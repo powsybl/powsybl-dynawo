@@ -94,7 +94,7 @@ public class DynawoImpactAnalysis implements ImpactAnalysis {
                     "</dyn:jobs>"));
                 Path path = config.getWorkingDir().resolve(".");
                 XMLExporter xmlExporter = new XMLExporter();
-                xmlExporter.export(network, null, new FileDataSource(path, "dynawoModel.iidm"));
+                xmlExporter.export(network, null, new FileDataSource(path, "dynawoModel"));
                 dynawoJobsFile = jobsFile.toAbsolutePath().toString();
             } catch (IOException e) {
                 // TODO Auto-generated catch block
