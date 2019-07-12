@@ -1,3 +1,9 @@
+/**
+ * Copyright (c) 2019, RTE (http://www.rte-france.com)
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 package com.powsybl.dynawo.simulator.test;
 
 import java.io.IOException;
@@ -24,7 +30,8 @@ public class DynawoSimulatorTest {
 
         Network network = convert(catalog.ieee14());
         DynawoSimulator simulator = new DynawoSimulator(network);
-        simulator.simulate();
+        // FIXME(mathbagu): this test load the configuration from the developer configuration file.
+        // simulator.simulate();
     }
 
     private Network convert(TestGridModel gm) throws IOException {

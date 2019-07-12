@@ -1,3 +1,9 @@
+/**
+ * Copyright (c) 2019, RTE (http://www.rte-france.com)
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 package com.powsybl.dynawo.simulator;
 
 import java.io.IOException;
@@ -133,16 +139,16 @@ public class DynawoImpactAnalysis implements ImpactAnalysis {
     }
 
     @Override
-    public void init(SimulationParameters parameters, Map<String, Object> context) throws Exception {
+    public void init(SimulationParameters parameters, Map<String, Object> context) {
     }
 
     @Override
-    public ImpactAnalysisResult run(SimulationState state) throws Exception {
+    public ImpactAnalysisResult run(SimulationState state) {
         return runAsync(state, null, null).join();
     }
 
     @Override
-    public ImpactAnalysisResult run(SimulationState state, Set<String> contingencyIds) throws Exception {
+    public ImpactAnalysisResult run(SimulationState state, Set<String> contingencyIds) {
         return runAsync(state, contingencyIds, null).join();
     }
 
@@ -154,14 +160,14 @@ public class DynawoImpactAnalysis implements ImpactAnalysis {
             new AbstractExecutionHandler<ImpactAnalysisResult>() {
 
                 @Override
-                public List<CommandExecution> before(Path workingDir) throws IOException {
+                public List<CommandExecution> before(Path workingDir) {
                     Command cmd = DynawoImpactAnalysis.this.before(state, contingencyIds, workingDir);
                     return Collections.singletonList(
                         new CommandExecution(cmd, 1, priority, ImmutableMap.of("state", state.getName())));
                 }
 
                 @Override
-                public ImpactAnalysisResult after(Path workingDir, ExecutionReport report) throws IOException {
+                public ImpactAnalysisResult after(Path workingDir, ExecutionReport report) {
                     return DynawoImpactAnalysis.this.after(workingDir, report);
                 }
             });
