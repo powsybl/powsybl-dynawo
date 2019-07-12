@@ -1,0 +1,25 @@
+# Maven projects
+/dynawo-simulator/target
+
+/.metadata/
+/.recommenders/
+/.sonarlint/
+/target
+
+# IntelliJ
+/.idea
+*.iml
+
+# Compilation settings
+install.cfg
+
+# Eclipse projects
+.classpath
+.project
+org.eclipse.core.resources.prefs
+org.eclipse.jdt.core.prefs
+org.eclipse.m2e.core.prefs
+org.eclipse.jdt.groovy.core.prefs
+
+# Log files
+powsybl.log
