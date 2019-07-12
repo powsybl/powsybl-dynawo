@@ -43,7 +43,7 @@ public class DynawoDynamicsModels {
             "    This file is part of Dynawo, an hybrid C++/Modelica open source time domain",
             "    simulation tool for power systems.",
             "-->",
-            "<dyn:dynamicModelsArchitecture xmlns:dyn=\"http://www.ret-france.com/dynawo\">"));
+            "<dyn:dynamicModelsArchitecture xmlns:dyn=\"http://www.rte-france.com/dynawo\">"));
         int id = 1;
         for (Load l : network.getLoads()) {
             loadDynamicsModels(l, builder, id++);

@@ -43,7 +43,7 @@ public class DynawoSimulationParameters {
             "    This file is part of Dynawo, an hybrid C++/Modelica open source time domain",
             "    simulation tool for power systems.",
             "-->",
-            "    <parametersSet xmlns=\"http://www.ret-france.com/dynawo\">"));
+            "    <parametersSet xmlns=\"http://www.rte-france.com/dynawo\">"));
         int id = 1;
         openSet(builder, id);
         globalParameters(builder);
