@@ -97,7 +97,7 @@ public class DynawoDynamicsModels {
     private void genDynamicsModels(Generator g, StringBuilder builder, int id) {
         builder.append(String.join(System.lineSeparator(),
             "  <dyn:blackBoxModel id=\"" + g.getId()
-                + "\" lib=\"GeneratorSynchronousThreeWindingsProportionalRegulations\" parFile=\"dynawoModel.par\" parId=\""
+                + "\" lib=\"GeneratorSynchronousFourWindingsProportionalRegulations\" parFile=\"dynawoModel.par\" parId=\""
                 + id + "\" staticId=\"" + g.getId() + "\" />",
                 System.lineSeparator()));
     }
