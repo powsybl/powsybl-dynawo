@@ -99,8 +99,8 @@ public class DynawoSolverParameters {
             "    <par type=\"DOUBLE\" name=\"absAccuracy\" value=\"1e-6\"/>",
             "    <par type=\"DOUBLE\" name=\"relAccuracy\" value=\"1e-6\"/>",
             "  </set>",
-            "</parametersSet>"));
-        builder.append(System.lineSeparator());
+            "</parametersSet>",
+            System.lineSeparator()));
         return builder.toString();
     }
 
