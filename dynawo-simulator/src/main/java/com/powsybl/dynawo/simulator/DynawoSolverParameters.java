@@ -100,6 +100,7 @@ public class DynawoSolverParameters {
             "    <par type=\"DOUBLE\" name=\"relAccuracy\" value=\"1e-6\"/>",
             "  </set>",
             "</parametersSet>"));
+        builder.append(System.lineSeparator());
         return builder.toString();
     }
 

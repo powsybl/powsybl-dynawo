@@ -50,6 +50,7 @@ public class DynawoSimulationParameters {
             "    simulation tool for power systems.",
             "-->",
             "    <parametersSet xmlns=\"http://www.rte-france.com/dynawo\">"));
+        builder.append(System.lineSeparator());
         int id = 1;
         openSet(builder, id);
         globalParameters(builder);
@@ -72,17 +73,20 @@ public class DynawoSimulationParameters {
         closeSet(builder);
         builder.append(String.join(System.lineSeparator(),
             "</parametersSet>"));
+        builder.append(System.lineSeparator());
         return builder.toString();
     }
 
     private void openSet(StringBuilder builder, int id) {
         builder.append(String.join(System.lineSeparator(),
             "  <set id=\"" + id + "\">"));
+        builder.append(System.lineSeparator());
     }
 
     private void closeSet(StringBuilder builder) {
         builder.append(String.join(System.lineSeparator(),
             "  </set>"));
+        builder.append(System.lineSeparator());
     }
 
     private void omegaRefParameters(StringBuilder builder) {
@@ -93,6 +97,7 @@ public class DynawoSimulationParameters {
             "    <par type=\"DOUBLE\" name=\"weight_gen_2\" value=\"1650\"/>",
             "    <par type=\"DOUBLE\" name=\"weight_gen_3\" value=\"80\"/>",
             "    <par type=\"DOUBLE\" name=\"weight_gen_4\" value=\"250\"/>"));
+        builder.append(System.lineSeparator());
     }
 
     private void globalParameters(StringBuilder builder) {
@@ -117,6 +122,7 @@ public class DynawoSimulationParameters {
             "    <par type=\"DOUBLE\" name=\"transformer_tNext_HT\" value=\"10\"/>",
             "    <par type=\"DOUBLE\" name=\"transformer_tNext_THT\" value=\"10\"/>",
             "    <par type=\"DOUBLE\" name=\"transformer_tolV\" value=\"0.014999999700000001\"/>"));
+        builder.append(System.lineSeparator());
     }
 
     private void eventParameters(StringBuilder builder) {
@@ -124,6 +130,7 @@ public class DynawoSimulationParameters {
             "    <par type=\"DOUBLE\" name=\"event_tEvent\" value=\"1\"/>",
             "    <par type=\"BOOL\" name=\"event_disconnectOrigin\" value=\"false\"/>",
             "    <par type=\"BOOL\" name=\"event_disconnectExtremity\" value=\"true\"/>"));
+        builder.append(System.lineSeparator());
     }
 
     private void loadParameters(Load l, StringBuilder builder) {
@@ -134,6 +141,7 @@ public class DynawoSimulationParameters {
             "    <reference type=\"DOUBLE\" name=\"load_Q0PU\" origData=\"IIDM\" origName=\"q_pu\"/>",
             "    <reference type=\"DOUBLE\" name=\"load_U0PU\" origData=\"IIDM\" origName=\"v_pu\"/>",
             "    <reference type=\"DOUBLE\" name=\"load_UPhase\" origData=\"IIDM\" origName=\"angle_pu\"/>"));
+        builder.append(System.lineSeparator());
     }
 
     private void genParameters(Generator g, StringBuilder builder) {
@@ -178,6 +186,7 @@ public class DynawoSimulationParameters {
             "    <reference name=\"generator_Q0Pu\" origData=\"IIDM\" origName=\"q_pu\" type=\"DOUBLE\"/>",
             "    <reference name=\"generator_U0Pu\" origData=\"IIDM\" origName=\"v_pu\" type=\"DOUBLE\"/>",
             "    <reference name=\"generator_UPhase0\" origData=\"IIDM\" origName=\"angle_pu\" type=\"DOUBLE\"/>"));
+        builder.append(System.lineSeparator());
     }
 
     private final Network network;
