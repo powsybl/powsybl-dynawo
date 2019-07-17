@@ -51,17 +51,22 @@ public class DynawoDynamicsModels {
             "-->",
             "<dyn:dynamicModelsArchitecture xmlns:dyn=\"http://www.rte-france.com/dynawo\">",
             System.lineSeparator()));
-        int id = 1;
+        int id = 2;
         for (Load l : network.getLoads()) {
             loadDynamicsModels(l, builder, id++);
-            loadConnections(l, builder);
         }
         for (Generator g : network.getGenerators()) {
             genDynamicsModels(g, builder, id++);
-            genConnections(g, builder);
         }
         omegaRefDynamicsModels(builder, id++);
         eventDynamicsModels(builder, id++);
+        for (Load l : network.getLoads()) {
+            loadConnections(l, builder);
+        }
+        int grp = 0;
+        for (Generator g : network.getGenerators()) {
+            genConnections(g, builder, grp++);
+        }
         builder.append(String.join(System.lineSeparator(),
             "</dyn:dynamicModelsArchitecture>",
             System.lineSeparator()));
@@ -70,7 +75,7 @@ public class DynawoDynamicsModels {
 
     private void omegaRefDynamicsModels(StringBuilder builder, int id) {
         builder.append(String.join(System.lineSeparator(),
-            "  <dyn:blackBoxModel id=\"OMEGAREF\" lib=\"DYNModelOmegaRef\" parFile=\"dynawoModel.par\" parId=\"" + id
+            "  <dyn:blackBoxModel id=\"OMEGA_REF\" lib=\"DYNModelOmegaRef\" parFile=\"dynawoModel.par\" parId=\"" + id
                 + "\" />",
                 System.lineSeparator()));
     }
@@ -100,19 +105,19 @@ public class DynawoDynamicsModels {
     private void loadConnections(Load l, StringBuilder builder) {
         builder.append(String.join(System.lineSeparator(),
             "  <dyn:connect id1=\"" + l.getId() + "\" var1=\"load_terminal\" id2=\"NETWORK\" var2=\""
-                + l.getTerminal().getBusView().getBus().getId() + "_ACPIN\"/>",
+                + l.getTerminal().getBusBreakerView().getBus().getId() + "_ACPIN\"/>",
                 System.lineSeparator()));
     }
 
-    private void genConnections(Generator g, StringBuilder builder) {
+    private void genConnections(Generator g, StringBuilder builder, int grp) {
         builder.append(String.join(System.lineSeparator(),
-            "  <dyn:connect id1=\"OMEGA_REF\" var1=\"omega_grp_0\" id2=\"" + g.getId()
+            "  <dyn:connect id1=\"OMEGA_REF\" var1=\"omega_grp_" + grp + "\" id2=\"" + g.getId()
                 + "\" var2=\"generator_omegaPu\"/>",
-            "  <dyn:connect id1=\"OMEGA_REF\" var1=\"omegaRef_grp_0\" id2=\"" + g.getId()
+            "  <dyn:connect id1=\"OMEGA_REF\" var1=\"omegaRef_grp_" + grp + "\" id2=\"" + g.getId()
                 + "\" var2=\"generator_omegaRefPu\"/>",
-            "  <dyn:connect id1=\"OMEGA_REF\" var1=\"numcc_node_0\" id2=\"NETWORK\" var2=\"@" + g.getId()
+            "  <dyn:connect id1=\"OMEGA_REF\" var1=\"numcc_node_" + grp + "\" id2=\"NETWORK\" var2=\"@" + g.getId()
                 + "@@NODE@_numcc\"/>",
-            "  <dyn:connect id1=\"OMEGA_REF\" var1=\"running_grp_0\" id2=\"" + g.getId()
+            "  <dyn:connect id1=\"OMEGA_REF\" var1=\"running_grp_" + grp + "\" id2=\"" + g.getId()
                 + "\" var2=\"generator_running\"/>",
             "  <dyn:connect id1=\"" + g.getId() + "\" var1=\"generator_terminal\" id2=\"NETWORK\" var2=\"@" + g.getId()
                 + "@@NODE@_ACPIN\"/>",

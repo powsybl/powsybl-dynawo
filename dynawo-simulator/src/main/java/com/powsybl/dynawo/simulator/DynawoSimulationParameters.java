@@ -49,10 +49,10 @@ public class DynawoSimulationParameters {
             "    This file is part of Dynawo, an hybrid C++/Modelica open source time domain",
             "    simulation tool for power systems.",
             "-->",
-            "    <parametersSet xmlns=\"http://www.rte-france.com/dynawo\">",
+            "<parametersSet xmlns=\"http://www.rte-france.com/dynawo\">",
             System.lineSeparator()));
         int id = 1;
-        openSet(builder, id);
+        openSet(builder, id++);
         globalParameters(builder);
         closeSet(builder);
         for (Load l : network.getLoads()) {
@@ -137,10 +137,10 @@ public class DynawoSimulationParameters {
         builder.append(String.join(System.lineSeparator(),
             "    <par type=\"DOUBLE\" name=\"load_alpha\" value=\"1.5\"/>",
             "    <par type=\"DOUBLE\" name=\"load_beta\" value=\"2.5\"/>",
-            "    <reference type=\"DOUBLE\" name=\"load_P0PU\" origData=\"IIDM\" origName=\"p_pu\"/>",
-            "    <reference type=\"DOUBLE\" name=\"load_Q0PU\" origData=\"IIDM\" origName=\"q_pu\"/>",
-            "    <reference type=\"DOUBLE\" name=\"load_U0PU\" origData=\"IIDM\" origName=\"v_pu\"/>",
-            "    <reference type=\"DOUBLE\" name=\"load_UPhase\" origData=\"IIDM\" origName=\"angle_pu\"/>",
+            "    <reference type=\"DOUBLE\" name=\"load_P0Pu\" origData=\"IIDM\" origName=\"p_pu\"/>",
+            "    <reference type=\"DOUBLE\" name=\"load_Q0Pu\" origData=\"IIDM\" origName=\"q_pu\"/>",
+            "    <reference type=\"DOUBLE\" name=\"load_U0Pu\" origData=\"IIDM\" origName=\"v_pu\"/>",
+            "    <reference type=\"DOUBLE\" name=\"load_UPhase0\" origData=\"IIDM\" origName=\"angle_pu\"/>",
             System.lineSeparator()));
     }
 
