@@ -26,6 +26,7 @@ import com.powsybl.commons.datasource.ReadOnlyDataSource;
 import com.powsybl.dynawo.simulator.DynawoConfig;
 import com.powsybl.dynawo.simulator.DynawoSimulator;
 import com.powsybl.iidm.network.Network;
+import com.powsybl.simulation.SimulationParameters;
 import com.powsybl.triplestore.api.TripleStoreFactory;
 
 public class DynawoSimulatorTest {
@@ -35,7 +36,7 @@ public class DynawoSimulatorTest {
         try (FileSystem fs = Jimfs.newFileSystem(Configuration.unix())) {
             PlatformConfig platformConfig = configure(fs);
             Network network = convert(fs, catalog.ieee14());
-            DynawoSimulator simulator = new DynawoSimulator(network, DynawoConfig.load(platformConfig));
+            DynawoSimulator simulator = new DynawoSimulator(network, DynawoConfig.load(platformConfig), SimulationParameters.load(platformConfig));
             simulator.simulate();
         }
     }

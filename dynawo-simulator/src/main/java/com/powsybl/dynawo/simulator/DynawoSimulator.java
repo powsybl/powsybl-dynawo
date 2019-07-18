@@ -22,12 +22,13 @@ import com.powsybl.simulation.StabilizationStatus;
 public class DynawoSimulator {
 
     public DynawoSimulator(Network network) {
-        this(network, DynawoConfig.load());
+        this(network, DynawoConfig.load(), SimulationParameters.load());
     }
 
-    public DynawoSimulator(Network network, DynawoConfig config) {
+    public DynawoSimulator(Network network, DynawoConfig config, SimulationParameters simulationParameters) {
         this.network = network;
         this.config = config;
+        this.simulationParameters = simulationParameters;
     }
 
     public void simulate() throws Exception {
@@ -35,7 +36,6 @@ public class DynawoSimulator {
         Stabilization stabilization = new DynawoStabilization(network, computationManager, 0);
         ImpactAnalysis impactAnalysis = new DynawoImpactAnalysis(network, computationManager, 0, null, config);
         Map<String, Object> initContext = new HashMap<>();
-        SimulationParameters simulationParameters = SimulationParameters.load();
         stabilization.init(simulationParameters, initContext);
         impactAnalysis.init(simulationParameters, initContext);
         StabilizationResult sr = stabilization.run();
@@ -46,4 +46,5 @@ public class DynawoSimulator {
 
     private final Network network;
     private final DynawoConfig config;
+    private final SimulationParameters simulationParameters;
 }
