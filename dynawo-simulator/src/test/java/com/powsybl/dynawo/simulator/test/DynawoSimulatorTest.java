@@ -33,18 +33,30 @@ public class DynawoSimulatorTest {
     @Test
     public void test() throws Exception {
         try (FileSystem fs = Jimfs.newFileSystem(Configuration.unix())) {
-            Path dynawoPath = Files.createDirectory(fs.getPath("/dynawoPath"));
-            Path workingPath = Files.createDirectory(fs.getPath("/workingPath"));
-            InMemoryPlatformConfig platformConfig = new InMemoryPlatformConfig(fs);
-            MapModuleConfig moduleConfig = platformConfig.createModuleConfig("dynawo");
-            moduleConfig.setPathProperty("dynawoHomeDir", dynawoPath);
-            moduleConfig.setPathProperty("workingDir", workingPath);
-            moduleConfig.setStringProperty("debug", "false");
-            moduleConfig.setStringProperty("dynawoCptCommandName", "myEnvDynawo.sh");
+            PlatformConfig platformConfig = configure(fs);
             Network network = convert(fs, catalog.ieee14());
             DynawoSimulator simulator = new DynawoSimulator(network, DynawoConfig.load(platformConfig));
             simulator.simulate();
         }
+    }
+
+    private PlatformConfig configure(FileSystem fs) throws IOException {
+        InMemoryPlatformConfig platformConfig = new InMemoryPlatformConfig(fs);
+        Path dynawoPath = Files.createDirectory(fs.getPath("/dynawoPath"));
+        Path workingPath = Files.createDirectory(fs.getPath("/workingPath"));
+        MapModuleConfig moduleConfig = platformConfig.createModuleConfig("dynawo");
+        moduleConfig.setPathProperty("dynawoHomeDir", dynawoPath);
+        moduleConfig.setPathProperty("workingDir", workingPath);
+        moduleConfig.setStringProperty("debug", "false");
+        moduleConfig.setStringProperty("dynawoCptCommandName", "myEnvDynawo.sh");
+        moduleConfig = platformConfig.createModuleConfig("simulation-parameters");
+        moduleConfig.setStringProperty("preFaultSimulationStopInstant", "1");
+        moduleConfig.setStringProperty("postFaultSimulationStopInstant", "60");
+        moduleConfig.setStringProperty("faultEventInstant", "30");
+        moduleConfig.setStringProperty("branchSideOneFaultShortCircuitDuration", "60");
+        moduleConfig.setStringProperty("branchSideTwoFaultShortCircuitDuration", "60");
+        moduleConfig.setStringProperty("generatorFaultShortCircuitDuration", "60");
+        return platformConfig;
     }
 
     private Network convert(FileSystem fs, TestGridModel gm) throws IOException {
