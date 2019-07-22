@@ -54,7 +54,6 @@ public class DynawoImpactAnalysis implements ImpactAnalysis {
         this.computationManager = computationManager;
         this.priority = priority;
         this.config = config;
-        cmd = createCommand();
     }
 
     private Command createCommand() {
@@ -121,7 +120,7 @@ public class DynawoImpactAnalysis implements ImpactAnalysis {
         new DynawoDynamicsModels(network, config).prepareFile();
         new DynawoSimulationParameters(network, config).prepareFile();
         new DynawoSolverParameters(network, config).prepareFile();
-        return cmd;
+        return createCommand();
     }
 
     protected ImpactAnalysisResult after(Path workingDir, ExecutionReport report) {
@@ -174,7 +173,6 @@ public class DynawoImpactAnalysis implements ImpactAnalysis {
     }
 
     private final Network network;
-    private final Command cmd;
     private final ComputationManager computationManager;
     private final int priority;
     private final DynawoConfig config;

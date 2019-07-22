@@ -26,6 +26,7 @@ import com.powsybl.commons.datasource.ReadOnlyDataSource;
 import com.powsybl.dynawo.simulator.DynawoConfig;
 import com.powsybl.dynawo.simulator.DynawoSimulator;
 import com.powsybl.iidm.network.Network;
+import com.powsybl.iidm.network.NetworkFactory;
 import com.powsybl.simulation.SimulationParameters;
 import com.powsybl.triplestore.api.TripleStoreFactory;
 
@@ -35,7 +36,7 @@ public class DynawoSimulatorTest {
     public void test() throws Exception {
         try (FileSystem fs = Jimfs.newFileSystem(Configuration.unix())) {
             PlatformConfig platformConfig = configure(fs);
-            Network network = convert(fs, catalog.ieee14());
+            Network network = convert(platformConfig, catalog.ieee14());
             DynawoSimulator simulator = new DynawoSimulator(network, DynawoConfig.load(platformConfig), SimulationParameters.load(platformConfig));
             simulator.simulate();
         }
@@ -60,15 +61,14 @@ public class DynawoSimulatorTest {
         return platformConfig;
     }
 
-    private Network convert(FileSystem fs, TestGridModel gm) throws IOException {
+    private Network convert(PlatformConfig platformConfig, TestGridModel gm) throws IOException {
         String impl = TripleStoreFactory.defaultImplementation();
-        PlatformConfig platformConfig = new InMemoryPlatformConfig(fs);
         CgmesImport i = new CgmesImport(platformConfig);
         Properties params = new Properties();
         params.put("storeCgmesModelAsNetworkExtension", "true");
         params.put("powsyblTripleStore", impl);
         ReadOnlyDataSource ds = gm.dataSource();
-        Network n = i.importData(ds, params);
+        Network n = i.importData(ds, NetworkFactory.findDefault(), params);
         return n;
     }
 
