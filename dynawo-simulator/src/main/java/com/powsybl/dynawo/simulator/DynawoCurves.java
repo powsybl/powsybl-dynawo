@@ -44,7 +44,7 @@ public class DynawoCurves {
             "    This file is part of Dynawo, an hybrid C++/Modelica open source time domain",
             "    simulation tool for power systems.",
             "-->",
-            "<curvesInput xmlns:dyn=\"http://www.rte-france.com/dynawo\">",
+            "<curvesInput xmlns=\"http://www.rte-france.com/dynawo\">",
             "<!--Curves for scenario-->",
             System.lineSeparator()));
 
