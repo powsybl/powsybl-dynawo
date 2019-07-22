@@ -87,7 +87,7 @@ public class DynawoImpactAnalysis implements ImpactAnalysis {
                     "    <dyn:simulation startTime=\"0\" stopTime=\"30\" activateCriteria=\"false\"/>",
                     "    <dyn:outputs directory=\"outputs\">",
                     "      <dyn:dumpInitValues local=\"true\" global=\"true\"/>",
-                    "      <!--dyn:curves inputFile=\"dynawoModel.crv\" exportMode=\"CSV\"/-->",
+                    "      <dyn:curves inputFile=\"dynawoModel.crv\" exportMode=\"CSV\"/>",
                     "      <dyn:timeline exportMode=\"TXT\"/>",
                     "      <dyn:logs>",
                     "        <dyn:appender tag=\"\" file=\"dynawo.log\" lvlFilter=\"DEBUG\"/>",
@@ -120,6 +120,7 @@ public class DynawoImpactAnalysis implements ImpactAnalysis {
         new DynawoDynamicsModels(network, config).prepareFile();
         new DynawoSimulationParameters(network, config).prepareFile();
         new DynawoSolverParameters(network, config).prepareFile();
+        new DynawoCurves(network, config).prepareFile();
         return createCommand();
     }
 
