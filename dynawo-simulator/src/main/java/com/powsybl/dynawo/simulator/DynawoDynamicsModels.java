@@ -18,13 +18,12 @@ import com.powsybl.iidm.network.Network;
 
 public class DynawoDynamicsModels {
 
-    public DynawoDynamicsModels(Network network, DynawoConfig config) {
+    public DynawoDynamicsModels(Network network) {
         this.network = network;
-        this.config = config;
     }
 
-    public void prepareFile() {
-        Path parFile = config.getWorkingDir().resolve("dynawoModel.dyd");
+    public void prepareFile(Path workingDir) {
+        Path parFile = workingDir.resolve("dynawoModel.dyd");
         try (Writer writer = Files.newBufferedWriter(parFile, StandardCharsets.UTF_8)) {
             writer.write(String.join(System.lineSeparator(), dynamicsModels()));
         } catch (IOException e) {
@@ -127,5 +126,4 @@ public class DynawoDynamicsModels {
     }
 
     private final Network network;
-    private final DynawoConfig config;
 }

@@ -16,13 +16,12 @@ import com.powsybl.iidm.network.Network;
 
 public class DynawoSolverParameters {
 
-    public DynawoSolverParameters(Network network, DynawoConfig config) {
+    public DynawoSolverParameters(Network network) {
         this.network = network;
-        this.config = config;
     }
 
-    public void prepareFile() {
-        Path parFile = config.getWorkingDir().resolve("solvers.par");
+    public void prepareFile(Path workingDir) {
+        Path parFile = workingDir.resolve("solvers.par");
         try (Writer writer = Files.newBufferedWriter(parFile, StandardCharsets.UTF_8)) {
             writer.write(String.join(System.lineSeparator(), parameters()));
         } catch (IOException e) {
@@ -105,5 +104,4 @@ public class DynawoSolverParameters {
     }
 
     private final Network network;
-    private final DynawoConfig config;
 }

@@ -13,13 +13,12 @@ import com.powsybl.iidm.network.Network;
 
 public class DynawoCurves {
 
-    public DynawoCurves(Network network, DynawoConfig config) {
+    public DynawoCurves(Network network) {
         this.network = network;
-        this.config = config;
     }
 
-    public void prepareFile() {
-        Path parFile = config.getWorkingDir().resolve("dynawoModel.crv");
+    public void prepareFile(Path workingDir) {
+        Path parFile = workingDir.resolve("dynawoModel.crv");
         try (Writer writer = Files.newBufferedWriter(parFile, StandardCharsets.UTF_8)) {
             writer.write(String.join(System.lineSeparator(), curves()));
         } catch (IOException e) {
@@ -89,5 +88,4 @@ public class DynawoCurves {
     }
 
     private final Network network;
-    private final DynawoConfig config;
 }

@@ -18,13 +18,12 @@ import com.powsybl.iidm.network.Network;
 
 public class DynawoSimulationParameters {
 
-    public DynawoSimulationParameters(Network network, DynawoConfig config) {
+    public DynawoSimulationParameters(Network network) {
         this.network = network;
-        this.config = config;
     }
 
-    public void prepareFile() {
-        Path parFile = config.getWorkingDir().resolve("dynawoModel.par");
+    public void prepareFile(Path workingDir) {
+        Path parFile = workingDir.resolve("dynawoModel.par");
         try (Writer writer = Files.newBufferedWriter(parFile, StandardCharsets.UTF_8)) {
             writer.write(String.join(System.lineSeparator(), parameters()));
         } catch (IOException e) {
@@ -190,5 +189,4 @@ public class DynawoSimulationParameters {
     }
 
     private final Network network;
-    private final DynawoConfig config;
 }
