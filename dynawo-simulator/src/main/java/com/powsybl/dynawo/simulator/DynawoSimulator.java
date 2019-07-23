@@ -9,7 +9,9 @@ package com.powsybl.dynawo.simulator;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.computation.ComputationManager;
+import com.powsybl.computation.local.LocalComputationConfig;
 import com.powsybl.computation.local.LocalComputationManager;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.simulation.ImpactAnalysis;
@@ -22,21 +24,23 @@ import com.powsybl.simulation.StabilizationStatus;
 public class DynawoSimulator {
 
     public DynawoSimulator(Network network) {
-        this(network, DynawoConfig.load(), SimulationParameters.load());
+        this(network, PlatformConfig.defaultConfig());
     }
 
-    public DynawoSimulator(Network network, DynawoConfig config, SimulationParameters simulationParameters) {
+    public DynawoSimulator(Network network, PlatformConfig platformConfig) {
         this.network = network;
-        this.config = config;
-        this.simulationParameters = simulationParameters;
+        this.platformConfig = platformConfig;
         this.result = null;
     }
 
     public void simulate() throws Exception {
-        ComputationManager computationManager = new LocalComputationManager();
+        ComputationManager computationManager = new LocalComputationManager(
+            LocalComputationConfig.load(platformConfig));
         Stabilization stabilization = new DynawoStabilization(network, computationManager, 0);
-        ImpactAnalysis impactAnalysis = new DynawoImpactAnalysis(network, computationManager, 0, null, config);
+        ImpactAnalysis impactAnalysis = new DynawoImpactAnalysis(network, computationManager, 0, null,
+            DynawoConfig.load(platformConfig));
         Map<String, Object> initContext = new HashMap<>();
+        SimulationParameters simulationParameters = SimulationParameters.load(platformConfig);
         stabilization.init(simulationParameters, initContext);
         impactAnalysis.init(simulationParameters, initContext);
         StabilizationResult sr = stabilization.run();
@@ -50,7 +54,6 @@ public class DynawoSimulator {
     }
 
     private final Network network;
-    private final DynawoConfig config;
-    private final SimulationParameters simulationParameters;
+    private final PlatformConfig platformConfig;
     private ImpactAnalysisResult result;
 }

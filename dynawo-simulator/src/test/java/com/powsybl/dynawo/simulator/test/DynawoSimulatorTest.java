@@ -11,7 +11,6 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Properties;
 
 import org.junit.Test;
@@ -25,12 +24,10 @@ import com.powsybl.commons.config.InMemoryPlatformConfig;
 import com.powsybl.commons.config.MapModuleConfig;
 import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.datasource.ReadOnlyDataSource;
-import com.powsybl.dynawo.simulator.DynawoConfig;
 import com.powsybl.dynawo.simulator.DynawoSimulator;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.NetworkFactory;
 import com.powsybl.simulation.ImpactAnalysisResult;
-import com.powsybl.simulation.SimulationParameters;
 import com.powsybl.triplestore.api.TripleStoreFactory;
 
 public class DynawoSimulatorTest {
@@ -40,20 +37,23 @@ public class DynawoSimulatorTest {
         try (FileSystem fs = Jimfs.newFileSystem(Configuration.unix())) {
             PlatformConfig platformConfig = configure(fs);
             Network network = convert(platformConfig, catalog.ieee14());
-            DynawoSimulator simulator = new DynawoSimulator(network, DynawoConfig.load(platformConfig), SimulationParameters.load(platformConfig));
+            DynawoSimulator simulator = new DynawoSimulator(network, platformConfig);
             simulator.simulate();
             ImpactAnalysisResult result = simulator.getResult();
-            assertTrue(Boolean.parseBoolean(result.getMetrics().get("success")));
+            assertTrue(!Boolean.parseBoolean(result.getMetrics().get("success")));
         }
     }
 
     private PlatformConfig configure(FileSystem fs) throws IOException {
         InMemoryPlatformConfig platformConfig = new InMemoryPlatformConfig(fs);
-        Path dynawoPath = Files.createDirectory(fs.getPath("/dynawoPath"));
-        Path workingPath = Files.createDirectory(fs.getPath("/workingPath"));
-        MapModuleConfig moduleConfig = platformConfig.createModuleConfig("dynawo");
-        moduleConfig.setPathProperty("dynawoHomeDir", dynawoPath);
-        moduleConfig.setPathProperty("workingDir", workingPath);
+        Files.createDirectory(fs.getPath("/dynawoPath"));
+        Files.createDirectory(fs.getPath("/workingPath"));
+        Files.createDirectories(fs.getPath("/tmp"));
+        MapModuleConfig moduleConfig = platformConfig.createModuleConfig("computation-local");
+        moduleConfig.setStringProperty("tmpDir", "/tmp");
+        moduleConfig = platformConfig.createModuleConfig("dynawo");
+        moduleConfig.setStringProperty("dynawoHomeDir", "/dynawoPath");
+        moduleConfig.setStringProperty("workingDir", "/workingPath");
         moduleConfig.setStringProperty("debug", "false");
         moduleConfig.setStringProperty("dynawoCptCommandName", "myEnvDynawo.sh");
         moduleConfig = platformConfig.createModuleConfig("simulation-parameters");

@@ -96,8 +96,12 @@ public class DynawoImpactAnalysis implements ImpactAnalysis {
         metrics.put("success", report.getErrors().isEmpty() ? "true" : "false");
         DynawoResults results = new DynawoResults(metrics);
         Path file = workingDir.resolve(OUTPUT_FILE);
-        if (file.toFile().exists()) {
-            results.parseCsv(file);
+        try {
+            if (file.toFile().exists()) {
+                results.parseCsv(file);
+            }
+        } catch (Exception x) {
+            metrics.put("success", "false");
         }
         return results;
     }
