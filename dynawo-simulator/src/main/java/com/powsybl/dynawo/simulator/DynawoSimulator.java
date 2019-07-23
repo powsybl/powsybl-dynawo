@@ -29,6 +29,7 @@ public class DynawoSimulator {
         this.network = network;
         this.config = config;
         this.simulationParameters = simulationParameters;
+        this.result = null;
     }
 
     public void simulate() throws Exception {
@@ -40,11 +41,16 @@ public class DynawoSimulator {
         impactAnalysis.init(simulationParameters, initContext);
         StabilizationResult sr = stabilization.run();
         if (sr.getStatus() == StabilizationStatus.COMPLETED) {
-            ImpactAnalysisResult iar = impactAnalysis.run(sr.getState());
+            result = impactAnalysis.run(sr.getState());
         }
+    }
+
+    public ImpactAnalysisResult getResult() {
+        return result;
     }
 
     private final Network network;
     private final DynawoConfig config;
     private final SimulationParameters simulationParameters;
+    private ImpactAnalysisResult result;
 }

@@ -8,6 +8,7 @@ package com.powsybl.dynawo.simulator;
 
 import java.nio.file.Path;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -26,6 +27,12 @@ import com.powsybl.computation.ExecutionEnvironment;
 import com.powsybl.computation.ExecutionReport;
 import com.powsybl.computation.GroupCommandBuilder;
 import com.powsybl.contingency.ContingenciesProvider;
+import com.powsybl.dynawo.simulator.input.DynawoCurves;
+import com.powsybl.dynawo.simulator.input.DynawoDynamicsModels;
+import com.powsybl.dynawo.simulator.input.DynawoJobs;
+import com.powsybl.dynawo.simulator.input.DynawoSimulationParameters;
+import com.powsybl.dynawo.simulator.input.DynawoSolverParameters;
+import com.powsybl.dynawo.simulator.results.DynawoResults;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.xml.XMLExporter;
 import com.powsybl.simulation.ImpactAnalysis;
@@ -37,6 +44,7 @@ import com.powsybl.simulation.SimulationState;
 public class DynawoImpactAnalysis implements ImpactAnalysis {
 
     private static final String WORKING_DIR_PREFIX = "powsybl_dynawo_impact_analysis_";
+    private static final String OUTPUT_FILE = "outputs/curves/curves.csv";
     private static final String DEFAULT_DYNAWO_CASE_NAME = "nrt/data/IEEE14/IEEE14_BasicTestCases/IEEE14_DisconnectLine/IEEE14.jobs";
 
     public DynawoImpactAnalysis(Network network, ComputationManager computationManager, int priority,
@@ -72,6 +80,7 @@ public class DynawoImpactAnalysis implements ImpactAnalysis {
         if (network != null) {
             Path jobsFile = workingDir.resolve("dynawoModel.jobs");
             Path path = workingDir.resolve(".");
+            LOG.info("path {}", path.toString());
             XMLExporter xmlExporter = new XMLExporter();
             xmlExporter.export(network, null, new FileDataSource(path, "dynawoModel"));
             dynawoJobsFile = jobsFile.toAbsolutePath().toString();
@@ -81,7 +90,16 @@ public class DynawoImpactAnalysis implements ImpactAnalysis {
     }
 
     protected ImpactAnalysisResult after(Path workingDir, ExecutionReport report) {
-        return null;
+        report.log();
+
+        Map<String, String> metrics = new HashMap<>();
+        metrics.put("success", report.getErrors().isEmpty() ? "true" : "false");
+        DynawoResults results = new DynawoResults(metrics);
+        Path file = workingDir.resolve(OUTPUT_FILE);
+        if (file.toFile().exists()) {
+            results.parseCsv(file);
+        }
+        return results;
     }
 
     @Override

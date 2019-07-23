@@ -4,7 +4,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package com.powsybl.dynawo.simulator;
+package com.powsybl.dynawo.simulator.input;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -48,8 +48,7 @@ public class DynawoDynamicsModels {
             "    This file is part of Dynawo, an hybrid C++/Modelica open source time domain",
             "    simulation tool for power systems.",
             "-->",
-            "<dyn:dynamicModelsArchitecture xmlns:dyn=\"http://www.rte-france.com/dynawo\">",
-            System.lineSeparator()));
+            "<dyn:dynamicModelsArchitecture xmlns:dyn=\"http://www.rte-france.com/dynawo\">") + System.lineSeparator());
         int id = 2;
         for (Load l : network.getLoads()) {
             loadDynamicsModels(l, builder, id++);
@@ -67,45 +66,39 @@ public class DynawoDynamicsModels {
             genConnections(g, builder, grp++);
         }
         builder.append(String.join(System.lineSeparator(),
-            "</dyn:dynamicModelsArchitecture>",
-            System.lineSeparator()));
+            "</dyn:dynamicModelsArchitecture>") + System.lineSeparator());
         return builder.toString();
     }
 
     private void omegaRefDynamicsModels(StringBuilder builder, int id) {
         builder.append(String.join(System.lineSeparator(),
             "  <dyn:blackBoxModel id=\"OMEGA_REF\" lib=\"DYNModelOmegaRef\" parFile=\"dynawoModel.par\" parId=\"" + id
-                + "\" />",
-                System.lineSeparator()));
+                + "\" />") + System.lineSeparator());
     }
 
     private void eventDynamicsModels(StringBuilder builder, int id) {
         builder.append(String.join(System.lineSeparator(),
             "  <dyn:blackBoxModel id=\"DISCONNCET_LINE\" lib=\"EventQuadripoleDisconnection\" parFile=\"dynawoModel.par\" parId=\""
-                + id + "\" />",
-                System.lineSeparator()));
+                + id + "\" />") + System.lineSeparator());
     }
 
     private void loadDynamicsModels(Load l, StringBuilder builder, int id) {
         builder.append(String.join(System.lineSeparator(),
             "  <dyn:blackBoxModel id=\"" + l.getId() + "\" lib=\"LoadAlphaBeta\" parFile=\"dynawoModel.par\" parId=\""
-                + id + "\" staticId=\"" + l.getId() + "\" />",
-                System.lineSeparator()));
+                + id + "\" staticId=\"" + l.getId() + "\" />") + System.lineSeparator());
     }
 
     private void genDynamicsModels(Generator g, StringBuilder builder, int id) {
         builder.append(String.join(System.lineSeparator(),
             "  <dyn:blackBoxModel id=\"" + g.getId()
                 + "\" lib=\"GeneratorSynchronousFourWindingsProportionalRegulations\" parFile=\"dynawoModel.par\" parId=\""
-                + id + "\" staticId=\"" + g.getId() + "\" />",
-                System.lineSeparator()));
+                + id + "\" staticId=\"" + g.getId() + "\" />") + System.lineSeparator());
     }
 
     private void loadConnections(Load l, StringBuilder builder) {
         builder.append(String.join(System.lineSeparator(),
             "  <dyn:connect id1=\"" + l.getId() + "\" var1=\"load_terminal\" id2=\"NETWORK\" var2=\""
-                + l.getTerminal().getBusBreakerView().getBus().getId() + "_ACPIN\"/>",
-                System.lineSeparator()));
+                + l.getTerminal().getBusBreakerView().getBus().getId() + "_ACPIN\"/>") + System.lineSeparator());
     }
 
     private void genConnections(Generator g, StringBuilder builder, int grp) {
@@ -121,8 +114,7 @@ public class DynawoDynamicsModels {
             "  <dyn:connect id1=\"" + g.getId() + "\" var1=\"generator_terminal\" id2=\"NETWORK\" var2=\"@" + g.getId()
                 + "@@NODE@_ACPIN\"/>",
             "  <dyn:connect id1=\"" + g.getId() + "\" var1=\"generator_switchOffSignal1\" id2=\"NETWORK\" var2=\"@"
-                + g.getId() + "@@NODE@_switchOff\"/>",
-                System.lineSeparator()));
+                + g.getId() + "@@NODE@_switchOff\"/>") + System.lineSeparator());
     }
 
     private final Network network;

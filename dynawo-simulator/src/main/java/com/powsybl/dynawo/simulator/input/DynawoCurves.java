@@ -1,4 +1,4 @@
-package com.powsybl.dynawo.simulator;
+package com.powsybl.dynawo.simulator.input;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -44,8 +44,7 @@ public class DynawoCurves {
             "    simulation tool for power systems.",
             "-->",
             "<curvesInput xmlns=\"http://www.rte-france.com/dynawo\">",
-            "<!--Curves for scenario-->",
-            System.lineSeparator()));
+            "<!--Curves for scenario-->") + System.lineSeparator());
 
         for (Bus b : network.getBusBreakerView().getBuses()) {
             loadBusCurve(b, builder);
@@ -58,15 +57,13 @@ public class DynawoCurves {
         }
 
         builder.append(String.join(System.lineSeparator(),
-            "</curvesInput>",
-            System.lineSeparator()));
+            "</curvesInput>") + System.lineSeparator());
         return builder.toString();
     }
 
     private void loadBusCurve(Bus b, StringBuilder builder) {
         builder.append(String.join(System.lineSeparator(),
-            "  <curve model=\"NETWORK\" variable=\"" + b.getId() + "_Upu_value\"/>",
-            System.lineSeparator()));
+            "  <curve model=\"NETWORK\" variable=\"" + b.getId() + "_Upu_value\"/>") + System.lineSeparator());
     }
 
     private void loadGeneratorCurve(Generator g, StringBuilder builder) {
@@ -76,15 +73,13 @@ public class DynawoCurves {
             "  <curve model=\"" + g.getId() + "\" variable=\"generator_QGen\"/>",
             "  <curve model=\"" + g.getId() + "\" variable=\"generator_UStatorPu\"/>",
             "  <curve model=\"" + g.getId() + "\" variable=\"voltageRegulator_UcEfdPu\"/>",
-            "  <curve model=\"" + g.getId() + "\" variable=\"voltageRegulator_EfdPu\"/>",
-            System.lineSeparator()));
+            "  <curve model=\"" + g.getId() + "\" variable=\"voltageRegulator_EfdPu\"/>") + System.lineSeparator());
     }
 
     private void loadLoadCurve(Load l, StringBuilder builder) {
         builder.append(String.join(System.lineSeparator(),
             "  <curve model=\"" + l.getId() + "\" variable=\"load_PPu\"/>",
-            "  <curve model=\"" + l.getId() + "\" variable=\"load_QPu\"/>",
-            System.lineSeparator()));
+            "  <curve model=\"" + l.getId() + "\" variable=\"load_QPu\"/>") + System.lineSeparator());
     }
 
     private final Network network;

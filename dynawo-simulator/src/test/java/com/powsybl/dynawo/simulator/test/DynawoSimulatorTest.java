@@ -6,6 +6,8 @@
  */
 package com.powsybl.dynawo.simulator.test;
 
+import static org.junit.Assert.assertTrue;
+
 import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
@@ -27,6 +29,7 @@ import com.powsybl.dynawo.simulator.DynawoConfig;
 import com.powsybl.dynawo.simulator.DynawoSimulator;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.NetworkFactory;
+import com.powsybl.simulation.ImpactAnalysisResult;
 import com.powsybl.simulation.SimulationParameters;
 import com.powsybl.triplestore.api.TripleStoreFactory;
 
@@ -39,6 +42,8 @@ public class DynawoSimulatorTest {
             Network network = convert(platformConfig, catalog.ieee14());
             DynawoSimulator simulator = new DynawoSimulator(network, DynawoConfig.load(platformConfig), SimulationParameters.load(platformConfig));
             simulator.simulate();
+            ImpactAnalysisResult result = simulator.getResult();
+            assertTrue(Boolean.parseBoolean(result.getMetrics().get("success")));
         }
     }
 

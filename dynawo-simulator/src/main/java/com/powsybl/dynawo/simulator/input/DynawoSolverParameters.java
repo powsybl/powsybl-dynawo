@@ -4,7 +4,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package com.powsybl.dynawo.simulator;
+package com.powsybl.dynawo.simulator.input;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -98,8 +98,7 @@ public class DynawoSolverParameters {
             "    <par type=\"DOUBLE\" name=\"absAccuracy\" value=\"1e-6\"/>",
             "    <par type=\"DOUBLE\" name=\"relAccuracy\" value=\"1e-6\"/>",
             "  </set>",
-            "</parametersSet>",
-            System.lineSeparator()));
+            "</parametersSet>") + System.lineSeparator());
         return builder.toString();
     }
 

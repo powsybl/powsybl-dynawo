@@ -1,4 +1,4 @@
-package com.powsybl.dynawo.simulator;
+package com.powsybl.dynawo.simulator.input;
 
 import java.io.IOException;
 import java.io.Writer;
