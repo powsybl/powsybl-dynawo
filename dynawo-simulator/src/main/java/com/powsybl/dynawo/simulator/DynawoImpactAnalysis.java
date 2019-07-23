@@ -52,16 +52,7 @@ public class DynawoImpactAnalysis implements ImpactAnalysis {
         this.config = config;
     }
 
-    private Command createCommand() {
-        String dynawoJobsFile = DEFAULT_DYNAWO_CASE_NAME;
-        if (network != null) {
-            Path jobsFile = config.getWorkingDir().resolve("dynawoModel.jobs");
-            Path path = config.getWorkingDir().resolve(".");
-            XMLExporter xmlExporter = new XMLExporter();
-            xmlExporter.export(network, null, new FileDataSource(path, "dynawoModel"));
-            dynawoJobsFile = jobsFile.toAbsolutePath().toString();
-        }
-        LOG.info("cmd {} jobs {}", config.getDynawoCptCommandName(), dynawoJobsFile);
+    private Command createCommand(String dynawoJobsFile) {
         return new GroupCommandBuilder()
             .id("dyn_fs")
             .subCommand()
@@ -77,7 +68,16 @@ public class DynawoImpactAnalysis implements ImpactAnalysis {
         new DynawoSimulationParameters(network).prepareFile(workingDir);
         new DynawoSolverParameters(network).prepareFile(workingDir);
         new DynawoCurves(network).prepareFile(workingDir);
-        return createCommand();
+        String dynawoJobsFile = DEFAULT_DYNAWO_CASE_NAME;
+        if (network != null) {
+            Path jobsFile = workingDir.resolve("dynawoModel.jobs");
+            Path path = workingDir.resolve(".");
+            XMLExporter xmlExporter = new XMLExporter();
+            xmlExporter.export(network, null, new FileDataSource(path, "dynawoModel"));
+            dynawoJobsFile = jobsFile.toAbsolutePath().toString();
+        }
+        LOG.info("cmd {} jobs {}", config.getDynawoCptCommandName(), dynawoJobsFile);
+        return createCommand(dynawoJobsFile);
     }
 
     protected ImpactAnalysisResult after(Path workingDir, ExecutionReport report) {
