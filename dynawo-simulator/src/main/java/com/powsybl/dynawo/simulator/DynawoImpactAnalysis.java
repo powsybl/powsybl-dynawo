@@ -6,6 +6,8 @@
  */
 package com.powsybl.dynawo.simulator;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.HashMap;
@@ -71,18 +73,23 @@ public class DynawoImpactAnalysis implements ImpactAnalysis {
     }
 
     protected Command before(SimulationState state, Set<String> contingencyIds, Path workingDir) {
+        String dynawoJobsFile = DEFAULT_DYNAWO_CASE_NAME;
         new DynawoJobs(network).prepareFile(workingDir);
         new DynawoDynamicsModels(network).prepareFile(workingDir);
         new DynawoSimulationParameters(network).prepareFile(workingDir);
         new DynawoSolverParameters(network).prepareFile(workingDir);
         new DynawoCurves(network).prepareFile(workingDir);
-        String dynawoJobsFile = DEFAULT_DYNAWO_CASE_NAME;
         if (network != null) {
             Path jobsFile = workingDir.resolve("dynawoModel.jobs");
-            Path path = workingDir.resolve(".");
-            LOG.info("path {}", path.toString());
             XMLExporter xmlExporter = new XMLExporter();
-            xmlExporter.export(network, null, new FileDataSource(path, "dynawoModel"));
+            xmlExporter.export(network, null, new FileDataSource(workingDir, "dynawoModel"));
+            // Exporter uses xiidm extension, dynawo expects iidm extension
+            try {
+                Files.move(workingDir.resolve("dynawoModel.xiidm"), workingDir.resolve("dynawoModel.iidm"));
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
             dynawoJobsFile = jobsFile.toAbsolutePath().toString();
         }
         LOG.info("cmd {} jobs {}", config.getDynawoCptCommandName(), dynawoJobsFile);
