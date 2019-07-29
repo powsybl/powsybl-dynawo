@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
@@ -20,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.ImmutableMap;
+import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.datasource.FileDataSource;
 import com.powsybl.computation.AbstractExecutionHandler;
 import com.powsybl.computation.Command;
@@ -51,15 +53,16 @@ public class DynawoImpactAnalysis implements ImpactAnalysis {
 
     public DynawoImpactAnalysis(Network network, ComputationManager computationManager, int priority,
         ContingenciesProvider contingenciesProvider) {
-        this(network, computationManager, priority, contingenciesProvider, DynawoConfig.load());
+        this(network, computationManager, priority, contingenciesProvider, PlatformConfig.defaultConfig());
     }
 
     public DynawoImpactAnalysis(Network network, ComputationManager computationManager, int priority,
-        ContingenciesProvider contingenciesProvider, DynawoConfig config) {
+        ContingenciesProvider contingenciesProvider, PlatformConfig platformConfig) {
         this.network = network;
         this.computationManager = computationManager;
         this.priority = priority;
-        this.config = config;
+        this.platformConfig = platformConfig;
+        this.config = DynawoConfig.load(platformConfig);
     }
 
     private Command createCommand(String dynawoJobsFile) {
@@ -81,9 +84,10 @@ public class DynawoImpactAnalysis implements ImpactAnalysis {
         new DynawoCurves(network).prepareFile(workingDir);
         if (network != null) {
             Path jobsFile = workingDir.resolve("dynawoModel.jobs");
-            XMLExporter xmlExporter = new XMLExporter();
+            XMLExporter xmlExporter = new XMLExporter(platformConfig);
             xmlExporter.export(network, null, new FileDataSource(workingDir, "dynawoModel"));
             // Exporter uses xiidm extension, dynawo expects iidm extension
+            // Error in dynawo beacause substation is exported without country field
             try {
                 Files.move(workingDir.resolve("dynawoModel.xiidm"), workingDir.resolve("dynawoModel.iidm"));
             } catch (IOException e) {
@@ -161,6 +165,7 @@ public class DynawoImpactAnalysis implements ImpactAnalysis {
     private final Network network;
     private final ComputationManager computationManager;
     private final int priority;
+    private final PlatformConfig platformConfig;
     private final DynawoConfig config;
     private static final Logger LOG = LoggerFactory.getLogger(DynawoImpactAnalysis.class);
 }

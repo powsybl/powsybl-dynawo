@@ -38,7 +38,7 @@ public class DynawoSimulator {
             LocalComputationConfig.load(platformConfig));
         Stabilization stabilization = new DynawoStabilization(network, computationManager, 0);
         ImpactAnalysis impactAnalysis = new DynawoImpactAnalysis(network, computationManager, 0, null,
-            DynawoConfig.load(platformConfig));
+            platformConfig);
         Map<String, Object> initContext = new HashMap<>();
         SimulationParameters simulationParameters = SimulationParameters.load(platformConfig);
         stabilization.init(simulationParameters, initContext);

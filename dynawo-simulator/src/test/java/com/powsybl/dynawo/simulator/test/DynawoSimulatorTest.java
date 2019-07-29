@@ -27,6 +27,7 @@ import com.powsybl.commons.datasource.ReadOnlyDataSource;
 import com.powsybl.dynawo.simulator.DynawoSimulator;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.NetworkFactory;
+import com.powsybl.iidm.xml.XMLExporter;
 import com.powsybl.simulation.ImpactAnalysisResult;
 import com.powsybl.triplestore.api.TripleStoreFactory;
 
@@ -36,7 +37,7 @@ public class DynawoSimulatorTest {
     public void test() throws Exception {
         try (FileSystem fs = Jimfs.newFileSystem(Configuration.unix())) {
             PlatformConfig platformConfig = configure(fs);
-            Network network = convert(platformConfig, catalog.ieee14());
+            Network network = convert(platformConfig, catalog.nordic32());
             DynawoSimulator simulator = new DynawoSimulator(network, platformConfig);
             simulator.simulate();
             ImpactAnalysisResult result = simulator.getResult();
@@ -49,7 +50,9 @@ public class DynawoSimulatorTest {
         Files.createDirectory(fs.getPath("/dynawoPath"));
         Files.createDirectory(fs.getPath("/workingPath"));
         Files.createDirectories(fs.getPath("/tmp"));
-        MapModuleConfig moduleConfig = platformConfig.createModuleConfig("computation-local");
+        MapModuleConfig moduleConfig = platformConfig.createModuleConfig("import-export-parameters-default-value");
+        moduleConfig.setStringProperty("iidm.export.xml.skip-extensions", "true");
+        moduleConfig = platformConfig.createModuleConfig("computation-local");
         moduleConfig.setStringProperty("tmpDir", "/tmp");
         moduleConfig = platformConfig.createModuleConfig("dynawo");
         moduleConfig.setStringProperty("dynawoHomeDir", "/dynawoPath");
@@ -72,6 +75,7 @@ public class DynawoSimulatorTest {
         Properties params = new Properties();
         params.put("storeCgmesModelAsNetworkExtension", "true");
         params.put("powsyblTripleStore", impl);
+        params.put(XMLExporter.SKIP_EXTENSIONS, "true");
         ReadOnlyDataSource ds = gm.dataSource();
         Network n = i.importData(ds, NetworkFactory.findDefault(), params);
         return n;
