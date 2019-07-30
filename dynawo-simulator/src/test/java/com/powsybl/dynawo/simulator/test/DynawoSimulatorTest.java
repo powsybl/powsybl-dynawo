@@ -27,7 +27,6 @@ import com.powsybl.commons.datasource.ReadOnlyDataSource;
 import com.powsybl.dynawo.simulator.DynawoSimulator;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.NetworkFactory;
-import com.powsybl.iidm.xml.XMLExporter;
 import com.powsybl.simulation.ImpactAnalysisResult;
 import com.powsybl.triplestore.api.TripleStoreFactory;
 
