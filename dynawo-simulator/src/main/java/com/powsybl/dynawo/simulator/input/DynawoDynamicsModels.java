@@ -73,36 +73,43 @@ public class DynawoDynamicsModels {
     private void omegaRefDynamicsModels(StringBuilder builder, int id) {
         builder.append(String.join(System.lineSeparator(),
             "  <dyn:blackBoxModel id=\"OMEGA_REF\" lib=\"DYNModelOmegaRef\" parFile=\"dynawoModel.par\" parId=\"" + id
-                + "\" />") + System.lineSeparator());
+                + "\" />")
+            + System.lineSeparator());
     }
 
     private void eventDynamicsModels(StringBuilder builder, int id) {
         builder.append(String.join(System.lineSeparator(),
             "  <dyn:blackBoxModel id=\"DISCONNCET_LINE\" lib=\"EventQuadripoleDisconnection\" parFile=\"dynawoModel.par\" parId=\""
-                + id + "\" />") + System.lineSeparator());
+                + id + "\" />")
+            + System.lineSeparator());
     }
 
     private void loadDynamicsModels(Load l, StringBuilder builder, int id) {
         builder.append(String.join(System.lineSeparator(),
             "  <dyn:blackBoxModel id=\"" + l.getId() + "\" lib=\"LoadAlphaBeta\" parFile=\"dynawoModel.par\" parId=\""
-                + id + "\" staticId=\"" + l.getId() + "\" />") + System.lineSeparator());
+                + id + "\" staticId=\"" + l.getId() + "\" />")
+            + System.lineSeparator());
     }
 
     private void genDynamicsModels(Generator g, StringBuilder builder, int id) {
         builder.append(String.join(System.lineSeparator(),
             "  <dyn:blackBoxModel id=\"" + g.getId()
                 + "\" lib=\"GeneratorSynchronousFourWindingsProportionalRegulations\" parFile=\"dynawoModel.par\" parId=\""
-                + id + "\" staticId=\"" + g.getId() + "\" />") + System.lineSeparator());
+                + id + "\" staticId=\"" + g.getId() + "\" />")
+            + System.lineSeparator());
     }
 
     private void loadConnections(Load l, StringBuilder builder) {
         builder.append(String.join(System.lineSeparator(),
             "  <dyn:connect id1=\"" + l.getId() + "\" var1=\"load_terminal\" id2=\"NETWORK\" var2=\""
-                + l.getTerminal().getBusBreakerView().getBus().getId() + "_ACPIN\"/>") + System.lineSeparator());
+                + l.getTerminal().getBusBreakerView().getBus().getId() + "_ACPIN\"/>")
+            + System.lineSeparator());
     }
 
     private void genConnections(Generator g, StringBuilder builder, int grp) {
-        if (grp >= 5) return;
+        if (grp >= 5) {
+            return;
+        }
 
         builder.append(String.join(System.lineSeparator(),
             "  <dyn:connect id1=\"OMEGA_REF\" var1=\"omega_grp_" + grp + "\" id2=\"" + g.getId()
@@ -116,7 +123,8 @@ public class DynawoDynamicsModels {
             "  <dyn:connect id1=\"" + g.getId() + "\" var1=\"generator_terminal\" id2=\"NETWORK\" var2=\"@" + g.getId()
                 + "@@NODE@_ACPIN\"/>",
             "  <dyn:connect id1=\"" + g.getId() + "\" var1=\"generator_switchOffSignal1\" id2=\"NETWORK\" var2=\"@"
-                + g.getId() + "@@NODE@_switchOff\"/>") + System.lineSeparator());
+                + g.getId() + "@@NODE@_switchOff\"/>")
+            + System.lineSeparator());
     }
 
     private final Network network;
