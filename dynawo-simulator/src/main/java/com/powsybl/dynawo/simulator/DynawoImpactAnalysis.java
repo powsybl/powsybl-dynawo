@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
@@ -84,7 +85,9 @@ public class DynawoImpactAnalysis implements ImpactAnalysis {
         if (network != null) {
             Path jobsFile = workingDir.resolve("dynawoModel.jobs");
             XMLExporter xmlExporter = new XMLExporter(platformConfig);
-            xmlExporter.export(network, null, new FileDataSource(workingDir, "dynawoModel"));
+            Properties params = new Properties();
+            params.put("iidm.export.xml.extensions", "null");
+            xmlExporter.export(network, params, new FileDataSource(workingDir, "dynawoModel"));
             // Exporter uses xiidm extension, dynawo expects iidm extension
             // Error in dynawo beacause substation is exported without country field
             try {

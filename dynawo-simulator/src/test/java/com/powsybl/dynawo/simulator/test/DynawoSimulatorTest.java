@@ -51,7 +51,7 @@ public class DynawoSimulatorTest {
         Files.createDirectory(fs.getPath("/workingPath"));
         Files.createDirectories(fs.getPath("/tmp"));
         MapModuleConfig moduleConfig = platformConfig.createModuleConfig("import-export-parameters-default-value");
-        moduleConfig.setStringProperty("iidm.export.xml.skip-extensions", "true");
+        moduleConfig.setStringProperty("iidm.export.xml.extensions", "null");
         moduleConfig = platformConfig.createModuleConfig("computation-local");
         moduleConfig.setStringProperty("tmpDir", "/tmp");
         moduleConfig = platformConfig.createModuleConfig("dynawo");
@@ -75,7 +75,6 @@ public class DynawoSimulatorTest {
         Properties params = new Properties();
         params.put("storeCgmesModelAsNetworkExtension", "true");
         params.put("powsyblTripleStore", impl);
-        params.put(XMLExporter.SKIP_EXTENSIONS, "true");
         ReadOnlyDataSource ds = gm.dataSource();
         Network n = i.importData(ds, NetworkFactory.findDefault(), params);
         return n;
