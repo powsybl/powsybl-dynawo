@@ -93,12 +93,11 @@ public class DynawoImpactAnalysis implements ImpactAnalysis {
             try {
                 Files.move(workingDir.resolve("dynawoModel.xiidm"), workingDir.resolve("dynawoModel.iidm"));
             } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                LOGGER.error("Error in file dynawoModel.iidm");
             }
             dynawoJobsFile = jobsFile.toAbsolutePath().toString();
         }
-        LOG.info("cmd {} jobs {}", config.getDynawoCptCommandName(), dynawoJobsFile);
+        LOGGER.info("cmd {} jobs {}", config.getDynawoCptCommandName(), dynawoJobsFile);
         return createCommand(dynawoJobsFile);
     }
 
@@ -169,5 +168,6 @@ public class DynawoImpactAnalysis implements ImpactAnalysis {
     private final int priority;
     private final PlatformConfig platformConfig;
     private final DynawoConfig config;
-    private static final Logger LOG = LoggerFactory.getLogger(DynawoImpactAnalysis.class);
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(DynawoImpactAnalysis.class);
 }

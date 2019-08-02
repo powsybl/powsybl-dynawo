@@ -11,8 +11,6 @@ import java.util.Map;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Options;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.auto.service.AutoService;
 import com.powsybl.commons.config.ComponentDefaultConfig;
@@ -30,8 +28,6 @@ import com.powsybl.tools.ToolRunningContext;
 
 @AutoService(Tool.class)
 public class DynawoSimulatorTool implements Tool {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(DynawoSimulatorTool.class);
 
     @Override
     public Command getCommand() {
@@ -54,8 +50,7 @@ public class DynawoSimulatorTool implements Tool {
 
             @Override
             public Options getOptions() {
-                Options options = new Options();
-                return options;
+                return new Options();
             }
 
             @Override

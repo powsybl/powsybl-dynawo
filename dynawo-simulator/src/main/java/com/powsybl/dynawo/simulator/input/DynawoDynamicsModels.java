@@ -12,14 +12,20 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.powsybl.iidm.network.Generator;
 import com.powsybl.iidm.network.Load;
 import com.powsybl.iidm.network.Network;
 
 public class DynawoDynamicsModels {
 
-    public DynawoDynamicsModels(Network network) {
-        this.network = network;
+    private static final String NETWORK = "NETWORK";
+    private static final String OMEGA_REF = "OMEGA_REF";
+
+    public DynawoDynamicsModels(Network n) {
+        this.n = n;
     }
 
     public void prepareFile(Path workingDir) {
@@ -27,42 +33,29 @@ public class DynawoDynamicsModels {
         try (Writer writer = Files.newBufferedWriter(parFile, StandardCharsets.UTF_8)) {
             writer.write(String.join(System.lineSeparator(), dynamicsModels()));
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            LOGGER.error("Error in file dynawoModel.dyd");
         }
     }
 
     private CharSequence dynamicsModels() {
         StringBuilder builder = new StringBuilder();
         builder.append(String.join(System.lineSeparator(),
-            "<?xml version='1.0' encoding='UTF-8'?>",
-            "<!--",
-            "    Copyright (c) 2015-2019, RTE (http://www.rte-france.com)",
-            "    See AUTHORS.txt",
-            "    All rights reserved.",
-            "    This Source Code Form is subject to the terms of the Mozilla Public",
-            "    License, v. 2.0. If a copy of the MPL was not distributed with this",
-            "    file, you can obtain one at http://mozilla.org/MPL/2.0/.",
-            "    SPDX-License-Identifier: MPL-2.0",
-            "",
-            "    This file is part of Dynawo, an hybrid C++/Modelica open source time domain",
-            "    simulation tool for power systems.",
-            "-->",
+            DynawoInput.setInputHeader(),
             "<dyn:dynamicModelsArchitecture xmlns:dyn=\"http://www.rte-france.com/dynawo\">") + System.lineSeparator());
         int id = 2;
-        for (Load l : network.getLoads()) {
+        for (Load l : n.getLoads()) {
             loadDynamicsModels(l, builder, id++);
         }
-        for (Generator g : network.getGenerators()) {
+        for (Generator g : n.getGenerators()) {
             genDynamicsModels(g, builder, id++);
         }
         omegaRefDynamicsModels(builder, id++);
-        eventDynamicsModels(builder, id++);
-        for (Load l : network.getLoads()) {
+        eventDynamicsModels(builder, id);
+        for (Load l : n.getLoads()) {
             loadConnections(l, builder);
         }
         int grp = 0;
-        for (Generator g : network.getGenerators()) {
+        for (Generator g : n.getGenerators()) {
             genConnections(g, builder, grp++);
         }
         builder.append(String.join(System.lineSeparator(),
@@ -72,37 +65,32 @@ public class DynawoDynamicsModels {
 
     private void omegaRefDynamicsModels(StringBuilder builder, int id) {
         builder.append(String.join(System.lineSeparator(),
-            "  <dyn:blackBoxModel id=\"OMEGA_REF\" lib=\"DYNModelOmegaRef\" parFile=\"dynawoModel.par\" parId=\"" + id
-                + "\" />")
+            setBlackBoxModel(OMEGA_REF, "DYNModelOmegaRef", id))
             + System.lineSeparator());
     }
 
     private void eventDynamicsModels(StringBuilder builder, int id) {
         builder.append(String.join(System.lineSeparator(),
-            "  <dyn:blackBoxModel id=\"DISCONNCET_LINE\" lib=\"EventQuadripoleDisconnection\" parFile=\"dynawoModel.par\" parId=\""
-                + id + "\" />")
+            setBlackBoxModel("DISCONNECT_LINE", "EventQuadripoleDisconnection", id))
             + System.lineSeparator());
     }
 
     private void loadDynamicsModels(Load l, StringBuilder builder, int id) {
         builder.append(String.join(System.lineSeparator(),
-            "  <dyn:blackBoxModel id=\"" + l.getId() + "\" lib=\"LoadAlphaBeta\" parFile=\"dynawoModel.par\" parId=\""
-                + id + "\" staticId=\"" + l.getId() + "\" />")
+            setBlackBoxModel(l.getId(), "LoadAlphaBeta", id, l.getId()))
             + System.lineSeparator());
     }
 
     private void genDynamicsModels(Generator g, StringBuilder builder, int id) {
         builder.append(String.join(System.lineSeparator(),
-            "  <dyn:blackBoxModel id=\"" + g.getId()
-                + "\" lib=\"GeneratorSynchronousFourWindingsProportionalRegulations\" parFile=\"dynawoModel.par\" parId=\""
-                + id + "\" staticId=\"" + g.getId() + "\" />")
+            setBlackBoxModel(g.getId(), "GeneratorSynchronousFourWindingsProportionalRegulations", id, g.getId()))
             + System.lineSeparator());
     }
 
     private void loadConnections(Load l, StringBuilder builder) {
         builder.append(String.join(System.lineSeparator(),
-            "  <dyn:connect id1=\"" + l.getId() + "\" var1=\"load_terminal\" id2=\"NETWORK\" var2=\""
-                + l.getTerminal().getBusBreakerView().getBus().getId() + "_ACPIN\"/>")
+            setConnection(l.getId(), "load_terminal", NETWORK,
+                l.getTerminal().getBusBreakerView().getBus().getId() + "_ACPIN"))
             + System.lineSeparator());
     }
 
@@ -112,20 +100,30 @@ public class DynawoDynamicsModels {
         }
 
         builder.append(String.join(System.lineSeparator(),
-            "  <dyn:connect id1=\"OMEGA_REF\" var1=\"omega_grp_" + grp + "\" id2=\"" + g.getId()
-                + "\" var2=\"generator_omegaPu\"/>",
-            "  <dyn:connect id1=\"OMEGA_REF\" var1=\"omegaRef_grp_" + grp + "\" id2=\"" + g.getId()
-                + "\" var2=\"generator_omegaRefPu\"/>",
-            "  <dyn:connect id1=\"OMEGA_REF\" var1=\"numcc_node_" + grp + "\" id2=\"NETWORK\" var2=\"@" + g.getId()
-                + "@@NODE@_numcc\"/>",
-            "  <dyn:connect id1=\"OMEGA_REF\" var1=\"running_grp_" + grp + "\" id2=\"" + g.getId()
-                + "\" var2=\"generator_running\"/>",
-            "  <dyn:connect id1=\"" + g.getId() + "\" var1=\"generator_terminal\" id2=\"NETWORK\" var2=\"@" + g.getId()
-                + "@@NODE@_ACPIN\"/>",
-            "  <dyn:connect id1=\"" + g.getId() + "\" var1=\"generator_switchOffSignal1\" id2=\"NETWORK\" var2=\"@"
-                + g.getId() + "@@NODE@_switchOff\"/>")
+            setConnection(OMEGA_REF, "omega_grp_" + grp, g.getId(), "generator_omegaPu"),
+            setConnection(OMEGA_REF, "omegaRef_grp_" + grp, g.getId(), "generator_omegaRefPu"),
+            setConnection(OMEGA_REF, "numcc_node_" + grp, NETWORK, "@" + g.getId() + "@@NODE@_numcc"),
+            setConnection(OMEGA_REF, "running_grp_" + grp, g.getId(), "generator_running"),
+            setConnection(g.getId(), "generator_terminal", NETWORK, "@" + g.getId() + "@@NODE@_ACPIN"),
+            setConnection(g.getId(), "generator_switchOffSignal1", NETWORK, "@" + g.getId() + "@@NODE@_switchOff"))
             + System.lineSeparator());
     }
 
-    private final Network network;
+    private String setBlackBoxModel(String id, String lib, int parId) {
+        return "  <dyn:blackBoxModel id=\"" + id + "\" lib=\"" + lib + "\" parFile=\"dynawoModel.par\" parId=\"" + parId
+            + "\" />";
+    }
+
+    private String setBlackBoxModel(String id, String lib, int parId, String staticId) {
+        return "  <dyn:blackBoxModel id=\"" + id + "\" lib=\"" + lib + "\" parFile=\"dynawoModel.par\" parId=\"" + parId
+            + "\" staticId=\"" + staticId + "\" />";
+    }
+
+    private String setConnection(String id1, String var1, String id2, String var2) {
+        return "  <dyn:connect id1=\"" + id1 + "\" var1=\"" + var1 + "\" id2=\"" + id2 + "\" var2=\"" + var2 + "\"/>";
+    }
+
+    private final Network n;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(DynawoDynamicsModels.class);
 }

@@ -12,11 +12,18 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.powsybl.iidm.network.Generator;
 import com.powsybl.iidm.network.Load;
 import com.powsybl.iidm.network.Network;
 
 public class DynawoSimulationParameters {
+
+    private static final String DOUBLE = "DOUBLE";
+    private static final String BOOLEAN = "BOOL";
+    private static final String IIDM = "IIDM";
 
     public DynawoSimulationParameters(Network network) {
         this.network = network;
@@ -27,27 +34,14 @@ public class DynawoSimulationParameters {
         try (Writer writer = Files.newBufferedWriter(parFile, StandardCharsets.UTF_8)) {
             writer.write(String.join(System.lineSeparator(), parameters()));
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            LOGGER.error("Error in file dynawoModel.par");
         }
     }
 
     private CharSequence parameters() {
         StringBuilder builder = new StringBuilder();
         builder.append(String.join(System.lineSeparator(),
-            "<?xml version='1.0' encoding='UTF-8'?>",
-            "<!--",
-            "    Copyright (c) 2015-2019, RTE (http://www.rte-france.com)",
-            "    See AUTHORS.txt",
-            "    All rights reserved.",
-            "    This Source Code Form is subject to the terms of the Mozilla Public",
-            "    License, v. 2.0. If a copy of the MPL was not distributed with this",
-            "    file, you can obtain one at http://mozilla.org/MPL/2.0/.",
-            "    SPDX-License-Identifier: MPL-2.0",
-            "",
-            "    This file is part of Dynawo, an hybrid C++/Modelica open source time domain",
-            "    simulation tool for power systems.",
-            "-->",
+            DynawoInput.setInputHeader(),
             "<parametersSet xmlns=\"http://www.rte-france.com/dynawo\">") + System.lineSeparator());
         int id = 1;
         openSet(builder, id++);
@@ -55,18 +49,18 @@ public class DynawoSimulationParameters {
         closeSet(builder);
         for (Load l : network.getLoads()) {
             openSet(builder, id++);
-            loadParameters(l, builder);
+            loadParameters(builder);
             closeSet(builder);
         }
         for (Generator g : network.getGenerators()) {
             openSet(builder, id++);
-            genParameters(g, builder);
+            genParameters(builder);
             closeSet(builder);
         }
         openSet(builder, id++);
         omegaRefParameters(builder);
         closeSet(builder);
-        openSet(builder, id++);
+        openSet(builder, id);
         eventParameters(builder);
         closeSet(builder);
         builder.append(String.join(System.lineSeparator(),
@@ -86,98 +80,108 @@ public class DynawoSimulationParameters {
 
     private void omegaRefParameters(StringBuilder builder) {
         builder.append(String.join(System.lineSeparator(),
-            "    <par type=\"INT\" name=\"nbGen\" value=\"5\"/>",
-            "    <par type=\"DOUBLE\" name=\"weight_gen_0\" value=\"1211\"/>",
-            "    <par type=\"DOUBLE\" name=\"weight_gen_1\" value=\"1120\"/>",
-            "    <par type=\"DOUBLE\" name=\"weight_gen_2\" value=\"1650\"/>",
-            "    <par type=\"DOUBLE\" name=\"weight_gen_3\" value=\"80\"/>",
-            "    <par type=\"DOUBLE\" name=\"weight_gen_4\" value=\"250\"/>") + System.lineSeparator());
+            setParameter("INT", "nbGen", "5"),
+            setParameter(DOUBLE, "weight_gen_0", "1211"),
+            setParameter(DOUBLE, "weight_gen_1", "1120"),
+            setParameter(DOUBLE, "weight_gen_2", "1650"),
+            setParameter(DOUBLE, "weight_gen_3", "80"),
+            setParameter(DOUBLE, "weight_gen_4", "250")) + System.lineSeparator());
     }
 
     private void globalParameters(StringBuilder builder) {
         builder.append(String.join(System.lineSeparator(),
-            "    <par type=\"DOUBLE\" name=\"capacitor_no_reclosing_delay\" value=\"300\"/>",
-            "    <par type=\"DOUBLE\" name=\"dangling_line_currentLimit_maxTimeOperation\" value=\"90\"/>",
-            "    <par type=\"DOUBLE\" name=\"line_currentLimit_maxTimeOperation\" value=\"90\"/>",
-            "    <par type=\"DOUBLE\" name=\"load_Tp\" value=\"90\"/>",
-            "    <par type=\"DOUBLE\" name=\"load_Tq\" value=\"90\"/>",
-            "    <par type=\"DOUBLE\" name=\"load_alpha\" value=\"1\"/>",
-            "    <par type=\"DOUBLE\" name=\"load_alphaLong\" value=\"0\"/>",
-            "    <par type=\"DOUBLE\" name=\"load_beta\" value=\"2\"/>",
-            "    <par type=\"DOUBLE\" name=\"load_betaLong\" value=\"0\"/>",
-            "    <par type=\"BOOL\" name=\"load_isControllable\" value=\"false\"/>",
-            "    <par type=\"BOOL\" name=\"load_isRestorative\" value=\"false\"/>",
-            "    <par type=\"DOUBLE\" name=\"load_zPMax\" value=\"100\"/>",
-            "    <par type=\"DOUBLE\" name=\"load_zQMax\" value=\"100\"/>",
-            "    <par type=\"DOUBLE\" name=\"reactance_no_reclosing_delay\" value=\"0\"/>",
-            "    <par type=\"DOUBLE\" name=\"transformer_currentLimit_maxTimeOperation\" value=\"90\"/>",
-            "    <par type=\"DOUBLE\" name=\"transformer_t1st_HT\" value=\"60\"/>",
-            "    <par type=\"DOUBLE\" name=\"transformer_t1st_THT\" value=\"30\"/>",
-            "    <par type=\"DOUBLE\" name=\"transformer_tNext_HT\" value=\"10\"/>",
-            "    <par type=\"DOUBLE\" name=\"transformer_tNext_THT\" value=\"10\"/>",
-            "    <par type=\"DOUBLE\" name=\"transformer_tolV\" value=\"0.014999999700000001\"/>") + System.lineSeparator());
+            setParameter(DOUBLE, "capacitor_no_reclosing_delay", "300"),
+            setParameter(DOUBLE, "dangling_line_currentLimit_maxTimeOperation", "90"),
+            setParameter(DOUBLE, "line_currentLimit_maxTimeOperation", "90"),
+            setParameter(DOUBLE, "load_Tp", "90"),
+            setParameter(DOUBLE, "load_Tq", "90"),
+            setParameter(DOUBLE, "load_alpha", "1"),
+            setParameter(DOUBLE, "load_alphaLong", "0"),
+            setParameter(DOUBLE, "load_beta", "2"),
+            setParameter(DOUBLE, "load_betaLong", "0"),
+            setParameter(BOOLEAN, "load_isControllable", "false"),
+            setParameter(BOOLEAN, "load_isRestorative", "false"),
+            setParameter(DOUBLE, "load_zPMax", "100"),
+            setParameter(DOUBLE, "load_zQMax", "100"),
+            setParameter(DOUBLE, "reactance_no_reclosing_delay", "0"),
+            setParameter(DOUBLE, "transformer_currentLimit_maxTimeOperation", "90"),
+            setParameter(DOUBLE, "transformer_t1st_HT", "60"),
+            setParameter(DOUBLE, "transformer_t1st_THT", "30"),
+            setParameter(DOUBLE, "transformer_tNext_HT", "10"),
+            setParameter(DOUBLE, "transformer_tNext_THT", "10"),
+            setParameter(DOUBLE, "transformer_tolV", "0.014999999700000001")) + System.lineSeparator());
     }
 
     private void eventParameters(StringBuilder builder) {
         builder.append(String.join(System.lineSeparator(),
-            "    <par type=\"DOUBLE\" name=\"event_tEvent\" value=\"1\"/>",
-            "    <par type=\"BOOL\" name=\"event_disconnectOrigin\" value=\"false\"/>",
-            "    <par type=\"BOOL\" name=\"event_disconnectExtremity\" value=\"true\"/>") + System.lineSeparator());
+            setParameter(DOUBLE, "event_tEvent", "1"),
+            setParameter(BOOLEAN, "event_disconnectOrigin", "false"),
+            setParameter(BOOLEAN, "event_disconnectExtremity", "true")) + System.lineSeparator());
     }
 
-    private void loadParameters(Load l, StringBuilder builder) {
+    private void loadParameters(StringBuilder builder) {
         builder.append(String.join(System.lineSeparator(),
-            "    <par type=\"DOUBLE\" name=\"load_alpha\" value=\"1.5\"/>",
-            "    <par type=\"DOUBLE\" name=\"load_beta\" value=\"2.5\"/>",
-            "    <reference type=\"DOUBLE\" name=\"load_P0Pu\" origData=\"IIDM\" origName=\"p_pu\"/>",
-            "    <reference type=\"DOUBLE\" name=\"load_Q0Pu\" origData=\"IIDM\" origName=\"q_pu\"/>",
-            "    <reference type=\"DOUBLE\" name=\"load_U0Pu\" origData=\"IIDM\" origName=\"v_pu\"/>",
-            "    <reference type=\"DOUBLE\" name=\"load_UPhase0\" origData=\"IIDM\" origName=\"angle_pu\"/>") + System.lineSeparator());
+            setParameter(DOUBLE, "load_alpha", "1.5"),
+            setParameter(DOUBLE, "load_beta", "2.5"),
+            setReference("load_P0Pu", IIDM, "p_pu", DOUBLE),
+            setReference("load_Q0Pu", IIDM, "q_pu", DOUBLE),
+            setReference("load_UPhase0", IIDM, "v_pu", DOUBLE),
+            setReference("generator_P0Pu", IIDM, "angle_pu", DOUBLE)) + System.lineSeparator());
     }
 
-    private void genParameters(Generator g, StringBuilder builder) {
+    private void genParameters(StringBuilder builder) {
         builder.append(String.join(System.lineSeparator(),
-            "    <par type=\"INT\" name=\"generator_ExcitationPu\" value=\"1\"/>",
-            "    <par type=\"DOUBLE\" name=\"generator_DPu\" value=\"0\"/>",
-            "    <par type=\"DOUBLE\" name=\"generator_H\" value=\"5.4000000000000004\"/>",
-            "    <par type=\"DOUBLE\" name=\"generator_RaPu\" value=\"0.0027959999999999999\"/>",
-            "    <par type=\"DOUBLE\" name=\"generator_XlPu\" value=\"0.20200000000000001\"/>",
-            "    <par type=\"DOUBLE\" name=\"generator_XdPu\" value=\"2.2200000000000002\"/>",
-            "    <par type=\"DOUBLE\" name=\"generator_XpdPu\" value=\"0.38400000000000001\"/>",
-            "    <par type=\"DOUBLE\" name=\"generator_XppdPu\" value=\"0.26400000000000001\"/>",
-            "    <par type=\"DOUBLE\" name=\"generator_Tpd0\" value=\"8.0939999999999994\"/>",
-            "    <par type=\"DOUBLE\" name=\"generator_Tppd0\" value=\"0.080000000000000002\"/>",
-            "    <par type=\"DOUBLE\" name=\"generator_XqPu\" value=\"2.2200000000000002\"/>",
-            "    <par type=\"DOUBLE\" name=\"generator_XpqPu\" value=\"0.39300000000000002\"/>",
-            "    <par type=\"DOUBLE\" name=\"generator_XppqPu\" value=\"0.26200000000000001\"/>",
-            "    <par type=\"DOUBLE\" name=\"generator_Tpq0\" value=\"1.5720000000000001\"/>",
-            "    <par type=\"DOUBLE\" name=\"generator_Tppq0\" value=\"0.084000000000000005\"/>",
-            "    <par type=\"DOUBLE\" name=\"generator_UNom\" value=\"24\"/>",
-            "    <par type=\"DOUBLE\" name=\"generator_SNom\" value=\"1211\"/>",
-            "    <par type=\"DOUBLE\" name=\"generator_PNom\" value=\"1090\"/>",
-            "    <par type=\"DOUBLE\" name=\"generator_SnTfo\" value=\"1211\"/>",
-            "    <par type=\"DOUBLE\" name=\"generator_UNomHV\" value=\"69\"/>",
-            "    <par type=\"DOUBLE\" name=\"generator_UNomLV\" value=\"24\"/>",
-            "    <par type=\"DOUBLE\" name=\"generator_UBaseHV\" value=\"69\"/>",
-            "    <par type=\"DOUBLE\" name=\"generator_UBaseLV\" value=\"24\"/>",
-            "    <par type=\"DOUBLE\" name=\"generator_RTfPu\" value=\"0.0\"/>",
-            "    <par type=\"DOUBLE\" name=\"generator_XTfPu\" value=\"0.1\"/>",
-            "    <par type=\"DOUBLE\" name=\"voltageRegulator_LagEfdMax\" value=\"0\"/>",
-            "    <par type=\"DOUBLE\" name=\"voltageRegulator_LagEfdMin\" value=\"0\"/>",
-            "    <par type=\"DOUBLE\" name=\"voltageRegulator_EfdMinPu\" value=\"-5\"/>",
-            "    <par type=\"DOUBLE\" name=\"voltageRegulator_EfdMaxPu\" value=\"5\"/>",
-            "    <par type=\"DOUBLE\" name=\"voltageRegulator_Gain\" value=\"20\"/>",
-            "    <par type=\"DOUBLE\" name=\"governor_KGover\" value=\"5\"/>",
-            "    <par type=\"DOUBLE\" name=\"governor_PMin\" value=\"0\"/>",
-            "    <par type=\"DOUBLE\" name=\"governor_PMax\" value=\"1090\"/>",
-            "    <par type=\"DOUBLE\" name=\"governor_PNom\" value=\"1090\"/>",
-            "    <par type=\"DOUBLE\" name=\"URef_ValueIn\" value=\"0\"/>",
-            "    <par type=\"DOUBLE\" name=\"Pm_ValueIn\" value=\"0\"/>",
-            "    <reference name=\"generator_P0Pu\" origData=\"IIDM\" origName=\"p_pu\" type=\"DOUBLE\"/>",
-            "    <reference name=\"generator_Q0Pu\" origData=\"IIDM\" origName=\"q_pu\" type=\"DOUBLE\"/>",
-            "    <reference name=\"generator_U0Pu\" origData=\"IIDM\" origName=\"v_pu\" type=\"DOUBLE\"/>",
-            "    <reference name=\"generator_UPhase0\" origData=\"IIDM\" origName=\"angle_pu\" type=\"DOUBLE\"/>") + System.lineSeparator());
+            setParameter("INT", "generator_ExcitationPu", "1"),
+            setParameter(DOUBLE, "generator_DPu", "0"),
+            setParameter(DOUBLE, "generator_H", "5.4000000000000004"),
+            setParameter(DOUBLE, "generator_RaPu", "0.0027959999999999999"),
+            setParameter(DOUBLE, "generator_XlPu", "0.20200000000000001"),
+            setParameter(DOUBLE, "generator_XdPu", "2.2200000000000002"),
+            setParameter(DOUBLE, "generator_XpdPu", "0.38400000000000001"),
+            setParameter(DOUBLE, "generator_XppdPu", "0.26400000000000001"),
+            setParameter(DOUBLE, "generator_Tpd0", "8.0939999999999994"),
+            setParameter(DOUBLE, "generator_Tppd0", "0.080000000000000002"),
+            setParameter(DOUBLE, "generator_XqPu", "2.2200000000000002"),
+            setParameter(DOUBLE, "generator_XpqPu", "0.39300000000000002"),
+            setParameter(DOUBLE, "generator_XppqPu", "0.26200000000000001"),
+            setParameter(DOUBLE, "generator_Tpq0", "1.5720000000000001"),
+            setParameter(DOUBLE, "generator_Tppq0", "0.084000000000000005"),
+            setParameter(DOUBLE, "generator_UNom", "24"),
+            setParameter(DOUBLE, "generator_SNom", "1211"),
+            setParameter(DOUBLE, "generator_PNom", "1090"),
+            setParameter(DOUBLE, "generator_SnTfo", "1211"),
+            setParameter(DOUBLE, "generator_UNomHV", "69"),
+            setParameter(DOUBLE, "generator_UNomLV", "24"),
+            setParameter(DOUBLE, "generator_UBaseHV", "69"),
+            setParameter(DOUBLE, "generator_UBaseLV", "24"),
+            setParameter(DOUBLE, "generator_RTfPu", "0.0"),
+            setParameter(DOUBLE, "generator_XTfPu", "0.1"),
+            setParameter(DOUBLE, "voltageRegulator_LagEfdMax", "0"),
+            setParameter(DOUBLE, "voltageRegulator_LagEfdMin", "0"),
+            setParameter(DOUBLE, "voltageRegulator_EfdMinPu", "-5"),
+            setParameter(DOUBLE, "voltageRegulator_EfdMaxPu", "5"),
+            setParameter(DOUBLE, "voltageRegulator_Gain", "20"),
+            setParameter(DOUBLE, "governor_KGover", "5"),
+            setParameter(DOUBLE, "governor_PMin", "0"),
+            setParameter(DOUBLE, "governor_PMax", "1090"),
+            setParameter(DOUBLE, "governor_PNom", "1090"),
+            setParameter(DOUBLE, "URef_ValueIn", "0"),
+            setParameter(DOUBLE, "Pm_ValueIn", "0"),
+            setReference("generator_P0Pu", IIDM, "p_pu", DOUBLE),
+            setReference("generator_Q0Pu", IIDM, "q_pu", DOUBLE),
+            setReference("generator_U0Pu", IIDM, "v_pu", DOUBLE),
+            setReference("generator_UPhase0", IIDM, "angle_pu", DOUBLE)) + System.lineSeparator());
+    }
+
+    private String setParameter(String type, String name, String value) {
+        return "    <par type=\"" + type + "\" name=\"" + name + "\" value=\"" + value + "\"/>";
+    }
+
+    private String setReference(String name, String origData, String origName, String type) {
+        return "    <reference name=\"" + name + "\" origData=\"" + origData + "\" origName=\"" + origName + "\" type=\"" + type + "\"/>";
     }
 
     private final Network network;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(DynawoSimulationParameters.class);
 }

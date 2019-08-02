@@ -12,9 +12,14 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.powsybl.iidm.network.Network;
 
 public class DynawoSolverParameters {
+
+    private static final String DOUBLE = "DOUBLE";
 
     public DynawoSolverParameters(Network network) {
         this.network = network;
@@ -25,82 +30,83 @@ public class DynawoSolverParameters {
         try (Writer writer = Files.newBufferedWriter(parFile, StandardCharsets.UTF_8)) {
             writer.write(String.join(System.lineSeparator(), parameters()));
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            LOGGER.error("Error in file solvers.par");
         }
     }
 
     private CharSequence parameters() {
         StringBuilder builder = new StringBuilder();
         builder.append(String.join(System.lineSeparator(),
-            "<?xml version='1.0' encoding='UTF-8'?>",
-            "<!--",
-            "    Copyright (c) 2015-2019, RTE (http://www.rte-france.com)",
-            "    See AUTHORS.txt",
-            "    All rights reserved.",
-            "    This Source Code Form is subject to the terms of the Mozilla Public",
-            "    License, v. 2.0. If a copy of the MPL was not distributed with this",
-            "    file, you can obtain one at http://mozilla.org/MPL/2.0/.",
-            "    SPDX-License-Identifier: MPL-2.0",
-            "",
-            "    This file is part of Dynawo, an hybrid C++/Modelica open source time domain",
-            "    simulation tool for power systems.",
-            "-->",
+            DynawoInput.setInputHeader(),
             "<parametersSet xmlns=\"http://www.rte-france.com/dynawo\">",
             "  <!-- IDA order 1 solver-->",
-            "  <set id=\"1\">",
-            "    <par type=\"INT\" name=\"order\" value=\"1\"/>",
-            "    <par type=\"DOUBLE\" name=\"initStep\" value=\"0.000001\"/>",
-            "    <par type=\"DOUBLE\" name=\"minStep\" value=\"0.000001\"/>",
-            "    <par type=\"DOUBLE\" name=\"maxStep\" value=\"10\"/>",
-            "    <par type=\"DOUBLE\" name=\"absAccuracy\" value=\"1e-4\"/>",
-            "    <par type=\"DOUBLE\" name=\"relAccuracy\" value=\"1e-4\"/>",
-            "  </set>",
+            openSet(1),
+            setParameter(DOUBLE, "order", "1"),
+            setParameter(DOUBLE, "initStep", "0.000001"),
+            setParameter(DOUBLE, "minStep", "0.000001"),
+            setParameter(DOUBLE, "maxStep", "10"),
+            setParameter(DOUBLE, "absAccuracy", "1e-4"),
+            setParameter(DOUBLE, "relAccuracy", "1e-4"),
+            closeSet(),
             "  <!-- IDA order 2 solver -->",
-            "  <set id=\"2\">",
-            "    <par type=\"INT\" name=\"order\" value=\"2\"/>",
-            "    <par type=\"DOUBLE\" name=\"initStep\" value=\"0.000001\"/>",
-            "    <par type=\"DOUBLE\" name=\"minStep\" value=\"0.000001\"/>",
-            "    <par type=\"DOUBLE\" name=\"maxStep\" value=\"10\"/>",
-            "    <par type=\"DOUBLE\" name=\"absAccuracy\" value=\"1e-4\"/>",
-            "    <par type=\"DOUBLE\" name=\"relAccuracy\" value=\"1e-4\"/>",
-            "  </set>",
+            openSet(2),
+            setParameter(DOUBLE, "order", "2"),
+            setParameter(DOUBLE, "initStep", "0.000001"),
+            setParameter(DOUBLE, "minStep", "0.000001"),
+            setParameter(DOUBLE, "maxStep", "10"),
+            setParameter(DOUBLE, "absAccuracy", "1e-4"),
+            setParameter(DOUBLE, "relAccuracy", "1e-4"),
+            closeSet(),
             "  <!-- Simplified solver without step recalculation -->",
-            "  <set id=\"3\">",
-            "    <par type=\"DOUBLE\" name=\"hMin\" value=\"0.000001\"/>",
-            "    <par type=\"DOUBLE\" name=\"hMax\" value=\"1\"/>",
-            "    <par type=\"DOUBLE\" name=\"kReduceStep\" value=\"0.5\"/>",
-            "    <par type=\"INT\" name=\"nEff\" value=\"10\"/>",
-            "    <par type=\"INT\" name=\"nDeadband\" value=\"2\"/>",
-            "    <par type=\"INT\" name=\"maxRootRestart\" value=\"3\"/>",
-            "    <par type=\"INT\" name=\"maxNewtonTry\" value=\"10\"/>",
-            "    <par type=\"STRING\" name=\"linearSolverName\" value=\"KLU\"/>",
-            "    <par type=\"BOOL\" name=\"recalculateStep\" value=\"false\"/>",
-            "  </set>",
+            openSet(3),
+            setParameter(DOUBLE, "hMin", "0.000001"),
+            setParameter(DOUBLE, "hMax", "1"),
+            setParameter(DOUBLE, "kReduceStep", "0.5"),
+            setParameter(DOUBLE, "nEff", "10"),
+            setParameter(DOUBLE, "nDeadband", "2"),
+            setParameter(DOUBLE, "maxRootRestart", "3"),
+            setParameter(DOUBLE, "maxNewtonTry", "10"),
+            setParameter(DOUBLE, "linearSolverName", "KLU"),
+            setParameter(DOUBLE, "recalculateStep", "false"),
+            closeSet(),
             "  <!-- Simplified solver with step recalculation -->",
-            "  <set id=\"4\">",
-            "    <par type=\"DOUBLE\" name=\"hMin\" value=\"0.000001\"/>",
-            "    <par type=\"DOUBLE\" name=\"hMax\" value=\"1\"/>",
-            "    <par type=\"DOUBLE\" name=\"kReduceStep\" value=\"0.5\"/>",
-            "    <par type=\"INT\" name=\"nEff\" value=\"10\"/>",
-            "    <par type=\"INT\" name=\"nDeadband\" value=\"2\"/>",
-            "    <par type=\"INT\" name=\"maxRootRestart\" value=\"3\"/>",
-            "    <par type=\"INT\" name=\"maxNewtonTry\" value=\"10\"/>",
-            "    <par type=\"STRING\" name=\"linearSolverName\" value=\"KLU\"/>",
-            "    <par type=\"BOOL\" name=\"recalculateStep\" value=\"true\"/>",
-            "  </set>",
+            openSet(4),
+            setParameter(DOUBLE, "hMin", "0.000001"),
+            setParameter(DOUBLE, "hMax", "1"),
+            setParameter(DOUBLE, "kReduceStep", "0.5"),
+            setParameter(DOUBLE, "nEff", "10"),
+            setParameter(DOUBLE, "nDeadband", "2"),
+            setParameter(DOUBLE, "maxRootRestart", "3"),
+            setParameter(DOUBLE, "maxNewtonTry", "10"),
+            setParameter(DOUBLE, "linearSolverName", "KLU"),
+            setParameter(DOUBLE, "recalculateStep", "true"),
+            closeSet(),
             "  <!-- IDA order 2 solver with higher accuracy requirements -->",
-            "  <set id=\"5\">",
-            "    <par type=\"INT\" name=\"order\" value=\"2\"/>",
-            "    <par type=\"DOUBLE\" name=\"initStep\" value=\"0.000001\"/>",
-            "    <par type=\"DOUBLE\" name=\"minStep\" value=\"0.000001\"/>",
-            "    <par type=\"DOUBLE\" name=\"maxStep\" value=\"10\"/>",
-            "    <par type=\"DOUBLE\" name=\"absAccuracy\" value=\"1e-6\"/>",
-            "    <par type=\"DOUBLE\" name=\"relAccuracy\" value=\"1e-6\"/>",
-            "  </set>",
+            openSet(5),
+            setParameter(DOUBLE, "order", "2"),
+            setParameter(DOUBLE, "initStep", "0.000001"),
+            setParameter(DOUBLE, "minStep", "0.000001"),
+            setParameter(DOUBLE, "maxStep", "10"),
+            setParameter(DOUBLE, "absAccuracy", "1e-6"),
+            setParameter(DOUBLE, "relAccuracy", "1e-6"),
+            closeSet(),
             "</parametersSet>") + System.lineSeparator());
         return builder.toString();
     }
 
+    private String openSet(int id) {
+        return "  <set id=\"" + id + "\">";
+    }
+
+    private String closeSet() {
+        return "  </set>";
+    }
+
+    private String setParameter(String type, String name, String value) {
+        return "    <par type=\"" + type + "\" name=\"" + name + "\" value=\"" + value + "\"/>";
+    }
+
     private final Network network;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(DynawoSolverParameters.class);
 }

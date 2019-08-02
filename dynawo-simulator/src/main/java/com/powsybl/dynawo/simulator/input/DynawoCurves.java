@@ -6,6 +6,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.Generator;
 import com.powsybl.iidm.network.Load;
@@ -22,27 +25,14 @@ public class DynawoCurves {
         try (Writer writer = Files.newBufferedWriter(parFile, StandardCharsets.UTF_8)) {
             writer.write(String.join(System.lineSeparator(), curves()));
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            LOGGER.error("Error in file dynawoModel.crv");
         }
     }
 
     private CharSequence curves() {
         StringBuilder builder = new StringBuilder();
         builder.append(String.join(System.lineSeparator(),
-            "<?xml version='1.0' encoding='UTF-8'?>",
-            "<!--",
-            "    Copyright (c) 2015-2019, RTE (http://www.rte-france.com)",
-            "    See AUTHORS.txt",
-            "    All rights reserved.",
-            "    This Source Code Form is subject to the terms of the Mozilla Public",
-            "    License, v. 2.0. If a copy of the MPL was not distributed with this",
-            "    file, you can obtain one at http://mozilla.org/MPL/2.0/.",
-            "    SPDX-License-Identifier: MPL-2.0",
-            "",
-            "    This file is part of Dynawo, an hybrid C++/Modelica open source time domain",
-            "    simulation tool for power systems.",
-            "-->",
+            DynawoInput.setInputHeader(),
             "<curvesInput xmlns=\"http://www.rte-france.com/dynawo\">",
             "<!--Curves for scenario-->") + System.lineSeparator());
 
@@ -63,24 +53,30 @@ public class DynawoCurves {
 
     private void loadBusCurve(Bus b, StringBuilder builder) {
         builder.append(String.join(System.lineSeparator(),
-            "  <curve model=\"NETWORK\" variable=\"" + b.getId() + "_Upu_value\"/>") + System.lineSeparator());
+            setCurve("NETWORK", b.getId() + "_Upu_value")) + System.lineSeparator());
     }
 
     private void loadGeneratorCurve(Generator g, StringBuilder builder) {
         builder.append(String.join(System.lineSeparator(),
-            "  <curve model=\"" + g.getId() + "\" variable=\"generator_omegaPu\"/>",
-            "  <curve model=\"" + g.getId() + "\" variable=\"generator_PGen\"/>",
-            "  <curve model=\"" + g.getId() + "\" variable=\"generator_QGen\"/>",
-            "  <curve model=\"" + g.getId() + "\" variable=\"generator_UStatorPu\"/>",
-            "  <curve model=\"" + g.getId() + "\" variable=\"voltageRegulator_UcEfdPu\"/>",
-            "  <curve model=\"" + g.getId() + "\" variable=\"voltageRegulator_EfdPu\"/>") + System.lineSeparator());
+            setCurve(g.getId(), "generator_omegaPu"),
+            setCurve(g.getId(), "generator_PGen"),
+            setCurve(g.getId(), "generator_QGen"),
+            setCurve(g.getId(), "generator_UStatorPu"),
+            setCurve(g.getId(), "voltageRegulator_UcEfdPu"),
+            setCurve(g.getId(), "voltageRegulator_EfdPu")) + System.lineSeparator());
     }
 
     private void loadLoadCurve(Load l, StringBuilder builder) {
         builder.append(String.join(System.lineSeparator(),
-            "  <curve model=\"" + l.getId() + "\" variable=\"load_PPu\"/>",
-            "  <curve model=\"" + l.getId() + "\" variable=\"load_QPu\"/>") + System.lineSeparator());
+            setCurve(l.getId(), "load_PPu"),
+            setCurve(l.getId(), "load_QPu")) + System.lineSeparator());
+    }
+
+    private String setCurve(String model, String variable) {
+        return "  <curve model=\"" + model + "\" variable=\"" + variable + "\"/>";
     }
 
     private final Network network;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(DynawoCurves.class);
 }

@@ -6,6 +6,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.powsybl.iidm.network.Network;
 
 public class DynawoJobs {
@@ -18,19 +21,7 @@ public class DynawoJobs {
         Path parFile = workingDir.resolve("dynawoModel.jobs");
         try (Writer writer = Files.newBufferedWriter(parFile, StandardCharsets.UTF_8)) {
             writer.write(String.join(System.lineSeparator(),
-                "<?xml version='1.0' encoding='UTF-8'?>",
-                "<!--",
-                "    Copyright (c) 2015-2019, RTE (http://www.rte-france.com)",
-                "    See AUTHORS.txt",
-                "    All rights reserved.",
-                "    This Source Code Form is subject to the terms of the Mozilla Public",
-                "    License, v. 2.0. If a copy of the MPL was not distributed with this",
-                "    file, you can obtain one at http://mozilla.org/MPL/2.0/.",
-                "    SPDX-License-Identifier: MPL-2.0",
-                "",
-                "    This file is part of Dynawo, an hybrid C++/Modelica open source time domain",
-                "    simulation tool for power systems.",
-                "-->",
+                DynawoInput.setInputHeader(),
                 "<dyn:jobs xmlns:dyn=\"http://www.rte-france.com/dynawo\">",
                 "  <dyn:job name=\"IEEE14 - Disconnect Line\">",
                 "    <dyn:solver lib=\"libdynawo_SolverIDA\" parFile=\"solvers.par\" parId=\"2\"/>",
@@ -54,10 +45,11 @@ public class DynawoJobs {
                 "  </dyn:job>",
                 "</dyn:jobs>"));
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            LOGGER.error("Error in file dynawoModel.jobs");
         }
     }
 
     private final Network network;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(DynawoJobs.class);
 }
