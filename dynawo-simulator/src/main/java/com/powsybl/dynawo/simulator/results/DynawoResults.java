@@ -34,6 +34,14 @@ public class DynawoResults extends ImpactAnalysisResult {
         }
     }
 
+    public List<String> getNames() {
+        return names;
+    }
+
+    public Map<Double, List<Double>> getTimeSerie() {
+        return timeSerie;
+    }
+
     private void parseCsv(BufferedReader reader, char separator) {
         Objects.requireNonNull(reader);
 
@@ -73,7 +81,7 @@ public class DynawoResults extends ImpactAnalysisResult {
         while ((line = reader.readLine()) != null) {
             String[] tokens = line.split(separatorStr);
 
-            if (tokens.length != names.size()) {
+            if (tokens.length != names.size() + 1) {
                 throw new PowsyblException("Columns of line " + names.size() + " are inconsistent with header");
             }
 

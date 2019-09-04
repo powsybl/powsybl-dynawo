@@ -11,35 +11,29 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
-import java.util.Properties;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
-import com.powsybl.cgmes.conversion.CgmesImport;
-import com.powsybl.cgmes.model.test.TestGridModel;
 import com.powsybl.cgmes.model.test.cim14.Cim14SmallCasesCatalog;
 import com.powsybl.commons.config.InMemoryPlatformConfig;
 import com.powsybl.commons.config.MapModuleConfig;
 import com.powsybl.commons.config.PlatformConfig;
-import com.powsybl.commons.datasource.ReadOnlyDataSource;
-import com.powsybl.dynawo.simulator.DynawoSimulator;
-import com.powsybl.iidm.network.Network;
-import com.powsybl.iidm.network.NetworkFactory;
 import com.powsybl.simulation.ImpactAnalysisResult;
-import com.powsybl.triplestore.api.TripleStoreFactory;
 
 public class DynawoSimulatorTest {
 
     @Test
     public void test() throws Exception {
         try (FileSystem fs = Jimfs.newFileSystem(Configuration.unix())) {
+
             PlatformConfig platformConfig = configure(fs);
-            Network network = convert(platformConfig, catalog.nordic32());
-            DynawoSimulator simulator = new DynawoSimulator(network, platformConfig);
-            simulator.simulate();
-            ImpactAnalysisResult result = simulator.getResult();
+            DynawoSimulatorTester tester = new DynawoSimulatorTester(platformConfig);
+            ImpactAnalysisResult result = tester.testGridModel(catalog.nordic32());
+            LOGGER.info("metrics " + result.getMetrics().get("success"));
             assertTrue(!Boolean.parseBoolean(result.getMetrics().get("success")));
         }
     }
@@ -68,16 +62,6 @@ public class DynawoSimulatorTest {
         return platformConfig;
     }
 
-    private Network convert(PlatformConfig platformConfig, TestGridModel gm) throws IOException {
-        String impl = TripleStoreFactory.defaultImplementation();
-        CgmesImport i = new CgmesImport(platformConfig);
-        Properties params = new Properties();
-        params.put("storeCgmesModelAsNetworkExtension", "true");
-        params.put("powsyblTripleStore", impl);
-        ReadOnlyDataSource ds = gm.dataSource();
-        Network n = i.importData(ds, NetworkFactory.findDefault(), params);
-        return n;
-    }
-
     private final Cim14SmallCasesCatalog catalog = new Cim14SmallCasesCatalog();
+    private static final Logger LOGGER = LoggerFactory.getLogger(DynawoSimulatorTest.class);
 }

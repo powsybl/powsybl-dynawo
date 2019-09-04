@@ -15,7 +15,7 @@ import org.apache.commons.cli.Options;
 import com.google.auto.service.AutoService;
 import com.powsybl.commons.config.ComponentDefaultConfig;
 import com.powsybl.computation.ComputationManager;
-import com.powsybl.dynawo.simulator.DynawoSimulatorFactory;
+import com.powsybl.dynawo.simulator.DynawoSimulatorFactoryImpl;
 import com.powsybl.simulation.ImpactAnalysis;
 import com.powsybl.simulation.ImpactAnalysisResult;
 import com.powsybl.simulation.SimulationParameters;
@@ -64,7 +64,7 @@ public class DynawoSimulatorTool implements Tool {
     @Override
     public void run(CommandLine line, ToolRunningContext context) throws Exception {
         ComponentDefaultConfig defaultConfig = ComponentDefaultConfig.load();
-        DynawoSimulatorFactory simulatorFactory = defaultConfig.newFactoryImpl(DynawoSimulatorFactory.class);
+        DynawoSimulatorFactoryImpl simulatorFactory = defaultConfig.newFactoryImpl(DynawoSimulatorFactoryImpl.class);
         ComputationManager computationManager = context.getShortTimeExecutionComputationManager();
         Stabilization stabilization = simulatorFactory.createStabilization(null, computationManager, 0);
         ImpactAnalysis impactAnalysis = simulatorFactory.createImpactAnalysis(null, computationManager, 0, null);

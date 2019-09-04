@@ -13,6 +13,7 @@ import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.computation.ComputationManager;
 import com.powsybl.computation.local.LocalComputationConfig;
 import com.powsybl.computation.local.LocalComputationManager;
+import com.powsybl.dynawo.DynawoProvider;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.simulation.ImpactAnalysis;
 import com.powsybl.simulation.ImpactAnalysisResult;
@@ -33,11 +34,11 @@ public class DynawoSimulator {
         this.result = null;
     }
 
-    public void simulate() throws Exception {
+    public void simulate(DynawoProvider dynawoProvider) throws Exception {
         ComputationManager computationManager = new LocalComputationManager(
             LocalComputationConfig.load(platformConfig));
         Stabilization stabilization = new DynawoStabilization(network, computationManager, 0);
-        ImpactAnalysis impactAnalysis = new DynawoImpactAnalysis(network, computationManager, 0, null,
+        ImpactAnalysis impactAnalysis = new DynawoImpactAnalysis(network, computationManager, 0, dynawoProvider,
             platformConfig);
         Map<String, Object> initContext = new HashMap<>();
         SimulationParameters simulationParameters = SimulationParameters.load(platformConfig);
