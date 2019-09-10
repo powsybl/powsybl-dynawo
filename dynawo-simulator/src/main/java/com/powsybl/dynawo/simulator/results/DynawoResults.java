@@ -73,7 +73,7 @@ public class DynawoResults extends ImpactAnalysisResult {
         while ((line = reader.readLine()) != null) {
             String[] tokens = line.split(separatorStr);
 
-            if (tokens.length != names.size()) {
+            if (tokens.length - 1 != names.size()) {
                 throw new PowsyblException("Columns of line " + names.size() + " are inconsistent with header");
             }
 

@@ -8,12 +8,16 @@ package com.powsybl.dynawo.simulator.test;
 
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
@@ -25,9 +29,9 @@ import com.powsybl.commons.config.MapModuleConfig;
 import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.datasource.ReadOnlyDataSource;
 import com.powsybl.dynawo.simulator.DynawoSimulator;
+import com.powsybl.dynawo.simulator.results.DynawoResults;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.NetworkFactory;
-import com.powsybl.simulation.ImpactAnalysisResult;
 import com.powsybl.triplestore.api.TripleStoreFactory;
 
 public class DynawoSimulatorTest {
@@ -37,11 +41,21 @@ public class DynawoSimulatorTest {
         try (FileSystem fs = Jimfs.newFileSystem(Configuration.unix())) {
             PlatformConfig platformConfig = configure(fs);
             Network network = convert(platformConfig, catalog.nordic32());
-            DynawoSimulator simulator = new DynawoSimulator(network, platformConfig);
+            DynawoSimulator simulator = mockResults(new DynawoSimulator(network, platformConfig));
             simulator.simulate();
-            ImpactAnalysisResult result = simulator.getResult();
-            assertTrue(!Boolean.parseBoolean(result.getMetrics().get("success")));
+            DynawoResults result = (DynawoResults) simulator.getResult();
+            assertTrue(Boolean.parseBoolean(result.getMetrics().get("success")));
         }
+    }
+
+    private DynawoSimulator mockResults(DynawoSimulator simulator) {
+        DynawoSimulator spySimulator = Mockito.spy(simulator);
+        Map<String, String> metrics = new HashMap<>();
+        metrics.put("success", "true");
+        DynawoResults result = new DynawoResults(metrics);
+        result.parseCsv(new File(getClass().getClassLoader().getResource("curves.csv").getFile()).toPath());
+        Mockito.when(spySimulator.getResult()).thenReturn(result);
+        return spySimulator;
     }
 
     private PlatformConfig configure(FileSystem fs) throws IOException {
