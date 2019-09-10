@@ -34,6 +34,9 @@ import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.NetworkFactory;
 import com.powsybl.triplestore.api.TripleStoreFactory;
 
+/**
+ * @author Marcos de Miguel <demiguelm at aia.es>
+ */
 public class DynawoSimulatorTest {
 
     @Test

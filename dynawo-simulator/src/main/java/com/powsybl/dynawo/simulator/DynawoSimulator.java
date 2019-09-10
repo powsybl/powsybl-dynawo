@@ -21,6 +21,9 @@ import com.powsybl.simulation.Stabilization;
 import com.powsybl.simulation.StabilizationResult;
 import com.powsybl.simulation.StabilizationStatus;
 
+/**
+ * @author Marcos de Miguel <demiguelm at aia.es>
+ */
 public class DynawoSimulator {
 
     public DynawoSimulator(Network network) {

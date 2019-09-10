@@ -6,6 +6,9 @@
  */
 package com.powsybl.dynawo.simulator;
 
+/**
+ * @author Marcos de Miguel <demiguelm at aia.es>
+ */
 import com.google.auto.service.AutoService;
 import com.powsybl.computation.ComputationManager;
 import com.powsybl.contingency.ContingenciesProvider;

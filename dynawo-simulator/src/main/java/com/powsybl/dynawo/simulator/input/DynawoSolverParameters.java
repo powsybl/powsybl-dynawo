@@ -17,6 +17,9 @@ import org.slf4j.LoggerFactory;
 
 import com.powsybl.iidm.network.Network;
 
+/**
+ * @author Marcos de Miguel <demiguelm at aia.es>
+ */
 public class DynawoSolverParameters {
 
     private static final String DOUBLE = "DOUBLE";

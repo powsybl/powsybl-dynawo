@@ -26,6 +26,9 @@ import com.powsybl.tools.Command;
 import com.powsybl.tools.Tool;
 import com.powsybl.tools.ToolRunningContext;
 
+/**
+ * @author Marcos de Miguel <demiguelm at aia.es>
+ */
 @AutoService(Tool.class)
 public class DynawoSimulatorTool implements Tool {
 

@@ -19,6 +19,9 @@ import com.powsybl.iidm.network.Generator;
 import com.powsybl.iidm.network.Load;
 import com.powsybl.iidm.network.Network;
 
+/**
+ * @author Marcos de Miguel <demiguelm at aia.es>
+ */
 public class DynawoDynamicsModels {
 
     private static final String NETWORK = "NETWORK";

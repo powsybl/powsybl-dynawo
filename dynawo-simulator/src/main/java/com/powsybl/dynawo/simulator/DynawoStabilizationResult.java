@@ -12,6 +12,9 @@ import com.powsybl.simulation.SimulationState;
 import com.powsybl.simulation.StabilizationResult;
 import com.powsybl.simulation.StabilizationStatus;
 
+/**
+ * @author Marcos de Miguel <demiguelm at aia.es>
+ */
 public class DynawoStabilizationResult implements StabilizationResult {
 
     public DynawoStabilizationResult(StabilizationStatus completed, Map<String, String> metrics, DynawoState state) {

@@ -45,6 +45,9 @@ import com.powsybl.simulation.ImpactAnalysisResult;
 import com.powsybl.simulation.SimulationParameters;
 import com.powsybl.simulation.SimulationState;
 
+/**
+ * @author Marcos de Miguel <demiguelm at aia.es>
+ */
 public class DynawoImpactAnalysis implements ImpactAnalysis {
 
     private static final String WORKING_DIR_PREFIX = "powsybl_dynawo_impact_analysis_";
