@@ -6,6 +6,7 @@
  */
 package com.powsybl.dynawo.simulator.test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -48,6 +49,10 @@ public class DynawoSimulatorTest {
             simulator.simulate();
             DynawoResults result = (DynawoResults) simulator.getResult();
             assertTrue(Boolean.parseBoolean(result.getMetrics().get("success")));
+
+            //check final voltage of bus close to the event
+            int index = result.getNames().indexOf("NETWORK__N1011____TN_Upu_value");
+            assertEquals(result.getTimeSerie().get(new Double(30.0)).get(index), new Double(0.931558));
         }
     }
 
@@ -56,7 +61,7 @@ public class DynawoSimulatorTest {
         Map<String, String> metrics = new HashMap<>();
         metrics.put("success", "true");
         DynawoResults result = new DynawoResults(metrics);
-        result.parseCsv(new File(getClass().getClassLoader().getResource("curves.csv").getFile()).toPath());
+        result.parseCsv(new File(getClass().getClassLoader().getResource("nordic32/curves.csv").getFile()).toPath());
         Mockito.when(spySimulator.getResult()).thenReturn(result);
         return spySimulator;
     }

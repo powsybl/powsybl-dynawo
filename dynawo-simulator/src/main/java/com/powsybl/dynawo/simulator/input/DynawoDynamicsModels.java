@@ -11,11 +11,13 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Objects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.powsybl.iidm.network.Generator;
+import com.powsybl.iidm.network.Line;
 import com.powsybl.iidm.network.Load;
 import com.powsybl.iidm.network.Network;
 
@@ -53,7 +55,7 @@ public class DynawoDynamicsModels {
             genDynamicsModels(g, builder, id++);
         }
         omegaRefDynamicsModels(builder, id++);
-        eventDynamicsModels(builder, id);
+        eventDisconnectLineDynamicsModels(builder, id);
         for (Load l : n.getLoads()) {
             loadConnections(l, builder);
         }
@@ -61,6 +63,7 @@ public class DynawoDynamicsModels {
         for (Generator g : n.getGenerators()) {
             genConnections(g, builder, grp++);
         }
+        eventDisconnectLineConnections(n.getLineStream().findFirst().get(), builder);
         builder.append(String.join(System.lineSeparator(),
             "</dyn:dynamicModelsArchitecture>") + System.lineSeparator());
         return builder.toString();
@@ -72,7 +75,7 @@ public class DynawoDynamicsModels {
             + System.lineSeparator());
     }
 
-    private void eventDynamicsModels(StringBuilder builder, int id) {
+    private void eventDisconnectLineDynamicsModels(StringBuilder builder, int id) {
         builder.append(String.join(System.lineSeparator(),
             setBlackBoxModel("DISCONNECT_LINE", "EventQuadripoleDisconnection", id))
             + System.lineSeparator());
@@ -105,6 +108,13 @@ public class DynawoDynamicsModels {
             setConnection(OMEGA_REF, "running_grp_" + grp, g.getId(), "generator_running"),
             setConnection(g.getId(), "generator_terminal", NETWORK, "@" + g.getId() + "@@NODE@_ACPIN"),
             setConnection(g.getId(), "generator_switchOffSignal1", NETWORK, "@" + g.getId() + "@@NODE@_switchOff"))
+            + System.lineSeparator());
+    }
+
+    private void eventDisconnectLineConnections(Line l, StringBuilder builder) {
+        Objects.requireNonNull(l);
+        builder.append(String.join(System.lineSeparator(),
+            setConnection("DISCONNECT_LINE", "event_state1_value", "NETWORK", l.getId() + "_state_value"))
             + System.lineSeparator());
     }
 

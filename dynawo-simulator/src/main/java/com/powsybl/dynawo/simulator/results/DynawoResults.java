@@ -55,6 +55,14 @@ public class DynawoResults extends ImpactAnalysisResult {
         }
     }
 
+    public List<String> getNames() {
+        return names;
+    }
+
+    public Map<Double, List<Double>> getTimeSerie() {
+        return timeSerie;
+    }
+
     private void readCsvHeader(BufferedReader reader, String separatorStr) throws IOException {
         String line = reader.readLine();
         if (line == null) {
