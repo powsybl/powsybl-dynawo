@@ -6,16 +6,23 @@
  */
 package com.powsybl.dynawo.simulator.tools;
 
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 
 import com.google.auto.service.AutoService;
 import com.powsybl.commons.config.ComponentDefaultConfig;
 import com.powsybl.computation.ComputationManager;
 import com.powsybl.dynawo.simulator.DynawoSimulatorFactory;
+import com.powsybl.iidm.import_.ImportConfig;
+import com.powsybl.iidm.import_.Importers;
+import com.powsybl.iidm.network.Network;
+import com.powsybl.iidm.tools.ConversionToolUtils;
 import com.powsybl.simulation.ImpactAnalysis;
 import com.powsybl.simulation.ImpactAnalysisResult;
 import com.powsybl.simulation.SimulationParameters;
@@ -26,11 +33,15 @@ import com.powsybl.tools.Command;
 import com.powsybl.tools.Tool;
 import com.powsybl.tools.ToolRunningContext;
 
+import static com.powsybl.iidm.tools.ConversionToolUtils.readProperties;
+
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 @AutoService(Tool.class)
 public class DynawoSimulatorTool implements Tool {
+
+    private static final String CASE_FILE = "case-file";
 
     @Override
     public Command getCommand() {
@@ -53,7 +64,14 @@ public class DynawoSimulatorTool implements Tool {
 
             @Override
             public Options getOptions() {
-                return new Options();
+                Options options = new Options();
+                options.addOption(Option.builder().longOpt(CASE_FILE)
+                        .desc("the case path")
+                        .hasArg()
+                        .argName("FILE")
+                        .required()
+                        .build());
+                return options;
             }
 
             @Override
@@ -66,11 +84,17 @@ public class DynawoSimulatorTool implements Tool {
 
     @Override
     public void run(CommandLine line, ToolRunningContext context) throws Exception {
+        Path caseFile = context.getFileSystem().getPath(line.getOptionValue(CASE_FILE));
+
+        context.getOutputStream().println("Loading network '" + caseFile + "'");
+        Properties inputParams = readProperties(line, ConversionToolUtils.OptionType.IMPORT, context);
+        Network network = Importers.loadNetwork(caseFile, context.getShortTimeExecutionComputationManager(), ImportConfig.load(), inputParams);
+
         ComponentDefaultConfig defaultConfig = ComponentDefaultConfig.load();
         DynawoSimulatorFactory simulatorFactory = defaultConfig.newFactoryImpl(DynawoSimulatorFactory.class);
         ComputationManager computationManager = context.getShortTimeExecutionComputationManager();
-        Stabilization stabilization = simulatorFactory.createStabilization(null, computationManager, 0);
-        ImpactAnalysis impactAnalysis = simulatorFactory.createImpactAnalysis(null, computationManager, 0, null);
+        Stabilization stabilization = simulatorFactory.createStabilization(network, computationManager, 0);
+        ImpactAnalysis impactAnalysis = simulatorFactory.createImpactAnalysis(network, computationManager, 0, null);
         Map<String, Object> initContext = new HashMap<>();
         SimulationParameters simulationParameters = SimulationParameters.load();
         stabilization.init(simulationParameters, initContext);

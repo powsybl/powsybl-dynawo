@@ -83,12 +83,16 @@ public class DynawoSimulationParameters {
 
     private void omegaRefParameters(StringBuilder builder) {
         builder.append(String.join(System.lineSeparator(),
-            setParameter("INT", "nbGen", "5"),
+            setParameter("INT", "nbGen", "" + network.getGeneratorCount()),
             setParameter(DOUBLE, "weight_gen_0", "1211"),
             setParameter(DOUBLE, "weight_gen_1", "1120"),
             setParameter(DOUBLE, "weight_gen_2", "1650"),
             setParameter(DOUBLE, "weight_gen_3", "80"),
             setParameter(DOUBLE, "weight_gen_4", "250")) + System.lineSeparator());
+        for (int i = 5; i < network.getGeneratorCount(); i++) {
+            builder.append(String.join(System.lineSeparator(),
+                setParameter(DOUBLE, "weight_gen_" + i, "1")) + System.lineSeparator());
+        }
     }
 
     private void globalParameters(StringBuilder builder) {
@@ -128,8 +132,8 @@ public class DynawoSimulationParameters {
             setParameter(DOUBLE, "load_beta", "2.5"),
             setReference("load_P0Pu", IIDM, "p_pu", DOUBLE),
             setReference("load_Q0Pu", IIDM, "q_pu", DOUBLE),
-            setReference("load_UPhase0", IIDM, "v_pu", DOUBLE),
-            setReference("generator_P0Pu", IIDM, "angle_pu", DOUBLE)) + System.lineSeparator());
+            setReference("load_U0Pu", IIDM, "v_pu", DOUBLE),
+            setReference("load_UPhase0", IIDM, "angle_pu", DOUBLE)) + System.lineSeparator());
     }
 
     private void genParameters(StringBuilder builder) {

@@ -98,10 +98,6 @@ public class DynawoDynamicsModels {
     }
 
     private void genConnections(Generator g, StringBuilder builder, int grp) {
-        if (grp >= 5) {
-            return;
-        }
-
         builder.append(String.join(System.lineSeparator(),
             setConnection(OMEGA_REF, "omega_grp_" + grp, g.getId(), "generator_omegaPu"),
             setConnection(OMEGA_REF, "omegaRef_grp_" + grp, g.getId(), "generator_omegaRefPu"),

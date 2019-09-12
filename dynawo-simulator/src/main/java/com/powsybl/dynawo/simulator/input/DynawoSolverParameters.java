@@ -22,7 +22,10 @@ import com.powsybl.iidm.network.Network;
  */
 public class DynawoSolverParameters {
 
+    private static final String INT = "INT";
     private static final String DOUBLE = "DOUBLE";
+    private static final String STRING = "STRING";
+    private static final String BOOL = "BOOL";
 
     public DynawoSolverParameters(Network network) {
         this.network = network;
@@ -44,7 +47,7 @@ public class DynawoSolverParameters {
             "<parametersSet xmlns=\"http://www.rte-france.com/dynawo\">",
             "  <!-- IDA order 1 solver-->",
             openSet(1),
-            setParameter(DOUBLE, "order", "1"),
+            setParameter(INT, "order", "1"),
             setParameter(DOUBLE, "initStep", "0.000001"),
             setParameter(DOUBLE, "minStep", "0.000001"),
             setParameter(DOUBLE, "maxStep", "10"),
@@ -53,7 +56,7 @@ public class DynawoSolverParameters {
             closeSet(),
             "  <!-- IDA order 2 solver -->",
             openSet(2),
-            setParameter(DOUBLE, "order", "2"),
+            setParameter(INT, "order", "2"),
             setParameter(DOUBLE, "initStep", "0.000001"),
             setParameter(DOUBLE, "minStep", "0.000001"),
             setParameter(DOUBLE, "maxStep", "10"),
@@ -65,28 +68,28 @@ public class DynawoSolverParameters {
             setParameter(DOUBLE, "hMin", "0.000001"),
             setParameter(DOUBLE, "hMax", "1"),
             setParameter(DOUBLE, "kReduceStep", "0.5"),
-            setParameter(DOUBLE, "nEff", "10"),
-            setParameter(DOUBLE, "nDeadband", "2"),
-            setParameter(DOUBLE, "maxRootRestart", "3"),
-            setParameter(DOUBLE, "maxNewtonTry", "10"),
-            setParameter(DOUBLE, "linearSolverName", "KLU"),
-            setParameter(DOUBLE, "recalculateStep", "false"),
+            setParameter(INT, "nEff", "10"),
+            setParameter(INT, "nDeadband", "2"),
+            setParameter(INT, "maxRootRestart", "3"),
+            setParameter(INT, "maxNewtonTry", "10"),
+            setParameter(STRING, "linearSolverName", "KLU"),
+            setParameter(BOOL, "recalculateStep", "false"),
             closeSet(),
             "  <!-- Simplified solver with step recalculation -->",
             openSet(4),
             setParameter(DOUBLE, "hMin", "0.000001"),
             setParameter(DOUBLE, "hMax", "1"),
             setParameter(DOUBLE, "kReduceStep", "0.5"),
-            setParameter(DOUBLE, "nEff", "10"),
-            setParameter(DOUBLE, "nDeadband", "2"),
-            setParameter(DOUBLE, "maxRootRestart", "3"),
-            setParameter(DOUBLE, "maxNewtonTry", "10"),
-            setParameter(DOUBLE, "linearSolverName", "KLU"),
-            setParameter(DOUBLE, "recalculateStep", "true"),
+            setParameter(INT, "nEff", "10"),
+            setParameter(INT, "nDeadband", "2"),
+            setParameter(INT, "maxRootRestart", "3"),
+            setParameter(INT, "maxNewtonTry", "10"),
+            setParameter(STRING, "linearSolverName", "KLU"),
+            setParameter(BOOL, "recalculateStep", "true"),
             closeSet(),
             "  <!-- IDA order 2 solver with higher accuracy requirements -->",
             openSet(5),
-            setParameter(DOUBLE, "order", "2"),
+            setParameter(INT, "order", "2"),
             setParameter(DOUBLE, "initStep", "0.000001"),
             setParameter(DOUBLE, "minStep", "0.000001"),
             setParameter(DOUBLE, "maxStep", "10"),
