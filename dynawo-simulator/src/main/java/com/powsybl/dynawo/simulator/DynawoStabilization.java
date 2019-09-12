@@ -36,6 +36,7 @@ public class DynawoStabilization implements Stabilization {
 
     @Override
     public void init(SimulationParameters parameters, Map<String, Object> context) {
+        // empty default implementation
     }
 
     @Override

@@ -12,6 +12,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,7 +64,10 @@ public class DynawoDynamicsModels {
         for (Generator g : n.getGenerators()) {
             genConnections(g, builder, grp++);
         }
-        eventDisconnectLineConnections(n.getLineStream().findFirst().get(), builder);
+        Optional<Line> line = n.getLineStream().findFirst();
+        if (line.isPresent()) {
+            eventDisconnectLineConnections(line.get(), builder);
+        }
         builder.append(String.join(System.lineSeparator(),
             "</dyn:dynamicModelsArchitecture>") + System.lineSeparator());
         return builder.toString();
@@ -114,7 +118,7 @@ public class DynawoDynamicsModels {
     private void eventDisconnectLineConnections(Line l, StringBuilder builder) {
         Objects.requireNonNull(l);
         builder.append(String.join(System.lineSeparator(),
-            setConnection("DISCONNECT_LINE", "event_state1_value", "NETWORK", l.getId() + "_state_value"))
+            setConnection("DISCONNECT_LINE", "event_state1_value", NETWORK, l.getId() + "_state_value"))
             + System.lineSeparator());
     }
 

@@ -30,7 +30,6 @@ import com.powsybl.computation.ComputationManager;
 import com.powsybl.computation.ExecutionEnvironment;
 import com.powsybl.computation.ExecutionReport;
 import com.powsybl.computation.GroupCommandBuilder;
-import com.powsybl.contingency.ContingenciesProvider;
 import com.powsybl.dynawo.simulator.input.DynawoCurves;
 import com.powsybl.dynawo.simulator.input.DynawoDynamicsModels;
 import com.powsybl.dynawo.simulator.input.DynawoJobs;
@@ -54,13 +53,12 @@ public class DynawoImpactAnalysis implements ImpactAnalysis {
     private static final String OUTPUT_FILE = "outputs/curves/curves.csv";
     private static final String DEFAULT_DYNAWO_CASE_NAME = "nrt/data/IEEE14/IEEE14_BasicTestCases/IEEE14_DisconnectLine/IEEE14.jobs";
 
-    public DynawoImpactAnalysis(Network network, ComputationManager computationManager, int priority,
-        ContingenciesProvider contingenciesProvider) {
-        this(network, computationManager, priority, contingenciesProvider, PlatformConfig.defaultConfig());
+    public DynawoImpactAnalysis(Network network, ComputationManager computationManager, int priority) {
+        this(network, computationManager, priority, PlatformConfig.defaultConfig());
     }
 
     public DynawoImpactAnalysis(Network network, ComputationManager computationManager, int priority,
-        ContingenciesProvider contingenciesProvider, PlatformConfig platformConfig) {
+        PlatformConfig platformConfig) {
         this.network = network;
         this.computationManager = computationManager;
         this.priority = priority;
@@ -79,6 +77,7 @@ public class DynawoImpactAnalysis implements ImpactAnalysis {
     }
 
     protected Command before(SimulationState state, Set<String> contingencyIds, Path workingDir) {
+        LOGGER.debug(state.getName());
         String dynawoJobsFile = DEFAULT_DYNAWO_CASE_NAME;
         new DynawoJobs(network).prepareFile(workingDir);
         new DynawoDynamicsModels(network).prepareFile(workingDir);
@@ -133,6 +132,7 @@ public class DynawoImpactAnalysis implements ImpactAnalysis {
 
     @Override
     public void init(SimulationParameters parameters, Map<String, Object> context) {
+        // empty default implementation
     }
 
     @Override

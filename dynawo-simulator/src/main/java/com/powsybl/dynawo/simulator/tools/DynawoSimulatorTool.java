@@ -6,6 +6,8 @@
  */
 package com.powsybl.dynawo.simulator.tools;
 
+import static com.powsybl.iidm.tools.ConversionToolUtils.readProperties;
+
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +26,6 @@ import com.powsybl.iidm.import_.Importers;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.tools.ConversionToolUtils;
 import com.powsybl.simulation.ImpactAnalysis;
-import com.powsybl.simulation.ImpactAnalysisResult;
 import com.powsybl.simulation.SimulationParameters;
 import com.powsybl.simulation.Stabilization;
 import com.powsybl.simulation.StabilizationResult;
@@ -32,8 +33,6 @@ import com.powsybl.simulation.StabilizationStatus;
 import com.powsybl.tools.Command;
 import com.powsybl.tools.Tool;
 import com.powsybl.tools.ToolRunningContext;
-
-import static com.powsybl.iidm.tools.ConversionToolUtils.readProperties;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -94,14 +93,14 @@ public class DynawoSimulatorTool implements Tool {
         DynawoSimulatorFactory simulatorFactory = defaultConfig.newFactoryImpl(DynawoSimulatorFactory.class);
         ComputationManager computationManager = context.getShortTimeExecutionComputationManager();
         Stabilization stabilization = simulatorFactory.createStabilization(network, computationManager, 0);
-        ImpactAnalysis impactAnalysis = simulatorFactory.createImpactAnalysis(network, computationManager, 0, null);
+        ImpactAnalysis impactAnalysis = simulatorFactory.createImpactAnalysis(network, computationManager, 0);
         Map<String, Object> initContext = new HashMap<>();
         SimulationParameters simulationParameters = SimulationParameters.load();
         stabilization.init(simulationParameters, initContext);
         impactAnalysis.init(simulationParameters, initContext);
         StabilizationResult sr = stabilization.run();
         if (sr.getStatus() == StabilizationStatus.COMPLETED) {
-            ImpactAnalysisResult iar = impactAnalysis.run(sr.getState());
+            impactAnalysis.run(sr.getState());
         }
     }
 }
