@@ -76,8 +76,7 @@ public class DynawoImpactAnalysis implements ImpactAnalysis {
             .build();
     }
 
-    protected Command before(SimulationState state, Set<String> contingencyIds, Path workingDir) {
-        LOGGER.debug(state.getName());
+    protected Command before(Path workingDir) {
         String dynawoJobsFile = DEFAULT_DYNAWO_CASE_NAME;
         new DynawoJobs(network).prepareFile(workingDir);
         new DynawoDynamicsModels(network).prepareFile(workingDir);
@@ -154,7 +153,7 @@ public class DynawoImpactAnalysis implements ImpactAnalysis {
 
                 @Override
                 public List<CommandExecution> before(Path workingDir) {
-                    Command cmd = DynawoImpactAnalysis.this.before(state, contingencyIds, workingDir);
+                    Command cmd = DynawoImpactAnalysis.this.before(workingDir);
                     return Collections.singletonList(
                         new CommandExecution(cmd, 1, priority, ImmutableMap.of("state", state.getName())));
                 }
