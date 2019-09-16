@@ -1,16 +1,33 @@
+/**
+ * Copyright (c) 2018, RTE (http://www.rte-france.com)
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 package com.powsybl.dynawo;
 
 import java.util.List;
 
+import com.powsybl.iidm.network.Network;
+
+/**
+ * @author Marcos de Miguel <demiguelm at aia.es>
+ */
 public interface DynawoProvider {
 
-    List<DynawoJob> getDynawoJob();
+    List<DynawoJob> getDynawoJob(Network network);
 
-    List<DynawoCurve> getDynawoCurves();
+    List<DynawoCurve> getDynawoCurves(Network network);
 
-    List<DynawoDynamicModel> getDynawoDynamicModels();
+    List<DynawoDynamicModel> getDynawoDynamicModels(Network network);
 
-    List<DynawoParameterSet> getDynawoParameterSets();
+    List<DynawoParameterSet> getDynawoParameterSets(Network network);
 
-    List<DynawoParameterSet> getDynawoSolverParameterSets();
+    List<DynawoParameterSet> getDynawoSolverParameterSets(Network network);
+
+    default String asScript() {
+        throw new UnsupportedOperationException(
+            "Serialization not supported for dynawo provider of type " + this.getClass().getName());
+    }
+
 }

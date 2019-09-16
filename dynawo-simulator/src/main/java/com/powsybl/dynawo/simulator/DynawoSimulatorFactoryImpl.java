@@ -13,6 +13,9 @@ import com.powsybl.iidm.network.Network;
 import com.powsybl.simulation.ImpactAnalysis;
 import com.powsybl.simulation.Stabilization;
 
+/**
+ * @author Marcos de Miguel <demiguelm at aia.es>
+ */
 @AutoService(DynawoSimulatorFactory.class)
 public class DynawoSimulatorFactoryImpl implements DynawoSimulatorFactory {
 

@@ -43,6 +43,9 @@ import com.powsybl.simulation.ImpactAnalysisResult;
 import com.powsybl.simulation.SimulationParameters;
 import com.powsybl.simulation.SimulationState;
 
+/**
+ * @author Marcos de Miguel <demiguelm at aia.es>
+ */
 public class DynawoImpactAnalysis implements ImpactAnalysis {
 
     private static final String WORKING_DIR_PREFIX = "powsybl_dynawo_impact_analysis_";
@@ -74,13 +77,13 @@ public class DynawoImpactAnalysis implements ImpactAnalysis {
             .build();
     }
 
-    protected Command before(SimulationState state, Set<String> contingencyIds, Path workingDir) {
+    protected Command before(Path workingDir) {
         String dynawoJobsFile = DEFAULT_DYNAWO_CASE_NAME;
-        new DynawoJobs(dynawoProvider).prepareFile(workingDir);
-        new DynawoDynamicModels(dynawoProvider).prepareFile(workingDir);
-        new DynawoSimulationParameters(dynawoProvider).prepareFile(workingDir);
-        new DynawoSolverParameters(dynawoProvider).prepareFile(workingDir);
-        new DynawoCurves(dynawoProvider).prepareFile(workingDir);
+        new DynawoJobs(network, dynawoProvider).prepareFile(workingDir);
+        new DynawoDynamicModels(network, dynawoProvider).prepareFile(workingDir);
+        new DynawoSimulationParameters(network, dynawoProvider).prepareFile(workingDir);
+        new DynawoSolverParameters(network, dynawoProvider).prepareFile(workingDir);
+        new DynawoCurves(network, dynawoProvider).prepareFile(workingDir);
         if (network != null) {
             Path jobsFile = workingDir.resolve("dynawoModel.jobs");
             XMLExporter xmlExporter = new XMLExporter(platformConfig);
@@ -99,7 +102,8 @@ public class DynawoImpactAnalysis implements ImpactAnalysis {
         Map<String, String> metrics = new HashMap<>();
         metrics.put("success", Boolean.toString(report.getErrors().isEmpty()));
         DynawoResults results = new DynawoResults(metrics);
-        Path file = workingDir.resolve(dynawoProvider.getDynawoJob().get(0).getOutputs().getDirectory()).resolve(OUTPUT_FILE);
+        Path file = workingDir.resolve(dynawoProvider.getDynawoJob(network).get(0).getOutputs().getDirectory())
+            .resolve(OUTPUT_FILE);
         try {
             if (file.toFile().exists()) {
                 results.parseCsv(file);
@@ -123,6 +127,7 @@ public class DynawoImpactAnalysis implements ImpactAnalysis {
 
     @Override
     public void init(SimulationParameters parameters, Map<String, Object> context) {
+        // empty default implementation
     }
 
     @Override
@@ -144,7 +149,7 @@ public class DynawoImpactAnalysis implements ImpactAnalysis {
 
                 @Override
                 public List<CommandExecution> before(Path workingDir) {
-                    Command cmd = DynawoImpactAnalysis.this.before(state, contingencyIds, workingDir);
+                    Command cmd = DynawoImpactAnalysis.this.before(workingDir);
                     return Collections.singletonList(
                         new CommandExecution(cmd, 1, priority, ImmutableMap.of("state", state.getName())));
                 }

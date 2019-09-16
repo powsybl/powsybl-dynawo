@@ -8,6 +8,9 @@ package com.powsybl.dynawo.simulator;
 
 import com.powsybl.simulation.SimulationState;
 
+/**
+ * @author Marcos de Miguel <demiguelm at aia.es>
+ */
 public class DynawoState implements SimulationState {
 
     @Override

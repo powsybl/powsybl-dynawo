@@ -19,55 +19,58 @@ import org.slf4j.LoggerFactory;
 import com.powsybl.dynawo.DynawoParameter;
 import com.powsybl.dynawo.DynawoParameterSet;
 import com.powsybl.dynawo.DynawoProvider;
+import com.powsybl.iidm.network.Network;
 
+/**
+ * @author Marcos de Miguel <demiguelm at aia.es>
+ */
 public class DynawoSolverParameters {
 
-    public DynawoSolverParameters(DynawoProvider provider) {
-        this.parameterSets = provider.getDynawoSolverParameterSets();
+    public DynawoSolverParameters(Network network, DynawoProvider provider) {
+        this.parameterSets = provider.getDynawoSolverParameterSets(network);
     }
 
     public void prepareFile(Path workingDir) {
         Path parFile = workingDir.resolve("solvers.par");
         try (Writer writer = Files.newBufferedWriter(parFile, StandardCharsets.UTF_8)) {
-            writer.write(String.join(System.lineSeparator(), parameterSets()));
+            writer.write(String.join(System.lineSeparator(), writeParameterSets()));
         } catch (IOException e) {
             LOGGER.error("Error in file solvers.par");
         }
     }
 
-    private CharSequence parameterSets() {
+    private String writeParameterSets() {
         StringBuilder builder = new StringBuilder();
         builder.append(String.join(System.lineSeparator(),
-            DynawoInput.setInputHeader(),
+            DynawoInput.writeInputHeader(),
             "<parametersSet xmlns=\"http://www.rte-france.com/dynawo\">") + System.lineSeparator());
-        int id = 1;
         parameterSets.forEach(parameterSet -> builder
-            .append(String.join(System.lineSeparator(), parameterSet(parameterSet)) + System.lineSeparator()));
+            .append(String.join(System.lineSeparator(), writeParameterSet(parameterSet)) + System.lineSeparator()));
         builder.append(String.join(System.lineSeparator(),
             "</parametersSet>") + System.lineSeparator());
         return builder.toString();
     }
 
-    private CharSequence parameterSet(DynawoParameterSet parameterSet) {
+    private String writeParameterSet(DynawoParameterSet parameterSet) {
         StringBuilder builder = new StringBuilder();
         int id = parameterSet.getId();
         builder.append(String.join(System.lineSeparator(),
             "  <set id=\"" + id + "\">") + System.lineSeparator());
         parameterSet.getParameters().forEach(parameter -> builder
-            .append(String.join(System.lineSeparator(), parameter(parameter)) + System.lineSeparator()));
+            .append(String.join(System.lineSeparator(), writeParameter(parameter)) + System.lineSeparator()));
         builder.append(String.join(System.lineSeparator(),
             "  </set>") + System.lineSeparator());
         return builder.toString();
     }
 
-    private CharSequence parameter(DynawoParameter parameter) {
+    private String writeParameter(DynawoParameter parameter) {
         String name = parameter.getName();
         String type = parameter.getType();
         String value = parameter.getValue();
-        return setParameter(type, name, value);
+        return writeParameter(type, name, value);
     }
 
-    private String setParameter(String type, String name, String value) {
+    private String writeParameter(String type, String name, String value) {
         return "    <par type=\"" + type + "\" name=\"" + name + "\" value=\"" + value + "\"/>";
     }
 

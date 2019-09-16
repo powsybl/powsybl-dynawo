@@ -1,3 +1,9 @@
+/**
+ * Copyright (c) 2018, RTE (http://www.rte-france.com)
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 package com.powsybl.dynawo.simulator.input;
 
 import java.io.IOException;
@@ -16,47 +22,51 @@ import com.powsybl.dynawo.DynawoOutputs;
 import com.powsybl.dynawo.DynawoProvider;
 import com.powsybl.dynawo.DynawoSimulation;
 import com.powsybl.dynawo.DynawoSolver;
+import com.powsybl.iidm.network.Network;
 
+/**
+ * @author Marcos de Miguel <demiguelm at aia.es>
+ */
 public class DynawoJobs {
 
-    public DynawoJobs(DynawoProvider provider) {
-        this.jobs = provider.getDynawoJob();
+    public DynawoJobs(Network network, DynawoProvider provider) {
+        this.jobs = provider.getDynawoJob(network);
     }
 
     public void prepareFile(Path workingDir) {
         Path jobFile = workingDir.resolve("dynawoModel.jobs");
         try (Writer writer = Files.newBufferedWriter(jobFile, StandardCharsets.UTF_8)) {
-            writer.write(String.join(System.lineSeparator(), jobs()));
+            writer.write(String.join(System.lineSeparator(), writeJobs()));
 
         } catch (IOException e) {
             LOGGER.error("Error in file dynawoModel.jobs");
         }
     }
 
-    private CharSequence jobs() {
+    private String writeJobs() {
         StringBuilder builder = new StringBuilder();
         builder.append(String.join(System.lineSeparator(),
-            DynawoInput.setInputHeader(),
+            DynawoInput.writeInputHeader(),
             "<dyn:jobs xmlns:dyn=\"http://www.rte-france.com/dynawo\">") + System.lineSeparator());
-        jobs.forEach(job -> builder.append(String.join(System.lineSeparator(), job(job) + System.lineSeparator())));
+        jobs.forEach(job -> builder.append(String.join(System.lineSeparator(), writeJob(job) + System.lineSeparator())));
         builder.append(String.join(System.lineSeparator(), "</dyn:jobs>") + System.lineSeparator());
         return builder.toString();
     }
 
-    private CharSequence job(DynawoJob job) {
+    private String writeJob(DynawoJob job) {
         StringBuilder builder = new StringBuilder();
         String jobName = job.getName();
         builder.append(String.join(System.lineSeparator(),
             "  <dyn:job name=\"" + jobName + "\">",
-            solver(job.getSolver()),
-            modeler(job.getModeler()),
-            simulation(job.getSimulation()),
-            output(job.getOutputs()),
+            writeSolver(job.getSolver()),
+            writeModeler(job.getModeler()),
+            writeSimulation(job.getSimulation()),
+            writeOutput(job.getOutputs()),
             "  </dyn:job>") + System.lineSeparator());
         return builder.toString();
     }
 
-    private CharSequence solver(DynawoSolver solver) {
+    private String writeSolver(DynawoSolver solver) {
         StringBuilder builder = new StringBuilder();
         String solverLib = solver.getLib();
         String solverParams = solver.getFile();
@@ -68,7 +78,7 @@ public class DynawoJobs {
         return builder.toString();
     }
 
-    private CharSequence modeler(DynawoModeler modeler) {
+    private String writeModeler(DynawoModeler modeler) {
         StringBuilder builder = new StringBuilder();
         String compileDir = modeler.getCompile();
         String iidmFile = modeler.getIidm();
@@ -85,7 +95,7 @@ public class DynawoJobs {
         return builder.toString();
     }
 
-    private CharSequence simulation(DynawoSimulation simulation) {
+    private String writeSimulation(DynawoSimulation simulation) {
         StringBuilder builder = new StringBuilder();
         int startTime = simulation.getStartTime();
         int stopTime = simulation.getStopTime();
@@ -97,7 +107,7 @@ public class DynawoJobs {
         return builder.toString();
     }
 
-    private CharSequence output(DynawoOutputs outputs) {
+    private String writeOutput(DynawoOutputs outputs) {
         StringBuilder builder = new StringBuilder();
         String outputDir = outputs.getDirectory();
         String curvesFile = outputs.getCurve();

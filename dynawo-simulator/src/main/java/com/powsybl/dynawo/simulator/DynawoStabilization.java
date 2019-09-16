@@ -16,6 +16,9 @@ import com.powsybl.simulation.Stabilization;
 import com.powsybl.simulation.StabilizationResult;
 import com.powsybl.simulation.StabilizationStatus;
 
+/**
+ * @author Marcos de Miguel <demiguelm at aia.es>
+ */
 public class DynawoStabilization implements Stabilization {
 
     public DynawoStabilization(Network network, ComputationManager computationManager, int priority) {
@@ -33,6 +36,7 @@ public class DynawoStabilization implements Stabilization {
 
     @Override
     public void init(SimulationParameters parameters, Map<String, Object> context) {
+        // empty default implementation
     }
 
     @Override
