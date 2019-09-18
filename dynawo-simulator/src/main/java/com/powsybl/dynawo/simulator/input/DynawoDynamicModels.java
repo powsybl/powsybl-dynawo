@@ -22,6 +22,8 @@ import com.powsybl.iidm.network.Generator;
 import com.powsybl.iidm.network.Load;
 import com.powsybl.iidm.network.Network;
 
+import static java.lang.Math.toIntExact;
+
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
@@ -48,6 +50,7 @@ public class DynawoDynamicModels {
             "<dyn:dynamicModelsArchitecture xmlns:dyn=\"http://www.rte-france.com/dynawo\">") + System.lineSeparator());
 
         builder.append(String.join(System.lineSeparator(), defaultOmegaRef()) + System.lineSeparator());
+        generators = toIntExact(dynamicModels.stream().filter(dynamicModel -> dynamicModel.getConnectionVar2() != null && dynamicModel.getConnectionVar2().equals("generator_omegaPu")).count());
         dynamicModels.forEach(dynamicModel -> builder
             .append(String.join(System.lineSeparator(), writeDynamicModel(dynamicModel)) + System.lineSeparator()));
         builder.append(String.join(System.lineSeparator(), writeDefaultDynamicModels()) + System.lineSeparator());
@@ -86,6 +89,7 @@ public class DynawoDynamicModels {
             if (!definedDynamicModel(generator.getId())) {
                 builder.append(String.join(System.lineSeparator(), writeDefaultGenerator(generator))
                     + System.lineSeparator());
+                generators++;
             }
         });
         return builder.toString();
