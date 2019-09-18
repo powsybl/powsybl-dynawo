@@ -6,7 +6,6 @@
  */
 package com.powsybl.dynawo.simulator;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,8 +28,9 @@ import com.powsybl.triplestore.api.TripleStoreFactory;
  */
 public class DynawoSimulatorTester {
 
-    public DynawoSimulatorTester(PlatformConfig platformConfig) {
+    public DynawoSimulatorTester(PlatformConfig platformConfig, boolean mockResults) {
         this.platformConfig = platformConfig;
+        this.mockResults = mockResults;
     }
 
     public DynawoResults testGridModel(Network network, DynawoProvider provider) throws Exception {
@@ -52,14 +52,18 @@ public class DynawoSimulatorTester {
     }
 
     private DynawoSimulator mockResults(DynawoSimulator simulator) {
+        if (!mockResults) {
+            return simulator;
+        }
         DynawoSimulator spySimulator = Mockito.spy(simulator);
         Map<String, String> metrics = new HashMap<>();
         metrics.put("success", "true");
         DynawoResults result = new DynawoResults(metrics);
-        result.parseCsv(new File(getClass().getClassLoader().getResource("nordic32/curves.csv").getFile()).toPath());
+        result.parseCsv(getClass().getResourceAsStream("/nordic32/curves.csv"));
         Mockito.when(spySimulator.getResult()).thenReturn(result);
         return spySimulator;
     }
 
+    private final boolean mockResults;
     private final PlatformConfig platformConfig;
 }

@@ -8,6 +8,8 @@ package com.powsybl.dynawo.simulator.results;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -36,7 +38,15 @@ public class DynawoResults extends ImpactAnalysisResult {
     }
 
     public void parseCsv(Path file) {
-        try (BufferedReader reader = Files.newBufferedReader(file, StandardCharsets.UTF_8)) {
+        try {
+            parseCsv(Files.newInputStream(file));
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    public void parseCsv(InputStream is) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
             parseCsv(reader, ';');
         } catch (IOException e) {
             throw new UncheckedIOException(e);

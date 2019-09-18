@@ -119,9 +119,13 @@ class DynawoParameterSetDslLoader extends DslLoader {
             ParameterSpec parameterSpec = new ParameterSpec()
             cloned.delegate = parameterSpec
             cloned()
-            DynawoParameter parameter = new DynawoParameter(parameterSpec.name, parameterSpec.type, parameterSpec.origData, parameterSpec.origName)
-            parameters.add(parameter)
-
+            if (parameterSpec.origName != null) {
+                DynawoParameter parameter = new DynawoParameter(parameterSpec.name, parameterSpec.type, parameterSpec.origData, parameterSpec.origName)
+                parameters.add(parameter)
+            } else {
+                DynawoParameter parameter = new DynawoParameter(parameterSpec.name, parameterSpec.type, parameterSpec.value)
+                parameters.add(parameter)
+            }
         }
     }
 

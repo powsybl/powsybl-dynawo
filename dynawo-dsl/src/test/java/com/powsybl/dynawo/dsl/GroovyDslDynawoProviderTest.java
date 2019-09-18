@@ -21,18 +21,27 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
+import com.powsybl.cgmes.model.test.cim14.Cim14SmallCasesCatalog;
+import com.powsybl.commons.config.InMemoryPlatformConfig;
+import com.powsybl.commons.config.MapModuleConfig;
+import com.powsybl.commons.config.PlatformConfig;
+import com.powsybl.dynawo.DynawoProvider;
 import com.powsybl.dynawo.DynawoCurve;
 import com.powsybl.dynawo.DynawoDynamicModel;
 import com.powsybl.dynawo.DynawoJob;
 import com.powsybl.dynawo.DynawoModeler;
 import com.powsybl.dynawo.DynawoOutputs;
-import com.powsybl.dynawo.DynawoParameter;
-import com.powsybl.dynawo.DynawoParameterSet;
 import com.powsybl.dynawo.DynawoSimulation;
 import com.powsybl.dynawo.DynawoSolver;
+import com.powsybl.dynawo.DynawoParameter;
+import com.powsybl.dynawo.DynawoParameterSet;
+import com.powsybl.dynawo.simulator.DynawoSimulatorTester;
+import com.powsybl.dynawo.simulator.results.DynawoResults;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 
@@ -203,4 +212,43 @@ public class GroovyDslDynawoProviderTest {
         assertEquals("type", parameter.getType());
         assertEquals("value", parameter.getValue());
     }
+
+    @Test
+    public void testNordic32() throws Exception {
+        try (FileSystem fs = Jimfs.newFileSystem(Configuration.unix())) {
+
+            PlatformConfig platformConfig = configure(fs);
+            DynawoSimulatorTester tester = new DynawoSimulatorTester(platformConfig, false);
+            Network network = tester.convert(platformConfig, catalog.nordic32());
+            DynawoProvider provider = new GroovyDslDynawoProvider(getClass().getResourceAsStream("/nordic32.groovy"));
+            DynawoResults result = tester.testGridModel(network, provider);
+        }
+    }
+
+    private PlatformConfig configure(FileSystem fs) throws IOException {
+        InMemoryPlatformConfig platformConfig = new InMemoryPlatformConfig(fs);
+        Files.createDirectory(fs.getPath("/dynawoPath"));
+        Files.createDirectory(fs.getPath("/workingPath"));
+        Files.createDirectories(fs.getPath("/tmp"));
+        MapModuleConfig moduleConfig = platformConfig.createModuleConfig("import-export-parameters-default-value");
+        moduleConfig.setStringProperty("iidm.export.xml.extensions", "null");
+        moduleConfig = platformConfig.createModuleConfig("computation-local");
+        moduleConfig.setStringProperty("tmpDir", "/tmp");
+        moduleConfig = platformConfig.createModuleConfig("dynawo");
+        moduleConfig.setStringProperty("dynawoHomeDir", "/dynawoPath");
+        moduleConfig.setStringProperty("workingDir", "/workingPath");
+        moduleConfig.setStringProperty("debug", "false");
+        moduleConfig.setStringProperty("dynawoCptCommandName", "myEnvDynawo.sh");
+        moduleConfig = platformConfig.createModuleConfig("simulation-parameters");
+        moduleConfig.setStringProperty("preFaultSimulationStopInstant", "1");
+        moduleConfig.setStringProperty("postFaultSimulationStopInstant", "60");
+        moduleConfig.setStringProperty("faultEventInstant", "30");
+        moduleConfig.setStringProperty("branchSideOneFaultShortCircuitDuration", "60");
+        moduleConfig.setStringProperty("branchSideTwoFaultShortCircuitDuration", "60");
+        moduleConfig.setStringProperty("generatorFaultShortCircuitDuration", "60");
+        return platformConfig;
+    }
+
+    private final Cim14SmallCasesCatalog catalog = new Cim14SmallCasesCatalog();
+    private static final Logger LOGGER = LoggerFactory.getLogger(GroovyDslDynawoProviderTest.class);
 }

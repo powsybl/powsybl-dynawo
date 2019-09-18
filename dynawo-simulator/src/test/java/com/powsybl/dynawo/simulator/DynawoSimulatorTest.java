@@ -51,7 +51,7 @@ public class DynawoSimulatorTest {
         try (FileSystem fs = Jimfs.newFileSystem(Configuration.unix())) {
 
             PlatformConfig platformConfig = configure(fs);
-            DynawoSimulatorTester tester = new DynawoSimulatorTester(platformConfig);
+            DynawoSimulatorTester tester = new DynawoSimulatorTester(platformConfig, true);
             Network network = tester.convert(platformConfig, catalog.nordic32());
             DynawoProvider provider = configureProvider(network);
             DynawoResults result = tester.testGridModel(network, provider);

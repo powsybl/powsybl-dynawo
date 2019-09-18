@@ -21,11 +21,11 @@ import com.powsybl.iidm.network.Network;
  */
 public class GroovyDslDynawoProvider extends AbstractDslDynawoProvider {
 
-    protected GroovyDslDynawoProvider(final Path path) {
+    public GroovyDslDynawoProvider(final Path path) {
         super(path);
     }
 
-    protected GroovyDslDynawoProvider(InputStream input) {
+    public GroovyDslDynawoProvider(InputStream input) {
         super(input);
     }
 
