@@ -4,18 +4,18 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package com.powsybl.dynawo.simulator;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+package com.powsybl.dynawo.xml;
 
 import java.io.IOException;
-import java.nio.file.FileSystem;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Properties;
 
+import org.joda.time.DateTime;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
@@ -23,10 +23,13 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
+import com.powsybl.cgmes.conversion.CgmesImport;
+import com.powsybl.cgmes.model.test.TestGridModel;
 import com.powsybl.cgmes.model.test.cim14.Cim14SmallCasesCatalog;
+import com.powsybl.commons.AbstractConverterTest;
 import com.powsybl.commons.config.InMemoryPlatformConfig;
-import com.powsybl.commons.config.MapModuleConfig;
 import com.powsybl.commons.config.PlatformConfig;
+import com.powsybl.commons.datasource.ReadOnlyDataSource;
 import com.powsybl.dynawo.DynawoCurve;
 import com.powsybl.dynawo.DynawoDynamicModel;
 import com.powsybl.dynawo.DynawoJob;
@@ -37,62 +40,57 @@ import com.powsybl.dynawo.DynawoParameterSet;
 import com.powsybl.dynawo.DynawoProvider;
 import com.powsybl.dynawo.DynawoSimulation;
 import com.powsybl.dynawo.DynawoSolver;
-import com.powsybl.dynawo.simulator.results.DynawoResults;
-import com.powsybl.dynawo.xml.DynawoInput;
 import com.powsybl.iidm.network.Network;
+import com.powsybl.iidm.network.NetworkFactory;
+import com.powsybl.triplestore.api.TripleStoreFactory;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class DynawoSimulatorTest {
+public class DynawoExporterTest extends AbstractConverterTest {
 
-    @Test
-    public void test() throws Exception {
-        try (FileSystem fs = Jimfs.newFileSystem(Configuration.unix())) {
-
-            PlatformConfig platformConfig = configure(fs);
-            DynawoSimulatorTester tester = new DynawoSimulatorTester(platformConfig, true);
-            Network network = tester.convert(platformConfig, catalog.nordic32());
-            DynawoProvider provider = configureProvider(network);
-            DynawoResults result = tester.testGridModel(network, provider);
-            LOGGER.info("metrics " + result.getMetrics().get("success"));
-            assertTrue(Boolean.parseBoolean(result.getMetrics().get("success")));
-
-            // check final voltage of bus close to the event
-            int index = result.getNames().indexOf("NETWORK__N1011____TN_Upu_value");
-            assertEquals(result.getTimeSerie().get(new Double(30.0)).get(index), new Double(0.931558));
-        }
+    @Before
+    public void setUp() throws IOException {
+        fileSystem = Jimfs.newFileSystem(Configuration.unix());
+        tmpDir = Files.createDirectory(fileSystem.getPath("/tmp"));
+        platformConfig = new InMemoryPlatformConfig(fileSystem);
+        network = importNetwork(platformConfig, catalog.nordic32());
+        network.setCaseDate(DateTime.parse("2019-09-23T11:06:12.313+02:00"));
+        dynawoProvider = configureProvider(network);
     }
 
-    private PlatformConfig configure(FileSystem fs) throws IOException {
-        InMemoryPlatformConfig platformConfig = new InMemoryPlatformConfig(fs);
-        Files.createDirectory(fs.getPath("/dynawoPath"));
-        Files.createDirectory(fs.getPath("/workingPath"));
-        Files.createDirectories(fs.getPath("/tmp"));
-        MapModuleConfig moduleConfig = platformConfig.createModuleConfig("import-export-parameters-default-value");
-        moduleConfig.setStringProperty("iidm.export.xml.extensions", "null");
-        moduleConfig = platformConfig.createModuleConfig("computation-local");
-        moduleConfig.setStringProperty("tmpDir", "/tmp");
-        moduleConfig = platformConfig.createModuleConfig("dynawo");
-        moduleConfig.setStringProperty("dynawoHomeDir", "/dynawoPath");
-        moduleConfig.setStringProperty("workingDir", "/workingPath");
-        moduleConfig.setStringProperty("debug", "false");
-        moduleConfig.setStringProperty("dynawoCptCommandName", "myEnvDynawo.sh");
-        moduleConfig = platformConfig.createModuleConfig("simulation-parameters");
-        moduleConfig.setStringProperty("preFaultSimulationStopInstant", "1");
-        moduleConfig.setStringProperty("postFaultSimulationStopInstant", "60");
-        moduleConfig.setStringProperty("faultEventInstant", "30");
-        moduleConfig.setStringProperty("branchSideOneFaultShortCircuitDuration", "60");
-        moduleConfig.setStringProperty("branchSideTwoFaultShortCircuitDuration", "60");
-        moduleConfig.setStringProperty("generatorFaultShortCircuitDuration", "60");
-        return platformConfig;
+    @Test
+    public void export() throws IOException {
+        DynawoExporter exporter = new DynawoExporter(network, dynawoProvider);
+        exporter.export(tmpDir, platformConfig);
+        Files.walk(tmpDir).forEach(file -> {
+            if (Files.isRegularFile(file)) {
+                try (InputStream is = Files.newInputStream(file)) {
+                    compareXml(getClass().getResourceAsStream("/nordic32/" + file.getFileName()), is);
+                } catch (IOException e) {
+                    LOGGER.error(e.getMessage());
+                }
+            }
+        });
+    }
+
+    private Network importNetwork(PlatformConfig platformConfig, TestGridModel gm) throws IOException {
+        String impl = TripleStoreFactory.defaultImplementation();
+        CgmesImport i = new CgmesImport(platformConfig);
+        Properties params = new Properties();
+        params.put("storeCgmesModelAsNetworkExtension", "true");
+        params.put("powsyblTripleStore", impl);
+        ReadOnlyDataSource ds = gm.dataSource();
+        Network n = i.importData(ds, NetworkFactory.findDefault(), params);
+        return n;
     }
 
     private DynawoProvider configureProvider(Network network) {
         // Job file
         DynawoProvider dynawoProvider = Mockito.mock(DynawoProvider.class);
         DynawoSolver solver = new DynawoSolver("libdynawo_SolverIDA", "solvers.par", 2);
-        DynawoModeler modeler = new DynawoModeler("outputs/compilation", "dynawoModel.xiidm", "dynawoModel.par", 1, "dynawoModel.dyd");
+        DynawoModeler modeler = new DynawoModeler("outputs/compilation", "dynawoModel.xiidm", "dynawoModel.par", 1,
+            "dynawoModel.dyd");
         DynawoSimulation simulation = new DynawoSimulation(0, 30, false);
         DynawoOutputs outputs = new DynawoOutputs("outputs", "dynawoModel.crv");
         DynawoJob job = new DynawoJob("Nordic 32 - Disconnect Line", solver, modeler, simulation, outputs);
@@ -245,7 +243,8 @@ public class DynawoSimulatorTest {
 
         // Event connection dyd
         dynamicModels
-            .add(new DynawoDynamicModel("DISCONNECT_LINE", "event_state1_value", "NETWORK", "_N1011___-N1013___-1_AC_state_value"));
+            .add(new DynawoDynamicModel("DISCONNECT_LINE", "event_state1_value", "NETWORK",
+                "_N1011___-N1013___-1_AC_state_value"));
         Mockito.when(dynawoProvider.getDynawoDynamicModels(network)).thenReturn(dynamicModels);
 
         // Curve file
@@ -263,6 +262,8 @@ public class DynawoSimulatorTest {
         return dynawoProvider;
     }
 
+    private Network network;
+    private DynawoProvider dynawoProvider;
     private final Cim14SmallCasesCatalog catalog = new Cim14SmallCasesCatalog();
-    private static final Logger LOGGER = LoggerFactory.getLogger(DynawoSimulatorTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DynawoExporterTest.class);
 }

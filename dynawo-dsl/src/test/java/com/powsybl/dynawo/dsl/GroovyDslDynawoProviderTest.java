@@ -218,10 +218,16 @@ public class GroovyDslDynawoProviderTest {
         try (FileSystem fs = Jimfs.newFileSystem(Configuration.unix())) {
 
             PlatformConfig platformConfig = configure(fs);
-            DynawoSimulatorTester tester = new DynawoSimulatorTester(platformConfig, false);
+            DynawoSimulatorTester tester = new DynawoSimulatorTester(platformConfig, true);
             Network network = tester.convert(platformConfig, catalog.nordic32());
             DynawoProvider provider = new GroovyDslDynawoProvider(getClass().getResourceAsStream("/nordic32.groovy"));
             DynawoResults result = tester.testGridModel(network, provider);
+            LOGGER.info("metrics " + result.getMetrics().get("success"));
+            assertTrue(Boolean.parseBoolean(result.getMetrics().get("success")));
+
+            // check final voltage of bus close to the event
+            int index = result.getNames().indexOf("NETWORK__N1011____TN_Upu_value");
+            assertEquals(result.getTimeSerie().get(new Double(30.0)).get(index), new Double(0.931558));
         }
     }
 

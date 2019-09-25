@@ -43,6 +43,7 @@
 		<module>dynawo-simulator</module>
 		<module>dynawo-api</module>
 		<module>dynawo-dsl</module>
+		<module>dynawo-xml-exporter</module>
 	</modules>
 
 	<properties>
@@ -88,6 +89,7 @@
 		<mockito.version>1.10.19</mockito.version>
 		<groovy.version>2.4.15</groovy.version>
 		<commonsio.version>2.5</commonsio.version>
+        <xmlunit.version>2.3.0</xmlunit.version>
 
 		<powsyblcore.version>3.0.0-SNAPSHOT</powsyblcore.version>
 	</properties>
@@ -505,6 +507,19 @@
 				<groupId>com.google.jimfs</groupId>
 				<artifactId>jimfs</artifactId>
 				<version>${jimfs.version}</version>
+				<scope>test</scope>
+			</dependency>
+            <dependency>
+                <groupId>org.xmlunit</groupId>
+                <artifactId>xmlunit-core</artifactId>
+                <version>${xmlunit.version}</version>
+                <scope>test</scope>
+            </dependency>
+			<dependency>
+				<groupId>com.powsybl</groupId>
+				<artifactId>powsybl-commons</artifactId>
+				<version>${powsyblcore.version}</version>
+				<type>test-jar</type>
 				<scope>test</scope>
 			</dependency>
 			<dependency>

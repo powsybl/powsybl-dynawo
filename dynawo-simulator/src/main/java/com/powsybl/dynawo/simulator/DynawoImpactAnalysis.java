@@ -11,7 +11,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
@@ -20,7 +19,6 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.ImmutableMap;
 import com.powsybl.commons.config.PlatformConfig;
-import com.powsybl.commons.datasource.FileDataSource;
 import com.powsybl.computation.AbstractExecutionHandler;
 import com.powsybl.computation.Command;
 import com.powsybl.computation.CommandExecution;
@@ -29,14 +27,9 @@ import com.powsybl.computation.ExecutionEnvironment;
 import com.powsybl.computation.ExecutionReport;
 import com.powsybl.computation.GroupCommandBuilder;
 import com.powsybl.dynawo.DynawoProvider;
-import com.powsybl.dynawo.simulator.input.DynawoCurves;
-import com.powsybl.dynawo.simulator.input.DynawoDynamicModels;
-import com.powsybl.dynawo.simulator.input.DynawoJobs;
-import com.powsybl.dynawo.simulator.input.DynawoSimulationParameters;
-import com.powsybl.dynawo.simulator.input.DynawoSolverParameters;
 import com.powsybl.dynawo.simulator.results.DynawoResults;
+import com.powsybl.dynawo.xml.DynawoExporter;
 import com.powsybl.iidm.network.Network;
-import com.powsybl.iidm.xml.XMLExporter;
 import com.powsybl.simulation.ImpactAnalysis;
 import com.powsybl.simulation.ImpactAnalysisProgressListener;
 import com.powsybl.simulation.ImpactAnalysisResult;
@@ -50,7 +43,6 @@ public class DynawoImpactAnalysis implements ImpactAnalysis {
 
     private static final String WORKING_DIR_PREFIX = "powsybl_dynawo_impact_analysis_";
     private static final String OUTPUT_FILE = "curves/curves.csv";
-    private static final String DEFAULT_DYNAWO_CASE_NAME = "nrt/data/IEEE14/IEEE14_BasicTestCases/IEEE14_DisconnectLine/IEEE14.jobs";
 
     public DynawoImpactAnalysis(Network network, ComputationManager computationManager, int priority,
         DynawoProvider dynawoProvider) {
@@ -78,20 +70,8 @@ public class DynawoImpactAnalysis implements ImpactAnalysis {
     }
 
     protected Command before(Path workingDir) {
-        String dynawoJobsFile = DEFAULT_DYNAWO_CASE_NAME;
-        new DynawoJobs(network, dynawoProvider).prepareFile(workingDir);
-        new DynawoDynamicModels(network, dynawoProvider).prepareFile(workingDir);
-        new DynawoSimulationParameters(network, dynawoProvider).prepareFile(workingDir);
-        new DynawoSolverParameters(network, dynawoProvider).prepareFile(workingDir);
-        new DynawoCurves(network, dynawoProvider).prepareFile(workingDir);
-        if (network != null) {
-            Path jobsFile = workingDir.resolve("dynawoModel.jobs");
-            XMLExporter xmlExporter = new XMLExporter(platformConfig);
-            Properties params = new Properties();
-            params.put("iidm.export.xml.extensions", "null");
-            xmlExporter.export(network, params, new FileDataSource(workingDir, "dynawoModel"));
-            dynawoJobsFile = jobsFile.toAbsolutePath().toString();
-        }
+        DynawoExporter exporter = new DynawoExporter(network, dynawoProvider);
+        String dynawoJobsFile = exporter.export(workingDir, platformConfig);
         LOGGER.info("cmd {} jobs {}", config.getDynawoCptCommandName(), dynawoJobsFile);
         return createCommand(dynawoJobsFile);
     }
