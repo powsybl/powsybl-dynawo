@@ -6,86 +6,43 @@
  */
 package com.powsybl.dynawo.simulator.input;
 
-import java.io.IOException;
-import java.io.Writer;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 
 import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.Generator;
 import com.powsybl.iidm.network.Load;
-import com.powsybl.iidm.network.Network;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class DynawoCurves {
+public final class DynawoCurves {
 
-    public DynawoCurves(Network network) {
-        this.network = network;
+    private DynawoCurves() {
+        throw new IllegalStateException("Utility class");
     }
 
-    public void prepareFile(Path workingDir) {
-        Path parFile = workingDir.resolve("dynawoModel.crv");
-        try (Writer writer = Files.newBufferedWriter(parFile, StandardCharsets.UTF_8)) {
-            writer.write(String.join(System.lineSeparator(), curves()));
-        } catch (IOException e) {
-            LOGGER.error("Error in file dynawoModel.crv");
-        }
+    public static void writeBusCurve(Bus b, XMLStreamWriter writer) throws XMLStreamException {
+        writeCurve(writer, "NETWORK", b.getId() + "_Upu_value");
     }
 
-    private CharSequence curves() {
-        StringBuilder builder = new StringBuilder();
-        builder.append(String.join(System.lineSeparator(),
-            DynawoInput.setInputHeader(),
-            "<curvesInput xmlns=\"http://www.rte-france.com/dynawo\">",
-            "<!--Curves for scenario-->") + System.lineSeparator());
-
-        for (Bus b : network.getBusBreakerView().getBuses()) {
-            loadBusCurve(b, builder);
-        }
-        for (Generator g : network.getGenerators()) {
-            loadGeneratorCurve(g, builder);
-        }
-        for (Load l : network.getLoads()) {
-            loadLoadCurve(l, builder);
-        }
-
-        builder.append(String.join(System.lineSeparator(),
-            "</curvesInput>") + System.lineSeparator());
-        return builder.toString();
+    public static void writeGeneratorCurve(Generator g, XMLStreamWriter writer) throws XMLStreamException {
+        writeCurve(writer, g.getId(), "generator_omegaPu");
+        writeCurve(writer, g.getId(), "generator_PGen");
+        writeCurve(writer, g.getId(), "generator_QGen");
+        writeCurve(writer, g.getId(), "generator_UStatorPu");
+        writeCurve(writer, g.getId(), "voltageRegulator_UcEfdPu");
+        writeCurve(writer, g.getId(), "voltageRegulator_EfdPu");
     }
 
-    private void loadBusCurve(Bus b, StringBuilder builder) {
-        builder.append(String.join(System.lineSeparator(),
-            setCurve("NETWORK", b.getId() + "_Upu_value")) + System.lineSeparator());
+    public static void writeLoadCurve(Load l, XMLStreamWriter writer) throws XMLStreamException {
+        writeCurve(writer, l.getId(), "load_PPu");
+        writeCurve(writer, l.getId(), "load_QPu");
     }
 
-    private void loadGeneratorCurve(Generator g, StringBuilder builder) {
-        builder.append(String.join(System.lineSeparator(),
-            setCurve(g.getId(), "generator_omegaPu"),
-            setCurve(g.getId(), "generator_PGen"),
-            setCurve(g.getId(), "generator_QGen"),
-            setCurve(g.getId(), "generator_UStatorPu"),
-            setCurve(g.getId(), "voltageRegulator_UcEfdPu"),
-            setCurve(g.getId(), "voltageRegulator_EfdPu")) + System.lineSeparator());
+    private static void writeCurve(XMLStreamWriter writer, String model, String variable) throws XMLStreamException {
+        writer.writeEmptyElement("curve");
+        writer.writeAttribute("model", model);
+        writer.writeAttribute("variable", variable);
     }
-
-    private void loadLoadCurve(Load l, StringBuilder builder) {
-        builder.append(String.join(System.lineSeparator(),
-            setCurve(l.getId(), "load_PPu"),
-            setCurve(l.getId(), "load_QPu")) + System.lineSeparator());
-    }
-
-    private String setCurve(String model, String variable) {
-        return "  <curve model=\"" + model + "\" variable=\"" + variable + "\"/>";
-    }
-
-    private final Network network;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(DynawoCurves.class);
 }

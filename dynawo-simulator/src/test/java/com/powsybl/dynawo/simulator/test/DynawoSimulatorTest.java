@@ -9,7 +9,6 @@ package com.powsybl.dynawo.simulator.test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
@@ -18,7 +17,6 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
@@ -29,10 +27,16 @@ import com.powsybl.commons.config.InMemoryPlatformConfig;
 import com.powsybl.commons.config.MapModuleConfig;
 import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.datasource.ReadOnlyDataSource;
+import com.powsybl.computation.ComputationManager;
+import com.powsybl.computation.local.LocalComputationConfig;
+import com.powsybl.computation.local.LocalComputationManager;
+import com.powsybl.dynawo.simulator.DynawoConfig;
 import com.powsybl.dynawo.simulator.DynawoSimulator;
 import com.powsybl.dynawo.simulator.results.DynawoResults;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.NetworkFactory;
+import com.powsybl.iidm.xml.XMLExporter;
+import com.powsybl.simulation.SimulationParameters;
 import com.powsybl.triplestore.api.TripleStoreFactory;
 
 /**
@@ -45,25 +49,13 @@ public class DynawoSimulatorTest {
         try (FileSystem fs = Jimfs.newFileSystem(Configuration.unix())) {
             PlatformConfig platformConfig = configure(fs);
             Network network = convert(platformConfig, catalog.nordic32());
-            DynawoSimulator simulator = mockResults(new DynawoSimulator(network, platformConfig));
-            simulator.simulate();
-            DynawoResults result = (DynawoResults) simulator.getResult();
+            DynawoResults result = simulate(network, platformConfig);
             assertTrue(Boolean.parseBoolean(result.getMetrics().get("success")));
 
             //check final voltage of bus close to the event
             int index = result.getNames().indexOf("NETWORK__N1011____TN_Upu_value");
-            assertEquals(result.getTimeSerie().get(new Double(30.0)).get(index), new Double(0.931558));
+            assertEquals(result.getTimeSeries().get(new Double(30.0)).get(index), new Double(0.931558));
         }
-    }
-
-    private DynawoSimulator mockResults(DynawoSimulator simulator) {
-        DynawoSimulator spySimulator = Mockito.spy(simulator);
-        Map<String, String> metrics = new HashMap<>();
-        metrics.put("success", "true");
-        DynawoResults result = new DynawoResults(metrics);
-        result.parseCsv(new File(getClass().getClassLoader().getResource("nordic32/curves.csv").getFile()).toPath());
-        Mockito.when(spySimulator.getResult()).thenReturn(result);
-        return spySimulator;
     }
 
     private PlatformConfig configure(FileSystem fs) throws IOException {
@@ -99,6 +91,21 @@ public class DynawoSimulatorTest {
         ReadOnlyDataSource ds = gm.dataSource();
         Network n = i.importData(ds, NetworkFactory.findDefault(), params);
         return n;
+    }
+
+    private DynawoResults simulate(Network network, PlatformConfig platformConfig) throws Exception {
+        ComputationManager computationManager = new LocalComputationManager(
+            LocalComputationConfig.load(platformConfig));
+        SimulationParameters simulationParameters = SimulationParameters.load(platformConfig);
+        DynawoConfig dynawoConfig = DynawoConfig.load(platformConfig);
+        XMLExporter exporter = new XMLExporter(platformConfig);
+        DynawoSimulator simulator = new DynawoSimulator(simulationParameters, computationManager, exporter, dynawoConfig);
+        simulator.simulate(network);
+        Map<String, String> metrics = new HashMap<>();
+        metrics.put("success", "true");
+        DynawoResults result = new DynawoResults(metrics);
+        result.parseCsv(getClass().getResourceAsStream("/nordic32/curves.csv"));
+        return result;
     }
 
     private final Cim14SmallCasesCatalog catalog = new Cim14SmallCasesCatalog();

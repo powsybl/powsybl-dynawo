@@ -8,12 +8,15 @@ package com.powsybl.dynawo.simulator.results;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -27,16 +30,25 @@ import com.powsybl.simulation.ImpactAnalysisResult;
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
+//TODO pending to use Powsybl TimeSeries
 public class DynawoResults extends ImpactAnalysisResult {
 
     public DynawoResults(Map<String, String> metrics) {
         super(metrics);
         names = new ArrayList<>();
-        timeSerie = new HashMap<>();
+        timeSeries = new HashMap<>();
     }
 
     public void parseCsv(Path file) {
-        try (BufferedReader reader = Files.newBufferedReader(file, StandardCharsets.UTF_8)) {
+        try {
+            parseCsv(Files.newInputStream(file));
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    public void parseCsv(InputStream is) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
             parseCsv(reader, ';');
         } catch (IOException e) {
             throw new UncheckedIOException(e);
@@ -59,8 +71,8 @@ public class DynawoResults extends ImpactAnalysisResult {
         return names;
     }
 
-    public Map<Double, List<Double>> getTimeSerie() {
-        return timeSerie;
+    public Map<Double, List<Double>> getTimeSeries() {
+        return Collections.unmodifiableMap(timeSeries);
     }
 
     private void readCsvHeader(BufferedReader reader, String separatorStr) throws IOException {
@@ -105,7 +117,7 @@ public class DynawoResults extends ImpactAnalysisResult {
             values.add(parseToken(token));
         }
         Double time = parseToken(tokens[0].trim());
-        timeSerie.put(time, values);
+        timeSeries.put(time, values);
     }
 
     private Double parseToken(String token) {
@@ -113,5 +125,5 @@ public class DynawoResults extends ImpactAnalysisResult {
     }
 
     private List<String> names;
-    private Map<Double, List<Double>> timeSerie;
+    private Map<Double, List<Double>> timeSeries;
 }

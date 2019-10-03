@@ -6,137 +6,93 @@
  */
 package com.powsybl.dynawo.simulator.input;
 
-import java.io.IOException;
-import java.io.Writer;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Objects;
-import java.util.Optional;
+import static com.powsybl.dynawo.simulator.DynawoConstants.PAR_FILENAME;
+import static com.powsybl.dynawo.simulator.DynawoXmlConstants.DYN_URI;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Objects;
+
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 
 import com.powsybl.iidm.network.Generator;
 import com.powsybl.iidm.network.Line;
 import com.powsybl.iidm.network.Load;
-import com.powsybl.iidm.network.Network;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class DynawoDynamicsModels {
+public final class DynawoDynamicsModels {
 
     private static final String NETWORK = "NETWORK";
     private static final String OMEGA_REF = "OMEGA_REF";
 
-    public DynawoDynamicsModels(Network n) {
-        this.n = n;
+    private DynawoDynamicsModels() {
+        throw new IllegalStateException("Utility class");
     }
 
-    public void prepareFile(Path workingDir) {
-        Path parFile = workingDir.resolve("dynawoModel.dyd");
-        try (Writer writer = Files.newBufferedWriter(parFile, StandardCharsets.UTF_8)) {
-            writer.write(String.join(System.lineSeparator(), dynamicsModels()));
-        } catch (IOException e) {
-            LOGGER.error("Error in file dynawoModel.dyd");
-        }
+    public static void writeOmegaRefDynamicsModels(XMLStreamWriter writer, int id) throws XMLStreamException {
+        writeBlackBoxModel(writer, OMEGA_REF, "DYNModelOmegaRef", id);
     }
 
-    private CharSequence dynamicsModels() {
-        StringBuilder builder = new StringBuilder();
-        builder.append(String.join(System.lineSeparator(),
-            DynawoInput.setInputHeader(),
-            "<dyn:dynamicModelsArchitecture xmlns:dyn=\"http://www.rte-france.com/dynawo\">") + System.lineSeparator());
-        int id = 2;
-        for (Load l : n.getLoads()) {
-            loadDynamicsModels(l, builder, id++);
-        }
-        for (Generator g : n.getGenerators()) {
-            genDynamicsModels(g, builder, id++);
-        }
-        omegaRefDynamicsModels(builder, id++);
-        eventDisconnectLineDynamicsModels(builder, id);
-        for (Load l : n.getLoads()) {
-            loadConnections(l, builder);
-        }
-        int grp = 0;
-        for (Generator g : n.getGenerators()) {
-            genConnections(g, builder, grp++);
-        }
-        Optional<Line> line = n.getLineStream().findFirst();
-        if (line.isPresent()) {
-            eventDisconnectLineConnections(line.get(), builder);
-        }
-        builder.append(String.join(System.lineSeparator(),
-            "</dyn:dynamicModelsArchitecture>") + System.lineSeparator());
-        return builder.toString();
+    public static void writeEventDisconnectLineDynamicsModels(XMLStreamWriter writer, int id)
+        throws XMLStreamException {
+        writeBlackBoxModel(writer, "DISCONNECT_LINE", "EventQuadripoleDisconnection", id);
     }
 
-    private void omegaRefDynamicsModels(StringBuilder builder, int id) {
-        builder.append(String.join(System.lineSeparator(),
-            setBlackBoxModel(OMEGA_REF, "DYNModelOmegaRef", id))
-            + System.lineSeparator());
+    public static void writeLoadDynamicsModels(Load l, XMLStreamWriter writer, int id) throws XMLStreamException {
+        writeBlackBoxModel(writer, l.getId(), "LoadAlphaBeta", id, l.getId());
     }
 
-    private void eventDisconnectLineDynamicsModels(StringBuilder builder, int id) {
-        builder.append(String.join(System.lineSeparator(),
-            setBlackBoxModel("DISCONNECT_LINE", "EventQuadripoleDisconnection", id))
-            + System.lineSeparator());
+    public static void writeGeneratorDynamicsModels(Generator g, XMLStreamWriter writer, int id)
+        throws XMLStreamException {
+        writeBlackBoxModel(writer, g.getId(), "GeneratorSynchronousFourWindingsProportionalRegulations", id,
+            g.getId());
     }
 
-    private void loadDynamicsModels(Load l, StringBuilder builder, int id) {
-        builder.append(String.join(System.lineSeparator(),
-            setBlackBoxModel(l.getId(), "LoadAlphaBeta", id, l.getId()))
-            + System.lineSeparator());
+    public static void writeLoadConnections(Load l, XMLStreamWriter writer) throws XMLStreamException {
+        wrtieConnection(writer, l.getId(), "load_terminal", NETWORK,
+            l.getTerminal().getBusBreakerView().getBus().getId() + "_ACPIN");
     }
 
-    private void genDynamicsModels(Generator g, StringBuilder builder, int id) {
-        builder.append(String.join(System.lineSeparator(),
-            setBlackBoxModel(g.getId(), "GeneratorSynchronousFourWindingsProportionalRegulations", id, g.getId()))
-            + System.lineSeparator());
+    public static void writeGeneratorConnections(Generator g, XMLStreamWriter writer, int grp)
+        throws XMLStreamException {
+        wrtieConnection(writer, OMEGA_REF, "omega_grp_" + grp, g.getId(), "generator_omegaPu");
+        wrtieConnection(writer, OMEGA_REF, "omegaRef_grp_" + grp, g.getId(), "generator_omegaRefPu");
+        wrtieConnection(writer, OMEGA_REF, "numcc_node_" + grp, NETWORK, "@" + g.getId() + "@@NODE@_numcc");
+        wrtieConnection(writer, OMEGA_REF, "running_grp_" + grp, g.getId(), "generator_running");
+        wrtieConnection(writer, g.getId(), "generator_terminal", NETWORK, "@" + g.getId() + "@@NODE@_ACPIN");
+        wrtieConnection(writer, g.getId(), "generator_switchOffSignal1", NETWORK,
+            "@" + g.getId() + "@@NODE@_switchOff");
     }
 
-    private void loadConnections(Load l, StringBuilder builder) {
-        builder.append(String.join(System.lineSeparator(),
-            setConnection(l.getId(), "load_terminal", NETWORK,
-                l.getTerminal().getBusBreakerView().getBus().getId() + "_ACPIN"))
-            + System.lineSeparator());
-    }
-
-    private void genConnections(Generator g, StringBuilder builder, int grp) {
-        builder.append(String.join(System.lineSeparator(),
-            setConnection(OMEGA_REF, "omega_grp_" + grp, g.getId(), "generator_omegaPu"),
-            setConnection(OMEGA_REF, "omegaRef_grp_" + grp, g.getId(), "generator_omegaRefPu"),
-            setConnection(OMEGA_REF, "numcc_node_" + grp, NETWORK, "@" + g.getId() + "@@NODE@_numcc"),
-            setConnection(OMEGA_REF, "running_grp_" + grp, g.getId(), "generator_running"),
-            setConnection(g.getId(), "generator_terminal", NETWORK, "@" + g.getId() + "@@NODE@_ACPIN"),
-            setConnection(g.getId(), "generator_switchOffSignal1", NETWORK, "@" + g.getId() + "@@NODE@_switchOff"))
-            + System.lineSeparator());
-    }
-
-    private void eventDisconnectLineConnections(Line l, StringBuilder builder) {
+    public static void writeEventDisconnectLineConnections(Line l, XMLStreamWriter writer) throws XMLStreamException {
         Objects.requireNonNull(l);
-        builder.append(String.join(System.lineSeparator(),
-            setConnection("DISCONNECT_LINE", "event_state1_value", NETWORK, l.getId() + "_state_value"))
-            + System.lineSeparator());
+        wrtieConnection(writer, "DISCONNECT_LINE", "event_state1_value", NETWORK, l.getId() + "_state_value");
     }
 
-    private String setBlackBoxModel(String id, String lib, int parId) {
-        return "  <dyn:blackBoxModel id=\"" + id + "\" lib=\"" + lib + "\" parFile=\"dynawoModel.par\" parId=\"" + parId
-            + "\" />";
+    private static void writeBlackBoxModel(XMLStreamWriter writer, String id, String lib, int parId)
+        throws XMLStreamException {
+        writeBlackBoxModel(writer, id, lib, parId, null);
     }
 
-    private String setBlackBoxModel(String id, String lib, int parId, String staticId) {
-        return "  <dyn:blackBoxModel id=\"" + id + "\" lib=\"" + lib + "\" parFile=\"dynawoModel.par\" parId=\"" + parId
-            + "\" staticId=\"" + staticId + "\" />";
+    private static void writeBlackBoxModel(XMLStreamWriter writer, String id, String lib, int parId, String staticId)
+        throws XMLStreamException {
+        writer.writeEmptyElement(DYN_URI, "blackBoxModel");
+        writer.writeAttribute("id", id);
+        writer.writeAttribute("lib", lib);
+        writer.writeAttribute("parFile", PAR_FILENAME);
+        writer.writeAttribute("parId", Integer.toString(parId));
+        if (staticId != null) {
+            writer.writeAttribute("staticId", staticId);
+        }
     }
 
-    private String setConnection(String id1, String var1, String id2, String var2) {
-        return "  <dyn:connect id1=\"" + id1 + "\" var1=\"" + var1 + "\" id2=\"" + id2 + "\" var2=\"" + var2 + "\"/>";
+    private static void wrtieConnection(XMLStreamWriter writer, String id1, String var1, String id2, String var2)
+        throws XMLStreamException {
+        writer.writeEmptyElement(DYN_URI, "connect");
+        writer.writeAttribute("id1", id1);
+        writer.writeAttribute("var1", var1);
+        writer.writeAttribute("id2", id2);
+        writer.writeAttribute("var2", var2);
     }
-
-    private final Network n;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(DynawoDynamicsModels.class);
 }
