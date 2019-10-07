@@ -6,198 +6,233 @@
  */
 package com.powsybl.dynawo.xml;
 
-import java.io.IOException;
-import java.io.Writer;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 
-import com.powsybl.dynawo.DynawoParameter;
-import com.powsybl.dynawo.DynawoParameterSet;
-import com.powsybl.dynawo.DynawoProvider;
+import com.powsybl.dynawo.DynawoParameterType;
+import com.powsybl.dynawo.par.DynawoParameter;
+import com.powsybl.dynawo.par.DynawoParameterRow;
+import com.powsybl.dynawo.par.DynawoParameterSet;
+import com.powsybl.dynawo.par.DynawoParameterTable;
 import com.powsybl.iidm.network.Network;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class DynawoSimulationParameters {
+public final class DynawoSimulationParameters {
 
-    public DynawoSimulationParameters(Network network, DynawoProvider provider) {
-        this.network = network;
-        this.parameterSets = provider.getDynawoParameterSets(network);
+    private DynawoSimulationParameters() {
     }
 
-    public void prepareFile(Path workingDir) {
-        Path parFile = workingDir.resolve("dynawoModel.par");
-        try (Writer writer = Files.newBufferedWriter(parFile, StandardCharsets.UTF_8)) {
-            writer.write(String.join(System.lineSeparator(), writeParameterSets()));
-        } catch (IOException e) {
-            LOGGER.error("Error in file dynawoModel.par");
+    public static int getMaxId(List<DynawoParameterSet> parameterSets) {
+        return parameterSets.stream().mapToInt(parameterSet -> parameterSet.getId()).max().orElse(1);
+    }
+
+    public static int countLoadParameterSets(List<DynawoParameterSet> parameterSets) {
+        int loads = 0;
+        for (DynawoParameterSet parameterSet : parameterSets) {
+            if (parameterSet.getParameters().stream().anyMatch(parameter -> parameter.getName().startsWith("load_"))) {
+                loads++;
+            }
+        }
+        return loads;
+    }
+
+    public static int countGeneratorParameterSets(List<DynawoParameterSet> parameterSets) {
+        int generators = 0;
+        for (DynawoParameterSet parameterSet : parameterSets) {
+            if (parameterSet.getParameters().stream()
+                .anyMatch(parameter -> parameter.getName().startsWith("generator_"))) {
+                generators++;
+            }
+        }
+        return generators;
+    }
+
+    public static void writeParameterSets(XMLStreamWriter writer, List<DynawoParameterSet> parameterSets)
+        throws XMLStreamException {
+        for (DynawoParameterSet parameterSet : parameterSets) {
+            writeParameterSet(writer, parameterSet);
         }
     }
 
-    private String writeParameterSets() {
-        StringBuilder builder = new StringBuilder();
-        builder.append(String.join(System.lineSeparator(),
-            DynawoInput.writeInputHeader(),
-            "<parametersSet xmlns=\"http://www.rte-france.com/dynawo\">") + System.lineSeparator());
-        if (parameterSets.stream().noneMatch(this::defaultOmegaRefParameterSet)) {
-            builder.append(
-                String.join(System.lineSeparator(), writeDefaultOmegaRefParameterSets()) + System.lineSeparator());
-        }
-        parameterSets.forEach(parameterSet -> builder
-            .append(String.join(System.lineSeparator(), writeParameterSet(parameterSet)) + System.lineSeparator()));
-        builder.append(String.join(System.lineSeparator(), writeDefaultParameterSets()) + System.lineSeparator());
-        builder.append(String.join(System.lineSeparator(),
-            "</parametersSet>") + System.lineSeparator());
-        return builder.toString();
-    }
-
-    private String writeDefaultOmegaRefParameterSets() {
+    public static void writeDefaultOmegaRefParameterSets(XMLStreamWriter writer, Network network, int id)
+        throws XMLStreamException {
         List<DynawoParameter> parameters = new ArrayList<>();
-        parameters.add(new DynawoParameter("nbGen", DynawoInput.INT, "" + network.getGeneratorCount()));
+        parameters
+            .add(new DynawoParameter("nbGen", DynawoParameterType.INT.getValue(), "" + network.getGeneratorCount()));
         for (int i = 0; i < network.getGeneratorCount(); i++) {
-            parameters.add(new DynawoParameter("weight_gen_" + i, DynawoInput.DOUBLE, "1"));
+            parameters.add(new DynawoParameter("weight_gen_" + i, DynawoParameterType.DOUBLE.getValue(), "1"));
         }
-        parameterSets.add(new DynawoParameterSet(2, Collections.unmodifiableList(parameters)));
-        return writeParameterSet(new DynawoParameterSet(2, parameters));
+        DynawoParameterSet parameterSet = new DynawoParameterSet(2);
+        parameterSet.addParameters(Collections.unmodifiableList(parameters));
+        writeParameterSet(writer, parameterSet);
     }
 
-    private boolean defaultOmegaRefParameterSet(DynawoParameterSet parameterSet) {
-        return parameterSet.getParameters().stream().anyMatch(parameter -> parameter.getName().equals("nbGen"));
+    public static boolean hasDefaultOmegaRefParameterSet(List<DynawoParameterSet> parameterSets) {
+        return parameterSets.stream().noneMatch(parameterSet -> parameterSet.getParameters().stream()
+            .anyMatch(parameter -> parameter.getName().equals("nbGen")));
     }
 
-    private String writeDefaultParameterSets() {
-        StringBuilder builder = new StringBuilder();
-        while (loads <= network.getLoadCount()) {
-            builder.append(String.join(System.lineSeparator(),
-                writeDefaultLoad()) + System.lineSeparator());
-        }
-        while (generators <= network.getGeneratorCount()) {
-            builder.append(String.join(System.lineSeparator(), writeDefaultGenerator())
-                + System.lineSeparator());
-        }
-        return builder.toString();
-    }
-
-    private CharSequence writeDefaultLoad() {
+    public static void writeDefaultLoad(XMLStreamWriter writer, int setId) throws XMLStreamException {
         List<DynawoParameter> parameters = new ArrayList<>();
-        parameters.add(new DynawoParameter("load_alpha", DynawoInput.DOUBLE, "1.5"));
-        parameters.add(new DynawoParameter("load_beta", DynawoInput.DOUBLE, "2.5"));
-        parameters.add(new DynawoParameter("load_P0Pu", DynawoInput.DOUBLE, DynawoInput.IIDM, "p_pu"));
-        parameters.add(new DynawoParameter("load_Q0Pu", DynawoInput.DOUBLE, DynawoInput.IIDM, "q_pu"));
-        parameters.add(new DynawoParameter("load_U0Pu", DynawoInput.DOUBLE, DynawoInput.IIDM, "v_pu"));
-        parameters.add(new DynawoParameter("load_UPhase0", DynawoInput.DOUBLE, DynawoInput.IIDM, "angle_pu"));
-        return writeParameterSet(new DynawoParameterSet(maxSetId + 1, parameters));
+        parameters.add(new DynawoParameter("load_alpha", DynawoParameterType.DOUBLE.getValue(), "1.5"));
+        parameters.add(new DynawoParameter("load_beta", DynawoParameterType.DOUBLE.getValue(), "2.5"));
+        parameters.add(new DynawoParameter("load_P0Pu", DynawoParameterType.DOUBLE.getValue(),
+            DynawoParameterType.IIDM.getValue(), "p_pu"));
+        parameters.add(new DynawoParameter("load_Q0Pu", DynawoParameterType.DOUBLE.getValue(),
+            DynawoParameterType.IIDM.getValue(), "q_pu"));
+        parameters.add(new DynawoParameter("load_U0Pu", DynawoParameterType.DOUBLE.getValue(),
+            DynawoParameterType.IIDM.getValue(), "v_pu"));
+        parameters.add(new DynawoParameter("load_UPhase0", DynawoParameterType.DOUBLE.getValue(),
+            DynawoParameterType.IIDM.getValue(), "angle_pu"));
+        DynawoParameterSet parameterSet = new DynawoParameterSet(setId);
+        parameterSet.addParameters(Collections.unmodifiableList(parameters));
+        writeParameterSet(writer, parameterSet);
     }
 
-    private CharSequence writeDefaultGenerator() {
+    public static void writeDefaultGenerator(XMLStreamWriter writer, int setId) throws XMLStreamException {
         List<DynawoParameter> parameters = new ArrayList<>();
-        parameters.add(new DynawoParameter("generator_ExcitationPu", DynawoInput.INT, "1"));
-        parameters.add(new DynawoParameter("generator_DPu", DynawoInput.DOUBLE, "0"));
-        parameters.add(new DynawoParameter("generator_H", DynawoInput.DOUBLE, "5.4000000000000004"));
-        parameters.add(new DynawoParameter("generator_RaPu", DynawoInput.DOUBLE, "0.0027959999999999999"));
-        parameters.add(new DynawoParameter("generator_XlPu", DynawoInput.DOUBLE, "0.20200000000000001"));
-        parameters.add(new DynawoParameter("generator_XdPu", DynawoInput.DOUBLE, "2.2200000000000002"));
-        parameters.add(new DynawoParameter("generator_XpdPu", DynawoInput.DOUBLE, "0.38400000000000001"));
-        parameters.add(new DynawoParameter("generator_XppdPu", DynawoInput.DOUBLE, "0.26400000000000001"));
-        parameters.add(new DynawoParameter("generator_Tpd0", DynawoInput.DOUBLE, "8.0939999999999994"));
-        parameters.add(new DynawoParameter("generator_Tppd0", DynawoInput.DOUBLE, "0.080000000000000002"));
-        parameters.add(new DynawoParameter("generator_XqPu", DynawoInput.DOUBLE, "2.2200000000000002"));
-        parameters.add(new DynawoParameter("generator_XpqPu", DynawoInput.DOUBLE, "0.39300000000000002"));
-        parameters.add(new DynawoParameter("generator_XppqPu", DynawoInput.DOUBLE, "0.26200000000000001"));
-        parameters.add(new DynawoParameter("generator_Tpq0", DynawoInput.DOUBLE, "1.5720000000000001"));
-        parameters.add(new DynawoParameter("generator_Tppq0", DynawoInput.DOUBLE, "0.084000000000000005"));
-        parameters.add(new DynawoParameter("generator_UNom", DynawoInput.DOUBLE, "24"));
-        parameters.add(new DynawoParameter("generator_SNom", DynawoInput.DOUBLE, "1211"));
-        parameters.add(new DynawoParameter("generator_PNom", DynawoInput.DOUBLE, "1090"));
-        parameters.add(new DynawoParameter("generator_SnTfo", DynawoInput.DOUBLE, "1211"));
-        parameters.add(new DynawoParameter("generator_UNomHV", DynawoInput.DOUBLE, "69"));
-        parameters.add(new DynawoParameter("generator_UNomLV", DynawoInput.DOUBLE, "24"));
-        parameters.add(new DynawoParameter("generator_UBaseHV", DynawoInput.DOUBLE, "69"));
-        parameters.add(new DynawoParameter("generator_UBaseLV", DynawoInput.DOUBLE, "24"));
-        parameters.add(new DynawoParameter("generator_RTfPu", DynawoInput.DOUBLE, "0.0"));
-        parameters.add(new DynawoParameter("generator_XTfPu", DynawoInput.DOUBLE, "0.1"));
-        parameters.add(new DynawoParameter("voltageRegulator_LagEfdMax", DynawoInput.DOUBLE, "0"));
-        parameters.add(new DynawoParameter("voltageRegulator_LagEfdMin", DynawoInput.DOUBLE, "0"));
-        parameters.add(new DynawoParameter("voltageRegulator_EfdMinPu", DynawoInput.DOUBLE, "-5"));
-        parameters.add(new DynawoParameter("voltageRegulator_EfdMaxPu", DynawoInput.DOUBLE, "5"));
-        parameters.add(new DynawoParameter("voltageRegulator_UsRefMinPu", DynawoInput.DOUBLE, "0.8"));
-        parameters.add(new DynawoParameter("voltageRegulator_UsRefMaxPu", DynawoInput.DOUBLE, "1.2"));
-        parameters.add(new DynawoParameter("voltageRegulator_Gain", DynawoInput.DOUBLE, "20"));
-        parameters.add(new DynawoParameter("governor_KGover", DynawoInput.DOUBLE, "5"));
-        parameters.add(new DynawoParameter("governor_PMin", DynawoInput.DOUBLE, "0"));
-        parameters.add(new DynawoParameter("governor_PMax", DynawoInput.DOUBLE, "1090"));
-        parameters.add(new DynawoParameter("governor_PNom", DynawoInput.DOUBLE, "1090"));
-        parameters.add(new DynawoParameter("URef_ValueIn", DynawoInput.DOUBLE, "0"));
-        parameters.add(new DynawoParameter("Pm_ValueIn", DynawoInput.DOUBLE, "0"));
-        parameters.add(new DynawoParameter("generator_P0Pu", DynawoInput.DOUBLE, DynawoInput.IIDM, "p_pu"));
-        parameters.add(new DynawoParameter("generator_Q0Pu", DynawoInput.DOUBLE, DynawoInput.IIDM, "q_pu"));
-        parameters.add(new DynawoParameter("generator_U0Pu", DynawoInput.DOUBLE, DynawoInput.IIDM, "v_pu"));
-        parameters.add(new DynawoParameter("generator_UPhase0", DynawoInput.DOUBLE, DynawoInput.IIDM, "angle_pu"));
-        return writeParameterSet(new DynawoParameterSet(maxSetId + 1, parameters));
+        parameters.add(new DynawoParameter("generator_ExcitationPu", DynawoParameterType.INT.getValue(), "1"));
+        parameters.add(new DynawoParameter("generator_DPu", DynawoParameterType.DOUBLE.getValue(), "0"));
+        parameters.add(new DynawoParameter("generator_H", DynawoParameterType.DOUBLE.getValue(), "5.4000000000000004"));
+        parameters
+            .add(new DynawoParameter("generator_RaPu", DynawoParameterType.DOUBLE.getValue(), "0.0027959999999999999"));
+        parameters
+            .add(new DynawoParameter("generator_XlPu", DynawoParameterType.DOUBLE.getValue(), "0.20200000000000001"));
+        parameters
+            .add(new DynawoParameter("generator_XdPu", DynawoParameterType.DOUBLE.getValue(), "2.2200000000000002"));
+        parameters
+            .add(new DynawoParameter("generator_XpdPu", DynawoParameterType.DOUBLE.getValue(), "0.38400000000000001"));
+        parameters
+            .add(new DynawoParameter("generator_XppdPu", DynawoParameterType.DOUBLE.getValue(), "0.26400000000000001"));
+        parameters
+            .add(new DynawoParameter("generator_Tpd0", DynawoParameterType.DOUBLE.getValue(), "8.0939999999999994"));
+        parameters
+            .add(new DynawoParameter("generator_Tppd0", DynawoParameterType.DOUBLE.getValue(), "0.080000000000000002"));
+        parameters
+            .add(new DynawoParameter("generator_XqPu", DynawoParameterType.DOUBLE.getValue(), "2.2200000000000002"));
+        parameters
+            .add(new DynawoParameter("generator_XpqPu", DynawoParameterType.DOUBLE.getValue(), "0.39300000000000002"));
+        parameters
+            .add(new DynawoParameter("generator_XppqPu", DynawoParameterType.DOUBLE.getValue(), "0.26200000000000001"));
+        parameters
+            .add(new DynawoParameter("generator_Tpq0", DynawoParameterType.DOUBLE.getValue(), "1.5720000000000001"));
+        parameters
+            .add(new DynawoParameter("generator_Tppq0", DynawoParameterType.DOUBLE.getValue(), "0.084000000000000005"));
+        parameters.add(new DynawoParameter("generator_UNom", DynawoParameterType.DOUBLE.getValue(), "24"));
+        parameters.add(new DynawoParameter("generator_SNom", DynawoParameterType.DOUBLE.getValue(), "1211"));
+        parameters.add(new DynawoParameter("generator_PNom", DynawoParameterType.DOUBLE.getValue(), "1090"));
+        parameters.add(new DynawoParameter("generator_SnTfo", DynawoParameterType.DOUBLE.getValue(), "1211"));
+        parameters.add(new DynawoParameter("generator_UNomHV", DynawoParameterType.DOUBLE.getValue(), "69"));
+        parameters.add(new DynawoParameter("generator_UNomLV", DynawoParameterType.DOUBLE.getValue(), "24"));
+        parameters.add(new DynawoParameter("generator_UBaseHV", DynawoParameterType.DOUBLE.getValue(), "69"));
+        parameters.add(new DynawoParameter("generator_UBaseLV", DynawoParameterType.DOUBLE.getValue(), "24"));
+        parameters.add(new DynawoParameter("generator_RTfPu", DynawoParameterType.DOUBLE.getValue(), "0.0"));
+        parameters.add(new DynawoParameter("generator_XTfPu", DynawoParameterType.DOUBLE.getValue(), "0.1"));
+        parameters.add(new DynawoParameter("voltageRegulator_LagEfdMax", DynawoParameterType.DOUBLE.getValue(), "0"));
+        parameters.add(new DynawoParameter("voltageRegulator_LagEfdMin", DynawoParameterType.DOUBLE.getValue(), "0"));
+        parameters.add(new DynawoParameter("voltageRegulator_EfdMinPu", DynawoParameterType.DOUBLE.getValue(), "-5"));
+        parameters.add(new DynawoParameter("voltageRegulator_EfdMaxPu", DynawoParameterType.DOUBLE.getValue(), "5"));
+        parameters
+            .add(new DynawoParameter("voltageRegulator_UsRefMinPu", DynawoParameterType.DOUBLE.getValue(), "0.8"));
+        parameters
+            .add(new DynawoParameter("voltageRegulator_UsRefMaxPu", DynawoParameterType.DOUBLE.getValue(), "1.2"));
+        parameters.add(new DynawoParameter("voltageRegulator_Gain", DynawoParameterType.DOUBLE.getValue(), "20"));
+        parameters.add(new DynawoParameter("governor_KGover", DynawoParameterType.DOUBLE.getValue(), "5"));
+        parameters.add(new DynawoParameter("governor_PMin", DynawoParameterType.DOUBLE.getValue(), "0"));
+        parameters.add(new DynawoParameter("governor_PMax", DynawoParameterType.DOUBLE.getValue(), "1090"));
+        parameters.add(new DynawoParameter("governor_PNom", DynawoParameterType.DOUBLE.getValue(), "1090"));
+        parameters.add(new DynawoParameter("URef_ValueIn", DynawoParameterType.DOUBLE.getValue(), "0"));
+        parameters.add(new DynawoParameter("Pm_ValueIn", DynawoParameterType.DOUBLE.getValue(), "0"));
+        parameters.add(new DynawoParameter("generator_P0Pu", DynawoParameterType.DOUBLE.getValue(),
+            DynawoParameterType.IIDM.getValue(), "p_pu"));
+        parameters.add(new DynawoParameter("generator_Q0Pu", DynawoParameterType.DOUBLE.getValue(),
+            DynawoParameterType.IIDM.getValue(), "q_pu"));
+        parameters.add(new DynawoParameter("generator_U0Pu", DynawoParameterType.DOUBLE.getValue(),
+            DynawoParameterType.IIDM.getValue(), "v_pu"));
+        parameters.add(new DynawoParameter("generator_UPhase0", DynawoParameterType.DOUBLE.getValue(),
+            DynawoParameterType.IIDM.getValue(), "angle_pu"));
+        DynawoParameterSet parameterSet = new DynawoParameterSet(setId);
+        parameterSet.addParameters(Collections.unmodifiableList(parameters));
+        writeParameterSet(writer, parameterSet);
     }
 
-    private String writeParameterSet(DynawoParameterSet parameterSet) {
-        StringBuilder builder = new StringBuilder();
+    private static void writeParameterSet(XMLStreamWriter writer, DynawoParameterSet parameterSet)
+        throws XMLStreamException {
         int id = parameterSet.getId();
-        if (id > maxSetId) {
-            maxSetId = id;
+        writer.writeStartElement("set");
+        writer.writeAttribute("id", Integer.toString(id));
+        for (DynawoParameter parameter : parameterSet.getParameters()) {
+            writeParameter(writer, parameter);
         }
-        builder.append(String.join(System.lineSeparator(),
-            "  <set id=\"" + id + "\">") + System.lineSeparator());
-        parameterSet.getParameters().forEach(parameter -> builder
-            .append(String.join(System.lineSeparator(), writeParameter(parameter)) + System.lineSeparator()));
-        builder.append(String.join(System.lineSeparator(),
-            "  </set>") + System.lineSeparator());
-        countParameterSetByType(parameterSet);
-        return builder.toString();
+        for (DynawoParameterTable parameterTable : parameterSet.getParameterTables()) {
+            writeParameterTable(writer, parameterTable);
+        }
+        writer.writeEndElement();
     }
 
-    private void countParameterSetByType(DynawoParameterSet parameterSet) {
-        if (parameterSet.getParameters().stream().anyMatch(parameter -> parameter.getName().startsWith("load_"))) {
-            loads++;
-        } else if (parameterSet.getParameters().stream()
-            .anyMatch(parameter -> parameter.getName().startsWith("generator_"))) {
-            generators++;
-        }
-    }
-
-    private String writeParameter(DynawoParameter parameter) {
+    private static void writeParameter(XMLStreamWriter writer, DynawoParameter parameter) throws XMLStreamException {
         if (parameter.isReference()) {
             String name = parameter.getName();
             String type = parameter.getType();
             String origData = parameter.getOrigData();
             String origName = parameter.getOrigName();
-            return writeReference(name, origData, origName, type);
+            writeReference(writer, name, origData, origName, type);
         } else {
             String name = parameter.getName();
             String type = parameter.getType();
             String value = parameter.getValue();
-            return writeParameter(type, name, value);
+            writeParameter(writer, type, name, value);
         }
     }
 
-    private String writeParameter(String type, String name, String value) {
-        return "    <par type=\"" + type + "\" name=\"" + name + "\" value=\"" + value + "\"/>";
+    private static void writeParameterTable(XMLStreamWriter writer, DynawoParameterTable parameterTable)
+        throws XMLStreamException {
+        String type = parameterTable.getType();
+        String name = parameterTable.getName();
+        writer.writeStartElement("parTable");
+        writer.writeAttribute("type", type);
+        writer.writeAttribute("name", name);
+        for (DynawoParameterRow parameterRow : parameterTable.getParameterRows()) {
+            writeParameterRow(writer, parameterRow);
+        }
+        writer.writeEndElement();
     }
 
-    private String writeReference(String name, String origData, String origName, String type) {
-        return "    <reference name=\"" + name + "\" origData=\"" + origData + "\" origName=\"" + origName
-            + "\" type=\"" + type + "\"/>";
+    private static void writeParameterRow(XMLStreamWriter writer, DynawoParameterRow parameterRow)
+        throws XMLStreamException {
+        int row = parameterRow.getRow();
+        int column = parameterRow.getColumn();
+        String value = parameterRow.getValue();
+        writeRow(writer, row, column, value);
     }
 
-    private final List<DynawoParameterSet> parameterSets;
-    private final Network network;
-    private int maxSetId = 1;
-    private int loads = 0;
-    private int generators = 0;
+    private static void writeRow(XMLStreamWriter writer, int row, int column, String value) throws XMLStreamException {
+        writer.writeEmptyElement("row");
+        writer.writeAttribute("row", Integer.toString(row));
+        writer.writeAttribute("column", Integer.toString(column));
+        writer.writeAttribute("value", value);
+    }
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DynawoSimulationParameters.class);
+    private static void writeParameter(XMLStreamWriter writer, String type, String name, String value)
+        throws XMLStreamException {
+        writer.writeEmptyElement("par");
+        writer.writeAttribute("type", type);
+        writer.writeAttribute("name", name);
+        writer.writeAttribute("value", value);
+    }
+
+    private static void writeReference(XMLStreamWriter writer, String name, String origData, String origName,
+        String type) throws XMLStreamException {
+        writer.writeEmptyElement("reference");
+        writer.writeAttribute("name", name);
+        writer.writeAttribute("origData", origData);
+        writer.writeAttribute("origName", origName);
+        writer.writeAttribute("type", type);
+    }
 }

@@ -8,6 +8,7 @@ package com.powsybl.dynawo.simulator;
 
 import com.google.auto.service.AutoService;
 import com.powsybl.computation.ComputationManager;
+import com.powsybl.dynawo.DynawoExporter;
 import com.powsybl.dynawo.DynawoProvider;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.simulation.ImpactAnalysis;
@@ -26,8 +27,8 @@ public class DynawoSimulatorFactoryImpl implements DynawoSimulatorFactory {
 
     @Override
     public ImpactAnalysis createImpactAnalysis(Network network, ComputationManager computationManager, int priority,
-        DynawoProvider dynawoProvider) {
-        return new DynawoImpactAnalysis(network, computationManager, priority, dynawoProvider);
+        DynawoProvider dynawoProvider, DynawoExporter exporter) {
+        return new DynawoImpactAnalysis(network, computationManager, priority, dynawoProvider, exporter);
     }
 
 }

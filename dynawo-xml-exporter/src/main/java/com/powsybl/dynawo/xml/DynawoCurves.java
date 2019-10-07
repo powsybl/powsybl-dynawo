@@ -6,63 +6,36 @@
  */
 package com.powsybl.dynawo.xml;
 
-import java.io.IOException;
-import java.io.Writer;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 
-import com.powsybl.dynawo.DynawoCurve;
-import com.powsybl.dynawo.DynawoProvider;
-import com.powsybl.iidm.network.Network;
+import com.powsybl.dynawo.crv.DynawoCurve;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class DynawoCurves {
+public final class DynawoCurves {
 
-    public DynawoCurves(Network network, DynawoProvider provider) {
-        this.curves = provider.getDynawoCurves(network);
+    private DynawoCurves() {
     }
 
-    public void prepareFile(Path workingDir) {
-        Path parFile = workingDir.resolve("dynawoModel.crv");
-        try (Writer writer = Files.newBufferedWriter(parFile, StandardCharsets.UTF_8)) {
-            writer.write(String.join(System.lineSeparator(), writeCurves()));
-        } catch (IOException e) {
-            LOGGER.error("Error in file dynawoModel.crv");
+    public static void writeCurves(XMLStreamWriter writer, List<DynawoCurve> curves) throws XMLStreamException {
+        for (DynawoCurve curve : curves) {
+            writeCurve(writer, curve);
         }
     }
 
-    private String writeCurves() {
-        StringBuilder builder = new StringBuilder();
-        builder.append(String.join(System.lineSeparator(),
-            DynawoInput.writeInputHeader(),
-            "<curvesInput xmlns=\"http://www.rte-france.com/dynawo\">",
-            "<!--Curves for scenario-->") + System.lineSeparator());
-
-        curves.forEach(curve -> builder.append(String.join(System.lineSeparator(), writeCurve(curve) + System.lineSeparator())));
-
-        builder.append(String.join(System.lineSeparator(),
-            "</curvesInput>") + System.lineSeparator());
-        return builder.toString();
-    }
-
-    private String writeCurve(DynawoCurve curve) {
+    private static void writeCurve(XMLStreamWriter writer, DynawoCurve curve) throws XMLStreamException {
         String model = curve.getModel();
         String variable = curve.getVariable();
-        return writeCurve(model, variable);
+        writeCurve(writer, model, variable);
     }
 
-    private String writeCurve(String model, String variable) {
-        return "  <curve model=\"" + model + "\" variable=\"" + variable + "\"/>";
+    private static void writeCurve(XMLStreamWriter writer, String model, String variable) throws XMLStreamException {
+        writer.writeEmptyElement("curve");
+        writer.writeAttribute("model", model);
+        writer.writeAttribute("variable", variable);
     }
-
-    private final List<DynawoCurve> curves;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(DynawoCurves.class);
 }

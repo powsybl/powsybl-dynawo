@@ -6,126 +6,149 @@
  */
 package com.powsybl.dynawo.xml;
 
-import java.io.IOException;
-import java.io.Writer;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 
-import com.powsybl.dynawo.DynawoJob;
-import com.powsybl.dynawo.DynawoModeler;
-import com.powsybl.dynawo.DynawoOutputs;
-import com.powsybl.dynawo.DynawoProvider;
-import com.powsybl.dynawo.DynawoSimulation;
-import com.powsybl.dynawo.DynawoSolver;
-import com.powsybl.iidm.network.Network;
+import com.powsybl.dynawo.job.DynawoJob;
+import com.powsybl.dynawo.job.DynawoModeler;
+import com.powsybl.dynawo.job.DynawoOutputs;
+import com.powsybl.dynawo.job.DynawoSimulation;
+import com.powsybl.dynawo.job.DynawoSolver;
+import com.powsybl.dynawo.job.LogAppender;
+
+import static com.powsybl.dynawo.xml.DynawoXmlConstants.DYN_URI;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class DynawoJobs {
+public final class DynawoJobs {
 
-    public DynawoJobs(Network network, DynawoProvider provider) {
-        this.jobs = provider.getDynawoJob(network);
+    private DynawoJobs() {
     }
 
-    public void prepareFile(Path workingDir) {
-        Path jobFile = workingDir.resolve("dynawoModel.jobs");
-        try (Writer writer = Files.newBufferedWriter(jobFile, StandardCharsets.UTF_8)) {
-            writer.write(String.join(System.lineSeparator(), writeJobs()));
-
-        } catch (IOException e) {
-            LOGGER.error("Error in file dynawoModel.jobs");
+    public static void writeJobs(XMLStreamWriter writer, List<DynawoJob> jobs) throws XMLStreamException {
+        for (DynawoJob job : jobs) {
+            writeJob(writer, job);
         }
     }
 
-    private String writeJobs() {
-        StringBuilder builder = new StringBuilder();
-        builder.append(String.join(System.lineSeparator(),
-            DynawoInput.writeInputHeader(),
-            "<dyn:jobs xmlns:dyn=\"http://www.rte-france.com/dynawo\">") + System.lineSeparator());
-        jobs.forEach(job -> builder.append(String.join(System.lineSeparator(), writeJob(job) + System.lineSeparator())));
-        builder.append(String.join(System.lineSeparator(), "</dyn:jobs>") + System.lineSeparator());
-        return builder.toString();
-    }
-
-    private String writeJob(DynawoJob job) {
-        StringBuilder builder = new StringBuilder();
+    private static void writeJob(XMLStreamWriter writer, DynawoJob job) throws XMLStreamException {
         String jobName = job.getName();
-        builder.append(String.join(System.lineSeparator(),
-            "  <dyn:job name=\"" + jobName + "\">",
-            writeSolver(job.getSolver()),
-            writeModeler(job.getModeler()),
-            writeSimulation(job.getSimulation()),
-            writeOutput(job.getOutputs()),
-            "  </dyn:job>") + System.lineSeparator());
-        return builder.toString();
+        writer.writeStartElement(DYN_URI, "job");
+        writer.writeAttribute("name", jobName);
+        writeSolver(writer, job.getSolver());
+        writeModeler(writer, job.getModeler());
+        writeSimulation(writer, job.getSimulation());
+        writeOutput(writer, job.getOutputs());
+        writer.writeEndElement();
     }
 
-    private String writeSolver(DynawoSolver solver) {
-        StringBuilder builder = new StringBuilder();
+    private static void writeSolver(XMLStreamWriter writer, DynawoSolver solver) throws XMLStreamException {
         String solverLib = solver.getLib();
         String solverParams = solver.getFile();
         int solverParamsId = solver.getId();
-        builder.append(String.join(System.lineSeparator(),
-            "    <dyn:solver lib=\"" + solverLib + "\" parFile=\"" + solverParams + "\" parId=\"" + solverParamsId
-                + "\"/>")
-            + System.lineSeparator());
-        return builder.toString();
+        writer.writeEmptyElement(DYN_URI, "solver");
+        writer.writeAttribute("lib", solverLib);
+        writer.writeAttribute("parFile", solverParams);
+        writer.writeAttribute("parId", Integer.toString(solverParamsId));
     }
 
-    private String writeModeler(DynawoModeler modeler) {
-        StringBuilder builder = new StringBuilder();
-        String compileDir = modeler.getCompile();
+    private static void writeModeler(XMLStreamWriter writer, DynawoModeler modeler) throws XMLStreamException {
+        String compileDir = modeler.getCompileDir();
+        String preCompiledModelsDir = modeler.getPreCompiledModelsDir();
+        boolean useStandardModelsPreCompiledModels = modeler.isUseStandardModelsPreCompiledModels();
+        String modelicaModelsDir = modeler.getModelicaModelsDir();
+        boolean useStandardModelsModelicaModels = modeler.isUseStandardModelsModelicaModels();
         String iidmFile = modeler.getIidm();
         String parFile = modeler.getParameters();
         int parId = modeler.getParameterId();
         String dydFile = modeler.getDyd();
-        builder.append(String.join(System.lineSeparator(),
-            "    <dyn:modeler compileDir=\"" + compileDir + "\">",
-            "      <dyn:network iidmFile=\"" + iidmFile + "\" parFile=\"" + parFile + "\" parId=\"" + parId + "\"/>",
-            "      <dyn:dynModels dydFile=\"" + dydFile + "\"/>",
-            "      <dyn:precompiledModels useStandardModels=\"true\"/>",
-            "      <dyn:modelicaModels useStandardModels=\"true\"/>",
-            "    </dyn:modeler>") + System.lineSeparator());
-        return builder.toString();
+        String initialState = modeler.getInitialState();
+        writer.writeStartElement(DYN_URI, "modeler");
+        writer.writeAttribute("compileDir", compileDir);
+        writer.writeEmptyElement(DYN_URI, "network");
+        writer.writeAttribute("iidmFile", iidmFile);
+        writer.writeAttribute("parFile", parFile);
+        writer.writeAttribute("parId", Integer.toString(parId));
+        writer.writeEmptyElement(DYN_URI, "dynModels");
+        writer.writeAttribute("dydFile", dydFile);
+        if (initialState != null) {
+            writer.writeEmptyElement(DYN_URI, "initialState");
+            writer.writeAttribute("file", initialState);
+        }
+        writer.writeEmptyElement(DYN_URI, "precompiledModels");
+        modelsDir(writer, preCompiledModelsDir);
+        writer.writeAttribute("useStandardModels", Boolean.toString(useStandardModelsPreCompiledModels));
+        writer.writeEmptyElement(DYN_URI, "modelicaModels");
+        modelsDir(writer, modelicaModelsDir);
+        writer.writeAttribute("useStandardModels", Boolean.toString(useStandardModelsModelicaModels));
+        writer.writeEndElement();
     }
 
-    private String writeSimulation(DynawoSimulation simulation) {
-        StringBuilder builder = new StringBuilder();
+    private static void modelsDir(XMLStreamWriter writer, String modelicaModelsDir) throws XMLStreamException {
+        if (modelicaModelsDir != null) {
+            writer.writeAttribute("directory", modelicaModelsDir);
+        }
+    }
+
+    private static void writeSimulation(XMLStreamWriter writer, DynawoSimulation simulation) throws XMLStreamException {
         int startTime = simulation.getStartTime();
         int stopTime = simulation.getStopTime();
         boolean activeCriteria = simulation.isActiveCriteria();
-        builder.append(String.join(System.lineSeparator(),
-            "    <dyn:simulation startTime=\"" + startTime + "\" stopTime=\"" + stopTime + "\" activateCriteria=\""
-                + Boolean.toString(activeCriteria) + "\"/>")
-            + System.lineSeparator());
-        return builder.toString();
+        writer.writeEmptyElement(DYN_URI, "simulation");
+        writer.writeAttribute("startTime", Integer.toString(startTime));
+        writer.writeAttribute("stopTime", Integer.toString(stopTime));
+        writer.writeAttribute("activateCriteria", Boolean.toString(activeCriteria));
     }
 
-    private String writeOutput(DynawoOutputs outputs) {
-        StringBuilder builder = new StringBuilder();
+    private static void writeOutput(XMLStreamWriter writer, DynawoOutputs outputs) throws XMLStreamException {
         String outputDir = outputs.getDirectory();
+        boolean dumpLocalInitValues = outputs.isDumpLocalInitValues();
+        boolean dumpGlobalInitValues = outputs.isDumpGlobalInitValues();
+        String constraints = outputs.getConstraints();
+        String timeLine = outputs.getTimeLine();
+        boolean exportFinalState = outputs.isExportFinalState();
+        boolean exportIidmFile = outputs.isExportIidmFile();
+        boolean exportDumpFile = outputs.isExportDumpFile();
         String curvesFile = outputs.getCurve();
-        builder.append(String.join(System.lineSeparator(),
-            "    <dyn:outputs directory=\"" + outputDir + "\">",
-            "      <dyn:dumpInitValues local=\"true\" global=\"true\"/>",
-            "      <dyn:curves inputFile=\"" + curvesFile + "\" exportMode=\"CSV\"/>",
-            "      <dyn:timeline exportMode=\"TXT\"/>",
-            "      <dyn:logs>",
-            "        <dyn:appender tag=\"\" file=\"dynawo.log\" lvlFilter=\"DEBUG\"/>",
-            "        <dyn:appender tag=\"COMPILE\" file=\"dynawoCompiler.log\" lvlFilter=\"DEBUG\"/>",
-            "        <dyn:appender tag=\"MODELER\" file=\"dynawoModeler.log\" lvlFilter=\"DEBUG\"/>",
-            "      </dyn:logs>",
-            "    </dyn:outputs>") + System.lineSeparator());
-        return builder.toString();
+        String curvesExportMode = outputs.getExportMode();
+        List<LogAppender> appenders = outputs.getAppenders();
+        writer.writeStartElement(DYN_URI, "outputs");
+        writer.writeAttribute("directory", outputDir);
+        writer.writeEmptyElement(DYN_URI, "dumpInitValues");
+        writer.writeAttribute("local", Boolean.toString(dumpLocalInitValues));
+        writer.writeAttribute("global", Boolean.toString(dumpGlobalInitValues));
+        writer.writeEmptyElement(DYN_URI, "curves");
+        writer.writeAttribute("inputFile", curvesFile);
+        writer.writeAttribute("exportMode", curvesExportMode);
+        writer.writeEmptyElement(DYN_URI, "timeline");
+        writer.writeAttribute("exportMode", timeLine);
+        if (constraints != null) {
+            writer.writeEmptyElement(DYN_URI, "constraints");
+            writer.writeAttribute("exportMode", constraints);
+        }
+        if (exportFinalState) {
+            writer.writeEmptyElement(DYN_URI, "finalState");
+            writer.writeAttribute("exportIIDMFile", Boolean.toString(exportIidmFile));
+            writer.writeAttribute("exportDumpFile", Boolean.toString(exportDumpFile));
+        }
+        writer.writeStartElement(DYN_URI, "logs");
+        for (LogAppender appender : appenders) {
+            writeAppender(writer, appender);
+        }
+        writer.writeEndElement();
+        writer.writeEndElement();
     }
 
-    private final List<DynawoJob> jobs;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(DynawoJobs.class);
+    private static void writeAppender(XMLStreamWriter writer, LogAppender appender) throws XMLStreamException {
+        String tag = appender.getTag();
+        String file = appender.getFile();
+        String lvlFilter = appender.getLvlFilter();
+        writer.writeEmptyElement(DYN_URI, "appender");
+        writer.writeAttribute("tag", tag);
+        writer.writeAttribute("file", file);
+        writer.writeAttribute("lvlFilter", lvlFilter);
+    }
 }

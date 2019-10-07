@@ -20,6 +20,8 @@ import org.apache.commons.cli.Options;
 import com.google.auto.service.AutoService;
 import com.powsybl.commons.config.ComponentDefaultConfig;
 import com.powsybl.computation.ComputationManager;
+import com.powsybl.dynawo.DynawoExporter;
+import com.powsybl.dynawo.DynawoExporterFactory;
 import com.powsybl.dynawo.simulator.DynawoSimulatorFactoryImpl;
 import com.powsybl.iidm.import_.ImportConfig;
 import com.powsybl.iidm.import_.Importers;
@@ -92,9 +94,11 @@ public class DynawoSimulatorTool implements Tool {
         ComponentDefaultConfig defaultConfig = ComponentDefaultConfig.load();
 
         DynawoSimulatorFactoryImpl simulatorFactory = defaultConfig.newFactoryImpl(DynawoSimulatorFactoryImpl.class);
+        DynawoExporterFactory exporterFactory = DynawoExporterFactory.findDefault();
+        DynawoExporter exporter = exporterFactory.create();
         ComputationManager computationManager = context.getShortTimeExecutionComputationManager();
         Stabilization stabilization = simulatorFactory.createStabilization(network, computationManager, 0);
-        ImpactAnalysis impactAnalysis = simulatorFactory.createImpactAnalysis(network, computationManager, 0, null);
+        ImpactAnalysis impactAnalysis = simulatorFactory.createImpactAnalysis(network, computationManager, 0, null, exporter);
         Map<String, Object> initContext = new HashMap<>();
         SimulationParameters simulationParameters = SimulationParameters.load();
         stabilization.init(simulationParameters, initContext);

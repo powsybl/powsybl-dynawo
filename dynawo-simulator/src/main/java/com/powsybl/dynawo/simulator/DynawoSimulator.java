@@ -9,10 +9,9 @@ package com.powsybl.dynawo.simulator;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.computation.ComputationManager;
-import com.powsybl.computation.local.LocalComputationConfig;
 import com.powsybl.computation.local.LocalComputationManager;
+import com.powsybl.dynawo.DynawoExporter;
 import com.powsybl.dynawo.DynawoProvider;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.simulation.ImpactAnalysis;
@@ -27,37 +26,34 @@ import com.powsybl.simulation.StabilizationStatus;
  */
 public class DynawoSimulator {
 
-    public DynawoSimulator(Network network) {
-        this(network, PlatformConfig.defaultConfig());
+    public DynawoSimulator(DynawoExporter exporter) {
+        this(SimulationParameters.load(), LocalComputationManager.getDefault(), exporter, DynawoConfig.load());
     }
 
-    public DynawoSimulator(Network network, PlatformConfig platformConfig) {
-        this.network = network;
-        this.platformConfig = platformConfig;
-        this.result = null;
+    public DynawoSimulator(SimulationParameters simulationParameters, ComputationManager computationManager,
+        DynawoExporter exporter, DynawoConfig dynawoConfig) {
+        this.simulationParameters = simulationParameters;
+        this.computationManager = computationManager;
+        this.dynawoConfig = dynawoConfig;
+        this.exporter = exporter;
     }
 
-    public void simulate(DynawoProvider dynawoProvider) throws Exception {
-        ComputationManager computationManager = new LocalComputationManager(
-            LocalComputationConfig.load(platformConfig));
+    public ImpactAnalysisResult simulate(Network network, DynawoProvider dynawoProvider) throws Exception {
         Stabilization stabilization = new DynawoStabilization(network, computationManager, 0);
         ImpactAnalysis impactAnalysis = new DynawoImpactAnalysis(network, computationManager, 0, dynawoProvider,
-            platformConfig);
+            exporter, dynawoConfig);
         Map<String, Object> initContext = new HashMap<>();
-        SimulationParameters simulationParameters = SimulationParameters.load(platformConfig);
         stabilization.init(simulationParameters, initContext);
         impactAnalysis.init(simulationParameters, initContext);
         StabilizationResult sr = stabilization.run();
         if (sr.getStatus() == StabilizationStatus.COMPLETED) {
-            result = impactAnalysis.run(sr.getState());
+            return impactAnalysis.run(sr.getState());
         }
+        return null;
     }
 
-    public ImpactAnalysisResult getResult() {
-        return result;
-    }
-
-    private final Network network;
-    private final PlatformConfig platformConfig;
-    private ImpactAnalysisResult result;
+    private final ComputationManager computationManager;
+    private final SimulationParameters simulationParameters;
+    private final DynawoConfig dynawoConfig;
+    private final DynawoExporter exporter;
 }

@@ -6,192 +6,356 @@
  */
 package com.powsybl.dynawo.xml;
 
-import java.io.IOException;
-import java.io.Writer;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 
-import com.powsybl.dynawo.DynawoDynamicModel;
-import com.powsybl.dynawo.DynawoProvider;
+import com.powsybl.commons.PowsyblException;
+import com.powsybl.dynawo.DynawoParameterType;
+import com.powsybl.dynawo.dyd.BlackBoxModel;
+import com.powsybl.dynawo.dyd.Connection;
+import com.powsybl.dynawo.dyd.DydComponent;
+import com.powsybl.dynawo.dyd.DydConnection;
+import com.powsybl.dynawo.dyd.DynawoDynamicModel;
+import com.powsybl.dynawo.dyd.InitConnection;
+import com.powsybl.dynawo.dyd.MacroConnection;
+import com.powsybl.dynawo.dyd.MacroConnector;
+import com.powsybl.dynawo.dyd.MacroStaticReference;
+import com.powsybl.dynawo.dyd.ModelTemplate;
+import com.powsybl.dynawo.dyd.ModelicaModel;
+import com.powsybl.dynawo.dyd.StaticRef;
+import com.powsybl.dynawo.dyd.UnitDynamicModel;
 import com.powsybl.iidm.network.Generator;
 import com.powsybl.iidm.network.Load;
-import com.powsybl.iidm.network.Network;
 
+import static com.powsybl.dynawo.xml.DynawoXmlConstants.DYN_URI;
 import static java.lang.Math.toIntExact;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class DynawoDynamicModels {
+public final class DynawoDynamicModels {
 
-    public DynawoDynamicModels(Network network, DynawoProvider provider) {
-        this.network = network;
-        this.dynamicModels = provider.getDynawoDynamicModels(network);
+    private DynawoDynamicModels() {
     }
 
-    public void prepareFile(Path workingDir) {
-        Path parFile = workingDir.resolve("dynawoModel.dyd");
-        try (Writer writer = Files.newBufferedWriter(parFile, StandardCharsets.UTF_8)) {
-            writer.write(String.join(System.lineSeparator(), writeDynamicModels()));
-        } catch (IOException e) {
-            LOGGER.error("Error in file dynawoModel.dyd");
+    public static void writeDynamicModels(XMLStreamWriter writer, List<DynawoDynamicModel> dynamicModels)
+        throws XMLStreamException {
+        for (DynawoDynamicModel dynamicModel : dynamicModels) {
+            writeDynamicModel(writer, dynamicModel);
         }
     }
 
-    private String writeDynamicModels() {
-        StringBuilder builder = new StringBuilder();
-        builder.append(String.join(System.lineSeparator(),
-            DynawoInput.writeInputHeader(),
-            "<dyn:dynamicModelsArchitecture xmlns:dyn=\"http://www.rte-france.com/dynawo\">") + System.lineSeparator());
-
-        builder.append(String.join(System.lineSeparator(), defaultOmegaRef()) + System.lineSeparator());
-        generators = toIntExact(dynamicModels.stream().filter(dynamicModel -> dynamicModel.getConnectionVar2() != null && dynamicModel.getConnectionVar2().equals("generator_omegaPu")).count());
-        dynamicModels.forEach(dynamicModel -> builder
-            .append(String.join(System.lineSeparator(), writeDynamicModel(dynamicModel)) + System.lineSeparator()));
-        builder.append(String.join(System.lineSeparator(), writeDefaultDynamicModels()) + System.lineSeparator());
-        builder.append(String.join(System.lineSeparator(),
-            "</dyn:dynamicModelsArchitecture>") + System.lineSeparator());
-        return builder.toString();
+    public static int countGeneratorConnections(List<DynawoDynamicModel> dynamicModels) {
+        return toIntExact(dynamicModels.stream().filter(dynamicModel -> Connection.class.isInstance(dynamicModel)
+            && ((Connection) dynamicModel).getVar2().equals("generator_omegaPu")).count());
     }
 
-    private boolean definedDynamicModel(String id) {
-        return dynamicModels.stream().anyMatch(
-            dynamicModel -> dynamicModel.getBlackBoxModelId() != null && dynamicModel.getBlackBoxModelId().equals(id));
+    public static boolean definedDynamicModel(List<DynawoDynamicModel> dynamicModels, String id) {
+        return dynamicModels.stream()
+            .anyMatch(dynamicModel -> dynamicModel.getId() != null && dynamicModel.getId().equals(id));
     }
 
-    private String defaultOmegaRef() {
-        StringBuilder builder = new StringBuilder();
-        if (!definedDynamicModel(DynawoInput.OMEGA_REF)) {
-            builder.append(String.join(System.lineSeparator(),
-                writeDefaultOmegaRef()) + System.lineSeparator());
-        }
-        return builder.toString();
+    public static void writeDefaultOmegaRef(XMLStreamWriter writer, int parId) throws XMLStreamException {
+        writeDynamicModel(writer,
+            new BlackBoxModel(DynawoParameterType.OMEGA_REF.getValue(), "DYNModelOmegaRef",
+                DynawoParameterType.DYNAWO_PAR.getValue(), parId));
     }
 
-    private String writeDefaultOmegaRef() {
-        return writeDynamicModel(new DynawoDynamicModel(DynawoInput.OMEGA_REF, "DYNModelOmegaRef", DynawoInput.DYANWO_PAR, 1));
+    public static void writeDefaultLoad(XMLStreamWriter writer, Load load, int parId) throws XMLStreamException {
+        writeDefaultLoadBlackBoxModel(writer, load, parId);
+        writeDefaultLoadConnection(writer, load);
     }
 
-    private String writeDefaultDynamicModels() {
-        StringBuilder builder = new StringBuilder();
-        network.getLoads().forEach(load -> {
-            if (!definedDynamicModel(load.getId())) {
-                builder.append(String.join(System.lineSeparator(),
-                    writeDefaultLoad(load)) + System.lineSeparator());
-            }
-        });
-        network.getGenerators().forEach(generator -> {
-            if (!definedDynamicModel(generator.getId())) {
-                builder.append(String.join(System.lineSeparator(), writeDefaultGenerator(generator))
-                    + System.lineSeparator());
-                generators++;
-            }
-        });
-        return builder.toString();
+    private static void writeDefaultLoadBlackBoxModel(XMLStreamWriter writer, Load load, int parId)
+        throws XMLStreamException {
+        writeDynamicModel(writer,
+            new BlackBoxModel(load.getId(), "LoadAlphaBeta", DynawoParameterType.DYNAWO_PAR.getValue(), parId,
+                load.getId()));
     }
 
-    private String writeDefaultLoad(Load load) {
-        return String.join(System.lineSeparator(),
-            writeDefaultLoadBlackBoxModel(load),
-            writeDefaultLoadConnection(load));
-    }
-
-    private String writeDefaultLoadBlackBoxModel(Load load) {
-        return writeDynamicModel(
-            new DynawoDynamicModel(load.getId(), "LoadAlphaBeta", DynawoInput.DYANWO_PAR, maxParId + 1, load.getId()));
-    }
-
-    private String writeDefaultLoadConnection(Load load) {
+    private static void writeDefaultLoadConnection(XMLStreamWriter writer, Load load) throws XMLStreamException {
         if (load.getTerminal().getBusBreakerView() != null) {
-            return writeDynamicModel(
-                new DynawoDynamicModel(load.getId(), "load_terminal", DynawoInput.NETWORK,
+            writeDynamicModel(writer,
+                new Connection(load.getId(), "load_terminal", DynawoParameterType.NETWORK.getValue(),
                     load.getTerminal().getBusBreakerView().getBus().getId() + "_ACPIN"));
-        }
-        return writeDynamicModel(
-            new DynawoDynamicModel(load.getId(), "load_terminal", DynawoInput.NETWORK,
-                load.getTerminal().getBusView().getBus().getId() + "_ACPIN"));
-    }
-
-    private String writeDefaultGenerator(Generator generator) {
-        return String.join(System.lineSeparator(),
-            writeDefaultGeneratorBlackBoxModel(generator),
-            writeDefaultGeneratorConnection(generator));
-    }
-
-    private String writeDefaultGeneratorBlackBoxModel(Generator generator) {
-        return writeDynamicModel(new DynawoDynamicModel(generator.getId(),
-            "GeneratorSynchronousFourWindingsProportionalRegulations", DynawoInput.DYANWO_PAR, maxParId + 1,
-            generator.getId()));
-    }
-
-    private String writeDefaultGeneratorConnection(Generator generator) {
-        return String.join(System.lineSeparator(),
-            writeDynamicModel(
-                new DynawoDynamicModel(DynawoInput.OMEGA_REF, "omega_grp_" + generators, generator.getId(), "generator_omegaPu")),
-            writeDynamicModel(new DynawoDynamicModel(DynawoInput.OMEGA_REF, "omegaRef_grp_" + generators, generator.getId(),
-                "generator_omegaRefPu")),
-            writeDynamicModel(new DynawoDynamicModel(DynawoInput.OMEGA_REF, "numcc_node_" + generators, DynawoInput.NETWORK,
-                "@" + generator.getId() + "@@NODE@_numcc")),
-            writeDynamicModel(
-                new DynawoDynamicModel(DynawoInput.OMEGA_REF, "running_grp_" + generators, generator.getId(),
-                    "generator_running")),
-            writeDynamicModel(new DynawoDynamicModel(generator.getId(), "generator_terminal", DynawoInput.NETWORK,
-                "@" + generator.getId() + "@@NODE@_ACPIN")),
-            writeDynamicModel(new DynawoDynamicModel(generator.getId(), "generator_switchOffSignal1", DynawoInput.NETWORK,
-                "@" + generator.getId() + "@@NODE@_switchOff")));
-    }
-
-    private String writeDynamicModel(DynawoDynamicModel dynamicModel) {
-        if (dynamicModel.isBlackBoxModel()) {
-            return writeBlackBoxModel(dynamicModel);
         } else {
-            return writeConnection(dynamicModel);
+            writeDynamicModel(writer,
+                new Connection(load.getId(), "load_terminal", DynawoParameterType.NETWORK.getValue(),
+                    load.getTerminal().getBusView().getBus().getId() + "_ACPIN"));
         }
     }
 
-    private String writeBlackBoxModel(DynawoDynamicModel dynamicModel) {
-        String id = dynamicModel.getBlackBoxModelId();
-        String lib = dynamicModel.getBlackBoxModelLib();
+    public static void writeDefaultGenerator(XMLStreamWriter writer, Generator generator, int parId, int id)
+        throws XMLStreamException {
+        writeDefaultGeneratorBlackBoxModel(writer, generator, parId);
+        writeDefaultGeneratorConnection(writer, generator, id);
+    }
+
+    private static void writeDefaultGeneratorBlackBoxModel(XMLStreamWriter writer, Generator generator, int parId)
+        throws XMLStreamException {
+        writeDynamicModel(writer, new BlackBoxModel(generator.getId(),
+            "GeneratorSynchronousFourWindingsProportionalRegulations", DynawoParameterType.DYNAWO_PAR.getValue(),
+            parId, generator.getId()));
+    }
+
+    private static void writeDefaultGeneratorConnection(XMLStreamWriter writer, Generator generator, int id)
+        throws XMLStreamException {
+        writeDynamicModel(writer,
+            new Connection(DynawoParameterType.OMEGA_REF.getValue(), "omega_grp_" + id, generator.getId(),
+                "generator_omegaPu"));
+        writeDynamicModel(writer, new Connection(DynawoParameterType.OMEGA_REF.getValue(), "omegaRef_grp_" + id,
+            generator.getId(),
+            "generator_omegaRefPu"));
+        writeDynamicModel(writer, new Connection(DynawoParameterType.OMEGA_REF.getValue(), "numcc_node_" + id,
+            DynawoParameterType.NETWORK.getValue(),
+            "@" + generator.getId() + "@@NODE@_numcc"));
+        writeDynamicModel(writer,
+            new Connection(DynawoParameterType.OMEGA_REF.getValue(), "running_grp_" + id, generator.getId(),
+                "generator_running"));
+        writeDynamicModel(writer,
+            new Connection(generator.getId(), "generator_terminal", DynawoParameterType.NETWORK.getValue(),
+                "@" + generator.getId() + "@@NODE@_ACPIN"));
+        writeDynamicModel(writer,
+            new Connection(generator.getId(), "generator_switchOffSignal1", DynawoParameterType.NETWORK.getValue(),
+                "@" + generator.getId() + "@@NODE@_switchOff"));
+    }
+
+    private static void writeDynamicModel(XMLStreamWriter writer, DynawoDynamicModel dynamicModel)
+        throws XMLStreamException {
+        if (BlackBoxModel.class.isInstance(dynamicModel)) {
+            writeBlackBoxModel(writer, (BlackBoxModel) dynamicModel);
+        } else if (ModelicaModel.class.isInstance(dynamicModel)) {
+            writeModelicaModel(writer, (ModelicaModel) dynamicModel);
+        } else if (ModelTemplate.class.isInstance(dynamicModel)) {
+            writeModelTemplate(writer, (ModelTemplate) dynamicModel);
+        } else if (Connection.class.isInstance(dynamicModel)) {
+            writeConnection(writer, (Connection) dynamicModel);
+        } else if (InitConnection.class.isInstance(dynamicModel)) {
+            writeInitConnection(writer, (InitConnection) dynamicModel);
+        } else if (MacroConnector.class.isInstance(dynamicModel)) {
+            writeMacroConnector(writer, (MacroConnector) dynamicModel);
+        } else if (MacroConnection.class.isInstance(dynamicModel)) {
+            writeMacroConnection(writer, (MacroConnection) dynamicModel);
+        } else if (MacroStaticReference.class.isInstance(dynamicModel)) {
+            writeMacroStaticReference(writer, (MacroStaticReference) dynamicModel);
+        } else {
+            throw new PowsyblException("DynamicModel class " + dynamicModel.getClass().getName() + " is not allowed");
+        }
+    }
+
+    private static void writeBlackBoxModel(XMLStreamWriter writer, BlackBoxModel dynamicModel)
+        throws XMLStreamException {
+        String id = dynamicModel.getId();
+        String lib = dynamicModel.getLib();
         String file = dynamicModel.getParametersFile();
         int paramId = dynamicModel.getParametersId();
         String staticId = dynamicModel.getStaticId();
-        return writeBlackBoxModel(id, lib, file, paramId, staticId);
+        List<StaticRef> staticRefs = dynamicModel.getStaticRefs();
+        List<DydComponent> macroStaticRefs = dynamicModel.getMacroStaticRefs();
+        writeBlackBoxModel(writer, id, lib, file, paramId, staticId, staticRefs, macroStaticRefs);
     }
 
-    private String writeConnection(DynawoDynamicModel dynamicModel) {
-        String id1 = dynamicModel.getConnectionId1();
-        String var1 = dynamicModel.getConnectionVar1();
-        String id2 = dynamicModel.getConnectionId2();
-        String var2 = dynamicModel.getConnectionVar2();
-        return writeConnection(id1, var1, id2, var2);
-    }
-
-    private String writeBlackBoxModel(String id, String lib, String parFile, int parId, String staticId) {
-        if (parId > maxParId) {
-            maxParId = parId;
+    private static void writeModelicaModel(XMLStreamWriter writer, ModelicaModel dynamicModel)
+        throws XMLStreamException {
+        String id = dynamicModel.getId();
+        String staticId = dynamicModel.getStaticId();
+        writer.writeStartElement(DYN_URI, "modelicaModel");
+        writer.writeAttribute("id", id);
+        writer.writeAttribute("staticId", staticId);
+        for (UnitDynamicModel unitDynamicModel : dynamicModel.getUnitDynamicModels()) {
+            writeUnitDynamicModel(writer, unitDynamicModel);
         }
-        if (staticId == null) {
-            return "  <dyn:blackBoxModel id=\"" + id + "\" lib=\"" + lib + "\" parFile=\"" + parFile + "\" parId=\""
-                + parId
-                + "\" />";
+        for (Connection connection : dynamicModel.getConnections()) {
+            writeConnection(writer, connection);
         }
-        return "  <dyn:blackBoxModel id=\"" + id + "\" lib=\"" + lib + "\" parFile=\"" + parFile + "\" parId=\"" + parId
-            + "\" staticId=\"" + staticId + "\" />";
+        for (InitConnection initConnection : dynamicModel.getInitConnections()) {
+            writeInitConnection(writer, initConnection);
+        }
+        for (StaticRef staticRef : dynamicModel.getStaticRefs()) {
+            writeStaticRef(writer, staticRef);
+        }
+        for (DydComponent macroStaticRef : dynamicModel.getMacroStaticRefs()) {
+            writeMacroStaticRef(writer, macroStaticRef);
+        }
+        writer.writeEndElement();
     }
 
-    private String writeConnection(String id1, String var1, String id2, String var2) {
-        return "  <dyn:connect id1=\"" + id1 + "\" var1=\"" + var1 + "\" id2=\"" + id2 + "\" var2=\"" + var2 + "\"/>";
+    private static void writeModelTemplate(XMLStreamWriter writer, ModelTemplate dynamicModel)
+        throws XMLStreamException {
+        String id = dynamicModel.getId();
+        writer.writeStartElement(DYN_URI, "modelTemplate");
+        writer.writeAttribute("id", id);
+        for (UnitDynamicModel unitDynamicModel : dynamicModel.getUnitDynamicModels()) {
+            writeUnitDynamicModel(writer, unitDynamicModel);
+        }
+        for (Connection connection : dynamicModel.getConnections()) {
+            writeConnection(writer, connection);
+        }
+        for (InitConnection initConnection : dynamicModel.getInitConnections()) {
+            writeInitConnection(writer, initConnection);
+        }
+        writer.writeEndElement();
     }
 
-    private final Network network;
-    private final List<DynawoDynamicModel> dynamicModels;
+    private static void writeUnitDynamicModel(XMLStreamWriter writer, UnitDynamicModel dynamicModel)
+        throws XMLStreamException {
+        String id = dynamicModel.getId();
+        String name = dynamicModel.getName();
+        String moFile = dynamicModel.getMoFile();
+        String initName = dynamicModel.getInitName();
+        String parFile = dynamicModel.getParametersFile();
+        int parId = dynamicModel.getParametersId();
+        writeUnitDynamicModel(writer, id, name, moFile, initName, parFile, parId);
+    }
+
+    private static void writeConnection(XMLStreamWriter writer, Connection dynamicModel) throws XMLStreamException {
+        String id1 = dynamicModel.getId1();
+        String var1 = dynamicModel.getVar1();
+        String id2 = dynamicModel.getId2();
+        String var2 = dynamicModel.getVar2();
+        writeConnection(writer, id1, var1, id2, var2);
+    }
+
+    private static void writeInitConnection(XMLStreamWriter writer, InitConnection dynamicModel)
+        throws XMLStreamException {
+        String id1 = dynamicModel.getId1();
+        String var1 = dynamicModel.getVar1();
+        String id2 = dynamicModel.getId2();
+        String var2 = dynamicModel.getVar2();
+        writeInitConnection(writer, id1, var1, id2, var2);
+    }
+
+    private static void writeMacroConnector(XMLStreamWriter writer, MacroConnector dynamicModel)
+        throws XMLStreamException {
+        String id = dynamicModel.getId();
+        writer.writeStartElement(DYN_URI, "macroConnector");
+        writer.writeAttribute("id", id);
+        for (DydConnection connection : dynamicModel.getConnections()) {
+            writeConnection(writer, connection);
+        }
+        writer.writeEndElement();
+    }
+
+    private static void writeMacroConnection(XMLStreamWriter writer, MacroConnection dynamicModel)
+        throws XMLStreamException {
+        String connector = dynamicModel.getConnector();
+        String id1 = dynamicModel.getId1();
+        String id2 = dynamicModel.getId2();
+        writeMacroConnection(writer, connector, id1, id2);
+    }
+
+    private static void writeConnection(XMLStreamWriter writer, DydConnection dynamicModel) throws XMLStreamException {
+        String var1 = dynamicModel.getVar1();
+        String var2 = dynamicModel.getVar2();
+        writeConnection(writer, var1, var2);
+    }
+
+    private static void writeMacroStaticReference(XMLStreamWriter writer, MacroStaticReference dynamicModel)
+        throws XMLStreamException {
+        writer.writeStartElement(DYN_URI, "macroStaticReference");
+        for (StaticRef staticRef : dynamicModel.getStaticRefs()) {
+            writeStaticRef(writer, staticRef);
+        }
+        writer.writeEndElement();
+    }
+
+    private static void writeStaticRef(XMLStreamWriter writer, StaticRef dynamicModel) throws XMLStreamException {
+        String var = dynamicModel.getVar();
+        String staticVar = dynamicModel.getStaticVar();
+        writeStaticRef(writer, var, staticVar);
+    }
+
+    private static void writeBlackBoxModel(XMLStreamWriter writer, String id, String lib, String parFile, int parId,
+        String staticId, List<StaticRef> staticRefs, List<DydComponent> macroStaticRefs) throws XMLStreamException {
+        if (staticRefs.isEmpty() && macroStaticRefs.isEmpty()) {
+            writer.writeEmptyElement(DYN_URI, "blackBoxModel");
+        } else {
+            writer.writeStartElement(DYN_URI, "blackBoxModel");
+        }
+        writer.writeAttribute("id", id);
+        writer.writeAttribute("lib", lib);
+        writer.writeAttribute("parFile", parFile);
+        writer.writeAttribute("parId", Integer.toString(parId));
+        if (staticId != null) {
+            writer.writeAttribute("staticId", staticId);
+        }
+        if (!staticRefs.isEmpty() || !macroStaticRefs.isEmpty()) {
+            for (StaticRef staticRef : staticRefs) {
+                writeStaticRef(writer, staticRef);
+            }
+            for (DydComponent macroStaticRef : macroStaticRefs) {
+                writeMacroStaticRef(writer, macroStaticRef);
+            }
+            writer.writeEndElement();
+        }
+    }
+
+    private static void writeUnitDynamicModel(XMLStreamWriter writer, String id, String name, String moFile,
+        String initName, String parFile, int parId) throws XMLStreamException {
+        writer.writeEmptyElement(DYN_URI, "unitDynamicModel");
+        writer.writeAttribute("id", id);
+        writer.writeAttribute("name", name);
+        writer.writeAttribute("initName", initName);
+        writer.writeAttribute("parFile", parFile);
+        writer.writeAttribute("parId", Integer.toString(parId));
+        if (moFile != null) {
+            writer.writeAttribute("moFile", moFile);
+        }
+    }
+
+    private static void writeMacroStaticRef(XMLStreamWriter writer, DydComponent macroStaticRef)
+        throws XMLStreamException {
+        String id = macroStaticRef.getId();
+        writeMacroStaticRef(writer, id);
+    }
+
+    private static void writeConnection(XMLStreamWriter writer, String id1, String var1, String id2, String var2)
+        throws XMLStreamException {
+        writer.writeEmptyElement(DYN_URI, "connect");
+        if (id1 != null) {
+            writer.writeAttribute("id1", id1);
+        }
+        writer.writeAttribute("var1", var1);
+        if (id2 != null) {
+            writer.writeAttribute("id2", id2);
+        }
+        writer.writeAttribute("var2", var2);
+    }
+
+    private static void writeInitConnection(XMLStreamWriter writer, String id1, String var1, String id2, String var2)
+        throws XMLStreamException {
+        writer.writeEmptyElement(DYN_URI, "initConnect");
+        writer.writeAttribute("id1", id1);
+        writer.writeAttribute("var1", var1);
+        writer.writeAttribute("id2", id2);
+        writer.writeAttribute("var2", var2);
+    }
+
+    private static void writeMacroConnection(XMLStreamWriter writer, String connector, String id1, String id2)
+        throws XMLStreamException {
+        writer.writeEmptyElement(DYN_URI, "macroConnect");
+        writer.writeAttribute("connector", connector);
+        writer.writeAttribute("id1", id1);
+        writer.writeAttribute("id2", id2);
+    }
+
+    private static void writeConnection(XMLStreamWriter writer, String var1, String var2) throws XMLStreamException {
+        writeConnection(writer, null, var1, null, var2);
+    }
+
+    private static void writeStaticRef(XMLStreamWriter writer, String var, String staticVar) throws XMLStreamException {
+        writer.writeEmptyElement(DYN_URI, "staticRef");
+        writer.writeAttribute("var", var);
+        writer.writeAttribute("staticVar", staticVar);
+    }
+
+    private static void writeMacroStaticRef(XMLStreamWriter writer, String id) throws XMLStreamException {
+        writer.writeEmptyElement(DYN_URI, "macroStaticRef");
+        writer.writeAttribute("id", id);
+    }
+
     private int maxParId = 0;
     private int generators = 0;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(DynawoDynamicModels.class);
 }

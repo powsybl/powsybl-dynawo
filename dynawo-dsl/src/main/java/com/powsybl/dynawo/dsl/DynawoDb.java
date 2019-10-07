@@ -10,10 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import com.powsybl.dynawo.DynawoCurve;
-import com.powsybl.dynawo.DynawoDynamicModel;
-import com.powsybl.dynawo.DynawoJob;
-import com.powsybl.dynawo.DynawoParameterSet;
+import com.powsybl.dynawo.crv.DynawoCurve;
+import com.powsybl.dynawo.dyd.DynawoDynamicModel;
+import com.powsybl.dynawo.job.DynawoJob;
+import com.powsybl.dynawo.par.DynawoParameterSet;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>

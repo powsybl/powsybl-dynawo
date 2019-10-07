@@ -21,27 +21,19 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
-import com.powsybl.cgmes.model.test.cim14.Cim14SmallCasesCatalog;
-import com.powsybl.commons.config.InMemoryPlatformConfig;
-import com.powsybl.commons.config.MapModuleConfig;
-import com.powsybl.commons.config.PlatformConfig;
-import com.powsybl.dynawo.DynawoProvider;
-import com.powsybl.dynawo.DynawoCurve;
-import com.powsybl.dynawo.DynawoDynamicModel;
-import com.powsybl.dynawo.DynawoJob;
-import com.powsybl.dynawo.DynawoModeler;
-import com.powsybl.dynawo.DynawoOutputs;
-import com.powsybl.dynawo.DynawoSimulation;
-import com.powsybl.dynawo.DynawoSolver;
-import com.powsybl.dynawo.DynawoParameter;
-import com.powsybl.dynawo.DynawoParameterSet;
-import com.powsybl.dynawo.simulator.DynawoSimulatorTester;
-import com.powsybl.dynawo.simulator.results.DynawoResults;
+import com.powsybl.dynawo.crv.DynawoCurve;
+import com.powsybl.dynawo.dyd.BlackBoxModel;
+import com.powsybl.dynawo.dyd.DynawoDynamicModel;
+import com.powsybl.dynawo.job.DynawoJob;
+import com.powsybl.dynawo.job.DynawoModeler;
+import com.powsybl.dynawo.job.DynawoOutputs;
+import com.powsybl.dynawo.job.DynawoSimulation;
+import com.powsybl.dynawo.job.DynawoSolver;
+import com.powsybl.dynawo.par.DynawoParameter;
+import com.powsybl.dynawo.par.DynawoParameterSet;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 
@@ -100,7 +92,7 @@ public class GroovyDslDynawoProviderTest {
             "    }",
             "}");
 
-        List<DynawoJob> jobs = new GroovyDslDynawoProvider(dslFile).getDynawoJob(network);
+        List<DynawoJob> jobs = new GroovyDslDynawoProvider(dslFile).getDynawoJobs(network);
         assertEquals(1, jobs.size());
         DynawoJob job = jobs.get(0);
         assertEquals("j1", job.getName());
@@ -109,7 +101,7 @@ public class GroovyDslDynawoProviderTest {
         assertEquals("file", solver.getFile());
         assertEquals(2, solver.getId());
         DynawoModeler modeler = job.getModeler();
-        assertEquals("compile", modeler.getCompile());
+        assertEquals("compile", modeler.getCompileDir());
         assertEquals("iidm", modeler.getIidm());
         assertEquals("parameters", modeler.getParameters());
         assertEquals(1, modeler.getParameterId());
@@ -139,9 +131,9 @@ public class GroovyDslDynawoProviderTest {
 
     @Test
     public void testDynamicModel() throws IOException {
-        writeToDslFile("dynamicModel {",
-            "    blackBoxModelId 'bbid'",
-            "    blackBoxModelLib 'bblib'",
+        writeToDslFile("blackBoxModel {",
+            "    id 'bbid'",
+            "    lib 'bblib'",
             "    parametersFile 'parametersFile'",
             "    parametersId 1",
             "}");
@@ -149,11 +141,12 @@ public class GroovyDslDynawoProviderTest {
         List<DynawoDynamicModel> dynamicModels = new GroovyDslDynawoProvider(dslFile).getDynawoDynamicModels(network);
         assertEquals(1, dynamicModels.size());
         DynawoDynamicModel dynamicModel = dynamicModels.get(0);
-        assertTrue(dynamicModel.isBlackBoxModel());
-        assertEquals("bblib", dynamicModel.getBlackBoxModelLib());
-        assertEquals("bbid", dynamicModel.getBlackBoxModelId());
-        assertEquals("parametersFile", dynamicModel.getParametersFile());
-        assertEquals(1, dynamicModel.getParametersId());
+        assertTrue(BlackBoxModel.class.isInstance(dynamicModel));
+        BlackBoxModel blackBoxModel = (BlackBoxModel) dynamicModel;
+        assertEquals("bblib", blackBoxModel.getLib());
+        assertEquals("bbid", blackBoxModel.getId());
+        assertEquals("parametersFile", blackBoxModel.getParametersFile());
+        assertEquals(1, blackBoxModel.getParametersId());
     }
 
     @Test
@@ -212,49 +205,4 @@ public class GroovyDslDynawoProviderTest {
         assertEquals("type", parameter.getType());
         assertEquals("value", parameter.getValue());
     }
-
-    @Test
-    public void testNordic32() throws Exception {
-        try (FileSystem fs = Jimfs.newFileSystem(Configuration.unix())) {
-
-            PlatformConfig platformConfig = configure(fs);
-            DynawoSimulatorTester tester = new DynawoSimulatorTester(platformConfig, true);
-            Network network = tester.convert(platformConfig, catalog.nordic32());
-            DynawoProvider provider = new GroovyDslDynawoProvider(getClass().getResourceAsStream("/nordic32.groovy"));
-            DynawoResults result = tester.testGridModel(network, provider);
-            LOGGER.info("metrics " + result.getMetrics().get("success"));
-            assertTrue(Boolean.parseBoolean(result.getMetrics().get("success")));
-
-            // check final voltage of bus close to the event
-            int index = result.getNames().indexOf("NETWORK__N1011____TN_Upu_value");
-            assertEquals(result.getTimeSerie().get(new Double(30.0)).get(index), new Double(0.931558));
-        }
-    }
-
-    private PlatformConfig configure(FileSystem fs) throws IOException {
-        InMemoryPlatformConfig platformConfig = new InMemoryPlatformConfig(fs);
-        Files.createDirectory(fs.getPath("/dynawoPath"));
-        Files.createDirectory(fs.getPath("/workingPath"));
-        Files.createDirectories(fs.getPath("/tmp"));
-        MapModuleConfig moduleConfig = platformConfig.createModuleConfig("import-export-parameters-default-value");
-        moduleConfig.setStringProperty("iidm.export.xml.extensions", "null");
-        moduleConfig = platformConfig.createModuleConfig("computation-local");
-        moduleConfig.setStringProperty("tmpDir", "/tmp");
-        moduleConfig = platformConfig.createModuleConfig("dynawo");
-        moduleConfig.setStringProperty("dynawoHomeDir", "/dynawoPath");
-        moduleConfig.setStringProperty("workingDir", "/workingPath");
-        moduleConfig.setStringProperty("debug", "false");
-        moduleConfig.setStringProperty("dynawoCptCommandName", "myEnvDynawo.sh");
-        moduleConfig = platformConfig.createModuleConfig("simulation-parameters");
-        moduleConfig.setStringProperty("preFaultSimulationStopInstant", "1");
-        moduleConfig.setStringProperty("postFaultSimulationStopInstant", "60");
-        moduleConfig.setStringProperty("faultEventInstant", "30");
-        moduleConfig.setStringProperty("branchSideOneFaultShortCircuitDuration", "60");
-        moduleConfig.setStringProperty("branchSideTwoFaultShortCircuitDuration", "60");
-        moduleConfig.setStringProperty("generatorFaultShortCircuitDuration", "60");
-        return platformConfig;
-    }
-
-    private final Cim14SmallCasesCatalog catalog = new Cim14SmallCasesCatalog();
-    private static final Logger LOGGER = LoggerFactory.getLogger(GroovyDslDynawoProviderTest.class);
 }

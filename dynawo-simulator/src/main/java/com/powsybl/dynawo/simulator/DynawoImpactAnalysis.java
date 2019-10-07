@@ -18,7 +18,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.ImmutableMap;
-import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.computation.AbstractExecutionHandler;
 import com.powsybl.computation.Command;
 import com.powsybl.computation.CommandExecution;
@@ -26,9 +25,9 @@ import com.powsybl.computation.ComputationManager;
 import com.powsybl.computation.ExecutionEnvironment;
 import com.powsybl.computation.ExecutionReport;
 import com.powsybl.computation.GroupCommandBuilder;
+import com.powsybl.dynawo.DynawoExporter;
 import com.powsybl.dynawo.DynawoProvider;
 import com.powsybl.dynawo.simulator.results.DynawoResults;
-import com.powsybl.dynawo.xml.DynawoExporter;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.simulation.ImpactAnalysis;
 import com.powsybl.simulation.ImpactAnalysisProgressListener;
@@ -45,44 +44,43 @@ public class DynawoImpactAnalysis implements ImpactAnalysis {
     private static final String OUTPUT_FILE = "curves/curves.csv";
 
     public DynawoImpactAnalysis(Network network, ComputationManager computationManager, int priority,
-        DynawoProvider dynawoProvider) {
-        this(network, computationManager, priority, dynawoProvider, PlatformConfig.defaultConfig());
+        DynawoProvider dynawoProvider, DynawoExporter dynawoExporter) {
+        this(network, computationManager, priority, dynawoProvider, dynawoExporter, DynawoConfig.load());
     }
 
     public DynawoImpactAnalysis(Network network, ComputationManager computationManager, int priority,
-        DynawoProvider dynawoProvider, PlatformConfig platformConfig) {
+        DynawoProvider dynawoProvider, DynawoExporter dynawoExporter, DynawoConfig dynawoConfig) {
         this.network = network;
         this.computationManager = computationManager;
         this.priority = priority;
         this.dynawoProvider = dynawoProvider;
-        this.platformConfig = platformConfig;
-        this.config = DynawoConfig.load(platformConfig);
+        this.dynawoExporter = dynawoExporter;
+        this.dynawoConfig = dynawoConfig;
     }
 
     private Command createCommand(String dynawoJobsFile) {
         return new GroupCommandBuilder()
             .id("dyn_fs")
             .subCommand()
-            .program(config.getDynawoCptCommandName())
+            .program(dynawoConfig.getDynawoCptCommandName())
             .args("jobs", dynawoJobsFile)
             .add()
             .build();
     }
 
-    protected Command before(Path workingDir) {
-        DynawoExporter exporter = new DynawoExporter(network, dynawoProvider);
-        String dynawoJobsFile = exporter.export(workingDir, platformConfig);
-        LOGGER.info("cmd {} jobs {}", config.getDynawoCptCommandName(), dynawoJobsFile);
+    private Command before(Path workingDir) {
+        String dynawoJobsFile = dynawoExporter.export(network, dynawoProvider, workingDir);
+        LOGGER.info("cmd {} jobs {}", dynawoConfig.getDynawoCptCommandName(), dynawoJobsFile);
         return createCommand(dynawoJobsFile);
     }
 
-    protected ImpactAnalysisResult after(Path workingDir, ExecutionReport report) {
+    private ImpactAnalysisResult after(Path workingDir, ExecutionReport report) {
         report.log();
 
         Map<String, String> metrics = new HashMap<>();
         metrics.put("success", Boolean.toString(report.getErrors().isEmpty()));
         DynawoResults results = new DynawoResults(metrics);
-        Path file = workingDir.resolve(dynawoProvider.getDynawoJob(network).get(0).getOutputs().getDirectory())
+        Path file = workingDir.resolve(dynawoProvider.getDynawoJobs(network).get(0).getOutputs().getDirectory())
             .resolve(OUTPUT_FILE);
         try {
             if (file.toFile().exists()) {
@@ -124,7 +122,7 @@ public class DynawoImpactAnalysis implements ImpactAnalysis {
     public CompletableFuture<ImpactAnalysisResult> runAsync(SimulationState state, Set<String> contingencyIds,
         ImpactAnalysisProgressListener listener) {
         return computationManager.execute(
-            new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, config.isDebug()),
+            new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, dynawoConfig.isDebug()),
             new AbstractExecutionHandler<ImpactAnalysisResult>() {
 
                 @Override
@@ -143,10 +141,10 @@ public class DynawoImpactAnalysis implements ImpactAnalysis {
 
     private final Network network;
     private final DynawoProvider dynawoProvider;
+    private final DynawoExporter dynawoExporter;
     private final ComputationManager computationManager;
     private final int priority;
-    private final PlatformConfig platformConfig;
-    private final DynawoConfig config;
+    private final DynawoConfig dynawoConfig;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DynawoImpactAnalysis.class);
 }

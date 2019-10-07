@@ -40,9 +40,9 @@
 	</developers>
 
 	<modules>
-		<module>dynawo-simulator</module>
 		<module>dynawo-api</module>
 		<module>dynawo-dsl</module>
+		<module>dynawo-simulator</module>
 		<module>dynawo-xml-exporter</module>
 	</modules>
 
@@ -89,7 +89,7 @@
 		<mockito.version>1.10.19</mockito.version>
 		<groovy.version>2.4.15</groovy.version>
 		<commonsio.version>2.5</commonsio.version>
-        <xmlunit.version>2.3.0</xmlunit.version>
+		<xmlunit.version>2.3.0</xmlunit.version>
 
 		<powsyblcore.version>3.0.0-SNAPSHOT</powsyblcore.version>
 	</properties>
@@ -452,8 +452,28 @@
 				<version>${commonsio.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.powsybl</groupId>
+				<groupId>org.codehaus.groovy</groupId>
+				<artifactId>groovy-all</artifactId>
+				<version>${groovy.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>${slf4j.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>powsybl-commons</artifactId>
+				<version>${powsyblcore.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>powsybl-computation-local</artifactId>
+				<version>${powsyblcore.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>powsybl-contingency-api</artifactId>
 				<version>${powsyblcore.version}</version>
 			</dependency>
 			<dependency>
@@ -462,44 +482,24 @@
 				<version>${powsyblcore.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.powsybl</groupId>
-				<artifactId>powsybl-computation-local</artifactId>
-				<version>${powsyblcore.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.powsybl</groupId>
-				<artifactId>powsybl-contingency-api</artifactId>
-				<version>${powsyblcore.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.powsybl</groupId>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>powsybl-iidm-api</artifactId>
 				<version>${powsyblcore.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.powsybl</groupId>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>powsybl-iidm-xml-converter</artifactId>
 				<version>${powsyblcore.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.powsybl</groupId>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>powsybl-simulation-api</artifactId>
 				<version>${powsyblcore.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.powsybl</groupId>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>powsybl-tools</artifactId>
 				<version>${powsyblcore.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>slf4j-api</artifactId>
-				<version>${slf4j.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.codehaus.groovy</groupId>
-				<artifactId>groovy-all</artifactId>
-				<version>${groovy.version}</version>
 			</dependency>
 
 			<!-- Test dependencies -->
@@ -507,56 +507,6 @@
 				<groupId>com.google.jimfs</groupId>
 				<artifactId>jimfs</artifactId>
 				<version>${jimfs.version}</version>
-				<scope>test</scope>
-			</dependency>
-            <dependency>
-                <groupId>org.xmlunit</groupId>
-                <artifactId>xmlunit-core</artifactId>
-                <version>${xmlunit.version}</version>
-                <scope>test</scope>
-            </dependency>
-			<dependency>
-				<groupId>com.powsybl</groupId>
-				<artifactId>powsybl-commons</artifactId>
-				<version>${powsyblcore.version}</version>
-				<type>test-jar</type>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>com.powsybl</groupId>
-				<artifactId>powsybl-cgmes-conversion</artifactId>
-				<version>${powsyblcore.version}</version>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>com.powsybl</groupId>
-				<artifactId>powsybl-cgmes-model</artifactId>
-				<version>${powsyblcore.version}</version>
-				<type>test-jar</type>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>com.powsybl</groupId>
-				<artifactId>powsybl-iidm-impl</artifactId>
-				<version>${powsyblcore.version}</version>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>${project.groupId}</groupId>
-				<artifactId>powsybl-iidm-test</artifactId>
-				<version>${powsyblcore.version}</version>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>com.powsybl</groupId>
-				<artifactId>powsybl-triple-store-api</artifactId>
-				<version>${powsyblcore.version}</version>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>com.powsybl</groupId>
-				<artifactId>powsybl-triple-store-impl-rdf4j</artifactId>
-				<version>${powsyblcore.version}</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>
@@ -575,6 +525,62 @@
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-simple</artifactId>
 				<version>${slf4j.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.xmlunit</groupId>
+				<artifactId>xmlunit-core</artifactId>
+				<version>${xmlunit.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>powsybl-cgmes-conversion</artifactId>
+				<version>${powsyblcore.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>powsybl-cgmes-model</artifactId>
+				<version>${powsyblcore.version}</version>
+				<type>test-jar</type>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>powsybl-commons</artifactId>
+				<version>${powsyblcore.version}</version>
+				<type>test-jar</type>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>powsybl-config-classic</artifactId>
+				<version>${powsyblcore.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>powsybl-iidm-impl</artifactId>
+				<version>${powsyblcore.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>powsybl-iidm-test</artifactId>
+				<version>${powsyblcore.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>powsybl-triple-store-api</artifactId>
+				<version>${powsyblcore.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>powsybl-triple-store-impl-rdf4j</artifactId>
+				<version>${powsyblcore.version}</version>
 				<scope>test</scope>
 			</dependency>
 		</dependencies>

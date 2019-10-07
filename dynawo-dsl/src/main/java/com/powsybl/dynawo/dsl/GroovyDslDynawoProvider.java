@@ -10,10 +10,10 @@ import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.List;
 
-import com.powsybl.dynawo.DynawoCurve;
-import com.powsybl.dynawo.DynawoDynamicModel;
-import com.powsybl.dynawo.DynawoJob;
-import com.powsybl.dynawo.DynawoParameterSet;
+import com.powsybl.dynawo.crv.DynawoCurve;
+import com.powsybl.dynawo.dyd.DynawoDynamicModel;
+import com.powsybl.dynawo.job.DynawoJob;
+import com.powsybl.dynawo.par.DynawoParameterSet;
 import com.powsybl.iidm.network.Network;
 
 /**
@@ -30,7 +30,7 @@ public class GroovyDslDynawoProvider extends AbstractDslDynawoProvider {
     }
 
     @Override
-    public List<DynawoJob> getDynawoJob(Network network) {
+    public List<DynawoJob> getDynawoJobs(Network network) {
         DynawoDb dynawoDb = new DynawoDslLoader(script).load(network);
         return dynawoDb.getJobs();
     }

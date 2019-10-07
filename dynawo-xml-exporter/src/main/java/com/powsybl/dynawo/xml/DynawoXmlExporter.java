@@ -9,8 +9,12 @@ package com.powsybl.dynawo.xml;
 import java.nio.file.Path;
 import java.util.Properties;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.datasource.FileDataSource;
+import com.powsybl.dynawo.DynawoExporter;
 import com.powsybl.dynawo.DynawoProvider;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.xml.XMLExporter;
@@ -18,33 +22,38 @@ import com.powsybl.iidm.xml.XMLExporter;
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class DynawoExporter {
+public class DynawoXmlExporter implements DynawoExporter {
 
     private static final String DEFAULT_DYNAWO_CASE_NAME = "nrt/data/IEEE14/IEEE14_BasicTestCases/IEEE14_DisconnectLine/IEEE14.jobs";
 
-    public DynawoExporter(Network network, DynawoProvider dynawoProvider) {
-        this.network = network;
-        this.dynawoProvider = dynawoProvider;
+    public DynawoXmlExporter() {
+        this(PlatformConfig.defaultConfig());
     }
 
-    public String export(Path workingDir, PlatformConfig platformConfig) {
+    public DynawoXmlExporter(PlatformConfig platformConfig) {
+        this.platformConfig = platformConfig;
+    }
+
+    @Override
+    public String export(Network network, DynawoProvider dynawoProvider, Path workingDir) {
         String dynawoJobsFile = DEFAULT_DYNAWO_CASE_NAME;
-        new DynawoJobs(network, dynawoProvider).prepareFile(workingDir);
-        new DynawoDynamicModels(network, dynawoProvider).prepareFile(workingDir);
-        new DynawoSimulationParameters(network, dynawoProvider).prepareFile(workingDir);
-        new DynawoSolverParameters(network, dynawoProvider).prepareFile(workingDir);
-        new DynawoCurves(network, dynawoProvider).prepareFile(workingDir);
+        try {
+            DynawoInputs.prepare(network, dynawoProvider, workingDir);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+        }
         if (network != null) {
             Path jobsFile = workingDir.resolve("dynawoModel.jobs");
             XMLExporter xmlExporter = new XMLExporter(platformConfig);
             Properties properties = new Properties();
             properties.put(XMLExporter.ANONYMISED, "false");
             xmlExporter.export(network, properties, new FileDataSource(workingDir, "dynawoModel"));
+            // Error in dynawo because substation is exported without country field
             dynawoJobsFile = jobsFile.toAbsolutePath().toString();
         }
         return dynawoJobsFile;
     }
 
-    private final Network network;
-    private final DynawoProvider dynawoProvider;
+    private final PlatformConfig platformConfig;
+    private static final Logger LOGGER = LoggerFactory.getLogger(DynawoXmlExporter.class);
 }

@@ -8,6 +8,10 @@ package com.powsybl.dynawo;
 
 import java.util.List;
 
+import com.powsybl.dynawo.crv.DynawoCurve;
+import com.powsybl.dynawo.dyd.DynawoDynamicModel;
+import com.powsybl.dynawo.job.DynawoJob;
+import com.powsybl.dynawo.par.DynawoParameterSet;
 import com.powsybl.iidm.network.Network;
 
 /**
@@ -15,7 +19,7 @@ import com.powsybl.iidm.network.Network;
  */
 public interface DynawoProvider {
 
-    List<DynawoJob> getDynawoJob(Network network);
+    List<DynawoJob> getDynawoJobs(Network network);
 
     List<DynawoCurve> getDynawoCurves(Network network);
 

@@ -10,10 +10,15 @@ import org.codehaus.groovy.control.CompilationFailedException
 import org.slf4j.LoggerFactory
 
 import com.powsybl.dsl.DslLoader
-import com.powsybl.dynawo.DynawoCurve
-import com.powsybl.dynawo.DynawoDynamicModel
-import com.powsybl.dynawo.DynawoJob
-import com.powsybl.dynawo.DynawoParameterSet
+import com.powsybl.dynawo.crv.DynawoCurve
+import com.powsybl.dynawo.dsl.crv.DynawoCurveDslLoader
+import com.powsybl.dynawo.dsl.dyd.DynawoDynamicModelDslLoader
+import com.powsybl.dynawo.dsl.job.DynawoJobDslLoader
+import com.powsybl.dynawo.dsl.par.DynawoParameterSetDslLoader
+import com.powsybl.dynawo.dsl.par.DynawoSolverParameterSetDslLoader
+import com.powsybl.dynawo.dyd.DynawoDynamicModel
+import com.powsybl.dynawo.job.DynawoJob
+import com.powsybl.dynawo.par.DynawoParameterSet
 import com.powsybl.iidm.network.Network
 
 /**

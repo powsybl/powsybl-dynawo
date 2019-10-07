@@ -16,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -33,8 +34,6 @@ public class DynawoResults extends ImpactAnalysisResult {
 
     public DynawoResults(Map<String, String> metrics) {
         super(metrics);
-        names = new ArrayList<>();
-        timeSerie = new HashMap<>();
     }
 
     public void parseCsv(Path file) {
@@ -57,8 +56,8 @@ public class DynawoResults extends ImpactAnalysisResult {
         return names;
     }
 
-    public Map<Double, List<Double>> getTimeSerie() {
-        return timeSerie;
+    public Map<Double, List<Double>> getTimeSeries() {
+        return Collections.unmodifiableMap(timeSeries);
     }
 
     private void parseCsv(BufferedReader reader, char separator) {
@@ -115,13 +114,13 @@ public class DynawoResults extends ImpactAnalysisResult {
             values.add(parseToken(token));
         }
         Double time = parseToken(tokens[0].trim());
-        timeSerie.put(time, values);
+        timeSeries.put(time, values);
     }
 
     private Double parseToken(String token) {
         return Double.valueOf(token);
     }
 
-    private List<String> names;
-    private Map<Double, List<Double>> timeSerie;
+    private List<String> names = new ArrayList<>();
+    private Map<Double, List<Double>> timeSeries = new HashMap<>();
 }

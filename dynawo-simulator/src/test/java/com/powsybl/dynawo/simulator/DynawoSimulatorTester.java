@@ -11,16 +11,19 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import org.mockito.Mockito;
-
 import com.powsybl.cgmes.conversion.CgmesImport;
 import com.powsybl.cgmes.model.test.TestGridModel;
 import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.datasource.ReadOnlyDataSource;
+import com.powsybl.computation.ComputationManager;
+import com.powsybl.computation.local.LocalComputationConfig;
+import com.powsybl.computation.local.LocalComputationManager;
+import com.powsybl.dynawo.DynawoExporter;
 import com.powsybl.dynawo.DynawoProvider;
 import com.powsybl.dynawo.simulator.results.DynawoResults;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.NetworkFactory;
+import com.powsybl.simulation.SimulationParameters;
 import com.powsybl.triplestore.api.TripleStoreFactory;
 
 /**
@@ -31,13 +34,6 @@ public class DynawoSimulatorTester {
     public DynawoSimulatorTester(PlatformConfig platformConfig, boolean mockResults) {
         this.platformConfig = platformConfig;
         this.mockResults = mockResults;
-    }
-
-    public DynawoResults testGridModel(Network network, DynawoProvider provider) throws Exception {
-        DynawoSimulator simulator = mockResults(new DynawoSimulator(network, platformConfig));
-        simulator.simulate(provider);
-
-        return (DynawoResults) simulator.getResult();
     }
 
     public Network convert(PlatformConfig platformConfig, TestGridModel gm) throws IOException {
@@ -51,17 +47,23 @@ public class DynawoSimulatorTester {
         return n;
     }
 
-    private DynawoSimulator mockResults(DynawoSimulator simulator) {
-        if (!mockResults) {
-            return simulator;
+    public DynawoResults simulate(Network network, DynawoProvider provider, DynawoExporter exporter,
+        PlatformConfig platformConfig)
+        throws Exception {
+        ComputationManager computationManager = new LocalComputationManager(
+            LocalComputationConfig.load(platformConfig));
+        SimulationParameters simulationParameters = SimulationParameters.load(platformConfig);
+        DynawoConfig dynawoConfig = DynawoConfig.load(platformConfig);
+        DynawoSimulator simulator = new DynawoSimulator(simulationParameters, computationManager, exporter,
+            dynawoConfig);
+        DynawoResults result = (DynawoResults) simulator.simulate(network, provider);
+        if (mockResults) {
+            Map<String, String> metrics = new HashMap<>();
+            metrics.put("success", "true");
+            result = new DynawoResults(metrics);
+            result.parseCsv(getClass().getResourceAsStream("/nordic32/curves.csv"));
         }
-        DynawoSimulator spySimulator = Mockito.spy(simulator);
-        Map<String, String> metrics = new HashMap<>();
-        metrics.put("success", "true");
-        DynawoResults result = new DynawoResults(metrics);
-        result.parseCsv(getClass().getResourceAsStream("/nordic32/curves.csv"));
-        Mockito.when(spySimulator.getResult()).thenReturn(result);
-        return spySimulator;
+        return result;
     }
 
     private final boolean mockResults;
