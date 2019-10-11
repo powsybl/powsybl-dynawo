@@ -1,6 +1,8 @@
 # Maven projects
-/dynawo-simulator/target
-
+/dynawo-api/target/
+/dynawo-dsl/target/
+/dynawo-simulator/target/
+/dynawo-xml-exporter/target/
 /.metadata/
 /.recommenders/
 /.sonarlint/

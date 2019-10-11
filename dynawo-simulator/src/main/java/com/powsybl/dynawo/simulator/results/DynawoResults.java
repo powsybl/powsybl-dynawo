@@ -30,6 +30,7 @@ import com.powsybl.simulation.ImpactAnalysisResult;
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
+//TODO pending to use Powsybl TimeSeries
 public class DynawoResults extends ImpactAnalysisResult {
 
     public DynawoResults(Map<String, String> metrics) {
