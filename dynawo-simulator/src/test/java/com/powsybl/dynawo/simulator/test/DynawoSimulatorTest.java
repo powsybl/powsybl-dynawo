@@ -48,7 +48,7 @@ public class DynawoSimulatorTest {
     public void test() throws Exception {
         try (FileSystem fs = Jimfs.newFileSystem(Configuration.unix())) {
             PlatformConfig platformConfig = configure(fs);
-            Network network = convert(platformConfig, catalog.nordic32());
+            Network network = convert(platformConfig, Cim14SmallCasesCatalog.nordic32());
             DynawoResults result = simulate(network, platformConfig);
             assertTrue(Boolean.parseBoolean(result.getMetrics().get("success")));
 
@@ -107,6 +107,4 @@ public class DynawoSimulatorTest {
         result.parseCsv(getClass().getResourceAsStream("/nordic32/curves.csv"));
         return result;
     }
-
-    private final Cim14SmallCasesCatalog catalog = new Cim14SmallCasesCatalog();
 }
