@@ -242,6 +242,11 @@
                     <groupId>org.eluder.coveralls</groupId>
                     <artifactId>coveralls-maven-plugin</artifactId>
                     <version>${maven.coveralls.version}</version>
+                    <configuration>
+                        <jacocoReports>
+                            <jacocoReport>${project.basedir}/dynawo-simulator/target/site/jacoco-aggregate/jacoco.xml</jacocoReport>
+                        </jacocoReports>
+                    </configuration>
                     <dependencies>
                         <dependency>
                             <groupId>javax.xml.bind</groupId>
