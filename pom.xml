@@ -79,6 +79,16 @@
         <maven.templating.version>1.0.0</maven.templating.version>
         <maven.versions.version>2.7</maven.versions.version>
 
+        <sonar.coverage.jacoco.xmlReportPaths>
+            ../dynawo-simulator/target/site/jacoco-aggregate/jacoco.xml,
+            ../../dynawo-simulator/target/site/jacoco-aggregate/jacoco.xml,
+            ../../../dynawo-simulator/target/site/jacoco-aggregate/jacoco.xml
+        </sonar.coverage.jacoco.xmlReportPaths>
+
+        <sonar.exclusions>
+            **/generated/**/*
+        </sonar.exclusions>
+
         <autoservice.version>1.0-rc2</autoservice.version>
         <guava.version>20.0</guava.version>
         <jaxb-api.version>2.4.0-b180830.0359</jaxb-api.version>
