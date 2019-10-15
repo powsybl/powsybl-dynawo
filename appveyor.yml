@@ -18,5 +18,7 @@ before_build:
       pushd powsybl/powsybl-core
       mvn -DskipTests install --batch-mode
       popd
+  matrix:
+    - JAVA_HOME: C:\Program Files\Java\jdk1.8.0
 build_script:
   - mvn clean package --batch-mode
