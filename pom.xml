@@ -80,9 +80,9 @@
         <maven.versions.version>2.7</maven.versions.version>
 
         <sonar.coverage.jacoco.xmlReportPaths>
+            ./dynawo-simulator/target/site/jacoco-aggregate/jacoco.xml,
             ../dynawo-simulator/target/site/jacoco-aggregate/jacoco.xml,
-            ../../dynawo-simulator/target/site/jacoco-aggregate/jacoco.xml,
-            ../../../dynawo-simulator/target/site/jacoco-aggregate/jacoco.xml
+            ../../dynawo-simulator/target/site/jacoco-aggregate/jacoco.xml
         </sonar.coverage.jacoco.xmlReportPaths>
 
         <sonar.exclusions>
