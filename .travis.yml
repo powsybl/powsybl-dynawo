@@ -27,8 +27,8 @@ install:
 - git clone https://github.com/powsybl/powsybl-core powsybl/powsybl-core
 - pushd powsybl/powsybl-core && mvn --batch-mode -DskipTests install && popd
 
-script:
-- mvn -B clean verify -Pjacoco coveralls:report
+after_success:
+- mvn clean test jacoco:report coveralls:report
 - if [ "$TRAVIS_OS_NAME" = "linux" -a "$TRAVIS_JDK_VERSION" = "oraclejdk8" -a "$TRAVIS_SECURE_ENV_VARS"  = "true" ]; then mvn -B sonar:sonar; fi
 
 before_cache:
