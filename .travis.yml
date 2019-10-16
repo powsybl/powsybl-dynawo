@@ -28,7 +28,7 @@ install:
 - pushd powsybl/powsybl-core && mvn --batch-mode -DskipTests install && popd
 
 after_success:
-- mvn -e clean test jacoco:report coveralls:report
+- mvn -B clean verify -Pjacoco
 - if [ "$TRAVIS_OS_NAME" = "linux" -a "$TRAVIS_JDK_VERSION" = "oraclejdk8" -a "$TRAVIS_SECURE_ENV_VARS"  = "true" ]; then mvn -B sonar:sonar; fi
 
 before_cache:
