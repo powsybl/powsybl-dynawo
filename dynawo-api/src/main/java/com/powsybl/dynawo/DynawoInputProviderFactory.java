@@ -6,25 +6,21 @@
  */
 package com.powsybl.dynawo;
 
+import java.io.InputStream;
+import java.nio.file.Path;
+
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class DynawoOutputs {
+public interface DynawoInputProviderFactory {
 
-    private final String directory;
-    private final String curve;
+    DynawoInputProvider create();
 
-    public DynawoOutputs(String directory, String curve) {
-        this.directory = directory;
-        this.curve = curve;
+    default DynawoInputProvider create(Path dynawoFile) {
+        return create();
     }
 
-    public String getDirectory() {
-        return directory;
+    default DynawoInputProvider create(InputStream data) {
+        return create();
     }
-
-    public String getCurve() {
-        return curve;
-    }
-
 }

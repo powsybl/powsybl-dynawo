@@ -17,7 +17,7 @@ import com.powsybl.iidm.network.Network;
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public interface DynawoProvider {
+public interface DynawoInputProvider {
 
     List<DynawoJob> getDynawoJobs(Network network);
 
