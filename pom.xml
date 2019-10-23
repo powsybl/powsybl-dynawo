@@ -478,17 +478,17 @@
 			</dependency>
 			<dependency>
 				<groupId>${project.groupId}</groupId>
+				<artifactId>powsybl-dynamic-simulation-api</artifactId>
+				<version>${powsyblcore.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>powsybl-iidm-api</artifactId>
 				<version>${powsyblcore.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>${project.groupId}</groupId>
 				<artifactId>powsybl-iidm-xml-converter</artifactId>
-				<version>${powsyblcore.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>${project.groupId}</groupId>
-				<artifactId>powsybl-dynamic-simulation-api</artifactId>
 				<version>${powsyblcore.version}</version>
 			</dependency>
 			<dependency>
