@@ -9,55 +9,63 @@ package com.powsybl.dynawo.simulator;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import com.powsybl.commons.config.ModuleConfig;
-import com.powsybl.commons.config.PlatformConfig;
+import com.powsybl.commons.extensions.AbstractExtension;
+import com.powsybl.dynamic.simulation.DynamicSimulationParameters;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class DynawoConfig {
+public class DynawoConfig extends AbstractExtension<DynamicSimulationParameters> {
 
-    // default eustag_cpt command name
     private static final String DEFAULT_DYNAWO_CMD_NAME = "myEnvDynawo.sh";
 
-    public static synchronized DynawoConfig load() {
-        return load(PlatformConfig.defaultConfig());
+    public DynawoConfig() {
+        dynawoHomeDir = null;
+        workingDir = Paths.get("./tmp");
+        debug = false;
+        dynawoCptCommandName = DEFAULT_DYNAWO_CMD_NAME;
     }
 
-    public static synchronized DynawoConfig load(PlatformConfig platformConfig) {
-        ModuleConfig config = platformConfig.getModuleConfig("dynawo");
-        Path dynawoHomeDir = config.getPathProperty("dynawoHomeDir", null);
-        Path workingDir = config.getPathProperty("workingDir", Paths.get("./tmp"));
-        boolean debug = config.getBooleanProperty("debug", false);
-        String dynawoCptCommandName = config.getStringProperty("dynawoCptCommandName", DEFAULT_DYNAWO_CMD_NAME);
-        return new DynawoConfig(dynawoHomeDir, workingDir, debug, dynawoCptCommandName);
-    }
-
-    public DynawoConfig(Path dynawoHomeDir, Path workingDir, boolean debug, String dynawoCptCommandName) {
-        this.dynawoHomeDir = dynawoHomeDir;
-        this.workingDir = workingDir;
-        this.debug = debug;
-        this.dynawoCptCommandName = dynawoCptCommandName;
+    @Override
+    public String getName() {
+        return "DynawoConfig";
     }
 
     public Path getDynawoHomeDir() {
         return dynawoHomeDir;
     }
 
+    public void setDynawoHomeDir(Path dynawoHomeDir) {
+        this.dynawoHomeDir = dynawoHomeDir;
+    }
+
     public Path getWorkingDir() {
         return workingDir;
+    }
+
+    public void setWorkingDir(Path workingDir) {
+        this.workingDir = workingDir;
     }
 
     public boolean isDebug() {
         return debug;
     }
 
+    public void setDebug(boolean debug) {
+        this.debug = debug;
+    }
+
     public String getDynawoCptCommandName() {
         return dynawoCptCommandName;
     }
 
-    private final Path dynawoHomeDir;
-    private final Path workingDir;
-    private final boolean debug;
-    private final String dynawoCptCommandName;
+    public void setDynawoCptCommandName(String dynawoCptCommandName) {
+        this.dynawoCptCommandName = dynawoCptCommandName;
+    }
+
+    private Path dynawoHomeDir;
+    private Path workingDir;
+    private boolean debug;
+    private String dynawoCptCommandName;
+
 }

@@ -28,10 +28,8 @@ import com.powsybl.commons.config.ComponentDefaultConfig;
 import com.powsybl.commons.config.InMemoryPlatformConfig;
 import com.powsybl.commons.config.MapModuleConfig;
 import com.powsybl.commons.config.PlatformConfig;
-import com.powsybl.dynawo.DynawoExporter;
-import com.powsybl.dynawo.DynawoExporterFactory;
 import com.powsybl.dynawo.DynawoParameterType;
-import com.powsybl.dynawo.DynawoProvider;
+import com.powsybl.dynawo.DynawoInputProvider;
 import com.powsybl.dynawo.crv.DynawoCurve;
 import com.powsybl.dynawo.dsl.GroovyDslDynawoProvider;
 import com.powsybl.dynawo.dyd.BlackBoxModel;
@@ -51,18 +49,17 @@ import com.powsybl.iidm.network.Network;
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class DynawoSimulatorTest {
+public class DynawoSimulationTest {
 
     @Test
     public void test() throws Exception {
         try (FileSystem fs = Jimfs.newFileSystem(Configuration.unix())) {
 
             PlatformConfig platformConfig = configure(fs);
-            DynawoSimulatorTester tester = new DynawoSimulatorTester(platformConfig, true);
-            Network network = tester.convert(platformConfig, catalog.nordic32());
-            DynawoProvider provider = configureProvider(network);
-            DynawoExporter exporter = Mockito.mock(DynawoExporter.class);
-            DynawoResults result = tester.simulate(network, provider, exporter, platformConfig);
+            DynawoSimulationTester tester = new DynawoSimulationTester(true);
+            Network network = tester.convert(platformConfig, Cim14SmallCasesCatalog.nordic32());
+            DynawoInputProvider provider = configureProvider(network);
+            DynawoResults result = tester.simulate(network, provider, platformConfig);
             LOGGER.info("metrics " + result.getMetrics().get("success"));
             assertTrue(Boolean.parseBoolean(result.getMetrics().get("success")));
 
@@ -77,13 +74,11 @@ public class DynawoSimulatorTest {
         try (FileSystem fs = Jimfs.newFileSystem(Configuration.unix())) {
 
             PlatformConfig platformConfig = configure(fs);
-            DynawoSimulatorTester tester = new DynawoSimulatorTester(platformConfig, true);
-            Network network = tester.convert(platformConfig, catalog.nordic32());
-            DynawoProvider provider = new GroovyDslDynawoProvider(getClass().getResourceAsStream("/nordic32/nordic32.groovy"));
+            DynawoSimulationTester tester = new DynawoSimulationTester(true);
+            Network network = tester.convert(platformConfig, Cim14SmallCasesCatalog.nordic32());
+            DynawoInputProvider inputProvider = new GroovyDslDynawoProvider(getClass().getResourceAsStream("/nordic32/nordic32.groovy"));
             ComponentDefaultConfig defaultConfig = ComponentDefaultConfig.load(platformConfig);
-            DynawoExporterFactory factory = defaultConfig.newFactoryImpl(DynawoExporterFactory.class);
-            DynawoExporter exporter = factory.create(platformConfig);
-            DynawoResults result = tester.simulate(network, provider, exporter, platformConfig);
+            DynawoResults result = tester.simulate(network, inputProvider, platformConfig);
             LOGGER.info("metrics " + result.getMetrics().get("success"));
             assertTrue(Boolean.parseBoolean(result.getMetrics().get("success")));
 
@@ -120,9 +115,9 @@ public class DynawoSimulatorTest {
         return platformConfig;
     }
 
-    private DynawoProvider configureProvider(Network network) {
+    private DynawoInputProvider configureProvider(Network network) {
 
-        DynawoProvider dynawoProvider = Mockito.mock(DynawoProvider.class);
+        DynawoInputProvider dynawoProvider = Mockito.mock(DynawoInputProvider.class);
 
         // Job file
         DynawoSolver solver = new DynawoSolver("libdynawo_SolverIDA", "solvers.par", 2);
@@ -313,6 +308,5 @@ public class DynawoSimulatorTest {
         return dynawoProvider;
     }
 
-    private final Cim14SmallCasesCatalog catalog = new Cim14SmallCasesCatalog();
-    private static final Logger LOGGER = LoggerFactory.getLogger(DynawoSimulatorTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DynawoSimulationTest.class);
 }

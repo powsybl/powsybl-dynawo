@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import com.google.common.collect.ImmutableList;
 import com.powsybl.cgmes.conversion.CgmesImport;
 import com.powsybl.cgmes.model.test.TestGridModel;
 import com.powsybl.commons.config.PlatformConfig;
@@ -18,21 +19,20 @@ import com.powsybl.commons.datasource.ReadOnlyDataSource;
 import com.powsybl.computation.ComputationManager;
 import com.powsybl.computation.local.LocalComputationConfig;
 import com.powsybl.computation.local.LocalComputationManager;
-import com.powsybl.dynawo.DynawoExporter;
-import com.powsybl.dynawo.DynawoProvider;
+import com.powsybl.dynamic.simulation.DynamicSimulation;
+import com.powsybl.dynamic.simulation.DynamicSimulationParameters;
+import com.powsybl.dynawo.DynawoInputProvider;
 import com.powsybl.dynawo.simulator.results.DynawoResults;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.NetworkFactory;
-import com.powsybl.simulation.SimulationParameters;
 import com.powsybl.triplestore.api.TripleStoreFactory;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class DynawoSimulatorTester {
+public class DynawoSimulationTester {
 
-    public DynawoSimulatorTester(PlatformConfig platformConfig, boolean mockResults) {
-        this.platformConfig = platformConfig;
+    public DynawoSimulationTester(boolean mockResults) {
         this.mockResults = mockResults;
     }
 
@@ -47,25 +47,27 @@ public class DynawoSimulatorTester {
         return n;
     }
 
-    public DynawoResults simulate(Network network, DynawoProvider provider, DynawoExporter exporter,
-        PlatformConfig platformConfig)
+    public DynawoResults simulate(Network network, DynawoInputProvider inputProvider, PlatformConfig platformConfig)
         throws Exception {
+        DynawoSimulationProvider dynawoSimulationProvider = new DynawoSimulationProvider();
+        dynawoSimulationProvider.setDynawoInputProvider(inputProvider);
+        DynamicSimulation.Runner runner = DynamicSimulation.find(null, ImmutableList.of(dynawoSimulationProvider), PlatformConfig.defaultConfig());
+
         ComputationManager computationManager = new LocalComputationManager(
             LocalComputationConfig.load(platformConfig));
-        SimulationParameters simulationParameters = SimulationParameters.load(platformConfig);
-        DynawoConfig dynawoConfig = DynawoConfig.load(platformConfig);
-        DynawoSimulator simulator = new DynawoSimulator(simulationParameters, computationManager, exporter,
-            dynawoConfig);
-        DynawoResults result = (DynawoResults) simulator.simulate(network, provider);
+        DynamicSimulationParameters simulationParameters = DynamicSimulationParameters.load(platformConfig);
+        DynawoConfig dynawoConfig = new DynawoConfig();
+        dynawoConfig.setDebug(true);
+        simulationParameters.addExtension(DynawoConfig.class, dynawoConfig);
+        DynawoResults result = (DynawoResults) runner.run(network, computationManager, simulationParameters);
         if (mockResults) {
             Map<String, String> metrics = new HashMap<>();
             metrics.put("success", "true");
-            result = new DynawoResults(metrics);
+            result = new DynawoResults(true, metrics, null);
             result.parseCsv(getClass().getResourceAsStream("/nordic32/curves.csv"));
         }
         return result;
     }
 
     private final boolean mockResults;
-    private final PlatformConfig platformConfig;
 }

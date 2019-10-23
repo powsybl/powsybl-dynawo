@@ -69,7 +69,7 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>powsybl-simulation-api</artifactId>
+            <artifactId>powsybl-dynamic-simulation-api</artifactId>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>

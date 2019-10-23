@@ -25,16 +25,33 @@ import java.util.Objects;
 import java.util.Set;
 
 import com.powsybl.commons.PowsyblException;
-import com.powsybl.simulation.ImpactAnalysisResult;
+import com.powsybl.dynamic.simulation.DynamicSimulationResult;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 //TODO pending to use Powsybl TimeSeries
-public class DynawoResults extends ImpactAnalysisResult {
+public class DynawoResults implements DynamicSimulationResult {
 
-    public DynawoResults(Map<String, String> metrics) {
-        super(metrics);
+    public DynawoResults(boolean status, Map<String, String> metrics, String logs) {
+        this.status = status;
+        this.metrics = Objects.requireNonNull(metrics);
+        this.logs = logs;
+    }
+
+    @Override
+    public boolean isOk() {
+        return status;
+    }
+
+    @Override
+    public Map<String, String> getMetrics() {
+        return Collections.unmodifiableMap(metrics);
+    }
+
+    @Override
+    public String getLogs() {
+        return logs;
     }
 
     public void parseCsv(Path file) {
@@ -122,6 +139,9 @@ public class DynawoResults extends ImpactAnalysisResult {
         return Double.valueOf(token);
     }
 
+    private final boolean status;
+    private final Map<String, String> metrics;
+    private final String logs;
     private List<String> names = new ArrayList<>();
     private Map<Double, List<Double>> timeSeries = new HashMap<>();
 }
