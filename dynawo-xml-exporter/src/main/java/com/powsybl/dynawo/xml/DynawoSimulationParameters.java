@@ -29,7 +29,7 @@ public final class DynawoSimulationParameters {
     }
 
     public static int getMaxId(List<DynawoParameterSet> parameterSets) {
-        return parameterSets.stream().mapToInt(parameterSet -> parameterSet.getId()).max().orElse(1);
+        return parameterSets.stream().mapToInt(DynawoParameterSet::getId).max().orElse(1);
     }
 
     public static int countLoadParameterSets(List<DynawoParameterSet> parameterSets) {
@@ -60,7 +60,7 @@ public final class DynawoSimulationParameters {
         }
     }
 
-    public static void writeDefaultOmegaRefParameterSets(XMLStreamWriter writer, Network network, int id)
+    public static void writeDefaultOmegaRefParameterSets(XMLStreamWriter writer, Network network)
         throws XMLStreamException {
         List<DynawoParameter> parameters = new ArrayList<>();
         parameters

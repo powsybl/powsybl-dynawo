@@ -355,7 +355,4 @@ public final class DynawoDynamicModels {
         writer.writeEmptyElement(DYN_URI, "macroStaticRef");
         writer.writeAttribute("id", id);
     }
-
-    private int maxParId = 0;
-    private int generators = 0;
 }

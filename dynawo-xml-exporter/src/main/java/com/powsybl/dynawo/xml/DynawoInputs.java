@@ -17,7 +17,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
 import com.powsybl.dynawo.DynawoParameterType;
-import com.powsybl.dynawo.DynawoProvider;
+import com.powsybl.dynawo.DynawoInputProvider;
 import com.powsybl.iidm.network.Generator;
 import com.powsybl.iidm.network.Load;
 import com.powsybl.iidm.network.Network;
@@ -41,7 +41,7 @@ public final class DynawoInputs {
         throw new IllegalStateException("Utility class");
     }
 
-    public static void prepare(Network network, DynawoProvider provider, Path workingDir)
+    public static void prepare(Network network, DynawoInputProvider provider, Path workingDir)
         throws XMLStreamException, IOException {
         Path jobFile = workingDir.resolve(JOBS_FILENAME);
         Path dydFile = workingDir.resolve(DYD_FILENAME);
@@ -115,7 +115,7 @@ public final class DynawoInputs {
                 }
 
                 if (!DynawoDynamicModels.definedDynamicModel(provider.getDynawoDynamicModels(network), DynawoParameterType.OMEGA_REF.getValue())) {
-                    DynawoSimulationParameters.writeDefaultOmegaRefParameterSets(parXmlWriter, network, id);
+                    DynawoSimulationParameters.writeDefaultOmegaRefParameterSets(parXmlWriter, network);
                     DynawoDynamicModels.writeDefaultOmegaRef(dydXmlWriter, id++);
                 }
                 jobXmlWriter.writeEndElement();

@@ -11,13 +11,13 @@ import java.nio.file.Path;
 import com.google.auto.service.AutoService;
 import com.powsybl.commons.config.ModuleConfig;
 import com.powsybl.commons.config.PlatformConfig;
-import com.powsybl.dynawo.DynawoProviderFactory;
+import com.powsybl.dynawo.DynawoInputProviderFactory;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-@AutoService(DynawoProviderFactory.class)
-public class GroovyDslDynawoProviderFactory implements DynawoProviderFactory {
+@AutoService(DynawoInputProviderFactory.class)
+public class GroovyDslDynawoProviderFactory implements DynawoInputProviderFactory {
 
     @Override
     public GroovyDslDynawoProvider create() {

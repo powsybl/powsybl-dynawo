@@ -16,7 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
 
-import com.powsybl.dynawo.DynawoProvider;
+import com.powsybl.dynawo.DynawoInputProvider;
 
 import groovy.lang.GroovyCodeSource;
 import groovy.lang.GroovyShell;
@@ -24,7 +24,7 @@ import groovy.lang.GroovyShell;
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public abstract class AbstractDslDynawoProvider implements DynawoProvider {
+public abstract class AbstractDslDynawoProvider implements DynawoInputProvider {
 
     protected final GroovyCodeSource script;
 

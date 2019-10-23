@@ -12,30 +12,42 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.auto.service.AutoService;
 import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.datasource.FileDataSource;
-import com.powsybl.dynawo.DynawoExporter;
-import com.powsybl.dynawo.DynawoProvider;
+import com.powsybl.dynawo.DynawoInputProvider;
+import com.powsybl.dynawo.exporter.DynawoExporterProvider;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.xml.XMLExporter;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class DynawoXmlExporter implements DynawoExporter {
+@AutoService(DynawoExporterProvider.class)
+public class DynawoXmlExporterProvider implements DynawoExporterProvider {
 
     private static final String DEFAULT_DYNAWO_CASE_NAME = "nrt/data/IEEE14/IEEE14_BasicTestCases/IEEE14_DisconnectLine/IEEE14.jobs";
 
-    public DynawoXmlExporter() {
+    public DynawoXmlExporterProvider() {
         this(PlatformConfig.defaultConfig());
     }
 
-    public DynawoXmlExporter(PlatformConfig platformConfig) {
+    public DynawoXmlExporterProvider(PlatformConfig platformConfig) {
         this.platformConfig = platformConfig;
     }
 
     @Override
-    public String export(Network network, DynawoProvider dynawoProvider, Path workingDir) {
+    public String getName() {
+        return "DynawoXmlExporter";
+    }
+
+    @Override
+    public String getVersion() {
+        return "1.0";
+    }
+
+    @Override
+    public String export(Network network, DynawoInputProvider dynawoProvider, Path workingDir) {
         String dynawoJobsFile = DEFAULT_DYNAWO_CASE_NAME;
         try {
             DynawoInputs.prepare(network, dynawoProvider, workingDir);
@@ -55,5 +67,6 @@ public class DynawoXmlExporter implements DynawoExporter {
     }
 
     private final PlatformConfig platformConfig;
-    private static final Logger LOGGER = LoggerFactory.getLogger(DynawoXmlExporter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DynawoXmlExporterProvider.class);
+
 }
