@@ -27,7 +27,7 @@ import com.powsybl.commons.config.InMemoryPlatformConfig;
 import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.datasource.ReadOnlyDataSource;
 import com.powsybl.dynawo.DynawoInputProvider;
-import com.powsybl.dynawo.dsl.GroovyDslDynawoProvider;
+import com.powsybl.dynawo.dsl.GroovyDslDynawoInputProvider;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.NetworkFactory;
 import com.powsybl.triplestore.api.TripleStoreFactory;
@@ -44,7 +44,7 @@ public class DynawoExporterTest extends AbstractConverterTest {
         platformConfig = new InMemoryPlatformConfig(fileSystem);
         network = importNetwork(platformConfig, Cim14SmallCasesCatalog.nordic32());
         network.setCaseDate(DateTime.parse("2019-09-23T11:06:12.313+02:00"));
-        dynawoProvider = new GroovyDslDynawoProvider(getClass().getResourceAsStream("/nordic32/nordic32.groovy"));
+        dynawoProvider = new GroovyDslDynawoInputProvider(getClass().getResourceAsStream("/nordic32/nordic32.groovy"));
     }
 
     @Test

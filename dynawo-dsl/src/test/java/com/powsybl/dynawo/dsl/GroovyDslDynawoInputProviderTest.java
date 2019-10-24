@@ -40,7 +40,7 @@ import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class GroovyDslDynawoProviderTest {
+public class GroovyDslDynawoInputProviderTest {
 
     private FileSystem fileSystem;
 
@@ -92,7 +92,7 @@ public class GroovyDslDynawoProviderTest {
             "    }",
             "}");
 
-        List<DynawoJob> jobs = new GroovyDslDynawoProvider(dslFile).getDynawoJobs(network);
+        List<DynawoJob> jobs = new GroovyDslDynawoInputProvider(dslFile).getDynawoJobs(network);
         assertEquals(1, jobs.size());
         DynawoJob job = jobs.get(0);
         assertEquals("j1", job.getName());
@@ -122,7 +122,7 @@ public class GroovyDslDynawoProviderTest {
             "    variable 'variable'",
             "}");
 
-        List<DynawoCurve> curves = new GroovyDslDynawoProvider(dslFile).getDynawoCurves(network);
+        List<DynawoCurve> curves = new GroovyDslDynawoInputProvider(dslFile).getDynawoCurves(network);
         assertEquals(1, curves.size());
         DynawoCurve curve = curves.get(0);
         assertEquals("model", curve.getModel());
@@ -138,7 +138,7 @@ public class GroovyDslDynawoProviderTest {
             "    parametersId 1",
             "}");
 
-        List<DynawoDynamicModel> dynamicModels = new GroovyDslDynawoProvider(dslFile).getDynawoDynamicModels(network);
+        List<DynawoDynamicModel> dynamicModels = new GroovyDslDynawoInputProvider(dslFile).getDynawoDynamicModels(network);
         assertEquals(1, dynamicModels.size());
         DynawoDynamicModel dynamicModel = dynamicModels.get(0);
         assertTrue(BlackBoxModel.class.isInstance(dynamicModel));
@@ -168,7 +168,7 @@ public class GroovyDslDynawoProviderTest {
             "    }",
             "}");
 
-        List<DynawoParameterSet> parameterSets = new GroovyDslDynawoProvider(dslFile).getDynawoParameterSets(network);
+        List<DynawoParameterSet> parameterSets = new GroovyDslDynawoInputProvider(dslFile).getDynawoParameterSets(network);
         assertEquals(1, parameterSets.size());
         DynawoParameterSet parameterSet = parameterSets.get(0);
         assertEquals(1, parameterSet.getId());
@@ -193,7 +193,7 @@ public class GroovyDslDynawoProviderTest {
             "    }",
             "}");
 
-        List<DynawoParameterSet> parameterSets = new GroovyDslDynawoProvider(dslFile)
+        List<DynawoParameterSet> parameterSets = new GroovyDslDynawoInputProvider(dslFile)
             .getDynawoSolverParameterSets(network);
         assertEquals(1, parameterSets.size());
         DynawoParameterSet parameterSet = parameterSets.get(0);

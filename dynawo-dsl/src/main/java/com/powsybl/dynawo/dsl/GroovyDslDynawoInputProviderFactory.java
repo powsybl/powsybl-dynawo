@@ -17,13 +17,13 @@ import com.powsybl.dynawo.DynawoInputProviderFactory;
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 @AutoService(DynawoInputProviderFactory.class)
-public class GroovyDslDynawoProviderFactory implements DynawoInputProviderFactory {
+public class GroovyDslDynawoInputProviderFactory implements DynawoInputProviderFactory {
 
     @Override
-    public GroovyDslDynawoProvider create() {
+    public GroovyDslDynawoInputProvider create() {
         ModuleConfig config = PlatformConfig.defaultConfig().getModuleConfig("groovy-dsl-contingencies");
         Path dslFile = config.getPathProperty("dsl-file");
-        return new GroovyDslDynawoProvider(dslFile);
+        return new GroovyDslDynawoInputProvider(dslFile);
     }
 
 }
