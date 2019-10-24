@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.util.Properties;
 
+import com.powsybl.iidm.network.impl.NetworkFactoryImpl;
 import org.junit.Test;
 
 import com.google.common.jimfs.Jimfs;
@@ -28,7 +29,7 @@ public class DynawoSimulatorTest {
     @Test
     public void test() throws Exception {
 
-        Network network = convert(catalog.ieee14());
+        Network network = convert(Cim14SmallCasesCatalog.ieee14());
         DynawoSimulator simulator = new DynawoSimulator(network);
         // FIXME(mathbagu): this test load the configuration from the developer configuration file.
         // simulator.simulate();
@@ -43,10 +44,7 @@ public class DynawoSimulatorTest {
             params.put("storeCgmesModelAsNetworkExtension", "true");
             params.put("powsyblTripleStore", impl);
             ReadOnlyDataSource ds = gm.dataSource();
-            Network n = i.importData(ds, params);
-            return n;
+            return i.importData(ds, new NetworkFactoryImpl(), params);
         }
     }
-
-    private final Cim14SmallCasesCatalog catalog = new Cim14SmallCasesCatalog();
 }
