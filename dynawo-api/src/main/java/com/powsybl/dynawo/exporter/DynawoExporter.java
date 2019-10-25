@@ -38,8 +38,8 @@ public final class DynawoExporter {
             this.provider = Objects.requireNonNull(provider);
         }
 
-        public String export(Network network, DynawoInputProvider dynawoProvider, Path workingDir) {
-            return provider.export(network, dynawoProvider, workingDir);
+        public String export(Network network, DynawoInputProvider dynawoInputProvider, Path workingDir) {
+            return provider.export(network, dynawoInputProvider, workingDir);
         }
 
         @Override
@@ -97,7 +97,7 @@ public final class DynawoExporter {
         return new Runner(provider);
     }
 
-    public static String export(Network network, DynawoInputProvider dynawoProvider, Path workingDir) {
-        return find().export(network, dynawoProvider, workingDir);
+    public static String export(Network network, DynawoInputProvider dynawoInputProvider, Path workingDir) {
+        return find().export(network, dynawoInputProvider, workingDir);
     }
 }
