@@ -53,7 +53,7 @@ public final class DynawoInputs {
     }
 
     public static void prepare(Network network, DynawoInputProvider inputProvider, DynawoInputProvider defaultsOmegaRefProvider,
-        DynawoInputProvider defaultsLoadProvider, DynawoInputProvider defaultsGeneratorProvider, Path workingDir) {
+        DynawoInputProvider defaultsLoadProvider, DynawoInputProvider defaultsGeneratorProvider, Path workingDir) throws IOException, XMLStreamException {
         Path jobFile = workingDir.resolve(JOBS_FILENAME);
         Path dydFile = workingDir.resolve(DYD_FILENAME);
         Path parFile = workingDir.resolve(PAR_FILENAME);
@@ -157,9 +157,6 @@ public final class DynawoInputs {
                 parSolverXmlWriter.close();
                 crvXmlWriter.close();
             }
-        } catch (IOException | XMLStreamException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
         }
     }
 
