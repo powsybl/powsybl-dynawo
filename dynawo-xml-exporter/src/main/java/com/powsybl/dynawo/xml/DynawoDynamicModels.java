@@ -26,6 +26,7 @@ import com.powsybl.dynawo.dyd.MacroConnection;
 import com.powsybl.dynawo.dyd.MacroConnector;
 import com.powsybl.dynawo.dyd.MacroStaticReference;
 import com.powsybl.dynawo.dyd.ModelTemplate;
+import com.powsybl.dynawo.dyd.ModelTemplateExpansion;
 import com.powsybl.dynawo.dyd.ModelicaModel;
 import com.powsybl.dynawo.dyd.StaticRef;
 import com.powsybl.dynawo.dyd.UnitDynamicModel;
@@ -134,6 +135,8 @@ public final class DynawoDynamicModels {
             writeModelicaModel(writer, (ModelicaModel) dynamicModel);
         } else if (ModelTemplate.class.isInstance(dynamicModel)) {
             writeModelTemplate(writer, (ModelTemplate) dynamicModel);
+        } else if (ModelTemplateExpansion.class.isInstance(dynamicModel)) {
+            writeModelTemplateExpansion(writer, (ModelTemplateExpansion) dynamicModel);
         } else if (Connection.class.isInstance(dynamicModel)) {
             writeConnection(writer, (Connection) dynamicModel);
         } else if (InitConnection.class.isInstance(dynamicModel)) {
@@ -167,7 +170,9 @@ public final class DynawoDynamicModels {
         String staticId = dynamicModel.getStaticId();
         writer.writeStartElement(DYN_URI, "modelicaModel");
         writer.writeAttribute("id", id);
-        writer.writeAttribute("staticId", staticId);
+        if (staticId != null) {
+            writer.writeAttribute("staticId", staticId);
+        }
         for (UnitDynamicModel unitDynamicModel : dynamicModel.getUnitDynamicModels()) {
             writeUnitDynamicModel(writer, unitDynamicModel);
         }
@@ -201,6 +206,19 @@ public final class DynawoDynamicModels {
             writeInitConnection(writer, initConnection);
         }
         writer.writeEndElement();
+    }
+
+    private static void writeModelTemplateExpansion(XMLStreamWriter writer, ModelTemplateExpansion dynamicModel)
+        throws XMLStreamException {
+        String id = dynamicModel.getId();
+        String templateId = dynamicModel.getTemplateId();
+        String file = dynamicModel.getParametersFile();
+        int paramId = dynamicModel.getParametersId();
+        writer.writeEmptyElement(DYN_URI, "modelTemplateExpansion");
+        writer.writeAttribute("id", id);
+        writer.writeAttribute("templateId", templateId);
+        writer.writeAttribute("parFile", file);
+        writer.writeAttribute("parId", Integer.toString(paramId));
     }
 
     private static void writeUnitDynamicModel(XMLStreamWriter writer, UnitDynamicModel dynamicModel)
@@ -258,7 +276,9 @@ public final class DynawoDynamicModels {
 
     private static void writeMacroStaticReference(XMLStreamWriter writer, MacroStaticReference dynamicModel)
         throws XMLStreamException {
+        String id = dynamicModel.getId();
         writer.writeStartElement(DYN_URI, "macroStaticReference");
+        writer.writeAttribute("id", id);
         for (StaticRef staticRef : dynamicModel.getStaticRefs()) {
             writeStaticRef(writer, staticRef);
         }
