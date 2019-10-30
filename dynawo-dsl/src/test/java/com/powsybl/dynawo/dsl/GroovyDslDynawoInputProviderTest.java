@@ -342,12 +342,6 @@ public class GroovyDslDynawoInputProviderTest {
             "            type 'type'",
             "            value 'value'",
             "        }",
-            "        parameter {",
-            "            name 'name'",
-            "            type 'type'",
-            "            origData 'origData'",
-            "            origName 'origName'",
-            "        }",
             "    }",
             "}");
 
@@ -356,7 +350,7 @@ public class GroovyDslDynawoInputProviderTest {
         assertEquals(1, parameterSets.size());
         DynawoParameterSet parameterSet = parameterSets.get(0);
         assertEquals(1, parameterSet.getId());
-        assertEquals(2, parameterSet.getParameters().size());
+        assertEquals(1, parameterSet.getParameters().size());
         DynawoParameter parameter = parameterSet.getParameters().get(0);
         assertFalse(parameter.isReference());
         assertEquals("name", parameter.getName());
