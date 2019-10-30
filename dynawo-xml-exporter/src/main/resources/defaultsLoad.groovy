@@ -42,8 +42,7 @@ parameterSet (1) {
         }
     }
 }
-blackBoxModel {
-    id '#ID#'
+blackBoxModel ('#ID#'){
     lib 'LoadAlphaBeta'
     parametersFile 'dynawoModel.par'
     parametersId 0

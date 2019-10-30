@@ -41,10 +41,6 @@ class ModelTemplateDslLoader extends DslLoader {
         String parFile
         int parId
 
-        void id(String id) {
-            this.id = id
-        }
-
         void name(String name) {
             this.name = name
         }
@@ -103,10 +99,6 @@ class ModelTemplateDslLoader extends DslLoader {
         final ConnectionsSpec connectionsSpec = new ConnectionsSpec()
         final ConnectionsSpec initConnectionsSpec = new ConnectionsSpec()
 
-        void id(int id) {
-            this.id = id
-        }
-
         void unitDynamicModels(Closure<Void> closure) {
             def cloned = closure.clone()
             cloned.delegate = unitDynamicModelsSpec
@@ -141,11 +133,8 @@ class ModelTemplateDslLoader extends DslLoader {
 
     static void loadDsl(Binding binding, Network network, Consumer<DynawoDynamicModel> consumer, DynawoDslLoaderObserver observer) {
 
-        // set base network
-        binding.setVariable("network", network)
-
-        // blackBoxModels
-        binding.modelTemplate = { Closure<Void> closure ->
+        // model template
+        binding.modelTemplate = { String id, Closure<Void> closure ->
             def cloned = closure.clone()
             ModelTemplateSpec modelTemplateSpec = new ModelTemplateSpec()
 
@@ -162,24 +151,24 @@ class ModelTemplateDslLoader extends DslLoader {
             cloned()
 
             // create dynamicModel
-            ModelTemplate dynamicModel = new ModelTemplate(modelTemplateSpec.id)
+            ModelTemplate dynamicModel = new ModelTemplate(id)
             dynamicModel.addUnitDynamicModels(unitDynamicModels)
             dynamicModel.addConnections(connections)
             dynamicModel.addInitConnections(initConnections)
             consumer.accept(dynamicModel)
-            LOGGER.debug("Found modelTemplate '{}'", modelTemplateSpec.id)
-            observer?.dynamicModelFound(modelTemplateSpec.id)
+            LOGGER.debug("Found modelTemplate '{}'", id)
+            observer?.dynamicModelFound(id)
         }
     }
 
     static void addUnitDynamicModels(MetaClass unitDynamicModelsSpecMetaClass, List<UnitDynamicModel> unitDynamicModels, Binding binding) {
 
-        unitDynamicModelsSpecMetaClass.unitDynamicModel = { Closure<Void> closure ->
+        unitDynamicModelsSpecMetaClass.unitDynamicModel = { String id, Closure<Void> closure ->
             def cloned = closure.clone()
             UnitDynamicModelSpec unitDynamicModelSpec = new UnitDynamicModelSpec()
             cloned.delegate = unitDynamicModelSpec
             cloned()
-            UnitDynamicModel unitDynamicModel = new UnitDynamicModel(unitDynamicModelSpec.id, unitDynamicModelSpec.name, unitDynamicModelSpec.moFile, unitDynamicModelSpec.initName, unitDynamicModelSpec.parFile, unitDynamicModelSpec.parId)
+            UnitDynamicModel unitDynamicModel = new UnitDynamicModel(id, unitDynamicModelSpec.name, unitDynamicModelSpec.moFile, unitDynamicModelSpec.initName, unitDynamicModelSpec.parFile, unitDynamicModelSpec.parId)
             unitDynamicModels.add(unitDynamicModel)
         }
     }
@@ -207,36 +196,4 @@ class ModelTemplateDslLoader extends DslLoader {
             initConnections.add(initConnection)
         }
     }
-
-    List<DynawoDynamicModel> load(Network network) {
-        load(network, null)
-    }
-
-    List<DynawoDynamicModel> load(Network network, DynawoDslLoaderObserver observer) {
-
-        List<DynawoDynamicModel> dynamicModels = new ArrayList<>()
-
-        try {
-            observer?.begin(dslSrc.getName())
-
-            Binding binding = new Binding()
-
-            loadDsl(binding, network, dynamicModels.&add, observer)
-
-            // set base network
-            binding.setVariable("network", network)
-
-            def shell = createShell(binding)
-
-            shell.evaluate(dslSrc)
-
-            observer?.end()
-
-            dynamicModels
-
-        } catch (CompilationFailedException e) {
-            throw new DslException(e.getMessage(), e)
-        }
-    }
-
 }

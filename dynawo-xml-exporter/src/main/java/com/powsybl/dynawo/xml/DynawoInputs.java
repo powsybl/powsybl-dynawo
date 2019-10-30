@@ -6,24 +6,35 @@
  */
 package com.powsybl.dynawo.xml;
 
+import static com.powsybl.dynawo.xml.DynawoConstants.CRV_FILENAME;
+import static com.powsybl.dynawo.xml.DynawoConstants.DYD_FILENAME;
+import static com.powsybl.dynawo.xml.DynawoConstants.JOBS_FILENAME;
+import static com.powsybl.dynawo.xml.DynawoConstants.PAR_FILENAME;
+import static com.powsybl.dynawo.xml.DynawoConstants.SOLVER_PAR_FILENAME;
+import static com.powsybl.dynawo.xml.DynawoXmlConstants.DYN_PREFIX;
+import static com.powsybl.dynawo.xml.DynawoXmlConstants.DYN_URI;
+import static com.powsybl.dynawo.xml.DynawoXmlConstants.EMPTY_PREFIX;
+
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
-import com.powsybl.dynawo.DynawoParameterType;
 import com.powsybl.dynawo.DynawoInputProvider;
+import com.powsybl.dynawo.DynawoParameterType;
+import com.powsybl.dynawo.crv.DynawoCurve;
+import com.powsybl.dynawo.dyd.DynawoDynamicModel;
+import com.powsybl.dynawo.job.DynawoJob;
+import com.powsybl.dynawo.par.DynawoParameterSet;
 import com.powsybl.iidm.network.Generator;
 import com.powsybl.iidm.network.Load;
 import com.powsybl.iidm.network.Network;
-
-import static com.powsybl.dynawo.xml.DynawoConstants.*;
-import static com.powsybl.dynawo.xml.DynawoXmlConstants.*;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -41,8 +52,8 @@ public final class DynawoInputs {
         throw new IllegalStateException("Utility class");
     }
 
-    public static void prepare(Network network, DynawoInputProvider inputProvider, DynawoInputProvider defaultsOmegaRefProvider, DynawoInputProvider defaultsLoadProvider, DynawoInputProvider defaultsGeneratorProvider, Path workingDir)
-        throws XMLStreamException, IOException {
+    public static void prepare(Network network, DynawoInputProvider inputProvider, DynawoInputProvider defaultsOmegaRefProvider,
+        DynawoInputProvider defaultsLoadProvider, DynawoInputProvider defaultsGeneratorProvider, Path workingDir) {
         Path jobFile = workingDir.resolve(JOBS_FILENAME);
         Path dydFile = workingDir.resolve(DYD_FILENAME);
         Path parFile = workingDir.resolve(PAR_FILENAME);
@@ -60,6 +71,17 @@ public final class DynawoInputs {
             XMLStreamWriter parSolverXmlWriter = output.createXMLStreamWriter(parSolverWriter);
             XMLStreamWriter crvXmlWriter = output.createXMLStreamWriter(crvWriter);
             try {
+                List<DynawoJob> jobs = inputProvider.getDynawoJobs(network);
+                List<DynawoDynamicModel> dyds = inputProvider.getDynawoDynamicModels(network);
+                List<DynawoDynamicModel> defaultsLoadDyds = defaultsLoadProvider.getDynawoDynamicModels(network);
+                List<DynawoDynamicModel> defaultsGeneratorDyds = defaultsGeneratorProvider.getDynawoDynamicModels(network);
+                List<DynawoDynamicModel> defaultsOmegaRefDyds = defaultsOmegaRefProvider.getDynawoDynamicModels(network);
+                List<DynawoParameterSet> pars = inputProvider.getDynawoParameterSets(network);
+                List<DynawoParameterSet> defaultsLoadPars = defaultsLoadProvider.getDynawoParameterSets(network);
+                List<DynawoParameterSet> defaultsGeneratorPars = defaultsGeneratorProvider.getDynawoParameterSets(network);
+                List<DynawoParameterSet> spars = inputProvider.getDynawoSolverParameterSets(network);
+                List<DynawoCurve> curves = inputProvider.getDynawoCurves(network);
+
                 jobXmlWriter.writeStartDocument(StandardCharsets.UTF_8.toString(), "1.0");
                 dydXmlWriter.writeStartDocument(StandardCharsets.UTF_8.toString(), "1.0");
                 parXmlWriter.writeStartDocument(StandardCharsets.UTF_8.toString(), "1.0");
@@ -75,48 +97,48 @@ public final class DynawoInputs {
                 jobXmlWriter.setPrefix(DYN_PREFIX, DYN_URI);
                 jobXmlWriter.writeStartElement(DYN_URI, "jobs");
                 jobXmlWriter.writeNamespace(DYN_PREFIX, DYN_URI);
-                DynawoJobs.writeJobs(jobXmlWriter, inputProvider.getDynawoJobs(network));
+                DynawoJobs.writeJobs(jobXmlWriter, jobs);
 
                 dydXmlWriter.setPrefix(DYN_PREFIX, DYN_URI);
                 dydXmlWriter.writeStartElement(DYN_URI, "dynamicModelsArchitecture");
                 dydXmlWriter.writeNamespace(DYN_PREFIX, DYN_URI);
-                DynawoDynamicModels.writeDynamicModels(dydXmlWriter, inputProvider.getDynawoDynamicModels(network));
+                DynawoDynamicModels.writeDynamicModels(dydXmlWriter, dyds);
 
                 parXmlWriter.setPrefix(EMPTY_PREFIX, DYN_URI);
                 parXmlWriter.writeStartElement("parametersSet");
                 parXmlWriter.writeNamespace(EMPTY_PREFIX, DYN_URI);
-                DynawoSimulationParameters.writeParameterSets(parXmlWriter, inputProvider.getDynawoParameterSets(network));
+                DynawoSimulationParameters.writeParameterSets(parXmlWriter, pars);
 
                 parSolverXmlWriter.setPrefix(EMPTY_PREFIX, DYN_URI);
                 parSolverXmlWriter.writeStartElement("parametersSet");
                 parSolverXmlWriter.writeNamespace(EMPTY_PREFIX, DYN_URI);
-                DynawoSolverParameters.writeParameterSets(parSolverXmlWriter, inputProvider.getDynawoSolverParameterSets(network));
+                DynawoSolverParameters.writeParameterSets(parSolverXmlWriter, spars);
 
                 crvXmlWriter.setPrefix(EMPTY_PREFIX, DYN_URI);
                 crvXmlWriter.writeStartElement("curvesInput");
                 crvXmlWriter.writeNamespace(EMPTY_PREFIX, DYN_URI);
                 crvXmlWriter.writeComment("Curves for scenario");
-                DynawoCurves.writeCurves(crvXmlWriter, inputProvider.getDynawoCurves(network));
+                DynawoCurves.writeCurves(crvXmlWriter, curves);
 
-                int id = DynawoSimulationParameters.getMaxId(inputProvider.getDynawoParameterSets(network)) + 1;
+                int id = DynawoSimulationParameters.getMaxId(pars) + 1;
                 for (Load l : network.getLoads()) {
-                    if (!DynawoDynamicModels.definedDynamicModel(inputProvider.getDynawoDynamicModels(network), l.getId())) {
-                        DynawoSimulationParameters.writeDefaultLoad(parXmlWriter, defaultsLoadProvider.getDynawoParameterSets(network), id);
-                        DynawoDynamicModels.writeDefaultLoad(dydXmlWriter, defaultsLoadProvider.getDynawoDynamicModels(network), l, id++);
+                    if (!DynawoDynamicModels.definedDynamicModel(dyds, l.getId())) {
+                        DynawoSimulationParameters.writeDefaultLoad(parXmlWriter, defaultsLoadPars, id);
+                        DynawoDynamicModels.writeDefaultLoad(dydXmlWriter, defaultsLoadDyds, l, id++);
                     }
                 }
-                int gens = DynawoDynamicModels.countGeneratorConnections(inputProvider.getDynawoDynamicModels(network));
+                int gens = DynawoDynamicModels.countGeneratorConnections(dyds);
                 for (Generator g : network.getGenerators()) {
-                    if (!DynawoDynamicModels.definedDynamicModel(inputProvider.getDynawoDynamicModels(network), g.getId())) {
-                        DynawoSimulationParameters.writeDefaultGenerator(parXmlWriter, defaultsGeneratorProvider.getDynawoParameterSets(network), id);
-                        DynawoDynamicModels.writeDefaultGenerator(dydXmlWriter, defaultsGeneratorProvider.getDynawoDynamicModels(network), g, id++, gens);
+                    if (!DynawoDynamicModels.definedDynamicModel(dyds, g.getId())) {
+                        DynawoSimulationParameters.writeDefaultGenerator(parXmlWriter, defaultsGeneratorPars, id);
+                        DynawoDynamicModels.writeDefaultGenerator(dydXmlWriter, defaultsGeneratorDyds, g, id++, gens);
                         gens++;
                     }
                 }
 
-                if (!DynawoDynamicModels.definedDynamicModel(inputProvider.getDynawoDynamicModels(network), DynawoParameterType.OMEGA_REF.getValue())) {
+                if (!DynawoDynamicModels.definedDynamicModel(dyds, DynawoParameterType.OMEGA_REF.getValue())) {
                     DynawoSimulationParameters.writeDefaultOmegaRefParameterSets(parXmlWriter, network);
-                    DynawoDynamicModels.writeDefaultOmegaRef(dydXmlWriter, defaultsOmegaRefProvider.getDynawoDynamicModels(network), id++);
+                    DynawoDynamicModels.writeDefaultOmegaRef(dydXmlWriter, defaultsOmegaRefDyds, id++);
                 }
                 jobXmlWriter.writeEndElement();
                 jobXmlWriter.writeEndDocument();
@@ -135,6 +157,9 @@ public final class DynawoInputs {
                 parSolverXmlWriter.close();
                 crvXmlWriter.close();
             }
+        } catch (IOException | XMLStreamException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
     }
 

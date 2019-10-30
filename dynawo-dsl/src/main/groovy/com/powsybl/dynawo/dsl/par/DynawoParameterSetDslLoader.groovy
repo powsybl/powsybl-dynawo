@@ -70,6 +70,9 @@ class DynawoParameterSetDslLoader extends DslLoader {
         }
     }
 
+    static class ParameterTablesSpec {
+    }
+
     static class ParameterSpec {
 
         String name;
@@ -97,10 +100,6 @@ class DynawoParameterSetDslLoader extends DslLoader {
         void origData(String origData) {
             this.origData = origData
         }
-
-        boolean isReference() {
-            return origName != null && origName.length() > 0
-        }
     }
 
     static class ParametersSpec {
@@ -110,11 +109,7 @@ class DynawoParameterSetDslLoader extends DslLoader {
 
         int id
         final ParametersSpec parametersSpec = new ParametersSpec()
-        final ParameterTableSpec parameterTablesSpec = new ParameterTableSpec()
-
-        void id(int id) {
-            this.id = id
-        }
+        final ParameterTablesSpec parameterTablesSpec = new ParameterTablesSpec()
 
         void parameters(Closure<Void> closure) {
             def cloned = closure.clone()
@@ -143,9 +138,6 @@ class DynawoParameterSetDslLoader extends DslLoader {
 
     static void loadDsl(Binding binding, Network network, Consumer<DynawoParameterSet> consumer, DynawoDslLoaderObserver observer) {
 
-        // set base network
-        binding.setVariable("network", network)
-
         // parameterSets
         binding.parameterSet = { int id, Closure<Void> closure ->
             def cloned = closure.clone()
@@ -173,7 +165,7 @@ class DynawoParameterSetDslLoader extends DslLoader {
 
     static void addParameterTables(MetaClass parameterTablesSpecMetaClass, List<DynawoParameterTable> parameterTables, Binding binding) {
 
-        parameterTablesSpecMetaClass.parameter = { Closure<Void> closure ->
+        parameterTablesSpecMetaClass.parameterTable = { Closure<Void> closure ->
             def cloned = closure.clone()
             ParameterTableSpec parameterTableSpec = new ParameterTableSpec()
 
@@ -190,7 +182,7 @@ class DynawoParameterSetDslLoader extends DslLoader {
 
     static void addParameterRows(MetaClass parameterRowsSpecMetaClass, List<DynawoParameter> parameterRows, Binding binding) {
 
-        parameterRowsSpecMetaClass.parameter = { Closure<Void> closure ->
+        parameterRowsSpecMetaClass.parameterRow = { Closure<Void> closure ->
             def cloned = closure.clone()
             ParameterRowSpec parameterRowSpec = new ParameterRowSpec()
             cloned.delegate = parameterRowSpec
@@ -216,36 +208,4 @@ class DynawoParameterSetDslLoader extends DslLoader {
             }
         }
     }
-
-    List<DynawoParameterSet> load(Network network) {
-        load(network, null)
-    }
-
-    List<DynawoParameterSet> load(Network network, DynawoDslLoaderObserver observer) {
-
-        List<DynawoParameterSet> parameterSets = new ArrayList<>()
-
-        try {
-            observer?.begin(dslSrc.getName())
-
-            Binding binding = new Binding()
-
-            loadDsl(binding, network, parameterSets.&add, observer)
-
-            // set base network
-            binding.setVariable("network", network)
-
-            def shell = createShell(binding)
-
-            shell.evaluate(dslSrc)
-
-            observer?.end()
-
-            parameterSets
-
-        } catch (CompilationFailedException e) {
-            throw new DslException(e.getMessage(), e)
-        }
-    }
-
 }

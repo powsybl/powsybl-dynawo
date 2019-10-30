@@ -8,10 +8,8 @@ package com.powsybl.dynawo.dsl.dyd
 
 import java.util.function.Consumer
 
-import org.codehaus.groovy.control.CompilationFailedException
 import org.slf4j.LoggerFactory
 
-import com.powsybl.dsl.DslException
 import com.powsybl.dsl.DslLoader
 import com.powsybl.dynawo.dsl.DynawoDslLoaderObserver
 import com.powsybl.dynawo.dyd.Connection
@@ -21,7 +19,6 @@ import com.powsybl.dynawo.dyd.MacroStaticReference
 import com.powsybl.dynawo.dyd.ModelicaModel
 import com.powsybl.dynawo.dyd.StaticRef
 import com.powsybl.dynawo.dyd.UnitDynamicModel
-import com.powsybl.dynawo.par.DynawoParameter
 import com.powsybl.iidm.network.Network
 
 /**
@@ -39,10 +36,6 @@ class ModelicaModelDslLoader extends DslLoader {
         String initName
         String parFile
         int parId
-
-        void id(String id) {
-            this.id = id
-        }
 
         void name(String name) {
             this.name = name
@@ -114,9 +107,12 @@ class ModelicaModelDslLoader extends DslLoader {
 
     static class MacroStaticRefSpec {
         String id
-
-        void id(String id) {
-            this.id = id
+        final StaticRefsSpec mStaticRefsSpec = new StaticRefsSpec()
+        
+        void mStaticRefs(Closure<Void> closure) {
+            def cloned = closure.clone()
+            cloned.delegate = mStaticRefsSpec
+            cloned()
         }
     }
 
@@ -131,10 +127,6 @@ class ModelicaModelDslLoader extends DslLoader {
         final ConnectionsSpec initConnectionsSpec = new ConnectionsSpec()
         final StaticRefsSpec staticRefsSpec = new StaticRefsSpec()
         final MacroStaticRefsSpec macroStaticRefsSpec = new MacroStaticRefsSpec()
-
-        void id(int id) {
-            this.id = id
-        }
 
         void unitDynamicModels(Closure<Void> closure) {
             def cloned = closure.clone()
@@ -181,11 +173,8 @@ class ModelicaModelDslLoader extends DslLoader {
 
     static void loadDsl(Binding binding, Network network, Consumer<DynawoDynamicModel> consumer, DynawoDslLoaderObserver observer) {
 
-        // set base network
-        binding.setVariable("network", network)
-
-        // blackBoxModels
-        binding.modelicaModel = { Closure<Void> closure ->
+        // modelica model
+        binding.modelicaModel = { String id, Closure<Void> closure ->
             def cloned = closure.clone()
             ModelicaModelSpec modelicaModelSpec = new ModelicaModelSpec()
 
@@ -208,26 +197,26 @@ class ModelicaModelDslLoader extends DslLoader {
             cloned()
 
             // create dynamicModel
-            ModelicaModel dynamicModel = new ModelicaModel(modelicaModelSpec.id)
+            ModelicaModel dynamicModel = new ModelicaModel(id)
             dynamicModel.addUnitDynamicModels(unitDynamicModels)
             dynamicModel.addConnections(connections)
             dynamicModel.addInitConnections(initConnections)
             dynamicModel.addStaticRefs(staticRefs)
             dynamicModel.addMacroStaticRefs(macroStaticRefs)
             consumer.accept(dynamicModel)
-            LOGGER.debug("Found modelicaModel '{}'", modelicaModelSpec.id)
-            observer?.dynamicModelFound(modelicaModelSpec.id)
+            LOGGER.debug("Found modelicaModel '{}'", id)
+            observer?.dynamicModelFound(id)
         }
     }
 
     static void addUnitDynamicModels(MetaClass unitDynamicModelsSpecMetaClass, List<UnitDynamicModel> unitDynamicModels, Binding binding) {
 
-        unitDynamicModelsSpecMetaClass.unitDynamicModel = { Closure<Void> closure ->
+        unitDynamicModelsSpecMetaClass.unitDynamicModel = { String id, Closure<Void> closure ->
             def cloned = closure.clone()
             UnitDynamicModelSpec unitDynamicModelSpec = new UnitDynamicModelSpec()
             cloned.delegate = unitDynamicModelSpec
             cloned()
-            UnitDynamicModel unitDynamicModel = new UnitDynamicModel(unitDynamicModelSpec.id, unitDynamicModelSpec.name, unitDynamicModelSpec.moFile, unitDynamicModelSpec.initName, unitDynamicModelSpec.parFile, unitDynamicModelSpec.parId)
+            UnitDynamicModel unitDynamicModel = new UnitDynamicModel(id, unitDynamicModelSpec.name, unitDynamicModelSpec.moFile, unitDynamicModelSpec.initName, unitDynamicModelSpec.parFile, unitDynamicModelSpec.parId)
             unitDynamicModels.add(unitDynamicModel)
         }
     }
@@ -270,45 +259,30 @@ class ModelicaModelDslLoader extends DslLoader {
 
     static void addMacroStaticReferences(MetaClass macroStaticRefsSpecMetaClass, List<MacroStaticReference> macroStaticRefs, Binding binding) {
 
-        macroStaticRefsSpecMetaClass.macroStaticReference = { Closure<Void> closure ->
+        macroStaticRefsSpecMetaClass.macroStaticRef = { String id, Closure<Void> closure ->
             def cloned = closure.clone()
             MacroStaticRefSpec macroStaticRefSpec = new MacroStaticRefSpec()
+            
+            List<StaticRef> staticRefs = new ArrayList<>()
+            addMStaticRefs(macroStaticRefSpec.mStaticRefsSpec.metaClass, staticRefs, binding)
+            
             cloned.delegate = macroStaticRefSpec
             cloned()
-            MacroStaticReference macroStaticRef = new MacroStaticReference(macroStaticRefSpec.id)
+            MacroStaticReference macroStaticRef = new MacroStaticReference(id)
+            macroStaticRef.addStaticRefs(staticRefs)
             macroStaticRefs.add(macroStaticRef)
         }
     }
 
-    List<DynawoDynamicModel> load(Network network) {
-        load(network, null)
-    }
+    static void addMStaticRefs(MetaClass mStaticRefsSpecMetaClass, List<StaticRef> staticRefs, Binding binding) {
 
-    List<DynawoDynamicModel> load(Network network, DynawoDslLoaderObserver observer) {
-
-        List<DynawoDynamicModel> dynamicModels = new ArrayList<>()
-
-        try {
-            observer?.begin(dslSrc.getName())
-
-            Binding binding = new Binding()
-
-            loadDsl(binding, network, dynamicModels.&add, observer)
-
-            // set base network
-            binding.setVariable("network", network)
-
-            def shell = createShell(binding)
-
-            shell.evaluate(dslSrc)
-
-            observer?.end()
-
-            dynamicModels
-
-        } catch (CompilationFailedException e) {
-            throw new DslException(e.getMessage(), e)
+        mStaticRefsSpecMetaClass.mStaticRef = { Closure<Void> closure ->
+            def cloned = closure.clone()
+            StaticRefSpec staticRefSpec = new StaticRefSpec()
+            cloned.delegate = staticRefSpec
+            cloned()
+            StaticRef staticRef = new StaticRef(staticRefSpec.var, staticRefSpec.staticVar)
+            staticRefs.add(staticRef)
         }
     }
-
 }

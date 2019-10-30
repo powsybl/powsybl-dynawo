@@ -4,8 +4,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-blackBoxModel {
-    id 'OMEGA_REF'
+blackBoxModel ('OMEGA_REF'){
     lib 'DYNModelOmegaRef'
     parametersFile 'dynawoModel.par'
     parametersId 0

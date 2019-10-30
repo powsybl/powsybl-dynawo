@@ -8,10 +8,8 @@ package com.powsybl.dynawo.dsl.dyd
 
 import java.util.function.Consumer
 
-import org.codehaus.groovy.control.CompilationFailedException
 import org.slf4j.LoggerFactory
 
-import com.powsybl.dsl.DslException
 import com.powsybl.dsl.DslLoader
 import com.powsybl.dynawo.dsl.DynawoDslLoaderObserver
 import com.powsybl.dynawo.dyd.BlackBoxModel
@@ -19,7 +17,9 @@ import com.powsybl.dynawo.dyd.Connection
 import com.powsybl.dynawo.dyd.DynawoDynamicModel
 import com.powsybl.dynawo.dyd.InitConnection
 import com.powsybl.dynawo.dyd.MacroConnection
+import com.powsybl.dynawo.dyd.MacroStaticReference
 import com.powsybl.dynawo.dyd.ModelTemplateExpansion
+import com.powsybl.dynawo.dyd.StaticRef
 import com.powsybl.iidm.network.Network
 
 /**
@@ -29,6 +29,37 @@ class DynawoDynamicModelDslLoader extends DslLoader {
 
     static LOGGER = LoggerFactory.getLogger(DynawoDynamicModelDslLoader.class)
 
+    static class StaticRefSpec {
+
+        String var
+        String staticVar
+
+        void var(String var) {
+            this.var = var
+        }
+
+        void staticVar(String staticVar) {
+            this.staticVar = staticVar
+        }
+    }
+
+    static class StaticRefsSpec {
+    }
+
+    static class MacroStaticRefSpec {
+        String id
+        final StaticRefsSpec mStaticRefsSpec = new StaticRefsSpec()
+        
+        void mStaticRefs(Closure<Void> closure) {
+            def cloned = closure.clone()
+            cloned.delegate = mStaticRefsSpec
+            cloned()
+        }
+    }
+
+    static class MacroStaticRefsSpec {
+    }
+
     static class BlackBoxModelSpec {
 
         String id;
@@ -36,10 +67,8 @@ class DynawoDynamicModelDslLoader extends DslLoader {
         String parametersFile;
         int parametersId;
         String staticId;
-
-        void id(String id) {
-            this.id = id
-        }
+        final StaticRefsSpec staticRefsSpec = new StaticRefsSpec()
+        final MacroStaticRefsSpec macroStaticRefsSpec = new MacroStaticRefsSpec()
 
         void lib(String lib) {
             this.lib = lib
@@ -56,6 +85,18 @@ class DynawoDynamicModelDslLoader extends DslLoader {
         void staticId(String staticId) {
             this.staticId = staticId
         }
+
+        void staticRefs(Closure<Void> closure) {
+            def cloned = closure.clone()
+            cloned.delegate = staticRefsSpec
+            cloned()
+        }
+
+        void macroStaticRefs(Closure<Void> closure) {
+            def cloned = closure.clone()
+            cloned.delegate = macroStaticRefsSpec
+            cloned()
+        }
     }
 
     static class ModelTemplateExpansionSpec {
@@ -64,10 +105,6 @@ class DynawoDynamicModelDslLoader extends DslLoader {
         String templateId
         String parametersFile
         int parametersId
-
-        void id(String id) {
-            this.id = id
-        }
 
         void templateId(String templateId) {
             this.templateId = templateId
@@ -139,21 +176,27 @@ class DynawoDynamicModelDslLoader extends DslLoader {
 
     static void loadDsl(Binding binding, Network network, Consumer<DynawoDynamicModel> consumer, DynawoDslLoaderObserver observer) {
 
-        // set base network
-        binding.setVariable("network", network)
-
         // blackBoxModels
-        binding.blackBoxModel = { Closure<Void> closure ->
+        binding.blackBoxModel = { String id, Closure<Void> closure ->
             def cloned = closure.clone()
             BlackBoxModelSpec blackBoxModelSpec = new BlackBoxModelSpec()
+
+            List<StaticRef> staticRefs = new ArrayList<>()
+            addStaticRefs(blackBoxModelSpec.staticRefsSpec.metaClass, staticRefs, binding)
+
+            List<MacroStaticReference> macroStaticRefs = new ArrayList<>()
+            addMacroStaticReferences(blackBoxModelSpec.macroStaticRefsSpec.metaClass, macroStaticRefs, binding)
+
             cloned.delegate = blackBoxModelSpec
             cloned()
 
             // create dynamicModel
-            DynawoDynamicModel dynamicModel = new BlackBoxModel(blackBoxModelSpec.id, blackBoxModelSpec.lib, blackBoxModelSpec.parametersFile, blackBoxModelSpec.parametersId, blackBoxModelSpec.staticId)
+            DynawoDynamicModel dynamicModel = new BlackBoxModel(id, blackBoxModelSpec.lib, blackBoxModelSpec.parametersFile, blackBoxModelSpec.parametersId, blackBoxModelSpec.staticId)
+            dynamicModel.addStaticRefs(staticRefs)
+            dynamicModel.addMacroStaticRefs(macroStaticRefs)
             consumer.accept(dynamicModel)
-            LOGGER.debug("Found blackBoxModel '{}'", blackBoxModelSpec.id)
-            observer?.dynamicModelFound(blackBoxModelSpec.id)
+            LOGGER.debug("Found blackBoxModel '{}'", id)
+            observer?.dynamicModelFound(id)
         }
 
         // modelicaModels
@@ -163,17 +206,17 @@ class DynawoDynamicModelDslLoader extends DslLoader {
         ModelTemplateDslLoader.loadDsl(binding, network, {d -> consumer.accept(d)}, observer)
 
         // modelTemplateExpansions
-        binding.modelTemplateExpansion = { Closure<Void> closure ->
+        binding.modelTemplateExpansion = { String id, Closure<Void> closure ->
             def cloned = closure.clone()
             ModelTemplateExpansionSpec modelTemplateExpansionSpec = new ModelTemplateExpansionSpec()
             cloned.delegate = modelTemplateExpansionSpec
             cloned()
 
             // create dynamicModel
-            DynawoDynamicModel dynamicModel = new ModelTemplateExpansion(modelTemplateExpansionSpec.id, modelTemplateExpansionSpec.templateId, modelTemplateExpansionSpec.parametersFile, modelTemplateExpansionSpec.parametersId)
+            DynawoDynamicModel dynamicModel = new ModelTemplateExpansion(id, modelTemplateExpansionSpec.templateId, modelTemplateExpansionSpec.parametersFile, modelTemplateExpansionSpec.parametersId)
             consumer.accept(dynamicModel)
-            LOGGER.debug("Found modelTemplateExpansion '{}'", modelTemplateExpansionSpec.id)
-            observer?.dynamicModelFound(modelTemplateExpansionSpec.id)
+            LOGGER.debug("Found modelTemplateExpansion '{}'", id)
+            observer?.dynamicModelFound(id)
         }
 
         // connections
@@ -200,8 +243,8 @@ class DynawoDynamicModelDslLoader extends DslLoader {
             // create dynamicModel
             DynawoDynamicModel dynamicModel = new InitConnection(connectionSpec.id1, connectionSpec.var1, connectionSpec.id2, connectionSpec.var2)
             consumer.accept(dynamicModel)
-            LOGGER.debug("Found initConnection '{}'", connectionSpec.id)
-            observer?.dynamicModelFound(connectionSpec.id)
+            LOGGER.debug("Found initConnection '{}'", connectionSpec.id1)
+            observer?.dynamicModelFound(connectionSpec.id1)
         }
 
         // macroConnectors
@@ -225,35 +268,44 @@ class DynawoDynamicModelDslLoader extends DslLoader {
         MacroStaticRefDslLoader.loadDsl(binding, network, {d -> consumer.accept(d)}, observer)
     }
 
-    List<DynawoDynamicModel> load(Network network) {
-        load(network, null)
-    }
+    static void addStaticRefs(MetaClass staticRefsSpecMetaClass, List<StaticRef> staticRefs, Binding binding) {
 
-    List<DynawoDynamicModel> load(Network network, DynawoDslLoaderObserver observer) {
-
-        List<DynawoDynamicModel> dynamicModels = new ArrayList<>()
-
-        try {
-            observer?.begin(dslSrc.getName())
-
-            Binding binding = new Binding()
-
-            loadDsl(binding, network, dynamicModels.&add, observer)
-
-            // set base network
-            binding.setVariable("network", network)
-
-            def shell = createShell(binding)
-
-            shell.evaluate(dslSrc)
-
-            observer?.end()
-
-            dynamicModels
-
-        } catch (CompilationFailedException e) {
-            throw new DslException(e.getMessage(), e)
+        staticRefsSpecMetaClass.staticRef = { Closure<Void> closure ->
+            def cloned = closure.clone()
+            StaticRefSpec staticRefSpec = new StaticRefSpec()
+            cloned.delegate = staticRefSpec
+            cloned()
+            StaticRef staticRef = new StaticRef(staticRefSpec.var, staticRefSpec.staticVar)
+            staticRefs.add(staticRef)
         }
     }
 
+    static void addMacroStaticReferences(MetaClass macroStaticRefsSpecMetaClass, List<MacroStaticReference> macroStaticRefs, Binding binding) {
+
+        macroStaticRefsSpecMetaClass.macroStaticRef = { String id, Closure<Void> closure ->
+            def cloned = closure.clone()
+            MacroStaticRefSpec macroStaticRefSpec = new MacroStaticRefSpec()
+            
+            List<StaticRef> staticRefs = new ArrayList<>()
+            addMStaticRefs(macroStaticRefSpec.mStaticRefsSpec.metaClass, staticRefs, binding)
+            
+            cloned.delegate = macroStaticRefSpec
+            cloned()
+            MacroStaticReference macroStaticRef = new MacroStaticReference(id)
+            macroStaticRef.addStaticRefs(staticRefs)
+            macroStaticRefs.add(macroStaticRef)
+        }
+    }
+
+    static void addMStaticRefs(MetaClass mStaticRefsSpecMetaClass, List<StaticRef> staticRefs, Binding binding) {
+
+        mStaticRefsSpecMetaClass.mStaticRef = { Closure<Void> closure ->
+            def cloned = closure.clone()
+            StaticRefSpec staticRefSpec = new StaticRefSpec()
+            cloned.delegate = staticRefSpec
+            cloned()
+            StaticRef staticRef = new StaticRef(staticRefSpec.var, staticRefSpec.staticVar)
+            staticRefs.add(staticRef)
+        }
+    }
 }

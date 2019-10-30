@@ -49,10 +49,6 @@ class MacroConnectorDslLoader extends DslLoader {
         int id
         final ConnectionsSpec connectionsSpec = new ConnectionsSpec()
 
-        void id(int id) {
-            this.id = id
-        }
-
         void connections(Closure<Void> closure) {
             def cloned = closure.clone()
             cloned.delegate = connectionsSpec
@@ -74,11 +70,8 @@ class MacroConnectorDslLoader extends DslLoader {
 
     static void loadDsl(Binding binding, Network network, Consumer<DynawoDynamicModel> consumer, DynawoDslLoaderObserver observer) {
 
-        // set base network
-        binding.setVariable("network", network)
-
-        // blackBoxModels
-        binding.macroConnector = { Closure<Void> closure ->
+        // macro connector
+        binding.macroConnector = { String id, Closure<Void> closure ->
             def cloned = closure.clone()
             MacroConnectorSpec macroConnectorSpec = new MacroConnectorSpec()
 
@@ -89,11 +82,11 @@ class MacroConnectorDslLoader extends DslLoader {
             cloned()
 
             // create dynamicModel
-            MacroConnector dynamicModel = new MacroConnector(macroConnectorSpec.id)
+            MacroConnector dynamicModel = new MacroConnector(id)
             dynamicModel.addConnections(connections)
             consumer.accept(dynamicModel)
-            LOGGER.debug("Found modelicaModel '{}'", macroConnectorSpec.id)
-            observer?.dynamicModelFound(macroConnectorSpec.id)
+            LOGGER.debug("Found modelicaModel '{}'", id)
+            observer?.dynamicModelFound(id)
         }
     }
 
@@ -108,36 +101,4 @@ class MacroConnectorDslLoader extends DslLoader {
             connections.add(connection)
         }
     }
-
-    List<DynawoDynamicModel> load(Network network) {
-        load(network, null)
-    }
-
-    List<DynawoDynamicModel> load(Network network, DynawoDslLoaderObserver observer) {
-
-        List<DynawoDynamicModel> dynamicModels = new ArrayList<>()
-
-        try {
-            observer?.begin(dslSrc.getName())
-
-            Binding binding = new Binding()
-
-            loadDsl(binding, network, dynamicModels.&add, observer)
-
-            // set base network
-            binding.setVariable("network", network)
-
-            def shell = createShell(binding)
-
-            shell.evaluate(dslSrc)
-
-            observer?.end()
-
-            dynamicModels
-
-        } catch (CompilationFailedException e) {
-            throw new DslException(e.getMessage(), e)
-        }
-    }
-
 }

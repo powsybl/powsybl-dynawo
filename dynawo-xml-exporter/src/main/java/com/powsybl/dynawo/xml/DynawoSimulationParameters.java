@@ -32,27 +32,6 @@ public final class DynawoSimulationParameters {
         return parameterSets.stream().mapToInt(DynawoParameterSet::getId).max().orElse(1);
     }
 
-    public static int countLoadParameterSets(List<DynawoParameterSet> parameterSets) {
-        int loads = 0;
-        for (DynawoParameterSet parameterSet : parameterSets) {
-            if (parameterSet.getParameters().stream().anyMatch(parameter -> parameter.getName().startsWith("load_"))) {
-                loads++;
-            }
-        }
-        return loads;
-    }
-
-    public static int countGeneratorParameterSets(List<DynawoParameterSet> parameterSets) {
-        int generators = 0;
-        for (DynawoParameterSet parameterSet : parameterSets) {
-            if (parameterSet.getParameters().stream()
-                .anyMatch(parameter -> parameter.getName().startsWith("generator_"))) {
-                generators++;
-            }
-        }
-        return generators;
-    }
-
     public static void writeParameterSets(XMLStreamWriter writer, List<DynawoParameterSet> parameterSets)
         throws XMLStreamException {
         for (DynawoParameterSet parameterSet : parameterSets) {
@@ -71,11 +50,6 @@ public final class DynawoSimulationParameters {
         DynawoParameterSet parameterSet = new DynawoParameterSet(2);
         parameterSet.addParameters(Collections.unmodifiableList(parameters));
         writeParameterSet(writer, parameterSet);
-    }
-
-    public static boolean hasDefaultOmegaRefParameterSet(List<DynawoParameterSet> parameterSets) {
-        return parameterSets.stream().noneMatch(parameterSet -> parameterSet.getParameters().stream()
-            .anyMatch(parameter -> parameter.getName().equals("nbGen")));
     }
 
     public static void writeDefaultLoad(XMLStreamWriter writer, List<DynawoParameterSet> parameterSets, int setId) throws XMLStreamException {

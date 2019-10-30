@@ -222,8 +222,7 @@ parameterSet (1) {
         }
     }
 }
-blackBoxModel {
-    id '#ID#'
+blackBoxModel ('#ID#'){
     lib 'GeneratorSynchronousFourWindingsProportionalRegulations'
     parametersFile 'dynawoModel.par'
     parametersId 0

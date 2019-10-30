@@ -55,10 +55,6 @@ class DynawoSolverParameterSetDslLoader extends DslLoader {
         void origData(String origData) {
             this.origData = origData
         }
-
-        boolean isReference() {
-            return origName != null && origName.length() > 0
-        }
     }
 
     static class ParametersSpec {
@@ -68,10 +64,6 @@ class DynawoSolverParameterSetDslLoader extends DslLoader {
 
         int id
         final ParametersSpec parametersSpec = new ParametersSpec()
-
-        void id(int id) {
-            this.id = id
-        }
 
         void parameters(Closure<Void> closure) {
             def cloned = closure.clone()
@@ -93,9 +85,6 @@ class DynawoSolverParameterSetDslLoader extends DslLoader {
     }
 
     static void loadDsl(Binding binding, Network network, Consumer<DynawoParameterSet> consumer, DynawoDslLoaderObserver observer) {
-
-        // set base network
-        binding.setVariable("network", network)
 
         // parameterSets
         binding.solverParameterSet = { int id, Closure<Void> closure ->
@@ -130,36 +119,4 @@ class DynawoSolverParameterSetDslLoader extends DslLoader {
 
         }
     }
-
-    List<DynawoParameterSet> load(Network network) {
-        load(network, null)
-    }
-
-    List<DynawoParameterSet> load(Network network, DynawoDslLoaderObserver observer) {
-
-        List<DynawoParameterSet> parameterSets = new ArrayList<>()
-
-        try {
-            observer?.begin(dslSrc.getName())
-
-            Binding binding = new Binding()
-
-            loadDsl(binding, network, parameterSets.&add, observer)
-
-            // set base network
-            binding.setVariable("network", network)
-
-            def shell = createShell(binding)
-
-            shell.evaluate(dslSrc)
-
-            observer?.end()
-
-            parameterSets
-
-        } catch (CompilationFailedException e) {
-            throw new DslException(e.getMessage(), e)
-        }
-    }
-
 }

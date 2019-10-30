@@ -53,9 +53,6 @@ class DynawoCurveDslLoader extends DslLoader {
 
     static void loadDsl(Binding binding, Network network, Consumer<DynawoCurve> consumer, DynawoDslLoaderObserver observer) {
 
-        // set base network
-        binding.setVariable("network", network)
-
         // curves
         binding.curve = { Closure<Void> closure ->
             def cloned = closure.clone()
@@ -70,36 +67,4 @@ class DynawoCurveDslLoader extends DslLoader {
             observer?.curveFound(curveSpec.model)
         }
     }
-
-    List<DynawoCurve> load(Network network) {
-        load(network, null)
-    }
-
-    List<DynawoCurve> load(Network network, DynawoDslLoaderObserver observer) {
-
-        List<DynawoCurve> curves = new ArrayList<>()
-        
-        try {
-            observer?.begin(dslSrc.getName())
-
-            Binding binding = new Binding()
-
-            loadDsl(binding, network, curves.&add, observer)
-
-            // set base network
-            binding.setVariable("network", network)
-
-            def shell = createShell(binding)
-
-            shell.evaluate(dslSrc)
-
-            observer?.end()
-
-            curves
-
-        } catch (CompilationFailedException e) {
-            throw new DslException(e.getMessage(), e)
-        }
-    }
-
 }

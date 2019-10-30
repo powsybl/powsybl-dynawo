@@ -175,10 +175,6 @@ class DynawoJobDslLoader extends DslLoader {
         final SimulationSpec simulationSpec = new SimulationSpec()
         final OutputsSpec outputsSpec = new OutputsSpec()
 
-        void name(String name) {
-            this.name = name
-        }
-
         void solver(Closure<Void> closure) {
             def cloned = closure.clone()
             cloned.delegate = solverSpec
@@ -217,9 +213,6 @@ class DynawoJobDslLoader extends DslLoader {
     }
 
     static void loadDsl(Binding binding, Network network, Consumer<DynawoJob> consumer, DynawoDslLoaderObserver observer) {
-
-        // set base network
-        binding.setVariable("network", network)
 
         // jobs
         binding.job = { String name, Closure<Void> closure ->
@@ -261,36 +254,4 @@ class DynawoJobDslLoader extends DslLoader {
             appenders.add(appender)
         }
     }
-
-        List<DynawoJob> load(Network network) {
-        load(network, null)
-    }
-
-    List<DynawoJob> load(Network network, DynawoDslLoaderObserver observer) {
-
-        List<DynawoJob> jobs = new ArrayList<>()
-
-        try {
-            observer?.begin(dslSrc.getName())
-
-            Binding binding = new Binding()
-
-            loadDsl(binding, network, jobs.&add, observer)
-
-            // set base network
-            binding.setVariable("network", network)
-
-            def shell = createShell(binding)
-
-            shell.evaluate(dslSrc)
-
-            observer?.end()
-
-            jobs
-
-        } catch (CompilationFailedException e) {
-            throw new DslException(e.getMessage(), e)
-        }
-    }
-
 }

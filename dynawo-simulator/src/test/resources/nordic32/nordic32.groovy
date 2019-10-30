@@ -568,28 +568,24 @@ parameterSet (5) {
         }
     }
 }
-blackBoxModel {
-    id 'OMEGA_REF'
+blackBoxModel ('OMEGA_REF'){
     lib 'DYNModelOmegaRef'
     parametersFile 'dynawoModel.par'
     parametersId 2
 }
-blackBoxModel {
-    id '_N1011____EC'
+blackBoxModel ('_N1011____EC'){
     lib 'LoadAlphaBeta'
     parametersFile 'dynawoModel.par'
     parametersId 3
     staticId '_N1011____EC'
 }
-blackBoxModel {
-    id '_G10______SM'
+blackBoxModel ('_G10______SM'){
     lib 'GeneratorSynchronousFourWindingsProportionalRegulations'
     parametersFile 'dynawoModel.par'
     parametersId 4
     staticId '_G10______SM'
 }
-blackBoxModel {
-    id 'DISCONNECT_LINE'
+blackBoxModel ('DISCONNECT_LINE'){
     lib 'EventQuadripoleDisconnection'
     parametersFile 'dynawoModel.par'
     parametersId 5
