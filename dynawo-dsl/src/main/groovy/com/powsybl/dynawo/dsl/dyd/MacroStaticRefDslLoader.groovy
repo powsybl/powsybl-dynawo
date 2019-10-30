@@ -90,15 +90,15 @@ class MacroStaticRefDslLoader extends DslLoader {
         }
     }
 
-    static void addStaticRefs(MetaClass connectionsSpecMetaClass, List<StaticRef> connections, Binding binding) {
+    static void addStaticRefs(MetaClass connectionsSpecMetaClass, List<StaticRef> staticRefs, Binding binding) {
 
         connectionsSpecMetaClass.staticRef = { Closure<Void> closure ->
             def cloned = closure.clone()
             StaticRefSpec staticRefSpec = new StaticRefSpec()
             cloned.delegate = staticRefSpec
             cloned()
-            DydConnection connection = new DydConnection(staticRefSpec.var, staticRefSpec.staticVar)
-            connections.add(connection)
+            StaticRef staticRef = new StaticRef(staticRefSpec.var, staticRefSpec.staticVar)
+            staticRefs.add(staticRef)
         }
     }
 }
