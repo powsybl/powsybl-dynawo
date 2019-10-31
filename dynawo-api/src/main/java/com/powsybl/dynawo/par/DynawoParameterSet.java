@@ -7,7 +7,9 @@
 package com.powsybl.dynawo.par;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -15,13 +17,11 @@ import java.util.List;
 public class DynawoParameterSet {
 
     private final int id;
-    private List<DynawoParameter> parameters;
-    private List<DynawoParameterTable> parameterTables;
+    private final List<DynawoParameter> parameters = new ArrayList<>();
+    private final List<DynawoParameterTable> parameterTables = new ArrayList<>();
 
     public DynawoParameterSet(int id) {
-        this.id = id;
-        this.parameters = new ArrayList<>();
-        this.parameterTables = new ArrayList<>();
+        this.id = Objects.requireNonNull(id);
     }
 
     public int getId() {
@@ -29,11 +29,11 @@ public class DynawoParameterSet {
     }
 
     public List<DynawoParameter> getParameters() {
-        return parameters;
+        return Collections.unmodifiableList(parameters);
     }
 
     public List<DynawoParameterTable> getParameterTables() {
-        return parameterTables;
+        return Collections.unmodifiableList(parameterTables);
     }
 
     public DynawoParameterSet addParameters(List<DynawoParameter> parameter) {
@@ -42,6 +42,7 @@ public class DynawoParameterSet {
     }
 
     public DynawoParameterSet add(DynawoParameter parameter) {
+        Objects.requireNonNull(parameter);
         parameters.add(parameter);
         return this;
     }
@@ -52,6 +53,7 @@ public class DynawoParameterSet {
     }
 
     public DynawoParameterSet add(DynawoParameterTable parameterTable) {
+        Objects.requireNonNull(parameterTable);
         parameterTables.add(parameterTable);
         return this;
     }

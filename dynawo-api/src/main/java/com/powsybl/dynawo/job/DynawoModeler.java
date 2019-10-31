@@ -6,6 +6,8 @@
  */
 package com.powsybl.dynawo.job;
 
+import java.util.Objects;
+
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
@@ -29,15 +31,15 @@ public class DynawoModeler {
     public DynawoModeler(String compile, String preCompiledModelsDir, boolean useStandardModelsPreCompiledModels,
         String modelicaModelsDir, boolean useStandardModelsModelicaModels, String iidm, String parameters,
         int parameterId, String dyd, String initialState) {
-        this.compileDir = compile;
+        this.compileDir = Objects.requireNonNull(compile);
         this.preCompiledModelsDir = preCompiledModelsDir;
         this.useStandardModelsPreCompiledModels = useStandardModelsPreCompiledModels;
         this.modelicaModelsDir = modelicaModelsDir;
         this.useStandardModelsModelicaModels = useStandardModelsModelicaModels;
-        this.iidm = iidm;
-        this.parameters = parameters;
+        this.iidm = Objects.requireNonNull(iidm);
+        this.parameters = Objects.requireNonNull(parameters);
         this.parameterId = parameterId;
-        this.dyd = dyd;
+        this.dyd = Objects.requireNonNull(dyd);
         this.initialState = initialState;
     }
 

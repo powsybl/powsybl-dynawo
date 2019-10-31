@@ -7,22 +7,23 @@
 package com.powsybl.dynawo.dyd;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 public class MacroConnector extends DydComponent implements DynawoDynamicModel {
 
-    private List<DydConnection> connections;
+    private final List<DydConnection> connections = new ArrayList<>();
 
     public MacroConnector(String id) {
         super(id);
-        this.connections = new ArrayList<>();
     }
 
     public List<DydConnection> getConnections() {
-        return connections;
+        return Collections.unmodifiableList(connections);
     }
 
     public MacroConnector addConnections(List<DydConnection> connection) {
@@ -31,6 +32,7 @@ public class MacroConnector extends DydComponent implements DynawoDynamicModel {
     }
 
     public MacroConnector add(DydConnection connection) {
+        Objects.requireNonNull(connection);
         connections.add(connection);
         return this;
     }

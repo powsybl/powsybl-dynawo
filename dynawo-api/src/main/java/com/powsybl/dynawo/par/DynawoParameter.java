@@ -6,6 +6,8 @@
  */
 package com.powsybl.dynawo.par;
 
+import java.util.Objects;
+
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
@@ -21,17 +23,17 @@ public class DynawoParameter {
 
     public DynawoParameter(String name, String type, String value) {
         this.reference = false;
-        this.name = name;
-        this.type = type;
-        this.value = value;
+        this.name = Objects.requireNonNull(name);
+        this.type = Objects.requireNonNull(type);
+        this.value = Objects.requireNonNull(value);
     }
 
     public DynawoParameter(String name, String type, String origData, String origName) {
         this.reference = true;
-        this.name = name;
-        this.type = type;
-        this.origData = origData;
-        this.origName = origName;
+        this.name = Objects.requireNonNull(name);
+        this.type = Objects.requireNonNull(type);
+        this.origData = Objects.requireNonNull(origData);
+        this.origName = Objects.requireNonNull(origName);
     }
 
     public boolean isReference() {
