@@ -461,12 +461,7 @@
 				<artifactId>powsybl-iidm-xml-converter</artifactId>
 				<version>${powsyblcore.version}</version>
 			</dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>powsybl-simulation-api</artifactId>
-                <version>${powsyblcore.version}</version>
-            </dependency>
-            <dependency>
+			<dependency>
 				<groupId>${project.groupId}</groupId>
 				<artifactId>powsybl-tools</artifactId>
 				<version>${powsyblcore.version}</version>
