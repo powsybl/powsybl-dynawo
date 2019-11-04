@@ -1,5 +1,6 @@
 # Maven projects
 /dynawo-api/target
+/dynawo-dsl/target
 /dynawo-simulator/target
 
 /.metadata/
@@ -16,9 +17,11 @@ install.cfg
 
 # Eclipse projects
 .classpath
+.factorypath
 .project
 org.eclipse.core.resources.prefs
 org.eclipse.jdt.core.prefs
+org.eclipse.jdt.apt.core.prefs
 org.eclipse.m2e.core.prefs
 org.eclipse.jdt.groovy.core.prefs
 
