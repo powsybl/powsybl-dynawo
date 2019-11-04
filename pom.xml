@@ -81,14 +81,14 @@
 		<maven.gmavenplus.version>1.6.1</maven.gmavenplus.version>
 
 		<autoservice.version>1.0-rc2</autoservice.version>
+		<commonsio.version>2.5</commonsio.version>
+		<groovy.version>2.4.15</groovy.version>
 		<guava.version>20.0</guava.version>
 		<jimfs.version>1.1</jimfs.version>
 		<junit.version>4.12</junit.version>
 		<logback.version>1.1.8</logback.version>
-		<slf4j.version>1.7.22</slf4j.version>
 		<mockito.version>1.10.19</mockito.version>
-		<groovy.version>2.4.15</groovy.version>
-		<commonsio.version>2.5</commonsio.version>
+		<slf4j.version>1.7.22</slf4j.version>
 		<xmlunit.version>2.3.0</xmlunit.version>
 
 		<powsyblcore.version>3.1.0-SNAPSHOT</powsyblcore.version>

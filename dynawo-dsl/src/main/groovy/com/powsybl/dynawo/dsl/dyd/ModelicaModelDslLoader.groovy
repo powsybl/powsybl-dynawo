@@ -107,11 +107,11 @@ class ModelicaModelDslLoader extends DslLoader {
 
     static class MacroStaticRefSpec {
         String id
-        final StaticRefsSpec mStaticRefsSpec = new StaticRefsSpec()
+        final StaticRefsSpec staticRefsSpec = new StaticRefsSpec()
         
-        void mStaticRefs(Closure<Void> closure) {
+        void staticRefs(Closure<Void> closure) {
             def cloned = closure.clone()
-            cloned.delegate = mStaticRefsSpec
+            cloned.delegate = staticRefsSpec
             cloned()
         }
     }
@@ -246,13 +246,14 @@ class ModelicaModelDslLoader extends DslLoader {
     }
 
     static void addStaticRefs(MetaClass staticRefsSpecMetaClass, List<StaticRef> staticRefs, Binding binding) {
-
+        binding.setVariable("staticRefs", staticRefs)
         staticRefsSpecMetaClass.staticRef = { Closure<Void> closure ->
             def cloned = closure.clone()
             StaticRefSpec staticRefSpec = new StaticRefSpec()
             cloned.delegate = staticRefSpec
             cloned()
             StaticRef staticRef = new StaticRef(staticRefSpec.var, staticRefSpec.staticVar)
+            staticRefs = binding.getVariable("staticRefs")
             staticRefs.add(staticRef)
         }
     }
@@ -264,25 +265,13 @@ class ModelicaModelDslLoader extends DslLoader {
             MacroStaticRefSpec macroStaticRefSpec = new MacroStaticRefSpec()
             
             List<StaticRef> staticRefs = new ArrayList<>()
-            addMStaticRefs(macroStaticRefSpec.mStaticRefsSpec.metaClass, staticRefs, binding)
+            addStaticRefs(macroStaticRefSpec.staticRefsSpec.metaClass, staticRefs, binding)
             
             cloned.delegate = macroStaticRefSpec
             cloned()
             MacroStaticReference macroStaticRef = new MacroStaticReference(id)
             macroStaticRef.addStaticRefs(staticRefs)
             macroStaticRefs.add(macroStaticRef)
-        }
-    }
-
-    static void addMStaticRefs(MetaClass mStaticRefsSpecMetaClass, List<StaticRef> staticRefs, Binding binding) {
-
-        mStaticRefsSpecMetaClass.mStaticRef = { Closure<Void> closure ->
-            def cloned = closure.clone()
-            StaticRefSpec staticRefSpec = new StaticRefSpec()
-            cloned.delegate = staticRefSpec
-            cloned()
-            StaticRef staticRef = new StaticRef(staticRefSpec.var, staticRefSpec.staticVar)
-            staticRefs.add(staticRef)
         }
     }
 }
