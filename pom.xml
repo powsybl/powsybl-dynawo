@@ -45,6 +45,7 @@
 
     <modules>
         <module>dynawo-api</module>
+        <module>dynawo-dsl</module>
         <module>dynawo-simulator</module>
     </modules>
 
@@ -76,14 +77,14 @@
         <maven.shade.version>3.1.1</maven.shade.version>
         <maven.site.version>3.7.1</maven.site.version>
         <maven.source.version>3.0.1</maven.source.version>
-        <maven.surefire.version>2.22.1</maven.surefire.version>
-        <maven.templating.version>1.0.0</maven.templating.version>
 		<maven.surefire.version>2.22.1</maven.surefire.version>
 		<maven.templating.version>1.0.0</maven.templating.version>
 		<maven.versions.version>2.7</maven.versions.version>
 		<maven.gmavenplus.version>1.6.1</maven.gmavenplus.version>
 
         <autoservice.version>1.0-rc2</autoservice.version>
+        <commonsio.version>2.5</commonsio.version>
+        <groovy.version>2.4.15</groovy.version>
         <guava.version>20.0</guava.version>
         <jimfs.version>1.1</jimfs.version>
         <junit.version>4.12</junit.version>
@@ -241,6 +242,25 @@
                         </execution>
                     </executions>
                 </plugin>
+				<plugin>
+					<groupId>org.codehaus.gmavenplus</groupId>
+					<artifactId>gmavenplus-plugin</artifactId>
+					<version>${maven.gmavenplus.version}</version>
+					<executions>
+						<execution>
+							<goals>
+								<goal>addSources</goal>
+								<goal>addTestSources</goal>
+								<goal>generateStubs</goal>
+								<goal>compile</goal>
+								<goal>generateTestStubs</goal>
+								<goal>compileTests</goal>
+								<goal>removeStubs</goal>
+								<goal>removeTestStubs</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
                 <plugin>
                     <groupId>org.eluder.coveralls</groupId>
                     <artifactId>coveralls-maven-plugin</artifactId>
@@ -432,6 +452,16 @@
                 <version>${guava.version}</version>
             </dependency>
 			<dependency>
+				<groupId>commons-io</groupId>
+				<artifactId>commons-io</artifactId>
+				<version>${commonsio.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.codehaus.groovy</groupId>
+				<artifactId>groovy-all</artifactId>
+				<version>${groovy.version}</version>
+			</dependency>
+			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-api</artifactId>
 				<version>${slf4j.version}</version>
@@ -449,6 +479,11 @@
 			<dependency>
 				<groupId>${project.groupId}</groupId>
 				<artifactId>powsybl-contingency-api</artifactId>
+				<version>${powsyblcore.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>powsybl-dsl</artifactId>
 				<version>${powsyblcore.version}</version>
 			</dependency>
 			<dependency>
@@ -506,6 +541,13 @@
 			<dependency>
 				<groupId>${project.groupId}</groupId>
 				<artifactId>powsybl-cgmes-model</artifactId>
+				<version>${powsyblcore.version}</version>
+				<type>test-jar</type>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>powsybl-commons</artifactId>
 				<version>${powsyblcore.version}</version>
 				<type>test-jar</type>
 				<scope>test</scope>

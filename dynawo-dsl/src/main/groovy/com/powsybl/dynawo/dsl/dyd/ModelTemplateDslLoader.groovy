@@ -1,0 +1,199 @@
+/**
+ * Copyright (c) 2018, RTE (http://www.rte-france.com)
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+package com.powsybl.dynawo.dsl.dyd
+
+import java.util.function.Consumer
+
+import org.codehaus.groovy.control.CompilationFailedException
+import org.slf4j.LoggerFactory
+
+import com.powsybl.dsl.DslException
+import com.powsybl.dsl.DslLoader
+import com.powsybl.dynawo.dsl.DynawoDslLoaderObserver
+import com.powsybl.dynawo.dsl.dyd.ModelicaModelDslLoader.MacroStaticRefSpec
+import com.powsybl.dynawo.dsl.dyd.ModelicaModelDslLoader.StaticRefSpec
+import com.powsybl.dynawo.dyd.Connection
+import com.powsybl.dynawo.dyd.DynawoDynamicModel
+import com.powsybl.dynawo.dyd.InitConnection
+import com.powsybl.dynawo.dyd.MacroStaticReference
+import com.powsybl.dynawo.dyd.ModelTemplate
+import com.powsybl.dynawo.dyd.StaticRef
+import com.powsybl.dynawo.dyd.UnitDynamicModel
+import com.powsybl.iidm.network.Network
+
+/**
+ * @author Marcos de Miguel <demiguelm at aia.es>
+ */
+class ModelTemplateDslLoader extends DslLoader {
+
+    static LOGGER = LoggerFactory.getLogger(ModelTemplateDslLoader.class)
+
+    static class UnitDynamicModelSpec {
+
+        String id
+        String name
+        String moFile
+        String initName
+        String parFile
+        int parId
+
+        void name(String name) {
+            this.name = name
+        }
+
+        void moFile(String moFile) {
+            this.moFile = moFile
+        }
+
+        void initName(String initName) {
+            this.initName = initName
+        }
+
+        void parFile(String parFile) {
+            this.parFile = parFile
+        }
+
+        void parId(int parId) {
+            this.parId = parId
+        }
+    }
+
+    static class UnitDynamicModelsSpec {
+    }
+
+    static class ConnectionSpec {
+
+        String id1
+        String var1
+        String id2
+        String var2
+
+        void id1(String id1) {
+            this.id1 = id1
+        }
+
+        void var1(String var1) {
+            this.var1 = var1
+        }
+
+        void id2(String id2) {
+            this.id2 = id2
+        }
+
+        void var2(String var2) {
+            this.var2 = var2
+        }
+    }
+
+    static class ConnectionsSpec {
+    }
+
+    static class ModelTemplateSpec {
+
+        int id
+        final UnitDynamicModelsSpec unitDynamicModelsSpec = new UnitDynamicModelsSpec()
+        final ConnectionsSpec connectionsSpec = new ConnectionsSpec()
+        final ConnectionsSpec initConnectionsSpec = new ConnectionsSpec()
+
+        void unitDynamicModels(Closure<Void> closure) {
+            def cloned = closure.clone()
+            cloned.delegate = unitDynamicModelsSpec
+            cloned()
+        }
+
+        void connections(Closure<Void> closure) {
+            def cloned = closure.clone()
+            cloned.delegate = connectionsSpec
+            cloned()
+        }
+
+        void initConnections(Closure<Void> closure) {
+            def cloned = closure.clone()
+            cloned.delegate = initConnectionsSpec
+            cloned()
+        }
+
+    }
+
+    ModelTemplateDslLoader(GroovyCodeSource dslSrc) {
+        super(dslSrc)
+    }
+
+    ModelTemplateDslLoader(File dslFile) {
+        super(dslFile)
+    }
+
+    ModelTemplateDslLoader(String script) {
+        super(script)
+    }
+
+    static void loadDsl(Binding binding, Network network, Consumer<DynawoDynamicModel> consumer, DynawoDslLoaderObserver observer) {
+
+        // model template
+        binding.modelTemplate = { String id, Closure<Void> closure ->
+            def cloned = closure.clone()
+            ModelTemplateSpec modelTemplateSpec = new ModelTemplateSpec()
+
+            List<UnitDynamicModel> unitDynamicModels = new ArrayList<>()
+            addUnitDynamicModels(modelTemplateSpec.unitDynamicModelsSpec.metaClass, unitDynamicModels, binding)
+
+            List<Connection> connections = new ArrayList<>()
+            addConnections(modelTemplateSpec.connectionsSpec.metaClass, connections, binding)
+
+            List<InitConnection> initConnections = new ArrayList<>()
+            addInitConnections(modelTemplateSpec.initConnectionsSpec.metaClass, initConnections, binding)
+
+            cloned.delegate = modelTemplateSpec
+            cloned()
+
+            // create dynamicModel
+            ModelTemplate dynamicModel = new ModelTemplate(id)
+            dynamicModel.addUnitDynamicModels(unitDynamicModels)
+            dynamicModel.addConnections(connections)
+            dynamicModel.addInitConnections(initConnections)
+            consumer.accept(dynamicModel)
+            LOGGER.debug("Found modelTemplate '{}'", id)
+            observer?.dynamicModelFound(id)
+        }
+    }
+
+    static void addUnitDynamicModels(MetaClass unitDynamicModelsSpecMetaClass, List<UnitDynamicModel> unitDynamicModels, Binding binding) {
+
+        unitDynamicModelsSpecMetaClass.unitDynamicModel = { String id, Closure<Void> closure ->
+            def cloned = closure.clone()
+            UnitDynamicModelSpec unitDynamicModelSpec = new UnitDynamicModelSpec()
+            cloned.delegate = unitDynamicModelSpec
+            cloned()
+            UnitDynamicModel unitDynamicModel = new UnitDynamicModel(id, unitDynamicModelSpec.name, unitDynamicModelSpec.moFile, unitDynamicModelSpec.initName, unitDynamicModelSpec.parFile, unitDynamicModelSpec.parId)
+            unitDynamicModels.add(unitDynamicModel)
+        }
+    }
+
+    static void addConnections(MetaClass connectionsSpecMetaClass, List<Connection> connections, Binding binding) {
+
+        connectionsSpecMetaClass.connection = { Closure<Void> closure ->
+            def cloned = closure.clone()
+            ConnectionSpec connectionSpec = new ConnectionSpec()
+            cloned.delegate = connectionSpec
+            cloned()
+            Connection connection = new Connection(connectionSpec.id1, connectionSpec.var1, connectionSpec.id2, connectionSpec.var2)
+            connections.add(connection)
+        }
+    }
+
+    static void addInitConnections(MetaClass initConnectionsSpecMetaClass, List<InitConnection> initConnections, Binding binding) {
+
+        initConnectionsSpecMetaClass.initConnection = { Closure<Void> closure ->
+            def cloned = closure.clone()
+            ConnectionSpec initConnectionSpec = new ConnectionSpec()
+            cloned.delegate = initConnectionSpec
+            cloned()
+            InitConnection initConnection = new InitConnection(initConnectionSpec.id1, initConnectionSpec.var1, initConnectionSpec.id2, initConnectionSpec.var2)
+            initConnections.add(initConnection)
+        }
+    }
+}
