@@ -8,13 +8,9 @@ package com.powsybl.dynawo.dsl.dyd
 
 import java.util.function.Consumer
 
-import org.codehaus.groovy.control.CompilationFailedException
 import org.slf4j.LoggerFactory
 
-import com.powsybl.dsl.DslException
-import com.powsybl.dsl.DslLoader
 import com.powsybl.dynawo.dsl.DynawoDslLoaderObserver
-import com.powsybl.dynawo.dyd.DydConnection
 import com.powsybl.dynawo.dyd.DynawoDynamicModel
 import com.powsybl.dynawo.dyd.MacroStaticReference
 import com.powsybl.dynawo.dyd.StaticRef
@@ -23,7 +19,7 @@ import com.powsybl.iidm.network.Network
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-class MacroStaticRefDslLoader extends DslLoader {
+class MacroStaticRefDslLoader {
 
     static LOGGER = LoggerFactory.getLogger(MacroStaticRefDslLoader.class)
 
@@ -54,18 +50,6 @@ class MacroStaticRefDslLoader extends DslLoader {
             cloned.delegate = staticRefsSpec
             cloned()
         }
-    }
-
-    MacroStaticRefDslLoader(GroovyCodeSource dslSrc) {
-        super(dslSrc)
-    }
-
-    MacroStaticRefDslLoader(File dslFile) {
-        super(dslFile)
-    }
-
-    MacroStaticRefDslLoader(String script) {
-        super(script)
     }
 
     static void loadDsl(Binding binding, Network network, Consumer<DynawoDynamicModel> consumer, DynawoDslLoaderObserver observer) {
