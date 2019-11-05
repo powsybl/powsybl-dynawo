@@ -10,7 +10,6 @@ import java.util.function.Consumer
 
 import org.slf4j.LoggerFactory
 
-import com.powsybl.dsl.DslLoader
 import com.powsybl.dynawo.dsl.DynawoDslLoaderObserver
 import com.powsybl.dynawo.dyd.Connection
 import com.powsybl.dynawo.dyd.DydComponent
@@ -24,7 +23,7 @@ import com.powsybl.iidm.network.Network
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-class ModelicaModelDslLoader extends DslLoader {
+class ModelicaModelDslLoader {
 
     static LOGGER = LoggerFactory.getLogger(ModelicaModelDslLoader.class)
 
@@ -150,18 +149,6 @@ class ModelicaModelDslLoader extends DslLoader {
             cloned.delegate = macroStaticRefsSpec
             cloned()
         }
-    }
-
-    ModelicaModelDslLoader(GroovyCodeSource dslSrc) {
-        super(dslSrc)
-    }
-
-    ModelicaModelDslLoader(File dslFile) {
-        super(dslFile)
-    }
-
-    ModelicaModelDslLoader(String script) {
-        super(script)
     }
 
     static void loadDsl(Binding binding, Network network, Consumer<DynawoDynamicModel> consumer, DynawoDslLoaderObserver observer) {

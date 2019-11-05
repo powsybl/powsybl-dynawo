@@ -8,11 +8,8 @@ package com.powsybl.dynawo.dsl.par
 
 import java.util.function.Consumer
 
-import org.codehaus.groovy.control.CompilationFailedException
 import org.slf4j.LoggerFactory
 
-import com.powsybl.dsl.DslException
-import com.powsybl.dsl.DslLoader
 import com.powsybl.dynawo.dsl.DynawoDslLoaderObserver
 import com.powsybl.dynawo.par.DynawoParameter
 import com.powsybl.dynawo.par.DynawoParameterRow
@@ -23,7 +20,7 @@ import com.powsybl.iidm.network.Network
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-class DynawoParameterSetDslLoader extends DslLoader {
+class DynawoParameterSetDslLoader {
 
     static LOGGER = LoggerFactory.getLogger(DynawoParameterSetDslLoader.class)
 
@@ -122,18 +119,6 @@ class DynawoParameterSetDslLoader extends DslLoader {
             cloned.delegate = parameterTablesSpec
             cloned()
         }
-    }
-
-    DynawoParameterSetDslLoader(GroovyCodeSource dslSrc) {
-        super(dslSrc)
-    }
-
-    DynawoParameterSetDslLoader(File dslFile) {
-        super(dslFile)
-    }
-
-    DynawoParameterSetDslLoader(String script) {
-        super(script)
     }
 
     static void loadDsl(Binding binding, Network network, Consumer<DynawoParameterSet> consumer, DynawoDslLoaderObserver observer) {

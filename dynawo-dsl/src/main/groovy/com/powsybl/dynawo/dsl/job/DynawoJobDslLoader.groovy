@@ -8,11 +8,8 @@ package com.powsybl.dynawo.dsl.job
 
 import java.util.function.Consumer
 
-import org.codehaus.groovy.control.CompilationFailedException
 import org.slf4j.LoggerFactory
 
-import com.powsybl.dsl.DslException
-import com.powsybl.dsl.DslLoader
 import com.powsybl.dynawo.dsl.DynawoDslLoaderObserver
 import com.powsybl.dynawo.job.DynawoJob
 import com.powsybl.dynawo.job.DynawoModeler
@@ -20,13 +17,12 @@ import com.powsybl.dynawo.job.DynawoOutputs
 import com.powsybl.dynawo.job.DynawoSimulation
 import com.powsybl.dynawo.job.DynawoSolver
 import com.powsybl.dynawo.job.LogAppender
-import com.powsybl.dynawo.par.DynawoParameter
 import com.powsybl.iidm.network.Network
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-class DynawoJobDslLoader extends DslLoader {
+class DynawoJobDslLoader {
 
     static LOGGER = LoggerFactory.getLogger(DynawoJobDslLoader.class)
 
@@ -198,18 +194,6 @@ class DynawoJobDslLoader extends DslLoader {
             cloned.delegate = outputsSpec
             cloned()
         }
-    }
-
-    DynawoJobDslLoader(GroovyCodeSource dslSrc) {
-        super(dslSrc)
-    }
-
-    DynawoJobDslLoader(File dslFile) {
-        super(dslFile)
-    }
-
-    DynawoJobDslLoader(String script) {
-        super(script)
     }
 
     static void loadDsl(Binding binding, Network network, Consumer<DynawoJob> consumer, DynawoDslLoaderObserver observer) {
