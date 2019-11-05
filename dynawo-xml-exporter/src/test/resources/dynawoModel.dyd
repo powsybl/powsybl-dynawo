@@ -11,7 +11,8 @@
     simulation tool for power systems.-->
 <dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
 	<dyn:blackBoxModel id="bbid" lib="bblib" parFile="parametersFile" parId="1" staticId="staticId">
-		<dyn:staticRef var="var" staticVar="staticVar"/>
+		<dyn:staticRef var="var1" staticVar="staticVar1"/>
+		<dyn:staticRef var="var2" staticVar="staticVar2"/>
 		<dyn:macroStaticRef id="macroStaticid"/>
 	</dyn:blackBoxModel>
 	<dyn:modelicaModel id="mid">

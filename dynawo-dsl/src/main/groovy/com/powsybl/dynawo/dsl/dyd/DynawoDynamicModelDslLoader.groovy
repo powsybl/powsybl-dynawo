@@ -14,10 +14,10 @@ import com.powsybl.dsl.DslLoader
 import com.powsybl.dynawo.dsl.DynawoDslLoaderObserver
 import com.powsybl.dynawo.dyd.BlackBoxModel
 import com.powsybl.dynawo.dyd.Connection
+import com.powsybl.dynawo.dyd.DydComponent
 import com.powsybl.dynawo.dyd.DynawoDynamicModel
 import com.powsybl.dynawo.dyd.InitConnection
 import com.powsybl.dynawo.dyd.MacroConnection
-import com.powsybl.dynawo.dyd.MacroStaticReference
 import com.powsybl.dynawo.dyd.ModelTemplateExpansion
 import com.powsybl.dynawo.dyd.StaticRef
 import com.powsybl.iidm.network.Network
@@ -48,13 +48,6 @@ class DynawoDynamicModelDslLoader extends DslLoader {
 
     static class MacroStaticRefSpec {
         String id
-        final StaticRefsSpec staticRefsSpec = new StaticRefsSpec()
-        
-        void staticRefs(Closure<Void> closure) {
-            def cloned = closure.clone()
-            cloned.delegate = staticRefsSpec
-            cloned()
-        }
     }
 
     static class MacroStaticRefsSpec {
@@ -184,7 +177,7 @@ class DynawoDynamicModelDslLoader extends DslLoader {
             List<StaticRef> staticRefs = new ArrayList<>()
             addStaticRefs(blackBoxModelSpec.staticRefsSpec.metaClass, staticRefs, binding)
 
-            List<MacroStaticReference> macroStaticRefs = new ArrayList<>()
+            List<DydComponent> macroStaticRefs = new ArrayList<>()
             addMacroStaticReferences(blackBoxModelSpec.macroStaticRefsSpec.metaClass, macroStaticRefs, binding)
 
             cloned.delegate = blackBoxModelSpec
@@ -281,19 +274,10 @@ class DynawoDynamicModelDslLoader extends DslLoader {
         }
     }
 
-    static void addMacroStaticReferences(MetaClass macroStaticRefsSpecMetaClass, List<MacroStaticReference> macroStaticRefs, Binding binding) {
+    static void addMacroStaticReferences(MetaClass macroStaticRefsSpecMetaClass, List<DydComponent> macroStaticRefs, Binding binding) {
 
-        macroStaticRefsSpecMetaClass.macroStaticRef = { String id, Closure<Void> closure ->
-            def cloned = closure.clone()
-            MacroStaticRefSpec macroStaticRefSpec = new MacroStaticRefSpec()
-            
-            List<StaticRef> staticRefs = new ArrayList<>()
-            addStaticRefs(macroStaticRefSpec.staticRefsSpec.metaClass, staticRefs, binding)
-            
-            cloned.delegate = macroStaticRefSpec
-            cloned()
-            MacroStaticReference macroStaticRef = new MacroStaticReference(id)
-            macroStaticRef.addStaticRefs(staticRefs)
+        macroStaticRefsSpecMetaClass.macroStaticRef = { String id ->
+            DydComponent macroStaticRef = new DydComponent(id)
             macroStaticRefs.add(macroStaticRef)
         }
     }
