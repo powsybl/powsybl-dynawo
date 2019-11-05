@@ -239,14 +239,12 @@ class ModelicaModelDslLoader extends DslLoader {
     }
 
     static void addStaticRefs(MetaClass staticRefsSpecMetaClass, List<StaticRef> staticRefs, Binding binding) {
-        binding.setVariable("staticRefs", staticRefs)
         staticRefsSpecMetaClass.staticRef = { Closure<Void> closure ->
             def cloned = closure.clone()
             StaticRefSpec staticRefSpec = new StaticRefSpec()
             cloned.delegate = staticRefSpec
             cloned()
             StaticRef staticRef = new StaticRef(staticRefSpec.var, staticRefSpec.staticVar)
-            staticRefs = binding.getVariable("staticRefs")
             staticRefs.add(staticRef)
         }
     }
