@@ -8,27 +8,20 @@ package com.powsybl.dynawo.dsl.dyd
 
 import java.util.function.Consumer
 
-import org.codehaus.groovy.control.CompilationFailedException
 import org.slf4j.LoggerFactory
 
-import com.powsybl.dsl.DslException
-import com.powsybl.dsl.DslLoader
 import com.powsybl.dynawo.dsl.DynawoDslLoaderObserver
-import com.powsybl.dynawo.dsl.dyd.ModelicaModelDslLoader.MacroStaticRefSpec
-import com.powsybl.dynawo.dsl.dyd.ModelicaModelDslLoader.StaticRefSpec
 import com.powsybl.dynawo.dyd.Connection
 import com.powsybl.dynawo.dyd.DynawoDynamicModel
 import com.powsybl.dynawo.dyd.InitConnection
-import com.powsybl.dynawo.dyd.MacroStaticReference
 import com.powsybl.dynawo.dyd.ModelTemplate
-import com.powsybl.dynawo.dyd.StaticRef
 import com.powsybl.dynawo.dyd.UnitDynamicModel
 import com.powsybl.iidm.network.Network
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-class ModelTemplateDslLoader extends DslLoader {
+class ModelTemplateDslLoader {
 
     static LOGGER = LoggerFactory.getLogger(ModelTemplateDslLoader.class)
 
@@ -117,18 +110,6 @@ class ModelTemplateDslLoader extends DslLoader {
             cloned()
         }
 
-    }
-
-    ModelTemplateDslLoader(GroovyCodeSource dslSrc) {
-        super(dslSrc)
-    }
-
-    ModelTemplateDslLoader(File dslFile) {
-        super(dslFile)
-    }
-
-    ModelTemplateDslLoader(String script) {
-        super(script)
     }
 
     static void loadDsl(Binding binding, Network network, Consumer<DynawoDynamicModel> consumer, DynawoDslLoaderObserver observer) {

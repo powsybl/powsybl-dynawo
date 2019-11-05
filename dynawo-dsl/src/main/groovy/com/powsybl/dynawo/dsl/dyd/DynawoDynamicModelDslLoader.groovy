@@ -10,7 +10,6 @@ import java.util.function.Consumer
 
 import org.slf4j.LoggerFactory
 
-import com.powsybl.dsl.DslLoader
 import com.powsybl.dynawo.dsl.DynawoDslLoaderObserver
 import com.powsybl.dynawo.dyd.BlackBoxModel
 import com.powsybl.dynawo.dyd.Connection
@@ -25,7 +24,7 @@ import com.powsybl.iidm.network.Network
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-class DynawoDynamicModelDslLoader extends DslLoader {
+class DynawoDynamicModelDslLoader {
 
     static LOGGER = LoggerFactory.getLogger(DynawoDynamicModelDslLoader.class)
 
@@ -153,18 +152,6 @@ class DynawoDynamicModelDslLoader extends DslLoader {
         void id2(String id2) {
             this.id2 = id2
         }
-    }
-
-    DynawoDynamicModelDslLoader(GroovyCodeSource dslSrc) {
-        super(dslSrc)
-    }
-
-    DynawoDynamicModelDslLoader(File dslFile) {
-        super(dslFile)
-    }
-
-    DynawoDynamicModelDslLoader(String script) {
-        super(script)
     }
 
     static void loadDsl(Binding binding, Network network, Consumer<DynawoDynamicModel> consumer, DynawoDslLoaderObserver observer) {

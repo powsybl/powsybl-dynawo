@@ -8,12 +8,8 @@ package com.powsybl.dynawo.dsl.crv
 
 import java.util.function.Consumer
 
-import org.codehaus.groovy.control.CompilationFailedException
 import org.slf4j.LoggerFactory
 
-import com.powsybl.dsl.DslException
-import com.powsybl.dsl.DslLoader
-import com.powsybl.dynawo.*
 import com.powsybl.dynawo.crv.DynawoCurve
 import com.powsybl.dynawo.dsl.DynawoDslLoaderObserver
 import com.powsybl.iidm.network.Network
@@ -21,7 +17,7 @@ import com.powsybl.iidm.network.Network
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-class DynawoCurveDslLoader extends DslLoader {
+class DynawoCurveDslLoader {
 
     static LOGGER = LoggerFactory.getLogger(DynawoCurveDslLoader.class)
 
@@ -37,18 +33,6 @@ class DynawoCurveDslLoader extends DslLoader {
         void variable(String variable) {
             this.variable = variable
         }
-    }
-
-    DynawoCurveDslLoader(GroovyCodeSource dslSrc) {
-        super(dslSrc)
-    }
-
-    DynawoCurveDslLoader(File dslFile) {
-        super(dslFile)
-    }
-
-    DynawoCurveDslLoader(String script) {
-        super(script)
     }
 
     static void loadDsl(Binding binding, Network network, Consumer<DynawoCurve> consumer, DynawoDslLoaderObserver observer) {
