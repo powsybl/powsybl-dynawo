@@ -19,6 +19,7 @@ install.cfg
 .classpath
 .factorypath
 .project
+.factorypath
 org.eclipse.core.resources.prefs
 org.eclipse.jdt.core.prefs
 org.eclipse.jdt.apt.core.prefs
