@@ -8,10 +8,9 @@ package com.powsybl.dynawo.simulator;
 
 import java.nio.file.Path;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,11 +61,16 @@ public class DynawoSimulation {
     }
 
     private DynawoResults after(Path workingDir, ExecutionReport report) {
-        report.log();
+        String log = null;
+        if (!report.getErrors().isEmpty()) {
+            report.log();
+            String exitCodes = report.getErrors().stream()
+                    .map(err -> String.format("Task %d : %d", err.getIndex(), err.getExitCode()))
+                    .collect(Collectors.joining(", "));
+            log = String.format("Error during the execution in directory  %s exit codes: %s", workingDir.toAbsolutePath(), exitCodes);
+        }
 
-        Map<String, String> metrics = new HashMap<>();
-        metrics.put("success", Boolean.toString(report.getErrors().isEmpty()));
-        DynawoResults results = new DynawoResults(false, metrics, null);
+        DynawoResults results = new DynawoResults(log == null, log);
         Path file = workingDir.resolve(dynawoProvider.getDynawoJobs(network).get(0).getOutputs().getDirectory())
             .resolve(OUTPUT_FILE);
         try {
@@ -74,8 +78,8 @@ public class DynawoSimulation {
                 results.parseCsv(file);
             }
         } catch (Exception x) {
-            LOGGER.error(x.toString());
-            metrics.put("success", "false");
+            results.setStatus(false);
+            results.setLogs(x.toString());
         }
         return results;
     }

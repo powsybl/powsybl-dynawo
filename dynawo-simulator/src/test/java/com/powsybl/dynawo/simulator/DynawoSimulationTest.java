@@ -7,6 +7,7 @@
 package com.powsybl.dynawo.simulator;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -60,8 +61,8 @@ public class DynawoSimulationTest {
             Network network = tester.convert(platformConfig, Cim14SmallCasesCatalog.nordic32());
             DynawoInputProvider provider = configureProvider(network);
             DynawoResults result = tester.simulate(network, provider, platformConfig);
-            LOGGER.info("metrics " + result.getMetrics().get("success"));
-            assertTrue(Boolean.parseBoolean(result.getMetrics().get("success")));
+            assertTrue(result.isOk());
+            assertNull(result.getLogs());
 
             // check final voltage of bus close to the event
             int index = result.getNames().indexOf("NETWORK__N1011____TN_Upu_value");
@@ -79,8 +80,6 @@ public class DynawoSimulationTest {
             DynawoInputProvider inputProvider = new GroovyDslDynawoInputProvider(getClass().getResourceAsStream("/nordic32/nordic32.groovy"));
             ComponentDefaultConfig defaultConfig = ComponentDefaultConfig.load(platformConfig);
             DynawoResults result = tester.simulate(network, inputProvider, platformConfig);
-            LOGGER.info("metrics " + result.getMetrics().get("success"));
-            assertTrue(Boolean.parseBoolean(result.getMetrics().get("success")));
 
             // check final voltage of bus close to the event
             int index = result.getNames().indexOf("NETWORK__N1011____TN_Upu_value");

@@ -7,8 +7,6 @@
 package com.powsybl.dynawo.simulator;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 
 import com.google.common.collect.ImmutableList;
@@ -61,9 +59,7 @@ public class DynawoSimulationTester {
         simulationParameters.addExtension(DynawoConfig.class, dynawoConfig);
         DynawoResults result = (DynawoResults) runner.run(network, computationManager, simulationParameters);
         if (mockResults) {
-            Map<String, String> metrics = new HashMap<>();
-            metrics.put("success", "true");
-            result = new DynawoResults(true, metrics, null);
+            result = new DynawoResults(true, null);
             result.parseCsv(getClass().getResourceAsStream("/nordic32/curves.csv"));
         }
         return result;

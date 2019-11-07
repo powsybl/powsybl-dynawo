@@ -6,9 +6,6 @@
  */
 package com.powsybl.dynawo.simulator;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
 import com.powsybl.commons.extensions.AbstractExtension;
 import com.powsybl.dynamic.simulation.DynamicSimulationParameters;
 
@@ -20,8 +17,6 @@ public class DynawoConfig extends AbstractExtension<DynamicSimulationParameters>
     private static final String DEFAULT_DYNAWO_CMD_NAME = "myEnvDynawo.sh";
 
     public DynawoConfig() {
-        dynawoHomeDir = null;
-        workingDir = Paths.get("./tmp");
         debug = false;
         dynawoCptCommandName = DEFAULT_DYNAWO_CMD_NAME;
     }
@@ -29,22 +24,6 @@ public class DynawoConfig extends AbstractExtension<DynamicSimulationParameters>
     @Override
     public String getName() {
         return "DynawoConfig";
-    }
-
-    public Path getDynawoHomeDir() {
-        return dynawoHomeDir;
-    }
-
-    public void setDynawoHomeDir(Path dynawoHomeDir) {
-        this.dynawoHomeDir = dynawoHomeDir;
-    }
-
-    public Path getWorkingDir() {
-        return workingDir;
-    }
-
-    public void setWorkingDir(Path workingDir) {
-        this.workingDir = workingDir;
     }
 
     public boolean isDebug() {
@@ -63,9 +42,6 @@ public class DynawoConfig extends AbstractExtension<DynamicSimulationParameters>
         this.dynawoCptCommandName = dynawoCptCommandName;
     }
 
-    private Path dynawoHomeDir;
-    private Path workingDir;
     private boolean debug;
     private String dynawoCptCommandName;
-
 }
