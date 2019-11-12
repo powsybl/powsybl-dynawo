@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import com.powsybl.iidm.network.impl.NetworkFactoryImpl;
 import org.junit.Test;
 
 import com.google.common.jimfs.Configuration;
