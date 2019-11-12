@@ -24,7 +24,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import com.powsybl.commons.PowsyblException;
-import com.powsybl.dynamic.simulation.DynamicSimulationResult;
+import com.powsybl.dynamicsimulation.DynamicSimulationResult;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>

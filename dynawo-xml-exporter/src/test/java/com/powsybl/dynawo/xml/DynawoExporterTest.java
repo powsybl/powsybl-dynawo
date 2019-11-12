@@ -27,8 +27,6 @@ import com.powsybl.cgmes.conversion.CgmesImport;
 import com.powsybl.cgmes.model.test.TestGridModel;
 import com.powsybl.cgmes.model.test.cim14.Cim14SmallCasesCatalog;
 import com.powsybl.commons.AbstractConverterTest;
-import com.powsybl.commons.config.InMemoryPlatformConfig;
-import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.datasource.ReadOnlyDataSource;
 import com.powsybl.dynawo.DynawoInputProvider;
 import com.powsybl.dynawo.dsl.GroovyDslDynawoInputProvider;
@@ -46,10 +44,9 @@ public class DynawoExporterTest extends AbstractConverterTest {
         fileSystem = Jimfs.newFileSystem(Configuration.unix());
         tmpDir = Files.createDirectory(fileSystem.getPath("/tmp"));
         network = NetworkFactory.findDefault().createNetwork("network1", "test");
-        platformConfig = new InMemoryPlatformConfig(fileSystem);
         dynawoProvider = new GroovyDslDynawoInputProvider(getClass().getResourceAsStream("/nordic32/nordic32.groovy"));
         dslFile = fileSystem.getPath("/test.dsl");
-        exporter = new DynawoXmlExporterProvider(platformConfig);
+        exporter = new DynawoXmlExporterProvider();
     }
 
     @After
@@ -59,7 +56,7 @@ public class DynawoExporterTest extends AbstractConverterTest {
 
     @Test
     public void export() throws IOException {
-        network = importNetwork(platformConfig, Cim14SmallCasesCatalog.nordic32());
+        network = importNetwork(Cim14SmallCasesCatalog.nordic32());
         network.setCaseDate(DateTime.parse("2019-09-23T11:06:12.313+02:00"));
         exporter.export(network, dynawoProvider, tmpDir);
         Files.walk(tmpDir).forEach(file -> {
@@ -324,9 +321,9 @@ public class DynawoExporterTest extends AbstractConverterTest {
         compareXml(getClass().getResourceAsStream("/solvers.par"), is);
     }
 
-    private Network importNetwork(PlatformConfig platformConfig, TestGridModel gm) throws IOException {
+    private Network importNetwork(TestGridModel gm) throws IOException {
         String impl = TripleStoreFactory.defaultImplementation();
-        CgmesImport i = new CgmesImport(platformConfig);
+        CgmesImport i = new CgmesImport();
         Properties params = new Properties();
         params.put("storeCgmesModelAsNetworkExtension", "true");
         params.put("powsyblTripleStore", impl);

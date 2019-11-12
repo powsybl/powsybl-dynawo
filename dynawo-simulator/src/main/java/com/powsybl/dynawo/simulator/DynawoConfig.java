@@ -7,7 +7,7 @@
 package com.powsybl.dynawo.simulator;
 
 import com.powsybl.commons.extensions.AbstractExtension;
-import com.powsybl.dynamic.simulation.DynamicSimulationParameters;
+import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>

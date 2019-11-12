@@ -22,7 +22,7 @@ import com.powsybl.computation.ComputationManager;
 import com.powsybl.computation.ExecutionEnvironment;
 import com.powsybl.computation.ExecutionReport;
 import com.powsybl.computation.GroupCommandBuilder;
-import com.powsybl.dynamic.simulation.DynamicSimulationResult;
+import com.powsybl.dynamicsimulation.DynamicSimulationResult;
 import com.powsybl.dynawo.DynawoInputProvider;
 import com.powsybl.dynawo.exporter.DynawoExporter;
 import com.powsybl.dynawo.simulator.results.DynawoResults;
