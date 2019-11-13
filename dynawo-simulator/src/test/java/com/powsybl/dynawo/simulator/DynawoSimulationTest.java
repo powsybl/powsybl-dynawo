@@ -19,18 +19,15 @@ import java.util.List;
 
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
 import com.powsybl.cgmes.model.test.cim14.Cim14SmallCasesCatalog;
-import com.powsybl.commons.config.ComponentDefaultConfig;
 import com.powsybl.commons.config.InMemoryPlatformConfig;
 import com.powsybl.commons.config.MapModuleConfig;
 import com.powsybl.commons.config.PlatformConfig;
-import com.powsybl.dynawo.DynawoParameterType;
 import com.powsybl.dynawo.DynawoInputProvider;
+import com.powsybl.dynawo.DynawoParameterType;
 import com.powsybl.dynawo.crv.DynawoCurve;
 import com.powsybl.dynawo.dsl.GroovyDslDynawoInputProvider;
 import com.powsybl.dynawo.dyd.BlackBoxModel;
@@ -78,7 +75,6 @@ public class DynawoSimulationTest {
             DynawoSimulationTester tester = new DynawoSimulationTester(true);
             Network network = tester.convert(platformConfig, Cim14SmallCasesCatalog.nordic32());
             DynawoInputProvider inputProvider = new GroovyDslDynawoInputProvider(getClass().getResourceAsStream("/nordic32/nordic32.groovy"));
-            ComponentDefaultConfig defaultConfig = ComponentDefaultConfig.load(platformConfig);
             DynawoResults result = tester.simulate(network, inputProvider, platformConfig);
 
             // check final voltage of bus close to the event
@@ -306,6 +302,4 @@ public class DynawoSimulationTest {
         Mockito.when(dynawoProvider.getDynawoCurves(network)).thenReturn(curves);
         return dynawoProvider;
     }
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(DynawoSimulationTest.class);
 }

@@ -114,11 +114,16 @@ class ModelicaModelDslLoader {
     static class ModelicaModelSpec {
 
         int id
+        String staticId
         final UnitDynamicModelsSpec unitDynamicModelsSpec = new UnitDynamicModelsSpec()
         final ConnectionsSpec connectionsSpec = new ConnectionsSpec()
         final ConnectionsSpec initConnectionsSpec = new ConnectionsSpec()
         final StaticRefsSpec staticRefsSpec = new StaticRefsSpec()
         final MacroStaticRefsSpec macroStaticRefsSpec = new MacroStaticRefsSpec()
+
+        void staticId(String staticId) {
+            this.staticId = staticId
+        }
 
         void unitDynamicModels(Closure<Void> closure) {
             def cloned = closure.clone()
@@ -177,7 +182,7 @@ class ModelicaModelDslLoader {
             cloned()
 
             // create dynamicModel
-            ModelicaModel dynamicModel = new ModelicaModel(id)
+            ModelicaModel dynamicModel = new ModelicaModel(id, modelicaModelSpec.staticId)
             dynamicModel.addUnitDynamicModels(unitDynamicModels)
             dynamicModel.addConnections(connections)
             dynamicModel.addInitConnections(initConnections)
