@@ -24,7 +24,7 @@ before_install:
 
 install:
 # Build powsybl-core
-- git clone https://github.com/powsybl/powsybl-core powsybl/powsybl-core --single-branch -b dynamic_simulation_api
+- git clone https://github.com/powsybl/powsybl-core powsybl/powsybl-core
 - pushd powsybl/powsybl-core && mvn --batch-mode -DskipTests install && popd
 
 script:
