@@ -3,6 +3,13 @@ language: java
 dist: trusty
 sudo: required
 
+git:
+  depth: false
+
+cache:
+  directories:
+  - $HOME/.m2
+
 jdk:
 - oraclejdk8
 
@@ -12,10 +19,17 @@ addons:
         token:
             secure: ${SONAR_TOKEN}
 
+before_install:
+- rm -rf $HOME/.m2/repository/com/powsybl
+
 install:
 # Build powsybl-core
 - git clone https://github.com/powsybl/powsybl-core powsybl/powsybl-core
 - pushd powsybl/powsybl-core && mvn --batch-mode -DskipTests install && popd
 
 script:
-- mvn --batch-mode clean verify sonar:sonar
+- mvn -B clean verify -Pjacoco
+- if [ "$TRAVIS_OS_NAME" = "linux" -a "$TRAVIS_JDK_VERSION" = "oraclejdk8" -a "$TRAVIS_SECURE_ENV_VARS"  = "true" ]; then mvn -B sonar:sonar; fi
+
+before_cache:
+- rm -rf $HOME/.m2/repository/com/powsybl

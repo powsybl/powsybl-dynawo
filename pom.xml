@@ -85,6 +85,7 @@
         <junit.version>4.12</junit.version>
         <logback.version>1.1.8</logback.version>
         <slf4j.version>1.7.22</slf4j.version>
+        <mockito.version>1.10.19</mockito.version>
 
         <powsyblcore.version>3.1.0-SNAPSHOT</powsyblcore.version>
     </properties>
@@ -138,6 +139,19 @@
                 <configuration>
                     <generateBackupPoms>false</generateBackupPoms>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${maven.jacoco.version}</version>
+                <executions>
+                    <execution>
+                        <id>prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
         <pluginManagement>
@@ -236,6 +250,11 @@
                         </execution>
                     </executions>
                 </plugin>
+                <plugin>
+                    <groupId>org.eluder.coveralls</groupId>
+                    <artifactId>coveralls-maven-plugin</artifactId>
+                    <version>${maven.coveralls.version}</version>
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>
@@ -263,32 +282,12 @@
             </build>
         </profile>
         <profile>
-            <id>jacoco</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.jacoco</groupId>
-                        <artifactId>jacoco-maven-plugin</artifactId>
-                        <version>${maven.jacoco.version}</version>
-                        <executions>
-                            <execution>
-                                <id>prepare-agent</id>
-                                <goals>
-                                    <goal>prepare-agent</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
             <id>checks</id>
             <activation>
-                <activeByDefault>true</activeByDefault>
+                <property>
+                    <name>powsyblchecks</name>
+                    <value>!false</value>
+                </property>
             </activation>
             <build>
                 <plugins>
@@ -408,112 +407,118 @@
         </profile>
     </profiles>
 
-    <dependencyManagement>
-        <dependencies>
-            <!-- Compile dependencies -->
-            <dependency>
-                <groupId>com.google.auto.service</groupId>
-                <artifactId>auto-service</artifactId>
-                <version>${autoservice.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>${guava.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.powsybl</groupId>
-                <artifactId>powsybl-commons</artifactId>
-                <version>${powsyblcore.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.powsybl</groupId>
-                <artifactId>powsybl-computation-local</artifactId>
-                <version>${powsyblcore.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.powsybl</groupId>
-                <artifactId>powsybl-contingency-api</artifactId>
-                <version>${powsyblcore.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.powsybl</groupId>
-                <artifactId>powsybl-iidm-api</artifactId>
-                <version>${powsyblcore.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.powsybl</groupId>
-                <artifactId>powsybl-iidm-xml-converter</artifactId>
-                <version>${powsyblcore.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.powsybl</groupId>
-                <artifactId>powsybl-simulation-api</artifactId>
-                <version>${powsyblcore.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.powsybl</groupId>
-                <artifactId>powsybl-tools</artifactId>
-                <version>${powsyblcore.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-                <version>${slf4j.version}</version>
-            </dependency>
+	<dependencyManagement>
+		<dependencies>
+			<!-- Compile dependencies -->
+			<dependency>
+				<groupId>com.google.auto.service</groupId>
+				<artifactId>auto-service</artifactId>
+				<version>${autoservice.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.google.guava</groupId>
+				<artifactId>guava</artifactId>
+				<version>${guava.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.powsybl</groupId>
+				<artifactId>powsybl-commons</artifactId>
+				<version>${powsyblcore.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.powsybl</groupId>
+				<artifactId>powsybl-computation-local</artifactId>
+				<version>${powsyblcore.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.powsybl</groupId>
+				<artifactId>powsybl-contingency-api</artifactId>
+				<version>${powsyblcore.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.powsybl</groupId>
+				<artifactId>powsybl-iidm-api</artifactId>
+				<version>${powsyblcore.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.powsybl</groupId>
+				<artifactId>powsybl-iidm-xml-converter</artifactId>
+				<version>${powsyblcore.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.powsybl</groupId>
+				<artifactId>powsybl-simulation-api</artifactId>
+				<version>${powsyblcore.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.powsybl</groupId>
+				<artifactId>powsybl-tools</artifactId>
+				<version>${powsyblcore.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>${slf4j.version}</version>
+			</dependency>
 
-            <!-- Test dependencies -->
-            <dependency>
-                <groupId>com.google.jimfs</groupId>
-                <artifactId>jimfs</artifactId>
-                <version>${jimfs.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.powsybl</groupId>
-                <artifactId>powsybl-cgmes-conversion</artifactId>
-                <version>${powsyblcore.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.powsybl</groupId>
-                <artifactId>powsybl-cgmes-model</artifactId>
-                <version>${powsyblcore.version}</version>
-                <type>test-jar</type>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.powsybl</groupId>
-                <artifactId>powsybl-iidm-impl</artifactId>
-                <version>${powsyblcore.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.powsybl</groupId>
-                <artifactId>powsybl-triple-store-api</artifactId>
-                <version>${powsyblcore.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.powsybl</groupId>
-                <artifactId>powsybl-triple-store-impl-rdf4j</artifactId>
-                <version>${powsyblcore.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>${junit.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-simple</artifactId>
-                <version>${slf4j.version}</version>
-                <scope>test</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+			<!-- Test dependencies -->
+			<dependency>
+				<groupId>com.google.jimfs</groupId>
+				<artifactId>jimfs</artifactId>
+				<version>${jimfs.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>com.powsybl</groupId>
+				<artifactId>powsybl-cgmes-conversion</artifactId>
+				<version>${powsyblcore.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>com.powsybl</groupId>
+				<artifactId>powsybl-cgmes-model</artifactId>
+				<version>${powsyblcore.version}</version>
+				<type>test-jar</type>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>com.powsybl</groupId>
+				<artifactId>powsybl-iidm-impl</artifactId>
+				<version>${powsyblcore.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>com.powsybl</groupId>
+				<artifactId>powsybl-triple-store-api</artifactId>
+				<version>${powsyblcore.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>com.powsybl</groupId>
+				<artifactId>powsybl-triple-store-impl-rdf4j</artifactId>
+				<version>${powsyblcore.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>${junit.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.mockito</groupId>
+				<artifactId>mockito-all</artifactId>
+				<version>${mockito.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-simple</artifactId>
+				<version>${slf4j.version}</version>
+				<scope>test</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 </project>
 
