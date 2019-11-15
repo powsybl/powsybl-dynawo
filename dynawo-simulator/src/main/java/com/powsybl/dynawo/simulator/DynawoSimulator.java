@@ -12,6 +12,7 @@ import java.util.Map;
 import com.powsybl.computation.ComputationManager;
 import com.powsybl.computation.local.LocalComputationManager;
 import com.powsybl.iidm.network.Network;
+import com.powsybl.iidm.xml.XMLExporter;
 import com.powsybl.simulation.ImpactAnalysis;
 import com.powsybl.simulation.ImpactAnalysisResult;
 import com.powsybl.simulation.SimulationParameters;
@@ -19,25 +20,37 @@ import com.powsybl.simulation.Stabilization;
 import com.powsybl.simulation.StabilizationResult;
 import com.powsybl.simulation.StabilizationStatus;
 
+/**
+ * @author Marcos de Miguel <demiguelm at aia.es>
+ */
 public class DynawoSimulator {
 
-    public DynawoSimulator(Network network) {
-        this.network = network;
+    public DynawoSimulator() {
+        this(SimulationParameters.load(), LocalComputationManager.getDefault(), new XMLExporter(), DynawoConfig.load());
     }
 
-    public void simulate() throws Exception {
-        ComputationManager computationManager = new LocalComputationManager();
+    public DynawoSimulator(SimulationParameters simulationParameters, ComputationManager computationManager, XMLExporter xmlExporter, DynawoConfig dynawoConfig) {
+        this.simulationParameters = simulationParameters;
+        this.computationManager = computationManager;
+        this.xmlExporter = xmlExporter;
+        this.dynawoConfig = dynawoConfig;
+    }
+
+    public ImpactAnalysisResult simulate(Network network) throws Exception {
         Stabilization stabilization = new DynawoStabilization(network, computationManager, 0);
-        ImpactAnalysis impactAnalysis = new DynawoImpactAnalysis(network, computationManager, 0, null);
+        ImpactAnalysis impactAnalysis = new DynawoImpactAnalysis(network, computationManager, 0, xmlExporter, dynawoConfig);
         Map<String, Object> initContext = new HashMap<>();
-        SimulationParameters simulationParameters = SimulationParameters.load();
         stabilization.init(simulationParameters, initContext);
         impactAnalysis.init(simulationParameters, initContext);
         StabilizationResult sr = stabilization.run();
         if (sr.getStatus() == StabilizationStatus.COMPLETED) {
-            ImpactAnalysisResult iar = impactAnalysis.run(sr.getState());
+            return impactAnalysis.run(sr.getState());
         }
+        return null;
     }
 
-    private final Network network;
+    private final ComputationManager computationManager;
+    private final SimulationParameters simulationParameters;
+    private final DynawoConfig dynawoConfig;
+    private final XMLExporter xmlExporter;
 }

@@ -6,16 +6,17 @@
  */
 package com.powsybl.dynawo.simulator;
 
-import com.powsybl.simulation.SimulationState;
-
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class DynawoState implements SimulationState {
+public final class DynawoXmlConstants {
 
-    @Override
-    public String getName() {
-        return "DynawoState";
+    public static final String DYN_BASE_URI = "http://www.rte-france.com/dynawo";
+
+    public static final String DYN_PREFIX = "dyn";
+
+    public static final String DYN_URI = DYN_BASE_URI;
+
+    private DynawoXmlConstants() {
     }
-
 }
