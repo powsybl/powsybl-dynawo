@@ -10,8 +10,8 @@
     </parent>
 
     <artifactId>powsybl-dynawo-simulator</artifactId>
-    <name>Dynawo integration</name>
-    <description>Dynawo integration</description>
+    <name>Dynawo simulator</name>
+    <description>Dynawo simulator</description>
 
     <build>
         <plugins>
