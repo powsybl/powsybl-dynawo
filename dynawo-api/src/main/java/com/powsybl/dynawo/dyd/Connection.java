@@ -6,6 +6,8 @@
  */
 package com.powsybl.dynawo.dyd;
 
+import java.util.Objects;
+
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
@@ -16,8 +18,8 @@ public class Connection extends DydConnection implements DynawoDynamicModel {
 
     public Connection(String id1, String var1, String id2, String var2) {
         super(var1, var2);
-        this.id1 = id1;
-        this.id2 = id2;
+        this.id1 = Objects.requireNonNull(id1);
+        this.id2 = Objects.requireNonNull(id2);
     }
 
     public String getId1() {

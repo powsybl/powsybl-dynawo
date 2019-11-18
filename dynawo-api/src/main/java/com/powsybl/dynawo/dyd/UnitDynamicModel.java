@@ -13,7 +13,7 @@ public class UnitDynamicModel extends DydParComponent {
 
     private final String name;
     private final String initName;
-    private String moFile = null;
+    private final String moFile;
 
     public UnitDynamicModel(String id, String name, String initName, String parametersFile, int parametersId) {
         this(id, name, null, initName, parametersFile, parametersId);

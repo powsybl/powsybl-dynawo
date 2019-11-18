@@ -6,6 +6,8 @@
  */
 package com.powsybl.dynawo.job;
 
+import java.util.Objects;
+
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
@@ -16,9 +18,9 @@ public class LogAppender {
     private final String lvlFilter;
 
     public LogAppender(String tag, String file, String lvlFilter) {
-        this.tag = tag;
-        this.file = file;
-        this.lvlFilter = lvlFilter;
+        this.tag = Objects.requireNonNull(tag);
+        this.file = Objects.requireNonNull(file);
+        this.lvlFilter = Objects.requireNonNull(lvlFilter);
     }
 
     public String getTag() {

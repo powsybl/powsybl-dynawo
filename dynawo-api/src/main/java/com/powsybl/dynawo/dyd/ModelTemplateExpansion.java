@@ -6,6 +6,8 @@
  */
 package com.powsybl.dynawo.dyd;
 
+import java.util.Objects;
+
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
@@ -15,7 +17,7 @@ public class ModelTemplateExpansion extends DydParComponent implements DynawoDyn
 
     public ModelTemplateExpansion(String id, String templateId, String parametersFile, int parametersId) {
         super(id, parametersFile, parametersId);
-        this.templateId = templateId;
+        this.templateId = Objects.requireNonNull(templateId);
     }
 
     public String getTemplateId() {

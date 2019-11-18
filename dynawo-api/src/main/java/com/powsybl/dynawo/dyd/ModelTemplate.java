@@ -7,34 +7,33 @@
 package com.powsybl.dynawo.dyd;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 public class ModelTemplate extends DydComponent implements DynawoDynamicModel {
 
-    private List<UnitDynamicModel> unitDynamicModels;
-    private List<Connection> connections;
-    private List<InitConnection> initConnections;
+    private final List<UnitDynamicModel> unitDynamicModels = new ArrayList<>();
+    private final List<Connection> connections = new ArrayList<>();
+    private final List<InitConnection> initConnections = new ArrayList<>();
 
     public ModelTemplate(String id) {
         super(id);
-        this.unitDynamicModels = new ArrayList<>();
-        this.connections = new ArrayList<>();
-        this.initConnections = new ArrayList<>();
     }
 
     public List<UnitDynamicModel> getUnitDynamicModels() {
-        return unitDynamicModels;
+        return Collections.unmodifiableList(unitDynamicModels);
     }
 
     public List<Connection> getConnections() {
-        return connections;
+        return Collections.unmodifiableList(connections);
     }
 
     public List<InitConnection> getInitConnections() {
-        return initConnections;
+        return Collections.unmodifiableList(initConnections);
     }
 
     public ModelTemplate addUnitDynamicModels(List<UnitDynamicModel> unitDynamicModel) {
@@ -43,6 +42,7 @@ public class ModelTemplate extends DydComponent implements DynawoDynamicModel {
     }
 
     public ModelTemplate add(UnitDynamicModel unitDynamicModel) {
+        Objects.requireNonNull(unitDynamicModel);
         unitDynamicModels.add(unitDynamicModel);
         return this;
     }
@@ -53,6 +53,7 @@ public class ModelTemplate extends DydComponent implements DynawoDynamicModel {
     }
 
     public ModelTemplate add(Connection connection) {
+        Objects.requireNonNull(connection);
         connections.add(connection);
         return this;
     }
@@ -63,8 +64,8 @@ public class ModelTemplate extends DydComponent implements DynawoDynamicModel {
     }
 
     public ModelTemplate add(InitConnection initConnection) {
+        Objects.requireNonNull(initConnection);
         initConnections.add(initConnection);
         return this;
     }
-
 }

@@ -10,8 +10,8 @@
     </parent>
 
     <artifactId>powsybl-dynawo-simulator</artifactId>
-    <name>Dynawo integration</name>
-    <description>Dynawo integration</description>
+    <name>Dynawo simulator</name>
+    <description>Dynawo simulator</description>
 
     <build>
         <plugins>
@@ -154,6 +154,11 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

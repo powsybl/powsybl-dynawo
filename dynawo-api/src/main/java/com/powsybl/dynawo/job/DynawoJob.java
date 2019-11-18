@@ -6,6 +6,8 @@
  */
 package com.powsybl.dynawo.job;
 
+import java.util.Objects;
+
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
@@ -17,13 +19,12 @@ public class DynawoJob {
     private final DynawoSimulation simulation;
     private final DynawoOutputs outputs;
 
-    public DynawoJob(String name, DynawoSolver solver, DynawoModeler modeler, DynawoSimulation simulation,
-        DynawoOutputs outputs) {
-        this.name = name;
-        this.solver = solver;
-        this.modeler = modeler;
-        this.simulation = simulation;
-        this.outputs = outputs;
+    public DynawoJob(String name, DynawoSolver solver, DynawoModeler modeler, DynawoSimulation simulation, DynawoOutputs outputs) {
+        this.name = Objects.requireNonNull(name);
+        this.solver = Objects.requireNonNull(solver);
+        this.modeler = Objects.requireNonNull(modeler);
+        this.simulation = Objects.requireNonNull(simulation);
+        this.outputs = Objects.requireNonNull(outputs);
     }
 
     public String getName() {

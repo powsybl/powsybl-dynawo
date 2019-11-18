@@ -6,6 +6,8 @@
  */
 package com.powsybl.dynawo.par;
 
+import java.util.Objects;
+
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
@@ -18,7 +20,7 @@ public class DynawoParameterRow {
     public DynawoParameterRow(int row, int column, String value) {
         this.row = row;
         this.column = column;
-        this.value = value;
+        this.value = Objects.requireNonNull(value);
     }
 
     public int getRow() {

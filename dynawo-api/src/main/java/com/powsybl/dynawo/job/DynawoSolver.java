@@ -6,6 +6,8 @@
  */
 package com.powsybl.dynawo.job;
 
+import java.util.Objects;
+
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
@@ -16,8 +18,8 @@ public class DynawoSolver {
     private final int id;
 
     public DynawoSolver(String lib, String file, int id) {
-        this.lib = lib;
-        this.file = file;
+        this.lib = Objects.requireNonNull(lib);
+        this.file = Objects.requireNonNull(file);
         this.id = id;
     }
 

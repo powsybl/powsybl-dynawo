@@ -7,20 +7,22 @@
 package com.powsybl.dynawo.dyd;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 public class ModelicaModel extends DydComponent implements DynawoDynamicModel {
 
-    private List<UnitDynamicModel> unitDynamicModels;
-    private List<Connection> connections;
-    private List<InitConnection> initConnections;
+    private final List<UnitDynamicModel> unitDynamicModels = new ArrayList<>();
+    private final List<Connection> connections = new ArrayList<>();
+    private final List<InitConnection> initConnections = new ArrayList<>();
 
-    private String staticId;
-    private List<StaticRef> staticRefs;
-    private List<DydComponent> macroStaticRefs;
+    private final String staticId;
+    private final List<StaticRef> staticRefs = new ArrayList<>();
+    private final List<DydComponent> macroStaticRefs = new ArrayList<>();
 
     public ModelicaModel(String id) {
         this(id, null);
@@ -28,25 +30,19 @@ public class ModelicaModel extends DydComponent implements DynawoDynamicModel {
 
     public ModelicaModel(String id, String staticId) {
         super(id);
-        this.unitDynamicModels = new ArrayList<>();
-        this.connections = new ArrayList<>();
-        this.initConnections = new ArrayList<>();
-
         this.staticId = staticId;
-        this.staticRefs = new ArrayList<>();
-        this.macroStaticRefs = new ArrayList<>();
     }
 
     public List<UnitDynamicModel> getUnitDynamicModels() {
-        return unitDynamicModels;
+        return Collections.unmodifiableList(unitDynamicModels);
     }
 
     public List<Connection> getConnections() {
-        return connections;
+        return Collections.unmodifiableList(connections);
     }
 
     public List<InitConnection> getInitConnections() {
-        return initConnections;
+        return Collections.unmodifiableList(initConnections);
     }
 
     public String getStaticId() {
@@ -54,11 +50,11 @@ public class ModelicaModel extends DydComponent implements DynawoDynamicModel {
     }
 
     public List<StaticRef> getStaticRefs() {
-        return staticRefs;
+        return Collections.unmodifiableList(staticRefs);
     }
 
     public List<DydComponent> getMacroStaticRefs() {
-        return macroStaticRefs;
+        return Collections.unmodifiableList(macroStaticRefs);
     }
 
     public ModelicaModel addUnitDynamicModels(List<UnitDynamicModel> unitDynamicModel) {
@@ -67,6 +63,7 @@ public class ModelicaModel extends DydComponent implements DynawoDynamicModel {
     }
 
     public ModelicaModel add(UnitDynamicModel unitDynamicModel) {
+        Objects.requireNonNull(unitDynamicModel);
         unitDynamicModels.add(unitDynamicModel);
         return this;
     }
@@ -77,6 +74,7 @@ public class ModelicaModel extends DydComponent implements DynawoDynamicModel {
     }
 
     public ModelicaModel add(Connection connection) {
+        Objects.requireNonNull(connection);
         connections.add(connection);
         return this;
     }
@@ -87,6 +85,7 @@ public class ModelicaModel extends DydComponent implements DynawoDynamicModel {
     }
 
     public ModelicaModel add(InitConnection initConnection) {
+        Objects.requireNonNull(initConnection);
         initConnections.add(initConnection);
         return this;
     }
@@ -97,6 +96,7 @@ public class ModelicaModel extends DydComponent implements DynawoDynamicModel {
     }
 
     public ModelicaModel add(StaticRef staticRef) {
+        Objects.requireNonNull(staticRef);
         staticRefs.add(staticRef);
         return this;
     }
@@ -107,6 +107,7 @@ public class ModelicaModel extends DydComponent implements DynawoDynamicModel {
     }
 
     public ModelicaModel add(DydComponent macroStaticRef) {
+        Objects.requireNonNull(macroStaticRef);
         macroStaticRefs.add(macroStaticRef);
         return this;
     }
