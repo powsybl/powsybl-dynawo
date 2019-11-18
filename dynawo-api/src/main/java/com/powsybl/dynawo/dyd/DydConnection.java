@@ -6,6 +6,8 @@
  */
 package com.powsybl.dynawo.dyd;
 
+import java.util.Objects;
+
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
@@ -15,8 +17,8 @@ public class DydConnection {
     private final String var2;
 
     public DydConnection(String var1, String var2) {
-        this.var1 = var1;
-        this.var2 = var2;
+        this.var1 = Objects.requireNonNull(var1);
+        this.var2 = Objects.requireNonNull(var2);
     }
 
     public String getVar1() {

@@ -7,7 +7,9 @@
 package com.powsybl.dynawo.par;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -16,12 +18,11 @@ public class DynawoParameterTable {
 
     private final String type;
     private final String name;
-    private List<DynawoParameterRow> parameterRows;
+    private final List<DynawoParameterRow> parameterRows = new ArrayList<>();
 
     public DynawoParameterTable(String type, String name) {
-        this.type = type;
-        this.name = name;
-        this.parameterRows = new ArrayList<>();
+        this.type = Objects.requireNonNull(type);
+        this.name = Objects.requireNonNull(name);
     }
 
     public String getType() {
@@ -33,7 +34,7 @@ public class DynawoParameterTable {
     }
 
     public List<DynawoParameterRow> getParameterRows() {
-        return parameterRows;
+        return Collections.unmodifiableList(parameterRows);
     }
 
     public DynawoParameterTable addParameterRows(List<DynawoParameterRow> parameterRow) {
@@ -42,6 +43,7 @@ public class DynawoParameterTable {
     }
 
     public DynawoParameterTable add(DynawoParameterRow parameterRow) {
+        Objects.requireNonNull(parameterRow);
         parameterRows.add(parameterRow);
         return this;
     }

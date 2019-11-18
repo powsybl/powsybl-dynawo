@@ -6,6 +6,8 @@
  */
 package com.powsybl.dynawo.dyd;
 
+import java.util.Objects;
+
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
@@ -15,8 +17,8 @@ public class StaticRef {
     private final String staticVar;
 
     public StaticRef(String var, String staticVar) {
-        this.var = var;
-        this.staticVar = staticVar;
+        this.var = Objects.requireNonNull(var);
+        this.staticVar = Objects.requireNonNull(staticVar);
     }
 
     public String getVar() {

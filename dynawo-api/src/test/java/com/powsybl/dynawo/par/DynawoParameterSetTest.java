@@ -24,8 +24,8 @@ public class DynawoParameterSetTest {
 
         DynawoParameterSet parameterSet = new DynawoParameterSet("1");
 
-        DynawoParameter parameter1 = new DynawoParameter("name", "type", "value");
-        DynawoParameter parameter2 = new DynawoParameter("name", "type", "origData", "origName");
+        DynawoParameter parameter1 = new DynawoParameter("name1", "type1", "value1");
+        DynawoParameter parameter2 = new DynawoParameter("name2", "type2", "origData2", "origName2", "componentId2");
         parameterSet.addParameters(Arrays.asList(parameter1, parameter2));
 
         DynawoParameterTable parameterTable = new DynawoParameterTable("type", "name");
@@ -37,16 +37,19 @@ public class DynawoParameterSetTest {
         assertNotNull(parameterSet.getParameters());
         assertNotNull(parameterSet.getParameterTables());
 
+        String key1 = "name1";
         assertEquals(2, parameterSet.getParameters().size());
-        assertTrue(!parameterSet.getParameters().get(0).isReference());
-        assertEquals("name", parameterSet.getParameters().get(0).getName());
-        assertEquals("type", parameterSet.getParameters().get(0).getType());
-        assertEquals("value", parameterSet.getParameters().get(0).getValue());
-        assertTrue(parameterSet.getParameters().get(1).isReference());
-        assertEquals("name", parameterSet.getParameters().get(1).getName());
-        assertEquals("type", parameterSet.getParameters().get(1).getType());
-        assertEquals("origData", parameterSet.getParameters().get(1).getOrigData());
-        assertEquals("origName", parameterSet.getParameters().get(1).getOrigName());
+        assertTrue(!parameterSet.getParameters().get(key1).isReference());
+        assertEquals("name1", parameterSet.getParameters().get(key1).getName());
+        assertEquals("type1", parameterSet.getParameters().get(key1).getType());
+        assertEquals("value1", parameterSet.getParameters().get(key1).getValue());
+        String key2 = "name2";
+        assertTrue(parameterSet.getParameters().get(key2).isReference());
+        assertEquals("name2", parameterSet.getParameters().get(key2).getName());
+        assertEquals("type2", parameterSet.getParameters().get(key2).getType());
+        assertEquals("origData2", parameterSet.getParameters().get(key2).getOrigData());
+        assertEquals("origName2", parameterSet.getParameters().get(key2).getOrigName());
+        assertEquals("componentId2", parameterSet.getParameters().get(key2).getComponentId());
 
         assertEquals(1, parameterSet.getParameterTables().size());
         assertEquals("type", parameterSet.getParameterTables().get(0).getType());

@@ -6,6 +6,8 @@
  */
 package com.powsybl.dynawo.crv;
 
+import java.util.Objects;
+
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
@@ -15,8 +17,8 @@ public class DynawoCurve {
     private final String variable;
 
     public DynawoCurve(String model, String variable) {
-        this.model = model;
-        this.variable = variable;
+        this.model = Objects.requireNonNull(model);
+        this.variable = Objects.requireNonNull(variable);
     }
 
     public String getModel() {

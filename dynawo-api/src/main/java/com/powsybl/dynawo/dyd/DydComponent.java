@@ -6,6 +6,8 @@
  */
 package com.powsybl.dynawo.dyd;
 
+import java.util.Objects;
+
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
@@ -14,7 +16,7 @@ public class DydComponent {
     private final String id;
 
     public DydComponent(String id) {
-        this.id = id;
+        this.id = Objects.requireNonNull(id);
     }
 
     public String getId() {

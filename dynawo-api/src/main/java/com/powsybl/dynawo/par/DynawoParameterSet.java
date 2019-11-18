@@ -7,9 +7,11 @@
 package com.powsybl.dynawo.par;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,13 +22,11 @@ import org.slf4j.LoggerFactory;
 public class DynawoParameterSet {
 
     private final String id;
-    private Map<String, DynawoParameter> parameters;
-    private List<DynawoParameterTable> parameterTables;
+    private final Map<String, DynawoParameter> parameters = new HashMap<>();
+    private final List<DynawoParameterTable> parameterTables = new ArrayList<>();
 
     public DynawoParameterSet(String id) {
-        this.id = id;
-        this.parameters = new HashMap<>();
-        this.parameterTables = new ArrayList<>();
+        this.id = Objects.requireNonNull(id);
     }
 
     public String getId() {
@@ -34,11 +34,11 @@ public class DynawoParameterSet {
     }
 
     public Map<String, DynawoParameter> getParameters() {
-        return parameters;
+        return Collections.unmodifiableMap(parameters);
     }
 
     public List<DynawoParameterTable> getParameterTables() {
-        return parameterTables;
+        return Collections.unmodifiableList(parameterTables);
     }
 
     public DynawoParameterSet addParameters(List<DynawoParameter> parameters) {
@@ -47,6 +47,7 @@ public class DynawoParameterSet {
     }
 
     public DynawoParameterSet add(DynawoParameter parameter) {
+        Objects.requireNonNull(parameter);
         parameters.put(parameter.getName(), parameter);
         LOGGER.warn("parameter {} already exists, the last value entered is retained.", parameter.getName());
         return this;
@@ -58,6 +59,7 @@ public class DynawoParameterSet {
     }
 
     public DynawoParameterSet add(DynawoParameterTable parameterTable) {
+        Objects.requireNonNull(parameterTable);
         parameterTables.add(parameterTable);
         return this;
     }

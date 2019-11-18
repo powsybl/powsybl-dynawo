@@ -1,8 +1,9 @@
 # Maven projects
-/dynawo-api/target/
-/dynawo-dsl/target/
-/dynawo-simulator/target/
-/dynawo-xml-exporter/target/
+/dynawo-api/target
+/dynawo-dsl/target
+/dynawo-simulator/target
+/dynawo-xml-exporter/target
+
 /.metadata/
 /.recommenders/
 /.sonarlint/
@@ -19,8 +20,10 @@ install.cfg
 .classpath
 .factorypath
 .project
+.factorypath
 org.eclipse.core.resources.prefs
 org.eclipse.jdt.core.prefs
+org.eclipse.jdt.apt.core.prefs
 org.eclipse.m2e.core.prefs
 org.eclipse.jdt.apt.core.prefs
 org.eclipse.jdt.groovy.core.prefs

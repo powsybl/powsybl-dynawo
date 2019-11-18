@@ -6,6 +6,8 @@
  */
 package com.powsybl.dynawo;
 
+import java.util.Objects;
+
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
@@ -23,7 +25,7 @@ public enum DynawoParameterType {
     private String value;
 
     DynawoParameterType(String value) {
-        this.value = value;
+        this.value = Objects.requireNonNull(value);
     }
 
     public String getValue() {

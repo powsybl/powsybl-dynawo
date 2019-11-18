@@ -315,7 +315,8 @@ public class GroovyDslDynawoInputProviderTest {
         DynawoParameterSet parameterSet = parameterSets.get(0);
         assertEquals("1", parameterSet.getId());
         assertEquals(2, parameterSet.getParameters().size());
-        DynawoParameter parameter = parameterSet.getParameters().get(0);
+        String key = "name1";
+        DynawoParameter parameter = parameterSet.getParameters().get(key);
         assertTrue(parameter.isReference());
         assertEquals("name1", parameter.getName());
         assertEquals("type1", parameter.getType());
@@ -341,7 +342,8 @@ public class GroovyDslDynawoInputProviderTest {
         DynawoParameterSet parameterSet = parameterSets.get(0);
         assertEquals("1", parameterSet.getId());
         assertEquals(1, parameterSet.getParameters().size());
-        DynawoParameter parameter = parameterSet.getParameters().get(0);
+        String key = "name";
+        DynawoParameter parameter = parameterSet.getParameters().get(key);
         assertFalse(parameter.isReference());
         assertEquals("name", parameter.getName());
         assertEquals("type", parameter.getType());
