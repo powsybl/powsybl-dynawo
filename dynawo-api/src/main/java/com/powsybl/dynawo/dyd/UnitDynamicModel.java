@@ -15,12 +15,12 @@ public class UnitDynamicModel extends DydParComponent {
     private final String initName;
     private String moFile = null;
 
-    public UnitDynamicModel(String id, String name, String initName, String parametersFile, int parametersId) {
+    public UnitDynamicModel(String id, String name, String initName, String parametersFile, String parametersId) {
         this(id, name, null, initName, parametersFile, parametersId);
     }
 
     public UnitDynamicModel(String id, String name, String moFile, String initName, String parametersFile,
-        int parametersId) {
+        String parametersId) {
         super(id, parametersFile, parametersId);
         this.name = name;
         this.initName = initName;

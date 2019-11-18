@@ -115,8 +115,8 @@ public class DynawoSimulationTest {
         DynawoInputProvider dynawoProvider = Mockito.mock(DynawoInputProvider.class);
 
         // Job file
-        DynawoSolver solver = new DynawoSolver("libdynawo_SolverIDA", "solvers.par", 2);
-        DynawoModeler modeler = new DynawoModeler("outputs/compilation", "dynawoModel.xiidm", "dynawoModel.par", 1,
+        DynawoSolver solver = new DynawoSolver("libdynawo_SolverIDA", "solvers.par", "2");
+        DynawoModeler modeler = new DynawoModeler("outputs/compilation", "dynawoModel.xiidm", "dynawoModel.par", "1",
             "dynawoModel.dyd");
         DynawoSimulation simulation = new DynawoSimulation(0, 30, false);
         DynawoOutputs outputs = new DynawoOutputs("outputs", "dynawoModel.crv");
@@ -134,7 +134,7 @@ public class DynawoSimulationTest {
         parameters.add(new DynawoParameter("maxStep", DynawoParameterType.DOUBLE.getValue(), "10"));
         parameters.add(new DynawoParameter("absAccuracy", DynawoParameterType.DOUBLE.getValue(), "1e-4"));
         parameters.add(new DynawoParameter("relAccuracy", DynawoParameterType.DOUBLE.getValue(), "1e-4"));
-        DynawoParameterSet solverParams = new DynawoParameterSet(2);
+        DynawoParameterSet solverParams = new DynawoParameterSet("2");
         solverParams.addParameters(Collections.unmodifiableList(parameters));
         Mockito.when(dynawoProvider.getDynawoSolverParameterSets(network))
             .thenReturn(Collections.singletonList(solverParams));
@@ -163,7 +163,7 @@ public class DynawoSimulationTest {
         parameters.add(new DynawoParameter("transformer_tNext_HT", DynawoParameterType.DOUBLE.getValue(), "10"));
         parameters.add(new DynawoParameter("transformer_tNext_THT", DynawoParameterType.DOUBLE.getValue(), "10"));
         parameters.add(new DynawoParameter("transformer_tolV", DynawoParameterType.DOUBLE.getValue(), "0.014999999700000001"));
-        DynawoParameterSet parameterSet = new DynawoParameterSet(1);
+        DynawoParameterSet parameterSet = new DynawoParameterSet("1");
         parameterSet.addParameters(Collections.unmodifiableList(parameters));
         parameterSets.add(parameterSet);
 
@@ -174,7 +174,7 @@ public class DynawoSimulationTest {
         for (int i = 1; i < network.getGeneratorCount(); i++) {
             parameters.add(new DynawoParameter("weight_gen_" + i, DynawoParameterType.DOUBLE.getValue(), "1"));
         }
-        parameterSet = new DynawoParameterSet(2);
+        parameterSet = new DynawoParameterSet("2");
         parameterSet.addParameters(Collections.unmodifiableList(parameters));
         parameterSets.add(parameterSet);
 
@@ -186,7 +186,7 @@ public class DynawoSimulationTest {
         parameters.add(new DynawoParameter("load_Q0Pu", DynawoParameterType.DOUBLE.getValue(), DynawoParameterType.IIDM.getValue(), "q_pu"));
         parameters.add(new DynawoParameter("load_U0Pu", DynawoParameterType.DOUBLE.getValue(), DynawoParameterType.IIDM.getValue(), "v_pu"));
         parameters.add(new DynawoParameter("load_UPhase0", DynawoParameterType.DOUBLE.getValue(), DynawoParameterType.IIDM.getValue(), "angle_pu"));
-        parameterSet = new DynawoParameterSet(3);
+        parameterSet = new DynawoParameterSet("3");
         parameterSet.addParameters(Collections.unmodifiableList(parameters));
         parameterSets.add(parameterSet);
 
@@ -234,7 +234,7 @@ public class DynawoSimulationTest {
         parameters.add(new DynawoParameter("generator_Q0Pu", DynawoParameterType.DOUBLE.getValue(), DynawoParameterType.IIDM.getValue(), "q_pu"));
         parameters.add(new DynawoParameter("generator_U0Pu", DynawoParameterType.DOUBLE.getValue(), DynawoParameterType.IIDM.getValue(), "v_pu"));
         parameters.add(new DynawoParameter("generator_UPhase0", DynawoParameterType.DOUBLE.getValue(), DynawoParameterType.IIDM.getValue(), "angle_pu"));
-        parameterSet = new DynawoParameterSet(4);
+        parameterSet = new DynawoParameterSet("4");
         parameterSet.addParameters(Collections.unmodifiableList(parameters));
         parameterSets.add(parameterSet);
 
@@ -243,7 +243,7 @@ public class DynawoSimulationTest {
         parameters.add(new DynawoParameter("event_tEvent", DynawoParameterType.DOUBLE.getValue(), "1"));
         parameters.add(new DynawoParameter("event_disconnectOrigin", DynawoParameterType.BOOLEAN.getValue(), "false"));
         parameters.add(new DynawoParameter("event_disconnectExtremity", DynawoParameterType.BOOLEAN.getValue(), "true"));
-        parameterSet = new DynawoParameterSet(5);
+        parameterSet = new DynawoParameterSet("5");
         parameterSet.addParameters(Collections.unmodifiableList(parameters));
         parameterSets.add(parameterSet);
         Mockito.when(dynawoProvider.getDynawoParameterSets(network))
@@ -252,19 +252,19 @@ public class DynawoSimulationTest {
         // Dyd file
         List<DynawoDynamicModel> dynamicModels = new ArrayList<>();
         // Omega Ref dyd
-        dynamicModels.add(new BlackBoxModel("OMEGA_REF", "DYNModelOmegaRef", "dynawoModel.par", 2));
+        dynamicModels.add(new BlackBoxModel("OMEGA_REF", "DYNModelOmegaRef", "dynawoModel.par", "2"));
 
         // Load dyd
         dynamicModels
-            .add(new BlackBoxModel("_N1011____EC", "LoadAlphaBeta", "dynawoModel.par", 3, "_N1011____EC"));
+            .add(new BlackBoxModel("_N1011____EC", "LoadAlphaBeta", "dynawoModel.par", "3", "_N1011____EC"));
 
         // Generator dyd
         dynamicModels.add(new BlackBoxModel("_G10______SM",
-            "GeneratorSynchronousFourWindingsProportionalRegulations", "dynawoModel.par", 4, "_G10______SM"));
+            "GeneratorSynchronousFourWindingsProportionalRegulations", "dynawoModel.par", "4", "_G10______SM"));
 
         // Event dyd
         dynamicModels
-            .add(new BlackBoxModel("DISCONNECT_LINE", "EventQuadripoleDisconnection", "dynawoModel.par", 5));
+            .add(new BlackBoxModel("DISCONNECT_LINE", "EventQuadripoleDisconnection", "dynawoModel.par", "5"));
 
         // Load connection dyd
         dynamicModels.add(new Connection("_N1011____EC", "load_terminal", "NETWORK", "_N1011____TN_ACPIN"));

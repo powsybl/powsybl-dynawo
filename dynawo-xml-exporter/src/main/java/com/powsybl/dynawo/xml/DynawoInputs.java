@@ -120,25 +120,28 @@ public final class DynawoInputs {
                 crvXmlWriter.writeComment("Curves for scenario");
                 DynawoCurves.writeCurves(crvXmlWriter, curves);
 
-                int id = DynawoSimulationParameters.getMaxId(pars) + 1;
+                int id = 1;
                 for (Load l : network.getLoads()) {
                     if (!DynawoDynamicModels.definedDynamicModel(dyds, l.getId())) {
-                        DynawoSimulationParameters.writeDefaultLoad(parXmlWriter, defaultsLoadPars, id);
-                        DynawoDynamicModels.writeDefaultLoad(dydXmlWriter, defaultsLoadDyds, l, id++);
+                        DynawoSimulationParameters.writeDefaultLoad(parXmlWriter, defaultsLoadPars, "Def-" + id);
+                        DynawoDynamicModels.writeDefaultLoad(dydXmlWriter, defaultsLoadDyds, l, "Def-" + id);
+                        id++;
                     }
                 }
                 int gens = DynawoDynamicModels.countGeneratorConnections(dyds);
                 for (Generator g : network.getGenerators()) {
                     if (!DynawoDynamicModels.definedDynamicModel(dyds, g.getId())) {
-                        DynawoSimulationParameters.writeDefaultGenerator(parXmlWriter, defaultsGeneratorPars, id);
-                        DynawoDynamicModels.writeDefaultGenerator(dydXmlWriter, defaultsGeneratorDyds, g, id++, gens);
+                        DynawoSimulationParameters.writeDefaultGenerator(parXmlWriter, defaultsGeneratorPars, "Def-" + id);
+                        DynawoDynamicModels.writeDefaultGenerator(dydXmlWriter, defaultsGeneratorDyds, g, "Def-" + id, gens);
+                        id++;
                         gens++;
                     }
                 }
 
-                if (!DynawoDynamicModels.definedDynamicModel(dyds, DynawoParameterType.OMEGA_REF.getValue())) {
-                    DynawoSimulationParameters.writeDefaultOmegaRefParameterSets(parXmlWriter, network);
-                    DynawoDynamicModels.writeDefaultOmegaRef(dydXmlWriter, defaultsOmegaRefDyds, id++);
+                if (!DynawoDynamicModels.definedDynamicModel(dyds, DynawoParameterType.OMEGA_REF.getValue()) &&
+                    !DynawoDynamicModels.definedDynamicModel(dyds, DynawoParameterType.SYS_DATA.getValue())) {
+                    DynawoSimulationParameters.writeDefaultOmegaRefParameterSets(parXmlWriter, network, "OmegaRef");
+                    DynawoDynamicModels.writeDefaultOmegaRef(dydXmlWriter, defaultsOmegaRefDyds, "OmegaRef");
                 }
                 jobXmlWriter.writeEndElement();
                 jobXmlWriter.writeEndDocument();
@@ -150,6 +153,8 @@ public final class DynawoInputs {
                 parSolverXmlWriter.writeEndDocument();
                 crvXmlWriter.writeEndElement();
                 crvXmlWriter.writeEndDocument();
+            } catch (Exception e) {
+                System.err.println(e.getMessage());
             } finally {
                 jobXmlWriter.close();
                 dydXmlWriter.close();

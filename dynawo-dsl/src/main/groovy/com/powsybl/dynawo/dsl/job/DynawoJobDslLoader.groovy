@@ -30,7 +30,7 @@ class DynawoJobDslLoader {
 
         String lib
         String file
-        int id
+        String id
 
         void lib(String lib) {
             this.lib = lib
@@ -40,7 +40,7 @@ class DynawoJobDslLoader {
             this.file = file
         }
 
-        void id(int id) {
+        void id(String id) {
             this.id = id
         }
     }
@@ -54,7 +54,7 @@ class DynawoJobDslLoader {
         boolean useStandardModelsModelicaModels
         String iidm
         String parameters
-        int parameterId
+        String parameterId
         String dyd
         String initialState
 
@@ -86,7 +86,7 @@ class DynawoJobDslLoader {
             this.parameters = parameters
         }
 
-        void parameterId(int parameterId) {
+        void parameterId(String parameterId) {
             this.parameterId = parameterId
         }
 

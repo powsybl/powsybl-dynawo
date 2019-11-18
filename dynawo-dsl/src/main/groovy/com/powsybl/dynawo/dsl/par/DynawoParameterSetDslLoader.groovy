@@ -77,6 +77,7 @@ class DynawoParameterSetDslLoader {
         String value;
         String origName;
         String origData;
+        String componentId;
 
         void name(String name) {
             this.name = name
@@ -97,6 +98,10 @@ class DynawoParameterSetDslLoader {
         void origData(String origData) {
             this.origData = origData
         }
+
+        void componentId(String componentId) {
+            this.componentId = componentId
+        }
     }
 
     static class ParametersSpec {
@@ -104,7 +109,7 @@ class DynawoParameterSetDslLoader {
 
     static class ParameterSetSpec {
 
-        int id
+        String id
         final ParametersSpec parametersSpec = new ParametersSpec()
         final ParameterTablesSpec parameterTablesSpec = new ParameterTablesSpec()
 
@@ -124,7 +129,7 @@ class DynawoParameterSetDslLoader {
     static void loadDsl(Binding binding, Network network, Consumer<DynawoParameterSet> consumer, DynawoDslLoaderObserver observer) {
 
         // parameterSets
-        binding.parameterSet = { int id, Closure<Void> closure ->
+        binding.parameterSet = { String id, Closure<Void> closure ->
             def cloned = closure.clone()
             ParameterSetSpec parameterSetSpec = new ParameterSetSpec()
 
@@ -185,8 +190,13 @@ class DynawoParameterSetDslLoader {
             cloned.delegate = parameterSpec
             cloned()
             if (parameterSpec.origName != null) {
-                DynawoParameter parameter = new DynawoParameter(parameterSpec.name, parameterSpec.type, parameterSpec.origData, parameterSpec.origName)
-                parameters.add(parameter)
+                if (parameterSpec.componentId != null) {
+                    DynawoParameter parameter = new DynawoParameter(parameterSpec.name, parameterSpec.type, parameterSpec.origData, parameterSpec.origName, parameterSpec.componentId)
+                    parameters.add(parameter)
+                } else {
+                    DynawoParameter parameter = new DynawoParameter(parameterSpec.name, parameterSpec.type, parameterSpec.origData, parameterSpec.origName)
+                    parameters.add(parameter)
+                }
             } else {
                 DynawoParameter parameter = new DynawoParameter(parameterSpec.name, parameterSpec.type, parameterSpec.value)
                 parameters.add(parameter)

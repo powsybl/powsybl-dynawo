@@ -14,6 +14,7 @@ public enum DynawoParameterType {
     DYNAWO_PAR("dynawoModel.par"),
     NETWORK("NETWORK"),
     OMEGA_REF("OMEGA_REF"),
+    SYS_DATA("_SYSTEM_"),
     IIDM("IIDM"),
     BOOLEAN("BOOL"),
     DOUBLE("DOUBLE"),

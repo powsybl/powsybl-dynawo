@@ -57,7 +57,7 @@ class DynawoDynamicModelDslLoader {
         String id;
         String lib;
         String parametersFile;
-        int parametersId;
+        String parametersId;
         String staticId;
         final StaticRefsSpec staticRefsSpec = new StaticRefsSpec()
         final MacroStaticRefsSpec macroStaticRefsSpec = new MacroStaticRefsSpec()
@@ -70,7 +70,7 @@ class DynawoDynamicModelDslLoader {
             this.parametersFile = parametersFile
         }
 
-        void parametersId(int parametersId) {
+        void parametersId(String parametersId) {
             this.parametersId = parametersId
         }
 
@@ -96,7 +96,7 @@ class DynawoDynamicModelDslLoader {
         String id
         String templateId
         String parametersFile
-        int parametersId
+        String parametersId
 
         void templateId(String templateId) {
             this.templateId = templateId
@@ -106,7 +106,7 @@ class DynawoDynamicModelDslLoader {
             this.parametersFile = parametersFile
         }
 
-        void parametersId(int parametersId) {
+        void parametersId(String parametersId) {
             this.parametersId = parametersId
         }
     }

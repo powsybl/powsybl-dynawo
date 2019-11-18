@@ -18,6 +18,7 @@ public class DynawoParameter {
     private String value;
     private String origName;
     private String origData;
+    private String componentId;
 
     public DynawoParameter(String name, String type, String value) {
         this.reference = false;
@@ -27,11 +28,16 @@ public class DynawoParameter {
     }
 
     public DynawoParameter(String name, String type, String origData, String origName) {
+        this(name, type, origData, origName, null);
+    }
+
+    public DynawoParameter(String name, String type, String origData, String origName, String componentId) {
         this.reference = true;
         this.name = name;
         this.type = type;
         this.origData = origData;
         this.origName = origName;
+        this.componentId = componentId;
     }
 
     public boolean isReference() {
@@ -56,6 +62,10 @@ public class DynawoParameter {
 
     public String getOrigData() {
         return origData;
+    }
+
+    public String getComponentId() {
+        return componentId;
     }
 
 }

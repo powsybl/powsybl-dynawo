@@ -43,7 +43,7 @@ class MacroConnectorDslLoader {
 
     static class MacroConnectorSpec {
 
-        int id
+        String id
         final ConnectionsSpec connectionsSpec = new ConnectionsSpec()
 
         void connections(Closure<Void> closure) {

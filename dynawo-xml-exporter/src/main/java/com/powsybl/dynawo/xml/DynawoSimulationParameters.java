@@ -9,6 +9,7 @@ package com.powsybl.dynawo.xml;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map.Entry;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -28,10 +29,6 @@ public final class DynawoSimulationParameters {
     private DynawoSimulationParameters() {
     }
 
-    public static int getMaxId(List<DynawoParameterSet> parameterSets) {
-        return parameterSets.stream().mapToInt(DynawoParameterSet::getId).max().orElse(1);
-    }
-
     public static void writeParameterSets(XMLStreamWriter writer, List<DynawoParameterSet> parameterSets)
         throws XMLStreamException {
         for (DynawoParameterSet parameterSet : parameterSets) {
@@ -39,7 +36,7 @@ public final class DynawoSimulationParameters {
         }
     }
 
-    public static void writeDefaultOmegaRefParameterSets(XMLStreamWriter writer, Network network)
+    public static void writeDefaultOmegaRefParameterSets(XMLStreamWriter writer, Network network, String parId)
         throws XMLStreamException {
         List<DynawoParameter> parameters = new ArrayList<>();
         parameters
@@ -47,22 +44,23 @@ public final class DynawoSimulationParameters {
         for (int i = 0; i < network.getGeneratorCount(); i++) {
             parameters.add(new DynawoParameter("weight_gen_" + i, DynawoParameterType.DOUBLE.getValue(), "1"));
         }
-        DynawoParameterSet parameterSet = new DynawoParameterSet(2);
+        DynawoParameterSet parameterSet = new DynawoParameterSet(parId);
         parameterSet.addParameters(Collections.unmodifiableList(parameters));
         writeParameterSet(writer, parameterSet);
     }
 
-    public static void writeDefaultLoad(XMLStreamWriter writer, List<DynawoParameterSet> parameterSets, int setId) throws XMLStreamException {
+    public static void writeDefaultLoad(XMLStreamWriter writer, List<DynawoParameterSet> parameterSets, String setId) throws XMLStreamException {
         writeDefaultParameterSet(writer, parameterSets, setId);
     }
 
-    public static void writeDefaultGenerator(XMLStreamWriter writer, List<DynawoParameterSet> parameterSets, int setId) throws XMLStreamException {
+    public static void writeDefaultGenerator(XMLStreamWriter writer, List<DynawoParameterSet> parameterSets, String setId) throws XMLStreamException {
         writeDefaultParameterSet(writer, parameterSets, setId);
     }
 
-    public static void writeDefaultParameterSet(XMLStreamWriter writer, List<DynawoParameterSet> parameterSets, int setId) throws XMLStreamException {
+    public static void writeDefaultParameterSet(XMLStreamWriter writer, List<DynawoParameterSet> parameterSets, String setId) throws XMLStreamException {
         List<DynawoParameter> parameters = new ArrayList<>();
-        for (DynawoParameter parameter : parameterSets.get(0).getParameters()) {
+        for (Entry<String, DynawoParameter> entry : parameterSets.get(0).getParameters().entrySet()) {
+            DynawoParameter parameter = entry.getValue();
             if (parameter.isReference()) {
                 parameters.add(new DynawoParameter(parameter.getName(), parameter.getType(), parameter.getOrigData(), parameter.getOrigName()));
             } else {
@@ -76,11 +74,11 @@ public final class DynawoSimulationParameters {
 
     private static void writeParameterSet(XMLStreamWriter writer, DynawoParameterSet parameterSet)
         throws XMLStreamException {
-        int id = parameterSet.getId();
+        String id = parameterSet.getId();
         writer.writeStartElement("set");
-        writer.writeAttribute("id", Integer.toString(id));
-        for (DynawoParameter parameter : parameterSet.getParameters()) {
-            writeParameter(writer, parameter);
+        writer.writeAttribute("id", id);
+        for (Entry<String, DynawoParameter> parameter : parameterSet.getParameters().entrySet()) {
+            writeParameter(writer, parameter.getValue());
         }
         for (DynawoParameterTable parameterTable : parameterSet.getParameterTables()) {
             writeParameterTable(writer, parameterTable);
@@ -94,7 +92,8 @@ public final class DynawoSimulationParameters {
             String type = parameter.getType();
             String origData = parameter.getOrigData();
             String origName = parameter.getOrigName();
-            writeReference(writer, name, origData, origName, type);
+            String componentId = parameter.getComponentId();
+            writeReference(writer, name, origData, origName, type, componentId);
         } else {
             String name = parameter.getName();
             String type = parameter.getType();
@@ -140,11 +139,14 @@ public final class DynawoSimulationParameters {
     }
 
     private static void writeReference(XMLStreamWriter writer, String name, String origData, String origName,
-        String type) throws XMLStreamException {
+        String type, String componentId) throws XMLStreamException {
         writer.writeEmptyElement("reference");
         writer.writeAttribute("name", name);
         writer.writeAttribute("origData", origData);
         writer.writeAttribute("origName", origName);
         writer.writeAttribute("type", type);
+        if (componentId != null) {
+            writer.writeAttribute("componentId", componentId);
+        }
     }
 }

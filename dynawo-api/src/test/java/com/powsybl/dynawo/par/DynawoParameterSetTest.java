@@ -22,7 +22,7 @@ public class DynawoParameterSetTest {
     @Test
     public void test() {
 
-        DynawoParameterSet parameterSet = new DynawoParameterSet(1);
+        DynawoParameterSet parameterSet = new DynawoParameterSet("1");
 
         DynawoParameter parameter1 = new DynawoParameter("name", "type", "value");
         DynawoParameter parameter2 = new DynawoParameter("name", "type", "origData", "origName");
@@ -33,7 +33,7 @@ public class DynawoParameterSetTest {
         parameterTable.add(row);
         parameterSet.add(parameterTable);
 
-        assertEquals(1, parameterSet.getId());
+        assertEquals("1", parameterSet.getId());
         assertNotNull(parameterSet.getParameters());
         assertNotNull(parameterSet.getParameterTables());
 

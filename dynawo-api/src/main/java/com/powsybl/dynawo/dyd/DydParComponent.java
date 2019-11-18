@@ -12,9 +12,9 @@ package com.powsybl.dynawo.dyd;
 public class DydParComponent extends DydComponent {
 
     private final String parametersFile;
-    private final int parametersId;
+    private final String parametersId;
 
-    public DydParComponent(String id, String parametersFile, int parametersId) {
+    public DydParComponent(String id, String parametersFile, String parametersId) {
         super(id);
         this.parametersFile = parametersFile;
         this.parametersId = parametersId;
@@ -24,7 +24,7 @@ public class DydParComponent extends DydComponent {
         return parametersFile;
     }
 
-    public int getParametersId() {
+    public String getParametersId() {
         return parametersId;
     }
 

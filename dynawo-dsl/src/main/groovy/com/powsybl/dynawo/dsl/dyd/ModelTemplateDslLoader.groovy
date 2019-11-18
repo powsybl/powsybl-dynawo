@@ -31,8 +31,8 @@ class ModelTemplateDslLoader {
         String name
         String moFile
         String initName
-        String parFile
-        int parId
+        String parametersFile
+        String parametersId
 
         void name(String name) {
             this.name = name
@@ -46,12 +46,12 @@ class ModelTemplateDslLoader {
             this.initName = initName
         }
 
-        void parFile(String parFile) {
-            this.parFile = parFile
+        void parametersFile(String parametersFile) {
+            this.parametersFile = parametersFile
         }
 
-        void parId(int parId) {
-            this.parId = parId
+        void parametersId(String parametersId) {
+            this.parametersId = parametersId
         }
     }
 
@@ -87,7 +87,7 @@ class ModelTemplateDslLoader {
 
     static class ModelTemplateSpec {
 
-        int id
+        String id
         final UnitDynamicModelsSpec unitDynamicModelsSpec = new UnitDynamicModelsSpec()
         final ConnectionsSpec connectionsSpec = new ConnectionsSpec()
         final ConnectionsSpec initConnectionsSpec = new ConnectionsSpec()
@@ -149,7 +149,7 @@ class ModelTemplateDslLoader {
             UnitDynamicModelSpec unitDynamicModelSpec = new UnitDynamicModelSpec()
             cloned.delegate = unitDynamicModelSpec
             cloned()
-            UnitDynamicModel unitDynamicModel = new UnitDynamicModel(id, unitDynamicModelSpec.name, unitDynamicModelSpec.moFile, unitDynamicModelSpec.initName, unitDynamicModelSpec.parFile, unitDynamicModelSpec.parId)
+            UnitDynamicModel unitDynamicModel = new UnitDynamicModel(id, unitDynamicModelSpec.name, unitDynamicModelSpec.moFile, unitDynamicModelSpec.initName, unitDynamicModelSpec.parametersFile, unitDynamicModelSpec.parametersId)
             unitDynamicModels.add(unitDynamicModel)
         }
     }

@@ -7,28 +7,33 @@
 package com.powsybl.dynawo.par;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 public class DynawoParameterSet {
 
-    private final int id;
-    private List<DynawoParameter> parameters;
+    private final String id;
+    private Map<String, DynawoParameter> parameters;
     private List<DynawoParameterTable> parameterTables;
 
-    public DynawoParameterSet(int id) {
+    public DynawoParameterSet(String id) {
         this.id = id;
-        this.parameters = new ArrayList<>();
+        this.parameters = new HashMap<>();
         this.parameterTables = new ArrayList<>();
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public List<DynawoParameter> getParameters() {
+    public Map<String, DynawoParameter> getParameters() {
         return parameters;
     }
 
@@ -36,13 +41,14 @@ public class DynawoParameterSet {
         return parameterTables;
     }
 
-    public DynawoParameterSet addParameters(List<DynawoParameter> parameter) {
-        parameters.addAll(parameter);
+    public DynawoParameterSet addParameters(List<DynawoParameter> parameters) {
+        parameters.forEach(p -> add(p));
         return this;
     }
 
     public DynawoParameterSet add(DynawoParameter parameter) {
-        parameters.add(parameter);
+        parameters.put(parameter.getName(), parameter);
+        LOGGER.warn("parameter {} already exists, the last value entered is retained.", parameter.getName());
         return this;
     }
 
@@ -55,4 +61,6 @@ public class DynawoParameterSet {
         parameterTables.add(parameterTable);
         return this;
     }
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(DynawoParameterSet.class);
 }

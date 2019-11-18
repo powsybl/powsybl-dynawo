@@ -7,5 +7,5 @@
 blackBoxModel ('OMEGA_REF'){
     lib 'DYNModelOmegaRef'
     parametersFile 'dynawoModel.par'
-    parametersId 0
+    parametersId '0'
 }

@@ -20,11 +20,11 @@ public class BlackBoxModel extends DydParComponent implements DynawoDynamicModel
     private List<StaticRef> staticRefs;
     private List<DydComponent> macroStaticRefs;
 
-    public BlackBoxModel(String id, String lib, String parametersFile, int parametersId) {
+    public BlackBoxModel(String id, String lib, String parametersFile, String parametersId) {
         this(id, lib, parametersFile, parametersId, null);
     }
 
-    public BlackBoxModel(String id, String lib, String parametersFile, int parametersId, String staticId) {
+    public BlackBoxModel(String id, String lib, String parametersFile, String parametersId, String staticId) {
         super(id, parametersFile, parametersId);
         this.lib = lib;
 

@@ -56,7 +56,7 @@ class DynawoSolverParameterSetDslLoader {
 
     static class ParameterSetSpec {
 
-        int id
+        String id
         final ParametersSpec parametersSpec = new ParametersSpec()
 
         void parameters(Closure<Void> closure) {
@@ -69,7 +69,7 @@ class DynawoSolverParameterSetDslLoader {
     static void loadDsl(Binding binding, Network network, Consumer<DynawoParameterSet> consumer, DynawoDslLoaderObserver observer) {
 
         // parameterSets
-        binding.solverParameterSet = { int id, Closure<Void> closure ->
+        binding.solverParameterSet = { String id, Closure<Void> closure ->
             def cloned = closure.clone()
             ParameterSetSpec parameterSetSpec = new ParameterSetSpec()
 

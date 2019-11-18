@@ -8,7 +8,7 @@
     solver {
         lib 'libdynawo_SolverIDA'
         file 'solvers.par'
-        id 2
+        id '2'
     }
     modeler {
         compile 'outputs/compilation'
@@ -16,7 +16,7 @@
         useStandardModelsModelicaModels true
         iidm 'dynawoModel.xiidm'
         parameters 'dynawoModel.par'
-        parameterId 1
+        parameterId '1'
         dyd 'dynawoModel.dyd'
     }
     simulation {
@@ -46,7 +46,7 @@
         }
     }
 }
-solverParameterSet (2) {
+solverParameterSet ('2') {
     parameters {
         parameter {
             name 'order'
@@ -80,7 +80,7 @@ solverParameterSet (2) {
         }
     }
 }
-parameterSet (1) {
+parameterSet ('1') {
     parameters {
         parameter {
             name 'capacitor_no_reclosing_delay'
@@ -184,7 +184,7 @@ parameterSet (1) {
         }
     }
 }
-parameterSet (2) {
+parameterSet ('2') {
     parameters {
         parameter {
             name 'nbGen'
@@ -293,7 +293,7 @@ parameterSet (2) {
         }
     }
 }
-parameterSet (3) {
+parameterSet ('3') {
     parameters {
         parameter {
             name 'load_alpha'
@@ -331,7 +331,7 @@ parameterSet (3) {
         }
     }
 }
-parameterSet (4) {
+parameterSet ('4') {
     parameters {
         parameter {
             name 'generator_ExcitationPu'
@@ -549,7 +549,7 @@ parameterSet (4) {
         }
     }
 }
-parameterSet (5) {
+parameterSet ('5') {
     parameters {
         parameter {
             name 'event_tEvent'
@@ -571,24 +571,24 @@ parameterSet (5) {
 blackBoxModel ('OMEGA_REF') {
     lib 'DYNModelOmegaRef'
     parametersFile 'dynawoModel.par'
-    parametersId 2
+    parametersId '2'
 }
 blackBoxModel ('_N1011____EC') {
     lib 'LoadAlphaBeta'
     parametersFile 'dynawoModel.par'
-    parametersId 3
+    parametersId '3'
     staticId '_N1011____EC'
 }
 blackBoxModel ('_G10______SM'){
     lib 'GeneratorSynchronousFourWindingsProportionalRegulations'
     parametersFile 'dynawoModel.par'
-    parametersId 4
+    parametersId '4'
     staticId '_G10______SM'
 }
 blackBoxModel ('DISCONNECT_LINE'){
     lib 'EventQuadripoleDisconnection'
     parametersFile 'dynawoModel.par'
-    parametersId 5
+    parametersId '5'
 }
 connection {
     id1 '_N1011____EC'
