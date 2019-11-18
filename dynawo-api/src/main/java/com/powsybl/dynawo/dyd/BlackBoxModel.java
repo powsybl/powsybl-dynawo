@@ -7,7 +7,9 @@
 package com.powsybl.dynawo.dyd;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -15,10 +17,9 @@ import java.util.List;
 public class BlackBoxModel extends DydParComponent implements DynawoDynamicModel {
 
     private final String lib;
-
-    private String staticId;
-    private List<StaticRef> staticRefs;
-    private List<DydComponent> macroStaticRefs;
+    private final String staticId;
+    private final List<StaticRef> staticRefs = new ArrayList<>();
+    private final List<DydComponent> macroStaticRefs = new ArrayList<>();
 
     public BlackBoxModel(String id, String lib, String parametersFile, int parametersId) {
         this(id, lib, parametersFile, parametersId, null);
@@ -26,11 +27,9 @@ public class BlackBoxModel extends DydParComponent implements DynawoDynamicModel
 
     public BlackBoxModel(String id, String lib, String parametersFile, int parametersId, String staticId) {
         super(id, parametersFile, parametersId);
-        this.lib = lib;
+        this.lib = Objects.requireNonNull(lib);
 
         this.staticId = staticId;
-        this.staticRefs = new ArrayList<>();
-        this.macroStaticRefs = new ArrayList<>();
     }
 
     public String getLib() {
@@ -42,11 +41,11 @@ public class BlackBoxModel extends DydParComponent implements DynawoDynamicModel
     }
 
     public List<StaticRef> getStaticRefs() {
-        return staticRefs;
+        return Collections.unmodifiableList(staticRefs);
     }
 
     public List<DydComponent> getMacroStaticRefs() {
-        return macroStaticRefs;
+        return Collections.unmodifiableList(macroStaticRefs);
     }
 
     public BlackBoxModel addStaticRefs(List<StaticRef> staticRef) {
@@ -55,6 +54,7 @@ public class BlackBoxModel extends DydParComponent implements DynawoDynamicModel
     }
 
     public BlackBoxModel add(StaticRef staticRef) {
+        Objects.requireNonNull(staticRef);
         staticRefs.add(staticRef);
         return this;
     }
@@ -65,6 +65,7 @@ public class BlackBoxModel extends DydParComponent implements DynawoDynamicModel
     }
 
     public BlackBoxModel add(DydComponent macroStaticRef) {
+        Objects.requireNonNull(macroStaticRef);
         macroStaticRefs.add(macroStaticRef);
         return this;
     }

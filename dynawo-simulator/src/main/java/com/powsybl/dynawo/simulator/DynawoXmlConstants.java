@@ -4,22 +4,19 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package com.powsybl.dynawo.dyd;
-
-import java.util.Objects;
+package com.powsybl.dynawo.simulator;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class DydComponent {
+public final class DynawoXmlConstants {
 
-    private final String id;
+    public static final String DYN_BASE_URI = "http://www.rte-france.com/dynawo";
 
-    public DydComponent(String id) {
-        this.id = Objects.requireNonNull(id);
-    }
+    public static final String DYN_PREFIX = "dyn";
 
-    public String getId() {
-        return id;
+    public static final String DYN_URI = DYN_BASE_URI;
+
+    private DynawoXmlConstants() {
     }
 }

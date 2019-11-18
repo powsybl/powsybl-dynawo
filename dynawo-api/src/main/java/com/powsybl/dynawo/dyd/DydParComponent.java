@@ -6,6 +6,8 @@
  */
 package com.powsybl.dynawo.dyd;
 
+import java.util.Objects;
+
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
@@ -16,7 +18,7 @@ public class DydParComponent extends DydComponent {
 
     public DydParComponent(String id, String parametersFile, int parametersId) {
         super(id);
-        this.parametersFile = parametersFile;
+        this.parametersFile = Objects.requireNonNull(parametersFile);
         this.parametersId = parametersId;
     }
 

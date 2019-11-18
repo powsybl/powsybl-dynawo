@@ -6,6 +6,8 @@
  */
 package com.powsybl.dynawo.dyd;
 
+import java.util.Objects;
+
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
@@ -16,9 +18,9 @@ public class MacroConnection implements DynawoDynamicModel {
     private final String id2;
 
     public MacroConnection(String connector, String id1, String id2) {
-        this.connector = connector;
-        this.id1 = id1;
-        this.id2 = id2;
+        this.connector = Objects.requireNonNull(connector);
+        this.id1 = Objects.requireNonNull(id1);
+        this.id2 = Objects.requireNonNull(id2);
     }
 
     public String getConnector() {

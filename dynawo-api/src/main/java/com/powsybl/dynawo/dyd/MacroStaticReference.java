@@ -7,22 +7,23 @@
 package com.powsybl.dynawo.dyd;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 public class MacroStaticReference extends DydComponent implements DynawoDynamicModel {
 
-    private List<StaticRef> staticRefs;
+    private final List<StaticRef> staticRefs = new ArrayList<>();
 
     public MacroStaticReference(String id) {
         super(id);
-        this.staticRefs = new ArrayList<>();
     }
 
     public List<StaticRef> getStaticRefs() {
-        return staticRefs;
+        return Collections.unmodifiableList(staticRefs);
     }
 
     public MacroStaticReference addStaticRefs(List<StaticRef> staticRef) {
@@ -31,6 +32,7 @@ public class MacroStaticReference extends DydComponent implements DynawoDynamicM
     }
 
     public MacroStaticReference add(StaticRef staticRef) {
+        Objects.requireNonNull(staticRef);
         staticRefs.add(staticRef);
         return this;
     }

@@ -8,6 +8,7 @@ package com.powsybl.dynawo.job;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -24,7 +25,7 @@ public class DynawoOutputs {
     private final boolean exportDumpFile;
     private final String curve;
     private final String exportMode;
-    private List<LogAppender> appenders;
+    private final List<LogAppender> appenders = new ArrayList<>();
 
     public DynawoOutputs(String directory, String curve) {
         this(directory, true, true, null, "TXT", false, false, false, curve, "CSV");
@@ -33,17 +34,16 @@ public class DynawoOutputs {
     public DynawoOutputs(String directory, boolean dumpLocalInitValues, boolean dumpGlobalInitValues,
         String constraints, String timeLine, boolean exportFinalState, boolean exportIidmFile, boolean exportDumpFile,
         String curve, String exportMode) {
-        this.directory = directory;
+        this.directory = Objects.requireNonNull(directory);
         this.dumpLocalInitValues = dumpLocalInitValues;
         this.dumpGlobalInitValues = dumpGlobalInitValues;
         this.constraints = constraints;
-        this.timeLine = timeLine;
+        this.timeLine = Objects.requireNonNull(timeLine);
         this.exportFinalState = exportFinalState;
         this.exportIIDMFile = exportIidmFile;
         this.exportDumpFile = exportDumpFile;
-        this.curve = curve;
-        this.exportMode = exportMode;
-        this.appenders = new ArrayList<>();
+        this.curve = Objects.requireNonNull(curve);
+        this.exportMode = Objects.requireNonNull(exportMode);
     }
 
     public String getDirectory() {
@@ -96,6 +96,7 @@ public class DynawoOutputs {
     }
 
     public DynawoOutputs add(LogAppender appender) {
+        Objects.requireNonNull(appender);
         appenders.add(appender);
         return this;
     }
