@@ -4,7 +4,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package com.powsybl.dynawo.simulator.test;
+package com.powsybl.dynawo.simulator;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -30,8 +30,6 @@ import com.powsybl.commons.datasource.ReadOnlyDataSource;
 import com.powsybl.computation.ComputationManager;
 import com.powsybl.computation.local.LocalComputationConfig;
 import com.powsybl.computation.local.LocalComputationManager;
-import com.powsybl.dynawo.simulator.DynawoConfig;
-import com.powsybl.dynawo.simulator.DynawoSimulator;
 import com.powsybl.dynawo.simulator.results.DynawoResults;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.NetworkFactory;

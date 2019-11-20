@@ -44,9 +44,7 @@
     </developers>
 
     <modules>
-        <module>dynawo-api</module>
-        <module>dynawo-dsl</module>
-        <module>dynawo-simulator</module>
+        <module>dynawo</module>
     </modules>
 
     <properties>
@@ -566,12 +564,6 @@
                 <artifactId>powsybl-commons</artifactId>
                 <version>${powsyblcore.version}</version>
                 <type>test-jar</type>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>powsybl-config-classic</artifactId>
-                <version>${powsyblcore.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
