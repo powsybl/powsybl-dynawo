@@ -44,10 +44,7 @@
     </developers>
 
     <modules>
-        <module>dynawo-api</module>
-        <module>dynawo-dsl</module>
-        <module>dynawo-simulator</module>
-        <module>dynawo-xml-exporter</module>
+        <module>dynawo</module>
     </modules>
 
     <properties>

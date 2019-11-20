@@ -1,8 +1,5 @@
 # Maven projects
-/dynawo-api/target
-/dynawo-dsl/target
-/dynawo-simulator/target
-/dynawo-xml-exporter/target
+/dynawo/target
 
 /.metadata/
 /.recommenders/
