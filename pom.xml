@@ -77,10 +77,7 @@
         <maven.source.version>3.0.1</maven.source.version>
         <maven.surefire.version>2.22.1</maven.surefire.version>
         <maven.templating.version>1.0.0</maven.templating.version>
-        <maven.surefire.version>2.22.1</maven.surefire.version>
-        <maven.templating.version>1.0.0</maven.templating.version>
         <maven.versions.version>2.7</maven.versions.version>
-        <maven.gmavenplus.version>1.6.1</maven.gmavenplus.version>
 
         <autoservice.version>1.0-rc2</autoservice.version>
         <commonsio.version>2.5</commonsio.version>

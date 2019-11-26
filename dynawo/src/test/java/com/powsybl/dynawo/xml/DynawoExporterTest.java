@@ -16,6 +16,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Properties;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
@@ -55,7 +57,7 @@ public class DynawoExporterTest extends AbstractConverterTest {
     }
 
     @Test
-    public void export() throws IOException {
+    public void export() throws IOException, XMLStreamException {
         network = importNetwork(Cim14SmallCasesCatalog.nordic32());
         network.setCaseDate(DateTime.parse("2019-09-23T11:06:12.313+02:00"));
         exporter.export(network, dynawoProvider, tmpDir);
@@ -77,7 +79,7 @@ public class DynawoExporterTest extends AbstractConverterTest {
     }
 
     @Test
-    public void testJob() throws IOException {
+    public void testJob() throws IOException, XMLStreamException {
         writeToDslFile("job('j1') {",
             "    solver {",
             "        lib 'lib'",
@@ -121,7 +123,7 @@ public class DynawoExporterTest extends AbstractConverterTest {
     }
 
     @Test
-    public void testCurve() throws IOException {
+    public void testCurve() throws IOException, XMLStreamException {
         writeToDslFile("curve {",
             "    model 'model'",
             "    variable 'variable'",
@@ -134,7 +136,7 @@ public class DynawoExporterTest extends AbstractConverterTest {
     }
 
     @Test
-    public void testDynamicModel() throws IOException {
+    public void testDynamicModel() throws IOException, XMLStreamException {
         writeToDslFile("blackBoxModel ('bbid') {",
             "    lib 'bblib'",
             "    parametersFile 'parametersFile'",
@@ -267,7 +269,7 @@ public class DynawoExporterTest extends AbstractConverterTest {
     }
 
     @Test
-    public void testParameterSet() throws IOException {
+    public void testParameterSet() throws IOException, XMLStreamException {
         writeToDslFile("parameterSet ('1') {",
             "    parameters {",
             "        parameter {",
@@ -305,7 +307,7 @@ public class DynawoExporterTest extends AbstractConverterTest {
     }
 
     @Test
-    public void testSolverParameterSet() throws IOException {
+    public void testSolverParameterSet() throws IOException, XMLStreamException {
         writeToDslFile("solverParameterSet ('1') {",
             "    parameters {",
             "        parameter {",

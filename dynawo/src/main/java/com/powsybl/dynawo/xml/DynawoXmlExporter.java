@@ -6,11 +6,10 @@
  */
 package com.powsybl.dynawo.xml;
 
+import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Properties;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.xml.stream.XMLStreamException;
 
 import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.datasource.FileDataSource;
@@ -37,20 +36,14 @@ public class DynawoXmlExporter {
         this.defaultsOmegaRefProvider = new GroovyDslDynawoInputProvider(getClass().getResourceAsStream("/defaultsOmegaRef.groovy"));
     }
 
-    public String export(Network network, DynawoInputProvider dynawoProvider, Path workingDir) {
+    public String export(Network network, DynawoInputProvider dynawoProvider, Path workingDir) throws IOException, XMLStreamException {
         String dynawoJobsFile = DEFAULT_DYNAWO_CASE_NAME;
-        try {
-            DynawoInputs.prepare(network, dynawoProvider, defaultsOmegaRefProvider, defaultsLoadProvider, defaultsGeneratorProvider, workingDir);
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage());
-        }
+        DynawoInputs.prepare(network, dynawoProvider, defaultsOmegaRefProvider, defaultsLoadProvider, defaultsGeneratorProvider, workingDir);
         if (network != null) {
             Path jobsFile = workingDir.resolve("dynawoModel.jobs");
             XMLExporter xmlExporter = new XMLExporter(platformConfig);
-            Properties properties = new Properties();
-            properties.put(XMLExporter.ANONYMISED, "false");
-            xmlExporter.export(network, properties, new FileDataSource(workingDir, "dynawoModel"));
-            // Error in dynawo because substation is exported without country field
+            xmlExporter.export(network, null, new FileDataSource(workingDir, "dynawoModel"));
+            // Warning: dynawo expects the country field in each substation element
             dynawoJobsFile = jobsFile.toAbsolutePath().toString();
         }
         return dynawoJobsFile;
@@ -60,6 +53,5 @@ public class DynawoXmlExporter {
     private DynawoInputProvider defaultsLoadProvider;
     private DynawoInputProvider defaultsGeneratorProvider;
     private DynawoInputProvider defaultsOmegaRefProvider;
-    private static final Logger LOGGER = LoggerFactory.getLogger(DynawoXmlExporter.class);
 
 }

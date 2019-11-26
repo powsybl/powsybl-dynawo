@@ -49,7 +49,6 @@ public final class DynawoInputs {
     public static final String INT = "INT";
 
     private DynawoInputs() {
-        throw new IllegalStateException("Utility class");
     }
 
     public static void prepare(Network network, DynawoInputProvider inputProvider, DynawoInputProvider defaultsOmegaRefProvider,
@@ -153,8 +152,6 @@ public final class DynawoInputs {
                 parSolverXmlWriter.writeEndDocument();
                 crvXmlWriter.writeEndElement();
                 crvXmlWriter.writeEndDocument();
-            } catch (Exception e) {
-                System.err.println(e.getMessage());
             } finally {
                 jobXmlWriter.close();
                 dydXmlWriter.close();
@@ -173,9 +170,6 @@ public final class DynawoInputs {
             "    This Source Code Form is subject to the terms of the Mozilla Public",
             "    License, v. 2.0. If a copy of the MPL was not distributed with this",
             "    file, you can obtain one at http://mozilla.org/MPL/2.0/.",
-            "    SPDX-License-Identifier: MPL-2.0",
-            "",
-            "    This file is part of Dynawo, an hybrid C++/Modelica open source time domain",
-            "    simulation tool for power systems.");
+            "    SPDX-License-Identifier: MPL-2.0");
     }
 }

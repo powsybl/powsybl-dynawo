@@ -6,11 +6,14 @@
  */
 package com.powsybl.dynawo.simulator;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
+
+import javax.xml.stream.XMLStreamException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +57,7 @@ public class DynawoSimulation {
             .build();
     }
 
-    private Command before(Path workingDir, DynawoConfig dynawoConfig) {
+    private Command before(Path workingDir, DynawoConfig dynawoConfig) throws IOException, XMLStreamException {
         String dynawoJobsFile = new DynawoXmlExporter().export(network, dynawoProvider, workingDir);
         LOGGER.info("cmd {} jobs {}", dynawoConfig.getDynawoCptCommandName(), dynawoJobsFile);
         return createCommand(dynawoJobsFile, dynawoConfig);
@@ -92,8 +95,13 @@ public class DynawoSimulation {
                 @Override
                 public List<CommandExecution> before(Path workingDir) {
                     network.getVariantManager().setWorkingVariant(workingStateId);
-                    Command cmd = DynawoSimulation.this.before(workingDir, dynawoConfig);
-                    return Collections.singletonList(new CommandExecution(cmd, 1, priority));
+                    try {
+                        Command cmd = DynawoSimulation.this.before(workingDir, dynawoConfig);
+                        return Collections.singletonList(new CommandExecution(cmd, 1, priority));
+                    } catch (IOException | XMLStreamException e) {
+                        LOGGER.error(e.getMessage());
+                        return Collections.emptyList();
+                    }
                 }
 
                 @Override
