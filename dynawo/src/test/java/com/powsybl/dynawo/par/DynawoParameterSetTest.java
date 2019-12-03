@@ -25,7 +25,7 @@ public class DynawoParameterSetTest {
         DynawoParameterSet parameterSet = new DynawoParameterSet(1);
 
         DynawoParameter parameter1 = new DynawoParameter("name", "type", "value");
-        DynawoParameter parameter2 = new DynawoParameter("name", "type", "origData", "origName");
+        DynawoParameter parameter2 = new DynawoParameter("name", "type", "origData", "origName", "componentId");
         parameterSet.addParameters(Arrays.asList(parameter1, parameter2));
 
         DynawoParameterTable parameterTable = new DynawoParameterTable("type", "name");
@@ -47,6 +47,7 @@ public class DynawoParameterSetTest {
         assertEquals("type", parameterSet.getParameters().get(1).getType());
         assertEquals("origData", parameterSet.getParameters().get(1).getOrigData());
         assertEquals("origName", parameterSet.getParameters().get(1).getOrigName());
+        assertEquals("componentId", parameterSet.getParameters().get(1).getComponentId());
 
         assertEquals(1, parameterSet.getParameterTables().size());
         assertEquals("type", parameterSet.getParameterTables().get(0).getType());

@@ -33,12 +33,16 @@ class DynawoDynamicModelDslLoader {
         String var
         String staticVar
 
-        void var(String var) {
+        StaticRefSpec var(String var) {
+			assert var != null
             this.var = var
+			return this
         }
 
-        void staticVar(String staticVar) {
+        StaticRefSpec staticVar(String staticVar) {
+			assert staticVar != null
             this.staticVar = staticVar
+			return this
         }
     }
 
@@ -62,32 +66,42 @@ class DynawoDynamicModelDslLoader {
         final StaticRefsSpec staticRefsSpec = new StaticRefsSpec()
         final MacroStaticRefsSpec macroStaticRefsSpec = new MacroStaticRefsSpec()
 
-        void lib(String lib) {
+        BlackBoxModelSpec lib(String lib) {
+			assert lib != null
             this.lib = lib
+			return this
         }
 
-        void parametersFile(String parametersFile) {
+        BlackBoxModelSpec parametersFile(String parametersFile) {
+			assert parametersFile != null
             this.parametersFile = parametersFile
+			return this
         }
 
-        void parametersId(int parametersId) {
+        BlackBoxModelSpec parametersId(int parametersId) {
+			assert parametersId != null
             this.parametersId = parametersId
+			return this
         }
 
-        void staticId(String staticId) {
+        BlackBoxModelSpec staticId(String staticId) {
+			assert staticId != null
             this.staticId = staticId
+			return this
         }
 
-        void staticRefs(Closure<Void> closure) {
+        BlackBoxModelSpec staticRefs(Closure<Void> closure) {
             def cloned = closure.clone()
             cloned.delegate = staticRefsSpec
             cloned()
+			return this
         }
 
-        void macroStaticRefs(Closure<Void> closure) {
+        BlackBoxModelSpec macroStaticRefs(Closure<Void> closure) {
             def cloned = closure.clone()
             cloned.delegate = macroStaticRefsSpec
             cloned()
+			return this
         }
     }
 
@@ -98,16 +112,22 @@ class DynawoDynamicModelDslLoader {
         String parametersFile
         int parametersId
 
-        void templateId(String templateId) {
+        ModelTemplateExpansionSpec templateId(String templateId) {
+			assert templateId != null
             this.templateId = templateId
+			return this
         }
 
-        void parametersFile(String parametersFile) {
+        ModelTemplateExpansionSpec parametersFile(String parametersFile) {
+			assert parametersFile != null
             this.parametersFile = parametersFile
+			return this
         }
 
-        void parametersId(int parametersId) {
+        ModelTemplateExpansionSpec parametersId(int parametersId) {
+			assert parametersId != null
             this.parametersId = parametersId
+			return this
         }
     }
 
@@ -118,20 +138,28 @@ class DynawoDynamicModelDslLoader {
         String id2
         String var2
 
-        void id1(String id1) {
+        ConnectionSpec id1(String id1) {
+			assert id1 != null
             this.id1 = id1
+			return this
         }
 
-        void var1(String var1) {
+        ConnectionSpec var1(String var1) {
+			assert var1 != null
             this.var1 = var1
+			return this
         }
 
-        void id2(String id2) {
+        ConnectionSpec id2(String id2) {
+			assert id2 != null
             this.id2 = id2
+			return this
         }
 
-        void var2(String var2) {
+        ConnectionSpec var2(String var2) {
+			assert var2 != null
             this.var2 = var2
+			return this
         }
     }
 
@@ -141,16 +169,22 @@ class DynawoDynamicModelDslLoader {
         String id1
         String id2
 
-        void connector(String connector) {
+        MacroConnectionSpec connector(String connector) {
+			assert connector != null
             this.connector = connector
+			return this
         }
 
-        void id1(String id1) {
+        MacroConnectionSpec id1(String id1) {
+			assert id1 != null
             this.id1 = id1
+			return this
         }
 
-        void id2(String id2) {
+        MacroConnectionSpec id2(String id2) {
+			assert id2 != null
             this.id2 = id2
+			return this
         }
     }
 

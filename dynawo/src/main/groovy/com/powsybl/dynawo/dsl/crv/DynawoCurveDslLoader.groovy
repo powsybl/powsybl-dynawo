@@ -26,12 +26,16 @@ class DynawoCurveDslLoader {
         String model
         String variable
         
-        void model(String model) {
+        CurveSpec model(String model) {
+			assert model != null
             this.model = model
+			return this
         }
         
-        void variable(String variable) {
+        CurveSpec variable(String variable) {
+			assert variable != null
             this.variable = variable
+			return this
         }
     }
 

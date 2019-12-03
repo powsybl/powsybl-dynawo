@@ -87,31 +87,31 @@ class DynawoDslLoader extends DslLoader {
         //Handler to create an ActionDb instance
         DynawoDslHandler dynawoDbBuilder = new DynawoDslHandler() {
 
-                    @Override
-                    void addJob(DynawoJob job) {
-                        dynawoDb.addJob(job)
-                    }
+            @Override
+            void addJob(DynawoJob job) {
+                dynawoDb.addJob(job)
+            }
 
-                    @Override
-                    void addCurve(DynawoCurve curve) {
-                        dynawoDb.addCurve(curve)
-                    }
+            @Override
+            void addCurve(DynawoCurve curve) {
+                dynawoDb.addCurve(curve)
+            }
 
-                    @Override
-                    void addDynamicModel(DynawoDynamicModel dynamicModel) {
-                        dynawoDb.addDynamicModel(dynamicModel)
-                    }
+            @Override
+            void addDynamicModel(DynawoDynamicModel dynamicModel) {
+                dynawoDb.addDynamicModel(dynamicModel)
+            }
 
-                    @Override
-                    void addParameterSet(DynawoParameterSet parameterSet) {
-                        dynawoDb.addParameterSet(parameterSet)
-                    }
+            @Override
+            void addParameterSet(DynawoParameterSet parameterSet) {
+                dynawoDb.addParameterSet(parameterSet)
+            }
 
-                    @Override
-                    void addSolverParameterSet(DynawoParameterSet solverParameterSet) {
-                        dynawoDb.addSolverParameterSet(solverParameterSet)
-                    }
-                }
+            @Override
+            void addSolverParameterSet(DynawoParameterSet solverParameterSet) {
+                dynawoDb.addSolverParameterSet(solverParameterSet)
+            }
+        }
 
         load(network, dynawoDbBuilder, observer)
 
