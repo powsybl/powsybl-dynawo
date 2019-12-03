@@ -7,6 +7,7 @@
 package com.powsybl.dynawo.dsl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -32,7 +33,7 @@ public class DynawoDb {
     }
 
     public List<DynawoJob> getJobs() {
-        return jobs;
+        return Collections.unmodifiableList(jobs);
     }
 
     public void addCurve(DynawoCurve curve) {
@@ -41,7 +42,7 @@ public class DynawoDb {
     }
 
     public List<DynawoCurve> getCurves() {
-        return curves;
+        return Collections.unmodifiableList(curves);
     }
 
     public void addDynamicModel(DynawoDynamicModel dynamicModel) {
@@ -50,7 +51,7 @@ public class DynawoDb {
     }
 
     public List<DynawoDynamicModel> getDynamicModels() {
-        return dynamicModels;
+        return Collections.unmodifiableList(dynamicModels);
     }
 
     public void addParameterSet(DynawoParameterSet parameterSet) {
@@ -59,7 +60,7 @@ public class DynawoDb {
     }
 
     public List<DynawoParameterSet> getParameterSets() {
-        return parameterSets;
+        return Collections.unmodifiableList(parameterSets);
     }
 
     public void addSolverParameterSet(DynawoParameterSet solverParameterSet) {
@@ -68,7 +69,7 @@ public class DynawoDb {
     }
 
     public List<DynawoParameterSet> getSolverParameterSets() {
-        return solverParameterSets;
+        return Collections.unmodifiableList(solverParameterSets);
     }
 
 }

@@ -29,12 +29,16 @@ class MacroConnectorDslLoader {
         String var1
         String var2
 
-        void var1(String var1) {
+        ConnectionSpec var1(String var1) {
+			assert var1 != null
             this.var1 = var1
+			return this
         }
 
-        void var2(String var2) {
+        ConnectionSpec var2(String var2) {
+			assert var2 != null
             this.var2 = var2
+			return this
         }
     }
 
@@ -46,10 +50,11 @@ class MacroConnectorDslLoader {
         String id
         final ConnectionsSpec connectionsSpec = new ConnectionsSpec()
 
-        void connections(Closure<Void> closure) {
+        MacroConnectorSpec connections(Closure<Void> closure) {
             def cloned = closure.clone()
             cloned.delegate = connectionsSpec
             cloned()
+			return this
         }
     }
 

@@ -30,24 +30,34 @@ class DynawoSolverParameterSetDslLoader {
         String origName;
         String origData;
 
-        void name(String name) {
+        ParameterSpec name(String name) {
+			assert name != null
             this.name = name
+			return this
         }
 
-        void type(String type) {
+        ParameterSpec type(String type) {
+			assert type != null
             this.type = type
+			return this
         }
 
-        void value(String value) {
+        ParameterSpec value(String value) {
+			assert value != null
             this.value = value
+			return this
         }
 
-        void origName(String origName) {
+        ParameterSpec origName(String origName) {
+			assert origName != null
             this.origName = origName
+			return this
         }
 
-        void origData(String origData) {
+        ParameterSpec origData(String origData) {
+			assert origData != null
             this.origData = origData
+			return this
         }
     }
 
@@ -59,10 +69,11 @@ class DynawoSolverParameterSetDslLoader {
         String id
         final ParametersSpec parametersSpec = new ParametersSpec()
 
-        void parameters(Closure<Void> closure) {
+        ParameterSetSpec parameters(Closure<Void> closure) {
             def cloned = closure.clone()
             cloned.delegate = parametersSpec
             cloned()
+			return this
         }
     }
 
