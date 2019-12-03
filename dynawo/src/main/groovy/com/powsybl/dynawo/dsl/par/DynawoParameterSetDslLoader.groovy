@@ -31,21 +31,21 @@ class DynawoParameterSetDslLoader {
         String value
 
         ParameterRowSpec row(int row) {
-			assert row != null
+            assert row != null
             this.row = row
-			return this
+            return this
         }
 
         ParameterRowSpec column(int column) {
-			assert column != null
+            assert column != null
             this.column = column
-			return this
+            return this
         }
 
         ParameterRowSpec value(String value) {
-			assert value != null
+            assert value != null
             this.value = value
-			return this
+            return this
         }
     }
 
@@ -59,22 +59,22 @@ class DynawoParameterSetDslLoader {
         final ParameterRowsSpec parameterRowsSpec = new ParameterRowsSpec()
 
         ParameterTableSpec name(String name) {
-			assert name != null
+            assert name != null
             this.name = name
-			return this
+            return this
         }
 
         ParameterTableSpec type(String type) {
-			assert type != null
+            assert type != null
             this.type = type
-			return this
+            return this
         }
 
         ParameterTableSpec parameterRows(Closure<Void> closure) {
             def cloned = closure.clone()
             cloned.delegate = parameterRowsSpec
             cloned()
-			return this
+            return this
         }
     }
 
@@ -88,36 +88,36 @@ class DynawoParameterSetDslLoader {
         String value;
         String origName;
         String origData;
-		String componentId;
+        String componentId;
 
         ParameterSpec name(String name) {
-			assert name != null
+            assert name != null
             this.name = name
-			return this
+            return this
         }
 
         ParameterSpec type(String type) {
-			assert type != null
+            assert type != null
             this.type = type
-			return this
+            return this
         }
 
         ParameterSpec value(String value) {
-			assert value != null
+            assert value != null
             this.value = value
-			return this
+            return this
         }
 
         ParameterSpec origName(String origName) {
-			assert origName != null
+            assert origName != null
             this.origName = origName
-			return this
+            return this
         }
 
         ParameterSpec origData(String origData) {
-			assert origData != null
+            assert origData != null
             this.origData = origData
-			return this
+            return this
         }
 
         ParameterSpec componentId(String componentId) {
@@ -140,14 +140,14 @@ class DynawoParameterSetDslLoader {
             def cloned = closure.clone()
             cloned.delegate = parametersSpec
             cloned()
-			return this
+            return this
         }
 
         ParameterSetSpec parameterTables(Closure<Void> closure) {
             def cloned = closure.clone()
             cloned.delegate = parameterTablesSpec
             cloned()
-			return this
+            return this
         }
     }
 
@@ -215,13 +215,13 @@ class DynawoParameterSetDslLoader {
             cloned.delegate = parameterSpec
             cloned()
             if (parameterSpec.origName != null) {
-				if (parameterSpec.componentId != null) {
-	                DynawoParameter parameter = new DynawoParameter(parameterSpec.name, parameterSpec.type, parameterSpec.origData, parameterSpec.origName, parameterSpec.componentId)
-	                parameters.add(parameter)
-				} else {
-	                DynawoParameter parameter = new DynawoParameter(parameterSpec.name, parameterSpec.type, parameterSpec.origData, parameterSpec.origName)
-	                parameters.add(parameter)
-				}
+                if (parameterSpec.componentId != null) {
+                    DynawoParameter parameter = new DynawoParameter(parameterSpec.name, parameterSpec.type, parameterSpec.origData, parameterSpec.origName, parameterSpec.componentId)
+                    parameters.add(parameter)
+                } else {
+                    DynawoParameter parameter = new DynawoParameter(parameterSpec.name, parameterSpec.type, parameterSpec.origData, parameterSpec.origName)
+                    parameters.add(parameter)
+                }
             } else {
                 DynawoParameter parameter = new DynawoParameter(parameterSpec.name, parameterSpec.type, parameterSpec.value)
                 parameters.add(parameter)

@@ -35,33 +35,33 @@ class ModelTemplateDslLoader {
         int parId
 
         UnitDynamicModelSpec name(String name) {
-			assert name != null
+            assert name != null
             this.name = name
-			return this
+            return this
         }
 
         UnitDynamicModelSpec moFile(String moFile) {
-			assert moFile != null
+            assert moFile != null
             this.moFile = moFile
-			return this
+            return this
         }
 
         UnitDynamicModelSpec initName(String initName) {
-			assert initName != null
+            assert initName != null
             this.initName = initName
-			return this
+            return this
         }
 
         UnitDynamicModelSpec parFile(String parFile) {
-			assert parFile != null
+            assert parFile != null
             this.parFile = parFile
-			return this
+            return this
         }
 
         UnitDynamicModelSpec parId(int parId) {
-			assert parId != null
+            assert parId != null
             this.parId = parId
-			return this
+            return this
         }
     }
 
@@ -76,27 +76,27 @@ class ModelTemplateDslLoader {
         String var2
 
         ConnectionSpec id1(String id1) {
-			assert id1 != null
+            assert id1 != null
             this.id1 = id1
-			return this
+            return this
         }
 
         ConnectionSpec var1(String var1) {
-			assert var1 != null
+            assert var1 != null
             this.var1 = var1
-			return this
+            return this
         }
 
         ConnectionSpec id2(String id2) {
-			assert id2 != null
+            assert id2 != null
             this.id2 = id2
-			return this
+            return this
         }
 
         ConnectionSpec var2(String var2) {
-			assert var2 != null
+            assert var2 != null
             this.var2 = var2
-			return this
+            return this
         }
     }
 
@@ -114,23 +114,22 @@ class ModelTemplateDslLoader {
             def cloned = closure.clone()
             cloned.delegate = unitDynamicModelsSpec
             cloned()
-			return this
+            return this
         }
 
         ModelTemplateSpec connections(Closure<Void> closure) {
             def cloned = closure.clone()
             cloned.delegate = connectionsSpec
             cloned()
-			return this
+            return this
         }
 
         ModelTemplateSpec initConnections(Closure<Void> closure) {
             def cloned = closure.clone()
             cloned.delegate = initConnectionsSpec
             cloned()
-			return this
+            return this
         }
-
     }
 
     static void loadDsl(Binding binding, Network network, Consumer<DynawoDynamicModel> consumer, DynawoDslLoaderObserver observer) {

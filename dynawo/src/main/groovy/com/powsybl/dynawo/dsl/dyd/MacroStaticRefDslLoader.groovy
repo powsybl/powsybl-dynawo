@@ -29,15 +29,15 @@ class MacroStaticRefDslLoader {
         String staticVar
 
         StaticRefSpec var(String var) {
-			assert var != null
+            assert var != null
             this.var = var
-			return this
+            return this
         }
 
         StaticRefSpec staticVar(String staticVar) {
-			assert staticVar != null
+            assert staticVar != null
             this.staticVar = staticVar
-			return this
+            return this
         }
     }
 
@@ -53,7 +53,7 @@ class MacroStaticRefDslLoader {
             def cloned = closure.clone()
             cloned.delegate = staticRefsSpec
             cloned()
-			return this
+            return this
         }
     }
 

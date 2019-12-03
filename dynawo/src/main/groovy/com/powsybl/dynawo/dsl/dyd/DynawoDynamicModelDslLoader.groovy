@@ -34,15 +34,15 @@ class DynawoDynamicModelDslLoader {
         String staticVar
 
         StaticRefSpec var(String var) {
-			assert var != null
+            assert var != null
             this.var = var
-			return this
+            return this
         }
 
         StaticRefSpec staticVar(String staticVar) {
-			assert staticVar != null
+            assert staticVar != null
             this.staticVar = staticVar
-			return this
+            return this
         }
     }
 
@@ -67,41 +67,41 @@ class DynawoDynamicModelDslLoader {
         final MacroStaticRefsSpec macroStaticRefsSpec = new MacroStaticRefsSpec()
 
         BlackBoxModelSpec lib(String lib) {
-			assert lib != null
+            assert lib != null
             this.lib = lib
-			return this
+            return this
         }
 
         BlackBoxModelSpec parametersFile(String parametersFile) {
-			assert parametersFile != null
+            assert parametersFile != null
             this.parametersFile = parametersFile
-			return this
+            return this
         }
 
         BlackBoxModelSpec parametersId(int parametersId) {
-			assert parametersId != null
+            assert parametersId != null
             this.parametersId = parametersId
-			return this
+            return this
         }
 
         BlackBoxModelSpec staticId(String staticId) {
-			assert staticId != null
+            assert staticId != null
             this.staticId = staticId
-			return this
+            return this
         }
 
         BlackBoxModelSpec staticRefs(Closure<Void> closure) {
             def cloned = closure.clone()
             cloned.delegate = staticRefsSpec
             cloned()
-			return this
+            return this
         }
 
         BlackBoxModelSpec macroStaticRefs(Closure<Void> closure) {
             def cloned = closure.clone()
             cloned.delegate = macroStaticRefsSpec
             cloned()
-			return this
+            return this
         }
     }
 
@@ -113,21 +113,21 @@ class DynawoDynamicModelDslLoader {
         int parametersId
 
         ModelTemplateExpansionSpec templateId(String templateId) {
-			assert templateId != null
+            assert templateId != null
             this.templateId = templateId
-			return this
+            return this
         }
 
         ModelTemplateExpansionSpec parametersFile(String parametersFile) {
-			assert parametersFile != null
+            assert parametersFile != null
             this.parametersFile = parametersFile
-			return this
+            return this
         }
 
         ModelTemplateExpansionSpec parametersId(int parametersId) {
-			assert parametersId != null
+            assert parametersId != null
             this.parametersId = parametersId
-			return this
+            return this
         }
     }
 
@@ -139,27 +139,27 @@ class DynawoDynamicModelDslLoader {
         String var2
 
         ConnectionSpec id1(String id1) {
-			assert id1 != null
+            assert id1 != null
             this.id1 = id1
-			return this
+            return this
         }
 
         ConnectionSpec var1(String var1) {
-			assert var1 != null
+            assert var1 != null
             this.var1 = var1
-			return this
+            return this
         }
 
         ConnectionSpec id2(String id2) {
-			assert id2 != null
+            assert id2 != null
             this.id2 = id2
-			return this
+            return this
         }
 
         ConnectionSpec var2(String var2) {
-			assert var2 != null
+            assert var2 != null
             this.var2 = var2
-			return this
+            return this
         }
     }
 
@@ -170,21 +170,21 @@ class DynawoDynamicModelDslLoader {
         String id2
 
         MacroConnectionSpec connector(String connector) {
-			assert connector != null
+            assert connector != null
             this.connector = connector
-			return this
+            return this
         }
 
         MacroConnectionSpec id1(String id1) {
-			assert id1 != null
+            assert id1 != null
             this.id1 = id1
-			return this
+            return this
         }
 
         MacroConnectionSpec id2(String id2) {
-			assert id2 != null
+            assert id2 != null
             this.id2 = id2
-			return this
+            return this
         }
     }
 
