@@ -16,6 +16,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Properties;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
@@ -55,7 +57,7 @@ public class DynawoExporterTest extends AbstractConverterTest {
     }
 
     @Test
-    public void export() throws IOException {
+    public void export() throws IOException, XMLStreamException {
         network = importNetwork(Cim14SmallCasesCatalog.nordic32());
         network.setCaseDate(DateTime.parse("2019-09-23T11:06:12.313+02:00"));
         exporter.export(network, dynawoProvider, tmpDir);
@@ -77,18 +79,18 @@ public class DynawoExporterTest extends AbstractConverterTest {
     }
 
     @Test
-    public void testJob() throws IOException {
+    public void testJob() throws IOException, XMLStreamException {
         writeToDslFile("job('j1') {",
             "    solver {",
             "        lib 'lib'",
             "        file 'file'",
-            "        id 2",
+            "        id '2'",
             "    }",
             "    modeler {",
             "        compile 'compile'",
             "        iidm 'iidm'",
             "        parameters 'parameters'",
-            "        parameterId 1",
+            "        parameterId '1'",
             "        dyd 'dyd'",
             "        useStandardModelsPreCompiledModels false",
             "        useStandardModelsModelicaModels false",
@@ -121,7 +123,7 @@ public class DynawoExporterTest extends AbstractConverterTest {
     }
 
     @Test
-    public void testCurve() throws IOException {
+    public void testCurve() throws IOException, XMLStreamException {
         writeToDslFile("curve {",
             "    model 'model'",
             "    variable 'variable'",
@@ -134,11 +136,11 @@ public class DynawoExporterTest extends AbstractConverterTest {
     }
 
     @Test
-    public void testDynamicModel() throws IOException {
+    public void testDynamicModel() throws IOException, XMLStreamException {
         writeToDslFile("blackBoxModel ('bbid') {",
             "    lib 'bblib'",
             "    parametersFile 'parametersFile'",
-            "    parametersId 1",
+            "    parametersId '1'",
             "    staticId 'staticId'",
             "    staticRefs {",
             "        staticRef {",
@@ -160,8 +162,8 @@ public class DynawoExporterTest extends AbstractConverterTest {
             "            name 'name'",
             "            moFile 'moFile'",
             "            initName 'initName'",
-            "            parFile 'parFile'",
-            "            parId 1",
+            "            parametersFile 'parFile'",
+            "            parametersId '1'",
             "        }",
             "    }",
             "    connections {",
@@ -200,8 +202,8 @@ public class DynawoExporterTest extends AbstractConverterTest {
             "            name 'name'",
             "            moFile 'moFile'",
             "            initName 'initName'",
-            "            parFile 'parFile'",
-            "            parId 1",
+            "            parametersFile 'parFile'",
+            "            parametersId '1'",
             "        }",
             "    }",
             "    connections {",
@@ -224,7 +226,7 @@ public class DynawoExporterTest extends AbstractConverterTest {
             "modelTemplateExpansion ('mtid') {",
             "    templateId 'templateId'",
             "    parametersFile 'parametersFile'",
-            "    parametersId 1",
+            "    parametersId '1'",
             "}",
             "connection {",
             "    id1 'id1'",
@@ -267,14 +269,15 @@ public class DynawoExporterTest extends AbstractConverterTest {
     }
 
     @Test
-    public void testParameterSet() throws IOException {
-        writeToDslFile("parameterSet (1) {",
+    public void testParameterSet() throws IOException, XMLStreamException {
+        writeToDslFile("parameterSet ('1') {",
             "    parameters {",
             "        parameter {",
             "            name 'name1'",
             "            type 'type1'",
             "            origData 'origData1'",
             "            origName 'origName1'",
+            "            componentId 'componentId1'",
             "        }",
             "        parameter {",
             "            name 'name2'",
@@ -304,8 +307,8 @@ public class DynawoExporterTest extends AbstractConverterTest {
     }
 
     @Test
-    public void testSolverParameterSet() throws IOException {
-        writeToDslFile("solverParameterSet (1) {",
+    public void testSolverParameterSet() throws IOException, XMLStreamException {
+        writeToDslFile("solverParameterSet ('1') {",
             "    parameters {",
             "        parameter {",
             "            name 'name'",
@@ -335,5 +338,5 @@ public class DynawoExporterTest extends AbstractConverterTest {
     private Network network;
     private DynawoInputProvider dynawoProvider;
     private Path dslFile;
-    DynawoXmlExporter exporter;
+    private DynawoXmlExporter exporter;
 }

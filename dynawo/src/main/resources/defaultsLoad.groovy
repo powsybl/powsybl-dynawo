@@ -4,7 +4,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-parameterSet (1) {
+parameterSet ('1') {
     parameters {
         parameter {
             name 'load_alpha'
@@ -45,7 +45,7 @@ parameterSet (1) {
 blackBoxModel ('#ID#'){
     lib 'LoadAlphaBeta'
     parametersFile 'dynawoModel.par'
-    parametersId 0
+    parametersId '0'
     staticId '#ID#'
 }
 connection {

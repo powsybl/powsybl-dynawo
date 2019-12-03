@@ -8,6 +8,7 @@ package com.powsybl.dynawo.dsl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -72,13 +73,13 @@ public class GroovyDslDynawoInputProviderTest {
             "    solver {",
             "        lib 'lib'",
             "        file 'file'",
-            "        id 2",
+            "        id '2'",
             "    }",
             "    modeler {",
             "        compile 'compile'",
             "        iidm 'iidm'",
             "        parameters 'parameters'",
-            "        parameterId 1",
+            "        parameterId '1'",
             "        dyd 'dyd'",
             "        useStandardModelsPreCompiledModels false",
             "        useStandardModelsModelicaModels false",
@@ -111,12 +112,12 @@ public class GroovyDslDynawoInputProviderTest {
         DynawoSolver solver = job.getSolver();
         assertEquals("lib", solver.getLib());
         assertEquals("file", solver.getFile());
-        assertEquals(2, solver.getId());
+        assertEquals("2", solver.getId());
         DynawoModeler modeler = job.getModeler();
         assertEquals("compile", modeler.getCompileDir());
         assertEquals("iidm", modeler.getIidm());
         assertEquals("parameters", modeler.getParameters());
-        assertEquals(1, modeler.getParameterId());
+        assertEquals("1", modeler.getParameterId());
         assertEquals("dyd", modeler.getDyd());
         DynawoSimulation simulation = job.getSimulation();
         assertEquals(0, simulation.getStartTime());
@@ -146,7 +147,7 @@ public class GroovyDslDynawoInputProviderTest {
         writeToDslFile("blackBoxModel ('bbid') {",
             "    lib 'bblib'",
             "    parametersFile 'parametersFile'",
-            "    parametersId 1",
+            "    parametersId '1'",
             "    staticId 'staticId'",
             "    staticRefs {",
             "        staticRef {",
@@ -168,8 +169,8 @@ public class GroovyDslDynawoInputProviderTest {
             "            name 'name'",
             "            moFile 'moFile'",
             "            initName 'initName'",
-            "            parFile 'parFile'",
-            "            parId 1",
+            "            parametersFile 'parFile'",
+            "            parametersId '1'",
             "        }",
             "    }",
             "    connections {",
@@ -208,8 +209,8 @@ public class GroovyDslDynawoInputProviderTest {
             "            name 'name'",
             "            moFile 'moFile'",
             "            initName 'initName'",
-            "            parFile 'parFile'",
-            "            parId 1",
+            "            parametersFile 'parFile'",
+            "            parametersId '1'",
             "        }",
             "    }",
             "    connections {",
@@ -232,7 +233,7 @@ public class GroovyDslDynawoInputProviderTest {
             "modelTemplateExpansion ('mtid') {",
             "    templateId 'templateId'",
             "    parametersFile 'parametersFile'",
-            "    parametersId 1",
+            "    parametersId '1'",
             "}",
             "connection {",
             "    id1 'id1'",
@@ -276,12 +277,12 @@ public class GroovyDslDynawoInputProviderTest {
         assertEquals("bblib", blackBoxModel.getLib());
         assertEquals("bbid", blackBoxModel.getId());
         assertEquals("parametersFile", blackBoxModel.getParametersFile());
-        assertEquals(1, blackBoxModel.getParametersId());
+        assertEquals("1", blackBoxModel.getParametersId());
     }
 
     @Test
     public void testParameterSet() throws IOException {
-        writeToDslFile("parameterSet (1) {",
+        writeToDslFile("parameterSet ('1') {",
             "    parameters {",
             "        parameter {",
             "            name 'name1'",
@@ -313,9 +314,10 @@ public class GroovyDslDynawoInputProviderTest {
         List<DynawoParameterSet> parameterSets = new GroovyDslDynawoInputProvider(dslFile).getDynawoParameterSets(network);
         assertEquals(1, parameterSets.size());
         DynawoParameterSet parameterSet = parameterSets.get(0);
-        assertEquals(1, parameterSet.getId());
+        assertEquals("1", parameterSet.getId());
         assertEquals(2, parameterSet.getParameters().size());
-        DynawoParameter parameter = parameterSet.getParameters().get(0);
+        String key = "name1";
+        DynawoParameter parameter = parameterSet.getParameters().get(key);
         assertTrue(parameter.isReference());
         assertEquals("name1", parameter.getName());
         assertEquals("type1", parameter.getType());
@@ -325,7 +327,7 @@ public class GroovyDslDynawoInputProviderTest {
 
     @Test
     public void testSolverParameterSet() throws IOException {
-        writeToDslFile("solverParameterSet (1) {",
+        writeToDslFile("solverParameterSet ('1') {",
             "    parameters {",
             "        parameter {",
             "            name 'name'",
@@ -339,12 +341,15 @@ public class GroovyDslDynawoInputProviderTest {
             .getDynawoSolverParameterSets(network);
         assertEquals(1, parameterSets.size());
         DynawoParameterSet parameterSet = parameterSets.get(0);
-        assertEquals(1, parameterSet.getId());
+        assertEquals("1", parameterSet.getId());
         assertEquals(1, parameterSet.getParameters().size());
-        DynawoParameter parameter = parameterSet.getParameters().get(0);
+        String key = "name";
+        DynawoParameter parameter = parameterSet.getParameters().get(key);
         assertFalse(parameter.isReference());
         assertEquals("name", parameter.getName());
         assertEquals("type", parameter.getType());
         assertEquals("value", parameter.getValue());
+        assertNull(parameter.getOrigData());
+        assertNull(parameter.getOrigName());
     }
 }

@@ -48,11 +48,11 @@ public final class DynawoJobs {
     private static void writeSolver(XMLStreamWriter writer, DynawoSolver solver) throws XMLStreamException {
         String solverLib = solver.getLib();
         String solverParams = solver.getFile();
-        int solverParamsId = solver.getId();
+        String solverParamsId = solver.getId();
         writer.writeEmptyElement(DYN_URI, "solver");
         writer.writeAttribute("lib", solverLib);
         writer.writeAttribute("parFile", solverParams);
-        writer.writeAttribute("parId", Integer.toString(solverParamsId));
+        writer.writeAttribute("parId", solverParamsId);
     }
 
     private static void writeModeler(XMLStreamWriter writer, DynawoModeler modeler) throws XMLStreamException {
@@ -63,7 +63,7 @@ public final class DynawoJobs {
         boolean useStandardModelsModelicaModels = modeler.isUseStandardModelsModelicaModels();
         String iidmFile = modeler.getIidm();
         String parFile = modeler.getParameters();
-        int parId = modeler.getParameterId();
+        String parId = modeler.getParameterId();
         String dydFile = modeler.getDyd();
         String initialState = modeler.getInitialState();
         writer.writeStartElement(DYN_URI, "modeler");
@@ -71,7 +71,7 @@ public final class DynawoJobs {
         writer.writeEmptyElement(DYN_URI, "network");
         writer.writeAttribute("iidmFile", iidmFile);
         writer.writeAttribute("parFile", parFile);
-        writer.writeAttribute("parId", Integer.toString(parId));
+        writer.writeAttribute("parId", parId);
         writer.writeEmptyElement(DYN_URI, "dynModels");
         writer.writeAttribute("dydFile", dydFile);
         if (initialState != null) {

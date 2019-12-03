@@ -21,8 +21,8 @@ public class DynawoJobTest {
     @Test
     public void test() {
 
-        DynawoSolver solver = new DynawoSolver("lib", "file", 1);
-        DynawoModeler modeler = new DynawoModeler("compile", "iidm", "parameters", 1, "dyd");
+        DynawoSolver solver = new DynawoSolver("lib", "file", "1");
+        DynawoModeler modeler = new DynawoModeler("compile", "iidm", "parameters", "1", "dyd");
         DynawoSimulation simulation = new DynawoSimulation(0, 1, false);
         LogAppender appender = new LogAppender("tag", "file", "lvlFilter");
         DynawoOutputs outputs = new DynawoOutputs("directory", "curve");
@@ -39,7 +39,7 @@ public class DynawoJobTest {
 
         assertEquals("lib", job.getSolver().getLib());
         assertEquals("file", job.getSolver().getFile());
-        assertEquals(1, job.getSolver().getId());
+        assertEquals("1", job.getSolver().getId());
 
         assertEquals("compile", job.getModeler().getCompileDir());
         assertNull(job.getModeler().getPreCompiledModelsDir());
@@ -48,7 +48,7 @@ public class DynawoJobTest {
         assertTrue(job.getModeler().isUseStandardModelsModelicaModels());
         assertEquals("iidm", job.getModeler().getIidm());
         assertEquals("parameters", job.getModeler().getParameters());
-        assertEquals(1, job.getModeler().getParameterId());
+        assertEquals("1", job.getModeler().getParameterId());
         assertEquals("dyd", job.getModeler().getDyd());
         assertNull(job.getModeler().getInitialState());
 

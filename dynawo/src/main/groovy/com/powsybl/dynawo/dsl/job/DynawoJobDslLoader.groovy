@@ -30,18 +30,24 @@ class DynawoJobDslLoader {
 
         String lib
         String file
-        int id
+        String id
 
-        void lib(String lib) {
+        SolverSpec lib(String lib) {
+            assert lib != null
             this.lib = lib
+            return this
         }
 
-        void file(String file) {
+        SolverSpec file(String file) {
+            assert file != null
             this.file = file
+            return this
         }
 
-        void id(int id) {
+        SolverSpec id(String id) {
+            assert id != null
             this.id = id
+            return this
         }
     }
 
@@ -54,48 +60,68 @@ class DynawoJobDslLoader {
         boolean useStandardModelsModelicaModels
         String iidm
         String parameters
-        int parameterId
+        String parameterId
         String dyd
         String initialState
 
-        void compile(String compile) {
+        ModelerSpec compile(String compile) {
+            assert compile != null
             this.compile = compile
+            return this
         }
 
-        void useStandardModelsPreCompiledModels(boolean useStandardModelsPreCompiledModels) {
+        ModelerSpec useStandardModelsPreCompiledModels(boolean useStandardModelsPreCompiledModels) {
+            assert useStandardModelsPreCompiledModels != null
             this.useStandardModelsPreCompiledModels = useStandardModelsPreCompiledModels
+            return this
         }
 
-        void useStandardModelsModelicaModels(boolean useStandardModelsModelicaModels) {
+        ModelerSpec useStandardModelsModelicaModels(boolean useStandardModelsModelicaModels) {
+            assert useStandardModelsModelicaModels != null
             this.useStandardModelsModelicaModels = useStandardModelsModelicaModels
+            return this
         }
 
-        void preCompiledModelsDir(String preCompiledModelsDir) {
+        ModelerSpec preCompiledModelsDir(String preCompiledModelsDir) {
+            assert preCompiledModelsDir != null
             this.preCompiledModelsDir = preCompiledModelsDir
+            return this
         }
 
-        void modelicaModelsDir(String modelicaModelsDir) {
+        ModelerSpec modelicaModelsDir(String modelicaModelsDir) {
+            assert modelicaModelsDir != null
             this.modelicaModelsDir = modelicaModelsDir
+            return this
         }
 
-        void iidm(String iidm) {
+        ModelerSpec iidm(String iidm) {
+            assert iidm != null
             this.iidm = iidm
+            return this
         }
 
-        void parameters(String parameters) {
+        ModelerSpec parameters(String parameters) {
+            assert parameters != null
             this.parameters = parameters
+            return this
         }
 
-        void parameterId(int parameterId) {
+        ModelerSpec parameterId(String parameterId) {
+            assert parameterId != null
             this.parameterId = parameterId
+            return this
         }
 
-        void dyd(String dyd) {
+        ModelerSpec dyd(String dyd) {
+            assert dyd != null
             this.dyd = dyd
+            return this
         }
 
-        void initialState(String initialState) {
+        ModelerSpec initialState(String initialState) {
+            assert initialState != null
             this.initialState = initialState
+            return this
         }
     }
 
@@ -105,40 +131,51 @@ class DynawoJobDslLoader {
         int stopTime
         boolean activeCriteria
 
-        void startTime(int startTime) {
+        SimulationSpec startTime(int startTime) {
+            assert startTime != null
             this.startTime = startTime
+            return this
         }
 
-        void stopTime(int stopTime) {
+        SimulationSpec stopTime(int stopTime) {
+            assert stopTime != null
             this.stopTime = stopTime
+            return this
         }
 
-        void activeCriteria(boolean activeCriteria) {
+        SimulationSpec activeCriteria(boolean activeCriteria) {
+            assert activeCriteria != null
             this.activeCriteria = activeCriteria
+            return this
         }
     }
-    
+
     static class LogAppenderSpec {
-        
+
         String tag
         String file
         String lvlFilter
-        
-        void tag(String tag) {
+
+        LogAppenderSpec tag(String tag) {
+            assert tag != null
             this.tag = tag
+            return this
         }
-        
-        void file(String file) {
+
+        LogAppenderSpec file(String file) {
+            assert file != null
             this.file = file
+            return this
         }
-        
-        void lvlFilter(String lvlFilter) {
+
+        LogAppenderSpec lvlFilter(String lvlFilter) {
+            assert lvlFilter != null
             this.lvlFilter = lvlFilter
+            return this
         }
     }
 
     static class LogAppendersSpec {
-        
     }
 
     static class OutputsSpec {
@@ -147,18 +184,23 @@ class DynawoJobDslLoader {
         String curve
         final LogAppendersSpec appendersSpec = new LogAppendersSpec()
 
-        void directory(String directory) {
+        OutputsSpec directory(String directory) {
+            assert directory != null
             this.directory = directory
+            return this
         }
 
-        void curve(String curve) {
+        OutputsSpec curve(String curve) {
+            assert curve != null
             this.curve = curve
+            return this
         }
 
-        void appenders(Closure<Void> closure) {
+        OutputsSpec appenders(Closure<Void> closure) {
             def cloned = closure.clone()
             cloned.delegate = appendersSpec
             cloned()
+            return this
         }
     }
 
@@ -171,28 +213,32 @@ class DynawoJobDslLoader {
         final SimulationSpec simulationSpec = new SimulationSpec()
         final OutputsSpec outputsSpec = new OutputsSpec()
 
-        void solver(Closure<Void> closure) {
+        JobSpec solver(Closure<Void> closure) {
             def cloned = closure.clone()
             cloned.delegate = solverSpec
             cloned()
+            return this
         }
 
-        void modeler(Closure<Void> closure) {
+        JobSpec modeler(Closure<Void> closure) {
             def cloned = closure.clone()
             cloned.delegate = modelerSpec
             cloned()
+            return this
         }
 
-        void simulation(Closure<Void> closure) {
+        JobSpec simulation(Closure<Void> closure) {
             def cloned = closure.clone()
             cloned.delegate = simulationSpec
             cloned()
+            return this
         }
 
-        void outputs(Closure<Void> closure) {
+        JobSpec outputs(Closure<Void> closure) {
             def cloned = closure.clone()
             cloned.delegate = outputsSpec
             cloned()
+            return this
         }
     }
 

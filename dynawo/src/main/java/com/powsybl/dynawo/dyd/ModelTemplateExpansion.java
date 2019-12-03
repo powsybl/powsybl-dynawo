@@ -15,7 +15,7 @@ public class ModelTemplateExpansion extends DydParComponent implements DynawoDyn
 
     private final String templateId;
 
-    public ModelTemplateExpansion(String id, String templateId, String parametersFile, int parametersId) {
+    public ModelTemplateExpansion(String id, String templateId, String parametersFile, String parametersId) {
         super(id, parametersFile, parametersId);
         this.templateId = Objects.requireNonNull(templateId);
     }

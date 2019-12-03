@@ -15,7 +15,7 @@ import com.powsybl.dynawo.par.DynawoParameterSet;
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 public interface DynawoDslHandler {
-    
+
     void addJob(DynawoJob job);
 
     void addCurve(DynawoCurve curve);

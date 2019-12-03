@@ -21,6 +21,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
 
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -49,11 +50,12 @@ public final class DynawoInputs {
     public static final String INT = "INT";
 
     private DynawoInputs() {
-        throw new IllegalStateException("Utility class");
     }
 
-    public static void prepare(Network network, DynawoInputProvider inputProvider, DynawoInputProvider defaultsOmegaRefProvider,
-        DynawoInputProvider defaultsLoadProvider, DynawoInputProvider defaultsGeneratorProvider, Path workingDir) throws IOException, XMLStreamException {
+    public static void prepare(Network network, DynawoInputProvider inputProvider,
+        DynawoInputProvider defaultsOmegaRefProvider,
+        DynawoInputProvider defaultsLoadProvider, DynawoInputProvider defaultsGeneratorProvider, Path workingDir)
+        throws IOException, XMLStreamException {
         Path jobFile = workingDir.resolve(JOBS_FILENAME);
         Path dydFile = workingDir.resolve(DYD_FILENAME);
         Path parFile = workingDir.resolve(PAR_FILENAME);
@@ -74,11 +76,14 @@ public final class DynawoInputs {
                 List<DynawoJob> jobs = inputProvider.getDynawoJobs(network);
                 List<DynawoDynamicModel> dyds = inputProvider.getDynawoDynamicModels(network);
                 List<DynawoDynamicModel> defaultsLoadDyds = defaultsLoadProvider.getDynawoDynamicModels(network);
-                List<DynawoDynamicModel> defaultsGeneratorDyds = defaultsGeneratorProvider.getDynawoDynamicModels(network);
-                List<DynawoDynamicModel> defaultsOmegaRefDyds = defaultsOmegaRefProvider.getDynawoDynamicModels(network);
+                List<DynawoDynamicModel> defaultsGeneratorDyds = defaultsGeneratorProvider
+                    .getDynawoDynamicModels(network);
+                List<DynawoDynamicModel> defaultsOmegaRefDyds = defaultsOmegaRefProvider
+                    .getDynawoDynamicModels(network);
                 List<DynawoParameterSet> pars = inputProvider.getDynawoParameterSets(network);
                 List<DynawoParameterSet> defaultsLoadPars = defaultsLoadProvider.getDynawoParameterSets(network);
-                List<DynawoParameterSet> defaultsGeneratorPars = defaultsGeneratorProvider.getDynawoParameterSets(network);
+                List<DynawoParameterSet> defaultsGeneratorPars = defaultsGeneratorProvider
+                    .getDynawoParameterSets(network);
                 List<DynawoParameterSet> spars = inputProvider.getDynawoSolverParameterSets(network);
                 List<DynawoCurve> curves = inputProvider.getDynawoCurves(network);
 
@@ -120,25 +125,33 @@ public final class DynawoInputs {
                 crvXmlWriter.writeComment("Curves for scenario");
                 DynawoCurves.writeCurves(crvXmlWriter, curves);
 
-                int id = DynawoSimulationParameters.getMaxId(pars) + 1;
+                Optional<Integer> maxId = pars.stream().map(DynawoParameterSet::getId).map(Integer::parseInt).max(Integer::compare);
+                int id = 2;
+                if (maxId.isPresent()) {
+                    id = maxId.get();
+                    id++;
+                }
                 for (Load l : network.getLoads()) {
                     if (!DynawoDynamicModels.definedDynamicModel(dyds, l.getId())) {
-                        DynawoSimulationParameters.writeDefaultLoad(parXmlWriter, defaultsLoadPars, id);
-                        DynawoDynamicModels.writeDefaultLoad(dydXmlWriter, defaultsLoadDyds, l, id++);
+                        DynawoSimulationParameters.writeDefaultLoad(parXmlWriter, defaultsLoadPars, Integer.toString(id));
+                        DynawoDynamicModels.writeDefaultLoad(dydXmlWriter, defaultsLoadDyds, l, Integer.toString(id));
+                        id++;
                     }
                 }
                 int gens = DynawoDynamicModels.countGeneratorConnections(dyds);
                 for (Generator g : network.getGenerators()) {
                     if (!DynawoDynamicModels.definedDynamicModel(dyds, g.getId())) {
-                        DynawoSimulationParameters.writeDefaultGenerator(parXmlWriter, defaultsGeneratorPars, id);
-                        DynawoDynamicModels.writeDefaultGenerator(dydXmlWriter, defaultsGeneratorDyds, g, id++, gens);
+                        DynawoSimulationParameters.writeDefaultGenerator(parXmlWriter, defaultsGeneratorPars, Integer.toString(id));
+                        DynawoDynamicModels.writeDefaultGenerator(dydXmlWriter, defaultsGeneratorDyds, g, Integer.toString(id), gens);
+                        id++;
                         gens++;
                     }
                 }
 
-                if (!DynawoDynamicModels.definedDynamicModel(dyds, DynawoParameterType.OMEGA_REF.getValue())) {
-                    DynawoSimulationParameters.writeDefaultOmegaRefParameterSets(parXmlWriter, network);
-                    DynawoDynamicModels.writeDefaultOmegaRef(dydXmlWriter, defaultsOmegaRefDyds, id++);
+                if (!DynawoDynamicModels.definedDynamicModel(dyds, DynawoParameterType.OMEGA_REF.getValue()) &&
+                    !DynawoDynamicModels.definedDynamicModel(dyds, DynawoParameterType.SYS_DATA.getValue())) {
+                    DynawoSimulationParameters.writeDefaultOmegaRefParameterSets(parXmlWriter, network, Integer.toString(id));
+                    DynawoDynamicModels.writeDefaultOmegaRef(dydXmlWriter, defaultsOmegaRefDyds, Integer.toString(id));
                 }
                 jobXmlWriter.writeEndElement();
                 jobXmlWriter.writeEndDocument();
@@ -168,9 +181,6 @@ public final class DynawoInputs {
             "    This Source Code Form is subject to the terms of the Mozilla Public",
             "    License, v. 2.0. If a copy of the MPL was not distributed with this",
             "    file, you can obtain one at http://mozilla.org/MPL/2.0/.",
-            "    SPDX-License-Identifier: MPL-2.0",
-            "",
-            "    This file is part of Dynawo, an hybrid C++/Modelica open source time domain",
-            "    simulation tool for power systems.");
+            "    SPDX-License-Identifier: MPL-2.0");
     }
 }

@@ -7,6 +7,7 @@
 package com.powsybl.dynawo.xml;
 
 import java.util.List;
+import java.util.Map.Entry;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -31,11 +32,11 @@ public final class DynawoSolverParameters {
 
     private static void writeParameterSet(XMLStreamWriter writer, DynawoParameterSet parameterSet)
         throws XMLStreamException {
-        int id = parameterSet.getId();
+        String id = parameterSet.getId();
         writer.writeStartElement("set");
-        writer.writeAttribute("id", Integer.toString(id));
-        for (DynawoParameter parameter : parameterSet.getParameters()) {
-            writeParameter(writer, parameter);
+        writer.writeAttribute("id", id);
+        for (Entry<String, DynawoParameter> parameter : parameterSet.getParameters().entrySet()) {
+            writeParameter(writer, parameter.getValue());
         }
         writer.writeEndElement();
     }

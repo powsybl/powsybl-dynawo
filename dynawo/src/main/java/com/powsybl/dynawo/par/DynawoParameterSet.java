@@ -8,42 +8,48 @@ package com.powsybl.dynawo.par;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 public class DynawoParameterSet {
 
-    private final int id;
-    private final List<DynawoParameter> parameters = new ArrayList<>();
+    private final String id;
+    private final Map<String, DynawoParameter> parameters = new HashMap<>();
     private final List<DynawoParameterTable> parameterTables = new ArrayList<>();
 
-    public DynawoParameterSet(int id) {
+    public DynawoParameterSet(String id) {
         this.id = Objects.requireNonNull(id);
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public List<DynawoParameter> getParameters() {
-        return Collections.unmodifiableList(parameters);
+    public Map<String, DynawoParameter> getParameters() {
+        return Collections.unmodifiableMap(parameters);
     }
 
     public List<DynawoParameterTable> getParameterTables() {
         return Collections.unmodifiableList(parameterTables);
     }
 
-    public DynawoParameterSet addParameters(List<DynawoParameter> parameter) {
-        parameters.addAll(parameter);
+    public DynawoParameterSet addParameters(List<DynawoParameter> parameters) {
+        parameters.forEach(p -> add(p));
         return this;
     }
 
     public DynawoParameterSet add(DynawoParameter parameter) {
         Objects.requireNonNull(parameter);
-        parameters.add(parameter);
+        parameters.put(parameter.getName(), parameter);
+        LOGGER.warn("parameter {} already exists, the last value entered is retained.", parameter.getName());
         return this;
     }
 
@@ -57,4 +63,6 @@ public class DynawoParameterSet {
         parameterTables.add(parameterTable);
         return this;
     }
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(DynawoParameterSet.class);
 }

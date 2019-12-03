@@ -20,17 +20,17 @@ public class DynawoModeler {
     private final boolean useStandardModelsModelicaModels;
     private final String iidm;
     private final String parameters;
-    private final int parameterId;
+    private final String parameterId;
     private final String dyd;
     private final String initialState;
 
-    public DynawoModeler(String compile, String iidm, String parameters, int parameterId, String dyd) {
+    public DynawoModeler(String compile, String iidm, String parameters, String parameterId, String dyd) {
         this(compile, null, true, null, true, iidm, parameters, parameterId, dyd, null);
     }
 
     public DynawoModeler(String compile, String preCompiledModelsDir, boolean useStandardModelsPreCompiledModels,
         String modelicaModelsDir, boolean useStandardModelsModelicaModels, String iidm, String parameters,
-        int parameterId, String dyd, String initialState) {
+        String parameterId, String dyd, String initialState) {
         this.compileDir = Objects.requireNonNull(compile);
         this.preCompiledModelsDir = preCompiledModelsDir;
         this.useStandardModelsPreCompiledModels = useStandardModelsPreCompiledModels;
@@ -71,7 +71,7 @@ public class DynawoModeler {
         return parameters;
     }
 
-    public int getParameterId() {
+    public String getParameterId() {
         return parameterId;
     }
 

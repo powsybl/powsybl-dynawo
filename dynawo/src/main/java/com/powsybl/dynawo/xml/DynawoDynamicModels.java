@@ -56,21 +56,21 @@ public final class DynawoDynamicModels {
 
     public static boolean definedDynamicModel(List<DynawoDynamicModel> dynamicModels, String id) {
         return dynamicModels.stream()
-            .anyMatch(dynamicModel -> dynamicModel.getId() != null && dynamicModel.getId().equals(id));
+            .anyMatch(dynamicModel -> dynamicModel.getId() != null && dynamicModel.getId().contains(id));
     }
 
-    public static void writeDefaultOmegaRef(XMLStreamWriter writer, List<DynawoDynamicModel> dynamicModels, int parId) throws XMLStreamException {
+    public static void writeDefaultOmegaRef(XMLStreamWriter writer, List<DynawoDynamicModel> dynamicModels, String parId) throws XMLStreamException {
         BlackBoxModel defaultModel = (BlackBoxModel) dynamicModels.get(0);
         writeDynamicModel(writer, new BlackBoxModel(defaultModel.getId(), defaultModel.getLib(), DynawoParameterType.DYNAWO_PAR.getValue(), parId));
     }
 
-    public static void writeDefaultLoad(XMLStreamWriter writer, List<DynawoDynamicModel> dynamicModels, Load load, int parId)
+    public static void writeDefaultLoad(XMLStreamWriter writer, List<DynawoDynamicModel> dynamicModels, Load load, String parId)
         throws XMLStreamException {
         writeDefaultLoadBlackBoxModel(writer, dynamicModels, load, parId);
         writeDefaultLoadConnection(writer, dynamicModels, load);
     }
 
-    private static void writeDefaultLoadBlackBoxModel(XMLStreamWriter writer, List<DynawoDynamicModel> dynamicModels, Load load, int parId)
+    private static void writeDefaultLoadBlackBoxModel(XMLStreamWriter writer, List<DynawoDynamicModel> dynamicModels, Load load, String parId)
         throws XMLStreamException {
         BlackBoxModel defaultModel = null;
         for (DynawoDynamicModel dynamicModel : dynamicModels) {
@@ -95,14 +95,14 @@ public final class DynawoDynamicModels {
         }
     }
 
-    public static void writeDefaultGenerator(XMLStreamWriter writer, List<DynawoDynamicModel> dynamicModels, Generator generator, int parId, int id)
+    public static void writeDefaultGenerator(XMLStreamWriter writer, List<DynawoDynamicModel> dynamicModels, Generator generator, String parId, int id)
         throws XMLStreamException {
         writeDefaultGeneratorBlackBoxModel(writer, dynamicModels, generator, parId);
         writeDefaultGeneratorConnection(writer, dynamicModels, generator, id);
     }
 
     private static void writeDefaultGeneratorBlackBoxModel(XMLStreamWriter writer, List<DynawoDynamicModel> dynamicModels, Generator generator,
-        int parId)
+        String parId)
         throws XMLStreamException {
         BlackBoxModel defaultModel = null;
         for (DynawoDynamicModel dynamicModel : dynamicModels) {
@@ -157,7 +157,7 @@ public final class DynawoDynamicModels {
         String id = dynamicModel.getId();
         String lib = dynamicModel.getLib();
         String file = dynamicModel.getParametersFile();
-        int paramId = dynamicModel.getParametersId();
+        String paramId = dynamicModel.getParametersId();
         String staticId = dynamicModel.getStaticId();
         List<StaticRef> staticRefs = dynamicModel.getStaticRefs();
         List<DydComponent> macroStaticRefs = dynamicModel.getMacroStaticRefs();
@@ -213,12 +213,12 @@ public final class DynawoDynamicModels {
         String id = dynamicModel.getId();
         String templateId = dynamicModel.getTemplateId();
         String file = dynamicModel.getParametersFile();
-        int paramId = dynamicModel.getParametersId();
+        String paramId = dynamicModel.getParametersId();
         writer.writeEmptyElement(DYN_URI, "modelTemplateExpansion");
         writer.writeAttribute("id", id);
         writer.writeAttribute("templateId", templateId);
         writer.writeAttribute("parFile", file);
-        writer.writeAttribute("parId", Integer.toString(paramId));
+        writer.writeAttribute("parId", paramId);
     }
 
     private static void writeUnitDynamicModel(XMLStreamWriter writer, UnitDynamicModel dynamicModel)
@@ -228,7 +228,7 @@ public final class DynawoDynamicModels {
         String moFile = dynamicModel.getMoFile();
         String initName = dynamicModel.getInitName();
         String parFile = dynamicModel.getParametersFile();
-        int parId = dynamicModel.getParametersId();
+        String parId = dynamicModel.getParametersId();
         writeUnitDynamicModel(writer, id, name, moFile, initName, parFile, parId);
     }
 
@@ -291,7 +291,7 @@ public final class DynawoDynamicModels {
         writeStaticRef(writer, var, staticVar);
     }
 
-    private static void writeBlackBoxModel(XMLStreamWriter writer, String id, String lib, String parFile, int parId,
+    private static void writeBlackBoxModel(XMLStreamWriter writer, String id, String lib, String parFile, String parId,
         String staticId, List<StaticRef> staticRefs, List<DydComponent> macroStaticRefs) throws XMLStreamException {
         if (staticRefs.isEmpty() && macroStaticRefs.isEmpty()) {
             writer.writeEmptyElement(DYN_URI, "blackBoxModel");
@@ -301,7 +301,7 @@ public final class DynawoDynamicModels {
         writer.writeAttribute("id", id);
         writer.writeAttribute("lib", lib);
         writer.writeAttribute("parFile", parFile);
-        writer.writeAttribute("parId", Integer.toString(parId));
+        writer.writeAttribute("parId", parId);
         if (staticId != null) {
             writer.writeAttribute("staticId", staticId);
         }
@@ -317,13 +317,17 @@ public final class DynawoDynamicModels {
     }
 
     private static void writeUnitDynamicModel(XMLStreamWriter writer, String id, String name, String moFile,
-        String initName, String parFile, int parId) throws XMLStreamException {
+        String initName, String parFile, String parId) throws XMLStreamException {
         writer.writeEmptyElement(DYN_URI, "unitDynamicModel");
         writer.writeAttribute("id", id);
         writer.writeAttribute("name", name);
-        writer.writeAttribute("initName", initName);
-        writer.writeAttribute("parFile", parFile);
-        writer.writeAttribute("parId", Integer.toString(parId));
+        if (initName != null) {
+            writer.writeAttribute("initName", initName);
+        }
+        if (parFile != null) {
+            writer.writeAttribute("parFile", parFile);
+            writer.writeAttribute("parId", parId);
+        }
         if (moFile != null) {
             writer.writeAttribute("moFile", moFile);
         }

@@ -31,27 +31,37 @@ class ModelTemplateDslLoader {
         String name
         String moFile
         String initName
-        String parFile
-        int parId
+        String parametersFile
+        String parametersId
 
-        void name(String name) {
+        UnitDynamicModelSpec name(String name) {
+            assert name != null
             this.name = name
+            return this
         }
 
-        void moFile(String moFile) {
+        UnitDynamicModelSpec moFile(String moFile) {
+            assert moFile != null
             this.moFile = moFile
+            return this
         }
 
-        void initName(String initName) {
+        UnitDynamicModelSpec initName(String initName) {
+            assert initName != null
             this.initName = initName
+            return this
         }
 
-        void parFile(String parFile) {
-            this.parFile = parFile
+        UnitDynamicModelSpec parametersFile(String parametersFile) {
+            assert parametersFile != null
+            this.parametersFile = parametersFile
+            return this
         }
 
-        void parId(int parId) {
-            this.parId = parId
+        UnitDynamicModelSpec parametersId(String parametersId) {
+            assert parametersId != null
+            this.parametersId = parametersId
+            return this
         }
     }
 
@@ -65,20 +75,28 @@ class ModelTemplateDslLoader {
         String id2
         String var2
 
-        void id1(String id1) {
+        ConnectionSpec id1(String id1) {
+            assert id1 != null
             this.id1 = id1
+            return this
         }
 
-        void var1(String var1) {
+        ConnectionSpec var1(String var1) {
+            assert var1 != null
             this.var1 = var1
+            return this
         }
 
-        void id2(String id2) {
+        ConnectionSpec id2(String id2) {
+            assert id2 != null
             this.id2 = id2
+            return this
         }
 
-        void var2(String var2) {
+        ConnectionSpec var2(String var2) {
+            assert var2 != null
             this.var2 = var2
+            return this
         }
     }
 
@@ -87,29 +105,31 @@ class ModelTemplateDslLoader {
 
     static class ModelTemplateSpec {
 
-        int id
+        String id
         final UnitDynamicModelsSpec unitDynamicModelsSpec = new UnitDynamicModelsSpec()
         final ConnectionsSpec connectionsSpec = new ConnectionsSpec()
         final ConnectionsSpec initConnectionsSpec = new ConnectionsSpec()
 
-        void unitDynamicModels(Closure<Void> closure) {
+        ModelTemplateSpec unitDynamicModels(Closure<Void> closure) {
             def cloned = closure.clone()
             cloned.delegate = unitDynamicModelsSpec
             cloned()
+            return this
         }
 
-        void connections(Closure<Void> closure) {
+        ModelTemplateSpec connections(Closure<Void> closure) {
             def cloned = closure.clone()
             cloned.delegate = connectionsSpec
             cloned()
+            return this
         }
 
-        void initConnections(Closure<Void> closure) {
+        ModelTemplateSpec initConnections(Closure<Void> closure) {
             def cloned = closure.clone()
             cloned.delegate = initConnectionsSpec
             cloned()
+            return this
         }
-
     }
 
     static void loadDsl(Binding binding, Network network, Consumer<DynawoDynamicModel> consumer, DynawoDslLoaderObserver observer) {
@@ -149,7 +169,7 @@ class ModelTemplateDslLoader {
             UnitDynamicModelSpec unitDynamicModelSpec = new UnitDynamicModelSpec()
             cloned.delegate = unitDynamicModelSpec
             cloned()
-            UnitDynamicModel unitDynamicModel = new UnitDynamicModel(id, unitDynamicModelSpec.name, unitDynamicModelSpec.moFile, unitDynamicModelSpec.initName, unitDynamicModelSpec.parFile, unitDynamicModelSpec.parId)
+            UnitDynamicModel unitDynamicModel = new UnitDynamicModel(id, unitDynamicModelSpec.name, unitDynamicModelSpec.moFile, unitDynamicModelSpec.initName, unitDynamicModelSpec.parametersFile, unitDynamicModelSpec.parametersId)
             unitDynamicModels.add(unitDynamicModel)
         }
     }

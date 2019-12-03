@@ -11,6 +11,6 @@ package com.powsybl.dynawo.dyd;
  */
 public interface DynawoDynamicModel {
 
-    String getId();
+    public abstract String getId();
 
 }

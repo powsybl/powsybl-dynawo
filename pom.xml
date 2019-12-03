@@ -467,21 +467,6 @@
                 <version>${guava.version}</version>
             </dependency>
             <dependency>
-                <groupId>commons-io</groupId>
-                <artifactId>commons-io</artifactId>
-                <version>${commonsio.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.codehaus.groovy</groupId>
-                <artifactId>groovy-all</artifactId>
-                <version>${groovy.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-                <version>${slf4j.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>powsybl-commons</artifactId>
                 <version>${powsyblcore.version}</version>
@@ -526,36 +511,27 @@
                 <artifactId>powsybl-tools</artifactId>
                 <version>${powsyblcore.version}</version>
             </dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commonsio.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy-all</artifactId>
+                <version>${groovy.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
 
             <!-- Test dependencies -->
             <dependency>
                 <groupId>com.google.jimfs</groupId>
                 <artifactId>jimfs</artifactId>
                 <version>${jimfs.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>${junit.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.mockito</groupId>
-                <artifactId>mockito-all</artifactId>
-                <version>${mockito.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-simple</artifactId>
-                <version>${slf4j.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.xmlunit</groupId>
-                <artifactId>xmlunit-core</artifactId>
-                <version>${xmlunit.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -602,10 +578,51 @@
                 <version>${powsyblcore.version}</version>
                 <scope>test</scope>
             </dependency>
+
+            <!-- Test with all known triple store engines -->
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>powsybl-triple-store-impl-rdf4j</artifactId>
                 <version>${powsyblcore.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <!--
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>powsybl-triple-store-impl-jena</artifactId>
+                <version>${powsyblcore.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>powsybl-triple-store-impl-blazegraph</artifactId>
+                <version>${powsyblcore.version}</version>
+                <scope>test</scope>
+            </dependency>
+            -->
+
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-all</artifactId>
+                <version>${mockito.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-simple</artifactId>
+                <version>${slf4j.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.xmlunit</groupId>
+                <artifactId>xmlunit-core</artifactId>
+                <version>${xmlunit.version}</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>
