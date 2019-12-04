@@ -10,14 +10,14 @@
     This file is part of Dynawo, an hybrid C++/Modelica open source time domain
     simulation tool for power systems.-->
 <curvesInput xmlns="http://www.rte-france.com/dynawo">
-	<!--Curves for scenario-->
-	<curve model="NETWORK" variable="_N1011____TN_Upu_value"/>
-	<curve model="_G10______SM" variable="generator_omegaPu"/>
-	<curve model="_G10______SM" variable="generator_PGen"/>
-	<curve model="_G10______SM" variable="generator_QGen"/>
-	<curve model="_G10______SM" variable="generator_UStatorPu"/>
-	<curve model="_G10______SM" variable="voltageRegulator_UcEfdPu"/>
-	<curve model="_G10______SM" variable="voltageRegulator_EfdPu"/>
-	<curve model="_N1011____EC" variable="load_PPu"/>
-	<curve model="_N1011____EC" variable="load_QPu"/>
+    <!--Curves for scenario-->
+    <curve model="NETWORK" variable="_N1011____TN_Upu_value"/>
+    <curve model="_G10______SM" variable="generator_omegaPu"/>
+    <curve model="_G10______SM" variable="generator_PGen"/>
+    <curve model="_G10______SM" variable="generator_QGen"/>
+    <curve model="_G10______SM" variable="generator_UStatorPu"/>
+    <curve model="_G10______SM" variable="voltageRegulator_UcEfdPu"/>
+    <curve model="_G10______SM" variable="voltageRegulator_EfdPu"/>
+    <curve model="_N1011____EC" variable="load_PPu"/>
+    <curve model="_N1011____EC" variable="load_QPu"/>
 </curvesInput>

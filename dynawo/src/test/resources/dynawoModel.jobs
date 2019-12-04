@@ -10,23 +10,23 @@
     This file is part of Dynawo, an hybrid C++/Modelica open source time domain
     simulation tool for power systems.-->
 <dyn:jobs xmlns:dyn="http://www.rte-france.com/dynawo">
-	<dyn:job name="j1">
-		<dyn:solver lib="lib" parFile="file" parId="2"/>
-		<dyn:modeler compileDir="compile">
-			<dyn:network iidmFile="iidm" parFile="parameters" parId="1"/>
-			<dyn:dynModels dydFile="dyd"/>
-			<dyn:initialState file="initialState"/>
-			<dyn:precompiledModels directory="preCompiledModelsDir" useStandardModels="false"/>
-			<dyn:modelicaModels directory="modelicaModelsDir" useStandardModels="false"/>
-		</dyn:modeler>
-		<dyn:simulation startTime="0" stopTime="30" activateCriteria="false"/>
-		<dyn:outputs directory="directory">
-			<dyn:dumpInitValues local="true" global="true"/>
-			<dyn:curves inputFile="curve" exportMode="CSV"/>
-			<dyn:timeline exportMode="TXT"/>
-			<dyn:logs>
-				<dyn:appender tag="tag" file="file" lvlFilter="lvlFilter"/>
-			</dyn:logs>
-		</dyn:outputs>
-	</dyn:job>
+    <dyn:job name="j1">
+        <dyn:solver lib="lib" parFile="file" parId="2"/>
+        <dyn:modeler compileDir="compile">
+            <dyn:network iidmFile="iidm" parFile="parameters" parId="1"/>
+            <dyn:dynModels dydFile="dyd"/>
+            <dyn:initialState file="initialState"/>
+            <dyn:precompiledModels directory="preCompiledModelsDir" useStandardModels="false"/>
+            <dyn:modelicaModels directory="modelicaModelsDir" useStandardModels="false"/>
+        </dyn:modeler>
+        <dyn:simulation startTime="0" stopTime="30" activateCriteria="false"/>
+        <dyn:outputs directory="directory">
+            <dyn:dumpInitValues local="true" global="true"/>
+            <dyn:curves inputFile="curve" exportMode="CSV"/>
+            <dyn:timeline exportMode="TXT"/>
+            <dyn:logs>
+                <dyn:appender tag="tag" file="file" lvlFilter="lvlFilter"/>
+            </dyn:logs>
+        </dyn:outputs>
+    </dyn:job>
 </dyn:jobs>

@@ -10,12 +10,12 @@
     This file is part of Dynawo, an hybrid C++/Modelica open source time domain
     simulation tool for power systems.-->
 <parametersSet xmlns="http://www.rte-france.com/dynawo">
-	<set id="2">
-		<par type="DOUBLE" name="initStep" value="0.000001"/>
-		<par type="DOUBLE" name="absAccuracy" value="1e-4"/>
-		<par type="DOUBLE" name="minStep" value="0.000001"/>
-		<par type="DOUBLE" name="relAccuracy" value="1e-4"/>
-		<par type="INT" name="order" value="2"/>
-		<par type="DOUBLE" name="maxStep" value="10"/>
-	</set>
+    <set id="2">
+        <par type="DOUBLE" name="initStep" value="0.000001"/>
+        <par type="DOUBLE" name="absAccuracy" value="1e-4"/>
+        <par type="DOUBLE" name="minStep" value="0.000001"/>
+        <par type="DOUBLE" name="relAccuracy" value="1e-4"/>
+        <par type="INT" name="order" value="2"/>
+        <par type="DOUBLE" name="maxStep" value="10"/>
+    </set>
 </parametersSet>

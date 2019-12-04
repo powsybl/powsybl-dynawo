@@ -33,21 +33,21 @@ class DynawoJobDslLoader {
         String id
 
         SolverSpec lib(String lib) {
-			assert lib != null
+            assert lib != null
             this.lib = lib
-			return this
+            return this
         }
 
         SolverSpec file(String file) {
-			assert file != null
+            assert file != null
             this.file = file
-			return this
+            return this
         }
 
         SolverSpec id(String id) {
-			assert id != null
+            assert id != null
             this.id = id
-			return this
+            return this
         }
     }
 
@@ -65,63 +65,63 @@ class DynawoJobDslLoader {
         String initialState
 
         ModelerSpec compile(String compile) {
-			assert compile != null
+            assert compile != null
             this.compile = compile
-			return this
+            return this
         }
 
         ModelerSpec useStandardModelsPreCompiledModels(boolean useStandardModelsPreCompiledModels) {
-			assert useStandardModelsPreCompiledModels != null
+            assert useStandardModelsPreCompiledModels != null
             this.useStandardModelsPreCompiledModels = useStandardModelsPreCompiledModels
-			return this
+            return this
         }
 
         ModelerSpec useStandardModelsModelicaModels(boolean useStandardModelsModelicaModels) {
-			assert useStandardModelsModelicaModels != null
+            assert useStandardModelsModelicaModels != null
             this.useStandardModelsModelicaModels = useStandardModelsModelicaModels
-			return this
+            return this
         }
 
         ModelerSpec preCompiledModelsDir(String preCompiledModelsDir) {
-			assert preCompiledModelsDir != null
+            assert preCompiledModelsDir != null
             this.preCompiledModelsDir = preCompiledModelsDir
-			return this
+            return this
         }
 
         ModelerSpec modelicaModelsDir(String modelicaModelsDir) {
-			assert modelicaModelsDir != null
+            assert modelicaModelsDir != null
             this.modelicaModelsDir = modelicaModelsDir
-			return this
+            return this
         }
 
         ModelerSpec iidm(String iidm) {
-			assert iidm != null
+            assert iidm != null
             this.iidm = iidm
-			return this
+            return this
         }
 
         ModelerSpec parameters(String parameters) {
-			assert parameters != null
+            assert parameters != null
             this.parameters = parameters
-			return this
+            return this
         }
 
         ModelerSpec parameterId(String parameterId) {
-			assert parameterId != null
+            assert parameterId != null
             this.parameterId = parameterId
-			return this
+            return this
         }
 
         ModelerSpec dyd(String dyd) {
-			assert dyd != null
+            assert dyd != null
             this.dyd = dyd
-			return this
+            return this
         }
 
         ModelerSpec initialState(String initialState) {
-			assert initialState != null
+            assert initialState != null
             this.initialState = initialState
-			return this
+            return this
         }
     }
 
@@ -132,51 +132,50 @@ class DynawoJobDslLoader {
         boolean activeCriteria
 
         SimulationSpec startTime(int startTime) {
-			assert startTime != null
+            assert startTime != null
             this.startTime = startTime
-			return this
+            return this
         }
 
         SimulationSpec stopTime(int stopTime) {
-			assert stopTime != null
+            assert stopTime != null
             this.stopTime = stopTime
-			return this
+            return this
         }
 
         SimulationSpec activeCriteria(boolean activeCriteria) {
-			assert activeCriteria != null
+            assert activeCriteria != null
             this.activeCriteria = activeCriteria
-			return this
+            return this
         }
     }
-    
+
     static class LogAppenderSpec {
-        
+
         String tag
         String file
         String lvlFilter
-        
+
         LogAppenderSpec tag(String tag) {
-			assert tag != null
+            assert tag != null
             this.tag = tag
-			return this
+            return this
         }
-        
+
         LogAppenderSpec file(String file) {
-			assert file != null
+            assert file != null
             this.file = file
-			return this
+            return this
         }
-        
+
         LogAppenderSpec lvlFilter(String lvlFilter) {
-			assert lvlFilter != null
+            assert lvlFilter != null
             this.lvlFilter = lvlFilter
-			return this
+            return this
         }
     }
 
     static class LogAppendersSpec {
-        
     }
 
     static class OutputsSpec {
@@ -186,22 +185,22 @@ class DynawoJobDslLoader {
         final LogAppendersSpec appendersSpec = new LogAppendersSpec()
 
         OutputsSpec directory(String directory) {
-			assert directory != null
+            assert directory != null
             this.directory = directory
-			return this
+            return this
         }
 
         OutputsSpec curve(String curve) {
-			assert curve != null
+            assert curve != null
             this.curve = curve
-			return this
+            return this
         }
 
         OutputsSpec appenders(Closure<Void> closure) {
             def cloned = closure.clone()
             cloned.delegate = appendersSpec
             cloned()
-			return this
+            return this
         }
     }
 
@@ -218,28 +217,28 @@ class DynawoJobDslLoader {
             def cloned = closure.clone()
             cloned.delegate = solverSpec
             cloned()
-			return this
+            return this
         }
 
         JobSpec modeler(Closure<Void> closure) {
             def cloned = closure.clone()
             cloned.delegate = modelerSpec
             cloned()
-			return this
+            return this
         }
 
         JobSpec simulation(Closure<Void> closure) {
             def cloned = closure.clone()
             cloned.delegate = simulationSpec
             cloned()
-			return this
+            return this
         }
 
         JobSpec outputs(Closure<Void> closure) {
             def cloned = closure.clone()
             cloned.delegate = outputsSpec
             cloned()
-			return this
+            return this
         }
     }
 

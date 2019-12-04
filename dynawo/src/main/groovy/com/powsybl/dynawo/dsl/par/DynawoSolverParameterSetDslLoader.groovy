@@ -31,33 +31,33 @@ class DynawoSolverParameterSetDslLoader {
         String origData;
 
         ParameterSpec name(String name) {
-			assert name != null
+            assert name != null
             this.name = name
-			return this
+            return this
         }
 
         ParameterSpec type(String type) {
-			assert type != null
+            assert type != null
             this.type = type
-			return this
+            return this
         }
 
         ParameterSpec value(String value) {
-			assert value != null
+            assert value != null
             this.value = value
-			return this
+            return this
         }
 
         ParameterSpec origName(String origName) {
-			assert origName != null
+            assert origName != null
             this.origName = origName
-			return this
+            return this
         }
 
         ParameterSpec origData(String origData) {
-			assert origData != null
+            assert origData != null
             this.origData = origData
-			return this
+            return this
         }
     }
 
@@ -73,7 +73,7 @@ class DynawoSolverParameterSetDslLoader {
             def cloned = closure.clone()
             cloned.delegate = parametersSpec
             cloned()
-			return this
+            return this
         }
     }
 

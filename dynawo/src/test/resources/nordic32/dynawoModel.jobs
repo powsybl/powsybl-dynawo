@@ -10,24 +10,24 @@
     This file is part of Dynawo, an hybrid C++/Modelica open source time domain
     simulation tool for power systems.-->
 <dyn:jobs xmlns:dyn="http://www.rte-france.com/dynawo">
-	<dyn:job name="Nordic 32 - Disconnect Line">
-		<dyn:solver lib="libdynawo_SolverIDA" parFile="solvers.par" parId="2"/>
-		<dyn:modeler compileDir="outputs/compilation">
-			<dyn:network iidmFile="dynawoModel.xiidm" parFile="dynawoModel.par" parId="1"/>
-			<dyn:dynModels dydFile="dynawoModel.dyd"/>
-			<dyn:precompiledModels useStandardModels="true"/>
-			<dyn:modelicaModels useStandardModels="true"/>
-		</dyn:modeler>
-		<dyn:simulation startTime="0" stopTime="30" activateCriteria="false"/>
-		<dyn:outputs directory="outputs">
-			<dyn:dumpInitValues local="true" global="true"/>
-			<dyn:curves inputFile="dynawoModel.crv" exportMode="CSV"/>
-			<dyn:timeline exportMode="TXT"/>
-			<dyn:logs>
-				<dyn:appender tag="" file="dynawo.log" lvlFilter="DEBUG"/>
-				<dyn:appender tag="COMPILE" file="dynawoCompiler.log" lvlFilter="DEBUG"/>
-				<dyn:appender tag="MODELER" file="dynawoModeler.log" lvlFilter="DEBUG"/>
-			</dyn:logs>
-		</dyn:outputs>
-	</dyn:job>
+    <dyn:job name="Nordic 32 - Disconnect Line">
+        <dyn:solver lib="libdynawo_SolverIDA" parFile="solvers.par" parId="2"/>
+        <dyn:modeler compileDir="outputs/compilation">
+            <dyn:network iidmFile="dynawoModel.xiidm" parFile="dynawoModel.par" parId="1"/>
+            <dyn:dynModels dydFile="dynawoModel.dyd"/>
+            <dyn:precompiledModels useStandardModels="true"/>
+            <dyn:modelicaModels useStandardModels="true"/>
+        </dyn:modeler>
+        <dyn:simulation startTime="0" stopTime="30" activateCriteria="false"/>
+        <dyn:outputs directory="outputs">
+            <dyn:dumpInitValues local="true" global="true"/>
+            <dyn:curves inputFile="dynawoModel.crv" exportMode="CSV"/>
+            <dyn:timeline exportMode="TXT"/>
+            <dyn:logs>
+                <dyn:appender tag="" file="dynawo.log" lvlFilter="DEBUG"/>
+                <dyn:appender tag="COMPILE" file="dynawoCompiler.log" lvlFilter="DEBUG"/>
+                <dyn:appender tag="MODELER" file="dynawoModeler.log" lvlFilter="DEBUG"/>
+            </dyn:logs>
+        </dyn:outputs>
+    </dyn:job>
 </dyn:jobs>

@@ -10,14 +10,14 @@
     This file is part of Dynawo, an hybrid C++/Modelica open source time domain
     simulation tool for power systems.-->
 <parametersSet xmlns="http://www.rte-france.com/dynawo">
-	<set id="1">
-		<par type="type2" name="name2" value="value2"/>
-		<reference name="name1" origData="origData1" origName="origName1" type="type1" componentId="componentId1"/>
-		<parTable type="nameTable" name="typeTable">
-			<row row="1" column="1" value="valueRow"/>
-		</parTable>
-	</set>
-	<set id="OmegaRef">
-		<par type="INT" name="nbGen" value="0"/>
-	</set>
+    <set id="1">
+        <par type="type2" name="name2" value="value2"/>
+        <reference name="name1" origData="origData1" origName="origName1" type="type1" componentId="componentId1"/>
+        <parTable type="nameTable" name="typeTable">
+            <row row="1" column="1" value="valueRow"/>
+        </parTable>
+    </set>
+    <set id="OmegaRef">
+        <par type="INT" name="nbGen" value="0"/>
+    </set>
 </parametersSet>
