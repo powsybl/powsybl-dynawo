@@ -1,2 +1,2 @@
 # powsybl-dynawo
-Dynawo integration in powsybl
+[Dynawo](https://dynawo.github.io/) integration in powsybl
