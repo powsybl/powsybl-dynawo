@@ -467,47 +467,47 @@
                 <version>${guava.version}</version>
             </dependency>
             <dependency>
-                <groupId>${project.groupId}</groupId>
+                <groupId>com.powsybl</groupId>
                 <artifactId>powsybl-commons</artifactId>
                 <version>${powsyblcore.version}</version>
             </dependency>
             <dependency>
-                <groupId>${project.groupId}</groupId>
+                <groupId>com.powsybl</groupId>
                 <artifactId>powsybl-config-classic</artifactId>
                 <version>${powsyblcore.version}</version>
             </dependency>
             <dependency>
-                <groupId>${project.groupId}</groupId>
+                <groupId>com.powsybl</groupId>
                 <artifactId>powsybl-computation-local</artifactId>
                 <version>${powsyblcore.version}</version>
             </dependency>
             <dependency>
-                <groupId>${project.groupId}</groupId>
+                <groupId>com.powsybl</groupId>
                 <artifactId>powsybl-contingency-api</artifactId>
                 <version>${powsyblcore.version}</version>
             </dependency>
             <dependency>
-                <groupId>${project.groupId}</groupId>
+                <groupId>com.powsybl</groupId>
                 <artifactId>powsybl-dsl</artifactId>
                 <version>${powsyblcore.version}</version>
             </dependency>
             <dependency>
-                <groupId>${project.groupId}</groupId>
+                <groupId>com.powsybl</groupId>
                 <artifactId>powsybl-iidm-api</artifactId>
                 <version>${powsyblcore.version}</version>
             </dependency>
             <dependency>
-                <groupId>${project.groupId}</groupId>
+                <groupId>com.powsybl</groupId>
                 <artifactId>powsybl-iidm-xml-converter</artifactId>
                 <version>${powsyblcore.version}</version>
             </dependency>
             <dependency>
-                <groupId>${project.groupId}</groupId>
+                <groupId>com.powsybl</groupId>
                 <artifactId>powsybl-simulation-api</artifactId>
                 <version>${powsyblcore.version}</version>
             </dependency>
             <dependency>
-                <groupId>${project.groupId}</groupId>
+                <groupId>com.powsybl</groupId>
                 <artifactId>powsybl-tools</artifactId>
                 <version>${powsyblcore.version}</version>
             </dependency>
@@ -535,45 +535,45 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>${project.groupId}</groupId>
+                <groupId>com.powsybl</groupId>
                 <artifactId>powsybl-cgmes-conversion</artifactId>
                 <version>${powsyblcore.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>${project.groupId}</groupId>
+                <groupId>com.powsybl</groupId>
                 <artifactId>powsybl-cgmes-model</artifactId>
                 <version>${powsyblcore.version}</version>
                 <type>test-jar</type>
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>${project.groupId}</groupId>
+                <groupId>com.powsybl</groupId>
                 <artifactId>powsybl-commons</artifactId>
                 <version>${powsyblcore.version}</version>
                 <type>test-jar</type>
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>${project.groupId}</groupId>
+                <groupId>com.powsybl</groupId>
                 <artifactId>powsybl-config-test</artifactId>
                 <version>${powsyblcore.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>${project.groupId}</groupId>
+                <groupId>com.powsybl</groupId>
                 <artifactId>powsybl-iidm-impl</artifactId>
                 <version>${powsyblcore.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>${project.groupId}</groupId>
+                <groupId>com.powsybl</groupId>
                 <artifactId>powsybl-iidm-test</artifactId>
                 <version>${powsyblcore.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>${project.groupId}</groupId>
+                <groupId>com.powsybl</groupId>
                 <artifactId>powsybl-triple-store-api</artifactId>
                 <version>${powsyblcore.version}</version>
                 <scope>test</scope>
@@ -581,20 +581,20 @@
 
             <!-- Test with all known triple store engines -->
             <dependency>
-                <groupId>${project.groupId}</groupId>
+                <groupId>com.powsybl</groupId>
                 <artifactId>powsybl-triple-store-impl-rdf4j</artifactId>
                 <version>${powsyblcore.version}</version>
                 <scope>test</scope>
             </dependency>
             <!--
             <dependency>
-                <groupId>${project.groupId}</groupId>
+                <groupId>com.powsybl</groupId>
                 <artifactId>powsybl-triple-store-impl-jena</artifactId>
                 <version>${powsyblcore.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>${project.groupId}</groupId>
+                <groupId>com.powsybl</groupId>
                 <artifactId>powsybl-triple-store-impl-blazegraph</artifactId>
                 <version>${powsyblcore.version}</version>
                 <scope>test</scope>
