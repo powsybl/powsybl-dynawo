@@ -48,8 +48,10 @@ public class DynawoParameterSet {
 
     public DynawoParameterSet add(DynawoParameter parameter) {
         Objects.requireNonNull(parameter);
+        if (parameters.containsKey(parameter.getName())) {
+            LOGGER.warn("parameter {} already exists, the last value entered is retained.", parameter.getName());
+        }
         parameters.put(parameter.getName(), parameter);
-        LOGGER.warn("parameter {} already exists, the last value entered is retained.", parameter.getName());
         return this;
     }
 
