@@ -10,8 +10,6 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.powsybl.dynawo.crv.DynawoCurve;
-
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
