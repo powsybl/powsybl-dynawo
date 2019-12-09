@@ -14,7 +14,6 @@ import javax.xml.stream.XMLStreamException;
 import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.datasource.FileDataSource;
 import com.powsybl.dynawo.DynawoInputProvider;
-import com.powsybl.dynawo.dsl.GroovyDslDynawoInputProvider;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.xml.XMLExporter;
 
@@ -31,14 +30,11 @@ public class DynawoXmlExporter {
 
     public DynawoXmlExporter(PlatformConfig platformConfig) {
         this.platformConfig = platformConfig;
-        this.defaultsLoadProvider = new GroovyDslDynawoInputProvider(getClass().getResourceAsStream("/defaultsLoad.groovy"));
-        this.defaultsGeneratorProvider = new GroovyDslDynawoInputProvider(getClass().getResourceAsStream("/defaultsGenerator.groovy"));
-        this.defaultsOmegaRefProvider = new GroovyDslDynawoInputProvider(getClass().getResourceAsStream("/defaultsOmegaRef.groovy"));
     }
 
     public String export(Network network, DynawoInputProvider dynawoProvider, Path workingDir) throws IOException, XMLStreamException {
         String dynawoJobsFile = DEFAULT_DYNAWO_CASE_NAME;
-        DynawoInputs.prepare(network, dynawoProvider, defaultsOmegaRefProvider, defaultsLoadProvider, defaultsGeneratorProvider, workingDir);
+        DynawoInputs.prepare(network, dynawoProvider, workingDir);
         if (network != null) {
             Path jobsFile = workingDir.resolve("dynawoModel.jobs");
             XMLExporter xmlExporter = new XMLExporter(platformConfig);
@@ -50,8 +46,5 @@ public class DynawoXmlExporter {
     }
 
     private final PlatformConfig platformConfig;
-    private DynawoInputProvider defaultsLoadProvider;
-    private DynawoInputProvider defaultsGeneratorProvider;
-    private DynawoInputProvider defaultsOmegaRefProvider;
 
 }

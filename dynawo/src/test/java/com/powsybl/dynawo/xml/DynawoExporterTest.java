@@ -102,6 +102,7 @@ public class DynawoExporterTest extends AbstractConverterTest {
             "        startTime 0",
             "        stopTime 30",
             "        activeCriteria false",
+            "        precision 1e-6",
             "    }",
             "    outputs {",
             "        directory 'directory'",

@@ -38,5 +38,4 @@
         <dyn:staticRef var="var" staticVar="staticVar"/>
     </dyn:macroStaticReference>
     <dyn:macroConnect connector="connector" id1="id1" id2="id2"/>
-    <dyn:blackBoxModel id="OMEGA_REF" lib="DYNModelOmegaRef" parFile="dynawoModel.par" parId="2"/>
 </dyn:dynamicModelsArchitecture>

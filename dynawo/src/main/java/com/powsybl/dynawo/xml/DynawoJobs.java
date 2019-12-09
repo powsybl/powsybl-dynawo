@@ -97,10 +97,14 @@ public final class DynawoJobs {
         int startTime = simulation.getStartTime();
         int stopTime = simulation.getStopTime();
         boolean activeCriteria = simulation.isActiveCriteria();
+        double precision = simulation.getPrecision();
         writer.writeEmptyElement(DYN_URI, "simulation");
         writer.writeAttribute("startTime", Integer.toString(startTime));
         writer.writeAttribute("stopTime", Integer.toString(stopTime));
         writer.writeAttribute("activateCriteria", Boolean.toString(activeCriteria));
+        if (precision != 0.0) {
+            writer.writeAttribute("precision", Double.toString(precision));
+        }
     }
 
     private static void writeOutput(XMLStreamWriter writer, DynawoOutputs outputs) throws XMLStreamException {

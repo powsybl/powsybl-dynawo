@@ -23,7 +23,7 @@ public class DynawoJobTest {
 
         DynawoSolver solver = new DynawoSolver("lib", "file", "1");
         DynawoModeler modeler = new DynawoModeler("compile", "iidm", "parameters", "1", "dyd");
-        DynawoSimulation simulation = new DynawoSimulation(0, 1, false);
+        DynawoSimulation simulation = new DynawoSimulation(0, 1, false, 1e-6);
         LogAppender appender = new LogAppender("tag", "file", "lvlFilter");
         DynawoOutputs outputs = new DynawoOutputs("directory", "curve");
         outputs.add(appender);

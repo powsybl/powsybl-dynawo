@@ -17,7 +17,4 @@
             <row row="1" column="1" value="valueRow"/>
         </parTable>
     </set>
-    <set id="2">
-        <par type="INT" name="nbGen" value="0"/>
-    </set>
 </parametersSet>

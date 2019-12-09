@@ -42,7 +42,7 @@ public class DynawoParameterSet {
     }
 
     public DynawoParameterSet addParameters(List<DynawoParameter> parameters) {
-        parameters.forEach(p -> add(p));
+        parameters.forEach(this::add);
         return this;
     }
 

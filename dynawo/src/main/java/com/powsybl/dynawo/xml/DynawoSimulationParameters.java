@@ -6,20 +6,16 @@
  */
 package com.powsybl.dynawo.xml;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
-import com.powsybl.dynawo.DynawoParameterType;
 import com.powsybl.dynawo.par.DynawoParameter;
 import com.powsybl.dynawo.par.DynawoParameterRow;
 import com.powsybl.dynawo.par.DynawoParameterSet;
 import com.powsybl.dynawo.par.DynawoParameterTable;
-import com.powsybl.iidm.network.Network;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -34,42 +30,6 @@ public final class DynawoSimulationParameters {
         for (DynawoParameterSet parameterSet : parameterSets) {
             writeParameterSet(writer, parameterSet);
         }
-    }
-
-    public static void writeDefaultOmegaRefParameterSets(XMLStreamWriter writer, Network network, String parId)
-        throws XMLStreamException {
-        List<DynawoParameter> parameters = new ArrayList<>();
-        parameters
-            .add(new DynawoParameter("nbGen", DynawoParameterType.INT.getValue(), "" + network.getGeneratorCount()));
-        for (int i = 0; i < network.getGeneratorCount(); i++) {
-            parameters.add(new DynawoParameter("weight_gen_" + i, DynawoParameterType.DOUBLE.getValue(), "1"));
-        }
-        DynawoParameterSet parameterSet = new DynawoParameterSet(parId);
-        parameterSet.addParameters(Collections.unmodifiableList(parameters));
-        writeParameterSet(writer, parameterSet);
-    }
-
-    public static void writeDefaultLoad(XMLStreamWriter writer, List<DynawoParameterSet> parameterSets, String setId) throws XMLStreamException {
-        writeDefaultParameterSet(writer, parameterSets, setId);
-    }
-
-    public static void writeDefaultGenerator(XMLStreamWriter writer, List<DynawoParameterSet> parameterSets, String setId) throws XMLStreamException {
-        writeDefaultParameterSet(writer, parameterSets, setId);
-    }
-
-    public static void writeDefaultParameterSet(XMLStreamWriter writer, List<DynawoParameterSet> parameterSets, String setId) throws XMLStreamException {
-        List<DynawoParameter> parameters = new ArrayList<>();
-        for (Entry<String, DynawoParameter> entry : parameterSets.get(0).getParameters().entrySet()) {
-            DynawoParameter parameter = entry.getValue();
-            if (parameter.isReference()) {
-                parameters.add(new DynawoParameter(parameter.getName(), parameter.getType(), parameter.getOrigData(), parameter.getOrigName()));
-            } else {
-                parameters.add(new DynawoParameter(parameter.getName(), parameter.getType(), parameter.getValue()));
-            }
-        }
-        DynawoParameterSet parameterSet = new DynawoParameterSet(setId);
-        parameterSet.addParameters(Collections.unmodifiableList(parameters));
-        writeParameterSet(writer, parameterSet);
     }
 
     private static void writeParameterSet(XMLStreamWriter writer, DynawoParameterSet parameterSet)

@@ -6,6 +6,12 @@
  */
 package com.powsybl.dynawo.simulator.input;
 
+import static com.powsybl.dynawo.simulator.DynawoConstants.CRV_FILENAME;
+import static com.powsybl.dynawo.simulator.DynawoConstants.DYD_FILENAME;
+import static com.powsybl.dynawo.simulator.DynawoConstants.PAR_FILENAME;
+import static com.powsybl.dynawo.simulator.DynawoXmlConstants.DYN_PREFIX;
+import static com.powsybl.dynawo.simulator.DynawoXmlConstants.DYN_URI;
+
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
@@ -17,20 +23,11 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.Generator;
 import com.powsybl.iidm.network.Line;
 import com.powsybl.iidm.network.Load;
 import com.powsybl.iidm.network.Network;
-
-import static com.powsybl.dynawo.simulator.DynawoConstants.DYD_FILENAME;
-import static com.powsybl.dynawo.simulator.DynawoConstants.PAR_FILENAME;
-import static com.powsybl.dynawo.simulator.DynawoConstants.CRV_FILENAME;
-
-import static com.powsybl.dynawo.simulator.DynawoXmlConstants.*;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -141,6 +138,4 @@ public final class DynawoInputs {
             "    This file is part of Dynawo, an hybrid C++/Modelica open source time domain",
             "    simulation tool for power systems.");
     }
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(DynawoInputs.class);
 }
