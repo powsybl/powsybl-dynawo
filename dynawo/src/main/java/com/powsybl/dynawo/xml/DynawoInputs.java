@@ -50,95 +50,126 @@ public final class DynawoInputs {
 
     public static void prepare(Network network, DynawoInputProvider inputProvider, Path workingDir)
         throws IOException, XMLStreamException {
+        prepareJobFile(network, inputProvider, workingDir);
+        prepareDydFile(network, inputProvider, workingDir);
+        prepareParFile(network, inputProvider, workingDir);
+        prepareParSolverFile(network, inputProvider, workingDir);
+        prepareCrvFile(network, inputProvider, workingDir);
+    }
+
+    public static void prepareJobFile(Network network, DynawoInputProvider inputProvider, Path workingDir)
+        throws IOException, XMLStreamException {
         Path jobFile = workingDir.resolve(JOBS_FILENAME);
-        Path dydFile = workingDir.resolve(DYD_FILENAME);
-        Path parFile = workingDir.resolve(PAR_FILENAME);
-        Path parSolverFile = workingDir.resolve(SOLVER_PAR_FILENAME);
-        Path crvFile = workingDir.resolve(CRV_FILENAME);
         XMLOutputFactory output = XMLOutputFactory.newInstance();
-        try (Writer jobWriter = Files.newBufferedWriter(jobFile, StandardCharsets.UTF_8);
-            Writer dydWriter = Files.newBufferedWriter(dydFile, StandardCharsets.UTF_8);
-            Writer parWriter = Files.newBufferedWriter(parFile, StandardCharsets.UTF_8);
-            Writer parSolverWriter = Files.newBufferedWriter(parSolverFile, StandardCharsets.UTF_8);
-            Writer crvWriter = Files.newBufferedWriter(crvFile, StandardCharsets.UTF_8)) {
+        try (Writer jobWriter = Files.newBufferedWriter(jobFile, StandardCharsets.UTF_8)) {
             XMLStreamWriter jobXmlWriter = output.createXMLStreamWriter(jobWriter);
-            XMLStreamWriter dydXmlWriter = output.createXMLStreamWriter(dydWriter);
-            XMLStreamWriter parXmlWriter = output.createXMLStreamWriter(parWriter);
-            XMLStreamWriter parSolverXmlWriter = output.createXMLStreamWriter(parSolverWriter);
-            XMLStreamWriter crvXmlWriter = output.createXMLStreamWriter(crvWriter);
             try {
                 List<DynawoJob> jobs = inputProvider.getDynawoJobs(network);
-                List<DynawoDynamicModel> dyds = inputProvider.getDynawoDynamicModels(network);
-                List<DynawoParameterSet> pars = inputProvider.getDynawoParameterSets(network);
-                List<DynawoParameterSet> spars = inputProvider.getDynawoSolverParameterSets(network);
-                List<DynawoCurve> curves = inputProvider.getDynawoCurves(network);
 
                 jobXmlWriter.writeStartDocument(StandardCharsets.UTF_8.toString(), "1.0");
-                dydXmlWriter.writeStartDocument(StandardCharsets.UTF_8.toString(), "1.0");
-                parXmlWriter.writeStartDocument(StandardCharsets.UTF_8.toString(), "1.0");
-                parSolverXmlWriter.writeStartDocument(StandardCharsets.UTF_8.toString(), "1.0");
-                crvXmlWriter.writeStartDocument(StandardCharsets.UTF_8.toString(), "1.0");
-
-                jobXmlWriter.writeComment(getCopyrightText());
-                dydXmlWriter.writeComment(getCopyrightText());
-                parXmlWriter.writeComment(getCopyrightText());
-                parSolverXmlWriter.writeComment(getCopyrightText());
-                crvXmlWriter.writeComment(getCopyrightText());
 
                 jobXmlWriter.setPrefix(DYN_PREFIX, DYN_URI);
                 jobXmlWriter.writeStartElement(DYN_URI, "jobs");
                 jobXmlWriter.writeNamespace(DYN_PREFIX, DYN_URI);
                 DynawoJobs.writeJobs(jobXmlWriter, jobs);
+                jobXmlWriter.writeEndElement();
+                jobXmlWriter.writeEndDocument();
+            } finally {
+                jobXmlWriter.close();
+            }
+        }
+    }
+
+    public static void prepareDydFile(Network network, DynawoInputProvider inputProvider, Path workingDir)
+        throws IOException, XMLStreamException {
+        Path dydFile = workingDir.resolve(DYD_FILENAME);
+        XMLOutputFactory output = XMLOutputFactory.newInstance();
+        try (Writer dydWriter = Files.newBufferedWriter(dydFile, StandardCharsets.UTF_8)) {
+            XMLStreamWriter dydXmlWriter = output.createXMLStreamWriter(dydWriter);
+            try {
+                List<DynawoDynamicModel> dyds = inputProvider.getDynawoDynamicModels(network);
+
+                dydXmlWriter.writeStartDocument(StandardCharsets.UTF_8.toString(), "1.0");
 
                 dydXmlWriter.setPrefix(DYN_PREFIX, DYN_URI);
                 dydXmlWriter.writeStartElement(DYN_URI, "dynamicModelsArchitecture");
                 dydXmlWriter.writeNamespace(DYN_PREFIX, DYN_URI);
                 DynawoDynamicModels.writeDynamicModels(dydXmlWriter, dyds);
+                dydXmlWriter.writeEndElement();
+                dydXmlWriter.writeEndDocument();
+            } finally {
+                dydXmlWriter.close();
+            }
+        }
+    }
+
+    public static void prepareParFile(Network network, DynawoInputProvider inputProvider, Path workingDir)
+        throws IOException, XMLStreamException {
+        Path parFile = workingDir.resolve(PAR_FILENAME);
+        XMLOutputFactory output = XMLOutputFactory.newInstance();
+        try (Writer parWriter = Files.newBufferedWriter(parFile, StandardCharsets.UTF_8)) {
+            XMLStreamWriter parXmlWriter = output.createXMLStreamWriter(parWriter);
+            try {
+                List<DynawoParameterSet> pars = inputProvider.getDynawoParameterSets(network);
+
+                parXmlWriter.writeStartDocument(StandardCharsets.UTF_8.toString(), "1.0");
 
                 parXmlWriter.setPrefix(EMPTY_PREFIX, DYN_URI);
                 parXmlWriter.writeStartElement("parametersSet");
                 parXmlWriter.writeNamespace(EMPTY_PREFIX, DYN_URI);
                 DynawoSimulationParameters.writeParameterSets(parXmlWriter, pars);
+                parXmlWriter.writeEndElement();
+                parXmlWriter.writeEndDocument();
+            } finally {
+                parXmlWriter.close();
+            }
+        }
+    }
+
+    public static void prepareParSolverFile(Network network, DynawoInputProvider inputProvider, Path workingDir)
+        throws IOException, XMLStreamException {
+        Path parSolverFile = workingDir.resolve(SOLVER_PAR_FILENAME);
+        XMLOutputFactory output = XMLOutputFactory.newInstance();
+        try (Writer parSolverWriter = Files.newBufferedWriter(parSolverFile, StandardCharsets.UTF_8)) {
+            XMLStreamWriter parSolverXmlWriter = output.createXMLStreamWriter(parSolverWriter);
+            try {
+                List<DynawoParameterSet> spars = inputProvider.getDynawoSolverParameterSets(network);
+
+                parSolverXmlWriter.writeStartDocument(StandardCharsets.UTF_8.toString(), "1.0");
 
                 parSolverXmlWriter.setPrefix(EMPTY_PREFIX, DYN_URI);
                 parSolverXmlWriter.writeStartElement("parametersSet");
                 parSolverXmlWriter.writeNamespace(EMPTY_PREFIX, DYN_URI);
                 DynawoSolverParameters.writeParameterSets(parSolverXmlWriter, spars);
+                parSolverXmlWriter.writeEndElement();
+                parSolverXmlWriter.writeEndDocument();
+            } finally {
+                parSolverXmlWriter.close();
+            }
+        }
+    }
+
+    public static void prepareCrvFile(Network network, DynawoInputProvider inputProvider, Path workingDir)
+        throws IOException, XMLStreamException {
+        Path crvFile = workingDir.resolve(CRV_FILENAME);
+        XMLOutputFactory output = XMLOutputFactory.newInstance();
+        try (Writer crvWriter = Files.newBufferedWriter(crvFile, StandardCharsets.UTF_8)) {
+            XMLStreamWriter crvXmlWriter = output.createXMLStreamWriter(crvWriter);
+            try {
+                List<DynawoCurve> curves = inputProvider.getDynawoCurves(network);
+
+                crvXmlWriter.writeStartDocument(StandardCharsets.UTF_8.toString(), "1.0");
 
                 crvXmlWriter.setPrefix(EMPTY_PREFIX, DYN_URI);
                 crvXmlWriter.writeStartElement("curvesInput");
                 crvXmlWriter.writeNamespace(EMPTY_PREFIX, DYN_URI);
                 crvXmlWriter.writeComment("Curves for scenario");
                 DynawoCurves.writeCurves(crvXmlWriter, curves);
-
-                jobXmlWriter.writeEndElement();
-                jobXmlWriter.writeEndDocument();
-                dydXmlWriter.writeEndElement();
-                dydXmlWriter.writeEndDocument();
-                parXmlWriter.writeEndElement();
-                parXmlWriter.writeEndDocument();
-                parSolverXmlWriter.writeEndElement();
-                parSolverXmlWriter.writeEndDocument();
                 crvXmlWriter.writeEndElement();
                 crvXmlWriter.writeEndDocument();
             } finally {
-                jobXmlWriter.close();
-                dydXmlWriter.close();
-                parXmlWriter.close();
-                parSolverXmlWriter.close();
                 crvXmlWriter.close();
             }
         }
-    }
-
-    public static String getCopyrightText() {
-        return String.join(System.lineSeparator(),
-            "    Copyright (c) 2015-2019, RTE (http://www.rte-france.com)",
-            "    See AUTHORS.txt",
-            "    All rights reserved.",
-            "    This Source Code Form is subject to the terms of the Mozilla Public",
-            "    License, v. 2.0. If a copy of the MPL was not distributed with this",
-            "    file, you can obtain one at http://mozilla.org/MPL/2.0/.",
-            "    SPDX-License-Identifier: MPL-2.0");
     }
 }

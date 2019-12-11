@@ -8,6 +8,7 @@ package com.powsybl.dynawo.xml;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Objects;
 
 import javax.xml.stream.XMLStreamException;
 
@@ -29,6 +30,7 @@ public class DynawoXmlExporter {
     }
 
     public DynawoXmlExporter(PlatformConfig platformConfig) {
+        Objects.nonNull(platformConfig);
         this.platformConfig = platformConfig;
     }
 

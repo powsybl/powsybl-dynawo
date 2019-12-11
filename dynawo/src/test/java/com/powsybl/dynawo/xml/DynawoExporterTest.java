@@ -10,10 +10,7 @@ import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Writer;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Properties;
 
 import javax.xml.stream.XMLStreamException;
@@ -47,7 +44,7 @@ public class DynawoExporterTest extends AbstractConverterTest {
         tmpDir = Files.createDirectory(fileSystem.getPath("/tmp"));
         network = NetworkFactory.findDefault().createNetwork("network1", "test");
         dynawoProvider = new GroovyDslDynawoInputProvider(getClass().getResourceAsStream("/nordic32/nordic32.groovy"));
-        dslFile = fileSystem.getPath("/test.dsl");
+        dslFile = getClass().getResourceAsStream("/exportTest.groovy");
         exporter = new DynawoXmlExporter();
     }
 
@@ -72,257 +69,49 @@ public class DynawoExporterTest extends AbstractConverterTest {
         });
     }
 
-    private void writeToDslFile(String... lines) throws IOException {
-        try (Writer writer = Files.newBufferedWriter(dslFile, StandardCharsets.UTF_8)) {
-            writer.write(String.join(System.lineSeparator(), lines));
+    @Test
+    public void testJob() throws IOException, XMLStreamException {
+        exporter.export(network, new GroovyDslDynawoInputProvider(dslFile), tmpDir);
+        try (InputStream is = Files.newInputStream(tmpDir.resolve("dynawoModel.jobs"))) {
+            assertNotNull(is);
+            compareXml(getClass().getResourceAsStream("/dynawoModel.jobs"), is);
         }
     }
 
     @Test
-    public void testJob() throws IOException, XMLStreamException {
-        writeToDslFile("job('j1') {",
-            "    solver {",
-            "        lib 'lib'",
-            "        file 'file'",
-            "        id '2'",
-            "    }",
-            "    modeler {",
-            "        compile 'compile'",
-            "        iidm 'iidm'",
-            "        parameters 'parameters'",
-            "        parameterId '1'",
-            "        dyd 'dyd'",
-            "        useStandardModelsPreCompiledModels false",
-            "        useStandardModelsModelicaModels false",
-            "        preCompiledModelsDir 'preCompiledModelsDir'",
-            "        modelicaModelsDir 'modelicaModelsDir'",
-            "        initialState 'initialState'",
-            "    }",
-            "    simulation {",
-            "        startTime 0",
-            "        stopTime 30",
-            "        activeCriteria false",
-            "        precision 1e-6",
-            "    }",
-            "    outputs {",
-            "        directory 'directory'",
-            "        curve 'curve'",
-            "        appenders {",
-            "            appender {",
-            "                tag 'tag'",
-            "                file 'file'",
-            "                lvlFilter 'lvlFilter'",
-            "            }",
-            "        }",
-            "    }",
-            "}");
-
-        exporter.export(network, new GroovyDslDynawoInputProvider(dslFile), tmpDir);
-        InputStream is = Files.newInputStream(tmpDir.resolve("dynawoModel.jobs"));
-        assertNotNull(is);
-        compareXml(getClass().getResourceAsStream("/dynawoModel.jobs"), is);
-    }
-
-    @Test
     public void testCurve() throws IOException, XMLStreamException {
-        writeToDslFile("curve {",
-            "    model 'model'",
-            "    variable 'variable'",
-            "}");
-
         exporter.export(network, new GroovyDslDynawoInputProvider(dslFile), tmpDir);
-        InputStream is = Files.newInputStream(tmpDir.resolve("dynawoModel.crv"));
-        assertNotNull(is);
-        compareXml(getClass().getResourceAsStream("/dynawoModel.crv"), is);
+        try (InputStream is = Files.newInputStream(tmpDir.resolve("dynawoModel.crv"))) {
+            assertNotNull(is);
+            compareXml(getClass().getResourceAsStream("/dynawoModel.crv"), is);
+        }
     }
 
     @Test
     public void testDynamicModel() throws IOException, XMLStreamException {
-        writeToDslFile("blackBoxModel ('bbid') {",
-            "    lib 'bblib'",
-            "    parametersFile 'parametersFile'",
-            "    parametersId '1'",
-            "    staticId 'staticId'",
-            "    staticRefs {",
-            "        staticRef {",
-            "            var 'var1'",
-            "            staticVar 'staticVar1'",
-            "        }",
-            "        staticRef {",
-            "            var 'var2'",
-            "            staticVar 'staticVar2'",
-            "        }",
-            "    }",
-            "    macroStaticRefs {",
-            "        macroStaticRef ('macroStaticid')",
-            "    }",
-            "}",
-            "modelicaModel ('mid') {",
-            "    unitDynamicModels {",
-            "        unitDynamicModel ('udmid') {",
-            "            name 'name'",
-            "            moFile 'moFile'",
-            "            initName 'initName'",
-            "            parametersFile 'parFile'",
-            "            parametersId '1'",
-            "        }",
-            "    }",
-            "    connections {",
-            "        connection {",
-            "            id1 'id1'",
-            "            var1 'var1'",
-            "            id2 'id2'",
-            "            var2 'var2'",
-            "        }",
-            "    }",
-            "    initConnections {",
-            "        initConnection {",
-            "            id1 'id1'",
-            "            var1 'var1'",
-            "            id2 'id2'",
-            "            var2 'var2'",
-            "        }",
-            "    }",
-            "    staticRefs {",
-            "        staticRef {",
-            "            var 'var1'",
-            "            staticVar 'staticVar1'",
-            "        }",
-            "        staticRef {",
-            "            var 'var2'",
-            "            staticVar 'staticVar2'",
-            "        }",
-            "    }",
-            "    macroStaticRefs {",
-            "        macroStaticRef ('macroStaticid')",
-            "    }",
-            "}",
-            "modelTemplate ('mtid') {",
-            "    unitDynamicModels {",
-            "        unitDynamicModel ('udmid') {",
-            "            name 'name'",
-            "            moFile 'moFile'",
-            "            initName 'initName'",
-            "            parametersFile 'parFile'",
-            "            parametersId '1'",
-            "        }",
-            "    }",
-            "    connections {",
-            "        connection {",
-            "            id1 'id1'",
-            "            var1 'var1'",
-            "            id2 'id2'",
-            "            var2 'var2'",
-            "        }",
-            "    }",
-            "    initConnections {",
-            "        initConnection {",
-            "            id1 'id1'",
-            "            var1 'var1'",
-            "            id2 'id2'",
-            "            var2 'var2'",
-            "        }",
-            "    }",
-            "}",
-            "modelTemplateExpansion ('mtid') {",
-            "    templateId 'templateId'",
-            "    parametersFile 'parametersFile'",
-            "    parametersId '1'",
-            "}",
-            "connection {",
-            "    id1 'id1'",
-            "    var1 'var1'",
-            "    id2 'id2'",
-            "    var2 'var2'",
-            "}",
-            "initConnection {",
-            "    id1 'id1'",
-            "    var1 'var1'",
-            "    id2 'id2'",
-            "    var2 'var2'",
-            "}",
-            "macroConnector ('mcid') {",
-            "    connections {",
-            "        connection {",
-            "            var1 'var1'",
-            "            var2 'var2'",
-            "        }",
-            "    }",
-            "}",
-            "macroStaticRef ('msrid') {",
-            "    staticRefs {",
-            "        staticRef {",
-            "            var 'var'",
-            "            staticVar 'staticVar'",
-            "        }",
-            "    }",
-            "}",
-            "macroConnection {",
-            "    connector 'connector'",
-            "    id1 'id1'",
-            "    id2 'id2'",
-            "}");
-
         exporter.export(network, new GroovyDslDynawoInputProvider(dslFile), tmpDir);
-        InputStream is = Files.newInputStream(tmpDir.resolve("dynawoModel.dyd"));
-        assertNotNull(is);
-        compareXml(getClass().getResourceAsStream("/dynawoModel.dyd"), is);
+        try (InputStream is = Files.newInputStream(tmpDir.resolve("dynawoModel.dyd"))) {
+            assertNotNull(is);
+            compareXml(getClass().getResourceAsStream("/dynawoModel.dyd"), is);
+        }
     }
 
     @Test
     public void testParameterSet() throws IOException, XMLStreamException {
-        writeToDslFile("parameterSet ('1') {",
-            "    parameters {",
-            "        parameter {",
-            "            name 'name1'",
-            "            type 'type1'",
-            "            origData 'origData1'",
-            "            origName 'origName1'",
-            "            componentId 'componentId1'",
-            "        }",
-            "        parameter {",
-            "            name 'name2'",
-            "            type 'type2'",
-            "            value 'value2'",
-            "        }",
-            "    }",
-            "    parameterTables {",
-            "        parameterTable {",
-            "            name 'nameTable'",
-            "            type 'typeTable'",
-            "            parameterRows {",
-            "                parameterRow {",
-            "                    row 1",
-            "                    column 1",
-            "                    value 'valueRow'",
-            "                }",
-            "            }",
-            "        }",
-            "    }",
-            "}");
-
         exporter.export(network, new GroovyDslDynawoInputProvider(dslFile), tmpDir);
-        InputStream is = Files.newInputStream(tmpDir.resolve("dynawoModel.par"));
-        assertNotNull(is);
-        compareXml(getClass().getResourceAsStream("/dynawoModel.par"), is);
+        try (InputStream is = Files.newInputStream(tmpDir.resolve("dynawoModel.par"))) {
+            assertNotNull(is);
+            compareXml(getClass().getResourceAsStream("/dynawoModel.par"), is);
+        }
     }
 
     @Test
     public void testSolverParameterSet() throws IOException, XMLStreamException {
-        writeToDslFile("solverParameterSet ('1') {",
-            "    parameters {",
-            "        parameter {",
-            "            name 'name'",
-            "            type 'type'",
-            "            value 'value'",
-            "        }",
-            "    }",
-            "}");
-
         exporter.export(network, new GroovyDslDynawoInputProvider(dslFile), tmpDir);
-        InputStream is = Files.newInputStream(tmpDir.resolve("solvers.par"));
-        assertNotNull(is);
-        compareXml(getClass().getResourceAsStream("/solvers.par"), is);
+        try (InputStream is = Files.newInputStream(tmpDir.resolve("solvers.par"))) {
+            assertNotNull(is);
+            compareXml(getClass().getResourceAsStream("/solvers.par"), is);
+        }
     }
 
     private Network importNetwork(TestGridModel gm) throws IOException {
@@ -338,6 +127,6 @@ public class DynawoExporterTest extends AbstractConverterTest {
 
     private Network network;
     private DynawoInputProvider dynawoProvider;
-    private Path dslFile;
+    private InputStream dslFile;
     private DynawoXmlExporter exporter;
 }

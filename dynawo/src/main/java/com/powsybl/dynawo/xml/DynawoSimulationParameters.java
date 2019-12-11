@@ -34,9 +34,8 @@ public final class DynawoSimulationParameters {
 
     private static void writeParameterSet(XMLStreamWriter writer, DynawoParameterSet parameterSet)
         throws XMLStreamException {
-        String id = parameterSet.getId();
         writer.writeStartElement("set");
-        writer.writeAttribute("id", id);
+        writer.writeAttribute("id", parameterSet.getId());
         for (Entry<String, DynawoParameter> parameter : parameterSet.getParameters().entrySet()) {
             writeParameter(writer, parameter.getValue());
         }
@@ -48,27 +47,28 @@ public final class DynawoSimulationParameters {
 
     private static void writeParameter(XMLStreamWriter writer, DynawoParameter parameter) throws XMLStreamException {
         if (parameter.isReference()) {
-            String name = parameter.getName();
-            String type = parameter.getType();
-            String origData = parameter.getOrigData();
-            String origName = parameter.getOrigName();
+            writer.writeEmptyElement("reference");
+            writer.writeAttribute("name", parameter.getName());
+            writer.writeAttribute("origData", parameter.getOrigData());
+            writer.writeAttribute("origName", parameter.getOrigName());
+            writer.writeAttribute("type", parameter.getType());
             String componentId = parameter.getComponentId();
-            writeReference(writer, name, origData, origName, type, componentId);
+            if (componentId != null) {
+                writer.writeAttribute("componentId", componentId);
+            }
         } else {
-            String name = parameter.getName();
-            String type = parameter.getType();
-            String value = parameter.getValue();
-            writeParameter(writer, type, name, value);
+            writer.writeEmptyElement("par");
+            writer.writeAttribute("type", parameter.getType());
+            writer.writeAttribute("name", parameter.getName());
+            writer.writeAttribute("value", parameter.getValue());
         }
     }
 
     private static void writeParameterTable(XMLStreamWriter writer, DynawoParameterTable parameterTable)
         throws XMLStreamException {
-        String type = parameterTable.getType();
-        String name = parameterTable.getName();
         writer.writeStartElement("parTable");
-        writer.writeAttribute("type", type);
-        writer.writeAttribute("name", name);
+        writer.writeAttribute("type", parameterTable.getType());
+        writer.writeAttribute("name", parameterTable.getName());
         for (DynawoParameterRow parameterRow : parameterTable.getParameterRows()) {
             writeParameterRow(writer, parameterRow);
         }
@@ -77,36 +77,9 @@ public final class DynawoSimulationParameters {
 
     private static void writeParameterRow(XMLStreamWriter writer, DynawoParameterRow parameterRow)
         throws XMLStreamException {
-        int row = parameterRow.getRow();
-        int column = parameterRow.getColumn();
-        String value = parameterRow.getValue();
-        writeRow(writer, row, column, value);
-    }
-
-    private static void writeRow(XMLStreamWriter writer, int row, int column, String value) throws XMLStreamException {
         writer.writeEmptyElement("row");
-        writer.writeAttribute("row", Integer.toString(row));
-        writer.writeAttribute("column", Integer.toString(column));
-        writer.writeAttribute("value", value);
-    }
-
-    private static void writeParameter(XMLStreamWriter writer, String type, String name, String value)
-        throws XMLStreamException {
-        writer.writeEmptyElement("par");
-        writer.writeAttribute("type", type);
-        writer.writeAttribute("name", name);
-        writer.writeAttribute("value", value);
-    }
-
-    private static void writeReference(XMLStreamWriter writer, String name, String origData, String origName,
-        String type, String componentId) throws XMLStreamException {
-        writer.writeEmptyElement("reference");
-        writer.writeAttribute("name", name);
-        writer.writeAttribute("origData", origData);
-        writer.writeAttribute("origName", origName);
-        writer.writeAttribute("type", type);
-        if (componentId != null) {
-            writer.writeAttribute("componentId", componentId);
-        }
+        writer.writeAttribute("row", Integer.toString(parameterRow.getRow()));
+        writer.writeAttribute("column", Integer.toString(parameterRow.getColumn()));
+        writer.writeAttribute("value", parameterRow.getValue());
     }
 }
