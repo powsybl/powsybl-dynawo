@@ -7,6 +7,7 @@
 package com.powsybl.dynawo.xml;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Map.Entry;
 
 import javax.xml.stream.XMLStreamException;
@@ -27,6 +28,8 @@ public final class DynawoSimulationParameters {
 
     public static void writeParameterSets(XMLStreamWriter writer, List<DynawoParameterSet> parameterSets)
         throws XMLStreamException {
+        Objects.requireNonNull(writer);
+        Objects.requireNonNull(parameterSets);
         for (DynawoParameterSet parameterSet : parameterSets) {
             writeParameterSet(writer, parameterSet);
         }

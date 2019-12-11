@@ -11,6 +11,7 @@ import static com.powsybl.dynawo.xml.DynawoXmlConstants.DYN_URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.BiConsumer;
 
 import javax.xml.stream.XMLStreamException;
@@ -41,6 +42,8 @@ public final class DynawoDynamicModels {
     }
 
     public static void writeDynamicModels(XMLStreamWriter writer, List<DynawoDynamicModel> dynamicModels) {
+        Objects.requireNonNull(writer);
+        Objects.requireNonNull(dynamicModels);
         for (DynawoDynamicModel dynamicModel : dynamicModels) {
             writeDynamicModel(writer, dynamicModel);
         }

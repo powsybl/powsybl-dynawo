@@ -7,6 +7,7 @@
 package com.powsybl.dynawo.xml;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -29,6 +30,8 @@ public final class DynawoJobs {
     }
 
     public static void writeJobs(XMLStreamWriter writer, List<DynawoJob> jobs) throws XMLStreamException {
+        Objects.requireNonNull(writer);
+        Objects.requireNonNull(jobs);
         for (DynawoJob job : jobs) {
             writeJob(writer, job);
         }
