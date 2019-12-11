@@ -30,8 +30,7 @@ public class DynawoXmlExporter {
     }
 
     public DynawoXmlExporter(PlatformConfig platformConfig) {
-        Objects.nonNull(platformConfig);
-        this.platformConfig = platformConfig;
+        this.platformConfig = Objects.requireNonNull(platformConfig);
     }
 
     public String export(Network network, DynawoInputProvider dynawoProvider, Path workingDir) throws IOException, XMLStreamException {

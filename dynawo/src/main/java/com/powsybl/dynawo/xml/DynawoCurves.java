@@ -23,8 +23,8 @@ public final class DynawoCurves {
     }
 
     public static void writeCurves(XMLStreamWriter writer, List<DynawoCurve> curves) throws XMLStreamException {
-        Objects.nonNull(writer);
-        Objects.nonNull(curves);
+        Objects.requireNonNull(writer);
+        Objects.requireNonNull(curves);
         for (DynawoCurve curve : curves) {
             writeCurve(writer, curve);
         }
