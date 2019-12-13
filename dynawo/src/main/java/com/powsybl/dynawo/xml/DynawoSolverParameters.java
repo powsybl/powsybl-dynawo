@@ -42,17 +42,9 @@ public final class DynawoSolverParameters {
     }
 
     private static void writeParameter(XMLStreamWriter writer, DynawoParameter parameter) throws XMLStreamException {
-        String name = parameter.getName();
-        String type = parameter.getType();
-        String value = parameter.getValue();
-        writeParameter(writer, type, name, value);
-    }
-
-    private static void writeParameter(XMLStreamWriter writer, String type, String name, String value)
-        throws XMLStreamException {
         writer.writeEmptyElement("par");
-        writer.writeAttribute("type", type);
-        writer.writeAttribute("name", name);
-        writer.writeAttribute("value", value);
+        writer.writeAttribute("type", parameter.getType());
+        writer.writeAttribute("name", parameter.getName());
+        writer.writeAttribute("value", parameter.getValue());
     }
 }

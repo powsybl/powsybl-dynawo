@@ -6,20 +6,17 @@
  */
 package com.powsybl.dynawo.xml;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Map.Entry;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
-import com.powsybl.dynawo.DynawoParameterType;
 import com.powsybl.dynawo.par.DynawoParameter;
 import com.powsybl.dynawo.par.DynawoParameterRow;
 import com.powsybl.dynawo.par.DynawoParameterSet;
 import com.powsybl.dynawo.par.DynawoParameterTable;
-import com.powsybl.iidm.network.Network;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -31,52 +28,17 @@ public final class DynawoSimulationParameters {
 
     public static void writeParameterSets(XMLStreamWriter writer, List<DynawoParameterSet> parameterSets)
         throws XMLStreamException {
+        Objects.requireNonNull(writer);
+        Objects.requireNonNull(parameterSets);
         for (DynawoParameterSet parameterSet : parameterSets) {
             writeParameterSet(writer, parameterSet);
         }
     }
 
-    public static void writeDefaultOmegaRefParameterSets(XMLStreamWriter writer, Network network, String parId)
-        throws XMLStreamException {
-        List<DynawoParameter> parameters = new ArrayList<>();
-        parameters
-            .add(new DynawoParameter("nbGen", DynawoParameterType.INT.getValue(), "" + network.getGeneratorCount()));
-        for (int i = 0; i < network.getGeneratorCount(); i++) {
-            parameters.add(new DynawoParameter("weight_gen_" + i, DynawoParameterType.DOUBLE.getValue(), "1"));
-        }
-        DynawoParameterSet parameterSet = new DynawoParameterSet(parId);
-        parameterSet.addParameters(Collections.unmodifiableList(parameters));
-        writeParameterSet(writer, parameterSet);
-    }
-
-    public static void writeDefaultLoad(XMLStreamWriter writer, List<DynawoParameterSet> parameterSets, String setId) throws XMLStreamException {
-        writeDefaultParameterSet(writer, parameterSets, setId);
-    }
-
-    public static void writeDefaultGenerator(XMLStreamWriter writer, List<DynawoParameterSet> parameterSets, String setId) throws XMLStreamException {
-        writeDefaultParameterSet(writer, parameterSets, setId);
-    }
-
-    public static void writeDefaultParameterSet(XMLStreamWriter writer, List<DynawoParameterSet> parameterSets, String setId) throws XMLStreamException {
-        List<DynawoParameter> parameters = new ArrayList<>();
-        for (Entry<String, DynawoParameter> entry : parameterSets.get(0).getParameters().entrySet()) {
-            DynawoParameter parameter = entry.getValue();
-            if (parameter.isReference()) {
-                parameters.add(new DynawoParameter(parameter.getName(), parameter.getType(), parameter.getOrigData(), parameter.getOrigName()));
-            } else {
-                parameters.add(new DynawoParameter(parameter.getName(), parameter.getType(), parameter.getValue()));
-            }
-        }
-        DynawoParameterSet parameterSet = new DynawoParameterSet(setId);
-        parameterSet.addParameters(Collections.unmodifiableList(parameters));
-        writeParameterSet(writer, parameterSet);
-    }
-
     private static void writeParameterSet(XMLStreamWriter writer, DynawoParameterSet parameterSet)
         throws XMLStreamException {
-        String id = parameterSet.getId();
         writer.writeStartElement("set");
-        writer.writeAttribute("id", id);
+        writer.writeAttribute("id", parameterSet.getId());
         for (Entry<String, DynawoParameter> parameter : parameterSet.getParameters().entrySet()) {
             writeParameter(writer, parameter.getValue());
         }
@@ -88,27 +50,28 @@ public final class DynawoSimulationParameters {
 
     private static void writeParameter(XMLStreamWriter writer, DynawoParameter parameter) throws XMLStreamException {
         if (parameter.isReference()) {
-            String name = parameter.getName();
-            String type = parameter.getType();
-            String origData = parameter.getOrigData();
-            String origName = parameter.getOrigName();
+            writer.writeEmptyElement("reference");
+            writer.writeAttribute("name", parameter.getName());
+            writer.writeAttribute("origData", parameter.getOrigData());
+            writer.writeAttribute("origName", parameter.getOrigName());
+            writer.writeAttribute("type", parameter.getType());
             String componentId = parameter.getComponentId();
-            writeReference(writer, name, origData, origName, type, componentId);
+            if (componentId != null) {
+                writer.writeAttribute("componentId", componentId);
+            }
         } else {
-            String name = parameter.getName();
-            String type = parameter.getType();
-            String value = parameter.getValue();
-            writeParameter(writer, type, name, value);
+            writer.writeEmptyElement("par");
+            writer.writeAttribute("type", parameter.getType());
+            writer.writeAttribute("name", parameter.getName());
+            writer.writeAttribute("value", parameter.getValue());
         }
     }
 
     private static void writeParameterTable(XMLStreamWriter writer, DynawoParameterTable parameterTable)
         throws XMLStreamException {
-        String type = parameterTable.getType();
-        String name = parameterTable.getName();
         writer.writeStartElement("parTable");
-        writer.writeAttribute("type", type);
-        writer.writeAttribute("name", name);
+        writer.writeAttribute("type", parameterTable.getType());
+        writer.writeAttribute("name", parameterTable.getName());
         for (DynawoParameterRow parameterRow : parameterTable.getParameterRows()) {
             writeParameterRow(writer, parameterRow);
         }
@@ -117,36 +80,9 @@ public final class DynawoSimulationParameters {
 
     private static void writeParameterRow(XMLStreamWriter writer, DynawoParameterRow parameterRow)
         throws XMLStreamException {
-        int row = parameterRow.getRow();
-        int column = parameterRow.getColumn();
-        String value = parameterRow.getValue();
-        writeRow(writer, row, column, value);
-    }
-
-    private static void writeRow(XMLStreamWriter writer, int row, int column, String value) throws XMLStreamException {
         writer.writeEmptyElement("row");
-        writer.writeAttribute("row", Integer.toString(row));
-        writer.writeAttribute("column", Integer.toString(column));
-        writer.writeAttribute("value", value);
-    }
-
-    private static void writeParameter(XMLStreamWriter writer, String type, String name, String value)
-        throws XMLStreamException {
-        writer.writeEmptyElement("par");
-        writer.writeAttribute("type", type);
-        writer.writeAttribute("name", name);
-        writer.writeAttribute("value", value);
-    }
-
-    private static void writeReference(XMLStreamWriter writer, String name, String origData, String origName,
-        String type, String componentId) throws XMLStreamException {
-        writer.writeEmptyElement("reference");
-        writer.writeAttribute("name", name);
-        writer.writeAttribute("origData", origData);
-        writer.writeAttribute("origName", origName);
-        writer.writeAttribute("type", type);
-        if (componentId != null) {
-            writer.writeAttribute("componentId", componentId);
-        }
+        writer.writeAttribute("row", Integer.toString(parameterRow.getRow()));
+        writer.writeAttribute("column", Integer.toString(parameterRow.getColumn()));
+        writer.writeAttribute("value", parameterRow.getValue());
     }
 }

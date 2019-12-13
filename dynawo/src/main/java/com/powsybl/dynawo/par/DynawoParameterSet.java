@@ -42,16 +42,15 @@ public class DynawoParameterSet {
     }
 
     public DynawoParameterSet addParameters(List<DynawoParameter> parameters) {
-        parameters.forEach(p -> add(p));
+        parameters.forEach(this::addParameter);
         return this;
     }
 
-    public DynawoParameterSet add(DynawoParameter parameter) {
+    public DynawoParameterSet addParameter(DynawoParameter parameter) {
         Objects.requireNonNull(parameter);
-        if (parameters.containsKey(parameter.getName())) {
+        if (parameters.put(parameter.getName(), parameter) != null) {
             LOGGER.warn("parameter {} already exists, the last value entered is retained.", parameter.getName());
         }
-        parameters.put(parameter.getName(), parameter);
         return this;
     }
 

@@ -7,6 +7,7 @@
 package com.powsybl.dynawo.xml;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -22,20 +23,16 @@ public final class DynawoCurves {
     }
 
     public static void writeCurves(XMLStreamWriter writer, List<DynawoCurve> curves) throws XMLStreamException {
+        Objects.requireNonNull(writer);
+        Objects.requireNonNull(curves);
         for (DynawoCurve curve : curves) {
             writeCurve(writer, curve);
         }
     }
 
     private static void writeCurve(XMLStreamWriter writer, DynawoCurve curve) throws XMLStreamException {
-        String model = curve.getModel();
-        String variable = curve.getVariable();
-        writeCurve(writer, model, variable);
-    }
-
-    private static void writeCurve(XMLStreamWriter writer, String model, String variable) throws XMLStreamException {
         writer.writeEmptyElement("curve");
-        writer.writeAttribute("model", model);
-        writer.writeAttribute("variable", variable);
+        writer.writeAttribute("model", curve.getModel());
+        writer.writeAttribute("variable", curve.getVariable());
     }
 }

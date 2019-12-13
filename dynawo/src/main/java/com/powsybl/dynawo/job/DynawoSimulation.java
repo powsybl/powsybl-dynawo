@@ -14,11 +14,13 @@ public class DynawoSimulation {
     private final int startTime;
     private final int stopTime;
     private final boolean activeCriteria;
+    private final double precision;
 
-    public DynawoSimulation(int startTime, int stopTime, boolean activateCriteria) {
+    public DynawoSimulation(int startTime, int stopTime, boolean activateCriteria, double precision) {
         this.startTime = startTime;
         this.stopTime = stopTime;
         this.activeCriteria = activateCriteria;
+        this.precision = precision;
     }
 
     public int getStartTime() {
@@ -33,4 +35,7 @@ public class DynawoSimulation {
         return activeCriteria;
     }
 
+    public double getPrecision() {
+        return precision;
+    }
 }

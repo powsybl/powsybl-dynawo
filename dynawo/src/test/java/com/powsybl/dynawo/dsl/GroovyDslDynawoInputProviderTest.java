@@ -8,6 +8,7 @@ package com.powsybl.dynawo.dsl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -348,5 +349,7 @@ public class GroovyDslDynawoInputProviderTest {
         assertEquals("name", parameter.getName());
         assertEquals("type", parameter.getType());
         assertEquals("value", parameter.getValue());
+        assertNull(parameter.getOrigData());
+        assertNull(parameter.getOrigName());
     }
 }

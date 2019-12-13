@@ -27,8 +27,6 @@ class DynawoSolverParameterSetDslLoader {
         String name;
         String type;
         String value;
-        String origName;
-        String origData;
 
         ParameterSpec name(String name) {
             assert name != null
@@ -45,18 +43,6 @@ class DynawoSolverParameterSetDslLoader {
         ParameterSpec value(String value) {
             assert value != null
             this.value = value
-            return this
-        }
-
-        ParameterSpec origName(String origName) {
-            assert origName != null
-            this.origName = origName
-            return this
-        }
-
-        ParameterSpec origData(String origData) {
-            assert origData != null
-            this.origData = origData
             return this
         }
     }

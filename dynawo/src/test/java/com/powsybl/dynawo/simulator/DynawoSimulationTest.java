@@ -118,7 +118,7 @@ public class DynawoSimulationTest {
         DynawoSolver solver = new DynawoSolver("libdynawo_SolverIDA", "solvers.par", "2");
         DynawoModeler modeler = new DynawoModeler("outputs/compilation", "dynawoModel.xiidm", "dynawoModel.par", "1",
             "dynawoModel.dyd");
-        DynawoSimulation simulation = new DynawoSimulation(0, 30, false);
+        DynawoSimulation simulation = new DynawoSimulation(0, 30, false, 1e-6);
         DynawoOutputs outputs = new DynawoOutputs("outputs", "dynawoModel.crv");
         outputs.add(new LogAppender("", "dynawo.log", "DEBUG"));
         outputs.add(new LogAppender("COMPILE", "dynawoCompiler.log", "DEBUG"));
