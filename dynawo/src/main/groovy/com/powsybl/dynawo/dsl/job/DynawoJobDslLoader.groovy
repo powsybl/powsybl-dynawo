@@ -30,7 +30,7 @@ class DynawoJobDslLoader {
 
         String lib
         String file
-        int id
+        String id
 
         SolverSpec lib(String lib) {
             assert lib != null
@@ -44,7 +44,7 @@ class DynawoJobDslLoader {
             return this
         }
 
-        SolverSpec id(int id) {
+        SolverSpec id(String id) {
             assert id != null
             this.id = id
             return this
@@ -60,7 +60,7 @@ class DynawoJobDslLoader {
         boolean useStandardModelsModelicaModels
         String iidm
         String parameters
-        int parameterId
+        String parameterId
         String dyd
         String initialState
 
@@ -106,7 +106,7 @@ class DynawoJobDslLoader {
             return this
         }
 
-        ModelerSpec parameterId(int parameterId) {
+        ModelerSpec parameterId(String parameterId) {
             assert parameterId != null
             this.parameterId = parameterId
             return this
@@ -130,6 +130,7 @@ class DynawoJobDslLoader {
         int startTime
         int stopTime
         boolean activeCriteria
+        double precision
 
         SimulationSpec startTime(int startTime) {
             assert startTime != null
@@ -146,6 +147,12 @@ class DynawoJobDslLoader {
         SimulationSpec activeCriteria(boolean activeCriteria) {
             assert activeCriteria != null
             this.activeCriteria = activeCriteria
+            return this
+        }
+
+        SimulationSpec precision(double precision) {
+            assert precision != null && precision > 0.0
+            this.precision = precision
             return this
         }
     }
@@ -260,7 +267,7 @@ class DynawoJobDslLoader {
             // create modeler
             DynawoModeler modeler = new DynawoModeler(jobSpec.modelerSpec.compile, jobSpec.modelerSpec.preCompiledModelsDir, jobSpec.modelerSpec.useStandardModelsPreCompiledModels, jobSpec.modelerSpec.modelicaModelsDir, jobSpec.modelerSpec.useStandardModelsModelicaModels, jobSpec.modelerSpec.iidm, jobSpec.modelerSpec.parameters, jobSpec.modelerSpec.parameterId, , jobSpec.modelerSpec.dyd, jobSpec.modelerSpec.initialState)
             // create simulation
-            DynawoSimulation simulation = new DynawoSimulation(jobSpec.simulationSpec.startTime, jobSpec.simulationSpec.stopTime, jobSpec.simulationSpec.activeCriteria)
+            DynawoSimulation simulation = new DynawoSimulation(jobSpec.simulationSpec.startTime, jobSpec.simulationSpec.stopTime, jobSpec.simulationSpec.activeCriteria, jobSpec.simulationSpec.precision)
             // create outputs
             DynawoOutputs outputs = new DynawoOutputs(jobSpec.outputsSpec.directory, jobSpec.outputsSpec.curve)
             outputs.addAppenders(appenders)

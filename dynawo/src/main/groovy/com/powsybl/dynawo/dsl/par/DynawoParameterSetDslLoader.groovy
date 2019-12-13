@@ -132,7 +132,7 @@ class DynawoParameterSetDslLoader {
 
     static class ParameterSetSpec {
 
-        int id
+        String id
         final ParametersSpec parametersSpec = new ParametersSpec()
         final ParameterTablesSpec parameterTablesSpec = new ParameterTablesSpec()
 
@@ -154,7 +154,7 @@ class DynawoParameterSetDslLoader {
     static void loadDsl(Binding binding, Network network, Consumer<DynawoParameterSet> consumer, DynawoDslLoaderObserver observer) {
 
         // parameterSets
-        binding.parameterSet = { int id, Closure<Void> closure ->
+        binding.parameterSet = { String id, Closure<Void> closure ->
             def cloned = closure.clone()
             ParameterSetSpec parameterSetSpec = new ParameterSetSpec()
 

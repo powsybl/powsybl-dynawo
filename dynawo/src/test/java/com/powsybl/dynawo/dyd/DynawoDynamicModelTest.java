@@ -20,7 +20,7 @@ public class DynawoDynamicModelTest {
     @Test
     public void testBlackBoxModel() {
 
-        BlackBoxModel model = new BlackBoxModel("id", "lib", "parametersFile", 1);
+        BlackBoxModel model = new BlackBoxModel("id", "lib", "parametersFile", "1");
 
         StaticRef staticRef = new StaticRef("var", "staticVar");
         model.add(staticRef);
@@ -31,7 +31,7 @@ public class DynawoDynamicModelTest {
         assertEquals("id", model.getId());
         assertEquals("lib", model.getLib());
         assertEquals("parametersFile", model.getParametersFile());
-        assertEquals(1, model.getParametersId());
+        assertEquals("1", model.getParametersId());
         assertNull(model.getStaticId());
 
         assertNotNull(model.getStaticRefs());
@@ -56,7 +56,7 @@ public class DynawoDynamicModelTest {
         DydComponent macroStaticRef = new DydComponent("id");
         model.add(macroStaticRef);
 
-        UnitDynamicModel unitDynamicModel = new UnitDynamicModel("id", "name", "initName", "parametersFile", 1);
+        UnitDynamicModel unitDynamicModel = new UnitDynamicModel("id", "name", "initName", "parametersFile", "1");
         model.add(unitDynamicModel);
 
         Connection connection = new Connection("id1", "var1", "id2", "var2");
@@ -87,7 +87,7 @@ public class DynawoDynamicModelTest {
         assertNull(model.getUnitDynamicModels().get(0).getMoFile());
         assertEquals("initName", model.getUnitDynamicModels().get(0).getInitName());
         assertEquals("parametersFile", model.getUnitDynamicModels().get(0).getParametersFile());
-        assertEquals(1, model.getUnitDynamicModels().get(0).getParametersId());
+        assertEquals("1", model.getUnitDynamicModels().get(0).getParametersId());
 
         assertEquals(1, model.getConnections().size());
         assertEquals("id1", model.getConnections().get(0).getId1());
@@ -107,7 +107,7 @@ public class DynawoDynamicModelTest {
 
         ModelTemplate model = new ModelTemplate("id");
 
-        UnitDynamicModel unitDynamicModel = new UnitDynamicModel("id", "name", "initName", "parametersFile", 1);
+        UnitDynamicModel unitDynamicModel = new UnitDynamicModel("id", "name", "initName", "parametersFile", "1");
         model.add(unitDynamicModel);
 
         Connection connection = new Connection("id1", "var1", "id2", "var2");
@@ -127,7 +127,7 @@ public class DynawoDynamicModelTest {
         assertNull(model.getUnitDynamicModels().get(0).getMoFile());
         assertEquals("initName", model.getUnitDynamicModels().get(0).getInitName());
         assertEquals("parametersFile", model.getUnitDynamicModels().get(0).getParametersFile());
-        assertEquals(1, model.getUnitDynamicModels().get(0).getParametersId());
+        assertEquals("1", model.getUnitDynamicModels().get(0).getParametersId());
 
         assertEquals(1, model.getConnections().size());
         assertEquals("id1", model.getConnections().get(0).getId1());
@@ -145,12 +145,12 @@ public class DynawoDynamicModelTest {
     @Test
     public void testModelTemplateExpansion() {
 
-        ModelTemplateExpansion model = new ModelTemplateExpansion("id", "templateId", "parametersFile", 1);
+        ModelTemplateExpansion model = new ModelTemplateExpansion("id", "templateId", "parametersFile", "1");
 
         assertEquals("id", model.getId());
         assertEquals("templateId", model.getTemplateId());
         assertEquals("parametersFile", model.getParametersFile());
-        assertEquals(1, model.getParametersId());
+        assertEquals("1", model.getParametersId());
     }
 
     @Test

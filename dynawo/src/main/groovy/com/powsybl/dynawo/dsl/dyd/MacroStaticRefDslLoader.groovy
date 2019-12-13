@@ -46,7 +46,7 @@ class MacroStaticRefDslLoader {
 
     static class MacroStaticRefSpec {
 
-        int id
+        String id
         final StaticRefsSpec staticRefsSpec = new StaticRefsSpec()
 
         MacroStaticRefSpec staticRefs(Closure<Void> closure) {

@@ -69,4 +69,5 @@ public class DynawoParameter {
     public String getComponentId() {
         return componentId;
     }
+
 }

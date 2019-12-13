@@ -89,6 +89,7 @@
         <logback.version>1.1.8</logback.version>
         <mockito.version>1.10.19</mockito.version>
         <slf4j.version>1.7.22</slf4j.version>
+        <xmlunit.version>2.3.0</xmlunit.version>
 
         <powsyblcore.version>3.1.0-SNAPSHOT</powsyblcore.version>
     </properties>
@@ -550,6 +551,12 @@
             </dependency>
             <dependency>
                 <groupId>com.powsybl</groupId>
+                <artifactId>powsybl-config-test</artifactId>
+                <version>${powsyblcore.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.powsybl</groupId>
                 <artifactId>powsybl-iidm-impl</artifactId>
                 <version>${powsyblcore.version}</version>
                 <scope>test</scope>
@@ -566,6 +573,7 @@
                 <version>${powsyblcore.version}</version>
                 <scope>test</scope>
             </dependency>
+
             <!-- Test with all known triple store engines -->
             <dependency>
                 <groupId>com.powsybl</groupId>
@@ -587,6 +595,7 @@
                 <scope>test</scope>
             </dependency>
             -->
+
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
@@ -603,6 +612,12 @@
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-simple</artifactId>
                 <version>${slf4j.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.xmlunit</groupId>
+                <artifactId>xmlunit-core</artifactId>
+                <version>${xmlunit.version}</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>

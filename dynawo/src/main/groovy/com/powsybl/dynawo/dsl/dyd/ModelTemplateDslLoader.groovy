@@ -31,8 +31,8 @@ class ModelTemplateDslLoader {
         String name
         String moFile
         String initName
-        String parFile
-        int parId
+        String parametersFile
+        String parametersId
 
         UnitDynamicModelSpec name(String name) {
             assert name != null
@@ -52,15 +52,15 @@ class ModelTemplateDslLoader {
             return this
         }
 
-        UnitDynamicModelSpec parFile(String parFile) {
-            assert parFile != null
-            this.parFile = parFile
+        UnitDynamicModelSpec parametersFile(String parametersFile) {
+            assert parametersFile != null
+            this.parametersFile = parametersFile
             return this
         }
 
-        UnitDynamicModelSpec parId(int parId) {
-            assert parId != null
-            this.parId = parId
+        UnitDynamicModelSpec parametersId(String parametersId) {
+            assert parametersId != null
+            this.parametersId = parametersId
             return this
         }
     }
@@ -105,7 +105,7 @@ class ModelTemplateDslLoader {
 
     static class ModelTemplateSpec {
 
-        int id
+        String id
         final UnitDynamicModelsSpec unitDynamicModelsSpec = new UnitDynamicModelsSpec()
         final ConnectionsSpec connectionsSpec = new ConnectionsSpec()
         final ConnectionsSpec initConnectionsSpec = new ConnectionsSpec()
@@ -169,7 +169,7 @@ class ModelTemplateDslLoader {
             UnitDynamicModelSpec unitDynamicModelSpec = new UnitDynamicModelSpec()
             cloned.delegate = unitDynamicModelSpec
             cloned()
-            UnitDynamicModel unitDynamicModel = new UnitDynamicModel(id, unitDynamicModelSpec.name, unitDynamicModelSpec.moFile, unitDynamicModelSpec.initName, unitDynamicModelSpec.parFile, unitDynamicModelSpec.parId)
+            UnitDynamicModel unitDynamicModel = new UnitDynamicModel(id, unitDynamicModelSpec.name, unitDynamicModelSpec.moFile, unitDynamicModelSpec.initName, unitDynamicModelSpec.parametersFile, unitDynamicModelSpec.parametersId)
             unitDynamicModels.add(unitDynamicModel)
         }
     }

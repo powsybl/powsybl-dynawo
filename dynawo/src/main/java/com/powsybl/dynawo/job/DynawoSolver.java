@@ -15,9 +15,9 @@ public class DynawoSolver {
 
     private final String lib;
     private final String file;
-    private final int id;
+    private final String id;
 
-    public DynawoSolver(String lib, String file, int id) {
+    public DynawoSolver(String lib, String file, String id) {
         this.lib = Objects.requireNonNull(lib);
         this.file = Objects.requireNonNull(file);
         this.id = id;
@@ -31,7 +31,7 @@ public class DynawoSolver {
         return file;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 }

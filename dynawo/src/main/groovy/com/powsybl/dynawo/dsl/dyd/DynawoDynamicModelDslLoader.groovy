@@ -61,7 +61,7 @@ class DynawoDynamicModelDslLoader {
         String id;
         String lib;
         String parametersFile;
-        int parametersId;
+        String parametersId;
         String staticId;
         final StaticRefsSpec staticRefsSpec = new StaticRefsSpec()
         final MacroStaticRefsSpec macroStaticRefsSpec = new MacroStaticRefsSpec()
@@ -78,7 +78,7 @@ class DynawoDynamicModelDslLoader {
             return this
         }
 
-        BlackBoxModelSpec parametersId(int parametersId) {
+        BlackBoxModelSpec parametersId(String parametersId) {
             assert parametersId != null
             this.parametersId = parametersId
             return this
@@ -110,7 +110,7 @@ class DynawoDynamicModelDslLoader {
         String id
         String templateId
         String parametersFile
-        int parametersId
+        String parametersId
 
         ModelTemplateExpansionSpec templateId(String templateId) {
             assert templateId != null
@@ -124,7 +124,7 @@ class DynawoDynamicModelDslLoader {
             return this
         }
 
-        ModelTemplateExpansionSpec parametersId(int parametersId) {
+        ModelTemplateExpansionSpec parametersId(String parametersId) {
             assert parametersId != null
             this.parametersId = parametersId
             return this
