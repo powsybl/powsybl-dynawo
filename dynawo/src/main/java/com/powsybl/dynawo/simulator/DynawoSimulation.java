@@ -18,6 +18,7 @@ import javax.xml.stream.XMLStreamException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.powsybl.commons.PowsyblException;
 import com.powsybl.computation.AbstractExecutionHandler;
 import com.powsybl.computation.Command;
 import com.powsybl.computation.CommandExecution;
@@ -77,9 +78,7 @@ public class DynawoSimulation {
         Path file = workingDir.resolve(dynawoProvider.getDynawoJobs(network).get(0).getOutputs().getDirectory())
             .resolve(OUTPUT_FILE);
         try {
-            if (file.toFile().exists()) {
-                results.parseCsv(file);
-            }
+            results.parseCsv(file);
         } catch (Exception x) {
             results.setStatus(false);
             results.setLogs(x.toString());
@@ -99,8 +98,7 @@ public class DynawoSimulation {
                         Command cmd = DynawoSimulation.this.before(workingDir, dynawoConfig);
                         return Collections.singletonList(new CommandExecution(cmd, 1, priority));
                     } catch (IOException | XMLStreamException e) {
-                        LOGGER.error(e.getMessage());
-                        return Collections.emptyList();
+                        throw new PowsyblException(e.getMessage());
                     }
                 }
 
