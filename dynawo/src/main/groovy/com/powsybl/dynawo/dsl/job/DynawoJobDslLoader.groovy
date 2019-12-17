@@ -151,7 +151,7 @@ class DynawoJobDslLoader {
         }
 
         SimulationSpec precision(double precision) {
-            assert precision != null && precision > 0.0
+            assert precision != null && precision >= 0.0
             this.precision = precision
             return this
         }
