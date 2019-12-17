@@ -6,6 +6,8 @@
  */
 package com.powsybl.dynawo.simulator;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 import java.util.Properties;
 
@@ -23,6 +25,7 @@ import com.powsybl.dynawo.DynawoInputProvider;
 import com.powsybl.dynawo.simulator.results.DynawoResults;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.NetworkFactory;
+import com.powsybl.tools.PowsyblCoreVersion;
 import com.powsybl.triplestore.api.TripleStoreFactory;
 
 /**
@@ -48,6 +51,8 @@ public class DynawoSimulationTester {
     public DynawoResults simulate(Network network, DynawoInputProvider inputProvider, PlatformConfig platformConfig)
         throws Exception {
         DynawoSimulationProvider dynawoSimulationProvider = new DynawoSimulationProvider();
+        assertEquals("DynawoSimulation", dynawoSimulationProvider.getName());
+        assertEquals(new PowsyblCoreVersion().getMavenProjectVersion(), dynawoSimulationProvider.getVersion());
         dynawoSimulationProvider.setDynawoInputProvider(inputProvider);
         DynamicSimulation.Runner runner = DynamicSimulation.find(null, ImmutableList.of(dynawoSimulationProvider), PlatformConfig.defaultConfig());
 
@@ -56,6 +61,7 @@ public class DynawoSimulationTester {
         DynamicSimulationParameters simulationParameters = DynamicSimulationParameters.load(platformConfig);
         DynawoConfig dynawoConfig = new DynawoConfig();
         dynawoConfig.setDebug(true);
+        dynawoConfig.setDynawoCptCommandName("myEnvDynawo.sh");
         simulationParameters.addExtension(DynawoConfig.class, dynawoConfig);
         DynawoResults result = (DynawoResults) runner.run(network, computationManager, simulationParameters);
         if (mockResults) {

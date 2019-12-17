@@ -29,6 +29,22 @@ public class DynawoResultsTest {
     }
 
     @Test
+    public void emptyException() {
+        exception.expect(PowsyblException.class);
+        DynawoResults result = new DynawoResults(true, null);
+        result.parseCsv(getClass().getResourceAsStream("/nordic32/emptyCurves.csv"));
+        exception.expectMessage("CSV header is missing");
+    }
+
+    @Test
+    public void columnsException() {
+        exception.expect(PowsyblException.class);
+        DynawoResults result = new DynawoResults(true, null);
+        result.parseCsv(getClass().getResourceAsStream("/nordic32/inconsistentCurves.csv"));
+        exception.expectMessage("Columns of line 217 are inconsistent with header");
+    }
+
+    @Test
     public void duplicateException() {
         exception.expect(PowsyblException.class);
         DynawoResults result = new DynawoResults(true, null);
