@@ -6,7 +6,7 @@
     License, v. 2.0. If a copy of the MPL was not distributed with this
     file, you can obtain one at http://mozilla.org/MPL/2.0/.
     SPDX-License-Identifier: MPL-2.0-->
-<iidm:network xmlns:iidm="http://www.powsybl.org/schema/iidm/1_1" id="unknown" caseDate="2019-09-23T11:06:12.313+02:00" forecastDistance="0" sourceFormat="CGMES">
+<iidm:network xmlns:iidm="http://www.itesla_project.eu/schema/iidm/1_0" id="unknown" caseDate="2019-09-23T11:06:12.313+02:00" forecastDistance="0" sourceFormat="CGMES">
     <iidm:property name="CGMESModelDetail" value="bus-branch"/>
     <iidm:substation id="_NG11_____SS" name="NG11    _SS" country="FR" geographicalTags="_SGR_01">
         <iidm:voltageLevel id="_N4021____VL" name="N4021   _VL" nominalV="400.0" topologyKind="BUS_BREAKER">
