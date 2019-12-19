@@ -25,7 +25,6 @@ import com.powsybl.dynawo.DynawoInputProvider;
 import com.powsybl.dynawo.simulator.results.DynawoResults;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.NetworkFactory;
-import com.powsybl.tools.PowsyblCoreVersion;
 import com.powsybl.triplestore.api.TripleStoreFactory;
 
 /**
@@ -48,21 +47,21 @@ public class DynawoSimulationTester {
         return n;
     }
 
-    public DynawoResults simulate(Network network, DynawoInputProvider inputProvider, PlatformConfig platformConfig)
+    public DynawoResults simulate(Network network, DynawoInputProvider dynawoInputProvider, PlatformConfig platformConfig)
         throws Exception {
         DynawoSimulationProvider dynawoSimulationProvider = new DynawoSimulationProvider();
         assertEquals("DynawoSimulation", dynawoSimulationProvider.getName());
-        assertEquals(new PowsyblCoreVersion().getMavenProjectVersion(), dynawoSimulationProvider.getVersion());
-        dynawoSimulationProvider.setDynawoInputProvider(inputProvider);
-        DynamicSimulation.Runner runner = DynamicSimulation.find(null, ImmutableList.of(dynawoSimulationProvider), PlatformConfig.defaultConfig());
+        assertEquals("1.0.0", dynawoSimulationProvider.getVersion());
+        DynamicSimulation.Runner runner = DynamicSimulation.find(null, ImmutableList.of(dynawoSimulationProvider),
+            PlatformConfig.defaultConfig());
 
         ComputationManager computationManager = new LocalComputationManager(
             LocalComputationConfig.load(platformConfig));
         DynamicSimulationParameters simulationParameters = DynamicSimulationParameters.load(platformConfig);
-        DynawoConfig dynawoConfig = new DynawoConfig();
-        dynawoConfig.setDebug(true);
-        dynawoConfig.setDynawoCptCommandName("myEnvDynawo.sh");
-        simulationParameters.addExtension(DynawoConfig.class, dynawoConfig);
+        simulationParameters.addExtension(DynawoParameters.class, new DynawoParameters()
+            .setDebug(true)
+            .setDynawoCommandName("myEnvDynawo.sh")
+            .setDynawoInputProvider(dynawoInputProvider));
         DynawoResults result = (DynawoResults) runner.run(network, computationManager, simulationParameters);
         if (mockResults) {
             result = new DynawoResults(true, null);

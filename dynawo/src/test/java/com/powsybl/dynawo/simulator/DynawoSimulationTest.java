@@ -56,8 +56,8 @@ public class DynawoSimulationTest {
             PlatformConfig platformConfig = configure(fs);
             DynawoSimulationTester tester = new DynawoSimulationTester(true);
             Network network = tester.convert(platformConfig, Cim14SmallCasesCatalog.nordic32());
-            DynawoInputProvider provider = configureProvider(network);
-            DynawoResults result = tester.simulate(network, provider, platformConfig);
+            DynawoInputProvider dynawoInputProvider = configureProvider(network);
+            DynawoResults result = tester.simulate(network, dynawoInputProvider, platformConfig);
             assertTrue(result.isOk());
             assertNull(result.getLogs());
 
@@ -74,8 +74,8 @@ public class DynawoSimulationTest {
             PlatformConfig platformConfig = configure(fs);
             DynawoSimulationTester tester = new DynawoSimulationTester(true);
             Network network = tester.convert(platformConfig, Cim14SmallCasesCatalog.nordic32());
-            DynawoInputProvider inputProvider = new GroovyDslDynawoInputProvider(getClass().getResourceAsStream("/nordic32/nordic32.groovy"));
-            DynawoResults result = tester.simulate(network, inputProvider, platformConfig);
+            DynawoInputProvider dynawoInputProvider = new GroovyDslDynawoInputProvider(getClass().getResourceAsStream("/nordic32/nordic32.groovy"));
+            DynawoResults result = tester.simulate(network, dynawoInputProvider, platformConfig);
 
             // check final voltage of bus close to the event
             int index = result.getNames().indexOf("NETWORK__N1011____TN_Upu_value");
@@ -85,28 +85,11 @@ public class DynawoSimulationTest {
 
     private PlatformConfig configure(FileSystem fs) throws IOException {
         InMemoryPlatformConfig platformConfig = new InMemoryPlatformConfig(fs);
-        Files.createDirectory(fs.getPath("/dynawoPath"));
-        Files.createDirectory(fs.getPath("/workingPath"));
         Files.createDirectories(fs.getPath("/tmp"));
         MapModuleConfig moduleConfig = platformConfig.createModuleConfig("import-export-parameters-default-value");
         moduleConfig.setStringProperty("iidm.export.xml.extensions", "null");
         moduleConfig = platformConfig.createModuleConfig("computation-local");
         moduleConfig.setStringProperty("tmpDir", "/tmp");
-        moduleConfig = platformConfig.createModuleConfig("dynawo");
-        moduleConfig.setStringProperty("dynawoHomeDir", "/dynawoPath");
-        moduleConfig.setStringProperty("workingDir", "/workingPath");
-        moduleConfig.setStringProperty("debug", "false");
-        moduleConfig.setStringProperty("dynawoCptCommandName", "myEnvDynawo.sh");
-        moduleConfig = platformConfig.createModuleConfig("simulation-parameters");
-        moduleConfig.setStringProperty("preFaultSimulationStopInstant", "1");
-        moduleConfig.setStringProperty("postFaultSimulationStopInstant", "60");
-        moduleConfig.setStringProperty("faultEventInstant", "30");
-        moduleConfig.setStringProperty("branchSideOneFaultShortCircuitDuration", "60");
-        moduleConfig.setStringProperty("branchSideTwoFaultShortCircuitDuration", "60");
-        moduleConfig.setStringProperty("generatorFaultShortCircuitDuration", "60");
-        moduleConfig = platformConfig.createModuleConfig("componentDefaultConfig");
-        moduleConfig.setStringProperty("DynawoSimulatorFactory", "com.powsybl.dynawo.simulator.DynawoSimulatorFactory");
-        moduleConfig.setStringProperty("DynawoExporterFactory", "com.powsybl.dynawo.xml.DynawoXmlExporterFactory");
         return platformConfig;
     }
 

@@ -56,9 +56,9 @@ public class DynawoResults implements DynamicSimulationResult {
     }
 
     public void parseCsv(Path file) {
-        try {
-            parseCsv(Files.newInputStream(file));
-        } catch (Exception e) {
+        try (InputStream is = Files.newInputStream(file)) {
+            parseCsv(is);
+        } catch (IOException e) {
             throw new PowsyblException(e);
         }
     }
@@ -66,7 +66,7 @@ public class DynawoResults implements DynamicSimulationResult {
     public void parseCsv(InputStream is) {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
             parseCsv(reader, ';');
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new PowsyblException(e);
         }
     }
@@ -79,54 +79,45 @@ public class DynawoResults implements DynamicSimulationResult {
         return Collections.unmodifiableMap(timeSeries);
     }
 
-    private void parseCsv(BufferedReader reader, char separator) {
+    private void parseCsv(BufferedReader reader, char separator) throws IOException {
         Objects.requireNonNull(reader);
 
-        String separatorStr = Character.toString(separator);
-        readCsvHeader(reader, separatorStr);
-        readCsvValues(reader, separatorStr);
+        readCsvHeader(reader, separator);
+        readCsvValues(reader, separator);
     }
 
-    private void readCsvHeader(BufferedReader reader, String separatorStr) {
-        try {
-            String line = reader.readLine();
-            if (line == null) {
-                throw new PowsyblException("CSV header is missing");
-            }
-            String[] tokens = line.split(separatorStr);
-            if (tokens.length < 1 || !"time".equals(tokens[0])) {
-                throw new PowsyblException("Bad CSV header, should be \ntime" + separatorStr + "...");
-            }
-            List<String> duplicates = new ArrayList<>();
-            Set<String> namesWithoutDuplicates = new HashSet<>();
-            for (int i = 0; i < tokens.length; i++) {
-                if (!namesWithoutDuplicates.add(tokens[i])) {
-                    duplicates.add(tokens[i]);
-                }
-            }
-            if (!duplicates.isEmpty()) {
-                throw new PowsyblException("Bad CSV header, there are duplicates in time series names " + duplicates);
-            }
-            names = Arrays.asList(tokens).subList(1, tokens.length);
-        } catch (IOException e) {
-            throw new PowsyblException(e);
+    private void readCsvHeader(BufferedReader reader, char separator) throws IOException {
+        String line = reader.readLine();
+        if (line == null) {
+            throw new PowsyblException("CSV header is missing");
         }
+        String[] tokens = line.split(Character.toString(separator));
+        if (tokens.length < 1 || !"time".equals(tokens[0])) {
+            throw new PowsyblException("Bad CSV header, should be \ntime" + separator + "...");
+        }
+        List<String> duplicates = new ArrayList<>();
+        Set<String> namesWithoutDuplicates = new HashSet<>();
+        for (int i = 0; i < tokens.length; i++) {
+            if (!namesWithoutDuplicates.add(tokens[i])) {
+                duplicates.add(tokens[i]);
+            }
+        }
+        if (!duplicates.isEmpty()) {
+            throw new PowsyblException("Bad CSV header, there are duplicates in time series names " + duplicates);
+        }
+        names = Arrays.asList(tokens).subList(1, tokens.length);
     }
 
-    private void readCsvValues(BufferedReader reader, String separatorStr) {
-        try {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] tokens = line.split(separatorStr);
+    private void readCsvValues(BufferedReader reader, char separator) throws IOException {
+        String line;
+        while ((line = reader.readLine()) != null) {
+            String[] tokens = line.split(Character.toString(separator));
 
-                if (tokens.length != names.size() + 1) {
-                    throw new PowsyblException("Columns of line " + names.size() + " are inconsistent with header");
-                }
-
-                parseLine(tokens);
+            if (tokens.length != names.size() + 1) {
+                throw new PowsyblException("Columns of line " + names.size() + " are inconsistent with header");
             }
-        } catch (IOException e) {
-            throw new PowsyblException(e);
+
+            parseLine(tokens);
         }
     }
 

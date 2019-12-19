@@ -23,8 +23,6 @@ import com.powsybl.iidm.xml.XMLExporter;
  */
 public class DynawoXmlExporter {
 
-    private static final String DEFAULT_DYNAWO_CASE_NAME = "nrt/data/IEEE14/IEEE14_BasicTestCases/IEEE14_DisconnectLine/IEEE14.jobs";
-
     public DynawoXmlExporter() {
         this(PlatformConfig.defaultConfig());
     }
@@ -34,16 +32,15 @@ public class DynawoXmlExporter {
     }
 
     public String export(Network network, DynawoInputProvider dynawoProvider, Path workingDir) throws IOException, XMLStreamException {
-        String dynawoJobsFile = DEFAULT_DYNAWO_CASE_NAME;
         DynawoInputs.prepare(network, dynawoProvider, workingDir);
         if (network != null) {
             Path jobsFile = workingDir.resolve("dynawoModel.jobs");
             XMLExporter xmlExporter = new XMLExporter(platformConfig);
             xmlExporter.export(network, null, new FileDataSource(workingDir, "dynawoModel"));
             // Warning: dynawo expects the country field in each substation element
-            dynawoJobsFile = jobsFile.toAbsolutePath().toString();
+            return jobsFile.toAbsolutePath().toString();
         }
-        return dynawoJobsFile;
+        return null;
     }
 
     private final PlatformConfig platformConfig;
