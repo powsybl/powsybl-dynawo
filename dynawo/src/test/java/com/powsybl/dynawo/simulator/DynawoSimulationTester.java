@@ -59,8 +59,6 @@ public class DynawoSimulationTester {
             LocalComputationConfig.load(platformConfig));
         DynamicSimulationParameters simulationParameters = DynamicSimulationParameters.load(platformConfig);
         simulationParameters.addExtension(DynawoParameters.class, new DynawoParameters()
-            .setDebug(true)
-            .setDynawoCommandName("myEnvDynawo.sh")
             .setDynawoInputProvider(dynawoInputProvider));
         DynawoResults result = (DynawoResults) runner.run(network, computationManager, simulationParameters);
         if (mockResults) {

@@ -15,39 +15,17 @@ import com.powsybl.dynawo.DynawoInputProvider;
  */
 public class DynawoParameters extends AbstractExtension<DynamicSimulationParameters> {
 
-    private static final String DEFAULT_DYNAWO_CMD_NAME = "myEnvDynawo.sh";
-
     public DynawoParameters() {
-        this(false, DEFAULT_DYNAWO_CMD_NAME, null);
+        this(null);
     }
 
-    public DynawoParameters(boolean debug, String dynawoCommandName, DynawoInputProvider dynawoInputProvider) {
-        this.debug = debug;
-        this.dynawoCommandName = dynawoCommandName;
+    public DynawoParameters(DynawoInputProvider dynawoInputProvider) {
         this.dynawoInputProvider = dynawoInputProvider;
     }
 
     @Override
     public String getName() {
-        return "DynawoConfig";
-    }
-
-    public boolean isDebug() {
-        return debug;
-    }
-
-    public DynawoParameters setDebug(boolean debug) {
-        this.debug = debug;
-        return this;
-    }
-
-    public String getDynawoCommandName() {
-        return dynawoCommandName;
-    }
-
-    public DynawoParameters setDynawoCommandName(String dynawoCommandName) {
-        this.dynawoCommandName = dynawoCommandName;
-        return this;
+        return "DynawoParameters";
     }
 
     public DynawoInputProvider getDynawoInputProvider() {
@@ -59,8 +37,6 @@ public class DynawoParameters extends AbstractExtension<DynamicSimulationParamet
         return this;
     }
 
-    private boolean debug;
-    private String dynawoCommandName;
     private DynawoInputProvider dynawoInputProvider;
 
 }
