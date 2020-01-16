@@ -39,14 +39,6 @@ public class DynawoConfig {
         this(HOME_DIR, DEBUG_MODE);
     }
 
-    public DynawoConfig(String homeDir) {
-        this(homeDir, DEBUG_MODE);
-    }
-
-    public DynawoConfig(boolean debug) {
-        this(HOME_DIR, debug);
-    }
-
     public DynawoConfig(String homeDir, boolean debug) {
         this.homeDir = homeDir;
         this.debug = debug;
