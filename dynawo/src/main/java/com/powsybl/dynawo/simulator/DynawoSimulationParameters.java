@@ -51,7 +51,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
         Objects.requireNonNull(parameters);
         Objects.requireNonNull(platformConfig);
 
-        platformConfig.getOptionalModuleConfig("load-flow-default-parameters")
+        platformConfig.getOptionalModuleConfig("dynawo-simulation-default-parameters")
             .ifPresent(config -> {
                 parameters.setSolver(config.getEnumProperty("solver", Solvers.class, DEFAULT_SOLVER));
                 parameters.setIdaOrder(config.getIntProperty("IDAorder", DEFAULT_IDA_ORDER));
