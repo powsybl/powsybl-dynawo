@@ -8,7 +8,7 @@
     SPDX-License-Identifier: MPL-2.0-->
 <dyn:jobs xmlns:dyn="http://www.rte-france.com/dynawo">
     <dyn:job name="j1">
-        <dyn:solver lib="lib" parFile="file" parId="2"/>
+        <dyn:solver lib="libdynawo_SolverSIM" parFile="file" parId="2"/>
         <dyn:modeler compileDir="compile">
             <dyn:network iidmFile="iidm" parFile="parameters" parId="1"/>
             <dyn:dynModels dydFile="dyd"/>

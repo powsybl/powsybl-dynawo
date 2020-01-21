@@ -75,7 +75,7 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
             : dynawoConfig.getHomeDir() + "/" + DEFAULT_DYNAWO_CMD_NAME;
     }
 
-    private DynawoResults results(Network network, DynawoParameters dynawoParameters,
+    private DynawoResults results(Network network, DynawoSimulationParameters dynawoParameters,
         Path workingDir, ExecutionReport report) {
         report.log();
         String log = null;
@@ -102,7 +102,7 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
     }
 
     private CompletableFuture<DynamicSimulationResult> run(Network network, ComputationManager computationManager,
-        String workingStateId, DynamicSimulationParameters parameters, DynawoParameters dynawoParameters) {
+        String workingStateId, DynamicSimulationParameters parameters, DynawoSimulationParameters dynawoParameters) {
         return computationManager.execute(
             new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, dynawoConfig.isDebug()),
             new AbstractExecutionHandler<DynamicSimulationResult>() {
@@ -112,8 +112,8 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
                     network.getVariantManager().setWorkingVariant(workingStateId);
                     String dynawoJobsFile = "";
                     try {
-                        dynawoJobsFile = new DynawoXmlExporter().export(network,
-                            dynawoParameters.getDynawoInputProvider(), workingDir);
+                        dynawoJobsFile = new DynawoXmlExporter().export(network, dynawoParameters.getSolver(),
+                            dynawoParameters.getIdaOrder(), dynawoParameters.getDynawoInputProvider(), workingDir);
                     } catch (IOException | XMLStreamException e) {
                         throw new PowsyblException(e.getMessage());
                     }
@@ -132,9 +132,9 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
     public CompletableFuture<DynamicSimulationResult> run(Network network, ComputationManager computationManager,
         String workingVariantId,
         DynamicSimulationParameters parameters) {
-        DynawoParameters dynawoParameters = parameters.getExtensionByName("DynawoParameters");
+        DynawoSimulationParameters dynawoParameters = parameters.getExtensionByName("DynawoParameters");
         if (dynawoParameters == null) {
-            dynawoParameters = new DynawoParameters();
+            dynawoParameters = new DynawoSimulationParameters();
         }
         return run(network, computationManager, workingVariantId, parameters, dynawoParameters);
     }

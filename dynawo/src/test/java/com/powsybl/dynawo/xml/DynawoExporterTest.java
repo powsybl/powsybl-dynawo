@@ -29,6 +29,7 @@ import com.powsybl.commons.AbstractConverterTest;
 import com.powsybl.commons.datasource.ReadOnlyDataSource;
 import com.powsybl.dynawo.DynawoInputProvider;
 import com.powsybl.dynawo.dsl.GroovyDslDynawoInputProvider;
+import com.powsybl.dynawo.simulator.DynawoSimulationParameters.Solvers;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.NetworkFactory;
 import com.powsybl.triplestore.api.TripleStoreFactory;
@@ -57,7 +58,7 @@ public class DynawoExporterTest extends AbstractConverterTest {
     public void export() throws IOException, XMLStreamException {
         network = importNetwork(Cim14SmallCasesCatalog.nordic32());
         network.setCaseDate(DateTime.parse("2019-09-23T11:06:12.313+02:00"));
-        exporter.export(network, dynawoProvider, tmpDir);
+        exporter.export(network, Solvers.IDA, 2, dynawoProvider, tmpDir);
         Files.walk(tmpDir).forEach(file -> {
             if (Files.isRegularFile(file)) {
                 try (InputStream is = Files.newInputStream(file)) {
@@ -71,7 +72,7 @@ public class DynawoExporterTest extends AbstractConverterTest {
 
     @Test
     public void testJob() throws IOException, XMLStreamException {
-        exporter.export(network, new GroovyDslDynawoInputProvider(dslFile), tmpDir);
+        exporter.export(network, Solvers.SIM, 2, new GroovyDslDynawoInputProvider(dslFile), tmpDir);
         try (InputStream is = Files.newInputStream(tmpDir.resolve("dynawoModel.jobs"))) {
             assertNotNull(is);
             compareXml(getClass().getResourceAsStream("/dynawoModel.jobs"), is);
@@ -80,7 +81,7 @@ public class DynawoExporterTest extends AbstractConverterTest {
 
     @Test
     public void testCurve() throws IOException, XMLStreamException {
-        exporter.export(network, new GroovyDslDynawoInputProvider(dslFile), tmpDir);
+        exporter.export(network, Solvers.SIM, 2, new GroovyDslDynawoInputProvider(dslFile), tmpDir);
         try (InputStream is = Files.newInputStream(tmpDir.resolve("dynawoModel.crv"))) {
             assertNotNull(is);
             compareXml(getClass().getResourceAsStream("/dynawoModel.crv"), is);
@@ -89,7 +90,7 @@ public class DynawoExporterTest extends AbstractConverterTest {
 
     @Test
     public void testDynamicModel() throws IOException, XMLStreamException {
-        exporter.export(network, new GroovyDslDynawoInputProvider(dslFile), tmpDir);
+        exporter.export(network, Solvers.SIM, 2, new GroovyDslDynawoInputProvider(dslFile), tmpDir);
         try (InputStream is = Files.newInputStream(tmpDir.resolve("dynawoModel.dyd"))) {
             assertNotNull(is);
             compareXml(getClass().getResourceAsStream("/dynawoModel.dyd"), is);
@@ -98,7 +99,7 @@ public class DynawoExporterTest extends AbstractConverterTest {
 
     @Test
     public void testParameterSet() throws IOException, XMLStreamException {
-        exporter.export(network, new GroovyDslDynawoInputProvider(dslFile), tmpDir);
+        exporter.export(network, Solvers.SIM, 2, new GroovyDslDynawoInputProvider(dslFile), tmpDir);
         try (InputStream is = Files.newInputStream(tmpDir.resolve("dynawoModel.par"))) {
             assertNotNull(is);
             compareXml(getClass().getResourceAsStream("/dynawoModel.par"), is);
@@ -107,7 +108,7 @@ public class DynawoExporterTest extends AbstractConverterTest {
 
     @Test
     public void testSolverParameterSet() throws IOException, XMLStreamException {
-        exporter.export(network, new GroovyDslDynawoInputProvider(dslFile), tmpDir);
+        exporter.export(network, Solvers.SIM, 2, new GroovyDslDynawoInputProvider(dslFile), tmpDir);
         try (InputStream is = Files.newInputStream(tmpDir.resolve("solvers.par"))) {
             assertNotNull(is);
             compareXml(getClass().getResourceAsStream("/solvers.par"), is);

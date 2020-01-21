@@ -14,6 +14,7 @@ import javax.xml.stream.XMLStreamWriter;
 
 import com.powsybl.dynawo.par.DynawoParameter;
 import com.powsybl.dynawo.par.DynawoParameterSet;
+import com.powsybl.dynawo.simulator.DynawoSimulationParameters.Solvers;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -23,19 +24,30 @@ public final class DynawoSolverParameters {
     private DynawoSolverParameters() {
     }
 
-    public static void writeParameterSets(XMLStreamWriter writer, List<DynawoParameterSet> parameterSets)
+    public static void writeParameterSets(XMLStreamWriter writer, Solvers solver, int order,
+        List<DynawoParameterSet> parameterSets)
         throws XMLStreamException {
         for (DynawoParameterSet parameterSet : parameterSets) {
-            writeParameterSet(writer, parameterSet);
+            writeParameterSet(writer, solver, order, parameterSet);
         }
     }
 
-    private static void writeParameterSet(XMLStreamWriter writer, DynawoParameterSet parameterSet)
+    private static void writeParameterSet(XMLStreamWriter writer, Solvers solver, int order,
+        DynawoParameterSet parameterSet)
         throws XMLStreamException {
         String id = parameterSet.getId();
         writer.writeStartElement("set");
         writer.writeAttribute("id", id);
+        if (solver.equals(Solvers.IDA)) {
+            writer.writeEmptyElement("par");
+            writer.writeAttribute("type", "INT");
+            writer.writeAttribute("name", "order");
+            writer.writeAttribute("value", Integer.toString(order));
+        }
         for (Entry<String, DynawoParameter> parameter : parameterSet.getParameters().entrySet()) {
+            if (parameter.getValue().getName().equals("order") && solver.equals(Solvers.IDA)) {
+                continue;
+            }
             writeParameter(writer, parameter.getValue());
         }
         writer.writeEndElement();
