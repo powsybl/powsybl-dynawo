@@ -21,8 +21,9 @@ import com.powsybl.computation.local.LocalComputationConfig;
 import com.powsybl.computation.local.LocalComputationManager;
 import com.powsybl.dynamicsimulation.DynamicSimulation;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
-import com.powsybl.dynawo.DynawoInputProvider;
-import com.powsybl.dynawo.simulator.results.DynawoResults;
+import com.powsybl.dynawo.inputs.model.DynawoInputs;
+import com.powsybl.dynawo.results.CurvesCsv;
+import com.powsybl.dynawo.results.DynawoResults;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.NetworkFactory;
 import com.powsybl.triplestore.api.TripleStoreFactory;
@@ -47,7 +48,7 @@ public class DynawoSimulationTester {
         return n;
     }
 
-    public DynawoResults simulate(Network network, DynawoInputProvider dynawoInputProvider, PlatformConfig platformConfig)
+    public DynawoResults simulate(Network network, DynawoInputs dynawoInputs, PlatformConfig platformConfig)
         throws Exception {
         DynawoSimulationProvider dynawoSimulationProvider = new DynawoSimulationProvider();
         assertEquals("DynawoSimulation", dynawoSimulationProvider.getName());
@@ -59,11 +60,11 @@ public class DynawoSimulationTester {
             LocalComputationConfig.load(platformConfig));
         DynamicSimulationParameters simulationParameters = DynamicSimulationParameters.load(platformConfig);
         simulationParameters.addExtension(DynawoSimulationParameters.class, new DynawoSimulationParameters()
-            .setDynawoInputProvider(dynawoInputProvider));
+            .setDynawoInputs(dynawoInputs));
         DynawoResults result = (DynawoResults) runner.run(network, computationManager, simulationParameters);
         if (mockResults) {
             result = new DynawoResults(true, null);
-            result.parseCsv(getClass().getResourceAsStream("/nordic32/curves.csv"));
+            result.setTimeSeries(CurvesCsv.parse(getClass().getResourceAsStream("/nordic32/curves.csv")));
         }
         return result;
     }

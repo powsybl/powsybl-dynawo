@@ -26,22 +26,22 @@ import com.powsybl.cgmes.model.test.cim14.Cim14SmallCasesCatalog;
 import com.powsybl.commons.config.InMemoryPlatformConfig;
 import com.powsybl.commons.config.MapModuleConfig;
 import com.powsybl.commons.config.PlatformConfig;
-import com.powsybl.dynawo.DynawoInputProvider;
-import com.powsybl.dynawo.DynawoParameterType;
-import com.powsybl.dynawo.crv.DynawoCurve;
-import com.powsybl.dynawo.dsl.GroovyDslDynawoInputProvider;
-import com.powsybl.dynawo.dyd.BlackBoxModel;
-import com.powsybl.dynawo.dyd.Connection;
-import com.powsybl.dynawo.dyd.DynawoDynamicModel;
-import com.powsybl.dynawo.job.DynawoJob;
-import com.powsybl.dynawo.job.DynawoModeler;
-import com.powsybl.dynawo.job.DynawoOutputs;
-import com.powsybl.dynawo.job.DynawoSimulation;
-import com.powsybl.dynawo.job.DynawoSolver;
-import com.powsybl.dynawo.job.LogAppender;
-import com.powsybl.dynawo.par.DynawoParameter;
-import com.powsybl.dynawo.par.DynawoParameterSet;
-import com.powsybl.dynawo.simulator.results.DynawoResults;
+import com.powsybl.dynawo.inputs.dsl.GroovyDslDynawoInputProvider;
+import com.powsybl.dynawo.inputs.model.DynawoInputs;
+import com.powsybl.dynawo.inputs.model.DynawoParameterType;
+import com.powsybl.dynawo.inputs.model.crv.Curve;
+import com.powsybl.dynawo.inputs.model.dyd.BlackBoxModel;
+import com.powsybl.dynawo.inputs.model.dyd.Connection;
+import com.powsybl.dynawo.inputs.model.dyd.DynawoDynamicModel;
+import com.powsybl.dynawo.inputs.model.job.Job;
+import com.powsybl.dynawo.inputs.model.job.Modeler;
+import com.powsybl.dynawo.inputs.model.job.Outputs;
+import com.powsybl.dynawo.inputs.model.job.Simulation;
+import com.powsybl.dynawo.inputs.model.job.Solver;
+import com.powsybl.dynawo.inputs.model.job.LogAppender;
+import com.powsybl.dynawo.inputs.model.par.Parameter;
+import com.powsybl.dynawo.inputs.model.par.ParameterSet;
+import com.powsybl.dynawo.results.DynawoResults;
 import com.powsybl.iidm.network.Network;
 
 /**
@@ -56,14 +56,14 @@ public class DynawoSimulationTest {
             PlatformConfig platformConfig = configure(fs);
             DynawoSimulationTester tester = new DynawoSimulationTester(true);
             Network network = tester.convert(platformConfig, Cim14SmallCasesCatalog.nordic32());
-            DynawoInputProvider dynawoInputProvider = configureProvider(network);
-            DynawoResults result = tester.simulate(network, dynawoInputProvider, platformConfig);
+            DynawoInputs dynawoInputs = buildInputs(network);
+            DynawoResults result = tester.simulate(network, dynawoInputs, platformConfig);
             assertTrue(result.isOk());
             assertNull(result.getLogs());
 
             // check final voltage of bus close to the event
-            int index = result.getNames().indexOf("NETWORK__N1011____TN_Upu_value");
-            assertEquals(result.getTimeSeries().get(new Double(30.0)).get(index), new Double(0.931558));
+            int index = result.getTimeSeries().getNames().indexOf("NETWORK__N1011____TN_Upu_value");
+            assertEquals(result.getTimeSeries().getValues().get(new Double(30.0)).get(index), new Double(0.931558));
         }
     }
 
@@ -74,12 +74,12 @@ public class DynawoSimulationTest {
             PlatformConfig platformConfig = configure(fs);
             DynawoSimulationTester tester = new DynawoSimulationTester(true);
             Network network = tester.convert(platformConfig, Cim14SmallCasesCatalog.nordic32());
-            DynawoInputProvider dynawoInputProvider = new GroovyDslDynawoInputProvider(getClass().getResourceAsStream("/nordic32/nordic32.groovy"));
-            DynawoResults result = tester.simulate(network, dynawoInputProvider, platformConfig);
+            DynawoInputs dynawoInputs = new GroovyDslDynawoInputProvider(getClass().getResourceAsStream("/nordic32/nordic32.groovy")).getDynawoInputs(network);
+            DynawoResults result = tester.simulate(network, dynawoInputs, platformConfig);
 
             // check final voltage of bus close to the event
-            int index = result.getNames().indexOf("NETWORK__N1011____TN_Upu_value");
-            assertEquals(result.getTimeSeries().get(new Double(30.0)).get(index), new Double(0.931558));
+            int index = result.getTimeSeries().getNames().indexOf("NETWORK__N1011____TN_Upu_value");
+            assertEquals(result.getTimeSeries().getValues().get(new Double(30.0)).get(index), new Double(0.931558));
         }
     }
 
@@ -93,161 +93,161 @@ public class DynawoSimulationTest {
         return platformConfig;
     }
 
-    private DynawoInputProvider configureProvider(Network network) {
+    private DynawoInputs buildInputs(Network network) {
 
-        DynawoInputProvider dynawoProvider = Mockito.mock(DynawoInputProvider.class);
+        DynawoInputs dynawoInputs = Mockito.mock(DynawoInputs.class);
 
         // Job file
-        DynawoSolver solver = new DynawoSolver("libdynawo_SolverIDA", "solvers.par", "2");
-        DynawoModeler modeler = new DynawoModeler("outputs/compilation", "dynawoModel.xiidm", "dynawoModel.par", "1",
-            "dynawoModel.dyd");
-        DynawoSimulation simulation = new DynawoSimulation(0, 30, false, 1e-6);
-        DynawoOutputs outputs = new DynawoOutputs("outputs", "dynawoModel.crv");
+        Solver solver = new Solver("libdynawo_SolverIDA", "solvers.par", "2");
+        Modeler modeler = new Modeler("outputs/compilation", "powsybl_network.xiidm", "powsybl_dynawo.par", "1",
+            "powsybl_dynawo.dyd");
+        Simulation simulation = new Simulation(0, 30, false, 1e-6);
+        Outputs outputs = new Outputs("outputs", "powsybl_dynawo.crv");
         outputs.add(new LogAppender("", "dynawo.log", "DEBUG"));
         outputs.add(new LogAppender("COMPILE", "dynawoCompiler.log", "DEBUG"));
         outputs.add(new LogAppender("MODELER", "dynawoModeler.log", "DEBUG"));
-        DynawoJob job = new DynawoJob("Nordic 32 - Disconnect Line", solver, modeler, simulation, outputs);
-        Mockito.when(dynawoProvider.getDynawoJobs(network)).thenReturn(Collections.singletonList(job));
+        Job job = new Job("Nordic 32 - Disconnect Line", solver, modeler, simulation, outputs);
+        Mockito.when(dynawoInputs.getJobs()).thenReturn(Collections.singletonList(job));
 
         // Solvers file
-        List<DynawoParameter> parameters = new ArrayList<>();
-        parameters.add(new DynawoParameter("order", DynawoParameterType.INT.getValue(), "2"));
-        parameters.add(new DynawoParameter("initStep", DynawoParameterType.DOUBLE.getValue(), "0.000001"));
-        parameters.add(new DynawoParameter("minStep", DynawoParameterType.DOUBLE.getValue(), "0.000001"));
-        parameters.add(new DynawoParameter("maxStep", DynawoParameterType.DOUBLE.getValue(), "10"));
-        parameters.add(new DynawoParameter("absAccuracy", DynawoParameterType.DOUBLE.getValue(), "1e-4"));
-        parameters.add(new DynawoParameter("relAccuracy", DynawoParameterType.DOUBLE.getValue(), "1e-4"));
-        DynawoParameterSet solverParams = new DynawoParameterSet("2");
+        List<Parameter> parameters = new ArrayList<>();
+        parameters.add(new Parameter("order", DynawoParameterType.INT.getValue(), "2"));
+        parameters.add(new Parameter("initStep", DynawoParameterType.DOUBLE.getValue(), "0.000001"));
+        parameters.add(new Parameter("minStep", DynawoParameterType.DOUBLE.getValue(), "0.000001"));
+        parameters.add(new Parameter("maxStep", DynawoParameterType.DOUBLE.getValue(), "10"));
+        parameters.add(new Parameter("absAccuracy", DynawoParameterType.DOUBLE.getValue(), "1e-4"));
+        parameters.add(new Parameter("relAccuracy", DynawoParameterType.DOUBLE.getValue(), "1e-4"));
+        ParameterSet solverParams = new ParameterSet("2");
         solverParams.addParameters(Collections.unmodifiableList(parameters));
-        Mockito.when(dynawoProvider.getDynawoSolverParameterSets(network))
+        Mockito.when(dynawoInputs.getSolverParameterSets())
             .thenReturn(Collections.singletonList(solverParams));
 
         // Parameters file
-        List<DynawoParameterSet> parameterSets = new ArrayList<>();
+        List<ParameterSet> parameterSets = new ArrayList<>();
         // Global param
         parameters = new ArrayList<>();
-        parameters.add(new DynawoParameter("capacitor_no_reclosing_delay", DynawoParameterType.DOUBLE.getValue(), "300"));
-        parameters.add(new DynawoParameter("dangling_line_currentLimit_maxTimeOperation", DynawoParameterType.DOUBLE.getValue(), "90"));
-        parameters.add(new DynawoParameter("line_currentLimit_maxTimeOperation", DynawoParameterType.DOUBLE.getValue(), "90"));
-        parameters.add(new DynawoParameter("load_Tp", DynawoParameterType.DOUBLE.getValue(), "90"));
-        parameters.add(new DynawoParameter("load_Tq", DynawoParameterType.DOUBLE.getValue(), "90"));
-        parameters.add(new DynawoParameter("load_alpha", DynawoParameterType.DOUBLE.getValue(), "1"));
-        parameters.add(new DynawoParameter("load_alphaLong", DynawoParameterType.DOUBLE.getValue(), "0"));
-        parameters.add(new DynawoParameter("load_beta", DynawoParameterType.DOUBLE.getValue(), "2"));
-        parameters.add(new DynawoParameter("load_betaLong", DynawoParameterType.DOUBLE.getValue(), "0"));
-        parameters.add(new DynawoParameter("load_isControllable", DynawoParameterType.BOOLEAN.getValue(), "false"));
-        parameters.add(new DynawoParameter("load_isRestorative", DynawoParameterType.BOOLEAN.getValue(), "false"));
-        parameters.add(new DynawoParameter("load_zPMax", DynawoParameterType.DOUBLE.getValue(), "100"));
-        parameters.add(new DynawoParameter("load_zQMax", DynawoParameterType.DOUBLE.getValue(), "100"));
-        parameters.add(new DynawoParameter("reactance_no_reclosing_delay", DynawoParameterType.DOUBLE.getValue(), "0"));
-        parameters.add(new DynawoParameter("transformer_currentLimit_maxTimeOperation", DynawoParameterType.DOUBLE.getValue(), "90"));
-        parameters.add(new DynawoParameter("transformer_t1st_HT", DynawoParameterType.DOUBLE.getValue(), "60"));
-        parameters.add(new DynawoParameter("transformer_t1st_THT", DynawoParameterType.DOUBLE.getValue(), "30"));
-        parameters.add(new DynawoParameter("transformer_tNext_HT", DynawoParameterType.DOUBLE.getValue(), "10"));
-        parameters.add(new DynawoParameter("transformer_tNext_THT", DynawoParameterType.DOUBLE.getValue(), "10"));
-        parameters.add(new DynawoParameter("transformer_tolV", DynawoParameterType.DOUBLE.getValue(), "0.014999999700000001"));
-        DynawoParameterSet parameterSet = new DynawoParameterSet("1");
+        parameters.add(new Parameter("capacitor_no_reclosing_delay", DynawoParameterType.DOUBLE.getValue(), "300"));
+        parameters.add(new Parameter("dangling_line_currentLimit_maxTimeOperation", DynawoParameterType.DOUBLE.getValue(), "90"));
+        parameters.add(new Parameter("line_currentLimit_maxTimeOperation", DynawoParameterType.DOUBLE.getValue(), "90"));
+        parameters.add(new Parameter("load_Tp", DynawoParameterType.DOUBLE.getValue(), "90"));
+        parameters.add(new Parameter("load_Tq", DynawoParameterType.DOUBLE.getValue(), "90"));
+        parameters.add(new Parameter("load_alpha", DynawoParameterType.DOUBLE.getValue(), "1"));
+        parameters.add(new Parameter("load_alphaLong", DynawoParameterType.DOUBLE.getValue(), "0"));
+        parameters.add(new Parameter("load_beta", DynawoParameterType.DOUBLE.getValue(), "2"));
+        parameters.add(new Parameter("load_betaLong", DynawoParameterType.DOUBLE.getValue(), "0"));
+        parameters.add(new Parameter("load_isControllable", DynawoParameterType.BOOLEAN.getValue(), "false"));
+        parameters.add(new Parameter("load_isRestorative", DynawoParameterType.BOOLEAN.getValue(), "false"));
+        parameters.add(new Parameter("load_zPMax", DynawoParameterType.DOUBLE.getValue(), "100"));
+        parameters.add(new Parameter("load_zQMax", DynawoParameterType.DOUBLE.getValue(), "100"));
+        parameters.add(new Parameter("reactance_no_reclosing_delay", DynawoParameterType.DOUBLE.getValue(), "0"));
+        parameters.add(new Parameter("transformer_currentLimit_maxTimeOperation", DynawoParameterType.DOUBLE.getValue(), "90"));
+        parameters.add(new Parameter("transformer_t1st_HT", DynawoParameterType.DOUBLE.getValue(), "60"));
+        parameters.add(new Parameter("transformer_t1st_THT", DynawoParameterType.DOUBLE.getValue(), "30"));
+        parameters.add(new Parameter("transformer_tNext_HT", DynawoParameterType.DOUBLE.getValue(), "10"));
+        parameters.add(new Parameter("transformer_tNext_THT", DynawoParameterType.DOUBLE.getValue(), "10"));
+        parameters.add(new Parameter("transformer_tolV", DynawoParameterType.DOUBLE.getValue(), "0.014999999700000001"));
+        ParameterSet parameterSet = new ParameterSet("1");
         parameterSet.addParameters(Collections.unmodifiableList(parameters));
         parameterSets.add(parameterSet);
 
         // Omega Ref param
         parameters = new ArrayList<>();
-        parameters.add(new DynawoParameter("nbGen", DynawoParameterType.INT.getValue(), "" + network.getGeneratorCount()));
-        parameters.add(new DynawoParameter("weight_gen_0", DynawoParameterType.DOUBLE.getValue(), "1211"));
+        parameters.add(new Parameter("nbGen", DynawoParameterType.INT.getValue(), "" + network.getGeneratorCount()));
+        parameters.add(new Parameter("weight_gen_0", DynawoParameterType.DOUBLE.getValue(), "1211"));
         for (int i = 1; i < network.getGeneratorCount(); i++) {
-            parameters.add(new DynawoParameter("weight_gen_" + i, DynawoParameterType.DOUBLE.getValue(), "1"));
+            parameters.add(new Parameter("weight_gen_" + i, DynawoParameterType.DOUBLE.getValue(), "1"));
         }
-        parameterSet = new DynawoParameterSet("2");
+        parameterSet = new ParameterSet("2");
         parameterSet.addParameters(Collections.unmodifiableList(parameters));
         parameterSets.add(parameterSet);
 
         // Load param
         parameters = new ArrayList<>();
-        parameters.add(new DynawoParameter("load_alpha", DynawoParameterType.DOUBLE.getValue(), "1.5"));
-        parameters.add(new DynawoParameter("load_beta", DynawoParameterType.DOUBLE.getValue(), "2.5"));
-        parameters.add(new DynawoParameter("load_P0Pu", DynawoParameterType.DOUBLE.getValue(), DynawoParameterType.IIDM.getValue(), "p_pu"));
-        parameters.add(new DynawoParameter("load_Q0Pu", DynawoParameterType.DOUBLE.getValue(), DynawoParameterType.IIDM.getValue(), "q_pu"));
-        parameters.add(new DynawoParameter("load_U0Pu", DynawoParameterType.DOUBLE.getValue(), DynawoParameterType.IIDM.getValue(), "v_pu"));
-        parameters.add(new DynawoParameter("load_UPhase0", DynawoParameterType.DOUBLE.getValue(), DynawoParameterType.IIDM.getValue(), "angle_pu"));
-        parameterSet = new DynawoParameterSet("3");
+        parameters.add(new Parameter("load_alpha", DynawoParameterType.DOUBLE.getValue(), "1.5"));
+        parameters.add(new Parameter("load_beta", DynawoParameterType.DOUBLE.getValue(), "2.5"));
+        parameters.add(new Parameter("load_P0Pu", DynawoParameterType.DOUBLE.getValue(), DynawoParameterType.IIDM.getValue(), "p_pu"));
+        parameters.add(new Parameter("load_Q0Pu", DynawoParameterType.DOUBLE.getValue(), DynawoParameterType.IIDM.getValue(), "q_pu"));
+        parameters.add(new Parameter("load_U0Pu", DynawoParameterType.DOUBLE.getValue(), DynawoParameterType.IIDM.getValue(), "v_pu"));
+        parameters.add(new Parameter("load_UPhase0", DynawoParameterType.DOUBLE.getValue(), DynawoParameterType.IIDM.getValue(), "angle_pu"));
+        parameterSet = new ParameterSet("3");
         parameterSet.addParameters(Collections.unmodifiableList(parameters));
         parameterSets.add(parameterSet);
 
         // Generator param
         parameters = new ArrayList<>();
-        parameters.add(new DynawoParameter("generator_ExcitationPu", DynawoParameterType.INT.getValue(), "1"));
-        parameters.add(new DynawoParameter("generator_DPu", DynawoParameterType.DOUBLE.getValue(), "0"));
-        parameters.add(new DynawoParameter("generator_H", DynawoParameterType.DOUBLE.getValue(), "5.4000000000000004"));
-        parameters.add(new DynawoParameter("generator_RaPu", DynawoParameterType.DOUBLE.getValue(), "0.0027959999999999999"));
-        parameters.add(new DynawoParameter("generator_XlPu", DynawoParameterType.DOUBLE.getValue(), "0.20200000000000001"));
-        parameters.add(new DynawoParameter("generator_XdPu", DynawoParameterType.DOUBLE.getValue(), "2.2200000000000002"));
-        parameters.add(new DynawoParameter("generator_XpdPu", DynawoParameterType.DOUBLE.getValue(), "0.38400000000000001"));
-        parameters.add(new DynawoParameter("generator_XppdPu", DynawoParameterType.DOUBLE.getValue(), "0.26400000000000001"));
-        parameters.add(new DynawoParameter("generator_Tpd0", DynawoParameterType.DOUBLE.getValue(), "8.0939999999999994"));
-        parameters.add(new DynawoParameter("generator_Tppd0", DynawoParameterType.DOUBLE.getValue(), "0.080000000000000002"));
-        parameters.add(new DynawoParameter("generator_XqPu", DynawoParameterType.DOUBLE.getValue(), "2.2200000000000002"));
-        parameters.add(new DynawoParameter("generator_XpqPu", DynawoParameterType.DOUBLE.getValue(), "0.39300000000000002"));
-        parameters.add(new DynawoParameter("generator_XppqPu", DynawoParameterType.DOUBLE.getValue(), "0.26200000000000001"));
-        parameters.add(new DynawoParameter("generator_Tpq0", DynawoParameterType.DOUBLE.getValue(), "1.5720000000000001"));
-        parameters.add(new DynawoParameter("generator_Tppq0", DynawoParameterType.DOUBLE.getValue(), "0.084000000000000005"));
-        parameters.add(new DynawoParameter("generator_UNom", DynawoParameterType.DOUBLE.getValue(), "24"));
-        parameters.add(new DynawoParameter("generator_SNom", DynawoParameterType.DOUBLE.getValue(), "1211"));
-        parameters.add(new DynawoParameter("generator_PNom", DynawoParameterType.DOUBLE.getValue(), "1090"));
-        parameters.add(new DynawoParameter("generator_SnTfo", DynawoParameterType.DOUBLE.getValue(), "1211"));
-        parameters.add(new DynawoParameter("generator_UNomHV", DynawoParameterType.DOUBLE.getValue(), "69"));
-        parameters.add(new DynawoParameter("generator_UNomLV", DynawoParameterType.DOUBLE.getValue(), "24"));
-        parameters.add(new DynawoParameter("generator_UBaseHV", DynawoParameterType.DOUBLE.getValue(), "69"));
-        parameters.add(new DynawoParameter("generator_UBaseLV", DynawoParameterType.DOUBLE.getValue(), "24"));
-        parameters.add(new DynawoParameter("generator_RTfPu", DynawoParameterType.DOUBLE.getValue(), "0.0"));
-        parameters.add(new DynawoParameter("generator_XTfPu", DynawoParameterType.DOUBLE.getValue(), "0.1"));
-        parameters.add(new DynawoParameter("voltageRegulator_LagEfdMax", DynawoParameterType.DOUBLE.getValue(), "0"));
-        parameters.add(new DynawoParameter("voltageRegulator_LagEfdMin", DynawoParameterType.DOUBLE.getValue(), "0"));
-        parameters.add(new DynawoParameter("voltageRegulator_EfdMinPu", DynawoParameterType.DOUBLE.getValue(), "-5"));
-        parameters.add(new DynawoParameter("voltageRegulator_EfdMaxPu", DynawoParameterType.DOUBLE.getValue(), "5"));
-        parameters.add(new DynawoParameter("voltageRegulator_UsRefMinPu", DynawoParameterType.DOUBLE.getValue(), "0.8"));
-        parameters.add(new DynawoParameter("voltageRegulator_UsRefMaxPu", DynawoParameterType.DOUBLE.getValue(), "1.2"));
-        parameters.add(new DynawoParameter("voltageRegulator_Gain", DynawoParameterType.DOUBLE.getValue(), "20"));
-        parameters.add(new DynawoParameter("governor_KGover", DynawoParameterType.DOUBLE.getValue(), "5"));
-        parameters.add(new DynawoParameter("governor_PMin", DynawoParameterType.DOUBLE.getValue(), "0"));
-        parameters.add(new DynawoParameter("governor_PMax", DynawoParameterType.DOUBLE.getValue(), "1090"));
-        parameters.add(new DynawoParameter("governor_PNom", DynawoParameterType.DOUBLE.getValue(), "1090"));
-        parameters.add(new DynawoParameter("URef_ValueIn", DynawoParameterType.DOUBLE.getValue(), "0"));
-        parameters.add(new DynawoParameter("Pm_ValueIn", DynawoParameterType.DOUBLE.getValue(), "0"));
-        parameters.add(new DynawoParameter("generator_P0Pu", DynawoParameterType.DOUBLE.getValue(), DynawoParameterType.IIDM.getValue(), "p_pu"));
-        parameters.add(new DynawoParameter("generator_Q0Pu", DynawoParameterType.DOUBLE.getValue(), DynawoParameterType.IIDM.getValue(), "q_pu"));
-        parameters.add(new DynawoParameter("generator_U0Pu", DynawoParameterType.DOUBLE.getValue(), DynawoParameterType.IIDM.getValue(), "v_pu"));
-        parameters.add(new DynawoParameter("generator_UPhase0", DynawoParameterType.DOUBLE.getValue(), DynawoParameterType.IIDM.getValue(), "angle_pu"));
-        parameterSet = new DynawoParameterSet("4");
+        parameters.add(new Parameter("generator_ExcitationPu", DynawoParameterType.INT.getValue(), "1"));
+        parameters.add(new Parameter("generator_DPu", DynawoParameterType.DOUBLE.getValue(), "0"));
+        parameters.add(new Parameter("generator_H", DynawoParameterType.DOUBLE.getValue(), "5.4000000000000004"));
+        parameters.add(new Parameter("generator_RaPu", DynawoParameterType.DOUBLE.getValue(), "0.0027959999999999999"));
+        parameters.add(new Parameter("generator_XlPu", DynawoParameterType.DOUBLE.getValue(), "0.20200000000000001"));
+        parameters.add(new Parameter("generator_XdPu", DynawoParameterType.DOUBLE.getValue(), "2.2200000000000002"));
+        parameters.add(new Parameter("generator_XpdPu", DynawoParameterType.DOUBLE.getValue(), "0.38400000000000001"));
+        parameters.add(new Parameter("generator_XppdPu", DynawoParameterType.DOUBLE.getValue(), "0.26400000000000001"));
+        parameters.add(new Parameter("generator_Tpd0", DynawoParameterType.DOUBLE.getValue(), "8.0939999999999994"));
+        parameters.add(new Parameter("generator_Tppd0", DynawoParameterType.DOUBLE.getValue(), "0.080000000000000002"));
+        parameters.add(new Parameter("generator_XqPu", DynawoParameterType.DOUBLE.getValue(), "2.2200000000000002"));
+        parameters.add(new Parameter("generator_XpqPu", DynawoParameterType.DOUBLE.getValue(), "0.39300000000000002"));
+        parameters.add(new Parameter("generator_XppqPu", DynawoParameterType.DOUBLE.getValue(), "0.26200000000000001"));
+        parameters.add(new Parameter("generator_Tpq0", DynawoParameterType.DOUBLE.getValue(), "1.5720000000000001"));
+        parameters.add(new Parameter("generator_Tppq0", DynawoParameterType.DOUBLE.getValue(), "0.084000000000000005"));
+        parameters.add(new Parameter("generator_UNom", DynawoParameterType.DOUBLE.getValue(), "24"));
+        parameters.add(new Parameter("generator_SNom", DynawoParameterType.DOUBLE.getValue(), "1211"));
+        parameters.add(new Parameter("generator_PNom", DynawoParameterType.DOUBLE.getValue(), "1090"));
+        parameters.add(new Parameter("generator_SnTfo", DynawoParameterType.DOUBLE.getValue(), "1211"));
+        parameters.add(new Parameter("generator_UNomHV", DynawoParameterType.DOUBLE.getValue(), "69"));
+        parameters.add(new Parameter("generator_UNomLV", DynawoParameterType.DOUBLE.getValue(), "24"));
+        parameters.add(new Parameter("generator_UBaseHV", DynawoParameterType.DOUBLE.getValue(), "69"));
+        parameters.add(new Parameter("generator_UBaseLV", DynawoParameterType.DOUBLE.getValue(), "24"));
+        parameters.add(new Parameter("generator_RTfPu", DynawoParameterType.DOUBLE.getValue(), "0.0"));
+        parameters.add(new Parameter("generator_XTfPu", DynawoParameterType.DOUBLE.getValue(), "0.1"));
+        parameters.add(new Parameter("voltageRegulator_LagEfdMax", DynawoParameterType.DOUBLE.getValue(), "0"));
+        parameters.add(new Parameter("voltageRegulator_LagEfdMin", DynawoParameterType.DOUBLE.getValue(), "0"));
+        parameters.add(new Parameter("voltageRegulator_EfdMinPu", DynawoParameterType.DOUBLE.getValue(), "-5"));
+        parameters.add(new Parameter("voltageRegulator_EfdMaxPu", DynawoParameterType.DOUBLE.getValue(), "5"));
+        parameters.add(new Parameter("voltageRegulator_UsRefMinPu", DynawoParameterType.DOUBLE.getValue(), "0.8"));
+        parameters.add(new Parameter("voltageRegulator_UsRefMaxPu", DynawoParameterType.DOUBLE.getValue(), "1.2"));
+        parameters.add(new Parameter("voltageRegulator_Gain", DynawoParameterType.DOUBLE.getValue(), "20"));
+        parameters.add(new Parameter("governor_KGover", DynawoParameterType.DOUBLE.getValue(), "5"));
+        parameters.add(new Parameter("governor_PMin", DynawoParameterType.DOUBLE.getValue(), "0"));
+        parameters.add(new Parameter("governor_PMax", DynawoParameterType.DOUBLE.getValue(), "1090"));
+        parameters.add(new Parameter("governor_PNom", DynawoParameterType.DOUBLE.getValue(), "1090"));
+        parameters.add(new Parameter("URef_ValueIn", DynawoParameterType.DOUBLE.getValue(), "0"));
+        parameters.add(new Parameter("Pm_ValueIn", DynawoParameterType.DOUBLE.getValue(), "0"));
+        parameters.add(new Parameter("generator_P0Pu", DynawoParameterType.DOUBLE.getValue(), DynawoParameterType.IIDM.getValue(), "p_pu"));
+        parameters.add(new Parameter("generator_Q0Pu", DynawoParameterType.DOUBLE.getValue(), DynawoParameterType.IIDM.getValue(), "q_pu"));
+        parameters.add(new Parameter("generator_U0Pu", DynawoParameterType.DOUBLE.getValue(), DynawoParameterType.IIDM.getValue(), "v_pu"));
+        parameters.add(new Parameter("generator_UPhase0", DynawoParameterType.DOUBLE.getValue(), DynawoParameterType.IIDM.getValue(), "angle_pu"));
+        parameterSet = new ParameterSet("4");
         parameterSet.addParameters(Collections.unmodifiableList(parameters));
         parameterSets.add(parameterSet);
 
         // Event param
         parameters = new ArrayList<>();
-        parameters.add(new DynawoParameter("event_tEvent", DynawoParameterType.DOUBLE.getValue(), "1"));
-        parameters.add(new DynawoParameter("event_disconnectOrigin", DynawoParameterType.BOOLEAN.getValue(), "false"));
-        parameters.add(new DynawoParameter("event_disconnectExtremity", DynawoParameterType.BOOLEAN.getValue(), "true"));
-        parameterSet = new DynawoParameterSet("5");
+        parameters.add(new Parameter("event_tEvent", DynawoParameterType.DOUBLE.getValue(), "1"));
+        parameters.add(new Parameter("event_disconnectOrigin", DynawoParameterType.BOOLEAN.getValue(), "false"));
+        parameters.add(new Parameter("event_disconnectExtremity", DynawoParameterType.BOOLEAN.getValue(), "true"));
+        parameterSet = new ParameterSet("5");
         parameterSet.addParameters(Collections.unmodifiableList(parameters));
         parameterSets.add(parameterSet);
-        Mockito.when(dynawoProvider.getDynawoParameterSets(network))
+        Mockito.when(dynawoInputs.getParameterSets())
             .thenReturn(Collections.unmodifiableList(parameterSets));
 
         // Dyd file
         List<DynawoDynamicModel> dynamicModels = new ArrayList<>();
         // Omega Ref dyd
-        dynamicModels.add(new BlackBoxModel("OMEGA_REF", "DYNModelOmegaRef", "dynawoModel.par", "2"));
+        dynamicModels.add(new BlackBoxModel("OMEGA_REF", "DYNModelOmegaRef", "powsybl_dynawo.par", "2"));
 
         // Load dyd
         dynamicModels
-            .add(new BlackBoxModel("_N1011____EC", "LoadAlphaBeta", "dynawoModel.par", "3", "_N1011____EC"));
+            .add(new BlackBoxModel("_N1011____EC", "LoadAlphaBeta", "powsybl_dynawo.par", "3", "_N1011____EC"));
 
         // Generator dyd
         dynamicModels.add(new BlackBoxModel("_G10______SM",
-            "GeneratorSynchronousFourWindingsProportionalRegulations", "dynawoModel.par", "4", "_G10______SM"));
+            "GeneratorSynchronousFourWindingsProportionalRegulations", "powsybl_dynawo.par", "4", "_G10______SM"));
 
         // Event dyd
         dynamicModels
-            .add(new BlackBoxModel("DISCONNECT_LINE", "EventQuadripoleDisconnection", "dynawoModel.par", "5"));
+            .add(new BlackBoxModel("DISCONNECT_LINE", "EventQuadripoleDisconnection", "powsybl_dynawo.par", "5"));
 
         // Load connection dyd
         dynamicModels.add(new Connection("_N1011____EC", "load_terminal", "NETWORK", "_N1011____TN_ACPIN"));
@@ -269,20 +269,20 @@ public class DynawoSimulationTest {
         dynamicModels
             .add(new Connection("DISCONNECT_LINE", "event_state1_value", "NETWORK",
                 "_N1011___-N1013___-1_AC_state_value"));
-        Mockito.when(dynawoProvider.getDynawoDynamicModels(network)).thenReturn(dynamicModels);
+        Mockito.when(dynawoInputs.getDynamicModels()).thenReturn(dynamicModels);
 
         // Curve file
-        List<DynawoCurve> curves = new ArrayList<>();
-        curves.add(new DynawoCurve("NETWORK", "_N1011____TN_Upu_value"));
-        curves.add(new DynawoCurve("_G10______SM", "generator_omegaPu"));
-        curves.add(new DynawoCurve("_G10______SM", "generator_PGen"));
-        curves.add(new DynawoCurve("_G10______SM", "generator_QGen"));
-        curves.add(new DynawoCurve("_G10______SM", "generator_UStatorPu"));
-        curves.add(new DynawoCurve("_G10______SM", "voltageRegulator_UcEfdPu"));
-        curves.add(new DynawoCurve("_G10______SM", "voltageRegulator_EfdPu"));
-        curves.add(new DynawoCurve("_N1011____EC", "load_PPu"));
-        curves.add(new DynawoCurve("_N1011____EC", "load_QPu"));
-        Mockito.when(dynawoProvider.getDynawoCurves(network)).thenReturn(curves);
-        return dynawoProvider;
+        List<Curve> curves = new ArrayList<>();
+        curves.add(new Curve("NETWORK", "_N1011____TN_Upu_value"));
+        curves.add(new Curve("_G10______SM", "generator_omegaPu"));
+        curves.add(new Curve("_G10______SM", "generator_PGen"));
+        curves.add(new Curve("_G10______SM", "generator_QGen"));
+        curves.add(new Curve("_G10______SM", "generator_UStatorPu"));
+        curves.add(new Curve("_G10______SM", "voltageRegulator_UcEfdPu"));
+        curves.add(new Curve("_G10______SM", "voltageRegulator_EfdPu"));
+        curves.add(new Curve("_N1011____EC", "load_PPu"));
+        curves.add(new Curve("_N1011____EC", "load_QPu"));
+        Mockito.when(dynawoInputs.getCurves()).thenReturn(curves);
+        return dynawoInputs;
     }
 }

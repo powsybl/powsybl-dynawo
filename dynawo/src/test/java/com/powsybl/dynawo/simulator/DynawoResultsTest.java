@@ -10,7 +10,8 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import com.powsybl.commons.PowsyblException;
-import com.powsybl.dynawo.simulator.results.DynawoResults;
+import com.powsybl.dynawo.results.CurvesCsv;
+import com.powsybl.dynawo.results.DynawoResults;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -23,32 +24,28 @@ public class DynawoResultsTest {
     @Test
     public void resultException() {
         exception.expect(PowsyblException.class);
-        DynawoResults result = new DynawoResults(true, null);
-        result.parseCsv(getClass().getResourceAsStream("/nordic32/invalidCurves.csv"));
+        CurvesCsv.parse(getClass().getResourceAsStream("/nordic32/invalidCurves.csv"));
         exception.expectMessage("Bad CSV header, should be \ntime;...");
     }
 
     @Test
     public void emptyException() {
         exception.expect(PowsyblException.class);
-        DynawoResults result = new DynawoResults(true, null);
-        result.parseCsv(getClass().getResourceAsStream("/nordic32/emptyCurves.csv"));
+        CurvesCsv.parse(getClass().getResourceAsStream("/nordic32/emptyCurves.csv"));
         exception.expectMessage("CSV header is missing");
     }
 
     @Test
     public void columnsException() {
         exception.expect(PowsyblException.class);
-        DynawoResults result = new DynawoResults(true, null);
-        result.parseCsv(getClass().getResourceAsStream("/nordic32/inconsistentCurves.csv"));
+        CurvesCsv.parse(getClass().getResourceAsStream("/nordic32/inconsistentCurves.csv"));
         exception.expectMessage("Columns of line 217 are inconsistent with header");
     }
 
     @Test
     public void duplicateException() {
         exception.expect(PowsyblException.class);
-        DynawoResults result = new DynawoResults(true, null);
-        result.parseCsv(getClass().getResourceAsStream("/nordic32/duplicateTitle.csv"));
+        CurvesCsv.parse(getClass().getResourceAsStream("/nordic32/duplicateTitle.csv"));
         exception.expectMessage("Bad CSV header, there are duplicates in time series names time");
     }
 }

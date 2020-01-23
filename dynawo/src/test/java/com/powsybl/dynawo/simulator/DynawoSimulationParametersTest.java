@@ -12,7 +12,7 @@ import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
 import com.powsybl.commons.config.InMemoryPlatformConfig;
 import com.powsybl.commons.config.MapModuleConfig;
-import com.powsybl.dynawo.simulator.DynawoSimulationParameters.Solvers;
+import com.powsybl.dynawo.simulator.DynawoSimulationParameters.Solver;
 
 public class DynawoSimulationParametersTest {
 
@@ -30,7 +30,7 @@ public class DynawoSimulationParametersTest {
         fileSystem.close();
     }
 
-    private void checkValues(DynawoSimulationParameters parameters, Solvers solver, int order) {
+    private void checkValues(DynawoSimulationParameters parameters, Solver solver, int order) {
         assertEquals(parameters.getSolver(), solver);
         assertEquals(parameters.getIdaOrder(), order);
     }
@@ -44,7 +44,7 @@ public class DynawoSimulationParametersTest {
 
     @Test
     public void checkConfig() throws Exception {
-        Solvers solver = Solvers.IDA;
+        Solver solver = Solver.IDA;
         int order = 2;
 
         MapModuleConfig moduleConfig = platformConfig.createModuleConfig("dynawo-simulation-default-parameters");

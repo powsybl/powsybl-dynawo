@@ -14,10 +14,10 @@ job('Nordic 32 - Disconnect Line') {
         compile 'outputs/compilation'
         useStandardModelsPreCompiledModels true
         useStandardModelsModelicaModels true
-        iidm 'dynawoModel.xiidm'
-        parameters 'dynawoModel.par'
+        iidm 'powsybl_network.xiidm'
+        parameters 'powsybl_dynawo.par'
         parameterId '1'
-        dyd 'dynawoModel.dyd'
+        dyd 'powsybl_dynawo.dyd'
     }
     simulation {
         startTime 0
@@ -26,7 +26,7 @@ job('Nordic 32 - Disconnect Line') {
     }
     outputs {
         directory 'outputs'
-        curve 'dynawoModel.crv'
+        curve 'powsybl_dynawo.crv'
         appenders {
             appender {
                 tag ''
@@ -570,24 +570,24 @@ parameterSet ('5') {
 }
 blackBoxModel ('OMEGA_REF'){
     lib 'DYNModelOmegaRef'
-    parametersFile 'dynawoModel.par'
+    parametersFile 'powsybl_dynawo.par'
     parametersId '2'
 }
 blackBoxModel ('_N1011____EC'){
     lib 'LoadAlphaBeta'
-    parametersFile 'dynawoModel.par'
+    parametersFile 'powsybl_dynawo.par'
     parametersId '3'
     staticId '_N1011____EC'
 }
 blackBoxModel ('_G10______SM'){
     lib 'GeneratorSynchronousFourWindingsProportionalRegulations'
-    parametersFile 'dynawoModel.par'
+    parametersFile 'powsybl_dynawo.par'
     parametersId '4'
     staticId '_G10______SM'
 }
 blackBoxModel ('DISCONNECT_LINE'){
     lib 'EventQuadripoleDisconnection'
-    parametersFile 'dynawoModel.par'
+    parametersFile 'powsybl_dynawo.par'
     parametersId '5'
 }
 connection {

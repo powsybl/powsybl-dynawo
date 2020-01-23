@@ -8,13 +8,16 @@ package com.powsybl.dynawo.simulator;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 import javax.xml.stream.XMLStreamException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.auto.service.AutoService;
 import com.powsybl.commons.PowsyblException;
@@ -28,8 +31,14 @@ import com.powsybl.computation.GroupCommandBuilder;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynamicsimulation.DynamicSimulationProvider;
 import com.powsybl.dynamicsimulation.DynamicSimulationResult;
-import com.powsybl.dynawo.simulator.results.DynawoResults;
-import com.powsybl.dynawo.xml.DynawoXmlExporter;
+import com.powsybl.dynawo.inputs.dsl.GroovyDslDynawoInputProviderFactory;
+import com.powsybl.dynawo.inputs.model.DynawoInputs;
+import com.powsybl.dynawo.inputs.model.DynawoInputsProvider;
+import com.powsybl.dynawo.inputs.model.job.Solver;
+import com.powsybl.dynawo.inputs.xml.DynawoInputsXmlExporter;
+import com.powsybl.dynawo.results.CurvesCsv;
+import com.powsybl.dynawo.results.DynawoResults;
+import com.powsybl.dynawo.results.TimeSeries;
 import com.powsybl.iidm.network.Network;
 
 /**
@@ -60,74 +69,6 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
         return "1.0.0";
     }
 
-    private Command createCommand(String dynawoJobsFile) {
-        return new GroupCommandBuilder()
-            .id("dyn_fs")
-            .subCommand()
-            .program(getProgram())
-            .args("jobs", dynawoJobsFile)
-            .add()
-            .build();
-    }
-
-    private String getProgram() {
-        return dynawoConfig.getHomeDir().endsWith("/") ? dynawoConfig.getHomeDir() + DEFAULT_DYNAWO_CMD_NAME
-            : dynawoConfig.getHomeDir() + "/" + DEFAULT_DYNAWO_CMD_NAME;
-    }
-
-    private DynawoResults results(Network network, DynawoSimulationParameters dynawoParameters,
-        Path workingDir, ExecutionReport report) {
-        report.log();
-        String log = null;
-        if (!report.getErrors().isEmpty()) {
-            String exitCodes = report.getErrors().stream()
-                .map(err -> String.format("Task %d : %d", err.getIndex(), err.getExitCode()))
-                .collect(Collectors.joining(", "));
-            log = String.format("Error during the execution in directory %s exit codes: %s",
-                workingDir.toAbsolutePath(), exitCodes);
-        }
-
-        DynawoResults results = new DynawoResults(report.getErrors().isEmpty(), log);
-        Path file = workingDir
-            .resolve(
-                dynawoParameters.getDynawoInputProvider().getDynawoJobs(network).get(0).getOutputs().getDirectory())
-            .resolve(OUTPUT_FILE);
-        try {
-            results.parseCsv(file);
-        } catch (PowsyblException x) {
-            results.setStatus(false);
-            results.setLogs(x.toString());
-        }
-        return results;
-    }
-
-    private CompletableFuture<DynamicSimulationResult> run(Network network, ComputationManager computationManager,
-        String workingStateId, DynamicSimulationParameters parameters, DynawoSimulationParameters dynawoParameters) {
-        return computationManager.execute(
-            new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, dynawoConfig.isDebug()),
-            new AbstractExecutionHandler<DynamicSimulationResult>() {
-
-                @Override
-                public List<CommandExecution> before(Path workingDir) {
-                    network.getVariantManager().setWorkingVariant(workingStateId);
-                    String dynawoJobsFile = "";
-                    try {
-                        dynawoJobsFile = new DynawoXmlExporter().export(network, dynawoParameters.getSolver(),
-                            dynawoParameters.getIdaOrder(), dynawoParameters.getDynawoInputProvider(), workingDir);
-                    } catch (IOException | XMLStreamException e) {
-                        throw new PowsyblException(e.getMessage());
-                    }
-                    Command cmd = createCommand(dynawoJobsFile);
-                    return Collections.singletonList(new CommandExecution(cmd, 1));
-                }
-
-                @Override
-                public DynamicSimulationResult after(Path workingDir, ExecutionReport report) {
-                    return results(network, dynawoParameters, workingDir, report);
-                }
-            });
-    }
-
     @Override
     public CompletableFuture<DynamicSimulationResult> run(Network network, ComputationManager computationManager,
         String workingVariantId,
@@ -139,5 +80,125 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
         return run(network, computationManager, workingVariantId, parameters, dynawoParameters);
     }
 
+    private CompletableFuture<DynamicSimulationResult> run(Network network, ComputationManager computationManager,
+        String workingStateId, DynamicSimulationParameters parameters, DynawoSimulationParameters dynawoParameters) {
+
+        network.getVariantManager().setWorkingVariant(workingStateId);
+        DynawoInputs inputs = prepareDynawoInputs(network, parameters, dynawoParameters);
+
+        return computationManager.execute(
+            new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, dynawoConfig.isDebug()),
+            new AbstractExecutionHandler<DynamicSimulationResult>() {
+
+                @Override
+                public List<CommandExecution> before(Path workingDir) {
+                    Path dynawoJobsFile = writeInputFiles(inputs, workingDir);
+                    Command cmd = createCommand(dynawoJobsFile);
+                    return Collections.singletonList(new CommandExecution(cmd, 1));
+                }
+
+                @Override
+                public DynamicSimulationResult after(Path workingDir, ExecutionReport report) throws IOException {
+                    super.after(workingDir, report);
+                    return results(inputs, workingDir, report);
+                }
+
+            });
+    }
+
+    private static DynawoInputs prepareDynawoInputs(Network network, DynamicSimulationParameters parameters, DynawoSimulationParameters dynawoParameters) {
+        // FIXME currently, the only way to obtain Dynawo inputs
+        // is receiving then directly from the parameters (used in tests)
+        // or reading from Groovy DSL files
+        DynawoInputs inputs = dynawoParameters.getDynawoInputs();
+        if (inputs == null) {
+            if (dynawoParameters.getDslFilename() == null) {
+                throw new PowsyblException("Unable to obtain Dynawo inputs. No explicit inputs given. No dslFilename in Dynawo parameters");
+            }
+            Path dslFile = Paths.get(dynawoParameters.getDslFilename());
+            DynawoInputsProvider in = new GroovyDslDynawoInputProviderFactory().create(dslFile);
+            inputs = in.getDynawoInputs(network);
+        }
+
+        // FIXME Complete the Dynawo inputs with additional information
+        // received through simulation parameters
+        // We should only complete missing information in the inputs
+        // As an example: each job may use a different solver
+        // Some jobs could have its solver already configured
+        // For the rest of jobs that do not define a solver,
+        // we assign it the solver defined in the parameters
+        inputs.getJobs().forEach(j -> {
+            if (j.getSolver() == null) {
+                String lib;
+                String parFile;
+                String parId;
+                switch (dynawoParameters.getSolver()) {
+                    case IDA:
+                        lib = "libdynawo_SolverIDA";
+                        // FIXME We should create a parId in the simulation par file
+                        // and write on it the parameter "order" with its value
+                        LOG.warn("PENDING adding IDA order {} to simulation parFile", dynawoParameters.getIdaOrder());
+                        parFile = "pending";
+                        parId = "pending";
+                        LOG.warn("PENDING define parFile ({}) and parId ({})", parFile, parId);
+                        break;
+                    case SIM:
+                    default:
+                        lib = "libdynawo_SolverSIM";
+                        parFile = null;
+                        parId = null;
+                        break;
+                }
+                j.setSolver(new Solver(lib, parFile, parId));
+            }
+        });
+        return inputs;
+    }
+
+    private static Path writeInputFiles(DynawoInputs inputs, Path workingDir) {
+        try {
+            return new DynawoInputsXmlExporter().export(inputs, workingDir);
+        } catch (IOException | XMLStreamException e) {
+            throw new PowsyblException(e.getMessage());
+        }
+    }
+
+    private Command createCommand(Path dynawoJobsFile) {
+        return new GroupCommandBuilder()
+            .id("dyn_fs")
+            .subCommand()
+            .program(getProgram())
+            .args("jobs", dynawoJobsFile.toAbsolutePath().toString())
+            .add()
+            .build();
+    }
+
+    private String getProgram() {
+        return dynawoConfig.getHomeDir().endsWith("/") ? dynawoConfig.getHomeDir() + DEFAULT_DYNAWO_CMD_NAME
+            : dynawoConfig.getHomeDir() + "/" + DEFAULT_DYNAWO_CMD_NAME;
+    }
+
+    private DynawoResults results(DynawoInputs inputs, Path workingDir, ExecutionReport report) {
+        // Initially results are ok if the command was completed without errors
+        boolean isOk = report.getErrors().isEmpty();
+        // We do not consider the logs
+        String logs = null;
+        DynawoResults results = new DynawoResults(isOk, logs);
+
+        // FIXME Only the results of the first job are read
+        Path file = workingDir
+            .resolve(inputs.getJobs().get(0).getOutputs().getDirectory())
+            .resolve(OUTPUT_FILE);
+        try {
+            TimeSeries timeSeries = CurvesCsv.parse(file);
+            results.setTimeSeries(timeSeries);
+        } catch (PowsyblException x) {
+            results.setOk(false);
+            results.setLogs(x.toString());
+        }
+        return results;
+    }
+
     private final DynawoConfig dynawoConfig;
+    private static final Logger LOG = LoggerFactory.getLogger(DynawoSimulationProvider.class);
 }
