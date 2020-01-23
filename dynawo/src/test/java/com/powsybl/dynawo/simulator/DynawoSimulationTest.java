@@ -86,7 +86,10 @@ public class DynawoSimulationTest {
     private PlatformConfig configure(FileSystem fs) throws IOException {
         InMemoryPlatformConfig platformConfig = new InMemoryPlatformConfig(fs);
         Files.createDirectories(fs.getPath("/tmp"));
-        MapModuleConfig moduleConfig = platformConfig.createModuleConfig("import-export-parameters-default-value");
+        MapModuleConfig moduleConfig = platformConfig.createModuleConfig("dynawo");
+        moduleConfig.setStringProperty("homeDir", "/home/dynawo");
+        moduleConfig.setStringProperty("debug", "false");
+        moduleConfig = platformConfig.createModuleConfig("import-export-parameters-default-value");
         moduleConfig.setStringProperty("iidm.export.xml.extensions", "null");
         moduleConfig = platformConfig.createModuleConfig("computation-local");
         moduleConfig.setStringProperty("tmpDir", "/tmp");

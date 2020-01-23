@@ -1,7 +1,9 @@
 package com.powsybl.dynawo.simulator;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
+import java.io.IOException;
 import java.nio.file.FileSystem;
 
 import org.junit.After;
@@ -15,8 +17,8 @@ import com.powsybl.commons.config.MapModuleConfig;
 
 public class DynawoConfigTest {
 
-    InMemoryPlatformConfig platformConfig;
-    FileSystem fileSystem;
+    private InMemoryPlatformConfig platformConfig;
+    private FileSystem fileSystem;
 
     @Before
     public void setUp() {
@@ -25,7 +27,7 @@ public class DynawoConfigTest {
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() throws IOException {
         fileSystem.close();
     }
 
@@ -36,21 +38,19 @@ public class DynawoConfigTest {
 
     @Test
     public void testNoConfig() {
-        DynawoConfig config = new DynawoConfig();
-        DynawoConfig.load(config, platformConfig);
-        checkValues(config, DynawoConfig.HOME_DIR, DynawoConfig.DEBUG_MODE);
+        DynawoConfig config = DynawoConfig.load(platformConfig);
+        assertNull(config);
     }
 
     @Test
-    public void checkConfig() throws Exception {
+    public void checkConfig() throws IOException {
         String homeDir = "homeDir";
         boolean debug = true;
 
         MapModuleConfig moduleConfig = platformConfig.createModuleConfig("dynawo");
         moduleConfig.setStringProperty("homeDir", homeDir);
         moduleConfig.setStringProperty("debug", Boolean.toString(debug));
-        DynawoConfig config = new DynawoConfig();
-        DynawoConfig.load(config, platformConfig);
+        DynawoConfig config = DynawoConfig.load(platformConfig);
         checkValues(config, homeDir, debug);
     }
 

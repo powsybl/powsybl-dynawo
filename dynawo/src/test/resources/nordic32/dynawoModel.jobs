@@ -8,7 +8,7 @@
     SPDX-License-Identifier: MPL-2.0-->
 <dyn:jobs xmlns:dyn="http://www.rte-france.com/dynawo">
     <dyn:job name="Nordic 32 - Disconnect Line">
-        <dyn:solver lib="libdynawo_SolverIDA" parFile="solvers.par" parId="2"/>
+        <dyn:solver lib="dynawo_SolverIDA" parFile="solvers.par" parId="2"/>
         <dyn:modeler compileDir="outputs/compilation">
             <dyn:network iidmFile="dynawoModel.xiidm" parFile="dynawoModel.par" parId="1"/>
             <dyn:dynModels dydFile="dynawoModel.dyd"/>

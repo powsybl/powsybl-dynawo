@@ -15,7 +15,7 @@ import javax.xml.stream.XMLStreamException;
 import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.datasource.FileDataSource;
 import com.powsybl.dynawo.DynawoInputProvider;
-import com.powsybl.dynawo.simulator.DynawoSimulationParameters.Solvers;
+import com.powsybl.dynawo.simulator.DynawoSimulationParameters.Solver;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.xml.XMLExporter;
 
@@ -32,7 +32,7 @@ public class DynawoXmlExporter {
         this.platformConfig = Objects.requireNonNull(platformConfig);
     }
 
-    public String export(Network network, Solvers solver, int order, DynawoInputProvider dynawoProvider,
+    public String export(Network network, Solver solver, int order, DynawoInputProvider dynawoProvider,
         Path workingDir) throws IOException, XMLStreamException {
         DynawoInputs.prepare(network, solver, order, dynawoProvider, workingDir);
         if (network != null) {

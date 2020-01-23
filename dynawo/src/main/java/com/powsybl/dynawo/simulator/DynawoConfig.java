@@ -1,46 +1,38 @@
+/**
+ * Copyright (c) 2019, RTE (http://www.rte-france.com)
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 package com.powsybl.dynawo.simulator;
 
 import java.util.Objects;
 
+import com.powsybl.commons.config.ModuleConfig;
 import com.powsybl.commons.config.PlatformConfig;
 
+/**
+ * @author Marcos de Miguel <demiguelm at aia.es>
+ */
 public class DynawoConfig {
-
-    public static final String HOME_DIR = "./dynawo";
-    public static final boolean DEBUG_MODE = false;
 
     public static DynawoConfig load() {
         return load(PlatformConfig.defaultConfig());
     }
 
     public static DynawoConfig load(PlatformConfig platformConfig) {
-        DynawoConfig dynawoConfig = new DynawoConfig();
-        load(dynawoConfig, platformConfig);
-
+        DynawoConfig dynawoConfig = null;
+        if (platformConfig.moduleExists("dynawo")) {
+            ModuleConfig config = platformConfig.getModuleConfig("dynawo");
+            String homeDir = config.getStringProperty("homeDir");
+            boolean debug = config.getBooleanProperty("debug");
+            dynawoConfig = new DynawoConfig(homeDir, debug);
+        }
         return dynawoConfig;
     }
 
-    protected static void load(DynawoConfig dynawoConfig) {
-        load(dynawoConfig, PlatformConfig.defaultConfig());
-    }
-
-    protected static void load(DynawoConfig dynawoConfig, PlatformConfig platformConfig) {
-        Objects.requireNonNull(dynawoConfig);
-        Objects.requireNonNull(platformConfig);
-
-        platformConfig.getOptionalModuleConfig("dynawo")
-            .ifPresent(config -> {
-                dynawoConfig.setHomeDir(config.getStringProperty("homeDir", HOME_DIR));
-                dynawoConfig.setDebug(config.getBooleanProperty("debug", DEBUG_MODE));
-            });
-    }
-
-    public DynawoConfig() {
-        this(HOME_DIR, DEBUG_MODE);
-    }
-
     public DynawoConfig(String homeDir, boolean debug) {
-        this.homeDir = homeDir;
+        this.homeDir = Objects.requireNonNull(homeDir);
         this.debug = debug;
     }
 
@@ -48,18 +40,10 @@ public class DynawoConfig {
         return homeDir;
     }
 
-    public void setHomeDir(String homeDir) {
-        this.homeDir = homeDir;
-    }
-
     public boolean isDebug() {
         return debug;
     }
 
-    public void setDebug(boolean debug) {
-        this.debug = debug;
-    }
-
-    private String homeDir;
-    private boolean debug;
+    private final String homeDir;
+    private final boolean debug;
 }

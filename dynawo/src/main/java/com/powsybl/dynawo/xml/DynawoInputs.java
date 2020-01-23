@@ -31,7 +31,7 @@ import com.powsybl.dynawo.crv.DynawoCurve;
 import com.powsybl.dynawo.dyd.DynawoDynamicModel;
 import com.powsybl.dynawo.job.DynawoJob;
 import com.powsybl.dynawo.par.DynawoParameterSet;
-import com.powsybl.dynawo.simulator.DynawoSimulationParameters.Solvers;
+import com.powsybl.dynawo.simulator.DynawoSimulationParameters.Solver;
 import com.powsybl.iidm.network.Network;
 
 /**
@@ -49,7 +49,7 @@ public final class DynawoInputs {
     private DynawoInputs() {
     }
 
-    public static void prepare(Network network, Solvers solver, int order, DynawoInputProvider inputProvider,
+    public static void prepare(Network network, Solver solver, int order, DynawoInputProvider inputProvider,
         Path workingDir) throws IOException, XMLStreamException {
         prepareJobFile(network, solver, inputProvider, workingDir);
         prepareDydFile(network, inputProvider, workingDir);
@@ -58,7 +58,7 @@ public final class DynawoInputs {
         prepareCrvFile(network, inputProvider, workingDir);
     }
 
-    public static void prepareJobFile(Network network, Solvers solver, DynawoInputProvider inputProvider,
+    public static void prepareJobFile(Network network, Solver solver, DynawoInputProvider inputProvider,
         Path workingDir) throws IOException, XMLStreamException {
         Path jobFile = workingDir.resolve(JOBS_FILENAME);
         XMLOutputFactory output = XMLOutputFactory.newInstance();
@@ -127,7 +127,7 @@ public final class DynawoInputs {
         }
     }
 
-    public static void prepareParSolverFile(Network network, Solvers solver, int order,
+    public static void prepareParSolverFile(Network network, Solver solver, int order,
         DynawoInputProvider inputProvider, Path workingDir) throws IOException, XMLStreamException {
         Path parSolverFile = workingDir.resolve(SOLVER_PAR_FILENAME);
         XMLOutputFactory output = XMLOutputFactory.newInstance();

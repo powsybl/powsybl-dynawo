@@ -1,7 +1,14 @@
+/**
+ * Copyright (c) 2019, RTE (http://www.rte-france.com)
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 package com.powsybl.dynawo.simulator;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
 import java.nio.file.FileSystem;
 
 import org.junit.After;
@@ -12,12 +19,15 @@ import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
 import com.powsybl.commons.config.InMemoryPlatformConfig;
 import com.powsybl.commons.config.MapModuleConfig;
-import com.powsybl.dynawo.simulator.DynawoSimulationParameters.Solvers;
+import com.powsybl.dynawo.simulator.DynawoSimulationParameters.Solver;
 
+/**
+ * @author Marcos de Miguel <demiguelm at aia.es>
+ */
 public class DynawoSimulationParametersTest {
 
-    InMemoryPlatformConfig platformConfig;
-    FileSystem fileSystem;
+    private InMemoryPlatformConfig platformConfig;
+    private FileSystem fileSystem;
 
     @Before
     public void setUp() {
@@ -26,11 +36,11 @@ public class DynawoSimulationParametersTest {
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() throws IOException {
         fileSystem.close();
     }
 
-    private void checkValues(DynawoSimulationParameters parameters, Solvers solver, int order) {
+    private void checkValues(DynawoSimulationParameters parameters, Solver solver, int order) {
         assertEquals(parameters.getSolver(), solver);
         assertEquals(parameters.getIdaOrder(), order);
     }
@@ -43,8 +53,8 @@ public class DynawoSimulationParametersTest {
     }
 
     @Test
-    public void checkConfig() throws Exception {
-        Solvers solver = Solvers.IDA;
+    public void checkConfig() throws IOException {
+        Solver solver = Solver.IDA;
         int order = 2;
 
         MapModuleConfig moduleConfig = platformConfig.createModuleConfig("dynawo-simulation-default-parameters");

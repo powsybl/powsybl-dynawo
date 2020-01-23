@@ -18,10 +18,10 @@ import com.powsybl.dynawo.DynawoInputProvider;
  */
 public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulationParameters> {
 
-    public static final Solvers DEFAULT_SOLVER = Solvers.SIM;
+    public static final Solver DEFAULT_SOLVER = Solver.SIM;
     public static final int DEFAULT_IDA_ORDER = 2;
 
-    public enum Solvers {
+    public enum Solver {
         SIM,
         IDA
     }
@@ -53,7 +53,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
 
         platformConfig.getOptionalModuleConfig("dynawo-simulation-default-parameters")
             .ifPresent(config -> {
-                parameters.setSolver(config.getEnumProperty("solver", Solvers.class, DEFAULT_SOLVER));
+                parameters.setSolver(config.getEnumProperty("solver", Solver.class, DEFAULT_SOLVER));
                 parameters.setIdaOrder(config.getIntProperty("IDAorder", DEFAULT_IDA_ORDER));
             });
     }
@@ -62,7 +62,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
         this(DEFAULT_SOLVER, DEFAULT_IDA_ORDER, null);
     }
 
-    public DynawoSimulationParameters(Solvers solver, int order, DynawoInputProvider dynawoInputProvider) {
+    public DynawoSimulationParameters(Solver solver, int order, DynawoInputProvider dynawoInputProvider) {
         this.solver = solver;
         this.idaOrder = order;
         this.dynawoInputProvider = dynawoInputProvider;
@@ -73,11 +73,11 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
         return "DynawoParameters";
     }
 
-    public Solvers getSolver() {
+    public Solver getSolver() {
         return solver;
     }
 
-    public void setSolver(Solvers solver) {
+    public void setSolver(Solver solver) {
         this.solver = solver;
     }
 
@@ -98,7 +98,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
         return this;
     }
 
-    private Solvers solver;
+    private Solver solver;
     private int idaOrder;
     private DynawoInputProvider dynawoInputProvider;
 

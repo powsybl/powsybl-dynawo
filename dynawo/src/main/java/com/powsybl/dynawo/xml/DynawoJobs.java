@@ -18,7 +18,7 @@ import com.powsybl.dynawo.job.DynawoOutputs;
 import com.powsybl.dynawo.job.DynawoSimulation;
 import com.powsybl.dynawo.job.DynawoSolver;
 import com.powsybl.dynawo.job.LogAppender;
-import com.powsybl.dynawo.simulator.DynawoSimulationParameters.Solvers;
+import com.powsybl.dynawo.simulator.DynawoSimulationParameters.Solver;
 
 import static com.powsybl.dynawo.xml.DynawoXmlConstants.DYN_URI;
 
@@ -30,7 +30,7 @@ public final class DynawoJobs {
     private DynawoJobs() {
     }
 
-    public static void writeJobs(XMLStreamWriter writer, Solvers solver, List<DynawoJob> jobs) throws XMLStreamException {
+    public static void writeJobs(XMLStreamWriter writer, Solver solver, List<DynawoJob> jobs) throws XMLStreamException {
         Objects.requireNonNull(writer);
         Objects.requireNonNull(jobs);
         for (DynawoJob job : jobs) {
@@ -38,7 +38,7 @@ public final class DynawoJobs {
         }
     }
 
-    private static void writeJob(XMLStreamWriter writer, Solvers solver, DynawoJob job) throws XMLStreamException {
+    private static void writeJob(XMLStreamWriter writer, Solver solver, DynawoJob job) throws XMLStreamException {
         writer.writeStartElement(DYN_URI, "job");
         writer.writeAttribute("name", job.getName());
         writeSolver(writer, solver, job.getSolver());
@@ -48,18 +48,17 @@ public final class DynawoJobs {
         writer.writeEndElement();
     }
 
-    private static void writeSolver(XMLStreamWriter writer, Solvers solver, DynawoSolver dynawoSolver) throws XMLStreamException {
+    private static void writeSolver(XMLStreamWriter writer, Solver solver, DynawoSolver dynawoSolver) throws XMLStreamException {
         writer.writeEmptyElement(DYN_URI, "solver");
         switch (solver) {
             case SIM:
-                writer.writeAttribute("lib", "libdynawo_SolverSIM");
+                writer.writeAttribute("lib", "dynawo_SolverSIM");
                 break;
             case IDA:
-                writer.writeAttribute("lib", "libdynawo_SolverIDA");
+                writer.writeAttribute("lib", "dynawo_SolverIDA");
                 break;
             default:
-                writer.writeAttribute("lib", "libdynawo_SolverIDA");
-                break;
+                throw new AssertionError("");
         }
         writer.writeAttribute("parFile", dynawoSolver.getFile());
         writer.writeAttribute("parId", dynawoSolver.getId());
