@@ -134,7 +134,7 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
                 String parId;
                 switch (dynawoParameters.getSolver()) {
                     case IDA:
-                        lib = "libdynawo_SolverIDA";
+                        lib = "dynawo_SolverIDA";
                         // FIXME We should create a parId in the simulation par file
                         // and write on it the parameter "order" with its value
                         LOG.warn("PENDING adding IDA order {} to simulation parFile", dynawoParameters.getIdaOrder());
@@ -144,7 +144,7 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
                         break;
                     case SIM:
                     default:
-                        lib = "libdynawo_SolverSIM";
+                        lib = "dynawo_SolverSIM";
                         parFile = null;
                         parId = null;
                         break;
