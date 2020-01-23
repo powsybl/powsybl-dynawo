@@ -13,10 +13,12 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -26,7 +28,6 @@ import com.powsybl.cgmes.model.test.cim14.Cim14SmallCasesCatalog;
 import com.powsybl.commons.config.InMemoryPlatformConfig;
 import com.powsybl.commons.config.MapModuleConfig;
 import com.powsybl.commons.config.PlatformConfig;
-import com.powsybl.dynawo.inputs.dsl.GroovyDslDynawoInputProvider;
 import com.powsybl.dynawo.inputs.model.DynawoInputs;
 import com.powsybl.dynawo.inputs.model.DynawoParameterType;
 import com.powsybl.dynawo.inputs.model.crv.Curve;
@@ -34,11 +35,11 @@ import com.powsybl.dynawo.inputs.model.dyd.BlackBoxModel;
 import com.powsybl.dynawo.inputs.model.dyd.Connection;
 import com.powsybl.dynawo.inputs.model.dyd.DynawoDynamicModel;
 import com.powsybl.dynawo.inputs.model.job.Job;
+import com.powsybl.dynawo.inputs.model.job.LogAppender;
 import com.powsybl.dynawo.inputs.model.job.Modeler;
 import com.powsybl.dynawo.inputs.model.job.Outputs;
 import com.powsybl.dynawo.inputs.model.job.Simulation;
 import com.powsybl.dynawo.inputs.model.job.Solver;
-import com.powsybl.dynawo.inputs.model.job.LogAppender;
 import com.powsybl.dynawo.inputs.model.par.Parameter;
 import com.powsybl.dynawo.inputs.model.par.ParameterSet;
 import com.powsybl.dynawo.results.DynawoResults;
@@ -56,8 +57,9 @@ public class DynawoSimulationTest {
             PlatformConfig platformConfig = configure(fs);
             DynawoSimulationTester tester = new DynawoSimulationTester(true);
             Network network = tester.convert(platformConfig, Cim14SmallCasesCatalog.nordic32());
-            DynawoInputs dynawoInputs = buildInputs(network);
-            DynawoResults result = tester.simulate(network, dynawoInputs, platformConfig);
+            DynawoSimulationParameters dynawoSimulationParameters = new DynawoSimulationParameters()
+                .setDynawoInputs(buildInputs(network));
+            DynawoResults result = tester.simulate(network, dynawoSimulationParameters, platformConfig);
             assertTrue(result.isOk());
             assertNull(result.getLogs());
 
@@ -74,8 +76,12 @@ public class DynawoSimulationTest {
             PlatformConfig platformConfig = configure(fs);
             DynawoSimulationTester tester = new DynawoSimulationTester(true);
             Network network = tester.convert(platformConfig, Cim14SmallCasesCatalog.nordic32());
-            DynawoInputs dynawoInputs = new GroovyDslDynawoInputProvider(getClass().getResourceAsStream("/nordic32/nordic32.groovy")).getDynawoInputs(network);
-            DynawoResults result = tester.simulate(network, dynawoInputs, platformConfig);
+            String dslFile = "/tmp/nordic32.groovy";
+            FileUtils.copyInputStreamToFile(getClass().getResourceAsStream("/nordic32/nordic32.groovy"),
+                Paths.get(dslFile).toFile());
+            DynawoSimulationParameters dynawoSimulationParameters = new DynawoSimulationParameters();
+            dynawoSimulationParameters.setDslFilename(dslFile);
+            DynawoResults result = tester.simulate(network, dynawoSimulationParameters, platformConfig);
 
             // check final voltage of bus close to the event
             int index = result.getTimeSeries().getNames().indexOf("NETWORK__N1011____TN_Upu_value");
@@ -130,8 +136,10 @@ public class DynawoSimulationTest {
         // Global param
         parameters = new ArrayList<>();
         parameters.add(new Parameter("capacitor_no_reclosing_delay", DynawoParameterType.DOUBLE.getValue(), "300"));
-        parameters.add(new Parameter("dangling_line_currentLimit_maxTimeOperation", DynawoParameterType.DOUBLE.getValue(), "90"));
-        parameters.add(new Parameter("line_currentLimit_maxTimeOperation", DynawoParameterType.DOUBLE.getValue(), "90"));
+        parameters.add(
+            new Parameter("dangling_line_currentLimit_maxTimeOperation", DynawoParameterType.DOUBLE.getValue(), "90"));
+        parameters
+            .add(new Parameter("line_currentLimit_maxTimeOperation", DynawoParameterType.DOUBLE.getValue(), "90"));
         parameters.add(new Parameter("load_Tp", DynawoParameterType.DOUBLE.getValue(), "90"));
         parameters.add(new Parameter("load_Tq", DynawoParameterType.DOUBLE.getValue(), "90"));
         parameters.add(new Parameter("load_alpha", DynawoParameterType.DOUBLE.getValue(), "1"));
@@ -143,12 +151,14 @@ public class DynawoSimulationTest {
         parameters.add(new Parameter("load_zPMax", DynawoParameterType.DOUBLE.getValue(), "100"));
         parameters.add(new Parameter("load_zQMax", DynawoParameterType.DOUBLE.getValue(), "100"));
         parameters.add(new Parameter("reactance_no_reclosing_delay", DynawoParameterType.DOUBLE.getValue(), "0"));
-        parameters.add(new Parameter("transformer_currentLimit_maxTimeOperation", DynawoParameterType.DOUBLE.getValue(), "90"));
+        parameters.add(
+            new Parameter("transformer_currentLimit_maxTimeOperation", DynawoParameterType.DOUBLE.getValue(), "90"));
         parameters.add(new Parameter("transformer_t1st_HT", DynawoParameterType.DOUBLE.getValue(), "60"));
         parameters.add(new Parameter("transformer_t1st_THT", DynawoParameterType.DOUBLE.getValue(), "30"));
         parameters.add(new Parameter("transformer_tNext_HT", DynawoParameterType.DOUBLE.getValue(), "10"));
         parameters.add(new Parameter("transformer_tNext_THT", DynawoParameterType.DOUBLE.getValue(), "10"));
-        parameters.add(new Parameter("transformer_tolV", DynawoParameterType.DOUBLE.getValue(), "0.014999999700000001"));
+        parameters
+            .add(new Parameter("transformer_tolV", DynawoParameterType.DOUBLE.getValue(), "0.014999999700000001"));
         ParameterSet parameterSet = new ParameterSet("1");
         parameterSet.addParameters(Collections.unmodifiableList(parameters));
         parameterSets.add(parameterSet);
@@ -168,10 +178,14 @@ public class DynawoSimulationTest {
         parameters = new ArrayList<>();
         parameters.add(new Parameter("load_alpha", DynawoParameterType.DOUBLE.getValue(), "1.5"));
         parameters.add(new Parameter("load_beta", DynawoParameterType.DOUBLE.getValue(), "2.5"));
-        parameters.add(new Parameter("load_P0Pu", DynawoParameterType.DOUBLE.getValue(), DynawoParameterType.IIDM.getValue(), "p_pu"));
-        parameters.add(new Parameter("load_Q0Pu", DynawoParameterType.DOUBLE.getValue(), DynawoParameterType.IIDM.getValue(), "q_pu"));
-        parameters.add(new Parameter("load_U0Pu", DynawoParameterType.DOUBLE.getValue(), DynawoParameterType.IIDM.getValue(), "v_pu"));
-        parameters.add(new Parameter("load_UPhase0", DynawoParameterType.DOUBLE.getValue(), DynawoParameterType.IIDM.getValue(), "angle_pu"));
+        parameters.add(new Parameter("load_P0Pu", DynawoParameterType.DOUBLE.getValue(),
+            DynawoParameterType.IIDM.getValue(), "p_pu"));
+        parameters.add(new Parameter("load_Q0Pu", DynawoParameterType.DOUBLE.getValue(),
+            DynawoParameterType.IIDM.getValue(), "q_pu"));
+        parameters.add(new Parameter("load_U0Pu", DynawoParameterType.DOUBLE.getValue(),
+            DynawoParameterType.IIDM.getValue(), "v_pu"));
+        parameters.add(new Parameter("load_UPhase0", DynawoParameterType.DOUBLE.getValue(),
+            DynawoParameterType.IIDM.getValue(), "angle_pu"));
         parameterSet = new ParameterSet("3");
         parameterSet.addParameters(Collections.unmodifiableList(parameters));
         parameterSets.add(parameterSet);
@@ -216,10 +230,14 @@ public class DynawoSimulationTest {
         parameters.add(new Parameter("governor_PNom", DynawoParameterType.DOUBLE.getValue(), "1090"));
         parameters.add(new Parameter("URef_ValueIn", DynawoParameterType.DOUBLE.getValue(), "0"));
         parameters.add(new Parameter("Pm_ValueIn", DynawoParameterType.DOUBLE.getValue(), "0"));
-        parameters.add(new Parameter("generator_P0Pu", DynawoParameterType.DOUBLE.getValue(), DynawoParameterType.IIDM.getValue(), "p_pu"));
-        parameters.add(new Parameter("generator_Q0Pu", DynawoParameterType.DOUBLE.getValue(), DynawoParameterType.IIDM.getValue(), "q_pu"));
-        parameters.add(new Parameter("generator_U0Pu", DynawoParameterType.DOUBLE.getValue(), DynawoParameterType.IIDM.getValue(), "v_pu"));
-        parameters.add(new Parameter("generator_UPhase0", DynawoParameterType.DOUBLE.getValue(), DynawoParameterType.IIDM.getValue(), "angle_pu"));
+        parameters.add(new Parameter("generator_P0Pu", DynawoParameterType.DOUBLE.getValue(),
+            DynawoParameterType.IIDM.getValue(), "p_pu"));
+        parameters.add(new Parameter("generator_Q0Pu", DynawoParameterType.DOUBLE.getValue(),
+            DynawoParameterType.IIDM.getValue(), "q_pu"));
+        parameters.add(new Parameter("generator_U0Pu", DynawoParameterType.DOUBLE.getValue(),
+            DynawoParameterType.IIDM.getValue(), "v_pu"));
+        parameters.add(new Parameter("generator_UPhase0", DynawoParameterType.DOUBLE.getValue(),
+            DynawoParameterType.IIDM.getValue(), "angle_pu"));
         parameterSet = new ParameterSet("4");
         parameterSet.addParameters(Collections.unmodifiableList(parameters));
         parameterSets.add(parameterSet);
