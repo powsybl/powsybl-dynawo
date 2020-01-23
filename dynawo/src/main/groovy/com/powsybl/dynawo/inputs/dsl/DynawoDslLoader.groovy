@@ -10,14 +10,12 @@ import org.codehaus.groovy.control.CompilationFailedException
 import org.slf4j.LoggerFactory
 
 import com.powsybl.dsl.DslLoader
-import com.powsybl.dynawo.inputs.dsl.DynawoDb
-import com.powsybl.dynawo.inputs.dsl.DynawoDslException
-import com.powsybl.dynawo.inputs.dsl.DynawoDslLoaderObserver
 import com.powsybl.dynawo.inputs.dsl.crv.DynawoCurveDslLoader
 import com.powsybl.dynawo.inputs.dsl.dyd.DynawoDynamicModelDslLoader
 import com.powsybl.dynawo.inputs.dsl.job.DynawoJobDslLoader
 import com.powsybl.dynawo.inputs.dsl.par.DynawoParameterSetDslLoader
 import com.powsybl.dynawo.inputs.dsl.par.DynawoSolverParameterSetDslLoader
+import com.powsybl.dynawo.inputs.model.DynawoInputs
 import com.powsybl.dynawo.inputs.model.crv.Curve
 import com.powsybl.dynawo.inputs.model.dyd.DynawoDynamicModel
 import com.powsybl.dynawo.inputs.model.job.Job
@@ -60,7 +58,7 @@ class DynawoDslLoader extends DslLoader {
         DynawoSolverParameterSetDslLoader.loadDsl(binding, network, {s -> handler.addSolverParameterSet(s)}, observer)
     }
 
-    DynawoDb load(Network network) {
+    DynawoInputs load(Network network) {
         load(network, null)
     }
 
@@ -84,40 +82,40 @@ class DynawoDslLoader extends DslLoader {
         }
     }
 
-    DynawoDb load(Network network, DynawoDslLoaderObserver observer) {
-        DynawoDb dynawoDb = new DynawoDb()
+    DynawoInputs load(Network network, DynawoDslLoaderObserver observer) {
+        DynawoInputs dynawoInputs = new DynawoInputs(network)
 
         //Handler to create an DynawoInputs instance
         DynawoDslHandler dynawoInputsBuilder = new DynawoDslHandler() {
 
             @Override
             void addJob(Job job) {
-                dynawoDb.addJob(job)
+                dynawoInputs.addJob(job)
             }
 
             @Override
             void addCurve(Curve curve) {
-                dynawoDb.addCurve(curve)
+                dynawoInputs.addCurve(curve)
             }
 
             @Override
             void addDynamicModel(DynawoDynamicModel dynamicModel) {
-                dynawoDb.addDynamicModel(dynamicModel)
+                dynawoInputs.addDynamicModel(dynamicModel)
             }
 
             @Override
             void addParameterSet(ParameterSet parameterSet) {
-                dynawoDb.addParameterSet(parameterSet)
+                dynawoInputs.addParameterSet(parameterSet)
             }
 
             @Override
             void addSolverParameterSet(ParameterSet solverParameterSet) {
-                dynawoDb.addSolverParameterSet(solverParameterSet)
+                dynawoInputs.addSolverParameterSet(solverParameterSet)
             }
         }
 
         load(network, dynawoInputsBuilder, observer)
 
-        dynawoDb
+        dynawoInputs
     }
 }

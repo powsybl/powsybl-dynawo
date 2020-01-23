@@ -6,7 +6,10 @@
  */
 package com.powsybl.dynawo.inputs.model;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import com.powsybl.dynawo.inputs.model.crv.Curve;
 import com.powsybl.dynawo.inputs.model.dyd.DynawoDynamicModel;
@@ -17,23 +20,66 @@ import com.powsybl.iidm.network.Network;
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public interface DynawoInputs {
+public class DynawoInputs {
 
-    // FIXME Reconsider if we need here an interface
-    // Why not use directly the object model with one implementation
-    // Currently the class DynawoDb inside inputs.dsl package is a
-    // complete object
+    private final Network network;
+    private final List<Job> jobs = new ArrayList<>();
+    private final List<Curve> curves = new ArrayList<>();
+    private final List<DynawoDynamicModel> dynamicModels = new ArrayList<>();
+    private final List<ParameterSet> parameterSets = new ArrayList<>();
+    private final List<ParameterSet> solverParameterSets = new ArrayList<>();
 
-    Network getNetwork();
+    public DynawoInputs(Network network) {
+        this.network = network;
+    }
 
-    List<Job> getJobs();
+    public Network getNetwork() {
+        return network;
+    }
 
-    List<Curve> getCurves();
+    public void addJob(Job job) {
+        Objects.requireNonNull(job);
+        jobs.add(job);
+    }
 
-    List<DynawoDynamicModel> getDynamicModels();
+    public List<Job> getJobs() {
+        return Collections.unmodifiableList(jobs);
+    }
 
-    List<ParameterSet> getParameterSets();
+    public void addCurve(Curve curve) {
+        Objects.requireNonNull(curve);
+        curves.add(curve);
+    }
 
-    List<ParameterSet> getSolverParameterSets();
+    public List<Curve> getCurves() {
+        return Collections.unmodifiableList(curves);
+    }
+
+    public void addDynamicModel(DynawoDynamicModel dynamicModel) {
+        Objects.requireNonNull(dynamicModel);
+        dynamicModels.add(dynamicModel);
+    }
+
+    public List<DynawoDynamicModel> getDynamicModels() {
+        return Collections.unmodifiableList(dynamicModels);
+    }
+
+    public void addParameterSet(ParameterSet parameterSet) {
+        Objects.requireNonNull(parameterSet);
+        parameterSets.add(parameterSet);
+    }
+
+    public List<ParameterSet> getParameterSets() {
+        return Collections.unmodifiableList(parameterSets);
+    }
+
+    public void addSolverParameterSet(ParameterSet solverParameterSet) {
+        Objects.requireNonNull(solverParameterSet);
+        solverParameterSets.add(solverParameterSet);
+    }
+
+    public List<ParameterSet> getSolverParameterSets() {
+        return Collections.unmodifiableList(solverParameterSets);
+    }
 
 }
