@@ -1,6 +1,13 @@
+/**
+ * Copyright (c) 2019, RTE (http://www.rte-france.com)
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 package com.powsybl.dynawo.simulator;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.nio.file.FileSystem;
 
@@ -13,6 +20,9 @@ import com.google.common.jimfs.Jimfs;
 import com.powsybl.commons.config.InMemoryPlatformConfig;
 import com.powsybl.commons.config.MapModuleConfig;
 
+/**
+ * @author Marcos de Miguel <demiguelm at aia.es>
+ */
 public class DynawoConfigTest {
 
     InMemoryPlatformConfig platformConfig;
@@ -36,9 +46,8 @@ public class DynawoConfigTest {
 
     @Test
     public void testNoConfig() {
-        DynawoConfig config = new DynawoConfig();
-        DynawoConfig.load(config, platformConfig);
-        checkValues(config, DynawoConfig.HOME_DIR, DynawoConfig.DEBUG_MODE);
+        DynawoConfig config = DynawoConfig.load(platformConfig);
+        assertNull(config);
     }
 
     @Test
@@ -49,8 +58,7 @@ public class DynawoConfigTest {
         MapModuleConfig moduleConfig = platformConfig.createModuleConfig("dynawo");
         moduleConfig.setStringProperty("homeDir", homeDir);
         moduleConfig.setStringProperty("debug", Boolean.toString(debug));
-        DynawoConfig config = new DynawoConfig();
-        DynawoConfig.load(config, platformConfig);
+        DynawoConfig config = DynawoConfig.load(platformConfig);
         checkValues(config, homeDir, debug);
     }
 
