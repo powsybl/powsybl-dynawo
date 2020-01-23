@@ -21,9 +21,9 @@ public class Job {
 
     public Job(String name, Solver solver, Modeler modeler, Simulation simulation, Outputs outputs) {
         this.name = Objects.requireNonNull(name);
-        // FIXME review. Solver may be null? 
+        // FIXME review. Solver may be null?
         // Default values could be specified as parameters from command line
-        // and applied later to the inputs, before sending data to Dynawo 
+        // and applied later to the inputs, before sending data to Dynawo
         this.solver = solver;
         this.modeler = Objects.requireNonNull(modeler);
         this.simulation = Objects.requireNonNull(simulation);

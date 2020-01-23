@@ -11,7 +11,6 @@ import org.junit.rules.ExpectedException;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawo.results.CurvesCsv;
-import com.powsybl.dynawo.results.DynawoResults;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>

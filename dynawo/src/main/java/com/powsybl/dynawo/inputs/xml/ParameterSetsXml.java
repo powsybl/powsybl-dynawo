@@ -42,7 +42,7 @@ public class ParameterSetsXml implements DynawoCollectionXmlFile {
     public String getCollectionTag() {
         return "parametersSet";
     }
-    
+
     @Override
     public String getNamespacePrefix() {
         return DynawoXmlConstants.EMPTY_PREFIX;

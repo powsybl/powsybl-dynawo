@@ -22,7 +22,7 @@ public interface DynawoInputs {
     // FIXME Reconsider if we need here an interface
     // Why not use directly the object model with one implementation
     // Currently the class DynawoDb inside inputs.dsl package is a
-    // complete object 
+    // complete object
 
     Network getNetwork();
 

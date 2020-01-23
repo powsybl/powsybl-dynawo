@@ -16,7 +16,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
 
-import com.powsybl.dynawo.inputs.model.DynawoInputs;
 import com.powsybl.dynawo.inputs.model.DynawoInputsProvider;
 
 import groovy.lang.GroovyCodeSource;

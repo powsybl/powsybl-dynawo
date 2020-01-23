@@ -9,7 +9,6 @@ package com.powsybl.dynawo.inputs.dsl;
 import java.io.InputStream;
 import java.nio.file.Path;
 
-import com.powsybl.dynawo.inputs.dsl.DynawoDslLoader;
 import com.powsybl.dynawo.inputs.model.DynawoInputs;
 import com.powsybl.iidm.network.Network;
 
