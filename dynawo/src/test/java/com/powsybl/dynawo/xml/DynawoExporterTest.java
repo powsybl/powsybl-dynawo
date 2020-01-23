@@ -28,7 +28,6 @@ import com.powsybl.cgmes.model.test.cim14.Cim14SmallCasesCatalog;
 import com.powsybl.commons.AbstractConverterTest;
 import com.powsybl.commons.datasource.ReadOnlyDataSource;
 import com.powsybl.dynawo.inputs.dsl.GroovyDslDynawoInputProvider;
-import com.powsybl.dynawo.inputs.model.DynawoInputs;
 import com.powsybl.dynawo.inputs.xml.DynawoConstants;
 import com.powsybl.dynawo.inputs.xml.DynawoInputsXmlExporter;
 import com.powsybl.iidm.network.Network;
@@ -45,7 +44,6 @@ public class DynawoExporterTest extends AbstractConverterTest {
         fileSystem = Jimfs.newFileSystem(Configuration.unix());
         tmpDir = Files.createDirectory(fileSystem.getPath("/tmp"));
         network = NetworkFactory.findDefault().createNetwork("network1", "test");
-        dynawoInputs = new GroovyDslDynawoInputProvider(getClass().getResourceAsStream("/nordic32/nordic32.groovy")).getDynawoInputs(network);
         dslFile = getClass().getResourceAsStream("/exportTest.groovy");
         exporter = new DynawoInputsXmlExporter();
     }
@@ -59,7 +57,8 @@ public class DynawoExporterTest extends AbstractConverterTest {
     public void export() throws IOException, XMLStreamException {
         network = importNetwork(Cim14SmallCasesCatalog.nordic32());
         network.setCaseDate(DateTime.parse("2019-09-23T11:06:12.313+02:00"));
-        exporter.export(dynawoInputs, tmpDir);
+        dslFile = getClass().getResourceAsStream("/nordic32/nordic32.groovy");
+        exporter.export(new GroovyDslDynawoInputProvider(dslFile).getDynawoInputs(network), tmpDir);
         Files.walk(tmpDir).forEach(file -> {
             if (Files.isRegularFile(file)) {
                 try (InputStream is = Files.newInputStream(file)) {
@@ -121,7 +120,6 @@ public class DynawoExporterTest extends AbstractConverterTest {
     }
 
     private Network network;
-    private DynawoInputs dynawoInputs;
     private InputStream dslFile;
     private DynawoInputsXmlExporter exporter;
 }

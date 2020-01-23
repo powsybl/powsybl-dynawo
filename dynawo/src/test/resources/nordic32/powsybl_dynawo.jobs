@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <dyn:jobs xmlns:dyn="http://www.rte-france.com/dynawo">
     <dyn:job name="Nordic 32 - Disconnect Line">
-        <dyn:solver lib="libdynawo_SolverIDA" parFile="solvers.par" parId="2"/>
+        <dyn:solver lib="dynawo_SolverIDA" parFile="solvers.par" parId="2"/>
         <dyn:modeler compileDir="outputs/compilation">
             <dyn:network iidmFile="powsybl_network.xiidm" parFile="powsybl_dynawo.par" parId="1"/>
             <dyn:dynModels dydFile="powsybl_dynawo.dyd"/>

@@ -50,7 +50,7 @@ public class DynawoSimulationTester {
 
     public DynawoResults simulate(Network network, DynawoInputs dynawoInputs, PlatformConfig platformConfig)
         throws Exception {
-        DynawoSimulationProvider dynawoSimulationProvider = new DynawoSimulationProvider();
+        DynawoSimulationProvider dynawoSimulationProvider = new DynawoSimulationProvider(DynawoConfig.load(platformConfig));
         assertEquals("DynawoSimulation", dynawoSimulationProvider.getName());
         assertEquals("1.0.0", dynawoSimulationProvider.getVersion());
         DynamicSimulation.Runner runner = DynamicSimulation.find(null, ImmutableList.of(dynawoSimulationProvider),

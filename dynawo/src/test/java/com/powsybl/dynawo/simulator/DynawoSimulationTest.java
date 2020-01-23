@@ -86,7 +86,10 @@ public class DynawoSimulationTest {
     private PlatformConfig configure(FileSystem fs) throws IOException {
         InMemoryPlatformConfig platformConfig = new InMemoryPlatformConfig(fs);
         Files.createDirectories(fs.getPath("/tmp"));
-        MapModuleConfig moduleConfig = platformConfig.createModuleConfig("import-export-parameters-default-value");
+        MapModuleConfig moduleConfig = platformConfig.createModuleConfig("dynawo");
+        moduleConfig.setStringProperty("homeDir", "/home/dynawo");
+        moduleConfig.setStringProperty("debug", "false");
+        moduleConfig = platformConfig.createModuleConfig("import-export-parameters-default-value");
         moduleConfig.setStringProperty("iidm.export.xml.extensions", "null");
         moduleConfig = platformConfig.createModuleConfig("computation-local");
         moduleConfig.setStringProperty("tmpDir", "/tmp");
@@ -98,7 +101,7 @@ public class DynawoSimulationTest {
         DynawoInputs dynawoInputs = Mockito.mock(DynawoInputs.class);
 
         // Job file
-        Solver solver = new Solver("libdynawo_SolverIDA", "solvers.par", "2");
+        Solver solver = new Solver("dynawo_SolverIDA", "solvers.par", "2");
         Modeler modeler = new Modeler("outputs/compilation", "powsybl_network.xiidm", "powsybl_dynawo.par", "1",
             "powsybl_dynawo.dyd");
         Simulation simulation = new Simulation(0, 30, false, 1e-6);
