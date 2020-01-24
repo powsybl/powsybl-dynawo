@@ -8,6 +8,7 @@ package com.powsybl.dynawo.simulator;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -28,6 +29,8 @@ import com.powsybl.computation.GroupCommandBuilder;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynamicsimulation.DynamicSimulationProvider;
 import com.powsybl.dynamicsimulation.DynamicSimulationResult;
+import com.powsybl.dynawo.DynawoInputProvider;
+import com.powsybl.dynawo.dsl.GroovyDslDynawoInputProviderFactory;
 import com.powsybl.dynawo.simulator.results.DynawoResults;
 import com.powsybl.dynawo.xml.DynawoXmlExporter;
 import com.powsybl.iidm.network.Network;
@@ -112,8 +115,18 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
                     network.getVariantManager().setWorkingVariant(workingStateId);
                     String dynawoJobsFile = "";
                     try {
+                        DynawoInputProvider dynawoInputProvider = dynawoParameters.getDynawoInputProvider();
+                        if (dynawoInputProvider == null) {
+                            if (dynawoParameters.getDslFilename() == null) {
+                                throw new PowsyblException(
+                                    "Unable to obtain Dynawo inputs. No explicit inputs given. No dslFilename in Dynawo parameters");
+                            }
+                            Path dslFile = Paths.get(dynawoParameters.getDslFilename());
+                            dynawoInputProvider = new GroovyDslDynawoInputProviderFactory().create(dslFile);
+                            dynawoParameters.setDynawoInputProvider(dynawoInputProvider);
+                        }
                         dynawoJobsFile = new DynawoXmlExporter().export(network, dynawoParameters.getSolver(),
-                            dynawoParameters.getIdaOrder(), dynawoParameters.getDynawoInputProvider(), workingDir);
+                            dynawoParameters.getIdaOrder(), dynawoInputProvider, workingDir);
                     } catch (IOException | XMLStreamException e) {
                         throw new PowsyblException(e.getMessage());
                     }
@@ -132,7 +145,7 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
     public CompletableFuture<DynamicSimulationResult> run(Network network, ComputationManager computationManager,
         String workingVariantId,
         DynamicSimulationParameters parameters) {
-        DynawoSimulationParameters dynawoParameters = parameters.getExtensionByName("DynawoParameters");
+        DynawoSimulationParameters dynawoParameters = parameters.getExtensionByName("DynawoSimulationParameters");
         if (dynawoParameters == null) {
             dynawoParameters = new DynawoSimulationParameters();
         }

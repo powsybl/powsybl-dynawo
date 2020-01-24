@@ -21,7 +21,6 @@ import com.powsybl.computation.local.LocalComputationConfig;
 import com.powsybl.computation.local.LocalComputationManager;
 import com.powsybl.dynamicsimulation.DynamicSimulation;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
-import com.powsybl.dynawo.DynawoInputProvider;
 import com.powsybl.dynawo.simulator.results.DynawoResults;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.NetworkFactory;
@@ -47,7 +46,7 @@ public class DynawoSimulationTester {
         return n;
     }
 
-    public DynawoResults simulate(Network network, DynawoInputProvider dynawoInputProvider, PlatformConfig platformConfig)
+    public DynawoResults simulate(Network network, DynawoSimulationParameters dynawoSimulationParameters, PlatformConfig platformConfig)
         throws Exception {
         DynawoSimulationProvider dynawoSimulationProvider = new DynawoSimulationProvider(DynawoConfig.load(platformConfig));
         assertEquals("DynawoSimulation", dynawoSimulationProvider.getName());
@@ -58,8 +57,7 @@ public class DynawoSimulationTester {
         ComputationManager computationManager = new LocalComputationManager(
             LocalComputationConfig.load(platformConfig));
         DynamicSimulationParameters simulationParameters = DynamicSimulationParameters.load(platformConfig);
-        simulationParameters.addExtension(DynawoSimulationParameters.class, new DynawoSimulationParameters()
-            .setDynawoInputProvider(dynawoInputProvider));
+        simulationParameters.addExtension(DynawoSimulationParameters.class, dynawoSimulationParameters);
         DynawoResults result = (DynawoResults) runner.run(network, computationManager, simulationParameters);
         if (mockResults) {
             result = new DynawoResults(true, null);

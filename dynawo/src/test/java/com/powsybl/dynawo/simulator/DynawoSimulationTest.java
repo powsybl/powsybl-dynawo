@@ -13,10 +13,12 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -29,7 +31,6 @@ import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.dynawo.DynawoInputProvider;
 import com.powsybl.dynawo.DynawoParameterType;
 import com.powsybl.dynawo.crv.DynawoCurve;
-import com.powsybl.dynawo.dsl.GroovyDslDynawoInputProvider;
 import com.powsybl.dynawo.dyd.BlackBoxModel;
 import com.powsybl.dynawo.dyd.Connection;
 import com.powsybl.dynawo.dyd.DynawoDynamicModel;
@@ -56,8 +57,9 @@ public class DynawoSimulationTest {
             PlatformConfig platformConfig = configure(fs);
             DynawoSimulationTester tester = new DynawoSimulationTester(true);
             Network network = tester.convert(platformConfig, Cim14SmallCasesCatalog.nordic32());
-            DynawoInputProvider dynawoInputProvider = configureProvider(network);
-            DynawoResults result = tester.simulate(network, dynawoInputProvider, platformConfig);
+            DynawoSimulationParameters dynawoSimulationParameters = new DynawoSimulationParameters()
+                .setDynawoInputProvider(configureProvider(network));
+            DynawoResults result = tester.simulate(network, dynawoSimulationParameters, platformConfig);
             assertTrue(result.isOk());
             assertNull(result.getLogs());
 
@@ -74,8 +76,12 @@ public class DynawoSimulationTest {
             PlatformConfig platformConfig = configure(fs);
             DynawoSimulationTester tester = new DynawoSimulationTester(true);
             Network network = tester.convert(platformConfig, Cim14SmallCasesCatalog.nordic32());
-            DynawoInputProvider dynawoInputProvider = new GroovyDslDynawoInputProvider(getClass().getResourceAsStream("/nordic32/nordic32.groovy"));
-            DynawoResults result = tester.simulate(network, dynawoInputProvider, platformConfig);
+            String dslFile = "/tmp/nordic32.groovy";
+            FileUtils.copyInputStreamToFile(getClass().getResourceAsStream("/nordic32/nordic32.groovy"),
+                Paths.get(dslFile).toFile());
+            DynawoSimulationParameters dynawoSimulationParameters = new DynawoSimulationParameters();
+            dynawoSimulationParameters.setDslFilename(dslFile);
+            DynawoResults result = tester.simulate(network, dynawoSimulationParameters, platformConfig);
 
             // check final voltage of bus close to the event
             int index = result.getNames().indexOf("NETWORK__N1011____TN_Upu_value");
