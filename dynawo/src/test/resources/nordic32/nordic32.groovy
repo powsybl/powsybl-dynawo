@@ -6,7 +6,7 @@
  */
 job('Nordic 32 - Disconnect Line') {
     solver {
-        lib 'libdynawo_SolverIDA'
+        lib 'dynawo_SolverIDA'
         file 'solvers.par'
         id '2'
     }

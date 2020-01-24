@@ -21,9 +21,13 @@ public class GroovyDslDynawoInputProviderFactory implements DynawoInputProviderF
 
     @Override
     public GroovyDslDynawoInputProvider create() {
-        ModuleConfig config = PlatformConfig.defaultConfig().getModuleConfig("groovy-dsl-contingencies");
+        ModuleConfig config = PlatformConfig.defaultConfig().getModuleConfig("groovy-dsl-dynawo");
         Path dslFile = config.getPathProperty("dsl-file");
         return new GroovyDslDynawoInputProvider(dslFile);
     }
 
+    @Override
+    public GroovyDslDynawoInputProvider create(Path dslFile) {
+        return new GroovyDslDynawoInputProvider(dslFile);
+    }
 }
