@@ -1,0 +1,12 @@
+{
+  "version" : "1.0",
+  "startTime" : 0,
+  "stopTime" : 1,
+  "extensions" : {
+    "DynawoSimulationParameters" : {
+      "solver" : "SIM",
+      "IDAorder" : 2,
+      "dslFile" : null
+    }
+  }
+}
