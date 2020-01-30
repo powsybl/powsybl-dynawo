@@ -17,7 +17,9 @@ import com.google.auto.service.AutoService;
 import com.powsybl.dynamicsimulation.json.JsonDynamicSimulationParameters;
 import com.powsybl.dynamicsimulation.json.JsonDynamicSimulationParameters.ExtensionSerializer;
 import com.powsybl.dynawo.simulator.DynawoSimulationParameters;
-import com.powsybl.dynawo.simulator.DynawoSimulationParameters.Solver;
+import com.powsybl.dynawo.simulator.DynawoSimulationParameters.SolverIDAParameters;
+import com.powsybl.dynawo.simulator.DynawoSimulationParameters.SolverParameters;
+import com.powsybl.dynawo.simulator.DynawoSimulationParameters.SolverType;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -45,17 +47,19 @@ public class DynawoSimulationParametersSerializer
     public DynawoSimulationParameters deserialize(JsonParser parser, DeserializationContext deserializationContext)
         throws IOException {
         DynawoSimulationParameters parameters = new DynawoSimulationParameters();
+        SolverType solverType = DynawoSimulationParameters.DEFAULT_SOLVER_TYPE;
+        int idaOrder = DynawoSimulationParameters.DEFAULT_IDA_ORDER;
         while (parser.nextToken() != JsonToken.END_OBJECT) {
             switch (parser.getCurrentName()) {
 
                 case "solver":
                     parser.nextToken();
-                    parameters.setSolver(parser.readValueAs(Solver.class));
+                    solverType = parser.readValueAs(SolverType.class);
                     break;
 
                 case "IDAorder":
                     parser.nextToken();
-                    parameters.setIdaOrder(parser.readValueAs(Integer.class));
+                    idaOrder = parser.readValueAs(Integer.class);
                     break;
 
                 case "dslFile":
@@ -67,6 +71,11 @@ public class DynawoSimulationParametersSerializer
                     throw new AssertionError("Unexpected field: " + parser.getCurrentName());
             }
         }
+        if (solverType == SolverType.IDA) {
+            parameters.setSolverParameters(new SolverIDAParameters(idaOrder));
+        } else {
+            parameters.setSolverParameters(new SolverParameters(solverType));
+        }
         return parameters;
     }
 
@@ -76,8 +85,11 @@ public class DynawoSimulationParametersSerializer
         throws IOException {
         jsonGenerator.writeStartObject();
 
-        jsonGenerator.writeStringField("solver", dynawoSimulationParameters.getSolver().toString());
-        jsonGenerator.writeNumberField("IDAorder", dynawoSimulationParameters.getIdaOrder());
+        SolverParameters solverParameters = dynawoSimulationParameters.getSolverParameters();
+        jsonGenerator.writeStringField("solver", solverParameters.getType().toString());
+        if (solverParameters.getType() == SolverType.IDA) {
+            jsonGenerator.writeNumberField("IDAorder", ((SolverIDAParameters) solverParameters).getOrder());
+        }
         jsonGenerator.writeStringField("dslFile", dynawoSimulationParameters.getDslFilename());
 
         jsonGenerator.writeEndObject();

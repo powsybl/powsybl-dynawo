@@ -19,7 +19,8 @@ import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
 import com.powsybl.commons.config.InMemoryPlatformConfig;
 import com.powsybl.commons.config.MapModuleConfig;
-import com.powsybl.dynawo.simulator.DynawoSimulationParameters.Solver;
+import com.powsybl.dynawo.simulator.DynawoSimulationParameters.SolverIDAParameters;
+import com.powsybl.dynawo.simulator.DynawoSimulationParameters.SolverType;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -40,28 +41,24 @@ public class DynawoSimulationParametersTest {
         fileSystem.close();
     }
 
-    private void checkValues(DynawoSimulationParameters parameters, Solver solver, int order) {
-        assertEquals(parameters.getSolver(), solver);
-        assertEquals(parameters.getIdaOrder(), order);
-    }
-
     @Test
     public void testNoConfig() {
         DynawoSimulationParameters parameters = new DynawoSimulationParameters();
         DynawoSimulationParameters.load(parameters, platformConfig);
-        checkValues(parameters, DynawoSimulationParameters.DEFAULT_SOLVER, DynawoSimulationParameters.DEFAULT_IDA_ORDER);
+        assertEquals(DynawoSimulationParameters.DEFAULT_SOLVER_TYPE, parameters.getSolverParameters().getType());
     }
 
     @Test
     public void checkConfig() {
-        Solver solver = Solver.IDA;
-        int order = 2;
+        SolverType solverType = SolverType.IDA;
+        int idaOrder = 2;
 
         MapModuleConfig moduleConfig = platformConfig.createModuleConfig("dynawo-simulation-default-parameters");
-        moduleConfig.setStringProperty("solver", solver.toString());
-        moduleConfig.setStringProperty("IDAorder", Integer.toString(order));
+        moduleConfig.setStringProperty("solver", solverType.toString());
+        moduleConfig.setStringProperty("IDAorder", Integer.toString(idaOrder));
         DynawoSimulationParameters parameters = new DynawoSimulationParameters();
         DynawoSimulationParameters.load(parameters, platformConfig);
-        checkValues(parameters, solver, order);
+        assertEquals(SolverType.IDA, parameters.getSolverParameters().getType());
+        assertEquals(idaOrder, ((SolverIDAParameters) parameters.getSolverParameters()).getOrder());
     }
 }

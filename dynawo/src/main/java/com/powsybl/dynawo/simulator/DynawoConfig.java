@@ -23,7 +23,7 @@ public class DynawoConfig {
     public static DynawoConfig load(PlatformConfig platformConfig) {
         ModuleConfig config = platformConfig.getModuleConfig("dynawo");
         String homeDir = config.getStringProperty("homeDir");
-        boolean debug = config.getBooleanProperty("debug", DEBUG);
+        boolean debug = config.getBooleanProperty("debug", DEBUG_DEFAULT);
 
         return new DynawoConfig(homeDir, debug);
     }
@@ -44,5 +44,5 @@ public class DynawoConfig {
     private final String homeDir;
     private final boolean debug;
 
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG_DEFAULT = false;
 }

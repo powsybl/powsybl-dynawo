@@ -12,9 +12,12 @@ import java.util.Map.Entry;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
+import com.powsybl.commons.xml.XmlUtil;
 import com.powsybl.dynawo.par.DynawoParameter;
 import com.powsybl.dynawo.par.DynawoParameterSet;
-import com.powsybl.dynawo.simulator.DynawoSimulationParameters.Solver;
+import com.powsybl.dynawo.simulator.DynawoSimulationParameters.SolverIDAParameters;
+import com.powsybl.dynawo.simulator.DynawoSimulationParameters.SolverParameters;
+import com.powsybl.dynawo.simulator.DynawoSimulationParameters.SolverType;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -24,28 +27,29 @@ public final class DynawoSolverParameters {
     private DynawoSolverParameters() {
     }
 
-    public static void writeParameterSets(XMLStreamWriter writer, Solver solver, int order,
+    public static void writeParameterSets(XMLStreamWriter writer, SolverParameters solverParameters,
         List<DynawoParameterSet> parameterSets)
         throws XMLStreamException {
         for (DynawoParameterSet parameterSet : parameterSets) {
-            writeParameterSet(writer, solver, order, parameterSet);
+            writeParameterSet(writer, solverParameters, parameterSet);
         }
     }
 
-    private static void writeParameterSet(XMLStreamWriter writer, Solver solver, int order,
+    private static void writeParameterSet(XMLStreamWriter writer, SolverParameters solverParameters,
         DynawoParameterSet parameterSet)
         throws XMLStreamException {
         String id = parameterSet.getId();
         writer.writeStartElement("set");
         writer.writeAttribute("id", id);
-        if (solver.equals(Solver.IDA)) {
+        SolverType solverType = solverParameters.getType();
+        if (solverType == SolverType.IDA) {
             writer.writeEmptyElement("par");
             writer.writeAttribute("type", "INT");
             writer.writeAttribute("name", "order");
-            writer.writeAttribute("value", Integer.toString(order));
+            XmlUtil.writeInt("value", ((SolverIDAParameters) solverParameters).getOrder(), writer);
         }
         for (Entry<String, DynawoParameter> parameter : parameterSet.getParameters().entrySet()) {
-            if (parameter.getValue().getName().equals("order") && solver.equals(Solver.IDA)) {
+            if (parameter.getValue().getName().equals("order") && solverType == SolverType.IDA) {
                 continue;
             }
             writeParameter(writer, parameter.getValue());

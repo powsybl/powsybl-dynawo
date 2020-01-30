@@ -125,8 +125,7 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
                             dynawoInputProvider = new GroovyDslDynawoInputProviderFactory().create(dslFile);
                             dynawoParameters.setDynawoInputProvider(dynawoInputProvider);
                         }
-                        dynawoJobsFile = new DynawoXmlExporter().export(network, dynawoParameters.getSolver(),
-                            dynawoParameters.getIdaOrder(), dynawoInputProvider, workingDir);
+                        dynawoJobsFile = new DynawoXmlExporter().export(network, dynawoParameters.getSolverParameters(), dynawoInputProvider, workingDir);
                     } catch (IOException | XMLStreamException e) {
                         throw new PowsyblException(e.getMessage());
                     }

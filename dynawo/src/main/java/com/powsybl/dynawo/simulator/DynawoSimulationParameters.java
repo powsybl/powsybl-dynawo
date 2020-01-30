@@ -18,12 +18,37 @@ import com.powsybl.dynawo.DynawoInputProvider;
  */
 public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulationParameters> {
 
-    public static final Solver DEFAULT_SOLVER = Solver.SIM;
+    public static final SolverType DEFAULT_SOLVER_TYPE = SolverType.SIM;
     public static final int DEFAULT_IDA_ORDER = 2;
 
-    public enum Solver {
+    public enum SolverType {
         SIM,
         IDA
+    }
+
+    public static class SolverParameters {
+        private final SolverType type;
+
+        public SolverParameters(SolverType type) {
+            this.type = type;
+        }
+
+        public SolverType getType() {
+            return type;
+        }
+    }
+
+    public static class SolverIDAParameters extends SolverParameters {
+        private final int order;
+
+        public SolverIDAParameters(int order) {
+            super(SolverType.IDA);
+            this.order = order;
+        }
+
+        public int getOrder() {
+            return order;
+        }
     }
 
     /**
@@ -53,26 +78,31 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
 
         platformConfig.getOptionalModuleConfig("dynawo-simulation-default-parameters")
             .ifPresent(config -> {
-                parameters.setSolver(config.getEnumProperty("solver", Solver.class, DEFAULT_SOLVER));
-                parameters.setIdaOrder(config.getIntProperty("IDAorder", DEFAULT_IDA_ORDER));
+                SolverParameters solverParameters = null;
+                SolverType solverType = config.getEnumProperty("solver", SolverType.class, DEFAULT_SOLVER_TYPE);
+                if (solverType.equals(SolverType.IDA)) {
+                    solverParameters = new SolverIDAParameters(config.getIntProperty("IDAorder", DEFAULT_IDA_ORDER));
+                } else {
+                    solverParameters = new SolverParameters(solverType);
+                }
+                parameters.setSolverParameters(solverParameters);
             });
     }
 
     public DynawoSimulationParameters() {
-        this(DEFAULT_SOLVER, DEFAULT_IDA_ORDER, null, null);
+        this(new SolverParameters(DEFAULT_SOLVER_TYPE), null, null);
     }
 
-    public DynawoSimulationParameters(Solver solver, int order, String dslFilename) {
-        this(solver, order, dslFilename, null);
+    public DynawoSimulationParameters(SolverParameters solverParameters, String dslFilename) {
+        this(solverParameters, dslFilename, null);
     }
 
-    public DynawoSimulationParameters(Solver solver, int order, DynawoInputProvider dynawoInputProvider) {
-        this(solver, order, null, dynawoInputProvider);
+    public DynawoSimulationParameters(SolverParameters solverParameters, DynawoInputProvider dynawoInputProvider) {
+        this(solverParameters, null, dynawoInputProvider);
     }
 
-    private DynawoSimulationParameters(Solver solver, int order, String dslFilename, DynawoInputProvider dynawoInputProvider) {
-        this.solver = Objects.requireNonNull(solver);
-        this.idaOrder = order;
+    private DynawoSimulationParameters(SolverParameters solverParameters, String dslFilename, DynawoInputProvider dynawoInputProvider) {
+        this.solverParameters = Objects.requireNonNull(solverParameters);
         this.dslFilename = dslFilename;
         this.dynawoInputProvider = dynawoInputProvider;
     }
@@ -82,21 +112,12 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
         return "DynawoSimulationParameters";
     }
 
-    public Solver getSolver() {
-        return solver;
+    public SolverParameters getSolverParameters() {
+        return solverParameters;
     }
 
-    public DynawoSimulationParameters setSolver(Solver solver) {
-        this.solver = Objects.requireNonNull(solver);
-        return this;
-    }
-
-    public int getIdaOrder() {
-        return idaOrder;
-    }
-
-    public DynawoSimulationParameters setIdaOrder(int order) {
-        this.idaOrder = order;
+    public DynawoSimulationParameters setSolverParameters(SolverParameters solverParameters) {
+        this.solverParameters = Objects.requireNonNull(solverParameters);
         return this;
     }
 
@@ -118,8 +139,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
         return this;
     }
 
-    private Solver solver;
-    private int idaOrder;
+    private SolverParameters solverParameters;
     private String dslFilename;
 
     private DynawoInputProvider dynawoInputProvider;

@@ -5,7 +5,6 @@
   "extensions" : {
     "DynawoSimulationParameters" : {
       "solver" : "SIM",
-      "IDAorder" : 2,
       "dslFile" : null
     }
   }
