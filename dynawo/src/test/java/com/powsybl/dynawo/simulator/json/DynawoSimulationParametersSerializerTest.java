@@ -26,10 +26,10 @@ public class DynawoSimulationParametersSerializerTest extends AbstractConverterT
         DynamicSimulationParameters dynamicSimulationParameters = new DynamicSimulationParameters()
             .setStartTime(0)
             .setStopTime(1);
-        DynawoSimulationParameters dynawoSimulationParameters = new DynawoSimulationParameters();
-        dynawoSimulationParameters.setSolver(Solver.SIM);
-        dynawoSimulationParameters.setIdaOrder(2);
-        dynawoSimulationParameters.setDslFilename(null);
+        DynawoSimulationParameters dynawoSimulationParameters = new DynawoSimulationParameters()
+            .setSolver(Solver.SIM)
+            .setIdaOrder(2)
+            .setDslFilename(null);
         dynamicSimulationParameters.addExtension(DynawoSimulationParameters.class, dynawoSimulationParameters);
         roundTripTest(dynamicSimulationParameters, JsonDynamicSimulationParameters::write,
             JsonDynamicSimulationParameters::read, "/DynawoSimulationParameters.json");

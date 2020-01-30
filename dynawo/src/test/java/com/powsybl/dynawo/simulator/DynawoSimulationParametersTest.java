@@ -53,7 +53,7 @@ public class DynawoSimulationParametersTest {
     }
 
     @Test
-    public void checkConfig() throws IOException {
+    public void checkConfig() {
         Solver solver = Solver.IDA;
         int order = 2;
 

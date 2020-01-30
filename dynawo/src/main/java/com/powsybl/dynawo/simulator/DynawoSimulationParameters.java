@@ -71,7 +71,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
     }
 
     private DynawoSimulationParameters(Solver solver, int order, String dslFilename, DynawoInputProvider dynawoInputProvider) {
-        this.solver = solver;
+        this.solver = Objects.requireNonNull(solver);
         this.idaOrder = order;
         this.dslFilename = dslFilename;
         this.dynawoInputProvider = dynawoInputProvider;
@@ -86,16 +86,18 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
         return solver;
     }
 
-    public void setSolver(Solver solver) {
-        this.solver = solver;
+    public DynawoSimulationParameters setSolver(Solver solver) {
+        this.solver = Objects.requireNonNull(solver);
+        return this;
     }
 
     public int getIdaOrder() {
         return idaOrder;
     }
 
-    public void setIdaOrder(int order) {
+    public DynawoSimulationParameters setIdaOrder(int order) {
         this.idaOrder = order;
+        return this;
     }
 
     public DynawoInputProvider getDynawoInputProvider() {
@@ -111,8 +113,9 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
         return dslFilename;
     }
 
-    public void setDslFilename(String dslFilename) {
+    public DynawoSimulationParameters setDslFilename(String dslFilename) {
         this.dslFilename = dslFilename;
+        return this;
     }
 
     private Solver solver;

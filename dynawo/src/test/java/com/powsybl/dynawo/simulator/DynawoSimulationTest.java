@@ -65,7 +65,7 @@ public class DynawoSimulationTest {
 
             // check final voltage of bus close to the event
             int index = result.getNames().indexOf("NETWORK__N1011____TN_Upu_value");
-            assertEquals(result.getTimeSeries().get(new Double(30.0)).get(index), new Double(0.931558));
+            assertEquals(result.getTimeSeries().get(30.0d).get(index), new Double(0.931558));
         }
     }
 
@@ -85,7 +85,7 @@ public class DynawoSimulationTest {
 
             // check final voltage of bus close to the event
             int index = result.getNames().indexOf("NETWORK__N1011____TN_Upu_value");
-            assertEquals(result.getTimeSeries().get(new Double(30.0)).get(index), new Double(0.931558));
+            assertEquals(result.getTimeSeries().get(30.0d).get(index), new Double(0.931558));
         }
     }
 

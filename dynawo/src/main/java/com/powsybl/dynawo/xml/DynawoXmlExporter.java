@@ -32,19 +32,16 @@ public class DynawoXmlExporter {
         this.platformConfig = Objects.requireNonNull(platformConfig);
     }
 
-    public String export(Network network, Solver solver, int order, DynawoInputProvider dynawoProvider,
-        Path workingDir) throws IOException, XMLStreamException {
+    public String export(Network network, Solver solver, int order, DynawoInputProvider dynawoProvider, Path workingDir) throws IOException, XMLStreamException {
         DynawoInputs.prepare(network, solver, order, dynawoProvider, workingDir);
-        if (network != null) {
-            Path jobsFile = workingDir.resolve("dynawoModel.jobs");
-            XMLExporter xmlExporter = new XMLExporter(platformConfig);
-            xmlExporter.export(network, null, new FileDataSource(workingDir, "dynawoModel"));
-            // Warning: dynawo expects the country field in each substation element
-            return jobsFile.toAbsolutePath().toString();
-        }
-        return null;
+
+        Path jobsFile = workingDir.resolve("dynawoModel.jobs");
+        XMLExporter xmlExporter = new XMLExporter(platformConfig);
+        xmlExporter.export(network, null, new FileDataSource(workingDir, "dynawoModel"));
+
+        // Warning: dynawo expects the country field in each substation element
+        return jobsFile.toAbsolutePath().toString();
     }
 
     private final PlatformConfig platformConfig;
-
 }
