@@ -14,6 +14,7 @@ import com.powsybl.commons.AbstractConverterTest;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynamicsimulation.json.JsonDynamicSimulationParameters;
 import com.powsybl.dynawo.simulator.DynawoSimulationParameters;
+import com.powsybl.dynawo.simulator.DynawoSimulationParameters.SolverIDAParameters;
 import com.powsybl.dynawo.simulator.DynawoSimulationParameters.SolverParameters;
 import com.powsybl.dynawo.simulator.DynawoSimulationParameters.SolverType;
 
@@ -23,7 +24,7 @@ import com.powsybl.dynawo.simulator.DynawoSimulationParameters.SolverType;
 public class DynawoSimulationParametersSerializerTest extends AbstractConverterTest {
 
     @Test
-    public void roundTrip() throws IOException {
+    public void roundTripSIMParameters() throws IOException {
         DynamicSimulationParameters dynamicSimulationParameters = new DynamicSimulationParameters()
             .setStartTime(0)
             .setStopTime(1);
@@ -32,6 +33,19 @@ public class DynawoSimulationParametersSerializerTest extends AbstractConverterT
             .setDslFilename(null);
         dynamicSimulationParameters.addExtension(DynawoSimulationParameters.class, dynawoSimulationParameters);
         roundTripTest(dynamicSimulationParameters, JsonDynamicSimulationParameters::write,
-            JsonDynamicSimulationParameters::read, "/DynawoSimulationParameters.json");
+            JsonDynamicSimulationParameters::read, "/DynawoSimulationSIMParameters.json");
+    }
+
+    @Test
+    public void roundTripIDAParameters() throws IOException {
+        DynamicSimulationParameters dynamicSimulationParameters = new DynamicSimulationParameters()
+            .setStartTime(0)
+            .setStopTime(1);
+        DynawoSimulationParameters dynawoSimulationParameters = new DynawoSimulationParameters()
+            .setSolverParameters(new SolverIDAParameters(2))
+            .setDslFilename(null);
+        dynamicSimulationParameters.addExtension(DynawoSimulationParameters.class, dynawoSimulationParameters);
+        roundTripTest(dynamicSimulationParameters, JsonDynamicSimulationParameters::write,
+            JsonDynamicSimulationParameters::read, "/DynawoSimulationIDAParameters.json");
     }
 }
