@@ -59,7 +59,12 @@ public class DynawoSimulationParametersSerializer
 
                 case "IDAorder":
                     parser.nextToken();
-                    idaOrder = parser.readValueAs(Integer.class);
+                    // We assume that the parameters are in the correct order
+                    if (solverType == SolverType.IDA) {
+                        idaOrder = parser.readValueAs(Integer.class);
+                    } else {
+                        throw new AssertionError("The IDAorder parameter is used only with IDA solver");
+                    }
                     break;
 
                 case "dslFile":
