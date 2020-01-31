@@ -10,7 +10,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -25,25 +24,42 @@ import java.util.Objects;
 import java.util.Set;
 
 import com.powsybl.commons.PowsyblException;
-import com.powsybl.simulation.ImpactAnalysisResult;
+import com.powsybl.dynamicsimulation.DynamicSimulationResult;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 //TODO pending to use Powsybl TimeSeries
-public class DynawoResults extends ImpactAnalysisResult {
+public class DynawoResults implements DynamicSimulationResult {
 
-    public DynawoResults(Map<String, String> metrics) {
-        super(metrics);
-        names = new ArrayList<>();
-        timeSeries = new HashMap<>();
+    public DynawoResults(boolean status, String logs) {
+        this.status = status;
+        this.logs = logs;
+    }
+
+    @Override
+    public boolean isOk() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
+
+    @Override
+    public String getLogs() {
+        return logs;
+    }
+
+    public void setLogs(String logs) {
+        this.logs = logs;
     }
 
     public void parseCsv(Path file) {
-        try {
-            parseCsv(Files.newInputStream(file));
+        try (InputStream is = Files.newInputStream(file)) {
+            parseCsv(is);
         } catch (IOException e) {
-            throw new UncheckedIOException(e);
+            throw new PowsyblException(e);
         }
     }
 
@@ -51,19 +67,7 @@ public class DynawoResults extends ImpactAnalysisResult {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
             parseCsv(reader, ';');
         } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
-    }
-
-    private void parseCsv(BufferedReader reader, char separator) {
-        Objects.requireNonNull(reader);
-
-        String separatorStr = Character.toString(separator);
-        try {
-            readCsvHeader(reader, separatorStr);
-            readCsvValues(reader, separatorStr);
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
+            throw new PowsyblException(e);
         }
     }
 
@@ -75,14 +79,21 @@ public class DynawoResults extends ImpactAnalysisResult {
         return Collections.unmodifiableMap(timeSeries);
     }
 
-    private void readCsvHeader(BufferedReader reader, String separatorStr) throws IOException {
+    private void parseCsv(BufferedReader reader, char separator) throws IOException {
+        Objects.requireNonNull(reader);
+
+        readCsvHeader(reader, separator);
+        readCsvValues(reader, separator);
+    }
+
+    private void readCsvHeader(BufferedReader reader, char separator) throws IOException {
         String line = reader.readLine();
         if (line == null) {
             throw new PowsyblException("CSV header is missing");
         }
-        String[] tokens = line.split(separatorStr);
+        String[] tokens = line.split(Character.toString(separator));
         if (tokens.length < 1 || !"time".equals(tokens[0])) {
-            throw new PowsyblException("Bad CSV header, should be \ntime" + separatorStr + "...");
+            throw new PowsyblException("Bad CSV header, should be \ntime" + separator + "...");
         }
         List<String> duplicates = new ArrayList<>();
         Set<String> namesWithoutDuplicates = new HashSet<>();
@@ -97,12 +108,12 @@ public class DynawoResults extends ImpactAnalysisResult {
         names = Arrays.asList(tokens).subList(1, tokens.length);
     }
 
-    private void readCsvValues(BufferedReader reader, String separatorStr) throws IOException {
+    private void readCsvValues(BufferedReader reader, char separator) throws IOException {
         String line;
         while ((line = reader.readLine()) != null) {
-            String[] tokens = line.split(separatorStr);
+            String[] tokens = line.split(Character.toString(separator));
 
-            if (tokens.length - 1 != names.size()) {
+            if (tokens.length != names.size() + 1) {
                 throw new PowsyblException("Columns of line " + names.size() + " are inconsistent with header");
             }
 
@@ -124,6 +135,8 @@ public class DynawoResults extends ImpactAnalysisResult {
         return Double.valueOf(token);
     }
 
-    private List<String> names;
-    private Map<Double, List<Double>> timeSeries;
+    private boolean status;
+    private String logs;
+    private List<String> names = new ArrayList<>();
+    private Map<Double, List<Double>> timeSeries = new HashMap<>();
 }

@@ -6,11 +6,11 @@
  */
 package com.powsybl.dynawo.dsl;
 
+import java.io.InputStream;
 import java.nio.file.Path;
 
 import com.google.auto.service.AutoService;
-import com.powsybl.commons.config.ModuleConfig;
-import com.powsybl.commons.config.PlatformConfig;
+import com.powsybl.dynawo.DynawoInputProvider;
 import com.powsybl.dynawo.DynawoInputProviderFactory;
 
 /**
@@ -20,10 +20,13 @@ import com.powsybl.dynawo.DynawoInputProviderFactory;
 public class GroovyDslDynawoInputProviderFactory implements DynawoInputProviderFactory {
 
     @Override
-    public GroovyDslDynawoInputProvider create() {
-        ModuleConfig config = PlatformConfig.defaultConfig().getModuleConfig("groovy-dsl-contingencies");
-        Path dslFile = config.getPathProperty("dsl-file");
+    public GroovyDslDynawoInputProvider create(Path dslFile) {
         return new GroovyDslDynawoInputProvider(dslFile);
+    }
+
+    @Override
+    public DynawoInputProvider create(InputStream data) {
+        return new GroovyDslDynawoInputProvider(data);
     }
 
 }
