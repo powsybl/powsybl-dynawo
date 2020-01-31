@@ -1,10 +1,4 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<!--
-    Copyright (c) 2019 RTE (http://www.rte-france.com)
-    This Source Code Form is subject to the terms of the Mozilla Public
-    License v. 2.0. If a copy of the MPL was not distributed with this
-    file You can obtain one at http://mozilla.org/MPL/2.0/.
- -->
 <iidm:network xmlns:iidm="http://www.itesla_project.eu/schema/iidm/1_0" id="unknown" caseDate="2019-09-23T11:06:12.313+02:00" forecastDistance="0" sourceFormat="CGMES">
     <iidm:property name="CGMESModelDetail" value="bus-branch"/>
     <iidm:substation id="_NG11_____SS" name="NG11    _SS" country="FR" geographicalTags="_SGR_01">
