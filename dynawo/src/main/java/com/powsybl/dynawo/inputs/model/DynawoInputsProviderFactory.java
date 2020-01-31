@@ -14,13 +14,8 @@ import java.nio.file.Path;
  */
 public interface DynawoInputsProviderFactory {
 
-    DynawoInputsProvider create();
+    DynawoInputsProvider create(Path dynawoFile);
 
-    default DynawoInputsProvider create(Path dynawoFile) {
-        return create();
-    }
+    DynawoInputsProvider create(InputStream data);
 
-    default DynawoInputsProvider create(InputStream data) {
-        return create();
-    }
 }

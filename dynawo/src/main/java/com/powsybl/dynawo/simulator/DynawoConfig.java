@@ -21,14 +21,11 @@ public class DynawoConfig {
     }
 
     public static DynawoConfig load(PlatformConfig platformConfig) {
-        DynawoConfig dynawoConfig = null;
-        if (platformConfig.moduleExists("dynawo")) {
-            ModuleConfig config = platformConfig.getModuleConfig("dynawo");
-            String homeDir = config.getStringProperty("homeDir");
-            boolean debug = config.getBooleanProperty("debug");
-            dynawoConfig = new DynawoConfig(homeDir, debug);
-        }
-        return dynawoConfig;
+        ModuleConfig config = platformConfig.getModuleConfig("dynawo");
+        String homeDir = config.getStringProperty("homeDir");
+        boolean debug = config.getBooleanProperty("debug", DEBUG_DEFAULT);
+
+        return new DynawoConfig(homeDir, debug);
     }
 
     public DynawoConfig(String homeDir, boolean debug) {
@@ -46,4 +43,6 @@ public class DynawoConfig {
 
     private final String homeDir;
     private final boolean debug;
+
+    private static final boolean DEBUG_DEFAULT = false;
 }

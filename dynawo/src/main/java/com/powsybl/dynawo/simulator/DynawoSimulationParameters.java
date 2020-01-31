@@ -12,18 +12,44 @@ import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.extensions.AbstractExtension;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawo.inputs.model.DynawoInputs;
+import com.powsybl.dynawo.inputs.model.DynawoInputsProvider;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulationParameters> {
 
-    public static final Solver DEFAULT_SOLVER = Solver.SIM;
+    public static final SolverType DEFAULT_SOLVER_TYPE = SolverType.SIM;
     public static final int DEFAULT_IDA_ORDER = 2;
 
-    public enum Solver {
+    public enum SolverType {
         SIM,
         IDA
+    }
+
+    public static class SolverParameters {
+        private final SolverType type;
+
+        public SolverParameters(SolverType type) {
+            this.type = type;
+        }
+
+        public SolverType getType() {
+            return type;
+        }
+    }
+
+    public static class SolverIDAParameters extends SolverParameters {
+        private final int order;
+
+        public SolverIDAParameters(int order) {
+            super(SolverType.IDA);
+            this.order = order;
+        }
+
+        public int getOrder() {
+            return order;
+        }
     }
 
     /**
@@ -53,49 +79,47 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
 
         platformConfig.getOptionalModuleConfig("dynawo-simulation-default-parameters")
             .ifPresent(config -> {
-                parameters.setSolver(config.getEnumProperty("solver", Solver.class, DEFAULT_SOLVER));
-                parameters.setIdaOrder(config.getIntProperty("IDAorder", DEFAULT_IDA_ORDER));
+                SolverParameters solverParameters = null;
+                SolverType solverType = config.getEnumProperty("solver", SolverType.class, DEFAULT_SOLVER_TYPE);
+                if (solverType.equals(SolverType.IDA)) {
+                    solverParameters = new SolverIDAParameters(config.getIntProperty("IDAorder", DEFAULT_IDA_ORDER));
+                } else {
+                    solverParameters = new SolverParameters(solverType);
+                }
+                parameters.setSolverParameters(solverParameters);
             });
     }
 
     public DynawoSimulationParameters() {
-        this(DEFAULT_SOLVER, DEFAULT_IDA_ORDER, null, null);
+        this(new SolverParameters(DEFAULT_SOLVER_TYPE), null, null);
     }
 
-    public DynawoSimulationParameters(Solver solver, int order, String dslFilename) {
-        this(solver, order, dslFilename, null);
+    public DynawoSimulationParameters(SolverParameters solverParameters, String dslFilename) {
+        this(solverParameters, dslFilename, null);
     }
 
-    public DynawoSimulationParameters(Solver solver, int order, DynawoInputs dynawoInputs) {
-        this(solver, order, null, dynawoInputs);
+    public DynawoSimulationParameters(SolverParameters solverParameters, DynawoInputsProvider dynawoInputProvider) {
+        this(solverParameters, null, dynawoInputProvider);
     }
 
-    private DynawoSimulationParameters(Solver solver, int order, String dslFilename, DynawoInputs dynawoInputs) {
-        this.solver = solver;
-        this.idaOrder = order;
+    private DynawoSimulationParameters(SolverParameters solverParameters, String dslFilename, DynawoInputsProvider dynawoInputProvider) {
+        this.solverParameters = Objects.requireNonNull(solverParameters);
         this.dslFilename = dslFilename;
-        this.dynawoInputs = dynawoInputs;
+        this.dynawoInputProvider = dynawoInputProvider;
     }
 
     @Override
     public String getName() {
-        return "DynawoParameters";
+        return "DynawoSimulationParameters";
     }
 
-    public Solver getSolver() {
-        return solver;
+    public SolverParameters getSolverParameters() {
+        return solverParameters;
     }
 
-    public void setSolver(Solver solver) {
-        this.solver = solver;
-    }
-
-    public int getIdaOrder() {
-        return idaOrder;
-    }
-
-    public void setIdaOrder(int order) {
-        this.idaOrder = order;
+    public DynawoSimulationParameters setSolverParameters(SolverParameters solverParameters) {
+        this.solverParameters = Objects.requireNonNull(solverParameters);
+        return this;
     }
 
     public DynawoInputs getDynawoInputs() {
@@ -111,13 +135,15 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
         return dslFilename;
     }
 
-    public void setDslFilename(String dslFilename) {
+    public DynawoSimulationParameters setDslFilename(String dslFilename) {
         this.dslFilename = dslFilename;
+        return this;
     }
 
-    private Solver solver;
-    private int idaOrder;
+    private SolverParameters solverParameters;
     private String dslFilename;
+
+    private DynawoInputsProvider dynawoInputProvider;
 
     // FIXME Used only for initial testing, should be removed
     private DynawoInputs dynawoInputs;

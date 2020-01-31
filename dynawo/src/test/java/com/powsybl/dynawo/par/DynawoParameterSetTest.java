@@ -6,10 +6,6 @@
  */
 package com.powsybl.dynawo.par;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 import java.util.Arrays;
 
 import org.junit.Test;
@@ -18,6 +14,8 @@ import com.powsybl.dynawo.inputs.model.par.Parameter;
 import com.powsybl.dynawo.inputs.model.par.ParameterRow;
 import com.powsybl.dynawo.inputs.model.par.ParameterSet;
 import com.powsybl.dynawo.inputs.model.par.ParameterTable;
+
+import static org.junit.Assert.*;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -44,7 +42,7 @@ public class DynawoParameterSetTest {
 
         String key1 = "name1";
         assertEquals(2, parameterSet.getParameters().size());
-        assertTrue(!parameterSet.getParameters().get(key1).isReference());
+        assertFalse(parameterSet.getParameters().get(key1).isReference());
         assertEquals("name1", parameterSet.getParameters().get(key1).getName());
         assertEquals("type1", parameterSet.getParameters().get(key1).getType());
         assertEquals("value1", parameterSet.getParameters().get(key1).getValue());

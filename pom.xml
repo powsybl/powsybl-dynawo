@@ -6,8 +6,8 @@
     file, You can obtain one at http://mozilla.org/MPL/2.0/.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.powsybl</groupId>
@@ -48,8 +48,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <!-- javac's source and target arguments accept both 1.8 and 8, but release 
-            accepts only 8 -->
+        <!-- javac's source and target arguments accept both 1.8 and 8, but release accepts only 8 -->
         <java.version>8</java.version>
 
         <maven.antrun.version>1.8</maven.antrun.version>
@@ -294,9 +293,8 @@
                 <jdk>[9,)</jdk>
             </activation>
             <build>
-                <!-- This is merged in the main configuration but plexus-compiler-javac 
-                    is smart enough to ignore the source and target arguments when the release 
-                    argument is supplied. -->
+                <!-- This is merged in the main configuration but plexus-compiler-javac is smart enough
+                  to ignore the source and target arguments when the release argument is supplied. -->
                 <pluginManagement>
                     <plugins>
                         <plugin>
@@ -376,7 +374,7 @@
                                 <configuration>
                                     <fail>false</fail>
                                     <rules>
-                                        <dependencyConvergence />
+                                        <dependencyConvergence/>
                                         <requireMavenVersion>
                                             <version>${maven.core.version}</version>
                                         </requireMavenVersion>
@@ -587,7 +585,7 @@
                 <version>${powsyblcore.version}</version>
                 <scope>test</scope>
             </dependency>
-            <!-- 
+            <!--
             <dependency>
                 <groupId>com.powsybl</groupId>
                 <artifactId>powsybl-triple-store-impl-jena</artifactId>

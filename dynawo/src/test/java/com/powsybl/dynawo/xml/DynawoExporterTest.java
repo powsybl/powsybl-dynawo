@@ -108,15 +108,14 @@ public class DynawoExporterTest extends AbstractConverterTest {
         }
     }
 
-    private Network importNetwork(TestGridModel gm) throws IOException {
+    private Network importNetwork(TestGridModel gm) {
         String impl = TripleStoreFactory.defaultImplementation();
         CgmesImport i = new CgmesImport();
         Properties params = new Properties();
         params.put("storeCgmesModelAsNetworkExtension", "true");
         params.put("powsyblTripleStore", impl);
         ReadOnlyDataSource ds = gm.dataSource();
-        Network n = i.importData(ds, NetworkFactory.findDefault(), params);
-        return n;
+        return i.importData(ds, NetworkFactory.findDefault(), params);
     }
 
     private Network network;

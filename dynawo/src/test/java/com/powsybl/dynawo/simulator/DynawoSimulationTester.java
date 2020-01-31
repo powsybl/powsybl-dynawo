@@ -8,7 +8,6 @@ package com.powsybl.dynawo.simulator;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.IOException;
 import java.util.Properties;
 
 import com.google.common.collect.ImmutableList;
@@ -36,15 +35,14 @@ public class DynawoSimulationTester {
         this.mockResults = mockResults;
     }
 
-    public Network convert(PlatformConfig platformConfig, TestGridModel gm) throws IOException {
+    public Network convert(PlatformConfig platformConfig, TestGridModel gm) {
         String impl = TripleStoreFactory.defaultImplementation();
         CgmesImport i = new CgmesImport(platformConfig);
         Properties params = new Properties();
         params.put("storeCgmesModelAsNetworkExtension", "true");
         params.put("powsyblTripleStore", impl);
         ReadOnlyDataSource ds = gm.dataSource();
-        Network n = i.importData(ds, NetworkFactory.findDefault(), params);
-        return n;
+        return i.importData(ds, NetworkFactory.findDefault(), params);
     }
 
     public DynawoResults simulate(Network network, DynawoSimulationParameters dynawoSimulationParameters, PlatformConfig platformConfig)

@@ -39,6 +39,7 @@ import com.powsybl.dynawo.inputs.xml.DynawoInputsXmlExporter;
 import com.powsybl.dynawo.results.CurvesCsv;
 import com.powsybl.dynawo.results.DynawoResults;
 import com.powsybl.dynawo.results.TimeSeries;
+import com.powsybl.dynawo.simulator.DynawoSimulationParameters.SolverIDAParameters;
 import com.powsybl.iidm.network.Network;
 
 /**
@@ -73,7 +74,7 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
     public CompletableFuture<DynamicSimulationResult> run(Network network, ComputationManager computationManager,
         String workingVariantId,
         DynamicSimulationParameters parameters) {
-        DynawoSimulationParameters dynawoParameters = parameters.getExtensionByName("DynawoParameters");
+        DynawoSimulationParameters dynawoParameters = parameters.getExtensionByName("DynawoSimulationParameters");
         if (dynawoParameters == null) {
             dynawoParameters = new DynawoSimulationParameters();
         }
@@ -132,12 +133,12 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
                 String lib;
                 String parFile;
                 String parId;
-                switch (dynawoParameters.getSolver()) {
+                switch (dynawoParameters.getSolverParameters().getType()) {
                     case IDA:
                         lib = "dynawo_SolverIDA";
                         // FIXME We should create a parId in the simulation par file
                         // and write on it the parameter "order" with its value
-                        LOG.warn("PENDING adding IDA order {} to simulation parFile", dynawoParameters.getIdaOrder());
+                        LOG.warn("PENDING adding IDA order {} to simulation parFile", ((SolverIDAParameters) dynawoParameters.getSolverParameters()).getOrder());
                         parFile = "pending";
                         parId = "pending";
                         LOG.warn("PENDING define parFile ({}) and parId ({})", parFile, parId);

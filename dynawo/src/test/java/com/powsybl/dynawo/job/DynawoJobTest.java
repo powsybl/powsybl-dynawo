@@ -6,11 +6,6 @@
  */
 package com.powsybl.dynawo.job;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
 import org.junit.Test;
 
 import com.powsybl.dynawo.inputs.model.job.Job;
@@ -19,6 +14,8 @@ import com.powsybl.dynawo.inputs.model.job.Outputs;
 import com.powsybl.dynawo.inputs.model.job.Simulation;
 import com.powsybl.dynawo.inputs.model.job.Solver;
 import com.powsybl.dynawo.inputs.model.job.LogAppender;
+
+import static org.junit.Assert.*;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -42,7 +39,7 @@ public class DynawoJobTest {
         assertNotNull(job.getModeler());
         assertNotNull(job.getSimulation());
         assertNotNull(job.getOutputs());
-        assertTrue(!job.getOutputs().getAppenders().isEmpty());
+        assertFalse(job.getOutputs().getAppenders().isEmpty());
 
         assertEquals("lib", job.getSolver().getLib());
         assertEquals("file", job.getSolver().getParFile());
@@ -61,7 +58,7 @@ public class DynawoJobTest {
 
         assertEquals(0, job.getSimulation().getStartTime());
         assertEquals(1, job.getSimulation().getStopTime());
-        assertTrue(!job.getSimulation().isActiveCriteria());
+        assertFalse(job.getSimulation().isActiveCriteria());
 
         assertEquals("directory", job.getOutputs().getDirectory());
         assertEquals("curve", job.getOutputs().getCurve());
@@ -69,9 +66,9 @@ public class DynawoJobTest {
         assertTrue(job.getOutputs().isDumpGlobalInitValues());
         assertNull(job.getOutputs().getConstraints());
         assertEquals("TXT", job.getOutputs().getTimeLine());
-        assertTrue(!job.getOutputs().isExportFinalState());
-        assertTrue(!job.getOutputs().isExportIidmFile());
-        assertTrue(!job.getOutputs().isExportDumpFile());
+        assertFalse(job.getOutputs().isExportFinalState());
+        assertFalse(job.getOutputs().isExportIidmFile());
+        assertFalse(job.getOutputs().isExportDumpFile());
         assertEquals("CSV", job.getOutputs().getExportMode());
 
         assertEquals(1, job.getOutputs().getAppenders().size());

@@ -272,7 +272,7 @@ public class DynamicModelsXml implements DynawoCollectionXmlFile {
         writer.writeAttribute("id", macroStaticRef.getId());
     }
 
-    private static final Map<Class, BiConsumer<XMLStreamWriter, DynawoDynamicModel>> MODEL_WRITERS = new HashMap<>();
+    private static final Map<Class<?>, BiConsumer<XMLStreamWriter, DynawoDynamicModel>> MODEL_WRITERS = new HashMap<>();
 
     static {
         MODEL_WRITERS.put(BlackBoxModel.class, DynamicModelsXml::writeBlackBoxModel);
