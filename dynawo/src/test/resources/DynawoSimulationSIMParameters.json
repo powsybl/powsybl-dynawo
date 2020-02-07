@@ -5,6 +5,15 @@
   "extensions" : {
     "DynawoSimulationParameters" : {
       "solver" : "SIM",
+      "SIMhMin" : 1.0E-6,
+      "SIMhMax" : 1.0,
+      "SIMkReduceStep" : 0.5,
+      "SIMnEff" : 10,
+      "SIMnDeadband" : 2,
+      "SIMmaxRootRestart" : 3,
+      "SIMmaxNewtonTry" : 10,
+      "SIMlinearSolverName" : "KLU",
+      "SIMrecalculateStep" : false,
       "dslFile" : null
     }
   }

@@ -84,7 +84,7 @@ public class ParameterSetsXml implements DynawoCollectionXmlFile {
             writer.writeEmptyElement("par");
             writer.writeAttribute("type", parameter.getType());
             writer.writeAttribute("name", parameter.getName());
-            writer.writeAttribute("value", parameter.getValue());
+            writer.writeAttribute("value", parameter.getValue().toString());
         }
     }
 

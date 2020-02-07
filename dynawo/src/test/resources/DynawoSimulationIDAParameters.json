@@ -6,6 +6,11 @@
     "DynawoSimulationParameters" : {
       "solver" : "IDA",
       "IDAorder" : 2,
+      "IDAinitStep" : 1.0E-6,
+      "IDAminStep" : 1.0E-6,
+      "IDAmaxStep" : 10.0,
+      "IDArelAccuracy" : 1.0E-4,
+      "IDAabsAccuracy" : 1.0E-4,
       "dslFile" : null
     }
   }

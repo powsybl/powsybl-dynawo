@@ -15,8 +15,7 @@ import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynamicsimulation.json.JsonDynamicSimulationParameters;
 import com.powsybl.dynawo.simulator.DynawoSimulationParameters;
 import com.powsybl.dynawo.simulator.DynawoSimulationParameters.SolverIDAParameters;
-import com.powsybl.dynawo.simulator.DynawoSimulationParameters.SolverParameters;
-import com.powsybl.dynawo.simulator.DynawoSimulationParameters.SolverType;
+import com.powsybl.dynawo.simulator.DynawoSimulationParameters.SolverSIMParameters;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -29,7 +28,7 @@ public class DynawoSimulationParametersSerializerTest extends AbstractConverterT
             .setStartTime(0)
             .setStopTime(1);
         DynawoSimulationParameters dynawoSimulationParameters = new DynawoSimulationParameters()
-            .setSolverParameters(new SolverParameters(SolverType.SIM))
+            .setSolverParameters(new SolverSIMParameters(0.000001, 1, 0.5, 10, 2, 3, 10, "KLU", false))
             .setDslFilename(null);
         dynamicSimulationParameters.addExtension(DynawoSimulationParameters.class, dynawoSimulationParameters);
         roundTripTest(dynamicSimulationParameters, JsonDynamicSimulationParameters::write,
@@ -42,7 +41,7 @@ public class DynawoSimulationParametersSerializerTest extends AbstractConverterT
             .setStartTime(0)
             .setStopTime(1);
         DynawoSimulationParameters dynawoSimulationParameters = new DynawoSimulationParameters()
-            .setSolverParameters(new SolverIDAParameters(2))
+            .setSolverParameters(new SolverIDAParameters(2, 0.000001, 0.000001, 10, 1e-4, 1e-4))
             .setDslFilename(null);
         dynamicSimulationParameters.addExtension(DynawoSimulationParameters.class, dynawoSimulationParameters);
         roundTripTest(dynamicSimulationParameters, JsonDynamicSimulationParameters::write,
