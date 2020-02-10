@@ -17,9 +17,6 @@ import java.util.concurrent.CompletableFuture;
 
 import javax.xml.stream.XMLStreamException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.auto.service.AutoService;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.computation.AbstractExecutionHandler;
@@ -139,7 +136,6 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
         // we assign it the solver defined in the parameters
         inputs.getJobs().forEach(j -> {
             if (j.getSolver() == null) {
-                Solver solver = null;
                 String lib;
                 List<ParameterSet> parameterSets = dynawoParameters.getDynawoInputs().getSolverParameterSets();
                 String parFile = DynawoConstants.PAR_SIM_FILENAME;
@@ -236,5 +232,4 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
     }
 
     private final DynawoConfig dynawoConfig;
-    private static final Logger LOG = LoggerFactory.getLogger(DynawoSimulationProvider.class);
 }
