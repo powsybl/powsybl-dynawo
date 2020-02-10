@@ -272,7 +272,7 @@ public class GroovyDslDynawoInputProviderTest {
         List<DynawoDynamicModel> dynamicModels = new GroovyDslDynawoInputProvider(dslFile).getDynawoDynamicModels(network);
         assertEquals(9, dynamicModels.size());
         DynawoDynamicModel dynamicModel = dynamicModels.get(0);
-        assertTrue(BlackBoxModel.class.isInstance(dynamicModel));
+        assertTrue(dynamicModel instanceof BlackBoxModel);
         BlackBoxModel blackBoxModel = (BlackBoxModel) dynamicModel;
         assertEquals("bblib", blackBoxModel.getLib());
         assertEquals("bbid", blackBoxModel.getId());

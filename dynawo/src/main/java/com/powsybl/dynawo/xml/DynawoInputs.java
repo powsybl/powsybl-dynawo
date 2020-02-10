@@ -31,6 +31,7 @@ import com.powsybl.dynawo.crv.DynawoCurve;
 import com.powsybl.dynawo.dyd.DynawoDynamicModel;
 import com.powsybl.dynawo.job.DynawoJob;
 import com.powsybl.dynawo.par.DynawoParameterSet;
+import com.powsybl.dynawo.simulator.DynawoSimulationParameters.SolverParameters;
 import com.powsybl.iidm.network.Network;
 
 /**
@@ -48,17 +49,17 @@ public final class DynawoInputs {
     private DynawoInputs() {
     }
 
-    public static void prepare(Network network, DynawoInputProvider inputProvider, Path workingDir)
-        throws IOException, XMLStreamException {
-        prepareJobFile(network, inputProvider, workingDir);
+    public static void prepare(Network network, SolverParameters solverParameters, DynawoInputProvider inputProvider,
+        Path workingDir) throws IOException, XMLStreamException {
+        prepareJobFile(network, solverParameters, inputProvider, workingDir);
         prepareDydFile(network, inputProvider, workingDir);
         prepareParFile(network, inputProvider, workingDir);
-        prepareParSolverFile(network, inputProvider, workingDir);
+        prepareParSolverFile(network, solverParameters, inputProvider, workingDir);
         prepareCrvFile(network, inputProvider, workingDir);
     }
 
-    public static void prepareJobFile(Network network, DynawoInputProvider inputProvider, Path workingDir)
-        throws IOException, XMLStreamException {
+    public static void prepareJobFile(Network network, SolverParameters solverParameters, DynawoInputProvider inputProvider,
+        Path workingDir) throws IOException, XMLStreamException {
         Path jobFile = workingDir.resolve(JOBS_FILENAME);
         XMLOutputFactory output = XMLOutputFactory.newInstance();
         try (Writer jobWriter = Files.newBufferedWriter(jobFile, StandardCharsets.UTF_8)) {
@@ -71,7 +72,7 @@ public final class DynawoInputs {
                 jobXmlWriter.setPrefix(DYN_PREFIX, DYN_URI);
                 jobXmlWriter.writeStartElement(DYN_URI, "jobs");
                 jobXmlWriter.writeNamespace(DYN_PREFIX, DYN_URI);
-                DynawoJobs.writeJobs(jobXmlWriter, jobs);
+                DynawoJobs.writeJobs(jobXmlWriter, solverParameters, jobs);
                 jobXmlWriter.writeEndElement();
                 jobXmlWriter.writeEndDocument();
             } finally {
@@ -126,8 +127,8 @@ public final class DynawoInputs {
         }
     }
 
-    public static void prepareParSolverFile(Network network, DynawoInputProvider inputProvider, Path workingDir)
-        throws IOException, XMLStreamException {
+    public static void prepareParSolverFile(Network network, SolverParameters solverParameters,
+        DynawoInputProvider inputProvider, Path workingDir) throws IOException, XMLStreamException {
         Path parSolverFile = workingDir.resolve(SOLVER_PAR_FILENAME);
         XMLOutputFactory output = XMLOutputFactory.newInstance();
         try (Writer parSolverWriter = Files.newBufferedWriter(parSolverFile, StandardCharsets.UTF_8)) {
@@ -140,7 +141,7 @@ public final class DynawoInputs {
                 parSolverXmlWriter.setPrefix(EMPTY_PREFIX, DYN_URI);
                 parSolverXmlWriter.writeStartElement("parametersSet");
                 parSolverXmlWriter.writeNamespace(EMPTY_PREFIX, DYN_URI);
-                DynawoSolverParameters.writeParameterSets(parSolverXmlWriter, spars);
+                DynawoSolverParameters.writeParameterSets(parSolverXmlWriter, solverParameters, spars);
                 parSolverXmlWriter.writeEndElement();
                 parSolverXmlWriter.writeEndDocument();
             } finally {

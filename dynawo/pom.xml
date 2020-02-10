@@ -68,15 +68,15 @@
         </dependency>
         <dependency>
             <groupId>com.powsybl</groupId>
+            <artifactId>powsybl-dynamic-simulation-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.powsybl</groupId>
             <artifactId>powsybl-iidm-api</artifactId>
         </dependency>
         <dependency>
             <groupId>com.powsybl</groupId>
             <artifactId>powsybl-iidm-xml-converter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.powsybl</groupId>
-            <artifactId>powsybl-simulation-api</artifactId>
         </dependency>
         <dependency>
             <groupId>com.powsybl</groupId>
@@ -180,3 +180,4 @@
         </dependency>
     </dependencies>
 </project>
+

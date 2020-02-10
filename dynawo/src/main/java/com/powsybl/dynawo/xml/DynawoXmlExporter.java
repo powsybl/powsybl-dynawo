@@ -15,6 +15,7 @@ import javax.xml.stream.XMLStreamException;
 import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.datasource.FileDataSource;
 import com.powsybl.dynawo.DynawoInputProvider;
+import com.powsybl.dynawo.simulator.DynawoSimulationParameters.SolverParameters;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.xml.XMLExporter;
 
@@ -22,8 +23,6 @@ import com.powsybl.iidm.xml.XMLExporter;
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 public class DynawoXmlExporter {
-
-    private static final String DEFAULT_DYNAWO_CASE_NAME = "nrt/data/IEEE14/IEEE14_BasicTestCases/IEEE14_DisconnectLine/IEEE14.jobs";
 
     public DynawoXmlExporter() {
         this(PlatformConfig.defaultConfig());
@@ -33,19 +32,16 @@ public class DynawoXmlExporter {
         this.platformConfig = Objects.requireNonNull(platformConfig);
     }
 
-    public String export(Network network, DynawoInputProvider dynawoProvider, Path workingDir) throws IOException, XMLStreamException {
-        String dynawoJobsFile = DEFAULT_DYNAWO_CASE_NAME;
-        DynawoInputs.prepare(network, dynawoProvider, workingDir);
-        if (network != null) {
-            Path jobsFile = workingDir.resolve("dynawoModel.jobs");
-            XMLExporter xmlExporter = new XMLExporter(platformConfig);
-            xmlExporter.export(network, null, new FileDataSource(workingDir, "dynawoModel"));
-            // Warning: dynawo expects the country field in each substation element
-            dynawoJobsFile = jobsFile.toAbsolutePath().toString();
-        }
-        return dynawoJobsFile;
+    public String export(Network network, SolverParameters solverParameters, DynawoInputProvider dynawoProvider, Path workingDir) throws IOException, XMLStreamException {
+        DynawoInputs.prepare(network, solverParameters, dynawoProvider, workingDir);
+
+        Path jobsFile = workingDir.resolve("dynawoModel.jobs");
+        XMLExporter xmlExporter = new XMLExporter(platformConfig);
+        xmlExporter.export(network, null, new FileDataSource(workingDir, "dynawoModel"));
+
+        // Warning: dynawo expects the country field in each substation element
+        return jobsFile.toAbsolutePath().toString();
     }
 
     private final PlatformConfig platformConfig;
-
 }
