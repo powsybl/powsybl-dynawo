@@ -12,5 +12,5 @@ import com.powsybl.iidm.network.Network;
  * @author Luma Zamarreño <zamarrenolm at aia.es>
  */
 public interface DynawoInputsProvider {
-    DynawoInputs getDynawoInputs(Network network);
+    DynawoInputs createDynawoInputs(Network network);
 }

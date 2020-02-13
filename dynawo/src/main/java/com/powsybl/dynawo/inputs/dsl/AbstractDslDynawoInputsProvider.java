@@ -24,14 +24,14 @@ import groovy.lang.GroovyShell;
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public abstract class AbstractDynawoInputsProviderDsl implements DynawoInputsProvider {
+public abstract class AbstractDslDynawoInputsProvider implements DynawoInputsProvider {
 
     protected final GroovyCodeSource script;
 
     /**
      * Creates a Dynawo inputs model by reading DSL from a UTF-8 encoded file.
      */
-    protected AbstractDynawoInputsProviderDsl(final Path path) {
+    protected AbstractDslDynawoInputsProvider(final Path path) {
         Objects.requireNonNull(path);
         try (Reader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
             script = new GroovyCodeSource(reader, "script", GroovyShell.DEFAULT_CODE_BASE);
@@ -43,7 +43,7 @@ public abstract class AbstractDynawoInputsProviderDsl implements DynawoInputsPro
     /**
      * Creates a Dynawo inputs model by reading the DSL content from a UTF-8 encoded input stream.
      */
-    protected AbstractDynawoInputsProviderDsl(final InputStream input) {
+    protected AbstractDslDynawoInputsProvider(final InputStream input) {
         Objects.requireNonNull(input);
         script = new GroovyCodeSource(new InputStreamReader(input, StandardCharsets.UTF_8), "script", GroovyShell.DEFAULT_CODE_BASE);
     }

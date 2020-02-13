@@ -19,13 +19,6 @@ import com.powsybl.dynawo.inputs.model.crv.Curve;
  */
 public class CurvesXml implements DynawoCollectionXmlFile {
 
-    private final List<Curve> curves;
-
-    public CurvesXml(List<Curve> curves) {
-        Objects.requireNonNull(curves);
-        this.curves = curves;
-    }
-
     @Override
     public String getFilename() {
         return DynawoConstants.CRV_FILENAME;
@@ -42,10 +35,11 @@ public class CurvesXml implements DynawoCollectionXmlFile {
     }
 
     @Override
-    public void writeCollection(XMLStreamWriter writer) throws XMLStreamException {
+    public void writeCollection(XMLStreamWriter writer, List<?> curves) throws XMLStreamException {
         Objects.requireNonNull(writer);
-        for (Curve curve : curves) {
-            writeCurve(writer, curve);
+        for (Object curve : curves) {
+            assert curve instanceof Curve;
+            writeCurve(writer, (Curve) curve);
         }
     }
 

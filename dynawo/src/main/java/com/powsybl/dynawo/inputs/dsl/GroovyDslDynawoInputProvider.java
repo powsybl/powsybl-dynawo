@@ -15,18 +15,18 @@ import com.powsybl.iidm.network.Network;
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class GroovyDslDynawoInputProvider extends AbstractDynawoInputsProviderDsl {
+public class GroovyDslDynawoInputProvider extends AbstractDslDynawoInputsProvider {
 
     public GroovyDslDynawoInputProvider(final Path path) {
         super(path);
     }
 
-    public GroovyDslDynawoInputProvider(InputStream input) {
+    public GroovyDslDynawoInputProvider(final InputStream input) {
         super(input);
     }
 
     @Override
-    public DynawoInputs getDynawoInputs(Network network) {
+    public DynawoInputs createDynawoInputs(Network network) {
         return new DynawoDslLoader(script).load(network);
     }
 }

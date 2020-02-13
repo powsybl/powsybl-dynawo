@@ -53,11 +53,11 @@ public class DynawoInputsXmlExporter {
     }
 
     private static void exportDynawoFiles(DynawoInputs inputs, Path workingDir) throws IOException, XMLStreamException {
-        new JobsXml(inputs.getJobs()).write(workingDir);
-        new DynamicModelsXml(inputs.getDynamicModels()).write(workingDir);
-        new ParameterSetsXml(inputs.getParameterSets(), PAR_FILENAME).write(workingDir);
-        new ParameterSetsXml(inputs.getSolverParameterSets(), PAR_SIM_FILENAME).write(workingDir);
-        new CurvesXml(inputs.getCurves()).write(workingDir);
+        new JobsXml().write(workingDir, inputs.getJobs());
+        new DynamicModelsXml().write(workingDir, inputs.getDynamicModels());
+        new ParameterSetsXml(PAR_FILENAME).write(workingDir, inputs.getParameterSets());
+        new ParameterSetsXml(PAR_SIM_FILENAME).write(workingDir, inputs.getSolverParameterSets());
+        new CurvesXml().write(workingDir, inputs.getCurves());
     }
 
     private final PlatformConfig platformConfig;

@@ -18,6 +18,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
 import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
+import com.powsybl.dynawo.inputs.model.crv.Curve;
 import com.powsybl.dynawo.inputs.model.dyd.BlackBoxModel;
 import com.powsybl.dynawo.inputs.model.dyd.Connection;
 import com.powsybl.dynawo.inputs.model.dyd.DydComponent;
@@ -38,13 +39,6 @@ import com.powsybl.dynawo.inputs.model.dyd.UnitDynamicModel;
  */
 public class DynamicModelsXml implements DynawoCollectionXmlFile {
 
-    private final List<DynawoDynamicModel> dynamicModels;
-
-    public DynamicModelsXml(List<DynawoDynamicModel> dynamicModels) {
-        Objects.requireNonNull(dynamicModels);
-        this.dynamicModels = dynamicModels;
-    }
-
     @Override
     public String getFilename() {
         return DynawoConstants.DYD_FILENAME;
@@ -56,10 +50,11 @@ public class DynamicModelsXml implements DynawoCollectionXmlFile {
     }
 
     @Override
-    public void writeCollection(XMLStreamWriter writer) throws XMLStreamException {
+    public void writeCollection(XMLStreamWriter writer, List<?> dynamicModels) throws XMLStreamException {
         Objects.requireNonNull(writer);
-        for (DynawoDynamicModel dynamicModel : dynamicModels) {
-            writeDynamicModel(writer, dynamicModel);
+        for (Object dynamicModel : dynamicModels) {
+            assert dynamicModel instanceof DynawoDynamicModel;
+            writeDynamicModel(writer, (DynawoDynamicModel) dynamicModel);
         }
     }
 

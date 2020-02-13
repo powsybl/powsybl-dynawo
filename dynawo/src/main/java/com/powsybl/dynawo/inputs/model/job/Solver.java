@@ -20,7 +20,7 @@ public class Solver {
     public Solver(String lib, String parFile, String parId) {
         this.lib = Objects.requireNonNull(lib);
         this.parFile = Objects.requireNonNull(parFile);
-        this.parId = parId;
+        this.parId = Objects.requireNonNull(parId);
     }
 
     public String getLib() {

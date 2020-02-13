@@ -11,6 +11,7 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -25,7 +26,7 @@ interface DynawoCollectionXmlFile {
 
     String getCollectionTag();
 
-    void writeCollection(XMLStreamWriter writer) throws XMLStreamException;
+    void writeCollection(XMLStreamWriter writer, List<?> list) throws XMLStreamException;
 
     default String getNamespacePrefix() {
         return DynawoXmlConstants.DYN_PREFIX;
@@ -35,7 +36,7 @@ interface DynawoCollectionXmlFile {
         return DynawoXmlConstants.DYN_URI;
     }
 
-    default void write(Path workingDir) throws IOException, XMLStreamException {
+    default void write(Path workingDir, List<?> list) throws IOException, XMLStreamException {
         Path file = workingDir.resolve(getFilename());
         XMLOutputFactory output = XMLOutputFactory.newInstance();
         try (Writer writer = Files.newBufferedWriter(file, StandardCharsets.UTF_8)) {
@@ -46,7 +47,7 @@ interface DynawoCollectionXmlFile {
                 xmlWriter.writeStartElement(getNamespaceUri(), getCollectionTag());
                 xmlWriter.writeNamespace(getNamespacePrefix(), getNamespaceUri());
 
-                writeCollection(xmlWriter);
+                writeCollection(xmlWriter, list);
 
                 xmlWriter.writeEndElement();
                 xmlWriter.writeEndDocument();
