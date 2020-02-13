@@ -13,7 +13,6 @@ import java.util.Objects;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
-import com.powsybl.dynawo.inputs.model.dyd.DynawoDynamicModel;
 import com.powsybl.dynawo.inputs.model.par.Parameter;
 import com.powsybl.dynawo.inputs.model.par.ParameterRow;
 import com.powsybl.dynawo.inputs.model.par.ParameterSet;

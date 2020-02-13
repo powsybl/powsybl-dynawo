@@ -18,7 +18,6 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
 import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
-import com.powsybl.dynawo.inputs.model.crv.Curve;
 import com.powsybl.dynawo.inputs.model.dyd.BlackBoxModel;
 import com.powsybl.dynawo.inputs.model.dyd.Connection;
 import com.powsybl.dynawo.inputs.model.dyd.DydComponent;
