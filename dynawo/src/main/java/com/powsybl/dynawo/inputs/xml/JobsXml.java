@@ -57,6 +57,7 @@ public class JobsXml implements DynawoCollectionXmlFile {
     }
 
     private static void writeSolver(XMLStreamWriter writer, Solver solver) throws XMLStreamException {
+        Objects.requireNonNull(solver);
         writer.writeEmptyElement(DYN_URI, "solver");
         writer.writeAttribute("lib", solver.getLib());
         writer.writeAttribute("parFile", solver.getParFile());
