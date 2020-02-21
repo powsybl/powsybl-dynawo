@@ -1,10 +1,9 @@
 # Maven projects
-/dynawo/target
+target/
 
 /.metadata/
 /.recommenders/
 /.sonarlint/
-/target/
 
 # IntelliJ
 /.idea

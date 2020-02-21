@@ -12,6 +12,20 @@ import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 
+import com.powsybl.dynawo.inputs.model.dyd.BlackBoxModel;
+import com.powsybl.dynawo.inputs.model.dyd.Connection;
+import com.powsybl.dynawo.inputs.model.dyd.DydComponent;
+import com.powsybl.dynawo.inputs.model.dyd.DydConnection;
+import com.powsybl.dynawo.inputs.model.dyd.InitConnection;
+import com.powsybl.dynawo.inputs.model.dyd.MacroConnection;
+import com.powsybl.dynawo.inputs.model.dyd.MacroConnector;
+import com.powsybl.dynawo.inputs.model.dyd.MacroStaticReference;
+import com.powsybl.dynawo.inputs.model.dyd.ModelTemplate;
+import com.powsybl.dynawo.inputs.model.dyd.ModelTemplateExpansion;
+import com.powsybl.dynawo.inputs.model.dyd.ModelicaModel;
+import com.powsybl.dynawo.inputs.model.dyd.StaticRef;
+import com.powsybl.dynawo.inputs.model.dyd.UnitDynamicModel;
+
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */

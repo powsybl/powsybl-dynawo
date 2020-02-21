@@ -8,6 +8,13 @@ package com.powsybl.dynawo.job;
 
 import org.junit.Test;
 
+import com.powsybl.dynawo.inputs.model.job.Job;
+import com.powsybl.dynawo.inputs.model.job.Modeler;
+import com.powsybl.dynawo.inputs.model.job.Outputs;
+import com.powsybl.dynawo.inputs.model.job.Simulation;
+import com.powsybl.dynawo.inputs.model.job.Solver;
+import com.powsybl.dynawo.inputs.model.job.LogAppender;
+
 import static org.junit.Assert.*;
 
 /**
@@ -18,14 +25,14 @@ public class DynawoJobTest {
     @Test
     public void test() {
 
-        DynawoSolver solver = new DynawoSolver("lib", "file", "1");
-        DynawoModeler modeler = new DynawoModeler("compile", "iidm", "parameters", "1", "dyd");
-        DynawoSimulation simulation = new DynawoSimulation(0, 1, false, 1e-6);
+        Solver solver = new Solver("lib", "file", "1");
+        Modeler modeler = new Modeler("compile", "iidm", "parameters", "1", "dyd");
+        Simulation simulation = new Simulation(0, 1, false, 1e-6);
         LogAppender appender = new LogAppender("tag", "file", "lvlFilter");
-        DynawoOutputs outputs = new DynawoOutputs("directory", "curve");
+        Outputs outputs = new Outputs("directory", "curve");
         outputs.add(appender);
 
-        DynawoJob job = new DynawoJob("job", solver, modeler, simulation, outputs);
+        Job job = new Job("job", solver, modeler, simulation, outputs);
 
         assertEquals("job", job.getName());
         assertNotNull(job.getSolver());
@@ -35,8 +42,8 @@ public class DynawoJobTest {
         assertFalse(job.getOutputs().getAppenders().isEmpty());
 
         assertEquals("lib", job.getSolver().getLib());
-        assertEquals("file", job.getSolver().getFile());
-        assertEquals("1", job.getSolver().getId());
+        assertEquals("file", job.getSolver().getParFile());
+        assertEquals("1", job.getSolver().getParId());
 
         assertEquals("compile", job.getModeler().getCompileDir());
         assertNull(job.getModeler().getPreCompiledModelsDir());

@@ -10,6 +10,11 @@ import java.util.Arrays;
 
 import org.junit.Test;
 
+import com.powsybl.dynawo.inputs.model.par.Parameter;
+import com.powsybl.dynawo.inputs.model.par.ParameterRow;
+import com.powsybl.dynawo.inputs.model.par.ParameterSet;
+import com.powsybl.dynawo.inputs.model.par.ParameterTable;
+
 import static org.junit.Assert.*;
 
 /**
@@ -20,14 +25,14 @@ public class DynawoParameterSetTest {
     @Test
     public void test() {
 
-        DynawoParameterSet parameterSet = new DynawoParameterSet("1");
+        ParameterSet parameterSet = new ParameterSet("1");
 
-        DynawoParameter parameter1 = new DynawoParameter("name1", "type1", "value1");
-        DynawoParameter parameter2 = new DynawoParameter("name2", "type2", "origData2", "origName2", "componentId2");
+        Parameter parameter1 = new Parameter("name1", "type1", "value1");
+        Parameter parameter2 = new Parameter("name2", "type2", "origData2", "origName2", "componentId2");
         parameterSet.addParameters(Arrays.asList(parameter1, parameter2));
 
-        DynawoParameterTable parameterTable = new DynawoParameterTable("type", "name");
-        DynawoParameterRow row = new DynawoParameterRow(0, 0, "value");
+        ParameterTable parameterTable = new ParameterTable("type", "name");
+        ParameterRow row = new ParameterRow(0, 0, "value");
         parameterTable.add(row);
         parameterSet.add(parameterTable);
 

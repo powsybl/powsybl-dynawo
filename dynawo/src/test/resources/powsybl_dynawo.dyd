@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
+    <dyn:blackBoxModel id="bbid" lib="bblib" parFile="parametersFile" parId="1" staticId="staticId">
+        <dyn:staticRef var="var1" staticVar="staticVar1"/>
+        <dyn:staticRef var="var2" staticVar="staticVar2"/>
+        <dyn:macroStaticRef id="macroStaticid"/>
+    </dyn:blackBoxModel>
+    <dyn:modelicaModel id="mid">
+        <dyn:unitDynamicModel id="udmid" name="name" initName="initName" parFile="parFile" parId="1" moFile="moFile"/>
+        <dyn:connect id1="id1" var1="var1" id2="id2" var2="var2"/>
+        <dyn:initConnect id1="id1" var1="var1" id2="id2" var2="var2"/>
+        <dyn:staticRef var="var1" staticVar="staticVar1"/>
+        <dyn:staticRef var="var2" staticVar="staticVar2"/>
+        <dyn:macroStaticRef id="macroStaticid"/>
+    </dyn:modelicaModel>
+    <dyn:modelTemplate id="mtid">
+        <dyn:unitDynamicModel id="udmid" name="name" initName="initName" parFile="parFile" parId="1" moFile="moFile"/>
+        <dyn:connect id1="id1" var1="var1" id2="id2" var2="var2"/>
+        <dyn:initConnect id1="id1" var1="var1" id2="id2" var2="var2"/>
+    </dyn:modelTemplate>
+    <dyn:modelTemplateExpansion id="mtid" templateId="templateId" parFile="parametersFile" parId="1"/>
+    <dyn:connect id1="id1" var1="var1" id2="id2" var2="var2"/>
+    <dyn:initConnect id1="id1" var1="var1" id2="id2" var2="var2"/>
+    <dyn:macroConnector id="mcid">
+        <dyn:connect var1="var1" var2="var2"/>
+    </dyn:macroConnector>
+    <dyn:macroStaticReference id="msrid">
+        <dyn:staticRef var="var" staticVar="staticVar"/>
+    </dyn:macroStaticReference>
+    <dyn:macroConnect connector="connector" id1="id1" id2="id2"/>
+</dyn:dynamicModelsArchitecture>

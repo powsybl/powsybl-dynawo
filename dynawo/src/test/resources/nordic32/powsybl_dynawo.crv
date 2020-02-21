@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<curvesInput xmlns="http://www.rte-france.com/dynawo">
+    <curve model="NETWORK" variable="_N1011____TN_Upu_value"/>
+    <curve model="_G10______SM" variable="generator_omegaPu"/>
+    <curve model="_G10______SM" variable="generator_PGen"/>
+    <curve model="_G10______SM" variable="generator_QGen"/>
+    <curve model="_G10______SM" variable="generator_UStatorPu"/>
+    <curve model="_G10______SM" variable="voltageRegulator_UcEfdPu"/>
+    <curve model="_G10______SM" variable="voltageRegulator_EfdPu"/>
+    <curve model="_N1011____EC" variable="load_PPu"/>
+    <curve model="_N1011____EC" variable="load_QPu"/>
+</curvesInput>

@@ -20,7 +20,8 @@ import com.powsybl.computation.local.LocalComputationConfig;
 import com.powsybl.computation.local.LocalComputationManager;
 import com.powsybl.dynamicsimulation.DynamicSimulation;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
-import com.powsybl.dynawo.simulator.results.DynawoResults;
+import com.powsybl.dynawo.results.CurvesCsv;
+import com.powsybl.dynawo.results.DynawoResults;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.NetworkFactory;
 import com.powsybl.triplestore.api.TripleStoreFactory;
@@ -59,7 +60,7 @@ public class DynawoSimulationTester {
         DynawoResults result = (DynawoResults) runner.run(network, computationManager, simulationParameters);
         if (mockResults) {
             result = new DynawoResults(true, null);
-            result.parseCsv(getClass().getResourceAsStream("/nordic32/curves.csv"));
+            result.setTimeSeries(CurvesCsv.parse(getClass().getResourceAsStream("/nordic32/curves.csv")));
         }
         return result;
     }

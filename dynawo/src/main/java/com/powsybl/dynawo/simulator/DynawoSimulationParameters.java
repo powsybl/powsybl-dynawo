@@ -11,7 +11,8 @@ import java.util.Objects;
 import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.extensions.AbstractExtension;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
-import com.powsybl.dynawo.DynawoInputProvider;
+import com.powsybl.dynawo.inputs.model.DynawoInputs;
+import com.powsybl.dynawo.inputs.model.DynawoInputsProvider;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -97,11 +98,11 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
         this(solverParameters, dslFilename, null);
     }
 
-    public DynawoSimulationParameters(SolverParameters solverParameters, DynawoInputProvider dynawoInputProvider) {
+    public DynawoSimulationParameters(SolverParameters solverParameters, DynawoInputsProvider dynawoInputProvider) {
         this(solverParameters, null, dynawoInputProvider);
     }
 
-    private DynawoSimulationParameters(SolverParameters solverParameters, String dslFilename, DynawoInputProvider dynawoInputProvider) {
+    private DynawoSimulationParameters(SolverParameters solverParameters, String dslFilename, DynawoInputsProvider dynawoInputProvider) {
         this.solverParameters = Objects.requireNonNull(solverParameters);
         this.dslFilename = dslFilename;
         this.dynawoInputProvider = dynawoInputProvider;
@@ -121,12 +122,12 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
         return this;
     }
 
-    public DynawoInputProvider getDynawoInputProvider() {
-        return dynawoInputProvider;
+    public DynawoInputs getDynawoInputs() {
+        return dynawoInputs;
     }
 
-    public DynawoSimulationParameters setDynawoInputProvider(DynawoInputProvider dynawoInputProvider) {
-        this.dynawoInputProvider = dynawoInputProvider;
+    public DynawoSimulationParameters setDynawoInputs(DynawoInputs dynawoInputs) {
+        this.dynawoInputs = dynawoInputs;
         return this;
     }
 
@@ -142,6 +143,8 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
     private SolverParameters solverParameters;
     private String dslFilename;
 
-    private DynawoInputProvider dynawoInputProvider;
+    private DynawoInputsProvider dynawoInputProvider;
 
+    // FIXME Used only for initial testing, should be removed
+    private DynawoInputs dynawoInputs;
 }

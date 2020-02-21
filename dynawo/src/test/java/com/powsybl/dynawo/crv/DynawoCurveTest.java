@@ -10,6 +10,8 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import com.powsybl.dynawo.inputs.model.crv.Curve;
+
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
@@ -18,7 +20,7 @@ public class DynawoCurveTest {
     @Test
     public void test() {
 
-        DynawoCurve curve = new DynawoCurve("model", "variable");
+        Curve curve = new Curve("model", "variable");
 
         assertEquals("model", curve.getModel());
         assertEquals("variable", curve.getVariable());
