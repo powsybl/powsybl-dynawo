@@ -138,19 +138,21 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
             if (j.getSolver() == null) {
                 String lib;
                 List<ParameterSet> parameterSets = dynawoParameters.getDynawoInputs().getSolverParameterSets();
+                ParameterSet parameterSet = null;
                 String parFile = DynawoConstants.PAR_SIM_FILENAME;
                 String parId = generateSolverParameterSetId(parameterSets);
                 switch (dynawoParameters.getSolverParameters().getType()) {
                     case IDA:
                         lib = "dynawo_SolverIDA";
-                        parameterSets.add(new ParameterSet(parId).addParameters(completeIDASolverParameters((SolverIDAParameters) dynawoParameters.getSolverParameters())));
+                        parameterSet = new ParameterSet(parId).addParameters(completeIDASolverParameters((SolverIDAParameters) dynawoParameters.getSolverParameters()));
                         break;
                     case SIM:
                     default:
                         lib = "dynawo_SolverSIM";
-                        parameterSets.add(new ParameterSet(parId).addParameters(completeSIMSolverParameters((SolverSIMParameters) dynawoParameters.getSolverParameters())));
+                        parameterSet = new ParameterSet(parId).addParameters(completeSIMSolverParameters((SolverSIMParameters) dynawoParameters.getSolverParameters()));
                         break;
                 }
+                dynawoParameters.getDynawoInputs().addSolverParameterSet(parameterSet);
                 j.setSolver(new Solver(lib, parFile, parId));
             }
         });
