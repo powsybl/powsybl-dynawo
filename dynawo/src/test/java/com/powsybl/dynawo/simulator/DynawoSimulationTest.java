@@ -49,10 +49,30 @@ import com.powsybl.iidm.network.Network;
 public class DynawoSimulationTest {
 
     @Test
-    public void test() throws Exception {
+    public void testWithIDASolver() throws Exception {
         try (FileSystem fs = Jimfs.newFileSystem(Configuration.unix())) {
 
-            PlatformConfig platformConfig = configure(fs);
+            PlatformConfig platformConfig = configure(fs, SolverType.IDA);
+            DynawoSimulationTester tester = new DynawoSimulationTester(true);
+            Network network = tester.convert(platformConfig, Cim14SmallCasesCatalog.nordic32());
+            DynawoSimulationParameters dynawoSimulationParameters = new DynawoSimulationParameters();
+            DynawoSimulationParameters.load(dynawoSimulationParameters, platformConfig);
+            dynawoSimulationParameters.setDynawoInputs(buildInputs(network));
+            DynawoResults result = tester.simulate(network, dynawoSimulationParameters, platformConfig);
+            assertTrue(result.isOk());
+            assertNull(result.getLogs());
+
+            // check final voltage of bus close to the event
+            int index = result.getTimeSeries().getNames().indexOf("NETWORK__N1011____TN_Upu_value");
+            assertEquals(result.getTimeSeries().getValues().get(30.0d).get(index), new Double(0.931558));
+        }
+    }
+
+    @Test
+    public void testWithSIMSolver() throws Exception {
+        try (FileSystem fs = Jimfs.newFileSystem(Configuration.unix())) {
+
+            PlatformConfig platformConfig = configure(fs, SolverType.SIM);
             DynawoSimulationTester tester = new DynawoSimulationTester(true);
             Network network = tester.convert(platformConfig, Cim14SmallCasesCatalog.nordic32());
             DynawoSimulationParameters dynawoSimulationParameters = new DynawoSimulationParameters();
@@ -72,7 +92,7 @@ public class DynawoSimulationTest {
     public void testGroovy() throws Exception {
         try (FileSystem fs = Jimfs.newFileSystem(Configuration.unix())) {
 
-            PlatformConfig platformConfig = configure(fs);
+            PlatformConfig platformConfig = configure(fs, SolverType.IDA);
             DynawoSimulationTester tester = new DynawoSimulationTester(true);
             Network network = tester.convert(platformConfig, Cim14SmallCasesCatalog.nordic32());
             String dslFile = "/tmp/nordic32.groovy";
@@ -88,10 +108,7 @@ public class DynawoSimulationTest {
         }
     }
 
-    private PlatformConfig configure(FileSystem fs) throws IOException {
-        SolverType solverType = SolverType.IDA;
-        int idaOrder = 2;
-
+    private PlatformConfig configure(FileSystem fs, SolverType solverType) throws IOException {
         InMemoryPlatformConfig platformConfig = new InMemoryPlatformConfig(fs);
         Files.createDirectories(fs.getPath("/tmp"));
         MapModuleConfig moduleConfig = platformConfig.createModuleConfig("dynawo");
@@ -103,7 +120,6 @@ public class DynawoSimulationTest {
         moduleConfig.setStringProperty("tmpDir", "/tmp");
         moduleConfig = platformConfig.createModuleConfig("dynawo-simulation-default-parameters");
         moduleConfig.setStringProperty("solver", solverType.toString());
-        moduleConfig.setStringProperty("IDAorder", Integer.toString(idaOrder));
         return platformConfig;
     }
 
