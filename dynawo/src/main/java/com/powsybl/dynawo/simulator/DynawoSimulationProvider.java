@@ -120,7 +120,7 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
             }
             Path dslFile = Paths.get(dynawoParameters.getDslFilename());
             DynawoInputsProvider in = new GroovyDslDynawoInputProviderFactory().create(dslFile);
-            inputs = in.getDynawoInputs(network);
+            inputs = in.createDynawoInputs(network);
         }
 
         completeDynawoInputsFromDynawoParameters(inputs, dynawoParameters);

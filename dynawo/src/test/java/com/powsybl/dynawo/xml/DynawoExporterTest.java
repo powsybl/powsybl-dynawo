@@ -58,7 +58,7 @@ public class DynawoExporterTest extends AbstractConverterTest {
         network = importNetwork(Cim14SmallCasesCatalog.nordic32());
         network.setCaseDate(DateTime.parse("2019-09-23T11:06:12.313+02:00"));
         dslFile = getClass().getResourceAsStream("/nordic32/nordic32.groovy");
-        exporter.export(new GroovyDslDynawoInputProvider(dslFile).getDynawoInputs(network), tmpDir);
+        exporter.export(new GroovyDslDynawoInputProvider(dslFile).createDynawoInputs(network), tmpDir);
         Files.walk(tmpDir).forEach(file -> {
             if (Files.isRegularFile(file)) {
                 try (InputStream is = Files.newInputStream(file)) {
@@ -72,31 +72,31 @@ public class DynawoExporterTest extends AbstractConverterTest {
 
     @Test
     public void testJob() throws IOException, XMLStreamException {
-        exporter.export(new GroovyDslDynawoInputProvider(dslFile).getDynawoInputs(network), tmpDir);
+        exporter.export(new GroovyDslDynawoInputProvider(dslFile).createDynawoInputs(network), tmpDir);
         compareWithExpected(DynawoConstants.JOBS_FILENAME);
     }
 
     @Test
     public void testCurve() throws IOException, XMLStreamException {
-        exporter.export(new GroovyDslDynawoInputProvider(dslFile).getDynawoInputs(network), tmpDir);
+        exporter.export(new GroovyDslDynawoInputProvider(dslFile).createDynawoInputs(network), tmpDir);
         compareWithExpected(DynawoConstants.CRV_FILENAME);
     }
 
     @Test
     public void testDynamicModel() throws IOException, XMLStreamException {
-        exporter.export(new GroovyDslDynawoInputProvider(dslFile).getDynawoInputs(network), tmpDir);
+        exporter.export(new GroovyDslDynawoInputProvider(dslFile).createDynawoInputs(network), tmpDir);
         compareWithExpected(DynawoConstants.DYD_FILENAME);
     }
 
     @Test
     public void testParameterSet() throws IOException, XMLStreamException {
-        exporter.export(new GroovyDslDynawoInputProvider(dslFile).getDynawoInputs(network), tmpDir);
+        exporter.export(new GroovyDslDynawoInputProvider(dslFile).createDynawoInputs(network), tmpDir);
         compareWithExpected(DynawoConstants.PAR_FILENAME);
     }
 
     @Test
     public void testSolverParameterSet() throws IOException, XMLStreamException {
-        exporter.export(new GroovyDslDynawoInputProvider(dslFile).getDynawoInputs(network), tmpDir);
+        exporter.export(new GroovyDslDynawoInputProvider(dslFile).createDynawoInputs(network), tmpDir);
         compareWithExpected(DynawoConstants.PAR_SIM_FILENAME);
     }
 

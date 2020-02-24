@@ -23,14 +23,10 @@ import com.powsybl.dynawo.inputs.model.par.ParameterTable;
  */
 public class ParameterSetsXml implements DynawoCollectionXmlFile {
 
-    private final List<ParameterSet> parameterSets;
     private final String filename;
 
-    public ParameterSetsXml(List<ParameterSet> parameterSets, String filename) {
-        Objects.requireNonNull(parameterSets);
-        Objects.requireNonNull(filename);
-        this.parameterSets = parameterSets;
-        this.filename = filename;
+    public ParameterSetsXml(String filename) {
+        this.filename = Objects.requireNonNull(filename);
     }
 
     @Override
@@ -49,10 +45,11 @@ public class ParameterSetsXml implements DynawoCollectionXmlFile {
     }
 
     @Override
-    public void writeCollection(XMLStreamWriter writer) throws XMLStreamException {
+    public void writeCollection(XMLStreamWriter writer, List<?> parameterSets) throws XMLStreamException {
         Objects.requireNonNull(writer);
-        for (ParameterSet parameterSet : parameterSets) {
-            writeParameterSet(writer, parameterSet);
+        for (Object parameterSet : parameterSets) {
+            assert parameterSet instanceof ParameterSet;
+            writeParameterSet(writer, (ParameterSet) parameterSet);
         }
     }
 

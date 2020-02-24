@@ -26,13 +26,6 @@ import com.powsybl.dynawo.inputs.model.job.LogAppender;
  */
 public class JobsXml implements DynawoCollectionXmlFile {
 
-    private final List<Job> jobs;
-
-    JobsXml(List<Job> jobs) {
-        Objects.requireNonNull(jobs);
-        this.jobs = jobs;
-    }
-
     @Override
     public String getFilename() {
         return DynawoConstants.JOBS_FILENAME;
@@ -44,10 +37,12 @@ public class JobsXml implements DynawoCollectionXmlFile {
     }
 
     @Override
-    public void writeCollection(XMLStreamWriter writer) throws XMLStreamException {
+    public void writeCollection(XMLStreamWriter writer, List<?> jobs) throws XMLStreamException {
         Objects.requireNonNull(writer);
-        for (Job job : jobs) {
-            writeJob(writer, job);
+        Objects.requireNonNull(jobs);
+        for (Object job : jobs) {
+            assert job instanceof Job;
+            writeJob(writer, (Job) job);
         }
     }
 
@@ -62,6 +57,7 @@ public class JobsXml implements DynawoCollectionXmlFile {
     }
 
     private static void writeSolver(XMLStreamWriter writer, Solver solver) throws XMLStreamException {
+        Objects.requireNonNull(solver);
         writer.writeEmptyElement(DYN_URI, "solver");
         writer.writeAttribute("lib", solver.getLib());
         writer.writeAttribute("parFile", solver.getParFile());

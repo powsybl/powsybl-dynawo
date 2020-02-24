@@ -30,7 +30,7 @@ public class DynawoInputs {
     private final List<ParameterSet> solverParameterSets = new ArrayList<>();
 
     public DynawoInputs(Network network) {
-        this.network = network;
+        this.network = Objects.requireNonNull(network);
     }
 
     public Network getNetwork() {
