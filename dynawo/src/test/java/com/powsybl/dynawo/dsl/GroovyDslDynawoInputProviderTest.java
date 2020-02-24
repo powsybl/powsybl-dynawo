@@ -338,8 +338,7 @@ public class GroovyDslDynawoInputProviderTest {
             "    }",
             "}");
 
-        List<ParameterSet> parameterSets = new GroovyDslDynawoInputProvider(dslFile)
-            .createDynawoInputs(network).getSolverParameterSets();
+        List<ParameterSet> parameterSets = new GroovyDslDynawoInputProvider(dslFile).createDynawoInputs(network).getSolverParameterSets();
         assertEquals(1, parameterSets.size());
         ParameterSet parameterSet = parameterSets.get(0);
         assertEquals("1", parameterSet.getId());

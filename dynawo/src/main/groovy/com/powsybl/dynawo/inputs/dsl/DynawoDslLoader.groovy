@@ -41,35 +41,35 @@ class DynawoDslLoader extends DslLoader {
         super(script)
     }
 
-    static void loadDsl(Binding binding, Network network, DynawoInputs dynawoInputs, DynawoDslLoaderObserver observer) {
+    static void loadDsl(Binding binding, Network network, DynawoDslHandler handler, DynawoDslLoaderObserver observer) {
 
         // set base network
         binding.setVariable("network", network)
 
         // jobs
-        DynawoJobDslLoader.loadDsl(binding, network, {j -> dynawoInputs.addJob(j)}, observer)
+        DynawoJobDslLoader.loadDsl(binding, network, {j -> handler.addJob(j)}, observer)
         // curves
-        DynawoCurveDslLoader.loadDsl(binding, network, {c -> dynawoInputs.addCurve(c)}, observer)
+        DynawoCurveDslLoader.loadDsl(binding, network, {c -> handler.addCurve(c)}, observer)
         // dynamicModels
-        DynawoDynamicModelDslLoader.loadDsl(binding, network, {d -> dynawoInputs.addDynamicModel(d)}, observer)
+        DynawoDynamicModelDslLoader.loadDsl(binding, network, {d -> handler.addDynamicModel(d)}, observer)
         // parameterSets
-        DynawoParameterSetDslLoader.loadDsl(binding, network, {p -> dynawoInputs.addParameterSet(p)}, observer)
+        DynawoParameterSetDslLoader.loadDsl(binding, network, {p -> handler.addParameterSet(p)}, observer)
         // solverParameterSets
-        DynawoSolverParameterSetDslLoader.loadDsl(binding, network, {s -> dynawoInputs.addSolverParameterSet(s)}, observer)
+        DynawoSolverParameterSetDslLoader.loadDsl(binding, network, {s -> handler.addSolverParameterSet(s)}, observer)
     }
 
     DynawoInputs load(Network network) {
         load(network, null)
     }
 
-    void load(Network network, DynawoInputs dynawoInputs, DynawoDslLoaderObserver observer) {
+    void load(Network network, DynawoDslHandler handler, DynawoDslLoaderObserver observer) {
 
         LOGGER.debug("Loading DSL '{}'", dslSrc.getName())
         observer?.begin(dslSrc.getName())
 
         Binding binding = new Binding()
 
-        loadDsl(binding, network, dynawoInputs, observer)
+        loadDsl(binding, network, handler, observer)
         try {
 
             def shell = createShell(binding)
@@ -85,7 +85,36 @@ class DynawoDslLoader extends DslLoader {
     DynawoInputs load(Network network, DynawoDslLoaderObserver observer) {
         DynawoInputs dynawoInputs = new DynawoInputs(network)
 
-        load(network, dynawoInputs, observer)
+        //Handler to create an DynawoInputs instance
+        DynawoDslHandler dynawoInputsBuilder = new DynawoDslHandler() {
+
+            @Override
+            void addJob(Job job) {
+                dynawoInputs.addJob(job)
+            }
+
+            @Override
+            void addCurve(Curve curve) {
+                dynawoInputs.addCurve(curve)
+            }
+
+            @Override
+            void addDynamicModel(DynawoDynamicModel dynamicModel) {
+                dynawoInputs.addDynamicModel(dynamicModel)
+            }
+
+            @Override
+            void addParameterSet(ParameterSet parameterSet) {
+                dynawoInputs.addParameterSet(parameterSet)
+            }
+
+            @Override
+            void addSolverParameterSet(ParameterSet solverParameterSet) {
+                dynawoInputs.addSolverParameterSet(solverParameterSet)
+            }
+        }
+
+        load(network, dynawoInputsBuilder, observer)
 
         dynawoInputs
     }

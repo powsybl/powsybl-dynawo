@@ -29,4 +29,5 @@ public class GroovyDslDynawoInputProvider extends AbstractDslDynawoInputsProvide
     public DynawoInputs createDynawoInputs(Network network) {
         return new DynawoDslLoader(script).load(network);
     }
+
 }

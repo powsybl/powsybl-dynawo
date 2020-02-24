@@ -17,12 +17,12 @@ public class Parameter {
 
     private final String name;
     private final String type;
-    private String value;
+    private Object value;
     private String origName;
     private String origData;
     private String componentId;
 
-    public Parameter(String name, String type, String value) {
+    public Parameter(String name, String type, Object value) {
         this.reference = false;
         this.name = Objects.requireNonNull(name);
         this.type = Objects.requireNonNull(type);
@@ -54,7 +54,7 @@ public class Parameter {
         return type;
     }
 
-    public String getValue() {
+    public Object getValue() {
         return value;
     }
 

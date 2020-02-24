@@ -20,7 +20,6 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
@@ -33,16 +32,15 @@ import com.powsybl.dynawo.inputs.model.DynawoParameterType;
 import com.powsybl.dynawo.inputs.model.crv.Curve;
 import com.powsybl.dynawo.inputs.model.dyd.BlackBoxModel;
 import com.powsybl.dynawo.inputs.model.dyd.Connection;
-import com.powsybl.dynawo.inputs.model.dyd.DynawoDynamicModel;
 import com.powsybl.dynawo.inputs.model.job.Job;
 import com.powsybl.dynawo.inputs.model.job.LogAppender;
 import com.powsybl.dynawo.inputs.model.job.Modeler;
 import com.powsybl.dynawo.inputs.model.job.Outputs;
 import com.powsybl.dynawo.inputs.model.job.Simulation;
-import com.powsybl.dynawo.inputs.model.job.Solver;
 import com.powsybl.dynawo.inputs.model.par.Parameter;
 import com.powsybl.dynawo.inputs.model.par.ParameterSet;
 import com.powsybl.dynawo.results.DynawoResults;
+import com.powsybl.dynawo.simulator.DynawoSimulationParameters.SolverType;
 import com.powsybl.iidm.network.Network;
 
 /**
@@ -51,14 +49,35 @@ import com.powsybl.iidm.network.Network;
 public class DynawoSimulationTest {
 
     @Test
-    public void test() throws Exception {
+    public void testWithIDASolver() throws Exception {
         try (FileSystem fs = Jimfs.newFileSystem(Configuration.unix())) {
 
-            PlatformConfig platformConfig = configure(fs);
+            PlatformConfig platformConfig = configure(fs, SolverType.IDA);
             DynawoSimulationTester tester = new DynawoSimulationTester(true);
             Network network = tester.convert(platformConfig, Cim14SmallCasesCatalog.nordic32());
-            DynawoSimulationParameters dynawoSimulationParameters = new DynawoSimulationParameters()
-                .setDynawoInputs(buildInputs(network));
+            DynawoSimulationParameters dynawoSimulationParameters = new DynawoSimulationParameters();
+            DynawoSimulationParameters.load(dynawoSimulationParameters, platformConfig);
+            dynawoSimulationParameters.setDynawoInputs(buildInputs(network));
+            DynawoResults result = tester.simulate(network, dynawoSimulationParameters, platformConfig);
+            assertTrue(result.isOk());
+            assertNull(result.getLogs());
+
+            // check final voltage of bus close to the event
+            int index = result.getTimeSeries().getNames().indexOf("NETWORK__N1011____TN_Upu_value");
+            assertEquals(result.getTimeSeries().getValues().get(30.0d).get(index), new Double(0.931558));
+        }
+    }
+
+    @Test
+    public void testWithSIMSolver() throws Exception {
+        try (FileSystem fs = Jimfs.newFileSystem(Configuration.unix())) {
+
+            PlatformConfig platformConfig = configure(fs, SolverType.SIM);
+            DynawoSimulationTester tester = new DynawoSimulationTester(true);
+            Network network = tester.convert(platformConfig, Cim14SmallCasesCatalog.nordic32());
+            DynawoSimulationParameters dynawoSimulationParameters = new DynawoSimulationParameters();
+            DynawoSimulationParameters.load(dynawoSimulationParameters, platformConfig);
+            dynawoSimulationParameters.setDynawoInputs(buildInputs(network));
             DynawoResults result = tester.simulate(network, dynawoSimulationParameters, platformConfig);
             assertTrue(result.isOk());
             assertNull(result.getLogs());
@@ -73,7 +92,7 @@ public class DynawoSimulationTest {
     public void testGroovy() throws Exception {
         try (FileSystem fs = Jimfs.newFileSystem(Configuration.unix())) {
 
-            PlatformConfig platformConfig = configure(fs);
+            PlatformConfig platformConfig = configure(fs, SolverType.IDA);
             DynawoSimulationTester tester = new DynawoSimulationTester(true);
             Network network = tester.convert(platformConfig, Cim14SmallCasesCatalog.nordic32());
             String dslFile = "/tmp/nordic32.groovy";
@@ -89,7 +108,7 @@ public class DynawoSimulationTest {
         }
     }
 
-    private PlatformConfig configure(FileSystem fs) throws IOException {
+    private PlatformConfig configure(FileSystem fs, SolverType solverType) throws IOException {
         InMemoryPlatformConfig platformConfig = new InMemoryPlatformConfig(fs);
         Files.createDirectories(fs.getPath("/tmp"));
         MapModuleConfig moduleConfig = platformConfig.createModuleConfig("dynawo");
@@ -99,15 +118,16 @@ public class DynawoSimulationTest {
         moduleConfig.setStringProperty("iidm.export.xml.extensions", "null");
         moduleConfig = platformConfig.createModuleConfig("computation-local");
         moduleConfig.setStringProperty("tmpDir", "/tmp");
+        moduleConfig = platformConfig.createModuleConfig("dynawo-simulation-default-parameters");
+        moduleConfig.setStringProperty("solver", solverType.toString());
         return platformConfig;
     }
 
     private DynawoInputs buildInputs(Network network) {
 
-        DynawoInputs dynawoInputs = Mockito.mock(DynawoInputs.class);
+        DynawoInputs dynawoInputs = new DynawoInputs(network);
 
         // Job file
-        Solver solver = new Solver("dynawo_SolverIDA", "solvers.par", "2");
         Modeler modeler = new Modeler("outputs/compilation", "powsybl_network.xiidm", "powsybl_dynawo.par", "1",
             "powsybl_dynawo.dyd");
         Simulation simulation = new Simulation(0, 30, false, 1e-6);
@@ -115,26 +135,11 @@ public class DynawoSimulationTest {
         outputs.add(new LogAppender("", "dynawo.log", "DEBUG"));
         outputs.add(new LogAppender("COMPILE", "dynawoCompiler.log", "DEBUG"));
         outputs.add(new LogAppender("MODELER", "dynawoModeler.log", "DEBUG"));
-        Job job = new Job("Nordic 32 - Disconnect Line", solver, modeler, simulation, outputs);
-        Mockito.when(dynawoInputs.getJobs()).thenReturn(Collections.singletonList(job));
-
-        // Solvers file
-        List<Parameter> parameters = new ArrayList<>();
-        parameters.add(new Parameter("order", DynawoParameterType.INT.getValue(), "2"));
-        parameters.add(new Parameter("initStep", DynawoParameterType.DOUBLE.getValue(), "0.000001"));
-        parameters.add(new Parameter("minStep", DynawoParameterType.DOUBLE.getValue(), "0.000001"));
-        parameters.add(new Parameter("maxStep", DynawoParameterType.DOUBLE.getValue(), "10"));
-        parameters.add(new Parameter("absAccuracy", DynawoParameterType.DOUBLE.getValue(), "1e-4"));
-        parameters.add(new Parameter("relAccuracy", DynawoParameterType.DOUBLE.getValue(), "1e-4"));
-        ParameterSet solverParams = new ParameterSet("2");
-        solverParams.addParameters(Collections.unmodifiableList(parameters));
-        Mockito.when(dynawoInputs.getSolverParameterSets())
-            .thenReturn(Collections.singletonList(solverParams));
+        dynawoInputs.addJob(new Job("Nordic 32 - Disconnect Line", null, modeler, simulation, outputs));
 
         // Parameters file
-        List<ParameterSet> parameterSets = new ArrayList<>();
         // Global param
-        parameters = new ArrayList<>();
+        List<Parameter> parameters = new ArrayList<>();
         parameters.add(new Parameter("capacitor_no_reclosing_delay", DynawoParameterType.DOUBLE.getValue(), "300"));
         parameters.add(
             new Parameter("dangling_line_currentLimit_maxTimeOperation", DynawoParameterType.DOUBLE.getValue(), "90"));
@@ -161,7 +166,7 @@ public class DynawoSimulationTest {
             .add(new Parameter("transformer_tolV", DynawoParameterType.DOUBLE.getValue(), "0.014999999700000001"));
         ParameterSet parameterSet = new ParameterSet("1");
         parameterSet.addParameters(Collections.unmodifiableList(parameters));
-        parameterSets.add(parameterSet);
+        dynawoInputs.addParameterSet(parameterSet);
 
         // Omega Ref param
         parameters = new ArrayList<>();
@@ -172,7 +177,7 @@ public class DynawoSimulationTest {
         }
         parameterSet = new ParameterSet("2");
         parameterSet.addParameters(Collections.unmodifiableList(parameters));
-        parameterSets.add(parameterSet);
+        dynawoInputs.addParameterSet(parameterSet);
 
         // Load param
         parameters = new ArrayList<>();
@@ -188,7 +193,7 @@ public class DynawoSimulationTest {
             DynawoParameterType.IIDM.getValue(), "angle_pu"));
         parameterSet = new ParameterSet("3");
         parameterSet.addParameters(Collections.unmodifiableList(parameters));
-        parameterSets.add(parameterSet);
+        dynawoInputs.addParameterSet(parameterSet);
 
         // Generator param
         parameters = new ArrayList<>();
@@ -240,7 +245,7 @@ public class DynawoSimulationTest {
             DynawoParameterType.IIDM.getValue(), "angle_pu"));
         parameterSet = new ParameterSet("4");
         parameterSet.addParameters(Collections.unmodifiableList(parameters));
-        parameterSets.add(parameterSet);
+        dynawoInputs.addParameterSet(parameterSet);
 
         // Event param
         parameters = new ArrayList<>();
@@ -249,61 +254,46 @@ public class DynawoSimulationTest {
         parameters.add(new Parameter("event_disconnectExtremity", DynawoParameterType.BOOLEAN.getValue(), "true"));
         parameterSet = new ParameterSet("5");
         parameterSet.addParameters(Collections.unmodifiableList(parameters));
-        parameterSets.add(parameterSet);
-        Mockito.when(dynawoInputs.getParameterSets())
-            .thenReturn(Collections.unmodifiableList(parameterSets));
+        dynawoInputs.addParameterSet(parameterSet);
 
         // Dyd file
-        List<DynawoDynamicModel> dynamicModels = new ArrayList<>();
         // Omega Ref dyd
-        dynamicModels.add(new BlackBoxModel("OMEGA_REF", "DYNModelOmegaRef", "powsybl_dynawo.par", "2"));
+        dynawoInputs.addDynamicModel(new BlackBoxModel("OMEGA_REF", "DYNModelOmegaRef", "powsybl_dynawo.par", "2"));
 
         // Load dyd
-        dynamicModels
-            .add(new BlackBoxModel("_N1011____EC", "LoadAlphaBeta", "powsybl_dynawo.par", "3", "_N1011____EC"));
+        dynawoInputs.addDynamicModel(new BlackBoxModel("_N1011____EC", "LoadAlphaBeta", "powsybl_dynawo.par", "3", "_N1011____EC"));
 
         // Generator dyd
-        dynamicModels.add(new BlackBoxModel("_G10______SM",
+        dynawoInputs.addDynamicModel(new BlackBoxModel("_G10______SM",
             "GeneratorSynchronousFourWindingsProportionalRegulations", "powsybl_dynawo.par", "4", "_G10______SM"));
 
         // Event dyd
-        dynamicModels
-            .add(new BlackBoxModel("DISCONNECT_LINE", "EventQuadripoleDisconnection", "powsybl_dynawo.par", "5"));
+        dynawoInputs.addDynamicModel(new BlackBoxModel("DISCONNECT_LINE", "EventQuadripoleDisconnection", "powsybl_dynawo.par", "5"));
 
         // Load connection dyd
-        dynamicModels.add(new Connection("_N1011____EC", "load_terminal", "NETWORK", "_N1011____TN_ACPIN"));
+        dynawoInputs.addDynamicModel(new Connection("_N1011____EC", "load_terminal", "NETWORK", "_N1011____TN_ACPIN"));
 
         // Generator connection dyd
-        dynamicModels.add(new Connection("OMEGA_REF", "omega_grp_0", "_G10______SM", "generator_omegaPu"));
-        dynamicModels
-            .add(new Connection("OMEGA_REF", "omegaRef_grp_0", "_G10______SM", "generator_omegaRefPu"));
-        dynamicModels
-            .add(new Connection("OMEGA_REF", "numcc_node_0", "NETWORK", "@_G10______SM@@NODE@_numcc"));
-        dynamicModels
-            .add(new Connection("OMEGA_REF", "running_grp_0", "_G10______SM", "generator_running"));
-        dynamicModels.add(
-            new Connection("_G10______SM", "generator_terminal", "NETWORK", "@_G10______SM@@NODE@_ACPIN"));
-        dynamicModels.add(new Connection("_G10______SM", "generator_switchOffSignal1", "NETWORK",
-            "@_G10______SM@@NODE@_switchOff"));
+        dynawoInputs.addDynamicModel(new Connection("OMEGA_REF", "omega_grp_0", "_G10______SM", "generator_omegaPu"));
+        dynawoInputs.addDynamicModel(new Connection("OMEGA_REF", "omegaRef_grp_0", "_G10______SM", "generator_omegaRefPu"));
+        dynawoInputs.addDynamicModel(new Connection("OMEGA_REF", "numcc_node_0", "NETWORK", "@_G10______SM@@NODE@_numcc"));
+        dynawoInputs.addDynamicModel(new Connection("OMEGA_REF", "running_grp_0", "_G10______SM", "generator_running"));
+        dynawoInputs.addDynamicModel(new Connection("_G10______SM", "generator_terminal", "NETWORK", "@_G10______SM@@NODE@_ACPIN"));
+        dynawoInputs.addDynamicModel(new Connection("_G10______SM", "generator_switchOffSignal1", "NETWORK", "@_G10______SM@@NODE@_switchOff"));
 
         // Event connection dyd
-        dynamicModels
-            .add(new Connection("DISCONNECT_LINE", "event_state1_value", "NETWORK",
-                "_N1011___-N1013___-1_AC_state_value"));
-        Mockito.when(dynawoInputs.getDynamicModels()).thenReturn(dynamicModels);
+        dynawoInputs.addDynamicModel(new Connection("DISCONNECT_LINE", "event_state1_value", "NETWORK", "_N1011___-N1013___-1_AC_state_value"));
 
         // Curve file
-        List<Curve> curves = new ArrayList<>();
-        curves.add(new Curve("NETWORK", "_N1011____TN_Upu_value"));
-        curves.add(new Curve("_G10______SM", "generator_omegaPu"));
-        curves.add(new Curve("_G10______SM", "generator_PGen"));
-        curves.add(new Curve("_G10______SM", "generator_QGen"));
-        curves.add(new Curve("_G10______SM", "generator_UStatorPu"));
-        curves.add(new Curve("_G10______SM", "voltageRegulator_UcEfdPu"));
-        curves.add(new Curve("_G10______SM", "voltageRegulator_EfdPu"));
-        curves.add(new Curve("_N1011____EC", "load_PPu"));
-        curves.add(new Curve("_N1011____EC", "load_QPu"));
-        Mockito.when(dynawoInputs.getCurves()).thenReturn(curves);
+        dynawoInputs.addCurve(new Curve("NETWORK", "_N1011____TN_Upu_value"));
+        dynawoInputs.addCurve(new Curve("_G10______SM", "generator_omegaPu"));
+        dynawoInputs.addCurve(new Curve("_G10______SM", "generator_PGen"));
+        dynawoInputs.addCurve(new Curve("_G10______SM", "generator_QGen"));
+        dynawoInputs.addCurve(new Curve("_G10______SM", "generator_UStatorPu"));
+        dynawoInputs.addCurve(new Curve("_G10______SM", "voltageRegulator_UcEfdPu"));
+        dynawoInputs.addCurve(new Curve("_G10______SM", "voltageRegulator_EfdPu"));
+        dynawoInputs.addCurve(new Curve("_N1011____EC", "load_PPu"));
+        dynawoInputs.addCurve(new Curve("_N1011____EC", "load_QPu"));
         return dynawoInputs;
     }
 }
