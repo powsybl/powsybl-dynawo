@@ -27,11 +27,14 @@ import com.powsybl.cgmes.model.test.TestGridModel;
 import com.powsybl.cgmes.model.test.cim14.Cim14SmallCasesCatalog;
 import com.powsybl.commons.AbstractConverterTest;
 import com.powsybl.commons.datasource.ReadOnlyDataSource;
+import com.powsybl.commons.datasource.ResourceDataSource;
+import com.powsybl.commons.datasource.ResourceSet;
 import com.powsybl.dynawo.inputs.dsl.GroovyDslDynawoInputProvider;
 import com.powsybl.dynawo.inputs.xml.DynawoConstants;
 import com.powsybl.dynawo.inputs.xml.DynawoInputsXmlExporter;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.NetworkFactory;
+import com.powsybl.iidm.xml.XMLImporter;
 import com.powsybl.triplestore.api.TripleStoreFactory;
 
 /**
@@ -54,7 +57,7 @@ public class DynawoExporterTest extends AbstractConverterTest {
     }
 
     @Test
-    public void export() throws IOException, XMLStreamException {
+    public void exportNordic32() throws IOException, XMLStreamException {
         network = importNetwork(Cim14SmallCasesCatalog.nordic32());
         network.setCaseDate(DateTime.parse("2019-09-23T11:06:12.313+02:00"));
         dslFile = getClass().getResourceAsStream("/nordic32/nordic32.groovy");
@@ -64,6 +67,24 @@ public class DynawoExporterTest extends AbstractConverterTest {
                 try (InputStream is = Files.newInputStream(file)) {
                     assertNotNull(is);
                     compareXml(getClass().getResourceAsStream("/nordic32/" + file.getFileName()), is);
+                } catch (IOException ignored) {
+                }
+            }
+        });
+    }
+
+    @Test
+    public void exportIEEE57BasicTestCase() throws Exception {
+        ReadOnlyDataSource dataSource = new ResourceDataSource("ieee57", new ResourceSet("/ieee57/", "ieee57.xml"));
+        XMLImporter importer = new XMLImporter();
+        network = importer.importData(dataSource, NetworkFactory.findDefault(), null);
+        dslFile = getClass().getResourceAsStream("/ieee57/ieee57.groovy");
+        exporter.export(new GroovyDslDynawoInputProvider(dslFile).createDynawoInputs(network), tmpDir);
+        Files.walk(tmpDir).forEach(file -> {
+            if (Files.isRegularFile(file)) {
+                try (InputStream is = Files.newInputStream(file)) {
+                    assertNotNull(is);
+                    compareXml(getClass().getResourceAsStream("/ieee57/" + file.getFileName()), is);
                 } catch (IOException ignored) {
                 }
             }

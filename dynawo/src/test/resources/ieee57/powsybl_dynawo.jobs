@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dyn:jobs xmlns:dyn="http://www.rte-france.com/dynawo">
+  <dyn:job name="IEEE57 - Disconnect line 6-8 - IDA Solver">
+    <dyn:solver lib="dynawo_SolverIDA" parFile="powsybl_dynawo_simulation_params.par" parId="2"/>
+    <dyn:modeler compileDir="outputs/compilation">
+      <dyn:network iidmFile="powsybl_network.xiidm" parFile="powsybl_dynawo.par" parId="51"/>
+      <dyn:dynModels dydFile="powsybl_dynawo.dyd"/>
+      <dyn:precompiledModels useStandardModels="true"/>
+      <dyn:modelicaModels useStandardModels="true"/>
+    </dyn:modeler>
+    <dyn:simulation startTime="0" stopTime="30" activateCriteria="false"/>
+    <dyn:outputs directory="outputs">
+      <dyn:dumpInitValues local="true" global="true"/>
+      <dyn:curves inputFile="powsybl_dynawo.crv" exportMode="CSV"/>
+      <dyn:timeline exportMode="TXT"/>
+      <dyn:logs>
+        <dyn:appender tag="" file="dynawo.log" lvlFilter="DEBUG"/>
+        <dyn:appender tag="COMPILE" file="dynawoCompiler.log" lvlFilter="DEBUG"/>
+        <dyn:appender tag="MODELER" file="dynawoModeler.log" lvlFilter="DEBUG"/>
+      </dyn:logs>
+    </dyn:outputs>
+  </dyn:job>
+  <dyn:job name="IEEE57 - Disconnect line 6-8 - Simplified solver">
+    <dyn:solver lib="dynawo_SolverSIM" parFile="powsybl_dynawo_simulation_params.par" parId="3"/>
+    <dyn:modeler compileDir="outputsSIM/compilation">
+      <dyn:network iidmFile="powsybl_network.xiidm" parFile="powsybl_dynawo.par" parId="51"/>
+      <dyn:dynModels dydFile="powsybl_dynawo.dyd"/>
+      <dyn:precompiledModels useStandardModels="true"/>
+      <dyn:modelicaModels useStandardModels="true"/>
+    </dyn:modeler>
+    <dyn:simulation startTime="0" stopTime="30" activateCriteria="false"/>
+    <dyn:outputs directory="outputsSIM">
+      <dyn:dumpInitValues local="true" global="true"/>
+      <dyn:curves inputFile="powsybl_dynawo.crv" exportMode="CSV"/>
+      <dyn:timeline exportMode="TXT"/>
+      <dyn:logs>
+        <dyn:appender tag="" file="dynawo.log" lvlFilter="DEBUG"/>
+        <dyn:appender tag="COMPILE" file="dynawoCompiler.log" lvlFilter="DEBUG"/>
+        <dyn:appender tag="MODELER" file="dynawoModeler.log" lvlFilter="DEBUG"/>
+      </dyn:logs>
+    </dyn:outputs>
+  </dyn:job>
+</dyn:jobs>
