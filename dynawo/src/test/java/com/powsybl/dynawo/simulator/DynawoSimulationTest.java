@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.jimfs.Configuration;
@@ -27,6 +28,9 @@ import com.powsybl.cgmes.model.test.cim14.Cim14SmallCasesCatalog;
 import com.powsybl.commons.config.InMemoryPlatformConfig;
 import com.powsybl.commons.config.MapModuleConfig;
 import com.powsybl.commons.config.PlatformConfig;
+import com.powsybl.commons.datasource.ReadOnlyDataSource;
+import com.powsybl.commons.datasource.ResourceDataSource;
+import com.powsybl.commons.datasource.ResourceSet;
 import com.powsybl.dynawo.inputs.model.DynawoInputs;
 import com.powsybl.dynawo.inputs.model.DynawoParameterType;
 import com.powsybl.dynawo.inputs.model.crv.Curve;
@@ -42,6 +46,8 @@ import com.powsybl.dynawo.inputs.model.par.ParameterSet;
 import com.powsybl.dynawo.results.DynawoResults;
 import com.powsybl.dynawo.simulator.DynawoSimulationParameters.SolverType;
 import com.powsybl.iidm.network.Network;
+import com.powsybl.iidm.network.NetworkFactory;
+import com.powsybl.iidm.xml.XMLImporter;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -89,7 +95,7 @@ public class DynawoSimulationTest {
     }
 
     @Test
-    public void testGroovy() throws Exception {
+    public void testNordic32() throws Exception {
         try (FileSystem fs = Jimfs.newFileSystem(Configuration.unix())) {
 
             PlatformConfig platformConfig = configure(fs, SolverType.IDA);
@@ -106,6 +112,26 @@ public class DynawoSimulationTest {
             int index = result.getTimeSeries().getNames().indexOf("NETWORK__N1011____TN_Upu_value");
             assertEquals(result.getTimeSeries().getValues().get(30.0d).get(index), new Double(0.931558));
         }
+    }
+
+    @Ignore("Test only available with Dynawo installed")
+    @Test
+    public void testIEEE57() throws Exception {
+
+        PlatformConfig platformConfig = PlatformConfig.defaultConfig();
+        DynawoSimulationTester tester = new DynawoSimulationTester(false);
+        ReadOnlyDataSource ds = new ResourceDataSource("ieee57", new ResourceSet("/ieee57/", "ieee57.xml"));
+        XMLImporter importer = new XMLImporter();
+        Network network = importer.importData(ds, NetworkFactory.findDefault(), null);
+        //network.getSubstationStream().forEach(s -> s.setCountry(Country.FR));
+        String dslFile = "/tmp/ieee57.groovy";
+        FileUtils.copyInputStreamToFile(getClass().getResourceAsStream("/ieee57/ieee57.groovy"),
+            Paths.get(dslFile).toFile());
+        DynawoSimulationParameters dynawoSimulationParameters = new DynawoSimulationParameters();
+        dynawoSimulationParameters.setDslFilename(dslFile);
+        DynawoResults result = tester.simulate(network, dynawoSimulationParameters, platformConfig);
+        assertTrue(result.isOk());
+        assertNull(result.getLogs());
     }
 
     private PlatformConfig configure(FileSystem fs, SolverType solverType) throws IOException {
