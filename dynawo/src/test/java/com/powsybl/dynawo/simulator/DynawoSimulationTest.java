@@ -43,7 +43,9 @@ import com.powsybl.dynawo.inputs.model.job.Outputs;
 import com.powsybl.dynawo.inputs.model.job.Simulation;
 import com.powsybl.dynawo.inputs.model.par.Parameter;
 import com.powsybl.dynawo.inputs.model.par.ParameterSet;
+import com.powsybl.dynawo.results.CurvesCsv;
 import com.powsybl.dynawo.results.DynawoResults;
+import com.powsybl.dynawo.results.TimeSeries;
 import com.powsybl.dynawo.simulator.DynawoSimulationParameters.SolverType;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.NetworkFactory;
@@ -132,6 +134,9 @@ public class DynawoSimulationTest {
         DynawoResults result = tester.simulate(network, dynawoSimulationParameters, platformConfig);
         assertTrue(result.isOk());
         assertNull(result.getLogs());
+
+        TimeSeries timeSeries = CurvesCsv.parse(getClass().getResourceAsStream("/ieee57/curves.csv"));
+        assertTrue(result.getTimeSeries().getValues().equals(timeSeries.getValues()));
     }
 
     private PlatformConfig configure(FileSystem fs, SolverType solverType) throws IOException {
