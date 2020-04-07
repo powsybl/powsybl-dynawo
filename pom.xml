@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Copyright (c) 2019, RTE (http://www.rte-france.com)
+    This Source Code Form is subject to the terms of the Mozilla Public
+    License, v. 2.0. If a copy of the MPL was not distributed with this
+    file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.powsybl</groupId>
+        <artifactId>powsybl-parent</artifactId>
+        <version>1</version>
+        <relativePath/>
+    </parent>
+    <artifactId>powsybl-dynawo</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>powsybl dynawo</name>
+    <description>Dynawo integration modules for powsybl</description>
+    <url>https://www.powsybl.org</url>
+
+    <scm>
+        <connection>scm:git:https://github.com/powsybl/powsybl-dynawo.git</connection>
+        <developerConnection>scm:git:https://github.com/powsybl/powsybl-dynawo.git</developerConnection>
+        <url>https://github.com/powsybl/powsybl-dynawo</url>
+    </scm>
+
+    <developers>
+        <developer>
+            <name>Marcos de Miguel</name>
+            <email>demiguelm@aia.es</email>
+            <organization>Grupo AIA</organization>
+            <organizationUrl>http://www.aia.es</organizationUrl>
+        </developer>
+    </developers>
+
+    <modules>
+        <module>dynawo</module>
+    </modules>
+
+    <properties>
+        <jimfs.version>1.1</jimfs.version>
+        <junit.version>4.12</junit.version>
+
+        <powsyblcore.version>3.2.0</powsyblcore.version>
+    </properties>
+
+    <profiles>
+        <profile>
+            <id>release</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>javadoc-aggregate-jar</id>
+                                <phase>package</phase>
+                                <inherited>false</inherited>
+                                <goals>
+                                    <goal>aggregate-jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- Compile dependencies -->
+            <dependency>
+                <groupId>com.powsybl</groupId>
+                <artifactId>powsybl-commons</artifactId>
+                <version>${powsyblcore.version}</version>
+            </dependency>
+
+            <!-- Test dependencies -->
+            <dependency>
+                <groupId>com.google.jimfs</groupId>
+                <artifactId>jimfs</artifactId>
+                <version>${jimfs.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+</project>
