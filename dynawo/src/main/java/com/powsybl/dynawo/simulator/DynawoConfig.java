@@ -5,6 +5,9 @@ import java.util.Objects;
 import com.powsybl.commons.config.ModuleConfig;
 import com.powsybl.commons.config.PlatformConfig;
 
+/**
+ * @author Marcos de Miguel <demiguelm at aia.es>
+ */
 public class DynawoConfig {
 
     public static DynawoConfig load() {
