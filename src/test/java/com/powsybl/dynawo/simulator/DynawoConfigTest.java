@@ -48,8 +48,8 @@ public class DynawoConfigTest {
         moduleConfig.setStringProperty("homeDir", homeDir);
         moduleConfig.setStringProperty("debug", Boolean.toString(debug));
         DynawoConfig config = DynawoConfig.load(platformConfig);
-        assertEquals(config.getHomeDir(), homeDir);
-        assertEquals(config.isDebug(), debug);
+        assertEquals(homeDir, config.getHomeDir());
+        assertEquals(debug, config.isDebug());
     }
 
 }
