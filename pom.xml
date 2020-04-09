@@ -51,11 +51,6 @@
             <artifactId>powsybl-commons</artifactId>
             <version>${powsyblcore.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.powsybl</groupId>
-            <artifactId>powsybl-dynamic-simulation-api</artifactId>
-            <version>${powsyblcore.version}</version>
-        </dependency>
 
         <!-- Test dependencies -->
         <dependency>
