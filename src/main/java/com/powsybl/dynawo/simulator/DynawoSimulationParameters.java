@@ -31,12 +31,18 @@ public class DynawoSimulationParameters {
      */
     public static DynawoSimulationParameters load(PlatformConfig platformConfig) {
         ModuleConfig config = platformConfig.getModuleConfig("dynawo-default-parameters");
+        // File with all the dynamic models' parameters for the simulation
         String parametersDDB = config.getStringProperty("parametersDDB");
+        // Identifies the set of network parameters that will be used in the simulation.
         String networkParametersId = config.getStringProperty("networkParametersId");
 
         config = platformConfig.getModuleConfig("dynawo-solver-default-parameters");
+        // Information about the solver to use in the simulation, there are two options the simplified solver
+        //  and the IDA solver
         SolverType solverType = config.getEnumProperty("type", SolverType.class);
+        // File with all the solvers' parameters for the simulation
         String solverParametersFile = config.getStringProperty("parametersFile");
+        // Identifies the set of solver parameters that will be used in the simulation
         String solverParametersId = config.getStringProperty("parametersId");
 
         return new DynawoSimulationParameters(parametersDDB, networkParametersId, solverType, solverParametersFile, solverParametersId);
