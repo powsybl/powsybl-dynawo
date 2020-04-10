@@ -73,9 +73,9 @@ public class DynawoSimulationParameters {
         return solverParametersId;
     }
 
-    private String parametersDDB;
-    private String networkParametersId;
-    private SolverType solverType;
-    private String solverParametersFile;
-    private String solverParametersId;
+    private final String parametersDDB;
+    private final String networkParametersId;
+    private final SolverType solverType;
+    private final String solverParametersFile;
+    private final String solverParametersId;
 }
