@@ -14,8 +14,6 @@ import com.powsybl.commons.config.PlatformConfig;
  */
 public class DynawoSimulationParameters {
 
-    public static final SolverType DEFAULT_SOLVER_TYPE = SolverType.SIM;
-
     public enum SolverType {
         SIM,
         IDA
@@ -37,7 +35,7 @@ public class DynawoSimulationParameters {
         String networkParametersId = config.getStringProperty("networkParametersId");
 
         config = platformConfig.getModuleConfig("dynawo-solver-default-parameters");
-        SolverType solverType = config.getEnumProperty("type", SolverType.class, DEFAULT_SOLVER_TYPE);
+        SolverType solverType = config.getEnumProperty("type", SolverType.class);
         String solverParametersFile = config.getStringProperty("parametersFile");
         String solverParametersId = config.getStringProperty("parametersId");
 
