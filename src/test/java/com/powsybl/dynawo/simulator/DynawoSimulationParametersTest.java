@@ -44,10 +44,10 @@ public class DynawoSimulationParametersTest {
 
     @Test
     public void checkParameters() {
-        String parametersFile = "/home/user/parametersDDB";
+        String parametersFile = "/home/user/parametersFile";
         String networkParametersId = "networkParametersId";
         SolverType solverType = SolverType.IDA;
-        String solverParametersFile = "/home/user/parameters";
+        String solverParametersFile = "/home/user/solverParametersFile";
         String solverParametersId = "solverParametersId";
 
         MapModuleConfig moduleConfig = (MapModuleConfig) platformConfig.getModuleConfig("dynawo-default-parameters");
@@ -70,9 +70,9 @@ public class DynawoSimulationParametersTest {
 
         DynawoSimulationParameters parameters = DynawoSimulationParameters.load(platformConfig);
         assertNull(parameters.getParametersFile());
-        assertEquals("NETWORK", parameters.getNetworkParametersId());
+        assertEquals(DynawoSimulationParameters.DEFAULT_NETWORK_PAR_ID, parameters.getNetworkParametersId());
         assertEquals(DynawoSimulationParameters.DEFAULT_SOLVER_TYPE, parameters.getSolverType());
         assertNull(parameters.getSolverParametersFile());
-        assertEquals("SIM", parameters.getSolverParametersId());
+        assertEquals(DynawoSimulationParameters.DEFAULT_SOLVER_PAR_ID, parameters.getSolverParametersId());
     }
 }

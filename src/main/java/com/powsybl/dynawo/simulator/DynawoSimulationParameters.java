@@ -15,6 +15,8 @@ import com.powsybl.commons.config.PlatformConfig;
 public class DynawoSimulationParameters {
 
     public static final SolverType DEFAULT_SOLVER_TYPE = SolverType.SIM;
+    public static final String DEFAULT_NETWORK_PAR_ID = "NETWORK";
+    public static final String DEFAULT_SOLVER_PAR_ID = "SIM";
 
     public enum SolverType {
         SIM,
@@ -36,14 +38,14 @@ public class DynawoSimulationParameters {
         // File with all the dynamic models' parameters for the simulation
         String parametersFile = config.getStringProperty("parametersFile", null);
         // Identifies the set of network parameters that will be used in the simulation.
-        String networkParametersId = config.getStringProperty("network.ParametersId", "NETWORK");
+        String networkParametersId = config.getStringProperty("network.ParametersId", DEFAULT_NETWORK_PAR_ID);
         // Information about the solver to use in the simulation, there are two options the simplified solver
         //  and the IDA solver
         SolverType solverType = config.getEnumProperty("solver.type", SolverType.class, DEFAULT_SOLVER_TYPE);
         // File with all the solvers' parameters for the simulation
         String solverParametersFile = config.getStringProperty("solver.parametersFile", null);
         // Identifies the set of solver parameters that will be used in the simulation
-        String solverParametersId = config.getStringProperty("solver.parametersId", "SIM");
+        String solverParametersId = config.getStringProperty("solver.parametersId", DEFAULT_SOLVER_PAR_ID);
 
         return new DynawoSimulationParameters(parametersFile, networkParametersId, solverType, solverParametersFile, solverParametersId);
     }
