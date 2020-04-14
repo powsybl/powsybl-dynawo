@@ -14,6 +14,8 @@ import com.powsybl.commons.config.PlatformConfig;
  */
 public class DynawoSimulationParameters {
 
+    public static final SolverType DEFAULT_SOLVER_TYPE = SolverType.SIM;
+
     public enum SolverType {
         SIM,
         IDA
@@ -32,33 +34,31 @@ public class DynawoSimulationParameters {
     public static DynawoSimulationParameters load(PlatformConfig platformConfig) {
         ModuleConfig config = platformConfig.getModuleConfig("dynawo-default-parameters");
         // File with all the dynamic models' parameters for the simulation
-        String parametersDDB = config.getStringProperty("parametersDDB");
+        String parametersFile = config.getStringProperty("parametersFile", null);
         // Identifies the set of network parameters that will be used in the simulation.
-        String networkParametersId = config.getStringProperty("networkParametersId");
-
-        config = platformConfig.getModuleConfig("dynawo-solver-default-parameters");
+        String networkParametersId = config.getStringProperty("network.ParametersId", "NETWORK");
         // Information about the solver to use in the simulation, there are two options the simplified solver
         //  and the IDA solver
-        SolverType solverType = config.getEnumProperty("type", SolverType.class);
+        SolverType solverType = config.getEnumProperty("solver.type", SolverType.class, DEFAULT_SOLVER_TYPE);
         // File with all the solvers' parameters for the simulation
-        String solverParametersFile = config.getStringProperty("parametersFile");
+        String solverParametersFile = config.getStringProperty("solver.parametersFile", null);
         // Identifies the set of solver parameters that will be used in the simulation
-        String solverParametersId = config.getStringProperty("parametersId");
+        String solverParametersId = config.getStringProperty("solver.parametersId", "SIM");
 
-        return new DynawoSimulationParameters(parametersDDB, networkParametersId, solverType, solverParametersFile, solverParametersId);
+        return new DynawoSimulationParameters(parametersFile, networkParametersId, solverType, solverParametersFile, solverParametersId);
     }
 
-    public DynawoSimulationParameters(String parametersDDB, String networkParametersId, SolverType solverType, String solverParametersFile,
+    public DynawoSimulationParameters(String parametersFile, String networkParametersId, SolverType solverType, String solverParametersFile,
         String solverParametersId) {
-        this.parametersDDB = parametersDDB;
+        this.parametersFile = parametersFile;
         this.networkParametersId = networkParametersId;
         this.solverType = solverType;
         this.solverParametersFile = solverParametersFile;
         this.solverParametersId = solverParametersId;
     }
 
-    public String getParametersDDB() {
-        return parametersDDB;
+    public String getParametersFile() {
+        return parametersFile;
     }
 
     public String getNetworkParametersId() {
@@ -77,7 +77,7 @@ public class DynawoSimulationParameters {
         return solverParametersId;
     }
 
-    private final String parametersDDB;
+    private final String parametersFile;
     private final String networkParametersId;
     private final SolverType solverType;
     private final String solverParametersFile;
