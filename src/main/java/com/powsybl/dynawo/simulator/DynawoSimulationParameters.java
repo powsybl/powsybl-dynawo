@@ -6,6 +6,8 @@
  */
 package com.powsybl.dynawo.simulator;
 
+import java.util.Objects;
+
 import com.powsybl.commons.config.ModuleConfig;
 import com.powsybl.commons.config.PlatformConfig;
 
@@ -52,11 +54,11 @@ public class DynawoSimulationParameters {
 
     public DynawoSimulationParameters(String parametersFile, String networkParametersId, SolverType solverType, String solverParametersFile,
         String solverParametersId) {
-        this.parametersFile = parametersFile;
-        this.networkParametersId = networkParametersId;
-        this.solverType = solverType;
-        this.solverParametersFile = solverParametersFile;
-        this.solverParametersId = solverParametersId;
+        this.parametersFile = Objects.requireNonNull(parametersFile);
+        this.networkParametersId = Objects.requireNonNull(networkParametersId);
+        this.solverType = Objects.requireNonNull(solverType);
+        this.solverParametersFile = Objects.requireNonNull(solverParametersFile);
+        this.solverParametersId = Objects.requireNonNull(solverParametersId);
     }
 
     public String getParametersFile() {
