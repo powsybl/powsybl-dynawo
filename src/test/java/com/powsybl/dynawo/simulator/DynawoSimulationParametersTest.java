@@ -7,7 +7,6 @@
 package com.powsybl.dynawo.simulator;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 import java.io.IOException;
 import java.nio.file.FileSystem;
@@ -27,6 +26,9 @@ import com.powsybl.dynawo.simulator.DynawoSimulationParameters.SolverType;
  */
 public class DynawoSimulationParametersTest {
 
+    private final String parametersFile = "/home/user/parametersFile";
+    private final String solverParametersFile = "/home/user/solverParametersFile";
+
     private InMemoryPlatformConfig platformConfig;
     private FileSystem fileSystem;
 
@@ -34,7 +36,9 @@ public class DynawoSimulationParametersTest {
     public void setUp() {
         fileSystem = Jimfs.newFileSystem(Configuration.unix());
         platformConfig = new InMemoryPlatformConfig(fileSystem);
-        platformConfig.createModuleConfig("dynawo-default-parameters");
+        MapModuleConfig moduleConfig = platformConfig.createModuleConfig("dynawo-default-parameters");
+        moduleConfig.setStringProperty("parametersFile", parametersFile);
+        moduleConfig.setStringProperty("solver.parametersFile", solverParametersFile);
     }
 
     @After
@@ -44,17 +48,13 @@ public class DynawoSimulationParametersTest {
 
     @Test
     public void checkParameters() {
-        String parametersFile = "/home/user/parametersFile";
         String networkParametersId = "networkParametersId";
         SolverType solverType = SolverType.IDA;
-        String solverParametersFile = "/home/user/solverParametersFile";
         String solverParametersId = "solverParametersId";
 
         MapModuleConfig moduleConfig = (MapModuleConfig) platformConfig.getModuleConfig("dynawo-default-parameters");
-        moduleConfig.setStringProperty("parametersFile", parametersFile);
         moduleConfig.setStringProperty("network.ParametersId", networkParametersId);
         moduleConfig.setStringProperty("solver.type", solverType.toString());
-        moduleConfig.setStringProperty("solver.parametersFile", solverParametersFile);
         moduleConfig.setStringProperty("solver.parametersId", solverParametersId);
 
         DynawoSimulationParameters parameters = DynawoSimulationParameters.load(platformConfig);
@@ -69,10 +69,10 @@ public class DynawoSimulationParametersTest {
     public void checkDefaultParameters() {
 
         DynawoSimulationParameters parameters = DynawoSimulationParameters.load(platformConfig);
-        assertNull(parameters.getParametersFile());
+        assertEquals(parametersFile, parameters.getParametersFile());
         assertEquals(DynawoSimulationParameters.DEFAULT_NETWORK_PAR_ID, parameters.getNetworkParametersId());
         assertEquals(DynawoSimulationParameters.DEFAULT_SOLVER_TYPE, parameters.getSolverType());
-        assertNull(parameters.getSolverParametersFile());
+        assertEquals(solverParametersFile, parameters.getSolverParametersFile());
         assertEquals(DynawoSimulationParameters.DEFAULT_SOLVER_PAR_ID, parameters.getSolverParametersId());
     }
 }
