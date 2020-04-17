@@ -47,7 +47,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
         //  and the IDA solver
         SolverType solverType = config.getEnumProperty("solver.type", SolverType.class, DEFAULT_SOLVER_TYPE);
         // File with all the solvers' parameters for the simulation
-        String solverParametersFile = config.getStringProperty("solver.parametersFile", null);
+        String solverParametersFile = config.getStringProperty("solver.parametersFile");
         // Identifies the set of solver parameters that will be used in the simulation
         String solverParametersId = config.getStringProperty("solver.parametersId", DEFAULT_SOLVER_PAR_ID);
 
