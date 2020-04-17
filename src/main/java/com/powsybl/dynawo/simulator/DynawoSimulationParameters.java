@@ -10,11 +10,13 @@ import java.util.Objects;
 
 import com.powsybl.commons.config.ModuleConfig;
 import com.powsybl.commons.config.PlatformConfig;
+import com.powsybl.commons.extensions.AbstractExtension;
+import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class DynawoSimulationParameters {
+public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulationParameters> {
 
     public static final SolverType DEFAULT_SOLVER_TYPE = SolverType.SIM;
     public static final String DEFAULT_NETWORK_PAR_ID = "NETWORK";
@@ -59,6 +61,11 @@ public class DynawoSimulationParameters {
         this.solverType = Objects.requireNonNull(solverType);
         this.solverParametersFile = Objects.requireNonNull(solverParametersFile);
         this.solverParametersId = Objects.requireNonNull(solverParametersId);
+    }
+
+    @Override
+    public String getName() {
+        return "DynawoParameters";
     }
 
     public String getParametersFile() {
