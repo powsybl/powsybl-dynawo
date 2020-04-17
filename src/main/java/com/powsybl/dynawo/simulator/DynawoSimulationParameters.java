@@ -47,7 +47,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
         //  and the IDA solver
         SolverType solverType = config.getEnumProperty("solver.type", SolverType.class, DEFAULT_SOLVER_TYPE);
         // File with all the solvers' parameters for the simulation
-        String solverParametersFile = config.getStringProperty("solver.parametersFile");
+        String solverParametersFile = config.getStringProperty("solver.parametersFile", null);
         // Identifies the set of solver parameters that will be used in the simulation
         String solverParametersId = config.getStringProperty("solver.parametersId", DEFAULT_SOLVER_PAR_ID);
 
@@ -59,7 +59,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
         this.parametersFile = Objects.requireNonNull(parametersFile);
         this.networkParametersId = Objects.requireNonNull(networkParametersId);
         this.solverType = Objects.requireNonNull(solverType);
-        this.solverParametersFile = Objects.requireNonNull(solverParametersFile);
+        this.solverParametersFile = solverParametersFile;
         this.solverParametersId = Objects.requireNonNull(solverParametersId);
     }
 
@@ -88,9 +88,29 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
         return solverParametersId;
     }
 
-    private final String parametersFile;
-    private final String networkParametersId;
-    private final SolverType solverType;
-    private final String solverParametersFile;
-    private final String solverParametersId;
+    public void setParametersFile(String parametersFile) {
+        this.parametersFile = parametersFile;
+    }
+
+    public void setNetworkParametersId(String networkParametersId) {
+        this.networkParametersId = networkParametersId;
+    }
+
+    public void setSolverType(SolverType solverType) {
+        this.solverType = solverType;
+    }
+
+    public void setSolverParametersFile(String solverParametersFile) {
+        this.solverParametersFile = solverParametersFile;
+    }
+
+    public void setSolverParametersId(String solverParametersId) {
+        this.solverParametersId = solverParametersId;
+    }
+
+    private String parametersFile;
+    private String networkParametersId;
+    private SolverType solverType;
+    private String solverParametersFile;
+    private String solverParametersId;
 }
