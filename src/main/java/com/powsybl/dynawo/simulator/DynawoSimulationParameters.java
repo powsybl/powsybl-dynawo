@@ -59,7 +59,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
         this.parametersFile = Objects.requireNonNull(parametersFile);
         this.networkParametersId = Objects.requireNonNull(networkParametersId);
         this.solverType = Objects.requireNonNull(solverType);
-        this.solverParametersFile = solverParametersFile;
+        this.solverParametersFile = Objects.requireNonNull(solverParametersFile);
         this.solverParametersId = Objects.requireNonNull(solverParametersId);
     }
 
