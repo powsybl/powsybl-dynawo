@@ -27,7 +27,8 @@ public class DynawoSimulationParametersSerializer implements JsonDynamicSimulati
 
     @Override
     public String getCategoryName() {
-        // TODO: use "dynamic-simulation-parameters" when powsybl-core v3.3.0 is released
+        // TODO: use "dynamic-simulation-parameters" when powsybl-core v3.3.0 is
+        // released
         return "DynamicSimulation-parameters";
     }
 
@@ -46,10 +47,8 @@ public class DynawoSimulationParametersSerializer implements JsonDynamicSimulati
         throws IOException {
 
         String parametersFile = null;
-        String networkParametersId = DynawoSimulationParameters.DEFAULT_NETWORK_PAR_ID;
-        SolverType solverType = DynawoSimulationParameters.DEFAULT_SOLVER_TYPE;
-        String solverParametersFile = null;
-        String solverParametersId = DynawoSimulationParameters.DEFAULT_SOLVER_PAR_ID;
+        Network network = new Network();
+        Solver solver = new Solver();
         while (parser.nextToken() != JsonToken.END_OBJECT) {
             switch (parser.getCurrentName()) {
 
@@ -60,44 +59,12 @@ public class DynawoSimulationParametersSerializer implements JsonDynamicSimulati
 
                 case "network":
                     parser.nextToken();
-                    while (parser.nextToken() != JsonToken.END_OBJECT) {
-                        switch (parser.getCurrentName()) {
-
-                            case "parametersId":
-                                parser.nextToken();
-                                networkParametersId = parser.readValueAs(String.class);
-                                break;
-
-                            default:
-                                throw new AssertionError("Unexpected field: " + parser.getCurrentName());
-                        }
-                    }
+                    deserializeNetwork(parser, network);
                     break;
 
                 case "solver":
                     parser.nextToken();
-                    while (parser.nextToken() != JsonToken.END_OBJECT) {
-                        switch (parser.getCurrentName()) {
-
-                            case "type":
-                                parser.nextToken();
-                                solverType = parser.readValueAs(SolverType.class);
-                                break;
-
-                            case "parametersFile":
-                                parser.nextToken();
-                                solverParametersFile = parser.readValueAs(String.class);
-                                break;
-
-                            case "parametersId":
-                                parser.nextToken();
-                                solverParametersId = parser.readValueAs(String.class);
-                                break;
-
-                            default:
-                                throw new AssertionError("Unexpected field: " + parser.getCurrentName());
-                        }
-                    }
+                    deserializeSolver(parser, solver);
                     break;
 
                 default:
@@ -105,7 +72,8 @@ public class DynawoSimulationParametersSerializer implements JsonDynamicSimulati
             }
         }
 
-        return new DynawoSimulationParameters(parametersFile, networkParametersId, solverType, solverParametersFile, solverParametersId);
+        return new DynawoSimulationParameters(parametersFile, network.getParametersId(), solver.getType(), solver.getParametersFile(),
+            solver.getParametersId());
     }
 
     @Override
@@ -130,4 +98,99 @@ public class DynawoSimulationParametersSerializer implements JsonDynamicSimulati
         jsonGenerator.writeEndObject();
     }
 
+    private void deserializeNetwork(JsonParser parser, Network network)
+        throws IOException {
+        while (parser.nextToken() != JsonToken.END_OBJECT) {
+            switch (parser.getCurrentName()) {
+
+                case "parametersId":
+                    parser.nextToken();
+                    network.setParametersId(parser.readValueAs(String.class));
+                    break;
+
+                default:
+                    throw new AssertionError("Unexpected field: " + parser.getCurrentName());
+            }
+        }
+    }
+
+    private void deserializeSolver(JsonParser parser, Solver solver)
+        throws IOException {
+        while (parser.nextToken() != JsonToken.END_OBJECT) {
+            switch (parser.getCurrentName()) {
+
+                case "type":
+                    parser.nextToken();
+                    solver.setType(parser.readValueAs(SolverType.class));
+                    break;
+
+                case "parametersFile":
+                    parser.nextToken();
+                    solver.setParametersFile(parser.readValueAs(String.class));
+                    break;
+
+                case "parametersId":
+                    parser.nextToken();
+                    solver.setParametersId(parser.readValueAs(String.class));
+                    break;
+
+                default:
+                    throw new AssertionError("Unexpected field: " + parser.getCurrentName());
+            }
+        }
+    }
+
+    class Network {
+
+        Network() {
+            parametersId = DynawoSimulationParameters.DEFAULT_NETWORK_PAR_ID;
+        }
+
+        void setParametersId(String parametersId) {
+            this.parametersId = parametersId;
+        }
+
+        String getParametersId() {
+            return parametersId;
+        }
+
+        private String parametersId;
+    }
+
+    class Solver {
+
+        Solver() {
+            type = DynawoSimulationParameters.DEFAULT_SOLVER_TYPE;
+            parametersFile = null;
+            parametersId = DynawoSimulationParameters.DEFAULT_SOLVER_PAR_ID;
+        }
+
+        void setType(SolverType type) {
+            this.type = type;
+        }
+
+        SolverType getType() {
+            return type;
+        }
+
+        void setParametersFile(String parametersFile) {
+            this.parametersFile = parametersFile;
+        }
+
+        String getParametersFile() {
+            return parametersFile;
+        }
+
+        void setParametersId(String parametersId) {
+            this.parametersId = parametersId;
+        }
+
+        String getParametersId() {
+            return parametersId;
+        }
+
+        private SolverType type;
+        private String parametersFile;
+        private String parametersId;
+    }
 }
