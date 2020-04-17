@@ -88,29 +88,9 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
         return solverParametersId;
     }
 
-    public void setParametersFile(String parametersFile) {
-        this.parametersFile = parametersFile;
-    }
-
-    public void setNetworkParametersId(String networkParametersId) {
-        this.networkParametersId = networkParametersId;
-    }
-
-    public void setSolverType(SolverType solverType) {
-        this.solverType = solverType;
-    }
-
-    public void setSolverParametersFile(String solverParametersFile) {
-        this.solverParametersFile = solverParametersFile;
-    }
-
-    public void setSolverParametersId(String solverParametersId) {
-        this.solverParametersId = solverParametersId;
-    }
-
-    private String parametersFile;
-    private String networkParametersId;
-    private SolverType solverType;
-    private String solverParametersFile;
-    private String solverParametersId;
+    private final String parametersFile;
+    private final String networkParametersId;
+    private final SolverType solverType;
+    private final String solverParametersFile;
+    private final String solverParametersId;
 }
