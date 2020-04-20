@@ -1,0 +1,19 @@
+{
+  "version" : "1.0",
+  "startTime" : 0,
+  "stopTime" : 3600,
+  "extensions" : {
+    "DynawoParameters" : {
+      "parametersFile" : "/home/user/parametersFile",
+      "network" : {
+        "parametersFile" : "/home/user/networkParametersFile",
+        "parametersId" : "NETWORK"
+      },
+      "solver" : {
+        "type" : "SIM",
+        "parametersFile" : "/home/user/solverParametersFile",
+        "parametersId" : "SIM"
+      }
+    }
+  }
+}
