@@ -6,6 +6,7 @@
     "DynawoParameters" : {
       "parametersFile" : "/home/user/parametersFile",
       "network" : {
+        "parametersFile" : "/home/user/networkParametersFile",
         "parametersId" : "NETWORK"
       },
       "solver" : {

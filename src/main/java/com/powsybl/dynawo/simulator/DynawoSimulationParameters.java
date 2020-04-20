@@ -32,8 +32,17 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
         public Network() {
         }
 
-        public Network(String parametersId) {
+        public Network(String parametersFile, String parametersId) {
+            this.parametersFile = Objects.requireNonNull(parametersFile);
             this.parametersId = Objects.requireNonNull(parametersId);
+        }
+
+        public String getParametersFile() {
+            return parametersFile;
+        }
+
+        public void setParametersFile(String parametersFile) {
+            this.parametersFile = Objects.requireNonNull(parametersFile);
         }
 
         public String getParametersId() {
@@ -44,6 +53,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
             this.parametersId = Objects.requireNonNull(parametersId);
         }
 
+        private String parametersFile;
         private String parametersId;
     }
 
@@ -101,6 +111,8 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
         ModuleConfig config = platformConfig.getModuleConfig("dynawo-default-parameters");
         // File with all the dynamic models' parameters for the simulation
         String parametersFile = config.getStringProperty("parametersFile");
+        // File with all the network's parameters for the simulation
+        String networkParametersFile = config.getStringProperty("network.parametersFile");
         // Identifies the set of network parameters that will be used in the simulation.
         String networkParametersId = config.getStringProperty("network.ParametersId", DEFAULT_NETWORK_PAR_ID);
         // Information about the solver to use in the simulation, there are two options
@@ -112,16 +124,16 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
         // Identifies the set of solver parameters that will be used in the simulation
         String solverParametersId = config.getStringProperty("solver.parametersId", DEFAULT_SOLVER_PAR_ID);
 
-        return new DynawoSimulationParameters(parametersFile, networkParametersId, solverType, solverParametersFile, solverParametersId);
+        return new DynawoSimulationParameters(parametersFile, networkParametersFile, networkParametersId, solverType, solverParametersFile, solverParametersId);
     }
 
     public DynawoSimulationParameters() {
     }
 
-    public DynawoSimulationParameters(String parametersFile, String networkParametersId, SolverType solverType, String solverParametersFile,
+    public DynawoSimulationParameters(String parametersFile, String networkParametersFile, String networkParametersId, SolverType solverType, String solverParametersFile,
         String solverParametersId) {
         this.parametersFile = Objects.requireNonNull(parametersFile);
-        this.network = new Network(networkParametersId);
+        this.network = new Network(networkParametersFile, networkParametersId);
         this.solver = new Solver(solverType, solverParametersFile, solverParametersId);
     }
 

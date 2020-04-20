@@ -25,10 +25,12 @@ public class DynawoSimulationParametersSerializerTest extends AbstractConverterT
     @Test
     public void roundTripParameters() throws IOException {
         String parametersFile = "/home/user/parametersFile";
+        String networkParametersFile = "/home/user/networkParametersFile";
         String solverParametersFile = "/home/user/solverParametersFile";
         InMemoryPlatformConfig platformConfig = new InMemoryPlatformConfig(fileSystem);
         MapModuleConfig moduleConfig = platformConfig.createModuleConfig("dynawo-default-parameters");
         moduleConfig.setStringProperty("parametersFile", parametersFile);
+        moduleConfig.setStringProperty("network.parametersFile", networkParametersFile);
         moduleConfig.setStringProperty("solver.parametersFile", solverParametersFile);
 
         DynamicSimulationParameters dynamicSimulationParameters = new DynamicSimulationParameters()
