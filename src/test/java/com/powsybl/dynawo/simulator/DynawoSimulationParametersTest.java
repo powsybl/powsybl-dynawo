@@ -59,10 +59,10 @@ public class DynawoSimulationParametersTest {
 
         DynawoSimulationParameters parameters = DynawoSimulationParameters.load(platformConfig);
         assertEquals(parametersFile, parameters.getParametersFile());
-        assertEquals(networkParametersId, parameters.getNetworkParametersId());
-        assertEquals(solverType, parameters.getSolverType());
-        assertEquals(solverParametersFile, parameters.getSolverParametersFile());
-        assertEquals(solverParametersId, parameters.getSolverParametersId());
+        assertEquals(networkParametersId, parameters.getNetwork().getParametersId());
+        assertEquals(solverType, parameters.getSolver().getType());
+        assertEquals(solverParametersFile, parameters.getSolver().getParametersFile());
+        assertEquals(solverParametersId, parameters.getSolver().getParametersId());
     }
 
     @Test
@@ -70,9 +70,9 @@ public class DynawoSimulationParametersTest {
 
         DynawoSimulationParameters parameters = DynawoSimulationParameters.load(platformConfig);
         assertEquals(parametersFile, parameters.getParametersFile());
-        assertEquals(DynawoSimulationParameters.DEFAULT_NETWORK_PAR_ID, parameters.getNetworkParametersId());
-        assertEquals(DynawoSimulationParameters.DEFAULT_SOLVER_TYPE, parameters.getSolverType());
-        assertEquals(solverParametersFile, parameters.getSolverParametersFile());
-        assertEquals(DynawoSimulationParameters.DEFAULT_SOLVER_PAR_ID, parameters.getSolverParametersId());
+        assertEquals(DynawoSimulationParameters.DEFAULT_NETWORK_PAR_ID, parameters.getNetwork().getParametersId());
+        assertEquals(DynawoSimulationParameters.DEFAULT_SOLVER_TYPE, parameters.getSolver().getType());
+        assertEquals(solverParametersFile, parameters.getSolver().getParametersFile());
+        assertEquals(DynawoSimulationParameters.DEFAULT_SOLVER_PAR_ID, parameters.getSolver().getParametersId());
     }
 }

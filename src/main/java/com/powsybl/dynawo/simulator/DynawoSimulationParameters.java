@@ -27,6 +27,66 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
         IDA
     }
 
+    class Network {
+
+        public Network() {
+        }
+
+        public Network(String parametersId) {
+            this.parametersId = Objects.requireNonNull(parametersId);
+        }
+
+        public String getParametersId() {
+            return parametersId;
+        }
+
+        public void setParametersId(String parametersId) {
+            this.parametersId = Objects.requireNonNull(parametersId);
+        }
+
+        private String parametersId;
+    }
+
+    class Solver {
+
+        public Solver() {
+        }
+
+        public Solver(SolverType type, String parametersFile, String parametersId) {
+            this.type = Objects.requireNonNull(type);
+            this.parametersFile = Objects.requireNonNull(parametersFile);
+            this.parametersId = Objects.requireNonNull(parametersId);
+        }
+
+        public SolverType getType() {
+            return type;
+        }
+
+        public void setType(SolverType type) {
+            this.type = Objects.requireNonNull(type);
+        }
+
+        public String getParametersFile() {
+            return parametersFile;
+        }
+
+        public void setParametersFile(String parametersFile) {
+            this.parametersFile = Objects.requireNonNull(parametersFile);
+        }
+
+        public String getParametersId() {
+            return parametersId;
+        }
+
+        public void setParametersId(String parametersId) {
+            this.parametersId = Objects.requireNonNull(parametersId);
+        }
+
+        private SolverType type;
+        private String parametersFile;
+        private String parametersId;
+    }
+
     /**
      * Loads parameters from the default platform configuration.
      */
@@ -43,8 +103,9 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
         String parametersFile = config.getStringProperty("parametersFile");
         // Identifies the set of network parameters that will be used in the simulation.
         String networkParametersId = config.getStringProperty("network.ParametersId", DEFAULT_NETWORK_PAR_ID);
-        // Information about the solver to use in the simulation, there are two options the simplified solver
-        //  and the IDA solver
+        // Information about the solver to use in the simulation, there are two options
+        // the simplified solver
+        // and the IDA solver
         SolverType solverType = config.getEnumProperty("solver.type", SolverType.class, DEFAULT_SOLVER_TYPE);
         // File with all the solvers' parameters for the simulation
         String solverParametersFile = config.getStringProperty("solver.parametersFile");
@@ -54,13 +115,14 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
         return new DynawoSimulationParameters(parametersFile, networkParametersId, solverType, solverParametersFile, solverParametersId);
     }
 
+    public DynawoSimulationParameters() {
+    }
+
     public DynawoSimulationParameters(String parametersFile, String networkParametersId, SolverType solverType, String solverParametersFile,
         String solverParametersId) {
         this.parametersFile = Objects.requireNonNull(parametersFile);
-        this.networkParametersId = Objects.requireNonNull(networkParametersId);
-        this.solverType = Objects.requireNonNull(solverType);
-        this.solverParametersFile = Objects.requireNonNull(solverParametersFile);
-        this.solverParametersId = Objects.requireNonNull(solverParametersId);
+        this.network = new Network(networkParametersId);
+        this.solver = new Solver(solverType, solverParametersFile, solverParametersId);
     }
 
     @Override
@@ -72,25 +134,27 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
         return parametersFile;
     }
 
-    public String getNetworkParametersId() {
-        return networkParametersId;
+    public void setParametersFile(String parametersFile) {
+        this.parametersFile = Objects.requireNonNull(parametersFile);
     }
 
-    public SolverType getSolverType() {
-        return solverType;
+    public Network getNetwork() {
+        return network;
     }
 
-    public String getSolverParametersFile() {
-        return solverParametersFile;
+    public void setNetwork(Network network) {
+        this.network = Objects.requireNonNull(network);
     }
 
-    public String getSolverParametersId() {
-        return solverParametersId;
+    public Solver getSolver() {
+        return solver;
     }
 
-    private final String parametersFile;
-    private final String networkParametersId;
-    private final SolverType solverType;
-    private final String solverParametersFile;
-    private final String solverParametersId;
+    public void setSolver(Solver solver) {
+        this.solver = Objects.requireNonNull(solver);
+    }
+
+    private String parametersFile;
+    private Network network;
+    private Solver solver;
 }
