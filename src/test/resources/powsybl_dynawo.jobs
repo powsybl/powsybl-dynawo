@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dyn:jobs xmlns:dyn="http://www.rte-france.com/dynawo">
+    <dyn:job name="Job test">
+        <dyn:solver lib="lib" parFile="/home/user/solverParametersFile" parId="solverParametersId"/>
+        <dyn:modeler compileDir="outputs/compilation">
+            <dyn:network iidmFile="iidm" parFile="/home/user/networkParametersFile" parId="networkParametersId"/>
+            <dyn:dynModels dydFile="dyd"/>
+        </dyn:modeler>
+        <dyn:simulation startTime="1" stopTime="100"/>
+        <dyn:outputs directory="outputs">
+            <dyn:dumpInitValues local="false" global="false"/>
+            <dyn:curves inputFile="curve" exportMode="CSV"/>
+            <dyn:timeline exportMode="TXT"/>
+            <dyn:finalState exportIIDMFile="true" exportDumpFile="false"/>
+            <dyn:logs>
+                <dyn:appender tag="" file="dynawo.log" lvlFilter="DEBUG"/>
+            </dyn:logs>
+        </dyn:outputs>
+    </dyn:job>
+</dyn:jobs>

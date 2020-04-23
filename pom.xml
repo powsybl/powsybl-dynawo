@@ -41,6 +41,7 @@
         <jimfs.version>1.1</jimfs.version>
         <junit.version>4.12</junit.version>
         <slf4j.version>1.7.22</slf4j.version>
+        <xmlunit.version>2.3.0</xmlunit.version>
 
         <powsyblcore.version>3.2.0</powsyblcore.version>
     </properties>
@@ -82,6 +83,12 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
             <version>${slf4j.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.xmlunit</groupId>
+            <artifactId>xmlunit-core</artifactId>
+            <version>${xmlunit.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
