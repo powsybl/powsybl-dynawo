@@ -36,11 +36,11 @@ public class DynawoTestUtil extends AbstractConverterTest {
     public void setUpDynawo() throws IOException {
         int startTime = 1;
         int stopTime = 100;
-        String parametersFile = "/home/user/parametersFile";
-        String networkParametersFile = "/home/user/networkParametersFile";
+        String parametersFile = "/models.par";
+        String networkParametersFile = "/network.par";
         String networkParametersId = "1";
         SolverType solverType = SolverType.IDA;
-        String solverParametersFile = "/home/user/solverParametersFile";
+        String solverParametersFile = "/solver.par";
         String solverParametersId = "1";
 
         platformConfig = new InMemoryPlatformConfig(fileSystem);
