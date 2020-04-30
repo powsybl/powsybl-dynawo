@@ -21,6 +21,10 @@ import com.powsybl.dynawo.DynawoContext;
 import com.powsybl.dynawo.simulator.DynawoSimulationParameters;
 import com.powsybl.dynawo.simulator.DynawoSimulationParameters.SolverType;
 
+import static com.powsybl.dynawo.xml.DynawoConstants.*;
+import static com.powsybl.dynawo.xml.DynawoXmlConstants.DYN_PREFIX;
+import static com.powsybl.dynawo.xml.DynawoXmlConstants.DYN_URI;
+
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
@@ -29,42 +33,18 @@ public final class JobsXml {
     private JobsXml() {
     }
 
-    private static String getJobsFilename() {
-        return DynawoConstants.JOBS_FILENAME;
-    }
-
-    private static String getNetworkFilename() {
-        return DynawoConstants.NETWORK_FILENAME;
-    }
-
-    private static String getDydFilename() {
-        return DynawoConstants.DYD_FILENAME;
-    }
-
-    private static String getCurvesFilename() {
-        return DynawoConstants.CRV_FILENAME;
-    }
-
-    private static String getNamespacePrefix() {
-        return DynawoXmlConstants.DYN_PREFIX;
-    }
-
-    private static String getNamespaceUri() {
-        return DynawoXmlConstants.DYN_URI;
-    }
-
     public static void write(Path workingDir, DynawoContext context) throws IOException, XMLStreamException {
         Objects.requireNonNull(workingDir);
         Objects.requireNonNull(context);
-        Path file = workingDir.resolve(getJobsFilename());
+        Path file = workingDir.resolve(JOBS_FILENAME);
         XMLOutputFactory output = XMLOutputFactory.newInstance();
         try (Writer writer = Files.newBufferedWriter(file, StandardCharsets.UTF_8)) {
             XMLStreamWriter xmlWriter = output.createXMLStreamWriter(writer);
             try {
                 xmlWriter.writeStartDocument(StandardCharsets.UTF_8.toString(), "1.0");
-                xmlWriter.setPrefix(getNamespacePrefix(), getNamespaceUri());
-                xmlWriter.writeStartElement(getNamespaceUri(), "jobs");
-                xmlWriter.writeNamespace(getNamespacePrefix(), getNamespaceUri());
+                xmlWriter.setPrefix(DYN_PREFIX, DYN_URI);
+                xmlWriter.writeStartElement(DYN_URI, "jobs");
+                xmlWriter.writeNamespace(DYN_PREFIX, DYN_URI);
 
                 write(xmlWriter, context);
 
@@ -77,7 +57,7 @@ public final class JobsXml {
     }
 
     private static void write(XMLStreamWriter writer, DynawoContext context) throws XMLStreamException {
-        writer.writeStartElement(getNamespaceUri(), "job");
+        writer.writeStartElement(DYN_URI, "job");
         writer.writeAttribute("name", "Job");
         writeSolver(writer, context);
         writeModeler(writer, context);
@@ -88,7 +68,7 @@ public final class JobsXml {
 
     private static void writeSolver(XMLStreamWriter writer, DynawoContext context) throws XMLStreamException {
         DynawoSimulationParameters parameters = Objects.requireNonNull(context.getParameters().getExtension(DynawoSimulationParameters.class));
-        writer.writeEmptyElement(getNamespaceUri(), "solver");
+        writer.writeEmptyElement(DYN_URI, "solver");
         writer.writeAttribute("lib", parameters.getSolver().getType().equals(SolverType.IDA) ? "dynawo_SolverIDA" : "dynawo_SolverSIM");
         writer.writeAttribute("parFile", parameters.getSolver().getParametersFile());
         writer.writeAttribute("parId", parameters.getSolver().getParametersId());
@@ -96,52 +76,52 @@ public final class JobsXml {
 
     private static void writeModeler(XMLStreamWriter writer, DynawoContext context) throws XMLStreamException {
         DynawoSimulationParameters parameters = Objects.requireNonNull(context.getParameters().getExtension(DynawoSimulationParameters.class));
-        writer.writeStartElement(getNamespaceUri(), "modeler");
+        writer.writeStartElement(DYN_URI, "modeler");
         writer.writeAttribute("compileDir", "outputs/compilation");
 
-        writer.writeEmptyElement(getNamespaceUri(), "network");
-        writer.writeAttribute("iidmFile", getNetworkFilename());
+        writer.writeEmptyElement(DYN_URI, "network");
+        writer.writeAttribute("iidmFile", NETWORK_FILENAME);
         writer.writeAttribute("parFile", parameters.getNetwork().getParametersFile());
         writer.writeAttribute("parId", parameters.getNetwork().getParametersId());
 
-        writer.writeEmptyElement(getNamespaceUri(), "dynModels");
-        writer.writeAttribute("dydFile", getDydFilename());
+        writer.writeEmptyElement(DYN_URI, "dynModels");
+        writer.writeAttribute("dydFile", DYD_FILENAME);
 
-        writer.writeEmptyElement(getNamespaceUri(), "precompiledModels");
+        writer.writeEmptyElement(DYN_URI, "precompiledModels");
         writer.writeAttribute("useStandardModels", "true");
 
-        writer.writeEmptyElement(getNamespaceUri(), "modelicaModels");
+        writer.writeEmptyElement(DYN_URI, "modelicaModels");
         writer.writeAttribute("useStandardModels", "false");
 
         writer.writeEndElement();
     }
 
     private static void writeSimulation(XMLStreamWriter writer, DynawoContext context) throws XMLStreamException {
-        writer.writeEmptyElement(getNamespaceUri(), "simulation");
+        writer.writeEmptyElement(DYN_URI, "simulation");
         writer.writeAttribute("startTime", Integer.toString(context.getParameters().getStartTime()));
         writer.writeAttribute("stopTime", Integer.toString(context.getParameters().getStopTime()));
     }
 
     private static void writeOutput(XMLStreamWriter writer) throws XMLStreamException {
-        writer.writeStartElement(getNamespaceUri(), "outputs");
+        writer.writeStartElement(DYN_URI, "outputs");
         writer.writeAttribute("directory", "outputs");
 
-        writer.writeEmptyElement(getNamespaceUri(), "dumpInitValues");
+        writer.writeEmptyElement(DYN_URI, "dumpInitValues");
         writer.writeAttribute("local", "false");
         writer.writeAttribute("global", "false");
 
-        writer.writeEmptyElement(getNamespaceUri(), "curves");
-        writer.writeAttribute("inputFile", getCurvesFilename());
+        writer.writeEmptyElement(DYN_URI, "curves");
+        writer.writeAttribute("inputFile", DynawoConstants.CRV_FILENAME);
         writer.writeAttribute("exportMode", "CSV");
 
-        writer.writeEmptyElement(getNamespaceUri(), "timeline");
+        writer.writeEmptyElement(DYN_URI, "timeline");
         writer.writeAttribute("exportMode", "TXT");
 
-        writer.writeEmptyElement(getNamespaceUri(), "finalState");
+        writer.writeEmptyElement(DYN_URI, "finalState");
         writer.writeAttribute("exportIIDMFile", "true");
         writer.writeAttribute("exportDumpFile", "false");
 
-        writer.writeStartElement(getNamespaceUri(), "logs");
+        writer.writeStartElement(DYN_URI, "logs");
         writeAppender(writer);
         writer.writeEndElement();
 
@@ -149,7 +129,7 @@ public final class JobsXml {
     }
 
     private static void writeAppender(XMLStreamWriter writer) throws XMLStreamException {
-        writer.writeEmptyElement(getNamespaceUri(), "appender");
+        writer.writeEmptyElement(DYN_URI, "appender");
         writer.writeAttribute("tag", "");
         writer.writeAttribute("file", "dynawo.log");
         writer.writeAttribute("lvlFilter", "DEBUG");

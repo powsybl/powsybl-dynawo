@@ -27,7 +27,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
         IDA
     }
 
-    public class Network {
+    public static class Network {
 
         public Network() {
         }
@@ -57,7 +57,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
         private String parametersId;
     }
 
-    public class Solver {
+    public static class Solver {
 
         public Solver() {
         }
