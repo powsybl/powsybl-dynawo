@@ -7,12 +7,12 @@
       "parametersFile" : "/home/user/parametersFile",
       "network" : {
         "parametersFile" : "/home/user/networkParametersFile",
-        "parametersId" : "NETWORK"
+        "parametersId" : "1"
       },
       "solver" : {
         "type" : "SIM",
         "parametersFile" : "/home/user/solverParametersFile",
-        "parametersId" : "SIM"
+        "parametersId" : "1"
       }
     }
   }

@@ -19,15 +19,15 @@ import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulationParameters> {
 
     public static final SolverType DEFAULT_SOLVER_TYPE = SolverType.SIM;
-    public static final String DEFAULT_NETWORK_PAR_ID = "NETWORK";
-    public static final String DEFAULT_SOLVER_PAR_ID = "SIM";
+    public static final String DEFAULT_NETWORK_PAR_ID = "1";
+    public static final String DEFAULT_SOLVER_PAR_ID = "1";
 
     public enum SolverType {
         SIM,
         IDA
     }
 
-    public class Network {
+    public static class Network {
 
         public Network() {
         }
@@ -57,7 +57,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
         private String parametersId;
     }
 
-    public class Solver {
+    public static class Solver {
 
         public Solver() {
         }

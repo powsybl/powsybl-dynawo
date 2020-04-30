@@ -28,9 +28,7 @@ public class DynawoSimulationParametersSerializer implements JsonDynamicSimulati
 
     @Override
     public String getCategoryName() {
-        // TODO: use "dynamic-simulation-parameters" when powsybl-core v3.3.0 is
-        // released
-        return "DynamicSimulation-parameters";
+        return "dynamic-simulation-parameters";
     }
 
     @Override
