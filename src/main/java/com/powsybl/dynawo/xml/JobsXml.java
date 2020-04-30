@@ -26,11 +26,25 @@ import com.powsybl.dynawo.simulator.DynawoSimulationParameters.SolverType;
  */
 public final class JobsXml {
 
-    public static final String JOBS_FILENAME = "powsybl_dynawo.jobs";
-
     private JobsXml() {
     }
 
+    private static String getJobsFilename() {
+        return DynawoConstants.JOBS_FILENAME;
+    }
+
+    private static String getNetworkFilename() {
+        return DynawoConstants.NETWORK_FILENAME;
+    }
+
+    private static String getDydFilename() {
+        return DynawoConstants.DYD_FILENAME;
+    }
+
+    private static String getCurvesFilename() {
+        return DynawoConstants.CRV_FILENAME;
+    }
+    
     private static String getNamespacePrefix() {
         return DynawoXmlConstants.DYN_PREFIX;
     }
@@ -42,7 +56,7 @@ public final class JobsXml {
     public static void write(Path workingDir, DynawoContext context) throws IOException, XMLStreamException {
         Objects.requireNonNull(workingDir);
         Objects.requireNonNull(context);
-        Path file = workingDir.resolve(JOBS_FILENAME);
+        Path file = workingDir.resolve(getJobsFilename());
         XMLOutputFactory output = XMLOutputFactory.newInstance();
         try (Writer writer = Files.newBufferedWriter(file, StandardCharsets.UTF_8)) {
             XMLStreamWriter xmlWriter = output.createXMLStreamWriter(writer);
@@ -86,18 +100,18 @@ public final class JobsXml {
         writer.writeAttribute("compileDir", "outputs/compilation");
 
         writer.writeEmptyElement(getNamespaceUri(), "network");
-        writer.writeAttribute("iidmFile", "powsybl_dynawo.xiidm");
+        writer.writeAttribute("iidmFile", getNetworkFilename());
         writer.writeAttribute("parFile", parameters.getNetwork().getParametersFile());
         writer.writeAttribute("parId", parameters.getNetwork().getParametersId());
 
         writer.writeEmptyElement(getNamespaceUri(), "dynModels");
-        writer.writeAttribute("dydFile", "powsybl_dynawo.dyd");
+        writer.writeAttribute("dydFile", getDydFilename());
 
         writer.writeEmptyElement(getNamespaceUri(), "precompiledModels");
-        writer.writeAttribute("useStandardModels", Boolean.toString(true));
+        writer.writeAttribute("useStandardModels", "true");
 
         writer.writeEmptyElement(getNamespaceUri(), "modelicaModels");
-        writer.writeAttribute("useStandardModels", Boolean.toString(false));
+        writer.writeAttribute("useStandardModels", "false");
 
         writer.writeEndElement();
     }
@@ -113,19 +127,19 @@ public final class JobsXml {
         writer.writeAttribute("directory", "outputs");
 
         writer.writeEmptyElement(getNamespaceUri(), "dumpInitValues");
-        writer.writeAttribute("local", Boolean.toString(false));
-        writer.writeAttribute("global", Boolean.toString(false));
+        writer.writeAttribute("local", "false");
+        writer.writeAttribute("global", "false");
 
         writer.writeEmptyElement(getNamespaceUri(), "curves");
-        writer.writeAttribute("inputFile", "powsybl_dynawo.crv");
+        writer.writeAttribute("inputFile", getCurvesFilename());
         writer.writeAttribute("exportMode", "CSV");
 
         writer.writeEmptyElement(getNamespaceUri(), "timeline");
         writer.writeAttribute("exportMode", "TXT");
 
         writer.writeEmptyElement(getNamespaceUri(), "finalState");
-        writer.writeAttribute("exportIIDMFile", Boolean.toString(true));
-        writer.writeAttribute("exportDumpFile", Boolean.toString(false));
+        writer.writeAttribute("exportIIDMFile", "true");
+        writer.writeAttribute("exportDumpFile", "false");
 
         writer.writeStartElement(getNamespaceUri(), "logs");
         writeAppender(writer);
