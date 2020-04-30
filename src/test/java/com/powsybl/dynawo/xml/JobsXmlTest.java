@@ -25,8 +25,8 @@ public class JobsXmlTest extends DynawoTestUtil {
 
     @Test
     public void writeJob() throws SAXException, IOException, XMLStreamException {
-        DynamicSimulationParameters parameters = DynamicSimulationParameters.load(platformConfig);
-        parameters.addExtension(DynawoSimulationParameters.class, DynawoSimulationParameters.load(platformConfig));
+        DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
+        parameters.addExtension(DynawoSimulationParameters.class, DynawoSimulationParameters.load());
 
         Network network = Network.create("test", "test");
         DynawoContext context = new DynawoContext(network, parameters);

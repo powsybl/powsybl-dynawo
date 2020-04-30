@@ -17,44 +17,14 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
-import org.junit.Before;
 import org.xml.sax.SAXException;
 
 import com.powsybl.commons.AbstractConverterTest;
-import com.powsybl.commons.config.InMemoryPlatformConfig;
-import com.powsybl.commons.config.MapModuleConfig;
-import com.powsybl.dynawo.simulator.DynawoSimulationParameters.SolverType;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 public class DynawoTestUtil extends AbstractConverterTest {
-
-    protected InMemoryPlatformConfig platformConfig;
-
-    @Before
-    public void setUpDynawo() throws IOException {
-        int startTime = 1;
-        int stopTime = 100;
-        String parametersFile = "/models.par";
-        String networkParametersFile = "/network.par";
-        String networkParametersId = "1";
-        SolverType solverType = SolverType.IDA;
-        String solverParametersFile = "/solver.par";
-        String solverParametersId = "1";
-
-        platformConfig = new InMemoryPlatformConfig(fileSystem);
-        MapModuleConfig moduleConfig = platformConfig.createModuleConfig("dynamic-simulation-default-parameters");
-        moduleConfig.setStringProperty("startTime", Integer.toString(startTime));
-        moduleConfig.setStringProperty("stopTime", Integer.toString(stopTime));
-        moduleConfig = platformConfig.createModuleConfig("dynawo-default-parameters");
-        moduleConfig.setStringProperty("parametersFile", parametersFile);
-        moduleConfig.setStringProperty("network.parametersFile", networkParametersFile);
-        moduleConfig.setStringProperty("network.ParametersId", networkParametersId);
-        moduleConfig.setStringProperty("solver.type", solverType.toString());
-        moduleConfig.setStringProperty("solver.parametersFile", solverParametersFile);
-        moduleConfig.setStringProperty("solver.parametersId", solverParametersId);
-    }
 
     public void validate(Path xmlFile, String name) throws SAXException, IOException {
         SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
