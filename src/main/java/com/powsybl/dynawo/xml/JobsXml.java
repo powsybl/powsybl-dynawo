@@ -44,7 +44,7 @@ public final class JobsXml {
     private static String getCurvesFilename() {
         return DynawoConstants.CRV_FILENAME;
     }
-    
+
     private static String getNamespacePrefix() {
         return DynawoXmlConstants.DYN_PREFIX;
     }
