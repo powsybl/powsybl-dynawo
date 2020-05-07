@@ -2,6 +2,10 @@ dynamic-simulation-default-parameters:
     startTime: 1
     stopTime: 100
 
+dynawo:
+  homeDir: /home/dynawo
+  debug: true
+
 dynawo-default-parameters:
     parametersFile: /models.par
     network.parametersFile: /network.par
