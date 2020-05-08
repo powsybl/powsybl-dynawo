@@ -48,7 +48,8 @@ public final class Main {
     public static void main(String[] args) {
 
         if (args.length < 1) {
-            throw new PowsyblException("Usage: com.powsybl.dynawo.Main networkFile.xiidm [parametersFile.json]");
+            LOGGER.info("Usage: com.powsybl.dynawo.Main networkFile.xiidm [parametersFile.json]");
+            return;
         }
         networkFile = args[0];
         Network network = Importers.loadNetwork(networkFile);
