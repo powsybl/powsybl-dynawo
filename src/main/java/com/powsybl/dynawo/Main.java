@@ -1,7 +1,10 @@
 package com.powsybl.dynawo;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -25,25 +28,35 @@ import com.powsybl.computation.local.LocalComputationManager;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynamicsimulation.DynamicSimulationResult;
 import com.powsybl.dynamicsimulation.DynamicSimulationResultImpl;
+import com.powsybl.dynamicsimulation.json.JsonDynamicSimulationParameters;
 import com.powsybl.dynawo.simulator.DynawoConfig;
 import com.powsybl.dynawo.simulator.DynawoSimulationParameters;
 import com.powsybl.dynawo.xml.DynawoConstants;
 import com.powsybl.dynawo.xml.JobsXml;
+import com.powsybl.iidm.import_.Importers;
 import com.powsybl.iidm.network.Network;
 
 public final class Main {
 
     private static final String DEFAULT_DYNAWO_CMD_NAME = "myEnvDynawo.sh";
     private static final String WORKING_DIR_PREFIX = "powsybl_dynawo_";
+    private static String networkFile;
 
     private Main() {
     }
 
     public static void main(String[] args) {
 
-        Network network = Network.create("test", "test");
+        if (args.length < 1) {
+            throw new PowsyblException("Usage: com.powsybl.dynawo.Main networkFile.xiidm [parametersFile.json]");
+        }
+        networkFile = args[0];
+        Network network = Importers.loadNetwork(networkFile);
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         parameters.addExtension(DynawoSimulationParameters.class, DynawoSimulationParameters.load());
+        if (args.length > 1) {
+            JsonDynamicSimulationParameters.update(parameters, Paths.get(args[1]));
+        }
 
         try (ComputationManager computationManager = new LocalComputationManager(LocalComputationConfig.load())) {
             DynamicSimulationResult result = run(network, computationManager, parameters).get();
@@ -75,6 +88,7 @@ public final class Main {
                 private void writeInputFiles(Path workingDir, Network network, DynamicSimulationParameters parameters) {
                     DynawoContext context = new DynawoContext(network, parameters);
                     try {
+                        Files.copy(Paths.get(networkFile), workingDir.resolve(DynawoConstants.NETWORK_FILENAME), StandardCopyOption.REPLACE_EXISTING);
                         JobsXml.write(workingDir, context);
                     } catch (IOException | XMLStreamException e) {
                         throw new PowsyblException(e.getMessage());

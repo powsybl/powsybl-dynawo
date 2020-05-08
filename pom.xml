@@ -110,6 +110,11 @@
             <artifactId>powsybl-iidm-impl</artifactId>
             <version>${powsyblcore.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.powsybl</groupId>
+            <artifactId>powsybl-iidm-xml-converter</artifactId>
+            <version>${powsyblcore.version}</version>
+        </dependency>
 
         <!-- Test dependencies -->
         <dependency>
