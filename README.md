@@ -1,12 +1,27 @@
 # powsybl-dynawo
 Dynawo integration in powsybl
 
-# run dynawo from main
-It's mandatory to include a config package in the classpath.
-The expected list of arguments are:
- - a network file (mandatory argument)
- - a JSON parameters file (optional argument)
+# Running dynawo from main
+Maven exec plugin is used to launch the `Main` class.
 
+Arguments:
+ - A network file (mandatory).
+ - A JSON parameters file (optional).
+
+Sample invocation from the command line:
 ```
-$> java -cp "./target/powsybl-dynawo-1.0.0-SNAPSHOT.jar;$USERPROFILE/.m2/repository/com/powsybl/powsybl-config-classic/3.3.0/powsybl-config-classic-3.3.0.jar" -Dpowsybl.config.dirs="./config" com.powsybl.dynawo.Main ./ieee57cdf.xiidm  
+$> mvn exec:java -Dexec.args="path/to/ieee57cdf.xiidm"
+```
+
+The package `powsybl-config-classic` is used for runtime. Tests use `powsybl-config-test`.
+
+Sample contents of ``${HOME}.itools/config.yml`
+```
+dynawo:
+    homeDir: dynawoHomeDir
+
+dynawo-default-parameters:
+    parametersFile: parametersFileLocation
+    network.parametersFile: networkParametersFileLocation
+    solver.parametersFile: solverParametersFileLocation
 ```

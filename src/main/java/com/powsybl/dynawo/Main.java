@@ -63,7 +63,9 @@ public final class Main {
             DynamicSimulationResult result = run(network, computationManager, parameters).get();
         } catch (IOException | InterruptedException | ExecutionException e) {
             LOGGER.error(e.toString());
+            System.exit(1);
         }
+        System.exit(0);
     }
 
     private static CompletableFuture<DynamicSimulationResult> run(Network network, ComputationManager computationManager,
@@ -77,6 +79,7 @@ public final class Main {
                 public List<CommandExecution> before(Path workingDir) {
                     writeInputFiles(workingDir, network, parameters);
                     Command cmd = createCommand(workingDir.resolve(DynawoConstants.JOBS_FILENAME));
+                    LOGGER.info("Command {}", cmd.toString(0));
                     return Collections.singletonList(new CommandExecution(cmd, 1));
                 }
 
