@@ -63,6 +63,8 @@ public final class Main {
             DynamicSimulationResult result = run(network, computationManager, parameters).get();
         } catch (IOException | InterruptedException | ExecutionException e) {
             LOGGER.error(e.toString());
+            // Restore interrupted state...
+            Thread.currentThread().interrupt();
             System.exit(1);
         }
         System.exit(0);
