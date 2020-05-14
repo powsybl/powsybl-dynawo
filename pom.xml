@@ -25,17 +25,6 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <manifestEntries>
-                            <Automatic-Module-Name>com.powsybl.dynawo.simulator</Automatic-Module-Name>
-                        </manifestEntries>
-                    </archive>
-                </configuration>
-            </plugin>
-            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>1.6.0</version>
@@ -93,13 +82,29 @@
         </dependency>
         <dependency>
             <groupId>com.powsybl</groupId>
-            <artifactId>powsybl-iidm-impl</artifactId>
+            <artifactId>powsybl-iidm-xml-converter</artifactId>
             <version>${powsyblcore.version}</version>
+        </dependency>
+
+
+        <!-- Runtime dependencies -->
+        <dependency>
+            <groupId>com.powsybl</groupId>
+            <artifactId>powsybl-config-classic</artifactId>
+            <version>${powsyblcore.version}</version>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>com.powsybl</groupId>
-            <artifactId>powsybl-iidm-xml-converter</artifactId>
+            <artifactId>powsybl-iidm-impl</artifactId>
             <version>${powsyblcore.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-jdk14</artifactId>
+            <version>${slf4j.version}</version>
+            <scope>runtime</scope>
         </dependency>
 
         <!-- Test dependencies -->
@@ -139,20 +144,6 @@
             <artifactId>xmlunit-core</artifactId>
             <version>${xmlunit.version}</version>
             <scope>test</scope>
-        </dependency>
-
-        <!-- Runtime dependencies -->
-        <dependency>
-            <groupId>com.powsybl</groupId>
-            <artifactId>powsybl-config-classic</artifactId>
-            <version>${powsyblcore.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-jdk14</artifactId>
-            <version>${slf4j.version}</version>
-            <scope>runtime</scope>
         </dependency>
     </dependencies>
 

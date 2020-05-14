@@ -55,7 +55,7 @@ public class DynawoSimulationParametersTest {
         String solverParametersId = "solverParametersId";
 
         MapModuleConfig moduleConfig = (MapModuleConfig) platformConfig.getModuleConfig("dynawo-default-parameters");
-        moduleConfig.setStringProperty("network.ParametersId", networkParametersId);
+        moduleConfig.setStringProperty("network.parametersId", networkParametersId);
         moduleConfig.setStringProperty("solver.type", solverType.toString());
         moduleConfig.setStringProperty("solver.parametersId", solverParametersId);
 

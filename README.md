@@ -15,7 +15,7 @@ $> mvn exec:java -Dexec.args="path/to/ieee57cdf.xiidm"
 
 The package `powsybl-config-classic` is used for runtime. Tests use `powsybl-config-test`.
 
-Sample contents of ``${HOME}.itools/config.yml`
+Sample contents of `${HOME}.itools/config.yml`
 ```
 dynawo:
     homeDir: dynawoHomeDir

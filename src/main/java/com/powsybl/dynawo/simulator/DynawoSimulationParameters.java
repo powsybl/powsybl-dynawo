@@ -114,7 +114,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
         // File with all the network's parameters for the simulation
         String networkParametersFile = config.getStringProperty("network.parametersFile");
         // Identifies the set of network parameters that will be used in the simulation.
-        String networkParametersId = config.getStringProperty("network.ParametersId", DEFAULT_NETWORK_PAR_ID);
+        String networkParametersId = config.getStringProperty("network.parametersId", DEFAULT_NETWORK_PAR_ID);
         // Information about the solver to use in the simulation, there are two options
         // the simplified solver
         // and the IDA solver
