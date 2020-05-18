@@ -29,7 +29,7 @@ public class JobsXmlTest extends DynawoTestUtil {
         parameters.addExtension(DynawoSimulationParameters.class, DynawoSimulationParameters.load());
 
         Network network = Network.create("test", "test");
-        DynawoContext context = new DynawoContext(network, parameters);
+        DynawoContext context = new DynawoContext(network, parameters, DynawoConstants.CRV_FILENAME);
 
         JobsXml.write(tmpDir, context);
         validate(tmpDir.resolve(DynawoConstants.JOBS_FILENAME), "jobs");

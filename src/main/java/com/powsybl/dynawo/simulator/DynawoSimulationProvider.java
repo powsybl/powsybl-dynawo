@@ -8,11 +8,13 @@ package com.powsybl.dynawo.simulator;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Properties;
 import java.util.concurrent.CompletableFuture;
 
 import javax.xml.stream.XMLStreamException;
@@ -35,6 +37,7 @@ import com.powsybl.dynawo.DynawoContext;
 import com.powsybl.dynawo.xml.DynawoConstants;
 import com.powsybl.dynawo.xml.JobsXml;
 import com.powsybl.iidm.network.Network;
+import com.powsybl.iidm.xml.IidmXmlVersion;
 import com.powsybl.iidm.xml.XMLExporter;
 
 /**
@@ -54,6 +57,15 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
 
     public DynawoSimulationProvider(DynawoConfig dynawoConfig) {
         this.dynawoConfig = Objects.requireNonNull(dynawoConfig);
+    }
+
+    //TODO reference to DYD file and curves content. Only for main remove with it
+    private String dydFile = null;
+    private String crvFile = DynawoConstants.CRV_FILENAME;
+
+    public void setDydFilenameProvisional(String dydFile) {
+        this.dydFile = dydFile;
+        this.crvFile = null;
     }
 
     @Override
@@ -90,24 +102,21 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
         network.getVariantManager().setWorkingVariant(workingStateId);
         ExecutionEnvironment execEnv = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, dynawoConfig.isDebug());
 
-        return computationManager.execute(execEnv, new DynawoHandler(network, parameters, dynawoParameters));
+        DynawoContext context = new DynawoContext(network, parameters, crvFile);
+        return computationManager.execute(execEnv, new DynawoHandler(context));
     }
 
     private final class DynawoHandler extends AbstractExecutionHandler<DynamicSimulationResult> {
 
-        private final Network network;
-        private final DynamicSimulationParameters parameters;
-        private final DynawoSimulationParameters dynawoParameters;
+        private final DynawoContext context;
 
-        public DynawoHandler(Network network, DynamicSimulationParameters parameters, DynawoSimulationParameters dynawoParameters) {
-            this.network = network;
-            this.parameters = parameters;
-            this.dynawoParameters = dynawoParameters;
+        public DynawoHandler(DynawoContext context) {
+            this.context = context;
         }
 
         @Override
         public List<CommandExecution> before(Path workingDir) {
-            writeInputFiles(workingDir, network, parameters);
+            writeInputFiles(workingDir);
             Command cmd = createCommand(workingDir.resolve(DynawoConstants.JOBS_FILENAME));
             return Collections.singletonList(new CommandExecution(cmd, 1));
         }
@@ -118,10 +127,14 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
             return new DynamicSimulationResultImpl(true, "");
         }
 
-        private void writeInputFiles(Path workingDir, Network network, DynamicSimulationParameters parameters) {
-            DynawoContext context = new DynawoContext(network, parameters);
+        private void writeInputFiles(Path workingDir) {
             try {
-                new XMLExporter().export(network, null, new FileDataSource(workingDir, DynawoConstants.BASEFILENAME));
+                if (dydFile != null) {
+                    Files.copy(Paths.get(dydFile), workingDir.resolve(DynawoConstants.DYD_FILENAME));
+                }
+                Properties params = new Properties();
+                params.setProperty(XMLExporter.VERSION, IidmXmlVersion.V_1_0.toString("."));
+                new XMLExporter().export(context.getNetwork(), params, new FileDataSource(workingDir, DynawoConstants.BASEFILENAME));
                 JobsXml.write(workingDir, context);
             } catch (IOException e) {
                 throw new UncheckedIOException(e);

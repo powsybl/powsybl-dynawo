@@ -6,15 +6,19 @@
  */
 package com.powsybl.dynawo;
 
+import java.io.IOException;
 import java.nio.file.Paths;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.powsybl.dynamicsimulation.DynamicSimulation;
+import com.powsybl.computation.ComputationManager;
+import com.powsybl.computation.local.LocalComputationConfig;
+import com.powsybl.computation.local.LocalComputationManager;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynamicsimulation.json.JsonDynamicSimulationParameters;
 import com.powsybl.dynawo.simulator.DynawoSimulationParameters;
+import com.powsybl.dynawo.simulator.DynawoSimulationProvider;
 import com.powsybl.iidm.import_.Importers;
 import com.powsybl.iidm.network.Network;
 
@@ -30,19 +34,37 @@ public final class Main {
 
     public static void main(String[] args) {
 
-        if (args.length < 1 || args.length > 2) {
-            LOGGER.info("Usage: {} networkFile.xiidm [parametersFile.json]", Main.class.getName());
+        if (args.length < 2 || args.length > 3) {
+            LOGGER.info("Usage: {} networkFile.xiidm dynamicModels.dyd [parametersFile.json]", Main.class.getName());
             return;
         }
-        Network network = Importers.loadNetwork(args[0]);
+        String networkFile = null;
+        String parametersJsonFile = null;
+        String dydFile = null;
+        for (int i = 0; i < args.length; i++) {
+            if (args[i].endsWith("xiidm") || args[i].endsWith("iidm")) {
+                networkFile = args[i];
+            } else if (args[i].endsWith("json")) {
+                parametersJsonFile = args[i];
+            } else if (args[i].endsWith("dyd")) {
+                dydFile = args[i];
+            }
+        }
+        Network network = Importers.loadNetwork(networkFile);
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         parameters.addExtension(DynawoSimulationParameters.class, DynawoSimulationParameters.load());
-        if (args.length > 1) {
-            JsonDynamicSimulationParameters.update(parameters, Paths.get(args[1]));
+        if (parametersJsonFile != null) {
+            JsonDynamicSimulationParameters.update(parameters, Paths.get(parametersJsonFile));
         }
 
-        DynamicSimulation.Runner runner = DynamicSimulation.find();
-        runner.run(network, parameters);
+        DynawoSimulationProvider provider = new DynawoSimulationProvider();
+        provider.setDydFilenameProvisional(dydFile);
+        try (ComputationManager computationManager = new LocalComputationManager(LocalComputationConfig.load())) {
+            provider.run(network, computationManager, network.getVariantManager().getWorkingVariantId(), parameters).join();
+        } catch (IOException e) {
+            LOGGER.error(e.toString());
+            System.exit(1);
+        }
         System.exit(0);
     }
 }

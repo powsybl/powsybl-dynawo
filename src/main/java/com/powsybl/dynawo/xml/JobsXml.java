@@ -62,7 +62,7 @@ public final class JobsXml {
         writeSolver(writer, context);
         writeModeler(writer, context);
         writeSimulation(writer, context);
-        writeOutput(writer);
+        writeOutput(writer, context);
         writer.writeEndElement();
     }
 
@@ -102,7 +102,7 @@ public final class JobsXml {
         writer.writeAttribute("stopTime", Integer.toString(context.getParameters().getStopTime()));
     }
 
-    private static void writeOutput(XMLStreamWriter writer) throws XMLStreamException {
+    private static void writeOutput(XMLStreamWriter writer, DynawoContext context) throws XMLStreamException {
         writer.writeStartElement(DYN_URI, "outputs");
         writer.writeAttribute("directory", "outputs");
 
@@ -110,9 +110,11 @@ public final class JobsXml {
         writer.writeAttribute("local", "false");
         writer.writeAttribute("global", "false");
 
-        writer.writeEmptyElement(DYN_URI, "curves");
-        writer.writeAttribute("inputFile", DynawoConstants.CRV_FILENAME);
-        writer.writeAttribute("exportMode", "CSV");
+        if (context.getCurves() != null) {
+            writer.writeEmptyElement(DYN_URI, "curves");
+            writer.writeAttribute("inputFile", DynawoConstants.CRV_FILENAME);
+            writer.writeAttribute("exportMode", "CSV");
+        }
 
         writer.writeEmptyElement(DYN_URI, "timeline");
         writer.writeAttribute("exportMode", "TXT");

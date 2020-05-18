@@ -17,8 +17,13 @@ import com.powsybl.iidm.network.Network;
 public class DynawoContext {
 
     public DynawoContext(Network network, DynamicSimulationParameters parameters) {
+        this(network, parameters, null);
+    }
+
+    public DynawoContext(Network network, DynamicSimulationParameters parameters, String curves) {
         this.network = Objects.requireNonNull(network);
         this.parameters = Objects.requireNonNull(parameters);
+        this.curves = curves;
     }
 
     public Network getNetwork() {
@@ -29,6 +34,11 @@ public class DynawoContext {
         return parameters;
     }
 
+    public String getCurves() {
+        return curves;
+    }
+
     private final Network network;
     private final DynamicSimulationParameters parameters;
+    private final String curves;
 }
