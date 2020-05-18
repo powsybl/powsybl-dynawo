@@ -4,7 +4,7 @@ dynamic-simulation-default-parameters:
 
 dynawo:
   homeDir: /home/dynawo
-  debug: true
+  debug: false
 
 dynawo-default-parameters:
     parametersFile: /models.par
