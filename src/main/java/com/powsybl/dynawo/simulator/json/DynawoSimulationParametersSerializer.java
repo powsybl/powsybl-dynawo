@@ -59,9 +59,9 @@ public class DynawoSimulationParametersSerializer implements JsonDynamicSimulati
     }
 
     @Override
-    public void serialize(DynawoSimulationParameters dynawoSimulationOarameters, JsonGenerator generator,
+    public void serialize(DynawoSimulationParameters dynawoSimulationParameters, JsonGenerator generator,
             SerializerProvider provider) throws IOException {
-        createMapper().writeValue(generator, dynawoSimulationOarameters);
+        createMapper().writeValue(generator, dynawoSimulationParameters);
     }
 
     @Override
