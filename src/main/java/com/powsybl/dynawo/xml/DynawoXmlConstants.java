@@ -17,6 +17,8 @@ public final class DynawoXmlConstants {
 
     public static final String DYN_URI = DYN_BASE_URI;
 
+    public static final String INDENT = "    ";
+
     private DynawoXmlConstants() {
     }
 }

@@ -6,39 +6,31 @@
  */
 package com.powsybl.dynawo.simulator;
 
+import com.google.auto.service.AutoService;
+import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
+import com.powsybl.computation.*;
+import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
+import com.powsybl.dynamicsimulation.DynamicSimulationProvider;
+import com.powsybl.dynamicsimulation.DynamicSimulationResult;
+import com.powsybl.dynamicsimulation.DynamicSimulationResultImpl;
+import com.powsybl.dynawo.DynawoContext;
+import com.powsybl.dynawo.xml.JobsXml;
+import com.powsybl.iidm.export.Exporters;
+import com.powsybl.iidm.network.Network;
+import com.powsybl.iidm.xml.IidmXmlVersion;
+import com.powsybl.iidm.xml.XMLExporter;
+
+import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.concurrent.CompletableFuture;
 
-import javax.xml.stream.XMLStreamException;
-
-import com.google.auto.service.AutoService;
-import com.powsybl.commons.datasource.FileDataSource;
-import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
-import com.powsybl.computation.AbstractExecutionHandler;
-import com.powsybl.computation.Command;
-import com.powsybl.computation.CommandExecution;
-import com.powsybl.computation.ComputationManager;
-import com.powsybl.computation.ExecutionEnvironment;
-import com.powsybl.computation.ExecutionReport;
-import com.powsybl.computation.GroupCommandBuilder;
-import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
-import com.powsybl.dynamicsimulation.DynamicSimulationProvider;
-import com.powsybl.dynamicsimulation.DynamicSimulationResult;
-import com.powsybl.dynamicsimulation.DynamicSimulationResultImpl;
-import com.powsybl.dynawo.DynawoContext;
-import com.powsybl.dynawo.xml.DynawoConstants;
-import com.powsybl.dynawo.xml.JobsXml;
-import com.powsybl.iidm.network.Network;
-import com.powsybl.iidm.xml.IidmXmlVersion;
-import com.powsybl.iidm.xml.XMLExporter;
+import static com.powsybl.dynawo.xml.DynawoConstants.*;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -51,6 +43,9 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
 
     private final DynawoConfig dynawoConfig;
 
+    // FIXME(mathbagu): to be removed once the DYD file will be generated
+    private String dydFilename;
+
     public DynawoSimulationProvider() {
         this(DynawoConfig.load());
     }
@@ -59,13 +54,9 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
         this.dynawoConfig = Objects.requireNonNull(dynawoConfig);
     }
 
-    //TODO reference to DYD file and curves content. Only for main remove with it
-    private String dydFile = null;
-    private String crvFile = DynawoConstants.CRV_FILENAME;
-
-    public void setDydFilenameProvisional(String dydFile) {
-        this.dydFile = dydFile;
-        this.crvFile = null;
+    // FIXME(mathbagu): to be removed once the DYD file will be generated
+    public void setDydFilename(String dydFile) {
+        this.dydFilename = Objects.requireNonNull(dydFile);
     }
 
     @Override
@@ -91,7 +82,6 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
         DynawoSimulationParameters dynawoParameters = parameters.getExtension(DynawoSimulationParameters.class);
         if (dynawoParameters == null) {
             dynawoParameters = DynawoSimulationParameters.load();
-            parameters.addExtension(DynawoSimulationParameters.class, dynawoParameters);
         }
         return dynawoParameters;
     }
@@ -102,7 +92,7 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
         network.getVariantManager().setWorkingVariant(workingStateId);
         ExecutionEnvironment execEnv = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, dynawoConfig.isDebug());
 
-        DynawoContext context = new DynawoContext(network, parameters, crvFile);
+        DynawoContext context = new DynawoContext(network, parameters, dynawoParameters);
         return computationManager.execute(execEnv, new DynawoHandler(context));
     }
 
@@ -117,7 +107,7 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
         @Override
         public List<CommandExecution> before(Path workingDir) {
             writeInputFiles(workingDir);
-            Command cmd = createCommand(workingDir.resolve(DynawoConstants.JOBS_FILENAME));
+            Command cmd = createCommand(workingDir.resolve(JOBS_FILENAME));
             return Collections.singletonList(new CommandExecution(cmd, 1));
         }
 
@@ -129,17 +119,40 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
 
         private void writeInputFiles(Path workingDir) {
             try {
-                if (dydFile != null) {
-                    Files.copy(Paths.get(dydFile), workingDir.resolve(DynawoConstants.DYD_FILENAME));
+                // FIXME(mathbagu): To be refactored
+                if (dydFilename != null) {
+                    Files.copy(Paths.get(dydFilename), workingDir.resolve(DYD_FILENAME));
                 }
+
+                writeParametersFiles(workingDir);
+
+                // Write the network to XIIDM v1.0 because currently Dynawo only supports this version
                 Properties params = new Properties();
                 params.setProperty(XMLExporter.VERSION, IidmXmlVersion.V_1_0.toString("."));
-                new XMLExporter().export(context.getNetwork(), params, new FileDataSource(workingDir, DynawoConstants.BASEFILENAME));
+                Exporters.export("XIIDM", context.getNetwork(), params, workingDir.resolve(NETWORK_FILENAME));
+
                 JobsXml.write(workingDir, context);
             } catch (IOException e) {
                 throw new UncheckedIOException(e);
             } catch (XMLStreamException e) {
                 throw new UncheckedXmlStreamException(e);
+            }
+        }
+
+        private void writeParametersFiles(Path workingDirectory) throws IOException {
+            Path parametersFile = Paths.get(context.getDynawoParameters().getParametersFile());
+            if (Files.exists(parametersFile)) {
+                Files.copy(parametersFile, workingDirectory.resolve(parametersFile.getFileName()), StandardCopyOption.REPLACE_EXISTING);
+            }
+
+            Path networkParFile = Paths.get(context.getDynawoParameters().getNetwork().getParametersFile());
+            if (Files.exists(networkParFile)) {
+                Files.copy(networkParFile, workingDirectory.resolve(networkParFile.getFileName()), StandardCopyOption.REPLACE_EXISTING);
+            }
+
+            Path solverParFile = Paths.get(context.getDynawoParameters().getSolver().getParametersFile());
+            if (Files.exists(solverParFile)) {
+                Files.copy(solverParFile, workingDirectory.resolve(solverParFile.getFileName()), StandardCopyOption.REPLACE_EXISTING);
             }
         }
 

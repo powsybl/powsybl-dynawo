@@ -33,38 +33,30 @@ public final class Main {
     }
 
     public static void main(String[] args) {
-
         if (args.length < 2 || args.length > 3) {
-            LOGGER.info("Usage: {} networkFile.xiidm dynamicModels.dyd [parametersFile.json]", Main.class.getName());
-            return;
+            LOGGER.error("Usage: {} networkFile.xiidm dynamicModels.dyd [parametersFile.json]", Main.class.getName());
+            System.exit(1);
         }
-        String networkFile = null;
-        String parametersJsonFile = null;
-        String dydFile = null;
-        for (int i = 0; i < args.length; i++) {
-            if (args[i].endsWith("xiidm") || args[i].endsWith("iidm")) {
-                networkFile = args[i];
-            } else if (args[i].endsWith("json")) {
-                parametersJsonFile = args[i];
-            } else if (args[i].endsWith("dyd")) {
-                dydFile = args[i];
-            }
-        }
+
+        String networkFile = args[0];
+        String dydFile = args[1];
+        String parametersFile = args.length == 3 ? args[2] : null;
+
         Network network = Importers.loadNetwork(networkFile);
+
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         parameters.addExtension(DynawoSimulationParameters.class, DynawoSimulationParameters.load());
-        if (parametersJsonFile != null) {
-            JsonDynamicSimulationParameters.update(parameters, Paths.get(parametersJsonFile));
+        if (parametersFile != null) {
+            JsonDynamicSimulationParameters.update(parameters, Paths.get(parametersFile));
         }
 
         DynawoSimulationProvider provider = new DynawoSimulationProvider();
-        provider.setDydFilenameProvisional(dydFile);
+        provider.setDydFilename(dydFile);
         try (ComputationManager computationManager = new LocalComputationManager(LocalComputationConfig.load())) {
             provider.run(network, computationManager, network.getVariantManager().getWorkingVariantId(), parameters).join();
         } catch (IOException e) {
-            LOGGER.error(e.toString());
+            LOGGER.error(e.toString(), e);
             System.exit(1);
         }
-        System.exit(0);
     }
 }

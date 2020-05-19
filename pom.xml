@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright (c) 2020, RTE (http://www.rte-france.com) This Source Code
+<!--
+    Copyright (c) 2020, RTE (http://www.rte-france.com) This Source Code
     Form is subject to the terms of the Mozilla Public License, v. 2.0. If a
     copy of the MPL was not distributed with this file, You can obtain one at
-    http://mozilla.org/MPL/2.0/. -->
+    http://mozilla.org/MPL/2.0/.
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -22,28 +24,6 @@
     <description>Dynawo integration modules for powsybl</description>
     <url>https://www.powsybl.org</url>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>1.6.0</version>
-                <configuration>
-                    <mainClass>com.powsybl.dynawo.Main</mainClass>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <classpathDependencyExcludes>
-                        <classpathDependencyExclude>com.powsybl:powsybl-config-classic</classpathDependencyExclude>
-                    </classpathDependencyExcludes>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-
     <scm>
         <connection>scm:git:https://github.com/powsybl/powsybl-dynawo.git</connection>
         <developerConnection>scm:git:https://github.com/powsybl/powsybl-dynawo.git</developerConnection>
@@ -60,13 +40,38 @@
     </developers>
 
     <properties>
+        <maven.exec.plugin>1.6.0</maven.exec.plugin>
+
         <jimfs.version>1.1</jimfs.version>
         <junit.version>4.12</junit.version>
-        <slf4j.version>1.7.22</slf4j.version>
+        <logback.version>1.1.8</logback.version>
         <xmlunit.version>2.3.0</xmlunit.version>
 
         <powsyblcore.version>3.3.0</powsyblcore.version>
     </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>${maven.exec.plugin}</version>
+                <configuration>
+                    <mainClass>com.powsybl.dynawo.Main</mainClass>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <classpathDependencyExcludes>
+                        <classpathDependencyExclude>com.powsybl:powsybl-config-classic</classpathDependencyExclude>
+                    </classpathDependencyExcludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
 
     <dependencies>
         <!-- Compile dependencies -->
@@ -86,7 +91,6 @@
             <version>${powsyblcore.version}</version>
         </dependency>
 
-
         <!-- Runtime dependencies -->
         <dependency>
             <groupId>com.powsybl</groupId>
@@ -101,9 +105,9 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-jdk14</artifactId>
-            <version>${slf4j.version}</version>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
             <scope>runtime</scope>
         </dependency>
 
@@ -131,12 +135,6 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>${slf4j.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

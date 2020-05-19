@@ -6,20 +6,19 @@
  */
 package com.powsybl.dynawo.xml;
 
+import com.powsybl.dynawo.DynawoContext;
+import com.powsybl.dynawo.simulator.DynawoSimulationParameters;
+import com.powsybl.dynawo.simulator.DynawoSimulationParameters.SolverType;
+
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Objects;
-
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
-
-import com.powsybl.dynawo.DynawoContext;
-import com.powsybl.dynawo.simulator.DynawoSimulationParameters;
-import com.powsybl.dynawo.simulator.DynawoSimulationParameters.SolverType;
 
 import static com.powsybl.dynawo.xml.DynawoConstants.*;
 import static com.powsybl.dynawo.xml.DynawoXmlConstants.DYN_PREFIX;
@@ -37,9 +36,8 @@ public final class JobsXml {
         Objects.requireNonNull(workingDir);
         Objects.requireNonNull(context);
         Path file = workingDir.resolve(JOBS_FILENAME);
-        XMLOutputFactory output = XMLOutputFactory.newInstance();
         try (Writer writer = Files.newBufferedWriter(file, StandardCharsets.UTF_8)) {
-            XMLStreamWriter xmlWriter = output.createXMLStreamWriter(writer);
+            XMLStreamWriter xmlWriter = XmlStreamWriterFactory.newInstance(writer);
             try {
                 xmlWriter.writeStartDocument(StandardCharsets.UTF_8.toString(), "1.0");
                 xmlWriter.setPrefix(DYN_PREFIX, DYN_URI);
@@ -67,21 +65,21 @@ public final class JobsXml {
     }
 
     private static void writeSolver(XMLStreamWriter writer, DynawoContext context) throws XMLStreamException {
-        DynawoSimulationParameters parameters = Objects.requireNonNull(context.getParameters().getExtension(DynawoSimulationParameters.class));
+        DynawoSimulationParameters parameters = context.getDynawoParameters();
         writer.writeEmptyElement(DYN_URI, "solver");
         writer.writeAttribute("lib", parameters.getSolver().getType().equals(SolverType.IDA) ? "dynawo_SolverIDA" : "dynawo_SolverSIM");
-        writer.writeAttribute("parFile", parameters.getSolver().getParametersFile());
+        writer.writeAttribute("parFile", Paths.get(parameters.getSolver().getParametersFile()).getFileName().toString());
         writer.writeAttribute("parId", parameters.getSolver().getParametersId());
     }
 
     private static void writeModeler(XMLStreamWriter writer, DynawoContext context) throws XMLStreamException {
-        DynawoSimulationParameters parameters = Objects.requireNonNull(context.getParameters().getExtension(DynawoSimulationParameters.class));
+        DynawoSimulationParameters parameters = context.getDynawoParameters();
         writer.writeStartElement(DYN_URI, "modeler");
         writer.writeAttribute("compileDir", "outputs/compilation");
 
         writer.writeEmptyElement(DYN_URI, "network");
         writer.writeAttribute("iidmFile", NETWORK_FILENAME);
-        writer.writeAttribute("parFile", parameters.getNetwork().getParametersFile());
+        writer.writeAttribute("parFile", Paths.get(parameters.getNetwork().getParametersFile()).getFileName().toString());
         writer.writeAttribute("parId", parameters.getNetwork().getParametersId());
 
         writer.writeEmptyElement(DYN_URI, "dynModels");
@@ -110,7 +108,7 @@ public final class JobsXml {
         writer.writeAttribute("local", "false");
         writer.writeAttribute("global", "false");
 
-        if (context.getCurves() != null) {
+        if (context.withCurves()) {
             writer.writeEmptyElement(DYN_URI, "curves");
             writer.writeAttribute("inputFile", DynawoConstants.CRV_FILENAME);
             writer.writeAttribute("exportMode", "CSV");

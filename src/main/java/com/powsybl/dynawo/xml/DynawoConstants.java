@@ -11,8 +11,6 @@ package com.powsybl.dynawo.xml;
  */
 public final class DynawoConstants {
 
-    public static final String BASEFILENAME = "powsybl_dynawo";
-
     public static final String JOBS_FILENAME = "powsybl_dynawo.jobs";
 
     public static final String NETWORK_FILENAME = "powsybl_dynawo.xiidm";
