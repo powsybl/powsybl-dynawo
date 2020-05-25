@@ -9,6 +9,7 @@ package com.powsybl.dynawo;
 import java.util.Objects;
 
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
+import com.powsybl.dynawo.simulator.DynawoSimulationParameters;
 import com.powsybl.iidm.network.Network;
 
 /**
@@ -16,9 +17,10 @@ import com.powsybl.iidm.network.Network;
  */
 public class DynawoContext {
 
-    public DynawoContext(Network network, DynamicSimulationParameters parameters) {
+    public DynawoContext(Network network, DynamicSimulationParameters parameters, DynawoSimulationParameters dynawoParameters) {
         this.network = Objects.requireNonNull(network);
         this.parameters = Objects.requireNonNull(parameters);
+        this.dynawoParameters = Objects.requireNonNull(dynawoParameters);
     }
 
     public Network getNetwork() {
@@ -29,6 +31,15 @@ public class DynawoContext {
         return parameters;
     }
 
+    public DynawoSimulationParameters getDynawoParameters() {
+        return dynawoParameters;
+    }
+
+    public boolean withCurves() {
+        return false;
+    }
+
     private final Network network;
     private final DynamicSimulationParameters parameters;
+    private final DynawoSimulationParameters dynawoParameters;
 }
