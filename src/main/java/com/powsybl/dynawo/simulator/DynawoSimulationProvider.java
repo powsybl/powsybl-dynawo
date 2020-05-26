@@ -9,6 +9,7 @@ package com.powsybl.dynawo.simulator;
 import com.google.auto.service.AutoService;
 import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
 import com.powsybl.computation.*;
+import com.powsybl.dynamicsimulation.CurvesProvider;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynamicsimulation.DynamicSimulationProvider;
 import com.powsybl.dynamicsimulation.DynamicSimulationResult;
@@ -70,7 +71,7 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
     }
 
     @Override
-    public CompletableFuture<DynamicSimulationResult> run(Network network, ComputationManager computationManager, String workingVariantId, DynamicSimulationParameters parameters) {
+    public CompletableFuture<DynamicSimulationResult> run(Network network, CurvesProvider curvesProvider, ComputationManager computationManager, String workingVariantId, DynamicSimulationParameters parameters) {
         Objects.requireNonNull(workingVariantId);
         Objects.requireNonNull(parameters);
 
