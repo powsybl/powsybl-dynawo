@@ -2,15 +2,16 @@ package com.powsybl.dynawo.simulator;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Arrays;
 import java.util.Iterator;
 
 import org.junit.Test;
 
-public class DynawoCurveTest {
+public class CurveImplTest {
 
     @Test
     public void test() {
-        DynawoCurve curve = new DynawoCurve("busId", "variable1", "variable2");
+        CurveImpl curve = new CurveImpl("busId", Arrays.asList("variable1", "variable2"));
 
         assertEquals("busId", curve.getModelId());
 

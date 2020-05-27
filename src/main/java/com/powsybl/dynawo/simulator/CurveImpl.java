@@ -4,28 +4,27 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
+
 package com.powsybl.dynawo.simulator;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import com.powsybl.dynamicsimulation.Curve;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import com.powsybl.dynamicsimulation.Curve;
-
 /**
- * @author Marcos de Miguel <demiguelm at aia.es>
+ * @author Mathieu Bague <mathieu.bague@rte-france.com>
  */
-public class DynawoCurve implements Curve {
+public class CurveImpl implements Curve {
 
-    public DynawoCurve(String modelId, String... variables) {
-        this(modelId, Arrays.asList(variables));
-    }
+    private final String modelId;
 
-    public DynawoCurve(String modelId, List<String> variables) {
+    private final List<String> variables;
+
+    public CurveImpl(String modelId, List<String> variables) {
         this.modelId = Objects.requireNonNull(modelId);
-        this.variables = new ArrayList<>(variables);
+        this.variables = Objects.requireNonNull(variables);
     }
 
     public String getModelId() {
@@ -35,7 +34,4 @@ public class DynawoCurve implements Curve {
     public List<String> getVariables() {
         return Collections.unmodifiableList(variables);
     }
-
-    private final String modelId;
-    private final List<String> variables;
 }
