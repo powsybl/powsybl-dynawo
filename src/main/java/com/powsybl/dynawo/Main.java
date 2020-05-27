@@ -8,7 +8,6 @@ package com.powsybl.dynawo;
 
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.Collections;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,8 +54,7 @@ public final class Main {
         DynawoSimulationProvider provider = new DynawoSimulationProvider();
         provider.setDydFilename(dydFile);
         try (ComputationManager computationManager = new LocalComputationManager(LocalComputationConfig.load())) {
-            CurvesProvider curvesProvider = n -> Collections.emptyList();
-            provider.run(network, curvesProvider, computationManager, network.getVariantManager().getWorkingVariantId(), parameters).join();
+            provider.run(network, CurvesProvider.empty(), computationManager, network.getVariantManager().getWorkingVariantId(), parameters).join();
         } catch (IOException e) {
             LOGGER.error(e.toString(), e);
             System.exit(1);
