@@ -30,30 +30,95 @@ import java.util.function.Consumer
 class DynawoCurveGroovyExtension implements CurveGroovyExtension {
 
     static class CurveSpec {
+        String modelId
+        String staticId
+        String variable
+
+        void modelId(String modelId) {
+            this.modelId = modelId
+        }
+
+        void staticId(String staticId) {
+            this.staticId = staticId
+        }
+
+        void variable(String variable) {
+            this.variable = variable
+        }
+    }
+
+    static class CurvesSpec {
+        String modelId
+        String staticId
         String[] variables
+
+        void modelId(String modelId) {
+            this.modelId = modelId
+        }
+
+        void staticId(String staticId) {
+            this.staticId = staticId
+        }
 
         void variables(String[] variables) {
             this.variables = variables
         }
     }
 
+    String getName() {
+        return "dynawo";
+    }
+
     void load(Binding binding, Consumer<Curve> consumer) {
-        binding.curve = { String id, Closure<Void> closure ->
+        binding.curve = { Closure<Void> closure ->
             def cloned = closure.clone()
             CurveSpec curveSpec = new CurveSpec()
 
             cloned.delegate = curveSpec
             cloned()
 
-            if (!curveSpec.variables) {
+            if (!curveSpec.staticId) {
+                throw new DslException("'staticId' field is not set")
+            }
+            if (!curveSpec.variable) {
+                throw new DslException("'variable' field is not set")
+            }
+
+            if (!curveSpec.modelId) {
+                Curve curve = new DynawoCurve(curveSpec.staticId, curveSpec.variable)
+                consumer.accept(curve)
+            } else {
+                Curve curve = new DynawoCurve(curveSpec.modelId, curveSpec.staticId, curveSpec.variable)
+                consumer.accept(curve)
+            }
+        }
+
+        binding.curves = { Closure<Void> closure ->
+            def cloned = closure.clone()
+            CurvesSpec curvesSpec = new CurvesSpec()
+
+            cloned.delegate = curvesSpec
+            cloned()
+
+            if (!curvesSpec.staticId) {
+                throw new DslException("'staticId' field is not set")
+            }
+            if (!curvesSpec.variables) {
                 throw new DslException("'variables' field is not set")
             }
-            if (curveSpec.variables.length == 0) {
+            if (curvesSpec.variables.length == 0) {
                 throw new DslException("'variables' field is empty")
             }
 
-            Curve curve = new CurveImpl(id, Arrays.asList(curveSpec.variables))
-            consumer.accept(curve)
+            for (String variable : curvesSpec.variables) {
+                if (!curvesSpec.modelId) {
+                    Curve curve = new DynawoCurve(curvesSpec.staticId, variable)
+                    consumer.accept(curve)
+                } else {
+                    Curve curve = new DynawoCurve(curvesSpec.modelId, curvesSpec.staticId, variable)
+                    consumer.accept(curve)
+                }
+            }
         }
     }
 

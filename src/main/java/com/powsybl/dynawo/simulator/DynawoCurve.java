@@ -9,29 +9,36 @@ package com.powsybl.dynawo.simulator;
 
 import com.powsybl.dynamicsimulation.Curve;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Objects;
 
 /**
  * @author Mathieu Bague <mathieu.bague@rte-france.com>
  */
-public class CurveImpl implements Curve {
+public class DynawoCurve implements Curve {
 
     private final String modelId;
+    private final String staticId;
+    private final String variable;
 
-    private final List<String> variables;
+    public DynawoCurve(String staticId, String variable) {
+        this(staticId, staticId, variable);
+    }
 
-    public CurveImpl(String modelId, List<String> variables) {
+    public DynawoCurve(String modelId, String staticId, String variable) {
         this.modelId = Objects.requireNonNull(modelId);
-        this.variables = Objects.requireNonNull(variables);
+        this.staticId = Objects.requireNonNull(staticId);
+        this.variable = Objects.requireNonNull(variable);
     }
 
     public String getModelId() {
         return modelId;
     }
 
-    public List<String> getVariables() {
-        return Collections.unmodifiableList(variables);
+    public String getStaticId() {
+        return staticId;
+    }
+
+    public String getVariable() {
+        return variable;
     }
 }
