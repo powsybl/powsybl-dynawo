@@ -20,7 +20,6 @@ public class DynawoCurveTest {
         DynawoCurve curve = new DynawoCurve("busId", "variable");
 
         assertEquals("busId", curve.getModelId());
-        assertEquals("busId", curve.getStaticId());
         assertEquals("variable", curve.getVariable());
     }
 }

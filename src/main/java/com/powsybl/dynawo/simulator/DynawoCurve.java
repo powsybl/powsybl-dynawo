@@ -17,25 +17,15 @@ import java.util.Objects;
 public class DynawoCurve implements Curve {
 
     private final String modelId;
-    private final String staticId;
     private final String variable;
 
-    public DynawoCurve(String staticId, String variable) {
-        this(staticId, staticId, variable);
-    }
-
-    public DynawoCurve(String modelId, String staticId, String variable) {
+    public DynawoCurve(String modelId, String variable) {
         this.modelId = Objects.requireNonNull(modelId);
-        this.staticId = Objects.requireNonNull(staticId);
         this.variable = Objects.requireNonNull(variable);
     }
 
     public String getModelId() {
         return modelId;
-    }
-
-    public String getStaticId() {
-        return staticId;
     }
 
     public String getVariable() {
