@@ -7,7 +7,6 @@
 package com.powsybl.dynawo.simulator;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -23,20 +22,17 @@ import org.junit.Test;
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
 import com.powsybl.dynamicsimulation.Curve;
-import com.powsybl.dynamicsimulation.CurvesProvider;
+import com.powsybl.dynamicsimulation.CurvesSupplier;
 import com.powsybl.dynamicsimulation.groovy.CurveGroovyExtension;
-import com.powsybl.dynamicsimulation.groovy.GroovyCurvesProvider;
+import com.powsybl.dynamicsimulation.groovy.GroovyCurvesSupplier;
 import com.powsybl.dynamicsimulation.groovy.GroovyExtension;
-import com.powsybl.iidm.network.Bus;
-import com.powsybl.iidm.network.Generator;
-import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class DynawoGroovyCurvesProviderTest {
+public class DynawoGroovyCurvesSupplierTest {
 
     private FileSystem fileSystem;
     private Network network;
@@ -61,9 +57,9 @@ public class DynawoGroovyCurvesProviderTest {
         assertEquals(1, extensions.size());
         assertTrue(extensions.get(0) instanceof DynawoCurveGroovyExtension);
 
-        CurvesProvider provider = new GroovyCurvesProvider(fileSystem.getPath("/curves.groovy"), extensions);
+        CurvesSupplier supplier = new GroovyCurvesSupplier(fileSystem.getPath("/curves.groovy"), extensions);
 
-        List<Curve> curves = provider.get(network);
+        List<Curve> curves = supplier.get(network);
         assertEquals(9, curves.size());
         curves.forEach(this::validateCurve);
     }
@@ -71,11 +67,9 @@ public class DynawoGroovyCurvesProviderTest {
     private void validateCurve(Curve curve) {
         assertEquals(DynawoCurve.class, curve.getClass());
         DynawoCurve curveImpl = (DynawoCurve) curve;
-        Identifiable identifiable = network.getIdentifiable(curveImpl.getModelId());
-        assertNotNull(identifiable);
-        if (identifiable instanceof Bus) {
-            assertEquals("Upu_value", curveImpl.getVariable());
-        } else if (identifiable instanceof Generator) {
+        if (curveImpl.getModelId().equals("NETWORK")) {
+            assertTrue(Arrays.asList("NGEN_Upu_value", "NHV1_Upu_value", "NHV2_Upu_value", "NLOAD_Upu_value").contains(curveImpl.getVariable()));
+        } else {
             assertTrue(Arrays.asList("generator_omegaPu", "generator_PGen", "generator_UStatorPU", "voltageRegulator_UcEfdP", "voltageRegulator_EfdPu").contains(curveImpl.getVariable()));
         }
     }

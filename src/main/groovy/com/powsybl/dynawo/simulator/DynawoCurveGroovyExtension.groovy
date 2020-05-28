@@ -77,19 +77,16 @@ class DynawoCurveGroovyExtension implements CurveGroovyExtension {
             cloned.delegate = curveSpec
             cloned()
 
-            if (!curveSpec.staticId) {
-                throw new DslException("'staticId' field is not set")
+            if (curveSpec.staticId && curveSpec.modelId) {
+                throw new DslException("Both staticId and modelId are defined");
             }
             if (!curveSpec.variable) {
                 throw new DslException("'variable' field is not set")
             }
-
-            if (!curveSpec.modelId) {
-                Curve curve = new DynawoCurve(curveSpec.staticId, curveSpec.variable)
-                consumer.accept(curve)
+            if (curveSpec.staticId) {
+                consumer.accept(new DynawoCurve("NETWORK", curveSpec.staticId + "_" + curveSpec.variable));
             } else {
-                Curve curve = new DynawoCurve(curveSpec.modelId, curveSpec.staticId, curveSpec.variable)
-                consumer.accept(curve)
+                consumer.accept(new DynawoCurve(curveSpec.modelId, curveSpec.variable));
             }
         }
 
@@ -100,8 +97,8 @@ class DynawoCurveGroovyExtension implements CurveGroovyExtension {
             cloned.delegate = curvesSpec
             cloned()
 
-            if (!curvesSpec.staticId) {
-                throw new DslException("'staticId' field is not set")
+            if (curvesSpec.staticId && curvesSpec.modelId) {
+                throw new DslException("Both staticId and modelId are defined");
             }
             if (!curvesSpec.variables) {
                 throw new DslException("'variables' field is not set")
@@ -111,12 +108,10 @@ class DynawoCurveGroovyExtension implements CurveGroovyExtension {
             }
 
             for (String variable : curvesSpec.variables) {
-                if (!curvesSpec.modelId) {
-                    Curve curve = new DynawoCurve(curvesSpec.staticId, variable)
-                    consumer.accept(curve)
+                if (curvesSpec.staticId) {
+                    consumer.accept(new DynawoCurve("NETWORK", curvesSpec.staticId + "_" + variable));
                 } else {
-                    Curve curve = new DynawoCurve(curvesSpec.modelId, curvesSpec.staticId, variable)
-                    consumer.accept(curve)
+                    consumer.accept(new DynawoCurve(curvesSpec.modelId, variable));
                 }
             }
         }
