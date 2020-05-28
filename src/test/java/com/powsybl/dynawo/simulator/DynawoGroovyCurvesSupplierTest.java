@@ -17,15 +17,20 @@ import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
+import com.powsybl.dsl.DslException;
 import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynamicsimulation.CurvesSupplier;
 import com.powsybl.dynamicsimulation.groovy.CurveGroovyExtension;
 import com.powsybl.dynamicsimulation.groovy.GroovyCurvesSupplier;
 import com.powsybl.dynamicsimulation.groovy.GroovyExtension;
+import com.powsybl.iidm.network.Generator;
+import com.powsybl.iidm.network.Load;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 
@@ -33,6 +38,9 @@ import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 public class DynawoGroovyCurvesSupplierTest {
+
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
 
     private FileSystem fileSystem;
     private Network network;
@@ -43,6 +51,9 @@ public class DynawoGroovyCurvesSupplierTest {
         network = EurostagTutorialExample1Factory.create();
 
         Files.copy(getClass().getResourceAsStream("/curves.groovy"), fileSystem.getPath("/curves.groovy"));
+        Files.copy(getClass().getResourceAsStream("/curves_modelId_staticId.groovy"), fileSystem.getPath("/curves_modelId_staticId.groovy"));
+        Files.copy(getClass().getResourceAsStream("/curves_variable.groovy"), fileSystem.getPath("/curves_variable.groovy"));
+        Files.copy(getClass().getResourceAsStream("/curves_variables.groovy"), fileSystem.getPath("/curves_variables.groovy"));
     }
 
     @After
@@ -60,8 +71,50 @@ public class DynawoGroovyCurvesSupplierTest {
         CurvesSupplier supplier = new GroovyCurvesSupplier(fileSystem.getPath("/curves.groovy"), extensions);
 
         List<Curve> curves = supplier.get(network);
-        assertEquals(9, curves.size());
+        assertEquals(11, curves.size());
         curves.forEach(this::validateCurve);
+    }
+
+    @Test
+    public void testModelIdStaticIdDefined() {
+
+        exception.expect(DslException.class);
+        exception.expectMessage("Both staticId and modelId are defined");
+
+        List<CurveGroovyExtension> extensions = GroovyExtension.find(CurveGroovyExtension.class, "dynawo");
+        assertEquals(1, extensions.size());
+        assertTrue(extensions.get(0) instanceof DynawoCurveGroovyExtension);
+
+        CurvesSupplier supplier = new GroovyCurvesSupplier(fileSystem.getPath("/curves_modelId_staticId.groovy"), extensions);
+        supplier.get(network);
+    }
+
+    @Test
+    public void testVariableNotDefined() {
+
+        exception.expect(DslException.class);
+        exception.expectMessage("'variable' field is not set");
+
+        List<CurveGroovyExtension> extensions = GroovyExtension.find(CurveGroovyExtension.class, "dynawo");
+        assertEquals(1, extensions.size());
+        assertTrue(extensions.get(0) instanceof DynawoCurveGroovyExtension);
+
+        CurvesSupplier supplier = new GroovyCurvesSupplier(fileSystem.getPath("/curves_variable.groovy"), extensions);
+        supplier.get(network);
+    }
+
+    @Test
+    public void testVariablesNotDefined() {
+
+        exception.expect(DslException.class);
+        exception.expectMessage("'variables' field is not set");
+
+        List<CurveGroovyExtension> extensions = GroovyExtension.find(CurveGroovyExtension.class, "dynawo");
+        assertEquals(1, extensions.size());
+        assertTrue(extensions.get(0) instanceof DynawoCurveGroovyExtension);
+
+        CurvesSupplier supplier = new GroovyCurvesSupplier(fileSystem.getPath("/curves_variables.groovy"), extensions);
+        supplier.get(network);
     }
 
     private void validateCurve(Curve curve) {
@@ -69,8 +122,10 @@ public class DynawoGroovyCurvesSupplierTest {
         DynawoCurve curveImpl = (DynawoCurve) curve;
         if (curveImpl.getModelId().equals("NETWORK")) {
             assertTrue(Arrays.asList("NGEN_Upu_value", "NHV1_Upu_value", "NHV2_Upu_value", "NLOAD_Upu_value").contains(curveImpl.getVariable()));
-        } else {
+        } else if (network.getIdentifiable(curveImpl.getModelId()) instanceof Generator) {
             assertTrue(Arrays.asList("generator_omegaPu", "generator_PGen", "generator_UStatorPU", "voltageRegulator_UcEfdP", "voltageRegulator_EfdPu").contains(curveImpl.getVariable()));
+        } else if (network.getIdentifiable(curveImpl.getModelId()) instanceof Load) {
+            assertTrue(Arrays.asList("load_PPu", "load_QPu").contains(curveImpl.getVariable()));
         }
     }
 }

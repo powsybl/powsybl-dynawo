@@ -5,8 +5,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import com.powsybl.iidm.network.Generator
 import com.powsybl.iidm.network.Bus
+import com.powsybl.iidm.network.Generator
+import com.powsybl.iidm.network.Load
 
 for (Bus bus : network.busBreakerView.buses) {
     curve {
@@ -19,5 +20,16 @@ for (Generator gen : network.generators) {
     curves {
         modelId gen.id
         variables "generator_omegaPu", "generator_PGen", "generator_UStatorPU", "voltageRegulator_UcEfdP", "voltageRegulator_EfdPu"
+    }
+}
+
+for (Load load : network.loads) {
+    curve {
+        modelId load.id
+        variable "load_PPu"
+    }
+    curve {
+        modelId load.id
+        variable "load_QPu"
     }
 }
