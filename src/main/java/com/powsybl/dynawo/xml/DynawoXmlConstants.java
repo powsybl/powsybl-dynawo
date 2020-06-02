@@ -19,6 +19,8 @@ public final class DynawoXmlConstants {
 
     public static final String INDENT = "    ";
 
+    public static final String EMPTY_PREFIX = "";
+
     private DynawoXmlConstants() {
     }
 }

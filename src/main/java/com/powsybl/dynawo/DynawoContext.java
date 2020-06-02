@@ -6,8 +6,11 @@
  */
 package com.powsybl.dynawo;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
+import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawo.simulator.DynawoSimulationParameters;
 import com.powsybl.iidm.network.Network;
@@ -17,8 +20,9 @@ import com.powsybl.iidm.network.Network;
  */
 public class DynawoContext {
 
-    public DynawoContext(Network network, DynamicSimulationParameters parameters, DynawoSimulationParameters dynawoParameters) {
+    public DynawoContext(Network network, List<Curve> curves, DynamicSimulationParameters parameters, DynawoSimulationParameters dynawoParameters) {
         this.network = Objects.requireNonNull(network);
+        this.curves = Objects.requireNonNull(curves);
         this.parameters = Objects.requireNonNull(parameters);
         this.dynawoParameters = Objects.requireNonNull(dynawoParameters);
     }
@@ -35,11 +39,16 @@ public class DynawoContext {
         return dynawoParameters;
     }
 
+    public List<Curve> getCurves() {
+        return Collections.unmodifiableList(curves);
+    }
+
     public boolean withCurves() {
-        return false;
+        return !curves.isEmpty();
     }
 
     private final Network network;
     private final DynamicSimulationParameters parameters;
     private final DynawoSimulationParameters dynawoParameters;
+    private final List<Curve> curves;
 }

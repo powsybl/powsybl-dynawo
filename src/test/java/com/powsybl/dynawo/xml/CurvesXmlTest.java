@@ -25,25 +25,25 @@ import com.powsybl.iidm.network.Network;
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class JobsXmlTest extends DynawoTestUtil {
+public class CurvesXmlTest extends DynawoTestUtil {
 
     @Test
-    public void writeJob() throws SAXException, IOException, XMLStreamException {
+    public void writeCurve() throws SAXException, IOException, XMLStreamException {
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load();
 
         Network network = Network.create("test", "test");
 
         List<Curve> curves = Arrays.asList(new DynawoCurve("NETWORK", "busId_Upu_value"),
-            new DynawoCurve("genId", "generator_omegaPu"),
-            new DynawoCurve("genId", "generator_PGen"),
-            new DynawoCurve("genId", "generator_UStatorPu"),
-            new DynawoCurve("genId", "voltageRegulator_UcEfdP"),
-            new DynawoCurve("genId", "voltageRegulator_EfdPu"));
+                                            new DynawoCurve("genId", "generator_omegaPu"),
+                                            new DynawoCurve("genId", "generator_PGen"),
+                                            new DynawoCurve("genId", "generator_UStatorPu"),
+                                            new DynawoCurve("genId", "voltageRegulator_UcEfdP"),
+                                            new DynawoCurve("genId", "voltageRegulator_EfdPu"));
         DynawoContext context = new DynawoContext(network, curves, parameters, dynawoParameters);
 
-        JobsXml.write(tmpDir, context);
-        validate(tmpDir.resolve(DynawoConstants.JOBS_FILENAME), "jobs");
+        CurvesXml.write(tmpDir, context);
+        validate(tmpDir.resolve(DynawoConstants.CRV_FILENAME), "curvesInput");
     }
 
 }

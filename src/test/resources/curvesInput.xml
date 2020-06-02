@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<curvesInput xmlns="http://www.rte-france.com/dynawo">
+  <curve model="NETWORK" variable="busId_Upu_value"/>
+  <curve model="genId" variable="generator_omegaPu"/>
+  <curve model="genId" variable="generator_PGen"/>
+  <curve model="genId" variable="generator_UStatorPu"/>
+  <curve model="genId" variable="voltageRegulator_UcEfdP"/>
+  <curve model="genId" variable="voltageRegulator_EfdPu"/>
+</curvesInput>

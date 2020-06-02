@@ -8,6 +8,7 @@ package com.powsybl.dynawo;
 
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +16,11 @@ import org.slf4j.LoggerFactory;
 import com.powsybl.computation.ComputationManager;
 import com.powsybl.computation.local.LocalComputationConfig;
 import com.powsybl.computation.local.LocalComputationManager;
+import com.powsybl.dynamicsimulation.CurvesSupplier;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
+import com.powsybl.dynamicsimulation.groovy.CurveGroovyExtension;
+import com.powsybl.dynamicsimulation.groovy.GroovyCurvesSupplier;
+import com.powsybl.dynamicsimulation.groovy.GroovyExtension;
 import com.powsybl.dynamicsimulation.json.JsonDynamicSimulationParameters;
 import com.powsybl.dynawo.simulator.DynawoSimulationParameters;
 import com.powsybl.dynawo.simulator.DynawoSimulationProvider;
@@ -33,14 +38,15 @@ public final class Main {
     }
 
     public static void main(String[] args) {
-        if (args.length < 2 || args.length > 3) {
-            LOGGER.error("Usage: {} networkFile.xiidm dynamicModels.dyd [parametersFile.json]", Main.class.getName());
+        if (args.length < 2 || args.length > 4) {
+            LOGGER.error("Usage: {} networkFile.xiidm dynamicModels.dyd [curves.crv] [parametersFile.json]", Main.class.getName());
             System.exit(1);
         }
 
         String networkFile = args[0];
         String dydFile = args[1];
-        String parametersFile = args.length == 3 ? args[2] : null;
+        CurvesSupplier curvesSupplier = getCurvesSupplier(args);
+        String parametersFile = getParametersFile(args);
 
         Network network = Importers.loadNetwork(networkFile);
 
@@ -53,10 +59,26 @@ public final class Main {
         DynawoSimulationProvider provider = new DynawoSimulationProvider();
         provider.setDydFilename(dydFile);
         try (ComputationManager computationManager = new LocalComputationManager(LocalComputationConfig.load())) {
-            provider.run(network, computationManager, network.getVariantManager().getWorkingVariantId(), parameters).join();
+            provider.run(network, curvesSupplier, computationManager, network.getVariantManager().getWorkingVariantId(), parameters).join();
         } catch (IOException e) {
             LOGGER.error(e.toString(), e);
             System.exit(1);
         }
+    }
+
+    private static String getParametersFile(String[] args) {
+        String parametersFile = args.length == 4 ? args[3] : null;
+        if (parametersFile == null) {
+            parametersFile = args.length == 3 & args[2].endsWith(".json") ? args[2] : null;
+        }
+        return parametersFile;
+    }
+
+    private static CurvesSupplier getCurvesSupplier(String[] args) {
+        if (args.length == 3 & args[2].endsWith(".crv")) {
+            List<CurveGroovyExtension> extensions = GroovyExtension.find(CurveGroovyExtension.class, "dynawo");
+            return new GroovyCurvesSupplier(Paths.get(args[2]), extensions);
+        }
+        return CurvesSupplier.empty();
     }
 }
