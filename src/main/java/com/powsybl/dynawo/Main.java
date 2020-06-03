@@ -54,7 +54,7 @@ public final class Main {
         DynawoSimulationProvider provider = new DynawoSimulationProvider();
         provider.setDydFilename(dydFile);
         try (ComputationManager computationManager = new LocalComputationManager(LocalComputationConfig.load())) {
-            provider.run(network, CurvesSupplier.empty(), computationManager, network.getVariantManager().getWorkingVariantId(), parameters).join();
+            provider.run(network, CurvesSupplier.empty(), network.getVariantManager().getWorkingVariantId(), computationManager, parameters).join();
         } catch (IOException e) {
             LOGGER.error(e.toString(), e);
             System.exit(1);
