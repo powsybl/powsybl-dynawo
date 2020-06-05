@@ -93,7 +93,7 @@ public class DynawoGroovyCurvesSupplierTest {
     public void testVariableNotDefined() {
 
         exception.expect(DslException.class);
-        exception.expectMessage("'variable' field is not set");
+        exception.expectMessage("'variables' field is not set");
 
         List<CurveGroovyExtension> extensions = GroovyExtension.find(CurveGroovyExtension.class, "dynawo");
         assertEquals(1, extensions.size());
