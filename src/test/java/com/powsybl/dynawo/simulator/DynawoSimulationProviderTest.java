@@ -40,7 +40,7 @@ public class DynawoSimulationProviderTest {
             DynamicSimulation.Runner dynawoSimulation = DynamicSimulation.find();
             assertEquals("DynawoSimulation", dynawoSimulation.getName());
             assertEquals("1.0.0", dynawoSimulation.getVersion());
-            DynamicSimulationResult result = dynawoSimulation.run(network, CurvesSupplier.empty(), computationManager, DynamicSimulationParameters.load());
+            DynamicSimulationResult result = dynawoSimulation.run(network, CurvesSupplier.empty(), network.getVariantManager().getWorkingVariantId(), computationManager, DynamicSimulationParameters.load());
             assertNotNull(result);
         }
     }
