@@ -29,6 +29,11 @@ import java.util.function.Consumer
 @AutoService(CurveGroovyExtension.class)
 class DynawoCurveGroovyExtension implements CurveGroovyExtension {
 
+    /**
+     * A curve for <pre>Dynawo</pre> can be defined in DSL using {@code staticId} and {@code variable} or {@code modelId} and {@code variable}.
+     * Definition with {@code staticId} and {@code variable} are used when no explicit dynamic component exists (buses).
+     * <pre>Dynawo</pre> expects {@code modelId} = “NETWORK” for these variables.
+     */
     static class CurvesSpec {
         String modelId
         String staticId
