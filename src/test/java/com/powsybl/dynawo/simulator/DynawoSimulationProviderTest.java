@@ -19,6 +19,7 @@ import com.google.common.jimfs.Jimfs;
 import com.powsybl.computation.ComputationManager;
 import com.powsybl.computation.local.LocalComputationConfig;
 import com.powsybl.computation.local.LocalComputationManager;
+import com.powsybl.dynamicsimulation.CurvesSupplier;
 import com.powsybl.dynamicsimulation.DynamicSimulation;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynamicsimulation.DynamicSimulationResult;
@@ -39,7 +40,7 @@ public class DynawoSimulationProviderTest {
             DynamicSimulation.Runner dynawoSimulation = DynamicSimulation.find();
             assertEquals("DynawoSimulation", dynawoSimulation.getName());
             assertEquals("1.0.0", dynawoSimulation.getVersion());
-            DynamicSimulationResult result = dynawoSimulation.run(network, computationManager, DynamicSimulationParameters.load());
+            DynamicSimulationResult result = dynawoSimulation.run(network, CurvesSupplier.empty(), network.getVariantManager().getWorkingVariantId(), computationManager, DynamicSimulationParameters.load());
             assertNotNull(result);
         }
     }

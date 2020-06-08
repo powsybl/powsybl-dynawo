@@ -69,6 +69,10 @@
                     </classpathDependencyExcludes>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.gmavenplus</groupId>
+                <artifactId>gmavenplus-plugin</artifactId>
+            </plugin>
         </plugins>
     </build>
 
@@ -83,6 +87,11 @@
         <dependency>
             <groupId>com.powsybl</groupId>
             <artifactId>powsybl-dynamic-simulation-api</artifactId>
+            <version>${powsyblcore.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.powsybl</groupId>
+            <artifactId>powsybl-dynamic-simulation-dsl</artifactId>
             <version>${powsyblcore.version}</version>
         </dependency>
         <dependency>
@@ -128,6 +137,12 @@
         <dependency>
             <groupId>com.powsybl</groupId>
             <artifactId>powsybl-config-test</artifactId>
+            <version>${powsyblcore.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>powsybl-iidm-test</artifactId>
             <version>${powsyblcore.version}</version>
             <scope>test</scope>
         </dependency>
