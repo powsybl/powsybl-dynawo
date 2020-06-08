@@ -103,6 +103,12 @@
         <!-- Runtime dependencies -->
         <dependency>
             <groupId>com.powsybl</groupId>
+            <artifactId>powsybl-config-classic</artifactId>
+            <version>${powsyblcore.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.powsybl</groupId>
             <artifactId>powsybl-iidm-impl</artifactId>
             <version>${powsyblcore.version}</version>
             <scope>runtime</scope>
@@ -115,12 +121,6 @@
         </dependency>
 
         <!-- Test dependencies -->
-        <dependency>
-            <groupId>com.powsybl</groupId>
-            <artifactId>powsybl-config-classic</artifactId>
-            <version>${powsyblcore.version}</version>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>com.google.jimfs</groupId>
             <artifactId>jimfs</artifactId>
