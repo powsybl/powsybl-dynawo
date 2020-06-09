@@ -7,7 +7,7 @@
 package com.powsybl.dynawo.xml;
 
 import static com.powsybl.dynawo.xml.DynawoConstants.CRV_FILENAME;
-import static com.powsybl.dynawo.xml.DynawoXmlConstants.EMPTY_PREFIX;
+import static com.powsybl.dynawo.xml.DynawoXmlConstants.DYN_PREFIX;
 import static com.powsybl.dynawo.xml.DynawoXmlConstants.DYN_URI;
 
 import java.io.IOException;
@@ -40,9 +40,9 @@ public final class CurvesXml {
             XMLStreamWriter xmlWriter = XmlStreamWriterFactory.newInstance(writer);
             try {
                 xmlWriter.writeStartDocument(StandardCharsets.UTF_8.toString(), "1.0");
-                xmlWriter.setPrefix(EMPTY_PREFIX, DYN_URI);
+                xmlWriter.setPrefix(DYN_PREFIX, DYN_URI);
                 xmlWriter.writeStartElement(DYN_URI, "curvesInput");
-                xmlWriter.writeNamespace(EMPTY_PREFIX, DYN_URI);
+                xmlWriter.writeNamespace(DYN_PREFIX, DYN_URI);
 
                 write(xmlWriter, context);
 

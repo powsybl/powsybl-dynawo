@@ -1,12 +1,12 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<curvesInput xmlns="http://www.rte-france.com/dynawo">
-  <curve model="NETWORK" variable="NGEN_Upu_value"/>
-  <curve model="NETWORK" variable="NHV1_Upu_value"/>
-  <curve model="NETWORK" variable="NHV2_Upu_value"/>
-  <curve model="NETWORK" variable="NLOAD_Upu_value"/>
-  <curve model="GEN" variable="generator_omegaPu"/>
-  <curve model="GEN" variable="generator_PGen"/>
-  <curve model="GEN" variable="generator_UStatorPu"/>
-  <curve model="GEN" variable="voltageRegulator_UcEfdP"/>
-  <curve model="GEN" variable="voltageRegulator_EfdPu"/>
-</curvesInput>
+<dyn:curvesInput xmlns:dyn="http://www.rte-france.com/dynawo">
+  <dyn:curve model="NETWORK" variable="NGEN_Upu_value"/>
+  <dyn:curve model="NETWORK" variable="NHV1_Upu_value"/>
+  <dyn:curve model="NETWORK" variable="NHV2_Upu_value"/>
+  <dyn:curve model="NETWORK" variable="NLOAD_Upu_value"/>
+  <dyn:curve model="GEN" variable="generator_omegaPu"/>
+  <dyn:curve model="GEN" variable="generator_PGen"/>
+  <dyn:curve model="GEN" variable="generator_UStatorPu"/>
+  <dyn:curve model="GEN" variable="voltageRegulator_UcEfdP"/>
+  <dyn:curve model="GEN" variable="voltageRegulator_EfdPu"/>
+</dyn:curvesInput>
