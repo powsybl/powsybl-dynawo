@@ -75,7 +75,7 @@ public final class Main {
     }
 
     private static CurvesSupplier getCurvesSupplier(String[] args) {
-        if (args.length == 3 && args[2].endsWith(".crv")) {
+        if (args.length >= 3 && args[2].endsWith(".crv")) {
             List<CurveGroovyExtension> extensions = GroovyExtension.find(CurveGroovyExtension.class, "dynawo");
             return new GroovyCurvesSupplier(Paths.get(args[2]), extensions);
         }
