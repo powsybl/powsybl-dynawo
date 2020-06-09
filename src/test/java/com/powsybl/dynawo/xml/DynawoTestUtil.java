@@ -9,6 +9,8 @@ package com.powsybl.dynawo.xml;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.XMLConstants;
 import javax.xml.transform.Source;
@@ -17,14 +19,38 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
+import org.junit.Before;
 import org.xml.sax.SAXException;
 
 import com.powsybl.commons.AbstractConverterTest;
+import com.powsybl.dynamicsimulation.Curve;
+import com.powsybl.dynawo.simulator.DynawoCurve;
+import com.powsybl.iidm.network.Network;
+import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 public class DynawoTestUtil extends AbstractConverterTest {
+
+    protected Network network;
+    protected List<Curve> curves;
+
+    @Before
+    public void setup() throws IOException {
+        network = EurostagTutorialExample1Factory.create();
+
+        curves = new ArrayList<>();
+        network.getBusBreakerView().getBusStream().forEach(b -> curves.add(new DynawoCurve("NETWORK", b.getId() + "_Upu_value")));
+        network.getGeneratorStream().forEach(g -> {
+            curves.add(new DynawoCurve(g.getId(), "generator_omegaPu"));
+            curves.add(new DynawoCurve(g.getId(), "generator_PGen"));
+            curves.add(new DynawoCurve(g.getId(), "generator_UStatorPu"));
+            curves.add(new DynawoCurve(g.getId(), "voltageRegulator_UcEfdP"));
+            curves.add(new DynawoCurve(g.getId(), "voltageRegulator_EfdPu"));
+        });
+
+    }
 
     public void validate(Path xmlFile, String name) throws SAXException, IOException {
         SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
