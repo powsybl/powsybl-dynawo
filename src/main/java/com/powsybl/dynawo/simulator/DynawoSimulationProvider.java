@@ -15,6 +15,7 @@ import com.powsybl.dynamicsimulation.DynamicSimulationProvider;
 import com.powsybl.dynamicsimulation.DynamicSimulationResult;
 import com.powsybl.dynamicsimulation.DynamicSimulationResultImpl;
 import com.powsybl.dynawo.DynawoContext;
+import com.powsybl.dynawo.xml.CurvesXml;
 import com.powsybl.dynawo.xml.JobsXml;
 import com.powsybl.iidm.export.Exporters;
 import com.powsybl.iidm.network.Network;
@@ -71,12 +72,14 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
     }
 
     @Override
-    public CompletableFuture<DynamicSimulationResult> run(Network network, CurvesSupplier curvesSupplier, String workingVariantId, ComputationManager computationManager, DynamicSimulationParameters parameters) {
+    public CompletableFuture<DynamicSimulationResult> run(Network network, CurvesSupplier curvesSupplier, String workingVariantId,
+                                                          ComputationManager computationManager, DynamicSimulationParameters parameters) {
+        Objects.requireNonNull(curvesSupplier);
         Objects.requireNonNull(workingVariantId);
         Objects.requireNonNull(parameters);
 
         DynawoSimulationParameters dynawoParameters = getDynawoSimulationParameters(parameters);
-        return run(network, workingVariantId, computationManager, parameters, dynawoParameters);
+        return run(network, curvesSupplier, workingVariantId, computationManager, parameters, dynawoParameters);
     }
 
     private DynawoSimulationParameters getDynawoSimulationParameters(DynamicSimulationParameters parameters) {
@@ -87,13 +90,13 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
         return dynawoParameters;
     }
 
-    private CompletableFuture<DynamicSimulationResult> run(Network network, String workingStateId, ComputationManager computationManager,
-        DynamicSimulationParameters parameters, DynawoSimulationParameters dynawoParameters) {
+    private CompletableFuture<DynamicSimulationResult> run(Network network, CurvesSupplier curvesSupplier, String workingVariantId,
+                                                           ComputationManager computationManager, DynamicSimulationParameters parameters, DynawoSimulationParameters dynawoParameters) {
 
-        network.getVariantManager().setWorkingVariant(workingStateId);
+        network.getVariantManager().setWorkingVariant(workingVariantId);
         ExecutionEnvironment execEnv = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, dynawoConfig.isDebug());
 
-        DynawoContext context = new DynawoContext(network, parameters, dynawoParameters);
+        DynawoContext context = new DynawoContext(network, curvesSupplier.get(network), parameters, dynawoParameters);
         return computationManager.execute(execEnv, new DynawoHandler(context));
     }
 
@@ -133,6 +136,9 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
                 Exporters.export("XIIDM", context.getNetwork(), params, workingDir.resolve(NETWORK_FILENAME));
 
                 JobsXml.write(workingDir, context);
+                if (context.withCurves()) {
+                    CurvesXml.write(workingDir, context);
+                }
             } catch (IOException e) {
                 throw new UncheckedIOException(e);
             } catch (XMLStreamException e) {

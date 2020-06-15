@@ -6,6 +6,7 @@ Maven exec plugin is used to launch the `Main` class.
 Arguments:
  - A network file (mandatory)
  - A dynamic model file (mandatory)
+ - A curves file (optional)
  - A JSON parameters file (optional)
 
 Sample invocation from the command line:

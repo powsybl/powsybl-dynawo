@@ -6,6 +6,7 @@
  */
 package com.powsybl.dynawo.xml;
 
+import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
 import com.powsybl.dynawo.DynawoContext;
 import com.powsybl.dynawo.simulator.DynawoSimulationParameters;
 import com.powsybl.dynawo.simulator.DynawoSimulationParameters.SolverType;
@@ -13,15 +14,11 @@ import com.powsybl.dynawo.simulator.DynawoSimulationParameters.SolverType;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.io.IOException;
-import java.io.Writer;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
 
 import static com.powsybl.dynawo.xml.DynawoConstants.*;
-import static com.powsybl.dynawo.xml.DynawoXmlConstants.DYN_PREFIX;
 import static com.powsybl.dynawo.xml.DynawoXmlConstants.DYN_URI;
 
 /**
@@ -34,34 +31,23 @@ public final class JobsXml {
 
     public static void write(Path workingDir, DynawoContext context) throws IOException, XMLStreamException {
         Objects.requireNonNull(workingDir);
-        Objects.requireNonNull(context);
         Path file = workingDir.resolve(JOBS_FILENAME);
-        try (Writer writer = Files.newBufferedWriter(file, StandardCharsets.UTF_8)) {
-            XMLStreamWriter xmlWriter = XmlStreamWriterFactory.newInstance(writer);
-            try {
-                xmlWriter.writeStartDocument(StandardCharsets.UTF_8.toString(), "1.0");
-                xmlWriter.setPrefix(DYN_PREFIX, DYN_URI);
-                xmlWriter.writeStartElement(DYN_URI, "jobs");
-                xmlWriter.writeNamespace(DYN_PREFIX, DYN_URI);
 
-                write(xmlWriter, context);
-
-                xmlWriter.writeEndElement();
-                xmlWriter.writeEndDocument();
-            } finally {
-                xmlWriter.close();
-            }
-        }
+        XmlUtil.write(file, context, "jobs", JobsXml::write);
     }
 
-    private static void write(XMLStreamWriter writer, DynawoContext context) throws XMLStreamException {
-        writer.writeStartElement(DYN_URI, "job");
-        writer.writeAttribute("name", "Job");
-        writeSolver(writer, context);
-        writeModeler(writer, context);
-        writeSimulation(writer, context);
-        writeOutput(writer, context);
-        writer.writeEndElement();
+    private static void write(XMLStreamWriter writer, DynawoContext context) {
+        try {
+            writer.writeStartElement(DYN_URI, "job");
+            writer.writeAttribute("name", "Job");
+            writeSolver(writer, context);
+            writeModeler(writer, context);
+            writeSimulation(writer, context);
+            writeOutput(writer, context);
+            writer.writeEndElement();
+        } catch (XMLStreamException e) {
+            throw new UncheckedXmlStreamException(e);
+        }
     }
 
     private static void writeSolver(XMLStreamWriter writer, DynawoContext context) throws XMLStreamException {
