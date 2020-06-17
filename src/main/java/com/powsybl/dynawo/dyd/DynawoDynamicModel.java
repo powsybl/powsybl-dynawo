@@ -23,8 +23,8 @@ public interface DynawoDynamicModel extends DynamicModel {
 
     public abstract String getLib();
 
-    public abstract List<MacroConnector> getMacroConnectors();
+    public abstract List<MacroConnect> getMacroConnects();
 
-    public abstract List<String> getMacroStaticReferencesId();
+    public abstract List<String> getMacroStaticRefs();
 
 }

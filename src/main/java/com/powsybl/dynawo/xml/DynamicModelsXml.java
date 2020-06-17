@@ -23,7 +23,11 @@ import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
 import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynawo.DynawoContext;
 import com.powsybl.dynawo.dyd.DynawoDynamicModel;
+import com.powsybl.dynawo.dyd.MacroConnect;
 import com.powsybl.dynawo.dyd.MacroConnector;
+import com.powsybl.dynawo.dyd.MacroConnector.Connect;
+import com.powsybl.dynawo.dyd.MacroStaticReference;
+import com.powsybl.dynawo.dyd.MacroStaticReference.StaticRef;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -53,31 +57,47 @@ public final class DynamicModelsXml {
                 writer.writeAttribute("parFile", parametersFile.getFileName().toString());
                 writer.writeAttribute("parId", dynDynamicModel.getParameterSetId());
                 writer.writeAttribute("staticId", dynDynamicModel.getStaticId());
-                for (String macroStaticRefenceId : dynDynamicModel.getMacroStaticReferencesId()) {
+                for (String macroStaticRef : dynDynamicModel.getMacroStaticRefs()) {
                     writer.writeEmptyElement(DYN_URI, "macroStaticRef");
-                    writer.writeAttribute("id", macroStaticRefenceId);
-                    if (!macroStaticReferencesNeeded.contains(macroStaticRefenceId)) {
-                        macroStaticReferencesNeeded.add(macroStaticRefenceId);
+                    writer.writeAttribute("id", macroStaticRef);
+                    if (!macroStaticReferencesNeeded.contains(macroStaticRef)) {
+                        macroStaticReferencesNeeded.add(macroStaticRef);
                     }
                 }
                 writer.writeEndElement();
-                for (MacroConnector macroConnector : dynDynamicModel.getMacroConnectors()) {
+                for (MacroConnect macroConnect : dynDynamicModel.getMacroConnects()) {
                     writer.writeEmptyElement(DYN_URI, "macroConnect");
-                    writer.writeAttribute("connector", macroConnector.getId());
-                    writer.writeAttribute("id1", macroConnector.getId1());
-                    writer.writeAttribute("id2", macroConnector.getId2());
-                    if (!macroConnectorsNeeded.contains(macroConnector.getId())) {
-                        macroConnectorsNeeded.add(macroConnector.getId());
+                    writer.writeAttribute("connector", macroConnect.getId());
+                    writer.writeAttribute("id1", macroConnect.getId1());
+                    writer.writeAttribute("id2", macroConnect.getId2());
+                    if (!macroConnectorsNeeded.contains(macroConnect.getId())) {
+                        macroConnectorsNeeded.add(macroConnect.getId());
                     }
                 }
             }
 
             for (String macroConnectorId : macroConnectorsNeeded) {
-                writer.writeCharacters(context.getMacroConnector(macroConnectorId));
+                MacroConnector macroConnector = context.getMacroConnector(macroConnectorId);
+                writer.writeStartElement(DYN_URI, "macroConnector");
+                writer.writeAttribute("id", macroConnector.getId());
+                for (Connect connect : macroConnector.getConnections()) {
+                    writer.writeEmptyElement(DYN_URI, "connect");
+                    writer.writeAttribute("var1", connect.getVar1());
+                    writer.writeAttribute("var2", connect.getVar2());
+                }
+                writer.writeEndElement();
             }
 
-            for (String macroStaticRefenceId : macroStaticReferencesNeeded) {
-                writer.writeCharacters(context.getMacroStaticReference(macroStaticRefenceId));
+            for (String macroStaticReferenceId : macroStaticReferencesNeeded) {
+                MacroStaticReference macroStaticReference = context.getMacroStaticReference(macroStaticReferenceId);
+                writer.writeStartElement(DYN_URI, "macroStaticReference");
+                writer.writeAttribute("id", macroStaticReference.getId());
+                for (StaticRef staticRef : macroStaticReference.getStaticRefs()) {
+                    writer.writeEmptyElement(DYN_URI, "staticRef");
+                    writer.writeAttribute("var", staticRef.getVar());
+                    writer.writeAttribute("staticVar", staticRef.getStaticVar());
+                }
+                writer.writeEndElement();
             }
         } catch (XMLStreamException e) {
             throw new UncheckedXmlStreamException(e);

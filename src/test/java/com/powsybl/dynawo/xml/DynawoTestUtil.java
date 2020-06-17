@@ -25,6 +25,7 @@ import org.xml.sax.SAXException;
 import com.powsybl.commons.AbstractConverterTest;
 import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynamicsimulation.DynamicModel;
+import com.powsybl.dynawo.dyd.LoadAlphaBeta;
 import com.powsybl.dynawo.simulator.DynawoCurve;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
@@ -46,6 +47,9 @@ public class DynawoTestUtil extends AbstractConverterTest {
         curves = new ArrayList<>();
         network.getBusBreakerView().getBusStream().forEach(b -> curves.add(new DynawoCurve("NETWORK", b.getId() + "_Upu_value")));
 
+        network.getLoadStream().forEach(l -> {
+            dynamicModels.add(new LoadAlphaBeta(l.getId(), l.getId(), "default"));
+        });
         // A curve is made up of the id of the dynamic model and the variable to plot.
         // The static id of the generator is used as the id of the dynamic model (modelId).
         network.getGeneratorStream().forEach(g -> {

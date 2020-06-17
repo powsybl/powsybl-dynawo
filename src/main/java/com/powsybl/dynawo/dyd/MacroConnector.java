@@ -6,6 +6,9 @@
  */
 package com.powsybl.dynawo.dyd;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -13,25 +16,42 @@ import java.util.Objects;
  */
 public class MacroConnector {
 
-    public MacroConnector(String id, String id1, String id2) {
+    public static class Connect {
+
+        public Connect(String var1, String var2) {
+            this.var1 = Objects.requireNonNull(var1);
+            this.var2 = Objects.requireNonNull(var2);
+        }
+
+        public String getVar1() {
+            return var1;
+        }
+
+        public String getVar2() {
+            return var2;
+        }
+
+        private final String var1;
+        private final String var2;
+    }
+
+    public MacroConnector(String id, Connect... connections) {
+        this(id, Arrays.asList(connections));
+    }
+
+    public MacroConnector(String id, List<Connect> connections) {
         this.id = Objects.requireNonNull(id);
-        this.id1 = Objects.requireNonNull(id1);
-        this.id2 = Objects.requireNonNull(id2);
+        this.connections = Objects.requireNonNull(connections);
     }
 
     public String getId() {
         return id;
     }
 
-    public String getId1() {
-        return id1;
-    }
-
-    public String getId2() {
-        return id2;
+    public List<Connect> getConnections() {
+        return Collections.unmodifiableList(connections);
     }
 
     private final String id;
-    private final String id1;
-    private final String id2;
+    private final List<Connect> connections;
 }

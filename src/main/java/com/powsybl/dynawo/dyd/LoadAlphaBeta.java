@@ -41,12 +41,12 @@ public class LoadAlphaBeta implements DynawoDynamicModel {
     }
 
     @Override
-    public List<MacroConnector> getMacroConnectors() {
-        return Collections.singletonList(new MacroConnector("LoadToNode", modelId, "NETWORK"));
+    public List<MacroConnect> getMacroConnects() {
+        return Collections.singletonList(new MacroConnect("LoadToNode", modelId, "NETWORK"));
     }
 
     @Override
-    public List<String> getMacroStaticReferencesId() {
+    public List<String> getMacroStaticRefs() {
         return Collections.singletonList("Load");
     }
 

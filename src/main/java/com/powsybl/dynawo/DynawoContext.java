@@ -15,6 +15,10 @@ import java.util.Objects;
 import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
+import com.powsybl.dynawo.dyd.MacroConnector;
+import com.powsybl.dynawo.dyd.MacroConnector.Connect;
+import com.powsybl.dynawo.dyd.MacroStaticReference;
+import com.powsybl.dynawo.dyd.MacroStaticReference.StaticRef;
 import com.powsybl.dynawo.simulator.DynawoSimulationParameters;
 import com.powsybl.iidm.network.Network;
 
@@ -30,18 +34,14 @@ public class DynawoContext {
         this.parameters = Objects.requireNonNull(parameters);
         this.dynawoParameters = Objects.requireNonNull(dynawoParameters);
 
-        this.macroConnectors.put("LoadToNode",
-            "<dyn:macroConnector id=\"LoadToNode\">" +
-            "  <dyn:connect var1=\"load_terminal\" var2=\"@STATIC_ID@@NODE@_ACPIN\"/>" +
-            "  <dyn:connect var1=\"load_switchOffSignal1\" var2=\"@STATIC_ID@@NODE@_switchOff\"/>" +
-            "</dyn:macroConnector>");
+        this.macroConnectors.put("LoadToNode", new MacroConnector("LoadToNode",
+            new Connect("load_terminal", "@STATIC_ID@@NODE@_ACPIN"),
+            new Connect("load_switchOffSignal1", "@STATIC_ID@@NODE@_switchOff")));
 
-        this.macroStaticReferences.put("Load",
-            "<dyn:macroStaticReference id=\"Load\">" +
-            "    <dyn:staticRef var=\"load_PPu\" staticVar=\"p\"/>" +
-            "    <dyn:staticRef var=\"load_QPu\" staticVar=\"q\"/>" +
-            "    <dyn:staticRef var=\"load_state\" staticVar=\"state\"/>" +
-            "  </dyn:macroStaticReference>");
+        this.macroStaticReferences.put("Load", new MacroStaticReference("Load",
+            new StaticRef("load_PPu", "p"),
+            new StaticRef("load_QPu", "q"),
+            new StaticRef("load_state", "state")));
     }
 
     public Network getNetwork() {
@@ -68,11 +68,11 @@ public class DynawoContext {
         return !curves.isEmpty();
     }
 
-    public String getMacroConnector(String id) {
+    public MacroConnector getMacroConnector(String id) {
         return macroConnectors.get(id);
     }
 
-    public String getMacroStaticReference(String id) {
+    public MacroStaticReference getMacroStaticReference(String id) {
         return macroStaticReferences.get(id);
     }
 
@@ -82,6 +82,6 @@ public class DynawoContext {
     private final List<DynamicModel> dynamicModels;
     private final List<Curve> curves;
 
-    private final Map<String, String> macroConnectors = new HashMap<>();
-    private final Map<String, String> macroStaticReferences = new HashMap<>();
+    private final Map<String, MacroConnector> macroConnectors = new HashMap<>();
+    private final Map<String, MacroStaticReference> macroStaticReferences = new HashMap<>();
 }
