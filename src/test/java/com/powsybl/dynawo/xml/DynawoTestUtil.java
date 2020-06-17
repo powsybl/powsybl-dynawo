@@ -24,6 +24,7 @@ import org.xml.sax.SAXException;
 
 import com.powsybl.commons.AbstractConverterTest;
 import com.powsybl.dynamicsimulation.Curve;
+import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynawo.simulator.DynawoCurve;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
@@ -34,12 +35,14 @@ import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 public class DynawoTestUtil extends AbstractConverterTest {
 
     protected Network network;
+    protected List<DynamicModel> dynamicModels;
     protected List<Curve> curves;
 
     @Before
     public void setup() throws IOException {
         network = EurostagTutorialExample1Factory.create();
 
+        dynamicModels = new ArrayList<>();
         curves = new ArrayList<>();
         network.getBusBreakerView().getBusStream().forEach(b -> curves.add(new DynawoCurve("NETWORK", b.getId() + "_Upu_value")));
 

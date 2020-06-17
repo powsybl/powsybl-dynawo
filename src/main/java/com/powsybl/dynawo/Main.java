@@ -17,10 +17,12 @@ import com.powsybl.computation.ComputationManager;
 import com.powsybl.computation.local.LocalComputationConfig;
 import com.powsybl.computation.local.LocalComputationManager;
 import com.powsybl.dynamicsimulation.CurvesSupplier;
+import com.powsybl.dynamicsimulation.DynamicModelsSupplier;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynamicsimulation.groovy.CurveGroovyExtension;
 import com.powsybl.dynamicsimulation.groovy.GroovyCurvesSupplier;
 import com.powsybl.dynamicsimulation.groovy.GroovyExtension;
+import com.powsybl.dynamicsimulation.groovy.GroovyDynamicModelsSupplier;
 import com.powsybl.dynamicsimulation.json.JsonDynamicSimulationParameters;
 import com.powsybl.dynawo.simulator.DynawoSimulationParameters;
 import com.powsybl.dynawo.simulator.DynawoSimulationProvider;
@@ -57,9 +59,9 @@ public final class Main {
         }
 
         DynawoSimulationProvider provider = new DynawoSimulationProvider();
-        provider.setDydFilename(dydFile);
+        DynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(Paths.get(dydFile));
         try (ComputationManager computationManager = new LocalComputationManager(LocalComputationConfig.load())) {
-            provider.run(network, curvesSupplier, network.getVariantManager().getWorkingVariantId(), computationManager, parameters).join();
+            provider.run(network, dynamicModelsSupplier, curvesSupplier, network.getVariantManager().getWorkingVariantId(), computationManager, parameters).join();
         } catch (IOException e) {
             LOGGER.error(e.toString(), e);
             System.exit(1);

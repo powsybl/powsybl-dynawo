@@ -26,7 +26,7 @@ public class JobsXmlTest extends DynawoTestUtil {
     public void writeJob() throws SAXException, IOException, XMLStreamException {
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load();
-        DynawoContext context = new DynawoContext(network, curves, parameters, dynawoParameters);
+        DynawoContext context = new DynawoContext(network, dynamicModels, curves, parameters, dynawoParameters);
 
         JobsXml.write(tmpDir, context);
         validate(tmpDir.resolve(DynawoConstants.JOBS_FILENAME), "jobs");
