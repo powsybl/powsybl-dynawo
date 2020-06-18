@@ -47,20 +47,12 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
 
     private final DynawoConfig dynawoConfig;
 
-    // FIXME(mathbagu): to be removed once the DYD file will be generated
-    private String dydFilename;
-
     public DynawoSimulationProvider() {
         this(DynawoConfig.load());
     }
 
     public DynawoSimulationProvider(DynawoConfig dynawoConfig) {
         this.dynawoConfig = Objects.requireNonNull(dynawoConfig);
-    }
-
-    // FIXME(mathbagu): to be removed once the DYD file will be generated
-    public void setDydFilename(String dydFile) {
-        this.dydFilename = Objects.requireNonNull(dydFile);
     }
 
     @Override

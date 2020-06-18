@@ -46,7 +46,7 @@ public final class Main {
         }
 
         String networkFile = args[0];
-        String dydFile = args[1];
+        DynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(Paths.get(args[1]));
         CurvesSupplier curvesSupplier = getCurvesSupplier(args);
         String parametersFile = getParametersFile(args);
 
@@ -59,7 +59,6 @@ public final class Main {
         }
 
         DynawoSimulationProvider provider = new DynawoSimulationProvider();
-        DynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(Paths.get(dydFile));
         try (ComputationManager computationManager = new LocalComputationManager(LocalComputationConfig.load())) {
             provider.run(network, dynamicModelsSupplier, curvesSupplier, network.getVariantManager().getWorkingVariantId(), computationManager, parameters).join();
         } catch (IOException e) {
