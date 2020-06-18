@@ -27,7 +27,10 @@ import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynawo.dyd.LoadAlphaBeta;
 import com.powsybl.dynawo.simulator.DynawoCurve;
+import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.Network;
+import com.powsybl.iidm.network.NetworkFactory;
+import com.powsybl.iidm.network.VoltageLevel;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 
 /**
@@ -41,15 +44,11 @@ public class DynawoTestUtil extends AbstractConverterTest {
 
     @Before
     public void setup() throws IOException {
-        network = EurostagTutorialExample1Factory.create();
 
-        dynamicModels = new ArrayList<>();
+        network = createEurostagTutorialExample1WithMoreLoads();
+
         curves = new ArrayList<>();
         network.getBusBreakerView().getBusStream().forEach(b -> curves.add(new DynawoCurve("NETWORK", b.getId() + "_Upu_value")));
-
-        network.getLoadStream().forEach(l -> {
-            dynamicModels.add(new LoadAlphaBeta(l.getId(), l.getId(), "default"));
-        });
         // A curve is made up of the id of the dynamic model and the variable to plot.
         // The static id of the generator is used as the id of the dynamic model (modelId).
         network.getGeneratorStream().forEach(g -> {
@@ -60,6 +59,10 @@ public class DynawoTestUtil extends AbstractConverterTest {
             curves.add(new DynawoCurve(g.getId(), "voltageRegulator_EfdPu"));
         });
 
+        dynamicModels = new ArrayList<>();
+        network.getLoadStream().forEach(l -> {
+            dynamicModels.add(new LoadAlphaBeta(l.getId(), l.getId(), "default"));
+        });
     }
 
     public void validate(Path xmlFile, String name) throws SAXException, IOException {
@@ -70,5 +73,20 @@ public class DynawoTestUtil extends AbstractConverterTest {
         Validator validator = schema.newValidator();
         validator.validate(xml);
         compareXml(getClass().getResourceAsStream("/" + name + ".xml"), Files.newInputStream(xmlFile));
+    }
+
+    private static Network createEurostagTutorialExample1WithMoreLoads() {
+        Network network = EurostagTutorialExample1Factory.create(NetworkFactory.findDefault());
+
+        VoltageLevel vlload = network.getVoltageLevel("VLLOAD");
+        Bus nload = vlload.getBusBreakerView().getBus("NLOAD");
+        vlload.newLoad()
+            .setId("LOAD2")
+            .setBus(nload.getId())
+            .setConnectableBus(nload.getId())
+            .setP0(1.0)
+            .setQ0(0.5)
+            .add();
+        return network;
     }
 }

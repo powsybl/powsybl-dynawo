@@ -12,27 +12,10 @@ import java.util.List;
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class LoadAlphaBeta implements DynawoDynamicModel {
+public class LoadAlphaBeta extends AbstractBlackBoxModel {
 
-    public LoadAlphaBeta(String modelId, String staticId, String parameterSetId) {
-        this.modelId = modelId;
-        this.staticId = staticId;
-        this.parameterSetId = parameterSetId;
-    }
-
-    @Override
-    public String getId() {
-        return modelId;
-    }
-
-    @Override
-    public String getStaticId() {
-        return staticId;
-    }
-
-    @Override
-    public String getParameterSetId() {
-        return parameterSetId;
+    public LoadAlphaBeta(String id, String staticId, String parameterSetId) {
+        super(id, staticId, parameterSetId);
     }
 
     @Override
@@ -42,7 +25,7 @@ public class LoadAlphaBeta implements DynawoDynamicModel {
 
     @Override
     public List<MacroConnect> getMacroConnects() {
-        return Collections.singletonList(new MacroConnect("LoadToNode", modelId, "NETWORK"));
+        return Collections.singletonList(new MacroConnect("LoadToNode", getId(), "NETWORK"));
     }
 
     @Override
@@ -50,7 +33,4 @@ public class LoadAlphaBeta implements DynawoDynamicModel {
         return Collections.singletonList("Load");
     }
 
-    private final String modelId;
-    private final String staticId;
-    private final String parameterSetId;
 }

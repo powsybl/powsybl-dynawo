@@ -7,7 +7,6 @@
 package com.powsybl.dynawo.xml;
 
 import java.io.IOException;
-import java.nio.file.Paths;
 
 import javax.xml.stream.XMLStreamException;
 

@@ -34,14 +34,7 @@ public class DynawoContext {
         this.parameters = Objects.requireNonNull(parameters);
         this.dynawoParameters = Objects.requireNonNull(dynawoParameters);
 
-        this.macroConnectors.put("LoadToNode", new MacroConnector("LoadToNode",
-            new Connect("load_terminal", "@STATIC_ID@@NODE@_ACPIN"),
-            new Connect("load_switchOffSignal1", "@STATIC_ID@@NODE@_switchOff")));
-
-        this.macroStaticReferences.put("Load", new MacroStaticReference("Load",
-            new StaticRef("load_PPu", "p"),
-            new StaticRef("load_QPu", "q"),
-            new StaticRef("load_state", "state")));
+        setupHardcodedMacroConnectorsAndStaticReferences();
     }
 
     public Network getNetwork() {
@@ -74,6 +67,16 @@ public class DynawoContext {
 
     public MacroStaticReference getMacroStaticReference(String id) {
         return macroStaticReferences.get(id);
+    }
+
+    private void setupHardcodedMacroConnectorsAndStaticReferences() {
+        this.macroConnectors.put("LoadToNode", new MacroConnector("LoadToNode",
+            new Connect("load_terminal", "@STATIC_ID@@NODE@_ACPIN"),
+            new Connect("load_switchOffSignal1", "@STATIC_ID@@NODE@_switchOff")));
+        this.macroStaticReferences.put("Load", new MacroStaticReference("Load",
+            new StaticRef("load_PPu", "p"),
+            new StaticRef("load_QPu", "q"),
+            new StaticRef("load_state", "state")));
     }
 
     private final Network network;
