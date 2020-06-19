@@ -41,7 +41,7 @@ public final class Main {
 
     public static void main(String[] args) {
         if (args.length < 2 || args.length > 4) {
-            LOGGER.error("Usage: {} networkFile.xiidm dynamicModels.dyd [curves.crv] [parametersFile.json]", Main.class.getName());
+            LOGGER.error("Usage: {} networkFile.xiidm dynamicModels.groovy [curves.groovy] [parametersFile.json]", Main.class.getName());
             System.exit(1);
         }
 
@@ -76,7 +76,7 @@ public final class Main {
     }
 
     private static CurvesSupplier getCurvesSupplier(String[] args) {
-        if (args.length >= 3 && args[2].endsWith(".crv")) {
+        if (args.length >= 3 && args[2].endsWith(".groovy")) {
             List<CurveGroovyExtension> extensions = GroovyExtension.find(CurveGroovyExtension.class, "dynawo");
             return new GroovyCurvesSupplier(Paths.get(args[2]), extensions);
         }
