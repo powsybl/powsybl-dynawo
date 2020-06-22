@@ -22,8 +22,7 @@ public abstract class AbstractDynawoDynamicModel implements DynamicModel {
     }
 
     public AbstractDynawoDynamicModel(String id) {
-        Objects.requireNonNull(id);
-        this.id = id;
+        this.id = Objects.requireNonNull(id);
     }
 
     public abstract DynamicModelType getType();

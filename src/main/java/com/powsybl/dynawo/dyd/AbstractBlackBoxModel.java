@@ -6,6 +6,8 @@
  */
 package com.powsybl.dynawo.dyd;
 
+import java.util.Objects;
+
 /**
  * @author Luma Zamarreño <zamarrenolm at aia.es>
  */
@@ -13,8 +15,8 @@ public abstract class AbstractBlackBoxModel extends AbstractDynawoDynamicModel {
 
     public AbstractBlackBoxModel(String id, String staticId, String parameterSetId) {
         super(id);
-        this.staticId = staticId;
-        this.parameterSetId = parameterSetId;
+        this.staticId = Objects.requireNonNull(staticId);
+        this.parameterSetId = Objects.requireNonNull(parameterSetId);
     }
 
     @Override
