@@ -14,8 +14,8 @@ import java.util.List;
  */
 public class LoadAlphaBeta extends AbstractBlackBoxModel {
 
-    public LoadAlphaBeta(String id, String staticId, String parameterSetId) {
-        super(id, staticId, parameterSetId);
+    public LoadAlphaBeta(String modelId, String staticId, String parameterSetId) {
+        super(modelId, staticId, parameterSetId);
     }
 
     @Override
