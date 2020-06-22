@@ -42,7 +42,7 @@ public class DynawoSimulationProviderTest {
 
         @Override
         public List<DynamicModel> get(Network network) {
-            return null;
+            return Collections.emptyList();
         }
 
     }
