@@ -6,41 +6,55 @@
  */
 package com.powsybl.dynawo.xml;
 
-import static com.powsybl.dynawo.xml.DynawoConstants.DYD_FILENAME;
-import static com.powsybl.dynawo.xml.DynawoXmlConstants.DYN_URI;
-
-import java.io.IOException;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
-
-import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
-import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynawo.DynawoContext;
-import com.powsybl.dynawo.dyd.AbstractDynawoDynamicModel;
-import com.powsybl.dynawo.dyd.MacroConnector;
-import com.powsybl.dynawo.dyd.MacroConnector.Connect;
-import com.powsybl.dynawo.dyd.MacroStaticReference;
-import com.powsybl.dynawo.dyd.MacroStaticReference.StaticRef;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public final class DynamicModelsXml {
+public class DynawoXmlContext {
 
-    private DynamicModelsXml() {
+    private final String parFile;
+
+    private final Map<String, AtomicInteger> counters = new HashMap<>();
+
+    public DynawoXmlContext(DynawoContext context) {
+        Objects.requireNonNull(context);
+        this.parFile = Paths.get(context.getDynawoParameters().getParametersFile()).getFileName().toString();
+    }
+
+    public String getParFile() {
+        return parFile;
+    }
+
+    public int getIndex(String modelType, boolean increment) {
+        AtomicInteger counter = counters.computeIfAbsent(modelType, k -> new AtomicInteger());
+        return increment ? counter.getAndIncrement() : counter.get();
+    }
+
+    /*
+
+
+
+
+
+
+
+
+
+
+
+    private DynawoXmlContext() {
     }
 
     public static void write(Path workingDir, DynawoContext context) throws IOException, XMLStreamException {
         Objects.requireNonNull(workingDir);
         Path file = workingDir.resolve(DYD_FILENAME);
 
-        XmlUtil.write(file, context, "dynamicModelsArchitecture", DynamicModelsXml::write);
+        XmlUtil.write(file, context, "dynamicModelsArchitecture", DynawoXmlContext::write);
     }
 
     private static void write(XMLStreamWriter writer, DynawoContext context) {
@@ -110,4 +124,5 @@ public final class DynamicModelsXml {
         final Set<String> macroConnectorsUsed = new HashSet<>();
         final Set<String> macroStaticReferencesUsed = new HashSet<>();
     }
+     */
 }

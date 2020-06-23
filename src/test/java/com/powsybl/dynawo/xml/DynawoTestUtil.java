@@ -61,7 +61,7 @@ public class DynawoTestUtil extends AbstractConverterTest {
 
         dynamicModels = new ArrayList<>();
         network.getLoadStream().forEach(l -> {
-            dynamicModels.add(new LoadAlphaBeta(l.getId(), l.getId(), "default"));
+            dynamicModels.add(new LoadAlphaBeta("BBM_" + l.getId(), l.getId(), "default"));
         });
     }
 

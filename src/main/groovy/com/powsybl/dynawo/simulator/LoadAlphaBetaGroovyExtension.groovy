@@ -51,19 +51,16 @@ class LoadAlphaBetaGroovyExtension implements DynamicModelGroovyExtension {
     
             cloned.delegate = loadAlphaBetaSpec
             cloned()
-    
+
             if (!loadAlphaBetaSpec.staticId) {
                 throw new DslException("'staticId' field is not set");
             }
             if (!loadAlphaBetaSpec.parameterSetId) {
                 throw new DslException("'parameterSetId' field is not set")
             }
-    
-            if (loadAlphaBetaSpec.modelId) {
-                consumer.accept(new LoadAlphaBeta(loadAlphaBetaSpec.modelId, loadAlphaBetaSpec.staticId, loadAlphaBetaSpec.parameterSetId))
-            } else {
-                consumer.accept(new LoadAlphaBeta(loadAlphaBetaSpec.staticId, loadAlphaBetaSpec.staticId, loadAlphaBetaSpec.parameterSetId))
-            }
+
+            String modelId = loadAlphaBetaSpec.modelId ? loadAlphaBetaSpec.modelId : 'BBM_' + loadAlphaBetaSpec.staticId
+            consumer.accept(new LoadAlphaBeta(modelId, loadAlphaBetaSpec.staticId, loadAlphaBetaSpec.parameterSetId))
         }
     }
 

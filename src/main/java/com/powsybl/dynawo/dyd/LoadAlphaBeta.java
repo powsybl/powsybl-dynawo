@@ -6,20 +6,17 @@
  */
 package com.powsybl.dynawo.dyd;
 
-import static com.powsybl.dynawo.xml.DynawoXmlConstants.DYN_URI;
-
-import java.util.Collections;
-import java.util.List;
+import com.powsybl.dynawo.xml.DynawoXmlContext;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
-import com.powsybl.dynawo.xml.DynamicModelsXml.DydXmlWriterContext;
+import static com.powsybl.dynawo.xml.DynawoXmlConstants.*;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class LoadAlphaBeta extends AbstractDynawoDynamicModel {
+public class LoadAlphaBeta extends AbstractBlackBoxModel {
 
     public LoadAlphaBeta(String modelId, String staticId, String parameterSetId) {
         super(modelId, staticId, parameterSetId);
@@ -31,44 +28,35 @@ public class LoadAlphaBeta extends AbstractDynawoDynamicModel {
     }
 
     @Override
-    public List<MacroConnect> getMacroConnects() {
-        return Collections.singletonList(new MacroConnect("LoadToNode", getId(), "NETWORK"));
-    }
+    public void write(XMLStreamWriter writer, DynawoXmlContext context) throws XMLStreamException {
+        if (context.getIndex(getLib(), true) == 0) {
+            // Write the macroStaticReference object
+            writer.writeStartElement(DYN_URI, "macroStaticReference");
+            writer.writeAttribute("id", MACRO_STATIC_REFERENCE_PREFIX + getLib());
+            writeStaticRef(writer, "load_PPu", "p");
+            writeStaticRef(writer, "load_QPu", "q");
+            writeStaticRef(writer, "load_state", "state");
+            writer.writeEndElement();
 
-    @Override
-    public List<String> getMacroStaticRefs() {
-        return Collections.singletonList("Load");
-    }
+            // Write the macroConnector object
+            writer.writeStartElement(DYN_URI, "macroConnector");
+            writer.writeAttribute("id", MACRO_CONNECTOR_PREFIX + getLib());
+            writeMacroConnection(writer, "load_terminal", "@STATIC_ID@@NODE@_ACPIN");
+            writeMacroConnection(writer, "load_switchOffSignal1", "@STATIC_ID@@NODE@_switchOff");
+            writer.writeEndElement();
+        }
 
-    @Override
-    public void write(XMLStreamWriter writer, DydXmlWriterContext dydXmlWriterContext) throws XMLStreamException {
-
+        // Write the blackBoxModel object
         writer.writeStartElement(DYN_URI, "blackBoxModel");
         writer.writeAttribute("id", getId());
         writer.writeAttribute("lib", getLib());
-        writer.writeAttribute("parFile", dydXmlWriterContext.getParFile());
+        writer.writeAttribute("parFile", context.getParFile());
         writer.writeAttribute("parId", getParameterSetId());
         writer.writeAttribute("staticId", getStaticId());
-
-        for (String macroStaticRef : getMacroStaticRefs()) {
-            writer.writeEmptyElement(DYN_URI, "macroStaticRef");
-            writer.writeAttribute("id", macroStaticRef);
-            dydXmlWriterContext.addMacroStaticReferencesUsed(macroStaticRef);
-        }
+        writeMacroStaticRef(writer, MACRO_STATIC_REFERENCE_PREFIX + getLib());
         writer.writeEndElement();
 
-        // Write all macroConnects related to the dynamic models
-        for (MacroConnect macroConnect : getMacroConnects()) {
-            writeMacroConnect(writer, dydXmlWriterContext, macroConnect);
-        }
-
-    }
-
-    private void writeMacroConnect(XMLStreamWriter writer, DydXmlWriterContext dydXmlWriterContext, MacroConnect macroConnect) throws XMLStreamException {
-        writer.writeEmptyElement(DYN_URI, "macroConnect");
-        writer.writeAttribute("connector", macroConnect.getId());
-        writer.writeAttribute("id1", macroConnect.getId1());
-        writer.writeAttribute("id2", macroConnect.getId2());
-        dydXmlWriterContext.addMacroConnectorsUsed(macroConnect.getId());
+        // Write the connect object
+        writeConnect(writer, MACRO_CONNECTOR_PREFIX + getLib(), getId(), NETWORK);
     }
 }
