@@ -12,7 +12,6 @@ import static com.powsybl.dynawo.xml.DynawoXmlConstants.DYN_URI;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -23,9 +22,7 @@ import javax.xml.stream.XMLStreamWriter;
 import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
 import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynawo.DynawoContext;
-import com.powsybl.dynawo.dyd.AbstractBlackBoxModel;
 import com.powsybl.dynawo.dyd.AbstractDynawoDynamicModel;
-import com.powsybl.dynawo.dyd.MacroConnect;
 import com.powsybl.dynawo.dyd.MacroConnector;
 import com.powsybl.dynawo.dyd.MacroConnector.Connect;
 import com.powsybl.dynawo.dyd.MacroStaticReference;
@@ -53,16 +50,7 @@ public final class DynamicModelsXml {
             for (DynamicModel dynamicModel : context.getDynamicModels()) {
                 // All dynamic models must be Dynawo abstract dynamic models
                 AbstractDynawoDynamicModel dynawoDynamicModel = (AbstractDynawoDynamicModel) dynamicModel;
-                writeDynamicModel(writer, dydXmlWriterContext, dynawoDynamicModel);
-            }
-
-            // Write all macroConnects related to the dynamic models
-            // We need to loop again for all dynamic models
-            for (DynamicModel dynamicModel : context.getDynamicModels()) {
-                AbstractDynawoDynamicModel dynDynamicModel = (AbstractDynawoDynamicModel) dynamicModel;
-                for (MacroConnect macroConnect : dynDynamicModel.getMacroConnects()) {
-                    writeMacroConnect(writer, dydXmlWriterContext, macroConnect);
-                }
+                dynawoDynamicModel.write(writer, dydXmlWriterContext);
             }
 
             // Write macro... objects referenced by the dynamic models written
@@ -77,43 +65,7 @@ public final class DynamicModelsXml {
         }
     }
 
-    private static void writeDynamicModel(XMLStreamWriter writer, DydXmlWriterContext dydXmlWriterContext,
-            AbstractDynawoDynamicModel dynawoDynamicModel) throws XMLStreamException {
-        writer.writeStartElement(DYN_URI, TAG_NAMES.get(dynawoDynamicModel.getType()));
-        writer.writeAttribute("id", dynawoDynamicModel.getId());
-        writeDynamicModelAttributes(writer, dydXmlWriterContext, dynawoDynamicModel);
-
-        for (String macroStaticRef : dynawoDynamicModel.getMacroStaticRefs()) {
-            writer.writeEmptyElement(DYN_URI, "macroStaticRef");
-            writer.writeAttribute("id", macroStaticRef);
-            dydXmlWriterContext.macroStaticReferencesUsed.add(macroStaticRef);
-        }
-        writer.writeEndElement();
-    }
-
-    private static void writeDynamicModelAttributes(XMLStreamWriter writer, DydXmlWriterContext dydXmlWriterContext,
-            AbstractDynawoDynamicModel dynawoDynamicModel) throws XMLStreamException {
-        // TODO only black box models for the moment
-        if (dynawoDynamicModel instanceof AbstractBlackBoxModel) {
-            AbstractBlackBoxModel blackBox = (AbstractBlackBoxModel) dynawoDynamicModel;
-            writer.writeAttribute("lib", blackBox.getLib());
-            writer.writeAttribute("parFile", dydXmlWriterContext.parFile);
-            writer.writeAttribute("parId", blackBox.getParameterSetId());
-            writer.writeAttribute("staticId", blackBox.getStaticId());
-        }
-    }
-
-    private static void writeMacroConnect(XMLStreamWriter writer, DydXmlWriterContext dydXmlWriterContext,
-            MacroConnect macroConnect) throws XMLStreamException {
-        writer.writeEmptyElement(DYN_URI, "macroConnect");
-        writer.writeAttribute("connector", macroConnect.getId());
-        writer.writeAttribute("id1", macroConnect.getId1());
-        writer.writeAttribute("id2", macroConnect.getId2());
-        dydXmlWriterContext.macroConnectorsUsed.add(macroConnect.getId());
-    }
-
-    private static void writeMacroConnector(XMLStreamWriter writer, MacroConnector macroConnector)
-            throws XMLStreamException {
+    private static void writeMacroConnector(XMLStreamWriter writer, MacroConnector macroConnector) throws XMLStreamException {
         writer.writeStartElement(DYN_URI, "macroConnector");
         writer.writeAttribute("id", macroConnector.getId());
         for (Connect connect : macroConnector.getConnections()) {
@@ -124,8 +76,7 @@ public final class DynamicModelsXml {
         writer.writeEndElement();
     }
 
-    private static void writeMacroStaticReference(XMLStreamWriter writer, MacroStaticReference macroStaticReference)
-            throws XMLStreamException {
+    private static void writeMacroStaticReference(XMLStreamWriter writer, MacroStaticReference macroStaticReference) throws XMLStreamException {
         writer.writeStartElement(DYN_URI, "macroStaticReference");
         writer.writeAttribute("id", macroStaticReference.getId());
         for (StaticRef staticRef : macroStaticReference.getStaticRefs()) {
@@ -136,23 +87,27 @@ public final class DynamicModelsXml {
         writer.writeEndElement();
     }
 
-    private static class DydXmlWriterContext {
+    public static class DydXmlWriterContext {
         DydXmlWriterContext(DynawoContext context) {
             parametersFile = Paths.get(context.getDynawoParameters().getParametersFile());
             parFile = parametersFile.getFileName().toString();
+        }
+
+        public void addMacroConnectorsUsed(String macroConnectorId) {
+            macroConnectorsUsed.add(macroConnectorId);
+        }
+
+        public void addMacroStaticReferencesUsed(String macroStaticReferenceId) {
+            macroStaticReferencesUsed.add(macroStaticReferenceId);
+        }
+
+        public String getParFile() {
+            return parFile;
         }
 
         final Path parametersFile;
         final String parFile;
         final Set<String> macroConnectorsUsed = new HashSet<>();
         final Set<String> macroStaticReferencesUsed = new HashSet<>();
-    }
-
-    private static final EnumMap<AbstractDynawoDynamicModel.DynamicModelType, String> TAG_NAMES = new EnumMap<>(
-            AbstractDynawoDynamicModel.DynamicModelType.class);
-
-    static {
-        TAG_NAMES.put(AbstractDynawoDynamicModel.DynamicModelType.MODELICA_MODEL, "modelicaModel");
-        TAG_NAMES.put(AbstractDynawoDynamicModel.DynamicModelType.BLACK_BOX_MODEL, "blackBoxModel");
     }
 }

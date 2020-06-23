@@ -10,31 +10,36 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+
 import com.powsybl.dynamicsimulation.DynamicModel;
+import com.powsybl.dynawo.xml.DynamicModelsXml.DydXmlWriterContext;
 
 /**
- * @author Marcos de Miguel <demiguelm at aia.es>
+ * @author Luma Zamarreño <zamarrenolm at aia.es>
  */
 public abstract class AbstractDynawoDynamicModel implements DynamicModel {
 
-    public enum DynamicModelType {
-        BLACK_BOX_MODEL, MODELICA_MODEL;
-    }
-
-    public AbstractDynawoDynamicModel(String id) {
+    public AbstractDynawoDynamicModel(String id, String staticId, String parameterSetId) {
         this.id = Objects.requireNonNull(id);
+        this.staticId = Objects.requireNonNull(staticId);
+        this.parameterSetId = Objects.requireNonNull(parameterSetId);
     }
-
-    public abstract DynamicModelType getType();
 
     public String getId() {
         return id;
     }
 
-    // TODO Confirm:
-    // It seems that all dynawo model types
-    // (ModelicaModel, BlackBoxModel, ModelTemplate, ...)
-    // may have macroStaticRefs, staticRefs, macroConnects and macroConnectors
+    public abstract String getLib();
+
+    public String getStaticId() {
+        return staticId;
+    }
+
+    public String getParameterSetId() {
+        return parameterSetId;
+    }
 
     public List<String> getMacroStaticRefs() {
         return Collections.emptyList();
@@ -44,5 +49,9 @@ public abstract class AbstractDynawoDynamicModel implements DynamicModel {
         return Collections.emptyList();
     }
 
+    public abstract void write(XMLStreamWriter writer, DydXmlWriterContext dydXmlWriterContext) throws XMLStreamException;
+
     private final String id;
+    private final String staticId;
+    private final String parameterSetId;
 }

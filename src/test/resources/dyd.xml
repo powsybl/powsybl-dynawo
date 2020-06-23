@@ -3,10 +3,10 @@
     <dyn:blackBoxModel id="LOAD" lib="LoadAlphaBeta" parFile="models.par" parId="default" staticId="LOAD">
         <dyn:macroStaticRef id="Load"/>
     </dyn:blackBoxModel>
+    <dyn:macroConnect connector="LoadToNode" id1="LOAD" id2="NETWORK"/>
     <dyn:blackBoxModel id="LOAD2" lib="LoadAlphaBeta" parFile="models.par" parId="default" staticId="LOAD2">
         <dyn:macroStaticRef id="Load"/>
     </dyn:blackBoxModel>
-    <dyn:macroConnect connector="LoadToNode" id1="LOAD" id2="NETWORK"/>
     <dyn:macroConnect connector="LoadToNode" id1="LOAD2" id2="NETWORK"/>
     <dyn:macroConnector id="LoadToNode">
         <dyn:connect var1="load_terminal" var2="@STATIC_ID@@NODE@_ACPIN"/>
