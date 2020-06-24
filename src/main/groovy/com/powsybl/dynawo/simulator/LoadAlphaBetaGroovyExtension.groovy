@@ -41,7 +41,7 @@ class LoadAlphaBetaGroovyExtension implements DynamicModelGroovyExtension {
     }
 
     String getName() {
-        return "dynawo";
+        return "dynawo"
     }
     
     void load(Binding binding, Consumer<DynamicModel> consumer) {
