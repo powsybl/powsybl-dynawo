@@ -17,10 +17,13 @@ import com.powsybl.computation.ComputationManager;
 import com.powsybl.computation.local.LocalComputationConfig;
 import com.powsybl.computation.local.LocalComputationManager;
 import com.powsybl.dynamicsimulation.CurvesSupplier;
+import com.powsybl.dynamicsimulation.DynamicModelsSupplier;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynamicsimulation.groovy.CurveGroovyExtension;
+import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension;
 import com.powsybl.dynamicsimulation.groovy.GroovyCurvesSupplier;
 import com.powsybl.dynamicsimulation.groovy.GroovyExtension;
+import com.powsybl.dynamicsimulation.groovy.GroovyDynamicModelsSupplier;
 import com.powsybl.dynamicsimulation.json.JsonDynamicSimulationParameters;
 import com.powsybl.dynawo.simulator.DynawoSimulationParameters;
 import com.powsybl.dynawo.simulator.DynawoSimulationProvider;
@@ -39,12 +42,13 @@ public final class Main {
 
     public static void main(String[] args) {
         if (args.length < 2 || args.length > 4) {
-            LOGGER.error("Usage: {} networkFile.xiidm dynamicModels.dyd [curves.crv] [parametersFile.json]", Main.class.getName());
+            LOGGER.error("Usage: {} networkFile.xiidm dynamicModels.groovy [curves.groovy] [parametersFile.json]", Main.class.getName());
             System.exit(1);
         }
 
         String networkFile = args[0];
-        String dydFile = args[1];
+        List<DynamicModelGroovyExtension> extensions = GroovyExtension.find(DynamicModelGroovyExtension.class, "dynawo");
+        DynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(Paths.get(args[1]), extensions);
         CurvesSupplier curvesSupplier = getCurvesSupplier(args);
         String parametersFile = getParametersFile(args);
 
@@ -57,9 +61,8 @@ public final class Main {
         }
 
         DynawoSimulationProvider provider = new DynawoSimulationProvider();
-        provider.setDydFilename(dydFile);
         try (ComputationManager computationManager = new LocalComputationManager(LocalComputationConfig.load())) {
-            provider.run(network, curvesSupplier, network.getVariantManager().getWorkingVariantId(), computationManager, parameters).join();
+            provider.run(network, dynamicModelsSupplier, curvesSupplier, network.getVariantManager().getWorkingVariantId(), computationManager, parameters).join();
         } catch (IOException e) {
             LOGGER.error(e.toString(), e);
             System.exit(1);
@@ -75,7 +78,7 @@ public final class Main {
     }
 
     private static CurvesSupplier getCurvesSupplier(String[] args) {
-        if (args.length >= 3 && args[2].endsWith(".crv")) {
+        if (args.length >= 3 && args[2].endsWith(".groovy")) {
             List<CurveGroovyExtension> extensions = GroovyExtension.find(CurveGroovyExtension.class, "dynawo");
             return new GroovyCurvesSupplier(Paths.get(args[2]), extensions);
         }

@@ -20,16 +20,16 @@ import com.powsybl.dynawo.simulator.DynawoSimulationParameters;
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class JobsXmlTest extends DynawoTestUtil {
+public class DynamicModelsXmlTest extends DynawoTestUtil {
 
     @Test
-    public void writeJob() throws SAXException, IOException, XMLStreamException {
+    public void writeDynamicModel() throws SAXException, IOException, XMLStreamException {
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load();
         DynawoContext context = new DynawoContext(network, dynamicModels, curves, parameters, dynawoParameters);
 
-        JobsXml.write(tmpDir, context);
-        validate(tmpDir.resolve(DynawoConstants.JOBS_FILENAME), "jobs");
+        DydXml.write(tmpDir, context);
+        validate(tmpDir.resolve(DynawoConstants.DYD_FILENAME), "dyd");
     }
 
 }

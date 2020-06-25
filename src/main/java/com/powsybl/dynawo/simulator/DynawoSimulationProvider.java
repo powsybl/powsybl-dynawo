@@ -9,13 +9,10 @@ package com.powsybl.dynawo.simulator;
 import com.google.auto.service.AutoService;
 import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
 import com.powsybl.computation.*;
-import com.powsybl.dynamicsimulation.CurvesSupplier;
-import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
-import com.powsybl.dynamicsimulation.DynamicSimulationProvider;
-import com.powsybl.dynamicsimulation.DynamicSimulationResult;
-import com.powsybl.dynamicsimulation.DynamicSimulationResultImpl;
+import com.powsybl.dynamicsimulation.*;
 import com.powsybl.dynawo.DynawoContext;
 import com.powsybl.dynawo.xml.CurvesXml;
+import com.powsybl.dynawo.xml.DydXml;
 import com.powsybl.dynawo.xml.JobsXml;
 import com.powsybl.iidm.export.Exporters;
 import com.powsybl.iidm.network.Network;
@@ -25,14 +22,18 @@ import com.powsybl.iidm.xml.XMLExporter;
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.concurrent.CompletableFuture;
 
-import static com.powsybl.dynawo.xml.DynawoConstants.*;
+import static com.powsybl.dynawo.xml.DynawoConstants.JOBS_FILENAME;
+import static com.powsybl.dynawo.xml.DynawoConstants.NETWORK_FILENAME;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -45,20 +46,12 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
 
     private final DynawoConfig dynawoConfig;
 
-    // FIXME(mathbagu): to be removed once the DYD file will be generated
-    private String dydFilename;
-
     public DynawoSimulationProvider() {
         this(DynawoConfig.load());
     }
 
     public DynawoSimulationProvider(DynawoConfig dynawoConfig) {
         this.dynawoConfig = Objects.requireNonNull(dynawoConfig);
-    }
-
-    // FIXME(mathbagu): to be removed once the DYD file will be generated
-    public void setDydFilename(String dydFile) {
-        this.dydFilename = Objects.requireNonNull(dydFile);
     }
 
     @Override
@@ -72,14 +65,15 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
     }
 
     @Override
-    public CompletableFuture<DynamicSimulationResult> run(Network network, CurvesSupplier curvesSupplier, String workingVariantId,
+    public CompletableFuture<DynamicSimulationResult> run(Network network, DynamicModelsSupplier dynamicModelsSupplier, CurvesSupplier curvesSupplier, String workingVariantId,
                                                           ComputationManager computationManager, DynamicSimulationParameters parameters) {
+        Objects.requireNonNull(dynamicModelsSupplier);
         Objects.requireNonNull(curvesSupplier);
         Objects.requireNonNull(workingVariantId);
         Objects.requireNonNull(parameters);
 
         DynawoSimulationParameters dynawoParameters = getDynawoSimulationParameters(parameters);
-        return run(network, curvesSupplier, workingVariantId, computationManager, parameters, dynawoParameters);
+        return run(network, dynamicModelsSupplier, curvesSupplier, workingVariantId, computationManager, parameters, dynawoParameters);
     }
 
     private DynawoSimulationParameters getDynawoSimulationParameters(DynamicSimulationParameters parameters) {
@@ -90,13 +84,13 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
         return dynawoParameters;
     }
 
-    private CompletableFuture<DynamicSimulationResult> run(Network network, CurvesSupplier curvesSupplier, String workingVariantId,
+    private CompletableFuture<DynamicSimulationResult> run(Network network, DynamicModelsSupplier dynamicModelsSupplier, CurvesSupplier curvesSupplier, String workingVariantId,
                                                            ComputationManager computationManager, DynamicSimulationParameters parameters, DynawoSimulationParameters dynawoParameters) {
 
         network.getVariantManager().setWorkingVariant(workingVariantId);
         ExecutionEnvironment execEnv = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, dynawoConfig.isDebug());
 
-        DynawoContext context = new DynawoContext(network, curvesSupplier.get(network), parameters, dynawoParameters);
+        DynawoContext context = new DynawoContext(network, dynamicModelsSupplier.get(network), curvesSupplier.get(network), parameters, dynawoParameters);
         return computationManager.execute(execEnv, new DynawoHandler(context));
     }
 
@@ -123,11 +117,6 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
 
         private void writeInputFiles(Path workingDir) {
             try {
-                // FIXME(mathbagu): To be refactored
-                if (dydFilename != null) {
-                    Files.copy(Paths.get(dydFilename), workingDir.resolve(DYD_FILENAME));
-                }
-
                 writeParametersFiles(workingDir);
 
                 // Write the network to XIIDM v1.0 because currently Dynawo only supports this version
@@ -136,6 +125,7 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
                 Exporters.export("XIIDM", context.getNetwork(), params, workingDir.resolve(NETWORK_FILENAME));
 
                 JobsXml.write(workingDir, context);
+                DydXml.write(workingDir, context);
                 if (context.withCurves()) {
                     CurvesXml.write(workingDir, context);
                 }
