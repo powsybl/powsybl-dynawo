@@ -4,14 +4,14 @@
 ## Running Dynawo from main
 Maven exec plugin is used to launch the `Main` class.  
 Arguments:
- - A network file (mandatory)
- - A dynamic model file (mandatory)
- - A curves file (optional)
- - A JSON parameters file (optional)
+ - A network file (mandatory).
+ - A GROOVY dynamic model file (mandatory), only processes models of type LoadAlphaBeta.
+ - A GROOVY curves file (optional).
+ - A JSON parameters file (optional).
 
 Sample invocation from the command line:
 ```
-$> mvn exec:java -Dexec.args="path/to/ieee57cdf.xiidm path/to/ieee57cdf.dyd"
+$> mvn exec:java -Dexec.args="path/to/ieee57cdf.xiidm path/to/ieee57cdf.groovy"
 ```
 
 The package `powsybl-config-classic` is used for runtime. Tests use `powsybl-config-test`.

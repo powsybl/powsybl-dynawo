@@ -19,6 +19,11 @@ public final class DynawoXmlConstants {
 
     public static final String INDENT = "    ";
 
+    public static final String NETWORK = "NETWORK";
+
+    public static final String MACRO_STATIC_REFERENCE_PREFIX = "MSR_";
+    public static final String MACRO_CONNECTOR_PREFIX = "MC_";
+
     private DynawoXmlConstants() {
     }
 }
