@@ -41,8 +41,8 @@ public class LoadAlphaBeta extends AbstractBlackBoxModel {
             // Write the macroConnector object
             writer.writeStartElement(DYN_URI, "macroConnector");
             writer.writeAttribute("id", MACRO_CONNECTOR_PREFIX + getLib());
-            writeMacroConnection(writer, "load_terminal", "@STATIC_ID@@NODE@_ACPIN");
-            writeMacroConnection(writer, "load_switchOffSignal1", "@STATIC_ID@@NODE@_switchOff");
+            writeMacroConnectorConnect(writer, "load_terminal", "@STATIC_ID@@NODE@_ACPIN");
+            writeMacroConnectorConnect(writer, "load_switchOffSignal1", "@STATIC_ID@@NODE@_switchOff");
             writer.writeEndElement();
         }
 
@@ -57,6 +57,6 @@ public class LoadAlphaBeta extends AbstractBlackBoxModel {
         writer.writeEndElement();
 
         // Write the connect object
-        writeConnect(writer, MACRO_CONNECTOR_PREFIX + getLib(), getId(), NETWORK);
+        writeMacroConnect(writer, MACRO_CONNECTOR_PREFIX + getLib(), getId(), NETWORK);
     }
 }
