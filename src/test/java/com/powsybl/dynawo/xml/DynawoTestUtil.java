@@ -25,6 +25,8 @@ import org.xml.sax.SAXException;
 import com.powsybl.commons.AbstractConverterTest;
 import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynamicsimulation.DynamicModel;
+import com.powsybl.dynawo.dyd.DYNModelOmegaRef;
+import com.powsybl.dynawo.dyd.GeneratorSynchronousFourWindingsProportionalRegulations;
 import com.powsybl.dynawo.dyd.LoadAlphaBeta;
 import com.powsybl.dynawo.simulator.DynawoCurve;
 import com.powsybl.iidm.network.Bus;
@@ -45,7 +47,7 @@ public class DynawoTestUtil extends AbstractConverterTest {
     @Before
     public void setup() throws IOException {
 
-        network = createEurostagTutorialExample1WithMoreLoads();
+        network = createEurostagTutorialExample1WithMoreLoadsAndGenerators();
 
         curves = new ArrayList<>();
         network.getBusBreakerView().getBusStream().forEach(b -> curves.add(new DynawoCurve("NETWORK", b.getId() + "_Upu_value")));
@@ -60,9 +62,15 @@ public class DynawoTestUtil extends AbstractConverterTest {
         });
 
         dynamicModels = new ArrayList<>();
+        List<String> generators = new ArrayList<>();
         network.getLoadStream().forEach(l -> {
             dynamicModels.add(new LoadAlphaBeta("BBM_" + l.getId(), l.getId(), "default"));
         });
+        network.getGeneratorStream().forEach(g -> {
+            dynamicModels.add(new GeneratorSynchronousFourWindingsProportionalRegulations("BBM_" + g.getId(), g.getId(), "default"));
+            generators.add("BBM_" + g.getId());
+        });
+        dynamicModels.add(new DYNModelOmegaRef("OMEGA_REF", generators));
     }
 
     public void validate(Path xmlFile, String name) throws SAXException, IOException {
@@ -75,7 +83,7 @@ public class DynawoTestUtil extends AbstractConverterTest {
         compareXml(getClass().getResourceAsStream("/" + name + ".xml"), Files.newInputStream(xmlFile));
     }
 
-    private static Network createEurostagTutorialExample1WithMoreLoads() {
+    private static Network createEurostagTutorialExample1WithMoreLoadsAndGenerators() {
         Network network = EurostagTutorialExample1Factory.create(NetworkFactory.findDefault());
 
         VoltageLevel vlload = network.getVoltageLevel("VLLOAD");
@@ -86,6 +94,19 @@ public class DynawoTestUtil extends AbstractConverterTest {
             .setConnectableBus(nload.getId())
             .setP0(1.0)
             .setQ0(0.5)
+            .add();
+        VoltageLevel vlgen  = network.getVoltageLevel("VLGEN");
+        Bus ngen = vlgen.getBusBreakerView().getBus("NGEN");
+        vlgen.newGenerator()
+            .setId("GEN2")
+            .setBus(ngen.getId())
+            .setConnectableBus(ngen.getId())
+            .setMinP(-9999.99)
+            .setMaxP(9999.99)
+            .setVoltageRegulatorOn(true)
+            .setTargetV(24.5)
+            .setTargetP(1.0)
+            .setTargetQ(0.5)
             .add();
         return network;
     }

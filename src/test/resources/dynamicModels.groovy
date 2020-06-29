@@ -6,12 +6,28 @@
  */
 
 import com.powsybl.iidm.network.Load
+import com.powsybl.iidm.network.Generator
 
 for (Load load : network.loads) {
     LoadAlphaBeta {
         staticId load.id
-        // modelId "DM_" + load.id (modelId could be optional and equal to staticId)
+        // modelId "BBM_" + load.id (modelId could be optional and equal to staticId)
         parameterSetId "default"
        // the parameterSetId is a string that points to the requested entry in the aggregated par file defined in config.yml
     }
+}
+
+List<String> omegaRefGenerators = new ArrayList<String>()
+for (Generator gen : network.generators) {
+    GeneratorSynchronousFourWindingsProportionalRegulations {
+        staticId gen.id
+        modelId "BBM_" + gen.id
+        parameterSetId "default"
+    }
+    omegaRefGenerators.add("BBM_" + gen.id)
+}
+
+OmegaRef {
+    modelId "OMEGA_REF"
+    generators omegaRefGenerators
 }
