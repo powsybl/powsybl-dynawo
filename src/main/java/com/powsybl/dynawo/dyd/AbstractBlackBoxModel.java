@@ -43,30 +43,27 @@ public abstract class AbstractBlackBoxModel implements DynamicModel {
     public abstract void write(XMLStreamWriter writer, DynawoXmlContext context) throws XMLStreamException;
 
     protected static void writeStaticRef(XMLStreamWriter writer, String var, String staticVar) throws XMLStreamException {
-        writer.writeStartElement(DYN_URI, "staticRef");
+        writer.writeEmptyElement(DYN_URI, "staticRef");
         writer.writeAttribute("var", var);
         writer.writeAttribute("staticVar", staticVar);
-        writer.writeEndElement();
     }
 
     protected static void writeMacroStaticRef(XMLStreamWriter writer, String id) throws XMLStreamException {
-        writer.writeStartElement(DYN_URI, "macroStaticRef");
+        writer.writeEmptyElement(DYN_URI, "macroStaticRef");
         writer.writeAttribute("id", id);
-        writer.writeEndElement();
     }
 
-    protected void writeConnect(XMLStreamWriter writer, String connector, String id1, String id2) throws XMLStreamException {
+    protected void writeMacroConnect(XMLStreamWriter writer, String connector, String id1, String id2) throws XMLStreamException {
         writer.writeEmptyElement(DYN_URI, "macroConnect");
         writer.writeAttribute("connector", connector);
         writer.writeAttribute("id1", id1);
         writer.writeAttribute("id2", id2);
     }
 
-    protected static void writeMacroConnection(XMLStreamWriter writer, String var1, String var2) throws XMLStreamException {
-        writer.writeStartElement(DYN_URI, "connect");
+    protected static void writeMacroConnectorConnect(XMLStreamWriter writer, String var1, String var2) throws XMLStreamException {
+        writer.writeEmptyElement(DYN_URI, "connect");
         writer.writeAttribute("var1", var1);
         writer.writeAttribute("var2", var2);
-        writer.writeEndElement();
     }
 
     private final String id;
