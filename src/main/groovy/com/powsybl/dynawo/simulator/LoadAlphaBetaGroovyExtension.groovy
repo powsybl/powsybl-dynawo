@@ -59,7 +59,7 @@ class LoadAlphaBetaGroovyExtension implements DynamicModelGroovyExtension {
                 throw new DslException("'parameterSetId' field is not set")
             }
 
-            String modelId = loadAlphaBetaSpec.modelId ? loadAlphaBetaSpec.modelId : 'BBM_' + loadAlphaBetaSpec.staticId
+            String modelId = loadAlphaBetaSpec.modelId ? loadAlphaBetaSpec.modelId : loadAlphaBetaSpec.staticId
             consumer.accept(new LoadAlphaBeta(modelId, loadAlphaBetaSpec.staticId, loadAlphaBetaSpec.parameterSetId))
         }
     }
