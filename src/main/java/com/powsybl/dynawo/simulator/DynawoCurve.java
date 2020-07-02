@@ -16,16 +16,16 @@ import java.util.Objects;
  */
 public class DynawoCurve implements Curve {
 
-    private final String modelId;
+    private final String dynamicModelId;
     private final String variable;
 
-    public DynawoCurve(String modelId, String variable) {
-        this.modelId = Objects.requireNonNull(modelId);
+    public DynawoCurve(String dynamicModelId, String variable) {
+        this.dynamicModelId = Objects.requireNonNull(dynamicModelId);
         this.variable = Objects.requireNonNull(variable);
     }
 
     public String getModelId() {
-        return modelId;
+        return dynamicModelId;
     }
 
     public String getVariable() {

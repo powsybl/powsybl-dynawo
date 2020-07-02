@@ -9,6 +9,6 @@ import com.powsybl.iidm.network.Generator
 
 for (Generator gen : network.generators) {
     curves {
-        modelId gen.id
+        dynamicModelId gen.id
     }
 }
