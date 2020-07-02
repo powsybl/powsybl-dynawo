@@ -25,7 +25,7 @@ public abstract class AbstractBlackBoxModel implements DynamicModel {
         this.parameterSetId = Objects.requireNonNull(parameterSetId);
     }
 
-    public String getId() {
+    public String getDynamicModelId() {
         return id;
     }
 

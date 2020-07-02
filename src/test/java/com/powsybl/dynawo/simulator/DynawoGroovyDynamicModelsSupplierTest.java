@@ -74,7 +74,7 @@ public class DynawoGroovyDynamicModelsSupplierTest {
         assertEquals(LoadAlphaBeta.class, dynamicModel.getClass());
         LoadAlphaBeta loadAlphaBetaImpl = (LoadAlphaBeta) dynamicModel;
         if (network.getIdentifiable(loadAlphaBetaImpl.getStaticId()) instanceof Load) {
-            assertEquals("LOAD", loadAlphaBetaImpl.getId());
+            assertEquals("LOAD", loadAlphaBetaImpl.getDynamicModelId());
             assertEquals("default", loadAlphaBetaImpl.getParameterSetId());
         }
     }
