@@ -73,7 +73,7 @@ public class DynawoGroovyDynamicModelsSupplierTest {
         DynamicModelsSupplier supplier = new GroovyDynamicModelsSupplier(fileSystem.getPath("/dynamicModels.groovy"), extensions);
 
         List<DynamicModel> dynamicModels = supplier.get(network);
-        assertEquals(3, dynamicModels.size());
+        assertEquals(2, dynamicModels.size());
         dynamicModels.forEach(this::validateModel);
     }
 

@@ -62,15 +62,15 @@ public class DynawoTestUtil extends AbstractConverterTest {
         });
 
         dynamicModels = new ArrayList<>();
-        List<String> generators = new ArrayList<>();
         network.getLoadStream().forEach(l -> {
             dynamicModels.add(new LoadAlphaBeta("BBM_" + l.getId(), l.getId(), "default"));
         });
+        DYNModelOmegaRef dynModelOmegaRef = new DYNModelOmegaRef("OMEGA_REF", "OMEGA_REF");
         network.getGeneratorStream().forEach(g -> {
             dynamicModels.add(new GeneratorSynchronousFourWindingsProportionalRegulations("BBM_" + g.getId(), g.getId(), "default"));
-            generators.add("BBM_" + g.getId());
+            dynModelOmegaRef.addGenerator("BBM_" + g.getId());
         });
-        dynamicModels.add(new DYNModelOmegaRef("OMEGA_REF", generators));
+        dynamicModels.add(dynModelOmegaRef);
     }
 
     public void validate(Path xmlFile, String name) throws SAXException, IOException {

@@ -23,16 +23,12 @@ import com.powsybl.dynawo.dyd.DYNModelOmegaRef
 class DYNModelOmegaRefGroovyExtension implements DynamicModelGroovyExtension {
 
     static class DYNModelOmegaRefSpec {
-        String modelId
-        List generators
+        String generatorModelId
 
-        void modelId(String modelId) {
-            this.modelId = modelId
+        void generatorModelId(String generatorModelId) {
+            this.generatorModelId = generatorModelId
         }
 
-        void generators(List generators) {
-            this.generators = generators
-        }
     }
 
     String getName() {
@@ -43,21 +39,13 @@ class DYNModelOmegaRefGroovyExtension implements DynamicModelGroovyExtension {
         binding.OmegaRef = { Closure<Void> closure ->
             def cloned = closure.clone()
             DYNModelOmegaRefSpec dynModelOmegaRefSpec = new DYNModelOmegaRefSpec()
-    
+
             cloned.delegate = dynModelOmegaRefSpec
             cloned()
 
-            if (!dynModelOmegaRefSpec.modelId) {
-                throw new DslException("'modelId' field is not set");
+            if (!dynModelOmegaRefSpec.generatorModelId) {
+                throw new DslException("'generatorModelId' field is not set")
             }
-            if (!dynModelOmegaRefSpec.generators) {
-                throw new DslException("'generators' field is not set")
-            }
-            if (dynModelOmegaRefSpec.generators.empty) {
-                throw new DslException("'generators' field is empty")
-            }
-    
-            consumer.accept(new DYNModelOmegaRef(dynModelOmegaRefSpec.modelId, dynModelOmegaRefSpec.generators))
         }
     }
 

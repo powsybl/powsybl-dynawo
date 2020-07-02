@@ -8,18 +8,17 @@ package com.powsybl.dynawo.dyd;
 
 import static com.powsybl.dynawo.xml.DynawoXmlConstants.DYN_URI;
 import static com.powsybl.dynawo.xml.DynawoXmlConstants.MACRO_CONNECTOR_PREFIX;
-import static com.powsybl.dynawo.xml.DynawoXmlConstants.NETWORK;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-
 import static com.powsybl.dynawo.xml.DynawoXmlConstants.MACRO_CONNECTOR_TO_GENERATOR;
 import static com.powsybl.dynawo.xml.DynawoXmlConstants.MACRO_CONNECTOR_TO_NUMCCMACHINE;
+import static com.powsybl.dynawo.xml.DynawoXmlConstants.NETWORK;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
+import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynawo.xml.DynawoXmlContext;
 
 /**
@@ -27,13 +26,13 @@ import com.powsybl.dynawo.xml.DynawoXmlContext;
  */
 public class DYNModelOmegaRef extends AbstractBlackBoxModel {
 
-    public DYNModelOmegaRef(String modelId, String... generatorModelIds) {
-        this (modelId, Arrays.asList(generatorModelIds));
+    public DYNModelOmegaRef(String modelId, String parameterSetId) {
+        super(modelId, "", parameterSetId);
+        this.generatorModelIds = new ArrayList<>();
     }
 
-    public DYNModelOmegaRef(String modelId, List<String> generatorModelIds) {
-        super(modelId, "", "");
-        this.generatorModelIds = Objects.requireNonNull(generatorModelIds);
+    public void addGenerator(String generatorModelId) {
+        generatorModelIds.add(generatorModelId);
     }
 
     @Override
@@ -69,14 +68,15 @@ public class DYNModelOmegaRef extends AbstractBlackBoxModel {
         int index = 0;
         for (String generatorModelId : generatorModelIds) {
             writeConnect(writer, MACRO_CONNECTOR_PREFIX + getLib() + MACRO_CONNECTOR_TO_GENERATOR, getId(), index, generatorModelId);
-            writeConnect(writer, MACRO_CONNECTOR_PREFIX + getLib() + MACRO_CONNECTOR_TO_NUMCCMACHINE, getId(), index, NETWORK, getStaticId(generatorModelId));
+            writeConnect(writer, MACRO_CONNECTOR_PREFIX + getLib() + MACRO_CONNECTOR_TO_NUMCCMACHINE, getId(), index, NETWORK, getStaticId(context, generatorModelId));
             index++;
         }
     }
 
-    private String getStaticId(String modelId) {
-        //TODO: get the dynamic model associated to the given modelId and return its staticId
-        return modelId;
+    private String getStaticId(DynawoXmlContext context, String modelId) {
+        DynamicModel dynamicModel = context.getDynamicModel(modelId);
+        AbstractBlackBoxModel bbm = (AbstractBlackBoxModel) dynamicModel;
+        return bbm.getStaticId();
     }
 
     private void writeConnect(XMLStreamWriter writer, String connector, String id1, int index1, String id2) throws XMLStreamException {

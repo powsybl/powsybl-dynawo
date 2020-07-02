@@ -48,18 +48,18 @@ class GeneratorSynchronousFourWindingsProportionalRegulationsGroovyExtension imp
         binding.GeneratorSynchronousFourWindingsProportionalRegulations = { Closure<Void> closure ->
             def cloned = closure.clone()
             GeneratorSynchronousFourWindingsProportionalRegulationsSpec generatorSynchronousFourWindingsProportionalRegulationsSpec = new GeneratorSynchronousFourWindingsProportionalRegulationsSpec()
-    
+
             cloned.delegate = generatorSynchronousFourWindingsProportionalRegulationsSpec
             cloned()
 
             if (!generatorSynchronousFourWindingsProportionalRegulationsSpec.staticId) {
-                throw new DslException("'staticId' field is not set");
+                throw new DslException("'staticId' field is not set")
             }
             if (!generatorSynchronousFourWindingsProportionalRegulationsSpec.parameterSetId) {
                 throw new DslException("'parameterSetId' field is not set")
             }
 
-            String modelId = generatorSynchronousFourWindingsProportionalRegulationsSpec.modelId ? generatorSynchronousFourWindingsProportionalRegulationsSpec.modelId : 'BBM_' + generatorSynchronousFourWindingsProportionalRegulationsSpec.staticId
+            String modelId = generatorSynchronousFourWindingsProportionalRegulationsSpec.modelId ? generatorSynchronousFourWindingsProportionalRegulationsSpec.modelId : generatorSynchronousFourWindingsProportionalRegulationsSpec.staticId
             consumer.accept(new GeneratorSynchronousFourWindingsProportionalRegulations(modelId, generatorSynchronousFourWindingsProportionalRegulationsSpec.staticId, generatorSynchronousFourWindingsProportionalRegulationsSpec.parameterSetId))
         }
     }

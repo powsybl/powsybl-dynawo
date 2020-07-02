@@ -17,17 +17,14 @@ for (Load load : network.loads) {
     }
 }
 
-List<String> omegaRefGenerators = new ArrayList<String>()
 for (Generator gen : network.generators) {
     GeneratorSynchronousFourWindingsProportionalRegulations {
         staticId gen.id
         modelId "BBM_" + gen.id
         parameterSetId "default"
     }
-    omegaRefGenerators.add("BBM_" + gen.id)
+    OmegaRef {
+        generatorModelId "BBM_" + gen.id
+    }
 }
 
-OmegaRef {
-    modelId "OMEGA_REF"
-    generators omegaRefGenerators
-}

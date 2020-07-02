@@ -48,12 +48,12 @@ class LoadAlphaBetaGroovyExtension implements DynamicModelGroovyExtension {
         binding.LoadAlphaBeta = { Closure<Void> closure ->
             def cloned = closure.clone()
             LoadAlphaBetaSpec loadAlphaBetaSpec = new LoadAlphaBetaSpec()
-    
+
             cloned.delegate = loadAlphaBetaSpec
             cloned()
 
             if (!loadAlphaBetaSpec.staticId) {
-                throw new DslException("'staticId' field is not set");
+                throw new DslException("'staticId' field is not set")
             }
             if (!loadAlphaBetaSpec.parameterSetId) {
                 throw new DslException("'parameterSetId' field is not set")

@@ -7,18 +7,19 @@
 
 package com.powsybl.dynawo.xml;
 
-import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
-import com.powsybl.dynamicsimulation.DynamicModel;
-import com.powsybl.dynawo.DynawoContext;
-import com.powsybl.dynawo.dyd.AbstractBlackBoxModel;
+import static com.powsybl.dynawo.xml.DynawoConstants.DYD_FILENAME;
 
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Objects;
 
-import static com.powsybl.dynawo.xml.DynawoConstants.DYD_FILENAME;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+
+import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
+import com.powsybl.dynamicsimulation.DynamicModel;
+import com.powsybl.dynawo.DynawoContext;
+import com.powsybl.dynawo.dyd.AbstractBlackBoxModel;
 
 /**
  * @author Mathieu Bague <mathieu.bague@rte-france.com>

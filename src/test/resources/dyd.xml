@@ -42,9 +42,9 @@
     <dyn:macroConnector id="MC_DYNModelOmegaRegToNumCCMachine">
         <dyn:connect var1="numcc_node_@INDEX@" var2="@@NAME@@@NODE@_numcc"/>
     </dyn:macroConnector>
-    <dyn:blackBoxModel id="OMEGA_REF" lib="DYNModelOmegaReg" parFile="models.par" parId=""/>
+    <dyn:blackBoxModel id="OMEGA_REF" lib="DYNModelOmegaReg" parFile="models.par" parId="OMEGA_REF"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRegToGenerator" id1="OMEGA_REF" index1="0" id2="BBM_GEN"/>
-    <dyn:macroConnect connector="MC_DYNModelOmegaRegToNumCCMachine" id1="OMEGA_REF" index1="0" id2="NETWORK" name2="BBM_GEN"/>
+    <dyn:macroConnect connector="MC_DYNModelOmegaRegToNumCCMachine" id1="OMEGA_REF" index1="0" id2="NETWORK" name2="GEN"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRegToGenerator" id1="OMEGA_REF" index1="1" id2="BBM_GEN2"/>
-    <dyn:macroConnect connector="MC_DYNModelOmegaRegToNumCCMachine" id1="OMEGA_REF" index1="1" id2="NETWORK" name2="BBM_GEN2"/>
+    <dyn:macroConnect connector="MC_DYNModelOmegaRegToNumCCMachine" id1="OMEGA_REF" index1="1" id2="NETWORK" name2="GEN2"/>
 </dyn:dynamicModelsArchitecture>
