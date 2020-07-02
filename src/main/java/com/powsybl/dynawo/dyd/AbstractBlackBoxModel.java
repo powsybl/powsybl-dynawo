@@ -6,14 +6,13 @@
  */
 package com.powsybl.dynawo.dyd;
 
-import com.powsybl.dynamicsimulation.DynamicModel;
-import com.powsybl.dynawo.xml.DynawoXmlContext;
+import java.util.Objects;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-import java.util.Objects;
 
-import static com.powsybl.dynawo.xml.DynawoXmlConstants.DYN_URI;
+import com.powsybl.dynamicsimulation.DynamicModel;
+import com.powsybl.dynawo.xml.DynawoXmlContext;
 
 /**
  * @author Luma Zamarreño <zamarrenolm at aia.es>
@@ -41,30 +40,6 @@ public abstract class AbstractBlackBoxModel implements DynamicModel {
     }
 
     public abstract void write(XMLStreamWriter writer, DynawoXmlContext context) throws XMLStreamException;
-
-    protected static void writeStaticRef(XMLStreamWriter writer, String var, String staticVar) throws XMLStreamException {
-        writer.writeEmptyElement(DYN_URI, "staticRef");
-        writer.writeAttribute("var", var);
-        writer.writeAttribute("staticVar", staticVar);
-    }
-
-    protected static void writeMacroStaticRef(XMLStreamWriter writer, String id) throws XMLStreamException {
-        writer.writeEmptyElement(DYN_URI, "macroStaticRef");
-        writer.writeAttribute("id", id);
-    }
-
-    protected void writeMacroConnect(XMLStreamWriter writer, String connector, String id1, String id2) throws XMLStreamException {
-        writer.writeEmptyElement(DYN_URI, "macroConnect");
-        writer.writeAttribute("connector", connector);
-        writer.writeAttribute("id1", id1);
-        writer.writeAttribute("id2", id2);
-    }
-
-    protected static void writeMacroConnectorConnect(XMLStreamWriter writer, String var1, String var2) throws XMLStreamException {
-        writer.writeEmptyElement(DYN_URI, "connect");
-        writer.writeAttribute("var1", var1);
-        writer.writeAttribute("var2", var2);
-    }
 
     private final String id;
     private final String staticId;

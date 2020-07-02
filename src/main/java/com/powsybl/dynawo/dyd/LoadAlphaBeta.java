@@ -6,12 +6,17 @@
  */
 package com.powsybl.dynawo.dyd;
 
-import com.powsybl.dynawo.xml.DynawoXmlContext;
+import static com.powsybl.dynawo.xml.DynawoXmlConstants.DYN_URI;
+import static com.powsybl.dynawo.xml.DynawoXmlConstants.MACRO_CONNECTOR_PREFIX;
+import static com.powsybl.dynawo.xml.DynawoXmlConstants.MACRO_STATIC_REFERENCE_PREFIX;
+import static com.powsybl.dynawo.xml.DynawoXmlConstants.NETWORK;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
-import static com.powsybl.dynawo.xml.DynawoXmlConstants.*;
+import com.powsybl.dynawo.xml.DynawoXmlContext;
+import com.powsybl.dynawo.xml.MacroConnectorXml;
+import com.powsybl.dynawo.xml.MacroStaticReferenceXml;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -33,16 +38,16 @@ public class LoadAlphaBeta extends AbstractBlackBoxModel {
             // Write the macroStaticReference object
             writer.writeStartElement(DYN_URI, "macroStaticReference");
             writer.writeAttribute("id", MACRO_STATIC_REFERENCE_PREFIX + getLib());
-            writeStaticRef(writer, "load_PPu", "p");
-            writeStaticRef(writer, "load_QPu", "q");
-            writeStaticRef(writer, "load_state", "state");
+            MacroStaticReferenceXml.writeStaticRef(writer, "load_PPu", "p");
+            MacroStaticReferenceXml.writeStaticRef(writer, "load_QPu", "q");
+            MacroStaticReferenceXml.writeStaticRef(writer, "load_state", "state");
             writer.writeEndElement();
 
             // Write the macroConnector object
             writer.writeStartElement(DYN_URI, "macroConnector");
             writer.writeAttribute("id", MACRO_CONNECTOR_PREFIX + getLib());
-            writeMacroConnectorConnect(writer, "load_terminal", "@STATIC_ID@@NODE@_ACPIN");
-            writeMacroConnectorConnect(writer, "load_switchOffSignal1", "@STATIC_ID@@NODE@_switchOff");
+            MacroConnectorXml.writeConnect(writer, "load_terminal", "@STATIC_ID@@NODE@_ACPIN");
+            MacroConnectorXml.writeConnect(writer, "load_switchOffSignal1", "@STATIC_ID@@NODE@_switchOff");
             writer.writeEndElement();
         }
 
@@ -53,10 +58,10 @@ public class LoadAlphaBeta extends AbstractBlackBoxModel {
         writer.writeAttribute("parFile", context.getParFile());
         writer.writeAttribute("parId", getParameterSetId());
         writer.writeAttribute("staticId", getStaticId());
-        writeMacroStaticRef(writer, MACRO_STATIC_REFERENCE_PREFIX + getLib());
+        MacroStaticReferenceXml.writeMacroStaticRef(writer, MACRO_STATIC_REFERENCE_PREFIX + getLib());
         writer.writeEndElement();
 
         // Write the connect object
-        writeMacroConnect(writer, MACRO_CONNECTOR_PREFIX + getLib(), getId(), NETWORK);
+        MacroConnectorXml.writeMacroConnect(writer, MACRO_CONNECTOR_PREFIX + getLib(), getId(), NETWORK);
     }
 }
