@@ -27,18 +27,18 @@ import com.powsybl.dynawo.xml.MacroConnectorXml;
  */
 public class DYNModelOmegaRef extends AbstractBlackBoxModel {
 
-    public DYNModelOmegaRef(String modelId, String parameterSetId) {
-        super(modelId, "", parameterSetId);
-        this.generatorModelIds = new ArrayList<>();
+    public DYNModelOmegaRef(String dynamicModelId, String parameterSetId) {
+        super(dynamicModelId, "", parameterSetId);
+        this.generatorDynamicModelIds = new ArrayList<>();
     }
 
-    public void addGenerator(String generatorModelId) {
-        generatorModelIds.add(generatorModelId);
+    public void addGenerator(String generatorDynamicModelId) {
+        generatorDynamicModelIds.add(generatorDynamicModelId);
     }
 
     @Override
     public String getLib() {
-        return "DYNModelOmegaReg";
+        return "DYNModelOmegaRef";
     }
 
     @Override
@@ -67,9 +67,9 @@ public class DYNModelOmegaRef extends AbstractBlackBoxModel {
 
         // Write the connect object
         int index = 0;
-        for (String generatorModelId : generatorModelIds) {
-            writeConnect(writer, MACRO_CONNECTOR_PREFIX + getLib() + MACRO_CONNECTOR_TO_GENERATOR, getId(), index, generatorModelId);
-            writeConnect(writer, MACRO_CONNECTOR_PREFIX + getLib() + MACRO_CONNECTOR_TO_NUMCCMACHINE, getId(), index, NETWORK, getStaticId(context, generatorModelId));
+        for (String generatorDynamicModelId : generatorDynamicModelIds) {
+            writeConnect(writer, MACRO_CONNECTOR_PREFIX + getLib() + MACRO_CONNECTOR_TO_GENERATOR, getId(), index, generatorDynamicModelId);
+            writeConnect(writer, MACRO_CONNECTOR_PREFIX + getLib() + MACRO_CONNECTOR_TO_NUMCCMACHINE, getId(), index, NETWORK, getStaticId(context, generatorDynamicModelId));
             index++;
         }
     }
@@ -97,6 +97,6 @@ public class DYNModelOmegaRef extends AbstractBlackBoxModel {
         writer.writeAttribute("name2", name2);
     }
 
-    private List<String> generatorModelIds;
+    private List<String> generatorDynamicModelIds;
 
 }
