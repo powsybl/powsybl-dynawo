@@ -20,6 +20,7 @@ import javax.xml.stream.XMLStreamWriter;
 
 import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynawo.xml.DynawoXmlContext;
+import com.powsybl.dynawo.xml.MacroConnectorXml;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -46,14 +47,14 @@ public class DYNModelOmegaRef extends AbstractBlackBoxModel {
             // Write the macroConnector object
             writer.writeStartElement(DYN_URI, "macroConnector");
             writer.writeAttribute("id", MACRO_CONNECTOR_PREFIX + getLib() + MACRO_CONNECTOR_TO_GENERATOR);
-            writeMacroConnection(writer, "omega_grp_@INDEX@", "generator_omegaPu");
-            writeMacroConnection(writer, "omegaRef_grp_@INDEX@", "generator_omegaRefPu");
-            writeMacroConnection(writer, "running_grp_@INDEX@", "generator_running");
+            MacroConnectorXml.writeConnect(writer, "omega_grp_@INDEX@", "generator_omegaPu");
+            MacroConnectorXml.writeConnect(writer, "omegaRef_grp_@INDEX@", "generator_omegaRefPu");
+            MacroConnectorXml.writeConnect(writer, "running_grp_@INDEX@", "generator_running");
             writer.writeEndElement();
 
             writer.writeStartElement(DYN_URI, "macroConnector");
             writer.writeAttribute("id", MACRO_CONNECTOR_PREFIX + getLib() + MACRO_CONNECTOR_TO_NUMCCMACHINE);
-            writeMacroConnection(writer, "numcc_node_@INDEX@", "@@NAME@@@NODE@_numcc");
+            MacroConnectorXml.writeConnect(writer, "numcc_node_@INDEX@", "@@NAME@@@NODE@_numcc");
             writer.writeEndElement();
         }
 

@@ -15,6 +15,8 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
 import com.powsybl.dynawo.xml.DynawoXmlContext;
+import com.powsybl.dynawo.xml.MacroConnectorXml;
+import com.powsybl.dynawo.xml.MacroStaticReferenceXml;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -36,16 +38,16 @@ public class GeneratorSynchronousFourWindingsProportionalRegulations extends Abs
             // Write the macroStaticReference object
             writer.writeStartElement(DYN_URI, "macroStaticReference");
             writer.writeAttribute("id", MACRO_STATIC_REFERENCE_PREFIX + getLib());
-            writeStaticRef(writer, "generator_PGenPu", "p");
-            writeStaticRef(writer, "generator_QGenPu", "q");
-            writeStaticRef(writer, "generator_state", "state");
+            MacroStaticReferenceXml.writeStaticRef(writer, "generator_PGenPu", "p");
+            MacroStaticReferenceXml.writeStaticRef(writer, "generator_QGenPu", "q");
+            MacroStaticReferenceXml.writeStaticRef(writer, "generator_state", "state");
             writer.writeEndElement();
 
             // Write the macroConnector object
             writer.writeStartElement(DYN_URI, "macroConnector");
             writer.writeAttribute("id", MACRO_CONNECTOR_PREFIX + getLib());
-            writeMacroConnection(writer, "generator_terminal", "@STATIC_ID@@NODE@_ACPIN");
-            writeMacroConnection(writer, "generator_switchOffSignal1", "@STATIC_ID@@NODE@_switchOff");
+            MacroConnectorXml.writeConnect(writer, "generator_terminal", "@STATIC_ID@@NODE@_ACPIN");
+            MacroConnectorXml.writeConnect(writer, "generator_switchOffSignal1", "@STATIC_ID@@NODE@_switchOff");
             writer.writeEndElement();
         }
 
@@ -56,10 +58,10 @@ public class GeneratorSynchronousFourWindingsProportionalRegulations extends Abs
         writer.writeAttribute("parFile", context.getParFile());
         writer.writeAttribute("parId", getParameterSetId());
         writer.writeAttribute("staticId", getStaticId());
-        writeMacroStaticRef(writer, MACRO_STATIC_REFERENCE_PREFIX + getLib());
+        MacroStaticReferenceXml.writeMacroStaticRef(writer, MACRO_STATIC_REFERENCE_PREFIX + getLib());
         writer.writeEndElement();
 
         // Write the connect object
-        writeConnect(writer, MACRO_CONNECTOR_PREFIX + getLib(), getId(), NETWORK);
+        MacroConnectorXml.writeMacroConnect(writer, MACRO_CONNECTOR_PREFIX + getLib(), getId(), NETWORK);
     }
 }
