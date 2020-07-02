@@ -73,8 +73,8 @@ public class DynawoGroovyDynamicModelsSupplierTest {
     private void validateLoad(DynamicModel dynamicModel) {
         assertEquals(LoadAlphaBeta.class, dynamicModel.getClass());
         LoadAlphaBeta loadAlphaBetaImpl = (LoadAlphaBeta) dynamicModel;
-        if (network.getIdentifiable(loadAlphaBetaImpl.getId()) instanceof Load) {
-            assertEquals("LOAD", loadAlphaBetaImpl.getStaticId());
+        if (network.getIdentifiable(loadAlphaBetaImpl.getStaticId()) instanceof Load) {
+            assertEquals("LOAD", loadAlphaBetaImpl.getId());
             assertEquals("default", loadAlphaBetaImpl.getParameterSetId());
         }
     }
