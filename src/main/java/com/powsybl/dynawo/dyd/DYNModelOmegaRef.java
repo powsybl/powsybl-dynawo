@@ -6,6 +6,8 @@
  */
 package com.powsybl.dynawo.dyd;
 
+import static com.powsybl.dynawo.xml.DynawoConstants.OMEGAREF_PAR_FILENAME;
+
 import static com.powsybl.dynawo.xml.DynawoXmlConstants.DYN_URI;
 import static com.powsybl.dynawo.xml.DynawoXmlConstants.MACRO_CONNECTOR_PREFIX;
 import static com.powsybl.dynawo.xml.DynawoXmlConstants.MACRO_CONNECTOR_TO_GENERATOR;
@@ -66,35 +68,18 @@ public class DYNModelOmegaRef extends AbstractBlackBoxModel {
             writer.writeEmptyElement(DYN_URI, "blackBoxModel");
             writer.writeAttribute("id", getId());
             writer.writeAttribute("lib", getLib());
-            writer.writeAttribute("parFile", context.getParFile());
+            writer.writeAttribute("parFile", OMEGAREF_PAR_FILENAME);
             writer.writeAttribute("parId", getParameterSetId());
         }
         // This instance of DYNModelOmegaRef has a reference to one generator, write its connect
-        writeConnect(writer, MACRO_CONNECTOR_PREFIX + getLib() + MACRO_CONNECTOR_TO_GENERATOR, getId(), index, generatorDynamicModelId);
-        writeConnect(writer, MACRO_CONNECTOR_PREFIX + getLib() + MACRO_CONNECTOR_TO_NUMCCMACHINE, getId(), index, NETWORK, getStaticId(context, generatorDynamicModelId));
+        MacroConnectorXml.writeMacroConnect(writer, MACRO_CONNECTOR_PREFIX + getLib() + MACRO_CONNECTOR_TO_GENERATOR, getId(), index, generatorDynamicModelId);
+        MacroConnectorXml.writeMacroConnect(writer, MACRO_CONNECTOR_PREFIX + getLib() + MACRO_CONNECTOR_TO_NUMCCMACHINE, getId(), index, NETWORK, getStaticId(context, generatorDynamicModelId));
     }
 
     private String getStaticId(DynawoXmlContext context, String modelId) {
         DynamicModel dynamicModel = context.getDynamicModel(modelId);
         AbstractBlackBoxModel bbm = (AbstractBlackBoxModel) dynamicModel;
         return bbm.getStaticId();
-    }
-
-    private void writeConnect(XMLStreamWriter writer, String connector, String id1, int index1, String id2) throws XMLStreamException {
-        writer.writeEmptyElement(DYN_URI, "macroConnect");
-        writer.writeAttribute("connector", connector);
-        writer.writeAttribute("id1", id1);
-        writer.writeAttribute("index1", Integer.toString(index1));
-        writer.writeAttribute("id2", id2);
-    }
-
-    private void writeConnect(XMLStreamWriter writer, String connector, String id1, int index1, String id2, String name2) throws XMLStreamException {
-        writer.writeEmptyElement(DYN_URI, "macroConnect");
-        writer.writeAttribute("connector", connector);
-        writer.writeAttribute("id1", id1);
-        writer.writeAttribute("index1", Integer.toString(index1));
-        writer.writeAttribute("id2", id2);
-        writer.writeAttribute("name2", name2);
     }
 
     private final String generatorDynamicModelId;
