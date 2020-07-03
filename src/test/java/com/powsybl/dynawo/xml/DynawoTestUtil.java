@@ -65,22 +65,20 @@ public class DynawoTestUtil extends AbstractConverterTest {
         network.getLoadStream().forEach(l -> {
             dynamicModels.add(new LoadAlphaBeta("BBM_" + l.getId(), l.getId(), "default"));
         });
-        DYNModelOmegaRef dynModelOmegaRef = new DYNModelOmegaRef("OMEGA_REF", "OMEGA_REF");
         network.getGeneratorStream().forEach(g -> {
             dynamicModels.add(new GeneratorSynchronousFourWindingsProportionalRegulations("BBM_" + g.getId(), g.getId(), "default"));
-            dynModelOmegaRef.addGenerator("BBM_" + g.getId());
+            dynamicModels.add(new DYNModelOmegaRef("BBM_" + g.getId()));
         });
-        dynamicModels.add(dynModelOmegaRef);
     }
 
-    public void validate(Path xmlFile, String name) throws SAXException, IOException {
+    public void validate(String schemaDefinition, String expectedResourceName, Path xmlFile) throws SAXException, IOException {
         SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         Source xml = new StreamSource(Files.newInputStream(xmlFile));
-        Source xsd = new StreamSource(getClass().getResourceAsStream("/" + name + ".xsd"));
+        Source xsd = new StreamSource(getClass().getResourceAsStream("/" + schemaDefinition));
         Schema schema = factory.newSchema(xsd);
         Validator validator = schema.newValidator();
         validator.validate(xml);
-        compareXml(getClass().getResourceAsStream("/" + name + ".xml"), Files.newInputStream(xmlFile));
+        compareXml(getClass().getResourceAsStream("/" + expectedResourceName), Files.newInputStream(xmlFile));
     }
 
     private static Network createEurostagTutorialExample1WithMoreLoadsAndGenerators() {

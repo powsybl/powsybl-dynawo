@@ -23,10 +23,10 @@ import com.powsybl.dynawo.dyd.DYNModelOmegaRef
 class DYNModelOmegaRefGroovyExtension implements DynamicModelGroovyExtension {
 
     static class DYNModelOmegaRefSpec {
-        String generatorModelId
+        String generatorDynamicModelId
 
-        void generatorModelId(String generatorModelId) {
-            this.generatorModelId = generatorModelId
+        void generatorDynamicModelId(String generatorDynamicModelId) {
+            this.generatorDynamicModelId = generatorDynamicModelId
         }
 
     }
@@ -34,7 +34,7 @@ class DYNModelOmegaRefGroovyExtension implements DynamicModelGroovyExtension {
     String getName() {
         return "dynawo"
     }
-    
+
     void load(Binding binding, Consumer<DynamicModel> consumer) {
         binding.OmegaRef = { Closure<Void> closure ->
             def cloned = closure.clone()
@@ -43,9 +43,11 @@ class DYNModelOmegaRefGroovyExtension implements DynamicModelGroovyExtension {
             cloned.delegate = dynModelOmegaRefSpec
             cloned()
 
-            if (!dynModelOmegaRefSpec.generatorModelId) {
+            if (!dynModelOmegaRefSpec.generatorDynamicModelId) {
                 throw new DslException("'generatorModelId' field is not set")
             }
+
+            consumer.accept(new DYNModelOmegaRef(dynModelOmegaRefSpec.generatorDynamicModelId));
         }
     }
 

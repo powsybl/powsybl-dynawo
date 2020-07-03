@@ -24,7 +24,6 @@ for (Generator gen : network.generators) {
         parameterSetId "default"
     }
     OmegaRef {
-        generatorModelId "BBM_" + gen.id
+        generatorDynamicModelId "BBM_" + gen.id
     }
 }
-

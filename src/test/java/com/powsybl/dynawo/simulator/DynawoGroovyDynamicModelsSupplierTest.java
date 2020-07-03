@@ -73,7 +73,12 @@ public class DynawoGroovyDynamicModelsSupplierTest {
         DynamicModelsSupplier supplier = new GroovyDynamicModelsSupplier(fileSystem.getPath("/dynamicModels.groovy"), extensions);
 
         List<DynamicModel> dynamicModels = supplier.get(network);
-        assertEquals(2, dynamicModels.size());
+        // One model for each load, one model for each generator and one omegaRef per generator
+        int numLoads = network.getLoadCount();
+        int numGenerators = network.getGeneratorCount();
+        int numOmegaRefs = numGenerators;
+        int expectedDynamicModelsSize =  numLoads + numGenerators + numOmegaRefs;
+        assertEquals(expectedDynamicModelsSize, dynamicModels.size());
         dynamicModels.forEach(this::validateModel);
     }
 
