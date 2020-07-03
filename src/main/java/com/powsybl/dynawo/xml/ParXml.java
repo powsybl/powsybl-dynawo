@@ -24,7 +24,7 @@ import com.powsybl.dynawo.dyd.AbstractBlackBoxModel;
 import com.powsybl.dynawo.dyd.DYNModelOmegaRef;
 
 /**
- * @author Mathieu Bague <mathieu.bague@rte-france.com>
+ * @author Marcos de Miguel <demiguelm at aia.es>
  */
 public final class ParXml {
 
