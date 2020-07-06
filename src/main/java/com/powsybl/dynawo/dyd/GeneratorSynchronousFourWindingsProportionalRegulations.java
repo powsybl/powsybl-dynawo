@@ -23,8 +23,8 @@ import com.powsybl.dynawo.xml.MacroStaticReferenceXml;
  */
 public class GeneratorSynchronousFourWindingsProportionalRegulations extends AbstractBlackBoxModel {
 
-    public GeneratorSynchronousFourWindingsProportionalRegulations(String modelId, String staticId, String parameterSetId) {
-        super(modelId, staticId, parameterSetId);
+    public GeneratorSynchronousFourWindingsProportionalRegulations(String dynamicModelId, String staticId, String parameterSetId) {
+        super(dynamicModelId, staticId, parameterSetId);
     }
 
     @Override
