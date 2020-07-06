@@ -29,7 +29,7 @@ public class DynamicModelsXmlTest extends DynawoTestUtil {
         DynawoContext context = new DynawoContext(network, dynamicModels, curves, parameters, dynawoParameters);
 
         DydXml.write(tmpDir, context);
-        validate(tmpDir.resolve(DynawoConstants.DYD_FILENAME), "dyd");
+        validate("dyd.xsd", "dyd.xml", tmpDir.resolve(DynawoConstants.DYD_FILENAME));
     }
 
 }

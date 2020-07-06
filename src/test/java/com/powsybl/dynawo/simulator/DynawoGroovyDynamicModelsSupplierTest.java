@@ -27,7 +27,11 @@ import com.powsybl.dynamicsimulation.DynamicModelsSupplier;
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension;
 import com.powsybl.dynamicsimulation.groovy.GroovyDynamicModelsSupplier;
 import com.powsybl.dynamicsimulation.groovy.GroovyExtension;
+import com.powsybl.dynawo.dyd.AbstractBlackBoxModel;
+import com.powsybl.dynawo.dyd.GeneratorSynchronousFourWindingsProportionalRegulations;
 import com.powsybl.dynawo.dyd.LoadAlphaBeta;
+import com.powsybl.iidm.network.Generator;
+import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.Load;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
@@ -60,22 +64,41 @@ public class DynawoGroovyDynamicModelsSupplierTest {
     public void test() {
 
         List<DynamicModelGroovyExtension> extensions = GroovyExtension.find(DynamicModelGroovyExtension.class, "dynawo");
-        assertEquals(1, extensions.size());
-        assertTrue(extensions.get(0) instanceof LoadAlphaBetaGroovyExtension);
+        assertEquals(2, extensions.size());
+        assertTrue(validateExtension(extensions.get(0)));
+        assertTrue(validateExtension(extensions.get(1)));
 
         DynamicModelsSupplier supplier = new GroovyDynamicModelsSupplier(fileSystem.getPath("/dynamicModels.groovy"), extensions);
 
         List<DynamicModel> dynamicModels = supplier.get(network);
-        assertEquals(1, dynamicModels.size());
-        dynamicModels.forEach(this::validateLoad);
+        // One model for each load, one model for each generator
+        int numLoads = network.getLoadCount();
+        int numGenerators = network.getGeneratorCount();
+        int expectedDynamicModelsSize =  numLoads + numGenerators;
+        assertEquals(expectedDynamicModelsSize, dynamicModels.size());
+        dynamicModels.forEach(this::validateModel);
     }
 
-    private void validateLoad(DynamicModel dynamicModel) {
-        assertEquals(LoadAlphaBeta.class, dynamicModel.getClass());
-        LoadAlphaBeta loadAlphaBetaImpl = (LoadAlphaBeta) dynamicModel;
-        if (network.getIdentifiable(loadAlphaBetaImpl.getStaticId()) instanceof Load) {
-            assertEquals("LOAD", loadAlphaBetaImpl.getDynamicModelId());
-            assertEquals("default", loadAlphaBetaImpl.getParameterSetId());
+    private boolean validateExtension(DynamicModelGroovyExtension extension) {
+        boolean isLoadExtension = extension instanceof LoadAlphaBetaGroovyExtension;
+        boolean isGeneratorExtension = extension instanceof GeneratorSynchronousFourWindingsProportionalRegulationsGroovyExtension;
+
+        return isLoadExtension || isGeneratorExtension;
+    }
+
+    private void validateModel(DynamicModel dynamicModel) {
+        assertTrue(dynamicModel instanceof AbstractBlackBoxModel);
+        AbstractBlackBoxModel blackBoxModel = (AbstractBlackBoxModel) dynamicModel;
+        if (blackBoxModel instanceof LoadAlphaBeta) {
+            Identifiable<?> identifiable = network.getIdentifiable(blackBoxModel.getStaticId());
+            assertEquals(identifiable.getId(), blackBoxModel.getDynamicModelId());
+            assertEquals("default", blackBoxModel.getParameterSetId());
+            assertTrue(identifiable instanceof Load);
+        } else if (blackBoxModel instanceof GeneratorSynchronousFourWindingsProportionalRegulations) {
+            Identifiable<?> identifiable = network.getIdentifiable(blackBoxModel.getStaticId());
+            assertEquals("BBM_" + identifiable.getId(), blackBoxModel.getDynamicModelId());
+            assertEquals("default", blackBoxModel.getParameterSetId());
+            assertTrue(identifiable instanceof Generator);
         }
     }
 }

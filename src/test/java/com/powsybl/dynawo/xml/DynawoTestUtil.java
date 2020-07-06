@@ -25,6 +25,7 @@ import org.xml.sax.SAXException;
 import com.powsybl.commons.AbstractConverterTest;
 import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynamicsimulation.DynamicModel;
+import com.powsybl.dynawo.dyd.GeneratorSynchronousFourWindingsProportionalRegulations;
 import com.powsybl.dynawo.dyd.LoadAlphaBeta;
 import com.powsybl.dynawo.simulator.DynawoCurve;
 import com.powsybl.iidm.network.Bus;
@@ -63,16 +64,19 @@ public class DynawoTestUtil extends AbstractConverterTest {
         network.getLoadStream().forEach(l -> {
             dynamicModels.add(new LoadAlphaBeta("BBM_" + l.getId(), l.getId(), "default"));
         });
+        network.getGeneratorStream().forEach(g -> {
+            dynamicModels.add(new GeneratorSynchronousFourWindingsProportionalRegulations("BBM_" + g.getId(), g.getId(), "default"));
+        });
     }
 
-    public void validate(Path xmlFile, String name) throws SAXException, IOException {
+    public void validate(String schemaDefinition, String expectedResourceName, Path xmlFile) throws SAXException, IOException {
         SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         Source xml = new StreamSource(Files.newInputStream(xmlFile));
-        Source xsd = new StreamSource(getClass().getResourceAsStream("/" + name + ".xsd"));
+        Source xsd = new StreamSource(getClass().getResourceAsStream("/" + schemaDefinition));
         Schema schema = factory.newSchema(xsd);
         Validator validator = schema.newValidator();
         validator.validate(xml);
-        compareXml(getClass().getResourceAsStream("/" + name + ".xml"), Files.newInputStream(xmlFile));
+        compareXml(getClass().getResourceAsStream("/" + expectedResourceName), Files.newInputStream(xmlFile));
     }
 
     private static Network createEurostagTutorialExample1WithMoreLoads() {
@@ -86,6 +90,19 @@ public class DynawoTestUtil extends AbstractConverterTest {
             .setConnectableBus(nload.getId())
             .setP0(1.0)
             .setQ0(0.5)
+            .add();
+        VoltageLevel vlgen  = network.getVoltageLevel("VLGEN");
+        Bus ngen = vlgen.getBusBreakerView().getBus("NGEN");
+        vlgen.newGenerator()
+            .setId("GEN2")
+            .setBus(ngen.getId())
+            .setConnectableBus(ngen.getId())
+            .setMinP(-9999.99)
+            .setMaxP(9999.99)
+            .setVoltageRegulatorOn(true)
+            .setTargetV(24.5)
+            .setTargetP(1.0)
+            .setTargetQ(0.5)
             .add();
         return network;
     }
