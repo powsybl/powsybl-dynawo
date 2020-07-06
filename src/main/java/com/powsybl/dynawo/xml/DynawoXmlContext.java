@@ -35,7 +35,7 @@ public class DynawoXmlContext {
                 return;
             }
             AbstractBlackBoxModel bbm = (AbstractBlackBoxModel) dynamicModel;
-            this.dynamicModels.put(bbm.getId(), bbm);
+            this.dynamicModels.put(bbm.getDynamicModelId(), bbm);
         });
     }
 

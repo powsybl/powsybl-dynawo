@@ -23,12 +23,12 @@ import com.powsybl.dynawo.dyd.LoadAlphaBeta
 class LoadAlphaBetaGroovyExtension implements DynamicModelGroovyExtension {
 
     static class LoadAlphaBetaSpec {
-        String modelId
+        String dynamicModelId
         String staticId
         String parameterSetId
 
-        void modelId(String modelId) {
-            this.modelId = modelId
+        void dynamicModelId(String dynamicModelId) {
+            this.dynamicModelId = dynamicModelId
         }
 
         void staticId(String staticId) {
@@ -59,8 +59,8 @@ class LoadAlphaBetaGroovyExtension implements DynamicModelGroovyExtension {
                 throw new DslException("'parameterSetId' field is not set")
             }
 
-            String modelId = loadAlphaBetaSpec.modelId ? loadAlphaBetaSpec.modelId : loadAlphaBetaSpec.staticId
-            consumer.accept(new LoadAlphaBeta(modelId, loadAlphaBetaSpec.staticId, loadAlphaBetaSpec.parameterSetId))
+            String dynamicModelId = loadAlphaBetaSpec.dynamicModelId ? loadAlphaBetaSpec.dynamicModelId : loadAlphaBetaSpec.staticId
+            consumer.accept(new LoadAlphaBeta(dynamicModelId, loadAlphaBetaSpec.staticId, loadAlphaBetaSpec.parameterSetId))
         }
     }
 

@@ -9,7 +9,7 @@ import com.powsybl.iidm.network.Bus
 
 for (Bus bus : network.busBreakerView.buses) {
     curve {
-        modelId "NETWORK"
+        dynamicModelId "NETWORK"
         staticId bus.id
         variable "Upu_value"
     }

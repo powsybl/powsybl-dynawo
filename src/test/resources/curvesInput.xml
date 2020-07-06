@@ -5,7 +5,7 @@
   <dyn:curve model="NETWORK" variable="NHV2_Upu_value"/>
   <dyn:curve model="NETWORK" variable="NLOAD_Upu_value"/>
   <!-- A curve is made up of the id of the dynamic model and the variable to plot.
-       The static id of the generator is used as the id of the dynamic model (modelId) -->
+       The static id of the generator is used as the id of the dynamic model (dynamicModelId) -->
   <dyn:curve model="GEN" variable="generator_omegaPu"/>
   <dyn:curve model="GEN" variable="generator_PGen"/>
   <dyn:curve model="GEN" variable="generator_UStatorPu"/>

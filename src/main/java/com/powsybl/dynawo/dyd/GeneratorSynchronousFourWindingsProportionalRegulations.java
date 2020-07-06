@@ -53,7 +53,7 @@ public class GeneratorSynchronousFourWindingsProportionalRegulations extends Abs
 
         // Write the blackBoxModel object
         writer.writeStartElement(DYN_URI, "blackBoxModel");
-        writer.writeAttribute("id", getId());
+        writer.writeAttribute("id", getDynamicModelId());
         writer.writeAttribute("lib", getLib());
         writer.writeAttribute("parFile", context.getParFile());
         writer.writeAttribute("parId", getParameterSetId());
@@ -62,6 +62,6 @@ public class GeneratorSynchronousFourWindingsProportionalRegulations extends Abs
         writer.writeEndElement();
 
         // Write the connect object
-        MacroConnectorXml.writeMacroConnect(writer, MACRO_CONNECTOR_PREFIX + getLib(), getId(), NETWORK);
+        MacroConnectorXml.writeMacroConnect(writer, MACRO_CONNECTOR_PREFIX + getLib(), getDynamicModelId(), NETWORK);
     }
 }

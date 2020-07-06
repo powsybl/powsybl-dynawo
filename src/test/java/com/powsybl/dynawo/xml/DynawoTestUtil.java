@@ -52,7 +52,7 @@ public class DynawoTestUtil extends AbstractConverterTest {
         curves = new ArrayList<>();
         network.getBusBreakerView().getBusStream().forEach(b -> curves.add(new DynawoCurve("NETWORK", b.getId() + "_Upu_value")));
         // A curve is made up of the id of the dynamic model and the variable to plot.
-        // The static id of the generator is used as the id of the dynamic model (modelId).
+        // The static id of the generator is used as the id of the dynamic model (dynamicModelId).
         network.getGeneratorStream().forEach(g -> {
             curves.add(new DynawoCurve(g.getId(), "generator_omegaPu"));
             curves.add(new DynawoCurve(g.getId(), "generator_PGen"));

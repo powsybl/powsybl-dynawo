@@ -23,8 +23,8 @@ import com.powsybl.dynawo.xml.MacroStaticReferenceXml;
  */
 public class LoadAlphaBeta extends AbstractBlackBoxModel {
 
-    public LoadAlphaBeta(String modelId, String staticId, String parameterSetId) {
-        super(modelId, staticId, parameterSetId);
+    public LoadAlphaBeta(String dynamicModelId, String staticId, String parameterSetId) {
+        super(dynamicModelId, staticId, parameterSetId);
     }
 
     @Override
@@ -53,7 +53,7 @@ public class LoadAlphaBeta extends AbstractBlackBoxModel {
 
         // Write the blackBoxModel object
         writer.writeStartElement(DYN_URI, "blackBoxModel");
-        writer.writeAttribute("id", getId());
+        writer.writeAttribute("id", getDynamicModelId());
         writer.writeAttribute("lib", getLib());
         writer.writeAttribute("parFile", context.getParFile());
         writer.writeAttribute("parId", getParameterSetId());
@@ -62,6 +62,6 @@ public class LoadAlphaBeta extends AbstractBlackBoxModel {
         writer.writeEndElement();
 
         // Write the connect object
-        MacroConnectorXml.writeMacroConnect(writer, MACRO_CONNECTOR_PREFIX + getLib(), getId(), NETWORK);
+        MacroConnectorXml.writeMacroConnect(writer, MACRO_CONNECTOR_PREFIX + getLib(), getDynamicModelId(), NETWORK);
     }
 }

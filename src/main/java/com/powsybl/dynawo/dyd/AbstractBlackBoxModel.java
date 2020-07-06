@@ -19,14 +19,14 @@ import com.powsybl.dynawo.xml.DynawoXmlContext;
  */
 public abstract class AbstractBlackBoxModel implements DynamicModel {
 
-    public AbstractBlackBoxModel(String id, String staticId, String parameterSetId) {
-        this.id = Objects.requireNonNull(id);
+    public AbstractBlackBoxModel(String dynamicModelId, String staticId, String parameterSetId) {
+        this.dynamicModelId = Objects.requireNonNull(dynamicModelId);
         this.staticId = Objects.requireNonNull(staticId);
         this.parameterSetId = Objects.requireNonNull(parameterSetId);
     }
 
-    public String getId() {
-        return id;
+    public String getDynamicModelId() {
+        return dynamicModelId;
     }
 
     public abstract String getLib();
@@ -41,7 +41,7 @@ public abstract class AbstractBlackBoxModel implements DynamicModel {
 
     public abstract void write(XMLStreamWriter writer, DynawoXmlContext context) throws XMLStreamException;
 
-    private final String id;
+    private final String dynamicModelId;
     private final String staticId;
     private final String parameterSetId;
 }

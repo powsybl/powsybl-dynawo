@@ -66,14 +66,14 @@ public class DYNModelOmegaRef extends AbstractBlackBoxModel {
             // All instances of DYNModelOmegaRef refer in fact to a single Dynawo BlackBoxModel
             // We write the blackBoxModel in the output XML only once
             writer.writeEmptyElement(DYN_URI, "blackBoxModel");
-            writer.writeAttribute("id", getId());
+            writer.writeAttribute("id", getDynamicModelId());
             writer.writeAttribute("lib", getLib());
             writer.writeAttribute("parFile", OMEGAREF_PAR_FILENAME);
             writer.writeAttribute("parId", getParameterSetId());
         }
         // This instance of DYNModelOmegaRef has a reference to one generator, write its connect
-        MacroConnectorXml.writeMacroConnect(writer, MACRO_CONNECTOR_PREFIX + getLib() + MACRO_CONNECTOR_TO_GENERATOR, getId(), index, generatorDynamicModelId);
-        MacroConnectorXml.writeMacroConnect(writer, MACRO_CONNECTOR_PREFIX + getLib() + MACRO_CONNECTOR_TO_NUMCCMACHINE, getId(), index, NETWORK, getStaticId(context, generatorDynamicModelId));
+        MacroConnectorXml.writeMacroConnect(writer, MACRO_CONNECTOR_PREFIX + getLib() + MACRO_CONNECTOR_TO_GENERATOR, getDynamicModelId(), index, generatorDynamicModelId);
+        MacroConnectorXml.writeMacroConnect(writer, MACRO_CONNECTOR_PREFIX + getLib() + MACRO_CONNECTOR_TO_NUMCCMACHINE, getDynamicModelId(), index, NETWORK, getStaticId(context, generatorDynamicModelId));
     }
 
     private String getStaticId(DynawoXmlContext context, String modelId) {
