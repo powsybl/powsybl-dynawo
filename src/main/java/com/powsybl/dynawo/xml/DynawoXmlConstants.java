@@ -23,6 +23,8 @@ public final class DynawoXmlConstants {
 
     public static final String MACRO_STATIC_REFERENCE_PREFIX = "MSR_";
     public static final String MACRO_CONNECTOR_PREFIX = "MC_";
+    public static final String MACRO_CONNECTOR_TO_GENERATOR_SUFIX = "ToGenerator";
+    public static final String MACRO_CONNECTOR_TO_NUMCCMACHINE_SUFIX = "ToNumCCMachine";
 
     private DynawoXmlConstants() {
     }

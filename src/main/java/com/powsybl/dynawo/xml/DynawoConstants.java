@@ -19,6 +19,8 @@ public final class DynawoConstants {
 
     public static final String CRV_FILENAME = "powsybl_dynawo.crv";
 
+    public static final String OMEGAREF_PAR_FILENAME = "omega_ref.par";
+
     private DynawoConstants() {
     }
 }

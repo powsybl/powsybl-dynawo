@@ -25,6 +25,7 @@ import org.xml.sax.SAXException;
 import com.powsybl.commons.AbstractConverterTest;
 import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynamicsimulation.DynamicModel;
+import com.powsybl.dynawo.dyd.DYNModelOmegaRef;
 import com.powsybl.dynawo.dyd.LoadAlphaBeta;
 import com.powsybl.dynawo.simulator.DynawoCurve;
 import com.powsybl.iidm.network.Bus;
@@ -62,6 +63,9 @@ public class DynawoTestUtil extends AbstractConverterTest {
         dynamicModels = new ArrayList<>();
         network.getLoadStream().forEach(l -> {
             dynamicModels.add(new LoadAlphaBeta("BBM_" + l.getId(), l.getId(), "default"));
+        });
+        network.getGeneratorStream().forEach(g -> {
+            dynamicModels.add(new DYNModelOmegaRef("BBM_" + g.getId()));
         });
     }
 
