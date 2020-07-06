@@ -30,17 +30,17 @@ import java.util.function.Consumer
 class DynawoCurveGroovyExtension implements CurveGroovyExtension {
 
     /**
-     * A curve for <pre>Dynawo</pre> can be defined in DSL using {@code staticId} and {@code variable} or {@code modelId} and {@code variable}.
+     * A curve for <pre>Dynawo</pre> can be defined in DSL using {@code staticId} and {@code variable} or {@code dynamicModelId} and {@code variable}.
      * Definition with {@code staticId} and {@code variable} are used when no explicit dynamic component exists (buses).
-     * <pre>Dynawo</pre> expects {@code modelId} = “NETWORK” for these variables.
+     * <pre>Dynawo</pre> expects {@code dynamicModelId} = “NETWORK” for these variables.
      */
     static class CurvesSpec {
-        String modelId
+        String dynamicModelId
         String staticId
         String[] variables
 
-        void modelId(String modelId) {
-            this.modelId = modelId
+        void dynamicModelId(String dynamicModelId) {
+            this.dynamicModelId = dynamicModelId
         }
 
         void staticId(String staticId) {
@@ -62,8 +62,8 @@ class DynawoCurveGroovyExtension implements CurveGroovyExtension {
     
     DynawoCurve dynawoCurve(CurvesSpec curveSpec, Consumer<Curve> consumer) {
         
-        if (curveSpec.staticId && curveSpec.modelId) {
-            throw new DslException("Both staticId and modelId are defined");
+        if (curveSpec.staticId && curveSpec.dynamicModelId) {
+            throw new DslException("Both staticId and dynamicModelId are defined");
         }
         if (!curveSpec.variables) {
             throw new DslException("'variables' field is not set")
@@ -76,7 +76,7 @@ class DynawoCurveGroovyExtension implements CurveGroovyExtension {
             if (curveSpec.staticId) {
                 consumer.accept(new DynawoCurve("NETWORK", curveSpec.staticId + "_" + variable))
             } else {
-                consumer.accept(new DynawoCurve(curveSpec.modelId, variable))
+                consumer.accept(new DynawoCurve(curveSpec.dynamicModelId, variable))
             }
         }
     }

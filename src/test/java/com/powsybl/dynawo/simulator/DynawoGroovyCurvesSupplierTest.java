@@ -51,7 +51,7 @@ public class DynawoGroovyCurvesSupplierTest {
         network = EurostagTutorialExample1Factory.create();
 
         Files.copy(getClass().getResourceAsStream("/curves.groovy"), fileSystem.getPath("/curves.groovy"));
-        Files.copy(getClass().getResourceAsStream("/curves_modelId_staticId.groovy"), fileSystem.getPath("/curves_modelId_staticId.groovy"));
+        Files.copy(getClass().getResourceAsStream("/curves_dynamicModelId_staticId.groovy"), fileSystem.getPath("/curves_dynamicModelId_staticId.groovy"));
         Files.copy(getClass().getResourceAsStream("/curves_variable.groovy"), fileSystem.getPath("/curves_variable.groovy"));
         Files.copy(getClass().getResourceAsStream("/curves_variables.groovy"), fileSystem.getPath("/curves_variables.groovy"));
     }
@@ -79,13 +79,13 @@ public class DynawoGroovyCurvesSupplierTest {
     public void testModelIdStaticIdDefined() {
 
         exception.expect(DslException.class);
-        exception.expectMessage("Both staticId and modelId are defined");
+        exception.expectMessage("Both staticId and dynamicModelId are defined");
 
         List<CurveGroovyExtension> extensions = GroovyExtension.find(CurveGroovyExtension.class, "dynawo");
         assertEquals(1, extensions.size());
         assertTrue(extensions.get(0) instanceof DynawoCurveGroovyExtension);
 
-        CurvesSupplier supplier = new GroovyCurvesSupplier(fileSystem.getPath("/curves_modelId_staticId.groovy"), extensions);
+        CurvesSupplier supplier = new GroovyCurvesSupplier(fileSystem.getPath("/curves_dynamicModelId_staticId.groovy"), extensions);
         supplier.get(network);
     }
 
