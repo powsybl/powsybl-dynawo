@@ -6,12 +6,21 @@
  */
 
 import com.powsybl.iidm.network.Load
+import com.powsybl.iidm.network.Generator
 
 for (Load load : network.loads) {
     LoadAlphaBeta {
         staticId load.id
-        // dynamicModelId "DM_" + load.id (dynamicModelId could be optional and equal to staticId)
+        // dynamicModelId "BBM_" + load.id (dynamicModelId could be optional and equal to staticId)
         parameterSetId "default"
        // the parameterSetId is a string that points to the requested entry in the aggregated par file defined in config.yml
+    }
+}
+
+for (Generator gen : network.generators) {
+    GeneratorSynchronousFourWindingsProportionalRegulations {
+        staticId gen.id
+        dynamicModelId "BBM_" + gen.id
+        parameterSetId "default"
     }
 }
