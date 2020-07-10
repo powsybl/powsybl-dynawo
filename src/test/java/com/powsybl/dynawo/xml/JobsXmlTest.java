@@ -29,7 +29,7 @@ public class JobsXmlTest extends DynawoTestUtil {
         DynawoContext context = new DynawoContext(network, dynamicModels, curves, parameters, dynawoParameters);
 
         JobsXml.write(tmpDir, context);
-        validate(tmpDir.resolve(DynawoConstants.JOBS_FILENAME), "jobs");
+        validate("jobs.xsd", "jobs.xml", tmpDir.resolve(DynawoConstants.JOBS_FILENAME));
     }
 
 }

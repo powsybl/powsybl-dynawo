@@ -29,7 +29,7 @@ public class CurvesXmlTest extends DynawoTestUtil {
         DynawoContext context = new DynawoContext(network, dynamicModels, curves, parameters, dynawoParameters);
 
         CurvesXml.write(tmpDir, context);
-        validate(tmpDir.resolve(DynawoConstants.CRV_FILENAME), "curvesInput");
+        validate("curvesInput.xsd", "curvesInput.xml", tmpDir.resolve(DynawoConstants.CRV_FILENAME));
     }
 
 }

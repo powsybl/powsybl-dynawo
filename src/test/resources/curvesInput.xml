@@ -11,4 +11,9 @@
   <dyn:curve model="GEN" variable="generator_UStatorPu"/>
   <dyn:curve model="GEN" variable="voltageRegulator_UcEfdP"/>
   <dyn:curve model="GEN" variable="voltageRegulator_EfdPu"/>
+  <dyn:curve model="GEN2" variable="generator_omegaPu"/>
+  <dyn:curve model="GEN2" variable="generator_PGen"/>
+  <dyn:curve model="GEN2" variable="generator_UStatorPu"/>
+  <dyn:curve model="GEN2" variable="voltageRegulator_UcEfdP"/>
+  <dyn:curve model="GEN2" variable="voltageRegulator_EfdPu"/>
 </dyn:curvesInput>

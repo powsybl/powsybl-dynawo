@@ -29,7 +29,9 @@ import com.powsybl.dynamicsimulation.groovy.GroovyDynamicModelsSupplier;
 import com.powsybl.dynamicsimulation.groovy.GroovyExtension;
 import com.powsybl.dynawo.dyd.AbstractBlackBoxModel;
 import com.powsybl.dynawo.dyd.DYNModelOmegaRef;
+import com.powsybl.dynawo.dyd.GeneratorSynchronousFourWindingsProportionalRegulations;
 import com.powsybl.dynawo.dyd.LoadAlphaBeta;
+import com.powsybl.iidm.network.Generator;
 import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.Load;
 import com.powsybl.iidm.network.Network;
@@ -63,9 +65,10 @@ public class DynawoGroovyDynamicModelsSupplierTest {
     public void test() {
 
         List<DynamicModelGroovyExtension> extensions = GroovyExtension.find(DynamicModelGroovyExtension.class, "dynawo");
-        assertEquals(2, extensions.size());
+        assertEquals(3, extensions.size());
         assertTrue(validateExtension(extensions.get(0)));
         assertTrue(validateExtension(extensions.get(1)));
+        assertTrue(validateExtension(extensions.get(2)));
 
         DynamicModelsSupplier supplier = new GroovyDynamicModelsSupplier(fileSystem.getPath("/dynamicModels.groovy"), extensions);
 
@@ -74,16 +77,17 @@ public class DynawoGroovyDynamicModelsSupplierTest {
         int numLoads = network.getLoadCount();
         int numGenerators = network.getGeneratorCount();
         int numOmegaRefs = numGenerators;
-        int expectedDynamicModelsSize =  numLoads + numOmegaRefs;
+        int expectedDynamicModelsSize =  numLoads + numGenerators + numOmegaRefs;
         assertEquals(expectedDynamicModelsSize, dynamicModels.size());
         dynamicModels.forEach(this::validateModel);
     }
 
     private boolean validateExtension(DynamicModelGroovyExtension extension) {
         boolean isLoadExtension = extension instanceof LoadAlphaBetaGroovyExtension;
+        boolean isGeneratorExtension = extension instanceof GeneratorSynchronousFourWindingsProportionalRegulationsGroovyExtension;
         boolean isOmegaRefExtension = extension instanceof DYNModelOmegaRefGroovyExtension;
 
-        return isLoadExtension || isOmegaRefExtension;
+        return isLoadExtension || isGeneratorExtension || isOmegaRefExtension;
     }
 
     private void validateModel(DynamicModel dynamicModel) {
@@ -94,6 +98,11 @@ public class DynawoGroovyDynamicModelsSupplierTest {
             assertEquals(identifiable.getId(), blackBoxModel.getDynamicModelId());
             assertEquals("default", blackBoxModel.getParameterSetId());
             assertTrue(identifiable instanceof Load);
+        } else if (blackBoxModel instanceof GeneratorSynchronousFourWindingsProportionalRegulations) {
+            Identifiable<?> identifiable = network.getIdentifiable(blackBoxModel.getStaticId());
+            assertEquals("BBM_" + identifiable.getId(), blackBoxModel.getDynamicModelId());
+            assertEquals("default", blackBoxModel.getParameterSetId());
+            assertTrue(identifiable instanceof Generator);
         } else if (blackBoxModel instanceof DYNModelOmegaRef) {
             assertEquals("OMEGA_REF", blackBoxModel.getDynamicModelId());
             assertEquals("", blackBoxModel.getStaticId());
