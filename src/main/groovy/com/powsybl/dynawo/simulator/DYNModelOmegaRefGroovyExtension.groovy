@@ -44,7 +44,7 @@ class DYNModelOmegaRefGroovyExtension implements DynamicModelGroovyExtension {
             cloned()
 
             if (!dynModelOmegaRefSpec.generatorDynamicModelId) {
-                throw new DslException("'generatorModelId' field is not set")
+                throw new DslException("'generatorDynamicModelId' field is not set")
             }
 
             consumer.accept(new DYNModelOmegaRef(dynModelOmegaRefSpec.generatorDynamicModelId));

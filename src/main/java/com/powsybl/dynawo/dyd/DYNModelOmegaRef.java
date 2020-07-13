@@ -29,12 +29,16 @@ public class DYNModelOmegaRef extends AbstractBlackBoxModel {
     private static final String MACRO_CONNECTOR_TO_GENERATOR_SUFFIX = "ToGenerator";
     private static final String MACRO_CONNECTOR_TO_NUMCCMACHINE_SUFFIX = "ToNumCCMachine";
 
-    // OmegaRef is a magic model
-    // There will be multiple instances of OmegaRef dynamic model,
-    // each one having only one reference to a generator dynamic model
-    // When all these OmegaRef objects are serialized to XML,
-    // Only one blackBoxModel must be present in the XML output,
-    // connected to all generator dynamic models that have been specified
+    // OmegaRef is a special dynamic model
+    // Its role is to synchronize the generators' frequency
+    // There will be multiple Java instances of the OmegaRef dynamic model, one for
+    // each generator's dynamic model connected to it.
+    // The corresponding black box model XML entry is serialized only once.
+    // For each generator synchronised through the OmegaRef model,
+    // there will be one XML entry for the connection with the generator's dynamic model,
+    // and one XML entry for the connection with the NETWORK dynamic model.
+    // There are thus two macroConnectors defined for OmegaRef: one to connect it to a
+    // generator's dynamic model and one to connect it to the NETWORK model.
     public DYNModelOmegaRef(String generatorDynamicModelId) {
         super(OMEGA_REF_ID, "", OMEGA_REF_PARAMETER_SET_ID);
         this.generatorDynamicModelId = generatorDynamicModelId;
@@ -71,7 +75,7 @@ public class DYNModelOmegaRef extends AbstractBlackBoxModel {
             writer.writeAttribute("parFile", OMEGAREF_PAR_FILENAME);
             writer.writeAttribute("parId", getParameterSetId());
         }
-        // This instance of DYNModelOmegaRef has a reference to one generator, write its connect
+        // This instance of DYNModelOmegaRef has a reference to one generator, write its connect and the subsequent connect to the NETWORK model
         MacroConnectorXml.writeMacroConnect(writer, MACRO_CONNECTOR_PREFIX + getLib() + MACRO_CONNECTOR_TO_GENERATOR_SUFFIX, getDynamicModelId(), index, generatorDynamicModelId);
         MacroConnectorXml.writeMacroConnect(writer, MACRO_CONNECTOR_PREFIX + getLib() + MACRO_CONNECTOR_TO_NUMCCMACHINE_SUFFIX, getDynamicModelId(), index, NETWORK, getStaticId(context, generatorDynamicModelId));
     }
