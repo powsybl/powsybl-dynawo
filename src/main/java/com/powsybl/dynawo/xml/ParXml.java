@@ -53,7 +53,8 @@ public final class ParXml {
                         writer.writeStartElement(DYN_URI, "set");
                         writer.writeAttribute("id", dynawoModel.getParameterSetId());
                     }
-                    writeParameter(writer, "DOUBLE", "weight_gen_" + index, Double.toString(WEIGHT));
+                    double weight = WEIGHT; // Change it by gen.H * gen.SNOM
+                    writeParameter(writer, "DOUBLE", "weight_gen_" + index, Double.toString(weight));
                 }
             }
             if (index >= 0) {
