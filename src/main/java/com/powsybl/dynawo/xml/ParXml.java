@@ -21,7 +21,7 @@ import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
 import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynawo.DynawoContext;
 import com.powsybl.dynawo.dyd.AbstractBlackBoxModel;
-import com.powsybl.dynawo.dyd.DYNModelOmegaRef;
+import com.powsybl.dynawo.dyd.OmegaRef;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -47,7 +47,7 @@ public final class ParXml {
             int index = -1;
             for (DynamicModel model : context.getDynamicModels()) {
                 AbstractBlackBoxModel dynawoModel = (AbstractBlackBoxModel) model;
-                if (dynawoModel instanceof DYNModelOmegaRef) {
+                if (dynawoModel instanceof OmegaRef) {
                     index = xmlContext.getIndex(dynawoModel.getLib(), true);
                     if (index == 0) {
                         writer.writeStartElement(DYN_URI, "set");
