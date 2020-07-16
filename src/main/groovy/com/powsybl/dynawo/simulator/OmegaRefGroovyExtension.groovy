@@ -22,13 +22,12 @@ import com.powsybl.dynawo.dyd.OmegaRef
 @AutoService(DynamicModelGroovyExtension.class)
 class OmegaRefGroovyExtension implements DynamicModelGroovyExtension {
 
-    static class DYNModelOmegaRefSpec {
+    static class OmegaRefSpec {
         String generatorDynamicModelId
 
         void generatorDynamicModelId(String generatorDynamicModelId) {
             this.generatorDynamicModelId = generatorDynamicModelId
         }
-
     }
 
     String getName() {
@@ -38,17 +37,16 @@ class OmegaRefGroovyExtension implements DynamicModelGroovyExtension {
     void load(Binding binding, Consumer<DynamicModel> consumer) {
         binding.OmegaRef = { Closure<Void> closure ->
             def cloned = closure.clone()
-            DYNModelOmegaRefSpec dynModelOmegaRefSpec = new DYNModelOmegaRefSpec()
+            OmegaRefSpec omegaRefSpec = new OmegaRefSpec()
 
-            cloned.delegate = dynModelOmegaRefSpec
+            cloned.delegate = omegaRefSpec
             cloned()
 
-            if (!dynModelOmegaRefSpec.generatorDynamicModelId) {
+            if (!omegaRefSpec.generatorDynamicModelId) {
                 throw new DslException("'generatorDynamicModelId' field is not set")
             }
 
-            consumer.accept(new OmegaRef(dynModelOmegaRefSpec.generatorDynamicModelId));
+            consumer.accept(new OmegaRef(omegaRefSpec.generatorDynamicModelId));
         }
     }
-
 }
