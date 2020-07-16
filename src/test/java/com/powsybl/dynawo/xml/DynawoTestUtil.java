@@ -19,12 +19,16 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
+import junit.framework.AssertionFailedError;
 import org.junit.Before;
+import org.junit.Rule;
+import org.junit.rules.ExpectedException;
 import org.xml.sax.SAXException;
 
 import com.powsybl.commons.AbstractConverterTest;
 import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynamicsimulation.DynamicModel;
+import com.powsybl.dynawo.dyd.OmegaRef;
 import com.powsybl.dynawo.dyd.GeneratorSynchronousFourWindingsProportionalRegulations;
 import com.powsybl.dynawo.dyd.LoadAlphaBeta;
 import com.powsybl.dynawo.simulator.DynawoCurve;
@@ -39,12 +43,15 @@ import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
  */
 public class DynawoTestUtil extends AbstractConverterTest {
 
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
+
     protected Network network;
     protected List<DynamicModel> dynamicModels;
     protected List<Curve> curves;
 
     @Before
-    public void setup() throws IOException {
+    public void setup() {
 
         network = createEurostagTutorialExample1WithMoreLoads();
 
@@ -66,6 +73,7 @@ public class DynawoTestUtil extends AbstractConverterTest {
         });
         network.getGeneratorStream().forEach(g -> {
             dynamicModels.add(new GeneratorSynchronousFourWindingsProportionalRegulations("BBM_" + g.getId(), g.getId(), "default"));
+            dynamicModels.add(new OmegaRef("BBM_" + g.getId()));
         });
     }
 
@@ -105,5 +113,18 @@ public class DynawoTestUtil extends AbstractConverterTest {
             .setTargetQ(0.5)
             .add();
         return network;
+    }
+
+    public static <T extends Throwable> T assertThrows(Class<T> expectedType, Runnable runnable) {
+        try {
+            runnable.run();
+        } catch (Throwable actualException) {
+            if (expectedType.isInstance(actualException)) {
+                return (T) actualException;
+            } else {
+                throw new AssertionFailedError(String.format("Expected %s to be thrown, but %s was thrown", expectedType.getCanonicalName(), actualException.getClass().getCanonicalName()));
+            }
+        }
+        throw new AssertionFailedError(String.format("Expected %s to be thrown, but nothing was thrown.", expectedType.getCanonicalName()));
     }
 }
