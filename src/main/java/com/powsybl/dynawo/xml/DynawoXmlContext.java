@@ -6,11 +6,16 @@
  */
 package com.powsybl.dynawo.xml;
 
-import java.nio.file.Paths;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import com.powsybl.dynawo.DynawoContext;
+import com.powsybl.dynawo.dyd.AbstractBlackBoxModel;
+import com.powsybl.dynawo.dyd.OmegaRef;
+
+import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -21,9 +26,16 @@ public class DynawoXmlContext {
 
     private final Map<String, AtomicInteger> counters = new HashMap<>();
 
+    private final Map<String, AbstractBlackBoxModel> blackBoxModels;
+
     public DynawoXmlContext(DynawoContext context) {
         Objects.requireNonNull(context);
         this.parFile = Paths.get(context.getDynawoParameters().getParametersFile()).getFileName().toString();
+        this.blackBoxModels = context.getDynamicModels().stream()
+                .filter(AbstractBlackBoxModel.class::isInstance)
+                .map(AbstractBlackBoxModel.class::cast)
+                .filter(bbm -> !bbm.getDynamicModelId().equals(OmegaRef.OMEGA_REF_ID))
+                .collect(Collectors.toMap(AbstractBlackBoxModel::getDynamicModelId, value -> value));
     }
 
     public String getParFile() {
@@ -33,5 +45,9 @@ public class DynawoXmlContext {
     public int getIndex(String modelType, boolean increment) {
         AtomicInteger counter = counters.computeIfAbsent(modelType, k -> new AtomicInteger());
         return increment ? counter.getAndIncrement() : counter.get();
+    }
+
+    public AbstractBlackBoxModel getBlackBoxModel(String dynamicModelId) {
+        return blackBoxModels.get(dynamicModelId);
     }
 }
