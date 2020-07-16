@@ -12,7 +12,7 @@ import com.google.auto.service.AutoService
 import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
-import com.powsybl.dynawo.dyd.DYNModelOmegaRef
+import com.powsybl.dynawo.dyd.OmegaRef
 
 /**
  * An implementation of {@link DynamicModelGroovyExtension} that adds the <pre>DYNModelOmegaRef</pre> keyword to the DSL
@@ -20,7 +20,7 @@ import com.powsybl.dynawo.dyd.DYNModelOmegaRef
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class DYNModelOmegaRefGroovyExtension implements DynamicModelGroovyExtension {
+class OmegaRefGroovyExtension implements DynamicModelGroovyExtension {
 
     static class DYNModelOmegaRefSpec {
         String generatorDynamicModelId
@@ -47,7 +47,7 @@ class DYNModelOmegaRefGroovyExtension implements DynamicModelGroovyExtension {
                 throw new DslException("'generatorDynamicModelId' field is not set")
             }
 
-            consumer.accept(new DYNModelOmegaRef(dynModelOmegaRefSpec.generatorDynamicModelId));
+            consumer.accept(new OmegaRef(dynModelOmegaRefSpec.generatorDynamicModelId));
         }
     }
 

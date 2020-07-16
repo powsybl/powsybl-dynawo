@@ -6,20 +6,6 @@
  */
 package com.powsybl.dynawo.simulator;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.io.IOException;
-import java.nio.file.FileSystem;
-import java.nio.file.Files;
-import java.util.List;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
 import com.powsybl.dynamicsimulation.DynamicModel;
@@ -28,22 +14,31 @@ import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension;
 import com.powsybl.dynamicsimulation.groovy.GroovyDynamicModelsSupplier;
 import com.powsybl.dynamicsimulation.groovy.GroovyExtension;
 import com.powsybl.dynawo.dyd.AbstractBlackBoxModel;
-import com.powsybl.dynawo.dyd.DYNModelOmegaRef;
 import com.powsybl.dynawo.dyd.GeneratorSynchronousFourWindingsProportionalRegulations;
 import com.powsybl.dynawo.dyd.LoadAlphaBeta;
+import com.powsybl.dynawo.dyd.OmegaRef;
+import com.powsybl.dynawo.xml.DynawoTestUtil;
 import com.powsybl.iidm.network.Generator;
 import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.Load;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.io.IOException;
+import java.nio.file.FileSystem;
+import java.nio.file.Files;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 public class DynawoGroovyDynamicModelsSupplierTest {
-
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
 
     private FileSystem fileSystem;
     private Network network;
@@ -85,7 +80,7 @@ public class DynawoGroovyDynamicModelsSupplierTest {
     private boolean validateExtension(DynamicModelGroovyExtension extension) {
         boolean isLoadExtension = extension instanceof LoadAlphaBetaGroovyExtension;
         boolean isGeneratorExtension = extension instanceof GeneratorSynchronousFourWindingsProportionalRegulationsGroovyExtension;
-        boolean isOmegaRefExtension = extension instanceof DYNModelOmegaRefGroovyExtension;
+        boolean isOmegaRefExtension = extension instanceof OmegaRefGroovyExtension;
 
         return isLoadExtension || isGeneratorExtension || isOmegaRefExtension;
     }
@@ -103,9 +98,9 @@ public class DynawoGroovyDynamicModelsSupplierTest {
             assertEquals("BBM_" + identifiable.getId(), blackBoxModel.getDynamicModelId());
             assertEquals("default", blackBoxModel.getParameterSetId());
             assertTrue(identifiable instanceof Generator);
-        } else if (blackBoxModel instanceof DYNModelOmegaRef) {
+        } else if (blackBoxModel instanceof OmegaRef) {
             assertEquals("OMEGA_REF", blackBoxModel.getDynamicModelId());
-            assertEquals("", blackBoxModel.getStaticId());
+            DynawoTestUtil.assertThrows(UnsupportedOperationException.class, blackBoxModel::getStaticId);
             assertEquals("OMEGA_REF", blackBoxModel.getParameterSetId());
         }
     }
