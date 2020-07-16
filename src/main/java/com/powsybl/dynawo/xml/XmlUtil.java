@@ -9,7 +9,9 @@ package com.powsybl.dynawo.xml;
 
 import com.powsybl.dynawo.DynawoContext;
 
+import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 import java.io.IOException;
 import java.io.Writer;
@@ -28,6 +30,65 @@ import static com.powsybl.dynawo.xml.DynawoXmlConstants.DYN_URI;
 public final class XmlUtil {
 
     private XmlUtil() {
+    }
+
+    public interface XmlEventHandler {
+
+        void onStartElement() throws XMLStreamException;
+    }
+
+    /**
+     * An richer event handler which give element depth with each start event.
+     */
+    public interface XmlEventHandlerWithDepth {
+
+        void onStartElement(int elementDepth) throws XMLStreamException;
+    }
+
+    public static String readUntilEndElement(String endElementName, XMLStreamReader reader, XmlEventHandler eventHandler) throws XMLStreamException {
+        return readUntilEndElementWithDepth(endElementName, reader, elementDepth -> {
+            if (eventHandler != null) {
+                eventHandler.onStartElement();
+            }
+        });
+    }
+
+    public static String readUntilEndElementWithDepth(String endElementName, XMLStreamReader reader, XmlEventHandlerWithDepth eventHandler) throws XMLStreamException {
+        Objects.requireNonNull(endElementName);
+        Objects.requireNonNull(reader);
+
+        String text = null;
+        int event;
+        int depth = 0;
+        while (!((event = reader.next()) == XMLStreamConstants.END_ELEMENT
+                && reader.getLocalName().equals(endElementName))) {
+            text = null;
+            switch (event) {
+                case XMLStreamConstants.START_ELEMENT:
+                    if (eventHandler != null) {
+                        String startLocalName = reader.getLocalName();
+                        eventHandler.onStartElement(depth);
+                        // if handler has already consumed end element we must decrease the depth
+                        if (reader.getEventType() == XMLStreamConstants.END_ELEMENT && reader.getLocalName().equals(startLocalName)) {
+                            depth--;
+                        }
+                    }
+                    depth++;
+                    break;
+
+                case XMLStreamConstants.END_ELEMENT:
+                    depth--;
+                    break;
+
+                case XMLStreamConstants.CHARACTERS:
+                    text = reader.getText();
+                    break;
+
+                default:
+                    break;
+            }
+        }
+        return text;
     }
 
     public static void write(Path file, DynawoContext context, String elementName, BiConsumer<XMLStreamWriter, DynawoContext> write) throws IOException, XMLStreamException {
