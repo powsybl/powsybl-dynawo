@@ -3,6 +3,6 @@
     <dyn:set id="OMEGA_REF">
         <dyn:par type="DOUBLE" name="weight_gen_0" value="10.0"/>
         <dyn:par type="DOUBLE" name="weight_gen_1" value="10.0"/>
-        <dyn:par type="INT" name="nbGen" value="1"/>
+        <dyn:par type="INT" name="nbGen" value="2"/>
     </dyn:set>
 </dyn:parametersSet>

@@ -60,7 +60,7 @@ public final class ParXml {
                 }
             }
             if (index >= 0) {
-                writeParameter(writer, "INT", "nbGen", Integer.toString(index));
+                writeParameter(writer, "INT", "nbGen", Integer.toString(index + 1));
                 writer.writeEndElement();
             }
         } catch (XMLStreamException e) {
