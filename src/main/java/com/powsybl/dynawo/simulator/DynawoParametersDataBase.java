@@ -6,80 +6,85 @@
  */
 package com.powsybl.dynawo.simulator;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.io.UncheckedIOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
-
-import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
-import com.powsybl.dynawo.DynawoContext;
-import com.powsybl.dynawo.xml.XmlUtil;
+import com.powsybl.dynawo.xml.ParXml;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 public class DynawoParametersDataBase {
 
-    public static DynawoParametersDataBase load() {
-        return load(Paths.get("./models.par"));
+    private static Path defaultParametersFile;
+
+    public static void setDefaultParametersFile(Path parametersFile) {
+        defaultParametersFile = parametersFile;
     }
 
-    public static DynawoParametersDataBase load(DynawoContext context) {
-        return load(Paths.get(context.getDynawoParameters().getParametersFile()));
+    public static DynawoParametersDataBase load() {
+        return ParXml.read(defaultParametersFile);
     }
 
     public static DynawoParametersDataBase load(Path parametersFile) {
-        DynawoParametersDataBase parametersDataBase = new DynawoParametersDataBase();
-        if (Files.exists(parametersFile)) {
-            try (Reader reader = Files.newBufferedReader(parametersFile, StandardCharsets.UTF_8)) {
-                XMLStreamReader xmlReader = XMLInputFactory.newInstance().createXMLStreamReader(reader);
-                try {
-                    loadXML(xmlReader, parametersDataBase);
-                } finally {
-                    xmlReader.close();
-                }
-            } catch (IOException e) {
-                throw new UncheckedIOException(e);
-            } catch (XMLStreamException e) {
-                throw new UncheckedXmlStreamException(e);
-            }
-        }
-        return parametersDataBase;
+        return ParXml.read(parametersFile);
     }
 
-    private static void loadXML(XMLStreamReader xmlReader, DynawoParametersDataBase parametersDataBase) {
-        try {
-            XmlUtil.readUntilEndElement("parametersSet", xmlReader, () -> {
-                if (xmlReader.getLocalName().equals("set")) {
-                    String parameterSetId = xmlReader.getAttributeValue(null, "id");
-                    ParameterSet parameterSet = parametersDataBase.new ParameterSet();
-                    XmlUtil.readUntilEndElement("set", xmlReader, () -> {
-                        if (xmlReader.getLocalName().equals("par")) {
-                            String name = xmlReader.getAttributeValue(null, "name");
-                            String value = xmlReader.getAttributeValue(null, "value");
-                            parameterSet.addParameter(name, value);
-                        } else  if (xmlReader.getLocalName().equals("reference")) {
-                            String name = xmlReader.getAttributeValue(null, "name");
-                            String value = xmlReader.getAttributeValue(null, "origName");
-                            parameterSet.addParameter(name, value);
-                        }
-                    });
-                    parametersDataBase.addParameterSet(parameterSetId, parameterSet);
-                }
-            });
-        } catch (XMLStreamException e) {
-            throw new UncheckedXmlStreamException(e);
+    public static enum ParameterType {
+        DOUBLE, INT, BOOL, STRING;
+    }
+
+    public static class ParameterBase {
+        public ParameterBase(String name, ParameterType type) {
+            this.name = name;
+            this.type = type;
         }
+
+        public String getName() {
+            return name;
+        }
+
+        public ParameterType getType() {
+            return type;
+        }
+
+        private final String name;
+        private final ParameterType type;
+    }
+
+    public static class Parameter extends ParameterBase {
+        public Parameter(String name, ParameterType type, String value) {
+            super(name, type);
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        private final String value;
+    }
+
+    public class Reference extends ParameterBase {
+        public Reference(String name, ParameterType type, String origData, String origName) {
+            super(name, type);
+            this.origData = origData;
+            this.origName = origName;
+        }
+
+        public String getOrigData() {
+            return origData;
+        }
+
+        public String getOrigName() {
+            return origName;
+        }
+
+        private final String origData;
+        private final String origName;
+        // TODO There is also an optional componentId, not yet supported
     }
 
     public class ParameterSet {
@@ -88,18 +93,46 @@ public class DynawoParametersDataBase {
             this.parameters = new HashMap<>();
         }
 
-        public void addParameter(String name, String value) {
+        public void addParameter(String name, ParameterType type, String value) {
             Objects.requireNonNull(name);
+            Objects.requireNonNull(type);
             Objects.requireNonNull(value);
 
-            parameters.put(name, value);
+            parameters.put(name, new Parameter(name, type, value));
         }
 
-        public String getParameter(String name) {
-            return parameters.get(name);
+        public void addReference(String name, ParameterType type, String origData, String origName) {
+            Objects.requireNonNull(name);
+            Objects.requireNonNull(type);
+            Objects.requireNonNull(origData);
+            Objects.requireNonNull(origName);
+
+            parameters.put(name, new Reference(name, type, origData, origName));
         }
 
-        private Map<String, String> parameters;
+        public Parameter getParameter(String name) {
+            ParameterBase p = parameters.get(name);
+            if (p != null && p instanceof Parameter) {
+                return (Parameter) p;
+            }
+            return null;
+        }
+
+        public Reference getReference(String name) {
+            ParameterBase r = parameters.get(name);
+            if (r != null && r instanceof Reference) {
+                return (Reference) r;
+            }
+            return null;
+        }
+
+        // TODO parTable
+        // In addition to "par" (single values) and "reference" parameters
+        // there could be "parTable" elements inside a parameter set
+        // that are not yet supported
+
+        private final Map<String, ParameterBase> parameters;
+
     }
 
     public DynawoParametersDataBase() {
@@ -115,5 +148,5 @@ public class DynawoParametersDataBase {
     }
 
     private Map<String, ParameterSet> parameterSets;
-}
 
+}

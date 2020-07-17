@@ -36,14 +36,14 @@ public class DynawoParametersDataBaseTest {
     public void checkParameters() {
         DynawoParametersDataBase parametersDataBase = DynawoParametersDataBase.load(fileSystem.getPath("/models.par"));
         assertNotNull(parametersDataBase.getParameterSet("LoadAlphaBeta"));
-        assertEquals("1.5", parametersDataBase.getParameterSet("LoadAlphaBeta").getParameter("load_alpha"));
-        assertEquals("2.5", parametersDataBase.getParameterSet("LoadAlphaBeta").getParameter("load_beta"));
-        assertEquals("p_pu", parametersDataBase.getParameterSet("LoadAlphaBeta").getParameter("load_P0Pu"));
-        assertEquals("q_pu", parametersDataBase.getParameterSet("LoadAlphaBeta").getParameter("load_Q0Pu"));
+        assertEquals("1.5", parametersDataBase.getParameterSet("LoadAlphaBeta").getParameter("load_alpha").getValue());
+        assertEquals("2.5", parametersDataBase.getParameterSet("LoadAlphaBeta").getParameter("load_beta").getValue());
+        assertEquals("p_pu", parametersDataBase.getParameterSet("LoadAlphaBeta").getReference("load_P0Pu").getOrigName());
+        assertEquals("q_pu", parametersDataBase.getParameterSet("LoadAlphaBeta").getReference("load_Q0Pu").getOrigName());
         assertNotNull(parametersDataBase.getParameterSet("GeneratorSynchronousFourWindingsProportionalRegulations"));
-        assertEquals("5.4000000000000004", parametersDataBase.getParameterSet("GeneratorSynchronousFourWindingsProportionalRegulations").getParameter("generator_H"));
-        assertEquals("1211", parametersDataBase.getParameterSet("GeneratorSynchronousFourWindingsProportionalRegulations").getParameter("generator_SNom"));
-        assertEquals("p_pu", parametersDataBase.getParameterSet("GeneratorSynchronousFourWindingsProportionalRegulations").getParameter("generator_P0Pu"));
-        assertEquals("q_pu", parametersDataBase.getParameterSet("GeneratorSynchronousFourWindingsProportionalRegulations").getParameter("generator_Q0Pu"));
+        assertEquals("5.4000000000000004", parametersDataBase.getParameterSet("GeneratorSynchronousFourWindingsProportionalRegulations").getParameter("generator_H").getValue());
+        assertEquals("1211", parametersDataBase.getParameterSet("GeneratorSynchronousFourWindingsProportionalRegulations").getParameter("generator_SNom").getValue());
+        assertEquals("p_pu", parametersDataBase.getParameterSet("GeneratorSynchronousFourWindingsProportionalRegulations").getReference("generator_P0Pu").getOrigName());
+        assertEquals("q_pu", parametersDataBase.getParameterSet("GeneratorSynchronousFourWindingsProportionalRegulations").getReference("generator_Q0Pu").getOrigName());
     }
 }

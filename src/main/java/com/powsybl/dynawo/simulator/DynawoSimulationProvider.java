@@ -90,6 +90,19 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
         network.getVariantManager().setWorkingVariant(workingVariantId);
         ExecutionEnvironment execEnv = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, dynawoConfig.isDebug());
 
+        // FIXME Discuss/Document a critical point here:
+        // We want to provide access to DynawoParametersDataBase
+        // to groovy extensions for dynamic models and related scripts
+        // We want to do this through a groovy extension that loads
+        // the DynawoParametersDataBase using a static method load()
+        // (we don't access to DynawoContext in the extensions)
+        // We have here, stored in DynawoSimulationParameters,
+        // the name of the file that should be used to read the database
+        // We have to set this attribute in a static way before
+        // the dynamic models supplier is called
+        // (that is the time where the groovy extensions will be loaded)
+        DynawoParametersDataBase.setDefaultParametersFile(Paths.get(dynawoParameters.getParametersFile()));
+
         DynawoContext context = new DynawoContext(network, dynamicModelsSupplier.get(network), curvesSupplier.get(network), parameters, dynawoParameters);
         return computationManager.execute(execEnv, new DynawoHandler(context));
     }
