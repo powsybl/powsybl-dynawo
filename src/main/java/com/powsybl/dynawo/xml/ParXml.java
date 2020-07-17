@@ -28,19 +28,19 @@ import com.powsybl.dynawo.dyd.OmegaRef;
  */
 public final class ParXml {
 
-    private static double WEIGHT = 10.0;
+    private static double OMEGA_REF_TEMP_WEIGHT_NOT_CALCULATED = 10.0;
 
     private ParXml() {
     }
 
     public static void write(Path workingDir, DynawoContext context) throws IOException, XMLStreamException {
         Objects.requireNonNull(workingDir);
-        Path file = workingDir.resolve(OMEGAREF_PAR_FILENAME);
 
-        XmlUtil.write(file, context, "parametersSet", ParXml::write);
+        Path file = workingDir.resolve(OMEGAREF_PAR_FILENAME);
+        XmlUtil.write(file, context, "parametersSet", ParXml::writeOmegaRef);
     }
 
-    private static void write(XMLStreamWriter writer, DynawoContext context) {
+    private static void writeOmegaRef(XMLStreamWriter writer, DynawoContext context) {
         DynawoXmlContext xmlContext = new DynawoXmlContext(context);
 
         try {
@@ -53,7 +53,9 @@ public final class ParXml {
                         writer.writeStartElement(DYN_URI, "set");
                         writer.writeAttribute("id", dynawoModel.getParameterSetId());
                     }
-                    double weight = WEIGHT; // Change it by gen.H * gen.SNOM
+                    // FIXME Change it by gen.H * gen.SNOM
+                    // when parameters from generator dynamic model are available
+                    double weight = OMEGA_REF_TEMP_WEIGHT_NOT_CALCULATED;
                     writeParameter(writer, "DOUBLE", "weight_gen_" + index, Double.toString(weight));
                 }
             }
