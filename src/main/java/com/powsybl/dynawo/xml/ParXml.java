@@ -18,7 +18,6 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import com.google.common.base.Optional;
 import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
 import com.powsybl.dynawo.simulator.DynawoParametersDataBase;
 import com.powsybl.dynawo.simulator.DynawoParametersDataBase.ParameterSet;
@@ -64,8 +63,7 @@ public final class ParXml {
                             String value = xmlReader.getAttributeValue(null, "value");
                             parameterSet.addParameter(name, type, value);
                         } else if (xmlReader.getLocalName().equals("reference")) {
-                            String origData = Optional.fromNullable(xmlReader.getAttributeValue(null, "origName"))
-                                    .or("IIDM");
+                            String origData = xmlReader.getAttributeValue(null, "origData");
                             String origName = xmlReader.getAttributeValue(null, "origName");
                             parameterSet.addReference(name, type, origData, origName);
                         }
