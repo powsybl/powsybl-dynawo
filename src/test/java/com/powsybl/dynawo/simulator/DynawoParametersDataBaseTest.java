@@ -40,10 +40,14 @@ public class DynawoParametersDataBaseTest {
         assertEquals("2.5", parametersDataBase.getParameterSet("LoadAlphaBeta").getParameter("load_beta").getValue());
         assertEquals("p_pu", parametersDataBase.getParameterSet("LoadAlphaBeta").getReference("load_P0Pu").getOrigName());
         assertEquals("q_pu", parametersDataBase.getParameterSet("LoadAlphaBeta").getReference("load_Q0Pu").getOrigName());
+        assertEquals("IIDM", parametersDataBase.getParameterSet("LoadAlphaBeta").getReference("load_P0Pu").getOrigData());
+        assertEquals("IIDM", parametersDataBase.getParameterSet("LoadAlphaBeta").getReference("load_Q0Pu").getOrigData());
         assertNotNull(parametersDataBase.getParameterSet("GeneratorSynchronousFourWindingsProportionalRegulations"));
         assertEquals("5.4000000000000004", parametersDataBase.getParameterSet("GeneratorSynchronousFourWindingsProportionalRegulations").getParameter("generator_H").getValue());
         assertEquals("1211", parametersDataBase.getParameterSet("GeneratorSynchronousFourWindingsProportionalRegulations").getParameter("generator_SNom").getValue());
         assertEquals("p_pu", parametersDataBase.getParameterSet("GeneratorSynchronousFourWindingsProportionalRegulations").getReference("generator_P0Pu").getOrigName());
         assertEquals("q_pu", parametersDataBase.getParameterSet("GeneratorSynchronousFourWindingsProportionalRegulations").getReference("generator_Q0Pu").getOrigName());
+        assertEquals("IIDM", parametersDataBase.getParameterSet("GeneratorSynchronousFourWindingsProportionalRegulations").getReference("generator_P0Pu").getOrigData());
+        assertEquals("IIDM", parametersDataBase.getParameterSet("GeneratorSynchronousFourWindingsProportionalRegulations").getReference("generator_Q0Pu").getOrigData());
     }
 }
