@@ -26,20 +26,15 @@ jobs:
           java-version: 11
 
       - name: Build and install powsybl-core with Maven
-        if: matrix.os == 'ubuntu-latest'
-        run: mvn --batch-mode -Pjacoco -DskipTests=true --file ../powsybl-core/pom.xml install
-
-      - name: Build and install powsybl-core with Maven
-        if: matrix.os != 'ubuntu-latest'
         run: mvn --batch-mode -DskipTests=true --file ../powsybl-core/pom.xml install
 
       - name: Build with Maven
         if: matrix.os == 'ubuntu-latest'
-        run: mvn --batch-mode -Pjacoco package
+        run: mvn --batch-mode -Pjacoco install
 
       - name: Build with Maven
         if: matrix.os != 'ubuntu-latest'
-        run: mvn --batch-mode package
+        run: mvn --batch-mode install
 
       - name: Run SonarCloud analysis
         if: matrix.os == 'ubuntu-latest'
