@@ -14,6 +14,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import javax.xml.XMLConstants;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -35,7 +36,10 @@ public final class ParXml {
         DynawoParametersDataBase parametersDataBase = new DynawoParametersDataBase();
         if (Files.exists(parametersFile)) {
             try (Reader reader = Files.newBufferedReader(parametersFile, StandardCharsets.UTF_8)) {
-                XMLStreamReader xmlReader = XMLInputFactory.newInstance().createXMLStreamReader(reader);
+                XMLInputFactory factory = XMLInputFactory.newInstance();
+                factory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+                factory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+                XMLStreamReader xmlReader = factory.createXMLStreamReader(reader);
                 try {
                     read(xmlReader, parametersDataBase);
                 } finally {
