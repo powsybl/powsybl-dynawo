@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -30,6 +31,11 @@ public class DynawoParametersDataBaseTest {
     public void setUp() throws IOException {
         fileSystem = Jimfs.newFileSystem(Configuration.unix());
         Files.copy(getClass().getResourceAsStream("/models.par"), fileSystem.getPath("/models.par"));
+    }
+
+    @After
+    public void tearDown() throws IOException {
+        fileSystem.close();
     }
 
     @Test
