@@ -14,6 +14,7 @@ import com.powsybl.dynawo.DynawoContext;
 import com.powsybl.dynawo.xml.CurvesXml;
 import com.powsybl.dynawo.xml.DydXml;
 import com.powsybl.dynawo.xml.JobsXml;
+import com.powsybl.dynawo.xml.ParametersXml;
 import com.powsybl.iidm.export.Exporters;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.xml.IidmXmlVersion;
@@ -126,6 +127,7 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
 
                 JobsXml.write(workingDir, context);
                 DydXml.write(workingDir, context);
+                ParametersXml.write(workingDir, context);
                 if (context.withCurves()) {
                     CurvesXml.write(workingDir, context);
                 }

@@ -41,6 +41,8 @@ public abstract class AbstractBlackBoxModel implements DynamicModel {
 
     public abstract void write(XMLStreamWriter writer, DynawoXmlContext context) throws XMLStreamException;
 
+    public abstract void writeParameters(XMLStreamWriter writer, DynawoXmlContext context) throws XMLStreamException;
+
     private final String dynamicModelId;
     private final String staticId;
     private final String parameterSetId;

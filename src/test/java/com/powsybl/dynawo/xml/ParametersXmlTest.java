@@ -29,7 +29,7 @@ public class ParametersXmlTest extends DynawoTestUtil {
         DynawoContext context = new DynawoContext(network, dynamicModels, curves, parameters, dynawoParameters);
 
         DydXml.write(tmpDir, context);
-        ParXml.write(tmpDir, context);
+        ParametersXml.write(tmpDir, context);
         validate("parameters.xsd", "omega_ref.xml", tmpDir.resolve(DynawoConstants.OMEGAREF_PAR_FILENAME));
     }
 

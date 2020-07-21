@@ -64,4 +64,8 @@ public class GeneratorSynchronousFourWindingsProportionalRegulations extends Abs
         // Write the connect object
         MacroConnectorXml.writeMacroConnect(writer, MACRO_CONNECTOR_PREFIX + getLib(), getDynamicModelId(), NETWORK);
     }
+
+    @Override
+    public void writeParameters(XMLStreamWriter writer, DynawoXmlContext context) throws XMLStreamException {
+    }
 }
