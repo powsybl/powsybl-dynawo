@@ -16,24 +16,27 @@ import java.nio.file.Path;
 
 import javax.xml.XMLConstants;
 import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
-import com.powsybl.dynawo.simulator.DynawoParametersDataBase;
-import com.powsybl.dynawo.simulator.DynawoParametersDataBase.ParameterSet;
-import com.powsybl.dynawo.simulator.DynawoParametersDataBase.ParameterType;
+import com.powsybl.commons.xml.XmlUtil;
+import com.powsybl.dynawo.simulator.DynawoParametersDatabase;
+import com.powsybl.dynawo.simulator.DynawoParametersDatabase.ParameterSet;
+import com.powsybl.dynawo.simulator.DynawoParametersDatabase.ParameterType;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public final class ParXml {
+public final class PararametersXml {
 
-    private ParXml() {
+    private PararametersXml() {
     }
 
-    public static DynawoParametersDataBase read(Path parametersFile) {
-        DynawoParametersDataBase parametersDataBase = new DynawoParametersDataBase();
+    public static DynawoParametersDatabase read(Path parametersFile) throws IOException {
+        DynawoParametersDatabase parametersDatabase = new DynawoParametersDatabase();
         if (Files.exists(parametersFile)) {
             try (Reader reader = Files.newBufferedReader(parametersFile, StandardCharsets.UTF_8)) {
                 XMLInputFactory factory = XMLInputFactory.newInstance();
@@ -41,7 +44,7 @@ public final class ParXml {
                 factory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
                 XMLStreamReader xmlReader = factory.createXMLStreamReader(reader);
                 try {
-                    read(xmlReader, parametersDataBase);
+                    read(xmlReader, parametersDatabase);
                 } finally {
                     xmlReader.close();
                 }
@@ -50,29 +53,35 @@ public final class ParXml {
             } catch (XMLStreamException e) {
                 throw new UncheckedXmlStreamException(e);
             }
+        } else {
+            throw new IOException(parametersFile + " not found");
         }
-        return parametersDataBase;
+        return parametersDatabase;
     }
 
-    private static void read(XMLStreamReader xmlReader, DynawoParametersDataBase parametersDataBase) {
+    private static void read(XMLStreamReader xmlReader, DynawoParametersDatabase parametersDatabase) {
         try {
+            int state = xmlReader.next();
+            while (state == XMLStreamConstants.COMMENT) {
+                state = xmlReader.next();
+            }
             XmlUtil.readUntilEndElement("parametersSet", xmlReader, () -> {
                 if (xmlReader.getLocalName().equals("set")) {
                     String parameterSetId = xmlReader.getAttributeValue(null, "id");
-                    ParameterSet parameterSet = parametersDataBase.new ParameterSet();
+                    ParameterSet parameterSet = parametersDatabase.new ParameterSet();
                     XmlUtil.readUntilEndElement("set", xmlReader, () -> {
                         String name = xmlReader.getAttributeValue(null, "name");
                         ParameterType type = ParameterType.valueOf(xmlReader.getAttributeValue(null, "type"));
                         if (xmlReader.getLocalName().equals("par")) {
                             String value = xmlReader.getAttributeValue(null, "value");
                             parameterSet.addParameter(name, type, value);
-                        } else if (xmlReader.getLocalName().equals("reference")) {
-                            String origData = xmlReader.getAttributeValue(null, "origData");
-                            String origName = xmlReader.getAttributeValue(null, "origName");
-                            parameterSet.addReference(name, type, origData, origName);
+                        } else {
+                            throw new PowsyblException("Unexpected element: " + xmlReader.getLocalName());
                         }
                     });
-                    parametersDataBase.addParameterSet(parameterSetId, parameterSet);
+                    parametersDatabase.addParameterSet(parameterSetId, parameterSet);
+                } else {
+                    throw new PowsyblException("Unexpected element: " + xmlReader.getLocalName());
                 }
             });
         } catch (XMLStreamException e) {

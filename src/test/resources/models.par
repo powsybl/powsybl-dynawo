@@ -3,10 +3,6 @@
     <set id="LoadAlphaBeta">
         <par type="DOUBLE" name="load_alpha" value="1.5"/>
         <par type="DOUBLE" name="load_beta" value="2.5"/>
-        <reference type="DOUBLE" name="load_P0Pu" origData="IIDM" origName="p_pu"/>
-        <reference type="DOUBLE" name="load_Q0Pu" origData="IIDM" origName="q_pu"/>
-        <reference type="DOUBLE" name="load_U0Pu" origData="IIDM" origName="v_pu"/>
-        <reference type="DOUBLE" name="load_UPhase0" origData="IIDM" origName="angle_pu"/>
     </set>
     <set id="GeneratorSynchronousFourWindingsProportionalRegulations">
         <par type="INT" name="generator_ExcitationPu" value="1"/>
@@ -49,9 +45,5 @@
         <par type="DOUBLE" name="governor_PNom" value="1090"/>
         <par type="DOUBLE" name="URef_ValueIn" value="0"/>
         <par type="DOUBLE" name="Pm_ValueIn" value="0"/>
-        <reference name="generator_P0Pu" origData="IIDM" origName="p_pu" type="DOUBLE"/>
-        <reference name="generator_Q0Pu" origData="IIDM" origName="q_pu" type="DOUBLE"/>
-        <reference name="generator_U0Pu" origData="IIDM" origName="v_pu" type="DOUBLE"/>
-        <reference name="generator_UPhase0" origData="IIDM" origName="angle_pu" type="DOUBLE"/>
     </set>
 </parametersSet>
