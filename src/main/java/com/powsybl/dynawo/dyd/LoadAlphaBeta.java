@@ -67,5 +67,6 @@ public class LoadAlphaBeta extends AbstractBlackBoxModel {
 
     @Override
     public void writeParameters(XMLStreamWriter writer, DynawoXmlContext context) throws XMLStreamException {
+        //TODO: write LoadAlfaBeta parameters and references
     }
 }

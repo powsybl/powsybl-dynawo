@@ -67,5 +67,6 @@ public class GeneratorSynchronousFourWindingsProportionalRegulations extends Abs
 
     @Override
     public void writeParameters(XMLStreamWriter writer, DynawoXmlContext context) throws XMLStreamException {
+        //TODO: write GeneratorSynchronousFourWindingsProportionalRegulations parameters and references
     }
 }
