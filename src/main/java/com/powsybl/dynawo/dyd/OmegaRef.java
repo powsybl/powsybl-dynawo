@@ -34,7 +34,7 @@ public class OmegaRef extends AbstractBlackBoxModel {
     private static final String OMEGA_REF_PARAMETER_SET_ID = "OMEGA_REF";
     private static final String MACRO_CONNECTOR_TO_GENERATOR_SUFFIX = "ToGenerator";
     private static final String MACRO_CONNECTOR_TO_NUMCCMACHINE_SUFFIX = "ToNumCCMachine";
-    private static double OMEGA_REF_TEMP_WEIGHT_NOT_CALCULATED = 10.0;
+    private static final double OMEGA_REF_TEMP_WEIGHT_NOT_CALCULATED = 10.0;
 
     public OmegaRef(String generatorDynamicModelId) {
         super(OMEGA_REF_ID, "", OMEGA_REF_PARAMETER_SET_ID);
