@@ -17,7 +17,6 @@ import javax.xml.stream.XMLStreamWriter;
 import com.powsybl.dynawo.xml.DynawoXmlContext;
 import com.powsybl.dynawo.xml.MacroConnectorXml;
 import com.powsybl.dynawo.xml.MacroStaticReferenceXml;
-import com.powsybl.dynawo.xml.ParameterXml;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
