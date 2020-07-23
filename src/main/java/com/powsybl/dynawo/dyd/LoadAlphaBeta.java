@@ -67,10 +67,5 @@ public class LoadAlphaBeta extends AbstractBlackBoxModel {
 
     @Override
     public void writeParameters(XMLStreamWriter writer, DynawoXmlContext context) throws XMLStreamException {
-        //TODO: write LoadAlfaBeta parameters and references
-        // Parameter sample
-        // ParameterXml.writeParameter(writer, parameter.getType(), parameter.getName(), parameter.getValue());
-        // Hard-coded reference sample
-        // ReferenceXml.writeReference(writer, "DOUBLE", "load_P0Pu", "IIDM", "p_pu");
     }
 }
