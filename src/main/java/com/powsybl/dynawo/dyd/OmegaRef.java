@@ -9,6 +9,7 @@ package com.powsybl.dynawo.dyd;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawo.xml.DynawoXmlContext;
 import com.powsybl.dynawo.xml.MacroConnectorXml;
+import com.powsybl.dynawo.xml.ParameterXml;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -33,6 +34,7 @@ public class OmegaRef extends AbstractBlackBoxModel {
     private static final String OMEGA_REF_PARAMETER_SET_ID = "OMEGA_REF";
     private static final String MACRO_CONNECTOR_TO_GENERATOR_SUFFIX = "ToGenerator";
     private static final String MACRO_CONNECTOR_TO_NUMCCMACHINE_SUFFIX = "ToNumCCMachine";
+    private static final double OMEGA_REF_TEMP_WEIGHT_NOT_CALCULATED = 10.0;
 
     public OmegaRef(String generatorDynamicModelId) {
         super(OMEGA_REF_ID, "", OMEGA_REF_PARAMETER_SET_ID);
@@ -79,6 +81,23 @@ public class OmegaRef extends AbstractBlackBoxModel {
         // This instance of DYNModelOmegaRef has a reference to one generator, write its connect and the subsequent connect to the NETWORK model
         MacroConnectorXml.writeMacroConnect(writer, MACRO_CONNECTOR_PREFIX + getLib() + MACRO_CONNECTOR_TO_GENERATOR_SUFFIX, getDynamicModelId(), index, generatorDynamicModelId);
         MacroConnectorXml.writeMacroConnect(writer, MACRO_CONNECTOR_PREFIX + getLib() + MACRO_CONNECTOR_TO_NUMCCMACHINE_SUFFIX, getDynamicModelId(), index, NETWORK, getStaticId(context, generatorDynamicModelId));
+    }
+
+    @Override
+    public void writeParameters(XMLStreamWriter writer, DynawoXmlContext context) throws XMLStreamException {
+        int index = context.getIndex(getLib(), true);
+        if (index == 0) {
+            writer.writeStartElement(DYN_URI, "set");
+            writer.writeAttribute("id", getParameterSetId());
+            ParameterXml.writeParameter(writer, "INT", "nbGen", Long.toString(context.getOmegaRefCount()));
+        }
+        // FIXME Change it by gen.H * gen.SNOM
+        // when parameters from generator dynamic model are available
+        double weight = OMEGA_REF_TEMP_WEIGHT_NOT_CALCULATED;
+        ParameterXml.writeParameter(writer, "DOUBLE", "weight_gen_" + index, Double.toString(weight));
+        if (index == context.getOmegaRefCount() - 1) {
+            writer.writeEndElement();
+        }
     }
 
     private static String getStaticId(DynawoXmlContext context, String dynamicModelId) {
