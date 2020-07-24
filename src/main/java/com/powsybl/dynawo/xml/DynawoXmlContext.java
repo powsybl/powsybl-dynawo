@@ -28,6 +28,8 @@ public class DynawoXmlContext {
 
     private final Map<String, AbstractBlackBoxModel> blackBoxModels;
 
+    private final long omegaRefCount;
+
     public DynawoXmlContext(DynawoContext context) {
         Objects.requireNonNull(context);
         this.parFile = Paths.get(context.getDynawoParameters().getParametersFile()).getFileName().toString();
@@ -36,6 +38,10 @@ public class DynawoXmlContext {
                 .map(AbstractBlackBoxModel.class::cast)
                 .filter(bbm -> !bbm.getDynamicModelId().equals(OmegaRef.OMEGA_REF_ID))
                 .collect(Collectors.toMap(AbstractBlackBoxModel::getDynamicModelId, value -> value));
+        this.omegaRefCount = context.getDynamicModels().stream()
+            .filter(AbstractBlackBoxModel.class::isInstance)
+            .map(AbstractBlackBoxModel.class::cast)
+            .filter(bbm -> bbm.getDynamicModelId().equals(OmegaRef.OMEGA_REF_ID)).count();
     }
 
     public String getParFile() {
@@ -49,5 +55,9 @@ public class DynawoXmlContext {
 
     public AbstractBlackBoxModel getBlackBoxModel(String dynamicModelId) {
         return blackBoxModels.get(dynamicModelId);
+    }
+
+    public long getOmegaRefCount() {
+        return omegaRefCount;
     }
 }
