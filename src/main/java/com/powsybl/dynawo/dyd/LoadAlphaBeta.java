@@ -14,6 +14,7 @@ import static com.powsybl.dynawo.xml.DynawoXmlConstants.NETWORK;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
+import com.powsybl.dynawo.simulator.DynawoParametersDatabase;
 import com.powsybl.dynawo.xml.DynawoXmlContext;
 import com.powsybl.dynawo.xml.MacroConnectorXml;
 import com.powsybl.dynawo.xml.MacroStaticReferenceXml;
@@ -23,8 +24,41 @@ import com.powsybl.dynawo.xml.MacroStaticReferenceXml;
  */
 public class LoadAlphaBeta extends AbstractBlackBoxModel {
 
+    protected static class Parameters extends AbstractBlackBoxModel.Parameters {
+
+        public static AbstractBlackBoxModel.Parameters load(DynawoParametersDatabase parametersDatabase, String parameterSetId) {
+            Parameters parameters = new Parameters();
+            parameters.setLoadAlpha(parametersDatabase.getParameterSet(parameterSetId).getParameter("load_alpha").getValue());
+            parameters.setLoadBeta(parametersDatabase.getParameterSet(parameterSetId).getParameter("load_beta").getValue());
+            return parameters;
+        }
+
+        public String getLoadAlpha() {
+            return loadAlpha;
+        }
+
+        public void setLoadAlpha(String loadAlpha) {
+            this.loadAlpha = loadAlpha;
+        }
+
+        public String getLoadBeta() {
+            return loadBeta;
+        }
+
+        public void setLoadBeta(String loadBeta) {
+            this.loadBeta = loadBeta;
+        }
+
+        private String loadAlpha;
+        private String loadBeta;
+    }
+
     public LoadAlphaBeta(String dynamicModelId, String staticId, String parameterSetId) {
-        super(dynamicModelId, staticId, parameterSetId);
+        this(dynamicModelId, staticId, parameterSetId, null);
+    }
+
+    public LoadAlphaBeta(String dynamicModelId, String staticId, String parameterSetId, AbstractBlackBoxModel.Parameters parameters) {
+        super(dynamicModelId, staticId, parameterSetId, parameters);
     }
 
     @Override

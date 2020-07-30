@@ -140,7 +140,6 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
 
                 JobsXml.write(workingDir, context);
                 DydXml.write(workingDir, context);
-                ParametersXml.write(workingDir, context);
                 if (context.withCurves()) {
                     CurvesXml.write(workingDir, context);
                 }
@@ -151,11 +150,9 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
             }
         }
 
-        private void writeParametersFiles(Path workingDirectory) throws IOException {
-            Path parametersFile = Paths.get(context.getDynawoParameters().getParametersFile());
-            if (Files.exists(parametersFile)) {
-                Files.copy(parametersFile, workingDirectory.resolve(parametersFile.getFileName()), StandardCopyOption.REPLACE_EXISTING);
-            }
+        private void writeParametersFiles(Path workingDirectory) throws IOException, XMLStreamException {
+            ParametersXml.write(workingDirectory, context);
+            ParametersXml.writeOmegaRef(workingDirectory, context);
 
             Path networkParFile = Paths.get(context.getDynawoParameters().getNetwork().getParametersFile());
             if (Files.exists(networkParFile)) {

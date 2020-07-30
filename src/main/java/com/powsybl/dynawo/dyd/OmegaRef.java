@@ -37,7 +37,7 @@ public class OmegaRef extends AbstractBlackBoxModel {
     private static final double OMEGA_REF_TEMP_WEIGHT_NOT_CALCULATED = 10.0;
 
     public OmegaRef(String generatorDynamicModelId) {
-        super(OMEGA_REF_ID, "", OMEGA_REF_PARAMETER_SET_ID);
+        super(OMEGA_REF_ID, "", OMEGA_REF_PARAMETER_SET_ID, null);
         this.generatorDynamicModelId = Objects.requireNonNull(generatorDynamicModelId);
     }
 
@@ -91,9 +91,15 @@ public class OmegaRef extends AbstractBlackBoxModel {
             writer.writeAttribute("id", getParameterSetId());
             ParameterXml.writeParameter(writer, "INT", "nbGen", Long.toString(context.getOmegaRefCount()));
         }
-        // FIXME Change it by gen.H * gen.SNOM
-        // when parameters from generator dynamic model are available
+
         double weight = OMEGA_REF_TEMP_WEIGHT_NOT_CALCULATED;
+        AbstractBlackBoxModel dynamicModel = context.getBlackBoxModel(generatorDynamicModelId);
+        if (dynamicModel instanceof GeneratorSynchronousFourWindingsProportionalRegulations) {
+            GeneratorSynchronousFourWindingsProportionalRegulations.Parameters parameters = (GeneratorSynchronousFourWindingsProportionalRegulations.Parameters) dynamicModel.getParameters();
+            if (parameters != null) {
+                weight = Double.parseDouble(parameters.getGeneratorH()) * Double.parseDouble(parameters.getGeneratorSNom());
+            }
+        }
         ParameterXml.writeParameter(writer, "DOUBLE", "weight_gen_" + index, Double.toString(weight));
         if (index == context.getOmegaRefCount() - 1) {
             writer.writeEndElement();

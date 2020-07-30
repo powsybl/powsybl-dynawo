@@ -25,4 +25,12 @@ public final class ParameterXml {
         writer.writeAttribute("name", name);
         writer.writeAttribute("value", value);
     }
+
+    public static void writeReference(XMLStreamWriter writer, String type, String name, String origData, String origName) throws XMLStreamException {
+        writer.writeEmptyElement(DYN_URI, "par");
+        writer.writeAttribute("type", type);
+        writer.writeAttribute("name", name);
+        writer.writeAttribute("origData", origData);
+        writer.writeAttribute("origName", origName);
+    }
 }

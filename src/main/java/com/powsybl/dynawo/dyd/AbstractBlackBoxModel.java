@@ -12,6 +12,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
 import com.powsybl.dynamicsimulation.DynamicModel;
+import com.powsybl.dynawo.simulator.DynawoParametersDatabase;
 import com.powsybl.dynawo.xml.DynawoXmlContext;
 
 /**
@@ -19,10 +20,19 @@ import com.powsybl.dynawo.xml.DynawoXmlContext;
  */
 public abstract class AbstractBlackBoxModel implements DynamicModel {
 
-    public AbstractBlackBoxModel(String dynamicModelId, String staticId, String parameterSetId) {
+    protected static class Parameters {
+
+        public static Parameters load(DynawoParametersDatabase parametersDatabase, String parameterSetId) {
+            return null;
+        }
+
+    }
+
+    public AbstractBlackBoxModel(String dynamicModelId, String staticId, String parameterSetId, Parameters parameters) {
         this.dynamicModelId = Objects.requireNonNull(dynamicModelId);
         this.staticId = Objects.requireNonNull(staticId);
         this.parameterSetId = Objects.requireNonNull(parameterSetId);
+        this.parameters = parameters;
     }
 
     public String getDynamicModelId() {
@@ -39,6 +49,10 @@ public abstract class AbstractBlackBoxModel implements DynamicModel {
         return parameterSetId;
     }
 
+    public Parameters getParameters() {
+        return parameters;
+    }
+
     public abstract void write(XMLStreamWriter writer, DynawoXmlContext context) throws XMLStreamException;
 
     public void writeParameters(XMLStreamWriter writer, DynawoXmlContext context) throws XMLStreamException {
@@ -48,4 +62,5 @@ public abstract class AbstractBlackBoxModel implements DynamicModel {
     private final String dynamicModelId;
     private final String staticId;
     private final String parameterSetId;
+    private final Parameters parameters;
 }

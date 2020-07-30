@@ -91,12 +91,12 @@ public class DynawoGroovyDynamicModelsSupplierTest {
         if (blackBoxModel instanceof LoadAlphaBeta) {
             Identifiable<?> identifiable = network.getIdentifiable(blackBoxModel.getStaticId());
             assertEquals(identifiable.getId(), blackBoxModel.getDynamicModelId());
-            assertEquals("default", blackBoxModel.getParameterSetId());
+            assertEquals("LoadAlphaBeta", blackBoxModel.getParameterSetId());
             assertTrue(identifiable instanceof Load);
         } else if (blackBoxModel instanceof GeneratorSynchronousFourWindingsProportionalRegulations) {
             Identifiable<?> identifiable = network.getIdentifiable(blackBoxModel.getStaticId());
             assertEquals("BBM_" + identifiable.getId(), blackBoxModel.getDynamicModelId());
-            assertEquals("default", blackBoxModel.getParameterSetId());
+            assertEquals("GeneratorSynchronousFourWindingsProportionalRegulations", blackBoxModel.getParameterSetId());
             assertTrue(identifiable instanceof Generator);
         } else if (blackBoxModel instanceof OmegaRef) {
             assertEquals("OMEGA_REF", blackBoxModel.getDynamicModelId());
