@@ -24,413 +24,413 @@ import com.powsybl.dynawo.xml.MacroStaticReferenceXml;
  */
 public class GeneratorSynchronousFourWindingsProportionalRegulations extends AbstractBlackBoxModel {
 
-    protected static class Parameters extends AbstractBlackBoxModel.Parameters {
+    public static class Parameters extends AbstractBlackBoxModel.Parameters {
 
         public static AbstractBlackBoxModel.Parameters load(DynawoParametersDatabase parametersDatabase, String parameterSetId) {
             Parameters parameters = new Parameters();
-            parameters.setGeneratorExcitationPu(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_ExcitationPu").getValue());
-            parameters.setGeneratorMdPuEfd(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_MdPuEfd").getValue());
-            parameters.setGeneratorH(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_H").getValue());
-            parameters.setGeneratorDPu(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_DPu").getValue());
-            parameters.setGeneratorRaPu(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_RaPu").getValue());
-            parameters.setGeneratorXlPu(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_XlPu").getValue());
-            parameters.setGeneratorXdPu(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_XdPu").getValue());
-            parameters.setGeneratorXpdPu(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_XpdPu").getValue());
-            parameters.setGeneratorXppdPu(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_XppdPu").getValue());
-            parameters.setGeneratorTpd0(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_Tpd0").getValue());
-            parameters.setGeneratorTppd0(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_Tppd0").getValue());
-            parameters.setGeneratorXqPu(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_XqPu").getValue());
-            parameters.setGeneratorXpqPu(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_XpqPu").getValue());
-            parameters.setGeneratorXppqPu(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_XppqPu").getValue());
-            parameters.setGeneratorTpq0(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_Tpq0").getValue());
-            parameters.setGeneratorTppq0(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_Tppq0").getValue());
-            parameters.setGeneratorUNom(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_UNom").getValue());
-            parameters.setGeneratorSNom(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_SNom").getValue());
-            parameters.setGeneratorPNomTurb(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_PNomTurb").getValue());
-            parameters.setGeneratorPNomAlt(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_PNomAlt").getValue());
-            parameters.setGeneratorSnTfo(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_SnTfo").getValue());
-            parameters.setGeneratorUNomHV(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_UNomHV").getValue());
-            parameters.setGeneratorUNomLV(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_UNomLV").getValue());
-            parameters.setGeneratorUBaseHV(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_UBaseHV").getValue());
-            parameters.setGeneratorUBaseLV(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_UBaseLV").getValue());
-            parameters.setGeneratorRTfPu(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_RTfPu").getValue());
-            parameters.setGeneratorXTfPu(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_XTfPu").getValue());
-            parameters.setVoltageRegulatorLagEfdMax(parametersDatabase.getParameterSet(parameterSetId).getParameter("voltageRegulator_LagEfdMax").getValue());
-            parameters.setVoltageRegulatorLagEfdMin(parametersDatabase.getParameterSet(parameterSetId).getParameter("voltageRegulator_LagEfdMin").getValue());
-            parameters.setVoltageRegulatorEfdMinPu(parametersDatabase.getParameterSet(parameterSetId).getParameter("voltageRegulator_EfdMinPu").getValue());
-            parameters.setVoltageRegulatorEfdMaxPu(parametersDatabase.getParameterSet(parameterSetId).getParameter("voltageRegulator_EfdMaxPu").getValue());
-            parameters.setVoltageRegulatorUsRefMinPu(parametersDatabase.getParameterSet(parameterSetId).getParameter("voltageRegulator_UsRefMinPu").getValue());
-            parameters.setVoltageRegulatorUsRefMaxPu(parametersDatabase.getParameterSet(parameterSetId).getParameter("voltageRegulator_UsRefMaxPu").getValue());
-            parameters.setVoltageRegulatorGain(parametersDatabase.getParameterSet(parameterSetId).getParameter("voltageRegulator_Gain").getValue());
-            parameters.setGovernorKGover(parametersDatabase.getParameterSet(parameterSetId).getParameter("governor_KGover").getValue());
-            parameters.setGovernorPMin(parametersDatabase.getParameterSet(parameterSetId).getParameter("governor_PMin").getValue());
-            parameters.setGovernorPMax(parametersDatabase.getParameterSet(parameterSetId).getParameter("governor_PMax").getValue());
-            parameters.setGovernorPNom(parametersDatabase.getParameterSet(parameterSetId).getParameter("governor_PNom").getValue());
-            parameters.setURefValueIn(parametersDatabase.getParameterSet(parameterSetId).getParameter("URef_ValueIn").getValue());
-            parameters.setPmValueIn(parametersDatabase.getParameterSet(parameterSetId).getParameter("Pm_ValueIn").getValue());
+            parameters.setGeneratorExcitationPu(Integer.parseInt(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_ExcitationPu").getValue()));
+            parameters.setGeneratorMdPuEfd(Double.parseDouble(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_MdPuEfd").getValue()));
+            parameters.setGeneratorH(Double.parseDouble(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_H").getValue()));
+            parameters.setGeneratorDPu(Double.parseDouble(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_DPu").getValue()));
+            parameters.setGeneratorRaPu(Double.parseDouble(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_RaPu").getValue()));
+            parameters.setGeneratorXlPu(Double.parseDouble(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_XlPu").getValue()));
+            parameters.setGeneratorXdPu(Double.parseDouble(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_XdPu").getValue()));
+            parameters.setGeneratorXpdPu(Double.parseDouble(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_XpdPu").getValue()));
+            parameters.setGeneratorXppdPu(Double.parseDouble(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_XppdPu").getValue()));
+            parameters.setGeneratorTpd0(Double.parseDouble(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_Tpd0").getValue()));
+            parameters.setGeneratorTppd0(Double.parseDouble(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_Tppd0").getValue()));
+            parameters.setGeneratorXqPu(Double.parseDouble(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_XqPu").getValue()));
+            parameters.setGeneratorXpqPu(Double.parseDouble(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_XpqPu").getValue()));
+            parameters.setGeneratorXppqPu(Double.parseDouble(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_XppqPu").getValue()));
+            parameters.setGeneratorTpq0(Double.parseDouble(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_Tpq0").getValue()));
+            parameters.setGeneratorTppq0(Double.parseDouble(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_Tppq0").getValue()));
+            parameters.setGeneratorUNom(Double.parseDouble(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_UNom").getValue()));
+            parameters.setGeneratorSNom(Double.parseDouble(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_SNom").getValue()));
+            parameters.setGeneratorPNomTurb(Double.parseDouble(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_PNomTurb").getValue()));
+            parameters.setGeneratorPNomAlt(Double.parseDouble(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_PNomAlt").getValue()));
+            parameters.setGeneratorSnTfo(Double.parseDouble(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_SnTfo").getValue()));
+            parameters.setGeneratorUNomHV(Double.parseDouble(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_UNomHV").getValue()));
+            parameters.setGeneratorUNomLV(Double.parseDouble(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_UNomLV").getValue()));
+            parameters.setGeneratorUBaseHV(Double.parseDouble(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_UBaseHV").getValue()));
+            parameters.setGeneratorUBaseLV(Double.parseDouble(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_UBaseLV").getValue()));
+            parameters.setGeneratorRTfPu(Double.parseDouble(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_RTfPu").getValue()));
+            parameters.setGeneratorXTfPu(Double.parseDouble(parametersDatabase.getParameterSet(parameterSetId).getParameter("generator_XTfPu").getValue()));
+            parameters.setVoltageRegulatorLagEfdMax(Double.parseDouble(parametersDatabase.getParameterSet(parameterSetId).getParameter("voltageRegulator_LagEfdMax").getValue()));
+            parameters.setVoltageRegulatorLagEfdMin(Double.parseDouble(parametersDatabase.getParameterSet(parameterSetId).getParameter("voltageRegulator_LagEfdMin").getValue()));
+            parameters.setVoltageRegulatorEfdMinPu(Double.parseDouble(parametersDatabase.getParameterSet(parameterSetId).getParameter("voltageRegulator_EfdMinPu").getValue()));
+            parameters.setVoltageRegulatorEfdMaxPu(Double.parseDouble(parametersDatabase.getParameterSet(parameterSetId).getParameter("voltageRegulator_EfdMaxPu").getValue()));
+            parameters.setVoltageRegulatorUsRefMinPu(Double.parseDouble(parametersDatabase.getParameterSet(parameterSetId).getParameter("voltageRegulator_UsRefMinPu").getValue()));
+            parameters.setVoltageRegulatorUsRefMaxPu(Double.parseDouble(parametersDatabase.getParameterSet(parameterSetId).getParameter("voltageRegulator_UsRefMaxPu").getValue()));
+            parameters.setVoltageRegulatorGain(Double.parseDouble(parametersDatabase.getParameterSet(parameterSetId).getParameter("voltageRegulator_Gain").getValue()));
+            parameters.setGovernorKGover(Double.parseDouble(parametersDatabase.getParameterSet(parameterSetId).getParameter("governor_KGover").getValue()));
+            parameters.setGovernorPMin(Double.parseDouble(parametersDatabase.getParameterSet(parameterSetId).getParameter("governor_PMin").getValue()));
+            parameters.setGovernorPMax(Double.parseDouble(parametersDatabase.getParameterSet(parameterSetId).getParameter("governor_PMax").getValue()));
+            parameters.setGovernorPNom(Double.parseDouble(parametersDatabase.getParameterSet(parameterSetId).getParameter("governor_PNom").getValue()));
+            parameters.setURefValueIn(Double.parseDouble(parametersDatabase.getParameterSet(parameterSetId).getParameter("URef_ValueIn").getValue()));
+            parameters.setPmValueIn(Double.parseDouble(parametersDatabase.getParameterSet(parameterSetId).getParameter("Pm_ValueIn").getValue()));
             return parameters;
         }
 
-        public String getGeneratorExcitationPu() {
+        public int getGeneratorExcitationPu() {
             return generatorExcitationPu;
         }
 
-        public void setGeneratorExcitationPu(String generatorExcitationPu) {
+        public void setGeneratorExcitationPu(int generatorExcitationPu) {
             this.generatorExcitationPu = generatorExcitationPu;
         }
 
-        public String getGeneratorMdPuEfd() {
+        public double getGeneratorMdPuEfd() {
             return generatorMdPuEfd;
         }
 
-        public void setGeneratorMdPuEfd(String generatorMdPuEfd) {
+        public void setGeneratorMdPuEfd(double generatorMdPuEfd) {
             this.generatorMdPuEfd = generatorMdPuEfd;
         }
 
-        public String getGeneratorH() {
+        public double getGeneratorH() {
             return generatorH;
         }
 
-        public void setGeneratorH(String generatorH) {
+        public void setGeneratorH(double generatorH) {
             this.generatorH = generatorH;
         }
 
-        public String getGeneratorDPu() {
+        public double getGeneratorDPu() {
             return generatorDPu;
         }
 
-        public void setGeneratorDPu(String generatorDPu) {
+        public void setGeneratorDPu(double generatorDPu) {
             this.generatorDPu = generatorDPu;
         }
 
-        public String getGeneratorRaPu() {
+        public double getGeneratorRaPu() {
             return generatorRaPu;
         }
 
-        public void setGeneratorRaPu(String generatorRaPu) {
+        public void setGeneratorRaPu(double generatorRaPu) {
             this.generatorRaPu = generatorRaPu;
         }
 
-        public String getGeneratorXlPu() {
+        public double getGeneratorXlPu() {
             return generatorXlPu;
         }
 
-        public void setGeneratorXlPu(String generatorXlPu) {
+        public void setGeneratorXlPu(double generatorXlPu) {
             this.generatorXlPu = generatorXlPu;
         }
 
-        public String getGeneratorXdPu() {
+        public double getGeneratorXdPu() {
             return generatorXdPu;
         }
 
-        public void setGeneratorXdPu(String generatorXdPu) {
+        public void setGeneratorXdPu(double generatorXdPu) {
             this.generatorXdPu = generatorXdPu;
         }
 
-        public String getGeneratorXpdPu() {
+        public double getGeneratorXpdPu() {
             return generatorXpdPu;
         }
 
-        public void setGeneratorXpdPu(String generatorXpdPu) {
+        public void setGeneratorXpdPu(double generatorXpdPu) {
             this.generatorXpdPu = generatorXpdPu;
         }
 
-        public String getGeneratorXppdPu() {
+        public double getGeneratorXppdPu() {
             return generatorXppdPu;
         }
 
-        public void setGeneratorXppdPu(String generatorXppdPu) {
+        public void setGeneratorXppdPu(double generatorXppdPu) {
             this.generatorXppdPu = generatorXppdPu;
         }
 
-        public String getGeneratorTpd0() {
+        public double getGeneratorTpd0() {
             return generatorTpd0;
         }
 
-        public void setGeneratorTpd0(String generatorTpd0) {
+        public void setGeneratorTpd0(double generatorTpd0) {
             this.generatorTpd0 = generatorTpd0;
         }
 
-        public String getGeneratorTppd0() {
+        public double getGeneratorTppd0() {
             return generatorTppd0;
         }
 
-        public void setGeneratorTppd0(String generatorTppd0) {
+        public void setGeneratorTppd0(double generatorTppd0) {
             this.generatorTppd0 = generatorTppd0;
         }
 
-        public String getGeneratorXqPu() {
+        public double getGeneratorXqPu() {
             return generatorXqPu;
         }
 
-        public void setGeneratorXqPu(String generatorXqPu) {
+        public void setGeneratorXqPu(double generatorXqPu) {
             this.generatorXqPu = generatorXqPu;
         }
 
-        public String getGeneratorXpqPu() {
+        public double getGeneratorXpqPu() {
             return generatorXpqPu;
         }
 
-        public void setGeneratorXpqPu(String generatorXpqPu) {
+        public void setGeneratorXpqPu(double generatorXpqPu) {
             this.generatorXpqPu = generatorXpqPu;
         }
 
-        public String getGeneratorXppqPu() {
+        public double getGeneratorXppqPu() {
             return generatorXppqPu;
         }
 
-        public void setGeneratorXppqPu(String generatorXppqPu) {
+        public void setGeneratorXppqPu(double generatorXppqPu) {
             this.generatorXppqPu = generatorXppqPu;
         }
 
-        public String getGeneratorTpq0() {
+        public double getGeneratorTpq0() {
             return generatorTpq0;
         }
 
-        public void setGeneratorTpq0(String generatorTpq0) {
+        public void setGeneratorTpq0(double generatorTpq0) {
             this.generatorTpq0 = generatorTpq0;
         }
 
-        public String getGeneratorTppq0() {
+        public double getGeneratorTppq0() {
             return generatorTppq0;
         }
 
-        public void setGeneratorTppq0(String generatorTppq0) {
+        public void setGeneratorTppq0(double generatorTppq0) {
             this.generatorTppq0 = generatorTppq0;
         }
 
-        public String getGeneratorUNom() {
+        public double getGeneratorUNom() {
             return generatorUNom;
         }
 
-        public void setGeneratorUNom(String generatorUNom) {
+        public void setGeneratorUNom(double generatorUNom) {
             this.generatorUNom = generatorUNom;
         }
 
-        public String getGeneratorSNom() {
+        public double getGeneratorSNom() {
             return generatorSNom;
         }
 
-        public void setGeneratorSNom(String generatorSNom) {
+        public void setGeneratorSNom(double generatorSNom) {
             this.generatorSNom = generatorSNom;
         }
 
-        public String getGeneratorPNomTurb() {
+        public double getGeneratorPNomTurb() {
             return generatorPNomTurb;
         }
 
-        public void setGeneratorPNomTurb(String generatorPNomTurb) {
+        public void setGeneratorPNomTurb(double generatorPNomTurb) {
             this.generatorPNomTurb = generatorPNomTurb;
         }
 
-        public String getGeneratorPNomAlt() {
+        public double getGeneratorPNomAlt() {
             return generatorPNomAlt;
         }
 
-        public void setGeneratorPNomAlt(String generatorPNomAlt) {
+        public void setGeneratorPNomAlt(double generatorPNomAlt) {
             this.generatorPNomAlt = generatorPNomAlt;
         }
 
-        public String getGeneratorSnTfo() {
+        public double getGeneratorSnTfo() {
             return generatorSnTfo;
         }
 
-        public void setGeneratorSnTfo(String generatorSnTfo) {
+        public void setGeneratorSnTfo(double generatorSnTfo) {
             this.generatorSnTfo = generatorSnTfo;
         }
 
-        public String getGeneratorUNomHV() {
+        public double getGeneratorUNomHV() {
             return generatorUNomHV;
         }
 
-        public void setGeneratorUNomHV(String generatorUNomHV) {
+        public void setGeneratorUNomHV(double generatorUNomHV) {
             this.generatorUNomHV = generatorUNomHV;
         }
 
-        public String getGeneratorUNomLV() {
+        public double getGeneratorUNomLV() {
             return generatorUNomLV;
         }
 
-        public void setGeneratorUNomLV(String generatorUNomLV) {
+        public void setGeneratorUNomLV(double generatorUNomLV) {
             this.generatorUNomLV = generatorUNomLV;
         }
 
-        public String getGeneratorUBaseHV() {
+        public double getGeneratorUBaseHV() {
             return generatorUBaseHV;
         }
 
-        public void setGeneratorUBaseHV(String generatorUBaseHV) {
+        public void setGeneratorUBaseHV(double generatorUBaseHV) {
             this.generatorUBaseHV = generatorUBaseHV;
         }
 
-        public String getGeneratorUBaseLV() {
+        public double getGeneratorUBaseLV() {
             return generatorUBaseLV;
         }
 
-        public void setGeneratorUBaseLV(String generatorUBaseLV) {
+        public void setGeneratorUBaseLV(double generatorUBaseLV) {
             this.generatorUBaseLV = generatorUBaseLV;
         }
 
-        public String getGeneratorRTfPu() {
+        public double getGeneratorRTfPu() {
             return generatorRTfPu;
         }
 
-        public void setGeneratorRTfPu(String generatorRTfPu) {
+        public void setGeneratorRTfPu(double generatorRTfPu) {
             this.generatorRTfPu = generatorRTfPu;
         }
 
-        public String getGeneratorXTfPu() {
+        public double getGeneratorXTfPu() {
             return generatorXTfPu;
         }
 
-        public void setGeneratorXTfPu(String generatorXTfPu) {
+        public void setGeneratorXTfPu(double generatorXTfPu) {
             this.generatorXTfPu = generatorXTfPu;
         }
 
-        public String getVoltageRegulatorLagEfdMax() {
+        public double getVoltageRegulatorLagEfdMax() {
             return voltageRegulatorLagEfdMax;
         }
 
-        public void setVoltageRegulatorLagEfdMax(String voltageRegulatorLagEfdMax) {
+        public void setVoltageRegulatorLagEfdMax(double voltageRegulatorLagEfdMax) {
             this.voltageRegulatorLagEfdMax = voltageRegulatorLagEfdMax;
         }
 
-        public String getVoltageRegulatorLagEfdMin() {
+        public double getVoltageRegulatorLagEfdMin() {
             return voltageRegulatorLagEfdMin;
         }
 
-        public void setVoltageRegulatorLagEfdMin(String voltageRegulatorLagEfdMin) {
+        public void setVoltageRegulatorLagEfdMin(double voltageRegulatorLagEfdMin) {
             this.voltageRegulatorLagEfdMin = voltageRegulatorLagEfdMin;
         }
 
-        public String getVoltageRegulatorEfdMinPu() {
+        public double getVoltageRegulatorEfdMinPu() {
             return voltageRegulatorEfdMinPu;
         }
 
-        public void setVoltageRegulatorEfdMinPu(String voltageRegulatorEfdMinPu) {
+        public void setVoltageRegulatorEfdMinPu(double voltageRegulatorEfdMinPu) {
             this.voltageRegulatorEfdMinPu = voltageRegulatorEfdMinPu;
         }
 
-        public String getVoltageRegulatorEfdMaxPu() {
+        public double getVoltageRegulatorEfdMaxPu() {
             return voltageRegulatorEfdMaxPu;
         }
 
-        public void setVoltageRegulatorEfdMaxPu(String voltageRegulatorEfdMaxPu) {
+        public void setVoltageRegulatorEfdMaxPu(double voltageRegulatorEfdMaxPu) {
             this.voltageRegulatorEfdMaxPu = voltageRegulatorEfdMaxPu;
         }
 
-        public String getVoltageRegulatorUsRefMinPu() {
+        public double getVoltageRegulatorUsRefMinPu() {
             return voltageRegulatorUsRefMinPu;
         }
 
-        public void setVoltageRegulatorUsRefMinPu(String voltageRegulatorUsRefMinPu) {
+        public void setVoltageRegulatorUsRefMinPu(double voltageRegulatorUsRefMinPu) {
             this.voltageRegulatorUsRefMinPu = voltageRegulatorUsRefMinPu;
         }
 
-        public String getVoltageRegulatorUsRefMaxPu() {
+        public double getVoltageRegulatorUsRefMaxPu() {
             return voltageRegulatorUsRefMaxPu;
         }
 
-        public void setVoltageRegulatorUsRefMaxPu(String voltageRegulatorUsRefMaxPu) {
+        public void setVoltageRegulatorUsRefMaxPu(double voltageRegulatorUsRefMaxPu) {
             this.voltageRegulatorUsRefMaxPu = voltageRegulatorUsRefMaxPu;
         }
 
-        public String getVoltageRegulatorGain() {
+        public double getVoltageRegulatorGain() {
             return voltageRegulatorGain;
         }
 
-        public void setVoltageRegulatorGain(String voltageRegulatorGain) {
+        public void setVoltageRegulatorGain(double voltageRegulatorGain) {
             this.voltageRegulatorGain = voltageRegulatorGain;
         }
 
-        public String getGovernorKGover() {
+        public double getGovernorKGover() {
             return governorKGover;
         }
 
-        public void setGovernorKGover(String governorKGover) {
+        public void setGovernorKGover(double governorKGover) {
             this.governorKGover = governorKGover;
         }
 
-        public String getGovernorPMin() {
+        public double getGovernorPMin() {
             return governorPMin;
         }
 
-        public void setGovernorPMin(String governorPMin) {
+        public void setGovernorPMin(double governorPMin) {
             this.governorPMin = governorPMin;
         }
 
-        public String getGovernorPMax() {
+        public double getGovernorPMax() {
             return governorPMax;
         }
 
-        public void setGovernorPMax(String governorPMax) {
+        public void setGovernorPMax(double governorPMax) {
             this.governorPMax = governorPMax;
         }
 
-        public String getGovernorPNom() {
+        public double getGovernorPNom() {
             return governorPNom;
         }
 
-        public void setGovernorPNom(String governorPNom) {
+        public void setGovernorPNom(double governorPNom) {
             this.governorPNom = governorPNom;
         }
 
-        public String getURefValueIn() {
+        public double getURefValueIn() {
             return uRefValueIn;
         }
 
-        public void setURefValueIn(String uRefValueIn) {
+        public void setURefValueIn(double uRefValueIn) {
             this.uRefValueIn = uRefValueIn;
         }
 
-        public String getPmValueIn() {
+        public double getPmValueIn() {
             return pmValueIn;
         }
 
-        public void setPmValueIn(String pmValueIn) {
+        public void setPmValueIn(double pmValueIn) {
             this.pmValueIn = pmValueIn;
         }
 
-        private String generatorExcitationPu;
-        private String generatorMdPuEfd;
-        private String generatorH;
-        private String generatorDPu;
-        private String generatorRaPu;
-        private String generatorXlPu;
-        private String generatorXdPu;
-        private String generatorXpdPu;
-        private String generatorXppdPu;
-        private String generatorTpd0;
-        private String generatorTppd0;
-        private String generatorXqPu;
-        private String generatorXpqPu;
-        private String generatorXppqPu;
-        private String generatorTpq0;
-        private String generatorTppq0;
-        private String generatorUNom;
-        private String generatorSNom;
-        private String generatorPNomTurb;
-        private String generatorPNomAlt;
-        private String generatorSnTfo;
-        private String generatorUNomHV;
-        private String generatorUNomLV;
-        private String generatorUBaseHV;
-        private String generatorUBaseLV;
-        private String generatorRTfPu;
-        private String generatorXTfPu;
-        private String voltageRegulatorLagEfdMax;
-        private String voltageRegulatorLagEfdMin;
-        private String voltageRegulatorEfdMinPu;
-        private String voltageRegulatorEfdMaxPu;
-        private String voltageRegulatorUsRefMinPu;
-        private String voltageRegulatorUsRefMaxPu;
-        private String voltageRegulatorGain;
-        private String governorKGover;
-        private String governorPMin;
-        private String governorPMax;
-        private String governorPNom;
-        private String uRefValueIn;
-        private String pmValueIn;
+        private int generatorExcitationPu;
+        private double generatorMdPuEfd;
+        private double generatorH;
+        private double generatorDPu;
+        private double generatorRaPu;
+        private double generatorXlPu;
+        private double generatorXdPu;
+        private double generatorXpdPu;
+        private double generatorXppdPu;
+        private double generatorTpd0;
+        private double generatorTppd0;
+        private double generatorXqPu;
+        private double generatorXpqPu;
+        private double generatorXppqPu;
+        private double generatorTpq0;
+        private double generatorTppq0;
+        private double generatorUNom;
+        private double generatorSNom;
+        private double generatorPNomTurb;
+        private double generatorPNomAlt;
+        private double generatorSnTfo;
+        private double generatorUNomHV;
+        private double generatorUNomLV;
+        private double generatorUBaseHV;
+        private double generatorUBaseLV;
+        private double generatorRTfPu;
+        private double generatorXTfPu;
+        private double voltageRegulatorLagEfdMax;
+        private double voltageRegulatorLagEfdMin;
+        private double voltageRegulatorEfdMinPu;
+        private double voltageRegulatorEfdMaxPu;
+        private double voltageRegulatorUsRefMinPu;
+        private double voltageRegulatorUsRefMaxPu;
+        private double voltageRegulatorGain;
+        private double governorKGover;
+        private double governorPMin;
+        private double governorPMax;
+        private double governorPNom;
+        private double uRefValueIn;
+        private double pmValueIn;
     }
 
     public GeneratorSynchronousFourWindingsProportionalRegulations(String dynamicModelId, String staticId, String parameterSetId) {

@@ -20,7 +20,7 @@ public class LoadAlphaBetaTest extends DynamicModelUtilTest {
     @Test
     public void test() {
         LoadAlphaBeta.Parameters parameters = (Parameters) LoadAlphaBeta.Parameters.load(parametersDatabase, "LoadAlphaBeta");
-        assertEquals("1.5", parameters.getLoadAlpha());
-        assertEquals("2.5", parameters.getLoadBeta());
+        assertEquals(1.5, parameters.getLoadAlpha(), 0.0);
+        assertEquals(2.5, parameters.getLoadBeta(), 0.0);
     }
 }

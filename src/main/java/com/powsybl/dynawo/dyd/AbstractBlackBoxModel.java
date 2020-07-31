@@ -20,7 +20,7 @@ import com.powsybl.dynawo.xml.DynawoXmlContext;
  */
 public abstract class AbstractBlackBoxModel implements DynamicModel {
 
-    protected static class Parameters {
+    public static class Parameters {
 
         public static Parameters load(DynawoParametersDatabase parametersDatabase, String parameterSetId) {
             return null;

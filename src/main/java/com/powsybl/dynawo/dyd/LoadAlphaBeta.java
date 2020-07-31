@@ -24,33 +24,33 @@ import com.powsybl.dynawo.xml.MacroStaticReferenceXml;
  */
 public class LoadAlphaBeta extends AbstractBlackBoxModel {
 
-    protected static class Parameters extends AbstractBlackBoxModel.Parameters {
+    public static class Parameters extends AbstractBlackBoxModel.Parameters {
 
         public static AbstractBlackBoxModel.Parameters load(DynawoParametersDatabase parametersDatabase, String parameterSetId) {
             Parameters parameters = new Parameters();
-            parameters.setLoadAlpha(parametersDatabase.getParameterSet(parameterSetId).getParameter("load_alpha").getValue());
-            parameters.setLoadBeta(parametersDatabase.getParameterSet(parameterSetId).getParameter("load_beta").getValue());
+            parameters.setLoadAlpha(Double.parseDouble(parametersDatabase.getParameterSet(parameterSetId).getParameter("load_alpha").getValue()));
+            parameters.setLoadBeta(Double.parseDouble(parametersDatabase.getParameterSet(parameterSetId).getParameter("load_beta").getValue()));
             return parameters;
         }
 
-        public String getLoadAlpha() {
+        public double getLoadAlpha() {
             return loadAlpha;
         }
 
-        public void setLoadAlpha(String loadAlpha) {
+        public void setLoadAlpha(double loadAlpha) {
             this.loadAlpha = loadAlpha;
         }
 
-        public String getLoadBeta() {
+        public double getLoadBeta() {
             return loadBeta;
         }
 
-        public void setLoadBeta(String loadBeta) {
+        public void setLoadBeta(double loadBeta) {
             this.loadBeta = loadBeta;
         }
 
-        private String loadAlpha;
-        private String loadBeta;
+        private double loadAlpha;
+        private double loadBeta;
     }
 
     public LoadAlphaBeta(String dynamicModelId, String staticId, String parameterSetId) {

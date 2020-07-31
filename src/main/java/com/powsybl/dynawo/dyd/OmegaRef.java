@@ -97,7 +97,7 @@ public class OmegaRef extends AbstractBlackBoxModel {
         if (dynamicModel instanceof GeneratorSynchronousFourWindingsProportionalRegulations) {
             GeneratorSynchronousFourWindingsProportionalRegulations.Parameters parameters = (GeneratorSynchronousFourWindingsProportionalRegulations.Parameters) dynamicModel.getParameters();
             if (parameters != null) {
-                weight = Double.parseDouble(parameters.getGeneratorH()) * Double.parseDouble(parameters.getGeneratorSNom());
+                weight = parameters.getGeneratorH() * parameters.getGeneratorSNom();
             }
         }
         ParameterXml.writeParameter(writer, "DOUBLE", "weight_gen_" + index, Double.toString(weight));
