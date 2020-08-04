@@ -22,10 +22,25 @@ import com.powsybl.dynawo.dyd.LoadAlphaBeta
 @AutoService(DynamicModelGroovyExtension.class)
 class LoadAlphaBetaGroovyExtension implements DynamicModelGroovyExtension {
 
+    static class ParametersSpec {
+        Double load_alpha
+        Double load_beta
+
+        void load_alpha(double load_alpha) {
+            this.load_alpha = load_alpha
+        }
+
+        void load_beta(double load_beta) {
+            this.load_beta = load_beta
+        }
+    }
+
     static class LoadAlphaBetaSpec {
         String dynamicModelId
         String staticId
         String parameterSetId
+        
+        final ParametersSpec parametersSpec = new ParametersSpec()
 
         void dynamicModelId(String dynamicModelId) {
             this.dynamicModelId = dynamicModelId
@@ -38,17 +53,23 @@ class LoadAlphaBetaGroovyExtension implements DynamicModelGroovyExtension {
         void parameterSetId(String parameterSetId) {
             this.parameterSetId = parameterSetId
         }
+
+        void parameters(Closure<Void> closure) {
+            def cloned = closure.clone()
+            cloned.delegate = parametersSpec
+            cloned()
+        }
     }
 
     String getName() {
         return "dynawo"
     }
-    
+
     void load(Binding binding, Consumer<DynamicModel> consumer) {
         binding.LoadAlphaBeta = { Closure<Void> closure ->
             def cloned = closure.clone()
             LoadAlphaBetaSpec loadAlphaBetaSpec = new LoadAlphaBetaSpec()
-    
+
             cloned.delegate = loadAlphaBetaSpec
             cloned()
 
@@ -57,6 +78,14 @@ class LoadAlphaBetaGroovyExtension implements DynamicModelGroovyExtension {
             }
             if (!loadAlphaBetaSpec.parameterSetId) {
                 throw new DslException("'parameterSetId' field is not set")
+            }
+
+            //LoadAlphaBeta.Parameters parameters = LoadAlphaBeta.Parameters.load(parametersDB, loadAlphaBetaSpec.parameterSetId)
+            if (loadAlphaBetaSpec.parametersSpec.load_alpha) {
+                //parameters.setLoadAlpha(loadAlphaBetaSpec.parametersSpec.load_alpha)
+            }
+            if (loadAlphaBetaSpec.parametersSpec.load_beta) {
+                //parameters.setLoadBeta(loadAlphaBetaSpec.parametersSpec.load_beta)
             }
 
             String dynamicModelId = loadAlphaBetaSpec.dynamicModelId ? loadAlphaBetaSpec.dynamicModelId : loadAlphaBetaSpec.staticId
