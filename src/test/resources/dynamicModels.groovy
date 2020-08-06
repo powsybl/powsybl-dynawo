@@ -55,7 +55,7 @@ for (Generator gen : network.generators) {
             generator_XTfPu 0.1
             voltageRegulator_LagEfdMax 0
             voltageRegulator_LagEfdMin 0
-            voltageRegulator_EfdMinPu -5
+            voltageRegulator_EfdMinPu 0
             voltageRegulator_EfdMaxPu 5
             voltageRegulator_UsRefMinPu 0.8
             voltageRegulator_UsRefMaxPu 1.2
