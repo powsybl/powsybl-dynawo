@@ -13,6 +13,7 @@ import com.powsybl.dynamicsimulation.*;
 import com.powsybl.dynawo.DynawoContext;
 import com.powsybl.dynawo.xml.CurvesXml;
 import com.powsybl.dynawo.xml.DydXml;
+import com.powsybl.dynawo.xml.EventsXml;
 import com.powsybl.dynawo.xml.JobsXml;
 import com.powsybl.dynawo.xml.ParametersXml;
 import com.powsybl.iidm.export.Exporters;
@@ -66,15 +67,16 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
     }
 
     @Override
-    public CompletableFuture<DynamicSimulationResult> run(Network network, DynamicModelsSupplier dynamicModelsSupplier, CurvesSupplier curvesSupplier, String workingVariantId,
-                                                          ComputationManager computationManager, DynamicSimulationParameters parameters) {
+    public CompletableFuture<DynamicSimulationResult> run(Network network, DynamicModelsSupplier dynamicModelsSupplier, DynamicEventModelsSupplier dynamicEventsModelsSupplier, CurvesSupplier curvesSupplier,
+                                                          String workingVariantId, ComputationManager computationManager, DynamicSimulationParameters parameters) {
         Objects.requireNonNull(dynamicModelsSupplier);
+        Objects.requireNonNull(dynamicEventsModelsSupplier);
         Objects.requireNonNull(curvesSupplier);
         Objects.requireNonNull(workingVariantId);
         Objects.requireNonNull(parameters);
 
         DynawoSimulationParameters dynawoParameters = getDynawoSimulationParameters(parameters);
-        return run(network, dynamicModelsSupplier, curvesSupplier, workingVariantId, computationManager, parameters, dynawoParameters);
+        return run(network, dynamicModelsSupplier, dynamicEventsModelsSupplier, curvesSupplier, workingVariantId, computationManager, parameters, dynawoParameters);
     }
 
     private DynawoSimulationParameters getDynawoSimulationParameters(DynamicSimulationParameters parameters) {
@@ -85,8 +87,8 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
         return dynawoParameters;
     }
 
-    private CompletableFuture<DynamicSimulationResult> run(Network network, DynamicModelsSupplier dynamicModelsSupplier, CurvesSupplier curvesSupplier, String workingVariantId,
-                                                           ComputationManager computationManager, DynamicSimulationParameters parameters, DynawoSimulationParameters dynawoParameters) {
+    private CompletableFuture<DynamicSimulationResult> run(Network network, DynamicModelsSupplier dynamicModelsSupplier, DynamicEventModelsSupplier dynamicEventsModelsSupplier, CurvesSupplier curvesSupplier,
+                                                           String workingVariantId, ComputationManager computationManager, DynamicSimulationParameters parameters, DynawoSimulationParameters dynawoParameters) {
 
         network.getVariantManager().setWorkingVariant(workingVariantId);
         ExecutionEnvironment execEnv = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, dynawoConfig.isDebug());
@@ -104,7 +106,7 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
         // (that is the time where the groovy extensions will be loaded)
         DynawoParametersDatabase.setDefaultParametersFile(Paths.get(dynawoParameters.getParametersFile()));
 
-        DynawoContext context = new DynawoContext(network, dynamicModelsSupplier.get(network), curvesSupplier.get(network), parameters, dynawoParameters);
+        DynawoContext context = new DynawoContext(network, dynamicModelsSupplier.get(network), dynamicEventsModelsSupplier.get(network), curvesSupplier.get(network), parameters, dynawoParameters);
         return computationManager.execute(execEnv, new DynawoHandler(context));
     }
 
@@ -140,6 +142,7 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
 
                 JobsXml.write(workingDir, context);
                 DydXml.write(workingDir, context);
+                EventsXml.write(workingDir, context);
                 ParametersXml.write(workingDir, context);
                 if (context.withCurves()) {
                     CurvesXml.write(workingDir, context);

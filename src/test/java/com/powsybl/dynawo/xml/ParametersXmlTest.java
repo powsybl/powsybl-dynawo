@@ -26,7 +26,7 @@ public class ParametersXmlTest extends DynawoTestUtil {
     public void writeOmegaRef() throws SAXException, IOException, XMLStreamException {
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load();
-        DynawoContext context = new DynawoContext(network, dynamicModels, curves, parameters, dynawoParameters);
+        DynawoContext context = new DynawoContext(network, dynamicModels, dynamicEventModels, curves, parameters, dynawoParameters);
 
         DydXml.write(tmpDir, context);
         ParametersXml.write(tmpDir, context);

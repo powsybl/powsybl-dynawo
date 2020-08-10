@@ -26,7 +26,7 @@ public class CurvesXmlTest extends DynawoTestUtil {
     public void writeCurve() throws SAXException, IOException, XMLStreamException {
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load();
-        DynawoContext context = new DynawoContext(network, dynamicModels, curves, parameters, dynawoParameters);
+        DynawoContext context = new DynawoContext(network, dynamicModels, dynamicEventModels, curves, parameters, dynawoParameters);
 
         CurvesXml.write(tmpDir, context);
         validate("curvesInput.xsd", "curvesInput.xml", tmpDir.resolve(DynawoConstants.CRV_FILENAME));

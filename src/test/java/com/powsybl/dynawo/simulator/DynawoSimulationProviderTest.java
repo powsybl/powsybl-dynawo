@@ -22,6 +22,8 @@ import com.powsybl.computation.ComputationManager;
 import com.powsybl.computation.local.LocalComputationConfig;
 import com.powsybl.computation.local.LocalComputationManager;
 import com.powsybl.dynamicsimulation.CurvesSupplier;
+import com.powsybl.dynamicsimulation.DynamicEventModel;
+import com.powsybl.dynamicsimulation.DynamicEventModelsSupplier;
 import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynamicsimulation.DynamicSimulation;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
@@ -47,6 +49,19 @@ public class DynawoSimulationProviderTest {
 
     }
 
+    public static class DynamicEvenModelsSupplierMock implements DynamicEventModelsSupplier {
+
+        static DynamicEventModelsSupplier empty() {
+            return network -> Collections.emptyList();
+        }
+
+        @Override
+        public List<DynamicEventModel> get(Network network) {
+            return Collections.emptyList();
+        }
+
+    }
+
     @Test
     public void test() throws Exception {
         try (FileSystem fs = Jimfs.newFileSystem(Configuration.unix())) {
@@ -57,8 +72,8 @@ public class DynawoSimulationProviderTest {
             DynamicSimulation.Runner dynawoSimulation = DynamicSimulation.find();
             assertEquals("DynawoSimulation", dynawoSimulation.getName());
             assertEquals("1.0.0", dynawoSimulation.getVersion());
-            DynamicSimulationResult result = dynawoSimulation.run(network, DynamicModelsSupplierMock.empty(), CurvesSupplier.empty(),
-                                                                  network.getVariantManager().getWorkingVariantId(),
+            DynamicSimulationResult result = dynawoSimulation.run(network, DynamicModelsSupplierMock.empty(), DynamicEvenModelsSupplierMock.empty(),
+                                                                  CurvesSupplier.empty(), network.getVariantManager().getWorkingVariantId(),
                                                                   computationManager, DynamicSimulationParameters.load());
             assertNotNull(result);
         }

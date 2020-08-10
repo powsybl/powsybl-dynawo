@@ -17,6 +17,7 @@ import com.powsybl.computation.ComputationManager;
 import com.powsybl.computation.local.LocalComputationConfig;
 import com.powsybl.computation.local.LocalComputationManager;
 import com.powsybl.dynamicsimulation.CurvesSupplier;
+import com.powsybl.dynamicsimulation.DynamicEventModelsSupplier;
 import com.powsybl.dynamicsimulation.DynamicModelsSupplier;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynamicsimulation.groovy.CurveGroovyExtension;
@@ -62,7 +63,7 @@ public final class Main {
 
         DynawoSimulationProvider provider = new DynawoSimulationProvider();
         try (ComputationManager computationManager = new LocalComputationManager(LocalComputationConfig.load())) {
-            provider.run(network, dynamicModelsSupplier, curvesSupplier, network.getVariantManager().getWorkingVariantId(), computationManager, parameters).join();
+            provider.run(network, dynamicModelsSupplier, DynamicEventModelsSupplier.empty(), curvesSupplier, network.getVariantManager().getWorkingVariantId(), computationManager, parameters).join();
         } catch (IOException e) {
             LOGGER.error(e.toString(), e);
             System.exit(1);

@@ -27,6 +27,7 @@ import org.xml.sax.SAXException;
 
 import com.powsybl.commons.AbstractConverterTest;
 import com.powsybl.dynamicsimulation.Curve;
+import com.powsybl.dynamicsimulation.DynamicEventModel;
 import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynawo.dyd.OmegaRef;
 import com.powsybl.dynawo.dyd.GeneratorSynchronousFourWindingsProportionalRegulations;
@@ -48,6 +49,7 @@ public class DynawoTestUtil extends AbstractConverterTest {
 
     protected Network network;
     protected List<DynamicModel> dynamicModels;
+    protected List<DynamicEventModel> dynamicEventModels;
     protected List<Curve> curves;
 
     @Before
@@ -75,6 +77,8 @@ public class DynawoTestUtil extends AbstractConverterTest {
             dynamicModels.add(new GeneratorSynchronousFourWindingsProportionalRegulations("BBM_" + g.getId(), g.getId(), "default"));
             dynamicModels.add(new OmegaRef("BBM_" + g.getId()));
         });
+
+        dynamicEventModels = new ArrayList<>();
     }
 
     public void validate(String schemaDefinition, String expectedResourceName, Path xmlFile) throws SAXException, IOException {
