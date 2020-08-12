@@ -1,11 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <parametersSet xmlns="http://www.rte-france.com/dynawo">
-    <set id="LoadAlphaBeta">
+    <set id="LAB">
         <par type="DOUBLE" name="load_alpha" value="1.5"/>
         <par type="DOUBLE" name="load_beta" value="2.5"/>
-        <reference type="DOUBLE" name="load_P0Pu" origData="IIDM" origName="p_pu"/>
     </set>
-    <set id="GeneratorSynchronousFourWindingsProportionalRegulations">
+    <set id="GSFWPR">
         <par type="INT" name="generator_ExcitationPu" value="1"/>
         <par type="DOUBLE" name="generator_MdPuEfd" value="0"/>
         <par type="DOUBLE" name="generator_DPu" value="0"/>

@@ -55,8 +55,8 @@ public class DynawoSimulationProviderTest {
             Path localDir = fs.getPath("/tmp");
             ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(localDir, 1));
             DynamicSimulation.Runner dynawoSimulation = DynamicSimulation.find();
-            assertEquals("DynawoSimulation", dynawoSimulation.getName());
-            assertEquals("1.0.0", dynawoSimulation.getVersion());
+            assertEquals("Dynawo", dynawoSimulation.getName());
+            assertEquals("1.2.0", dynawoSimulation.getVersion());
             DynamicSimulationResult result = dynawoSimulation.run(network, DynamicModelsSupplierMock.empty(), CurvesSupplier.empty(),
                                                                   network.getVariantManager().getWorkingVariantId(),
                                                                   computationManager, DynamicSimulationParameters.load());

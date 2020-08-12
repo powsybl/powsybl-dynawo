@@ -46,4 +46,8 @@
         <par type="DOUBLE" name="URef_ValueIn" value="0"/>
         <par type="DOUBLE" name="Pm_ValueIn" value="0"/>
     </set>
+    <set id="test">
+        <par type="BOOL" name="boolean" value="true"/>
+        <par type="STRING" name="string" value="aString"/>
+    </set>
 </parametersSet>

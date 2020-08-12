@@ -6,15 +6,18 @@
  */
 package com.powsybl.dynawo;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-
+import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
+import com.powsybl.dynawo.simulator.DynawoParametersDatabase;
 import com.powsybl.dynawo.simulator.DynawoSimulationParameters;
 import com.powsybl.iidm.network.Network;
+
+import java.nio.file.FileSystem;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -27,6 +30,7 @@ public class DynawoContext {
         this.curves = Objects.requireNonNull(curves);
         this.parameters = Objects.requireNonNull(parameters);
         this.dynawoParameters = Objects.requireNonNull(dynawoParameters);
+        this.parametersDatabase = loadDatabase(dynawoParameters.getParametersFile());
     }
 
     public Network getNetwork() {
@@ -41,6 +45,10 @@ public class DynawoContext {
         return dynawoParameters;
     }
 
+    public DynawoParametersDatabase getParametersDatabase() {
+        return parametersDatabase;
+    }
+
     public List<DynamicModel> getDynamicModels() {
         return Collections.unmodifiableList(dynamicModels);
     }
@@ -53,9 +61,15 @@ public class DynawoContext {
         return !curves.isEmpty();
     }
 
+    private static DynawoParametersDatabase loadDatabase(String filename) {
+        FileSystem fs = PlatformConfig.defaultConfig().getConfigDir().getFileSystem();
+        return DynawoParametersDatabase.load(fs.getPath(filename));
+    }
+
     private final Network network;
     private final DynamicSimulationParameters parameters;
     private final DynawoSimulationParameters dynawoParameters;
+    private final DynawoParametersDatabase parametersDatabase;
     private final List<DynamicModel> dynamicModels;
     private final List<Curve> curves;
 }
