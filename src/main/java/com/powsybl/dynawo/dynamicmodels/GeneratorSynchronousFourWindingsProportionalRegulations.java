@@ -51,15 +51,7 @@ public class GeneratorSynchronousFourWindingsProportionalRegulations extends Abs
             writer.writeEndElement();
         }
 
-        // Write the blackBoxModel object
-        writer.writeStartElement(DYN_URI, "blackBoxModel");
-        writer.writeAttribute("id", getDynamicModelId());
-        writer.writeAttribute("lib", getLib());
-        writer.writeAttribute("parFile", context.getParFile());
-        writer.writeAttribute("parId", getParameterSetId());
-        writer.writeAttribute("staticId", getStaticId());
-        MacroStaticReferenceXml.writeMacroStaticRef(writer, MACRO_STATIC_REFERENCE_PREFIX + getLib());
-        writer.writeEndElement();
+        writeBlackBoxModel(writer, context);
 
         // Write the connect object
         MacroConnectorXml.writeMacroConnect(writer, MACRO_CONNECTOR_PREFIX + getLib(), getDynamicModelId(), NETWORK);
