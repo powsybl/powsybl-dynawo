@@ -21,7 +21,7 @@ import java.util.Objects;
 import static com.powsybl.dynawo.xml.DynawoConstants.DYD_FILENAME;
 
 /**
- * @author Mathieu Bague <mathieu.bague@rte-france.com>
+ * @author Marcos de Miguel <demiguelm at aia.es>
  */
 public final class EventsXml {
 
