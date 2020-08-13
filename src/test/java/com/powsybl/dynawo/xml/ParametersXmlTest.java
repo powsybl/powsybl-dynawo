@@ -15,7 +15,7 @@ import org.xml.sax.SAXException;
 
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawo.DynawoContext;
-import com.powsybl.dynawo.simulator.DynawoSimulationParameters;
+import com.powsybl.dynawo.DynawoSimulationParameters;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>

@@ -4,7 +4,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package com.powsybl.dynawo.simulator;
+package com.powsybl.dynawo;
 
 import static org.junit.Assert.assertEquals;
 
@@ -19,7 +19,7 @@ import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
 import com.powsybl.commons.config.InMemoryPlatformConfig;
 import com.powsybl.commons.config.MapModuleConfig;
-import com.powsybl.dynawo.simulator.DynawoSimulationParameters.SolverType;
+import com.powsybl.dynawo.DynawoSimulationParameters.SolverType;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>

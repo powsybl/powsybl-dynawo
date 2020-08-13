@@ -7,8 +7,8 @@
 package com.powsybl.dynawo.xml;
 
 import com.powsybl.dynawo.DynawoContext;
-import com.powsybl.dynawo.dyd.AbstractBlackBoxModel;
-import com.powsybl.dynawo.simulator.DynawoParametersDatabase;
+import com.powsybl.dynawo.dynamicmodels.AbstractBlackBoxModel;
+import com.powsybl.dynawo.DynawoParametersDatabase;
 
 import java.nio.file.Paths;
 import java.util.Collection;

@@ -4,20 +4,13 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package com.powsybl.dynawo.simulator
+package com.powsybl.dynawo.dynamicmodels
 
 import com.google.auto.service.AutoService
 import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.Curve
 import com.powsybl.dynamicsimulation.groovy.CurveGroovyExtension
-import com.powsybl.iidm.network.BusbarSection
-import com.powsybl.iidm.network.Generator
-import com.powsybl.iidm.network.HvdcLine
-import com.powsybl.iidm.network.Identifiable
-import com.powsybl.iidm.network.Line
-import com.powsybl.iidm.network.ShuntCompensator
-import com.powsybl.iidm.network.StaticVarCompensator
-import com.powsybl.iidm.network.TwoWindingsTransformer
+import com.powsybl.dynawo.DynawoCurve
 
 import java.util.function.Consumer
 
@@ -59,7 +52,7 @@ class DynawoCurveGroovyExtension implements CurveGroovyExtension {
     String getName() {
         return "dynawo";
     }
-    
+
     DynawoCurve dynawoCurve(CurvesSpec curveSpec, Consumer<Curve> consumer) {
         
         if (curveSpec.staticId && curveSpec.dynamicModelId) {

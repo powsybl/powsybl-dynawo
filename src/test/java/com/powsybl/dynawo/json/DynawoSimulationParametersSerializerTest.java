@@ -4,7 +4,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package com.powsybl.dynawo.simulator.json;
+package com.powsybl.dynawo.json;
 
 import java.io.IOException;
 
@@ -15,7 +15,7 @@ import com.powsybl.commons.config.InMemoryPlatformConfig;
 import com.powsybl.commons.config.MapModuleConfig;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynamicsimulation.json.JsonDynamicSimulationParameters;
-import com.powsybl.dynawo.simulator.DynawoSimulationParameters;
+import com.powsybl.dynawo.DynawoSimulationParameters;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
