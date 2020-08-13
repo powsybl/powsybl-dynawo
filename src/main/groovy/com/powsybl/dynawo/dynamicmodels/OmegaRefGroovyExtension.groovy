@@ -4,7 +4,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package com.powsybl.dynawo.simulator
+package com.powsybl.dynawo.dynamicmodels
 
 import java.util.function.Consumer
 
@@ -12,7 +12,6 @@ import com.google.auto.service.AutoService
 import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
-import com.powsybl.dynawo.dyd.OmegaRef
 
 /**
  * An implementation of {@link DynamicModelGroovyExtension} that adds the <pre>DYNModelOmegaRef</pre> keyword to the DSL

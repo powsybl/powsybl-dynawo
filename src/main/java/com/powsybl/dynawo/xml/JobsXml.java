@@ -8,8 +8,8 @@ package com.powsybl.dynawo.xml;
 
 import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
 import com.powsybl.dynawo.DynawoContext;
-import com.powsybl.dynawo.simulator.DynawoSimulationParameters;
-import com.powsybl.dynawo.simulator.DynawoSimulationParameters.SolverType;
+import com.powsybl.dynawo.DynawoSimulationParameters;
+import com.powsybl.dynawo.DynawoSimulationParameters.SolverType;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;

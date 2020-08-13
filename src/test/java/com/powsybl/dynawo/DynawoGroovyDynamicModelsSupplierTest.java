@@ -4,7 +4,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package com.powsybl.dynawo.simulator;
+package com.powsybl.dynawo;
 
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
@@ -13,10 +13,13 @@ import com.powsybl.dynamicsimulation.DynamicModelsSupplier;
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension;
 import com.powsybl.dynamicsimulation.groovy.GroovyDynamicModelsSupplier;
 import com.powsybl.dynamicsimulation.groovy.GroovyExtension;
-import com.powsybl.dynawo.dyd.AbstractBlackBoxModel;
-import com.powsybl.dynawo.dyd.GeneratorSynchronousFourWindingsProportionalRegulations;
-import com.powsybl.dynawo.dyd.LoadAlphaBeta;
-import com.powsybl.dynawo.dyd.OmegaRef;
+import com.powsybl.dynawo.dynamicmodels.AbstractBlackBoxModel;
+import com.powsybl.dynawo.dynamicmodels.GeneratorSynchronousFourWindingsProportionalRegulations;
+import com.powsybl.dynawo.dynamicmodels.LoadAlphaBeta;
+import com.powsybl.dynawo.dynamicmodels.OmegaRef;
+import com.powsybl.dynawo.dynamicmodels.GeneratorSynchronousFourWindingsProportionalRegulationsGroovyExtension;
+import com.powsybl.dynawo.dynamicmodels.LoadAlphaBetaGroovyExtension;
+import com.powsybl.dynawo.dynamicmodels.OmegaRefGroovyExtension;
 import com.powsybl.dynawo.xml.DynawoTestUtil;
 import com.powsybl.iidm.network.Generator;
 import com.powsybl.iidm.network.Identifiable;

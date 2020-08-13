@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-package com.powsybl.dynawo.simulator;
+package com.powsybl.dynawo;
 
 import com.powsybl.dynamicsimulation.Curve;
 
