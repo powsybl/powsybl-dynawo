@@ -24,10 +24,8 @@ import com.powsybl.iidm.xml.XMLExporter;
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -43,7 +41,7 @@ import static com.powsybl.dynawo.xml.DynawoConstants.NETWORK_FILENAME;
 @AutoService(DynamicSimulationProvider.class)
 public class DynawoSimulationProvider implements DynamicSimulationProvider {
 
-    private static final String DYNAWO_CMD_NAME = "execDynawo.sh";
+    private static final String DYNAWO_CMD_NAME = "dynawo.sh";
     private static final String WORKING_DIR_PREFIX = "powsybl_dynawo_";
 
     private final DynawoConfig dynawoConfig;
@@ -58,12 +56,12 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
 
     @Override
     public String getName() {
-        return "DynawoSimulation";
+        return "Dynawo";
     }
 
     @Override
     public String getVersion() {
-        return "1.0.0";
+        return "1.2.0";
     }
 
     @Override
@@ -93,19 +91,6 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
         network.getVariantManager().setWorkingVariant(workingVariantId);
         ExecutionEnvironment execEnv = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, dynawoConfig.isDebug());
 
-        // FIXME Discuss/Document a critical point here:
-        // We want to provide access to DynawoParametersDatabase
-        // to groovy extensions for dynamic models and related scripts
-        // We want to do this through a groovy extension that loads
-        // the DynawoParametersDatabase using a static method load()
-        // (we don't access to DynawoContext in the extensions)
-        // We have here, stored in DynawoSimulationParameters,
-        // the name of the file that should be used to read the database
-        // We have to set this attribute in a static way before
-        // the dynamic models supplier is called
-        // (that is the time where the groovy extensions will be loaded)
-        DynawoParametersDatabase.setDefaultParametersFile(Paths.get(dynawoParameters.getParametersFile()));
-
         DynawoContext context = new DynawoContext(network, dynamicModelsSupplier.get(network), dynamicEventsModelsSupplier.get(network), curvesSupplier.get(network), parameters, dynawoParameters);
         return computationManager.execute(execEnv, new DynawoHandler(context));
     }
@@ -133,8 +118,6 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
 
         private void writeInputFiles(Path workingDir) {
             try {
-                writeParametersFiles(workingDir);
-
                 // Write the network to XIIDM v1.0 because currently Dynawo only supports this version
                 Properties params = new Properties();
                 params.setProperty(XMLExporter.VERSION, IidmXmlVersion.V_1_0.toString("."));
@@ -154,23 +137,6 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
             }
         }
 
-        private void writeParametersFiles(Path workingDirectory) throws IOException {
-            Path parametersFile = Paths.get(context.getDynawoParameters().getParametersFile());
-            if (Files.exists(parametersFile)) {
-                Files.copy(parametersFile, workingDirectory.resolve(parametersFile.getFileName()), StandardCopyOption.REPLACE_EXISTING);
-            }
-
-            Path networkParFile = Paths.get(context.getDynawoParameters().getNetwork().getParametersFile());
-            if (Files.exists(networkParFile)) {
-                Files.copy(networkParFile, workingDirectory.resolve(networkParFile.getFileName()), StandardCopyOption.REPLACE_EXISTING);
-            }
-
-            Path solverParFile = Paths.get(context.getDynawoParameters().getSolver().getParametersFile());
-            if (Files.exists(solverParFile)) {
-                Files.copy(solverParFile, workingDirectory.resolve(solverParFile.getFileName()), StandardCopyOption.REPLACE_EXISTING);
-            }
-        }
-
         private Command createCommand(Path dynawoJobsFile) {
             return new GroupCommandBuilder()
                 .id("dyn_fs")
@@ -182,7 +148,7 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
         }
 
         private String getProgram() {
-            return Paths.get(dynawoConfig.getHomeDir()).resolve("bin").resolve(DYNAWO_CMD_NAME).toString();
+            return Paths.get(dynawoConfig.getHomeDir()).resolve(DYNAWO_CMD_NAME).toString();
         }
     }
 }

@@ -8,9 +8,10 @@ package com.powsybl.dynawo.xml;
 
 import com.powsybl.dynawo.DynawoContext;
 import com.powsybl.dynawo.dyd.AbstractBlackBoxModel;
-import com.powsybl.dynawo.dyd.OmegaRef;
+import com.powsybl.dynawo.simulator.DynawoParametersDatabase;
 
 import java.nio.file.Paths;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -22,30 +23,29 @@ import java.util.stream.Collectors;
  */
 public class DynawoXmlContext {
 
+    private final DynawoContext context;
+
     private final String parFile;
 
     private final Map<String, AtomicInteger> counters = new HashMap<>();
 
     private final Map<String, AbstractBlackBoxModel> blackBoxModels;
 
-    private final long omegaRefCount;
-
     public DynawoXmlContext(DynawoContext context) {
-        Objects.requireNonNull(context);
+        this.context = Objects.requireNonNull(context);
         this.parFile = Paths.get(context.getDynawoParameters().getParametersFile()).getFileName().toString();
         this.blackBoxModels = context.getDynamicModels().stream()
                 .filter(AbstractBlackBoxModel.class::isInstance)
                 .map(AbstractBlackBoxModel.class::cast)
-                .filter(bbm -> !bbm.getDynamicModelId().equals(OmegaRef.OMEGA_REF_ID))
                 .collect(Collectors.toMap(AbstractBlackBoxModel::getDynamicModelId, value -> value));
-        this.omegaRefCount = context.getDynamicModels().stream()
-            .filter(AbstractBlackBoxModel.class::isInstance)
-            .map(AbstractBlackBoxModel.class::cast)
-            .filter(bbm -> bbm.getDynamicModelId().equals(OmegaRef.OMEGA_REF_ID)).count();
     }
 
     public String getParFile() {
         return parFile;
+    }
+
+    public String getSimulationParFile() {
+        return context.getNetwork().getId() + ".par";
     }
 
     public int getIndex(String modelType, boolean increment) {
@@ -53,11 +53,15 @@ public class DynawoXmlContext {
         return increment ? counter.getAndIncrement() : counter.get();
     }
 
+    public Collection<AbstractBlackBoxModel> getBlackBoxModels() {
+        return blackBoxModels.values();
+    }
+
     public AbstractBlackBoxModel getBlackBoxModel(String dynamicModelId) {
         return blackBoxModels.get(dynamicModelId);
     }
 
-    public long getOmegaRefCount() {
-        return omegaRefCount;
+    public DynawoParametersDatabase getParametersDatabase() {
+        return context.getParametersDatabase();
     }
 }

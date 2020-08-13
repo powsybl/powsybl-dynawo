@@ -27,10 +27,11 @@ public class ParametersXmlTest extends DynawoTestUtil {
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load();
         DynawoContext context = new DynawoContext(network, dynamicModels, dynamicEventModels, curves, parameters, dynawoParameters);
+        DynawoXmlContext xmlContext = new DynawoXmlContext(context);
 
         DydXml.write(tmpDir, context);
         ParametersXml.write(tmpDir, context);
-        validate("parameters.xsd", "omega_ref.xml", tmpDir.resolve(DynawoConstants.OMEGAREF_PAR_FILENAME));
+        validate("parameters.xsd", "omega_ref.xml", tmpDir.resolve(xmlContext.getSimulationParFile()));
     }
 
 }

@@ -7,15 +7,17 @@
 package com.powsybl.dynawo.dyd;
 
 import com.powsybl.commons.PowsyblException;
+import com.powsybl.dynawo.simulator.DynawoParametersDatabase;
 import com.powsybl.dynawo.xml.DynawoXmlContext;
 import com.powsybl.dynawo.xml.MacroConnectorXml;
-import com.powsybl.dynawo.xml.ParameterXml;
+import com.powsybl.dynawo.xml.ParametersXml;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.util.Objects;
 
-import static com.powsybl.dynawo.xml.DynawoConstants.OMEGAREF_PAR_FILENAME;
+import static com.powsybl.dynawo.simulator.DynawoParametersDatabase.ParameterType.DOUBLE;
+import static com.powsybl.dynawo.simulator.DynawoParametersDatabase.ParameterType.INT;
 import static com.powsybl.dynawo.xml.DynawoXmlConstants.*;
 
 /**
@@ -34,10 +36,9 @@ public class OmegaRef extends AbstractBlackBoxModel {
     private static final String OMEGA_REF_PARAMETER_SET_ID = "OMEGA_REF";
     private static final String MACRO_CONNECTOR_TO_GENERATOR_SUFFIX = "ToGenerator";
     private static final String MACRO_CONNECTOR_TO_NUMCCMACHINE_SUFFIX = "ToNumCCMachine";
-    private static final double OMEGA_REF_TEMP_WEIGHT_NOT_CALCULATED = 10.0;
 
     public OmegaRef(String generatorDynamicModelId) {
-        super(OMEGA_REF_ID, "", OMEGA_REF_PARAMETER_SET_ID);
+        super(OMEGA_REF_ID + "_" + generatorDynamicModelId, "", OMEGA_REF_PARAMETER_SET_ID);
         this.generatorDynamicModelId = Objects.requireNonNull(generatorDynamicModelId);
     }
 
@@ -49,6 +50,10 @@ public class OmegaRef extends AbstractBlackBoxModel {
     @Override
     public String getStaticId() {
         throw new UnsupportedOperationException("OmegaRef is not bound to a static equipment");
+    }
+
+    public String getGeneratorDynamicModelId() {
+        return generatorDynamicModelId;
     }
 
     @Override
@@ -72,30 +77,39 @@ public class OmegaRef extends AbstractBlackBoxModel {
             // All instances of DYNModelOmegaRef refer in fact to a single Dynawo BlackBoxModel
             // We write the blackBoxModel in the output XML only once
             writer.writeEmptyElement(DYN_URI, "blackBoxModel");
-            writer.writeAttribute("id", getDynamicModelId());
+            writer.writeAttribute("id", OMEGA_REF_ID);
             writer.writeAttribute("lib", getLib());
-            writer.writeAttribute("parFile", OMEGAREF_PAR_FILENAME);
+            writer.writeAttribute("parFile", context.getSimulationParFile());
             writer.writeAttribute("parId", getParameterSetId());
         }
 
         // This instance of DYNModelOmegaRef has a reference to one generator, write its connect and the subsequent connect to the NETWORK model
-        MacroConnectorXml.writeMacroConnect(writer, MACRO_CONNECTOR_PREFIX + getLib() + MACRO_CONNECTOR_TO_GENERATOR_SUFFIX, getDynamicModelId(), index, generatorDynamicModelId);
-        MacroConnectorXml.writeMacroConnect(writer, MACRO_CONNECTOR_PREFIX + getLib() + MACRO_CONNECTOR_TO_NUMCCMACHINE_SUFFIX, getDynamicModelId(), index, NETWORK, getStaticId(context, generatorDynamicModelId));
+        MacroConnectorXml.writeMacroConnect(writer, MACRO_CONNECTOR_PREFIX + getLib() + MACRO_CONNECTOR_TO_GENERATOR_SUFFIX, OMEGA_REF_ID, index, generatorDynamicModelId);
+        MacroConnectorXml.writeMacroConnect(writer, MACRO_CONNECTOR_PREFIX + getLib() + MACRO_CONNECTOR_TO_NUMCCMACHINE_SUFFIX, OMEGA_REF_ID, index, NETWORK, getStaticId(context, generatorDynamicModelId));
     }
 
     @Override
     public void writeParameters(XMLStreamWriter writer, DynawoXmlContext context) throws XMLStreamException {
         int index = context.getIndex(getLib(), true);
         if (index == 0) {
+            DynawoParametersDatabase parDB = context.getParametersDatabase();
+
             writer.writeStartElement(DYN_URI, "set");
             writer.writeAttribute("id", getParameterSetId());
-            ParameterXml.writeParameter(writer, "INT", "nbGen", Long.toString(context.getOmegaRefCount()));
-        }
-        // FIXME Change it by gen.H * gen.SNOM
-        // when parameters from generator dynamic model are available
-        double weight = OMEGA_REF_TEMP_WEIGHT_NOT_CALCULATED;
-        ParameterXml.writeParameter(writer, "DOUBLE", "weight_gen_" + index, Double.toString(weight));
-        if (index == context.getOmegaRefCount() - 1) {
+
+            long count = 0;
+            for (AbstractBlackBoxModel model : context.getBlackBoxModels()) {
+                if (model instanceof OmegaRef) {
+                    AbstractBlackBoxModel generatorModel = context.getBlackBoxModel(((OmegaRef) model).getGeneratorDynamicModelId());
+                    double h = parDB.getDouble(generatorModel.getParameterSetId(), "generator_H");
+                    double snom = parDB.getDouble(generatorModel.getParameterSetId(), "generator_SNom");
+
+                    ParametersXml.writeParameter(writer, DOUBLE, "weight_gen_" + count, Double.toString(h * snom));
+                    count++;
+                }
+            }
+            ParametersXml.writeParameter(writer, INT, "nbGen", Long.toString(count));
+
             writer.writeEndElement();
         }
     }

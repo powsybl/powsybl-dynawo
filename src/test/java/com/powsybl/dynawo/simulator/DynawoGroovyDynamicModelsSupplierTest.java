@@ -50,7 +50,6 @@ public class DynawoGroovyDynamicModelsSupplierTest {
 
         Files.copy(getClass().getResourceAsStream("/dynamicModels.groovy"), fileSystem.getPath("/dynamicModels.groovy"));
         Files.copy(getClass().getResourceAsStream("/models.par"), fileSystem.getPath("/models.par"));
-        DynawoParametersDatabase.setDefaultParametersFile(fileSystem.getPath("/models.par"));
     }
 
     @After
@@ -61,12 +60,11 @@ public class DynawoGroovyDynamicModelsSupplierTest {
     @Test
     public void test() {
 
-        List<DynamicModelGroovyExtension> extensions = GroovyExtension.find(DynamicModelGroovyExtension.class, "dynawo");
-        assertEquals(4, extensions.size());
+        List<DynamicModelGroovyExtension> extensions = GroovyExtension.find(DynamicModelGroovyExtension.class, "Dynawo");
+        assertEquals(3, extensions.size());
         assertTrue(validateExtension(extensions.get(0)));
         assertTrue(validateExtension(extensions.get(1)));
         assertTrue(validateExtension(extensions.get(2)));
-        assertTrue(validateExtension(extensions.get(3)));
 
         DynamicModelsSupplier supplier = new GroovyDynamicModelsSupplier(fileSystem.getPath("/dynamicModels.groovy"), extensions);
 
@@ -84,9 +82,8 @@ public class DynawoGroovyDynamicModelsSupplierTest {
         boolean isLoadExtension = extension instanceof LoadAlphaBetaGroovyExtension;
         boolean isGeneratorExtension = extension instanceof GeneratorSynchronousFourWindingsProportionalRegulationsGroovyExtension;
         boolean isOmegaRefExtension = extension instanceof OmegaRefGroovyExtension;
-        boolean isParametersDatabaseExtension = extension instanceof DynawoParametersDatabaseGroovyExtension;
 
-        return isLoadExtension || isGeneratorExtension || isOmegaRefExtension || isParametersDatabaseExtension;
+        return isLoadExtension || isGeneratorExtension || isOmegaRefExtension;
     }
 
     private void validateModel(DynamicModel dynamicModel) {
@@ -95,15 +92,16 @@ public class DynawoGroovyDynamicModelsSupplierTest {
         if (blackBoxModel instanceof LoadAlphaBeta) {
             Identifiable<?> identifiable = network.getIdentifiable(blackBoxModel.getStaticId());
             assertEquals(identifiable.getId(), blackBoxModel.getDynamicModelId());
-            assertEquals("default", blackBoxModel.getParameterSetId());
+            assertEquals("LAB", blackBoxModel.getParameterSetId());
             assertTrue(identifiable instanceof Load);
         } else if (blackBoxModel instanceof GeneratorSynchronousFourWindingsProportionalRegulations) {
             Identifiable<?> identifiable = network.getIdentifiable(blackBoxModel.getStaticId());
             assertEquals("BBM_" + identifiable.getId(), blackBoxModel.getDynamicModelId());
-            assertEquals("default", blackBoxModel.getParameterSetId());
+            assertEquals("GSFWPR", blackBoxModel.getParameterSetId());
             assertTrue(identifiable instanceof Generator);
         } else if (blackBoxModel instanceof OmegaRef) {
-            assertEquals("OMEGA_REF", blackBoxModel.getDynamicModelId());
+            OmegaRef omegaRef = (OmegaRef) blackBoxModel;
+            assertEquals("OMEGA_REF_" + omegaRef.getGeneratorDynamicModelId(), blackBoxModel.getDynamicModelId());
             DynawoTestUtil.assertThrows(UnsupportedOperationException.class, blackBoxModel::getStaticId);
             assertEquals("OMEGA_REF", blackBoxModel.getParameterSetId());
         }

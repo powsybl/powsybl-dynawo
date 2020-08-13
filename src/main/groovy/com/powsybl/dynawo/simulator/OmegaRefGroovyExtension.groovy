@@ -31,7 +31,7 @@ class OmegaRefGroovyExtension implements DynamicModelGroovyExtension {
     }
 
     String getName() {
-        return "dynawo"
+        return "Dynawo"
     }
 
     void load(Binding binding, Consumer<DynamicModel> consumer) {

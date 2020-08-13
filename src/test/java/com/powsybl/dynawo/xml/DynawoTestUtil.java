@@ -29,9 +29,9 @@ import com.powsybl.commons.AbstractConverterTest;
 import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynamicsimulation.DynamicEventModel;
 import com.powsybl.dynamicsimulation.DynamicModel;
-import com.powsybl.dynawo.dyd.OmegaRef;
 import com.powsybl.dynawo.dyd.GeneratorSynchronousFourWindingsProportionalRegulations;
 import com.powsybl.dynawo.dyd.LoadAlphaBeta;
+import com.powsybl.dynawo.dyd.OmegaRef;
 import com.powsybl.dynawo.simulator.DynawoCurve;
 import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.Network;
@@ -71,10 +71,10 @@ public class DynawoTestUtil extends AbstractConverterTest {
 
         dynamicModels = new ArrayList<>();
         network.getLoadStream().forEach(l -> {
-            dynamicModels.add(new LoadAlphaBeta("BBM_" + l.getId(), l.getId(), "default"));
+            dynamicModels.add(new LoadAlphaBeta("BBM_" + l.getId(), l.getId(), "LAB"));
         });
         network.getGeneratorStream().forEach(g -> {
-            dynamicModels.add(new GeneratorSynchronousFourWindingsProportionalRegulations("BBM_" + g.getId(), g.getId(), "default"));
+            dynamicModels.add(new GeneratorSynchronousFourWindingsProportionalRegulations("BBM_" + g.getId(), g.getId(), "GSFWPR"));
             dynamicModels.add(new OmegaRef("BBM_" + g.getId()));
         });
 
