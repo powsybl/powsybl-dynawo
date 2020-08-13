@@ -14,15 +14,15 @@ import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 
 /**
- * An implementation of {@link DynamicModelGroovyExtension} that adds the <pre>GeneratorSynchronousFourWindingsProportionalRegulations</pre> keyword to the DSL
+ * An implementation of {@link DynamicModelGroovyExtension} that adds the <pre>GeneratorSynchronousThreeWindingsProportionalRegulations</pre> keyword to the DSL
  *
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class GeneratorSynchronousFourWindingsProportionalRegulationsGroovyExtension extends GeneratorModelGroovyExtension {
+class GeneratorSynchronousThreeWindingsProportionalRegulationsGroovyExtension extends GeneratorModelGroovyExtension {
 
     void load(Binding binding, Consumer<DynamicModel> consumer) {
-        binding.GeneratorSynchronousFourWindingsProportionalRegulations = { Closure<Void> closure ->
+        binding.GeneratorSynchronousThreeWindingsProportionalRegulations = { Closure<Void> closure ->
             def cloned = closure.clone()
             GeneratorModelSpec generatorModelSpec = new GeneratorModelSpec()
 
@@ -37,7 +37,7 @@ class GeneratorSynchronousFourWindingsProportionalRegulationsGroovyExtension ext
             }
 
             String dynamicModelId = generatorModelSpec.dynamicModelId ? generatorModelSpec.dynamicModelId : generatorModelSpec.staticId
-            consumer.accept(new GeneratorSynchronousFourWindingsProportionalRegulations(dynamicModelId, generatorModelSpec.staticId, generatorModelSpec.parameterSetId))
+            consumer.accept(new GeneratorSynchronousThreeWindingsProportionalRegulations(dynamicModelId, generatorModelSpec.staticId, generatorModelSpec.parameterSetId))
         }
     }
 

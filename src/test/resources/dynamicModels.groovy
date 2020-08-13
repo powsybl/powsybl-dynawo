@@ -18,10 +18,18 @@ for (Load load : network.loads) {
 }
 
 for (Generator gen : network.generators) {
-    GeneratorSynchronousFourWindingsProportionalRegulations {
-        staticId gen.id
-        dynamicModelId "BBM_" + gen.id
-        parameterSetId "GSFWPR"
+    if (gen.id != "GEN2") {
+        GeneratorSynchronousFourWindingsProportionalRegulations {
+            staticId gen.id
+            dynamicModelId "BBM_" + gen.id
+            parameterSetId "GSFWPR"
+        }
+    } else {
+        GeneratorSynchronousThreeWindingsProportionalRegulations {
+            staticId gen.id
+            dynamicModelId "BBM_" + gen.id
+            parameterSetId "GSTWPR"
+        }
     }
     OmegaRef {
         generatorDynamicModelId "BBM_" + gen.id
