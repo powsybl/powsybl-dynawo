@@ -7,10 +7,10 @@ dynawo:
   debug: false
 
 dynawo-default-parameters:
-    parametersFile: /models.par
-    network.parametersFile: /network.par
+    parametersFile: /work/unittests/models.par
+    network.parametersFile: /work/unittests/network.par
     network.parametersId: "1"
     solver.type: IDA
-    solver.parametersFile: /solver.par
+    solver.parametersFile: /work/unittests/solver.par
     solver.parametersId: "1"
 

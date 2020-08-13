@@ -6,10 +6,8 @@
  */
 package com.powsybl.dynawo.simulator;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 
@@ -22,6 +20,8 @@ import org.junit.rules.ExpectedException;
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
 import com.powsybl.commons.PowsyblException;
+
+import static org.junit.Assert.*;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -37,7 +37,6 @@ public class DynawoParametersDatabaseTest {
     public void setUp() throws IOException {
         fileSystem = Jimfs.newFileSystem(Configuration.unix());
         Files.copy(getClass().getResourceAsStream("/models.par"), fileSystem.getPath("/models.par"));
-        Files.copy(getClass().getResourceAsStream("/models_reference.par"), fileSystem.getPath("/models_reference.par"));
         Files.copy(getClass().getResourceAsStream("/models_misspelled.par"), fileSystem.getPath("/models_misspelled.par"));
     }
 
@@ -47,28 +46,20 @@ public class DynawoParametersDatabaseTest {
     }
 
     @Test
-    public void checkParameters() throws IOException {
+    public void checkParameters() {
         DynawoParametersDatabase parametersDatabase = DynawoParametersDatabase.load(fileSystem.getPath("/models.par"));
         assertNotNull(parametersDatabase.getParameterSet("LoadAlphaBeta"));
-        assertEquals("1.5", parametersDatabase.getParameterSet("LoadAlphaBeta").getParameter("load_alpha").getValue());
-        assertEquals("2.5", parametersDatabase.getParameterSet("LoadAlphaBeta").getParameter("load_beta").getValue());
+        assertEquals(1.5, parametersDatabase.getDouble("LoadAlphaBeta", "load_alpha"), 1e-6);
+        assertEquals(2.5, parametersDatabase.getDouble("LoadAlphaBeta", "load_beta"), 1e-6);
         assertNotNull(parametersDatabase.getParameterSet("GeneratorSynchronousFourWindingsProportionalRegulations"));
-        assertEquals("5.4000000000000004",
-            parametersDatabase.getParameterSet("GeneratorSynchronousFourWindingsProportionalRegulations").getParameter("generator_H").getValue());
-        assertEquals("1211",
-            parametersDatabase.getParameterSet("GeneratorSynchronousFourWindingsProportionalRegulations").getParameter("generator_SNom").getValue());
+        assertEquals(5.4, parametersDatabase.getDouble("GeneratorSynchronousFourWindingsProportionalRegulations", "generator_H"), 1e-6);
+        assertEquals(1, parametersDatabase.getInt("GeneratorSynchronousFourWindingsProportionalRegulations", "generator_ExcitationPu"));
+        assertTrue(parametersDatabase.getBool("test", "boolean"));
+        assertEquals("aString", parametersDatabase.getString("test", "string"));
     }
 
     @Test
-    public void checkParametersWithReference() throws IOException {
-        exception.expect(PowsyblException.class);
-        exception.expectMessage("Unexpected element: reference");
-
-        DynawoParametersDatabase.load(fileSystem.getPath("/models_reference.par"));
-    }
-
-    @Test
-    public void checkParametersMisspelled() throws IOException {
+    public void checkParametersMisspelled() {
         exception.expect(PowsyblException.class);
         exception.expectMessage("Unexpected element: sett");
 
@@ -76,9 +67,9 @@ public class DynawoParametersDatabaseTest {
     }
 
     @Test
-    public void checkParametersNotFound() throws IOException {
-        exception.expect(IOException.class);
-        exception.expectMessage("/file.par not found");
+    public void checkParametersNotFound() {
+        exception.expect(UncheckedIOException.class);
+        exception.expectMessage("NoSuchFileException: /file.par");
 
         DynawoParametersDatabase.load(fileSystem.getPath("/file.par"));
     }
