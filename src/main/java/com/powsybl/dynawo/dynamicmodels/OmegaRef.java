@@ -4,10 +4,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package com.powsybl.dynawo.dyd;
+package com.powsybl.dynawo.dynamicmodels;
 
 import com.powsybl.commons.PowsyblException;
-import com.powsybl.dynawo.simulator.DynawoParametersDatabase;
+import com.powsybl.dynawo.DynawoParametersDatabase;
 import com.powsybl.dynawo.xml.DynawoXmlContext;
 import com.powsybl.dynawo.xml.MacroConnectorXml;
 import com.powsybl.dynawo.xml.ParametersXml;
@@ -16,8 +16,8 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.util.Objects;
 
-import static com.powsybl.dynawo.simulator.DynawoParametersDatabase.ParameterType.DOUBLE;
-import static com.powsybl.dynawo.simulator.DynawoParametersDatabase.ParameterType.INT;
+import static com.powsybl.dynawo.DynawoParametersDatabase.ParameterType.DOUBLE;
+import static com.powsybl.dynawo.DynawoParametersDatabase.ParameterType.INT;
 import static com.powsybl.dynawo.xml.DynawoXmlConstants.*;
 
 /**

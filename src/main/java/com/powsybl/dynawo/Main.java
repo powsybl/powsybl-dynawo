@@ -25,8 +25,6 @@ import com.powsybl.dynamicsimulation.groovy.GroovyCurvesSupplier;
 import com.powsybl.dynamicsimulation.groovy.GroovyExtension;
 import com.powsybl.dynamicsimulation.groovy.GroovyDynamicModelsSupplier;
 import com.powsybl.dynamicsimulation.json.JsonDynamicSimulationParameters;
-import com.powsybl.dynawo.simulator.DynawoSimulationParameters;
-import com.powsybl.dynawo.simulator.DynawoSimulationProvider;
 import com.powsybl.iidm.import_.Importers;
 import com.powsybl.iidm.network.Network;
 
