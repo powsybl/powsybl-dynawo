@@ -11,13 +11,13 @@ import java.util.Objects;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
-import com.powsybl.dynamicsimulation.DynamicEventModel;
+import com.powsybl.dynamicsimulation.EventModel;
 import com.powsybl.dynawo.xml.DynawoXmlContext;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public abstract class AbstractBlackBoxEventModel implements DynamicEventModel {
+public abstract class AbstractBlackBoxEventModel implements EventModel {
 
     public AbstractBlackBoxEventModel(String dynamicModelId, String staticId, String parameterSetId) {
         this.dynamicModelId = Objects.requireNonNull(dynamicModelId);

@@ -8,7 +8,7 @@
 package com.powsybl.dynawo.xml;
 
 import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
-import com.powsybl.dynamicsimulation.DynamicEventModel;
+import com.powsybl.dynamicsimulation.EventModel;
 import com.powsybl.dynawo.DynawoContext;
 import com.powsybl.dynawo.dyd.AbstractBlackBoxEventModel;
 
@@ -39,7 +39,7 @@ public final class EventsXml {
         DynawoXmlContext xmlContext = new DynawoXmlContext(context);
 
         try {
-            for (DynamicEventModel model : context.getDynamicEventModels()) {
+            for (EventModel model : context.getDynamicEventModels()) {
                 AbstractBlackBoxEventModel dynawoModel = (AbstractBlackBoxEventModel) model;
                 dynawoModel.write(writer, xmlContext);
             }

@@ -65,7 +65,7 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
     }
 
     @Override
-    public CompletableFuture<DynamicSimulationResult> run(Network network, DynamicModelsSupplier dynamicModelsSupplier, DynamicEventModelsSupplier dynamicEventsModelsSupplier, CurvesSupplier curvesSupplier,
+    public CompletableFuture<DynamicSimulationResult> run(Network network, DynamicModelsSupplier dynamicModelsSupplier, EventModelsSupplier dynamicEventsModelsSupplier, CurvesSupplier curvesSupplier,
                                                           String workingVariantId, ComputationManager computationManager, DynamicSimulationParameters parameters) {
         Objects.requireNonNull(dynamicModelsSupplier);
         Objects.requireNonNull(dynamicEventsModelsSupplier);
@@ -85,7 +85,7 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
         return dynawoParameters;
     }
 
-    private CompletableFuture<DynamicSimulationResult> run(Network network, DynamicModelsSupplier dynamicModelsSupplier, DynamicEventModelsSupplier dynamicEventsModelsSupplier, CurvesSupplier curvesSupplier,
+    private CompletableFuture<DynamicSimulationResult> run(Network network, DynamicModelsSupplier dynamicModelsSupplier, EventModelsSupplier dynamicEventsModelsSupplier, CurvesSupplier curvesSupplier,
                                                            String workingVariantId, ComputationManager computationManager, DynamicSimulationParameters parameters, DynawoSimulationParameters dynawoParameters) {
 
         network.getVariantManager().setWorkingVariant(workingVariantId);

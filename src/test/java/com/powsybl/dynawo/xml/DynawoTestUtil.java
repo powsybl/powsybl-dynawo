@@ -27,7 +27,7 @@ import org.xml.sax.SAXException;
 
 import com.powsybl.commons.AbstractConverterTest;
 import com.powsybl.dynamicsimulation.Curve;
-import com.powsybl.dynamicsimulation.DynamicEventModel;
+import com.powsybl.dynamicsimulation.EventModel;
 import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynawo.dyd.GeneratorSynchronousFourWindingsProportionalRegulations;
 import com.powsybl.dynawo.dyd.LoadAlphaBeta;
@@ -49,7 +49,7 @@ public class DynawoTestUtil extends AbstractConverterTest {
 
     protected Network network;
     protected List<DynamicModel> dynamicModels;
-    protected List<DynamicEventModel> dynamicEventModels;
+    protected List<EventModel> dynamicEventModels;
     protected List<Curve> curves;
 
     @Before

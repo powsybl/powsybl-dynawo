@@ -22,8 +22,8 @@ import com.powsybl.computation.ComputationManager;
 import com.powsybl.computation.local.LocalComputationConfig;
 import com.powsybl.computation.local.LocalComputationManager;
 import com.powsybl.dynamicsimulation.CurvesSupplier;
-import com.powsybl.dynamicsimulation.DynamicEventModel;
-import com.powsybl.dynamicsimulation.DynamicEventModelsSupplier;
+import com.powsybl.dynamicsimulation.EventModel;
+import com.powsybl.dynamicsimulation.EventModelsSupplier;
 import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynamicsimulation.DynamicSimulation;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
@@ -49,14 +49,14 @@ public class DynawoSimulationProviderTest {
 
     }
 
-    public static class DynamicEvenModelsSupplierMock implements DynamicEventModelsSupplier {
+    public static class DynamicEvenModelsSupplierMock implements EventModelsSupplier {
 
-        static DynamicEventModelsSupplier empty() {
+        static EventModelsSupplier empty() {
             return network -> Collections.emptyList();
         }
 
         @Override
-        public List<DynamicEventModel> get(Network network) {
+        public List<EventModel> get(Network network) {
             return Collections.emptyList();
         }
 
