@@ -13,6 +13,10 @@ import javax.xml.stream.XMLStreamWriter;
 
 import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynawo.xml.DynawoXmlContext;
+import com.powsybl.dynawo.xml.MacroStaticReferenceXml;
+
+import static com.powsybl.dynawo.xml.DynawoXmlConstants.DYN_URI;
+import static com.powsybl.dynawo.xml.DynawoXmlConstants.MACRO_STATIC_REFERENCE_PREFIX;
 
 /**
  * @author Luma Zamarreño <zamarrenolm at aia.es>
@@ -43,6 +47,18 @@ public abstract class AbstractBlackBoxModel implements DynamicModel {
 
     public void writeParameters(XMLStreamWriter writer, DynawoXmlContext context) throws XMLStreamException {
         //Empty method to be redefined by specific models
+    }
+
+    protected void writeBlackBoxModel(XMLStreamWriter writer, DynawoXmlContext context) throws XMLStreamException {
+        // Write the blackBoxModel object
+        writer.writeStartElement(DYN_URI, "blackBoxModel");
+        writer.writeAttribute("id", getDynamicModelId());
+        writer.writeAttribute("lib", getLib());
+        writer.writeAttribute("parFile", context.getParFile());
+        writer.writeAttribute("parId", getParameterSetId());
+        writer.writeAttribute("staticId", getStaticId());
+        MacroStaticReferenceXml.writeMacroStaticRef(writer, MACRO_STATIC_REFERENCE_PREFIX + getLib());
+        writer.writeEndElement();
     }
 
     private final String dynamicModelId;
