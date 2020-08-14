@@ -32,7 +32,7 @@ import com.powsybl.iidm.network.Network;
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class DynawoSimulationProviderTest {
+public class DynawoProviderTest {
 
     public static class DynamicModelsSupplierMock implements DynamicModelsSupplier {
 
