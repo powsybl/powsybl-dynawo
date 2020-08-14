@@ -28,6 +28,7 @@ import org.xml.sax.SAXException;
 import com.powsybl.commons.AbstractConverterTest;
 import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynamicsimulation.DynamicModel;
+import com.powsybl.dynawo.dynamicmodels.CurrentLimitAutomaton;
 import com.powsybl.dynawo.dynamicmodels.GeneratorSynchronousFourWindingsProportionalRegulations;
 import com.powsybl.dynawo.dynamicmodels.LoadAlphaBeta;
 import com.powsybl.dynawo.dynamicmodels.OmegaRef;
@@ -74,6 +75,9 @@ public class DynawoTestUtil extends AbstractConverterTest {
         network.getGeneratorStream().forEach(g -> {
             dynamicModels.add(new GeneratorSynchronousFourWindingsProportionalRegulations("BBM_" + g.getId(), g.getId(), "GSFWPR"));
             dynamicModels.add(new OmegaRef("BBM_" + g.getId()));
+        });
+        network.getLineStream().forEach(l -> {
+            dynamicModels.add(new CurrentLimitAutomaton("BBM_" + l.getId(), l.getId(), "CLA"));
         });
     }
 
