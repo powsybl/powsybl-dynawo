@@ -8,8 +8,8 @@ package com.powsybl.dynawo.xml;
 
 import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
 import com.powsybl.dynawo.DynawoContext;
-import com.powsybl.dynawo.DynawoSimulationParameters;
-import com.powsybl.dynawo.DynawoSimulationParameters.SolverType;
+import com.powsybl.dynawo.DynawoParameters;
+import com.powsybl.dynawo.DynawoParameters.SolverType;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -51,7 +51,7 @@ public final class JobsXml {
     }
 
     private static void writeSolver(XMLStreamWriter writer, DynawoContext context) throws XMLStreamException {
-        DynawoSimulationParameters parameters = context.getDynawoParameters();
+        DynawoParameters parameters = context.getDynawoParameters();
         writer.writeEmptyElement(DYN_URI, "solver");
         writer.writeAttribute("lib", parameters.getSolver().getType().equals(SolverType.IDA) ? "dynawo_SolverIDA" : "dynawo_SolverSIM");
         writer.writeAttribute("parFile", Paths.get(parameters.getSolver().getParametersFile()).getFileName().toString());
@@ -59,7 +59,7 @@ public final class JobsXml {
     }
 
     private static void writeModeler(XMLStreamWriter writer, DynawoContext context) throws XMLStreamException {
-        DynawoSimulationParameters parameters = context.getDynawoParameters();
+        DynawoParameters parameters = context.getDynawoParameters();
         writer.writeStartElement(DYN_URI, "modeler");
         writer.writeAttribute("compileDir", "outputs/compilation");
 

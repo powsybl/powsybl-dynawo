@@ -15,12 +15,12 @@ import com.powsybl.commons.config.InMemoryPlatformConfig;
 import com.powsybl.commons.config.MapModuleConfig;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynamicsimulation.json.JsonDynamicSimulationParameters;
-import com.powsybl.dynawo.DynawoSimulationParameters;
+import com.powsybl.dynawo.DynawoParameters;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class DynawoSimulationParametersSerializerTest extends AbstractConverterTest {
+public class DynawoParametersSerializerTest extends AbstractConverterTest {
 
     @Test
     public void roundTripParameters() throws IOException {
@@ -36,8 +36,8 @@ public class DynawoSimulationParametersSerializerTest extends AbstractConverterT
         DynamicSimulationParameters dynamicSimulationParameters = new DynamicSimulationParameters()
             .setStartTime(0)
             .setStopTime(3600);
-        DynawoSimulationParameters dynawoSimulationParameters = DynawoSimulationParameters.load(platformConfig);
-        dynamicSimulationParameters.addExtension(DynawoSimulationParameters.class, dynawoSimulationParameters);
+        DynawoParameters dynawoParameters = DynawoParameters.load(platformConfig);
+        dynamicSimulationParameters.addExtension(DynawoParameters.class, dynawoParameters);
         roundTripTest(dynamicSimulationParameters, JsonDynamicSimulationParameters::write,
             JsonDynamicSimulationParameters::read, "/DynawoParameters.json");
     }
