@@ -4,13 +4,14 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package com.powsybl.dynawo.dynamicmodels;
+package com.powsybl.dynawo.automatons;
 
 import static com.powsybl.dynawo.xml.DynawoXmlConstants.NETWORK;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
+import com.powsybl.dynawo.dynamicmodels.AbstractBlackBoxModel;
 import com.powsybl.dynawo.xml.DynawoXmlContext;
 import com.powsybl.dynawo.xml.MacroConnectorXml;
 
