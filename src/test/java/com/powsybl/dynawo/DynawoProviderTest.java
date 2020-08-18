@@ -57,7 +57,7 @@ public class DynawoProviderTest {
             DynamicSimulation.Runner dynawoSimulation = DynamicSimulation.find();
             assertEquals("Dynawo", dynawoSimulation.getName());
             assertEquals("1.2.0", dynawoSimulation.getVersion());
-            DynamicSimulationResult result = dynawoSimulation.run(network, DynamicModelsSupplierMock.empty(), CurvesSupplier.empty(),
+            DynamicSimulationResult result = dynawoSimulation.run(network, DynamicModelsSupplierMock.empty(), null, CurvesSupplier.empty(),
                                                                   network.getVariantManager().getWorkingVariantId(),
                                                                   computationManager, DynamicSimulationParameters.load());
             assertNotNull(result);
