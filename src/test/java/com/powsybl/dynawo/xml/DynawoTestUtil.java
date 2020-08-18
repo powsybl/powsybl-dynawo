@@ -32,6 +32,7 @@ import com.powsybl.dynawo.dynamicmodels.GeneratorSynchronousFourWindingsProporti
 import com.powsybl.dynawo.dynamicmodels.LoadAlphaBeta;
 import com.powsybl.dynawo.dynamicmodels.OmegaRef;
 import com.powsybl.dynawo.DynawoCurve;
+import com.powsybl.dynawo.automatons.CurrentLimitAutomaton;
 import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.NetworkFactory;
@@ -74,6 +75,9 @@ public class DynawoTestUtil extends AbstractConverterTest {
         network.getGeneratorStream().forEach(g -> {
             dynamicModels.add(new GeneratorSynchronousFourWindingsProportionalRegulations("BBM_" + g.getId(), g.getId(), "GSFWPR"));
             dynamicModels.add(new OmegaRef("BBM_" + g.getId()));
+        });
+        network.getLineStream().forEach(l -> {
+            dynamicModels.add(new CurrentLimitAutomaton("BBM_" + l.getId(), l.getId(), "CLA"));
         });
     }
 
