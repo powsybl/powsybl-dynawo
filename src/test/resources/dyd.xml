@@ -17,19 +17,19 @@
         <dyn:macroStaticRef id="MSR_LoadAlphaBeta"/>
     </dyn:blackBoxModel>
     <dyn:macroConnect connector="MC_LoadAlphaBeta" id1="BBM_LOAD2" id2="NETWORK"/>
-    <dyn:macroStaticReference id="MSR_GeneratorSynchronousFourWindingsProportionalRegulations">
+    <dyn:macroStaticReference id="MSR_GeneratorSynchronousThreeWindingsProportionalRegulations">
         <dyn:staticRef var="generator_PGenPu" staticVar="p"/>
         <dyn:staticRef var="generator_QGenPu" staticVar="q"/>
         <dyn:staticRef var="generator_state" staticVar="state"/>
     </dyn:macroStaticReference>
-    <dyn:macroConnector id="MC_GeneratorSynchronousFourWindingsProportionalRegulations">
+    <dyn:macroConnector id="MC_GeneratorSynchronousThreeWindingsProportionalRegulations">
         <dyn:connect var1="generator_terminal" var2="@STATIC_ID@@NODE@_ACPIN"/>
         <dyn:connect var1="generator_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
     </dyn:macroConnector>
-    <dyn:blackBoxModel id="BBM_GEN" lib="GeneratorSynchronousFourWindingsProportionalRegulations" parFile="models.par" parId="GSFWPR" staticId="GEN">
-        <dyn:macroStaticRef id="MSR_GeneratorSynchronousFourWindingsProportionalRegulations"/>
+    <dyn:blackBoxModel id="BBM_GEN" lib="GeneratorSynchronousThreeWindingsProportionalRegulations" parFile="models.par" parId="GSFWPR" staticId="GEN">
+        <dyn:macroStaticRef id="MSR_GeneratorSynchronousThreeWindingsProportionalRegulations"/>
     </dyn:blackBoxModel>
-    <dyn:macroConnect connector="MC_GeneratorSynchronousFourWindingsProportionalRegulations" id1="BBM_GEN" id2="NETWORK"/>
+    <dyn:macroConnect connector="MC_GeneratorSynchronousThreeWindingsProportionalRegulations" id1="BBM_GEN" id2="NETWORK"/>
     <dyn:macroConnector id="MC_DYNModelOmegaRefToGenerator">
         <dyn:connect var1="omega_grp_@INDEX@" var2="generator_omegaPu"/>
         <dyn:connect var1="omegaRef_grp_@INDEX@" var2="generator_omegaRefPu"/>
@@ -41,6 +41,15 @@
     <dyn:blackBoxModel id="OMEGA_REF" lib="DYNModelOmegaRef" parFile="sim1.par" parId="OMEGA_REF"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRefToGenerator" id1="OMEGA_REF" index1="0" id2="BBM_GEN"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRefToNumCCMachine" id1="OMEGA_REF" index1="0" id2="NETWORK" name2="GEN"/>
+    <dyn:macroStaticReference id="MSR_GeneratorSynchronousFourWindingsProportionalRegulations">
+        <dyn:staticRef var="generator_PGenPu" staticVar="p"/>
+        <dyn:staticRef var="generator_QGenPu" staticVar="q"/>
+        <dyn:staticRef var="generator_state" staticVar="state"/>
+    </dyn:macroStaticReference>
+    <dyn:macroConnector id="MC_GeneratorSynchronousFourWindingsProportionalRegulations">
+        <dyn:connect var1="generator_terminal" var2="@STATIC_ID@@NODE@_ACPIN"/>
+        <dyn:connect var1="generator_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
+    </dyn:macroConnector>
     <dyn:blackBoxModel id="BBM_GEN2" lib="GeneratorSynchronousFourWindingsProportionalRegulations" parFile="models.par" parId="GSFWPR" staticId="GEN2">
         <dyn:macroStaticRef id="MSR_GeneratorSynchronousFourWindingsProportionalRegulations"/>
     </dyn:blackBoxModel>
