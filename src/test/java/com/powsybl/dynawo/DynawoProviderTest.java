@@ -22,6 +22,8 @@ import com.powsybl.computation.ComputationManager;
 import com.powsybl.computation.local.LocalComputationConfig;
 import com.powsybl.computation.local.LocalComputationManager;
 import com.powsybl.dynamicsimulation.CurvesSupplier;
+import com.powsybl.dynamicsimulation.EventModel;
+import com.powsybl.dynamicsimulation.EventModelsSupplier;
 import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynamicsimulation.DynamicSimulation;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
@@ -47,6 +49,19 @@ public class DynawoProviderTest {
 
     }
 
+    public static class EvenModelsSupplierMock implements EventModelsSupplier {
+
+        static EventModelsSupplier empty() {
+            return network -> Collections.emptyList();
+        }
+
+        @Override
+        public List<EventModel> get(Network network) {
+            return Collections.emptyList();
+        }
+
+    }
+
     @Test
     public void test() throws Exception {
         try (FileSystem fs = Jimfs.newFileSystem(Configuration.unix())) {
@@ -57,8 +72,8 @@ public class DynawoProviderTest {
             DynamicSimulation.Runner dynawoSimulation = DynamicSimulation.find();
             assertEquals("Dynawo", dynawoSimulation.getName());
             assertEquals("1.2.0", dynawoSimulation.getVersion());
-            DynamicSimulationResult result = dynawoSimulation.run(network, DynamicModelsSupplierMock.empty(), null, CurvesSupplier.empty(),
-                                                                  network.getVariantManager().getWorkingVariantId(),
+            DynamicSimulationResult result = dynawoSimulation.run(network, DynamicModelsSupplierMock.empty(), EvenModelsSupplierMock.empty(),
+                                                                  CurvesSupplier.empty(), network.getVariantManager().getWorkingVariantId(),
                                                                   computationManager, DynamicSimulationParameters.load());
             assertNotNull(result);
         }
