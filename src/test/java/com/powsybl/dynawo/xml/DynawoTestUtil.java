@@ -27,6 +27,7 @@ import org.xml.sax.SAXException;
 
 import com.powsybl.commons.AbstractConverterTest;
 import com.powsybl.dynamicsimulation.Curve;
+import com.powsybl.dynamicsimulation.EventModel;
 import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynawo.dynamicmodels.GeneratorSynchronousFourWindingsProportionalRegulations;
 import com.powsybl.dynawo.dynamicmodels.LoadAlphaBeta;
@@ -49,6 +50,7 @@ public class DynawoTestUtil extends AbstractConverterTest {
 
     protected Network network;
     protected List<DynamicModel> dynamicModels;
+    protected List<EventModel> eventModels;
     protected List<Curve> curves;
 
     @Before
@@ -68,6 +70,7 @@ public class DynawoTestUtil extends AbstractConverterTest {
             curves.add(new DynawoCurve(g.getId(), "voltageRegulator_EfdPu"));
         });
 
+        // Dynamic Models
         dynamicModels = new ArrayList<>();
         network.getLoadStream().forEach(l -> {
             dynamicModels.add(new LoadAlphaBeta("BBM_" + l.getId(), l.getId(), "LAB"));
@@ -76,6 +79,11 @@ public class DynawoTestUtil extends AbstractConverterTest {
             dynamicModels.add(new GeneratorSynchronousFourWindingsProportionalRegulations("BBM_" + g.getId(), g.getId(), "GSFWPR"));
             dynamicModels.add(new OmegaRef("BBM_" + g.getId()));
         });
+
+        // Events
+        eventModels = new ArrayList<>();
+
+        // Automatons
         network.getLineStream().forEach(l -> {
             dynamicModels.add(new CurrentLimitAutomaton("BBM_" + l.getId(), l.getId(), "CLA"));
         });
