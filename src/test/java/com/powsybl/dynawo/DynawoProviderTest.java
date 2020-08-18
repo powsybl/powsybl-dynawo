@@ -32,7 +32,7 @@ import com.powsybl.iidm.network.Network;
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class DynawoSimulationProviderTest {
+public class DynawoProviderTest {
 
     public static class DynamicModelsSupplierMock implements DynamicModelsSupplier {
 
@@ -57,7 +57,7 @@ public class DynawoSimulationProviderTest {
             DynamicSimulation.Runner dynawoSimulation = DynamicSimulation.find();
             assertEquals("Dynawo", dynawoSimulation.getName());
             assertEquals("1.2.0", dynawoSimulation.getVersion());
-            DynamicSimulationResult result = dynawoSimulation.run(network, DynamicModelsSupplierMock.empty(), CurvesSupplier.empty(),
+            DynamicSimulationResult result = dynawoSimulation.run(network, DynamicModelsSupplierMock.empty(), null, CurvesSupplier.empty(),
                                                                   network.getVariantManager().getWorkingVariantId(),
                                                                   computationManager, DynamicSimulationParameters.load());
             assertNotNull(result);

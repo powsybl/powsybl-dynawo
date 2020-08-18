@@ -15,7 +15,7 @@ import org.xml.sax.SAXException;
 
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawo.DynawoContext;
-import com.powsybl.dynawo.DynawoSimulationParameters;
+import com.powsybl.dynawo.DynawoParameters;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -25,7 +25,7 @@ public class CurvesXmlTest extends DynawoTestUtil {
     @Test
     public void writeCurve() throws SAXException, IOException, XMLStreamException {
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
-        DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load();
+        DynawoParameters dynawoParameters = DynawoParameters.load();
         DynawoContext context = new DynawoContext(network, dynamicModels, curves, parameters, dynawoParameters);
 
         CurvesXml.write(tmpDir, context);

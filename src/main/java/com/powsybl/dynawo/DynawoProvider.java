@@ -37,18 +37,18 @@ import static com.powsybl.dynawo.xml.DynawoConstants.NETWORK_FILENAME;
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 @AutoService(DynamicSimulationProvider.class)
-public class DynawoSimulationProvider implements DynamicSimulationProvider {
+public class DynawoProvider implements DynamicSimulationProvider {
 
     private static final String DYNAWO_CMD_NAME = "dynawo.sh";
     private static final String WORKING_DIR_PREFIX = "powsybl_dynawo_";
 
     private final DynawoConfig dynawoConfig;
 
-    public DynawoSimulationProvider() {
+    public DynawoProvider() {
         this(DynawoConfig.load());
     }
 
-    public DynawoSimulationProvider(DynawoConfig dynawoConfig) {
+    public DynawoProvider(DynawoConfig dynawoConfig) {
         this.dynawoConfig = Objects.requireNonNull(dynawoConfig);
     }
 
@@ -63,27 +63,27 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
     }
 
     @Override
-    public CompletableFuture<DynamicSimulationResult> run(Network network, DynamicModelsSupplier dynamicModelsSupplier, CurvesSupplier curvesSupplier, String workingVariantId,
+    public CompletableFuture<DynamicSimulationResult> run(Network network, DynamicModelsSupplier dynamicModelsSupplier, EventModelsSupplier eventModelsSupplier, CurvesSupplier curvesSupplier, String workingVariantId,
                                                           ComputationManager computationManager, DynamicSimulationParameters parameters) {
         Objects.requireNonNull(dynamicModelsSupplier);
         Objects.requireNonNull(curvesSupplier);
         Objects.requireNonNull(workingVariantId);
         Objects.requireNonNull(parameters);
 
-        DynawoSimulationParameters dynawoParameters = getDynawoSimulationParameters(parameters);
+        DynawoParameters dynawoParameters = getDynawoSimulationParameters(parameters);
         return run(network, dynamicModelsSupplier, curvesSupplier, workingVariantId, computationManager, parameters, dynawoParameters);
     }
 
-    private DynawoSimulationParameters getDynawoSimulationParameters(DynamicSimulationParameters parameters) {
-        DynawoSimulationParameters dynawoParameters = parameters.getExtension(DynawoSimulationParameters.class);
+    private DynawoParameters getDynawoSimulationParameters(DynamicSimulationParameters parameters) {
+        DynawoParameters dynawoParameters = parameters.getExtension(DynawoParameters.class);
         if (dynawoParameters == null) {
-            dynawoParameters = DynawoSimulationParameters.load();
+            dynawoParameters = DynawoParameters.load();
         }
         return dynawoParameters;
     }
 
     private CompletableFuture<DynamicSimulationResult> run(Network network, DynamicModelsSupplier dynamicModelsSupplier, CurvesSupplier curvesSupplier, String workingVariantId,
-                                                           ComputationManager computationManager, DynamicSimulationParameters parameters, DynawoSimulationParameters dynawoParameters) {
+                                                           ComputationManager computationManager, DynamicSimulationParameters parameters, DynawoParameters dynawoParameters) {
 
         network.getVariantManager().setWorkingVariant(workingVariantId);
         ExecutionEnvironment execEnv = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, dynawoConfig.isDebug());

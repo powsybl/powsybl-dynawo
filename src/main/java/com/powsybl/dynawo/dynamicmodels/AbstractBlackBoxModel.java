@@ -61,6 +61,15 @@ public abstract class AbstractBlackBoxModel implements DynamicModel {
         writer.writeEndElement();
     }
 
+    protected void writeAutomatonBlackBoxModel(XMLStreamWriter writer, DynawoXmlContext context) throws XMLStreamException {
+        // Write the blackBoxModel object
+        writer.writeEmptyElement(DYN_URI, "blackBoxModel");
+        writer.writeAttribute("id", getDynamicModelId());
+        writer.writeAttribute("lib", getLib());
+        writer.writeAttribute("parFile", context.getParFile());
+        writer.writeAttribute("parId", getParameterSetId());
+    }
+
     private final String dynamicModelId;
     private final String staticId;
     private final String parameterSetId;
