@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
+    <dyn:blackBoxModel id="EM_VLGEN_0" lib="DummyEventModel" parFile="models.par" parId="DEM"/>
+</dyn:dynamicModelsArchitecture>
