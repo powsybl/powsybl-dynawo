@@ -21,14 +21,14 @@ import com.powsybl.dynawo.xml.DynawoXmlContext;
  */
 public abstract class AbstractBlackBoxEventModel implements EventModel {
 
-    public AbstractBlackBoxEventModel(String dynamicModelId, String staticId, String parameterSetId) {
-        this.dynamicModelId = Objects.requireNonNull(dynamicModelId);
+    public AbstractBlackBoxEventModel(String eventModelId, String staticId, String parameterSetId) {
+        this.eventModelId = Objects.requireNonNull(eventModelId);
         this.staticId = Objects.requireNonNull(staticId);
         this.parameterSetId = Objects.requireNonNull(parameterSetId);
     }
 
-    public String getDynamicModelId() {
-        return dynamicModelId;
+    public String getEventModelId() {
+        return eventModelId;
     }
 
     public abstract String getLib();
@@ -46,13 +46,13 @@ public abstract class AbstractBlackBoxEventModel implements EventModel {
     protected void writeEventBlackBoxModel(XMLStreamWriter writer, DynawoXmlContext context) throws XMLStreamException {
         // Write the blackBoxModel object
         writer.writeEmptyElement(DYN_URI, "blackBoxModel");
-        writer.writeAttribute("id", getDynamicModelId());
+        writer.writeAttribute("id", getEventModelId());
         writer.writeAttribute("lib", getLib());
         writer.writeAttribute("parFile", context.getParFile());
         writer.writeAttribute("parId", getParameterSetId());
     }
 
-    private final String dynamicModelId;
+    private final String eventModelId;
     private final String staticId;
     private final String parameterSetId;
 }

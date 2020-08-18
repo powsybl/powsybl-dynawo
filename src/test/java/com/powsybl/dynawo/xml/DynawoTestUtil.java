@@ -33,6 +33,7 @@ import com.powsybl.dynawo.dynamicmodels.GeneratorSynchronousFourWindingsProporti
 import com.powsybl.dynawo.dynamicmodels.GeneratorSynchronousThreeWindingsProportionalRegulations;
 import com.powsybl.dynawo.dynamicmodels.LoadAlphaBeta;
 import com.powsybl.dynawo.dynamicmodels.OmegaRef;
+import com.powsybl.dynawo.events.EventQuadripoleDisconnection;
 import com.powsybl.dynawo.DynawoCurve;
 import com.powsybl.dynawo.automatons.CurrentLimitAutomaton;
 import com.powsybl.iidm.network.Bus;
@@ -87,6 +88,9 @@ public class DynawoTestUtil extends AbstractConverterTest {
 
         // Events
         eventModels = new ArrayList<>();
+        network.getLineStream().forEach(l -> {
+            eventModels.add(new EventQuadripoleDisconnection("EM_" + l.getId(), l.getId(), "EQD"));
+        });
 
         // Automatons
         network.getLineStream().forEach(l -> {

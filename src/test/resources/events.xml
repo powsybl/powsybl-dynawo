@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
-    <dyn:blackBoxModel id="EM_VLGEN_0" lib="DummyEventModel" parFile="models.par" parId="DEM"/>
+    <dyn:macroConnector id="MC_EventQuadripoleDisconnection">
+        <dyn:connect var1="event_state1_value" var2="@NAME@_state_value"/>
+    </dyn:macroConnector>
+    <dyn:blackBoxModel id="EM_NHV1_NHV2_1" lib="EventQuadripoleDisconnection" parFile="models.par" parId="EQD"/>
+    <dyn:macroConnect connector="MC_EventQuadripoleDisconnection" id1="EM_NHV1_NHV2_1" id2="NETWORK" name2="NHV1_NHV2_1"/>
+    <dyn:blackBoxModel id="EM_NHV1_NHV2_2" lib="EventQuadripoleDisconnection" parFile="models.par" parId="EQD"/>
+    <dyn:macroConnect connector="MC_EventQuadripoleDisconnection" id1="EM_NHV1_NHV2_2" id2="NETWORK" name2="NHV1_NHV2_2"/>
 </dyn:dynamicModelsArchitecture>
