@@ -6,6 +6,8 @@
  */
 package com.powsybl.dynawo.automatons;
 
+import static com.powsybl.dynawo.xml.DynawoXmlConstants.DYN_URI;
+import static com.powsybl.dynawo.xml.DynawoXmlConstants.MACRO_CONNECTOR_PREFIX;
 import static com.powsybl.dynawo.xml.DynawoXmlConstants.NETWORK;
 
 import javax.xml.stream.XMLStreamException;
@@ -34,10 +36,27 @@ public class CurrentLimitAutomaton extends AbstractBlackBoxModel {
 
     @Override
     public void write(XMLStreamWriter writer, DynawoXmlContext context) throws XMLStreamException {
+        if (context.getIndex(getLib(), true) == 0) {
+            // Write the macroConnector object
+            writer.writeStartElement(DYN_URI, "macroConnector");
+            writer.writeAttribute("id", MACRO_CONNECTOR_PREFIX + getLib() + TO_LINE_SIDE1);
+            MacroConnectorXml.writeConnect(writer, "currentLimitAutomaton_IMonitored", "@NAME@_iSide1");
+            MacroConnectorXml.writeConnect(writer, "currentLimitAutomaton_order", "@NAME@_state");
+            MacroConnectorXml.writeConnect(writer, "currentLimitAutomaton_AutomatonExists", "@NAME@_desactivate_currentLimits");
+            writer.writeEndElement();
+
+            writer.writeStartElement(DYN_URI, "macroConnector");
+            writer.writeAttribute("id", MACRO_CONNECTOR_PREFIX + getLib() + TO_LINE_SIDE2);
+            MacroConnectorXml.writeConnect(writer, "currentLimitAutomaton_IMonitored", "@NAME@_iSide2");
+            MacroConnectorXml.writeConnect(writer, "currentLimitAutomaton_order", "@NAME@_state");
+            MacroConnectorXml.writeConnect(writer, "currentLimitAutomaton_AutomatonExists", "@NAME@_desactivate_currentLimits");
+            writer.writeEndElement();
+        }
+
         writeAutomatonBlackBoxModel(writer, context);
 
         // Write the connect object
-        MacroConnectorXml.writeMacroConnect(writer, getLib() + TO_LINE_SIDE1, getDynamicModelId(), NETWORK, getStaticId());
-        MacroConnectorXml.writeMacroConnect(writer, getLib() + TO_LINE_SIDE2, getDynamicModelId(), NETWORK, getStaticId());
+        MacroConnectorXml.writeMacroConnect(writer, MACRO_CONNECTOR_PREFIX + getLib() + TO_LINE_SIDE1, getDynamicModelId(), NETWORK, getStaticId());
+        MacroConnectorXml.writeMacroConnect(writer, MACRO_CONNECTOR_PREFIX + getLib() + TO_LINE_SIDE2, getDynamicModelId(), NETWORK, getStaticId());
     }
 }
