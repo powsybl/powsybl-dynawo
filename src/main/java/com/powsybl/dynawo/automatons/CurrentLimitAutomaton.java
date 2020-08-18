@@ -34,7 +34,7 @@ public class CurrentLimitAutomaton extends AbstractBlackBoxModel {
 
     @Override
     public void write(XMLStreamWriter writer, DynawoXmlContext context) throws XMLStreamException {
-        writeEmptyBlackBoxModel(writer, context);
+        writeAutomatonBlackBoxModel(writer, context);
 
         // Write the connect object
         MacroConnectorXml.writeMacroConnect(writer, getLib() + TO_LINE_SIDE1, getDynamicModelId(), NETWORK, getStaticId());
