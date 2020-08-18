@@ -49,7 +49,7 @@ public class DynawoProviderTest {
 
     }
 
-    public static class DynamicEvenModelsSupplierMock implements EventModelsSupplier {
+    public static class EvenModelsSupplierMock implements EventModelsSupplier {
 
         static EventModelsSupplier empty() {
             return network -> Collections.emptyList();
@@ -72,7 +72,7 @@ public class DynawoProviderTest {
             DynamicSimulation.Runner dynawoSimulation = DynamicSimulation.find();
             assertEquals("Dynawo", dynawoSimulation.getName());
             assertEquals("1.2.0", dynawoSimulation.getVersion());
-            DynamicSimulationResult result = dynawoSimulation.run(network, DynamicModelsSupplierMock.empty(), DynamicEvenModelsSupplierMock.empty(),
+            DynamicSimulationResult result = dynawoSimulation.run(network, DynamicModelsSupplierMock.empty(), EvenModelsSupplierMock.empty(),
                                                                   CurvesSupplier.empty(), network.getVariantManager().getWorkingVariantId(),
                                                                   computationManager, DynamicSimulationParameters.load());
             assertNotNull(result);

@@ -64,16 +64,16 @@ public class DynawoProvider implements DynamicSimulationProvider {
     }
 
     @Override
-    public CompletableFuture<DynamicSimulationResult> run(Network network, DynamicModelsSupplier dynamicModelsSupplier, EventModelsSupplier dynamicEventsModelsSupplier, CurvesSupplier curvesSupplier,
+    public CompletableFuture<DynamicSimulationResult> run(Network network, DynamicModelsSupplier dynamicModelsSupplier, EventModelsSupplier eventsModelsSupplier, CurvesSupplier curvesSupplier,
                                                           String workingVariantId, ComputationManager computationManager, DynamicSimulationParameters parameters) {
         Objects.requireNonNull(dynamicModelsSupplier);
-        Objects.requireNonNull(dynamicEventsModelsSupplier);
+        Objects.requireNonNull(eventsModelsSupplier);
         Objects.requireNonNull(curvesSupplier);
         Objects.requireNonNull(workingVariantId);
         Objects.requireNonNull(parameters);
 
         DynawoParameters dynawoParameters = getDynawoSimulationParameters(parameters);
-        return run(network, dynamicModelsSupplier, dynamicEventsModelsSupplier, curvesSupplier, workingVariantId, computationManager, parameters, dynawoParameters);
+        return run(network, dynamicModelsSupplier, eventsModelsSupplier, curvesSupplier, workingVariantId, computationManager, parameters, dynawoParameters);
     }
 
     private DynawoParameters getDynawoSimulationParameters(DynamicSimulationParameters parameters) {
@@ -84,13 +84,13 @@ public class DynawoProvider implements DynamicSimulationProvider {
         return dynawoParameters;
     }
 
-    private CompletableFuture<DynamicSimulationResult> run(Network network, DynamicModelsSupplier dynamicModelsSupplier, EventModelsSupplier dynamicEventsModelsSupplier, CurvesSupplier curvesSupplier,
+    private CompletableFuture<DynamicSimulationResult> run(Network network, DynamicModelsSupplier dynamicModelsSupplier, EventModelsSupplier eventsModelsSupplier, CurvesSupplier curvesSupplier,
                                                            String workingVariantId, ComputationManager computationManager, DynamicSimulationParameters parameters, DynawoParameters dynawoParameters) {
 
         network.getVariantManager().setWorkingVariant(workingVariantId);
         ExecutionEnvironment execEnv = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, dynawoConfig.isDebug());
 
-        DynawoContext context = new DynawoContext(network, dynamicModelsSupplier.get(network), dynamicEventsModelsSupplier.get(network), curvesSupplier.get(network), parameters, dynawoParameters);
+        DynawoContext context = new DynawoContext(network, dynamicModelsSupplier.get(network), eventsModelsSupplier.get(network), curvesSupplier.get(network), parameters, dynawoParameters);
         return computationManager.execute(execEnv, new DynawoHandler(context));
     }
 

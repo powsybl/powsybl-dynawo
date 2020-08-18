@@ -49,7 +49,7 @@ public class DynawoTestUtil extends AbstractConverterTest {
 
     protected Network network;
     protected List<DynamicModel> dynamicModels;
-    protected List<EventModel> dynamicEventModels;
+    protected List<EventModel> eventModels;
     protected List<Curve> curves;
 
     @Before
@@ -78,7 +78,7 @@ public class DynawoTestUtil extends AbstractConverterTest {
             dynamicModels.add(new OmegaRef("BBM_" + g.getId()));
         });
 
-        dynamicEventModels = new ArrayList<>();
+        eventModels = new ArrayList<>();
     }
 
     public void validate(String schemaDefinition, String expectedResourceName, Path xmlFile) throws SAXException, IOException {

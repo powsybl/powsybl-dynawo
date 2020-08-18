@@ -23,10 +23,10 @@ import java.util.Objects;
  */
 public class DynawoContext {
 
-    public DynawoContext(Network network, List<DynamicModel> dynamicModels, List<EventModel> dynamicEventModels, List<Curve> curves, DynamicSimulationParameters parameters, DynawoParameters dynawoParameters) {
+    public DynawoContext(Network network, List<DynamicModel> dynamicModels, List<EventModel> eventModels, List<Curve> curves, DynamicSimulationParameters parameters, DynawoParameters dynawoParameters) {
         this.network = Objects.requireNonNull(network);
         this.dynamicModels = Objects.requireNonNull(dynamicModels);
-        this.dynamicEventModels = Objects.requireNonNull(dynamicEventModels);
+        this.eventModels = Objects.requireNonNull(eventModels);
         this.curves = Objects.requireNonNull(curves);
         this.parameters = Objects.requireNonNull(parameters);
         this.dynawoParameters = Objects.requireNonNull(dynawoParameters);
@@ -53,8 +53,8 @@ public class DynawoContext {
         return Collections.unmodifiableList(dynamicModels);
     }
 
-    public List<EventModel> getDynamicEventModels() {
-        return Collections.unmodifiableList(dynamicEventModels);
+    public List<EventModel> geteventModels() {
+        return Collections.unmodifiableList(eventModels);
     }
 
     public List<Curve> getCurves() {
@@ -75,6 +75,6 @@ public class DynawoContext {
     private final DynawoParameters dynawoParameters;
     private final DynawoParametersDatabase parametersDatabase;
     private final List<DynamicModel> dynamicModels;
-    private final List<EventModel> dynamicEventModels;
+    private final List<EventModel> eventModels;
     private final List<Curve> curves;
 }
