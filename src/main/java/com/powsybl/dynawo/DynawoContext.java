@@ -8,6 +8,7 @@ package com.powsybl.dynawo;
 
 import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.dynamicsimulation.Curve;
+import com.powsybl.dynamicsimulation.EventModel;
 import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.iidm.network.Network;
@@ -22,9 +23,10 @@ import java.util.Objects;
  */
 public class DynawoContext {
 
-    public DynawoContext(Network network, List<DynamicModel> dynamicModels, List<Curve> curves, DynamicSimulationParameters parameters, DynawoParameters dynawoParameters) {
+    public DynawoContext(Network network, List<DynamicModel> dynamicModels, List<EventModel> eventModels, List<Curve> curves, DynamicSimulationParameters parameters, DynawoParameters dynawoParameters) {
         this.network = Objects.requireNonNull(network);
         this.dynamicModels = Objects.requireNonNull(dynamicModels);
+        this.eventModels = Objects.requireNonNull(eventModels);
         this.curves = Objects.requireNonNull(curves);
         this.parameters = Objects.requireNonNull(parameters);
         this.dynawoParameters = Objects.requireNonNull(dynawoParameters);
@@ -51,6 +53,10 @@ public class DynawoContext {
         return Collections.unmodifiableList(dynamicModels);
     }
 
+    public List<EventModel> geteventModels() {
+        return Collections.unmodifiableList(eventModels);
+    }
+
     public List<Curve> getCurves() {
         return Collections.unmodifiableList(curves);
     }
@@ -69,5 +75,6 @@ public class DynawoContext {
     private final DynawoParameters dynawoParameters;
     private final DynawoParametersDatabase parametersDatabase;
     private final List<DynamicModel> dynamicModels;
+    private final List<EventModel> eventModels;
     private final List<Curve> curves;
 }
