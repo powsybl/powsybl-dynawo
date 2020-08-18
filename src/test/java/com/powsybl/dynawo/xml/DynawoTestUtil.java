@@ -33,6 +33,7 @@ import com.powsybl.dynawo.dynamicmodels.GeneratorSynchronousFourWindingsProporti
 import com.powsybl.dynawo.dynamicmodels.LoadAlphaBeta;
 import com.powsybl.dynawo.dynamicmodels.OmegaRef;
 import com.powsybl.dynawo.DynawoCurve;
+import com.powsybl.dynawo.automatons.CurrentLimitAutomaton;
 import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.NetworkFactory;
@@ -69,6 +70,7 @@ public class DynawoTestUtil extends AbstractConverterTest {
             curves.add(new DynawoCurve(g.getId(), "voltageRegulator_EfdPu"));
         });
 
+        // Dynamic Models
         dynamicModels = new ArrayList<>();
         network.getLoadStream().forEach(l -> {
             dynamicModels.add(new LoadAlphaBeta("BBM_" + l.getId(), l.getId(), "LAB"));
@@ -78,7 +80,13 @@ public class DynawoTestUtil extends AbstractConverterTest {
             dynamicModels.add(new OmegaRef("BBM_" + g.getId()));
         });
 
+        // Events
         eventModels = new ArrayList<>();
+
+        // Automatons
+        network.getLineStream().forEach(l -> {
+            dynamicModels.add(new CurrentLimitAutomaton("BBM_" + l.getId(), l.getId(), "CLA"));
+        });
     }
 
     public void validate(String schemaDefinition, String expectedResourceName, Path xmlFile) throws SAXException, IOException {

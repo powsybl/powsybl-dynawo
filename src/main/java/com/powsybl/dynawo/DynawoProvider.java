@@ -64,16 +64,16 @@ public class DynawoProvider implements DynamicSimulationProvider {
     }
 
     @Override
-    public CompletableFuture<DynamicSimulationResult> run(Network network, DynamicModelsSupplier dynamicModelsSupplier, EventModelsSupplier eventsModelsSupplier, CurvesSupplier curvesSupplier,
-                                                          String workingVariantId, ComputationManager computationManager, DynamicSimulationParameters parameters) {
+    public CompletableFuture<DynamicSimulationResult> run(Network network, DynamicModelsSupplier dynamicModelsSupplier, EventModelsSupplier eventModelsSupplier, CurvesSupplier curvesSupplier, String workingVariantId,
+                                                          ComputationManager computationManager, DynamicSimulationParameters parameters) {
         Objects.requireNonNull(dynamicModelsSupplier);
-        Objects.requireNonNull(eventsModelsSupplier);
+        Objects.requireNonNull(eventModelsSupplier);
         Objects.requireNonNull(curvesSupplier);
         Objects.requireNonNull(workingVariantId);
         Objects.requireNonNull(parameters);
 
         DynawoParameters dynawoParameters = getDynawoSimulationParameters(parameters);
-        return run(network, dynamicModelsSupplier, eventsModelsSupplier, curvesSupplier, workingVariantId, computationManager, parameters, dynawoParameters);
+        return run(network, dynamicModelsSupplier, eventModelsSupplier, curvesSupplier, workingVariantId, computationManager, parameters, dynawoParameters);
     }
 
     private DynawoParameters getDynawoSimulationParameters(DynamicSimulationParameters parameters) {

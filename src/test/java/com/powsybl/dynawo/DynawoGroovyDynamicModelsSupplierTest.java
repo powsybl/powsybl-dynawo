@@ -13,6 +13,8 @@ import com.powsybl.dynamicsimulation.DynamicModelsSupplier;
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension;
 import com.powsybl.dynamicsimulation.groovy.GroovyDynamicModelsSupplier;
 import com.powsybl.dynamicsimulation.groovy.GroovyExtension;
+import com.powsybl.dynawo.automatons.CurrentLimitAutomaton;
+import com.powsybl.dynawo.automatons.CurrentLimitAutomatonGroovyExtension;
 import com.powsybl.dynawo.dynamicmodels.AbstractBlackBoxModel;
 import com.powsybl.dynawo.dynamicmodels.GeneratorSynchronousFourWindingsProportionalRegulations;
 import com.powsybl.dynawo.dynamicmodels.LoadAlphaBeta;
@@ -23,6 +25,7 @@ import com.powsybl.dynawo.dynamicmodels.OmegaRefGroovyExtension;
 import com.powsybl.dynawo.xml.DynawoTestUtil;
 import com.powsybl.iidm.network.Generator;
 import com.powsybl.iidm.network.Identifiable;
+import com.powsybl.iidm.network.Line;
 import com.powsybl.iidm.network.Load;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
@@ -64,10 +67,11 @@ public class DynawoGroovyDynamicModelsSupplierTest {
     public void test() {
 
         List<DynamicModelGroovyExtension> extensions = GroovyExtension.find(DynamicModelGroovyExtension.class, "Dynawo");
-        assertEquals(3, extensions.size());
+        assertEquals(4, extensions.size());
         assertTrue(validateExtension(extensions.get(0)));
         assertTrue(validateExtension(extensions.get(1)));
         assertTrue(validateExtension(extensions.get(2)));
+        assertTrue(validateExtension(extensions.get(3)));
 
         DynamicModelsSupplier supplier = new GroovyDynamicModelsSupplier(fileSystem.getPath("/dynamicModels.groovy"), extensions);
 
@@ -76,7 +80,8 @@ public class DynawoGroovyDynamicModelsSupplierTest {
         int numLoads = network.getLoadCount();
         int numGenerators = network.getGeneratorCount();
         int numOmegaRefs = numGenerators;
-        int expectedDynamicModelsSize =  numLoads + numGenerators + numOmegaRefs;
+        int numLines = network.getLineCount();
+        int expectedDynamicModelsSize =  numLoads + numGenerators + numOmegaRefs + numLines;
         assertEquals(expectedDynamicModelsSize, dynamicModels.size());
         dynamicModels.forEach(this::validateModel);
     }
@@ -85,8 +90,9 @@ public class DynawoGroovyDynamicModelsSupplierTest {
         boolean isLoadExtension = extension instanceof LoadAlphaBetaGroovyExtension;
         boolean isGeneratorExtension = extension instanceof GeneratorSynchronousFourWindingsProportionalRegulationsGroovyExtension;
         boolean isOmegaRefExtension = extension instanceof OmegaRefGroovyExtension;
+        boolean isCurrentLimitAutomatonExtension = extension instanceof CurrentLimitAutomatonGroovyExtension;
 
-        return isLoadExtension || isGeneratorExtension || isOmegaRefExtension;
+        return isLoadExtension || isGeneratorExtension || isOmegaRefExtension || isCurrentLimitAutomatonExtension;
     }
 
     private void validateModel(DynamicModel dynamicModel) {
@@ -107,6 +113,11 @@ public class DynawoGroovyDynamicModelsSupplierTest {
             assertEquals("OMEGA_REF_" + omegaRef.getGeneratorDynamicModelId(), blackBoxModel.getDynamicModelId());
             DynawoTestUtil.assertThrows(UnsupportedOperationException.class, blackBoxModel::getStaticId);
             assertEquals("OMEGA_REF", blackBoxModel.getParameterSetId());
+        } else if (blackBoxModel instanceof CurrentLimitAutomaton) {
+            Identifiable<?> identifiable = network.getIdentifiable(blackBoxModel.getStaticId());
+            assertEquals("BBM_" + identifiable.getId(), blackBoxModel.getDynamicModelId());
+            assertEquals("CLA", blackBoxModel.getParameterSetId());
+            assertTrue(identifiable instanceof Line);
         }
     }
 }
