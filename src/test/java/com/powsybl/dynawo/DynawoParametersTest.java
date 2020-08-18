@@ -4,7 +4,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package com.powsybl.dynawo.simulator;
+package com.powsybl.dynawo;
 
 import static org.junit.Assert.assertEquals;
 
@@ -19,12 +19,12 @@ import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
 import com.powsybl.commons.config.InMemoryPlatformConfig;
 import com.powsybl.commons.config.MapModuleConfig;
-import com.powsybl.dynawo.simulator.DynawoSimulationParameters.SolverType;
+import com.powsybl.dynawo.DynawoParameters.SolverType;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class DynawoSimulationParametersTest {
+public class DynawoParametersTest {
 
     private final String parametersFile = "/home/user/parametersFile";
     private final String networkParametersFile = "/home/user/networkParametersFile";
@@ -59,7 +59,7 @@ public class DynawoSimulationParametersTest {
         moduleConfig.setStringProperty("solver.type", solverType.toString());
         moduleConfig.setStringProperty("solver.parametersId", solverParametersId);
 
-        DynawoSimulationParameters parameters = DynawoSimulationParameters.load(platformConfig);
+        DynawoParameters parameters = DynawoParameters.load(platformConfig);
         assertEquals(parametersFile, parameters.getParametersFile());
         assertEquals(networkParametersFile, parameters.getNetwork().getParametersFile());
         assertEquals(networkParametersId, parameters.getNetwork().getParametersId());
@@ -71,12 +71,12 @@ public class DynawoSimulationParametersTest {
     @Test
     public void checkDefaultParameters() {
 
-        DynawoSimulationParameters parameters = DynawoSimulationParameters.load(platformConfig);
+        DynawoParameters parameters = DynawoParameters.load(platformConfig);
         assertEquals(parametersFile, parameters.getParametersFile());
         assertEquals(networkParametersFile, parameters.getNetwork().getParametersFile());
-        assertEquals(DynawoSimulationParameters.DEFAULT_NETWORK_PAR_ID, parameters.getNetwork().getParametersId());
-        assertEquals(DynawoSimulationParameters.DEFAULT_SOLVER_TYPE, parameters.getSolver().getType());
+        assertEquals(DynawoParameters.DEFAULT_NETWORK_PAR_ID, parameters.getNetwork().getParametersId());
+        assertEquals(DynawoParameters.DEFAULT_SOLVER_TYPE, parameters.getSolver().getType());
         assertEquals(solverParametersFile, parameters.getSolver().getParametersFile());
-        assertEquals(DynawoSimulationParameters.DEFAULT_SOLVER_PAR_ID, parameters.getSolver().getParametersId());
+        assertEquals(DynawoParameters.DEFAULT_SOLVER_PAR_ID, parameters.getSolver().getParametersId());
     }
 }

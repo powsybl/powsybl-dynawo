@@ -4,13 +4,12 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package com.powsybl.dynawo.simulator;
+package com.powsybl.dynawo;
 
 import com.google.auto.service.AutoService;
 import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
 import com.powsybl.computation.*;
 import com.powsybl.dynamicsimulation.*;
-import com.powsybl.dynawo.DynawoContext;
 import com.powsybl.dynawo.xml.CurvesXml;
 import com.powsybl.dynawo.xml.DydXml;
 import com.powsybl.dynawo.xml.EventsXml;
@@ -39,18 +38,18 @@ import static com.powsybl.dynawo.xml.DynawoConstants.NETWORK_FILENAME;
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 @AutoService(DynamicSimulationProvider.class)
-public class DynawoSimulationProvider implements DynamicSimulationProvider {
+public class DynawoProvider implements DynamicSimulationProvider {
 
     private static final String DYNAWO_CMD_NAME = "dynawo.sh";
     private static final String WORKING_DIR_PREFIX = "powsybl_dynawo_";
 
     private final DynawoConfig dynawoConfig;
 
-    public DynawoSimulationProvider() {
+    public DynawoProvider() {
         this(DynawoConfig.load());
     }
 
-    public DynawoSimulationProvider(DynawoConfig dynawoConfig) {
+    public DynawoProvider(DynawoConfig dynawoConfig) {
         this.dynawoConfig = Objects.requireNonNull(dynawoConfig);
     }
 
@@ -73,20 +72,20 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
         Objects.requireNonNull(workingVariantId);
         Objects.requireNonNull(parameters);
 
-        DynawoSimulationParameters dynawoParameters = getDynawoSimulationParameters(parameters);
+        DynawoParameters dynawoParameters = getDynawoSimulationParameters(parameters);
         return run(network, dynamicModelsSupplier, dynamicEventsModelsSupplier, curvesSupplier, workingVariantId, computationManager, parameters, dynawoParameters);
     }
 
-    private DynawoSimulationParameters getDynawoSimulationParameters(DynamicSimulationParameters parameters) {
-        DynawoSimulationParameters dynawoParameters = parameters.getExtension(DynawoSimulationParameters.class);
+    private DynawoParameters getDynawoSimulationParameters(DynamicSimulationParameters parameters) {
+        DynawoParameters dynawoParameters = parameters.getExtension(DynawoParameters.class);
         if (dynawoParameters == null) {
-            dynawoParameters = DynawoSimulationParameters.load();
+            dynawoParameters = DynawoParameters.load();
         }
         return dynawoParameters;
     }
 
     private CompletableFuture<DynamicSimulationResult> run(Network network, DynamicModelsSupplier dynamicModelsSupplier, EventModelsSupplier dynamicEventsModelsSupplier, CurvesSupplier curvesSupplier,
-                                                           String workingVariantId, ComputationManager computationManager, DynamicSimulationParameters parameters, DynawoSimulationParameters dynawoParameters) {
+                                                           String workingVariantId, ComputationManager computationManager, DynamicSimulationParameters parameters, DynawoParameters dynawoParameters) {
 
         network.getVariantManager().setWorkingVariant(workingVariantId);
         ExecutionEnvironment execEnv = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, dynawoConfig.isDebug());

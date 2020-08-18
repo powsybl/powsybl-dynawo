@@ -22,9 +22,9 @@ import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
 import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynawo.DynawoContext;
-import com.powsybl.dynawo.dyd.AbstractBlackBoxModel;
-import com.powsybl.dynawo.simulator.DynawoParametersDatabase;
-import com.powsybl.dynawo.simulator.DynawoSimulationParameters;
+import com.powsybl.dynawo.dynamicmodels.AbstractBlackBoxModel;
+import com.powsybl.dynawo.DynawoParametersDatabase;
+import com.powsybl.dynawo.DynawoParameters;
 
 import static com.powsybl.dynawo.xml.DynawoXmlConstants.DYN_URI;
 
@@ -39,7 +39,7 @@ public final class ParametersXml {
     public static void write(Path workingDir, DynawoContext context) throws IOException, XMLStreamException {
         Objects.requireNonNull(workingDir);
 
-        DynawoSimulationParameters parameters = context.getDynawoParameters();
+        DynawoParameters parameters = context.getDynawoParameters();
         copy(parameters.getParametersFile(), workingDir);
         copy(parameters.getNetwork().getParametersFile(), workingDir);
         copy(parameters.getSolver().getParametersFile(), workingDir);

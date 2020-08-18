@@ -10,7 +10,7 @@ package com.powsybl.dynawo.xml;
 import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
 import com.powsybl.dynamicsimulation.EventModel;
 import com.powsybl.dynawo.DynawoContext;
-import com.powsybl.dynawo.dyd.AbstractBlackBoxEventModel;
+import com.powsybl.dynawo.events.AbstractBlackBoxEventModel;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;

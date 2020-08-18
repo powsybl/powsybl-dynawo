@@ -4,7 +4,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package com.powsybl.dynawo.simulator;
+package com.powsybl.dynawo;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -15,6 +15,7 @@ import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.List;
 
+import com.powsybl.dynawo.dynamicmodels.DynawoCurveGroovyExtension;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;

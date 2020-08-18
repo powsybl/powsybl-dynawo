@@ -4,7 +4,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package com.powsybl.dynawo.simulator;
+package com.powsybl.dynawo;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -34,7 +34,7 @@ import com.powsybl.iidm.network.Network;
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class DynawoSimulationProviderTest {
+public class DynawoProviderTest {
 
     public static class DynamicModelsSupplierMock implements DynamicModelsSupplier {
 

@@ -9,7 +9,7 @@ package com.powsybl.dynawo.xml;
 import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
 import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynawo.DynawoContext;
-import com.powsybl.dynawo.simulator.DynawoCurve;
+import com.powsybl.dynawo.DynawoCurve;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;

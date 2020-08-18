@@ -4,24 +4,23 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package com.powsybl.dynawo.dyd;
+package com.powsybl.dynawo.events;
 
 import java.util.Objects;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
-import com.powsybl.dynamicsimulation.DynamicModel;
+import com.powsybl.dynamicsimulation.EventModel;
 import com.powsybl.dynawo.xml.DynawoXmlContext;
 
 /**
- * @author Luma Zamarreño <zamarrenolm at aia.es>
+ * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public abstract class AbstractBlackBoxModel implements DynamicModel {
+public abstract class AbstractBlackBoxEventModel implements EventModel {
 
-    public AbstractBlackBoxModel(String dynamicModelId, String staticId, String parameterSetId) {
+    public AbstractBlackBoxEventModel(String dynamicModelId, String staticId, String parameterSetId) {
         this.dynamicModelId = Objects.requireNonNull(dynamicModelId);
-        this.staticId = Objects.requireNonNull(staticId);
         this.parameterSetId = Objects.requireNonNull(parameterSetId);
     }
 
@@ -31,21 +30,12 @@ public abstract class AbstractBlackBoxModel implements DynamicModel {
 
     public abstract String getLib();
 
-    public String getStaticId() {
-        return staticId;
-    }
-
     public String getParameterSetId() {
         return parameterSetId;
     }
 
     public abstract void write(XMLStreamWriter writer, DynawoXmlContext context) throws XMLStreamException;
 
-    public void writeParameters(XMLStreamWriter writer, DynawoXmlContext context) throws XMLStreamException {
-        //Empty method to be redefined by specific models
-    }
-
     private final String dynamicModelId;
-    private final String staticId;
     private final String parameterSetId;
 }

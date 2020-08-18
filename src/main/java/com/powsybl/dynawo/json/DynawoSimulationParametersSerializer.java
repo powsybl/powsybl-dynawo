@@ -4,7 +4,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package com.powsybl.dynawo.simulator.json;
+package com.powsybl.dynawo.json;
 
 import java.io.IOException;
 
@@ -16,15 +16,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.google.auto.service.AutoService;
 import com.powsybl.commons.json.JsonUtil;
+import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynamicsimulation.json.JsonDynamicSimulationParameters;
 import com.powsybl.dynamicsimulation.json.JsonDynamicSimulationParameters.ExtensionSerializer;
-import com.powsybl.dynawo.simulator.DynawoSimulationParameters;
+import com.powsybl.dynawo.DynawoParameters;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 @AutoService(ExtensionSerializer.class)
-public class DynawoSimulationParametersSerializer implements JsonDynamicSimulationParameters.ExtensionSerializer<DynawoSimulationParameters> {
+public class DynawoSimulationParametersSerializer implements JsonDynamicSimulationParameters.ExtensionSerializer<DynawoParameters> {
 
     @Override
     public String getCategoryName() {
@@ -32,8 +33,8 @@ public class DynawoSimulationParametersSerializer implements JsonDynamicSimulati
     }
 
     @Override
-    public Class<? super DynawoSimulationParameters> getExtensionClass() {
-        return DynawoSimulationParameters.class;
+    public Class<? super DynawoParameters> getExtensionClass() {
+        return DynawoParameters.class;
     }
 
     @Override
@@ -50,23 +51,23 @@ public class DynawoSimulationParametersSerializer implements JsonDynamicSimulati
         String getName();
 
         @JsonIgnore
-        DynawoSimulationParameters getExtendable();
+        DynamicSimulationParameters getExtendable();
     }
 
     private static ObjectMapper createMapper() {
         return JsonUtil.createObjectMapper()
-                .addMixIn(DynawoSimulationParameters.class, SerializationSpec.class);
+                .addMixIn(DynawoParameters.class, SerializationSpec.class);
     }
 
     @Override
-    public void serialize(DynawoSimulationParameters dynawoSimulationParameters, JsonGenerator generator,
-            SerializerProvider provider) throws IOException {
-        createMapper().writeValue(generator, dynawoSimulationParameters);
+    public void serialize(DynawoParameters dynawoParameters, JsonGenerator generator,
+                          SerializerProvider provider) throws IOException {
+        createMapper().writeValue(generator, dynawoParameters);
     }
 
     @Override
-    public DynawoSimulationParameters deserialize(JsonParser parser, DeserializationContext arg1)
+    public DynawoParameters deserialize(JsonParser parser, DeserializationContext arg1)
             throws IOException {
-        return createMapper().readValue(parser, DynawoSimulationParameters.class);
+        return createMapper().readValue(parser, DynawoParameters.class);
     }
 }
