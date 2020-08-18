@@ -80,7 +80,7 @@ public class DynawoTestUtil extends AbstractConverterTest {
             if (g.getId().equals("GEN2")) {
                 dynamicModels.add(new GeneratorSynchronousFourWindingsProportionalRegulations("BBM_" + g.getId(), g.getId(), "GSFWPR"));
             } else {
-                dynamicModels.add(new GeneratorSynchronousThreeWindingsProportionalRegulations("BBM_" + g.getId(), g.getId(), "GSFWPR"));
+                dynamicModels.add(new GeneratorSynchronousThreeWindingsProportionalRegulations("BBM_" + g.getId(), g.getId(), "GSTWPR"));
             }
             dynamicModels.add(new OmegaRef("BBM_" + g.getId()));
         });

@@ -26,7 +26,7 @@
         <dyn:connect var1="generator_terminal" var2="@STATIC_ID@@NODE@_ACPIN"/>
         <dyn:connect var1="generator_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
     </dyn:macroConnector>
-    <dyn:blackBoxModel id="BBM_GEN" lib="GeneratorSynchronousThreeWindingsProportionalRegulations" parFile="models.par" parId="GSFWPR" staticId="GEN">
+    <dyn:blackBoxModel id="BBM_GEN" lib="GeneratorSynchronousThreeWindingsProportionalRegulations" parFile="models.par" parId="GSTWPR" staticId="GEN">
         <dyn:macroStaticRef id="MSR_GeneratorSynchronousThreeWindingsProportionalRegulations"/>
     </dyn:blackBoxModel>
     <dyn:macroConnect connector="MC_GeneratorSynchronousThreeWindingsProportionalRegulations" id1="BBM_GEN" id2="NETWORK"/>
