@@ -63,7 +63,7 @@ public class DynawoProvider implements DynamicSimulationProvider {
     }
 
     @Override
-    public CompletableFuture<DynamicSimulationResult> run(Network network, DynamicModelsSupplier dynamicModelsSupplier, CurvesSupplier curvesSupplier, String workingVariantId,
+    public CompletableFuture<DynamicSimulationResult> run(Network network, DynamicModelsSupplier dynamicModelsSupplier, EventModelsSupplier eventModelsSupplier, CurvesSupplier curvesSupplier, String workingVariantId,
                                                           ComputationManager computationManager, DynamicSimulationParameters parameters) {
         Objects.requireNonNull(dynamicModelsSupplier);
         Objects.requireNonNull(curvesSupplier);
