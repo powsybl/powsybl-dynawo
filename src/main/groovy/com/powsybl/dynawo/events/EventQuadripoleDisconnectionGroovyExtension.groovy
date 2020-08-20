@@ -47,20 +47,20 @@ class EventQuadripoleDisconnectionGroovyExtension implements EventModelGroovyExt
     void load(Binding binding, Consumer<EventModel> consumer) {
         binding.EventQuadripoleDisconnection = { Closure<Void> closure ->
             def cloned = closure.clone()
-            EventQuadripoleDisconnectionSpec cventQuadripoleDisconnectionSpec = new EventQuadripoleDisconnectionSpec()
+            EventQuadripoleDisconnectionSpec eventQuadripoleDisconnectionSpec = new EventQuadripoleDisconnectionSpec()
     
-            cloned.delegate = cventQuadripoleDisconnectionSpec
+            cloned.delegate = eventQuadripoleDisconnectionSpec
             cloned()
 
-            if (!cventQuadripoleDisconnectionSpec.staticId) {
+            if (!eventQuadripoleDisconnectionSpec.staticId) {
                 throw new DslException("'staticId' field is not set");
             }
-            if (!cventQuadripoleDisconnectionSpec.parameterSetId) {
+            if (!eventQuadripoleDisconnectionSpec.parameterSetId) {
                 throw new DslException("'parameterSetId' field is not set")
             }
 
-            String dynamicModelId = cventQuadripoleDisconnectionSpec.dynamicModelId ? cventQuadripoleDisconnectionSpec.dynamicModelId : cventQuadripoleDisconnectionSpec.staticId
-            consumer.accept(new EventQuadripoleDisconnection(dynamicModelId, cventQuadripoleDisconnectionSpec.staticId, cventQuadripoleDisconnectionSpec.parameterSetId))
+            String dynamicModelId = eventQuadripoleDisconnectionSpec.dynamicModelId ? eventQuadripoleDisconnectionSpec.dynamicModelId : eventQuadripoleDisconnectionSpec.staticId
+            consumer.accept(new EventQuadripoleDisconnection(dynamicModelId, eventQuadripoleDisconnectionSpec.staticId, eventQuadripoleDisconnectionSpec.parameterSetId))
         }
     }
 

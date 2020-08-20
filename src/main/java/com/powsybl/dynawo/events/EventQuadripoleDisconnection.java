@@ -21,8 +21,8 @@ import com.powsybl.dynawo.xml.MacroConnectorXml;
  */
 public class EventQuadripoleDisconnection extends AbstractBlackBoxEventModel {
 
-    public EventQuadripoleDisconnection(String dynamicModelId, String staticId, String parameterSetId) {
-        super(dynamicModelId, staticId, parameterSetId);
+    public EventQuadripoleDisconnection(String eventModelId, String staticId, String parameterSetId) {
+        super(eventModelId, staticId, parameterSetId);
     }
 
     @Override
