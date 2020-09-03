@@ -51,11 +51,12 @@ import com.powsybl.iidm.network.Network;
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class IeeeTestUtil extends AbstractConverterTest {
+public abstract class AbstractIeeeTestUtil extends AbstractConverterTest {
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
+    private Network network;
     private DynamicSimulationParameters parameters;
     private DynamicModelsSupplier dynamicModelsSupplier;
     private EventModelsSupplier eventModelsSupplier;
@@ -63,6 +64,8 @@ public class IeeeTestUtil extends AbstractConverterTest {
 
     @Before
     public void setup() throws IOException {
+
+        network = loadNetwork();
 
         Files.copy(getClass().getResourceAsStream("/ieee14-macroconnects/curves.groovy"), fileSystem.getPath("/curves.groovy"));
         Files.copy(getClass().getResourceAsStream("/ieee14-macroconnects/dynamicModels.groovy"), fileSystem.getPath("/dynamicModels.groovy"));
@@ -79,6 +82,8 @@ public class IeeeTestUtil extends AbstractConverterTest {
         parameters = JsonDynamicSimulationParameters.read(fileSystem.getPath("/dynawoParameters.json"));
     }
 
+    protected abstract Network loadNetwork() throws IOException;
+
     private DynawoParameters getDynawoSimulationParameters(DynamicSimulationParameters parameters) {
         DynawoParameters dynawoParameters = parameters.getExtension(DynawoParameters.class);
         if (dynawoParameters == null) {
@@ -91,7 +96,7 @@ public class IeeeTestUtil extends AbstractConverterTest {
         compareXml(getClass().getResourceAsStream(expectedResourceName), Files.newInputStream(xmlFile));
     }
 
-    public void writeJob(Network network, String expectedResourceName) throws IOException, XMLStreamException {
+    public void validateJob(String expectedResourceName) throws IOException, XMLStreamException {
         DynawoParameters dynawoParameters = getDynawoSimulationParameters(parameters);
         DynawoContext context = new DynawoContext(network, dynamicModelsSupplier.get(network), eventModelsSupplier.get(network), curvesSupplier.get(network), parameters, dynawoParameters);
 
@@ -99,7 +104,7 @@ public class IeeeTestUtil extends AbstractConverterTest {
         validate(expectedResourceName, tmpDir.resolve(DynawoConstants.JOBS_FILENAME));
     }
 
-    public void writeDyd(Network network, String expectedResourceName) throws IOException, XMLStreamException {
+    public void validateDyd(String expectedResourceName) throws IOException, XMLStreamException {
         DynawoParameters dynawoParameters = getDynawoSimulationParameters(parameters);
         DynawoContext context = new DynawoContext(network, dynamicModelsSupplier.get(network), eventModelsSupplier.get(network), curvesSupplier.get(network), parameters, dynawoParameters);
 
@@ -107,7 +112,7 @@ public class IeeeTestUtil extends AbstractConverterTest {
         validate(expectedResourceName, tmpDir.resolve(DynawoConstants.DYD_FILENAME));
     }
 
-    public void writeParameters(Network network, String expectedParameters, String expectedNetworkParameters, String expectedSolverParameters, String expectedOmegaRefParameters) throws IOException, XMLStreamException {
+    public void validateParameters(String expectedParameters, String expectedNetworkParameters, String expectedSolverParameters, String expectedOmegaRefParameters) throws IOException, XMLStreamException {
         DynawoParameters dynawoParameters = getDynawoSimulationParameters(parameters);
         DynawoContext context = new DynawoContext(network, dynamicModelsSupplier.get(network), eventModelsSupplier.get(network), curvesSupplier.get(network), parameters, dynawoParameters);
 
@@ -118,7 +123,7 @@ public class IeeeTestUtil extends AbstractConverterTest {
         validate(expectedOmegaRefParameters, tmpDir.resolve(context.getNetwork().getId() + ".par"));
     }
 
-    public void writeCurves(Network network, String expectedResourceName) throws IOException, XMLStreamException {
+    public void validateCurves(String expectedResourceName) throws IOException, XMLStreamException {
         DynawoParameters dynawoParameters = getDynawoSimulationParameters(parameters);
         DynawoContext context = new DynawoContext(network, dynamicModelsSupplier.get(network), eventModelsSupplier.get(network), curvesSupplier.get(network), parameters, dynawoParameters);
 
@@ -126,7 +131,7 @@ public class IeeeTestUtil extends AbstractConverterTest {
         validate(expectedResourceName, tmpDir.resolve(DynawoConstants.CRV_FILENAME));
     }
 
-    public void testSimulation(Network network) throws Exception {
+    public void validateSimulation() throws Exception {
         try (FileSystem fs = Jimfs.newFileSystem(Configuration.unix())) {
             Path localDir = fs.getPath("/tmp");
             ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(localDir, 1));

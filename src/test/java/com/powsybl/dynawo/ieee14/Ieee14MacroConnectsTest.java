@@ -18,36 +18,37 @@ import com.powsybl.iidm.network.Network;
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class Ieee14MacroConnectsTest extends IeeeTestUtil {
+public class Ieee14MacroConnectsTest extends AbstractIeeeTestUtil {
 
-    public Network loadNetwork() throws IOException {
+    @Override
+    protected Network loadNetwork() throws IOException {
 
         Files.copy(getClass().getResourceAsStream("/ieee14-macroconnects/IEEE14.iidm"), fileSystem.getPath("/IEEE14.iidm"));
         return Importers.loadNetwork(fileSystem.getPath("/IEEE14.iidm"));
     }
 
     @Test
-    public void writeJob() throws IOException, XMLStreamException {
-        writeJob(loadNetwork(), "/ieee14-macroconnects/IEEE14.jobs");
+    public void testJob() throws IOException, XMLStreamException {
+        validateJob("/ieee14-macroconnects/IEEE14.jobs");
     }
 
     @Test
-    public void writeDyd() throws IOException, XMLStreamException {
-        writeDyd(loadNetwork(), "/ieee14-macroconnects/IEEE14.dyd");
+    public void testDyd() throws IOException, XMLStreamException {
+        validateDyd("/ieee14-macroconnects/IEEE14.dyd");
     }
 
     @Test
-    public void writeParameters() throws IOException, XMLStreamException {
-        writeParameters(loadNetwork(), "/ieee14-macroconnects/IEEE14.par", "/ieee14-macroconnects/network.par", "/ieee14-macroconnects/solvers.par", "/ieee14-macroconnects/omega_ref.par");
+    public void testParameters() throws IOException, XMLStreamException {
+        validateParameters("/ieee14-macroconnects/IEEE14.par", "/ieee14-macroconnects/network.par", "/ieee14-macroconnects/solvers.par", "/ieee14-macroconnects/omega_ref.par");
     }
 
     @Test
-    public void writeCurves() throws IOException, XMLStreamException {
-        writeCurves(loadNetwork(), "/ieee14-macroconnects/IEEE14.crv");
+    public void testCurves() throws IOException, XMLStreamException {
+        validateCurves("/ieee14-macroconnects/IEEE14.crv");
     }
 
     @Test
     public void testSimulation() throws Exception {
-        testSimulation(loadNetwork());
+        validateSimulation();
     }
 }
