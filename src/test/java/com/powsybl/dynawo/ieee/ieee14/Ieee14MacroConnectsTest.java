@@ -3,7 +3,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package com.powsybl.dynawo.ieee14;
+package com.powsybl.dynawo.ieee.ieee14;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -12,6 +12,7 @@ import javax.xml.stream.XMLStreamException;
 
 import org.junit.Test;
 
+import com.powsybl.dynawo.ieee.AbstractIeeeTestUtil;
 import com.powsybl.iidm.import_.Importers;
 import com.powsybl.iidm.network.Network;
 
@@ -25,6 +26,13 @@ public class Ieee14MacroConnectsTest extends AbstractIeeeTestUtil {
 
         Files.copy(getClass().getResourceAsStream("/ieee14-macroconnects/IEEE14.iidm"), fileSystem.getPath("/IEEE14.iidm"));
         return Importers.loadNetwork(fileSystem.getPath("/IEEE14.iidm"));
+    }
+
+    @Override
+    protected void loadCaseFiles() throws IOException {
+        Files.copy(getClass().getResourceAsStream("/ieee14-macroconnects/curves.groovy"), fileSystem.getPath("/curves.groovy"));
+        Files.copy(getClass().getResourceAsStream("/ieee14-macroconnects/dynamicModels.groovy"), fileSystem.getPath("/dynamicModels.groovy"));
+        Files.copy(getClass().getResourceAsStream("/ieee14-macroconnects/dynawoParameters.json"), fileSystem.getPath("/dynawoParameters.json"));
     }
 
     @Test

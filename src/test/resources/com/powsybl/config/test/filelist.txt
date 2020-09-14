@@ -4,4 +4,4 @@ network.par
 solver.par
 ieee14-macroconnects.par
 ieee14-macroconnects-network.par
-ieee14-macroconnects-solvers.par
+ieee-solvers.par

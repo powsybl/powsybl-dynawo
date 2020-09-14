@@ -11,7 +11,7 @@
       },
       "solver" : {
         "type" : "IDA",
-        "parametersFile" : "/work/unittests/ieee14-macroconnects-solvers.par",
+        "parametersFile" : "/work/unittests/ieee-solvers.par",
         "parametersId" : "2"
       }
     }

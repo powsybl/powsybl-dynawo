@@ -3,7 +3,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package com.powsybl.dynawo.ieee14;
+package com.powsybl.dynawo.ieee;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -66,10 +66,7 @@ public abstract class AbstractIeeeTestUtil extends AbstractConverterTest {
     public void setup() throws IOException {
 
         network = loadNetwork();
-
-        Files.copy(getClass().getResourceAsStream("/ieee14-macroconnects/curves.groovy"), fileSystem.getPath("/curves.groovy"));
-        Files.copy(getClass().getResourceAsStream("/ieee14-macroconnects/dynamicModels.groovy"), fileSystem.getPath("/dynamicModels.groovy"));
-        Files.copy(getClass().getResourceAsStream("/ieee14-macroconnects/dynawoParameters.json"), fileSystem.getPath("/dynawoParameters.json"));
+        loadCaseFiles();
 
         List<CurveGroovyExtension> curveGroovyExtensions = GroovyExtension.find(CurveGroovyExtension.class, "dynawo");
         curvesSupplier = new GroovyCurvesSupplier(fileSystem.getPath("/curves.groovy"), curveGroovyExtensions);
@@ -83,6 +80,8 @@ public abstract class AbstractIeeeTestUtil extends AbstractConverterTest {
     }
 
     protected abstract Network loadNetwork() throws IOException;
+
+    protected abstract void loadCaseFiles() throws IOException;
 
     private DynawoParameters getDynawoSimulationParameters(DynamicSimulationParameters parameters) {
         DynawoParameters dynawoParameters = parameters.getExtension(DynawoParameters.class);
