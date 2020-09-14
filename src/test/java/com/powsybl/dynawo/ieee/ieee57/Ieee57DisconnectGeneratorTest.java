@@ -24,7 +24,6 @@ public class Ieee57DisconnectGeneratorTest extends AbstractIeeeTestUtil {
 
     @Override
     protected Network loadNetwork() throws IOException {
-        tmpDir = Paths.get("/tmp");
 
         Files.copy(getClass().getResourceAsStream("/ieee57-disconnectgenerator/IEEE57.iidm"), fileSystem.getPath("/IEEE57.iidm"));
         return Importers.loadNetwork(fileSystem.getPath("/IEEE57.iidm"));
