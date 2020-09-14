@@ -4,4 +4,6 @@ network.par
 solver.par
 ieee14-macroconnects.par
 ieee14-macroconnects-network.par
+ieee57-disconnectgenerator.par
+ieee57-disconnectgenerator-network.par
 ieee-solvers.par
