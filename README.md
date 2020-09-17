@@ -1,28 +1,36 @@
 # powsybl-dynawo
 [Dynawo](https://dynawo.github.io) integration in [PowSyBl](https://www.powsybl.org)
 
-## Running Dynawo from main
-Maven exec plugin is used to launch the `Main` class.  
+## Running Dynawo from the command line
+The DynamicSimulation tool is used to launch the Dynawo Simulator.  
 Arguments:
- - A network file (mandatory).
- - A GROOVY dynamic model file (mandatory), only processes models of type LoadAlphaBeta.
- - A GROOVY curves file (optional).
- - A JSON parameters file (optional).
+ - `case-file`: A network file (mandatory).
+ - `dynamic-models-file`: A GROOVY dynamic model file (mandatory), only processes models of type LoadAlphaBeta, GeneratorSynchronousFourWindingsProportionalRegulations, GeneratorSynchronousThreeWindingsProportionalRegulations and OmegaRef.
+ - `event-models-file`: A GROOVY event model file (optional), only processes models of type EventQuadripoleDisconnection.
+ - `curves-file`: A GROOVY curves file (optional).
+ - `parameters-file`: A JSON parameters file (optional).
 
 Sample invocation from the command line:
 ```
-$> mvn exec:java -Dexec.args="path/to/ieee57cdf.xiidm path/to/ieee57cdf.groovy"
+$> itools dynamic-simulation --case-file network.xiidm --dynamic-models-file dynamic_models.groovy [--event-models-file event_models.groovy] [--curves-file curves.groovy] [--parameters-file parameters.json]"
 ```
 
 The package `powsybl-config-classic` is used for runtime. Tests use `powsybl-config-test`.
 
 Sample contents of `${HOME}/.itools/config.yml`
 ```
+dynamic-simulation-default-parameters:
+    startTime: 1  % Instant of time at which the dynamic simulation begins.
+    stopTime: 100  % Instant of time at which the dynamic simulation ends.
+
 dynawo:
-    homeDir: dynawoHomeDir
+  homeDir: /home/dynawo  % Path of the Dynawo installation.
+  debug: false  % flag to activate the debug mode of the Dynawo Simulator.
 
 dynawo-default-parameters:
-    parametersFile: parametersFileLocation
-    network.parametersFile: networkParametersFileLocation
-    solver.parametersFile: solverParametersFileLocation
-```
+    parametersFile: /work/unittests/models.par  % Path of the file which contains the parameters of the dynamic models.
+    network.parametersFile: /work/unittests/network.par  % Path of the file which contains the parameters of the network.
+    network.parametersId: "1"  % Parameters Id for the selected network.
+    solver.type: IDA  % Selected solver type.
+    solver.parametersFile: /work/unittests/solver.par  % Path of the file which contains the parameters of the solver.
+    solver.parametersId: "1"  % Parameters Id for the selected solver.
