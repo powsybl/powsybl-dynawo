@@ -40,8 +40,8 @@ import com.powsybl.dynamicsimulation.groovy.GroovyExtension;
 import com.powsybl.dynamicsimulation.json.JsonDynamicSimulationParameters;
 import com.powsybl.dynawo.DynawoContext;
 import com.powsybl.dynawo.DynawoParameters;
-import com.powsybl.dynawo.DynawoProviderTest.EvenModelsSupplierMock;
 import com.powsybl.dynawo.DynawoProvider;
+import com.powsybl.dynawo.DynawoProviderTest.EventModelsSupplierMock;
 import com.powsybl.dynawo.xml.CurvesXml;
 import com.powsybl.dynawo.xml.DydXml;
 import com.powsybl.dynawo.xml.DynawoConstants;
@@ -75,7 +75,7 @@ public abstract class AbstractIeeeTestUtil extends AbstractConverterTest {
         List<DynamicModelGroovyExtension> dynamicModelGroovyExtensions = GroovyExtension.find(DynamicModelGroovyExtension.class, DynawoProvider.NAME);
         dynamicModelsSupplier = new GroovyDynamicModelsSupplier(fileSystem.getPath("/dynamicModels.groovy"), dynamicModelGroovyExtensions);
 
-        eventModelsSupplier = new EvenModelsSupplierMock();
+        eventModelsSupplier = new EventModelsSupplierMock();
 
         parameters = JsonDynamicSimulationParameters.read(fileSystem.getPath("/dynawoParameters.json"));
     }
