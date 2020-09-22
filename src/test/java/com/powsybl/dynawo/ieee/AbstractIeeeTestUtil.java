@@ -41,6 +41,7 @@ import com.powsybl.dynamicsimulation.json.JsonDynamicSimulationParameters;
 import com.powsybl.dynawo.DynawoContext;
 import com.powsybl.dynawo.DynawoParameters;
 import com.powsybl.dynawo.DynawoProviderTest.EvenModelsSupplierMock;
+import com.powsybl.dynawo.DynawoProvider;
 import com.powsybl.dynawo.xml.CurvesXml;
 import com.powsybl.dynawo.xml.DydXml;
 import com.powsybl.dynawo.xml.DynawoConstants;
@@ -68,10 +69,10 @@ public abstract class AbstractIeeeTestUtil extends AbstractConverterTest {
         network = loadNetwork();
         loadCaseFiles();
 
-        List<CurveGroovyExtension> curveGroovyExtensions = GroovyExtension.find(CurveGroovyExtension.class, "dynawo");
+        List<CurveGroovyExtension> curveGroovyExtensions = GroovyExtension.find(CurveGroovyExtension.class, DynawoProvider.NAME);
         curvesSupplier = new GroovyCurvesSupplier(fileSystem.getPath("/curves.groovy"), curveGroovyExtensions);
 
-        List<DynamicModelGroovyExtension> dynamicModelGroovyExtensions = GroovyExtension.find(DynamicModelGroovyExtension.class, "Dynawo");
+        List<DynamicModelGroovyExtension> dynamicModelGroovyExtensions = GroovyExtension.find(DynamicModelGroovyExtension.class, DynawoProvider.NAME);
         dynamicModelsSupplier = new GroovyDynamicModelsSupplier(fileSystem.getPath("/dynamicModels.groovy"), dynamicModelGroovyExtensions);
 
         eventModelsSupplier = new EvenModelsSupplierMock();
@@ -135,7 +136,7 @@ public abstract class AbstractIeeeTestUtil extends AbstractConverterTest {
             Path localDir = fs.getPath("/tmp");
             ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(localDir, 1));
             DynamicSimulation.Runner dynawoSimulation = DynamicSimulation.find();
-            assertEquals("Dynawo", dynawoSimulation.getName());
+            assertEquals(DynawoProvider.NAME, dynawoSimulation.getName());
             assertEquals("1.2.0", dynawoSimulation.getVersion());
             DynamicSimulationResult result = dynawoSimulation.run(network, dynamicModelsSupplier, eventModelsSupplier,
                                                                   curvesSupplier, network.getVariantManager().getWorkingVariantId(),

@@ -40,6 +40,7 @@ import static com.powsybl.dynawo.xml.DynawoConstants.NETWORK_FILENAME;
 @AutoService(DynamicSimulationProvider.class)
 public class DynawoProvider implements DynamicSimulationProvider {
 
+    public static final String NAME = "Dynawo";
     private static final String DYNAWO_CMD_NAME = "dynawo.sh";
     private static final String WORKING_DIR_PREFIX = "powsybl_dynawo_";
 
@@ -55,7 +56,7 @@ public class DynawoProvider implements DynamicSimulationProvider {
 
     @Override
     public String getName() {
-        return "Dynawo";
+        return NAME;
     }
 
     @Override
