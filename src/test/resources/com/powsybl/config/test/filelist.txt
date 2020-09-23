@@ -2,6 +2,3 @@ config.yml
 models.par
 network.par
 solver.par
-ieee14-macroconnects.par
-ieee14-macroconnects-network.par
-ieee-solvers.par
