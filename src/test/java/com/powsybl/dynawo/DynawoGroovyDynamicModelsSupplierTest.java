@@ -71,7 +71,7 @@ public class DynawoGroovyDynamicModelsSupplierTest {
     @Test
     public void test() {
 
-        List<DynamicModelGroovyExtension> extensions = GroovyExtension.find(DynamicModelGroovyExtension.class, "Dynawo");
+        List<DynamicModelGroovyExtension> extensions = GroovyExtension.find(DynamicModelGroovyExtension.class, DynawoProvider.NAME);
         assertEquals(5, extensions.size());
         extensions.forEach(DynawoGroovyDynamicModelsSupplierTest::validateExtension);
 

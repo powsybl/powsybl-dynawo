@@ -12,6 +12,7 @@ import com.google.auto.service.AutoService
 import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
+import com.powsybl.dynawo.DynawoProvider
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -37,7 +38,7 @@ abstract class GeneratorModelGroovyExtension implements DynamicModelGroovyExtens
     }
 
     String getName() {
-        return "Dynawo"
+        return DynawoProvider.NAME
     }
     
 }

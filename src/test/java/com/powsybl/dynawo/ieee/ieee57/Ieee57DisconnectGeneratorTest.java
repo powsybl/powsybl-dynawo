@@ -5,58 +5,32 @@
  */
 package com.powsybl.dynawo.ieee.ieee57;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.io.IOException;
-import java.nio.file.Files;
 
-import javax.xml.stream.XMLStreamException;
-
+import org.junit.Before;
 import org.junit.Test;
 
-import com.powsybl.dynawo.ieee.AbstractIeeeTestUtil;
-import com.powsybl.iidm.import_.Importers;
-import com.powsybl.iidm.network.Network;
+import com.powsybl.dynamicsimulation.DynamicSimulationResult;
+import com.powsybl.dynawo.ieee.IeeeTestUtil;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class Ieee57DisconnectGeneratorTest extends AbstractIeeeTestUtil {
+public class Ieee57DisconnectGeneratorTest extends IeeeTestUtil {
 
-    @Override
-    protected Network loadNetwork() throws IOException {
-
-        Files.copy(getClass().getResourceAsStream("/ieee57-disconnectgenerator/IEEE57.iidm"), fileSystem.getPath("/IEEE57.iidm"));
-        return Importers.loadNetwork(fileSystem.getPath("/IEEE57.iidm"));
-    }
-
-    @Override
-    protected void loadCaseFiles() throws IOException {
-        Files.copy(getClass().getResourceAsStream("/ieee57-disconnectgenerator/curves.groovy"), fileSystem.getPath("/curves.groovy"));
-        Files.copy(getClass().getResourceAsStream("/ieee57-disconnectgenerator/dynamicModels.groovy"), fileSystem.getPath("/dynamicModels.groovy"));
-        Files.copy(getClass().getResourceAsStream("/ieee57-disconnectgenerator/dynawoParameters.json"), fileSystem.getPath("/dynawoParameters.json"));
-    }
-
-    @Test
-    public void testJob() throws IOException, XMLStreamException {
-        validateJob("/ieee57-disconnectgenerator/IEEE57.jobs");
-    }
-
-    @Test
-    public void testDyd() throws IOException, XMLStreamException {
-        validateDyd("/ieee57-disconnectgenerator/IEEE57.dyd");
-    }
-
-    @Test
-    public void testParameters() throws IOException, XMLStreamException {
-        validateParameters("/ieee57-disconnectgenerator/IEEE57.par", "/ieee57-disconnectgenerator/network.par", "/ieee57-disconnectgenerator/solvers.par", "/ieee57-disconnectgenerator/omega_ref.par");
-    }
-
-    @Test
-    public void testCurves() throws IOException, XMLStreamException {
-        validateCurves("/ieee57-disconnectgenerator/IEEE57.crv");
+    @Before
+    public void setup() throws IOException {
+        super.setup("/ieee57-disconnectgenerator/ieee57-disconnectgenerator.par", "/ieee57-disconnectgenerator/ieee57-disconnectgenerator-network.par", "/ieee57-disconnectgenerator/ieee-solvers.par",
+            "/ieee57-disconnectgenerator/IEEE57.iidm", "/ieee57-disconnectgenerator/curves.groovy", "/ieee57-disconnectgenerator/dynamicModels.groovy",
+            "/ieee57-disconnectgenerator/dynawoParameters.json");
     }
 
     @Test
     public void testSimulation() throws Exception {
-        validateSimulation();
+        Ieee57DisconnectGeneratorLocalCommandExecutor commandExecutor = new Ieee57DisconnectGeneratorLocalCommandExecutor(fileSystem, network, getDynawoSimulationParameters(parameters));
+        DynamicSimulationResult result = runSimulation(commandExecutor);
+        assertNotNull(result);
     }
 }

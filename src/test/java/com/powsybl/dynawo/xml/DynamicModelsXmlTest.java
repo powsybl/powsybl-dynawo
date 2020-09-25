@@ -7,6 +7,7 @@
 package com.powsybl.dynawo.xml;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.xml.stream.XMLStreamException;
 
@@ -26,7 +27,7 @@ public class DynamicModelsXmlTest extends DynawoTestUtil {
     public void writeDynamicModel() throws SAXException, IOException, XMLStreamException {
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynawoParameters dynawoParameters = DynawoParameters.load();
-        DynawoContext context = new DynawoContext(network, dynamicModels, eventModels, curves, parameters, dynawoParameters);
+        DynawoContext context = new DynawoContext(network, dynamicModels, new ArrayList<>(), curves, parameters, dynawoParameters);
 
         DydXml.write(tmpDir, context);
         validate("dyd.xsd", "dyd.xml", tmpDir.resolve(DynawoConstants.DYD_FILENAME));

@@ -4,14 +4,14 @@
   "stopTime" : 100,
   "extensions" : {
     "DynawoParameters" : {
-      "parametersFile" : "/work/unittests/ieee14-macroconnects.par",
+      "parametersFile" : "/work/ieee-models.par",
       "network" : {
-        "parametersFile" : "/work/unittests/ieee14-macroconnects-network.par",
+        "parametersFile" : "/work/ieee-network.par",
         "parametersId" : "8"
       },
       "solver" : {
         "type" : "IDA",
-        "parametersFile" : "/work/unittests/ieee-solvers.par",
+        "parametersFile" : "/work/ieee-solvers.par",
         "parametersId" : "2"
       }
     }

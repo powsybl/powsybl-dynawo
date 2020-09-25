@@ -3,7 +3,7 @@
     <dyn:job name="Job">
         <dyn:solver lib="dynawo_SolverIDA" parFile="ieee-solvers.par" parId="2"/>
         <dyn:modeler compileDir="outputs/compilation">
-            <dyn:network iidmFile="powsybl_dynawo.xiidm" parFile="ieee14-macroconnects-network.par" parId="8"/>
+            <dyn:network iidmFile="powsybl_dynawo.xiidm" parFile="ieee-network.par" parId="8"/>
             <dyn:dynModels dydFile="powsybl_dynawo.dyd"/>
             <dyn:precompiledModels useStandardModels="true"/>
             <dyn:modelicaModels useStandardModels="false"/>

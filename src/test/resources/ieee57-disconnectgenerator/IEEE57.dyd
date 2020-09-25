@@ -9,7 +9,7 @@
         <dyn:connect var1="generator_terminal" var2="@STATIC_ID@@NODE@_ACPIN"/>
         <dyn:connect var1="generator_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
     </dyn:macroConnector>
-    <dyn:blackBoxModel id="BBM_GEN____6_SM" lib="GeneratorSynchronousFourWindingsProportionalRegulations" parFile="ieee57-disconnectgenerator.par" parId="GSFWPR_GEN____6_SM" staticId="_GEN____6_SM">
+    <dyn:blackBoxModel id="BBM_GEN____6_SM" lib="GeneratorSynchronousFourWindingsProportionalRegulations" parFile="ieee-models.par" parId="GSFWPR_GEN____6_SM" staticId="_GEN____6_SM">
         <dyn:macroStaticRef id="MSR_GeneratorSynchronousFourWindingsProportionalRegulations"/>
     </dyn:blackBoxModel>
     <dyn:macroConnect connector="MC_GeneratorSynchronousFourWindingsProportionalRegulations" id1="BBM_GEN____6_SM" id2="NETWORK"/>
@@ -24,37 +24,37 @@
     <dyn:blackBoxModel id="OMEGA_REF" lib="DYNModelOmegaRef" parFile="ieee57bus.par" parId="OMEGA_REF"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRefToGenerator" id1="OMEGA_REF" index1="0" id2="BBM_GEN____6_SM"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRefToNumCCMachine" id1="OMEGA_REF" index1="0" id2="NETWORK" name2="_GEN____6_SM"/>
-    <dyn:blackBoxModel id="BBM_GEN____8_SM" lib="GeneratorSynchronousFourWindingsProportionalRegulations" parFile="ieee57-disconnectgenerator.par" parId="GSFWPR_GEN____8_SM" staticId="_GEN____8_SM">
+    <dyn:blackBoxModel id="BBM_GEN____8_SM" lib="GeneratorSynchronousFourWindingsProportionalRegulations" parFile="ieee-models.par" parId="GSFWPR_GEN____8_SM" staticId="_GEN____8_SM">
         <dyn:macroStaticRef id="MSR_GeneratorSynchronousFourWindingsProportionalRegulations"/>
     </dyn:blackBoxModel>
     <dyn:macroConnect connector="MC_GeneratorSynchronousFourWindingsProportionalRegulations" id1="BBM_GEN____8_SM" id2="NETWORK"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRefToGenerator" id1="OMEGA_REF" index1="1" id2="BBM_GEN____8_SM"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRefToNumCCMachine" id1="OMEGA_REF" index1="1" id2="NETWORK" name2="_GEN____8_SM"/>
-    <dyn:blackBoxModel id="BBM_GEN___12_SM" lib="GeneratorSynchronousFourWindingsProportionalRegulations" parFile="ieee57-disconnectgenerator.par" parId="GSFWPR_GEN___12_SM" staticId="_GEN___12_SM">
+    <dyn:blackBoxModel id="BBM_GEN___12_SM" lib="GeneratorSynchronousFourWindingsProportionalRegulations" parFile="ieee-models.par" parId="GSFWPR_GEN___12_SM" staticId="_GEN___12_SM">
         <dyn:macroStaticRef id="MSR_GeneratorSynchronousFourWindingsProportionalRegulations"/>
     </dyn:blackBoxModel>
     <dyn:macroConnect connector="MC_GeneratorSynchronousFourWindingsProportionalRegulations" id1="BBM_GEN___12_SM" id2="NETWORK"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRefToGenerator" id1="OMEGA_REF" index1="2" id2="BBM_GEN___12_SM"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRefToNumCCMachine" id1="OMEGA_REF" index1="2" id2="NETWORK" name2="_GEN___12_SM"/>
-    <dyn:blackBoxModel id="BBM_GEN____1_SM" lib="GeneratorSynchronousFourWindingsProportionalRegulations" parFile="ieee57-disconnectgenerator.par" parId="GSFWPR_GEN____1_SM" staticId="_GEN____1_SM">
+    <dyn:blackBoxModel id="BBM_GEN____1_SM" lib="GeneratorSynchronousFourWindingsProportionalRegulations" parFile="ieee-models.par" parId="GSFWPR_GEN____1_SM" staticId="_GEN____1_SM">
         <dyn:macroStaticRef id="MSR_GeneratorSynchronousFourWindingsProportionalRegulations"/>
     </dyn:blackBoxModel>
     <dyn:macroConnect connector="MC_GeneratorSynchronousFourWindingsProportionalRegulations" id1="BBM_GEN____1_SM" id2="NETWORK"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRefToGenerator" id1="OMEGA_REF" index1="3" id2="BBM_GEN____1_SM"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRefToNumCCMachine" id1="OMEGA_REF" index1="3" id2="NETWORK" name2="_GEN____1_SM"/>
-    <dyn:blackBoxModel id="BBM_GEN____3_SM" lib="GeneratorSynchronousFourWindingsProportionalRegulations" parFile="ieee57-disconnectgenerator.par" parId="GSFWPR_GEN____3_SM" staticId="_GEN____3_SM">
+    <dyn:blackBoxModel id="BBM_GEN____3_SM" lib="GeneratorSynchronousFourWindingsProportionalRegulations" parFile="ieee-models.par" parId="GSFWPR_GEN____3_SM" staticId="_GEN____3_SM">
         <dyn:macroStaticRef id="MSR_GeneratorSynchronousFourWindingsProportionalRegulations"/>
     </dyn:blackBoxModel>
     <dyn:macroConnect connector="MC_GeneratorSynchronousFourWindingsProportionalRegulations" id1="BBM_GEN____3_SM" id2="NETWORK"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRefToGenerator" id1="OMEGA_REF" index1="4" id2="BBM_GEN____3_SM"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRefToNumCCMachine" id1="OMEGA_REF" index1="4" id2="NETWORK" name2="_GEN____3_SM"/>
-    <dyn:blackBoxModel id="BBM_GEN____9_SM" lib="GeneratorSynchronousFourWindingsProportionalRegulations" parFile="ieee57-disconnectgenerator.par" parId="GSFWPR_GEN____9_SM" staticId="_GEN____9_SM">
+    <dyn:blackBoxModel id="BBM_GEN____9_SM" lib="GeneratorSynchronousFourWindingsProportionalRegulations" parFile="ieee-models.par" parId="GSFWPR_GEN____9_SM" staticId="_GEN____9_SM">
         <dyn:macroStaticRef id="MSR_GeneratorSynchronousFourWindingsProportionalRegulations"/>
     </dyn:blackBoxModel>
     <dyn:macroConnect connector="MC_GeneratorSynchronousFourWindingsProportionalRegulations" id1="BBM_GEN____9_SM" id2="NETWORK"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRefToGenerator" id1="OMEGA_REF" index1="5" id2="BBM_GEN____9_SM"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRefToNumCCMachine" id1="OMEGA_REF" index1="5" id2="NETWORK" name2="_GEN____9_SM"/>
-    <dyn:blackBoxModel id="BBM_GEN____2_SM" lib="GeneratorSynchronousFourWindingsProportionalRegulations" parFile="ieee57-disconnectgenerator.par" parId="GSFWPR_GEN____2_SM" staticId="_GEN____2_SM">
+    <dyn:blackBoxModel id="BBM_GEN____2_SM" lib="GeneratorSynchronousFourWindingsProportionalRegulations" parFile="ieee-models.par" parId="GSFWPR_GEN____2_SM" staticId="_GEN____2_SM">
         <dyn:macroStaticRef id="MSR_GeneratorSynchronousFourWindingsProportionalRegulations"/>
     </dyn:blackBoxModel>
     <dyn:macroConnect connector="MC_GeneratorSynchronousFourWindingsProportionalRegulations" id1="BBM_GEN____2_SM" id2="NETWORK"/>
