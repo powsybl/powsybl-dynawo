@@ -1,0 +1,19 @@
+{
+  "version" : "1.0",
+  "startTime" : 0,
+  "stopTime" : 30,
+  "extensions" : {
+    "DynawoParameters" : {
+      "parametersFile" : "/work/ieee-models.par",
+      "network" : {
+        "parametersFile" : "/work/ieee-network.par",
+        "parametersId" : "8"
+      },
+      "solver" : {
+        "type" : "IDA",
+        "parametersFile" : "/work/ieee-solvers.par",
+        "parametersId" : "2"
+      }
+    }
+  }
+}
