@@ -1,4 +1,5 @@
-/* Copyright (c) 2020, RTE (http://www.rte-france.com)
+/**
+ * Copyright (c) 2020, RTE (http://www.rte-france.com)
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -30,9 +31,9 @@ import com.powsybl.iidm.network.Network;
  */
 public abstract class AbstractDynawoLocalCommandExecutor implements LocalCommandExecutor {
 
-    protected FileSystem fileSystem;
-    protected Network network;
-    protected DynawoParameters dynawoParameters;
+    protected final FileSystem fileSystem;
+    protected final Network network;
+    protected final DynawoParameters dynawoParameters;
 
     public AbstractDynawoLocalCommandExecutor(FileSystem fileSystem, Network network, DynawoParameters dynawoParameters) {
         this.fileSystem = Objects.requireNonNull(fileSystem);
@@ -45,15 +46,12 @@ public abstract class AbstractDynawoLocalCommandExecutor implements LocalCommand
     protected abstract void copyOutputs(Path workingDir) throws IOException;
 
     @Override
-    public int execute(String program, List<String> args, Path outFile, Path errFile, Path workingDir, Map<String, String> env)
-        throws IOException, InterruptedException {
+    public int execute(String program, List<String> args, Path outFile, Path errFile, Path workingDir, Map<String, String> env) throws IOException {
         return execute(program, -1, args, outFile, errFile, workingDir, env);
     }
 
     @Override
-    public int execute(String program, long timeoutSeconds, List<String> args, Path outFile, Path errFile, Path workingDir, Map<String, String> env)
-        throws IOException, InterruptedException {
-
+    public int execute(String program, long timeoutSeconds, List<String> args, Path outFile, Path errFile, Path workingDir, Map<String, String> env) throws IOException {
         validateInputs(workingDir);
         copyOutputs(workingDir);
         return 0;
@@ -64,7 +62,7 @@ public abstract class AbstractDynawoLocalCommandExecutor implements LocalCommand
     }
 
     @Override
-    public void stopForcibly(Path workingDir) throws InterruptedException {
+    public void stopForcibly(Path workingDir) {
     }
 
     protected static void compareXml(InputStream expected, InputStream actual) {

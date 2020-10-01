@@ -59,7 +59,7 @@ public final class DydXml {
         DynawoXmlContext xmlContext = new DynawoXmlContext(context);
 
         try {
-            for (EventModel model : context.geteventModels()) {
+            for (EventModel model : context.getEventModels()) {
                 AbstractBlackBoxEventModel dynawoModel = (AbstractBlackBoxEventModel) model;
                 dynawoModel.write(writer, xmlContext);
             }

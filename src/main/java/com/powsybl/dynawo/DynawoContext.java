@@ -53,7 +53,7 @@ public class DynawoContext {
         return Collections.unmodifiableList(dynamicModels);
     }
 
-    public List<EventModel> geteventModels() {
+    public List<EventModel> getEventModels() {
         return Collections.unmodifiableList(eventModels);
     }
 
