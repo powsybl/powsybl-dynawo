@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 
@@ -50,20 +51,24 @@ public abstract class AbstractIeeeTest {
         // The parameter files are copied into the PlatformConfig filesystem,
         // that filesystem is the one that DynawoContext and ParametersXml will use to read the parameters
         fileSystem = PlatformConfig.defaultConfig().getConfigDir().getFileSystem();
-        tmpDir = Files.createDirectory(fileSystem.getPath("tmp"));
+        if (Files.exists(fileSystem.getPath("tmp"))) {
+            tmpDir = fileSystem.getPath("tmp");
+        } else {
+            tmpDir = Files.createDirectory(fileSystem.getPath("tmp"));
+        }
 
         // Copy parameter files
-        Files.copy(getClass().getResourceAsStream(parametersFile), fileSystem.getPath("/work/ieee-models.par"));
-        Files.copy(getClass().getResourceAsStream(networkParametersFile), fileSystem.getPath("/work/ieee-network.par"));
-        Files.copy(getClass().getResourceAsStream(solverParametersFile), fileSystem.getPath("/work/ieee-solvers.par"));
+        Files.copy(getClass().getResourceAsStream(parametersFile), fileSystem.getPath("/work/ieee-models.par"), StandardCopyOption.REPLACE_EXISTING);
+        Files.copy(getClass().getResourceAsStream(networkParametersFile), fileSystem.getPath("/work/ieee-network.par"), StandardCopyOption.REPLACE_EXISTING);
+        Files.copy(getClass().getResourceAsStream(solverParametersFile), fileSystem.getPath("/work/ieee-solvers.par"), StandardCopyOption.REPLACE_EXISTING);
 
         // Load network
-        Files.copy(getClass().getResourceAsStream(networkFile), fileSystem.getPath("/network.iidm"));
+        Files.copy(getClass().getResourceAsStream(networkFile), fileSystem.getPath("/network.iidm"), StandardCopyOption.REPLACE_EXISTING);
         network = Importers.loadNetwork(fileSystem.getPath("/network.iidm"));
 
         // Dynamic models
         if (dynamicModelsFile != null) {
-            Files.copy(getClass().getResourceAsStream(dynamicModelsFile), fileSystem.getPath("/dynamicModels.groovy"));
+            Files.copy(getClass().getResourceAsStream(dynamicModelsFile), fileSystem.getPath("/dynamicModels.groovy"), StandardCopyOption.REPLACE_EXISTING);
             List<DynamicModelGroovyExtension> dynamicModelGroovyExtensions = GroovyExtension.find(DynamicModelGroovyExtension.class, DynawoProvider.NAME);
             dynamicModelsSupplier = new GroovyDynamicModelsSupplier(fileSystem.getPath("/dynamicModels.groovy"), dynamicModelGroovyExtensions);
         } else {
@@ -72,7 +77,7 @@ public abstract class AbstractIeeeTest {
 
         // Event models
         if (eventModelsFile != null) {
-            Files.copy(getClass().getResourceAsStream(eventModelsFile), fileSystem.getPath("/eventModels.groovy"));
+            Files.copy(getClass().getResourceAsStream(eventModelsFile), fileSystem.getPath("/eventModels.groovy"), StandardCopyOption.REPLACE_EXISTING);
             List<EventModelGroovyExtension> eventModelGroovyExtensions = GroovyExtension.find(EventModelGroovyExtension.class, DynawoProvider.NAME);
             eventModelsSupplier = new GroovyEventModelsSupplier(fileSystem.getPath("/eventModels.groovy"), eventModelGroovyExtensions);
         } else {
@@ -81,7 +86,7 @@ public abstract class AbstractIeeeTest {
 
         // Curves
         if (curvesFile != null) {
-            Files.copy(getClass().getResourceAsStream(curvesFile), fileSystem.getPath("/curves.groovy"));
+            Files.copy(getClass().getResourceAsStream(curvesFile), fileSystem.getPath("/curves.groovy"), StandardCopyOption.REPLACE_EXISTING);
             List<CurveGroovyExtension> curveGroovyExtensions = GroovyExtension.find(CurveGroovyExtension.class, DynawoProvider.NAME);
             curvesSupplier = new GroovyCurvesSupplier(fileSystem.getPath("/curves.groovy"), curveGroovyExtensions);
         } else {
@@ -89,7 +94,7 @@ public abstract class AbstractIeeeTest {
         }
 
         // Parameters
-        Files.copy(getClass().getResourceAsStream(parametersJson), fileSystem.getPath("/dynawoParameters.json"));
+        Files.copy(getClass().getResourceAsStream(parametersJson), fileSystem.getPath("/dynawoParameters.json"), StandardCopyOption.REPLACE_EXISTING);
         parameters = JsonDynamicSimulationParameters.read(fileSystem.getPath("/dynawoParameters.json"));
     }
 
