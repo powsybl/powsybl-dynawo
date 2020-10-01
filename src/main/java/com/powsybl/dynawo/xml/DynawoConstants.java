@@ -19,6 +19,8 @@ public final class DynawoConstants {
 
     public static final String CRV_FILENAME = "powsybl_dynawo.crv";
 
+    public static final String CURVES_FILENAME = "output/curves/curves.csv";
+
     private DynawoConstants() {
     }
 }

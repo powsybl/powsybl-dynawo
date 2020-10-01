@@ -33,6 +33,7 @@ import java.util.concurrent.CompletableFuture;
 
 import static com.powsybl.dynawo.xml.DynawoConstants.JOBS_FILENAME;
 import static com.powsybl.dynawo.xml.DynawoConstants.NETWORK_FILENAME;
+import static com.powsybl.dynawo.xml.DynawoConstants.CURVES_FILENAME;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -112,7 +113,7 @@ public class DynawoProvider implements DynamicSimulationProvider {
         @Override
         public DynamicSimulationResult after(Path workingDir, ExecutionReport report) throws IOException {
             super.after(workingDir, report);
-            return new DynamicSimulationResultImpl(true, "");
+            return new DynawoResult(workingDir.resolve(CURVES_FILENAME));
         }
 
         private void writeInputFiles(Path workingDir) {
