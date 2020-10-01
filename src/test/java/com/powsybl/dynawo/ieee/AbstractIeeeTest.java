@@ -33,7 +33,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class AbstractIeeeTest {
+public abstract class AbstractIeeeTest {
 
     protected FileSystem fileSystem;
     protected Path tmpDir;
