@@ -12,7 +12,6 @@ import com.powsybl.computation.*;
 import com.powsybl.dynamicsimulation.*;
 import com.powsybl.dynawo.xml.CurvesXml;
 import com.powsybl.dynawo.xml.DydXml;
-import com.powsybl.dynawo.xml.EventsXml;
 import com.powsybl.dynawo.xml.JobsXml;
 import com.powsybl.dynawo.xml.ParametersXml;
 import com.powsybl.iidm.export.Exporters;
@@ -40,6 +39,7 @@ import static com.powsybl.dynawo.xml.DynawoConstants.NETWORK_FILENAME;
 @AutoService(DynamicSimulationProvider.class)
 public class DynawoProvider implements DynamicSimulationProvider {
 
+    public static final String NAME = "Dynawo";
     private static final String DYNAWO_CMD_NAME = "dynawo.sh";
     private static final String WORKING_DIR_PREFIX = "powsybl_dynawo_";
 
@@ -55,7 +55,7 @@ public class DynawoProvider implements DynamicSimulationProvider {
 
     @Override
     public String getName() {
-        return "Dynawo";
+        return NAME;
     }
 
     @Override
@@ -124,7 +124,6 @@ public class DynawoProvider implements DynamicSimulationProvider {
 
                 JobsXml.write(workingDir, context);
                 DydXml.write(workingDir, context);
-                EventsXml.write(workingDir, context);
                 ParametersXml.write(workingDir, context);
                 if (context.withCurves()) {
                     CurvesXml.write(workingDir, context);
