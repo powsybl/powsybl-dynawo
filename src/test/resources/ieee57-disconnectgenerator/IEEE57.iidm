@@ -1,16 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-    Copyright (c) 2015-2019, RTE (http://www.rte-france.com)
-    See AUTHORS.txt
-    All rights reserved.
-    This Source Code Form is subject to the terms of the Mozilla Public
-    License, v. 2.0. If a copy of the MPL was not distributed with this
-    file, you can obtain one at http://mozilla.org/MPL/2.0/.
-    SPDX-License-Identifier: MPL-2.0
-
-    This file is part of Dynawo, an hybrid C++/Modelica open source time domain
-    simulation tool for power systems.
--->
 <iidm:network xmlns:iidm="http://www.itesla_project.eu/schema/iidm/1_0" id="ieee57bus" caseDate="2018-02-27T13:26:14.115+01:00" forecastDistance="0" sourceFormat="CIM1">
     <iidm:substation id="_BEAV___6_SS" name="BEAV   6_SS" country="AF" geographicalTags="_SGR_01">
         <iidm:voltageLevel id="_BEAV___6_VL" name="BEAV   6_VL" nominalV="69.0" topologyKind="BUS_BREAKER">
