@@ -12,6 +12,7 @@ import com.google.auto.service.AutoService
 import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
+import com.powsybl.dynawo.DynawoProvider
 
 /**
  * An implementation of {@link DynamicModelGroovyExtension} that adds the <pre>LoadAlphaBeta</pre> keyword to the DSL
@@ -40,7 +41,7 @@ class LoadAlphaBetaGroovyExtension implements DynamicModelGroovyExtension {
     }
 
     String getName() {
-        return "Dynawo"
+        return DynawoProvider.NAME
     }
     
     void load(Binding binding, Consumer<DynamicModel> consumer) {

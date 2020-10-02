@@ -65,7 +65,7 @@ public class DynawoGroovyCurvesSupplierTest {
     @Test
     public void test() {
 
-        List<CurveGroovyExtension> extensions = GroovyExtension.find(CurveGroovyExtension.class, "dynawo");
+        List<CurveGroovyExtension> extensions = GroovyExtension.find(CurveGroovyExtension.class, DynawoProvider.NAME);
         assertEquals(1, extensions.size());
         assertTrue(extensions.get(0) instanceof DynawoCurveGroovyExtension);
 
@@ -82,7 +82,7 @@ public class DynawoGroovyCurvesSupplierTest {
         exception.expect(DslException.class);
         exception.expectMessage("Both staticId and dynamicModelId are defined");
 
-        List<CurveGroovyExtension> extensions = GroovyExtension.find(CurveGroovyExtension.class, "dynawo");
+        List<CurveGroovyExtension> extensions = GroovyExtension.find(CurveGroovyExtension.class, DynawoProvider.NAME);
         assertEquals(1, extensions.size());
         assertTrue(extensions.get(0) instanceof DynawoCurveGroovyExtension);
 
@@ -96,7 +96,7 @@ public class DynawoGroovyCurvesSupplierTest {
         exception.expect(DslException.class);
         exception.expectMessage("'variables' field is not set");
 
-        List<CurveGroovyExtension> extensions = GroovyExtension.find(CurveGroovyExtension.class, "dynawo");
+        List<CurveGroovyExtension> extensions = GroovyExtension.find(CurveGroovyExtension.class, DynawoProvider.NAME);
         assertEquals(1, extensions.size());
         assertTrue(extensions.get(0) instanceof DynawoCurveGroovyExtension);
 
@@ -110,7 +110,7 @@ public class DynawoGroovyCurvesSupplierTest {
         exception.expect(DslException.class);
         exception.expectMessage("'variables' field is not set");
 
-        List<CurveGroovyExtension> extensions = GroovyExtension.find(CurveGroovyExtension.class, "dynawo");
+        List<CurveGroovyExtension> extensions = GroovyExtension.find(CurveGroovyExtension.class, DynawoProvider.NAME);
         assertEquals(1, extensions.size());
         assertTrue(extensions.get(0) instanceof DynawoCurveGroovyExtension);
 
