@@ -9,8 +9,6 @@ package com.powsybl.dynawo.ieee.ieee14;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -45,7 +43,7 @@ public class Ieee14MacroConnectsTest extends AbstractIeeeTest {
     }
 
     @Override
-    public Path getWorkingDir() throws IOException {
-        return Files.createDirectory(fileSystem.getPath("ieee14-macroconnects"));
+    public String getWorkingDirName() {
+        return "ieee14-macroconnects";
     }
 }

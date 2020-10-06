@@ -52,7 +52,7 @@ public abstract class AbstractIeeeTest {
         FileUtil.removeDir(workingDir);
     }
 
-    public abstract Path getWorkingDir() throws IOException;
+    public abstract String getWorkingDirName();
 
     protected void setup(String parametersFile, String networkParametersFile, String solverParametersFile, String networkFile,
         String dynamicModelsFile, String eventModelsFile, String curvesFile, String parametersJson) throws IOException {
@@ -60,7 +60,7 @@ public abstract class AbstractIeeeTest {
         // The parameter files are copied into the PlatformConfig filesystem,
         // that filesystem is the one that DynawoContext and ParametersXml will use to read the parameters
         fileSystem = PlatformConfig.defaultConfig().getConfigDir().getFileSystem();
-        workingDir = getWorkingDir();
+        workingDir = Files.createDirectory(fileSystem.getPath(getWorkingDirName()));
 
         // Copy parameter files
         Files.copy(getClass().getResourceAsStream(parametersFile), workingDir.resolve("ieee-models.par"));
