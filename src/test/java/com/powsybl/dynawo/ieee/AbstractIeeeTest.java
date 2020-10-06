@@ -6,7 +6,10 @@
  */
 package com.powsybl.dynawo.ieee;
 
+import org.junit.After;
+
 import com.powsybl.commons.config.PlatformConfig;
+import com.powsybl.commons.io.FileUtil;
 import com.powsybl.computation.ComputationManager;
 import com.powsybl.computation.local.LocalCommandExecutor;
 import com.powsybl.computation.local.LocalComputationConfig;
@@ -25,7 +28,6 @@ import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 
@@ -37,7 +39,7 @@ import static org.junit.Assert.assertEquals;
 public abstract class AbstractIeeeTest {
 
     protected FileSystem fileSystem;
-    protected Path tmpDir;
+    protected Path workingDir;
     protected Network network;
     protected DynamicSimulationParameters parameters;
 
@@ -45,57 +47,60 @@ public abstract class AbstractIeeeTest {
     private EventModelsSupplier eventModelsSupplier;
     private CurvesSupplier curvesSupplier;
 
+    @After
+    public void tearDown() throws IOException {
+        FileUtil.removeDir(workingDir);
+    }
+
+    public abstract Path getWorkingDir() throws IOException;
+
     protected void setup(String parametersFile, String networkParametersFile, String solverParametersFile, String networkFile,
         String dynamicModelsFile, String eventModelsFile, String curvesFile, String parametersJson) throws IOException {
 
         // The parameter files are copied into the PlatformConfig filesystem,
         // that filesystem is the one that DynawoContext and ParametersXml will use to read the parameters
         fileSystem = PlatformConfig.defaultConfig().getConfigDir().getFileSystem();
-        if (Files.exists(fileSystem.getPath("tmp"))) {
-            tmpDir = fileSystem.getPath("tmp");
-        } else {
-            tmpDir = Files.createDirectory(fileSystem.getPath("tmp"));
-        }
+        workingDir = getWorkingDir();
 
         // Copy parameter files
-        Files.copy(getClass().getResourceAsStream(parametersFile), fileSystem.getPath("/work/ieee-models.par"), StandardCopyOption.REPLACE_EXISTING);
-        Files.copy(getClass().getResourceAsStream(networkParametersFile), fileSystem.getPath("/work/ieee-network.par"), StandardCopyOption.REPLACE_EXISTING);
-        Files.copy(getClass().getResourceAsStream(solverParametersFile), fileSystem.getPath("/work/ieee-solvers.par"), StandardCopyOption.REPLACE_EXISTING);
+        Files.copy(getClass().getResourceAsStream(parametersFile), workingDir.resolve("ieee-models.par"));
+        Files.copy(getClass().getResourceAsStream(networkParametersFile), workingDir.resolve("ieee-network.par"));
+        Files.copy(getClass().getResourceAsStream(solverParametersFile), workingDir.resolve("ieee-solvers.par"));
 
         // Load network
-        Files.copy(getClass().getResourceAsStream(networkFile), fileSystem.getPath("/network.iidm"), StandardCopyOption.REPLACE_EXISTING);
-        network = Importers.loadNetwork(fileSystem.getPath("/network.iidm"));
+        Files.copy(getClass().getResourceAsStream(networkFile), workingDir.resolve("network.iidm"));
+        network = Importers.loadNetwork(workingDir.resolve("network.iidm"));
 
         // Dynamic models
         if (dynamicModelsFile != null) {
-            Files.copy(getClass().getResourceAsStream(dynamicModelsFile), fileSystem.getPath("/dynamicModels.groovy"), StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(getClass().getResourceAsStream(dynamicModelsFile), workingDir.resolve("dynamicModels.groovy"));
             List<DynamicModelGroovyExtension> dynamicModelGroovyExtensions = GroovyExtension.find(DynamicModelGroovyExtension.class, DynawoProvider.NAME);
-            dynamicModelsSupplier = new GroovyDynamicModelsSupplier(fileSystem.getPath("/dynamicModels.groovy"), dynamicModelGroovyExtensions);
+            dynamicModelsSupplier = new GroovyDynamicModelsSupplier(workingDir.resolve("dynamicModels.groovy"), dynamicModelGroovyExtensions);
         } else {
             dynamicModelsSupplier = new DynamicModelsSupplierMock();
         }
 
         // Event models
         if (eventModelsFile != null) {
-            Files.copy(getClass().getResourceAsStream(eventModelsFile), fileSystem.getPath("/eventModels.groovy"), StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(getClass().getResourceAsStream(eventModelsFile), workingDir.resolve("eventModels.groovy"));
             List<EventModelGroovyExtension> eventModelGroovyExtensions = GroovyExtension.find(EventModelGroovyExtension.class, DynawoProvider.NAME);
-            eventModelsSupplier = new GroovyEventModelsSupplier(fileSystem.getPath("/eventModels.groovy"), eventModelGroovyExtensions);
+            eventModelsSupplier = new GroovyEventModelsSupplier(workingDir.resolve("eventModels.groovy"), eventModelGroovyExtensions);
         } else {
             eventModelsSupplier = new EventModelsSupplierMock();
         }
 
         // Curves
         if (curvesFile != null) {
-            Files.copy(getClass().getResourceAsStream(curvesFile), fileSystem.getPath("/curves.groovy"), StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(getClass().getResourceAsStream(curvesFile), workingDir.resolve("curves.groovy"));
             List<CurveGroovyExtension> curveGroovyExtensions = GroovyExtension.find(CurveGroovyExtension.class, DynawoProvider.NAME);
-            curvesSupplier = new GroovyCurvesSupplier(fileSystem.getPath("/curves.groovy"), curveGroovyExtensions);
+            curvesSupplier = new GroovyCurvesSupplier(workingDir.resolve("curves.groovy"), curveGroovyExtensions);
         } else {
             curvesSupplier = CurvesSupplier.empty();
         }
 
         // Parameters
-        Files.copy(getClass().getResourceAsStream(parametersJson), fileSystem.getPath("/dynawoParameters.json"), StandardCopyOption.REPLACE_EXISTING);
-        parameters = JsonDynamicSimulationParameters.read(fileSystem.getPath("/dynawoParameters.json"));
+        Files.copy(getClass().getResourceAsStream(parametersJson), workingDir.resolve("dynawoParameters.json"));
+        parameters = JsonDynamicSimulationParameters.read(workingDir.resolve("dynawoParameters.json"));
     }
 
     protected DynawoParameters getDynawoSimulationParameters(DynamicSimulationParameters parameters) {
@@ -107,7 +112,7 @@ public abstract class AbstractIeeeTest {
     }
 
     public DynamicSimulationResult runSimulation(LocalCommandExecutor commandExecutor) throws Exception {
-        ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(tmpDir, 1), commandExecutor, ForkJoinPool.commonPool());
+        ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(workingDir, 1), commandExecutor, ForkJoinPool.commonPool());
         DynamicSimulation.Runner dynawoSimulation = DynamicSimulation.find();
         assertEquals(DynawoProvider.NAME, dynawoSimulation.getName());
         assertEquals("1.2.0", dynawoSimulation.getVersion());
