@@ -1,25 +1,36 @@
+/**
+ * Copyright (c) 2020, RTE (http://www.rte-france.com)
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 package com.powsybl.dynawo;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 import com.powsybl.dynamicsimulation.DynamicSimulationResult;
+import com.powsybl.dynawo.csv.CsvCurvesParser;
 import com.powsybl.timeseries.TimeSeries;
 
+/**
+ * @author Marcos de Miguel <demiguelm at aia.es>
+ */
 public class DynawoResult implements DynamicSimulationResult {
 
     private final boolean isOk;
     private final String logs;
-    private final Map<Integer, List<TimeSeries>> ts;
+    private final List<TimeSeries> ts;
 
-    public DynawoResult(Path csv) {
-        Objects.requireNonNull(csv);
-        isOk = Files.exists(csv)?true:false;
+    public DynawoResult(Path file) {
+        isOk = Files.exists(file);
         logs = null;
-        ts = TimeSeries.parseCsv(csv);
+        if (isOk) {
+            ts = CsvCurvesParser.parseCsv(file);
+        } else {
+            ts = null;
+        }
     }
 
     @Override
@@ -32,8 +43,7 @@ public class DynawoResult implements DynamicSimulationResult {
         return logs;
     }
 
-    public Map<Integer, List<TimeSeries>> getTimeSeries() {
+    public List<TimeSeries> getTimeSeries() {
         return ts;
     }
-
 }
