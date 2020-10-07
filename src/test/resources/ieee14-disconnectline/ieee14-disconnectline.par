@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <parametersSet xmlns="http://www.rte-france.com/dynawo">
-    <set id="1">
+     <set id="LAB">
         <par type="DOUBLE" name="load_alpha" value="1.5"/>
         <par type="DOUBLE" name="load_beta" value="2.5"/>
-        <reference type="DOUBLE" name="load_P0Pu" origData="IIDM" origName="p_pu"/>
-        <reference type="DOUBLE" name="load_Q0Pu" origData="IIDM" origName="q_pu"/>
-        <reference type="DOUBLE" name="load_U0Pu" origData="IIDM" origName="v_pu"/>
-        <reference type="DOUBLE" name="load_UPhase0" origData="IIDM" origName="angle_pu"/>
     </set>
-    <set id="2">
+    <set id="GSFWPR_GEN____1_SM">
         <par type="INT" name="generator_ExcitationPu" value="1"/>
         <par type="DOUBLE" name="generator_md" value="0.215"/>
         <par type="DOUBLE" name="generator_mq" value="0.215"/>
@@ -40,6 +36,8 @@
         <par type="DOUBLE" name="generator_UBaseLV" value="24"/>
         <par type="DOUBLE" name="generator_RTfPu" value="0.0"/>
         <par type="DOUBLE" name="generator_XTfPu" value="0.1"/>
+        <par type="DOUBLE" name="PmPu_ValueIn" value="0"/>
+        <par type="DOUBLE" name="EfdPu_ValueIn" value="0"/>
         <par type="DOUBLE" name="voltageRegulator_LagEfdMax" value="0"/>
         <par type="DOUBLE" name="voltageRegulator_LagEfdMin" value="0"/>
         <par type="DOUBLE" name="voltageRegulator_EfdMinPu" value="-5"/>
@@ -53,12 +51,8 @@
         <par type="DOUBLE" name="governor_PNom" value="1090"/>
         <par type="DOUBLE" name="URef_ValueIn" value="0"/>
         <par type="DOUBLE" name="Pm_ValueIn" value="0"/>
-        <reference name="generator_P0Pu" origData="IIDM" origName="p_pu" type="DOUBLE"/>
-        <reference name="generator_Q0Pu" origData="IIDM" origName="q_pu" type="DOUBLE"/>
-        <reference name="generator_U0Pu" origData="IIDM" origName="v_pu" type="DOUBLE"/>
-        <reference name="generator_UPhase0" origData="IIDM" origName="angle_pu" type="DOUBLE"/>
     </set>
-    <set id="3">
+    <set id="GSFWPR_GEN____2_SM">
         <par type="INT" name="generator_ExcitationPu" value="1"/>
         <par type="DOUBLE" name="generator_md" value="0.084"/>
         <par type="DOUBLE" name="generator_mq" value="0.084"/>
@@ -90,6 +84,8 @@
         <par type="DOUBLE" name="generator_UBaseLV" value="24"/>
         <par type="DOUBLE" name="generator_RTfPu" value="0.0"/>
         <par type="DOUBLE" name="generator_XTfPu" value="0.1"/>
+        <par type="DOUBLE" name="PmPu_ValueIn" value="0"/>
+        <par type="DOUBLE" name="EfdPu_ValueIn" value="0"/>
         <par type="DOUBLE" name="voltageRegulator_LagEfdMax" value="0"/>
         <par type="DOUBLE" name="voltageRegulator_LagEfdMin" value="0"/>
         <par type="DOUBLE" name="voltageRegulator_EfdMinPu" value="-5"/>
@@ -103,12 +99,8 @@
         <par type="DOUBLE" name="governor_PNom" value="1008"/>
         <par type="DOUBLE" name="URef_ValueIn" value="0"/>
         <par type="DOUBLE" name="Pm_ValueIn" value="0"/>
-        <reference name="generator_P0Pu" origData="IIDM" origName="p_pu" type="DOUBLE"/>
-        <reference name="generator_Q0Pu" origData="IIDM" origName="q_pu" type="DOUBLE"/>
-        <reference name="generator_U0Pu" origData="IIDM" origName="v_pu" type="DOUBLE"/>
-        <reference name="generator_UPhase0" origData="IIDM" origName="angle_pu" type="DOUBLE"/>
     </set>
-    <set id="4">
+    <set id="GSFWPR_GEN____3_SM">
         <par type="INT" name="generator_ExcitationPu" value="1"/>
         <par type="DOUBLE" name="generator_md" value="0.05"/>
         <par type="DOUBLE" name="generator_mq" value="0.05"/>
@@ -140,6 +132,8 @@
         <par type="DOUBLE" name="generator_UBaseLV" value="20"/>
         <par type="DOUBLE" name="generator_RTfPu" value="0.0"/>
         <par type="DOUBLE" name="generator_XTfPu" value="0.1"/>
+        <par type="DOUBLE" name="PmPu_ValueIn" value="0"/>
+        <par type="DOUBLE" name="EfdPu_ValueIn" value="0"/>
         <par type="DOUBLE" name="voltageRegulator_LagEfdMax" value="0"/>
         <par type="DOUBLE" name="voltageRegulator_LagEfdMin" value="0"/>
         <par type="DOUBLE" name="voltageRegulator_EfdMinPu" value="-5"/>
@@ -153,12 +147,8 @@
         <par type="DOUBLE" name="governor_PNom" value="1485"/>
         <par type="DOUBLE" name="URef_ValueIn" value="0"/>
         <par type="DOUBLE" name="Pm_ValueIn" value="0"/>
-        <reference name="generator_P0Pu" origData="IIDM" origName="p_pu" type="DOUBLE"/>
-        <reference name="generator_Q0Pu" origData="IIDM" origName="q_pu" type="DOUBLE"/>
-        <reference name="generator_U0Pu" origData="IIDM" origName="v_pu" type="DOUBLE"/>
-        <reference name="generator_UPhase0" origData="IIDM" origName="angle_pu" type="DOUBLE"/>
     </set>
-    <set id="5">
+    <set id="GSTWPR_GEN____6_SM">
         <par type="INT" name="generator_ExcitationPu" value="1"/>
         <par type="DOUBLE" name="generator_md" value="0.16"/>
         <par type="DOUBLE" name="generator_mq" value="0.16"/>
@@ -188,6 +178,8 @@
         <par type="DOUBLE" name="generator_UBaseLV" value="15"/>
         <par type="DOUBLE" name="generator_RTfPu" value="0.0"/>
         <par type="DOUBLE" name="generator_XTfPu" value="0.0"/>
+        <par type="DOUBLE" name="PmPu_ValueIn" value="0"/>
+        <par type="DOUBLE" name="EfdPu_ValueIn" value="0"/>
         <par type="DOUBLE" name="voltageRegulator_LagEfdMax" value="0"/>
         <par type="DOUBLE" name="voltageRegulator_LagEfdMin" value="0"/>
         <par type="DOUBLE" name="voltageRegulator_EfdMinPu" value="-5"/>
@@ -201,12 +193,8 @@
         <par type="DOUBLE" name="governor_PNom" value="74.4"/>
         <par type="DOUBLE" name="URef_ValueIn" value="0"/>
         <par type="DOUBLE" name="Pm_ValueIn" value="0"/>
-        <reference name="generator_P0Pu" origData="IIDM" origName="p_pu" type="DOUBLE"/>
-        <reference name="generator_Q0Pu" origData="IIDM" origName="q_pu" type="DOUBLE"/>
-        <reference name="generator_U0Pu" origData="IIDM" origName="v_pu" type="DOUBLE"/>
-        <reference name="generator_UPhase0" origData="IIDM" origName="angle_pu" type="DOUBLE"/>
     </set>
-    <set id="6">
+    <set id="GSTWPR_GEN____8_SM">
         <par type="INT" name="generator_ExcitationPu" value="1"/>
         <par type="DOUBLE" name="generator_md" value="0"/>
         <par type="DOUBLE" name="generator_mq" value="0"/>
@@ -236,6 +224,8 @@
         <par type="DOUBLE" name="generator_UBaseLV" value="18"/>
         <par type="DOUBLE" name="generator_RTfPu" value="0.0"/>
         <par type="DOUBLE" name="generator_XTfPu" value="0.1"/>
+        <par type="DOUBLE" name="PmPu_ValueIn" value="0"/>
+        <par type="DOUBLE" name="EfdPu_ValueIn" value="0"/>
         <par type="DOUBLE" name="voltageRegulator_LagEfdMax" value="0"/>
         <par type="DOUBLE" name="voltageRegulator_LagEfdMin" value="0"/>
         <par type="DOUBLE" name="voltageRegulator_EfdMinPu" value="-5"/>
@@ -249,12 +239,8 @@
         <par type="DOUBLE" name="governor_PNom" value="228"/>
         <par type="DOUBLE" name="URef_ValueIn" value="0"/>
         <par type="DOUBLE" name="Pm_ValueIn" value="0"/>
-        <reference name="generator_P0Pu" origData="IIDM" origName="p_pu" type="DOUBLE"/>
-        <reference name="generator_Q0Pu" origData="IIDM" origName="q_pu" type="DOUBLE"/>
-        <reference name="generator_U0Pu" origData="IIDM" origName="v_pu" type="DOUBLE"/>
-        <reference name="generator_UPhase0" origData="IIDM" origName="angle_pu" type="DOUBLE"/>
     </set>
-    <set id="9">
+    <set id="EQD">
         <par type="DOUBLE" name="event_tEvent" value="1"/>
         <par type="BOOL" name="event_disconnectOrigin" value="false"/>
         <par type="BOOL" name="event_disconnectExtremity" value="true"/>

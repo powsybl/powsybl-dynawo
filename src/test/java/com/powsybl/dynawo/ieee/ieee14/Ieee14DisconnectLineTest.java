@@ -36,8 +36,14 @@ public class Ieee14DisconnectLineTest extends AbstractIeeeTest {
 
     @Test
     public void testSimulation() throws Exception {
-        Ieee14MacroconnectsLocalCommandExecutor commandExecutor = new Ieee14MacroconnectsLocalCommandExecutor(fileSystem, network, getDynawoSimulationParameters(parameters));
-        DynamicSimulationResult result = runSimulation(commandExecutor);
+        Ieee14DisconnectLineLocalCommandExecutor commandExecutor = new Ieee14DisconnectLineLocalCommandExecutor(fileSystem, network, getDynawoSimulationParameters(parameters));
+        DynamicSimulationResult result;
+        result = runSimulation(commandExecutor);
         assertNotNull(result);
+    }
+
+    @Override
+    public String getWorkingDirName() {
+        return "ieee14-disconnectline";
     }
 }

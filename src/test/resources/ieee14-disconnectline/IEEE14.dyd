@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
-<dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
     <dyn:macroStaticReference id="MSR_LoadAlphaBeta">
         <dyn:staticRef var="load_PPu" staticVar="p"/>
         <dyn:staticRef var="load_QPu" staticVar="q"/>
