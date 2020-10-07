@@ -86,5 +86,21 @@ public class CsvCurvesParserTest {
                 "0.000002;1.059970;1.045041;1.010001;1.017703",
                 "0.000004;1.059970;1.045041;1.010101;1.017703") + System.lineSeparator();
         assertThatCode(() -> CsvCurvesParser.parseCsv(duplicates, ';')).hasMessageContaining("Bad CSV header, there are duplicates in time series names").isInstanceOf(TimeSeriesException.class);
+
+        String inconsistent = String.join(System.lineSeparator(),
+            "time;NETWORK__BUS____1_TN_Upu_value;NETWORK__BUS____2_TN_Upu_value;NETWORK__BUS____3_TN_Upu_value;NETWORK__BUS____4_TN_Upu_value",
+            "0.000000;1.059970;1.045041;1.010101;1.017703",
+            "0.000001;1.045041;1.010201;1.017703",
+            "0.000002;1.059970;1.045041;1.010001;1.017703",
+            "0.000004;1.059970;1.045041;1.010101;1.017703") + System.lineSeparator();
+        assertThatCode(() -> CsvCurvesParser.parseCsv(inconsistent, ';')).hasMessageContaining("Columns of line 1 are inconsistent with header").isInstanceOf(TimeSeriesException.class);
+
+        String wrongType = String.join(System.lineSeparator(),
+            "time;NETWORK__BUS____1_TN_Upu_value;NETWORK__BUS____2_TN_Upu_value;NETWORK__BUS____3_TN_Upu_value;NETWORK__BUS____4_TN_Upu_value",
+            "0.000000;1.059970;value;1.010101;1.017703",
+            "0.000001;1.059970;1.045041;1.010201;1.017703",
+            "0.000002;1.059970;1.045041;1.010001;1.017703",
+            "0.000004;1.059970;1.045041;1.010101;1.017703") + System.lineSeparator();
+        assertThatCode(() -> CsvCurvesParser.parseCsv(wrongType, ';')).hasMessageContaining("Unexpected data type DOUBLE").isInstanceOf(TimeSeriesException.class);
     }
 }

@@ -126,7 +126,7 @@ public final class CsvCurvesParser {
         List<String> tokens;
         while ((tokens = reader.read()) != null) {
 
-            if (tokens.size() != context.names.size() + 1 && tokens.size() != context.names.size()) {
+            if (tokens.size() != context.names.size() + 1) {
                 throw new TimeSeriesException("Columns of line " + context.times.size() + " are inconsistent with header");
             }
 
@@ -139,10 +139,6 @@ public final class CsvCurvesParser {
         return token.isEmpty() ? Double.NaN : Double.parseDouble(token);
     }
 
-    static String checkString(String token) {
-        return token.isEmpty() ? null : token;
-    }
-
     static class CsvParsingContext {
         final List<String> names;
 
@@ -150,8 +146,6 @@ public final class CsvCurvesParser {
         final Object[] values;
 
         final List<Long> times = new ArrayList<>();
-
-        TimeSeriesIndex refIndex;
 
         CsvParsingContext(List<String> names) {
             this.names = names;
@@ -171,16 +165,6 @@ public final class CsvCurvesParser {
             return doubleValues;
         }
 
-        private List<String> createStringValues() {
-            List<String> stringValues = new ArrayList<>();
-            if (!times.isEmpty()) {
-                for (int j = 0; j < times.size(); j++) {
-                    stringValues.add(null);
-                }
-            }
-            return stringValues;
-        }
-
         void parseToken(int i, String token) {
             if (dataTypes[i - 1] == null) {
                 // test double parsing, in case of error we consider it a string time series
@@ -190,16 +174,11 @@ public final class CsvCurvesParser {
                     doubleValues.add(parseDouble(token));
                     values[i - 1] = doubleValues;
                 } else {
-                    dataTypes[i - 1] = TimeSeriesDataType.STRING;
-                    List<String> stringValues = createStringValues();
-                    stringValues.add(checkString(token));
-                    values[i - 1] = stringValues;
+                    throw assertDataType(TimeSeriesDataType.DOUBLE);
                 }
             } else {
                 if (dataTypes[i - 1] == TimeSeriesDataType.DOUBLE) {
                     ((TDoubleArrayList) values[i - 1]).add(parseDouble(token));
-                } else if (dataTypes[i - 1] == TimeSeriesDataType.STRING) {
-                    ((List<String>) values[i - 1]).add(checkString(token));
                 } else {
                     throw assertDataType(dataTypes[i - 1]);
                 }
@@ -211,10 +190,6 @@ public final class CsvCurvesParser {
                 String token = tokens.get(i) != null ? tokens.get(i).trim() : "";
                 parseToken(i, token);
             }
-            // empty last cell case
-            if (tokens.size() == names.size()) {
-                parseToken(tokens.size(), "");
-            }
 
             Double time = Double.parseDouble(tokens.get(0)) * 1000;
             times.add(time.longValue());
@@ -223,13 +198,6 @@ public final class CsvCurvesParser {
         List<TimeSeries> createTimeSeries() {
             TimeSeriesIndex index = new IrregularTimeSeriesIndex(times.stream().mapToLong(l -> l).toArray());
 
-            // check all data version have the same index
-            if (this.refIndex != null && !index.equals(refIndex)) {
-                throw new TimeSeriesException("All version of the data must have the same index: " + refIndex + " != " + index);
-            } else {
-                this.refIndex = index;
-            }
-
             List<TimeSeries> timeSeriesList = new ArrayList<>(names.size());
             for (int i = 0; i < names.size(); i++) {
                 TimeSeriesMetadata metadata = new TimeSeriesMetadata(names.get(i), dataTypes[i], index);
@@ -237,10 +205,6 @@ public final class CsvCurvesParser {
                     TDoubleArrayList doubleValues = (TDoubleArrayList) values[i];
                     DoubleDataChunk chunk = new UncompressedDoubleDataChunk(0, doubleValues.toArray()).tryToCompress();
                     timeSeriesList.add(new StoredDoubleTimeSeries(metadata, chunk));
-                } else if (dataTypes[i] == TimeSeriesDataType.STRING) {
-                    List<String> stringValues = (List<String>) values[i];
-                    StringDataChunk chunk = new UncompressedStringDataChunk(0, stringValues.toArray(new String[0])).tryToCompress();
-                    timeSeriesList.add(new StringTimeSeries(metadata, chunk));
                 } else {
                     throw assertDataType(dataTypes[i - 1]);
                 }
