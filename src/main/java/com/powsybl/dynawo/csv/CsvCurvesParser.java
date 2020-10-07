@@ -30,8 +30,6 @@ import com.google.common.primitives.Doubles;
 import com.powsybl.timeseries.DoubleDataChunk;
 import com.powsybl.timeseries.IrregularTimeSeriesIndex;
 import com.powsybl.timeseries.StoredDoubleTimeSeries;
-import com.powsybl.timeseries.StringDataChunk;
-import com.powsybl.timeseries.StringTimeSeries;
 import com.powsybl.timeseries.TimeSeries;
 import com.powsybl.timeseries.TimeSeriesConstants;
 import com.powsybl.timeseries.TimeSeriesDataType;
@@ -39,7 +37,6 @@ import com.powsybl.timeseries.TimeSeriesException;
 import com.powsybl.timeseries.TimeSeriesIndex;
 import com.powsybl.timeseries.TimeSeriesMetadata;
 import com.powsybl.timeseries.UncompressedDoubleDataChunk;
-import com.powsybl.timeseries.UncompressedStringDataChunk;
 
 import gnu.trove.list.array.TDoubleArrayList;
 
