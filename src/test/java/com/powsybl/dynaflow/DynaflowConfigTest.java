@@ -1,5 +1,6 @@
 package com.powsybl.dynaflow;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Paths;
@@ -52,8 +53,8 @@ public class DynaflowConfigTest {
         moduleConfig.setStringProperty("homeDir", homeDir);
         DynaflowConfig config = DynaflowConfig.fromPlatformConfig(platformConfig);
         String versionCommand = config.getVersionCommand().toString(0);
-        String expectedVersionCommand = "[homeDir/dynaflow-launcher.sh, --version]";
-        assertEquals(versionCommand, expectedVersionCommand);
+        String expectedVersionCommand = "[homeDir" + File.separator + "dynaflow-launcher.sh, --version]";
+        assertEquals(expectedVersionCommand, versionCommand);
     }
 
     @Test
@@ -62,10 +63,10 @@ public class DynaflowConfigTest {
         MapModuleConfig moduleConfig = platformConfig.createModuleConfig("dynaflow");
         moduleConfig.setStringProperty("homeDir", homeDir);
         DynaflowConfig config = DynaflowConfig.fromPlatformConfig(platformConfig);
-        String workingDir = "/tmp/dynaflow_123";
+        String workingDir = File.separator + "tmp" + File.separator + "dynaflow_123";
         String executionCommand = config.getCommand(Paths.get(workingDir)).toString(0);
-        String expectedExecutionCommand = "[homeDir/dynaflow-launcher.sh, --iidm, " + workingDir + "/" + IIDM_IN_FILE
-            + ", --config, " + workingDir + "/" + CONFIG_FILENAME + "]";
-        assertEquals(executionCommand, expectedExecutionCommand);
+        String expectedExecutionCommand = "[homeDir" + File.separator + "dynaflow-launcher.sh, --iidm, " + workingDir
+                + File.separator + IIDM_IN_FILE + ", --config, " + workingDir + File.separator + CONFIG_FILENAME + "]";
+        assertEquals(expectedExecutionCommand, executionCommand);
     }
 }
