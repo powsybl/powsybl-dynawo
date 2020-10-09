@@ -24,14 +24,14 @@ public class Ieee14CurrentLimitAutomatonTest extends AbstractIeeeTest {
     @Before
     public void setup() throws IOException {
         super.setup(
-                "/ieee14-currentlimitautomaton/ieee14-currentlimitautomaton.par",
-                "/ieee14-currentlimitautomaton/ieee14-currentlimitautomaton-network.par",
-                "/ieee14-currentlimitautomaton/ieee-solvers.par",
-                "/ieee14-currentlimitautomaton/IEEE14.iidm",
-                "/ieee14-currentlimitautomaton/dynamicModels.groovy",
-                "/ieee14-currentlimitautomaton/eventModels.groovy",
-                "/ieee14-currentlimitautomaton/curves.groovy",
-                "/ieee14-currentlimitautomaton/dynawoParameters.json"
+                "/ieee14-currentlimitautomaton/config/models.par",
+                "/ieee14-currentlimitautomaton/config/network.par",
+                "/ieee14-currentlimitautomaton/config/solvers.par",
+                "/ieee14-currentlimitautomaton/powsybl-inputs/IEEE14.iidm",
+                "/ieee14-currentlimitautomaton/powsybl-inputs/dynamicModels.groovy",
+                "/ieee14-currentlimitautomaton/powsybl-inputs/eventModels.groovy",
+                "/ieee14-currentlimitautomaton/powsybl-inputs/curves.groovy",
+                "/ieee14-currentlimitautomaton/powsybl-inputs/dynawoParameters.json"
         );
     }
 
