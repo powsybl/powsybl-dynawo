@@ -1,22 +1,21 @@
 package com.powsybl.dynaflow;
 
-import java.io.File;
+import com.google.common.jimfs.Configuration;
+import com.google.common.jimfs.Jimfs;
+import com.powsybl.commons.config.InMemoryPlatformConfig;
+import com.powsybl.commons.config.MapModuleConfig;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import java.io.IOException;
 import java.nio.file.FileSystem;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static com.powsybl.dynaflow.DynaflowConstants.CONFIG_FILENAME;
 import static com.powsybl.dynaflow.DynaflowConstants.IIDM_IN_FILE;
 import static org.junit.Assert.assertEquals;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
-import com.google.common.jimfs.Configuration;
-import com.google.common.jimfs.Jimfs;
-import com.powsybl.commons.config.InMemoryPlatformConfig;
-import com.powsybl.commons.config.MapModuleConfig;
 
 public class DynaflowConfigTest {
     private InMemoryPlatformConfig platformConfig;
@@ -52,8 +51,11 @@ public class DynaflowConfigTest {
         MapModuleConfig moduleConfig = platformConfig.createModuleConfig("dynaflow");
         moduleConfig.setStringProperty("homeDir", homeDir);
         DynaflowConfig config = DynaflowConfig.fromPlatformConfig(platformConfig);
+        String program = Paths.get(homeDir).resolve("dynaflow-launcher.sh").toString();
+
         String versionCommand = config.getVersionCommand().toString(0);
-        String expectedVersionCommand = "[homeDir" + File.separator + "dynaflow-launcher.sh, --version]";
+        String expectedVersionCommand = "[" + program + ", --version]";
+
         assertEquals(expectedVersionCommand, versionCommand);
     }
 
@@ -63,10 +65,15 @@ public class DynaflowConfigTest {
         MapModuleConfig moduleConfig = platformConfig.createModuleConfig("dynaflow");
         moduleConfig.setStringProperty("homeDir", homeDir);
         DynaflowConfig config = DynaflowConfig.fromPlatformConfig(platformConfig);
-        String workingDir = File.separator + "tmp" + File.separator + "dynaflow_123";
-        String executionCommand = config.getCommand(Paths.get(workingDir)).toString(0);
-        String expectedExecutionCommand = "[homeDir" + File.separator + "dynaflow-launcher.sh, --iidm, " + workingDir
-                + File.separator + IIDM_IN_FILE + ", --config, " + workingDir + File.separator + CONFIG_FILENAME + "]";
+
+        Path workingDir = Paths.get("tmp").resolve("dynaflow_123");
+        String program = Paths.get(homeDir).resolve("dynaflow-launcher.sh").toString();
+        String iidmPath = workingDir.resolve(IIDM_IN_FILE).toString();
+        String configPath = workingDir.resolve(CONFIG_FILENAME).toString();
+
+        String executionCommand = config.getCommand(workingDir).toString(0);
+        String expectedExecutionCommand = "[" + program + ", --iidm, " + iidmPath +
+                ", --config, " + configPath + "]";
         assertEquals(expectedExecutionCommand, executionCommand);
     }
 }
