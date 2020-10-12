@@ -86,27 +86,28 @@ public class DynaflowParameters extends AbstractExtension<LoadFlowParameters> {
     }
 
     public void writeConfigInputFile(Path workingDir, LoadFlowParameters params) throws IOException {
-        FileOutputStream outputStream = new FileOutputStream(workingDir.resolve(CONFIG_FILENAME).toString());
-        writeConfigInputFile(outputStream, params);
-        outputStream.close();
+        try (FileOutputStream outputStream = new FileOutputStream(workingDir.resolve(CONFIG_FILENAME).toString())) {
+            writeConfigInputFile(outputStream, params);
+        }
     }
 
     public void writeConfigInputFile(OutputStream outputStream, LoadFlowParameters params) throws IOException {
         JsonFactory factory = new JsonFactory();
-        JsonGenerator jsonGenerator = factory.createGenerator(outputStream, JsonEncoding.UTF8);
-        jsonGenerator.useDefaultPrettyPrinter();
-        jsonGenerator.writeStartObject();
-        jsonGenerator.writeObjectFieldStart("dfl-config");
-        jsonGenerator.writeBooleanField("SVCRegulationOn", svcRegulationOn);
-        jsonGenerator.writeBooleanField("ShuntRegulationOn", shuntRegulationOn);
-        jsonGenerator.writeBooleanField("AutomaticSlackBusOn", automaticSlackBusOn);
-        jsonGenerator.writeBooleanField("VSCAsGenerators", vscAsGenerators);
-        jsonGenerator.writeBooleanField("LCCAsLoads", lccAsLoads);
-        jsonGenerator.writeBooleanField("InfiniteReactiveLimits", params.isNoGeneratorReactiveLimits());
-        jsonGenerator.writeBooleanField("PSTRegulationOn", params.isPhaseShifterRegulationOn());
-        jsonGenerator.writeEndObject();
-        jsonGenerator.writeEndObject();
-        jsonGenerator.close();
+        try (JsonGenerator jsonGenerator = factory.createGenerator(outputStream, JsonEncoding.UTF8)) {
+            jsonGenerator.useDefaultPrettyPrinter();
+            jsonGenerator.writeStartObject();
+            jsonGenerator.writeObjectFieldStart("dfl-config");
+            jsonGenerator.writeBooleanField("SVCRegulationOn", svcRegulationOn);
+            jsonGenerator.writeBooleanField("ShuntRegulationOn", shuntRegulationOn);
+            jsonGenerator.writeBooleanField("AutomaticSlackBusOn", automaticSlackBusOn);
+            jsonGenerator.writeBooleanField("VSCAsGenerators", vscAsGenerators);
+            jsonGenerator.writeBooleanField("LCCAsLoads", lccAsLoads);
+            jsonGenerator.writeBooleanField("InfiniteReactiveLimits", params.isNoGeneratorReactiveLimits());
+            jsonGenerator.writeBooleanField("PSTRegulationOn", params.isPhaseShifterRegulationOn());
+            jsonGenerator.writeEndObject();
+            jsonGenerator.writeEndObject();
+        }
+
     }
 
     @Override
