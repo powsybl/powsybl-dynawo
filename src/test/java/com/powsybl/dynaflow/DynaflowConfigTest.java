@@ -17,8 +17,6 @@ import org.junit.Test;
 import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Objects;
 
 import static org.junit.Assert.assertEquals;
 
@@ -27,15 +25,13 @@ import static org.junit.Assert.assertEquals;
  * @author Guillaume Pernin <guillaume.pernin at rte-france.com>
  */
 public class DynaflowConfigTest {
-    private InMemoryPlatformConfig platformConfig;
     private FileSystem fileSystem;
-    boolean debug = true;
-    String homeDir = "homeDir";
+    private final boolean debug = true;
+    private final String homeDir = "homeDir";
 
     @Before
     public void setUp() {
         fileSystem = Jimfs.newFileSystem(Configuration.windows());
-        homeDir = "homeDir";
     }
 
     @After
@@ -45,11 +41,11 @@ public class DynaflowConfigTest {
 
     @Test
     public void fromPlatformConfigTest() {
-        platformConfig = new InMemoryPlatformConfig(fileSystem);
+        InMemoryPlatformConfig platformConfig = new InMemoryPlatformConfig(fileSystem);
 
         MapModuleConfig moduleConfig = platformConfig.createModuleConfig("dynaflow");
         moduleConfig.setStringProperty("homeDir", homeDir);
-        moduleConfig.setStringProperty("debug", Objects.toString(debug));
+        moduleConfig.setStringProperty("debug", Boolean.toString(debug));
 
         DynaflowConfig config = DynaflowConfig.fromPlatformConfig(platformConfig);
         assertEquals(homeDir, config.getHomeDir().toString());
@@ -58,7 +54,7 @@ public class DynaflowConfigTest {
 
     @Test
     public void checkGetters() {
-        Path pathHomeDir = Paths.get(homeDir);
+        Path pathHomeDir = fileSystem.getPath(homeDir);
         DynaflowConfig config = new DynaflowConfig(pathHomeDir, debug);
 
         assertEquals(homeDir, config.getHomeDir().toString());

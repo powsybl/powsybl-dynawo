@@ -15,9 +15,9 @@ import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.extensions.AbstractExtension;
 import com.powsybl.loadflow.LoadFlowParameters;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static com.powsybl.dynaflow.DynaflowConstants.CONFIG_FILENAME;
@@ -85,13 +85,13 @@ public class DynaflowParameters extends AbstractExtension<LoadFlowParameters> {
         return this;
     }
 
-    public void writeConfigInputFile(Path workingDir, LoadFlowParameters params) throws IOException {
-        try (FileOutputStream outputStream = new FileOutputStream(workingDir.resolve(CONFIG_FILENAME).toString())) {
+    void writeConfigInputFile(Path workingDir, LoadFlowParameters params) throws IOException {
+        try (OutputStream outputStream = Files.newOutputStream(workingDir.resolve(CONFIG_FILENAME))) {
             writeConfigInputFile(outputStream, params);
         }
     }
 
-    public void writeConfigInputFile(OutputStream outputStream, LoadFlowParameters params) throws IOException {
+    void writeConfigInputFile(OutputStream outputStream, LoadFlowParameters params) throws IOException {
         JsonFactory factory = new JsonFactory();
         try (JsonGenerator jsonGenerator = factory.createGenerator(outputStream, JsonEncoding.UTF8)) {
             jsonGenerator.useDefaultPrettyPrinter();

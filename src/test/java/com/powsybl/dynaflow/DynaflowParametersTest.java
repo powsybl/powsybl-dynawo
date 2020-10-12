@@ -19,10 +19,9 @@ import org.junit.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.FileSystem;
-import java.util.Objects;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  *
@@ -30,7 +29,6 @@ import static org.junit.Assert.*;
  */
 public class DynaflowParametersTest extends AbstractConverterTest {
 
-    private FileSystem fileSystem;
     private InMemoryPlatformConfig platformConfig;
 
     @Before
@@ -53,20 +51,20 @@ public class DynaflowParametersTest extends AbstractConverterTest {
         boolean lccAsLoads = true;
 
         MapModuleConfig moduleConfig = platformConfig.createModuleConfig("dynaflow-default-parameters");
-        moduleConfig.setStringProperty("svcRegulationOn", Objects.toString(svcRegulationOn));
-        moduleConfig.setStringProperty("shuntRegulationOn", Objects.toString(shuntRegulationOn));
-        moduleConfig.setStringProperty("automaticSlackBusOn", Objects.toString(automaticSlackBusOn));
-        moduleConfig.setStringProperty("vscAsGenerators", Objects.toString(vscAsGenerators));
-        moduleConfig.setStringProperty("lccAsLoads", Objects.toString(lccAsLoads));
+        moduleConfig.setStringProperty("svcRegulationOn", Boolean.toString(svcRegulationOn));
+        moduleConfig.setStringProperty("shuntRegulationOn", Boolean.toString(shuntRegulationOn));
+        moduleConfig.setStringProperty("automaticSlackBusOn", Boolean.toString(automaticSlackBusOn));
+        moduleConfig.setStringProperty("vscAsGenerators", Boolean.toString(vscAsGenerators));
+        moduleConfig.setStringProperty("lccAsLoads", Boolean.toString(lccAsLoads));
 
         DynaflowParameters.DynaflowConfigLoader configLoader = new DynaflowParameters.DynaflowConfigLoader();
         DynaflowParameters parameters = configLoader.load(platformConfig);
 
-        assertTrue(parameters.getSvcRegulationOn());
-        assertFalse(parameters.getShuntRegulationOn());
-        assertTrue(parameters.getAutomaticSlackBusOn());
-        assertFalse(parameters.getVscAsGenerators());
-        assertTrue(parameters.getLccAsLoads());
+        assertEquals(parameters.getSvcRegulationOn(), svcRegulationOn);
+        assertEquals(parameters.getShuntRegulationOn(), shuntRegulationOn);
+        assertEquals(parameters.getAutomaticSlackBusOn(), automaticSlackBusOn);
+        assertEquals(parameters.getVscAsGenerators(), vscAsGenerators);
+        assertEquals(parameters.getLccAsLoads(), lccAsLoads);
     }
 
     @Test
