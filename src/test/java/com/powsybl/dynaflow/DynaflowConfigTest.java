@@ -1,3 +1,9 @@
+/**
+ * Copyright (c) 2020, RTE (http://www.rte-france.com)
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 package com.powsybl.dynaflow;
 
 import com.google.common.jimfs.Configuration;
@@ -12,19 +18,24 @@ import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Objects;
 
-import static com.powsybl.dynaflow.DynaflowConstants.CONFIG_FILENAME;
-import static com.powsybl.dynaflow.DynaflowConstants.IIDM_IN_FILE;
 import static org.junit.Assert.assertEquals;
 
+/**
+ *
+ * @author Guillaume Pernin <guillaume.pernin at rte-france.com>
+ */
 public class DynaflowConfigTest {
     private InMemoryPlatformConfig platformConfig;
     private FileSystem fileSystem;
+    boolean debug = true;
+    String homeDir = "homeDir";
 
     @Before
     public void setUp() {
-        fileSystem = Jimfs.newFileSystem(Configuration.unix());
-        platformConfig = new InMemoryPlatformConfig(fileSystem);
+        fileSystem = Jimfs.newFileSystem(Configuration.windows());
+        homeDir = "homeDir";
     }
 
     @After
@@ -33,47 +44,24 @@ public class DynaflowConfigTest {
     }
 
     @Test
-    public void checkConfig() {
-        String homeDir = "homeDir";
-        boolean debug = true;
+    public void fromPlatformConfigTest() {
+        platformConfig = new InMemoryPlatformConfig(fileSystem);
 
         MapModuleConfig moduleConfig = platformConfig.createModuleConfig("dynaflow");
         moduleConfig.setStringProperty("homeDir", homeDir);
-        moduleConfig.setStringProperty("debug", Boolean.toString(debug));
+        moduleConfig.setStringProperty("debug", Objects.toString(debug));
+
         DynaflowConfig config = DynaflowConfig.fromPlatformConfig(platformConfig);
         assertEquals(homeDir, config.getHomeDir().toString());
         assertEquals(debug, config.isDebug());
     }
 
     @Test
-    public void checkVersionCommand() {
-        String homeDir = "homeDir";
-        MapModuleConfig moduleConfig = platformConfig.createModuleConfig("dynaflow");
-        moduleConfig.setStringProperty("homeDir", homeDir);
-        DynaflowConfig config = DynaflowConfig.fromPlatformConfig(platformConfig);
-        String program = Paths.get(homeDir).resolve("dynaflow-launcher.sh").toString();
+    public void checkGetters() {
+        Path pathHomeDir = Paths.get(homeDir);
+        DynaflowConfig config = new DynaflowConfig(pathHomeDir, debug);
 
-        String versionCommand = config.getVersionCommand().toString(0);
-        String expectedVersionCommand = "[" + program + ", --version]";
-
-        assertEquals(expectedVersionCommand, versionCommand);
-    }
-
-    @Test
-    public void checkExecutionCommand() {
-        String homeDir = "homeDir";
-        MapModuleConfig moduleConfig = platformConfig.createModuleConfig("dynaflow");
-        moduleConfig.setStringProperty("homeDir", homeDir);
-        DynaflowConfig config = DynaflowConfig.fromPlatformConfig(platformConfig);
-
-        Path workingDir = Paths.get("tmp").resolve("dynaflow_123");
-        String program = Paths.get(homeDir).resolve("dynaflow-launcher.sh").toString();
-        String iidmPath = workingDir.resolve(IIDM_IN_FILE).toString();
-        String configPath = workingDir.resolve(CONFIG_FILENAME).toString();
-
-        String executionCommand = config.getCommand(workingDir).toString(0);
-        String expectedExecutionCommand = "[" + program + ", --iidm, " + iidmPath +
-                ", --config, " + configPath + "]";
-        assertEquals(expectedExecutionCommand, executionCommand);
+        assertEquals(homeDir, config.getHomeDir().toString());
+        assertEquals(debug, config.isDebug());
     }
 }

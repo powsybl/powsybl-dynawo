@@ -1,11 +1,17 @@
+/**
+ * Copyright (c) 2020, RTE (http://www.rte-france.com)
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 package com.powsybl.dynaflow;
 
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
+import com.powsybl.commons.AbstractConverterTest;
 import com.powsybl.commons.config.InMemoryPlatformConfig;
 import com.powsybl.commons.config.MapModuleConfig;
 import com.powsybl.loadflow.LoadFlowParameters;
-import org.apache.commons.io.IOUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,13 +19,16 @@ import org.junit.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystem;
 import java.util.Objects;
 
 import static org.junit.Assert.*;
 
-public class DynaflowParametersTest {
+/**
+ *
+ * @author Guillaume Pernin <guillaume.pernin at rte-france.com>
+ */
+public class DynaflowParametersTest extends AbstractConverterTest {
 
     private FileSystem fileSystem;
     private InMemoryPlatformConfig platformConfig;
@@ -64,12 +73,13 @@ public class DynaflowParametersTest {
     public void checkDefaultParameters() {
         LoadFlowParameters parameters = LoadFlowParameters.load(platformConfig);
         DynaflowParameters parametersExt = parameters.getExtension(DynaflowParameters.class);
+        assertNotNull(parametersExt);
 
-        assertEquals(DynaflowParameters.SVC_REGULATION_ON, parametersExt.getSvcRegulationOn());
-        assertEquals(DynaflowParameters.SHUNT_REGULATION_ON, parametersExt.getShuntRegulationOn());
-        assertEquals(DynaflowParameters.AUTOMATIC_SLACK_BUS_ON, parametersExt.getAutomaticSlackBusOn());
-        assertEquals(DynaflowParameters.VSC_AS_GENERATORS, parametersExt.getVscAsGenerators());
-        assertEquals(DynaflowParameters.LCC_AS_LOADS, parametersExt.getLccAsLoads());
+        assertEquals(DynaflowParameters.DEFAULT_SVC_REGULATION_ON, parametersExt.getSvcRegulationOn());
+        assertEquals(DynaflowParameters.DEFAULT_SHUNT_REGULATION_ON, parametersExt.getShuntRegulationOn());
+        assertEquals(DynaflowParameters.DEFAULT_AUTOMATIC_SLACK_BUS_ON, parametersExt.getAutomaticSlackBusOn());
+        assertEquals(DynaflowParameters.DEFAULT_VSC_AS_GENERATORS, parametersExt.getVscAsGenerators());
+        assertEquals(DynaflowParameters.DEFAULT_LCC_AS_LOADS, parametersExt.getLccAsLoads());
 
     }
 
@@ -77,11 +87,11 @@ public class DynaflowParametersTest {
     public void checkDefaultToString() {
         LoadFlowParameters parameters = LoadFlowParameters.load(platformConfig);
         DynaflowParameters parametersExt = parameters.getExtension(DynaflowParameters.class);
-        String expectedString = "{svcRegulationOn=" + DynaflowParameters.SVC_REGULATION_ON +
-                ", shuntRegulationON=" + DynaflowParameters.SHUNT_REGULATION_ON +
-                ", automaticSlackBusON=" + DynaflowParameters.AUTOMATIC_SLACK_BUS_ON +
-                ", vscAsGenerators=" + DynaflowParameters.VSC_AS_GENERATORS +
-                ", lccAsLoads=" + DynaflowParameters.LCC_AS_LOADS + "}";
+        String expectedString = "{svcRegulationOn=" + DynaflowParameters.DEFAULT_SVC_REGULATION_ON +
+                ", shuntRegulationON=" + DynaflowParameters.DEFAULT_SHUNT_REGULATION_ON +
+                ", automaticSlackBusON=" + DynaflowParameters.DEFAULT_AUTOMATIC_SLACK_BUS_ON +
+                ", vscAsGenerators=" + DynaflowParameters.DEFAULT_VSC_AS_GENERATORS +
+                ", lccAsLoads=" + DynaflowParameters.DEFAULT_LCC_AS_LOADS + "}";
         assertEquals(expectedString, parametersExt.toString());
 
     }
@@ -104,9 +114,9 @@ public class DynaflowParametersTest {
         params.writeConfigInputFile(out, parameters);
         String generatedParams = out.toString();
 
-        InputStream inputStream = getClass().getResourceAsStream("/dynaflow/params.json");
-        String fileParams = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
-        assertEquals(fileParams, generatedParams);
+        InputStream fileParams = getClass().getResourceAsStream("/dynaflow/params.json");
+        compareTxt(fileParams, generatedParams);
+        fileParams.close();
 
     }
 }

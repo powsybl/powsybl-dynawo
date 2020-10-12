@@ -1,3 +1,9 @@
+/**
+ * Copyright (c) 2020, RTE (http://www.rte-france.com)
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 package com.powsybl.dynaflow;
 
 import com.fasterxml.jackson.core.JsonEncoding;
@@ -16,64 +22,73 @@ import java.nio.file.Path;
 
 import static com.powsybl.dynaflow.DynaflowConstants.CONFIG_FILENAME;
 
+/**
+ * @author Guillaume Pernin <guillaume.pernin at rte-france.com>
+ */
 public class DynaflowParameters extends AbstractExtension<LoadFlowParameters> {
 
     private static final String MODULE_SPECIFIC_PARAMETERS = "dynaflow-default-parameters";
-    public static final boolean SVC_REGULATION_ON = false;
-    public static final boolean SHUNT_REGULATION_ON = false;
-    public static final boolean AUTOMATIC_SLACK_BUS_ON = false;
-    public static final boolean VSC_AS_GENERATORS = true;
-    public static final boolean LCC_AS_LOADS = true;
+    public static final boolean DEFAULT_SVC_REGULATION_ON = false;
+    public static final boolean DEFAULT_SHUNT_REGULATION_ON = false;
+    public static final boolean DEFAULT_AUTOMATIC_SLACK_BUS_ON = false;
+    public static final boolean DEFAULT_VSC_AS_GENERATORS = true;
+    public static final boolean DEFAULT_LCC_AS_LOADS = true;
 
-    private boolean svcRegulationOn = SVC_REGULATION_ON;
-    private boolean shuntRegulationOn = SHUNT_REGULATION_ON;
-    private boolean automaticSlackBusOn = AUTOMATIC_SLACK_BUS_ON;
-    private boolean vscAsGenerators = VSC_AS_GENERATORS;
-    private boolean lccAsLoads = LCC_AS_LOADS;
+    private boolean svcRegulationOn = DEFAULT_SVC_REGULATION_ON;
+    private boolean shuntRegulationOn = DEFAULT_SHUNT_REGULATION_ON;
+    private boolean automaticSlackBusOn = DEFAULT_AUTOMATIC_SLACK_BUS_ON;
+    private boolean vscAsGenerators = DEFAULT_VSC_AS_GENERATORS;
+    private boolean lccAsLoads = DEFAULT_LCC_AS_LOADS;
 
     public boolean getSvcRegulationOn() {
         return svcRegulationOn;
     }
 
-    public void setSvcRegulationOn(boolean svcRegulationOn) {
+    public DynaflowParameters setSvcRegulationOn(boolean svcRegulationOn) {
         this.svcRegulationOn = svcRegulationOn;
+        return this;
     }
 
     public boolean getShuntRegulationOn() {
         return shuntRegulationOn;
     }
 
-    public void setShuntRegulationOn(boolean shuntRegulationOn) {
+    public DynaflowParameters setShuntRegulationOn(boolean shuntRegulationOn) {
         this.shuntRegulationOn = shuntRegulationOn;
+        return this;
     }
 
     public boolean getAutomaticSlackBusOn() {
         return automaticSlackBusOn;
     }
 
-    public void setAutomaticSlackBusOn(boolean automaticSlackBusOn) {
+    public DynaflowParameters setAutomaticSlackBusOn(boolean automaticSlackBusOn) {
         this.automaticSlackBusOn = automaticSlackBusOn;
+        return this;
     }
 
     public boolean getVscAsGenerators() {
         return vscAsGenerators;
     }
 
-    public void setVscAsGenerators(boolean vscAsGenerators) {
+    public DynaflowParameters setVscAsGenerators(boolean vscAsGenerators) {
         this.vscAsGenerators = vscAsGenerators;
+        return this;
     }
 
     public boolean getLccAsLoads() {
         return lccAsLoads;
     }
 
-    public void setLccAsLoads(boolean lccAsLoads) {
+    public DynaflowParameters setLccAsLoads(boolean lccAsLoads) {
         this.lccAsLoads = lccAsLoads;
+        return this;
     }
 
     public void writeConfigInputFile(Path workingDir, LoadFlowParameters params) throws IOException {
         FileOutputStream outputStream = new FileOutputStream(workingDir.resolve(CONFIG_FILENAME).toString());
         writeConfigInputFile(outputStream, params);
+        outputStream.close();
     }
 
     public void writeConfigInputFile(OutputStream outputStream, LoadFlowParameters params) throws IOException {
@@ -87,7 +102,6 @@ public class DynaflowParameters extends AbstractExtension<LoadFlowParameters> {
         jsonGenerator.writeBooleanField("AutomaticSlackBusOn", automaticSlackBusOn);
         jsonGenerator.writeBooleanField("VSCAsGenerators", vscAsGenerators);
         jsonGenerator.writeBooleanField("LCCAsLoads", lccAsLoads);
-        //This is here that we do the mapping from the names of the variables from powsybl to dynaflow
         jsonGenerator.writeBooleanField("InfiniteReactiveLimits", params.isNoGeneratorReactiveLimits());
         jsonGenerator.writeBooleanField("PSTRegulationOn", params.isPhaseShifterRegulationOn());
         jsonGenerator.writeEndObject();
@@ -124,11 +138,11 @@ public class DynaflowParameters extends AbstractExtension<LoadFlowParameters> {
 
             platformConfig.getOptionalModuleConfig(MODULE_SPECIFIC_PARAMETERS)
                     .ifPresent(config -> {
-                        parameters.setSvcRegulationOn(config.getBooleanProperty("svcRegulationOn", SVC_REGULATION_ON));
-                        parameters.setShuntRegulationOn(config.getBooleanProperty("shuntRegulationOn", SHUNT_REGULATION_ON));
-                        parameters.setAutomaticSlackBusOn(config.getBooleanProperty("automaticSlackBusOn", AUTOMATIC_SLACK_BUS_ON));
-                        parameters.setVscAsGenerators(config.getBooleanProperty("vscAsGenerators", VSC_AS_GENERATORS));
-                        parameters.setLccAsLoads(config.getBooleanProperty("lccAsLoads", LCC_AS_LOADS));
+                        parameters.setSvcRegulationOn(config.getBooleanProperty("svcRegulationOn", DEFAULT_SVC_REGULATION_ON))
+                                .setShuntRegulationOn(config.getBooleanProperty("shuntRegulationOn", DEFAULT_SHUNT_REGULATION_ON))
+                                .setAutomaticSlackBusOn(config.getBooleanProperty("automaticSlackBusOn", DEFAULT_AUTOMATIC_SLACK_BUS_ON))
+                                .setVscAsGenerators(config.getBooleanProperty("vscAsGenerators", DEFAULT_VSC_AS_GENERATORS))
+                                .setLccAsLoads(config.getBooleanProperty("lccAsLoads", DEFAULT_LCC_AS_LOADS));
                     });
 
             return parameters;
