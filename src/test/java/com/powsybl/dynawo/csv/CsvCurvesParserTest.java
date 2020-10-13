@@ -10,7 +10,7 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.junit.Assert.*;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.Map;
 
 import org.junit.Test;
 
@@ -41,14 +41,14 @@ public class CsvCurvesParserTest {
                 "\"0.000004\";\"1.059970\";\"1.045041\";\"1.010101\";\"1.017703\"") + System.lineSeparator();
 
         Arrays.asList(csv, csvWithQuotes).forEach(data -> {
-            List<TimeSeries> timeSeries = CsvCurvesParser.parseCsv(data, ';');
+            Map<String, TimeSeries> timeSeries = CsvCurvesParser.parseCsv(data, ';');
 
             assertEquals(4, timeSeries.size());
 
-            TimeSeries ts1 = timeSeries.get(0);
-            TimeSeries ts2 = timeSeries.get(1);
-            TimeSeries ts3 = timeSeries.get(2);
-            TimeSeries ts4 = timeSeries.get(3);
+            TimeSeries ts1 = timeSeries.get("NETWORK__BUS____1_TN_Upu_value");
+            TimeSeries ts2 = timeSeries.get("NETWORK__BUS____2_TN_Upu_value");
+            TimeSeries ts3 = timeSeries.get("NETWORK__BUS____3_TN_Upu_value");
+            TimeSeries ts4 = timeSeries.get("NETWORK__BUS____4_TN_Upu_value");
 
             assertEquals("NETWORK__BUS____1_TN_Upu_value", ts1.getMetadata().getName());
             assertEquals(TimeSeriesDataType.DOUBLE, ts1.getMetadata().getDataType());

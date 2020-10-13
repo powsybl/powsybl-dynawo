@@ -8,7 +8,7 @@ package com.powsybl.dynawo;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
+import java.util.Map;
 
 import com.powsybl.dynamicsimulation.DynamicSimulationResult;
 import com.powsybl.dynawo.csv.CsvCurvesParser;
@@ -21,7 +21,7 @@ public class DynawoResult implements DynamicSimulationResult {
 
     private final boolean isOk;
     private final String logs;
-    private final List<TimeSeries> ts;
+    private final Map<String, TimeSeries> ts;
 
     public DynawoResult(Path file) {
         isOk = Files.exists(file);
@@ -43,7 +43,11 @@ public class DynawoResult implements DynamicSimulationResult {
         return logs;
     }
 
-    public List<TimeSeries> getTimeSeries() {
+    public Map<String, TimeSeries> getCurves() {
         return ts;
+    }
+
+    public TimeSeries getCurve(String curve) {
+        return ts.get(curve);
     }
 }

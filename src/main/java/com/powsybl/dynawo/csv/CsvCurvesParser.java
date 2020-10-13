@@ -15,8 +15,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -48,7 +50,7 @@ public final class CsvCurvesParser {
     private CsvCurvesParser() {
     }
 
-    public static List<TimeSeries> parseCsv(Path file) {
+    public static Map<String, TimeSeries> parseCsv(Path file) {
         try (BufferedReader reader = Files.newBufferedReader(file, StandardCharsets.UTF_8)) {
             return parseCsv(file, TimeSeriesConstants.DEFAULT_SEPARATOR);
         } catch (IOException e) {
@@ -56,7 +58,7 @@ public final class CsvCurvesParser {
         }
     }
 
-    public static List<TimeSeries> parseCsv(Path file, char separator) {
+    public static Map<String, TimeSeries> parseCsv(Path file, char separator) {
         try (BufferedReader reader = Files.newBufferedReader(file, StandardCharsets.UTF_8)) {
             return parseCsv(reader, separator);
         } catch (IOException e) {
@@ -64,7 +66,7 @@ public final class CsvCurvesParser {
         }
     }
 
-    public static List<TimeSeries> parseCsv(String csv, char separator) {
+    public static Map<String, TimeSeries> parseCsv(String csv, char separator) {
         try (BufferedReader reader = new BufferedReader(new StringReader(csv))) {
             return parseCsv(reader, separator);
         } catch (IOException e) {
@@ -72,12 +74,12 @@ public final class CsvCurvesParser {
         }
     }
 
-    static List<TimeSeries> parseCsv(BufferedReader reader, char separator) {
+    static Map<String, TimeSeries> parseCsv(BufferedReader reader, char separator) {
         Objects.requireNonNull(reader);
 
         Stopwatch stopwatch = Stopwatch.createStarted();
 
-        List<TimeSeries> timeSeries = new ArrayList<>();
+        Map<String, TimeSeries> timeSeries = new HashMap<>();
         String separatorStr = Character.toString(separator);
 
         try {
@@ -119,7 +121,7 @@ public final class CsvCurvesParser {
         return new CsvParsingContext(names);
     }
 
-    static void readCsvValues(CsvListReader reader, CsvParsingContext context, List<TimeSeries> timeSeries) throws IOException {
+    static void readCsvValues(CsvListReader reader, CsvParsingContext context, Map<String, TimeSeries> timeSeries) throws IOException {
         List<String> tokens;
         while ((tokens = reader.read()) != null) {
 
@@ -129,7 +131,7 @@ public final class CsvCurvesParser {
 
             context.parseLine(tokens);
         }
-        timeSeries.addAll(context.createTimeSeries());
+        timeSeries.putAll(context.createTimeSeries());
     }
 
     static double parseDouble(String token) {
@@ -192,21 +194,21 @@ public final class CsvCurvesParser {
             times.add(time.longValue());
         }
 
-        List<TimeSeries> createTimeSeries() {
+        Map<String, TimeSeries> createTimeSeries() {
             TimeSeriesIndex index = new IrregularTimeSeriesIndex(times.stream().mapToLong(l -> l).toArray());
 
-            List<TimeSeries> timeSeriesList = new ArrayList<>(names.size());
+            Map<String, TimeSeries> timeSeries = new HashMap<>(names.size());
             for (int i = 0; i < names.size(); i++) {
                 TimeSeriesMetadata metadata = new TimeSeriesMetadata(names.get(i), dataTypes[i], index);
                 if (dataTypes[i] == TimeSeriesDataType.DOUBLE) {
                     TDoubleArrayList doubleValues = (TDoubleArrayList) values[i];
                     DoubleDataChunk chunk = new UncompressedDoubleDataChunk(0, doubleValues.toArray()).tryToCompress();
-                    timeSeriesList.add(new StoredDoubleTimeSeries(metadata, chunk));
+                    timeSeries.put(names.get(i), new StoredDoubleTimeSeries(metadata, chunk));
                 } else {
                     throw assertDataType(dataTypes[i - 1]);
                 }
             }
-            return timeSeriesList;
+            return timeSeries;
         }
     }
 }

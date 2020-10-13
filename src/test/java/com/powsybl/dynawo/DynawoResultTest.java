@@ -43,12 +43,12 @@ public class DynawoResultTest {
 
         assertTrue(result.isOk());
 
-        assertEquals(4, result.getTimeSeries().size());
+        assertEquals(4, result.getCurves().size());
 
-        TimeSeries ts1 = result.getTimeSeries().get(0);
-        TimeSeries ts2 = result.getTimeSeries().get(1);
-        TimeSeries ts3 = result.getTimeSeries().get(2);
-        TimeSeries ts4 = result.getTimeSeries().get(3);
+        TimeSeries ts1 = result.getCurve("NETWORK__BUS____1_TN_Upu_value");
+        TimeSeries ts2 = result.getCurve("NETWORK__BUS____2_TN_Upu_value");
+        TimeSeries ts3 = result.getCurve("NETWORK__BUS____3_TN_Upu_value");
+        TimeSeries ts4 = result.getCurve("NETWORK__BUS____4_TN_Upu_value");
 
         assertEquals("NETWORK__BUS____1_TN_Upu_value", ts1.getMetadata().getName());
         assertEquals(TimeSeriesDataType.DOUBLE, ts1.getMetadata().getDataType());
