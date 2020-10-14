@@ -20,6 +20,9 @@ import com.powsybl.iidm.xml.IidmXmlVersion;
 import com.powsybl.iidm.xml.XMLExporter;
 
 import javax.xml.stream.XMLStreamException;
+
+import org.apache.commons.lang3.SystemUtils;
+
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Path;
@@ -40,7 +43,7 @@ import static com.powsybl.dynawo.xml.DynawoConstants.NETWORK_FILENAME;
 public class DynawoProvider implements DynamicSimulationProvider {
 
     public static final String NAME = "Dynawo";
-    private static final String DYNAWO_CMD_NAME = "dynawo.sh";
+    private static final String DYNAWO_CMD_NAME = "dynawo";
     private static final String WORKING_DIR_PREFIX = "powsybl_dynawo_";
 
     private final DynawoConfig dynawoConfig;
@@ -136,17 +139,25 @@ public class DynawoProvider implements DynamicSimulationProvider {
         }
 
         private Command createCommand(Path dynawoJobsFile) {
+            String jobs = "jobs";
+            if (SystemUtils.IS_OS_WINDOWS) {
+                jobs = "--jobs-file";
+            }
             return new GroupCommandBuilder()
                 .id("dyn_fs")
                 .subCommand()
                 .program(getProgram())
-                .args("jobs", dynawoJobsFile.toString())
+                .args(jobs, dynawoJobsFile.toString())
                 .add()
                 .build();
         }
 
         private String getProgram() {
-            return Paths.get(dynawoConfig.getHomeDir()).resolve(DYNAWO_CMD_NAME).toString();
+            String cmdExtension = ".sh";
+            if (SystemUtils.IS_OS_WINDOWS) {
+                cmdExtension = ".cmd";
+            }
+            return Paths.get(dynawoConfig.getHomeDir()).resolve(DYNAWO_CMD_NAME + cmdExtension).toString();
         }
     }
 }
