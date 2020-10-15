@@ -11,7 +11,7 @@ import java.nio.file.Path;
 import java.util.Map;
 
 import com.powsybl.dynamicsimulation.DynamicSimulationResult;
-import com.powsybl.dynawo.csv.CsvCurvesParser;
+import com.powsybl.dynawo.timeseries.CsvCurvesParser;
 import com.powsybl.timeseries.TimeSeries;
 
 /**
