@@ -19,31 +19,31 @@ import com.powsybl.dynawo.ieee.AbstractIeeeTest;
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class Ieee14MacroConnectsTest extends AbstractIeeeTest {
+public class Ieee14CurrentLimitAutomatonTest extends AbstractIeeeTest {
 
     @Before
     public void setup() throws IOException {
         super.setup(
-                "/ieee14-macroconnects/ieee14-macroconnects.par",
-                "/ieee14-macroconnects/ieee14-macroconnects-network.par",
-                "/ieee14-macroconnects/ieee-solvers.par",
-                "/ieee14-macroconnects/IEEE14.iidm",
-                "/ieee14-macroconnects/dynamicModels.groovy",
-                null,
-                "/ieee14-macroconnects/curves.groovy",
-                "/ieee14-macroconnects/dynawoParameters.json"
+                "/ieee14-currentlimitautomaton/ieee14-currentlimitautomaton.par",
+                "/ieee14-currentlimitautomaton/ieee14-currentlimitautomaton-network.par",
+                "/ieee14-currentlimitautomaton/ieee-solvers.par",
+                "/ieee14-currentlimitautomaton/IEEE14.iidm",
+                "/ieee14-currentlimitautomaton/dynamicModels.groovy",
+                "/ieee14-currentlimitautomaton/eventModels.groovy",
+                "/ieee14-currentlimitautomaton/curves.groovy",
+                "/ieee14-currentlimitautomaton/dynawoParameters.json"
         );
     }
 
     @Test
     public void testSimulation() throws Exception {
-        Ieee14MacroconnectsLocalCommandExecutor commandExecutor = new Ieee14MacroconnectsLocalCommandExecutor(fileSystem, network, getDynawoSimulationParameters(parameters));
+        Ieee14CurrentLimitAutomatonLocalCommandExecutor commandExecutor = new Ieee14CurrentLimitAutomatonLocalCommandExecutor(fileSystem, network, getDynawoSimulationParameters(parameters));
         DynamicSimulationResult result = runSimulation(commandExecutor);
         assertNotNull(result);
     }
 
     @Override
     public String getWorkingDirName() {
-        return "ieee14-macroconnects";
+        return "ieee14-currentlimitautomaton";
     }
 }

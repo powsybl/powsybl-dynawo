@@ -19,31 +19,31 @@ import com.powsybl.dynawo.ieee.AbstractIeeeTest;
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class Ieee14MacroConnectsTest extends AbstractIeeeTest {
+public class Ieee14DisconnectLineTest extends AbstractIeeeTest {
 
     @Before
     public void setup() throws IOException {
         super.setup(
-                "/ieee14-macroconnects/ieee14-macroconnects.par",
-                "/ieee14-macroconnects/ieee14-macroconnects-network.par",
-                "/ieee14-macroconnects/ieee-solvers.par",
-                "/ieee14-macroconnects/IEEE14.iidm",
-                "/ieee14-macroconnects/dynamicModels.groovy",
-                null,
-                "/ieee14-macroconnects/curves.groovy",
-                "/ieee14-macroconnects/dynawoParameters.json"
-        );
+            "/ieee14-disconnectline/ieee14-disconnectline.par",
+            "/ieee14-disconnectline/ieee14-disconnectline-network.par",
+            "/ieee14-disconnectline/ieee-solvers.par",
+            "/ieee14-disconnectline/IEEE14.iidm",
+            "/ieee14-disconnectline/dynamicModels.groovy",
+            "/ieee14-disconnectline/eventModels.groovy",
+            "/ieee14-disconnectline/curves.groovy",
+            "/ieee14-disconnectline/dynawoParameters.json");
     }
 
     @Test
     public void testSimulation() throws Exception {
-        Ieee14MacroconnectsLocalCommandExecutor commandExecutor = new Ieee14MacroconnectsLocalCommandExecutor(fileSystem, network, getDynawoSimulationParameters(parameters));
-        DynamicSimulationResult result = runSimulation(commandExecutor);
+        Ieee14DisconnectLineLocalCommandExecutor commandExecutor = new Ieee14DisconnectLineLocalCommandExecutor(fileSystem, network, getDynawoSimulationParameters(parameters));
+        DynamicSimulationResult result;
+        result = runSimulation(commandExecutor);
         assertNotNull(result);
     }
 
     @Override
     public String getWorkingDirName() {
-        return "ieee14-macroconnects";
+        return "ieee14-disconnectline";
     }
 }

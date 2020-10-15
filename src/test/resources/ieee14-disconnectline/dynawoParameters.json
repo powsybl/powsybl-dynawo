@@ -1,17 +1,17 @@
 {
   "version" : "1.0",
   "startTime" : 0,
-  "stopTime" : 100,
+  "stopTime" : 30,
   "extensions" : {
     "DynawoParameters" : {
-      "parametersFile" : "ieee14-macroconnects/ieee-models.par",
+      "parametersFile" : "ieee14-disconnectline/ieee-models.par",
       "network" : {
-        "parametersFile" : "ieee14-macroconnects/ieee-network.par",
+        "parametersFile" : "ieee14-disconnectline/ieee-network.par",
         "parametersId" : "8"
       },
       "solver" : {
         "type" : "IDA",
-        "parametersFile" : "ieee14-macroconnects/ieee-solvers.par",
+        "parametersFile" : "ieee14-disconnectline/ieee-solvers.par",
         "parametersId" : "2"
       }
     }

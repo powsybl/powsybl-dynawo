@@ -4,7 +4,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package com.powsybl.dynawo.ieee.ieee14;
+package com.powsybl.dynawo.ieee.ieee57;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -19,31 +19,30 @@ import com.powsybl.dynawo.ieee.AbstractIeeeTest;
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class Ieee14MacroConnectsTest extends AbstractIeeeTest {
+public class Ieee57DisconnectGeneratorTest extends AbstractIeeeTest {
 
     @Before
     public void setup() throws IOException {
         super.setup(
-                "/ieee14-macroconnects/ieee14-macroconnects.par",
-                "/ieee14-macroconnects/ieee14-macroconnects-network.par",
-                "/ieee14-macroconnects/ieee-solvers.par",
-                "/ieee14-macroconnects/IEEE14.iidm",
-                "/ieee14-macroconnects/dynamicModels.groovy",
-                null,
-                "/ieee14-macroconnects/curves.groovy",
-                "/ieee14-macroconnects/dynawoParameters.json"
-        );
+            "/ieee57-disconnectgenerator/ieee57-disconnectgenerator.par",
+            "/ieee57-disconnectgenerator/ieee57-disconnectgenerator-network.par",
+            "/ieee57-disconnectgenerator/ieee-solvers.par",
+            "/ieee57-disconnectgenerator/IEEE57.iidm",
+            "/ieee57-disconnectgenerator/dynamicModels.groovy",
+            null,
+            "/ieee57-disconnectgenerator/curves.groovy",
+            "/ieee57-disconnectgenerator/dynawoParameters.json");
     }
 
     @Test
     public void testSimulation() throws Exception {
-        Ieee14MacroconnectsLocalCommandExecutor commandExecutor = new Ieee14MacroconnectsLocalCommandExecutor(fileSystem, network, getDynawoSimulationParameters(parameters));
+        Ieee57DisconnectGeneratorLocalCommandExecutor commandExecutor = new Ieee57DisconnectGeneratorLocalCommandExecutor(fileSystem, network, getDynawoSimulationParameters(parameters));
         DynamicSimulationResult result = runSimulation(commandExecutor);
         assertNotNull(result);
     }
 
     @Override
     public String getWorkingDirName() {
-        return "ieee14-macroconnects";
+        return "ieee57-disconnectgenerator";
     }
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <parametersSet xmlns="http://www.rte-france.com/dynawo">
-    <set id="LAB">
+     <set id="LAB">
         <par type="DOUBLE" name="load_alpha" value="1.5"/>
         <par type="DOUBLE" name="load_beta" value="2.5"/>
     </set>
@@ -239,5 +239,10 @@
         <par type="DOUBLE" name="governor_PNom" value="228"/>
         <par type="DOUBLE" name="URef_ValueIn" value="0"/>
         <par type="DOUBLE" name="Pm_ValueIn" value="0"/>
+    </set>
+    <set id="EQD">
+        <par type="DOUBLE" name="event_tEvent" value="1"/>
+        <par type="BOOL" name="event_disconnectOrigin" value="false"/>
+        <par type="BOOL" name="event_disconnectExtremity" value="true"/>
     </set>
 </parametersSet>

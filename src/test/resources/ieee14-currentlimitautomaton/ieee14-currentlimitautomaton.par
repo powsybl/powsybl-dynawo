@@ -36,8 +36,6 @@
         <par type="DOUBLE" name="generator_UBaseLV" value="24"/>
         <par type="DOUBLE" name="generator_RTfPu" value="0.0"/>
         <par type="DOUBLE" name="generator_XTfPu" value="0.1"/>
-        <par type="DOUBLE" name="PmPu_ValueIn" value="0"/>
-        <par type="DOUBLE" name="EfdPu_ValueIn" value="0"/>
         <par type="DOUBLE" name="voltageRegulator_LagEfdMax" value="0"/>
         <par type="DOUBLE" name="voltageRegulator_LagEfdMin" value="0"/>
         <par type="DOUBLE" name="voltageRegulator_EfdMinPu" value="-5"/>
@@ -84,8 +82,6 @@
         <par type="DOUBLE" name="generator_UBaseLV" value="24"/>
         <par type="DOUBLE" name="generator_RTfPu" value="0.0"/>
         <par type="DOUBLE" name="generator_XTfPu" value="0.1"/>
-        <par type="DOUBLE" name="PmPu_ValueIn" value="0"/>
-        <par type="DOUBLE" name="EfdPu_ValueIn" value="0"/>
         <par type="DOUBLE" name="voltageRegulator_LagEfdMax" value="0"/>
         <par type="DOUBLE" name="voltageRegulator_LagEfdMin" value="0"/>
         <par type="DOUBLE" name="voltageRegulator_EfdMinPu" value="-5"/>
@@ -132,8 +128,6 @@
         <par type="DOUBLE" name="generator_UBaseLV" value="20"/>
         <par type="DOUBLE" name="generator_RTfPu" value="0.0"/>
         <par type="DOUBLE" name="generator_XTfPu" value="0.1"/>
-        <par type="DOUBLE" name="PmPu_ValueIn" value="0"/>
-        <par type="DOUBLE" name="EfdPu_ValueIn" value="0"/>
         <par type="DOUBLE" name="voltageRegulator_LagEfdMax" value="0"/>
         <par type="DOUBLE" name="voltageRegulator_LagEfdMin" value="0"/>
         <par type="DOUBLE" name="voltageRegulator_EfdMinPu" value="-5"/>
@@ -178,8 +172,6 @@
         <par type="DOUBLE" name="generator_UBaseLV" value="15"/>
         <par type="DOUBLE" name="generator_RTfPu" value="0.0"/>
         <par type="DOUBLE" name="generator_XTfPu" value="0.0"/>
-        <par type="DOUBLE" name="PmPu_ValueIn" value="0"/>
-        <par type="DOUBLE" name="EfdPu_ValueIn" value="0"/>
         <par type="DOUBLE" name="voltageRegulator_LagEfdMax" value="0"/>
         <par type="DOUBLE" name="voltageRegulator_LagEfdMin" value="0"/>
         <par type="DOUBLE" name="voltageRegulator_EfdMinPu" value="-5"/>
@@ -193,7 +185,7 @@
         <par type="DOUBLE" name="governor_PNom" value="74.4"/>
         <par type="DOUBLE" name="URef_ValueIn" value="0"/>
         <par type="DOUBLE" name="Pm_ValueIn" value="0"/>
-    </set>
+   </set>
     <set id="GSTWPR_GEN____8_SM">
         <par type="INT" name="generator_ExcitationPu" value="1"/>
         <par type="DOUBLE" name="generator_md" value="0"/>
@@ -224,8 +216,6 @@
         <par type="DOUBLE" name="generator_UBaseLV" value="18"/>
         <par type="DOUBLE" name="generator_RTfPu" value="0.0"/>
         <par type="DOUBLE" name="generator_XTfPu" value="0.1"/>
-        <par type="DOUBLE" name="PmPu_ValueIn" value="0"/>
-        <par type="DOUBLE" name="EfdPu_ValueIn" value="0"/>
         <par type="DOUBLE" name="voltageRegulator_LagEfdMax" value="0"/>
         <par type="DOUBLE" name="voltageRegulator_LagEfdMin" value="0"/>
         <par type="DOUBLE" name="voltageRegulator_EfdMinPu" value="-5"/>
@@ -239,5 +229,22 @@
         <par type="DOUBLE" name="governor_PNom" value="228"/>
         <par type="DOUBLE" name="URef_ValueIn" value="0"/>
         <par type="DOUBLE" name="Pm_ValueIn" value="0"/>
+    </set>
+    <set id="EQD">
+        <par type="DOUBLE" name="event_tEvent" value="5"/>
+        <par type="BOOL" name="event_disconnectOrigin" value="false"/>
+        <par type="BOOL" name="event_disconnectExtremity" value="true"/>
+    </set>
+    <set id="CLA_BUS____2-BUS____4-1_AC">
+        <par type="INT" name="currentLimitAutomaton_OrderToEmit" value="3"/>
+        <par type="BOOL" name="currentLimitAutomaton_Running" value="true"/>
+        <par type="DOUBLE" name="currentLimitAutomaton_IMax" value="1000"/>
+        <par type="DOUBLE" name="currentLimitAutomaton_tLagBeforeActing" value="10"/>
+    </set>
+    <set id="CLA_BUS____2-BUS____5-1_AC">
+        <par type="INT" name="currentLimitAutomaton_OrderToEmit" value="1"/>
+        <par type="BOOL" name="currentLimitAutomaton_Running" value="true"/>
+        <par type="DOUBLE" name="currentLimitAutomaton_IMax" value="600"/>
+        <par type="DOUBLE" name="currentLimitAutomaton_tLagBeforeActing" value="5"/>
     </set>
 </parametersSet>
