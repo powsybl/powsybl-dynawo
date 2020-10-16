@@ -20,6 +20,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import static com.powsybl.dynaflow.DynaflowConfigFile.writeDynaflowConfigInputFile;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -109,12 +110,11 @@ public class DynaflowParametersTest extends AbstractConverterTest {
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         parameters.addExtension(DynaflowParameters.class, params);
-        params.writeConfigInputFile(out, parameters);
+        writeDynaflowConfigInputFile(params, out, parameters);
         String generatedParams = out.toString();
 
-        InputStream fileParams = getClass().getResourceAsStream("/dynaflow/params.json");
-        compareTxt(fileParams, generatedParams);
-        fileParams.close();
-
+        try (InputStream fileParams = getClass().getResourceAsStream("/dynaflow/params.json")) {
+            compareTxt(fileParams, generatedParams);
+        }
     }
 }

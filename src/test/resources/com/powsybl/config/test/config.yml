@@ -7,7 +7,7 @@ dynawo:
   debug: false
 
 dynaflow:
-  homeDir: homeDir
+  homeDir: /home/dynaflow
   debug: false
 
 dynaflow-default-parameters:
