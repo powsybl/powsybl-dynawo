@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import com.powsybl.dynawo.DynawoParameters;
 import com.powsybl.dynawo.ieee.AbstractDynawoLocalCommandExecutor;
@@ -29,7 +28,6 @@ public class Ieee14CurrentLimitAutomatonLocalCommandExecutor extends AbstractDyn
 
     @Override
     protected void validateInputs(Path workingDir) throws IOException {
-        Files.copy(workingDir.resolve(NETWORK_FILENAME), Paths.get("/tmp/actual"));
         compareXml(getClass().getResourceAsStream("/ieee14-currentlimitautomaton/dynawo-inputs/powsybl_dynawo.xiidm"), Files.newInputStream(workingDir.resolve(NETWORK_FILENAME)));
         compareXml(getClass().getResourceAsStream("/ieee14-currentlimitautomaton/dynawo-inputs/powsybl_dynawo.jobs"), Files.newInputStream(workingDir.resolve(JOBS_FILENAME)));
         compareXml(getClass().getResourceAsStream("/ieee14-currentlimitautomaton/dynawo-inputs/powsybl_dynawo.dyd"), Files.newInputStream(workingDir.resolve(DYD_FILENAME)));
