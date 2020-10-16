@@ -259,13 +259,13 @@
         <par type="BOOL" name="event_disconnectOrigin" value="false"/>
         <par type="BOOL" name="event_disconnectExtremity" value="true"/>
     </set>
-    <set id="CLA_BUS____2-BUS____4-1_AC">
+    <set id="CLA_2_4">
         <par type="INT" name="currentLimitAutomaton_OrderToEmit" value="3"/>
         <par type="BOOL" name="currentLimitAutomaton_Running" value="true"/>
         <par type="DOUBLE" name="currentLimitAutomaton_IMax" value="1000"/>
         <par type="DOUBLE" name="currentLimitAutomaton_tLagBeforeActing" value="10"/>
     </set>
-    <set id="CLA_BUS____2-BUS____5-1_AC">
+    <set id="CLA_2_5">
         <par type="INT" name="currentLimitAutomaton_OrderToEmit" value="1"/>
         <par type="BOOL" name="currentLimitAutomaton_Running" value="true"/>
         <par type="DOUBLE" name="currentLimitAutomaton_IMax" value="600"/>

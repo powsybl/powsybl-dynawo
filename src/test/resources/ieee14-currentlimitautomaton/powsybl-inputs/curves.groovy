@@ -8,8 +8,6 @@
 
 import com.powsybl.iidm.network.Bus
 import com.powsybl.iidm.network.Generator
-import com.powsybl.iidm.network.Line
-import com.powsybl.iidm.network.Load
 
 for (Bus bus : network.busBreakerView.buses) {
     curve {
@@ -20,29 +18,37 @@ for (Bus bus : network.busBreakerView.buses) {
 
 for (Generator gen : network.generators) {
     curves {
-        dynamicModelId "BBM" + gen.id
+        dynamicModelId gen.id
         variables "generator_omegaPu", "generator_PGen", "generator_QGen", "generator_UStatorPu", "voltageRegulator_EfdPu"
     }
 }
 
-for (Load load : network.loads) {
-    if (load.id == "_LOAD___2_EC") {
-        curve {
-            dynamicModelId "BBM" + load.id
-            variables "load_PPu", "load_QPu"
-        }
-    }
+curves {
+    dynamicModelId "_LOAD___2_EC"
+    variables "load_PPu", "load_QPu"
 }
 
-for (Line line : network.lines) {
-    if (line.id == "_BUS____2-BUS____4-1_AC" || line.id == "_BUS____2-BUS____5-1_AC") {
-        curve {
-            staticId line.id
-            variables "iSide2", "state"
-        }
-        curve {
-            dynamicModelId "AM" + line.id
-            variables "currentLimitAutomaton_order", "currentLimitAutomaton_IMax"
-        }
-    }
+curves {
+    staticId "_BUS____2-BUS____4-1_AC"
+    variables "iSide2", "state"
+}
+
+curves {
+    dynamicModelId "CLA_2_4"
+    variables "currentLimitAutomaton_order", "currentLimitAutomaton_IMax"
+}
+
+curves {
+    staticId "_BUS____1-BUS____5-1_AC"
+    variables "iSide2", "state"
+}
+
+curves {
+    staticId "_BUS____2-BUS____5-1_AC"
+    variables "iSide2", "state"
+}
+
+curves {
+    dynamicModelId "CLA_2_5"
+    variables "currentLimitAutomaton_order", "currentLimitAutomaton_IMax"
 }

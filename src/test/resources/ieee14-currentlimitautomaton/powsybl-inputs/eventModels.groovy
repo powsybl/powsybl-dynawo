@@ -5,15 +5,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import com.powsybl.iidm.network.Line
-
-
-for (Line line : network.lines) {
-    if (line.id == "_BUS____1-BUS____5-1_AC") {
-        EventQuadripoleDisconnection {
-            staticId line.id
-            dynamicModelId "EM" + line.id
-            parameterSetId "EQD"
-        }
-    }
+EventQuadripoleDisconnection {
+    staticId "_BUS____1-BUS____5-1_AC"
+    dynamicModelId "DISCONNECT_LINE"
+    parameterSetId "EQD"
 }
