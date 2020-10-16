@@ -149,7 +149,8 @@ public class DynawoProvider implements DynamicSimulationProvider {
         }
 
         private String getProgram() {
-            return Paths.get(dynawoConfig.getHomeDir()).resolve(DYNAWO_CMD_NAME + (SystemUtils.IS_OS_WINDOWS ? ".cmd" : ".sh")).toString();
+            String extension = SystemUtils.IS_OS_WINDOWS ? ".cmd" : ".sh";
+            return Paths.get(dynawoConfig.getHomeDir()).resolve(DYNAWO_CMD_NAME + extension).toString();
         }
     }
 }
