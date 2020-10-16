@@ -139,25 +139,17 @@ public class DynawoProvider implements DynamicSimulationProvider {
         }
 
         private Command createCommand(Path dynawoJobsFile) {
-            String jobs = "jobs";
-            if (SystemUtils.IS_OS_WINDOWS) {
-                jobs = "--jobs-file";
-            }
             return new GroupCommandBuilder()
                 .id("dyn_fs")
                 .subCommand()
                 .program(getProgram())
-                .args(jobs, dynawoJobsFile.toString())
+                .args(SystemUtils.IS_OS_WINDOWS ? "--jobs-file" : "jobs", dynawoJobsFile.toString())
                 .add()
                 .build();
         }
 
         private String getProgram() {
-            String cmdExtension = ".sh";
-            if (SystemUtils.IS_OS_WINDOWS) {
-                cmdExtension = ".cmd";
-            }
-            return Paths.get(dynawoConfig.getHomeDir()).resolve(DYNAWO_CMD_NAME + cmdExtension).toString();
+            return Paths.get(dynawoConfig.getHomeDir()).resolve(DYNAWO_CMD_NAME + (SystemUtils.IS_OS_WINDOWS ? ".cmd" : ".sh")).toString();
         }
     }
 }
