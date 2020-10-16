@@ -6,14 +6,14 @@
  */
 package com.powsybl.dynawo.ieee.ieee14;
 
+import com.powsybl.dynawo.DynawoParameters;
+import com.powsybl.dynawo.ieee.AbstractDynawoLocalCommandExecutor;
+import com.powsybl.iidm.network.Network;
+
 import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
-import com.powsybl.dynawo.DynawoParameters;
-import com.powsybl.dynawo.ieee.AbstractDynawoLocalCommandExecutor;
-import com.powsybl.iidm.network.Network;
 
 import static com.powsybl.dynawo.xml.DynawoConstants.*;
 

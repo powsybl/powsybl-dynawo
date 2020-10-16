@@ -5,8 +5,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+
 import com.powsybl.iidm.network.Bus
 import com.powsybl.iidm.network.Generator
+import com.powsybl.iidm.network.Line
 import com.powsybl.iidm.network.Load
 
 for (Bus bus : network.busBreakerView.buses) {
@@ -28,6 +30,19 @@ for (Load load : network.loads) {
         curve {
             dynamicModelId "BBM" + load.id
             variables "load_PPu", "load_QPu"
+        }
+    }
+}
+
+for (Line line : network.lines) {
+    if (line.id == "_BUS____2-BUS____4-1_AC" || line.id == "_BUS____2-BUS____5-1_AC") {
+        curve {
+            staticId line.id
+            variables "iSide2", "state"
+        }
+        curve {
+            dynamicModelId "AM" + line.id
+            variables "currentLimitAutomaton_order", "currentLimitAutomaton_IMax"
         }
     }
 }

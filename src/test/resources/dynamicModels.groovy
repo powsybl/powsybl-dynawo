@@ -5,6 +5,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+
+import com.powsybl.iidm.network.Branch
 import com.powsybl.iidm.network.Line
 import com.powsybl.iidm.network.Load
 import com.powsybl.iidm.network.Generator
@@ -43,5 +45,6 @@ for (Line line : network.lines) {
         staticId line.id
         dynamicModelId "BBM_" + line.id
         parameterSetId "CLA"
+        side Branch.Side.TWO
     }
 }

@@ -110,22 +110,15 @@
     <dyn:macroConnect connector="MC_GeneratorSynchronousThreeWindingsProportionalRegulations" id1="BBM_GEN____8_SM" id2="NETWORK"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRefToGenerator" id1="OMEGA_REF" index1="4" id2="BBM_GEN____8_SM"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRefToNumCCMachine" id1="OMEGA_REF" index1="4" id2="NETWORK" name2="_GEN____8_SM"/>
-    <dyn:macroConnector id="MC_CurrentLimitAutomatonToLineSide1">
-        <dyn:connect var1="currentLimitAutomaton_IMonitored" var2="@NAME@_iSide1"/>
-        <dyn:connect var1="currentLimitAutomaton_order" var2="@NAME@_state"/>
-        <dyn:connect var1="currentLimitAutomaton_AutomatonExists" var2="@NAME@_desactivate_currentLimits"/>
-    </dyn:macroConnector>
     <dyn:macroConnector id="MC_CurrentLimitAutomatonToLineSide2">
         <dyn:connect var1="currentLimitAutomaton_IMonitored" var2="@NAME@_iSide2"/>
         <dyn:connect var1="currentLimitAutomaton_order" var2="@NAME@_state"/>
         <dyn:connect var1="currentLimitAutomaton_AutomatonExists" var2="@NAME@_desactivate_currentLimits"/>
     </dyn:macroConnector>
     <dyn:blackBoxModel id="AM_BUS____2-BUS____4-1_AC" lib="CurrentLimitAutomaton" parFile="models.par" parId="CLA_BUS____2-BUS____4-1_AC"/>
-    <dyn:macroConnect connector="MC_CurrentLimitAutomatonToLineSide1" id1="AM_BUS____2-BUS____4-1_AC" id2="NETWORK" name2="_BUS____2-BUS____4-1_AC"/>
-    <!--<dyn:macroConnect connector="MC_CurrentLimitAutomatonToLineSide2" id1="AM_BUS____2-BUS____4-1_AC" id2="NETWORK" name2="_BUS____2-BUS____4-1_AC"/>-->
+    <dyn:macroConnect connector="MC_CurrentLimitAutomatonToLineSide2" id1="AM_BUS____2-BUS____4-1_AC" id2="NETWORK" name2="_BUS____2-BUS____4-1_AC"/>
     <dyn:blackBoxModel id="AM_BUS____2-BUS____5-1_AC" lib="CurrentLimitAutomaton" parFile="models.par" parId="CLA_BUS____2-BUS____5-1_AC"/>
-    <dyn:macroConnect connector="MC_CurrentLimitAutomatonToLineSide1" id1="AM_BUS____2-BUS____5-1_AC" id2="NETWORK" name2="_BUS____2-BUS____5-1_AC"/>
-    <!--<dyn:macroConnect connector="MC_CurrentLimitAutomatonToLineSide2" id1="AM_BUS____2-BUS____5-1_AC" id2="NETWORK" name2="_BUS____2-BUS____5-1_AC"/>-->
+    <dyn:macroConnect connector="MC_CurrentLimitAutomatonToLineSide2" id1="AM_BUS____2-BUS____5-1_AC" id2="NETWORK" name2="_BUS____2-BUS____5-1_AC"/>
     <dyn:macroConnector id="MC_EventQuadripoleDisconnection">
         <dyn:connect var1="event_state1_value" var2="@NAME@_state_value"/>
     </dyn:macroConnector>

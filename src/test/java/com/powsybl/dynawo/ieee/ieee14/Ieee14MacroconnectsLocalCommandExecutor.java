@@ -41,7 +41,7 @@ public class Ieee14MacroconnectsLocalCommandExecutor extends AbstractDynawoLocal
     @Override
     protected void copyOutputs(Path workingDir) throws IOException  {
         Path output = Files.createDirectories(workingDir.resolve("outputs/curves").toAbsolutePath());
-        Files.copy(getClass().getResourceAsStream("/ieee14-macroconnects/curves.csv"), output.resolve("curves.csv"));
+        Files.copy(getClass().getResourceAsStream("/ieee14-macroconnects/dynawo-outputs/curves.csv"), output.resolve("curves.csv"));
     }
 
 }

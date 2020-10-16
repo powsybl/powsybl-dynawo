@@ -6,14 +6,14 @@
  */
 package com.powsybl.dynawo.ieee.ieee57;
 
+import com.powsybl.dynawo.DynawoParameters;
+import com.powsybl.dynawo.ieee.AbstractDynawoLocalCommandExecutor;
+import com.powsybl.iidm.network.Network;
+
 import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
-import com.powsybl.dynawo.DynawoParameters;
-import com.powsybl.dynawo.ieee.AbstractDynawoLocalCommandExecutor;
-import com.powsybl.iidm.network.Network;
 
 import static com.powsybl.dynawo.xml.DynawoConstants.*;
 
@@ -28,7 +28,7 @@ public class Ieee57DisconnectGeneratorLocalCommandExecutor extends AbstractDynaw
 
     @Override
     protected void validateInputs(Path workingDir) throws IOException {
-        compareXml(getClass().getResourceAsStream("/ieee14-disconnectgenerator/dynawo-inputs/powsybl_dynawo.xiidm"), Files.newInputStream(workingDir.resolve(NETWORK_FILENAME)));
+        compareXml(getClass().getResourceAsStream("/ieee57-disconnectgenerator/dynawo-inputs/powsybl_dynawo.xiidm"), Files.newInputStream(workingDir.resolve(NETWORK_FILENAME)));
         compareXml(getClass().getResourceAsStream("/ieee57-disconnectgenerator/dynawo-inputs/powsybl_dynawo.jobs"), Files.newInputStream(workingDir.resolve(JOBS_FILENAME)));
         compareXml(getClass().getResourceAsStream("/ieee57-disconnectgenerator/dynawo-inputs/powsybl_dynawo.dyd"), Files.newInputStream(workingDir.resolve(DYD_FILENAME)));
         compareXml(getClass().getResourceAsStream("/ieee57-disconnectgenerator/dynawo-inputs/models.par"), Files.newInputStream(workingDir.resolve(fileSystem.getPath(dynawoParameters.getParametersFile()).getFileName().toString())));
