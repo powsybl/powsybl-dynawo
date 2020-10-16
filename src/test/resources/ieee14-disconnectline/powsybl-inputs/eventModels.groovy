@@ -12,7 +12,7 @@ for (Line line : network.lines) {
     if (line.id == "_BUS____1-BUS____5-1_AC") {
         EventQuadripoleDisconnection {
             staticId line.id
-            dynamicModelId "EM" + line.id
+            dynamicModelId "DISCONNECT_LINE"
             parameterSetId "EQD"
         }
     }
