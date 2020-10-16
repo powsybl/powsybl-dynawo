@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<timeline xmlns="http://www.rte-france.com/dynawo">
+  <event time="0" modelName="GEN____8_SM" message="PMIN : activation"/>
+  <event time="0.030691068513160655" modelName="GEN____3_SM" message="PMIN : activation"/>
+  <event time="0.348405399018546" modelName="GEN____8_SM" message="PMIN : deactivation"/>
+  <event time="0.82867509138207629" modelName="GEN____3_SM" message="PMIN : deactivation"/>
+  <event time="0.83470144243143729" modelName="GEN____8_SM" message="PMIN : activation"/>
+</timeline>
