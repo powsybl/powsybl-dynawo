@@ -18,7 +18,7 @@ for (Bus bus : network.busBreakerView.buses) {
 
 for (Generator gen : network.generators) {
     curves {
-        dynamicModelId "BBM" + gen.id
+        dynamicModelId gen.id
         variables "generator_omegaPu", "generator_PGen", "generator_QGen", "generator_UStatorPu", "voltageRegulator_EfdPu"
     }
 }
@@ -26,7 +26,7 @@ for (Generator gen : network.generators) {
 for (Load load : network.loads) {
     if (load.id == "_LOAD___2_EC") {
         curve {
-            dynamicModelId "BBM" + load.id
+            dynamicModelId load.id
             variables "load_PPu", "load_QPu"
         }
     }
