@@ -49,7 +49,7 @@ public class DynawoProviderTest {
 
     }
 
-    public static class EvenModelsSupplierMock implements EventModelsSupplier {
+    public static class EventModelsSupplierMock implements EventModelsSupplier {
 
         static EventModelsSupplier empty() {
             return network -> Collections.emptyList();
@@ -70,9 +70,9 @@ public class DynawoProviderTest {
             Path localDir = fs.getPath("/tmp");
             ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(localDir, 1));
             DynamicSimulation.Runner dynawoSimulation = DynamicSimulation.find();
-            assertEquals("Dynawo", dynawoSimulation.getName());
+            assertEquals(DynawoProvider.NAME, dynawoSimulation.getName());
             assertEquals("1.2.0", dynawoSimulation.getVersion());
-            DynamicSimulationResult result = dynawoSimulation.run(network, DynamicModelsSupplierMock.empty(), EvenModelsSupplierMock.empty(),
+            DynamicSimulationResult result = dynawoSimulation.run(network, DynamicModelsSupplierMock.empty(), EventModelsSupplierMock.empty(),
                                                                   CurvesSupplier.empty(), network.getVariantManager().getWorkingVariantId(),
                                                                   computationManager, DynamicSimulationParameters.load());
             assertNotNull(result);

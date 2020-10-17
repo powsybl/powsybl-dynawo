@@ -58,7 +58,7 @@ public class DynawoGroovyEventModelsSupplierTest {
     @Test
     public void test() {
 
-        List<EventModelGroovyExtension> extensions = GroovyExtension.find(EventModelGroovyExtension.class, "Dynawo");
+        List<EventModelGroovyExtension> extensions = GroovyExtension.find(EventModelGroovyExtension.class, DynawoProvider.NAME);
         assertEquals(1, extensions.size());
         extensions.forEach(DynawoGroovyEventModelsSupplierTest::validateExtension);
 

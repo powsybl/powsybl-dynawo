@@ -11,6 +11,7 @@ import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.Curve
 import com.powsybl.dynamicsimulation.groovy.CurveGroovyExtension
 import com.powsybl.dynawo.DynawoCurve
+import com.powsybl.dynawo.DynawoProvider
 
 import java.util.function.Consumer
 
@@ -50,7 +51,7 @@ class DynawoCurveGroovyExtension implements CurveGroovyExtension {
     }
 
     String getName() {
-        return "dynawo";
+        return DynawoProvider.NAME;
     }
 
     DynawoCurve dynawoCurve(CurvesSpec curveSpec, Consumer<Curve> consumer) {

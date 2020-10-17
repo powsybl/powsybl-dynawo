@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dyn:parametersSet xmlns:dyn="http://www.rte-france.com/dynawo">
+    <dyn:set id="OMEGA_REF">
+        <dyn:par type="DOUBLE" name="weight_gen_0" value="1211"/>
+        <dyn:par type="DOUBLE" name="weight_gen_1" value="1120"/>
+        <dyn:par type="DOUBLE" name="weight_gen_2" value="1650"/>
+        <dyn:par type="DOUBLE" name="weight_gen_3" value="80"/>
+        <dyn:par type="DOUBLE" name="weight_gen_4" value="250"/>
+        <dyn:par type="INT" name="nbGen" value="5"/>
+    </dyn:set>
+</dyn:parametersSet>
