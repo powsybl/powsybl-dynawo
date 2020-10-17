@@ -16,6 +16,7 @@ import com.powsybl.dynamicsimulation.groovy.GroovyExtension;
 import com.powsybl.dynawo.events.AbstractBlackBoxEventModel;
 import com.powsybl.dynawo.events.EventQuadripoleDisconnection;
 import com.powsybl.dynawo.events.EventQuadripoleDisconnectionGroovyExtension;
+import com.powsybl.dynawo.events.EventSetPointBooleanGroovyExtension;
 import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.Line;
 import com.powsybl.iidm.network.Network;
@@ -59,7 +60,7 @@ public class DynawoGroovyEventModelsSupplierTest {
     public void test() {
 
         List<EventModelGroovyExtension> extensions = GroovyExtension.find(EventModelGroovyExtension.class, DynawoProvider.NAME);
-        assertEquals(1, extensions.size());
+        assertEquals(2, extensions.size());
         extensions.forEach(DynawoGroovyEventModelsSupplierTest::validateExtension);
 
         EventModelsSupplier supplier = new GroovyEventModelsSupplier(fileSystem.getPath("/eventModels.groovy"), extensions);
@@ -79,8 +80,9 @@ public class DynawoGroovyEventModelsSupplierTest {
 
     private static boolean validateExtension(EventModelGroovyExtension extension) {
         boolean isEventQuadripoleDisconnectionExtension = extension instanceof EventQuadripoleDisconnectionGroovyExtension;
+        boolean isEventSetPointExtension = extension instanceof EventSetPointBooleanGroovyExtension;
 
-        return isEventQuadripoleDisconnectionExtension;
+        return isEventQuadripoleDisconnectionExtension || isEventSetPointExtension;
     }
 
     private void validateModel(EventModel eventModel) {

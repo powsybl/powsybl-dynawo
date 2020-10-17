@@ -29,7 +29,7 @@ public class Ieee57DisconnectGeneratorTest extends AbstractIeeeTest {
             "/ieee57-disconnectgenerator/config/solvers.par",
             "/ieee57-disconnectgenerator/powsybl-inputs/IEEE57.iidm",
             "/ieee57-disconnectgenerator/powsybl-inputs/dynamicModels.groovy",
-            null,
+            "/ieee57-disconnectgenerator/powsybl-inputs/eventModels.groovy",
             "/ieee57-disconnectgenerator/powsybl-inputs/curves.groovy",
             "/ieee57-disconnectgenerator/powsybl-inputs/dynawoParameters.json");
     }

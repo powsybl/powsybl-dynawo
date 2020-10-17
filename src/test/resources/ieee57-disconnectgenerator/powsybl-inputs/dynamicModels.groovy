@@ -10,10 +10,9 @@ import com.powsybl.iidm.network.Generator
 for (Generator gen : network.generators) {
     GeneratorSynchronousFourWindingsProportionalRegulations {
         staticId gen.id
-        dynamicModelId "BBM" + gen.id
         parameterSetId "GSFWPR" + gen.id
     }
     OmegaRef {
-        generatorDynamicModelId "BBM" + gen.id
+        generatorDynamicModelId gen.id
     }
 }

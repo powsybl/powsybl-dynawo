@@ -20,7 +20,7 @@ for (Bus bus : network.busBreakerView.buses) {
 
 for (Generator gen : network.generators) {
     curves {
-        dynamicModelId "BBM" + gen.id
+        dynamicModelId gen.id
         variables "generator_omegaPu", "generator_PGen", "generator_QGen", "generator_UStatorPu"
     }
 }
