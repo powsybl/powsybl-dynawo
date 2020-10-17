@@ -25,6 +25,7 @@ import static org.junit.Assert.assertEquals;
  * @author Guillaume Pernin <guillaume.pernin at rte-france.com>
  */
 public class DynaflowConfigTest {
+
     private FileSystem fileSystem;
     private final boolean debug = true;
     private final String homeDir = "homeDir";

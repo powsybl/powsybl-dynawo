@@ -19,7 +19,9 @@ import java.util.Objects;
  * @author Guillaume Pernin <guillaume.pernin at rte-france.com>
  */
 public class DynaflowConfig {
+
     private static final boolean DEFAULT_DEBUG = false;
+
     private final Path homeDir;
     private final boolean debug;
 

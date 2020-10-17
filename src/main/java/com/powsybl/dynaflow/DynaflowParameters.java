@@ -18,6 +18,7 @@ import com.powsybl.loadflow.LoadFlowParameters;
 public class DynaflowParameters extends AbstractExtension<LoadFlowParameters> {
 
     private static final String MODULE_SPECIFIC_PARAMETERS = "dynaflow-default-parameters";
+
     public static final boolean DEFAULT_SVC_REGULATION_ON = false;
     public static final boolean DEFAULT_SHUNT_REGULATION_ON = false;
     public static final boolean DEFAULT_AUTOMATIC_SLACK_BUS_ON = false;

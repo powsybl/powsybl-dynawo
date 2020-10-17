@@ -11,16 +11,17 @@ import com.google.common.jimfs.Jimfs;
 import com.powsybl.commons.AbstractConverterTest;
 import com.powsybl.commons.config.InMemoryPlatformConfig;
 import com.powsybl.commons.config.MapModuleConfig;
+import com.powsybl.dynaflow.json.DynaflowConfigSerializer;
 import com.powsybl.loadflow.LoadFlowParameters;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
-import static com.powsybl.dynaflow.DynaflowConfigFile.writeDynaflowConfigInputFile;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -61,11 +62,11 @@ public class DynaflowParametersTest extends AbstractConverterTest {
         DynaflowParameters.DynaflowConfigLoader configLoader = new DynaflowParameters.DynaflowConfigLoader();
         DynaflowParameters parameters = configLoader.load(platformConfig);
 
-        assertEquals(parameters.getSvcRegulationOn(), svcRegulationOn);
-        assertEquals(parameters.getShuntRegulationOn(), shuntRegulationOn);
-        assertEquals(parameters.getAutomaticSlackBusOn(), automaticSlackBusOn);
-        assertEquals(parameters.getVscAsGenerators(), vscAsGenerators);
-        assertEquals(parameters.getLccAsLoads(), lccAsLoads);
+        assertEquals(svcRegulationOn, parameters.getSvcRegulationOn());
+        assertEquals(shuntRegulationOn, parameters.getShuntRegulationOn());
+        assertEquals(automaticSlackBusOn, parameters.getAutomaticSlackBusOn());
+        assertEquals(vscAsGenerators, parameters.getVscAsGenerators());
+        assertEquals(lccAsLoads, parameters.getLccAsLoads());
     }
 
     @Test
@@ -97,24 +98,24 @@ public class DynaflowParametersTest extends AbstractConverterTest {
 
     @Test
     public void parametersSerialization() throws IOException {
-        LoadFlowParameters parameters = LoadFlowParameters.load(platformConfig);
-        parameters.setNoGeneratorReactiveLimits(true);
-        parameters.setPhaseShifterRegulationOn(false);
+        LoadFlowParameters lfParameters = LoadFlowParameters.load(platformConfig);
+        lfParameters.setNoGeneratorReactiveLimits(true);
+        lfParameters.setPhaseShifterRegulationOn(false);
 
-        DynaflowParameters params = new DynaflowParameters();
-        params.setSvcRegulationOn(true);
-        params.setShuntRegulationOn(false);
-        params.setAutomaticSlackBusOn(true);
-        params.setVscAsGenerators(false);
-        params.setLccAsLoads(true);
+        DynaflowParameters dynaflowParameters = new DynaflowParameters();
+        dynaflowParameters.setSvcRegulationOn(true);
+        dynaflowParameters.setShuntRegulationOn(false);
+        dynaflowParameters.setAutomaticSlackBusOn(true);
+        dynaflowParameters.setVscAsGenerators(false);
+        dynaflowParameters.setLccAsLoads(true);
+        lfParameters.addExtension(DynaflowParameters.class, dynaflowParameters);
 
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        parameters.addExtension(DynaflowParameters.class, params);
-        writeDynaflowConfigInputFile(params, out, parameters);
-        String generatedParams = out.toString();
+        Path parameterFile = fileSystem.getPath(DynaflowConstants.CONFIG_FILENAME);
+        DynaflowConfigSerializer.serialize(lfParameters, dynaflowParameters, parameterFile);
 
-        try (InputStream fileParams = getClass().getResourceAsStream("/dynaflow/params.json")) {
-            compareTxt(fileParams, generatedParams);
+        try (InputStream actual = Files.newInputStream(parameterFile);
+            InputStream expected = getClass().getResourceAsStream("/dynaflow/params.json")) {
+            compareTxt(expected, actual);
         }
     }
 }
