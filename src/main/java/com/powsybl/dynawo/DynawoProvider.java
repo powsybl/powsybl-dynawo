@@ -12,7 +12,6 @@ import com.powsybl.computation.*;
 import com.powsybl.dynamicsimulation.*;
 import com.powsybl.dynawo.xml.CurvesXml;
 import com.powsybl.dynawo.xml.DydXml;
-import com.powsybl.dynawo.xml.EventsXml;
 import com.powsybl.dynawo.xml.JobsXml;
 import com.powsybl.dynawo.xml.ParametersXml;
 import com.powsybl.iidm.export.Exporters;
@@ -21,6 +20,9 @@ import com.powsybl.iidm.xml.IidmXmlVersion;
 import com.powsybl.iidm.xml.XMLExporter;
 
 import javax.xml.stream.XMLStreamException;
+
+import org.apache.commons.lang3.SystemUtils;
+
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Path;
@@ -40,7 +42,8 @@ import static com.powsybl.dynawo.xml.DynawoConstants.NETWORK_FILENAME;
 @AutoService(DynamicSimulationProvider.class)
 public class DynawoProvider implements DynamicSimulationProvider {
 
-    private static final String DYNAWO_CMD_NAME = "dynawo.sh";
+    public static final String NAME = "Dynawo";
+    private static final String DYNAWO_CMD_NAME = "dynawo";
     private static final String WORKING_DIR_PREFIX = "powsybl_dynawo_";
 
     private final DynawoConfig dynawoConfig;
@@ -55,7 +58,7 @@ public class DynawoProvider implements DynamicSimulationProvider {
 
     @Override
     public String getName() {
-        return "Dynawo";
+        return NAME;
     }
 
     @Override
@@ -124,7 +127,6 @@ public class DynawoProvider implements DynamicSimulationProvider {
 
                 JobsXml.write(workingDir, context);
                 DydXml.write(workingDir, context);
-                EventsXml.write(workingDir, context);
                 ParametersXml.write(workingDir, context);
                 if (context.withCurves()) {
                     CurvesXml.write(workingDir, context);
@@ -141,13 +143,14 @@ public class DynawoProvider implements DynamicSimulationProvider {
                 .id("dyn_fs")
                 .subCommand()
                 .program(getProgram())
-                .args("jobs", dynawoJobsFile.toString())
+                .args(SystemUtils.IS_OS_WINDOWS ? "--jobs-file" : "jobs", dynawoJobsFile.toString())
                 .add()
                 .build();
         }
 
         private String getProgram() {
-            return Paths.get(dynawoConfig.getHomeDir()).resolve(DYNAWO_CMD_NAME).toString();
+            String extension = SystemUtils.IS_OS_WINDOWS ? ".cmd" : ".sh";
+            return Paths.get(dynawoConfig.getHomeDir()).resolve(DYNAWO_CMD_NAME + extension).toString();
         }
     }
 }

@@ -12,6 +12,7 @@ import com.google.auto.service.AutoService
 import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
+import com.powsybl.dynawo.DynawoProvider
 import com.powsybl.dynawo.automatons.CurrentLimitAutomaton
 
 /**
@@ -41,7 +42,7 @@ class CurrentLimitAutomatonGroovyExtension implements DynamicModelGroovyExtensio
     }
 
     String getName() {
-        return "Dynawo"
+        return DynawoProvider.NAME
     }
     
     void load(Binding binding, Consumer<DynamicModel> consumer) {

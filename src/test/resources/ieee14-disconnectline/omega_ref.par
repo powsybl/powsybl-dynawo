@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<parametersSet xmlns="http://www.rte-france.com/dynawo">
+    <set id="7">
+        <par type="INT" name="nbGen" value="5"/>
+        <par type="DOUBLE" name="weight_gen_0" value="1211"/>
+        <par type="DOUBLE" name="weight_gen_1" value="1120"/>
+        <par type="DOUBLE" name="weight_gen_2" value="1650"/>
+        <par type="DOUBLE" name="weight_gen_3" value="80"/>
+        <par type="DOUBLE" name="weight_gen_4" value="250"/>
+    </set>
+</parametersSet>

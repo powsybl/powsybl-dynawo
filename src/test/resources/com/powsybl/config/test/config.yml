@@ -6,6 +6,21 @@ dynawo:
   homeDir: /home/dynawo
   debug: false
 
+dynaflow:
+  homeDir: /home/dynaflow
+  debug: false
+
+dynaflow-default-parameters:
+  lccAsLoads: false
+  vscAsGenerators: false
+  svcRegulationOn: true
+
+load-flow-default-parameters:
+  voltageInitMode: DC_VALUES
+  transformerVoltageControlOn: false
+  specificCompatibility: true
+  noGeneratorReactiveLimits: true
+
 dynawo-default-parameters:
     parametersFile: /work/unittests/models.par
     network.parametersFile: /work/unittests/network.par
