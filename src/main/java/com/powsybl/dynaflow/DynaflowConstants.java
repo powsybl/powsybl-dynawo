@@ -16,6 +16,8 @@ public final class DynaflowConstants {
 
     public static final String IIDM_FILENAME = "network.xiidm";
 
+    public static final String VERSION = "0.1";
+
     private DynaflowConstants() {
     }
 
