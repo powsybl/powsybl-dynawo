@@ -34,11 +34,11 @@ public final class DynaflowUtil {
             @Override
             public Boolean after(Path workingDir, ExecutionReport report) throws IOException {
                 super.after(workingDir, report);
-                Optional<InputStream> stdout = report.getStdErr(versionCmd, 0);
-                if (!stdout.isPresent()) {
+                Optional<InputStream> stdErr = report.getStdErr(versionCmd, 0);
+                if (!stdErr.isPresent()) {
                     throw new PowsyblException("No output for Dynaflow version command");
                 }
-                try (Reader reader = new InputStreamReader(stdout.get())) {
+                try (Reader reader = new InputStreamReader(stdErr.get())) {
                     String stdOut = CharStreams.toString(reader);
                     return stdOut.equals(DynaflowConstants.VERSION);
                 }

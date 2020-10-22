@@ -116,4 +116,13 @@ public class DynaflowVersionCheckTest {
     public void versionTest() {
         assertTrue(DynaflowUtil.checkDynaflowVersion(env, new MockComputationManager("/dynaflow/dynaflow_version.out"), versionCmd));
     }
+
+    @Test(expected = java.util.concurrent.CompletionException.class)
+    public void versionTestNotExistingFile() {
+        Command badVersionCmd = new SimpleCommandBuilder()
+                .id("does_not_exist")
+                .program("dummy")
+                .build();
+        DynaflowUtil.checkDynaflowVersion(env, new MockComputationManager("/dynaflow/dynaflow_version.out"), badVersionCmd);
+    }
 }
