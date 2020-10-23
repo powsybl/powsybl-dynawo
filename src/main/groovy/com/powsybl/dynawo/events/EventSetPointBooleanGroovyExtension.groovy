@@ -22,12 +22,12 @@ import java.util.function.Consumer
 class EventSetPointBooleanGroovyExtension implements EventModelGroovyExtension {
 
     static class EventSetPointBooleanSpec {
-        String dynamicModelId
+        String eventModelId
         String staticId
         String parameterSetId
 
-        void dynamicModelId(String dynamicModelId) {
-            this.dynamicModelId = dynamicModelId
+        void eventModelId(String eventModelId) {
+            this.eventModelId = eventModelId
         }
 
         void staticId(String staticId) {
@@ -58,8 +58,8 @@ class EventSetPointBooleanGroovyExtension implements EventModelGroovyExtension {
                 throw new DslException("'parameterSetId' field is not set")
             }
 
-            String dynamicModelId = eventSetPointBooleanSpec.dynamicModelId ? eventSetPointBooleanSpec.dynamicModelId : eventSetPointBooleanSpec.staticId
-            consumer.accept(new EventSetPointBoolean(dynamicModelId, eventSetPointBooleanSpec.staticId, eventSetPointBooleanSpec.parameterSetId))
+            String eventModelId = eventSetPointBooleanSpec.eventModelId ? eventSetPointBooleanSpec.eventModelId : eventSetPointBooleanSpec.staticId
+            consumer.accept(new EventSetPointBoolean(eventModelId, eventSetPointBooleanSpec.staticId, eventSetPointBooleanSpec.parameterSetId))
         }
     }
 }

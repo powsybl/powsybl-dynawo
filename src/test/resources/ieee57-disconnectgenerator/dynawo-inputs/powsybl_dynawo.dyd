@@ -61,8 +61,8 @@
     <dyn:macroConnect connector="MC_DYNModelOmegaRefToGenerator" id1="OMEGA_REF" index1="6" id2="_GEN____2_SM"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRefToNumCCMachine" id1="OMEGA_REF" index1="6" id2="NETWORK" name2="_GEN____2_SM"/>
     <dyn:macroConnector id="MC_EventSetPointBoolean">
-        <dyn:connect var1="event_state1" var2="@NAME@_switchOff"/>
+        <dyn:connect var1="event_state1" var2="generator_switchOffSignal2"/>
     </dyn:macroConnector>
     <dyn:blackBoxModel id="DisconnectGenerator" lib="EventSetPointBoolean" parFile="models.par" parId="DisconnectGenerator"/>
-    <dyn:macroConnect connector="MC_EventSetPointBoolean" id1="DisconnectGenerator" id2="NETWORK" name2="_GEN___12_SM"/>
+    <dyn:macroConnect connector="MC_EventSetPointBoolean" id1="DisconnectGenerator" id2="_GEN___12_SM"/>
 </dyn:dynamicModelsArchitecture>

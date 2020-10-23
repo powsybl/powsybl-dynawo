@@ -30,6 +30,6 @@ for (Generator gen : network.generators) {
         }
     }
     OmegaRef {
-        generatorDynamicModelId + gen.id
+        generatorDynamicModelId gen.id
     }
 }

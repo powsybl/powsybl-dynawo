@@ -7,6 +7,6 @@
 
 EventSetPointBoolean {
     staticId "_GEN___12_SM"
-    dynamicModelId "DisconnectGenerator"
+    eventModelId "DisconnectGenerator"
     parameterSetId "DisconnectGenerator"
 }

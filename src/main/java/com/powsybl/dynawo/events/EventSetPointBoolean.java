@@ -34,13 +34,13 @@ public class EventSetPointBoolean extends AbstractBlackBoxEventModel {
             // Write the macroConnector object
             writer.writeStartElement(DYN_URI, "macroConnector");
             writer.writeAttribute("id", MACRO_CONNECTOR_PREFIX + getLib());
-            MacroConnectorXml.writeConnect(writer, "event_state1", "@NAME@_switchOff");
+            MacroConnectorXml.writeConnect(writer, "event_state1", "generator_switchOffSignal2");
             writer.writeEndElement();
         }
 
         writeEventBlackBoxModel(writer, context);
 
         // Write the connect object
-        MacroConnectorXml.writeMacroConnect(writer, MACRO_CONNECTOR_PREFIX + getLib(), getEventModelId(), NETWORK, getStaticId());
+        MacroConnectorXml.writeMacroConnect(writer, MACRO_CONNECTOR_PREFIX + getLib(), getEventModelId(), getStaticId());
     }
 }

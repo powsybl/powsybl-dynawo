@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import static com.powsybl.dynawo.xml.DynawoConstants.*;
 
@@ -35,7 +34,6 @@ public class Ieee57DisconnectGeneratorLocalCommandExecutor extends AbstractDynaw
         compareXml(getClass().getResourceAsStream("/ieee57-disconnectgenerator/dynawo-inputs/models.par"), Files.newInputStream(workingDir.resolve(fileSystem.getPath(dynawoParameters.getParametersFile()).getFileName().toString())));
         compareXml(getClass().getResourceAsStream("/ieee57-disconnectgenerator/dynawo-inputs/network.par"), Files.newInputStream(workingDir.resolve(fileSystem.getPath(dynawoParameters.getNetwork().getParametersFile()).getFileName().toString())));
         compareXml(getClass().getResourceAsStream("/ieee57-disconnectgenerator/dynawo-inputs/solvers.par"), Files.newInputStream(workingDir.resolve(fileSystem.getPath(dynawoParameters.getSolver().getParametersFile()).getFileName().toString())));
-        Files.copy(Files.newInputStream(workingDir.resolve(network.getId() + ".par")), Paths.get("/tmp/file.par"));
         compareXml(getClass().getResourceAsStream("/ieee57-disconnectgenerator/dynawo-inputs/ieee57bus.par"), Files.newInputStream(workingDir.resolve(network.getId() + ".par")));
         compareXml(getClass().getResourceAsStream("/ieee57-disconnectgenerator/dynawo-inputs/powsybl_dynawo.crv"), Files.newInputStream(workingDir.resolve(CRV_FILENAME)));
     }

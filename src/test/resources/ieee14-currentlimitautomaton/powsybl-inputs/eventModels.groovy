@@ -7,6 +7,6 @@
 
 EventQuadripoleDisconnection {
     staticId "_BUS____1-BUS____5-1_AC"
-    dynamicModelId "DISCONNECT_LINE"
+    eventModelId "DISCONNECT_LINE"
     parameterSetId "EQD"
 }
