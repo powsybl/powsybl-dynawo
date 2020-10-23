@@ -43,7 +43,7 @@
         <maven.exec.plugin>1.6.0</maven.exec.plugin>
 
         <jimfs.version>1.1</jimfs.version>
-        <junit.version>4.12</junit.version>
+        <junit.version>4.13.1</junit.version>
         <logback.version>1.1.8</logback.version>
         <xmlunit.version>2.3.0</xmlunit.version>
 
@@ -80,6 +80,11 @@
         <dependency>
             <groupId>com.powsybl</groupId>
             <artifactId>powsybl-iidm-xml-converter</artifactId>
+            <version>${powsyblcore.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.powsybl</groupId>
+            <artifactId>powsybl-loadflow-api</artifactId>
             <version>${powsyblcore.version}</version>
         </dependency>
 
