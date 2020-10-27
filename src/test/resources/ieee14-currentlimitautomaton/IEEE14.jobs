@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<dyn:jobs xmlns:dyn="http://www.rte-france.com/dynawo">
+    <dyn:job name="Job">
+        <dyn:solver lib="dynawo_SolverIDA" parFile="ieee-solvers.par" parId="2"/>
+        <dyn:modeler compileDir="outputs/compilation">
+            <dyn:network iidmFile="powsybl_dynawo.xiidm" parFile="ieee-network.par" parId="8"/>
+            <dyn:dynModels dydFile="powsybl_dynawo.dyd"/>
+            <dyn:precompiledModels useStandardModels="true"/>
+            <dyn:modelicaModels useStandardModels="false"/>
+        </dyn:modeler>
+        <dyn:simulation startTime="0" stopTime="50"/>
+        <dyn:outputs directory="outputs">
+            <dyn:dumpInitValues local="false" global="false"/>
+            <dyn:curves inputFile="powsybl_dynawo.crv" exportMode="CSV"/>
+            <dyn:timeline exportMode="TXT"/>
+            <dyn:finalState exportIIDMFile="true" exportDumpFile="false"/>
+            <dyn:logs>
+                <dyn:appender tag="" file="dynawo.log" lvlFilter="DEBUG"/>
+            </dyn:logs>
+        </dyn:outputs>
+    </dyn:job>
+</dyn:jobs>
