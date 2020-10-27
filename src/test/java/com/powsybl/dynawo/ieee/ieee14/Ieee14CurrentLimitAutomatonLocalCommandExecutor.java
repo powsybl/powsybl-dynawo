@@ -6,14 +6,14 @@
  */
 package com.powsybl.dynawo.ieee.ieee14;
 
+import com.powsybl.dynawo.DynawoParameters;
+import com.powsybl.dynawo.ieee.AbstractDynawoLocalCommandExecutor;
+import com.powsybl.iidm.network.Network;
+
 import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
-import com.powsybl.dynawo.DynawoParameters;
-import com.powsybl.dynawo.ieee.AbstractDynawoLocalCommandExecutor;
-import com.powsybl.iidm.network.Network;
 
 import static com.powsybl.dynawo.xml.DynawoConstants.*;
 
@@ -28,19 +28,20 @@ public class Ieee14CurrentLimitAutomatonLocalCommandExecutor extends AbstractDyn
 
     @Override
     protected void validateInputs(Path workingDir) throws IOException {
-        compareXml(getClass().getResourceAsStream("/ieee14-currentlimitautomaton/IEEE14.jobs"), Files.newInputStream(workingDir.resolve(JOBS_FILENAME)));
-        compareXml(getClass().getResourceAsStream("/ieee14-currentlimitautomaton/IEEE14.dyd"), Files.newInputStream(workingDir.resolve(DYD_FILENAME)));
-        compareXml(getClass().getResourceAsStream("/ieee14-currentlimitautomaton/IEEE14.par"), Files.newInputStream(workingDir.resolve(fileSystem.getPath(dynawoParameters.getParametersFile()).getFileName().toString())));
-        compareXml(getClass().getResourceAsStream("/ieee14-currentlimitautomaton/network.par"), Files.newInputStream(workingDir.resolve(fileSystem.getPath(dynawoParameters.getNetwork().getParametersFile()).getFileName().toString())));
-        compareXml(getClass().getResourceAsStream("/ieee14-currentlimitautomaton/solvers.par"), Files.newInputStream(workingDir.resolve(fileSystem.getPath(dynawoParameters.getSolver().getParametersFile()).getFileName().toString())));
-        compareXml(getClass().getResourceAsStream("/ieee14-currentlimitautomaton/omega-ref.par"), Files.newInputStream(workingDir.resolve(network.getId() + ".par")));
-        compareXml(getClass().getResourceAsStream("/ieee14-currentlimitautomaton/IEEE14.crv"), Files.newInputStream(workingDir.resolve(CRV_FILENAME)));
+        compareXml(getClass().getResourceAsStream("/ieee14-currentlimitautomaton/dynawo-inputs/powsybl_dynawo.xiidm"), Files.newInputStream(workingDir.resolve(NETWORK_FILENAME)));
+        compareXml(getClass().getResourceAsStream("/ieee14-currentlimitautomaton/dynawo-inputs/powsybl_dynawo.jobs"), Files.newInputStream(workingDir.resolve(JOBS_FILENAME)));
+        compareXml(getClass().getResourceAsStream("/ieee14-currentlimitautomaton/dynawo-inputs/powsybl_dynawo.dyd"), Files.newInputStream(workingDir.resolve(DYD_FILENAME)));
+        compareXml(getClass().getResourceAsStream("/ieee14-currentlimitautomaton/dynawo-inputs/models.par"), Files.newInputStream(workingDir.resolve(fileSystem.getPath(dynawoParameters.getParametersFile()).getFileName().toString())));
+        compareXml(getClass().getResourceAsStream("/ieee14-currentlimitautomaton/dynawo-inputs/network.par"), Files.newInputStream(workingDir.resolve(fileSystem.getPath(dynawoParameters.getNetwork().getParametersFile()).getFileName().toString())));
+        compareXml(getClass().getResourceAsStream("/ieee14-currentlimitautomaton/dynawo-inputs/solvers.par"), Files.newInputStream(workingDir.resolve(fileSystem.getPath(dynawoParameters.getSolver().getParametersFile()).getFileName().toString())));
+        compareXml(getClass().getResourceAsStream("/ieee14-currentlimitautomaton/dynawo-inputs/ieee14bus.par"), Files.newInputStream(workingDir.resolve(network.getId() + ".par")));
+        compareXml(getClass().getResourceAsStream("/ieee14-currentlimitautomaton/dynawo-inputs/powsybl_dynawo.crv"), Files.newInputStream(workingDir.resolve(CRV_FILENAME)));
     }
 
     @Override
     protected void copyOutputs(Path workingDir) throws IOException  {
         Path output = Files.createDirectories(workingDir.resolve("outputs/curves").toAbsolutePath());
-        Files.copy(getClass().getResourceAsStream("/ieee14-currentlimitautomaton/curves.csv"), output.resolve("curves.csv"));
+        Files.copy(getClass().getResourceAsStream("/ieee14-currentlimitautomaton/dynawo-outputs/curves.csv"), output.resolve("curves.csv"));
     }
 
 }
