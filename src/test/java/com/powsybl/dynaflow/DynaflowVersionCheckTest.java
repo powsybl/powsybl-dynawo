@@ -117,7 +117,7 @@ public class DynaflowVersionCheckTest {
         assertTrue(DynaflowUtil.checkDynaflowVersion(env, new MockComputationManager("/dynaflow/dynaflow_version.out"), versionCmd));
     }
 
-    @Test(expected = java.util.concurrent.CompletionException.class)
+    @Test //(expected = java.util.concurrent.CompletionException.class)
     public void versionTestNotExistingFile() {
         Command badVersionCmd = new SimpleCommandBuilder()
                 .id("does_not_exist")

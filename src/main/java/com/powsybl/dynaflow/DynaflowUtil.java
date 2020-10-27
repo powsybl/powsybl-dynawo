@@ -23,7 +23,8 @@ import java.util.Optional;
  *
  * @author Guillaume Pernin <guillaume.pernin at rte-france.com>
  */
-public final class DynaflowUtil {
+final class DynaflowUtil {
+
     public static boolean checkDynaflowVersion(ExecutionEnvironment env, ComputationManager computationManager, Command versionCmd) {
         return computationManager.execute(env, new AbstractExecutionHandler<Boolean>() {
             @Override
