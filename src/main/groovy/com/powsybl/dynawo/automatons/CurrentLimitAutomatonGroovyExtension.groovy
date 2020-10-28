@@ -6,6 +6,8 @@
  */
 package com.powsybl.dynawo.automatons
 
+import com.powsybl.iidm.network.Branch
+
 import java.util.function.Consumer
 
 import com.google.auto.service.AutoService
@@ -13,7 +15,6 @@ import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawo.DynawoProvider
-import com.powsybl.dynawo.automatons.CurrentLimitAutomaton
 
 /**
  * An implementation of {@link DynamicModelGroovyExtension} that adds the <pre>CurrentLimitAutomaton</pre> keyword to the DSL
@@ -26,6 +27,7 @@ class CurrentLimitAutomatonGroovyExtension implements DynamicModelGroovyExtensio
     static class CurrentLimitAutomatonSpec {
         String dynamicModelId
         String staticId
+        Branch.Side side
         String parameterSetId
 
         void dynamicModelId(String dynamicModelId) {
@@ -38,6 +40,10 @@ class CurrentLimitAutomatonGroovyExtension implements DynamicModelGroovyExtensio
 
         void parameterSetId(String parameterSetId) {
             this.parameterSetId = parameterSetId
+        }
+
+        void side(Branch.Side side) {
+            this.side = side
         }
     }
 
@@ -59,9 +65,12 @@ class CurrentLimitAutomatonGroovyExtension implements DynamicModelGroovyExtensio
             if (!currentLimitAutomatonSpec.parameterSetId) {
                 throw new DslException("'parameterSetId' field is not set")
             }
+            if (!currentLimitAutomatonSpec.side) {
+                throw new DslException("'side' field is not set");
+            }
 
             String dynamicModelId = currentLimitAutomatonSpec.dynamicModelId ? currentLimitAutomatonSpec.dynamicModelId : currentLimitAutomatonSpec.staticId
-            consumer.accept(new CurrentLimitAutomaton(dynamicModelId, currentLimitAutomatonSpec.staticId, currentLimitAutomatonSpec.parameterSetId))
+            consumer.accept(new CurrentLimitAutomaton(dynamicModelId, currentLimitAutomatonSpec.staticId, currentLimitAutomatonSpec.parameterSetId, currentLimitAutomatonSpec.side))
         }
     }
 

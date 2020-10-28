@@ -18,6 +18,8 @@ import java.util.Objects;
 
 import javax.xml.transform.Source;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlunit.builder.DiffBuilder;
 import org.xmlunit.builder.Input;
 import org.xmlunit.diff.Diff;
@@ -30,6 +32,8 @@ import com.powsybl.iidm.network.Network;
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 public abstract class AbstractDynawoLocalCommandExecutor implements LocalCommandExecutor {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractDynawoLocalCommandExecutor.class);
 
     protected final FileSystem fileSystem;
     protected final Network network;
@@ -52,8 +56,13 @@ public abstract class AbstractDynawoLocalCommandExecutor implements LocalCommand
 
     @Override
     public int execute(String program, long timeoutSeconds, List<String> args, Path outFile, Path errFile, Path workingDir, Map<String, String> env) throws IOException {
-        validateInputs(workingDir);
-        copyOutputs(workingDir);
+        try {
+            validateInputs(workingDir);
+            copyOutputs(workingDir);
+        } catch (Throwable throwable) {
+            LOGGER.error(throwable.toString(), throwable);
+            return -1;
+        }
         return 0;
     }
 

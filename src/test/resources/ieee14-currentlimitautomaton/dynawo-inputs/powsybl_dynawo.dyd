@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
+    <dyn:macroStaticReference id="MSR_LoadAlphaBeta">
+        <dyn:staticRef var="load_PPu" staticVar="p"/>
+        <dyn:staticRef var="load_QPu" staticVar="q"/>
+        <dyn:staticRef var="load_state" staticVar="state"/>
+    </dyn:macroStaticReference>
+    <dyn:macroConnector id="MC_LoadAlphaBeta">
+        <dyn:connect var1="load_terminal" var2="@STATIC_ID@@NODE@_ACPIN"/>
+        <dyn:connect var1="load_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
+    </dyn:macroConnector>
+    <dyn:blackBoxModel id="_LOAD__10_EC" lib="LoadAlphaBeta" parFile="models.par" parId="LAB" staticId="_LOAD__10_EC">
+        <dyn:macroStaticRef id="MSR_LoadAlphaBeta"/>
+    </dyn:blackBoxModel>
+    <dyn:macroConnect connector="MC_LoadAlphaBeta" id1="_LOAD__10_EC" id2="NETWORK"/>
+    <dyn:blackBoxModel id="_LOAD__11_EC" lib="LoadAlphaBeta" parFile="models.par" parId="LAB" staticId="_LOAD__11_EC">
+        <dyn:macroStaticRef id="MSR_LoadAlphaBeta"/>
+    </dyn:blackBoxModel>
+    <dyn:macroConnect connector="MC_LoadAlphaBeta" id1="_LOAD__11_EC" id2="NETWORK"/>
+    <dyn:blackBoxModel id="_LOAD__12_EC" lib="LoadAlphaBeta" parFile="models.par" parId="LAB" staticId="_LOAD__12_EC">
+        <dyn:macroStaticRef id="MSR_LoadAlphaBeta"/>
+    </dyn:blackBoxModel>
+    <dyn:macroConnect connector="MC_LoadAlphaBeta" id1="_LOAD__12_EC" id2="NETWORK"/>
+    <dyn:blackBoxModel id="_LOAD__13_EC" lib="LoadAlphaBeta" parFile="models.par" parId="LAB" staticId="_LOAD__13_EC">
+        <dyn:macroStaticRef id="MSR_LoadAlphaBeta"/>
+    </dyn:blackBoxModel>
+    <dyn:macroConnect connector="MC_LoadAlphaBeta" id1="_LOAD__13_EC" id2="NETWORK"/>
+    <dyn:blackBoxModel id="_LOAD__14_EC" lib="LoadAlphaBeta" parFile="models.par" parId="LAB" staticId="_LOAD__14_EC">
+        <dyn:macroStaticRef id="MSR_LoadAlphaBeta"/>
+    </dyn:blackBoxModel>
+    <dyn:macroConnect connector="MC_LoadAlphaBeta" id1="_LOAD__14_EC" id2="NETWORK"/>
+    <dyn:blackBoxModel id="_LOAD___2_EC" lib="LoadAlphaBeta" parFile="models.par" parId="LAB" staticId="_LOAD___2_EC">
+        <dyn:macroStaticRef id="MSR_LoadAlphaBeta"/>
+    </dyn:blackBoxModel>
+    <dyn:macroConnect connector="MC_LoadAlphaBeta" id1="_LOAD___2_EC" id2="NETWORK"/>
+    <dyn:blackBoxModel id="_LOAD___3_EC" lib="LoadAlphaBeta" parFile="models.par" parId="LAB" staticId="_LOAD___3_EC">
+        <dyn:macroStaticRef id="MSR_LoadAlphaBeta"/>
+    </dyn:blackBoxModel>
+    <dyn:macroConnect connector="MC_LoadAlphaBeta" id1="_LOAD___3_EC" id2="NETWORK"/>
+    <dyn:blackBoxModel id="_LOAD___9_EC" lib="LoadAlphaBeta" parFile="models.par" parId="LAB" staticId="_LOAD___9_EC">
+        <dyn:macroStaticRef id="MSR_LoadAlphaBeta"/>
+    </dyn:blackBoxModel>
+    <dyn:macroConnect connector="MC_LoadAlphaBeta" id1="_LOAD___9_EC" id2="NETWORK"/>
+    <dyn:blackBoxModel id="_LOAD___4_EC" lib="LoadAlphaBeta" parFile="models.par" parId="LAB" staticId="_LOAD___4_EC">
+        <dyn:macroStaticRef id="MSR_LoadAlphaBeta"/>
+    </dyn:blackBoxModel>
+    <dyn:macroConnect connector="MC_LoadAlphaBeta" id1="_LOAD___4_EC" id2="NETWORK"/>
+    <dyn:blackBoxModel id="_LOAD___6_EC" lib="LoadAlphaBeta" parFile="models.par" parId="LAB" staticId="_LOAD___6_EC">
+        <dyn:macroStaticRef id="MSR_LoadAlphaBeta"/>
+    </dyn:blackBoxModel>
+    <dyn:macroConnect connector="MC_LoadAlphaBeta" id1="_LOAD___6_EC" id2="NETWORK"/>
+    <dyn:blackBoxModel id="_LOAD___5_EC" lib="LoadAlphaBeta" parFile="models.par" parId="LAB" staticId="_LOAD___5_EC">
+        <dyn:macroStaticRef id="MSR_LoadAlphaBeta"/>
+    </dyn:blackBoxModel>
+    <dyn:macroConnect connector="MC_LoadAlphaBeta" id1="_LOAD___5_EC" id2="NETWORK"/>
+    <dyn:macroStaticReference id="MSR_GeneratorSynchronousFourWindingsProportionalRegulations">
+        <dyn:staticRef var="generator_PGenPu" staticVar="p"/>
+        <dyn:staticRef var="generator_QGenPu" staticVar="q"/>
+        <dyn:staticRef var="generator_state" staticVar="state"/>
+    </dyn:macroStaticReference>
+    <dyn:macroConnector id="MC_GeneratorSynchronousFourWindingsProportionalRegulations">
+        <dyn:connect var1="generator_terminal" var2="@STATIC_ID@@NODE@_ACPIN"/>
+        <dyn:connect var1="generator_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
+    </dyn:macroConnector>
+    <dyn:blackBoxModel id="_GEN____1_SM" lib="GeneratorSynchronousFourWindingsProportionalRegulations" parFile="models.par" parId="GSFWPR_GEN____1_SM" staticId="_GEN____1_SM">
+        <dyn:macroStaticRef id="MSR_GeneratorSynchronousFourWindingsProportionalRegulations"/>
+    </dyn:blackBoxModel>
+    <dyn:macroConnect connector="MC_GeneratorSynchronousFourWindingsProportionalRegulations" id1="_GEN____1_SM" id2="NETWORK"/>
+    <dyn:macroConnector id="MC_DYNModelOmegaRefToGenerator">
+        <dyn:connect var1="omega_grp_@INDEX@" var2="generator_omegaPu"/>
+        <dyn:connect var1="omegaRef_grp_@INDEX@" var2="generator_omegaRefPu"/>
+        <dyn:connect var1="running_grp_@INDEX@" var2="generator_running"/>
+    </dyn:macroConnector>
+    <dyn:macroConnector id="MC_DYNModelOmegaRefToNumCCMachine">
+        <dyn:connect var1="numcc_node_@INDEX@" var2="@@NAME@@@NODE@_numcc"/>
+    </dyn:macroConnector>
+    <dyn:blackBoxModel id="OMEGA_REF" lib="DYNModelOmegaRef" parFile="ieee14bus.par" parId="OMEGA_REF"/>
+    <dyn:macroConnect connector="MC_DYNModelOmegaRefToGenerator" id1="OMEGA_REF" index1="0" id2="_GEN____1_SM"/>
+    <dyn:macroConnect connector="MC_DYNModelOmegaRefToNumCCMachine" id1="OMEGA_REF" index1="0" id2="NETWORK" name2="_GEN____1_SM"/>
+    <dyn:blackBoxModel id="_GEN____2_SM" lib="GeneratorSynchronousFourWindingsProportionalRegulations" parFile="models.par" parId="GSFWPR_GEN____2_SM" staticId="_GEN____2_SM">
+        <dyn:macroStaticRef id="MSR_GeneratorSynchronousFourWindingsProportionalRegulations"/>
+    </dyn:blackBoxModel>
+    <dyn:macroConnect connector="MC_GeneratorSynchronousFourWindingsProportionalRegulations" id1="_GEN____2_SM" id2="NETWORK"/>
+    <dyn:macroConnect connector="MC_DYNModelOmegaRefToGenerator" id1="OMEGA_REF" index1="1" id2="_GEN____2_SM"/>
+    <dyn:macroConnect connector="MC_DYNModelOmegaRefToNumCCMachine" id1="OMEGA_REF" index1="1" id2="NETWORK" name2="_GEN____2_SM"/>
+    <dyn:blackBoxModel id="_GEN____3_SM" lib="GeneratorSynchronousFourWindingsProportionalRegulations" parFile="models.par" parId="GSFWPR_GEN____3_SM" staticId="_GEN____3_SM">
+        <dyn:macroStaticRef id="MSR_GeneratorSynchronousFourWindingsProportionalRegulations"/>
+    </dyn:blackBoxModel>
+    <dyn:macroConnect connector="MC_GeneratorSynchronousFourWindingsProportionalRegulations" id1="_GEN____3_SM" id2="NETWORK"/>
+    <dyn:macroConnect connector="MC_DYNModelOmegaRefToGenerator" id1="OMEGA_REF" index1="2" id2="_GEN____3_SM"/>
+    <dyn:macroConnect connector="MC_DYNModelOmegaRefToNumCCMachine" id1="OMEGA_REF" index1="2" id2="NETWORK" name2="_GEN____3_SM"/>
+    <dyn:macroStaticReference id="MSR_GeneratorSynchronousThreeWindingsProportionalRegulations">
+        <dyn:staticRef var="generator_PGenPu" staticVar="p"/>
+        <dyn:staticRef var="generator_QGenPu" staticVar="q"/>
+        <dyn:staticRef var="generator_state" staticVar="state"/>
+    </dyn:macroStaticReference>
+    <dyn:macroConnector id="MC_GeneratorSynchronousThreeWindingsProportionalRegulations">
+        <dyn:connect var1="generator_terminal" var2="@STATIC_ID@@NODE@_ACPIN"/>
+        <dyn:connect var1="generator_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
+    </dyn:macroConnector>
+    <dyn:blackBoxModel id="_GEN____6_SM" lib="GeneratorSynchronousThreeWindingsProportionalRegulations" parFile="models.par" parId="GSTWPR_GEN____6_SM" staticId="_GEN____6_SM">
+        <dyn:macroStaticRef id="MSR_GeneratorSynchronousThreeWindingsProportionalRegulations"/>
+    </dyn:blackBoxModel>
+    <dyn:macroConnect connector="MC_GeneratorSynchronousThreeWindingsProportionalRegulations" id1="_GEN____6_SM" id2="NETWORK"/>
+    <dyn:macroConnect connector="MC_DYNModelOmegaRefToGenerator" id1="OMEGA_REF" index1="3" id2="_GEN____6_SM"/>
+    <dyn:macroConnect connector="MC_DYNModelOmegaRefToNumCCMachine" id1="OMEGA_REF" index1="3" id2="NETWORK" name2="_GEN____6_SM"/>
+    <dyn:blackBoxModel id="_GEN____8_SM" lib="GeneratorSynchronousThreeWindingsProportionalRegulations" parFile="models.par" parId="GSTWPR_GEN____8_SM" staticId="_GEN____8_SM">
+        <dyn:macroStaticRef id="MSR_GeneratorSynchronousThreeWindingsProportionalRegulations"/>
+    </dyn:blackBoxModel>
+    <dyn:macroConnect connector="MC_GeneratorSynchronousThreeWindingsProportionalRegulations" id1="_GEN____8_SM" id2="NETWORK"/>
+    <dyn:macroConnect connector="MC_DYNModelOmegaRefToGenerator" id1="OMEGA_REF" index1="4" id2="_GEN____8_SM"/>
+    <dyn:macroConnect connector="MC_DYNModelOmegaRefToNumCCMachine" id1="OMEGA_REF" index1="4" id2="NETWORK" name2="_GEN____8_SM"/>
+    <dyn:macroConnector id="MC_CurrentLimitAutomatonToLineSide2">
+        <dyn:connect var1="currentLimitAutomaton_IMonitored" var2="@NAME@_iSide2"/>
+        <dyn:connect var1="currentLimitAutomaton_order" var2="@NAME@_state"/>
+        <dyn:connect var1="currentLimitAutomaton_AutomatonExists" var2="@NAME@_desactivate_currentLimits"/>
+    </dyn:macroConnector>
+    <dyn:blackBoxModel id="CLA_2_4" lib="CurrentLimitAutomaton" parFile="models.par" parId="CLA_2_4"/>
+    <dyn:macroConnect connector="MC_CurrentLimitAutomatonToLineSide2" id1="CLA_2_4" id2="NETWORK" name2="_BUS____2-BUS____4-1_AC"/>
+    <dyn:blackBoxModel id="CLA_2_5" lib="CurrentLimitAutomaton" parFile="models.par" parId="CLA_2_5"/>
+    <dyn:macroConnect connector="MC_CurrentLimitAutomatonToLineSide2" id1="CLA_2_5" id2="NETWORK" name2="_BUS____2-BUS____5-1_AC"/>
+    <dyn:macroConnector id="MC_EventQuadripoleDisconnection">
+        <dyn:connect var1="event_state1_value" var2="@NAME@_state_value"/>
+    </dyn:macroConnector>
+    <dyn:blackBoxModel id="DISCONNECT_LINE" lib="EventQuadripoleDisconnection" parFile="models.par" parId="EQD"/>
+    <dyn:macroConnect connector="MC_EventQuadripoleDisconnection" id1="DISCONNECT_LINE" id2="NETWORK" name2="_BUS____1-BUS____5-1_AC"/>
+</dyn:dynamicModelsArchitecture>
