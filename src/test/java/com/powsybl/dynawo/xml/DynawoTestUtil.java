@@ -19,6 +19,7 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
+import com.powsybl.iidm.network.*;
 import junit.framework.AssertionFailedError;
 import org.junit.Before;
 import org.junit.Rule;
@@ -36,10 +37,6 @@ import com.powsybl.dynawo.dynamicmodels.OmegaRef;
 import com.powsybl.dynawo.events.EventQuadripoleDisconnection;
 import com.powsybl.dynawo.DynawoCurve;
 import com.powsybl.dynawo.automatons.CurrentLimitAutomaton;
-import com.powsybl.iidm.network.Bus;
-import com.powsybl.iidm.network.Network;
-import com.powsybl.iidm.network.NetworkFactory;
-import com.powsybl.iidm.network.VoltageLevel;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 
 /**
@@ -94,7 +91,7 @@ public class DynawoTestUtil extends AbstractConverterTest {
 
         // Automatons
         network.getLineStream().forEach(l -> {
-            dynamicModels.add(new CurrentLimitAutomaton("BBM_" + l.getId(), l.getId(), "CLA"));
+            dynamicModels.add(new CurrentLimitAutomaton("BBM_" + l.getId(), l.getId(), "CLA", Branch.Side.ONE));
         });
     }
 
