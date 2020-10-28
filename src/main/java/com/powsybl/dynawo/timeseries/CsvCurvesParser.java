@@ -80,7 +80,7 @@ public final class CsvCurvesParser {
             throw new UncheckedIOException(e);
         }
 
-        LoggerFactory.getLogger(TimeSeries.class)
+        LoggerFactory.getLogger(CsvCurvesParser.class)
                 .info("{} time series loaded from CSV in {} ms",
                 timeSeries.size(),
                 stopwatch.elapsed(TimeUnit.MILLISECONDS));
