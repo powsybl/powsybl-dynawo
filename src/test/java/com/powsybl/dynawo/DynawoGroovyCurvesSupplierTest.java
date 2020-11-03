@@ -15,7 +15,6 @@ import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.List;
 
-import com.powsybl.dynawo.dynamicmodels.DynawoCurveGroovyExtension;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
