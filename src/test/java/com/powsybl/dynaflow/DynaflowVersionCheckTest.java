@@ -69,7 +69,7 @@ public class DynaflowVersionCheckTest {
         }
 
         @Override
-        public void stopForcibly(Path workingDir) throws InterruptedException {
+        public void stopForcibly(Path workingDir) {
 
         }
 

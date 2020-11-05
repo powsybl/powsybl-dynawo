@@ -40,8 +40,8 @@ final class DynaflowUtil {
                     throw new PowsyblException("No output for Dynaflow version command");
                 }
                 try (Reader reader = new InputStreamReader(stdErr.get())) {
-                    String stdOut = CharStreams.toString(reader);
-                    return stdOut.equals(DynaflowConstants.VERSION);
+                    String stdErrContent = CharStreams.toString(reader);
+                    return stdErrContent.equals(DynaflowConstants.VERSION);
                 }
 
             }
