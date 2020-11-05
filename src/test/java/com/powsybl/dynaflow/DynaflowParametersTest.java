@@ -110,8 +110,9 @@ public class DynaflowParametersTest extends AbstractConverterTest {
         dynaflowParameters.setLccAsLoads(true);
         lfParameters.addExtension(DynaflowParameters.class, dynaflowParameters);
 
+        Path workingDir = fileSystem.getPath("dynaflow/workingDir");
         Path parameterFile = fileSystem.getPath(DynaflowConstants.CONFIG_FILENAME);
-        DynaflowConfigSerializer.serialize(lfParameters, dynaflowParameters, parameterFile);
+        DynaflowConfigSerializer.serialize(lfParameters, dynaflowParameters, workingDir, parameterFile);
 
         try (InputStream actual = Files.newInputStream(parameterFile);
             InputStream expected = getClass().getResourceAsStream("/dynaflow/params.json")) {

@@ -6,6 +6,8 @@
     "VSCAsGenerators" : false,
     "LCCAsLoads" : true,
     "InfiniteReactiveLimits" : true,
-    "PSTRegulationOn" : false
+    "PSTRegulationOn" : false,
+    "OutputDir" : "dynaflow/workingDir",
+    "DsoVoltageLevel" : 45.0
   }
 }
