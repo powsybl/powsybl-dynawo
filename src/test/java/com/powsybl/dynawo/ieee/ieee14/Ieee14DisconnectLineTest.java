@@ -24,14 +24,14 @@ public class Ieee14DisconnectLineTest extends AbstractIeeeTest {
     @Before
     public void setup() throws IOException {
         super.setup(
-            "/ieee14-disconnectline/ieee14-disconnectline.par",
-            "/ieee14-disconnectline/ieee14-disconnectline-network.par",
-            "/ieee14-disconnectline/ieee-solvers.par",
-            "/ieee14-disconnectline/IEEE14.iidm",
-            "/ieee14-disconnectline/dynamicModels.groovy",
-            "/ieee14-disconnectline/eventModels.groovy",
-            "/ieee14-disconnectline/curves.groovy",
-            "/ieee14-disconnectline/dynawoParameters.json");
+            "/ieee14-disconnectline/config/models.par",
+            "/ieee14-disconnectline/config/network.par",
+            "/ieee14-disconnectline/config/solvers.par",
+            "/ieee14-disconnectline/powsybl-inputs/IEEE14.iidm",
+            "/ieee14-disconnectline/powsybl-inputs/dynamicModels.groovy",
+            "/ieee14-disconnectline/powsybl-inputs/eventModels.groovy",
+            "/ieee14-disconnectline/powsybl-inputs/curves.groovy",
+            "/ieee14-disconnectline/powsybl-inputs/dynawoParameters.json");
     }
 
     @Test

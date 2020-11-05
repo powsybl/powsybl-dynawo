@@ -16,17 +16,20 @@ import javax.xml.stream.XMLStreamWriter;
 import com.powsybl.dynawo.dynamicmodels.AbstractBlackBoxModel;
 import com.powsybl.dynawo.xml.DynawoXmlContext;
 import com.powsybl.dynawo.xml.MacroConnectorXml;
+import com.powsybl.iidm.network.Branch;
+
+import java.util.Objects;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 public class CurrentLimitAutomaton extends AbstractBlackBoxModel {
 
-    private static final String TO_LINE_SIDE1 = "ToLineSide1";
-    private static final String TO_LINE_SIDE2 = "ToLineSide2";
+    private final Branch.Side side;
 
-    public CurrentLimitAutomaton(String dynamicModelId, String staticId, String parameterSetId) {
+    public CurrentLimitAutomaton(String dynamicModelId, String staticId, String parameterSetId, Branch.Side side) {
         super(dynamicModelId, staticId, parameterSetId);
+        this.side = Objects.requireNonNull(side);
     }
 
     @Override
@@ -36,18 +39,13 @@ public class CurrentLimitAutomaton extends AbstractBlackBoxModel {
 
     @Override
     public void write(XMLStreamWriter writer, DynawoXmlContext context) throws XMLStreamException {
+        String postfix = getPostfix(side);
         if (context.getIndex(getLib(), true) == 0) {
             // Write the macroConnector object
-            writer.writeStartElement(DYN_URI, "macroConnector");
-            writer.writeAttribute("id", MACRO_CONNECTOR_PREFIX + getLib() + TO_LINE_SIDE1);
-            MacroConnectorXml.writeConnect(writer, "currentLimitAutomaton_IMonitored", "@NAME@_iSide1");
-            MacroConnectorXml.writeConnect(writer, "currentLimitAutomaton_order", "@NAME@_state");
-            MacroConnectorXml.writeConnect(writer, "currentLimitAutomaton_AutomatonExists", "@NAME@_desactivate_currentLimits");
-            writer.writeEndElement();
 
             writer.writeStartElement(DYN_URI, "macroConnector");
-            writer.writeAttribute("id", MACRO_CONNECTOR_PREFIX + getLib() + TO_LINE_SIDE2);
-            MacroConnectorXml.writeConnect(writer, "currentLimitAutomaton_IMonitored", "@NAME@_iSide2");
+            writer.writeAttribute("id", MACRO_CONNECTOR_PREFIX + getLib() + "ToLine" + postfix);
+            MacroConnectorXml.writeConnect(writer, "currentLimitAutomaton_IMonitored", "@NAME@_i" + postfix);
             MacroConnectorXml.writeConnect(writer, "currentLimitAutomaton_order", "@NAME@_state");
             MacroConnectorXml.writeConnect(writer, "currentLimitAutomaton_AutomatonExists", "@NAME@_desactivate_currentLimits");
             writer.writeEndElement();
@@ -56,7 +54,17 @@ public class CurrentLimitAutomaton extends AbstractBlackBoxModel {
         writeAutomatonBlackBoxModel(writer, context);
 
         // Write the connect object
-        MacroConnectorXml.writeMacroConnect(writer, MACRO_CONNECTOR_PREFIX + getLib() + TO_LINE_SIDE1, getDynamicModelId(), NETWORK, getStaticId());
-        MacroConnectorXml.writeMacroConnect(writer, MACRO_CONNECTOR_PREFIX + getLib() + TO_LINE_SIDE2, getDynamicModelId(), NETWORK, getStaticId());
+        MacroConnectorXml.writeMacroConnect(writer, MACRO_CONNECTOR_PREFIX + getLib() + "ToLine" + postfix, getDynamicModelId(), NETWORK, getStaticId());
+    }
+
+    private static String getPostfix(Branch.Side side) {
+        switch (side) {
+            case ONE:
+                return "Side1";
+            case TWO:
+                return "Side2";
+            default:
+                throw new AssertionError("Unexpected Side value: " + side);
+        }
     }
 }

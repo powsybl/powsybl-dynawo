@@ -61,15 +61,8 @@
         <dyn:connect var1="currentLimitAutomaton_order" var2="@NAME@_state"/>
         <dyn:connect var1="currentLimitAutomaton_AutomatonExists" var2="@NAME@_desactivate_currentLimits"/>
     </dyn:macroConnector>
-    <dyn:macroConnector id="MC_CurrentLimitAutomatonToLineSide2">
-        <dyn:connect var1="currentLimitAutomaton_IMonitored" var2="@NAME@_iSide2"/>
-        <dyn:connect var1="currentLimitAutomaton_order" var2="@NAME@_state"/>
-        <dyn:connect var1="currentLimitAutomaton_AutomatonExists" var2="@NAME@_desactivate_currentLimits"/>
-    </dyn:macroConnector>
     <dyn:blackBoxModel id="BBM_NHV1_NHV2_1" lib="CurrentLimitAutomaton" parFile="models.par" parId="CLA"/>
     <dyn:macroConnect connector="MC_CurrentLimitAutomatonToLineSide1" id1="BBM_NHV1_NHV2_1" id2="NETWORK" name2="NHV1_NHV2_1"/>
-    <dyn:macroConnect connector="MC_CurrentLimitAutomatonToLineSide2" id1="BBM_NHV1_NHV2_1" id2="NETWORK" name2="NHV1_NHV2_1"/>
     <dyn:blackBoxModel id="BBM_NHV1_NHV2_2" lib="CurrentLimitAutomaton" parFile="models.par" parId="CLA"/>
     <dyn:macroConnect connector="MC_CurrentLimitAutomatonToLineSide1" id1="BBM_NHV1_NHV2_2" id2="NETWORK" name2="NHV1_NHV2_2"/>
-    <dyn:macroConnect connector="MC_CurrentLimitAutomatonToLineSide2" id1="BBM_NHV1_NHV2_2" id2="NETWORK" name2="NHV1_NHV2_2"/>
 </dyn:dynamicModelsArchitecture>
