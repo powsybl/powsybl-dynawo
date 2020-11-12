@@ -36,8 +36,8 @@ public class DynawoParametersDatabaseTest {
     @Before
     public void setUp() throws IOException {
         fileSystem = Jimfs.newFileSystem(Configuration.unix());
-        Files.copy(getClass().getResourceAsStream("/models.par"), fileSystem.getPath("/models.par"));
-        Files.copy(getClass().getResourceAsStream("/models_misspelled.par"), fileSystem.getPath("/models_misspelled.par"));
+        Files.copy(getClass().getResourceAsStream("/config/models.par"), fileSystem.getPath("/models.par"));
+        Files.copy(getClass().getResourceAsStream("/config/models_misspelled.par"), fileSystem.getPath("/models_misspelled.par"));
     }
 
     @After

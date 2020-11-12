@@ -98,11 +98,11 @@ public class DynawoTestUtil extends AbstractConverterTest {
     public void validate(String schemaDefinition, String expectedResourceName, Path xmlFile) throws SAXException, IOException {
         SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         Source xml = new StreamSource(Files.newInputStream(xmlFile));
-        Source xsd = new StreamSource(getClass().getResourceAsStream("/" + schemaDefinition));
+        Source xsd = new StreamSource(getClass().getResourceAsStream("/dynawo-inputs/" + schemaDefinition));
         Schema schema = factory.newSchema(xsd);
         Validator validator = schema.newValidator();
         validator.validate(xml);
-        compareXml(getClass().getResourceAsStream("/" + expectedResourceName), Files.newInputStream(xmlFile));
+        compareXml(getClass().getResourceAsStream("/dynawo-inputs/" + expectedResourceName), Files.newInputStream(xmlFile));
     }
 
     private static Network createEurostagTutorialExample1WithMoreLoads() {

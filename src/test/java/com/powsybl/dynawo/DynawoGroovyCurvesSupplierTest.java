@@ -50,10 +50,10 @@ public class DynawoGroovyCurvesSupplierTest {
         fileSystem = Jimfs.newFileSystem(Configuration.unix());
         network = EurostagTutorialExample1Factory.create();
 
-        Files.copy(getClass().getResourceAsStream("/curves.groovy"), fileSystem.getPath("/curves.groovy"));
-        Files.copy(getClass().getResourceAsStream("/curves_dynamicModelId_staticId.groovy"), fileSystem.getPath("/curves_dynamicModelId_staticId.groovy"));
-        Files.copy(getClass().getResourceAsStream("/curves_variable.groovy"), fileSystem.getPath("/curves_variable.groovy"));
-        Files.copy(getClass().getResourceAsStream("/curves_variables.groovy"), fileSystem.getPath("/curves_variables.groovy"));
+        Files.copy(getClass().getResourceAsStream("/powsybl-inputs/curves.groovy"), fileSystem.getPath("/curves.groovy"));
+        Files.copy(getClass().getResourceAsStream("/powsybl-inputs/curves_dynamicModelId_staticId.groovy"), fileSystem.getPath("/curves_dynamicModelId_staticId.groovy"));
+        Files.copy(getClass().getResourceAsStream("/powsybl-inputs/curves_variable.groovy"), fileSystem.getPath("/curves_variable.groovy"));
+        Files.copy(getClass().getResourceAsStream("/powsybl-inputs/curves_variables.groovy"), fileSystem.getPath("/curves_variables.groovy"));
     }
 
     @After

@@ -47,8 +47,8 @@ public class DynawoGroovyEventModelsSupplierTest {
         fileSystem = Jimfs.newFileSystem(Configuration.unix());
         network = createEurostagTutorialExample1WithMoreGens();
 
-        Files.copy(getClass().getResourceAsStream("/eventModels.groovy"), fileSystem.getPath("/eventModels.groovy"));
-        Files.copy(getClass().getResourceAsStream("/models.par"), fileSystem.getPath("/models.par"));
+        Files.copy(getClass().getResourceAsStream("/powsybl-inputs/eventModels.groovy"), fileSystem.getPath("/eventModels.groovy"));
+        Files.copy(getClass().getResourceAsStream("/config/models.par"), fileSystem.getPath("/models.par"));
     }
 
     @After

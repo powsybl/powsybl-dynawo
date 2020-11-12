@@ -39,6 +39,6 @@ public class DynawoParametersSerializerTest extends AbstractConverterTest {
         DynawoParameters dynawoParameters = DynawoParameters.load(platformConfig);
         dynamicSimulationParameters.addExtension(DynawoParameters.class, dynawoParameters);
         roundTripTest(dynamicSimulationParameters, JsonDynamicSimulationParameters::write,
-            JsonDynamicSimulationParameters::read, "/DynawoParameters.json");
+            JsonDynamicSimulationParameters::read, "/powsybl-inputs/DynawoParameters.json");
     }
 }

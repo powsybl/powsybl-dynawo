@@ -59,8 +59,8 @@ public class DynawoGroovyDynamicModelsSupplierTest {
         fileSystem = Jimfs.newFileSystem(Configuration.unix());
         network = createEurostagTutorialExample1WithMoreGens();
 
-        Files.copy(getClass().getResourceAsStream("/dynamicModels.groovy"), fileSystem.getPath("/dynamicModels.groovy"));
-        Files.copy(getClass().getResourceAsStream("/models.par"), fileSystem.getPath("/models.par"));
+        Files.copy(getClass().getResourceAsStream("/powsybl-inputs/dynamicModels.groovy"), fileSystem.getPath("/dynamicModels.groovy"));
+        Files.copy(getClass().getResourceAsStream("/config/models.par"), fileSystem.getPath("/models.par"));
     }
 
     @After
