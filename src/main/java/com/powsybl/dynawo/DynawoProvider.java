@@ -18,6 +18,7 @@ import com.powsybl.iidm.export.Exporters;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.xml.IidmXmlVersion;
 import com.powsybl.iidm.xml.XMLExporter;
+import com.powsybl.timeseries.TimeSeries;
 
 import javax.xml.stream.XMLStreamException;
 
@@ -25,10 +26,12 @@ import org.apache.commons.lang3.SystemUtils;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.concurrent.CompletableFuture;
@@ -116,7 +119,13 @@ public class DynawoProvider implements DynamicSimulationProvider {
         @Override
         public DynamicSimulationResult after(Path workingDir, ExecutionReport report) throws IOException {
             super.after(workingDir, report);
-            return new DynawoResult(workingDir.resolve(CURVES_FILENAME));
+            Path path = workingDir.resolve(CURVES_FILENAME);
+            Map<String, TimeSeries> curves = null;
+            if (Files.exists(path)) {
+                Map<Integer, List<TimeSeries>> curvesPerVersion = TimeSeries.parseCsv(path, false);
+                curvesPerVersion.values().forEach(l -> l.forEach(curve -> curves.put(curve.getMetadata().getName(),curve)));
+            }
+            return new DynamicSimulationResultImpl(true, null, curves, null);
         }
 
         private void writeInputFiles(Path workingDir) {
