@@ -7,6 +7,7 @@
 package com.powsybl.dynawo.xml;
 
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import javax.xml.stream.XMLStreamException;
@@ -29,6 +30,7 @@ public class DynamicModelsXmlTest extends DynawoTestUtil {
         DynawoParameters dynawoParameters = DynawoParameters.load();
         DynawoContext context = new DynawoContext(network, dynamicModels, new ArrayList<>(), curves, parameters, dynawoParameters);
 
+        tmpDir = Paths.get("c://tmp");
         DydXml.write(tmpDir, context);
         validate("dyd.xsd", "dyd.xml", tmpDir.resolve(DynawoConstants.DYD_FILENAME));
     }

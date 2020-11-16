@@ -23,6 +23,8 @@ import com.powsybl.dynawo.dynamicmodels.GeneratorSynchronousFourWindingsProporti
 import com.powsybl.dynawo.dynamicmodels.GeneratorSynchronousThreeWindingsProportionalRegulations;
 import com.powsybl.dynawo.dynamicmodels.GeneratorSynchronousThreeWindingsProportionalRegulationsGroovyExtension;
 import com.powsybl.dynawo.dynamicmodels.LoadAlphaBetaGroovyExtension;
+import com.powsybl.dynawo.dynamicmodels.LoadOneTransformer;
+import com.powsybl.dynawo.dynamicmodels.LoadOneTransformerGroovyExtension;
 import com.powsybl.dynawo.dynamicmodels.OmegaRefGroovyExtension;
 import com.powsybl.dynawo.xml.DynawoTestUtil;
 import com.powsybl.iidm.network.Bus;
@@ -72,7 +74,7 @@ public class DynawoGroovyDynamicModelsSupplierTest {
     public void test() {
 
         List<DynamicModelGroovyExtension> extensions = GroovyExtension.find(DynamicModelGroovyExtension.class, DynawoProvider.NAME);
-        assertEquals(5, extensions.size());
+        assertEquals(6, extensions.size());
         extensions.forEach(DynawoGroovyDynamicModelsSupplierTest::validateExtension);
 
         DynamicModelsSupplier supplier = new GroovyDynamicModelsSupplier(fileSystem.getPath("/dynamicModels.groovy"), extensions);
@@ -104,14 +106,26 @@ public class DynawoGroovyDynamicModelsSupplierTest {
             .setTargetP(1.0)
             .setTargetQ(0.5)
             .add();
+        VoltageLevel vlload  = network.getVoltageLevel("VLLOAD");
+        Bus nload = vlload.getBusBreakerView().getBus("NLOAD");
+        vlload.newLoad()
+            .setId("LOAD2")
+            .setBus(nload.getId())
+            .setConnectableBus(nload.getId())
+            .setP0(1.0)
+            .setQ0(0.5)
+            .add();
         return network;
     }
 
     private static boolean validateExtension(DynamicModelGroovyExtension extension) {
-        boolean isLoadExtension = extension instanceof LoadAlphaBetaGroovyExtension;
+        boolean isLoadAlphaBetaExtension = extension instanceof LoadAlphaBetaGroovyExtension;
+        boolean isLoadOneTransformerExtension = extension instanceof LoadOneTransformerGroovyExtension;
         boolean isThreeWindingsGeneratorExtension = extension instanceof GeneratorSynchronousThreeWindingsProportionalRegulationsGroovyExtension;
         boolean isFourWindingsGeneratorExtension = extension instanceof GeneratorSynchronousFourWindingsProportionalRegulationsGroovyExtension;
         boolean isOmegaRefExtension = extension instanceof OmegaRefGroovyExtension;
+
+        boolean isLoadExtension = isLoadAlphaBetaExtension || isLoadOneTransformerExtension;
         boolean isDynamicModelExtension = isLoadExtension || isThreeWindingsGeneratorExtension || isFourWindingsGeneratorExtension || isOmegaRefExtension;
 
         boolean isCurrentLimitAutomatonExtension = extension instanceof CurrentLimitAutomatonGroovyExtension;
@@ -127,6 +141,11 @@ public class DynawoGroovyDynamicModelsSupplierTest {
             Identifiable<?> identifiable = network.getIdentifiable(blackBoxModel.getStaticId());
             assertEquals(identifiable.getId(), blackBoxModel.getDynamicModelId());
             assertEquals("LAB", blackBoxModel.getParameterSetId());
+            assertTrue(identifiable instanceof Load);
+        } else if (blackBoxModel instanceof LoadOneTransformer) {
+            Identifiable<?> identifiable = network.getIdentifiable(blackBoxModel.getStaticId());
+            assertEquals(identifiable.getId(), blackBoxModel.getDynamicModelId());
+            assertEquals("LOT", blackBoxModel.getParameterSetId());
             assertTrue(identifiable instanceof Load);
         } else if (blackBoxModel instanceof GeneratorSynchronousThreeWindingsProportionalRegulations) {
             Identifiable<?> identifiable = network.getIdentifiable(blackBoxModel.getStaticId());
