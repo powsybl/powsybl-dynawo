@@ -22,13 +22,13 @@ for (Load load : network.loads) {
 }
 
 for (Generator gen : network.generators) {
-    if (gen.id != "GEN2") {
+    if (gen.id.equals("GEN2")) {
         GeneratorSynchronousFourWindingsProportionalRegulations {
             staticId gen.id
             dynamicModelId "BBM_" + gen.id
             parameterSetId "GSFWPR"
         }
-    } else if (gen.id != "GEN3") {
+    } else if (gen.id.equals("GEN3")) {
         GeneratorSynchronousFourWindings {
             staticId gen.id
             dynamicModelId "BBM_" + gen.id
