@@ -11,11 +11,9 @@ import com.powsybl.dynawo.dynamicmodels.AbstractBlackBoxModel;
 import com.powsybl.dynawo.DynawoParametersDatabase;
 
 import java.nio.file.Paths;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -37,7 +35,7 @@ public class DynawoXmlContext {
         this.blackBoxModels = context.getDynamicModels().stream()
                 .filter(AbstractBlackBoxModel.class::isInstance)
                 .map(AbstractBlackBoxModel.class::cast)
-                .collect(Collectors.toMap(AbstractBlackBoxModel::getDynamicModelId, value -> value));
+                .collect(Collectors.toMap(AbstractBlackBoxModel::getDynamicModelId, Function.identity(), (o1, o2) -> o1, TreeMap::new));
     }
 
     public String getParFile() {
