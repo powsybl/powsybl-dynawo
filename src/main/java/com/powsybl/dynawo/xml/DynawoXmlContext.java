@@ -7,13 +7,12 @@
 package com.powsybl.dynawo.xml;
 
 import com.powsybl.dynawo.DynawoContext;
-import com.powsybl.dynawo.dynamicmodels.AbstractBlackBoxModel;
 import com.powsybl.dynawo.DynawoParametersDatabase;
+import com.powsybl.dynawo.dynamicmodels.AbstractBlackBoxModel;
 
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -27,7 +26,9 @@ public class DynawoXmlContext {
 
     private final Map<String, AtomicInteger> counters = new HashMap<>();
 
-    private final Map<String, AbstractBlackBoxModel> blackBoxModels;
+    private final List<AbstractBlackBoxModel> blackBoxModels;
+
+    private final Map<String, AbstractBlackBoxModel> blackBoxModelsById;
 
     public DynawoXmlContext(DynawoContext context) {
         this.context = Objects.requireNonNull(context);
@@ -35,7 +36,8 @@ public class DynawoXmlContext {
         this.blackBoxModels = context.getDynamicModels().stream()
                 .filter(AbstractBlackBoxModel.class::isInstance)
                 .map(AbstractBlackBoxModel.class::cast)
-                .collect(Collectors.toMap(AbstractBlackBoxModel::getDynamicModelId, Function.identity(), (o1, o2) -> o1, TreeMap::new));
+                .collect(Collectors.toList());
+        this.blackBoxModelsById = this.blackBoxModels.stream().collect(Collectors.toMap(b -> b.getDynamicModelId(), b -> b));
     }
 
     public String getParFile() {
@@ -51,12 +53,12 @@ public class DynawoXmlContext {
         return increment ? counter.getAndIncrement() : counter.get();
     }
 
-    public Collection<AbstractBlackBoxModel> getBlackBoxModels() {
-        return blackBoxModels.values();
+    public List<AbstractBlackBoxModel> getBlackBoxModels() {
+        return Collections.unmodifiableList(blackBoxModels);
     }
 
     public AbstractBlackBoxModel getBlackBoxModel(String dynamicModelId) {
-        return blackBoxModels.get(dynamicModelId);
+        return blackBoxModelsById.get(dynamicModelId);
     }
 
     public DynawoParametersDatabase getParametersDatabase() {
