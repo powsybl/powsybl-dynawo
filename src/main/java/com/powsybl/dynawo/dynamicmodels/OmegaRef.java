@@ -98,6 +98,10 @@ public class OmegaRef extends AbstractBlackBoxModel {
             writer.writeAttribute("id", getParameterSetId());
 
             long count = 0;
+            // Black box models returned by the context should follow the same order
+            // of the dynamic models supplier returned by the dynamic models supplier.
+            // The dynamic models are declared in the DYD following the order of dynamic models supplier.
+            // The OmegaRef parameters index the weight of each generator according to that declaration order.
             for (AbstractBlackBoxModel model : context.getBlackBoxModels()) {
                 if (model instanceof OmegaRef) {
                     AbstractBlackBoxModel generatorModel = context.getBlackBoxModel(((OmegaRef) model).getGeneratorDynamicModelId());
