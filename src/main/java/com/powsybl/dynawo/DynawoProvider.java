@@ -19,6 +19,7 @@ import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.xml.IidmXmlVersion;
 import com.powsybl.iidm.xml.XMLExporter;
 import com.powsybl.timeseries.TimeSeries;
+import com.powsybl.timeseries.TimeSeries.TimeFormat;
 
 import javax.xml.stream.XMLStreamException;
 
@@ -30,6 +31,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -120,10 +122,10 @@ public class DynawoProvider implements DynamicSimulationProvider {
         public DynamicSimulationResult after(Path workingDir, ExecutionReport report) throws IOException {
             super.after(workingDir, report);
             Path path = workingDir.resolve(CURVES_FILENAME);
-            Map<String, TimeSeries> curves = null;
+            Map<String, TimeSeries> curves = new HashMap<>();
             if (Files.exists(path)) {
-                Map<Integer, List<TimeSeries>> curvesPerVersion = TimeSeries.parseCsv(path, false);
-                curvesPerVersion.values().forEach(l -> l.forEach(curve -> curves.put(curve.getMetadata().getName(),curve)));
+                Map<Integer, List<TimeSeries>> curvesPerVersion = TimeSeries.parseCsv(path, false, TimeFormat.FRACTIONS_OF_SECOND);
+                curvesPerVersion.values().forEach(l -> l.forEach(curve -> curves.put(curve.getMetadata().getName(), curve)));
             }
             return new DynamicSimulationResultImpl(true, null, curves, null);
         }
