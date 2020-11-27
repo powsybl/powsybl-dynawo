@@ -13,7 +13,7 @@ import com.powsybl.iidm.network.Generator
 
 
 for (Load load : network.loads) {
-    if (load.id.equals("LOAD2")) {
+    if (load == "LOAD2") {
         LoadOneTransformer {
             staticId load.id
             // dynamicModelId "BBM_" + load.id (dynamicModelId could be optional and equal to staticId)
@@ -31,11 +31,23 @@ for (Load load : network.loads) {
 }
 
 for (Generator gen : network.generators) {
-    if (gen.id != "GEN2") {
+    if (gen.id == "GEN2") {
         GeneratorSynchronousFourWindingsProportionalRegulations {
             staticId gen.id
             dynamicModelId "BBM_" + gen.id
             parameterSetId "GSFWPR"
+        }
+    } else if (gen.id == "GEN3") {
+        GeneratorSynchronousFourWindings {
+            staticId gen.id
+            dynamicModelId "BBM_" + gen.id
+            parameterSetId "GSFW"
+        }
+    } else if (gen.id == "GEN4") {
+        GeneratorSynchronousThreeWindings {
+            staticId gen.id
+            dynamicModelId "BBM_" + gen.id
+            parameterSetId "GSTW"
         }
     } else {
         GeneratorSynchronousThreeWindingsProportionalRegulations {

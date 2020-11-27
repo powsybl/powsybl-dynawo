@@ -30,7 +30,9 @@ import com.powsybl.commons.AbstractConverterTest;
 import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynamicsimulation.EventModel;
 import com.powsybl.dynamicsimulation.DynamicModel;
+import com.powsybl.dynawo.dynamicmodels.GeneratorSynchronousFourWindings;
 import com.powsybl.dynawo.dynamicmodels.GeneratorSynchronousFourWindingsProportionalRegulations;
+import com.powsybl.dynawo.dynamicmodels.GeneratorSynchronousThreeWindings;
 import com.powsybl.dynawo.dynamicmodels.GeneratorSynchronousThreeWindingsProportionalRegulations;
 import com.powsybl.dynawo.dynamicmodels.LoadAlphaBeta;
 import com.powsybl.dynawo.dynamicmodels.LoadOneTransformer;
@@ -82,6 +84,10 @@ public class DynawoTestUtil extends AbstractConverterTest {
         network.getGeneratorStream().forEach(g -> {
             if (g.getId().equals("GEN2")) {
                 dynamicModels.add(new GeneratorSynchronousFourWindingsProportionalRegulations("BBM_" + g.getId(), g.getId(), "GSFWPR"));
+            } else if (g.getId().equals("GEN3")) {
+                dynamicModels.add(new GeneratorSynchronousFourWindings("BBM_" + g.getId(), g.getId(), "GSFW"));
+            } else if (g.getId().equals("GEN4")) {
+                dynamicModels.add(new GeneratorSynchronousThreeWindings("BBM_" + g.getId(), g.getId(), "GSTW"));
             } else {
                 dynamicModels.add(new GeneratorSynchronousThreeWindingsProportionalRegulations("BBM_" + g.getId(), g.getId(), "GSTWPR"));
             }
@@ -134,6 +140,28 @@ public class DynawoTestUtil extends AbstractConverterTest {
             .setTargetV(24.5)
             .setTargetP(1.0)
             .setTargetQ(0.5)
+            .add();
+        vlgen.newGenerator()
+            .setId("GEN3")
+            .setBus(ngen.getId())
+            .setConnectableBus(ngen.getId())
+            .setMinP(-9999.99)
+            .setMaxP(9999.99)
+            .setVoltageRegulatorOn(true)
+            .setTargetV(24.5)
+            .setTargetP(0.1)
+            .setTargetQ(0.2)
+            .add();
+        vlgen.newGenerator()
+            .setId("GEN4")
+            .setBus(ngen.getId())
+            .setConnectableBus(ngen.getId())
+            .setMinP(-9999.99)
+            .setMaxP(9999.99)
+            .setVoltageRegulatorOn(true)
+            .setTargetV(24.5)
+            .setTargetP(-1.3)
+            .setTargetQ(0.9)
             .add();
         return network;
     }
