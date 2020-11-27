@@ -49,7 +49,7 @@ public class DynaflowProvider implements LoadFlowProvider {
         this.versionCmd = getVersionCommand();
     }
 
-    static private void writeIIDM(Path workingDir, Network network) {
+    private static void writeIIDM(Path workingDir, Network network) {
         Properties params = new Properties();
         params.setProperty(XMLExporter.VERSION, IidmXmlVersion.V_1_0.toString("."));
         Exporters.export("XIIDM", network, params, workingDir.resolve(IIDM_FILENAME));
