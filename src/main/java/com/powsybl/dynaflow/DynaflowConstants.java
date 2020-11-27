@@ -18,8 +18,6 @@ public final class DynaflowConstants {
 
     public static final String VERSION = "0.1";
 
-    public static final double DEFAULT_DSO_VOLTAGE_LEVEL = 45.0;
-
     private DynaflowConstants() {
     }
 

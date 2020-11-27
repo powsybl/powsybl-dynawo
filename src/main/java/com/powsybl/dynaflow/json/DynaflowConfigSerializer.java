@@ -8,7 +8,6 @@ package com.powsybl.dynaflow.json;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.powsybl.commons.json.JsonUtil;
-import com.powsybl.dynaflow.DynaflowConstants;
 import com.powsybl.dynaflow.DynaflowParameters;
 import com.powsybl.loadflow.LoadFlowParameters;
 
@@ -48,10 +47,10 @@ public final class DynaflowConfigSerializer {
             jsonGenerator.writeBooleanField("AutomaticSlackBusOn", dynaflowParameters.getAutomaticSlackBusOn());
             jsonGenerator.writeBooleanField("VSCAsGenerators", dynaflowParameters.getVscAsGenerators());
             jsonGenerator.writeBooleanField("LCCAsLoads", dynaflowParameters.getLccAsLoads());
+            jsonGenerator.writeNumberField("DsoVoltageLevel", dynaflowParameters.getDsoVoltageLevel());
             jsonGenerator.writeBooleanField("InfiniteReactiveLimits", lfParameters.isNoGeneratorReactiveLimits());
             jsonGenerator.writeBooleanField("PSTRegulationOn", lfParameters.isPhaseShifterRegulationOn());
             jsonGenerator.writeStringField("OutputDir", workingDir.toString());
-            jsonGenerator.writeNumberField("DsoVoltageLevel", DynaflowConstants.DEFAULT_DSO_VOLTAGE_LEVEL);
             jsonGenerator.writeEndObject();
             jsonGenerator.writeEndObject();
         } catch (IOException e) {

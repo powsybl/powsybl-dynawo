@@ -5,9 +5,9 @@
     "AutomaticSlackBusOn" : true,
     "VSCAsGenerators" : false,
     "LCCAsLoads" : true,
+    "DsoVoltageLevel" : 32.4,
     "InfiniteReactiveLimits" : true,
     "PSTRegulationOn" : false,
-    "OutputDir" : "dynaflow/workingDir",
-    "DsoVoltageLevel" : 45.0
+    "OutputDir" : "dynaflow/workingDir"
   }
 }

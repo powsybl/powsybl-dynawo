@@ -51,6 +51,7 @@ public class DynaflowParametersTest extends AbstractConverterTest {
         boolean automaticSlackBusOn = true;
         boolean vscAsGenerators = false;
         boolean lccAsLoads = true;
+        double dsoVoltageLevel = 87.32;
 
         MapModuleConfig moduleConfig = platformConfig.createModuleConfig("dynaflow-default-parameters");
         moduleConfig.setStringProperty("svcRegulationOn", Boolean.toString(svcRegulationOn));
@@ -58,6 +59,7 @@ public class DynaflowParametersTest extends AbstractConverterTest {
         moduleConfig.setStringProperty("automaticSlackBusOn", Boolean.toString(automaticSlackBusOn));
         moduleConfig.setStringProperty("vscAsGenerators", Boolean.toString(vscAsGenerators));
         moduleConfig.setStringProperty("lccAsLoads", Boolean.toString(lccAsLoads));
+        moduleConfig.setStringProperty("dsoVoltageLevel", Double.toString(dsoVoltageLevel));
 
         DynaflowParameters.DynaflowConfigLoader configLoader = new DynaflowParameters.DynaflowConfigLoader();
         DynaflowParameters parameters = configLoader.load(platformConfig);
@@ -91,7 +93,8 @@ public class DynaflowParametersTest extends AbstractConverterTest {
                 ", shuntRegulationON=" + DynaflowParameters.DEFAULT_SHUNT_REGULATION_ON +
                 ", automaticSlackBusON=" + DynaflowParameters.DEFAULT_AUTOMATIC_SLACK_BUS_ON +
                 ", vscAsGenerators=" + DynaflowParameters.DEFAULT_VSC_AS_GENERATORS +
-                ", lccAsLoads=" + DynaflowParameters.DEFAULT_LCC_AS_LOADS + "}";
+                ", lccAsLoads=" + DynaflowParameters.DEFAULT_LCC_AS_LOADS +
+                ", dsoVoltageLevel=" + DynaflowParameters.DEFAULT_DSO_VOLTAGE_LEVEL + "}";
         assertEquals(expectedString, parametersExt.toString());
 
     }
@@ -108,6 +111,7 @@ public class DynaflowParametersTest extends AbstractConverterTest {
         dynaflowParameters.setAutomaticSlackBusOn(true);
         dynaflowParameters.setVscAsGenerators(false);
         dynaflowParameters.setLccAsLoads(true);
+        dynaflowParameters.setDsoVoltageLevel(32.4);
         lfParameters.addExtension(DynaflowParameters.class, dynaflowParameters);
 
         Path workingDir = fileSystem.getPath("dynaflow/workingDir");
