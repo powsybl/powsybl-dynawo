@@ -78,7 +78,7 @@ public class DynaflowProviderTest {
         assertEquals(expectedExecutionCommand, executionCommand);
     }
 
-    private class LocalCommandExecutorMock implements LocalCommandExecutor {
+    private class LocalCommandExecutorMock extends AbstractLocalCommandExecutor {
 
         private String stdOutFileRef;
 
@@ -96,22 +96,6 @@ public class DynaflowProviderTest {
                 throw new UncheckedIOException(e);
             }
         }
-
-        @Override
-        public void stop(Path workingDir) {
-
-        }
-
-        @Override
-        public void stopForcibly(Path workingDir) {
-
-        }
-
-        private void copyFile(String source, Path target) throws IOException {
-            try (InputStream is = getClass().getResourceAsStream(source)) {
-                Files.copy(is, target, StandardCopyOption.REPLACE_EXISTING);
-            }
-        }
     }
 
     @Test
@@ -124,7 +108,7 @@ public class DynaflowProviderTest {
         assertEquals("DynaFlow", dynaflowSimulation.getName());
         assertEquals("0.1", dynaflowSimulation.getVersion());
 
-        LocalCommandExecutor commandExecutor = new DynaflowProviderTest.LocalCommandExecutorMock("/dynaflow/dynaflow_version.out");
+        LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynaflow/dynaflow_version.out");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
         LoadFlowResult result = dynaflowSimulation.run(network, computationManager, params);
         assertNotNull(result);

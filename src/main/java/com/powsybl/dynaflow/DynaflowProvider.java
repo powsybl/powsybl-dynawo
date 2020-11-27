@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2020, RTE (http://www.rte-france.com)
-jklM1 * This Source Code Form is subject to the terms of the Mozilla Public
+ * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
@@ -34,23 +34,22 @@ import static com.powsybl.dynaflow.DynaflowConstants.IIDM_FILENAME;
 @AutoService(LoadFlowProvider.class)
 public class DynaflowProvider implements LoadFlowProvider {
 
+    private static final String WORKING_DIR_PREFIX = "dynaflow_";
     private final ExecutionEnvironment env;
     private final Command versionCmd;
     private final DynaflowConfig config;
-    private static final String WORKING_DIR_PREFIX = "dynaflow_";
 
     public DynaflowProvider() {
         this(DynaflowConfig.fromPropertyFile());
     }
 
     public DynaflowProvider(DynaflowConfig config) {
-        Objects.requireNonNull(config, "The Config is Null");
-        this.config = config;
+        this.config = Objects.requireNonNull(config, "Config is null");
         this.env = new ExecutionEnvironment(config.createEnv(), WORKING_DIR_PREFIX, config.isDebug());
         this.versionCmd = getVersionCommand();
     }
 
-    private void writeIIDM(Path workingDir, Network network) {
+    static private void writeIIDM(Path workingDir, Network network) {
         Properties params = new Properties();
         params.setProperty(XMLExporter.VERSION, IidmXmlVersion.V_1_0.toString("."));
         Exporters.export("XIIDM", network, params, workingDir.resolve(IIDM_FILENAME));
@@ -81,7 +80,7 @@ public class DynaflowProvider implements LoadFlowProvider {
                 .build();
     }
 
-    static DynaflowParameters getParametersExt(LoadFlowParameters parameters) {
+    private static DynaflowParameters getParametersExt(LoadFlowParameters parameters) {
         DynaflowParameters parametersExt = parameters.getExtension(DynaflowParameters.class);
         if (parametersExt == null) {
             parametersExt = new DynaflowParameters();

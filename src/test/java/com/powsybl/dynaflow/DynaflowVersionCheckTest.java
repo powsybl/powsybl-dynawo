@@ -44,7 +44,7 @@ public class DynaflowVersionCheckTest {
             .program("dummy")
             .build();
 
-    private class LocalCommandExecutorMock implements LocalCommandExecutor {
+    private class LocalCommandExecutorMock extends AbstractLocalCommandExecutor {
 
         private String stdOutFileRef;
 
@@ -60,22 +60,6 @@ public class DynaflowVersionCheckTest {
                 return 0;
             } catch (IOException e) {
                 throw new UncheckedIOException(e);
-            }
-        }
-
-        @Override
-        public void stop(Path workingDir) {
-
-        }
-
-        @Override
-        public void stopForcibly(Path workingDir) {
-
-        }
-
-        private void copyFile(String source, Path target) throws IOException {
-            try (InputStream is = getClass().getResourceAsStream(source)) {
-                Files.copy(is, target, StandardCopyOption.REPLACE_EXISTING);
             }
         }
     }
