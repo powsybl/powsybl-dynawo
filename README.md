@@ -5,7 +5,7 @@
 The PowSybl DynamicSimulation tool is used to launch the Dynawo Simulator.  
 Arguments:
  - `case-file`: A network file (mandatory).
- - `dynamic-models-file`: A GROOVY dynamic model and automaton file (mandatory), only processes models of type `LoadAlphaBeta`, `GeneratorSynchronousFourWindingsProportionalRegulations`, `GeneratorSynchronousThreeWindingsProportionalRegulations` and `OmegaRef`, and automatons of type `CurrentLimitAutomaton`.
+ - `dynamic-models-file`: A GROOVY dynamic model and automaton file (mandatory), only processes models of type `LoadAlphaBeta`, `GeneratorSynchronousFourWindingsProportionalRegulations`, `GeneratorSynchronousThreeWindingsProportionalRegulations`, `GeneratorSynchronousFourWindings`, `GeneratorSynchronousThreeWindings` and `OmegaRef`, and automatons of type `CurrentLimitAutomaton`.
  - `event-models-file`: A GROOVY event model file (optional), only processes models of type `EventQuadripoleDisconnection`.
  - `curves-file`: A GROOVY curves file (optional).
  - `parameters-file`: A JSON parameters file (optional).
