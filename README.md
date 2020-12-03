@@ -6,7 +6,7 @@ The PowSybl DynamicSimulation tool is used to launch the Dynawo Simulator.
 Arguments:
  - `case-file`: A network file (mandatory).
  - `dynamic-models-file`: A GROOVY dynamic model and automaton file (mandatory), only processes models of type `LoadAlphaBeta`, `GeneratorSynchronousFourWindingsProportionalRegulations`, `GeneratorSynchronousThreeWindingsProportionalRegulations`, `GeneratorSynchronousFourWindings`, `GeneratorSynchronousThreeWindings` and `OmegaRef`, and automatons of type `CurrentLimitAutomaton`.
- - `event-models-file`: A GROOVY event model file (optional), only processes models of type `EventQuadripoleDisconnection`.
+ - `event-models-file`: A GROOVY event model file (optional), only processes models of type `EventQuadripoleDisconnection` and `EventSetPointBoolean`.
  - `curves-file`: A GROOVY curves file (optional).
  - `parameters-file`: A JSON parameters file (optional).
 
@@ -66,6 +66,22 @@ for (Line line : network.lines) {
         staticId line.id
         dynamicModelId "BBM_" + line.id
         parameterSetId "CLA"
+    }
+}
+```
+
+Sample contents of `dynamic-models-file`
+```
+import com.powsybl.iidm.network.Line
+
+
+for (Line line : network.lines) {
+    if (line.id == "_BUS____1-BUS____5-1_AC") {
+        EventQuadripoleDisconnection {
+            staticId line.id
+            eventModelId "DISCONNECT_LINE"
+            parameterSetId "EQD"
+        }
     }
 }
 ```
