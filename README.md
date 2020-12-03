@@ -1,1 +1,101 @@
+# powsybl-dynawo
+
+[![Actions Status](https://github.com/powsybl/powsybl-dynawo/workflows/CI/badge.svg)](https://github.com/powsybl/powsybl-dynawo/actions)
+[![Coverage Status](https://coveralls.io/repos/github/powsybl/powsybl-dynawo/badge.svg?branch=master)](https://coveralls.io/github/powsybl/powsybl-dynawo?branch=master)
+[![Coverage Status](https://sonarcloud.io/api/project_badges/measure?project=com.powsybl%3Apowsybl-dynawo&metric=coverage)](https://sonarcloud.io/component_measures?id=com.powsybl%3Apowsybl-dynawo&metric=coverage)
+[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=com.powsybl%3Apowsybl-dynawo&metric=alert_status)](https://sonarcloud.io/dashboard?id=com.powsybl%3Apowsybl-dynawo)
+[![MPL-2.0 License](https://img.shields.io/badge/license-MPL_2.0-blue.svg)](https://www.mozilla.org/en-US/MPL/2.0/)
+[![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/powsybl)
+[![Javadocs](https://www.javadoc.io/badge/com.powsybl/powsybl-dynawo.svg?color=blue)](https://www.javadoc.io/doc/com.powsybl/powsybl-dynawo)
+
+[Dynawo](https://dynawo.github.io) is an hybrid C++/Modelica open source suite of simulation tools for power systems. This integration module allows to use DynaFlow for [power flow simulations](https://www.powsybl.org/pages/documentation/simulation/powerflow) and DynaWaltz for [time domain simulations](https://www.powsybl.org/pages/documentation/simulation/timedomain).
+
+## DynaFlow
+
+To use DynaFlow as your power flow engine, add the `com.powsybl:powsybl-dynawo` module to your dependencies.
+
+```java
+Network network = Importers.loadNetwork("/path/to/the/casefile.xiidm");
+LoadFlowParameters parameters = LoadFlowParameters.load();
+LoadFlow.find("DynaFlow").run(network, parameters);
+```
+
+To learn more about the usage of DynaFlow, read the [dedicated page](https://www.powsybl.org/pages/documentation/simulation/powerflow/dynaflow.html) on our website.
+
+## DynaWaltz
+
+To use DynaWaltz as your time domain engine, add the `com.powsybl:powsybl-dynawo` module to your dependencies. To run a dynamic simulation, you need:
+- a case file
+- a `DynamicModelsSupplier` to associate dynamic models to the equipment of the network
+- an `EventModelsSuppler` to configure events simulated during the simulation (optional)
+- a `CurvesSupplier` to follow the evolution of dynamic variables during the simulation (optional)
+- a set of parameters to configure the simulation (optional)
+
+In `powsybl-dynawo`, the inputs can be configured using Groovy scripts. The simulation parameters can be configured either in the `config.yml` file or using a Json file.
+
+```java
+Network network = Importers.loadNetwork("/path/to/the/casefile.xiidm");
+
+// Load the dynamic models mapping
+GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
+    Paths.get("/path/to/dynamicModelsMapping.groovy"),
+    GroovyExtension.find(DynamicModelGroovyExtension.class, "dynawo"));
+
+// Load the events
+GroovyEventModelsSupplier eventModelsSupplier = new GroovyEventModelsSupplier(
+    Paths.get("/path/to/event.groovy"),
+    GroovyExtension.find(EventModelGroovyExtension.class, "dynawo"));
+
+// Configure the curves
+GroovyCurvesSupplier curvesSupplier = new GroovyCurvesSupplier(
+    Paths.get("/path/to/curves.groovy"),
+    GroovyExtension.find(CurveGroovyExtension.class, "dynawo"));
+
+// Load the parameters
+DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
+
+// Run the simulation and display the results
+DynamicSimulationResult result = DynamicSimulation.run(network, dynamicModelsSupplier, eventModelsSupplier, curvesSupplier, parameters);
+System.out.println(result.isOk());
+System.out.println(result.getLogs());
+```
+
+To learn more about the usage of DynaWaltz, read the [dedicated page](https://www.powsybl.org/pages/documentation/simulation/timedomain/dynawo.html) on our website.
+
+### Examples
+
+This is an example of a dynamic models mapping file:
+```
+import com.powsybl.iidm.network.Line
+import com.powsybl.iidm.network.Load
+import com.powsybl.iidm.network.Generator
+
+
+for (Load load : network.loads) {
+    LoadAlphaBeta {
+        staticId load.id
+        parameterSetId "LAB"
+    }
+}
+
 for (Generator gen : network.generators) {
+    GeneratorSynchronousThreeWindingsProportionalRegulations {
+        staticId gen.id
+        dynamicModelId "BBM_" + gen.id
+        parameterSetId "GSTWPR"
+    }
+    OmegaRef {
+        generatorDynamicModelId "BBM_" + gen.id
+    }
+}
+
+for (Line line : network.lines) {
+    CurrentLimitAutomaton {
+        staticId line.id
+        dynamicModelId "BBM_" + line.id
+        parameterSetId "CLA"
+    }
+}
+```
+
+Other examples can be found in the [resources](https://github.com/powsybl/powsybl-dynawo/tree/master/src/test/resources) of this project.
