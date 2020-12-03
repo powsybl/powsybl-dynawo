@@ -11,7 +11,6 @@ import com.powsybl.computation.*;
 import com.powsybl.dynaflow.json.DynaflowConfigSerializer;
 import com.powsybl.iidm.export.Exporters;
 import com.powsybl.iidm.network.Network;
-import com.powsybl.iidm.network.util.Networks;
 import com.powsybl.iidm.xml.IidmXmlVersion;
 import com.powsybl.iidm.xml.XMLExporter;
 import com.powsybl.loadflow.LoadFlowParameters;
@@ -100,7 +99,7 @@ public class DynaflowProvider implements LoadFlowProvider {
 
     private CommandExecution createCommandExecution(Network network, Path workingDir) {
         Command cmd = getCommand(workingDir);
-        return new CommandExecution(cmd, 1, 0, Networks.getExecutionTags(network));
+        return new CommandExecution(cmd, 1, 0);
     }
 
     @Override

@@ -26,6 +26,7 @@ import java.nio.file.FileSystem;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ForkJoinPool;
 
 import static com.powsybl.dynaflow.DynaflowConstants.CONFIG_FILENAME;
@@ -63,24 +64,22 @@ public class DynaflowProviderTest {
 
     @Test
     public void checkExecutionCommand() {
-
         Path workingDir = fileSystem.getPath("tmp").resolve("dynaflow");
         String program = fileSystem.getPath(homeDir).resolve("dynaflow-launcher.sh").toString();
         String iidmPath = workingDir.resolve(IIDM_FILENAME).toString();
         String configPath = workingDir.resolve(CONFIG_FILENAME).toString();
 
         String executionCommand = provider.getCommand(workingDir).toString(0);
-        String expectedExecutionCommand = "[" + program + ", --iidm, " + iidmPath +
-                ", --config, " + configPath + "]";
+        String expectedExecutionCommand = "[" + program + ", --iidm, " + iidmPath + ", --config, " + configPath + "]";
         assertEquals(expectedExecutionCommand, executionCommand);
     }
 
-    private class LocalCommandExecutorMock extends AbstractLocalCommandExecutor {
+    private static class LocalCommandExecutorMock extends AbstractLocalCommandExecutor {
 
-        private String stdOutFileRef;
+        private final String stdOutFileRef;
 
         public LocalCommandExecutorMock(String stdoutFileRef) {
-            this.stdOutFileRef = stdoutFileRef;
+            this.stdOutFileRef = Objects.requireNonNull(stdoutFileRef);
         }
 
         @Override

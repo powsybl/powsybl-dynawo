@@ -19,17 +19,18 @@ import java.nio.file.StandardCopyOption;
  * @author Guillaume Pernin <guillaume.pernin at rte-france.com>
  */
 abstract class AbstractLocalCommandExecutor implements LocalCommandExecutor {
+
     @Override
     public void stop(Path workingDir) {
-
+        // Nothing to do
     }
 
     @Override
     public void stopForcibly(Path workingDir) {
-
+        // Nothing to do
     }
 
-    void copyFile(String source, Path target) throws IOException {
+    protected void copyFile(String source, Path target) throws IOException {
         try (InputStream is = getClass().getResourceAsStream(source)) {
             Files.copy(is, target, StandardCopyOption.REPLACE_EXISTING);
         }

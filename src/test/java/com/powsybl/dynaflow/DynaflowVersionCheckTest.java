@@ -26,6 +26,7 @@ import java.nio.file.FileSystem;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ForkJoinPool;
 
 import static org.junit.Assert.assertFalse;
@@ -44,12 +45,12 @@ public class DynaflowVersionCheckTest {
             .program("dummy")
             .build();
 
-    private class LocalCommandExecutorMock extends AbstractLocalCommandExecutor {
+    private static class LocalCommandExecutorMock extends AbstractLocalCommandExecutor {
 
-        private String stdOutFileRef;
+        private final String stdOutFileRef;
 
         public LocalCommandExecutorMock(String stdoutFileRef) {
-            this.stdOutFileRef = stdoutFileRef;
+            this.stdOutFileRef = Objects.requireNonNull(stdoutFileRef);
         }
 
         @Override
