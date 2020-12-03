@@ -48,19 +48,19 @@ public class DynaflowProvider implements LoadFlowProvider {
         this.versionCmd = getVersionCommand();
     }
 
-    private static void writeIIDM(Path workingDir, Network network) {
+    private static void writeIIDM(Path absoluteWorkingDir, Network network) {
         Properties params = new Properties();
         params.setProperty(XMLExporter.VERSION, IidmXmlVersion.V_1_0.toString("."));
-        Exporters.export("XIIDM", network, params, workingDir.resolve(IIDM_FILENAME));
+        Exporters.export("XIIDM", network, params, absoluteWorkingDir.resolve(IIDM_FILENAME));
     }
 
     private String getProgram() {
         return config.getHomeDir().resolve("dynaflow-launcher.sh").toString();
     }
 
-    public Command getCommand(Path workingDir) {
-        String iidmPath = workingDir.resolve(IIDM_FILENAME).toString();
-        String configPath = workingDir.resolve(CONFIG_FILENAME).toString();
+    public Command getCommand(Path absoluteWorkingDir) {
+        String iidmPath = absoluteWorkingDir.resolve(IIDM_FILENAME).toString();
+        String configPath = absoluteWorkingDir.resolve(CONFIG_FILENAME).toString();
         List<String> args = Arrays.asList("--iidm", iidmPath, "--config", configPath);
 
         return new SimpleCommandBuilder()
@@ -97,8 +97,8 @@ public class DynaflowProvider implements LoadFlowProvider {
         return "0.1";
     }
 
-    private CommandExecution createCommandExecution(Network network, Path workingDir) {
-        Command cmd = getCommand(workingDir);
+    private CommandExecution createCommandExecution(Network network, Path absoluteWorkingDir) {
+        Command cmd = getCommand(absoluteWorkingDir);
         return new CommandExecution(cmd, 1, 0);
     }
 
@@ -113,16 +113,18 @@ public class DynaflowProvider implements LoadFlowProvider {
         return computationManager.execute(env, new AbstractExecutionHandler<LoadFlowResult>() {
             @Override
             public List<CommandExecution> before(Path workingDir) throws IOException {
+                Path absoluteWorkingDir = workingDir.toAbsolutePath();
                 network.getVariantManager().setWorkingVariant(workingStateId);
 
-                writeIIDM(workingDir, network);
-                DynaflowConfigSerializer.serialize(parameters, dynaflowParameters, workingDir.resolve(CONFIG_FILENAME));
-                return Collections.singletonList(createCommandExecution(network, workingDir));
+                writeIIDM(absoluteWorkingDir, network);
+                DynaflowConfigSerializer.serialize(parameters, dynaflowParameters, absoluteWorkingDir, absoluteWorkingDir.resolve(CONFIG_FILENAME));
+                return Collections.singletonList(createCommandExecution(network, absoluteWorkingDir));
             }
 
             @Override
             public LoadFlowResult after(Path workingDir, ExecutionReport report) throws IOException {
-                super.after(workingDir, report);
+                Path absoluteWorkingDir = workingDir.toAbsolutePath();
+                super.after(absoluteWorkingDir, report);
                 network.getVariantManager().setWorkingVariant(workingStateId);
 
                 Map<String, String> metrics = new HashMap<>();
