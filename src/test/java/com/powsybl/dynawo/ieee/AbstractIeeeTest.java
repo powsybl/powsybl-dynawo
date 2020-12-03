@@ -63,9 +63,10 @@ public abstract class AbstractIeeeTest {
         workingDir = Files.createDirectory(fileSystem.getPath(getWorkingDirName()));
 
         // Copy parameter files
-        Files.copy(getClass().getResourceAsStream(parametersFile), workingDir.resolve("ieee-models.par"));
-        Files.copy(getClass().getResourceAsStream(networkParametersFile), workingDir.resolve("ieee-network.par"));
-        Files.copy(getClass().getResourceAsStream(solverParametersFile), workingDir.resolve("ieee-solvers.par"));
+        Path configDir = Files.createDirectory(workingDir.resolve("config"));
+        Files.copy(getClass().getResourceAsStream(parametersFile), configDir.resolve("models.par"));
+        Files.copy(getClass().getResourceAsStream(networkParametersFile), configDir.resolve("network.par"));
+        Files.copy(getClass().getResourceAsStream(solverParametersFile), configDir.resolve("solvers.par"));
 
         // Load network
         Files.copy(getClass().getResourceAsStream(networkFile), workingDir.resolve("network.iidm"));

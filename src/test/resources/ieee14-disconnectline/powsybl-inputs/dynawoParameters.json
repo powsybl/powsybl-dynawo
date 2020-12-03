@@ -1,0 +1,19 @@
+{
+  "version" : "1.0",
+  "startTime" : 0,
+  "stopTime" : 30,
+  "extensions" : {
+    "DynawoParameters" : {
+      "parametersFile" : "ieee14-disconnectline/config/models.par",
+      "network" : {
+        "parametersFile" : "ieee14-disconnectline/config/network.par",
+        "parametersId" : "8"
+      },
+      "solver" : {
+        "type" : "IDA",
+        "parametersFile" : "ieee14-disconnectline/config/solvers.par",
+        "parametersId" : "2"
+      }
+    }
+  }
+}

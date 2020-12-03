@@ -23,12 +23,12 @@ import com.powsybl.dynawo.events.EventQuadripoleDisconnection
 class EventQuadripoleDisconnectionGroovyExtension implements EventModelGroovyExtension {
 
     static class EventQuadripoleDisconnectionSpec {
-        String dynamicModelId
+        String eventModelId
         String staticId
         String parameterSetId
 
-        void dynamicModelId(String dynamicModelId) {
-            this.dynamicModelId = dynamicModelId
+        void eventModelId(String eventModelId) {
+            this.eventModelId = eventModelId
         }
 
         void staticId(String staticId) {
@@ -59,8 +59,8 @@ class EventQuadripoleDisconnectionGroovyExtension implements EventModelGroovyExt
                 throw new DslException("'parameterSetId' field is not set")
             }
 
-            String dynamicModelId = eventQuadripoleDisconnectionSpec.dynamicModelId ? eventQuadripoleDisconnectionSpec.dynamicModelId : eventQuadripoleDisconnectionSpec.staticId
-            consumer.accept(new EventQuadripoleDisconnection(dynamicModelId, eventQuadripoleDisconnectionSpec.staticId, eventQuadripoleDisconnectionSpec.parameterSetId))
+            String eventModelId = eventQuadripoleDisconnectionSpec.eventModelId ? eventQuadripoleDisconnectionSpec.eventModelId : eventQuadripoleDisconnectionSpec.staticId
+            consumer.accept(new EventQuadripoleDisconnection(eventModelId, eventQuadripoleDisconnectionSpec.staticId, eventQuadripoleDisconnectionSpec.parameterSetId))
         }
     }
 

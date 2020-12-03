@@ -2,6 +2,9 @@ dynamic-simulation-default-parameters:
     startTime: 1
     stopTime: 100
 
+load-flow:
+  default-impl-name: "DynaFlow"
+
 dynawo:
   homeDir: /home/dynawo
   debug: false

@@ -11,7 +11,7 @@ import com.powsybl.iidm.network.Line
 for (Line line : network.lines) {
     EventQuadripoleDisconnection {
         staticId line.id
-        dynamicModelId "EM_" + line.id
+        eventModelId "EM_" + line.id
         parameterSetId "EQD"
     }
 }
