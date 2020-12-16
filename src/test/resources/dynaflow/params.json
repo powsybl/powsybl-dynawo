@@ -8,6 +8,6 @@
     "DsoVoltageLevel" : 32.4,
     "InfiniteReactiveLimits" : true,
     "PSTRegulationOn" : false,
-    "OutputDir" : "dynaflow/workingDir"
+    "OutputDir" : "/work/dynaflow/workingDir"
   }
 }

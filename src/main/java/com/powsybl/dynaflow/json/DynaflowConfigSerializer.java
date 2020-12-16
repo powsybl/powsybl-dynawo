@@ -50,7 +50,7 @@ public final class DynaflowConfigSerializer {
             jsonGenerator.writeNumberField("DsoVoltageLevel", dynaflowParameters.getDsoVoltageLevel());
             jsonGenerator.writeBooleanField("InfiniteReactiveLimits", lfParameters.isNoGeneratorReactiveLimits());
             jsonGenerator.writeBooleanField("PSTRegulationOn", lfParameters.isPhaseShifterRegulationOn());
-            jsonGenerator.writeStringField("OutputDir", workingDir.toString());
+            jsonGenerator.writeStringField("OutputDir", workingDir.toAbsolutePath().toString());
             jsonGenerator.writeEndObject();
             jsonGenerator.writeEndObject();
         } catch (IOException e) {

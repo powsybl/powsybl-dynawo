@@ -8,7 +8,6 @@ package com.powsybl.dynaflow;
 
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
-import com.powsybl.commons.config.InMemoryPlatformConfig;
 import com.powsybl.computation.ComputationManager;
 import com.powsybl.computation.local.LocalCommandExecutor;
 import com.powsybl.computation.local.LocalComputationConfig;
@@ -38,7 +37,6 @@ import static org.junit.Assert.assertNotNull;
  * @author Guillaume Pernin <guillaume.pernin at rte-france.com>
  */
 public class DynaflowProviderTest {
-    private InMemoryPlatformConfig platformConfig;
     private FileSystem fileSystem;
     private String homeDir;
     private DynaflowProvider provider;
@@ -46,7 +44,6 @@ public class DynaflowProviderTest {
     @Before
     public void setUp() {
         fileSystem = Jimfs.newFileSystem(Configuration.unix());
-        platformConfig = new InMemoryPlatformConfig(fileSystem);
         homeDir = "/home/dynaflow";
         provider = new DynaflowProvider();
     }
@@ -64,13 +61,10 @@ public class DynaflowProviderTest {
 
     @Test
     public void checkExecutionCommand() {
-        Path workingDir = fileSystem.getPath("tmp").resolve("dynaflow");
         String program = fileSystem.getPath(homeDir).resolve("dynaflow-launcher.sh").toString();
-        String iidmPath = workingDir.resolve(IIDM_FILENAME).toString();
-        String configPath = workingDir.resolve(CONFIG_FILENAME).toString();
 
-        String executionCommand = provider.getCommand(workingDir).toString(0);
-        String expectedExecutionCommand = "[" + program + ", --iidm, " + iidmPath + ", --config, " + configPath + "]";
+        String executionCommand = provider.getCommand().toString(0);
+        String expectedExecutionCommand = "[" + program + ", --iidm, " + IIDM_FILENAME + ", --config, " + CONFIG_FILENAME + "]";
         assertEquals(expectedExecutionCommand, executionCommand);
     }
 
