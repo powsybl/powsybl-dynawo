@@ -58,10 +58,8 @@ public class DynaflowProvider implements LoadFlowProvider {
         return config.getHomeDir().resolve("dynaflow-launcher.sh").toString();
     }
 
-    public Command getCommand(Path workingDir) {
-        String iidmPath = workingDir.resolve(IIDM_FILENAME).toString();
-        String configPath = workingDir.resolve(CONFIG_FILENAME).toString();
-        List<String> args = Arrays.asList("--iidm", iidmPath, "--config", configPath);
+    public Command getCommand() {
+        List<String> args = Arrays.asList("--iidm", IIDM_FILENAME, "--config", CONFIG_FILENAME);
 
         return new SimpleCommandBuilder()
                 .id("dynaflow_lf")
@@ -97,8 +95,8 @@ public class DynaflowProvider implements LoadFlowProvider {
         return "0.1";
     }
 
-    private CommandExecution createCommandExecution(Network network, Path workingDir) {
-        Command cmd = getCommand(workingDir);
+    private CommandExecution createCommandExecution() {
+        Command cmd = getCommand();
         return new CommandExecution(cmd, 1, 0);
     }
 
@@ -116,13 +114,14 @@ public class DynaflowProvider implements LoadFlowProvider {
                 network.getVariantManager().setWorkingVariant(workingStateId);
 
                 writeIIDM(workingDir, network);
-                DynaflowConfigSerializer.serialize(parameters, dynaflowParameters, workingDir.resolve(CONFIG_FILENAME));
-                return Collections.singletonList(createCommandExecution(network, workingDir));
+                DynaflowConfigSerializer.serialize(parameters, dynaflowParameters, workingDir, workingDir.resolve(CONFIG_FILENAME));
+                return Collections.singletonList(createCommandExecution());
             }
 
             @Override
             public LoadFlowResult after(Path workingDir, ExecutionReport report) throws IOException {
-                super.after(workingDir, report);
+                Path absoluteWorkingDir = workingDir.toAbsolutePath();
+                super.after(absoluteWorkingDir, report);
                 network.getVariantManager().setWorkingVariant(workingStateId);
 
                 Map<String, String> metrics = new HashMap<>();
