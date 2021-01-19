@@ -28,17 +28,17 @@ public final class DynaflowConfigSerializer {
     private DynaflowConfigSerializer() {
     }
 
-    public static void serialize(LoadFlowParameters lfParameters, DynaflowParameters dynaflowParameters, Path file) throws IOException {
+    public static void serialize(LoadFlowParameters lfParameters, DynaflowParameters dynaflowParameters, Path workingDir, Path file) throws IOException {
         try (BufferedWriter writer = Files.newBufferedWriter(file, StandardCharsets.UTF_8)) {
-            JsonUtil.writeJson(writer, jsonGenerator -> serialize(lfParameters, dynaflowParameters, jsonGenerator));
+            JsonUtil.writeJson(writer, jsonGenerator -> serialize(lfParameters, dynaflowParameters, workingDir, jsonGenerator));
         }
     }
 
-    public static void serialize(LoadFlowParameters lfParameters, DynaflowParameters dynaflowParameters, Writer writer) {
-        JsonUtil.writeJson(writer, jsonGenerator -> serialize(lfParameters, dynaflowParameters, jsonGenerator));
+    public static void serialize(LoadFlowParameters lfParameters, DynaflowParameters dynaflowParameters, Path workingDir, Writer writer) {
+        JsonUtil.writeJson(writer, jsonGenerator -> serialize(lfParameters, dynaflowParameters, workingDir, jsonGenerator));
     }
 
-    private static void serialize(LoadFlowParameters lfParameters, DynaflowParameters dynaflowParameters, JsonGenerator jsonGenerator) {
+    private static void serialize(LoadFlowParameters lfParameters, DynaflowParameters dynaflowParameters, Path workingDir, JsonGenerator jsonGenerator) {
         try {
             jsonGenerator.writeStartObject();
             jsonGenerator.writeObjectFieldStart("dfl-config");
@@ -47,8 +47,10 @@ public final class DynaflowConfigSerializer {
             jsonGenerator.writeBooleanField("AutomaticSlackBusOn", dynaflowParameters.getAutomaticSlackBusOn());
             jsonGenerator.writeBooleanField("VSCAsGenerators", dynaflowParameters.getVscAsGenerators());
             jsonGenerator.writeBooleanField("LCCAsLoads", dynaflowParameters.getLccAsLoads());
+            jsonGenerator.writeNumberField("DsoVoltageLevel", dynaflowParameters.getDsoVoltageLevel());
             jsonGenerator.writeBooleanField("InfiniteReactiveLimits", lfParameters.isNoGeneratorReactiveLimits());
             jsonGenerator.writeBooleanField("PSTRegulationOn", lfParameters.isPhaseShifterRegulationOn());
+            jsonGenerator.writeStringField("OutputDir", workingDir.toAbsolutePath().toString());
             jsonGenerator.writeEndObject();
             jsonGenerator.writeEndObject();
         } catch (IOException e) {

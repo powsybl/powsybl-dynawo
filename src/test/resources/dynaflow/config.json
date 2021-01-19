@@ -11,7 +11,8 @@
       "shuntRegulationOn": false,
       "automaticSlackBusOn": true,
       "vscAsGenerators": false,
-      "lccAsLoads": true
+      "lccAsLoads": true,
+      "dsoVoltageLevel": 987.6
     }
   }
 }

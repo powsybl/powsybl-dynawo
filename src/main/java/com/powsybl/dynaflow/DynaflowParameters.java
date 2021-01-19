@@ -24,12 +24,14 @@ public class DynaflowParameters extends AbstractExtension<LoadFlowParameters> {
     public static final boolean DEFAULT_AUTOMATIC_SLACK_BUS_ON = false;
     public static final boolean DEFAULT_VSC_AS_GENERATORS = true;
     public static final boolean DEFAULT_LCC_AS_LOADS = true;
+    public static final double DEFAULT_DSO_VOLTAGE_LEVEL = 45.0;
 
     private boolean svcRegulationOn = DEFAULT_SVC_REGULATION_ON;
     private boolean shuntRegulationOn = DEFAULT_SHUNT_REGULATION_ON;
     private boolean automaticSlackBusOn = DEFAULT_AUTOMATIC_SLACK_BUS_ON;
     private boolean vscAsGenerators = DEFAULT_VSC_AS_GENERATORS;
     private boolean lccAsLoads = DEFAULT_LCC_AS_LOADS;
+    private double dsoVoltageLevel = DEFAULT_DSO_VOLTAGE_LEVEL;
 
     public boolean getSvcRegulationOn() {
         return svcRegulationOn;
@@ -76,6 +78,15 @@ public class DynaflowParameters extends AbstractExtension<LoadFlowParameters> {
         return this;
     }
 
+    public double getDsoVoltageLevel() {
+        return dsoVoltageLevel;
+    }
+
+    public DynaflowParameters setDsoVoltageLevel(double dsoVoltageLevel) {
+        this.dsoVoltageLevel = dsoVoltageLevel;
+        return this;
+    }
+
     @Override
     public String getName() {
         return "DynaflowParameters";
@@ -89,7 +100,8 @@ public class DynaflowParameters extends AbstractExtension<LoadFlowParameters> {
                 .put("shuntRegulationON", shuntRegulationOn)
                 .put("automaticSlackBusON", automaticSlackBusOn)
                 .put("vscAsGenerators", vscAsGenerators)
-                .put("lccAsLoads", lccAsLoads);
+                .put("lccAsLoads", lccAsLoads)
+                .put("dsoVoltageLevel", dsoVoltageLevel);
 
         return immutableMapBuilder.build().toString();
     }
@@ -108,7 +120,8 @@ public class DynaflowParameters extends AbstractExtension<LoadFlowParameters> {
                             .setShuntRegulationOn(config.getBooleanProperty("shuntRegulationOn", DEFAULT_SHUNT_REGULATION_ON))
                             .setAutomaticSlackBusOn(config.getBooleanProperty("automaticSlackBusOn", DEFAULT_AUTOMATIC_SLACK_BUS_ON))
                             .setVscAsGenerators(config.getBooleanProperty("vscAsGenerators", DEFAULT_VSC_AS_GENERATORS))
-                            .setLccAsLoads(config.getBooleanProperty("lccAsLoads", DEFAULT_LCC_AS_LOADS)));
+                            .setLccAsLoads(config.getBooleanProperty("lccAsLoads", DEFAULT_LCC_AS_LOADS))
+                            .setDsoVoltageLevel(config.getDoubleProperty("dsoVoltageLevel", DEFAULT_DSO_VOLTAGE_LEVEL)));
 
             return parameters;
         }

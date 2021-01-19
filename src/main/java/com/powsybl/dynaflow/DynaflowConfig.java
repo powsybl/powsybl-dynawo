@@ -54,5 +54,4 @@ public class DynaflowConfig {
     public Path getHomeDir() {
         return homeDir;
     }
-
 }
