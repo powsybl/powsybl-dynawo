@@ -42,6 +42,7 @@ import java.util.concurrent.CompletableFuture;
 
 import static com.powsybl.dynawo.xml.DynawoConstants.JOBS_FILENAME;
 import static com.powsybl.dynawo.xml.DynawoConstants.NETWORK_FILENAME;
+import static com.powsybl.dynawo.xml.DynawoConstants.CURVES_OUTPUT_PATH;
 import static com.powsybl.dynawo.xml.DynawoConstants.CURVES_FILENAME;
 
 /**
@@ -123,10 +124,10 @@ public class DynawoProvider implements DynamicSimulationProvider {
         @Override
         public DynamicSimulationResult after(Path workingDir, ExecutionReport report) throws IOException {
             super.after(workingDir, report);
-            Path path = workingDir.resolve(CURVES_FILENAME);
+            Path curvesPath = workingDir.resolve(CURVES_OUTPUT_PATH).toAbsolutePath().resolve(CURVES_FILENAME);
             Map<String, TimeSeries> curves = new HashMap<>();
-            if (Files.exists(path)) {
-                Map<Integer, List<TimeSeries>> curvesPerVersion = TimeSeries.parseCsv(path, new TimeSeriesCsvConfig(TimeSeriesConstants.DEFAULT_SEPARATOR, false, TimeFormat.FRACTIONS_OF_SECOND));
+            if (Files.exists(curvesPath)) {
+                Map<Integer, List<TimeSeries>> curvesPerVersion = TimeSeries.parseCsv(curvesPath, new TimeSeriesCsvConfig(TimeSeriesConstants.DEFAULT_SEPARATOR, false, TimeFormat.FRACTIONS_OF_SECOND));
                 curvesPerVersion.values().forEach(l -> l.forEach(curve -> curves.put(curve.getMetadata().getName(), curve)));
             }
             return new DynamicSimulationResultImpl(true, null, curves, DynamicSimulationResult.emptyTimeLine());
