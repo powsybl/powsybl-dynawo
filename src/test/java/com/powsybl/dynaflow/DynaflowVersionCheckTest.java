@@ -8,7 +8,10 @@ package com.powsybl.dynaflow;
 
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
-import com.powsybl.computation.*;
+import com.powsybl.computation.Command;
+import com.powsybl.computation.ComputationManager;
+import com.powsybl.computation.ExecutionEnvironment;
+import com.powsybl.computation.SimpleCommandBuilder;
 import com.powsybl.computation.local.LocalCommandExecutor;
 import com.powsybl.computation.local.LocalComputationConfig;
 import com.powsybl.computation.local.LocalComputationManager;
@@ -18,14 +21,12 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.nio.file.FileSystem;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ForkJoinPool;
 
 import static org.junit.Assert.assertFalse;
@@ -44,12 +45,12 @@ public class DynaflowVersionCheckTest {
             .program("dummy")
             .build();
 
-    private class LocalCommandExecutorMock implements LocalCommandExecutor {
+    private static class LocalCommandExecutorMock extends AbstractLocalCommandExecutor {
 
-        private String stdOutFileRef;
+        private final String stdOutFileRef;
 
         public LocalCommandExecutorMock(String stdoutFileRef) {
-            this.stdOutFileRef = stdoutFileRef;
+            this.stdOutFileRef = Objects.requireNonNull(stdoutFileRef);
         }
 
         @Override
@@ -60,22 +61,6 @@ public class DynaflowVersionCheckTest {
                 return 0;
             } catch (IOException e) {
                 throw new UncheckedIOException(e);
-            }
-        }
-
-        @Override
-        public void stop(Path workingDir) {
-
-        }
-
-        @Override
-        public void stopForcibly(Path workingDir) {
-
-        }
-
-        private void copyFile(String source, Path target) throws IOException {
-            try (InputStream is = getClass().getResourceAsStream(source)) {
-                Files.copy(is, target, StandardCopyOption.REPLACE_EXISTING);
             }
         }
     }

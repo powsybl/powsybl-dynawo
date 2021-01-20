@@ -35,6 +35,8 @@ public class JsonDynaflowParametersSerializerTest extends AbstractConverterTest 
         assertTrue(dynaflowParameters.getAutomaticSlackBusOn());
         assertFalse(dynaflowParameters.getVscAsGenerators());
         assertTrue(dynaflowParameters.getLccAsLoads());
+        double expectedDsoVoltageLevelValue = 987.6;
+        assertEquals(expectedDsoVoltageLevelValue, dynaflowParameters.getDsoVoltageLevel(), 0);
 
         assertTrue(lfParameters.isTransformerVoltageControlOn());
         assertFalse(lfParameters.isPhaseShifterRegulationOn());
@@ -54,6 +56,7 @@ public class JsonDynaflowParametersSerializerTest extends AbstractConverterTest 
         params.setAutomaticSlackBusOn(true);
         params.setVscAsGenerators(false);
         params.setLccAsLoads(true);
+        params.setDsoVoltageLevel(54.23);
 
         parameters.addExtension(DynaflowParameters.class, params);
 

@@ -18,6 +18,10 @@ import com.powsybl.iidm.export.Exporters;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.xml.IidmXmlVersion;
 import com.powsybl.iidm.xml.XMLExporter;
+import com.powsybl.timeseries.TimeSeries;
+import com.powsybl.timeseries.TimeSeriesConstants;
+import com.powsybl.timeseries.TimeSeries.TimeFormat;
+import com.powsybl.timeseries.TimeSeriesCsvConfig;
 
 import javax.xml.stream.XMLStreamException;
 
@@ -25,16 +29,21 @@ import org.apache.commons.lang3.SystemUtils;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.concurrent.CompletableFuture;
 
 import static com.powsybl.dynawo.xml.DynawoConstants.JOBS_FILENAME;
 import static com.powsybl.dynawo.xml.DynawoConstants.NETWORK_FILENAME;
+import static com.powsybl.dynawo.xml.DynawoConstants.CURVES_OUTPUT_PATH;
+import static com.powsybl.dynawo.xml.DynawoConstants.CURVES_FILENAME;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -115,7 +124,13 @@ public class DynawoProvider implements DynamicSimulationProvider {
         @Override
         public DynamicSimulationResult after(Path workingDir, ExecutionReport report) throws IOException {
             super.after(workingDir, report);
-            return new DynamicSimulationResultImpl(true, "");
+            Path curvesPath = workingDir.resolve(CURVES_OUTPUT_PATH).toAbsolutePath().resolve(CURVES_FILENAME);
+            Map<String, TimeSeries> curves = new HashMap<>();
+            if (Files.exists(curvesPath)) {
+                Map<Integer, List<TimeSeries>> curvesPerVersion = TimeSeries.parseCsv(curvesPath, new TimeSeriesCsvConfig(TimeSeriesConstants.DEFAULT_SEPARATOR, false, TimeFormat.FRACTIONS_OF_SECOND));
+                curvesPerVersion.values().forEach(l -> l.forEach(curve -> curves.put(curve.getMetadata().getName(), curve)));
+            }
+            return new DynamicSimulationResultImpl(true, null, curves, DynamicSimulationResult.emptyTimeLine());
         }
 
         private void writeInputFiles(Path workingDir) {
