@@ -56,7 +56,7 @@
         <mockito.version>3.3.3</mockito.version>
         <xmlunit.version>2.3.0</xmlunit.version>
 
-        <powsyblcore.version>3.9.0-SNAPSHOT</powsyblcore.version>
+        <powsyblcore.version>4.1.0-SNAPSHOT</powsyblcore.version>
     </properties>
 
     <profiles>
