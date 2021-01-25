@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dyn:curvesInput xmlns:dyn="http://www.rte-france.com/dynawo">
+  <dyn:curve model="NETWORK" variable="NGEN_Upu_value"/>
+  <dyn:curve model="NETWORK" variable="NHV1_Upu_value"/>
+  <dyn:curve model="NETWORK" variable="NHV2_Upu_value"/>
+  <dyn:curve model="NETWORK" variable="NLOAD_Upu_value"/>
+  <!-- A curve is made up of the id of the dynamic model and the variable to plot.
+       The static id of the generator is used as the id of the dynamic model (dynamicModelId) -->
+  <dyn:curve model="GEN" variable="generator_omegaPu"/>
+  <dyn:curve model="GEN" variable="generator_PGen"/>
+  <dyn:curve model="GEN" variable="generator_UStatorPu"/>
+  <dyn:curve model="GEN" variable="voltageRegulator_UcEfdP"/>
+  <dyn:curve model="GEN" variable="voltageRegulator_EfdPu"/>
+  <dyn:curve model="GEN2" variable="generator_omegaPu"/>
+  <dyn:curve model="GEN2" variable="generator_PGen"/>
+  <dyn:curve model="GEN2" variable="generator_UStatorPu"/>
+  <dyn:curve model="GEN2" variable="voltageRegulator_UcEfdP"/>
+  <dyn:curve model="GEN2" variable="voltageRegulator_EfdPu"/>
+  <dyn:curve model="GEN3" variable="generator_omegaPu"/>
+  <dyn:curve model="GEN3" variable="generator_PGen"/>
+  <dyn:curve model="GEN3" variable="generator_UStatorPu"/>
+  <dyn:curve model="GEN3" variable="voltageRegulator_UcEfdP"/>
+  <dyn:curve model="GEN3" variable="voltageRegulator_EfdPu"/>
+  <dyn:curve model="GEN4" variable="generator_omegaPu"/>
+  <dyn:curve model="GEN4" variable="generator_PGen"/>
+  <dyn:curve model="GEN4" variable="generator_UStatorPu"/>
+  <dyn:curve model="GEN4" variable="voltageRegulator_UcEfdP"/>
+  <dyn:curve model="GEN4" variable="voltageRegulator_EfdPu"/>
+</dyn:curvesInput>
