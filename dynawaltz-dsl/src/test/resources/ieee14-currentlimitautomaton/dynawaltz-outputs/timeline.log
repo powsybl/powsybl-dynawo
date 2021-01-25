@@ -1,0 +1,57 @@
+0 | GEN____8_SM | PMIN : activation
+0.0306911 | GEN____3_SM | PMIN : activation
+0.348405 | GEN____8_SM | PMIN : deactivation
+0.828675 | GEN____3_SM | PMIN : deactivation
+0.834701 | GEN____8_SM | PMIN : activation
+1.90571 | GEN____8_SM | PMIN : deactivation
+2.18387 | GEN____3_SM | PMIN : activation
+2.33844 | GEN____8_SM | PMIN : activation
+2.75809 | GEN____3_SM | PMIN : deactivation
+5 | _BUS____1-BUS____5-1_AC | LINE : opening on side 2
+5 | GEN____8_SM | PMIN : deactivation
+5.24792 | CLA_2_5 | CLA : arming by over-current constraint
+5.40302 | GEN____6_SM | PMIN : activation
+5.56415 | GEN____8_SM | PMIN : activation
+5.77516 | GEN____6_SM | PMIN : deactivation
+5.9207 | GEN____3_SM | PMIN : activation
+6.0422 | GEN____8_SM | PMIN : deactivation
+6.1641 | GEN____6_SM | PMIN : activation
+6.37254 | GEN____6_SM | PMIN : deactivation
+6.49194 | GEN____3_SM | PMIN : deactivation
+6.58196 | GEN____8_SM | PMIN : activation
+6.82207 | GEN____6_SM | PMIN : activation
+7.02395 | GEN____8_SM | PMIN : deactivation
+7.1399 | GEN____6_SM | PMIN : deactivation
+7.67521 | GEN____6_SM | PMIN : activation
+7.75105 | GEN____8_SM | PMIN : activation
+7.92352 | GEN____6_SM | PMIN : deactivation
+8.04783 | GEN____8_SM | PMIN : deactivation
+10.2479 | CLA_2_5 | CLA : order to change topology
+10.2479 | _BUS____2-BUS____5-1_AC | LINE : opening both sides
+10.2479 | CLA_2_5 | CLA : order to change topology
+10.4396 | CLA_2_4 | CLA : arming by over-current constraint
+10.6887 | GEN____6_SM | PMIN : activation
+10.8648 | GEN____8_SM | PMIN : activation
+11.0126 | GEN____6_SM | PMIN : deactivation
+11.2938 | GEN____8_SM | PMIN : deactivation
+11.4529 | GEN____6_SM | PMIN : activation
+11.5988 | GEN____6_SM | PMIN : deactivation
+11.8919 | GEN____8_SM | PMIN : activation
+12.1345 | GEN____6_SM | PMIN : activation
+12.2236 | GEN____8_SM | PMIN : deactivation
+12.3802 | GEN____6_SM | PMIN : deactivation
+12.997 | GEN____6_SM | PMIN : activation
+13.1766 | GEN____6_SM | PMIN : deactivation
+20.4396 | CLA_2_4 | CLA : order to change topology
+20.4396 | _BUS____2-BUS____4-1_AC | LINE : opening on side 2
+20.4396 | CLA_2_4 | CLA : order to change topology
+21.2032 | GEN____8_SM | PMIN : activation
+21.596 | GEN____8_SM | PMIN : deactivation
+21.5988 | GEN____6_SM | PMIN : activation
+21.8242 | GEN____6_SM | PMIN : deactivation
+21.8939 | GEN____3_SM | PMIN : activation
+22.1047 | GEN____3_SM | PMIN : deactivation
+22.2214 | GEN____8_SM | PMIN : activation
+22.3301 | GEN____6_SM | PMIN : activation
+22.5521 | GEN____8_SM | PMIN : deactivation
+22.6049 | GEN____6_SM | PMIN : deactivation
