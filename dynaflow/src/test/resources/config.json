@@ -1,0 +1,18 @@
+{
+  "version" : "1.0",
+  "voltageInitMode" : "PREVIOUS_VALUES",
+  "transformerVoltageControlOn" : true,
+  "phaseShifterRegulationOn" : false,
+  "noGeneratorReactiveLimits" : false,
+  "specificCompatibility" : false,
+  "extensions" : {
+    "DynaflowParameters" : {
+      "svcRegulationOn": true,
+      "shuntRegulationOn": false,
+      "automaticSlackBusOn": true,
+      "vscAsGenerators": false,
+      "lccAsLoads": true,
+      "dsoVoltageLevel": 987.6
+    }
+  }
+}
