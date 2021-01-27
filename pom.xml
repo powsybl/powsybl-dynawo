@@ -48,7 +48,7 @@
         <logback.version>1.1.8</logback.version>
         <xmlunit.version>2.3.0</xmlunit.version>
 
-        <powsyblcore.version>3.9.0-SNAPSHOT</powsyblcore.version>
+        <powsyblcore.version>4.1.0-SNAPSHOT</powsyblcore.version>
     </properties>
 
     <build>
