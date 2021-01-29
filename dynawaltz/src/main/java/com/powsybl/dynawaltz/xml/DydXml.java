@@ -17,7 +17,7 @@ import com.powsybl.dynawaltz.events.AbstractBlackBoxEventModel;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
-import static com.powsybl.dynawaltz.xml.DynawaltzConstants.DYD_FILENAME;
+import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.DYD_FILENAME;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -44,7 +44,7 @@ public final class DydXml {
     }
 
     private static void writeDynamicModels(XMLStreamWriter writer, DynaWaltzContext context) {
-        DynawaltzXmlContext xmlContext = new DynawaltzXmlContext(context);
+        DynaWaltzXmlContext xmlContext = new DynaWaltzXmlContext(context);
 
         try {
             for (DynamicModel model : context.getDynamicModels()) {
@@ -57,7 +57,7 @@ public final class DydXml {
     }
 
     private static void writeEvents(XMLStreamWriter writer, DynaWaltzContext context) {
-        DynawaltzXmlContext xmlContext = new DynawaltzXmlContext(context);
+        DynaWaltzXmlContext xmlContext = new DynaWaltzXmlContext(context);
 
         try {
             for (EventModel model : context.getEventModels()) {

@@ -22,7 +22,7 @@ import java.util.function.Consumer
  * @author Mathieu Bague <mathieu.bague@rte-france.com>
  */
 @AutoService(CurveGroovyExtension.class)
-class DynawaltzCurveGroovyExtension implements CurveGroovyExtension {
+class DynaWaltzCurveGroovyExtension implements CurveGroovyExtension {
 
     /**
      * A curve for <pre>DynaWaltz</pre> can be defined in DSL using {@code staticId} and {@code variable} or {@code dynamicModelId} and {@code variable}.

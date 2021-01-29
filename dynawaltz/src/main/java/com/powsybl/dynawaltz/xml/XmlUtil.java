@@ -12,8 +12,8 @@ import javax.xml.stream.XMLStreamWriter;
 
 import com.powsybl.dynawaltz.DynaWaltzContext;
 
-import static com.powsybl.dynawaltz.xml.DynawaltzXmlConstants.DYN_PREFIX;
-import static com.powsybl.dynawaltz.xml.DynawaltzXmlConstants.DYN_URI;
+import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_PREFIX;
+import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 
 import java.io.IOException;
 import java.io.Writer;

@@ -27,7 +27,7 @@ public class ParametersXmlTest extends DynaWaltzTestUtil {
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynaWaltzParameters dynawoParameters = DynaWaltzParameters.load();
         DynaWaltzContext context = new DynaWaltzContext(network, dynamicModels, eventModels, curves, parameters, dynawoParameters);
-        DynawaltzXmlContext xmlContext = new DynawaltzXmlContext(context);
+        DynaWaltzXmlContext xmlContext = new DynaWaltzXmlContext(context);
 
         DydXml.write(tmpDir, context);
         ParametersXml.write(tmpDir, context);

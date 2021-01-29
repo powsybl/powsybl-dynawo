@@ -6,7 +6,7 @@
  */
 package com.powsybl.dynawaltz.events;
 
-import static com.powsybl.dynawaltz.xml.DynawaltzXmlConstants.DYN_URI;
+import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 
 import java.util.Objects;
 
@@ -14,7 +14,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
 import com.powsybl.dynamicsimulation.EventModel;
-import com.powsybl.dynawaltz.xml.DynawaltzXmlContext;
+import com.powsybl.dynawaltz.xml.DynaWaltzXmlContext;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -41,9 +41,9 @@ public abstract class AbstractBlackBoxEventModel implements EventModel {
         return parameterSetId;
     }
 
-    public abstract void write(XMLStreamWriter writer, DynawaltzXmlContext context) throws XMLStreamException;
+    public abstract void write(XMLStreamWriter writer, DynaWaltzXmlContext context) throws XMLStreamException;
 
-    protected void writeEventBlackBoxModel(XMLStreamWriter writer, DynawaltzXmlContext context) throws XMLStreamException {
+    protected void writeEventBlackBoxModel(XMLStreamWriter writer, DynaWaltzXmlContext context) throws XMLStreamException {
         // Write the blackBoxModel object
         writer.writeEmptyElement(DYN_URI, "blackBoxModel");
         writer.writeAttribute("id", getEventModelId());

@@ -9,7 +9,7 @@ package com.powsybl.dynawaltz.xml;
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public final class DynawaltzXmlConstants {
+public final class DynaWaltzXmlConstants {
 
     public static final String DYN_BASE_URI = "http://www.rte-france.com/dynawo";
 
@@ -24,6 +24,6 @@ public final class DynawaltzXmlConstants {
     public static final String MACRO_STATIC_REFERENCE_PREFIX = "MSR_";
     public static final String MACRO_CONNECTOR_PREFIX = "MC_";
 
-    private DynawaltzXmlConstants() {
+    private DynaWaltzXmlConstants() {
     }
 }

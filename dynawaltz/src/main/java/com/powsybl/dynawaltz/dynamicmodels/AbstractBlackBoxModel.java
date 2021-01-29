@@ -6,8 +6,8 @@
  */
 package com.powsybl.dynawaltz.dynamicmodels;
 
-import static com.powsybl.dynawaltz.xml.DynawaltzXmlConstants.DYN_URI;
-import static com.powsybl.dynawaltz.xml.DynawaltzXmlConstants.MACRO_STATIC_REFERENCE_PREFIX;
+import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
+import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.MACRO_STATIC_REFERENCE_PREFIX;
 
 import java.util.Objects;
 
@@ -15,7 +15,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
 import com.powsybl.dynamicsimulation.DynamicModel;
-import com.powsybl.dynawaltz.xml.DynawaltzXmlContext;
+import com.powsybl.dynawaltz.xml.DynaWaltzXmlContext;
 import com.powsybl.dynawaltz.xml.MacroStaticReferenceXml;
 
 /**
@@ -43,13 +43,13 @@ public abstract class AbstractBlackBoxModel implements DynamicModel {
         return parameterSetId;
     }
 
-    public abstract void write(XMLStreamWriter writer, DynawaltzXmlContext context) throws XMLStreamException;
+    public abstract void write(XMLStreamWriter writer, DynaWaltzXmlContext context) throws XMLStreamException;
 
-    public void writeParameters(XMLStreamWriter writer, DynawaltzXmlContext context) throws XMLStreamException {
+    public void writeParameters(XMLStreamWriter writer, DynaWaltzXmlContext context) throws XMLStreamException {
         //Empty method to be redefined by specific models
     }
 
-    protected void writeBlackBoxModel(XMLStreamWriter writer, DynawaltzXmlContext context) throws XMLStreamException {
+    protected void writeBlackBoxModel(XMLStreamWriter writer, DynaWaltzXmlContext context) throws XMLStreamException {
         // Write the blackBoxModel object
         writer.writeStartElement(DYN_URI, "blackBoxModel");
         writer.writeAttribute("id", getDynamicModelId());
@@ -61,7 +61,7 @@ public abstract class AbstractBlackBoxModel implements DynamicModel {
         writer.writeEndElement();
     }
 
-    protected void writeAutomatonBlackBoxModel(XMLStreamWriter writer, DynawaltzXmlContext context) throws XMLStreamException {
+    protected void writeAutomatonBlackBoxModel(XMLStreamWriter writer, DynaWaltzXmlContext context) throws XMLStreamException {
         // Write the blackBoxModel object
         writer.writeEmptyElement(DYN_URI, "blackBoxModel");
         writer.writeAttribute("id", getDynamicModelId());

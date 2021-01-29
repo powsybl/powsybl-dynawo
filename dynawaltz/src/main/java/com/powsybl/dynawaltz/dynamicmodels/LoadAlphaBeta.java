@@ -6,15 +6,15 @@
  */
 package com.powsybl.dynawaltz.dynamicmodels;
 
-import static com.powsybl.dynawaltz.xml.DynawaltzXmlConstants.DYN_URI;
-import static com.powsybl.dynawaltz.xml.DynawaltzXmlConstants.MACRO_CONNECTOR_PREFIX;
-import static com.powsybl.dynawaltz.xml.DynawaltzXmlConstants.MACRO_STATIC_REFERENCE_PREFIX;
-import static com.powsybl.dynawaltz.xml.DynawaltzXmlConstants.NETWORK;
+import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
+import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.MACRO_CONNECTOR_PREFIX;
+import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.MACRO_STATIC_REFERENCE_PREFIX;
+import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.NETWORK;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
-import com.powsybl.dynawaltz.xml.DynawaltzXmlContext;
+import com.powsybl.dynawaltz.xml.DynaWaltzXmlContext;
 import com.powsybl.dynawaltz.xml.MacroConnectorXml;
 import com.powsybl.dynawaltz.xml.MacroStaticReferenceXml;
 
@@ -33,7 +33,7 @@ public class LoadAlphaBeta extends AbstractBlackBoxModel {
     }
 
     @Override
-    public void write(XMLStreamWriter writer, DynawaltzXmlContext context) throws XMLStreamException {
+    public void write(XMLStreamWriter writer, DynaWaltzXmlContext context) throws XMLStreamException {
         if (context.getIndex(getLib(), true) == 0) {
             // Write the macroStaticReference object
             writer.writeStartElement(DYN_URI, "macroStaticReference");

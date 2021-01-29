@@ -30,7 +30,7 @@ public class EventXmlTest extends DynaWaltzTestUtil {
         DynaWaltzContext context = new DynaWaltzContext(network, new ArrayList<>(), eventModels, curves, parameters, dynawoParameters);
 
         DydXml.write(tmpDir, context);
-        validate("dyd.xsd", "events.xml", tmpDir.resolve(DynawaltzConstants.DYD_FILENAME));
+        validate("dyd.xsd", "events.xml", tmpDir.resolve(DynaWaltzConstants.DYD_FILENAME));
     }
 
 }

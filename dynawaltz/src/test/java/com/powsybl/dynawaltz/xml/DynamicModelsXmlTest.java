@@ -30,7 +30,7 @@ public class DynamicModelsXmlTest extends DynaWaltzTestUtil {
         DynaWaltzContext context = new DynaWaltzContext(network, dynamicModels, new ArrayList<>(), curves, parameters, dynawoParameters);
 
         DydXml.write(tmpDir, context);
-        validate("dyd.xsd", "dyd.xml", tmpDir.resolve(DynawaltzConstants.DYD_FILENAME));
+        validate("dyd.xsd", "dyd.xml", tmpDir.resolve(DynaWaltzConstants.DYD_FILENAME));
     }
 
 }

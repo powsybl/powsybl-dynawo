@@ -66,7 +66,7 @@ public class DynaWaltzGroovyCurvesSupplierTest {
 
         List<CurveGroovyExtension> extensions = GroovyExtension.find(CurveGroovyExtension.class, DynaWaltzProvider.NAME);
         assertEquals(1, extensions.size());
-        assertTrue(extensions.get(0) instanceof DynawaltzCurveGroovyExtension);
+        assertTrue(extensions.get(0) instanceof DynaWaltzCurveGroovyExtension);
 
         CurvesSupplier supplier = new GroovyCurvesSupplier(fileSystem.getPath("/curves.groovy"), extensions);
 
@@ -83,7 +83,7 @@ public class DynaWaltzGroovyCurvesSupplierTest {
 
         List<CurveGroovyExtension> extensions = GroovyExtension.find(CurveGroovyExtension.class, DynaWaltzProvider.NAME);
         assertEquals(1, extensions.size());
-        assertTrue(extensions.get(0) instanceof DynawaltzCurveGroovyExtension);
+        assertTrue(extensions.get(0) instanceof DynaWaltzCurveGroovyExtension);
 
         CurvesSupplier supplier = new GroovyCurvesSupplier(fileSystem.getPath("/curves_dynamicModelId_staticId.groovy"), extensions);
         supplier.get(network);
@@ -97,7 +97,7 @@ public class DynaWaltzGroovyCurvesSupplierTest {
 
         List<CurveGroovyExtension> extensions = GroovyExtension.find(CurveGroovyExtension.class, DynaWaltzProvider.NAME);
         assertEquals(1, extensions.size());
-        assertTrue(extensions.get(0) instanceof DynawaltzCurveGroovyExtension);
+        assertTrue(extensions.get(0) instanceof DynaWaltzCurveGroovyExtension);
 
         CurvesSupplier supplier = new GroovyCurvesSupplier(fileSystem.getPath("/curves_variable.groovy"), extensions);
         supplier.get(network);
@@ -111,7 +111,7 @@ public class DynaWaltzGroovyCurvesSupplierTest {
 
         List<CurveGroovyExtension> extensions = GroovyExtension.find(CurveGroovyExtension.class, DynaWaltzProvider.NAME);
         assertEquals(1, extensions.size());
-        assertTrue(extensions.get(0) instanceof DynawaltzCurveGroovyExtension);
+        assertTrue(extensions.get(0) instanceof DynaWaltzCurveGroovyExtension);
 
         CurvesSupplier supplier = new GroovyCurvesSupplier(fileSystem.getPath("/curves_variables.groovy"), extensions);
         supplier.get(network);

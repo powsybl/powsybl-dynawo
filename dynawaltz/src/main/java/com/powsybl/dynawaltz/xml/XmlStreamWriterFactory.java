@@ -31,7 +31,7 @@ public final class XmlStreamWriterFactory {
         XMLStreamWriter xmlStreamWriter = factory.createXMLStreamWriter(writer);
         if (indent) {
             IndentingXMLStreamWriter indentingWriter = new IndentingXMLStreamWriter(xmlStreamWriter);
-            indentingWriter.setIndent(DynawaltzXmlConstants.INDENT);
+            indentingWriter.setIndent(DynaWaltzXmlConstants.INDENT);
             xmlStreamWriter = indentingWriter;
         }
         return xmlStreamWriter;

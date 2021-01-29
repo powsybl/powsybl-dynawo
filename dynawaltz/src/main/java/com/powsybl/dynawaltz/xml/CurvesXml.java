@@ -14,8 +14,8 @@ import com.powsybl.dynawaltz.DynaWaltzCurve;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
-import static com.powsybl.dynawaltz.xml.DynawaltzConstants.CRV_FILENAME;
-import static com.powsybl.dynawaltz.xml.DynawaltzXmlConstants.DYN_URI;
+import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.CRV_FILENAME;
+import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 
 import java.io.IOException;
 import java.nio.file.Path;

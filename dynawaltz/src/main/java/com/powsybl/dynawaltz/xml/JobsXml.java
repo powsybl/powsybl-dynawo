@@ -14,8 +14,8 @@ import com.powsybl.dynawaltz.DynaWaltzParameters.SolverType;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
-import static com.powsybl.dynawaltz.xml.DynawaltzConstants.*;
-import static com.powsybl.dynawaltz.xml.DynawaltzXmlConstants.DYN_URI;
+import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.*;
+import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -97,7 +97,7 @@ public final class JobsXml {
 
         if (context.withCurves()) {
             writer.writeEmptyElement(DYN_URI, "curves");
-            writer.writeAttribute("inputFile", DynawaltzConstants.CRV_FILENAME);
+            writer.writeAttribute("inputFile", DynaWaltzConstants.CRV_FILENAME);
             writer.writeAttribute("exportMode", "CSV");
         }
 

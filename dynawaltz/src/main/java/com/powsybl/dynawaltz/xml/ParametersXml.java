@@ -7,7 +7,7 @@
 
 package com.powsybl.dynawaltz.xml;
 
-import static com.powsybl.dynawaltz.xml.DynawaltzXmlConstants.DYN_URI;
+import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -45,7 +45,7 @@ public final class ParametersXml {
         copy(parameters.getSolver().getParametersFile(), workingDir);
 
         // Write parameterSet that needs to be generated (OmegaRef...)
-        DynawaltzXmlContext xmlContext = new DynawaltzXmlContext(context);
+        DynaWaltzXmlContext xmlContext = new DynaWaltzXmlContext(context);
         Path file = workingDir.resolve(xmlContext.getSimulationParFile());
         XmlUtil.write(file, context, "parametersSet", ParametersXml::write);
     }
@@ -60,7 +60,7 @@ public final class ParametersXml {
     }
 
     private static void write(XMLStreamWriter writer, DynaWaltzContext context) {
-        DynawaltzXmlContext xmlContext = new DynawaltzXmlContext(context);
+        DynaWaltzXmlContext xmlContext = new DynaWaltzXmlContext(context);
 
         try {
             for (DynamicModel model : context.getDynamicModels()) {

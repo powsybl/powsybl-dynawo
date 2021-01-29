@@ -29,7 +29,7 @@ public class JobsXmlTest extends DynaWaltzTestUtil {
         DynaWaltzContext context = new DynaWaltzContext(network, dynamicModels, eventModels, curves, parameters, dynawoParameters);
 
         JobsXml.write(tmpDir, context);
-        validate("jobs.xsd", "jobs.xml", tmpDir.resolve(DynawaltzConstants.JOBS_FILENAME));
+        validate("jobs.xsd", "jobs.xml", tmpDir.resolve(DynaWaltzConstants.JOBS_FILENAME));
     }
 
 }

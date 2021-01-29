@@ -40,10 +40,10 @@ import java.util.Objects;
 import java.util.Properties;
 import java.util.concurrent.CompletableFuture;
 
-import static com.powsybl.dynawaltz.xml.DynawaltzConstants.JOBS_FILENAME;
-import static com.powsybl.dynawaltz.xml.DynawaltzConstants.NETWORK_FILENAME;
-import static com.powsybl.dynawaltz.xml.DynawaltzConstants.CURVES_OUTPUT_PATH;
-import static com.powsybl.dynawaltz.xml.DynawaltzConstants.CURVES_FILENAME;
+import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.JOBS_FILENAME;
+import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.NETWORK_FILENAME;
+import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.CURVES_OUTPUT_PATH;
+import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.CURVES_FILENAME;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>

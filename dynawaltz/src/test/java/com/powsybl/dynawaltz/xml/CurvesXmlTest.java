@@ -29,7 +29,7 @@ public class CurvesXmlTest extends DynaWaltzTestUtil {
         DynaWaltzContext context = new DynaWaltzContext(network, dynamicModels, eventModels, curves, parameters, dynawoParameters);
 
         CurvesXml.write(tmpDir, context);
-        validate("curvesInput.xsd", "curvesInput.xml", tmpDir.resolve(DynawaltzConstants.CRV_FILENAME));
+        validate("curvesInput.xsd", "curvesInput.xml", tmpDir.resolve(DynaWaltzConstants.CRV_FILENAME));
     }
 
 }

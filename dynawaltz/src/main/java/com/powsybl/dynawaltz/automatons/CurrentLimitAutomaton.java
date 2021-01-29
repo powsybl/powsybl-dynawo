@@ -9,14 +9,14 @@ package com.powsybl.dynawaltz.automatons;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
-import com.powsybl.dynawaltz.xml.DynawaltzXmlContext;
+import com.powsybl.dynawaltz.xml.DynaWaltzXmlContext;
 import com.powsybl.dynawaltz.xml.MacroConnectorXml;
 import com.powsybl.dynawaltz.dynamicmodels.AbstractBlackBoxModel;
 import com.powsybl.iidm.network.Branch;
 
-import static com.powsybl.dynawaltz.xml.DynawaltzXmlConstants.DYN_URI;
-import static com.powsybl.dynawaltz.xml.DynawaltzXmlConstants.MACRO_CONNECTOR_PREFIX;
-import static com.powsybl.dynawaltz.xml.DynawaltzXmlConstants.NETWORK;
+import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
+import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.MACRO_CONNECTOR_PREFIX;
+import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.NETWORK;
 
 import java.util.Objects;
 
@@ -38,7 +38,7 @@ public class CurrentLimitAutomaton extends AbstractBlackBoxModel {
     }
 
     @Override
-    public void write(XMLStreamWriter writer, DynawaltzXmlContext context) throws XMLStreamException {
+    public void write(XMLStreamWriter writer, DynaWaltzXmlContext context) throws XMLStreamException {
         String postfix = getPostfix(side);
         if (context.getIndex(getLib(), true) == 0) {
             // Write the macroConnector object

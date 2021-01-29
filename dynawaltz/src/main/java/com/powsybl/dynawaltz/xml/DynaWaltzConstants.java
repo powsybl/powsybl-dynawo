@@ -9,7 +9,7 @@ package com.powsybl.dynawaltz.xml;
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public final class DynawaltzConstants {
+public final class DynaWaltzConstants {
 
     public static final String JOBS_FILENAME = "powsybl_dynawaltz.jobs";
 
@@ -23,6 +23,6 @@ public final class DynawaltzConstants {
 
     public static final String CURVES_FILENAME = "curves.csv";
 
-    private DynawaltzConstants() {
+    private DynaWaltzConstants() {
     }
 }

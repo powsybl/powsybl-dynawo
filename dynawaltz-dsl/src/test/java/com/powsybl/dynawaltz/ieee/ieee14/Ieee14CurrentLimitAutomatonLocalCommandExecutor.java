@@ -10,7 +10,7 @@ import com.powsybl.dynawaltz.DynaWaltzParameters;
 import com.powsybl.dynawaltz.ieee.AbstractDynaWaltzLocalCommandExecutor;
 import com.powsybl.iidm.network.Network;
 
-import static com.powsybl.dynawaltz.xml.DynawaltzConstants.*;
+import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.*;
 
 import java.io.IOException;
 import java.nio.file.FileSystem;

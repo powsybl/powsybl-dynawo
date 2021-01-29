@@ -8,7 +8,7 @@ package com.powsybl.dynawaltz.dynamicmodels;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzParametersDatabase;
-import com.powsybl.dynawaltz.xml.DynawaltzXmlContext;
+import com.powsybl.dynawaltz.xml.DynaWaltzXmlContext;
 import com.powsybl.dynawaltz.xml.MacroConnectorXml;
 import com.powsybl.dynawaltz.xml.ParametersXml;
 
@@ -18,7 +18,7 @@ import java.util.Objects;
 
 import static com.powsybl.dynawaltz.DynaWaltzParametersDatabase.ParameterType.DOUBLE;
 import static com.powsybl.dynawaltz.DynaWaltzParametersDatabase.ParameterType.INT;
-import static com.powsybl.dynawaltz.xml.DynawaltzXmlConstants.*;
+import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.*;
 
 /**
  * OmegaRef is a special dynamic model: its role is to synchronize the generators' frequency, there will be multiple Java
@@ -57,7 +57,7 @@ public class OmegaRef extends AbstractBlackBoxModel {
     }
 
     @Override
-    public void write(XMLStreamWriter writer, DynawaltzXmlContext context) throws XMLStreamException {
+    public void write(XMLStreamWriter writer, DynaWaltzXmlContext context) throws XMLStreamException {
         int index = context.getIndex(getLib(), true);
         if (index == 0) {
             // Write the macroConnector object
@@ -89,7 +89,7 @@ public class OmegaRef extends AbstractBlackBoxModel {
     }
 
     @Override
-    public void writeParameters(XMLStreamWriter writer, DynawaltzXmlContext context) throws XMLStreamException {
+    public void writeParameters(XMLStreamWriter writer, DynaWaltzXmlContext context) throws XMLStreamException {
         int index = context.getIndex(getLib(), true);
         if (index == 0) {
             DynaWaltzParametersDatabase parDB = context.getParametersDatabase();
@@ -118,7 +118,7 @@ public class OmegaRef extends AbstractBlackBoxModel {
         }
     }
 
-    private static String getStaticId(DynawaltzXmlContext context, String dynamicModelId) {
+    private static String getStaticId(DynaWaltzXmlContext context, String dynamicModelId) {
         AbstractBlackBoxModel dynamicModel = context.getBlackBoxModel(dynamicModelId);
         if (dynamicModel == null) {
             throw new PowsyblException("BlackBoxModel '" + dynamicModelId + "' not found");

@@ -19,7 +19,7 @@ import com.powsybl.dynawaltz.dynamicmodels.AbstractBlackBoxModel;
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class DynawaltzXmlContext {
+public class DynaWaltzXmlContext {
 
     private final DynaWaltzContext context;
 
@@ -29,7 +29,7 @@ public class DynawaltzXmlContext {
 
     private final Map<String, AbstractBlackBoxModel> blackBoxModels;
 
-    public DynawaltzXmlContext(DynaWaltzContext context) {
+    public DynaWaltzXmlContext(DynaWaltzContext context) {
         this.context = Objects.requireNonNull(context);
         this.parFile = Paths.get(context.getDynaWaltzParameters().getParametersFile()).getFileName().toString();
         this.blackBoxModels = context.getDynamicModels().stream()

@@ -6,7 +6,7 @@
  */
 package com.powsybl.dynawaltz.ieee.ieee14;
 
-import static com.powsybl.dynawaltz.xml.DynawaltzConstants.*;
+import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.*;
 
 import java.io.IOException;
 import java.nio.file.FileSystem;

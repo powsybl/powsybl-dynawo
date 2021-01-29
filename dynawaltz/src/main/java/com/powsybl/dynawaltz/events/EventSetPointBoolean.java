@@ -6,12 +6,12 @@
  */
 package com.powsybl.dynawaltz.events;
 
-import static com.powsybl.dynawaltz.xml.DynawaltzXmlConstants.*;
+import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.*;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
-import com.powsybl.dynawaltz.xml.DynawaltzXmlContext;
+import com.powsybl.dynawaltz.xml.DynaWaltzXmlContext;
 import com.powsybl.dynawaltz.xml.MacroConnectorXml;
 
 /**
@@ -29,7 +29,7 @@ public class EventSetPointBoolean extends AbstractBlackBoxEventModel {
     }
 
     @Override
-    public void write(XMLStreamWriter writer, DynawaltzXmlContext context) throws XMLStreamException {
+    public void write(XMLStreamWriter writer, DynaWaltzXmlContext context) throws XMLStreamException {
         if (context.getIndex(getLib(), true) == 0) {
             // Write the macroConnector object
             writer.writeStartElement(DYN_URI, "macroConnector");
