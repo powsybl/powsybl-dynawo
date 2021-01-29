@@ -24,7 +24,7 @@ import static org.junit.Assert.assertEquals;
  *
  * @author Guillaume Pernin <guillaume.pernin at rte-france.com>
  */
-public class DynaflowConfigTest {
+public class DynaFlowConfigTest {
 
     private FileSystem fileSystem;
     private final boolean debug = true;
@@ -48,7 +48,7 @@ public class DynaflowConfigTest {
         moduleConfig.setStringProperty("homeDir", homeDir);
         moduleConfig.setStringProperty("debug", Boolean.toString(debug));
 
-        DynaflowConfig config = DynaflowConfig.fromPlatformConfig(platformConfig);
+        DynaFlowConfig config = DynaFlowConfig.fromPlatformConfig(platformConfig);
         assertEquals(homeDir, config.getHomeDir().toString());
         assertEquals(debug, config.isDebug());
     }
@@ -56,7 +56,7 @@ public class DynaflowConfigTest {
     @Test
     public void checkGetters() {
         Path pathHomeDir = fileSystem.getPath(homeDir);
-        DynaflowConfig config = new DynaflowConfig(pathHomeDir, debug);
+        DynaFlowConfig config = new DynaFlowConfig(pathHomeDir, debug);
 
         assertEquals(homeDir, config.getHomeDir().toString());
         assertEquals(debug, config.isDebug());

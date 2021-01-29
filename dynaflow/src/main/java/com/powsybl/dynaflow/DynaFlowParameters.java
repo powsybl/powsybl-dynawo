@@ -15,7 +15,7 @@ import com.powsybl.loadflow.LoadFlowParameters;
 /**
  * @author Guillaume Pernin <guillaume.pernin at rte-france.com>
  */
-public class DynaflowParameters extends AbstractExtension<LoadFlowParameters> {
+public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
 
     private static final String MODULE_SPECIFIC_PARAMETERS = "dynaflow-default-parameters";
 
@@ -37,7 +37,7 @@ public class DynaflowParameters extends AbstractExtension<LoadFlowParameters> {
         return svcRegulationOn;
     }
 
-    public DynaflowParameters setSvcRegulationOn(boolean svcRegulationOn) {
+    public DynaFlowParameters setSvcRegulationOn(boolean svcRegulationOn) {
         this.svcRegulationOn = svcRegulationOn;
         return this;
     }
@@ -46,7 +46,7 @@ public class DynaflowParameters extends AbstractExtension<LoadFlowParameters> {
         return shuntRegulationOn;
     }
 
-    public DynaflowParameters setShuntRegulationOn(boolean shuntRegulationOn) {
+    public DynaFlowParameters setShuntRegulationOn(boolean shuntRegulationOn) {
         this.shuntRegulationOn = shuntRegulationOn;
         return this;
     }
@@ -55,7 +55,7 @@ public class DynaflowParameters extends AbstractExtension<LoadFlowParameters> {
         return automaticSlackBusOn;
     }
 
-    public DynaflowParameters setAutomaticSlackBusOn(boolean automaticSlackBusOn) {
+    public DynaFlowParameters setAutomaticSlackBusOn(boolean automaticSlackBusOn) {
         this.automaticSlackBusOn = automaticSlackBusOn;
         return this;
     }
@@ -64,7 +64,7 @@ public class DynaflowParameters extends AbstractExtension<LoadFlowParameters> {
         return vscAsGenerators;
     }
 
-    public DynaflowParameters setVscAsGenerators(boolean vscAsGenerators) {
+    public DynaFlowParameters setVscAsGenerators(boolean vscAsGenerators) {
         this.vscAsGenerators = vscAsGenerators;
         return this;
     }
@@ -73,7 +73,7 @@ public class DynaflowParameters extends AbstractExtension<LoadFlowParameters> {
         return lccAsLoads;
     }
 
-    public DynaflowParameters setLccAsLoads(boolean lccAsLoads) {
+    public DynaFlowParameters setLccAsLoads(boolean lccAsLoads) {
         this.lccAsLoads = lccAsLoads;
         return this;
     }
@@ -82,14 +82,14 @@ public class DynaflowParameters extends AbstractExtension<LoadFlowParameters> {
         return dsoVoltageLevel;
     }
 
-    public DynaflowParameters setDsoVoltageLevel(double dsoVoltageLevel) {
+    public DynaFlowParameters setDsoVoltageLevel(double dsoVoltageLevel) {
         this.dsoVoltageLevel = dsoVoltageLevel;
         return this;
     }
 
     @Override
     public String getName() {
-        return "DynaflowParameters";
+        return "DynaFlowParameters";
     }
 
     @Override
@@ -107,13 +107,13 @@ public class DynaflowParameters extends AbstractExtension<LoadFlowParameters> {
     }
 
     @AutoService(LoadFlowParameters.ConfigLoader.class)
-    public static class DynaflowConfigLoader implements LoadFlowParameters.ConfigLoader<DynaflowParameters> {
+    public static class DynaFlowConfigLoader implements LoadFlowParameters.ConfigLoader<DynaFlowParameters> {
 
         //Watch out for the name in the config.yml, no upper case at the beginning to match the one in the config.json
         //that can not have upper case also at the beginning
         @Override
-        public DynaflowParameters load(PlatformConfig platformConfig) {
-            DynaflowParameters parameters = new DynaflowParameters();
+        public DynaFlowParameters load(PlatformConfig platformConfig) {
+            DynaFlowParameters parameters = new DynaFlowParameters();
 
             platformConfig.getOptionalModuleConfig(MODULE_SPECIFIC_PARAMETERS)
                     .ifPresent(config -> parameters.setSvcRegulationOn(config.getBooleanProperty("svcRegulationOn", DEFAULT_SVC_REGULATION_ON))
@@ -128,7 +128,7 @@ public class DynaflowParameters extends AbstractExtension<LoadFlowParameters> {
 
         @Override
         public String getExtensionName() {
-            return "DynaflowParameters";
+            return "DynaFlowParameters";
         }
 
         @Override
@@ -137,8 +137,8 @@ public class DynaflowParameters extends AbstractExtension<LoadFlowParameters> {
         }
 
         @Override
-        public Class<? super DynaflowParameters> getExtensionClass() {
-            return DynaflowParameters.class;
+        public Class<? super DynaFlowParameters> getExtensionClass() {
+            return DynaFlowParameters.class;
         }
     }
 }

@@ -15,7 +15,7 @@ import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.google.auto.service.AutoService;
 import com.powsybl.commons.json.JsonUtil;
-import com.powsybl.dynaflow.DynaflowParameters;
+import com.powsybl.dynaflow.DynaFlowParameters;
 import com.powsybl.loadflow.LoadFlowParameters;
 import com.powsybl.loadflow.json.JsonLoadFlowParameters.ExtensionSerializer;
 
@@ -26,7 +26,7 @@ import java.io.IOException;
  * @author Guillaume Pernin <guillaume.pernin at rte-france.com>
  */
 @AutoService(ExtensionSerializer.class)
-public class JsonDynaflowParametersSerializer implements ExtensionSerializer<DynaflowParameters> {
+public class JsonDynaFlowParametersSerializer implements ExtensionSerializer<DynaFlowParameters> {
 
     @Override
     public String getCategoryName() {
@@ -34,13 +34,13 @@ public class JsonDynaflowParametersSerializer implements ExtensionSerializer<Dyn
     }
 
     @Override
-    public Class<? super DynaflowParameters> getExtensionClass() {
-        return DynaflowParameters.class;
+    public Class<? super DynaFlowParameters> getExtensionClass() {
+        return DynaFlowParameters.class;
     }
 
     @Override
     public String getExtensionName() {
-        return "DynaflowParameters";
+        return "DynaFlowParameters";
     }
 
     /**
@@ -57,24 +57,24 @@ public class JsonDynaflowParametersSerializer implements ExtensionSerializer<Dyn
 
     private static ObjectMapper createMapper() {
         return JsonUtil.createObjectMapper()
-                .addMixIn(DynaflowParameters.class, SerializationSpec.class);
+                .addMixIn(DynaFlowParameters.class, SerializationSpec.class);
     }
 
     @Override
-    public void serialize(DynaflowParameters jsonDynaflowParameters, JsonGenerator jsonGenerator,
+    public void serialize(DynaFlowParameters jsonDynaFlowParameters, JsonGenerator jsonGenerator,
                           SerializerProvider provider) throws IOException {
-        createMapper().writeValue(jsonGenerator, jsonDynaflowParameters);
+        createMapper().writeValue(jsonGenerator, jsonDynaFlowParameters);
     }
 
     @Override
-    public DynaflowParameters deserialize(JsonParser parser, DeserializationContext context) throws IOException {
-        return createMapper().readValue(parser, DynaflowParameters.class);
+    public DynaFlowParameters deserialize(JsonParser parser, DeserializationContext context) throws IOException {
+        return createMapper().readValue(parser, DynaFlowParameters.class);
     }
 
     @Override
-    public DynaflowParameters deserializeAndUpdate(JsonParser parser, DeserializationContext context, DynaflowParameters toUpdateParameters) throws IOException {
+    public DynaFlowParameters deserializeAndUpdate(JsonParser parser, DeserializationContext context, DynaFlowParameters toUpdateParameters) throws IOException {
         ObjectMapper objectMapper = createMapper();
         ObjectReader objectReader = objectMapper.readerForUpdating(toUpdateParameters);
-        return objectReader.readValue(parser, DynaflowParameters.class);
+        return objectReader.readValue(parser, DynaFlowParameters.class);
     }
 }

@@ -11,7 +11,7 @@ import com.google.common.jimfs.Jimfs;
 import com.powsybl.commons.AbstractConverterTest;
 import com.powsybl.commons.config.InMemoryPlatformConfig;
 import com.powsybl.commons.config.MapModuleConfig;
-import com.powsybl.dynaflow.json.DynaflowConfigSerializer;
+import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
 import com.powsybl.loadflow.LoadFlowParameters;
 import org.junit.After;
 import org.junit.Before;
@@ -29,7 +29,7 @@ import static org.junit.Assert.assertNotNull;
  *
  * @author Guillaume Pernin <guillaume.pernin at rte-france.com>
  */
-public class DynaflowParametersTest extends AbstractConverterTest {
+public class DynaFlowParametersTest extends AbstractConverterTest {
 
     private InMemoryPlatformConfig platformConfig;
 
@@ -61,8 +61,8 @@ public class DynaflowParametersTest extends AbstractConverterTest {
         moduleConfig.setStringProperty("lccAsLoads", Boolean.toString(lccAsLoads));
         moduleConfig.setStringProperty("dsoVoltageLevel", Double.toString(dsoVoltageLevel));
 
-        DynaflowParameters.DynaflowConfigLoader configLoader = new DynaflowParameters.DynaflowConfigLoader();
-        DynaflowParameters parameters = configLoader.load(platformConfig);
+        DynaFlowParameters.DynaFlowConfigLoader configLoader = new DynaFlowParameters.DynaFlowConfigLoader();
+        DynaFlowParameters parameters = configLoader.load(platformConfig);
 
         assertEquals(svcRegulationOn, parameters.getSvcRegulationOn());
         assertEquals(shuntRegulationOn, parameters.getShuntRegulationOn());
@@ -74,27 +74,27 @@ public class DynaflowParametersTest extends AbstractConverterTest {
     @Test
     public void checkDefaultParameters() {
         LoadFlowParameters parameters = LoadFlowParameters.load(platformConfig);
-        DynaflowParameters parametersExt = parameters.getExtension(DynaflowParameters.class);
+        DynaFlowParameters parametersExt = parameters.getExtension(DynaFlowParameters.class);
         assertNotNull(parametersExt);
 
-        assertEquals(DynaflowParameters.DEFAULT_SVC_REGULATION_ON, parametersExt.getSvcRegulationOn());
-        assertEquals(DynaflowParameters.DEFAULT_SHUNT_REGULATION_ON, parametersExt.getShuntRegulationOn());
-        assertEquals(DynaflowParameters.DEFAULT_AUTOMATIC_SLACK_BUS_ON, parametersExt.getAutomaticSlackBusOn());
-        assertEquals(DynaflowParameters.DEFAULT_VSC_AS_GENERATORS, parametersExt.getVscAsGenerators());
-        assertEquals(DynaflowParameters.DEFAULT_LCC_AS_LOADS, parametersExt.getLccAsLoads());
+        assertEquals(DynaFlowParameters.DEFAULT_SVC_REGULATION_ON, parametersExt.getSvcRegulationOn());
+        assertEquals(DynaFlowParameters.DEFAULT_SHUNT_REGULATION_ON, parametersExt.getShuntRegulationOn());
+        assertEquals(DynaFlowParameters.DEFAULT_AUTOMATIC_SLACK_BUS_ON, parametersExt.getAutomaticSlackBusOn());
+        assertEquals(DynaFlowParameters.DEFAULT_VSC_AS_GENERATORS, parametersExt.getVscAsGenerators());
+        assertEquals(DynaFlowParameters.DEFAULT_LCC_AS_LOADS, parametersExt.getLccAsLoads());
 
     }
 
     @Test
     public void checkDefaultToString() {
         LoadFlowParameters parameters = LoadFlowParameters.load(platformConfig);
-        DynaflowParameters parametersExt = parameters.getExtension(DynaflowParameters.class);
-        String expectedString = "{svcRegulationOn=" + DynaflowParameters.DEFAULT_SVC_REGULATION_ON +
-                ", shuntRegulationON=" + DynaflowParameters.DEFAULT_SHUNT_REGULATION_ON +
-                ", automaticSlackBusON=" + DynaflowParameters.DEFAULT_AUTOMATIC_SLACK_BUS_ON +
-                ", vscAsGenerators=" + DynaflowParameters.DEFAULT_VSC_AS_GENERATORS +
-                ", lccAsLoads=" + DynaflowParameters.DEFAULT_LCC_AS_LOADS +
-                ", dsoVoltageLevel=" + DynaflowParameters.DEFAULT_DSO_VOLTAGE_LEVEL + "}";
+        DynaFlowParameters parametersExt = parameters.getExtension(DynaFlowParameters.class);
+        String expectedString = "{svcRegulationOn=" + DynaFlowParameters.DEFAULT_SVC_REGULATION_ON +
+                ", shuntRegulationON=" + DynaFlowParameters.DEFAULT_SHUNT_REGULATION_ON +
+                ", automaticSlackBusON=" + DynaFlowParameters.DEFAULT_AUTOMATIC_SLACK_BUS_ON +
+                ", vscAsGenerators=" + DynaFlowParameters.DEFAULT_VSC_AS_GENERATORS +
+                ", lccAsLoads=" + DynaFlowParameters.DEFAULT_LCC_AS_LOADS +
+                ", dsoVoltageLevel=" + DynaFlowParameters.DEFAULT_DSO_VOLTAGE_LEVEL + "}";
         assertEquals(expectedString, parametersExt.toString());
 
     }
@@ -105,18 +105,18 @@ public class DynaflowParametersTest extends AbstractConverterTest {
         lfParameters.setNoGeneratorReactiveLimits(true);
         lfParameters.setPhaseShifterRegulationOn(false);
 
-        DynaflowParameters dynaflowParameters = new DynaflowParameters();
-        dynaflowParameters.setSvcRegulationOn(true);
-        dynaflowParameters.setShuntRegulationOn(false);
-        dynaflowParameters.setAutomaticSlackBusOn(true);
-        dynaflowParameters.setVscAsGenerators(false);
-        dynaflowParameters.setLccAsLoads(true);
-        dynaflowParameters.setDsoVoltageLevel(32.4);
-        lfParameters.addExtension(DynaflowParameters.class, dynaflowParameters);
+        DynaFlowParameters dynaFlowParameters = new DynaFlowParameters();
+        dynaFlowParameters.setSvcRegulationOn(true);
+        dynaFlowParameters.setShuntRegulationOn(false);
+        dynaFlowParameters.setAutomaticSlackBusOn(true);
+        dynaFlowParameters.setVscAsGenerators(false);
+        dynaFlowParameters.setLccAsLoads(true);
+        dynaFlowParameters.setDsoVoltageLevel(32.4);
+        lfParameters.addExtension(DynaFlowParameters.class, dynaFlowParameters);
 
         Path workingDir = fileSystem.getPath("dynaflow/workingDir");
-        Path parameterFile = fileSystem.getPath(DynaflowConstants.CONFIG_FILENAME);
-        DynaflowConfigSerializer.serialize(lfParameters, dynaflowParameters, workingDir, parameterFile);
+        Path parameterFile = fileSystem.getPath(DynaFlowConstants.CONFIG_FILENAME);
+        DynaFlowConfigSerializer.serialize(lfParameters, dynaFlowParameters, workingDir, parameterFile);
 
         try (InputStream actual = Files.newInputStream(parameterFile);
             InputStream expected = getClass().getResourceAsStream("/params.json")) {

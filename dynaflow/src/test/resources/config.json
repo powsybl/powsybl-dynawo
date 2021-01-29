@@ -6,7 +6,7 @@
   "noGeneratorReactiveLimits" : false,
   "specificCompatibility" : false,
   "extensions" : {
-    "DynaflowParameters" : {
+    "DynaFlowParameters" : {
       "svcRegulationOn": true,
       "shuntRegulationOn": false,
       "automaticSlackBusOn": true,

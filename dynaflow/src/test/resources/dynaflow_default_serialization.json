@@ -12,7 +12,7 @@
   "distributedSlack" : true,
   "balanceType" : "PROPORTIONAL_TO_GENERATION_P_MAX",
   "extensions" : {
-    "DynaflowParameters" : {
+    "DynaFlowParameters" : {
       "svcRegulationOn" : true,
       "shuntRegulationOn" : false,
       "automaticSlackBusOn" : true,

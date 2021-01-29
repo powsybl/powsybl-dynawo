@@ -8,7 +8,7 @@ package com.powsybl.dynaflow.json;
 
 import com.powsybl.commons.AbstractConverterTest;
 import com.powsybl.commons.config.InMemoryPlatformConfig;
-import com.powsybl.dynaflow.DynaflowParameters;
+import com.powsybl.dynaflow.DynaFlowParameters;
 import com.powsybl.loadflow.LoadFlowParameters;
 import com.powsybl.loadflow.json.JsonLoadFlowParameters;
 import org.junit.Test;
@@ -21,22 +21,22 @@ import static org.junit.Assert.*;
  *
  * @author Guillaume Pernin <guillaume.pernin at rte-france.com>
  */
-public class JsonDynaflowParametersSerializerTest extends AbstractConverterTest {
+public class JsonDynaFlowParametersSerializerTest extends AbstractConverterTest {
 
     @Test
     public void testDeserialize() {
         LoadFlowParameters lfParameters = LoadFlowParameters.load();
         JsonLoadFlowParameters.update(lfParameters, getClass().getResourceAsStream("/config.json"));
-        DynaflowParameters dynaflowParameters = lfParameters.getExtension(DynaflowParameters.class);
-        assertNotNull(dynaflowParameters);
+        DynaFlowParameters dynaFlowParameters = lfParameters.getExtension(DynaFlowParameters.class);
+        assertNotNull(dynaFlowParameters);
 
-        assertTrue(dynaflowParameters.getSvcRegulationOn());
-        assertFalse(dynaflowParameters.getShuntRegulationOn());
-        assertTrue(dynaflowParameters.getAutomaticSlackBusOn());
-        assertFalse(dynaflowParameters.getVscAsGenerators());
-        assertTrue(dynaflowParameters.getLccAsLoads());
+        assertTrue(dynaFlowParameters.getSvcRegulationOn());
+        assertFalse(dynaFlowParameters.getShuntRegulationOn());
+        assertTrue(dynaFlowParameters.getAutomaticSlackBusOn());
+        assertFalse(dynaFlowParameters.getVscAsGenerators());
+        assertTrue(dynaFlowParameters.getLccAsLoads());
         double expectedDsoVoltageLevelValue = 987.6;
-        assertEquals(expectedDsoVoltageLevelValue, dynaflowParameters.getDsoVoltageLevel(), 0);
+        assertEquals(expectedDsoVoltageLevelValue, dynaFlowParameters.getDsoVoltageLevel(), 0);
 
         assertTrue(lfParameters.isTransformerVoltageControlOn());
         assertFalse(lfParameters.isPhaseShifterRegulationOn());
@@ -50,7 +50,7 @@ public class JsonDynaflowParametersSerializerTest extends AbstractConverterTest 
         parameters.setNoGeneratorReactiveLimits(true);
         parameters.setPhaseShifterRegulationOn(false);
 
-        DynaflowParameters params = new DynaflowParameters();
+        DynaFlowParameters params = new DynaFlowParameters();
         params.setSvcRegulationOn(true);
         params.setShuntRegulationOn(false);
         params.setAutomaticSlackBusOn(true);
@@ -58,7 +58,7 @@ public class JsonDynaflowParametersSerializerTest extends AbstractConverterTest 
         params.setLccAsLoads(true);
         params.setDsoVoltageLevel(54.23);
 
-        parameters.addExtension(DynaflowParameters.class, params);
+        parameters.addExtension(DynaFlowParameters.class, params);
 
         roundTripTest(parameters, JsonLoadFlowParameters::write,
                 JsonLoadFlowParameters::read, "/dynaflow_default_serialization.json");

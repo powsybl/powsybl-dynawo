@@ -36,7 +36,7 @@ import static org.junit.Assert.assertTrue;
  *
  * @author Guillaume Pernin <guillaume.pernin at rte-france.com>
  */
-public class DynaflowVersionCheckTest {
+public class DynaFlowVersionCheckTest {
 
     private FileSystem fileSystem;
     private final ExecutionEnvironment env = Mockito.mock(ExecutionEnvironment.class);
@@ -79,14 +79,14 @@ public class DynaflowVersionCheckTest {
     public void versionTest() throws IOException {
         LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynaflow_version.out");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
-        assertTrue(DynaflowUtil.checkDynaflowVersion(env, computationManager, versionCmd));
+        assertTrue(DynaFlowUtil.checkDynaFlowVersion(env, computationManager, versionCmd));
     }
 
     @Test
     public void badVersionTest() throws IOException {
         LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynaflow_bad_version.out");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
-        assertFalse(DynaflowUtil.checkDynaflowVersion(env, computationManager, versionCmd));
+        assertFalse(DynaFlowUtil.checkDynaFlowVersion(env, computationManager, versionCmd));
     }
 
     @Test(expected = java.util.concurrent.CompletionException.class)
@@ -97,6 +97,6 @@ public class DynaflowVersionCheckTest {
                 .build();
         LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynaflow_version.out");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
-        DynaflowUtil.checkDynaflowVersion(env, computationManager, badVersionCmd);
+        DynaFlowUtil.checkDynaFlowVersion(env, computationManager, badVersionCmd);
     }
 }

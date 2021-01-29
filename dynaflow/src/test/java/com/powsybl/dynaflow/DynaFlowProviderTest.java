@@ -28,24 +28,24 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ForkJoinPool;
 
-import static com.powsybl.dynaflow.DynaflowConstants.CONFIG_FILENAME;
-import static com.powsybl.dynaflow.DynaflowConstants.IIDM_FILENAME;
+import static com.powsybl.dynaflow.DynaFlowConstants.CONFIG_FILENAME;
+import static com.powsybl.dynaflow.DynaFlowConstants.IIDM_FILENAME;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 /**
  * @author Guillaume Pernin <guillaume.pernin at rte-france.com>
  */
-public class DynaflowProviderTest {
+public class DynaFlowProviderTest {
     private FileSystem fileSystem;
     private String homeDir;
-    private DynaflowProvider provider;
+    private DynaFlowProvider provider;
 
     @Before
     public void setUp() {
         fileSystem = Jimfs.newFileSystem(Configuration.unix());
         homeDir = "/home/dynaflow";
-        provider = new DynaflowProvider();
+        provider = new DynaFlowProvider();
     }
 
     @Test
@@ -92,15 +92,15 @@ public class DynaflowProviderTest {
     public void test() throws Exception {
         Network network = Network.create("test", "test");
 
-        LoadFlow.Runner dynaflowSimulation = LoadFlow.find();
+        LoadFlow.Runner dynaFlowSimulation = LoadFlow.find();
         LoadFlowParameters params = LoadFlowParameters.load();
 
-        assertEquals("DynaFlow", dynaflowSimulation.getName());
-        assertEquals("0.1", dynaflowSimulation.getVersion());
+        assertEquals("DynaFlow", dynaFlowSimulation.getName());
+        assertEquals("0.1", dynaFlowSimulation.getVersion());
 
         LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynaflow_version.out");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
-        LoadFlowResult result = dynaflowSimulation.run(network, computationManager, params);
+        LoadFlowResult result = dynaFlowSimulation.run(network, computationManager, params);
         assertNotNull(result);
     }
 }

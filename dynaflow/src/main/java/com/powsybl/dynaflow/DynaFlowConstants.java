@@ -10,7 +10,7 @@ package com.powsybl.dynaflow;
  *
  * @author Guillaume Pernin <guillaume.pernin at rte-france.com>
  */
-public final class DynaflowConstants {
+public final class DynaFlowConstants {
 
     public static final String CONFIG_FILENAME = "config.json";
 
@@ -18,7 +18,7 @@ public final class DynaflowConstants {
 
     public static final String VERSION = "0.1";
 
-    private DynaflowConstants() {
+    private DynaFlowConstants() {
     }
 
 }

@@ -18,28 +18,28 @@ import java.util.Objects;
  *
  * @author Guillaume Pernin <guillaume.pernin at rte-france.com>
  */
-public class DynaflowConfig {
+public class DynaFlowConfig {
 
     private static final boolean DEFAULT_DEBUG = false;
 
     private final Path homeDir;
     private final boolean debug;
 
-    public DynaflowConfig(Path homeDir, boolean debug) {
+    public DynaFlowConfig(Path homeDir, boolean debug) {
         this.homeDir = Objects.requireNonNull(homeDir);
         this.debug = debug;
     }
 
-    public static DynaflowConfig fromPropertyFile() {
+    public static DynaFlowConfig fromPropertyFile() {
         return fromPlatformConfig(PlatformConfig.defaultConfig());
     }
 
-    public static DynaflowConfig fromPlatformConfig(PlatformConfig platformConfig) {
+    public static DynaFlowConfig fromPlatformConfig(PlatformConfig platformConfig) {
         Objects.requireNonNull(platformConfig);
         ModuleConfig config = platformConfig.getModuleConfig("dynaflow");
         Path homeDir = config.getPathProperty("homeDir");
         boolean debug = config.getBooleanProperty("debug", DEFAULT_DEBUG);
-        return new DynaflowConfig(homeDir, debug);
+        return new DynaFlowConfig(homeDir, debug);
     }
 
     public Map<String, String> createEnv() {

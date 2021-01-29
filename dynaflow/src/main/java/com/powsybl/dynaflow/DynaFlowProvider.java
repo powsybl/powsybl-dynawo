@@ -8,7 +8,7 @@ package com.powsybl.dynaflow;
 
 import com.google.auto.service.AutoService;
 import com.powsybl.computation.*;
-import com.powsybl.dynaflow.json.DynaflowConfigSerializer;
+import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
 import com.powsybl.iidm.export.Exporters;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.xml.IidmXmlVersion;
@@ -23,26 +23,26 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
-import static com.powsybl.dynaflow.DynaflowConstants.CONFIG_FILENAME;
-import static com.powsybl.dynaflow.DynaflowConstants.IIDM_FILENAME;
+import static com.powsybl.dynaflow.DynaFlowConstants.CONFIG_FILENAME;
+import static com.powsybl.dynaflow.DynaFlowConstants.IIDM_FILENAME;
 
 /**
  *
  * @author Guillaume Pernin <guillaume.pernin at rte-france.com>
  */
 @AutoService(LoadFlowProvider.class)
-public class DynaflowProvider implements LoadFlowProvider {
+public class DynaFlowProvider implements LoadFlowProvider {
 
     private static final String WORKING_DIR_PREFIX = "dynaflow_";
     private final ExecutionEnvironment env;
     private final Command versionCmd;
-    private final DynaflowConfig config;
+    private final DynaFlowConfig config;
 
-    public DynaflowProvider() {
-        this(DynaflowConfig.fromPropertyFile());
+    public DynaFlowProvider() {
+        this(DynaFlowConfig.fromPropertyFile());
     }
 
-    public DynaflowProvider(DynaflowConfig config) {
+    public DynaFlowProvider(DynaFlowConfig config) {
         this.config = Objects.requireNonNull(config, "Config is null");
         this.env = new ExecutionEnvironment(config.createEnv(), WORKING_DIR_PREFIX, config.isDebug());
         this.versionCmd = getVersionCommand();
@@ -77,10 +77,10 @@ public class DynaflowProvider implements LoadFlowProvider {
                 .build();
     }
 
-    private static DynaflowParameters getParametersExt(LoadFlowParameters parameters) {
-        DynaflowParameters parametersExt = parameters.getExtension(DynaflowParameters.class);
+    private static DynaFlowParameters getParametersExt(LoadFlowParameters parameters) {
+        DynaFlowParameters parametersExt = parameters.getExtension(DynaFlowParameters.class);
         if (parametersExt == null) {
-            parametersExt = new DynaflowParameters();
+            parametersExt = new DynaFlowParameters();
         }
         return parametersExt;
     }
@@ -106,15 +106,15 @@ public class DynaflowProvider implements LoadFlowProvider {
         Objects.requireNonNull(computationManager);
         Objects.requireNonNull(workingStateId);
         Objects.requireNonNull(parameters);
-        DynaflowParameters dynaflowParameters = getParametersExt(parameters);
-        DynaflowUtil.checkDynaflowVersion(env, computationManager, versionCmd);
+        DynaFlowParameters dynaFlowParameters = getParametersExt(parameters);
+        DynaFlowUtil.checkDynaFlowVersion(env, computationManager, versionCmd);
         return computationManager.execute(env, new AbstractExecutionHandler<LoadFlowResult>() {
             @Override
             public List<CommandExecution> before(Path workingDir) throws IOException {
                 network.getVariantManager().setWorkingVariant(workingStateId);
 
                 writeIIDM(workingDir, network);
-                DynaflowConfigSerializer.serialize(parameters, dynaflowParameters, workingDir, workingDir.resolve(CONFIG_FILENAME));
+                DynaFlowConfigSerializer.serialize(parameters, dynaFlowParameters, workingDir, workingDir.resolve(CONFIG_FILENAME));
                 return Collections.singletonList(createCommandExecution());
             }
 

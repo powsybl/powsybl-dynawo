@@ -23,9 +23,9 @@ import java.util.Optional;
  *
  * @author Guillaume Pernin <guillaume.pernin at rte-france.com>
  */
-final class DynaflowUtil {
+final class DynaFlowUtil {
 
-    public static boolean checkDynaflowVersion(ExecutionEnvironment env, ComputationManager computationManager, Command versionCmd) {
+    public static boolean checkDynaFlowVersion(ExecutionEnvironment env, ComputationManager computationManager, Command versionCmd) {
         return computationManager.execute(env, new AbstractExecutionHandler<Boolean>() {
             @Override
             public List<CommandExecution> before(Path path) {
@@ -37,18 +37,18 @@ final class DynaflowUtil {
                 super.after(workingDir, report);
                 Optional<InputStream> stdErr = report.getStdErr(versionCmd, 0);
                 if (!stdErr.isPresent()) {
-                    throw new PowsyblException("No output for Dynaflow version command");
+                    throw new PowsyblException("No output for DynaFlow version command");
                 }
                 try (Reader reader = new InputStreamReader(stdErr.get())) {
                     String stdErrContent = CharStreams.toString(reader);
-                    return stdErrContent.equals(DynaflowConstants.VERSION);
+                    return stdErrContent.equals(DynaFlowConstants.VERSION);
                 }
 
             }
         }).join();
     }
 
-    private DynaflowUtil() {
+    private DynaFlowUtil() {
 
     }
 }
