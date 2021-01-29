@@ -4,17 +4,17 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package com.powsybl.dynawaltz.ieee.ieee57;
+package com.powsybl.dynawaltz.dsl.ieee57;
 
 import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
 
+import com.powsybl.dynawaltz.dsl.ieee.AbstractIeeeTest;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.powsybl.dynamicsimulation.DynamicSimulationResult;
-import com.powsybl.dynawaltz.ieee.AbstractIeeeTest;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>

@@ -4,9 +4,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package com.powsybl.dynawaltz.events
-
-import java.util.function.Consumer
+package com.powsybl.dynawaltz.dsl.events
 
 import com.google.auto.service.AutoService
 import com.powsybl.dsl.DslException
@@ -14,17 +12,19 @@ import com.powsybl.dynamicsimulation.EventModel
 import com.powsybl.dynamicsimulation.groovy.EventModelGroovyExtension
 
 import com.powsybl.dynawaltz.DynaWaltzProvider
-import com.powsybl.dynawaltz.events.EventQuadripoleDisconnection
+import com.powsybl.dynawaltz.events.EventSetPointBoolean
+
+import java.util.function.Consumer
 
 /**
- * An implementation of {@link EventModelGroovyExtension} that adds the <pre>EventQuadripoleDisconnection</pre> keyword to the DSL
+ * An implementation of {@link EventModelGroovyExtension} that adds the <pre>EventSetPointBoolean</pre> keyword to the DSL
  *
- * @author Marcos de Miguel <demiguelm at aia.es>
+ * @author Mathieu BAGUE {@literal <mathieu.bague at rte-france.com>}
  */
 @AutoService(EventModelGroovyExtension.class)
-class EventQuadripoleDisconnectionGroovyExtension implements EventModelGroovyExtension {
+class EventSetPointBooleanGroovyExtension implements EventModelGroovyExtension {
 
-    static class EventQuadripoleDisconnectionSpec {
+    static class EventSetPointBooleanSpec {
         String eventModelId
         String staticId
         String parameterSetId
@@ -45,25 +45,24 @@ class EventQuadripoleDisconnectionGroovyExtension implements EventModelGroovyExt
     String getName() {
         return DynaWaltzProvider.NAME
     }
-    
+
     void load(Binding binding, Consumer<EventModel> consumer) {
-        binding.EventQuadripoleDisconnection = { Closure<Void> closure ->
+        binding.EventSetPointBoolean = { Closure<Void> closure ->
             def cloned = closure.clone()
-            EventQuadripoleDisconnectionSpec eventQuadripoleDisconnectionSpec = new EventQuadripoleDisconnectionSpec()
-    
-            cloned.delegate = eventQuadripoleDisconnectionSpec
+            EventSetPointBooleanSpec eventSetPointBooleanSpec = new EventSetPointBooleanSpec()
+
+            cloned.delegate = eventSetPointBooleanSpec
             cloned()
 
-            if (!eventQuadripoleDisconnectionSpec.staticId) {
+            if (!eventSetPointBooleanSpec.staticId) {
                 throw new DslException("'staticId' field is not set");
             }
-            if (!eventQuadripoleDisconnectionSpec.parameterSetId) {
+            if (!eventSetPointBooleanSpec.parameterSetId) {
                 throw new DslException("'parameterSetId' field is not set")
             }
 
-            String eventModelId = eventQuadripoleDisconnectionSpec.eventModelId ? eventQuadripoleDisconnectionSpec.eventModelId : eventQuadripoleDisconnectionSpec.staticId
-            consumer.accept(new EventQuadripoleDisconnection(eventModelId, eventQuadripoleDisconnectionSpec.staticId, eventQuadripoleDisconnectionSpec.parameterSetId))
+            String eventModelId = eventSetPointBooleanSpec.eventModelId ? eventSetPointBooleanSpec.eventModelId : eventSetPointBooleanSpec.staticId
+            consumer.accept(new EventSetPointBoolean(eventModelId, eventSetPointBooleanSpec.staticId, eventSetPointBooleanSpec.parameterSetId))
         }
     }
-
 }

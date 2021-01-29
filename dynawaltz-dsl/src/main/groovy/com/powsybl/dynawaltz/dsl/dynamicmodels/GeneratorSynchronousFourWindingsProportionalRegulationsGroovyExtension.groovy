@@ -4,7 +4,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package com.powsybl.dynawaltz.dynamicmodels
+package com.powsybl.dynawaltz.dsl.dynamicmodels
 
 import java.util.function.Consumer
 
@@ -13,18 +13,18 @@ import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 
-import com.powsybl.dynawaltz.dynamicmodels.GeneratorSynchronousThreeWindings
+import com.powsybl.dynawaltz.dynamicmodels.GeneratorSynchronousFourWindingsProportionalRegulations
 
 /**
- * An implementation of {@link DynamicModelGroovyExtension} that adds the <pre>GeneratorSynchronousThreeWindingsProportionalRegulations</pre> keyword to the DSL
+ * An implementation of {@link DynamicModelGroovyExtension} that adds the <pre>GeneratorSynchronousFourWindingsProportionalRegulations</pre> keyword to the DSL
  *
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class GeneratorSynchronousThreeWindingsGroovyExtension extends GeneratorModelGroovyExtension {
+class GeneratorSynchronousFourWindingsProportionalRegulationsGroovyExtension extends GeneratorModelGroovyExtension {
 
     void load(Binding binding, Consumer<DynamicModel> consumer) {
-        binding.GeneratorSynchronousThreeWindings = { Closure<Void> closure ->
+        binding.GeneratorSynchronousFourWindingsProportionalRegulations = { Closure<Void> closure ->
             def cloned = closure.clone()
             GeneratorModelSpec generatorModelSpec = new GeneratorModelSpec()
 
@@ -39,7 +39,7 @@ class GeneratorSynchronousThreeWindingsGroovyExtension extends GeneratorModelGro
             }
 
             String dynamicModelId = generatorModelSpec.dynamicModelId ? generatorModelSpec.dynamicModelId : generatorModelSpec.staticId
-            consumer.accept(new GeneratorSynchronousThreeWindings(dynamicModelId, generatorModelSpec.staticId, generatorModelSpec.parameterSetId))
+            consumer.accept(new GeneratorSynchronousFourWindingsProportionalRegulations(dynamicModelId, generatorModelSpec.staticId, generatorModelSpec.parameterSetId))
         }
     }
 

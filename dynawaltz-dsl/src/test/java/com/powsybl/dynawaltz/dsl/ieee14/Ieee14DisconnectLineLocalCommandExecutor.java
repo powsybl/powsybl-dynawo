@@ -4,7 +4,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package com.powsybl.dynawaltz.ieee.ieee14;
+package com.powsybl.dynawaltz.dsl.ieee14;
 
 import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.*;
 
@@ -14,7 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import com.powsybl.dynawaltz.DynaWaltzParameters;
-import com.powsybl.dynawaltz.ieee.AbstractDynaWaltzLocalCommandExecutor;
+import com.powsybl.dynawaltz.dsl.ieee.AbstractDynaWaltzLocalCommandExecutor;
 import com.powsybl.iidm.network.Network;
 
 /**

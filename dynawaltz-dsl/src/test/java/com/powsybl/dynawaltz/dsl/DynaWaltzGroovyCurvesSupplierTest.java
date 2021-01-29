@@ -4,7 +4,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package com.powsybl.dynawaltz;
+package com.powsybl.dynawaltz.dsl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -29,6 +29,8 @@ import com.powsybl.dynamicsimulation.CurvesSupplier;
 import com.powsybl.dynamicsimulation.groovy.CurveGroovyExtension;
 import com.powsybl.dynamicsimulation.groovy.GroovyCurvesSupplier;
 import com.powsybl.dynamicsimulation.groovy.GroovyExtension;
+import com.powsybl.dynawaltz.DynaWaltzCurve;
+import com.powsybl.dynawaltz.DynaWaltzProvider;
 import com.powsybl.iidm.network.Generator;
 import com.powsybl.iidm.network.Load;
 import com.powsybl.iidm.network.Network;

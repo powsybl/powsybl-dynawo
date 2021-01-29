@@ -4,7 +4,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package com.powsybl.dynawaltz;
+package com.powsybl.dynawaltz.dsl;
 
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
@@ -13,6 +13,7 @@ import com.powsybl.dynamicsimulation.DynamicModelsSupplier;
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension;
 import com.powsybl.dynamicsimulation.groovy.GroovyDynamicModelsSupplier;
 import com.powsybl.dynamicsimulation.groovy.GroovyExtension;
+import com.powsybl.dynawaltz.DynaWaltzProvider;
 import com.powsybl.dynawaltz.automatons.CurrentLimitAutomaton;
 import com.powsybl.dynawaltz.dynamicmodels.AbstractBlackBoxModel;
 import com.powsybl.dynawaltz.dynamicmodels.GeneratorSynchronousFourWindings;
@@ -21,13 +22,13 @@ import com.powsybl.dynawaltz.dynamicmodels.GeneratorSynchronousThreeWindings;
 import com.powsybl.dynawaltz.dynamicmodels.GeneratorSynchronousThreeWindingsProportionalRegulations;
 import com.powsybl.dynawaltz.dynamicmodels.LoadAlphaBeta;
 import com.powsybl.dynawaltz.dynamicmodels.OmegaRef;
-import com.powsybl.dynawaltz.automatons.CurrentLimitAutomatonGroovyExtension;
-import com.powsybl.dynawaltz.dynamicmodels.GeneratorSynchronousFourWindingsGroovyExtension;
-import com.powsybl.dynawaltz.dynamicmodels.GeneratorSynchronousFourWindingsProportionalRegulationsGroovyExtension;
-import com.powsybl.dynawaltz.dynamicmodels.GeneratorSynchronousThreeWindingsGroovyExtension;
-import com.powsybl.dynawaltz.dynamicmodels.GeneratorSynchronousThreeWindingsProportionalRegulationsGroovyExtension;
-import com.powsybl.dynawaltz.dynamicmodels.LoadAlphaBetaGroovyExtension;
-import com.powsybl.dynawaltz.dynamicmodels.OmegaRefGroovyExtension;
+import com.powsybl.dynawaltz.dsl.automatons.CurrentLimitAutomatonGroovyExtension;
+import com.powsybl.dynawaltz.dsl.dynamicmodels.GeneratorSynchronousFourWindingsGroovyExtension;
+import com.powsybl.dynawaltz.dsl.dynamicmodels.GeneratorSynchronousFourWindingsProportionalRegulationsGroovyExtension;
+import com.powsybl.dynawaltz.dsl.dynamicmodels.GeneratorSynchronousThreeWindingsGroovyExtension;
+import com.powsybl.dynawaltz.dsl.dynamicmodels.GeneratorSynchronousThreeWindingsProportionalRegulationsGroovyExtension;
+import com.powsybl.dynawaltz.dsl.dynamicmodels.LoadAlphaBetaGroovyExtension;
+import com.powsybl.dynawaltz.dsl.dynamicmodels.OmegaRefGroovyExtension;
 import com.powsybl.dynawaltz.xml.DynaWaltzTestUtil;
 import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.Generator;
