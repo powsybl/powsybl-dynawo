@@ -1,0 +1,16 @@
+dynamic-simulation-default-parameters:
+    startTime: 1
+    stopTime: 100
+
+dynawaltz:
+  homeDir: /home/dynawaltz
+  debug: false
+
+dynawaltz-default-parameters:
+    parametersFile: /work/unittests/models.par
+    network.parametersFile: /work/unittests/network.par
+    network.parametersId: "1"
+    solver.type: IDA
+    solver.parametersFile: /work/unittests/solver.par
+    solver.parametersId: "1"
+
