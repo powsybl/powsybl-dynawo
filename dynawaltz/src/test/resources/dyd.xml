@@ -13,10 +13,20 @@
         <dyn:macroStaticRef id="MSR_LoadAlphaBeta"/>
     </dyn:blackBoxModel>
     <dyn:macroConnect connector="MC_LoadAlphaBeta" id1="BBM_LOAD" id2="NETWORK"/>
-    <dyn:blackBoxModel id="BBM_LOAD2" lib="LoadAlphaBeta" parFile="models.par" parId="LAB" staticId="LOAD2">
-        <dyn:macroStaticRef id="MSR_LoadAlphaBeta"/>
+    <dyn:macroStaticReference id="MSR_LoadOneTransformer">
+        <dyn:staticRef var="transformer_P1Pu_value" staticVar="p"/>
+        <dyn:staticRef var="transformer_Q1Pu_value" staticVar="q"/>
+        <dyn:staticRef var="transformer_state" staticVar="state"/>
+    </dyn:macroStaticReference>
+    <dyn:macroConnector id="MC_LoadOneTransformer">
+        <dyn:connect var1="transformer_terminal" var2="@STATIC_ID@@NODE@_ACPIN"/>
+        <dyn:connect var1="transformer_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
+        <dyn:connect var1="load_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
+    </dyn:macroConnector>
+    <dyn:blackBoxModel id="BBM_LOAD2" lib="LoadOneTransformer" parFile="models.par" parId="LOT" staticId="LOAD2">
+        <dyn:macroStaticRef id="MSR_LoadOneTransformer"/>
     </dyn:blackBoxModel>
-    <dyn:macroConnect connector="MC_LoadAlphaBeta" id1="BBM_LOAD2" id2="NETWORK"/>
+    <dyn:macroConnect connector="MC_LoadOneTransformer" id1="BBM_LOAD2" id2="NETWORK"/>
     <dyn:macroStaticReference id="MSR_GeneratorSynchronousThreeWindingsProportionalRegulations">
         <dyn:staticRef var="generator_PGenPu" staticVar="p"/>
         <dyn:staticRef var="generator_QGenPu" staticVar="q"/>

@@ -4,6 +4,18 @@
         <par type="DOUBLE" name="load_alpha" value="1.5"/>
         <par type="DOUBLE" name="load_beta" value="2.5"/>
     </set>
+    <set id="LOT">
+	    <par type="DOUBLE" name="load_alpha" value="1.5"/>
+	    <par type="DOUBLE" name="load_beta" value="2.5"/>
+	    <par type="DOUBLE" name="transformer_B" value="0"/>
+	    <par type="DOUBLE" name="transformer_G" value="0"/>
+	    <par type="DOUBLE" name="transformer_R" value="0"/>
+	    <par type="DOUBLE" name="transformer_X" value="10"/>
+	    <par type="INT" name="transformer_NbTap" value="21"/>
+	    <par type="DOUBLE" name="transformer_rTfoMaxPu" value="1.10"/>
+	    <par type="DOUBLE" name="transformer_rTfoMinPu" value="0.90"/>
+	    <par type="DOUBLE" name="transformer_Uc20Pu" value="1"/>
+    </set>
     <set id="GSTWPR">
         <par type="INT" name="generator_ExcitationPu" value="1"/>
         <par type="DOUBLE" name="generator_MdPuEfd" value="0"/>

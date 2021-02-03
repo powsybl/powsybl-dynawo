@@ -13,11 +13,20 @@ import com.powsybl.iidm.network.Generator
 
 
 for (Load load : network.loads) {
-    LoadAlphaBeta {
-        staticId load.id
-        // dynamicModelId "BBM_" + load.id (dynamicModelId could be optional and equal to staticId)
-        parameterSetId "LAB"
-       // the parameterSetId is a string that points to the requested entry in the aggregated par file defined in config.yml
+    if (load == "LOAD2") {
+        LoadOneTransformer {
+            staticId load.id
+            // dynamicModelId "BBM_" + load.id (dynamicModelId could be optional and equal to staticId)
+            parameterSetId "LOT"
+           // the parameterSetId is a string that points to the requested entry in the aggregated par file defined in config.yml
+        }
+    } else {
+        LoadAlphaBeta {
+            staticId load.id
+            // dynamicModelId "BBM_" + load.id (dynamicModelId could be optional and equal to staticId)
+            parameterSetId "LAB"
+           // the parameterSetId is a string that points to the requested entry in the aggregated par file defined in config.yml
+        }
     }
 }
 

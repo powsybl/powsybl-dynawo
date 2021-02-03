@@ -29,17 +29,12 @@ import org.xml.sax.SAXException;
 
 import com.powsybl.commons.AbstractConverterTest;
 import com.powsybl.dynamicsimulation.Curve;
+import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynamicsimulation.EventModel;
 import com.powsybl.dynawaltz.DynaWaltzCurve;
-import com.powsybl.dynawaltz.automatons.CurrentLimitAutomaton;
-import com.powsybl.dynawaltz.dynamicmodels.GeneratorSynchronousFourWindings;
-import com.powsybl.dynawaltz.dynamicmodels.GeneratorSynchronousFourWindingsProportionalRegulations;
-import com.powsybl.dynawaltz.dynamicmodels.GeneratorSynchronousThreeWindings;
-import com.powsybl.dynawaltz.dynamicmodels.GeneratorSynchronousThreeWindingsProportionalRegulations;
-import com.powsybl.dynawaltz.dynamicmodels.LoadAlphaBeta;
-import com.powsybl.dynawaltz.dynamicmodels.OmegaRef;
-import com.powsybl.dynawaltz.events.EventQuadripoleDisconnection;
-import com.powsybl.dynamicsimulation.DynamicModel;
+import com.powsybl.dynawaltz.automatons.*;
+import com.powsybl.dynawaltz.dynamicmodels.*;
+import com.powsybl.dynawaltz.events.*;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 
 /**
@@ -75,7 +70,11 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
         // Dynamic Models
         dynamicModels = new ArrayList<>();
         network.getLoadStream().forEach(l -> {
-            dynamicModels.add(new LoadAlphaBeta("BBM_" + l.getId(), l.getId(), "LAB"));
+            if (l.getId().equals("LOAD2")) {
+                dynamicModels.add(new LoadOneTransformer("BBM_" + l.getId(), l.getId(), "LOT"));
+            } else {
+                dynamicModels.add(new LoadAlphaBeta("BBM_" + l.getId(), l.getId(), "LAB"));
+            }
         });
         network.getGeneratorStream().forEach(g -> {
             if (g.getId().equals("GEN2")) {

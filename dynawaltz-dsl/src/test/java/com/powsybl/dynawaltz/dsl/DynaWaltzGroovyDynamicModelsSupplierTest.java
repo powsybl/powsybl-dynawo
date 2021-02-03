@@ -14,21 +14,10 @@ import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension;
 import com.powsybl.dynamicsimulation.groovy.GroovyDynamicModelsSupplier;
 import com.powsybl.dynamicsimulation.groovy.GroovyExtension;
 import com.powsybl.dynawaltz.DynaWaltzProvider;
-import com.powsybl.dynawaltz.automatons.CurrentLimitAutomaton;
-import com.powsybl.dynawaltz.dynamicmodels.AbstractBlackBoxModel;
-import com.powsybl.dynawaltz.dynamicmodels.GeneratorSynchronousFourWindings;
-import com.powsybl.dynawaltz.dynamicmodels.GeneratorSynchronousFourWindingsProportionalRegulations;
-import com.powsybl.dynawaltz.dynamicmodels.GeneratorSynchronousThreeWindings;
-import com.powsybl.dynawaltz.dynamicmodels.GeneratorSynchronousThreeWindingsProportionalRegulations;
-import com.powsybl.dynawaltz.dynamicmodels.LoadAlphaBeta;
-import com.powsybl.dynawaltz.dynamicmodels.OmegaRef;
-import com.powsybl.dynawaltz.dsl.automatons.CurrentLimitAutomatonGroovyExtension;
-import com.powsybl.dynawaltz.dsl.dynamicmodels.GeneratorSynchronousFourWindingsGroovyExtension;
-import com.powsybl.dynawaltz.dsl.dynamicmodels.GeneratorSynchronousFourWindingsProportionalRegulationsGroovyExtension;
-import com.powsybl.dynawaltz.dsl.dynamicmodels.GeneratorSynchronousThreeWindingsGroovyExtension;
-import com.powsybl.dynawaltz.dsl.dynamicmodels.GeneratorSynchronousThreeWindingsProportionalRegulationsGroovyExtension;
-import com.powsybl.dynawaltz.dsl.dynamicmodels.LoadAlphaBetaGroovyExtension;
-import com.powsybl.dynawaltz.dsl.dynamicmodels.OmegaRefGroovyExtension;
+import com.powsybl.dynawaltz.automatons.*;
+import com.powsybl.dynawaltz.dynamicmodels.*;
+import com.powsybl.dynawaltz.dsl.automatons.*;
+import com.powsybl.dynawaltz.dsl.dynamicmodels.*;
 import com.powsybl.dynawaltz.xml.DynaWaltzTestUtil;
 import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.Generator;
@@ -78,7 +67,7 @@ public class DynaWaltzGroovyDynamicModelsSupplierTest {
     public void test() {
 
         List<DynamicModelGroovyExtension> extensions = GroovyExtension.find(DynamicModelGroovyExtension.class, DynaWaltzProvider.NAME);
-        assertEquals(7, extensions.size());
+        assertEquals(8, extensions.size());
         extensions.forEach(DynaWaltzGroovyDynamicModelsSupplierTest::validateExtension);
 
         DynamicModelsSupplier supplier = new GroovyDynamicModelsSupplier(fileSystem.getPath("/dynamicModels.groovy"), extensions);
@@ -132,11 +121,21 @@ public class DynaWaltzGroovyDynamicModelsSupplierTest {
             .setTargetP(-1.3)
             .setTargetQ(0.9)
             .add();
+        VoltageLevel vlload  = network.getVoltageLevel("VLLOAD");
+        Bus nload = vlload.getBusBreakerView().getBus("NLOAD");
+        vlload.newLoad()
+            .setId("LOAD2")
+            .setBus(nload.getId())
+            .setConnectableBus(nload.getId())
+            .setP0(1.0)
+            .setQ0(0.5)
+            .add();
         return network;
     }
 
     private static boolean validateExtension(DynamicModelGroovyExtension extension) {
-        boolean isLoadExtension = extension instanceof LoadAlphaBetaGroovyExtension;
+        boolean isLoadAlphaBetaExtension = extension instanceof LoadAlphaBetaGroovyExtension;
+        boolean isLoadOneTransformerExtension = extension instanceof LoadOneTransformerGroovyExtension;
 
         boolean isThreeWindingsGeneratorExtension = extension instanceof GeneratorSynchronousThreeWindingsGroovyExtension;
         boolean isFourWindingsGeneratorExtension = extension instanceof GeneratorSynchronousFourWindingsGroovyExtension;
@@ -145,6 +144,7 @@ public class DynaWaltzGroovyDynamicModelsSupplierTest {
 
         boolean isOmegaRefExtension = extension instanceof OmegaRefGroovyExtension;
 
+        boolean isLoadExtension = isLoadAlphaBetaExtension || isLoadOneTransformerExtension;
         boolean isGeneratorExtension = isThreeWindingsGeneratorExtension || isFourWindingsGeneratorExtension || isThreeWindingsGeneratorProportionalRegulationsExtension || isFourWindingsGeneratorProportionalRegulationsExtension;
         boolean isDynamicModelExtension = isLoadExtension || isGeneratorExtension || isOmegaRefExtension;
 
@@ -161,6 +161,11 @@ public class DynaWaltzGroovyDynamicModelsSupplierTest {
             Identifiable<?> identifiable = network.getIdentifiable(blackBoxModel.getStaticId());
             assertEquals(identifiable.getId(), blackBoxModel.getDynamicModelId());
             assertEquals("LAB", blackBoxModel.getParameterSetId());
+            assertTrue(identifiable instanceof Load);
+        } else if (blackBoxModel instanceof LoadOneTransformer) {
+            Identifiable<?> identifiable = network.getIdentifiable(blackBoxModel.getStaticId());
+            assertEquals(identifiable.getId(), blackBoxModel.getDynamicModelId());
+            assertEquals("LOT", blackBoxModel.getParameterSetId());
             assertTrue(identifiable instanceof Load);
         } else if (blackBoxModel instanceof GeneratorSynchronousThreeWindingsProportionalRegulations) {
             Identifiable<?> identifiable = network.getIdentifiable(blackBoxModel.getStaticId());

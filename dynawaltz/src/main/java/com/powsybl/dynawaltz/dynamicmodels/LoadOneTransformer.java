@@ -16,27 +16,28 @@ import com.powsybl.dynawaltz.xml.MacroStaticReferenceXml;
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class LoadAlphaBeta extends AbstractLoadModel {
+public class LoadOneTransformer extends AbstractLoadModel {
 
-    public LoadAlphaBeta(String dynamicModelId, String staticId, String parameterSetId) {
+    public LoadOneTransformer(String dynamicModelId, String staticId, String parameterSetId) {
         super(dynamicModelId, staticId, parameterSetId);
     }
 
     @Override
     public String getLib() {
-        return "LoadAlphaBeta";
+        return "LoadOneTransformer";
     }
 
     @Override
     protected void writeReference(XMLStreamWriter writer, DynaWaltzXmlContext context) throws XMLStreamException {
-        MacroStaticReferenceXml.writeStaticRef(writer, "load_PPu", "p");
-        MacroStaticReferenceXml.writeStaticRef(writer, "load_QPu", "q");
-        MacroStaticReferenceXml.writeStaticRef(writer, "load_state", "state");
+        MacroStaticReferenceXml.writeStaticRef(writer, "transformer_P1Pu_value", "p");
+        MacroStaticReferenceXml.writeStaticRef(writer, "transformer_Q1Pu_value", "q");
+        MacroStaticReferenceXml.writeStaticRef(writer, "transformer_state", "state");
     }
 
     @Override
     protected void writeConnector(XMLStreamWriter writer, DynaWaltzXmlContext context) throws XMLStreamException {
-        MacroConnectorXml.writeConnect(writer, "load_terminal", "@STATIC_ID@@NODE@_ACPIN");
+        MacroConnectorXml.writeConnect(writer, "transformer_terminal", "@STATIC_ID@@NODE@_ACPIN");
+        MacroConnectorXml.writeConnect(writer, "transformer_switchOffSignal1", "@STATIC_ID@@NODE@_switchOff");
         MacroConnectorXml.writeConnect(writer, "load_switchOffSignal1", "@STATIC_ID@@NODE@_switchOff");
     }
 }
