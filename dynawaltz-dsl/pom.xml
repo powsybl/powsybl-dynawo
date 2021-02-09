@@ -20,6 +20,10 @@
     <name>DynaWaltz DSL</name>
     <description>DSL for DynaWaltz</description>
 
+    <properties>
+        <groovydoc.classifier>javadoc</groovydoc.classifier>
+    </properties>
+
     <build>
         <plugins>
             <plugin>
