@@ -40,11 +40,15 @@ public final class DynawoResultsNetworkUpdate {
 
             PhaseTapChanger sourcePhaseTapChanger = sourceTwoWindingsTransformer.getPhaseTapChanger();
             PhaseTapChanger targetPhaseTapChanger = targetNetwork.getTwoWindingsTransformer(sourceTwoWindingsTransformer.getId()).getPhaseTapChanger();
-            targetPhaseTapChanger.setTapPosition(sourcePhaseTapChanger.getTapPosition());
+            if (targetPhaseTapChanger != null) {
+                targetPhaseTapChanger.setTapPosition(sourcePhaseTapChanger.getTapPosition());
+            }
 
             RatioTapChanger sourceRatioTapChanger = sourceTwoWindingsTransformer.getRatioTapChanger();
             RatioTapChanger targetRatioTapChanger = targetNetwork.getTwoWindingsTransformer(sourceTwoWindingsTransformer.getId()).getRatioTapChanger();
-            targetRatioTapChanger.setTapPosition(sourceRatioTapChanger.getTapPosition());
+            if (targetRatioTapChanger != null) {
+                targetRatioTapChanger.setTapPosition(sourceRatioTapChanger.getTapPosition());
+            }
         }
         for (Load sourceLoad : sourceNetwork.getLoads()) {
             update(targetNetwork.getLoad(sourceLoad.getId()).getTerminal(), sourceLoad.getTerminal());
@@ -111,13 +115,18 @@ public final class DynawoResultsNetworkUpdate {
             }
             PhaseTapChanger sourcePhaseTapChanger = sourceTwoWindingsTransformer.getPhaseTapChanger();
             PhaseTapChanger verifyPhaseTapChanger = verifyNetwork.getTwoWindingsTransformer(sourceTwoWindingsTransformer.getId()).getPhaseTapChanger();
-            if (sourcePhaseTapChanger.getTapPosition() != verifyPhaseTapChanger.getTapPosition()) {
-                return false;
+            if ((sourcePhaseTapChanger != null) && (verifyPhaseTapChanger != null)) {
+                if (sourcePhaseTapChanger.getTapPosition() != verifyPhaseTapChanger.getTapPosition()) {
+                    return false;
+                }
             }
+
             RatioTapChanger sourceRatioTapChanger = sourceTwoWindingsTransformer.getRatioTapChanger();
             RatioTapChanger verifyRatioTapChanger = verifyNetwork.getTwoWindingsTransformer(sourceTwoWindingsTransformer.getId()).getRatioTapChanger();
-            if (sourceRatioTapChanger.getTapPosition() != verifyRatioTapChanger.getTapPosition()) {
-                return false;
+            if ((sourceRatioTapChanger != null) && (verifyRatioTapChanger != null)) {
+                if (sourceRatioTapChanger.getTapPosition() != verifyRatioTapChanger.getTapPosition()) {
+                    return false;
+                }
             }
         }
         for (Load sourceLoad : sourceNetwork.getLoads()) {
@@ -185,10 +194,14 @@ public final class DynawoResultsNetworkUpdate {
             zero(targetTwoWindingsTransformer.getTerminal2());
 
             PhaseTapChanger targetPhaseTapChanger = targetTwoWindingsTransformer.getPhaseTapChanger();
-            targetPhaseTapChanger.setTapPosition(0);
+            if (targetPhaseTapChanger != null) {
+                targetPhaseTapChanger.setTapPosition(0);
+            }
 
             RatioTapChanger targetRatioTapChanger = targetTwoWindingsTransformer.getRatioTapChanger();
-            targetRatioTapChanger.setTapPosition(0);
+            if (targetRatioTapChanger != null) {
+                targetRatioTapChanger.setTapPosition(0);
+            }
         }
         for (Load targetLoad : targetNetwork.getLoads()) {
             zero(targetLoad.getTerminal());
