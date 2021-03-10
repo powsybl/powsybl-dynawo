@@ -1,33 +1,28 @@
-/**
- * Copyright (c) 2019, RTE (http://www.rte-france.com)
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- */
-
-import com.powsybl.iidm.network.Network;
+import com.powsybl.commons.extensions.Extension;
+import com.powsybl.iidm.network.*;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
+import org.joda.time.DateTime;
 import org.junit.Test;
+
+import java.util.Collection;
+import java.util.Set;
+import java.util.stream.Stream;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
- * @author Mathieu Bague <mathieu.bague at rte-france.com>
+ * @author Guillem Jané Guasch <zamarrenolm at aia.es>
  */
 public class DynawoResultsNetworkUpdateTest {
 
     @Test
-    public void test() {
-        Network network = EurostagTutorialExample1Factory.create();
+    public void testUpdate() {
+        Network networkInput = EurostagTutorialExample1Factory.create();
+        Network networkOutput = EurostagTutorialExample1Factory.create();
 
-        NetworkPredicate predicate = IdentifierNetworkPredicate.of("P2");
-        assertFalse(predicate.test(network.getSubstation("P1")));
-        assertFalse(predicate.test(network.getVoltageLevel("VLGEN")));
-        assertFalse(predicate.test(network.getVoltageLevel("VLHV1")));
-
-        assertTrue(predicate.test(network.getSubstation("P2")));
-        assertTrue(predicate.test(network.getVoltageLevel("VLLOAD")));
-        assertTrue(predicate.test(network.getVoltageLevel("VLHV2")));
+        DynawoResultsNetworkUpdate.zero(networkOutput);
+        DynawoResultsNetworkUpdate.update(networkInput, networkOutput);
+        assertTrue(DynawoResultsNetworkUpdate.equalState(networkInput, networkOutput));
     }
 }
