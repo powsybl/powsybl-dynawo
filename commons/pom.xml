@@ -94,5 +94,10 @@
             <artifactId>powsybl-iidm-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>powsybl-iidm-xml-converter</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>
