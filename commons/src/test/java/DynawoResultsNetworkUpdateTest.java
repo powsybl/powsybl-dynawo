@@ -1,8 +1,11 @@
 import com.powsybl.commons.AbstractConverterTest;
+import com.powsybl.commons.datasource.ResourceDataSource;
+import com.powsybl.commons.datasource.ResourceSet;
+import com.powsybl.iidm.import_.Importers;
 import com.powsybl.iidm.network.*;
-import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import com.powsybl.iidm.xml.NetworkXml;
 import org.junit.Test;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -27,8 +30,7 @@ public class DynawoResultsNetworkUpdateTest extends AbstractConverterTest {
     }
 
     private static Network createTestCase() {
-        // TODO(Luma) use a test case that corresponds to a solved power flow (voltages, angles, flows on lines, ...)
-        return EurostagTutorialExample1Factory.create();
+        return Importers.importData("XIIDM", new ResourceDataSource("SmallBusBranch", new ResourceSet("/", "SmallBusBranch.xiidm")), null);
     }
 
     private static void reset(Network targetNetwork) {
@@ -53,12 +55,12 @@ public class DynawoResultsNetworkUpdateTest extends AbstractConverterTest {
 
             PhaseTapChanger targetPhaseTapChanger = targetTwoWindingsTransformer.getPhaseTapChanger();
             if (targetPhaseTapChanger != null) {
-                targetPhaseTapChanger.setTapPosition(0);
+                targetPhaseTapChanger.setTapPosition(targetPhaseTapChanger.getLowTapPosition());
             }
 
             RatioTapChanger targetRatioTapChanger = targetTwoWindingsTransformer.getRatioTapChanger();
             if (targetRatioTapChanger != null) {
-                targetRatioTapChanger.setTapPosition(0);
+                targetRatioTapChanger.setTapPosition(targetRatioTapChanger.getLowTapPosition());
             }
         }
         for (Load targetLoad : targetNetwork.getLoads()) {
