@@ -1,4 +1,12 @@
+/**
+ * Copyright (c) 2020, RTE (http://www.rte-france.com)
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 import com.powsybl.commons.AbstractConverterTest;
+import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.datasource.ResourceDataSource;
 import com.powsybl.commons.datasource.ResourceSet;
 import com.powsybl.iidm.import_.Importers;
@@ -6,7 +14,6 @@ import com.powsybl.iidm.network.*;
 import com.powsybl.iidm.xml.NetworkXml;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -16,7 +23,7 @@ import java.nio.file.Path;
 public class DynawoResultsNetworkUpdateTest extends AbstractConverterTest {
 
     @Test
-    public void testUpdate()  throws IOException {
+    public void testUpdate() throws Exception {
         Network expected = createTestCase();
         Network actual = createTestCase();
         reset(actual);
@@ -62,6 +69,9 @@ public class DynawoResultsNetworkUpdateTest extends AbstractConverterTest {
             if (targetRatioTapChanger != null) {
                 targetRatioTapChanger.setTapPosition(targetRatioTapChanger.getLowTapPosition());
             }
+        }
+        if (targetNetwork.getThreeWindingsTransformerCount() > 0) {
+            throw new PowsyblException("Three Windings Transformers not supported");
         }
         for (Load targetLoad : targetNetwork.getLoads()) {
             reset(targetLoad.getTerminal());

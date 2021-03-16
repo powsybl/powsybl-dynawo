@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) 2020, RTE (http://www.rte-france.com)
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+import com.powsybl.commons.PowsyblException;
 import com.powsybl.iidm.network.*;
 
 /**
@@ -42,6 +49,9 @@ public final class DynawoResultsNetworkUpdate {
             if (targetRatioTapChanger != null) {
                 targetRatioTapChanger.setTapPosition(sourceRatioTapChanger.getTapPosition());
             }
+        }
+        if (sourceNetwork.getThreeWindingsTransformerCount() > 0) {
+            throw new PowsyblException("Three Windings Transformers not supported");
         }
         for (Load sourceLoad : sourceNetwork.getLoads()) {
             update(targetNetwork.getLoad(sourceLoad.getId()).getTerminal(), sourceLoad.getTerminal());
