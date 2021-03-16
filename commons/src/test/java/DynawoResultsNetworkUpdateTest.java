@@ -33,8 +33,8 @@ public class DynawoResultsNetworkUpdateTest extends AbstractConverterTest {
 
     private static void reset(Network targetNetwork) {
         for (Bus targetBus : targetNetwork.getBusView().getBuses()) {
-            targetBus.setV(0.0);
-            targetBus.setAngle(0.0);
+            targetBus.setV(Double.NaN);
+            targetBus.setAngle(Double.NaN);
         }
         for (Line targetline : targetNetwork.getLines()) {
             reset(targetline.getTerminal1());
@@ -81,8 +81,8 @@ public class DynawoResultsNetworkUpdateTest extends AbstractConverterTest {
     }
 
     private static void reset(Terminal target) {
-        target.setP(0.0);
-        target.setQ(0.0);
+        target.setP(Double.NaN);
+        target.setQ(Double.NaN);
         target.disconnect();
     }
 }
