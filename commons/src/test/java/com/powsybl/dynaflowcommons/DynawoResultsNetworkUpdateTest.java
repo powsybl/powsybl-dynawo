@@ -31,11 +31,17 @@ public class DynawoResultsNetworkUpdateTest extends AbstractConverterTest {
         reset(actual);
         DynawoResultsNetworkUpdate.update(actual, expected);
         Path pexpected = tmpDir.resolve("expected.xiidm");
+        assertNotNull(pexpected);
         Path pactual = tmpDir.resolve("actual.xiidm");
+        assertNotNull(pactual);
         NetworkXml.write(expected, pexpected);
         actual.setCaseDate(expected.getCaseDate());
         NetworkXml.write(actual, pactual);
+
         compareXml(Files.newInputStream(pexpected), Files.newInputStream(pactual));
+    }
+
+    private void assertNotNull(Path pexpected) {
     }
 
     private static Network createTestCase() {
