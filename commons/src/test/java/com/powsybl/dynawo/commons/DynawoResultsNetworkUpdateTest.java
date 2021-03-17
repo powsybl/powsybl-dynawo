@@ -10,13 +10,17 @@ import com.powsybl.commons.AbstractConverterTest;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.datasource.ResourceDataSource;
 import com.powsybl.commons.datasource.ResourceSet;
+import com.powsybl.iidm.export.ExportOptions;
 import com.powsybl.iidm.import_.Importers;
 import com.powsybl.iidm.network.*;
 import com.powsybl.iidm.xml.NetworkXml;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
+import static org.junit.Assert.assertNotNull;
 
 /**
  * @author Guillem Jané Guasch <janeg at aia.es>
@@ -24,11 +28,43 @@ import java.nio.file.Path;
 public class DynawoResultsNetworkUpdateTest extends AbstractConverterTest {
 
     @Test
-    public void testUpdate() throws Exception {
-        Network expected = createTestCase();
-        Network actual = createTestCase();
+    public void testUpdateNodeBreaker() throws IOException {
+        Network expected = createTestCaseNodeBreaker();
+        Network actual = createTestCaseNodeBreaker();
         reset(actual);
         DynawoResultsNetworkUpdate.update(actual, expected);
+        compare(expected, actual);
+    }
+
+    @Test
+    public void testUpdateNodeBreakerPassingThroughBusBreaker() throws IOException {
+        Network expected = createTestCaseNodeBreaker();
+        Network actual = createTestCaseNodeBreaker();
+        reset(actual);
+
+        // We assume that the original network will be updated by some analysis tool
+        // but it is exchanged with that external tool at Bus/Breaker view
+        // We want to ensure that the the "actual" Node/Breaker network
+        // is properly updated from the Bus/Breaker "solution" exchanged
+        // with the external analysis tool
+        Path pexpectedAsBusBreaker = tmpDir.resolve("expected-as-busbreaker.xiidm");
+        NetworkXml.write(expected, new ExportOptions().setTopologyLevel(TopologyLevel.BUS_BREAKER), pexpectedAsBusBreaker);
+        Network expectedBusBreaker = NetworkXml.read(pexpectedAsBusBreaker);
+        DynawoResultsNetworkUpdate.update(actual, expectedBusBreaker);
+
+        compare(expected, actual);
+    }
+
+    @Test
+    public void testUpdateBusBranch() throws IOException {
+        Network expected = createTestCaseBusBranch();
+        Network actual = createTestCaseBusBranch();
+        reset(actual);
+        DynawoResultsNetworkUpdate.update(actual, expected);
+        compare(expected, actual);
+    }
+
+    private void compare(Network expected, Network actual) throws IOException {
         Path pexpected = tmpDir.resolve("expected.xiidm");
         assertNotNull(pexpected);
         Path pactual = tmpDir.resolve("actual.xiidm");
@@ -36,15 +72,15 @@ public class DynawoResultsNetworkUpdateTest extends AbstractConverterTest {
         NetworkXml.write(expected, pexpected);
         actual.setCaseDate(expected.getCaseDate());
         NetworkXml.write(actual, pactual);
-
         compareXml(Files.newInputStream(pexpected), Files.newInputStream(pactual));
     }
 
-    private void assertNotNull(Path pexpected) {
+    private static Network createTestCaseBusBranch() {
+        return Importers.importData("XIIDM", new ResourceDataSource("SmallBusBranch", new ResourceSet("/", "SmallBusBranch.xiidm")), null);
     }
 
-    private static Network createTestCase() {
-        return Importers.importData("XIIDM", new ResourceDataSource("SmallBusBranch", new ResourceSet("/", "SmallBusBranch.xiidm")), null);
+    private static Network createTestCaseNodeBreaker() {
+        return Importers.importData("XIIDM", new ResourceDataSource("SmallNodeBreaker_fix_line_044bbe91", new ResourceSet("/", "SmallNodeBreaker_fix_line_044bbe91.xiidm")), null);
     }
 
     private static void reset(Network targetNetwork) {
