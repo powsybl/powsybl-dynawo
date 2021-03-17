@@ -84,9 +84,9 @@ public final class DynawoResultsNetworkUpdate {
     private static void update(Terminal target, Terminal source) {
         target.setP(source.getP());
         target.setQ(source.getQ());
-        if (source.isConnected() && !target.isConnected()) {
+        if (source.isConnected()) {
             target.connect();
-        } else if (!source.isConnected() && target.isConnected()) {
+        } else if (!source.isConnected()) {
             target.disconnect();
         }
     }
