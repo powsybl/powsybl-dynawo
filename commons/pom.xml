@@ -16,32 +16,9 @@
         <version>1.1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>powsybl-dynawaltz</artifactId>
-    <name>DynaWaltz</name>
-    <description>DynaWaltz integration module for powsybl</description>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <manifestEntries>
-                            <Automatic-Module-Name>com.powsybl.dynawaltz</Automatic-Module-Name>
-                        </manifestEntries>
-                    </archive>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>test-jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
+    <artifactId>powsybl-dynawo-commons</artifactId>
+    <name>Commons</name>
+    <description>Common tools for Dynawo integration in Powsybl</description>
 
     <dependencies>
         <!-- Compile dependencies -->
@@ -51,15 +28,7 @@
         </dependency>
         <dependency>
             <groupId>com.powsybl</groupId>
-            <artifactId>powsybl-dynamic-simulation-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.powsybl</groupId>
-            <artifactId>powsybl-iidm-xml-converter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.powsybl</groupId>
-            <artifactId>powsybl-time-series-api</artifactId>
+            <artifactId>powsybl-iidm-api</artifactId>
         </dependency>
 
         <!-- Runtime dependencies -->
@@ -116,6 +85,10 @@
             <artifactId>powsybl-iidm-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.powsybl</groupId>
+            <artifactId>powsybl-iidm-xml-converter</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
-
 </project>

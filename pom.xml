@@ -41,6 +41,7 @@
     </developers>
 
     <modules>
+        <module>commons</module>
         <module>dynaflow</module>
         <module>dynawaltz</module>
         <module>dynawaltz-dsl</module>
@@ -128,30 +129,30 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>${project.groupId}</groupId>
+                <groupId>com.powsybl</groupId>
                 <artifactId>powsybl-commons</artifactId>
                 <version>${powsyblcore.version}</version>
             </dependency>
             <dependency>
-                <groupId>${project.groupId}</groupId>
-                    <artifactId>powsybl-commons</artifactId>
+                <groupId>com.powsybl</groupId>
+                <artifactId>powsybl-commons</artifactId>
                 <version>${powsyblcore.version}</version>
                 <type>test-jar</type>
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>${project.groupId}</groupId>
+                <groupId>com.powsybl</groupId>
                 <artifactId>powsybl-config-test</artifactId>
                 <version>${powsyblcore.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>${project.groupId}</groupId>
+                <groupId>com.powsybl</groupId>
                 <artifactId>powsybl-dynamic-simulation-api</artifactId>
                 <version>${powsyblcore.version}</version>
             </dependency>
             <dependency>
-                <groupId>${project.groupId}</groupId>
+                <groupId>com.powsybl</groupId>
                 <artifactId>powsybl-dynamic-simulation-dsl</artifactId>
                 <version>${powsyblcore.version}</version>
             </dependency>
@@ -168,29 +169,34 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>${project.groupId}</groupId>
+                <groupId>com.powsybl</groupId>
+                <artifactId>powsybl-iidm-api</artifactId>
+                <version>${powsyblcore.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.powsybl</groupId>
                 <artifactId>powsybl-iidm-impl</artifactId>
                 <version>${powsyblcore.version}</version>
                 <scope>runtime</scope>
             </dependency>
             <dependency>
-                <groupId>${project.groupId}</groupId>
+                <groupId>com.powsybl</groupId>
                 <artifactId>powsybl-iidm-test</artifactId>
                 <version>${powsyblcore.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>${project.groupId}</groupId>
+                <groupId>com.powsybl</groupId>
                 <artifactId>powsybl-iidm-xml-converter</artifactId>
                 <version>${powsyblcore.version}</version>
             </dependency>
             <dependency>
-                <groupId>${project.groupId}</groupId>
+                <groupId>com.powsybl</groupId>
                 <artifactId>powsybl-loadflow-api</artifactId>
                 <version>${powsyblcore.version}</version>
             </dependency>
             <dependency>
-                <groupId>${project.groupId}</groupId>
+                <groupId>com.powsybl</groupId>
                 <artifactId>powsybl-time-series-api</artifactId>
                 <version>${powsyblcore.version}</version>
             </dependency>
