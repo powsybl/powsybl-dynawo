@@ -7,7 +7,6 @@
 package com.powsybl.dynawo.commons;
 
 import com.powsybl.commons.AbstractConverterTest;
-import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.datasource.ResourceDataSource;
 import com.powsybl.commons.datasource.ResourceSet;
 import com.powsybl.iidm.export.ExportOptions;
@@ -64,6 +63,15 @@ public class DynawoResultsNetworkUpdateTest extends AbstractConverterTest {
         compare(expected, actual);
     }
 
+    @Test
+    public void testUpdateMicro() throws IOException {
+        Network expected = createTestMicro();
+        Network actual = createTestMicro();
+        reset(actual);
+        DynawoResultsNetworkUpdate.update(actual, expected);
+        compare(expected, actual);
+    }
+
     private void compare(Network expected, Network actual) throws IOException {
         Path pexpected = tmpDir.resolve("expected.xiidm");
         assertNotNull(pexpected);
@@ -81,6 +89,10 @@ public class DynawoResultsNetworkUpdateTest extends AbstractConverterTest {
 
     private static Network createTestCaseNodeBreaker() {
         return Importers.importData("XIIDM", new ResourceDataSource("SmallNodeBreaker_fix_line_044bbe91", new ResourceSet("/", "SmallNodeBreaker_fix_line_044bbe91.xiidm")), null);
+    }
+
+    private static Network createTestMicro() {
+        return Importers.importData("XIIDM", new ResourceDataSource("MicroAssembled", new ResourceSet("/", "MicroAssembled.xiidm")), null);
     }
 
     private static void reset(Network targetNetwork) {
@@ -113,8 +125,10 @@ public class DynawoResultsNetworkUpdateTest extends AbstractConverterTest {
                 targetRatioTapChanger.setTapPosition(targetRatioTapChanger.getLowTapPosition());
             }
         }
-        if (targetNetwork.getThreeWindingsTransformerCount() > 0) {
-            throw new PowsyblException("Three Windings Transformers not supported");
+        for (ThreeWindingsTransformer targetThreeWindingsTransformer : targetNetwork.getThreeWindingsTransformers()) {
+            reset(targetThreeWindingsTransformer.getLeg1());
+            reset(targetThreeWindingsTransformer.getLeg2());
+            reset(targetThreeWindingsTransformer.getLeg3());
         }
         for (Load targetLoad : targetNetwork.getLoads()) {
             reset(targetLoad.getTerminal());
@@ -132,6 +146,18 @@ public class DynawoResultsNetworkUpdateTest extends AbstractConverterTest {
         }
         for (Switch targetSwitch : targetNetwork.getSwitches()) {
             targetSwitch.setOpen(false);
+        }
+    }
+
+    private static void reset(ThreeWindingsTransformer.Leg leg) {
+        reset(leg.getTerminal());
+        PhaseTapChanger phaseTapChanger = leg.getPhaseTapChanger();
+        if (phaseTapChanger != null) {
+            phaseTapChanger.setTapPosition(phaseTapChanger.getLowTapPosition());
+        }
+        RatioTapChanger ratioTapChanger = leg.getRatioTapChanger();
+        if (ratioTapChanger != null) {
+            ratioTapChanger.setTapPosition(ratioTapChanger.getLowTapPosition());
         }
     }
 

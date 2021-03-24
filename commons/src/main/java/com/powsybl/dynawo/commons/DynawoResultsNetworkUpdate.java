@@ -6,7 +6,6 @@
  */
 package com.powsybl.dynawo.commons;
 
-import com.powsybl.commons.PowsyblException;
 import com.powsybl.iidm.network.*;
 
 /**
@@ -52,8 +51,11 @@ public final class DynawoResultsNetworkUpdate {
                 targetRatioTapChanger.setTapPosition(sourceRatioTapChanger.getTapPosition());
             }
         }
-        if (sourceNetwork.getThreeWindingsTransformerCount() > 0) {
-            throw new PowsyblException("Three Windings Transformers not supported");
+        for (ThreeWindingsTransformer sourceThreeWindingsTransformer : sourceNetwork.getThreeWindingsTransformers()) {
+            ThreeWindingsTransformer targetThreeWindingsTransformer = targetNetwork.getThreeWindingsTransformer(sourceThreeWindingsTransformer.getId());
+            update(targetThreeWindingsTransformer.getLeg1(), sourceThreeWindingsTransformer.getLeg1());
+            update(targetThreeWindingsTransformer.getLeg2(), sourceThreeWindingsTransformer.getLeg2());
+            update(targetThreeWindingsTransformer.getLeg3(), sourceThreeWindingsTransformer.getLeg3());
         }
         for (Load sourceLoad : sourceNetwork.getLoads()) {
             update(targetNetwork.getLoad(sourceLoad.getId()).getTerminal(), sourceLoad.getTerminal());
@@ -78,6 +80,22 @@ public final class DynawoResultsNetworkUpdate {
             Bus targetBus = targetNetwork.getBusView().getBus(sourceBus.getId());
             targetBus.setV(sourceBus.getV());
             targetBus.setAngle(sourceBus.getAngle());
+        }
+    }
+
+    private static void update(ThreeWindingsTransformer.Leg target, ThreeWindingsTransformer.Leg source) {
+        update(target.getTerminal(), source.getTerminal());
+
+        PhaseTapChanger sourcePhaseTapChanger = source.getPhaseTapChanger();
+        PhaseTapChanger targetPhaseTapChanger = target.getPhaseTapChanger();
+        if (targetPhaseTapChanger != null) {
+            targetPhaseTapChanger.setTapPosition(sourcePhaseTapChanger.getTapPosition());
+        }
+
+        RatioTapChanger sourceRatioTapChanger = source.getRatioTapChanger();
+        RatioTapChanger targetRatioTapChanger = target.getRatioTapChanger();
+        if (targetRatioTapChanger != null) {
+            targetRatioTapChanger.setTapPosition(sourceRatioTapChanger.getTapPosition());
         }
     }
 
