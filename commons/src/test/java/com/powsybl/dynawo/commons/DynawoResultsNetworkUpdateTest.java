@@ -72,6 +72,35 @@ public class DynawoResultsNetworkUpdateTest extends AbstractConverterTest {
         compare(expected, actual);
     }
 
+    @Test
+    public void testUpdateMicroDisconnects() throws IOException {
+        Network expected = createTestMicro();
+        // Test with some elements disconnected in the network
+        expected.getLoads().iterator().next().getTerminal().disconnect();
+        expected.getGenerators().iterator().next().getTerminal().disconnect();
+        expected.getShuntCompensators().iterator().next().getTerminal().disconnect();
+        expected.getLines().iterator().next().getTerminal1().disconnect();
+        expected.getLines().iterator().next().getTerminal2().disconnect();
+        expected.getTwoWindingsTransformers().iterator().next().getTerminal1().disconnect();
+        expected.getTwoWindingsTransformers().iterator().next().getTerminal2().disconnect();
+        expected.getThreeWindingsTransformers().iterator().next().getLeg1().getTerminal().disconnect();
+        expected.getThreeWindingsTransformers().iterator().next().getLeg2().getTerminal().disconnect();
+        expected.getThreeWindingsTransformers().iterator().next().getLeg3().getTerminal().disconnect();
+        // For consistency, we must remove the voltage for all configured buses that have been left isolated
+        // (All buses in bus breaker view that have not received a calculated bus in the bus view)
+        for (Bus b : expected.getBusBreakerView().getBuses()) {
+            if (b.getVoltageLevel().getBusView().getMergedBus(b.getId()) == null) {
+                b.setV(Double.NaN);
+                b.setAngle(Double.NaN);
+            }
+        }
+
+        Network actual = createTestMicro();
+        reset(actual);
+        DynawoResultsNetworkUpdate.update(actual, expected);
+        compare(expected, actual);
+    }
+
     private void compare(Network expected, Network actual) throws IOException {
         Path pexpected = tmpDir.resolve("expected.xiidm");
         assertNotNull(pexpected);
