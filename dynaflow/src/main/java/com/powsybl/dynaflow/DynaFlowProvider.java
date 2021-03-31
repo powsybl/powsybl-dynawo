@@ -47,10 +47,6 @@ public class DynaFlowProvider implements LoadFlowProvider {
         this.configSupplier = Suppliers.memoize(Objects.requireNonNull(configSupplier, "Config supplier is null"));
     }
 
-    DynaFlowConfig getConfig() {
-        return configSupplier.get();
-    }
-
     private static void writeIIDM(Path workingDir, Network network) {
         Properties params = new Properties();
         params.setProperty(XMLExporter.VERSION, IidmXmlVersion.V_1_0.toString("."));
