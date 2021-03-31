@@ -39,12 +39,14 @@ import static org.junit.Assert.assertNotNull;
 public class DynaFlowProviderTest {
     private FileSystem fileSystem;
     private String homeDir;
+    private DynaFlowConfig config;
     private DynaFlowProvider provider;
 
     @Before
     public void setUp() {
         fileSystem = Jimfs.newFileSystem(Configuration.unix());
         homeDir = "/home/dynaflow";
+        config = DynaFlowConfig.fromPropertyFile();
         provider = new DynaFlowProvider();
     }
 
@@ -53,7 +55,7 @@ public class DynaFlowProviderTest {
         Path pathHomeDir = fileSystem.getPath(homeDir);
         String program = pathHomeDir.resolve("dynaflow-launcher.sh").toString();
 
-        String versionCommand = provider.getVersionCommand().toString(0);
+        String versionCommand = DynaFlowProvider.getVersionCommand(config).toString(0);
         String expectedVersionCommand = "[" + program + ", --version]";
 
         assertEquals(expectedVersionCommand, versionCommand);
@@ -63,7 +65,7 @@ public class DynaFlowProviderTest {
     public void checkExecutionCommand() {
         String program = fileSystem.getPath(homeDir).resolve("dynaflow-launcher.sh").toString();
 
-        String executionCommand = provider.getCommand().toString(0);
+        String executionCommand = DynaFlowProvider.getCommand(config).toString(0);
         String expectedExecutionCommand = "[" + program + ", --iidm, " + IIDM_FILENAME + ", --config, " + CONFIG_FILENAME + "]";
         assertEquals(expectedExecutionCommand, executionCommand);
     }
