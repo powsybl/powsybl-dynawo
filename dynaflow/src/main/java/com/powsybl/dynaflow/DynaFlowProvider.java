@@ -7,6 +7,7 @@
 package com.powsybl.dynaflow;
 
 import com.google.auto.service.AutoService;
+import com.google.common.base.Charsets;
 import com.powsybl.computation.*;
 import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
 import com.powsybl.iidm.export.Exporters;
@@ -19,6 +20,7 @@ import com.powsybl.loadflow.LoadFlowResult;
 import com.powsybl.loadflow.LoadFlowResultImpl;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -50,7 +52,7 @@ public class DynaFlowProvider implements LoadFlowProvider {
 
     private static void writeIIDM(Path workingDir, Network network) {
         Properties params = new Properties();
-        params.setProperty(XMLExporter.VERSION, IidmXmlVersion.V_1_0.toString("."));
+        params.setProperty(XMLExporter.VERSION, IidmXmlVersion.V_1_2.toString("."));
         Exporters.export("XIIDM", network, params, workingDir.resolve(IIDM_FILENAME));
     }
 
@@ -59,7 +61,7 @@ public class DynaFlowProvider implements LoadFlowProvider {
     }
 
     public Command getCommand() {
-        List<String> args = Arrays.asList("--iidm", IIDM_FILENAME, "--config", CONFIG_FILENAME);
+        List<String> args = Arrays.asList("--network", IIDM_FILENAME, "--config", CONFIG_FILENAME);
 
         return new SimpleCommandBuilder()
                 .id("dynaflow_lf")
@@ -108,26 +110,58 @@ public class DynaFlowProvider implements LoadFlowProvider {
         Objects.requireNonNull(parameters);
         DynaFlowParameters dynaFlowParameters = getParametersExt(parameters);
         DynaFlowUtil.checkDynaFlowVersion(env, computationManager, versionCmd);
-        return computationManager.execute(env, new AbstractExecutionHandler<LoadFlowResult>() {
-            @Override
-            public List<CommandExecution> before(Path workingDir) throws IOException {
-                network.getVariantManager().setWorkingVariant(workingStateId);
+        DynaFlowContext context = new DynaFlowContext(network, parameters, dynaFlowParameters, workingStateId);
+        return computationManager.execute(env, new DynaFlowHandler(context));
+    }
 
-                writeIIDM(workingDir, network);
-                DynaFlowConfigSerializer.serialize(parameters, dynaFlowParameters, workingDir, workingDir.resolve(CONFIG_FILENAME));
-                return Collections.singletonList(createCommandExecution());
-            }
+    private final class DynaFlowHandler extends AbstractExecutionHandler<LoadFlowResult> {
 
-            @Override
-            public LoadFlowResult after(Path workingDir, ExecutionReport report) throws IOException {
-                Path absoluteWorkingDir = workingDir.toAbsolutePath();
-                super.after(absoluteWorkingDir, report);
-                network.getVariantManager().setWorkingVariant(workingStateId);
+        private final DynaFlowContext context;
 
-                Map<String, String> metrics = new HashMap<>();
-                String logs = null;
-                return new LoadFlowResultImpl(true, metrics, logs);
-            }
-        });
+        public DynaFlowHandler(DynaFlowContext context) {
+            this.context = context;
+        }
+
+        @Override
+        public List<CommandExecution> before(Path workingDir) throws IOException {
+            context.getNetwork().getVariantManager().setWorkingVariant(context.getWorkingStateId());
+
+            writeIIDM(workingDir, context.getNetwork());
+
+            Files.list(workingDir).forEach(file -> {
+                try {
+                    System.out.println(String.format("%s (%db)", file, Files.readAllBytes(file).length));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+
+            DynaFlowConfigSerializer.serialize(context.getLoadFlowParameters(), context.getDynaFlowParameters(), workingDir, workingDir.resolve(CONFIG_FILENAME));
+            return Collections.singletonList(createCommandExecution());
+        }
+
+        @Override
+        public LoadFlowResult after(Path workingDir, ExecutionReport report) throws IOException {
+            Path absoluteWorkingDir = workingDir.toAbsolutePath();
+            super.after(absoluteWorkingDir, report);
+            context.getNetwork().getVariantManager().setWorkingVariant(context.getWorkingStateId());
+
+            Files.list(workingDir).forEach(file -> {
+                try {
+                    System.out.println(String.format("%s (%db)", file, Files.readAllBytes(file).length));
+                    for (String line : Files.readAllLines(file, Charsets.UTF_8)) {
+                        System.out.println(line);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+
+            //DynawoResultsNetworkUpdate.update(context.getNetwork(), NetworkXml.read(workingDir.resolve("outputs").resolve("finalState").resolve("outputIIDM.xml")));
+
+            Map<String, String> metrics = new HashMap<>();
+            String logs = null;
+            return new LoadFlowResultImpl(true, metrics, logs);
+        }
     }
 }
