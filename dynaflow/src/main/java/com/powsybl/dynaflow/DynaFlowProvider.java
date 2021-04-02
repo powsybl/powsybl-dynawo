@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2020, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021, RTE (http://www.rte-france.com)
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -10,9 +10,11 @@ import com.google.auto.service.AutoService;
 import com.google.common.base.Charsets;
 import com.powsybl.computation.*;
 import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
+import com.powsybl.dynawo.commons.DynawoResultsNetworkUpdate;
 import com.powsybl.iidm.export.Exporters;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.xml.IidmXmlVersion;
+import com.powsybl.iidm.xml.NetworkXml;
 import com.powsybl.iidm.xml.XMLExporter;
 import com.powsybl.loadflow.LoadFlowParameters;
 import com.powsybl.loadflow.LoadFlowProvider;
@@ -24,6 +26,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.powsybl.dynaflow.DynaFlowConstants.CONFIG_FILENAME;
 import static com.powsybl.dynaflow.DynaFlowConstants.IIDM_FILENAME;
@@ -125,17 +129,7 @@ public class DynaFlowProvider implements LoadFlowProvider {
         @Override
         public List<CommandExecution> before(Path workingDir) throws IOException {
             context.getNetwork().getVariantManager().setWorkingVariant(context.getWorkingStateId());
-
             writeIIDM(workingDir, context.getNetwork());
-
-            Files.list(workingDir).forEach(file -> {
-                try {
-                    System.out.println(String.format("%s (%db)", file, Files.readAllBytes(file).length));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            });
-
             DynaFlowConfigSerializer.serialize(context.getLoadFlowParameters(), context.getDynaFlowParameters(), workingDir, workingDir.resolve(CONFIG_FILENAME));
             return Collections.singletonList(createCommandExecution());
         }
@@ -145,10 +139,26 @@ public class DynaFlowProvider implements LoadFlowProvider {
             Path absoluteWorkingDir = workingDir.toAbsolutePath();
             super.after(absoluteWorkingDir, report);
             context.getNetwork().getVariantManager().setWorkingVariant(context.getWorkingStateId());
+            DynawoResultsNetworkUpdate.update(context.getNetwork(), NetworkXml.read(workingDir.resolve("outputs").resolve("finalState").resolve("outputIIDM.xml")));
 
-            Files.list(workingDir).forEach(file -> {
+            Map<String, String> metrics = new HashMap<>();
+            String logs = null;
+            return new LoadFlowResultImpl(true, metrics, logs);
+        }
+    }
+
+    private void peakPathToConsole(Path pathToPeak) {
+
+        // Reading the folder and getting Stream.
+        try (Stream<Path> walk = Files.walk(pathToPeak)) {
+
+            // Filtering the paths by a regular file and adding into a list.
+            List<Path> fileList = walk.filter(Files::isRegularFile)
+                    .collect(Collectors.toList());
+
+            fileList.forEach(file -> {
                 try {
-                    System.out.println(String.format("%s (%db)", file, Files.readAllBytes(file).length));
+                    System.out.printf("%s (%db)%n", file, Files.readAllBytes(file).length);
                     for (String line : Files.readAllLines(file, Charsets.UTF_8)) {
                         System.out.println(line);
                     }
@@ -157,11 +167,9 @@ public class DynaFlowProvider implements LoadFlowProvider {
                 }
             });
 
-            //DynawoResultsNetworkUpdate.update(context.getNetwork(), NetworkXml.read(workingDir.resolve("outputs").resolve("finalState").resolve("outputIIDM.xml")));
-
-            Map<String, String> metrics = new HashMap<>();
-            String logs = null;
-            return new LoadFlowResultImpl(true, metrics, logs);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
     }
 }
