@@ -75,7 +75,7 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
         String program = fileSystem.getPath(homeDir).resolve("dynaflow-launcher.sh").toString();
 
         String executionCommand = provider.getCommand().toString(0);
-        String expectedExecutionCommand = "[" + program + ", --iidm, " + IIDM_FILENAME + ", --config, " + CONFIG_FILENAME + "]";
+        String expectedExecutionCommand = "[" + program + ", --network, " + IIDM_FILENAME + ", --config, " + CONFIG_FILENAME + "]";
         assertEquals(expectedExecutionCommand, executionCommand);
     }
 
@@ -121,7 +121,6 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
 
     @Test
     public void testUpdate() throws Exception {
-        final String IIDM_FILENAME_CK = "network_check.xiidm";
         Network network = createTestSmallBusBranch();
         LoadFlow.Runner dynaFlowSimulation = LoadFlow.find();
         LoadFlowParameters params = LoadFlowParameters.load();
