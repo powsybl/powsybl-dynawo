@@ -8,6 +8,8 @@ package com.powsybl.dynaflow;
 
 import com.google.auto.service.AutoService;
 import com.google.common.base.Charsets;
+import com.google.common.base.Supplier;
+import com.google.common.base.Suppliers;
 import com.powsybl.computation.*;
 import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
 import com.powsybl.dynawo.commons.DynawoResultsNetworkUpdate;
@@ -40,18 +42,15 @@ import static com.powsybl.dynaflow.DynaFlowConstants.IIDM_FILENAME;
 public class DynaFlowProvider implements LoadFlowProvider {
 
     private static final String WORKING_DIR_PREFIX = "dynaflow_";
-    private final ExecutionEnvironment env;
-    private final Command versionCmd;
-    private final DynaFlowConfig config;
+
+    private final Supplier<DynaFlowConfig> configSupplier;
 
     public DynaFlowProvider() {
-        this(DynaFlowConfig.fromPropertyFile());
+        this(DynaFlowConfig::fromPropertyFile);
     }
 
-    public DynaFlowProvider(DynaFlowConfig config) {
-        this.config = Objects.requireNonNull(config, "Config is null");
-        this.env = new ExecutionEnvironment(config.createEnv(), WORKING_DIR_PREFIX, config.isDebug());
-        this.versionCmd = getVersionCommand();
+    public DynaFlowProvider(Supplier<DynaFlowConfig> configSupplier) {
+        this.configSupplier = Suppliers.memoize(Objects.requireNonNull(configSupplier, "Config supplier is null"));
     }
 
     private static void writeIIDM(Path workingDir, Network network) {
@@ -60,25 +59,25 @@ public class DynaFlowProvider implements LoadFlowProvider {
         Exporters.export("XIIDM", network, params, workingDir.resolve(IIDM_FILENAME));
     }
 
-    private String getProgram() {
+    private static String getProgram(DynaFlowConfig config) {
         return config.getHomeDir().resolve("dynaflow-launcher.sh").toString();
     }
 
-    public Command getCommand() {
+    public static Command getCommand(DynaFlowConfig config) {
         List<String> args = Arrays.asList("--network", IIDM_FILENAME, "--config", CONFIG_FILENAME);
 
         return new SimpleCommandBuilder()
                 .id("dynaflow_lf")
-                .program(getProgram())
+                .program(getProgram(config))
                 .args(args)
                 .build();
     }
 
-    public Command getVersionCommand() {
+    public static Command getVersionCommand(DynaFlowConfig config) {
         List<String> args = Collections.singletonList("--version");
         return new SimpleCommandBuilder()
                 .id("dynaflow_version")
-                .program(getProgram())
+                .program(getProgram(config))
                 .args(args)
                 .build();
     }
@@ -101,8 +100,8 @@ public class DynaFlowProvider implements LoadFlowProvider {
         return "0.1";
     }
 
-    private CommandExecution createCommandExecution() {
-        Command cmd = getCommand();
+    private static CommandExecution createCommandExecution(DynaFlowConfig config) {
+        Command cmd = getCommand(config);
         return new CommandExecution(cmd, 1, 0);
     }
 
@@ -113,17 +112,22 @@ public class DynaFlowProvider implements LoadFlowProvider {
         Objects.requireNonNull(workingStateId);
         Objects.requireNonNull(parameters);
         DynaFlowParameters dynaFlowParameters = getParametersExt(parameters);
+        DynaFlowConfig config = Objects.requireNonNull(configSupplier.get());
+        ExecutionEnvironment env = new ExecutionEnvironment(config.createEnv(), WORKING_DIR_PREFIX, config.isDebug());
+        Command versionCmd = getVersionCommand(config);
         DynaFlowUtil.checkDynaFlowVersion(env, computationManager, versionCmd);
         DynaFlowContext context = new DynaFlowContext(network, parameters, dynaFlowParameters, workingStateId);
-        return computationManager.execute(env, new DynaFlowHandler(context));
+        return computationManager.execute(env, new DynaFlowHandler(context, config));
     }
 
     private final class DynaFlowHandler extends AbstractExecutionHandler<LoadFlowResult> {
 
         private final DynaFlowContext context;
+        private final DynaFlowConfig config;
 
-        public DynaFlowHandler(DynaFlowContext context) {
+        public DynaFlowHandler(DynaFlowContext context, DynaFlowConfig config) {
             this.context = context;
+            this.config = config;
         }
 
         @Override
@@ -131,7 +135,7 @@ public class DynaFlowProvider implements LoadFlowProvider {
             context.getNetwork().getVariantManager().setWorkingVariant(context.getWorkingStateId());
             writeIIDM(workingDir, context.getNetwork());
             DynaFlowConfigSerializer.serialize(context.getLoadFlowParameters(), context.getDynaFlowParameters(), workingDir, workingDir.resolve(CONFIG_FILENAME));
-            return Collections.singletonList(createCommandExecution());
+            return Collections.singletonList(createCommandExecution(config));
         }
 
         @Override
@@ -170,6 +174,5 @@ public class DynaFlowProvider implements LoadFlowProvider {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 }

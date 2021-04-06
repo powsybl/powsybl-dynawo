@@ -49,6 +49,7 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
 
     private FileSystem fileSystem;
     private String homeDir;
+    private DynaFlowConfig config;
     private DynaFlowProvider provider;
 
     @Before
@@ -56,6 +57,7 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
         super.setUp();
         fileSystem = Jimfs.newFileSystem(Configuration.unix());
         homeDir = "/home/dynaflow";
+        config = DynaFlowConfig.fromPropertyFile();
         provider = new DynaFlowProvider();
     }
 
@@ -64,7 +66,7 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
         Path pathHomeDir = fileSystem.getPath(homeDir);
         String program = pathHomeDir.resolve("dynaflow-launcher.sh").toString();
 
-        String versionCommand = provider.getVersionCommand().toString(0);
+        String versionCommand = DynaFlowProvider.getVersionCommand(config).toString(0);
         String expectedVersionCommand = "[" + program + ", --version]";
 
         assertEquals(expectedVersionCommand, versionCommand);
@@ -74,7 +76,7 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
     public void checkExecutionCommand() {
         String program = fileSystem.getPath(homeDir).resolve("dynaflow-launcher.sh").toString();
 
-        String executionCommand = provider.getCommand().toString(0);
+        String executionCommand = provider.getCommand(config).toString(0);
         String expectedExecutionCommand = "[" + program + ", --network, " + IIDM_FILENAME + ", --config, " + CONFIG_FILENAME + "]";
         assertEquals(expectedExecutionCommand, executionCommand);
     }
