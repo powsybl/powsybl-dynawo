@@ -27,8 +27,7 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
-import static com.powsybl.dynaflow.DynaFlowConstants.CONFIG_FILENAME;
-import static com.powsybl.dynaflow.DynaFlowConstants.IIDM_FILENAME;
+import static com.powsybl.dynaflow.DynaFlowConstants.*;
 
 /**
  *
@@ -127,7 +126,7 @@ public class DynaFlowProvider implements LoadFlowProvider {
                 Path absoluteWorkingDir = workingDir.toAbsolutePath();
                 super.after(absoluteWorkingDir, report);
                 network.getVariantManager().setWorkingVariant(workingStateId);
-                DynawoResultsNetworkUpdate.update(network, NetworkXml.read(workingDir.resolve("outputs").resolve("finalState").resolve("outputIIDM.xml")));
+                DynawoResultsNetworkUpdate.update(network, NetworkXml.read(workingDir.resolve("outputs").resolve("finalState").resolve(OUTPUT_IIDM_FILENAME)));
 
                 Map<String, String> metrics = new HashMap<>();
                 String logs = null;
