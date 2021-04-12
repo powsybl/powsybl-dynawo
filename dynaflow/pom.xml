@@ -39,7 +39,7 @@
             <artifactId>powsybl-time-series-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.powsybl</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>powsybl-dynawo-commons</artifactId>
             <version>${project.version}</version>
         </dependency>

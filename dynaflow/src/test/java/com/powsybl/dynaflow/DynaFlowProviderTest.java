@@ -1,13 +1,11 @@
 /**
- * Copyright (c) 2021, RTE (http://www.rte-france.com)
+ * Copyright (c) 2020, RTE (http://www.rte-france.com)
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 package com.powsybl.dynaflow;
 
-import com.google.common.jimfs.Configuration;
-import com.google.common.jimfs.Jimfs;
 import com.powsybl.commons.AbstractConverterTest;
 import com.powsybl.commons.datasource.ResourceDataSource;
 import com.powsybl.commons.datasource.ResourceSet;
@@ -27,7 +25,6 @@ import org.junit.Test;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
-import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -35,10 +32,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ForkJoinPool;
 
-import static com.powsybl.dynaflow.DynaFlowConstants.CONFIG_FILENAME;
-import static com.powsybl.dynaflow.DynaFlowConstants.IIDM_FILENAME;
-import static com.powsybl.dynaflow.DynaFlowConstants.OUTPUT_IIDM_FILENAME;
-
+import static com.powsybl.dynaflow.DynaFlowConstants.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -47,7 +41,6 @@ import static org.junit.Assert.assertNotNull;
  */
 public class DynaFlowProviderTest extends AbstractConverterTest {
 
-    private FileSystem fileSystem;
     private String homeDir;
     private DynaFlowConfig config;
     private DynaFlowProvider provider;
@@ -55,7 +48,6 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
     @Before
     public void setUp() throws IOException {
         super.setUp();
-        fileSystem = Jimfs.newFileSystem(Configuration.unix());
         homeDir = "/home/dynaflow";
         config = DynaFlowConfig.fromPropertyFile();
         provider = new DynaFlowProvider();
@@ -84,11 +76,11 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
     private static class LocalCommandExecutorMock extends AbstractLocalCommandExecutor {
 
         private final String stdOutFileRef;
-        private final String outPutIIDM;
+        private final String outputIidm;
 
-        public LocalCommandExecutorMock(String stdoutFileRef, String outPutIIDM) {
+        public LocalCommandExecutorMock(String stdoutFileRef, String outputIidm) {
             this.stdOutFileRef = Objects.requireNonNull(stdoutFileRef);
-            this.outPutIIDM = Objects.requireNonNull(outPutIIDM);
+            this.outputIidm = Objects.requireNonNull(outputIidm);
         }
 
         @Override
@@ -96,7 +88,7 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
             try {
                 copyFile(stdOutFileRef, errFile);
                 Files.createDirectories(workingDir.resolve("outputs").resolve("finalState"));
-                copyFile(outPutIIDM, workingDir.resolve("outputs").resolve("finalState").resolve(OUTPUT_IIDM_FILENAME));
+                copyFile(outputIidm, workingDir.resolve("outputs").resolve("finalState").resolve(OUTPUT_IIDM_FILENAME));
 
                 return 0;
             } catch (IOException e) {
