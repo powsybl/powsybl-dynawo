@@ -20,15 +20,6 @@
     <name>DynaFlow</name>
     <description>DynaFlow integration module for powsybl</description>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.gmavenplus</groupId>
-                <artifactId>gmavenplus-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
-
     <dependencies>
         <!-- Compile dependencies -->
         <dependency>
@@ -47,6 +38,11 @@
             <groupId>com.powsybl</groupId>
             <artifactId>powsybl-time-series-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>powsybl-dynawo-commons</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <!-- Runtime dependencies -->
         <dependency>
@@ -55,7 +51,7 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>com.powsybl</groupId>
             <artifactId>powsybl-iidm-impl</artifactId>
             <scope>runtime</scope>
         </dependency>
@@ -102,5 +98,6 @@
             <artifactId>powsybl-iidm-test</artifactId>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
 </project>
