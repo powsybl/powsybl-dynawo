@@ -11,9 +11,11 @@ import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.powsybl.computation.*;
 import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
+import com.powsybl.dynawo.commons.DynawoResultsNetworkUpdate;
 import com.powsybl.iidm.export.Exporters;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.xml.IidmXmlVersion;
+import com.powsybl.iidm.xml.NetworkXml;
 import com.powsybl.iidm.xml.XMLExporter;
 import com.powsybl.loadflow.LoadFlowParameters;
 import com.powsybl.loadflow.LoadFlowProvider;
@@ -25,8 +27,7 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
-import static com.powsybl.dynaflow.DynaFlowConstants.CONFIG_FILENAME;
-import static com.powsybl.dynaflow.DynaFlowConstants.IIDM_FILENAME;
+import static com.powsybl.dynaflow.DynaFlowConstants.*;
 
 /**
  *
@@ -49,7 +50,7 @@ public class DynaFlowProvider implements LoadFlowProvider {
 
     private static void writeIIDM(Path workingDir, Network network) {
         Properties params = new Properties();
-        params.setProperty(XMLExporter.VERSION, IidmXmlVersion.V_1_0.toString("."));
+        params.setProperty(XMLExporter.VERSION, IidmXmlVersion.V_1_2.toString("."));
         Exporters.export("XIIDM", network, params, workingDir.resolve(IIDM_FILENAME));
     }
 
@@ -58,7 +59,7 @@ public class DynaFlowProvider implements LoadFlowProvider {
     }
 
     public static Command getCommand(DynaFlowConfig config) {
-        List<String> args = Arrays.asList("--iidm", IIDM_FILENAME, "--config", CONFIG_FILENAME);
+        List<String> args = Arrays.asList("--network", IIDM_FILENAME, "--config", CONFIG_FILENAME);
 
         return new SimpleCommandBuilder()
                 .id("dynaflow_lf")
@@ -100,23 +101,23 @@ public class DynaFlowProvider implements LoadFlowProvider {
     }
 
     @Override
-    public CompletableFuture<LoadFlowResult> run(Network network, ComputationManager computationManager, String workingStateId, LoadFlowParameters parameters) {
+    public CompletableFuture<LoadFlowResult> run(Network network, ComputationManager computationManager, String workingStateId, LoadFlowParameters loadFlowParameters) {
         Objects.requireNonNull(network);
         Objects.requireNonNull(computationManager);
         Objects.requireNonNull(workingStateId);
-        Objects.requireNonNull(parameters);
-        DynaFlowParameters dynaFlowParameters = getParametersExt(parameters);
+        Objects.requireNonNull(loadFlowParameters);
+        DynaFlowParameters dynaFlowParameters = getParametersExt(loadFlowParameters);
         DynaFlowConfig config = Objects.requireNonNull(configSupplier.get());
         ExecutionEnvironment env = new ExecutionEnvironment(config.createEnv(), WORKING_DIR_PREFIX, config.isDebug());
         Command versionCmd = getVersionCommand(config);
         DynaFlowUtil.checkDynaFlowVersion(env, computationManager, versionCmd);
         return computationManager.execute(env, new AbstractExecutionHandler<LoadFlowResult>() {
+
             @Override
             public List<CommandExecution> before(Path workingDir) throws IOException {
                 network.getVariantManager().setWorkingVariant(workingStateId);
-
                 writeIIDM(workingDir, network);
-                DynaFlowConfigSerializer.serialize(parameters, dynaFlowParameters, workingDir, workingDir.resolve(CONFIG_FILENAME));
+                DynaFlowConfigSerializer.serialize(loadFlowParameters, dynaFlowParameters, workingDir, workingDir.resolve(CONFIG_FILENAME));
                 return Collections.singletonList(createCommandExecution(config));
             }
 
@@ -125,6 +126,7 @@ public class DynaFlowProvider implements LoadFlowProvider {
                 Path absoluteWorkingDir = workingDir.toAbsolutePath();
                 super.after(absoluteWorkingDir, report);
                 network.getVariantManager().setWorkingVariant(workingStateId);
+                DynawoResultsNetworkUpdate.update(network, NetworkXml.read(workingDir.resolve("outputs").resolve("finalState").resolve(OUTPUT_IIDM_FILENAME)));
 
                 Map<String, String> metrics = new HashMap<>();
                 String logs = null;
