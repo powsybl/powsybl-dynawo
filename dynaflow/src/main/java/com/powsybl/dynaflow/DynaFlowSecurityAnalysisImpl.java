@@ -8,7 +8,6 @@ package com.powsybl.dynaflow;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.google.common.base.Supplier;
 import com.powsybl.commons.json.JsonUtil;
 import com.powsybl.computation.*;
 import com.powsybl.contingency.ContingenciesProvider;
@@ -31,7 +30,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
+import java.util.function.Supplier;
 
 import static com.powsybl.dynaflow.DynaFlowConstants.CONFIG_FILENAME;
 import static com.powsybl.dynaflow.DynaFlowConstants.IIDM_FILENAME;
@@ -140,7 +139,6 @@ public class DynaFlowSecurityAnalysisImpl extends AbstractSecurityAnalysis {
         Command versionCmd = getVersionCommand(config);
         DynaFlowUtil.checkDynaFlowVersion(env, computationManager, versionCmd);
         List<Contingency> contingencies = contingenciesProvider.getContingencies(network);
-        Map<String, Contingency> contingenciesById = contingencies.stream().collect(Collectors.toMap(Contingency::getId, c -> c));
         return computationManager.execute(env, new AbstractExecutionHandler<SecurityAnalysisResult>() {
             @Override
             public List<CommandExecution> before(Path workingDir) throws IOException {
