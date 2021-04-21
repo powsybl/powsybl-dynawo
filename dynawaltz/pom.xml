@@ -61,6 +61,11 @@
             <groupId>com.powsybl</groupId>
             <artifactId>powsybl-time-series-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>powsybl-dynawo-commons</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <!-- Runtime dependencies -->
         <dependency>
