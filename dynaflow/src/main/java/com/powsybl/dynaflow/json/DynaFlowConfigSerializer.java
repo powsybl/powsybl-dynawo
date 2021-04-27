@@ -45,8 +45,6 @@ public final class DynaFlowConfigSerializer {
             jsonGenerator.writeBooleanField("SVCRegulationOn", dynaFlowParameters.getSvcRegulationOn());
             jsonGenerator.writeBooleanField("ShuntRegulationOn", dynaFlowParameters.getShuntRegulationOn());
             jsonGenerator.writeBooleanField("AutomaticSlackBusOn", dynaFlowParameters.getAutomaticSlackBusOn());
-            jsonGenerator.writeBooleanField("VSCAsGenerators", dynaFlowParameters.getVscAsGenerators());
-            jsonGenerator.writeBooleanField("LCCAsLoads", dynaFlowParameters.getLccAsLoads());
             jsonGenerator.writeNumberField("DsoVoltageLevel", dynaFlowParameters.getDsoVoltageLevel());
             jsonGenerator.writeBooleanField("InfiniteReactiveLimits", lfParameters.isNoGeneratorReactiveLimits());
             jsonGenerator.writeBooleanField("PSTRegulationOn", lfParameters.isPhaseShifterRegulationOn());
