@@ -22,15 +22,11 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
     public static final boolean DEFAULT_SVC_REGULATION_ON = false;
     public static final boolean DEFAULT_SHUNT_REGULATION_ON = false;
     public static final boolean DEFAULT_AUTOMATIC_SLACK_BUS_ON = false;
-    public static final boolean DEFAULT_VSC_AS_GENERATORS = true;
-    public static final boolean DEFAULT_LCC_AS_LOADS = true;
     public static final double DEFAULT_DSO_VOLTAGE_LEVEL = 45.0;
 
     private boolean svcRegulationOn = DEFAULT_SVC_REGULATION_ON;
     private boolean shuntRegulationOn = DEFAULT_SHUNT_REGULATION_ON;
     private boolean automaticSlackBusOn = DEFAULT_AUTOMATIC_SLACK_BUS_ON;
-    private boolean vscAsGenerators = DEFAULT_VSC_AS_GENERATORS;
-    private boolean lccAsLoads = DEFAULT_LCC_AS_LOADS;
     private double dsoVoltageLevel = DEFAULT_DSO_VOLTAGE_LEVEL;
 
     public boolean getSvcRegulationOn() {
@@ -60,24 +56,6 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         return this;
     }
 
-    public boolean getVscAsGenerators() {
-        return vscAsGenerators;
-    }
-
-    public DynaFlowParameters setVscAsGenerators(boolean vscAsGenerators) {
-        this.vscAsGenerators = vscAsGenerators;
-        return this;
-    }
-
-    public boolean getLccAsLoads() {
-        return lccAsLoads;
-    }
-
-    public DynaFlowParameters setLccAsLoads(boolean lccAsLoads) {
-        this.lccAsLoads = lccAsLoads;
-        return this;
-    }
-
     public double getDsoVoltageLevel() {
         return dsoVoltageLevel;
     }
@@ -99,8 +77,6 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
                 .put("svcRegulationOn", svcRegulationOn)
                 .put("shuntRegulationON", shuntRegulationOn)
                 .put("automaticSlackBusON", automaticSlackBusOn)
-                .put("vscAsGenerators", vscAsGenerators)
-                .put("lccAsLoads", lccAsLoads)
                 .put("dsoVoltageLevel", dsoVoltageLevel);
 
         return immutableMapBuilder.build().toString();
@@ -119,8 +95,6 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
                     .ifPresent(config -> parameters.setSvcRegulationOn(config.getBooleanProperty("svcRegulationOn", DEFAULT_SVC_REGULATION_ON))
                             .setShuntRegulationOn(config.getBooleanProperty("shuntRegulationOn", DEFAULT_SHUNT_REGULATION_ON))
                             .setAutomaticSlackBusOn(config.getBooleanProperty("automaticSlackBusOn", DEFAULT_AUTOMATIC_SLACK_BUS_ON))
-                            .setVscAsGenerators(config.getBooleanProperty("vscAsGenerators", DEFAULT_VSC_AS_GENERATORS))
-                            .setLccAsLoads(config.getBooleanProperty("lccAsLoads", DEFAULT_LCC_AS_LOADS))
                             .setDsoVoltageLevel(config.getDoubleProperty("dsoVoltageLevel", DEFAULT_DSO_VOLTAGE_LEVEL)));
 
             return parameters;

@@ -3,8 +3,6 @@
     "SVCRegulationOn" : true,
     "ShuntRegulationOn" : false,
     "AutomaticSlackBusOn" : true,
-    "VSCAsGenerators" : false,
-    "LCCAsLoads" : true,
     "DsoVoltageLevel" : 32.4,
     "InfiniteReactiveLimits" : true,
     "PSTRegulationOn" : false,
