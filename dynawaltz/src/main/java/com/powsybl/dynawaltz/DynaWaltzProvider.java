@@ -127,16 +127,21 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
             super.after(workingDir, report);
             context.getNetwork().getVariantManager().setWorkingVariant(context.getWorkingVariantId());
             boolean status = true;
-            // TODO(Luma) status should be set to false if Dynawo could not be run or output file does not exist
             Path outputNetworkFile = workingDir.resolve("outputs").resolve("finalState").resolve(OUTPUT_IIDM_FILENAME);
             if (Files.exists(outputNetworkFile)) {
                 DynawoResultsNetworkUpdate.update(context.getNetwork(), NetworkXml.read(outputNetworkFile));
+            } else {
+                status = false;
             }
             Path curvesPath = workingDir.resolve(CURVES_OUTPUT_PATH).toAbsolutePath().resolve(CURVES_FILENAME);
             Map<String, TimeSeries> curves = new HashMap<>();
             if (Files.exists(curvesPath)) {
                 Map<Integer, List<TimeSeries>> curvesPerVersion = TimeSeries.parseCsv(curvesPath, new TimeSeriesCsvConfig(TimeSeriesConstants.DEFAULT_SEPARATOR, false, TimeFormat.FRACTIONS_OF_SECOND));
                 curvesPerVersion.values().forEach(l -> l.forEach(curve -> curves.put(curve.getMetadata().getName(), curve)));
+            } else {
+                if (context.withCurves()) {
+                    status = false;
+                }
             }
             return new DynamicSimulationResultImpl(status, null, curves, DynamicSimulationResult.emptyTimeLine());
         }

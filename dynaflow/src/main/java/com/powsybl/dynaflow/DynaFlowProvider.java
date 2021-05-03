@@ -131,13 +131,16 @@ public class DynaFlowProvider implements LoadFlowProvider {
                 Path absoluteWorkingDir = workingDir.toAbsolutePath();
                 super.after(absoluteWorkingDir, report);
                 network.getVariantManager().setWorkingVariant(workingStateId);
+                boolean status = true;
                 Path outputNetworkFile = workingDir.resolve("outputs").resolve("finalState").resolve(OUTPUT_IIDM_FILENAME);
                 if (Files.exists(outputNetworkFile)) {
                     DynawoResultsNetworkUpdate.update(network, NetworkXml.read(outputNetworkFile));
+                } else {
+                    status = false;
                 }
                 Map<String, String> metrics = new HashMap<>();
                 String logs = null;
-                return new LoadFlowResultImpl(true, metrics, logs);
+                return new LoadFlowResultImpl(status, metrics, logs);
             }
         });
     }
