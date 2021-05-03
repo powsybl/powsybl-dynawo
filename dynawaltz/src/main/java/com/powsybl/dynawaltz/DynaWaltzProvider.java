@@ -108,7 +108,15 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
         }
 
         @Override
-        public List<CommandExecution> before(Path workingDir) {
+        public List<CommandExecution> before(Path workingDir) throws IOException {
+            Path outputNetworkFile = workingDir.resolve("outputs").resolve("finalState").resolve(OUTPUT_IIDM_FILENAME);
+            if (Files.exists(outputNetworkFile)) {
+                Files.delete(outputNetworkFile);
+            }
+            Path curvesPath = workingDir.resolve(CURVES_OUTPUT_PATH).toAbsolutePath().resolve(CURVES_FILENAME);
+            if (Files.exists(curvesPath)) {
+                Files.delete(curvesPath);
+            }
             writeInputFiles(workingDir);
             Command cmd = createCommand(workingDir.resolve(JOBS_FILENAME));
             return Collections.singletonList(new CommandExecution(cmd, 1));
