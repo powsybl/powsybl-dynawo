@@ -165,7 +165,7 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
         LoadFlowResult result = dynaFlowSimulation.run(network, computationManager, params);
         assertNotNull(result);
         assertTrue(result.isOk());
-        
+
         InputStream pReferenceOutput = getClass().getResourceAsStream("/SmallBusBranch_outputIIDM.xml");
         Network expectedNetwork = NetworkXml.read(pReferenceOutput);
 
