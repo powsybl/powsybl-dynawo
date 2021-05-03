@@ -33,8 +33,7 @@ import java.util.Objects;
 import java.util.concurrent.ForkJoinPool;
 
 import static com.powsybl.dynaflow.DynaFlowConstants.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 /**
  * @author Guillaume Pernin <guillaume.pernin at rte-france.com>
@@ -97,6 +96,27 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
         }
     }
 
+    private static class EmptyLocalCommandExecutorMock extends AbstractLocalCommandExecutor {
+
+        private final String stdOutFileRef;
+
+        public EmptyLocalCommandExecutorMock(String stdoutFileRef) {
+            this.stdOutFileRef = Objects.requireNonNull(stdoutFileRef);
+        }
+
+        @Override
+        public int execute(String program, List<String> args, Path outFile, Path errFile, Path workingDir, Map<String, String> env) {
+            try {
+                copyFile(stdOutFileRef, errFile);
+                Files.createDirectories(workingDir.resolve("outputs").resolve("finalState"));
+
+                return 0;
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
+        }
+    }
+
     @Test
     public void test() throws Exception {
         Network network = createTestSmallBusBranch();
@@ -111,6 +131,23 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
         LoadFlowResult result = dynaFlowSimulation.run(network, computationManager, params);
         assertNotNull(result);
+        assertTrue(result.isOk());
+    }
+
+    @Test
+    public void testFail() throws Exception {
+        Network network = createTestSmallBusBranch();
+        LoadFlow.Runner dynaFlowSimulation = LoadFlow.find();
+        LoadFlowParameters params = LoadFlowParameters.load();
+
+        assertEquals("DynaFlow", dynaFlowSimulation.getName());
+        assertEquals("0.1", dynaFlowSimulation.getVersion());
+
+        LocalCommandExecutor commandExecutor = new EmptyLocalCommandExecutorMock("/dynaflow_version.out");
+        ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
+        LoadFlowResult result = dynaFlowSimulation.run(network, computationManager, params);
+        assertNotNull(result);
+        assertFalse(result.isOk());
     }
 
     @Test
@@ -127,7 +164,8 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
         LoadFlowResult result = dynaFlowSimulation.run(network, computationManager, params);
         assertNotNull(result);
-
+        assertTrue(result.isOk());
+        
         InputStream pReferenceOutput = getClass().getResourceAsStream("/SmallBusBranch_outputIIDM.xml");
         Network expectedNetwork = NetworkXml.read(pReferenceOutput);
 

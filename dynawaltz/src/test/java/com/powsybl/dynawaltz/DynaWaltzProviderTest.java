@@ -6,14 +6,18 @@
  */
 package com.powsybl.dynawaltz;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.FileSystem;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ForkJoinPool;
 
+import com.powsybl.computation.local.LocalCommandExecutor;
 import org.junit.Test;
 
 import com.google.common.jimfs.Configuration;
@@ -30,6 +34,8 @@ import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynamicsimulation.DynamicSimulationResult;
 import com.powsybl.dynamicsimulation.DynamicModelsSupplier;
 import com.powsybl.iidm.network.Network;
+
+import static org.junit.Assert.*;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -62,6 +68,19 @@ public class DynaWaltzProviderTest {
 
     }
 
+    private static class EmptyLocalCommandExecutorMock extends AbstractLocalCommandExecutor {
+
+        @Override
+        public int execute(String program, List<String> args, Path outFile, Path errFile, Path workingDir, Map<String, String> env) {
+            try {
+                Files.createDirectories(workingDir.resolve("outputs").resolve("finalState"));
+                return 0;
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
+        }
+    }
+
     @Test
     public void test() throws Exception {
         try (FileSystem fs = Jimfs.newFileSystem(Configuration.unix())) {
@@ -76,6 +95,25 @@ public class DynaWaltzProviderTest {
                                                                   CurvesSupplier.empty(), network.getVariantManager().getWorkingVariantId(),
                                                                   computationManager, DynamicSimulationParameters.load());
             assertNotNull(result);
+        }
+    }
+
+    @Test
+    public void testFail() throws Exception {
+        try (FileSystem fs = Jimfs.newFileSystem(Configuration.unix())) {
+            Network network = Network.create("test", "test");
+
+            Path localDir = fs.getPath("/tmp");
+            LocalCommandExecutor commandExecutor = new EmptyLocalCommandExecutorMock();
+            ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(localDir, 1), commandExecutor, ForkJoinPool.commonPool());
+            DynamicSimulation.Runner dynawoSimulation = DynamicSimulation.find();
+            assertEquals(DynaWaltzProvider.NAME, dynawoSimulation.getName());
+            assertEquals("1.2.0", dynawoSimulation.getVersion());
+            DynamicSimulationResult result = dynawoSimulation.run(network, DynamicModelsSupplierMock.empty(), EventModelsSupplierMock.empty(),
+                    CurvesSupplier.empty(), network.getVariantManager().getWorkingVariantId(),
+                    computationManager, DynamicSimulationParameters.load());
+            assertNotNull(result);
+            assertFalse(result.isOk());
         }
     }
 }
