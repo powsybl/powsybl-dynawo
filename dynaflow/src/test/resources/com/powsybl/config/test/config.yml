@@ -6,8 +6,6 @@ dynaflow:
   debug: false
 
 dynaflow-default-parameters:
-  lccAsLoads: false
-  vscAsGenerators: false
   svcRegulationOn: true
 
 load-flow-default-parameters:

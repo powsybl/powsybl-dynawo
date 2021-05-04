@@ -49,16 +49,12 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
         boolean svcRegulationOn = true;
         boolean shuntRegulationOn = false;
         boolean automaticSlackBusOn = true;
-        boolean vscAsGenerators = false;
-        boolean lccAsLoads = true;
         double dsoVoltageLevel = 87.32;
 
         MapModuleConfig moduleConfig = platformConfig.createModuleConfig("dynaflow-default-parameters");
         moduleConfig.setStringProperty("svcRegulationOn", Boolean.toString(svcRegulationOn));
         moduleConfig.setStringProperty("shuntRegulationOn", Boolean.toString(shuntRegulationOn));
         moduleConfig.setStringProperty("automaticSlackBusOn", Boolean.toString(automaticSlackBusOn));
-        moduleConfig.setStringProperty("vscAsGenerators", Boolean.toString(vscAsGenerators));
-        moduleConfig.setStringProperty("lccAsLoads", Boolean.toString(lccAsLoads));
         moduleConfig.setStringProperty("dsoVoltageLevel", Double.toString(dsoVoltageLevel));
 
         DynaFlowParameters.DynaFlowConfigLoader configLoader = new DynaFlowParameters.DynaFlowConfigLoader();
@@ -67,8 +63,6 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
         assertEquals(svcRegulationOn, parameters.getSvcRegulationOn());
         assertEquals(shuntRegulationOn, parameters.getShuntRegulationOn());
         assertEquals(automaticSlackBusOn, parameters.getAutomaticSlackBusOn());
-        assertEquals(vscAsGenerators, parameters.getVscAsGenerators());
-        assertEquals(lccAsLoads, parameters.getLccAsLoads());
     }
 
     @Test
@@ -80,9 +74,6 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
         assertEquals(DynaFlowParameters.DEFAULT_SVC_REGULATION_ON, parametersExt.getSvcRegulationOn());
         assertEquals(DynaFlowParameters.DEFAULT_SHUNT_REGULATION_ON, parametersExt.getShuntRegulationOn());
         assertEquals(DynaFlowParameters.DEFAULT_AUTOMATIC_SLACK_BUS_ON, parametersExt.getAutomaticSlackBusOn());
-        assertEquals(DynaFlowParameters.DEFAULT_VSC_AS_GENERATORS, parametersExt.getVscAsGenerators());
-        assertEquals(DynaFlowParameters.DEFAULT_LCC_AS_LOADS, parametersExt.getLccAsLoads());
-
     }
 
     @Test
@@ -92,8 +83,6 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
         String expectedString = "{svcRegulationOn=" + DynaFlowParameters.DEFAULT_SVC_REGULATION_ON +
                 ", shuntRegulationON=" + DynaFlowParameters.DEFAULT_SHUNT_REGULATION_ON +
                 ", automaticSlackBusON=" + DynaFlowParameters.DEFAULT_AUTOMATIC_SLACK_BUS_ON +
-                ", vscAsGenerators=" + DynaFlowParameters.DEFAULT_VSC_AS_GENERATORS +
-                ", lccAsLoads=" + DynaFlowParameters.DEFAULT_LCC_AS_LOADS +
                 ", dsoVoltageLevel=" + DynaFlowParameters.DEFAULT_DSO_VOLTAGE_LEVEL + "}";
         assertEquals(expectedString, parametersExt.toString());
 
@@ -109,8 +98,6 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
         dynaFlowParameters.setSvcRegulationOn(true);
         dynaFlowParameters.setShuntRegulationOn(false);
         dynaFlowParameters.setAutomaticSlackBusOn(true);
-        dynaFlowParameters.setVscAsGenerators(false);
-        dynaFlowParameters.setLccAsLoads(true);
         dynaFlowParameters.setDsoVoltageLevel(32.4);
         lfParameters.addExtension(DynaFlowParameters.class, dynaFlowParameters);
 
