@@ -202,6 +202,13 @@
             </dependency>
             <dependency>
                 <groupId>com.powsybl</groupId>
+                <artifactId>powsybl-security-analysis-api</artifactId>
+                <version>${powsyblcore.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.powsybl</groupId>
                 <artifactId>powsybl-time-series-api</artifactId>
                 <version>${powsyblcore.version}</version>
             </dependency>
