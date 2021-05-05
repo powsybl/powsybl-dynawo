@@ -14,36 +14,28 @@ import com.powsybl.dynawaltz.xml.CurvesXml;
 import com.powsybl.dynawaltz.xml.DydXml;
 import com.powsybl.dynawaltz.xml.JobsXml;
 import com.powsybl.dynawaltz.xml.ParametersXml;
+import com.powsybl.dynawo.commons.DynawoResultsNetworkUpdate;
 import com.powsybl.iidm.export.Exporters;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.xml.IidmXmlVersion;
+import com.powsybl.iidm.xml.NetworkXml;
 import com.powsybl.iidm.xml.XMLExporter;
 import com.powsybl.timeseries.TimeSeries;
-import com.powsybl.timeseries.TimeSeriesConstants;
 import com.powsybl.timeseries.TimeSeries.TimeFormat;
+import com.powsybl.timeseries.TimeSeriesConstants;
 import com.powsybl.timeseries.TimeSeriesCsvConfig;
-
-import javax.xml.stream.XMLStreamException;
-
 import org.apache.commons.lang3.SystemUtils;
 
+import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Properties;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
-import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.JOBS_FILENAME;
-import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.NETWORK_FILENAME;
-import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.CURVES_OUTPUT_PATH;
-import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.CURVES_FILENAME;
+import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.*;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -54,6 +46,7 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
     public static final String NAME = "DynaWaltz";
     private static final String DYNAWO_CMD_NAME = "dynawo";
     private static final String WORKING_DIR_PREFIX = "powsybl_dynawaltz_";
+    private static final String OUTPUT_IIDM_FILENAME = "outputIIDM.xml";
 
     private final DynaWaltzConfig dynaWaltzConfig;
 
@@ -102,7 +95,7 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
         network.getVariantManager().setWorkingVariant(workingVariantId);
         ExecutionEnvironment execEnv = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, dynaWaltzConfig.isDebug());
 
-        DynaWaltzContext context = new DynaWaltzContext(network, dynamicModelsSupplier.get(network), eventsModelsSupplier.get(network), curvesSupplier.get(network), parameters, dynaWaltzParameters);
+        DynaWaltzContext context = new DynaWaltzContext(network, workingVariantId, dynamicModelsSupplier.get(network), eventsModelsSupplier.get(network), curvesSupplier.get(network), parameters, dynaWaltzParameters);
         return computationManager.execute(execEnv, new DynaWaltzHandler(context));
     }
 
@@ -115,7 +108,15 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
         }
 
         @Override
-        public List<CommandExecution> before(Path workingDir) {
+        public List<CommandExecution> before(Path workingDir) throws IOException {
+            Path outputNetworkFile = workingDir.resolve("outputs").resolve("finalState").resolve(OUTPUT_IIDM_FILENAME);
+            if (Files.exists(outputNetworkFile)) {
+                Files.delete(outputNetworkFile);
+            }
+            Path curvesPath = workingDir.resolve(CURVES_OUTPUT_PATH).toAbsolutePath().resolve(CURVES_FILENAME);
+            if (Files.exists(curvesPath)) {
+                Files.delete(curvesPath);
+            }
             writeInputFiles(workingDir);
             Command cmd = createCommand(workingDir.resolve(JOBS_FILENAME));
             return Collections.singletonList(new CommandExecution(cmd, 1));
@@ -124,13 +125,25 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
         @Override
         public DynamicSimulationResult after(Path workingDir, ExecutionReport report) throws IOException {
             super.after(workingDir, report);
+            context.getNetwork().getVariantManager().setWorkingVariant(context.getWorkingVariantId());
+            boolean status = true;
+            Path outputNetworkFile = workingDir.resolve("outputs").resolve("finalState").resolve(OUTPUT_IIDM_FILENAME);
+            if (Files.exists(outputNetworkFile)) {
+                DynawoResultsNetworkUpdate.update(context.getNetwork(), NetworkXml.read(outputNetworkFile));
+            } else {
+                status = false;
+            }
             Path curvesPath = workingDir.resolve(CURVES_OUTPUT_PATH).toAbsolutePath().resolve(CURVES_FILENAME);
             Map<String, TimeSeries> curves = new HashMap<>();
             if (Files.exists(curvesPath)) {
                 Map<Integer, List<TimeSeries>> curvesPerVersion = TimeSeries.parseCsv(curvesPath, new TimeSeriesCsvConfig(TimeSeriesConstants.DEFAULT_SEPARATOR, false, TimeFormat.FRACTIONS_OF_SECOND));
                 curvesPerVersion.values().forEach(l -> l.forEach(curve -> curves.put(curve.getMetadata().getName(), curve)));
+            } else {
+                if (context.withCurves()) {
+                    status = false;
+                }
             }
-            return new DynamicSimulationResultImpl(true, null, curves, DynamicSimulationResult.emptyTimeLine());
+            return new DynamicSimulationResultImpl(status, null, curves, DynamicSimulationResult.emptyTimeLine());
         }
 
         private void writeInputFiles(Path workingDir) {
