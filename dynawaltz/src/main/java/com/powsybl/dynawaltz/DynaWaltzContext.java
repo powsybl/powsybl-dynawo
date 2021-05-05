@@ -23,8 +23,9 @@ import java.util.Objects;
  */
 public class DynaWaltzContext {
 
-    public DynaWaltzContext(Network network, List<DynamicModel> dynamicModels, List<EventModel> eventModels, List<Curve> curves, DynamicSimulationParameters parameters, DynaWaltzParameters dynaWaltzParameters) {
+    public DynaWaltzContext(Network network, String workingVariantId, List<DynamicModel> dynamicModels, List<EventModel> eventModels, List<Curve> curves, DynamicSimulationParameters parameters, DynaWaltzParameters dynaWaltzParameters) {
         this.network = Objects.requireNonNull(network);
+        this.workingVariantId = Objects.requireNonNull(workingVariantId);
         this.dynamicModels = Objects.requireNonNull(dynamicModels);
         this.eventModels = Objects.requireNonNull(eventModels);
         this.curves = Objects.requireNonNull(curves);
@@ -35,6 +36,10 @@ public class DynaWaltzContext {
 
     public Network getNetwork() {
         return network;
+    }
+
+    public String getWorkingVariantId() {
+        return workingVariantId;
     }
 
     public DynamicSimulationParameters getParameters() {
@@ -71,6 +76,7 @@ public class DynaWaltzContext {
     }
 
     private final Network network;
+    private final String workingVariantId;
     private final DynamicSimulationParameters parameters;
     private final DynaWaltzParameters dynaWaltzParameters;
     private final DynaWaltzParametersDatabase parametersDatabase;

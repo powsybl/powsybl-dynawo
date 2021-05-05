@@ -23,6 +23,7 @@ import com.powsybl.loadflow.LoadFlowResult;
 import com.powsybl.loadflow.LoadFlowResultImpl;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -115,6 +116,10 @@ public class DynaFlowProvider implements LoadFlowProvider {
 
             @Override
             public List<CommandExecution> before(Path workingDir) throws IOException {
+                Path outputNetworkFile = workingDir.resolve("outputs").resolve("finalState").resolve(OUTPUT_IIDM_FILENAME);
+                if (Files.exists(outputNetworkFile)) {
+                    Files.delete(outputNetworkFile);
+                }
                 network.getVariantManager().setWorkingVariant(workingStateId);
                 writeIIDM(workingDir, network);
                 DynaFlowConfigSerializer.serialize(loadFlowParameters, dynaFlowParameters, workingDir, workingDir.resolve(CONFIG_FILENAME));
@@ -126,11 +131,16 @@ public class DynaFlowProvider implements LoadFlowProvider {
                 Path absoluteWorkingDir = workingDir.toAbsolutePath();
                 super.after(absoluteWorkingDir, report);
                 network.getVariantManager().setWorkingVariant(workingStateId);
-                DynawoResultsNetworkUpdate.update(network, NetworkXml.read(workingDir.resolve("outputs").resolve("finalState").resolve(OUTPUT_IIDM_FILENAME)));
-
+                boolean status = true;
+                Path outputNetworkFile = workingDir.resolve("outputs").resolve("finalState").resolve(OUTPUT_IIDM_FILENAME);
+                if (Files.exists(outputNetworkFile)) {
+                    DynawoResultsNetworkUpdate.update(network, NetworkXml.read(outputNetworkFile));
+                } else {
+                    status = false;
+                }
                 Map<String, String> metrics = new HashMap<>();
                 String logs = null;
-                return new LoadFlowResultImpl(true, metrics, logs);
+                return new LoadFlowResultImpl(status, metrics, logs);
             }
         });
     }
