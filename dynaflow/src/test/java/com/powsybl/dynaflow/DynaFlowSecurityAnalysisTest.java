@@ -78,10 +78,15 @@ public class DynaFlowSecurityAnalysisTest {
         @Override
         public int execute(String program, List<String> args, Path outFile, Path errFile, Path workingDir, Map<String, String> env) {
             try {
-                copyFile(stdOutFileRef, errFile);
-                Files.createDirectories(workingDir.resolve("outputs"));
-                copyFile(outputSecurityAnalisisResult, workingDir.resolve("outputs").resolve(SECURITY_ANALISIS_RESULTS_FILENAME));
-
+                if (args.get(0).equals("--version")) {
+                    copyFile(stdOutFileRef, errFile);
+                }  else {
+                    assertEquals("--network", args.get(0));
+                    assertEquals("--config", args.get(2));
+                    assertEquals("--contingencies", args.get(4));
+                    Files.createDirectories(workingDir.resolve("outputs"));
+                    copyFile(outputSecurityAnalisisResult, workingDir.resolve("outputs").resolve(SECURITY_ANALISIS_RESULTS_FILENAME));
+                }
                 return 0;
             } catch (IOException e) {
                 throw new UncheckedIOException(e);

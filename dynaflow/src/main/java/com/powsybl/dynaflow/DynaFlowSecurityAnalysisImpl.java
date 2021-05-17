@@ -66,12 +66,13 @@ public class DynaFlowSecurityAnalysisImpl extends AbstractSecurityAnalysis {
     }
 
     private static String getProgram(DynaFlowConfig config) {
-        return config.getHomeDir().resolve("dynaflow-launcher-sa.sh").toString();
+        return config.getHomeDir().resolve("dynaflow-launcher.sh").toString();
     }
 
     public static Command getCommand(DynaFlowConfig config) {
-        List<String> args = Arrays.asList("--network", IIDM_FILENAME, "--config", CONFIG_FILENAME);
-
+        List<String> args = Arrays.asList("--network", IIDM_FILENAME,
+            "--config", CONFIG_FILENAME,
+            "--contingencies", CONTINGENCIES_FILENAME);
         return new SimpleCommandBuilder()
             .id("dynaflow_sa")
             .program(getProgram(config))
