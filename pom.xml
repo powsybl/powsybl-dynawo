@@ -60,7 +60,7 @@
         <mockito.version>3.3.3</mockito.version>
         <xmlunit.version>2.3.0</xmlunit.version>
 
-        <powsyblcore.version>4.2.0-SNAPSHOT</powsyblcore.version>
+        <powsyblcore.version>4.3.0-SNAPSHOT</powsyblcore.version>
     </properties>
 
     <profiles>
@@ -194,6 +194,18 @@
                 <groupId>com.powsybl</groupId>
                 <artifactId>powsybl-loadflow-api</artifactId>
                 <version>${powsyblcore.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.powsybl</groupId>
+                <artifactId>powsybl-security-analysis-api</artifactId>
+                <version>${powsyblcore.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.powsybl</groupId>
+                <artifactId>powsybl-security-analysis-api</artifactId>
+                <version>${powsyblcore.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>com.powsybl</groupId>

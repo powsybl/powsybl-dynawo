@@ -36,6 +36,10 @@
         </dependency>
         <dependency>
             <groupId>com.powsybl</groupId>
+            <artifactId>powsybl-security-analysis-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.powsybl</groupId>
             <artifactId>powsybl-time-series-api</artifactId>
         </dependency>
         <dependency>
@@ -96,6 +100,12 @@
         <dependency>
             <groupId>com.powsybl</groupId>
             <artifactId>powsybl-iidm-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.powsybl</groupId>
+            <artifactId>powsybl-security-analysis-api</artifactId>
+            <type>test-jar</type>
             <scope>test</scope>
         </dependency>
 
