@@ -50,6 +50,7 @@ import static org.junit.Assert.*;
 public class DynaFlowSecurityAnalysisTest {
 
     private static final String SECURITY_ANALISIS_RESULTS_FILENAME = "securityAnalysisResults.json";
+    private static final String DYNAWO_PROVIDER_NAME = "DynawoSecurityAnalysis";
 
     private FileSystem fileSystem;
     private PlatformConfig platformConfig;
@@ -95,6 +96,13 @@ public class DynaFlowSecurityAnalysisTest {
     }
 
     @Test
+    public void testDefaultProvider() {
+        SecurityAnalysis.Runner dynawoSecurityAnalysisRunner = SecurityAnalysis.find();
+        assertEquals(DYNAWO_PROVIDER_NAME, dynawoSecurityAnalysisRunner.getName());
+        assertEquals("1.0", dynawoSecurityAnalysisRunner.getVersion());
+    }
+
+    @Test
     public void test() throws IOException {
         Network network = EurostagTutorialExample1Factory.create();
         ((Bus) network.getIdentifiable("NHV1")).setV(380.0);
@@ -129,9 +137,8 @@ public class DynaFlowSecurityAnalysisTest {
 
         LimitViolationFilter filter = new LimitViolationFilter();
 
-        SecurityAnalysis securityAnalysis = new DynaFlowSecurityAnalysisImpl(network, new DefaultLimitViolationDetector(), filter, computationManager);
-
-        SecurityAnalysisResult result = securityAnalysis.run(VariantManagerConstants.INITIAL_VARIANT_ID, SecurityAnalysisParameters.load(platformConfig), contingenciesProvider).join();
+        SecurityAnalysisReport report = SecurityAnalysis.run(network, VariantManagerConstants.INITIAL_VARIANT_ID, new DefaultLimitViolationDetector(), filter, computationManager, SecurityAnalysisParameters.load(platformConfig), contingenciesProvider, Collections.emptyList());
+        SecurityAnalysisResult result = report.getResult();
 
         assertTrue(result.getPreContingencyResult().isComputationOk());
         assertEquals(1, result.getPreContingencyResult().getLimitViolations().size());
