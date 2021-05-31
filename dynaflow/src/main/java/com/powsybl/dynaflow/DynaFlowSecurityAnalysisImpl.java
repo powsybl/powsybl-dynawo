@@ -12,6 +12,7 @@ import com.powsybl.commons.json.JsonUtil;
 import com.powsybl.computation.*;
 import com.powsybl.contingency.ContingenciesProvider;
 import com.powsybl.contingency.Contingency;
+import com.powsybl.contingency.ContingencyList;
 import com.powsybl.contingency.json.ContingencyJsonModule;
 import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
 import com.powsybl.iidm.export.Exporters;
@@ -106,7 +107,7 @@ public class DynaFlowSecurityAnalysisImpl extends AbstractSecurityAnalysis {
             ContingencyJsonModule module = new ContingencyJsonModule();
             mapper.registerModule(module);
             ObjectWriter writer = mapper.writerWithDefaultPrettyPrinter();
-            writer.writeValue(os, contingencies);
+            writer.writeValue(os, ContingencyList.of(contingencies.toArray(Contingency[]::new)));
         }
     }
 
