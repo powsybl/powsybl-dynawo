@@ -25,6 +25,7 @@ import com.powsybl.security.*;
 import com.powsybl.security.detectors.DefaultLimitViolationDetector;
 import com.powsybl.security.extensions.ActivePowerExtension;
 import com.powsybl.security.extensions.CurrentExtension;
+import com.powsybl.security.results.PostContingencyResult;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -140,8 +141,8 @@ public class DynaFlowSecurityAnalysisTest {
         SecurityAnalysisReport report = SecurityAnalysis.run(network, VariantManagerConstants.INITIAL_VARIANT_ID, new DefaultLimitViolationDetector(), filter, computationManager, SecurityAnalysisParameters.load(platformConfig), contingenciesProvider, Collections.emptyList());
         SecurityAnalysisResult result = report.getResult();
 
-        assertTrue(result.getPreContingencyResult().isComputationOk());
-        assertEquals(1, result.getPreContingencyResult().getLimitViolations().size());
+        assertTrue(result.getPreContingencyResult().getLimitViolationsResult().isComputationOk());
+        assertEquals(1, result.getPreContingencyResult().getLimitViolationsResult().getLimitViolations().size());
         PostContingencyResult postcontingencyResult = result.getPostContingencyResults().get(0);
         assertTrue(postcontingencyResult.getLimitViolationsResult().isComputationOk());
         assertEquals(3, postcontingencyResult.getLimitViolationsResult().getLimitViolations().size());
