@@ -25,6 +25,7 @@ import com.powsybl.security.*;
 import com.powsybl.security.detectors.DefaultLimitViolationDetector;
 import com.powsybl.security.extensions.ActivePowerExtension;
 import com.powsybl.security.extensions.CurrentExtension;
+import com.powsybl.security.results.PostContingencyResult;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -50,6 +51,7 @@ import static org.junit.Assert.*;
 public class DynaFlowSecurityAnalysisTest {
 
     private static final String SECURITY_ANALISIS_RESULTS_FILENAME = "securityAnalysisResults.json";
+    private static final String DYNAWO_PROVIDER_NAME = "DynawoSecurityAnalysis";
 
     private FileSystem fileSystem;
     private PlatformConfig platformConfig;
@@ -95,6 +97,13 @@ public class DynaFlowSecurityAnalysisTest {
     }
 
     @Test
+    public void testDefaultProvider() {
+        SecurityAnalysis.Runner dynawoSecurityAnalysisRunner = SecurityAnalysis.find();
+        assertEquals(DYNAWO_PROVIDER_NAME, dynawoSecurityAnalysisRunner.getName());
+        assertEquals("1.0", dynawoSecurityAnalysisRunner.getVersion());
+    }
+
+    @Test
     public void test() throws IOException {
         Network network = EurostagTutorialExample1Factory.create();
         ((Bus) network.getIdentifiable("NHV1")).setV(380.0);
@@ -129,12 +138,11 @@ public class DynaFlowSecurityAnalysisTest {
 
         LimitViolationFilter filter = new LimitViolationFilter();
 
-        SecurityAnalysis securityAnalysis = new DynaFlowSecurityAnalysisImpl(network, new DefaultLimitViolationDetector(), filter, computationManager);
+        SecurityAnalysisReport report = SecurityAnalysis.run(network, VariantManagerConstants.INITIAL_VARIANT_ID, new DefaultLimitViolationDetector(), filter, computationManager, SecurityAnalysisParameters.load(platformConfig), contingenciesProvider, Collections.emptyList());
+        SecurityAnalysisResult result = report.getResult();
 
-        SecurityAnalysisResult result = securityAnalysis.run(VariantManagerConstants.INITIAL_VARIANT_ID, SecurityAnalysisParameters.load(platformConfig), contingenciesProvider).join();
-
-        assertTrue(result.getPreContingencyResult().isComputationOk());
-        assertEquals(1, result.getPreContingencyResult().getLimitViolations().size());
+        assertTrue(result.getPreContingencyResult().getLimitViolationsResult().isComputationOk());
+        assertEquals(1, result.getPreContingencyResult().getLimitViolationsResult().getLimitViolations().size());
         PostContingencyResult postcontingencyResult = result.getPostContingencyResults().get(0);
         assertTrue(postcontingencyResult.getLimitViolationsResult().isComputationOk());
         assertEquals(3, postcontingencyResult.getLimitViolationsResult().getLimitViolations().size());

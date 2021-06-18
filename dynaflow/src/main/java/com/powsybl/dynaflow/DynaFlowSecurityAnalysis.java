@@ -39,7 +39,7 @@ import static com.powsybl.dynaflow.DynaFlowConstants.IIDM_FILENAME;
 /**
  * @author Luma Zamarreno <zamarrenolm at aia.es>
  */
-public class DynaFlowSecurityAnalysisImpl extends AbstractSecurityAnalysis {
+public class DynaFlowSecurityAnalysis {
 
     private static final String WORKING_DIR_PREFIX = "dynaflow_sa_";
     private static final String CONTINGENCIES_FILENAME = "contingencies.json";
@@ -48,11 +48,19 @@ public class DynaFlowSecurityAnalysisImpl extends AbstractSecurityAnalysis {
     private final Supplier<DynaFlowConfig> configSupplier;
 
     private final ComputationManager computationManager;
+    private final Network network;
+    private final LimitViolationDetector violationDetector;
+    private final LimitViolationFilter violationFilter;
+    private final List<SecurityAnalysisInterceptor> interceptors;
 
-    public DynaFlowSecurityAnalysisImpl(Network network, LimitViolationDetector detector,
-                                        LimitViolationFilter filter, ComputationManager computationManager) {
-        super(network, detector, filter);
+    public DynaFlowSecurityAnalysis(Network network, LimitViolationDetector detector,
+                                    LimitViolationFilter filter, ComputationManager computationManager) {
+        this.network = Objects.requireNonNull(network);
+        this.violationDetector = Objects.requireNonNull(detector);
+        this.violationFilter = Objects.requireNonNull(filter);
+        this.interceptors = new ArrayList<>();
         this.computationManager = Objects.requireNonNull(computationManager);
+
         interceptors.add(new CurrentLimitViolationInterceptor());
         // TODO(Luma) Allow additional sources for configuration?
         this.configSupplier = DynaFlowConfig::fromPropertyFile;
@@ -118,18 +126,15 @@ public class DynaFlowSecurityAnalysisImpl extends AbstractSecurityAnalysis {
         DynaFlowConfigSerializer.serialize(loadFlowParameters, dynaFlowParameters, workingDir, workingDir.resolve(CONFIG_FILENAME));
     }
 
-    @Override
     public void addInterceptor(SecurityAnalysisInterceptor interceptor) {
         interceptors.add(Objects.requireNonNull(interceptor));
     }
 
-    @Override
     public boolean removeInterceptor(SecurityAnalysisInterceptor interceptor) {
         return interceptors.remove(interceptor);
     }
 
-    @Override
-    public CompletableFuture<SecurityAnalysisResult> run(String workingVariantId,
+    public CompletableFuture<SecurityAnalysisReport> run(String workingVariantId,
                                                          SecurityAnalysisParameters securityAnalysisParameters,
                                                          ContingenciesProvider contingenciesProvider) {
         Objects.requireNonNull(workingVariantId);
@@ -141,7 +146,7 @@ public class DynaFlowSecurityAnalysisImpl extends AbstractSecurityAnalysis {
         Command versionCmd = getVersionCommand(config);
         DynaFlowUtil.checkDynaFlowVersion(env, computationManager, versionCmd);
         List<Contingency> contingencies = contingenciesProvider.getContingencies(network);
-        return computationManager.execute(env, new AbstractExecutionHandler<SecurityAnalysisResult>() {
+        return computationManager.execute(env, new AbstractExecutionHandler<SecurityAnalysisReport>() {
             @Override
             public List<CommandExecution> before(Path workingDir) throws IOException {
                 network.getVariantManager().setWorkingVariant(workingVariantId);
@@ -153,12 +158,12 @@ public class DynaFlowSecurityAnalysisImpl extends AbstractSecurityAnalysis {
             }
 
             @Override
-            public SecurityAnalysisResult after(Path workingDir, ExecutionReport report) throws IOException {
+            public SecurityAnalysisReport after(Path workingDir, ExecutionReport report) throws IOException {
                 Path absoluteWorkingDir = workingDir.toAbsolutePath();
                 super.after(absoluteWorkingDir, report);
                 network.getVariantManager().setWorkingVariant(workingVariantId);
 
-                return SecurityAnalysisResultDeserializer.read(workingDir.resolve("outputs").resolve(SECURITY_ANALISIS_RESULTS_FILENAME));
+                return new SecurityAnalysisReport(SecurityAnalysisResultDeserializer.read(workingDir.resolve("outputs").resolve(SECURITY_ANALISIS_RESULTS_FILENAME)));
             }
         });
     }
