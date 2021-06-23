@@ -18,12 +18,14 @@ import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
 import com.powsybl.iidm.export.Exporters;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.xml.IidmXmlVersion;
+import com.powsybl.iidm.xml.NetworkXml;
 import com.powsybl.iidm.xml.XMLExporter;
 import com.powsybl.loadflow.LoadFlowParameters;
 import com.powsybl.security.*;
 import com.powsybl.security.interceptors.CurrentLimitViolationInterceptor;
 import com.powsybl.security.interceptors.SecurityAnalysisInterceptor;
 import com.powsybl.security.json.SecurityAnalysisResultDeserializer;
+import com.powsybl.security.results.PostContingencyResult;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -32,6 +34,7 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static com.powsybl.dynaflow.DynaFlowConstants.CONFIG_FILENAME;
 import static com.powsybl.dynaflow.DynaFlowConstants.IIDM_FILENAME;
@@ -42,8 +45,13 @@ import static com.powsybl.dynaflow.DynaFlowConstants.IIDM_FILENAME;
 public class DynaFlowSecurityAnalysis {
 
     private static final String WORKING_DIR_PREFIX = "dynaflow_sa_";
+    private static final String DYNAFLOW_LAUNCHER_PROGRAM_NAME = "dynaflow-launcher.sh";
     private static final String CONTINGENCIES_FILENAME = "contingencies.json";
     private static final String SECURITY_ANALISIS_RESULTS_FILENAME = "securityAnalysisResults.json";
+    private static final String BASE_CASE_FOLDER = "BaseCase";
+    private static final String DYNAFLOW_OUTPUT_FOLDER = "outputs";
+    private static final String DYNAWO_FINAL_STATE_FOLDER = "finalState";
+    private static final String DYNAWO_OUTPUT_NETWORK_FILENAME = "outputIIDM.xml";
 
     private final Supplier<DynaFlowConfig> configSupplier;
 
@@ -75,7 +83,7 @@ public class DynaFlowSecurityAnalysis {
     }
 
     private static String getProgram(DynaFlowConfig config) {
-        return config.getHomeDir().resolve("dynaflow-launcher.sh").toString();
+        return config.getHomeDir().resolve(DYNAFLOW_LAUNCHER_PROGRAM_NAME).toString();
     }
 
     public static Command getCommand(DynaFlowConfig config) {
@@ -159,12 +167,47 @@ public class DynaFlowSecurityAnalysis {
 
             @Override
             public SecurityAnalysisReport after(Path workingDir, ExecutionReport report) throws IOException {
-                Path absoluteWorkingDir = workingDir.toAbsolutePath();
-                super.after(absoluteWorkingDir, report);
+                super.after(workingDir, report);
                 network.getVariantManager().setWorkingVariant(workingVariantId);
 
-                return new SecurityAnalysisReport(SecurityAnalysisResultDeserializer.read(workingDir.resolve("outputs").resolve(SECURITY_ANALISIS_RESULTS_FILENAME)));
+                // If the results have already been prepared, just read them ...
+                Path saOutput = workingDir.resolve("outputs").resolve(SECURITY_ANALISIS_RESULTS_FILENAME);
+                if (Files.exists(saOutput)) {
+                    return new SecurityAnalysisReport(SecurityAnalysisResultDeserializer.read(saOutput));
+                } else {
+                    // Build the results from the output networks written by DynaFlow
+                    LimitViolationsResult baseCaseResult = resultsFromOutputNetwork(workingDir.resolve(BASE_CASE_FOLDER));
+                    List<PostContingencyResult> contingenciesResults = contingencies.stream()
+                        .map(c -> new PostContingencyResult(c, resultsFromOutputNetwork(workingDir.resolve(c.getId()))))
+                        .collect(Collectors.toList());
+                    return new SecurityAnalysisReport(
+                        new SecurityAnalysisResult(baseCaseResult, contingenciesResults)
+                    );
+                }
             }
         });
+    }
+
+    private static LimitViolationsResult resultsFromOutputNetwork(Path folder) {
+        boolean computationOk;
+        List<LimitViolation> limitViolations;
+
+        Path outputNetworkPath = outputNetworkPath(folder);
+        if (Files.exists(outputNetworkPath)) {
+            Network outputNetwork = NetworkXml.read(outputNetworkPath);
+            computationOk = true;
+            limitViolations = Security.checkLimits(outputNetwork);
+        } else {
+            computationOk = false;
+            limitViolations = Collections.emptyList();
+        }
+        return new LimitViolationsResult(computationOk, limitViolations);
+    }
+
+    private static Path outputNetworkPath(Path folder) {
+        return folder
+            .resolve(DYNAFLOW_OUTPUT_FOLDER)
+            .resolve(DYNAWO_FINAL_STATE_FOLDER)
+            .resolve(DYNAWO_OUTPUT_NETWORK_FILENAME);
     }
 }
