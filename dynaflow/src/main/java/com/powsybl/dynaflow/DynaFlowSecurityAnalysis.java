@@ -171,7 +171,7 @@ public class DynaFlowSecurityAnalysis {
                 network.getVariantManager().setWorkingVariant(workingVariantId);
 
                 // If the results have already been prepared, just read them ...
-                Path saOutput = workingDir.resolve("outputs").resolve(SECURITY_ANALISIS_RESULTS_FILENAME);
+                Path saOutput = workingDir.resolve(DYNAFLOW_OUTPUT_FOLDER).resolve(SECURITY_ANALISIS_RESULTS_FILENAME);
                 if (Files.exists(saOutput)) {
                     return new SecurityAnalysisReport(SecurityAnalysisResultDeserializer.read(saOutput));
                 } else {
