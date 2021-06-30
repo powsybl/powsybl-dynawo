@@ -6,17 +6,19 @@
  */
 package com.powsybl.dynaflow;
 
+import com.google.common.io.ByteStreams;
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
 import com.powsybl.commons.config.InMemoryPlatformConfig;
 import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.computation.ComputationManager;
-import com.powsybl.computation.ComputationResourcesStatus;
 import com.powsybl.computation.local.LocalCommandExecutor;
 import com.powsybl.computation.local.LocalComputationConfig;
 import com.powsybl.computation.local.LocalComputationManager;
 import com.powsybl.contingency.ContingenciesProvider;
 import com.powsybl.contingency.Contingency;
+import com.powsybl.contingency.dsl.GroovyDslContingenciesProvider;
+import com.powsybl.iidm.import_.Importers;
 import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.VariantManagerConstants;
@@ -30,9 +32,15 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.xmlunit.builder.DiffBuilder;
+import org.xmlunit.builder.Input;
+import org.xmlunit.diff.Diff;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
+import javax.xml.transform.Source;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -40,9 +48,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ForkJoinPool;
 
+import static com.powsybl.dynaflow.DynaFlowConstants.*;
 import static org.junit.Assert.*;
 
 /**
@@ -160,13 +168,112 @@ public class DynaFlowSecurityAnalysisTest {
         assertEquals(95.0, extension2.getPreContingencyValue(), 0.0);
     }
 
-    private static ComputationManager createMockComputationManager() {
-        ComputationManager computationManager = Mockito.mock(ComputationManager.class);
-        Executor executor = Runnable::run;
-        Mockito.when(computationManager.getExecutor()).thenReturn(executor);
-        ComputationResourcesStatus computationResourcesStatus = Mockito.mock(ComputationResourcesStatus.class);
-        Mockito.when(computationResourcesStatus.getAvailableCores()).thenReturn(4);
-        Mockito.when(computationManager.getResourcesStatus()).thenReturn(computationResourcesStatus);
-        return computationManager;
+    private static class SecurityAnalysisLocalCommandExecutorMock extends AbstractLocalCommandExecutor {
+
+        private static final Logger LOGGER = LoggerFactory.getLogger(SecurityAnalysisLocalCommandExecutorMock.class);
+
+        private final String stdOutFileRef;
+
+        public SecurityAnalysisLocalCommandExecutorMock(String stdoutFileRef) {
+            this.stdOutFileRef = Objects.requireNonNull(stdoutFileRef);
+        }
+
+        @Override
+        public int execute(String program, List<String> args, Path outFile, Path errFile, Path workingDir, Map<String, String> env) throws IOException, InterruptedException {
+            try {
+                if (args.get(0).equals("--version")) {
+                    copyFile(stdOutFileRef, errFile);
+                }  else {
+                    validateInputs(workingDir);
+                    copyOutputs(workingDir);
+                }
+            } catch (Throwable throwable) {
+                LOGGER.error(throwable.toString(), throwable);
+                return -1;
+            }
+            return 0;
+        }
+
+        private void validateInputs(Path workingDir) throws IOException {
+            if (Files.exists(workingDir.resolve(IIDM_FILENAME))) {
+                compareXml(getClass().getResourceAsStream("/SmallBusBranch/dynaflow-inputs/powsybl_dynaflow.xiidm"), Files.newInputStream(workingDir.resolve(IIDM_FILENAME)));
+                compareTxt(getClass().getResourceAsStream("/SmallBusBranch/dynaflow-inputs/contingencies.json"), Files.newInputStream(workingDir.resolve("contingencies.json")));
+            }
+        }
+
+        private void copyOutputs(Path workingDir) throws IOException {
+            if (Files.exists(workingDir.resolve(IIDM_FILENAME))) {
+                Path output = Files.createDirectories(workingDir.resolve("BaseCase").resolve("outputs").resolve("finalState").toAbsolutePath());
+                copyFile("/SmallBusBranch/dynaflow-outputs/BaseCase-outputIIDM.xml", output.resolve(OUTPUT_IIDM_FILENAME));
+                output = Files.createDirectories(workingDir.resolve("contingency1").resolve("outputs").resolve("finalState").toAbsolutePath());
+                copyFile("/SmallBusBranch/dynaflow-outputs/contingency1-outputIIDM.xml", output.resolve(OUTPUT_IIDM_FILENAME));
+            }
+        }
+
+        private static void compareXml(InputStream expected, InputStream actual) {
+            Source control = Input.fromStream(expected).build();
+            Source test = Input.fromStream(actual).build();
+            Diff myDiff = DiffBuilder.compare(control).withTest(test).ignoreWhitespace().ignoreComments().build();
+            boolean hasDiff = myDiff.hasDifferences();
+            if (hasDiff) {
+                System.err.println(myDiff.toString());
+            }
+            assertFalse(hasDiff);
+        }
+
+        private static void compareTxt(InputStream expected, InputStream actual) {
+            try {
+                compareTxt(expected, new String(ByteStreams.toByteArray(actual), StandardCharsets.UTF_8));
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
+        }
+
+        private static void compareTxt(InputStream expected, String actual) {
+            try {
+                String expectedStr = normalizeLineSeparator(new String(ByteStreams.toByteArray(expected), StandardCharsets.UTF_8));
+                String actualStr = normalizeLineSeparator(actual);
+                assertEquals(expectedStr, actualStr);
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
+        }
+
+        private static String normalizeLineSeparator(String str) {
+            return str.replace("\r\n", "\n")
+                    .replace("\r", "\n");
+        }
+    }
+
+    @Test
+    public void testSecurityAnalysisOutputs() throws IOException {
+        Path workingDir = Files.createDirectory(fileSystem.getPath("SmallBusBranch"));
+
+        // Load network
+        Files.copy(getClass().getResourceAsStream("/SmallBusBranch/powsybl-inputs/SmallBusBranch.xiidm"), workingDir.resolve("network.iidm"));
+        Network network = Importers.loadNetwork(workingDir.resolve("network.iidm"));
+
+        Files.copy(getClass().getResourceAsStream("/SmallBusBranch/powsybl-inputs/contingencies.groovy"), workingDir.resolve("contingencies.groovy"));
+        ContingenciesProvider contingenciesProvider = new GroovyDslContingenciesProvider(workingDir.resolve("contingencies.groovy"));
+
+        LocalCommandExecutor commandExecutor = new SecurityAnalysisLocalCommandExecutorMock("/dynaflow_version.out");
+        ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(workingDir, 1), commandExecutor, ForkJoinPool.commonPool());
+
+        LimitViolationFilter filter = new LimitViolationFilter();
+        SecurityAnalysisReport report = SecurityAnalysis.run(network, VariantManagerConstants.INITIAL_VARIANT_ID, new DefaultLimitViolationDetector(), filter, computationManager, SecurityAnalysisParameters.load(platformConfig), contingenciesProvider, Collections.emptyList());
+        SecurityAnalysisResult result = report.getResult();
+
+        PostContingencyResult postcontingencyResult = result.getPostContingencyResults().get(0);
+        assertTrue(postcontingencyResult.getLimitViolationsResult().isComputationOk());
+        assertEquals(3, postcontingencyResult.getLimitViolationsResult().getLimitViolations().size());
+        LimitViolation violation = postcontingencyResult.getLimitViolationsResult().getLimitViolations().get(0);
+        assertEquals(LimitViolationType.CURRENT, violation.getLimitType());
+        assertEquals("_045e3524-c766-11e1-8775-005056c00008", violation.getSubjectId());
+        violation = postcontingencyResult.getLimitViolationsResult().getLimitViolations().get(1);
+        assertEquals(LimitViolationType.CURRENT, violation.getLimitType());
+        assertEquals("_0476c63a-c766-11e1-8775-005056c00008", violation.getSubjectId());
+        violation = postcontingencyResult.getLimitViolationsResult().getLimitViolations().get(2);
+        assertEquals(LimitViolationType.CURRENT, violation.getLimitType());
+        assertEquals("_044c81e3-c766-11e1-8775-005056c00008", violation.getSubjectId());
     }
 }

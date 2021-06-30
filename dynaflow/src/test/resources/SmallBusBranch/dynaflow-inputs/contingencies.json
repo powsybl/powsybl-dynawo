@@ -1,0 +1,11 @@
+{
+  "version" : "1.0",
+  "name" : "",
+  "contingencies" : [ {
+    "id" : "contingency1",
+    "elements" : [ {
+      "id" : "_0483e594-c766-11e1-8775-005056c00008",
+      "type" : "LINE"
+    } ]
+  } ]
+}
