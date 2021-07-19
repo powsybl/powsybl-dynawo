@@ -60,7 +60,7 @@
         <mockito.version>3.3.3</mockito.version>
         <xmlunit.version>2.3.0</xmlunit.version>
 
-        <powsyblcore.version>4.3.0</powsyblcore.version>
+        <powsyblcore.version>4.3.1</powsyblcore.version>
     </properties>
 
     <profiles>
