@@ -25,6 +25,7 @@ import com.powsybl.security.*;
 import com.powsybl.security.interceptors.CurrentLimitViolationInterceptor;
 import com.powsybl.security.interceptors.SecurityAnalysisInterceptor;
 import com.powsybl.security.json.SecurityAnalysisResultDeserializer;
+import com.powsybl.security.monitor.StateMonitor;
 import com.powsybl.security.results.PostContingencyResult;
 
 import java.io.IOException;
@@ -47,6 +48,7 @@ public class DynaFlowSecurityAnalysis {
     private static final String WORKING_DIR_PREFIX = "dynaflow_sa_";
     private static final String DYNAFLOW_LAUNCHER_PROGRAM_NAME = "dynaflow-launcher.sh";
     private static final String CONTINGENCIES_FILENAME = "contingencies.json";
+    private static final String MONITORS_FILENAME = "contingencies-monitors.json";
     private static final String SECURITY_ANALISIS_RESULTS_FILENAME = "securityAnalysisResults.json";
     private static final String BASE_CASE_FOLDER = "BaseCase";
     private static final String DYNAFLOW_OUTPUT_FOLDER = "outputs";
@@ -60,14 +62,19 @@ public class DynaFlowSecurityAnalysis {
     private final LimitViolationDetector violationDetector;
     private final LimitViolationFilter violationFilter;
     private final List<SecurityAnalysisInterceptor> interceptors;
+    private final List<StateMonitor> monitors;
 
-    public DynaFlowSecurityAnalysis(Network network, LimitViolationDetector detector,
-                                    LimitViolationFilter filter, ComputationManager computationManager) {
+    public DynaFlowSecurityAnalysis(Network network,
+                                    LimitViolationDetector detector,
+                                    LimitViolationFilter filter,
+                                    ComputationManager computationManager,
+                                    List<StateMonitor> monitors) {
         this.network = Objects.requireNonNull(network);
         this.violationDetector = Objects.requireNonNull(detector);
         this.violationFilter = Objects.requireNonNull(filter);
         this.interceptors = new ArrayList<>();
         this.computationManager = Objects.requireNonNull(computationManager);
+        this.monitors = Objects.requireNonNull(monitors);
 
         interceptors.add(new CurrentLimitViolationInterceptor());
         // TODO(Luma) Allow additional sources for configuration?
@@ -162,6 +169,7 @@ public class DynaFlowSecurityAnalysis {
                 writeIIDM(network, workingDir);
                 writeParameters(securityAnalysisParameters, workingDir);
                 writeContingencies(contingencies, workingDir);
+                StateMonitor.write(monitors, workingDir.resolve(MONITORS_FILENAME));
                 return Collections.singletonList(createCommandExecution(config));
             }
 

@@ -17,6 +17,8 @@ import com.powsybl.computation.local.LocalComputationConfig;
 import com.powsybl.computation.local.LocalComputationManager;
 import com.powsybl.contingency.ContingenciesProvider;
 import com.powsybl.contingency.Contingency;
+import com.powsybl.contingency.ContingencyContext;
+import com.powsybl.contingency.ContingencyContextType;
 import com.powsybl.contingency.dsl.GroovyDslContingenciesProvider;
 import com.powsybl.iidm.import_.Importers;
 import com.powsybl.iidm.network.Bus;
@@ -27,6 +29,8 @@ import com.powsybl.security.*;
 import com.powsybl.security.detectors.DefaultLimitViolationDetector;
 import com.powsybl.security.extensions.ActivePowerExtension;
 import com.powsybl.security.extensions.CurrentExtension;
+import com.powsybl.security.interceptors.SecurityAnalysisInterceptor;
+import com.powsybl.security.monitor.StateMonitor;
 import com.powsybl.security.results.PostContingencyResult;
 import org.junit.After;
 import org.junit.Before;
@@ -39,18 +43,18 @@ import org.xmlunit.builder.Input;
 import org.xmlunit.diff.Diff;
 
 import javax.xml.transform.Source;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.ForkJoinPool;
 
-import static com.powsybl.dynaflow.DynaFlowConstants.*;
+import static com.powsybl.dynaflow.DynaFlowConstants.IIDM_FILENAME;
+import static com.powsybl.dynaflow.DynaFlowConstants.OUTPUT_IIDM_FILENAME;
 import static org.junit.Assert.*;
 
 /**
@@ -130,7 +134,10 @@ public class DynaFlowSecurityAnalysisTest {
 
         LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynaflow_version.out",
                 "/security_analisis_result.json");
-        ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
+        ComputationManager computationManager = new LocalComputationManager(
+            new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1),
+            commandExecutor,
+            ForkJoinPool.commonPool());
 
         Contingency contingency = Contingency.builder("NHV1_NHV2_2_contingency")
                 .addBranch("NHV1_NHV2_2")
@@ -145,8 +152,30 @@ public class DynaFlowSecurityAnalysisTest {
         Mockito.when(contingenciesProvider.getContingencies(network)).thenReturn(Collections.singletonList(contingency));
 
         LimitViolationFilter filter = new LimitViolationFilter();
+        List<SecurityAnalysisInterceptor> interceptors = Collections.emptyList();
+        List<StateMonitor> monitors = new ArrayList<>();
+        monitors.add(new StateMonitor(ContingencyContext.all(),
+            Set.of("line_all_1", "line_all_2"),
+            Set.of("vl_all_1, vl_all_2"),
+            Set.of("3wt_all_1")));
+        monitors.add(new StateMonitor(ContingencyContext.none(),
+            Set.of("line_none_1"),
+            Set.of(),
+            Set.of("3wt_none_1")));
+        monitors.add(new StateMonitor(new ContingencyContext("NHV1_NHV2_2_contingency", ContingencyContextType.SPECIFIC),
+            Set.of("line_specific_1"),
+            Set.of("vl_specific_1"),
+            Set.of("3wt_specific_1")));
 
-        SecurityAnalysisReport report = SecurityAnalysis.run(network, VariantManagerConstants.INITIAL_VARIANT_ID, new DefaultLimitViolationDetector(), filter, computationManager, SecurityAnalysisParameters.load(platformConfig), contingenciesProvider, Collections.emptyList());
+        SecurityAnalysisReport report = SecurityAnalysis.run(network,
+            VariantManagerConstants.INITIAL_VARIANT_ID,
+            new DefaultLimitViolationDetector(),
+            filter,
+            computationManager,
+            SecurityAnalysisParameters.load(platformConfig),
+            contingenciesProvider,
+            interceptors,
+            monitors);
         SecurityAnalysisResult result = report.getResult();
 
         assertTrue(result.getPreContingencyResult().getLimitViolationsResult().isComputationOk());
