@@ -53,7 +53,6 @@
         <maven.exec.plugin>1.6.0</maven.exec.plugin>
 
         <assertj.version>3.11.0</assertj.version>
-        <groovy.version>3.0.7</groovy.version>
         <jimfs.version>1.1</jimfs.version>
         <junit.version>4.13.1</junit.version>
         <logback.version>1.2.0</logback.version>
@@ -91,7 +90,15 @@
     </profiles>
 
     <dependencyManagement>
-    <dependencies>
+        <dependencies>
+            <dependency>
+                <groupId>com.powsybl</groupId>
+                <artifactId>powsybl-core</artifactId>
+                <version>${powsyblcore.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
@@ -129,40 +136,6 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>com.powsybl</groupId>
-                <artifactId>powsybl-commons</artifactId>
-                <version>${powsyblcore.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.powsybl</groupId>
-                <artifactId>powsybl-commons</artifactId>
-                <version>${powsyblcore.version}</version>
-                <type>test-jar</type>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.powsybl</groupId>
-                <artifactId>powsybl-config-test</artifactId>
-                <version>${powsyblcore.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.powsybl</groupId>
-                <artifactId>powsybl-contingency-dsl</artifactId>
-                <version>${powsyblcore.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.powsybl</groupId>
-                <artifactId>powsybl-dynamic-simulation-api</artifactId>
-                <version>${powsyblcore.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.powsybl</groupId>
-                <artifactId>powsybl-dynamic-simulation-dsl</artifactId>
-                <version>${powsyblcore.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>powsybl-dynawaltz</artifactId>
                 <version>${project.version}</version>
@@ -173,43 +146,6 @@
                 <version>${project.version}</version>
                 <type>test-jar</type>
                 <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.powsybl</groupId>
-                <artifactId>powsybl-iidm-api</artifactId>
-                <version>${powsyblcore.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.powsybl</groupId>
-                <artifactId>powsybl-iidm-impl</artifactId>
-                <version>${powsyblcore.version}</version>
-                <scope>runtime</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.powsybl</groupId>
-                <artifactId>powsybl-iidm-test</artifactId>
-                <version>${powsyblcore.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.powsybl</groupId>
-                <artifactId>powsybl-iidm-xml-converter</artifactId>
-                <version>${powsyblcore.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.powsybl</groupId>
-                <artifactId>powsybl-loadflow-api</artifactId>
-                <version>${powsyblcore.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.powsybl</groupId>
-                <artifactId>powsybl-security-analysis-api</artifactId>
-                <version>${powsyblcore.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.powsybl</groupId>
-                <artifactId>powsybl-time-series-api</artifactId>
-                <version>${powsyblcore.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
