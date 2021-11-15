@@ -54,11 +54,6 @@
             <artifactId>logback-classic</artifactId>
             <scope>runtime</scope>
         </dependency>
-        <dependency>
-            <groupId>com.powsybl</groupId>
-            <artifactId>powsybl-iidm-impl</artifactId>
-            <scope>runtime</scope>
-        </dependency>
 
         <!-- Test dependencies -->
         <dependency>
@@ -100,6 +95,11 @@
         <dependency>
             <groupId>com.powsybl</groupId>
             <artifactId>powsybl-contingency-dsl</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.powsybl</groupId>
+            <artifactId>powsybl-iidm-impl</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
