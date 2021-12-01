@@ -4,5 +4,5 @@
     <constraint modelName="_0483e594-c766-11e1-8775-005056c00008" description="overload 900 side 1" time="80" type="Line" kind="OverloadUp" limit="1000" value="1032.2748996098567" side="1" acceptableDuration="900"/>
     <constraint modelName="_0483e594-c766-11e1-8775-005056c00008" description="permanent limit side 1" time="80" type="Line" kind="IMAP" limit="1000" value="1032.2748996098567" side="1"/>
     <constraint modelName="_0484a8e4-c766-11e1-8775-005056c00008" description="overload 900 side 1" time="80" type="Line" kind="OverloadUp" limit="1000" value="1003.8333097831829" side="1" acceptableDuration="900"/>
-    <constraint modelName="_0484a8e4-c766-11e1-8775-005056c00008" description="permanent limit side 1" time="80" type="Line" kind="IMAP" limit="1000" value="1003.8333097831829" side="1"/>
+    <constraint modelName="_0484a8e4-c766-11e1-8775-005056c00008" description="permanent limit side 1" time="80" type="Line" kind="IMAP" limit="1000" value="1003.8333097831829" side="2"/>
 </constraints>

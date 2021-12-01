@@ -37,8 +37,8 @@
     <constraint modelName="_0476c63a-c766-11e1-8775-005056c00008" description="overload 900 side 1" time="90" type="Line" kind="OverloadUp" limit="1000" value="1022.3009130796271" side="1" acceptableDuration="900"/>
     <constraint modelName="_0476c63a-c766-11e1-8775-005056c00008" description="permanent limit side 1" time="90" type="Line" kind="IMAP" limit="1000" value="1022.3009130796271" side="1"/>
     <constraint modelName="_047c4478-c766-11e1-8775-005056c00008" description="U &lt; Umin" time="90" type="Node" kind="UInfUmin" limit="105.60000000000001" value="130.21199999999999"/>
-    <constraint modelName="_047e4045-c766-11e1-8775-005056c00008" description="U &lt; Umin" time="90" type="Node" kind="UInfUmin" limit="105.60000000000001" value="129.71157800000003"/>
+    <constraint modelName="_047e4045-c766-11e1-8775-005056c00008" description="U &gt; Umax" time="90" type="Node" kind="USupUmax" limit="105.60000000000001" value="129.71157800000003"/>
     <constraint modelName="_045e3524-c766-11e1-8775-005056c00008" description="overload 900 side 1" time="95" type="Line" kind="OverloadUp" limit="1000" value="1020.9310700313705" side="1" acceptableDuration="900"/>
-    <constraint modelName="_045e3524-c766-11e1-8775-005056c00008" description="permanent limit side 1" time="95" type="Line" kind="IMAP" limit="1000" value="1020.9310700313705" side="1"/>
+    <constraint modelName="_045e3524-c766-11e1-8775-005056c00008" description="permanent limit side 1" time="95" type="Line" kind="IMAP" limit="1000" value="1020.9310700313705" side="2"/>
     <constraint modelName="_0461b794-c766-11e1-8775-005056c00008" description="U &lt; Umin" time="95" type="Node" kind="UInfUmin" limit="105.60000000000001" value="128.46864299999999"/>
 </constraints>
