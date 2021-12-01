@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<constraints xmlns="http://www.rte-france.com/dynawo">
+    <constraint modelName="_044bbe91-c766-11e1-8775-005056c00008" description="overload 60 : open line (side 1)" time="70" type="Line" kind="OverloadOpen" limit="1150" value="0" side="1" acceptableDuration="60"/>
+    <constraint modelName="_044c81e3-c766-11e1-8775-005056c00008" description="overload 900 side 1" time="80" type="Line" kind="OverloadUp" limit="1000" value="1009.391934746874" side="1" acceptableDuration="900"/>
+    <constraint modelName="_044c81e3-c766-11e1-8775-005056c00008" description="permanent limit side 1" time="80" type="Line" kind="IMAP" limit="1000" value="1009.391934746874" side="1"/>
+    <constraint modelName="_044e56a4-c766-11e1-8775-005056c00008" description="U &lt; Umin" time="80" type="Node" kind="UInfUmin" limit="105.60000000000001" value="130.81399999999999"/>
+    <constraint modelName="_0451b206-c766-11e1-8775-005056c00008" description="U &lt; Umin" time="80" type="Node" kind="UInfUmin" limit="176" value="211.95968600000003"/>
+    <constraint modelName="_04544a19-c766-11e1-8775-005056c00008" description="U &lt; Umin" time="80" type="Node" kind="UInfUmin" limit="105.60000000000001" value="122.716858"/>
+    <constraint modelName="_04577e63-c766-11e1-8775-005056c00008" description="U &lt; Umin" time="80" type="Node" kind="UInfUmin" limit="105.60000000000001" value="123.81780999999998"/>
+    <constraint modelName="_045868c7-c766-11e1-8775-005056c00008" description="U &lt; Umin" time="80" type="Node" kind="UInfUmin" limit="105.60000000000001" value="123.66723599999999"/>
+    <constraint modelName="_045e0e10-c766-11e1-8775-005056c00008" description="U &lt; Umin" time="80" type="Node" kind="UInfUmin" limit="105.60000000000001" value="128.29521199999999"/>
+    <constraint modelName="_045ef874-c766-11e1-8775-005056c00008" description="U &lt; Umin" time="80" type="Node" kind="UInfUmin" limit="105.60000000000001" value="130.137146"/>
+    <constraint modelName="_046bf0cb-c766-11e1-8775-005056c00008" description="U &lt; Umin" time="80" type="Node" kind="UInfUmin" limit="105.60000000000001" value="129.64537000000001"/>
+    <constraint modelName="_04778983-c766-11e1-8775-005056c00008" description="U &lt; Umin" time="80" type="Node" kind="UInfUmin" limit="105.60000000000001" value="125.535988"/>
+    <constraint modelName="_0480d858-c766-11e1-8775-005056c00008" description="U &lt; Umin" time="80" type="Node" kind="UInfUmin" limit="105.60000000000001" value="130.05947900000001"/>
+    <constraint modelName="_048b86b5-c766-11e1-8775-005056c00008" description="U &lt; Umin" time="80" type="Node" kind="UInfUmin" limit="105.60000000000001" value="131.565"/>
+    <constraint modelName="_044a8618-c766-11e1-8775-005056c00008" description="U &lt; Umin" time="90" type="Node" kind="UInfUmin" limit="105.60000000000001" value="126.882912"/>
+    <constraint modelName="_045163e5-c766-11e1-8775-005056c00008" description="U &lt; Umin" time="90" type="Node" kind="UInfUmin" limit="176" value="222.52287299999998"/>
+    <constraint modelName="_04531195-c766-11e1-8775-005056c00008" description="U &lt; Umin" time="90" type="Node" kind="UInfUmin" limit="105.60000000000001" value="129.67971800000001"/>
+    <constraint modelName="_0453d4eb-c766-11e1-8775-005056c00008" description="U &lt; Umin" time="90" type="Node" kind="UInfUmin" limit="105.60000000000001" value="130.41293300000001"/>
+    <constraint modelName="_04555b87-c766-11e1-8775-005056c00008" description="U &lt; Umin" time="90" type="Node" kind="UInfUmin" limit="105.60000000000001" value="133.2002"/>
+    <constraint modelName="_0458b6e4-c766-11e1-8775-005056c00008" description="U &lt; Umin" time="90" type="Node" kind="UInfUmin" limit="105.60000000000001" value="130.527084"/>
+    <constraint modelName="_045a1670-c766-11e1-8775-005056c00008" description="U &lt; Umin" time="90" type="Node" kind="UInfUmin" limit="105.60000000000001" value="126.70663500000001"/>
+    <constraint modelName="_045b4ef9-c766-11e1-8775-005056c00008" description="U &lt; Umin" time="90" type="Node" kind="UInfUmin" limit="105.60000000000001" value="128.09724399999999"/>
+    <constraint modelName="_045fe2d7-c766-11e1-8775-005056c00008" description="U &lt; Umin" time="90" type="Node" kind="UInfUmin" limit="105.60000000000001" value="128.53883400000001"/>
+    <constraint modelName="_04670ec8-c766-11e1-8775-005056c00008" description="U &lt; Umin" time="90" type="Node" kind="UInfUmin" limit="105.60000000000001" value="126.69177200000001"/>
+    <constraint modelName="_04684743-c766-11e1-8775-005056c00008" description="U &lt; Umin" time="90" type="Node" kind="UInfUmin" limit="105.60000000000001" value="130.68078600000001"/>
+    <constraint modelName="_04686e54-c766-11e1-8775-005056c00008" description="U &lt; Umin" time="90" type="Node" kind="UInfUmin" limit="105.60000000000001" value="127.00817099999999"/>
+    <constraint modelName="_046b066a-c766-11e1-8775-005056c00008" description="U &lt; Umin" time="90" type="Node" kind="UInfUmin" limit="105.60000000000001" value="130.82401999999999"/>
+    <constraint modelName="_046c3ee8-c766-11e1-8775-005056c00008" description="U &lt; Umin" time="90" type="Node" kind="UInfUmin" limit="176" value="216.352249"/>
+    <constraint modelName="_047147f0-c766-11e1-8775-005056c00008" description="U &lt; Umin" time="90" type="Node" kind="UInfUmin" limit="105.60000000000001" value="133.67599999999996"/>
+    <constraint modelName="_0471bd2a-c766-11e1-8775-005056c00008" description="U &lt; Umin" time="90" type="Node" kind="UInfUmin" limit="105.60000000000001" value="128.575378"/>
+    <constraint modelName="_0474071a-c766-11e1-8775-005056c00008" description="U &lt; Umin" time="90" type="Node" kind="UInfUmin" limit="105.60000000000001" value="127.583809"/>
+    <constraint modelName="_0474f17a-c766-11e1-8775-005056c00008" description="U &lt; Umin" time="90" type="Node" kind="UInfUmin" limit="105.60000000000001" value="126.359306"/>
+    <constraint modelName="_047566a8-c766-11e1-8775-005056c00008" description="U &lt; Umin" time="90" type="Node" kind="UInfUmin" limit="105.60000000000001" value="130.68000799999999"/>
+    <constraint modelName="_0476c631-c766-11e1-8775-005056c00008" description="U &lt; Umin" time="90" type="Node" kind="UInfUmin" limit="105.60000000000001" value="130.74118000000001"/>
+    <constraint modelName="_0476c63a-c766-11e1-8775-005056c00008" description="overload 900 side 1" time="90" type="Line" kind="OverloadUp" limit="1000" value="1022.3009130796271" side="1" acceptableDuration="900"/>
+    <constraint modelName="_0476c63a-c766-11e1-8775-005056c00008" description="permanent limit side 1" time="90" type="Line" kind="IMAP" limit="1000" value="1022.3009130796271" side="1"/>
+    <constraint modelName="_047c4478-c766-11e1-8775-005056c00008" description="U &lt; Umin" time="90" type="Node" kind="UInfUmin" limit="105.60000000000001" value="130.21199999999999"/>
+    <constraint modelName="_047e4045-c766-11e1-8775-005056c00008" description="U &lt; Umin" time="90" type="Node" kind="UInfUmin" limit="105.60000000000001" value="129.71157800000003"/>
+    <constraint modelName="_045e3524-c766-11e1-8775-005056c00008" description="overload 900 side 1" time="95" type="Line" kind="OverloadUp" limit="1000" value="1020.9310700313705" side="1" acceptableDuration="900"/>
+    <constraint modelName="_045e3524-c766-11e1-8775-005056c00008" description="permanent limit side 1" time="95" type="Line" kind="IMAP" limit="1000" value="1020.9310700313705" side="1"/>
+    <constraint modelName="_0461b794-c766-11e1-8775-005056c00008" description="U &lt; Umin" time="95" type="Node" kind="UInfUmin" limit="105.60000000000001" value="128.46864299999999"/>
+</constraints>

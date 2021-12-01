@@ -19,6 +19,7 @@ import com.powsybl.contingency.ContingenciesProvider;
 import com.powsybl.contingency.Contingency;
 import com.powsybl.contingency.dsl.GroovyDslContingenciesProvider;
 import com.powsybl.iidm.import_.Importers;
+import com.powsybl.iidm.network.Branch;
 import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.VariantManagerConstants;
@@ -203,10 +204,10 @@ public class DynaFlowSecurityAnalysisTest {
 
         private void copyOutputs(Path workingDir) throws IOException {
             if (Files.exists(workingDir.resolve(IIDM_FILENAME))) {
-                Path output = Files.createDirectories(workingDir.resolve("BaseCase").resolve("outputs").resolve("finalState").toAbsolutePath());
-                copyFile("/SmallBusBranch/dynaflow-outputs/BaseCase-outputIIDM.xml", output.resolve(OUTPUT_IIDM_FILENAME));
-                output = Files.createDirectories(workingDir.resolve("contingency1").resolve("outputs").resolve("finalState").toAbsolutePath());
-                copyFile("/SmallBusBranch/dynaflow-outputs/contingency1-outputIIDM.xml", output.resolve(OUTPUT_IIDM_FILENAME));
+                Path output = Files.createDirectories(workingDir.resolve("BaseCase").resolve("outputs").resolve("constraints").toAbsolutePath());
+                copyFile("/SmallBusBranch/dynaflow-outputs/BaseCase-constraints.xml", output.resolve(CONSTRAINTS_FILENAME));
+                output = Files.createDirectories(workingDir.resolve("contingency1").resolve("outputs").resolve("constraints").toAbsolutePath());
+                copyFile("/SmallBusBranch/dynaflow-outputs/contingency1-constraints.xml", output.resolve(CONSTRAINTS_FILENAME));
             }
         }
 
@@ -265,15 +266,34 @@ public class DynaFlowSecurityAnalysisTest {
 
         PostContingencyResult postcontingencyResult = result.getPostContingencyResults().get(0);
         assertTrue(postcontingencyResult.getLimitViolationsResult().isComputationOk());
-        assertEquals(3, postcontingencyResult.getLimitViolationsResult().getLimitViolations().size());
+        assertEquals(41, postcontingencyResult.getLimitViolationsResult().getLimitViolations().size());
         LimitViolation violation = postcontingencyResult.getLimitViolationsResult().getLimitViolations().get(0);
         assertEquals(LimitViolationType.CURRENT, violation.getLimitType());
-        assertEquals("_045e3524-c766-11e1-8775-005056c00008", violation.getSubjectId());
+        assertEquals("_044bbe91-c766-11e1-8775-005056c00008", violation.getSubjectId());
+        assertEquals(1150.0, violation.getLimit(), 0.0);
+        assertEquals(0.0, violation.getValue(), 0.0);
+        assertEquals(Branch.Side.ONE, violation.getSide());
+        assertEquals(60, violation.getAcceptableDuration());
         violation = postcontingencyResult.getLimitViolationsResult().getLimitViolations().get(1);
         assertEquals(LimitViolationType.CURRENT, violation.getLimitType());
-        assertEquals("_0476c63a-c766-11e1-8775-005056c00008", violation.getSubjectId());
+        assertEquals("_044c81e3-c766-11e1-8775-005056c00008", violation.getSubjectId());
+        assertEquals(1000.0, violation.getLimit(), 0.0);
+        assertEquals(1009.391934746874, violation.getValue(), 0.0);
+        assertEquals(Branch.Side.ONE, violation.getSide());
+        assertEquals(900, violation.getAcceptableDuration());
         violation = postcontingencyResult.getLimitViolationsResult().getLimitViolations().get(2);
         assertEquals(LimitViolationType.CURRENT, violation.getLimitType());
         assertEquals("_044c81e3-c766-11e1-8775-005056c00008", violation.getSubjectId());
+        assertEquals(1000.0, violation.getLimit(), 0.0);
+        assertEquals(1009.391934746874, violation.getValue(), 0.0);
+        assertEquals(Branch.Side.ONE, violation.getSide());
+        assertEquals(Integer.MAX_VALUE, violation.getAcceptableDuration());
+        violation = postcontingencyResult.getLimitViolationsResult().getLimitViolations().get(3);
+        assertEquals(LimitViolationType.LOW_VOLTAGE, violation.getLimitType());
+        assertEquals("_0483be8b-c766-11e1-8775-005056c00008", violation.getSubjectId());
+        assertEquals(105.60000000000001, violation.getLimit(), 0.0);
+        assertEquals(130.81399999999999, violation.getValue(), 0.0);
+        assertNull(violation.getSide());
+        assertEquals(Integer.MAX_VALUE, violation.getAcceptableDuration());
     }
 }

@@ -15,10 +15,10 @@ import com.powsybl.contingency.Contingency;
 import com.powsybl.contingency.ContingencyList;
 import com.powsybl.contingency.json.ContingencyJsonModule;
 import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
+import com.powsybl.dynaflow.xml.ConstraintsReader;
 import com.powsybl.iidm.export.Exporters;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.xml.IidmXmlVersion;
-import com.powsybl.iidm.xml.NetworkXml;
 import com.powsybl.iidm.xml.XMLExporter;
 import com.powsybl.loadflow.LoadFlowParameters;
 import com.powsybl.security.*;
@@ -50,8 +50,8 @@ public class DynaFlowSecurityAnalysis {
     private static final String SECURITY_ANALISIS_RESULTS_FILENAME = "securityAnalysisResults.json";
     private static final String BASE_CASE_FOLDER = "BaseCase";
     private static final String DYNAFLOW_OUTPUT_FOLDER = "outputs";
-    private static final String DYNAWO_FINAL_STATE_FOLDER = "finalState";
-    private static final String DYNAWO_OUTPUT_NETWORK_FILENAME = "outputIIDM.xml";
+    private static final String DYNAWO_CONSTRAINTS_FOLDER = "constraints";
+    private static final String DYNAWO_OUTPUT_CONSTRAINTS_FILENAME = "constraints.xml";
 
     private final Supplier<DynaFlowConfig> configSupplier;
 
@@ -176,9 +176,9 @@ public class DynaFlowSecurityAnalysis {
                     return new SecurityAnalysisReport(SecurityAnalysisResultDeserializer.read(saOutput));
                 } else {
                     // Build the results from the output networks written by DynaFlow
-                    LimitViolationsResult baseCaseResult = resultsFromOutputNetwork(workingDir.resolve(BASE_CASE_FOLDER));
+                    LimitViolationsResult baseCaseResult = resultsFromOutputNetwork(network, workingDir.resolve(BASE_CASE_FOLDER));
                     List<PostContingencyResult> contingenciesResults = contingencies.stream()
-                        .map(c -> new PostContingencyResult(c, resultsFromOutputNetwork(workingDir.resolve(c.getId()))))
+                        .map(c -> new PostContingencyResult(c, resultsFromOutputNetwork(network, workingDir.resolve(c.getId()))))
                         .collect(Collectors.toList());
                     return new SecurityAnalysisReport(
                         new SecurityAnalysisResult(baseCaseResult, contingenciesResults)
@@ -188,15 +188,14 @@ public class DynaFlowSecurityAnalysis {
         });
     }
 
-    private static LimitViolationsResult resultsFromOutputNetwork(Path folder) {
+    private static LimitViolationsResult resultsFromOutputNetwork(Network network, Path folder) {
         boolean computationOk;
         List<LimitViolation> limitViolations;
 
         Path outputNetworkPath = outputNetworkPath(folder);
         if (Files.exists(outputNetworkPath)) {
-            Network outputNetwork = NetworkXml.read(outputNetworkPath);
             computationOk = true;
-            limitViolations = Security.checkLimits(outputNetwork);
+            limitViolations = ConstraintsReader.read(network, outputNetworkPath);
         } else {
             computationOk = false;
             limitViolations = Collections.emptyList();
@@ -207,7 +206,7 @@ public class DynaFlowSecurityAnalysis {
     private static Path outputNetworkPath(Path folder) {
         return folder
             .resolve(DYNAFLOW_OUTPUT_FOLDER)
-            .resolve(DYNAWO_FINAL_STATE_FOLDER)
-            .resolve(DYNAWO_OUTPUT_NETWORK_FILENAME);
+            .resolve(DYNAWO_CONSTRAINTS_FOLDER)
+            .resolve(DYNAWO_OUTPUT_CONSTRAINTS_FILENAME);
     }
 }
