@@ -107,9 +107,7 @@ public final class ConstraintsReader {
             return LimitViolationType.LOW_VOLTAGE;
         } else if (kind.equals("USupUmax")) {
             return LimitViolationType.HIGH_VOLTAGE;
-        } else if (kind.contains("Overload")) {
-            return LimitViolationType.CURRENT;
-        } else if (kind.equals("IMAP")) {
+        } else if (kind.equals("OverloadOpen") || kind.equals("OverloadUp") || kind.equals("PATL")) {
             return LimitViolationType.CURRENT;
         } else {
             throw new PowsyblException("Unexpect violation type " + kind);
