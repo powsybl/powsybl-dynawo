@@ -292,7 +292,7 @@ public class DynaFlowSecurityAnalysisTest {
         assertEquals(LimitViolationType.LOW_VOLTAGE, violation.getLimitType());
         assertEquals("_0483be8b-c766-11e1-8775-005056c00008", violation.getSubjectId());
         assertEquals(105.60000000000001, violation.getLimit(), 0.0);
-        assertEquals(130.81399999999999, violation.getValue(), 0.0);
+        assertEquals(103.58050701251375, violation.getValue(), 0.0);
         assertNull(violation.getSide());
         assertEquals(Integer.MAX_VALUE, violation.getAcceptableDuration());
     }
