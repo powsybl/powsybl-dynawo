@@ -136,7 +136,7 @@ public class DynaFlowSecurityAnalysisTest {
                 .addBranch("NHV1_NHV2_2")
                 .build();
         contingency = Mockito.spy(contingency);
-        Mockito.when(contingency.toTask()).thenReturn((network1, computationManager1) -> {
+        Mockito.when(contingency.toModification()).thenReturn((network1, computationManager1) -> {
             network1.getLine("NHV1_NHV2_2").getTerminal1().disconnect();
             network1.getLine("NHV1_NHV2_2").getTerminal2().disconnect();
             network1.getLine("NHV1_NHV2_1").getTerminal2().setP(600.0);
@@ -146,7 +146,7 @@ public class DynaFlowSecurityAnalysisTest {
 
         LimitViolationFilter filter = new LimitViolationFilter();
 
-        SecurityAnalysisReport report = SecurityAnalysis.run(network, VariantManagerConstants.INITIAL_VARIANT_ID, new DefaultLimitViolationDetector(), filter, computationManager, SecurityAnalysisParameters.load(platformConfig), contingenciesProvider, Collections.emptyList());
+        SecurityAnalysisReport report = SecurityAnalysis.run(network, VariantManagerConstants.INITIAL_VARIANT_ID, contingenciesProvider, SecurityAnalysisParameters.load(platformConfig), computationManager, filter, new DefaultLimitViolationDetector(), Collections.emptyList());
         SecurityAnalysisResult result = report.getResult();
 
         assertTrue(result.getPreContingencyResult().getLimitViolationsResult().isComputationOk());
@@ -260,7 +260,7 @@ public class DynaFlowSecurityAnalysisTest {
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(workingDir, 1), commandExecutor, ForkJoinPool.commonPool());
 
         LimitViolationFilter filter = new LimitViolationFilter();
-        SecurityAnalysisReport report = SecurityAnalysis.run(network, VariantManagerConstants.INITIAL_VARIANT_ID, new DefaultLimitViolationDetector(), filter, computationManager, SecurityAnalysisParameters.load(platformConfig), contingenciesProvider, Collections.emptyList());
+        SecurityAnalysisReport report = SecurityAnalysis.run(network, VariantManagerConstants.INITIAL_VARIANT_ID, contingenciesProvider, SecurityAnalysisParameters.load(platformConfig), computationManager, filter, new DefaultLimitViolationDetector(), Collections.emptyList());
         SecurityAnalysisResult result = report.getResult();
 
         PostContingencyResult postcontingencyResult = result.getPostContingencyResults().get(0);
