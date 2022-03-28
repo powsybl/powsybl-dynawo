@@ -13,7 +13,7 @@
     <parent>
         <groupId>com.powsybl</groupId>
         <artifactId>powsybl-parent</artifactId>
-        <version>4</version>
+        <version>7</version>
         <relativePath />
     </parent>
 
@@ -59,6 +59,7 @@
         <logback.version>1.2.0</logback.version>
         <mockito.version>3.3.3</mockito.version>
         <xmlunit.version>2.3.0</xmlunit.version>
+        <jackson.version>2.13.2.20220328</jackson.version>
 
         <powsyblcore.version>4.7.0</powsyblcore.version>
     </properties>
@@ -92,6 +93,19 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- overrides of imports -->
+
+            <!-- The version 2.10 put by Powsybl cause a problem. spring boot 2.6 needs at least 2.13: https://github.com/FasterXML/jackson-databind/issues/2683 -->
+            <!-- java.lang.NoSuchMethodError: 'boolean com.fasterxml.jackson.databind.SerializationConfig.hasExplicitTimeZone()' -->
+            <!-- Use the version from spring boot 2.6.6 which contains the fix for the  spring 4 shell CVE -->
+            <dependency>
+                <groupId>com.fasterxml.jackson</groupId>
+                <artifactId>jackson-bom</artifactId>
+                <version>${jackson.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
             <dependency>
                 <groupId>com.powsybl</groupId>
                 <artifactId>powsybl-core</artifactId>
