@@ -9,8 +9,12 @@ package com.powsybl.dynaflow;
 import com.google.auto.service.AutoService;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
+import com.powsybl.commons.config.PlatformConfig;
+import com.powsybl.commons.extensions.Extension;
+import com.powsybl.commons.extensions.ExtensionJsonSerializer;
 import com.powsybl.computation.*;
 import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
+import com.powsybl.dynaflow.json.JsonDynaFlowParametersSerializer;
 import com.powsybl.dynawo.commons.DynawoResultsNetworkUpdate;
 import com.powsybl.iidm.export.Exporters;
 import com.powsybl.iidm.network.Network;
@@ -36,6 +40,8 @@ import static com.powsybl.dynaflow.DynaFlowConstants.*;
  */
 @AutoService(LoadFlowProvider.class)
 public class DynaFlowProvider implements LoadFlowProvider {
+
+    public static final String MODULE_SPECIFIC_PARAMETERS = "dynaflow-default-parameters";
 
     private static final String WORKING_DIR_PREFIX = "dynaflow_";
 
@@ -143,5 +149,26 @@ public class DynaFlowProvider implements LoadFlowProvider {
                 return new LoadFlowResultImpl(status, metrics, logs);
             }
         });
+    }
+
+    @Override
+    public Optional<Extension<LoadFlowParameters>> loadSpecificParameters(PlatformConfig platformConfig) {
+        // if not specified, dynaflow parameters must be default here
+        return Optional.of(DynaFlowParameters.load(platformConfig));
+    }
+
+    @Override
+    public Optional<Extension<LoadFlowParameters>> loadSpecificParameters(Map<String, String> properties) {
+        return Optional.of(DynaFlowParameters.load(properties));
+    }
+
+    @Override
+    public List<String> getSpecificParametersNames() {
+        return DynaFlowParameters.getSpecificParametersNames();
+    }
+
+    @Override
+    public Optional<ExtensionJsonSerializer> getSpecificParametersSerializer() {
+        return Optional.of(new JsonDynaFlowParametersSerializer());
     }
 }

@@ -7,11 +7,16 @@
 package com.powsybl.dynawo.commons;
 
 import com.powsybl.iidm.network.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Guillem Jané Guasch <janeg at aia.es>
  */
 public final class DynawoResultsNetworkUpdate {
+
+    private static final Logger LOG = LoggerFactory.getLogger(DynawoResultsNetworkUpdate.class);
+
     private DynawoResultsNetworkUpdate() {
     }
 
@@ -75,11 +80,18 @@ public final class DynawoResultsNetworkUpdate {
             targetNetwork.getSwitch(sourceSwitch.getId()).setOpen(sourceSwitch.isOpen());
         }
         // We have to update the voltages AFTER all possible topology changes have been updated in the target Network,
-        // At this point, the buses in the BusView of target and source should match
-        for (Bus sourceBus : sourceNetwork.getBusView().getBuses()) {
-            Bus targetBus = targetNetwork.getBusView().getBus(sourceBus.getId());
-            targetBus.setV(sourceBus.getV());
-            targetBus.setAngle(sourceBus.getAngle());
+        // At this point, the buses in the BusBreakerView of target and source should match
+        // We choose to iterate over BusBreakerView buses instead of BusView buses because they are more stable:
+        // a use-case when we need to export a node/breaker network to bus/breaker to Dynawo exists,
+        // and reading the results from Dynawo-exported bus/breaker will end up with different ids at BusView level
+        for (Bus sourceBus : sourceNetwork.getBusBreakerView().getBuses()) {
+            Bus targetBus = targetNetwork.getBusBreakerView().getBus(sourceBus.getId());
+            if (targetBus == null) {
+                LOG.error("Source bus {} not found in target network. Voltage not updated ({}, {})", sourceBus.getId(), sourceBus.getV(), sourceBus.getAngle());
+            } else {
+                targetBus.setV(sourceBus.getV());
+                targetBus.setAngle(sourceBus.getAngle());
+            }
         }
     }
 

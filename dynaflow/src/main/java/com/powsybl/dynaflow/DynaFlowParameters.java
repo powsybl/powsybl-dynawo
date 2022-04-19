@@ -6,18 +6,25 @@
  */
 package com.powsybl.dynaflow;
 
-import com.google.auto.service.AutoService;
 import com.google.common.collect.ImmutableMap;
+import com.powsybl.commons.config.ModuleConfig;
 import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.extensions.AbstractExtension;
 import com.powsybl.loadflow.LoadFlowParameters;
+
+import java.util.*;
+
+import static com.powsybl.dynaflow.DynaFlowProvider.MODULE_SPECIFIC_PARAMETERS;
 
 /**
  * @author Guillaume Pernin <guillaume.pernin at rte-france.com>
  */
 public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
 
-    private static final String MODULE_SPECIFIC_PARAMETERS = "dynaflow-default-parameters";
+    private static final String SVC_REGULATION_ON = "svcRegulationOn";
+    private static final String SHUNT_REGULATION_ON = "shuntRegulationOn";
+    private static final String AUTOMATIC_SLACK_BUS_ON = "automaticSlackBusOn";
+    private static final String DSO_VOLTAGE_LEVEL = "dsoVoltageLevel";
 
     public static final boolean DEFAULT_SVC_REGULATION_ON = false;
     public static final boolean DEFAULT_SHUNT_REGULATION_ON = false;
@@ -74,45 +81,50 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
     public String toString() {
         ImmutableMap.Builder<String, Object> immutableMapBuilder = ImmutableMap.builder();
         immutableMapBuilder
-                .put("svcRegulationOn", svcRegulationOn)
-                .put("shuntRegulationON", shuntRegulationOn)
-                .put("automaticSlackBusON", automaticSlackBusOn)
-                .put("dsoVoltageLevel", dsoVoltageLevel);
+                .put(SVC_REGULATION_ON, svcRegulationOn)
+                .put(SHUNT_REGULATION_ON, shuntRegulationOn)
+                .put(AUTOMATIC_SLACK_BUS_ON, automaticSlackBusOn)
+                .put(DSO_VOLTAGE_LEVEL, dsoVoltageLevel);
 
         return immutableMapBuilder.build().toString();
     }
 
-    @AutoService(LoadFlowParameters.ConfigLoader.class)
-    public static class DynaFlowConfigLoader implements LoadFlowParameters.ConfigLoader<DynaFlowParameters> {
+    public static DynaFlowParameters load(PlatformConfig platformConfig) {
+        Objects.requireNonNull(platformConfig);
+        DynaFlowParameters parameters = new DynaFlowParameters();
 
-        //Watch out for the name in the config.yml, no upper case at the beginning to match the one in the config.json
-        //that can not have upper case also at the beginning
-        @Override
-        public DynaFlowParameters load(PlatformConfig platformConfig) {
-            DynaFlowParameters parameters = new DynaFlowParameters();
+        platformConfig.getOptionalModuleConfig(MODULE_SPECIFIC_PARAMETERS)
+                .ifPresent(config -> load(parameters, config));
 
-            platformConfig.getOptionalModuleConfig(MODULE_SPECIFIC_PARAMETERS)
-                    .ifPresent(config -> parameters.setSvcRegulationOn(config.getBooleanProperty("svcRegulationOn", DEFAULT_SVC_REGULATION_ON))
-                            .setShuntRegulationOn(config.getBooleanProperty("shuntRegulationOn", DEFAULT_SHUNT_REGULATION_ON))
-                            .setAutomaticSlackBusOn(config.getBooleanProperty("automaticSlackBusOn", DEFAULT_AUTOMATIC_SLACK_BUS_ON))
-                            .setDsoVoltageLevel(config.getDoubleProperty("dsoVoltageLevel", DEFAULT_DSO_VOLTAGE_LEVEL)));
+        return parameters;
+    }
 
-            return parameters;
+    public static DynaFlowParameters load(ModuleConfig config) {
+        DynaFlowParameters parameters = new DynaFlowParameters();
+        if (config != null) {
+            load(parameters, config);
         }
+        return parameters;
+    }
 
-        @Override
-        public String getExtensionName() {
-            return "DynaFlowParameters";
-        }
+    private static void load(DynaFlowParameters parameters, ModuleConfig config) {
+        parameters.setSvcRegulationOn(config.getBooleanProperty(SVC_REGULATION_ON, DEFAULT_SVC_REGULATION_ON))
+                .setShuntRegulationOn(config.getBooleanProperty(SHUNT_REGULATION_ON, DEFAULT_SHUNT_REGULATION_ON))
+                .setAutomaticSlackBusOn(config.getBooleanProperty(AUTOMATIC_SLACK_BUS_ON, DEFAULT_AUTOMATIC_SLACK_BUS_ON))
+                .setDsoVoltageLevel(config.getDoubleProperty(DSO_VOLTAGE_LEVEL, DEFAULT_DSO_VOLTAGE_LEVEL));
+    }
 
-        @Override
-        public String getCategoryName() {
-            return "loadflow-parameters";
-        }
+    public static DynaFlowParameters load(Map<String, String> properties) {
+        Objects.requireNonNull(properties);
+        DynaFlowParameters parameters = new DynaFlowParameters();
+        Optional.ofNullable(properties.get(SVC_REGULATION_ON)).ifPresent(prop -> parameters.setSvcRegulationOn(Boolean.parseBoolean(prop)));
+        Optional.ofNullable(properties.get(SHUNT_REGULATION_ON)).ifPresent(prop -> parameters.setShuntRegulationOn(Boolean.parseBoolean(prop)));
+        Optional.ofNullable(properties.get(AUTOMATIC_SLACK_BUS_ON)).ifPresent(prop -> parameters.setAutomaticSlackBusOn(Boolean.parseBoolean(prop)));
+        Optional.ofNullable(properties.get(DSO_VOLTAGE_LEVEL)).ifPresent(prop -> parameters.setDsoVoltageLevel(Double.parseDouble(prop)));
+        return parameters;
+    }
 
-        @Override
-        public Class<? super DynaFlowParameters> getExtensionClass() {
-            return DynaFlowParameters.class;
-        }
+    public static List<String> getSpecificParametersNames() {
+        return Arrays.asList(SVC_REGULATION_ON, SHUNT_REGULATION_ON, AUTOMATIC_SLACK_BUS_ON, DSO_VOLTAGE_LEVEL);
     }
 }

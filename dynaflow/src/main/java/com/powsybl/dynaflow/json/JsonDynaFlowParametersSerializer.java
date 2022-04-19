@@ -14,10 +14,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.google.auto.service.AutoService;
+import com.powsybl.commons.extensions.ExtensionJsonSerializer;
 import com.powsybl.commons.json.JsonUtil;
 import com.powsybl.dynaflow.DynaFlowParameters;
 import com.powsybl.loadflow.LoadFlowParameters;
-import com.powsybl.loadflow.json.JsonLoadFlowParameters.ExtensionSerializer;
 
 import java.io.IOException;
 
@@ -25,8 +25,8 @@ import java.io.IOException;
  *
  * @author Guillaume Pernin <guillaume.pernin at rte-france.com>
  */
-@AutoService(ExtensionSerializer.class)
-public class JsonDynaFlowParametersSerializer implements ExtensionSerializer<DynaFlowParameters> {
+@AutoService(ExtensionJsonSerializer.class)
+public class JsonDynaFlowParametersSerializer implements ExtensionJsonSerializer<LoadFlowParameters, DynaFlowParameters> {
 
     @Override
     public String getCategoryName() {
