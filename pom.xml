@@ -50,6 +50,8 @@
     <properties>
         <java.version>11</java.version>
 
+        <groovy.version>3.0.9</groovy.version> <!-- used for groovydoc (dynawaltz-dsl) -->
+
         <powsyblcore.version>4.8.0</powsyblcore.version>
     </properties>
 
