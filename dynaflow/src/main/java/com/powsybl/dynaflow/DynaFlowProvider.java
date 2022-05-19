@@ -25,6 +25,7 @@ import com.powsybl.loadflow.LoadFlowParameters;
 import com.powsybl.loadflow.LoadFlowProvider;
 import com.powsybl.loadflow.LoadFlowResult;
 import com.powsybl.loadflow.LoadFlowResultImpl;
+import com.powsybl.loadflow.json.LoadFlowResultDeserializer;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -144,9 +145,20 @@ public class DynaFlowProvider implements LoadFlowProvider {
                 } else {
                     status = false;
                 }
-                Map<String, String> metrics = new HashMap<>();
-                String logs = null;
-                return new LoadFlowResultImpl(status, metrics, logs);
+                Path resultsPath = workingDir.resolve(OUTPUT_RESULTS_FILENAME);
+                if (!Files.exists(resultsPath)) {
+                    Map<String, String> metrics = new HashMap<>();
+                    String logs = null;
+                    List<LoadFlowResult.ComponentResult> componentResults = new ArrayList<>(1);
+                    componentResults.add(new LoadFlowResultImpl.ComponentResultImpl(0,
+                            0,
+                            status ? LoadFlowResult.ComponentResult.Status.CONVERGED : LoadFlowResult.ComponentResult.Status.FAILED,
+                            0,
+                            "not-found",
+                            0.));
+                    return new LoadFlowResultImpl(status, metrics, logs, componentResults);
+                }
+                return LoadFlowResultDeserializer.read(resultsPath);
             }
         });
     }
