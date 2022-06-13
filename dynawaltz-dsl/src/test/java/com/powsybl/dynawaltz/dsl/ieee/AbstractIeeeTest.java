@@ -59,7 +59,7 @@ public abstract class AbstractIeeeTest {
 
         // The parameter files are copied into the PlatformConfig filesystem,
         // that filesystem is the one that DynaWaltzContext and ParametersXml will use to read the parameters
-        fileSystem = PlatformConfig.defaultConfig().getConfigDir().getFileSystem();
+        fileSystem = PlatformConfig.defaultConfig().getConfigDir().map(Path::getFileSystem).orElseThrow(AssertionError::new);
         workingDir = Files.createDirectory(fileSystem.getPath(getWorkingDirName()));
 
         // Copy parameter files

@@ -155,7 +155,8 @@ public class DynaFlowProvider implements LoadFlowProvider {
                             status ? LoadFlowResult.ComponentResult.Status.CONVERGED : LoadFlowResult.ComponentResult.Status.FAILED,
                             0,
                             "not-found",
-                            0.));
+                            0.,
+                            Double.NaN));
                     return new LoadFlowResultImpl(status, metrics, logs, componentResults);
                 }
                 return LoadFlowResultDeserializer.read(resultsPath);

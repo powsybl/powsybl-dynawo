@@ -7,11 +7,15 @@
 package com.powsybl.dynaflow;
 
 import com.google.auto.service.AutoService;
+import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.computation.ComputationManager;
 import com.powsybl.contingency.ContingenciesProvider;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.security.*;
 import com.powsybl.security.interceptors.SecurityAnalysisInterceptor;
+import com.powsybl.security.monitor.StateMonitor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -21,6 +25,8 @@ import java.util.concurrent.CompletableFuture;
  */
 @AutoService(SecurityAnalysisProvider.class)
 public class DynaFlowSecurityAnalysisProvider implements SecurityAnalysisProvider {
+
+    private static final Logger LOG = LoggerFactory.getLogger(DynaFlowSecurityAnalysisProvider.class);
 
     private static final String PROVIDER_NAME = "DynawoSecurityAnalysis";
     private static final String PROVIDER_VERSION = "1.0";
@@ -33,7 +39,15 @@ public class DynaFlowSecurityAnalysisProvider implements SecurityAnalysisProvide
                                                          ComputationManager computationManager,
                                                          SecurityAnalysisParameters parameters,
                                                          ContingenciesProvider contingenciesProvider,
-                                                         List<SecurityAnalysisInterceptor> interceptors) {
+                                                         List<SecurityAnalysisInterceptor> interceptors,
+                                                         List<StateMonitor> monitors,
+                                                         Reporter reporter) {
+        if (monitors != null && !monitors.isEmpty()) {
+            LOG.error("Monitoring is not possible with Dynaflow implementation. There will not be supplementary information about monitored equipment.");
+        }
+        if (reporter != Reporter.NO_OP) {
+            LOG.warn("Reporters are not used in Dynaflow implementation");
+        }
         DynaFlowSecurityAnalysis securityAnalysis = new DynaFlowSecurityAnalysis(network, detector, filter, computationManager);
         interceptors.forEach(securityAnalysis::addInterceptor);
         return securityAnalysis.run(workingVariantId, parameters, contingenciesProvider);
