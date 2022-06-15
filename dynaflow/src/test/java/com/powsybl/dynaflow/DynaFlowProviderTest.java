@@ -76,16 +76,19 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
 
         private final String stdOutFileRef;
         private final String outputIidm;
+        private final String outputResults;
 
-        public LocalCommandExecutorMock(String stdoutFileRef, String outputIidm) {
+        public LocalCommandExecutorMock(String stdoutFileRef, String outputIidm, String outputResults) {
             this.stdOutFileRef = Objects.requireNonNull(stdoutFileRef);
             this.outputIidm = Objects.requireNonNull(outputIidm);
+            this.outputResults = Objects.requireNonNull(outputResults);
         }
 
         @Override
         public int execute(String program, List<String> args, Path outFile, Path errFile, Path workingDir, Map<String, String> env) {
             try {
                 copyFile(stdOutFileRef, errFile);
+                copyFile(outputResults, workingDir.resolve(OUTPUT_RESULTS_FILENAME));
                 Files.createDirectories(workingDir.resolve("outputs").resolve("finalState"));
                 copyFile(outputIidm, workingDir.resolve("outputs").resolve("finalState").resolve(OUTPUT_IIDM_FILENAME));
 
@@ -127,7 +130,7 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
         assertEquals("0.1", dynaFlowSimulation.getVersion());
 
         LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynaflow_version.out",
-                "/SmallBusBranch_outputIIDM.xml");
+                "/SmallBusBranch_outputIIDM.xml", "/results.json");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
         LoadFlowResult result = dynaFlowSimulation.run(network, computationManager, params);
         assertNotNull(result);
@@ -160,7 +163,7 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
         assertEquals("0.1", dynaFlowSimulation.getVersion());
 
         LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynaflow_version.out",
-                "/SmallBusBranch_outputIIDM.xml");
+                "/SmallBusBranch_outputIIDM.xml", "/results.json");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
         LoadFlowResult result = dynaFlowSimulation.run(network, computationManager, params);
         assertNotNull(result);
