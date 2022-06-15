@@ -20,6 +20,7 @@ import java.util.Objects;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
+import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
 import com.powsybl.dynamicsimulation.DynamicModel;
@@ -51,7 +52,9 @@ public final class ParametersXml {
     }
 
     private static void copy(String filename, Path workingDir) throws IOException {
-        FileSystem fs = PlatformConfig.defaultConfig().getConfigDir().getFileSystem();
+        FileSystem fs = PlatformConfig.defaultConfig().getConfigDir()
+                .map(Path::getFileSystem)
+                .orElseThrow(() -> new PowsyblException("A configuration directory should be defined"));
         Path source = fs.getPath(filename);
         if (!Files.exists(source)) {
             throw new FileNotFoundException("File not found: " + filename);

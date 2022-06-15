@@ -6,6 +6,7 @@
  */
 package com.powsybl.dynawaltz;
 
+import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynamicsimulation.EventModel;
@@ -14,6 +15,7 @@ import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.iidm.network.Network;
 
 import java.nio.file.FileSystem;
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -71,7 +73,9 @@ public class DynaWaltzContext {
     }
 
     private static DynaWaltzParametersDatabase loadDatabase(String filename) {
-        FileSystem fs = PlatformConfig.defaultConfig().getConfigDir().getFileSystem();
+        FileSystem fs = PlatformConfig.defaultConfig().getConfigDir()
+                .map(Path::getFileSystem)
+                .orElseThrow(() -> new PowsyblException("A configuration directory should be defined"));
         return DynaWaltzParametersDatabase.load(fs.getPath(filename));
     }
 
