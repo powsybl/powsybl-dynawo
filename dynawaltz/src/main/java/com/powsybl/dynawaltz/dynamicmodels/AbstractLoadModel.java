@@ -6,16 +6,13 @@
  */
 package com.powsybl.dynawaltz.dynamicmodels;
 
-import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
-import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.MACRO_CONNECTOR_PREFIX;
-import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.MACRO_STATIC_REFERENCE_PREFIX;
-import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.NETWORK;
+import com.powsybl.dynawaltz.xml.DynaWaltzXmlContext;
+import com.powsybl.dynawaltz.xml.MacroConnectorXml;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
-import com.powsybl.dynawaltz.xml.DynaWaltzXmlContext;
-import com.powsybl.dynawaltz.xml.MacroConnectorXml;
+import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.*;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>

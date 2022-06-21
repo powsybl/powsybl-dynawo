@@ -8,10 +8,9 @@
 package com.powsybl.dynawaltz.xml;
 
 import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
-import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynamicsimulation.EventModel;
 import com.powsybl.dynawaltz.DynaWaltzContext;
-import com.powsybl.dynawaltz.dynamicmodels.AbstractBlackBoxModel;
+import com.powsybl.dynawaltz.dynamicmodels.BlackBoxModel;
 import com.powsybl.dynawaltz.events.AbstractBlackBoxEventModel;
 
 import javax.xml.stream.XMLStreamException;
@@ -49,9 +48,8 @@ public final class DydXml {
             for (MacroStaticReference macroStaticReference : context.getMacroStaticReferences()) {
                 macroStaticReference.write(writer);
             }
-            for (DynamicModel model : context.getDynamicModels()) {
-                AbstractBlackBoxModel dynawoModel = (AbstractBlackBoxModel) model;
-                dynawoModel.write(writer, xmlContext);
+            for (BlackBoxModel model : context.getBlackBoxModels()) {
+                model.write(writer, xmlContext);
             }
         } catch (XMLStreamException e) {
             throw new UncheckedXmlStreamException(e);

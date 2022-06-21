@@ -110,9 +110,9 @@ public class OmegaRef extends AbstractBlackBoxModel {
             // of the dynamic models supplier returned by the dynamic models supplier.
             // The dynamic models are declared in the DYD following the order of dynamic models supplier.
             // The OmegaRef parameters index the weight of each generator according to that declaration order.
-            for (AbstractBlackBoxModel model : context.getBlackBoxModels()) {
+            for (BlackBoxModel model : context.getBlackBoxModels()) {
                 if (model instanceof OmegaRef) {
-                    AbstractBlackBoxModel generatorModel = context.getBlackBoxModel(((OmegaRef) model).getGeneratorDynamicModelId());
+                    BlackBoxModel generatorModel = context.getBlackBoxModel(((OmegaRef) model).getGeneratorDynamicModelId());
                     double h = parDB.getDouble(generatorModel.getParameterSetId(), "generator_H");
                     double snom = parDB.getDouble(generatorModel.getParameterSetId(), "generator_SNom");
 
@@ -127,7 +127,7 @@ public class OmegaRef extends AbstractBlackBoxModel {
     }
 
     private static String getStaticId(DynaWaltzXmlContext context, String dynamicModelId) {
-        AbstractBlackBoxModel dynamicModel = context.getBlackBoxModel(dynamicModelId);
+        BlackBoxModel dynamicModel = context.getBlackBoxModel(dynamicModelId);
         if (dynamicModel == null) {
             throw new PowsyblException("BlackBoxModel '" + dynamicModelId + "' not found");
         }

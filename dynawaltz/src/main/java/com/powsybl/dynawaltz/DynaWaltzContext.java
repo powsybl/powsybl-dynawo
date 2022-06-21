@@ -20,6 +20,7 @@ import java.nio.file.FileSystem;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -61,12 +62,20 @@ public class DynaWaltzContext {
         return Collections.unmodifiableList(dynamicModels);
     }
 
+    public List<BlackBoxModel> getBlackBoxModels() {
+        return getBlackBoxModelStream().collect(Collectors.toList());
+    }
+
     public Collection<MacroStaticReference> getMacroStaticReferences() {
-        return dynamicModels.stream()
-                .filter(BlackBoxModel.class::isInstance)
-                .map(BlackBoxModel.class::cast)
+        return getBlackBoxModelStream()
                 .map(BlackBoxModel::getMacroStaticReference)
                 .collect(Collectors.toCollection(LinkedHashSet::new));
+    }
+
+    public Stream<BlackBoxModel> getBlackBoxModelStream() {
+        return dynamicModels.stream()
+                .filter(BlackBoxModel.class::isInstance)
+                .map(BlackBoxModel.class::cast);
     }
 
     public List<EventModel> getEventModels() {

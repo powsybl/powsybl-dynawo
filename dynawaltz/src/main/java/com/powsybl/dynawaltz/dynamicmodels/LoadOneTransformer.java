@@ -6,14 +6,12 @@
  */
 package com.powsybl.dynawaltz.dynamicmodels;
 
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
-
 import com.powsybl.dynawaltz.xml.DynaWaltzXmlContext;
 import com.powsybl.dynawaltz.xml.MacroConnectorXml;
-import com.powsybl.dynawaltz.xml.MacroStaticReference;
 import org.apache.commons.lang3.tuple.Pair;
 
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 import java.util.Arrays;
 import java.util.List;
 

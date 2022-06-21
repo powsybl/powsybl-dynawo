@@ -16,9 +16,17 @@ import javax.xml.stream.XMLStreamWriter;
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  */
 public interface BlackBoxModel {
-    void write(XMLStreamWriter writer, DynaWaltzXmlContext context) throws XMLStreamException;
+    String getDynamicModelId();
+
+    String getStaticId();
+
+    String getParameterSetId();
 
     String getLib();
 
     MacroStaticReference getMacroStaticReference();
+
+    void write(XMLStreamWriter writer, DynaWaltzXmlContext context) throws XMLStreamException;
+
+    void writeParameters(XMLStreamWriter writer, DynaWaltzXmlContext xmlContext) throws XMLStreamException;
 }
