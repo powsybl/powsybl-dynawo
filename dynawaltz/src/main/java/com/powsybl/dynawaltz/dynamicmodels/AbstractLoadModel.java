@@ -29,12 +29,6 @@ public abstract class AbstractLoadModel extends AbstractBlackBoxModel {
     @Override
     public void write(XMLStreamWriter writer, DynaWaltzXmlContext context) throws XMLStreamException {
         if (context.getIndex(getLib(), true) == 0) {
-            // Write the macroStaticReference object
-            writer.writeStartElement(DYN_URI, "macroStaticReference");
-            writer.writeAttribute("id", MACRO_STATIC_REFERENCE_PREFIX + getLib());
-            writeReference(writer, context);
-            writer.writeEndElement();
-
             // Write the macroConnector object
             writer.writeStartElement(DYN_URI, "macroConnector");
             writer.writeAttribute("id", MACRO_CONNECTOR_PREFIX + getLib());
@@ -47,8 +41,6 @@ public abstract class AbstractLoadModel extends AbstractBlackBoxModel {
         // Write the connect object
         MacroConnectorXml.writeMacroConnect(writer, MACRO_CONNECTOR_PREFIX + getLib(), getDynamicModelId(), NETWORK);
     }
-
-    protected abstract void writeReference(XMLStreamWriter writer, DynaWaltzXmlContext context) throws XMLStreamException;
 
     protected abstract void writeConnector(XMLStreamWriter writer, DynaWaltzXmlContext context) throws XMLStreamException;
 }

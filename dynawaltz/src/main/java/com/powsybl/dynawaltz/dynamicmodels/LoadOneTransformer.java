@@ -11,12 +11,21 @@ import javax.xml.stream.XMLStreamWriter;
 
 import com.powsybl.dynawaltz.xml.DynaWaltzXmlContext;
 import com.powsybl.dynawaltz.xml.MacroConnectorXml;
-import com.powsybl.dynawaltz.xml.MacroStaticReferenceXml;
+import com.powsybl.dynawaltz.xml.MacroStaticReference;
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 public class LoadOneTransformer extends AbstractLoadModel {
+
+    public static final List<Pair<String, String>> VAR_MAPPING = Arrays.asList(
+            Pair.of("transformer_P1Pu_value", "p"),
+            Pair.of("transformer_Q1Pu_value", "q"),
+            Pair.of("transformer_state", "state"));
 
     public LoadOneTransformer(String dynamicModelId, String staticId, String parameterSetId) {
         super(dynamicModelId, staticId, parameterSetId);
@@ -28,10 +37,8 @@ public class LoadOneTransformer extends AbstractLoadModel {
     }
 
     @Override
-    protected void writeReference(XMLStreamWriter writer, DynaWaltzXmlContext context) throws XMLStreamException {
-        MacroStaticReferenceXml.writeStaticRef(writer, "transformer_P1Pu_value", "p");
-        MacroStaticReferenceXml.writeStaticRef(writer, "transformer_Q1Pu_value", "q");
-        MacroStaticReferenceXml.writeStaticRef(writer, "transformer_state", "state");
+    public List<Pair<String, String>> getVarMapping() {
+        return VAR_MAPPING;
     }
 
     @Override

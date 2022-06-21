@@ -9,16 +9,17 @@ package com.powsybl.dynawaltz;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.dynamicsimulation.Curve;
-import com.powsybl.dynamicsimulation.EventModel;
 import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
+import com.powsybl.dynamicsimulation.EventModel;
+import com.powsybl.dynawaltz.dynamicmodels.BlackBoxModel;
+import com.powsybl.dynawaltz.xml.MacroStaticReference;
 import com.powsybl.iidm.network.Network;
 
 import java.nio.file.FileSystem;
 import java.nio.file.Path;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -58,6 +59,14 @@ public class DynaWaltzContext {
 
     public List<DynamicModel> getDynamicModels() {
         return Collections.unmodifiableList(dynamicModels);
+    }
+
+    public Collection<MacroStaticReference> getMacroStaticReferences() {
+        return dynamicModels.stream()
+                .filter(BlackBoxModel.class::isInstance)
+                .map(BlackBoxModel.class::cast)
+                .map(BlackBoxModel::getMacroStaticReference)
+                .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     public List<EventModel> getEventModels() {

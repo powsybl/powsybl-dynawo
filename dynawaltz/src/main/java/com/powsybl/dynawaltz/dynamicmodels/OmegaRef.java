@@ -11,9 +11,12 @@ import com.powsybl.dynawaltz.DynaWaltzParametersDatabase;
 import com.powsybl.dynawaltz.xml.DynaWaltzXmlContext;
 import com.powsybl.dynawaltz.xml.MacroConnectorXml;
 import com.powsybl.dynawaltz.xml.ParametersXml;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 import static com.powsybl.dynawaltz.DynaWaltzParametersDatabase.ParameterType.DOUBLE;
@@ -50,6 +53,11 @@ public class OmegaRef extends AbstractBlackBoxModel {
     @Override
     public String getStaticId() {
         throw new UnsupportedOperationException("OmegaRef is not bound to a static equipment");
+    }
+
+    @Override
+    public List<Pair<String, String>> getVarMapping() {
+        return Collections.emptyList();
     }
 
     public String getGeneratorDynamicModelId() {

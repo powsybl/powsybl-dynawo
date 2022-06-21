@@ -11,12 +11,21 @@ import javax.xml.stream.XMLStreamWriter;
 
 import com.powsybl.dynawaltz.xml.DynaWaltzXmlContext;
 import com.powsybl.dynawaltz.xml.MacroConnectorXml;
-import com.powsybl.dynawaltz.xml.MacroStaticReferenceXml;
+import com.powsybl.dynawaltz.xml.MacroStaticReference;
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 public class LoadAlphaBeta extends AbstractLoadModel {
+
+    public static final List<Pair<String, String>> VAR_MAPPING = Arrays.asList(
+            Pair.of("load_PPu", "p"),
+            Pair.of("load_QPu", "q"),
+            Pair.of("load_state", "state"));
 
     public LoadAlphaBeta(String dynamicModelId, String staticId, String parameterSetId) {
         super(dynamicModelId, staticId, parameterSetId);
@@ -28,10 +37,8 @@ public class LoadAlphaBeta extends AbstractLoadModel {
     }
 
     @Override
-    protected void writeReference(XMLStreamWriter writer, DynaWaltzXmlContext context) throws XMLStreamException {
-        MacroStaticReferenceXml.writeStaticRef(writer, "load_PPu", "p");
-        MacroStaticReferenceXml.writeStaticRef(writer, "load_QPu", "q");
-        MacroStaticReferenceXml.writeStaticRef(writer, "load_state", "state");
+    public List<Pair<String, String>> getVarMapping() {
+        return VAR_MAPPING;
     }
 
     @Override

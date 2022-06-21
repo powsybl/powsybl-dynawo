@@ -16,12 +16,11 @@ import com.powsybl.dynawaltz.events.AbstractBlackBoxEventModel;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-
-import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.DYD_FILENAME;
-
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Objects;
+
+import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.DYD_FILENAME;
 
 /**
  * @author Mathieu Bague <mathieu.bague@rte-france.com>
@@ -47,6 +46,9 @@ public final class DydXml {
         DynaWaltzXmlContext xmlContext = new DynaWaltzXmlContext(context);
 
         try {
+            for (MacroStaticReference macroStaticReference : context.getMacroStaticReferences()) {
+                macroStaticReference.write(writer);
+            }
             for (DynamicModel model : context.getDynamicModels()) {
                 AbstractBlackBoxModel dynawoModel = (AbstractBlackBoxModel) model;
                 dynawoModel.write(writer, xmlContext);
