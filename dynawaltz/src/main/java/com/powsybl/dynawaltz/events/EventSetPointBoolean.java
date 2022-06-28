@@ -12,7 +12,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
 import com.powsybl.dynawaltz.xml.DynaWaltzXmlContext;
-import com.powsybl.dynawaltz.xml.MacroConnectorXml;
+import com.powsybl.dynawaltz.dynamicmodels.MacroConnector;
 
 /**
  * @author Mathieu BAGUE {@literal <mathieu.bague at rte-france.com>}
@@ -34,13 +34,13 @@ public class EventSetPointBoolean extends AbstractBlackBoxEventModel {
             // Write the macroConnector object
             writer.writeStartElement(DYN_URI, "macroConnector");
             writer.writeAttribute("id", MACRO_CONNECTOR_PREFIX + getLib());
-            MacroConnectorXml.writeConnect(writer, "event_state1", "generator_switchOffSignal2");
+            MacroConnector.writeConnect(writer, "event_state1", "generator_switchOffSignal2");
             writer.writeEndElement();
         }
 
         writeEventBlackBoxModel(writer, context);
 
         // Write the connect object
-        MacroConnectorXml.writeMacroConnect(writer, MACRO_CONNECTOR_PREFIX + getLib(), getEventModelId(), getStaticId());
+        MacroConnector.writeMacroConnect(writer, MACRO_CONNECTOR_PREFIX + getLib(), getEventModelId(), getStaticId());
     }
 }

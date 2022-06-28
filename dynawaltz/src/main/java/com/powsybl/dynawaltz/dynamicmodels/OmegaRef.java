@@ -7,9 +7,9 @@
 package com.powsybl.dynawaltz.dynamicmodels;
 
 import com.powsybl.commons.PowsyblException;
+import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParametersDatabase;
 import com.powsybl.dynawaltz.xml.DynaWaltzXmlContext;
-import com.powsybl.dynawaltz.xml.MacroConnectorXml;
 import com.powsybl.dynawaltz.xml.ParametersXml;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -71,14 +71,14 @@ public class OmegaRef extends AbstractBlackBoxModel {
             // Write the macroConnector object
             writer.writeStartElement(DYN_URI, "macroConnector");
             writer.writeAttribute("id", MACRO_CONNECTOR_PREFIX + getLib() + MACRO_CONNECTOR_TO_GENERATOR_SUFFIX);
-            MacroConnectorXml.writeConnect(writer, "omega_grp_@INDEX@", "generator_omegaPu");
-            MacroConnectorXml.writeConnect(writer, "omegaRef_grp_@INDEX@", "generator_omegaRefPu");
-            MacroConnectorXml.writeConnect(writer, "running_grp_@INDEX@", "generator_running");
+            MacroConnector.writeConnect(writer, "omega_grp_@INDEX@", "generator_omegaPu");
+            MacroConnector.writeConnect(writer, "omegaRef_grp_@INDEX@", "generator_omegaRefPu");
+            MacroConnector.writeConnect(writer, "running_grp_@INDEX@", "generator_running");
             writer.writeEndElement();
 
             writer.writeStartElement(DYN_URI, "macroConnector");
             writer.writeAttribute("id", MACRO_CONNECTOR_PREFIX + getLib() + MACRO_CONNECTOR_TO_NUMCCMACHINE_SUFFIX);
-            MacroConnectorXml.writeConnect(writer, "numcc_node_@INDEX@", "@@NAME@@@NODE@_numcc");
+            MacroConnector.writeConnect(writer, "numcc_node_@INDEX@", "@@NAME@@@NODE@_numcc");
             writer.writeEndElement();
 
             // Special magic here:
@@ -92,8 +92,8 @@ public class OmegaRef extends AbstractBlackBoxModel {
         }
 
         // This instance of DYNModelOmegaRef has a reference to one generator, write its connect and the subsequent connect to the NETWORK model
-        MacroConnectorXml.writeMacroConnect(writer, MACRO_CONNECTOR_PREFIX + getLib() + MACRO_CONNECTOR_TO_GENERATOR_SUFFIX, OMEGA_REF_ID, index, generatorDynamicModelId);
-        MacroConnectorXml.writeMacroConnect(writer, MACRO_CONNECTOR_PREFIX + getLib() + MACRO_CONNECTOR_TO_NUMCCMACHINE_SUFFIX, OMEGA_REF_ID, index, NETWORK, getStaticId(context, generatorDynamicModelId));
+        MacroConnector.writeMacroConnect(writer, MACRO_CONNECTOR_PREFIX + getLib() + MACRO_CONNECTOR_TO_GENERATOR_SUFFIX, OMEGA_REF_ID, index, generatorDynamicModelId);
+        MacroConnector.writeMacroConnect(writer, MACRO_CONNECTOR_PREFIX + getLib() + MACRO_CONNECTOR_TO_NUMCCMACHINE_SUFFIX, OMEGA_REF_ID, index, NETWORK, getStaticId(context, generatorDynamicModelId));
     }
 
     @Override
@@ -124,6 +124,11 @@ public class OmegaRef extends AbstractBlackBoxModel {
 
             writer.writeEndElement();
         }
+    }
+
+    @Override
+    public BlackBoxModel getModelConnectedTo(DynaWaltzContext dynaWaltzContext) {
+        return null;
     }
 
     private static String getStaticId(DynaWaltzXmlContext context, String dynamicModelId) {

@@ -13,12 +13,17 @@ import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynamicsimulation.EventModel;
 import com.powsybl.dynawaltz.dynamicmodels.BlackBoxModel;
+import com.powsybl.dynawaltz.dynamicmodels.MacroConnector;
+import com.powsybl.dynawaltz.dynamicmodels.NetworkModel;
+import com.powsybl.dynawaltz.dynamicmodels.OmegaRef;
 import com.powsybl.dynawaltz.xml.MacroStaticReference;
 import com.powsybl.iidm.network.Network;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.nio.file.FileSystem;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -28,6 +33,9 @@ import java.util.stream.Stream;
 public class DynaWaltzContext {
 
     private final Map<String, MacroStaticReference> macroStaticReferences = new LinkedHashMap<>();
+    private final Map<Pair<String, String>, MacroConnector> connectorsMap = new LinkedHashMap<>();
+    private final Map<BlackBoxModel, BlackBoxModel> modelsConnections = new LinkedHashMap<>();
+    private NetworkModel networkModel = new NetworkModel();
 
     public DynaWaltzContext(Network network, String workingVariantId, List<DynamicModel> dynamicModels, List<EventModel> eventModels, List<Curve> curves, DynamicSimulationParameters parameters, DynaWaltzParameters dynaWaltzParameters) {
         this.network = Objects.requireNonNull(network);
@@ -81,6 +89,49 @@ public class DynaWaltzContext {
         }
     }
 
+    public Map<String, BlackBoxModel> getDynamicIdBlackBoxModelMap() {
+        return getBlackBoxModelStream()
+                .collect(Collectors.toMap(BlackBoxModel::getDynamicModelId, Function.identity(), this::mergeModelsDynamicId, LinkedHashMap::new));
+    }
+
+    public Map<String, BlackBoxModel> getStaticIdBlackBoxModelMap() {
+        return getBlackBoxModelStream()
+                .filter(blackBoxModel -> !(blackBoxModel instanceof OmegaRef))
+                .collect(Collectors.toMap(BlackBoxModel::getStaticId, Function.identity(), this::mergeModelsStaticId, LinkedHashMap::new));
+    }
+
+    private BlackBoxModel mergeModelsStaticId(BlackBoxModel o1, BlackBoxModel o2) {
+        throw new AssertionError("Duplicate staticId " + o1.getStaticId()
+                + " with two models: " + o1.getClass().getSimpleName() + " and " + o2.getClass().getSimpleName());
+    }
+
+    private BlackBoxModel mergeModelsDynamicId(BlackBoxModel o1, BlackBoxModel o2) {
+        throw new AssertionError("Duplicate dynamicModelId " + o1.getDynamicModelId()
+                + " with two models: " + o1.getClass().getSimpleName() + " and " + o2.getClass().getSimpleName());
+    }
+
+    public void computeModelsConnectedTo() {
+        getBlackBoxModelStream().forEach(bbm -> modelsConnections.put(bbm, bbm.getModelConnectedTo(this)));
+
+    }
+    public void computeMacroConnectors() {
+        getBlackBoxModelStream().forEach(bbm -> bbm.setMacroConnector(getMacroConnector(bbm)));
+    }
+
+    private MacroConnector getMacroConnector(BlackBoxModel bbm) {
+        BlackBoxModel connectedBbm = modelsConnections.get(bbm);
+        return connectorsMap.computeIfAbsent(Pair.of(bbm.getLib(), connectedBbm.getLib()),
+                k -> new MacroConnector(bbm.getLib(), connectedBbm.getLib(), bbm.getVarsConnect(connectedBbm)));
+    }
+
+    public Collection<MacroConnector> getMacroConnectors() {
+        return connectorsMap.values();
+    }
+
+    public Map<BlackBoxModel, BlackBoxModel> getModelsConnections() {
+        return modelsConnections;
+    }
+
     public Stream<BlackBoxModel> getBlackBoxModelStream() {
         return dynamicModels.stream()
                 .filter(BlackBoxModel.class::isInstance)
@@ -114,4 +165,8 @@ public class DynaWaltzContext {
     private final List<DynamicModel> dynamicModels;
     private final List<EventModel> eventModels;
     private final List<Curve> curves;
+
+    public NetworkModel getNetworkModel() {
+        return networkModel;
+    }
 }

@@ -6,12 +6,9 @@
  */
 package com.powsybl.dynawaltz.dynamicmodels;
 
-import com.powsybl.dynawaltz.xml.DynaWaltzXmlContext;
-import com.powsybl.dynawaltz.xml.MacroConnectorXml;
+import com.powsybl.commons.PowsyblException;
 import org.apache.commons.lang3.tuple.Pair;
 
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
 import java.util.Arrays;
 import java.util.List;
 
@@ -40,9 +37,15 @@ public class LoadOneTransformer extends AbstractLoadModel {
     }
 
     @Override
-    protected void writeConnector(XMLStreamWriter writer, DynaWaltzXmlContext context) throws XMLStreamException {
-        MacroConnectorXml.writeConnect(writer, "transformer_terminal", "@STATIC_ID@@NODE@_ACPIN");
-        MacroConnectorXml.writeConnect(writer, "transformer_switchOffSignal1", "@STATIC_ID@@NODE@_switchOff");
-        MacroConnectorXml.writeConnect(writer, "load_switchOffSignal1", "@STATIC_ID@@NODE@_switchOff");
+    public List<Pair<String, String>> getVarsConnect(BlackBoxModel connected) {
+        if (!(connected instanceof BusModel)) {
+            throw new PowsyblException("GeneratorModel can only connect to BusModel");
+        }
+        BusModel connectedBusModel = (BusModel) connected;
+        return Arrays.asList(
+                Pair.of("transformer_terminal", connectedBusModel.getTerminalVarName()),
+                Pair.of("transformer_switchOffSignal1", connectedBusModel.getSwitchOffSignalVarName()),
+                Pair.of("load_switchOffSignal1", connectedBusModel.getSwitchOffSignalVarName())
+        );
     }
 }

@@ -9,16 +9,18 @@ package com.powsybl.dynawaltz.automatons;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
+import com.powsybl.commons.PowsyblException;
+import com.powsybl.dynawaltz.DynaWaltzContext;
+import com.powsybl.dynawaltz.dynamicmodels.*;
 import com.powsybl.dynawaltz.xml.DynaWaltzXmlContext;
-import com.powsybl.dynawaltz.xml.MacroConnectorXml;
-import com.powsybl.dynawaltz.dynamicmodels.AbstractBlackBoxModel;
-import com.powsybl.iidm.network.Branch;
+import com.powsybl.iidm.network.*;
 import org.apache.commons.lang3.tuple.Pair;
 
 import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.MACRO_CONNECTOR_PREFIX;
 import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.NETWORK;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -46,33 +48,39 @@ public class CurrentLimitAutomaton extends AbstractBlackBoxModel {
     }
 
     @Override
-    public void write(XMLStreamWriter writer, DynaWaltzXmlContext context) throws XMLStreamException {
-        String postfix = getPostfix(side);
-        if (context.getIndex(getLib(), true) == 0) {
-            // Write the macroConnector object
-
-            writer.writeStartElement(DYN_URI, "macroConnector");
-            writer.writeAttribute("id", MACRO_CONNECTOR_PREFIX + getLib() + "ToLine" + postfix);
-            MacroConnectorXml.writeConnect(writer, "currentLimitAutomaton_IMonitored", "@NAME@_i" + postfix);
-            MacroConnectorXml.writeConnect(writer, "currentLimitAutomaton_order", "@NAME@_state");
-            MacroConnectorXml.writeConnect(writer, "currentLimitAutomaton_AutomatonExists", "@NAME@_desactivate_currentLimits");
-            writer.writeEndElement();
+    public BlackBoxModel getModelConnectedTo(DynaWaltzContext context) {
+        Line line = context.getNetwork().getLine(getStaticId());
+        if (line == null) {
+            throw new PowsyblException("Unknown line static id: " + getStaticId());
         }
-
-        writeAutomatonBlackBoxModel(writer, context);
-
-        // Write the connect object
-        MacroConnectorXml.writeMacroConnect(writer, MACRO_CONNECTOR_PREFIX + getLib() + "ToLine" + postfix, getDynamicModelId(), NETWORK, getStaticId());
+        String connectedStaticId = line.getTerminal(side).getBusBreakerView().getConnectableBus().getId();
+        BlackBoxModel connectedBbm = context.getStaticIdBlackBoxModelMap().get(connectedStaticId);
+        if (connectedBbm == null) {
+            return context.getNetworkModel().getDefaultLineModel(side);
+        }
+        return connectedBbm;
     }
 
-    private static String getPostfix(Branch.Side side) {
-        switch (side) {
-            case ONE:
-                return "Side1";
-            case TWO:
-                return "Side2";
-            default:
-                throw new AssertionError("Unexpected Side value: " + side);
+    @Override
+    public List<Pair<String, String>> getVarsConnect(BlackBoxModel connected) {
+        if (!(connected instanceof LineModel)) {
+            throw new PowsyblException("GeneratorModel can only connect to BusModel");
         }
+        LineModel connectedLineModel = (LineModel) connected;
+        return Arrays.asList(
+                Pair.of("currentLimitAutomaton_IMonitored", connectedLineModel.getIVarName()),
+                Pair.of("currentLimitAutomaton_order", connectedLineModel.getStateVarName()),
+                Pair.of("currentLimitAutomaton_AutomatonExists", connectedLineModel.getDesactivateCurrentLimitsVarName())
+        );
+    }
+
+    @Override
+    public void write(XMLStreamWriter writer, DynaWaltzXmlContext context) throws XMLStreamException {
+        writeAutomatonBlackBoxModel(writer, context);
+    }
+
+    @Override
+    public void writeMacroConnect(XMLStreamWriter writer, BlackBoxModel connected) throws XMLStreamException {
+        getMacroConnector().writeMacroConnect(writer, getDynamicModelId(), connected.getDynamicModelId(), getStaticId());
     }
 }

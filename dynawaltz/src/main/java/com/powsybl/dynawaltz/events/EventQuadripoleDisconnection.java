@@ -14,7 +14,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
 import com.powsybl.dynawaltz.xml.DynaWaltzXmlContext;
-import com.powsybl.dynawaltz.xml.MacroConnectorXml;
+import com.powsybl.dynawaltz.dynamicmodels.MacroConnector;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -36,13 +36,13 @@ public class EventQuadripoleDisconnection extends AbstractBlackBoxEventModel {
             // Write the macroConnector object
             writer.writeStartElement(DYN_URI, "macroConnector");
             writer.writeAttribute("id", MACRO_CONNECTOR_PREFIX + getLib());
-            MacroConnectorXml.writeConnect(writer, "event_state1_value", "@NAME@_state_value");
+            MacroConnector.writeConnect(writer, "event_state1_value", "@NAME@_state_value");
             writer.writeEndElement();
         }
 
         writeEventBlackBoxModel(writer, context);
 
         // Write the connect object
-        MacroConnectorXml.writeMacroConnect(writer, MACRO_CONNECTOR_PREFIX + getLib(), getEventModelId(), NETWORK, getStaticId());
+        MacroConnector.writeMacroConnect(writer, MACRO_CONNECTOR_PREFIX + getLib(), getEventModelId(), NETWORK, getStaticId());
     }
 }

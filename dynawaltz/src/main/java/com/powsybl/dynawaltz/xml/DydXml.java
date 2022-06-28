@@ -11,12 +11,14 @@ import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
 import com.powsybl.dynamicsimulation.EventModel;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.dynamicmodels.BlackBoxModel;
+import com.powsybl.dynawaltz.dynamicmodels.MacroConnector;
 import com.powsybl.dynawaltz.events.AbstractBlackBoxEventModel;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Map;
 import java.util.Objects;
 
 import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.DYD_FILENAME;
@@ -45,11 +47,19 @@ public final class DydXml {
         DynaWaltzXmlContext xmlContext = new DynaWaltzXmlContext(context);
 
         try {
+            context.computeModelsConnectedTo();
+            context.computeMacroConnectors();
+            for (MacroConnector macroConnector : context.getMacroConnectors()) {
+                macroConnector.write(writer);
+            }
             for (MacroStaticReference macroStaticReference : context.getMacroStaticReferences()) {
                 macroStaticReference.write(writer);
             }
             for (BlackBoxModel model : context.getBlackBoxModels()) {
                 model.write(writer, xmlContext);
+            }
+            for (Map.Entry<BlackBoxModel, BlackBoxModel> bbmMapping : context.getModelsConnections().entrySet()) {
+                bbmMapping.getKey().writeMacroConnect(writer, bbmMapping.getValue());
             }
         } catch (XMLStreamException e) {
             throw new UncheckedXmlStreamException(e);

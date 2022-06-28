@@ -6,6 +6,7 @@
  */
 package com.powsybl.dynawaltz.dynamicmodels;
 
+import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.xml.DynaWaltzXmlContext;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -30,4 +31,14 @@ public interface BlackBoxModel {
     void write(XMLStreamWriter writer, DynaWaltzXmlContext context) throws XMLStreamException;
 
     void writeParameters(XMLStreamWriter writer, DynaWaltzXmlContext xmlContext) throws XMLStreamException;
+
+    void writeMacroConnect(XMLStreamWriter writer, BlackBoxModel connected) throws XMLStreamException;
+
+    List<Pair<String, String>> getVarsConnect(BlackBoxModel connected);
+
+    BlackBoxModel getModelConnectedTo(DynaWaltzContext dynaWaltzContext);
+
+    void setMacroConnector(MacroConnector macroConnector);
+
+    MacroConnector getMacroConnector();
 }
