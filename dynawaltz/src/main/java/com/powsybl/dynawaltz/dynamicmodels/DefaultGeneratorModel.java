@@ -1,6 +1,11 @@
 package com.powsybl.dynawaltz.dynamicmodels;
 
 public class DefaultGeneratorModel extends AbstractNetworkBlackBoxModel implements GeneratorModel {
+
+    public DefaultGeneratorModel(String staticId) {
+        super(staticId);
+    }
+
     @Override
     public String getLib() {
         return "NetworkGenerator";

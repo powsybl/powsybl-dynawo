@@ -14,7 +14,8 @@ import com.powsybl.iidm.network.Branch;
 public class DefaultLineModel extends AbstractNetworkBlackBoxModel implements LineModel {
     private final String sidePostfix;
 
-    public DefaultLineModel(Branch.Side side) {
+    public DefaultLineModel(String staticId, Branch.Side side) {
+        super(staticId);
         this.sidePostfix = LineModel.getPostfix(side);
     }
 

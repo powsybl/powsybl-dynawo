@@ -12,7 +12,8 @@ package com.powsybl.dynawaltz.dynamicmodels;
 public class DefaultBusModel extends AbstractNetworkBlackBoxModel implements BusModel {
     private final String id;
 
-    public DefaultBusModel() {
+    public DefaultBusModel(String staticId) {
+        super(staticId);
         id = "defaultNodeModel";
     }
 

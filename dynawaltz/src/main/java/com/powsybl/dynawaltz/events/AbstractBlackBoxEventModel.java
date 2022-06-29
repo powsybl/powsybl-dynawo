@@ -7,6 +7,8 @@
 package com.powsybl.dynawaltz.events;
 
 import com.powsybl.dynamicsimulation.EventModel;
+import com.powsybl.dynawaltz.dynamicmodels.BlackBoxModel;
+import com.powsybl.dynawaltz.dynamicmodels.MacroConnector;
 import com.powsybl.dynawaltz.xml.DynaWaltzXmlContext;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -71,5 +73,20 @@ public abstract class AbstractBlackBoxEventModel implements EventModel, BlackBox
     @Override
     public void writeParameters(XMLStreamWriter writer, DynaWaltzXmlContext xmlContext) {
         // No parameters for events
+    }
+
+    @Override
+    public void writeMacroConnect(XMLStreamWriter writer, DynaWaltzXmlContext xmlContext, MacroConnector macroConnector, BlackBoxModel connected) throws XMLStreamException {
+        macroConnector.writeMacroConnect(writer, getAttributesConnectFrom(), connected.getAttributesConnectTo());
+    }
+
+    public List<Pair<String, String>> getAttributesConnectFrom() {
+        return List.of(Pair.of("id1", getEventModelId()));
+    }
+
+    @Override
+    public List<Pair<String, String>> getAttributesConnectTo() {
+        // event always connect TO a model
+        return Collections.emptyList();
     }
 }

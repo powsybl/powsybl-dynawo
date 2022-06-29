@@ -8,25 +8,27 @@ package com.powsybl.dynawaltz.dynamicmodels;
 
 import com.powsybl.iidm.network.Branch;
 
+import java.util.function.BiFunction;
+import java.util.function.Function;
+
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  */
 public class NetworkModel {
 
-    private final DefaultBusModel busModel = new DefaultBusModel();
-    private final DefaultLineModel lineModel1 = new DefaultLineModel(Branch.Side.ONE);
-    private final DefaultLineModel lineModel2 = new DefaultLineModel(Branch.Side.TWO);
-    private final DefaultGeneratorModel generatorModel = new DefaultGeneratorModel();
+    private final Function<String, DefaultBusModel> busModelFactory = DefaultBusModel::new;
+    private final BiFunction<String, Branch.Side, DefaultLineModel> lineModelFactory = DefaultLineModel::new;
+    private final Function<String, DefaultGeneratorModel> generatorModelFactory = DefaultGeneratorModel::new;
 
-    public BlackBoxModel getDefaultBusModel() {
-        return busModel;
+    public BlackBoxModel getDefaultBusModel(String staticId) {
+        return busModelFactory.apply(staticId);
     }
 
-    public BlackBoxModel getDefaultLineModel(Branch.Side side) {
-        return side == Branch.Side.ONE ? lineModel1 : lineModel2;
+    public BlackBoxModel getDefaultLineModel(String staticId, Branch.Side side) {
+        return lineModelFactory.apply(staticId, side);
     }
 
-    public BlackBoxModel getDefaultGeneratorModel() {
-        return generatorModel;
+    public BlackBoxModel getDefaultGeneratorModel(String staticId) {
+        return generatorModelFactory.apply(staticId);
     }
 }

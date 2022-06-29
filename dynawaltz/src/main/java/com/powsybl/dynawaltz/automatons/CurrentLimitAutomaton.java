@@ -52,7 +52,7 @@ public class CurrentLimitAutomaton extends AbstractBlackBoxModel {
         String connectedStaticId = line.getTerminal(side).getBusBreakerView().getConnectableBus().getId();
         BlackBoxModel connectedBbm = context.getStaticIdBlackBoxModelMap().get(connectedStaticId);
         if (connectedBbm == null) {
-            return List.of(context.getNetworkModel().getDefaultLineModel(side));
+            return List.of(context.getNetworkModel().getDefaultLineModel(getStaticId(), side));
         }
         return List.of(connectedBbm);
     }
@@ -73,10 +73,5 @@ public class CurrentLimitAutomaton extends AbstractBlackBoxModel {
     @Override
     public void write(XMLStreamWriter writer, DynaWaltzXmlContext context) throws XMLStreamException {
         writeAutomatonBlackBoxModel(writer, context);
-    }
-
-    @Override
-    public void writeMacroConnect(XMLStreamWriter writer, DynaWaltzXmlContext xmlContext, MacroConnector macroConnector, BlackBoxModel connected) throws XMLStreamException {
-        macroConnector.writeMacroConnect(writer, getDynamicModelId(), connected.getDynamicModelId(), getStaticId());
     }
 }

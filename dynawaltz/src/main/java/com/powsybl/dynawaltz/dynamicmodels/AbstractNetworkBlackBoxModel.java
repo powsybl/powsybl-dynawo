@@ -11,13 +11,20 @@ import java.util.Collections;
 import java.util.List;
 
 public abstract class AbstractNetworkBlackBoxModel implements BlackBoxModel {
-    @Override
-    public String getDynamicModelId() {
-        return DynaWaltzXmlConstants.NETWORK;
+
+    private final String staticId;
+
+    protected AbstractNetworkBlackBoxModel(String staticId) {
+        this.staticId = staticId;
     }
 
     @Override
     public String getStaticId() {
+        return staticId;
+    }
+
+    @Override
+    public String getDynamicModelId() {
         return "";
     }
 
@@ -27,7 +34,7 @@ public abstract class AbstractNetworkBlackBoxModel implements BlackBoxModel {
     }
 
     @Override
-    public void writeMacroConnect(XMLStreamWriter writer, DynaWaltzXmlContext xmlContext, MacroConnector macroConnector, BlackBoxModel connected) throws XMLStreamException {
+    public void writeMacroConnect(XMLStreamWriter writer, DynaWaltzXmlContext xmlContext, MacroConnector macroConnector, BlackBoxModel connected) {
         // Default models not written in dyd
     }
 
@@ -55,5 +62,13 @@ public abstract class AbstractNetworkBlackBoxModel implements BlackBoxModel {
     public List<BlackBoxModel> getModelsConnectedTo(DynaWaltzContext dynaWaltzContext) {
         // Default models are only connected to
         return Collections.emptyList();
+    }
+
+    @Override
+    public List<Pair<String, String>> getAttributesConnectTo() {
+        return List.of(
+                Pair.of("id2", DynaWaltzXmlConstants.NETWORK),
+                Pair.of("name2", getStaticId())
+        );
     }
 }

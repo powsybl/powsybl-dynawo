@@ -28,45 +28,27 @@ public final class MacroConnector {
         this.varsConnect = varsConnect;
     }
 
-    public void writeMacroConnect(XMLStreamWriter writer, String id1, String id2) throws XMLStreamException {
+    public void writeMacroConnect(XMLStreamWriter writer,
+                                  List<Pair<String, String>> attributesFrom,
+                                  List<Pair<String, String>> attributesTo) throws XMLStreamException {
         writer.writeEmptyElement(DYN_URI, "macroConnect");
         writer.writeAttribute("connector", id);
-        writer.writeAttribute("id1", id1);
-        writer.writeAttribute("id2", id2);
-    }
-
-    public void writeMacroConnect(XMLStreamWriter writer, String id1, String id2, String name2) throws XMLStreamException {
-        writeMacroConnect(writer, id1, id2);
-        writer.writeAttribute("name2", name2);
+        for (Pair<String, String> attribute : attributesFrom) {
+            writer.writeAttribute(attribute.getKey(), attribute.getValue());
+        }
+        for (Pair<String, String> attribute : attributesTo) {
+            writer.writeAttribute(attribute.getKey(), attribute.getValue());
+        }
     }
 
     public void write(XMLStreamWriter writer) throws XMLStreamException {
         writer.writeStartElement(DYN_URI, "macroConnector");
         writer.writeAttribute("id", id);
         for (Pair<String, String> varPair : this.varsConnect) {
-            writeConnect(writer, varPair.getLeft(), varPair.getRight());
+            writer.writeEmptyElement(DYN_URI, "connect");
+            writer.writeAttribute("var1", varPair.getLeft());
+            writer.writeAttribute("var2", varPair.getRight());
         }
         writer.writeEndElement();
-    }
-
-    public void writeMacroConnect(XMLStreamWriter writer, String id1, int index1, String id2) throws XMLStreamException {
-        writeMacroConnect(writer, id1, index1, id2, null);
-    }
-
-    public void writeMacroConnect(XMLStreamWriter writer, String id1, int index1, String id2, String name2) throws XMLStreamException {
-        writer.writeEmptyElement(DYN_URI, "macroConnect");
-        writer.writeAttribute("connector", id);
-        writer.writeAttribute("id1", id1);
-        writer.writeAttribute("index1", Integer.toString(index1));
-        writer.writeAttribute("id2", id2);
-        if (name2 != null) {
-            writer.writeAttribute("name2", name2);
-        }
-    }
-
-    public static void writeConnect(XMLStreamWriter writer, String var1, String var2) throws XMLStreamException {
-        writer.writeEmptyElement(DYN_URI, "connect");
-        writer.writeAttribute("var1", var1);
-        writer.writeAttribute("var2", var2);
     }
 }

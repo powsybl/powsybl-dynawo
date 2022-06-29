@@ -10,12 +10,8 @@ import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.dynamicmodels.BlackBoxModel;
 import com.powsybl.dynawaltz.dynamicmodels.GeneratorModel;
-import com.powsybl.dynawaltz.dynamicmodels.MacroConnector;
-import com.powsybl.dynawaltz.xml.DynaWaltzXmlContext;
 import org.apache.commons.lang3.tuple.Pair;
 
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
 import java.util.List;
 
 /**
@@ -33,11 +29,6 @@ public class EventSetPointBoolean extends AbstractBlackBoxEventModel {
     }
 
     @Override
-    public void writeMacroConnect(XMLStreamWriter writer, DynaWaltzXmlContext xmlContext, MacroConnector macroConnector, BlackBoxModel connected) throws XMLStreamException {
-        macroConnector.writeMacroConnect(writer, getEventModelId(), getStaticId());
-    }
-
-    @Override
     public List<Pair<String, String>> getVarsConnect(BlackBoxModel connected) {
         if (!(connected instanceof GeneratorModel)) {
             throw new PowsyblException("EventSetPointBoolean can only connect to GeneratorModel");
@@ -49,7 +40,7 @@ public class EventSetPointBoolean extends AbstractBlackBoxEventModel {
     public List<BlackBoxModel> getModelsConnectedTo(DynaWaltzContext context) {
         BlackBoxModel connectedBbm = context.getStaticIdBlackBoxModelMap().get(getStaticId());
         if (connectedBbm == null) {
-            return List.of(context.getNetworkModel().getDefaultGeneratorModel());
+            return List.of(context.getNetworkModel().getDefaultGeneratorModel(getStaticId()));
         }
         return List.of(connectedBbm);
     }

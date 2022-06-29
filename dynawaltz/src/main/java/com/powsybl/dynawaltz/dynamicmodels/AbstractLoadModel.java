@@ -33,7 +33,7 @@ public abstract class AbstractLoadModel extends AbstractBlackBoxModel {
         String connectedStaticId = load.getTerminal().getBusBreakerView().getConnectableBus().getId();
         BlackBoxModel connectedBbm = context.getStaticIdBlackBoxModelMap().get(connectedStaticId);
         if (connectedBbm == null) {
-            return List.of(context.getNetworkModel().getDefaultBusModel());
+            return List.of(context.getNetworkModel().getDefaultBusModel(connectedStaticId));
         }
         return List.of(connectedBbm);
     }

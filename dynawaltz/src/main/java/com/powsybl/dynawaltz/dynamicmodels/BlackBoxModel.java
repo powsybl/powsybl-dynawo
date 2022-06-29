@@ -37,4 +37,6 @@ public interface BlackBoxModel {
     List<Pair<String, String>> getVarsConnect(BlackBoxModel connected);
 
     List<BlackBoxModel> getModelsConnectedTo(DynaWaltzContext dynaWaltzContext);
+
+    List<Pair<String, String>> getAttributesConnectTo();
 }

@@ -126,7 +126,7 @@ public class OmegaRef extends AbstractBlackBoxModel {
     public List<BlackBoxModel> getModelsConnectedTo(DynaWaltzContext context) {
         BlackBoxModel generatorModel = context.getBlackBoxModelFromDynamicId(generatorDynamicModelId);
         if (generatorModel == null) {
-            generatorModel = context.getNetworkModel().getDefaultGeneratorModel();
+            throw new PowsyblException("OmegaRef cannot be connected explicitly to a generator with no defined dynamic model");
         }
         if (!(generatorModel instanceof GeneratorModel)) {
             throw new PowsyblException("Generator dynamic id does not correspond to a generator: " + generatorDynamicModelId
@@ -140,7 +140,7 @@ public class OmegaRef extends AbstractBlackBoxModel {
         String connectedStaticId = generator.getTerminal().getBusBreakerView().getConnectableBus().getId();
         BlackBoxModel busModel = context.getStaticIdBlackBoxModelMap().get(connectedStaticId);
         if (busModel == null) {
-            busModel = context.getNetworkModel().getDefaultBusModel();
+            busModel = context.getNetworkModel().getDefaultBusModel(connectedStaticId);
         }
 
         return List.of(generatorModel, busModel);
@@ -149,10 +149,10 @@ public class OmegaRef extends AbstractBlackBoxModel {
     @Override
     public void writeMacroConnect(XMLStreamWriter writer, DynaWaltzXmlContext xmlContext, MacroConnector macroConnector, BlackBoxModel connected) throws XMLStreamException {
         int index = xmlContext.getLibIndex(this);
-        if (connected instanceof GeneratorModel) {
-            macroConnector.writeMacroConnect(writer, OMEGA_REF_ID, index, connected.getDynamicModelId());
-        } else if (connected instanceof BusModel) {
-            macroConnector.writeMacroConnect(writer, OMEGA_REF_ID, index, NETWORK, connected.getStaticId());
-        }
+        List<Pair<String, String>> attributesConnectFrom = List.of(
+                Pair.of("id1", getDynamicModelId()),
+                Pair.of("index1", Integer.toString(index))
+        );
+        macroConnector.writeMacroConnect(writer, attributesConnectFrom, connected.getAttributesConnectTo());
     }
 }
