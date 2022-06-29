@@ -18,6 +18,8 @@ public interface LineModel {
 
     String getDesactivateCurrentLimitsVarName();
 
+    String getStateValueVarName();
+
     static String getPostfix(Branch.Side side) {
         switch (side) {
             case ONE:
@@ -28,5 +30,4 @@ public interface LineModel {
                 throw new AssertionError("Unexpected Side value: " + side);
         }
     }
-
 }

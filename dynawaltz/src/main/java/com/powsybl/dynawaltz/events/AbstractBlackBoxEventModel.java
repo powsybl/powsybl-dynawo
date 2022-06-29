@@ -6,20 +6,26 @@
  */
 package com.powsybl.dynawaltz.events;
 
-import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
-
-import java.util.Objects;
+import com.powsybl.dynamicsimulation.EventModel;
+import com.powsybl.dynawaltz.xml.DynaWaltzXmlContext;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
-import com.powsybl.dynamicsimulation.EventModel;
-import com.powsybl.dynawaltz.xml.DynaWaltzXmlContext;
+import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public abstract class AbstractBlackBoxEventModel implements EventModel {
+public abstract class AbstractBlackBoxEventModel implements EventModel, BlackBoxEventModel {
+
+    private final String eventModelId;
+    private final String staticId;
+    private final String parameterSetId;
 
     public AbstractBlackBoxEventModel(String eventModelId, String staticId, String parameterSetId) {
         this.eventModelId = Objects.requireNonNull(eventModelId);
@@ -27,23 +33,33 @@ public abstract class AbstractBlackBoxEventModel implements EventModel {
         this.parameterSetId = Objects.requireNonNull(parameterSetId);
     }
 
+    @Override
     public String getEventModelId() {
         return eventModelId;
     }
 
-    public abstract String getLib();
-
+    @Override
     public String getStaticId() {
         return staticId;
     }
 
+    @Override
     public String getParameterSetId() {
         return parameterSetId;
     }
 
-    public abstract void write(XMLStreamWriter writer, DynaWaltzXmlContext context) throws XMLStreamException;
+    @Override
+    public String getDynamicModelId() {
+        return null;
+    }
 
-    protected void writeEventBlackBoxModel(XMLStreamWriter writer, DynaWaltzXmlContext context) throws XMLStreamException {
+    @Override
+    public List<Pair<String, String>> getVarsMapping() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public void write(XMLStreamWriter writer, DynaWaltzXmlContext context) throws XMLStreamException {
         // Write the blackBoxModel object
         writer.writeEmptyElement(DYN_URI, "blackBoxModel");
         writer.writeAttribute("id", getEventModelId());
@@ -52,7 +68,8 @@ public abstract class AbstractBlackBoxEventModel implements EventModel {
         writer.writeAttribute("parId", getParameterSetId());
     }
 
-    private final String eventModelId;
-    private final String staticId;
-    private final String parameterSetId;
+    @Override
+    public void writeParameters(XMLStreamWriter writer, DynaWaltzXmlContext xmlContext) {
+        // No parameters for events
+    }
 }

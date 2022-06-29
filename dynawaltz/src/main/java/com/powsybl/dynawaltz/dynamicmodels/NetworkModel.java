@@ -16,6 +16,7 @@ public class NetworkModel {
     private final DefaultBusModel busModel = new DefaultBusModel();
     private final DefaultLineModel lineModel1 = new DefaultLineModel(Branch.Side.ONE);
     private final DefaultLineModel lineModel2 = new DefaultLineModel(Branch.Side.TWO);
+    private final DefaultGeneratorModel generatorModel = new DefaultGeneratorModel();
 
     public BlackBoxModel getDefaultBusModel() {
         return busModel;
@@ -23,5 +24,9 @@ public class NetworkModel {
 
     public BlackBoxModel getDefaultLineModel(Branch.Side side) {
         return side == Branch.Side.ONE ? lineModel1 : lineModel2;
+    }
+
+    public BlackBoxModel getDefaultGeneratorModel() {
+        return generatorModel;
     }
 }

@@ -40,6 +40,15 @@ public final class MacroConnector {
         writer.writeAttribute("name2", name2);
     }
 
+    public void write(XMLStreamWriter writer) throws XMLStreamException {
+        writer.writeStartElement(DYN_URI, "macroConnector");
+        writer.writeAttribute("id", id);
+        for (Pair<String, String> varPair : this.varsConnect) {
+            writeConnect(writer, varPair.getLeft(), varPair.getRight());
+        }
+        writer.writeEndElement();
+    }
+
     public static void writeMacroConnect(XMLStreamWriter writer, String connector, String id1, int index1, String id2) throws XMLStreamException {
         writeMacroConnect(writer, connector, id1, index1, id2, null);
     }
@@ -53,15 +62,6 @@ public final class MacroConnector {
         if (name2 != null) {
             writer.writeAttribute("name2", name2);
         }
-    }
-
-    public void write(XMLStreamWriter writer) throws XMLStreamException {
-        writer.writeStartElement(DYN_URI, "macroConnector");
-        writer.writeAttribute("id", id);
-        for (Pair<String, String> varPair : this.varsConnect) {
-            writeConnect(writer, varPair.getLeft(), varPair.getRight());
-        }
-        writer.writeEndElement();
     }
 
     public static void writeConnect(XMLStreamWriter writer, String var1, String var2) throws XMLStreamException {

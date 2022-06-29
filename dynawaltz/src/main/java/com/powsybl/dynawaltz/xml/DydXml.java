@@ -8,11 +8,10 @@
 package com.powsybl.dynawaltz.xml;
 
 import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
-import com.powsybl.dynamicsimulation.EventModel;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.dynamicmodels.BlackBoxModel;
 import com.powsybl.dynawaltz.dynamicmodels.MacroConnector;
-import com.powsybl.dynawaltz.events.AbstractBlackBoxEventModel;
+import com.powsybl.dynawaltz.events.BlackBoxEventModel;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -47,8 +46,6 @@ public final class DydXml {
         DynaWaltzXmlContext xmlContext = new DynaWaltzXmlContext(context);
 
         try {
-            context.computeModelsConnectedTo();
-            context.computeMacroConnectors();
             for (MacroConnector macroConnector : context.getMacroConnectors()) {
                 macroConnector.write(writer);
             }
@@ -59,7 +56,9 @@ public final class DydXml {
                 model.write(writer, xmlContext);
             }
             for (Map.Entry<BlackBoxModel, BlackBoxModel> bbmMapping : context.getModelsConnections().entrySet()) {
-                bbmMapping.getKey().writeMacroConnect(writer, bbmMapping.getValue());
+                BlackBoxModel bbm0 = bbmMapping.getKey();
+                BlackBoxModel bbm1 = bbmMapping.getValue();
+                bbm0.writeMacroConnect(writer, context.getMacroConnector(bbm0, bbm1), bbm1);
             }
         } catch (XMLStreamException e) {
             throw new UncheckedXmlStreamException(e);
@@ -70,9 +69,16 @@ public final class DydXml {
         DynaWaltzXmlContext xmlContext = new DynaWaltzXmlContext(context);
 
         try {
-            for (EventModel model : context.getEventModels()) {
-                AbstractBlackBoxEventModel dynawoModel = (AbstractBlackBoxEventModel) model;
-                dynawoModel.write(writer, xmlContext);
+            for (MacroConnector macroConnector : context.getEventMacroConnectors()) {
+                macroConnector.write(writer);
+            }
+            for (BlackBoxEventModel model : context.getBlackBoxEventModels()) {
+                model.write(writer, xmlContext);
+            }
+            for (Map.Entry<BlackBoxEventModel, BlackBoxModel> bbemMapping : context.getEventModelsConnections().entrySet()) {
+                BlackBoxEventModel bbem = bbemMapping.getKey();
+                BlackBoxModel bbm = bbemMapping.getValue();
+                bbem.writeMacroConnect(writer, context.getEventMacroConnector(bbem, bbm), bbm);
             }
         } catch (XMLStreamException e) {
             throw new UncheckedXmlStreamException(e);

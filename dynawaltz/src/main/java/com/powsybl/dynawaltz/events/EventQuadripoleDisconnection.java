@@ -6,15 +6,18 @@
  */
 package com.powsybl.dynawaltz.events;
 
-import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
-import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.MACRO_CONNECTOR_PREFIX;
-import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.NETWORK;
+import com.powsybl.commons.PowsyblException;
+import com.powsybl.dynawaltz.DynaWaltzContext;
+import com.powsybl.dynawaltz.dynamicmodels.BlackBoxModel;
+import com.powsybl.dynawaltz.dynamicmodels.LineModel;
+import com.powsybl.dynawaltz.dynamicmodels.MacroConnector;
+import com.powsybl.dynawaltz.xml.DynaWaltzXmlContext;
+import com.powsybl.iidm.network.Branch;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-
-import com.powsybl.dynawaltz.xml.DynaWaltzXmlContext;
-import com.powsybl.dynawaltz.dynamicmodels.MacroConnector;
+import java.util.List;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -26,23 +29,34 @@ public class EventQuadripoleDisconnection extends AbstractBlackBoxEventModel {
     }
 
     @Override
+    public String getDynamicModelId() {
+        return null;
+    }
+
+    @Override
     public String getLib() {
         return "EventQuadripoleDisconnection";
     }
 
     @Override
-    public void write(XMLStreamWriter writer, DynaWaltzXmlContext context) throws XMLStreamException {
-        if (context.getIndex(getLib(), true) == 0) {
-            // Write the macroConnector object
-            writer.writeStartElement(DYN_URI, "macroConnector");
-            writer.writeAttribute("id", MACRO_CONNECTOR_PREFIX + getLib());
-            MacroConnector.writeConnect(writer, "event_state1_value", "@NAME@_state_value");
-            writer.writeEndElement();
+    public void writeMacroConnect(XMLStreamWriter writer, MacroConnector macroConnector, BlackBoxModel connected) throws XMLStreamException {
+        macroConnector.writeMacroConnect(writer, getEventModelId(), connected.getDynamicModelId(), getStaticId());
+    }
+
+    @Override
+    public List<Pair<String, String>> getVarsConnect(BlackBoxModel connected) {
+        if (!(connected instanceof LineModel)) {
+            throw new PowsyblException("EventQuadripoleDisconnection can only connect to LineModel");
         }
+        return List.of(Pair.of("event_state1_value", ((LineModel) connected).getStateValueVarName()));
+    }
 
-        writeEventBlackBoxModel(writer, context);
-
-        // Write the connect object
-        MacroConnector.writeMacroConnect(writer, MACRO_CONNECTOR_PREFIX + getLib(), getEventModelId(), NETWORK, getStaticId());
+    @Override
+    public BlackBoxModel getModelConnectedTo(DynaWaltzContext context) {
+        BlackBoxModel connectedBbm = context.getStaticIdBlackBoxModelMap().get(getStaticId());
+        if (connectedBbm == null) {
+            return context.getNetworkModel().getDefaultLineModel(Branch.Side.ONE);
+        }
+        return connectedBbm;
     }
 }

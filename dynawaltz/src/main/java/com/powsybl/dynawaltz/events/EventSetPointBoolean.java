@@ -6,13 +6,17 @@
  */
 package com.powsybl.dynawaltz.events;
 
-import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.*;
+import com.powsybl.commons.PowsyblException;
+import com.powsybl.dynawaltz.DynaWaltzContext;
+import com.powsybl.dynawaltz.dynamicmodels.BlackBoxModel;
+import com.powsybl.dynawaltz.dynamicmodels.GeneratorModel;
+import com.powsybl.dynawaltz.dynamicmodels.MacroConnector;
+import com.powsybl.dynawaltz.xml.DynaWaltzXmlContext;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-
-import com.powsybl.dynawaltz.xml.DynaWaltzXmlContext;
-import com.powsybl.dynawaltz.dynamicmodels.MacroConnector;
+import java.util.List;
 
 /**
  * @author Mathieu BAGUE {@literal <mathieu.bague at rte-france.com>}
@@ -29,18 +33,24 @@ public class EventSetPointBoolean extends AbstractBlackBoxEventModel {
     }
 
     @Override
-    public void write(XMLStreamWriter writer, DynaWaltzXmlContext context) throws XMLStreamException {
-        if (context.getIndex(getLib(), true) == 0) {
-            // Write the macroConnector object
-            writer.writeStartElement(DYN_URI, "macroConnector");
-            writer.writeAttribute("id", MACRO_CONNECTOR_PREFIX + getLib());
-            MacroConnector.writeConnect(writer, "event_state1", "generator_switchOffSignal2");
-            writer.writeEndElement();
+    public void writeMacroConnect(XMLStreamWriter writer, MacroConnector macroConnector, BlackBoxModel connected) throws XMLStreamException {
+        macroConnector.writeMacroConnect(writer, getEventModelId(), getStaticId());
+    }
+
+    @Override
+    public List<Pair<String, String>> getVarsConnect(BlackBoxModel connected) {
+        if (!(connected instanceof GeneratorModel)) {
+            throw new PowsyblException("EventSetPointBoolean can only connect to GeneratorModel");
         }
+        return List.of(Pair.of("event_state1", ((GeneratorModel) connected).getSwitchOffSignalEventVarName()));
+    }
 
-        writeEventBlackBoxModel(writer, context);
-
-        // Write the connect object
-        MacroConnector.writeMacroConnect(writer, MACRO_CONNECTOR_PREFIX + getLib(), getEventModelId(), getStaticId());
+    @Override
+    public BlackBoxModel getModelConnectedTo(DynaWaltzContext context) {
+        BlackBoxModel connectedBbm = context.getStaticIdBlackBoxModelMap().get(getStaticId());
+        if (connectedBbm == null) {
+            return context.getNetworkModel().getDefaultGeneratorModel();
+        }
+        return connectedBbm;
     }
 }

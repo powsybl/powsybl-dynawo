@@ -32,13 +32,9 @@ public interface BlackBoxModel {
 
     void writeParameters(XMLStreamWriter writer, DynaWaltzXmlContext xmlContext) throws XMLStreamException;
 
-    void writeMacroConnect(XMLStreamWriter writer, BlackBoxModel connected) throws XMLStreamException;
+    void writeMacroConnect(XMLStreamWriter writer, MacroConnector macroConnector, BlackBoxModel connected) throws XMLStreamException;
 
     List<Pair<String, String>> getVarsConnect(BlackBoxModel connected);
 
     BlackBoxModel getModelConnectedTo(DynaWaltzContext dynaWaltzContext);
-
-    void setMacroConnector(MacroConnector macroConnector);
-
-    MacroConnector getMacroConnector();
 }

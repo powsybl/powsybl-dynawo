@@ -16,10 +16,6 @@ import com.powsybl.dynawaltz.xml.DynaWaltzXmlContext;
 import com.powsybl.iidm.network.*;
 import org.apache.commons.lang3.tuple.Pair;
 
-import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
-import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.MACRO_CONNECTOR_PREFIX;
-import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.NETWORK;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -80,7 +76,7 @@ public class CurrentLimitAutomaton extends AbstractBlackBoxModel {
     }
 
     @Override
-    public void writeMacroConnect(XMLStreamWriter writer, BlackBoxModel connected) throws XMLStreamException {
-        getMacroConnector().writeMacroConnect(writer, getDynamicModelId(), connected.getDynamicModelId(), getStaticId());
+    public void writeMacroConnect(XMLStreamWriter writer, MacroConnector macroConnector, BlackBoxModel connected) throws XMLStreamException {
+        macroConnector.writeMacroConnect(writer, getDynamicModelId(), connected.getDynamicModelId(), getStaticId());
     }
 }

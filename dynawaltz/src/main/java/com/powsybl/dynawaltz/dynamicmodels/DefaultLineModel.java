@@ -34,6 +34,11 @@ public class DefaultLineModel extends AbstractNetworkBlackBoxModel implements Li
     }
 
     @Override
+    public String getStateValueVarName() {
+        return "@NAME@_state_value";
+    }
+
+    @Override
     public String getDesactivateCurrentLimitsVarName() {
         return "@NAME@_desactivate_currentLimits";
     }
