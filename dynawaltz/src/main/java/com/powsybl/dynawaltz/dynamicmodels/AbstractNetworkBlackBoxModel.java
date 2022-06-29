@@ -27,7 +27,7 @@ public abstract class AbstractNetworkBlackBoxModel implements BlackBoxModel {
     }
 
     @Override
-    public void writeMacroConnect(XMLStreamWriter writer, MacroConnector macroConnector, BlackBoxModel connected) throws XMLStreamException {
+    public void writeMacroConnect(XMLStreamWriter writer, DynaWaltzXmlContext xmlContext, MacroConnector macroConnector, BlackBoxModel connected) throws XMLStreamException {
         // Default models not written in dyd
     }
 
@@ -52,8 +52,8 @@ public abstract class AbstractNetworkBlackBoxModel implements BlackBoxModel {
     }
 
     @Override
-    public BlackBoxModel getModelConnectedTo(DynaWaltzContext dynaWaltzContext) {
+    public List<BlackBoxModel> getModelsConnectedTo(DynaWaltzContext dynaWaltzContext) {
         // Default models are only connected to
-        return null;
+        return Collections.emptyList();
     }
 }

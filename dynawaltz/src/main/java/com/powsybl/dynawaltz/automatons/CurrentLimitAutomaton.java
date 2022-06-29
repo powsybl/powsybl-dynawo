@@ -44,7 +44,7 @@ public class CurrentLimitAutomaton extends AbstractBlackBoxModel {
     }
 
     @Override
-    public BlackBoxModel getModelConnectedTo(DynaWaltzContext context) {
+    public List<BlackBoxModel> getModelsConnectedTo(DynaWaltzContext context) {
         Line line = context.getNetwork().getLine(getStaticId());
         if (line == null) {
             throw new PowsyblException("Unknown line static id: " + getStaticId());
@@ -52,9 +52,9 @@ public class CurrentLimitAutomaton extends AbstractBlackBoxModel {
         String connectedStaticId = line.getTerminal(side).getBusBreakerView().getConnectableBus().getId();
         BlackBoxModel connectedBbm = context.getStaticIdBlackBoxModelMap().get(connectedStaticId);
         if (connectedBbm == null) {
-            return context.getNetworkModel().getDefaultLineModel(side);
+            return List.of(context.getNetworkModel().getDefaultLineModel(side));
         }
-        return connectedBbm;
+        return List.of(connectedBbm);
     }
 
     @Override
@@ -76,7 +76,7 @@ public class CurrentLimitAutomaton extends AbstractBlackBoxModel {
     }
 
     @Override
-    public void writeMacroConnect(XMLStreamWriter writer, MacroConnector macroConnector, BlackBoxModel connected) throws XMLStreamException {
+    public void writeMacroConnect(XMLStreamWriter writer, DynaWaltzXmlContext xmlContext, MacroConnector macroConnector, BlackBoxModel connected) throws XMLStreamException {
         macroConnector.writeMacroConnect(writer, getDynamicModelId(), connected.getDynamicModelId(), getStaticId());
     }
 }

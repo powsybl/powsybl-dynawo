@@ -33,7 +33,7 @@ public class EventSetPointBoolean extends AbstractBlackBoxEventModel {
     }
 
     @Override
-    public void writeMacroConnect(XMLStreamWriter writer, MacroConnector macroConnector, BlackBoxModel connected) throws XMLStreamException {
+    public void writeMacroConnect(XMLStreamWriter writer, DynaWaltzXmlContext xmlContext, MacroConnector macroConnector, BlackBoxModel connected) throws XMLStreamException {
         macroConnector.writeMacroConnect(writer, getEventModelId(), getStaticId());
     }
 
@@ -46,11 +46,11 @@ public class EventSetPointBoolean extends AbstractBlackBoxEventModel {
     }
 
     @Override
-    public BlackBoxModel getModelConnectedTo(DynaWaltzContext context) {
+    public List<BlackBoxModel> getModelsConnectedTo(DynaWaltzContext context) {
         BlackBoxModel connectedBbm = context.getStaticIdBlackBoxModelMap().get(getStaticId());
         if (connectedBbm == null) {
-            return context.getNetworkModel().getDefaultGeneratorModel();
+            return List.of(context.getNetworkModel().getDefaultGeneratorModel());
         }
-        return connectedBbm;
+        return List.of(connectedBbm);
     }
 }

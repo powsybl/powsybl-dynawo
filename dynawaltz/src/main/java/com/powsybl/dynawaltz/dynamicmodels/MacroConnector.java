@@ -49,13 +49,13 @@ public final class MacroConnector {
         writer.writeEndElement();
     }
 
-    public static void writeMacroConnect(XMLStreamWriter writer, String connector, String id1, int index1, String id2) throws XMLStreamException {
-        writeMacroConnect(writer, connector, id1, index1, id2, null);
+    public void writeMacroConnect(XMLStreamWriter writer, String id1, int index1, String id2) throws XMLStreamException {
+        writeMacroConnect(writer, id1, index1, id2, null);
     }
 
-    public static void writeMacroConnect(XMLStreamWriter writer, String connector, String id1, int index1, String id2, String name2) throws XMLStreamException {
+    public void writeMacroConnect(XMLStreamWriter writer, String id1, int index1, String id2, String name2) throws XMLStreamException {
         writer.writeEmptyElement(DYN_URI, "macroConnect");
-        writer.writeAttribute("connector", connector);
+        writer.writeAttribute("connector", id);
         writer.writeAttribute("id1", id1);
         writer.writeAttribute("index1", Integer.toString(index1));
         writer.writeAttribute("id2", id2);

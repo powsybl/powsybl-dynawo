@@ -35,4 +35,9 @@ public class DefaultBusModel extends AbstractNetworkBlackBoxModel implements Bus
     public String getSwitchOffSignalVarName() {
         return "@STATIC_ID@@NODE@_switchOff";
     }
+
+    @Override
+    public String getNumCCVarName() {
+        return "@@NAME@@@NODE@_numcc";
+    }
 }

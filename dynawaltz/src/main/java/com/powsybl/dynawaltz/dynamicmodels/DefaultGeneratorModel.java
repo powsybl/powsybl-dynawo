@@ -25,4 +25,19 @@ public class DefaultGeneratorModel extends AbstractNetworkBlackBoxModel implemen
     public String getSwitchOffSignalAutomatonVarName() {
         return null; //TODO
     }
+
+    @Override
+    public String getOmegaPuVarName() {
+        return null; //TODO
+    }
+
+    @Override
+    public String getOmegaRefPuVarName() {
+        return null; //TODO
+    }
+
+    @Override
+    public String getRunningVarName() {
+        return null; //TODO
+    }
 }

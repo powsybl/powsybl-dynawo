@@ -13,6 +13,7 @@ import com.powsybl.iidm.network.Load;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
+import java.util.List;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -24,7 +25,7 @@ public abstract class AbstractLoadModel extends AbstractBlackBoxModel {
     }
 
     @Override
-    public BlackBoxModel getModelConnectedTo(DynaWaltzContext context) {
+    public List<BlackBoxModel> getModelsConnectedTo(DynaWaltzContext context) {
         Load load = context.getNetwork().getLoad(getStaticId());
         if (load == null) {
             throw new PowsyblException("Load static id unknown: " + getStaticId());
@@ -32,9 +33,9 @@ public abstract class AbstractLoadModel extends AbstractBlackBoxModel {
         String connectedStaticId = load.getTerminal().getBusBreakerView().getConnectableBus().getId();
         BlackBoxModel connectedBbm = context.getStaticIdBlackBoxModelMap().get(connectedStaticId);
         if (connectedBbm == null) {
-            return context.getNetworkModel().getDefaultBusModel();
+            return List.of(context.getNetworkModel().getDefaultBusModel());
         }
-        return connectedBbm;
+        return List.of(connectedBbm);
     }
 
     @Override

@@ -15,4 +15,6 @@ public interface BusModel {
     String getTerminalVarName();
 
     String getSwitchOffSignalVarName();
+
+    String getNumCCVarName();
 }

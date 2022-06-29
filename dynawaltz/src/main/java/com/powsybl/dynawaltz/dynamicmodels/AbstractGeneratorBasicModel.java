@@ -16,6 +16,9 @@ public abstract class AbstractGeneratorBasicModel extends AbstractGeneratorModel
                 "generator_terminal",
                 "generator_switchOffSignal1",
                 "generator_switchOffSignal2",
-                "generator_switchOffSignal2");
+                "generator_switchOffSignal2",
+                "generator_omegaPu",
+                "generator_omegaRefPu",
+                "generator_running");
     }
 }

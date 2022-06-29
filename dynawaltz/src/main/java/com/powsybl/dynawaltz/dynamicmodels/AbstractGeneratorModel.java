@@ -31,15 +31,22 @@ public abstract class AbstractGeneratorModel extends AbstractBlackBoxModel imple
     private final String switchOffSignalNodeVarName;
     private final String switchOffSignalEventVarName;
     private final String switchOffSignalAutomatonVarName;
+    private final String omegaPuVarName;
+    private final String omegaRefPuVarName;
+    private final String runningVarName;
 
     public AbstractGeneratorModel(String dynamicModelId, String staticId, String parameterSetId,
                                   String terminalVarName, String switchOffSignalNodeVarName,
-                                  String switchOffSignalEventVarName, String switchOffSignalAutomatonVarName) {
+                                  String switchOffSignalEventVarName, String switchOffSignalAutomatonVarName,
+                                  String omegaPuVarName, String omegaRefPuVarName, String runningVarName) {
         super(dynamicModelId, staticId, parameterSetId);
         this.terminalVarName = terminalVarName;
         this.switchOffSignalNodeVarName = switchOffSignalNodeVarName;
         this.switchOffSignalEventVarName = switchOffSignalEventVarName;
         this.switchOffSignalAutomatonVarName = switchOffSignalAutomatonVarName;
+        this.omegaPuVarName = omegaPuVarName;
+        this.omegaRefPuVarName = omegaRefPuVarName;
+        this.runningVarName = runningVarName;
     }
 
     @Override
@@ -48,7 +55,7 @@ public abstract class AbstractGeneratorModel extends AbstractBlackBoxModel imple
     }
 
     @Override
-    public BlackBoxModel getModelConnectedTo(DynaWaltzContext context) {
+    public List<BlackBoxModel> getModelsConnectedTo(DynaWaltzContext context) {
         Generator generator = context.getNetwork().getGenerator(getStaticId());
         if (generator == null) {
             throw new PowsyblException("Generator static id unknown: " + getStaticId());
@@ -56,9 +63,9 @@ public abstract class AbstractGeneratorModel extends AbstractBlackBoxModel imple
         String connectedStaticId = generator.getTerminal().getBusBreakerView().getConnectableBus().getId();
         BlackBoxModel connectedBbm = context.getStaticIdBlackBoxModelMap().get(connectedStaticId);
         if (connectedBbm == null) {
-            return context.getNetworkModel().getDefaultBusModel();
+            return List.of(context.getNetworkModel().getDefaultBusModel());
         }
-        return connectedBbm;
+        return List.of(connectedBbm);
     }
 
     @Override
@@ -91,6 +98,21 @@ public abstract class AbstractGeneratorModel extends AbstractBlackBoxModel imple
     @Override
     public String getSwitchOffSignalAutomatonVarName() {
         return switchOffSignalAutomatonVarName;
+    }
+
+    @Override
+    public String getOmegaPuVarName() {
+        return omegaPuVarName;
+    }
+
+    @Override
+    public String getOmegaRefPuVarName() {
+        return omegaRefPuVarName;
+    }
+
+    @Override
+    public String getRunningVarName() {
+        return runningVarName;
     }
 
     @Override

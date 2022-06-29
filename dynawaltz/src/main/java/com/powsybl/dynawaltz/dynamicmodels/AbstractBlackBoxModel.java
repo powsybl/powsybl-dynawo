@@ -21,6 +21,10 @@ import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
  */
 public abstract class AbstractBlackBoxModel implements DynamicModel, BlackBoxModel {
 
+    private final String dynamicModelId;
+    private final String staticId;
+    private final String parameterSetId;
+
     public AbstractBlackBoxModel(String dynamicModelId, String staticId, String parameterSetId) {
         this.dynamicModelId = Objects.requireNonNull(dynamicModelId);
         this.staticId = Objects.requireNonNull(staticId);
@@ -45,7 +49,7 @@ public abstract class AbstractBlackBoxModel implements DynamicModel, BlackBoxMod
     }
 
     @Override
-    public void writeMacroConnect(XMLStreamWriter writer, MacroConnector macroConnector, BlackBoxModel connected) throws XMLStreamException {
+    public void writeMacroConnect(XMLStreamWriter writer, DynaWaltzXmlContext xmlContext, MacroConnector macroConnector, BlackBoxModel connected) throws XMLStreamException {
         macroConnector.writeMacroConnect(writer, getDynamicModelId(), connected.getDynamicModelId());
     }
 
@@ -69,8 +73,4 @@ public abstract class AbstractBlackBoxModel implements DynamicModel, BlackBoxMod
         writer.writeAttribute("parFile", context.getParFile());
         writer.writeAttribute("parId", getParameterSetId());
     }
-
-    private final String dynamicModelId;
-    private final String staticId;
-    private final String parameterSetId;
 }
