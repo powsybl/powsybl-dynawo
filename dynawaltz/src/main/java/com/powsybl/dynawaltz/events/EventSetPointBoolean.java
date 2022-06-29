@@ -19,8 +19,11 @@ import java.util.List;
  */
 public class EventSetPointBoolean extends AbstractBlackBoxEventModel {
 
+    private final String generatorStaticId;
+
     public EventSetPointBoolean(String eventModelId, String staticId, String parameterSetId) {
-        super(eventModelId, staticId, parameterSetId);
+        super(eventModelId, "", parameterSetId);
+        this.generatorStaticId = staticId;
     }
 
     @Override
@@ -38,9 +41,9 @@ public class EventSetPointBoolean extends AbstractBlackBoxEventModel {
 
     @Override
     public List<BlackBoxModel> getModelsConnectedTo(DynaWaltzContext context) {
-        BlackBoxModel connectedBbm = context.getStaticIdBlackBoxModelMap().get(getStaticId());
+        BlackBoxModel connectedBbm = context.getStaticIdBlackBoxModelMap().get(generatorStaticId);
         if (connectedBbm == null) {
-            return List.of(context.getNetworkModel().getDefaultGeneratorModel(getStaticId()));
+            return List.of(context.getNetworkModel().getDefaultGeneratorModel(generatorStaticId));
         }
         return List.of(connectedBbm);
     }
