@@ -54,11 +54,6 @@ public class OmegaRef extends AbstractBlackBoxModel {
     }
 
     @Override
-    public String getStaticId() {
-        throw new UnsupportedOperationException("OmegaRef is not bound to a static equipment");
-    }
-
-    @Override
     public List<Pair<String, String>> getVarsMapping() {
         return Collections.emptyList();
     }

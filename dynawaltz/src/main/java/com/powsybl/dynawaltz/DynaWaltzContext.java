@@ -115,7 +115,7 @@ public class DynaWaltzContext {
 
     public Map<String, BlackBoxModel> getStaticIdBlackBoxModelMap() {
         return getBlackBoxModelStream()
-                .filter(blackBoxModel -> !(blackBoxModel instanceof OmegaRef))
+                .filter(blackBoxModel -> !blackBoxModel.getStaticId().isEmpty())
                 .collect(Collectors.toMap(BlackBoxModel::getStaticId, Function.identity(), this::mergeDuplicateStaticId, LinkedHashMap::new));
     }
 

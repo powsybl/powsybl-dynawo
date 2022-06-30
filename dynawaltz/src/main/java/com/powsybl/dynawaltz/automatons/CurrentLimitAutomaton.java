@@ -27,10 +27,12 @@ import java.util.Objects;
 public class CurrentLimitAutomaton extends AbstractBlackBoxModel {
 
     private final Branch.Side side;
+    private final String lineStaticId;
 
     public CurrentLimitAutomaton(String dynamicModelId, String staticId, String parameterSetId, Branch.Side side) {
-        super(dynamicModelId, staticId, parameterSetId);
+        super(dynamicModelId, "", parameterSetId);
         this.side = Objects.requireNonNull(side);
+        this.lineStaticId = staticId;
     }
 
     @Override
@@ -45,14 +47,14 @@ public class CurrentLimitAutomaton extends AbstractBlackBoxModel {
 
     @Override
     public List<BlackBoxModel> getModelsConnectedTo(DynaWaltzContext context) {
-        Line line = context.getNetwork().getLine(getStaticId());
+        Line line = context.getNetwork().getLine(lineStaticId);
         if (line == null) {
-            throw new PowsyblException("Unknown line static id: " + getStaticId());
+            throw new PowsyblException("Unknown line static id: " + lineStaticId);
         }
         String connectedStaticId = line.getTerminal(side).getBusBreakerView().getConnectableBus().getId();
         BlackBoxModel connectedBbm = context.getStaticIdBlackBoxModelMap().get(connectedStaticId);
         if (connectedBbm == null) {
-            return List.of(context.getNetworkModel().getDefaultLineModel(getStaticId(), side));
+            return List.of(context.getNetworkModel().getDefaultLineModel(lineStaticId, side));
         }
         return List.of(connectedBbm);
     }
