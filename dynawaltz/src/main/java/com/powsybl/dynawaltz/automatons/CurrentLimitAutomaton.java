@@ -72,6 +72,10 @@ public class CurrentLimitAutomaton extends AbstractBlackBoxModel {
         );
     }
 
+    public String getLineStaticId() {
+        return lineStaticId;
+    }
+
     @Override
     public void write(XMLStreamWriter writer, DynaWaltzXmlContext context) throws XMLStreamException {
         writeAutomatonBlackBoxModel(writer, context);

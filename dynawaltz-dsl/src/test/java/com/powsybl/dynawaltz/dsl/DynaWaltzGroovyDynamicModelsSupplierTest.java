@@ -18,7 +18,6 @@ import com.powsybl.dynawaltz.automatons.CurrentLimitAutomaton;
 import com.powsybl.dynawaltz.dsl.automatons.CurrentLimitAutomatonGroovyExtension;
 import com.powsybl.dynawaltz.dsl.dynamicmodels.*;
 import com.powsybl.dynawaltz.dynamicmodels.*;
-import com.powsybl.dynawaltz.xml.DynaWaltzTestUtil;
 import com.powsybl.iidm.network.*;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.After;
@@ -180,11 +179,10 @@ public class DynaWaltzGroovyDynamicModelsSupplierTest {
             assertTrue(identifiable instanceof Generator);
         } else if (blackBoxModel instanceof OmegaRef) {
             OmegaRef omegaRef = (OmegaRef) blackBoxModel;
-            assertEquals("OMEGA_REF_" + omegaRef.getGeneratorDynamicModelId(), blackBoxModel.getDynamicModelId());
-            DynaWaltzTestUtil.assertThrows(UnsupportedOperationException.class, blackBoxModel::getStaticId);
+            assertEquals("OMEGA_REF", blackBoxModel.getDynamicModelId());
             assertEquals("OMEGA_REF", blackBoxModel.getParameterSetId());
         } else if (blackBoxModel instanceof CurrentLimitAutomaton) {
-            Identifiable<?> identifiable = network.getIdentifiable(blackBoxModel.getStaticId());
+            Identifiable<?> identifiable = network.getIdentifiable(((CurrentLimitAutomaton) blackBoxModel).getLineStaticId());
             assertEquals("BBM_" + identifiable.getId(), blackBoxModel.getDynamicModelId());
             assertEquals("CLA", blackBoxModel.getParameterSetId());
             assertTrue(identifiable instanceof Line);

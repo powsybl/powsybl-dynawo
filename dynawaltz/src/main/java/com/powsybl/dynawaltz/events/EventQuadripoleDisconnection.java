@@ -53,4 +53,8 @@ public class EventQuadripoleDisconnection extends AbstractBlackBoxEventModel {
         }
         return List.of(connectedBbm);
     }
+
+    public String getLineStaticId() {
+        return lineStaticId;
+    }
 }
