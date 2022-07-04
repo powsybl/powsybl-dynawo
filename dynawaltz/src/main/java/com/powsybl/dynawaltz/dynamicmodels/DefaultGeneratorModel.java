@@ -1,5 +1,7 @@
 package com.powsybl.dynawaltz.dynamicmodels;
 
+import com.powsybl.commons.PowsyblException;
+
 public class DefaultGeneratorModel extends AbstractNetworkBlackBoxModel implements GeneratorModel {
 
     public DefaultGeneratorModel(String staticId) {
@@ -13,36 +15,36 @@ public class DefaultGeneratorModel extends AbstractNetworkBlackBoxModel implemen
 
     @Override
     public String getTerminalVarName() {
-        return null; //TODO
+        return "@NAME@_terminal";
     }
 
     @Override
     public String getSwitchOffSignalNodeVarName() {
-        return null; //TODO
+        return "@NAME@_switchOffSignal1";
     }
 
     @Override
     public String getSwitchOffSignalEventVarName() {
-        return null; //TODO
+        return "@NAME@_switchOffSignal2";
     }
 
     @Override
     public String getSwitchOffSignalAutomatonVarName() {
-        return null; //TODO
+        return "@NAME@_switchOffSignal3";
     }
 
     @Override
     public String getOmegaPuVarName() {
-        return null; //TODO
+        throw new PowsyblException("NetworkGenerator does not have 'omegaPu' variable");
     }
 
     @Override
     public String getOmegaRefPuVarName() {
-        return null; //TODO
+        throw new PowsyblException("NetworkGenerator does not have 'omegaRefPu' variable");
     }
 
     @Override
     public String getRunningVarName() {
-        return null; //TODO
+        throw new PowsyblException("NetworkGenerator does not have 'running' variable");
     }
 }
