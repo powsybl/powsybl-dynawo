@@ -35,7 +35,7 @@ public class LoadOneTransformer extends AbstractLoadModel {
     }
 
     @Override
-    public List<Pair<String, String>> getVarMapping() {
+    public List<Pair<String, String>> getVarsMapping() {
         return VAR_MAPPING;
     }
 

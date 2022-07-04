@@ -32,7 +32,7 @@ public abstract class AbstractGeneratorModel extends AbstractBlackBoxModel {
     }
 
     @Override
-    public List<Pair<String, String>> getVarMapping() {
+    public List<Pair<String, String>> getVarsMapping() {
         return VAR_MAPPING;
     }
 

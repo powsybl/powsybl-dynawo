@@ -56,7 +56,7 @@ public class OmegaRef extends AbstractBlackBoxModel {
     }
 
     @Override
-    public List<Pair<String, String>> getVarMapping() {
+    public List<Pair<String, String>> getVarsMapping() {
         return Collections.emptyList();
     }
 

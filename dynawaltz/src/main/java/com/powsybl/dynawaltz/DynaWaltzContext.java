@@ -76,7 +76,7 @@ public class DynaWaltzContext {
     private void initMacroStaticReferences() {
         if (macroStaticReferences.isEmpty()) {
             getBlackBoxModelStream().forEach(bbm ->
-                macroStaticReferences.computeIfAbsent(bbm.getLib(), k -> new MacroStaticReference(k, bbm.getVarMapping()))
+                macroStaticReferences.computeIfAbsent(bbm.getLib(), k -> new MacroStaticReference(k, bbm.getVarsMapping()))
             );
         }
     }

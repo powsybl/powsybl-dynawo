@@ -25,7 +25,7 @@ public interface BlackBoxModel {
 
     String getLib();
 
-    List<Pair<String, String>> getVarMapping();
+    List<Pair<String, String>> getVarsMapping();
 
     void write(XMLStreamWriter writer, DynaWaltzXmlContext context) throws XMLStreamException;
 
