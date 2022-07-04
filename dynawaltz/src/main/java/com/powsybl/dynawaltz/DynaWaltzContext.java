@@ -27,6 +27,8 @@ import java.util.stream.Stream;
  */
 public class DynaWaltzContext {
 
+    private final Map<String, MacroStaticReference> macroStaticReferences = new LinkedHashMap<>();
+
     public DynaWaltzContext(Network network, String workingVariantId, List<DynamicModel> dynamicModels, List<EventModel> eventModels, List<Curve> curves, DynamicSimulationParameters parameters, DynaWaltzParameters dynaWaltzParameters) {
         this.network = Objects.requireNonNull(network);
         this.workingVariantId = Objects.requireNonNull(workingVariantId);
@@ -67,9 +69,16 @@ public class DynaWaltzContext {
     }
 
     public Collection<MacroStaticReference> getMacroStaticReferences() {
-        return getBlackBoxModelStream()
-                .map(BlackBoxModel::getMacroStaticReference)
-                .collect(Collectors.toCollection(LinkedHashSet::new));
+        initMacroStaticReferences();
+        return macroStaticReferences.values();
+    }
+
+    private void initMacroStaticReferences() {
+        if (macroStaticReferences.isEmpty()) {
+            getBlackBoxModelStream().forEach(bbm ->
+                macroStaticReferences.computeIfAbsent(bbm.getLib(), k -> new MacroStaticReference(k, bbm.getVarMapping()))
+            );
+        }
     }
 
     public Stream<BlackBoxModel> getBlackBoxModelStream() {

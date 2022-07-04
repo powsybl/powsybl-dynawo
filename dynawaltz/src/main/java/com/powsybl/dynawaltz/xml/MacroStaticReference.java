@@ -8,13 +8,13 @@ package com.powsybl.dynawaltz.xml;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
-import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.MACRO_STATIC_REFERENCE_PREFIX;
-
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.util.List;
 import java.util.Objects;
+
+import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
+import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.MACRO_STATIC_REFERENCE_PREFIX;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -29,16 +29,12 @@ public final class MacroStaticReference {
         this.varMapping = Objects.requireNonNull(varMapping);
     }
 
-    public String getId() {
-        return MACRO_STATIC_REFERENCE_PREFIX + lib;
-    }
-
     public void write(XMLStreamWriter writer) throws XMLStreamException {
         if (varMapping.isEmpty()) {
             return;
         }
         writer.writeStartElement(DYN_URI, "macroStaticReference");
-        writer.writeAttribute("id", getId());
+        writer.writeAttribute("id", MACRO_STATIC_REFERENCE_PREFIX + lib);
         for (Pair<String, String> varStaticVarPair : varMapping) {
             writeStaticRef(writer, varStaticVarPair.getLeft(), varStaticVarPair.getRight());
         }
@@ -51,9 +47,9 @@ public final class MacroStaticReference {
         writer.writeAttribute("staticVar", staticVar);
     }
 
-    public static void writeMacroStaticRef(XMLStreamWriter writer, String id) throws XMLStreamException {
+    public static void writeMacroStaticRef(XMLStreamWriter writer, String lib) throws XMLStreamException {
         writer.writeEmptyElement(DYN_URI, "macroStaticRef");
-        writer.writeAttribute("id", id);
+        writer.writeAttribute("id", MACRO_STATIC_REFERENCE_PREFIX + lib);
     }
 
     @Override

@@ -7,10 +7,11 @@
 package com.powsybl.dynawaltz.dynamicmodels;
 
 import com.powsybl.dynawaltz.xml.DynaWaltzXmlContext;
-import com.powsybl.dynawaltz.xml.MacroStaticReference;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
+import java.util.List;
 
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
@@ -24,7 +25,7 @@ public interface BlackBoxModel {
 
     String getLib();
 
-    MacroStaticReference getMacroStaticReference();
+    List<Pair<String, String>> getVarMapping();
 
     void write(XMLStreamWriter writer, DynaWaltzXmlContext context) throws XMLStreamException;
 
