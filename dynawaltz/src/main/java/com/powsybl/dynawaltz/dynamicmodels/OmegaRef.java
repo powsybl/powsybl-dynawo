@@ -113,7 +113,7 @@ public class OmegaRef extends AbstractBlackBoxModel {
         } else if (connected instanceof BusModel) {
             return List.of(Pair.of("numcc_node_@INDEX@", ((BusModel) connected).getNumCCVarName()));
         } else {
-            throw new PowsyblException("OmegaRef can only connect to GeneratorModel and ConnectedComponentModel");
+            throw new PowsyblException("OmegaRef can only connect to GeneratorModel and BusModel");
         }
     }
 
