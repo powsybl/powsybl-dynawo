@@ -29,16 +29,16 @@ public class DefaultBusModel extends AbstractNetworkBlackBoxModel implements Bus
 
     @Override
     public String getTerminalVarName() {
-        return "@STATIC_ID@@NODE@_ACPIN";
+        return "@NAME@_ACPIN";
     }
 
     @Override
     public String getSwitchOffSignalVarName() {
-        return "@STATIC_ID@@NODE@_switchOff";
+        return "@NAME@_switchOff";
     }
 
     @Override
     public String getNumCCVarName() {
-        return "@@NAME@@@NODE@_numcc";
+        return "@NAME@_numcc";
     }
 }
