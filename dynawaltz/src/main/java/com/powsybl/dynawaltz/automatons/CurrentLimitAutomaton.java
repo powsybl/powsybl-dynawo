@@ -62,7 +62,7 @@ public class CurrentLimitAutomaton extends AbstractBlackBoxModel {
     @Override
     public List<Pair<String, String>> getVarsConnect(BlackBoxModel connected) {
         if (!(connected instanceof LineModel)) {
-            throw new PowsyblException("GeneratorModel can only connect to BusModel");
+            throw new PowsyblException("CurrentLimitAutomaton can only connect to BusModel");
         }
         LineModel connectedLineModel = (LineModel) connected;
         return Arrays.asList(

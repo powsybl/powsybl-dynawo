@@ -39,7 +39,7 @@ public class LoadOneTransformer extends AbstractLoadModel {
     @Override
     public List<Pair<String, String>> getVarsConnect(BlackBoxModel connected) {
         if (!(connected instanceof BusModel)) {
-            throw new PowsyblException("GeneratorModel can only connect to BusModel");
+            throw new PowsyblException("LoadModel can only connect to BusModel");
         }
         BusModel connectedBusModel = (BusModel) connected;
         return Arrays.asList(
