@@ -8,20 +8,18 @@
 package com.powsybl.dynawaltz.xml;
 
 import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
-import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynamicsimulation.EventModel;
 import com.powsybl.dynawaltz.DynaWaltzContext;
-import com.powsybl.dynawaltz.dynamicmodels.AbstractBlackBoxModel;
+import com.powsybl.dynawaltz.dynamicmodels.BlackBoxModel;
 import com.powsybl.dynawaltz.events.AbstractBlackBoxEventModel;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-
-import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.DYD_FILENAME;
-
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Objects;
+
+import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.DYD_FILENAME;
 
 /**
  * @author Mathieu Bague <mathieu.bague@rte-france.com>
@@ -47,9 +45,11 @@ public final class DydXml {
         DynaWaltzXmlContext xmlContext = new DynaWaltzXmlContext(context);
 
         try {
-            for (DynamicModel model : context.getDynamicModels()) {
-                AbstractBlackBoxModel dynawoModel = (AbstractBlackBoxModel) model;
-                dynawoModel.write(writer, xmlContext);
+            for (MacroStaticReference macroStaticReference : context.getMacroStaticReferences()) {
+                macroStaticReference.write(writer);
+            }
+            for (BlackBoxModel model : context.getBlackBoxModels()) {
+                model.write(writer, xmlContext);
             }
         } catch (XMLStreamException e) {
             throw new UncheckedXmlStreamException(e);

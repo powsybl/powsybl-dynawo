@@ -7,8 +7,16 @@
 
 package com.powsybl.dynawaltz.xml;
 
-import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
+import com.powsybl.commons.PowsyblException;
+import com.powsybl.commons.config.PlatformConfig;
+import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
+import com.powsybl.dynawaltz.DynaWaltzContext;
+import com.powsybl.dynawaltz.DynaWaltzParameters;
+import com.powsybl.dynawaltz.DynaWaltzParametersDatabase;
+import com.powsybl.dynawaltz.dynamicmodels.BlackBoxModel;
 
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.FileSystem;
@@ -17,17 +25,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.Objects;
 
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
-
-import com.powsybl.commons.PowsyblException;
-import com.powsybl.commons.config.PlatformConfig;
-import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
-import com.powsybl.dynamicsimulation.DynamicModel;
-import com.powsybl.dynawaltz.DynaWaltzContext;
-import com.powsybl.dynawaltz.DynaWaltzParameters;
-import com.powsybl.dynawaltz.DynaWaltzParametersDatabase;
-import com.powsybl.dynawaltz.dynamicmodels.AbstractBlackBoxModel;
+import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -66,9 +64,8 @@ public final class ParametersXml {
         DynaWaltzXmlContext xmlContext = new DynaWaltzXmlContext(context);
 
         try {
-            for (DynamicModel model : context.getDynamicModels()) {
-                AbstractBlackBoxModel dynawoModel = (AbstractBlackBoxModel) model;
-                dynawoModel.writeParameters(writer, xmlContext);
+            for (BlackBoxModel model : context.getBlackBoxModels()) {
+                model.writeParameters(writer, xmlContext);
             }
         } catch (XMLStreamException e) {
             throw new UncheckedXmlStreamException(e);

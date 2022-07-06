@@ -6,15 +6,15 @@
  */
 package com.powsybl.dynawaltz.xml;
 
+import com.powsybl.dynawaltz.DynaWaltzContext;
+import com.powsybl.dynawaltz.DynaWaltzParametersDatabase;
+import com.powsybl.dynawaltz.dynamicmodels.BlackBoxModel;
+
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import com.powsybl.dynawaltz.DynaWaltzContext;
-import com.powsybl.dynawaltz.DynaWaltzParametersDatabase;
-import com.powsybl.dynawaltz.dynamicmodels.AbstractBlackBoxModel;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -27,15 +27,13 @@ public class DynaWaltzXmlContext {
 
     private final Map<String, AtomicInteger> counters = new HashMap<>();
 
-    private final Map<String, AbstractBlackBoxModel> blackBoxModels;
+    private final Map<String, BlackBoxModel> blackBoxModels;
 
     public DynaWaltzXmlContext(DynaWaltzContext context) {
         this.context = Objects.requireNonNull(context);
         this.parFile = Paths.get(context.getDynaWaltzParameters().getParametersFile()).getFileName().toString();
-        this.blackBoxModels = context.getDynamicModels().stream()
-                .filter(AbstractBlackBoxModel.class::isInstance)
-                .map(AbstractBlackBoxModel.class::cast)
-                .collect(Collectors.toMap(AbstractBlackBoxModel::getDynamicModelId, Function.identity(), (o1, o2) -> o1, LinkedHashMap::new));
+        this.blackBoxModels = context.getBlackBoxModelStream()
+                .collect(Collectors.toMap(BlackBoxModel::getDynamicModelId, Function.identity(), (o1, o2) -> o1, LinkedHashMap::new));
     }
 
     public String getParFile() {
@@ -51,11 +49,11 @@ public class DynaWaltzXmlContext {
         return increment ? counter.getAndIncrement() : counter.get();
     }
 
-    public Collection<AbstractBlackBoxModel> getBlackBoxModels() {
+    public Collection<BlackBoxModel> getBlackBoxModels() {
         return blackBoxModels.values();
     }
 
-    public AbstractBlackBoxModel getBlackBoxModel(String dynamicModelId) {
+    public BlackBoxModel getBlackBoxModel(String dynamicModelId) {
         return blackBoxModels.get(dynamicModelId);
     }
 

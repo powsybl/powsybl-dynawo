@@ -6,37 +6,39 @@
  */
 package com.powsybl.dynawaltz.dynamicmodels;
 
-import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
-import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.MACRO_CONNECTOR_PREFIX;
-import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.MACRO_STATIC_REFERENCE_PREFIX;
-import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.NETWORK;
+import com.powsybl.dynawaltz.xml.DynaWaltzXmlContext;
+import com.powsybl.dynawaltz.xml.MacroConnectorXml;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
+import java.util.Arrays;
+import java.util.List;
 
-import com.powsybl.dynawaltz.xml.DynaWaltzXmlContext;
-import com.powsybl.dynawaltz.xml.MacroConnectorXml;
-import com.powsybl.dynawaltz.xml.MacroStaticReferenceXml;
+import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.*;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 public abstract class AbstractGeneratorModel extends AbstractBlackBoxModel {
 
+    protected static final List<Pair<String, String>> VAR_MAPPING = Arrays.asList(
+            Pair.of("generator_PGenPu", "p"),
+            Pair.of("generator_QGenPu", "q"),
+            Pair.of("generator_state", "state"));
+
     public AbstractGeneratorModel(String dynamicModelId, String staticId, String parameterSetId) {
         super(dynamicModelId, staticId, parameterSetId);
     }
 
     @Override
+    public List<Pair<String, String>> getVarsMapping() {
+        return VAR_MAPPING;
+    }
+
+    @Override
     public void write(XMLStreamWriter writer, DynaWaltzXmlContext context) throws XMLStreamException {
         if (context.getIndex(getLib(), true) == 0) {
-            // Write the macroStaticReference object
-            writer.writeStartElement(DYN_URI, "macroStaticReference");
-            writer.writeAttribute("id", MACRO_STATIC_REFERENCE_PREFIX + getLib());
-            MacroStaticReferenceXml.writeStaticRef(writer, "generator_PGenPu", "p");
-            MacroStaticReferenceXml.writeStaticRef(writer, "generator_QGenPu", "q");
-            MacroStaticReferenceXml.writeStaticRef(writer, "generator_state", "state");
-            writer.writeEndElement();
 
             // Write the macroConnector object
             writer.writeStartElement(DYN_URI, "macroConnector");

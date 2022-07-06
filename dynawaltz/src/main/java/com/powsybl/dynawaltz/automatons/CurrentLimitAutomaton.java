@@ -13,11 +13,14 @@ import com.powsybl.dynawaltz.xml.DynaWaltzXmlContext;
 import com.powsybl.dynawaltz.xml.MacroConnectorXml;
 import com.powsybl.dynawaltz.dynamicmodels.AbstractBlackBoxModel;
 import com.powsybl.iidm.network.Branch;
+import org.apache.commons.lang3.tuple.Pair;
 
 import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.MACRO_CONNECTOR_PREFIX;
 import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.NETWORK;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -35,6 +38,11 @@ public class CurrentLimitAutomaton extends AbstractBlackBoxModel {
     @Override
     public String getLib() {
         return "CurrentLimitAutomaton";
+    }
+
+    @Override
+    public List<Pair<String, String>> getVarsMapping() {
+        return Collections.emptyList();
     }
 
     @Override

@@ -9,21 +9,25 @@ package com.powsybl.dynawaltz;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.dynamicsimulation.Curve;
-import com.powsybl.dynamicsimulation.EventModel;
 import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
+import com.powsybl.dynamicsimulation.EventModel;
+import com.powsybl.dynawaltz.dynamicmodels.BlackBoxModel;
+import com.powsybl.dynawaltz.xml.MacroStaticReference;
 import com.powsybl.iidm.network.Network;
 
 import java.nio.file.FileSystem;
 import java.nio.file.Path;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 public class DynaWaltzContext {
+
+    private final Map<String, MacroStaticReference> macroStaticReferences = new LinkedHashMap<>();
 
     public DynaWaltzContext(Network network, String workingVariantId, List<DynamicModel> dynamicModels, List<EventModel> eventModels, List<Curve> curves, DynamicSimulationParameters parameters, DynaWaltzParameters dynaWaltzParameters) {
         this.network = Objects.requireNonNull(network);
@@ -58,6 +62,29 @@ public class DynaWaltzContext {
 
     public List<DynamicModel> getDynamicModels() {
         return Collections.unmodifiableList(dynamicModels);
+    }
+
+    public List<BlackBoxModel> getBlackBoxModels() {
+        return getBlackBoxModelStream().collect(Collectors.toList());
+    }
+
+    public Collection<MacroStaticReference> getMacroStaticReferences() {
+        initMacroStaticReferences();
+        return macroStaticReferences.values();
+    }
+
+    private void initMacroStaticReferences() {
+        if (macroStaticReferences.isEmpty()) {
+            getBlackBoxModelStream().forEach(bbm ->
+                macroStaticReferences.computeIfAbsent(bbm.getLib(), k -> new MacroStaticReference(k, bbm.getVarsMapping()))
+            );
+        }
+    }
+
+    public Stream<BlackBoxModel> getBlackBoxModelStream() {
+        return dynamicModels.stream()
+                .filter(BlackBoxModel.class::isInstance)
+                .map(BlackBoxModel.class::cast);
     }
 
     public List<EventModel> getEventModels() {

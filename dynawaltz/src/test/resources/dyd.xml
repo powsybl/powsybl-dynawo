@@ -5,6 +5,31 @@
         <dyn:staticRef var="load_QPu" staticVar="q"/>
         <dyn:staticRef var="load_state" staticVar="state"/>
     </dyn:macroStaticReference>
+    <dyn:macroStaticReference id="MSR_LoadOneTransformer">
+        <dyn:staticRef var="transformer_P1Pu_value" staticVar="p"/>
+        <dyn:staticRef var="transformer_Q1Pu_value" staticVar="q"/>
+        <dyn:staticRef var="transformer_state" staticVar="state"/>
+    </dyn:macroStaticReference>
+    <dyn:macroStaticReference id="MSR_GeneratorSynchronousThreeWindingsProportionalRegulations">
+        <dyn:staticRef var="generator_PGenPu" staticVar="p"/>
+        <dyn:staticRef var="generator_QGenPu" staticVar="q"/>
+        <dyn:staticRef var="generator_state" staticVar="state"/>
+    </dyn:macroStaticReference>
+    <dyn:macroStaticReference id="MSR_GeneratorSynchronousFourWindingsProportionalRegulations">
+        <dyn:staticRef var="generator_PGenPu" staticVar="p"/>
+        <dyn:staticRef var="generator_QGenPu" staticVar="q"/>
+        <dyn:staticRef var="generator_state" staticVar="state"/>
+    </dyn:macroStaticReference>
+    <dyn:macroStaticReference id="MSR_GeneratorSynchronousFourWindings">
+        <dyn:staticRef var="generator_PGenPu" staticVar="p"/>
+        <dyn:staticRef var="generator_QGenPu" staticVar="q"/>
+        <dyn:staticRef var="generator_state" staticVar="state"/>
+    </dyn:macroStaticReference>
+    <dyn:macroStaticReference id="MSR_GeneratorSynchronousThreeWindings">
+        <dyn:staticRef var="generator_PGenPu" staticVar="p"/>
+        <dyn:staticRef var="generator_QGenPu" staticVar="q"/>
+        <dyn:staticRef var="generator_state" staticVar="state"/>
+    </dyn:macroStaticReference>
     <dyn:macroConnector id="MC_LoadAlphaBeta">
         <dyn:connect var1="load_terminal" var2="@STATIC_ID@@NODE@_ACPIN"/>
         <dyn:connect var1="load_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
@@ -13,11 +38,6 @@
         <dyn:macroStaticRef id="MSR_LoadAlphaBeta"/>
     </dyn:blackBoxModel>
     <dyn:macroConnect connector="MC_LoadAlphaBeta" id1="BBM_LOAD" id2="NETWORK"/>
-    <dyn:macroStaticReference id="MSR_LoadOneTransformer">
-        <dyn:staticRef var="transformer_P1Pu_value" staticVar="p"/>
-        <dyn:staticRef var="transformer_Q1Pu_value" staticVar="q"/>
-        <dyn:staticRef var="transformer_state" staticVar="state"/>
-    </dyn:macroStaticReference>
     <dyn:macroConnector id="MC_LoadOneTransformer">
         <dyn:connect var1="transformer_terminal" var2="@STATIC_ID@@NODE@_ACPIN"/>
         <dyn:connect var1="transformer_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
@@ -27,11 +47,6 @@
         <dyn:macroStaticRef id="MSR_LoadOneTransformer"/>
     </dyn:blackBoxModel>
     <dyn:macroConnect connector="MC_LoadOneTransformer" id1="BBM_LOAD2" id2="NETWORK"/>
-    <dyn:macroStaticReference id="MSR_GeneratorSynchronousThreeWindingsProportionalRegulations">
-        <dyn:staticRef var="generator_PGenPu" staticVar="p"/>
-        <dyn:staticRef var="generator_QGenPu" staticVar="q"/>
-        <dyn:staticRef var="generator_state" staticVar="state"/>
-    </dyn:macroStaticReference>
     <dyn:macroConnector id="MC_GeneratorSynchronousThreeWindingsProportionalRegulations">
         <dyn:connect var1="generator_terminal" var2="@STATIC_ID@@NODE@_ACPIN"/>
         <dyn:connect var1="generator_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
@@ -51,11 +66,6 @@
     <dyn:blackBoxModel id="OMEGA_REF" lib="DYNModelOmegaRef" parFile="sim1.par" parId="OMEGA_REF"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRefToGenerator" id1="OMEGA_REF" index1="0" id2="BBM_GEN"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRefToNumCCMachine" id1="OMEGA_REF" index1="0" id2="NETWORK" name2="GEN"/>
-    <dyn:macroStaticReference id="MSR_GeneratorSynchronousFourWindingsProportionalRegulations">
-        <dyn:staticRef var="generator_PGenPu" staticVar="p"/>
-        <dyn:staticRef var="generator_QGenPu" staticVar="q"/>
-        <dyn:staticRef var="generator_state" staticVar="state"/>
-    </dyn:macroStaticReference>
     <dyn:macroConnector id="MC_GeneratorSynchronousFourWindingsProportionalRegulations">
         <dyn:connect var1="generator_terminal" var2="@STATIC_ID@@NODE@_ACPIN"/>
         <dyn:connect var1="generator_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
@@ -66,11 +76,6 @@
     <dyn:macroConnect connector="MC_GeneratorSynchronousFourWindingsProportionalRegulations" id1="BBM_GEN2" id2="NETWORK"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRefToGenerator" id1="OMEGA_REF" index1="1" id2="BBM_GEN2"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRefToNumCCMachine" id1="OMEGA_REF" index1="1" id2="NETWORK" name2="GEN2"/>
-    <dyn:macroStaticReference id="MSR_GeneratorSynchronousFourWindings">
-        <dyn:staticRef var="generator_PGenPu" staticVar="p"/>
-        <dyn:staticRef var="generator_QGenPu" staticVar="q"/>
-        <dyn:staticRef var="generator_state" staticVar="state"/>
-    </dyn:macroStaticReference>
     <dyn:macroConnector id="MC_GeneratorSynchronousFourWindings">
         <dyn:connect var1="generator_terminal" var2="@STATIC_ID@@NODE@_ACPIN"/>
         <dyn:connect var1="generator_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
@@ -81,11 +86,6 @@
     <dyn:macroConnect connector="MC_GeneratorSynchronousFourWindings" id1="BBM_GEN3" id2="NETWORK"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRefToGenerator" id1="OMEGA_REF" index1="2" id2="BBM_GEN3"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRefToNumCCMachine" id1="OMEGA_REF" index1="2" id2="NETWORK" name2="GEN3"/>
-    <dyn:macroStaticReference id="MSR_GeneratorSynchronousThreeWindings">
-        <dyn:staticRef var="generator_PGenPu" staticVar="p"/>
-        <dyn:staticRef var="generator_QGenPu" staticVar="q"/>
-        <dyn:staticRef var="generator_state" staticVar="state"/>
-    </dyn:macroStaticReference>
     <dyn:macroConnector id="MC_GeneratorSynchronousThreeWindings">
         <dyn:connect var1="generator_terminal" var2="@STATIC_ID@@NODE@_ACPIN"/>
         <dyn:connect var1="generator_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>

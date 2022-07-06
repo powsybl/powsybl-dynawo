@@ -6,22 +6,20 @@
  */
 package com.powsybl.dynawaltz.dynamicmodels;
 
-import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
-import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.MACRO_STATIC_REFERENCE_PREFIX;
-
-import java.util.Objects;
+import com.powsybl.dynamicsimulation.DynamicModel;
+import com.powsybl.dynawaltz.xml.DynaWaltzXmlContext;
+import com.powsybl.dynawaltz.xml.MacroStaticReference;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
+import java.util.Objects;
 
-import com.powsybl.dynamicsimulation.DynamicModel;
-import com.powsybl.dynawaltz.xml.DynaWaltzXmlContext;
-import com.powsybl.dynawaltz.xml.MacroStaticReferenceXml;
+import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 
 /**
  * @author Luma Zamarreño <zamarrenolm at aia.es>
  */
-public abstract class AbstractBlackBoxModel implements DynamicModel {
+public abstract class AbstractBlackBoxModel implements DynamicModel, BlackBoxModel {
 
     public AbstractBlackBoxModel(String dynamicModelId, String staticId, String parameterSetId) {
         this.dynamicModelId = Objects.requireNonNull(dynamicModelId);
@@ -33,8 +31,6 @@ public abstract class AbstractBlackBoxModel implements DynamicModel {
         return dynamicModelId;
     }
 
-    public abstract String getLib();
-
     public String getStaticId() {
         return staticId;
     }
@@ -42,8 +38,6 @@ public abstract class AbstractBlackBoxModel implements DynamicModel {
     public String getParameterSetId() {
         return parameterSetId;
     }
-
-    public abstract void write(XMLStreamWriter writer, DynaWaltzXmlContext context) throws XMLStreamException;
 
     public void writeParameters(XMLStreamWriter writer, DynaWaltzXmlContext context) throws XMLStreamException {
         //Empty method to be redefined by specific models
@@ -57,7 +51,7 @@ public abstract class AbstractBlackBoxModel implements DynamicModel {
         writer.writeAttribute("parFile", context.getParFile());
         writer.writeAttribute("parId", getParameterSetId());
         writer.writeAttribute("staticId", getStaticId());
-        MacroStaticReferenceXml.writeMacroStaticRef(writer, MACRO_STATIC_REFERENCE_PREFIX + getLib());
+        MacroStaticReference.writeMacroStaticRef(writer, getLib());
         writer.writeEndElement();
     }
 

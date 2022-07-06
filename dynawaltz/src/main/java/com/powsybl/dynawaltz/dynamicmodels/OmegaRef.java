@@ -11,9 +11,12 @@ import com.powsybl.dynawaltz.DynaWaltzParametersDatabase;
 import com.powsybl.dynawaltz.xml.DynaWaltzXmlContext;
 import com.powsybl.dynawaltz.xml.MacroConnectorXml;
 import com.powsybl.dynawaltz.xml.ParametersXml;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 import static com.powsybl.dynawaltz.DynaWaltzParametersDatabase.ParameterType.DOUBLE;
@@ -50,6 +53,11 @@ public class OmegaRef extends AbstractBlackBoxModel {
     @Override
     public String getStaticId() {
         throw new UnsupportedOperationException("OmegaRef is not bound to a static equipment");
+    }
+
+    @Override
+    public List<Pair<String, String>> getVarsMapping() {
+        return Collections.emptyList();
     }
 
     public String getGeneratorDynamicModelId() {
@@ -102,9 +110,9 @@ public class OmegaRef extends AbstractBlackBoxModel {
             // of the dynamic models supplier returned by the dynamic models supplier.
             // The dynamic models are declared in the DYD following the order of dynamic models supplier.
             // The OmegaRef parameters index the weight of each generator according to that declaration order.
-            for (AbstractBlackBoxModel model : context.getBlackBoxModels()) {
+            for (BlackBoxModel model : context.getBlackBoxModels()) {
                 if (model instanceof OmegaRef) {
-                    AbstractBlackBoxModel generatorModel = context.getBlackBoxModel(((OmegaRef) model).getGeneratorDynamicModelId());
+                    BlackBoxModel generatorModel = context.getBlackBoxModel(((OmegaRef) model).getGeneratorDynamicModelId());
                     double h = parDB.getDouble(generatorModel.getParameterSetId(), "generator_H");
                     double snom = parDB.getDouble(generatorModel.getParameterSetId(), "generator_SNom");
 
@@ -119,7 +127,7 @@ public class OmegaRef extends AbstractBlackBoxModel {
     }
 
     private static String getStaticId(DynaWaltzXmlContext context, String dynamicModelId) {
-        AbstractBlackBoxModel dynamicModel = context.getBlackBoxModel(dynamicModelId);
+        BlackBoxModel dynamicModel = context.getBlackBoxModel(dynamicModelId);
         if (dynamicModel == null) {
             throw new PowsyblException("BlackBoxModel '" + dynamicModelId + "' not found");
         }
