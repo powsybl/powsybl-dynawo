@@ -47,15 +47,15 @@ public final class DydXml {
         DynaWaltzXmlContext xmlContext = new DynaWaltzXmlContext(context);
 
         try {
+            // loop over the values of the map indexed by dynamicIds to write only once objects with the same dynamicId
+            for (BlackBoxModel model : context.getDynamicIdBlackBoxModelMap().values()) {
+                model.write(writer, xmlContext);
+            }
             for (MacroConnector macroConnector : context.getMacroConnectors()) {
                 macroConnector.write(writer);
             }
             for (MacroStaticReference macroStaticReference : context.getMacroStaticReferences()) {
                 macroStaticReference.write(writer);
-            }
-            // loop over the values of the map indexed by dynamicIds to write only once objects with the same dynamicId
-            for (BlackBoxModel model : context.getDynamicIdBlackBoxModelMap().values()) {
-                model.write(writer, xmlContext);
             }
             for (Map.Entry<BlackBoxModel, List<BlackBoxModel>> bbmMapping : context.getModelsConnections().entrySet()) {
                 BlackBoxModel bbm = bbmMapping.getKey();
@@ -72,11 +72,11 @@ public final class DydXml {
         DynaWaltzXmlContext xmlContext = new DynaWaltzXmlContext(context);
 
         try {
-            for (MacroConnector macroConnector : context.getEventMacroConnectors()) {
-                macroConnector.write(writer);
-            }
             for (BlackBoxEventModel model : context.getBlackBoxEventModels()) {
                 model.write(writer, xmlContext);
+            }
+            for (MacroConnector macroConnector : context.getEventMacroConnectors()) {
+                macroConnector.write(writer);
             }
             for (Map.Entry<BlackBoxEventModel, List<BlackBoxModel>> bbemMapping : context.getEventModelsConnections().entrySet()) {
                 BlackBoxEventModel bbem = bbemMapping.getKey();
