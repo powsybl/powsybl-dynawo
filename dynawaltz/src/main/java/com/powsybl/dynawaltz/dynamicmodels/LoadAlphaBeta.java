@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class LoadAlphaBeta extends AbstractLoadModel {
 
-    public static final List<Pair<String, String>> VAR_MAPPING = Arrays.asList(
+    protected static final List<Pair<String, String>> VAR_MAPPING = Arrays.asList(
             Pair.of("load_PPu", "p"),
             Pair.of("load_QPu", "q"),
             Pair.of("load_state", "state"));

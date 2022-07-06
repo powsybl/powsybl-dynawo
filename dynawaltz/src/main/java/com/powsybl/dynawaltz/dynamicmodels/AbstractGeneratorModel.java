@@ -22,7 +22,7 @@ import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.*;
  */
 public abstract class AbstractGeneratorModel extends AbstractBlackBoxModel {
 
-    public static final List<Pair<String, String>> VAR_MAPPING = Arrays.asList(
+    protected static final List<Pair<String, String>> VAR_MAPPING = Arrays.asList(
             Pair.of("generator_PGenPu", "p"),
             Pair.of("generator_QGenPu", "q"),
             Pair.of("generator_state", "state"));

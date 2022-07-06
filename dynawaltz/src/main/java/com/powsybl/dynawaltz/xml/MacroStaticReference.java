@@ -41,9 +41,9 @@ public final class MacroStaticReference {
         writer.writeEndElement();
     }
 
-    public static void writeStaticRef(XMLStreamWriter writer, String var, String staticVar) throws XMLStreamException {
+    public static void writeStaticRef(XMLStreamWriter writer, String dynamicVar, String staticVar) throws XMLStreamException {
         writer.writeEmptyElement(DYN_URI, "staticRef");
-        writer.writeAttribute("var", var);
+        writer.writeAttribute("var", dynamicVar);
         writer.writeAttribute("staticVar", staticVar);
     }
 
