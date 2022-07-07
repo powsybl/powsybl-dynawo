@@ -2,9 +2,20 @@
 <dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
     <dyn:blackBoxModel id="EM_NHV1_NHV2_1" lib="EventQuadripoleDisconnection" parFile="models.par" parId="EQD"/>
     <dyn:blackBoxModel id="EM_NHV1_NHV2_2" lib="EventQuadripoleDisconnection" parFile="models.par" parId="EQD"/>
+    <dyn:blackBoxModel id="EM_GEN" lib="EventSetPointBoolean" parFile="models.par" parId="ESPB"/>
+    <dyn:blackBoxModel id="EM_GEN2" lib="EventSetPointBoolean" parFile="models.par" parId="ESPB"/>
+    <dyn:blackBoxModel id="EM_GEN3" lib="EventSetPointBoolean" parFile="models.par" parId="ESPB"/>
+    <dyn:blackBoxModel id="EM_GEN4" lib="EventSetPointBoolean" parFile="models.par" parId="ESPB"/>
     <dyn:macroConnector id="MC_EventQuadripoleDisconnection-NetworkLineSide1">
         <dyn:connect var1="event_state1_value" var2="@NAME@_state_value"/>
     </dyn:macroConnector>
+    <dyn:macroConnector id="MC_EventSetPointBoolean-NetworkGenerator">
+        <dyn:connect var1="event_state1" var2="@NAME@_switchOffSignal2"/>
+    </dyn:macroConnector>
     <dyn:macroConnect connector="MC_EventQuadripoleDisconnection-NetworkLineSide1" id1="EM_NHV1_NHV2_1" id2="NETWORK" name2="NHV1_NHV2_1"/>
     <dyn:macroConnect connector="MC_EventQuadripoleDisconnection-NetworkLineSide1" id1="EM_NHV1_NHV2_2" id2="NETWORK" name2="NHV1_NHV2_2"/>
+    <dyn:macroConnect connector="MC_EventSetPointBoolean-NetworkGenerator" id1="EM_GEN" id2="NETWORK" name2="GEN"/>
+    <dyn:macroConnect connector="MC_EventSetPointBoolean-NetworkGenerator" id1="EM_GEN2" id2="NETWORK" name2="GEN2"/>
+    <dyn:macroConnect connector="MC_EventSetPointBoolean-NetworkGenerator" id1="EM_GEN3" id2="NETWORK" name2="GEN3"/>
+    <dyn:macroConnect connector="MC_EventSetPointBoolean-NetworkGenerator" id1="EM_GEN4" id2="NETWORK" name2="GEN4"/>
 </dyn:dynamicModelsArchitecture>
