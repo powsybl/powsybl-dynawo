@@ -11,7 +11,7 @@ package com.powsybl.dynawaltz.dynamicmodels;
  */
 public abstract class AbstractGeneratorBasicModel extends AbstractGeneratorModel {
 
-    public AbstractGeneratorBasicModel(String dynamicModelId, String staticId, String parameterSetId) {
+    protected AbstractGeneratorBasicModel(String dynamicModelId, String staticId, String parameterSetId) {
         super(dynamicModelId, staticId, parameterSetId,
                 "generator_terminal",
                 "generator_switchOffSignal1",

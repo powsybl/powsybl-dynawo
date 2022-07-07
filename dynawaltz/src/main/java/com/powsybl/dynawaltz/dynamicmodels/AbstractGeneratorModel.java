@@ -35,7 +35,7 @@ public abstract class AbstractGeneratorModel extends AbstractBlackBoxModel imple
     private final String omegaRefPuVarName;
     private final String runningVarName;
 
-    public AbstractGeneratorModel(String dynamicModelId, String staticId, String parameterSetId,
+    protected AbstractGeneratorModel(String dynamicModelId, String staticId, String parameterSetId,
                                   String terminalVarName, String switchOffSignalNodeVarName,
                                   String switchOffSignalEventVarName, String switchOffSignalAutomatonVarName,
                                   String omegaPuVarName, String omegaRefPuVarName, String runningVarName) {
