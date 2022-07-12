@@ -103,8 +103,8 @@ public class OmegaRef extends AbstractBlackBoxModel {
 
     @Override
     public List<Pair<String, String>> getVarsConnect(BlackBoxModel connected) {
-        if (connected instanceof GeneratorModel) {
-            GeneratorModel connectedGeneratorModel = (GeneratorModel) connected;
+        if (connected instanceof GeneratorSynchronousModel) {
+            GeneratorSynchronousModel connectedGeneratorModel = (GeneratorSynchronousModel) connected;
             return Arrays.asList(
                     Pair.of("omega_grp_@INDEX@", connectedGeneratorModel.getOmegaPuVarName()),
                     Pair.of("omegaRef_grp_@INDEX@", connectedGeneratorModel.getOmegaRefPuVarName()),

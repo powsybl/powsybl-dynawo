@@ -9,16 +9,6 @@ package com.powsybl.dynawaltz.dynamicmodels;
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  */
-public interface GeneratorModel {
-    String getTerminalVarName();
-
-    String getSwitchOffSignalNodeVarName();
-
-    String getSwitchOffSignalEventVarName();
-
-    String getSwitchOffSignalAutomatonVarName();
-
-    String getOmegaRefPuVarName();
-
-    String getRunningVarName();
+public interface GeneratorSynchronousModel extends GeneratorModel {
+    String getOmegaPuVarName();
 }
