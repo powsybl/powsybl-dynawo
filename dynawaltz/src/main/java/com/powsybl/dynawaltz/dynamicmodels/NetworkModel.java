@@ -18,7 +18,6 @@ public class NetworkModel {
 
     private final Function<String, DefaultBusModel> busModelFactory = DefaultBusModel::new;
     private final BiFunction<String, Branch.Side, DefaultLineModel> lineModelFactory = DefaultLineModel::new;
-    private final Function<String, DefaultGeneratorModel> generatorModelFactory = DefaultGeneratorModel::new;
 
     public BlackBoxModel getDefaultBusModel(String staticId) {
         return busModelFactory.apply(staticId);
@@ -26,9 +25,5 @@ public class NetworkModel {
 
     public BlackBoxModel getDefaultLineModel(String staticId, Branch.Side side) {
         return lineModelFactory.apply(staticId, side);
-    }
-
-    public BlackBoxModel getDefaultGeneratorModel(String staticId) {
-        return generatorModelFactory.apply(staticId);
     }
 }
