@@ -95,7 +95,9 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
             eventModels.add(new EventQuadripoleDisconnection("EM_" + l.getId(), l.getId(), "EQD"));
         });
         network.getGeneratorStream().forEach(g -> {
-            eventModels.add(new EventSetPointBoolean("EM_" + g.getId(), g.getId(), "ESPB"));
+            if (g.getId().equals("GEN2")) {
+                eventModels.add(new EventSetPointBoolean("EM_" + g.getId(), g.getId(), "ESPB"));
+            }
         });
 
         // Automatons
