@@ -9,7 +9,7 @@ package com.powsybl.dynawaltz.dynamicmodels;
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class GeneratorSynchronousFourWindings extends AbstractGeneratorBasicModel {
+public class GeneratorSynchronousFourWindings extends AbstractGeneratorSynchronousModel {
 
     public GeneratorSynchronousFourWindings(String dynamicModelId, String staticId, String parameterSetId) {
         super(dynamicModelId, staticId, parameterSetId);

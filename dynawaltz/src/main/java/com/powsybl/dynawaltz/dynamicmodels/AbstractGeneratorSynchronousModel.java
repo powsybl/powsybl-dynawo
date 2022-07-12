@@ -9,9 +9,9 @@ package com.powsybl.dynawaltz.dynamicmodels;
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  */
-public abstract class AbstractGeneratorBasicModel extends AbstractGeneratorModel {
+public abstract class AbstractGeneratorSynchronousModel extends AbstractGeneratorModel {
 
-    protected AbstractGeneratorBasicModel(String dynamicModelId, String staticId, String parameterSetId) {
+    protected AbstractGeneratorSynchronousModel(String dynamicModelId, String staticId, String parameterSetId) {
         super(dynamicModelId, staticId, parameterSetId,
                 "generator_terminal",
                 "generator_switchOffSignal1",

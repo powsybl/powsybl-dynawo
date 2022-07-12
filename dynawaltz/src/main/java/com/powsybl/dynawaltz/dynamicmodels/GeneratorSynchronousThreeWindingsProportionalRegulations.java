@@ -9,7 +9,7 @@ package com.powsybl.dynawaltz.dynamicmodels;
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class GeneratorSynchronousThreeWindingsProportionalRegulations extends AbstractGeneratorBasicModel {
+public class GeneratorSynchronousThreeWindingsProportionalRegulations extends AbstractGeneratorSynchronousModel {
 
     public GeneratorSynchronousThreeWindingsProportionalRegulations(String dynamicModelId, String staticId, String parameterSetId) {
         super(dynamicModelId, staticId, parameterSetId);
