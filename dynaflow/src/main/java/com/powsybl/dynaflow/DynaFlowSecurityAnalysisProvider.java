@@ -12,8 +12,10 @@ import com.powsybl.computation.ComputationManager;
 import com.powsybl.contingency.ContingenciesProvider;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.security.*;
+import com.powsybl.security.action.Action;
 import com.powsybl.security.interceptors.SecurityAnalysisInterceptor;
 import com.powsybl.security.monitor.StateMonitor;
+import com.powsybl.security.strategy.OperatorStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,6 +42,8 @@ public class DynaFlowSecurityAnalysisProvider implements SecurityAnalysisProvide
                                                          SecurityAnalysisParameters parameters,
                                                          ContingenciesProvider contingenciesProvider,
                                                          List<SecurityAnalysisInterceptor> interceptors,
+                                                         List<OperatorStrategy> operatorStrategies,
+                                                         List<Action> actions,
                                                          List<StateMonitor> monitors,
                                                          Reporter reporter) {
         if (monitors != null && !monitors.isEmpty()) {
@@ -47,6 +51,12 @@ public class DynaFlowSecurityAnalysisProvider implements SecurityAnalysisProvide
         }
         if (reporter != Reporter.NO_OP) {
             LOG.warn("Reporters are not used in Dynaflow implementation");
+        }
+        if (operatorStrategies != null && !operatorStrategies.isEmpty()) {
+            LOG.error("Strategies are not implemented in Dynaflow");
+        }
+        if (actions != null && !actions.isEmpty()) {
+            LOG.error("Actions are not implemented in Dynaflow");
         }
         DynaFlowSecurityAnalysis securityAnalysis = new DynaFlowSecurityAnalysis(network, detector, filter, computationManager);
         interceptors.forEach(securityAnalysis::addInterceptor);
