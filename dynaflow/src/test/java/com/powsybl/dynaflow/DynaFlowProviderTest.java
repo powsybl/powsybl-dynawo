@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ForkJoinPool;
 
+import static com.powsybl.commons.ComparisonUtils.compareXml;
 import static com.powsybl.dynaflow.DynaFlowConstants.*;
 import static org.junit.Assert.*;
 

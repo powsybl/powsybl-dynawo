@@ -37,6 +37,8 @@ import com.powsybl.dynawaltz.dynamicmodels.*;
 import com.powsybl.dynawaltz.events.*;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 
+import static com.powsybl.commons.ComparisonUtils.compareXml;
+
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */

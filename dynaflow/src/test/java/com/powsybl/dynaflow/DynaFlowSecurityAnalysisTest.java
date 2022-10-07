@@ -11,6 +11,7 @@ import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
 import com.powsybl.commons.config.InMemoryPlatformConfig;
 import com.powsybl.commons.config.PlatformConfig;
+import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.computation.ComputationManager;
 import com.powsybl.computation.local.LocalCommandExecutor;
 import com.powsybl.computation.local.LocalComputationConfig;
@@ -19,6 +20,7 @@ import com.powsybl.contingency.ContingenciesProvider;
 import com.powsybl.contingency.Contingency;
 import com.powsybl.contingency.dsl.GroovyDslContingenciesProvider;
 import com.powsybl.iidm.import_.Importers;
+import com.powsybl.iidm.modification.AbstractNetworkModification;
 import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.VariantManagerConstants;
@@ -63,6 +65,15 @@ public class DynaFlowSecurityAnalysisTest {
 
     private FileSystem fileSystem;
     private PlatformConfig platformConfig;
+
+    static class DynaFlowSecurityAnalysisTestNetworkModification extends AbstractNetworkModification {
+        @Override
+        public void apply(Network network, boolean throwException, ComputationManager computationManager, Reporter reporter) {
+            network.getLine("NHV1_NHV2_2").getTerminal1().disconnect();
+            network.getLine("NHV1_NHV2_2").getTerminal2().disconnect();
+            network.getLine("NHV1_NHV2_1").getTerminal2().setP(600.0);
+        }
+    }
 
     @Before
     public void setUp() {
@@ -136,17 +147,14 @@ public class DynaFlowSecurityAnalysisTest {
                 .addBranch("NHV1_NHV2_2")
                 .build();
         contingency = Mockito.spy(contingency);
-        Mockito.when(contingency.toModification()).thenReturn((network1, computationManager1) -> {
-            network1.getLine("NHV1_NHV2_2").getTerminal1().disconnect();
-            network1.getLine("NHV1_NHV2_2").getTerminal2().disconnect();
-            network1.getLine("NHV1_NHV2_1").getTerminal2().setP(600.0);
-        });
+        Mockito.when(contingency.toModification()).thenReturn(new DynaFlowSecurityAnalysisTestNetworkModification());
         ContingenciesProvider contingenciesProvider = Mockito.mock(ContingenciesProvider.class);
         Mockito.when(contingenciesProvider.getContingencies(network)).thenReturn(Collections.singletonList(contingency));
 
         LimitViolationFilter filter = new LimitViolationFilter();
 
-        SecurityAnalysisReport report = SecurityAnalysis.run(network, VariantManagerConstants.INITIAL_VARIANT_ID, contingenciesProvider, SecurityAnalysisParameters.load(platformConfig), computationManager, filter, new DefaultLimitViolationDetector(), Collections.emptyList());
+        SecurityAnalysisReport report = SecurityAnalysis.run(network, VariantManagerConstants.INITIAL_VARIANT_ID, contingenciesProvider,
+                SecurityAnalysisParameters.load(platformConfig), computationManager, filter, new DefaultLimitViolationDetector(), Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
         SecurityAnalysisResult result = report.getResult();
 
         assertTrue(result.getPreContingencyResult().getLimitViolationsResult().isComputationOk());
@@ -260,7 +268,8 @@ public class DynaFlowSecurityAnalysisTest {
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(workingDir, 1), commandExecutor, ForkJoinPool.commonPool());
 
         LimitViolationFilter filter = new LimitViolationFilter();
-        SecurityAnalysisReport report = SecurityAnalysis.run(network, VariantManagerConstants.INITIAL_VARIANT_ID, contingenciesProvider, SecurityAnalysisParameters.load(platformConfig), computationManager, filter, new DefaultLimitViolationDetector(), Collections.emptyList());
+        SecurityAnalysisReport report = SecurityAnalysis.run(network, VariantManagerConstants.INITIAL_VARIANT_ID, contingenciesProvider,
+                SecurityAnalysisParameters.load(platformConfig), computationManager, filter, new DefaultLimitViolationDetector(), Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
         SecurityAnalysisResult result = report.getResult();
 
         PostContingencyResult postcontingencyResult = result.getPostContingencyResults().get(0);
