@@ -7,14 +7,16 @@
 package com.powsybl.dynawaltz.dynamicmodels;
 
 import com.powsybl.commons.PowsyblException;
+import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParametersDatabase;
 import com.powsybl.dynawaltz.xml.DynaWaltzXmlContext;
-import com.powsybl.dynawaltz.xml.MacroConnectorXml;
 import com.powsybl.dynawaltz.xml.ParametersXml;
+import com.powsybl.iidm.network.Generator;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -37,22 +39,18 @@ public class OmegaRef extends AbstractBlackBoxModel {
 
     public static final String OMEGA_REF_ID = "OMEGA_REF";
     private static final String OMEGA_REF_PARAMETER_SET_ID = "OMEGA_REF";
-    private static final String MACRO_CONNECTOR_TO_GENERATOR_SUFFIX = "ToGenerator";
-    private static final String MACRO_CONNECTOR_TO_NUMCCMACHINE_SUFFIX = "ToNumCCMachine";
+
+    private final String generatorDynamicModelId;
 
     public OmegaRef(String generatorDynamicModelId) {
-        super(OMEGA_REF_ID + "_" + generatorDynamicModelId, "", OMEGA_REF_PARAMETER_SET_ID);
+        // All OmegaRef instances have the same dynamicId, as all instances of DYNModelOmegaRef refer in fact to a single Dynawo BlackBoxModel
+        super(OMEGA_REF_ID, "", OMEGA_REF_PARAMETER_SET_ID);
         this.generatorDynamicModelId = Objects.requireNonNull(generatorDynamicModelId);
     }
 
     @Override
     public String getLib() {
         return "DYNModelOmegaRef";
-    }
-
-    @Override
-    public String getStaticId() {
-        throw new UnsupportedOperationException("OmegaRef is not bound to a static equipment");
     }
 
     @Override
@@ -66,73 +64,90 @@ public class OmegaRef extends AbstractBlackBoxModel {
 
     @Override
     public void write(XMLStreamWriter writer, DynaWaltzXmlContext context) throws XMLStreamException {
-        int index = context.getIndex(getLib(), true);
-        if (index == 0) {
-            // Write the macroConnector object
-            writer.writeStartElement(DYN_URI, "macroConnector");
-            writer.writeAttribute("id", MACRO_CONNECTOR_PREFIX + getLib() + MACRO_CONNECTOR_TO_GENERATOR_SUFFIX);
-            MacroConnectorXml.writeConnect(writer, "omega_grp_@INDEX@", "generator_omegaPu");
-            MacroConnectorXml.writeConnect(writer, "omegaRef_grp_@INDEX@", "generator_omegaRefPu");
-            MacroConnectorXml.writeConnect(writer, "running_grp_@INDEX@", "generator_running");
-            writer.writeEndElement();
-
-            writer.writeStartElement(DYN_URI, "macroConnector");
-            writer.writeAttribute("id", MACRO_CONNECTOR_PREFIX + getLib() + MACRO_CONNECTOR_TO_NUMCCMACHINE_SUFFIX);
-            MacroConnectorXml.writeConnect(writer, "numcc_node_@INDEX@", "@@NAME@@@NODE@_numcc");
-            writer.writeEndElement();
-
-            // Special magic here:
-            // All instances of DYNModelOmegaRef refer in fact to a single Dynawo BlackBoxModel
-            // We write the blackBoxModel in the output XML only once
-            writer.writeEmptyElement(DYN_URI, "blackBoxModel");
-            writer.writeAttribute("id", OMEGA_REF_ID);
-            writer.writeAttribute("lib", getLib());
-            writer.writeAttribute("parFile", context.getSimulationParFile());
-            writer.writeAttribute("parId", getParameterSetId());
-        }
-
-        // This instance of DYNModelOmegaRef has a reference to one generator, write its connect and the subsequent connect to the NETWORK model
-        MacroConnectorXml.writeMacroConnect(writer, MACRO_CONNECTOR_PREFIX + getLib() + MACRO_CONNECTOR_TO_GENERATOR_SUFFIX, OMEGA_REF_ID, index, generatorDynamicModelId);
-        MacroConnectorXml.writeMacroConnect(writer, MACRO_CONNECTOR_PREFIX + getLib() + MACRO_CONNECTOR_TO_NUMCCMACHINE_SUFFIX, OMEGA_REF_ID, index, NETWORK, getStaticId(context, generatorDynamicModelId));
+        // Special magic here:
+        // All instances of DYNModelOmegaRef refer in fact to a single Dynawo BlackBoxModel, hence all have the same dynamicId
+        // Therefore this is called only once, and the blackBoxModel is written in the output XML only once
+        writer.writeEmptyElement(DYN_URI, "blackBoxModel");
+        writer.writeAttribute("id", OMEGA_REF_ID);
+        writer.writeAttribute("lib", getLib());
+        writer.writeAttribute("parFile", context.getSimulationParFile());
+        writer.writeAttribute("parId", getParameterSetId());
     }
 
     @Override
     public void writeParameters(XMLStreamWriter writer, DynaWaltzXmlContext context) throws XMLStreamException {
-        int index = context.getIndex(getLib(), true);
-        if (index == 0) {
-            DynaWaltzParametersDatabase parDB = context.getParametersDatabase();
+        DynaWaltzParametersDatabase parDB = context.getParametersDatabase();
 
-            writer.writeStartElement(DYN_URI, "set");
-            writer.writeAttribute("id", getParameterSetId());
+        writer.writeStartElement(DYN_URI, "set");
+        writer.writeAttribute("id", getParameterSetId());
 
-            long count = 0;
-            // Black box models returned by the context should follow the same order
-            // of the dynamic models supplier returned by the dynamic models supplier.
-            // The dynamic models are declared in the DYD following the order of dynamic models supplier.
-            // The OmegaRef parameters index the weight of each generator according to that declaration order.
-            for (BlackBoxModel model : context.getBlackBoxModels()) {
-                if (model instanceof OmegaRef) {
-                    BlackBoxModel generatorModel = context.getBlackBoxModel(((OmegaRef) model).getGeneratorDynamicModelId());
-                    double h = parDB.getDouble(generatorModel.getParameterSetId(), "generator_H");
-                    double snom = parDB.getDouble(generatorModel.getParameterSetId(), "generator_SNom");
+        long count = 0;
+        // Black box models returned by the context should follow the same order
+        // of the dynamic models supplier returned by the dynamic models supplier.
+        // The dynamic models are declared in the DYD following the order of dynamic models supplier.
+        // The OmegaRef parameters index the weight of each generator according to that declaration order.
+        for (BlackBoxModel model : context.getBlackBoxModels()) {
+            if (model instanceof OmegaRef) {
+                BlackBoxModel generatorModel = context.getBlackBoxModel(((OmegaRef) model).getGeneratorDynamicModelId());
+                double h = parDB.getDouble(generatorModel.getParameterSetId(), "generator_H");
+                double snom = parDB.getDouble(generatorModel.getParameterSetId(), "generator_SNom");
 
-                    ParametersXml.writeParameter(writer, DOUBLE, "weight_gen_" + count, Double.toString(h * snom));
-                    count++;
-                }
+                ParametersXml.writeParameter(writer, DOUBLE, "weight_gen_" + count, Double.toString(h * snom));
+                count++;
             }
-            ParametersXml.writeParameter(writer, INT, "nbGen", Long.toString(count));
+        }
+        ParametersXml.writeParameter(writer, INT, "nbGen", Long.toString(count));
 
-            writer.writeEndElement();
+        writer.writeEndElement();
+    }
+
+    @Override
+    public List<Pair<String, String>> getVarsConnect(BlackBoxModel connected) {
+        if (connected instanceof GeneratorSynchronousModel) {
+            GeneratorSynchronousModel connectedGeneratorModel = (GeneratorSynchronousModel) connected;
+            return Arrays.asList(
+                    Pair.of("omega_grp_@INDEX@", connectedGeneratorModel.getOmegaPuVarName()),
+                    Pair.of("omegaRef_grp_@INDEX@", connectedGeneratorModel.getOmegaRefPuVarName()),
+                    Pair.of("running_grp_@INDEX@", connectedGeneratorModel.getRunningVarName())
+            );
+        } else if (connected instanceof BusModel) {
+            return List.of(Pair.of("numcc_node_@INDEX@", ((BusModel) connected).getNumCCVarName()));
+        } else {
+            throw new PowsyblException("OmegaRef can only connect to GeneratorModel and BusModel");
         }
     }
 
-    private static String getStaticId(DynaWaltzXmlContext context, String dynamicModelId) {
-        BlackBoxModel dynamicModel = context.getBlackBoxModel(dynamicModelId);
-        if (dynamicModel == null) {
-            throw new PowsyblException("BlackBoxModel '" + dynamicModelId + "' not found");
+    @Override
+    public List<BlackBoxModel> getModelsConnectedTo(DynaWaltzContext context) {
+        BlackBoxModel generatorModel = context.getBlackBoxModelFromDynamicId(generatorDynamicModelId);
+        if (generatorModel == null) {
+            throw new PowsyblException("OmegaRef cannot be connected explicitly to a generator with no defined dynamic model");
         }
-        return dynamicModel.getStaticId();
+        if (!(generatorModel instanceof GeneratorModel)) {
+            throw new PowsyblException("Generator dynamic id does not correspond to a generator: " + generatorDynamicModelId
+                    + " corresponds to " + generatorModel.getClass().getSimpleName());
+        }
+
+        Generator generator = context.getNetwork().getGenerator(generatorModel.getStaticId());
+        if (generator == null) {
+            throw new PowsyblException("Generator static id unknown: " + getStaticId());
+        }
+        String connectedStaticId = generator.getTerminal().getBusBreakerView().getConnectableBus().getId();
+        BlackBoxModel busModel = context.getStaticIdBlackBoxModelMap().get(connectedStaticId);
+        if (busModel == null) {
+            busModel = context.getNetworkModel().getDefaultBusModel(connectedStaticId);
+        }
+
+        return List.of(generatorModel, busModel);
     }
 
-    private final String generatorDynamicModelId;
+    @Override
+    public void writeMacroConnect(XMLStreamWriter writer, DynaWaltzXmlContext xmlContext, MacroConnector macroConnector, BlackBoxModel connected) throws XMLStreamException {
+        int index = xmlContext.getLibIndex(this);
+        List<Pair<String, String>> attributesConnectFrom = List.of(
+                Pair.of("id1", getDynamicModelId()),
+                Pair.of("index1", Integer.toString(index))
+        );
+        macroConnector.writeMacroConnect(writer, attributesConnectFrom, connected.getAttributesConnectTo());
+    }
 }

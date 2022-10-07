@@ -6,13 +6,14 @@
  */
 package com.powsybl.dynawaltz.dynamicmodels;
 
+import com.powsybl.commons.PowsyblException;
+import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.xml.DynaWaltzXmlContext;
-import com.powsybl.dynawaltz.xml.MacroConnectorXml;
+import com.powsybl.iidm.network.Load;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-
-import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.*;
+import java.util.List;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -24,20 +25,21 @@ public abstract class AbstractLoadModel extends AbstractBlackBoxModel {
     }
 
     @Override
-    public void write(XMLStreamWriter writer, DynaWaltzXmlContext context) throws XMLStreamException {
-        if (context.getIndex(getLib(), true) == 0) {
-            // Write the macroConnector object
-            writer.writeStartElement(DYN_URI, "macroConnector");
-            writer.writeAttribute("id", MACRO_CONNECTOR_PREFIX + getLib());
-            writeConnector(writer, context);
-            writer.writeEndElement();
+    public List<BlackBoxModel> getModelsConnectedTo(DynaWaltzContext context) {
+        Load load = context.getNetwork().getLoad(getStaticId());
+        if (load == null) {
+            throw new PowsyblException("Load static id unknown: " + getStaticId());
         }
-
-        writeBlackBoxModel(writer, context);
-
-        // Write the connect object
-        MacroConnectorXml.writeMacroConnect(writer, MACRO_CONNECTOR_PREFIX + getLib(), getDynamicModelId(), NETWORK);
+        String connectedStaticId = load.getTerminal().getBusBreakerView().getConnectableBus().getId();
+        BlackBoxModel connectedBbm = context.getStaticIdBlackBoxModelMap().get(connectedStaticId);
+        if (connectedBbm == null) {
+            return List.of(context.getNetworkModel().getDefaultBusModel(connectedStaticId));
+        }
+        return List.of(connectedBbm);
     }
 
-    protected abstract void writeConnector(XMLStreamWriter writer, DynaWaltzXmlContext context) throws XMLStreamException;
+    @Override
+    public void write(XMLStreamWriter writer, DynaWaltzXmlContext context) throws XMLStreamException {
+        writeBlackBoxModel(writer, context);
+    }
 }

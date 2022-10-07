@@ -6,15 +6,17 @@
  */
 package com.powsybl.dynawaltz.xml;
 
+import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
+import com.powsybl.dynawaltz.dynamicmodels.GeneratorSynchronousFourWindingsProportionalRegulations;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -23,9 +25,13 @@ public class EventXmlTest extends DynaWaltzTestUtil {
 
     @Test
     public void writeDynamicModel() throws SAXException, IOException, XMLStreamException {
+        List<DynamicModel> dynamicModels = List.of(
+                new GeneratorSynchronousFourWindingsProportionalRegulations("BBM_GEN2", "GEN2", "GSFWPR")
+        );
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynaWaltzParameters dynawoParameters = DynaWaltzParameters.load();
-        DynaWaltzContext context = new DynaWaltzContext(network, network.getVariantManager().getWorkingVariantId(), new ArrayList<>(), eventModels, curves, parameters, dynawoParameters);
+        DynaWaltzContext context = new DynaWaltzContext(network, network.getVariantManager().getWorkingVariantId(),
+                dynamicModels, eventModels, curves, parameters, dynawoParameters);
 
         DydXml.write(tmpDir, context);
         validate("dyd.xsd", "events.xml", tmpDir.resolve(DynaWaltzConstants.DYD_FILENAME));

@@ -9,9 +9,11 @@ package com.powsybl.dynawaltz.dynamicmodels;
 import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynawaltz.xml.DynaWaltzXmlContext;
 import com.powsybl.dynawaltz.xml.MacroStaticReference;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
+import java.util.List;
 import java.util.Objects;
 
 import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
@@ -20,6 +22,10 @@ import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
  * @author Luma Zamarreño <zamarrenolm at aia.es>
  */
 public abstract class AbstractBlackBoxModel implements DynamicModel, BlackBoxModel {
+
+    private final String dynamicModelId;
+    private final String staticId;
+    private final String parameterSetId;
 
     public AbstractBlackBoxModel(String dynamicModelId, String staticId, String parameterSetId) {
         this.dynamicModelId = Objects.requireNonNull(dynamicModelId);
@@ -39,8 +45,19 @@ public abstract class AbstractBlackBoxModel implements DynamicModel, BlackBoxMod
         return parameterSetId;
     }
 
+    @Override
     public void writeParameters(XMLStreamWriter writer, DynaWaltzXmlContext context) throws XMLStreamException {
         //Empty method to be redefined by specific models
+    }
+
+    @Override
+    public void writeMacroConnect(XMLStreamWriter writer, DynaWaltzXmlContext xmlContext, MacroConnector macroConnector, BlackBoxModel connected) throws XMLStreamException {
+        macroConnector.writeMacroConnect(writer, List.of(Pair.of("id1", getDynamicModelId())), connected.getAttributesConnectTo());
+    }
+
+    @Override
+    public List<Pair<String, String>> getAttributesConnectTo() {
+        return List.of(Pair.of("id2", getDynamicModelId()));
     }
 
     protected void writeBlackBoxModel(XMLStreamWriter writer, DynaWaltzXmlContext context) throws XMLStreamException {
@@ -63,8 +80,4 @@ public abstract class AbstractBlackBoxModel implements DynamicModel, BlackBoxMod
         writer.writeAttribute("parFile", context.getParFile());
         writer.writeAttribute("parId", getParameterSetId());
     }
-
-    private final String dynamicModelId;
-    private final String staticId;
-    private final String parameterSetId;
 }

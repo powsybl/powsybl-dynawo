@@ -13,8 +13,6 @@ import com.powsybl.dynawaltz.dynamicmodels.BlackBoxModel;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -26,14 +24,16 @@ public class DynaWaltzXmlContext {
     private final String parFile;
 
     private final Map<String, AtomicInteger> counters = new HashMap<>();
+    private final Map<BlackBoxModel, Integer> libIndexMap = new HashMap<>();
 
-    private final Map<String, BlackBoxModel> blackBoxModels;
+    private final Map<String, BlackBoxModel> blackBoxModelsMap;
+    private final List<BlackBoxModel> blackBoxModels;
 
     public DynaWaltzXmlContext(DynaWaltzContext context) {
         this.context = Objects.requireNonNull(context);
         this.parFile = Paths.get(context.getDynaWaltzParameters().getParametersFile()).getFileName().toString();
-        this.blackBoxModels = context.getBlackBoxModelStream()
-                .collect(Collectors.toMap(BlackBoxModel::getDynamicModelId, Function.identity(), (o1, o2) -> o1, LinkedHashMap::new));
+        this.blackBoxModelsMap = context.getDynamicIdBlackBoxModelMap();
+        this.blackBoxModels = context.getBlackBoxModels();
     }
 
     public String getParFile() {
@@ -44,17 +44,24 @@ public class DynaWaltzXmlContext {
         return context.getNetwork().getId() + ".par";
     }
 
-    public int getIndex(String modelType, boolean increment) {
-        AtomicInteger counter = counters.computeIfAbsent(modelType, k -> new AtomicInteger());
-        return increment ? counter.getAndIncrement() : counter.get();
+    public int getLibIndex(BlackBoxModel bbm) {
+        return getLibIndexMap().get(bbm);
+    }
+
+    private Map<BlackBoxModel, Integer> getLibIndexMap() {
+        if (libIndexMap.isEmpty()) {
+            blackBoxModels.forEach(bbm -> libIndexMap.put(bbm,
+                    counters.computeIfAbsent(bbm.getLib(), k -> new AtomicInteger()).getAndIncrement()));
+        }
+        return libIndexMap;
     }
 
     public Collection<BlackBoxModel> getBlackBoxModels() {
-        return blackBoxModels.values();
+        return blackBoxModels;
     }
 
     public BlackBoxModel getBlackBoxModel(String dynamicModelId) {
-        return blackBoxModels.get(dynamicModelId);
+        return blackBoxModelsMap.get(dynamicModelId);
     }
 
     public DynaWaltzParametersDatabase getParametersDatabase() {

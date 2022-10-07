@@ -64,7 +64,8 @@ public final class ParametersXml {
         DynaWaltzXmlContext xmlContext = new DynaWaltzXmlContext(context);
 
         try {
-            for (BlackBoxModel model : context.getBlackBoxModels()) {
+            // loop over the values of the map indexed by dynamicIds to write only once parameters of objects with the same dynamicId
+            for (BlackBoxModel model : context.getDynamicIdBlackBoxModelMap().values()) {
                 model.writeParameters(writer, xmlContext);
             }
         } catch (XMLStreamException e) {
