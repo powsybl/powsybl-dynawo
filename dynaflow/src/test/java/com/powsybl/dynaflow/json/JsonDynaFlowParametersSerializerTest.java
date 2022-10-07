@@ -8,12 +8,14 @@ package com.powsybl.dynaflow.json;
 
 import com.powsybl.commons.AbstractConverterTest;
 import com.powsybl.commons.config.InMemoryPlatformConfig;
+import com.powsybl.dynaflow.DynaFlowConstants;
 import com.powsybl.dynaflow.DynaFlowParameters;
 import com.powsybl.loadflow.LoadFlowParameters;
 import com.powsybl.loadflow.json.JsonLoadFlowParameters;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Collections;
 
 import static org.junit.Assert.*;
 
@@ -53,6 +55,10 @@ public class JsonDynaFlowParametersSerializerTest extends AbstractConverterTest 
         params.setShuntRegulationOn(false);
         params.setAutomaticSlackBusOn(true);
         params.setDsoVoltageLevel(54.23);
+        params.setChosenOutputs(Collections.singletonList(DynaFlowConstants.OutputTypes.STEADYSTATE.name()));
+        params.setVscAsGenerators(false);
+        params.setLccAsLoads(false);
+        params.setTimeStep(2.6);
 
         parameters.addExtension(DynaFlowParameters.class, params);
 

@@ -12,6 +12,7 @@ import com.powsybl.commons.AbstractConverterTest;
 import com.powsybl.commons.config.InMemoryPlatformConfig;
 import com.powsybl.commons.config.MapModuleConfig;
 import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
+import com.powsybl.dynaflow.DynaFlowConstants.OutputTypes;
 import com.powsybl.loadflow.LoadFlowParameters;
 import org.junit.After;
 import org.junit.Before;
@@ -21,8 +22,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
+import java.util.List;
 
 import static com.powsybl.commons.ComparisonUtils.compareTxt;
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -51,18 +55,31 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
         boolean shuntRegulationOn = false;
         boolean automaticSlackBusOn = true;
         double dsoVoltageLevel = 87.32;
+        List<String> chosenOutputs = Collections.singletonList(OutputTypes.STEADYSTATE.name());
+        boolean vscAsGenerators = true;
+        boolean lccAsLoads = true;
+        double timeStep = 2.6;
 
         MapModuleConfig moduleConfig = platformConfig.createModuleConfig("dynaflow-default-parameters");
         moduleConfig.setStringProperty("svcRegulationOn", Boolean.toString(svcRegulationOn));
         moduleConfig.setStringProperty("shuntRegulationOn", Boolean.toString(shuntRegulationOn));
         moduleConfig.setStringProperty("automaticSlackBusOn", Boolean.toString(automaticSlackBusOn));
         moduleConfig.setStringProperty("dsoVoltageLevel", Double.toString(dsoVoltageLevel));
+        moduleConfig.setStringListProperty("chosenOutputs", chosenOutputs);
+        moduleConfig.setStringProperty("vscAsGenerators", Boolean.toString(vscAsGenerators));
+        moduleConfig.setStringProperty("lccAsLoads", Boolean.toString(lccAsLoads));
+        moduleConfig.setStringProperty("timeStep", Double.toString(timeStep));
 
         DynaFlowParameters parameters = DynaFlowParameters.load(platformConfig);
 
         assertEquals(svcRegulationOn, parameters.getSvcRegulationOn());
         assertEquals(shuntRegulationOn, parameters.getShuntRegulationOn());
         assertEquals(automaticSlackBusOn, parameters.getAutomaticSlackBusOn());
+        assert dsoVoltageLevel == parameters.getDsoVoltageLevel();
+        assertArrayEquals(chosenOutputs.toArray(), parameters.getChosenOutputs().toArray());
+        assertEquals(vscAsGenerators, parameters.getVscAsGenerators());
+        assertEquals(lccAsLoads, parameters.getLccAsLoads());
+        assert timeStep == parameters.getTimeStep();
     }
 
     @Test
@@ -74,6 +91,11 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
         assertEquals(DynaFlowParameters.DEFAULT_SVC_REGULATION_ON, parametersExt.getSvcRegulationOn());
         assertEquals(DynaFlowParameters.DEFAULT_SHUNT_REGULATION_ON, parametersExt.getShuntRegulationOn());
         assertEquals(DynaFlowParameters.DEFAULT_AUTOMATIC_SLACK_BUS_ON, parametersExt.getAutomaticSlackBusOn());
+        assert DynaFlowParameters.DEFAULT_DSO_VOLTAGE_LEVEL == parametersExt.getDsoVoltageLevel();
+        assertArrayEquals(DynaFlowParameters.DEFAULT_CHOSEN_OUTPUT.toArray(), parametersExt.getChosenOutputs().toArray());
+        assertEquals(DynaFlowParameters.DEFAULT_VSC_AS_GENERATORS, parametersExt.getVscAsGenerators());
+        assertEquals(DynaFlowParameters.DEFAULT_LCC_AS_LOADS, parametersExt.getLccAsLoads());
+        assert DynaFlowParameters.DEFAULT_TIME_STEP == parametersExt.getTimeStep();
     }
 
     @Test
@@ -83,7 +105,11 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
         String expectedString = "{svcRegulationOn=" + DynaFlowParameters.DEFAULT_SVC_REGULATION_ON +
                 ", shuntRegulationOn=" + DynaFlowParameters.DEFAULT_SHUNT_REGULATION_ON +
                 ", automaticSlackBusOn=" + DynaFlowParameters.DEFAULT_AUTOMATIC_SLACK_BUS_ON +
-                ", dsoVoltageLevel=" + DynaFlowParameters.DEFAULT_DSO_VOLTAGE_LEVEL + "}";
+                ", dsoVoltageLevel=" + DynaFlowParameters.DEFAULT_DSO_VOLTAGE_LEVEL +
+                ", chosenOutputs=" + DynaFlowParameters.DEFAULT_CHOSEN_OUTPUT +
+                ", vscAsGenerators=" + DynaFlowParameters.DEFAULT_VSC_AS_GENERATORS +
+                ", llcAsLoads=" + DynaFlowParameters.DEFAULT_LCC_AS_LOADS +
+                ", timeStep=" + DynaFlowParameters.DEFAULT_TIME_STEP + "}";
         assertEquals(expectedString, parametersExt.toString());
 
     }
@@ -99,6 +125,10 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
         dynaFlowParameters.setShuntRegulationOn(false);
         dynaFlowParameters.setAutomaticSlackBusOn(true);
         dynaFlowParameters.setDsoVoltageLevel(32.4);
+        dynaFlowParameters.setChosenOutputs(Collections.singletonList(OutputTypes.STEADYSTATE.name()));
+        dynaFlowParameters.setVscAsGenerators(true);
+        dynaFlowParameters.setLccAsLoads(true);
+        dynaFlowParameters.setTimeStep(2.6);
         lfParameters.addExtension(DynaFlowParameters.class, dynaFlowParameters);
 
         Path workingDir = fileSystem.getPath("dynaflow/workingDir");
@@ -109,5 +139,9 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
             InputStream expected = getClass().getResourceAsStream("/params.json")) {
             compareTxt(expected, actual);
         }
+    }
+
+    @Test
+    public void loadMapDynaflowParameters() {
     }
 }
