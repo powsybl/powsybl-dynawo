@@ -18,6 +18,7 @@ import com.powsybl.dynawaltz.automatons.CurrentLimitAutomaton;
 import com.powsybl.dynawaltz.dsl.automatons.CurrentLimitAutomatonGroovyExtension;
 import com.powsybl.dynawaltz.dsl.dynamicmodels.*;
 import com.powsybl.dynawaltz.dynamicmodels.*;
+import com.powsybl.dynawaltz.dynamicmodels.LoadOneTransformerGroovyExtension;
 import com.powsybl.iidm.network.*;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.After;
@@ -58,7 +59,7 @@ public class DynaWaltzGroovyDynamicModelsSupplierTest {
     public void test() {
 
         List<DynamicModelGroovyExtension> extensions = GroovyExtension.find(DynamicModelGroovyExtension.class, DynaWaltzProvider.NAME);
-        assertEquals(8, extensions.size());
+        assertEquals(9, extensions.size());
         extensions.forEach(DynaWaltzGroovyDynamicModelsSupplierTest::validateExtension);
 
         DynamicModelsSupplier supplier = new GroovyDynamicModelsSupplier(fileSystem.getPath("/dynamicModels.groovy"), extensions);
@@ -112,6 +113,17 @@ public class DynaWaltzGroovyDynamicModelsSupplierTest {
             .setTargetP(-1.3)
             .setTargetQ(0.9)
             .add();
+        vlgen.newGenerator()
+            .setId("GEN5")
+            .setBus(ngen.getId())
+            .setConnectableBus(ngen.getId())
+            .setMinP(-9999.99)
+            .setMaxP(9999.99)
+            .setVoltageRegulatorOn(true)
+            .setTargetV(24.5)
+            .setTargetP(-1.3)
+            .setTargetQ(0.9)
+            .add();
         VoltageLevel vlload  = network.getVoltageLevel("VLLOAD");
         Bus nload = vlload.getBusBreakerView().getBus("NLOAD");
         vlload.newLoad()
@@ -132,11 +144,12 @@ public class DynaWaltzGroovyDynamicModelsSupplierTest {
         boolean isFourWindingsGeneratorExtension = extension instanceof GeneratorSynchronousFourWindingsGroovyExtension;
         boolean isThreeWindingsGeneratorProportionalRegulationsExtension = extension instanceof GeneratorSynchronousThreeWindingsProportionalRegulationsGroovyExtension;
         boolean isFourWindingsGeneratorProportionalRegulationsExtension = extension instanceof GeneratorSynchronousFourWindingsProportionalRegulationsGroovyExtension;
+        boolean isFourWindingsGeneratorProportionalRegulationsStepPmExtension = extension instanceof GeneratorSynchronousFourWindingsProportionalRegulationsStepPmGroovyExtension;
 
         boolean isOmegaRefExtension = extension instanceof OmegaRefGroovyExtension;
 
         boolean isLoadExtension = isLoadAlphaBetaExtension || isLoadOneTransformerExtension;
-        boolean isGeneratorExtension = isThreeWindingsGeneratorExtension || isFourWindingsGeneratorExtension || isThreeWindingsGeneratorProportionalRegulationsExtension || isFourWindingsGeneratorProportionalRegulationsExtension;
+        boolean isGeneratorExtension = isThreeWindingsGeneratorExtension || isFourWindingsGeneratorExtension || isThreeWindingsGeneratorProportionalRegulationsExtension || isFourWindingsGeneratorProportionalRegulationsExtension || isFourWindingsGeneratorProportionalRegulationsStepPmExtension;
         boolean isDynamicModelExtension = isLoadExtension || isGeneratorExtension || isOmegaRefExtension;
 
         boolean isCurrentLimitAutomatonExtension = extension instanceof CurrentLimitAutomatonGroovyExtension;
@@ -167,6 +180,11 @@ public class DynaWaltzGroovyDynamicModelsSupplierTest {
             Identifiable<?> identifiable = network.getIdentifiable(blackBoxModel.getStaticId());
             assertEquals("BBM_" + identifiable.getId(), blackBoxModel.getDynamicModelId());
             assertEquals("GSFWPR", blackBoxModel.getParameterSetId());
+            assertTrue(identifiable instanceof Generator);
+        } else if (blackBoxModel instanceof GeneratorSynchronousFourWindingsProportionalRegulationsStepPm) {
+            Identifiable<?> identifiable = network.getIdentifiable(blackBoxModel.getStaticId());
+            assertEquals("BBM_" + identifiable.getId(), blackBoxModel.getDynamicModelId());
+            assertEquals("GSFWPRSP", blackBoxModel.getParameterSetId());
             assertTrue(identifiable instanceof Generator);
         } else if (blackBoxModel instanceof GeneratorSynchronousThreeWindings) {
             Identifiable<?> identifiable = network.getIdentifiable(blackBoxModel.getStaticId());
