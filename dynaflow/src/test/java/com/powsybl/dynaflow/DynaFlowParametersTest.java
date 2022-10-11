@@ -25,12 +25,16 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import static com.powsybl.commons.ComparisonUtils.compareTxt;
 import static com.powsybl.dynaflow.DynaFlowProvider.MODULE_SPECIFIC_PARAMETERS;
+import static com.powsybl.dynaflow.DynaFlowConstants.OutputTypes;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  *
@@ -113,7 +117,7 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
                 ", lccAsLoads=" + DynaFlowParameters.DEFAULT_LCC_AS_LOADS +
                 ", timeStep=" + DynaFlowParameters.DEFAULT_TIME_STEP + "}";
         assertEquals(expectedString, parametersExt.toString());
-
+        System.out.println(expectedString);
     }
 
     @Test
@@ -138,13 +142,32 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
         DynaFlowConfigSerializer.serialize(lfParameters, dynaFlowParameters, workingDir, parameterFile);
 
         try (InputStream actual = Files.newInputStream(parameterFile);
-            InputStream expected = getClass().getResourceAsStream("/params.json")) {
+             InputStream expected = getClass().getResourceAsStream("/params.json")) {
             compareTxt(expected, actual);
         }
     }
 
     @Test
     public void loadMapDynaflowParameters() {
+        Map<String, String> properties = Map.of(
+                "svcRegulationOn", "true",
+                "shuntRegulationOn", "true",
+                "automaticSlackBusOn", "false",
+                "dsoVoltageLevel", "2.0",
+                "chosenOutputs", "[ STEADYSTATE, CONSTRAINTS ]",
+                "vscAsGenerators", "false",
+                "lccAsLoads", "false",
+                "timeStep", "0");
 
+        DynaFlowParameters dynaFlowParameters = DynaFlowParameters.load(properties);
+
+        assertTrue(dynaFlowParameters.getSvcRegulationOn());
+        assertTrue(dynaFlowParameters.getShuntRegulationOn());
+        assertFalse(dynaFlowParameters.getAutomaticSlackBusOn());
+        assert 2 == dynaFlowParameters.getDsoVoltageLevel();
+        assertArrayEquals(Arrays.asList(OutputTypes.STEADYSTATE.name(), OutputTypes.CONSTRAINTS.name()).toArray(), dynaFlowParameters.getChosenOutputs().toArray());
+        assertFalse(dynaFlowParameters.getVscAsGenerators());
+        assertFalse(dynaFlowParameters.getLccAsLoads());
+        assert 0 == dynaFlowParameters.getTimeStep();
     }
 }
