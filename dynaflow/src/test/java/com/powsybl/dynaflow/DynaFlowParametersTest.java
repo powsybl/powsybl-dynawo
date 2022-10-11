@@ -22,10 +22,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import static com.powsybl.commons.ComparisonUtils.compareTxt;
+import static com.powsybl.dynaflow.DynaFlowProvider.MODULE_SPECIFIC_PARAMETERS;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -55,12 +57,12 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
         boolean shuntRegulationOn = false;
         boolean automaticSlackBusOn = true;
         double dsoVoltageLevel = 87.32;
-        List<String> chosenOutputs = Collections.singletonList(OutputTypes.STEADYSTATE.name());
-        boolean vscAsGenerators = true;
-        boolean lccAsLoads = true;
-        double timeStep = 2.6;
+        List<String> chosenOutputs = Arrays.asList(OutputTypes.STEADYSTATE.name(), OutputTypes.TIMELINE.name());
+        boolean vscAsGenerators = false;
+        boolean lccAsLoads = false;
+        double timeStep = 0;
 
-        MapModuleConfig moduleConfig = platformConfig.createModuleConfig("dynaflow-default-parameters");
+        MapModuleConfig moduleConfig = platformConfig.createModuleConfig(MODULE_SPECIFIC_PARAMETERS);
         moduleConfig.setStringProperty("svcRegulationOn", Boolean.toString(svcRegulationOn));
         moduleConfig.setStringProperty("shuntRegulationOn", Boolean.toString(shuntRegulationOn));
         moduleConfig.setStringProperty("automaticSlackBusOn", Boolean.toString(automaticSlackBusOn));
@@ -108,7 +110,7 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
                 ", dsoVoltageLevel=" + DynaFlowParameters.DEFAULT_DSO_VOLTAGE_LEVEL +
                 ", chosenOutputs=" + DynaFlowParameters.DEFAULT_CHOSEN_OUTPUT +
                 ", vscAsGenerators=" + DynaFlowParameters.DEFAULT_VSC_AS_GENERATORS +
-                ", llcAsLoads=" + DynaFlowParameters.DEFAULT_LCC_AS_LOADS +
+                ", lccAsLoads=" + DynaFlowParameters.DEFAULT_LCC_AS_LOADS +
                 ", timeStep=" + DynaFlowParameters.DEFAULT_TIME_STEP + "}";
         assertEquals(expectedString, parametersExt.toString());
 
@@ -143,5 +145,6 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
 
     @Test
     public void loadMapDynaflowParameters() {
+
     }
 }

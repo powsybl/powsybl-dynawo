@@ -31,7 +31,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
 
     private static final String VSC_AS_GENERATORS = "vscAsGenerators";
 
-    private static final String LCC_AS_LOADS = "llcAsLoads";
+    private static final String LCC_AS_LOADS = "lccAsLoads";
 
     private static final String TIME_STEP = "timeStep";
 
