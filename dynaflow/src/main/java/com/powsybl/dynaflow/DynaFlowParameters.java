@@ -185,19 +185,22 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
                 .setTimeStep(config.getDoubleProperty(TIME_STEP, DEFAULT_TIME_STEP));
     }
 
-    public static DynaFlowParameters load(Map<String, String> properties) {
+    public void loading(Map<String, String> properties) {
         Objects.requireNonNull(properties);
-        DynaFlowParameters parameters = new DynaFlowParameters();
-        Optional.ofNullable(properties.get(SVC_REGULATION_ON)).ifPresent(prop -> parameters.setSvcRegulationOn(Boolean.parseBoolean(prop)));
-        Optional.ofNullable(properties.get(SHUNT_REGULATION_ON)).ifPresent(prop -> parameters.setShuntRegulationOn(Boolean.parseBoolean(prop)));
-        Optional.ofNullable(properties.get(AUTOMATIC_SLACK_BUS_ON)).ifPresent(prop -> parameters.setAutomaticSlackBusOn(Boolean.parseBoolean(prop)));
-        Optional.ofNullable(properties.get(DSO_VOLTAGE_LEVEL)).ifPresent(prop -> parameters.setDsoVoltageLevel(Double.parseDouble(prop)));
+        Optional.ofNullable(properties.get(SVC_REGULATION_ON)).ifPresent(prop -> setSvcRegulationOn(Boolean.parseBoolean(prop)));
+        Optional.ofNullable(properties.get(SHUNT_REGULATION_ON)).ifPresent(prop -> setShuntRegulationOn(Boolean.parseBoolean(prop)));
+        Optional.ofNullable(properties.get(AUTOMATIC_SLACK_BUS_ON)).ifPresent(prop -> setAutomaticSlackBusOn(Boolean.parseBoolean(prop)));
+        Optional.ofNullable(properties.get(DSO_VOLTAGE_LEVEL)).ifPresent(prop -> setDsoVoltageLevel(Double.parseDouble(prop)));
         Optional.ofNullable(properties.get(CHOSEN_OUTPUTS)).ifPresent(prop ->
-                parameters.setChosenOutputs(Stream.of(prop.replaceAll("^\\[|\\]$", "").split(CHOSEN_OUTPUT_STRING_DELIMITER)).map(String::trim).collect(Collectors.toList())));
-        Optional.ofNullable(properties.get(VSC_AS_GENERATORS)).ifPresent(prop -> parameters.setVscAsGenerators(Boolean.parseBoolean(prop)));
-        Optional.ofNullable(properties.get(LCC_AS_LOADS)).ifPresent(prop -> parameters.setLccAsLoads(Boolean.parseBoolean(prop)));
-        Optional.ofNullable(properties.get(TIME_STEP)).ifPresent(prop -> parameters.setTimeStep(Double.parseDouble(prop)));
+                setChosenOutputs(Stream.of(prop.replaceAll("^\\[|\\]$", "").split(CHOSEN_OUTPUT_STRING_DELIMITER)).map(String::trim).collect(Collectors.toList())));
+        Optional.ofNullable(properties.get(VSC_AS_GENERATORS)).ifPresent(prop -> setVscAsGenerators(Boolean.parseBoolean(prop)));
+        Optional.ofNullable(properties.get(LCC_AS_LOADS)).ifPresent(prop -> setLccAsLoads(Boolean.parseBoolean(prop)));
+        Optional.ofNullable(properties.get(TIME_STEP)).ifPresent(prop -> setTimeStep(Double.parseDouble(prop)));
+    }
 
+    public static DynaFlowParameters load(Map<String, String> properties) {
+        DynaFlowParameters parameters = new DynaFlowParameters();
+        parameters.loading(properties);
         return parameters;
     }
 

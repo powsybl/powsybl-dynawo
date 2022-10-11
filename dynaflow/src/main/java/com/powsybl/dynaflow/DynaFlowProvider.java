@@ -184,4 +184,9 @@ public class DynaFlowProvider implements LoadFlowProvider {
     public Optional<ExtensionJsonSerializer> getSpecificParametersSerializer() {
         return Optional.of(new JsonDynaFlowParametersSerializer());
     }
+
+    @Override
+    public void updateSpecificParameters(Extension<LoadFlowParameters> extension, Map<String, String> properties) {
+        getParametersExt(extension.getExtendable()).loading(properties);
+    }
 }
