@@ -25,6 +25,7 @@ import static com.powsybl.dynaflow.DynaFlowConstants.OutputTypes;
 public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
 
     private static final String CHOSEN_OUTPUT_STRING_DELIMITER = ",";
+
     private static final String SVC_REGULATION_ON = "svcRegulationOn";
     private static final String SHUNT_REGULATION_ON = "shuntRegulationOn";
     private static final String AUTOMATIC_SLACK_BUS_ON = "automaticSlackBusOn";
@@ -192,7 +193,10 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         Optional.ofNullable(properties.get(AUTOMATIC_SLACK_BUS_ON)).ifPresent(prop -> setAutomaticSlackBusOn(Boolean.parseBoolean(prop)));
         Optional.ofNullable(properties.get(DSO_VOLTAGE_LEVEL)).ifPresent(prop -> setDsoVoltageLevel(Double.parseDouble(prop)));
         Optional.ofNullable(properties.get(CHOSEN_OUTPUTS)).ifPresent(prop ->
-                setChosenOutputs(Stream.of(prop.replaceAll("^\\[|\\]$", "").split(CHOSEN_OUTPUT_STRING_DELIMITER)).map(String::trim).collect(Collectors.toList())));
+                setChosenOutputs(Stream.of(prop.replace("[", "")
+                        .replace("]", "")
+                        .split(CHOSEN_OUTPUT_STRING_DELIMITER))
+                        .map(String::trim).collect(Collectors.toList())));
         Optional.ofNullable(properties.get(VSC_AS_GENERATORS)).ifPresent(prop -> setVscAsGenerators(Boolean.parseBoolean(prop)));
         Optional.ofNullable(properties.get(LCC_AS_LOADS)).ifPresent(prop -> setLccAsLoads(Boolean.parseBoolean(prop)));
         Optional.ofNullable(properties.get(TIME_STEP)).ifPresent(prop -> setTimeStep(Double.parseDouble(prop)));
