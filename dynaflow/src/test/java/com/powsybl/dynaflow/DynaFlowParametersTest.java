@@ -154,7 +154,7 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
                 "shuntRegulationOn", "true",
                 "automaticSlackBusOn", "false",
                 "dsoVoltageLevel", "2.0",
-                "chosenOutputs", "[ STEADYSTATE, CONSTRAINTS ]",
+                "chosenOutputs", "STEADYSTATE, CONSTRAINTS",
                 "vscAsGenerators", "false",
                 "lccAsLoads", "false",
                 "timeStep", "0");

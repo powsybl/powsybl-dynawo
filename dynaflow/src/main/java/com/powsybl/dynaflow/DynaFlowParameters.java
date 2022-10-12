@@ -186,17 +186,14 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
                 .setTimeStep(config.getDoubleProperty(TIME_STEP, DEFAULT_TIME_STEP));
     }
 
-    public void loading(Map<String, String> properties) {
+    public void update(Map<String, String> properties) {
         Objects.requireNonNull(properties);
         Optional.ofNullable(properties.get(SVC_REGULATION_ON)).ifPresent(prop -> setSvcRegulationOn(Boolean.parseBoolean(prop)));
         Optional.ofNullable(properties.get(SHUNT_REGULATION_ON)).ifPresent(prop -> setShuntRegulationOn(Boolean.parseBoolean(prop)));
         Optional.ofNullable(properties.get(AUTOMATIC_SLACK_BUS_ON)).ifPresent(prop -> setAutomaticSlackBusOn(Boolean.parseBoolean(prop)));
         Optional.ofNullable(properties.get(DSO_VOLTAGE_LEVEL)).ifPresent(prop -> setDsoVoltageLevel(Double.parseDouble(prop)));
         Optional.ofNullable(properties.get(CHOSEN_OUTPUTS)).ifPresent(prop ->
-                setChosenOutputs(Stream.of(prop.replace("[", "")
-                        .replace("]", "")
-                        .split(CHOSEN_OUTPUT_STRING_DELIMITER))
-                        .map(String::trim).collect(Collectors.toList())));
+                setChosenOutputs(Stream.of(prop.split(CHOSEN_OUTPUT_STRING_DELIMITER)).map(String::trim).collect(Collectors.toList())));
         Optional.ofNullable(properties.get(VSC_AS_GENERATORS)).ifPresent(prop -> setVscAsGenerators(Boolean.parseBoolean(prop)));
         Optional.ofNullable(properties.get(LCC_AS_LOADS)).ifPresent(prop -> setLccAsLoads(Boolean.parseBoolean(prop)));
         Optional.ofNullable(properties.get(TIME_STEP)).ifPresent(prop -> setTimeStep(Double.parseDouble(prop)));
@@ -204,7 +201,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
 
     public static DynaFlowParameters load(Map<String, String> properties) {
         DynaFlowParameters parameters = new DynaFlowParameters();
-        parameters.loading(properties);
+        parameters.update(properties);
         return parameters;
     }
 

@@ -187,6 +187,6 @@ public class DynaFlowProvider implements LoadFlowProvider {
 
     @Override
     public void updateSpecificParameters(Extension<LoadFlowParameters> extension, Map<String, String> properties) {
-        getParametersExt(extension.getExtendable()).loading(properties);
+        getParametersExt(extension.getExtendable()).update(properties);
     }
 }
