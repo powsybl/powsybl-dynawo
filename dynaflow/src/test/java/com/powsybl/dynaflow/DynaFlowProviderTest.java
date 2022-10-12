@@ -27,6 +27,7 @@ import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -174,6 +175,32 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
         Network expectedNetwork = NetworkXml.read(pReferenceOutput);
 
         compare(expectedNetwork, network);
+    }
+
+    @Test
+    public void testUpdateSpecificParameters() {
+        Map<String, String> properties = Map.of(
+                "svcRegulationOn", "true",
+                "shuntRegulationOn", "true",
+                "automaticSlackBusOn", "false",
+                "dsoVoltageLevel", "2.0",
+                "chosenOutputs", "STEADYSTATE, CONSTRAINTS",
+                "vscAsGenerators", "false",
+                "lccAsLoads", "false",
+                "timeStep", "0");
+
+        LoadFlowParameters params = LoadFlowParameters.load();
+        DynaFlowParameters dynaParams = params.getExtension(DynaFlowParameters.class);
+        provider.updateSpecificParameters(dynaParams, properties);
+
+        assertTrue(dynaParams.getSvcRegulationOn());
+        assertTrue(dynaParams.getShuntRegulationOn());
+        assertFalse(dynaParams.getAutomaticSlackBusOn());
+        assert 2 == dynaParams.getDsoVoltageLevel();
+        assertArrayEquals(Arrays.asList(OutputTypes.STEADYSTATE.name(), OutputTypes.CONSTRAINTS.name()).toArray(), dynaParams.getChosenOutputs().toArray());
+        assertFalse(dynaParams.getVscAsGenerators());
+        assertFalse(dynaParams.getLccAsLoads());
+        assert 0 == dynaParams.getTimeStep();
     }
 
     private void compare(Network expected, Network actual) throws IOException {

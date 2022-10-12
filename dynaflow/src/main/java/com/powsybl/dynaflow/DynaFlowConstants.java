@@ -7,7 +7,6 @@
 package com.powsybl.dynaflow;
 
 /**
- *
  * @author Guillaume Pernin <guillaume.pernin at rte-france.com>
  */
 public final class DynaFlowConstants {
@@ -21,6 +20,13 @@ public final class DynaFlowConstants {
     public static final String OUTPUT_IIDM_FILENAME = "outputIIDM.xml";
 
     public static final String OUTPUT_RESULTS_FILENAME = "results.json";
+
+    public enum OutputTypes {
+        STEADYSTATE,
+        LOSTEQ,
+        TIMELINE,
+        CONSTRAINTS;
+    }
 
     private DynaFlowConstants() {
     }
