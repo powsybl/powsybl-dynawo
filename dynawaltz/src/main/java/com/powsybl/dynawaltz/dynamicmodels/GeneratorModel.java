@@ -18,7 +18,5 @@ public interface GeneratorModel {
 
     String getSwitchOffSignalAutomatonVarName();
 
-    String getOmegaRefPuVarName();
-
     String getRunningVarName();
 }

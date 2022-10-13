@@ -18,8 +18,12 @@ public abstract class AbstractGeneratorSynchronousModel extends AbstractGenerato
                 "generator_switchOffSignal1",
                 "generator_switchOffSignal2",
                 "generator_switchOffSignal3",
-                "generator_omegaRefPu",
                 "generator_running");
+    }
+
+    @Override
+    public String getOmegaRefPuVarName() {
+        return "generator_omegaRefPu";
     }
 
     @Override

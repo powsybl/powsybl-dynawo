@@ -31,19 +31,17 @@ public abstract class AbstractGeneratorModel extends AbstractBlackBoxModel imple
     private final String switchOffSignalNodeVarName;
     private final String switchOffSignalEventVarName;
     private final String switchOffSignalAutomatonVarName;
-    private final String omegaRefPuVarName;
     private final String runningVarName;
 
     protected AbstractGeneratorModel(String dynamicModelId, String staticId, String parameterSetId,
                                   String terminalVarName, String switchOffSignalNodeVarName,
                                   String switchOffSignalEventVarName, String switchOffSignalAutomatonVarName,
-                                  String omegaRefPuVarName, String runningVarName) {
+                                  String runningVarName) {
         super(dynamicModelId, staticId, parameterSetId);
         this.terminalVarName = terminalVarName;
         this.switchOffSignalNodeVarName = switchOffSignalNodeVarName;
         this.switchOffSignalEventVarName = switchOffSignalEventVarName;
         this.switchOffSignalAutomatonVarName = switchOffSignalAutomatonVarName;
-        this.omegaRefPuVarName = omegaRefPuVarName;
         this.runningVarName = runningVarName;
     }
 
@@ -96,11 +94,6 @@ public abstract class AbstractGeneratorModel extends AbstractBlackBoxModel imple
     @Override
     public String getSwitchOffSignalAutomatonVarName() {
         return switchOffSignalAutomatonVarName;
-    }
-
-    @Override
-    public String getOmegaRefPuVarName() {
-        return omegaRefPuVarName;
     }
 
     @Override

@@ -59,7 +59,7 @@ public class DynaWaltzGroovyDynamicModelsSupplierTest {
     public void test() {
 
         List<DynamicModelGroovyExtension> extensions = GroovyExtension.find(DynamicModelGroovyExtension.class, DynaWaltzProvider.NAME);
-        assertEquals(9, extensions.size());
+        assertEquals(10, extensions.size());
         extensions.forEach(this::validateExtension);
 
         DynamicModelsSupplier supplier = new GroovyDynamicModelsSupplier(fileSystem.getPath("/dynamicModels.groovy"), extensions);
@@ -115,6 +115,17 @@ public class DynaWaltzGroovyDynamicModelsSupplierTest {
             .add();
         vlgen.newGenerator()
             .setId("GEN5")
+            .setBus(ngen.getId())
+            .setConnectableBus(ngen.getId())
+            .setMinP(-9999.99)
+            .setMaxP(9999.99)
+            .setVoltageRegulatorOn(true)
+            .setTargetV(24.5)
+            .setTargetP(-1.3)
+            .setTargetQ(0.9)
+            .add();
+        vlgen.newGenerator()
+            .setId("GEN6")
             .setBus(ngen.getId())
             .setConnectableBus(ngen.getId())
             .setMinP(-9999.99)
@@ -188,6 +199,11 @@ public class DynaWaltzGroovyDynamicModelsSupplierTest {
             Identifiable<?> identifiable = network.getIdentifiable(blackBoxModel.getStaticId());
             assertEquals("BBM_" + identifiable.getId(), blackBoxModel.getDynamicModelId());
             assertEquals("GSFW", blackBoxModel.getParameterSetId());
+            assertTrue(identifiable instanceof Generator);
+        } else if (blackBoxModel instanceof GeneratorFictitious) {
+            Identifiable<?> identifiable = network.getIdentifiable(blackBoxModel.getStaticId());
+            assertEquals("BBM_" + identifiable.getId(), blackBoxModel.getDynamicModelId());
+            assertEquals("GF", blackBoxModel.getParameterSetId());
             assertTrue(identifiable instanceof Generator);
         } else if (blackBoxModel instanceof OmegaRef) {
             OmegaRef omegaRef = (OmegaRef) blackBoxModel;
