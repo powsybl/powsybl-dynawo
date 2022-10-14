@@ -13,6 +13,7 @@ import com.powsybl.dynawaltz.dynamicmodels.BlackBoxModel;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>

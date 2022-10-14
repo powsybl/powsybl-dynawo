@@ -84,6 +84,10 @@ public class DynaWaltzContext {
         return Collections.unmodifiableList(dynamicModels);
     }
 
+    public List<BlackBoxModel> getUserBlackBoxModels() {
+        return getUserBlackBoxModelStream().collect(Collectors.toList());
+    }
+
     public List<BlackBoxModel> getBlackBoxModels() {
         return getBlackBoxModelStream().collect(Collectors.toList());
     }
@@ -190,10 +194,15 @@ public class DynaWaltzContext {
         return eventModelsConnections;
     }
 
-    public Stream<BlackBoxModel> getBlackBoxModelStream() {
+
+    public Stream<BlackBoxModel> getUserBlackBoxModelStream() {
         return dynamicModels.stream()
                 .filter(BlackBoxModel.class::isInstance)
                 .map(BlackBoxModel.class::cast);
+    }
+
+    public Stream<BlackBoxModel> getBlackBoxModelStream() {
+        return Stream.concat(Stream.of(omegaRef), getUserBlackBoxModelStream());
     }
 
     public List<EventModel> getEventModels() {

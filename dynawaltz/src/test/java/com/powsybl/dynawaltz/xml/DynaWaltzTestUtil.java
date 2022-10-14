@@ -92,7 +92,7 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
             } else {
                 dynamicModels.add(new GeneratorSynchronousThreeWindingsProportionalRegulations("BBM_" + g.getId(), g.getId(), "GSTWPR"));
             }
-            dynamicModels.add(new OmegaRef("BBM_" + g.getId()));
+            //dynamicModels.add(new OmegaRef("BBM_" + g.getId()));
         });
 
         // Events
