@@ -46,6 +46,8 @@ public class DynaWaltzContext {
     private final Map<String, BlackBoxModel> dynamicIdBlackBoxModelMap = new LinkedHashMap<>();
     private final NetworkModel networkModel = new NetworkModel();
 
+    private final OmegaRef omegaRef;
+
     public DynaWaltzContext(Network network, String workingVariantId, List<DynamicModel> dynamicModels, List<EventModel> eventModels, List<Curve> curves, DynamicSimulationParameters parameters, DynaWaltzParameters dynaWaltzParameters) {
         this.network = Objects.requireNonNull(network);
         this.workingVariantId = Objects.requireNonNull(workingVariantId);
@@ -55,6 +57,7 @@ public class DynaWaltzContext {
         this.parameters = Objects.requireNonNull(parameters);
         this.dynaWaltzParameters = Objects.requireNonNull(dynaWaltzParameters);
         this.parametersDatabase = loadDatabase(dynaWaltzParameters.getParametersFile());
+        this.omegaRef = new OmegaRef(dynamicModels);
     }
 
     public Network getNetwork() {

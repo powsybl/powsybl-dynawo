@@ -7,6 +7,7 @@
 package com.powsybl.dynawaltz.dynamicmodels;
 
 import com.powsybl.commons.PowsyblException;
+import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParametersDatabase;
 import com.powsybl.dynawaltz.xml.DynaWaltzXmlContext;
@@ -18,8 +19,10 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static com.powsybl.dynawaltz.DynaWaltzParametersDatabase.ParameterType.DOUBLE;
 import static com.powsybl.dynawaltz.DynaWaltzParametersDatabase.ParameterType.INT;
@@ -42,10 +45,24 @@ public class OmegaRef extends AbstractBlackBoxModel {
 
     private final String generatorDynamicModelId;
 
+    private final List<GeneratorSynchronousModel> generatorDynamicModelIds;
+
     public OmegaRef(String generatorDynamicModelId) {
         // All OmegaRef instances have the same dynamicId, as all instances of DYNModelOmegaRef refer in fact to a single Dynawo BlackBoxModel
         super(OMEGA_REF_ID, "", OMEGA_REF_PARAMETER_SET_ID);
         this.generatorDynamicModelId = Objects.requireNonNull(generatorDynamicModelId);
+        this.generatorDynamicModelIds = null;
+    }
+
+    public OmegaRef(List<DynamicModel> dynamicModels) {
+        // New way to handle the OmegaRef : there's only one instance.
+        super(OMEGA_REF_ID, "", OMEGA_REF_PARAMETER_SET_ID);
+        this.generatorDynamicModelId = null;
+        this.generatorDynamicModelIds = dynamicModels
+                .stream()
+                .filter(GeneratorSynchronousModel.class::isInstance)
+                .map(GeneratorSynchronousModel.class::cast)
+                .collect(Collectors.toList());
     }
 
     @Override
