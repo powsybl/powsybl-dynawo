@@ -189,7 +189,7 @@ public class DynaWaltzContext {
     }
 
     public Stream<BlackBoxModel> getBlackBoxModelStream() {
-        return Stream.concat(Stream.of(omegaRef), getUserBlackBoxModelStream());
+        return Stream.concat(getUserBlackBoxModelStream(), Stream.of(omegaRef));
     }
 
     public List<EventModel> getEventModels() {
