@@ -44,8 +44,7 @@ public final class ParametersXml {
         copy(parameters.getSolver().getParametersFile(), workingDir);
 
         // Write parameterSet that needs to be generated (OmegaRef...)
-        DynaWaltzXmlContext xmlContext = new DynaWaltzXmlContext(context);
-        Path file = workingDir.resolve(xmlContext.getSimulationParFile());
+        Path file = workingDir.resolve(context.getSimulationParFile());
         XmlUtil.write(file, context, "parametersSet", ParametersXml::write);
     }
 
@@ -61,12 +60,10 @@ public final class ParametersXml {
     }
 
     private static void write(XMLStreamWriter writer, DynaWaltzContext context) {
-        DynaWaltzXmlContext xmlContext = new DynaWaltzXmlContext(context);
-
         try {
             // loop over the values of the map indexed by dynamicIds to write only once parameters of objects with the same dynamicId
-            for (BlackBoxModel model : context.getDynamicIdBlackBoxModelMap().values()) {
-                model.writeParameters(writer, xmlContext);
+            for (BlackBoxModel model : context.getBlackBoxModels()) {
+                model.writeParameters(writer, context);
             }
         } catch (XMLStreamException e) {
             throw new UncheckedXmlStreamException(e);

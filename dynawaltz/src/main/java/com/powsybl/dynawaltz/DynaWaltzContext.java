@@ -20,7 +20,9 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import java.nio.file.FileSystem;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -43,8 +45,9 @@ public class DynaWaltzContext {
     private final Map<Pair<String, String>, MacroConnector> eventConnectorsMap = new LinkedHashMap<>();
     private final Map<BlackBoxModel, List<BlackBoxModel>> modelsConnections = new LinkedHashMap<>();
     private final Map<BlackBoxEventModel, List<BlackBoxModel>> eventModelsConnections = new LinkedHashMap<>();
-    private final Map<String, BlackBoxModel> dynamicIdBlackBoxModelMap = new LinkedHashMap<>();
     private final NetworkModel networkModel = new NetworkModel();
+    private final Map<String, AtomicInteger> counters = new HashMap<>();
+    private final Map<BlackBoxModel, Integer> libIndexMap = new HashMap<>();
 
     private final OmegaRef omegaRef;
 
@@ -100,24 +103,9 @@ public class DynaWaltzContext {
     private void initMacroStaticReferences() {
         if (macroStaticReferences.isEmpty()) {
             getBlackBoxModelStream().forEach(bbm ->
-                macroStaticReferences.computeIfAbsent(bbm.getLib(), k -> new MacroStaticReference(k, bbm.getVarsMapping()))
+                    macroStaticReferences.computeIfAbsent(bbm.getLib(), k -> new MacroStaticReference(k, bbm.getVarsMapping()))
             );
         }
-    }
-
-    public Map<String, BlackBoxModel> getDynamicIdBlackBoxModelMap() {
-        if (dynamicIdBlackBoxModelMap.isEmpty()) {
-            getBlackBoxModelStream().forEach(bbm -> dynamicIdBlackBoxModelMap.merge(bbm.getDynamicModelId(), bbm, this::mergeDuplicateDynamicId));
-        }
-        return dynamicIdBlackBoxModelMap;
-    }
-
-    private BlackBoxModel mergeDuplicateDynamicId(BlackBoxModel bbm1, BlackBoxModel bbm2) {
-        if (bbm1 instanceof OmegaRef && bbm2 instanceof OmegaRef
-                && !((OmegaRef) bbm1).getGeneratorDynamicModelId().equals(((OmegaRef) bbm2).getGeneratorDynamicModelId())) {
-            return bbm1;
-        }
-        throw new AssertionError("Duplicate dynamicModelId " + bbm1.getDynamicModelId());
     }
 
     public Map<String, BlackBoxModel> getStaticIdBlackBoxModelMap() {
@@ -194,7 +182,6 @@ public class DynaWaltzContext {
         return eventModelsConnections;
     }
 
-
     public Stream<BlackBoxModel> getUserBlackBoxModelStream() {
         return dynamicModels.stream()
                 .filter(BlackBoxModel.class::isInstance)
@@ -238,7 +225,23 @@ public class DynaWaltzContext {
         return networkModel;
     }
 
-    public BlackBoxModel getBlackBoxModelFromDynamicId(String dynamicModelId) {
-        return getDynamicIdBlackBoxModelMap().get(dynamicModelId);
+    public int getLibIndex(BlackBoxModel bbm) {
+        return getLibIndexMap().get(bbm);
+    }
+
+    private Map<BlackBoxModel, Integer> getLibIndexMap() {
+        if (libIndexMap.isEmpty()) {
+            getBlackBoxModelStream().forEach(bbm -> libIndexMap.put(bbm,
+                    counters.computeIfAbsent(bbm.getLib(), k -> new AtomicInteger()).getAndIncrement()));
+        }
+        return libIndexMap;
+    }
+
+    public String getParFile() {
+        return Paths.get(getDynaWaltzParameters().getParametersFile()).getFileName().toString();
+    }
+
+    public String getSimulationParFile() {
+        return getNetwork().getId() + ".par";
     }
 }

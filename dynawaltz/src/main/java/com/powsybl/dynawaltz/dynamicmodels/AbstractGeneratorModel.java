@@ -8,7 +8,6 @@ package com.powsybl.dynawaltz.dynamicmodels;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
-import com.powsybl.dynawaltz.xml.DynaWaltzXmlContext;
 import com.powsybl.iidm.network.Generator;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -102,7 +101,7 @@ public abstract class AbstractGeneratorModel extends AbstractBlackBoxModel imple
     }
 
     @Override
-    public void write(XMLStreamWriter writer, DynaWaltzXmlContext context) throws XMLStreamException {
+    public void write(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
         writeBlackBoxModel(writer, context);
     }
 }

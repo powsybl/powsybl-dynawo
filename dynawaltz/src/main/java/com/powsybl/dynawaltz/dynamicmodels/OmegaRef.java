@@ -10,7 +10,6 @@ import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParametersDatabase;
-import com.powsybl.dynawaltz.xml.DynaWaltzXmlContext;
 import com.powsybl.dynawaltz.xml.ParametersXml;
 import com.powsybl.iidm.network.Generator;
 import org.apache.commons.lang3.tuple.Pair;
@@ -46,22 +45,12 @@ public class OmegaRef extends AbstractBlackBoxModel {
 
     public static final String OMEGA_REF_ID = "OMEGA_REF";
     private static final String OMEGA_REF_PARAMETER_SET_ID = "OMEGA_REF";
-
-    private final String generatorDynamicModelId;
-
+    //TODO: change the name, not accurate
     private final List<GeneratorSynchronousModel> generatorDynamicModelIds;
-
-    public OmegaRef(String generatorDynamicModelId) {
-        // All OmegaRef instances have the same dynamicId, as all instances of DYNModelOmegaRef refer in fact to a single Dynawo BlackBoxModel
-        super(OMEGA_REF_ID, "", OMEGA_REF_PARAMETER_SET_ID);
-        this.generatorDynamicModelId = Objects.requireNonNull(generatorDynamicModelId);
-        this.generatorDynamicModelIds = null;
-    }
 
     public OmegaRef(List<DynamicModel> dynamicModels) {
         // New way to handle the OmegaRef : there's only one instance.
         super(OMEGA_REF_ID, "", OMEGA_REF_PARAMETER_SET_ID);
-        this.generatorDynamicModelId = null;
         this.generatorDynamicModelIds = dynamicModels
                 .stream()
                 .filter(GeneratorSynchronousModel.class::isInstance)
@@ -79,15 +68,8 @@ public class OmegaRef extends AbstractBlackBoxModel {
         return Collections.emptyList();
     }
 
-    public String getGeneratorDynamicModelId() {
-        return generatorDynamicModelId;
-    }
-
     @Override
-    public void write(XMLStreamWriter writer, DynaWaltzXmlContext context) throws XMLStreamException {
-        // Special magic here:
-        // All instances of DYNModelOmegaRef refer in fact to a single Dynawo BlackBoxModel, hence all have the same dynamicId
-        // Therefore this is called only once, and the blackBoxModel is written in the output XML only once
+    public void write(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
         writer.writeEmptyElement(DYN_URI, "blackBoxModel");
         writer.writeAttribute("id", OMEGA_REF_ID);
         writer.writeAttribute("lib", getLib());
@@ -96,27 +78,25 @@ public class OmegaRef extends AbstractBlackBoxModel {
     }
 
     @Override
-    public void writeParameters(XMLStreamWriter writer, DynaWaltzXmlContext context) throws XMLStreamException {
+    public void writeParameters(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
         DynaWaltzParametersDatabase parDB = context.getParametersDatabase();
 
         writer.writeStartElement(DYN_URI, "set");
         writer.writeAttribute("id", getParameterSetId());
 
         long count = 0;
-        // Black box models returned by the context should follow the same order
-        // of the dynamic models supplier returned by the dynamic models supplier.
         // The dynamic models are declared in the DYD following the order of dynamic models supplier.
         // The OmegaRef parameters index the weight of each generator according to that declaration order.
-        for (BlackBoxModel model : context.getBlackBoxModels()) {
-            if (model instanceof OmegaRef) {
-                BlackBoxModel generatorModel = context.getBlackBoxModel(((OmegaRef) model).getGeneratorDynamicModelId());
-                double h = parDB.getDouble(generatorModel.getParameterSetId(), "generator_H");
-                double snom = parDB.getDouble(generatorModel.getParameterSetId(), "generator_SNom");
+        for (BlackBoxModel blackBoxModel : context.getUserBlackBoxModels()) {
+            if (blackBoxModel instanceof GeneratorSynchronousModel) {
+                double h = parDB.getDouble(blackBoxModel.getParameterSetId(), "generator_H");
+                double snom = parDB.getDouble(blackBoxModel.getParameterSetId(), "generator_SNom");
 
                 ParametersXml.writeParameter(writer, DOUBLE, "weight_gen_" + count, Double.toString(h * snom));
                 count++;
             }
         }
+
         ParametersXml.writeParameter(writer, INT, "nbGen", Long.toString(count));
 
         writer.writeEndElement();
@@ -163,8 +143,8 @@ public class OmegaRef extends AbstractBlackBoxModel {
     }
 
     @Override
-    public void writeMacroConnect(XMLStreamWriter writer, DynaWaltzXmlContext xmlContext, MacroConnector macroConnector, BlackBoxModel connected) throws XMLStreamException {
-        int index = xmlContext.getLibIndex(this);
+    public void writeMacroConnect(XMLStreamWriter writer, DynaWaltzContext context, MacroConnector macroConnector, BlackBoxModel connected) throws XMLStreamException {
+        int index = context.getLibIndex(this);
         List<Pair<String, String>> attributesConnectFrom = List.of(
                 Pair.of("id1", getDynamicModelId()),
                 Pair.of("index1", Integer.toString(index))
