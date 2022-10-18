@@ -58,6 +58,10 @@ public class OmegaRef extends AbstractBlackBoxModel {
                 .collect(Collectors.toList());
     }
 
+    public boolean hasToBeExported() {
+        return !generatorDynamicModelIds.isEmpty();
+    }
+
     @Override
     public String getLib() {
         return "DYNModelOmegaRef";
