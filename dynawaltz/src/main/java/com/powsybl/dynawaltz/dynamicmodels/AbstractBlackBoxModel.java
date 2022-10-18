@@ -6,7 +6,6 @@
  */
 package com.powsybl.dynawaltz.dynamicmodels;
 
-import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.xml.MacroStaticReference;
 import org.apache.commons.lang3.tuple.Pair;
@@ -21,13 +20,13 @@ import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 /**
  * @author Luma Zamarreño <zamarrenolm at aia.es>
  */
-public abstract class AbstractBlackBoxModel implements DynamicModel, BlackBoxModel {
+public abstract class AbstractBlackBoxModel implements BlackBoxModel {
 
     private final String dynamicModelId;
     private final String staticId;
     private final String parameterSetId;
 
-    public AbstractBlackBoxModel(String dynamicModelId, String staticId, String parameterSetId) {
+    protected AbstractBlackBoxModel(String dynamicModelId, String staticId, String parameterSetId) {
         this.dynamicModelId = Objects.requireNonNull(dynamicModelId);
         this.staticId = Objects.requireNonNull(staticId);
         this.parameterSetId = Objects.requireNonNull(parameterSetId);

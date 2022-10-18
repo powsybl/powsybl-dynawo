@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public abstract class AbstractGeneratorModel extends AbstractBlackBoxModel implements GeneratorModel {
+public abstract class AbstractGeneratorModel extends AbstractDynamicBlackBoxModel implements GeneratorModel {
 
     protected static final List<Pair<String, String>> VAR_MAPPING = Arrays.asList(
             Pair.of("generator_PGenPu", "p"),
