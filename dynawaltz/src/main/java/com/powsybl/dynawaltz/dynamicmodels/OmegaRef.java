@@ -30,12 +30,11 @@ import static com.powsybl.dynawaltz.DynaWaltzParametersDatabase.ParameterType.IN
 import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.*;
 
 /**
- * OmegaRef is a special dynamic model: its role is to synchronize the generators' frequency, there will be multiple Java
- * instances of the OmegaRef dynamic model, one for each generator's dynamic model connected to it. The corresponding black
+ * OmegaRef is a special model: its role is to synchronize the generators' frequency. The corresponding black
  * box model XML entry is serialized only once. For each generator synchronised through the OmegaRef model, there will be
  * one XML entry for the connection with the generator's dynamic model, and one XML entry for the connection with the
  * NETWORK dynamic model. There are thus two macroConnectors defined for OmegaRef: one to connect it to a generator's
- * dynamic model and one to connect it to the NETWORK model
+ * dynamic model and one to connect it to the NETWORK model.
  *
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
@@ -45,13 +44,12 @@ public class OmegaRef extends AbstractBlackBoxModel {
 
     public static final String OMEGA_REF_ID = "OMEGA_REF";
     private static final String OMEGA_REF_PARAMETER_SET_ID = "OMEGA_REF";
-    //TODO: change the name, not accurate
-    private final List<GeneratorSynchronousModel> generatorDynamicModelIds;
+    private final List<GeneratorSynchronousModel> generatorDynamicModelsAssociated;
 
     public OmegaRef(List<DynamicModel> dynamicModels) {
         // New way to handle the OmegaRef : there's only one instance.
         super(OMEGA_REF_ID, "", OMEGA_REF_PARAMETER_SET_ID);
-        this.generatorDynamicModelIds = dynamicModels
+        this.generatorDynamicModelsAssociated = dynamicModels
                 .stream()
                 .filter(GeneratorSynchronousModel.class::isInstance)
                 .map(GeneratorSynchronousModel.class::cast)
@@ -59,7 +57,7 @@ public class OmegaRef extends AbstractBlackBoxModel {
     }
 
     public boolean hasToBeExported() {
-        return !generatorDynamicModelIds.isEmpty();
+        return !generatorDynamicModelsAssociated.isEmpty();
     }
 
     @Override
@@ -91,14 +89,12 @@ public class OmegaRef extends AbstractBlackBoxModel {
         long count = 0;
         // The dynamic models are declared in the DYD following the order of dynamic models supplier.
         // The OmegaRef parameters index the weight of each generator according to that declaration order.
-        for (BlackBoxModel blackBoxModel : context.getUserBlackBoxModels()) {
-            if (blackBoxModel instanceof GeneratorSynchronousModel) {
-                double h = parDB.getDouble(blackBoxModel.getParameterSetId(), "generator_H");
-                double snom = parDB.getDouble(blackBoxModel.getParameterSetId(), "generator_SNom");
+        for (BlackBoxModel blackBoxModel : generatorDynamicModelsAssociated.stream().map(BlackBoxModel.class::cast).collect(Collectors.toList())) {
+            double h = parDB.getDouble(blackBoxModel.getParameterSetId(), "generator_H");
+            double snom = parDB.getDouble(blackBoxModel.getParameterSetId(), "generator_SNom");
 
-                ParametersXml.writeParameter(writer, DOUBLE, "weight_gen_" + count, Double.toString(h * snom));
-                count++;
-            }
+            ParametersXml.writeParameter(writer, DOUBLE, "weight_gen_" + count, Double.toString(h * snom));
+            count++;
         }
 
         ParametersXml.writeParameter(writer, INT, "nbGen", Long.toString(count));
@@ -126,7 +122,7 @@ public class OmegaRef extends AbstractBlackBoxModel {
     public List<BlackBoxModel> getModelsConnectedTo(DynaWaltzContext context) {
         List<BlackBoxModel> lGenAndBuses = new ArrayList<>();
 
-        generatorDynamicModelIds.stream().map(BlackBoxModel.class::cast)
+        generatorDynamicModelsAssociated.stream().map(BlackBoxModel.class::cast)
                 .forEach(generatorModel -> {
                     Generator generator = context.getNetwork().getGenerator(generatorModel.getStaticId());
                     if (Objects.nonNull(generator)) {
