@@ -68,9 +68,8 @@ public class DynaWaltzGroovyDynamicModelsSupplierTest {
         // One model for each load, one model for each generator and one omegaRef per generator
         int numLoads = network.getLoadCount();
         int numGenerators = network.getGeneratorCount();
-        int numOmegaRefs = numGenerators;
         int numLines = network.getLineCount();
-        int expectedDynamicModelsSize =  numLoads + numGenerators + numOmegaRefs + numLines;
+        int expectedDynamicModelsSize =  numLoads + numGenerators + numLines;
         assertEquals(expectedDynamicModelsSize, dynamicModels.size());
         dynamicModels.forEach(this::validateModel);
     }
@@ -151,11 +150,9 @@ public class DynaWaltzGroovyDynamicModelsSupplierTest {
         boolean isLoadAlphaBetaExtension = extension instanceof LoadAlphaBetaGroovyExtension;
         boolean isLoadOneTransformerExtension = extension instanceof LoadOneTransformerGroovyExtension;
 
-        boolean isOmegaRefExtension = extension instanceof OmegaRefGroovyExtension;
-
         boolean isLoadExtension = isLoadAlphaBetaExtension || isLoadOneTransformerExtension;
         boolean isGeneratorExtension = extension instanceof GeneratorModelGroovyExtension;
-        boolean isDynamicModelExtension = isLoadExtension || isGeneratorExtension || isOmegaRefExtension;
+        boolean isDynamicModelExtension = isLoadExtension || isGeneratorExtension;
 
         boolean isCurrentLimitAutomatonExtension = extension instanceof CurrentLimitAutomatonGroovyExtension;
         boolean isAutomatonExtension = isCurrentLimitAutomatonExtension;
@@ -164,8 +161,8 @@ public class DynaWaltzGroovyDynamicModelsSupplierTest {
     }
 
     private void validateModel(DynamicModel dynamicModel) {
-        assertTrue(dynamicModel instanceof AbstractBlackBoxModel);
-        AbstractBlackBoxModel blackBoxModel = (AbstractBlackBoxModel) dynamicModel;
+        assertTrue(dynamicModel instanceof AbstractDynamicBlackBoxModel);
+        AbstractDynamicBlackBoxModel blackBoxModel = (AbstractDynamicBlackBoxModel) dynamicModel;
         if (blackBoxModel instanceof LoadAlphaBeta) {
             Identifiable<?> identifiable = network.getIdentifiable(blackBoxModel.getStaticId());
             assertEquals(identifiable.getId(), blackBoxModel.getDynamicModelId());
@@ -205,10 +202,6 @@ public class DynaWaltzGroovyDynamicModelsSupplierTest {
             assertEquals("BBM_" + identifiable.getId(), blackBoxModel.getDynamicModelId());
             assertEquals("GF", blackBoxModel.getParameterSetId());
             assertTrue(identifiable instanceof Generator);
-        } else if (blackBoxModel instanceof OmegaRef) {
-            OmegaRef omegaRef = (OmegaRef) blackBoxModel;
-            assertEquals("OMEGA_REF", blackBoxModel.getDynamicModelId());
-            assertEquals("OMEGA_REF", blackBoxModel.getParameterSetId());
         } else if (blackBoxModel instanceof CurrentLimitAutomaton) {
             Identifiable<?> identifiable = network.getIdentifiable(((CurrentLimitAutomaton) blackBoxModel).getLineStaticId());
             assertEquals("BBM_" + identifiable.getId(), blackBoxModel.getDynamicModelId());

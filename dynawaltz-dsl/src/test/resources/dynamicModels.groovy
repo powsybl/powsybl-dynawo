@@ -68,9 +68,6 @@ for (Generator gen : network.generators) {
             parameterSetId "GSTWPR"
         }
     }
-    OmegaRef {
-        generatorDynamicModelId "BBM_" + gen.id
-    }
 }
 
 for (Line line : network.lines) {
