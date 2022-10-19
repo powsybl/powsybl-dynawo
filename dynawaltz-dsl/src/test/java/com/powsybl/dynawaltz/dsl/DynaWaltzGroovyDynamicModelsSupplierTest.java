@@ -60,7 +60,7 @@ public class DynaWaltzGroovyDynamicModelsSupplierTest {
 
         List<DynamicModelGroovyExtension> extensions = GroovyExtension.find(DynamicModelGroovyExtension.class, DynaWaltzProvider.NAME);
         assertEquals(9, extensions.size());
-        extensions.forEach(DynaWaltzGroovyDynamicModelsSupplierTest::validateExtension);
+        extensions.forEach(this::validateExtension);
 
         DynamicModelsSupplier supplier = new GroovyDynamicModelsSupplier(fileSystem.getPath("/dynamicModels.groovy"), extensions);
 
@@ -136,26 +136,20 @@ public class DynaWaltzGroovyDynamicModelsSupplierTest {
         return network;
     }
 
-    private static boolean validateExtension(DynamicModelGroovyExtension extension) {
+    private void validateExtension(DynamicModelGroovyExtension extension) {
         boolean isLoadAlphaBetaExtension = extension instanceof LoadAlphaBetaGroovyExtension;
         boolean isLoadOneTransformerExtension = extension instanceof LoadOneTransformerGroovyExtension;
-
-        boolean isThreeWindingsGeneratorExtension = extension instanceof GeneratorSynchronousThreeWindingsGroovyExtension;
-        boolean isFourWindingsGeneratorExtension = extension instanceof GeneratorSynchronousFourWindingsGroovyExtension;
-        boolean isThreeWindingsGeneratorProportionalRegulationsExtension = extension instanceof GeneratorSynchronousThreeWindingsProportionalRegulationsGroovyExtension;
-        boolean isFourWindingsGeneratorProportionalRegulationsExtension = extension instanceof GeneratorSynchronousFourWindingsProportionalRegulationsGroovyExtension;
-        boolean isFourWindingsGeneratorProportionalRegulationsStepPmExtension = extension instanceof GeneratorSynchronousFourWindingsProportionalRegulationsStepPmGroovyExtension;
 
         boolean isOmegaRefExtension = extension instanceof OmegaRefGroovyExtension;
 
         boolean isLoadExtension = isLoadAlphaBetaExtension || isLoadOneTransformerExtension;
-        boolean isGeneratorExtension = isThreeWindingsGeneratorExtension || isFourWindingsGeneratorExtension || isThreeWindingsGeneratorProportionalRegulationsExtension || isFourWindingsGeneratorProportionalRegulationsExtension || isFourWindingsGeneratorProportionalRegulationsStepPmExtension;
+        boolean isGeneratorExtension = extension instanceof GeneratorModelGroovyExtension;
         boolean isDynamicModelExtension = isLoadExtension || isGeneratorExtension || isOmegaRefExtension;
 
         boolean isCurrentLimitAutomatonExtension = extension instanceof CurrentLimitAutomatonGroovyExtension;
         boolean isAutomatonExtension = isCurrentLimitAutomatonExtension;
 
-        return isDynamicModelExtension || isAutomatonExtension;
+        assertTrue(isDynamicModelExtension || isAutomatonExtension);
     }
 
     private void validateModel(DynamicModel dynamicModel) {

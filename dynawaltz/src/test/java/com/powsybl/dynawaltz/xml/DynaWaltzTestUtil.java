@@ -6,12 +6,9 @@
  */
 package com.powsybl.dynawaltz.xml;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -171,16 +168,16 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
             .setTargetQ(0.9)
             .add();
         vlgen.newGenerator()
-                .setId("GEN5")
-                .setBus(ngen.getId())
-                .setConnectableBus(ngen.getId())
-                .setMinP(-9999.99)
-                .setMaxP(9999.99)
-                .setVoltageRegulatorOn(true)
-                .setTargetV(24.5)
-                .setTargetP(-0.3)
-                .setTargetQ(0.7)
-                .add();
+            .setId("GEN5")
+            .setBus(ngen.getId())
+            .setConnectableBus(ngen.getId())
+            .setMinP(-9999.99)
+            .setMaxP(9999.99)
+            .setVoltageRegulatorOn(true)
+            .setTargetV(24.5)
+            .setTargetP(-0.3)
+            .setTargetQ(0.7)
+            .add();
         return network;
     }
 
