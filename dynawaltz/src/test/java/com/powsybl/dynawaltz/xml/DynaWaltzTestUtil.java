@@ -85,6 +85,8 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
                 dynamicModels.add(new GeneratorSynchronousFourWindings("BBM_" + g.getId(), g.getId(), "GSFW"));
             } else if (g.getId().equals("GEN4")) {
                 dynamicModels.add(new GeneratorSynchronousThreeWindings("BBM_" + g.getId(), g.getId(), "GSTW"));
+            } else if (g.getId().equals("GEN5")) {
+                dynamicModels.add(new GeneratorSynchronousFourWindingsProportionalRegulationsStepPm("BBM_" + g.getId(), g.getId(), "GSFWPRSP"));
             } else {
                 dynamicModels.add(new GeneratorSynchronousThreeWindingsProportionalRegulations("BBM_" + g.getId(), g.getId(), "GSTWPR"));
             }
@@ -130,7 +132,7 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
             .setP0(1.0)
             .setQ0(0.5)
             .add();
-        VoltageLevel vlgen  = network.getVoltageLevel("VLGEN");
+        VoltageLevel vlgen = network.getVoltageLevel("VLGEN");
         Bus ngen = vlgen.getBusBreakerView().getBus("NGEN");
         vlgen.newGenerator()
             .setId("GEN2")
@@ -164,6 +166,17 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
             .setTargetV(24.5)
             .setTargetP(-1.3)
             .setTargetQ(0.9)
+            .add();
+        vlgen.newGenerator()
+            .setId("GEN5")
+            .setBus(ngen.getId())
+            .setConnectableBus(ngen.getId())
+            .setMinP(-9999.99)
+            .setMaxP(9999.99)
+            .setVoltageRegulatorOn(true)
+            .setTargetV(24.5)
+            .setTargetP(-0.3)
+            .setTargetQ(0.7)
             .add();
         return network;
     }
