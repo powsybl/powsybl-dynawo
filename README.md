@@ -61,7 +61,7 @@ System.out.println(result.isOk());
 System.out.println(result.getLogs());
 ```
 
-To learn more about the usage of DynaWaltz, read the [dedicated page](https://www.powsybl.org/pages/documentation/simulation/timedomain/dynawo.html) on our website.
+To learn more about the usage of DynaWaltz, read the [dedicated page](https://www.powsybl.org/pages/documentation/simulation/timedomain/dynawo) on our website.
 
 ### Examples
 
@@ -85,9 +85,6 @@ for (Generator gen : network.generators) {
         dynamicModelId "BBM_" + gen.id
         parameterSetId "GSTWPR"
     }
-    OmegaRef {
-        generatorDynamicModelId "BBM_" + gen.id
-    }
 }
 
 for (Line line : network.lines) {
@@ -99,4 +96,4 @@ for (Line line : network.lines) {
 }
 ```
 
-Other examples can be found in the [resources](https://github.com/powsybl/powsybl-dynawo/tree/main/src/test/resources) of this project.
+Other examples can be found in the [resources](https://github.com/powsybl/powsybl-dynawo/tree/main/dynawaltz-dsl/src/test/resources) of this project.
