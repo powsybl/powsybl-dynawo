@@ -18,6 +18,7 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Objects;
 
 /**
  *
@@ -42,21 +43,37 @@ public final class DynaFlowConfigSerializer {
         try {
             jsonGenerator.writeStartObject();
             jsonGenerator.writeObjectFieldStart("dfl-config");
-            jsonGenerator.writeBooleanField("SVCRegulationOn", dynaFlowParameters.getSvcRegulationOn());
-            jsonGenerator.writeBooleanField("ShuntRegulationOn", dynaFlowParameters.getShuntRegulationOn());
-            jsonGenerator.writeBooleanField("AutomaticSlackBusOn", dynaFlowParameters.getAutomaticSlackBusOn());
-            jsonGenerator.writeNumberField("DsoVoltageLevel", dynaFlowParameters.getDsoVoltageLevel());
+            if (Objects.nonNull(dynaFlowParameters.getSvcRegulationOn())) {
+                jsonGenerator.writeBooleanField("SVCRegulationOn", dynaFlowParameters.getSvcRegulationOn());
+            }
+            if (Objects.nonNull(dynaFlowParameters.getShuntRegulationOn())) {
+                jsonGenerator.writeBooleanField("ShuntRegulationOn", dynaFlowParameters.getShuntRegulationOn());
+            }
+            if (Objects.nonNull(dynaFlowParameters.getAutomaticSlackBusOn())) {
+                jsonGenerator.writeBooleanField("AutomaticSlackBusOn", dynaFlowParameters.getAutomaticSlackBusOn());
+            }
+            if (Objects.nonNull(dynaFlowParameters.getDsoVoltageLevel())) {
+                jsonGenerator.writeNumberField("DsoVoltageLevel", dynaFlowParameters.getDsoVoltageLevel());
+            }
             jsonGenerator.writeBooleanField("InfiniteReactiveLimits", lfParameters.isNoGeneratorReactiveLimits());
             jsonGenerator.writeBooleanField("PSTRegulationOn", lfParameters.isPhaseShifterRegulationOn());
-            jsonGenerator.writeFieldName("ChosenOutputs");
-            jsonGenerator.writeStartArray();
-            for (String outputType : dynaFlowParameters.getChosenOutputs()) {
-                jsonGenerator.writeString(outputType);
+            if (Objects.nonNull(dynaFlowParameters.getChosenOutputs())) {
+                jsonGenerator.writeFieldName("ChosenOutputs");
+                jsonGenerator.writeStartArray();
+                for (String outputType : dynaFlowParameters.getChosenOutputs()) {
+                    jsonGenerator.writeString(outputType);
+                }
+                jsonGenerator.writeEndArray();
             }
-            jsonGenerator.writeEndArray();
-            jsonGenerator.writeBooleanField("VscAsGenerators", dynaFlowParameters.getVscAsGenerators());
-            jsonGenerator.writeBooleanField("LccAsLoads", dynaFlowParameters.getLccAsLoads());
-            jsonGenerator.writeNumberField("TimeStep", dynaFlowParameters.getTimeStep());
+            if (Objects.nonNull(dynaFlowParameters.getVscAsGenerators())) {
+                jsonGenerator.writeBooleanField("VscAsGenerators", dynaFlowParameters.getVscAsGenerators());
+            }
+            if (Objects.nonNull(dynaFlowParameters.getLccAsLoads())) {
+                jsonGenerator.writeBooleanField("LccAsLoads", dynaFlowParameters.getLccAsLoads());
+            }
+            if (Objects.nonNull(dynaFlowParameters.getTimeStep())) {
+                jsonGenerator.writeNumberField("TimeStep", dynaFlowParameters.getTimeStep());
+            }
             jsonGenerator.writeStringField("OutputDir", workingDir.toAbsolutePath().toString());
             jsonGenerator.writeEndObject();
             jsonGenerator.writeEndObject();

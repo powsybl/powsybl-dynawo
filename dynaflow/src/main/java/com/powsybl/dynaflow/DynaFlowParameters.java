@@ -6,7 +6,7 @@
  */
 package com.powsybl.dynaflow;
 
-import com.google.common.collect.ImmutableMap;
+import com.google.common.base.MoreObjects;
 import com.powsybl.commons.config.ModuleConfig;
 import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.extensions.AbstractExtension;
@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.powsybl.dynaflow.DynaFlowProvider.MODULE_SPECIFIC_PARAMETERS;
-import static com.powsybl.dynaflow.DynaFlowConstants.OutputTypes;
 
 /**
  * @author Guillaume Pernin <guillaume.pernin at rte-france.com>
@@ -39,32 +38,16 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
 
     private static final String TIME_STEP = "timeStep";
 
-    public static final boolean DEFAULT_SVC_REGULATION_ON = false;
-    public static final boolean DEFAULT_SHUNT_REGULATION_ON = false;
-    public static final boolean DEFAULT_AUTOMATIC_SLACK_BUS_ON = false;
-    public static final double DEFAULT_DSO_VOLTAGE_LEVEL = 45.0;
+    private Boolean svcRegulationOn = null;
+    private Boolean shuntRegulationOn = null;
+    private Boolean automaticSlackBusOn = null;
+    private Double dsoVoltageLevel = null;
+    private List<String> chosenOutputs = null;
+    private Boolean vscAsGenerators = null;
+    private Boolean lccAsLoads = null;
+    private Double timeStep = null;
 
-    public static final boolean DEFAULT_VSC_AS_GENERATORS = true;
-    public static final boolean DEFAULT_LCC_AS_LOADS = true;
-
-    public static final double DEFAULT_TIME_STEP = 2.6;
-
-    public static final List<String> DEFAULT_CHOSEN_OUTPUT = Collections.singletonList(OutputTypes.STEADYSTATE.name());
-
-    private boolean svcRegulationOn = DEFAULT_SVC_REGULATION_ON;
-    private boolean shuntRegulationOn = DEFAULT_SHUNT_REGULATION_ON;
-    private boolean automaticSlackBusOn = DEFAULT_AUTOMATIC_SLACK_BUS_ON;
-    private double dsoVoltageLevel = DEFAULT_DSO_VOLTAGE_LEVEL;
-
-    private List<String> chosenOutputs = DEFAULT_CHOSEN_OUTPUT;
-
-    private boolean vscAsGenerators = DEFAULT_VSC_AS_GENERATORS;
-
-    private boolean lccAsLoads = DEFAULT_LCC_AS_LOADS;
-
-    private double timeStep = DEFAULT_TIME_STEP;
-
-    public boolean getSvcRegulationOn() {
+    public Boolean getSvcRegulationOn() {
         return svcRegulationOn;
     }
 
@@ -73,7 +56,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         return this;
     }
 
-    public boolean getShuntRegulationOn() {
+    public Boolean getShuntRegulationOn() {
         return shuntRegulationOn;
     }
 
@@ -82,7 +65,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         return this;
     }
 
-    public boolean getAutomaticSlackBusOn() {
+    public Boolean getAutomaticSlackBusOn() {
         return automaticSlackBusOn;
     }
 
@@ -91,7 +74,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         return this;
     }
 
-    public double getDsoVoltageLevel() {
+    public Double getDsoVoltageLevel() {
         return dsoVoltageLevel;
     }
 
@@ -109,7 +92,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         return this;
     }
 
-    public boolean getVscAsGenerators() {
+    public Boolean getVscAsGenerators() {
         return vscAsGenerators;
     }
 
@@ -118,7 +101,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         return this;
     }
 
-    public boolean getLccAsLoads() {
+    public Boolean getLccAsLoads() {
         return lccAsLoads;
     }
 
@@ -127,7 +110,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         return this;
     }
 
-    public double getTimeStep() {
+    public Double getTimeStep() {
         return timeStep;
     }
 
@@ -143,18 +126,16 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
 
     @Override
     public String toString() {
-        ImmutableMap.Builder<String, Object> immutableMapBuilder = ImmutableMap.builder();
-        immutableMapBuilder
-                .put(SVC_REGULATION_ON, svcRegulationOn)
-                .put(SHUNT_REGULATION_ON, shuntRegulationOn)
-                .put(AUTOMATIC_SLACK_BUS_ON, automaticSlackBusOn)
-                .put(DSO_VOLTAGE_LEVEL, dsoVoltageLevel)
-                .put(CHOSEN_OUTPUTS, chosenOutputs)
-                .put(VSC_AS_GENERATORS, vscAsGenerators)
-                .put(LCC_AS_LOADS, lccAsLoads)
-                .put(TIME_STEP, timeStep);
-
-        return immutableMapBuilder.build().toString();
+        return MoreObjects.toStringHelper("").omitNullValues()
+                .add(SVC_REGULATION_ON, svcRegulationOn)
+                .add(SHUNT_REGULATION_ON, shuntRegulationOn)
+                .add(AUTOMATIC_SLACK_BUS_ON, automaticSlackBusOn)
+                .add(DSO_VOLTAGE_LEVEL, dsoVoltageLevel)
+                .add(CHOSEN_OUTPUTS, chosenOutputs)
+                .add(VSC_AS_GENERATORS, vscAsGenerators)
+                .add(LCC_AS_LOADS, lccAsLoads)
+                .add(TIME_STEP, timeStep)
+                .toString();
     }
 
     public static DynaFlowParameters load(PlatformConfig platformConfig) {
@@ -176,14 +157,30 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
     }
 
     private static void load(DynaFlowParameters parameters, ModuleConfig config) {
-        parameters.setSvcRegulationOn(config.getBooleanProperty(SVC_REGULATION_ON, DEFAULT_SVC_REGULATION_ON))
-                .setShuntRegulationOn(config.getBooleanProperty(SHUNT_REGULATION_ON, DEFAULT_SHUNT_REGULATION_ON))
-                .setAutomaticSlackBusOn(config.getBooleanProperty(AUTOMATIC_SLACK_BUS_ON, DEFAULT_AUTOMATIC_SLACK_BUS_ON))
-                .setDsoVoltageLevel(config.getDoubleProperty(DSO_VOLTAGE_LEVEL, DEFAULT_DSO_VOLTAGE_LEVEL))
-                .setChosenOutputs(config.getStringListProperty(CHOSEN_OUTPUTS, DEFAULT_CHOSEN_OUTPUT))
-                .setVscAsGenerators(config.getBooleanProperty(VSC_AS_GENERATORS, DEFAULT_VSC_AS_GENERATORS))
-                .setLccAsLoads(config.getBooleanProperty(LCC_AS_LOADS, DEFAULT_LCC_AS_LOADS))
-                .setTimeStep(config.getDoubleProperty(TIME_STEP, DEFAULT_TIME_STEP));
+        if (config.hasProperty(SVC_REGULATION_ON)) {
+            parameters.setSvcRegulationOn(config.getBooleanProperty(SVC_REGULATION_ON));
+        }
+        if (config.hasProperty(SHUNT_REGULATION_ON)) {
+            parameters.setShuntRegulationOn(config.getBooleanProperty(SHUNT_REGULATION_ON));
+        }
+        if (config.hasProperty(AUTOMATIC_SLACK_BUS_ON)) {
+            parameters.setAutomaticSlackBusOn(config.getBooleanProperty(AUTOMATIC_SLACK_BUS_ON));
+        }
+        if (config.hasProperty(DSO_VOLTAGE_LEVEL)) {
+            parameters.setDsoVoltageLevel(config.getDoubleProperty(DSO_VOLTAGE_LEVEL));
+        }
+        if (config.hasProperty(CHOSEN_OUTPUTS)) {
+            parameters.setChosenOutputs(config.getStringListProperty(CHOSEN_OUTPUTS));
+        }
+        if (config.hasProperty(VSC_AS_GENERATORS)) {
+            parameters.setVscAsGenerators(config.getBooleanProperty(VSC_AS_GENERATORS));
+        }
+        if (config.hasProperty(LCC_AS_LOADS)) {
+            parameters.setLccAsLoads(config.getBooleanProperty(LCC_AS_LOADS));
+        }
+        if (config.hasProperty(TIME_STEP)) {
+            parameters.setTimeStep(config.getDoubleProperty(TIME_STEP));
+        }
     }
 
     public void update(Map<String, String> properties) {

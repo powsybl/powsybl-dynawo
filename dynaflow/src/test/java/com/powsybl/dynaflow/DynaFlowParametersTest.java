@@ -29,11 +29,11 @@ import java.util.Map;
 
 import static com.powsybl.commons.ComparisonUtils.compareTxt;
 import static com.powsybl.dynaflow.DynaFlowProvider.MODULE_SPECIFIC_PARAMETERS;
-import static com.powsybl.dynaflow.DynaFlowConstants.OutputTypes;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -94,30 +94,81 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
         DynaFlowParameters parametersExt = parameters.getExtension(DynaFlowParameters.class);
         assertNotNull(parametersExt);
 
-        assertEquals(DynaFlowParameters.DEFAULT_SVC_REGULATION_ON, parametersExt.getSvcRegulationOn());
-        assertEquals(DynaFlowParameters.DEFAULT_SHUNT_REGULATION_ON, parametersExt.getShuntRegulationOn());
-        assertEquals(DynaFlowParameters.DEFAULT_AUTOMATIC_SLACK_BUS_ON, parametersExt.getAutomaticSlackBusOn());
-        assert DynaFlowParameters.DEFAULT_DSO_VOLTAGE_LEVEL == parametersExt.getDsoVoltageLevel();
-        assertArrayEquals(DynaFlowParameters.DEFAULT_CHOSEN_OUTPUT.toArray(), parametersExt.getChosenOutputs().toArray());
-        assertEquals(DynaFlowParameters.DEFAULT_VSC_AS_GENERATORS, parametersExt.getVscAsGenerators());
-        assertEquals(DynaFlowParameters.DEFAULT_LCC_AS_LOADS, parametersExt.getLccAsLoads());
-        assert DynaFlowParameters.DEFAULT_TIME_STEP == parametersExt.getTimeStep();
+        assertNull(parametersExt.getSvcRegulationOn());
+        assertNull(parametersExt.getShuntRegulationOn());
+        assertNull(parametersExt.getAutomaticSlackBusOn());
+        assertNull(parametersExt.getDsoVoltageLevel());
+        assertNull(parametersExt.getChosenOutputs());
+        assertNull(parametersExt.getVscAsGenerators());
+        assertNull(parametersExt.getLccAsLoads());
+        assertNull(parametersExt.getTimeStep());
     }
 
     @Test
     public void checkDefaultToString() {
         LoadFlowParameters parameters = LoadFlowParameters.load(platformConfig);
         DynaFlowParameters parametersExt = parameters.getExtension(DynaFlowParameters.class);
-        String expectedString = "{svcRegulationOn=" + DynaFlowParameters.DEFAULT_SVC_REGULATION_ON +
-                ", shuntRegulationOn=" + DynaFlowParameters.DEFAULT_SHUNT_REGULATION_ON +
-                ", automaticSlackBusOn=" + DynaFlowParameters.DEFAULT_AUTOMATIC_SLACK_BUS_ON +
-                ", dsoVoltageLevel=" + DynaFlowParameters.DEFAULT_DSO_VOLTAGE_LEVEL +
-                ", chosenOutputs=" + DynaFlowParameters.DEFAULT_CHOSEN_OUTPUT +
-                ", vscAsGenerators=" + DynaFlowParameters.DEFAULT_VSC_AS_GENERATORS +
-                ", lccAsLoads=" + DynaFlowParameters.DEFAULT_LCC_AS_LOADS +
-                ", timeStep=" + DynaFlowParameters.DEFAULT_TIME_STEP + "}";
+
+        String expectedString = "{}";
+
+        assertEquals(expectedString, parametersExt.toString());
+
+    }
+
+    @Test
+    public void checkAllParametersAssignedToString() {
+        LoadFlowParameters parameters = LoadFlowParameters.load(platformConfig);
+        DynaFlowParameters parametersExt = parameters.getExtension(DynaFlowParameters.class);
+        boolean svcRegulationOn = true;
+        boolean shuntRegulationOn = false;
+        boolean automaticSlackBusOn = true;
+        Double dsoVoltage = 45.0;
+        List<String> chosenOutputs = Arrays.asList(OutputTypes.STEADYSTATE.name(), OutputTypes.TIMELINE.name());
+        boolean vscAsGenerators = false;
+        boolean lccAsLoads = false;
+        Double timeStep = 2.6;
+
+        Map<String, String> properties = Map.of(
+                "svcRegulationOn", Boolean.toString(svcRegulationOn),
+                "shuntRegulationOn", Boolean.toString(shuntRegulationOn),
+                "automaticSlackBusOn", Boolean.toString(automaticSlackBusOn),
+                "dsoVoltageLevel", Double.toString(dsoVoltage),
+                "chosenOutputs", OutputTypes.STEADYSTATE.name() + "," + OutputTypes.TIMELINE.name(),
+                "vscAsGenerators", Boolean.toString(vscAsGenerators),
+                "lccAsLoads", Boolean.toString(lccAsLoads),
+                "timeStep", Double.toString(timeStep));
+
+        parametersExt.update(properties);
+
+        String expectedString = "{svcRegulationOn=" + svcRegulationOn +
+                ", shuntRegulationOn=" + shuntRegulationOn +
+                ", automaticSlackBusOn=" + automaticSlackBusOn +
+                ", dsoVoltageLevel=" + dsoVoltage +
+                ", chosenOutputs=" + chosenOutputs +
+                ", vscAsGenerators=" + vscAsGenerators +
+                ", lccAsLoads=" + lccAsLoads +
+                ", timeStep=" + timeStep + "}";
         assertEquals(expectedString, parametersExt.toString());
         System.out.println(expectedString);
+    }
+
+    @Test
+    public void defaultParametersSerialization() throws IOException {
+        LoadFlowParameters lfParameters = LoadFlowParameters.load(platformConfig);
+        lfParameters.setNoGeneratorReactiveLimits(true);
+        lfParameters.setPhaseShifterRegulationOn(false);
+
+        DynaFlowParameters dynaFlowParameters = new DynaFlowParameters();
+        lfParameters.addExtension(DynaFlowParameters.class, dynaFlowParameters);
+
+        Path workingDir = fileSystem.getPath("dynaflow/workingDir");
+        Path parameterFile = fileSystem.getPath(DynaFlowConstants.CONFIG_FILENAME);
+        DynaFlowConfigSerializer.serialize(lfParameters, dynaFlowParameters, workingDir, parameterFile);
+
+        try (InputStream actual = Files.newInputStream(parameterFile);
+             InputStream expected = getClass().getResourceAsStream("/params_default.json")) {
+            compareTxt(expected, actual);
+        }
     }
 
     @Test

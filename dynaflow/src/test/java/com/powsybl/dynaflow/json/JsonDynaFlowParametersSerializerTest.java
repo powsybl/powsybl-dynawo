@@ -63,6 +63,16 @@ public class JsonDynaFlowParametersSerializerTest extends AbstractConverterTest 
         parameters.addExtension(DynaFlowParameters.class, params);
 
         roundTripTest(parameters, JsonLoadFlowParameters::write,
+                JsonLoadFlowParameters::read, "/dynaflow_parameters_set_serialization.json");
+    }
+
+    @Test
+    public void serializeWithDefaultDynaflowParameters() throws IOException {
+        InMemoryPlatformConfig platformConfig = new InMemoryPlatformConfig(fileSystem);
+
+        LoadFlowParameters parameters = LoadFlowParameters.load(platformConfig);
+
+        roundTripTest(parameters, JsonLoadFlowParameters::write,
                 JsonLoadFlowParameters::read, "/dynaflow_default_serialization.json");
     }
 }
