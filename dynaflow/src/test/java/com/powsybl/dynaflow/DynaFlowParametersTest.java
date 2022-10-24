@@ -62,8 +62,6 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
         boolean automaticSlackBusOn = true;
         double dsoVoltageLevel = 87.32;
         List<String> chosenOutputs = Arrays.asList(OutputTypes.STEADYSTATE.name(), OutputTypes.TIMELINE.name());
-        boolean vscAsGenerators = false;
-        boolean lccAsLoads = false;
         double timeStep = 0;
 
         MapModuleConfig moduleConfig = platformConfig.createModuleConfig(MODULE_SPECIFIC_PARAMETERS);
@@ -72,8 +70,6 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
         moduleConfig.setStringProperty("automaticSlackBusOn", Boolean.toString(automaticSlackBusOn));
         moduleConfig.setStringProperty("dsoVoltageLevel", Double.toString(dsoVoltageLevel));
         moduleConfig.setStringListProperty("chosenOutputs", chosenOutputs);
-        moduleConfig.setStringProperty("vscAsGenerators", Boolean.toString(vscAsGenerators));
-        moduleConfig.setStringProperty("lccAsLoads", Boolean.toString(lccAsLoads));
         moduleConfig.setStringProperty("timeStep", Double.toString(timeStep));
 
         DynaFlowParameters parameters = DynaFlowParameters.load(platformConfig);
@@ -83,8 +79,6 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
         assertEquals(automaticSlackBusOn, parameters.getAutomaticSlackBusOn());
         assert dsoVoltageLevel == parameters.getDsoVoltageLevel();
         assertArrayEquals(chosenOutputs.toArray(), parameters.getChosenOutputs().toArray());
-        assertEquals(vscAsGenerators, parameters.getVscAsGenerators());
-        assertEquals(lccAsLoads, parameters.getLccAsLoads());
         assert timeStep == parameters.getTimeStep();
     }
 
@@ -99,8 +93,6 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
         assertNull(parametersExt.getAutomaticSlackBusOn());
         assertNull(parametersExt.getDsoVoltageLevel());
         assertNull(parametersExt.getChosenOutputs());
-        assertNull(parametersExt.getVscAsGenerators());
-        assertNull(parametersExt.getLccAsLoads());
         assertNull(parametersExt.getTimeStep());
     }
 
@@ -124,8 +116,6 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
         boolean automaticSlackBusOn = true;
         Double dsoVoltage = 45.0;
         List<String> chosenOutputs = Arrays.asList(OutputTypes.STEADYSTATE.name(), OutputTypes.TIMELINE.name());
-        boolean vscAsGenerators = false;
-        boolean lccAsLoads = false;
         Double timeStep = 2.6;
 
         Map<String, String> properties = Map.of(
@@ -134,8 +124,6 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
                 "automaticSlackBusOn", Boolean.toString(automaticSlackBusOn),
                 "dsoVoltageLevel", Double.toString(dsoVoltage),
                 "chosenOutputs", OutputTypes.STEADYSTATE.name() + "," + OutputTypes.TIMELINE.name(),
-                "vscAsGenerators", Boolean.toString(vscAsGenerators),
-                "lccAsLoads", Boolean.toString(lccAsLoads),
                 "timeStep", Double.toString(timeStep));
 
         parametersExt.update(properties);
@@ -145,8 +133,6 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
                 ", automaticSlackBusOn=" + automaticSlackBusOn +
                 ", dsoVoltageLevel=" + dsoVoltage +
                 ", chosenOutputs=" + chosenOutputs +
-                ", vscAsGenerators=" + vscAsGenerators +
-                ", lccAsLoads=" + lccAsLoads +
                 ", timeStep=" + timeStep + "}";
         assertEquals(expectedString, parametersExt.toString());
         System.out.println(expectedString);
@@ -183,8 +169,6 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
         dynaFlowParameters.setAutomaticSlackBusOn(true);
         dynaFlowParameters.setDsoVoltageLevel(32.4);
         dynaFlowParameters.setChosenOutputs(Collections.singletonList(OutputTypes.STEADYSTATE.name()));
-        dynaFlowParameters.setVscAsGenerators(true);
-        dynaFlowParameters.setLccAsLoads(true);
         dynaFlowParameters.setTimeStep(2.6);
         lfParameters.addExtension(DynaFlowParameters.class, dynaFlowParameters);
 
@@ -206,8 +190,6 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
                 "automaticSlackBusOn", "false",
                 "dsoVoltageLevel", "2.0",
                 "chosenOutputs", "STEADYSTATE, CONSTRAINTS",
-                "vscAsGenerators", "false",
-                "lccAsLoads", "false",
                 "timeStep", "0");
 
         DynaFlowParameters dynaFlowParameters = DynaFlowParameters.load(properties);
@@ -217,8 +199,6 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
         assertFalse(dynaFlowParameters.getAutomaticSlackBusOn());
         assert 2 == dynaFlowParameters.getDsoVoltageLevel();
         assertArrayEquals(Arrays.asList(OutputTypes.STEADYSTATE.name(), OutputTypes.CONSTRAINTS.name()).toArray(), dynaFlowParameters.getChosenOutputs().toArray());
-        assertFalse(dynaFlowParameters.getVscAsGenerators());
-        assertFalse(dynaFlowParameters.getLccAsLoads());
         assert 0 == dynaFlowParameters.getTimeStep();
     }
 }

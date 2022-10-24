@@ -32,10 +32,6 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
 
     private static final String CHOSEN_OUTPUTS = "chosenOutputs";
 
-    private static final String VSC_AS_GENERATORS = "vscAsGenerators";
-
-    private static final String LCC_AS_LOADS = "lccAsLoads";
-
     private static final String TIME_STEP = "timeStep";
 
     private Boolean svcRegulationOn = null;
@@ -43,8 +39,6 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
     private Boolean automaticSlackBusOn = null;
     private Double dsoVoltageLevel = null;
     private List<String> chosenOutputs = null;
-    private Boolean vscAsGenerators = null;
-    private Boolean lccAsLoads = null;
     private Double timeStep = null;
 
     public Boolean getSvcRegulationOn() {
@@ -92,24 +86,6 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         return this;
     }
 
-    public Boolean getVscAsGenerators() {
-        return vscAsGenerators;
-    }
-
-    public DynaFlowParameters setVscAsGenerators(boolean vscAsGenerators) {
-        this.vscAsGenerators = vscAsGenerators;
-        return this;
-    }
-
-    public Boolean getLccAsLoads() {
-        return lccAsLoads;
-    }
-
-    public DynaFlowParameters setLccAsLoads(boolean lccAsLoads) {
-        this.lccAsLoads = lccAsLoads;
-        return this;
-    }
-
     public Double getTimeStep() {
         return timeStep;
     }
@@ -132,8 +108,6 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
                 .add(AUTOMATIC_SLACK_BUS_ON, automaticSlackBusOn)
                 .add(DSO_VOLTAGE_LEVEL, dsoVoltageLevel)
                 .add(CHOSEN_OUTPUTS, chosenOutputs)
-                .add(VSC_AS_GENERATORS, vscAsGenerators)
-                .add(LCC_AS_LOADS, lccAsLoads)
                 .add(TIME_STEP, timeStep)
                 .toString();
     }
@@ -172,12 +146,6 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         if (config.hasProperty(CHOSEN_OUTPUTS)) {
             parameters.setChosenOutputs(config.getStringListProperty(CHOSEN_OUTPUTS));
         }
-        if (config.hasProperty(VSC_AS_GENERATORS)) {
-            parameters.setVscAsGenerators(config.getBooleanProperty(VSC_AS_GENERATORS));
-        }
-        if (config.hasProperty(LCC_AS_LOADS)) {
-            parameters.setLccAsLoads(config.getBooleanProperty(LCC_AS_LOADS));
-        }
         if (config.hasProperty(TIME_STEP)) {
             parameters.setTimeStep(config.getDoubleProperty(TIME_STEP));
         }
@@ -191,8 +159,6 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         Optional.ofNullable(properties.get(DSO_VOLTAGE_LEVEL)).ifPresent(prop -> setDsoVoltageLevel(Double.parseDouble(prop)));
         Optional.ofNullable(properties.get(CHOSEN_OUTPUTS)).ifPresent(prop ->
                 setChosenOutputs(Stream.of(prop.split(CHOSEN_OUTPUT_STRING_DELIMITER)).map(String::trim).collect(Collectors.toList())));
-        Optional.ofNullable(properties.get(VSC_AS_GENERATORS)).ifPresent(prop -> setVscAsGenerators(Boolean.parseBoolean(prop)));
-        Optional.ofNullable(properties.get(LCC_AS_LOADS)).ifPresent(prop -> setLccAsLoads(Boolean.parseBoolean(prop)));
         Optional.ofNullable(properties.get(TIME_STEP)).ifPresent(prop -> setTimeStep(Double.parseDouble(prop)));
     }
 
@@ -205,7 +171,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
     public static List<String> getSpecificParametersNames() {
         return Arrays.asList(
                 SVC_REGULATION_ON, SHUNT_REGULATION_ON, AUTOMATIC_SLACK_BUS_ON, DSO_VOLTAGE_LEVEL,
-                CHOSEN_OUTPUTS, VSC_AS_GENERATORS, LCC_AS_LOADS, TIME_STEP
+                CHOSEN_OUTPUTS, TIME_STEP
         );
     }
 

@@ -65,12 +65,6 @@ public final class DynaFlowConfigSerializer {
                 }
                 jsonGenerator.writeEndArray();
             }
-            if (Objects.nonNull(dynaFlowParameters.getVscAsGenerators())) {
-                jsonGenerator.writeBooleanField("VscAsGenerators", dynaFlowParameters.getVscAsGenerators());
-            }
-            if (Objects.nonNull(dynaFlowParameters.getLccAsLoads())) {
-                jsonGenerator.writeBooleanField("LccAsLoads", dynaFlowParameters.getLccAsLoads());
-            }
             if (Objects.nonNull(dynaFlowParameters.getTimeStep())) {
                 jsonGenerator.writeNumberField("TimeStep", dynaFlowParameters.getTimeStep());
             }

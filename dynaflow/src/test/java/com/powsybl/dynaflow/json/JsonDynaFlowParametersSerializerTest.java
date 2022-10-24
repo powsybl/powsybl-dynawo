@@ -56,8 +56,6 @@ public class JsonDynaFlowParametersSerializerTest extends AbstractConverterTest 
         params.setAutomaticSlackBusOn(true);
         params.setDsoVoltageLevel(54.23);
         params.setChosenOutputs(Collections.singletonList(DynaFlowConstants.OutputTypes.STEADYSTATE.name()));
-        params.setVscAsGenerators(false);
-        params.setLccAsLoads(false);
         params.setTimeStep(2.6);
 
         parameters.addExtension(DynaFlowParameters.class, params);

@@ -7,8 +7,6 @@
     "InfiniteReactiveLimits" : true,
     "PSTRegulationOn" : false,
     "ChosenOutputs" : [ "STEADYSTATE" ],
-    "VscAsGenerators" : true,
-    "LccAsLoads" : true,
     "TimeStep" : 2.6,
     "OutputDir" : "/work/dynaflow/workingDir"
   }

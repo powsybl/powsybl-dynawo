@@ -12,8 +12,6 @@
       "automaticSlackBusOn": true,
       "dsoVoltageLevel": 987.6,
       "chosenOutputs" : [ "STEADYSTATE" ],
-      "vscAsGenerators" : true,
-      "lccAsLoads" : true,
       "timeStep" : 2.6
     }
   }
