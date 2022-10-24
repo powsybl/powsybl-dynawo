@@ -56,7 +56,27 @@ public final class DynaFlowConfigSerializer {
                 jsonGenerator.writeNumberField("DsoVoltageLevel", dynaFlowParameters.getDsoVoltageLevel());
             }
             jsonGenerator.writeBooleanField("InfiniteReactiveLimits", lfParameters.isNoGeneratorReactiveLimits());
-            jsonGenerator.writeBooleanField("PSTRegulationOn", lfParameters.isPhaseShifterRegulationOn());
+            if (Objects.nonNull(dynaFlowParameters.getActivePowerCompensation())) {
+                jsonGenerator.writeStringField("ActivePowerCompensation", dynaFlowParameters.getActivePowerCompensation().name());
+            }
+            if (Objects.nonNull(dynaFlowParameters.getSettingPath())) {
+                jsonGenerator.writeStringField("SettingPath", dynaFlowParameters.getSettingPath());
+            }
+            if (Objects.nonNull(dynaFlowParameters.getAssemblingPath())) {
+                jsonGenerator.writeStringField("AssemblingPath", dynaFlowParameters.getAssemblingPath());
+            }
+            if (Objects.nonNull(dynaFlowParameters.getStartTime())) {
+                jsonGenerator.writeNumberField("StartTime", dynaFlowParameters.getStartTime());
+            }
+            if (Objects.nonNull(dynaFlowParameters.getStopTime())) {
+                jsonGenerator.writeNumberField("StopTime", dynaFlowParameters.getStopTime());
+            }
+            if (Objects.nonNull(dynaFlowParameters.getPrecision())) {
+                jsonGenerator.writeNumberField("Precision", dynaFlowParameters.getPrecision());
+            }
+            if (Objects.nonNull(dynaFlowParameters.getSa())) {
+                DynaFlowParameters.Sa.writeJson(jsonGenerator, dynaFlowParameters);
+            }
             if (Objects.nonNull(dynaFlowParameters.getChosenOutputs())) {
                 jsonGenerator.writeFieldName("ChosenOutputs");
                 jsonGenerator.writeStartArray();

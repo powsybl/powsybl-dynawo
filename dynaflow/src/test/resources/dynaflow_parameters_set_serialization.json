@@ -21,8 +21,17 @@
       "shuntRegulationOn" : false,
       "automaticSlackBusOn" : true,
       "dsoVoltageLevel" : 54.23,
+      "activePowerCompensation" : "P",
+      "settingPath" : "path/to/settingFile",
+      "assemblingPath" : "path/to/assemblingFile",
+      "startTime" : 0.0,
+      "stopTime" : 100.0,
+      "precision" : 0.0,
       "chosenOutputs" : [ "STEADYSTATE" ],
-      "timeStep" : 2.6
+      "timeStep" : 2.6,
+      "sa" : {
+        "timeOfEvent" : 10.0
+      }
     }
   }
 }
