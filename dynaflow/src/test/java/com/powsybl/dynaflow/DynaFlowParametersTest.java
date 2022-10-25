@@ -288,7 +288,7 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
         assert startTime == dynaFlowParameters.getStartTime();
         assert stopTime == dynaFlowParameters.getStopTime();
         assert precision == dynaFlowParameters.getPrecision();
-        //assert timeOfEvent == dynaFlowParameters.getTimeOfEvent();
+        assert timeOfEvent == dynaFlowParameters.getTimeOfEvent();
         assertArrayEquals(chosenOutputs.toArray(), dynaFlowParameters.getChosenOutputs().toArray());
         assert timeStep == dynaFlowParameters.getTimeStep();
     }
