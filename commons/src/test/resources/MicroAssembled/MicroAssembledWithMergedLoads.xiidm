@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<iidm:network xmlns:iidm="http://www.powsybl.org/schema/iidm/1_3" id="urn:uuid:77b55f87-fc1e-4046-9599-6c6b4f991a86" caseDate="2014-06-01T10:30:00.000Z" forecastDistance="0" sourceFormat="CGMES">
+<iidm:network xmlns:iidm="http://www.powsybl.org/schema/iidm/1_8" id="urn:uuid:77b55f87-fc1e-4046-9599-6c6b4f991a86" caseDate="2014-06-01T10:30:00.000Z" forecastDistance="0" sourceFormat="CGMES" minimumValidationLevel="STEADY_STATE_HYPOTHESIS">
     <iidm:property name="CGMESModelDetail" value="bus-branch"/>
     <iidm:substation id="_c49942d6-8b01-4b01-b5e8-f1180f84906c" name="PP_Amsterdam" country="NL" geographicalTags="_c1d5bfe48f8011e08e4d00247eb1f55e">
         <iidm:voltageLevel id="_2a37dc57-2faf-464a-8175-bc415f9a635f" name="15.8" nominalV="15.75" lowVoltageLimit="14.175" highVoltageLimit="17.325" topologyKind="BUS_BREAKER">
@@ -49,12 +49,11 @@
         <iidm:voltageLevel id="_c1d5bfde8f8011e08e4d00247eb1f55e" name="400.0" nominalV="400.0" lowVoltageLimit="360.0" highVoltageLimit="440.0" topologyKind="BUS_BREAKER">
             <iidm:busBreakerTopology>
                 <iidm:bus id="_81b0e447-181e-4aec-8921-f1dd7813bebc" name="N1230992195" v="408.617286" angle="-6.35443"/>
+                <iidm:bus id="_2a4se447-181e-4aec-8921-f1dd7813bebc" name="N1230992196" v="333.617286" angle="-4.35443"/>
             </iidm:busBreakerTopology>
-            <iidm:load id="_25ab1b5b-6803-47e2-805a-ab7b2072e034" name="NL-Load_2" loadType="UNDEFINED" p0="10.0" q0="10.0" bus="_81b0e447-181e-4aec-8921-f1dd7813bebc" connectableBus="_81b0e447-181e-4aec-8921-f1dd7813bebc" p="10.0" q="10.0">
-                <iidm:alias>_6dad1a97-6874-4206-a5a5-837e495325f8</iidm:alias>
-            </iidm:load>
-            <iidm:load id="_69add5b4-70bd-4360-8a93-286256c0d38b" name="NL-Load_1" loadType="UNDEFINED" p0="90.0" q0="280.0" bus="_81b0e447-181e-4aec-8921-f1dd7813bebc" connectableBus="_81b0e447-181e-4aec-8921-f1dd7813bebc" p="90.0" q="280.0">
-                <iidm:alias>_f461fd2d-1e41-4a3e-8213-7cc33c77a089</iidm:alias>
+            <iidm:load id="merged_load_._81b0e447-181e-4aec-8921-f1dd7813bebc" loadType="UNDEFINED" p0="100.0" q0="290.0" bus="_81b0e447-181e-4aec-8921-f1dd7813bebc" connectableBus="_81b0e447-181e-4aec-8921-f1dd7813bebc" p="100.0" q="290.0"/>
+            <iidm:load id="_42add5b4-70bd-4360-8a93-286256c0d38b" name="NL-Load_3" loadType="UNDEFINED" p0="90.0" q0="280.0" bus="_2a4se447-181e-4aec-8921-f1dd7813bebc" connectableBus="_2a4se447-181e-4aec-8921-f1dd7813bebc" p="90.0" q="280.0">
+                <iidm:alias>_c417ad2b-1e41-4a3e-8213-7cc33c77a089</iidm:alias>
             </iidm:load>
             <iidm:shunt id="_fbfed7e3-3dec-4829-a286-029e73535685" name="NL-S1" sectionCount="1" voltageRegulatorOn="false" targetV="400.0" targetDeadband="0.5" bus="_81b0e447-181e-4aec-8921-f1dd7813bebc" connectableBus="_81b0e447-181e-4aec-8921-f1dd7813bebc" q="-52.177526">
                 <iidm:alias>_a015f692-3fc5-4ec3-8d1d-977c7b499e7c</iidm:alias>

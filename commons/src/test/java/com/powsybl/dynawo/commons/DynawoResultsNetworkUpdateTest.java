@@ -113,15 +113,15 @@ public class DynawoResultsNetworkUpdateTest extends AbstractConverterTest {
     }
 
     private static Network createTestCaseBusBranch() {
-        return Importers.importData("XIIDM", new ResourceDataSource("SmallBusBranch", new ResourceSet("/", "SmallBusBranch.xiidm")), null);
+        return Importers.importData("XIIDM", new ResourceDataSource("SmallBusBranch", new ResourceSet("/SmallBusBranch", "SmallBusBranch.xiidm")), null);
     }
 
     private static Network createTestCaseNodeBreaker() {
-        return Importers.importData("XIIDM", new ResourceDataSource("SmallNodeBreaker_fix_line_044bbe91", new ResourceSet("/", "SmallNodeBreaker_fix_line_044bbe91.xiidm")), null);
+        return Importers.importData("XIIDM", new ResourceDataSource("SmallNodeBreaker_fix_line_044bbe91", new ResourceSet("/SmallNodeBreaker", "SmallNodeBreaker_fix_line_044bbe91.xiidm")), null);
     }
 
     private static Network createTestMicro() {
-        return Importers.importData("XIIDM", new ResourceDataSource("MicroAssembled", new ResourceSet("/", "MicroAssembled.xiidm")), null);
+        return Importers.importData("XIIDM", new ResourceDataSource("MicroAssembled", new ResourceSet("/MicroAssembled", "MicroAssembled.xiidm")), null);
     }
 
     private static void reset(Network targetNetwork) {
