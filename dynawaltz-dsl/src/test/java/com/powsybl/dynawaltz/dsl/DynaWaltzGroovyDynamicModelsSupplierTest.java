@@ -161,8 +161,8 @@ public class DynaWaltzGroovyDynamicModelsSupplierTest {
     }
 
     private void validateModel(DynamicModel dynamicModel) {
-        assertTrue(dynamicModel instanceof AbstractDynamicBlackBoxModel);
-        AbstractDynamicBlackBoxModel blackBoxModel = (AbstractDynamicBlackBoxModel) dynamicModel;
+        assertTrue(dynamicModel instanceof AbstractBlackBoxModel);
+        AbstractBlackBoxModel blackBoxModel = (AbstractBlackBoxModel) dynamicModel;
         if (blackBoxModel instanceof LoadAlphaBeta) {
             Identifiable<?> identifiable = network.getIdentifiable(blackBoxModel.getStaticId());
             assertEquals(identifiable.getId(), blackBoxModel.getDynamicModelId());

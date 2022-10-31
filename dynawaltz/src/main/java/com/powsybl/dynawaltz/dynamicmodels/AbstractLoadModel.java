@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public abstract class AbstractLoadModel extends AbstractDynamicBlackBoxModel {
+public abstract class AbstractLoadModel extends AbstractBlackBoxModel {
 
     public AbstractLoadModel(String dynamicModelId, String staticId, String parameterSetId) {
         super(dynamicModelId, staticId, parameterSetId);
