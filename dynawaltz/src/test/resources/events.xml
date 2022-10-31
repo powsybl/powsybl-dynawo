@@ -23,7 +23,7 @@
     </dyn:macroStaticReference>
     <dyn:macroConnect connector="MC_GeneratorSynchronousFourWindingsProportionalRegulations-NetworkBus" id1="BBM_GEN2" id2="NETWORK" name2="NGEN"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorSynchronousFourWindingsProportionalRegulations" id1="OMEGA_REF" index1="0" id2="BBM_GEN2"/>
-    <dyn:macroConnect connector="MC_DYNModelOmegaRef-NetworkBus" id1="OMEGA_REF" index1="0" id2="NETWORK" name2="NGEN"/>
+    <dyn:macroConnect connector="MC_DYNModelOmegaRef-NetworkBus" id1="OMEGA_REF" index1="1" id2="NETWORK" name2="NGEN"/>
     <dyn:blackBoxModel id="EM_NHV1_NHV2_1" lib="EventQuadripoleDisconnection" parFile="models.par" parId="EQD"/>
     <dyn:blackBoxModel id="EM_NHV1_NHV2_2" lib="EventQuadripoleDisconnection" parFile="models.par" parId="EQD"/>
     <dyn:blackBoxModel id="EM_GEN2" lib="EventSetPointBoolean" parFile="models.par" parId="ESPB"/>

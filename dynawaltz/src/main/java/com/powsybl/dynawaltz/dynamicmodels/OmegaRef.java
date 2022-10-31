@@ -7,7 +7,6 @@
 package com.powsybl.dynawaltz.dynamicmodels;
 
 import com.powsybl.commons.PowsyblException;
-import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParametersDatabase;
 import com.powsybl.dynawaltz.xml.ParametersXml;
@@ -140,10 +139,9 @@ public class OmegaRef extends AbstractBlackBoxModel {
 
     @Override
     public void writeMacroConnect(XMLStreamWriter writer, DynaWaltzContext context, MacroConnector macroConnector, BlackBoxModel connected) throws XMLStreamException {
-        int index = context.getLibIndex(this);
         List<Pair<String, String>> attributesConnectFrom = List.of(
                 Pair.of("id1", getDynamicModelId()),
-                Pair.of("index1", Integer.toString(index))
+                Pair.of("index1", Integer.toString(context.getModelsConnections().get(this).indexOf(connected)))
         );
         macroConnector.writeMacroConnect(writer, attributesConnectFrom, connected.getAttributesConnectTo());
     }

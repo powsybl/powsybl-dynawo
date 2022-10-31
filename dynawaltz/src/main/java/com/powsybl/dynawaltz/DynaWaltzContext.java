@@ -22,7 +22,6 @@ import java.nio.file.FileSystem;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -46,8 +45,6 @@ public class DynaWaltzContext {
     private final Map<BlackBoxModel, List<BlackBoxModel>> modelsConnections = new LinkedHashMap<>();
     private final Map<BlackBoxEventModel, List<BlackBoxModel>> eventModelsConnections = new LinkedHashMap<>();
     private final NetworkModel networkModel = new NetworkModel();
-    private final Map<String, AtomicInteger> counters = new HashMap<>();
-    private final Map<BlackBoxModel, Integer> libIndexMap = new HashMap<>();
 
     private final OmegaRef omegaRef;
 
@@ -225,18 +222,6 @@ public class DynaWaltzContext {
 
     public NetworkModel getNetworkModel() {
         return networkModel;
-    }
-
-    public int getLibIndex(BlackBoxModel bbm) {
-        return getLibIndexMap().get(bbm);
-    }
-
-    private Map<BlackBoxModel, Integer> getLibIndexMap() {
-        if (libIndexMap.isEmpty()) {
-            getBlackBoxModelStream().forEach(bbm -> libIndexMap.put(bbm,
-                    counters.computeIfAbsent(bbm.getLib(), k -> new AtomicInteger()).getAndIncrement()));
-        }
-        return libIndexMap;
     }
 
     public String getParFile() {
