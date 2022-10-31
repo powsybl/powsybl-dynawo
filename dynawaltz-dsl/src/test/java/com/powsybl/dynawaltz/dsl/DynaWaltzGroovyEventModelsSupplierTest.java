@@ -69,7 +69,7 @@ public class DynaWaltzGroovyEventModelsSupplierTest {
 
         List<EventModel> eventModels = supplier.get(network);
         int numLines = network.getLineCount();
-        int expectedEventModelsSize = numLines;
+        int expectedEventModelsSize =  numLines;
         assertEquals(expectedEventModelsSize, eventModels.size());
         eventModels.forEach(this::validateModel);
     }
