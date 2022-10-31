@@ -185,10 +185,10 @@ public class DynaWaltzContext {
     }
 
     public Stream<BlackBoxModel> getBlackBoxModelStream() {
-        if (omegaRef.hasToBeExported()) {
-            return Stream.concat(getUserBlackBoxModelStream(), Stream.of(omegaRef));
+        if (omegaRef.getSynchronousGenerators().isEmpty()) {
+            return getUserBlackBoxModelStream();
         }
-        return getUserBlackBoxModelStream();
+        return Stream.concat(getUserBlackBoxModelStream(), Stream.of(omegaRef));
     }
 
     public List<EventModel> getEventModels() {

@@ -46,8 +46,8 @@ public class OmegaRef extends AbstractBlackBoxModel {
         this.synchronousGenerators = synchronousGenerators;
     }
 
-    public boolean hasToBeExported() {
-        return !synchronousGenerators.isEmpty();
+    public List<GeneratorSynchronousModel> getSynchronousGenerators() {
+        return Collections.unmodifiableList(synchronousGenerators);
     }
 
     @Override
