@@ -12,8 +12,6 @@ import com.powsybl.dynawaltz.DynaWaltzParametersDatabase;
 import com.powsybl.dynawaltz.xml.ParametersXml;
 import com.powsybl.iidm.network.Generator;
 import org.apache.commons.lang3.tuple.Pair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -21,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.powsybl.dynawaltz.DynaWaltzParametersDatabase.ParameterType.DOUBLE;
@@ -38,8 +35,6 @@ import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.*;
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 public class OmegaRef extends AbstractBlackBoxModel {
-
-    private static final Logger LOG = LoggerFactory.getLogger(OmegaRef.class);
 
     public static final String OMEGA_REF_ID = "OMEGA_REF";
     private static final String OMEGA_REF_PARAMETER_SET_ID = "OMEGA_REF";
@@ -114,25 +109,22 @@ public class OmegaRef extends AbstractBlackBoxModel {
     }
 
     @Override
-    public List<BlackBoxModel> getModelsConnectedTo(DynaWaltzContext context) {
+    public List<BlackBoxModel> getModelsConnectedTo(DynaWaltzContext context) throws PowsyblException {
         List<BlackBoxModel> lGenAndBuses = new ArrayList<>();
 
-        synchronousGenerators.stream().map(BlackBoxModel.class::cast)
-                .forEach(generatorModel -> {
-                    Generator generator = context.getNetwork().getGenerator(generatorModel.getStaticId());
-                    if (Objects.nonNull(generator)) {
-                        lGenAndBuses.add(generatorModel);
-                        String connectedStaticId = generator.getTerminal().getBusBreakerView().getConnectableBus().getId();
-                        BlackBoxModel busModel = context.getStaticIdBlackBoxModelMap().get(connectedStaticId);
-                        if (busModel == null) {
-                            busModel = context.getNetworkModel().getDefaultBusModel(connectedStaticId);
-                        }
-                        lGenAndBuses.add(busModel);
-                    } else {
-                        LOG.warn("Generator {} not found in DynaWaltz context. Id : {}", generatorModel.getLib(), generatorModel.getDynamicModelId());
-                    }
-                }
-        );
+        for (BlackBoxModel generatorModel : synchronousGenerators.stream().map(BlackBoxModel.class::cast).collect(Collectors.toList())) {
+            Generator generator = context.getNetwork().getGenerator(generatorModel.getStaticId());
+            if (generator == null) {
+                throw new PowsyblException("Generator " + generatorModel.getLib() + " not found in DynaWaltz context. Id : " + generatorModel.getDynamicModelId());
+            }
+            lGenAndBuses.add(generatorModel);
+            String connectedStaticId = generator.getTerminal().getBusBreakerView().getConnectableBus().getId();
+            BlackBoxModel busModel = context.getStaticIdBlackBoxModelMap().get(connectedStaticId);
+            if (busModel == null) {
+                busModel = context.getNetworkModel().getDefaultBusModel(connectedStaticId);
+            }
+            lGenAndBuses.add(busModel);
+        }
 
         return lGenAndBuses;
     }
