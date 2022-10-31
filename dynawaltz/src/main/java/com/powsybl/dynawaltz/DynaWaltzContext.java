@@ -60,7 +60,10 @@ public class DynaWaltzContext {
         this.parameters = Objects.requireNonNull(parameters);
         this.dynaWaltzParameters = Objects.requireNonNull(dynaWaltzParameters);
         this.parametersDatabase = loadDatabase(dynaWaltzParameters.getParametersFile());
-        this.omegaRef = new OmegaRef(dynamicModels);
+        this.omegaRef = new OmegaRef(dynamicModels.stream()
+                .filter(GeneratorSynchronousModel.class::isInstance)
+                .map(GeneratorSynchronousModel.class::cast)
+                .collect(Collectors.toList()));
     }
 
     public Network getNetwork() {

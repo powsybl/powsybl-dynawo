@@ -44,20 +44,16 @@ public class OmegaRef extends AbstractBlackBoxModel {
 
     public static final String OMEGA_REF_ID = "OMEGA_REF";
     private static final String OMEGA_REF_PARAMETER_SET_ID = "OMEGA_REF";
-    private final List<GeneratorSynchronousModel> generatorDynamicModelsAssociated;
+    private final List<GeneratorSynchronousModel> synchronousGenerators;
 
-    public OmegaRef(List<DynamicModel> dynamicModels) {
+    public OmegaRef(List<GeneratorSynchronousModel> synchronousGenerators) {
         // New way to handle the OmegaRef : there's only one instance.
         super(OMEGA_REF_ID, "", OMEGA_REF_PARAMETER_SET_ID);
-        this.generatorDynamicModelsAssociated = dynamicModels
-                .stream()
-                .filter(GeneratorSynchronousModel.class::isInstance)
-                .map(GeneratorSynchronousModel.class::cast)
-                .collect(Collectors.toList());
+        this.synchronousGenerators = synchronousGenerators;
     }
 
     public boolean hasToBeExported() {
-        return !generatorDynamicModelsAssociated.isEmpty();
+        return !synchronousGenerators.isEmpty();
     }
 
     @Override
@@ -89,7 +85,7 @@ public class OmegaRef extends AbstractBlackBoxModel {
         long count = 0;
         // The dynamic models are declared in the DYD following the order of dynamic models supplier.
         // The OmegaRef parameters index the weight of each generator according to that declaration order.
-        for (BlackBoxModel blackBoxModel : generatorDynamicModelsAssociated.stream().map(BlackBoxModel.class::cast).collect(Collectors.toList())) {
+        for (BlackBoxModel blackBoxModel : synchronousGenerators.stream().map(BlackBoxModel.class::cast).collect(Collectors.toList())) {
             double h = parDB.getDouble(blackBoxModel.getParameterSetId(), "generator_H");
             double snom = parDB.getDouble(blackBoxModel.getParameterSetId(), "generator_SNom");
 
@@ -122,7 +118,7 @@ public class OmegaRef extends AbstractBlackBoxModel {
     public List<BlackBoxModel> getModelsConnectedTo(DynaWaltzContext context) {
         List<BlackBoxModel> lGenAndBuses = new ArrayList<>();
 
-        generatorDynamicModelsAssociated.stream().map(BlackBoxModel.class::cast)
+        synchronousGenerators.stream().map(BlackBoxModel.class::cast)
                 .forEach(generatorModel -> {
                     Generator generator = context.getNetwork().getGenerator(generatorModel.getStaticId());
                     if (Objects.nonNull(generator)) {
