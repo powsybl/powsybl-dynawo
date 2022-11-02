@@ -13,6 +13,7 @@ import com.powsybl.commons.config.PlatformConfig;
 import java.nio.file.Path;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  *
@@ -36,10 +37,13 @@ public class DynaFlowConfig {
 
     public static DynaFlowConfig fromPlatformConfig(PlatformConfig platformConfig) {
         Objects.requireNonNull(platformConfig);
-        ModuleConfig config = platformConfig.getModuleConfig("dynaflow");
-        Path homeDir = config.getPathProperty("homeDir");
-        boolean debug = config.getBooleanProperty("debug", DEFAULT_DEBUG);
-        return new DynaFlowConfig(homeDir, debug);
+        Optional<ModuleConfig> optionalModuleConfig = platformConfig.getOptionalModuleConfig("dynaflow");
+        if (optionalModuleConfig.isPresent()) {
+            Path homeDir = optionalModuleConfig.get().getPathProperty("homeDir");
+            boolean debug = optionalModuleConfig.get().getBooleanProperty("debug", DEFAULT_DEBUG);
+            return new DynaFlowConfig(homeDir, debug);
+        }
+        return null;
     }
 
     public Map<String, String> createEnv() {
