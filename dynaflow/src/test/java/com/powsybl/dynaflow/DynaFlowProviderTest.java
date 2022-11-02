@@ -128,8 +128,8 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
         LoadFlow.Runner dynaFlowSimulation = LoadFlow.find();
         LoadFlowParameters params = LoadFlowParameters.load();
 
-        assertEquals("DynaFlow", dynaFlowSimulation.getName());
-        assertEquals("0.1", dynaFlowSimulation.getVersion());
+        assertEquals(DYNAFLOW_NAME, dynaFlowSimulation.getName());
+        assertEquals(VERSION, dynaFlowSimulation.getVersion());
 
         LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynaflow_version.out",
                 "/SmallBusBranch_outputIIDM.xml", "/results.json");
@@ -145,8 +145,8 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
         LoadFlow.Runner dynaFlowSimulation = LoadFlow.find();
         LoadFlowParameters params = LoadFlowParameters.load();
 
-        assertEquals("DynaFlow", dynaFlowSimulation.getName());
-        assertEquals("0.1", dynaFlowSimulation.getVersion());
+        assertEquals(DYNAFLOW_NAME, dynaFlowSimulation.getName());
+        assertEquals(VERSION, dynaFlowSimulation.getVersion());
 
         LocalCommandExecutor commandExecutor = new EmptyLocalCommandExecutorMock("/dynaflow_version.out");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
@@ -161,8 +161,8 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
         LoadFlow.Runner dynaFlowSimulation = LoadFlow.find();
         LoadFlowParameters params = LoadFlowParameters.load();
 
-        assertEquals("DynaFlow", dynaFlowSimulation.getName());
-        assertEquals("0.1", dynaFlowSimulation.getVersion());
+        assertEquals(DYNAFLOW_NAME, dynaFlowSimulation.getName());
+        assertEquals(VERSION, dynaFlowSimulation.getVersion());
 
         LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynaflow_version.out",
                 "/SmallBusBranch_outputIIDM.xml", "/results.json");
