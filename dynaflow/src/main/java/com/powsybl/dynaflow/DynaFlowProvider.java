@@ -147,7 +147,6 @@ public class DynaFlowProvider implements LoadFlowProvider {
                 Path resultsPath = workingDir.resolve(OUTPUT_RESULTS_FILENAME);
                 if (!Files.exists(resultsPath)) {
                     Map<String, String> metrics = new HashMap<>();
-                    String logs = null;
                     List<LoadFlowResult.ComponentResult> componentResults = new ArrayList<>(1);
                     componentResults.add(new LoadFlowResultImpl.ComponentResultImpl(0,
                             0,
@@ -156,7 +155,7 @@ public class DynaFlowProvider implements LoadFlowProvider {
                             "not-found",
                             0.,
                             Double.NaN));
-                    return new LoadFlowResultImpl(status, metrics, logs, componentResults);
+                    return new LoadFlowResultImpl(status, metrics, null, componentResults);
                 }
                 return LoadFlowResultDeserializer.read(resultsPath);
             }
