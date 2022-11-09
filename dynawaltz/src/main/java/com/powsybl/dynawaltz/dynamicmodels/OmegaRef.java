@@ -39,6 +39,7 @@ public class OmegaRef extends AbstractBlackBoxModel {
     public static final String OMEGA_REF_ID = "OMEGA_REF";
     private static final String OMEGA_REF_PARAMETER_SET_ID = "OMEGA_REF";
     private final List<GeneratorSynchronousModel> synchronousGenerators;
+    private List<Pair<GeneratorSynchronousModel, BusModel>> lGenByBus = new ArrayList<>();
 
     public OmegaRef(List<GeneratorSynchronousModel> synchronousGenerators) {
         // New way to handle the OmegaRef : there's only one instance.
@@ -124,6 +125,10 @@ public class OmegaRef extends AbstractBlackBoxModel {
                 busModel = context.getNetworkModel().getDefaultBusModel(connectedStaticId);
             }
             lGenAndBuses.add(busModel);
+
+            if (lGenByBus.size() < synchronousGenerators.size()) {
+                lGenByBus.add(Pair.of((GeneratorSynchronousModel) generatorModel, (BusModel) busModel));
+            }
         }
 
         return lGenAndBuses;
@@ -131,9 +136,19 @@ public class OmegaRef extends AbstractBlackBoxModel {
 
     @Override
     public void writeMacroConnect(XMLStreamWriter writer, DynaWaltzContext context, MacroConnector macroConnector, BlackBoxModel connected) throws XMLStreamException {
+        int index1 = 0;
+        while (index1 < lGenByBus.size()) {
+            Pair<GeneratorSynchronousModel, BusModel> currentPair = lGenByBus.get(index1);
+            if (currentPair.getLeft().equals(connected) ||
+                    currentPair.getRight().equals(connected)) {
+                break;
+            }
+            index1++;
+        }
+
         List<Pair<String, String>> attributesConnectFrom = List.of(
                 Pair.of("id1", getDynamicModelId()),
-                Pair.of("index1", Integer.toString(context.getModelsConnections().get(this).indexOf(connected)))
+                Pair.of("index1", Integer.toString(index1))
         );
         macroConnector.writeMacroConnect(writer, attributesConnectFrom, connected.getAttributesConnectTo());
     }

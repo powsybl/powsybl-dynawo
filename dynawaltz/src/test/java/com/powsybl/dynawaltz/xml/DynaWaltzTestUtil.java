@@ -190,6 +190,19 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
             .setTargetP(-0.3)
             .setTargetQ(0.7)
             .add();
+        VoltageLevel vlhv1 = network.getVoltageLevel("VLHV1");
+        Bus nhv1 = vlhv1.getBusBreakerView().getBus("NHV1");
+        vlhv1.newGenerator()
+            .setId("NHV1_1")
+            .setBus(nhv1.getId())
+            .setConnectableBus(nhv1.getId())
+            .setMinP(-9999.99)
+            .setMaxP(9999.99)
+            .setVoltageRegulatorOn(true)
+            .setTargetV(24.5)
+            .setTargetP(0.1)
+            .setTargetQ(0.2)
+            .add();
         return network;
     }
 
