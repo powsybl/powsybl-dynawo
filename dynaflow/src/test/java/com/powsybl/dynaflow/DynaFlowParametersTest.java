@@ -96,16 +96,16 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
         assertEquals(svcRegulationOn, parameters.getSvcRegulationOn());
         assertEquals(shuntRegulationOn, parameters.getShuntRegulationOn());
         assertEquals(automaticSlackBusOn, parameters.getAutomaticSlackBusOn());
-        assert dsoVoltageLevel == parameters.getDsoVoltageLevel();
+        assertEquals(dsoVoltageLevel, parameters.getDsoVoltageLevel(), 0.1d);
         assertEquals(activePowerCompensation, parameters.getActivePowerCompensation());
         assertEquals(settingPath, parameters.getSettingPath());
         assertEquals(assemblingPath, parameters.getAssemblingPath());
-        assert startTime == parameters.getStartTime();
-        assert stopTime == parameters.getStopTime();
-        assert precision == parameters.getPrecision();
-        assert timeOfEvent == parameters.getTimeOfEvent();
+        assertEquals(startTime, parameters.getStartTime(), 0.1d);
+        assertEquals(stopTime, parameters.getStopTime(), 0.1d);
+        assertEquals(precision, parameters.getPrecision(), 0.1d);
+        assertEquals(timeOfEvent, parameters.getTimeOfEvent(), 0.1d);
         assertArrayEquals(chosenOutputs.toArray(), parameters.getChosenOutputs().toArray());
-        assert timeStep == parameters.getTimeStep();
+        assertEquals(timeStep, parameters.getTimeStep(), 0.1d);
     }
 
     @Test
@@ -281,15 +281,15 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
         assertTrue(dynaFlowParameters.getSvcRegulationOn());
         assertTrue(dynaFlowParameters.getShuntRegulationOn());
         assertFalse(dynaFlowParameters.getAutomaticSlackBusOn());
-        assert dsoVoltageLevel == dynaFlowParameters.getDsoVoltageLevel();
+        assertEquals(dsoVoltageLevel, dynaFlowParameters.getDsoVoltageLevel(), 0.1d);
         assertEquals(activePowerCompensation, dynaFlowParameters.getActivePowerCompensation());
         assertEquals(settingPath, dynaFlowParameters.getSettingPath());
         assertEquals(assemblingPath, dynaFlowParameters.getAssemblingPath());
-        assert startTime == dynaFlowParameters.getStartTime();
-        assert stopTime == dynaFlowParameters.getStopTime();
-        assert precision == dynaFlowParameters.getPrecision();
-        assert timeOfEvent == dynaFlowParameters.getTimeOfEvent();
+        assertEquals(startTime, dynaFlowParameters.getStartTime(), 0.1d);
+        assertEquals(stopTime, dynaFlowParameters.getStopTime(), 0.1d);
+        assertEquals(precision, dynaFlowParameters.getPrecision(), 0.1d);
+        assertEquals(timeOfEvent, dynaFlowParameters.getTimeOfEvent(), 0.1d);
         assertArrayEquals(chosenOutputs.toArray(), dynaFlowParameters.getChosenOutputs().toArray());
-        assert timeStep == dynaFlowParameters.getTimeStep();
+        assertEquals(timeStep, dynaFlowParameters.getTimeStep(), 0.1d);
     }
 }

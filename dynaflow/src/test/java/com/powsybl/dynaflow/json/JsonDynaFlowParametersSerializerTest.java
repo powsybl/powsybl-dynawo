@@ -52,12 +52,12 @@ public class JsonDynaFlowParametersSerializerTest extends AbstractConverterTest 
         assertEquals(DynaFlowConstants.ActivePowerCompensation.P, dynaFlowParameters.getActivePowerCompensation());
         assertEquals(expectedSettingPath, dynaFlowParameters.getSettingPath());
         assertEquals(expectedAssemblingPath, dynaFlowParameters.getAssemblingPath());
-        assert expectedStartTime == dynaFlowParameters.getStartTime();
-        assert expectedStopTime == dynaFlowParameters.getStopTime();
-        assert expectedPrecision == dynaFlowParameters.getPrecision();
-        assert expectedTimeOfEvent == dynaFlowParameters.getTimeOfEvent();
+        assertEquals(expectedStartTime, dynaFlowParameters.getStartTime(), 0.1d);
+        assertEquals(expectedStopTime, dynaFlowParameters.getStopTime(), 0.1d);
+        assertEquals(expectedPrecision, dynaFlowParameters.getPrecision(), 0.1d);
+        assertEquals(expectedTimeOfEvent, dynaFlowParameters.getTimeOfEvent(), 0.1d);
         assertArrayEquals(expectedChosenOutputs.toArray(), dynaFlowParameters.getChosenOutputs().toArray());
-        assert expectedTimeStep == dynaFlowParameters.getTimeStep();
+        assertEquals(expectedTimeStep, dynaFlowParameters.getTimeStep(), 0.1d);
 
         assertTrue(lfParameters.isTransformerVoltageControlOn());
         assertFalse(lfParameters.isPhaseShifterRegulationOn());
