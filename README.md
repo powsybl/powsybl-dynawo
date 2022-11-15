@@ -40,17 +40,17 @@ Network network = Importers.loadNetwork("/path/to/the/casefile.xiidm");
 // Load the dynamic models mapping
 GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
     Paths.get("/path/to/dynamicModelsMapping.groovy"),
-    GroovyExtension.find(DynamicModelGroovyExtension.class, "dynawo"));
+    GroovyExtension.find(DynamicModelGroovyExtension.class, DynaWaltzProvider.NAME));
 
 // Load the events
 GroovyEventModelsSupplier eventModelsSupplier = new GroovyEventModelsSupplier(
     Paths.get("/path/to/event.groovy"),
-    GroovyExtension.find(EventModelGroovyExtension.class, "dynawo"));
+    GroovyExtension.find(EventModelGroovyExtension.class, DynaWaltzProvider.NAME));
 
 // Configure the curves
 GroovyCurvesSupplier curvesSupplier = new GroovyCurvesSupplier(
     Paths.get("/path/to/curves.groovy"),
-    GroovyExtension.find(CurveGroovyExtension.class, "dynawo"));
+    GroovyExtension.find(CurveGroovyExtension.class, DynaWaltzProvider.NAME));
 
 // Load the parameters
 DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
@@ -95,5 +95,7 @@ for (Line line : network.lines) {
     }
 }
 ```
+
+Note that this mapping file refers to parameter set ids which should be found in the Dynawo parameters file.
 
 Other examples can be found in the [resources](https://github.com/powsybl/powsybl-dynawo/tree/main/dynawaltz-dsl/src/test/resources) of this project.
