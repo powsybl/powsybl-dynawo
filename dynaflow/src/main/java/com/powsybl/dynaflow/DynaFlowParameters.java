@@ -60,7 +60,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
 
         @JsonIgnore
         public boolean isSerializable() {
-            return Objects.nonNull(timeOfEvent);
+            return timeOfEvent != null;
         }
     }
 
@@ -74,7 +74,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
     private static final String ASSEMBLING_PATH = "assemblingPath";
     private static final String START_TIME = "startTime";
     private static final String STOP_TIME = "stopTime";
-    private static final String PRECISION = "precision";
+    private static final String PRECISION_NAME = "precision";
     private static final String CHOSEN_OUTPUTS = "chosenOutputs";
     private static final String TIME_STEP = "timeStep";
 
@@ -184,11 +184,11 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
 
     @JsonIgnore
     public Double getTimeOfEvent() {
-        return Objects.isNull(securityAnalysis) ? null : securityAnalysis.getTimeOfEvent();
+        return securityAnalysis == null ? null : securityAnalysis.getTimeOfEvent();
     }
 
     public DynaFlowParameters setTimeOfEvent(Double timeOfEvent) {
-        if (Objects.isNull(this.securityAnalysis)) {
+        if (this.securityAnalysis == null) {
             securityAnalysis = new Sa();
         }
         securityAnalysis.setTimeOfEvent(timeOfEvent);
@@ -239,7 +239,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
                 .add(ASSEMBLING_PATH, assemblingPath)
                 .add(START_TIME, startTime)
                 .add(STOP_TIME, stopTime)
-                .add(PRECISION, precision)
+                .add(PRECISION_NAME, precision)
                 .add(Sa.SECURITY_ANALYSIS, securityAnalysis)
                 .add(CHOSEN_OUTPUTS, chosenOutputs)
                 .add(TIME_STEP, timeStep)
@@ -293,8 +293,8 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         if (config.hasProperty(STOP_TIME)) {
             parameters.setStopTime(config.getDoubleProperty(STOP_TIME));
         }
-        if (config.hasProperty(PRECISION)) {
-            parameters.setPrecision(config.getDoubleProperty(PRECISION));
+        if (config.hasProperty(PRECISION_NAME)) {
+            parameters.setPrecision(config.getDoubleProperty(PRECISION_NAME));
         }
         if (config.hasProperty(Sa.TIME_OF_EVENT)) {
             parameters.setTimeOfEvent(config.getDoubleProperty(Sa.TIME_OF_EVENT));
@@ -318,9 +318,9 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         Optional.ofNullable(properties.get(ASSEMBLING_PATH)).ifPresent(this::setAssemblingPath);
         Optional.ofNullable(properties.get(START_TIME)).ifPresent(prop -> setStartTime(Double.parseDouble(prop)));
         Optional.ofNullable(properties.get(STOP_TIME)).ifPresent(prop -> setStopTime(Double.parseDouble(prop)));
-        Optional.ofNullable(properties.get(PRECISION)).ifPresent(prop -> setPrecision(Double.parseDouble(prop)));
+        Optional.ofNullable(properties.get(PRECISION_NAME)).ifPresent(prop -> setPrecision(Double.parseDouble(prop)));
         Optional.ofNullable(properties.get(Sa.TIME_OF_EVENT)).ifPresent(prop -> {
-            if (Objects.isNull(securityAnalysis)) {
+            if (securityAnalysis == null) {
                 securityAnalysis = new Sa();
             }
             securityAnalysis.setTimeOfEvent(Double.parseDouble(prop));
@@ -339,7 +339,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
     public static List<String> getSpecificParametersNames() {
         return Arrays.asList(
                 SVC_REGULATION_ON, SHUNT_REGULATION_ON, AUTOMATIC_SLACK_BUS_ON, DSO_VOLTAGE_LEVEL,
-                ACTIVE_POWER_COMPENSATION, SETTING_PATH, ASSEMBLING_PATH, START_TIME, STOP_TIME, PRECISION,
+                ACTIVE_POWER_COMPENSATION, SETTING_PATH, ASSEMBLING_PATH, START_TIME, STOP_TIME, PRECISION_NAME,
                 Sa.TIME_OF_EVENT, CHOSEN_OUTPUTS, TIME_STEP
         );
     }

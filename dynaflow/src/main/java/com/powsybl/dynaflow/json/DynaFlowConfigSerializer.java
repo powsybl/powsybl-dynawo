@@ -18,7 +18,6 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Objects;
 
 /**
  *
@@ -43,41 +42,41 @@ public final class DynaFlowConfigSerializer {
         try {
             jsonGenerator.writeStartObject();
             jsonGenerator.writeObjectFieldStart("dfl-config");
-            if (Objects.nonNull(dynaFlowParameters.getSvcRegulationOn())) {
+            if (dynaFlowParameters.getSvcRegulationOn() != null) {
                 jsonGenerator.writeBooleanField("SVCRegulationOn", dynaFlowParameters.getSvcRegulationOn());
             }
-            if (Objects.nonNull(dynaFlowParameters.getShuntRegulationOn())) {
+            if (dynaFlowParameters.getShuntRegulationOn() != null) {
                 jsonGenerator.writeBooleanField("ShuntRegulationOn", dynaFlowParameters.getShuntRegulationOn());
             }
-            if (Objects.nonNull(dynaFlowParameters.getAutomaticSlackBusOn())) {
+            if (dynaFlowParameters.getAutomaticSlackBusOn() != null) {
                 jsonGenerator.writeBooleanField("AutomaticSlackBusOn", dynaFlowParameters.getAutomaticSlackBusOn());
             }
-            if (Objects.nonNull(dynaFlowParameters.getDsoVoltageLevel())) {
+            if (dynaFlowParameters.getDsoVoltageLevel() != null) {
                 jsonGenerator.writeNumberField("DsoVoltageLevel", dynaFlowParameters.getDsoVoltageLevel());
             }
             jsonGenerator.writeBooleanField("InfiniteReactiveLimits", lfParameters.isNoGeneratorReactiveLimits());
-            if (Objects.nonNull(dynaFlowParameters.getActivePowerCompensation())) {
+            if (dynaFlowParameters.getActivePowerCompensation() != null) {
                 jsonGenerator.writeStringField("ActivePowerCompensation", dynaFlowParameters.getActivePowerCompensation().name());
             }
-            if (Objects.nonNull(dynaFlowParameters.getSettingPath())) {
+            if (dynaFlowParameters.getSettingPath() != null) {
                 jsonGenerator.writeStringField("SettingPath", dynaFlowParameters.getSettingPath());
             }
-            if (Objects.nonNull(dynaFlowParameters.getAssemblingPath())) {
+            if (dynaFlowParameters.getAssemblingPath() != null) {
                 jsonGenerator.writeStringField("AssemblingPath", dynaFlowParameters.getAssemblingPath());
             }
-            if (Objects.nonNull(dynaFlowParameters.getStartTime())) {
+            if (dynaFlowParameters.getStartTime() != null) {
                 jsonGenerator.writeNumberField("StartTime", dynaFlowParameters.getStartTime());
             }
-            if (Objects.nonNull(dynaFlowParameters.getStopTime())) {
+            if (dynaFlowParameters.getStopTime() != null) {
                 jsonGenerator.writeNumberField("StopTime", dynaFlowParameters.getStopTime());
             }
-            if (Objects.nonNull(dynaFlowParameters.getPrecision())) {
+            if (dynaFlowParameters.getPrecision() != null) {
                 jsonGenerator.writeNumberField("Precision", dynaFlowParameters.getPrecision());
             }
-            if (Objects.nonNull(dynaFlowParameters.getSa())) {
+            if (dynaFlowParameters.getSa() != null) {
                 DynaFlowParameters.Sa.writeJson(jsonGenerator, dynaFlowParameters);
             }
-            if (Objects.nonNull(dynaFlowParameters.getChosenOutputs())) {
+            if (dynaFlowParameters.getChosenOutputs() != null) {
                 jsonGenerator.writeFieldName("ChosenOutputs");
                 jsonGenerator.writeStartArray();
                 for (String outputType : dynaFlowParameters.getChosenOutputs()) {
@@ -85,7 +84,7 @@ public final class DynaFlowConfigSerializer {
                 }
                 jsonGenerator.writeEndArray();
             }
-            if (Objects.nonNull(dynaFlowParameters.getTimeStep())) {
+            if (dynaFlowParameters.getTimeStep() != null) {
                 jsonGenerator.writeNumberField("TimeStep", dynaFlowParameters.getTimeStep());
             }
             jsonGenerator.writeStringField("OutputDir", workingDir.toAbsolutePath().toString());
