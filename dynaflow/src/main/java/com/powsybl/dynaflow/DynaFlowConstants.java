@@ -34,6 +34,11 @@ public final class DynaFlowConstants {
         PMAX
     }
 
+    public enum StartingPointMode {
+        WARM,
+        FLAT
+    }
+
     private DynaFlowConstants() {
     }
 
