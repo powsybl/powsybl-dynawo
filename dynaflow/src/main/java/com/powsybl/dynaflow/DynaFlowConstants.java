@@ -28,6 +28,12 @@ public final class DynaFlowConstants {
         CONSTRAINTS;
     }
 
+    public enum ActivePowerCompensation {
+        P,
+        TARGET_P,
+        PMAX
+    }
+
     private DynaFlowConstants() {
     }
 

@@ -6,65 +6,93 @@
  */
 package com.powsybl.dynaflow;
 
-import com.google.common.collect.ImmutableMap;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.google.common.base.MoreObjects;
 import com.powsybl.commons.config.ModuleConfig;
 import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.extensions.AbstractExtension;
 import com.powsybl.loadflow.LoadFlowParameters;
+import com.powsybl.dynaflow.DynaFlowConstants.ActivePowerCompensation;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.powsybl.dynaflow.DynaFlowProvider.MODULE_SPECIFIC_PARAMETERS;
-import static com.powsybl.dynaflow.DynaFlowConstants.OutputTypes;
 
 /**
  * @author Guillaume Pernin <guillaume.pernin at rte-france.com>
  */
 public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
 
-    private static final String CHOSEN_OUTPUT_STRING_DELIMITER = ",";
+    /**
+     * Inner class dedicated to Security Analysis (SA) namespace
+     */
+    public static class Sa {
+        private static final String SECURITY_ANALYSIS = "sa"; //Security analysis
+        private static final String TIME_OF_EVENT = "timeOfEvent";
 
+        private Double timeOfEvent = null;
+
+        public Double getTimeOfEvent() {
+            return timeOfEvent;
+        }
+
+        public void setTimeOfEvent(Double timeOfEvent) {
+            this.timeOfEvent = timeOfEvent;
+        }
+
+        @Override
+        public String toString() {
+            return MoreObjects.toStringHelper("").omitNullValues()
+                    .add(TIME_OF_EVENT, timeOfEvent).toString();
+        }
+
+        public static void writeJson(JsonGenerator jsonGenerator, DynaFlowParameters dynaFlowParameters) throws IOException {
+            if (dynaFlowParameters.getSa().isSerializable()) {
+                jsonGenerator.writeObjectFieldStart("sa");
+                jsonGenerator.writeNumberField("TimeOfEvent", dynaFlowParameters.getTimeOfEvent());
+                jsonGenerator.writeEndObject();
+            }
+        }
+
+        @JsonIgnore
+        public boolean isSerializable() {
+            return timeOfEvent != null;
+        }
+    }
+
+    private static final String CHOSEN_OUTPUT_STRING_DELIMITER = ",";
     private static final String SVC_REGULATION_ON = "svcRegulationOn";
     private static final String SHUNT_REGULATION_ON = "shuntRegulationOn";
     private static final String AUTOMATIC_SLACK_BUS_ON = "automaticSlackBusOn";
     private static final String DSO_VOLTAGE_LEVEL = "dsoVoltageLevel";
-
+    private static final String ACTIVE_POWER_COMPENSATION = "activePowerCompensation";
+    private static final String SETTING_PATH = "settingPath";
+    private static final String ASSEMBLING_PATH = "assemblingPath";
+    private static final String START_TIME = "startTime";
+    private static final String STOP_TIME = "stopTime";
+    private static final String PRECISION_NAME = "precision";
     private static final String CHOSEN_OUTPUTS = "chosenOutputs";
-
-    private static final String VSC_AS_GENERATORS = "vscAsGenerators";
-
-    private static final String LCC_AS_LOADS = "lccAsLoads";
-
     private static final String TIME_STEP = "timeStep";
 
-    public static final boolean DEFAULT_SVC_REGULATION_ON = false;
-    public static final boolean DEFAULT_SHUNT_REGULATION_ON = false;
-    public static final boolean DEFAULT_AUTOMATIC_SLACK_BUS_ON = false;
-    public static final double DEFAULT_DSO_VOLTAGE_LEVEL = 45.0;
+    private Boolean svcRegulationOn = null;
+    private Boolean shuntRegulationOn = null;
+    private Boolean automaticSlackBusOn = null;
+    private Double dsoVoltageLevel = null;
+    private ActivePowerCompensation activePowerCompensation = null;
+    private String settingPath = null;
+    private String assemblingPath = null;
+    private Double startTime = null;
+    private Double stopTime = null;
+    private Double precision = null;
+    private Sa securityAnalysis = null;
+    private List<String> chosenOutputs = null;
+    private Double timeStep = null;
 
-    public static final boolean DEFAULT_VSC_AS_GENERATORS = true;
-    public static final boolean DEFAULT_LCC_AS_LOADS = true;
-
-    public static final double DEFAULT_TIME_STEP = 2.6;
-
-    public static final List<String> DEFAULT_CHOSEN_OUTPUT = Collections.singletonList(OutputTypes.STEADYSTATE.name());
-
-    private boolean svcRegulationOn = DEFAULT_SVC_REGULATION_ON;
-    private boolean shuntRegulationOn = DEFAULT_SHUNT_REGULATION_ON;
-    private boolean automaticSlackBusOn = DEFAULT_AUTOMATIC_SLACK_BUS_ON;
-    private double dsoVoltageLevel = DEFAULT_DSO_VOLTAGE_LEVEL;
-
-    private List<String> chosenOutputs = DEFAULT_CHOSEN_OUTPUT;
-
-    private boolean vscAsGenerators = DEFAULT_VSC_AS_GENERATORS;
-
-    private boolean lccAsLoads = DEFAULT_LCC_AS_LOADS;
-
-    private double timeStep = DEFAULT_TIME_STEP;
-
-    public boolean getSvcRegulationOn() {
+    public Boolean getSvcRegulationOn() {
         return svcRegulationOn;
     }
 
@@ -73,7 +101,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         return this;
     }
 
-    public boolean getShuntRegulationOn() {
+    public Boolean getShuntRegulationOn() {
         return shuntRegulationOn;
     }
 
@@ -82,7 +110,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         return this;
     }
 
-    public boolean getAutomaticSlackBusOn() {
+    public Boolean getAutomaticSlackBusOn() {
         return automaticSlackBusOn;
     }
 
@@ -91,12 +119,79 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         return this;
     }
 
-    public double getDsoVoltageLevel() {
+    public Double getDsoVoltageLevel() {
         return dsoVoltageLevel;
     }
 
     public DynaFlowParameters setDsoVoltageLevel(double dsoVoltageLevel) {
         this.dsoVoltageLevel = dsoVoltageLevel;
+        return this;
+    }
+
+    public ActivePowerCompensation getActivePowerCompensation() {
+        return activePowerCompensation;
+    }
+
+    public DynaFlowParameters setActivePowerCompensation(ActivePowerCompensation activePowerCompensation) {
+        this.activePowerCompensation = activePowerCompensation;
+        return this;
+    }
+
+    public String getSettingPath() {
+        return settingPath;
+    }
+
+    public DynaFlowParameters setSettingPath(String settingPath) {
+        this.settingPath = settingPath;
+        return this;
+    }
+
+    public String getAssemblingPath() {
+        return assemblingPath;
+    }
+
+    public DynaFlowParameters setAssemblingPath(String assemblingPath) {
+        this.assemblingPath = assemblingPath;
+        return this;
+    }
+
+    public Double getStartTime() {
+        return startTime;
+    }
+
+    public DynaFlowParameters setStartTime(Double startTime) {
+        this.startTime = startTime;
+        return this;
+    }
+
+    public Double getStopTime() {
+        return stopTime;
+    }
+
+    public DynaFlowParameters setStopTime(Double stopTime) {
+        this.stopTime = stopTime;
+        return this;
+    }
+
+    public Double getPrecision() {
+        return precision;
+    }
+
+    public DynaFlowParameters setPrecision(Double precision) {
+        this.precision = precision;
+        return this;
+    }
+
+    @JsonIgnore
+    public Double getTimeOfEvent() {
+        return securityAnalysis == null ? null : securityAnalysis.getTimeOfEvent();
+    }
+
+    public DynaFlowParameters setTimeOfEvent(Double timeOfEvent) {
+        if (this.securityAnalysis == null) {
+            securityAnalysis = new Sa();
+        }
+        securityAnalysis.setTimeOfEvent(timeOfEvent);
         return this;
     }
 
@@ -109,30 +204,21 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         return this;
     }
 
-    public boolean getVscAsGenerators() {
-        return vscAsGenerators;
-    }
-
-    public DynaFlowParameters setVscAsGenerators(boolean vscAsGenerators) {
-        this.vscAsGenerators = vscAsGenerators;
-        return this;
-    }
-
-    public boolean getLccAsLoads() {
-        return lccAsLoads;
-    }
-
-    public DynaFlowParameters setLccAsLoads(boolean lccAsLoads) {
-        this.lccAsLoads = lccAsLoads;
-        return this;
-    }
-
-    public double getTimeStep() {
+    public Double getTimeStep() {
         return timeStep;
     }
 
     public DynaFlowParameters setTimeStep(double timeStep) {
         this.timeStep = timeStep;
+        return this;
+    }
+
+    public Sa getSa() {
+        return this.securityAnalysis;
+    }
+
+    public DynaFlowParameters setSa(Sa securityAnalysis) {
+        this.securityAnalysis = securityAnalysis;
         return this;
     }
 
@@ -143,18 +229,21 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
 
     @Override
     public String toString() {
-        ImmutableMap.Builder<String, Object> immutableMapBuilder = ImmutableMap.builder();
-        immutableMapBuilder
-                .put(SVC_REGULATION_ON, svcRegulationOn)
-                .put(SHUNT_REGULATION_ON, shuntRegulationOn)
-                .put(AUTOMATIC_SLACK_BUS_ON, automaticSlackBusOn)
-                .put(DSO_VOLTAGE_LEVEL, dsoVoltageLevel)
-                .put(CHOSEN_OUTPUTS, chosenOutputs)
-                .put(VSC_AS_GENERATORS, vscAsGenerators)
-                .put(LCC_AS_LOADS, lccAsLoads)
-                .put(TIME_STEP, timeStep);
-
-        return immutableMapBuilder.build().toString();
+        return MoreObjects.toStringHelper("").omitNullValues()
+                .add(SVC_REGULATION_ON, svcRegulationOn)
+                .add(SHUNT_REGULATION_ON, shuntRegulationOn)
+                .add(AUTOMATIC_SLACK_BUS_ON, automaticSlackBusOn)
+                .add(DSO_VOLTAGE_LEVEL, dsoVoltageLevel)
+                .add(ACTIVE_POWER_COMPENSATION, activePowerCompensation)
+                .add(SETTING_PATH, settingPath)
+                .add(ASSEMBLING_PATH, assemblingPath)
+                .add(START_TIME, startTime)
+                .add(STOP_TIME, stopTime)
+                .add(PRECISION_NAME, precision)
+                .add(Sa.SECURITY_ANALYSIS, securityAnalysis)
+                .add(CHOSEN_OUTPUTS, chosenOutputs)
+                .add(TIME_STEP, timeStep)
+                .toString();
     }
 
     public static DynaFlowParameters load(PlatformConfig platformConfig) {
@@ -176,14 +265,46 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
     }
 
     private static void load(DynaFlowParameters parameters, ModuleConfig config) {
-        parameters.setSvcRegulationOn(config.getBooleanProperty(SVC_REGULATION_ON, DEFAULT_SVC_REGULATION_ON))
-                .setShuntRegulationOn(config.getBooleanProperty(SHUNT_REGULATION_ON, DEFAULT_SHUNT_REGULATION_ON))
-                .setAutomaticSlackBusOn(config.getBooleanProperty(AUTOMATIC_SLACK_BUS_ON, DEFAULT_AUTOMATIC_SLACK_BUS_ON))
-                .setDsoVoltageLevel(config.getDoubleProperty(DSO_VOLTAGE_LEVEL, DEFAULT_DSO_VOLTAGE_LEVEL))
-                .setChosenOutputs(config.getStringListProperty(CHOSEN_OUTPUTS, DEFAULT_CHOSEN_OUTPUT))
-                .setVscAsGenerators(config.getBooleanProperty(VSC_AS_GENERATORS, DEFAULT_VSC_AS_GENERATORS))
-                .setLccAsLoads(config.getBooleanProperty(LCC_AS_LOADS, DEFAULT_LCC_AS_LOADS))
-                .setTimeStep(config.getDoubleProperty(TIME_STEP, DEFAULT_TIME_STEP));
+
+        if (config.hasProperty(SVC_REGULATION_ON)) {
+            parameters.setSvcRegulationOn(config.getBooleanProperty(SVC_REGULATION_ON));
+        }
+        if (config.hasProperty(SHUNT_REGULATION_ON)) {
+            parameters.setShuntRegulationOn(config.getBooleanProperty(SHUNT_REGULATION_ON));
+        }
+        if (config.hasProperty(AUTOMATIC_SLACK_BUS_ON)) {
+            parameters.setAutomaticSlackBusOn(config.getBooleanProperty(AUTOMATIC_SLACK_BUS_ON));
+        }
+        if (config.hasProperty(DSO_VOLTAGE_LEVEL)) {
+            parameters.setDsoVoltageLevel(config.getDoubleProperty(DSO_VOLTAGE_LEVEL));
+        }
+        if (config.hasProperty(ACTIVE_POWER_COMPENSATION)) {
+            parameters.setActivePowerCompensation(config.getEnumProperty(ACTIVE_POWER_COMPENSATION, ActivePowerCompensation.class));
+        }
+        if (config.hasProperty(SETTING_PATH)) {
+            parameters.setSettingPath(config.getStringProperty(SETTING_PATH));
+        }
+        if (config.hasProperty(ASSEMBLING_PATH)) {
+            parameters.setAssemblingPath(config.getStringProperty(ASSEMBLING_PATH));
+        }
+        if (config.hasProperty(START_TIME)) {
+            parameters.setStartTime(config.getDoubleProperty(START_TIME));
+        }
+        if (config.hasProperty(STOP_TIME)) {
+            parameters.setStopTime(config.getDoubleProperty(STOP_TIME));
+        }
+        if (config.hasProperty(PRECISION_NAME)) {
+            parameters.setPrecision(config.getDoubleProperty(PRECISION_NAME));
+        }
+        if (config.hasProperty(Sa.TIME_OF_EVENT)) {
+            parameters.setTimeOfEvent(config.getDoubleProperty(Sa.TIME_OF_EVENT));
+        }
+        if (config.hasProperty(CHOSEN_OUTPUTS)) {
+            parameters.setChosenOutputs(config.getStringListProperty(CHOSEN_OUTPUTS));
+        }
+        if (config.hasProperty(TIME_STEP)) {
+            parameters.setTimeStep(config.getDoubleProperty(TIME_STEP));
+        }
     }
 
     public void update(Map<String, String> properties) {
@@ -192,10 +313,20 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         Optional.ofNullable(properties.get(SHUNT_REGULATION_ON)).ifPresent(prop -> setShuntRegulationOn(Boolean.parseBoolean(prop)));
         Optional.ofNullable(properties.get(AUTOMATIC_SLACK_BUS_ON)).ifPresent(prop -> setAutomaticSlackBusOn(Boolean.parseBoolean(prop)));
         Optional.ofNullable(properties.get(DSO_VOLTAGE_LEVEL)).ifPresent(prop -> setDsoVoltageLevel(Double.parseDouble(prop)));
+        Optional.ofNullable(properties.get(ACTIVE_POWER_COMPENSATION)).ifPresent(prop -> setActivePowerCompensation(ActivePowerCompensation.valueOf(prop)));
+        Optional.ofNullable(properties.get(SETTING_PATH)).ifPresent(this::setSettingPath);
+        Optional.ofNullable(properties.get(ASSEMBLING_PATH)).ifPresent(this::setAssemblingPath);
+        Optional.ofNullable(properties.get(START_TIME)).ifPresent(prop -> setStartTime(Double.parseDouble(prop)));
+        Optional.ofNullable(properties.get(STOP_TIME)).ifPresent(prop -> setStopTime(Double.parseDouble(prop)));
+        Optional.ofNullable(properties.get(PRECISION_NAME)).ifPresent(prop -> setPrecision(Double.parseDouble(prop)));
+        Optional.ofNullable(properties.get(Sa.TIME_OF_EVENT)).ifPresent(prop -> {
+            if (securityAnalysis == null) {
+                securityAnalysis = new Sa();
+            }
+            securityAnalysis.setTimeOfEvent(Double.parseDouble(prop));
+        });
         Optional.ofNullable(properties.get(CHOSEN_OUTPUTS)).ifPresent(prop ->
                 setChosenOutputs(Stream.of(prop.split(CHOSEN_OUTPUT_STRING_DELIMITER)).map(String::trim).collect(Collectors.toList())));
-        Optional.ofNullable(properties.get(VSC_AS_GENERATORS)).ifPresent(prop -> setVscAsGenerators(Boolean.parseBoolean(prop)));
-        Optional.ofNullable(properties.get(LCC_AS_LOADS)).ifPresent(prop -> setLccAsLoads(Boolean.parseBoolean(prop)));
         Optional.ofNullable(properties.get(TIME_STEP)).ifPresent(prop -> setTimeStep(Double.parseDouble(prop)));
     }
 
@@ -208,7 +339,8 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
     public static List<String> getSpecificParametersNames() {
         return Arrays.asList(
                 SVC_REGULATION_ON, SHUNT_REGULATION_ON, AUTOMATIC_SLACK_BUS_ON, DSO_VOLTAGE_LEVEL,
-                CHOSEN_OUTPUTS, VSC_AS_GENERATORS, LCC_AS_LOADS, TIME_STEP
+                ACTIVE_POWER_COMPENSATION, SETTING_PATH, ASSEMBLING_PATH, START_TIME, STOP_TIME, PRECISION_NAME,
+                Sa.TIME_OF_EVENT, CHOSEN_OUTPUTS, TIME_STEP
         );
     }
 

@@ -185,8 +185,6 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
                 "automaticSlackBusOn", "false",
                 "dsoVoltageLevel", "2.0",
                 "chosenOutputs", "STEADYSTATE, CONSTRAINTS",
-                "vscAsGenerators", "false",
-                "lccAsLoads", "false",
                 "timeStep", "0");
 
         LoadFlowParameters params = LoadFlowParameters.load();
@@ -196,11 +194,9 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
         assertTrue(dynaParams.getSvcRegulationOn());
         assertTrue(dynaParams.getShuntRegulationOn());
         assertFalse(dynaParams.getAutomaticSlackBusOn());
-        assert 2 == dynaParams.getDsoVoltageLevel();
+        assertEquals(2, dynaParams.getDsoVoltageLevel(), 0.1d);
         assertArrayEquals(Arrays.asList(OutputTypes.STEADYSTATE.name(), OutputTypes.CONSTRAINTS.name()).toArray(), dynaParams.getChosenOutputs().toArray());
-        assertFalse(dynaParams.getVscAsGenerators());
-        assertFalse(dynaParams.getLccAsLoads());
-        assert 0 == dynaParams.getTimeStep();
+        assertEquals(0, dynaParams.getTimeStep(), 0.1d);
     }
 
     private void compare(Network expected, Network actual) throws IOException {
