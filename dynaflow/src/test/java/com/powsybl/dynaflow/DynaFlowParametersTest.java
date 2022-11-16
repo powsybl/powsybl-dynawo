@@ -73,7 +73,7 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
         double timeOfEvent = 10.;
         List<String> chosenOutputs = Arrays.asList(OutputTypes.STEADYSTATE.name(), OutputTypes.TIMELINE.name());
         double timeStep = 0;
-        StartingPointMode startingPointMode = StartingPointMode.warm;
+        StartingPointMode startingPointMode = StartingPointMode.WARM;
 
         DynaFlowParameters.Sa securityAnalysis = new DynaFlowParameters.Sa();
         securityAnalysis.setTimeOfEvent(2.);
@@ -92,7 +92,7 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
         moduleConfig.setStringProperty("timeOfEvent", Double.toString(timeOfEvent));
         moduleConfig.setStringListProperty("chosenOutputs", chosenOutputs);
         moduleConfig.setStringProperty("timeStep", Double.toString(timeStep));
-        moduleConfig.setStringProperty("startingPointMode", startingPointMode.name());
+        moduleConfig.setStringProperty("startingPointMode", startingPointMode.getName());
 
         DynaFlowParameters parameters = DynaFlowParameters.load(platformConfig);
 
@@ -162,7 +162,7 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
         double timeOfEvent = 10.;
         List<String> chosenOutputs = Arrays.asList(OutputTypes.STEADYSTATE.name(), OutputTypes.TIMELINE.name());
         double timeStep = 0;
-        StartingPointMode startingPointMode = StartingPointMode.warm;
+        StartingPointMode startingPointMode = StartingPointMode.WARM;
 
         Map<String, String> properties = new HashMap<>();
         properties.put("svcRegulationOn", Boolean.toString(svcRegulationOn));
@@ -240,7 +240,7 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
         dynaFlowParameters.setTimeOfEvent(10.);
         dynaFlowParameters.setChosenOutputs(Collections.singletonList(OutputTypes.STEADYSTATE.name()));
         dynaFlowParameters.setTimeStep(2.6);
-        dynaFlowParameters.setStartingPointMode(StartingPointMode.warm);
+        dynaFlowParameters.setStartingPointMode(StartingPointMode.WARM);
         lfParameters.addExtension(DynaFlowParameters.class, dynaFlowParameters);
 
         Path workingDir = fileSystem.getPath("dynaflow/workingDir");
@@ -269,7 +269,7 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
         double timeOfEvent = 10.;
         List<String> chosenOutputs = Arrays.asList(OutputTypes.STEADYSTATE.name(), OutputTypes.TIMELINE.name());
         double timeStep = 0;
-        StartingPointMode startingPointMode = StartingPointMode.warm;
+        StartingPointMode startingPointMode = StartingPointMode.WARM;
 
         Map<String, String> properties = new HashMap<>();
         properties.put("svcRegulationOn", Boolean.toString(svcRegulationOn));
@@ -285,7 +285,7 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
         properties.put("timeOfEvent", Double.toString(timeOfEvent));
         properties.put("chosenOutputs", OutputTypes.STEADYSTATE.name() + ", " + OutputTypes.TIMELINE.name());
         properties.put("timeStep", Double.toString(timeStep));
-        properties.put("startingPointMode", startingPointMode.name());
+        properties.put("startingPointMode", startingPointMode.getName());
 
         DynaFlowParameters dynaFlowParameters = DynaFlowParameters.load(properties);
 

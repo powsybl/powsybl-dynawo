@@ -6,6 +6,9 @@
  */
 package com.powsybl.dynaflow;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 /**
  * @author Guillaume Pernin <guillaume.pernin at rte-france.com>
  */
@@ -35,8 +38,24 @@ public final class DynaFlowConstants {
     }
 
     public enum StartingPointMode {
-        warm,
-        flat
+        WARM("warm"),
+        FLAT("flat");
+
+        private final String name;
+
+        StartingPointMode(String name) {
+            this.name = name;
+        }
+
+        @JsonCreator
+        public static StartingPointMode fromString(String startingPointMode) {
+            return startingPointMode == null ? null : StartingPointMode.valueOf(startingPointMode.toUpperCase());
+        }
+
+        @JsonValue
+        public String getName() {
+            return name;
+        }
     }
 
     private DynaFlowConstants() {
