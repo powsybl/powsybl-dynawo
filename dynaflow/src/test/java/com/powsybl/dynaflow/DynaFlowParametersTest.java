@@ -73,7 +73,7 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
         double timeOfEvent = 10.;
         List<String> chosenOutputs = Arrays.asList(OutputTypes.STEADYSTATE.name(), OutputTypes.TIMELINE.name());
         double timeStep = 0;
-        StartingPointMode startingPointMode = StartingPointMode.WARM;
+        StartingPointMode startingPointMode = StartingPointMode.warm;
 
         DynaFlowParameters.Sa securityAnalysis = new DynaFlowParameters.Sa();
         securityAnalysis.setTimeOfEvent(2.);
@@ -162,7 +162,7 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
         double timeOfEvent = 10.;
         List<String> chosenOutputs = Arrays.asList(OutputTypes.STEADYSTATE.name(), OutputTypes.TIMELINE.name());
         double timeStep = 0;
-        StartingPointMode startingPointMode = StartingPointMode.WARM;
+        StartingPointMode startingPointMode = StartingPointMode.warm;
 
         Map<String, String> properties = new HashMap<>();
         properties.put("svcRegulationOn", Boolean.toString(svcRegulationOn));
@@ -240,7 +240,7 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
         dynaFlowParameters.setTimeOfEvent(10.);
         dynaFlowParameters.setChosenOutputs(Collections.singletonList(OutputTypes.STEADYSTATE.name()));
         dynaFlowParameters.setTimeStep(2.6);
-        dynaFlowParameters.setStartingPointMode(StartingPointMode.WARM);
+        dynaFlowParameters.setStartingPointMode(StartingPointMode.warm);
         lfParameters.addExtension(DynaFlowParameters.class, dynaFlowParameters);
 
         Path workingDir = fileSystem.getPath("dynaflow/workingDir");
@@ -269,7 +269,7 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
         double timeOfEvent = 10.;
         List<String> chosenOutputs = Arrays.asList(OutputTypes.STEADYSTATE.name(), OutputTypes.TIMELINE.name());
         double timeStep = 0;
-        StartingPointMode startingPointMode = StartingPointMode.WARM;
+        StartingPointMode startingPointMode = StartingPointMode.warm;
 
         Map<String, String> properties = new HashMap<>();
         properties.put("svcRegulationOn", Boolean.toString(svcRegulationOn));

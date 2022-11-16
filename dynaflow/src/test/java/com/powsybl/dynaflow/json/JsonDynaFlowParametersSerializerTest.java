@@ -58,7 +58,7 @@ public class JsonDynaFlowParametersSerializerTest extends AbstractConverterTest 
         assertEquals(expectedTimeOfEvent, dynaFlowParameters.getTimeOfEvent(), 0.1d);
         assertArrayEquals(expectedChosenOutputs.toArray(), dynaFlowParameters.getChosenOutputs().toArray());
         assertEquals(expectedTimeStep, dynaFlowParameters.getTimeStep(), 0.1d);
-        assertEquals(DynaFlowConstants.StartingPointMode.WARM, dynaFlowParameters.getStartingPointMode());
+        assertEquals(DynaFlowConstants.StartingPointMode.warm, dynaFlowParameters.getStartingPointMode());
 
         assertTrue(lfParameters.isTransformerVoltageControlOn());
         assertFalse(lfParameters.isPhaseShifterRegulationOn());
@@ -86,7 +86,7 @@ public class JsonDynaFlowParametersSerializerTest extends AbstractConverterTest 
         params.setTimeOfEvent(10.);
         params.setChosenOutputs(Collections.singletonList(DynaFlowConstants.OutputTypes.STEADYSTATE.name()));
         params.setTimeStep(2.6);
-        params.setStartingPointMode(DynaFlowConstants.StartingPointMode.WARM);
+        params.setStartingPointMode(DynaFlowConstants.StartingPointMode.warm);
 
         parameters.addExtension(DynaFlowParameters.class, params);
 

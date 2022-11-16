@@ -35,8 +35,8 @@ public final class DynaFlowConstants {
     }
 
     public enum StartingPointMode {
-        WARM,
-        FLAT
+        warm,
+        flat
     }
 
     private DynaFlowConstants() {
