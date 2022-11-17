@@ -39,7 +39,7 @@ public class OmegaRef extends AbstractBlackBoxModel {
     public static final String OMEGA_REF_ID = "OMEGA_REF";
     private static final String OMEGA_REF_PARAMETER_SET_ID = "OMEGA_REF";
     private final List<GeneratorSynchronousModel> synchronousGenerators;
-    private List<Pair<GeneratorSynchronousModel, BusModel>> lGenByBus = new ArrayList<>();
+    private List<Pair<GeneratorSynchronousModel, BusModel>> connectedModels = new ArrayList<>();
 
     public OmegaRef(List<GeneratorSynchronousModel> synchronousGenerators) {
         super(OMEGA_REF_ID, "", OMEGA_REF_PARAMETER_SET_ID);
@@ -125,8 +125,8 @@ public class OmegaRef extends AbstractBlackBoxModel {
             }
             lGenAndBuses.add(busModel);
 
-            if (lGenByBus.size() < synchronousGenerators.size()) {
-                lGenByBus.add(Pair.of((GeneratorSynchronousModel) generatorModel, (BusModel) busModel));
+            if (connectedModels.size() < synchronousGenerators.size()) {
+                connectedModels.add(Pair.of((GeneratorSynchronousModel) generatorModel, (BusModel) busModel));
             }
         }
 
@@ -136,8 +136,8 @@ public class OmegaRef extends AbstractBlackBoxModel {
     @Override
     public void writeMacroConnect(XMLStreamWriter writer, DynaWaltzContext context, MacroConnector macroConnector, BlackBoxModel connected) throws XMLStreamException {
         int index1 = 0;
-        while (index1 < lGenByBus.size()) {
-            Pair<GeneratorSynchronousModel, BusModel> currentPair = lGenByBus.get(index1);
+        while (index1 < connectedModels.size()) {
+            Pair<GeneratorSynchronousModel, BusModel> currentPair = connectedModels.get(index1);
             if (currentPair.getLeft().equals(connected) ||
                     currentPair.getRight().equals(connected)) {
                 break;
