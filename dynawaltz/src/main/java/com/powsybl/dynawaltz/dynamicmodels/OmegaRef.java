@@ -42,7 +42,6 @@ public class OmegaRef extends AbstractBlackBoxModel {
     private List<Pair<GeneratorSynchronousModel, BusModel>> lGenByBus = new ArrayList<>();
 
     public OmegaRef(List<GeneratorSynchronousModel> synchronousGenerators) {
-        // New way to handle the OmegaRef : there's only one instance.
         super(OMEGA_REF_ID, "", OMEGA_REF_PARAMETER_SET_ID);
         this.synchronousGenerators = synchronousGenerators;
     }
