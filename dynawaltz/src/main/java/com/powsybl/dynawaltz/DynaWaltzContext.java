@@ -178,7 +178,8 @@ public class DynaWaltzContext {
         return eventModelsConnections;
     }
 
-    public Stream<BlackBoxModel> getUserBlackBoxModelStream() {
+    private Stream<BlackBoxModel> getInputBlackBoxModelStream() {
+        //Doesn't include the OmegaRef, it only concerns the DynamicModels provided by the user
         return dynamicModels.stream()
                 .filter(BlackBoxModel.class::isInstance)
                 .map(BlackBoxModel.class::cast);
@@ -186,9 +187,9 @@ public class DynaWaltzContext {
 
     public Stream<BlackBoxModel> getBlackBoxModelStream() {
         if (omegaRef.getSynchronousGenerators().isEmpty()) {
-            return getUserBlackBoxModelStream();
+            return getInputBlackBoxModelStream();
         }
-        return Stream.concat(getUserBlackBoxModelStream(), Stream.of(omegaRef));
+        return Stream.concat(getInputBlackBoxModelStream(), Stream.of(omegaRef));
     }
 
     public List<EventModel> getEventModels() {
