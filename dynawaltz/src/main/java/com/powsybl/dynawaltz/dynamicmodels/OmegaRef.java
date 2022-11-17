@@ -112,7 +112,7 @@ public class OmegaRef extends AbstractBlackBoxModel {
     public List<BlackBoxModel> getModelsConnectedTo(DynaWaltzContext context) throws PowsyblException {
         List<BlackBoxModel> lGenAndBuses = new ArrayList<>();
 
-        for (BlackBoxModel generatorModel : synchronousGenerators.stream().map(BlackBoxModel.class::cast).collect(Collectors.toList())) {
+        for (GeneratorSynchronousModel generatorModel : synchronousGenerators) {
             Generator generator = context.getNetwork().getGenerator(generatorModel.getStaticId());
             if (generator == null) {
                 throw new PowsyblException("Generator " + generatorModel.getLib() + " not found in DynaWaltz context. Id : " + generatorModel.getDynamicModelId());
