@@ -79,7 +79,7 @@ public class OmegaRef extends AbstractBlackBoxModel {
         long count = 0;
         // The dynamic models are declared in the DYD following the order of dynamic models supplier.
         // The OmegaRef parameters index the weight of each generator according to that declaration order.
-        for (BlackBoxModel blackBoxModel : synchronousGenerators.stream().map(BlackBoxModel.class::cast).collect(Collectors.toList())) {
+        for (GeneratorSynchronousModel blackBoxModel : synchronousGenerators) {
             double h = parDB.getDouble(blackBoxModel.getParameterSetId(), "generator_H");
             double snom = parDB.getDouble(blackBoxModel.getParameterSetId(), "generator_SNom");
 
