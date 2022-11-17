@@ -73,7 +73,7 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
         double timeOfEvent = 10.;
         List<String> chosenOutputs = Arrays.asList(OutputTypes.STEADYSTATE.name(), OutputTypes.TIMELINE.name());
         double timeStep = 0;
-        StartingPointMode startingPointMode = StartingPointMode.WARM;
+        StartingPointMode startingPointMode = StartingPointMode.FLAT;
 
         DynaFlowParameters.Sa securityAnalysis = new DynaFlowParameters.Sa();
         securityAnalysis.setTimeOfEvent(2.);
