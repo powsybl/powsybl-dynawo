@@ -29,6 +29,7 @@
       "precision" : 0.0,
       "chosenOutputs" : [ "STEADYSTATE" ],
       "timeStep" : 2.6,
+      "startingPointMode" : "warm",
       "sa" : {
         "timeOfEvent" : 10.0
       }

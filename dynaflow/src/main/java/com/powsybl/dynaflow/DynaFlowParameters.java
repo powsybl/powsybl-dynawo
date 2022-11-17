@@ -14,6 +14,7 @@ import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.extensions.AbstractExtension;
 import com.powsybl.loadflow.LoadFlowParameters;
 import com.powsybl.dynaflow.DynaFlowConstants.ActivePowerCompensation;
+import com.powsybl.dynaflow.DynaFlowConstants.StartingPointMode;
 
 import java.io.IOException;
 import java.util.*;
@@ -77,6 +78,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
     private static final String PRECISION_NAME = "precision";
     private static final String CHOSEN_OUTPUTS = "chosenOutputs";
     private static final String TIME_STEP = "timeStep";
+    private static final String STARTING_POINT_MODE = "startingPointMode";
 
     private Boolean svcRegulationOn = null;
     private Boolean shuntRegulationOn = null;
@@ -91,6 +93,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
     private Sa securityAnalysis = null;
     private List<String> chosenOutputs = null;
     private Double timeStep = null;
+    private StartingPointMode startingPointMode = null;
 
     public Boolean getSvcRegulationOn() {
         return svcRegulationOn;
@@ -213,6 +216,15 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         return this;
     }
 
+    public StartingPointMode getStartingPointMode() {
+        return startingPointMode;
+    }
+
+    public DynaFlowParameters setStartingPointMode(StartingPointMode startingPointMode) {
+        this.startingPointMode = startingPointMode;
+        return this;
+    }
+
     public Sa getSa() {
         return this.securityAnalysis;
     }
@@ -243,6 +255,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
                 .add(Sa.SECURITY_ANALYSIS, securityAnalysis)
                 .add(CHOSEN_OUTPUTS, chosenOutputs)
                 .add(TIME_STEP, timeStep)
+                .add(STARTING_POINT_MODE, startingPointMode)
                 .toString();
     }
 
@@ -305,6 +318,9 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         if (config.hasProperty(TIME_STEP)) {
             parameters.setTimeStep(config.getDoubleProperty(TIME_STEP));
         }
+        if (config.hasProperty(STARTING_POINT_MODE)) {
+            parameters.setStartingPointMode(StartingPointMode.fromString(config.getStringProperty(STARTING_POINT_MODE)));
+        }
     }
 
     public void update(Map<String, String> properties) {
@@ -328,6 +344,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         Optional.ofNullable(properties.get(CHOSEN_OUTPUTS)).ifPresent(prop ->
                 setChosenOutputs(Stream.of(prop.split(CHOSEN_OUTPUT_STRING_DELIMITER)).map(String::trim).collect(Collectors.toList())));
         Optional.ofNullable(properties.get(TIME_STEP)).ifPresent(prop -> setTimeStep(Double.parseDouble(prop)));
+        Optional.ofNullable(properties.get(STARTING_POINT_MODE)).ifPresent(prop -> setStartingPointMode(StartingPointMode.fromString(prop)));
     }
 
     public static DynaFlowParameters load(Map<String, String> properties) {
@@ -340,7 +357,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         return Arrays.asList(
                 SVC_REGULATION_ON, SHUNT_REGULATION_ON, AUTOMATIC_SLACK_BUS_ON, DSO_VOLTAGE_LEVEL,
                 ACTIVE_POWER_COMPENSATION, SETTING_PATH, ASSEMBLING_PATH, START_TIME, STOP_TIME, PRECISION_NAME,
-                Sa.TIME_OF_EVENT, CHOSEN_OUTPUTS, TIME_STEP
+                Sa.TIME_OF_EVENT, CHOSEN_OUTPUTS, TIME_STEP, STARTING_POINT_MODE
         );
     }
 
