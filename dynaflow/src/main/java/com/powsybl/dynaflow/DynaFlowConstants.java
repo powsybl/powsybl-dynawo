@@ -38,14 +38,8 @@ public final class DynaFlowConstants {
     }
 
     public enum StartingPointMode {
-        WARM("warm"),
-        FLAT("flat");
-
-        private final String name;
-
-        StartingPointMode(String name) {
-            this.name = name;
-        }
+        WARM,
+        FLAT;
 
         @JsonCreator
         public static StartingPointMode fromString(String startingPointMode) {
@@ -54,7 +48,7 @@ public final class DynaFlowConstants {
 
         @JsonValue
         public String getName() {
-            return name;
+            return name().toLowerCase();
         }
     }
 
