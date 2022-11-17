@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.powsybl.dynawaltz.DynaWaltzParametersDatabase.ParameterType.DOUBLE;
 import static com.powsybl.dynawaltz.DynaWaltzParametersDatabase.ParameterType.INT;
@@ -126,7 +125,7 @@ public class OmegaRef extends AbstractBlackBoxModel {
             lGenAndBuses.add(busModel);
 
             if (connectedModels.size() < synchronousGenerators.size()) {
-                connectedModels.add(Pair.of((GeneratorSynchronousModel) generatorModel, (BusModel) busModel));
+                connectedModels.add(Pair.of(generatorModel, (BusModel) busModel));
             }
         }
 
