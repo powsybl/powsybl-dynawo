@@ -9,7 +9,7 @@ package com.powsybl.dynawaltz.dynamicmodels;
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  */
-public interface BusModel {
+public interface BusModel extends BlackBoxModel {
     String getId();
 
     String getTerminalVarName();

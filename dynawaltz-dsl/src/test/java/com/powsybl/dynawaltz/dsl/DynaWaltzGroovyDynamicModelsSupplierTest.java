@@ -68,9 +68,8 @@ public class DynaWaltzGroovyDynamicModelsSupplierTest {
         // One model for each load, one model for each generator and one omegaRef per generator
         int numLoads = network.getLoadCount();
         int numGenerators = network.getGeneratorCount();
-        int numOmegaRefs = numGenerators;
         int numLines = network.getLineCount();
-        int expectedDynamicModelsSize =  numLoads + numGenerators + numOmegaRefs + numLines;
+        int expectedDynamicModelsSize =  numLoads + numGenerators + numLines;
         assertEquals(expectedDynamicModelsSize, dynamicModels.size());
         dynamicModels.forEach(this::validateModel);
     }
@@ -124,6 +123,17 @@ public class DynaWaltzGroovyDynamicModelsSupplierTest {
             .setTargetP(-1.3)
             .setTargetQ(0.9)
             .add();
+        vlgen.newGenerator()
+            .setId("GEN6")
+            .setBus(ngen.getId())
+            .setConnectableBus(ngen.getId())
+            .setMinP(-9999.99)
+            .setMaxP(9999.99)
+            .setVoltageRegulatorOn(true)
+            .setTargetV(24.5)
+            .setTargetP(-1.3)
+            .setTargetQ(0.9)
+            .add();
         VoltageLevel vlload  = network.getVoltageLevel("VLLOAD");
         Bus nload = vlload.getBusBreakerView().getBus("NLOAD");
         vlload.newLoad()
@@ -140,11 +150,9 @@ public class DynaWaltzGroovyDynamicModelsSupplierTest {
         boolean isLoadAlphaBetaExtension = extension instanceof LoadAlphaBetaGroovyExtension;
         boolean isLoadOneTransformerExtension = extension instanceof LoadOneTransformerGroovyExtension;
 
-        boolean isOmegaRefExtension = extension instanceof OmegaRefGroovyExtension;
-
         boolean isLoadExtension = isLoadAlphaBetaExtension || isLoadOneTransformerExtension;
         boolean isGeneratorExtension = extension instanceof GeneratorModelGroovyExtension;
-        boolean isDynamicModelExtension = isLoadExtension || isGeneratorExtension || isOmegaRefExtension;
+        boolean isDynamicModelExtension = isLoadExtension || isGeneratorExtension;
 
         boolean isCurrentLimitAutomatonExtension = extension instanceof CurrentLimitAutomatonGroovyExtension;
         boolean isAutomatonExtension = isCurrentLimitAutomatonExtension;
@@ -189,10 +197,11 @@ public class DynaWaltzGroovyDynamicModelsSupplierTest {
             assertEquals("BBM_" + identifiable.getId(), blackBoxModel.getDynamicModelId());
             assertEquals("GSFW", blackBoxModel.getParameterSetId());
             assertTrue(identifiable instanceof Generator);
-        } else if (blackBoxModel instanceof OmegaRef) {
-            OmegaRef omegaRef = (OmegaRef) blackBoxModel;
-            assertEquals("OMEGA_REF", blackBoxModel.getDynamicModelId());
-            assertEquals("OMEGA_REF", blackBoxModel.getParameterSetId());
+        } else if (blackBoxModel instanceof GeneratorFictitious) {
+            Identifiable<?> identifiable = network.getIdentifiable(blackBoxModel.getStaticId());
+            assertEquals("BBM_" + identifiable.getId(), blackBoxModel.getDynamicModelId());
+            assertEquals("GF", blackBoxModel.getParameterSetId());
+            assertTrue(identifiable instanceof Generator);
         } else if (blackBoxModel instanceof CurrentLimitAutomaton) {
             Identifiable<?> identifiable = network.getIdentifiable(((CurrentLimitAutomaton) blackBoxModel).getLineStaticId());
             assertEquals("BBM_" + identifiable.getId(), blackBoxModel.getDynamicModelId());

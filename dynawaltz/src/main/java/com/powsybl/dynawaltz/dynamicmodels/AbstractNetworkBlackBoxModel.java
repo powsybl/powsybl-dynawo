@@ -2,7 +2,6 @@ package com.powsybl.dynawaltz.dynamicmodels;
 
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants;
-import com.powsybl.dynawaltz.xml.DynaWaltzXmlContext;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.xml.stream.XMLStreamException;
@@ -34,17 +33,17 @@ public abstract class AbstractNetworkBlackBoxModel implements BlackBoxModel {
     }
 
     @Override
-    public void writeMacroConnect(XMLStreamWriter writer, DynaWaltzXmlContext xmlContext, MacroConnector macroConnector, BlackBoxModel connected) {
+    public void writeMacroConnect(XMLStreamWriter writer, DynaWaltzContext context, MacroConnector macroConnector, BlackBoxModel connected) {
         // Default models not written in dyd
     }
 
     @Override
-    public void write(XMLStreamWriter writer, DynaWaltzXmlContext context) throws XMLStreamException {
+    public void write(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
         // Default models not written in dyd
     }
 
     @Override
-    public void writeParameters(XMLStreamWriter writer, DynaWaltzXmlContext xmlContext) throws XMLStreamException {
+    public void writeParameters(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
         // Default models not written in dyd
     }
 

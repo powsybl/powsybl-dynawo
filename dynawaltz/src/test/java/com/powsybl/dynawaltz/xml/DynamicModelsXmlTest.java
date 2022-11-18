@@ -9,6 +9,7 @@ package com.powsybl.dynawaltz.xml;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
+import com.powsybl.dynawaltz.dynamicmodels.GeneratorFictitious;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
@@ -29,6 +30,23 @@ public class DynamicModelsXmlTest extends DynaWaltzTestUtil {
 
         DydXml.write(tmpDir, context);
         validate("dyd.xsd", "dyd.xml", tmpDir.resolve(DynaWaltzConstants.DYD_FILENAME));
+    }
+
+    @Test
+    public void writeDynamicModelWithLoadsAndOnlyOneFictitiousGenerator() throws SAXException, IOException, XMLStreamException {
+        DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
+        DynaWaltzParameters dynawoParameters = DynaWaltzParameters.load();
+        dynamicModels.clear();
+        network.getGeneratorStream().forEach(gen -> {
+            if (gen.getId().equals("GEN6")) {
+                dynamicModels.add(new GeneratorFictitious("BBM_" + gen.getId(), gen.getId(), "GF"));
+            }
+        });
+
+        DynaWaltzContext context = new DynaWaltzContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, new ArrayList<>(), curves, parameters, dynawoParameters);
+
+        DydXml.write(tmpDir, context);
+        validate("dyd.xsd", "dyd_fictitious.xml", tmpDir.resolve(DynaWaltzConstants.DYD_FILENAME));
     }
 
 }
