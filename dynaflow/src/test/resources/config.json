@@ -7,14 +7,22 @@
   "specificCompatibility" : false,
   "extensions" : {
     "DynaFlowParameters" : {
-      "svcRegulationOn": true,
-      "shuntRegulationOn": false,
-      "automaticSlackBusOn": true,
-      "dsoVoltageLevel": 987.6,
-      "chosenOutputs" : [ "STEADYSTATE" ],
-      "vscAsGenerators" : true,
-      "lccAsLoads" : true,
-      "timeStep" : 2.6
+      "svcRegulationOn" : true,
+      "shuntRegulationOn" : false,
+      "automaticSlackBusOn" : true,
+      "dsoVoltageLevel" : 987.6,
+      "activePowerCompensation" : "P",
+      "settingPath" : "path/to/settingFile",
+      "assemblingPath" : "path/to/assemblingFile",
+      "startTime" : 0.0,
+      "stopTime" : 100.0,
+      "precision" : 0.0,
+      "sa" : {
+        "timeOfEvent" : 10.0
+      },
+      "chosenOutputs" : [ "STEADYSTATE", "TIMELINE" ],
+      "timeStep" : 2.6,
+      "startingPointMode" : "warm"
     }
   }
 }

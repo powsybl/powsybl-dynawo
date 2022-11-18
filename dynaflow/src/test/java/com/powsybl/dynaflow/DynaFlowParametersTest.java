@@ -13,6 +13,8 @@ import com.powsybl.commons.config.InMemoryPlatformConfig;
 import com.powsybl.commons.config.MapModuleConfig;
 import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
 import com.powsybl.dynaflow.DynaFlowConstants.OutputTypes;
+import com.powsybl.dynaflow.DynaFlowConstants.ActivePowerCompensation;
+import com.powsybl.dynaflow.DynaFlowConstants.StartingPointMode;
 import com.powsybl.loadflow.LoadFlowParameters;
 import org.junit.After;
 import org.junit.Before;
@@ -24,16 +26,17 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.powsybl.commons.ComparisonUtils.compareTxt;
 import static com.powsybl.dynaflow.DynaFlowProvider.MODULE_SPECIFIC_PARAMETERS;
-import static com.powsybl.dynaflow.DynaFlowConstants.OutputTypes;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -61,31 +64,52 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
         boolean shuntRegulationOn = false;
         boolean automaticSlackBusOn = true;
         double dsoVoltageLevel = 87.32;
+        ActivePowerCompensation activePowerCompensation = ActivePowerCompensation.PMAX;
+        String settingPath = "path/to/settingFile";
+        String assemblingPath = "path/to/assemblingFile";
+        double startTime = 0.;
+        double stopTime = 100.;
+        double precision = 15.45;
+        double timeOfEvent = 10.;
         List<String> chosenOutputs = Arrays.asList(OutputTypes.STEADYSTATE.name(), OutputTypes.TIMELINE.name());
-        boolean vscAsGenerators = false;
-        boolean lccAsLoads = false;
         double timeStep = 0;
+        StartingPointMode startingPointMode = StartingPointMode.FLAT;
+
+        DynaFlowParameters.Sa securityAnalysis = new DynaFlowParameters.Sa();
+        securityAnalysis.setTimeOfEvent(2.);
 
         MapModuleConfig moduleConfig = platformConfig.createModuleConfig(MODULE_SPECIFIC_PARAMETERS);
         moduleConfig.setStringProperty("svcRegulationOn", Boolean.toString(svcRegulationOn));
         moduleConfig.setStringProperty("shuntRegulationOn", Boolean.toString(shuntRegulationOn));
         moduleConfig.setStringProperty("automaticSlackBusOn", Boolean.toString(automaticSlackBusOn));
         moduleConfig.setStringProperty("dsoVoltageLevel", Double.toString(dsoVoltageLevel));
+        moduleConfig.setStringProperty("activePowerCompensation", activePowerCompensation.name());
+        moduleConfig.setStringProperty("settingPath", settingPath);
+        moduleConfig.setStringProperty("assemblingPath", assemblingPath);
+        moduleConfig.setStringProperty("startTime", Double.toString(startTime));
+        moduleConfig.setStringProperty("stopTime", Double.toString(stopTime));
+        moduleConfig.setStringProperty("precision", Double.toString(precision));
+        moduleConfig.setStringProperty("timeOfEvent", Double.toString(timeOfEvent));
         moduleConfig.setStringListProperty("chosenOutputs", chosenOutputs);
-        moduleConfig.setStringProperty("vscAsGenerators", Boolean.toString(vscAsGenerators));
-        moduleConfig.setStringProperty("lccAsLoads", Boolean.toString(lccAsLoads));
         moduleConfig.setStringProperty("timeStep", Double.toString(timeStep));
+        moduleConfig.setStringProperty("startingPointMode", startingPointMode.getName());
 
         DynaFlowParameters parameters = DynaFlowParameters.load(platformConfig);
 
         assertEquals(svcRegulationOn, parameters.getSvcRegulationOn());
         assertEquals(shuntRegulationOn, parameters.getShuntRegulationOn());
         assertEquals(automaticSlackBusOn, parameters.getAutomaticSlackBusOn());
-        assert dsoVoltageLevel == parameters.getDsoVoltageLevel();
+        assertEquals(dsoVoltageLevel, parameters.getDsoVoltageLevel(), 0.1d);
+        assertEquals(activePowerCompensation, parameters.getActivePowerCompensation());
+        assertEquals(settingPath, parameters.getSettingPath());
+        assertEquals(assemblingPath, parameters.getAssemblingPath());
+        assertEquals(startTime, parameters.getStartTime(), 0.1d);
+        assertEquals(stopTime, parameters.getStopTime(), 0.1d);
+        assertEquals(precision, parameters.getPrecision(), 0.1d);
+        assertEquals(timeOfEvent, parameters.getTimeOfEvent(), 0.1d);
         assertArrayEquals(chosenOutputs.toArray(), parameters.getChosenOutputs().toArray());
-        assertEquals(vscAsGenerators, parameters.getVscAsGenerators());
-        assertEquals(lccAsLoads, parameters.getLccAsLoads());
-        assert timeStep == parameters.getTimeStep();
+        assertEquals(timeStep, parameters.getTimeStep(), 0.1d);
+        assertEquals(startingPointMode, parameters.getStartingPointMode());
     }
 
     @Test
@@ -94,30 +118,106 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
         DynaFlowParameters parametersExt = parameters.getExtension(DynaFlowParameters.class);
         assertNotNull(parametersExt);
 
-        assertEquals(DynaFlowParameters.DEFAULT_SVC_REGULATION_ON, parametersExt.getSvcRegulationOn());
-        assertEquals(DynaFlowParameters.DEFAULT_SHUNT_REGULATION_ON, parametersExt.getShuntRegulationOn());
-        assertEquals(DynaFlowParameters.DEFAULT_AUTOMATIC_SLACK_BUS_ON, parametersExt.getAutomaticSlackBusOn());
-        assert DynaFlowParameters.DEFAULT_DSO_VOLTAGE_LEVEL == parametersExt.getDsoVoltageLevel();
-        assertArrayEquals(DynaFlowParameters.DEFAULT_CHOSEN_OUTPUT.toArray(), parametersExt.getChosenOutputs().toArray());
-        assertEquals(DynaFlowParameters.DEFAULT_VSC_AS_GENERATORS, parametersExt.getVscAsGenerators());
-        assertEquals(DynaFlowParameters.DEFAULT_LCC_AS_LOADS, parametersExt.getLccAsLoads());
-        assert DynaFlowParameters.DEFAULT_TIME_STEP == parametersExt.getTimeStep();
+        assertNull(parametersExt.getSvcRegulationOn());
+        assertNull(parametersExt.getShuntRegulationOn());
+        assertNull(parametersExt.getAutomaticSlackBusOn());
+        assertNull(parametersExt.getDsoVoltageLevel());
+        assertNull(parametersExt.getActivePowerCompensation());
+        assertNull(parametersExt.getSettingPath());
+        assertNull(parametersExt.getAssemblingPath());
+        assertNull(parametersExt.getStartTime());
+        assertNull(parametersExt.getStopTime());
+        assertNull(parametersExt.getPrecision());
+        assertNull(parametersExt.getSa());
+        assertNull(parametersExt.getChosenOutputs());
+        assertNull(parametersExt.getTimeStep());
+        assertNull(parametersExt.getStartingPointMode());
     }
 
     @Test
     public void checkDefaultToString() {
         LoadFlowParameters parameters = LoadFlowParameters.load(platformConfig);
         DynaFlowParameters parametersExt = parameters.getExtension(DynaFlowParameters.class);
-        String expectedString = "{svcRegulationOn=" + DynaFlowParameters.DEFAULT_SVC_REGULATION_ON +
-                ", shuntRegulationOn=" + DynaFlowParameters.DEFAULT_SHUNT_REGULATION_ON +
-                ", automaticSlackBusOn=" + DynaFlowParameters.DEFAULT_AUTOMATIC_SLACK_BUS_ON +
-                ", dsoVoltageLevel=" + DynaFlowParameters.DEFAULT_DSO_VOLTAGE_LEVEL +
-                ", chosenOutputs=" + DynaFlowParameters.DEFAULT_CHOSEN_OUTPUT +
-                ", vscAsGenerators=" + DynaFlowParameters.DEFAULT_VSC_AS_GENERATORS +
-                ", lccAsLoads=" + DynaFlowParameters.DEFAULT_LCC_AS_LOADS +
-                ", timeStep=" + DynaFlowParameters.DEFAULT_TIME_STEP + "}";
+
+        String expectedString = "{}";
+
+        assertEquals(expectedString, parametersExt.toString());
+
+    }
+
+    @Test
+    public void checkAllParametersAssignedToString() {
+        LoadFlowParameters parameters = LoadFlowParameters.load(platformConfig);
+        DynaFlowParameters parametersExt = parameters.getExtension(DynaFlowParameters.class);
+        boolean svcRegulationOn = true;
+        boolean shuntRegulationOn = false;
+        boolean automaticSlackBusOn = true;
+        double dsoVoltageLevel = 87.32;
+        ActivePowerCompensation activePowerCompensation = ActivePowerCompensation.PMAX;
+        String settingPath = "path/to/settingFile";
+        String assemblingPath = "path/to/assemblingFile";
+        double startTime = 0.;
+        double stopTime = 100.;
+        double precision = 15.45;
+        double timeOfEvent = 10.;
+        List<String> chosenOutputs = Arrays.asList(OutputTypes.STEADYSTATE.name(), OutputTypes.TIMELINE.name());
+        double timeStep = 0;
+        StartingPointMode startingPointMode = StartingPointMode.WARM;
+
+        Map<String, String> properties = new HashMap<>();
+        properties.put("svcRegulationOn", Boolean.toString(svcRegulationOn));
+        properties.put("shuntRegulationOn", Boolean.toString(shuntRegulationOn));
+        properties.put("automaticSlackBusOn", Boolean.toString(automaticSlackBusOn));
+        properties.put("dsoVoltageLevel", Double.toString(dsoVoltageLevel));
+        properties.put("activePowerCompensation", activePowerCompensation.name());
+        properties.put("settingPath", settingPath);
+        properties.put("assemblingPath", assemblingPath);
+        properties.put("startTime", Double.toString(startTime));
+        properties.put("stopTime", Double.toString(stopTime));
+        properties.put("precision", Double.toString(precision));
+        properties.put("timeOfEvent", Double.toString(timeOfEvent));
+        properties.put("chosenOutputs", OutputTypes.STEADYSTATE.name() + "," + OutputTypes.TIMELINE.name());
+        properties.put("timeStep", Double.toString(timeStep));
+        properties.put("startingPointMode", startingPointMode.name());
+
+        parametersExt.update(properties);
+
+        String expectedString = "{svcRegulationOn=" + svcRegulationOn +
+                ", shuntRegulationOn=" + shuntRegulationOn +
+                ", automaticSlackBusOn=" + automaticSlackBusOn +
+                ", dsoVoltageLevel=" + dsoVoltageLevel +
+                ", activePowerCompensation=" + activePowerCompensation +
+                ", settingPath=" + settingPath +
+                ", assemblingPath=" + assemblingPath +
+                ", startTime=" + startTime +
+                ", stopTime=" + stopTime +
+                ", precision=" + precision +
+                ", sa=" +
+                "{timeOfEvent=" + timeOfEvent + "}" +
+                ", chosenOutputs=" + chosenOutputs +
+                ", timeStep=" + timeStep +
+                ", startingPointMode=" + startingPointMode + "}";
         assertEquals(expectedString, parametersExt.toString());
         System.out.println(expectedString);
+    }
+
+    @Test
+    public void defaultParametersSerialization() throws IOException {
+        LoadFlowParameters lfParameters = LoadFlowParameters.load(platformConfig);
+        lfParameters.setNoGeneratorReactiveLimits(true);
+        lfParameters.setPhaseShifterRegulationOn(false);
+
+        DynaFlowParameters dynaFlowParameters = new DynaFlowParameters();
+        lfParameters.addExtension(DynaFlowParameters.class, dynaFlowParameters);
+
+        Path workingDir = fileSystem.getPath("dynaflow/workingDir");
+        Path parameterFile = fileSystem.getPath(DynaFlowConstants.CONFIG_FILENAME);
+        DynaFlowConfigSerializer.serialize(lfParameters, dynaFlowParameters, workingDir, parameterFile);
+
+        try (InputStream actual = Files.newInputStream(parameterFile);
+             InputStream expected = getClass().getResourceAsStream("/params_default.json")) {
+            compareTxt(expected, actual);
+        }
     }
 
     @Test
@@ -131,10 +231,16 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
         dynaFlowParameters.setShuntRegulationOn(false);
         dynaFlowParameters.setAutomaticSlackBusOn(true);
         dynaFlowParameters.setDsoVoltageLevel(32.4);
+        dynaFlowParameters.setActivePowerCompensation(ActivePowerCompensation.P);
+        dynaFlowParameters.setSettingPath("path/to/settingFile");
+        dynaFlowParameters.setAssemblingPath("path/to/assemblingFile");
+        dynaFlowParameters.setStartTime(0.);
+        dynaFlowParameters.setStopTime(100.);
+        dynaFlowParameters.setPrecision(0.);
+        dynaFlowParameters.setTimeOfEvent(10.);
         dynaFlowParameters.setChosenOutputs(Collections.singletonList(OutputTypes.STEADYSTATE.name()));
-        dynaFlowParameters.setVscAsGenerators(true);
-        dynaFlowParameters.setLccAsLoads(true);
         dynaFlowParameters.setTimeStep(2.6);
+        dynaFlowParameters.setStartingPointMode(StartingPointMode.WARM);
         lfParameters.addExtension(DynaFlowParameters.class, dynaFlowParameters);
 
         Path workingDir = fileSystem.getPath("dynaflow/workingDir");
@@ -149,25 +255,53 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
 
     @Test
     public void loadMapDynaflowParameters() {
-        Map<String, String> properties = Map.of(
-                "svcRegulationOn", "true",
-                "shuntRegulationOn", "true",
-                "automaticSlackBusOn", "false",
-                "dsoVoltageLevel", "2.0",
-                "chosenOutputs", "STEADYSTATE, CONSTRAINTS",
-                "vscAsGenerators", "false",
-                "lccAsLoads", "false",
-                "timeStep", "0");
+
+        boolean svcRegulationOn = true;
+        boolean shuntRegulationOn = true;
+        boolean automaticSlackBusOn = false;
+        double dsoVoltageLevel = 2.0;
+        ActivePowerCompensation activePowerCompensation = ActivePowerCompensation.PMAX;
+        String settingPath = "path/to/settingFile";
+        String assemblingPath = "path/to/assemblingFile";
+        double startTime = 0.;
+        double stopTime = 100.;
+        double precision = 15.45;
+        double timeOfEvent = 10.;
+        List<String> chosenOutputs = Arrays.asList(OutputTypes.STEADYSTATE.name(), OutputTypes.TIMELINE.name());
+        double timeStep = 0;
+        StartingPointMode startingPointMode = StartingPointMode.WARM;
+
+        Map<String, String> properties = new HashMap<>();
+        properties.put("svcRegulationOn", Boolean.toString(svcRegulationOn));
+        properties.put("shuntRegulationOn", Boolean.toString(shuntRegulationOn));
+        properties.put("automaticSlackBusOn", Boolean.toString(automaticSlackBusOn));
+        properties.put("dsoVoltageLevel", Double.toString(dsoVoltageLevel));
+        properties.put("activePowerCompensation", activePowerCompensation.name());
+        properties.put("settingPath", settingPath);
+        properties.put("assemblingPath", assemblingPath);
+        properties.put("startTime", Double.toString(startTime));
+        properties.put("stopTime", Double.toString(stopTime));
+        properties.put("precision", Double.toString(precision));
+        properties.put("timeOfEvent", Double.toString(timeOfEvent));
+        properties.put("chosenOutputs", OutputTypes.STEADYSTATE.name() + ", " + OutputTypes.TIMELINE.name());
+        properties.put("timeStep", Double.toString(timeStep));
+        properties.put("startingPointMode", startingPointMode.getName());
 
         DynaFlowParameters dynaFlowParameters = DynaFlowParameters.load(properties);
 
         assertTrue(dynaFlowParameters.getSvcRegulationOn());
         assertTrue(dynaFlowParameters.getShuntRegulationOn());
         assertFalse(dynaFlowParameters.getAutomaticSlackBusOn());
-        assert 2 == dynaFlowParameters.getDsoVoltageLevel();
-        assertArrayEquals(Arrays.asList(OutputTypes.STEADYSTATE.name(), OutputTypes.CONSTRAINTS.name()).toArray(), dynaFlowParameters.getChosenOutputs().toArray());
-        assertFalse(dynaFlowParameters.getVscAsGenerators());
-        assertFalse(dynaFlowParameters.getLccAsLoads());
-        assert 0 == dynaFlowParameters.getTimeStep();
+        assertEquals(dsoVoltageLevel, dynaFlowParameters.getDsoVoltageLevel(), 0.1d);
+        assertEquals(activePowerCompensation, dynaFlowParameters.getActivePowerCompensation());
+        assertEquals(settingPath, dynaFlowParameters.getSettingPath());
+        assertEquals(assemblingPath, dynaFlowParameters.getAssemblingPath());
+        assertEquals(startTime, dynaFlowParameters.getStartTime(), 0.1d);
+        assertEquals(stopTime, dynaFlowParameters.getStopTime(), 0.1d);
+        assertEquals(precision, dynaFlowParameters.getPrecision(), 0.1d);
+        assertEquals(timeOfEvent, dynaFlowParameters.getTimeOfEvent(), 0.1d);
+        assertArrayEquals(chosenOutputs.toArray(), dynaFlowParameters.getChosenOutputs().toArray());
+        assertEquals(timeStep, dynaFlowParameters.getTimeStep(), 0.1d);
+        assertEquals(startingPointMode, dynaFlowParameters.getStartingPointMode());
     }
 }

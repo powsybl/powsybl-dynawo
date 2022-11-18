@@ -101,7 +101,7 @@ public class DynaFlowSecurityAnalysisTest {
             try {
                 if (args.get(0).equals("--version")) {
                     copyFile(stdOutFileRef, errFile);
-                }  else {
+                } else {
                     assertEquals("--network", args.get(0));
                     assertEquals("--config", args.get(2));
                     assertEquals("--contingencies", args.get(4));
@@ -191,7 +191,7 @@ public class DynaFlowSecurityAnalysisTest {
             try {
                 if (args.get(0).equals("--version")) {
                     copyFile(stdOutFileRef, errFile);
-                }  else {
+                } else {
                     validateInputs(workingDir);
                     copyOutputs(workingDir);
                 }

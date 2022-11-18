@@ -7,6 +7,7 @@
 package com.powsybl.dynaflow.json;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -57,7 +58,8 @@ public class JsonDynaFlowParametersSerializer implements ExtensionJsonSerializer
 
     private static ObjectMapper createMapper() {
         return JsonUtil.createObjectMapper()
-                .addMixIn(DynaFlowParameters.class, SerializationSpec.class);
+                .addMixIn(DynaFlowParameters.class, SerializationSpec.class)
+                .setSerializationInclusion(JsonInclude.Include.NON_NULL);
     }
 
     @Override

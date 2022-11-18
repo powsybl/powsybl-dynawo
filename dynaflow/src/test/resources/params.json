@@ -5,11 +5,18 @@
     "AutomaticSlackBusOn" : true,
     "DsoVoltageLevel" : 32.4,
     "InfiniteReactiveLimits" : true,
-    "PSTRegulationOn" : false,
+    "ActivePowerCompensation" : "P",
+    "SettingPath" : "path/to/settingFile",
+    "AssemblingPath" : "path/to/assemblingFile",
+    "StartTime" : 0.0,
+    "StopTime" : 100.0,
+    "Precision" : 0.0,
+    "sa" : {
+      "TimeOfEvent" : 10.0
+    },
     "ChosenOutputs" : [ "STEADYSTATE" ],
-    "VscAsGenerators" : true,
-    "LccAsLoads" : true,
     "TimeStep" : 2.6,
+    "StartingPointMode" : "warm",
     "OutputDir" : "/work/dynaflow/workingDir"
   }
 }
