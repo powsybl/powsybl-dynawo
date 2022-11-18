@@ -15,7 +15,6 @@ import com.powsybl.dynawaltz.xml.DydXml;
 import com.powsybl.dynawaltz.xml.JobsXml;
 import com.powsybl.dynawaltz.xml.ParametersXml;
 import com.powsybl.dynawo.commons.DynawoResultsNetworkUpdate;
-import com.powsybl.iidm.export.Exporters;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.xml.IidmXmlVersion;
 import com.powsybl.iidm.xml.NetworkXml;
@@ -151,7 +150,7 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
                 // Write the network to XIIDM v1.0 because currently Dynawo only supports this version
                 Properties params = new Properties();
                 params.setProperty(XMLExporter.VERSION, IidmXmlVersion.V_1_0.toString("."));
-                Exporters.export("XIIDM", context.getNetwork(), params, workingDir.resolve(NETWORK_FILENAME));
+                context.getNetwork().write("XIIDM", params, workingDir.resolve(NETWORK_FILENAME));
 
                 JobsXml.write(workingDir, context);
                 DydXml.write(workingDir, context);

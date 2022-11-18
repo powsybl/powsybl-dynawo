@@ -15,7 +15,6 @@ import com.powsybl.contingency.Contingency;
 import com.powsybl.contingency.ContingencyList;
 import com.powsybl.contingency.json.ContingencyJsonModule;
 import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
-import com.powsybl.iidm.export.Exporters;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.xml.IidmXmlVersion;
 import com.powsybl.iidm.xml.NetworkXml;
@@ -114,7 +113,7 @@ public class DynaFlowSecurityAnalysis {
     private static void writeIIDM(Network network, Path workingDir) {
         Properties params = new Properties();
         params.setProperty(XMLExporter.VERSION, IidmXmlVersion.V_1_2.toString("."));
-        Exporters.export("XIIDM", network, params, workingDir.resolve(IIDM_FILENAME));
+        network.write("XIIDM", params, workingDir.resolve(IIDM_FILENAME));
     }
 
     private static void writeContingencies(List<Contingency> contingencies, Path workingDir) throws IOException {
