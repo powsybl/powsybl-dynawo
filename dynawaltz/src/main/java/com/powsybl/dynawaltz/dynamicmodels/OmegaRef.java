@@ -15,14 +15,11 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import static com.powsybl.dynawaltz.DynaWaltzParametersDatabase.ParameterType.DOUBLE;
@@ -43,7 +40,6 @@ public class OmegaRef extends AbstractBlackBoxModel {
     public static final String OMEGA_REF_ID = "OMEGA_REF";
     private static final String OMEGA_REF_PARAMETER_SET_ID = "OMEGA_REF";
     private final List<GeneratorSynchronousModel> synchronousGenerators;
-    private List<Pair<GeneratorSynchronousModel, BusModel>> connectedModels = new ArrayList<>();
     private Map<BlackBoxModel, Integer> indexPerModel;
 
     public OmegaRef(List<GeneratorSynchronousModel> synchronousGenerators) {
