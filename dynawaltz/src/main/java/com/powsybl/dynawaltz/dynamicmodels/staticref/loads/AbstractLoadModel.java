@@ -4,10 +4,12 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package com.powsybl.dynawaltz.dynamicmodels;
+package com.powsybl.dynawaltz.dynamicmodels.staticref.loads;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
+import com.powsybl.dynawaltz.dynamicmodels.AbstractBlackBoxModel;
+import com.powsybl.dynawaltz.dynamicmodels.BlackBoxModel;
 import com.powsybl.iidm.network.Load;
 
 import javax.xml.stream.XMLStreamException;

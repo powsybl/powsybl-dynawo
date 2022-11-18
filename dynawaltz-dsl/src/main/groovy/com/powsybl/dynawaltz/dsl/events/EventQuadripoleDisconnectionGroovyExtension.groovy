@@ -14,7 +14,7 @@ import com.powsybl.dynamicsimulation.EventModel
 import com.powsybl.dynamicsimulation.groovy.EventModelGroovyExtension
 
 import com.powsybl.dynawaltz.DynaWaltzProvider
-import com.powsybl.dynawaltz.events.EventQuadripoleDisconnection
+import com.powsybl.dynawaltz.dynamicmodels.nonstaticref.events.EventQuadripoleDisconnection
 
 /**
  * An implementation of {@link EventModelGroovyExtension} that adds the <pre>EventQuadripoleDisconnection</pre> keyword to the DSL

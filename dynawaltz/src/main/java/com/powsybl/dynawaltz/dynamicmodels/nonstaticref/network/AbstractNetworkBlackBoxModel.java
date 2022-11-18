@@ -1,6 +1,8 @@
-package com.powsybl.dynawaltz.dynamicmodels;
+package com.powsybl.dynawaltz.dynamicmodels.nonstaticref.network;
 
 import com.powsybl.dynawaltz.DynaWaltzContext;
+import com.powsybl.dynawaltz.dynamicmodels.BlackBoxModel;
+import com.powsybl.dynawaltz.dynamicmodels.MacroConnector;
 import com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants;
 import org.apache.commons.lang3.tuple.Pair;
 

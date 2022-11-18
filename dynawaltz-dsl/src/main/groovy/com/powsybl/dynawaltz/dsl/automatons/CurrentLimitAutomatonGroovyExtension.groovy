@@ -9,7 +9,7 @@ package com.powsybl.dynawaltz.dsl.automatons
 import com.powsybl.iidm.network.Branch
 
 import com.powsybl.dynawaltz.DynaWaltzProvider
-import com.powsybl.dynawaltz.automatons.CurrentLimitAutomaton
+import com.powsybl.dynawaltz.dynamicmodels.nonstaticref.automatons.CurrentLimitAutomaton
 
 import java.util.function.Consumer
 

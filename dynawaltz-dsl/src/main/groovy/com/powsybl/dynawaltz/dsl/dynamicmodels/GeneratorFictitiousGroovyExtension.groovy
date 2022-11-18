@@ -10,8 +10,7 @@ import com.google.auto.service.AutoService
 import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
-import com.powsybl.dynawaltz.dynamicmodels.GeneratorFictitious
-import com.powsybl.dynawaltz.dynamicmodels.GeneratorSynchronousThreeWindingsProportionalRegulations
+import com.powsybl.dynawaltz.dynamicmodels.staticref.generators.GeneratorFictitious
 
 import java.util.function.Consumer
 

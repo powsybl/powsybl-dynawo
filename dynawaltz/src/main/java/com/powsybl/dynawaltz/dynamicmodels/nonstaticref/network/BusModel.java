@@ -4,15 +4,19 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package com.powsybl.dynawaltz.events;
+package com.powsybl.dynawaltz.dynamicmodels.nonstaticref.network;
 
 import com.powsybl.dynawaltz.dynamicmodels.BlackBoxModel;
 
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  */
-public interface BlackBoxEventModel extends BlackBoxModel {
+public interface BusModel extends BlackBoxModel {
+    String getId();
 
-    String getEventModelId();
+    String getTerminalVarName();
 
+    String getSwitchOffSignalVarName();
+
+    String getNumCCVarName();
 }

@@ -19,6 +19,17 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
+import com.powsybl.dynawaltz.dynamicmodels.nonstaticref.automatons.CurrentLimitAutomaton;
+import com.powsybl.dynawaltz.dynamicmodels.nonstaticref.events.EventQuadripoleDisconnection;
+import com.powsybl.dynawaltz.dynamicmodels.nonstaticref.events.EventSetPointBoolean;
+import com.powsybl.dynawaltz.dynamicmodels.staticref.generators.GeneratorFictitious;
+import com.powsybl.dynawaltz.dynamicmodels.staticref.generators.GeneratorSynchronousFourWindings;
+import com.powsybl.dynawaltz.dynamicmodels.staticref.generators.GeneratorSynchronousFourWindingsProportionalRegulations;
+import com.powsybl.dynawaltz.dynamicmodels.staticref.generators.GeneratorSynchronousFourWindingsProportionalRegulationsStepPm;
+import com.powsybl.dynawaltz.dynamicmodels.staticref.generators.GeneratorSynchronousThreeWindings;
+import com.powsybl.dynawaltz.dynamicmodels.staticref.generators.GeneratorSynchronousThreeWindingsProportionalRegulations;
+import com.powsybl.dynawaltz.dynamicmodels.staticref.loads.LoadAlphaBeta;
+import com.powsybl.dynawaltz.dynamicmodels.staticref.loads.LoadOneTransformer;
 import com.powsybl.iidm.network.*;
 import junit.framework.AssertionFailedError;
 
@@ -32,9 +43,6 @@ import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynamicsimulation.EventModel;
 import com.powsybl.dynawaltz.DynaWaltzCurve;
-import com.powsybl.dynawaltz.automatons.*;
-import com.powsybl.dynawaltz.dynamicmodels.*;
-import com.powsybl.dynawaltz.events.*;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 
 import static com.powsybl.commons.ComparisonUtils.compareXml;

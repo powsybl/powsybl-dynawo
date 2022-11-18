@@ -10,7 +10,7 @@ import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
-import com.powsybl.dynawaltz.dynamicmodels.GeneratorSynchronousFourWindingsProportionalRegulations;
+import com.powsybl.dynawaltz.dynamicmodels.staticref.generators.GeneratorSynchronousFourWindingsProportionalRegulations;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
