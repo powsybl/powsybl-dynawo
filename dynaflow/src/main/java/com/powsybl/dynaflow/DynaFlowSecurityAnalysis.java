@@ -20,11 +20,14 @@ import com.powsybl.iidm.xml.IidmXmlVersion;
 import com.powsybl.iidm.xml.NetworkXml;
 import com.powsybl.iidm.xml.XMLExporter;
 import com.powsybl.loadflow.LoadFlowParameters;
+import com.powsybl.loadflow.LoadFlowResult;
 import com.powsybl.security.*;
 import com.powsybl.security.interceptors.CurrentLimitViolationInterceptor;
 import com.powsybl.security.interceptors.SecurityAnalysisInterceptor;
 import com.powsybl.security.json.SecurityAnalysisResultDeserializer;
+import com.powsybl.security.results.NetworkResult;
 import com.powsybl.security.results.PostContingencyResult;
+import com.powsybl.security.results.PreContingencyResult;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -175,32 +178,50 @@ public class DynaFlowSecurityAnalysis {
                     return new SecurityAnalysisReport(SecurityAnalysisResultDeserializer.read(saOutput));
                 } else {
                     // Build the results from the output networks written by DynaFlow
-                    LimitViolationsResult baseCaseResult = resultsFromOutputNetwork(workingDir.resolve(BASE_CASE_FOLDER));
+                    PreContingencyResult preContingencyResult = getPreContingencyResult(workingDir);
                     List<PostContingencyResult> contingenciesResults = contingencies.stream()
-                        .map(c -> new PostContingencyResult(c, resultsFromOutputNetwork(workingDir.resolve(c.getId()))))
+                        .map(c -> getPostContingencyResult(workingDir, c))
                         .collect(Collectors.toList());
                     return new SecurityAnalysisReport(
-                        new SecurityAnalysisResult(baseCaseResult, contingenciesResults)
+                        new SecurityAnalysisResult(preContingencyResult, contingenciesResults, Collections.emptyList())
                     );
                 }
             }
         });
     }
 
-    private static LimitViolationsResult resultsFromOutputNetwork(Path folder) {
-        boolean computationOk;
-        List<LimitViolation> limitViolations;
+    private static PreContingencyResult getPreContingencyResult(Path workingDir) {
+        Path folder = workingDir.resolve(BASE_CASE_FOLDER);
+        LimitViolationsResult baseCaseResult = limitViolationsFromOutputNetwork(folder);
+        NetworkResult networkResult = new NetworkResult(Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
+        return new PreContingencyResult(preContingencyStatusFromOutputNetwork(folder), baseCaseResult, networkResult);
+    }
 
+    private static PostContingencyResult getPostContingencyResult(Path workingDir, Contingency c) {
+        Path folder = workingDir.resolve(c.getId());
+        return new PostContingencyResult(c, statusFromOutputNetwork(folder), limitViolationsFromOutputNetwork(folder));
+    }
+
+    private static LoadFlowResult.ComponentResult.Status preContingencyStatusFromOutputNetwork(Path folder) {
+        Path outputNetworkPath = outputNetworkPath(folder);
+        return Files.exists(outputNetworkPath) ? LoadFlowResult.ComponentResult.Status.CONVERGED : LoadFlowResult.ComponentResult.Status.FAILED;
+    }
+
+    private static PostContingencyComputationStatus statusFromOutputNetwork(Path folder) {
+        Path outputNetworkPath = outputNetworkPath(folder);
+        return Files.exists(outputNetworkPath) ? PostContingencyComputationStatus.CONVERGED : PostContingencyComputationStatus.FAILED;
+    }
+
+    private static LimitViolationsResult limitViolationsFromOutputNetwork(Path folder) {
+        List<LimitViolation> limitViolations;
         Path outputNetworkPath = outputNetworkPath(folder);
         if (Files.exists(outputNetworkPath)) {
             Network outputNetwork = NetworkXml.read(outputNetworkPath);
-            computationOk = true;
             limitViolations = Security.checkLimits(outputNetwork);
         } else {
-            computationOk = false;
             limitViolations = Collections.emptyList();
         }
-        return new LimitViolationsResult(computationOk, limitViolations);
+        return new LimitViolationsResult(limitViolations);
     }
 
     private static Path outputNetworkPath(Path folder) {

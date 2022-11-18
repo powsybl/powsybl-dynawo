@@ -272,7 +272,7 @@ public class DynaFlowSecurityAnalysisTest {
         SecurityAnalysisResult result = report.getResult();
 
         PostContingencyResult postcontingencyResult = result.getPostContingencyResults().get(0);
-        assertTrue(postcontingencyResult.getLimitViolationsResult().isComputationOk());
+        assertEquals(PostContingencyComputationStatus.CONVERGED, postcontingencyResult.getStatus());
         assertEquals(3, postcontingencyResult.getLimitViolationsResult().getLimitViolations().size());
         LimitViolation violation = postcontingencyResult.getLimitViolationsResult().getLimitViolations().get(0);
         assertEquals(LimitViolationType.CURRENT, violation.getLimitType());
