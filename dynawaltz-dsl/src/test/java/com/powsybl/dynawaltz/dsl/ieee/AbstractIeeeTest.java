@@ -21,7 +21,6 @@ import com.powsybl.dynawaltz.DynaWaltzParameters;
 import com.powsybl.dynawaltz.DynaWaltzProvider;
 import com.powsybl.dynawaltz.DynaWaltzProviderTest.DynamicModelsSupplierMock;
 import com.powsybl.dynawaltz.DynaWaltzProviderTest.EventModelsSupplierMock;
-import com.powsybl.iidm.import_.Importers;
 import com.powsybl.iidm.network.Network;
 
 import java.io.IOException;
@@ -70,7 +69,7 @@ public abstract class AbstractIeeeTest {
 
         // Load network
         Files.copy(getClass().getResourceAsStream(networkFile), workingDir.resolve("network.iidm"));
-        network = Importers.loadNetwork(workingDir.resolve("network.iidm"));
+        network = Network.read(workingDir.resolve("network.iidm"));
 
         // Dynamic models
         if (dynamicModelsFile != null) {

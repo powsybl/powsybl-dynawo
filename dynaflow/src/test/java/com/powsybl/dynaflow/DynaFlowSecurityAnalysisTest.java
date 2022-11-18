@@ -19,7 +19,6 @@ import com.powsybl.computation.local.LocalComputationManager;
 import com.powsybl.contingency.ContingenciesProvider;
 import com.powsybl.contingency.Contingency;
 import com.powsybl.contingency.dsl.GroovyDslContingenciesProvider;
-import com.powsybl.iidm.import_.Importers;
 import com.powsybl.iidm.modification.AbstractNetworkModification;
 import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.Network;
@@ -259,7 +258,7 @@ public class DynaFlowSecurityAnalysisTest {
 
         // Load network
         Files.copy(getClass().getResourceAsStream("/SmallBusBranch/powsybl-inputs/SmallBusBranch.xiidm"), workingDir.resolve("network.iidm"));
-        Network network = Importers.loadNetwork(workingDir.resolve("network.iidm"));
+        Network network = Network.read(workingDir.resolve("network.iidm"));
 
         Files.copy(getClass().getResourceAsStream("/SmallBusBranch/powsybl-inputs/contingencies.groovy"), workingDir.resolve("contingencies.groovy"));
         ContingenciesProvider contingenciesProvider = new GroovyDslContingenciesProvider(workingDir.resolve("contingencies.groovy"));
