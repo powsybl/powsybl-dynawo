@@ -18,7 +18,12 @@ import javax.xml.stream.XMLStreamWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import static com.powsybl.dynawaltz.DynaWaltzParametersDatabase.ParameterType.DOUBLE;
 import static com.powsybl.dynawaltz.DynaWaltzParametersDatabase.ParameterType.INT;
@@ -39,6 +44,7 @@ public class OmegaRef extends AbstractBlackBoxModel {
     private static final String OMEGA_REF_PARAMETER_SET_ID = "OMEGA_REF";
     private final List<GeneratorSynchronousModel> synchronousGenerators;
     private List<Pair<GeneratorSynchronousModel, BusModel>> connectedModels = new ArrayList<>();
+    private Map<BlackBoxModel, Integer> indexPerModel;
 
     public OmegaRef(List<GeneratorSynchronousModel> synchronousGenerators) {
         super(OMEGA_REF_ID, "", OMEGA_REF_PARAMETER_SET_ID);
@@ -109,44 +115,43 @@ public class OmegaRef extends AbstractBlackBoxModel {
 
     @Override
     public List<BlackBoxModel> getModelsConnectedTo(DynaWaltzContext context) throws PowsyblException {
-        List<BlackBoxModel> lGenAndBuses = new ArrayList<>();
+        return getConnectedModelsIndices(context).keySet().stream().collect(Collectors.toList());
+    }
 
-        for (GeneratorSynchronousModel generatorModel : synchronousGenerators) {
-            Generator generator = context.getNetwork().getGenerator(generatorModel.getStaticId());
-            if (generator == null) {
-                throw new PowsyblException("Generator " + generatorModel.getLib() + " not found in DynaWaltz context. Id : " + generatorModel.getDynamicModelId());
-            }
-            lGenAndBuses.add(generatorModel);
-            String connectedStaticId = generator.getTerminal().getBusBreakerView().getConnectableBus().getId();
-            BlackBoxModel busModel = context.getStaticIdBlackBoxModelMap().get(connectedStaticId);
-            if (busModel == null) {
-                busModel = context.getNetworkModel().getDefaultBusModel(connectedStaticId);
-            }
-            lGenAndBuses.add(busModel);
+    private BusModel getBusAssociatedTo(GeneratorSynchronousModel generatorModel, DynaWaltzContext context) {
+        Generator generator = context.getNetwork().getGenerator(generatorModel.getStaticId());
+        if (generator == null) {
+            throw new PowsyblException("Generator " + generatorModel.getLib() + " not found in DynaWaltz context. Id : " + generatorModel.getDynamicModelId());
+        }
+        String connectedStaticId = generator.getTerminal().getBusBreakerView().getConnectableBus().getId();
+        BusModel busModel = (BusModel) context.getStaticIdBlackBoxModelMap().get(connectedStaticId);
+        if (busModel == null) {
+            busModel = (BusModel) context.getNetworkModel().getDefaultBusModel(connectedStaticId);
+        }
+        return busModel;
+    }
 
-            if (connectedModels.size() < synchronousGenerators.size()) {
-                connectedModels.add(Pair.of(generatorModel, (BusModel) busModel));
+    private Map<BlackBoxModel, Integer> getConnectedModelsIndices(DynaWaltzContext context) {
+        if (indexPerModel == null) {
+            indexPerModel = new LinkedHashMap<>();
+            int index = 0;
+            for (GeneratorSynchronousModel generatorSynchronousModel : synchronousGenerators) {
+                BusModel busModel = getBusAssociatedTo(generatorSynchronousModel, context);
+                indexPerModel.put(generatorSynchronousModel, index);
+                indexPerModel.put(busModel, index);
+                index++;
             }
         }
-
-        return lGenAndBuses;
+        return indexPerModel;
     }
 
     @Override
     public void writeMacroConnect(XMLStreamWriter writer, DynaWaltzContext context, MacroConnector macroConnector, BlackBoxModel connected) throws XMLStreamException {
-        int index1 = 0;
-        while (index1 < connectedModels.size()) {
-            Pair<GeneratorSynchronousModel, BusModel> currentPair = connectedModels.get(index1);
-            if (currentPair.getLeft().equals(connected) ||
-                    currentPair.getRight().equals(connected)) {
-                break;
-            }
-            index1++;
-        }
+        Map<BlackBoxModel, Integer> indicesPerModel = getConnectedModelsIndices(context);
 
         List<Pair<String, String>> attributesConnectFrom = List.of(
                 Pair.of("id1", getDynamicModelId()),
-                Pair.of("index1", Integer.toString(index1))
+                Pair.of("index1", Integer.toString(indicesPerModel.get(connected)))
         );
         macroConnector.writeMacroConnect(writer, attributesConnectFrom, connected.getAttributesConnectTo());
     }
