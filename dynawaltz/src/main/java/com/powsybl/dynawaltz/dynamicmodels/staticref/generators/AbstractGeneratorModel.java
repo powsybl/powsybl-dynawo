@@ -8,9 +8,9 @@ package com.powsybl.dynawaltz.dynamicmodels.staticref.generators;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
-import com.powsybl.dynawaltz.dynamicmodels.AbstractBlackBoxModel;
 import com.powsybl.dynawaltz.dynamicmodels.BlackBoxModel;
 import com.powsybl.dynawaltz.dynamicmodels.nonstaticref.network.BusModel;
+import com.powsybl.dynawaltz.dynamicmodels.staticref.AbstractBlackBoxModelWithStaticRef;
 import com.powsybl.iidm.network.Generator;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public abstract class AbstractGeneratorModel extends AbstractBlackBoxModel implements GeneratorModel {
+public abstract class AbstractGeneratorModel extends AbstractBlackBoxModelWithStaticRef implements GeneratorModel {
 
     protected static final List<Pair<String, String>> VAR_MAPPING = Arrays.asList(
             Pair.of("generator_PGenPu", "p"),

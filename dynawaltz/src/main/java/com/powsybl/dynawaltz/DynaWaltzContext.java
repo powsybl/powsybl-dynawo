@@ -16,6 +16,7 @@ import com.powsybl.dynawaltz.dynamicmodels.*;
 import com.powsybl.dynawaltz.dynamicmodels.nonstaticref.OmegaRef;
 import com.powsybl.dynawaltz.dynamicmodels.nonstaticref.events.BlackBoxEventModel;
 import com.powsybl.dynawaltz.dynamicmodels.NetworkModel;
+import com.powsybl.dynawaltz.dynamicmodels.staticref.BlackBoxModelWithStaticRef;
 import com.powsybl.dynawaltz.dynamicmodels.staticref.generators.GeneratorSynchronousModel;
 import com.powsybl.dynawaltz.xml.MacroStaticReference;
 import com.powsybl.iidm.network.Network;
@@ -101,19 +102,24 @@ public class DynaWaltzContext {
 
     private void initMacroStaticReferences() {
         if (macroStaticReferences.isEmpty()) {
-            getBlackBoxModelStream().forEach(bbm ->
+            getBlackBoxModelStream()
+                    .filter(BlackBoxModelWithStaticRef.class::isInstance)
+                    .map(BlackBoxModelWithStaticRef.class::cast)
+                    .forEach(bbm ->
                     macroStaticReferences.computeIfAbsent(bbm.getLib(), k -> new MacroStaticReference(k, bbm.getVarsMapping()))
-            );
+                );
         }
     }
 
-    public Map<String, BlackBoxModel> getStaticIdBlackBoxModelMap() {
+    public Map<String, BlackBoxModelWithStaticRef> getStaticIdBlackBoxModelMap() {
         return getBlackBoxModelStream()
+                .filter(BlackBoxModelWithStaticRef.class::isInstance)
+                .map(BlackBoxModelWithStaticRef.class::cast)
                 .filter(blackBoxModel -> !blackBoxModel.getStaticId().isEmpty())
-                .collect(Collectors.toMap(BlackBoxModel::getStaticId, Function.identity(), this::mergeDuplicateStaticId, LinkedHashMap::new));
+                .collect(Collectors.toMap(BlackBoxModelWithStaticRef::getStaticId, Function.identity(), this::mergeDuplicateStaticId, LinkedHashMap::new));
     }
 
-    private BlackBoxModel mergeDuplicateStaticId(BlackBoxModel bbm1, BlackBoxModel bbm2) {
+    private BlackBoxModelWithStaticRef mergeDuplicateStaticId(BlackBoxModelWithStaticRef bbm1, BlackBoxModelWithStaticRef bbm2) {
         throw new AssertionError("Duplicate staticId " + bbm1.getStaticId());
     }
 

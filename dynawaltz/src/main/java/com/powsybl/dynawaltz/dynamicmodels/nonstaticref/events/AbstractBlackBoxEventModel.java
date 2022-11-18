@@ -26,23 +26,16 @@ import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 public abstract class AbstractBlackBoxEventModel implements EventModel, BlackBoxEventModel {
 
     private final String eventModelId;
-    private final String staticId;
     private final String parameterSetId;
 
-    public AbstractBlackBoxEventModel(String eventModelId, String staticId, String parameterSetId) {
+    public AbstractBlackBoxEventModel(String eventModelId, String parameterSetId) {
         this.eventModelId = Objects.requireNonNull(eventModelId);
-        this.staticId = Objects.requireNonNull(staticId);
         this.parameterSetId = Objects.requireNonNull(parameterSetId);
     }
 
     @Override
     public String getEventModelId() {
         return eventModelId;
-    }
-
-    @Override
-    public String getStaticId() {
-        return staticId;
     }
 
     @Override
@@ -53,11 +46,6 @@ public abstract class AbstractBlackBoxEventModel implements EventModel, BlackBox
     @Override
     public String getDynamicModelId() {
         return null;
-    }
-
-    @Override
-    public List<Pair<String, String>> getVarsMapping() {
-        return Collections.emptyList();
     }
 
     @Override

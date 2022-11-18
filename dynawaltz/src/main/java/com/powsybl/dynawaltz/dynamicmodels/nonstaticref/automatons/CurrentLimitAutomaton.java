@@ -17,7 +17,6 @@ import com.powsybl.iidm.network.*;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -30,7 +29,7 @@ public class CurrentLimitAutomaton extends AbstractBlackBoxModel {
     private final String lineStaticId;
 
     public CurrentLimitAutomaton(String dynamicModelId, String staticId, String parameterSetId, Branch.Side side) {
-        super(dynamicModelId, "", parameterSetId);
+        super(dynamicModelId, parameterSetId);
         this.side = Objects.requireNonNull(side);
         this.lineStaticId = staticId;
     }
@@ -38,11 +37,6 @@ public class CurrentLimitAutomaton extends AbstractBlackBoxModel {
     @Override
     public String getLib() {
         return "CurrentLimitAutomaton";
-    }
-
-    @Override
-    public List<Pair<String, String>> getVarsMapping() {
-        return Collections.emptyList();
     }
 
     @Override

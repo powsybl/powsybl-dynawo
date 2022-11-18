@@ -3,6 +3,7 @@ package com.powsybl.dynawaltz.dynamicmodels.nonstaticref.network;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.dynamicmodels.BlackBoxModel;
 import com.powsybl.dynawaltz.dynamicmodels.MacroConnector;
+import com.powsybl.dynawaltz.dynamicmodels.staticref.BlackBoxModelWithStaticRef;
 import com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -11,7 +12,7 @@ import javax.xml.stream.XMLStreamWriter;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class AbstractNetworkBlackBoxModel implements BlackBoxModel {
+public abstract class AbstractNetworkBlackBoxModel implements BlackBoxModelWithStaticRef {
 
     private final String staticId;
 

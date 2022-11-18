@@ -48,7 +48,7 @@ public class OmegaRef extends AbstractBlackBoxModel {
     private Map<BlackBoxModel, Integer> indexPerModel;
 
     public OmegaRef(List<GeneratorSynchronousModel> synchronousGenerators) {
-        super(OMEGA_REF_ID, "", OMEGA_REF_PARAMETER_SET_ID);
+        super(OMEGA_REF_ID, OMEGA_REF_PARAMETER_SET_ID);
         this.synchronousGenerators = synchronousGenerators;
     }
 
@@ -59,11 +59,6 @@ public class OmegaRef extends AbstractBlackBoxModel {
     @Override
     public String getLib() {
         return "DYNModelOmegaRef";
-    }
-
-    @Override
-    public List<Pair<String, String>> getVarsMapping() {
-        return Collections.emptyList();
     }
 
     @Override

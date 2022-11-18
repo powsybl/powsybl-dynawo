@@ -14,11 +14,13 @@ import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension;
 import com.powsybl.dynamicsimulation.groovy.GroovyDynamicModelsSupplier;
 import com.powsybl.dynamicsimulation.groovy.GroovyExtension;
 import com.powsybl.dynawaltz.DynaWaltzProvider;
-import com.powsybl.dynawaltz.dynamicmodels.nonstaticref.automatons.CurrentLimitAutomaton;
 import com.powsybl.dynawaltz.dsl.automatons.CurrentLimitAutomatonGroovyExtension;
-import com.powsybl.dynawaltz.dsl.dynamicmodels.*;
-import com.powsybl.dynawaltz.dynamicmodels.*;
+import com.powsybl.dynawaltz.dsl.dynamicmodels.GeneratorModelGroovyExtension;
+import com.powsybl.dynawaltz.dsl.dynamicmodels.LoadAlphaBetaGroovyExtension;
+import com.powsybl.dynawaltz.dynamicmodels.BlackBoxModel;
 import com.powsybl.dynawaltz.dynamicmodels.LoadOneTransformerGroovyExtension;
+import com.powsybl.dynawaltz.dynamicmodels.nonstaticref.automatons.CurrentLimitAutomaton;
+import com.powsybl.dynawaltz.dynamicmodels.staticref.BlackBoxModelWithStaticRef;
 import com.powsybl.dynawaltz.dynamicmodels.staticref.generators.GeneratorFictitious;
 import com.powsybl.dynawaltz.dynamicmodels.staticref.generators.GeneratorSynchronousFourWindings;
 import com.powsybl.dynawaltz.dynamicmodels.staticref.generators.GeneratorSynchronousFourWindingsProportionalRegulations;
@@ -27,7 +29,14 @@ import com.powsybl.dynawaltz.dynamicmodels.staticref.generators.GeneratorSynchro
 import com.powsybl.dynawaltz.dynamicmodels.staticref.generators.GeneratorSynchronousThreeWindingsProportionalRegulations;
 import com.powsybl.dynawaltz.dynamicmodels.staticref.loads.LoadAlphaBeta;
 import com.powsybl.dynawaltz.dynamicmodels.staticref.loads.LoadOneTransformer;
-import com.powsybl.iidm.network.*;
+import com.powsybl.iidm.network.Bus;
+import com.powsybl.iidm.network.Generator;
+import com.powsybl.iidm.network.Identifiable;
+import com.powsybl.iidm.network.Line;
+import com.powsybl.iidm.network.Load;
+import com.powsybl.iidm.network.Network;
+import com.powsybl.iidm.network.NetworkFactory;
+import com.powsybl.iidm.network.VoltageLevel;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.After;
 import org.junit.Before;
@@ -169,8 +178,22 @@ public class DynaWaltzGroovyDynamicModelsSupplierTest {
     }
 
     private void validateModel(DynamicModel dynamicModel) {
-        assertTrue(dynamicModel instanceof AbstractBlackBoxModel);
-        AbstractBlackBoxModel blackBoxModel = (AbstractBlackBoxModel) dynamicModel;
+        if (dynamicModel instanceof BlackBoxModelWithStaticRef) {
+            validateBlackBoxModel((BlackBoxModelWithStaticRef) dynamicModel);
+        } else if (dynamicModel instanceof BlackBoxModel) {
+            BlackBoxModel blackBoxModel = (BlackBoxModel) dynamicModel;
+            if (blackBoxModel instanceof CurrentLimitAutomaton) {
+                Identifiable<?> identifiable = network.getIdentifiable(((CurrentLimitAutomaton) blackBoxModel).getLineStaticId());
+                assertEquals("BBM_" + identifiable.getId(), blackBoxModel.getDynamicModelId());
+                assertEquals("CLA", blackBoxModel.getParameterSetId());
+                assertTrue(identifiable instanceof Line);
+            }
+        } else {
+            assert false;
+        }
+    }
+
+    private void validateBlackBoxModel(BlackBoxModelWithStaticRef blackBoxModel) {
         if (blackBoxModel instanceof LoadAlphaBeta) {
             Identifiable<?> identifiable = network.getIdentifiable(blackBoxModel.getStaticId());
             assertEquals(identifiable.getId(), blackBoxModel.getDynamicModelId());

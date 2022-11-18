@@ -19,13 +19,9 @@ import java.util.List;
 public interface BlackBoxModel {
     String getDynamicModelId();
 
-    String getStaticId();
-
     String getParameterSetId();
 
     String getLib();
-
-    List<Pair<String, String>> getVarsMapping();
 
     void write(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException;
 

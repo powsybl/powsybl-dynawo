@@ -23,7 +23,7 @@ public class EventQuadripoleDisconnection extends AbstractBlackBoxEventModel {
     private final String lineStaticId;
 
     public EventQuadripoleDisconnection(String eventModelId, String staticId, String parameterSetId) {
-        super(eventModelId, "", parameterSetId);
+        super(eventModelId, parameterSetId);
         this.lineStaticId = staticId;
     }
 

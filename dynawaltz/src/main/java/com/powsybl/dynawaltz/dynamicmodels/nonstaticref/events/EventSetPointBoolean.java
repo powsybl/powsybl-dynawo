@@ -22,7 +22,7 @@ public class EventSetPointBoolean extends AbstractBlackBoxEventModel {
     private final String generatorStaticId;
 
     public EventSetPointBoolean(String eventModelId, String staticId, String parameterSetId) {
-        super(eventModelId, "", parameterSetId);
+        super(eventModelId, parameterSetId);
         this.generatorStaticId = staticId;
     }
 

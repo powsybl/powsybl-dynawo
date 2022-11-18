@@ -8,8 +8,8 @@ package com.powsybl.dynawaltz.dynamicmodels.staticref.loads;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
-import com.powsybl.dynawaltz.dynamicmodels.AbstractBlackBoxModel;
 import com.powsybl.dynawaltz.dynamicmodels.BlackBoxModel;
+import com.powsybl.dynawaltz.dynamicmodels.staticref.AbstractBlackBoxModelWithStaticRef;
 import com.powsybl.iidm.network.Load;
 
 import javax.xml.stream.XMLStreamException;
@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public abstract class AbstractLoadModel extends AbstractBlackBoxModel {
+public abstract class AbstractLoadModel extends AbstractBlackBoxModelWithStaticRef {
 
     public AbstractLoadModel(String dynamicModelId, String staticId, String parameterSetId) {
         super(dynamicModelId, staticId, parameterSetId);
