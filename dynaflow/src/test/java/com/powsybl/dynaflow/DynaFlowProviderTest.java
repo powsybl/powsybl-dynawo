@@ -15,6 +15,7 @@ import com.powsybl.computation.local.LocalComputationConfig;
 import com.powsybl.computation.local.LocalComputationManager;
 import com.powsybl.iidm.import_.Importers;
 import com.powsybl.iidm.network.Network;
+import com.powsybl.iidm.xml.IidmXmlVersion;
 import com.powsybl.iidm.xml.NetworkXml;
 import com.powsybl.loadflow.LoadFlow;
 import com.powsybl.loadflow.LoadFlowParameters;
@@ -72,6 +73,11 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
         String executionCommand = provider.getCommand(config).toString(0);
         String expectedExecutionCommand = "[" + program + ", --network, " + IIDM_FILENAME + ", --config, " + CONFIG_FILENAME + "]";
         assertEquals(expectedExecutionCommand, executionCommand);
+    }
+
+    @Test
+    public void iidmCurrentVersionUsed() {
+        assertEquals(IidmXmlVersion.V_1_4.toString("."), IIDM_VERSION);
     }
 
     private static class LocalCommandExecutorMock extends AbstractLocalCommandExecutor {
