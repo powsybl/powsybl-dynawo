@@ -28,7 +28,7 @@ public final class DynaFlowConstants {
 
     public static final String OUTPUT_RESULTS_FILENAME = "results.json";
 
-    public static final String IIDM_VERSION = IidmXmlVersion.V_1_8.toString(".");
+    public static final String IIDM_VERSION = IidmXmlVersion.V_1_4.toString(".");
 
     public enum OutputTypes {
         STEADYSTATE,
