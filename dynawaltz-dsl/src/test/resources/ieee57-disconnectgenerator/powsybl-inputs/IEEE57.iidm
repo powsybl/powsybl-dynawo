@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<iidm:network xmlns:iidm="http://www.itesla_project.eu/schema/iidm/1_0" id="ieee57bus" caseDate="2018-02-27T13:26:14.115+01:00" forecastDistance="0" sourceFormat="CIM1">
+<iidm:network xmlns:iidm="http://www.powsybl.org/schema/iidm/1_4" id="ieee57bus" caseDate="2018-02-27T13:26:14.115+01:00" forecastDistance="0" sourceFormat="CIM1">
     <iidm:substation id="_BEAV___6_SS" name="BEAV   6_SS" country="AF" geographicalTags="_SGR_01">
         <iidm:voltageLevel id="_BEAV___6_VL" name="BEAV   6_VL" nominalV="69.0" topologyKind="BUS_BREAKER">
             <iidm:busBreakerTopology>
@@ -29,7 +29,7 @@
                 <iidm:step r="0.0" x="0.0" g="0.0" b="0.0" rho="1.1111112"/>
                 <iidm:step r="0.0" x="0.0" g="0.0" b="0.0" rho="1.0928961"/>
                 <iidm:step r="0.0" x="0.0" g="0.0" b="0.0" rho="1.0752689"/>
-                <iidm:step r="0.0" x="0.0" g="0.0" b="0.0" rho="1.0489510"/>
+                <iidm:step r="0.0" x="0.0" g="0.0" b="0.0" rho="1.048951"/>
                 <iidm:step r="0.0" x="0.0" g="0.0" b="0.0" rho="1.0238907"/>
                 <iidm:step r="0.0" x="0.0" g="0.0" b="0.0" rho="1.0"/>
                 <iidm:step r="0.0" x="0.0" g="0.0" b="0.0" rho="0.9803921"/>
@@ -51,7 +51,7 @@
         </iidm:voltageLevel>
         <iidm:voltageLevel id="_BUS___13_VL" name="BUS   13_VL" nominalV="69.0" topologyKind="BUS_BREAKER">
             <iidm:busBreakerTopology>
-                <iidm:bus id="_BUS___13_TN" v="67.54" angle="-9.80"/>
+                <iidm:bus id="_BUS___13_TN" v="67.54" angle="-9.8"/>
             </iidm:busBreakerTopology>
             <iidm:load id="_LOAD___13_EC" name="BUS   13" loadType="UNDEFINED" p0="18.0" q0="2.3" bus="_BUS___13_TN" connectableBus="_BUS___13_TN" p="18.0" q="2.3"/>
         </iidm:voltageLevel>
@@ -119,7 +119,7 @@
                 <iidm:step r="0.0" x="0.0" g="0.0" b="0.0" rho="1.0889292"/>
                 <iidm:step r="0.0" x="0.0" g="0.0" b="0.0" rho="1.0676156"/>
                 <iidm:step r="0.0" x="0.0" g="0.0" b="0.0" rho="1.0471204"/>
-                <iidm:step r="0.0" x="0.0" g="0.0" b="0.0" rho="1.0230180"/>
+                <iidm:step r="0.0" x="0.0" g="0.0" b="0.0" rho="1.023018"/>
                 <iidm:step r="0.0" x="0.0" g="0.0" b="0.0" rho="1.0"/>
                 <iidm:step r="0.0" x="0.0" g="0.0" b="0.0" rho="0.98039216"/>
                 <iidm:step r="0.0" x="0.0" g="0.0" b="0.0" rho="0.9615385"/>
@@ -142,7 +142,7 @@
     <iidm:substation id="_BUS___17_SS" name="BUS   17_SS" country="AF" geographicalTags="_SGR_01">
         <iidm:voltageLevel id="_BUS___17_VL" name="BUS   17_VL" nominalV="69.0" topologyKind="BUS_BREAKER">
             <iidm:busBreakerTopology>
-                <iidm:bus id="_BUS___17_TN" v="70.20" angle="-5.40"/>
+                <iidm:bus id="_BUS___17_TN" v="70.2" angle="-5.4"/>
             </iidm:busBreakerTopology>
             <iidm:load id="_LOAD___17_EC" name="BUS   17" loadType="UNDEFINED" p0="42.0" q0="8.0" bus="_BUS___17_TN" connectableBus="_BUS___17_TN" p="42.0" q="8.0"/>
         </iidm:voltageLevel>
@@ -163,7 +163,7 @@
         </iidm:voltageLevel>
         <iidm:voltageLevel id="_BUS___20_VL" name="BUS   20_VL" nominalV="13.8" topologyKind="BUS_BREAKER">
             <iidm:busBreakerTopology>
-                <iidm:bus id="_BUS___20_TN" v="13.30" angle="-13.44"/>
+                <iidm:bus id="_BUS___20_TN" v="13.3" angle="-13.44"/>
             </iidm:busBreakerTopology>
             <iidm:load id="_LOAD___20_EC" name="BUS   20" loadType="UNDEFINED" p0="2.3" q0="1.0" bus="_BUS___20_TN" connectableBus="_BUS___20_TN" p="2.3" q="1.0"/>
         </iidm:voltageLevel>
@@ -211,7 +211,9 @@
                 <iidm:bus id="_BUS___25_TN" v="13.56" angle="-18.17"/>
             </iidm:busBreakerTopology>
             <iidm:load id="_LOAD___25_EC" name="BUS   25" loadType="UNDEFINED" p0="6.3" q0="3.2" bus="_BUS___25_TN" connectableBus="_BUS___25_TN" p="6.3" q="3.2"/>
-            <iidm:shunt id="_BUS___25_SC" name="BUS   25" bPerSection="0.0309809" maximumSectionCount="1" currentSectionCount="1" bus="_BUS___25_TN" connectableBus="_BUS___25_TN" q="-5.6961102"/>
+            <iidm:shunt id="_BUS___25_SC" name="BUS   25" sectionCount="1" voltageRegulatorOn="false" bus="_BUS___25_TN" connectableBus="_BUS___25_TN" q="-5.6961102">
+                <iidm:shuntLinearModel bPerSection="0.0309809" maximumSectionCount="1"/>
+            </iidm:shunt>
         </iidm:voltageLevel>
         <iidm:voltageLevel id="_BUS___24_VL" name="BUS   24_VL" nominalV="18.0" topologyKind="BUS_BREAKER">
             <iidm:busBreakerTopology>
@@ -328,7 +330,7 @@
                 <iidm:step r="0.0" x="0.0" g="0.0" b="0.0" rho="1.0884353"/>
                 <iidm:step r="0.0" x="0.0" g="0.0" b="0.0" rho="1.0666666"/>
                 <iidm:step r="0.0" x="0.0" g="0.0" b="0.0" rho="1.0457516"/>
-                <iidm:step r="0.0" x="0.0" g="0.0" b="0.0" rho="1.0256410"/>
+                <iidm:step r="0.0" x="0.0" g="0.0" b="0.0" rho="1.025641"/>
                 <iidm:step r="0.0" x="0.0" g="0.0" b="0.0" rho="1.0"/>
                 <iidm:step r="0.0" x="0.0" g="0.0" b="0.0" rho="0.98039216"/>
                 <iidm:step r="0.0" x="0.0" g="0.0" b="0.0" rho="0.9615385"/>
@@ -441,7 +443,7 @@
     <iidm:substation id="_BUS___44_SS" name="BUS   44_SS" country="AF" geographicalTags="_SGR_01">
         <iidm:voltageLevel id="_BUS___44_VL" name="BUS   44_VL" nominalV="18.0" topologyKind="BUS_BREAKER">
             <iidm:busBreakerTopology>
-                <iidm:bus id="_BUS___44_TN" v="18.30" angle="-11.86"/>
+                <iidm:bus id="_BUS___44_TN" v="18.3" angle="-11.86"/>
             </iidm:busBreakerTopology>
             <iidm:load id="_LOAD___44_EC" name="BUS   44" loadType="UNDEFINED" p0="12.0" q0="1.8" bus="_BUS___44_TN" connectableBus="_BUS___44_TN" p="12.0" q="1.8"/>
         </iidm:voltageLevel>
@@ -449,7 +451,7 @@
     <iidm:substation id="_BUS___47_SS" name="BUS   47_SS" country="AF" geographicalTags="_SGR_01">
         <iidm:voltageLevel id="_BUS___47_VL" name="BUS   47_VL" nominalV="18.0" topologyKind="BUS_BREAKER">
             <iidm:busBreakerTopology>
-                <iidm:bus id="_BUS___47_TN" v="18.60" angle="-12.51"/>
+                <iidm:bus id="_BUS___47_TN" v="18.6" angle="-12.51"/>
             </iidm:busBreakerTopology>
             <iidm:load id="_LOAD___47_EC" name="BUS   47" loadType="UNDEFINED" p0="29.7" q0="11.6" bus="_BUS___47_TN" connectableBus="_BUS___47_TN" p="29.7" q="11.6"/>
         </iidm:voltageLevel>
@@ -472,7 +474,7 @@
     <iidm:substation id="_BUS___52_SS" name="BUS   52_SS" country="AF" geographicalTags="_SGR_01">
         <iidm:voltageLevel id="_BUS___52_VL" name="BUS   52_VL" nominalV="13.8" topologyKind="BUS_BREAKER">
             <iidm:busBreakerTopology>
-                <iidm:bus id="_BUS___52_TN" v="13.53" angle="-11.50"/>
+                <iidm:bus id="_BUS___52_TN" v="13.53" angle="-11.5"/>
             </iidm:busBreakerTopology>
             <iidm:load id="_LOAD___52_EC" name="BUS   52" loadType="UNDEFINED" p0="4.9" q0="2.2" bus="_BUS___52_TN" connectableBus="_BUS___52_TN" p="4.9" q="2.2"/>
         </iidm:voltageLevel>
@@ -483,7 +485,9 @@
                 <iidm:bus id="_BUS___53_TN" v="13.4" angle="-12.25"/>
             </iidm:busBreakerTopology>
             <iidm:load id="_LOAD___53_EC" name="BUS   53" loadType="UNDEFINED" p0="20.0" q0="10.0" bus="_BUS___53_TN" connectableBus="_BUS___53_TN" p="20.0" q="10.0"/>
-            <iidm:shunt id="_BUS___53_SC" name="BUS   53" bPerSection="0.0330813" maximumSectionCount="1" currentSectionCount="1" bus="_BUS___53_TN" connectableBus="_BUS___53_TN" q="-5.9945273"/>
+            <iidm:shunt id="_BUS___53_SC" name="BUS   53" sectionCount="1" voltageRegulatorOn="false" bus="_BUS___53_TN" connectableBus="_BUS___53_TN" q="-5.9945273">
+                <iidm:shuntLinearModel bPerSection="0.0330813" maximumSectionCount="1"/>
+            </iidm:shunt>
         </iidm:voltageLevel>
     </iidm:substation>
     <iidm:substation id="_BUS___54_SS" name="BUS   54_SS" country="AF" geographicalTags="_SGR_01">
@@ -505,7 +509,7 @@
     <iidm:substation id="_BUS____7_SS" name="BUS    7_SS" country="AF" geographicalTags="_SGR_01">
         <iidm:voltageLevel id="_BUS____7_VL" name="BUS    7_VL" nominalV="69.0" topologyKind="BUS_BREAKER">
             <iidm:busBreakerTopology>
-                <iidm:bus id="_BUS____7_TN" v="67.91" angle="-7.60"/>
+                <iidm:bus id="_BUS____7_TN" v="67.91" angle="-7.6"/>
             </iidm:busBreakerTopology>
         </iidm:voltageLevel>
         <iidm:voltageLevel id="_BUS___29_VL" name="BUS   29_VL" nominalV="13.8" topologyKind="BUS_BREAKER">
@@ -588,7 +592,7 @@
         </iidm:voltageLevel>
         <iidm:voltageLevel id="_SALT__55_VL" name="SALT  55_VL" nominalV="13.8" topologyKind="BUS_BREAKER">
             <iidm:busBreakerTopology>
-                <iidm:bus id="_SALT__55_TN" v="14.22" angle="-10.80"/>
+                <iidm:bus id="_SALT__55_TN" v="14.22" angle="-10.8"/>
             </iidm:busBreakerTopology>
             <iidm:load id="_LOAD___55_EC" name="SALT  55" loadType="UNDEFINED" p0="6.8" q0="3.4" bus="_SALT__55_TN" connectableBus="_SALT__55_TN" p="6.8" q="3.4"/>
         </iidm:voltageLevel>
@@ -621,7 +625,9 @@
                 <iidm:bus id="_SPRI__18_TN" v="13.81" angle="-11.73"/>
             </iidm:busBreakerTopology>
             <iidm:load id="_LOAD___18_EC" name="SPRI  18" loadType="UNDEFINED" p0="27.2" q0="9.8" bus="_SPRI__18_TN" connectableBus="_SPRI__18_TN" p="27.2" q="9.8"/>
-            <iidm:shunt id="_SPRI__18_SC" name="SPRI  18" bPerSection="0.05251" maximumSectionCount="1" currentSectionCount="1" bus="_SPRI__18_TN" connectableBus="_SPRI__18_TN" q="-9.997862"/>
+            <iidm:shunt id="_SPRI__18_SC" name="SPRI  18" sectionCount="1" voltageRegulatorOn="false" bus="_SPRI__18_TN" connectableBus="_SPRI__18_TN" q="-9.997862">
+                <iidm:shuntLinearModel bPerSection="0.05251" maximumSectionCount="1"/>
+            </iidm:shunt>
         </iidm:voltageLevel>
         <iidm:twoWindingsTransformer id="_SPRI___4-SPRI__18-1_PT" name="SPRI   4-SPRI  18-1" r="0.0" x="1.0569401" g="0.0" b="0.0" ratedU1="69.0" ratedU2="13.8" bus1="_SPRI___4_TN" connectableBus1="_SPRI___4_TN" voltageLevelId1="_SPRI___4_VL" bus2="_SPRI__18_TN" connectableBus2="_SPRI__18_TN" voltageLevelId2="_SPRI__18_VL" p1="13.947786" q1="2.587131" p2="-13.947786" q2="-1.494797">
             <iidm:ratioTapChanger lowTapPosition="1" tapPosition="5" loadTapChangingCapabilities="false">
@@ -673,7 +679,7 @@
         </iidm:voltageLevel>
         <iidm:voltageLevel id="_TAZE__11_VL" name="TAZE  11_VL" nominalV="69.0" topologyKind="BUS_BREAKER">
             <iidm:busBreakerTopology>
-                <iidm:bus id="_TAZE__11_TN" v="67.20" angle="-10.19"/>
+                <iidm:bus id="_TAZE__11_TN" v="67.2" angle="-10.19"/>
             </iidm:busBreakerTopology>
         </iidm:voltageLevel>
         <iidm:twoWindingsTransformer id="_TAZE__11-TAZE__43-1_PT" name="TAZE  11-TAZE  43-1" r="0.0" x="0.29137322" g="0.0" b="0.0" ratedU1="69.0" ratedU2="13.8" bus1="_TAZE__11_TN" connectableBus1="_TAZE__11_TN" voltageLevelId1="_TAZE__11_VL" bus2="_TAZE__43_TN" connectableBus2="_TAZE__43_TN" voltageLevelId2="_TAZE__43_VL" p1="13.566975" q1="5.010226" p2="-13.566975" q2="-4.699233">
