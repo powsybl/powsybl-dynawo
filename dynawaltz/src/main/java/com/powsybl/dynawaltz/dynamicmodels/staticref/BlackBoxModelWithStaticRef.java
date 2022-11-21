@@ -7,6 +7,7 @@
 package com.powsybl.dynawaltz.dynamicmodels.staticref;
 
 import com.powsybl.dynawaltz.dynamicmodels.BlackBoxModel;
+import com.powsybl.dynawaltz.dynamicmodels.BlackBoxModelWithStaticId;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
@@ -14,9 +15,7 @@ import java.util.List;
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  */
-public interface BlackBoxModelWithStaticRef extends BlackBoxModel {
-
-    String getStaticId();
+public interface BlackBoxModelWithStaticRef extends BlackBoxModelWithStaticId {
 
     List<Pair<String, String>> getStaticRef();
 }
