@@ -106,7 +106,7 @@ public class DynaWaltzContext {
                     .filter(BlackBoxModelWithStaticRef.class::isInstance)
                     .map(BlackBoxModelWithStaticRef.class::cast)
                     .forEach(bbm ->
-                    macroStaticReferences.computeIfAbsent(bbm.getLib(), k -> new MacroStaticReference(k, bbm.getVarsMapping()))
+                    macroStaticReferences.computeIfAbsent(bbm.getLib(), k -> new MacroStaticReference(k, bbm.getStaticRef()))
                 );
         }
     }

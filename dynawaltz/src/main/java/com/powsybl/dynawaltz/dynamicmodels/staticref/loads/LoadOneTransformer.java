@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class LoadOneTransformer extends AbstractLoadModel {
 
-    protected static final List<Pair<String, String>> VAR_MAPPING = Arrays.asList(
+    protected static final List<Pair<String, String>> STATIC_REF = Arrays.asList(
             Pair.of("transformer_P1Pu_value", "p"),
             Pair.of("transformer_Q1Pu_value", "q"),
             Pair.of("transformer_state", "state"));
@@ -34,8 +34,8 @@ public class LoadOneTransformer extends AbstractLoadModel {
     }
 
     @Override
-    public List<Pair<String, String>> getVarsMapping() {
-        return VAR_MAPPING;
+    public List<Pair<String, String>> getStaticRef() {
+        return STATIC_REF;
     }
 
     @Override

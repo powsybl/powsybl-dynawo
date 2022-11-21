@@ -51,7 +51,7 @@ public abstract class AbstractNetworkBlackBoxModel implements BlackBoxModelWithS
     }
 
     @Override
-    public List<Pair<String, String>> getVarsMapping() {
+    public List<Pair<String, String>> getStaticRef() {
         return Collections.emptyList();
     }
 

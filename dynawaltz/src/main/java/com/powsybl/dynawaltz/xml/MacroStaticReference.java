@@ -22,20 +22,20 @@ import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.MACRO_STATIC_REFER
 public final class MacroStaticReference {
 
     private final String lib;
-    private final List<Pair<String, String>> varMapping;
+    private final List<Pair<String, String>> staticRef;
 
-    public MacroStaticReference(String lib, List<Pair<String, String>> varMapping) {
+    public MacroStaticReference(String lib, List<Pair<String, String>> staticRef) {
         this.lib = Objects.requireNonNull(lib);
-        this.varMapping = Objects.requireNonNull(varMapping);
+        this.staticRef = Objects.requireNonNull(staticRef);
     }
 
     public void write(XMLStreamWriter writer) throws XMLStreamException {
-        if (varMapping.isEmpty()) {
+        if (staticRef.isEmpty()) {
             return;
         }
         writer.writeStartElement(DYN_URI, "macroStaticReference");
         writer.writeAttribute("id", MACRO_STATIC_REFERENCE_PREFIX + lib);
-        for (Pair<String, String> varStaticVarPair : varMapping) {
+        for (Pair<String, String> varStaticVarPair : staticRef) {
             writeStaticRef(writer, varStaticVarPair.getLeft(), varStaticVarPair.getRight());
         }
         writer.writeEndElement();

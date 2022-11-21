@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class LoadAlphaBeta extends AbstractLoadModel {
 
-    protected static final List<Pair<String, String>> VAR_MAPPING = Arrays.asList(
+    protected static final List<Pair<String, String>> STATIC_REF = Arrays.asList(
             Pair.of("load_PPu", "p"),
             Pair.of("load_QPu", "q"),
             Pair.of("load_state", "state"));
@@ -34,8 +34,8 @@ public class LoadAlphaBeta extends AbstractLoadModel {
     }
 
     @Override
-    public List<Pair<String, String>> getVarsMapping() {
-        return VAR_MAPPING;
+    public List<Pair<String, String>> getStaticRef() {
+        return STATIC_REF;
     }
 
     @Override

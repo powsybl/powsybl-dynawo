@@ -24,7 +24,7 @@ import java.util.List;
  */
 public abstract class AbstractGeneratorModel extends AbstractBlackBoxModelWithStaticRef implements GeneratorModel {
 
-    protected static final List<Pair<String, String>> VAR_MAPPING = Arrays.asList(
+    protected static final List<Pair<String, String>> STATIC_REF = Arrays.asList(
             Pair.of("generator_PGenPu", "p"),
             Pair.of("generator_QGenPu", "q"),
             Pair.of("generator_state", "state"));
@@ -48,8 +48,8 @@ public abstract class AbstractGeneratorModel extends AbstractBlackBoxModelWithSt
     }
 
     @Override
-    public List<Pair<String, String>> getVarsMapping() {
-        return VAR_MAPPING;
+    public List<Pair<String, String>> getStaticRef() {
+        return STATIC_REF;
     }
 
     @Override

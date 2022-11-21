@@ -18,5 +18,5 @@ public interface BlackBoxModelWithStaticRef extends BlackBoxModel {
 
     String getStaticId();
 
-    List<Pair<String, String>> getVarsMapping();
+    List<Pair<String, String>> getStaticRef();
 }
