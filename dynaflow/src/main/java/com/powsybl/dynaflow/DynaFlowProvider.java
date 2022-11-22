@@ -15,6 +15,7 @@ import com.powsybl.commons.extensions.ExtensionJsonSerializer;
 import com.powsybl.computation.*;
 import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
 import com.powsybl.dynaflow.json.JsonDynaFlowParametersSerializer;
+import com.powsybl.dynawo.commons.DynawoResultsMergeLoads;
 import com.powsybl.dynawo.commons.DynawoResultsNetworkUpdate;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.xml.IidmXmlVersion;
@@ -118,6 +119,7 @@ public class DynaFlowProvider implements LoadFlowProvider {
         ExecutionEnvironment env = new ExecutionEnvironment(config.createEnv(), WORKING_DIR_PREFIX, config.isDebug());
         Command versionCmd = getVersionCommand(config);
         DynaFlowUtil.checkDynaFlowVersion(env, computationManager, versionCmd);
+        DynawoResultsMergeLoads dynawoResultsMergeLoads = new DynawoResultsMergeLoads(network.getId());
         return computationManager.execute(env, new AbstractExecutionHandler<LoadFlowResult>() {
 
             @Override
@@ -127,6 +129,9 @@ public class DynaFlowProvider implements LoadFlowProvider {
                     Files.delete(outputNetworkFile);
                 }
                 network.getVariantManager().setWorkingVariant(workingStateId);
+                if (dynaFlowParameters.getMergeLoads()) {
+                    dynawoResultsMergeLoads.mergeLoads(network);
+                }
                 writeIIDM(workingDir, network);
                 DynaFlowConfigSerializer.serialize(loadFlowParameters, dynaFlowParameters, workingDir, workingDir.resolve(CONFIG_FILENAME));
                 return Collections.singletonList(createCommandExecution(config));
@@ -143,6 +148,9 @@ public class DynaFlowProvider implements LoadFlowProvider {
                     DynawoResultsNetworkUpdate.update(network, NetworkXml.read(outputNetworkFile));
                 } else {
                     status = false;
+                }
+                if (dynaFlowParameters.getMergeLoads()) {
+                    dynawoResultsMergeLoads.unmergeLoads(network);
                 }
                 Path resultsPath = workingDir.resolve(OUTPUT_RESULTS_FILENAME);
                 if (!Files.exists(resultsPath)) {

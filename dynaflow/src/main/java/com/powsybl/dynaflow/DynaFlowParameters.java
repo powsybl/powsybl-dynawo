@@ -79,6 +79,9 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
     private static final String CHOSEN_OUTPUTS = "chosenOutputs";
     private static final String TIME_STEP = "timeStep";
     private static final String STARTING_POINT_MODE = "startingPointMode";
+    private static final String MERGE_LOADS = "mergeLoads";
+
+    private static final boolean DEFAULT_MERGE_LOADS = true;
 
     private Boolean svcRegulationOn = null;
     private Boolean shuntRegulationOn = null;
@@ -94,6 +97,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
     private List<String> chosenOutputs = null;
     private Double timeStep = null;
     private StartingPointMode startingPointMode = null;
+    private boolean mergeLoads = DEFAULT_MERGE_LOADS;
 
     public Boolean getSvcRegulationOn() {
         return svcRegulationOn;
@@ -234,6 +238,15 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         return this;
     }
 
+    @JsonIgnore
+    public boolean getMergeLoads() {
+        return mergeLoads;
+    }
+
+    public void setMergeLoads(boolean mergeLoads) {
+        this.mergeLoads = mergeLoads;
+    }
+
     @Override
     public String getName() {
         return "DynaFlowParameters";
@@ -256,6 +269,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
                 .add(CHOSEN_OUTPUTS, chosenOutputs)
                 .add(TIME_STEP, timeStep)
                 .add(STARTING_POINT_MODE, startingPointMode)
+                .add(MERGE_LOADS, mergeLoads)
                 .toString();
     }
 
@@ -321,6 +335,9 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         if (config.hasProperty(STARTING_POINT_MODE)) {
             parameters.setStartingPointMode(StartingPointMode.fromString(config.getStringProperty(STARTING_POINT_MODE)));
         }
+        if (config.hasProperty(MERGE_LOADS)) {
+            parameters.setMergeLoads(config.getBooleanProperty(MERGE_LOADS, DEFAULT_MERGE_LOADS));
+        }
     }
 
     public void update(Map<String, String> properties) {
@@ -345,6 +362,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
                 setChosenOutputs(Stream.of(prop.split(CHOSEN_OUTPUT_STRING_DELIMITER)).map(String::trim).collect(Collectors.toList())));
         Optional.ofNullable(properties.get(TIME_STEP)).ifPresent(prop -> setTimeStep(Double.parseDouble(prop)));
         Optional.ofNullable(properties.get(STARTING_POINT_MODE)).ifPresent(prop -> setStartingPointMode(StartingPointMode.fromString(prop)));
+        Optional.ofNullable(properties.get(MERGE_LOADS)).ifPresent(prop -> setMergeLoads(Boolean.parseBoolean(prop)));
     }
 
     public static DynaFlowParameters load(Map<String, String> properties) {
@@ -357,7 +375,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         return Arrays.asList(
                 SVC_REGULATION_ON, SHUNT_REGULATION_ON, AUTOMATIC_SLACK_BUS_ON, DSO_VOLTAGE_LEVEL,
                 ACTIVE_POWER_COMPENSATION, SETTING_PATH, ASSEMBLING_PATH, START_TIME, STOP_TIME, PRECISION_NAME,
-                Sa.TIME_OF_EVENT, CHOSEN_OUTPUTS, TIME_STEP, STARTING_POINT_MODE
+                Sa.TIME_OF_EVENT, CHOSEN_OUTPUTS, TIME_STEP, STARTING_POINT_MODE, MERGE_LOADS
         );
     }
 
