@@ -14,6 +14,7 @@ import com.powsybl.dynawaltz.xml.CurvesXml;
 import com.powsybl.dynawaltz.xml.DydXml;
 import com.powsybl.dynawaltz.xml.JobsXml;
 import com.powsybl.dynawaltz.xml.ParametersXml;
+import com.powsybl.dynawo.commons.DynawoResultsMergeLoads;
 import com.powsybl.dynawo.commons.DynawoResultsNetworkUpdate;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.xml.IidmXmlVersion;
@@ -103,8 +104,11 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
 
         private final DynaWaltzContext context;
 
+        private final DynawoResultsMergeLoads dynawoResultsMergeLoads;
+
         public DynaWaltzHandler(DynaWaltzContext context) {
             this.context = context;
+            this.dynawoResultsMergeLoads = new DynawoResultsMergeLoads(context.getNetwork().getId());
         }
 
         @Override
@@ -116,6 +120,9 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
             Path curvesPath = workingDir.resolve(CURVES_OUTPUT_PATH).toAbsolutePath().resolve(CURVES_FILENAME);
             if (Files.exists(curvesPath)) {
                 Files.delete(curvesPath);
+            }
+            if (context.getDynaWaltzParameters().getMergeLoads()) {
+                dynawoResultsMergeLoads.mergeLoads(context.getNetwork());
             }
             writeInputFiles(workingDir);
             Command cmd = createCommand(workingDir.resolve(JOBS_FILENAME));
@@ -132,6 +139,9 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
                 DynawoResultsNetworkUpdate.update(context.getNetwork(), NetworkXml.read(outputNetworkFile));
             } else {
                 status = false;
+            }
+            if (context.getDynaWaltzParameters().getMergeLoads()) {
+                dynawoResultsMergeLoads.unmergeLoads(context.getNetwork());
             }
             Path curvesPath = workingDir.resolve(CURVES_OUTPUT_PATH).toAbsolutePath().resolve(CURVES_FILENAME);
             Map<String, TimeSeries> curves = new HashMap<>();

@@ -108,7 +108,7 @@ public class DynawoResultsMergeLoads {
             proceedUnmergeLoads(network);
             mapLoadsToMergePerBus.clear();
         } else {
-            LOGGER.warn("No load unmerged for network " + idNetwork);
+            LOGGER.warn("No load unmerged for network {}", idNetwork);
         }
     }
 

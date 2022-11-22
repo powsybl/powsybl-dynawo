@@ -27,11 +27,13 @@ public class DynaWaltzParametersSerializerTest extends AbstractConverterTest {
         String parametersFile = "/home/user/parametersFile";
         String networkParametersFile = "/home/user/networkParametersFile";
         String solverParametersFile = "/home/user/solverParametersFile";
+        boolean mergeLoads = false;
         InMemoryPlatformConfig platformConfig = new InMemoryPlatformConfig(fileSystem);
         MapModuleConfig moduleConfig = platformConfig.createModuleConfig("dynawaltz-default-parameters");
         moduleConfig.setStringProperty("parametersFile", parametersFile);
         moduleConfig.setStringProperty("network.parametersFile", networkParametersFile);
         moduleConfig.setStringProperty("solver.parametersFile", solverParametersFile);
+        moduleConfig.setStringProperty("mergeLoads", String.valueOf(mergeLoads));
 
         DynamicSimulationParameters dynamicSimulationParameters = new DynamicSimulationParameters()
             .setStartTime(0)

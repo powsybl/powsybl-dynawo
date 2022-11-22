@@ -21,6 +21,7 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
     public static final SolverType DEFAULT_SOLVER_TYPE = SolverType.SIM;
     public static final String DEFAULT_NETWORK_PAR_ID = "1";
     public static final String DEFAULT_SOLVER_PAR_ID = "1";
+    public static final boolean DEFAULT_MERGE_LOADS = true;
 
     public enum SolverType {
         SIM,
@@ -123,18 +124,20 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
         String solverParametersFile = config.getStringProperty("solver.parametersFile");
         // Identifies the set of solver parameters that will be used in the simulation
         String solverParametersId = config.getStringProperty("solver.parametersId", DEFAULT_SOLVER_PAR_ID);
+        boolean mergeLoads = config.getBooleanProperty("mergeLoads", DEFAULT_MERGE_LOADS);
 
-        return new DynaWaltzParameters(parametersFile, networkParametersFile, networkParametersId, solverType, solverParametersFile, solverParametersId);
+        return new DynaWaltzParameters(parametersFile, networkParametersFile, networkParametersId, solverType, solverParametersFile, solverParametersId, mergeLoads);
     }
 
     public DynaWaltzParameters() {
     }
 
     public DynaWaltzParameters(String parametersFile, String networkParametersFile, String networkParametersId, SolverType solverType, String solverParametersFile,
-                            String solverParametersId) {
+                            String solverParametersId, boolean mergeLoads) {
         this.parametersFile = Objects.requireNonNull(parametersFile);
         this.network = new Network(networkParametersFile, networkParametersId);
         this.solver = new Solver(solverType, solverParametersFile, solverParametersId);
+        this.mergeLoads = mergeLoads;
     }
 
     @Override
@@ -166,7 +169,12 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
         this.solver = Objects.requireNonNull(solver);
     }
 
+    public boolean getMergeLoads() {
+        return mergeLoads;
+    }
+
     private String parametersFile;
     private Network network;
     private Solver solver;
+    private boolean mergeLoads;
 }
