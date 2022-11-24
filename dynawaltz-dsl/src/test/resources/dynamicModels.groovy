@@ -55,15 +55,18 @@ for (Generator gen : network.generators) {
             dynamicModelId "BBM_" + gen.id
             parameterSetId "GSFWPRSP"
         }
+    } else if (gen.id == "GEN6") {
+        GeneratorFictitious {
+            staticId gen.id
+            dynamicModelId "BBM_" + gen.id
+            parameterSetId "GF"
+        }
     } else {
         GeneratorSynchronousThreeWindingsProportionalRegulations {
             staticId gen.id
             dynamicModelId "BBM_" + gen.id
             parameterSetId "GSTWPR"
         }
-    }
-    OmegaRef {
-        generatorDynamicModelId "BBM_" + gen.id
     }
 }
 

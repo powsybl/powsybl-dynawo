@@ -25,11 +25,10 @@ public class ParametersXmlTest extends DynaWaltzTestUtil {
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynaWaltzParameters dynawoParameters = DynaWaltzParameters.load();
         DynaWaltzContext context = new DynaWaltzContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, eventModels, curves, parameters, dynawoParameters);
-        DynaWaltzXmlContext xmlContext = new DynaWaltzXmlContext(context);
 
         DydXml.write(tmpDir, context);
         ParametersXml.write(tmpDir, context);
-        validate("parameters.xsd", "omega_ref.xml", tmpDir.resolve(xmlContext.getSimulationParFile()));
+        validate("parameters.xsd", "omega_ref.xml", tmpDir.resolve(context.getSimulationParFile()));
     }
 
 }

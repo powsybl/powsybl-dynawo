@@ -9,7 +9,7 @@ package com.powsybl.dynawaltz.dynamicmodels;
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  */
-public interface GeneratorModel {
+public interface GeneratorModel extends BlackBoxModel {
     String getTerminalVarName();
 
     String getSwitchOffSignalNodeVarName();
@@ -17,8 +17,6 @@ public interface GeneratorModel {
     String getSwitchOffSignalEventVarName();
 
     String getSwitchOffSignalAutomatonVarName();
-
-    String getOmegaRefPuVarName();
 
     String getRunningVarName();
 }

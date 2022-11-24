@@ -12,7 +12,6 @@ import javax.xml.stream.XMLStreamWriter;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.dynamicmodels.*;
-import com.powsybl.dynawaltz.xml.DynaWaltzXmlContext;
 import com.powsybl.iidm.network.*;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -77,7 +76,7 @@ public class CurrentLimitAutomaton extends AbstractBlackBoxModel {
     }
 
     @Override
-    public void write(XMLStreamWriter writer, DynaWaltzXmlContext context) throws XMLStreamException {
+    public void write(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
         writeAutomatonBlackBoxModel(writer, context);
     }
 }

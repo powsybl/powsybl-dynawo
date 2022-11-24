@@ -16,7 +16,6 @@ import com.powsybl.computation.*;
 import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
 import com.powsybl.dynaflow.json.JsonDynaFlowParametersSerializer;
 import com.powsybl.dynawo.commons.DynawoResultsNetworkUpdate;
-import com.powsybl.iidm.export.Exporters;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.xml.NetworkXml;
 import com.powsybl.iidm.xml.XMLExporter;
@@ -58,7 +57,7 @@ public class DynaFlowProvider implements LoadFlowProvider {
     private static void writeIIDM(Path workingDir, Network network) {
         Properties params = new Properties();
         params.setProperty(XMLExporter.VERSION, IIDM_VERSION);
-        Exporters.export("XIIDM", network, params, workingDir.resolve(IIDM_FILENAME));
+        network.write("XIIDM", params, workingDir.resolve(IIDM_FILENAME));
     }
 
     private static String getProgram(DynaFlowConfig config) {

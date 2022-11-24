@@ -20,6 +20,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import java.nio.file.FileSystem;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -43,8 +44,9 @@ public class DynaWaltzContext {
     private final Map<Pair<String, String>, MacroConnector> eventConnectorsMap = new LinkedHashMap<>();
     private final Map<BlackBoxModel, List<BlackBoxModel>> modelsConnections = new LinkedHashMap<>();
     private final Map<BlackBoxEventModel, List<BlackBoxModel>> eventModelsConnections = new LinkedHashMap<>();
-    private final Map<String, BlackBoxModel> dynamicIdBlackBoxModelMap = new LinkedHashMap<>();
     private final NetworkModel networkModel = new NetworkModel();
+
+    private final OmegaRef omegaRef;
 
     public DynaWaltzContext(Network network, String workingVariantId, List<DynamicModel> dynamicModels, List<EventModel> eventModels, List<Curve> curves, DynamicSimulationParameters parameters, DynaWaltzParameters dynaWaltzParameters) {
         this.network = Objects.requireNonNull(network);
@@ -55,6 +57,10 @@ public class DynaWaltzContext {
         this.parameters = Objects.requireNonNull(parameters);
         this.dynaWaltzParameters = Objects.requireNonNull(dynaWaltzParameters);
         this.parametersDatabase = loadDatabase(dynaWaltzParameters.getParametersFile());
+        this.omegaRef = new OmegaRef(dynamicModels.stream()
+                .filter(GeneratorSynchronousModel.class::isInstance)
+                .map(GeneratorSynchronousModel.class::cast)
+                .collect(Collectors.toList()));
     }
 
     public Network getNetwork() {
@@ -93,24 +99,9 @@ public class DynaWaltzContext {
     private void initMacroStaticReferences() {
         if (macroStaticReferences.isEmpty()) {
             getBlackBoxModelStream().forEach(bbm ->
-                macroStaticReferences.computeIfAbsent(bbm.getLib(), k -> new MacroStaticReference(k, bbm.getVarsMapping()))
+                    macroStaticReferences.computeIfAbsent(bbm.getLib(), k -> new MacroStaticReference(k, bbm.getVarsMapping()))
             );
         }
-    }
-
-    public Map<String, BlackBoxModel> getDynamicIdBlackBoxModelMap() {
-        if (dynamicIdBlackBoxModelMap.isEmpty()) {
-            getBlackBoxModelStream().forEach(bbm -> dynamicIdBlackBoxModelMap.merge(bbm.getDynamicModelId(), bbm, this::mergeDuplicateDynamicId));
-        }
-        return dynamicIdBlackBoxModelMap;
-    }
-
-    private BlackBoxModel mergeDuplicateDynamicId(BlackBoxModel bbm1, BlackBoxModel bbm2) {
-        if (bbm1 instanceof OmegaRef && bbm2 instanceof OmegaRef
-                && !((OmegaRef) bbm1).getGeneratorDynamicModelId().equals(((OmegaRef) bbm2).getGeneratorDynamicModelId())) {
-            return bbm1;
-        }
-        throw new AssertionError("Duplicate dynamicModelId " + bbm1.getDynamicModelId());
     }
 
     public Map<String, BlackBoxModel> getStaticIdBlackBoxModelMap() {
@@ -187,10 +178,18 @@ public class DynaWaltzContext {
         return eventModelsConnections;
     }
 
-    public Stream<BlackBoxModel> getBlackBoxModelStream() {
+    private Stream<BlackBoxModel> getInputBlackBoxModelStream() {
+        //Doesn't include the OmegaRef, it only concerns the DynamicModels provided by the user
         return dynamicModels.stream()
                 .filter(BlackBoxModel.class::isInstance)
                 .map(BlackBoxModel.class::cast);
+    }
+
+    public Stream<BlackBoxModel> getBlackBoxModelStream() {
+        if (omegaRef.getSynchronousGenerators().isEmpty()) {
+            return getInputBlackBoxModelStream();
+        }
+        return Stream.concat(getInputBlackBoxModelStream(), Stream.of(omegaRef));
     }
 
     public List<EventModel> getEventModels() {
@@ -226,7 +225,11 @@ public class DynaWaltzContext {
         return networkModel;
     }
 
-    public BlackBoxModel getBlackBoxModelFromDynamicId(String dynamicModelId) {
-        return getDynamicIdBlackBoxModelMap().get(dynamicModelId);
+    public String getParFile() {
+        return Paths.get(getDynaWaltzParameters().getParametersFile()).getFileName().toString();
+    }
+
+    public String getSimulationParFile() {
+        return getNetwork().getId() + ".par";
     }
 }

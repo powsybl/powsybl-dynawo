@@ -7,7 +7,7 @@
 package com.powsybl.dynawaltz.dynamicmodels;
 
 import com.powsybl.dynamicsimulation.DynamicModel;
-import com.powsybl.dynawaltz.xml.DynaWaltzXmlContext;
+import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.xml.MacroStaticReference;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -21,13 +21,13 @@ import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 /**
  * @author Luma Zamarreño <zamarrenolm at aia.es>
  */
-public abstract class AbstractBlackBoxModel implements DynamicModel, BlackBoxModel {
+public abstract class AbstractBlackBoxModel implements BlackBoxModel, DynamicModel {
 
     private final String dynamicModelId;
     private final String staticId;
     private final String parameterSetId;
 
-    public AbstractBlackBoxModel(String dynamicModelId, String staticId, String parameterSetId) {
+    protected AbstractBlackBoxModel(String dynamicModelId, String staticId, String parameterSetId) {
         this.dynamicModelId = Objects.requireNonNull(dynamicModelId);
         this.staticId = Objects.requireNonNull(staticId);
         this.parameterSetId = Objects.requireNonNull(parameterSetId);
@@ -46,12 +46,12 @@ public abstract class AbstractBlackBoxModel implements DynamicModel, BlackBoxMod
     }
 
     @Override
-    public void writeParameters(XMLStreamWriter writer, DynaWaltzXmlContext context) throws XMLStreamException {
+    public void writeParameters(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
         //Empty method to be redefined by specific models
     }
 
     @Override
-    public void writeMacroConnect(XMLStreamWriter writer, DynaWaltzXmlContext xmlContext, MacroConnector macroConnector, BlackBoxModel connected) throws XMLStreamException {
+    public void writeMacroConnect(XMLStreamWriter writer, DynaWaltzContext context, MacroConnector macroConnector, BlackBoxModel connected) throws XMLStreamException {
         macroConnector.writeMacroConnect(writer, List.of(Pair.of("id1", getDynamicModelId())), connected.getAttributesConnectTo());
     }
 
@@ -60,7 +60,7 @@ public abstract class AbstractBlackBoxModel implements DynamicModel, BlackBoxMod
         return List.of(Pair.of("id2", getDynamicModelId()));
     }
 
-    protected void writeBlackBoxModel(XMLStreamWriter writer, DynaWaltzXmlContext context) throws XMLStreamException {
+    protected void writeBlackBoxModel(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
         // Write the blackBoxModel object
         writer.writeStartElement(DYN_URI, "blackBoxModel");
         writer.writeAttribute("id", getDynamicModelId());
@@ -72,7 +72,7 @@ public abstract class AbstractBlackBoxModel implements DynamicModel, BlackBoxMod
         writer.writeEndElement();
     }
 
-    protected void writeAutomatonBlackBoxModel(XMLStreamWriter writer, DynaWaltzXmlContext context) throws XMLStreamException {
+    protected void writeAutomatonBlackBoxModel(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
         // Write the blackBoxModel object
         writer.writeEmptyElement(DYN_URI, "blackBoxModel");
         writer.writeAttribute("id", getDynamicModelId());
