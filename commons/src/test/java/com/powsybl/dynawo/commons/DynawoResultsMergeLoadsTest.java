@@ -42,6 +42,17 @@ public class DynawoResultsMergeLoadsTest extends AbstractConverterTest {
     }
 
     @Test
+    public void nothingHappensWhenUnmergingUnchangedNetwork() throws IOException {
+        Network network = Importers.importData("XIIDM", new ResourceDataSource("MicroAssembled", new ResourceSet("/MicroAssembled", "MicroAssembled.xiidm")), null);
+        DynawoResultsMergeLoads dynawoResultsMergeLoads = new DynawoResultsMergeLoads(network.getId());
+        dynawoResultsMergeLoads.unmergeLoads(network);
+
+        Network expectedNetwork = Importers.importData("XIIDM", new ResourceDataSource("MicroAssembled", new ResourceSet("/MicroAssembled", "MicroAssembled.xiidm")), null);
+
+        compare(expectedNetwork, network);
+    }
+
+    @Test
     public void mergeLoadsMicroAssembled() throws IOException {
         Network network = Importers.importData("XIIDM", new ResourceDataSource("MicroAssembled", new ResourceSet("/MicroAssembled", "MicroAssembled.xiidm")), null);
         DynawoResultsMergeLoads dynawoResultsMergeLoads = new DynawoResultsMergeLoads(network.getId());
