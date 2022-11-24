@@ -7,13 +7,11 @@
 package com.powsybl.dynaflow;
 
 import com.google.common.collect.ImmutableMap;
-import com.powsybl.commons.config.ModuleConfig;
 import com.powsybl.commons.config.PlatformConfig;
 
 import java.nio.file.Path;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 
 /**
  *
