@@ -37,13 +37,9 @@ public class DynaFlowConfig {
 
     public static DynaFlowConfig fromPlatformConfig(PlatformConfig platformConfig) {
         Objects.requireNonNull(platformConfig);
-        Optional<ModuleConfig> optionalModuleConfig = platformConfig.getOptionalModuleConfig("dynaflow");
-        if (optionalModuleConfig.isPresent()) {
-            Path homeDir = optionalModuleConfig.get().getPathProperty("homeDir");
-            boolean debug = optionalModuleConfig.get().getBooleanProperty("debug", DEFAULT_DEBUG);
-            return new DynaFlowConfig(homeDir, debug);
-        }
-        return null;
+        return platformConfig.getOptionalModuleConfig("dynaflow")
+                .map(config -> new DynaFlowConfig(config.getPathProperty("homeDir"), config.getBooleanProperty("debug", DEFAULT_DEBUG)))
+                .orElse(null);
     }
 
     public Map<String, String> createEnv() {
