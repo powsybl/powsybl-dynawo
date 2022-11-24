@@ -9,6 +9,7 @@ package com.powsybl.dynaflow;
 import com.google.auto.service.AutoService;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
+import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.extensions.Extension;
 import com.powsybl.commons.extensions.ExtensionJsonSerializer;
@@ -98,7 +99,7 @@ public class DynaFlowProvider implements LoadFlowProvider {
 
     @Override
     public String getVersion() {
-        return VERSION;
+        return VERSION.toString();
     }
 
     private static CommandExecution createCommandExecution(DynaFlowConfig config) {
@@ -116,7 +117,9 @@ public class DynaFlowProvider implements LoadFlowProvider {
         DynaFlowConfig config = Objects.requireNonNull(configSupplier.get());
         ExecutionEnvironment env = new ExecutionEnvironment(config.createEnv(), WORKING_DIR_PREFIX, config.isDebug());
         Command versionCmd = getVersionCommand(config);
-        DynaFlowUtil.checkDynaFlowVersion(env, computationManager, versionCmd);
+        if (!DynaFlowUtil.checkDynaFlowVersion(env, computationManager, versionCmd)) {
+            throw new PowsyblException("DynaFlow version not supported : " + versionCmd.toString());
+        }
         return computationManager.execute(env, new AbstractExecutionHandler<LoadFlowResult>() {
 
             @Override
