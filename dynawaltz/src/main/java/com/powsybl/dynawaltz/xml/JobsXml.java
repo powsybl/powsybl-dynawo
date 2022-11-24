@@ -95,18 +95,18 @@ public final class JobsXml {
         writer.writeAttribute("local", "false");
         writer.writeAttribute("global", "false");
 
-        if (context.withCurves()) {
-            writer.writeEmptyElement(DYN_URI, "curves");
-            writer.writeAttribute("inputFile", DynaWaltzConstants.CRV_FILENAME);
-            writer.writeAttribute("exportMode", "CSV");
-        }
-
         writer.writeEmptyElement(DYN_URI, "timeline");
         writer.writeAttribute("exportMode", "TXT");
 
         writer.writeEmptyElement(DYN_URI, "finalState");
         writer.writeAttribute("exportIIDMFile", "true");
         writer.writeAttribute("exportDumpFile", "false");
+
+        if (context.withCurves()) {
+            writer.writeEmptyElement(DYN_URI, "curves");
+            writer.writeAttribute("inputFile", DynaWaltzConstants.CRV_FILENAME);
+            writer.writeAttribute("exportMode", "CSV");
+        }
 
         writer.writeStartElement(DYN_URI, "logs");
         writeAppender(writer);

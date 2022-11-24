@@ -41,7 +41,7 @@
   <xs:complexType name="SolverEntry">
     <xs:attribute name="lib" use="required" type="xs:string"/>
     <xs:attribute name="parFile" use="required" type="xs:string"/>
-    <xs:attribute name="parId" use="required" type="xs:int"/>
+    <xs:attribute name="parId" use="required" type="xs:string"/>
   </xs:complexType>
 
   <xs:complexType name="ModelerEntry">
@@ -57,8 +57,8 @@
 
   <xs:complexType name="NetworkEntry">
     <xs:attribute name="iidmFile" use="required" type="xs:string"/>
-    <xs:attribute name="parFile" use="required" type="xs:string"/>
-    <xs:attribute name="parId" use="required" type="xs:int"/>
+    <xs:attribute name="parFile" use="optional" type="xs:string"/>
+    <xs:attribute name="parId" use="optional" type="xs:string"/>
   </xs:complexType>
 
   <xs:complexType name="DynModelsEntry">
@@ -101,17 +101,21 @@
     <xs:attribute name="stopTime" use="required" type="xs:float"/>
     <xs:attribute name="criteriaStep" type="xs:int"/>
     <xs:attribute name="precision" type="xs:float"/>
+    <xs:attribute name="timeout" type="xs:float"/>
   </xs:complexType>
 
   <xs:complexType name="OutputsEntry">
-    <xs:all>
+    <xs:sequence>
       <xs:element name="dumpInitValues" type="dyn:InitValuesEntry" minOccurs="0"/>
       <xs:element name="constraints" type="dyn:ConstraintsEntry" minOccurs="0"/>
       <xs:element name="timeline" type="dyn:TimelineEntry" minOccurs="0"/>
-      <xs:element name="finalState" type="dyn:FinalStateEntry" minOccurs="0"/>
+      <xs:element name="timetable" type="dyn:TimetableEntry" minOccurs="0"/>
+      <xs:element name="finalState" type="dyn:FinalStateEntry" minOccurs="0" maxOccurs="unbounded"/>
       <xs:element name="curves" type="dyn:CurvesEntry" minOccurs="0"/>
+      <xs:element name="finalStateValues" type="dyn:FinalStateValuesEntry" minOccurs="0"/>
+      <xs:element name="lostEquipments" type="dyn:LostEquipmentsEntry" minOccurs="0"/>
       <xs:element name="logs" type="dyn:LogsEntry" minOccurs="0"/>
-    </xs:all>
+    </xs:sequence>
     <xs:attribute name="directory" use="required" type="xs:string"/>
   </xs:complexType>
 
@@ -133,6 +137,13 @@
 
   <xs:complexType name="TimelineEntry">
     <xs:attribute name="exportMode" use="required" type="dyn:TimelineExportMode"/>
+    <xs:attribute name="exportTime" use="optional" type="xs:boolean"/>
+    <xs:attribute name="maxPriority" use="optional" type="xs:int"/>
+    <xs:attribute name="filter" use="optional" type="xs:boolean"/>
+  </xs:complexType>
+
+  <xs:complexType name="TimetableEntry">
+    <xs:attribute name="step" use="required" type="xs:int"/>
   </xs:complexType>
 
   <xs:simpleType name="TimelineExportMode">
@@ -146,12 +157,21 @@
   <xs:complexType name="FinalStateEntry">
     <xs:attribute name="exportIIDMFile" use="required" type="xs:boolean"/>
     <xs:attribute name="exportDumpFile" use="required" type="xs:boolean"/>
+    <xs:attribute name="timestamp" type="xs:float"/>
   </xs:complexType>
 
   <xs:complexType name="CurvesEntry">
-    <xs:attribute name="inputFile" use="required" type="xs:string"/>
+    <xs:attribute name="inputFile"  use="required" type="xs:string"/>
     <xs:attribute name="exportMode" use="required" type="dyn:CurvesExportMode"/>
+    <xs:attribute name="iterationStep"   use="optional" type="xs:int"/>
+    <xs:attribute name="timeStep"   use="optional" type="xs:double"/>
   </xs:complexType>
+
+  <xs:complexType name="FinalStateValuesEntry">
+    <xs:attribute name="inputFile" use="required" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="LostEquipmentsEntry"/>
 
   <xs:simpleType name="CurvesExportMode">
     <xs:restriction base="xs:string">
