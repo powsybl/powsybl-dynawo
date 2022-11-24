@@ -11,9 +11,9 @@
         <dyn:simulation startTime="0" stopTime="100"/>
         <dyn:outputs directory="outputs">
             <dyn:dumpInitValues local="false" global="false"/>
-            <dyn:curves inputFile="powsybl_dynawaltz.crv" exportMode="CSV"/>
             <dyn:timeline exportMode="TXT"/>
             <dyn:finalState exportIIDMFile="true" exportDumpFile="false"/>
+            <dyn:curves inputFile="powsybl_dynawaltz.crv" exportMode="CSV"/>
             <dyn:logs>
                 <dyn:appender tag="" file="dynawaltz.log" lvlFilter="DEBUG"/>
             </dyn:logs>
