@@ -148,6 +148,7 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
 
         private void writeInputFiles(Path workingDir) {
             try {
+                // Write the network to XIIDM v1.4 because currently Dynawo does not support versions above
                 Properties params = new Properties();
                 params.setProperty(XMLExporter.VERSION, IIDM_VERSION);
                 context.getNetwork().write("XIIDM", params, workingDir.resolve(NETWORK_FILENAME));
