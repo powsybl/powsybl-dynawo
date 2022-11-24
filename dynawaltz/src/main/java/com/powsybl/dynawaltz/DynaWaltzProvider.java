@@ -170,7 +170,7 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
                 .id("dyn_fs")
                 .subCommand()
                 .program(getProgram())
-                .args(SystemUtils.IS_OS_WINDOWS ? "--jobs-file" : "jobs", dynawoJobsFile.toString())
+                .args("jobs", dynawoJobsFile.toString())
                 .add()
                 .build();
         }
