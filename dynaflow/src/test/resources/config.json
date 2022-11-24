@@ -21,7 +21,8 @@
         "timeOfEvent" : 10.0
       },
       "chosenOutputs" : [ "STEADYSTATE", "TIMELINE" ],
-      "timeStep" : 2.6
+      "timeStep" : 2.6,
+      "startingPointMode" : "warm"
     }
   }
 }

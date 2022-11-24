@@ -87,6 +87,9 @@ public final class DynaFlowConfigSerializer {
             if (dynaFlowParameters.getTimeStep() != null) {
                 jsonGenerator.writeNumberField("TimeStep", dynaFlowParameters.getTimeStep());
             }
+            if (dynaFlowParameters.getStartingPointMode() != null) {
+                jsonGenerator.writeStringField("StartingPointMode", dynaFlowParameters.getStartingPointMode().getName());
+            }
             jsonGenerator.writeStringField("OutputDir", workingDir.toAbsolutePath().toString());
             jsonGenerator.writeEndObject();
             jsonGenerator.writeEndObject();

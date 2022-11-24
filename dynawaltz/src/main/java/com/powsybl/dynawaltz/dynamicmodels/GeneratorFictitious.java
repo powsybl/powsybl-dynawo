@@ -7,27 +7,21 @@
 package com.powsybl.dynawaltz.dynamicmodels;
 
 /**
- * @author Florian Dupuy <florian.dupuy at rte-france.com>
+ * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
  */
-public abstract class AbstractGeneratorSynchronousModel extends AbstractGeneratorModel
-        implements GeneratorSynchronousModel {
+public class GeneratorFictitious extends AbstractGeneratorModel {
 
-    protected AbstractGeneratorSynchronousModel(String dynamicModelId, String staticId, String parameterSetId) {
+    public GeneratorFictitious(String dynamicModelId, String staticId, String parameterSetId) {
         super(dynamicModelId, staticId, parameterSetId,
                 "generator_terminal",
                 "generator_switchOffSignal1",
                 "generator_switchOffSignal2",
                 "generator_switchOffSignal3",
-                "generator_running");
+                "generator_fictitious");
     }
 
     @Override
-    public String getOmegaRefPuVarName() {
-        return "generator_omegaRefPu";
-    }
-
-    @Override
-    public String getOmegaPuVarName() {
-        return "generator_omegaPu";
+    public String getLib() {
+        return "GeneratorFictitious";
     }
 }

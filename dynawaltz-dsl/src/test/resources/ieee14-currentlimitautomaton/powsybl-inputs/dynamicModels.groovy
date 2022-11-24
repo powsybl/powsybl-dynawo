@@ -34,9 +34,6 @@ for (Generator gen : network.generators) {
             parameterSetId "GSTWPR" + gen.id
         }
     }
-    OmegaRef {
-        generatorDynamicModelId gen.id
-    }
 }
 
 CurrentLimitAutomaton {

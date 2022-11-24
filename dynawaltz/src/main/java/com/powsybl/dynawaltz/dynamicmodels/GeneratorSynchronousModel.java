@@ -11,4 +11,6 @@ package com.powsybl.dynawaltz.dynamicmodels;
  */
 public interface GeneratorSynchronousModel extends GeneratorModel {
     String getOmegaPuVarName();
+
+    String getOmegaRefPuVarName();
 }

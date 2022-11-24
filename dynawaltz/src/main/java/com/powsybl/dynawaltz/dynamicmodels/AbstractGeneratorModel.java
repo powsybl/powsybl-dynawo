@@ -8,7 +8,6 @@ package com.powsybl.dynawaltz.dynamicmodels;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
-import com.powsybl.dynawaltz.xml.DynaWaltzXmlContext;
 import com.powsybl.iidm.network.Generator;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -31,19 +30,17 @@ public abstract class AbstractGeneratorModel extends AbstractBlackBoxModel imple
     private final String switchOffSignalNodeVarName;
     private final String switchOffSignalEventVarName;
     private final String switchOffSignalAutomatonVarName;
-    private final String omegaRefPuVarName;
     private final String runningVarName;
 
     protected AbstractGeneratorModel(String dynamicModelId, String staticId, String parameterSetId,
                                   String terminalVarName, String switchOffSignalNodeVarName,
                                   String switchOffSignalEventVarName, String switchOffSignalAutomatonVarName,
-                                  String omegaRefPuVarName, String runningVarName) {
+                                  String runningVarName) {
         super(dynamicModelId, staticId, parameterSetId);
         this.terminalVarName = terminalVarName;
         this.switchOffSignalNodeVarName = switchOffSignalNodeVarName;
         this.switchOffSignalEventVarName = switchOffSignalEventVarName;
         this.switchOffSignalAutomatonVarName = switchOffSignalAutomatonVarName;
-        this.omegaRefPuVarName = omegaRefPuVarName;
         this.runningVarName = runningVarName;
     }
 
@@ -99,17 +96,12 @@ public abstract class AbstractGeneratorModel extends AbstractBlackBoxModel imple
     }
 
     @Override
-    public String getOmegaRefPuVarName() {
-        return omegaRefPuVarName;
-    }
-
-    @Override
     public String getRunningVarName() {
         return runningVarName;
     }
 
     @Override
-    public void write(XMLStreamWriter writer, DynaWaltzXmlContext context) throws XMLStreamException {
+    public void write(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
         writeBlackBoxModel(writer, context);
     }
 }

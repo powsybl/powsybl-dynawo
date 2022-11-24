@@ -10,7 +10,6 @@ import com.powsybl.commons.AbstractConverterTest;
 import com.powsybl.commons.ComparisonUtils;
 import com.powsybl.commons.datasource.ResourceDataSource;
 import com.powsybl.commons.datasource.ResourceSet;
-import com.powsybl.iidm.import_.Importers;
 import com.powsybl.iidm.network.*;
 import com.powsybl.iidm.xml.ExportOptions;
 import com.powsybl.iidm.xml.NetworkXml;
