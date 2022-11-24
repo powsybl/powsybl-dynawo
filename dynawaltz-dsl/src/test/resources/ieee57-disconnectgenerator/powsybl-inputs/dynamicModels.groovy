@@ -12,7 +12,4 @@ for (Generator gen : network.generators) {
         staticId gen.id
         parameterSetId "GSFWPR" + gen.id
     }
-    OmegaRef {
-        generatorDynamicModelId gen.id
-    }
 }

@@ -87,10 +87,11 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
                 dynamicModels.add(new GeneratorSynchronousThreeWindings("BBM_" + g.getId(), g.getId(), "GSTW"));
             } else if (g.getId().equals("GEN5")) {
                 dynamicModels.add(new GeneratorSynchronousFourWindingsProportionalRegulationsStepPm("BBM_" + g.getId(), g.getId(), "GSFWPRSP"));
+            } else if (g.getId().equals("GEN6")) {
+                dynamicModels.add(new GeneratorFictitious("BBM_" + g.getId(), g.getId(), "GF"));
             } else {
                 dynamicModels.add(new GeneratorSynchronousThreeWindingsProportionalRegulations("BBM_" + g.getId(), g.getId(), "GSTWPR"));
             }
-            dynamicModels.add(new OmegaRef("BBM_" + g.getId()));
         });
 
         // Events
@@ -177,6 +178,30 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
             .setTargetV(24.5)
             .setTargetP(-0.3)
             .setTargetQ(0.7)
+            .add();
+        vlgen.newGenerator()
+            .setId("GEN6")
+            .setBus(ngen.getId())
+            .setConnectableBus(ngen.getId())
+            .setMinP(-9999.99)
+            .setMaxP(9999.99)
+            .setVoltageRegulatorOn(true)
+            .setTargetV(24.5)
+            .setTargetP(-0.3)
+            .setTargetQ(0.7)
+            .add();
+        VoltageLevel vlhv1 = network.getVoltageLevel("VLHV1");
+        Bus nhv1 = vlhv1.getBusBreakerView().getBus("NHV1");
+        vlhv1.newGenerator()
+            .setId("NHV1_1")
+            .setBus(nhv1.getId())
+            .setConnectableBus(nhv1.getId())
+            .setMinP(-9999.99)
+            .setMaxP(9999.99)
+            .setVoltageRegulatorOn(true)
+            .setTargetV(24.5)
+            .setTargetP(0.1)
+            .setTargetQ(0.2)
             .add();
         return network;
     }

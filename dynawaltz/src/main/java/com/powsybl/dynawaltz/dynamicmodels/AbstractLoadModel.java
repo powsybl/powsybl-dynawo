@@ -8,7 +8,6 @@ package com.powsybl.dynawaltz.dynamicmodels;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
-import com.powsybl.dynawaltz.xml.DynaWaltzXmlContext;
 import com.powsybl.iidm.network.Load;
 
 import javax.xml.stream.XMLStreamException;
@@ -39,7 +38,7 @@ public abstract class AbstractLoadModel extends AbstractBlackBoxModel {
     }
 
     @Override
-    public void write(XMLStreamWriter writer, DynaWaltzXmlContext context) throws XMLStreamException {
+    public void write(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
         writeBlackBoxModel(writer, context);
     }
 }
