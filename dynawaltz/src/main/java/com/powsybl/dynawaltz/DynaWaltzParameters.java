@@ -130,6 +130,7 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
     }
 
     public DynaWaltzParameters() {
+        this.mergeLoads = true;
     }
 
     public DynaWaltzParameters(String parametersFile, String networkParametersFile, String networkParametersId, SolverType solverType, String solverParametersFile,
@@ -171,6 +172,10 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
 
     public boolean getMergeLoads() {
         return mergeLoads;
+    }
+
+    public void setMergeLoads(boolean mergeLoads) {
+        this.mergeLoads = mergeLoads;
     }
 
     private String parametersFile;

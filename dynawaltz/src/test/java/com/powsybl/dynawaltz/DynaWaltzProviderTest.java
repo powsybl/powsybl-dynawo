@@ -102,7 +102,7 @@ public class DynaWaltzProviderTest {
     }
 
     @Test
-    public void test() throws Exception {
+    public void testWithMergeLoads() throws Exception {
         try (FileSystem fs = Jimfs.newFileSystem(Configuration.unix())) {
             Network network = Network.create("test", "test");
 
@@ -119,7 +119,29 @@ public class DynaWaltzProviderTest {
     }
 
     @Test
-    public void testFail() throws Exception {
+    public void testWithoutMergeLoads() throws Exception {
+        try (FileSystem fs = Jimfs.newFileSystem(Configuration.unix())) {
+            Network network = Network.create("test", "test");
+
+            Path localDir = fs.getPath("/tmp");
+            ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(localDir, 1));
+            DynamicSimulation.Runner dynawoSimulation = DynamicSimulation.find();
+            DynamicSimulationParameters dynamicSimulationParameters = DynamicSimulationParameters.load();
+            DynaWaltzParameters dynaWaltzParameters = DynaWaltzParameters.load();
+            dynaWaltzParameters.setMergeLoads(false);
+            dynamicSimulationParameters.addExtension(DynaWaltzParameters.class, dynaWaltzParameters);
+
+            assertEquals(DynaWaltzProvider.NAME, dynawoSimulation.getName());
+            assertEquals("1.2.0", dynawoSimulation.getVersion());
+            DynamicSimulationResult result = dynawoSimulation.run(network, DynamicModelsSupplierMock.empty(), EventModelsSupplierMock.empty(),
+                    CurvesSupplier.empty(), network.getVariantManager().getWorkingVariantId(),
+                    computationManager, dynamicSimulationParameters);
+            assertNotNull(result);
+        }
+    }
+
+    @Test
+    public void testFailWithMergeLoads() throws Exception {
         try (FileSystem fs = Jimfs.newFileSystem(Configuration.unix())) {
             Network network = Network.create("test", "test");
 
@@ -138,7 +160,30 @@ public class DynaWaltzProviderTest {
     }
 
     @Test
-    public void testWithoutCurves() throws Exception {
+    public void testFailWithoutMergeLoads() throws Exception {
+        try (FileSystem fs = Jimfs.newFileSystem(Configuration.unix())) {
+            Network network = Network.create("test", "test");
+
+            Path localDir = fs.getPath("/tmp");
+            LocalCommandExecutor commandExecutor = new EmptyLocalCommandExecutorMock();
+            ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(localDir, 1), commandExecutor, ForkJoinPool.commonPool());
+            DynamicSimulation.Runner dynawoSimulation = DynamicSimulation.find();
+            DynamicSimulationParameters dynamicSimulationParameters = DynamicSimulationParameters.load();
+            DynaWaltzParameters dynaWaltzParameters = DynaWaltzParameters.load();
+            dynaWaltzParameters.setMergeLoads(false);
+            dynamicSimulationParameters.addExtension(DynaWaltzParameters.class, dynaWaltzParameters);
+            assertEquals(DynaWaltzProvider.NAME, dynawoSimulation.getName());
+            assertEquals("1.2.0", dynawoSimulation.getVersion());
+            DynamicSimulationResult result = dynawoSimulation.run(network, DynamicModelsSupplierMock.empty(), EventModelsSupplierMock.empty(),
+                    CurvesSupplier.empty(), network.getVariantManager().getWorkingVariantId(),
+                    computationManager, dynamicSimulationParameters);
+            assertNotNull(result);
+            assertFalse(result.isOk());
+        }
+    }
+
+    @Test
+    public void testWithoutCurvesWithMergeLoads() throws Exception {
         try (FileSystem fs = Jimfs.newFileSystem(Configuration.unix())) {
             Network network = Network.create("test", "test");
 
@@ -151,6 +196,29 @@ public class DynaWaltzProviderTest {
             DynamicSimulationResult result = dynawoSimulation.run(network, DynamicModelsSupplierMock.empty(), EventModelsSupplierMock.empty(),
                     new CurvesSupplierMock(), network.getVariantManager().getWorkingVariantId(),
                     computationManager, DynamicSimulationParameters.load());
+            assertNotNull(result);
+            assertFalse(result.isOk());
+        }
+    }
+
+    @Test
+    public void testWithoutCurvesWithoutMergeLoads() throws Exception {
+        try (FileSystem fs = Jimfs.newFileSystem(Configuration.unix())) {
+            Network network = Network.create("test", "test");
+
+            Path localDir = fs.getPath("/tmp");
+            LocalCommandExecutor commandExecutor = new WithoutCurvesLocalCommandExecutorMock("/test.xiidm");
+            ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(localDir, 1), commandExecutor, ForkJoinPool.commonPool());
+            DynamicSimulation.Runner dynawoSimulation = DynamicSimulation.find();
+            DynamicSimulationParameters dynamicSimulationParameters = DynamicSimulationParameters.load();
+            DynaWaltzParameters dynaWaltzParameters = DynaWaltzParameters.load();
+            dynaWaltzParameters.setMergeLoads(false);
+            dynamicSimulationParameters.addExtension(DynaWaltzParameters.class, dynaWaltzParameters);
+            assertEquals(DynaWaltzProvider.NAME, dynawoSimulation.getName());
+            assertEquals("1.2.0", dynawoSimulation.getVersion());
+            DynamicSimulationResult result = dynawoSimulation.run(network, DynamicModelsSupplierMock.empty(), EventModelsSupplierMock.empty(),
+                    new CurvesSupplierMock(), network.getVariantManager().getWorkingVariantId(),
+                    computationManager, dynamicSimulationParameters);
             assertNotNull(result);
             assertFalse(result.isOk());
         }
