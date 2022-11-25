@@ -76,11 +76,6 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
         assertEquals(expectedExecutionCommand, executionCommand);
     }
 
-    @Test
-    public void iidmCurrentVersionUsed() {
-        assertEquals(IidmXmlVersion.V_1_4.toString("."), IIDM_VERSION);
-    }
-
     private static class LocalCommandExecutorMock extends AbstractLocalCommandExecutor {
 
         private final String stdOutFileRef;
