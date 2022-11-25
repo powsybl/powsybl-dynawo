@@ -9,7 +9,6 @@ package com.powsybl.dynaflow;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-import com.powsybl.commons.PowsyblException;
 import com.powsybl.iidm.xml.IidmXmlVersion;
 
 import java.util.List;
