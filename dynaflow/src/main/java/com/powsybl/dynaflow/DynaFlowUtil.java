@@ -49,19 +49,11 @@ final class DynaFlowUtil {
     }
 
     public static boolean versionRespectsMin(String version, DynaFlowVersion minDynaFlowVersion) {
-        try {
-            return DynaFlowVersion.of(version).compareTo(minDynaFlowVersion) >= 0;
-        } catch (PowsyblException ex) {
-            return false;
-        }
+            return DynaFlowVersion.of(version).map(v -> v.compareTo(minDynaFlowVersion) >= 0).orElse(false);
     }
 
     public static boolean versionRespectsMax(String version, DynaFlowVersion maxDynaFlowVersion) {
-        try {
-            return DynaFlowVersion.of(version).compareTo(maxDynaFlowVersion) <= 0;
-        } catch (PowsyblException ex) {
-            return false;
-        }
+            return DynaFlowVersion.of(version).map(v -> v.compareTo(maxDynaFlowVersion) <= 0).orElse(false);
     }
 
     public static boolean versionIsInRange(String version, DynaFlowVersion minDynaFlowVersion, DynaFlowVersion maxDynaFlowVersion) {

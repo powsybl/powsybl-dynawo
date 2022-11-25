@@ -13,6 +13,7 @@ import com.powsybl.commons.PowsyblException;
 import com.powsybl.iidm.xml.IidmXmlVersion;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -57,15 +58,14 @@ public final class DynaFlowConstants {
             return this.toString(DEFAULT_DELIMITER);
         }
 
-        public static DynaFlowVersion of(String version) {
+        public static Optional<DynaFlowVersion> of(String version) {
             return of(version, DEFAULT_DELIMITER);
         }
 
-        public static DynaFlowVersion of(String version, String separator) {
+        public static Optional<DynaFlowVersion> of(String version, String separator) {
             return Stream.of(DynaFlowVersion.values())
                     .filter(v -> version.equals(v.toString(separator)))
-                    .findFirst() // there can only be 0 or exactly 1 match
-                    .orElseThrow(() -> new PowsyblException("Version " + version + " is not supported."));
+                    .findFirst(); // there can only be 0 or exactly 1 match
         }
     }
 
