@@ -168,9 +168,6 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
         LoadFlow.Runner dynaFlowSimulation = LoadFlow.find();
         LoadFlowParameters params = LoadFlowParameters.load();
 
-        assertEquals(DYNAFLOW_NAME, dynaFlowSimulation.getName());
-        assertEquals(VERSION, DynaFlowVersion.of(dynaFlowSimulation.getVersion()));
-
         LocalCommandExecutor commandExecutor = new EmptyLocalCommandExecutorMock("/dynaflow_bad_version.out");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
         LoadFlowResult result = dynaFlowSimulation.run(network, computationManager, params);
