@@ -7,6 +7,7 @@
 package com.powsybl.dynaflow;
 
 import com.powsybl.commons.AbstractConverterTest;
+import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.datasource.ResourceDataSource;
 import com.powsybl.commons.datasource.ResourceSet;
 import com.powsybl.computation.ComputationManager;
@@ -128,8 +129,8 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
         LoadFlow.Runner dynaFlowSimulation = LoadFlow.find();
         LoadFlowParameters params = LoadFlowParameters.load();
 
-        assertEquals("DynaFlow", dynaFlowSimulation.getName());
-        assertEquals("0.1", dynaFlowSimulation.getVersion());
+        assertEquals(DYNAFLOW_NAME, dynaFlowSimulation.getName());
+        assertEquals(VERSION, DynaFlowVersion.of(dynaFlowSimulation.getVersion()).get());
 
         LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynaflow_version.out",
                 "/SmallBusBranch_outputIIDM.xml", "/results.json");
@@ -145,8 +146,8 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
         LoadFlow.Runner dynaFlowSimulation = LoadFlow.find();
         LoadFlowParameters params = LoadFlowParameters.load();
 
-        assertEquals("DynaFlow", dynaFlowSimulation.getName());
-        assertEquals("0.1", dynaFlowSimulation.getVersion());
+        assertEquals(DYNAFLOW_NAME, dynaFlowSimulation.getName());
+        assertEquals(VERSION, DynaFlowVersion.of(dynaFlowSimulation.getVersion()).get());
 
         LocalCommandExecutor commandExecutor = new EmptyLocalCommandExecutorMock("/dynaflow_version.out");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
@@ -155,14 +156,25 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
         assertFalse(result.isOk());
     }
 
+    @Test(expected = PowsyblException.class)
+    public void testCallingBadVersionDynaFlow() throws Exception {
+        Network network = createTestSmallBusBranch();
+        LoadFlow.Runner dynaFlowSimulation = LoadFlow.find();
+        LoadFlowParameters params = LoadFlowParameters.load();
+
+        LocalCommandExecutor commandExecutor = new EmptyLocalCommandExecutorMock("/dynaflow_bad_version.out");
+        ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
+        LoadFlowResult result = dynaFlowSimulation.run(network, computationManager, params);
+    }
+
     @Test
     public void testUpdate() throws Exception {
         Network network = createTestSmallBusBranch();
         LoadFlow.Runner dynaFlowSimulation = LoadFlow.find();
         LoadFlowParameters params = LoadFlowParameters.load();
 
-        assertEquals("DynaFlow", dynaFlowSimulation.getName());
-        assertEquals("0.1", dynaFlowSimulation.getVersion());
+        assertEquals(DYNAFLOW_NAME, dynaFlowSimulation.getName());
+        assertEquals(VERSION, DynaFlowVersion.of(dynaFlowSimulation.getVersion()).get());
 
         LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynaflow_version.out",
                 "/SmallBusBranch_outputIIDM.xml", "/results.json");

@@ -18,6 +18,7 @@ import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import com.powsybl.dynaflow.DynaFlowConstants.DynaFlowVersion;
 
 /**
  *
@@ -41,14 +42,25 @@ final class DynaFlowUtil {
                 }
                 try (Reader reader = new InputStreamReader(stdErr.get())) {
                     String stdErrContent = CharStreams.toString(reader);
-                    return stdErrContent.equals(DynaFlowConstants.VERSION);
+                    return DynaFlowUtil.versionIsInRange(stdErrContent, DynaFlowConstants.VERSION_MIN, DynaFlowConstants.VERSION);
                 }
-
             }
         }).join();
     }
 
-    private DynaFlowUtil() {
+    public static boolean versionRespectsMin(String version, DynaFlowVersion minDynaFlowVersion) {
+        return DynaFlowVersion.of(version).map(v -> v.compareTo(minDynaFlowVersion) >= 0).orElse(false);
+    }
 
+    public static boolean versionRespectsMax(String version, DynaFlowVersion maxDynaFlowVersion) {
+        return DynaFlowVersion.of(version).map(v -> v.compareTo(maxDynaFlowVersion) <= 0).orElse(false);
+    }
+
+    public static boolean versionIsInRange(String version, DynaFlowVersion minDynaFlowVersion, DynaFlowVersion maxDynaFlowVersion) {
+        return versionRespectsMin(version, minDynaFlowVersion)
+                && versionRespectsMax(version, maxDynaFlowVersion);
+    }
+
+    private DynaFlowUtil() {
     }
 }
