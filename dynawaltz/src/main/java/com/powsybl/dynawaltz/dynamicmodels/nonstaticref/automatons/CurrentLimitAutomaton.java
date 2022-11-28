@@ -23,15 +23,13 @@ import java.util.Objects;
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class CurrentLimitAutomaton extends AbstractBlackBoxModel {
+public class CurrentLimitAutomaton extends AbstractBlackBoxModelWithStaticId {
 
     private final Branch.Side side;
-    private final String lineStaticId;
 
     public CurrentLimitAutomaton(String dynamicModelId, String staticId, String parameterSetId, Branch.Side side) {
-        super(dynamicModelId, parameterSetId);
+        super(dynamicModelId, staticId, parameterSetId);
         this.side = Objects.requireNonNull(side);
-        this.lineStaticId = staticId;
     }
 
     @Override
@@ -41,14 +39,14 @@ public class CurrentLimitAutomaton extends AbstractBlackBoxModel {
 
     @Override
     public List<BlackBoxModel> getModelsConnectedTo(DynaWaltzContext context) {
-        Line line = context.getNetwork().getLine(lineStaticId);
+        Line line = context.getNetwork().getLine(getStaticId());
         if (line == null) {
-            throw new PowsyblException("Unknown line static id: " + lineStaticId);
+            throw new PowsyblException("Unknown line static id: " + getStaticId());
         }
         String connectedStaticId = line.getTerminal(side).getBusBreakerView().getConnectableBus().getId();
         BlackBoxModel connectedBbm = context.getStaticIdBlackBoxModelMap().get(connectedStaticId);
         if (connectedBbm == null) {
-            return List.of(context.getNetworkModel().getDefaultLineModel(lineStaticId, side));
+            return List.of(context.getNetworkModel().getDefaultLineModel(getStaticId(), side));
         }
         return List.of(connectedBbm);
     }
@@ -67,7 +65,7 @@ public class CurrentLimitAutomaton extends AbstractBlackBoxModel {
     }
 
     public String getLineStaticId() {
-        return lineStaticId;
+        return getStaticId();
     }
 
     @Override
