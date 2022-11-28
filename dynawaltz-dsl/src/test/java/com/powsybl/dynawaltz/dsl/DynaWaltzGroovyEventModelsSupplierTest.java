@@ -92,7 +92,7 @@ public class DynaWaltzGroovyEventModelsSupplierTest {
         AbstractBlackBoxEventModel blackBoxEventModel = (AbstractBlackBoxEventModel) eventModel;
         if (blackBoxEventModel instanceof EventQuadripoleDisconnection) {
             Identifiable<?> identifiable = network.getIdentifiable(((EventQuadripoleDisconnection) blackBoxEventModel).getLineStaticId());
-            assertEquals("EM_" + identifiable.getId(), blackBoxEventModel.getEventModelId());
+            assertEquals("EM_" + identifiable.getId(), blackBoxEventModel.getDynamicModelId());
             assertEquals("EQD", blackBoxEventModel.getParameterSetId());
             assertTrue(identifiable instanceof Line);
         }
