@@ -131,10 +131,14 @@ public class DynaFlowProvider implements LoadFlowProvider {
                     Files.delete(outputNetworkFile);
                 }
                 network.getVariantManager().setWorkingVariant(workingStateId);
+                Network workingNetwork;
                 if (dynaFlowParameters.getMergeLoads()) {
                     dynawoResultsMergeLoads.mergeLoads();
+                    workingNetwork = dynawoResultsMergeLoads.getNetwork();
+                } else {
+                    workingNetwork = network;
                 }
-                writeIIDM(workingDir, network);
+                writeIIDM(workingDir, workingNetwork);
                 DynaFlowConfigSerializer.serialize(loadFlowParameters, dynaFlowParameters, workingDir, workingDir.resolve(CONFIG_FILENAME));
                 return Collections.singletonList(createCommandExecution(config));
             }

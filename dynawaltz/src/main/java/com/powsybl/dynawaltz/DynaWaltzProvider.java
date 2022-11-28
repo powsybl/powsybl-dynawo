@@ -121,9 +121,6 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
             if (Files.exists(curvesPath)) {
                 Files.delete(curvesPath);
             }
-            if (context.getDynaWaltzParameters().getMergeLoads()) {
-                dynawoResultsMergeLoads.mergeLoads();
-            }
             writeInputFiles(workingDir);
             Command cmd = createCommand(workingDir.resolve(JOBS_FILENAME));
             return Collections.singletonList(new CommandExecution(cmd, 1));
@@ -166,8 +163,14 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
                 // Write the network to XIIDM v1.4 because currently Dynawo does not support versions above
                 Properties params = new Properties();
                 params.setProperty(XMLExporter.VERSION, IIDM_VERSION);
-                context.getNetwork().write("XIIDM", params, workingDir.resolve(NETWORK_FILENAME));
-
+                String fileFormat = "XIIDM";
+                Path filePath = workingDir.resolve(NETWORK_FILENAME);
+                if (context.getDynaWaltzParameters().getMergeLoads()) {
+                    dynawoResultsMergeLoads.mergeLoads();
+                    dynawoResultsMergeLoads.getNetwork().write(fileFormat, params, filePath);
+                } else {
+                    context.getNetwork().write(fileFormat, params, filePath);
+                }
                 JobsXml.write(workingDir, context);
                 DydXml.write(workingDir, context);
                 ParametersXml.write(workingDir, context);
