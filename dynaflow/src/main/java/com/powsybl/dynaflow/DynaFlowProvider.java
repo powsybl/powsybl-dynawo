@@ -147,12 +147,17 @@ public class DynaFlowProvider implements LoadFlowProvider {
                 boolean status = true;
                 Path outputNetworkFile = workingDir.resolve("outputs").resolve("finalState").resolve(OUTPUT_IIDM_FILENAME);
                 if (Files.exists(outputNetworkFile)) {
-                    DynawoResultsNetworkUpdate.update(network, NetworkXml.read(outputNetworkFile));
+                    Network modifiedNetwork;
+                    if (dynaFlowParameters.getMergeLoads()) {
+                        DynawoResultsNetworkUpdate.update(dynawoResultsMergeLoads.getNetwork(), NetworkXml.read(outputNetworkFile));
+                        dynawoResultsMergeLoads.unmergeLoads();
+                        modifiedNetwork = dynawoResultsMergeLoads.getNetwork();
+                    } else {
+                        modifiedNetwork = NetworkXml.read(outputNetworkFile);
+                    }
+                    DynawoResultsNetworkUpdate.update(network, modifiedNetwork);
                 } else {
                     status = false;
-                }
-                if (dynaFlowParameters.getMergeLoads()) {
-                    dynawoResultsMergeLoads.unmergeLoads();
                 }
                 Path resultsPath = workingDir.resolve(OUTPUT_RESULTS_FILENAME);
                 if (!Files.exists(resultsPath)) {
