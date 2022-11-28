@@ -12,6 +12,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -51,6 +52,22 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel, DynamicMod
     @Override
     public List<Pair<String, String>> getAttributesConnectTo() {
         return List.of(Pair.of("id2", getDynamicModelId()));
+    }
+
+    @Override
+    public void write(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
+        // Default models not written in dyd
+    }
+
+    @Override
+    public List<Pair<String, String>> getVarsConnect(BlackBoxModel connectedBbm) {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public List<BlackBoxModel> getModelsConnectedTo(DynaWaltzContext dynaWaltzContext) {
+        // Default models are only connected to
+        return Collections.emptyList();
     }
 
     protected void writeAutomatonBlackBoxModel(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {

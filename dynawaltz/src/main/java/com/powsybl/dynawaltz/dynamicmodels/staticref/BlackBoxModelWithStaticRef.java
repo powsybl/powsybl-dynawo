@@ -6,7 +6,6 @@
  */
 package com.powsybl.dynawaltz.dynamicmodels.staticref;
 
-import com.powsybl.dynawaltz.dynamicmodels.BlackBoxModel;
 import com.powsybl.dynawaltz.dynamicmodels.BlackBoxModelWithStaticId;
 import org.apache.commons.lang3.tuple.Pair;
 
