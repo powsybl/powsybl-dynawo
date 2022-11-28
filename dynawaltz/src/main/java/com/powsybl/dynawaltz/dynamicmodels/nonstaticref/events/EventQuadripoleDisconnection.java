@@ -20,16 +20,8 @@ import java.util.List;
  */
 public class EventQuadripoleDisconnection extends AbstractBlackBoxEventModel {
 
-    private final String lineStaticId;
-
     public EventQuadripoleDisconnection(String eventModelId, String staticId, String parameterSetId) {
-        super(eventModelId, parameterSetId);
-        this.lineStaticId = staticId;
-    }
-
-    @Override
-    public String getDynamicModelId() {
-        return null;
+        super(eventModelId, staticId, parameterSetId);
     }
 
     @Override
@@ -47,14 +39,14 @@ public class EventQuadripoleDisconnection extends AbstractBlackBoxEventModel {
 
     @Override
     public List<BlackBoxModel> getModelsConnectedTo(DynaWaltzContext context) {
-        BlackBoxModel connectedBbm = context.getStaticIdBlackBoxModelMap().get(lineStaticId);
+        BlackBoxModel connectedBbm = context.getStaticIdBlackBoxModelMap().get(getStaticId());
         if (connectedBbm == null) {
-            return List.of(context.getNetworkModel().getDefaultLineModel(lineStaticId, Branch.Side.ONE));
+            return List.of(context.getNetworkModel().getDefaultLineModel(getStaticId(), Branch.Side.ONE));
         }
         return List.of(connectedBbm);
     }
 
     public String getLineStaticId() {
-        return lineStaticId;
+        return getStaticId();
     }
 }

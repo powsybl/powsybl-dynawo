@@ -18,12 +18,8 @@ import java.util.List;
  * @author Mathieu BAGUE {@literal <mathieu.bague at rte-france.com>}
  */
 public class EventSetPointBoolean extends AbstractBlackBoxEventModel {
-
-    private final String generatorStaticId;
-
     public EventSetPointBoolean(String eventModelId, String staticId, String parameterSetId) {
-        super(eventModelId, parameterSetId);
-        this.generatorStaticId = staticId;
+        super(eventModelId, staticId, parameterSetId);
     }
 
     @Override
@@ -41,9 +37,9 @@ public class EventSetPointBoolean extends AbstractBlackBoxEventModel {
 
     @Override
     public List<BlackBoxModel> getModelsConnectedTo(DynaWaltzContext context) {
-        BlackBoxModel connectedBbm = context.getStaticIdBlackBoxModelMap().get(generatorStaticId);
+        BlackBoxModel connectedBbm = context.getStaticIdBlackBoxModelMap().get(getStaticId());
         if (connectedBbm == null) {
-            throw new PowsyblException("Cannot find generator '" + generatorStaticId + "' among the dynamic models provided");
+            throw new PowsyblException("Cannot find generator '" + getStaticId() + "' among the dynamic models provided");
         }
         return List.of(connectedBbm);
     }
