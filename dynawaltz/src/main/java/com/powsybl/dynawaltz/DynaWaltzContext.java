@@ -13,7 +13,7 @@ import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynamicsimulation.EventModel;
 import com.powsybl.dynawaltz.dynamicmodels.*;
-import com.powsybl.dynawaltz.dynamicmodels.nonstaticref.OmegaRef;
+import com.powsybl.dynawaltz.dynamicmodels.OmegaRef;
 import com.powsybl.dynawaltz.dynamicmodels.nonstaticref.events.BlackBoxEventModel;
 import com.powsybl.dynawaltz.dynamicmodels.NetworkModel;
 import com.powsybl.dynawaltz.dynamicmodels.staticref.BlackBoxModelWithStaticRef;

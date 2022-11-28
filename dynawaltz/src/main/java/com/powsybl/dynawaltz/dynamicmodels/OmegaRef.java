@@ -4,16 +4,13 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package com.powsybl.dynawaltz.dynamicmodels.nonstaticref;
+package com.powsybl.dynawaltz.dynamicmodels;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParametersDatabase;
-import com.powsybl.dynawaltz.dynamicmodels.AbstractBlackBoxModel;
-import com.powsybl.dynawaltz.dynamicmodels.BlackBoxModel;
 import com.powsybl.dynawaltz.dynamicmodels.nonstaticref.network.BusModel;
 import com.powsybl.dynawaltz.dynamicmodels.staticref.generators.GeneratorSynchronousModel;
-import com.powsybl.dynawaltz.dynamicmodels.MacroConnector;
 import com.powsybl.dynawaltz.xml.ParametersXml;
 import com.powsybl.iidm.network.Generator;
 import org.apache.commons.lang3.tuple.Pair;
