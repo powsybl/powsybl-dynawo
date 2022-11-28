@@ -168,7 +168,7 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
         dynaFlowParameters.setMergeLoads(false);
 
         assertEquals("DynaFlow", dynaFlowSimulation.getName());
-        assertEquals("0.1", dynaFlowSimulation.getVersion());
+        assertEquals(VERSION, DynaFlowVersion.of(dynaFlowSimulation.getVersion()).get());
 
         LocalCommandExecutor commandExecutor = new EmptyLocalCommandExecutorMock("/dynaflow_version.out");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
@@ -197,7 +197,7 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
         dynaFlowParameters.setMergeLoads(false);
 
         assertEquals("DynaFlow", dynaFlowSimulation.getName());
-        assertEquals("0.1", dynaFlowSimulation.getVersion());
+        assertEquals(VERSION, DynaFlowVersion.of(dynaFlowSimulation.getVersion()).get());
 
         LocalCommandExecutor commandExecutor = new EmptyLocalCommandExecutorMock("/dynaflow_version.out");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
@@ -215,7 +215,7 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
         dynaFlowParameters.setMergeLoads(false);
 
         assertEquals("DynaFlow", dynaFlowSimulation.getName());
-        assertEquals("0.1", dynaFlowSimulation.getVersion());
+        assertEquals(VERSION, DynaFlowVersion.of(dynaFlowSimulation.getVersion()).get());
 
         LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynaflow_version.out",
                 "/SmallBusBranch_outputIIDM.xml", "/results.json");
