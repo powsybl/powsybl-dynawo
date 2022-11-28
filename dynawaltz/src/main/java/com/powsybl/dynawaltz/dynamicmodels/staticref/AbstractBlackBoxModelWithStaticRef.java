@@ -7,7 +7,8 @@
 package com.powsybl.dynawaltz.dynamicmodels.staticref;
 
 import com.powsybl.dynawaltz.DynaWaltzContext;
-import com.powsybl.dynawaltz.dynamicmodels.AbstractBlackBoxModelWithStaticId;
+import com.powsybl.dynawaltz.dynamicmodels.AbstractBlackBoxModel;
+import com.powsybl.dynawaltz.dynamicmodels.BlackBoxModelWithStaticId;
 import com.powsybl.dynawaltz.xml.MacroStaticReference;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -21,13 +22,20 @@ import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 /**
  * @author Luma Zamarreño <zamarrenolm at aia.es>
  */
-public abstract class AbstractBlackBoxModelWithStaticRef extends AbstractBlackBoxModelWithStaticId implements BlackBoxModelWithStaticRef {
+public abstract class AbstractBlackBoxModelWithStaticRef extends AbstractBlackBoxModel implements BlackBoxModelWithStaticId, BlackBoxModelWithStaticRef {
 
+    private final String staticId;
     private final List<Pair<String, String>> staticRef;
 
     protected AbstractBlackBoxModelWithStaticRef(String dynamicModelId, String staticId, String parameterSetId, List<Pair<String, String>> staticRef) {
-        super(dynamicModelId, staticId, parameterSetId);
+        super(dynamicModelId, parameterSetId);
+        this.staticId = staticId;
         this.staticRef = staticRef;
+    }
+
+    @Override
+    public String getStaticId() {
+        return staticId;
     }
 
     @Override

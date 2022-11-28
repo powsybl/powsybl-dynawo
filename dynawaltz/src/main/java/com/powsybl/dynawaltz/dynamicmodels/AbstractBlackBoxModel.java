@@ -53,6 +53,11 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel, DynamicMod
     }
 
     @Override
+    public void writeMacroConnect(XMLStreamWriter writer, DynaWaltzContext context, MacroConnector macroConnector, BlackBoxModel connected) throws XMLStreamException {
+        macroConnector.writeMacroConnect(writer, List.of(Pair.of("id1", getDynamicModelId())), connected.getAttributesConnectTo());
+    }
+
+    @Override
     public List<Pair<String, String>> getVarsConnect(BlackBoxModel connectedBbm) {
         return Collections.emptyList();
     }

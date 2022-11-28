@@ -8,7 +8,7 @@ package com.powsybl.dynawaltz.dynamicmodels.nonstaticref.events;
 
 import com.powsybl.dynamicsimulation.EventModel;
 import com.powsybl.dynawaltz.DynaWaltzContext;
-import com.powsybl.dynawaltz.dynamicmodels.AbstractBlackBoxModelWithStaticId;
+import com.powsybl.dynawaltz.dynamicmodels.AbstractBlackBoxModel;
 import com.powsybl.dynawaltz.dynamicmodels.BlackBoxModel;
 import com.powsybl.dynawaltz.dynamicmodels.MacroConnector;
 import org.apache.commons.lang3.tuple.Pair;
@@ -22,10 +22,18 @@ import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public abstract class AbstractBlackBoxEventModel extends AbstractBlackBoxModelWithStaticId implements EventModel, BlackBoxEventModel {
+public abstract class AbstractBlackBoxEventModel extends AbstractBlackBoxModel implements EventModel, BlackBoxEventModel {
+
+    private final String staticId;
 
     protected AbstractBlackBoxEventModel(String eventModelId, String staticId, String parameterSetId) {
-        super(eventModelId, staticId, parameterSetId);
+        super(eventModelId, parameterSetId);
+        this.staticId = staticId;
+    }
+
+    @Override
+    public String getStaticId() {
+        return staticId;
     }
 
     @Override
