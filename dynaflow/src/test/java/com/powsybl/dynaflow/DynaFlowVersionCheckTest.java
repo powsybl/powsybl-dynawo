@@ -99,4 +99,69 @@ public class DynaFlowVersionCheckTest {
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
         DynaFlowUtil.checkDynaFlowVersion(env, computationManager, badVersionCmd);
     }
+
+    @Test
+    public void testVersionRespectsMin() {
+        assertTrue(DynaFlowUtil.versionRespectsMin("1.3.0", DynaFlowConstants.DynaFlowVersion.V_1_3_0));
+    }
+
+    @Test
+    public void testVersionAboveMin() {
+        assertTrue(DynaFlowUtil.versionRespectsMin("1.3.1", DynaFlowConstants.DynaFlowVersion.V_1_3_0));
+    }
+
+    @Test
+    public void testVersionDoesNotRespectMin() {
+        assertFalse(DynaFlowUtil.versionRespectsMin("1.3.0", DynaFlowConstants.DynaFlowVersion.V_1_3_1));
+    }
+
+    @Test
+    public void testVersionNotConvertibleMin() {
+        assertFalse(DynaFlowUtil.versionRespectsMin("1.1", DynaFlowConstants.DynaFlowVersion.V_1_3_1));
+    }
+
+    @Test
+    public void testVersionRespectsMax() {
+        assertTrue(DynaFlowUtil.versionRespectsMax("1.3.0", DynaFlowConstants.DynaFlowVersion.V_1_3_0));
+    }
+
+    @Test
+    public void testVersionAboveMax() {
+        assertFalse(DynaFlowUtil.versionRespectsMax("1.3.1", DynaFlowConstants.DynaFlowVersion.V_1_3_0));
+    }
+
+    @Test
+    public void testVersionBelowMax() {
+        assertTrue(DynaFlowUtil.versionRespectsMax("1.3.0", DynaFlowConstants.DynaFlowVersion.V_1_3_1));
+    }
+
+    @Test
+    public void testVersionNotConvertibleMax() {
+        assertFalse(DynaFlowUtil.versionRespectsMin("1.1", DynaFlowConstants.DynaFlowVersion.V_1_3_1));
+    }
+
+    @Test
+    public void testVersionIsInRange() {
+        assertTrue(DynaFlowUtil.versionIsInRange("1.3.0", DynaFlowConstants.DynaFlowVersion.V_1_3_0, DynaFlowConstants.DynaFlowVersion.V_1_3_1));
+    }
+
+    @Test
+    public void testVersionIsInRange2() {
+        assertTrue(DynaFlowUtil.versionIsInRange("1.3.0", DynaFlowConstants.DynaFlowVersion.V_1_3_0, DynaFlowConstants.DynaFlowVersion.V_1_3_0));
+    }
+
+    @Test
+    public void testVersionIsNotInRange() {
+        assertFalse(DynaFlowUtil.versionIsInRange("1.3.0", DynaFlowConstants.DynaFlowVersion.V_1_3_1, DynaFlowConstants.DynaFlowVersion.V_1_3_0));
+    }
+
+    @Test
+    public void testVersionIsNotInRange2() {
+        assertFalse(DynaFlowUtil.versionIsInRange("1.3.1", DynaFlowConstants.DynaFlowVersion.V_1_3_0, DynaFlowConstants.DynaFlowVersion.V_1_3_0));
+    }
+
+    @Test
+    public void testVersionNotKnownInRange() {
+        assertFalse(DynaFlowUtil.versionIsInRange("1.1", DynaFlowConstants.DynaFlowVersion.V_1_3_0, DynaFlowConstants.DynaFlowVersion.V_1_3_0));
+    }
 }

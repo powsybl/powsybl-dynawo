@@ -9,6 +9,7 @@ package com.powsybl.dynaflow;
 import com.google.auto.service.AutoService;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
+import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.extensions.Extension;
 import com.powsybl.commons.extensions.ExtensionJsonSerializer;
@@ -18,7 +19,6 @@ import com.powsybl.dynaflow.json.JsonDynaFlowParametersSerializer;
 import com.powsybl.dynawo.commons.DynawoResultsMergeLoads;
 import com.powsybl.dynawo.commons.DynawoResultsNetworkUpdate;
 import com.powsybl.iidm.network.Network;
-import com.powsybl.iidm.xml.IidmXmlVersion;
 import com.powsybl.iidm.xml.NetworkXml;
 import com.powsybl.iidm.xml.XMLExporter;
 import com.powsybl.loadflow.LoadFlowParameters;
@@ -58,7 +58,7 @@ public class DynaFlowProvider implements LoadFlowProvider {
 
     private static void writeIIDM(Path workingDir, Network network) {
         Properties params = new Properties();
-        params.setProperty(XMLExporter.VERSION, IidmXmlVersion.V_1_2.toString("."));
+        params.setProperty(XMLExporter.VERSION, IIDM_VERSION);
         network.write("XIIDM", params, workingDir.resolve(IIDM_FILENAME));
     }
 
@@ -95,12 +95,12 @@ public class DynaFlowProvider implements LoadFlowProvider {
 
     @Override
     public String getName() {
-        return "DynaFlow";
+        return DYNAFLOW_NAME;
     }
 
     @Override
     public String getVersion() {
-        return "0.1";
+        return VERSION.toString();
     }
 
     private static CommandExecution createCommandExecution(DynaFlowConfig config) {
@@ -118,7 +118,9 @@ public class DynaFlowProvider implements LoadFlowProvider {
         DynaFlowConfig config = Objects.requireNonNull(configSupplier.get());
         ExecutionEnvironment env = new ExecutionEnvironment(config.createEnv(), WORKING_DIR_PREFIX, config.isDebug());
         Command versionCmd = getVersionCommand(config);
-        DynaFlowUtil.checkDynaFlowVersion(env, computationManager, versionCmd);
+        if (!DynaFlowUtil.checkDynaFlowVersion(env, computationManager, versionCmd)) {
+            throw new PowsyblException("DynaFlow version not supported. Must be " + VERSION_MIN + " <= version <= " + VERSION);
+        }
         DynawoResultsMergeLoads dynawoResultsMergeLoads = new DynawoResultsMergeLoads(network.getId());
         return computationManager.execute(env, new AbstractExecutionHandler<LoadFlowResult>() {
 
@@ -155,7 +157,6 @@ public class DynaFlowProvider implements LoadFlowProvider {
                 Path resultsPath = workingDir.resolve(OUTPUT_RESULTS_FILENAME);
                 if (!Files.exists(resultsPath)) {
                     Map<String, String> metrics = new HashMap<>();
-                    String logs = null;
                     List<LoadFlowResult.ComponentResult> componentResults = new ArrayList<>(1);
                     componentResults.add(new LoadFlowResultImpl.ComponentResultImpl(0,
                             0,
@@ -164,7 +165,7 @@ public class DynaFlowProvider implements LoadFlowProvider {
                             "not-found",
                             0.,
                             Double.NaN));
-                    return new LoadFlowResultImpl(status, metrics, logs, componentResults);
+                    return new LoadFlowResultImpl(status, metrics, null, componentResults);
                 }
                 return LoadFlowResultDeserializer.read(resultsPath);
             }
