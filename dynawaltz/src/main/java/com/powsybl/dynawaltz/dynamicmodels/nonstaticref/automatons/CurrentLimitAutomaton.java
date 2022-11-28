@@ -23,7 +23,7 @@ import java.util.Objects;
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class CurrentLimitAutomaton extends AbstractBlackBoxModelWithStaticId {
+public class CurrentLimitAutomaton extends AbstractAutomaton {
 
     private final Branch.Side side;
 
