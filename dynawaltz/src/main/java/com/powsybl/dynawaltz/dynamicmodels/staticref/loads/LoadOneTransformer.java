@@ -19,23 +19,18 @@ import java.util.List;
  */
 public class LoadOneTransformer extends AbstractLoadModel {
 
-    protected static final List<Pair<String, String>> STATIC_REF = Arrays.asList(
-            Pair.of("transformer_P1Pu_value", "p"),
-            Pair.of("transformer_Q1Pu_value", "q"),
-            Pair.of("transformer_state", "state"));
-
     public LoadOneTransformer(String dynamicModelId, String staticId, String parameterSetId) {
-        super(dynamicModelId, staticId, parameterSetId);
+        super(dynamicModelId, staticId, parameterSetId,
+                Arrays.asList(
+                        Pair.of("transformer_P1Pu_value", "p"),
+                        Pair.of("transformer_Q1Pu_value", "q"),
+                        Pair.of("transformer_state", "state"))
+        );
     }
 
     @Override
     public String getLib() {
         return "LoadOneTransformer";
-    }
-
-    @Override
-    public List<Pair<String, String>> getStaticRef() {
-        return STATIC_REF;
     }
 
     @Override

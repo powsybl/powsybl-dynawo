@@ -19,23 +19,18 @@ import java.util.List;
  */
 public class LoadAlphaBeta extends AbstractLoadModel {
 
-    protected static final List<Pair<String, String>> STATIC_REF = Arrays.asList(
-            Pair.of("load_PPu", "p"),
-            Pair.of("load_QPu", "q"),
-            Pair.of("load_state", "state"));
-
     public LoadAlphaBeta(String dynamicModelId, String staticId, String parameterSetId) {
-        super(dynamicModelId, staticId, parameterSetId);
+        super(dynamicModelId, staticId, parameterSetId,
+                Arrays.asList(
+                        Pair.of("load_PPu", "p"),
+                        Pair.of("load_QPu", "q"),
+                        Pair.of("load_state", "state"))
+        );
     }
 
     @Override
     public String getLib() {
         return "LoadAlphaBeta";
-    }
-
-    @Override
-    public List<Pair<String, String>> getStaticRef() {
-        return STATIC_REF;
     }
 
     @Override

@@ -24,22 +24,17 @@ import java.util.List;
  */
 public abstract class AbstractGeneratorModel extends AbstractBlackBoxModelWithStaticRef implements GeneratorModel {
 
-    protected static final List<Pair<String, String>> STATIC_REF = Arrays.asList(
-            Pair.of("generator_PGenPu", "p"),
-            Pair.of("generator_QGenPu", "q"),
-            Pair.of("generator_state", "state"));
-
     private final GeneratorParameters generatorParameters;
 
     protected AbstractGeneratorModel(String dynamicModelId, String staticId, String parameterSetId,
                                   GeneratorParameters generatorParameters) {
-        super(dynamicModelId, staticId, parameterSetId);
+        super(dynamicModelId, staticId, parameterSetId,
+                Arrays.asList(
+                        Pair.of("generator_PGenPu", "p"),
+                        Pair.of("generator_QGenPu", "q"),
+                        Pair.of("generator_state", "state"))
+        );
         this.generatorParameters = generatorParameters;
-    }
-
-    @Override
-    public List<Pair<String, String>> getStaticRef() {
-        return STATIC_REF;
     }
 
     @Override

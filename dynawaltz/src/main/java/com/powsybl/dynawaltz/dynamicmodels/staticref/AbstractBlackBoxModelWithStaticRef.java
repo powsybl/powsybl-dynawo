@@ -9,9 +9,12 @@ package com.powsybl.dynawaltz.dynamicmodels.staticref;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.dynamicmodels.AbstractBlackBoxModelWithStaticId;
 import com.powsybl.dynawaltz.xml.MacroStaticReference;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
+
+import java.util.List;
 
 import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 
@@ -20,8 +23,16 @@ import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
  */
 public abstract class AbstractBlackBoxModelWithStaticRef extends AbstractBlackBoxModelWithStaticId implements BlackBoxModelWithStaticRef {
 
-    protected AbstractBlackBoxModelWithStaticRef(String dynamicModelId, String staticId, String parameterSetId) {
+    private final List<Pair<String, String>> staticRef;
+
+    protected AbstractBlackBoxModelWithStaticRef(String dynamicModelId, String staticId, String parameterSetId, List<Pair<String, String>> staticRef) {
         super(dynamicModelId, staticId, parameterSetId);
+        this.staticRef = staticRef;
+    }
+
+    @Override
+    public List<Pair<String, String>> getStaticRef() {
+        return staticRef;
     }
 
     protected void writeBlackBoxModel(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {

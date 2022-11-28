@@ -11,6 +11,7 @@ import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.dynamicmodels.BlackBoxModel;
 import com.powsybl.dynawaltz.dynamicmodels.staticref.AbstractBlackBoxModelWithStaticRef;
 import com.powsybl.iidm.network.Load;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -21,8 +22,8 @@ import java.util.List;
  */
 public abstract class AbstractLoadModel extends AbstractBlackBoxModelWithStaticRef {
 
-    protected AbstractLoadModel(String dynamicModelId, String staticId, String parameterSetId) {
-        super(dynamicModelId, staticId, parameterSetId);
+    protected AbstractLoadModel(String dynamicModelId, String staticId, String parameterSetId, List<Pair<String, String>> staticRef) {
+        super(dynamicModelId, staticId, parameterSetId, staticRef);
     }
 
     @Override
