@@ -21,4 +21,40 @@ public interface GeneratorModel extends BlackBoxModelWithStaticRef {
     String getSwitchOffSignalAutomatonVarName();
 
     String getRunningVarName();
+
+    public class GeneratorParameters {
+        private final String terminalVarName;
+        private final String switchOffSignalNodeVarName;
+        private final String switchOffSignalEventVarName;
+        private final String switchOffSignalAutomatonVarName;
+        private final String runningVarName;
+
+        public GeneratorParameters(String terminalVarName, String switchOffSignalNodeVarName, String switchOffSignalEventVarName, String switchOffSignalAutomatonVarName, String runningVarName) {
+            this.terminalVarName = terminalVarName;
+            this.switchOffSignalNodeVarName = switchOffSignalNodeVarName;
+            this.switchOffSignalEventVarName = switchOffSignalEventVarName;
+            this.switchOffSignalAutomatonVarName = switchOffSignalAutomatonVarName;
+            this.runningVarName = runningVarName;
+        }
+
+        public String getTerminalVarName() {
+            return terminalVarName;
+        }
+
+        public String getSwitchOffSignalNodeVarName() {
+            return switchOffSignalNodeVarName;
+        }
+
+        public String getSwitchOffSignalEventVarName() {
+            return switchOffSignalEventVarName;
+        }
+
+        public String getSwitchOffSignalAutomatonVarName() {
+            return switchOffSignalAutomatonVarName;
+        }
+
+        public String getRunningVarName() {
+            return runningVarName;
+        }
+    }
 }

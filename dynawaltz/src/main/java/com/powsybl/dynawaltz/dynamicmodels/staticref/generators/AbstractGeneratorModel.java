@@ -29,22 +29,12 @@ public abstract class AbstractGeneratorModel extends AbstractBlackBoxModelWithSt
             Pair.of("generator_QGenPu", "q"),
             Pair.of("generator_state", "state"));
 
-    private final String terminalVarName;
-    private final String switchOffSignalNodeVarName;
-    private final String switchOffSignalEventVarName;
-    private final String switchOffSignalAutomatonVarName;
-    private final String runningVarName;
+    private final GeneratorParameters generatorParameters;
 
     protected AbstractGeneratorModel(String dynamicModelId, String staticId, String parameterSetId,
-                                  String terminalVarName, String switchOffSignalNodeVarName,
-                                  String switchOffSignalEventVarName, String switchOffSignalAutomatonVarName,
-                                  String runningVarName) {
+                                  GeneratorParameters generatorParameters) {
         super(dynamicModelId, staticId, parameterSetId);
-        this.terminalVarName = terminalVarName;
-        this.switchOffSignalNodeVarName = switchOffSignalNodeVarName;
-        this.switchOffSignalEventVarName = switchOffSignalEventVarName;
-        this.switchOffSignalAutomatonVarName = switchOffSignalAutomatonVarName;
-        this.runningVarName = runningVarName;
+        this.generatorParameters = generatorParameters;
     }
 
     @Override
@@ -80,27 +70,27 @@ public abstract class AbstractGeneratorModel extends AbstractBlackBoxModelWithSt
 
     @Override
     public String getTerminalVarName() {
-        return terminalVarName;
+        return generatorParameters.getTerminalVarName();
     }
 
     @Override
     public String getSwitchOffSignalNodeVarName() {
-        return switchOffSignalNodeVarName;
+        return generatorParameters.getSwitchOffSignalNodeVarName();
     }
 
     @Override
     public String getSwitchOffSignalEventVarName() {
-        return switchOffSignalEventVarName;
+        return generatorParameters.getSwitchOffSignalEventVarName();
     }
 
     @Override
     public String getSwitchOffSignalAutomatonVarName() {
-        return switchOffSignalAutomatonVarName;
+        return generatorParameters.getSwitchOffSignalAutomatonVarName();
     }
 
     @Override
     public String getRunningVarName() {
-        return runningVarName;
+        return generatorParameters.getRunningVarName();
     }
 
     @Override

@@ -21,7 +21,7 @@ import java.util.List;
  */
 public abstract class AbstractLoadModel extends AbstractBlackBoxModelWithStaticRef {
 
-    public AbstractLoadModel(String dynamicModelId, String staticId, String parameterSetId) {
+    protected AbstractLoadModel(String dynamicModelId, String staticId, String parameterSetId) {
         super(dynamicModelId, staticId, parameterSetId);
     }
 
