@@ -121,7 +121,7 @@ public class DynaFlowProvider implements LoadFlowProvider {
         if (!DynaFlowUtil.checkDynaFlowVersion(env, computationManager, versionCmd)) {
             throw new PowsyblException("DynaFlow version not supported. Must be " + VERSION_MIN + " <= version <= " + VERSION);
         }
-        DynawoResultsMergeLoads dynawoResultsMergeLoads = new DynawoResultsMergeLoads(network.getId());
+        DynawoResultsMergeLoads dynawoResultsMergeLoads = new DynawoResultsMergeLoads(network);
         return computationManager.execute(env, new AbstractExecutionHandler<LoadFlowResult>() {
 
             @Override
@@ -132,7 +132,7 @@ public class DynaFlowProvider implements LoadFlowProvider {
                 }
                 network.getVariantManager().setWorkingVariant(workingStateId);
                 if (dynaFlowParameters.getMergeLoads()) {
-                    dynawoResultsMergeLoads.mergeLoads(network);
+                    dynawoResultsMergeLoads.mergeLoads();
                 }
                 writeIIDM(workingDir, network);
                 DynaFlowConfigSerializer.serialize(loadFlowParameters, dynaFlowParameters, workingDir, workingDir.resolve(CONFIG_FILENAME));
@@ -152,7 +152,7 @@ public class DynaFlowProvider implements LoadFlowProvider {
                     status = false;
                 }
                 if (dynaFlowParameters.getMergeLoads()) {
-                    dynawoResultsMergeLoads.unmergeLoads(network);
+                    dynawoResultsMergeLoads.unmergeLoads();
                 }
                 Path resultsPath = workingDir.resolve(OUTPUT_RESULTS_FILENAME);
                 if (!Files.exists(resultsPath)) {

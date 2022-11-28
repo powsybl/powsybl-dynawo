@@ -108,7 +108,7 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
 
         public DynaWaltzHandler(DynaWaltzContext context) {
             this.context = context;
-            this.dynawoResultsMergeLoads = new DynawoResultsMergeLoads(context.getNetwork().getId());
+            this.dynawoResultsMergeLoads = new DynawoResultsMergeLoads(context.getNetwork());
         }
 
         @Override
@@ -122,7 +122,7 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
                 Files.delete(curvesPath);
             }
             if (context.getDynaWaltzParameters().getMergeLoads()) {
-                dynawoResultsMergeLoads.mergeLoads(context.getNetwork());
+                dynawoResultsMergeLoads.mergeLoads();
             }
             writeInputFiles(workingDir);
             Command cmd = createCommand(workingDir.resolve(JOBS_FILENAME));
@@ -141,7 +141,7 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
                 status = false;
             }
             if (context.getDynaWaltzParameters().getMergeLoads()) {
-                dynawoResultsMergeLoads.unmergeLoads(context.getNetwork());
+                dynawoResultsMergeLoads.unmergeLoads();
             }
             Path curvesPath = workingDir.resolve(CURVES_OUTPUT_PATH).toAbsolutePath().resolve(CURVES_FILENAME);
             Map<String, TimeSeries> curves = new HashMap<>();

@@ -9,6 +9,7 @@ import com.powsybl.iidm.network.LoadType;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.Terminal;
 import com.powsybl.iidm.network.TopologyKind;
+import com.powsybl.iidm.xml.NetworkXml;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,9 +25,8 @@ public class DynawoResultsMergeLoads {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DynawoResultsMergeLoads.class);
     private static final String MERGE_LOAD_PREFIX_ID = "merged_load_.";
-    private final String idNetwork;
+    private final Network network;
     private final Map<String, List<InfoLoad>> mapLoadsToMergePerBus = new HashMap<>();
-    private static final String WRONG_NETWORK_ASSOCIATION = "Not associated to the right network. Linked to ";
 
     class InfoLoad {
         private final Load load;
@@ -84,31 +84,29 @@ public class DynawoResultsMergeLoads {
         }
     }
 
-    public DynawoResultsMergeLoads(String idNetwork) {
-        this.idNetwork = idNetwork;
+    public DynawoResultsMergeLoads(Network network) {
+        this.network = NetworkXml.copy(network);
     }
 
-    public void mergeLoads(Network network) throws PowsyblException {
-        if (!idNetwork.equals(network.getId())) {
-            throw new PowsyblException(WRONG_NETWORK_ASSOCIATION + idNetwork);
-        }
+    public Network getNetwork() {
+        return network;
+    }
+
+    public void mergeLoads() throws PowsyblException {
         if (mapLoadsToMergePerBus.size() != 0) {
-            throw new PowsyblException("There is already merged loads for network id " + idNetwork);
+            throw new PowsyblException("There is already merged loads for network id " + network.getId());
         }
         retrieveMapLoadsToMergePerBus(network);
         List<Load> loadsModified = createLoadsMerged(network);
         deleteLoads(loadsModified);
     }
 
-    public void unmergeLoads(Network network) throws PowsyblException {
-        if (!idNetwork.equals(network.getId())) {
-            throw new PowsyblException(WRONG_NETWORK_ASSOCIATION + idNetwork);
-        }
+    public void unmergeLoads() throws PowsyblException {
         if (mapLoadsToMergePerBus.size() != 0) {
             proceedUnmergeLoads(network);
             mapLoadsToMergePerBus.clear();
         } else {
-            LOGGER.warn("No load unmerged for network {}", idNetwork);
+            LOGGER.warn("No load unmerged for network {}", network.getId());
         }
     }
 
