@@ -14,21 +14,21 @@
             <iidm:busBreakerTopology>
                 <iidm:bus id="_04483c26-c766-11e1-8775-005056c00008" name="Madison" v="123.43693474071793" angle="-28.373851109387978"/>
             </iidm:busBreakerTopology>
-            <iidm:load id="_045b00d5-c766-11e1-8775-005056c00008" name="Madison LD" loadType="UNDEFINED" p0="62.0" q0="13.0" bus="_04483c26-c766-11e1-8775-005056c00008" connectableBus="_04483c26-c766-11e1-8775-005056c00008" p="68.00071872577833" q="12.755057385106063"/>
-            <iidm:load id="_04689566-c766-11e1-8775-005056c00008" name="Madison NegG LD" loadType="UNDEFINED" p0="2.0" q0="0.0" bus="_04483c26-c766-11e1-8775-005056c00008" connectableBus="_04483c26-c766-11e1-8775-005056c00008" p="2.1935715717993007" q="0.0"/>
+            <iidm:load id="_045b00d5-c766-11e1-8775-005056c00008" name="Madison LD" loadType="UNDEFINED" p0="62.0" q0="13.0" bus="_04483c26-c766-11e1-8775-005056c00008" connectableBus="_04483c26-c766-11e1-8775-005056c00008" p="61.29642251337764" q="12.755057385106063"/>
+            <iidm:load id="_04689566-c766-11e1-8775-005056c00008" name="Madison NegG LD" loadType="UNDEFINED" p0="9.0" q0="0.0" bus="_04483c26-c766-11e1-8775-005056c00008" connectableBus="_04483c26-c766-11e1-8775-005056c00008" p="8.897867784199981" q="0.0"/>
         </iidm:voltageLevel>
     </iidm:substation>
     <iidm:substation id="_04542302-c766-11e1-8775-005056c00008" name="Gringotts" country="GB" geographicalTags="_0472a781-c766-11e1-8775-005056c00008">
         <iidm:voltageLevel id="_0450eeb4-c766-11e1-8775-005056c00008" name="GRI132KV" nominalV="132.0" topologyKind="BUS_BREAKER">
             <iidm:busBreakerTopology>
-                <iidm:bus id="_04549837-c766-11e1-8775-005056c00008" name="Torrey" v="126.05999981296377" angle="-11.805456432276111"/>
+                <iidm:bus id="_04549837-c766-11e1-8775-005056c00008" name="Torrey" v="126.06" angle="-11.805456432276111"/>
             </iidm:busBreakerTopology>
             <iidm:generator id="_046c3ee7-c766-11e1-8775-005056c00008" name="Torrey SM" energySource="THERMAL" minP="20.0" maxP="80.0" ratedS="100.0" voltageRegulatorOn="true" targetP="48.0" targetV="126.06" targetQ="0.0" bus="_04549837-c766-11e1-8775-005056c00008" connectableBus="_04549837-c766-11e1-8775-005056c00008" p="-55.656242759437966" q="-2.473149592694645">
                 <iidm:property name="CGMES.GeneratingUnit" value="_b97aee41-3115-4cfd-9071-b52fb44d0b66"/>
                 <iidm:property name="CGMES.RegulatingControl" value="_5005c073-28d1-4a7d-b257-649dec43ec73"/>
                 <iidm:minMaxReactiveLimits minQ="-30.0" maxQ="85.0"/>
             </iidm:generator>
-            <iidm:load id="_044afb44-c766-11e1-8775-005056c00008" name="Torrey LD" loadType="UNDEFINED" p0="113.0" q0="32.0" bus="_04549837-c766-11e1-8775-005056c00008" connectableBus="_04549837-c766-11e1-8775-005056c00008" p="112.99999974851147" q="31.99999988130336"/>
+            <iidm:load id="_044afb44-c766-11e1-8775-005056c00008" name="Torrey LD" loadType="UNDEFINED" p0="113.0" q0="32.0" bus="_04549837-c766-11e1-8775-005056c00008" connectableBus="_04549837-c766-11e1-8775-005056c00008" p="112.99999999999999" q="32.0"/>
         </iidm:voltageLevel>
     </iidm:substation>
     <iidm:substation id="_045de701-c766-11e1-8775-005056c00008" name="Needlehole" country="GB" geographicalTags="_0472a781-c766-11e1-8775-005056c00008">
@@ -44,15 +44,15 @@
             <iidm:busBreakerTopology>
                 <iidm:bus id="_04845ac5-c766-11e1-8775-005056c00008" name="Smythe" v="130.42696681646373" angle="14.306188203145926"/>
             </iidm:busBreakerTopology>
-            <iidm:load id="_044c0cb3-c766-11e1-8775-005056c00008" name="Smythe LD" loadType="UNDEFINED" p0="5.0" q0="3.0" bus="_04845ac5-c766-11e1-8775-005056c00008" connectableBus="_04845ac5-c766-11e1-8775-005056c00008" p="4.997470719471604" q="2.997471145979578"/>
+            <iidm:load id="_044c0cb3-c766-11e1-8775-005056c00008" name="Smythe LD" loadType="UNDEFINED" p0="5.0" q0="3.0" bus="_04845ac5-c766-11e1-8775-005056c00008" connectableBus="_04845ac5-c766-11e1-8775-005056c00008" p="5.0" q="3.0"/>
         </iidm:voltageLevel>
     </iidm:substation>
     <iidm:substation id="_047a48a3-c766-11e1-8775-005056c00008" name="Hogsmeade" country="GB" geographicalTags="_0472a781-c766-11e1-8775-005056c00008">
         <iidm:voltageLevel id="_047e675c-c766-11e1-8775-005056c00008" name="HOG132KV" nominalV="132.0" topologyKind="BUS_BREAKER">
             <iidm:busBreakerTopology>
-                <iidm:bus id="_045b9d15-c766-11e1-8775-005056c00008" name="Sunnysde" v="125.918861909561" angle="-11.91195055859285"/>
+                <iidm:bus id="_045b9d15-c766-11e1-8775-005056c00008" name="Sunnysde" v="125.91379999999998" angle="-11.91195055859285"/>
             </iidm:busBreakerTopology>
-            <iidm:load id="_0450a093-c766-11e1-8775-005056c00008" name="Sunnysde LD" loadType="UNDEFINED" p0="84.0" q0="18.0" bus="_045b9d15-c766-11e1-8775-005056c00008" connectableBus="_045b9d15-c766-11e1-8775-005056c00008" p="84.00071628385992" q="18.000255816391387"/>
+            <iidm:load id="_0450a093-c766-11e1-8775-005056c00008" name="Sunnysde LD" loadType="UNDEFINED" p0="84.0" q0="18.0" bus="_045b9d15-c766-11e1-8775-005056c00008" connectableBus="_045b9d15-c766-11e1-8775-005056c00008" p="83.99999999999999" q="17.999999999999996"/>
         </iidm:voltageLevel>
     </iidm:substation>
     <iidm:substation id="_046f4c23-c766-11e1-8775-005056c00008" name="Barad-dûr" country="GB" geographicalTags="_0472a781-c766-11e1-8775-005056c00008">
@@ -70,10 +70,10 @@
     <iidm:substation id="_047a6fb6-c766-11e1-8775-005056c00008" name="Waymoot" country="GB" geographicalTags="_0472a781-c766-11e1-8775-005056c00008">
         <iidm:voltageLevel id="_04740714-c766-11e1-8775-005056c00008" name="WAY132KV" nominalV="132.0" topologyKind="BUS_BREAKER">
             <iidm:busBreakerTopology>
-                <iidm:bus id="_04550d63-c766-11e1-8775-005056c00008" name="Fieldale" v="126.0671899651197" angle="0.1705414436490363"/>
+                <iidm:bus id="_04550d63-c766-11e1-8775-005056c00008" name="Fieldale" v="126.066" angle="0.1705414436490363"/>
             </iidm:busBreakerTopology>
-            <iidm:load id="_04682035-c766-11e1-8775-005056c00008" name="Fieldale LD" loadType="UNDEFINED" p0="39.0" q0="30.0" bus="_04550d63-c766-11e1-8775-005056c00008" connectableBus="_04550d63-c766-11e1-8775-005056c00008" p="39.00088272812277" q="30.00113171125981"/>
-            <iidm:shunt id="_045c6067-c766-11e1-8775-005056c00008" name="Fieldale SC" sectionCount="5" voltageRegulatorOn="true" targetV="126.066" targetDeadband="1.0" bus="_04550d63-c766-11e1-8775-005056c00008" connectableBus="_04550d63-c766-11e1-8775-005056c00008" q="-5.467170116681343">
+            <iidm:load id="_04682035-c766-11e1-8775-005056c00008" name="Fieldale LD" loadType="UNDEFINED" p0="39.0" q0="30.0" bus="_04550d63-c766-11e1-8775-005056c00008" connectableBus="_04550d63-c766-11e1-8775-005056c00008" p="39.0" q="30.0"/>
+            <iidm:shunt id="_045c6067-c766-11e1-8775-005056c00008" name="Fieldale SC" sectionCount="5" voltageRegulatorOn="true" targetV="126.066" targetDeadband="1.0" bus="_04550d63-c766-11e1-8775-005056c00008" connectableBus="_04550d63-c766-11e1-8775-005056c00008" q="-5.467066906464001">
                 <iidm:property name="CGMES.RegulatingControl" value="_2d222dd9-7306-4afd-baa5-fd303b0eeb40"/>
                 <iidm:shuntLinearModel bPerSection="6.88E-5" maximumSectionCount="10"/>
             </iidm:shunt>
@@ -82,18 +82,18 @@
     <iidm:substation id="_0488eea9-c766-11e1-8775-005056c00008" name="Upbourn" country="GB" geographicalTags="_0472a781-c766-11e1-8775-005056c00008">
         <iidm:voltageLevel id="_047147f4-c766-11e1-8775-005056c00008" name="UPB132KV" nominalV="132.0" topologyKind="BUS_BREAKER">
             <iidm:busBreakerTopology>
-                <iidm:bus id="_04862f81-c766-11e1-8775-005056c00008" name="Muskngum1" v="138.59999139667656" angle="-0.06210913530618683"/>
+                <iidm:bus id="_04862f81-c766-11e1-8775-005056c00008" name="Muskngum1" v="138.599991" angle="-0.06210913530618683"/>
             </iidm:busBreakerTopology>
             <iidm:generator id="_047f0391-c766-11e1-8775-005056c00008" name="Muskngum SM" energySource="THERMAL" minP="200.0" maxP="400.0" ratedS="500.0" voltageRegulatorOn="true" targetP="392.0" targetV="138.599991" targetQ="0.0" bus="_04862f81-c766-11e1-8775-005056c00008" connectableBus="_04862f81-c766-11e1-8775-005056c00008" p="-400.0" q="1.4317122225812735">
                 <iidm:property name="CGMES.GeneratingUnit" value="_d9948603-709f-41dd-a0ff-2ebda091255a"/>
                 <iidm:property name="CGMES.RegulatingControl" value="_23727856-fd9b-4124-a981-4e862148f3bb"/>
                 <iidm:minMaxReactiveLimits minQ="-150.0" maxQ="450.0"/>
             </iidm:generator>
-            <iidm:load id="_047e1936-c766-11e1-8775-005056c00008" name="Muskngum LD" loadType="UNDEFINED" p0="39.0" q0="18.0" bus="_04862f81-c766-11e1-8775-005056c00008" connectableBus="_04862f81-c766-11e1-8775-005056c00008" p="39.000000167428446" q="18.00000012879111"/>
+            <iidm:load id="_047e1936-c766-11e1-8775-005056c00008" name="Muskngum LD" loadType="UNDEFINED" p0="39.0" q0="18.0" bus="_04862f81-c766-11e1-8775-005056c00008" connectableBus="_04862f81-c766-11e1-8775-005056c00008" p="39.0" q="18.0"/>
         </iidm:voltageLevel>
         <iidm:voltageLevel id="_0463da78-c766-11e1-8775-005056c00008" name="UPB220KV" nominalV="220.0" topologyKind="BUS_BREAKER">
             <iidm:busBreakerTopology>
-                <iidm:bus id="_0458ddf2-c766-11e1-8775-005056c00008" name="Muskngum2" v="221.09999999999997" angle="0.0"/>
+                <iidm:bus id="_0458ddf2-c766-11e1-8775-005056c00008" name="Muskngum2" v="221.09999999999994" angle="0.0"/>
             </iidm:busBreakerTopology>
             <iidm:generator id="_0458ddf1-c766-11e1-8775-005056c00008" name="Muskngum SM" energySource="THERMAL" minP="200.0" maxP="400.0" ratedS="500.0" voltageRegulatorOn="true" targetP="391.0" targetV="221.1" targetQ="0.0" bus="_0458ddf2-c766-11e1-8775-005056c00008" connectableBus="_0458ddf2-c766-11e1-8775-005056c00008" p="-400.0" q="-243.24035309490318">
                 <iidm:property name="CGMES.GeneratingUnit" value="_5036c3a5-56f9-489c-9ecb-8c15aa7c70c5"/>
@@ -101,7 +101,7 @@
                 <iidm:minMaxReactiveLimits minQ="-150.0" maxQ="450.0"/>
             </iidm:generator>
         </iidm:voltageLevel>
-        <iidm:twoWindingsTransformer id="_045cae83-c766-11e1-8775-005056c00008" name="65-66" r="0.0" x="6.44688" g="0.0" b="0.0" ratedU1="220.0" ratedU2="132.0" bus1="_0458ddf2-c766-11e1-8775-005056c00008" connectableBus1="_0458ddf2-c766-11e1-8775-005056c00008" voltageLevelId1="_0463da78-c766-11e1-8775-005056c00008" bus2="_04862f81-c766-11e1-8775-005056c00008" connectableBus2="_04862f81-c766-11e1-8775-005056c00008" voltageLevelId2="_047147f4-c766-11e1-8775-005056c00008" p1="3.306547488709424" q1="72.23970866546307" p2="-3.306547488709424" q2="-70.56494427762523">
+        <iidm:twoWindingsTransformer id="_045cae83-c766-11e1-8775-005056c00008" name="65-66" r="0.0" x="6.44688" g="0.0" b="0.0" ratedU1="220.0" ratedU2="132.0" bus1="_0458ddf2-c766-11e1-8775-005056c00008" connectableBus1="_0458ddf2-c766-11e1-8775-005056c00008" voltageLevelId1="_0463da78-c766-11e1-8775-005056c00008" bus2="_04862f81-c766-11e1-8775-005056c00008" connectableBus2="_04862f81-c766-11e1-8775-005056c00008" voltageLevelId2="_047147f4-c766-11e1-8775-005056c00008" p1="3.306547488709424" q1="72.2456212980967" p2="-3.306547488709424" q2="-70.55904870110842">
             <iidm:ratioTapChanger lowTapPosition="1" tapPosition="1" loadTapChangingCapabilities="false">
                 <iidm:step r="0.0" x="0.0" g="0.0" b="0.0" rho="1.06951871657754"/>
                 <iidm:step r="0.0" x="0.0" g="0.0" b="0.0" rho="1.0"/>
@@ -138,14 +138,14 @@
     <iidm:substation id="_04887979-c766-11e1-8775-005056c00008" name="The Wall" country="GB" geographicalTags="_0472a781-c766-11e1-8775-005056c00008">
         <iidm:voltageLevel id="_0475b4c0-c766-11e1-8775-005056c00008" name="THE132KV" nominalV="132.0" topologyKind="BUS_BREAKER">
             <iidm:busBreakerTopology>
-                <iidm:bus id="_04597a36-c766-11e1-8775-005056c00008" name="Claytor" v="133.31991062298655" angle="5.961568624996282"/>
+                <iidm:bus id="_04597a36-c766-11e1-8775-005056c00008" name="Claytor" v="133.319992" angle="5.961568624996282"/>
             </iidm:busBreakerTopology>
             <iidm:generator id="_046bf0c4-c766-11e1-8775-005056c00008" name="Claytor SM" energySource="THERMAL" minP="0.0" maxP="160.0" ratedS="200.0" voltageRegulatorOn="true" targetP="40.0" targetV="133.319992" targetQ="0.0" bus="_04597a36-c766-11e1-8775-005056c00008" connectableBus="_04597a36-c766-11e1-8775-005056c00008" p="-55.31248551887595" q="-79.34262449647974">
                 <iidm:property name="CGMES.GeneratingUnit" value="_e56da2eb-bb6a-4133-953c-40073c5bc5f4"/>
                 <iidm:property name="CGMES.RegulatingControl" value="_d41be6b4-155e-4c8f-b46b-16b50c49f0f4"/>
                 <iidm:minMaxReactiveLimits minQ="-60.0" maxQ="170.0"/>
             </iidm:generator>
-            <iidm:load id="_048433b6-c766-11e1-8775-005056c00008" name="Claytor LD" loadType="UNDEFINED" p0="23.0" q0="16.0" bus="_04597a36-c766-11e1-8775-005056c00008" connectableBus="_04597a36-c766-11e1-8775-005056c00008" p="22.99997894159388" q="15.999975584464124"/>
+            <iidm:load id="_048433b6-c766-11e1-8775-005056c00008" name="Claytor LD" loadType="UNDEFINED" p0="23.0" q0="16.0" bus="_04597a36-c766-11e1-8775-005056c00008" connectableBus="_04597a36-c766-11e1-8775-005056c00008" p="23.0" q="16.0"/>
         </iidm:voltageLevel>
     </iidm:substation>
     <iidm:substation id="_04795e41-c766-11e1-8775-005056c00008" name="Havens of the Falas" country="GB" geographicalTags="_0472a781-c766-11e1-8775-005056c00008">
@@ -181,11 +181,11 @@
             <iidm:busBreakerTopology>
                 <iidm:bus id="_04689561-c766-11e1-8775-005056c00008" name="Hazard" v="129.4086552477849" angle="13.007587226606034"/>
             </iidm:busBreakerTopology>
-            <iidm:load id="_044afb49-c766-11e1-8775-005056c00008" name="Hazard LD" loadType="UNDEFINED" p0="21.0" q0="10.0" bus="_04689561-c766-11e1-8775-005056c00008" connectableBus="_04689561-c766-11e1-8775-005056c00008" p="20.99204814945039" q="9.993689804106355"/>
+            <iidm:load id="_044afb49-c766-11e1-8775-005056c00008" name="Hazard LD" loadType="UNDEFINED" p0="21.0" q0="10.0" bus="_04689561-c766-11e1-8775-005056c00008" connectableBus="_04689561-c766-11e1-8775-005056c00008" p="21.0" q="10.0"/>
         </iidm:voltageLevel>
         <iidm:voltageLevel id="_04555b88-c766-11e1-8775-005056c00008" name="VALE33KV" nominalV="33.0" topologyKind="BUS_BREAKER">
             <iidm:busBreakerTopology>
-                <iidm:bus id="_04505279-c766-11e1-8775-005056c00008" name="Pinevlle" v="33.49497702924212" angle="13.683300615271909"/>
+                <iidm:bus id="_04505279-c766-11e1-8775-005056c00008" name="Pinevlle" v="33.495" angle="13.683300615271909"/>
             </iidm:busBreakerTopology>
             <iidm:generator id="_047fc6e6-c766-11e1-8775-005056c00008" name="Pinevlle SM" energySource="THERMAL" minP="0.0" maxP="40.0" ratedS="50.0" voltageRegulatorOn="true" targetP="4.0" targetV="33.495" targetQ="0.0" bus="_04505279-c766-11e1-8775-005056c00008" connectableBus="_04505279-c766-11e1-8775-005056c00008" p="-7.8281213797189855" q="-15.914007921104409">
                 <iidm:property name="CGMES.GeneratingUnit" value="_9a6bdb3c-346d-4426-8127-5f6cbf0150b2"/>
@@ -279,9 +279,9 @@
     <iidm:substation id="_047120e4-c766-11e1-8775-005056c00008" name="Bywater" country="GB" geographicalTags="_0472a781-c766-11e1-8775-005056c00008">
         <iidm:voltageLevel id="_046c65f4-c766-11e1-8775-005056c00008" name="BYW132KV" nominalV="132.0" topologyKind="BUS_BREAKER">
             <iidm:busBreakerTopology>
-                <iidm:bus id="_046b7b91-c766-11e1-8775-005056c00008" name="Blaine" v="126.62275281769256" angle="1.159923334808824"/>
+                <iidm:bus id="_046b7b91-c766-11e1-8775-005056c00008" name="Blaine" v="126.616516" angle="1.159923334808824"/>
             </iidm:busBreakerTopology>
-            <iidm:load id="_044ecbd1-c766-11e1-8775-005056c00008" name="Blaine LD" loadType="UNDEFINED" p0="2.0" q0="1.0" bus="_046b7b91-c766-11e1-8775-005056c00008" connectableBus="_046b7b91-c766-11e1-8775-005056c00008" p="2.000055280012644" q="1.0000460671016298"/>
+            <iidm:load id="_044ecbd1-c766-11e1-8775-005056c00008" name="Blaine LD" loadType="UNDEFINED" p0="2.0" q0="1.0" bus="_046b7b91-c766-11e1-8775-005056c00008" connectableBus="_046b7b91-c766-11e1-8775-005056c00008" p="2.0" q="1.0"/>
         </iidm:voltageLevel>
     </iidm:substation>
     <iidm:substation id="_0467f928-c766-11e1-8775-005056c00008" name="Tirion" country="GB" geographicalTags="_0472a781-c766-11e1-8775-005056c00008">
@@ -289,7 +289,7 @@
             <iidm:busBreakerTopology>
                 <iidm:bus id="_04667284-c766-11e1-8775-005056c00008" name="Sundial" v="133.155954166353" angle="6.0269389578299775"/>
             </iidm:busBreakerTopology>
-            <iidm:load id="_046b7b95-c766-11e1-8775-005056c00008" name="Sundial LD" loadType="UNDEFINED" p0="15.0" q0="9.0" bus="_04667284-c766-11e1-8775-005056c00008" connectableBus="_04667284-c766-11e1-8775-005056c00008" p="14.991850310264232" q="8.99185178629652"/>
+            <iidm:load id="_046b7b95-c766-11e1-8775-005056c00008" name="Sundial LD" loadType="UNDEFINED" p0="15.0" q0="9.0" bus="_04667284-c766-11e1-8775-005056c00008" connectableBus="_04667284-c766-11e1-8775-005056c00008" p="15.0" q="9.0"/>
         </iidm:voltageLevel>
     </iidm:substation>
     <iidm:substation id="_048badc8-c766-11e1-8775-005056c00008" name="White Harbor" country="GB" geographicalTags="_0472a781-c766-11e1-8775-005056c00008">
@@ -313,23 +313,23 @@
             <iidm:busBreakerTopology>
                 <iidm:bus id="_0467f927-c766-11e1-8775-005056c00008" name="WNwPhil2" v="126.62468856856844" angle="-11.767904829721019"/>
             </iidm:busBreakerTopology>
-            <iidm:load id="_0477627b-c766-11e1-8775-005056c00008" name="WNwPhil2 LD" loadType="UNDEFINED" p0="12.0" q0="3.0" bus="_0467f927-c766-11e1-8775-005056c00008" connectableBus="_0467f927-c766-11e1-8775-005056c00008" p="12.000905474928505" q="3.0003772907095385"/>
+            <iidm:load id="_0477627b-c766-11e1-8775-005056c00008" name="WNwPhil2 LD" loadType="UNDEFINED" p0="12.0" q0="3.0" bus="_0467f927-c766-11e1-8775-005056c00008" connectableBus="_0467f927-c766-11e1-8775-005056c00008" p="12.0" q="3.0"/>
         </iidm:voltageLevel>
     </iidm:substation>
     <iidm:substation id="_046b0666-c766-11e1-8775-005056c00008" name="Vinyamar" country="GB" geographicalTags="_0472a781-c766-11e1-8775-005056c00008">
         <iidm:voltageLevel id="_04479fe8-c766-11e1-8775-005056c00008" name="VIN132KV" nominalV="132.0" topologyKind="BUS_BREAKER">
             <iidm:busBreakerTopology>
-                <iidm:bus id="_044ef2e3-c766-11e1-8775-005056c00008" name="Cloverdl" v="126.73762325846704" angle="1.8384165734212252"/>
+                <iidm:bus id="_044ef2e3-c766-11e1-8775-005056c00008" name="Cloverdl" v="126.723633" angle="1.8384165734212252"/>
             </iidm:busBreakerTopology>
-            <iidm:load id="_0476781a-c766-11e1-8775-005056c00008" name="Cloverdl LD" loadType="UNDEFINED" p0="43.0" q0="16.0" bus="_044ef2e3-c766-11e1-8775-005056c00008" connectableBus="_044ef2e3-c766-11e1-8775-005056c00008" p="43.00167988872829" q="16.001041805025967"/>
+            <iidm:load id="_0476781a-c766-11e1-8775-005056c00008" name="Cloverdl LD" loadType="UNDEFINED" p0="43.0" q0="16.0" bus="_044ef2e3-c766-11e1-8775-005056c00008" connectableBus="_044ef2e3-c766-11e1-8775-005056c00008" p="43.0" q="16.0"/>
         </iidm:voltageLevel>
     </iidm:substation>
     <iidm:substation id="_046dec9b-c766-11e1-8775-005056c00008" name="Aldburg" country="GB" geographicalTags="_0472a781-c766-11e1-8775-005056c00008">
         <iidm:voltageLevel id="_0483977a-c766-11e1-8775-005056c00008" name="ALD132KV" nominalV="132.0" topologyKind="BUS_BREAKER">
             <iidm:busBreakerTopology>
-                <iidm:bus id="_046783f5-c766-11e1-8775-005056c00008" name="Hancock" v="128.11664499249736" angle="3.2321536294938706"/>
+                <iidm:bus id="_046783f5-c766-11e1-8775-005056c00008" name="Hancock" v="128.113724" angle="3.2321536294938706"/>
             </iidm:busBreakerTopology>
-            <iidm:load id="_046b0665-c766-11e1-8775-005056c00008" name="Hancock LD" loadType="UNDEFINED" p0="38.0" q0="25.0" bus="_046783f5-c766-11e1-8775-005056c00008" connectableBus="_046783f5-c766-11e1-8775-005056c00008" p="38.00057209141108" q="25.00062729636187"/>
+            <iidm:load id="_046b0665-c766-11e1-8775-005056c00008" name="Hancock LD" loadType="UNDEFINED" p0="38.0" q0="25.0" bus="_046783f5-c766-11e1-8775-005056c00008" connectableBus="_046783f5-c766-11e1-8775-005056c00008" p="38.0" q="25.0"/>
         </iidm:voltageLevel>
     </iidm:substation>
     <iidm:substation id="_04865696-c766-11e1-8775-005056c00008" name="Scary" country="GB" geographicalTags="_0472a781-c766-11e1-8775-005056c00008">
@@ -361,13 +361,13 @@
             <iidm:busBreakerTopology>
                 <iidm:bus id="_046a4314-c766-11e1-8775-005056c00008" name="Newcmrst" v="127.68409310479548" angle="-11.146052411613312"/>
             </iidm:busBreakerTopology>
-            <iidm:load id="_044d1e22-c766-11e1-8775-005056c00008" name="Newcmrst LD" loadType="UNDEFINED" p0="17.0" q0="8.0" bus="_046a4314-c766-11e1-8775-005056c00008" connectableBus="_046a4314-c766-11e1-8775-005056c00008" p="17.00193679012256" q="8.00151910876369"/>
+            <iidm:load id="_044d1e22-c766-11e1-8775-005056c00008" name="Newcmrst LD" loadType="UNDEFINED" p0="17.0" q0="8.0" bus="_046a4314-c766-11e1-8775-005056c00008" connectableBus="_046a4314-c766-11e1-8775-005056c00008" p="17.0" q="8.0"/>
         </iidm:voltageLevel>
     </iidm:substation>
     <iidm:substation id="_0480b149-c766-11e1-8775-005056c00008" name="Nindamos" country="GB" geographicalTags="_0472a781-c766-11e1-8775-005056c00008">
         <iidm:voltageLevel id="_04728079-c766-11e1-8775-005056c00008" name="NIN132KV" nominalV="132.0" topologyKind="BUS_BREAKER">
             <iidm:busBreakerTopology>
-                <iidm:bus id="_04689567-c766-11e1-8775-005056c00008" name="TannrsCk1" v="138.59999262181222" angle="-14.067214583037394"/>
+                <iidm:bus id="_04689567-c766-11e1-8775-005056c00008" name="TannrsCk1" v="138.599991" angle="-14.067214583037394"/>
             </iidm:busBreakerTopology>
             <iidm:generator id="_045ab2b0-c766-11e1-8775-005056c00008" name="TannrsCk SM" energySource="THERMAL" minP="100.0" maxP="400.0" ratedS="500.0" voltageRegulatorOn="true" targetP="220.0" targetV="138.599991" targetQ="0.0" bus="_04689567-c766-11e1-8775-005056c00008" connectableBus="_04689567-c766-11e1-8775-005056c00008" p="-258.2812137971898" q="-98.65688982039362">
                 <iidm:property name="CGMES.GeneratingUnit" value="_56975783-9739-40fc-8ec1-e1de8cb06c9a"/>
@@ -377,7 +377,7 @@
         </iidm:voltageLevel>
         <iidm:voltageLevel id="_044f8f2a-c766-11e1-8775-005056c00008" name="NIN220KV" nominalV="220.0" topologyKind="BUS_BREAKER">
             <iidm:busBreakerTopology>
-                <iidm:bus id="_0455a9a6-c766-11e1-8775-005056c00008" name="TannrsCk2" v="223.30000475245413" angle="-13.121769613592868"/>
+                <iidm:bus id="_0455a9a6-c766-11e1-8775-005056c00008" name="TannrsCk2" v="223.30000000000004" angle="-13.121769613592868"/>
             </iidm:busBreakerTopology>
             <iidm:generator id="_0483224a-c766-11e1-8775-005056c00008" name="TannrsCk SM" energySource="THERMAL" minP="100.0" maxP="400.0" ratedS="500.0" voltageRegulatorOn="true" targetP="314.0" targetV="223.3" targetQ="0.0" bus="_0455a9a6-c766-11e1-8775-005056c00008" connectableBus="_0455a9a6-c766-11e1-8775-005056c00008" p="-352.2812137971898" q="-119.52180419806855">
                 <iidm:property name="CGMES.GeneratingUnit" value="_05df66ba-3f64-40cb-8b18-c66d26c4e2c1"/>
@@ -406,7 +406,7 @@
     <iidm:substation id="_04553470-c766-11e1-8775-005056c00008" name="Haysend" country="GB" geographicalTags="_0472a781-c766-11e1-8775-005056c00008">
         <iidm:voltageLevel id="_0471bd23-c766-11e1-8775-005056c00008" name="HAY132KV" nominalV="132.0" topologyKind="BUS_BREAKER">
             <iidm:busBreakerTopology>
-                <iidm:bus id="_044a8615-c766-11e1-8775-005056c00008" name="Sporn1" v="136.61999397165047" angle="4.399700241447532"/>
+                <iidm:bus id="_044a8615-c766-11e1-8775-005056c00008" name="Sporn1" v="136.62" angle="4.399700241447532"/>
             </iidm:busBreakerTopology>
             <iidm:generator id="_048aea70-c766-11e1-8775-005056c00008" name="Sporn SM" energySource="THERMAL" minP="400.0" maxP="800.0" ratedS="1000.0" voltageRegulatorOn="true" targetP="513.437439" targetV="136.62" targetQ="-62.1325531" bus="_044a8615-c766-11e1-8775-005056c00008" connectableBus="_044a8615-c766-11e1-8775-005056c00008" p="-589.9998665943797" q="23.493131068349022">
                 <iidm:property name="CGMES.GeneratingUnit" value="_27799004-aa1e-4889-ba95-ee6fdae64895"/>
@@ -416,9 +416,9 @@
         </iidm:voltageLevel>
         <iidm:voltageLevel id="_0449e9d2-c766-11e1-8775-005056c00008" name="HAY220KV" nominalV="220.0" topologyKind="BUS_BREAKER">
             <iidm:busBreakerTopology>
-                <iidm:bus id="_044aad28-c766-11e1-8775-005056c00008" name="Sporn2" v="219.7020069945242" angle="1.260535702280857"/>
+                <iidm:bus id="_044aad28-c766-11e1-8775-005056c00008" name="Sporn2" v="219.706345" angle="1.260535702280857"/>
             </iidm:busBreakerTopology>
-            <iidm:danglingLine id="_0482fb33-c766-11e1-8775-005056c00008" name="68-116" p0="184.0" q0="0.0" r="0.16456" x="1.9602" g="0.0" b="3.38843E-4" ucteXnodeCode="XWE_BR21" bus="_044aad28-c766-11e1-8775-005056c00008" connectableBus="_044aad28-c766-11e1-8775-005056c00008" p="184.11556867523248" q="-14.978908722603398">
+            <iidm:danglingLine id="_0482fb33-c766-11e1-8775-005056c00008" name="68-116" p0="184.0" q0="0.0" r="0.16456" x="1.9602" g="0.0" b="3.38843E-4" ucteXnodeCode="XWE_BR21" bus="_044aad28-c766-11e1-8775-005056c00008" connectableBus="_044aad28-c766-11e1-8775-005056c00008" p="184.11572091711304" q="-14.972515845786823">
                 <iidm:currentLimits permanentLimit="1000.0">
                     <iidm:temporaryLimit name="_7c27ab8a-8043-4a55-851d-72adb14d9f4d" acceptableDuration="900" value="1150.0"/>
                     <iidm:temporaryLimit name="_f4458b8d-a0e1-4adc-977f-14a07b3c44e9" acceptableDuration="60" value="1400.0"/>
@@ -448,9 +448,9 @@
     <iidm:substation id="_046fe861-c766-11e1-8775-005056c00008" name="Bree" country="GB" geographicalTags="_0472a781-c766-11e1-8775-005056c00008">
         <iidm:voltageLevel id="_046bf0c5-c766-11e1-8775-005056c00008" name="BRE132KV" nominalV="132.0" topologyKind="BUS_BREAKER">
             <iidm:busBreakerTopology>
-                <iidm:bus id="_044b9787-c766-11e1-8775-005056c00008" name="Natrium" v="131.71670969669526" angle="-3.562822839837537"/>
+                <iidm:bus id="_044b9787-c766-11e1-8775-005056c00008" name="Natrium" v="131.702545" angle="-3.562822839837537"/>
             </iidm:busBreakerTopology>
-            <iidm:load id="_04547126-c766-11e1-8775-005056c00008" name="Natrium LD" loadType="UNDEFINED" p0="77.0" q0="14.0" bus="_044b9787-c766-11e1-8775-005056c00008" connectableBus="_044b9787-c766-11e1-8775-005056c00008" p="77.00181412651837" q="14.000549739625859"/>
+            <iidm:load id="_04547126-c766-11e1-8775-005056c00008" name="Natrium LD" loadType="UNDEFINED" p0="77.0" q0="14.0" bus="_044b9787-c766-11e1-8775-005056c00008" connectableBus="_044b9787-c766-11e1-8775-005056c00008" p="77.0" q="14.000000000000002"/>
         </iidm:voltageLevel>
     </iidm:substation>
     <iidm:substation id="_047fedfa-c766-11e1-8775-005056c00008" name="Mithlond" country="GB" geographicalTags="_0472a781-c766-11e1-8775-005056c00008">
@@ -474,7 +474,7 @@
             <iidm:busBreakerTopology>
                 <iidm:bus id="_044b7076-c766-11e1-8775-005056c00008" name="Bradley" v="135.05538156856332" angle="6.021802068730242"/>
             </iidm:busBreakerTopology>
-            <iidm:load id="_046adf5a-c766-11e1-8775-005056c00008" name="Bradley LD" loadType="UNDEFINED" p0="34.0" q0="8.0" bus="_044b7076-c766-11e1-8775-005056c00008" connectableBus="_044b7076-c766-11e1-8775-005056c00008" p="33.99693273549096" q="7.998797187344418"/>
+            <iidm:load id="_046adf5a-c766-11e1-8775-005056c00008" name="Bradley LD" loadType="UNDEFINED" p0="34.0" q0="8.0" bus="_044b7076-c766-11e1-8775-005056c00008" connectableBus="_044b7076-c766-11e1-8775-005056c00008" p="33.99999999999999" q="7.9999999999999964"/>
         </iidm:voltageLevel>
     </iidm:substation>
     <iidm:substation id="_047cb9a6-c766-11e1-8775-005056c00008" name="Lannisport" country="GB" geographicalTags="_0472a781-c766-11e1-8775-005056c00008">
@@ -488,14 +488,14 @@
     <iidm:substation id="_0449c2c6-c766-11e1-8775-005056c00008" name="Armenelos" country="GB" geographicalTags="_0472a781-c766-11e1-8775-005056c00008">
         <iidm:voltageLevel id="_04765109-c766-11e1-8775-005056c00008" name="ARM132KV" nominalV="132.0" topologyKind="BUS_BREAKER">
             <iidm:busBreakerTopology>
-                <iidm:bus id="_0468bc75-c766-11e1-8775-005056c00008" name="Glen Lyn" v="134.24391429641338" angle="9.222765555202537"/>
+                <iidm:bus id="_0468bc75-c766-11e1-8775-005056c00008" name="Glen Lyn" v="134.243988" angle="9.222765555202537"/>
             </iidm:busBreakerTopology>
             <iidm:generator id="_044cd00a-c766-11e1-8775-005056c00008" name="Glen Lyn SM" energySource="THERMAL" minP="200.0" maxP="400.0" ratedS="500.0" voltageRegulatorOn="true" targetP="252.0" targetV="134.243988" targetQ="0.0" bus="_0468bc75-c766-11e1-8775-005056c00008" connectableBus="_0468bc75-c766-11e1-8775-005056c00008" p="-290.2812137971898" q="-82.90651686434876">
                 <iidm:property name="CGMES.GeneratingUnit" value="_e54b499b-436c-4b89-9803-b1d75e2fa364"/>
                 <iidm:property name="CGMES.RegulatingControl" value="_32c8ab65-80f7-4c17-b3f5-ff075cce0ba5"/>
                 <iidm:minMaxReactiveLimits minQ="-150.0" maxQ="450.0"/>
             </iidm:generator>
-            <iidm:load id="_04566cf5-c766-11e1-8775-005056c00008" name="Glen Lyn LD" loadType="UNDEFINED" p0="37.0" q0="18.0" bus="_0468bc75-c766-11e1-8775-005056c00008" connectableBus="_0468bc75-c766-11e1-8775-005056c00008" p="36.99996952900047" q="17.999975293790943"/>
+            <iidm:load id="_04566cf5-c766-11e1-8775-005056c00008" name="Glen Lyn LD" loadType="UNDEFINED" p0="37.0" q0="18.0" bus="_0468bc75-c766-11e1-8775-005056c00008" connectableBus="_0468bc75-c766-11e1-8775-005056c00008" p="37.0" q="18.0"/>
         </iidm:voltageLevel>
     </iidm:substation>
     <iidm:substation id="_0474f171-c766-11e1-8775-005056c00008" name="Erebor" country="GB" geographicalTags="_0472a781-c766-11e1-8775-005056c00008">
@@ -509,10 +509,10 @@
     <iidm:substation id="_045fe2d2-c766-11e1-8775-005056c00008" name="Ollivanders" country="GB" geographicalTags="_0472a781-c766-11e1-8775-005056c00008">
         <iidm:voltageLevel id="_0465611a-c766-11e1-8775-005056c00008" name="OLL132KV" nominalV="132.0" topologyKind="BUS_BREAKER">
             <iidm:busBreakerTopology>
-                <iidm:bus id="_04876809-c766-11e1-8775-005056c00008" name="Roanoke" v="127.42155997162183" angle="2.13776781397367"/>
+                <iidm:bus id="_04876809-c766-11e1-8775-005056c00008" name="Roanoke" v="127.423" angle="2.13776781397367"/>
             </iidm:busBreakerTopology>
-            <iidm:load id="_0484cffb-c766-11e1-8775-005056c00008" name="Roanoke LD" loadType="UNDEFINED" p0="31.0" q0="26.0" bus="_04876809-c766-11e1-8775-005056c00008" connectableBus="_04876809-c766-11e1-8775-005056c00008" p="31.000379466257293" q="26.00053043886808"/>
-            <iidm:shunt id="_0489d903-c766-11e1-8775-005056c00008" name="Roanoke SC" sectionCount="5" voltageRegulatorOn="true" targetV="127.423" targetDeadband="1.0" bus="_04876809-c766-11e1-8775-005056c00008" connectableBus="_04876809-c766-11e1-8775-005056c00008" q="-18.639219529550658">
+            <iidm:load id="_0484cffb-c766-11e1-8775-005056c00008" name="Roanoke LD" loadType="UNDEFINED" p0="31.0" q0="26.0" bus="_04876809-c766-11e1-8775-005056c00008" connectableBus="_04876809-c766-11e1-8775-005056c00008" p="31.0" q="26.0"/>
+            <iidm:shunt id="_0489d903-c766-11e1-8775-005056c00008" name="Roanoke SC" sectionCount="5" voltageRegulatorOn="true" targetV="127.423" targetDeadband="1.0" bus="_04876809-c766-11e1-8775-005056c00008" connectableBus="_04876809-c766-11e1-8775-005056c00008" q="-18.639640826492">
                 <iidm:property name="CGMES.RegulatingControl" value="_5be38d1a-9d01-42d8-b8bb-e9a26cfbcf1a"/>
                 <iidm:shuntLinearModel bPerSection="2.296E-4" maximumSectionCount="10"/>
             </iidm:shunt>
@@ -535,14 +535,14 @@
         </iidm:voltageLevel>
         <iidm:voltageLevel id="_046efe09-c766-11e1-8775-005056c00008" name="CRI132KV" nominalV="132.0" topologyKind="BUS_BREAKER">
             <iidm:busBreakerTopology>
-                <iidm:bus id="_04898ae9-c766-11e1-8775-005056c00008" name="CabinCrk" v="137.2799773993816" angle="6.060745189486544"/>
+                <iidm:bus id="_04898ae9-c766-11e1-8775-005056c00008" name="CabinCrk" v="137.28" angle="6.060745189486544"/>
             </iidm:busBreakerTopology>
             <iidm:generator id="_045868c1-c766-11e1-8775-005056c00008" name="CabinCrk SM" energySource="THERMAL" minP="300.0" maxP="600.0" ratedS="750.0" voltageRegulatorOn="true" targetP="477.0" targetV="137.28" targetQ="0.0" bus="_04898ae9-c766-11e1-8775-005056c00008" connectableBus="_04898ae9-c766-11e1-8775-005056c00008" p="-534.4218206957847" q="-151.54178266279553">
                 <iidm:property name="CGMES.GeneratingUnit" value="_a6ec9760-88da-48df-a23f-7877e7c85ccd"/>
                 <iidm:property name="CGMES.RegulatingControl" value="_e6131af8-c298-413b-84e3-4e21c3b6b06f"/>
                 <iidm:minMaxReactiveLimits minQ="-225.0" maxQ="640.0"/>
             </iidm:generator>
-            <iidm:load id="_04747c44-c766-11e1-8775-005056c00008" name="CabinCrk LD" loadType="UNDEFINED" p0="130.0" q0="26.0" bus="_04898ae9-c766-11e1-8775-005056c00008" connectableBus="_04898ae9-c766-11e1-8775-005056c00008" p="129.9999678968502" q="25.999989298950943"/>
+            <iidm:load id="_04747c44-c766-11e1-8775-005056c00008" name="CabinCrk LD" loadType="UNDEFINED" p0="130.0" q0="26.0" bus="_04898ae9-c766-11e1-8775-005056c00008" connectableBus="_04898ae9-c766-11e1-8775-005056c00008" p="130.0" q="26.0"/>
         </iidm:voltageLevel>
         <iidm:twoWindingsTransformer id="_0488c79b-c766-11e1-8775-005056c00008" name="81-80" r="0.0" x="6.44688" g="0.0" b="0.0" ratedU1="220.0" ratedU2="132.0" bus1="_0453d4e3-c766-11e1-8775-005056c00008" connectableBus1="_0453d4e3-c766-11e1-8775-005056c00008" voltageLevelId1="_048a272b-c766-11e1-8775-005056c00008" bus2="_04898ae9-c766-11e1-8775-005056c00008" connectableBus2="_04898ae9-c766-11e1-8775-005056c00008" voltageLevelId2="_046efe09-c766-11e1-8775-005056c00008" p1="-154.65340402139012" q1="71.67192238512553" p2="154.65340402139006" q2="-62.16791211039072">
             <iidm:ratioTapChanger lowTapPosition="1" tapPosition="1" loadTapChangingCapabilities="false">
@@ -577,10 +577,10 @@
     <iidm:substation id="_0478c205-c766-11e1-8775-005056c00008" name="Harlond" country="GB" geographicalTags="_0472a781-c766-11e1-8775-005056c00008">
         <iidm:voltageLevel id="_044778d3-c766-11e1-8775-005056c00008" name="HRL132KV" nominalV="132.0" topologyKind="BUS_BREAKER">
             <iidm:busBreakerTopology>
-                <iidm:bus id="_044b7072-c766-11e1-8775-005056c00008" name="Zanesvll" v="134.7025045181331" angle="-8.03307848145053"/>
+                <iidm:bus id="_044b7072-c766-11e1-8775-005056c00008" name="Zanesvll" v="134.723" angle="-8.03307848145053"/>
             </iidm:busBreakerTopology>
-            <iidm:load id="_04524e4a-c766-11e1-8775-005056c00008" name="Zanesvll LD" loadType="UNDEFINED" p0="20.0" q0="11.0" bus="_044b7072-c766-11e1-8775-005056c00008" connectableBus="_044b7072-c766-11e1-8775-005056c00008" p="19.99930380373661" q="10.999361827496895"/>
-            <iidm:shunt id="_048b5fa9-c766-11e1-8775-005056c00008" name="Zanesvll SC" sectionCount="5" voltageRegulatorOn="true" targetV="134.723" targetDeadband="1.0" bus="_044b7072-c766-11e1-8775-005056c00008" connectableBus="_044b7072-c766-11e1-8775-005056c00008" q="-15.622642426897057">
+            <iidm:load id="_04524e4a-c766-11e1-8775-005056c00008" name="Zanesvll LD" loadType="UNDEFINED" p0="20.0" q0="11.0" bus="_044b7072-c766-11e1-8775-005056c00008" connectableBus="_044b7072-c766-11e1-8775-005056c00008" p="20.0" q="11.0"/>
+            <iidm:shunt id="_048b5fa9-c766-11e1-8775-005056c00008" name="Zanesvll SC" sectionCount="5" voltageRegulatorOn="true" targetV="134.723" targetDeadband="1.0" bus="_044b7072-c766-11e1-8775-005056c00008" connectableBus="_044b7072-c766-11e1-8775-005056c00008" q="-15.627396873669012">
                 <iidm:property name="CGMES.RegulatingControl" value="_99c6c4ad-5247-4058-96d4-ee8495103e85"/>
                 <iidm:shuntLinearModel bPerSection="1.722E-4" maximumSectionCount="10"/>
             </iidm:shunt>
@@ -591,7 +591,7 @@
             <iidm:busBreakerTopology>
                 <iidm:bus id="_04667289-c766-11e1-8775-005056c00008" name="Tazewell" v="129.69824298382102" angle="12.138451476198549"/>
             </iidm:busBreakerTopology>
-            <iidm:load id="_044ca8f2-c766-11e1-8775-005056c00008" name="Tazewell LD" loadType="UNDEFINED" p0="12.0" q0="7.0" bus="_04667289-c766-11e1-8775-005056c00008" connectableBus="_04667289-c766-11e1-8775-005056c00008" p="11.989735865299265" q="6.990023825589314"/>
+            <iidm:load id="_044ca8f2-c766-11e1-8775-005056c00008" name="Tazewell LD" loadType="UNDEFINED" p0="12.0" q0="7.0" bus="_04667289-c766-11e1-8775-005056c00008" connectableBus="_04667289-c766-11e1-8775-005056c00008" p="12.0" q="7.000000000000001"/>
         </iidm:voltageLevel>
     </iidm:substation>
     <iidm:substation id="_04675ce0-c766-11e1-8775-005056c00008" name="Stormlands" country="GB" geographicalTags="_0472a781-c766-11e1-8775-005056c00008">
@@ -605,10 +605,10 @@
     <iidm:substation id="_044e7db2-c766-11e1-8775-005056c00008" name="Crownlands" country="GB" geographicalTags="_0472a781-c766-11e1-8775-005056c00008">
         <iidm:voltageLevel id="_04784cd1-c766-11e1-8775-005056c00008" name="CRO132KV" nominalV="132.0" topologyKind="BUS_BREAKER">
             <iidm:busBreakerTopology>
-                <iidm:bus id="_0482d420-c766-11e1-8775-005056c00008" name="Danville" v="122.60649189883065" angle="-2.4766235701497754"/>
+                <iidm:bus id="_0482d420-c766-11e1-8775-005056c00008" name="Danville" v="122.605453" angle="-2.4766235701497754"/>
             </iidm:busBreakerTopology>
-            <iidm:load id="_0463da70-c766-11e1-8775-005056c00008" name="Danville LD" loadType="UNDEFINED" p0="25.0" q0="13.0" bus="_0482d420-c766-11e1-8775-005056c00008" connectableBus="_0482d420-c766-11e1-8775-005056c00008" p="25.000613296534567" q="13.000531528009695"/>
-            <iidm:load id="_0448b150-c766-11e1-8775-005056c00008" name="Danville NegG LD" loadType="UNDEFINED" p0="43.0" q0="0.0" bus="_0482d420-c766-11e1-8775-005056c00008" connectableBus="_0482d420-c766-11e1-8775-005056c00008" p="43.001054870039454" q="0.0"/>
+            <iidm:load id="_0463da70-c766-11e1-8775-005056c00008" name="Danville LD" loadType="UNDEFINED" p0="25.0" q0="13.0" bus="_0482d420-c766-11e1-8775-005056c00008" connectableBus="_0482d420-c766-11e1-8775-005056c00008" p="25.0" q="13.0"/>
+            <iidm:load id="_0448b150-c766-11e1-8775-005056c00008" name="Danville NegG LD" loadType="UNDEFINED" p0="43.0" q0="0.0" bus="_0482d420-c766-11e1-8775-005056c00008" connectableBus="_0482d420-c766-11e1-8775-005056c00008" p="43.0" q="0.0"/>
         </iidm:voltageLevel>
     </iidm:substation>
     <iidm:substation id="_0455a9aa-c766-11e1-8775-005056c00008" name="Hobbiton" country="GB" geographicalTags="_0472a781-c766-11e1-8775-005056c00008">
@@ -616,7 +616,7 @@
             <iidm:busBreakerTopology>
                 <iidm:bus id="_047a96c0-c766-11e1-8775-005056c00008" name="Fremont" v="130.07567255802866" angle="18.104474443202097"/>
             </iidm:busBreakerTopology>
-            <iidm:load id="_045cae82-c766-11e1-8775-005056c00008" name="Fremont LD" loadType="UNDEFINED" p0="48.0" q0="10.0" bus="_047a96c0-c766-11e1-8775-005056c00008" connectableBus="_047a96c0-c766-11e1-8775-005056c00008" p="47.97521719059536" q="9.991396338900016"/>
+            <iidm:load id="_045cae82-c766-11e1-8775-005056c00008" name="Fremont LD" loadType="UNDEFINED" p0="48.0" q0="10.0" bus="_047a96c0-c766-11e1-8775-005056c00008" connectableBus="_047a96c0-c766-11e1-8775-005056c00008" p="47.97521719059536" q="10.0"/>
         </iidm:voltageLevel>
     </iidm:substation>
     <iidm:substation id="_0452ea87-c766-11e1-8775-005056c00008" name="Goblin Town" country="GB" geographicalTags="_0472a781-c766-11e1-8775-005056c00008">
@@ -678,7 +678,7 @@
             <iidm:busBreakerTopology>
                 <iidm:bus id="_0485ba50-c766-11e1-8775-005056c00008" name="Wythe" v="130.75664898064628" angle="11.215021764378871"/>
             </iidm:busBreakerTopology>
-            <iidm:load id="_047b0bf0-c766-11e1-8775-005056c00008" name="Wythe LD" loadType="UNDEFINED" p0="22.0" q0="15.0" bus="_0485ba50-c766-11e1-8775-005056c00008" connectableBus="_0485ba50-c766-11e1-8775-005056c00008" p="21.99258409631732" q="14.991573783654106"/>
+            <iidm:load id="_047b0bf0-c766-11e1-8775-005056c00008" name="Wythe LD" loadType="UNDEFINED" p0="22.0" q0="15.0" bus="_0485ba50-c766-11e1-8775-005056c00008" connectableBus="_0485ba50-c766-11e1-8775-005056c00008" p="21.999999999999996" q="14.999999999999996"/>
         </iidm:voltageLevel>
     </iidm:substation>
     <iidm:substation id="_044c0cba-c766-11e1-8775-005056c00008" name="Calembel" country="GB" geographicalTags="_0472a781-c766-11e1-8775-005056c00008">
@@ -694,7 +694,7 @@
             <iidm:busBreakerTopology>
                 <iidm:bus id="_045f1f84-c766-11e1-8775-005056c00008" name="BeaverCk" v="129.66661940901975" angle="14.02592818262525"/>
             </iidm:busBreakerTopology>
-            <iidm:load id="_044b2257-c766-11e1-8775-005056c00008" name="BeaverCk LD" loadType="UNDEFINED" p0="24.0" q0="15.0" bus="_045f1f84-c766-11e1-8775-005056c00008" connectableBus="_045f1f84-c766-11e1-8775-005056c00008" p="23.981945270816325" q="14.981197706876086"/>
+            <iidm:load id="_044b2257-c766-11e1-8775-005056c00008" name="BeaverCk LD" loadType="UNDEFINED" p0="24.0" q0="15.0" bus="_045f1f84-c766-11e1-8775-005056c00008" connectableBus="_045f1f84-c766-11e1-8775-005056c00008" p="24.0" q="15.0"/>
         </iidm:voltageLevel>
     </iidm:substation>
     <iidm:substation id="_0466e7ba-c766-11e1-8775-005056c00008" name="Standelf" country="GB" geographicalTags="_0472a781-c766-11e1-8775-005056c00008">
@@ -729,14 +729,14 @@
     <iidm:substation id="_04642898-c766-11e1-8775-005056c00008" name="Rómenna" country="GB" geographicalTags="_0472a781-c766-11e1-8775-005056c00008">
         <iidm:voltageLevel id="_0457f394-c766-11e1-8775-005056c00008" name="RÓM132KV" nominalV="132.0" topologyKind="BUS_BREAKER">
             <iidm:busBreakerTopology>
-                <iidm:bus id="_0454e653-c766-11e1-8775-005056c00008" name="Philo" v="135.30000025966197" angle="-6.891218710174208"/>
+                <iidm:bus id="_0454e653-c766-11e1-8775-005056c00008" name="Philo" v="135.3" angle="-6.891218710174208"/>
             </iidm:busBreakerTopology>
             <iidm:generator id="_04859346-c766-11e1-8775-005056c00008" name="Philo SM" energySource="THERMAL" minP="100.0" maxP="400.0" ratedS="500.0" voltageRegulatorOn="true" targetP="204.0" targetV="135.3" targetQ="0.0" bus="_0454e653-c766-11e1-8775-005056c00008" connectableBus="_0454e653-c766-11e1-8775-005056c00008" p="-242.28121379718982" q="-204.29680038347843">
                 <iidm:property name="CGMES.GeneratingUnit" value="_e3753d6d-b894-4cce-b6fa-307c50dc107f"/>
                 <iidm:property name="CGMES.RegulatingControl" value="_dff93c01-9c84-4c1f-8529-66c054ed9e37"/>
                 <iidm:minMaxReactiveLimits minQ="-150.0" maxQ="450.0"/>
             </iidm:generator>
-            <iidm:load id="_045163e2-c766-11e1-8775-005056c00008" name="Philo LD" loadType="UNDEFINED" p0="87.0" q0="30.0" bus="_0454e653-c766-11e1-8775-005056c00008" connectableBus="_0454e653-c766-11e1-8775-005056c00008" p="87.00000025045" q="30.000000143936784"/>
+            <iidm:load id="_045163e2-c766-11e1-8775-005056c00008" name="Philo LD" loadType="UNDEFINED" p0="87.0" q0="30.0" bus="_0454e653-c766-11e1-8775-005056c00008" connectableBus="_0454e653-c766-11e1-8775-005056c00008" p="87.0" q="30.0"/>
         </iidm:voltageLevel>
     </iidm:substation>
     <iidm:substation id="_04828600-c766-11e1-8775-005056c00008" name="Ost-in-Edhil" country="GB" geographicalTags="_0472a781-c766-11e1-8775-005056c00008">
@@ -744,17 +744,17 @@
             <iidm:busBreakerTopology>
                 <iidm:bus id="_04716f02-c766-11e1-8775-005056c00008" name="BetsyLne" v="128.71270758364122" angle="11.8755721390819"/>
             </iidm:busBreakerTopology>
-            <iidm:load id="_04524e46-c766-11e1-8775-005056c00008" name="BetsyLne LD" loadType="UNDEFINED" p0="11.0" q0="7.0" bus="_04716f02-c766-11e1-8775-005056c00008" connectableBus="_04716f02-c766-11e1-8775-005056c00008" p="10.987403255728784" q="6.9866449171740035"/>
+            <iidm:load id="_04524e46-c766-11e1-8775-005056c00008" name="BetsyLne LD" loadType="UNDEFINED" p0="11.0" q0="7.0" bus="_04716f02-c766-11e1-8775-005056c00008" connectableBus="_04716f02-c766-11e1-8775-005056c00008" p="10.999999999999998" q="6.999999999999999"/>
         </iidm:voltageLevel>
     </iidm:substation>
     <iidm:substation id="_045fe2d1-c766-11e1-8775-005056c00008" name="Oldtown" country="GB" geographicalTags="_0472a781-c766-11e1-8775-005056c00008">
         <iidm:voltageLevel id="_046205b3-c766-11e1-8775-005056c00008" name="OLD132KV" nominalV="132.0" topologyKind="BUS_BREAKER">
             <iidm:busBreakerTopology>
-                <iidm:bus id="_0483be8a-c766-11e1-8775-005056c00008" name="Reusens" v="124.76194976911434" angle="-0.8529558532932973"/>
+                <iidm:bus id="_0483be8a-c766-11e1-8775-005056c00008" name="Reusens" v="124.763" angle="-0.8529558532932973"/>
             </iidm:busBreakerTopology>
-            <iidm:load id="_04566cf3-c766-11e1-8775-005056c00008" name="Reusens NegG LD" loadType="UNDEFINED" p0="22.0" q0="0.0" bus="_0483be8a-c766-11e1-8775-005056c00008" connectableBus="_0483be8a-c766-11e1-8775-005056c00008" p="20.37092534463341" q="0.0"/>
-            <iidm:load id="_0482fb36-c766-11e1-8775-005056c00008" name="Reusens LD" loadType="UNDEFINED" p0="32.0" q0="12.0" bus="_0483be8a-c766-11e1-8775-005056c00008" connectableBus="_0483be8a-c766-11e1-8775-005056c00008" p="29.63043686492132" q="12.000544888770182"/>
-            <iidm:shunt id="_04558293-c766-11e1-8775-005056c00008" name="Reusens SC" sectionCount="5" voltageRegulatorOn="true" targetV="124.763" targetDeadband="1.0" bus="_0483be8a-c766-11e1-8775-005056c00008" connectableBus="_0483be8a-c766-11e1-8775-005056c00008" q="-5.354547173905707">
+            <iidm:load id="_04566cf3-c766-11e1-8775-005056c00008" name="Reusens NegG LD" loadType="UNDEFINED" p0="22.0" q0="0.0" bus="_0483be8a-c766-11e1-8775-005056c00008" connectableBus="_0483be8a-c766-11e1-8775-005056c00008" p="22.0" q="0.0"/>
+            <iidm:load id="_0482fb36-c766-11e1-8775-005056c00008" name="Reusens LD" loadType="UNDEFINED" p0="28.0" q0="12.0" bus="_0483be8a-c766-11e1-8775-005056c00008" connectableBus="_0483be8a-c766-11e1-8775-005056c00008" p="28.000000000000004" q="12.0"/>
+            <iidm:shunt id="_04558293-c766-11e1-8775-005056c00008" name="Reusens SC" sectionCount="5" voltageRegulatorOn="true" targetV="124.763" targetDeadband="1.0" bus="_0483be8a-c766-11e1-8775-005056c00008" connectableBus="_0483be8a-c766-11e1-8775-005056c00008" q="-5.354637322136">
                 <iidm:property name="CGMES.RegulatingControl" value="_99303cd3-6b53-4ee2-a5ce-fe8d5feeb304"/>
                 <iidm:shuntLinearModel bPerSection="6.88E-5" maximumSectionCount="10"/>
             </iidm:shunt>
@@ -765,8 +765,8 @@
             <iidm:busBreakerTopology>
                 <iidm:bus id="_048433b2-c766-11e1-8775-005056c00008" name="Holston" v="126.41049521985148" angle="16.44681417268952"/>
             </iidm:busBreakerTopology>
-            <iidm:load id="_045c8777-c766-11e1-8775-005056c00008" name="Holston NegG LD" loadType="UNDEFINED" p0="85.0" q0="0.0" bus="_048433b2-c766-11e1-8775-005056c00008" connectableBus="_048433b2-c766-11e1-8775-005056c00008" p="84.98403441851818" q="0.0"/>
-            <iidm:load id="_0451d918-c766-11e1-8775-005056c00008" name="Holston LD" loadType="UNDEFINED" p0="78.0" q0="42.0" bus="_048433b2-c766-11e1-8775-005056c00008" connectableBus="_048433b2-c766-11e1-8775-005056c00008" p="77.9853492311108" q="41.986852697296776"/>
+            <iidm:load id="_045c8777-c766-11e1-8775-005056c00008" name="Holston NegG LD" loadType="UNDEFINED" p0="85.0" q0="0.0" bus="_048433b2-c766-11e1-8775-005056c00008" connectableBus="_048433b2-c766-11e1-8775-005056c00008" p="85.0" q="0.0"/>
+            <iidm:load id="_0451d918-c766-11e1-8775-005056c00008" name="Holston LD" loadType="UNDEFINED" p0="78.0" q0="42.0" bus="_048433b2-c766-11e1-8775-005056c00008" connectableBus="_048433b2-c766-11e1-8775-005056c00008" p="78.0" q="42.0"/>
         </iidm:voltageLevel>
     </iidm:substation>
     <iidm:substation id="_04745531-c766-11e1-8775-005056c00008" name="Edhellond" country="GB" geographicalTags="_0472a781-c766-11e1-8775-005056c00008">
@@ -810,7 +810,7 @@
             <iidm:busBreakerTopology>
                 <iidm:bus id="_04502b6a-c766-11e1-8775-005056c00008" name="Saltvlle" v="130.56173677964577" angle="16.008617515673937"/>
             </iidm:busBreakerTopology>
-            <iidm:load id="_0458ddf4-c766-11e1-8775-005056c00008" name="Saltvlle LD" loadType="UNDEFINED" p0="65.0" q0="10.0" bus="_04502b6a-c766-11e1-8775-005056c00008" connectableBus="_04502b6a-c766-11e1-8775-005056c00008" p="64.96558641677102" q="9.991177561649888"/>
+            <iidm:load id="_0458ddf4-c766-11e1-8775-005056c00008" name="Saltvlle LD" loadType="UNDEFINED" p0="65.0" q0="10.0" bus="_04502b6a-c766-11e1-8775-005056c00008" connectableBus="_04502b6a-c766-11e1-8775-005056c00008" p="64.96558641677102" q="10.0"/>
         </iidm:voltageLevel>
     </iidm:substation>
     <iidm:substation id="_0452ea86-c766-11e1-8775-005056c00008" name="Frogmorton" country="GB" geographicalTags="_0472a781-c766-11e1-8775-005056c00008">
@@ -837,14 +837,14 @@
         </iidm:voltageLevel>
         <iidm:voltageLevel id="_0455a9a2-c766-11e1-8775-005056c00008" name="KGL132KV" nominalV="132.0" topologyKind="BUS_BREAKER">
             <iidm:busBreakerTopology>
-                <iidm:bus id="_045645e7-c766-11e1-8775-005056c00008" name="Tidd1" v="130.0199994514086" angle="-7.37120920081204"/>
+                <iidm:bus id="_045645e7-c766-11e1-8775-005056c00008" name="Tidd1" v="130.02" angle="-7.37120920081204"/>
             </iidm:busBreakerTopology>
             <iidm:generator id="_04839777-c766-11e1-8775-005056c00008" name="Tidd SM" energySource="THERMAL" minP="120.0" maxP="240.0" ratedS="300.0" voltageRegulatorOn="true" targetP="155.0" targetV="130.02" targetQ="0.0" bus="_045645e7-c766-11e1-8775-005056c00008" connectableBus="_045645e7-c766-11e1-8775-005056c00008" p="-177.9687282783139" q="-72.3823875770619">
                 <iidm:property name="CGMES.GeneratingUnit" value="_d2a96d8d-65be-4fd6-a012-ceeeabd2bee6"/>
                 <iidm:property name="CGMES.RegulatingControl" value="_29df1e0b-36ca-4536-97b4-6f98b84d49d8"/>
                 <iidm:minMaxReactiveLimits minQ="-90.0" maxQ="255.0"/>
             </iidm:generator>
-            <iidm:load id="_04798556-c766-11e1-8775-005056c00008" name="Tidd LD" loadType="UNDEFINED" p0="277.0" q0="113.0" bus="_045645e7-c766-11e1-8775-005056c00008" connectableBus="_045645e7-c766-11e1-8775-005056c00008" p="276.9999982468872" q="112.99999880805207"/>
+            <iidm:load id="_04798556-c766-11e1-8775-005056c00008" name="Tidd LD" loadType="UNDEFINED" p0="277.0" q0="113.0" bus="_045645e7-c766-11e1-8775-005056c00008" connectableBus="_045645e7-c766-11e1-8775-005056c00008" p="277.0" q="112.99999999999999"/>
         </iidm:voltageLevel>
         <iidm:twoWindingsTransformer id="_044cd007-c766-11e1-8775-005056c00008" name="63-59" r="0.0" x="6.725664612" g="0.0" b="0.0" ratedU1="220.0" ratedU2="132.0" bus1="_047f2aa7-c766-11e1-8775-005056c00008" connectableBus1="_047f2aa7-c766-11e1-8775-005056c00008" voltageLevelId1="_04854527-c766-11e1-8775-005056c00008" bus2="_045645e7-c766-11e1-8775-005056c00008" connectableBus2="_045645e7-c766-11e1-8775-005056c00008" voltageLevelId2="_0455a9a2-c766-11e1-8775-005056c00008" p1="140.46567567669192" q1="68.53185238167515" p2="-140.465675676692" q2="-59.283852348174435">
             <iidm:ratioTapChanger lowTapPosition="1" tapPosition="1" loadTapChangingCapabilities="false">
@@ -895,15 +895,15 @@
             <iidm:busBreakerTopology>
                 <iidm:bus id="_04494d93-c766-11e1-8775-005056c00008" name="Wooster" v="124.90108494092061" angle="-12.842353153685107"/>
             </iidm:busBreakerTopology>
-            <iidm:load id="_0481c2b3-c766-11e1-8775-005056c00008" name="Wooster LD" loadType="UNDEFINED" p0="23.0" q0="11.0" bus="_04494d93-c766-11e1-8775-005056c00008" connectableBus="_04494d93-c766-11e1-8775-005056c00008" p="23.001461227856744" q="11.001164771508254"/>
+            <iidm:load id="_0481c2b3-c766-11e1-8775-005056c00008" name="Wooster LD" loadType="UNDEFINED" p0="23.0" q0="11.0" bus="_04494d93-c766-11e1-8775-005056c00008" connectableBus="_04494d93-c766-11e1-8775-005056c00008" p="23.0" q="11.0"/>
         </iidm:voltageLevel>
     </iidm:substation>
     <iidm:substation id="_046eafe3-c766-11e1-8775-005056c00008" name="Alqualondë" country="GB" geographicalTags="_0472a781-c766-11e1-8775-005056c00008">
         <iidm:voltageLevel id="_04767817-c766-11e1-8775-005056c00008" name="ALQ132KV" nominalV="132.0" topologyKind="BUS_BREAKER">
             <iidm:busBreakerTopology>
-                <iidm:bus id="_04769f21-c766-11e1-8775-005056c00008" name="Wagenhls" v="125.58074812264543" angle="-12.068564997221323"/>
+                <iidm:bus id="_04769f21-c766-11e1-8775-005056c00008" name="Wagenhls" v="125.576439" angle="-12.068564997221323"/>
             </iidm:busBreakerTopology>
-            <iidm:load id="_044974a8-c766-11e1-8775-005056c00008" name="Wagenhls LD" loadType="UNDEFINED" p0="63.0" q0="22.0" bus="_04769f21-c766-11e1-8775-005056c00008" connectableBus="_04769f21-c766-11e1-8775-005056c00008" p="63.00045893945359" q="22.000267108267092"/>
+            <iidm:load id="_044974a8-c766-11e1-8775-005056c00008" name="Wagenhls LD" loadType="UNDEFINED" p0="63.0" q0="22.0" bus="_04769f21-c766-11e1-8775-005056c00008" connectableBus="_04769f21-c766-11e1-8775-005056c00008" p="63.0" q="22.0"/>
         </iidm:voltageLevel>
     </iidm:substation>
     <iidm:substation id="_045ab2b4-c766-11e1-8775-005056c00008" name="Menegroth" country="GB" geographicalTags="_0472a781-c766-11e1-8775-005056c00008">
@@ -935,7 +935,7 @@
             <iidm:busBreakerTopology>
                 <iidm:bus id="_047c9297-c766-11e1-8775-005056c00008" name="WNwPhil1" v="128.1430343140011" angle="-10.957213407710926"/>
             </iidm:busBreakerTopology>
-            <iidm:load id="_0474f170-c766-11e1-8775-005056c00008" name="WNwPhil1 LD" loadType="UNDEFINED" p0="12.0" q0="3.0" bus="_047c9297-c766-11e1-8775-005056c00008" connectableBus="_047c9297-c766-11e1-8775-005056c00008" p="12.000776983032015" q="3.0003237499172544"/>
+            <iidm:load id="_0474f170-c766-11e1-8775-005056c00008" name="WNwPhil1 LD" loadType="UNDEFINED" p0="12.0" q0="3.0" bus="_047c9297-c766-11e1-8775-005056c00008" connectableBus="_047c9297-c766-11e1-8775-005056c00008" p="11.999999999999998" q="2.999999999999999"/>
         </iidm:voltageLevel>
     </iidm:substation>
     <iidm:substation id="_045ef876-c766-11e1-8775-005056c00008" name="Nogrod" country="GB" geographicalTags="_0472a781-c766-11e1-8775-005056c00008">
@@ -953,15 +953,15 @@
     <iidm:substation id="_046f7334-c766-11e1-8775-005056c00008" name="Beauxbatons" country="GB" geographicalTags="_0472a781-c766-11e1-8775-005056c00008">
         <iidm:voltageLevel id="_048a7544-c766-11e1-8775-005056c00008" name="BEA132KV" nominalV="132.0" topologyKind="BUS_BREAKER">
             <iidm:busBreakerTopology>
-                <iidm:bus id="_0462a1f3-c766-11e1-8775-005056c00008" name="W.Lancst" v="132.66000017843254" angle="-10.000113570876781"/>
+                <iidm:bus id="_0462a1f3-c766-11e1-8775-005056c00008" name="W.Lancst" v="132.66" angle="-10.000113570876781"/>
             </iidm:busBreakerTopology>
             <iidm:generator id="_04633e31-c766-11e1-8775-005056c00008" name="W.Lancst SM" energySource="THERMAL" minP="0.0" maxP="40.0" ratedS="50.0" voltageRegulatorOn="true" targetP="19.0" targetV="132.66" targetQ="0.0" bus="_0462a1f3-c766-11e1-8775-005056c00008" connectableBus="_0462a1f3-c766-11e1-8775-005056c00008" p="-22.828121379718986" q="-11.682362642948295">
                 <iidm:property name="CGMES.GeneratingUnit" value="_83fae784-1da1-4055-8108-ba978276d1b6"/>
                 <iidm:property name="CGMES.RegulatingControl" value="_5f711f63-f631-45d3-b26c-33821ab2ee56"/>
                 <iidm:minMaxReactiveLimits minQ="-15.0" maxQ="45.0"/>
             </iidm:generator>
-            <iidm:load id="_048a9c51-c766-11e1-8775-005056c00008" name="W.Lancst LD" loadType="UNDEFINED" p0="28.0" q0="10.0" bus="_0462a1f3-c766-11e1-8775-005056c00008" connectableBus="_0462a1f3-c766-11e1-8775-005056c00008" p="28.000000056491537" q="10.000000033625914"/>
-            <iidm:shunt id="_045b00d9-c766-11e1-8775-005056c00008" name="W.Lancst SC" sectionCount="5" voltageRegulatorOn="true" targetV="132.66" targetDeadband="1.0" bus="_0462a1f3-c766-11e1-8775-005056c00008" connectableBus="_0462a1f3-c766-11e1-8775-005056c00008" q="-10.10163982157415">
+            <iidm:load id="_048a9c51-c766-11e1-8775-005056c00008" name="W.Lancst LD" loadType="UNDEFINED" p0="28.0" q0="10.0" bus="_0462a1f3-c766-11e1-8775-005056c00008" connectableBus="_0462a1f3-c766-11e1-8775-005056c00008" p="28.000000000000004" q="10.0"/>
+            <iidm:shunt id="_045b00d9-c766-11e1-8775-005056c00008" name="W.Lancst SC" sectionCount="5" voltageRegulatorOn="true" targetV="132.66" targetDeadband="1.0" bus="_0462a1f3-c766-11e1-8775-005056c00008" connectableBus="_0462a1f3-c766-11e1-8775-005056c00008" q="-10.101639794399999">
                 <iidm:property name="CGMES.RegulatingControl" value="_be267a3c-f7a7-4bdf-bb17-71b773247fbf"/>
                 <iidm:shuntLinearModel bPerSection="1.148E-4" maximumSectionCount="10"/>
             </iidm:shunt>
@@ -1015,9 +1015,9 @@
     <iidm:substation id="_04631727-c766-11e1-8775-005056c00008" name="Rivendell" country="GB" geographicalTags="_0472a781-c766-11e1-8775-005056c00008">
         <iidm:voltageLevel id="_046b7b99-c766-11e1-8775-005056c00008" name="RIV132KV" nominalV="132.0" topologyKind="BUS_BREAKER">
             <iidm:busBreakerTopology>
-                <iidm:bus id="_046c17da-c766-11e1-8775-005056c00008" name="Franklin" v="126.3326723347013" angle="0.7931667904883447"/>
+                <iidm:bus id="_046c17da-c766-11e1-8775-005056c00008" name="Franklin" v="126.326439" angle="0.7931667904883447"/>
             </iidm:busBreakerTopology>
-            <iidm:load id="_045f94b4-c766-11e1-8775-005056c00008" name="Franklin LD" loadType="UNDEFINED" p0="8.0" q0="3.0" bus="_046c17da-c766-11e1-8775-005056c00008" connectableBus="_046c17da-c766-11e1-8775-005056c00008" p="8.000229393989159" q="3.0001433726135738"/>
+            <iidm:load id="_045f94b4-c766-11e1-8775-005056c00008" name="Franklin LD" loadType="UNDEFINED" p0="8.0" q0="3.0" bus="_046c17da-c766-11e1-8775-005056c00008" connectableBus="_046c17da-c766-11e1-8775-005056c00008" p="8.0" q="3.0"/>
         </iidm:voltageLevel>
     </iidm:substation>
     <iidm:substation id="_04765106-c766-11e1-8775-005056c00008" name="Esgaroth" country="GB" geographicalTags="_0472a781-c766-11e1-8775-005056c00008">
@@ -1060,7 +1060,7 @@
             <iidm:busBreakerTopology>
                 <iidm:bus id="_048c4a07-c766-11e1-8775-005056c00008" name="Hinton" v="134.61916561016855" angle="6.940902432215313"/>
             </iidm:busBreakerTopology>
-            <iidm:load id="_044c81e4-c766-11e1-8775-005056c00008" name="Hinton NegG LD" loadType="UNDEFINED" p0="42.0" q0="0.0" bus="_048c4a07-c766-11e1-8775-005056c00008" connectableBus="_048c4a07-c766-11e1-8775-005056c00008" p="41.99675170441461" q="0.0"/>
+            <iidm:load id="_044c81e4-c766-11e1-8775-005056c00008" name="Hinton NegG LD" loadType="UNDEFINED" p0="42.0" q0="0.0" bus="_048c4a07-c766-11e1-8775-005056c00008" connectableBus="_048c4a07-c766-11e1-8775-005056c00008" p="42.000000000000014" q="0.0"/>
         </iidm:voltageLevel>
     </iidm:substation>
     <iidm:substation id="_04631725-c766-11e1-8775-005056c00008" name="Qarth" country="GB" geographicalTags="_0472a781-c766-11e1-8775-005056c00008">
@@ -1113,7 +1113,7 @@
             <iidm:busBreakerTopology>
                 <iidm:bus id="_048c22f1-c766-11e1-8775-005056c00008" name="SCoshoct" v="126.36199655865764" angle="-12.037398334103726"/>
             </iidm:busBreakerTopology>
-            <iidm:load id="_04854525-c766-11e1-8775-005056c00008" name="SCoshoct LD" loadType="UNDEFINED" p0="18.0" q0="5.0" bus="_048c22f1-c766-11e1-8775-005056c00008" connectableBus="_048c22f1-c766-11e1-8775-005056c00008" p="18.00224002400083" q="5.001037091166694"/>
+            <iidm:load id="_04854525-c766-11e1-8775-005056c00008" name="SCoshoct LD" loadType="UNDEFINED" p0="18.0" q0="5.0" bus="_048c22f1-c766-11e1-8775-005056c00008" connectableBus="_048c22f1-c766-11e1-8775-005056c00008" p="17.999999999999996" q="4.999999999999999"/>
         </iidm:voltageLevel>
     </iidm:substation>
     <iidm:substation id="_04784cda-c766-11e1-8775-005056c00008" name="Gulltown" country="GB" geographicalTags="_0472a781-c766-11e1-8775-005056c00008">
@@ -1127,7 +1127,7 @@
     <iidm:substation id="_0456bb19-c766-11e1-8775-005056c00008" name="Khazad-dûm" country="GB" geographicalTags="_0472a781-c766-11e1-8775-005056c00008">
         <iidm:voltageLevel id="_046a1c00-c766-11e1-8775-005056c00008" name="KHA132KV" nominalV="132.0" topologyKind="BUS_BREAKER">
             <iidm:busBreakerTopology>
-                <iidm:bus id="_045fe2d4-c766-11e1-8775-005056c00008" name="DanRiver" v="129.35991480464958" angle="1.7256095778497398"/>
+                <iidm:bus id="_045fe2d4-c766-11e1-8775-005056c00008" name="DanRiver" v="129.36" angle="1.7256095778497398"/>
             </iidm:busBreakerTopology>
             <iidm:generator id="_0452ea80-c766-11e1-8775-005056c00008" name="DanRiver SM" energySource="THERMAL" minP="20.0" maxP="40.0" ratedS="50.0" voltageRegulatorOn="true" targetP="36.0" targetV="129.36" targetQ="0.0" bus="_045fe2d4-c766-11e1-8775-005056c00008" connectableBus="_045fe2d4-c766-11e1-8775-005056c00008" p="-39.828121379718986" q="-20.269468638609368">
                 <iidm:property name="CGMES.GeneratingUnit" value="_fec62959-21c5-4921-90b2-7c85e9f3bfab"/>
@@ -1141,7 +1141,7 @@
             <iidm:busBreakerTopology>
                 <iidm:bus id="_04878f11-c766-11e1-8775-005056c00008" name="X5 TRI" v="126.36551913834067" angle="-7.0312345046979"/>
             </iidm:busBreakerTopology>
-            <iidm:danglingLine id="_044ef2e7-c766-11e1-8775-005056c00008" name="71-73" p0="6.0" q0="0.0" r="1.508918" x="7.910496" g="0.0" b="6.76079E-5" ucteXnodeCode="XMO_TE31" bus="_04878f11-c766-11e1-8775-005056c00008" connectableBus="_04878f11-c766-11e1-8775-005056c00008" p="6.003405849563018" q="-1.0617250734134438">
+            <iidm:danglingLine id="_044ef2e7-c766-11e1-8775-005056c00008" name="71-73" p0="6.0" q0="0.0" r="1.508918" x="7.910496" g="0.0" b="6.76079E-5" ucteXnodeCode="XMO_TE31" bus="_04878f11-c766-11e1-8775-005056c00008" connectableBus="_04878f11-c766-11e1-8775-005056c00008" p="6.003251949533494" q="-1.0617250734134438">
                 <iidm:currentLimits permanentLimit="1000.0">
                     <iidm:temporaryLimit name="_d8fc27d8-dd8b-4396-ae7f-b877910f9726" acceptableDuration="900" value="1150.0"/>
                     <iidm:temporaryLimit name="_1481884d-3134-4896-ae32-b507830cc47a" acceptableDuration="60" value="1400.0"/>
@@ -1154,13 +1154,13 @@
             <iidm:busBreakerTopology>
                 <iidm:bus id="_04812671-c766-11e1-8775-005056c00008" name="Summerfl" v="134.61047797374732" angle="-2.451635720154882"/>
             </iidm:busBreakerTopology>
-            <iidm:load id="_0453add4-c766-11e1-8775-005056c00008" name="Summerfl LD" loadType="UNDEFINED" p0="28.0" q0="7.0" bus="_04812671-c766-11e1-8775-005056c00008" connectableBus="_04812671-c766-11e1-8775-005056c00008" p="28.001307930797935" q="7.000544979651294"/>
+            <iidm:load id="_0453add4-c766-11e1-8775-005056c00008" name="Summerfl LD" loadType="UNDEFINED" p0="28.0" q0="7.0" bus="_04812671-c766-11e1-8775-005056c00008" connectableBus="_04812671-c766-11e1-8775-005056c00008" p="28.000000000000004" q="7.000000000000001"/>
         </iidm:voltageLevel>
     </iidm:substation>
     <iidm:substation id="_047391e8-c766-11e1-8775-005056c00008" name="Durmstrang" country="GB" geographicalTags="_0472a781-c766-11e1-8775-005056c00008">
         <iidm:voltageLevel id="_0448d866-c766-11e1-8775-005056c00008" name="DUR132KV" nominalV="132.0" topologyKind="BUS_BREAKER">
             <iidm:busBreakerTopology>
-                <iidm:bus id="_0453d4e4-c766-11e1-8775-005056c00008" name="ClinchRv" v="132.65989108821617" angle="22.804057131492236"/>
+                <iidm:bus id="_0453d4e4-c766-11e1-8775-005056c00008" name="ClinchRv" v="132.66" angle="22.804057131492236"/>
             </iidm:busBreakerTopology>
             <iidm:generator id="_0489b1fa-c766-11e1-8775-005056c00008" name="ClinchRv SM" energySource="THERMAL" minP="400.0" maxP="800.0" ratedS="1000.0" voltageRegulatorOn="true" targetP="607.0" targetV="132.66" targetQ="0.0" bus="_0453d4e4-c766-11e1-8775-005056c00008" connectableBus="_0453d4e4-c766-11e1-8775-005056c00008" p="-683.5624275943796" q="-35.77114791462144">
                 <iidm:property name="CGMES.GeneratingUnit" value="_2621b09a-22e3-4630-b3bd-32c102e36741"/>
@@ -1204,9 +1204,9 @@
     <iidm:substation id="_046ab849-c766-11e1-8775-005056c00008" name="Valmar" country="GB" geographicalTags="_0472a781-c766-11e1-8775-005056c00008">
         <iidm:voltageLevel id="_045cfca4-c766-11e1-8775-005056c00008" name="VAL132KV" nominalV="132.0" topologyKind="BUS_BREAKER">
             <iidm:busBreakerTopology>
-                <iidm:bus id="_047d2ed4-c766-11e1-8775-005056c00008" name="SWKammer" v="131.09492307786593" angle="-3.7290591793814256"/>
+                <iidm:bus id="_047d2ed4-c766-11e1-8775-005056c00008" name="SWKammer" v="131.090652" angle="-3.7290591793814256"/>
             </iidm:busBreakerTopology>
-            <iidm:load id="_04555b82-c766-11e1-8775-005056c00008" name="SWKammer LD" loadType="UNDEFINED" p0="78.0" q0="3.0" bus="_047d2ed4-c766-11e1-8775-005056c00008" connectableBus="_047d2ed4-c766-11e1-8775-005056c00008" p="78.00053852332883" q="3.000034520805652"/>
+            <iidm:load id="_04555b82-c766-11e1-8775-005056c00008" name="SWKammer LD" loadType="UNDEFINED" p0="78.0" q0="3.0" bus="_047d2ed4-c766-11e1-8775-005056c00008" connectableBus="_047d2ed4-c766-11e1-8775-005056c00008" p="78.0" q="3.0"/>
         </iidm:voltageLevel>
     </iidm:substation>
     <iidm:substation id="_047343c0-c766-11e1-8775-005056c00008" name="Dol Amroth" country="GB" geographicalTags="_0472a781-c766-11e1-8775-005056c00008">
@@ -1222,7 +1222,7 @@
             <iidm:busBreakerTopology>
                 <iidm:bus id="_04675ce9-c766-11e1-8775-005056c00008" name="HolstonT" v="128.0197273631817" angle="15.93896577697093"/>
             </iidm:busBreakerTopology>
-            <iidm:load id="_0461b790-c766-11e1-8775-005056c00008" name="HolstonT NegG LD" loadType="UNDEFINED" p0="10.0" q0="0.0" bus="_04675ce9-c766-11e1-8775-005056c00008" connectableBus="_04675ce9-c766-11e1-8775-005056c00008" p="9.996715007140022" q="0.0"/>
+            <iidm:load id="_0461b790-c766-11e1-8775-005056c00008" name="HolstonT NegG LD" loadType="UNDEFINED" p0="10.0" q0="0.0" bus="_04675ce9-c766-11e1-8775-005056c00008" connectableBus="_04675ce9-c766-11e1-8775-005056c00008" p="10.000000000000005" q="0.0"/>
         </iidm:voltageLevel>
     </iidm:substation>
     <iidm:substation id="_046c17d5-c766-11e1-8775-005056c00008" name="Westerlands" country="GB" geographicalTags="_0472a781-c766-11e1-8775-005056c00008">
@@ -1279,7 +1279,7 @@
             <iidm:busBreakerTopology>
                 <iidm:bus id="_045d23b1-c766-11e1-8775-005056c00008" name="Crooksvl" v="134.10233520533384" angle="-6.998802928277067"/>
             </iidm:busBreakerTopology>
-            <iidm:load id="_046c3ee3-c766-11e1-8775-005056c00008" name="Crooksvl LD" loadType="UNDEFINED" p0="34.0" q0="0.0" bus="_045d23b1-c766-11e1-8775-005056c00008" connectableBus="_045d23b1-c766-11e1-8775-005056c00008" p="33.99147003228952" q="0.0"/>
+            <iidm:load id="_046c3ee3-c766-11e1-8775-005056c00008" name="Crooksvl LD" loadType="UNDEFINED" p0="34.0" q0="0.0" bus="_045d23b1-c766-11e1-8775-005056c00008" connectableBus="_045d23b1-c766-11e1-8775-005056c00008" p="34.0" q="0.0"/>
         </iidm:voltageLevel>
     </iidm:substation>
     <iidm:substation id="_0480b143-c766-11e1-8775-005056c00008" name="Newbury" country="GB" geographicalTags="_0472a781-c766-11e1-8775-005056c00008">
@@ -1287,7 +1287,7 @@
             <iidm:busBreakerTopology>
                 <iidm:bus id="_044a5f04-c766-11e1-8775-005056c00008" name="WCambrdg" v="132.17279359943674" angle="-8.754336594282426"/>
             </iidm:busBreakerTopology>
-            <iidm:load id="_046dc585-c766-11e1-8775-005056c00008" name="WCambrdg LD" loadType="UNDEFINED" p0="17.0" q0="4.0" bus="_044a5f04-c766-11e1-8775-005056c00008" connectableBus="_044a5f04-c766-11e1-8775-005056c00008" p="17.00099901864414" q="4.000391779691525"/>
+            <iidm:load id="_046dc585-c766-11e1-8775-005056c00008" name="WCambrdg LD" loadType="UNDEFINED" p0="17.0" q0="4.0" bus="_044a5f04-c766-11e1-8775-005056c00008" connectableBus="_044a5f04-c766-11e1-8775-005056c00008" p="17.0" q="4.0"/>
         </iidm:voltageLevel>
     </iidm:substation>
     <iidm:substation id="_04640189-c766-11e1-8775-005056c00008" name="Rushey" country="GB" geographicalTags="_0472a781-c766-11e1-8775-005056c00008">
@@ -1313,7 +1313,7 @@
         </iidm:voltageLevel>
         <iidm:voltageLevel id="_0448d867-c766-11e1-8775-005056c00008" name="EDO132KV" nominalV="132.0" topologyKind="BUS_BREAKER">
             <iidm:busBreakerTopology>
-                <iidm:bus id="_04814d88-c766-11e1-8775-005056c00008" name="W.Kammer" v="131.33999972183267" angle="-2.8243707576682415"/>
+                <iidm:bus id="_04814d88-c766-11e1-8775-005056c00008" name="W.Kammer" v="131.34" angle="-2.8243707576682415"/>
             </iidm:busBreakerTopology>
             <iidm:generator id="_0472a789-c766-11e1-8775-005056c00008" name="W.Kammer SM" energySource="THERMAL" minP="120.0" maxP="240.0" ratedS="300.0" voltageRegulatorOn="true" targetP="160.0" targetV="131.34" targetQ="0.0" bus="_04814d88-c766-11e1-8775-005056c00008" connectableBus="_04814d88-c766-11e1-8775-005056c00008" p="-182.96872827831393" q="43.28925380027911">
                 <iidm:property name="CGMES.GeneratingUnit" value="_17852426-f663-4add-9a2b-0a635d51f101"/>
@@ -1717,7 +1717,7 @@
             <iidm:temporaryLimit name="_d9d53af2-5ffa-4f2a-a4e6-ed22371332d6" acceptableDuration="60" value="1400.0"/>
         </iidm:currentLimits1>
     </iidm:line>
-    <iidm:line id="_04885268-c766-11e1-8775-005056c00008" name="110-112" r="4.303728" x="11.1513615" g1="0.0" b1="1.779155E-4" g2="0.0" b2="1.779155E-4" bus1="_04550d63-c766-11e1-8775-005056c00008" connectableBus1="_04550d63-c766-11e1-8775-005056c00008" voltageLevelId1="_04740714-c766-11e1-8775-005056c00008" bus2="_0482d420-c766-11e1-8775-005056c00008" connectableBus2="_0482d420-c766-11e1-8775-005056c00008" voltageLevelId2="_04784cd1-c766-11e1-8775-005056c00008" p1="69.35607876778911" q1="11.007907871927484" p2="-68.00164686319391" q2="-13.000536333984892">
+    <iidm:line id="_04885268-c766-11e1-8775-005056c00008" name="110-112" r="4.303728" x="11.1513615" g1="0.0" b1="1.779155E-4" g2="0.0" b2="1.779155E-4" bus1="_04550d63-c766-11e1-8775-005056c00008" connectableBus1="_04550d63-c766-11e1-8775-005056c00008" voltageLevelId1="_04740714-c766-11e1-8775-005056c00008" bus2="_0482d420-c766-11e1-8775-005056c00008" connectableBus2="_0482d420-c766-11e1-8775-005056c00008" voltageLevelId2="_04784cd1-c766-11e1-8775-005056c00008" p1="69.35372730851222" q1="11.00673142209584" p2="-67.99936737632093" q2="-12.999447667399004">
         <iidm:currentLimits1 permanentLimit="1000.0">
             <iidm:temporaryLimit name="_e55ac0b9-b111-4207-b7ee-59ac708a4e23" acceptableDuration="900" value="1150.0"/>
             <iidm:temporaryLimit name="_d50299b9-a055-408a-aa1e-2e93a715120f" acceptableDuration="60" value="1400.0"/>
