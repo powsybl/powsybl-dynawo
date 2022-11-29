@@ -15,6 +15,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -42,10 +43,14 @@ final class DynaFlowUtil {
                 }
                 try (Reader reader = new InputStreamReader(stdErr.get())) {
                     String stdErrContent = CharStreams.toString(reader);
-                    return DynaFlowUtil.versionIsInRange(stdErrContent, DynaFlowConstants.VERSION_MIN, DynaFlowConstants.VERSION);
+                    return DynaFlowUtil.versionIsInRange(versionSanitizer(stdErrContent), DynaFlowConstants.VERSION_MIN, DynaFlowConstants.VERSION);
                 }
             }
         }).join();
+    }
+
+    private static String versionSanitizer(String version) {
+        return Arrays.stream(version.split(" ")).findFirst().get();
     }
 
     public static boolean versionRespectsMin(String version, DynaFlowVersion minDynaFlowVersion) {
