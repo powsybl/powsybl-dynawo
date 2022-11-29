@@ -4,7 +4,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package com.powsybl.dynawaltz.dynamicmodels.staticref.generators;
+package com.powsybl.dynawaltz.dynamicmodels.staticref.generators.synchronous;
+
+import com.powsybl.dynawaltz.dynamicmodels.staticref.generators.GeneratorModel;
 
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>

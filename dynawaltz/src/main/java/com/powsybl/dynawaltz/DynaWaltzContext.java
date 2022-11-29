@@ -17,7 +17,7 @@ import com.powsybl.dynawaltz.dynamicmodels.OmegaRef;
 import com.powsybl.dynawaltz.dynamicmodels.nonstaticref.events.BlackBoxEventModel;
 import com.powsybl.dynawaltz.dynamicmodels.NetworkModel;
 import com.powsybl.dynawaltz.dynamicmodels.staticref.BlackBoxModelWithStaticRef;
-import com.powsybl.dynawaltz.dynamicmodels.staticref.generators.GeneratorSynchronousModel;
+import com.powsybl.dynawaltz.dynamicmodels.staticref.generators.synchronous.GeneratorSynchronousModel;
 import com.powsybl.dynawaltz.xml.MacroStaticReference;
 import com.powsybl.iidm.network.Network;
 import org.apache.commons.lang3.tuple.Pair;

@@ -4,19 +4,19 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package com.powsybl.dynawaltz.dynamicmodels.staticref.generators;
+package com.powsybl.dynawaltz.dynamicmodels.staticref.generators.synchronous;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class GeneratorSynchronousThreeWindingsProportionalRegulations extends AbstractGeneratorSynchronousModel {
+public class GeneratorSynchronousFourWindingsProportionalRegulations extends AbstractGeneratorSynchronousModel {
 
-    public GeneratorSynchronousThreeWindingsProportionalRegulations(String dynamicModelId, String staticId, String parameterSetId) {
+    public GeneratorSynchronousFourWindingsProportionalRegulations(String dynamicModelId, String staticId, String parameterSetId) {
         super(dynamicModelId, staticId, parameterSetId);
     }
 
     @Override
     public String getLib() {
-        return "GeneratorSynchronousThreeWindingsProportionalRegulations";
+        return "GeneratorSynchronousFourWindingsProportionalRegulations";
     }
 }
