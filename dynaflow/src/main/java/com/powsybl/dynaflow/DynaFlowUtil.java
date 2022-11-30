@@ -42,10 +42,14 @@ final class DynaFlowUtil {
                 }
                 try (Reader reader = new InputStreamReader(stdErr.get())) {
                     String stdErrContent = CharStreams.toString(reader);
-                    return DynaFlowUtil.versionIsInRange(stdErrContent, DynaFlowConstants.VERSION_MIN, DynaFlowConstants.VERSION);
+                    return DynaFlowUtil.versionIsInRange(versionSanitizer(stdErrContent), DynaFlowConstants.VERSION_MIN, DynaFlowConstants.VERSION);
                 }
             }
         }).join();
+    }
+
+    private static String versionSanitizer(String version) {
+        return version.split(" ")[0];
     }
 
     public static boolean versionRespectsMin(String version, DynaFlowVersion minDynaFlowVersion) {
