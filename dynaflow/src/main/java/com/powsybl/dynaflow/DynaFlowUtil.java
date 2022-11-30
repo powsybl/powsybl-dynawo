@@ -50,7 +50,7 @@ final class DynaFlowUtil {
     }
 
     private static String versionSanitizer(String version) {
-        return Arrays.stream(version.split(" ")).findFirst().orElse(version);
+        return version.split(" ")[0];
     }
 
     public static boolean versionRespectsMin(String version, DynaFlowVersion minDynaFlowVersion) {
