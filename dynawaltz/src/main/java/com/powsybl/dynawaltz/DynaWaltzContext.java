@@ -111,15 +111,15 @@ public class DynaWaltzContext {
         }
     }
 
-    public Map<String, BlackBoxModelWithStaticRef> getStaticIdBlackBoxModelMap() {
+    public Map<String, BlackBoxModelWithStaticId> getStaticIdBlackBoxModelMap() {
         return getBlackBoxModelStream()
-                .filter(BlackBoxModelWithStaticRef.class::isInstance)
-                .map(BlackBoxModelWithStaticRef.class::cast)
+                .filter(BlackBoxModelWithStaticId.class::isInstance)
+                .map(BlackBoxModelWithStaticId.class::cast)
                 .filter(blackBoxModel -> !blackBoxModel.getStaticId().isEmpty())
-                .collect(Collectors.toMap(BlackBoxModelWithStaticRef::getStaticId, Function.identity(), this::mergeDuplicateStaticId, LinkedHashMap::new));
+                .collect(Collectors.toMap(BlackBoxModelWithStaticId::getStaticId, Function.identity(), this::mergeDuplicateStaticId, LinkedHashMap::new));
     }
 
-    private BlackBoxModelWithStaticRef mergeDuplicateStaticId(BlackBoxModelWithStaticRef bbm1, BlackBoxModelWithStaticRef bbm2) {
+    private BlackBoxModelWithStaticId mergeDuplicateStaticId(BlackBoxModelWithStaticId bbm1, BlackBoxModelWithStaticId bbm2) {
         throw new AssertionError("Duplicate staticId " + bbm1.getStaticId());
     }
 
