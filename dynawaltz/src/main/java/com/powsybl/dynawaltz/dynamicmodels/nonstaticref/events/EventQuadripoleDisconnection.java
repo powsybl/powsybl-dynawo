@@ -9,11 +9,14 @@ package com.powsybl.dynawaltz.dynamicmodels.nonstaticref.events;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.dynamicmodels.BlackBoxModel;
+import com.powsybl.dynawaltz.dynamicmodels.BlackBoxModelWithStaticId;
 import com.powsybl.dynawaltz.dynamicmodels.nonstaticref.network.LineModel;
 import com.powsybl.iidm.network.Branch;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -39,11 +42,20 @@ public class EventQuadripoleDisconnection extends AbstractBlackBoxEventModel {
 
     @Override
     public List<BlackBoxModel> getModelsConnectedTo(DynaWaltzContext context) {
-        BlackBoxModel connectedBbm = context.getStaticIdBlackBoxModelMap().get(getStaticId());
+        BlackBoxModel connectedBbm = getStaticIdLineModelMap(context).get(getStaticId());
         if (connectedBbm == null) {
             return List.of(context.getNetworkModel().getDefaultLineModel(getStaticId(), Branch.Side.ONE));
         }
         return List.of(connectedBbm);
+    }
+
+    private Map<String, BlackBoxModelWithStaticId> getStaticIdLineModelMap(DynaWaltzContext dynaWaltzContext) {
+        return dynaWaltzContext.getStaticIdBlackBoxModelMap().entrySet().stream()
+                .filter(entry -> entry.getValue() instanceof LineModel)
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue)
+                );
     }
 
     public String getLineStaticId() {
