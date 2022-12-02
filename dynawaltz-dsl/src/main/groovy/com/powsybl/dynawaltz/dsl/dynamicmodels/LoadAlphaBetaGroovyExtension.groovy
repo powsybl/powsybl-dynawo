@@ -14,7 +14,7 @@ import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 
 import com.powsybl.dynawaltz.DynaWaltzProvider
-import com.powsybl.dynawaltz.dynamicmodels.staticref.loads.LoadAlphaBeta
+import com.powsybl.dynawaltz.dynamicmodels.staticid.staticref.loads.LoadAlphaBeta
 
 /**
  * An implementation of {@link DynamicModelGroovyExtension} that adds the <pre>LoadAlphaBeta</pre> keyword to the DSL

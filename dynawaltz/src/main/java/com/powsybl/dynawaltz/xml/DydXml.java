@@ -11,7 +11,7 @@ import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.dynamicmodels.BlackBoxModel;
 import com.powsybl.dynawaltz.dynamicmodels.MacroConnector;
-import com.powsybl.dynawaltz.dynamicmodels.nonstaticref.events.BlackBoxEventModel;
+import com.powsybl.dynawaltz.dynamicmodels.events.BlackBoxEventModel;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;

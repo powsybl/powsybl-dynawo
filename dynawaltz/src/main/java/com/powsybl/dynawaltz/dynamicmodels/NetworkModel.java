@@ -6,8 +6,8 @@
  */
 package com.powsybl.dynawaltz.dynamicmodels;
 
-import com.powsybl.dynawaltz.dynamicmodels.nonstaticref.network.DefaultBusModel;
-import com.powsybl.dynawaltz.dynamicmodels.nonstaticref.network.DefaultLineModel;
+import com.powsybl.dynawaltz.dynamicmodels.staticid.network.DefaultBusModel;
+import com.powsybl.dynawaltz.dynamicmodels.staticid.network.DefaultLineModel;
 import com.powsybl.iidm.network.Branch;
 
 import java.util.function.BiFunction;

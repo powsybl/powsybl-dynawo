@@ -19,17 +19,17 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
-import com.powsybl.dynawaltz.dynamicmodels.nonstaticref.automatons.CurrentLimitAutomaton;
-import com.powsybl.dynawaltz.dynamicmodels.nonstaticref.events.EventQuadripoleDisconnection;
-import com.powsybl.dynawaltz.dynamicmodels.nonstaticref.events.EventSetPointBoolean;
-import com.powsybl.dynawaltz.dynamicmodels.staticref.generators.GeneratorFictitious;
-import com.powsybl.dynawaltz.dynamicmodels.staticref.generators.synchronous.GeneratorSynchronousFourWindings;
-import com.powsybl.dynawaltz.dynamicmodels.staticref.generators.synchronous.GeneratorSynchronousFourWindingsProportionalRegulations;
-import com.powsybl.dynawaltz.dynamicmodels.staticref.generators.synchronous.GeneratorSynchronousFourWindingsProportionalRegulationsStepPm;
-import com.powsybl.dynawaltz.dynamicmodels.staticref.generators.synchronous.GeneratorSynchronousThreeWindings;
-import com.powsybl.dynawaltz.dynamicmodels.staticref.generators.synchronous.GeneratorSynchronousThreeWindingsProportionalRegulations;
-import com.powsybl.dynawaltz.dynamicmodels.staticref.loads.LoadAlphaBeta;
-import com.powsybl.dynawaltz.dynamicmodels.staticref.loads.LoadOneTransformer;
+import com.powsybl.dynawaltz.dynamicmodels.automatons.CurrentLimitAutomaton;
+import com.powsybl.dynawaltz.dynamicmodels.events.EventQuadripoleDisconnection;
+import com.powsybl.dynawaltz.dynamicmodels.events.EventSetPointBoolean;
+import com.powsybl.dynawaltz.dynamicmodels.staticid.staticref.generators.GeneratorFictitious;
+import com.powsybl.dynawaltz.dynamicmodels.staticid.staticref.generators.synchronous.GeneratorSynchronousFourWindings;
+import com.powsybl.dynawaltz.dynamicmodels.staticid.staticref.generators.synchronous.GeneratorSynchronousFourWindingsProportionalRegulations;
+import com.powsybl.dynawaltz.dynamicmodels.staticid.staticref.generators.synchronous.GeneratorSynchronousFourWindingsProportionalRegulationsStepPm;
+import com.powsybl.dynawaltz.dynamicmodels.staticid.staticref.generators.synchronous.GeneratorSynchronousThreeWindings;
+import com.powsybl.dynawaltz.dynamicmodels.staticid.staticref.generators.synchronous.GeneratorSynchronousThreeWindingsProportionalRegulations;
+import com.powsybl.dynawaltz.dynamicmodels.staticid.staticref.loads.LoadAlphaBeta;
+import com.powsybl.dynawaltz.dynamicmodels.staticid.staticref.loads.LoadOneTransformer;
 import com.powsybl.iidm.network.*;
 import junit.framework.AssertionFailedError;
 

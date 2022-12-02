@@ -6,7 +6,7 @@
  */
 package com.powsybl.dynawaltz.dynamicmodels
 
-import com.powsybl.dynawaltz.dynamicmodels.staticref.loads.LoadOneTransformer
+import com.powsybl.dynawaltz.dynamicmodels.staticid.staticref.loads.LoadOneTransformer
 
 import java.util.function.Consumer
 
