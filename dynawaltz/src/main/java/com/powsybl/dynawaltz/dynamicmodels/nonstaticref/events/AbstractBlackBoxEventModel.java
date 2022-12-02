@@ -8,34 +8,59 @@ package com.powsybl.dynawaltz.dynamicmodels.nonstaticref.events;
 
 import com.powsybl.dynamicsimulation.EventModel;
 import com.powsybl.dynawaltz.DynaWaltzContext;
-import com.powsybl.dynawaltz.dynamicmodels.AbstractBlackBoxModelWithStaticId;
 import com.powsybl.dynawaltz.dynamicmodels.BlackBoxModel;
 import com.powsybl.dynawaltz.dynamicmodels.MacroConnector;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public abstract class AbstractBlackBoxEventModel extends AbstractBlackBoxModelWithStaticId implements EventModel, BlackBoxEventModel {
+public abstract class AbstractBlackBoxEventModel implements EventModel, BlackBoxEventModel {
 
-    protected AbstractBlackBoxEventModel(String eventModelId, String staticId, String parameterSetId) {
-        super(eventModelId, staticId, parameterSetId);
+    private final String eventModelId;
+    private final String parameterSetId;
+
+    public AbstractBlackBoxEventModel(String eventModelId, String parameterSetId) {
+        this.eventModelId = Objects.requireNonNull(eventModelId);
+        this.parameterSetId = Objects.requireNonNull(parameterSetId);
+    }
+
+    @Override
+    public String getEventModelId() {
+        return eventModelId;
+    }
+
+    @Override
+    public String getParameterSetId() {
+        return parameterSetId;
+    }
+
+    @Override
+    public String getDynamicModelId() {
+        return null;
     }
 
     @Override
     public void write(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
         // Write the blackBoxModel object
         writer.writeEmptyElement(DYN_URI, "blackBoxModel");
-        writer.writeAttribute("id", getDynamicModelId());
+        writer.writeAttribute("id", getEventModelId());
         writer.writeAttribute("lib", getLib());
         writer.writeAttribute("parFile", context.getParFile());
         writer.writeAttribute("parId", getParameterSetId());
+    }
+
+    @Override
+    public void writeParameters(XMLStreamWriter writer, DynaWaltzContext context) {
+        // No parameters for events
     }
 
     @Override
@@ -43,7 +68,13 @@ public abstract class AbstractBlackBoxEventModel extends AbstractBlackBoxModelWi
         macroConnector.writeMacroConnect(writer, getAttributesConnectFrom(), connected.getAttributesConnectTo());
     }
 
-    private List<Pair<String, String>> getAttributesConnectFrom() {
-        return List.of(Pair.of("id1", getDynamicModelId()));
+    public List<Pair<String, String>> getAttributesConnectFrom() {
+        return List.of(Pair.of("id1", getEventModelId()));
+    }
+
+    @Override
+    public List<Pair<String, String>> getAttributesConnectTo() {
+        // event always connect TO a model
+        return Collections.emptyList();
     }
 }

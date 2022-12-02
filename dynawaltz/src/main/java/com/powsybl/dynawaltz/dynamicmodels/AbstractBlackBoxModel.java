@@ -16,6 +16,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
+
 /**
  * @author Luma Zamarreño <zamarrenolm at aia.es>
  */
@@ -43,6 +45,11 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel, DynamicMod
     }
 
     @Override
+    public void writeMacroConnect(XMLStreamWriter writer, DynaWaltzContext context, MacroConnector macroConnector, BlackBoxModel connected) throws XMLStreamException {
+        macroConnector.writeMacroConnect(writer, List.of(Pair.of("id1", getDynamicModelId())), connected.getAttributesConnectTo());
+    }
+
+    @Override
     public List<Pair<String, String>> getAttributesConnectTo() {
         return List.of(Pair.of("id2", getDynamicModelId()));
     }
@@ -61,5 +68,14 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel, DynamicMod
     public List<BlackBoxModel> getModelsConnectedTo(DynaWaltzContext dynaWaltzContext) {
         // Default models are only connected to
         return Collections.emptyList();
+    }
+
+    protected void writeAutomatonBlackBoxModel(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
+        // Write the blackBoxModel object
+        writer.writeEmptyElement(DYN_URI, "blackBoxModel");
+        writer.writeAttribute("id", getDynamicModelId());
+        writer.writeAttribute("lib", getLib());
+        writer.writeAttribute("parFile", context.getParFile());
+        writer.writeAttribute("parId", getParameterSetId());
     }
 }
