@@ -22,6 +22,7 @@ import javax.xml.validation.Validator;
 import com.powsybl.dynawaltz.dynamicmodels.automatons.CurrentLimitAutomaton;
 import com.powsybl.dynawaltz.dynamicmodels.events.EventQuadripoleDisconnection;
 import com.powsybl.dynawaltz.dynamicmodels.events.EventSetPointBoolean;
+import com.powsybl.dynawaltz.dynamicmodels.staticid.network.StandardBusModel;
 import com.powsybl.dynawaltz.dynamicmodels.staticid.staticref.generators.GeneratorFictitious;
 import com.powsybl.dynawaltz.dynamicmodels.staticid.staticref.generators.synchronous.GeneratorSynchronousFourWindings;
 import com.powsybl.dynawaltz.dynamicmodels.staticid.staticref.generators.synchronous.GeneratorSynchronousFourWindingsProportionalRegulations;
@@ -45,6 +46,7 @@ import com.powsybl.dynamicsimulation.EventModel;
 import com.powsybl.dynawaltz.DynaWaltzCurve;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 
+import static com.powsybl.commons.ComparisonUtils.compareTxt;
 import static com.powsybl.commons.ComparisonUtils.compareXml;
 
 /**
@@ -101,6 +103,11 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
                 dynamicModels.add(new GeneratorSynchronousThreeWindingsProportionalRegulations("BBM_" + g.getId(), g.getId(), "GSTWPR"));
             }
         });
+        network.getBusBreakerView().getBuses().forEach(b -> {
+            if (b.getId().equals("NGEN")) {
+                dynamicModels.add(new StandardBusModel("BBM_" + b.getId(), b.getId(), "SB"));
+            }
+        });
 
         // Events
         eventModels = new ArrayList<>();
@@ -126,7 +133,7 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
         Schema schema = factory.newSchema(xsd);
         Validator validator = schema.newValidator();
         validator.validate(xml);
-        compareXml(getClass().getResourceAsStream("/" + expectedResourceName), Files.newInputStream(xmlFile));
+        compareTxt(getClass().getResourceAsStream("/" + expectedResourceName), Files.newInputStream(xmlFile));
     }
 
     private static Network createEurostagTutorialExample1WithMoreLoads() {
