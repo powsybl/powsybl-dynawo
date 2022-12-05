@@ -140,10 +140,10 @@ public class DynaWaltzContext {
         }
     }
 
-    private void computeMacroConnectors(BlackBoxModel bbm) {
+    private void computeMacroConnectors(BlackBoxModelWithDynamicId bbm) {
         getModelsConnections().get(bbm).forEach(connectedBbm -> {
             var key = Pair.of(bbm.getLib(), connectedBbm.getLib());
-            connectorsMap.computeIfAbsent(key, k -> createMacroConnector((BlackBoxModelWithDynamicId) bbm, connectedBbm));
+            connectorsMap.computeIfAbsent(key, k -> createMacroConnector(bbm, connectedBbm));
         });
     }
 
