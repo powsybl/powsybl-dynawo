@@ -47,7 +47,7 @@ public class DynaWaltzContext {
     private final Map<String, MacroStaticReference> macroStaticReferences = new LinkedHashMap<>();
     private final Map<Pair<String, String>, MacroConnector> connectorsMap = new LinkedHashMap<>();
     private final Map<Pair<String, String>, MacroConnector> eventConnectorsMap = new LinkedHashMap<>();
-    private final Map<BlackBoxModelExtended, List<BlackBoxModel>> modelsConnections = new LinkedHashMap<>();
+    private final Map<BlackBoxModelWithDynamicId, List<BlackBoxModel>> modelsConnections = new LinkedHashMap<>();
     private final Map<BlackBoxEventModel, List<BlackBoxModel>> eventModelsConnections = new LinkedHashMap<>();
     private final NetworkModel networkModel = new NetworkModel();
 
@@ -92,7 +92,7 @@ public class DynaWaltzContext {
         return Collections.unmodifiableList(dynamicModels);
     }
 
-    public List<BlackBoxModelExtended> getBlackBoxModels() {
+    public List<BlackBoxModelWithDynamicId> getBlackBoxModels() {
         return getBlackBoxModelStream().collect(Collectors.toList());
     }
 
@@ -129,7 +129,7 @@ public class DynaWaltzContext {
         return connectorsMap.values();
     }
 
-    public MacroConnector getMacroConnector(BlackBoxModelExtended bbm0, BlackBoxModel bbm1) {
+    public MacroConnector getMacroConnector(BlackBoxModelWithDynamicId bbm0, BlackBoxModel bbm1) {
         initConnectorsMap();
         return connectorsMap.get(Pair.of(bbm0.getLib(), bbm1.getLib()));
     }
@@ -143,7 +143,7 @@ public class DynaWaltzContext {
     private void computeMacroConnectors(BlackBoxModel bbm) {
         getModelsConnections().get(bbm).forEach(connectedBbm -> {
             var key = Pair.of(bbm.getLib(), connectedBbm.getLib());
-            connectorsMap.computeIfAbsent(key, k -> createMacroConnector((BlackBoxModelExtended) bbm, connectedBbm));
+            connectorsMap.computeIfAbsent(key, k -> createMacroConnector((BlackBoxModelWithDynamicId) bbm, connectedBbm));
         });
     }
 
@@ -170,11 +170,11 @@ public class DynaWaltzContext {
         });
     }
 
-    private MacroConnector createMacroConnector(BlackBoxModelExtended bbm0, BlackBoxModel bbm1) {
+    private MacroConnector createMacroConnector(BlackBoxModelWithParameterId bbm0, BlackBoxModel bbm1) {
         return new MacroConnector(bbm0.getLib(), bbm1.getLib(), bbm0.getVarsConnect(bbm1));
     }
 
-    public Map<BlackBoxModelExtended, List<BlackBoxModel>> getModelsConnections() {
+    public Map<BlackBoxModelWithDynamicId, List<BlackBoxModel>> getModelsConnections() {
         if (modelsConnections.isEmpty()) {
             getBlackBoxModelStream().forEach(bbm -> modelsConnections.put(bbm, bbm.getModelsConnectedTo(this)));
         }
@@ -188,14 +188,14 @@ public class DynaWaltzContext {
         return eventModelsConnections;
     }
 
-    private Stream<BlackBoxModelExtended> getInputBlackBoxModelStream() {
+    private Stream<BlackBoxModelWithDynamicId> getInputBlackBoxModelStream() {
         //Doesn't include the OmegaRef, it only concerns the DynamicModels provided by the user
         return dynamicModels.stream()
-                .filter(BlackBoxModelExtended.class::isInstance)
-                .map(BlackBoxModelExtended.class::cast);
+                .filter(BlackBoxModelWithDynamicId.class::isInstance)
+                .map(BlackBoxModelWithDynamicId.class::cast);
     }
 
-    public Stream<BlackBoxModelExtended> getBlackBoxModelStream() {
+    public Stream<BlackBoxModelWithDynamicId> getBlackBoxModelStream() {
         if (omegaRef.getSynchronousGenerators().isEmpty()) {
             return getInputBlackBoxModelStream();
         }

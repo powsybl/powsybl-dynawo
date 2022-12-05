@@ -13,7 +13,7 @@ import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
 import com.powsybl.dynawaltz.DynaWaltzParametersDatabase;
-import com.powsybl.dynawaltz.dynamicmodels.BlackBoxModelExtended;
+import com.powsybl.dynawaltz.dynamicmodels.BlackBoxModelWithDynamicId;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -62,7 +62,7 @@ public final class ParametersXml {
     private static void write(XMLStreamWriter writer, DynaWaltzContext context) {
         try {
             // loop over the values of the map indexed by dynamicIds to write only once parameters of objects with the same dynamicId
-            for (BlackBoxModelExtended model : context.getBlackBoxModels()) {
+            for (BlackBoxModelWithDynamicId model : context.getBlackBoxModels()) {
                 model.writeParameters(writer, context);
             }
         } catch (XMLStreamException e) {

@@ -44,11 +44,6 @@ public abstract class AbstractBlackBoxEventModel implements EventModel, BlackBox
     }
 
     @Override
-    public String getDynamicModelId() {
-        return null;
-    }
-
-    @Override
     public void write(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
         // Write the blackBoxModel object
         writer.writeEmptyElement(DYN_URI, "blackBoxModel");
@@ -56,11 +51,6 @@ public abstract class AbstractBlackBoxEventModel implements EventModel, BlackBox
         writer.writeAttribute("lib", getLib());
         writer.writeAttribute("parFile", context.getParFile());
         writer.writeAttribute("parId", getParameterSetId());
-    }
-
-    @Override
-    public void writeParameters(XMLStreamWriter writer, DynaWaltzContext context) {
-        // No parameters for events
     }
 
     @Override

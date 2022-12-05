@@ -17,7 +17,7 @@ import com.powsybl.dynawaltz.DynaWaltzProvider;
 import com.powsybl.dynawaltz.dsl.automatons.CurrentLimitAutomatonGroovyExtension;
 import com.powsybl.dynawaltz.dsl.dynamicmodels.GeneratorModelGroovyExtension;
 import com.powsybl.dynawaltz.dsl.dynamicmodels.LoadAlphaBetaGroovyExtension;
-import com.powsybl.dynawaltz.dynamicmodels.BlackBoxModelExtended;
+import com.powsybl.dynawaltz.dynamicmodels.BlackBoxModelWithDynamicId;
 import com.powsybl.dynawaltz.dynamicmodels.LoadOneTransformerGroovyExtension;
 import com.powsybl.dynawaltz.dynamicmodels.automatons.CurrentLimitAutomaton;
 import com.powsybl.dynawaltz.dynamicmodels.staticid.staticref.BlackBoxModelWithStaticRef;
@@ -180,8 +180,8 @@ public class DynaWaltzGroovyDynamicModelsSupplierTest {
     private void validateModel(DynamicModel dynamicModel) {
         if (dynamicModel instanceof BlackBoxModelWithStaticRef) {
             validateBlackBoxModel((BlackBoxModelWithStaticRef) dynamicModel);
-        } else if (dynamicModel instanceof BlackBoxModelExtended) {
-            BlackBoxModelExtended blackBoxModel = (BlackBoxModelExtended) dynamicModel;
+        } else if (dynamicModel instanceof BlackBoxModelWithDynamicId) {
+            BlackBoxModelWithDynamicId blackBoxModel = (BlackBoxModelWithDynamicId) dynamicModel;
             if (blackBoxModel instanceof CurrentLimitAutomaton) {
                 Identifiable<?> identifiable = network.getIdentifiable(((CurrentLimitAutomaton) blackBoxModel).getLineStaticId());
                 assertEquals("BBM_" + identifiable.getId(), blackBoxModel.getDynamicModelId());

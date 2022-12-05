@@ -21,12 +21,12 @@ import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 /**
  * @author Luma Zamarreño <zamarrenolm at aia.es>
  */
-public abstract class AbstractBlackBoxModelExtended implements BlackBoxModelExtended, DynamicModel {
+public abstract class AbstractBlackBoxModelWithDynamicId implements BlackBoxModelWithDynamicId, DynamicModel {
 
     private final String dynamicModelId;
     private final String parameterSetId;
 
-    protected AbstractBlackBoxModelExtended(String dynamicModelId, String parameterSetId) {
+    protected AbstractBlackBoxModelWithDynamicId(String dynamicModelId, String parameterSetId) {
         this.dynamicModelId = Objects.requireNonNull(dynamicModelId);
         this.parameterSetId = Objects.requireNonNull(parameterSetId);
     }

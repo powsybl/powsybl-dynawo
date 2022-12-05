@@ -28,11 +28,6 @@ public class EventQuadripoleDisconnection extends AbstractBlackBoxEventModel {
     }
 
     @Override
-    public String getDynamicModelId() {
-        return null;
-    }
-
-    @Override
     public String getLib() {
         return "EventQuadripoleDisconnection";
     }
