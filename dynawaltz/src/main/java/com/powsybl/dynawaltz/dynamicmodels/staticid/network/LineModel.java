@@ -6,12 +6,13 @@
  */
 package com.powsybl.dynawaltz.dynamicmodels.staticid.network;
 
+import com.powsybl.dynawaltz.dynamicmodels.BlackBoxModel;
 import com.powsybl.iidm.network.Branch;
 
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  */
-public interface LineModel {
+public interface LineModel extends BlackBoxModel {
     String getIVarName();
 
     String getStateVarName();

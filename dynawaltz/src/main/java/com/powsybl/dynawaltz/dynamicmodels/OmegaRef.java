@@ -37,7 +37,7 @@ import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.*;
  *
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class OmegaRef extends AbstractBlackBoxModel {
+public class OmegaRef extends AbstractBlackBoxModelExtended {
 
     public static final String OMEGA_REF_ID = "OMEGA_REF";
     private static final String OMEGA_REF_PARAMETER_SET_ID = "OMEGA_REF";

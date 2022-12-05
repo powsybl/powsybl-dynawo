@@ -10,6 +10,7 @@ package com.powsybl.dynawaltz.xml;
 import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.dynamicmodels.BlackBoxModel;
+import com.powsybl.dynawaltz.dynamicmodels.BlackBoxModelExtended;
 import com.powsybl.dynawaltz.dynamicmodels.MacroConnector;
 import com.powsybl.dynawaltz.dynamicmodels.events.BlackBoxEventModel;
 
@@ -47,7 +48,7 @@ public final class DydXml {
 
         try {
             // loop over the values of the map indexed by dynamicIds to write only once objects with the same dynamicId
-            for (BlackBoxModel model : context.getBlackBoxModels()) {
+            for (BlackBoxModelExtended model : context.getBlackBoxModels()) {
                 model.write(writer, context);
             }
             for (MacroConnector macroConnector : context.getMacroConnectors()) {
@@ -56,8 +57,8 @@ public final class DydXml {
             for (MacroStaticReference macroStaticReference : context.getMacroStaticReferences()) {
                 macroStaticReference.write(writer);
             }
-            for (Map.Entry<BlackBoxModel, List<BlackBoxModel>> bbmMapping : context.getModelsConnections().entrySet()) {
-                BlackBoxModel bbm = bbmMapping.getKey();
+            for (Map.Entry<BlackBoxModelExtended, List<BlackBoxModel>> bbmMapping : context.getModelsConnections().entrySet()) {
+                BlackBoxModelExtended bbm = bbmMapping.getKey();
                 for (BlackBoxModel connectedBbm : bbmMapping.getValue()) {
                     bbm.writeMacroConnect(writer, context, context.getMacroConnector(bbm, connectedBbm), connectedBbm);
                 }

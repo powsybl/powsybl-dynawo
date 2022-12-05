@@ -6,12 +6,12 @@
  */
 package com.powsybl.dynawaltz.dynamicmodels.events;
 
-import com.powsybl.dynawaltz.dynamicmodels.BlackBoxModel;
+import com.powsybl.dynawaltz.dynamicmodels.BlackBoxModelExtended;
 
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  */
-public interface BlackBoxEventModel extends BlackBoxModel {
+public interface BlackBoxEventModel extends BlackBoxModelExtended {
 
     String getEventModelId();
 

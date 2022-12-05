@@ -1,8 +1,8 @@
 package com.powsybl.dynawaltz.dynamicmodels.staticid;
 
-import com.powsybl.dynawaltz.dynamicmodels.AbstractBlackBoxModel;
+import com.powsybl.dynawaltz.dynamicmodels.AbstractBlackBoxModelExtended;
 
-public abstract class AbstractBlackBoxModelWithStaticId extends AbstractBlackBoxModel implements BlackBoxModelWithStaticId {
+public abstract class AbstractBlackBoxModelWithStaticId extends AbstractBlackBoxModelExtended implements BlackBoxModelWithStaticId {
 
     private final String staticId;
 
