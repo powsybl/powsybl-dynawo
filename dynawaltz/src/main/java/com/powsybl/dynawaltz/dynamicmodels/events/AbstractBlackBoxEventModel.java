@@ -8,6 +8,7 @@ package com.powsybl.dynawaltz.dynamicmodels.events;
 
 import com.powsybl.dynamicsimulation.EventModel;
 import com.powsybl.dynawaltz.DynaWaltzContext;
+import com.powsybl.dynawaltz.dynamicmodels.AbstractBlackBoxModelWithParameterId;
 import com.powsybl.dynawaltz.dynamicmodels.BlackBoxModel;
 import com.powsybl.dynawaltz.dynamicmodels.MacroConnector;
 import org.apache.commons.lang3.tuple.Pair;
@@ -23,24 +24,18 @@ import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public abstract class AbstractBlackBoxEventModel implements EventModel, BlackBoxEventModel {
+public abstract class AbstractBlackBoxEventModel extends AbstractBlackBoxModelWithParameterId implements EventModel, BlackBoxEventModel {
 
     private final String eventModelId;
-    private final String parameterSetId;
 
     protected AbstractBlackBoxEventModel(String eventModelId, String parameterSetId) {
+        super(parameterSetId);
         this.eventModelId = Objects.requireNonNull(eventModelId);
-        this.parameterSetId = Objects.requireNonNull(parameterSetId);
     }
 
     @Override
     public String getEventModelId() {
         return eventModelId;
-    }
-
-    @Override
-    public String getParameterSetId() {
-        return parameterSetId;
     }
 
     @Override
