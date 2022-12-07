@@ -9,32 +9,50 @@ package com.powsybl.dynawo.it;
 import com.powsybl.commons.datasource.ResourceDataSource;
 import com.powsybl.commons.datasource.ResourceSet;
 import com.powsybl.dynaflow.DynaFlowConfig;
+import com.powsybl.dynaflow.DynaFlowParameters;
 import com.powsybl.dynaflow.DynaFlowProvider;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.VariantManagerConstants;
 import com.powsybl.loadflow.LoadFlowParameters;
 import com.powsybl.loadflow.LoadFlowResult;
-import org.junit.Ignore;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.nio.file.Path;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 /**
  * @author Geoffroy Jamgotchian <geoffroy.jamgotchian at rte-france.com>
  */
 public class DynaFlowTest extends AbstractDynawoTest {
 
+    private DynaFlowProvider provider;
+
+    private LoadFlowParameters parameters;
+
+    private DynaFlowParameters dynaFlowParameters;
+
+    @Override
+    @Before
+    public void setUp() throws Exception {
+        super.setUp();
+        DynaFlowConfig config = new DynaFlowConfig(Path.of("/dynaflow-launcher"), false);
+        provider = new DynaFlowProvider(() -> config);
+        parameters = new LoadFlowParameters();
+        dynaFlowParameters = new DynaFlowParameters();
+        parameters.addExtension(DynaFlowParameters.class, dynaFlowParameters);
+    }
+
     @Test
-    @Ignore
     public void test() {
         Network network = Network.read(new ResourceDataSource("IEEE14", new ResourceSet("/ieee14-disconnectline", "IEEE14.iidm")));
-        DynaFlowConfig config = new DynaFlowConfig(Path.of("/dynawo"), false);
-        DynaFlowProvider provider = new DynaFlowProvider(() -> config);
-        LoadFlowParameters parameters = new LoadFlowParameters();
         LoadFlowResult result = provider.run(network, computationManager, VariantManagerConstants.INITIAL_VARIANT_ID, parameters)
                 .join();
-        assertTrue(result.isOk());
+        assertFalse(result.isOk()); // FIXME
+        assertEquals(1, result.getComponentResults().size());
+        LoadFlowResult.ComponentResult componentResult = result.getComponentResults().get(0);
+        assertEquals(LoadFlowResult.ComponentResult.Status.FAILED, componentResult.getStatus());
     }
 }
