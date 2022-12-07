@@ -8,6 +8,7 @@ package com.powsybl.dynawaltz.models.events;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
+import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.lines.LineModel;
 import com.powsybl.iidm.network.Branch;
@@ -18,12 +19,12 @@ import java.util.List;
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class EventQuadripoleDisconnection extends AbstractBlackBoxEventModel {
+public class EventQuadripoleDisconnection extends AbstractPureDynamicBlackBoxModel {
 
     private final String lineStaticId;
 
     public EventQuadripoleDisconnection(String eventModelId, String staticId, String parameterSetId) {
-        super(eventModelId, "", parameterSetId);
+        super(eventModelId, parameterSetId);
         this.lineStaticId = staticId;
     }
 

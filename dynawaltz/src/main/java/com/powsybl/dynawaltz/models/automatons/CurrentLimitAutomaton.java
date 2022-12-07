@@ -12,6 +12,7 @@ import javax.xml.stream.XMLStreamWriter;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractBlackBoxModel;
+import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.lines.LineModel;
 import com.powsybl.iidm.network.*;
@@ -25,13 +26,13 @@ import java.util.Objects;
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class CurrentLimitAutomaton extends AbstractBlackBoxModel {
+public class CurrentLimitAutomaton extends AbstractPureDynamicBlackBoxModel {
 
     private final Branch.Side side;
     private final String lineStaticId;
 
     public CurrentLimitAutomaton(String dynamicModelId, String staticId, String parameterSetId, Branch.Side side) {
-        super(dynamicModelId, "", parameterSetId);
+        super(dynamicModelId, parameterSetId);
         this.side = Objects.requireNonNull(side);
         this.lineStaticId = staticId;
     }
@@ -39,11 +40,6 @@ public class CurrentLimitAutomaton extends AbstractBlackBoxModel {
     @Override
     public String getLib() {
         return "CurrentLimitAutomaton";
-    }
-
-    @Override
-    public List<Pair<String, String>> getVarsMapping() {
-        return Collections.emptyList();
     }
 
     @Override
@@ -75,10 +71,5 @@ public class CurrentLimitAutomaton extends AbstractBlackBoxModel {
 
     public String getLineStaticId() {
         return lineStaticId;
-    }
-
-    @Override
-    public void write(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
-        writeAutomatonBlackBoxModel(writer, context);
     }
 }

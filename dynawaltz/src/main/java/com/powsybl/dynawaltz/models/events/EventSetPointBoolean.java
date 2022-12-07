@@ -8,6 +8,7 @@ package com.powsybl.dynawaltz.models.events;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
+import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.generators.GeneratorModel;
 import org.apache.commons.lang3.tuple.Pair;
@@ -17,12 +18,12 @@ import java.util.List;
 /**
  * @author Mathieu BAGUE {@literal <mathieu.bague at rte-france.com>}
  */
-public class EventSetPointBoolean extends AbstractBlackBoxEventModel {
+public class EventSetPointBoolean extends AbstractPureDynamicBlackBoxModel {
 
     private final String generatorStaticId;
 
     public EventSetPointBoolean(String eventModelId, String staticId, String parameterSetId) {
-        super(eventModelId, "", parameterSetId);
+        super(eventModelId, parameterSetId);
         this.generatorStaticId = staticId;
     }
 

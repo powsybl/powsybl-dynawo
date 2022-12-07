@@ -60,24 +60,25 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel, DynamicMod
         return List.of(Pair.of("id2", getDynamicModelId()));
     }
 
-    protected void writeBlackBoxModel(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
-        // Write the blackBoxModel object
-        writer.writeStartElement(DYN_URI, "blackBoxModel");
+    protected void writeDynamicAttributes(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
         writer.writeAttribute("id", getDynamicModelId());
         writer.writeAttribute("lib", getLib());
         writer.writeAttribute("parFile", context.getParFile());
         writer.writeAttribute("parId", getParameterSetId());
+    }
+
+    protected void writeBlackBoxModel(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
+        // Write the blackBoxModel object
+        writer.writeStartElement(DYN_URI, "blackBoxModel");
+        writeDynamicAttributes(writer, context);
         writer.writeAttribute("staticId", getStaticId());
         MacroStaticReference.writeMacroStaticRef(writer, getLib());
         writer.writeEndElement();
     }
 
-    protected void writeAutomatonBlackBoxModel(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
+    protected void writePureDynamicBlackBoxModel(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
         // Write the blackBoxModel object
         writer.writeEmptyElement(DYN_URI, "blackBoxModel");
-        writer.writeAttribute("id", getDynamicModelId());
-        writer.writeAttribute("lib", getLib());
-        writer.writeAttribute("parFile", context.getParFile());
-        writer.writeAttribute("parId", getParameterSetId());
+        writeDynamicAttributes(writer, context);
     }
 }

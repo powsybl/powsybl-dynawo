@@ -11,7 +11,6 @@ import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
 import com.powsybl.computation.*;
 import com.powsybl.dynamicsimulation.*;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
-import com.powsybl.dynawaltz.models.events.BlackBoxEventModel;
 import com.powsybl.dynawaltz.xml.CurvesXml;
 import com.powsybl.dynawaltz.xml.DydXml;
 import com.powsybl.dynawaltz.xml.JobsXml;
@@ -102,9 +101,9 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
                 .filter(BlackBoxModel.class::isInstance)
                 .map(BlackBoxModel.class::cast)
                 .collect(Collectors.toList());
-        List<BlackBoxEventModel> blackBoxEventModels = eventsModelsSupplier.get(network).stream()
-                .filter(BlackBoxEventModel.class::isInstance)
-                .map(BlackBoxEventModel.class::cast)
+        List<BlackBoxModel> blackBoxEventModels = eventsModelsSupplier.get(network).stream()
+                .filter(BlackBoxModel.class::isInstance)
+                .map(BlackBoxModel.class::cast)
                 .collect(Collectors.toList());
         DynaWaltzContext context = new DynaWaltzContext(network, workingVariantId, blackBoxModels, blackBoxEventModels, curvesSupplier.get(network), parameters, dynaWaltzParameters);
         return computationManager.execute(execEnv, new DynaWaltzHandler(context));
