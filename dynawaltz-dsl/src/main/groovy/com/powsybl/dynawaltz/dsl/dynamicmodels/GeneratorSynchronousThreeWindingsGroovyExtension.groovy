@@ -13,7 +13,7 @@ import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 
-import com.powsybl.dynawaltz.dynamicmodels.GeneratorSynchronousThreeWindings
+import com.powsybl.dynawaltz.models.generators.GeneratorSynchronousThreeWindings
 
 /**
  * An implementation of {@link DynamicModelGroovyExtension} that adds the <pre>GeneratorSynchronousThreeWindingsProportionalRegulations</pre> keyword to the DSL

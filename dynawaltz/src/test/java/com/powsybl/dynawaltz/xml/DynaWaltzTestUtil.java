@@ -19,6 +19,12 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
+import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton;
+import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection;
+import com.powsybl.dynawaltz.models.events.EventSetPointBoolean;
+import com.powsybl.dynawaltz.models.generators.*;
+import com.powsybl.dynawaltz.models.loads.LoadAlphaBeta;
+import com.powsybl.dynawaltz.models.loads.LoadOneTransformer;
 import com.powsybl.iidm.network.*;
 import junit.framework.AssertionFailedError;
 
@@ -33,7 +39,6 @@ import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynamicsimulation.EventModel;
 import com.powsybl.dynawaltz.DynaWaltzCurve;
 import com.powsybl.dynawaltz.automatons.*;
-import com.powsybl.dynawaltz.dynamicmodels.*;
 import com.powsybl.dynawaltz.events.*;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 

@@ -6,6 +6,8 @@
  */
 package com.powsybl.dynawaltz.dynamicmodels
 
+import com.powsybl.dynawaltz.models.loads.LoadOneTransformer
+
 import java.util.function.Consumer
 
 import com.google.auto.service.AutoService
