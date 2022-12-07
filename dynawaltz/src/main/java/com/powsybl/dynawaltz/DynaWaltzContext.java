@@ -40,8 +40,8 @@ public class DynaWaltzContext {
     private final DynamicSimulationParameters parameters;
     private final DynaWaltzParameters dynaWaltzParameters;
     private final DynaWaltzParametersDatabase parametersDatabase;
-    private final List<DynamicModel> dynamicModels;
-    private final List<EventModel> eventModels;
+    private final List<BlackBoxModel> dynamicModels;
+    private final List<BlackBoxEventModel> eventModels;
     private final List<Curve> curves;
     private final Map<String, MacroStaticReference> macroStaticReferences = new LinkedHashMap<>();
     private final Map<Pair<String, String>, MacroConnector> connectorsMap = new LinkedHashMap<>();
@@ -52,7 +52,8 @@ public class DynaWaltzContext {
 
     private final OmegaRef omegaRef;
 
-    public DynaWaltzContext(Network network, String workingVariantId, List<DynamicModel> dynamicModels, List<EventModel> eventModels, List<Curve> curves, DynamicSimulationParameters parameters, DynaWaltzParameters dynaWaltzParameters) {
+    public DynaWaltzContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxEventModel> eventModels,
+                            List<Curve> curves, DynamicSimulationParameters parameters, DynaWaltzParameters dynaWaltzParameters) {
         this.network = Objects.requireNonNull(network);
         this.workingVariantId = Objects.requireNonNull(workingVariantId);
         this.dynamicModels = Objects.requireNonNull(dynamicModels);
@@ -87,12 +88,8 @@ public class DynaWaltzContext {
         return parametersDatabase;
     }
 
-    public List<DynamicModel> getDynamicModels() {
-        return Collections.unmodifiableList(dynamicModels);
-    }
-
     public List<BlackBoxModel> getBlackBoxModels() {
-        return getBlackBoxModelStream().collect(Collectors.toList());
+        return Collections.unmodifiableList(dynamicModels);
     }
 
     public Collection<MacroStaticReference> getMacroStaticReferences() {
@@ -184,9 +181,7 @@ public class DynaWaltzContext {
 
     private Stream<BlackBoxModel> getInputBlackBoxModelStream() {
         //Doesn't include the OmegaRef, it only concerns the DynamicModels provided by the user
-        return dynamicModels.stream()
-                .filter(BlackBoxModel.class::isInstance)
-                .map(BlackBoxModel.class::cast);
+        return dynamicModels.stream();
     }
 
     public Stream<BlackBoxModel> getBlackBoxModelStream() {
@@ -196,14 +191,8 @@ public class DynaWaltzContext {
         return Stream.concat(getInputBlackBoxModelStream(), Stream.of(omegaRef));
     }
 
-    public List<EventModel> getEventModels() {
-        return Collections.unmodifiableList(eventModels);
-    }
-
     public Stream<BlackBoxEventModel> getBlackBoxEventModelStream() {
-        return eventModels.stream()
-                .filter(BlackBoxEventModel.class::isInstance)
-                .map(BlackBoxEventModel.class::cast);
+        return eventModels.stream();
     }
 
     public List<BlackBoxEventModel> getBlackBoxEventModels() {
