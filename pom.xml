@@ -52,7 +52,7 @@
 
         <groovy.version>3.0.9</groovy.version> <!-- used for groovydoc (dynawaltz-dsl) -->
 
-        <powsyblcore.version>5.0.0</powsyblcore.version>
+        <powsyblcore.version>5.1.0-SNAPSHOT</powsyblcore.version>
     </properties>
 
     <profiles>
@@ -79,6 +79,15 @@
                     </plugin>
                 </plugins>
             </build>
+        </profile>
+        <profile>
+            <id>integration-tests</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <modules>
+                <module>dynawo-integration-tests</module>
+            </modules>
         </profile>
     </profiles>
 

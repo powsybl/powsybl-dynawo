@@ -16,6 +16,15 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
+      - name: Checkout powsybl core sources
+        uses: actions/checkout@v1
+        with:
+          repository: powsybl/powsybl-core
+          ref: computation-local-test-docker
+
+      - name: Build and install powsybl core with Maven
+        run: mvn --batch-mode -DskipTests=true --file ../powsybl-core/pom.xml install
+
       - name: Checkout sources
         uses: actions/checkout@v1
 
@@ -26,7 +35,7 @@ jobs:
 
       - name: Build with Maven
         if: matrix.os == 'ubuntu-latest'
-        run: mvn --batch-mode -Pjacoco install
+        run: mvn --batch-mode -Pintegration-tests,jacoco install
 
       - name: Build with Maven
         if: matrix.os != 'ubuntu-latest'

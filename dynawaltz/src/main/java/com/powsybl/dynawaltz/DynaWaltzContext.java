@@ -47,8 +47,16 @@ public class DynaWaltzContext {
     private final NetworkModel networkModel = new NetworkModel();
 
     private final OmegaRef omegaRef;
+    private final PlatformConfig platformConfig;
 
-    public DynaWaltzContext(Network network, String workingVariantId, List<DynamicModel> dynamicModels, List<EventModel> eventModels, List<Curve> curves, DynamicSimulationParameters parameters, DynaWaltzParameters dynaWaltzParameters) {
+    public DynaWaltzContext(Network network, String workingVariantId, List<DynamicModel> dynamicModels, List<EventModel> eventModels,
+                            List<Curve> curves, DynamicSimulationParameters parameters, DynaWaltzParameters dynaWaltzParameters) {
+        this(network, workingVariantId, dynamicModels, eventModels, curves, parameters, dynaWaltzParameters, PlatformConfig.defaultConfig());
+    }
+
+    public DynaWaltzContext(Network network, String workingVariantId, List<DynamicModel> dynamicModels, List<EventModel> eventModels,
+                            List<Curve> curves, DynamicSimulationParameters parameters, DynaWaltzParameters dynaWaltzParameters,
+                            PlatformConfig platformConfig) {
         this.network = Objects.requireNonNull(network);
         this.workingVariantId = Objects.requireNonNull(workingVariantId);
         this.dynamicModels = Objects.requireNonNull(dynamicModels);
@@ -56,7 +64,8 @@ public class DynaWaltzContext {
         this.curves = Objects.requireNonNull(curves);
         this.parameters = Objects.requireNonNull(parameters);
         this.dynaWaltzParameters = Objects.requireNonNull(dynaWaltzParameters);
-        this.parametersDatabase = loadDatabase(dynaWaltzParameters.getParametersFile());
+        this.platformConfig = Objects.requireNonNull(platformConfig);
+        this.parametersDatabase = loadDatabase(dynaWaltzParameters.getParametersFile(), platformConfig);
         this.omegaRef = new OmegaRef(dynamicModels.stream()
                 .filter(GeneratorSynchronousModel.class::isInstance)
                 .map(GeneratorSynchronousModel.class::cast)
@@ -214,10 +223,14 @@ public class DynaWaltzContext {
         return !curves.isEmpty();
     }
 
-    private static DynaWaltzParametersDatabase loadDatabase(String filename) {
-        FileSystem fs = PlatformConfig.defaultConfig().getConfigDir()
+    private static FileSystem getFileSystem(PlatformConfig platformConfig) {
+        return platformConfig.getConfigDir()
                 .map(Path::getFileSystem)
                 .orElseThrow(() -> new PowsyblException("A configuration directory should be defined"));
+    }
+
+    private static DynaWaltzParametersDatabase loadDatabase(String filename, PlatformConfig platformConfig) {
+        FileSystem fs = getFileSystem(platformConfig);
         return DynaWaltzParametersDatabase.load(fs.getPath(filename));
     }
 
@@ -231,5 +244,9 @@ public class DynaWaltzContext {
 
     public String getSimulationParFile() {
         return getNetwork().getId() + ".par";
+    }
+
+    public PlatformConfig getPlatformConfig() {
+        return platformConfig;
     }
 }

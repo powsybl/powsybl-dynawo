@@ -27,7 +27,7 @@ import org.junit.Rule;
 import org.junit.rules.ExpectedException;
 import org.xml.sax.SAXException;
 
-import com.powsybl.commons.AbstractConverterTest;
+import com.powsybl.commons.test.AbstractConverterTest;
 import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynamicsimulation.EventModel;
@@ -37,7 +37,7 @@ import com.powsybl.dynawaltz.dynamicmodels.*;
 import com.powsybl.dynawaltz.events.*;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 
-import static com.powsybl.commons.ComparisonUtils.compareXml;
+import static com.powsybl.commons.test.ComparisonUtils.compareXml;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>

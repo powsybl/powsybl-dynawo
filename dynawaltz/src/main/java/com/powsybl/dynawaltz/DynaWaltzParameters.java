@@ -41,16 +41,18 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
             return parametersFile;
         }
 
-        public void setParametersFile(String parametersFile) {
+        public Network setParametersFile(String parametersFile) {
             this.parametersFile = Objects.requireNonNull(parametersFile);
+            return this;
         }
 
         public String getParametersId() {
             return parametersId;
         }
 
-        public void setParametersId(String parametersId) {
+        public Network setParametersId(String parametersId) {
             this.parametersId = Objects.requireNonNull(parametersId);
+            return this;
         }
 
         private String parametersFile;
@@ -72,24 +74,27 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
             return type;
         }
 
-        public void setType(SolverType type) {
+        public Solver setType(SolverType type) {
             this.type = Objects.requireNonNull(type);
+            return this;
         }
 
         public String getParametersFile() {
             return parametersFile;
         }
 
-        public void setParametersFile(String parametersFile) {
+        public Solver setParametersFile(String parametersFile) {
             this.parametersFile = Objects.requireNonNull(parametersFile);
+            return this;
         }
 
         public String getParametersId() {
             return parametersId;
         }
 
-        public void setParametersId(String parametersId) {
+        public Solver setParametersId(String parametersId) {
             this.parametersId = Objects.requireNonNull(parametersId);
+            return this;
         }
 
         private SolverType type;
@@ -146,24 +151,27 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
         return parametersFile;
     }
 
-    public void setParametersFile(String parametersFile) {
+    public DynaWaltzParameters setParametersFile(String parametersFile) {
         this.parametersFile = Objects.requireNonNull(parametersFile);
+        return this;
     }
 
     public Network getNetwork() {
         return network;
     }
 
-    public void setNetwork(Network network) {
+    public DynaWaltzParameters setNetwork(Network network) {
         this.network = Objects.requireNonNull(network);
+        return this;
     }
 
     public Solver getSolver() {
         return solver;
     }
 
-    public void setSolver(Solver solver) {
+    public DynaWaltzParameters setSolver(Solver solver) {
         this.solver = Objects.requireNonNull(solver);
+        return this;
     }
 
     private String parametersFile;
