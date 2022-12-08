@@ -11,6 +11,7 @@ import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParametersDatabase;
 import com.powsybl.dynawaltz.dynamicmodels.staticid.network.BusModel;
 import com.powsybl.dynawaltz.dynamicmodels.staticid.network.StandardBusModel;
+import com.powsybl.dynawaltz.dynamicmodels.staticid.staticref.generators.GeneratorModel;
 import com.powsybl.dynawaltz.dynamicmodels.staticid.staticref.generators.synchronous.GeneratorSynchronousModel;
 import com.powsybl.dynawaltz.xml.ParametersXml;
 import com.powsybl.iidm.network.Generator;
@@ -141,12 +142,17 @@ public class OmegaRef extends AbstractBlackBoxModelWithDynamicId {
 
     @Override
     public void writeMacroConnect(XMLStreamWriter writer, DynaWaltzContext context, MacroConnector macroConnector, BlackBoxModel connected) throws XMLStreamException {
-        Map<BlackBoxModel, Integer> indicesPerModel = getConnectedModelsIndices(context);
+        if (connected instanceof GeneratorModel) {
+            int index = getConnectedModelsIndices(context).get(connected);
+            BusModel bus = getBusAssociatedTo((GeneratorSynchronousModel) connected, context);
 
-        List<Pair<String, String>> attributesConnectFrom = List.of(
-                Pair.of("id1", getDynamicModelId()),
-                Pair.of("index1", Integer.toString(indicesPerModel.get(connected)))
-        );
-        macroConnector.writeMacroConnect(writer, attributesConnectFrom, connected.getAttributesConnectTo());
+            List<Pair<String, String>> attributesConnectFrom = List.of(
+                    Pair.of("id1", getDynamicModelId()),
+                    Pair.of("index1", Integer.toString(index))
+            );
+            macroConnector.writeMacroConnect(writer, attributesConnectFrom, connected.getAttributesConnectTo());
+            MacroConnector macroConnectorOmegaRefBus = context.getMacroConnector(this, bus);
+            macroConnectorOmegaRefBus.writeMacroConnect(writer, attributesConnectFrom, bus.getAttributesConnectTo());
+        }
     }
 }
