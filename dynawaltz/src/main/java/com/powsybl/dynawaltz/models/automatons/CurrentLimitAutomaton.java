@@ -6,20 +6,16 @@
  */
 package com.powsybl.dynawaltz.models.automatons;
 
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
-
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
-import com.powsybl.dynawaltz.models.AbstractBlackBoxModel;
 import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
+import com.powsybl.dynawaltz.models.Model;
 import com.powsybl.dynawaltz.models.lines.LineModel;
 import com.powsybl.iidm.network.*;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -43,7 +39,7 @@ public class CurrentLimitAutomaton extends AbstractPureDynamicBlackBoxModel {
     }
 
     @Override
-    public List<BlackBoxModel> getModelsConnectedTo(DynaWaltzContext context) {
+    public List<Model> getModelsConnectedTo(DynaWaltzContext context) {
         Line line = context.getNetwork().getLine(lineStaticId);
         if (line == null) {
             throw new PowsyblException("Unknown line static id: " + lineStaticId);
@@ -57,7 +53,7 @@ public class CurrentLimitAutomaton extends AbstractPureDynamicBlackBoxModel {
     }
 
     @Override
-    public List<Pair<String, String>> getVarsConnect(BlackBoxModel connected) {
+    public List<Pair<String, String>> getVarsConnect(Model connected) {
         if (!(connected instanceof LineModel)) {
             throw new PowsyblException("CurrentLimitAutomaton can only connect to LineModel");
         }

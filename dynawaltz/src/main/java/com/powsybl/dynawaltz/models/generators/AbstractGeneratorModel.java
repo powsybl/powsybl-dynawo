@@ -10,6 +10,7 @@ import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractBlackBoxModel;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
+import com.powsybl.dynawaltz.models.Model;
 import com.powsybl.dynawaltz.models.buses.BusModel;
 import com.powsybl.iidm.network.Generator;
 import org.apache.commons.lang3.tuple.Pair;
@@ -53,7 +54,7 @@ public abstract class AbstractGeneratorModel extends AbstractBlackBoxModel imple
     }
 
     @Override
-    public List<BlackBoxModel> getModelsConnectedTo(DynaWaltzContext context) {
+    public List<Model> getModelsConnectedTo(DynaWaltzContext context) {
         Generator generator = context.getNetwork().getGenerator(getStaticId());
         if (generator == null) {
             throw new PowsyblException("Generator static id unknown: " + getStaticId());
@@ -67,7 +68,7 @@ public abstract class AbstractGeneratorModel extends AbstractBlackBoxModel imple
     }
 
     @Override
-    public List<Pair<String, String>> getVarsConnect(BlackBoxModel connected) {
+    public List<Pair<String, String>> getVarsConnect(Model connected) {
         if (!(connected instanceof BusModel)) {
             throw new PowsyblException("GeneratorModel can only connect to BusModel");
         }

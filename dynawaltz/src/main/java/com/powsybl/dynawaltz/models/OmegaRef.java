@@ -17,12 +17,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.*;
 
 import static com.powsybl.dynawaltz.DynaWaltzParametersDatabase.ParameterType.DOUBLE;
 import static com.powsybl.dynawaltz.DynaWaltzParametersDatabase.ParameterType.INT;
@@ -42,7 +37,7 @@ public class OmegaRef extends AbstractPureDynamicBlackBoxModel {
     public static final String OMEGA_REF_ID = "OMEGA_REF";
     private static final String OMEGA_REF_PARAMETER_SET_ID = "OMEGA_REF";
     private final List<GeneratorSynchronousModel> synchronousGenerators;
-    private Map<BlackBoxModel, Integer> indexPerModel;
+    private Map<Model, Integer> indexPerModel;
 
     public OmegaRef(List<GeneratorSynchronousModel> synchronousGenerators) {
         super(OMEGA_REF_ID, OMEGA_REF_PARAMETER_SET_ID);
@@ -91,7 +86,7 @@ public class OmegaRef extends AbstractPureDynamicBlackBoxModel {
     }
 
     @Override
-    public List<Pair<String, String>> getVarsConnect(BlackBoxModel connected) {
+    public List<Pair<String, String>> getVarsConnect(Model connected) {
         if (connected instanceof GeneratorSynchronousModel) {
             GeneratorSynchronousModel connectedGeneratorModel = (GeneratorSynchronousModel) connected;
             return Arrays.asList(
@@ -107,8 +102,8 @@ public class OmegaRef extends AbstractPureDynamicBlackBoxModel {
     }
 
     @Override
-    public List<BlackBoxModel> getModelsConnectedTo(DynaWaltzContext context) throws PowsyblException {
-        return getConnectedModelsIndices(context).keySet().stream().collect(Collectors.toList());
+    public List<Model> getModelsConnectedTo(DynaWaltzContext context) throws PowsyblException {
+        return new ArrayList<>(getConnectedModelsIndices(context).keySet());
     }
 
     private BusModel getBusAssociatedTo(GeneratorSynchronousModel generatorModel, DynaWaltzContext context) {
@@ -124,7 +119,7 @@ public class OmegaRef extends AbstractPureDynamicBlackBoxModel {
         return busModel;
     }
 
-    private Map<BlackBoxModel, Integer> getConnectedModelsIndices(DynaWaltzContext context) {
+    private Map<Model, Integer> getConnectedModelsIndices(DynaWaltzContext context) {
         if (indexPerModel == null) {
             indexPerModel = new LinkedHashMap<>();
             int index = 0;
@@ -139,8 +134,8 @@ public class OmegaRef extends AbstractPureDynamicBlackBoxModel {
     }
 
     @Override
-    public void writeMacroConnect(XMLStreamWriter writer, DynaWaltzContext context, MacroConnector macroConnector, BlackBoxModel connected) throws XMLStreamException {
-        Map<BlackBoxModel, Integer> indicesPerModel = getConnectedModelsIndices(context);
+    public void writeMacroConnect(XMLStreamWriter writer, DynaWaltzContext context, MacroConnector macroConnector, Model connected) throws XMLStreamException {
+        Map<Model, Integer> indicesPerModel = getConnectedModelsIndices(context);
 
         List<Pair<String, String>> attributesConnectFrom = List.of(
                 Pair.of("id1", getDynamicModelId()),

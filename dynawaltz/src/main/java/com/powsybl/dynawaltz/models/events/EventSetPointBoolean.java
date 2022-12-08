@@ -10,6 +10,7 @@ import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
+import com.powsybl.dynawaltz.models.Model;
 import com.powsybl.dynawaltz.models.generators.GeneratorModel;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -33,7 +34,7 @@ public class EventSetPointBoolean extends AbstractPureDynamicBlackBoxModel {
     }
 
     @Override
-    public List<Pair<String, String>> getVarsConnect(BlackBoxModel connected) {
+    public List<Pair<String, String>> getVarsConnect(Model connected) {
         if (!(connected instanceof GeneratorModel)) {
             throw new PowsyblException("EventSetPointBoolean can only connect to GeneratorModel");
         }
@@ -41,7 +42,7 @@ public class EventSetPointBoolean extends AbstractPureDynamicBlackBoxModel {
     }
 
     @Override
-    public List<BlackBoxModel> getModelsConnectedTo(DynaWaltzContext context) {
+    public List<Model> getModelsConnectedTo(DynaWaltzContext context) {
         BlackBoxModel connectedBbm = context.getStaticIdBlackBoxModelMap().get(generatorStaticId);
         if (connectedBbm == null) {
             throw new PowsyblException("Cannot find generator '" + generatorStaticId + "' among the dynamic models provided");

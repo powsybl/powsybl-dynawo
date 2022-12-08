@@ -6,7 +6,6 @@
  */
 package com.powsybl.dynawaltz.models;
 
-import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.xml.MacroStaticReference;
 import org.apache.commons.lang3.tuple.Pair;
@@ -21,7 +20,7 @@ import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 /**
  * @author Luma Zamarreño <zamarrenolm at aia.es>
  */
-public abstract class AbstractBlackBoxModel implements BlackBoxModel, DynamicModel {
+public abstract class AbstractBlackBoxModel implements BlackBoxModel {
 
     private final String dynamicModelId;
     private final String staticId;
@@ -51,7 +50,7 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel, DynamicMod
     }
 
     @Override
-    public void writeMacroConnect(XMLStreamWriter writer, DynaWaltzContext context, MacroConnector macroConnector, BlackBoxModel connected) throws XMLStreamException {
+    public void writeMacroConnect(XMLStreamWriter writer, DynaWaltzContext context, MacroConnector macroConnector, Model connected) throws XMLStreamException {
         macroConnector.writeMacroConnect(writer, List.of(Pair.of("id1", getDynamicModelId())), connected.getAttributesConnectTo());
     }
 

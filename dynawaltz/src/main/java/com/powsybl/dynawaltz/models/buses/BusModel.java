@@ -6,14 +6,12 @@
  */
 package com.powsybl.dynawaltz.models.buses;
 
-import com.powsybl.dynawaltz.models.BlackBoxModel;
+import com.powsybl.dynawaltz.models.Model;
 
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  */
-public interface BusModel extends BlackBoxModel {
-    String getId();
-
+public interface BusModel extends Model {
     String getTerminalVarName();
 
     String getSwitchOffSignalVarName();

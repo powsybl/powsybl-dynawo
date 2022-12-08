@@ -10,6 +10,7 @@ import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
+import com.powsybl.dynawaltz.models.Model;
 import com.powsybl.dynawaltz.models.lines.LineModel;
 import com.powsybl.iidm.network.Branch;
 import org.apache.commons.lang3.tuple.Pair;
@@ -39,7 +40,7 @@ public class EventQuadripoleDisconnection extends AbstractPureDynamicBlackBoxMod
     }
 
     @Override
-    public List<Pair<String, String>> getVarsConnect(BlackBoxModel connected) {
+    public List<Pair<String, String>> getVarsConnect(Model connected) {
         if (!(connected instanceof LineModel)) {
             throw new PowsyblException("EventQuadripoleDisconnection can only connect to LineModel");
         }
@@ -47,7 +48,7 @@ public class EventQuadripoleDisconnection extends AbstractPureDynamicBlackBoxMod
     }
 
     @Override
-    public List<BlackBoxModel> getModelsConnectedTo(DynaWaltzContext context) {
+    public List<Model> getModelsConnectedTo(DynaWaltzContext context) {
         BlackBoxModel connectedBbm = context.getStaticIdBlackBoxModelMap().get(lineStaticId);
         if (connectedBbm == null) {
             return List.of(context.getNetworkModel().getDefaultLineModel(lineStaticId, Branch.Side.ONE));

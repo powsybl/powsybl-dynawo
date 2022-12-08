@@ -10,10 +10,7 @@ import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
-import com.powsybl.dynawaltz.models.BlackBoxModel;
-import com.powsybl.dynawaltz.models.MacroConnector;
-import com.powsybl.dynawaltz.models.NetworkModel;
-import com.powsybl.dynawaltz.models.OmegaRef;
+import com.powsybl.dynawaltz.models.*;
 import com.powsybl.dynawaltz.models.generators.GeneratorSynchronousModel;
 import com.powsybl.dynawaltz.xml.MacroStaticReference;
 import com.powsybl.iidm.network.Network;
@@ -43,8 +40,8 @@ public class DynaWaltzContext {
     private final Map<String, MacroStaticReference> macroStaticReferences = new LinkedHashMap<>();
     private final Map<Pair<String, String>, MacroConnector> connectorsMap = new LinkedHashMap<>();
     private final Map<Pair<String, String>, MacroConnector> eventConnectorsMap = new LinkedHashMap<>();
-    private final Map<BlackBoxModel, List<BlackBoxModel>> modelsConnections = new LinkedHashMap<>();
-    private final Map<BlackBoxModel, List<BlackBoxModel>> eventModelsConnections = new LinkedHashMap<>();
+    private final Map<BlackBoxModel, List<Model>> modelsConnections = new LinkedHashMap<>();
+    private final Map<BlackBoxModel, List<Model>> eventModelsConnections = new LinkedHashMap<>();
     private final NetworkModel networkModel = new NetworkModel();
 
     private final OmegaRef omegaRef;
@@ -117,9 +114,9 @@ public class DynaWaltzContext {
         return connectorsMap.values();
     }
 
-    public MacroConnector getMacroConnector(BlackBoxModel bbm0, BlackBoxModel bbm1) {
+    public MacroConnector getMacroConnector(BlackBoxModel bbm, Model model) {
         initConnectorsMap();
-        return connectorsMap.get(Pair.of(bbm0.getLib(), bbm1.getLib()));
+        return connectorsMap.get(Pair.of(bbm.getLib(), model.getLib()));
     }
 
     private void initConnectorsMap() {
@@ -140,9 +137,9 @@ public class DynaWaltzContext {
         return eventConnectorsMap.values();
     }
 
-    public MacroConnector getEventMacroConnector(BlackBoxModel event, BlackBoxModel bbm) {
+    public MacroConnector getEventMacroConnector(BlackBoxModel event, Model model) {
         initEventConnectorsMap();
-        return eventConnectorsMap.get(Pair.of(event.getLib(), bbm.getLib()));
+        return eventConnectorsMap.get(Pair.of(event.getLib(), model.getLib()));
     }
 
     private void initEventConnectorsMap() {
@@ -158,18 +155,18 @@ public class DynaWaltzContext {
         });
     }
 
-    private MacroConnector createMacroConnector(BlackBoxModel bbm0, BlackBoxModel bbm1) {
-        return new MacroConnector(bbm0.getLib(), bbm1.getLib(), bbm0.getVarsConnect(bbm1));
+    private MacroConnector createMacroConnector(BlackBoxModel bbm, Model model) {
+        return new MacroConnector(bbm.getLib(), model.getLib(), bbm.getVarsConnect(model));
     }
 
-    public Map<BlackBoxModel, List<BlackBoxModel>> getModelsConnections() {
+    public Map<BlackBoxModel, List<Model>> getModelsConnections() {
         if (modelsConnections.isEmpty()) {
             getBlackBoxModelStream().forEach(bbm -> modelsConnections.put(bbm, bbm.getModelsConnectedTo(this)));
         }
         return modelsConnections;
     }
 
-    public Map<BlackBoxModel, List<BlackBoxModel>> getEventModelsConnections() {
+    public Map<BlackBoxModel, List<Model>> getEventModelsConnections() {
         if (eventModelsConnections.isEmpty()) {
             getBlackBoxEventModelStream().forEach(bbem -> eventModelsConnections.put(bbem, bbem.getModelsConnectedTo(this)));
         }

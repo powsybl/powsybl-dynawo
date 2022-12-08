@@ -16,14 +16,10 @@ import java.util.List;
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  */
-public interface BlackBoxModel {
+public interface BlackBoxModel extends Model {
     String getDynamicModelId();
 
-    String getStaticId();
-
     String getParameterSetId();
-
-    String getLib();
 
     List<Pair<String, String>> getVarsMapping();
 
@@ -31,11 +27,9 @@ public interface BlackBoxModel {
 
     void writeParameters(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException;
 
-    void writeMacroConnect(XMLStreamWriter writer, DynaWaltzContext context, MacroConnector macroConnector, BlackBoxModel connected) throws XMLStreamException;
+    void writeMacroConnect(XMLStreamWriter writer, DynaWaltzContext context, MacroConnector macroConnector, Model connected) throws XMLStreamException;
 
-    List<Pair<String, String>> getVarsConnect(BlackBoxModel connected);
+    List<Pair<String, String>> getVarsConnect(Model connected);
 
-    List<BlackBoxModel> getModelsConnectedTo(DynaWaltzContext dynaWaltzContext);
-
-    List<Pair<String, String>> getAttributesConnectTo();
+    List<Model> getModelsConnectedTo(DynaWaltzContext dynaWaltzContext);
 }

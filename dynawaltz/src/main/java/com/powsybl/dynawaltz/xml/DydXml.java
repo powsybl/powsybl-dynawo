@@ -11,6 +11,7 @@ import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.MacroConnector;
+import com.powsybl.dynawaltz.models.Model;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -55,10 +56,10 @@ public final class DydXml {
             for (MacroStaticReference macroStaticReference : context.getMacroStaticReferences()) {
                 macroStaticReference.write(writer);
             }
-            for (Map.Entry<BlackBoxModel, List<BlackBoxModel>> bbmMapping : context.getModelsConnections().entrySet()) {
+            for (Map.Entry<BlackBoxModel, List<Model>> bbmMapping : context.getModelsConnections().entrySet()) {
                 BlackBoxModel bbm = bbmMapping.getKey();
-                for (BlackBoxModel connectedBbm : bbmMapping.getValue()) {
-                    bbm.writeMacroConnect(writer, context, context.getMacroConnector(bbm, connectedBbm), connectedBbm);
+                for (Model connected : bbmMapping.getValue()) {
+                    bbm.writeMacroConnect(writer, context, context.getMacroConnector(bbm, connected), connected);
                 }
             }
         } catch (XMLStreamException e) {
@@ -75,10 +76,10 @@ public final class DydXml {
             for (MacroConnector macroConnector : context.getEventMacroConnectors()) {
                 macroConnector.write(writer);
             }
-            for (Map.Entry<BlackBoxModel, List<BlackBoxModel>> bbmMapping : context.getEventModelsConnections().entrySet()) {
+            for (Map.Entry<BlackBoxModel, List<Model>> bbmMapping : context.getEventModelsConnections().entrySet()) {
                 BlackBoxModel event = bbmMapping.getKey();
-                for (BlackBoxModel connectedBbm : bbmMapping.getValue()) {
-                    event.writeMacroConnect(writer, context, context.getEventMacroConnector(event, connectedBbm), connectedBbm);
+                for (Model connected : bbmMapping.getValue()) {
+                    event.writeMacroConnect(writer, context, context.getEventMacroConnector(event, connected), connected);
                 }
             }
         } catch (XMLStreamException e) {

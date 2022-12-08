@@ -6,13 +6,13 @@
  */
 package com.powsybl.dynawaltz.models.lines;
 
-import com.powsybl.dynawaltz.models.AbstractNetworkBlackBoxModel;
+import com.powsybl.dynawaltz.models.AbstractNetworkModel;
 import com.powsybl.iidm.network.Branch;
 
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  */
-public class DefaultLineModel extends AbstractNetworkBlackBoxModel implements LineModel {
+public class DefaultLineModel extends AbstractNetworkModel implements LineModel {
     private final String sidePostfix;
 
     public DefaultLineModel(String staticId, Branch.Side side) {

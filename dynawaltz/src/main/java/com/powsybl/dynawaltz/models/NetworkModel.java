@@ -21,11 +21,11 @@ public class NetworkModel {
     private final Function<String, DefaultBusModel> busModelFactory = DefaultBusModel::new;
     private final BiFunction<String, Branch.Side, DefaultLineModel> lineModelFactory = DefaultLineModel::new;
 
-    public BlackBoxModel getDefaultBusModel(String staticId) {
+    public DefaultBusModel getDefaultBusModel(String staticId) {
         return busModelFactory.apply(staticId);
     }
 
-    public BlackBoxModel getDefaultLineModel(String staticId, Branch.Side side) {
+    public DefaultLineModel getDefaultLineModel(String staticId, Branch.Side side) {
         return lineModelFactory.apply(staticId, side);
     }
 }

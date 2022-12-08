@@ -7,7 +7,7 @@
 package com.powsybl.dynawaltz.models.loads;
 
 import com.powsybl.commons.PowsyblException;
-import com.powsybl.dynawaltz.models.BlackBoxModel;
+import com.powsybl.dynawaltz.models.Model;
 import com.powsybl.dynawaltz.models.buses.BusModel;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -39,9 +39,9 @@ public class LoadAlphaBeta extends AbstractLoad {
     }
 
     @Override
-    public List<Pair<String, String>> getVarsConnect(BlackBoxModel connected) {
+    public List<Pair<String, String>> getVarsConnect(Model connected) {
         if (!(connected instanceof BusModel)) {
-            throw new PowsyblException("LoadModel can only connect to BusModel");
+            throw new PowsyblException("LoadAlphaBeta can only connect to BusModel");
         }
         BusModel connectedBusModel = (BusModel) connected;
         return Arrays.asList(

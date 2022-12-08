@@ -6,27 +6,19 @@
  */
 package com.powsybl.dynawaltz.models.buses;
 
-import com.powsybl.dynawaltz.models.AbstractNetworkBlackBoxModel;
+import com.powsybl.dynawaltz.models.AbstractNetworkModel;
 
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  */
-public class DefaultBusModel extends AbstractNetworkBlackBoxModel implements BusModel {
-    private final String id;
-
+public class DefaultBusModel extends AbstractNetworkModel implements BusModel {
     public DefaultBusModel(String staticId) {
         super(staticId);
-        id = "defaultNodeModel";
     }
 
     @Override
     public String getLib() {
         return "NetworkBus";
-    }
-
-    @Override
-    public String getId() {
-        return this.id;
     }
 
     @Override

@@ -10,6 +10,7 @@ import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractBlackBoxModel;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
+import com.powsybl.dynawaltz.models.Model;
 import com.powsybl.iidm.network.Load;
 
 import javax.xml.stream.XMLStreamException;
@@ -26,7 +27,7 @@ public abstract class AbstractLoad extends AbstractBlackBoxModel {
     }
 
     @Override
-    public List<BlackBoxModel> getModelsConnectedTo(DynaWaltzContext context) {
+    public List<Model> getModelsConnectedTo(DynaWaltzContext context) {
         Load load = context.getNetwork().getLoad(getStaticId());
         if (load == null) {
             throw new PowsyblException("Load static id unknown: " + getStaticId());
