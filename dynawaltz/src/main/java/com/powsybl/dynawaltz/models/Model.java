@@ -7,11 +7,8 @@
 package com.powsybl.dynawaltz.models;
 
 import com.powsybl.dynamicsimulation.DynamicModel;
-import com.powsybl.dynawaltz.DynaWaltzContext;
 import org.apache.commons.lang3.tuple.Pair;
 
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
 import java.util.List;
 
 /**
@@ -22,5 +19,5 @@ public interface Model extends DynamicModel {
 
     String getName();
 
-    List<Pair<String, String>> getAttributesConnectTo();
+    List<Pair<String, String>> getMacroConnectToAttributes();
 }

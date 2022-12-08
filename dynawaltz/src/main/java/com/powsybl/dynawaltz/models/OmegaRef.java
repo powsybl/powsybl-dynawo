@@ -141,6 +141,6 @@ public class OmegaRef extends AbstractPureDynamicBlackBoxModel {
                 Pair.of("id1", getDynamicModelId()),
                 Pair.of("index1", Integer.toString(indicesPerModel.get(connected)))
         );
-        macroConnector.writeMacroConnect(writer, attributesConnectFrom, connected.getAttributesConnectTo());
+        macroConnector.writeMacroConnect(writer, attributesConnectFrom, connected.getMacroConnectToAttributes());
     }
 }

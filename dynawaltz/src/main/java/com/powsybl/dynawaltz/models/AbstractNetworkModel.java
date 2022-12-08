@@ -23,7 +23,7 @@ public abstract class AbstractNetworkModel implements Model {
     }
 
     @Override
-    public List<Pair<String, String>> getAttributesConnectTo() {
+    public List<Pair<String, String>> getMacroConnectToAttributes() {
         return List.of(
                 Pair.of("id2", DynaWaltzXmlConstants.NETWORK),
                 Pair.of("name2", getStaticId())
