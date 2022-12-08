@@ -20,12 +20,22 @@ import java.util.List;
  */
 public final class MacroConnector {
 
+    private final Pair<String, String> libs;
     private final List<Pair<String, String>> varsConnect;
     private final String id;
 
     public MacroConnector(String lib1, String lib2, List<Pair<String, String>> varsConnect) {
+        this.libs = Pair.of(lib1, lib2);
         this.id = MACRO_CONNECTOR_PREFIX + lib1 + "-" + lib2;
         this.varsConnect = varsConnect;
+    }
+
+    public Pair<String, String> getLibs() {
+        return this.libs;
+    }
+
+    public List<Pair<String, String>> getVarsConnect() {
+        return this.varsConnect;
     }
 
     public void writeMacroConnect(XMLStreamWriter writer,
@@ -50,5 +60,22 @@ public final class MacroConnector {
             writer.writeAttribute("var2", varPair.getRight());
         }
         writer.writeEndElement();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof MacroConnector) {
+            MacroConnector mcObj = (MacroConnector) obj;
+            if ((libs.getRight().equals(mcObj.getLibs().getRight()) || libs.getLeft().equals(mcObj.getLibs().getRight()))
+                && (libs.getRight().equals(mcObj.getLibs().getLeft()) || libs.getLeft().equals(mcObj.getLibs().getLeft()))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode() * varsConnect.hashCode() * libs.hashCode();
     }
 }

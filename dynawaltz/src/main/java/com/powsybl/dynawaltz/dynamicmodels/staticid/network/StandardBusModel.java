@@ -2,7 +2,6 @@ package com.powsybl.dynawaltz.dynamicmodels.staticid.network;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
-import com.powsybl.dynawaltz.dynamicmodels.AbstractBlackBoxModelWithDynamicId;
 import com.powsybl.dynawaltz.dynamicmodels.BlackBoxModel;
 import com.powsybl.dynawaltz.dynamicmodels.staticid.AbstractBlackBoxModelWithStaticId;
 import com.powsybl.dynawaltz.dynamicmodels.staticid.staticref.generators.GeneratorModel;
@@ -15,7 +14,6 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 

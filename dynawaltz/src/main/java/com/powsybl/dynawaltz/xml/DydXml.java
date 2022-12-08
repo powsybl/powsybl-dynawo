@@ -18,6 +18,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -57,10 +58,15 @@ public final class DydXml {
             for (MacroStaticReference macroStaticReference : context.getMacroStaticReferences()) {
                 macroStaticReference.write(writer);
             }
+            List<MacroConnector> usedMacroConnectors = new ArrayList<>();
             for (Map.Entry<BlackBoxModelWithDynamicId, List<BlackBoxModel>> bbmMapping : context.getModelsConnections().entrySet()) {
                 BlackBoxModelWithDynamicId bbm = bbmMapping.getKey();
                 for (BlackBoxModel connectedBbm : bbmMapping.getValue()) {
-                    bbm.writeMacroConnect(writer, context, context.getMacroConnector(bbm, connectedBbm), connectedBbm);
+                    MacroConnector macroConnector = context.getMacroConnector(bbm, connectedBbm);
+                    if (!usedMacroConnectors.contains(macroConnector)) {
+                        bbm.writeMacroConnect(writer, context, macroConnector, connectedBbm);
+                        usedMacroConnectors.add(macroConnector);
+                    }
                 }
             }
         } catch (XMLStreamException e) {
