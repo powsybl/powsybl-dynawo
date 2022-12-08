@@ -6,19 +6,28 @@
  */
 package com.powsybl.dynawo.it;
 
-import com.powsybl.commons.datasource.ResourceDataSource;
-import com.powsybl.commons.datasource.ResourceSet;
+import com.powsybl.commons.reporter.Reporter;
+import com.powsybl.contingency.Contingency;
 import com.powsybl.dynaflow.DynaFlowConfig;
 import com.powsybl.dynaflow.DynaFlowParameters;
 import com.powsybl.dynaflow.DynaFlowProvider;
+import com.powsybl.dynaflow.DynaFlowSecurityAnalysisProvider;
+import com.powsybl.ieeecdf.converter.IeeeCdfNetworkFactory;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.VariantManagerConstants;
 import com.powsybl.loadflow.LoadFlowParameters;
 import com.powsybl.loadflow.LoadFlowResult;
+import com.powsybl.security.LimitViolationFilter;
+import com.powsybl.security.SecurityAnalysisParameters;
+import com.powsybl.security.SecurityAnalysisResult;
+import com.powsybl.security.detectors.DefaultLimitViolationDetector;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.nio.file.Path;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -28,31 +37,51 @@ import static org.junit.Assert.assertFalse;
  */
 public class DynaFlowTest extends AbstractDynawoTest {
 
-    private DynaFlowProvider provider;
+    private DynaFlowProvider loadFlowProvider;
 
-    private LoadFlowParameters parameters;
+    private DynaFlowSecurityAnalysisProvider securityAnalysisProvider;
 
-    private DynaFlowParameters dynaFlowParameters;
+    private LoadFlowParameters loadFlowParameters;
+
+    private DynaFlowParameters dynaFlowLoadFlowParameters;
+
+    private SecurityAnalysisParameters securityAnalysisParameters;
 
     @Override
     @Before
     public void setUp() throws Exception {
         super.setUp();
         DynaFlowConfig config = new DynaFlowConfig(Path.of("/dynaflow-launcher"), false);
-        provider = new DynaFlowProvider(() -> config);
-        parameters = new LoadFlowParameters();
-        dynaFlowParameters = new DynaFlowParameters();
-        parameters.addExtension(DynaFlowParameters.class, dynaFlowParameters);
+        loadFlowProvider = new DynaFlowProvider(() -> config);
+        loadFlowParameters = new LoadFlowParameters();
+        dynaFlowLoadFlowParameters = new DynaFlowParameters();
+        securityAnalysisProvider = new DynaFlowSecurityAnalysisProvider(() -> config);
+        securityAnalysisParameters = new SecurityAnalysisParameters();
+        loadFlowParameters.addExtension(DynaFlowParameters.class, dynaFlowLoadFlowParameters);
     }
 
     @Test
-    public void test() {
-        Network network = Network.read(new ResourceDataSource("IEEE14", new ResourceSet("/ieee14-disconnectline", "IEEE14.iidm")));
-        LoadFlowResult result = provider.run(network, computationManager, VariantManagerConstants.INITIAL_VARIANT_ID, parameters)
+    public void testLf() {
+        Network network = IeeeCdfNetworkFactory.create14();
+        LoadFlowResult result = loadFlowProvider.run(network, computationManager, VariantManagerConstants.INITIAL_VARIANT_ID, loadFlowParameters)
                 .join();
         assertFalse(result.isOk()); // FIXME
         assertEquals(1, result.getComponentResults().size());
         LoadFlowResult.ComponentResult componentResult = result.getComponentResults().get(0);
-        assertEquals(LoadFlowResult.ComponentResult.Status.FAILED, componentResult.getStatus());
+        assertEquals(LoadFlowResult.ComponentResult.Status.FAILED, componentResult.getStatus()); // FIXME
+    }
+
+    @Test
+    public void testSa() {
+        Network network = IeeeCdfNetworkFactory.create14();
+        List<Contingency> contingencies = network.getLineStream()
+                .map(l -> Contingency.line(l.getId()))
+                .collect(Collectors.toList());
+        SecurityAnalysisResult result = securityAnalysisProvider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID, new DefaultLimitViolationDetector(),
+                        new LimitViolationFilter(), computationManager, securityAnalysisParameters, n -> contingencies, Collections.emptyList(),
+                        Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), Reporter.NO_OP)
+                .join()
+                .getResult();
+        assertEquals(LoadFlowResult.ComponentResult.Status.FAILED, result.getPreContingencyResult().getStatus()); // FIXME
     }
 }

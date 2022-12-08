@@ -64,7 +64,8 @@ public class DynaFlowSecurityAnalysis {
     private final List<SecurityAnalysisInterceptor> interceptors;
 
     public DynaFlowSecurityAnalysis(Network network, LimitViolationDetector detector,
-                                    LimitViolationFilter filter, ComputationManager computationManager) {
+                                    LimitViolationFilter filter, ComputationManager computationManager,
+                                    Supplier<DynaFlowConfig> configSupplier) {
         this.network = Objects.requireNonNull(network);
         this.violationDetector = Objects.requireNonNull(detector);
         this.violationFilter = Objects.requireNonNull(filter);
@@ -72,8 +73,7 @@ public class DynaFlowSecurityAnalysis {
         this.computationManager = Objects.requireNonNull(computationManager);
 
         interceptors.add(new CurrentLimitViolationInterceptor());
-        // TODO(Luma) Allow additional sources for configuration?
-        this.configSupplier = DynaFlowConfig::fromPropertyFile;
+        this.configSupplier = Objects.requireNonNull(configSupplier);
     }
 
     private static DynaFlowParameters getParametersExt(LoadFlowParameters parameters) {

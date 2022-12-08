@@ -20,7 +20,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -32,6 +34,16 @@ public class DynaFlowSecurityAnalysisProvider implements SecurityAnalysisProvide
 
     private static final String PROVIDER_NAME = "DynawoSecurityAnalysis";
     private static final String PROVIDER_VERSION = "1.0";
+
+    private final Supplier<DynaFlowConfig> configSupplier;
+
+    public DynaFlowSecurityAnalysisProvider() {
+        this(DynaFlowConfig::fromPropertyFile);
+    }
+
+    public DynaFlowSecurityAnalysisProvider(Supplier<DynaFlowConfig> configSupplier) {
+        this.configSupplier = Objects.requireNonNull(configSupplier);
+    }
 
     @Override
     public CompletableFuture<SecurityAnalysisReport> run(Network network,
@@ -58,7 +70,7 @@ public class DynaFlowSecurityAnalysisProvider implements SecurityAnalysisProvide
         if (actions != null && !actions.isEmpty()) {
             LOG.error("Actions are not implemented in Dynaflow");
         }
-        DynaFlowSecurityAnalysis securityAnalysis = new DynaFlowSecurityAnalysis(network, detector, filter, computationManager);
+        DynaFlowSecurityAnalysis securityAnalysis = new DynaFlowSecurityAnalysis(network, detector, filter, computationManager, configSupplier);
         interceptors.forEach(securityAnalysis::addInterceptor);
         return securityAnalysis.run(workingVariantId, parameters, contingenciesProvider);
     }
