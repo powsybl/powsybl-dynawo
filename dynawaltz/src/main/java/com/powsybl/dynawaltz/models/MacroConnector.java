@@ -20,12 +20,12 @@ import java.util.List;
  */
 public final class MacroConnector {
 
-    private final List<Pair<String, String>> varsConnect;
+    private final List<VarConnection> varConnections;
     private final String id;
 
-    public MacroConnector(String lib1, String lib2, List<Pair<String, String>> varsConnect) {
+    public MacroConnector(String lib1, String lib2, List<VarConnection> varConnections) {
         this.id = MACRO_CONNECTOR_PREFIX + lib1 + "-" + lib2;
-        this.varsConnect = varsConnect;
+        this.varConnections = varConnections;
     }
 
     public void writeMacroConnect(XMLStreamWriter writer,
@@ -44,10 +44,10 @@ public final class MacroConnector {
     public void write(XMLStreamWriter writer) throws XMLStreamException {
         writer.writeStartElement(DYN_URI, "macroConnector");
         writer.writeAttribute("id", id);
-        for (Pair<String, String> varPair : this.varsConnect) {
+        for (VarConnection varConnection : this.varConnections) {
             writer.writeEmptyElement(DYN_URI, "connect");
-            writer.writeAttribute("var1", varPair.getLeft());
-            writer.writeAttribute("var2", varPair.getRight());
+            writer.writeAttribute("var1", varConnection.getVar1());
+            writer.writeAttribute("var2", varConnection.getVar2());
         }
         writer.writeEndElement();
     }

@@ -11,6 +11,7 @@ import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractBlackBoxModel;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.Model;
+import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.buses.BusModel;
 import com.powsybl.iidm.network.Generator;
 import org.apache.commons.lang3.tuple.Pair;
@@ -68,14 +69,14 @@ public abstract class AbstractGeneratorModel extends AbstractBlackBoxModel imple
     }
 
     @Override
-    public List<Pair<String, String>> getVarsConnect(Model connected) {
+    public List<VarConnection> getVarConnectionsWith(Model connected) {
         if (!(connected instanceof BusModel)) {
             throw new PowsyblException("GeneratorModel can only connect to BusModel");
         }
         BusModel connectedBusModel = (BusModel) connected;
         return Arrays.asList(
-                Pair.of(getTerminalVarName(), connectedBusModel.getTerminalVarName()),
-                Pair.of(getSwitchOffSignalNodeVarName(), connectedBusModel.getSwitchOffSignalVarName())
+                new VarConnection(getTerminalVarName(), connectedBusModel.getTerminalVarName()),
+                new VarConnection(getSwitchOffSignalNodeVarName(), connectedBusModel.getSwitchOffSignalVarName())
         );
     }
 

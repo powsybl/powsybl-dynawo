@@ -29,7 +29,7 @@ public interface BlackBoxModel extends Model {
 
     void writeMacroConnect(XMLStreamWriter writer, DynaWaltzContext context, MacroConnector macroConnector, Model connected) throws XMLStreamException;
 
-    List<Pair<String, String>> getVarsConnect(Model connected);
+    List<VarConnection> getVarConnectionsWith(Model connected);
 
     List<Model> getModelsConnectedTo(DynaWaltzContext dynaWaltzContext);
 }

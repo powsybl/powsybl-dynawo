@@ -86,16 +86,16 @@ public class OmegaRef extends AbstractPureDynamicBlackBoxModel {
     }
 
     @Override
-    public List<Pair<String, String>> getVarsConnect(Model connected) {
+    public List<VarConnection> getVarConnectionsWith(Model connected) {
         if (connected instanceof GeneratorSynchronousModel) {
             GeneratorSynchronousModel connectedGeneratorModel = (GeneratorSynchronousModel) connected;
             return Arrays.asList(
-                    Pair.of("omega_grp_@INDEX@", connectedGeneratorModel.getOmegaPuVarName()),
-                    Pair.of("omegaRef_grp_@INDEX@", connectedGeneratorModel.getOmegaRefPuVarName()),
-                    Pair.of("running_grp_@INDEX@", connectedGeneratorModel.getRunningVarName())
+                    new VarConnection("omega_grp_@INDEX@", connectedGeneratorModel.getOmegaPuVarName()),
+                    new VarConnection("omegaRef_grp_@INDEX@", connectedGeneratorModel.getOmegaRefPuVarName()),
+                    new VarConnection("running_grp_@INDEX@", connectedGeneratorModel.getRunningVarName())
             );
         } else if (connected instanceof BusModel) {
-            return List.of(Pair.of("numcc_node_@INDEX@", ((BusModel) connected).getNumCCVarName()));
+            return List.of(new VarConnection("numcc_node_@INDEX@", ((BusModel) connected).getNumCCVarName()));
         } else {
             throw new PowsyblException("OmegaRef can only connect to GeneratorModel and BusModel");
         }

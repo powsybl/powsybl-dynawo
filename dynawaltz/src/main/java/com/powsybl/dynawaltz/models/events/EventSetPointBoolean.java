@@ -11,6 +11,7 @@ import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.Model;
+import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.generators.GeneratorModel;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -34,11 +35,11 @@ public class EventSetPointBoolean extends AbstractPureDynamicBlackBoxModel {
     }
 
     @Override
-    public List<Pair<String, String>> getVarsConnect(Model connected) {
+    public List<VarConnection> getVarConnectionsWith(Model connected) {
         if (!(connected instanceof GeneratorModel)) {
             throw new PowsyblException("EventSetPointBoolean can only connect to GeneratorModel");
         }
-        return List.of(Pair.of("event_state1", ((GeneratorModel) connected).getSwitchOffSignalEventVarName()));
+        return List.of(new VarConnection("event_state1", ((GeneratorModel) connected).getSwitchOffSignalEventVarName()));
     }
 
     @Override

@@ -11,6 +11,7 @@ import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.Model;
+import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.lines.LineModel;
 import com.powsybl.iidm.network.Branch;
 import org.apache.commons.lang3.tuple.Pair;
@@ -40,11 +41,11 @@ public class EventQuadripoleDisconnection extends AbstractPureDynamicBlackBoxMod
     }
 
     @Override
-    public List<Pair<String, String>> getVarsConnect(Model connected) {
+    public List<VarConnection> getVarConnectionsWith(Model connected) {
         if (!(connected instanceof LineModel)) {
             throw new PowsyblException("EventQuadripoleDisconnection can only connect to LineModel");
         }
-        return List.of(Pair.of("event_state1_value", ((LineModel) connected).getStateValueVarName()));
+        return List.of(new VarConnection("event_state1_value", ((LineModel) connected).getStateValueVarName()));
     }
 
     @Override
