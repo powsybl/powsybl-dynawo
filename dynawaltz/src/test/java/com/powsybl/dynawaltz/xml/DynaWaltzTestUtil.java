@@ -6,19 +6,12 @@
  */
 package com.powsybl.dynawaltz.xml;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.xml.XMLConstants;
-import javax.xml.transform.Source;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
-
+import com.powsybl.commons.AbstractConverterTest;
+import com.powsybl.dynamicsimulation.Curve;
+import com.powsybl.dynamicsimulation.DynamicModel;
+import com.powsybl.dynamicsimulation.EventModel;
+import com.powsybl.dynawaltz.DynaWaltzCurve;
+import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton;
 import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection;
 import com.powsybl.dynawaltz.models.events.EventSetPointBoolean;
@@ -26,21 +19,24 @@ import com.powsybl.dynawaltz.models.generators.*;
 import com.powsybl.dynawaltz.models.loads.LoadAlphaBeta;
 import com.powsybl.dynawaltz.models.loads.LoadOneTransformer;
 import com.powsybl.iidm.network.*;
+import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import junit.framework.AssertionFailedError;
-
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
 import org.xml.sax.SAXException;
 
-import com.powsybl.commons.AbstractConverterTest;
-import com.powsybl.dynamicsimulation.Curve;
-import com.powsybl.dynamicsimulation.DynamicModel;
-import com.powsybl.dynamicsimulation.EventModel;
-import com.powsybl.dynawaltz.DynaWaltzCurve;
-import com.powsybl.dynawaltz.automatons.*;
-import com.powsybl.dynawaltz.events.*;
-import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
+import javax.xml.XMLConstants;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.powsybl.commons.ComparisonUtils.compareXml;
 
@@ -53,8 +49,8 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
     public ExpectedException exception = ExpectedException.none();
 
     protected Network network;
-    protected List<DynamicModel> dynamicModels;
-    protected List<EventModel> eventModels;
+    protected List<BlackBoxModel> dynamicModels;
+    protected List<BlackBoxModel> eventModels;
     protected List<Curve> curves;
 
     @Before
