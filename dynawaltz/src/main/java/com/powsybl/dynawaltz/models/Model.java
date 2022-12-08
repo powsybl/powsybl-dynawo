@@ -20,7 +20,7 @@ import java.util.List;
 public interface Model extends DynamicModel {
     String getStaticId();
 
-    String getLib();
+    String getName();
 
     List<Pair<String, String>> getAttributesConnectTo();
 }

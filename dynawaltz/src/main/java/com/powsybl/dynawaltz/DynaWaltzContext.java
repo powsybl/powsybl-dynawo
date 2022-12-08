@@ -116,7 +116,7 @@ public class DynaWaltzContext {
 
     public MacroConnector getMacroConnector(BlackBoxModel bbm, Model model) {
         initConnectorsMap();
-        return connectorsMap.get(Pair.of(bbm.getLib(), model.getLib()));
+        return connectorsMap.get(Pair.of(bbm.getLib(), model.getName()));
     }
 
     private void initConnectorsMap() {
@@ -127,7 +127,7 @@ public class DynaWaltzContext {
 
     private void computeMacroConnectors(BlackBoxModel bbm) {
         getModelsConnections().get(bbm).forEach(connectedBbm -> {
-            var key = Pair.of(bbm.getLib(), connectedBbm.getLib());
+            var key = Pair.of(bbm.getLib(), connectedBbm.getName());
             connectorsMap.computeIfAbsent(key, k -> createMacroConnector(bbm, connectedBbm));
         });
     }
@@ -139,7 +139,7 @@ public class DynaWaltzContext {
 
     public MacroConnector getEventMacroConnector(BlackBoxModel event, Model model) {
         initEventConnectorsMap();
-        return eventConnectorsMap.get(Pair.of(event.getLib(), model.getLib()));
+        return eventConnectorsMap.get(Pair.of(event.getLib(), model.getName()));
     }
 
     private void initEventConnectorsMap() {
@@ -150,13 +150,13 @@ public class DynaWaltzContext {
 
     private void computeEventMacroConnector(BlackBoxModel event) {
         getEventModelsConnections().get(event).forEach(connectedBbm -> {
-            var connectorKey = Pair.of(event.getLib(), connectedBbm.getLib());
+            var connectorKey = Pair.of(event.getLib(), connectedBbm.getName());
             eventConnectorsMap.computeIfAbsent(connectorKey, k -> createMacroConnector(event, connectedBbm));
         });
     }
 
     private MacroConnector createMacroConnector(BlackBoxModel bbm, Model model) {
-        return new MacroConnector(bbm.getLib(), model.getLib(), bbm.getVarConnectionsWith(model));
+        return new MacroConnector(bbm.getLib(), model.getName(), bbm.getVarConnectionsWith(model));
     }
 
     public Map<BlackBoxModel, List<Model>> getModelsConnections() {

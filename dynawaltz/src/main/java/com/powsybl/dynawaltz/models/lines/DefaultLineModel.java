@@ -21,7 +21,7 @@ public class DefaultLineModel extends AbstractNetworkModel implements LineModel 
     }
 
     @Override
-    public String getLib() {
+    public String getName() {
         return "NetworkLine" + sidePostfix;
     }
 

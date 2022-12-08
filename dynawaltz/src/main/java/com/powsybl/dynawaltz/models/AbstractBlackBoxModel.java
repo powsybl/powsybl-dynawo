@@ -32,12 +32,17 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel {
         this.parameterSetId = Objects.requireNonNull(parameterSetId);
     }
 
-    public String getDynamicModelId() {
-        return dynamicModelId;
-    }
-
     public String getStaticId() {
         return staticId;
+    }
+
+    @Override
+    public String getName() {
+        return getLib();
+    }
+
+    public String getDynamicModelId() {
+        return dynamicModelId;
     }
 
     public String getParameterSetId() {
@@ -46,7 +51,7 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel {
 
     @Override
     public void writeParameters(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
-        //Empty method to be redefined by specific models
+        // method empty by default to be redefined by specific models
     }
 
     @Override

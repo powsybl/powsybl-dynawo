@@ -17,7 +17,7 @@ public class DefaultBusModel extends AbstractNetworkModel implements BusModel {
     }
 
     @Override
-    public String getLib() {
+    public String getName() {
         return "NetworkBus";
     }
 
