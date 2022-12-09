@@ -6,6 +6,7 @@
  */
 package com.powsybl.dynawaltz.dynamicmodels.utils;
 
+import com.powsybl.dynawaltz.dynamicmodels.BlackBoxModel;
 import org.apache.commons.lang3.tuple.Pair;
 
 import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
@@ -20,18 +21,18 @@ import java.util.List;
  */
 public final class MacroConnector {
 
-    private final Pair<String, String> libs;
+    private final Pair<BlackBoxModel, BlackBoxModel> connectedBbms;
     private final List<Pair<String, String>> varsConnect;
     private final String id;
 
-    public MacroConnector(String lib1, String lib2, List<Pair<String, String>> varsConnect) {
-        this.libs = Pair.of(lib1, lib2);
-        this.id = MACRO_CONNECTOR_PREFIX + lib1 + "-" + lib2;
+    public MacroConnector(BlackBoxModel bbm1, BlackBoxModel bbm2, List<Pair<String, String>> varsConnect) {
+        this.connectedBbms = Pair.of(bbm1, bbm2);
+        this.id = MACRO_CONNECTOR_PREFIX + bbm1.getLib() + "-" + bbm2.getLib();
         this.varsConnect = varsConnect;
     }
 
-    public Pair<String, String> getLibs() {
-        return this.libs;
+    public Pair<BlackBoxModel, BlackBoxModel> getConnectedBbms() {
+        return this.connectedBbms;
     }
 
     public List<Pair<String, String>> getVarsConnect() {
@@ -66,8 +67,8 @@ public final class MacroConnector {
     public boolean equals(Object obj) {
         if (obj instanceof MacroConnector) {
             MacroConnector mcObj = (MacroConnector) obj;
-            if (mcObj.getLibs().getLeft().equals(libs.getLeft()) && mcObj.getLibs().getRight().equals(getLibs().getRight())
-                || mcObj.getLibs().getLeft().equals(libs.getRight()) && mcObj.getLibs().getRight().equals(getLibs().getLeft())) {
+            if (mcObj.getConnectedBbms().getLeft().equals(getConnectedBbms().getLeft()) && mcObj.getConnectedBbms().getRight().equals(getConnectedBbms().getRight())
+                || mcObj.getConnectedBbms().getLeft().equals(getConnectedBbms().getRight()) && mcObj.getConnectedBbms().getRight().equals(getConnectedBbms().getLeft())) {
                 return true;
             }
         }
@@ -76,6 +77,6 @@ public final class MacroConnector {
 
     @Override
     public int hashCode() {
-        return id.hashCode() * varsConnect.hashCode() * libs.hashCode();
+        return id.hashCode() * varsConnect.hashCode() * connectedBbms.hashCode();
     }
 }
