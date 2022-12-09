@@ -25,13 +25,15 @@ public interface BlackBoxModel extends Model {
 
     List<Pair<String, String>> getVarsMapping();
 
+    List<VarConnection> getVarConnectionsWith(Model connected);
+
+    List<Model> getModelsConnectedTo(DynaWaltzContext dynaWaltzContext);
+
+    String getParFile(DynaWaltzContext context);
+
     void write(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException;
 
     void writeParameters(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException;
 
     void writeMacroConnect(XMLStreamWriter writer, DynaWaltzContext context, MacroConnector macroConnector, Model connected) throws XMLStreamException;
-
-    List<VarConnection> getVarConnectionsWith(Model connected);
-
-    List<Model> getModelsConnectedTo(DynaWaltzContext dynaWaltzContext);
 }

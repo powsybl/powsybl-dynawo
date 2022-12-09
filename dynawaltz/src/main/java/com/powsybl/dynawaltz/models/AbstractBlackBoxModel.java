@@ -69,10 +69,15 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel {
         return List.of(Pair.of("id2", getDynamicModelId()));
     }
 
+    @Override
+    public String getParFile(DynaWaltzContext context) {
+        return context.getParFile();
+    }
+
     protected void writeDynamicAttributes(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
         writer.writeAttribute("id", getDynamicModelId());
         writer.writeAttribute("lib", getLib());
-        writer.writeAttribute("parFile", context.getParFile());
+        writer.writeAttribute("parFile", getParFile(context));
         writer.writeAttribute("parId", getParameterSetId());
     }
 

@@ -125,6 +125,11 @@ public class OmegaRef extends AbstractPureDynamicBlackBoxModel {
     }
 
     @Override
+    public String getParFile(DynaWaltzContext context) {
+        return context.getSimulationParFile();
+    }
+
+    @Override
     public void writeMacroConnect(XMLStreamWriter writer, DynaWaltzContext context, MacroConnector macroConnector, Model connected) throws XMLStreamException {
         Map<Model, Integer> indicesPerModel = getConnectedModelsIndices(context);
 
