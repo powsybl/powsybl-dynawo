@@ -10,7 +10,7 @@ import com.powsybl.dynamicsimulation.EventModel;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.dynamicmodels.AbstractBlackBoxModelWithParameterId;
 import com.powsybl.dynawaltz.dynamicmodels.BlackBoxModel;
-import com.powsybl.dynawaltz.dynamicmodels.MacroConnector;
+import com.powsybl.dynawaltz.dynamicmodels.utils.MacroConnector;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.xml.stream.XMLStreamException;

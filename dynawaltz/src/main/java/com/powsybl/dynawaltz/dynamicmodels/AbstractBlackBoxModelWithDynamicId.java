@@ -8,6 +8,7 @@ package com.powsybl.dynawaltz.dynamicmodels;
 
 import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynawaltz.DynaWaltzContext;
+import com.powsybl.dynawaltz.dynamicmodels.utils.MacroConnector;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.xml.stream.XMLStreamException;

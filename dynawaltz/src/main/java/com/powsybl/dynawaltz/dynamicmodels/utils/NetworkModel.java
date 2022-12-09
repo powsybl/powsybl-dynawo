@@ -4,8 +4,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package com.powsybl.dynawaltz.dynamicmodels;
+package com.powsybl.dynawaltz.dynamicmodels.utils;
 
+import com.powsybl.dynawaltz.dynamicmodels.BlackBoxModel;
 import com.powsybl.dynawaltz.dynamicmodels.staticid.network.DefaultBusModel;
 import com.powsybl.dynawaltz.dynamicmodels.staticid.network.DefaultLineModel;
 import com.powsybl.iidm.network.Branch;

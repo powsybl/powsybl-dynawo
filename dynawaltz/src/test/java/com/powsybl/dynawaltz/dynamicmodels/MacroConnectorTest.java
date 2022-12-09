@@ -1,5 +1,6 @@
 package com.powsybl.dynawaltz.dynamicmodels;
 
+import com.powsybl.dynawaltz.dynamicmodels.utils.MacroConnector;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
 

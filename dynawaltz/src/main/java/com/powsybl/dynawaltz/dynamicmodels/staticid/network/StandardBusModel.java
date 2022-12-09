@@ -5,7 +5,6 @@ import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.dynamicmodels.BlackBoxModel;
 import com.powsybl.dynawaltz.dynamicmodels.staticid.AbstractBlackBoxModelWithStaticId;
 import com.powsybl.dynawaltz.dynamicmodels.staticid.staticref.generators.GeneratorModel;
-import com.powsybl.dynawaltz.xml.MacroStaticReference;
 import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.Generator;
 import org.apache.commons.lang3.tuple.Pair;

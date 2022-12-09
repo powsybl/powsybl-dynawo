@@ -11,7 +11,7 @@ import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.dynamicmodels.BlackBoxModel;
 import com.powsybl.dynawaltz.dynamicmodels.BlackBoxModelWithDynamicId;
-import com.powsybl.dynawaltz.dynamicmodels.MacroConnector;
+import com.powsybl.dynawaltz.dynamicmodels.utils.MacroConnector;
 import com.powsybl.dynawaltz.dynamicmodels.events.BlackBoxEventModel;
 
 import javax.xml.stream.XMLStreamException;
@@ -65,7 +65,7 @@ public final class DydXml {
                     MacroConnector macroConnector = context.getMacroConnector(bbm, connectedBbm);
                     if (!usedMacroConnectors.contains(macroConnector)) {
                         bbm.writeMacroConnect(writer, context, macroConnector, connectedBbm);
-                        usedMacroConnectors.add(macroConnector);
+                        //usedMacroConnectors.add(macroConnector);
                     }
                 }
             }
