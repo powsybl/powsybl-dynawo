@@ -10,12 +10,13 @@ import com.powsybl.dynamicsimulation.DynamicModel;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  */
 public interface Model extends DynamicModel {
-    String getStaticId();
+    Optional<String> getStaticId();
 
     String getName();
 

@@ -16,6 +16,8 @@ import javax.xml.stream.XMLStreamWriter;
 import java.util.Collections;
 import java.util.List;
 
+import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
+
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  */
@@ -29,10 +31,5 @@ public abstract class AbstractPureDynamicBlackBoxModel extends AbstractBlackBoxM
     public final List<Pair<String, String>> getVarsMapping() {
         // No static-dynamic mapping as purely dynamic
         return Collections.emptyList();
-    }
-
-    @Override
-    public void write(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
-        writePureDynamicBlackBoxModel(writer, context);
     }
 }

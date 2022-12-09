@@ -14,6 +14,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 
@@ -28,12 +29,12 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel {
 
     protected AbstractBlackBoxModel(String dynamicModelId, String staticId, String parameterSetId) {
         this.dynamicModelId = Objects.requireNonNull(dynamicModelId);
-        this.staticId = Objects.requireNonNull(staticId);
+        this.staticId = staticId;
         this.parameterSetId = Objects.requireNonNull(parameterSetId);
     }
 
-    public String getStaticId() {
-        return staticId;
+    public Optional<String> getStaticId() {
+        return Optional.ofNullable(staticId);
     }
 
     @Override
@@ -75,17 +76,24 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel {
         writer.writeAttribute("parId", getParameterSetId());
     }
 
+    @Override
+    public void write(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
+        if (staticId != null) {
+            writeBlackBoxModel(writer, context);
+        } else {
+            writePureDynamicBlackBoxModel(writer, context);
+        }
+    }
+
     protected void writeBlackBoxModel(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
-        // Write the blackBoxModel object
         writer.writeStartElement(DYN_URI, "blackBoxModel");
         writeDynamicAttributes(writer, context);
-        writer.writeAttribute("staticId", getStaticId());
+        writer.writeAttribute("staticId", staticId);
         MacroStaticReference.writeMacroStaticRef(writer, getLib());
         writer.writeEndElement();
     }
 
     protected void writePureDynamicBlackBoxModel(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
-        // Write the blackBoxModel object
         writer.writeEmptyElement(DYN_URI, "blackBoxModel");
         writeDynamicAttributes(writer, context);
     }

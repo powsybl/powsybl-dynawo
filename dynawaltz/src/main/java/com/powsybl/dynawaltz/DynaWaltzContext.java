@@ -82,10 +82,6 @@ public class DynaWaltzContext {
         return parametersDatabase;
     }
 
-    public List<BlackBoxModel> getBlackBoxModels() {
-        return Collections.unmodifiableList(dynamicModels);
-    }
-
     public Collection<MacroStaticReference> getMacroStaticReferences() {
         initMacroStaticReferences();
         return macroStaticReferences.values();
@@ -100,9 +96,9 @@ public class DynaWaltzContext {
     }
 
     public Map<String, BlackBoxModel> getStaticIdBlackBoxModelMap() {
-        return getBlackBoxModelStream()
-                .filter(blackBoxModel -> !blackBoxModel.getStaticId().isEmpty())
-                .collect(Collectors.toMap(BlackBoxModel::getStaticId, Function.identity(), this::mergeDuplicateStaticId, LinkedHashMap::new));
+        return getInputBlackBoxModelStream()
+                .filter(blackBoxModel -> blackBoxModel.getStaticId().isPresent())
+                .collect(Collectors.toMap(bbm -> bbm.getStaticId().get(), Function.identity(), this::mergeDuplicateStaticId, LinkedHashMap::new));
     }
 
     private BlackBoxModel mergeDuplicateStaticId(BlackBoxModel bbm1, BlackBoxModel bbm2) {
@@ -183,6 +179,10 @@ public class DynaWaltzContext {
             return getInputBlackBoxModelStream();
         }
         return Stream.concat(getInputBlackBoxModelStream(), Stream.of(omegaRef));
+    }
+
+    public List<BlackBoxModel> getBlackBoxModels() {
+        return getBlackBoxModelStream().collect(Collectors.toList());
     }
 
     public Stream<BlackBoxModel> getBlackBoxEventModelStream() {

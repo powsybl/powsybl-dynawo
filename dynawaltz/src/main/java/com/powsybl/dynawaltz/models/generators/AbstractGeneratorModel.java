@@ -16,10 +16,9 @@ import com.powsybl.dynawaltz.models.buses.BusModel;
 import com.powsybl.iidm.network.Generator;
 import org.apache.commons.lang3.tuple.Pair;
 
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -41,7 +40,7 @@ public abstract class AbstractGeneratorModel extends AbstractBlackBoxModel imple
                                   String terminalVarName, String switchOffSignalNodeVarName,
                                   String switchOffSignalEventVarName, String switchOffSignalAutomatonVarName,
                                   String runningVarName) {
-        super(dynamicModelId, staticId, parameterSetId);
+        super(dynamicModelId, Objects.requireNonNull(staticId), parameterSetId);
         this.terminalVarName = terminalVarName;
         this.switchOffSignalNodeVarName = switchOffSignalNodeVarName;
         this.switchOffSignalEventVarName = switchOffSignalEventVarName;
@@ -56,9 +55,10 @@ public abstract class AbstractGeneratorModel extends AbstractBlackBoxModel imple
 
     @Override
     public List<Model> getModelsConnectedTo(DynaWaltzContext context) {
-        Generator generator = context.getNetwork().getGenerator(getStaticId());
+        String staticId = getStaticId().orElse(null); // cannot be empty as checked in constructor
+        Generator generator = context.getNetwork().getGenerator(staticId);
         if (generator == null) {
-            throw new PowsyblException("Generator static id unknown: " + getStaticId());
+            throw new PowsyblException("Generator static id unknown: " + staticId);
         }
         String connectedStaticId = generator.getTerminal().getBusBreakerView().getConnectableBus().getId();
         BlackBoxModel connectedBbm = context.getStaticIdBlackBoxModelMap().get(connectedStaticId);
@@ -103,10 +103,5 @@ public abstract class AbstractGeneratorModel extends AbstractBlackBoxModel imple
     @Override
     public String getRunningVarName() {
         return runningVarName;
-    }
-
-    @Override
-    public void write(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
-        writeBlackBoxModel(writer, context);
     }
 }

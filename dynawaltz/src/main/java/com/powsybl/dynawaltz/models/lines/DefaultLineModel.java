@@ -13,21 +13,21 @@ import com.powsybl.iidm.network.Branch;
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  */
 public class DefaultLineModel extends AbstractNetworkModel implements LineModel {
-    private final String sidePostfix;
+    private final String sideSuffix;
 
     public DefaultLineModel(String staticId, Branch.Side side) {
         super(staticId);
-        this.sidePostfix = LineModel.getPostfix(side);
+        this.sideSuffix = LineModel.getSuffix(side);
     }
 
     @Override
     public String getName() {
-        return "NetworkLine" + sidePostfix;
+        return "NetworkLine" + sideSuffix;
     }
 
     @Override
     public String getIVarName() {
-        return "@NAME@_i" + sidePostfix;
+        return "@NAME@_i" + sideSuffix;
     }
 
     @Override

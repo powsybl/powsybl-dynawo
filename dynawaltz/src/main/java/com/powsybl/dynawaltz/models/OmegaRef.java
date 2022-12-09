@@ -54,15 +54,6 @@ public class OmegaRef extends AbstractPureDynamicBlackBoxModel {
     }
 
     @Override
-    public void write(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
-        writer.writeEmptyElement(DYN_URI, "blackBoxModel");
-        writer.writeAttribute("id", OMEGA_REF_ID);
-        writer.writeAttribute("lib", getLib());
-        writer.writeAttribute("parFile", context.getSimulationParFile());
-        writer.writeAttribute("parId", getParameterSetId());
-    }
-
-    @Override
     public void writeParameters(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
         DynaWaltzParametersDatabase parDB = context.getParametersDatabase();
 
@@ -107,14 +98,14 @@ public class OmegaRef extends AbstractPureDynamicBlackBoxModel {
     }
 
     private BusModel getBusAssociatedTo(GeneratorSynchronousModel generatorModel, DynaWaltzContext context) {
-        Generator generator = context.getNetwork().getGenerator(generatorModel.getStaticId());
+        Generator generator = generatorModel.getStaticId().map(staticId -> context.getNetwork().getGenerator(staticId)).orElse(null);
         if (generator == null) {
             throw new PowsyblException("Generator " + generatorModel.getLib() + " not found in DynaWaltz context. Id : " + generatorModel.getDynamicModelId());
         }
         String connectedStaticId = generator.getTerminal().getBusBreakerView().getConnectableBus().getId();
         BusModel busModel = (BusModel) context.getStaticIdBlackBoxModelMap().get(connectedStaticId);
         if (busModel == null) {
-            busModel = (BusModel) context.getNetworkModel().getDefaultBusModel(connectedStaticId);
+            busModel = context.getNetworkModel().getDefaultBusModel(connectedStaticId);
         }
         return busModel;
     }

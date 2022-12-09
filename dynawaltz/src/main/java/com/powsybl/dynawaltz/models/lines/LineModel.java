@@ -21,7 +21,7 @@ public interface LineModel extends Model {
 
     String getStateValueVarName();
 
-    static String getPostfix(Branch.Side side) {
+    static String getSuffix(Branch.Side side) {
         switch (side) {
             case ONE:
                 return "Side1";

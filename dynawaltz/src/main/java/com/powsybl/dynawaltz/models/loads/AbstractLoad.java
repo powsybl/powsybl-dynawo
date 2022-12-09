@@ -13,24 +13,24 @@ import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.Model;
 import com.powsybl.iidm.network.Load;
 
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 public abstract class AbstractLoad extends AbstractBlackBoxModel {
 
-    public AbstractLoad(String dynamicModelId, String staticId, String parameterSetId) {
-        super(dynamicModelId, staticId, parameterSetId);
+    protected AbstractLoad(String dynamicModelId, String staticId, String parameterSetId) {
+        super(dynamicModelId, Objects.requireNonNull(staticId), parameterSetId);
     }
 
     @Override
     public List<Model> getModelsConnectedTo(DynaWaltzContext context) {
-        Load load = context.getNetwork().getLoad(getStaticId());
+        String staticId = getStaticId().orElse(null); // cannot be empty as checked in constructor
+        Load load = context.getNetwork().getLoad(staticId);
         if (load == null) {
-            throw new PowsyblException("Load static id unknown: " + getStaticId());
+            throw new PowsyblException("Load static id unknown: " + staticId);
         }
         String connectedStaticId = load.getTerminal().getBusBreakerView().getConnectableBus().getId();
         BlackBoxModel connectedBbm = context.getStaticIdBlackBoxModelMap().get(connectedStaticId);
@@ -38,10 +38,5 @@ public abstract class AbstractLoad extends AbstractBlackBoxModel {
             return List.of(context.getNetworkModel().getDefaultBusModel(connectedStaticId));
         }
         return List.of(connectedBbm);
-    }
-
-    @Override
-    public void write(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
-        writeBlackBoxModel(writer, context);
     }
 }
