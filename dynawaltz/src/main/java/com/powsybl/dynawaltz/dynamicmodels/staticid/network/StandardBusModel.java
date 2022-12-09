@@ -70,6 +70,14 @@ public class StandardBusModel extends AbstractBlackBoxModelWithStaticId implemen
     }
 
     @Override
+    public List<Pair<String, String>> getAttributesConnectTo() {
+        List<Pair<String, String>> attributesConnectTo = new ArrayList<>();
+        attributesConnectTo.addAll(super.getAttributesConnectTo());
+        attributesConnectTo.add(Pair.of("name2", getStaticId()));
+        return attributesConnectTo;
+    }
+
+    @Override
     public String getId() {
         return this.id;
     }
