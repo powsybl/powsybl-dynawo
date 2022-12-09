@@ -14,7 +14,6 @@ import com.powsybl.dynawaltz.models.Model;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.lines.LineModel;
 import com.powsybl.iidm.network.Branch;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
 

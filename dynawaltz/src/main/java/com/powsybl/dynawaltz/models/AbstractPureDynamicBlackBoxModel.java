@@ -7,16 +7,10 @@
 package com.powsybl.dynawaltz.models;
 
 import com.powsybl.dynamicsimulation.EventModel;
-import com.powsybl.dynawaltz.DynaWaltzContext;
-import com.powsybl.dynawaltz.models.AbstractBlackBoxModel;
 import org.apache.commons.lang3.tuple.Pair;
 
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
 import java.util.Collections;
 import java.util.List;
-
-import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>

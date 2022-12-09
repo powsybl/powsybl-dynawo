@@ -13,7 +13,6 @@ import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.Model;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.generators.GeneratorModel;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
 
