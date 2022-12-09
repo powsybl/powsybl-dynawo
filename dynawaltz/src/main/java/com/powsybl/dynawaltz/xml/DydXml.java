@@ -65,7 +65,7 @@ public final class DydXml {
                     MacroConnector macroConnector = context.getMacroConnector(bbm, connectedBbm);
                     if (!usedMacroConnectors.contains(macroConnector)) {
                         bbm.writeMacroConnect(writer, context, macroConnector, connectedBbm);
-                        //usedMacroConnectors.add(macroConnector);
+                        usedMacroConnectors.add(macroConnector);
                     }
                 }
             }

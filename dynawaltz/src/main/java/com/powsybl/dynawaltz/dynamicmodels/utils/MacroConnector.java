@@ -66,8 +66,8 @@ public final class MacroConnector {
     public boolean equals(Object obj) {
         if (obj instanceof MacroConnector) {
             MacroConnector mcObj = (MacroConnector) obj;
-            if ((libs.getRight().equals(mcObj.getLibs().getRight()) || libs.getLeft().equals(mcObj.getLibs().getRight()))
-                && (libs.getRight().equals(mcObj.getLibs().getLeft()) || libs.getLeft().equals(mcObj.getLibs().getLeft()))) {
+            if (mcObj.getLibs().getLeft().equals(libs.getLeft()) && mcObj.getLibs().getRight().equals(getLibs().getRight())
+                || mcObj.getLibs().getLeft().equals(libs.getRight()) && mcObj.getLibs().getRight().equals(getLibs().getLeft())) {
                 return true;
             }
         }
