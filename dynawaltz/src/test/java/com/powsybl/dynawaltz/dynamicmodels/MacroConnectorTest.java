@@ -22,7 +22,6 @@ public class MacroConnectorTest {
             super("parameterId");
         }
 
-
         @Override
         public String getLib() {
             return "lib" + atomicInteger.incrementAndGet();

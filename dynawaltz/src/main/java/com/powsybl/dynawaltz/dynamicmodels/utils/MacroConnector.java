@@ -63,6 +63,10 @@ public final class MacroConnector {
         writer.writeEndElement();
     }
 
+    public Couple<String> getLibCouple() {
+        return new Couple<String>(connectedBbms.getLeft().getLib(), connectedBbms.getRight().getLib());
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof MacroConnector) {

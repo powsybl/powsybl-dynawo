@@ -22,6 +22,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.DYD_FILENAME;
 
@@ -45,6 +49,11 @@ public final class DydXml {
         writeEvents(writer, context);
     }
 
+    public static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
+        Map<Object, Boolean> seen = new ConcurrentHashMap<>();
+        return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
+    }
+
     private static void writeDynamicModels(XMLStreamWriter writer, DynaWaltzContext context) {
 
         try {
@@ -52,7 +61,7 @@ public final class DydXml {
             for (BlackBoxModelWithDynamicId model : context.getBlackBoxModels()) {
                 model.write(writer, context);
             }
-            for (MacroConnector macroConnector : context.getMacroConnectors()) {
+            for (MacroConnector macroConnector : context.getMacroConnectors().stream().filter(distinctByKey(macroConnector -> macroConnector.getLibCouple())).collect(Collectors.toList())) {
                 macroConnector.write(writer);
             }
             for (MacroStaticReference macroStaticReference : context.getMacroStaticReferences()) {
