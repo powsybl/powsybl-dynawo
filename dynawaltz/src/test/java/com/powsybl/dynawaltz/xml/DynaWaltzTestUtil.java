@@ -46,7 +46,6 @@ import com.powsybl.dynamicsimulation.EventModel;
 import com.powsybl.dynawaltz.DynaWaltzCurve;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 
-import static com.powsybl.commons.ComparisonUtils.compareTxt;
 import static com.powsybl.commons.ComparisonUtils.compareXml;
 
 /**
@@ -133,7 +132,7 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
         Schema schema = factory.newSchema(xsd);
         Validator validator = schema.newValidator();
         validator.validate(xml);
-        compareTxt(getClass().getResourceAsStream("/" + expectedResourceName), Files.newInputStream(xmlFile));
+        compareXml(getClass().getResourceAsStream("/" + expectedResourceName), Files.newInputStream(xmlFile));
     }
 
     private static Network createEurostagTutorialExample1WithMoreLoads() {
