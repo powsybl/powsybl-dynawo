@@ -10,8 +10,8 @@ import javax.xml.stream.XMLStreamWriter;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 public class MacroConnectorTest {
     class DummyBlackBox extends AbstractBlackBoxModelWithParameterId {
@@ -60,7 +60,7 @@ public class MacroConnectorTest {
 
         MacroConnector connector1 = new MacroConnector(dumdum1, dumdum2, List.of(Pair.of("pair1", "pair2")));
         MacroConnector connector2 = new MacroConnector(dumdum1, dumdum2, List.of(Pair.of("pair1", "pair2")));
-        assertTrue(connector1.equals(connector2));
+        assertEquals(connector1, connector2);
     }
 
     @Test
@@ -70,7 +70,7 @@ public class MacroConnectorTest {
 
         MacroConnector connector1 = new MacroConnector(dumdum1, dumdum2, List.of(Pair.of("pair1", "pair2")));
         MacroConnector connector2 = new MacroConnector(dumdum1, new DummyBlackBox(), List.of(Pair.of("pair1", "pair2")));
-        assertFalse(connector1.equals(connector2));
+        assertNotEquals(connector1, connector2);
     }
 
     @Test
@@ -80,7 +80,7 @@ public class MacroConnectorTest {
 
         MacroConnector connector1 = new MacroConnector(dumdum1, dumdum2, List.of(Pair.of("pair1", "pair2")));
         MacroConnector connector2 = new MacroConnector(new DummyBlackBox(), dumdum2, List.of(Pair.of("pair1", "pair2")));
-        assertFalse(connector1.equals(connector2));
+        assertNotEquals(connector1, connector2);
     }
 
     @Test
@@ -90,7 +90,7 @@ public class MacroConnectorTest {
 
         MacroConnector connector1 = new MacroConnector(dumdum1, dumdum2, List.of(Pair.of("pair1", "pair2")));
         MacroConnector connector2 = new MacroConnector(dumdum2, dumdum1, List.of(Pair.of("pair1", "pair2")));
-        assertTrue(connector1.equals(connector2));
+        assertEquals(connector1, connector2);
     }
 
 }

@@ -61,7 +61,7 @@ public final class DydXml {
             for (BlackBoxModelWithDynamicId model : context.getBlackBoxModels()) {
                 model.write(writer, context);
             }
-            for (MacroConnector macroConnector : context.getMacroConnectors().stream().filter(distinctByKey(macroConnector -> macroConnector.getLibCouple())).collect(Collectors.toList())) {
+            for (MacroConnector macroConnector : context.getMacroConnectors().stream().filter(distinctByKey(MacroConnector::getLibCouple)).collect(Collectors.toList())) {
                 macroConnector.write(writer);
             }
             for (MacroStaticReference macroStaticReference : context.getMacroStaticReferences()) {

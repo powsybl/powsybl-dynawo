@@ -64,7 +64,7 @@ public final class MacroConnector {
     }
 
     public Couple<String> getLibCouple() {
-        return new Couple<String>(connectedBbms.getLeft().getLib(), connectedBbms.getRight().getLib());
+        return new Couple<>(connectedBbms.getLeft().getLib(), connectedBbms.getRight().getLib());
     }
 
     @Override
