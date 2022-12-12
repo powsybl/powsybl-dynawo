@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.powsybl.dynawaltz.DynaWaltzParametersDatabase.ParameterType.DOUBLE;
@@ -121,7 +122,13 @@ public class OmegaRef extends AbstractBlackBoxModelWithDynamicId {
         String connectedStaticId = generator.getTerminal().getBusBreakerView().getConnectableBus().getId();
         BusModel busModel = (BusModel) context.getStaticIdBlackBoxModelMap().get(connectedStaticId);
         if (busModel == null) {
-            busModel = (BusModel) context.getNetworkModel().getDefaultBusModel(connectedStaticId);
+            //If there's no associated bus to IIDM, maybe there's already a default bus associated to the generator
+            Optional<BlackBoxModel> bbm = context.getModelsConnections().get(generatorModel).stream().findFirst();
+            if (bbm.isPresent()) {
+                busModel = (BusModel) bbm.get();
+            } else {
+                busModel = (BusModel) context.getNetworkModel().getDefaultBusModel(connectedStaticId);
+            }
         }
         return busModel;
     }
