@@ -15,6 +15,7 @@ import com.powsybl.dynamicsimulation.EventModel;
 import com.powsybl.dynawaltz.dynamicmodels.*;
 import com.powsybl.dynawaltz.dynamicmodels.OmegaRef;
 import com.powsybl.dynawaltz.dynamicmodels.events.BlackBoxEventModel;
+import com.powsybl.dynawaltz.dynamicmodels.utils.Couple;
 import com.powsybl.dynawaltz.dynamicmodels.utils.MacroConnector;
 import com.powsybl.dynawaltz.dynamicmodels.utils.NetworkModel;
 import com.powsybl.dynawaltz.dynamicmodels.staticid.BlackBoxModelWithStaticId;
@@ -46,7 +47,7 @@ public class DynaWaltzContext {
     private final List<EventModel> eventModels;
     private final List<Curve> curves;
     private final Map<String, MacroStaticReference> macroStaticReferences = new LinkedHashMap<>();
-    private final Map<Pair<String, String>, MacroConnector> connectorsMap = new LinkedHashMap<>();
+    private final Map<Couple<BlackBoxModel>, MacroConnector> connectorsMap = new LinkedHashMap<>();
     private final Map<Pair<String, String>, MacroConnector> eventConnectorsMap = new LinkedHashMap<>();
     private final Map<BlackBoxModelWithDynamicId, List<BlackBoxModel>> modelsConnections = new LinkedHashMap<>();
     private final Map<BlackBoxEventModel, List<BlackBoxModel>> eventModelsConnections = new LinkedHashMap<>();
@@ -132,9 +133,9 @@ public class DynaWaltzContext {
 
     public MacroConnector getMacroConnector(BlackBoxModelWithDynamicId bbm0, BlackBoxModel bbm1) {
         initConnectorsMap();
-        MacroConnector connector = connectorsMap.get(Pair.of(bbm0.getLib(), bbm1.getLib()));
+        MacroConnector connector = connectorsMap.get(new Couple<BlackBoxModel>(bbm0, bbm1));
         if (connector == null) {
-            connector = connectorsMap.get(Pair.of(bbm1.getLib(), bbm0.getLib()));
+            connector = connectorsMap.get(new Couple<BlackBoxModel>(bbm1, bbm0));
         }
         return connector;
     }
@@ -147,18 +148,9 @@ public class DynaWaltzContext {
 
     private void computeMacroConnectors(BlackBoxModelWithDynamicId bbm) {
         getModelsConnections().get(bbm).forEach(connectedBbm -> {
-            var key = Pair.of(bbm.getLib(), connectedBbm.getLib());
-            var keyReverse = Pair.of(connectedBbm.getLib(), bbm.getLib());
-            connectorsMap.computeIfAbsent(key, k -> {
-                MacroConnector possibleMacro = connectorsMap.get(keyReverse);
-                MacroConnector newMacro = createMacroConnector(bbm, connectedBbm);
-                if (possibleMacro != null && possibleMacro.equals(newMacro)) {
-                    return null;
-                }
-                return newMacro;
-            });
+            var key = new Couple<BlackBoxModel>(bbm, connectedBbm);
+            connectorsMap.computeIfAbsent(key, k -> createMacroConnector(bbm, connectedBbm));
         });
-        connectorsMap.values().removeIf(Objects::isNull);
     }
 
     public Collection<MacroConnector> getEventMacroConnectors() {
