@@ -7,7 +7,6 @@
 package com.powsybl.dynawaltz.models;
 
 import com.powsybl.dynamicsimulation.EventModel;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Collections;
 import java.util.List;
@@ -22,7 +21,7 @@ public abstract class AbstractPureDynamicBlackBoxModel extends AbstractBlackBoxM
     }
 
     @Override
-    public final List<Pair<String, String>> getVarsMapping() {
+    public final List<VarMapping> getVarsMapping() {
         // No static-dynamic mapping as purely dynamic
         return Collections.emptyList();
     }

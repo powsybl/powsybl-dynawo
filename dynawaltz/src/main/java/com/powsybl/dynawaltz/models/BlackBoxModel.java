@@ -7,7 +7,6 @@
 package com.powsybl.dynawaltz.models;
 
 import com.powsybl.dynawaltz.DynaWaltzContext;
-import org.apache.commons.lang3.tuple.Pair;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -23,7 +22,7 @@ public interface BlackBoxModel extends Model {
 
     String getLib();
 
-    List<Pair<String, String>> getVarsMapping();
+    List<VarMapping> getVarsMapping();
 
     List<VarConnection> getVarConnectionsWith(Model connected);
 

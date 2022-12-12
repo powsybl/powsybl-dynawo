@@ -8,13 +8,9 @@ package com.powsybl.dynawaltz.models.generators;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
-import com.powsybl.dynawaltz.models.AbstractBlackBoxModel;
-import com.powsybl.dynawaltz.models.BlackBoxModel;
-import com.powsybl.dynawaltz.models.Model;
-import com.powsybl.dynawaltz.models.VarConnection;
+import com.powsybl.dynawaltz.models.*;
 import com.powsybl.dynawaltz.models.buses.BusModel;
 import com.powsybl.iidm.network.Generator;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Arrays;
 import java.util.List;
@@ -25,10 +21,10 @@ import java.util.Objects;
  */
 public abstract class AbstractGeneratorModel extends AbstractBlackBoxModel implements GeneratorModel {
 
-    protected static final List<Pair<String, String>> VAR_MAPPING = Arrays.asList(
-            Pair.of("generator_PGenPu", "p"),
-            Pair.of("generator_QGenPu", "q"),
-            Pair.of("generator_state", "state"));
+    protected static final List<VarMapping> VAR_MAPPING = Arrays.asList(
+            new VarMapping("generator_PGenPu", "p"),
+            new VarMapping("generator_QGenPu", "q"),
+            new VarMapping("generator_state", "state"));
 
     private final String terminalVarName;
     private final String switchOffSignalNodeVarName;
@@ -49,7 +45,7 @@ public abstract class AbstractGeneratorModel extends AbstractBlackBoxModel imple
     }
 
     @Override
-    public List<Pair<String, String>> getVarsMapping() {
+    public List<VarMapping> getVarsMapping() {
         return VAR_MAPPING;
     }
 

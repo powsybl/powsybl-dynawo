@@ -9,8 +9,8 @@ package com.powsybl.dynawaltz.models.loads;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.models.Model;
 import com.powsybl.dynawaltz.models.VarConnection;
+import com.powsybl.dynawaltz.models.VarMapping;
 import com.powsybl.dynawaltz.models.buses.BusModel;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Arrays;
 import java.util.List;
@@ -20,10 +20,10 @@ import java.util.List;
  */
 public class LoadOneTransformer extends AbstractLoad {
 
-    protected static final List<Pair<String, String>> VAR_MAPPING = Arrays.asList(
-            Pair.of("transformer_P1Pu_value", "p"),
-            Pair.of("transformer_Q1Pu_value", "q"),
-            Pair.of("transformer_state", "state"));
+    protected static final List<VarMapping> VAR_MAPPING = Arrays.asList(
+            new VarMapping("transformer_P1Pu_value", "p"),
+            new VarMapping("transformer_Q1Pu_value", "q"),
+            new VarMapping("transformer_state", "state"));
 
     public LoadOneTransformer(String dynamicModelId, String staticId, String parameterSetId) {
         super(dynamicModelId, staticId, parameterSetId);
@@ -35,7 +35,7 @@ public class LoadOneTransformer extends AbstractLoad {
     }
 
     @Override
-    public List<Pair<String, String>> getVarsMapping() {
+    public List<VarMapping> getVarsMapping() {
         return VAR_MAPPING;
     }
 
