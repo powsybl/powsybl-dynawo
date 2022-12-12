@@ -7,6 +7,7 @@
 
 
 import com.powsybl.iidm.network.Branch
+import com.powsybl.iidm.network.Bus
 import com.powsybl.iidm.network.Line
 import com.powsybl.iidm.network.Load
 import com.powsybl.iidm.network.Generator
@@ -76,5 +77,13 @@ for (Line line : network.lines) {
         dynamicModelId "BBM_" + line.id
         parameterSetId "CLA"
         side Branch.Side.TWO
+    }
+}
+
+for (Bus bus : network.busBreakerView.buses) {
+    Bus {
+        staticId bus.id
+        dynamicModelId "BBM_" + bus.id
+        parameterSetId "SB"
     }
 }
