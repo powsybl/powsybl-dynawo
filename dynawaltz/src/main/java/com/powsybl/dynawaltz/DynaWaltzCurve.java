@@ -31,4 +31,11 @@ public class DynaWaltzCurve implements Curve {
     public String getVariable() {
         return variable;
     }
+
+    /**
+     * @return the id given by dynawaltz to this curve
+     */
+    public String getDynaWaltzCurveId() {
+        return getModelId() + "_" + getVariable();
+    }
 }
