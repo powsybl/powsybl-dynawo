@@ -10,6 +10,7 @@ import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParametersDatabase;
 import com.powsybl.dynawaltz.models.buses.BusModel;
+import com.powsybl.dynawaltz.models.generators.GeneratorModel;
 import com.powsybl.dynawaltz.models.generators.GeneratorSynchronousModel;
 import com.powsybl.dynawaltz.xml.ParametersXml;
 import com.powsybl.iidm.network.Generator;
@@ -105,7 +106,13 @@ public class OmegaRef extends AbstractPureDynamicBlackBoxModel {
         String connectedStaticId = generator.getTerminal().getBusBreakerView().getConnectableBus().getId();
         BusModel busModel = (BusModel) context.getStaticIdBlackBoxModelMap().get(connectedStaticId);
         if (busModel == null) {
-            busModel = context.getNetworkModel().getDefaultBusModel(connectedStaticId);
+            //If there's no associated bus to IIDM, maybe there's already a default bus associated to the generator
+            Optional<Model> bbm = context.getModelsConnections().get(generatorModel).stream().findFirst();
+            if (bbm.isPresent()) {
+                busModel = (BusModel) bbm.get();
+            } else {
+                busModel = context.getNetworkModel().getDefaultBusModel(connectedStaticId);
+            }
         }
         return busModel;
     }
@@ -131,12 +138,17 @@ public class OmegaRef extends AbstractPureDynamicBlackBoxModel {
 
     @Override
     public void writeMacroConnect(XMLStreamWriter writer, DynaWaltzContext context, MacroConnector macroConnector, Model connected) throws XMLStreamException {
-        Map<Model, Integer> indicesPerModel = getConnectedModelsIndices(context);
+        if (connected instanceof GeneratorModel) {
+            int index = getConnectedModelsIndices(context).get(connected);
+            BusModel bus = getBusAssociatedTo((GeneratorSynchronousModel) connected, context);
 
-        List<Pair<String, String>> attributesConnectFrom = List.of(
-                Pair.of("id1", getDynamicModelId()),
-                Pair.of("index1", Integer.toString(indicesPerModel.get(connected)))
-        );
-        macroConnector.writeMacroConnect(writer, attributesConnectFrom, connected.getMacroConnectToAttributes());
+            List<Pair<String, String>> attributesConnectFrom = List.of(
+                    Pair.of("id1", getDynamicModelId()),
+                    Pair.of("index1", Integer.toString(index))
+            );
+            macroConnector.writeMacroConnect(writer, attributesConnectFrom, connected.getMacroConnectToAttributes());
+            MacroConnector macroConnectorOmegaRefBus = context.getMacroConnector(this, bus);
+            macroConnectorOmegaRefBus.writeMacroConnect(writer, attributesConnectFrom, bus.getMacroConnectToAttributes());
+        }
     }
 }
