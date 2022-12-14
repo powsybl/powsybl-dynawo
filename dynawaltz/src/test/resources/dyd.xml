@@ -29,7 +29,7 @@
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="BBM_NHV1_NHV2_1" lib="CurrentLimitAutomaton" parFile="models.par" parId="CLA"/>
     <dyn:blackBoxModel id="BBM_NHV1_NHV2_2" lib="CurrentLimitAutomaton" parFile="models.par" parId="CLA"/>
-    <dyn:blackBoxModel id="BBM_NGEN" lib="Bus" staticId="NGEN"></dyn:blackBoxModel>
+    <dyn:blackBoxModel id="BBM_NGEN" lib="Bus" staticId="NGEN"/>
     <dyn:blackBoxModel id="OMEGA_REF" lib="DYNModelOmegaRef" parFile="sim1.par" parId="OMEGA_REF"/>
     <dyn:macroConnector id="MC_LoadAlphaBeta-NetworkBus">
         <dyn:connect var1="load_terminal" var2="@NAME@_ACPIN"/>
