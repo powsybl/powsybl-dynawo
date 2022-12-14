@@ -23,12 +23,10 @@ import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 
 public class StandardBusModel extends AbstractBlackBoxModel implements BusModel {
 
-    private final String id;
     private static final AtomicInteger ATOMIC_INTEGER = new AtomicInteger();
 
     public StandardBusModel(String dynamicModelId, String staticId, String parameterSetId) {
         super(dynamicModelId, staticId, parameterSetId);
-        this.id = "bus" + ATOMIC_INTEGER.incrementAndGet();
     }
 
     @Override
@@ -87,7 +85,7 @@ public class StandardBusModel extends AbstractBlackBoxModel implements BusModel 
 
     @Override
     public String getName() {
-        return this.id;
+        return getLib();
     }
 
     @Override
@@ -97,7 +95,7 @@ public class StandardBusModel extends AbstractBlackBoxModel implements BusModel 
 
     @Override
     public String getSwitchOffSignalVarName() {
-        return getName() + "_switchOff";
+        return "bus_switchOff";
     }
 
     @Override
