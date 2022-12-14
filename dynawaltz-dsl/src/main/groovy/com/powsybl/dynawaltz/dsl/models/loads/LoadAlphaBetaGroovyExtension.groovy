@@ -4,9 +4,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package com.powsybl.dynawaltz.dynamicmodels
-
-import com.powsybl.dynawaltz.models.loads.LoadOneTransformer
+package com.powsybl.dynawaltz.dsl.models.loads
 
 import java.util.function.Consumer
 
@@ -14,17 +12,19 @@ import com.google.auto.service.AutoService
 import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
+
 import com.powsybl.dynawaltz.DynaWaltzProvider
+import com.powsybl.dynawaltz.models.loads.LoadAlphaBeta
 
 /**
- * An implementation of {@link DynamicModelGroovyExtension} that adds the <pre>LoadOneTransformer</pre> keyword to the DSL
+ * An implementation of {@link DynamicModelGroovyExtension} that adds the <pre>LoadAlphaBeta</pre> keyword to the DSL
  *
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class LoadOneTransformerGroovyExtension implements DynamicModelGroovyExtension {
+class LoadAlphaBetaGroovyExtension implements DynamicModelGroovyExtension {
 
-    static class LoadOneTransformerSpec {
+    static class LoadAlphaBetaSpec {
         String dynamicModelId
         String staticId
         String parameterSetId
@@ -47,22 +47,22 @@ class LoadOneTransformerGroovyExtension implements DynamicModelGroovyExtension {
     }
     
     void load(Binding binding, Consumer<DynamicModel> consumer) {
-        binding.LoadOneTransformer = { Closure<Void> closure ->
+        binding.LoadAlphaBeta = { Closure<Void> closure ->
             def cloned = closure.clone()
-            LoadOneTransformerSpec loadOneTransformerSpec = new LoadOneTransformerSpec()
+            LoadAlphaBetaSpec loadAlphaBetaSpec = new LoadAlphaBetaSpec()
     
-            cloned.delegate = loadOneTransformerSpec
+            cloned.delegate = loadAlphaBetaSpec
             cloned()
 
-            if (!loadOneTransformerSpec.staticId) {
+            if (!loadAlphaBetaSpec.staticId) {
                 throw new DslException("'staticId' field is not set");
             }
-            if (!loadOneTransformerSpec.parameterSetId) {
+            if (!loadAlphaBetaSpec.parameterSetId) {
                 throw new DslException("'parameterSetId' field is not set")
             }
 
-            String dynamicModelId = loadOneTransformerSpec.dynamicModelId ? loadOneTransformerSpec.dynamicModelId : loadOneTransformerSpec.staticId
-            consumer.accept(new LoadOneTransformer(dynamicModelId, loadOneTransformerSpec.staticId, loadOneTransformerSpec.parameterSetId))
+            String dynamicModelId = loadAlphaBetaSpec.dynamicModelId ? loadAlphaBetaSpec.dynamicModelId : loadAlphaBetaSpec.staticId
+            consumer.accept(new LoadAlphaBeta(dynamicModelId, loadAlphaBetaSpec.staticId, loadAlphaBetaSpec.parameterSetId))
         }
     }
 

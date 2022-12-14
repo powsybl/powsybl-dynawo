@@ -1,30 +1,27 @@
 /**
- * Copyright (c) 2020, RTE (http://www.rte-france.com)
+ * Copyright (c) 2022, RTE (http://www.rte-france.com)
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package com.powsybl.dynawaltz.dsl.dynamicmodels
-
-import java.util.function.Consumer
+package com.powsybl.dynawaltz.dsl.models.generators
 
 import com.google.auto.service.AutoService
 import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
+import com.powsybl.dynawaltz.models.generators.GeneratorFictitious
 
-import com.powsybl.dynawaltz.models.generators.GeneratorSynchronousThreeWindings
+import java.util.function.Consumer
 
 /**
- * An implementation of {@link DynamicModelGroovyExtension} that adds the <pre>GeneratorSynchronousThreeWindingsProportionalRegulations</pre> keyword to the DSL
- *
- * @author Marcos de Miguel <demiguelm at aia.es>
+ * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class GeneratorSynchronousThreeWindingsGroovyExtension extends GeneratorModelGroovyExtension {
+class GeneratorFictitiousGroovyExtension extends GeneratorModelGroovyExtension {
 
     void load(Binding binding, Consumer<DynamicModel> consumer) {
-        binding.GeneratorSynchronousThreeWindings = { Closure<Void> closure ->
+        binding.GeneratorFictitious = { Closure<Void> closure ->
             def cloned = closure.clone()
             GeneratorModelSpec generatorModelSpec = new GeneratorModelSpec()
 
@@ -39,7 +36,7 @@ class GeneratorSynchronousThreeWindingsGroovyExtension extends GeneratorModelGro
             }
 
             String dynamicModelId = generatorModelSpec.dynamicModelId ? generatorModelSpec.dynamicModelId : generatorModelSpec.staticId
-            consumer.accept(new GeneratorSynchronousThreeWindings(dynamicModelId, generatorModelSpec.staticId, generatorModelSpec.parameterSetId))
+            consumer.accept(new GeneratorFictitious(dynamicModelId, generatorModelSpec.staticId, generatorModelSpec.parameterSetId))
         }
     }
 
