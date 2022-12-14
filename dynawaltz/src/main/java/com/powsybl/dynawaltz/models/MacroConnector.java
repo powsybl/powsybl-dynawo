@@ -25,9 +25,9 @@ public final class MacroConnector {
     private final List<VarConnection> varConnections;
     private final String id;
 
-    public MacroConnector(String lib1, String lib2, List<VarConnection> varConnections) {
-        this.modelsConnectedNames = new Couple<>(lib1, lib2);
-        this.id = MACRO_CONNECTOR_PREFIX + lib1 + "-" + lib2;
+    public MacroConnector(String name1, String name2, List<VarConnection> varConnections) {
+        this.modelsConnectedNames = new Couple<>(name1, name2);
+        this.id = MACRO_CONNECTOR_PREFIX + name1 + "-" + name2;
         this.varConnections = varConnections;
     }
 
