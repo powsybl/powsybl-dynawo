@@ -17,13 +17,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 
 public class StandardBusModel extends AbstractBlackBoxModel implements BusModel {
-
-    private static final AtomicInteger ATOMIC_INTEGER = new AtomicInteger();
 
     public StandardBusModel(String dynamicModelId, String staticId, String parameterSetId) {
         super(dynamicModelId, staticId, parameterSetId);
