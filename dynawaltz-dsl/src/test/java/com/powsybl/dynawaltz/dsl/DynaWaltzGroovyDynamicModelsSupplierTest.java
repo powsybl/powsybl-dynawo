@@ -14,11 +14,14 @@ import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension;
 import com.powsybl.dynamicsimulation.groovy.GroovyDynamicModelsSupplier;
 import com.powsybl.dynamicsimulation.groovy.GroovyExtension;
 import com.powsybl.dynawaltz.DynaWaltzProvider;
-import com.powsybl.dynawaltz.automatons.CurrentLimitAutomaton;
+import com.powsybl.dynawaltz.models.AbstractBlackBoxModel;
+import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton;
 import com.powsybl.dynawaltz.dsl.automatons.CurrentLimitAutomatonGroovyExtension;
 import com.powsybl.dynawaltz.dsl.dynamicmodels.*;
-import com.powsybl.dynawaltz.dynamicmodels.*;
 import com.powsybl.dynawaltz.dynamicmodels.LoadOneTransformerGroovyExtension;
+import com.powsybl.dynawaltz.models.generators.*;
+import com.powsybl.dynawaltz.models.loads.LoadAlphaBeta;
+import com.powsybl.dynawaltz.models.loads.LoadOneTransformer;
 import com.powsybl.iidm.network.*;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.After;
@@ -164,41 +167,41 @@ public class DynaWaltzGroovyDynamicModelsSupplierTest {
         assertTrue(dynamicModel instanceof AbstractBlackBoxModel);
         AbstractBlackBoxModel blackBoxModel = (AbstractBlackBoxModel) dynamicModel;
         if (blackBoxModel instanceof LoadAlphaBeta) {
-            Identifiable<?> identifiable = network.getIdentifiable(blackBoxModel.getStaticId());
+            Identifiable<?> identifiable = network.getIdentifiable(blackBoxModel.getStaticId().orElse(null));
             assertEquals(identifiable.getId(), blackBoxModel.getDynamicModelId());
             assertEquals("LAB", blackBoxModel.getParameterSetId());
             assertTrue(identifiable instanceof Load);
         } else if (blackBoxModel instanceof LoadOneTransformer) {
-            Identifiable<?> identifiable = network.getIdentifiable(blackBoxModel.getStaticId());
+            Identifiable<?> identifiable = network.getIdentifiable(blackBoxModel.getStaticId().orElse(null));
             assertEquals(identifiable.getId(), blackBoxModel.getDynamicModelId());
             assertEquals("LOT", blackBoxModel.getParameterSetId());
             assertTrue(identifiable instanceof Load);
         } else if (blackBoxModel instanceof GeneratorSynchronousThreeWindingsProportionalRegulations) {
-            Identifiable<?> identifiable = network.getIdentifiable(blackBoxModel.getStaticId());
+            Identifiable<?> identifiable = network.getIdentifiable(blackBoxModel.getStaticId().orElse(null));
             assertEquals("BBM_" + identifiable.getId(), blackBoxModel.getDynamicModelId());
             assertEquals("GSTWPR", blackBoxModel.getParameterSetId());
             assertTrue(identifiable instanceof Generator);
         } else if (blackBoxModel instanceof GeneratorSynchronousFourWindingsProportionalRegulations) {
-            Identifiable<?> identifiable = network.getIdentifiable(blackBoxModel.getStaticId());
+            Identifiable<?> identifiable = network.getIdentifiable(blackBoxModel.getStaticId().orElse(null));
             assertEquals("BBM_" + identifiable.getId(), blackBoxModel.getDynamicModelId());
             assertEquals("GSFWPR", blackBoxModel.getParameterSetId());
             assertTrue(identifiable instanceof Generator);
         } else if (blackBoxModel instanceof GeneratorSynchronousFourWindingsProportionalRegulationsStepPm) {
-            Identifiable<?> identifiable = network.getIdentifiable(blackBoxModel.getStaticId());
+            Identifiable<?> identifiable = network.getIdentifiable(blackBoxModel.getStaticId().orElse(null));
             assertEquals("BBM_" + identifiable.getId(), blackBoxModel.getDynamicModelId());
             assertEquals("GSFWPRSP", blackBoxModel.getParameterSetId());
             assertTrue(identifiable instanceof Generator);
         } else if (blackBoxModel instanceof GeneratorSynchronousThreeWindings) {
-            Identifiable<?> identifiable = network.getIdentifiable(blackBoxModel.getStaticId());
+            Identifiable<?> identifiable = network.getIdentifiable(blackBoxModel.getStaticId().orElse(null));
             assertEquals("BBM_" + identifiable.getId(), blackBoxModel.getDynamicModelId());
             assertEquals("GSTW", blackBoxModel.getParameterSetId());
         } else if (blackBoxModel instanceof GeneratorSynchronousFourWindings) {
-            Identifiable<?> identifiable = network.getIdentifiable(blackBoxModel.getStaticId());
+            Identifiable<?> identifiable = network.getIdentifiable(blackBoxModel.getStaticId().orElse(null));
             assertEquals("BBM_" + identifiable.getId(), blackBoxModel.getDynamicModelId());
             assertEquals("GSFW", blackBoxModel.getParameterSetId());
             assertTrue(identifiable instanceof Generator);
         } else if (blackBoxModel instanceof GeneratorFictitious) {
-            Identifiable<?> identifiable = network.getIdentifiable(blackBoxModel.getStaticId());
+            Identifiable<?> identifiable = network.getIdentifiable(blackBoxModel.getStaticId().orElse(null));
             assertEquals("BBM_" + identifiable.getId(), blackBoxModel.getDynamicModelId());
             assertEquals("GF", blackBoxModel.getParameterSetId());
             assertTrue(identifiable instanceof Generator);

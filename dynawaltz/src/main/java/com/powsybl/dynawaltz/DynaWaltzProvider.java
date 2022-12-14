@@ -10,6 +10,7 @@ import com.google.auto.service.AutoService;
 import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
 import com.powsybl.computation.*;
 import com.powsybl.dynamicsimulation.*;
+import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.xml.CurvesXml;
 import com.powsybl.dynawaltz.xml.DydXml;
 import com.powsybl.dynawaltz.xml.JobsXml;
@@ -33,6 +34,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.*;
 
@@ -95,7 +97,15 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
         network.getVariantManager().setWorkingVariant(workingVariantId);
         ExecutionEnvironment execEnv = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, dynaWaltzConfig.isDebug());
 
-        DynaWaltzContext context = new DynaWaltzContext(network, workingVariantId, dynamicModelsSupplier.get(network), eventsModelsSupplier.get(network), curvesSupplier.get(network), parameters, dynaWaltzParameters);
+        List<BlackBoxModel> blackBoxModels = dynamicModelsSupplier.get(network).stream()
+                .filter(BlackBoxModel.class::isInstance)
+                .map(BlackBoxModel.class::cast)
+                .collect(Collectors.toList());
+        List<BlackBoxModel> blackBoxEventModels = eventsModelsSupplier.get(network).stream()
+                .filter(BlackBoxModel.class::isInstance)
+                .map(BlackBoxModel.class::cast)
+                .collect(Collectors.toList());
+        DynaWaltzContext context = new DynaWaltzContext(network, workingVariantId, blackBoxModels, blackBoxEventModels, curvesSupplier.get(network), parameters, dynaWaltzParameters);
         return computationManager.execute(execEnv, new DynaWaltzHandler(context));
     }
 

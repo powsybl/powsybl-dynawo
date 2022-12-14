@@ -12,7 +12,7 @@ import com.powsybl.dynamicsimulation.EventModel
 import com.powsybl.dynamicsimulation.groovy.EventModelGroovyExtension
 
 import com.powsybl.dynawaltz.DynaWaltzProvider
-import com.powsybl.dynawaltz.events.EventSetPointBoolean
+import com.powsybl.dynawaltz.models.events.EventSetPointBoolean
 
 import java.util.function.Consumer
 
