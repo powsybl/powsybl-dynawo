@@ -21,26 +21,22 @@ import java.util.List;
  */
 public final class MacroConnector {
 
-    private final Pair<BlackBoxModel, Model> connectedBbms;
+    private final Couple<String> modelsConnectedNames;
     private final List<VarConnection> varConnections;
     private final String id;
 
-    public MacroConnector(BlackBoxModel bbm, Model model, List<VarConnection> varConnections) {
-        this.connectedBbms = Pair.of(bbm, model);
-        this.id = MACRO_CONNECTOR_PREFIX + bbm.getLib() + "-" + model.getName();
+    public MacroConnector(String lib1, String lib2, List<VarConnection> varConnections) {
+        this.modelsConnectedNames = new Couple<>(lib1, lib2);
+        this.id = MACRO_CONNECTOR_PREFIX + lib1 + "-" + lib2;
         this.varConnections = varConnections;
-    }
-
-    public Pair<BlackBoxModel, Model> getConnectedBbms() {
-        return this.connectedBbms;
     }
 
     public List<VarConnection> getVarsConnections() {
         return this.varConnections;
     }
 
-    public Couple<String> getLibCouple() {
-        return new Couple<>(connectedBbms.getLeft().getLib(), connectedBbms.getRight().getName());
+    public Couple<String> getModelsConnectedNames() {
+        return this.modelsConnectedNames;
     }
 
     public void writeMacroConnect(XMLStreamWriter writer,
@@ -65,22 +61,5 @@ public final class MacroConnector {
             writer.writeAttribute("var2", varConnection.getVar2());
         }
         writer.writeEndElement();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof MacroConnector) {
-            MacroConnector mcObj = (MacroConnector) obj;
-            if (mcObj.getConnectedBbms().getLeft().equals(getConnectedBbms().getLeft()) && mcObj.getConnectedBbms().getRight().equals(getConnectedBbms().getRight())
-                || mcObj.getConnectedBbms().getLeft().equals(getConnectedBbms().getRight()) && mcObj.getConnectedBbms().getRight().equals(getConnectedBbms().getLeft())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public int hashCode() {
-        return id.hashCode() * varConnections.hashCode() * connectedBbms.hashCode();
     }
 }

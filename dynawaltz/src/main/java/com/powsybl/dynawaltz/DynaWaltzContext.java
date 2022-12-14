@@ -153,7 +153,7 @@ public class DynaWaltzContext {
     }
 
     private MacroConnector createMacroConnector(BlackBoxModel bbm, Model model) {
-        return new MacroConnector(bbm, model, bbm.getVarConnectionsWith(model));
+        return new MacroConnector(bbm.getName(), model.getName(), bbm.getVarConnectionsWith(model));
     }
 
     public Map<BlackBoxModel, List<Model>> getModelsConnections() {
