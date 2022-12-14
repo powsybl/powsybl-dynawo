@@ -7,8 +7,10 @@ import com.powsybl.dynawaltz.models.Model;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.VarMapping;
 import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton;
+import com.powsybl.dynawaltz.models.buses.BusModel;
 import com.powsybl.dynawaltz.models.generators.GeneratorModel;
 import com.powsybl.iidm.network.Branch;
+import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.Generator;
 import com.powsybl.iidm.network.Line;
 
@@ -55,14 +57,13 @@ public class StandardLineModel extends AbstractBlackBoxModel implements LineMode
 
     @Override
     public List<VarConnection> getVarConnectionsWith(Model connected) {
-        if (connected instanceof GeneratorModel) {
-            GeneratorModel generatorModel = (GeneratorModel) connected;
+        if (connected instanceof BusModel) {
+            BusModel busModel = (BusModel) connected;
             return Arrays.asList(
-                    new VarConnection(getIVarName(), generatorModel.getTerminalVarName()),
-                    new VarConnection(getStateVarName(), generatorModel.getSwitchOffSignalNodeVarName())
+                    new VarConnection(getIVarName(), busModel.getNumCCVarName()),
+                    new VarConnection(getStateVarName(), busModel.getTerminalVarName())
             );
         } else if (connected instanceof CurrentLimitAutomaton) {
-
             CurrentLimitAutomaton connectedAutomatonModel = (CurrentLimitAutomaton) connected;
             return Arrays.asList(
                     new VarConnection(getIVarName(), connectedAutomatonModel.getMonitored()),
@@ -70,7 +71,7 @@ public class StandardLineModel extends AbstractBlackBoxModel implements LineMode
                     new VarConnection(getDesactivateCurrentLimitsVarName(), connectedAutomatonModel.getExists())
             );
         } else {
-            throw new PowsyblException("StandardLineModel can only connect to GeneratorModel or CurrentLimitAutomaton");
+            throw new PowsyblException("StandardLineModel can only connect to BusModel or CurrentLimitAutomaton");
         }
     }
 
@@ -81,9 +82,9 @@ public class StandardLineModel extends AbstractBlackBoxModel implements LineMode
             throw new PowsyblException("Line static id unkwown: " + getStaticId());
         }
         List<Model> connectedBbm = new ArrayList<>();
-        for (Generator g : dynaWaltzContext.getNetwork().getGenerators()) {
-            if (g.getTerminal().getVoltageLevel().getLineStream().anyMatch(l -> l.equals(line))) {
-                connectedBbm.add(dynaWaltzContext.getStaticIdBlackBoxModelMap().get(g.getId()));
+        for (Bus b : dynaWaltzContext.getNetwork().getBusBreakerView().getBuses()) {
+            if (b.getLineStream().anyMatch(l -> l.equals(line))) {
+                connectedBbm.add(dynaWaltzContext.getStaticIdBlackBoxModelMap().get(b.getId()));
             }
         }
         return connectedBbm;
