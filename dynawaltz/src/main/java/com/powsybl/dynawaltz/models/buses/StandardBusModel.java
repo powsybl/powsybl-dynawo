@@ -24,11 +24,11 @@ import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 public class StandardBusModel extends AbstractBlackBoxModel implements BusModel {
 
     private final String id;
-    private final AtomicInteger atomicInteger = new AtomicInteger();
+    private static final AtomicInteger ATOMIC_INTEGER = new AtomicInteger();
 
     public StandardBusModel(String dynamicModelId, String staticId, String parameterSetId) {
         super(dynamicModelId, staticId, parameterSetId);
-        this.id = "bus" + atomicInteger.incrementAndGet();
+        this.id = "bus" + ATOMIC_INTEGER.incrementAndGet();
     }
 
     @Override

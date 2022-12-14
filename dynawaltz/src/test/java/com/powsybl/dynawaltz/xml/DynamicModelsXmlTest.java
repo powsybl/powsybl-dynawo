@@ -9,6 +9,7 @@ package com.powsybl.dynawaltz.xml;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
+import com.powsybl.dynawaltz.models.buses.StandardBusModel;
 import com.powsybl.dynawaltz.models.generators.GeneratorFictitious;
 import org.junit.Test;
 import org.xml.sax.SAXException;
@@ -24,6 +25,12 @@ public class DynamicModelsXmlTest extends DynaWaltzTestUtil {
 
     @Test
     public void writeDynamicModel() throws SAXException, IOException, XMLStreamException {
+        network.getBusBreakerView().getBuses().forEach(b -> {
+            if (b.getId().equals("NGEN")) {
+                dynamicModels.add(new StandardBusModel("BBM_" + b.getId(), b.getId(), "SB"));
+            }
+        });
+
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynaWaltzParameters dynawoParameters = DynaWaltzParameters.load();
         DynaWaltzContext context = new DynaWaltzContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, new ArrayList<>(), curves, parameters, dynawoParameters);
