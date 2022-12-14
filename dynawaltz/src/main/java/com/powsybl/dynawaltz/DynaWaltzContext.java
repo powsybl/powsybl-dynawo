@@ -113,11 +113,7 @@ public class DynaWaltzContext {
 
     public MacroConnector getMacroConnector(BlackBoxModel bbm, Model model) {
         initConnectorsMap();
-        MacroConnector connector = connectorsMap.get(new Couple<Model>(bbm, model));
-        if (connector == null) {
-            connector = connectorsMap.get(new Couple<Model>(model, bbm));
-        }
-        return connector;
+        return connectorsMap.get(new Couple<Model>(bbm, model));
     }
 
     private void initConnectorsMap() {
