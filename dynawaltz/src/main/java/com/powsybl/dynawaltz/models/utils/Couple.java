@@ -26,11 +26,9 @@ public class Couple<T> {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Couple) {
-            Couple<T> cpl = (Couple) obj;
-            if (cpl.getObj1().equals(obj1) && cpl.getObj2().equals(obj2)
-                    || cpl.getObj2().equals(obj1) && cpl.getObj1().equals(obj2)) {
-                return true;
-            }
+            Couple<?> cpl = (Couple) obj;
+            return cpl.getObj1().equals(obj1) && cpl.getObj2().equals(obj2)
+                    || cpl.getObj2().equals(obj1) && cpl.getObj1().equals(obj2);
         }
         return false;
     }

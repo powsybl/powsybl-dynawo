@@ -113,7 +113,7 @@ public class DynaWaltzContext {
 
     public MacroConnector getMacroConnector(BlackBoxModel bbm, Model model) {
         initConnectorsMap();
-        return connectorsMap.get(new Couple<Model>(bbm, model));
+        return connectorsMap.get(new Couple<>(bbm, model));
     }
 
     private void initConnectorsMap() {
@@ -124,7 +124,7 @@ public class DynaWaltzContext {
 
     private void computeMacroConnectors(BlackBoxModel bbm) {
         getModelsConnections().get(bbm).forEach(connectedBbm -> {
-            var key = new Couple<Model>(bbm, connectedBbm);
+            var key = new Couple<>(bbm, connectedBbm);
             connectorsMap.computeIfAbsent(key, k -> createMacroConnector(bbm, connectedBbm));
         });
     }
