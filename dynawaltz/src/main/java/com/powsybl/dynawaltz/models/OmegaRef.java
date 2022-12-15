@@ -138,6 +138,8 @@ public class OmegaRef extends AbstractPureDynamicBlackBoxModel {
 
     @Override
     public void writeMacroConnect(XMLStreamWriter writer, DynaWaltzContext context, MacroConnector macroConnector, Model connected) throws XMLStreamException {
+         // OmegaRef can be only connected to GeneratorModel and BusModel.
+         // To guarantee we talk about the same bus, we focus on the generator and retrieve its associated bus.
         if (connected instanceof GeneratorModel) {
             int index = getConnectedModelsIndices(context).get(connected);
             BusModel bus = getBusAssociatedTo((GeneratorSynchronousModel) connected, context);
