@@ -106,13 +106,7 @@ public class OmegaRef extends AbstractPureDynamicBlackBoxModel {
         String connectedStaticId = generator.getTerminal().getBusBreakerView().getConnectableBus().getId();
         BusModel busModel = (BusModel) context.getStaticIdBlackBoxModelMap().get(connectedStaticId);
         if (busModel == null) {
-            //If there's no associated bus to IIDM, maybe there's already a bus associated to the generator
-            Optional<Model> bbm = context.getModelsConnections().get(generatorModel).stream().findFirst();
-            if (bbm.isPresent()) {
-                busModel = (BusModel) bbm.get();
-            } else {
-                busModel = context.getNetworkModel().getDefaultBusModel(connectedStaticId);
-            }
+            busModel = context.getNetworkModel().getDefaultBusModel(connectedStaticId);
         }
         return busModel;
     }
