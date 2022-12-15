@@ -12,15 +12,17 @@ import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.MacroConnector;
 import com.powsybl.dynawaltz.models.Model;
+import com.powsybl.dynawaltz.models.utils.Couple;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -66,16 +68,14 @@ public final class DydXml {
             for (MacroStaticReference macroStaticReference : context.getMacroStaticReferences()) {
                 macroStaticReference.write(writer);
             }
-            List<MacroConnector> usedMacroConnectors = new ArrayList<>();
-            for (Map.Entry<BlackBoxModel, List<Model>> bbmMapping : context.getModelsConnections().entrySet()) {
-                BlackBoxModel bbm = bbmMapping.getKey();
-                for (Model connected : bbmMapping.getValue()) {
-                    MacroConnector macroConnector = context.getMacroConnector(bbm, connected);
-                    if (!usedMacroConnectors.contains(macroConnector)) {
-                        bbm.writeMacroConnect(writer, context, macroConnector, connected);
-                        usedMacroConnectors.add(macroConnector);
-                    }
-                }
+            Set<Couple<Model>> allModelCouples = context.getModelsConnections().entrySet().stream()
+                    .flatMap(e -> e.getValue().stream().map(m -> new Couple<>(e.getKey(), m)))
+                    .collect(Collectors.toCollection(LinkedHashSet::new));
+            for (Couple<Model> couple : allModelCouples) {
+                BlackBoxModel bbm = (BlackBoxModel) couple.getObj1();
+                Model connected = couple.getObj2();
+                MacroConnector macroConnector = context.getMacroConnector(bbm, connected);
+                bbm.writeMacroConnect(writer, context, macroConnector, connected);
             }
         } catch (XMLStreamException e) {
             throw new UncheckedXmlStreamException(e);

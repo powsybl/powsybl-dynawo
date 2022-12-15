@@ -39,7 +39,7 @@ public class DynaWaltzContext {
     private final List<BlackBoxModel> eventModels;
     private final List<Curve> curves;
     private final Map<String, MacroStaticReference> macroStaticReferences = new LinkedHashMap<>();
-    private final Map<Couple<Model>, MacroConnector> connectorsMap = new LinkedHashMap<>();
+    private final Map<Couple<String>, MacroConnector> connectorsMap = new LinkedHashMap<>();
     private final Map<Pair<String, String>, MacroConnector> eventConnectorsMap = new LinkedHashMap<>();
     private final Map<BlackBoxModel, List<Model>> modelsConnections = new LinkedHashMap<>();
     private final Map<BlackBoxModel, List<Model>> eventModelsConnections = new LinkedHashMap<>();
@@ -111,9 +111,9 @@ public class DynaWaltzContext {
         return connectorsMap.values();
     }
 
-    public MacroConnector getMacroConnector(BlackBoxModel bbm, Model model) {
+    public MacroConnector getMacroConnector(Model model1, Model model2) {
         initConnectorsMap();
-        return connectorsMap.get(new Couple<>(bbm, model));
+        return connectorsMap.get(new Couple<>(model1.getName(), model2.getName()));
     }
 
     private void initConnectorsMap() {
@@ -124,7 +124,7 @@ public class DynaWaltzContext {
 
     private void computeMacroConnectors(BlackBoxModel bbm) {
         getModelsConnections().get(bbm).forEach(connectedBbm -> {
-            var key = new Couple<>(bbm, connectedBbm);
+            var key = new Couple<>(bbm.getName(), connectedBbm.getName());
             connectorsMap.computeIfAbsent(key, k -> createMacroConnector(bbm, connectedBbm));
         });
     }
