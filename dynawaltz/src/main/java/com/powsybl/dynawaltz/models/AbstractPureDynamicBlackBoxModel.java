@@ -16,8 +16,8 @@ import java.util.List;
  */
 public abstract class AbstractPureDynamicBlackBoxModel extends AbstractBlackBoxModel implements EventModel {
 
-    protected AbstractPureDynamicBlackBoxModel(String eventModelId, String parameterSetId) {
-        super(eventModelId, null, parameterSetId);
+    protected AbstractPureDynamicBlackBoxModel(String dynamicModelId, String parameterSetId) {
+        super(dynamicModelId, null, parameterSetId);
     }
 
     @Override
