@@ -10,7 +10,6 @@ import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParametersDatabase;
 import com.powsybl.dynawaltz.models.buses.BusModel;
-import com.powsybl.dynawaltz.models.generators.GeneratorModel;
 import com.powsybl.dynawaltz.models.generators.GeneratorSynchronousModel;
 import com.powsybl.dynawaltz.xml.ParametersXml;
 import com.powsybl.iidm.network.Generator;
@@ -18,11 +17,15 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.powsybl.dynawaltz.DynaWaltzParametersDatabase.ParameterType.DOUBLE;
 import static com.powsybl.dynawaltz.DynaWaltzParametersDatabase.ParameterType.INT;
-import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.*;
+import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 
 /**
  * OmegaRef is a special model: its role is to synchronize the generators' frequency. The corresponding black
@@ -38,7 +41,6 @@ public class OmegaRef extends AbstractPureDynamicBlackBoxModel {
     public static final String OMEGA_REF_ID = "OMEGA_REF";
     private static final String OMEGA_REF_PARAMETER_SET_ID = "OMEGA_REF";
     private final List<GeneratorSynchronousModel> synchronousGenerators;
-    private Map<Model, Integer> indexPerModel;
 
     public OmegaRef(List<GeneratorSynchronousModel> synchronousGenerators) {
         super(OMEGA_REF_ID, OMEGA_REF_PARAMETER_SET_ID);
@@ -95,7 +97,9 @@ public class OmegaRef extends AbstractPureDynamicBlackBoxModel {
 
     @Override
     public List<Model> getModelsConnectedTo(DynaWaltzContext context) throws PowsyblException {
-        return new ArrayList<>(getConnectedModelsIndices(context).keySet());
+        return synchronousGenerators.stream()
+                .flatMap(g -> Stream.of(g, getBusAssociatedTo(g, context)))
+                .collect(Collectors.toList());
     }
 
     private BusModel getBusAssociatedTo(GeneratorSynchronousModel generatorModel, DynaWaltzContext context) {
@@ -111,20 +115,6 @@ public class OmegaRef extends AbstractPureDynamicBlackBoxModel {
         return busModel;
     }
 
-    private Map<Model, Integer> getConnectedModelsIndices(DynaWaltzContext context) {
-        if (indexPerModel == null) {
-            indexPerModel = new LinkedHashMap<>();
-            int index = 0;
-            for (GeneratorSynchronousModel generatorSynchronousModel : synchronousGenerators) {
-                BusModel busModel = getBusAssociatedTo(generatorSynchronousModel, context);
-                indexPerModel.put(generatorSynchronousModel, index);
-                indexPerModel.put(busModel, index);
-                index++;
-            }
-        }
-        return indexPerModel;
-    }
-
     @Override
     public String getParFile(DynaWaltzContext context) {
         return context.getSimulationParFile();
@@ -132,10 +122,11 @@ public class OmegaRef extends AbstractPureDynamicBlackBoxModel {
 
     @Override
     public void writeMacroConnect(XMLStreamWriter writer, DynaWaltzContext context, MacroConnector macroConnector, Model connected) throws XMLStreamException {
-         // OmegaRef can be only connected to GeneratorModel and BusModel.
-         // To guarantee we talk about the same bus, we focus on the generator and retrieve its associated bus.
-        if (connected instanceof GeneratorModel) {
-            int index = getConnectedModelsIndices(context).get(connected);
+        // OmegaRef can be only connected to GeneratorModel and BusModel.
+        // As the same bus can be connected to several generators, we focus on the generator and retrieve its associated bus
+        // in order to write the proper index for each generator-bus connection.
+        if (connected instanceof GeneratorSynchronousModel) {
+            int index = synchronousGenerators.indexOf(connected);
             BusModel bus = getBusAssociatedTo((GeneratorSynchronousModel) connected, context);
 
             List<Pair<String, String>> attributesConnectFrom = List.of(
