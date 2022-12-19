@@ -26,7 +26,7 @@ public class Couple<T> {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Couple) {
-            Couple<?> cpl = (Couple) obj;
+            Couple<?> cpl = (Couple<?>) obj;
             return cpl.getObj1().equals(obj1) && cpl.getObj2().equals(obj2)
                     || cpl.getObj2().equals(obj1) && cpl.getObj1().equals(obj2);
         }
