@@ -28,14 +28,19 @@ import java.util.function.BiConsumer;
  */
 public final class XmlUtil {
 
+    @FunctionalInterface
+    public interface XmlDynawaltzWriter {
+        void write(XMLStreamWriter writer, DynaWaltzContext dynaWaltzContext) throws XMLStreamException;
+    }
+
     private XmlUtil() {
     }
 
-    public static void write(Path file, DynaWaltzContext context, String elementName, BiConsumer<XMLStreamWriter, DynaWaltzContext> write) throws IOException, XMLStreamException {
+    public static void write(Path file, DynaWaltzContext context, String elementName, XmlDynawaltzWriter xmlDynawaltzWriter) throws IOException, XMLStreamException {
         Objects.requireNonNull(file);
         Objects.requireNonNull(context);
         Objects.requireNonNull(elementName);
-        Objects.requireNonNull(write);
+        Objects.requireNonNull(xmlDynawaltzWriter);
 
         try (Writer writer = Files.newBufferedWriter(file, StandardCharsets.UTF_8)) {
             XMLStreamWriter xmlWriter = XmlStreamWriterFactory.newInstance(writer);
@@ -45,7 +50,7 @@ public final class XmlUtil {
                 xmlWriter.writeStartElement(DYN_URI, elementName);
                 xmlWriter.writeNamespace(DYN_PREFIX, DYN_URI);
 
-                write.accept(xmlWriter, context);
+                xmlDynawaltzWriter.write(xmlWriter, context);
 
                 xmlWriter.writeEndElement();
                 xmlWriter.writeEndDocument();

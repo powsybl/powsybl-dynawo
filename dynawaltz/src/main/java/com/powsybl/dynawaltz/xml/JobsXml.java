@@ -37,18 +37,14 @@ public final class JobsXml {
         XmlUtil.write(file, context, "jobs", JobsXml::write);
     }
 
-    private static void write(XMLStreamWriter writer, DynaWaltzContext context) {
-        try {
-            writer.writeStartElement(DYN_URI, "job");
-            writer.writeAttribute("name", "Job");
-            writeSolver(writer, context);
-            writeModeler(writer, context);
-            writeSimulation(writer, context);
-            writeOutput(writer, context);
-            writer.writeEndElement();
-        } catch (XMLStreamException e) {
-            throw new UncheckedXmlStreamException(e);
-        }
+    private static void write(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
+        writer.writeStartElement(DYN_URI, "job");
+        writer.writeAttribute("name", "Job");
+        writeSolver(writer, context);
+        writeModeler(writer, context);
+        writeSimulation(writer, context);
+        writeOutput(writer, context);
+        writer.writeEndElement();
     }
 
     private static void writeSolver(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {

@@ -36,16 +36,12 @@ public final class CurvesXml {
         XmlUtil.write(file, context, "curvesInput", CurvesXml::write);
     }
 
-    private static void write(XMLStreamWriter writer, DynaWaltzContext context) {
-        try {
-            for (Curve curve : context.getCurves()) {
-                DynaWaltzCurve dynCurve = (DynaWaltzCurve) curve;
-                writer.writeEmptyElement(DYN_URI, "curve");
-                writer.writeAttribute("model", dynCurve.getModelId());
-                writer.writeAttribute("variable", dynCurve.getVariable());
-            }
-        } catch (XMLStreamException e) {
-            throw new UncheckedXmlStreamException(e);
+    private static void write(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
+        for (Curve curve : context.getCurves()) {
+            DynaWaltzCurve dynCurve = (DynaWaltzCurve) curve;
+            writer.writeEmptyElement(DYN_URI, "curve");
+            writer.writeAttribute("model", dynCurve.getModelId());
+            writer.writeAttribute("variable", dynCurve.getVariable());
         }
     }
 }

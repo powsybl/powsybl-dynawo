@@ -59,14 +59,10 @@ public final class ParametersXml {
         Files.copy(source, workingDir.resolve(source.getFileName().toString()), StandardCopyOption.REPLACE_EXISTING);
     }
 
-    private static void write(XMLStreamWriter writer, DynaWaltzContext context) {
-        try {
-            // loop over the values of the map indexed by dynamicIds to write only once parameters of objects with the same dynamicId
-            for (BlackBoxModel model : context.getBlackBoxModels()) {
-                model.writeParameters(writer, context);
-            }
-        } catch (XMLStreamException e) {
-            throw new UncheckedXmlStreamException(e);
+    private static void write(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
+        // loop over the values of the map indexed by dynamicIds to write only once parameters of objects with the same dynamicId
+        for (BlackBoxModel model : context.getBlackBoxModels()) {
+            model.writeParameters(writer, context);
         }
     }
 
