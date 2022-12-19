@@ -57,8 +57,7 @@ public class StandardBusModel extends AbstractBlackBoxModel implements BusModel 
 
     @Override
     public List<Pair<String, String>> getMacroConnectToAttributes() {
-        List<Pair<String, String>> attributesConnectTo = new ArrayList<>();
-        attributesConnectTo.addAll(super.getMacroConnectToAttributes());
+        List<Pair<String, String>> attributesConnectTo = new ArrayList<>(super.getMacroConnectToAttributes());
         attributesConnectTo.add(Pair.of("name2", getStaticId().orElse(null)));
         return attributesConnectTo;
     }
