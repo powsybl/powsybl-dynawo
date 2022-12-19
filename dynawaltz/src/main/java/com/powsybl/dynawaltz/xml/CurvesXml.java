@@ -6,20 +6,18 @@
  */
 package com.powsybl.dynawaltz.xml;
 
-import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
 import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzCurve;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-
-import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.CRV_FILENAME;
-import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
-
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Objects;
+
+import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.CRV_FILENAME;
+import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>

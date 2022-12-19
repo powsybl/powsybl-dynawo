@@ -6,21 +6,19 @@
  */
 package com.powsybl.dynawaltz.xml;
 
-import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
 import com.powsybl.dynawaltz.DynaWaltzParameters.SolverType;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-
-import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.*;
-import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
-
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
+
+import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.*;
+import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>

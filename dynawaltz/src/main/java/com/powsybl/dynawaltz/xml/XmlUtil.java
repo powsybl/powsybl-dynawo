@@ -7,21 +7,19 @@
 
 package com.powsybl.dynawaltz.xml;
 
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
-
 import com.powsybl.dynawaltz.DynaWaltzContext;
 
-import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_PREFIX;
-import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
-
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
-import java.util.function.BiConsumer;
+
+import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_PREFIX;
+import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 
 /**
  * @author Mathieu Bague <mathieu.bague@rte-france.com>

@@ -9,7 +9,6 @@ package com.powsybl.dynawaltz.xml;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.config.PlatformConfig;
-import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
 import com.powsybl.dynawaltz.DynaWaltzParametersDatabase;
