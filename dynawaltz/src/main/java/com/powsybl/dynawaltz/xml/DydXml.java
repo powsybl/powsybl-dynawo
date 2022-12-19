@@ -69,11 +69,11 @@ public final class DydXml {
                 macroStaticReference.write(writer);
             }
             Set<Couple<Model>> allModelCouples = context.getModelsConnections().entrySet().stream()
-                    .flatMap(e -> e.getValue().stream().map(m -> new Couple<>(e.getKey(), m)))
+                    .flatMap(e -> e.getValue().stream().map(m -> Couple.of(e.getKey(), m)))
                     .collect(Collectors.toCollection(LinkedHashSet::new));
-            for (Couple<Model> couple : allModelCouples) {
-                BlackBoxModel bbm = (BlackBoxModel) couple.getObj1();
-                Model connected = couple.getObj2();
+            for (Couple<Model> modelCouple : allModelCouples) {
+                BlackBoxModel bbm = (BlackBoxModel) modelCouple.getObj1();
+                Model connected = modelCouple.getObj2();
                 MacroConnector macroConnector = context.getMacroConnector(bbm, connected);
                 bbm.writeMacroConnect(writer, context, macroConnector, connected);
             }

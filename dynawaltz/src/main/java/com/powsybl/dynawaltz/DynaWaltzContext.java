@@ -70,7 +70,7 @@ public class DynaWaltzContext {
             modelsConnections.put(bbm, modelsConnected);
 
             for (Model connectedBbm : modelsConnected) {
-                var key = new Couple<>(bbm.getName(), connectedBbm.getName());
+                var key = Couple.of(bbm.getName(), connectedBbm.getName());
                 connectorsMap.computeIfAbsent(key, k -> createMacroConnector(bbm, connectedBbm));
             }
         }
@@ -80,7 +80,7 @@ public class DynaWaltzContext {
             eventModelsConnections.put(bbem, modelsConnected);
 
             for (Model connectedBbm : modelsConnected) {
-                var key = new Couple<>(bbem.getName(), connectedBbm.getName());
+                var key = Couple.of(bbem.getName(), connectedBbm.getName());
                 eventConnectorsMap.computeIfAbsent(key, k -> createMacroConnector(bbem, connectedBbm));
             }
         }
@@ -125,7 +125,7 @@ public class DynaWaltzContext {
     }
 
     public MacroConnector getMacroConnector(Model model1, Model model2) {
-        return connectorsMap.get(new Couple<>(model1.getName(), model2.getName()));
+        return connectorsMap.get(Couple.of(model1.getName(), model2.getName()));
     }
 
     public Collection<MacroConnector> getEventMacroConnectors() {
@@ -133,7 +133,7 @@ public class DynaWaltzContext {
     }
 
     public MacroConnector getEventMacroConnector(BlackBoxModel event, Model model) {
-        return eventConnectorsMap.get(new Couple<>(event.getName(), model.getName()));
+        return eventConnectorsMap.get(Couple.of(event.getName(), model.getName()));
     }
 
     private MacroConnector createMacroConnector(BlackBoxModel bbm, Model model) {
