@@ -20,8 +20,9 @@ import java.util.function.Function;
  */
 public class NetworkModel {
 
-    private final Function<String, DefaultBusModel> busModelFactory = DefaultBusModel::new;
     private final Map<String, DefaultBusModel> defaultBusModelMap = new HashMap<>();
+    private final Map<String, DefaultLineModel> defaultLineModelMap = new HashMap<>();
+    private final Function<String, DefaultBusModel> busModelFactory = DefaultBusModel::new;
     private final BiFunction<String, Branch.Side, DefaultLineModel> lineModelFactory = DefaultLineModel::new;
 
     public DefaultBusModel getDefaultBusModel(String staticId) {
@@ -29,6 +30,6 @@ public class NetworkModel {
     }
 
     public DefaultLineModel getDefaultLineModel(String staticId, Branch.Side side) {
-        return lineModelFactory.apply(staticId, side);
+        return defaultLineModelMap.computeIfAbsent(staticId, key -> lineModelFactory.apply(staticId, side));
     }
 }
