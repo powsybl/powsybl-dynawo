@@ -6,7 +6,6 @@
  */
 package com.powsybl.dynawaltz.models;
 
-import com.powsybl.dynawaltz.models.utils.Couple;
 import org.apache.commons.lang3.tuple.Pair;
 
 import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;

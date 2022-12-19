@@ -12,20 +12,13 @@ import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.MacroConnector;
 import com.powsybl.dynawaltz.models.Model;
-import com.powsybl.dynawaltz.models.utils.Couple;
+import com.powsybl.dynawaltz.models.utils.ConnectedModels;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
-import java.util.function.Predicate;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.DYD_FILENAME;
@@ -63,12 +56,12 @@ public final class DydXml {
             for (MacroStaticReference macroStaticReference : context.getMacroStaticReferences()) {
                 macroStaticReference.write(writer);
             }
-            Set<Couple<Model>> allModelCouples = context.getModelsConnections().entrySet().stream()
-                    .flatMap(e -> e.getValue().stream().map(m -> Couple.of(e.getKey(), m)))
+            Set<ConnectedModels> allConnectedModels = context.getModelsConnections().entrySet().stream()
+                    .flatMap(e -> e.getValue().stream().map(m -> ConnectedModels.of(e.getKey(), m)))
                     .collect(Collectors.toCollection(LinkedHashSet::new));
-            for (Couple<Model> modelCouple : allModelCouples) {
-                BlackBoxModel bbm = (BlackBoxModel) modelCouple.getObj1();
-                Model connected = modelCouple.getObj2();
+            for (ConnectedModels modelsConnected : allConnectedModels) {
+                BlackBoxModel bbm = modelsConnected.getBlackBoxModel();
+                Model connected = modelsConnected.getModel();
                 MacroConnector macroConnector = context.getMacroConnector(bbm, connected);
                 bbm.writeMacroConnect(writer, context, macroConnector, connected);
             }

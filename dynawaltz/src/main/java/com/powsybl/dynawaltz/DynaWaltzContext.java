@@ -12,7 +12,7 @@ import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.models.*;
 import com.powsybl.dynawaltz.models.generators.GeneratorSynchronousModel;
-import com.powsybl.dynawaltz.models.utils.Couple;
+import com.powsybl.dynawaltz.models.utils.ConnectedModelTypes;
 import com.powsybl.dynawaltz.xml.MacroStaticReference;
 import com.powsybl.iidm.network.Network;
 
@@ -38,8 +38,8 @@ public class DynaWaltzContext {
     private final List<BlackBoxModel> eventModels;
     private final List<Curve> curves;
     private final Map<String, MacroStaticReference> macroStaticReferences = new LinkedHashMap<>();
-    private final Map<Couple<String>, MacroConnector> connectorsMap = new LinkedHashMap<>();
-    private final Map<Couple<String>, MacroConnector> eventConnectorsMap = new LinkedHashMap<>();
+    private final Map<ConnectedModelTypes, MacroConnector> connectorsMap = new LinkedHashMap<>();
+    private final Map<ConnectedModelTypes, MacroConnector> eventConnectorsMap = new LinkedHashMap<>();
     private final Map<BlackBoxModel, List<Model>> modelsConnections = new LinkedHashMap<>();
     private final Map<BlackBoxModel, List<Model>> eventModelsConnections = new LinkedHashMap<>();
     private final NetworkModel networkModel = new NetworkModel();
@@ -70,7 +70,7 @@ public class DynaWaltzContext {
             modelsConnections.put(bbm, modelsConnected);
 
             for (Model connectedBbm : modelsConnected) {
-                var key = Couple.of(bbm.getName(), connectedBbm.getName());
+                var key = ConnectedModelTypes.of(bbm.getName(), connectedBbm.getName());
                 connectorsMap.computeIfAbsent(key, k -> createMacroConnector(bbm, connectedBbm));
             }
         }
@@ -80,7 +80,7 @@ public class DynaWaltzContext {
             eventModelsConnections.put(bbem, modelsConnected);
 
             for (Model connectedBbm : modelsConnected) {
-                var key = Couple.of(bbem.getName(), connectedBbm.getName());
+                var key = ConnectedModelTypes.of(bbem.getName(), connectedBbm.getName());
                 eventConnectorsMap.computeIfAbsent(key, k -> createMacroConnector(bbem, connectedBbm));
             }
         }
@@ -125,7 +125,7 @@ public class DynaWaltzContext {
     }
 
     public MacroConnector getMacroConnector(Model model1, Model model2) {
-        return connectorsMap.get(Couple.of(model1.getName(), model2.getName()));
+        return connectorsMap.get(ConnectedModelTypes.of(model1.getName(), model2.getName()));
     }
 
     public Collection<MacroConnector> getEventMacroConnectors() {
@@ -133,7 +133,7 @@ public class DynaWaltzContext {
     }
 
     public MacroConnector getEventMacroConnector(BlackBoxModel event, Model model) {
-        return eventConnectorsMap.get(Couple.of(event.getName(), model.getName()));
+        return eventConnectorsMap.get(ConnectedModelTypes.of(event.getName(), model.getName()));
     }
 
     private MacroConnector createMacroConnector(BlackBoxModel bbm, Model model) {
