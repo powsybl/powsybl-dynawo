@@ -15,7 +15,6 @@ import com.powsybl.dynawaltz.models.generators.GeneratorSynchronousModel;
 import com.powsybl.dynawaltz.models.utils.Couple;
 import com.powsybl.dynawaltz.xml.MacroStaticReference;
 import com.powsybl.iidm.network.Network;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.nio.file.FileSystem;
 import java.nio.file.Path;
@@ -40,7 +39,7 @@ public class DynaWaltzContext {
     private final List<Curve> curves;
     private final Map<String, MacroStaticReference> macroStaticReferences = new LinkedHashMap<>();
     private final Map<Couple<String>, MacroConnector> connectorsMap = new LinkedHashMap<>();
-    private final Map<Pair<String, String>, MacroConnector> eventConnectorsMap = new LinkedHashMap<>();
+    private final Map<Couple<String>, MacroConnector> eventConnectorsMap = new LinkedHashMap<>();
     private final Map<BlackBoxModel, List<Model>> modelsConnections = new LinkedHashMap<>();
     private final Map<BlackBoxModel, List<Model>> eventModelsConnections = new LinkedHashMap<>();
     private final NetworkModel networkModel = new NetworkModel();
@@ -82,7 +81,7 @@ public class DynaWaltzContext {
 
             for (Model connectedBbm : modelsConnected) {
                 var key = new Couple<>(bbem.getName(), connectedBbm.getName());
-                connectorsMap.computeIfAbsent(key, k -> createMacroConnector(bbem, connectedBbm));
+                eventConnectorsMap.computeIfAbsent(key, k -> createMacroConnector(bbem, connectedBbm));
             }
         }
     }
@@ -134,7 +133,7 @@ public class DynaWaltzContext {
     }
 
     public MacroConnector getEventMacroConnector(BlackBoxModel event, Model model) {
-        return eventConnectorsMap.get(Pair.of(event.getLib(), model.getName()));
+        return eventConnectorsMap.get(new Couple<>(event.getName(), model.getName()));
     }
 
     private MacroConnector createMacroConnector(BlackBoxModel bbm, Model model) {
