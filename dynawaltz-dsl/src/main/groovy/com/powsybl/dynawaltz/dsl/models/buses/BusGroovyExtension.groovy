@@ -12,7 +12,7 @@ import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.DynaWaltzProvider
-import com.powsybl.dynawaltz.models.buses.StandardBusModel
+import com.powsybl.dynawaltz.models.buses.StandardBus
 
 import java.util.function.Consumer
 
@@ -62,7 +62,7 @@ class BusGroovyExtension implements DynamicModelGroovyExtension {
             }
 
             String dynamicModelId = busSpec.dynamicModelId ? busSpec.dynamicModelId : busSpec.staticId
-            consumer.accept(new StandardBusModel(dynamicModelId, busSpec.staticId, busSpec.parameterSetId))
+            consumer.accept(new StandardBus(dynamicModelId, busSpec.staticId, busSpec.parameterSetId))
         }
     }
 

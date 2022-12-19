@@ -30,9 +30,9 @@ import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 /**
  * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
  */
-public class StandardBusModel extends AbstractBlackBoxModel implements BusModel {
+public class StandardBus extends AbstractBlackBoxModel implements BusModel {
 
-    public StandardBusModel(String dynamicModelId, String staticId, String parameterSetId) {
+    public StandardBus(String dynamicModelId, String staticId, String parameterSetId) {
         super(dynamicModelId, staticId, parameterSetId);
     }
 

@@ -21,7 +21,7 @@ import com.powsybl.dynawaltz.dsl.models.loads.LoadOneTransformerGroovyExtension;
 import com.powsybl.dynawaltz.models.AbstractBlackBoxModel;
 import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton;
 import com.powsybl.dynawaltz.dsl.automatons.CurrentLimitAutomatonGroovyExtension;
-import com.powsybl.dynawaltz.models.buses.StandardBusModel;
+import com.powsybl.dynawaltz.models.buses.StandardBus;
 import com.powsybl.dynawaltz.models.generators.*;
 import com.powsybl.dynawaltz.models.loads.LoadAlphaBeta;
 import com.powsybl.dynawaltz.models.loads.LoadOneTransformer;
@@ -215,7 +215,7 @@ public class DynaWaltzGroovyDynamicModelsSupplierTest {
             assertEquals("BBM_" + identifiable.getId(), blackBoxModel.getDynamicModelId());
             assertEquals("CLA", blackBoxModel.getParameterSetId());
             assertTrue(identifiable instanceof Line);
-        } else if (blackBoxModel instanceof StandardBusModel) {
+        } else if (blackBoxModel instanceof StandardBus) {
             Identifiable<?> identifiable = network.getIdentifiable(blackBoxModel.getStaticId().orElse(null));
             assertEquals("BBM_" + identifiable.getId(), blackBoxModel.getDynamicModelId());
             assertEquals("SB", blackBoxModel.getParameterSetId());

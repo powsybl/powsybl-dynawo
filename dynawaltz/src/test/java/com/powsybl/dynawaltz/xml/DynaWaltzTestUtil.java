@@ -11,7 +11,7 @@ import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynawaltz.DynaWaltzCurve;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton;
-import com.powsybl.dynawaltz.models.buses.StandardBusModel;
+import com.powsybl.dynawaltz.models.buses.StandardBus;
 import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection;
 import com.powsybl.dynawaltz.models.events.EventSetPointBoolean;
 import com.powsybl.dynawaltz.models.generators.*;
@@ -95,7 +95,7 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
         });
         network.getBusBreakerView().getBuses().forEach(b -> {
             if (b.getId().equals("NGEN")) {
-                dynamicModels.add(new StandardBusModel("BBM_" + b.getId(), b.getId(), "SB"));
+                dynamicModels.add(new StandardBus("BBM_" + b.getId(), b.getId(), "SB"));
             }
         });
 
