@@ -21,22 +21,12 @@ import java.util.List;
  */
 public final class MacroConnector {
 
-    private final Couple<String> modelsConnectedNames;
     private final List<VarConnection> varConnections;
     private final String id;
 
     public MacroConnector(String name1, String name2, List<VarConnection> varConnections) {
-        this.modelsConnectedNames = Couple.of(name1, name2);
         this.id = MACRO_CONNECTOR_PREFIX + name1 + "-" + name2;
         this.varConnections = varConnections;
-    }
-
-    public List<VarConnection> getVarsConnections() {
-        return this.varConnections;
-    }
-
-    public Couple<String> getModelsConnectedNames() {
-        return this.modelsConnectedNames;
     }
 
     public void writeMacroConnect(XMLStreamWriter writer,

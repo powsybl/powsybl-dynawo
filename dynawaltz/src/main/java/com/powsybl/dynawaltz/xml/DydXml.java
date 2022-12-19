@@ -50,11 +50,6 @@ public final class DydXml {
         writeEvents(writer, context);
     }
 
-    public static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
-        Map<Object, Boolean> seen = new ConcurrentHashMap<>();
-        return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
-    }
-
     private static void writeDynamicModels(XMLStreamWriter writer, DynaWaltzContext context) {
 
         try {
@@ -62,7 +57,7 @@ public final class DydXml {
             for (BlackBoxModel model : context.getBlackBoxModels()) {
                 model.write(writer, context);
             }
-            for (MacroConnector macroConnector : context.getMacroConnectors().stream().filter(distinctByKey(MacroConnector::getModelsConnectedNames)).collect(Collectors.toList())) {
+            for (MacroConnector macroConnector : context.getMacroConnectors()) {
                 macroConnector.write(writer);
             }
             for (MacroStaticReference macroStaticReference : context.getMacroStaticReferences()) {
