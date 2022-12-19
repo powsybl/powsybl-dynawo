@@ -154,7 +154,7 @@ public class DynaWaltzContext {
     }
 
     public Stream<BlackBoxModel> getBlackBoxModelStream() {
-        if (omegaRef.getSynchronousGenerators().isEmpty()) {
+        if (omegaRef.isEmpty()) {
             return getInputBlackBoxModelStream();
         }
         return Stream.concat(getInputBlackBoxModelStream(), Stream.of(omegaRef));

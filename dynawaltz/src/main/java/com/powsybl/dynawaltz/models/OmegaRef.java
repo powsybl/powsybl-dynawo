@@ -17,9 +17,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -40,15 +38,18 @@ public class OmegaRef extends AbstractPureDynamicBlackBoxModel {
 
     public static final String OMEGA_REF_ID = "OMEGA_REF";
     private static final String OMEGA_REF_PARAMETER_SET_ID = "OMEGA_REF";
-    private final List<GeneratorSynchronousModel> synchronousGenerators;
+    private Map<GeneratorSynchronousModel, Integer> synchronousGenerators = new LinkedHashMap<>();
 
     public OmegaRef(List<GeneratorSynchronousModel> synchronousGenerators) {
         super(OMEGA_REF_ID, OMEGA_REF_PARAMETER_SET_ID);
-        this.synchronousGenerators = synchronousGenerators;
+        int i = 0;
+        for (GeneratorSynchronousModel synchronousGenerator : synchronousGenerators) {
+            this.synchronousGenerators.put(synchronousGenerator, i++);
+        }
     }
 
-    public List<GeneratorSynchronousModel> getSynchronousGenerators() {
-        return Collections.unmodifiableList(synchronousGenerators);
+    public boolean isEmpty() {
+        return synchronousGenerators.isEmpty();
     }
 
     @Override
@@ -63,18 +64,17 @@ public class OmegaRef extends AbstractPureDynamicBlackBoxModel {
         writer.writeStartElement(DYN_URI, "set");
         writer.writeAttribute("id", getParameterSetId());
 
-        long count = 0;
         // The dynamic models are declared in the DYD following the order of dynamic models supplier.
         // The OmegaRef parameters index the weight of each generator according to that declaration order.
-        for (GeneratorSynchronousModel blackBoxModel : synchronousGenerators) {
-            double h = parDB.getDouble(blackBoxModel.getParameterSetId(), "generator_H");
-            double snom = parDB.getDouble(blackBoxModel.getParameterSetId(), "generator_SNom");
+        for (Map.Entry<GeneratorSynchronousModel, Integer> e : synchronousGenerators.entrySet()) {
+            GeneratorSynchronousModel generator = e.getKey();
+            double h = parDB.getDouble(generator.getParameterSetId(), "generator_H");
+            double snom = parDB.getDouble(generator.getParameterSetId(), "generator_SNom");
 
-            ParametersXml.writeParameter(writer, DOUBLE, "weight_gen_" + count, Double.toString(h * snom));
-            count++;
+            ParametersXml.writeParameter(writer, DOUBLE, "weight_gen_" + e.getValue(), Double.toString(h * snom));
         }
 
-        ParametersXml.writeParameter(writer, INT, "nbGen", Long.toString(count));
+        ParametersXml.writeParameter(writer, INT, "nbGen", Long.toString(synchronousGenerators.size()));
 
         writer.writeEndElement();
     }
@@ -97,7 +97,7 @@ public class OmegaRef extends AbstractPureDynamicBlackBoxModel {
 
     @Override
     public List<Model> getModelsConnectedTo(DynaWaltzContext context) throws PowsyblException {
-        return synchronousGenerators.stream()
+        return synchronousGenerators.keySet().stream()
                 .flatMap(g -> Stream.of(g, getBusAssociatedTo(g, context)))
                 .collect(Collectors.toList());
     }
@@ -126,7 +126,7 @@ public class OmegaRef extends AbstractPureDynamicBlackBoxModel {
         // As the same bus can be connected to several generators, we focus on the generator and retrieve its associated bus
         // in order to write the proper index for each generator-bus connection.
         if (connected instanceof GeneratorSynchronousModel) {
-            int index = synchronousGenerators.indexOf(connected);
+            int index = synchronousGenerators.get(connected);
             BusModel bus = getBusAssociatedTo((GeneratorSynchronousModel) connected, context);
 
             List<Pair<String, String>> attributesConnectFrom = List.of(
