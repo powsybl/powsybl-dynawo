@@ -8,10 +8,8 @@ import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.VarMapping;
 import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton;
 import com.powsybl.dynawaltz.models.buses.BusModel;
-import com.powsybl.dynawaltz.models.generators.GeneratorModel;
 import com.powsybl.iidm.network.Branch;
 import com.powsybl.iidm.network.Bus;
-import com.powsybl.iidm.network.Generator;
 import com.powsybl.iidm.network.Line;
 
 import javax.xml.stream.XMLStreamException;
@@ -24,13 +22,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 
-public class StandardLineModel extends AbstractBlackBoxModel implements LineModel {
+public class StandardLine extends AbstractBlackBoxModel implements LineModel {
 
     private final String id;
     private final String sidePostfix;
     private final AtomicInteger atomicInteger = new AtomicInteger();
 
-    public StandardLineModel(String dynamicModelId, String statidId, String parameterSetId, Branch.Side side) {
+    public StandardLine(String dynamicModelId, String statidId, String parameterSetId, Branch.Side side) {
         super(dynamicModelId, statidId, parameterSetId);
         this.sidePostfix = LineModel.getSuffix(side);
         this.id = "line" + atomicInteger.incrementAndGet();

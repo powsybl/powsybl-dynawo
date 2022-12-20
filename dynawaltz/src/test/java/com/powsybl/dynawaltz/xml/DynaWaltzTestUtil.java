@@ -15,7 +15,7 @@ import com.powsybl.dynawaltz.models.buses.StandardBus;
 import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection;
 import com.powsybl.dynawaltz.models.events.EventSetPointBoolean;
 import com.powsybl.dynawaltz.models.generators.*;
-import com.powsybl.dynawaltz.models.lines.StandardLineModel;
+import com.powsybl.dynawaltz.models.lines.StandardLine;
 import com.powsybl.dynawaltz.models.loads.LoadAlphaBeta;
 import com.powsybl.dynawaltz.models.loads.LoadOneTransformer;
 import com.powsybl.iidm.network.*;
@@ -38,7 +38,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.powsybl.commons.ComparisonUtils.compareXml;
+import static com.powsybl.commons.ComparisonUtils.compareTxt;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -101,7 +101,7 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
         });
         network.getLineStream().forEach(l -> {
             if (l.getId().equals("NHV1_NHV2_1")) {
-                dynamicModels.add(new StandardLineModel("Line_" + l.getId(), l.getId(), "SL", Branch.Side.ONE));
+                dynamicModels.add(new StandardLine("Line_" + l.getId(), l.getId(), "SL", Branch.Side.ONE));
             }
         });
 
@@ -129,7 +129,7 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
         Schema schema = factory.newSchema(xsd);
         Validator validator = schema.newValidator();
         validator.validate(xml);
-        compareXml(getClass().getResourceAsStream("/" + expectedResourceName), Files.newInputStream(xmlFile));
+        compareTxt(getClass().getResourceAsStream("/" + expectedResourceName), Files.newInputStream(xmlFile));
     }
 
     private static Network createEurostagTutorialExample1WithMoreLoads() {
