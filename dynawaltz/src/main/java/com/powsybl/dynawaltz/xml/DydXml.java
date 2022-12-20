@@ -7,7 +7,6 @@
 
 package com.powsybl.dynawaltz.xml;
 
-import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.MacroConnector;
@@ -38,55 +37,45 @@ public final class DydXml {
         XmlUtil.write(file, context, "dynamicModelsArchitecture", DydXml::write);
     }
 
-    private static void write(XMLStreamWriter writer, DynaWaltzContext context) {
+    private static void write(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
         writeDynamicModels(writer, context);
         writeEvents(writer, context);
     }
 
-    private static void writeDynamicModels(XMLStreamWriter writer, DynaWaltzContext context) {
-
-        try {
-            // loop over the values of the map indexed by dynamicIds to write only once objects with the same dynamicId
-            for (BlackBoxModel model : context.getBlackBoxModels()) {
-                model.write(writer, context);
-            }
-            for (MacroConnector macroConnector : context.getMacroConnectors()) {
-                macroConnector.write(writer);
-            }
-            for (MacroStaticReference macroStaticReference : context.getMacroStaticReferences()) {
-                macroStaticReference.write(writer);
-            }
-            Set<ConnectedModels> allConnectedModels = context.getModelsConnections().entrySet().stream()
-                    .flatMap(e -> e.getValue().stream().map(m -> ConnectedModels.of(e.getKey(), m)))
-                    .collect(Collectors.toCollection(LinkedHashSet::new));
-            for (ConnectedModels modelsConnected : allConnectedModels) {
-                BlackBoxModel bbm = modelsConnected.getBlackBoxModel();
-                Model connected = modelsConnected.getModel();
-                MacroConnector macroConnector = context.getMacroConnector(bbm, connected);
-                bbm.writeMacroConnect(writer, context, macroConnector, connected);
-            }
-        } catch (XMLStreamException e) {
-            throw new UncheckedXmlStreamException(e);
+    private static void writeDynamicModels(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
+        // loop over the values of the map indexed by dynamicIds to write only once objects with the same dynamicId
+        for (BlackBoxModel model : context.getBlackBoxModels()) {
+            model.write(writer, context);
+        }
+        for (MacroConnector macroConnector : context.getMacroConnectors()) {
+            macroConnector.write(writer);
+        }
+        for (MacroStaticReference macroStaticReference : context.getMacroStaticReferences()) {
+            macroStaticReference.write(writer);
+        }
+        Set<ConnectedModels> allConnectedModels = context.getModelsConnections().entrySet().stream()
+                .flatMap(e -> e.getValue().stream().map(m -> ConnectedModels.of(e.getKey(), m)))
+                .collect(Collectors.toCollection(LinkedHashSet::new));
+        for (ConnectedModels modelsConnected : allConnectedModels) {
+            BlackBoxModel bbm = modelsConnected.getBlackBoxModel();
+            Model connected = modelsConnected.getModel();
+            MacroConnector macroConnector = context.getMacroConnector(bbm, connected);
+            bbm.writeMacroConnect(writer, context, macroConnector, connected);
         }
     }
 
-    private static void writeEvents(XMLStreamWriter writer, DynaWaltzContext context) {
-
-        try {
-            for (BlackBoxModel model : context.getBlackBoxEventModels()) {
-                model.write(writer, context);
+    private static void writeEvents(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
+        for (BlackBoxModel model : context.getBlackBoxEventModels()) {
+            model.write(writer, context);
+        }
+        for (MacroConnector macroConnector : context.getEventMacroConnectors()) {
+            macroConnector.write(writer);
+        }
+        for (Map.Entry<BlackBoxModel, List<Model>> bbmMapping : context.getEventModelsConnections().entrySet()) {
+            BlackBoxModel event = bbmMapping.getKey();
+            for (Model connected : bbmMapping.getValue()) {
+                event.writeMacroConnect(writer, context, context.getEventMacroConnector(event, connected), connected);
             }
-            for (MacroConnector macroConnector : context.getEventMacroConnectors()) {
-                macroConnector.write(writer);
-            }
-            for (Map.Entry<BlackBoxModel, List<Model>> bbmMapping : context.getEventModelsConnections().entrySet()) {
-                BlackBoxModel event = bbmMapping.getKey();
-                for (Model connected : bbmMapping.getValue()) {
-                    event.writeMacroConnect(writer, context, context.getEventMacroConnector(event, connected), connected);
-                }
-            }
-        } catch (XMLStreamException e) {
-            throw new UncheckedXmlStreamException(e);
         }
     }
 }
