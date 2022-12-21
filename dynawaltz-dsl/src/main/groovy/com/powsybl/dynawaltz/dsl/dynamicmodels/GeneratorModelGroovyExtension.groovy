@@ -6,6 +6,8 @@
  */
 package com.powsybl.dynawaltz.dsl.dynamicmodels
 
+import com.powsybl.dynawaltz.models.generators.GeneratorSynchronous
+
 import java.util.function.Consumer
 
 import com.google.auto.service.AutoService
@@ -18,7 +20,10 @@ import com.powsybl.dynawaltz.DynaWaltzProvider
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-abstract class GeneratorModelGroovyExtension implements DynamicModelGroovyExtension {
+@AutoService(DynamicModelGroovyExtension.class)
+class GeneratorModelGroovyExtension implements DynamicModelGroovyExtension {
+
+    private static final String GENERATORS_CONFIG = "synchronous_generators.cfg";
 
     static class GeneratorModelSpec {
         String dynamicModelId
@@ -41,5 +46,29 @@ abstract class GeneratorModelGroovyExtension implements DynamicModelGroovyExtens
     String getName() {
         return DynaWaltzProvider.NAME
     }
-    
+
+    void load(Binding binding, Consumer<DynamicModel> consumer) {
+        ConfigSlurper config = new ConfigSlurper()
+        def cfg = config.parse(this.getClass().getClassLoader().getResource(GENERATORS_CONFIG))
+        for (def String gen : cfg.keySet()) {
+            binding.setVariable(gen, {
+                Closure<Void> closure ->
+                    def cloned = closure.clone()
+                    GeneratorModelSpec generatorModelSpec = new GeneratorModelSpec()
+
+                    cloned.delegate = generatorModelSpec
+                    cloned()
+
+                    if (!generatorModelSpec.staticId) {
+                        throw new DslException("'staticId' field is not set")
+                    }
+                    if (!generatorModelSpec.parameterSetId) {
+                        throw new DslException("'parameterSetId' field is not set")
+                    }
+
+                    String dynamicModelId = generatorModelSpec.dynamicModelId ? generatorModelSpec.dynamicModelId : generatorModelSpec.staticId
+                    consumer.accept(new GeneratorSynchronous(dynamicModelId, generatorModelSpec.staticId, generatorModelSpec.parameterSetId, gen))
+            })
+        }
+    }
 }
