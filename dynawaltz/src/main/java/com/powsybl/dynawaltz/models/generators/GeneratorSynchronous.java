@@ -9,16 +9,19 @@ package com.powsybl.dynawaltz.models.generators;
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  */
-public abstract class AbstractGeneratorSynchronousModel extends AbstractGeneratorModel
+public class GeneratorSynchronous extends AbstractGeneratorModel
         implements GeneratorSynchronousModel {
 
-    protected AbstractGeneratorSynchronousModel(String dynamicModelId, String staticId, String parameterSetId) {
+    private final String generatorLib;
+
+    public GeneratorSynchronous(String dynamicModelId, String staticId, String parameterSetId, String generatorLib) {
         super(dynamicModelId, staticId, parameterSetId,
                 "generator_terminal",
                 "generator_switchOffSignal1",
                 "generator_switchOffSignal2",
                 "generator_switchOffSignal3",
                 "generator_running");
+        this.generatorLib = generatorLib;
     }
 
     @Override
@@ -29,5 +32,10 @@ public abstract class AbstractGeneratorSynchronousModel extends AbstractGenerato
     @Override
     public String getOmegaPuVarName() {
         return "generator_omegaPu";
+    }
+
+    @Override
+    public String getLib() {
+        return generatorLib;
     }
 }

@@ -13,7 +13,7 @@ import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 
-import com.powsybl.dynawaltz.models.generators.GeneratorSynchronousThreeWindingsProportionalRegulations
+import com.powsybl.dynawaltz.models.generators.GeneratorSynchronous
 
 /**
  * An implementation of {@link DynamicModelGroovyExtension} that adds the <pre>GeneratorSynchronousThreeWindingsProportionalRegulations</pre> keyword to the DSL
@@ -39,7 +39,7 @@ class GeneratorSynchronousThreeWindingsProportionalRegulationsGroovyExtension ex
             }
 
             String dynamicModelId = generatorModelSpec.dynamicModelId ? generatorModelSpec.dynamicModelId : generatorModelSpec.staticId
-            consumer.accept(new GeneratorSynchronousThreeWindingsProportionalRegulations(dynamicModelId, generatorModelSpec.staticId, generatorModelSpec.parameterSetId))
+            consumer.accept(new GeneratorSynchronous(dynamicModelId, generatorModelSpec.staticId, generatorModelSpec.parameterSetId, "GeneratorSynchronousThreeWindingsProportionalRegulations"))
         }
     }
 

@@ -10,7 +10,7 @@ import com.google.auto.service.AutoService
 import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
-import com.powsybl.dynawaltz.models.generators.GeneratorSynchronousFourWindingsProportionalRegulationsStepPm
+import com.powsybl.dynawaltz.models.generators.GeneratorSynchronous
 
 import java.util.function.Consumer
 
@@ -37,7 +37,7 @@ class GeneratorSynchronousFourWindingsProportionalRegulationsStepPmGroovyExtensi
             }
 
             String dynamicModelId = generatorModelSpec.dynamicModelId ? generatorModelSpec.dynamicModelId : generatorModelSpec.staticId
-            consumer.accept(new GeneratorSynchronousFourWindingsProportionalRegulationsStepPm(dynamicModelId, generatorModelSpec.staticId, generatorModelSpec.parameterSetId))
+            consumer.accept(new GeneratorSynchronous(dynamicModelId, generatorModelSpec.staticId, generatorModelSpec.parameterSetId, "GeneratorSynchronousFourWindingsProportionalRegulationsStepPm"))
         }
     }
 
