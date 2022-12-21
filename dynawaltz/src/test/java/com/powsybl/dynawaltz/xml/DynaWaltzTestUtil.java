@@ -38,7 +38,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.powsybl.commons.ComparisonUtils.compareTxt;
+import static com.powsybl.commons.ComparisonUtils.compareXml;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -129,7 +129,7 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
         Schema schema = factory.newSchema(xsd);
         Validator validator = schema.newValidator();
         validator.validate(xml);
-        compareTxt(getClass().getResourceAsStream("/" + expectedResourceName), Files.newInputStream(xmlFile));
+        compareXml(getClass().getResourceAsStream("/" + expectedResourceName), Files.newInputStream(xmlFile));
     }
 
     private static Network createEurostagTutorialExample1WithMoreLoads() {

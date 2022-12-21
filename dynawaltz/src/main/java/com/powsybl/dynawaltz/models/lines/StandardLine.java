@@ -49,6 +49,8 @@ public class StandardLine extends AbstractBlackBoxModel implements LineModel {
         writer.writeStartElement(DYN_URI, "blackBoxModel");
         writer.writeAttribute("id", getDynamicModelId());
         writer.writeAttribute("lib", getLib());
+        writer.writeAttribute("parFile", getParFile(context));
+        writer.writeAttribute("parId", getParameterSetId());
         writer.writeAttribute("staticId", getStaticId().orElse(null));
         writer.writeEndElement();
     }
