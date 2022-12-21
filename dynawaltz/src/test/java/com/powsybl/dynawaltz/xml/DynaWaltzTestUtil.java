@@ -95,9 +95,9 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
             }
         });
         network.getBusBreakerView().getBuses().forEach(b -> {
-            //if (b.getId().equals("NGEN") || b.getId().equals("NHV1") ||) {
+            if (b.getId().equals("NHV2") || b.getId().equals("NHV1")) {
                 dynamicModels.add(new StandardBus("BBM_" + b.getId(), b.getId(), "SB"));
-            //}
+            }
         });
         network.getLineStream().forEach(l -> {
             if (l.getId().equals("NHV1_NHV2_1")) {

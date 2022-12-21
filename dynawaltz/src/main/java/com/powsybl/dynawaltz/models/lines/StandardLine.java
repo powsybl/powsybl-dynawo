@@ -61,15 +61,8 @@ public class StandardLine extends AbstractBlackBoxModel implements LineModel {
                     new VarConnection(getIVarName(), busModel.getNumCCVarName()),
                     new VarConnection(getStateVarName(), busModel.getTerminalVarName())
             );
-        } else if (connected instanceof CurrentLimitAutomaton) {
-            CurrentLimitAutomaton connectedAutomatonModel = (CurrentLimitAutomaton) connected;
-            return Arrays.asList(
-                    new VarConnection(getIVarName(), connectedAutomatonModel.getMonitored()),
-                    new VarConnection(getStateVarName(), connectedAutomatonModel.getOrder()),
-                    new VarConnection(getDesactivateCurrentLimitsVarName(), connectedAutomatonModel.getExists())
-            );
         } else {
-            throw new PowsyblException("StandardLineModel can only connect to BusModel or CurrentLimitAutomaton");
+            throw new PowsyblException("StandardLineModel can only connect to BusModel");
         }
     }
 
