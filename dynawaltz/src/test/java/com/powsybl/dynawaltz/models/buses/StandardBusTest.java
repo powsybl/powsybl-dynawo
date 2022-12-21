@@ -8,11 +8,9 @@
 
 package com.powsybl.dynawaltz.models.buses;
 
-import com.google.errorprone.annotations.Var;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.Model;
-import com.powsybl.dynawaltz.models.NetworkModel;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.generators.GeneratorModel;
 import com.powsybl.iidm.network.Network;
@@ -36,7 +34,7 @@ public class StandardBusTest {
 
     @Before
     public void setUp() {
-        standardBus = new StandardBus("dynamicModelId","staticId", "parameterSetId");
+        standardBus = new StandardBus("dynamicModelId", "staticId", "parameterSetId");
     }
 
     @Test(expected = PowsyblException.class)

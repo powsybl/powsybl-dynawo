@@ -9,23 +9,17 @@
 package com.powsybl.dynawaltz.models;
 
 import com.powsybl.commons.PowsyblException;
-import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.buses.BusModel;
-import com.powsybl.dynawaltz.models.generators.GeneratorSynchronousModel;
-import com.powsybl.iidm.network.Network;
 import org.junit.Before;
 import org.junit.Test;
 
 import javax.xml.stream.XMLStreamException;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
