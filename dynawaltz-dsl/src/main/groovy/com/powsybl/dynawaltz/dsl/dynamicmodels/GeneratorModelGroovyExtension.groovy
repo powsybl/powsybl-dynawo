@@ -50,9 +50,11 @@ class GeneratorModelGroovyExtension implements DynamicModelGroovyExtension {
     void load(Binding binding, Consumer<DynamicModel> consumer) {
         ConfigSlurper config = new ConfigSlurper()
         def cfg = config.parse(this.getClass().getClassLoader().getResource(GENERATORS_CONFIG))
+        int index = 0
         for (def String gen : cfg.keySet()) {
             binding.setVariable(gen, {
                 Closure<Void> closure ->
+                    String key = cfg.keySet().getAt(index++)
                     def cloned = closure.clone()
                     GeneratorModelSpec generatorModelSpec = new GeneratorModelSpec()
 
@@ -67,7 +69,7 @@ class GeneratorModelGroovyExtension implements DynamicModelGroovyExtension {
                     }
 
                     String dynamicModelId = generatorModelSpec.dynamicModelId ? generatorModelSpec.dynamicModelId : generatorModelSpec.staticId
-                    consumer.accept(new GeneratorSynchronous(dynamicModelId, generatorModelSpec.staticId, generatorModelSpec.parameterSetId, gen))
+                    consumer.accept(new GeneratorSynchronous(dynamicModelId, generatorModelSpec.staticId, generatorModelSpec.parameterSetId, key))
             })
         }
     }
