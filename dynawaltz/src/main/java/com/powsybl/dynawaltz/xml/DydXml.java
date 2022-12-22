@@ -11,14 +11,14 @@ import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.MacroConnector;
 import com.powsybl.dynawaltz.models.Model;
+import com.powsybl.dynawaltz.models.utils.ConnectedModels;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.DYD_FILENAME;
 
@@ -53,11 +53,14 @@ public final class DydXml {
         for (MacroStaticReference macroStaticReference : context.getMacroStaticReferences()) {
             macroStaticReference.write(writer);
         }
-        for (Map.Entry<BlackBoxModel, List<Model>> bbmMapping : context.getModelsConnections().entrySet()) {
-            BlackBoxModel bbm = bbmMapping.getKey();
-            for (Model connected : bbmMapping.getValue()) {
-                bbm.writeMacroConnect(writer, context, context.getMacroConnector(bbm, connected), connected);
-            }
+        Set<ConnectedModels> allConnectedModels = context.getModelsConnections().entrySet().stream()
+                .flatMap(e -> e.getValue().stream().map(m -> ConnectedModels.of(e.getKey(), m)))
+                .collect(Collectors.toCollection(LinkedHashSet::new));
+        for (ConnectedModels modelsConnected : allConnectedModels) {
+            BlackBoxModel bbm = modelsConnected.getBlackBoxModel();
+            Model connected = modelsConnected.getModel();
+            MacroConnector macroConnector = context.getMacroConnector(bbm, connected);
+            bbm.writeMacroConnect(writer, context, macroConnector, connected);
         }
     }
 
