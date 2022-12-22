@@ -1,30 +1,30 @@
 /**
- * Copyright (c) 2020, RTE (http://www.rte-france.com)
+ * Copyright (c) 2022, RTE (http://www.rte-france.com/)
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.dynamicmodels
-
-import com.powsybl.dynawaltz.models.loads.LoadOneTransformer
-
-import java.util.function.Consumer
+package com.powsybl.dynawaltz.dsl.models.buses
 
 import com.google.auto.service.AutoService
 import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.DynaWaltzProvider
+import com.powsybl.dynawaltz.models.buses.StandardBus
+
+import java.util.function.Consumer
 
 /**
- * An implementation of {@link DynamicModelGroovyExtension} that adds the <pre>LoadOneTransformer</pre> keyword to the DSL
+ * An implementation of {@link DynamicModelGroovyExtension} that adds the <pre>Bus</pre> keyword to the DSL
  *
- * @author Marcos de Miguel <demiguelm at aia.es>
+ * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class LoadOneTransformerGroovyExtension implements DynamicModelGroovyExtension {
+class BusGroovyExtension implements DynamicModelGroovyExtension {
 
-    static class LoadOneTransformerSpec {
+    static class BusSpec {
         String dynamicModelId
         String staticId
         String parameterSetId
@@ -47,22 +47,22 @@ class LoadOneTransformerGroovyExtension implements DynamicModelGroovyExtension {
     }
     
     void load(Binding binding, Consumer<DynamicModel> consumer) {
-        binding.LoadOneTransformer = { Closure<Void> closure ->
+        binding.Bus = { Closure<Void> closure ->
             def cloned = closure.clone()
-            LoadOneTransformerSpec loadOneTransformerSpec = new LoadOneTransformerSpec()
+            BusSpec busSpec = new BusSpec()
     
-            cloned.delegate = loadOneTransformerSpec
+            cloned.delegate = busSpec
             cloned()
 
-            if (!loadOneTransformerSpec.staticId) {
+            if (!busSpec.staticId) {
                 throw new DslException("'staticId' field is not set");
             }
-            if (!loadOneTransformerSpec.parameterSetId) {
+            if (!busSpec.parameterSetId) {
                 throw new DslException("'parameterSetId' field is not set")
             }
 
-            String dynamicModelId = loadOneTransformerSpec.dynamicModelId ? loadOneTransformerSpec.dynamicModelId : loadOneTransformerSpec.staticId
-            consumer.accept(new LoadOneTransformer(dynamicModelId, loadOneTransformerSpec.staticId, loadOneTransformerSpec.parameterSetId))
+            String dynamicModelId = busSpec.dynamicModelId ? busSpec.dynamicModelId : busSpec.staticId
+            consumer.accept(new StandardBus(dynamicModelId, busSpec.staticId, busSpec.parameterSetId))
         }
     }
 

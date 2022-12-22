@@ -14,11 +14,14 @@ import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension;
 import com.powsybl.dynamicsimulation.groovy.GroovyDynamicModelsSupplier;
 import com.powsybl.dynamicsimulation.groovy.GroovyExtension;
 import com.powsybl.dynawaltz.DynaWaltzProvider;
+import com.powsybl.dynawaltz.dsl.models.buses.BusGroovyExtension;
+import com.powsybl.dynawaltz.dsl.models.generators.GeneratorModelGroovyExtension;
+import com.powsybl.dynawaltz.dsl.models.loads.LoadAlphaBetaGroovyExtension;
+import com.powsybl.dynawaltz.dsl.models.loads.LoadOneTransformerGroovyExtension;
 import com.powsybl.dynawaltz.models.AbstractBlackBoxModel;
 import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton;
 import com.powsybl.dynawaltz.dsl.automatons.CurrentLimitAutomatonGroovyExtension;
-import com.powsybl.dynawaltz.dsl.dynamicmodels.*;
-import com.powsybl.dynawaltz.dynamicmodels.LoadOneTransformerGroovyExtension;
+import com.powsybl.dynawaltz.models.buses.StandardBus;
 import com.powsybl.dynawaltz.models.generators.*;
 import com.powsybl.dynawaltz.models.loads.LoadAlphaBeta;
 import com.powsybl.dynawaltz.models.loads.LoadOneTransformer;
@@ -62,7 +65,7 @@ public class DynaWaltzGroovyDynamicModelsSupplierTest {
     public void test() {
 
         List<DynamicModelGroovyExtension> extensions = GroovyExtension.find(DynamicModelGroovyExtension.class, DynaWaltzProvider.NAME);
-        assertEquals(5, extensions.size());
+        assertEquals(6, extensions.size());
         extensions.forEach(this::validateExtension);
 
         DynamicModelsSupplier supplier = new GroovyDynamicModelsSupplier(fileSystem.getPath("/dynamicModels.groovy"), extensions);
@@ -72,7 +75,8 @@ public class DynaWaltzGroovyDynamicModelsSupplierTest {
         int numLoads = network.getLoadCount();
         int numGenerators = network.getGeneratorCount();
         int numLines = network.getLineCount();
-        int expectedDynamicModelsSize =  numLoads + numGenerators + numLines;
+        long numBuses = network.getBusBreakerView().getBusStream().count();
+        int expectedDynamicModelsSize = numLoads + numGenerators + numLines + (int) numBuses;
         assertEquals(expectedDynamicModelsSize, dynamicModels.size());
         dynamicModels.forEach(this::validateModel);
     }
@@ -155,7 +159,8 @@ public class DynaWaltzGroovyDynamicModelsSupplierTest {
 
         boolean isLoadExtension = isLoadAlphaBetaExtension || isLoadOneTransformerExtension;
         boolean isGeneratorExtension = extension instanceof GeneratorModelGroovyExtension;
-        boolean isDynamicModelExtension = isLoadExtension || isGeneratorExtension;
+        boolean isBusExtension = extension instanceof BusGroovyExtension;
+        boolean isDynamicModelExtension = isLoadExtension || isGeneratorExtension || isBusExtension;
 
         boolean isCurrentLimitAutomatonExtension = extension instanceof CurrentLimitAutomatonGroovyExtension;
         boolean isAutomatonExtension = isCurrentLimitAutomatonExtension;
@@ -188,6 +193,11 @@ public class DynaWaltzGroovyDynamicModelsSupplierTest {
             assertEquals("BBM_" + identifiable.getId(), blackBoxModel.getDynamicModelId());
             assertEquals("CLA", blackBoxModel.getParameterSetId());
             assertTrue(identifiable instanceof Line);
+        } else if (blackBoxModel instanceof StandardBus) {
+            Identifiable<?> identifiable = network.getIdentifiable(blackBoxModel.getStaticId().orElse(null));
+            assertEquals("BBM_" + identifiable.getId(), blackBoxModel.getDynamicModelId());
+            assertEquals("SB", blackBoxModel.getParameterSetId());
+            assertTrue(identifiable instanceof Bus);
         }
     }
 
