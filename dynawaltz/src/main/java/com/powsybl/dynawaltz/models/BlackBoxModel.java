@@ -7,6 +7,7 @@
 package com.powsybl.dynawaltz.models;
 
 import com.powsybl.dynawaltz.DynaWaltzContext;
+import com.powsybl.dynawaltz.xml.MacroStaticReference;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -35,4 +36,6 @@ public interface BlackBoxModel extends Model {
     void writeParameters(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException;
 
     void writeMacroConnect(XMLStreamWriter writer, DynaWaltzContext context, MacroConnector macroConnector, Model connected) throws XMLStreamException;
+
+    MacroStaticReference getMacroStaticReference();
 }

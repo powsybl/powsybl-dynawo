@@ -64,8 +64,6 @@ public class DynaWaltzContext {
         this.omegaRef = new OmegaRef(synchronousGenerators);
 
         for (BlackBoxModel bbm : Stream.concat(dynamicModels.stream(), Stream.of(omegaRef)).collect(Collectors.toList())) {
-            macroStaticReferences.computeIfAbsent(bbm.getName(), k -> new MacroStaticReference(k, bbm.getVarsMapping()));
-
             List<Model> modelsConnected = bbm.getModelsConnectedTo(this);
             modelsConnections.put(bbm, modelsConnected);
 
@@ -107,7 +105,12 @@ public class DynaWaltzContext {
     }
 
     public Collection<MacroStaticReference> getMacroStaticReferences() {
-        return macroStaticReferences.values();
+        return getBlackBoxModelStream()
+                .filter(BlackBoxModel.class::isInstance)
+                .map(BlackBoxModel.class::cast)
+                .map(BlackBoxModel::getMacroStaticReference)
+                .distinct()
+                .collect(Collectors.toList());
     }
 
     public Map<String, BlackBoxModel> getStaticIdBlackBoxModelMap() {

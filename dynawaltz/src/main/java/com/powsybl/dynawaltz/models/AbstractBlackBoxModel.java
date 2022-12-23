@@ -12,7 +12,9 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -26,6 +28,7 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel {
     private final String dynamicModelId;
     private final String staticId;
     private final String parameterSetId;
+    private static final Map<Class<? extends BlackBoxModel>, MacroStaticReference> MACRO_STATIC_REFERENCE_PER_CLASS = new HashMap<>();
 
     protected AbstractBlackBoxModel(String dynamicModelId, String staticId, String parameterSetId) {
         this.dynamicModelId = Objects.requireNonNull(dynamicModelId);
@@ -101,5 +104,10 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel {
     protected void writePureDynamicBlackBoxModel(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
         writer.writeEmptyElement(DYN_URI, "blackBoxModel");
         writeDynamicAttributes(writer, context);
+    }
+
+    @Override
+    public MacroStaticReference getMacroStaticReference() {
+        return MACRO_STATIC_REFERENCE_PER_CLASS.computeIfAbsent(this.getClass(), k -> new MacroStaticReference(getLib(), getVarsMapping()));
     }
 }
