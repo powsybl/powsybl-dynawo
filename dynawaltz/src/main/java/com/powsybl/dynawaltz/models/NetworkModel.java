@@ -1,0 +1,35 @@
+/**
+ * Copyright (c) 2022, RTE (http://www.rte-france.com)
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+package com.powsybl.dynawaltz.models;
+
+import com.powsybl.dynawaltz.models.buses.DefaultBusModel;
+import com.powsybl.dynawaltz.models.lines.DefaultLineModel;
+import com.powsybl.iidm.network.Branch;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+
+/**
+ * @author Florian Dupuy <florian.dupuy at rte-france.com>
+ */
+public class NetworkModel {
+
+    private final Map<String, DefaultBusModel> defaultBusModelMap = new HashMap<>();
+    private final Map<String, DefaultLineModel> defaultLineModelMap = new HashMap<>();
+    private final Function<String, DefaultBusModel> busModelFactory = DefaultBusModel::new;
+    private final BiFunction<String, Branch.Side, DefaultLineModel> lineModelFactory = DefaultLineModel::new;
+
+    public DefaultBusModel getDefaultBusModel(String staticId) {
+        return defaultBusModelMap.computeIfAbsent(staticId, key -> busModelFactory.apply(staticId));
+    }
+
+    public DefaultLineModel getDefaultLineModel(String staticId, Branch.Side side) {
+        return defaultLineModelMap.computeIfAbsent(staticId, key -> lineModelFactory.apply(staticId, side));
+    }
+}
