@@ -6,7 +6,6 @@ import com.powsybl.dynawaltz.models.AbstractBlackBoxModel;
 import com.powsybl.dynawaltz.models.Model;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.VarMapping;
-import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton;
 import com.powsybl.dynawaltz.models.buses.BusModel;
 import com.powsybl.iidm.network.Branch;
 import com.powsybl.iidm.network.Bus;
