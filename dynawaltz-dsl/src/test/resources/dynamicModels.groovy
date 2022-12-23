@@ -62,6 +62,12 @@ for (Generator gen : network.generators) {
             dynamicModelId "BBM_" + gen.id
             parameterSetId "GF"
         }
+    } else if (gen.id == "GEN7") {
+        GeneratorPQ {
+            staticId gen.id
+            dynamicModelId "BBM_" + gen.id
+            parameterSetId "GPQ"
+        }
     } else {
         GeneratorSynchronousThreeWindingsProportionalRegulations {
             staticId gen.id

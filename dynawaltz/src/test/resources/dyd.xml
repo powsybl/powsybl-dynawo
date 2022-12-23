@@ -24,6 +24,9 @@
     <dyn:blackBoxModel id="BBM_GEN6" lib="GeneratorFictitious" parFile="models.par" parId="GF" staticId="GEN6">
         <dyn:macroStaticRef id="MSR_GeneratorFictitious"/>
     </dyn:blackBoxModel>
+    <dyn:blackBoxModel id="BBM_GEN7" lib="GeneratorPQ" parFile="models.par" parId="GPQ" staticId="GEN7">
+        <dyn:macroStaticRef id="MSR_GeneratorPQ"/>
+    </dyn:blackBoxModel>
     <dyn:blackBoxModel id="BBM_NHV1_1" lib="GeneratorSynchronousThreeWindingsProportionalRegulations" parFile="models.par" parId="GSTWPR" staticId="NHV1_1">
         <dyn:macroStaticRef id="MSR_GeneratorSynchronousThreeWindingsProportionalRegulations"/>
     </dyn:blackBoxModel>
@@ -64,6 +67,10 @@
         <dyn:connect var1="generator_terminal" var2="bus_terminal"/>
         <dyn:connect var1="generator_switchOffSignal1" var2="bus_switchOff"/>
     </dyn:macroConnector>
+    <dyn:macroConnector id="MC_GeneratorPQ-Bus">
+        <dyn:connect var1="generator_terminal" var2="bus_terminal"/>
+        <dyn:connect var1="generator_switchOffSignal1" var2="bus_switchOff"/>
+    </dyn:macroConnector>
     <dyn:macroConnector id="MC_GeneratorSynchronousThreeWindingsProportionalRegulations-NetworkBus">
         <dyn:connect var1="generator_terminal" var2="@NAME@_ACPIN"/>
         <dyn:connect var1="generator_switchOffSignal1" var2="@NAME@_switchOff"/>
@@ -95,6 +102,10 @@
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_DYNModelOmegaRef-GeneratorSynchronousFourWindingsProportionalRegulationsStepPm">
         <dyn:connect var1="omega_grp_@INDEX@" var2="generator_omegaPu"/>
+        <dyn:connect var1="omegaRef_grp_@INDEX@" var2="generator_omegaRefPu"/>
+        <dyn:connect var1="running_grp_@INDEX@" var2="generator_running"/>
+    </dyn:macroConnector>
+    <dyn:macroConnector id="MC_DYNModelOmegaRef-GeneratorPQ">
         <dyn:connect var1="omegaRef_grp_@INDEX@" var2="generator_omegaRefPu"/>
         <dyn:connect var1="running_grp_@INDEX@" var2="generator_running"/>
     </dyn:macroConnector>
@@ -144,6 +155,11 @@
         <dyn:staticRef var="generator_QGenPu" staticVar="q"/>
         <dyn:staticRef var="generator_state" staticVar="state"/>
     </dyn:macroStaticReference>
+    <dyn:macroStaticReference id="MSR_GeneratorPQ">
+        <dyn:staticRef var="generator_PGenPu" staticVar="p"/>
+        <dyn:staticRef var="generator_QGenPu" staticVar="q"/>
+        <dyn:staticRef var="generator_state" staticVar="state"/>
+    </dyn:macroStaticReference>
     <dyn:macroConnect connector="MC_LoadAlphaBeta-NetworkBus" id1="BBM_LOAD" id2="NETWORK" name2="NLOAD"/>
     <dyn:macroConnect connector="MC_LoadOneTransformer-NetworkBus" id1="BBM_LOAD2" id2="NETWORK" name2="NLOAD"/>
     <dyn:macroConnect connector="MC_GeneratorSynchronousThreeWindingsProportionalRegulations-Bus" id1="BBM_GEN" id2="BBM_NGEN" name2="NGEN"/>
@@ -152,6 +168,7 @@
     <dyn:macroConnect connector="MC_GeneratorSynchronousThreeWindings-Bus" id1="BBM_GEN4" id2="BBM_NGEN" name2="NGEN"/>
     <dyn:macroConnect connector="MC_GeneratorSynchronousFourWindingsProportionalRegulationsStepPm-Bus" id1="BBM_GEN5" id2="BBM_NGEN" name2="NGEN"/>
     <dyn:macroConnect connector="MC_GeneratorFictitious-Bus" id1="BBM_GEN6" id2="BBM_NGEN" name2="NGEN"/>
+    <dyn:macroConnect connector="MC_GeneratorPQ-Bus" id1="BBM_GEN7" id2="BBM_NGEN" name2="NGEN"/>
     <dyn:macroConnect connector="MC_GeneratorSynchronousThreeWindingsProportionalRegulations-NetworkBus" id1="BBM_NHV1_1" id2="NETWORK" name2="NHV1"/>
     <dyn:macroConnect connector="MC_CurrentLimitAutomaton-NetworkLineSide1" id1="BBM_NHV1_NHV2_1" id2="NETWORK" name2="NHV1_NHV2_1"/>
     <dyn:macroConnect connector="MC_CurrentLimitAutomaton-NetworkLineSide1" id1="BBM_NHV1_NHV2_2" id2="NETWORK" name2="NHV1_NHV2_2"/>
@@ -160,11 +177,13 @@
     <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorSynchronousFourWindings" id1="OMEGA_REF" index1="2" id2="BBM_GEN3"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorSynchronousThreeWindings" id1="OMEGA_REF" index1="3" id2="BBM_GEN4"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorSynchronousFourWindingsProportionalRegulationsStepPm" id1="OMEGA_REF" index1="4" id2="BBM_GEN5"/>
-    <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorSynchronousThreeWindingsProportionalRegulations" id1="OMEGA_REF" index1="5" id2="BBM_NHV1_1"/>
+    <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorPQ" id1="OMEGA_REF" index1="5" id2="BBM_GEN7"/>
+    <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorSynchronousThreeWindingsProportionalRegulations" id1="OMEGA_REF" index1="6" id2="BBM_NHV1_1"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRef-Bus" id1="OMEGA_REF" index1="0" id2="BBM_NGEN" name2="NGEN"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRef-Bus" id1="OMEGA_REF" index1="1" id2="BBM_NGEN" name2="NGEN"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRef-Bus" id1="OMEGA_REF" index1="2" id2="BBM_NGEN" name2="NGEN"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRef-Bus" id1="OMEGA_REF" index1="3" id2="BBM_NGEN" name2="NGEN"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRef-Bus" id1="OMEGA_REF" index1="4" id2="BBM_NGEN" name2="NGEN"/>
-    <dyn:macroConnect connector="MC_DYNModelOmegaRef-NetworkBus" id1="OMEGA_REF" index1="5" id2="NETWORK" name2="NHV1"/>
+    <dyn:macroConnect connector="MC_DYNModelOmegaRef-Bus" id1="OMEGA_REF" index1="5" id2="BBM_NGEN" name2="NGEN"/>
+    <dyn:macroConnect connector="MC_DYNModelOmegaRef-NetworkBus" id1="OMEGA_REF" index1="6" id2="NETWORK" name2="NHV1"/>
 </dyn:dynamicModelsArchitecture>

@@ -7,6 +7,7 @@
         <dyn:par type="DOUBLE" name="weight_gen_3" value="6539.400000000001"/>
         <dyn:par type="DOUBLE" name="weight_gen_4" value="6539.400000000001"/>
         <dyn:par type="DOUBLE" name="weight_gen_5" value="6539.400000000001"/>
-        <dyn:par type="INT" name="nbGen" value="6"/>
+        <dyn:par type="DOUBLE" name="weight_gen_6" value="6539.400000000001"/>
+        <dyn:par type="INT" name="nbGen" value="7"/>
     </dyn:set>
 </dyn:parametersSet>

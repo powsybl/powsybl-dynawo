@@ -89,6 +89,8 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
                 dynamicModels.add(new GeneratorSynchronous("BBM_" + g.getId(), g.getId(), "GSFWPRSP", "GeneratorSynchronousFourWindingsProportionalRegulationsStepPm"));
             } else if (g.getId().equals("GEN6")) {
                 dynamicModels.add(new GeneratorFictitious("BBM_" + g.getId(), g.getId(), "GF"));
+            } else if (g.getId().equals("GEN7")) {
+                dynamicModels.add(new GeneratorPQ("BBM_" + g.getId(), g.getId(), "GPQ"));
             } else {
                 dynamicModels.add(new GeneratorSynchronous("BBM_" + g.getId(), g.getId(), "GSTWPR", "GeneratorSynchronousThreeWindingsProportionalRegulations"));
             }
@@ -186,6 +188,17 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
             .add();
         vlgen.newGenerator()
             .setId("GEN6")
+            .setBus(ngen.getId())
+            .setConnectableBus(ngen.getId())
+            .setMinP(-9999.99)
+            .setMaxP(9999.99)
+            .setVoltageRegulatorOn(true)
+            .setTargetV(24.5)
+            .setTargetP(-0.3)
+            .setTargetQ(0.7)
+            .add();
+        vlgen.newGenerator()
+            .setId("GEN7")
             .setBus(ngen.getId())
             .setConnectableBus(ngen.getId())
             .setMinP(-9999.99)

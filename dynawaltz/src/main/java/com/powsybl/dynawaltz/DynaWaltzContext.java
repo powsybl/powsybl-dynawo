@@ -11,7 +11,7 @@ import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.models.*;
-import com.powsybl.dynawaltz.models.generators.GeneratorSynchronousModel;
+import com.powsybl.dynawaltz.models.generators.GeneratorConnectedToOmegaRefModel;
 import com.powsybl.dynawaltz.models.utils.ConnectedModelTypes;
 import com.powsybl.dynawaltz.xml.MacroStaticReference;
 import com.powsybl.iidm.network.Network;
@@ -57,9 +57,9 @@ public class DynaWaltzContext {
         this.dynaWaltzParameters = Objects.requireNonNull(dynaWaltzParameters);
         this.parametersDatabase = loadDatabase(dynaWaltzParameters.getParametersFile());
 
-        List<GeneratorSynchronousModel> synchronousGenerators = dynamicModels.stream()
-                .filter(GeneratorSynchronousModel.class::isInstance)
-                .map(GeneratorSynchronousModel.class::cast)
+        List<GeneratorConnectedToOmegaRefModel> synchronousGenerators = dynamicModels.stream()
+                .filter(GeneratorConnectedToOmegaRefModel.class::isInstance)
+                .map(GeneratorConnectedToOmegaRefModel.class::cast)
                 .collect(Collectors.toList());
         this.omegaRef = new OmegaRef(synchronousGenerators);
 
