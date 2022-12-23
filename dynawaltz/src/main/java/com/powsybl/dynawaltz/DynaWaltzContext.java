@@ -37,7 +37,6 @@ public class DynaWaltzContext {
     private final List<BlackBoxModel> dynamicModels;
     private final List<BlackBoxModel> eventModels;
     private final List<Curve> curves;
-    private final Map<String, MacroStaticReference> macroStaticReferences = new LinkedHashMap<>();
     private final Map<ConnectedModelTypes, MacroConnector> connectorsMap = new LinkedHashMap<>();
     private final Map<ConnectedModelTypes, MacroConnector> eventConnectorsMap = new LinkedHashMap<>();
     private final Map<BlackBoxModel, List<Model>> modelsConnections = new LinkedHashMap<>();
