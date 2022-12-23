@@ -50,31 +50,31 @@ class GeneratorModelGroovyExtension implements DynamicModelGroovyExtension {
     void load(Binding binding, Consumer<DynamicModel> consumer) {
         ConfigSlurper config = new ConfigSlurper()
         def cfg = config.parse(this.getClass().getClassLoader().getResource(GENERATORS_CONFIG))
-        int index = 0
         for (String gen : cfg.keySet()) {
             binding.setVariable(gen, generatorClosure(consumer, gen))
         }
     }
 
-    def generatorClosure =
-        { Consumer<DynamicModel> consumer, String generator ->
-            {
-                Closure<Void> closure ->
-                    def cloned = closure.clone()
-                    GeneratorModelSpec generatorModelSpec = new GeneratorModelSpec()
+    def generatorClosure = {
+        Consumer<DynamicModel> consumer, String generator ->
+        {
+            Closure<Void> closure -> {
+                def cloned = closure.clone()
+                GeneratorModelSpec generatorModelSpec = new GeneratorModelSpec()
 
-                    cloned.delegate = generatorModelSpec
-                    cloned()
+                cloned.delegate = generatorModelSpec
+                cloned()
 
-                    if (!generatorModelSpec.staticId) {
-                        throw new DslException("'staticId' field is not set")
-                    }
-                    if (!generatorModelSpec.parameterSetId) {
-                        throw new DslException("'parameterSetId' field is not set")
-                    }
+                if (!generatorModelSpec.staticId) {
+                    throw new DslException("'staticId' field is not set")
+                }
+                if (!generatorModelSpec.parameterSetId) {
+                    throw new DslException("'parameterSetId' field is not set")
+                }
 
-                    String dynamicModelId = generatorModelSpec.dynamicModelId ? generatorModelSpec.dynamicModelId : generatorModelSpec.staticId
-                    consumer.accept(new GeneratorSynchronous(dynamicModelId, generatorModelSpec.staticId, generatorModelSpec.parameterSetId, generator))
+                String dynamicModelId = generatorModelSpec.dynamicModelId ? generatorModelSpec.dynamicModelId : generatorModelSpec.staticId
+                consumer.accept(new GeneratorSynchronous(dynamicModelId, generatorModelSpec.staticId, generatorModelSpec.parameterSetId, generator))
             }
         }
+    }
 }
