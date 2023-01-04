@@ -24,6 +24,7 @@ import com.powsybl.dynawaltz.DynaWaltzProvider
 class GeneratorModelGroovyExtension implements DynamicModelGroovyExtension {
 
     private static final String GENERATORS_CONFIG = "synchronous_generators.cfg";
+    private static final String SYNCHRONOUS_GENERATORS_LIBS = "synchronousGeneratorsLibs";
 
     static class GeneratorModelSpec {
         String dynamicModelId
@@ -49,7 +50,7 @@ class GeneratorModelGroovyExtension implements DynamicModelGroovyExtension {
 
     void load(Binding binding, Consumer<DynamicModel> consumer) {
         ConfigSlurper config = new ConfigSlurper()
-        def cfg = config.parse(this.getClass().getClassLoader().getResource(GENERATORS_CONFIG))
+        def cfg = config.parse(this.getClass().getClassLoader().getResource(GENERATORS_CONFIG)).get(SYNCHRONOUS_GENERATORS_LIBS)
         for (String gen : cfg.keySet()) {
             binding.setVariable(gen, generatorClosure(consumer, gen))
         }
@@ -65,7 +66,7 @@ class GeneratorModelGroovyExtension implements DynamicModelGroovyExtension {
                 cloned.delegate = generatorModelSpec
                 cloned()
 
-                if (!generatorModelSpec.staticId) {
+                if (!generatorModelSpec.staticId) {SYNCHRONOUS_GENERATORS_LIBS
                     throw new DslException("'staticId' field is not set")
                 }
                 if (!generatorModelSpec.parameterSetId) {
