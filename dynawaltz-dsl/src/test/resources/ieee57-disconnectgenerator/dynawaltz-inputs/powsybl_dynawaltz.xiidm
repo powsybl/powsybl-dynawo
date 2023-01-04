@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<iidm:network xmlns:iidm="http://www.powsybl.org/schema/iidm/1_4" id="ieee57bus" caseDate="2018-02-27T13:26:14.115+01:00" forecastDistance="0" sourceFormat="CIM1">
+<iidm:network xmlns:iidm="http://www.itesla_project.eu/schema/iidm/1_0" id="ieee57bus" caseDate="2018-02-27T13:26:14.115+01:00" forecastDistance="0" sourceFormat="CIM1">
     <iidm:substation id="_BEAV___6_SS" name="BEAV   6_SS" country="AF" geographicalTags="_SGR_01">
         <iidm:voltageLevel id="_BEAV___6_VL" name="BEAV   6_VL" nominalV="69.0" topologyKind="BUS_BREAKER">
             <iidm:busBreakerTopology>
@@ -211,9 +211,7 @@
                 <iidm:bus id="_BUS___25_TN" v="13.56" angle="-18.17"/>
             </iidm:busBreakerTopology>
             <iidm:load id="_LOAD___25_EC" name="BUS   25" loadType="UNDEFINED" p0="6.3" q0="3.2" bus="_BUS___25_TN" connectableBus="_BUS___25_TN" p="6.3" q="3.2"/>
-            <iidm:shunt id="_BUS___25_SC" name="BUS   25" sectionCount="1" voltageRegulatorOn="false" bus="_BUS___25_TN" connectableBus="_BUS___25_TN" q="-5.6961102">
-                <iidm:shuntLinearModel bPerSection="0.0309809" maximumSectionCount="1"/>
-            </iidm:shunt>
+            <iidm:shunt id="_BUS___25_SC" name="BUS   25" bPerSection="0.0309809" maximumSectionCount="1" currentSectionCount="1" bus="_BUS___25_TN" connectableBus="_BUS___25_TN" q="-5.6961102"/>
         </iidm:voltageLevel>
         <iidm:voltageLevel id="_BUS___24_VL" name="BUS   24_VL" nominalV="18.0" topologyKind="BUS_BREAKER">
             <iidm:busBreakerTopology>
@@ -485,9 +483,7 @@
                 <iidm:bus id="_BUS___53_TN" v="13.4" angle="-12.25"/>
             </iidm:busBreakerTopology>
             <iidm:load id="_LOAD___53_EC" name="BUS   53" loadType="UNDEFINED" p0="20.0" q0="10.0" bus="_BUS___53_TN" connectableBus="_BUS___53_TN" p="20.0" q="10.0"/>
-            <iidm:shunt id="_BUS___53_SC" name="BUS   53" sectionCount="1" voltageRegulatorOn="false" bus="_BUS___53_TN" connectableBus="_BUS___53_TN" q="-5.9945273">
-                <iidm:shuntLinearModel bPerSection="0.0330813" maximumSectionCount="1"/>
-            </iidm:shunt>
+            <iidm:shunt id="_BUS___53_SC" name="BUS   53" bPerSection="0.0330813" maximumSectionCount="1" currentSectionCount="1" bus="_BUS___53_TN" connectableBus="_BUS___53_TN" q="-5.9945273"/>
         </iidm:voltageLevel>
     </iidm:substation>
     <iidm:substation id="_BUS___54_SS" name="BUS   54_SS" country="AF" geographicalTags="_SGR_01">
@@ -625,9 +621,7 @@
                 <iidm:bus id="_SPRI__18_TN" v="13.81" angle="-11.73"/>
             </iidm:busBreakerTopology>
             <iidm:load id="_LOAD___18_EC" name="SPRI  18" loadType="UNDEFINED" p0="27.2" q0="9.8" bus="_SPRI__18_TN" connectableBus="_SPRI__18_TN" p="27.2" q="9.8"/>
-            <iidm:shunt id="_SPRI__18_SC" name="SPRI  18" sectionCount="1" voltageRegulatorOn="false" bus="_SPRI__18_TN" connectableBus="_SPRI__18_TN" q="-9.997862">
-                <iidm:shuntLinearModel bPerSection="0.05251" maximumSectionCount="1"/>
-            </iidm:shunt>
+            <iidm:shunt id="_SPRI__18_SC" name="SPRI  18" bPerSection="0.05251" maximumSectionCount="1" currentSectionCount="1" bus="_SPRI__18_TN" connectableBus="_SPRI__18_TN" q="-9.997862"/>
         </iidm:voltageLevel>
         <iidm:twoWindingsTransformer id="_SPRI___4-SPRI__18-1_PT" name="SPRI   4-SPRI  18-1" r="0.0" x="1.0569401" g="0.0" b="0.0" ratedU1="69.0" ratedU2="13.8" bus1="_SPRI___4_TN" connectableBus1="_SPRI___4_TN" voltageLevelId1="_SPRI___4_VL" bus2="_SPRI__18_TN" connectableBus2="_SPRI__18_TN" voltageLevelId2="_SPRI__18_VL" p1="13.947786" q1="2.587131" p2="-13.947786" q2="-1.494797">
             <iidm:ratioTapChanger lowTapPosition="1" tapPosition="5" loadTapChangingCapabilities="false">

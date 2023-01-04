@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<iidm:network xmlns:iidm="http://www.powsybl.org/schema/iidm/1_4" id="ieee14bus" caseDate="2017-06-09T10:14:24.146+02:00" forecastDistance="0" sourceFormat="CIM1">
+<iidm:network xmlns:iidm="http://www.itesla_project.eu/schema/iidm/1_0" id="ieee14bus" caseDate="2017-06-09T10:14:24.146+02:00" forecastDistance="0" sourceFormat="CIM1">
     <iidm:substation id="_BUS___10_SS" name="BUS   10_SS" country="AF" geographicalTags="_SGR_01">
         <iidm:voltageLevel id="_BUS___10_VL" name="BUS   10_VL" nominalV="13.8" topologyKind="BUS_BREAKER">
             <iidm:busBreakerTopology>
@@ -78,9 +78,7 @@
                 <iidm:bus id="_BUS____9_TN" v="14.5719" angle="-14.9385"/>
             </iidm:busBreakerTopology>
             <iidm:load id="_LOAD___9_EC" name="LOAD   9" loadType="UNDEFINED" p0="29.5" q0="16.6" bus="_BUS____9_TN" connectableBus="_BUS____9_TN" p="29.5" q="16.6"/>
-            <iidm:shunt id="_BANK___9_SC" name="BANK   9" sectionCount="1" voltageRegulatorOn="false" bus="_BUS____9_TN" connectableBus="_BUS____9_TN" q="-21.256718">
-                <iidm:shuntLinearModel bPerSection="0.099769" maximumSectionCount="1"/>
-            </iidm:shunt>
+            <iidm:shunt id="_BANK___9_SC" name="BANK   9" bPerSection="0.099769" maximumSectionCount="1" currentSectionCount="1" bus="_BUS____9_TN" connectableBus="_BUS____9_TN" q="-21.256718"/>
         </iidm:voltageLevel>
         <iidm:voltageLevel id="_BUS____7_VL" name="BUS    7_VL" nominalV="13.8" topologyKind="BUS_BREAKER">
             <iidm:busBreakerTopology>
@@ -94,12 +92,12 @@
             <iidm:load id="_LOAD___4_EC" name="LOAD   4" loadType="UNDEFINED" p0="47.8" q0="-3.9" bus="_BUS____4_TN" connectableBus="_BUS____4_TN" p="47.8" q="-3.9"/>
         </iidm:voltageLevel>
         <iidm:twoWindingsTransformer id="_BUS____4-BUS____9-1_PT" name="BUS    4-BUS    9-1" r="0.0" x="1.0591881" g="0.0" b="0.0" ratedU1="69.0" ratedU2="13.8" bus1="_BUS____4_TN" connectableBus1="_BUS____4_TN" voltageLevelId1="_BUS____4_VL" bus2="_BUS____9_TN" connectableBus2="_BUS____9_TN" voltageLevelId2="_BUS____9_VL" p1="16.299362" q1="1.270369" p2="-16.299362" q2="0.050373">
-            <iidm:ratioTapChanger lowTapPosition="1" tapPosition="4" loadTapChangingCapabilities="false">
+            <iidm:ratioTapChanger lowTapPosition="1" tapPosition="4" regulating="false" loadTapChangingCapabilities="false">
                 <iidm:step r="0.0" x="0.0" g="0.0" b="0.0" rho="1.1111112"/>
                 <iidm:step r="0.0" x="0.0" g="0.0" b="0.0" rho="1.0834236"/>
                 <iidm:step r="0.0" x="0.0" g="0.0" b="0.0" rho="1.0570825"/>
                 <iidm:step r="0.0" x="0.0" g="0.0" b="0.0" rho="1.0319917"/>
-                <iidm:step r="0.0" x="0.0" g="0.0" b="0.0" rho="1.015744"/>
+                <iidm:step r="0.0" x="0.0" g="0.0" b="0.0" rho="1.0157440"/>
                 <iidm:step r="0.0" x="0.0" g="0.0" b="0.0" rho="1.0"/>
                 <iidm:step r="0.0" x="0.0" g="0.0" b="0.0" rho="0.9803922"/>
                 <iidm:step r="0.0" x="0.0" g="0.0" b="0.0" rho="0.9615385"/>
@@ -111,7 +109,7 @@
             <iidm:currentLimits2 permanentLimit="4183.7"/>
         </iidm:twoWindingsTransformer>
         <iidm:twoWindingsTransformer id="_BUS____4-BUS____7-1_PT" name="BUS    4-BUS    7-1" r="0.0" x="0.39824802" g="0.0" b="0.0" ratedU1="69.0" ratedU2="13.8" bus1="_BUS____4_TN" connectableBus1="_BUS____4_TN" voltageLevelId1="_BUS____4_VL" bus2="_BUS____7_TN" connectableBus2="_BUS____7_TN" voltageLevelId2="_BUS____7_VL" p1="28.129929" q1="-10.561864" p2="-28.129929" q2="12.3099">
-            <iidm:ratioTapChanger lowTapPosition="1" tapPosition="5" loadTapChangingCapabilities="false">
+            <iidm:ratioTapChanger lowTapPosition="1" tapPosition="5" regulating="false" loadTapChangingCapabilities="false">
                 <iidm:step r="0.0" x="0.0" g="0.0" b="0.0" rho="1.1111112"/>
                 <iidm:step r="0.0" x="0.0" g="0.0" b="0.0" rho="1.0875476"/>
                 <iidm:step r="0.0" x="0.0" g="0.0" b="0.0" rho="1.0649627"/>
@@ -145,11 +143,11 @@
             <iidm:load id="_LOAD___5_EC" name="LOAD   5" loadType="UNDEFINED" p0="7.6" q0="1.6" bus="_BUS____5_TN" connectableBus="_BUS____5_TN" p="7.6" q="1.6"/>
         </iidm:voltageLevel>
         <iidm:twoWindingsTransformer id="_BUS____5-BUS____6-1_PT" name="BUS    5-BUS    6-1" r="0.0" x="0.47994804" g="0.0" b="0.0" ratedU1="69.0" ratedU2="13.8" bus1="_BUS____5_TN" connectableBus1="_BUS____5_TN" voltageLevelId1="_BUS____5_VL" bus2="_BUS____6_TN" connectableBus2="_BUS____6_TN" voltageLevelId2="_BUS____6_VL" p1="43.804256" q1="9.096129" p2="-43.804256" q2="-4.821185">
-            <iidm:ratioTapChanger lowTapPosition="1" tapPosition="3" loadTapChangingCapabilities="false">
+            <iidm:ratioTapChanger lowTapPosition="1" tapPosition="3" regulating="false" loadTapChangingCapabilities="false">
                 <iidm:step r="0.0" x="0.0" g="0.0" b="0.0" rho="1.1111112"/>
                 <iidm:step r="0.0" x="0.0" g="0.0" b="0.0" rho="1.0917031"/>
                 <iidm:step r="0.0" x="0.0" g="0.0" b="0.0" rho="1.0729614"/>
-                <iidm:step r="0.0" x="0.0" g="0.0" b="0.0" rho="1.047486"/>
+                <iidm:step r="0.0" x="0.0" g="0.0" b="0.0" rho="1.0474860"/>
                 <iidm:step r="0.0" x="0.0" g="0.0" b="0.0" rho="1.0231924"/>
                 <iidm:step r="0.0" x="0.0" g="0.0" b="0.0" rho="1.0"/>
                 <iidm:step r="0.0" x="0.0" g="0.0" b="0.0" rho="0.9803922"/>
