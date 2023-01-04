@@ -48,7 +48,7 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
     private static final String DYNAWO_CMD_NAME = "dynawo";
     private static final String WORKING_DIR_PREFIX = "powsybl_dynawaltz_";
     private static final String OUTPUT_IIDM_FILENAME = "outputIIDM.xml";
-    private static final String IIDM_VERSION = IidmXmlVersion.V_1_4.toString(".");
+    private static final String IIDM_VERSION = IidmXmlVersion.V_1_0.toString(".");
 
     private final DynaWaltzConfig dynaWaltzConfig;
 
@@ -158,7 +158,7 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
 
         private void writeInputFiles(Path workingDir) {
             try {
-                // Write the network to XIIDM v1.4 because currently Dynawo does not support versions above
+                // Write the network to XIIDM v1.0 because currently Dynawo does not support versions above
                 Properties params = new Properties();
                 params.setProperty(XMLExporter.VERSION, IIDM_VERSION);
                 context.getNetwork().write("XIIDM", params, workingDir.resolve(NETWORK_FILENAME));
