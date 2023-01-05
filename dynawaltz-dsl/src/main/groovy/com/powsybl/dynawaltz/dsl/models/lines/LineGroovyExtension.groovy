@@ -19,7 +19,7 @@ import com.powsybl.iidm.network.Branch
 import java.util.function.Consumer
 
 /**
- * An implementation of {@link DynamicModelGroovyExtension} that adds the <pre>Bus</pre> keyword to the DSL
+ * An implementation of {@link DynamicModelGroovyExtension} that adds the <pre>Line</pre> keyword to the DSL
  *
  * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
  */
