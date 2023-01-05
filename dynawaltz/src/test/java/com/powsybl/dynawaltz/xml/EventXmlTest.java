@@ -10,7 +10,7 @@ import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
-import com.powsybl.dynawaltz.models.generators.GeneratorSynchronousFourWindingsProportionalRegulations;
+import com.powsybl.dynawaltz.models.generators.GeneratorSynchronous;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
@@ -26,7 +26,7 @@ public class EventXmlTest extends DynaWaltzTestUtil {
     @Test
     public void writeDynamicModel() throws SAXException, IOException, XMLStreamException {
         List<BlackBoxModel> dynamicModels = List.of(
-                new GeneratorSynchronousFourWindingsProportionalRegulations("BBM_GEN2", "GEN2", "GSFWPR")
+                new GeneratorSynchronous("BBM_GEN2", "GEN2", "GSFWPR", "GeneratorSynchronousFourWindingsProportionalRegulations")
         );
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynaWaltzParameters dynawoParameters = DynaWaltzParameters.load();
