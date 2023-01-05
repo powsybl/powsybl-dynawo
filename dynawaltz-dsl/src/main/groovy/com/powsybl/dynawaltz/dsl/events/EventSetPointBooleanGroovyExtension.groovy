@@ -27,7 +27,8 @@ class EventSetPointBooleanGroovyExtension implements EventModelGroovyExtension {
     static class EventSetPointBooleanSpec {
         String eventModelId
         String staticId
-        String parameterSetId
+        double startTime
+        boolean stateEvent
 
         void eventModelId(String eventModelId) {
             this.eventModelId = eventModelId
@@ -37,8 +38,12 @@ class EventSetPointBooleanGroovyExtension implements EventModelGroovyExtension {
             this.staticId = staticId
         }
 
-        void parameterSetId(String parameterSetId) {
-            this.parameterSetId = parameterSetId
+        void startTime(double startTime) {
+            this.startTime = startTime
+        }
+
+        void stateEvent(boolean stateEvent) {
+            this.stateEvent = stateEvent
         }
     }
 
@@ -57,12 +62,13 @@ class EventSetPointBooleanGroovyExtension implements EventModelGroovyExtension {
             if (!eventSetPointBooleanSpec.staticId) {
                 throw new DslException("'staticId' field is not set");
             }
-            if (!eventSetPointBooleanSpec.parameterSetId) {
-                throw new DslException("'parameterSetId' field is not set")
+            if (!eventSetPointBooleanSpec.startTime) {
+                throw new DslException("'startTime' field is not set")
             }
 
             String eventModelId = eventSetPointBooleanSpec.eventModelId ? eventSetPointBooleanSpec.eventModelId : eventSetPointBooleanSpec.staticId
-            consumer.accept(new EventSetPointBoolean(eventModelId, eventSetPointBooleanSpec.staticId, eventSetPointBooleanSpec.parameterSetId))
+            consumer.accept(new EventSetPointBoolean(eventModelId, eventSetPointBooleanSpec.staticId,
+                    eventSetPointBooleanSpec.startTime, eventSetPointBooleanSpec.stateEvent))
         }
     }
 }
