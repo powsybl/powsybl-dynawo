@@ -8,7 +8,7 @@ package com.powsybl.dynaflow;
 
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
-import com.powsybl.commons.AbstractConverterTest;
+import com.powsybl.commons.test.AbstractConverterTest;
 import com.powsybl.commons.config.InMemoryPlatformConfig;
 import com.powsybl.commons.config.MapModuleConfig;
 import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
@@ -30,7 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.powsybl.commons.ComparisonUtils.compareTxt;
+import static com.powsybl.commons.test.ComparisonUtils.compareTxt;
 import static com.powsybl.dynaflow.DynaFlowProvider.MODULE_SPECIFIC_PARAMETERS;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;

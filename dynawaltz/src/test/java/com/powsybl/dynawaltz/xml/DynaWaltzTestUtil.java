@@ -6,7 +6,7 @@
  */
 package com.powsybl.dynawaltz.xml;
 
-import com.powsybl.commons.AbstractConverterTest;
+import com.powsybl.commons.test.AbstractConverterTest;
 import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynawaltz.DynaWaltzCurve;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
@@ -37,7 +37,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.powsybl.commons.ComparisonUtils.compareXml;
+import static com.powsybl.commons.test.ComparisonUtils.compareXml;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>

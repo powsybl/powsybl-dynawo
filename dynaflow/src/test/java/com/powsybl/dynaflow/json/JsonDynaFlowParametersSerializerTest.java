@@ -6,7 +6,7 @@
  */
 package com.powsybl.dynaflow.json;
 
-import com.powsybl.commons.AbstractConverterTest;
+import com.powsybl.commons.test.AbstractConverterTest;
 import com.powsybl.commons.config.InMemoryPlatformConfig;
 import com.powsybl.dynaflow.DynaFlowConstants;
 import com.powsybl.dynaflow.DynaFlowParameters;
