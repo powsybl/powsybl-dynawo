@@ -71,13 +71,13 @@
         <dyn:connect var1="generator_switchOffSignal1" var2="bus_switchOff"/>
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_Line-Bus">
-        <dyn:connect var1="line1_1Side1" var2="@NAME@_numcc"/>
-        <dyn:connect var1="line1_state" var2="bus_terminal"/>
+        <dyn:connect var1="Line_NHV1_NHV2_1Side1" var2="@NAME@_numcc"/>
+        <dyn:connect var1="Line_NHV1_NHV2_1_state" var2="bus_terminal"/>
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_CurrentLimitAutomaton-Line">
-        <dyn:connect var1="currentLimitAutomaton_IMonitored" var2="line1_1Side1"/>
-        <dyn:connect var1="currentLimitAutomaton_order" var2="line1_state"/>
-        <dyn:connect var1="currentLimitAutomaton_AutomatonExists" var2="line1_desactivate_currentLimits"/>
+        <dyn:connect var1="currentLimitAutomaton_IMonitored" var2="Line_NHV1_NHV2_1Side1"/>
+        <dyn:connect var1="currentLimitAutomaton_order" var2="Line_NHV1_NHV2_1_state"/>
+        <dyn:connect var1="currentLimitAutomaton_AutomatonExists" var2="Line_NHV1_NHV2_1_desactivate_currentLimits"/>
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_CurrentLimitAutomaton-NetworkLineSide1">
         <dyn:connect var1="currentLimitAutomaton_IMonitored" var2="@NAME@_iSide1"/>

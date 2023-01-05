@@ -23,14 +23,11 @@ import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 
 public class StandardLine extends AbstractBlackBoxModel implements LineModel {
 
-    private final String id;
     private final String sidePostfix;
-    private final AtomicInteger atomicInteger = new AtomicInteger();
 
     public StandardLine(String dynamicModelId, String statidId, String parameterSetId, Branch.Side side) {
         super(dynamicModelId, statidId, parameterSetId);
         this.sidePostfix = LineModel.getSuffix(side);
-        this.id = "line" + atomicInteger.incrementAndGet();
     }
 
     @Override
@@ -86,21 +83,21 @@ public class StandardLine extends AbstractBlackBoxModel implements LineModel {
 
     @Override
     public String getIVarName() {
-        return this.id + "_" + atomicInteger + sidePostfix;
+        return getDynamicModelId() + sidePostfix;
     }
 
     @Override
     public String getStateVarName() {
-        return this.id + "_state";
+        return getDynamicModelId() + "_state";
     }
 
     @Override
     public String getDesactivateCurrentLimitsVarName() {
-        return this.id + "_desactivate_currentLimits";
+        return getDynamicModelId() + "_desactivate_currentLimits";
     }
 
     @Override
     public String getStateValueVarName() {
-        return this.id + "_state_value";
+        return getDynamicModelId() + "_state_value";
     }
 }
