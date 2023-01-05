@@ -128,7 +128,7 @@ public class DynaFlowProvider implements LoadFlowProvider {
                 Network workingNetwork;
                 if (dynaFlowParameters.getMergeLoads()) {
                     dynawoResultsMergeLoads.mergeLoads();
-                    workingNetwork = dynawoResultsMergeLoads.getNetwork();
+                    workingNetwork = dynawoResultsMergeLoads.getMergedLoadsNetwork();
                 } else {
                     workingNetwork = network;
                 }
@@ -146,9 +146,9 @@ public class DynaFlowProvider implements LoadFlowProvider {
                 if (Files.exists(outputNetworkFile)) {
                     Network modifiedNetwork;
                     if (dynaFlowParameters.getMergeLoads()) {
-                        DynawoResultsNetworkUpdate.update(dynawoResultsMergeLoads.getNetwork(), NetworkXml.read(outputNetworkFile));
+                        DynawoResultsNetworkUpdate.update(dynawoResultsMergeLoads.getMergedLoadsNetwork(), NetworkXml.read(outputNetworkFile));
                         dynawoResultsMergeLoads.unmergeLoads();
-                        modifiedNetwork = dynawoResultsMergeLoads.getNetwork();
+                        modifiedNetwork = dynawoResultsMergeLoads.getMergedLoadsNetwork();
                     } else {
                         modifiedNetwork = NetworkXml.read(outputNetworkFile);
                     }

@@ -152,9 +152,9 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
             if (Files.exists(outputNetworkFile)) {
                 Network modifiedNetwork;
                 if (context.getDynaWaltzParameters().getMergeLoads()) {
-                    DynawoResultsNetworkUpdate.update(dynawoResultsMergeLoads.getNetwork(), NetworkXml.read(outputNetworkFile));
+                    DynawoResultsNetworkUpdate.update(dynawoResultsMergeLoads.getMergedLoadsNetwork(), NetworkXml.read(outputNetworkFile));
                     dynawoResultsMergeLoads.unmergeLoads();
-                    modifiedNetwork = dynawoResultsMergeLoads.getNetwork();
+                    modifiedNetwork = dynawoResultsMergeLoads.getMergedLoadsNetwork();
                 } else {
                     modifiedNetwork = NetworkXml.read(outputNetworkFile);
                 }
@@ -180,7 +180,7 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
                 Network network;
                 if (context.getDynaWaltzParameters().getMergeLoads()) {
                     dynawoResultsMergeLoads.mergeLoads();
-                    network = dynawoResultsMergeLoads.getNetwork();
+                    network = dynawoResultsMergeLoads.getMergedLoadsNetwork();
                 } else {
                     network = context.getNetwork();
                 }
