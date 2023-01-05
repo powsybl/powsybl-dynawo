@@ -59,21 +59,21 @@ public class CurrentLimitAutomaton extends AbstractPureDynamicBlackBoxModel {
         }
         LineModel connectedLineModel = (LineModel) connected;
         return Arrays.asList(
-                new VarConnection(getMonitored(), connectedLineModel.getIVarName()),
-                new VarConnection(getOrder(), connectedLineModel.getStateVarName()),
-                new VarConnection(getExists(), connectedLineModel.getDesactivateCurrentLimitsVarName())
+                new VarConnection(getIMonitoredVarName(), connectedLineModel.getIVarName()),
+                new VarConnection(getOrderVarName(), connectedLineModel.getStateVarName()),
+                new VarConnection(getAutomatonExistsVarName(), connectedLineModel.getDesactivateCurrentLimitsVarName())
         );
     }
 
-    public String getMonitored() {
+    public String getIMonitoredVarName() {
         return "currentLimitAutomaton_IMonitored";
     }
 
-    public String getOrder() {
+    public String getOrderVarName() {
         return "currentLimitAutomaton_order";
     }
 
-    public String getExists() {
+    public String getAutomatonExistsVarName() {
         return "currentLimitAutomaton_AutomatonExists";
     }
 
