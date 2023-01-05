@@ -6,6 +6,7 @@
  */
 
 
+import com.powsybl.dynawaltz.models.lines.StandardLine
 import com.powsybl.iidm.network.Branch
 import com.powsybl.iidm.network.Bus
 import com.powsybl.iidm.network.Line
@@ -76,6 +77,13 @@ for (Line line : network.lines) {
         staticId line.id
         dynamicModelId "BBM_" + line.id
         parameterSetId "CLA"
+        side Branch.Side.TWO
+    }
+
+    Line {
+        staticId line.id
+        dynamicModelId "BBM_" + line.id
+        parameterSetId "SL"
         side Branch.Side.TWO
     }
 }
