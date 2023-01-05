@@ -46,10 +46,7 @@ public class StandardLine extends AbstractBlackBoxModel implements LineModel {
     @Override
     public void write(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
         writer.writeStartElement(DYN_URI, "blackBoxModel");
-        writer.writeAttribute("id", getDynamicModelId());
-        writer.writeAttribute("lib", getLib());
-        writer.writeAttribute("parFile", getParFile(context));
-        writer.writeAttribute("parId", getParameterSetId());
+        writeDynamicAttributes(writer, context);
         writer.writeAttribute("staticId", getStaticId().orElse(null));
         writer.writeEndElement();
     }
