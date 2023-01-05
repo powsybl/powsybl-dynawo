@@ -52,7 +52,7 @@
 
         <groovy.version>3.0.9</groovy.version> <!-- used for groovydoc (dynawaltz-dsl) -->
 
-        <powsyblcore.version>5.0.0</powsyblcore.version>
+        <powsyblcore.version>5.1.0-SNAPSHOT</powsyblcore.version>
     </properties>
 
     <profiles>
