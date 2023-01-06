@@ -8,20 +8,28 @@
 
 package com.powsybl.dynawaltz.models.generators;
 
-public abstract class AbstractGeneratorConnectedToOmegaRefModel extends AbstractGeneratorModel implements GeneratorConnectedToOmegaRefModel {
+public class GeneratorConnectedToOmegaRef extends AbstractGeneratorModel implements GeneratorConnectedToOmegaRefModel {
 
-    protected AbstractGeneratorConnectedToOmegaRefModel(String dynamicModelId, String staticId, String parameterSetId,
-                                                        String terminalVarName, String switchOffSignalNodeVarName,
-                                                        String switchOffSignalEventVarName, String switchOffSignalAutomatonVarName,
-                                                        String runningVarName) {
+    private final String generatorLib;
+
+    public GeneratorConnectedToOmegaRef(String dynamicModelId, String staticId, String parameterSetId, String generatorLib,
+                                        String terminalVarName, String switchOffSignalNodeVarName,
+                                        String switchOffSignalEventVarName, String switchOffSignalAutomatonVarName,
+                                        String runningVarName) {
         super(dynamicModelId, staticId, parameterSetId,
                 terminalVarName, switchOffSignalNodeVarName,
                 switchOffSignalEventVarName, switchOffSignalAutomatonVarName,
                 runningVarName);
+        this.generatorLib = generatorLib;
     }
 
     @Override
     public String getOmegaRefPuVarName() {
         return "generator_omegaRefPu";
+    }
+
+    @Override
+    public String getLib() {
+        return generatorLib;
     }
 }

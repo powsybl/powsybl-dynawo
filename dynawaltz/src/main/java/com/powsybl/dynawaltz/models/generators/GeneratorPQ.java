@@ -8,19 +8,14 @@
 
 package com.powsybl.dynawaltz.models.generators;
 
-public class GeneratorPQ extends AbstractGeneratorConnectedToOmegaRefModel implements GeneratorConnectedToOmegaRefModel {
+public class GeneratorPQ extends GeneratorConnectedToOmegaRef implements GeneratorConnectedToOmegaRefModel {
 
     public GeneratorPQ(String dynamicModelId, String staticId, String parameterSetId) {
-        super(dynamicModelId, staticId, parameterSetId,
+        super(dynamicModelId, staticId, parameterSetId, "GeneratorPQ",
                 "generator_terminal",
                 "generator_switchOffSignal1",
                 "generator_switchOffSignal2",
                 "generator_switchOffSignal3",
                 "generator_running");
-    }
-
-    @Override
-    public String getLib() {
-        return "GeneratorPQ";
     }
 }

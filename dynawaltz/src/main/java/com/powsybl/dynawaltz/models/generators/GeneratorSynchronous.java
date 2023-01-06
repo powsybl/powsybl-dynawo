@@ -8,28 +8,20 @@ package com.powsybl.dynawaltz.models.generators;
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  */
-public class GeneratorSynchronous extends AbstractGeneratorConnectedToOmegaRefModel
+public class GeneratorSynchronous extends GeneratorConnectedToOmegaRef
         implements GeneratorSynchronousModel {
 
-    private final String generatorLib;
-
     public GeneratorSynchronous(String dynamicModelId, String staticId, String parameterSetId, String generatorLib) {
-        super(dynamicModelId, staticId, parameterSetId,
+        super(dynamicModelId, staticId, parameterSetId, generatorLib,
                 "generator_terminal",
                 "generator_switchOffSignal1",
                 "generator_switchOffSignal2",
                 "generator_switchOffSignal3",
                 "generator_running");
-        this.generatorLib = generatorLib;
     }
 
     @Override
     public String getOmegaPuVarName() {
         return "generator_omegaPu";
-    }
-
-    @Override
-    public String getLib() {
-        return generatorLib;
     }
 }
