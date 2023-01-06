@@ -199,7 +199,7 @@ public class DynaWaltzGroovyDynamicModelsSupplierTest {
             assertEquals("BBM_" + identifiable.getId(), blackBoxModel.getDynamicModelId());
             assertEquals("GF", blackBoxModel.getParameterSetId());
             assertTrue(identifiable instanceof Generator);
-        } else if (blackBoxModel instanceof GeneratorPQ) {
+        } else if (blackBoxModel instanceof GeneratorConnectedToOmegaRef) {
             Identifiable<?> identifiable = network.getIdentifiable(blackBoxModel.getStaticId().orElse(null));
             assertEquals("BBM_" + identifiable.getId(), blackBoxModel.getDynamicModelId());
             assertEquals("GPQ", blackBoxModel.getParameterSetId());

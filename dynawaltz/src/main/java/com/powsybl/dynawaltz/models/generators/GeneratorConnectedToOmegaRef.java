@@ -12,14 +12,13 @@ public class GeneratorConnectedToOmegaRef extends AbstractGeneratorModel impleme
 
     private final String generatorLib;
 
-    public GeneratorConnectedToOmegaRef(String dynamicModelId, String staticId, String parameterSetId, String generatorLib,
-                                        String terminalVarName, String switchOffSignalNodeVarName,
-                                        String switchOffSignalEventVarName, String switchOffSignalAutomatonVarName,
-                                        String runningVarName) {
+    public GeneratorConnectedToOmegaRef(String dynamicModelId, String staticId, String parameterSetId, String generatorLib) {
         super(dynamicModelId, staticId, parameterSetId,
-                terminalVarName, switchOffSignalNodeVarName,
-                switchOffSignalEventVarName, switchOffSignalAutomatonVarName,
-                runningVarName);
+                "generator_terminal",
+                "generator_switchOffSignal1",
+                "generator_switchOffSignal2",
+                "generator_switchOffSignal3",
+                "generator_running");
         this.generatorLib = generatorLib;
     }
 

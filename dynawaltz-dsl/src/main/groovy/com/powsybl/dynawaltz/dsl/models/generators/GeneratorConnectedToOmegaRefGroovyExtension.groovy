@@ -1,0 +1,56 @@
+/*
+ * Copyright (c) 2022, RTE (http://www.rte-france.com)
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ */
+package com.powsybl.dynawaltz.dsl.models.generators
+
+import com.google.auto.service.AutoService
+import com.powsybl.dsl.DslException
+import com.powsybl.dynamicsimulation.DynamicModel
+import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
+import com.powsybl.dynawaltz.models.generators.GeneratorConnectedToOmegaRef
+
+import java.util.function.Consumer
+
+/**
+ * An implementation of {@link DynamicModelGroovyExtension} that adds the <pre>GeneratorPQ</pre> keyword to the DSL
+ *
+ */
+@AutoService(DynamicModelGroovyExtension.class)
+class GeneratorConnectedToOmegaRefGroovyExtension extends GeneratorModelGroovyExtension {
+
+    private static final String CONNECTED_TO_OMEGA_REF_GENERATORS_LIBS = "connectedToOmegaRefGeneratorsLibs"
+
+    void load(Binding binding, Consumer<DynamicModel> consumer) {
+        ConfigSlurper config = new ConfigSlurper()
+        def cfg = config.parse(this.getClass().getClassLoader().getResource(GENERATORS_CONFIG)).get(CONNECTED_TO_OMEGA_REF_GENERATORS_LIBS)
+        for (String gen : cfg.keySet()) {
+            binding.setVariable(gen, generatorClosure(consumer, gen))
+        }
+    }
+
+    def generatorClosure = {
+        Consumer<DynamicModel> consumer, String generator -> {
+            Closure<Void> closure -> {
+                def cloned = closure.clone()
+                GeneratorModelSpec generatorModelSpec = new GeneratorModelSpec()
+
+                cloned.delegate = generatorModelSpec
+                cloned()
+
+                if (!generatorModelSpec.staticId) {
+                    throw new DslException("'staticId' field is not set")
+                }
+                if (!generatorModelSpec.parameterSetId) {
+                    throw new DslException("'parameterSetId' field is not set")
+                }
+
+                String dynamicModelId = generatorModelSpec.dynamicModelId ? generatorModelSpec.dynamicModelId : generatorModelSpec.staticId
+                consumer.accept(new GeneratorConnectedToOmegaRef(dynamicModelId, generatorModelSpec.staticId, generatorModelSpec.parameterSetId, generator))
+            }
+        }
+    }
+}

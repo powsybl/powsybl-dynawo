@@ -12,12 +12,7 @@ public class GeneratorSynchronous extends GeneratorConnectedToOmegaRef
         implements GeneratorSynchronousModel {
 
     public GeneratorSynchronous(String dynamicModelId, String staticId, String parameterSetId, String generatorLib) {
-        super(dynamicModelId, staticId, parameterSetId, generatorLib,
-                "generator_terminal",
-                "generator_switchOffSignal1",
-                "generator_switchOffSignal2",
-                "generator_switchOffSignal3",
-                "generator_running");
+        super(dynamicModelId, staticId, parameterSetId, generatorLib);
     }
 
     @Override

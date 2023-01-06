@@ -90,7 +90,7 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
             } else if (g.getId().equals("GEN6")) {
                 dynamicModels.add(new GeneratorFictitious("BBM_" + g.getId(), g.getId(), "GF"));
             } else if (g.getId().equals("GEN7")) {
-                dynamicModels.add(new GeneratorPQ("BBM_" + g.getId(), g.getId(), "GPQ"));
+                dynamicModels.add(new GeneratorConnectedToOmegaRef("BBM_" + g.getId(), g.getId(), "GPQ", "GeneratorPQ"));
             } else {
                 dynamicModels.add(new GeneratorSynchronous("BBM_" + g.getId(), g.getId(), "GSTWPR", "GeneratorSynchronousThreeWindingsProportionalRegulations"));
             }
