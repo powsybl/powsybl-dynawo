@@ -20,11 +20,9 @@ import com.powsybl.dynawaltz.DynaWaltzProvider
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-@AutoService(DynamicModelGroovyExtension.class)
-class GeneratorModelGroovyExtension implements DynamicModelGroovyExtension {
+abstract class GeneratorModelGroovyExtension implements DynamicModelGroovyExtension {
 
-    private static final String GENERATORS_CONFIG = "synchronous_generators.cfg";
-    private static final String SYNCHRONOUS_GENERATORS_LIBS = "synchronousGeneratorsLibs";
+    protected static final String GENERATORS_CONFIG = "synchronous_generators.cfg";
 
     static class GeneratorModelSpec {
         String dynamicModelId
@@ -46,36 +44,5 @@ class GeneratorModelGroovyExtension implements DynamicModelGroovyExtension {
 
     String getName() {
         return DynaWaltzProvider.NAME
-    }
-
-    void load(Binding binding, Consumer<DynamicModel> consumer) {
-        ConfigSlurper config = new ConfigSlurper()
-        def cfg = config.parse(this.getClass().getClassLoader().getResource(GENERATORS_CONFIG)).get(SYNCHRONOUS_GENERATORS_LIBS)
-        for (String gen : cfg.keySet()) {
-            binding.setVariable(gen, generatorClosure(consumer, gen))
-        }
-    }
-
-    def generatorClosure = {
-        Consumer<DynamicModel> consumer, String generator ->
-        {
-            Closure<Void> closure -> {
-                def cloned = closure.clone()
-                GeneratorModelSpec generatorModelSpec = new GeneratorModelSpec()
-
-                cloned.delegate = generatorModelSpec
-                cloned()
-
-                if (!generatorModelSpec.staticId) {SYNCHRONOUS_GENERATORS_LIBS
-                    throw new DslException("'staticId' field is not set")
-                }
-                if (!generatorModelSpec.parameterSetId) {
-                    throw new DslException("'parameterSetId' field is not set")
-                }
-
-                String dynamicModelId = generatorModelSpec.dynamicModelId ? generatorModelSpec.dynamicModelId : generatorModelSpec.staticId
-                consumer.accept(new GeneratorSynchronous(dynamicModelId, generatorModelSpec.staticId, generatorModelSpec.parameterSetId, generator))
-            }
-        }
     }
 }
