@@ -22,7 +22,7 @@ import com.powsybl.dynawaltz.DynaWaltzProvider
  */
 abstract class GeneratorModelGroovyExtension implements DynamicModelGroovyExtension {
 
-    protected static final String GENERATORS_CONFIG = "synchronous_generators.cfg";
+    protected static final String GENERATORS_CONFIG = "generators.cfg";
 
     static class GeneratorModelSpec {
         String dynamicModelId
