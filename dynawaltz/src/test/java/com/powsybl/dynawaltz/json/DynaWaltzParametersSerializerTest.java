@@ -10,7 +10,7 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-import com.powsybl.commons.AbstractConverterTest;
+import com.powsybl.commons.test.AbstractConverterTest;
 import com.powsybl.commons.config.InMemoryPlatformConfig;
 import com.powsybl.commons.config.MapModuleConfig;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;

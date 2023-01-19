@@ -59,7 +59,6 @@ public final class ParametersXml {
     }
 
     private static void write(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
-        // loop over the values of the map indexed by dynamicIds to write only once parameters of objects with the same dynamicId
         for (BlackBoxModel model : context.getBlackBoxModels()) {
             model.writeParameters(writer, context);
         }

@@ -111,7 +111,7 @@ public class DynaWaltzContext {
     }
 
     public Map<String, BlackBoxModel> getStaticIdBlackBoxModelMap() {
-        return getInputBlackBoxModelStream()
+        return getInputBlackBoxDynamicModelStream()
                 .filter(blackBoxModel -> blackBoxModel.getStaticId().isPresent())
                 .collect(Collectors.toMap(bbm -> bbm.getStaticId().get(), Function.identity(), this::mergeDuplicateStaticId, LinkedHashMap::new));
     }
@@ -148,20 +148,25 @@ public class DynaWaltzContext {
         return eventModelsConnections;
     }
 
-    private Stream<BlackBoxModel> getInputBlackBoxModelStream() {
+    private Stream<BlackBoxModel> getInputBlackBoxDynamicModelStream() {
         //Doesn't include the OmegaRef, it only concerns the DynamicModels provided by the user
         return dynamicModels.stream();
     }
 
-    public Stream<BlackBoxModel> getBlackBoxModelStream() {
+    public Stream<BlackBoxModel> getBlackBoxDynamicModelStream() {
         if (omegaRef.isEmpty()) {
-            return getInputBlackBoxModelStream();
+            return getInputBlackBoxDynamicModelStream();
         }
-        return Stream.concat(getInputBlackBoxModelStream(), Stream.of(omegaRef));
+        return Stream.concat(getInputBlackBoxDynamicModelStream(), Stream.of(omegaRef));
+    }
+
+    public List<BlackBoxModel> getBlackBoxDynamicModels() {
+        return getBlackBoxDynamicModelStream().collect(Collectors.toList());
     }
 
     public List<BlackBoxModel> getBlackBoxModels() {
-        return getBlackBoxModelStream().collect(Collectors.toList());
+        return Stream.concat(getBlackBoxDynamicModelStream(), getBlackBoxEventModelStream())
+                .collect(Collectors.toList());
     }
 
     public Stream<BlackBoxModel> getBlackBoxEventModelStream() {
