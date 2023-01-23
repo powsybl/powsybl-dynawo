@@ -60,7 +60,7 @@
     <dyn:macroConnect connector="MC_DYNModelOmegaRef-NetworkBus" id1="OMEGA_REF" index1="4" id2="NETWORK" name2="_LOGA___3_TN"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRef-NetworkBus" id1="OMEGA_REF" index1="5" id2="NETWORK" name2="_SALT___9_TN"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRef-NetworkBus" id1="OMEGA_REF" index1="6" id2="NETWORK" name2="_TURN___2_TN"/>
-    <dyn:blackBoxModel id="DisconnectGenerator" lib="EventSetPointBoolean" parFile="models.par" parId="DisconnectGenerator"/>
+    <dyn:blackBoxModel id="DisconnectGenerator" lib="EventSetPointBoolean" parFile="ieee57bus.par" parId="DisconnectGenerator"/>
     <dyn:macroConnector id="MC_EventSetPointBoolean-GeneratorSynchronousFourWindingsProportionalRegulations">
         <dyn:connect var1="event_state1" var2="generator_switchOffSignal2"/>
     </dyn:macroConnector>
