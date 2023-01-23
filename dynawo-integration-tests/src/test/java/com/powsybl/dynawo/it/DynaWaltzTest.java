@@ -69,7 +69,7 @@ public class DynaWaltzTest extends AbstractDynawoTest {
                 GroovyExtension.find(CurveGroovyExtension.class, DynaWaltzProvider.NAME));
 
         // FIXME waiting for being able to pass parameters as an input stream
-        for (String parFileName : List.of("models.par", "network.par", "solver.par")) {
+        for (String parFileName : List.of("models.par", "network.par", "solvers.par")) {
             Files.copy(getResourceAsStream("/ieee14-disconnectline/" + parFileName), localDir.resolve(parFileName));
         }
 
@@ -81,7 +81,7 @@ public class DynaWaltzTest extends AbstractDynawoTest {
                 .setSolver(new DynaWaltzParameters.Solver()
                         .setType(DynaWaltzParameters.SolverType.IDA)
                         .setParametersId("2")
-                        .setParametersFile(localDir.resolve("solver.par").toString()));
+                        .setParametersFile(localDir.resolve("solvers.par").toString()));
 
         DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, curvesSupplier,
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters)
