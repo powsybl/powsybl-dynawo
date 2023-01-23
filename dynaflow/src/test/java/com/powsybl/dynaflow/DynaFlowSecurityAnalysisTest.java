@@ -61,7 +61,6 @@ import static org.junit.Assert.*;
 public class DynaFlowSecurityAnalysisTest {
 
     private static final String SECURITY_ANALISIS_RESULTS_FILENAME = "securityAnalysisResults.json";
-    private static final String DYNAWO_PROVIDER_NAME = "DynawoSecurityAnalysis";
 
     private FileSystem fileSystem;
     private PlatformConfig platformConfig;
@@ -118,8 +117,8 @@ public class DynaFlowSecurityAnalysisTest {
     @Test
     public void testDefaultProvider() {
         SecurityAnalysis.Runner dynawoSecurityAnalysisRunner = SecurityAnalysis.find();
-        assertEquals(DYNAWO_PROVIDER_NAME, dynawoSecurityAnalysisRunner.getName());
-        assertEquals("1.0", dynawoSecurityAnalysisRunner.getVersion());
+        assertEquals(DYNAFLOW_NAME, dynawoSecurityAnalysisRunner.getName());
+        assertEquals(VERSION.toString(), dynawoSecurityAnalysisRunner.getVersion());
     }
 
     @Test

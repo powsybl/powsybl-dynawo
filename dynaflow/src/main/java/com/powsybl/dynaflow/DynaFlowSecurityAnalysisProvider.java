@@ -22,6 +22,8 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+import static com.powsybl.dynaflow.DynaFlowConstants.*;
+
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
@@ -29,9 +31,6 @@ import java.util.concurrent.CompletableFuture;
 public class DynaFlowSecurityAnalysisProvider implements SecurityAnalysisProvider {
 
     private static final Logger LOG = LoggerFactory.getLogger(DynaFlowSecurityAnalysisProvider.class);
-
-    private static final String PROVIDER_NAME = "DynawoSecurityAnalysis";
-    private static final String PROVIDER_VERSION = "1.0";
 
     @Override
     public CompletableFuture<SecurityAnalysisReport> run(Network network,
@@ -65,11 +64,11 @@ public class DynaFlowSecurityAnalysisProvider implements SecurityAnalysisProvide
 
     @Override
     public String getName() {
-        return PROVIDER_NAME;
+        return DYNAFLOW_NAME;
     }
 
     @Override
     public String getVersion() {
-        return PROVIDER_VERSION;
+        return VERSION.toString();
     }
 }
