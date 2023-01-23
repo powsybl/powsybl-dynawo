@@ -38,17 +38,17 @@ public final class ParametersXml {
         Objects.requireNonNull(workingDir);
 
         DynaWaltzParameters parameters = context.getDynaWaltzParameters();
-        copy(parameters.getParametersFile(), workingDir);
-        copy(parameters.getNetwork().getParametersFile(), workingDir);
-        copy(parameters.getSolver().getParametersFile(), workingDir);
+        copy(parameters.getParametersFile(), workingDir, context.getPlatformConfig());
+        copy(parameters.getNetwork().getParametersFile(), workingDir, context.getPlatformConfig());
+        copy(parameters.getSolver().getParametersFile(), workingDir, context.getPlatformConfig());
 
         // Write parameterSet that needs to be generated (OmegaRef...)
         Path file = workingDir.resolve(context.getSimulationParFile());
         XmlUtil.write(file, context, "parametersSet", ParametersXml::write);
     }
 
-    private static void copy(String filename, Path workingDir) throws IOException {
-        FileSystem fs = PlatformConfig.defaultConfig().getConfigDir()
+    private static void copy(String filename, Path workingDir, PlatformConfig platformConfig) throws IOException {
+        FileSystem fs = platformConfig.getConfigDir()
                 .map(Path::getFileSystem)
                 .orElseThrow(() -> new PowsyblException("A configuration directory should be defined"));
         Path source = fs.getPath(filename);

@@ -20,7 +20,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
 
 import static com.powsybl.dynaflow.DynaFlowConstants.*;
 
@@ -31,6 +33,16 @@ import static com.powsybl.dynaflow.DynaFlowConstants.*;
 public class DynaFlowSecurityAnalysisProvider implements SecurityAnalysisProvider {
 
     private static final Logger LOG = LoggerFactory.getLogger(DynaFlowSecurityAnalysisProvider.class);
+
+    private final Supplier<DynaFlowConfig> configSupplier;
+
+    public DynaFlowSecurityAnalysisProvider() {
+        this(DynaFlowConfig::fromPropertyFile);
+    }
+
+    public DynaFlowSecurityAnalysisProvider(Supplier<DynaFlowConfig> configSupplier) {
+        this.configSupplier = Objects.requireNonNull(configSupplier);
+    }
 
     @Override
     public CompletableFuture<SecurityAnalysisReport> run(Network network,
@@ -57,7 +69,7 @@ public class DynaFlowSecurityAnalysisProvider implements SecurityAnalysisProvide
         if (actions != null && !actions.isEmpty()) {
             LOG.error("Actions are not implemented in Dynaflow");
         }
-        DynaFlowSecurityAnalysis securityAnalysis = new DynaFlowSecurityAnalysis(network, detector, filter, computationManager);
+        DynaFlowSecurityAnalysis securityAnalysis = new DynaFlowSecurityAnalysis(network, detector, filter, computationManager, configSupplier);
         interceptors.forEach(securityAnalysis::addInterceptor);
         return securityAnalysis.run(workingVariantId, parameters, contingenciesProvider);
     }

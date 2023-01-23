@@ -7,6 +7,7 @@
 package com.powsybl.dynawaltz;
 
 import com.google.auto.service.AutoService;
+import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
 import com.powsybl.computation.*;
 import com.powsybl.dynamicsimulation.*;
@@ -50,13 +51,20 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
     private static final String OUTPUT_IIDM_FILENAME = "outputIIDM.xml";
     private static final String IIDM_VERSION = IidmXmlVersion.V_1_4.toString(".");
 
+    private final PlatformConfig platformConfig;
+
     private final DynaWaltzConfig dynaWaltzConfig;
 
     public DynaWaltzProvider() {
-        this(DynaWaltzConfig.load());
+        this(PlatformConfig.defaultConfig());
     }
 
-    public DynaWaltzProvider(DynaWaltzConfig dynawoConfig) {
+    public DynaWaltzProvider(PlatformConfig platformConfig) {
+        this(platformConfig, DynaWaltzConfig.load(platformConfig));
+    }
+
+    public DynaWaltzProvider(PlatformConfig platformConfig, DynaWaltzConfig dynawoConfig) {
+        this.platformConfig = Objects.requireNonNull(platformConfig);
         this.dynaWaltzConfig = Objects.requireNonNull(dynawoConfig);
     }
 
@@ -105,7 +113,7 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
                 .filter(BlackBoxModel.class::isInstance)
                 .map(BlackBoxModel.class::cast)
                 .collect(Collectors.toList());
-        DynaWaltzContext context = new DynaWaltzContext(network, workingVariantId, blackBoxModels, blackBoxEventModels, curvesSupplier.get(network), parameters, dynaWaltzParameters);
+        DynaWaltzContext context = new DynaWaltzContext(network, workingVariantId, blackBoxModels, blackBoxEventModels, curvesSupplier.get(network), parameters, dynaWaltzParameters, platformConfig);
         return computationManager.execute(execEnv, new DynaWaltzHandler(context));
     }
 
@@ -128,7 +136,7 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
                 Files.delete(curvesPath);
             }
             writeInputFiles(workingDir);
-            Command cmd = createCommand(workingDir.resolve(JOBS_FILENAME));
+            Command cmd = createCommand();
             return Collections.singletonList(new CommandExecution(cmd, 1));
         }
 
@@ -176,12 +184,12 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
             }
         }
 
-        private Command createCommand(Path dynawoJobsFile) {
+        private Command createCommand() {
             return new GroupCommandBuilder()
                 .id("dyn_fs")
                 .subCommand()
                 .program(getProgram())
-                .args("jobs", dynawoJobsFile.toString())
+                .args("jobs", JOBS_FILENAME)
                 .add()
                 .build();
         }

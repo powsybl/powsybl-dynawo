@@ -33,7 +33,7 @@ To use DynaWaltz as your time domain engine, add the `com.powsybl:powsybl-dynawo
 In `powsybl-dynawo`, the inputs can be configured using Groovy scripts. The simulation parameters can be configured either in the `config.yml` file or using a Json file.
 
 ```java
-Network network = Importers.loadNetwork("/path/to/the/casefile.xiidm");
+Network network = Network.read("/path/to/the/casefile.xiidm");
 
 // Load the dynamic models mapping
 GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
