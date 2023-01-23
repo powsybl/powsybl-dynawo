@@ -23,7 +23,9 @@ import java.util.Objects;
  */
 public abstract class AbstractDynawoTest {
 
-    private static final String DOCKER_IMAGE_ID = "gridsuite/java-dynawo";
+    private static final String DYNAWO_VERSION = "1.3.1";
+
+    private static final String DOCKER_IMAGE_ID = "powsybl/java-dynawo:" + DYNAWO_VERSION;
 
     @Rule
     public final TemporaryFolder tempFolder = new TemporaryFolder();
