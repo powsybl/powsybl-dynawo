@@ -24,6 +24,8 @@ import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
+import static com.powsybl.dynaflow.DynaFlowConstants.*;
+
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
@@ -31,9 +33,6 @@ import java.util.function.Supplier;
 public class DynaFlowSecurityAnalysisProvider implements SecurityAnalysisProvider {
 
     private static final Logger LOG = LoggerFactory.getLogger(DynaFlowSecurityAnalysisProvider.class);
-
-    private static final String PROVIDER_NAME = "DynawoSecurityAnalysis";
-    private static final String PROVIDER_VERSION = "1.0";
 
     private final Supplier<DynaFlowConfig> configSupplier;
 
@@ -77,11 +76,11 @@ public class DynaFlowSecurityAnalysisProvider implements SecurityAnalysisProvide
 
     @Override
     public String getName() {
-        return PROVIDER_NAME;
+        return DYNAFLOW_NAME;
     }
 
     @Override
     public String getVersion() {
-        return PROVIDER_VERSION;
+        return VERSION.toString();
     }
 }
