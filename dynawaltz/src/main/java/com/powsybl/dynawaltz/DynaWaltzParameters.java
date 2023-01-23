@@ -7,6 +7,7 @@
 package com.powsybl.dynawaltz;
 
 import java.util.Objects;
+import java.util.Optional;
 
 import com.powsybl.commons.config.ModuleConfig;
 import com.powsybl.commons.config.PlatformConfig;
@@ -21,6 +22,9 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
     public static final SolverType DEFAULT_SOLVER_TYPE = SolverType.SIM;
     public static final String DEFAULT_NETWORK_PAR_ID = "1";
     public static final String DEFAULT_SOLVER_PAR_ID = "1";
+    private static final String DEFAULT_PARAMETERS_FILE = "models.par";
+    private static final String DEFAULT_NETWORK_PARAMETERS_FILE = "network.par";
+    private static final String DEFAULT_SOLVER_PARAMETERS_FILE = "solvers.par";
 
     public enum SolverType {
         SIM,
@@ -113,21 +117,27 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
      * Load parameters from a provided platform configuration.
      */
     public static DynaWaltzParameters load(PlatformConfig platformConfig) {
-        ModuleConfig config = platformConfig.getModuleConfig("dynawaltz-default-parameters");
+        Optional<ModuleConfig> config = platformConfig.getOptionalModuleConfig("dynawaltz-default-parameters");
+
         // File with all the dynamic models' parameters for the simulation
-        String parametersFile = config.getStringProperty("parametersFile");
+        String parametersFile = config.map(c -> c.getStringProperty("parametersFile")).orElse(DEFAULT_PARAMETERS_FILE);
+
         // File with all the network's parameters for the simulation
-        String networkParametersFile = config.getStringProperty("network.parametersFile");
+        String networkParametersFile = config.map(c -> c.getStringProperty("network.parametersFile")).orElse(DEFAULT_NETWORK_PARAMETERS_FILE);
+
         // Identifies the set of network parameters that will be used in the simulation.
-        String networkParametersId = config.getStringProperty("network.parametersId", DEFAULT_NETWORK_PAR_ID);
+        String networkParametersId = config.flatMap(c -> c.getOptionalStringProperty("network.parametersId")).orElse(DEFAULT_NETWORK_PAR_ID);
+
         // Information about the solver to use in the simulation, there are two options
         // the simplified solver
         // and the IDA solver
-        SolverType solverType = config.getEnumProperty("solver.type", SolverType.class, DEFAULT_SOLVER_TYPE);
+        SolverType solverType = config.flatMap(c -> c.getOptionalEnumProperty("solver.type", SolverType.class)).orElse(DEFAULT_SOLVER_TYPE);
+
         // File with all the solvers' parameters for the simulation
-        String solverParametersFile = config.getStringProperty("solver.parametersFile");
+        String solverParametersFile = config.flatMap(c -> c.getOptionalStringProperty("solver.parametersFile")).orElse(DEFAULT_SOLVER_PARAMETERS_FILE);
+
         // Identifies the set of solver parameters that will be used in the simulation
-        String solverParametersId = config.getStringProperty("solver.parametersId", DEFAULT_SOLVER_PAR_ID);
+        String solverParametersId = config.flatMap(c -> c.getOptionalStringProperty("solver.parametersId")).orElse(DEFAULT_SOLVER_PAR_ID);
 
         return new DynaWaltzParameters(parametersFile, networkParametersFile, networkParametersId, solverType, solverParametersFile, solverParametersId);
     }

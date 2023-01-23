@@ -6,7 +6,7 @@
  */
 package com.powsybl.dynawaltz.xml;
 
-import org.apache.commons.lang3.tuple.Pair;
+import com.powsybl.dynawaltz.models.VarMapping;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -22,21 +22,21 @@ import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.MACRO_STATIC_REFER
 public final class MacroStaticReference {
 
     private final String lib;
-    private final List<Pair<String, String>> varMapping;
+    private final List<VarMapping> varMappings;
 
-    public MacroStaticReference(String lib, List<Pair<String, String>> varMapping) {
+    public MacroStaticReference(String lib, List<VarMapping> varMappings) {
         this.lib = Objects.requireNonNull(lib);
-        this.varMapping = Objects.requireNonNull(varMapping);
+        this.varMappings = Objects.requireNonNull(varMappings);
     }
 
     public void write(XMLStreamWriter writer) throws XMLStreamException {
-        if (varMapping.isEmpty()) {
+        if (varMappings.isEmpty()) {
             return;
         }
         writer.writeStartElement(DYN_URI, "macroStaticReference");
         writer.writeAttribute("id", MACRO_STATIC_REFERENCE_PREFIX + lib);
-        for (Pair<String, String> varStaticVarPair : varMapping) {
-            writeStaticRef(writer, varStaticVarPair.getLeft(), varStaticVarPair.getRight());
+        for (VarMapping varMapping : varMappings) {
+            writeStaticRef(writer, varMapping.getDynamicVar(), varMapping.getStaticVar());
         }
         writer.writeEndElement();
     }

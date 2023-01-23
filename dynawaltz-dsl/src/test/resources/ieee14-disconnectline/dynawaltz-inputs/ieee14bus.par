@@ -8,4 +8,9 @@
         <dyn:par type="DOUBLE" name="weight_gen_4" value="687.0"/>
         <dyn:par type="INT" name="nbGen" value="5"/>
     </dyn:set>
+    <dyn:set id="DISCONNECT_LINE">
+        <dyn:par type="DOUBLE" name="event_tEvent" value="1.0"/>
+        <dyn:par type="BOOL" name="event_disconnectOrigin" value="false"/>
+        <dyn:par type="BOOL" name="event_disconnectExtremity" value="true"/>
+    </dyn:set>
 </dyn:parametersSet>
