@@ -36,6 +36,11 @@ public abstract class AbstractEventModel extends AbstractPureDynamicBlackBoxMode
     }
 
     @Override
+    public String getParFile(DynaWaltzContext context) {
+        return context.getSimulationParFile();
+    }
+
+    @Override
     public void writeParameters(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
         writer.writeStartElement(DYN_URI, "set");
         writer.writeAttribute("id", getParameterSetId());
