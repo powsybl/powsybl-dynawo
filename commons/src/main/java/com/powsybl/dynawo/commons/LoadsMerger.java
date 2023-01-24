@@ -11,19 +11,21 @@ public class LoadsMerger {
 
     private static final String MERGE_LOAD_PREFIX_ID = "merged_load_.";
     private final Network initialNetwork;
-    private final Network mergedLoadsNetwork;
+    private Network mergedLoadsNetwork;
 
     public LoadsMerger(Network network) {
         this.initialNetwork = network;
-        this.mergedLoadsNetwork = NetworkXml.copy(network);
     }
 
     public Network getMergedLoadsNetwork() {
+        if (mergedLoadsNetwork == null) {
+            mergedLoadsNetwork = NetworkXml.copy(initialNetwork);
+        }
         return mergedLoadsNetwork;
     }
 
     public void mergeLoads() throws PowsyblException {
-        for (Bus bus : mergedLoadsNetwork.getBusBreakerView().getBuses()) {
+        for (Bus bus : getMergedLoadsNetwork().getBusBreakerView().getBuses()) {
             if (bus.getLoadStream().count() > 1) {
                 mergeLoads(bus);
             }
@@ -33,7 +35,7 @@ public class LoadsMerger {
     public void unmergeLoads() throws PowsyblException {
         for (Bus bus0 : initialNetwork.getBusBreakerView().getBuses()) {
             if (bus0.getLoadStream().count() > 1) {
-                Bus bus1 = mergedLoadsNetwork.getBusBreakerView().getBus(bus0.getId());
+                Bus bus1 = getMergedLoadsNetwork().getBusBreakerView().getBus(bus0.getId());
                 if (bus1.getLoadStream().count() == 1) {
                     recreateInitialLoads(bus0, bus1);
                 }
