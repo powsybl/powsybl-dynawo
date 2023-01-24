@@ -7,13 +7,13 @@ import com.powsybl.iidm.xml.NetworkXml;
 /**
  * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
  */
-public class DynawoResultsMergeLoads {
+public class LoadsMerger {
 
     private static final String MERGE_LOAD_PREFIX_ID = "merged_load_.";
     private final Network initialNetwork;
     private final Network mergedLoadsNetwork;
 
-    public DynawoResultsMergeLoads(Network network) {
+    public LoadsMerger(Network network) {
         this.initialNetwork = network;
         this.mergedLoadsNetwork = NetworkXml.copy(network);
     }

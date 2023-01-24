@@ -16,7 +16,7 @@ import com.powsybl.dynawaltz.xml.CurvesXml;
 import com.powsybl.dynawaltz.xml.DydXml;
 import com.powsybl.dynawaltz.xml.JobsXml;
 import com.powsybl.dynawaltz.xml.ParametersXml;
-import com.powsybl.dynawo.commons.DynawoResultsMergeLoads;
+import com.powsybl.dynawo.commons.LoadsMerger;
 import com.powsybl.dynawo.commons.DynawoResultsNetworkUpdate;
 import com.powsybl.dynawo.commons.DynawoUtil;
 import com.powsybl.iidm.network.Network;
@@ -121,11 +121,11 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
 
         private final DynaWaltzContext context;
 
-        private final DynawoResultsMergeLoads dynawoResultsMergeLoads;
+        private final LoadsMerger loadsMerger;
 
         public DynaWaltzHandler(DynaWaltzContext context) {
             this.context = context;
-            this.dynawoResultsMergeLoads = new DynawoResultsMergeLoads(context.getNetwork());
+            this.loadsMerger = new LoadsMerger(context.getNetwork());
         }
 
         @Override
@@ -152,9 +152,9 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
             if (Files.exists(outputNetworkFile)) {
                 Network modifiedNetwork;
                 if (context.getDynaWaltzParameters().getMergeLoads()) {
-                    DynawoResultsNetworkUpdate.update(dynawoResultsMergeLoads.getMergedLoadsNetwork(), NetworkXml.read(outputNetworkFile));
-                    dynawoResultsMergeLoads.unmergeLoads();
-                    modifiedNetwork = dynawoResultsMergeLoads.getMergedLoadsNetwork();
+                    DynawoResultsNetworkUpdate.update(loadsMerger.getMergedLoadsNetwork(), NetworkXml.read(outputNetworkFile));
+                    loadsMerger.unmergeLoads();
+                    modifiedNetwork = loadsMerger.getMergedLoadsNetwork();
                 } else {
                     modifiedNetwork = NetworkXml.read(outputNetworkFile);
                 }
@@ -179,8 +179,8 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
             try {
                 Network network;
                 if (context.getDynaWaltzParameters().getMergeLoads()) {
-                    dynawoResultsMergeLoads.mergeLoads();
-                    network = dynawoResultsMergeLoads.getMergedLoadsNetwork();
+                    loadsMerger.mergeLoads();
+                    network = loadsMerger.getMergedLoadsNetwork();
                 } else {
                     network = context.getNetwork();
                 }

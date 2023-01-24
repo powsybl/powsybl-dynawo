@@ -19,6 +19,8 @@ import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
 import com.powsybl.dynaflow.json.JsonDynaFlowParametersSerializer;
 import com.powsybl.dynawo.commons.*;
 import com.powsybl.dynawo.commons.PowsyblDynawoVersion;
+import com.powsybl.dynawo.commons.LoadsMerger;
+import com.powsybl.dynawo.commons.DynawoResultsNetworkUpdate;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.xml.NetworkXml;
 import com.powsybl.loadflow.LoadFlowParameters;
@@ -119,7 +121,7 @@ public class DynaFlowProvider implements LoadFlowProvider {
         if (!DynaFlowUtil.checkDynaFlowVersion(env, computationManager, versionCmd)) {
             throw new PowsyblException("DynaFlow version not supported. Must be >= " + DynawoConstants.VERSION_MIN);
         }
-        DynawoResultsMergeLoads dynawoResultsMergeLoads = new DynawoResultsMergeLoads(network);
+        LoadsMerger loadsMerger = new LoadsMerger(network);
         return computationManager.execute(env, new AbstractExecutionHandler<>() {
 
             @Override
@@ -127,8 +129,8 @@ public class DynaFlowProvider implements LoadFlowProvider {
                 network.getVariantManager().setWorkingVariant(workingStateId);
                 Network workingNetwork;
                 if (dynaFlowParameters.getMergeLoads()) {
-                    dynawoResultsMergeLoads.mergeLoads();
-                    workingNetwork = dynawoResultsMergeLoads.getMergedLoadsNetwork();
+                    loadsMerger.mergeLoads();
+                    workingNetwork = loadsMerger.getMergedLoadsNetwork();
                 } else {
                     workingNetwork = network;
                 }
@@ -146,9 +148,9 @@ public class DynaFlowProvider implements LoadFlowProvider {
                 if (Files.exists(outputNetworkFile)) {
                     Network modifiedNetwork;
                     if (dynaFlowParameters.getMergeLoads()) {
-                        DynawoResultsNetworkUpdate.update(dynawoResultsMergeLoads.getMergedLoadsNetwork(), NetworkXml.read(outputNetworkFile));
-                        dynawoResultsMergeLoads.unmergeLoads();
-                        modifiedNetwork = dynawoResultsMergeLoads.getMergedLoadsNetwork();
+                        DynawoResultsNetworkUpdate.update(loadsMerger.getMergedLoadsNetwork(), NetworkXml.read(outputNetworkFile));
+                        loadsMerger.unmergeLoads();
+                        modifiedNetwork = loadsMerger.getMergedLoadsNetwork();
                     } else {
                         modifiedNetwork = NetworkXml.read(outputNetworkFile);
                     }
