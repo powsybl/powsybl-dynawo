@@ -16,9 +16,9 @@ import com.powsybl.dynawaltz.xml.CurvesXml;
 import com.powsybl.dynawaltz.xml.DydXml;
 import com.powsybl.dynawaltz.xml.JobsXml;
 import com.powsybl.dynawaltz.xml.ParametersXml;
-import com.powsybl.dynawo.commons.LoadsMerger;
-import com.powsybl.dynawo.commons.DynawoResultsNetworkUpdate;
 import com.powsybl.dynawo.commons.DynawoUtil;
+import com.powsybl.dynawo.commons.LoadsMerger;
+import com.powsybl.dynawo.commons.NetworkResultsUpdater;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.xml.NetworkXml;
 import com.powsybl.timeseries.TimeSeries;
@@ -152,13 +152,13 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
             if (Files.exists(outputNetworkFile)) {
                 Network modifiedNetwork;
                 if (context.getDynaWaltzParameters().getMergeLoads()) {
-                    DynawoResultsNetworkUpdate.update(loadsMerger.getMergedLoadsNetwork(), NetworkXml.read(outputNetworkFile));
+                    NetworkResultsUpdater.update(loadsMerger.getMergedLoadsNetwork(), NetworkXml.read(outputNetworkFile));
                     loadsMerger.unmergeLoads();
                     modifiedNetwork = loadsMerger.getMergedLoadsNetwork();
                 } else {
                     modifiedNetwork = NetworkXml.read(outputNetworkFile);
                 }
-                DynawoResultsNetworkUpdate.update(context.getNetwork(), modifiedNetwork);
+                NetworkResultsUpdater.update(context.getNetwork(), modifiedNetwork);
             } else {
                 status = false;
             }

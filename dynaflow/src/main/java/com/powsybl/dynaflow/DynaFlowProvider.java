@@ -19,8 +19,6 @@ import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
 import com.powsybl.dynaflow.json.JsonDynaFlowParametersSerializer;
 import com.powsybl.dynawo.commons.*;
 import com.powsybl.dynawo.commons.PowsyblDynawoVersion;
-import com.powsybl.dynawo.commons.LoadsMerger;
-import com.powsybl.dynawo.commons.DynawoResultsNetworkUpdate;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.xml.NetworkXml;
 import com.powsybl.loadflow.LoadFlowParameters;
@@ -148,13 +146,13 @@ public class DynaFlowProvider implements LoadFlowProvider {
                 if (Files.exists(outputNetworkFile)) {
                     Network modifiedNetwork;
                     if (dynaFlowParameters.getMergeLoads()) {
-                        DynawoResultsNetworkUpdate.update(loadsMerger.getMergedLoadsNetwork(), NetworkXml.read(outputNetworkFile));
+                        NetworkResultsUpdater.update(loadsMerger.getMergedLoadsNetwork(), NetworkXml.read(outputNetworkFile));
                         loadsMerger.unmergeLoads();
                         modifiedNetwork = loadsMerger.getMergedLoadsNetwork();
                     } else {
                         modifiedNetwork = NetworkXml.read(outputNetworkFile);
                     }
-                    DynawoResultsNetworkUpdate.update(network, modifiedNetwork);
+                    NetworkResultsUpdater.update(network, modifiedNetwork);
                 } else {
                     status = false;
                 }

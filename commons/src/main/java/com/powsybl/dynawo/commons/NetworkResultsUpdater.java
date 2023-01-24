@@ -13,11 +13,11 @@ import org.slf4j.LoggerFactory;
 /**
  * @author Guillem Jané Guasch <janeg at aia.es>
  */
-public final class DynawoResultsNetworkUpdate {
+public final class NetworkResultsUpdater {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DynawoResultsNetworkUpdate.class);
+    private static final Logger LOG = LoggerFactory.getLogger(NetworkResultsUpdater.class);
 
-    private DynawoResultsNetworkUpdate() {
+    private NetworkResultsUpdater() {
     }
 
     public static void update(Network targetNetwork, Network sourceNetwork) {
