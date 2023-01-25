@@ -25,9 +25,9 @@ public final class DynaFlowConstants {
 
     public static final String IIDM_FILENAME = "network.xiidm";
 
-    public static final DynaFlowVersion VERSION_MIN = DynaFlowVersion.V_1_3_0;
+    public static final DynaFlowVersion VERSION_MIN = DynaFlowVersion.V_1_4_0;
 
-    public static final DynaFlowVersion VERSION = DynaFlowVersion.V_1_3_1;
+    public static final DynaFlowVersion VERSION = DynaFlowVersion.V_1_4_0;
 
     public static final String OUTPUT_IIDM_FILENAME = "outputIIDM.xml";
 
@@ -35,7 +35,8 @@ public final class DynaFlowConstants {
 
     public enum DynaFlowVersion {
         V_1_3_0(List.of(1, 3, 0)),
-        V_1_3_1(List.of(1, 3, 1));
+        V_1_3_1(List.of(1, 3, 1)),
+        V_1_4_0(List.of(1, 4, 0));
 
         private final List<Integer> versionArray;
         private static final String DEFAULT_DELIMITER = ".";

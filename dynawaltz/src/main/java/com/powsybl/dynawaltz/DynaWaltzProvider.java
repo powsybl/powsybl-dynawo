@@ -45,7 +45,7 @@ import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.*;
 public class DynaWaltzProvider implements DynamicSimulationProvider {
 
     public static final String NAME = "DynaWaltz";
-    public static final String VERSION = "1.3.1";
+    public static final String VERSION = "1.4.0";
     private static final String DYNAWO_CMD_NAME = "dynawo";
     private static final String WORKING_DIR_PREFIX = "powsybl_dynawaltz_";
     private static final String OUTPUT_IIDM_FILENAME = "outputIIDM.xml";

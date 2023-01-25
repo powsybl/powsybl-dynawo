@@ -126,7 +126,7 @@ public class DynaFlowSecurityAnalysis {
         // TODO(Luma) Take into account also Security Analysis parameters
         LoadFlowParameters loadFlowParameters = securityAnalysisParameters.getLoadFlowParameters();
         DynaFlowParameters dynaFlowParameters = getParametersExt(loadFlowParameters);
-        DynaFlowConfigSerializer.serialize(loadFlowParameters, dynaFlowParameters, workingDir, workingDir.resolve(CONFIG_FILENAME));
+        DynaFlowConfigSerializer.serialize(loadFlowParameters, dynaFlowParameters, Path.of("."), workingDir.resolve(CONFIG_FILENAME));
     }
 
     public void addInterceptor(SecurityAnalysisInterceptor interceptor) {

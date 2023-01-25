@@ -66,6 +66,10 @@ public class DynaFlowProvider implements LoadFlowProvider {
                 .id("dynaflow_lf")
                 .program(getProgram(config))
                 .args(args)
+                .inputFiles(new InputFile(IIDM_FILENAME),
+                            new InputFile(CONFIG_FILENAME))
+                .outputFiles(new OutputFile(OUTPUT_RESULTS_FILENAME),
+                             new OutputFile("outputs/finalState/" + OUTPUT_IIDM_FILENAME))
                 .build();
     }
 
@@ -114,17 +118,13 @@ public class DynaFlowProvider implements LoadFlowProvider {
         if (!DynaFlowUtil.checkDynaFlowVersion(env, computationManager, versionCmd)) {
             throw new PowsyblException("DynaFlow version not supported. Must be " + VERSION_MIN + " <= version <= " + VERSION);
         }
-        return computationManager.execute(env, new AbstractExecutionHandler<LoadFlowResult>() {
+        return computationManager.execute(env, new AbstractExecutionHandler<>() {
 
             @Override
             public List<CommandExecution> before(Path workingDir) throws IOException {
-                Path outputNetworkFile = workingDir.resolve("outputs").resolve("finalState").resolve(OUTPUT_IIDM_FILENAME);
-                if (Files.exists(outputNetworkFile)) {
-                    Files.delete(outputNetworkFile);
-                }
                 network.getVariantManager().setWorkingVariant(workingStateId);
                 DynawoUtil.writeIidm(network, workingDir.resolve(IIDM_FILENAME));
-                DynaFlowConfigSerializer.serialize(loadFlowParameters, dynaFlowParameters, workingDir, workingDir.resolve(CONFIG_FILENAME));
+                DynaFlowConfigSerializer.serialize(loadFlowParameters, dynaFlowParameters, Path.of("."), workingDir.resolve(CONFIG_FILENAME));
                 return Collections.singletonList(createCommandExecution(config));
             }
 
