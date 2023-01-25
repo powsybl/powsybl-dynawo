@@ -9,8 +9,6 @@ package com.powsybl.dynaflow;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-import com.powsybl.iidm.xml.IidmXmlVersion;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -34,8 +32,6 @@ public final class DynaFlowConstants {
     public static final String OUTPUT_IIDM_FILENAME = "outputIIDM.xml";
 
     public static final String OUTPUT_RESULTS_FILENAME = "results.json";
-
-    public static final String IIDM_VERSION = IidmXmlVersion.V_1_4.toString(".");
 
     public enum DynaFlowVersion {
         V_1_3_0(List.of(1, 3, 0)),

@@ -17,9 +17,9 @@ import com.powsybl.computation.*;
 import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
 import com.powsybl.dynaflow.json.JsonDynaFlowParametersSerializer;
 import com.powsybl.dynawo.commons.DynawoResultsNetworkUpdate;
+import com.powsybl.dynawo.commons.DynawoUtil;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.xml.NetworkXml;
-import com.powsybl.iidm.xml.XMLExporter;
 import com.powsybl.loadflow.LoadFlowParameters;
 import com.powsybl.loadflow.LoadFlowProvider;
 import com.powsybl.loadflow.LoadFlowResult;
@@ -53,12 +53,6 @@ public class DynaFlowProvider implements LoadFlowProvider {
 
     public DynaFlowProvider(Supplier<DynaFlowConfig> configSupplier) {
         this.configSupplier = Suppliers.memoize(Objects.requireNonNull(configSupplier, "Config supplier is null"));
-    }
-
-    private static void writeIIDM(Path workingDir, Network network) {
-        Properties params = new Properties();
-        params.setProperty(XMLExporter.VERSION, IIDM_VERSION);
-        network.write("XIIDM", params, workingDir.resolve(IIDM_FILENAME));
     }
 
     private static String getProgram(DynaFlowConfig config) {
@@ -129,7 +123,7 @@ public class DynaFlowProvider implements LoadFlowProvider {
                     Files.delete(outputNetworkFile);
                 }
                 network.getVariantManager().setWorkingVariant(workingStateId);
-                writeIIDM(workingDir, network);
+                DynawoUtil.writeIidm(network, workingDir.resolve(IIDM_FILENAME));
                 DynaFlowConfigSerializer.serialize(loadFlowParameters, dynaFlowParameters, workingDir, workingDir.resolve(CONFIG_FILENAME));
                 return Collections.singletonList(createCommandExecution(config));
             }

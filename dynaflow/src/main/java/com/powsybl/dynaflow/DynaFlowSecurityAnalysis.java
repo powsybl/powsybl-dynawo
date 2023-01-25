@@ -15,10 +15,9 @@ import com.powsybl.contingency.Contingency;
 import com.powsybl.contingency.contingency.list.ContingencyList;
 import com.powsybl.contingency.json.ContingencyJsonModule;
 import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
+import com.powsybl.dynawo.commons.DynawoUtil;
 import com.powsybl.iidm.network.Network;
-import com.powsybl.iidm.xml.IidmXmlVersion;
 import com.powsybl.iidm.xml.NetworkXml;
-import com.powsybl.iidm.xml.XMLExporter;
 import com.powsybl.loadflow.LoadFlowParameters;
 import com.powsybl.loadflow.LoadFlowResult;
 import com.powsybl.security.*;
@@ -113,12 +112,6 @@ public class DynaFlowSecurityAnalysis {
             .build();
     }
 
-    private static void writeIIDM(Network network, Path workingDir) {
-        Properties params = new Properties();
-        params.setProperty(XMLExporter.VERSION, IidmXmlVersion.V_1_2.toString("."));
-        network.write("XIIDM", params, workingDir.resolve(IIDM_FILENAME));
-    }
-
     private static void writeContingencies(List<Contingency> contingencies, Path workingDir) throws IOException {
         try (OutputStream os = Files.newOutputStream(workingDir.resolve(CONTINGENCIES_FILENAME))) {
             ObjectMapper mapper = JsonUtil.createObjectMapper();
@@ -156,12 +149,12 @@ public class DynaFlowSecurityAnalysis {
         Command versionCmd = getVersionCommand(config);
         DynaFlowUtil.checkDynaFlowVersion(env, computationManager, versionCmd);
         List<Contingency> contingencies = contingenciesProvider.getContingencies(network);
-        return computationManager.execute(env, new AbstractExecutionHandler<SecurityAnalysisReport>() {
+        return computationManager.execute(env, new AbstractExecutionHandler<>() {
             @Override
             public List<CommandExecution> before(Path workingDir) throws IOException {
                 network.getVariantManager().setWorkingVariant(workingVariantId);
 
-                writeIIDM(network, workingDir);
+                DynawoUtil.writeIidm(network, workingDir.resolve(IIDM_FILENAME));
                 writeParameters(securityAnalysisParameters, workingDir);
                 writeContingencies(contingencies, workingDir);
                 return Collections.singletonList(createCommandExecution(config));
