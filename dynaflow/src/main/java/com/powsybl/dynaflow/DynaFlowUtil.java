@@ -37,12 +37,12 @@ final class DynaFlowUtil {
             public Boolean after(Path workingDir, ExecutionReport report) throws IOException {
                 super.after(workingDir, report);
                 Optional<InputStream> stdErr = report.getStdErr(versionCmd, 0);
-                if (!stdErr.isPresent()) {
+                if (stdErr.isEmpty()) {
                     throw new PowsyblException("No output for DynaFlow version command");
                 }
                 try (Reader reader = new InputStreamReader(stdErr.get())) {
                     String stdErrContent = CharStreams.toString(reader);
-                    return DynaFlowUtil.versionIsInRange(versionSanitizer(stdErrContent), DynaFlowConstants.VERSION_MIN, DynaFlowConstants.VERSION);
+                    return DynaFlowUtil.versionRespectsMin(versionSanitizer(stdErrContent), DynaFlowConstants.VERSION_MIN);
                 }
             }
         }).join();
@@ -54,15 +54,6 @@ final class DynaFlowUtil {
 
     public static boolean versionRespectsMin(String version, DynaFlowVersion minDynaFlowVersion) {
         return DynaFlowVersion.of(version).map(v -> v.compareTo(minDynaFlowVersion) >= 0).orElse(false);
-    }
-
-    public static boolean versionRespectsMax(String version, DynaFlowVersion maxDynaFlowVersion) {
-        return DynaFlowVersion.of(version).map(v -> v.compareTo(maxDynaFlowVersion) <= 0).orElse(false);
-    }
-
-    public static boolean versionIsInRange(String version, DynaFlowVersion minDynaFlowVersion, DynaFlowVersion maxDynaFlowVersion) {
-        return versionRespectsMin(version, minDynaFlowVersion)
-                && versionRespectsMax(version, maxDynaFlowVersion);
     }
 
     private DynaFlowUtil() {

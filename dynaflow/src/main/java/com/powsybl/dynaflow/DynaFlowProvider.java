@@ -118,9 +118,9 @@ public class DynaFlowProvider implements LoadFlowProvider {
         ExecutionEnvironment env = new ExecutionEnvironment(config.createEnv(), WORKING_DIR_PREFIX, config.isDebug());
         Command versionCmd = getVersionCommand(config);
         if (!DynaFlowUtil.checkDynaFlowVersion(env, computationManager, versionCmd)) {
-            throw new PowsyblException("DynaFlow version not supported. Must be " + VERSION_MIN + " <= version <= " + VERSION);
+            throw new PowsyblException("DynaFlow version not supported. Must be >= " + VERSION_MIN);
         }
-        return computationManager.execute(env, new AbstractExecutionHandler<LoadFlowResult>() {
+        return computationManager.execute(env, new AbstractExecutionHandler<>() {
 
             @Override
             public List<CommandExecution> before(Path workingDir) throws IOException {
