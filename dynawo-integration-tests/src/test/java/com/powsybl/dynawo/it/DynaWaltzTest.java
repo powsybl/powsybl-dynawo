@@ -91,7 +91,7 @@ public class DynaWaltzTest extends AbstractDynawoTest {
         assertEquals(41, result.getCurves().size());
         DoubleTimeSeries ts1 = (DoubleTimeSeries) result.getCurve("_GEN____1_SM_generator_UStatorPu");
         assertEquals("_GEN____1_SM_generator_UStatorPu", ts1.getMetadata().getName());
-        assertEquals(589, ts1.toArray().length);
+        assertEquals(586, ts1.toArray().length);
         StringTimeSeries timeLine = result.getTimeLine();
         assertEquals(1, timeLine.toArray().length);
         assertNull(timeLine.toArray()[0]); // FIXME why null????
