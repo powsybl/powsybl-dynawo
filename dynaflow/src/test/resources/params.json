@@ -17,6 +17,6 @@
     "ChosenOutputs" : [ "STEADYSTATE" ],
     "TimeStep" : 2.6,
     "StartingPointMode" : "warm",
-    "OutputDir" : "/work/dynaflow/workingDir"
+    "OutputDir" : "dynaflow/workingDir"
   }
 }

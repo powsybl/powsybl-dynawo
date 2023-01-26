@@ -115,7 +115,7 @@ public abstract class AbstractIeeeTest {
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(workingDir, 1), commandExecutor, ForkJoinPool.commonPool());
         DynamicSimulation.Runner dynawoSimulation = DynamicSimulation.find();
         assertEquals(DynaWaltzProvider.NAME, dynawoSimulation.getName());
-        assertEquals("1.2.0", dynawoSimulation.getVersion());
+        assertEquals(DynaWaltzProvider.VERSION, dynawoSimulation.getVersion());
         return dynawoSimulation.run(network, dynamicModelsSupplier, eventModelsSupplier,
             curvesSupplier, network.getVariantManager().getWorkingVariantId(),
             computationManager, parameters);

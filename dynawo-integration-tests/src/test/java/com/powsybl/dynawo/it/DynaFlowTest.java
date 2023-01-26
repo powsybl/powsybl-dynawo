@@ -29,8 +29,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.*;
 
 /**
  * @author Geoffroy Jamgotchian <geoffroy.jamgotchian at rte-france.com>
@@ -65,10 +64,11 @@ public class DynaFlowTest extends AbstractDynawoTest {
         Network network = IeeeCdfNetworkFactory.create14();
         LoadFlowResult result = loadFlowProvider.run(network, computationManager, VariantManagerConstants.INITIAL_VARIANT_ID, loadFlowParameters)
                 .join();
-        assertFalse(result.isOk()); // FIXME
+        assertTrue(result.isOk());
         assertEquals(1, result.getComponentResults().size());
         LoadFlowResult.ComponentResult componentResult = result.getComponentResults().get(0);
-        assertEquals(LoadFlowResult.ComponentResult.Status.FAILED, componentResult.getStatus()); // FIXME
+        assertEquals(LoadFlowResult.ComponentResult.Status.CONVERGED, componentResult.getStatus());
+        assertEquals("B4", componentResult.getSlackBusId());
     }
 
     @Test
