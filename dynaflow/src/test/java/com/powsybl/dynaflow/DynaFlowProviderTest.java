@@ -14,6 +14,7 @@ import com.powsybl.computation.ComputationManager;
 import com.powsybl.computation.local.LocalCommandExecutor;
 import com.powsybl.computation.local.LocalComputationConfig;
 import com.powsybl.computation.local.LocalComputationManager;
+import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.iidm.network.Importers;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.xml.NetworkXml;
@@ -130,7 +131,7 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
         LoadFlowParameters params = LoadFlowParameters.load();
 
         assertEquals(DYNAFLOW_NAME, dynaFlowSimulation.getName());
-        assertEquals(VERSION, DynaFlowVersion.of(dynaFlowSimulation.getVersion()).get());
+        assertEquals(VERSION, DynawoVersion.createFromString(dynaFlowSimulation.getVersion()));
 
         LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynaflow_version.out",
                 "/SmallBusBranch_outputIIDM.xml", "/results.json");
@@ -147,7 +148,7 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
         LoadFlowParameters params = LoadFlowParameters.load();
 
         assertEquals(DYNAFLOW_NAME, dynaFlowSimulation.getName());
-        assertEquals(VERSION, DynaFlowVersion.of(dynaFlowSimulation.getVersion()).get());
+        assertEquals(VERSION, DynawoVersion.createFromString(dynaFlowSimulation.getVersion()));
 
         LocalCommandExecutor commandExecutor = new EmptyLocalCommandExecutorMock("/dynaflow_version.out");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
@@ -174,7 +175,7 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
         LoadFlowParameters params = LoadFlowParameters.load();
 
         assertEquals(DYNAFLOW_NAME, dynaFlowSimulation.getName());
-        assertEquals(VERSION, DynaFlowVersion.of(dynaFlowSimulation.getVersion()).get());
+        assertEquals(VERSION, DynawoVersion.createFromString(dynaFlowSimulation.getVersion()));
 
         LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynaflow_version.out",
                 "/SmallBusBranch_outputIIDM.xml", "/results.json");
