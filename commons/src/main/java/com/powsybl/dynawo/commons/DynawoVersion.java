@@ -36,8 +36,8 @@ public class DynawoVersion implements Comparable<DynawoVersion> {
         try {
             Integer[] ints = Arrays.stream(version.split(separator)).map(Integer::parseInt).toArray(Integer[]::new);
             return new DynawoVersion(ints);
-        } catch (Throwable t) {
-            throw new PowsyblException(CREATION_ERROR + t.getMessage(), t);
+        } catch (Exception e) {
+            throw new PowsyblException(CREATION_ERROR + e.getMessage(), e);
         }
     }
 
