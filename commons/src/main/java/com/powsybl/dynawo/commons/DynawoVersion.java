@@ -18,14 +18,10 @@ public class DynawoVersion implements Comparable<DynawoVersion> {
     private final List<Integer> versionArray;
 
     public DynawoVersion(Integer... version) {
-        if (Arrays.stream(version).anyMatch(v -> v < 0)) {
+        if (version.length == 0 || Arrays.stream(version).anyMatch(v -> v < 0)) {
             throw new PowsyblException(CREATION_ERROR + Arrays.toString(version));
         }
         this.versionArray = List.of(version);
-    }
-
-    private DynawoVersion() {
-        versionArray = null;
     }
 
     public static DynawoVersion createFromString(String version) {

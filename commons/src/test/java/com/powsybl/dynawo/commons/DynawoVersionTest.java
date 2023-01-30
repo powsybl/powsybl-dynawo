@@ -26,6 +26,7 @@ public class DynawoVersionTest extends AbstractConverterTest {
         assertEquals("1.10.4", DynawoVersion.createFromString("1:10:4", ":").toString());
 
         // Errors
+        assertThrows(PowsyblException.class, DynawoVersion::new);
         assertThrows(PowsyblException.class, () -> new DynawoVersion(1, -4));
         assertThrows(PowsyblException.class, () -> DynawoVersion.createFromString("1.-2"));
         assertThrows(PowsyblException.class, () -> DynawoVersion.createFromString("1:2"));
