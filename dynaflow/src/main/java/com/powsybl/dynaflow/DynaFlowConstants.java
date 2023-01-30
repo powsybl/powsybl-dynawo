@@ -8,7 +8,6 @@ package com.powsybl.dynaflow;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.powsybl.dynawo.commons.DynawoVersion;
 
 /**
  * @author Guillaume Pernin <guillaume.pernin at rte-france.com>
@@ -20,8 +19,6 @@ public final class DynaFlowConstants {
     public static final String CONFIG_FILENAME = "config.json";
 
     public static final String IIDM_FILENAME = "network.xiidm";
-
-    public static final DynawoVersion VERSION = new DynawoVersion(1, 4, 0);
 
     public static final String OUTPUT_IIDM_FILENAME = "outputIIDM.xml";
 
