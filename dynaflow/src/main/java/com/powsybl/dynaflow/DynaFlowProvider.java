@@ -129,9 +129,8 @@ public class DynaFlowProvider implements LoadFlowProvider {
             }
 
             @Override
-            public LoadFlowResult after(Path workingDir, ExecutionReport report) throws IOException {
-                Path absoluteWorkingDir = workingDir.toAbsolutePath();
-                super.after(absoluteWorkingDir, report);
+            public LoadFlowResult after(Path workingDir, ExecutionReport report) {
+                report.log();
                 network.getVariantManager().setWorkingVariant(workingStateId);
                 boolean status = true;
                 Path outputNetworkFile = workingDir.resolve("outputs").resolve("finalState").resolve(OUTPUT_IIDM_FILENAME);

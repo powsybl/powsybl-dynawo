@@ -27,5 +27,8 @@ public final class DynawoConstants {
     public static final List<String> IIDM_EXTENSIONS = List.of(
             "activePowerControl",
             "slackTerminal",
-            "coordinatedReactiveControl");
+            "coordinatedReactiveControl",
+            "hvdcAngleDroopActivePowerControl",
+            "hvdcOperatorActivePowerRange",
+            "standbyAutomaton");
 }
