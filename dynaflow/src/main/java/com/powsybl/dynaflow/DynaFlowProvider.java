@@ -13,6 +13,7 @@ import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.extensions.Extension;
 import com.powsybl.commons.extensions.ExtensionJsonSerializer;
+import com.powsybl.commons.parameters.Parameter;
 import com.powsybl.computation.*;
 import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
 import com.powsybl.dynaflow.json.JsonDynaFlowParametersSerializer;
@@ -170,8 +171,8 @@ public class DynaFlowProvider implements LoadFlowProvider {
     }
 
     @Override
-    public List<String> getSpecificParametersNames() {
-        return DynaFlowParameters.getSpecificParametersNames();
+    public List<Parameter> getSpecificParameters() {
+        return DynaFlowParameters.SPECIFIC_PARAMETERS;
     }
 
     @Override

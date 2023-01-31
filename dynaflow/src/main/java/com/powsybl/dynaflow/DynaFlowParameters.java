@@ -12,6 +12,10 @@ import com.google.common.base.MoreObjects;
 import com.powsybl.commons.config.ModuleConfig;
 import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.extensions.AbstractExtension;
+import com.powsybl.commons.parameters.Parameter;
+import com.powsybl.commons.parameters.ParameterScope;
+import com.powsybl.commons.parameters.ParameterType;
+import com.powsybl.dynaflow.DynaFlowConstants.OutputTypes;
 import com.powsybl.loadflow.LoadFlowParameters;
 import com.powsybl.dynaflow.DynaFlowConstants.ActivePowerCompensation;
 import com.powsybl.dynaflow.DynaFlowConstants.StartingPointMode;
@@ -79,6 +83,26 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
     private static final String CHOSEN_OUTPUTS = "chosenOutputs";
     private static final String TIME_STEP = "timeStep";
     private static final String STARTING_POINT_MODE = "startingPointMode";
+
+    private static <E extends Enum<E>> List<Object> getEnumPossibleValues(Class<E> enumClass) {
+        return EnumSet.allOf(enumClass).stream().map(Enum::name).collect(Collectors.toList());
+    }
+
+    public static final List<Parameter> SPECIFIC_PARAMETERS = List.of(
+            new Parameter(SVC_REGULATION_ON, ParameterType.BOOLEAN, "Static Var Compensator regulation on", Boolean.FALSE),
+            new Parameter(SHUNT_REGULATION_ON, ParameterType.BOOLEAN, "Shunt compensator regulation on", Boolean.FALSE),
+            new Parameter(AUTOMATIC_SLACK_BUS_ON, ParameterType.BOOLEAN, "Automatic slack bus selection on", Boolean.FALSE),
+            new Parameter(DSO_VOLTAGE_LEVEL, ParameterType.DOUBLE, "DSO voltage level threshold", null, null),
+            new Parameter(ACTIVE_POWER_COMPENSATION, ParameterType.STRING, "Active power compensation mode", null, getEnumPossibleValues(ActivePowerCompensation.class)),
+            new Parameter(SETTING_PATH, ParameterType.STRING, "Setting file path", null, null, ParameterScope.TECHNICAL),
+            new Parameter(ASSEMBLING_PATH, ParameterType.STRING, "Assembling file path", null, null, ParameterScope.TECHNICAL),
+            new Parameter(START_TIME, ParameterType.DOUBLE, "Start time", null),
+            new Parameter(STOP_TIME, ParameterType.DOUBLE, "Stop time", null),
+            new Parameter(PRECISION_NAME, ParameterType.DOUBLE, "Precision", null),
+            new Parameter(Sa.TIME_OF_EVENT, ParameterType.DOUBLE, "Time of event", null),
+            new Parameter(CHOSEN_OUTPUTS, ParameterType.STRING, "Chosen outputs", null, getEnumPossibleValues(OutputTypes.class), ParameterScope.TECHNICAL),
+            new Parameter(TIME_STEP, ParameterType.DOUBLE, "Time step", null),
+            new Parameter(STARTING_POINT_MODE, ParameterType.STRING, "Starting point mode", null, getEnumPossibleValues(StartingPointMode.class)));
 
     private Boolean svcRegulationOn = null;
     private Boolean shuntRegulationOn = null;
@@ -352,13 +376,4 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         parameters.update(properties);
         return parameters;
     }
-
-    public static List<String> getSpecificParametersNames() {
-        return Arrays.asList(
-                SVC_REGULATION_ON, SHUNT_REGULATION_ON, AUTOMATIC_SLACK_BUS_ON, DSO_VOLTAGE_LEVEL,
-                ACTIVE_POWER_COMPENSATION, SETTING_PATH, ASSEMBLING_PATH, START_TIME, STOP_TIME, PRECISION_NAME,
-                Sa.TIME_OF_EVENT, CHOSEN_OUTPUTS, TIME_STEP, STARTING_POINT_MODE
-        );
-    }
-
 }
