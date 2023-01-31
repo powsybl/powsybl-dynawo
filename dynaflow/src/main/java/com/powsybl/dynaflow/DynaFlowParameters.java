@@ -89,20 +89,20 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
     }
 
     public static final List<Parameter> SPECIFIC_PARAMETERS = List.of(
-            new Parameter(SVC_REGULATION_ON, ParameterType.BOOLEAN, "Static Var Compensator regulation on", Boolean.FALSE),
-            new Parameter(SHUNT_REGULATION_ON, ParameterType.BOOLEAN, "Shunt compensator regulation on", Boolean.FALSE),
-            new Parameter(AUTOMATIC_SLACK_BUS_ON, ParameterType.BOOLEAN, "Automatic slack bus selection on", Boolean.FALSE),
-            new Parameter(DSO_VOLTAGE_LEVEL, ParameterType.DOUBLE, "DSO voltage level threshold", null, null),
-            new Parameter(ACTIVE_POWER_COMPENSATION, ParameterType.STRING, "Active power compensation mode", null, getEnumPossibleValues(ActivePowerCompensation.class)),
+            new Parameter(SVC_REGULATION_ON, ParameterType.BOOLEAN, "Static Var Compensator regulation on", Boolean.TRUE),
+            new Parameter(SHUNT_REGULATION_ON, ParameterType.BOOLEAN, "Shunt compensator regulation on", Boolean.TRUE),
+            new Parameter(AUTOMATIC_SLACK_BUS_ON, ParameterType.BOOLEAN, "Automatic slack bus selection on", Boolean.TRUE),
+            new Parameter(DSO_VOLTAGE_LEVEL, ParameterType.DOUBLE, "DSO voltage level threshold", 45d),
+            new Parameter(ACTIVE_POWER_COMPENSATION, ParameterType.STRING, "Active power compensation mode", ActivePowerCompensation.PMAX.name(), getEnumPossibleValues(ActivePowerCompensation.class)),
             new Parameter(SETTING_PATH, ParameterType.STRING, "Setting file path", null, null, ParameterScope.TECHNICAL),
             new Parameter(ASSEMBLING_PATH, ParameterType.STRING, "Assembling file path", null, null, ParameterScope.TECHNICAL),
-            new Parameter(START_TIME, ParameterType.DOUBLE, "Start time", null),
-            new Parameter(STOP_TIME, ParameterType.DOUBLE, "Stop time", null),
-            new Parameter(PRECISION_NAME, ParameterType.DOUBLE, "Precision", null),
-            new Parameter(Sa.TIME_OF_EVENT, ParameterType.DOUBLE, "Time of event", null),
-            new Parameter(CHOSEN_OUTPUTS, ParameterType.STRING, "Chosen outputs", null, getEnumPossibleValues(OutputTypes.class), ParameterScope.TECHNICAL),
-            new Parameter(TIME_STEP, ParameterType.DOUBLE, "Time step", null),
-            new Parameter(STARTING_POINT_MODE, ParameterType.STRING, "Starting point mode", null, getEnumPossibleValues(StartingPointMode.class)));
+            new Parameter(START_TIME, ParameterType.DOUBLE, "Start time", 0d),
+            new Parameter(STOP_TIME, ParameterType.DOUBLE, "Stop time", 100d),
+            new Parameter(PRECISION_NAME, ParameterType.DOUBLE, "Precision", Double.NaN),
+            new Parameter(Sa.TIME_OF_EVENT, ParameterType.DOUBLE, "Time of event", 10d),
+            new Parameter(CHOSEN_OUTPUTS, ParameterType.STRING_LIST, "Chosen outputs", Collections.emptyList(), getEnumPossibleValues(OutputTypes.class), ParameterScope.TECHNICAL),
+            new Parameter(TIME_STEP, ParameterType.DOUBLE, "Time step", 10d),
+            new Parameter(STARTING_POINT_MODE, ParameterType.STRING, "Starting point mode", StartingPointMode.WARM.name(), getEnumPossibleValues(StartingPointMode.class)));
 
     private Boolean svcRegulationOn = null;
     private Boolean shuntRegulationOn = null;
