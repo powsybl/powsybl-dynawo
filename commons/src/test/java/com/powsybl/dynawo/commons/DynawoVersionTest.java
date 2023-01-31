@@ -34,11 +34,23 @@ public class DynawoVersionTest extends AbstractConverterTest {
     }
 
     @Test
+    public void testEquals() {
+        DynawoVersion dv1 = DV_MIN;
+        DynawoVersion dv2 = DynawoVersion.createFromString("1.3");
+        assertEquals(DV_MIN, dv1);
+        assertEquals(DV_MIN, dv2);
+        assertNotEquals(DV_MIN, null);
+        assertNotEquals(DV_MIN, "1.3.0");
+    }
+
+    @Test
     public void testVersionEqual() {
         DynawoVersion dv1 = DynawoVersion.createFromString("1.3.0");
         DynawoVersion dv2 = DynawoVersion.createFromString("1.3");
+        DynawoVersion dv3 = DynawoVersion.createFromString("1.3.0.0");
         assertEquals(0, DV_MIN.compareTo(dv1));
         assertEquals(0, DV_MIN.compareTo(dv2));
+        assertEquals(0, DV_MIN.compareTo(dv3));
     }
 
     @Test
