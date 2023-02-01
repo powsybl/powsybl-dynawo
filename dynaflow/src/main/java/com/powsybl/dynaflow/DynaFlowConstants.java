@@ -9,11 +9,6 @@ package com.powsybl.dynaflow;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 /**
  * @author Guillaume Pernin <guillaume.pernin at rte-france.com>
  */
@@ -25,51 +20,15 @@ public final class DynaFlowConstants {
 
     public static final String IIDM_FILENAME = "network.xiidm";
 
-    public static final DynaFlowVersion VERSION_MIN = DynaFlowVersion.V_1_4_0;
-
-    public static final DynaFlowVersion VERSION = DynaFlowVersion.V_1_4_0;
-
     public static final String OUTPUT_IIDM_FILENAME = "outputIIDM.xml";
 
     public static final String OUTPUT_RESULTS_FILENAME = "results.json";
-
-    public enum DynaFlowVersion {
-        V_1_3_0(List.of(1, 3, 0)),
-        V_1_3_1(List.of(1, 3, 1)),
-        V_1_4_0(List.of(1, 4, 0));
-
-        private final List<Integer> versionArray;
-        private static final String DEFAULT_DELIMITER = ".";
-
-        DynaFlowVersion(List<Integer> versionArray) {
-            this.versionArray = versionArray;
-        }
-
-        public String toString(String separator) {
-            return versionArray.stream().map(Object::toString).collect(Collectors.joining(separator));
-        }
-
-        @Override
-        public String toString() {
-            return this.toString(DEFAULT_DELIMITER);
-        }
-
-        public static Optional<DynaFlowVersion> of(String version) {
-            return of(version, DEFAULT_DELIMITER);
-        }
-
-        public static Optional<DynaFlowVersion> of(String version, String separator) {
-            return Stream.of(DynaFlowVersion.values())
-                    .filter(v -> version.equals(v.toString(separator)))
-                    .findFirst(); // there can only be 0 or exactly 1 match
-        }
-    }
 
     public enum OutputTypes {
         STEADYSTATE,
         LOSTEQ,
         TIMELINE,
-        CONSTRAINTS;
+        CONSTRAINTS
     }
 
     public enum ActivePowerCompensation {

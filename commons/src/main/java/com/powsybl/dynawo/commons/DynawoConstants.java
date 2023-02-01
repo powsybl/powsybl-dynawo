@@ -24,6 +24,8 @@ public final class DynawoConstants {
      */
     public static final String IIDM_VERSION = IidmXmlVersion.V_1_4.toString(".");
 
+    public static final DynawoVersion VERSION_MIN = new DynawoVersion(1, 3, 0);
+
     public static final List<String> IIDM_EXTENSIONS = List.of(
             "activePowerControl",
             "slackTerminal",

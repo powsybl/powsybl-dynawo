@@ -99,24 +99,4 @@ public class DynaFlowVersionCheckTest {
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
         DynaFlowUtil.checkDynaFlowVersion(env, computationManager, badVersionCmd);
     }
-
-    @Test
-    public void testVersionRespectsMin() {
-        assertTrue(DynaFlowUtil.versionRespectsMin("1.3.0", DynaFlowConstants.DynaFlowVersion.V_1_3_0));
-    }
-
-    @Test
-    public void testVersionAboveMin() {
-        assertTrue(DynaFlowUtil.versionRespectsMin("1.3.1", DynaFlowConstants.DynaFlowVersion.V_1_3_0));
-    }
-
-    @Test
-    public void testVersionDoesNotRespectMin() {
-        assertFalse(DynaFlowUtil.versionRespectsMin("1.3.0", DynaFlowConstants.DynaFlowVersion.V_1_3_1));
-    }
-
-    @Test
-    public void testVersionNotConvertibleMin() {
-        assertFalse(DynaFlowUtil.versionRespectsMin("1.1", DynaFlowConstants.DynaFlowVersion.V_1_3_1));
-    }
 }
