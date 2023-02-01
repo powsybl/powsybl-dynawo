@@ -8,5 +8,6 @@
 EventSetPointBoolean {
     staticId "_GEN___12_SM"
     eventModelId "DisconnectGenerator"
-    parameterSetId "DisconnectGenerator"
+    startTime 1
+    stateEvent true
 }

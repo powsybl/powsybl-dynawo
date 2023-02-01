@@ -18,6 +18,8 @@ import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import com.powsybl.dynawo.commons.DynawoConstants;
+import com.powsybl.dynawo.commons.DynawoVersion;
 
 /**
  *
@@ -36,19 +38,22 @@ final class DynaFlowUtil {
             public Boolean after(Path workingDir, ExecutionReport report) throws IOException {
                 super.after(workingDir, report);
                 Optional<InputStream> stdErr = report.getStdErr(versionCmd, 0);
-                if (!stdErr.isPresent()) {
+                if (stdErr.isEmpty()) {
                     throw new PowsyblException("No output for DynaFlow version command");
                 }
                 try (Reader reader = new InputStreamReader(stdErr.get())) {
                     String stdErrContent = CharStreams.toString(reader);
-                    return stdErrContent.equals(DynaFlowConstants.VERSION);
+                    DynawoVersion version = DynawoVersion.createFromString(versionSanitizer(stdErrContent));
+                    return DynawoConstants.VERSION_MIN.compareTo(version) < 1;
                 }
-
             }
         }).join();
     }
 
-    private DynaFlowUtil() {
+    private static String versionSanitizer(String version) {
+        return version.split(" ")[0];
+    }
 
+    private DynaFlowUtil() {
     }
 }

@@ -7,7 +7,6 @@
 package com.powsybl.dynaflow;
 
 import com.google.common.collect.ImmutableMap;
-import com.powsybl.commons.config.ModuleConfig;
 import com.powsybl.commons.config.PlatformConfig;
 
 import java.nio.file.Path;
@@ -36,10 +35,9 @@ public class DynaFlowConfig {
 
     public static DynaFlowConfig fromPlatformConfig(PlatformConfig platformConfig) {
         Objects.requireNonNull(platformConfig);
-        ModuleConfig config = platformConfig.getModuleConfig("dynaflow");
-        Path homeDir = config.getPathProperty("homeDir");
-        boolean debug = config.getBooleanProperty("debug", DEFAULT_DEBUG);
-        return new DynaFlowConfig(homeDir, debug);
+        return platformConfig.getOptionalModuleConfig("dynaflow")
+                .map(config -> new DynaFlowConfig(config.getPathProperty("homeDir"), config.getBooleanProperty("debug", DEFAULT_DEBUG)))
+                .orElse(null);
     }
 
     public Map<String, String> createEnv() {

@@ -6,24 +6,55 @@
  */
 package com.powsybl.dynawaltz;
 
+import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.dynamicsimulation.Curve;
-import com.powsybl.dynamicsimulation.EventModel;
-import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
+import com.powsybl.dynawaltz.models.*;
+import com.powsybl.dynawaltz.models.generators.GeneratorSynchronousModel;
+import com.powsybl.dynawaltz.models.utils.ConnectedModelTypes;
+import com.powsybl.dynawaltz.xml.MacroStaticReference;
 import com.powsybl.iidm.network.Network;
 
 import java.nio.file.FileSystem;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 public class DynaWaltzContext {
 
-    public DynaWaltzContext(Network network, String workingVariantId, List<DynamicModel> dynamicModels, List<EventModel> eventModels, List<Curve> curves, DynamicSimulationParameters parameters, DynaWaltzParameters dynaWaltzParameters) {
+    private final Network network;
+    private final String workingVariantId;
+    private final DynamicSimulationParameters parameters;
+    private final DynaWaltzParameters dynaWaltzParameters;
+    private final DynaWaltzParametersDatabase parametersDatabase;
+    private final List<BlackBoxModel> dynamicModels;
+    private final List<BlackBoxModel> eventModels;
+    private final List<Curve> curves;
+    private final Map<String, MacroStaticReference> macroStaticReferences = new LinkedHashMap<>();
+    private final Map<ConnectedModelTypes, MacroConnector> connectorsMap = new LinkedHashMap<>();
+    private final Map<ConnectedModelTypes, MacroConnector> eventConnectorsMap = new LinkedHashMap<>();
+    private final Map<BlackBoxModel, List<Model>> modelsConnections = new LinkedHashMap<>();
+    private final Map<BlackBoxModel, List<Model>> eventModelsConnections = new LinkedHashMap<>();
+    private final NetworkModel networkModel = new NetworkModel();
+
+    private final OmegaRef omegaRef;
+    private final PlatformConfig platformConfig;
+
+    public DynaWaltzContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
+                            List<Curve> curves, DynamicSimulationParameters parameters, DynaWaltzParameters dynaWaltzParameters) {
+        this(network, workingVariantId, dynamicModels, eventModels, curves, parameters, dynaWaltzParameters, PlatformConfig.defaultConfig());
+    }
+
+    public DynaWaltzContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
+                            List<Curve> curves, DynamicSimulationParameters parameters, DynaWaltzParameters dynaWaltzParameters,
+                            PlatformConfig platformConfig) {
         this.network = Objects.requireNonNull(network);
         this.workingVariantId = Objects.requireNonNull(workingVariantId);
         this.dynamicModels = Objects.requireNonNull(dynamicModels);
@@ -31,7 +62,35 @@ public class DynaWaltzContext {
         this.curves = Objects.requireNonNull(curves);
         this.parameters = Objects.requireNonNull(parameters);
         this.dynaWaltzParameters = Objects.requireNonNull(dynaWaltzParameters);
-        this.parametersDatabase = loadDatabase(dynaWaltzParameters.getParametersFile());
+        this.platformConfig = Objects.requireNonNull(platformConfig);
+        this.parametersDatabase = loadDatabase(dynaWaltzParameters.getParametersFile(), platformConfig);
+        List<GeneratorSynchronousModel> synchronousGenerators = dynamicModels.stream()
+                .filter(GeneratorSynchronousModel.class::isInstance)
+                .map(GeneratorSynchronousModel.class::cast)
+                .collect(Collectors.toList());
+        this.omegaRef = new OmegaRef(synchronousGenerators);
+
+        for (BlackBoxModel bbm : Stream.concat(dynamicModels.stream(), Stream.of(omegaRef)).collect(Collectors.toList())) {
+            macroStaticReferences.computeIfAbsent(bbm.getName(), k -> new MacroStaticReference(k, bbm.getVarsMapping()));
+
+            List<Model> modelsConnected = bbm.getModelsConnectedTo(this);
+            modelsConnections.put(bbm, modelsConnected);
+
+            for (Model connectedBbm : modelsConnected) {
+                var key = ConnectedModelTypes.of(bbm.getName(), connectedBbm.getName());
+                connectorsMap.computeIfAbsent(key, k -> createMacroConnector(bbm, connectedBbm));
+            }
+        }
+
+        for (BlackBoxModel bbem : eventModels) {
+            List<Model> modelsConnected = bbem.getModelsConnectedTo(this);
+            eventModelsConnections.put(bbem, modelsConnected);
+
+            for (Model connectedBbm : modelsConnected) {
+                var key = ConnectedModelTypes.of(bbem.getName(), connectedBbm.getName());
+                eventConnectorsMap.computeIfAbsent(key, k -> createMacroConnector(bbem, connectedBbm));
+            }
+        }
     }
 
     public Network getNetwork() {
@@ -54,11 +113,74 @@ public class DynaWaltzContext {
         return parametersDatabase;
     }
 
-    public List<DynamicModel> getDynamicModels() {
-        return Collections.unmodifiableList(dynamicModels);
+    public Collection<MacroStaticReference> getMacroStaticReferences() {
+        return macroStaticReferences.values();
     }
 
-    public List<EventModel> getEventModels() {
+    public Map<String, BlackBoxModel> getStaticIdBlackBoxModelMap() {
+        return getInputBlackBoxDynamicModelStream()
+                .filter(blackBoxModel -> blackBoxModel.getStaticId().isPresent())
+                .collect(Collectors.toMap(bbm -> bbm.getStaticId().get(), Function.identity(), this::mergeDuplicateStaticId, LinkedHashMap::new));
+    }
+
+    private BlackBoxModel mergeDuplicateStaticId(BlackBoxModel bbm1, BlackBoxModel bbm2) {
+        throw new AssertionError("Duplicate staticId " + bbm1.getStaticId());
+    }
+
+    public Collection<MacroConnector> getMacroConnectors() {
+        return connectorsMap.values();
+    }
+
+    public MacroConnector getMacroConnector(Model model1, Model model2) {
+        return connectorsMap.get(ConnectedModelTypes.of(model1.getName(), model2.getName()));
+    }
+
+    public Collection<MacroConnector> getEventMacroConnectors() {
+        return eventConnectorsMap.values();
+    }
+
+    public MacroConnector getEventMacroConnector(BlackBoxModel event, Model model) {
+        return eventConnectorsMap.get(ConnectedModelTypes.of(event.getName(), model.getName()));
+    }
+
+    private MacroConnector createMacroConnector(BlackBoxModel bbm, Model model) {
+        return new MacroConnector(bbm.getName(), model.getName(), bbm.getVarConnectionsWith(model));
+    }
+
+    public Map<BlackBoxModel, List<Model>> getModelsConnections() {
+        return modelsConnections;
+    }
+
+    public Map<BlackBoxModel, List<Model>> getEventModelsConnections() {
+        return eventModelsConnections;
+    }
+
+    private Stream<BlackBoxModel> getInputBlackBoxDynamicModelStream() {
+        //Doesn't include the OmegaRef, it only concerns the DynamicModels provided by the user
+        return dynamicModels.stream();
+    }
+
+    public Stream<BlackBoxModel> getBlackBoxDynamicModelStream() {
+        if (omegaRef.isEmpty()) {
+            return getInputBlackBoxDynamicModelStream();
+        }
+        return Stream.concat(getInputBlackBoxDynamicModelStream(), Stream.of(omegaRef));
+    }
+
+    public List<BlackBoxModel> getBlackBoxDynamicModels() {
+        return getBlackBoxDynamicModelStream().collect(Collectors.toList());
+    }
+
+    public List<BlackBoxModel> getBlackBoxModels() {
+        return Stream.concat(getBlackBoxDynamicModelStream(), getBlackBoxEventModelStream())
+                .collect(Collectors.toList());
+    }
+
+    public Stream<BlackBoxModel> getBlackBoxEventModelStream() {
+        return eventModels.stream();
+    }
+
+    public List<BlackBoxModel> getBlackBoxEventModels() {
         return Collections.unmodifiableList(eventModels);
     }
 
@@ -70,17 +192,30 @@ public class DynaWaltzContext {
         return !curves.isEmpty();
     }
 
-    private static DynaWaltzParametersDatabase loadDatabase(String filename) {
-        FileSystem fs = PlatformConfig.defaultConfig().getConfigDir().getFileSystem();
+    private static FileSystem getFileSystem(PlatformConfig platformConfig) {
+        return platformConfig.getConfigDir()
+                .map(Path::getFileSystem)
+                .orElseThrow(() -> new PowsyblException("A configuration directory should be defined"));
+    }
+
+    private static DynaWaltzParametersDatabase loadDatabase(String filename, PlatformConfig platformConfig) {
+        FileSystem fs = getFileSystem(platformConfig);
         return DynaWaltzParametersDatabase.load(fs.getPath(filename));
     }
 
-    private final Network network;
-    private final String workingVariantId;
-    private final DynamicSimulationParameters parameters;
-    private final DynaWaltzParameters dynaWaltzParameters;
-    private final DynaWaltzParametersDatabase parametersDatabase;
-    private final List<DynamicModel> dynamicModels;
-    private final List<EventModel> eventModels;
-    private final List<Curve> curves;
+    public NetworkModel getNetworkModel() {
+        return networkModel;
+    }
+
+    public String getParFile() {
+        return Paths.get(getDynaWaltzParameters().getParametersFile()).getFileName().toString();
+    }
+
+    public String getSimulationParFile() {
+        return getNetwork().getId() + ".par";
+    }
+
+    public PlatformConfig getPlatformConfig() {
+        return platformConfig;
+    }
 }

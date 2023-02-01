@@ -1,11 +1,11 @@
 {
-  "version" : "1.5",
+  "version" : "1.8",
   "voltageInitMode" : "UNIFORM_VALUES",
   "transformerVoltageControlOn" : false,
   "phaseShifterRegulationOn" : false,
-  "noGeneratorReactiveLimits" : true,
+  "useReactiveLimits" : true,
   "twtSplitShuntAdmittance" : false,
-  "simulShunt" : false,
+  "shuntCompensatorVoltageControlOn" : false,
   "readSlackBus" : true,
   "writeSlackBus" : false,
   "dc" : false,
@@ -14,12 +14,8 @@
   "dcUseTransformerRatio" : true,
   "countriesToBalance" : [ ],
   "connectedComponentMode" : "MAIN",
+  "hvdcAcEmulation" : true,
   "extensions" : {
-    "DynaFlowParameters" : {
-      "svcRegulationOn" : true,
-      "shuntRegulationOn" : false,
-      "automaticSlackBusOn" : true,
-      "dsoVoltageLevel" : 54.23
-    }
+    "DynaFlowParameters" : { }
   }
 }

@@ -19,6 +19,7 @@ import java.nio.file.FileSystem;
 import java.nio.file.Path;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 /**
  *
@@ -51,6 +52,14 @@ public class DynaFlowConfigTest {
         DynaFlowConfig config = DynaFlowConfig.fromPlatformConfig(platformConfig);
         assertEquals(homeDir, config.getHomeDir().toString());
         assertEquals(debug, config.isDebug());
+    }
+
+    @Test
+    public void fromPlatformConfigNull() {
+        InMemoryPlatformConfig platformConfig = new InMemoryPlatformConfig(fileSystem);
+
+        DynaFlowConfig config = DynaFlowConfig.fromPlatformConfig(platformConfig);
+        assertNull(config);
     }
 
     @Test

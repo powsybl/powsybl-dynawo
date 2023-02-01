@@ -42,13 +42,55 @@ public final class DynaFlowConfigSerializer {
         try {
             jsonGenerator.writeStartObject();
             jsonGenerator.writeObjectFieldStart("dfl-config");
-            jsonGenerator.writeBooleanField("SVCRegulationOn", dynaFlowParameters.getSvcRegulationOn());
-            jsonGenerator.writeBooleanField("ShuntRegulationOn", dynaFlowParameters.getShuntRegulationOn());
-            jsonGenerator.writeBooleanField("AutomaticSlackBusOn", dynaFlowParameters.getAutomaticSlackBusOn());
-            jsonGenerator.writeNumberField("DsoVoltageLevel", dynaFlowParameters.getDsoVoltageLevel());
+            if (dynaFlowParameters.getSvcRegulationOn() != null) {
+                jsonGenerator.writeBooleanField("SVCRegulationOn", dynaFlowParameters.getSvcRegulationOn());
+            }
+            if (dynaFlowParameters.getShuntRegulationOn() != null) {
+                jsonGenerator.writeBooleanField("ShuntRegulationOn", dynaFlowParameters.getShuntRegulationOn());
+            }
+            if (dynaFlowParameters.getAutomaticSlackBusOn() != null) {
+                jsonGenerator.writeBooleanField("AutomaticSlackBusOn", dynaFlowParameters.getAutomaticSlackBusOn());
+            }
+            if (dynaFlowParameters.getDsoVoltageLevel() != null) {
+                jsonGenerator.writeNumberField("DsoVoltageLevel", dynaFlowParameters.getDsoVoltageLevel());
+            }
             jsonGenerator.writeBooleanField("InfiniteReactiveLimits", lfParameters.isNoGeneratorReactiveLimits());
-            jsonGenerator.writeBooleanField("PSTRegulationOn", lfParameters.isPhaseShifterRegulationOn());
-            jsonGenerator.writeStringField("OutputDir", workingDir.toAbsolutePath().toString());
+            if (dynaFlowParameters.getActivePowerCompensation() != null) {
+                jsonGenerator.writeStringField("ActivePowerCompensation", dynaFlowParameters.getActivePowerCompensation().name());
+            }
+            if (dynaFlowParameters.getSettingPath() != null) {
+                jsonGenerator.writeStringField("SettingPath", dynaFlowParameters.getSettingPath());
+            }
+            if (dynaFlowParameters.getAssemblingPath() != null) {
+                jsonGenerator.writeStringField("AssemblingPath", dynaFlowParameters.getAssemblingPath());
+            }
+            if (dynaFlowParameters.getStartTime() != null) {
+                jsonGenerator.writeNumberField("StartTime", dynaFlowParameters.getStartTime());
+            }
+            if (dynaFlowParameters.getStopTime() != null) {
+                jsonGenerator.writeNumberField("StopTime", dynaFlowParameters.getStopTime());
+            }
+            if (dynaFlowParameters.getPrecision() != null && !Double.isNaN(dynaFlowParameters.getPrecision())) {
+                jsonGenerator.writeNumberField("Precision", dynaFlowParameters.getPrecision());
+            }
+            if (dynaFlowParameters.getSa() != null) {
+                DynaFlowParameters.Sa.writeJson(jsonGenerator, dynaFlowParameters);
+            }
+            if (dynaFlowParameters.getChosenOutputs() != null) {
+                jsonGenerator.writeFieldName("ChosenOutputs");
+                jsonGenerator.writeStartArray();
+                for (String outputType : dynaFlowParameters.getChosenOutputs()) {
+                    jsonGenerator.writeString(outputType);
+                }
+                jsonGenerator.writeEndArray();
+            }
+            if (dynaFlowParameters.getTimeStep() != null) {
+                jsonGenerator.writeNumberField("TimeStep", dynaFlowParameters.getTimeStep());
+            }
+            if (dynaFlowParameters.getStartingPointMode() != null) {
+                jsonGenerator.writeStringField("StartingPointMode", dynaFlowParameters.getStartingPointMode().getName());
+            }
+            jsonGenerator.writeStringField("OutputDir", workingDir.toString());
             jsonGenerator.writeEndObject();
             jsonGenerator.writeEndObject();
         } catch (IOException e) {

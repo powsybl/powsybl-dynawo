@@ -6,21 +6,52 @@
  */
 package com.powsybl.dynaflow;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 /**
- *
  * @author Guillaume Pernin <guillaume.pernin at rte-france.com>
  */
 public final class DynaFlowConstants {
+
+    public static final String DYNAFLOW_NAME = "DynaFlow";
 
     public static final String CONFIG_FILENAME = "config.json";
 
     public static final String IIDM_FILENAME = "network.xiidm";
 
-    public static final String VERSION = "0.1";
-
     public static final String OUTPUT_IIDM_FILENAME = "outputIIDM.xml";
 
     public static final String CONSTRAINTS_FILENAME = "constraints.xml";
+    public static final String OUTPUT_RESULTS_FILENAME = "results.json";
+
+    public enum OutputTypes {
+        STEADYSTATE,
+        LOSTEQ,
+        TIMELINE,
+        CONSTRAINTS
+    }
+
+    public enum ActivePowerCompensation {
+        P,
+        TARGET_P,
+        PMAX
+    }
+
+    public enum StartingPointMode {
+        WARM,
+        FLAT;
+
+        @JsonCreator
+        public static StartingPointMode fromString(String startingPointMode) {
+            return startingPointMode == null ? null : StartingPointMode.valueOf(startingPointMode.toUpperCase());
+        }
+
+        @JsonValue
+        public String getName() {
+            return name().toLowerCase();
+        }
+    }
 
     private DynaFlowConstants() {
     }

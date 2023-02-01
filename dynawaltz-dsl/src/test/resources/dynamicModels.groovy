@@ -7,6 +7,7 @@
 
 
 import com.powsybl.iidm.network.Branch
+import com.powsybl.iidm.network.Bus
 import com.powsybl.iidm.network.Line
 import com.powsybl.iidm.network.Load
 import com.powsybl.iidm.network.Generator
@@ -49,15 +50,24 @@ for (Generator gen : network.generators) {
             dynamicModelId "BBM_" + gen.id
             parameterSetId "GSTW"
         }
+    } else if (gen.id == "GEN5") {
+        GeneratorSynchronousFourWindingsProportionalRegulationsStepPm {
+            staticId gen.id
+            dynamicModelId "BBM_" + gen.id
+            parameterSetId "GSFWPRSP"
+        }
+    } else if (gen.id == "GEN6") {
+        GeneratorFictitious {
+            staticId gen.id
+            dynamicModelId "BBM_" + gen.id
+            parameterSetId "GF"
+        }
     } else {
         GeneratorSynchronousThreeWindingsProportionalRegulations {
             staticId gen.id
             dynamicModelId "BBM_" + gen.id
             parameterSetId "GSTWPR"
         }
-    }
-    OmegaRef {
-        generatorDynamicModelId "BBM_" + gen.id
     }
 }
 
@@ -67,5 +77,13 @@ for (Line line : network.lines) {
         dynamicModelId "BBM_" + line.id
         parameterSetId "CLA"
         side Branch.Side.TWO
+    }
+}
+
+for (Bus bus : network.busBreakerView.buses) {
+    Bus {
+        staticId bus.id
+        dynamicModelId "BBM_" + bus.id
+        parameterSetId "SB"
     }
 }

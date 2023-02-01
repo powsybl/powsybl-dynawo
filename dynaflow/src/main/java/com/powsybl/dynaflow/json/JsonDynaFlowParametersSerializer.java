@@ -7,6 +7,7 @@
 package com.powsybl.dynaflow.json;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -14,10 +15,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.google.auto.service.AutoService;
+import com.powsybl.commons.extensions.ExtensionJsonSerializer;
 import com.powsybl.commons.json.JsonUtil;
 import com.powsybl.dynaflow.DynaFlowParameters;
 import com.powsybl.loadflow.LoadFlowParameters;
-import com.powsybl.loadflow.json.JsonLoadFlowParameters.ExtensionSerializer;
 
 import java.io.IOException;
 
@@ -25,8 +26,8 @@ import java.io.IOException;
  *
  * @author Guillaume Pernin <guillaume.pernin at rte-france.com>
  */
-@AutoService(ExtensionSerializer.class)
-public class JsonDynaFlowParametersSerializer implements ExtensionSerializer<DynaFlowParameters> {
+@AutoService(ExtensionJsonSerializer.class)
+public class JsonDynaFlowParametersSerializer implements ExtensionJsonSerializer<LoadFlowParameters, DynaFlowParameters> {
 
     @Override
     public String getCategoryName() {
@@ -57,7 +58,8 @@ public class JsonDynaFlowParametersSerializer implements ExtensionSerializer<Dyn
 
     private static ObjectMapper createMapper() {
         return JsonUtil.createObjectMapper()
-                .addMixIn(DynaFlowParameters.class, SerializationSpec.class);
+                .addMixIn(DynaFlowParameters.class, SerializationSpec.class)
+                .setSerializationInclusion(JsonInclude.Include.NON_NULL);
     }
 
     @Override

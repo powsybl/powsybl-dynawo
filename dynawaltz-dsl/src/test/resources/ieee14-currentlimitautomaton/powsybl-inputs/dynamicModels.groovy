@@ -5,10 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-
-import com.powsybl.dynawaltz.automatons.CurrentLimitAutomaton
 import com.powsybl.iidm.network.Branch
-import com.powsybl.iidm.network.Line
 import com.powsybl.iidm.network.Load
 import com.powsybl.iidm.network.Generator
 
@@ -33,9 +30,6 @@ for (Generator gen : network.generators) {
             staticId gen.id
             parameterSetId "GSTWPR" + gen.id
         }
-    }
-    OmegaRef {
-        generatorDynamicModelId gen.id
     }
 }
 

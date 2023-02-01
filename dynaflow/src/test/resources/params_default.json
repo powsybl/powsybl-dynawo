@@ -1,0 +1,6 @@
+{
+  "dfl-config" : {
+    "InfiniteReactiveLimits" : true,
+    "OutputDir" : "dynaflow/workingDir"
+  }
+}

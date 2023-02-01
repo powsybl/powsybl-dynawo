@@ -6,12 +6,12 @@
  */
 package com.powsybl.dynawo.commons;
 
-import com.powsybl.commons.AbstractConverterTest;
+import com.powsybl.commons.test.AbstractConverterTest;
+import com.powsybl.commons.test.ComparisonUtils;
 import com.powsybl.commons.datasource.ResourceDataSource;
 import com.powsybl.commons.datasource.ResourceSet;
-import com.powsybl.iidm.export.ExportOptions;
-import com.powsybl.iidm.import_.Importers;
 import com.powsybl.iidm.network.*;
+import com.powsybl.iidm.xml.ExportOptions;
 import com.powsybl.iidm.xml.NetworkXml;
 import org.junit.Test;
 
@@ -109,7 +109,7 @@ public class DynawoResultsNetworkUpdateTest extends AbstractConverterTest {
         NetworkXml.write(expected, pexpected);
         actual.setCaseDate(expected.getCaseDate());
         NetworkXml.write(actual, pactual);
-        compareXml(Files.newInputStream(pexpected), Files.newInputStream(pactual));
+        ComparisonUtils.compareXml(Files.newInputStream(pexpected), Files.newInputStream(pactual));
     }
 
     private static Network createTestCaseBusBranch() {

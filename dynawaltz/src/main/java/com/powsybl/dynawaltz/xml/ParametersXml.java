@@ -7,8 +7,15 @@
 
 package com.powsybl.dynawaltz.xml;
 
-import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
+import com.powsybl.commons.PowsyblException;
+import com.powsybl.commons.config.PlatformConfig;
+import com.powsybl.dynawaltz.DynaWaltzContext;
+import com.powsybl.dynawaltz.DynaWaltzParameters;
+import com.powsybl.dynawaltz.DynaWaltzParametersDatabase;
+import com.powsybl.dynawaltz.models.BlackBoxModel;
 
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.FileSystem;
@@ -17,16 +24,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.Objects;
 
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
-
-import com.powsybl.commons.config.PlatformConfig;
-import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
-import com.powsybl.dynamicsimulation.DynamicModel;
-import com.powsybl.dynawaltz.DynaWaltzContext;
-import com.powsybl.dynawaltz.DynaWaltzParameters;
-import com.powsybl.dynawaltz.DynaWaltzParametersDatabase;
-import com.powsybl.dynawaltz.dynamicmodels.AbstractBlackBoxModel;
+import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -40,18 +38,19 @@ public final class ParametersXml {
         Objects.requireNonNull(workingDir);
 
         DynaWaltzParameters parameters = context.getDynaWaltzParameters();
-        copy(parameters.getParametersFile(), workingDir);
-        copy(parameters.getNetwork().getParametersFile(), workingDir);
-        copy(parameters.getSolver().getParametersFile(), workingDir);
+        copy(parameters.getParametersFile(), workingDir, context.getPlatformConfig());
+        copy(parameters.getNetwork().getParametersFile(), workingDir, context.getPlatformConfig());
+        copy(parameters.getSolver().getParametersFile(), workingDir, context.getPlatformConfig());
 
         // Write parameterSet that needs to be generated (OmegaRef...)
-        DynaWaltzXmlContext xmlContext = new DynaWaltzXmlContext(context);
-        Path file = workingDir.resolve(xmlContext.getSimulationParFile());
+        Path file = workingDir.resolve(context.getSimulationParFile());
         XmlUtil.write(file, context, "parametersSet", ParametersXml::write);
     }
 
-    private static void copy(String filename, Path workingDir) throws IOException {
-        FileSystem fs = PlatformConfig.defaultConfig().getConfigDir().getFileSystem();
+    private static void copy(String filename, Path workingDir, PlatformConfig platformConfig) throws IOException {
+        FileSystem fs = platformConfig.getConfigDir()
+                .map(Path::getFileSystem)
+                .orElseThrow(() -> new PowsyblException("A configuration directory should be defined"));
         Path source = fs.getPath(filename);
         if (!Files.exists(source)) {
             throw new FileNotFoundException("File not found: " + filename);
@@ -59,16 +58,9 @@ public final class ParametersXml {
         Files.copy(source, workingDir.resolve(source.getFileName().toString()), StandardCopyOption.REPLACE_EXISTING);
     }
 
-    private static void write(XMLStreamWriter writer, DynaWaltzContext context) {
-        DynaWaltzXmlContext xmlContext = new DynaWaltzXmlContext(context);
-
-        try {
-            for (DynamicModel model : context.getDynamicModels()) {
-                AbstractBlackBoxModel dynawoModel = (AbstractBlackBoxModel) model;
-                dynawoModel.writeParameters(writer, xmlContext);
-            }
-        } catch (XMLStreamException e) {
-            throw new UncheckedXmlStreamException(e);
+    private static void write(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
+        for (BlackBoxModel model : context.getBlackBoxModels()) {
+            model.writeParameters(writer, context);
         }
     }
 

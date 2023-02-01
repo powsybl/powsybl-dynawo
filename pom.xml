@@ -13,12 +13,12 @@
     <parent>
         <groupId>com.powsybl</groupId>
         <artifactId>powsybl-parent</artifactId>
-        <version>4</version>
+        <version>8</version>
         <relativePath />
     </parent>
 
     <artifactId>powsybl-dynawo</artifactId>
-    <version>1.7.0-SNAPSHOT</version>
+    <version>1.13.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>powsybl dynawo</name>
@@ -33,6 +33,12 @@
 
     <developers>
         <developer>
+            <name>Florian DUPUY</name>
+            <email>florian.dupuy@rte-france.com</email>
+            <organization>RTE</organization>
+            <organizationUrl>http://www.rte-france.com</organizationUrl>
+        </developer>
+        <developer>
             <name>Marcos de Miguel</name>
             <email>demiguelm@aia.es</email>
             <organization>Grupo AIA</organization>
@@ -45,22 +51,19 @@
         <module>dynaflow</module>
         <module>dynawaltz</module>
         <module>dynawaltz-dsl</module>
+        <module>distribution</module>
     </modules>
 
     <properties>
         <java.version>11</java.version>
 
-        <maven.exec.plugin>1.6.0</maven.exec.plugin>
-
-        <assertj.version>3.11.0</assertj.version>
         <groovy.version>3.0.9</groovy.version> <!-- used for groovydoc (dynawaltz-dsl) -->
-        <jimfs.version>1.1</jimfs.version>
-        <junit.version>4.13.1</junit.version>
-        <logback.version>1.2.0</logback.version>
-        <mockito.version>3.3.3</mockito.version>
-        <xmlunit.version>2.3.0</xmlunit.version>
 
-        <powsyblcore.version>4.6.0</powsyblcore.version>
+        <powsyblcore.version>5.1.0</powsyblcore.version>
+
+        <sonar.coverage.jacoco.xmlReportPaths>
+            ../distribution/target/site/jacoco-aggregate/jacoco.xml,
+        </sonar.coverage.jacoco.xmlReportPaths>
     </properties>
 
     <profiles>
@@ -88,6 +91,15 @@
                 </plugins>
             </build>
         </profile>
+        <profile>
+            <id>integration-tests</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <modules>
+                <module>dynawo-integration-tests</module>
+            </modules>
+        </profile>
     </profiles>
 
     <dependencyManagement>
@@ -101,40 +113,31 @@
             </dependency>
 
             <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-classic</artifactId>
-                <version>${logback.version}</version>
-                <scope>runtime</scope>
+                <groupId>com.powsybl</groupId>
+                <artifactId>powsybl-dynawo-commons</artifactId>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.google.jimfs</groupId>
-                <artifactId>jimfs</artifactId>
-                <version>${jimfs.version}</version>
+                <groupId>com.powsybl</groupId>
+                <artifactId>powsybl-dynaflow</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.powsybl</groupId>
+                <artifactId>powsybl-dynawaltz</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>powsybl-dynawaltz</artifactId>
+                <version>${project.version}</version>
+                <type>test-jar</type>
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>${junit.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.assertj</groupId>
-                <artifactId>assertj-core</artifactId>
-                <version>${assertj.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.xmlunit</groupId>
-                <artifactId>xmlunit-core</artifactId>
-                <version>${xmlunit.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.mockito</groupId>
-                <artifactId>mockito-core</artifactId>
-                <version>${mockito.version}</version>
-                <scope>test</scope>
+                <groupId>com.powsybl</groupId>
+                <artifactId>powsybl-dynawaltz-dsl</artifactId>
+                <version>${project.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

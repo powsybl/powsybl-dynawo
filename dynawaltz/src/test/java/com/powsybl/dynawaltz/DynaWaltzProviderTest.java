@@ -110,7 +110,7 @@ public class DynaWaltzProviderTest {
             ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(localDir, 1));
             DynamicSimulation.Runner dynawoSimulation = DynamicSimulation.find();
             assertEquals(DynaWaltzProvider.NAME, dynawoSimulation.getName());
-            assertEquals("1.2.0", dynawoSimulation.getVersion());
+            assertEquals(DynaWaltzProvider.VERSION, dynawoSimulation.getVersion());
             DynamicSimulationResult result = dynawoSimulation.run(network, DynamicModelsSupplierMock.empty(), EventModelsSupplierMock.empty(),
                                                                   CurvesSupplier.empty(), network.getVariantManager().getWorkingVariantId(),
                                                                   computationManager, DynamicSimulationParameters.load());
@@ -128,7 +128,7 @@ public class DynaWaltzProviderTest {
             ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(localDir, 1), commandExecutor, ForkJoinPool.commonPool());
             DynamicSimulation.Runner dynawoSimulation = DynamicSimulation.find();
             assertEquals(DynaWaltzProvider.NAME, dynawoSimulation.getName());
-            assertEquals("1.2.0", dynawoSimulation.getVersion());
+            assertEquals(DynaWaltzProvider.VERSION, dynawoSimulation.getVersion());
             DynamicSimulationResult result = dynawoSimulation.run(network, DynamicModelsSupplierMock.empty(), EventModelsSupplierMock.empty(),
                     CurvesSupplier.empty(), network.getVariantManager().getWorkingVariantId(),
                     computationManager, DynamicSimulationParameters.load());
@@ -147,7 +147,7 @@ public class DynaWaltzProviderTest {
             ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(localDir, 1), commandExecutor, ForkJoinPool.commonPool());
             DynamicSimulation.Runner dynawoSimulation = DynamicSimulation.find();
             assertEquals(DynaWaltzProvider.NAME, dynawoSimulation.getName());
-            assertEquals("1.2.0", dynawoSimulation.getVersion());
+            assertEquals(DynaWaltzProvider.VERSION, dynawoSimulation.getVersion());
             DynamicSimulationResult result = dynawoSimulation.run(network, DynamicModelsSupplierMock.empty(), EventModelsSupplierMock.empty(),
                     new CurvesSupplierMock(), network.getVariantManager().getWorkingVariantId(),
                     computationManager, DynamicSimulationParameters.load());

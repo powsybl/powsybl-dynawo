@@ -14,8 +14,8 @@ import com.powsybl.dynamicsimulation.groovy.EventModelGroovyExtension;
 import com.powsybl.dynamicsimulation.groovy.GroovyEventModelsSupplier;
 import com.powsybl.dynamicsimulation.groovy.GroovyExtension;
 import com.powsybl.dynawaltz.DynaWaltzProvider;
-import com.powsybl.dynawaltz.events.AbstractBlackBoxEventModel;
-import com.powsybl.dynawaltz.events.EventQuadripoleDisconnection;
+import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
+import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection;
 import com.powsybl.dynawaltz.dsl.events.EventQuadripoleDisconnectionGroovyExtension;
 import com.powsybl.dynawaltz.dsl.events.EventSetPointBooleanGroovyExtension;
 import com.powsybl.iidm.network.Identifiable;
@@ -88,12 +88,12 @@ public class DynaWaltzGroovyEventModelsSupplierTest {
     }
 
     private void validateModel(EventModel eventModel) {
-        assertTrue(eventModel instanceof AbstractBlackBoxEventModel);
-        AbstractBlackBoxEventModel blackBoxEventModel = (AbstractBlackBoxEventModel) eventModel;
+        assertTrue(eventModel instanceof AbstractPureDynamicBlackBoxModel);
+        AbstractPureDynamicBlackBoxModel blackBoxEventModel = (AbstractPureDynamicBlackBoxModel) eventModel;
         if (blackBoxEventModel instanceof EventQuadripoleDisconnection) {
-            Identifiable<?> identifiable = network.getIdentifiable(blackBoxEventModel.getStaticId());
-            assertEquals("EM_" + identifiable.getId(), blackBoxEventModel.getEventModelId());
-            assertEquals("EQD", blackBoxEventModel.getParameterSetId());
+            Identifiable<?> identifiable = network.getIdentifiable(((EventQuadripoleDisconnection) blackBoxEventModel).getLineStaticId());
+            assertEquals("EM_" + identifiable.getId(), blackBoxEventModel.getDynamicModelId());
+            assertEquals(blackBoxEventModel.getDynamicModelId(), blackBoxEventModel.getParameterSetId());
             assertTrue(identifiable instanceof Line);
         }
     }

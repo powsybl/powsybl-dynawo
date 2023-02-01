@@ -9,18 +9,23 @@ package com.powsybl.dynaflow;
 import com.google.auto.service.AutoService;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
+import com.powsybl.commons.PowsyblException;
+import com.powsybl.commons.config.PlatformConfig;
+import com.powsybl.commons.extensions.Extension;
+import com.powsybl.commons.extensions.ExtensionJsonSerializer;
+import com.powsybl.commons.parameters.Parameter;
 import com.powsybl.computation.*;
 import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
-import com.powsybl.dynawo.commons.DynawoResultsNetworkUpdate;
-import com.powsybl.iidm.export.Exporters;
+import com.powsybl.dynaflow.json.JsonDynaFlowParametersSerializer;
+import com.powsybl.dynawo.commons.*;
+import com.powsybl.dynawo.commons.PowsyblDynawoVersion;
 import com.powsybl.iidm.network.Network;
-import com.powsybl.iidm.xml.IidmXmlVersion;
 import com.powsybl.iidm.xml.NetworkXml;
-import com.powsybl.iidm.xml.XMLExporter;
 import com.powsybl.loadflow.LoadFlowParameters;
 import com.powsybl.loadflow.LoadFlowProvider;
 import com.powsybl.loadflow.LoadFlowResult;
 import com.powsybl.loadflow.LoadFlowResultImpl;
+import com.powsybl.loadflow.json.LoadFlowResultDeserializer;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -37,6 +42,8 @@ import static com.powsybl.dynaflow.DynaFlowConstants.*;
 @AutoService(LoadFlowProvider.class)
 public class DynaFlowProvider implements LoadFlowProvider {
 
+    public static final String MODULE_SPECIFIC_PARAMETERS = "dynaflow-default-parameters";
+
     private static final String WORKING_DIR_PREFIX = "dynaflow_";
 
     private final Supplier<DynaFlowConfig> configSupplier;
@@ -47,12 +54,6 @@ public class DynaFlowProvider implements LoadFlowProvider {
 
     public DynaFlowProvider(Supplier<DynaFlowConfig> configSupplier) {
         this.configSupplier = Suppliers.memoize(Objects.requireNonNull(configSupplier, "Config supplier is null"));
-    }
-
-    private static void writeIIDM(Path workingDir, Network network) {
-        Properties params = new Properties();
-        params.setProperty(XMLExporter.VERSION, IidmXmlVersion.V_1_2.toString("."));
-        Exporters.export("XIIDM", network, params, workingDir.resolve(IIDM_FILENAME));
     }
 
     private static String getProgram(DynaFlowConfig config) {
@@ -66,6 +67,10 @@ public class DynaFlowProvider implements LoadFlowProvider {
                 .id("dynaflow_lf")
                 .program(getProgram(config))
                 .args(args)
+                .inputFiles(new InputFile(IIDM_FILENAME),
+                            new InputFile(CONFIG_FILENAME))
+                .outputFiles(new OutputFile(OUTPUT_RESULTS_FILENAME),
+                             new OutputFile("outputs/finalState/" + OUTPUT_IIDM_FILENAME))
                 .build();
     }
 
@@ -88,12 +93,12 @@ public class DynaFlowProvider implements LoadFlowProvider {
 
     @Override
     public String getName() {
-        return "DynaFlow";
+        return DYNAFLOW_NAME;
     }
 
     @Override
     public String getVersion() {
-        return "0.1";
+        return new PowsyblDynawoVersion().getMavenProjectVersion();
     }
 
     private static CommandExecution createCommandExecution(DynaFlowConfig config) {
@@ -111,25 +116,22 @@ public class DynaFlowProvider implements LoadFlowProvider {
         DynaFlowConfig config = Objects.requireNonNull(configSupplier.get());
         ExecutionEnvironment env = new ExecutionEnvironment(config.createEnv(), WORKING_DIR_PREFIX, config.isDebug());
         Command versionCmd = getVersionCommand(config);
-        DynaFlowUtil.checkDynaFlowVersion(env, computationManager, versionCmd);
-        return computationManager.execute(env, new AbstractExecutionHandler<LoadFlowResult>() {
+        if (!DynaFlowUtil.checkDynaFlowVersion(env, computationManager, versionCmd)) {
+            throw new PowsyblException("DynaFlow version not supported. Must be >= " + DynawoConstants.VERSION_MIN);
+        }
+        return computationManager.execute(env, new AbstractExecutionHandler<>() {
 
             @Override
             public List<CommandExecution> before(Path workingDir) throws IOException {
-                Path outputNetworkFile = workingDir.resolve("outputs").resolve("finalState").resolve(OUTPUT_IIDM_FILENAME);
-                if (Files.exists(outputNetworkFile)) {
-                    Files.delete(outputNetworkFile);
-                }
                 network.getVariantManager().setWorkingVariant(workingStateId);
-                writeIIDM(workingDir, network);
-                DynaFlowConfigSerializer.serialize(loadFlowParameters, dynaFlowParameters, workingDir, workingDir.resolve(CONFIG_FILENAME));
+                DynawoUtil.writeIidm(network, workingDir.resolve(IIDM_FILENAME));
+                DynaFlowConfigSerializer.serialize(loadFlowParameters, dynaFlowParameters, Path.of("."), workingDir.resolve(CONFIG_FILENAME));
                 return Collections.singletonList(createCommandExecution(config));
             }
 
             @Override
-            public LoadFlowResult after(Path workingDir, ExecutionReport report) throws IOException {
-                Path absoluteWorkingDir = workingDir.toAbsolutePath();
-                super.after(absoluteWorkingDir, report);
+            public LoadFlowResult after(Path workingDir, ExecutionReport report) {
+                report.log();
                 network.getVariantManager().setWorkingVariant(workingStateId);
                 boolean status = true;
                 Path outputNetworkFile = workingDir.resolve("outputs").resolve("finalState").resolve(OUTPUT_IIDM_FILENAME);
@@ -138,10 +140,47 @@ public class DynaFlowProvider implements LoadFlowProvider {
                 } else {
                     status = false;
                 }
-                Map<String, String> metrics = new HashMap<>();
-                String logs = null;
-                return new LoadFlowResultImpl(status, metrics, logs);
+                Path resultsPath = workingDir.resolve(OUTPUT_RESULTS_FILENAME);
+                if (!Files.exists(resultsPath)) {
+                    Map<String, String> metrics = new HashMap<>();
+                    List<LoadFlowResult.ComponentResult> componentResults = new ArrayList<>(1);
+                    componentResults.add(new LoadFlowResultImpl.ComponentResultImpl(0,
+                            0,
+                            status ? LoadFlowResult.ComponentResult.Status.CONVERGED : LoadFlowResult.ComponentResult.Status.FAILED,
+                            0,
+                            "not-found",
+                            0.,
+                            Double.NaN));
+                    return new LoadFlowResultImpl(status, metrics, null, componentResults);
+                }
+                return LoadFlowResultDeserializer.read(resultsPath);
             }
         });
+    }
+
+    @Override
+    public Optional<Extension<LoadFlowParameters>> loadSpecificParameters(PlatformConfig platformConfig) {
+        // if not specified, dynaflow parameters must be default here
+        return Optional.of(DynaFlowParameters.load(platformConfig));
+    }
+
+    @Override
+    public Optional<Extension<LoadFlowParameters>> loadSpecificParameters(Map<String, String> properties) {
+        return Optional.of(DynaFlowParameters.load(properties));
+    }
+
+    @Override
+    public List<Parameter> getSpecificParameters() {
+        return DynaFlowParameters.SPECIFIC_PARAMETERS;
+    }
+
+    @Override
+    public Optional<ExtensionJsonSerializer> getSpecificParametersSerializer() {
+        return Optional.of(new JsonDynaFlowParametersSerializer());
+    }
+
+    @Override
+    public void updateSpecificParameters(Extension<LoadFlowParameters> extension, Map<String, String> properties) {
+        getParametersExt(extension.getExtendable()).update(properties);
     }
 }

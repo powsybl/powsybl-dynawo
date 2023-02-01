@@ -21,7 +21,6 @@ import com.powsybl.dynawaltz.DynaWaltzParameters;
 import com.powsybl.dynawaltz.DynaWaltzProvider;
 import com.powsybl.dynawaltz.DynaWaltzProviderTest.DynamicModelsSupplierMock;
 import com.powsybl.dynawaltz.DynaWaltzProviderTest.EventModelsSupplierMock;
-import com.powsybl.iidm.import_.Importers;
 import com.powsybl.iidm.network.Network;
 
 import java.io.IOException;
@@ -59,7 +58,7 @@ public abstract class AbstractIeeeTest {
 
         // The parameter files are copied into the PlatformConfig filesystem,
         // that filesystem is the one that DynaWaltzContext and ParametersXml will use to read the parameters
-        fileSystem = PlatformConfig.defaultConfig().getConfigDir().getFileSystem();
+        fileSystem = PlatformConfig.defaultConfig().getConfigDir().map(Path::getFileSystem).orElseThrow(AssertionError::new);
         workingDir = Files.createDirectory(fileSystem.getPath(getWorkingDirName()));
 
         // Copy parameter files
@@ -70,7 +69,7 @@ public abstract class AbstractIeeeTest {
 
         // Load network
         Files.copy(getClass().getResourceAsStream(networkFile), workingDir.resolve("network.iidm"));
-        network = Importers.loadNetwork(workingDir.resolve("network.iidm"));
+        network = Network.read(workingDir.resolve("network.iidm"));
 
         // Dynamic models
         if (dynamicModelsFile != null) {
@@ -116,7 +115,7 @@ public abstract class AbstractIeeeTest {
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(workingDir, 1), commandExecutor, ForkJoinPool.commonPool());
         DynamicSimulation.Runner dynawoSimulation = DynamicSimulation.find();
         assertEquals(DynaWaltzProvider.NAME, dynawoSimulation.getName());
-        assertEquals("1.2.0", dynawoSimulation.getVersion());
+        assertEquals(DynaWaltzProvider.VERSION, dynawoSimulation.getVersion());
         return dynawoSimulation.run(network, dynamicModelsSupplier, eventModelsSupplier,
             curvesSupplier, network.getVariantManager().getWorkingVariantId(),
             computationManager, parameters);

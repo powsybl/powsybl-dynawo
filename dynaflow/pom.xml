@@ -13,7 +13,7 @@
     <parent>
         <artifactId>powsybl-dynawo</artifactId>
         <groupId>com.powsybl</groupId>
-        <version>1.7.0-SNAPSHOT</version>
+        <version>1.13.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>powsybl-dynaflow</artifactId>
@@ -41,14 +41,6 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>powsybl-dynawo-commons</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <!-- Runtime dependencies -->
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <scope>runtime</scope>
         </dependency>
 
         <!-- Test dependencies -->
@@ -78,9 +70,13 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>com.powsybl</groupId>
-            <artifactId>powsybl-commons</artifactId>
-            <type>test-jar</type>
+            <artifactId>powsybl-commons-test</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

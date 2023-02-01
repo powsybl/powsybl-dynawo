@@ -6,11 +6,24 @@
  */
 package com.powsybl.dynawaltz.xml;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
+import com.powsybl.commons.test.AbstractConverterTest;
+import com.powsybl.dynamicsimulation.Curve;
+import com.powsybl.dynawaltz.DynaWaltzCurve;
+import com.powsybl.dynawaltz.models.BlackBoxModel;
+import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton;
+import com.powsybl.dynawaltz.models.buses.StandardBus;
+import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection;
+import com.powsybl.dynawaltz.models.events.EventSetPointBoolean;
+import com.powsybl.dynawaltz.models.generators.*;
+import com.powsybl.dynawaltz.models.loads.LoadAlphaBeta;
+import com.powsybl.dynawaltz.models.loads.LoadOneTransformer;
+import com.powsybl.iidm.network.*;
+import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
+import junit.framework.AssertionFailedError;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.rules.ExpectedException;
+import org.xml.sax.SAXException;
 
 import javax.xml.XMLConstants;
 import javax.xml.transform.Source;
@@ -18,24 +31,13 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.powsybl.iidm.network.*;
-import junit.framework.AssertionFailedError;
-
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.rules.ExpectedException;
-import org.xml.sax.SAXException;
-
-import com.powsybl.commons.AbstractConverterTest;
-import com.powsybl.dynamicsimulation.Curve;
-import com.powsybl.dynamicsimulation.DynamicModel;
-import com.powsybl.dynamicsimulation.EventModel;
-import com.powsybl.dynawaltz.DynaWaltzCurve;
-import com.powsybl.dynawaltz.automatons.*;
-import com.powsybl.dynawaltz.dynamicmodels.*;
-import com.powsybl.dynawaltz.events.*;
-import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
+import static com.powsybl.commons.test.ComparisonUtils.compareXml;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -46,8 +48,8 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
     public ExpectedException exception = ExpectedException.none();
 
     protected Network network;
-    protected List<DynamicModel> dynamicModels;
-    protected List<EventModel> eventModels;
+    protected List<BlackBoxModel> dynamicModels;
+    protected List<BlackBoxModel> eventModels;
     protected List<Curve> curves;
 
     @Before
@@ -78,21 +80,34 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
         });
         network.getGeneratorStream().forEach(g -> {
             if (g.getId().equals("GEN2")) {
-                dynamicModels.add(new GeneratorSynchronousFourWindingsProportionalRegulations("BBM_" + g.getId(), g.getId(), "GSFWPR"));
+                dynamicModels.add(new GeneratorSynchronous("BBM_" + g.getId(), g.getId(), "GSFWPR", "GeneratorSynchronousFourWindingsProportionalRegulations"));
             } else if (g.getId().equals("GEN3")) {
-                dynamicModels.add(new GeneratorSynchronousFourWindings("BBM_" + g.getId(), g.getId(), "GSFW"));
+                dynamicModels.add(new GeneratorSynchronous("BBM_" + g.getId(), g.getId(), "GSFW", "GeneratorSynchronousFourWindings"));
             } else if (g.getId().equals("GEN4")) {
-                dynamicModels.add(new GeneratorSynchronousThreeWindings("BBM_" + g.getId(), g.getId(), "GSTW"));
+                dynamicModels.add(new GeneratorSynchronous("BBM_" + g.getId(), g.getId(), "GSTW", "GeneratorSynchronousThreeWindings"));
+            } else if (g.getId().equals("GEN5")) {
+                dynamicModels.add(new GeneratorSynchronous("BBM_" + g.getId(), g.getId(), "GSFWPRSP", "GeneratorSynchronousFourWindingsProportionalRegulationsStepPm"));
+            } else if (g.getId().equals("GEN6")) {
+                dynamicModels.add(new GeneratorFictitious("BBM_" + g.getId(), g.getId(), "GF"));
             } else {
-                dynamicModels.add(new GeneratorSynchronousThreeWindingsProportionalRegulations("BBM_" + g.getId(), g.getId(), "GSTWPR"));
+                dynamicModels.add(new GeneratorSynchronous("BBM_" + g.getId(), g.getId(), "GSTWPR", "GeneratorSynchronousThreeWindingsProportionalRegulations"));
             }
-            dynamicModels.add(new OmegaRef("BBM_" + g.getId()));
+        });
+        network.getBusBreakerView().getBuses().forEach(b -> {
+            if (b.getId().equals("NGEN")) {
+                dynamicModels.add(new StandardBus("BBM_" + b.getId(), b.getId(), "SB"));
+            }
         });
 
         // Events
         eventModels = new ArrayList<>();
         network.getLineStream().forEach(l -> {
-            eventModels.add(new EventQuadripoleDisconnection("EM_" + l.getId(), l.getId(), "EQD"));
+            eventModels.add(new EventQuadripoleDisconnection("EM_" + l.getId(), l.getId(), 5, false, true));
+        });
+        network.getGeneratorStream().forEach(g -> {
+            if (g.getId().equals("GEN2")) {
+                eventModels.add(new EventSetPointBoolean("EM_" + g.getId(), g.getId(), 1, true));
+            }
         });
 
         // Automatons
@@ -123,7 +138,7 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
             .setP0(1.0)
             .setQ0(0.5)
             .add();
-        VoltageLevel vlgen  = network.getVoltageLevel("VLGEN");
+        VoltageLevel vlgen = network.getVoltageLevel("VLGEN");
         Bus ngen = vlgen.getBusBreakerView().getBus("NGEN");
         vlgen.newGenerator()
             .setId("GEN2")
@@ -157,6 +172,41 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
             .setTargetV(24.5)
             .setTargetP(-1.3)
             .setTargetQ(0.9)
+            .add();
+        vlgen.newGenerator()
+            .setId("GEN5")
+            .setBus(ngen.getId())
+            .setConnectableBus(ngen.getId())
+            .setMinP(-9999.99)
+            .setMaxP(9999.99)
+            .setVoltageRegulatorOn(true)
+            .setTargetV(24.5)
+            .setTargetP(-0.3)
+            .setTargetQ(0.7)
+            .add();
+        vlgen.newGenerator()
+            .setId("GEN6")
+            .setBus(ngen.getId())
+            .setConnectableBus(ngen.getId())
+            .setMinP(-9999.99)
+            .setMaxP(9999.99)
+            .setVoltageRegulatorOn(true)
+            .setTargetV(24.5)
+            .setTargetP(-0.3)
+            .setTargetQ(0.7)
+            .add();
+        VoltageLevel vlhv1 = network.getVoltageLevel("VLHV1");
+        Bus nhv1 = vlhv1.getBusBreakerView().getBus("NHV1");
+        vlhv1.newGenerator()
+            .setId("NHV1_1")
+            .setBus(nhv1.getId())
+            .setConnectableBus(nhv1.getId())
+            .setMinP(-9999.99)
+            .setMaxP(9999.99)
+            .setVoltageRegulatorOn(true)
+            .setTargetV(24.5)
+            .setTargetP(0.1)
+            .setTargetQ(0.2)
             .add();
         return network;
     }

@@ -7,35 +7,38 @@
 
 package com.powsybl.dynawaltz.xml;
 
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
-
 import com.powsybl.dynawaltz.DynaWaltzContext;
 
-import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_PREFIX;
-import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
-
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
-import java.util.function.BiConsumer;
+
+import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_PREFIX;
+import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 
 /**
  * @author Mathieu Bague <mathieu.bague@rte-france.com>
  */
 public final class XmlUtil {
 
+    @FunctionalInterface
+    public interface XmlDynawaltzWriter {
+        void write(XMLStreamWriter writer, DynaWaltzContext dynaWaltzContext) throws XMLStreamException;
+    }
+
     private XmlUtil() {
     }
 
-    public static void write(Path file, DynaWaltzContext context, String elementName, BiConsumer<XMLStreamWriter, DynaWaltzContext> write) throws IOException, XMLStreamException {
+    public static void write(Path file, DynaWaltzContext context, String elementName, XmlDynawaltzWriter xmlDynawaltzWriter) throws IOException, XMLStreamException {
         Objects.requireNonNull(file);
         Objects.requireNonNull(context);
         Objects.requireNonNull(elementName);
-        Objects.requireNonNull(write);
+        Objects.requireNonNull(xmlDynawaltzWriter);
 
         try (Writer writer = Files.newBufferedWriter(file, StandardCharsets.UTF_8)) {
             XMLStreamWriter xmlWriter = XmlStreamWriterFactory.newInstance(writer);
@@ -45,7 +48,7 @@ public final class XmlUtil {
                 xmlWriter.writeStartElement(DYN_URI, elementName);
                 xmlWriter.writeNamespace(DYN_PREFIX, DYN_URI);
 
-                write.accept(xmlWriter, context);
+                xmlDynawaltzWriter.write(xmlWriter, context);
 
                 xmlWriter.writeEndElement();
                 xmlWriter.writeEndDocument();

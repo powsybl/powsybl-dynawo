@@ -6,14 +6,15 @@
  */
 package com.powsybl.dynaflow;
 
-import com.powsybl.commons.AbstractConverterTest;
+import com.powsybl.commons.test.AbstractConverterTest;
+import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.datasource.ResourceDataSource;
 import com.powsybl.commons.datasource.ResourceSet;
 import com.powsybl.computation.ComputationManager;
 import com.powsybl.computation.local.LocalCommandExecutor;
 import com.powsybl.computation.local.LocalComputationConfig;
 import com.powsybl.computation.local.LocalComputationManager;
-import com.powsybl.iidm.import_.Importers;
+import com.powsybl.iidm.network.Importers;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.xml.NetworkXml;
 import com.powsybl.loadflow.LoadFlow;
@@ -27,11 +28,13 @@ import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ForkJoinPool;
 
+import static com.powsybl.commons.test.ComparisonUtils.compareXml;
 import static com.powsybl.dynaflow.DynaFlowConstants.*;
 import static org.junit.Assert.*;
 
@@ -76,16 +79,19 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
 
         private final String stdOutFileRef;
         private final String outputIidm;
+        private final String outputResults;
 
-        public LocalCommandExecutorMock(String stdoutFileRef, String outputIidm) {
+        public LocalCommandExecutorMock(String stdoutFileRef, String outputIidm, String outputResults) {
             this.stdOutFileRef = Objects.requireNonNull(stdoutFileRef);
             this.outputIidm = Objects.requireNonNull(outputIidm);
+            this.outputResults = Objects.requireNonNull(outputResults);
         }
 
         @Override
         public int execute(String program, List<String> args, Path outFile, Path errFile, Path workingDir, Map<String, String> env) {
             try {
                 copyFile(stdOutFileRef, errFile);
+                copyFile(outputResults, workingDir.resolve(OUTPUT_RESULTS_FILENAME));
                 Files.createDirectories(workingDir.resolve("outputs").resolve("finalState"));
                 copyFile(outputIidm, workingDir.resolve("outputs").resolve("finalState").resolve(OUTPUT_IIDM_FILENAME));
 
@@ -123,11 +129,10 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
         LoadFlow.Runner dynaFlowSimulation = LoadFlow.find();
         LoadFlowParameters params = LoadFlowParameters.load();
 
-        assertEquals("DynaFlow", dynaFlowSimulation.getName());
-        assertEquals("0.1", dynaFlowSimulation.getVersion());
+        assertEquals(DYNAFLOW_NAME, dynaFlowSimulation.getName());
 
         LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynaflow_version.out",
-                "/SmallBusBranch_outputIIDM.xml");
+                "/SmallBusBranch_outputIIDM.xml", "/results.json");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
         LoadFlowResult result = dynaFlowSimulation.run(network, computationManager, params);
         assertNotNull(result);
@@ -140,8 +145,7 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
         LoadFlow.Runner dynaFlowSimulation = LoadFlow.find();
         LoadFlowParameters params = LoadFlowParameters.load();
 
-        assertEquals("DynaFlow", dynaFlowSimulation.getName());
-        assertEquals("0.1", dynaFlowSimulation.getVersion());
+        assertEquals(DYNAFLOW_NAME, dynaFlowSimulation.getName());
 
         LocalCommandExecutor commandExecutor = new EmptyLocalCommandExecutorMock("/dynaflow_version.out");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
@@ -150,17 +154,27 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
         assertFalse(result.isOk());
     }
 
+    @Test(expected = PowsyblException.class)
+    public void testCallingBadVersionDynaFlow() throws Exception {
+        Network network = createTestSmallBusBranch();
+        LoadFlow.Runner dynaFlowSimulation = LoadFlow.find();
+        LoadFlowParameters params = LoadFlowParameters.load();
+
+        LocalCommandExecutor commandExecutor = new EmptyLocalCommandExecutorMock("/dynaflow_bad_version.out");
+        ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
+        LoadFlowResult result = dynaFlowSimulation.run(network, computationManager, params);
+    }
+
     @Test
     public void testUpdate() throws Exception {
         Network network = createTestSmallBusBranch();
         LoadFlow.Runner dynaFlowSimulation = LoadFlow.find();
         LoadFlowParameters params = LoadFlowParameters.load();
 
-        assertEquals("DynaFlow", dynaFlowSimulation.getName());
-        assertEquals("0.1", dynaFlowSimulation.getVersion());
+        assertEquals(DYNAFLOW_NAME, dynaFlowSimulation.getName());
 
         LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynaflow_version.out",
-                "/SmallBusBranch_outputIIDM.xml");
+                "/SmallBusBranch_outputIIDM.xml", "/results.json");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
         LoadFlowResult result = dynaFlowSimulation.run(network, computationManager, params);
         assertNotNull(result);
@@ -170,6 +184,28 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
         Network expectedNetwork = NetworkXml.read(pReferenceOutput);
 
         compare(expectedNetwork, network);
+    }
+
+    @Test
+    public void testUpdateSpecificParameters() {
+        Map<String, String> properties = Map.of(
+                "svcRegulationOn", "true",
+                "shuntRegulationOn", "true",
+                "automaticSlackBusOn", "false",
+                "dsoVoltageLevel", "2.0",
+                "chosenOutputs", "STEADYSTATE, CONSTRAINTS",
+                "timeStep", "0");
+
+        LoadFlowParameters params = LoadFlowParameters.load();
+        DynaFlowParameters dynaParams = params.getExtension(DynaFlowParameters.class);
+        provider.updateSpecificParameters(dynaParams, properties);
+
+        assertTrue(dynaParams.getSvcRegulationOn());
+        assertTrue(dynaParams.getShuntRegulationOn());
+        assertFalse(dynaParams.getAutomaticSlackBusOn());
+        assertEquals(2, dynaParams.getDsoVoltageLevel(), 0.1d);
+        assertArrayEquals(Arrays.asList(OutputTypes.STEADYSTATE.name(), OutputTypes.CONSTRAINTS.name()).toArray(), dynaParams.getChosenOutputs().toArray());
+        assertEquals(0, dynaParams.getTimeStep(), 0.1d);
     }
 
     private void compare(Network expected, Network actual) throws IOException {
