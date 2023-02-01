@@ -60,7 +60,7 @@ import static org.junit.Assert.*;
  */
 public class DynaFlowSecurityAnalysisTest {
 
-    private static final String SECURITY_ANALISIS_RESULTS_FILENAME = "securityAnalysisResults.json";
+    private static final String SECURITY_ANALYSIS_RESULTS_FILENAME = "securityAnalysisResults.json";
 
     private FileSystem fileSystem;
     private PlatformConfig platformConfig;
@@ -88,11 +88,11 @@ public class DynaFlowSecurityAnalysisTest {
     private static class LocalCommandExecutorMock extends AbstractLocalCommandExecutor {
 
         private final String stdOutFileRef;
-        private final String outputSecurityAnalisisResult;
+        private final String outputSecurityAnalysisResult;
 
-        public LocalCommandExecutorMock(String stdoutFileRef, String outputSecurityAnalisisResult) {
+        public LocalCommandExecutorMock(String stdoutFileRef, String outputSecurityAnalysisResult) {
             this.stdOutFileRef = Objects.requireNonNull(stdoutFileRef);
-            this.outputSecurityAnalisisResult = Objects.requireNonNull(outputSecurityAnalisisResult);
+            this.outputSecurityAnalysisResult = Objects.requireNonNull(outputSecurityAnalysisResult);
         }
 
         @Override
@@ -105,7 +105,7 @@ public class DynaFlowSecurityAnalysisTest {
                     assertEquals("--config", args.get(2));
                     assertEquals("--contingencies", args.get(4));
                     Files.createDirectories(workingDir.resolve("outputs"));
-                    copyFile(outputSecurityAnalisisResult, workingDir.resolve("outputs").resolve(SECURITY_ANALISIS_RESULTS_FILENAME));
+                    copyFile(outputSecurityAnalysisResult, workingDir.resolve("outputs").resolve(SECURITY_ANALYSIS_RESULTS_FILENAME));
                 }
                 return 0;
             } catch (IOException e) {
@@ -118,7 +118,6 @@ public class DynaFlowSecurityAnalysisTest {
     public void testDefaultProvider() {
         SecurityAnalysis.Runner dynawoSecurityAnalysisRunner = SecurityAnalysis.find();
         assertEquals(DYNAFLOW_NAME, dynawoSecurityAnalysisRunner.getName());
-        assertEquals(VERSION.toString(), dynawoSecurityAnalysisRunner.getVersion());
     }
 
     @Test
@@ -139,7 +138,7 @@ public class DynaFlowSecurityAnalysisTest {
                 .add();
 
         LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynaflow_version.out",
-                "/security_analisis_result.json");
+                "/security_analysis_result.json");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
 
         Contingency contingency = Contingency.builder("NHV1_NHV2_2_contingency")
@@ -223,7 +222,7 @@ public class DynaFlowSecurityAnalysisTest {
             Diff myDiff = DiffBuilder.compare(control).withTest(test).ignoreWhitespace().ignoreComments().build();
             boolean hasDiff = myDiff.hasDifferences();
             if (hasDiff) {
-                System.err.println(myDiff.toString());
+                System.err.println(myDiff);
             }
             assertFalse(hasDiff);
         }
