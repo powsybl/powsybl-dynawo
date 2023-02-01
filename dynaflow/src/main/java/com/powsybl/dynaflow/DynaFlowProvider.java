@@ -16,10 +16,8 @@ import com.powsybl.commons.extensions.ExtensionJsonSerializer;
 import com.powsybl.computation.*;
 import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
 import com.powsybl.dynaflow.json.JsonDynaFlowParametersSerializer;
-import com.powsybl.dynawo.commons.DynawoConstants;
-import com.powsybl.dynawo.commons.DynawoResultsNetworkUpdate;
-import com.powsybl.dynawo.commons.DynawoUtil;
-import com.powsybl.dynawo.commons.PowsyblDynawoConstants;
+import com.powsybl.dynawo.commons.*;
+import com.powsybl.dynawo.commons.PowsyblDynawoVersion;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.xml.NetworkXml;
 import com.powsybl.loadflow.LoadFlowParameters;
@@ -99,7 +97,7 @@ public class DynaFlowProvider implements LoadFlowProvider {
 
     @Override
     public String getVersion() {
-        return PowsyblDynawoConstants.getProviderVersion();
+        return new PowsyblDynawoVersion().getMavenProjectVersion();
     }
 
     private static CommandExecution createCommandExecution(DynaFlowConfig config) {

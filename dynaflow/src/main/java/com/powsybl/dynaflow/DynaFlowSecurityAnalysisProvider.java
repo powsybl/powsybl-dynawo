@@ -10,7 +10,7 @@ import com.google.auto.service.AutoService;
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.computation.ComputationManager;
 import com.powsybl.contingency.ContingenciesProvider;
-import com.powsybl.dynawo.commons.PowsyblDynawoConstants;
+import com.powsybl.dynawo.commons.PowsyblDynawoVersion;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.security.*;
 import com.powsybl.security.action.Action;
@@ -82,6 +82,6 @@ public class DynaFlowSecurityAnalysisProvider implements SecurityAnalysisProvide
 
     @Override
     public String getVersion() {
-        return PowsyblDynawoConstants.getProviderVersion();
+        return new PowsyblDynawoVersion().getMavenProjectVersion();
     }
 }
