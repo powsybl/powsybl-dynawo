@@ -48,7 +48,7 @@ public class DynaFlowSecurityAnalysis {
     private static final String WORKING_DIR_PREFIX = "dynaflow_sa_";
     private static final String DYNAFLOW_LAUNCHER_PROGRAM_NAME = "dynaflow-launcher.sh";
     private static final String CONTINGENCIES_FILENAME = "contingencies.json";
-    private static final String SECURITY_ANALISIS_RESULTS_FILENAME = "securityAnalysisResults.json";
+    private static final String SECURITY_ANALYSIS_RESULTS_FILENAME = "securityAnalysisResults.json";
     private static final String BASE_CASE_FOLDER = "BaseCase";
     private static final String DYNAFLOW_OUTPUT_FOLDER = "outputs";
     private static final String DYNAWO_FINAL_STATE_FOLDER = "finalState";
@@ -166,7 +166,7 @@ public class DynaFlowSecurityAnalysis {
                 network.getVariantManager().setWorkingVariant(workingVariantId);
 
                 // If the results have already been prepared, just read them ...
-                Path saOutput = workingDir.resolve(DYNAFLOW_OUTPUT_FOLDER).resolve(SECURITY_ANALISIS_RESULTS_FILENAME);
+                Path saOutput = workingDir.resolve(DYNAFLOW_OUTPUT_FOLDER).resolve(SECURITY_ANALYSIS_RESULTS_FILENAME);
                 if (Files.exists(saOutput)) {
                     return new SecurityAnalysisReport(SecurityAnalysisResultDeserializer.read(saOutput));
                 } else {

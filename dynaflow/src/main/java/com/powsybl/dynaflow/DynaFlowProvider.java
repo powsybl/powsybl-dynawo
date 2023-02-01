@@ -13,11 +13,12 @@ import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.extensions.Extension;
 import com.powsybl.commons.extensions.ExtensionJsonSerializer;
+import com.powsybl.commons.parameters.Parameter;
 import com.powsybl.computation.*;
 import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
 import com.powsybl.dynaflow.json.JsonDynaFlowParametersSerializer;
-import com.powsybl.dynawo.commons.DynawoResultsNetworkUpdate;
-import com.powsybl.dynawo.commons.DynawoUtil;
+import com.powsybl.dynawo.commons.*;
+import com.powsybl.dynawo.commons.PowsyblDynawoVersion;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.xml.NetworkXml;
 import com.powsybl.loadflow.LoadFlowParameters;
@@ -97,7 +98,7 @@ public class DynaFlowProvider implements LoadFlowProvider {
 
     @Override
     public String getVersion() {
-        return VERSION.toString();
+        return new PowsyblDynawoVersion().getMavenProjectVersion();
     }
 
     private static CommandExecution createCommandExecution(DynaFlowConfig config) {
@@ -116,7 +117,7 @@ public class DynaFlowProvider implements LoadFlowProvider {
         ExecutionEnvironment env = new ExecutionEnvironment(config.createEnv(), WORKING_DIR_PREFIX, config.isDebug());
         Command versionCmd = getVersionCommand(config);
         if (!DynaFlowUtil.checkDynaFlowVersion(env, computationManager, versionCmd)) {
-            throw new PowsyblException("DynaFlow version not supported. Must be >= " + VERSION_MIN);
+            throw new PowsyblException("DynaFlow version not supported. Must be >= " + DynawoConstants.VERSION_MIN);
         }
         return computationManager.execute(env, new AbstractExecutionHandler<>() {
 
@@ -169,8 +170,8 @@ public class DynaFlowProvider implements LoadFlowProvider {
     }
 
     @Override
-    public List<String> getSpecificParametersNames() {
-        return DynaFlowParameters.getSpecificParametersNames();
+    public List<Parameter> getSpecificParameters() {
+        return DynaFlowParameters.SPECIFIC_PARAMETERS;
     }
 
     @Override
