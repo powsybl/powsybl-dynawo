@@ -11,10 +11,10 @@
 
 ## DynaFlow
 
-To use DynaFlow as your power flow engine, add the `com.powsybl:powsybl-dynawo` module to your dependencies.
+To use DynaFlow as your power flow engine, add the `com.powsybl:powsybl-dynaflow` module to your dependencies.
 
 ```java
-Network network = Importers.loadNetwork("/path/to/the/casefile.xiidm");
+Network network = Network.read("/path/to/the/casefile.xiidm");
 LoadFlowParameters parameters = LoadFlowParameters.load();
 LoadFlow.find("DynaFlow").run(network, parameters);
 ```
@@ -23,14 +23,16 @@ To learn more about the usage of DynaFlow, read the [dedicated page](https://www
 
 ## DynaWaltz
 
-To use DynaWaltz as your time domain engine, add the `com.powsybl:powsybl-dynawo` module to your dependencies. To run a dynamic simulation, you need:
+To use DynaWaltz as your time domain engine, add the `com.powsybl:powsybl-dynawaltz` and  `com.powsybl:powsybl-dynawaltz-dsl` modules to your dependencies.
+To run a dynamic simulation, you need:
 - a case file
 - a `DynamicModelsSupplier` to associate dynamic models to the equipment of the network
 - an `EventModelsSuppler` to configure events simulated during the simulation (optional)
 - a `CurvesSupplier` to follow the evolution of dynamic variables during the simulation (optional)
 - a set of parameters to configure the simulation (optional)
 
-In `powsybl-dynawo`, the inputs can be configured using Groovy scripts. The simulation parameters can be configured either in the `config.yml` file or using a Json file.
+Thanks to `powsybl-dynawaltz-dsl`, the inputs can be easily configured using Groovy scripts.
+The simulation parameters can be configured either in the `config.yml` file or using a Json file.
 
 ```java
 Network network = Network.read("/path/to/the/casefile.xiidm");
@@ -64,7 +66,7 @@ To learn more about the usage of DynaWaltz, read the [dedicated page](https://ww
 ### Examples
 
 This is an example of a dynamic models mapping file:
-```
+```groovy
 import com.powsybl.iidm.network.Line
 import com.powsybl.iidm.network.Load
 import com.powsybl.iidm.network.Generator
@@ -90,10 +92,82 @@ for (Line line : network.lines) {
         staticId line.id
         dynamicModelId "BBM_" + line.id
         parameterSetId "CLA"
+        side Branch.Side.TWO
     }
 }
 ```
 
 Note that this mapping file refers to parameter set ids which should be found in the Dynawo parameters file.
+For the above example, the corresponding parameter file could be:
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<parametersSet xmlns="http://www.rte-france.com/dynawo">
+    <set id="LAB">
+        <par type="DOUBLE" name="load_alpha" value="1.5"/>
+        <par type="DOUBLE" name="load_beta" value="2.5"/>
+        <reference type="DOUBLE" name="load_P0Pu" origData="IIDM" origName="p_pu"/>
+        <reference type="DOUBLE" name="load_Q0Pu" origData="IIDM" origName="q_pu"/>
+        <reference type="DOUBLE" name="load_U0Pu" origData="IIDM" origName="v_pu"/>
+        <reference type="DOUBLE" name="load_UPhase0" origData="IIDM" origName="angle_pu"/>
+    </set>
+    <set id="CLA">
+        <par type="INT" name="currentLimitAutomaton_OrderToEmit" value="1"/>
+        <par type="BOOL" name="currentLimitAutomaton_Running" value="true"/>
+        <par type="DOUBLE" name="currentLimitAutomaton_IMax" value="600"/>
+        <par type="DOUBLE" name="currentLimitAutomaton_tLagBeforeActing" value="5"/>
+    </set>
+    <set id="GSTWPR">
+        <par type="INT" name="generator_ExcitationPu" value="1"/>
+        <par type="DOUBLE" name="generator_md" value="0.16"/>
+        <par type="DOUBLE" name="generator_mq" value="0.16"/>
+        <par type="DOUBLE" name="generator_nd" value="5.7"/>
+        <par type="DOUBLE" name="generator_nq" value="5.7"/>
+        <par type="DOUBLE" name="generator_MdPuEfd" value="0"/>
+        <par type="DOUBLE" name="generator_DPu" value="0"/>
+        <par type="DOUBLE" name="generator_H" value="4.97"/>
+        <par type="DOUBLE" name="generator_RaPu" value="0.004"/>
+        <par type="DOUBLE" name="generator_XlPu" value="0.102"/>
+        <par type="DOUBLE" name="generator_XdPu" value="0.75"/>
+        <par type="DOUBLE" name="generator_XpdPu" value="0.225"/>
+        <par type="DOUBLE" name="generator_XppdPu" value="0.154"/>
+        <par type="DOUBLE" name="generator_Tpd0" value="3"/>
+        <par type="DOUBLE" name="generator_Tppd0" value="0.04"/>
+        <par type="DOUBLE" name="generator_XqPu" value="0.45"/>
+        <par type="DOUBLE" name="generator_XppqPu" value="0.2"/>
+        <par type="DOUBLE" name="generator_Tppq0" value="0.04"/>
+        <par type="DOUBLE" name="generator_UNom" value="15"/>
+        <par type="DOUBLE" name="generator_PNomTurb" value="74.4"/>
+        <par type="DOUBLE" name="generator_PNomAlt" value="74.4"/>
+        <par type="DOUBLE" name="generator_SNom" value="80"/>
+        <par type="DOUBLE" name="generator_SnTfo" value="80"/>
+        <par type="DOUBLE" name="generator_UNomHV" value="15"/>
+        <par type="DOUBLE" name="generator_UNomLV" value="15"/>
+        <par type="DOUBLE" name="generator_UBaseHV" value="15"/>
+        <par type="DOUBLE" name="generator_UBaseLV" value="15"/>
+        <par type="DOUBLE" name="generator_RTfPu" value="0.0"/>
+        <par type="DOUBLE" name="generator_XTfPu" value="0.0"/>
+        <par type="DOUBLE" name="PmPu_ValueIn" value="0"/>
+        <par type="DOUBLE" name="EfdPu_ValueIn" value="0"/>
+        <par type="DOUBLE" name="voltageRegulator_LagEfdMax" value="0"/>
+        <par type="DOUBLE" name="voltageRegulator_LagEfdMin" value="0"/>
+        <par type="DOUBLE" name="voltageRegulator_EfdMinPu" value="-5"/>
+        <par type="DOUBLE" name="voltageRegulator_EfdMaxPu" value="5"/>
+        <par type="DOUBLE" name="voltageRegulator_UsRefMinPu" value="0.8"/>
+        <par type="DOUBLE" name="voltageRegulator_UsRefMaxPu" value="1.2"/>
+        <par type="DOUBLE" name="voltageRegulator_Gain" value="20"/>
+        <par type="DOUBLE" name="governor_KGover" value="5"/>
+        <par type="DOUBLE" name="governor_PMin" value="0"/>
+        <par type="DOUBLE" name="governor_PMax" value="74.4"/>
+        <par type="DOUBLE" name="governor_PNom" value="74.4"/>
+        <par type="DOUBLE" name="URef_ValueIn" value="0"/>
+        <par type="DOUBLE" name="Pm_ValueIn" value="0"/>
+        <reference name="generator_P0Pu" origData="IIDM" origName="p_pu" type="DOUBLE"/>
+        <reference name="generator_Q0Pu" origData="IIDM" origName="q_pu" type="DOUBLE"/>
+        <reference name="generator_U0Pu" origData="IIDM" origName="v_pu" type="DOUBLE"/>
+        <reference name="generator_UPhase0" origData="IIDM" origName="angle_pu" type="DOUBLE"/>
+    </set>
+</parametersSet>
+```
+ 
 
 Other examples can be found in the [resources](https://github.com/powsybl/powsybl-dynawo/tree/main/dynawaltz-dsl/src/test/resources) of this project.
