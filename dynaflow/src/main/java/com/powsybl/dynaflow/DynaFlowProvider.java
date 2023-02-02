@@ -13,13 +13,14 @@ import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.extensions.Extension;
 import com.powsybl.commons.extensions.ExtensionJsonSerializer;
+import com.powsybl.commons.parameters.Parameter;
 import com.powsybl.computation.*;
 import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
 import com.powsybl.dynaflow.json.JsonDynaFlowParametersSerializer;
-import com.powsybl.dynawo.commons.DynawoResultsNetworkUpdate;
+import com.powsybl.dynawo.commons.*;
+import com.powsybl.dynawo.commons.PowsyblDynawoVersion;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.xml.NetworkXml;
-import com.powsybl.iidm.xml.XMLExporter;
 import com.powsybl.loadflow.LoadFlowParameters;
 import com.powsybl.loadflow.LoadFlowProvider;
 import com.powsybl.loadflow.LoadFlowResult;
@@ -55,12 +56,6 @@ public class DynaFlowProvider implements LoadFlowProvider {
         this.configSupplier = Suppliers.memoize(Objects.requireNonNull(configSupplier, "Config supplier is null"));
     }
 
-    private static void writeIIDM(Path workingDir, Network network) {
-        Properties params = new Properties();
-        params.setProperty(XMLExporter.VERSION, IIDM_VERSION);
-        network.write("XIIDM", params, workingDir.resolve(IIDM_FILENAME));
-    }
-
     private static String getProgram(DynaFlowConfig config) {
         return config.getHomeDir().resolve("dynaflow-launcher.sh").toString();
     }
@@ -72,6 +67,10 @@ public class DynaFlowProvider implements LoadFlowProvider {
                 .id("dynaflow_lf")
                 .program(getProgram(config))
                 .args(args)
+                .inputFiles(new InputFile(IIDM_FILENAME),
+                            new InputFile(CONFIG_FILENAME))
+                .outputFiles(new OutputFile(OUTPUT_RESULTS_FILENAME),
+                             new OutputFile("outputs/finalState/" + OUTPUT_IIDM_FILENAME))
                 .build();
     }
 
@@ -99,7 +98,7 @@ public class DynaFlowProvider implements LoadFlowProvider {
 
     @Override
     public String getVersion() {
-        return VERSION.toString();
+        return new PowsyblDynawoVersion().getMavenProjectVersion();
     }
 
     private static CommandExecution createCommandExecution(DynaFlowConfig config) {
@@ -118,26 +117,21 @@ public class DynaFlowProvider implements LoadFlowProvider {
         ExecutionEnvironment env = new ExecutionEnvironment(config.createEnv(), WORKING_DIR_PREFIX, config.isDebug());
         Command versionCmd = getVersionCommand(config);
         if (!DynaFlowUtil.checkDynaFlowVersion(env, computationManager, versionCmd)) {
-            throw new PowsyblException("DynaFlow version not supported. Must be " + VERSION_MIN + " <= version <= " + VERSION);
+            throw new PowsyblException("DynaFlow version not supported. Must be >= " + DynawoConstants.VERSION_MIN);
         }
-        return computationManager.execute(env, new AbstractExecutionHandler<LoadFlowResult>() {
+        return computationManager.execute(env, new AbstractExecutionHandler<>() {
 
             @Override
             public List<CommandExecution> before(Path workingDir) throws IOException {
-                Path outputNetworkFile = workingDir.resolve("outputs").resolve("finalState").resolve(OUTPUT_IIDM_FILENAME);
-                if (Files.exists(outputNetworkFile)) {
-                    Files.delete(outputNetworkFile);
-                }
                 network.getVariantManager().setWorkingVariant(workingStateId);
-                writeIIDM(workingDir, network);
-                DynaFlowConfigSerializer.serialize(loadFlowParameters, dynaFlowParameters, workingDir, workingDir.resolve(CONFIG_FILENAME));
+                DynawoUtil.writeIidm(network, workingDir.resolve(IIDM_FILENAME));
+                DynaFlowConfigSerializer.serialize(loadFlowParameters, dynaFlowParameters, Path.of("."), workingDir.resolve(CONFIG_FILENAME));
                 return Collections.singletonList(createCommandExecution(config));
             }
 
             @Override
-            public LoadFlowResult after(Path workingDir, ExecutionReport report) throws IOException {
-                Path absoluteWorkingDir = workingDir.toAbsolutePath();
-                super.after(absoluteWorkingDir, report);
+            public LoadFlowResult after(Path workingDir, ExecutionReport report) {
+                report.log();
                 network.getVariantManager().setWorkingVariant(workingStateId);
                 boolean status = true;
                 Path outputNetworkFile = workingDir.resolve("outputs").resolve("finalState").resolve(OUTPUT_IIDM_FILENAME);
@@ -176,8 +170,8 @@ public class DynaFlowProvider implements LoadFlowProvider {
     }
 
     @Override
-    public List<String> getSpecificParametersNames() {
-        return DynaFlowParameters.getSpecificParametersNames();
+    public List<Parameter> getSpecificParameters() {
+        return DynaFlowParameters.SPECIFIC_PARAMETERS;
     }
 
     @Override

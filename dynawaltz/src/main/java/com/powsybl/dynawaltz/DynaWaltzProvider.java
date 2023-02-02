@@ -7,6 +7,7 @@
 package com.powsybl.dynawaltz;
 
 import com.google.auto.service.AutoService;
+import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
 import com.powsybl.computation.*;
 import com.powsybl.dynamicsimulation.*;
@@ -16,10 +17,9 @@ import com.powsybl.dynawaltz.xml.DydXml;
 import com.powsybl.dynawaltz.xml.JobsXml;
 import com.powsybl.dynawaltz.xml.ParametersXml;
 import com.powsybl.dynawo.commons.DynawoResultsNetworkUpdate;
+import com.powsybl.dynawo.commons.DynawoUtil;
 import com.powsybl.iidm.network.Network;
-import com.powsybl.iidm.xml.IidmXmlVersion;
 import com.powsybl.iidm.xml.NetworkXml;
-import com.powsybl.iidm.xml.XMLExporter;
 import com.powsybl.timeseries.TimeSeries;
 import com.powsybl.timeseries.TimeSeries.TimeFormat;
 import com.powsybl.timeseries.TimeSeriesConstants;
@@ -45,18 +45,25 @@ import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.*;
 public class DynaWaltzProvider implements DynamicSimulationProvider {
 
     public static final String NAME = "DynaWaltz";
+    public static final String VERSION = "1.4.0";
     private static final String DYNAWO_CMD_NAME = "dynawo";
     private static final String WORKING_DIR_PREFIX = "powsybl_dynawaltz_";
     private static final String OUTPUT_IIDM_FILENAME = "outputIIDM.xml";
-    private static final String IIDM_VERSION = IidmXmlVersion.V_1_4.toString(".");
+
+    private final PlatformConfig platformConfig;
 
     private final DynaWaltzConfig dynaWaltzConfig;
 
     public DynaWaltzProvider() {
-        this(DynaWaltzConfig.load());
+        this(PlatformConfig.defaultConfig());
     }
 
-    public DynaWaltzProvider(DynaWaltzConfig dynawoConfig) {
+    public DynaWaltzProvider(PlatformConfig platformConfig) {
+        this(platformConfig, DynaWaltzConfig.load(platformConfig));
+    }
+
+    public DynaWaltzProvider(PlatformConfig platformConfig, DynaWaltzConfig dynawoConfig) {
+        this.platformConfig = Objects.requireNonNull(platformConfig);
         this.dynaWaltzConfig = Objects.requireNonNull(dynawoConfig);
     }
 
@@ -67,7 +74,7 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
 
     @Override
     public String getVersion() {
-        return "1.2.0";
+        return VERSION;
     }
 
     @Override
@@ -105,7 +112,7 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
                 .filter(BlackBoxModel.class::isInstance)
                 .map(BlackBoxModel.class::cast)
                 .collect(Collectors.toList());
-        DynaWaltzContext context = new DynaWaltzContext(network, workingVariantId, blackBoxModels, blackBoxEventModels, curvesSupplier.get(network), parameters, dynaWaltzParameters);
+        DynaWaltzContext context = new DynaWaltzContext(network, workingVariantId, blackBoxModels, blackBoxEventModels, curvesSupplier.get(network), parameters, dynaWaltzParameters, platformConfig);
         return computationManager.execute(execEnv, new DynaWaltzHandler(context));
     }
 
@@ -128,7 +135,7 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
                 Files.delete(curvesPath);
             }
             writeInputFiles(workingDir);
-            Command cmd = createCommand(workingDir.resolve(JOBS_FILENAME));
+            Command cmd = createCommand();
             return Collections.singletonList(new CommandExecution(cmd, 1));
         }
 
@@ -158,10 +165,7 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
 
         private void writeInputFiles(Path workingDir) {
             try {
-                // Write the network to XIIDM v1.4 because currently Dynawo does not support versions above
-                Properties params = new Properties();
-                params.setProperty(XMLExporter.VERSION, IIDM_VERSION);
-                context.getNetwork().write("XIIDM", params, workingDir.resolve(NETWORK_FILENAME));
+                DynawoUtil.writeIidm(context.getNetwork(), workingDir.resolve(NETWORK_FILENAME));
 
                 JobsXml.write(workingDir, context);
                 DydXml.write(workingDir, context);
@@ -176,12 +180,12 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
             }
         }
 
-        private Command createCommand(Path dynawoJobsFile) {
+        private Command createCommand() {
             return new GroupCommandBuilder()
                 .id("dyn_fs")
                 .subCommand()
                 .program(getProgram())
-                .args("jobs", dynawoJobsFile.toString())
+                .args("jobs", JOBS_FILENAME)
                 .add()
                 .build();
         }

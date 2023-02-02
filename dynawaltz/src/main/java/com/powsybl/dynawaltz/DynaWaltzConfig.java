@@ -6,10 +6,10 @@
  */
 package com.powsybl.dynawaltz;
 
-import java.util.Objects;
-
-import com.powsybl.commons.config.ModuleConfig;
+import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.config.PlatformConfig;
+
+import java.util.Objects;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -21,11 +21,11 @@ public class DynaWaltzConfig {
     }
 
     public static DynaWaltzConfig load(PlatformConfig platformConfig) {
-        ModuleConfig config = platformConfig.getModuleConfig("dynawaltz");
-        String homeDir = config.getStringProperty("homeDir");
-        boolean debug = config.getBooleanProperty("debug", DEBUG_DEFAULT);
-
-        return new DynaWaltzConfig(homeDir, debug);
+        return platformConfig.getOptionalModuleConfig("dynawaltz")
+                .map(moduleConfig -> new DynaWaltzConfig(
+                        moduleConfig.getStringProperty("homeDir"),
+                        moduleConfig.getBooleanProperty("debug", DEBUG_DEFAULT)))
+                .orElseThrow(() -> new PowsyblException("PlatformConfig incomplete: Module dynawaltz not found"));
     }
 
     public DynaWaltzConfig(String homeDir, boolean debug) {

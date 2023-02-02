@@ -44,7 +44,7 @@ public final class DydXml {
 
     private static void writeDynamicModels(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
         // loop over the values of the map indexed by dynamicIds to write only once objects with the same dynamicId
-        for (BlackBoxModel model : context.getBlackBoxModels()) {
+        for (BlackBoxModel model : context.getBlackBoxDynamicModels()) {
             model.write(writer, context);
         }
         for (MacroConnector macroConnector : context.getMacroConnectors()) {

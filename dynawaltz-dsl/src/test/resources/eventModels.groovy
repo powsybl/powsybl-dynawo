@@ -12,6 +12,8 @@ for (Line line : network.lines) {
     EventQuadripoleDisconnection {
         staticId line.id
         eventModelId "EM_" + line.id
-        parameterSetId "EQD"
+        startTime 4
+        disconnectOrigin false
+        disconnectExtremity true
     }
 }

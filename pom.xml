@@ -18,7 +18,7 @@
     </parent>
 
     <artifactId>powsybl-dynawo</artifactId>
-    <version>1.12.0-SNAPSHOT</version>
+    <version>1.13.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>powsybl dynawo</name>
@@ -33,6 +33,12 @@
 
     <developers>
         <developer>
+            <name>Florian DUPUY</name>
+            <email>florian.dupuy@rte-france.com</email>
+            <organization>RTE</organization>
+            <organizationUrl>http://www.rte-france.com</organizationUrl>
+        </developer>
+        <developer>
             <name>Marcos de Miguel</name>
             <email>demiguelm@aia.es</email>
             <organization>Grupo AIA</organization>
@@ -45,6 +51,7 @@
         <module>dynaflow</module>
         <module>dynawaltz</module>
         <module>dynawaltz-dsl</module>
+        <module>distribution</module>
     </modules>
 
     <properties>
@@ -52,7 +59,11 @@
 
         <groovy.version>3.0.9</groovy.version> <!-- used for groovydoc (dynawaltz-dsl) -->
 
-        <powsyblcore.version>5.0.0</powsyblcore.version>
+        <powsyblcore.version>5.1.0</powsyblcore.version>
+
+        <sonar.coverage.jacoco.xmlReportPaths>
+            ../distribution/target/site/jacoco-aggregate/jacoco.xml,
+        </sonar.coverage.jacoco.xmlReportPaths>
     </properties>
 
     <profiles>
@@ -79,6 +90,15 @@
                     </plugin>
                 </plugins>
             </build>
+        </profile>
+        <profile>
+            <id>integration-tests</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <modules>
+                <module>dynawo-integration-tests</module>
+            </modules>
         </profile>
     </profiles>
 
