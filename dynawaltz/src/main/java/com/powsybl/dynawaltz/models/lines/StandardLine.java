@@ -11,14 +11,10 @@ import com.powsybl.iidm.network.Branch;
 import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.Line;
 
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
-import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 
 public class StandardLine extends AbstractBlackBoxModel implements LineModel {
 
@@ -37,14 +33,6 @@ public class StandardLine extends AbstractBlackBoxModel implements LineModel {
     @Override
     public List<VarMapping> getVarsMapping() {
         return Collections.emptyList();
-    }
-
-    @Override
-    public void write(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
-        writer.writeStartElement(DYN_URI, "blackBoxModel");
-        writeDynamicAttributes(writer, context);
-        writer.writeAttribute("staticId", getStaticId().orElse(null));
-        writer.writeEndElement();
     }
 
     @Override
