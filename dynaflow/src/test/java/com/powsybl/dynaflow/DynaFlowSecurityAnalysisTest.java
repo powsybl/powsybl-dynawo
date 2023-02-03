@@ -9,6 +9,7 @@ package com.powsybl.dynaflow;
 import com.google.common.io.ByteStreams;
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
+import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.config.InMemoryPlatformConfig;
 import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.reporter.Reporter;
@@ -137,7 +138,7 @@ public class DynaFlowSecurityAnalysisTest {
                 .endTemporaryLimit()
                 .add();
 
-        LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynaflow_version.out",
+        LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynawo_version.out",
                 "/security_analysis_result.json");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
 
@@ -174,6 +175,26 @@ public class DynaFlowSecurityAnalysisTest {
         assertEquals(95.0, extension2.getPreContingencyValue(), 0.0);
     }
 
+    @Test
+    public void testCallingBadVersionDynawo() throws IOException {
+        Network network = EurostagTutorialExample1Factory.create();
+
+        Contingency contingency = Contingency.builder("NHV1_NHV2_2_contingency")
+                .addBranch("NHV1_NHV2_2")
+                .build();
+        contingency = Mockito.spy(contingency);
+        Mockito.when(contingency.toModification()).thenReturn(new DynaFlowSecurityAnalysisTestNetworkModification());
+        ContingenciesProvider contingenciesProvider = Mockito.mock(ContingenciesProvider.class);
+        Mockito.when(contingenciesProvider.getContingencies(network)).thenReturn(Collections.singletonList(contingency));
+        LimitViolationFilter filter = new LimitViolationFilter();
+
+        LocalCommandExecutor commandExecutor = new SecurityAnalysisLocalCommandExecutorMock("/dynawo_bad_version.out");
+        ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
+
+        assertThrows(PowsyblException.class, () -> SecurityAnalysis.run(network, VariantManagerConstants.INITIAL_VARIANT_ID, contingenciesProvider,
+                    SecurityAnalysisParameters.load(platformConfig), computationManager, filter, new DefaultLimitViolationDetector(), Collections.emptyList(), Collections.emptyList(), Collections.emptyList()));
+    }
+
     private static class SecurityAnalysisLocalCommandExecutorMock extends AbstractLocalCommandExecutor {
 
         private static final Logger LOGGER = LoggerFactory.getLogger(SecurityAnalysisLocalCommandExecutorMock.class);
@@ -185,7 +206,7 @@ public class DynaFlowSecurityAnalysisTest {
         }
 
         @Override
-        public int execute(String program, List<String> args, Path outFile, Path errFile, Path workingDir, Map<String, String> env) throws IOException, InterruptedException {
+        public int execute(String program, List<String> args, Path outFile, Path errFile, Path workingDir, Map<String, String> env) {
             try {
                 if (args.get(0).equals("--version")) {
                     copyFile(stdOutFileRef, errFile);
@@ -262,7 +283,7 @@ public class DynaFlowSecurityAnalysisTest {
         Files.copy(getClass().getResourceAsStream("/SmallBusBranch/powsybl-inputs/contingencies.groovy"), workingDir.resolve("contingencies.groovy"));
         ContingenciesProvider contingenciesProvider = new GroovyDslContingenciesProvider(workingDir.resolve("contingencies.groovy"));
 
-        LocalCommandExecutor commandExecutor = new SecurityAnalysisLocalCommandExecutorMock("/dynaflow_version.out");
+        LocalCommandExecutor commandExecutor = new SecurityAnalysisLocalCommandExecutorMock("/dynawo_version.out");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(workingDir, 1), commandExecutor, ForkJoinPool.commonPool());
 
         LimitViolationFilter filter = new LimitViolationFilter();

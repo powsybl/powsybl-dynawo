@@ -15,6 +15,7 @@ import com.powsybl.computation.SimpleCommandBuilder;
 import com.powsybl.computation.local.LocalCommandExecutor;
 import com.powsybl.computation.local.LocalComputationConfig;
 import com.powsybl.computation.local.LocalComputationManager;
+import com.powsybl.dynawo.commons.DynawoUtil;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,10 +28,10 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.CompletionException;
 import java.util.concurrent.ForkJoinPool;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  *
@@ -54,14 +55,24 @@ public class DynaFlowVersionCheckTest {
         }
 
         @Override
-        public int execute(String program, List<String> args, Path outFile, Path errFile, Path workingDir, Map<String, String> env) throws IOException, InterruptedException {
+        public int execute(String program, List<String> args, Path outFile, Path errFile, Path workingDir, Map<String, String> env) {
             try {
-                copyFile(stdOutFileRef, workingDir.resolve("dynaflow_version_0.err"));
-
+                copyFile(stdOutFileRef, errFile);
                 return 0;
             } catch (IOException e) {
                 throw new UncheckedIOException(e);
             }
+        }
+    }
+
+    private static class EmptyCommandExecutorMock extends AbstractLocalCommandExecutor {
+
+        public EmptyCommandExecutorMock() {
+        }
+
+        @Override
+        public int execute(String program, List<String> args, Path outFile, Path errFile, Path workingDir, Map<String, String> env) {
+            return 0;
         }
     }
 
@@ -77,26 +88,22 @@ public class DynaFlowVersionCheckTest {
 
     @Test
     public void versionTest() throws IOException {
-        LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynaflow_version.out");
+        LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynawo_version.out");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
-        assertTrue(DynaFlowUtil.checkDynaFlowVersion(env, computationManager, versionCmd));
+        assertTrue(DynawoUtil.checkDynawoVersion(env, computationManager, versionCmd));
     }
 
     @Test
     public void badVersionTest() throws IOException {
-        LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynaflow_bad_version.out");
+        LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynawo_bad_version.out");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
-        assertFalse(DynaFlowUtil.checkDynaFlowVersion(env, computationManager, versionCmd));
+        assertFalse(DynawoUtil.checkDynawoVersion(env, computationManager, versionCmd));
     }
 
-    @Test(expected = java.util.concurrent.CompletionException.class)
+    @Test
     public void versionTestNotExistingFile() throws IOException {
-        Command badVersionCmd = new SimpleCommandBuilder()
-                .id("does_not_exist")
-                .program("dummy")
-                .build();
-        LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynaflow_version.out");
+        LocalCommandExecutor commandExecutor = new EmptyCommandExecutorMock();
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
-        DynaFlowUtil.checkDynaFlowVersion(env, computationManager, badVersionCmd);
+        assertThrows(CompletionException.class, () -> DynawoUtil.checkDynawoVersion(env, computationManager, versionCmd));
     }
 }

@@ -8,31 +8,41 @@ package com.powsybl.dynawaltz;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.ForkJoinPool;
 
+import com.powsybl.commons.PowsyblException;
+import com.powsybl.commons.test.AbstractConverterTest;
 import com.powsybl.computation.local.LocalCommandExecutor;
 import com.powsybl.dynamicsimulation.*;
+import org.junit.Before;
 import org.junit.Test;
 
-import com.google.common.jimfs.Configuration;
-import com.google.common.jimfs.Jimfs;
 import com.powsybl.computation.ComputationManager;
 import com.powsybl.computation.local.LocalComputationConfig;
 import com.powsybl.computation.local.LocalComputationManager;
 import com.powsybl.iidm.network.Network;
 
+import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.JOBS_FILENAME;
 import static org.junit.Assert.*;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class DynaWaltzProviderTest {
+public class DynaWaltzProviderTest extends AbstractConverterTest {
 
     private static final String OUTPUT_IIDM_FILENAME = "outputIIDM.xml";
+    private Path homeDir;
+    private DynaWaltzConfig config;
+
+    @Before
+    public void setUp() throws IOException {
+        super.setUp();
+        homeDir = fileSystem.getPath("/home/dynawaltz");
+        config = DynaWaltzConfig.load();
+    }
 
     public static class DynamicModelsSupplierMock implements DynamicModelsSupplier {
 
@@ -70,9 +80,16 @@ public class DynaWaltzProviderTest {
 
     private static class EmptyLocalCommandExecutorMock extends AbstractLocalCommandExecutor {
 
+        private final String stdOutFileRef;
+
+        public EmptyLocalCommandExecutorMock(String stdoutFileRef) {
+            this.stdOutFileRef = Objects.requireNonNull(stdoutFileRef);
+        }
+
         @Override
         public int execute(String program, List<String> args, Path outFile, Path errFile, Path workingDir, Map<String, String> env) {
             try {
+                copyFile(stdOutFileRef, errFile);
                 Files.createDirectories(workingDir.resolve("outputs").resolve("finalState"));
                 return 0;
             } catch (IOException e) {
@@ -83,15 +100,18 @@ public class DynaWaltzProviderTest {
 
     private static class WithoutCurvesLocalCommandExecutorMock extends AbstractLocalCommandExecutor {
 
+        private final String stdOutFileRef;
         private final String outputIidm;
 
-        public WithoutCurvesLocalCommandExecutorMock(String outputIidm) {
+        public WithoutCurvesLocalCommandExecutorMock(String stdOutFileRef, String outputIidm) {
+            this.stdOutFileRef = stdOutFileRef;
             this.outputIidm = Objects.requireNonNull(outputIidm);
         }
 
         @Override
         public int execute(String program, List<String> args, Path outFile, Path errFile, Path workingDir, Map<String, String> env) {
             try {
+                copyFile(stdOutFileRef, errFile);
                 Files.createDirectories(workingDir.resolve("outputs").resolve("finalState"));
                 copyFile(outputIidm, workingDir.resolve("outputs").resolve("finalState").resolve(OUTPUT_IIDM_FILENAME));
                 return 0;
@@ -102,57 +122,58 @@ public class DynaWaltzProviderTest {
     }
 
     @Test
-    public void test() throws Exception {
-        try (FileSystem fs = Jimfs.newFileSystem(Configuration.unix())) {
-            Network network = Network.create("test", "test");
-
-            Path localDir = fs.getPath("/tmp");
-            ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(localDir, 1));
-            DynamicSimulation.Runner dynawoSimulation = DynamicSimulation.find();
-            assertEquals(DynaWaltzProvider.NAME, dynawoSimulation.getName());
-            assertEquals(DynaWaltzProvider.VERSION, dynawoSimulation.getVersion());
-            DynamicSimulationResult result = dynawoSimulation.run(network, DynamicModelsSupplierMock.empty(), EventModelsSupplierMock.empty(),
-                                                                  CurvesSupplier.empty(), network.getVariantManager().getWorkingVariantId(),
-                                                                  computationManager, DynamicSimulationParameters.load());
-            assertNotNull(result);
-        }
+    public void checkVersionCommand() {
+        String program = homeDir.resolve("dynawo.sh").toString();
+        String versionCommand = DynaWaltzProvider.getVersionCommand(config).toString(0);
+        String expectedVersionCommand = "[" + program + ", version]";
+        assertEquals(expectedVersionCommand, versionCommand);
     }
 
     @Test
-    public void testFail() throws Exception {
-        try (FileSystem fs = Jimfs.newFileSystem(Configuration.unix())) {
-            Network network = Network.create("test", "test");
-
-            Path localDir = fs.getPath("/tmp");
-            LocalCommandExecutor commandExecutor = new EmptyLocalCommandExecutorMock();
-            ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(localDir, 1), commandExecutor, ForkJoinPool.commonPool());
-            DynamicSimulation.Runner dynawoSimulation = DynamicSimulation.find();
-            assertEquals(DynaWaltzProvider.NAME, dynawoSimulation.getName());
-            assertEquals(DynaWaltzProvider.VERSION, dynawoSimulation.getVersion());
-            DynamicSimulationResult result = dynawoSimulation.run(network, DynamicModelsSupplierMock.empty(), EventModelsSupplierMock.empty(),
-                    CurvesSupplier.empty(), network.getVariantManager().getWorkingVariantId(),
-                    computationManager, DynamicSimulationParameters.load());
-            assertNotNull(result);
-            assertFalse(result.isOk());
-        }
+    public void checkExecutionCommand() {
+        String program = homeDir.resolve("dynawo.sh").toString();
+        String versionCommand = DynaWaltzProvider.getCommand(config).toString(0);
+        String expectedVersionCommand = "[[" + program + ", jobs, " + JOBS_FILENAME + "]]";
+        assertEquals(expectedVersionCommand, versionCommand);
     }
 
     @Test
     public void testWithoutCurves() throws Exception {
-        try (FileSystem fs = Jimfs.newFileSystem(Configuration.unix())) {
-            Network network = Network.create("test", "test");
+        Network network = Network.create("test", "test");
+        LocalCommandExecutor commandExecutor = new WithoutCurvesLocalCommandExecutorMock("/dynawo_version.out", "/test.xiidm");
+        ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(tmpDir, 1), commandExecutor, ForkJoinPool.commonPool());
+        DynamicSimulation.Runner dynawoSimulation = DynamicSimulation.find();
+        assertEquals(DynaWaltzProvider.NAME, dynawoSimulation.getName());
+        DynamicSimulationResult result = dynawoSimulation.run(network, DynamicModelsSupplierMock.empty(), EventModelsSupplierMock.empty(),
+                new CurvesSupplierMock(), network.getVariantManager().getWorkingVariantId(),
+                computationManager, DynamicSimulationParameters.load());
+        assertNotNull(result);
+        assertFalse(result.isOk());
+    }
 
-            Path localDir = fs.getPath("/tmp");
-            LocalCommandExecutor commandExecutor = new WithoutCurvesLocalCommandExecutorMock("/test.xiidm");
-            ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(localDir, 1), commandExecutor, ForkJoinPool.commonPool());
-            DynamicSimulation.Runner dynawoSimulation = DynamicSimulation.find();
-            assertEquals(DynaWaltzProvider.NAME, dynawoSimulation.getName());
-            assertEquals(DynaWaltzProvider.VERSION, dynawoSimulation.getVersion());
-            DynamicSimulationResult result = dynawoSimulation.run(network, DynamicModelsSupplierMock.empty(), EventModelsSupplierMock.empty(),
-                    new CurvesSupplierMock(), network.getVariantManager().getWorkingVariantId(),
-                    computationManager, DynamicSimulationParameters.load());
-            assertNotNull(result);
-            assertFalse(result.isOk());
-        }
+    @Test
+    public void testFail() throws Exception {
+        Network network = Network.create("test", "test");
+        LocalCommandExecutor commandExecutor = new EmptyLocalCommandExecutorMock("/dynawo_version.out");
+        ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(tmpDir, 1), commandExecutor, ForkJoinPool.commonPool());
+        DynamicSimulation.Runner dynawoSimulation = DynamicSimulation.find();
+        assertEquals(DynaWaltzProvider.NAME, dynawoSimulation.getName());
+        DynamicSimulationResult result = dynawoSimulation.run(network, DynamicModelsSupplierMock.empty(), EventModelsSupplierMock.empty(),
+                CurvesSupplier.empty(), network.getVariantManager().getWorkingVariantId(),
+                computationManager, DynamicSimulationParameters.load());
+        assertNotNull(result);
+        assertFalse(result.isOk());
+    }
+
+    @Test
+    public void testCallingBadVersionDynawo() throws Exception {
+        Network network = Network.create("test", "test");
+        LocalCommandExecutor commandExecutor = new EmptyLocalCommandExecutorMock("/dynawo_bad_version.out");
+        ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(tmpDir, 1), commandExecutor, ForkJoinPool.commonPool());
+        DynamicSimulation.Runner dynawoSimulation = DynamicSimulation.find();
+        assertEquals(DynaWaltzProvider.NAME, dynawoSimulation.getName());
+        assertThrows(PowsyblException.class, () -> dynawoSimulation.run(network, DynamicModelsSupplierMock.empty(), EventModelsSupplierMock.empty(),
+                CurvesSupplier.empty(), network.getVariantManager().getWorkingVariantId(),
+                computationManager, DynamicSimulationParameters.load()));
     }
 }

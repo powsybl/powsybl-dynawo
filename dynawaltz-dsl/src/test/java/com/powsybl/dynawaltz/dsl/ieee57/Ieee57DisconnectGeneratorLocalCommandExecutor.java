@@ -39,7 +39,7 @@ public class Ieee57DisconnectGeneratorLocalCommandExecutor extends AbstractDynaW
     }
 
     @Override
-    protected void copyOutputs(Path workingDir) throws IOException  {
+    protected void copyOutputs(Path workingDir) throws IOException {
         Path output = Files.createDirectories(workingDir.resolve("outputs/curves").toAbsolutePath());
         Files.copy(getClass().getResourceAsStream("/ieee57-disconnectgenerator/dynawaltz-outputs/curves.csv"), output.resolve("curves.csv"));
     }

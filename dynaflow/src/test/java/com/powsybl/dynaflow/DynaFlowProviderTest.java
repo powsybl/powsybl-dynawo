@@ -43,34 +43,30 @@ import static org.junit.Assert.*;
  */
 public class DynaFlowProviderTest extends AbstractConverterTest {
 
-    private String homeDir;
+    private Path homeDir;
     private DynaFlowConfig config;
     private DynaFlowProvider provider;
 
     @Before
     public void setUp() throws IOException {
         super.setUp();
-        homeDir = "/home/dynaflow";
+        homeDir = fileSystem.getPath("/home/dynaflow");
         config = DynaFlowConfig.fromPropertyFile();
         provider = new DynaFlowProvider();
     }
 
     @Test
     public void checkVersionCommand() {
-        Path pathHomeDir = fileSystem.getPath(homeDir);
-        String program = pathHomeDir.resolve("dynaflow-launcher.sh").toString();
-
+        String program = homeDir.resolve("dynaflow-launcher.sh").toString();
         String versionCommand = DynaFlowProvider.getVersionCommand(config).toString(0);
         String expectedVersionCommand = "[" + program + ", --version]";
-
         assertEquals(expectedVersionCommand, versionCommand);
     }
 
     @Test
     public void checkExecutionCommand() {
-        String program = fileSystem.getPath(homeDir).resolve("dynaflow-launcher.sh").toString();
-
-        String executionCommand = provider.getCommand(config).toString(0);
+        String program = homeDir.resolve("dynaflow-launcher.sh").toString();
+        String executionCommand = DynaFlowProvider.getCommand(config).toString(0);
         String expectedExecutionCommand = "[" + program + ", --network, " + IIDM_FILENAME + ", --config, " + CONFIG_FILENAME + "]";
         assertEquals(expectedExecutionCommand, executionCommand);
     }
@@ -115,7 +111,6 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
             try {
                 copyFile(stdOutFileRef, errFile);
                 Files.createDirectories(workingDir.resolve("outputs").resolve("finalState"));
-
                 return 0;
             } catch (IOException e) {
                 throw new UncheckedIOException(e);
@@ -131,7 +126,7 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
 
         assertEquals(DYNAFLOW_NAME, dynaFlowSimulation.getName());
 
-        LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynaflow_version.out",
+        LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynawo_version.out",
                 "/SmallBusBranch_outputIIDM.xml", "/results.json");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
         LoadFlowResult result = dynaFlowSimulation.run(network, computationManager, params);
@@ -147,22 +142,22 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
 
         assertEquals(DYNAFLOW_NAME, dynaFlowSimulation.getName());
 
-        LocalCommandExecutor commandExecutor = new EmptyLocalCommandExecutorMock("/dynaflow_version.out");
+        LocalCommandExecutor commandExecutor = new EmptyLocalCommandExecutorMock("/dynawo_version.out");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
         LoadFlowResult result = dynaFlowSimulation.run(network, computationManager, params);
         assertNotNull(result);
         assertFalse(result.isOk());
     }
 
-    @Test(expected = PowsyblException.class)
-    public void testCallingBadVersionDynaFlow() throws Exception {
+    @Test
+    public void testCallingBadVersionDynawo() throws Exception {
         Network network = createTestSmallBusBranch();
         LoadFlow.Runner dynaFlowSimulation = LoadFlow.find();
         LoadFlowParameters params = LoadFlowParameters.load();
 
-        LocalCommandExecutor commandExecutor = new EmptyLocalCommandExecutorMock("/dynaflow_bad_version.out");
+        LocalCommandExecutor commandExecutor = new EmptyLocalCommandExecutorMock("/dynawo_bad_version.out");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
-        LoadFlowResult result = dynaFlowSimulation.run(network, computationManager, params);
+        assertThrows(PowsyblException.class, () -> dynaFlowSimulation.run(network, computationManager, params));
     }
 
     @Test
@@ -173,7 +168,7 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
 
         assertEquals(DYNAFLOW_NAME, dynaFlowSimulation.getName());
 
-        LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynaflow_version.out",
+        LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynawo_version.out",
                 "/SmallBusBranch_outputIIDM.xml", "/results.json");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
         LoadFlowResult result = dynaFlowSimulation.run(network, computationManager, params);
