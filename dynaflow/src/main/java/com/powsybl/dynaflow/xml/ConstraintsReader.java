@@ -56,34 +56,30 @@ public final class ConstraintsReader {
 
             XmlUtil.readUntilEndElement(CONSTRAINTS_ELEMENT_NAME, reader, () -> {
                 float limitReduction = 1f;
-                switch (reader.getLocalName()) {
-                    case CONSTRAINT_ELEMENT_NAME:
-                        String name = reader.getAttributeValue(null, MODEL_NAME);
-                        String description = reader.getAttributeValue(null, DESCRIPTION);
-                        String type = reader.getAttributeValue(null, TYPE);
-                        String kind = reader.getAttributeValue(null, KIND);
-                        double limit = XmlUtil.readOptionalDoubleAttribute(reader, LIMIT);
-                        double value = XmlUtil.readOptionalDoubleAttribute(reader, VALUE);
-                        Integer side = XmlUtil.readOptionalIntegerAttribute(reader, SIDE);
-                        Integer acceptableDuration = XmlUtil.readOptionalIntegerAttribute(reader, ACCEPTABLE_DURATION);
-                        Identifiable id = network.getIdentifiable(name);
-                        LimitViolation limitViolation;
-                        if (id instanceof Branch) {
-                            Branch<?> branch = (Branch<?>) id;
-                            limitViolation = new LimitViolation(branch.getId(), branch.getOptionalName().orElse(null),
-                                    toLimitViolationType(kind), kind, acceptableDuration != null ? acceptableDuration : Integer.MAX_VALUE,
-                                    limit, limitReduction, value, toBranchSide(side));
-                            limitViolations.add(limitViolation);
-                        } else if (id instanceof Bus) {
-                            VoltageLevel vl = ((Bus) id).getVoltageLevel();
-                            limitViolation = new LimitViolation(vl.getId(), vl.getOptionalName().orElse(null),
-                                    toLimitViolationType(kind), limit, limitReduction, value);
-                            limitViolations.add(limitViolation);
-                        }
-                        break;
-
-                    default:
-                        throw new AssertionError();
+                if (!reader.getLocalName().equals(CONSTRAINT_ELEMENT_NAME)) {
+                    throw new AssertionError();
+                }
+                String name = reader.getAttributeValue(null, MODEL_NAME);
+                String description = reader.getAttributeValue(null, DESCRIPTION);
+                String type = reader.getAttributeValue(null, TYPE);
+                String kind = reader.getAttributeValue(null, KIND);
+                double limit = XmlUtil.readOptionalDoubleAttribute(reader, LIMIT);
+                double value = XmlUtil.readOptionalDoubleAttribute(reader, VALUE);
+                Integer side = XmlUtil.readOptionalIntegerAttribute(reader, SIDE);
+                Integer acceptableDuration = XmlUtil.readOptionalIntegerAttribute(reader, ACCEPTABLE_DURATION);
+                Identifiable<?> id = network.getIdentifiable(name);
+                LimitViolation limitViolation;
+                if (id instanceof Branch) {
+                    Branch<?> branch = (Branch<?>) id;
+                    limitViolation = new LimitViolation(branch.getId(), branch.getOptionalName().orElse(null),
+                            toLimitViolationType(kind), kind, acceptableDuration != null ? acceptableDuration : Integer.MAX_VALUE,
+                            limit, limitReduction, value, toBranchSide(side));
+                    limitViolations.add(limitViolation);
+                } else if (id instanceof Bus) {
+                    VoltageLevel vl = ((Bus) id).getVoltageLevel();
+                    limitViolation = new LimitViolation(vl.getId(), vl.getOptionalName().orElse(null),
+                            toLimitViolationType(kind), limit, limitReduction, value);
+                    limitViolations.add(limitViolation);
                 }
             });
             return limitViolations;
