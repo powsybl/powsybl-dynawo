@@ -7,12 +7,18 @@
  */
 package com.powsybl.dynawo.commons;
 
+import com.google.common.io.CharStreams;
+import com.powsybl.commons.PowsyblException;
+import com.powsybl.computation.*;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.xml.XMLExporter;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.nio.file.Path;
-import java.util.Objects;
-import java.util.Properties;
+import java.util.*;
 
 import static com.powsybl.dynawo.commons.DynawoConstants.IIDM_EXTENSIONS;
 import static com.powsybl.dynawo.commons.DynawoConstants.IIDM_VERSION;
@@ -32,5 +38,38 @@ public final class DynawoUtil {
         params.setProperty(XMLExporter.VERSION, IIDM_VERSION);
         params.setProperty(XMLExporter.EXTENSIONS_LIST, String.join(",", IIDM_EXTENSIONS));
         network.write("XIIDM", params, file);
+    }
+
+    public static void requireDynawoMinVersion(ExecutionEnvironment env, ComputationManager computationManager, Command versionCmd) {
+        if (!checkDynawoVersion(env, computationManager, versionCmd)) {
+            throw new PowsyblException("DynaFlow version not supported. Must be >= " + DynawoConstants.VERSION_MIN);
+        }
+    }
+
+    public static boolean checkDynawoVersion(ExecutionEnvironment env, ComputationManager computationManager, Command versionCmd) {
+        return computationManager.execute(env, new AbstractExecutionHandler<Boolean>() {
+            @Override
+            public List<CommandExecution> before(Path path) {
+                return Collections.singletonList(new CommandExecution(versionCmd, 1));
+            }
+
+            @Override
+            public Boolean after(Path workingDir, ExecutionReport report) throws IOException {
+                super.after(workingDir, report);
+                Optional<InputStream> stdErr = report.getStdErr(versionCmd, 0);
+                if (stdErr.isEmpty()) {
+                    throw new PowsyblException("No output for DynaFlow version command");
+                }
+                try (Reader reader = new InputStreamReader(stdErr.get())) {
+                    String stdErrContent = CharStreams.toString(reader);
+                    DynawoVersion version = DynawoVersion.createFromString(versionSanitizer(stdErrContent));
+                    return DynawoConstants.VERSION_MIN.compareTo(version) < 1;
+                }
+            }
+        }).join();
+    }
+
+    private static String versionSanitizer(String version) {
+        return version.split(" ")[0];
     }
 }
