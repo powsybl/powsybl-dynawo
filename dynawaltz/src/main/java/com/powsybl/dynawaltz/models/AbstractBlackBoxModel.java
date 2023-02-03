@@ -94,7 +94,9 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel {
         writer.writeStartElement(DYN_URI, "blackBoxModel");
         writeDynamicAttributes(writer, context);
         writer.writeAttribute("staticId", staticId);
-        MacroStaticReference.writeMacroStaticRef(writer, getLib());
+        if (!getVarsMapping().isEmpty()) {
+            MacroStaticReference.writeMacroStaticRef(writer, getLib());
+        }
         writer.writeEndElement();
     }
 
