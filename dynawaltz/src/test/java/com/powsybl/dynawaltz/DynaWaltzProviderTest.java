@@ -126,6 +126,9 @@ public class DynaWaltzProviderTest extends AbstractConverterTest {
     @Test
     public void checkVersionCommand() {
         String program = homeDir.resolve("dynawo" + extension).toString();
+        if (SystemUtils.IS_OS_WINDOWS) {
+            program = program.replace("/", "\\");
+        }
         String versionCommand = DynaWaltzProvider.getVersionCommand(config).toString(0);
         String expectedVersionCommand = "[" + program + ", version]";
         assertEquals(expectedVersionCommand, versionCommand);
@@ -134,6 +137,9 @@ public class DynaWaltzProviderTest extends AbstractConverterTest {
     @Test
     public void checkExecutionCommand() {
         String program = homeDir.resolve("dynawo" + extension).toString();
+        if (SystemUtils.IS_OS_WINDOWS) {
+            program = program.replace("/", "\\");
+        }
         String versionCommand = DynaWaltzProvider.getCommand(config).toString(0);
         String expectedVersionCommand = "[[" + program + ", jobs, " + JOBS_FILENAME + "]]";
         assertEquals(expectedVersionCommand, versionCommand);
