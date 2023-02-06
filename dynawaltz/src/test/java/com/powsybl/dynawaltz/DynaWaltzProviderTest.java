@@ -91,7 +91,7 @@ public class DynaWaltzProviderTest extends AbstractConverterTest {
         @Override
         public int execute(String program, List<String> args, Path outFile, Path errFile, Path workingDir, Map<String, String> env) {
             try {
-                copyFile(stdOutFileRef, errFile);
+                copyFile(stdOutFileRef, outFile);
                 Files.createDirectories(workingDir.resolve("outputs").resolve("finalState"));
                 return 0;
             } catch (IOException e) {
@@ -113,7 +113,7 @@ public class DynaWaltzProviderTest extends AbstractConverterTest {
         @Override
         public int execute(String program, List<String> args, Path outFile, Path errFile, Path workingDir, Map<String, String> env) {
             try {
-                copyFile(stdOutFileRef, errFile);
+                copyFile(stdOutFileRef, outFile);
                 Files.createDirectories(workingDir.resolve("outputs").resolve("finalState"));
                 copyFile(outputIidm, workingDir.resolve("outputs").resolve("finalState").resolve(OUTPUT_IIDM_FILENAME));
                 return 0;

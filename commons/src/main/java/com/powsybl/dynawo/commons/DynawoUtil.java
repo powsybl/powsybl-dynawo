@@ -40,13 +40,13 @@ public final class DynawoUtil {
         network.write("XIIDM", params, file);
     }
 
-    public static void requireDynawoMinVersion(ExecutionEnvironment env, ComputationManager computationManager, Command versionCmd) {
-        if (!checkDynawoVersion(env, computationManager, versionCmd)) {
+    public static void requireDynawoMinVersion(ExecutionEnvironment env, ComputationManager computationManager, Command versionCmd, boolean fromErr) {
+        if (!checkDynawoVersion(env, computationManager, versionCmd, fromErr)) {
             throw new PowsyblException("DynaFlow version not supported. Must be >= " + DynawoConstants.VERSION_MIN);
         }
     }
 
-    public static boolean checkDynawoVersion(ExecutionEnvironment env, ComputationManager computationManager, Command versionCmd) {
+    public static boolean checkDynawoVersion(ExecutionEnvironment env, ComputationManager computationManager, Command versionCmd, boolean fromErr) {
         return computationManager.execute(env, new AbstractExecutionHandler<Boolean>() {
             @Override
             public List<CommandExecution> before(Path path) {
@@ -56,11 +56,11 @@ public final class DynawoUtil {
             @Override
             public Boolean after(Path workingDir, ExecutionReport report) throws IOException {
                 super.after(workingDir, report);
-                Optional<InputStream> stdErr = report.getStdErr(versionCmd, 0);
-                if (stdErr.isEmpty()) {
+                Optional<InputStream> std = fromErr ? report.getStdErr(versionCmd, 0) : report.getStdOut(versionCmd, 0);
+                if (std.isEmpty()) {
                     throw new PowsyblException("No output for DynaFlow version command");
                 }
-                try (Reader reader = new InputStreamReader(stdErr.get())) {
+                try (Reader reader = new InputStreamReader(std.get())) {
                     String stdErrContent = CharStreams.toString(reader);
                     DynawoVersion version = DynawoVersion.createFromString(versionSanitizer(stdErrContent));
                     return DynawoConstants.VERSION_MIN.compareTo(version) < 1;

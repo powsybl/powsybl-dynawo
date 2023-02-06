@@ -115,7 +115,7 @@ public class DynaFlowProvider implements LoadFlowProvider {
         DynaFlowConfig config = Objects.requireNonNull(configSupplier.get());
         ExecutionEnvironment env = new ExecutionEnvironment(config.createEnv(), WORKING_DIR_PREFIX, config.isDebug());
         Command versionCmd = getVersionCommand(config);
-        DynawoUtil.requireDynawoMinVersion(env, computationManager, versionCmd);
+        DynawoUtil.requireDynawoMinVersion(env, computationManager, versionCmd, true);
 
         return computationManager.execute(env, new AbstractExecutionHandler<>() {
 

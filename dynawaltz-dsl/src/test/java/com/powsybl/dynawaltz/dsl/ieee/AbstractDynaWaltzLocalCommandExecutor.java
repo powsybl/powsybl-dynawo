@@ -62,7 +62,7 @@ public abstract class AbstractDynaWaltzLocalCommandExecutor implements LocalComm
     public int execute(String program, long timeoutSeconds, List<String> args, Path outFile, Path errFile, Path workingDir, Map<String, String> env) throws IOException {
         try {
             if (args.get(0).equals("version")) {
-                copyFile(stdOutFileRef, errFile);
+                copyFile(stdOutFileRef, outFile);
             } else {
                 validateInputs(workingDir);
                 copyOutputs(workingDir);

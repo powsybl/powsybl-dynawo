@@ -126,7 +126,7 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
         network.getVariantManager().setWorkingVariant(workingVariantId);
         ExecutionEnvironment execEnv = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, dynaWaltzConfig.isDebug());
         Command versionCmd = getVersionCommand(dynaWaltzConfig);
-        DynawoUtil.requireDynawoMinVersion(execEnv, computationManager, versionCmd);
+        DynawoUtil.requireDynawoMinVersion(execEnv, computationManager, versionCmd, false);
 
         List<BlackBoxModel> blackBoxModels = dynamicModelsSupplier.get(network).stream()
                 .filter(BlackBoxModel.class::isInstance)

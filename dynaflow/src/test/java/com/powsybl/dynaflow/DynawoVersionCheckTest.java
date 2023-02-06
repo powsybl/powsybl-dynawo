@@ -90,20 +90,20 @@ public class DynawoVersionCheckTest {
     public void versionTest() throws IOException {
         LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynawo_version.out");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
-        assertTrue(DynawoUtil.checkDynawoVersion(env, computationManager, versionCmd));
+        assertTrue(DynawoUtil.checkDynawoVersion(env, computationManager, versionCmd, true));
     }
 
     @Test
     public void badVersionTest() throws IOException {
         LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynawo_bad_version.out");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
-        assertFalse(DynawoUtil.checkDynawoVersion(env, computationManager, versionCmd));
+        assertFalse(DynawoUtil.checkDynawoVersion(env, computationManager, versionCmd, true));
     }
 
     @Test
     public void versionTestNotExistingFile() throws IOException {
         LocalCommandExecutor commandExecutor = new EmptyCommandExecutorMock();
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
-        assertThrows(CompletionException.class, () -> DynawoUtil.checkDynawoVersion(env, computationManager, versionCmd));
+        assertThrows(CompletionException.class, () -> DynawoUtil.checkDynawoVersion(env, computationManager, versionCmd, true));
     }
 }
