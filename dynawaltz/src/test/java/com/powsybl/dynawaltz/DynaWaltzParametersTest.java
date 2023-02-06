@@ -72,7 +72,7 @@ public class DynaWaltzParametersTest {
         assertEquals(solverType, parameters.getSolver().getType());
         assertEquals(solverParametersFile, parameters.getSolver().getParametersFile());
         assertEquals(solverParametersId, parameters.getSolver().getParametersId());
-        assertEquals(mergeLoads, parameters.getMergeLoads());
+        assertEquals(mergeLoads, parameters.isMergeLoads());
     }
 
     @Test
@@ -85,6 +85,6 @@ public class DynaWaltzParametersTest {
         assertEquals(DynaWaltzParameters.DEFAULT_SOLVER_TYPE, parameters.getSolver().getType());
         assertEquals(solverParametersFile, parameters.getSolver().getParametersFile());
         assertEquals(DynaWaltzParameters.DEFAULT_SOLVER_PAR_ID, parameters.getSolver().getParametersId());
-        assertEquals(DynaWaltzParameters.DEFAULT_MERGE_LOADS, parameters.getMergeLoads());
+        assertEquals(DynaWaltzParameters.DEFAULT_MERGE_LOADS, parameters.isMergeLoads());
     }
 }

@@ -85,8 +85,6 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
     private static final String STARTING_POINT_MODE = "startingPointMode";
     private static final String MERGE_LOADS = "mergeLoads";
 
-    private static final boolean DEFAULT_MERGE_LOADS = true;
-
     private static <E extends Enum<E>> List<Object> getEnumPossibleValues(Class<E> enumClass) {
         return EnumSet.allOf(enumClass).stream().map(Enum::name).collect(Collectors.toList());
     }
@@ -121,7 +119,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
     private List<String> chosenOutputs = null;
     private Double timeStep = null;
     private StartingPointMode startingPointMode = null;
-    private boolean mergeLoads = DEFAULT_MERGE_LOADS;
+    private boolean mergeLoads = true;
 
     public Boolean getSvcRegulationOn() {
         return svcRegulationOn;
@@ -263,7 +261,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
     }
 
     @JsonIgnore
-    public boolean getMergeLoads() {
+    public boolean isMergeLoads() {
         return mergeLoads;
     }
 
@@ -316,52 +314,21 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
     }
 
     private static void load(DynaFlowParameters parameters, ModuleConfig config) {
-
-        if (config.hasProperty(SVC_REGULATION_ON)) {
-            parameters.setSvcRegulationOn(config.getBooleanProperty(SVC_REGULATION_ON));
-        }
-        if (config.hasProperty(SHUNT_REGULATION_ON)) {
-            parameters.setShuntRegulationOn(config.getBooleanProperty(SHUNT_REGULATION_ON));
-        }
-        if (config.hasProperty(AUTOMATIC_SLACK_BUS_ON)) {
-            parameters.setAutomaticSlackBusOn(config.getBooleanProperty(AUTOMATIC_SLACK_BUS_ON));
-        }
-        if (config.hasProperty(DSO_VOLTAGE_LEVEL)) {
-            parameters.setDsoVoltageLevel(config.getDoubleProperty(DSO_VOLTAGE_LEVEL));
-        }
-        if (config.hasProperty(ACTIVE_POWER_COMPENSATION)) {
-            parameters.setActivePowerCompensation(config.getEnumProperty(ACTIVE_POWER_COMPENSATION, ActivePowerCompensation.class));
-        }
-        if (config.hasProperty(SETTING_PATH)) {
-            parameters.setSettingPath(config.getStringProperty(SETTING_PATH));
-        }
-        if (config.hasProperty(ASSEMBLING_PATH)) {
-            parameters.setAssemblingPath(config.getStringProperty(ASSEMBLING_PATH));
-        }
-        if (config.hasProperty(START_TIME)) {
-            parameters.setStartTime(config.getDoubleProperty(START_TIME));
-        }
-        if (config.hasProperty(STOP_TIME)) {
-            parameters.setStopTime(config.getDoubleProperty(STOP_TIME));
-        }
-        if (config.hasProperty(PRECISION_NAME)) {
-            parameters.setPrecision(config.getDoubleProperty(PRECISION_NAME));
-        }
-        if (config.hasProperty(Sa.TIME_OF_EVENT)) {
-            parameters.setTimeOfEvent(config.getDoubleProperty(Sa.TIME_OF_EVENT));
-        }
-        if (config.hasProperty(CHOSEN_OUTPUTS)) {
-            parameters.setChosenOutputs(config.getStringListProperty(CHOSEN_OUTPUTS));
-        }
-        if (config.hasProperty(TIME_STEP)) {
-            parameters.setTimeStep(config.getDoubleProperty(TIME_STEP));
-        }
-        if (config.hasProperty(STARTING_POINT_MODE)) {
-            parameters.setStartingPointMode(StartingPointMode.fromString(config.getStringProperty(STARTING_POINT_MODE)));
-        }
-        if (config.hasProperty(MERGE_LOADS)) {
-            parameters.setMergeLoads(config.getBooleanProperty(MERGE_LOADS, DEFAULT_MERGE_LOADS));
-        }
+        config.getOptionalBooleanProperty(SVC_REGULATION_ON).ifPresent(parameters::setSvcRegulationOn);
+        config.getOptionalBooleanProperty(SHUNT_REGULATION_ON).ifPresent(parameters::setShuntRegulationOn);
+        config.getOptionalBooleanProperty(AUTOMATIC_SLACK_BUS_ON).ifPresent(parameters::setAutomaticSlackBusOn);
+        config.getOptionalDoubleProperty(DSO_VOLTAGE_LEVEL).ifPresent(parameters::setDsoVoltageLevel);
+        config.getOptionalEnumProperty(ACTIVE_POWER_COMPENSATION, ActivePowerCompensation.class).ifPresent(parameters::setActivePowerCompensation);
+        config.getOptionalStringProperty(SETTING_PATH).ifPresent(parameters::setSettingPath);
+        config.getOptionalStringProperty(ASSEMBLING_PATH).ifPresent(parameters::setAssemblingPath);
+        config.getOptionalDoubleProperty(START_TIME).ifPresent(parameters::setStartTime);
+        config.getOptionalDoubleProperty(STOP_TIME).ifPresent(parameters::setStopTime);
+        config.getOptionalDoubleProperty(PRECISION_NAME).ifPresent(parameters::setPrecision);
+        config.getOptionalDoubleProperty(Sa.TIME_OF_EVENT).ifPresent(parameters::setTimeOfEvent);
+        config.getOptionalStringListProperty(CHOSEN_OUTPUTS).ifPresent(parameters::setChosenOutputs);
+        config.getOptionalDoubleProperty(TIME_STEP).ifPresent(parameters::setTimeStep);
+        config.getOptionalStringProperty(STARTING_POINT_MODE).map(StartingPointMode::fromString).ifPresent(parameters::setStartingPointMode);
+        config.getOptionalBooleanProperty(MERGE_LOADS).ifPresent(parameters::setMergeLoads);
     }
 
     public void update(Map<String, String> properties) {

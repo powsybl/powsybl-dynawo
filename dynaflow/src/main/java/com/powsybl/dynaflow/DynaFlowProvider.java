@@ -19,6 +19,8 @@ import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
 import com.powsybl.dynaflow.json.JsonDynaFlowParametersSerializer;
 import com.powsybl.dynawo.commons.*;
 import com.powsybl.dynawo.commons.PowsyblDynawoVersion;
+import com.powsybl.dynawo.commons.LoadsMerger;
+import com.powsybl.dynawo.commons.NetworkResultsUpdater;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.xml.NetworkXml;
 import com.powsybl.loadflow.LoadFlowParameters;
@@ -125,13 +127,7 @@ public class DynaFlowProvider implements LoadFlowProvider {
             @Override
             public List<CommandExecution> before(Path workingDir) throws IOException {
                 network.getVariantManager().setWorkingVariant(workingStateId);
-                Network workingNetwork;
-                if (dynaFlowParameters.getMergeLoads()) {
-                    loadsMerger.mergeLoads();
-                    workingNetwork = loadsMerger.getMergedLoadsNetwork();
-                } else {
-                    workingNetwork = network;
-                }
+                Network workingNetwork = dynaFlowParameters.isMergeLoads() ? loadsMerger.getMergedLoadsNetwork() : network;
                 DynawoUtil.writeIidm(workingNetwork, workingDir.resolve(IIDM_FILENAME));
                 DynaFlowConfigSerializer.serialize(loadFlowParameters, dynaFlowParameters, Path.of("."), workingDir.resolve(CONFIG_FILENAME));
                 return Collections.singletonList(createCommandExecution(config));
@@ -144,15 +140,7 @@ public class DynaFlowProvider implements LoadFlowProvider {
                 boolean status = true;
                 Path outputNetworkFile = workingDir.resolve("outputs").resolve("finalState").resolve(OUTPUT_IIDM_FILENAME);
                 if (Files.exists(outputNetworkFile)) {
-                    Network modifiedNetwork;
-                    if (dynaFlowParameters.getMergeLoads()) {
-                        NetworkResultsUpdater.update(loadsMerger.getMergedLoadsNetwork(), NetworkXml.read(outputNetworkFile));
-                        loadsMerger.unmergeLoads();
-                        modifiedNetwork = loadsMerger.getMergedLoadsNetwork();
-                    } else {
-                        modifiedNetwork = NetworkXml.read(outputNetworkFile);
-                    }
-                    NetworkResultsUpdater.update(network, modifiedNetwork);
+                    NetworkResultsUpdater.update(network, NetworkXml.read(outputNetworkFile), dynaFlowParameters.isMergeLoads());
                 } else {
                     status = false;
                 }

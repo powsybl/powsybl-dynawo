@@ -194,7 +194,7 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
         return this;
     }
 
-    public boolean getMergeLoads() {
+    public boolean isMergeLoads() {
         return mergeLoads;
     }
 

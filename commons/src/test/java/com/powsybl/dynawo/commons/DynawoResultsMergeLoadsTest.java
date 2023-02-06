@@ -19,22 +19,9 @@ import static org.junit.Assert.assertNotNull;
 public class DynawoResultsMergeLoadsTest extends AbstractConverterTest {
 
     @Test
-    public void nothingHappensWhenUnmergingUnchangedNetwork() throws IOException {
-        Network network = Importers.importData("XIIDM", new ResourceDataSource("MicroAssembled", new ResourceSet("/MicroAssembled", "MicroAssembled.xiidm")), null);
-        LoadsMerger loadsMerger = new LoadsMerger(network);
-        loadsMerger.unmergeLoads();
-
-        Network expectedNetwork = Importers.importData("XIIDM", new ResourceDataSource("MicroAssembled", new ResourceSet("/MicroAssembled", "MicroAssembled.xiidm")), null);
-
-        compare(expectedNetwork, loadsMerger.getMergedLoadsNetwork());
-    }
-
-    @Test
     public void mergeLoadsMicroAssembled() throws IOException {
         Network network = Importers.importData("XIIDM", new ResourceDataSource("MicroAssembled", new ResourceSet("/MicroAssembled", "MicroAssembled.xiidm")), null);
         LoadsMerger loadsMerger = new LoadsMerger(network);
-        loadsMerger.mergeLoads();
-
         Network expectedIidm = Importers.importData("XIIDM", new ResourceDataSource("MicroAssembledWithMergedLoads", new ResourceSet("/MicroAssembled", "MicroAssembledWithMergedLoads.xiidm")), null);
         compare(expectedIidm, loadsMerger.getMergedLoadsNetwork());
     }
@@ -43,21 +30,15 @@ public class DynawoResultsMergeLoadsTest extends AbstractConverterTest {
     public void unmergeLoadsMicroAssembled() throws IOException {
         Network network = Importers.importData("XIIDM", new ResourceDataSource("MicroAssembled", new ResourceSet("/MicroAssembled", "MicroAssembled.xiidm")), null);
         LoadsMerger loadsMerger = new LoadsMerger(network);
-        loadsMerger.mergeLoads();
-        loadsMerger.unmergeLoads();
-
-        assertEquals(2, network.getBusBreakerView().getBus("_81b0e447-181e-4aec-8921-f1dd7813bebc").getLoadStream().count());
+        NetworkResultsUpdater.update(network, loadsMerger.getMergedLoadsNetwork(), true);
         Network expectedIidm = Importers.importData("XIIDM", new ResourceDataSource("MicroAssembled", new ResourceSet("/MicroAssembled", "MicroAssembled.xiidm")), null);
-
-        compare(expectedIidm, loadsMerger.getMergedLoadsNetwork());
+        compare(expectedIidm, network);
     }
 
     @Test
     public void mergeLoadsSmallBusBranch() throws IOException {
         Network network = Importers.importData("XIIDM", new ResourceDataSource("SmallBusBranch", new ResourceSet("/SmallBusBranch", "SmallBusBranch.xiidm")), null);
         LoadsMerger loadsMerger = new LoadsMerger(network);
-        loadsMerger.mergeLoads();
-
         Network expectedIidm = Importers.importData("XIIDM", new ResourceDataSource("SmallBusBranchWithMergeLoads", new ResourceSet("/SmallBusBranch", "SmallBusBranchWithMergeLoads.xiidm")), null);
         compare(expectedIidm, loadsMerger.getMergedLoadsNetwork());
     }
@@ -66,21 +47,16 @@ public class DynawoResultsMergeLoadsTest extends AbstractConverterTest {
     public void unmergeLoadsSmallBusBranch() throws IOException {
         Network network = Importers.importData("XIIDM", new ResourceDataSource("SmallBusBranch", new ResourceSet("/SmallBusBranch", "SmallBusBranch.xiidm")), null);
         LoadsMerger loadsMerger = new LoadsMerger(network);
-        loadsMerger.mergeLoads();
-        loadsMerger.unmergeLoads();
-
+        NetworkResultsUpdater.update(network, loadsMerger.getMergedLoadsNetwork(), true);
         assertEquals(2, network.getBusBreakerView().getBus("_04483c26-c766-11e1-8775-005056c00008").getLoadStream().count());
         Network expectedIidm = Importers.importData("XIIDM", new ResourceDataSource("SmallBusBranch", new ResourceSet("/SmallBusBranch", "SmallBusBranch.xiidm")), null);
-
-        compare(expectedIidm, loadsMerger.getMergedLoadsNetwork());
+        compare(expectedIidm, network);
     }
 
     @Test
     public void mergeLoadsSmallNodeBreaker() throws IOException {
         Network network = Importers.importData("XIIDM", new ResourceDataSource("SmallNodeBreaker_fix_line_044bbe91", new ResourceSet("/SmallNodeBreaker", "SmallNodeBreaker_fix_line_044bbe91.xiidm")), null);
         LoadsMerger loadsMerger = new LoadsMerger(network);
-        loadsMerger.mergeLoads();
-
         Network expectedIidm = Importers.importData("XIIDM", new ResourceDataSource("SmallNodeBreakerWithMergeLoads", new ResourceSet("/SmallNodeBreaker", "SmallNodeBreakerWithMergeLoads.xiidm")), null);
         compare(expectedIidm, loadsMerger.getMergedLoadsNetwork());
     }
@@ -89,13 +65,10 @@ public class DynawoResultsMergeLoadsTest extends AbstractConverterTest {
     public void unmergeLoadsSmallNodeBreaker() throws IOException {
         Network network = Importers.importData("XIIDM", new ResourceDataSource("SmallNodeBreaker_fix_line_044bbe91", new ResourceSet("/SmallNodeBreaker", "SmallNodeBreaker_fix_line_044bbe91.xiidm")), null);
         LoadsMerger loadsMerger = new LoadsMerger(network);
-        loadsMerger.mergeLoads();
-        loadsMerger.unmergeLoads();
-
+        NetworkResultsUpdater.update(network, loadsMerger.getMergedLoadsNetwork(), true);
         assertEquals(2, network.getVoltageLevel("_0476c639-c766-11e1-8775-005056c00008").getLoadStream().count());
         Network expectedIidm = Importers.importData("XIIDM", new ResourceDataSource("SmallNodeBreaker_fix_line_044bbe91", new ResourceSet("/SmallNodeBreaker", "SmallNodeBreaker_fix_line_044bbe91.xiidm")), null);
-
-        compare(expectedIidm, loadsMerger.getMergedLoadsNetwork());
+        compare(expectedIidm, network);
     }
 
     private void compare(Network expected, Network actual) throws IOException {

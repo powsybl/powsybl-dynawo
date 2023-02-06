@@ -65,7 +65,7 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
         List<String> chosenOutputs = Arrays.asList(OutputTypes.STEADYSTATE.name(), OutputTypes.TIMELINE.name());
         double timeStep = 0;
         StartingPointMode startingPointMode = StartingPointMode.FLAT;
-        boolean mergedLoads = false;
+        boolean mergeLoads = false;
 
         DynaFlowParameters.Sa securityAnalysis = new DynaFlowParameters.Sa();
         securityAnalysis.setTimeOfEvent(2.);
@@ -85,7 +85,7 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
         moduleConfig.setStringListProperty("chosenOutputs", chosenOutputs);
         moduleConfig.setStringProperty("timeStep", Double.toString(timeStep));
         moduleConfig.setStringProperty("startingPointMode", startingPointMode.getName());
-        moduleConfig.setStringProperty("mergeLoads", Boolean.toString(mergedLoads));
+        moduleConfig.setStringProperty("mergeLoads", Boolean.toString(mergeLoads));
 
         DynaFlowParameters parameters = DynaFlowParameters.load(platformConfig);
 
@@ -103,7 +103,7 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
         assertArrayEquals(chosenOutputs.toArray(), parameters.getChosenOutputs().toArray());
         assertEquals(timeStep, parameters.getTimeStep(), 0.1d);
         assertEquals(startingPointMode, parameters.getStartingPointMode());
-        assertEquals(mergedLoads, parameters.getMergeLoads());
+        assertEquals(mergeLoads, parameters.isMergeLoads());
     }
 
     @Test
@@ -111,6 +111,8 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
         LoadFlowParameters parameters = LoadFlowParameters.load(platformConfig);
         DynaFlowParameters parametersExt = parameters.getExtension(DynaFlowParameters.class);
         assertNotNull(parametersExt);
+
+        assertEquals("{mergeLoads=true}", parametersExt.toString());
 
         assertNull(parametersExt.getSvcRegulationOn());
         assertNull(parametersExt.getShuntRegulationOn());
@@ -126,18 +128,7 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
         assertNull(parametersExt.getChosenOutputs());
         assertNull(parametersExt.getTimeStep());
         assertNull(parametersExt.getStartingPointMode());
-        assertTrue(parametersExt.getMergeLoads());
-    }
-
-    @Test
-    public void checkDefaultToString() {
-        LoadFlowParameters parameters = LoadFlowParameters.load(platformConfig);
-        DynaFlowParameters parametersExt = parameters.getExtension(DynaFlowParameters.class);
-
-        String expectedString = "{mergeLoads=true}";
-
-        assertEquals(expectedString, parametersExt.toString());
-
+        assertTrue(parametersExt.isMergeLoads());
     }
 
     @Test
@@ -304,6 +295,6 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
         assertArrayEquals(chosenOutputs.toArray(), dynaFlowParameters.getChosenOutputs().toArray());
         assertEquals(timeStep, dynaFlowParameters.getTimeStep(), 0.1d);
         assertEquals(startingPointMode, dynaFlowParameters.getStartingPointMode());
-        assertEquals(mergeLoads, dynaFlowParameters.getMergeLoads());
+        assertEquals(mergeLoads, dynaFlowParameters.isMergeLoads());
     }
 }

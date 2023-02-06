@@ -150,15 +150,7 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
             boolean status = true;
             Path outputNetworkFile = workingDir.resolve("outputs").resolve("finalState").resolve(OUTPUT_IIDM_FILENAME);
             if (Files.exists(outputNetworkFile)) {
-                Network modifiedNetwork;
-                if (context.getDynaWaltzParameters().getMergeLoads()) {
-                    NetworkResultsUpdater.update(loadsMerger.getMergedLoadsNetwork(), NetworkXml.read(outputNetworkFile));
-                    loadsMerger.unmergeLoads();
-                    modifiedNetwork = loadsMerger.getMergedLoadsNetwork();
-                } else {
-                    modifiedNetwork = NetworkXml.read(outputNetworkFile);
-                }
-                NetworkResultsUpdater.update(context.getNetwork(), modifiedNetwork);
+                NetworkResultsUpdater.update(context.getNetwork(), NetworkXml.read(outputNetworkFile), context.getDynaWaltzParameters().isMergeLoads());
             } else {
                 status = false;
             }
@@ -177,15 +169,10 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
 
         private void writeInputFiles(Path workingDir) {
             try {
-                Network network;
-                if (context.getDynaWaltzParameters().getMergeLoads()) {
-                    loadsMerger.mergeLoads();
-                    network = loadsMerger.getMergedLoadsNetwork();
-                } else {
-                    network = context.getNetwork();
-                }
-                DynawoUtil.writeIidm(network, workingDir.resolve(NETWORK_FILENAME));
-
+                Network input = context.getDynaWaltzParameters().isMergeLoads()
+                        ? loadsMerger.getMergedLoadsNetwork()
+                        : context.getNetwork();
+                DynawoUtil.writeIidm(input, workingDir.resolve(NETWORK_FILENAME));
                 JobsXml.write(workingDir, context);
                 DydXml.write(workingDir, context);
                 ParametersXml.write(workingDir, context);

@@ -31,7 +31,7 @@ public class NetworkResultsUpdaterTest extends AbstractConverterTest {
         Network expected = createTestCaseNodeBreaker();
         Network actual = createTestCaseNodeBreaker();
         reset(actual);
-        NetworkResultsUpdater.update(actual, expected);
+        NetworkResultsUpdater.update(actual, expected, false);
         compare(expected, actual);
     }
 
@@ -49,7 +49,7 @@ public class NetworkResultsUpdaterTest extends AbstractConverterTest {
         Path pexpectedAsBusBreaker = tmpDir.resolve("expected-as-busbreaker.xiidm");
         NetworkXml.write(expected, new ExportOptions().setTopologyLevel(TopologyLevel.BUS_BREAKER), pexpectedAsBusBreaker);
         Network expectedBusBreaker = NetworkXml.read(pexpectedAsBusBreaker);
-        NetworkResultsUpdater.update(actual, expectedBusBreaker);
+        NetworkResultsUpdater.update(actual, expectedBusBreaker, false);
 
         compare(expected, actual);
     }
@@ -59,7 +59,7 @@ public class NetworkResultsUpdaterTest extends AbstractConverterTest {
         Network expected = createTestCaseBusBranch();
         Network actual = createTestCaseBusBranch();
         reset(actual);
-        NetworkResultsUpdater.update(actual, expected);
+        NetworkResultsUpdater.update(actual, expected, false);
         compare(expected, actual);
     }
 
@@ -68,7 +68,7 @@ public class NetworkResultsUpdaterTest extends AbstractConverterTest {
         Network expected = createTestMicro();
         Network actual = createTestMicro();
         reset(actual);
-        NetworkResultsUpdater.update(actual, expected);
+        NetworkResultsUpdater.update(actual, expected, false);
         compare(expected, actual);
     }
 
@@ -97,7 +97,7 @@ public class NetworkResultsUpdaterTest extends AbstractConverterTest {
 
         Network actual = createTestMicro();
         reset(actual);
-        NetworkResultsUpdater.update(actual, expected);
+        NetworkResultsUpdater.update(actual, expected, false);
         compare(expected, actual);
     }
 

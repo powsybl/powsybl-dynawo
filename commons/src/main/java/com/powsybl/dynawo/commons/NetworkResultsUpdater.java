@@ -6,6 +6,8 @@
  */
 package com.powsybl.dynawo.commons;
 
+import com.google.common.collect.Iterables;
+import com.powsybl.commons.PowsyblException;
 import com.powsybl.iidm.network.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +22,8 @@ public final class NetworkResultsUpdater {
     private NetworkResultsUpdater() {
     }
 
-    public static void update(Network targetNetwork, Network sourceNetwork) {
+    public static void update(Network targetNetwork, Network sourceNetwork, boolean mergeLoads) {
+        updateLoads(targetNetwork, sourceNetwork, mergeLoads);
         for (Line lineSource : sourceNetwork.getLines()) {
             update(targetNetwork.getLine(lineSource.getId()).getTerminal1(), lineSource.getTerminal1());
             update(targetNetwork.getLine(lineSource.getId()).getTerminal2(), lineSource.getTerminal2());
@@ -61,9 +64,6 @@ public final class NetworkResultsUpdater {
             update(targetThreeWindingsTransformer.getLeg1(), sourceThreeWindingsTransformer.getLeg1());
             update(targetThreeWindingsTransformer.getLeg2(), sourceThreeWindingsTransformer.getLeg2());
             update(targetThreeWindingsTransformer.getLeg3(), sourceThreeWindingsTransformer.getLeg3());
-        }
-        for (Load sourceLoad : sourceNetwork.getLoads()) {
-            update(targetNetwork.getLoad(sourceLoad.getId()).getTerminal(), sourceLoad.getTerminal());
         }
         for (Generator sourceGenerator : sourceNetwork.getGenerators()) {
             update(targetNetwork.getGenerator(sourceGenerator.getId()).getTerminal(), sourceGenerator.getTerminal());
@@ -119,5 +119,47 @@ public final class NetworkResultsUpdater {
         } else if (!source.isConnected()) {
             target.disconnect();
         }
+    }
+
+    private static void updateLoads(Network targetNetwork, Network sourceNetwork, boolean mergeLoads) {
+        if (!mergeLoads) {
+            for (Load sourceLoad : sourceNetwork.getLoads()) {
+                update(targetNetwork.getLoad(sourceLoad.getId()).getTerminal(), sourceLoad.getTerminal());
+            }
+        } else {
+            for (Bus busTarget : targetNetwork.getBusBreakerView().getBuses()) {
+                Iterable<Load> loadsTarget = busTarget.getLoads();
+                int nbLoads = Iterables.size(loadsTarget);
+                if (nbLoads == 0) {
+                    continue;
+                }
+
+                Terminal mergedLoadTerminal = getMergedLoad(sourceNetwork, busTarget.getId()).getTerminal();
+                if (nbLoads == 1) {
+                    update(loadsTarget.iterator().next().getTerminal(), mergedLoadTerminal);
+                } else {
+                    LoadsMerger.BusState busState = LoadsMerger.getBusState(busTarget);
+                    for (Load load : loadsTarget) {
+                        Terminal loadTerminal = load.getTerminal();
+                        loadTerminal.setP(loadTerminal.getP() / busState.getP() * mergedLoadTerminal.getP());
+                        loadTerminal.setQ(loadTerminal.getQ() / busState.getQ() * mergedLoadTerminal.getQ());
+                        if (mergedLoadTerminal.isConnected()) {
+                            loadTerminal.connect();
+                        } else if (!mergedLoadTerminal.isConnected()) {
+                            loadTerminal.disconnect();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private static Load getMergedLoad(Network sourceNetwork, String busId) {
+        Bus busSource = sourceNetwork.getBusBreakerView().getBus(busId);
+        if (busSource.getLoadStream().count() > 1) {
+            throw new PowsyblException("Loads not merged in bus " + busId);
+        }
+        return busSource.getLoadStream().findFirst()
+                .orElseThrow(() -> new PowsyblException("Missing merged load in bus " + busId));
     }
 }
