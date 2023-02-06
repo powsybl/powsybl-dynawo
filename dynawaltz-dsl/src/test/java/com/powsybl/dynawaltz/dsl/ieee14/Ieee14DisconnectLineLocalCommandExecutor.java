@@ -22,8 +22,8 @@ import com.powsybl.iidm.network.Network;
  */
 public class Ieee14DisconnectLineLocalCommandExecutor extends AbstractDynaWaltzLocalCommandExecutor {
 
-    public Ieee14DisconnectLineLocalCommandExecutor(FileSystem fileSystem, Network network, DynaWaltzParameters dynaWaltzParameters) {
-        super(fileSystem, network, dynaWaltzParameters);
+    public Ieee14DisconnectLineLocalCommandExecutor(FileSystem fileSystem, Network network, DynaWaltzParameters dynaWaltzParameters, String stdOutFileRef) {
+        super(fileSystem, network, dynaWaltzParameters, stdOutFileRef);
     }
 
     @Override

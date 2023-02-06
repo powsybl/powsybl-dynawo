@@ -11,7 +11,9 @@ import static org.junit.Assert.assertFalse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.FileSystem;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -38,11 +40,13 @@ public abstract class AbstractDynaWaltzLocalCommandExecutor implements LocalComm
     protected final FileSystem fileSystem;
     protected final Network network;
     protected final DynaWaltzParameters dynaWaltzParameters;
+    protected final String stdOutFileRef;
 
-    public AbstractDynaWaltzLocalCommandExecutor(FileSystem fileSystem, Network network, DynaWaltzParameters dynaWaltzParameters) {
+    public AbstractDynaWaltzLocalCommandExecutor(FileSystem fileSystem, Network network, DynaWaltzParameters dynaWaltzParameters, String stdOutFileRef) {
         this.fileSystem = Objects.requireNonNull(fileSystem);
         this.network = Objects.requireNonNull(network);
         this.dynaWaltzParameters = Objects.requireNonNull(dynaWaltzParameters);
+        this.stdOutFileRef = stdOutFileRef;
     }
 
     protected abstract void validateInputs(Path workingDir) throws IOException;
@@ -57,8 +61,12 @@ public abstract class AbstractDynaWaltzLocalCommandExecutor implements LocalComm
     @Override
     public int execute(String program, long timeoutSeconds, List<String> args, Path outFile, Path errFile, Path workingDir, Map<String, String> env) throws IOException {
         try {
-            validateInputs(workingDir);
-            copyOutputs(workingDir);
+            if (args.get(0).equals("version")) {
+                copyFile(stdOutFileRef, errFile);
+            } else {
+                validateInputs(workingDir);
+                copyOutputs(workingDir);
+            }
         } catch (Throwable throwable) {
             LOGGER.error(throwable.toString(), throwable);
             return -1;
@@ -83,5 +91,11 @@ public abstract class AbstractDynaWaltzLocalCommandExecutor implements LocalComm
             System.err.println(myDiff.toString());
         }
         assertFalse(hasDiff);
+    }
+
+    protected void copyFile(String source, Path target) throws IOException {
+        try (InputStream is = getClass().getResourceAsStream(source)) {
+            Files.copy(is, target, StandardCopyOption.REPLACE_EXISTING);
+        }
     }
 }

@@ -22,8 +22,8 @@ import java.nio.file.Path;
  */
 public class Ieee14MacroconnectsLocalCommandExecutor extends AbstractDynaWaltzLocalCommandExecutor {
 
-    public Ieee14MacroconnectsLocalCommandExecutor(FileSystem fileSystem, Network network, DynaWaltzParameters dynaWaltzParameters) {
-        super(fileSystem, network, dynaWaltzParameters);
+    public Ieee14MacroconnectsLocalCommandExecutor(FileSystem fileSystem, Network network, DynaWaltzParameters dynaWaltzParameters, String stdOutFileRef) {
+        super(fileSystem, network, dynaWaltzParameters, stdOutFileRef);
     }
 
     @Override

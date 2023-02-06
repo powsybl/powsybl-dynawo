@@ -36,7 +36,7 @@ public class Ieee57DisconnectGeneratorTest extends AbstractIeeeTest {
 
     @Test
     public void testSimulation() throws Exception {
-        Ieee57DisconnectGeneratorLocalCommandExecutor commandExecutor = new Ieee57DisconnectGeneratorLocalCommandExecutor(fileSystem, network, getDynaWaltzSimulationParameters(parameters));
+        Ieee57DisconnectGeneratorLocalCommandExecutor commandExecutor = new Ieee57DisconnectGeneratorLocalCommandExecutor(fileSystem, network, getDynaWaltzSimulationParameters(parameters), "/dynawo_version.out");
         DynamicSimulationResult result = runSimulation(commandExecutor);
         assertNotNull(result);
     }

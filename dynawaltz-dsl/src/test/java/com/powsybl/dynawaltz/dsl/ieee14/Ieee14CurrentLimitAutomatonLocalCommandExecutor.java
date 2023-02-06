@@ -22,8 +22,8 @@ import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.*;
  */
 public class Ieee14CurrentLimitAutomatonLocalCommandExecutor extends AbstractDynaWaltzLocalCommandExecutor {
 
-    public Ieee14CurrentLimitAutomatonLocalCommandExecutor(FileSystem fileSystem, Network network, DynaWaltzParameters dynaWaltzParameters) {
-        super(fileSystem, network, dynaWaltzParameters);
+    public Ieee14CurrentLimitAutomatonLocalCommandExecutor(FileSystem fileSystem, Network network, DynaWaltzParameters dynaWaltzParameters, String stdOutFileRef) {
+        super(fileSystem, network, dynaWaltzParameters, stdOutFileRef);
     }
 
     @Override

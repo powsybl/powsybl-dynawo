@@ -37,7 +37,7 @@ public class Ieee14MacroConnectsTest extends AbstractIeeeTest {
 
     @Test
     public void testSimulation() throws Exception {
-        Ieee14MacroconnectsLocalCommandExecutor commandExecutor = new Ieee14MacroconnectsLocalCommandExecutor(fileSystem, network, getDynaWaltzSimulationParameters(parameters));
+        Ieee14MacroconnectsLocalCommandExecutor commandExecutor = new Ieee14MacroconnectsLocalCommandExecutor(fileSystem, network, getDynaWaltzSimulationParameters(parameters), "/dynawo_version.out");
         DynamicSimulationResult result = runSimulation(commandExecutor);
         assertNotNull(result);
     }
