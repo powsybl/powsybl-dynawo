@@ -17,6 +17,7 @@ import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.test.AbstractConverterTest;
 import com.powsybl.computation.local.LocalCommandExecutor;
 import com.powsybl.dynamicsimulation.*;
+import org.apache.commons.lang3.SystemUtils;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -34,6 +35,7 @@ import static org.junit.Assert.*;
 public class DynaWaltzProviderTest extends AbstractConverterTest {
 
     private static final String OUTPUT_IIDM_FILENAME = "outputIIDM.xml";
+    private final String extension = SystemUtils.IS_OS_WINDOWS ? ".cmd" : ".sh";
     private Path homeDir;
     private DynaWaltzConfig config;
 
@@ -123,7 +125,7 @@ public class DynaWaltzProviderTest extends AbstractConverterTest {
 
     @Test
     public void checkVersionCommand() {
-        String program = homeDir.resolve("dynawo.sh").toString();
+        String program = homeDir.resolve("dynawo" + extension).toString();
         String versionCommand = DynaWaltzProvider.getVersionCommand(config).toString(0);
         String expectedVersionCommand = "[" + program + ", version]";
         assertEquals(expectedVersionCommand, versionCommand);
@@ -131,7 +133,7 @@ public class DynaWaltzProviderTest extends AbstractConverterTest {
 
     @Test
     public void checkExecutionCommand() {
-        String program = homeDir.resolve("dynawo.sh").toString();
+        String program = homeDir.resolve("dynawo" + extension).toString();
         String versionCommand = DynaWaltzProvider.getCommand(config).toString(0);
         String expectedVersionCommand = "[[" + program + ", jobs, " + JOBS_FILENAME + "]]";
         assertEquals(expectedVersionCommand, versionCommand);

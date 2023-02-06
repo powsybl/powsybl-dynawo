@@ -37,7 +37,7 @@ public class Ieee14CurrentLimitAutomatonTest extends AbstractIeeeTest {
 
     @Test
     public void testSimulation() throws Exception {
-        Ieee14CurrentLimitAutomatonLocalCommandExecutor commandExecutor = new Ieee14CurrentLimitAutomatonLocalCommandExecutor(fileSystem, network, getDynaWaltzSimulationParameters(parameters));
+        Ieee14CurrentLimitAutomatonLocalCommandExecutor commandExecutor = new Ieee14CurrentLimitAutomatonLocalCommandExecutor(fileSystem, network, getDynaWaltzSimulationParameters(parameters), "/dynawo_version.out");
         DynamicSimulationResult result = runSimulation(commandExecutor);
         assertNotNull(result);
     }

@@ -37,7 +37,7 @@ import static org.junit.Assert.*;
  *
  * @author Guillaume Pernin <guillaume.pernin at rte-france.com>
  */
-public class DynaFlowVersionCheckTest {
+public class DynawoVersionCheckTest {
 
     private FileSystem fileSystem;
     private final ExecutionEnvironment env = Mockito.mock(ExecutionEnvironment.class);

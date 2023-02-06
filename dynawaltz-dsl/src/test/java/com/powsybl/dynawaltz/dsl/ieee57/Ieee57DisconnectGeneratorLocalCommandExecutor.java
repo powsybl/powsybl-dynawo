@@ -22,8 +22,8 @@ import java.nio.file.Path;
  */
 public class Ieee57DisconnectGeneratorLocalCommandExecutor extends AbstractDynaWaltzLocalCommandExecutor {
 
-    public Ieee57DisconnectGeneratorLocalCommandExecutor(FileSystem fileSystem, Network network, DynaWaltzParameters dynaWaltzParameters) {
-        super(fileSystem, network, dynaWaltzParameters);
+    public Ieee57DisconnectGeneratorLocalCommandExecutor(FileSystem fileSystem, Network network, DynaWaltzParameters dynaWaltzParameters, String stdOutFileRef) {
+        super(fileSystem, network, dynaWaltzParameters, stdOutFileRef);
     }
 
     @Override
