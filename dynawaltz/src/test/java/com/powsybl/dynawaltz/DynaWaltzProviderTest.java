@@ -180,8 +180,11 @@ public class DynaWaltzProviderTest extends AbstractConverterTest {
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(tmpDir, 1), commandExecutor, ForkJoinPool.commonPool());
         DynamicSimulation.Runner dynawoSimulation = DynamicSimulation.find();
         assertEquals(DynaWaltzProvider.NAME, dynawoSimulation.getName());
-        assertThrows(PowsyblException.class, () -> dynawoSimulation.run(network, DynamicModelsSupplierMock.empty(), EventModelsSupplierMock.empty(),
-                CurvesSupplier.empty(), network.getVariantManager().getWorkingVariantId(),
-                computationManager, DynamicSimulationParameters.load()));
+        DynamicModelsSupplier dms = DynamicModelsSupplierMock.empty();
+        EventModelsSupplier ems = EventModelsSupplierMock.empty();
+        CurvesSupplier cs = CurvesSupplier.empty();
+        String wvId = network.getVariantManager().getWorkingVariantId();
+        DynamicSimulationParameters dsp = DynamicSimulationParameters.load();
+        assertThrows(PowsyblException.class, () -> dynawoSimulation.run(network, dms, ems, cs, wvId, computationManager, dsp));
     }
 }

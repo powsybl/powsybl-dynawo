@@ -27,10 +27,13 @@ import com.powsybl.iidm.network.VariantManagerConstants;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import com.powsybl.loadflow.LoadFlowResult;
 import com.powsybl.security.*;
+import com.powsybl.security.action.Action;
 import com.powsybl.security.detectors.DefaultLimitViolationDetector;
 import com.powsybl.security.extensions.ActivePowerExtension;
 import com.powsybl.security.extensions.CurrentExtension;
+import com.powsybl.security.interceptors.SecurityAnalysisInterceptor;
 import com.powsybl.security.results.PostContingencyResult;
+import com.powsybl.security.strategy.OperatorStrategy;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -191,8 +194,13 @@ public class DynaFlowSecurityAnalysisTest {
         LocalCommandExecutor commandExecutor = new SecurityAnalysisLocalCommandExecutorMock("/dynawo_bad_version.out");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
 
+        SecurityAnalysisParameters sap = SecurityAnalysisParameters.load(platformConfig);
+        DefaultLimitViolationDetector dlvd = new DefaultLimitViolationDetector();
+        List<SecurityAnalysisInterceptor> interceptors = Collections.emptyList();
+        List<OperatorStrategy> operatorStrategies = Collections.emptyList();
+        List<Action> actions = Collections.emptyList();
         assertThrows(PowsyblException.class, () -> SecurityAnalysis.run(network, VariantManagerConstants.INITIAL_VARIANT_ID, contingenciesProvider,
-                    SecurityAnalysisParameters.load(platformConfig), computationManager, filter, new DefaultLimitViolationDetector(), Collections.emptyList(), Collections.emptyList(), Collections.emptyList()));
+                sap, computationManager, filter, dlvd, interceptors, operatorStrategies, actions));
     }
 
     private static class SecurityAnalysisLocalCommandExecutorMock extends AbstractLocalCommandExecutor {
