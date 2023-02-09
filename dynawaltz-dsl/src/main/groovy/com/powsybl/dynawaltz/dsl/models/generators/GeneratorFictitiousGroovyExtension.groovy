@@ -10,34 +10,54 @@ import com.google.auto.service.AutoService
 import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
+import com.powsybl.dynawaltz.dsl.ModelBuilder
+import com.powsybl.dynawaltz.dsl.PowsyblDynawoGroovyExtension
 import com.powsybl.dynawaltz.models.generators.GeneratorFictitious
-
-import java.util.function.Consumer
 
 /**
  * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class GeneratorFictitiousGroovyExtension extends GeneratorModelGroovyExtension {
+class GeneratorFictitiousGroovyExtension extends PowsyblDynawoGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
-    void load(Binding binding, Consumer<DynamicModel> consumer) {
-        binding.GeneratorFictitious = { Closure<Void> closure ->
-            def cloned = closure.clone()
-            GeneratorModelSpec generatorModelSpec = new GeneratorModelSpec()
-
-            cloned.delegate = generatorModelSpec
-            cloned()
-
-            if (!generatorModelSpec.staticId) {
-                throw new DslException("'staticId' field is not set")
-            }
-            if (!generatorModelSpec.parameterSetId) {
-                throw new DslException("'parameterSetId' field is not set")
-            }
-
-            String dynamicModelId = generatorModelSpec.dynamicModelId ? generatorModelSpec.dynamicModelId : generatorModelSpec.staticId
-            consumer.accept(new GeneratorFictitious(dynamicModelId, generatorModelSpec.staticId, generatorModelSpec.parameterSetId))
-        }
+    GeneratorFictitiousGroovyExtension() {
+        tags = ["GeneratorFictitious"]
     }
 
+    @Override
+    protected GeneratorFictitiousBuilder createBuilder(String currentTag) {
+        new GeneratorFictitiousBuilder()
+    }
+
+    static class GeneratorFictitiousBuilder implements ModelBuilder<DynamicModel> {
+        String dynamicModelId
+        String staticId
+        String parameterSetId
+
+        void dynamicModelId(String dynamicModelId) {
+            this.dynamicModelId = dynamicModelId
+        }
+
+        void staticId(String staticId) {
+            this.staticId = staticId
+        }
+
+        void parameterSetId(String parameterSetId) {
+            this.parameterSetId = parameterSetId
+        }
+
+        @Override
+        GeneratorFictitious build() {
+            if (!staticId) {
+                throw new DslException("'staticId' field is not set")
+            }
+            if (!parameterSetId) {
+                throw new DslException("'parameterSetId' field is not set")
+            }
+            if (!dynamicModelId) {
+                dynamicModelId = staticId
+            }
+            new GeneratorFictitious(dynamicModelId, staticId, parameterSetId)
+        }
+    }
 }

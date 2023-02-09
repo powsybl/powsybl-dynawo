@@ -6,30 +6,42 @@
  */
 package com.powsybl.dynawaltz.dsl.models.generators
 
-import com.powsybl.dynawaltz.models.generators.GeneratorSynchronous
-
-import java.util.function.Consumer
-
 import com.google.auto.service.AutoService
 import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
-
-import com.powsybl.dynawaltz.DynaWaltzProvider
+import com.powsybl.dynawaltz.dsl.ModelBuilder
+import com.powsybl.dynawaltz.dsl.PowsyblDynawoGroovyExtension
+import com.powsybl.dynawaltz.models.generators.GeneratorSynchronous
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class GeneratorModelGroovyExtension implements DynamicModelGroovyExtension {
+class GeneratorModelGroovyExtension extends PowsyblDynawoGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
-    private static final String GENERATORS_CONFIG = "synchronous_generators.cfg";
-    private static final String SYNCHRONOUS_GENERATORS_LIBS = "synchronousGeneratorsLibs";
+    private static final String GENERATORS_CONFIG = "synchronous_generators.cfg"
+    private static final String SYNCHRONOUS_GENERATORS_LIBS = "synchronousGeneratorsLibs"
 
-    static class GeneratorModelSpec {
+    GeneratorModelGroovyExtension() {
+        ConfigSlurper config = new ConfigSlurper()
+        tags = config.parse(this.getClass().getClassLoader().getResource(GENERATORS_CONFIG)).get(SYNCHRONOUS_GENERATORS_LIBS).keySet() as List
+    }
+
+    @Override
+    protected GeneratorBuilder createBuilder(String currentTag) {
+        new GeneratorBuilder(currentTag)
+    }
+
+    static class GeneratorBuilder implements ModelBuilder<DynamicModel> {
         String dynamicModelId
         String staticId
         String parameterSetId
+        String tag
+
+        GeneratorBuilder(String tag) {
+            this.tag = tag
+        }
 
         void dynamicModelId(String dynamicModelId) {
             this.dynamicModelId = dynamicModelId
@@ -42,40 +54,19 @@ class GeneratorModelGroovyExtension implements DynamicModelGroovyExtension {
         void parameterSetId(String parameterSetId) {
             this.parameterSetId = parameterSetId
         }
-    }
 
-    String getName() {
-        return DynaWaltzProvider.NAME
-    }
-
-    void load(Binding binding, Consumer<DynamicModel> consumer) {
-        ConfigSlurper config = new ConfigSlurper()
-        def cfg = config.parse(this.getClass().getClassLoader().getResource(GENERATORS_CONFIG)).get(SYNCHRONOUS_GENERATORS_LIBS)
-        for (String gen : cfg.keySet()) {
-            binding.setVariable(gen, generatorClosure(consumer, gen))
-        }
-    }
-
-    def generatorClosure = {
-        Consumer<DynamicModel> consumer, String generator ->
-        {
-            Closure<Void> closure -> {
-                def cloned = closure.clone()
-                GeneratorModelSpec generatorModelSpec = new GeneratorModelSpec()
-
-                cloned.delegate = generatorModelSpec
-                cloned()
-
-                if (!generatorModelSpec.staticId) {SYNCHRONOUS_GENERATORS_LIBS
-                    throw new DslException("'staticId' field is not set")
-                }
-                if (!generatorModelSpec.parameterSetId) {
-                    throw new DslException("'parameterSetId' field is not set")
-                }
-
-                String dynamicModelId = generatorModelSpec.dynamicModelId ? generatorModelSpec.dynamicModelId : generatorModelSpec.staticId
-                consumer.accept(new GeneratorSynchronous(dynamicModelId, generatorModelSpec.staticId, generatorModelSpec.parameterSetId, generator))
+        @Override
+        GeneratorSynchronous build() {
+            if (!staticId) {
+                throw new DslException("'staticId' field is not set")
             }
+            if (!parameterSetId) {
+                throw new DslException("'parameterSetId' field is not set")
+            }
+            if (!dynamicModelId) {
+                dynamicModelId = staticId
+            }
+            new GeneratorSynchronous(dynamicModelId, staticId, parameterSetId, tag)
         }
     }
 }

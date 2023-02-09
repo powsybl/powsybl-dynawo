@@ -6,17 +6,14 @@
  */
 package com.powsybl.dynawaltz.dsl.automatons
 
-import com.powsybl.iidm.network.Branch
-
-import com.powsybl.dynawaltz.DynaWaltzProvider
-import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton
-
-import java.util.function.Consumer
-
 import com.google.auto.service.AutoService
 import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
+import com.powsybl.dynawaltz.dsl.ModelBuilder
+import com.powsybl.dynawaltz.dsl.PowsyblDynawoGroovyExtension
+import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton
+import com.powsybl.iidm.network.Branch
 
 /**
  * An implementation of {@link DynamicModelGroovyExtension} that adds the <pre>CurrentLimitAutomaton</pre> keyword to the DSL
@@ -24,9 +21,18 @@ import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class CurrentLimitAutomatonGroovyExtension implements DynamicModelGroovyExtension {
+class CurrentLimitAutomatonGroovyExtension extends PowsyblDynawoGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
-    static class CurrentLimitAutomatonSpec {
+    CurrentLimitAutomatonGroovyExtension() {
+        tags = ["CurrentLimitAutomaton"]
+    }
+
+    @Override
+    protected CurrentLimitAutomatonBuilder createBuilder(String currentTag) {
+        new CurrentLimitAutomatonBuilder()
+    }
+
+    static class CurrentLimitAutomatonBuilder implements ModelBuilder<DynamicModel> {
         String dynamicModelId
         String staticId
         Branch.Side side
@@ -47,33 +53,22 @@ class CurrentLimitAutomatonGroovyExtension implements DynamicModelGroovyExtensio
         void side(Branch.Side side) {
             this.side = side
         }
-    }
 
-    String getName() {
-        return DynaWaltzProvider.NAME
-    }
-    
-    void load(Binding binding, Consumer<DynamicModel> consumer) {
-        binding.CurrentLimitAutomaton = { Closure<Void> closure ->
-            def cloned = closure.clone()
-            CurrentLimitAutomatonSpec currentLimitAutomatonSpec = new CurrentLimitAutomatonSpec()
-    
-            cloned.delegate = currentLimitAutomatonSpec
-            cloned()
-
-            if (!currentLimitAutomatonSpec.staticId) {
-                throw new DslException("'staticId' field is not set");
+        @Override
+        CurrentLimitAutomaton build() {
+            if (!staticId) {
+                throw new DslException("'staticId' field is not set")
             }
-            if (!currentLimitAutomatonSpec.parameterSetId) {
+            if (!parameterSetId) {
                 throw new DslException("'parameterSetId' field is not set")
             }
-            if (!currentLimitAutomatonSpec.side) {
-                throw new DslException("'side' field is not set");
+            if (!side) {
+                throw new DslException("'side' field is not set")
             }
-
-            String dynamicModelId = currentLimitAutomatonSpec.dynamicModelId ? currentLimitAutomatonSpec.dynamicModelId : currentLimitAutomatonSpec.staticId
-            consumer.accept(new CurrentLimitAutomaton(dynamicModelId, currentLimitAutomatonSpec.staticId, currentLimitAutomatonSpec.parameterSetId, currentLimitAutomatonSpec.side))
+            if (!dynamicModelId) {
+                dynamicModelId = staticId
+            }
+            new CurrentLimitAutomaton(dynamicModelId, staticId, parameterSetId, side)
         }
     }
-
 }

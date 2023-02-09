@@ -11,10 +11,9 @@ import com.google.auto.service.AutoService
 import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
-import com.powsybl.dynawaltz.DynaWaltzProvider
+import com.powsybl.dynawaltz.dsl.ModelBuilder
+import com.powsybl.dynawaltz.dsl.PowsyblDynawoGroovyExtension
 import com.powsybl.dynawaltz.models.buses.StandardBus
-
-import java.util.function.Consumer
 
 /**
  * An implementation of {@link DynamicModelGroovyExtension} that adds the <pre>Bus</pre> keyword to the DSL
@@ -22,9 +21,18 @@ import java.util.function.Consumer
  * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class BusGroovyExtension implements DynamicModelGroovyExtension {
+class BusGroovyExtension extends PowsyblDynawoGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
-    static class BusSpec {
+    BusGroovyExtension() {
+        tags = ["Bus"]
+    }
+
+    @Override
+    protected BusBuilder createBuilder(String currentTag) {
+        new BusBuilder()
+    }
+
+    static class BusBuilder implements ModelBuilder<DynamicModel> {
         String dynamicModelId
         String staticId
         String parameterSetId
@@ -40,30 +48,19 @@ class BusGroovyExtension implements DynamicModelGroovyExtension {
         void parameterSetId(String parameterSetId) {
             this.parameterSetId = parameterSetId
         }
-    }
 
-    String getName() {
-        return DynaWaltzProvider.NAME
-    }
-    
-    void load(Binding binding, Consumer<DynamicModel> consumer) {
-        binding.Bus = { Closure<Void> closure ->
-            def cloned = closure.clone()
-            BusSpec busSpec = new BusSpec()
-    
-            cloned.delegate = busSpec
-            cloned()
-
-            if (!busSpec.staticId) {
-                throw new DslException("'staticId' field is not set");
+        @Override
+        StandardBus build() {
+            if (!staticId) {
+                throw new DslException("'staticId' field is not set")
             }
-            if (!busSpec.parameterSetId) {
+            if (!parameterSetId) {
                 throw new DslException("'parameterSetId' field is not set")
             }
-
-            String dynamicModelId = busSpec.dynamicModelId ? busSpec.dynamicModelId : busSpec.staticId
-            consumer.accept(new StandardBus(dynamicModelId, busSpec.staticId, busSpec.parameterSetId))
+            if (!dynamicModelId) {
+                dynamicModelId = staticId
+            }
+            new StandardBus(dynamicModelId, staticId, parameterSetId)
         }
     }
-
 }

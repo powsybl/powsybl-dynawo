@@ -6,14 +6,12 @@
  */
 package com.powsybl.dynawaltz.dsl.events
 
-import java.util.function.Consumer
-
 import com.google.auto.service.AutoService
 import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.EventModel
 import com.powsybl.dynamicsimulation.groovy.EventModelGroovyExtension
-
-import com.powsybl.dynawaltz.DynaWaltzProvider
+import com.powsybl.dynawaltz.dsl.ModelBuilder
+import com.powsybl.dynawaltz.dsl.PowsyblDynawoGroovyExtension
 import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection
 
 /**
@@ -22,9 +20,19 @@ import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 @AutoService(EventModelGroovyExtension.class)
-class EventQuadripoleDisconnectionGroovyExtension implements EventModelGroovyExtension {
+class EventQuadripoleDisconnectionGroovyExtension extends PowsyblDynawoGroovyExtension<EventModel> implements EventModelGroovyExtension {
 
-    static class EventQuadripoleDisconnectionSpec {
+    EventQuadripoleDisconnectionGroovyExtension() {
+        tags = ["EventQuadripoleDisconnection"]
+    }
+
+    @Override
+    protected EventQuadripoleDisconnectionBuilder createBuilder(String currentTag) {
+        new EventQuadripoleDisconnectionBuilder()
+    }
+
+    static class EventQuadripoleDisconnectionBuilder implements ModelBuilder<EventModel> {
+
         String eventModelId
         String staticId
         double startTime
@@ -50,32 +58,19 @@ class EventQuadripoleDisconnectionGroovyExtension implements EventModelGroovyExt
         void disconnectExtremity(boolean disconnectExtremity) {
             this.disconnectExtremity = disconnectExtremity
         }
-    }
 
-    String getName() {
-        return DynaWaltzProvider.NAME
-    }
-    
-    void load(Binding binding, Consumer<EventModel> consumer) {
-        binding.EventQuadripoleDisconnection = { Closure<Void> closure ->
-            def cloned = closure.clone()
-            EventQuadripoleDisconnectionSpec eventQuadripoleDisconnectionSpec = new EventQuadripoleDisconnectionSpec()
-    
-            cloned.delegate = eventQuadripoleDisconnectionSpec
-            cloned()
-
-            if (!eventQuadripoleDisconnectionSpec.staticId) {
-                throw new DslException("'staticId' field is not set");
+        @Override
+        EventQuadripoleDisconnection build() {
+            if (!staticId) {
+                throw new DslException("'staticId' field is not set")
             }
-            if (!eventQuadripoleDisconnectionSpec.startTime) {
+            if (!startTime) {
                 throw new DslException("'startTime' field is not set")
             }
-
-            String eventModelId = eventQuadripoleDisconnectionSpec.eventModelId ? eventQuadripoleDisconnectionSpec.eventModelId : eventQuadripoleDisconnectionSpec.staticId
-            consumer.accept(new EventQuadripoleDisconnection(eventModelId, eventQuadripoleDisconnectionSpec.staticId,
-                    eventQuadripoleDisconnectionSpec.startTime, eventQuadripoleDisconnectionSpec.disconnectOrigin,
-                    eventQuadripoleDisconnectionSpec.disconnectExtremity))
+            if (!eventModelId) {
+                eventModelId = staticId
+            }
+            new EventQuadripoleDisconnection(eventModelId, staticId, startTime, disconnectOrigin, disconnectExtremity)
         }
     }
-
 }
