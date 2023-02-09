@@ -7,10 +7,8 @@
 package com.powsybl.dynawaltz.dsl.events
 
 import com.google.auto.service.AutoService
-import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.EventModel
 import com.powsybl.dynamicsimulation.groovy.EventModelGroovyExtension
-import com.powsybl.dynawaltz.dsl.ModelBuilder
 import com.powsybl.dynawaltz.dsl.PowsyblDynawoGroovyExtension
 import com.powsybl.dynawaltz.models.events.EventSetPointBoolean
 
@@ -31,23 +29,12 @@ class EventSetPointBooleanGroovyExtension extends PowsyblDynawoGroovyExtension<E
         new EventSetPointBooleanBuilder()
     }
 
-    static class EventSetPointBooleanBuilder implements ModelBuilder<EventModel> {
+    static class EventSetPointBooleanBuilder extends AbstractEventModelBuilder {
+
         String eventModelId
         String staticId
         double startTime
         boolean stateEvent
-
-        void eventModelId(String eventModelId) {
-            this.eventModelId = eventModelId
-        }
-
-        void staticId(String staticId) {
-            this.staticId = staticId
-        }
-
-        void startTime(double startTime) {
-            this.startTime = startTime
-        }
 
         void stateEvent(boolean stateEvent) {
             this.stateEvent = stateEvent
@@ -55,15 +42,7 @@ class EventSetPointBooleanGroovyExtension extends PowsyblDynawoGroovyExtension<E
 
         @Override
         EventModel build() {
-            if (!staticId) {
-                throw new DslException("'staticId' field is not set")
-            }
-            if (!startTime) {
-                throw new DslException("'startTime' field is not set")
-            }
-            if (!eventModelId) {
-                eventModelId = staticId
-            }
+            setupBuild()
             new EventSetPointBoolean(eventModelId, staticId, startTime, stateEvent)
         }
     }

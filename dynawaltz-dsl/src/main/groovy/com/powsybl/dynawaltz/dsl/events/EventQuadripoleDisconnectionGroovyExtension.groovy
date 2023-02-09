@@ -7,10 +7,8 @@
 package com.powsybl.dynawaltz.dsl.events
 
 import com.google.auto.service.AutoService
-import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.EventModel
 import com.powsybl.dynamicsimulation.groovy.EventModelGroovyExtension
-import com.powsybl.dynawaltz.dsl.ModelBuilder
 import com.powsybl.dynawaltz.dsl.PowsyblDynawoGroovyExtension
 import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection
 
@@ -31,25 +29,10 @@ class EventQuadripoleDisconnectionGroovyExtension extends PowsyblDynawoGroovyExt
         new EventQuadripoleDisconnectionBuilder()
     }
 
-    static class EventQuadripoleDisconnectionBuilder implements ModelBuilder<EventModel> {
+    static class EventQuadripoleDisconnectionBuilder extends AbstractEventModelBuilder {
 
-        String eventModelId
-        String staticId
-        double startTime
         boolean disconnectOrigin
         boolean disconnectExtremity
-
-        void eventModelId(String eventModelId) {
-            this.eventModelId = eventModelId
-        }
-
-        void staticId(String staticId) {
-            this.staticId = staticId
-        }
-
-        void startTime(double startTime) {
-            this.startTime = startTime
-        }
 
         void disconnectOrigin(boolean disconnectOrigin) {
             this.disconnectOrigin = disconnectOrigin
@@ -61,15 +44,7 @@ class EventQuadripoleDisconnectionGroovyExtension extends PowsyblDynawoGroovyExt
 
         @Override
         EventQuadripoleDisconnection build() {
-            if (!staticId) {
-                throw new DslException("'staticId' field is not set")
-            }
-            if (!startTime) {
-                throw new DslException("'startTime' field is not set")
-            }
-            if (!eventModelId) {
-                eventModelId = staticId
-            }
+            setupBuild()
             new EventQuadripoleDisconnection(eventModelId, staticId, startTime, disconnectOrigin, disconnectExtremity)
         }
     }

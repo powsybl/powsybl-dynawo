@@ -7,10 +7,9 @@
 package com.powsybl.dynawaltz.dsl.models.generators
 
 import com.google.auto.service.AutoService
-import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
-import com.powsybl.dynawaltz.dsl.ModelBuilder
+import com.powsybl.dynawaltz.dsl.AbstractDynamicModelBuilder
 import com.powsybl.dynawaltz.dsl.PowsyblDynawoGroovyExtension
 import com.powsybl.dynawaltz.models.generators.GeneratorSynchronous
 
@@ -33,39 +32,17 @@ class GeneratorModelGroovyExtension extends PowsyblDynawoGroovyExtension<Dynamic
         new GeneratorBuilder(currentTag)
     }
 
-    static class GeneratorBuilder implements ModelBuilder<DynamicModel> {
-        String dynamicModelId
-        String staticId
-        String parameterSetId
+    static class GeneratorBuilder extends AbstractDynamicModelBuilder {
+
         String tag
 
         GeneratorBuilder(String tag) {
             this.tag = tag
         }
 
-        void dynamicModelId(String dynamicModelId) {
-            this.dynamicModelId = dynamicModelId
-        }
-
-        void staticId(String staticId) {
-            this.staticId = staticId
-        }
-
-        void parameterSetId(String parameterSetId) {
-            this.parameterSetId = parameterSetId
-        }
-
         @Override
         GeneratorSynchronous build() {
-            if (!staticId) {
-                throw new DslException("'staticId' field is not set")
-            }
-            if (!parameterSetId) {
-                throw new DslException("'parameterSetId' field is not set")
-            }
-            if (!dynamicModelId) {
-                dynamicModelId = staticId
-            }
+            setupBuild()
             new GeneratorSynchronous(dynamicModelId, staticId, parameterSetId, tag)
         }
     }

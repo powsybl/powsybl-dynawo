@@ -10,7 +10,7 @@ import com.google.auto.service.AutoService
 import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
-import com.powsybl.dynawaltz.dsl.ModelBuilder
+import com.powsybl.dynawaltz.dsl.AbstractDynamicModelBuilder
 import com.powsybl.dynawaltz.dsl.PowsyblDynawoGroovyExtension
 import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton
 import com.powsybl.iidm.network.Branch
@@ -32,42 +32,25 @@ class CurrentLimitAutomatonGroovyExtension extends PowsyblDynawoGroovyExtension<
         new CurrentLimitAutomatonBuilder()
     }
 
-    static class CurrentLimitAutomatonBuilder implements ModelBuilder<DynamicModel> {
-        String dynamicModelId
-        String staticId
+    static class CurrentLimitAutomatonBuilder extends AbstractDynamicModelBuilder {
+
         Branch.Side side
-        String parameterSetId
-
-        void dynamicModelId(String dynamicModelId) {
-            this.dynamicModelId = dynamicModelId
-        }
-
-        void staticId(String staticId) {
-            this.staticId = staticId
-        }
-
-        void parameterSetId(String parameterSetId) {
-            this.parameterSetId = parameterSetId
-        }
 
         void side(Branch.Side side) {
             this.side = side
         }
 
         @Override
-        CurrentLimitAutomaton build() {
-            if (!staticId) {
-                throw new DslException("'staticId' field is not set")
-            }
-            if (!parameterSetId) {
-                throw new DslException("'parameterSetId' field is not set")
-            }
+        void setupBuild() {
+            super.setupBuild()
             if (!side) {
                 throw new DslException("'side' field is not set")
             }
-            if (!dynamicModelId) {
-                dynamicModelId = staticId
-            }
+        }
+
+        @Override
+        CurrentLimitAutomaton build() {
+            setupBuild()
             new CurrentLimitAutomaton(dynamicModelId, staticId, parameterSetId, side)
         }
     }
