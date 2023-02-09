@@ -6,14 +6,11 @@
  */
 package com.powsybl.dynawaltz.dsl.models.loads
 
-import java.util.function.Consumer
-
 import com.google.auto.service.AutoService
-import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
-
-import com.powsybl.dynawaltz.DynaWaltzProvider
+import com.powsybl.dynawaltz.dsl.AbstractDynamicModelBuilder
+import com.powsybl.dynawaltz.dsl.PowsyblDynawoGroovyExtension
 import com.powsybl.dynawaltz.models.loads.LoadAlphaBeta
 
 /**
@@ -22,48 +19,22 @@ import com.powsybl.dynawaltz.models.loads.LoadAlphaBeta
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class LoadAlphaBetaGroovyExtension implements DynamicModelGroovyExtension {
+class LoadAlphaBetaGroovyExtension extends PowsyblDynawoGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
-    static class LoadAlphaBetaSpec {
-        String dynamicModelId
-        String staticId
-        String parameterSetId
-
-        void dynamicModelId(String dynamicModelId) {
-            this.dynamicModelId = dynamicModelId
-        }
-
-        void staticId(String staticId) {
-            this.staticId = staticId
-        }
-
-        void parameterSetId(String parameterSetId) {
-            this.parameterSetId = parameterSetId
-        }
+    LoadAlphaBetaGroovyExtension() {
+        tags = ["LoadAlphaBeta"]
     }
 
-    String getName() {
-        return DynaWaltzProvider.NAME
+    @Override
+    protected LoadAlphaBetaBuilder createBuilder(String currentTag) {
+        new LoadAlphaBetaBuilder()
     }
-    
-    void load(Binding binding, Consumer<DynamicModel> consumer) {
-        binding.LoadAlphaBeta = { Closure<Void> closure ->
-            def cloned = closure.clone()
-            LoadAlphaBetaSpec loadAlphaBetaSpec = new LoadAlphaBetaSpec()
-    
-            cloned.delegate = loadAlphaBetaSpec
-            cloned()
 
-            if (!loadAlphaBetaSpec.staticId) {
-                throw new DslException("'staticId' field is not set");
-            }
-            if (!loadAlphaBetaSpec.parameterSetId) {
-                throw new DslException("'parameterSetId' field is not set")
-            }
-
-            String dynamicModelId = loadAlphaBetaSpec.dynamicModelId ? loadAlphaBetaSpec.dynamicModelId : loadAlphaBetaSpec.staticId
-            consumer.accept(new LoadAlphaBeta(dynamicModelId, loadAlphaBetaSpec.staticId, loadAlphaBetaSpec.parameterSetId))
+    static class LoadAlphaBetaBuilder extends AbstractDynamicModelBuilder {
+        @Override
+        LoadAlphaBeta build() {
+            setupBuild()
+            new LoadAlphaBeta(dynamicModelId, staticId, parameterSetId)
         }
     }
-
 }

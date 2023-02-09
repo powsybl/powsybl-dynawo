@@ -31,9 +31,6 @@ class EventSetPointBooleanGroovyExtension extends PowsyblDynawoGroovyExtension<E
 
     static class EventSetPointBooleanBuilder extends AbstractEventModelBuilder {
 
-        String eventModelId
-        String staticId
-        double startTime
         boolean stateEvent
 
         void stateEvent(boolean stateEvent) {
