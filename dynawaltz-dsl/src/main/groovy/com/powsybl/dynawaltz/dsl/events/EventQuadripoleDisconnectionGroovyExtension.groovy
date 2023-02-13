@@ -9,7 +9,7 @@ package com.powsybl.dynawaltz.dsl.events
 import com.google.auto.service.AutoService
 import com.powsybl.dynamicsimulation.EventModel
 import com.powsybl.dynamicsimulation.groovy.EventModelGroovyExtension
-import com.powsybl.dynawaltz.dsl.PowsyblDynawoGroovyExtension
+import com.powsybl.dynawaltz.dsl.AbstractPowsyblDynawoGroovyExtension
 import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection
 
 /**
@@ -18,7 +18,7 @@ import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 @AutoService(EventModelGroovyExtension.class)
-class EventQuadripoleDisconnectionGroovyExtension extends PowsyblDynawoGroovyExtension<EventModel> implements EventModelGroovyExtension {
+class EventQuadripoleDisconnectionGroovyExtension extends AbstractPowsyblDynawoGroovyExtension<EventModel> implements EventModelGroovyExtension {
 
     EventQuadripoleDisconnectionGroovyExtension() {
         tags = ["EventQuadripoleDisconnection"]

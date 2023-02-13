@@ -10,7 +10,7 @@ import com.google.auto.service.AutoService
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractDynamicModelBuilder
-import com.powsybl.dynawaltz.dsl.PowsyblDynawoGroovyExtension
+import com.powsybl.dynawaltz.dsl.AbstractPowsyblDynawoGroovyExtension
 import com.powsybl.dynawaltz.models.loads.LoadAlphaBeta
 
 /**
@@ -19,7 +19,7 @@ import com.powsybl.dynawaltz.models.loads.LoadAlphaBeta
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class LoadAlphaBetaGroovyExtension extends PowsyblDynawoGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+class LoadAlphaBetaGroovyExtension extends AbstractPowsyblDynawoGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
     LoadAlphaBetaGroovyExtension() {
         tags = ["LoadAlphaBeta"]

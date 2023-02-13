@@ -10,19 +10,19 @@ import com.google.auto.service.AutoService
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractDynamicModelBuilder
-import com.powsybl.dynawaltz.dsl.PowsyblDynawoGroovyExtension
+import com.powsybl.dynawaltz.dsl.AbstractPowsyblDynawoGroovyExtension
 import com.powsybl.dynawaltz.models.generators.GeneratorSynchronous
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class GeneratorModelGroovyExtension extends PowsyblDynawoGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+class GeneratorSynchronousGroovyExtension extends AbstractPowsyblDynawoGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
     private static final String GENERATORS_CONFIG = "synchronous_generators.cfg"
     private static final String SYNCHRONOUS_GENERATORS_LIBS = "synchronousGeneratorsLibs"
 
-    GeneratorModelGroovyExtension() {
+    GeneratorSynchronousGroovyExtension() {
         ConfigSlurper config = new ConfigSlurper()
         tags = config.parse(this.getClass().getClassLoader().getResource(GENERATORS_CONFIG)).get(SYNCHRONOUS_GENERATORS_LIBS).keySet() as List
     }

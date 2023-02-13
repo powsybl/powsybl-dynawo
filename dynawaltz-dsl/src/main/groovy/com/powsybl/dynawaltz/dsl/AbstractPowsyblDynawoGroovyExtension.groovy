@@ -15,7 +15,7 @@ import java.util.function.Consumer
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-abstract class PowsyblDynawoGroovyExtension<T> {
+abstract class AbstractPowsyblDynawoGroovyExtension<T> {
 
     protected List<String> tags
 

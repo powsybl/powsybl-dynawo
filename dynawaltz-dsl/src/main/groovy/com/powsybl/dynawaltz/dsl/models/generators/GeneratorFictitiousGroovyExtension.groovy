@@ -10,14 +10,14 @@ import com.google.auto.service.AutoService
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractDynamicModelBuilder
-import com.powsybl.dynawaltz.dsl.PowsyblDynawoGroovyExtension
+import com.powsybl.dynawaltz.dsl.AbstractPowsyblDynawoGroovyExtension
 import com.powsybl.dynawaltz.models.generators.GeneratorFictitious
 
 /**
  * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class GeneratorFictitiousGroovyExtension extends PowsyblDynawoGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+class GeneratorFictitiousGroovyExtension extends AbstractPowsyblDynawoGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
     GeneratorFictitiousGroovyExtension() {
         tags = ["GeneratorFictitious"]

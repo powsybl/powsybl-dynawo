@@ -11,7 +11,7 @@ import com.google.auto.service.AutoService
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractDynamicModelBuilder
-import com.powsybl.dynawaltz.dsl.PowsyblDynawoGroovyExtension
+import com.powsybl.dynawaltz.dsl.AbstractPowsyblDynawoGroovyExtension
 import com.powsybl.dynawaltz.models.lines.StandardLine
 import com.powsybl.iidm.network.Branch
 
@@ -21,7 +21,7 @@ import com.powsybl.iidm.network.Branch
  * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class LineGroovyExtension extends PowsyblDynawoGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+class LineGroovyExtension extends AbstractPowsyblDynawoGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
     LineGroovyExtension() {
         tags = ["Line"]

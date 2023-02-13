@@ -17,7 +17,7 @@ import com.powsybl.dynawaltz.DynaWaltzProvider;
 import com.powsybl.dynawaltz.dsl.automatons.CurrentLimitAutomatonGroovyExtension;
 import com.powsybl.dynawaltz.dsl.models.buses.BusGroovyExtension;
 import com.powsybl.dynawaltz.dsl.models.generators.GeneratorFictitiousGroovyExtension;
-import com.powsybl.dynawaltz.dsl.models.generators.GeneratorModelGroovyExtension;
+import com.powsybl.dynawaltz.dsl.models.generators.GeneratorSynchronousGroovyExtension;
 import com.powsybl.dynawaltz.dsl.models.lines.LineGroovyExtension;
 import com.powsybl.dynawaltz.dsl.models.loads.LoadAlphaBetaGroovyExtension;
 import com.powsybl.dynawaltz.dsl.models.loads.LoadOneTransformerGroovyExtension;
@@ -164,7 +164,7 @@ public class DynaWaltzGroovyDynamicModelsSupplierTest {
         boolean isLoadOneTransformerExtension = extension instanceof LoadOneTransformerGroovyExtension;
         boolean isLoadExtension = isLoadAlphaBetaExtension || isLoadOneTransformerExtension;
 
-        boolean isGeneratorExtension = extension instanceof GeneratorModelGroovyExtension || extension instanceof GeneratorFictitiousGroovyExtension;
+        boolean isGeneratorExtension = extension instanceof GeneratorSynchronousGroovyExtension || extension instanceof GeneratorFictitiousGroovyExtension;
         boolean isBusExtension = extension instanceof BusGroovyExtension;
         boolean isLineExtension = extension instanceof LineGroovyExtension;
         boolean isDynamicModelExtension = isLoadExtension || isGeneratorExtension || isBusExtension || isLineExtension;

@@ -11,7 +11,7 @@ import com.google.auto.service.AutoService
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractDynamicModelBuilder
-import com.powsybl.dynawaltz.dsl.PowsyblDynawoGroovyExtension
+import com.powsybl.dynawaltz.dsl.AbstractPowsyblDynawoGroovyExtension
 import com.powsybl.dynawaltz.models.buses.StandardBus
 
 /**
@@ -20,7 +20,7 @@ import com.powsybl.dynawaltz.models.buses.StandardBus
  * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class BusGroovyExtension extends PowsyblDynawoGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+class BusGroovyExtension extends AbstractPowsyblDynawoGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
     BusGroovyExtension() {
         tags = ["Bus"]

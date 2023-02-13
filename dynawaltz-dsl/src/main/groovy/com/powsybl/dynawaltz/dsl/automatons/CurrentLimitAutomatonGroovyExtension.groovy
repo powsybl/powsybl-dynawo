@@ -11,7 +11,7 @@ import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractDynamicModelBuilder
-import com.powsybl.dynawaltz.dsl.PowsyblDynawoGroovyExtension
+import com.powsybl.dynawaltz.dsl.AbstractPowsyblDynawoGroovyExtension
 import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton
 import com.powsybl.iidm.network.Branch
 
@@ -21,7 +21,7 @@ import com.powsybl.iidm.network.Branch
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class CurrentLimitAutomatonGroovyExtension extends PowsyblDynawoGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+class CurrentLimitAutomatonGroovyExtension extends AbstractPowsyblDynawoGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
     CurrentLimitAutomatonGroovyExtension() {
         tags = ["CurrentLimitAutomaton"]
