@@ -57,13 +57,13 @@ public class LoadsMergerTest extends AbstractConverterTest {
     }
 
     private void compare(Network expected, Network actual) throws IOException {
-        Path pexpected = tmpDir.resolve("expected.xiidm");
-        assertNotNull(pexpected);
-        Path pactual = tmpDir.resolve("actual.xiidm");
-        assertNotNull(pactual);
-        NetworkXml.write(expected, pexpected);
+        Path pExpected = tmpDir.resolve("expected.xiidm");
+        assertNotNull(pExpected);
+        Path pActual = tmpDir.resolve("actual.xiidm");
+        assertNotNull(pActual);
+        NetworkXml.write(expected, pExpected);
         actual.setCaseDate(expected.getCaseDate());
-        NetworkXml.write(actual, pactual);
-        compareTxt(Files.newInputStream(pexpected), Files.newInputStream(pactual));
+        NetworkXml.write(actual, pActual);
+        compareTxt(Files.newInputStream(pExpected), Files.newInputStream(pActual));
     }
 }

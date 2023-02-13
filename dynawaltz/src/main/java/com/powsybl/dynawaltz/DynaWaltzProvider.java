@@ -120,13 +120,9 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
     private final class DynaWaltzHandler extends AbstractExecutionHandler<DynamicSimulationResult> {
 
         private final DynaWaltzContext context;
-        private final Network dynawoInput;
 
         public DynaWaltzHandler(DynaWaltzContext context) {
             this.context = context;
-            this.dynawoInput = context.getDynaWaltzParameters().isMergeLoads()
-                    ? LoadsMerger.mergeLoads(context.getNetwork())
-                    : context.getNetwork();
         }
 
         @Override
@@ -170,7 +166,11 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
 
         private void writeInputFiles(Path workingDir) {
             try {
-                DynawoUtil.writeIidm(dynawoInput, workingDir.resolve(NETWORK_FILENAME));
+                Network input = context.getDynaWaltzParameters().isMergeLoads()
+                        ? LoadsMerger.mergeLoads(context.getNetwork())
+                        : context.getNetwork();
+                DynawoUtil.writeIidm(input, workingDir.resolve(NETWORK_FILENAME));
+
                 JobsXml.write(workingDir, context);
                 DydXml.write(workingDir, context);
                 ParametersXml.write(workingDir, context);

@@ -13,8 +13,6 @@ import com.powsybl.iidm.network.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
-
 /**
  * @author Guillem Jané Guasch <janeg at aia.es>
  */
@@ -147,17 +145,16 @@ public final class NetworkResultsUpdater {
                     continue;
                 }
 
-                Map<LoadPowers, BusState> busStates = LoadsMerger.getBusStates(busTarget);
-                for (Load load : loadsTarget) {
-                    LoadPowers loadPowers = LoadsMerger.getLoadPowers(load);
-                    Terminal mergedLoadTerminal = getMergedLoad(sourceNetwork, busTarget.getId(), loadPowers).getTerminal();
-                    BusState busState = busStates.get(loadPowers);
-                    if (busState == null) {
-                        update(load.getTerminal(), mergedLoadTerminal);
-                    } else {
-                        update(load.getTerminal(), mergedLoadTerminal, busState);
+                LoadsMerger.getLoadsToMergeList(busTarget).forEach(unmergedLoads -> {
+                    Terminal mergedLoadTerminal = getMergedLoad(sourceNetwork, busTarget.getId(), unmergedLoads.getLoadPowers()).getTerminal();
+                    for (Load load : unmergedLoads.getLoads()) {
+                        if (unmergedLoads.isSingle()) {
+                            update(load.getTerminal(), mergedLoadTerminal);
+                        } else {
+                            update(load.getTerminal(), mergedLoadTerminal, unmergedLoads.getBusState());
+                        }
                     }
-                }
+                });
             }
         }
     }
