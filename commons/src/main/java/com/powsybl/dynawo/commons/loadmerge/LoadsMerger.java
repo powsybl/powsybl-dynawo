@@ -44,6 +44,7 @@ public final class LoadsMerger {
             load.getTerminal().setP(merging.busState.getP());
             load.getTerminal().setQ(merging.busState.getQ());
         }
+
         return mergedLoadsNetwork;
     }
 

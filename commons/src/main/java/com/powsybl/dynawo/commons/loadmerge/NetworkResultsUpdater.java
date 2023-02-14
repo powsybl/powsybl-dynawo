@@ -13,6 +13,9 @@ import com.powsybl.iidm.network.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Map;
+import java.util.stream.Collectors;
+
 /**
  * @author Guillem Jané Guasch <janeg at aia.es>
  */
@@ -139,29 +142,30 @@ public final class NetworkResultsUpdater {
             }
         } else {
             for (Bus busTarget : targetNetwork.getBusBreakerView().getBuses()) {
-                Iterable<Load> loadsTarget = busTarget.getLoads();
-                int nbLoads = Iterables.size(loadsTarget);
-                if (nbLoads == 0) {
-                    continue;
-                }
-
-                LoadsMerger.getLoadsToMergeList(busTarget).forEach(unmergedLoads -> {
-                    Terminal mergedLoadTerminal = getMergedLoad(sourceNetwork, busTarget.getId(), unmergedLoads.getLoadPowers()).getTerminal();
-                    for (Load load : unmergedLoads.getLoads()) {
-                        if (unmergedLoads.isSingle()) {
-                            update(load.getTerminal(), mergedLoadTerminal);
-                        } else {
-                            update(load.getTerminal(), mergedLoadTerminal, unmergedLoads.getBusState());
-                        }
-                    }
-                });
+                updateLoads(busTarget, sourceNetwork.getBusBreakerView().getBus(busTarget.getId()));
             }
         }
     }
 
-    private static Load getMergedLoad(Network sourceNetwork, String busId, LoadPowers loadPowers) {
-        Bus busSource = sourceNetwork.getBusBreakerView().getBus(busId);
-        return busSource.getLoadStream().filter(l -> LoadsMerger.getLoadPowers(l) == loadPowers).findFirst()
-                .orElseThrow(() -> new PowsyblException("Missing merged load in bus " + busId));
+    private static void updateLoads(Bus busTarget, Bus busSource) {
+        Iterable<Load> loadsTarget = busTarget.getLoads();
+        int nbLoads = Iterables.size(loadsTarget);
+        if (nbLoads == 0) {
+            return;
+        }
+        Map<LoadPowers, Terminal> mergedLoadsTerminal = busSource.getLoadStream()
+                .collect(Collectors.toMap(LoadsMerger::getLoadPowers, Load::getTerminal));
+        LoadsMerger.getLoadsToMergeList(busTarget).forEach(unmergedLoads -> {
+            Terminal mergedLoadTerminal = mergedLoadsTerminal.computeIfAbsent(unmergedLoads.getLoadPowers(), k -> {
+                throw new PowsyblException("Missing merged load in bus " + k);
+            });
+            for (Load load : unmergedLoads.getLoads()) {
+                if (unmergedLoads.isSingle()) {
+                    update(load.getTerminal(), mergedLoadTerminal);
+                } else {
+                    update(load.getTerminal(), mergedLoadTerminal, unmergedLoads.getBusState());
+                }
+            }
+        });
     }
 }
