@@ -158,14 +158,12 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
     }
 
     @Test
-    public void testFailWithoutMergeLoads() throws Exception {
+    public void testFail() throws Exception {
         Network network = createTestSmallBusBranch();
         LoadFlow.Runner dynaFlowSimulation = LoadFlow.find();
         LoadFlowParameters params = LoadFlowParameters.load();
-        DynaFlowParameters dynaFlowParameters = params.getExtension(DynaFlowParameters.class);
-        dynaFlowParameters.setMergeLoads(false);
 
-        assertEquals("DynaFlow", dynaFlowSimulation.getName());
+        assertEquals(DYNAFLOW_NAME, dynaFlowSimulation.getName());
 
         LocalCommandExecutor commandExecutor = new EmptyLocalCommandExecutorMock("/dynaflow_version.out");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
@@ -183,23 +181,6 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
         LocalCommandExecutor commandExecutor = new EmptyLocalCommandExecutorMock("/dynaflow_bad_version.out");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
         LoadFlowResult result = dynaFlowSimulation.run(network, computationManager, params);
-    }
-
-    @Test
-    public void testFailWithMergeLoads() throws Exception {
-        Network network = createTestSmallBusBranch();
-        LoadFlow.Runner dynaFlowSimulation = LoadFlow.find();
-        LoadFlowParameters params = LoadFlowParameters.load();
-        DynaFlowParameters dynaFlowParameters = params.getExtension(DynaFlowParameters.class);
-        dynaFlowParameters.setMergeLoads(false);
-
-        assertEquals("DynaFlow", dynaFlowSimulation.getName());
-
-        LocalCommandExecutor commandExecutor = new EmptyLocalCommandExecutorMock("/dynaflow_version.out");
-        ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
-        LoadFlowResult result = dynaFlowSimulation.run(network, computationManager, params);
-        assertNotNull(result);
-        assertFalse(result.isOk());
     }
 
     @Test
@@ -282,5 +263,4 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
     private static Network createTestSmallBusBranch() {
         return Importers.importData("XIIDM", new ResourceDataSource("SmallBusBranch", new ResourceSet("/", "SmallBusBranch.xiidm")), null);
     }
-
 }
