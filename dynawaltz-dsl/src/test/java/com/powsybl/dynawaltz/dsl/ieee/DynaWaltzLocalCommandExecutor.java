@@ -8,7 +8,6 @@ package com.powsybl.dynawaltz.dsl.ieee;
 
 import com.powsybl.computation.local.LocalCommandExecutor;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
-import com.powsybl.iidm.network.Network;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xmlunit.builder.DiffBuilder;
@@ -30,19 +29,20 @@ import static org.junit.Assert.assertFalse;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
+ * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 public class DynaWaltzLocalCommandExecutor implements LocalCommandExecutor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DynaWaltzLocalCommandExecutor.class);
     private final FileSystem fileSystem;
-    private final Network network;
+    private final String networkId;
     private final DynaWaltzParameters dynaWaltzParameters;
     private final String baseDirName;
     private final String busSystem;
 
-    public DynaWaltzLocalCommandExecutor(FileSystem fileSystem, Network network, DynaWaltzParameters dynaWaltzParameters, String baseDir, String busSystem) {
+    public DynaWaltzLocalCommandExecutor(FileSystem fileSystem, String networkId, DynaWaltzParameters dynaWaltzParameters, String baseDir, String busSystem) {
         this.fileSystem = Objects.requireNonNull(fileSystem);
-        this.network = Objects.requireNonNull(network);
+        this.networkId = Objects.requireNonNull(networkId);
         this.dynaWaltzParameters = Objects.requireNonNull(dynaWaltzParameters);
         this.baseDirName = baseDir;
         this.busSystem = busSystem;
@@ -55,7 +55,7 @@ public class DynaWaltzLocalCommandExecutor implements LocalCommandExecutor {
         compareXml(getClass().getResourceAsStream("/" + baseDirName + "/dynawaltz-inputs/models.par"), Files.newInputStream(workingDir.resolve(fileSystem.getPath(dynaWaltzParameters.getParametersFile()).getFileName().toString())));
         compareXml(getClass().getResourceAsStream("/" + baseDirName + "/dynawaltz-inputs/network.par"), Files.newInputStream(workingDir.resolve(fileSystem.getPath(dynaWaltzParameters.getNetwork().getParametersFile()).getFileName().toString())));
         compareXml(getClass().getResourceAsStream("/" + baseDirName + "/dynawaltz-inputs/solvers.par"), Files.newInputStream(workingDir.resolve(fileSystem.getPath(dynaWaltzParameters.getSolver().getParametersFile()).getFileName().toString())));
-        compareXml(getClass().getResourceAsStream("/" + baseDirName + "/dynawaltz-inputs/" + busSystem + "bus.par"), Files.newInputStream(workingDir.resolve(network.getId() + ".par")));
+        compareXml(getClass().getResourceAsStream("/" + baseDirName + "/dynawaltz-inputs/" + busSystem + "bus.par"), Files.newInputStream(workingDir.resolve(networkId + ".par")));
         compareXml(getClass().getResourceAsStream("/" + baseDirName + "/dynawaltz-inputs/powsybl_dynawaltz.crv"), Files.newInputStream(workingDir.resolve(CRV_FILENAME)));
     }
 
