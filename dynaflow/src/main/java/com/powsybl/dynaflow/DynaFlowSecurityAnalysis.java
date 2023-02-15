@@ -15,10 +15,9 @@ import com.powsybl.contingency.Contingency;
 import com.powsybl.contingency.contingency.list.ContingencyList;
 import com.powsybl.contingency.json.ContingencyJsonModule;
 import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
+import com.powsybl.dynawo.commons.DynawoUtil;
 import com.powsybl.iidm.network.Network;
-import com.powsybl.iidm.xml.IidmXmlVersion;
 import com.powsybl.iidm.xml.NetworkXml;
-import com.powsybl.iidm.xml.XMLExporter;
 import com.powsybl.loadflow.LoadFlowParameters;
 import com.powsybl.loadflow.LoadFlowResult;
 import com.powsybl.security.*;
@@ -49,7 +48,7 @@ public class DynaFlowSecurityAnalysis {
     private static final String WORKING_DIR_PREFIX = "dynaflow_sa_";
     private static final String DYNAFLOW_LAUNCHER_PROGRAM_NAME = "dynaflow-launcher.sh";
     private static final String CONTINGENCIES_FILENAME = "contingencies.json";
-    private static final String SECURITY_ANALISIS_RESULTS_FILENAME = "securityAnalysisResults.json";
+    private static final String SECURITY_ANALYSIS_RESULTS_FILENAME = "securityAnalysisResults.json";
     private static final String BASE_CASE_FOLDER = "BaseCase";
     private static final String DYNAFLOW_OUTPUT_FOLDER = "outputs";
     private static final String DYNAWO_FINAL_STATE_FOLDER = "finalState";
@@ -64,7 +63,8 @@ public class DynaFlowSecurityAnalysis {
     private final List<SecurityAnalysisInterceptor> interceptors;
 
     public DynaFlowSecurityAnalysis(Network network, LimitViolationDetector detector,
-                                    LimitViolationFilter filter, ComputationManager computationManager) {
+                                    LimitViolationFilter filter, ComputationManager computationManager,
+                                    Supplier<DynaFlowConfig> configSupplier) {
         this.network = Objects.requireNonNull(network);
         this.violationDetector = Objects.requireNonNull(detector);
         this.violationFilter = Objects.requireNonNull(filter);
@@ -72,8 +72,7 @@ public class DynaFlowSecurityAnalysis {
         this.computationManager = Objects.requireNonNull(computationManager);
 
         interceptors.add(new CurrentLimitViolationInterceptor());
-        // TODO(Luma) Allow additional sources for configuration?
-        this.configSupplier = DynaFlowConfig::fromPropertyFile;
+        this.configSupplier = Objects.requireNonNull(configSupplier);
     }
 
     private static DynaFlowParameters getParametersExt(LoadFlowParameters parameters) {
@@ -113,12 +112,6 @@ public class DynaFlowSecurityAnalysis {
             .build();
     }
 
-    private static void writeIIDM(Network network, Path workingDir) {
-        Properties params = new Properties();
-        params.setProperty(XMLExporter.VERSION, IidmXmlVersion.V_1_2.toString("."));
-        network.write("XIIDM", params, workingDir.resolve(IIDM_FILENAME));
-    }
-
     private static void writeContingencies(List<Contingency> contingencies, Path workingDir) throws IOException {
         try (OutputStream os = Files.newOutputStream(workingDir.resolve(CONTINGENCIES_FILENAME))) {
             ObjectMapper mapper = JsonUtil.createObjectMapper();
@@ -133,7 +126,8 @@ public class DynaFlowSecurityAnalysis {
         // TODO(Luma) Take into account also Security Analysis parameters
         LoadFlowParameters loadFlowParameters = securityAnalysisParameters.getLoadFlowParameters();
         DynaFlowParameters dynaFlowParameters = getParametersExt(loadFlowParameters);
-        DynaFlowConfigSerializer.serialize(loadFlowParameters, dynaFlowParameters, workingDir, workingDir.resolve(CONFIG_FILENAME));
+        dynaFlowParameters.setChosenOutputs(Collections.singletonList(DynaFlowConstants.OutputTypes.STEADYSTATE.name()));
+        DynaFlowConfigSerializer.serialize(loadFlowParameters, dynaFlowParameters, Path.of("."), workingDir.resolve(CONFIG_FILENAME));
     }
 
     public void addInterceptor(SecurityAnalysisInterceptor interceptor) {
@@ -156,12 +150,12 @@ public class DynaFlowSecurityAnalysis {
         Command versionCmd = getVersionCommand(config);
         DynaFlowUtil.checkDynaFlowVersion(env, computationManager, versionCmd);
         List<Contingency> contingencies = contingenciesProvider.getContingencies(network);
-        return computationManager.execute(env, new AbstractExecutionHandler<SecurityAnalysisReport>() {
+        return computationManager.execute(env, new AbstractExecutionHandler<>() {
             @Override
             public List<CommandExecution> before(Path workingDir) throws IOException {
                 network.getVariantManager().setWorkingVariant(workingVariantId);
 
-                writeIIDM(network, workingDir);
+                DynawoUtil.writeIidm(network, workingDir.resolve(IIDM_FILENAME));
                 writeParameters(securityAnalysisParameters, workingDir);
                 writeContingencies(contingencies, workingDir);
                 return Collections.singletonList(createCommandExecution(config));
@@ -173,7 +167,7 @@ public class DynaFlowSecurityAnalysis {
                 network.getVariantManager().setWorkingVariant(workingVariantId);
 
                 // If the results have already been prepared, just read them ...
-                Path saOutput = workingDir.resolve(DYNAFLOW_OUTPUT_FOLDER).resolve(SECURITY_ANALISIS_RESULTS_FILENAME);
+                Path saOutput = workingDir.resolve(DYNAFLOW_OUTPUT_FOLDER).resolve(SECURITY_ANALYSIS_RESULTS_FILENAME);
                 if (Files.exists(saOutput)) {
                     return new SecurityAnalysisReport(SecurityAnalysisResultDeserializer.read(saOutput));
                 } else {

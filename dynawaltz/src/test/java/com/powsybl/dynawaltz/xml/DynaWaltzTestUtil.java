@@ -6,7 +6,7 @@
  */
 package com.powsybl.dynawaltz.xml;
 
-import com.powsybl.commons.AbstractConverterTest;
+import com.powsybl.commons.test.AbstractConverterTest;
 import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynawaltz.DynaWaltzCurve;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
@@ -15,6 +15,7 @@ import com.powsybl.dynawaltz.models.buses.StandardBus;
 import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection;
 import com.powsybl.dynawaltz.models.events.EventSetPointBoolean;
 import com.powsybl.dynawaltz.models.generators.*;
+import com.powsybl.dynawaltz.models.lines.StandardLine;
 import com.powsybl.dynawaltz.models.loads.LoadAlphaBeta;
 import com.powsybl.dynawaltz.models.loads.LoadOneTransformer;
 import com.powsybl.iidm.network.*;
@@ -37,7 +38,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.powsybl.commons.ComparisonUtils.compareXml;
+import static com.powsybl.commons.test.ComparisonUtils.compareXml;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -94,19 +95,24 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
             }
         });
         network.getBusBreakerView().getBuses().forEach(b -> {
-            if (b.getId().equals("NGEN")) {
+            if (b.getId().equals("NHV2") || b.getId().equals("NHV1")) {
                 dynamicModels.add(new StandardBus("BBM_" + b.getId(), b.getId(), "SB"));
+            }
+        });
+        network.getLineStream().forEach(l -> {
+            if (l.getId().equals("NHV1_NHV2_1")) {
+                dynamicModels.add(new StandardLine("Line_" + l.getId(), l.getId(), "SL", Branch.Side.ONE));
             }
         });
 
         // Events
         eventModels = new ArrayList<>();
         network.getLineStream().forEach(l -> {
-            eventModels.add(new EventQuadripoleDisconnection("EM_" + l.getId(), l.getId(), "EQD"));
+            eventModels.add(new EventQuadripoleDisconnection("EM_" + l.getId(), l.getId(), 5, false, true));
         });
         network.getGeneratorStream().forEach(g -> {
             if (g.getId().equals("GEN2")) {
-                eventModels.add(new EventSetPointBoolean("EM_" + g.getId(), g.getId(), "ESPB"));
+                eventModels.add(new EventSetPointBoolean("EM_" + g.getId(), g.getId(), 1, true));
             }
         });
 

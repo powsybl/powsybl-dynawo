@@ -6,8 +6,8 @@
  */
 package com.powsybl.dynawo.commons;
 
-import com.powsybl.commons.AbstractConverterTest;
-import com.powsybl.commons.ComparisonUtils;
+import com.powsybl.commons.test.AbstractConverterTest;
+import com.powsybl.commons.test.ComparisonUtils;
 import com.powsybl.commons.datasource.ResourceDataSource;
 import com.powsybl.commons.datasource.ResourceSet;
 import com.powsybl.iidm.network.*;

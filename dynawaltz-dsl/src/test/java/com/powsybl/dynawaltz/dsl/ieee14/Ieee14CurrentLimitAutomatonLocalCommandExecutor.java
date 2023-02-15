@@ -10,12 +10,12 @@ import com.powsybl.dynawaltz.DynaWaltzParameters;
 import com.powsybl.dynawaltz.dsl.ieee.AbstractDynaWaltzLocalCommandExecutor;
 import com.powsybl.iidm.network.Network;
 
-import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.*;
-
 import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
+import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.*;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>

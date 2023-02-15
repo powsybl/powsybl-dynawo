@@ -10,7 +10,9 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.nio.file.FileSystem;
+import java.util.Optional;
 
+import com.powsybl.commons.config.ModuleConfig;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -55,13 +57,13 @@ public class DynaWaltzParametersTest {
         String networkParametersId = "networkParametersId";
         SolverType solverType = SolverType.IDA;
         String solverParametersId = "solverParametersId";
-        boolean mergeLoads = false;
 
-        MapModuleConfig moduleConfig = (MapModuleConfig) platformConfig.getModuleConfig("dynawaltz-default-parameters");
-        moduleConfig.setStringProperty("network.parametersId", networkParametersId);
-        moduleConfig.setStringProperty("solver.type", solverType.toString());
-        moduleConfig.setStringProperty("solver.parametersId", solverParametersId);
-        moduleConfig.setStringProperty("mergeLoads", String.valueOf(mergeLoads));
+        Optional<ModuleConfig> moduleConfig = platformConfig.getOptionalModuleConfig("dynawaltz-default-parameters");
+        moduleConfig.filter(MapModuleConfig.class::isInstance).map(MapModuleConfig.class::cast).ifPresent(c -> {
+            c.setStringProperty("network.parametersId", networkParametersId);
+            c.setStringProperty("solver.type", solverType.toString());
+            c.setStringProperty("solver.parametersId", solverParametersId);
+        });
 
         DynaWaltzParameters parameters = DynaWaltzParameters.load(platformConfig);
         assertEquals(parametersFile, parameters.getParametersFile());

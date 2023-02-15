@@ -27,7 +27,9 @@ class EventQuadripoleDisconnectionGroovyExtension implements EventModelGroovyExt
     static class EventQuadripoleDisconnectionSpec {
         String eventModelId
         String staticId
-        String parameterSetId
+        double startTime
+        boolean disconnectOrigin
+        boolean disconnectExtremity
 
         void eventModelId(String eventModelId) {
             this.eventModelId = eventModelId
@@ -37,8 +39,16 @@ class EventQuadripoleDisconnectionGroovyExtension implements EventModelGroovyExt
             this.staticId = staticId
         }
 
-        void parameterSetId(String parameterSetId) {
-            this.parameterSetId = parameterSetId
+        void startTime(double startTime) {
+            this.startTime = startTime
+        }
+
+        void disconnectOrigin(boolean disconnectOrigin) {
+            this.disconnectOrigin = disconnectOrigin
+        }
+
+        void disconnectExtremity(boolean disconnectExtremity) {
+            this.disconnectExtremity = disconnectExtremity
         }
     }
 
@@ -57,12 +67,14 @@ class EventQuadripoleDisconnectionGroovyExtension implements EventModelGroovyExt
             if (!eventQuadripoleDisconnectionSpec.staticId) {
                 throw new DslException("'staticId' field is not set");
             }
-            if (!eventQuadripoleDisconnectionSpec.parameterSetId) {
-                throw new DslException("'parameterSetId' field is not set")
+            if (!eventQuadripoleDisconnectionSpec.startTime) {
+                throw new DslException("'startTime' field is not set")
             }
 
             String eventModelId = eventQuadripoleDisconnectionSpec.eventModelId ? eventQuadripoleDisconnectionSpec.eventModelId : eventQuadripoleDisconnectionSpec.staticId
-            consumer.accept(new EventQuadripoleDisconnection(eventModelId, eventQuadripoleDisconnectionSpec.staticId, eventQuadripoleDisconnectionSpec.parameterSetId))
+            consumer.accept(new EventQuadripoleDisconnection(eventModelId, eventQuadripoleDisconnectionSpec.staticId,
+                    eventQuadripoleDisconnectionSpec.startTime, eventQuadripoleDisconnectionSpec.disconnectOrigin,
+                    eventQuadripoleDisconnectionSpec.disconnectExtremity))
         }
     }
 

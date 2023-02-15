@@ -45,9 +45,16 @@ public class DynaWaltzContext {
     private final NetworkModel networkModel = new NetworkModel();
 
     private final OmegaRef omegaRef;
+    private final PlatformConfig platformConfig;
 
     public DynaWaltzContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
                             List<Curve> curves, DynamicSimulationParameters parameters, DynaWaltzParameters dynaWaltzParameters) {
+        this(network, workingVariantId, dynamicModels, eventModels, curves, parameters, dynaWaltzParameters, PlatformConfig.defaultConfig());
+    }
+
+    public DynaWaltzContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
+                            List<Curve> curves, DynamicSimulationParameters parameters, DynaWaltzParameters dynaWaltzParameters,
+                            PlatformConfig platformConfig) {
         this.network = Objects.requireNonNull(network);
         this.workingVariantId = Objects.requireNonNull(workingVariantId);
         this.dynamicModels = Objects.requireNonNull(dynamicModels);
@@ -55,8 +62,8 @@ public class DynaWaltzContext {
         this.curves = Objects.requireNonNull(curves);
         this.parameters = Objects.requireNonNull(parameters);
         this.dynaWaltzParameters = Objects.requireNonNull(dynaWaltzParameters);
-        this.parametersDatabase = loadDatabase(dynaWaltzParameters.getParametersFile());
-
+        this.platformConfig = Objects.requireNonNull(platformConfig);
+        this.parametersDatabase = loadDatabase(dynaWaltzParameters.getParametersFile(), platformConfig);
         List<GeneratorSynchronousModel> synchronousGenerators = dynamicModels.stream()
                 .filter(GeneratorSynchronousModel.class::isInstance)
                 .map(GeneratorSynchronousModel.class::cast)
@@ -111,7 +118,7 @@ public class DynaWaltzContext {
     }
 
     public Map<String, BlackBoxModel> getStaticIdBlackBoxModelMap() {
-        return getInputBlackBoxModelStream()
+        return getInputBlackBoxDynamicModelStream()
                 .filter(blackBoxModel -> blackBoxModel.getStaticId().isPresent())
                 .collect(Collectors.toMap(bbm -> bbm.getStaticId().get(), Function.identity(), this::mergeDuplicateStaticId, LinkedHashMap::new));
     }
@@ -148,20 +155,25 @@ public class DynaWaltzContext {
         return eventModelsConnections;
     }
 
-    private Stream<BlackBoxModel> getInputBlackBoxModelStream() {
+    private Stream<BlackBoxModel> getInputBlackBoxDynamicModelStream() {
         //Doesn't include the OmegaRef, it only concerns the DynamicModels provided by the user
         return dynamicModels.stream();
     }
 
-    public Stream<BlackBoxModel> getBlackBoxModelStream() {
+    public Stream<BlackBoxModel> getBlackBoxDynamicModelStream() {
         if (omegaRef.isEmpty()) {
-            return getInputBlackBoxModelStream();
+            return getInputBlackBoxDynamicModelStream();
         }
-        return Stream.concat(getInputBlackBoxModelStream(), Stream.of(omegaRef));
+        return Stream.concat(getInputBlackBoxDynamicModelStream(), Stream.of(omegaRef));
+    }
+
+    public List<BlackBoxModel> getBlackBoxDynamicModels() {
+        return getBlackBoxDynamicModelStream().collect(Collectors.toList());
     }
 
     public List<BlackBoxModel> getBlackBoxModels() {
-        return getBlackBoxModelStream().collect(Collectors.toList());
+        return Stream.concat(getBlackBoxDynamicModelStream(), getBlackBoxEventModelStream())
+                .collect(Collectors.toList());
     }
 
     public Stream<BlackBoxModel> getBlackBoxEventModelStream() {
@@ -180,10 +192,14 @@ public class DynaWaltzContext {
         return !curves.isEmpty();
     }
 
-    private static DynaWaltzParametersDatabase loadDatabase(String filename) {
-        FileSystem fs = PlatformConfig.defaultConfig().getConfigDir()
+    private static FileSystem getFileSystem(PlatformConfig platformConfig) {
+        return platformConfig.getConfigDir()
                 .map(Path::getFileSystem)
                 .orElseThrow(() -> new PowsyblException("A configuration directory should be defined"));
+    }
+
+    private static DynaWaltzParametersDatabase loadDatabase(String filename, PlatformConfig platformConfig) {
+        FileSystem fs = getFileSystem(platformConfig);
         return DynaWaltzParametersDatabase.load(fs.getPath(filename));
     }
 
@@ -197,5 +213,9 @@ public class DynaWaltzContext {
 
     public String getSimulationParFile() {
         return getNetwork().getId() + ".par";
+    }
+
+    public PlatformConfig getPlatformConfig() {
+        return platformConfig;
     }
 }
