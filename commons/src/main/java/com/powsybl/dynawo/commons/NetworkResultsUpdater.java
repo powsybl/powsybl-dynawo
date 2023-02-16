@@ -141,8 +141,8 @@ public final class NetworkResultsUpdater {
                     LoadsMerger.BusState busState = LoadsMerger.getBusState(busTarget);
                     for (Load load : loadsTarget) {
                         Terminal loadTerminal = load.getTerminal();
-                        loadTerminal.setP(loadTerminal.getP() / busState.getP() * mergedLoadTerminal.getP());
-                        loadTerminal.setQ(loadTerminal.getQ() / busState.getQ() * mergedLoadTerminal.getQ());
+                        loadTerminal.setP(mergedLoadTerminal.getP() * loadTerminal.getP() / busState.getP());
+                        loadTerminal.setQ(mergedLoadTerminal.getQ() * loadTerminal.getQ() / busState.getQ());
                         if (mergedLoadTerminal.isConnected()) {
                             loadTerminal.connect();
                         } else if (!mergedLoadTerminal.isConnected()) {
