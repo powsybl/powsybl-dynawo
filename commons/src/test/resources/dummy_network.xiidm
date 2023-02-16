@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<iidm:network xmlns:iidm="http://www.powsybl.org/schema/iidm/1_3" id="urn:uuid:77b55f87-fc1e-4046-9599-6c6b4f991a87" caseDate="2014-06-01T10:30:00.000Z" forecastDistance="0" sourceFormat="CGMES">
-    <iidm:property name="CGMESModelDetail" value="bus-branch"/>
-    <iidm:substation id="_c49942d6-8b01-4b01-b5e8-f1180f84906c" name="PP_Amsterdam" country="NL" geographicalTags="_c1d5bfe48f8011e08e4d00247eb1f55e"/>
-</iidm:network>

@@ -81,8 +81,8 @@
                 <iidm:internalConnection node1="43" node2="12"/>
                 <iidm:bus v="128.132538" angle="-14.5066376" nodes="0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43"/>
             </iidm:nodeBreakerTopology>
-            <iidm:load id="_045b00d5-c766-11e1-8775-005056c00008" name="Madison LD" loadType="UNDEFINED" p0="62.0" q0="14.0" node="14" p="86.0" q="26.0"></iidm:load>
-            <iidm:load id="_04689566-c766-11e1-8775-005056c00008" name="Madison NegG LD" loadType="UNDEFINED" p0="10.0" q0="0.0" node="15" p="17.0" q="0.0"></iidm:load>
+            <iidm:load id="_045b00d5-c766-11e1-8775-005056c00008" name="Madison LD" loadType="UNDEFINED" p0="62.0" q0="13.0" node="14" p="62.0" q="13.0"></iidm:load>
+            <iidm:load id="_04689566-c766-11e1-8775-005056c00008" name="Madison NegG LD" loadType="UNDEFINED" p0="9.0" q0="0.0" node="15" p="9.0" q="0.0"></iidm:load>
         </iidm:voltageLevel>
     </iidm:substation>
     <iidm:substation id="_04542302-c766-11e1-8775-005056c00008" name="Gringotts" country="GB" geographicalTags="_0472a781-c766-11e1-8775-005056c00008">
@@ -2911,7 +2911,7 @@
                 <iidm:bus v="124.763" angle="-12.388133" nodes="0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24"/>
             </iidm:nodeBreakerTopology>
             <iidm:load id="_04566cf3-c766-11e1-8775-005056c00008" name="Reusens NegG LD" loadType="UNDEFINED" p0="22.0" q0="0.0" node="8" p="22.0" q="0.0"></iidm:load>
-            <iidm:load id="_0482fb36-c766-11e1-8775-005056c00008" name="Reusens LD" loadType="UNDEFINED" p0="32.0" q0="12.0" node="9" p="14.0" q="12.0"></iidm:load>
+            <iidm:load id="_0482fb36-c766-11e1-8775-005056c00008" name="Reusens LD" loadType="UNDEFINED" p0="28.0" q0="12.0" node="9" p="28.0" q="12.0"></iidm:load>
             <iidm:shunt id="_04558293-c766-11e1-8775-005056c00008" name="Reusens SC" bPerSection="6.88E-5" maximumSectionCount="10" currentSectionCount="5" voltageRegulatorOn="true" targetV="124.763" targetDeadband="1.0" node="10" q="-5.354637">
                 <iidm:property name="CGMES.RegulatingControl" value="_99303cd3-6b53-4ee2-a5ce-fe8d5feeb304"/>
             </iidm:shunt>

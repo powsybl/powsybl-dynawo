@@ -36,6 +36,14 @@ public class NetworkResultsUpdaterTest extends AbstractConverterTest {
     }
 
     @Test
+    public void testUpdateNodeBreakerWithMergedLoads() throws IOException {
+        Network expected = createTestCaseNodeBreaker();
+        Network actual = createTestCaseNodeBreaker();
+        NetworkResultsUpdater.update(actual, LoadsMerger.mergeLoads(expected), true);
+        compare(expected, actual);
+    }
+
+    @Test
     public void testUpdateNodeBreakerPassingThroughBusBreaker() throws IOException {
         Network expected = createTestCaseNodeBreaker();
         Network actual = createTestCaseNodeBreaker();
@@ -60,6 +68,14 @@ public class NetworkResultsUpdaterTest extends AbstractConverterTest {
         Network actual = createTestCaseBusBranch();
         reset(actual);
         NetworkResultsUpdater.update(actual, expected, false);
+        compare(expected, actual);
+    }
+
+    @Test
+    public void testUpdateBusBranchWithMergedLoads() throws IOException {
+        Network expected = createTestCaseBusBranch();
+        Network actual = createTestCaseBusBranch();
+        NetworkResultsUpdater.update(actual, LoadsMerger.mergeLoads(expected), true);
         compare(expected, actual);
     }
 
@@ -113,15 +129,15 @@ public class NetworkResultsUpdaterTest extends AbstractConverterTest {
     }
 
     private static Network createTestCaseBusBranch() {
-        return Importers.importData("XIIDM", new ResourceDataSource("SmallBusBranch", new ResourceSet("/SmallBusBranch", "SmallBusBranch.xiidm")), null);
+        return Importers.importData("XIIDM", new ResourceDataSource("SmallBusBranch", new ResourceSet("/", "SmallBusBranch.xiidm")), null);
     }
 
     private static Network createTestCaseNodeBreaker() {
-        return Importers.importData("XIIDM", new ResourceDataSource("SmallNodeBreaker_fix_line_044bbe91", new ResourceSet("/SmallNodeBreaker", "SmallNodeBreaker_fix_line_044bbe91.xiidm")), null);
+        return Importers.importData("XIIDM", new ResourceDataSource("SmallNodeBreaker_fix_line_044bbe91", new ResourceSet("/", "SmallNodeBreaker_fix_line_044bbe91.xiidm")), null);
     }
 
     private static Network createTestMicro() {
-        return Importers.importData("XIIDM", new ResourceDataSource("MicroAssembled", new ResourceSet("/MicroAssembled", "MicroAssembled.xiidm")), null);
+        return Importers.importData("XIIDM", new ResourceDataSource("MicroAssembled", new ResourceSet("/", "MicroAssembled.xiidm")), null);
     }
 
     private static void reset(Network targetNetwork) {
