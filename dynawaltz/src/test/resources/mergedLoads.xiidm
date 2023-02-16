@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<iidm:network xmlns:iidm="http://www.powsybl.org/schema/iidm/1_9" id="test" caseDate="2023-02-16T16:03:32.005+01:00" forecastDistance="0" sourceFormat="test" minimumValidationLevel="STEADY_STATE_HYPOTHESIS">
+    <iidm:substation id="substation">
+        <iidm:voltageLevel id="vl1" nominalV="400.0" topologyKind="NODE_BREAKER">
+            <iidm:nodeBreakerTopology>
+                <iidm:busbarSection id="Busbar" node="0"/>
+                <iidm:switch id="breaker1" kind="DISCONNECTOR" retained="false" open="false" node1="0" node2="1"/>
+                <iidm:switch id="breaker2" kind="DISCONNECTOR" retained="false" open="false" node1="0" node2="2"/>
+            </iidm:nodeBreakerTopology>
+            <iidm:load id="merged_load_.vl1_0" loadType="UNDEFINED" p0="22.0" q0="6.0" node="1"/>
+        </iidm:voltageLevel>
+    </iidm:substation>
+</iidm:network>
