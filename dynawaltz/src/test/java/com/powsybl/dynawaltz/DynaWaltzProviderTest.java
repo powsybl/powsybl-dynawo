@@ -6,25 +6,28 @@
  */
 package com.powsybl.dynawaltz;
 
+import com.google.common.jimfs.Configuration;
+import com.google.common.jimfs.Jimfs;
+import com.powsybl.computation.ComputationManager;
+import com.powsybl.computation.local.LocalCommandExecutor;
+import com.powsybl.computation.local.LocalComputationConfig;
+import com.powsybl.computation.local.LocalComputationManager;
+import com.powsybl.dynamicsimulation.*;
+import com.powsybl.iidm.network.Network;
+import com.powsybl.iidm.network.Substation;
+import com.powsybl.iidm.network.TopologyKind;
+import com.powsybl.iidm.network.VoltageLevel;
+import org.junit.Test;
+
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ForkJoinPool;
-
-import com.powsybl.computation.local.LocalCommandExecutor;
-import com.powsybl.dynamicsimulation.*;
-import com.powsybl.dynawo.commons.LoadsMerger;
-import com.powsybl.iidm.network.*;
-import org.junit.Test;
-
-import com.google.common.jimfs.Configuration;
-import com.google.common.jimfs.Jimfs;
-import com.powsybl.computation.ComputationManager;
-import com.powsybl.computation.local.LocalComputationConfig;
-import com.powsybl.computation.local.LocalComputationManager;
 
 import static org.junit.Assert.*;
 
