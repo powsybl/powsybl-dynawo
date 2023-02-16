@@ -7,33 +7,24 @@ import com.powsybl.iidm.xml.NetworkXml;
 /**
  * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
  */
-public class LoadsMerger {
+public final class LoadsMerger {
 
     private static final String MERGE_LOAD_PREFIX_ID = "merged_load_.";
-    private final Network initialNetwork;
-    private Network mergedLoadsNetwork;
 
-    public LoadsMerger(Network network) {
-        this.initialNetwork = network;
+    private LoadsMerger() {
     }
 
-    public Network getMergedLoadsNetwork() {
-        if (mergedLoadsNetwork == null) {
-            mergedLoadsNetwork = NetworkXml.copy(initialNetwork);
-            mergeLoads();
-        }
-        return mergedLoadsNetwork;
-    }
-
-    private void mergeLoads() throws PowsyblException {
+    public static Network mergeLoads(Network network) throws PowsyblException {
+        Network mergedLoadsNetwork = NetworkXml.copy(network);
         for (Bus bus : mergedLoadsNetwork.getBusBreakerView().getBuses()) {
             if (bus.getLoadStream().count() > 1) {
                 mergeLoads(bus);
             }
         }
+        return mergedLoadsNetwork;
     }
 
-    private void mergeLoads(Bus bus) {
+    private static void mergeLoads(Bus bus) {
         TopologyKind topologyKind = bus.getVoltageLevel().getTopologyKind();
 
         LoadAdder loadAdder = bus.getVoltageLevel().newLoad();
