@@ -49,7 +49,6 @@ public class DynaFlowSecurityAnalysis {
     private static final String DYNAFLOW_LAUNCHER_PROGRAM_NAME = "dynaflow-launcher.sh";
     private static final String CONTINGENCIES_FILENAME = "contingencies.json";
     private static final String SECURITY_ANALYSIS_RESULTS_FILENAME = "securityAnalysisResults.json";
-    private static final String BASE_CASE_FOLDER = "BaseCase";
     private static final String DYNAFLOW_OUTPUT_FOLDER = "outputs";
     private static final String DYNAWO_FINAL_STATE_FOLDER = "finalState";
     private static final String DYNAWO_OUTPUT_NETWORK_FILENAME = "outputIIDM.xml";
@@ -172,7 +171,7 @@ public class DynaFlowSecurityAnalysis {
                     return new SecurityAnalysisReport(SecurityAnalysisResultDeserializer.read(saOutput));
                 } else {
                     // Build the results from the output networks written by DynaFlow
-                    PreContingencyResult preContingencyResult = getPreContingencyResult(workingDir);
+                    PreContingencyResult preContingencyResult = getPreContingencyResult(network);
                     List<PostContingencyResult> contingenciesResults = contingencies.stream()
                         .map(c -> getPostContingencyResult(workingDir, c))
                         .collect(Collectors.toList());
@@ -184,21 +183,15 @@ public class DynaFlowSecurityAnalysis {
         });
     }
 
-    private static PreContingencyResult getPreContingencyResult(Path workingDir) {
-        Path folder = workingDir.resolve(BASE_CASE_FOLDER);
-        LimitViolationsResult baseCaseResult = limitViolationsFromOutputNetwork(folder);
+    private static PreContingencyResult getPreContingencyResult(Network network) {
+        List<LimitViolation> limitViolations = Security.checkLimits(network);
         NetworkResult networkResult = new NetworkResult(Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
-        return new PreContingencyResult(preContingencyStatusFromOutputNetwork(folder), baseCaseResult, networkResult);
+        return new PreContingencyResult(LoadFlowResult.ComponentResult.Status.CONVERGED, new LimitViolationsResult(limitViolations), networkResult);
     }
 
     private static PostContingencyResult getPostContingencyResult(Path workingDir, Contingency c) {
         Path folder = workingDir.resolve(c.getId());
         return new PostContingencyResult(c, statusFromOutputNetwork(folder), limitViolationsFromOutputNetwork(folder));
-    }
-
-    private static LoadFlowResult.ComponentResult.Status preContingencyStatusFromOutputNetwork(Path folder) {
-        Path outputNetworkPath = outputNetworkPath(folder);
-        return Files.exists(outputNetworkPath) ? LoadFlowResult.ComponentResult.Status.CONVERGED : LoadFlowResult.ComponentResult.Status.FAILED;
     }
 
     private static PostContingencyComputationStatus statusFromOutputNetwork(Path folder) {
