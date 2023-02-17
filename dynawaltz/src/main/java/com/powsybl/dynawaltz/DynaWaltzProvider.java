@@ -16,8 +16,9 @@ import com.powsybl.dynawaltz.xml.CurvesXml;
 import com.powsybl.dynawaltz.xml.DydXml;
 import com.powsybl.dynawaltz.xml.JobsXml;
 import com.powsybl.dynawaltz.xml.ParametersXml;
-import com.powsybl.dynawo.commons.DynawoResultsNetworkUpdate;
 import com.powsybl.dynawo.commons.DynawoUtil;
+import com.powsybl.dynawo.commons.LoadsMerger;
+import com.powsybl.dynawo.commons.NetworkResultsUpdater;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.xml.NetworkXml;
 import com.powsybl.timeseries.TimeSeries;
@@ -119,9 +120,13 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
     private final class DynaWaltzHandler extends AbstractExecutionHandler<DynamicSimulationResult> {
 
         private final DynaWaltzContext context;
+        private final Network dynawoInput;
 
         public DynaWaltzHandler(DynaWaltzContext context) {
             this.context = context;
+            this.dynawoInput = context.getDynaWaltzParameters().isMergeLoads()
+                    ? LoadsMerger.mergeLoads(context.getNetwork())
+                    : context.getNetwork();
         }
 
         @Override
@@ -146,7 +151,7 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
             boolean status = true;
             Path outputNetworkFile = workingDir.resolve("outputs").resolve("finalState").resolve(OUTPUT_IIDM_FILENAME);
             if (Files.exists(outputNetworkFile)) {
-                DynawoResultsNetworkUpdate.update(context.getNetwork(), NetworkXml.read(outputNetworkFile));
+                NetworkResultsUpdater.update(context.getNetwork(), NetworkXml.read(outputNetworkFile), context.getDynaWaltzParameters().isMergeLoads());
             } else {
                 status = false;
             }
@@ -165,8 +170,7 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
 
         private void writeInputFiles(Path workingDir) {
             try {
-                DynawoUtil.writeIidm(context.getNetwork(), workingDir.resolve(NETWORK_FILENAME));
-
+                DynawoUtil.writeIidm(dynawoInput, workingDir.resolve(NETWORK_FILENAME));
                 JobsXml.write(workingDir, context);
                 DydXml.write(workingDir, context);
                 ParametersXml.write(workingDir, context);
