@@ -6,8 +6,6 @@
  */
 package com.powsybl.dynawaltz.dsl.ieee;
 
-import org.junit.After;
-
 import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.io.FileUtil;
 import com.powsybl.computation.ComputationManager;
@@ -19,14 +17,14 @@ import com.powsybl.dynamicsimulation.groovy.*;
 import com.powsybl.dynamicsimulation.json.JsonDynamicSimulationParameters;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
 import com.powsybl.dynawaltz.DynaWaltzProvider;
-import com.powsybl.dynawaltz.DynaWaltzProviderTest.DynamicModelsSupplierMock;
-import com.powsybl.dynawaltz.DynaWaltzProviderTest.EventModelsSupplierMock;
 import com.powsybl.iidm.network.Network;
+import org.junit.After;
 
 import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 
@@ -77,7 +75,7 @@ public abstract class AbstractIeeeTest {
             List<DynamicModelGroovyExtension> dynamicModelGroovyExtensions = GroovyExtension.find(DynamicModelGroovyExtension.class, DynaWaltzProvider.NAME);
             dynamicModelsSupplier = new GroovyDynamicModelsSupplier(workingDir.resolve("dynamicModels.groovy"), dynamicModelGroovyExtensions);
         } else {
-            dynamicModelsSupplier = new DynamicModelsSupplierMock();
+            dynamicModelsSupplier = n -> Collections.emptyList();
         }
 
         // Event models
@@ -86,7 +84,7 @@ public abstract class AbstractIeeeTest {
             List<EventModelGroovyExtension> eventModelGroovyExtensions = GroovyExtension.find(EventModelGroovyExtension.class, DynaWaltzProvider.NAME);
             eventModelsSupplier = new GroovyEventModelsSupplier(workingDir.resolve("eventModels.groovy"), eventModelGroovyExtensions);
         } else {
-            eventModelsSupplier = new EventModelsSupplierMock();
+            eventModelsSupplier = EventModelsSupplier.empty();
         }
 
         // Curves
