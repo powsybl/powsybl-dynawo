@@ -138,17 +138,7 @@ public final class NetworkResultsUpdater {
                 if (nbLoads == 1) {
                     update(loadsTarget.iterator().next().getTerminal(), mergedLoadTerminal);
                 } else {
-                    LoadsMerger.BusState busState = LoadsMerger.getBusState(busTarget);
-                    for (Load load : loadsTarget) {
-                        Terminal loadTerminal = load.getTerminal();
-                        loadTerminal.setP(mergedLoadTerminal.getP() * loadTerminal.getP() / busState.getP());
-                        loadTerminal.setQ(mergedLoadTerminal.getQ() * loadTerminal.getQ() / busState.getQ());
-                        if (mergedLoadTerminal.isConnected()) {
-                            loadTerminal.connect();
-                        } else if (!mergedLoadTerminal.isConnected()) {
-                            loadTerminal.disconnect();
-                        }
-                    }
+                    updateMultipleLoadsFromMergedLoad(loadsTarget, mergedLoadTerminal, busTarget);
                 }
             }
         }
@@ -161,5 +151,19 @@ public final class NetworkResultsUpdater {
         }
         return busSource.getLoadStream().findFirst()
                 .orElseThrow(() -> new PowsyblException("Missing merged load in bus " + busId));
+    }
+
+    private static void updateMultipleLoadsFromMergedLoad(Iterable<Load> loadsTarget, Terminal mergedLoadTerminal, Bus busTarget) {
+        LoadsMerger.BusState busState = LoadsMerger.getBusState(busTarget);
+        for (Load load : loadsTarget) {
+            Terminal loadTerminal = load.getTerminal();
+            loadTerminal.setP(mergedLoadTerminal.getP() * loadTerminal.getP() / busState.getP());
+            loadTerminal.setQ(mergedLoadTerminal.getQ() * loadTerminal.getQ() / busState.getQ());
+            if (mergedLoadTerminal.isConnected()) {
+                loadTerminal.connect();
+            } else if (!mergedLoadTerminal.isConnected()) {
+                loadTerminal.disconnect();
+            }
+        }
     }
 }

@@ -103,11 +103,6 @@ public class DynaFlowProvider implements LoadFlowProvider {
         return new PowsyblDynawoVersion().getMavenProjectVersion();
     }
 
-    private static CommandExecution createCommandExecution(DynaFlowConfig config) {
-        Command cmd = getCommand(config);
-        return new CommandExecution(cmd, 1, 0);
-    }
-
     @Override
     public CompletableFuture<LoadFlowResult> run(Network network, ComputationManager computationManager, String workingStateId, LoadFlowParameters loadFlowParameters) {
         Objects.requireNonNull(network);
@@ -173,6 +168,11 @@ public class DynaFlowProvider implements LoadFlowProvider {
             DynawoUtil.writeIidm(dynawoInput, workingDir.resolve(IIDM_FILENAME));
             DynaFlowConfigSerializer.serialize(loadFlowParameters, dynaFlowParameters, Path.of("."), workingDir.resolve(CONFIG_FILENAME));
             return Collections.singletonList(createCommandExecution(config));
+        }
+
+        private static CommandExecution createCommandExecution(DynaFlowConfig config) {
+            Command cmd = getCommand(config);
+            return new CommandExecution(cmd, 1, 0);
         }
 
         @Override
