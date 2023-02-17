@@ -221,11 +221,6 @@ public class DynaWaltzGroovyDynamicModelsSupplierTest {
             assertEquals("BBM_" + identifiable.getId(), generatorSynchronous.getDynamicModelId());
             assertEquals("GSFWPR", generatorSynchronous.getParameterSetId());
             assertTrue(identifiable instanceof Generator);
-        } else if (generatorSynchronous.getLib().equals("GeneratorSynchronousFourWindingsProportionalRegulationsStepPm")) {
-            Identifiable<?> identifiable = network.getIdentifiable(generatorSynchronous.getStaticId().orElse(null));
-            assertEquals("BBM_" + identifiable.getId(), generatorSynchronous.getDynamicModelId());
-            assertEquals("GSFWPRSP", generatorSynchronous.getParameterSetId());
-            assertTrue(identifiable instanceof Generator);
         } else if (generatorSynchronous.getLib().equals("GeneratorSynchronousThreeWindings")) {
             Identifiable<?> identifiable = network.getIdentifiable(generatorSynchronous.getStaticId().orElse(null));
             assertEquals("BBM_" + identifiable.getId(), generatorSynchronous.getDynamicModelId());
