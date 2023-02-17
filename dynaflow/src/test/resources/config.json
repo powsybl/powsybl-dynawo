@@ -22,7 +22,8 @@
       },
       "chosenOutputs" : [ "STEADYSTATE", "TIMELINE" ],
       "timeStep" : 2.6,
-      "startingPointMode" : "warm"
+      "startingPointMode" : "warm",
+      "mergeLoads" : false
     }
   }
 }

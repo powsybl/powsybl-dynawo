@@ -22,6 +22,7 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
     public static final SolverType DEFAULT_SOLVER_TYPE = SolverType.SIM;
     public static final String DEFAULT_NETWORK_PAR_ID = "1";
     public static final String DEFAULT_SOLVER_PAR_ID = "1";
+    public static final boolean DEFAULT_MERGE_LOADS = true;
     private static final String DEFAULT_PARAMETERS_FILE = "models.par";
     private static final String DEFAULT_NETWORK_PARAMETERS_FILE = "network.par";
     private static final String DEFAULT_SOLVER_PARAMETERS_FILE = "solvers.par";
@@ -139,17 +140,26 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
         // Identifies the set of solver parameters that will be used in the simulation
         String solverParametersId = config.flatMap(c -> c.getOptionalStringProperty("solver.parametersId")).orElse(DEFAULT_SOLVER_PAR_ID);
 
-        return new DynaWaltzParameters(parametersFile, networkParametersFile, networkParametersId, solverType, solverParametersFile, solverParametersId);
+        // If merging loads on each bus to simplify dynawo's analysis
+        boolean mergeLoads = config.flatMap(c -> c.getOptionalBooleanProperty("mergeLoads")).orElse(DEFAULT_MERGE_LOADS);
+
+        return new DynaWaltzParameters(parametersFile, networkParametersFile, networkParametersId, solverType, solverParametersFile, solverParametersId, mergeLoads);
     }
+
+    private String parametersFile;
+    private Network network;
+    private Solver solver;
+    private boolean mergeLoads;
 
     public DynaWaltzParameters() {
     }
 
     public DynaWaltzParameters(String parametersFile, String networkParametersFile, String networkParametersId, SolverType solverType, String solverParametersFile,
-                            String solverParametersId) {
+                            String solverParametersId, boolean mergeLoads) {
         this.parametersFile = Objects.requireNonNull(parametersFile);
         this.network = new Network(networkParametersFile, networkParametersId);
         this.solver = new Solver(solverType, solverParametersFile, solverParametersId);
+        this.mergeLoads = mergeLoads;
     }
 
     @Override
@@ -184,7 +194,11 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
         return this;
     }
 
-    private String parametersFile;
-    private Network network;
-    private Solver solver;
+    public boolean isMergeLoads() {
+        return mergeLoads;
+    }
+
+    public void setMergeLoads(boolean mergeLoads) {
+        this.mergeLoads = mergeLoads;
+    }
 }
