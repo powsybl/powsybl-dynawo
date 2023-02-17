@@ -146,7 +146,7 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
 
         assertEquals(DYNAFLOW_NAME, dynaFlowSimulation.getName());
 
-        LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynaflow_version.out",
+        LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynawo_version.out",
                 "/outputMergedLoads.xiidm", "/results.json");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
         LoadFlowResult result = dynaFlowSimulation.run(network, computationManager, params);
@@ -167,7 +167,7 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
 
         assertEquals(DYNAFLOW_NAME, dynaFlowSimulation.getName());
 
-        LocalCommandExecutor commandExecutor = new EmptyLocalCommandExecutorMock("/dynaflow_version.out");
+        LocalCommandExecutor commandExecutor = new EmptyLocalCommandExecutorMock("/dynawo_version.out");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
         LoadFlowResult result = dynaFlowSimulation.run(network, computationManager, params);
         assertNotNull(result);
