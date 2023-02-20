@@ -1,16 +1,19 @@
 /**
- * Copyright (c) 2021, RTE (http://www.rte-france.com)
+ * Copyright (c) 2023, RTE (http://www.rte-france.com/)
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawo.commons;
+package com.powsybl.dynawo.commons.loadmerge;
 
 import com.google.common.collect.Iterables;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.iidm.network.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Map;
 
 /**
  * @author Guillem Jané Guasch <janeg at aia.es>
@@ -121,6 +124,16 @@ public final class NetworkResultsUpdater {
         }
     }
 
+    private static void update(Terminal target, Terminal mergedSource, BusState busState) {
+        target.setP(target.getP() / busState.getP() * mergedSource.getP());
+        target.setQ(target.getQ() / busState.getQ() * mergedSource.getQ());
+        if (mergedSource.isConnected()) {
+            target.connect();
+        } else {
+            target.disconnect();
+        }
+    }
+
     private static void updateLoads(Network targetNetwork, Network sourceNetwork, boolean mergeLoads) {
         if (!mergeLoads) {
             for (Load sourceLoad : sourceNetwork.getLoads()) {
@@ -134,36 +147,24 @@ public final class NetworkResultsUpdater {
                     continue;
                 }
 
-                Terminal mergedLoadTerminal = getMergedLoad(sourceNetwork, busTarget.getId()).getTerminal();
-                if (nbLoads == 1) {
-                    update(loadsTarget.iterator().next().getTerminal(), mergedLoadTerminal);
-                } else {
-                    updateMultipleLoadsFromMergedLoad(loadsTarget, mergedLoadTerminal, busTarget);
+                Map<LoadPowers, BusState> busStates = LoadsMerger.getBusStates(busTarget);
+                for (Load load : loadsTarget) {
+                    LoadPowers loadPowers = LoadsMerger.getLoadPowers(load);
+                    Terminal mergedLoadTerminal = getMergedLoad(sourceNetwork, busTarget.getId(), loadPowers).getTerminal();
+                    BusState busState = busStates.get(loadPowers);
+                    if (busState == null) {
+                        update(load.getTerminal(), mergedLoadTerminal);
+                    } else {
+                        update(load.getTerminal(), mergedLoadTerminal, busState);
+                    }
                 }
             }
         }
     }
 
-    private static Load getMergedLoad(Network sourceNetwork, String busId) {
+    private static Load getMergedLoad(Network sourceNetwork, String busId, LoadPowers loadPowers) {
         Bus busSource = sourceNetwork.getBusBreakerView().getBus(busId);
-        if (busSource.getLoadStream().count() > 1) {
-            throw new PowsyblException("Loads not merged in bus " + busId);
-        }
-        return busSource.getLoadStream().findFirst()
+        return busSource.getLoadStream().filter(l -> LoadsMerger.getLoadPowers(l) == loadPowers).findFirst()
                 .orElseThrow(() -> new PowsyblException("Missing merged load in bus " + busId));
-    }
-
-    private static void updateMultipleLoadsFromMergedLoad(Iterable<Load> loadsTarget, Terminal mergedLoadTerminal, Bus busTarget) {
-        LoadsMerger.BusState busState = LoadsMerger.getBusState(busTarget);
-        for (Load load : loadsTarget) {
-            Terminal loadTerminal = load.getTerminal();
-            loadTerminal.setP(mergedLoadTerminal.getP() * loadTerminal.getP() / busState.getP());
-            loadTerminal.setQ(mergedLoadTerminal.getQ() * loadTerminal.getQ() / busState.getQ());
-            if (mergedLoadTerminal.isConnected()) {
-                loadTerminal.connect();
-            } else if (!mergedLoadTerminal.isConnected()) {
-                loadTerminal.disconnect();
-            }
-        }
     }
 }

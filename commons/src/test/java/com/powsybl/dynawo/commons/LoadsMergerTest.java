@@ -1,6 +1,7 @@
 package com.powsybl.dynawo.commons;
 
 import com.powsybl.commons.test.AbstractConverterTest;
+import com.powsybl.dynawo.commons.loadmerge.LoadsMerger;
 import com.powsybl.iidm.network.*;
 import com.powsybl.iidm.xml.NetworkXml;
 import org.junit.Test;

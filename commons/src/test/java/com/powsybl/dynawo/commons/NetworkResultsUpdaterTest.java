@@ -6,10 +6,12 @@
  */
 package com.powsybl.dynawo.commons;
 
-import com.powsybl.commons.test.AbstractConverterTest;
-import com.powsybl.commons.test.ComparisonUtils;
 import com.powsybl.commons.datasource.ResourceDataSource;
 import com.powsybl.commons.datasource.ResourceSet;
+import com.powsybl.commons.test.AbstractConverterTest;
+import com.powsybl.commons.test.ComparisonUtils;
+import com.powsybl.dynawo.commons.loadmerge.LoadsMerger;
+import com.powsybl.dynawo.commons.loadmerge.NetworkResultsUpdater;
 import com.powsybl.iidm.network.*;
 import com.powsybl.iidm.xml.ExportOptions;
 import com.powsybl.iidm.xml.NetworkXml;
