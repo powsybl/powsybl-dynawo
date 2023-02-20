@@ -53,7 +53,7 @@ public class EventQuadripoleDisconnection extends AbstractEventModel {
 
     @Override
     public List<Model> getModelsConnectedTo(DynaWaltzContext context) {
-        BlackBoxModel connectedBbm = context.getStaticIdBlackBoxModelMap().get(lineStaticId);
+        BlackBoxModel connectedBbm = context.getStaticIdBlackBoxModel(lineStaticId);
         if (connectedBbm == null) {
             return List.of(context.getNetworkModel().getDefaultLineModel(lineStaticId, Branch.Side.ONE));
         }

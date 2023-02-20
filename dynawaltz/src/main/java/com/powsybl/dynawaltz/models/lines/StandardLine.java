@@ -57,7 +57,7 @@ public class StandardLine extends AbstractBlackBoxModel implements LineModel {
         List<Model> connectedBbm = new ArrayList<>();
         for (Bus b : dynaWaltzContext.getNetwork().getBusBreakerView().getBuses()) {
             if (b.getLineStream().anyMatch(l -> l.equals(line))) {
-                connectedBbm.add(dynaWaltzContext.getStaticIdBlackBoxModelMap().get(b.getId()));
+                connectedBbm.add(dynaWaltzContext.getStaticIdBlackBoxModel(b.getId()));
             }
         }
         return connectedBbm;

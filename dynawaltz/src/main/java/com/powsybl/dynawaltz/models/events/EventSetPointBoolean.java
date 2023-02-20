@@ -49,7 +49,7 @@ public class EventSetPointBoolean extends AbstractEventModel {
 
     @Override
     public List<Model> getModelsConnectedTo(DynaWaltzContext context) {
-        BlackBoxModel connectedBbm = context.getStaticIdBlackBoxModelMap().get(generatorStaticId);
+        BlackBoxModel connectedBbm = context.getStaticIdBlackBoxModel(generatorStaticId);
         if (connectedBbm == null) {
             throw new PowsyblException("Cannot find generator '" + generatorStaticId + "' among the dynamic models provided");
         }

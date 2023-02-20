@@ -57,7 +57,7 @@ public abstract class AbstractGeneratorModel extends AbstractBlackBoxModel imple
             throw new PowsyblException("Generator static id unknown: " + staticId);
         }
         String connectedStaticId = generator.getTerminal().getBusBreakerView().getConnectableBus().getId();
-        BlackBoxModel connectedBbm = context.getStaticIdBlackBoxModelMap().get(connectedStaticId);
+        BlackBoxModel connectedBbm = context.getStaticIdBlackBoxModel(connectedStaticId);
         if (connectedBbm == null) {
             return List.of(context.getNetworkModel().getDefaultBusModel(connectedStaticId));
         }

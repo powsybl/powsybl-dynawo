@@ -33,7 +33,7 @@ public abstract class AbstractLoad extends AbstractBlackBoxModel {
             throw new PowsyblException("Load static id unknown: " + staticId);
         }
         String connectedStaticId = load.getTerminal().getBusBreakerView().getConnectableBus().getId();
-        BlackBoxModel connectedBbm = context.getStaticIdBlackBoxModelMap().get(connectedStaticId);
+        BlackBoxModel connectedBbm = context.getStaticIdBlackBoxModel(connectedStaticId);
         if (connectedBbm == null) {
             return List.of(context.getNetworkModel().getDefaultBusModel(connectedStaticId));
         }
