@@ -65,6 +65,7 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
         List<String> chosenOutputs = Arrays.asList(OutputTypes.STEADYSTATE.name(), OutputTypes.TIMELINE.name());
         double timeStep = 0;
         StartingPointMode startingPointMode = StartingPointMode.FLAT;
+        boolean mergeLoads = false;
 
         DynaFlowParameters.Sa securityAnalysis = new DynaFlowParameters.Sa();
         securityAnalysis.setTimeOfEvent(2.);
@@ -84,6 +85,7 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
         moduleConfig.setStringListProperty("chosenOutputs", chosenOutputs);
         moduleConfig.setStringProperty("timeStep", Double.toString(timeStep));
         moduleConfig.setStringProperty("startingPointMode", startingPointMode.getName());
+        moduleConfig.setStringProperty("mergeLoads", Boolean.toString(mergeLoads));
 
         DynaFlowParameters parameters = DynaFlowParameters.load(platformConfig);
 
@@ -101,6 +103,7 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
         assertArrayEquals(chosenOutputs.toArray(), parameters.getChosenOutputs().toArray());
         assertEquals(timeStep, parameters.getTimeStep(), 0.1d);
         assertEquals(startingPointMode, parameters.getStartingPointMode());
+        assertEquals(mergeLoads, parameters.isMergeLoads());
     }
 
     @Test
@@ -108,6 +111,8 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
         LoadFlowParameters parameters = LoadFlowParameters.load(platformConfig);
         DynaFlowParameters parametersExt = parameters.getExtension(DynaFlowParameters.class);
         assertNotNull(parametersExt);
+
+        assertEquals("{mergeLoads=true}", parametersExt.toString());
 
         assertNull(parametersExt.getSvcRegulationOn());
         assertNull(parametersExt.getShuntRegulationOn());
@@ -123,17 +128,7 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
         assertNull(parametersExt.getChosenOutputs());
         assertNull(parametersExt.getTimeStep());
         assertNull(parametersExt.getStartingPointMode());
-    }
-
-    @Test
-    public void checkDefaultToString() {
-        LoadFlowParameters parameters = LoadFlowParameters.load(platformConfig);
-        DynaFlowParameters parametersExt = parameters.getExtension(DynaFlowParameters.class);
-
-        String expectedString = "{}";
-
-        assertEquals(expectedString, parametersExt.toString());
-
+        assertTrue(parametersExt.isMergeLoads());
     }
 
     @Test
@@ -154,6 +149,7 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
         List<String> chosenOutputs = Arrays.asList(OutputTypes.STEADYSTATE.name(), OutputTypes.TIMELINE.name());
         double timeStep = 0;
         StartingPointMode startingPointMode = StartingPointMode.WARM;
+        boolean mergeLoad = false;
 
         Map<String, String> properties = new HashMap<>();
         properties.put("svcRegulationOn", Boolean.toString(svcRegulationOn));
@@ -170,6 +166,7 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
         properties.put("chosenOutputs", OutputTypes.STEADYSTATE.name() + "," + OutputTypes.TIMELINE.name());
         properties.put("timeStep", Double.toString(timeStep));
         properties.put("startingPointMode", startingPointMode.name());
+        properties.put("mergeLoads", Boolean.toString(mergeLoad));
 
         parametersExt.update(properties);
 
@@ -187,7 +184,8 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
                 "{timeOfEvent=" + timeOfEvent + "}" +
                 ", chosenOutputs=" + chosenOutputs +
                 ", timeStep=" + timeStep +
-                ", startingPointMode=" + startingPointMode + "}";
+                ", startingPointMode=" + startingPointMode +
+                ", mergeLoads=" + mergeLoad + "}";
         assertEquals(expectedString, parametersExt.toString());
         System.out.println(expectedString);
     }
@@ -232,6 +230,7 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
         dynaFlowParameters.setChosenOutputs(Collections.singletonList(OutputTypes.STEADYSTATE.name()));
         dynaFlowParameters.setTimeStep(2.6);
         dynaFlowParameters.setStartingPointMode(StartingPointMode.WARM);
+        dynaFlowParameters.setMergeLoads(false);
         lfParameters.addExtension(DynaFlowParameters.class, dynaFlowParameters);
 
         Path workingDir = fileSystem.getPath("dynaflow/workingDir");
@@ -261,6 +260,7 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
         List<String> chosenOutputs = Arrays.asList(OutputTypes.STEADYSTATE.name(), OutputTypes.TIMELINE.name());
         double timeStep = 0;
         StartingPointMode startingPointMode = StartingPointMode.WARM;
+        boolean mergeLoads = false;
 
         Map<String, String> properties = new HashMap<>();
         properties.put("svcRegulationOn", Boolean.toString(svcRegulationOn));
@@ -277,6 +277,7 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
         properties.put("chosenOutputs", OutputTypes.STEADYSTATE.name() + ", " + OutputTypes.TIMELINE.name());
         properties.put("timeStep", Double.toString(timeStep));
         properties.put("startingPointMode", startingPointMode.getName());
+        properties.put("mergeLoads", Boolean.toString(mergeLoads));
 
         DynaFlowParameters dynaFlowParameters = DynaFlowParameters.load(properties);
 
@@ -294,5 +295,6 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
         assertArrayEquals(chosenOutputs.toArray(), dynaFlowParameters.getChosenOutputs().toArray());
         assertEquals(timeStep, dynaFlowParameters.getTimeStep(), 0.1d);
         assertEquals(startingPointMode, dynaFlowParameters.getStartingPointMode());
+        assertEquals(mergeLoads, dynaFlowParameters.isMergeLoads());
     }
 }
