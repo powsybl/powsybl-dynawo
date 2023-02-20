@@ -32,7 +32,7 @@ abstract class AbstractDynamicModelBuilder implements ModelBuilder<DynamicModel>
         this.parameterSetId = parameterSetId
     }
 
-    void setupBuild() {
+    void checkData() {
         if (!staticId) {
             throw new DslException("'staticId' field is not set")
         }

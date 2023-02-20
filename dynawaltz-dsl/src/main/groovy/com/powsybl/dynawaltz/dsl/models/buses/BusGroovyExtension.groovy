@@ -23,7 +23,7 @@ import com.powsybl.dynawaltz.models.buses.StandardBus
 class BusGroovyExtension extends AbstractPowsyblDynawoGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
     BusGroovyExtension() {
-        tags = ["Bus"]
+        modelTags = ["Bus"]
     }
 
     @Override
@@ -35,7 +35,7 @@ class BusGroovyExtension extends AbstractPowsyblDynawoGroovyExtension<DynamicMod
 
         @Override
         StandardBus build() {
-            setupBuild()
+            checkData()
             new StandardBus(dynamicModelId, staticId, parameterSetId)
         }
     }

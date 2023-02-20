@@ -24,7 +24,7 @@ import com.powsybl.iidm.network.Branch
 class CurrentLimitAutomatonGroovyExtension extends AbstractPowsyblDynawoGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
     CurrentLimitAutomatonGroovyExtension() {
-        tags = ["CurrentLimitAutomaton"]
+        modelTags = ["CurrentLimitAutomaton"]
     }
 
     @Override
@@ -41,8 +41,8 @@ class CurrentLimitAutomatonGroovyExtension extends AbstractPowsyblDynawoGroovyEx
         }
 
         @Override
-        void setupBuild() {
-            super.setupBuild()
+        void checkData() {
+            super.checkData()
             if (!side) {
                 throw new DslException("'side' field is not set")
             }
@@ -50,7 +50,7 @@ class CurrentLimitAutomatonGroovyExtension extends AbstractPowsyblDynawoGroovyEx
 
         @Override
         CurrentLimitAutomaton build() {
-            setupBuild()
+            checkData()
             new CurrentLimitAutomaton(dynamicModelId, staticId, parameterSetId, side)
         }
     }

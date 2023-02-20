@@ -22,7 +22,7 @@ import com.powsybl.dynawaltz.models.loads.LoadAlphaBeta
 class LoadAlphaBetaGroovyExtension extends AbstractPowsyblDynawoGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
     LoadAlphaBetaGroovyExtension() {
-        tags = ["LoadAlphaBeta"]
+        modelTags = ["LoadAlphaBeta"]
     }
 
     @Override
@@ -33,7 +33,7 @@ class LoadAlphaBetaGroovyExtension extends AbstractPowsyblDynawoGroovyExtension<
     static class LoadAlphaBetaBuilder extends AbstractDynamicModelBuilder {
         @Override
         LoadAlphaBeta build() {
-            setupBuild()
+            checkData()
             new LoadAlphaBeta(dynamicModelId, staticId, parameterSetId)
         }
     }

@@ -24,7 +24,7 @@ class GeneratorSynchronousGroovyExtension extends AbstractPowsyblDynawoGroovyExt
 
     GeneratorSynchronousGroovyExtension() {
         ConfigSlurper config = new ConfigSlurper()
-        tags = config.parse(this.getClass().getClassLoader().getResource(GENERATORS_CONFIG)).get(SYNCHRONOUS_GENERATORS).keySet() as List
+        modelTags = config.parse(this.getClass().getClassLoader().getResource(GENERATORS_CONFIG)).get(SYNCHRONOUS_GENERATORS).keySet() as List
     }
 
     @Override
@@ -42,7 +42,7 @@ class GeneratorSynchronousGroovyExtension extends AbstractPowsyblDynawoGroovyExt
 
         @Override
         GeneratorSynchronous build() {
-            setupBuild()
+            checkData()
             new GeneratorSynchronous(dynamicModelId, staticId, parameterSetId, tag)
         }
     }

@@ -21,7 +21,7 @@ import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection
 class EventQuadripoleDisconnectionGroovyExtension extends AbstractPowsyblDynawoGroovyExtension<EventModel> implements EventModelGroovyExtension {
 
     EventQuadripoleDisconnectionGroovyExtension() {
-        tags = ["EventQuadripoleDisconnection"]
+        modelTags = ["EventQuadripoleDisconnection"]
     }
 
     @Override
@@ -44,7 +44,7 @@ class EventQuadripoleDisconnectionGroovyExtension extends AbstractPowsyblDynawoG
 
         @Override
         EventQuadripoleDisconnection build() {
-            setupBuild()
+            checkData()
             new EventQuadripoleDisconnection(eventModelId, staticId, startTime, disconnectOrigin, disconnectExtremity)
         }
     }

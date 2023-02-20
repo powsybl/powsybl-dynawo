@@ -21,7 +21,7 @@ import com.powsybl.dynawaltz.models.events.EventSetPointBoolean
 class EventSetPointBooleanGroovyExtension extends AbstractPowsyblDynawoGroovyExtension<EventModel> implements EventModelGroovyExtension {
 
     EventSetPointBooleanGroovyExtension() {
-        tags = ["EventSetPointBoolean"]
+        modelTags = ["EventSetPointBoolean"]
     }
 
     @Override
@@ -39,7 +39,7 @@ class EventSetPointBooleanGroovyExtension extends AbstractPowsyblDynawoGroovyExt
 
         @Override
         EventModel build() {
-            setupBuild()
+            checkData()
             new EventSetPointBoolean(eventModelId, staticId, startTime, stateEvent)
         }
     }

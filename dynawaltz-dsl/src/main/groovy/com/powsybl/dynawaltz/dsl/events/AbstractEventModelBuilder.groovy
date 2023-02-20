@@ -33,7 +33,7 @@ abstract class AbstractEventModelBuilder implements ModelBuilder<EventModel> {
         this.startTime = startTime
     }
 
-    void setupBuild() {
+    void checkData() {
         if (!staticId) {
             throw new DslException("'staticId' field is not set")
         }

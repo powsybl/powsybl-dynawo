@@ -24,7 +24,7 @@ import com.powsybl.iidm.network.Branch
 class LineGroovyExtension extends AbstractPowsyblDynawoGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
     LineGroovyExtension() {
-        tags = ["Line"]
+        modelTags = ["Line"]
     }
 
     @Override
@@ -46,7 +46,7 @@ class LineGroovyExtension extends AbstractPowsyblDynawoGroovyExtension<DynamicMo
 
         @Override
         StandardLine build() {
-            setupBuild()
+            checkData()
             new StandardLine(dynamicModelId, staticId, parameterSetId, side)
         }
     }

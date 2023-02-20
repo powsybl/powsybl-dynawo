@@ -22,7 +22,7 @@ import com.powsybl.dynawaltz.models.loads.LoadOneTransformer
 class LoadOneTransformerGroovyExtension extends AbstractPowsyblDynawoGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
     LoadOneTransformerGroovyExtension() {
-        tags = ["LoadOneTransformer"]
+        modelTags = ["LoadOneTransformer"]
     }
 
     @Override
@@ -33,7 +33,7 @@ class LoadOneTransformerGroovyExtension extends AbstractPowsyblDynawoGroovyExten
     static class LoadOneTransformerBuilder extends AbstractDynamicModelBuilder {
         @Override
         LoadOneTransformer build() {
-            setupBuild()
+            checkData()
             new LoadOneTransformer(dynamicModelId, staticId, parameterSetId)
         }
     }

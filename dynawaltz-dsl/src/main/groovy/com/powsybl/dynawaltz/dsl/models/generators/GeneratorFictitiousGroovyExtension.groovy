@@ -20,7 +20,7 @@ import com.powsybl.dynawaltz.models.generators.GeneratorFictitious
 class GeneratorFictitiousGroovyExtension extends AbstractPowsyblDynawoGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
     GeneratorFictitiousGroovyExtension() {
-        tags = ["GeneratorFictitious"]
+        modelTags = ["GeneratorFictitious"]
     }
 
     @Override
@@ -32,7 +32,7 @@ class GeneratorFictitiousGroovyExtension extends AbstractPowsyblDynawoGroovyExte
 
         @Override
         GeneratorFictitious build() {
-            setupBuild()
+            checkData()
             new GeneratorFictitious(dynamicModelId, staticId, parameterSetId)
         }
     }
