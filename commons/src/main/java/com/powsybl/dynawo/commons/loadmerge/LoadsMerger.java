@@ -30,33 +30,33 @@ public final class LoadsMerger {
     public static Network mergeLoads(Network network) throws PowsyblException {
         Network mergedLoadsNetwork = NetworkXml.copy(network);
 
-        List<LoadsMerging> loadsMerging = mergedLoadsNetwork.getBusBreakerView().getBusStream()
+        List<LoadsToMerge> loadsToMergeList = mergedLoadsNetwork.getBusBreakerView().getBusStream()
                 .filter(bus -> bus.getLoadStream().count() > 1)
                 .map(LoadsMerger::mergeLoads)
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
 
-        for (LoadsMerging merging : loadsMerging) {
-            merging.loadsToMerge.forEach(Connectable::remove);
-            merging.loadAdder.setP0(merging.busState.getP0());
-            merging.loadAdder.setQ0(merging.busState.getQ0());
-            Load load = merging.loadAdder.add();
-            load.getTerminal().setP(merging.busState.getP());
-            load.getTerminal().setQ(merging.busState.getQ());
+        for (LoadsToMerge loadsToMerge : loadsToMergeList) {
+            loadsToMerge.getLoads().forEach(Connectable::remove);
+            loadsToMerge.getLoadAdder().setP0(loadsToMerge.getBusState().getP0());
+            loadsToMerge.getLoadAdder().setQ0(loadsToMerge.getBusState().getQ0());
+            Load load = loadsToMerge.getLoadAdder().add();
+            load.getTerminal().setP(loadsToMerge.getBusState().getP());
+            load.getTerminal().setQ(loadsToMerge.getBusState().getQ());
         }
 
         return mergedLoadsNetwork;
     }
 
-    private static List<LoadsMerging> mergeLoads(Bus bus) {
+    private static List<LoadsToMerge> mergeLoads(Bus bus) {
         return getLoadsToMergeList(bus).stream()
                 .filter(loadsToMerge -> !loadsToMerge.isSingle())
                 .map(loadsToMerge -> mergeLoads(bus, loadsToMerge))
                 .collect(Collectors.toList());
     }
 
-    private static LoadsMerging mergeLoads(Bus bus, LoadsToMerge loadsToMerge) {
-        LoadAdder loadAdder = bus.getVoltageLevel().newLoad();
+    private static LoadsToMerge mergeLoads(Bus bus, LoadsToMerge loadsToMerge) {
+        LoadAdder loadAdder = loadsToMerge.getLoadAdder();
         loadAdder.setId(MERGE_LOAD_PREFIX_ID + bus.getId() + loadsToMerge.getLoadPowers().getMergeLoadSuffixId());
         loadAdder.setLoadType(LoadType.UNDEFINED);
 
@@ -68,7 +68,7 @@ public final class LoadsMerger {
             loadAdder.setNode(loadsToMerge.getLoads().get(0).getTerminal().getNodeBreakerView().getNode());
         }
 
-        return new LoadsMerging(loadAdder, loadsToMerge.getLoads(), loadsToMerge.getBusState());
+        return loadsToMerge;
     }
 
     static List<LoadsToMerge> getLoadsToMergeList(Bus bus) {
@@ -102,16 +102,16 @@ public final class LoadsMerger {
         }
 
         if (!pPosQPosLoads.isEmpty()) {
-            loadsToMerge.add(new LoadsToMerge(P_POS_Q_POS, BusState.createBusStateFromArray(pPosQPos), pPosQPosLoads));
+            loadsToMerge.add(new LoadsToMerge(P_POS_Q_POS, BusState.createBusStateFromArray(pPosQPos), pPosQPosLoads, bus.getVoltageLevel()));
         }
         if (!pPosQNegLoads.isEmpty()) {
-            loadsToMerge.add(new LoadsToMerge(P_POS_Q_NEG, BusState.createBusStateFromArray(pPosQNeg), pPosQNegLoads));
+            loadsToMerge.add(new LoadsToMerge(P_POS_Q_NEG, BusState.createBusStateFromArray(pPosQNeg), pPosQNegLoads, bus.getVoltageLevel()));
         }
         if (!pNegQPosLoads.isEmpty()) {
-            loadsToMerge.add(new LoadsToMerge(P_NEG_Q_POS, BusState.createBusStateFromArray(pNegQPos), pNegQPosLoads));
+            loadsToMerge.add(new LoadsToMerge(P_NEG_Q_POS, BusState.createBusStateFromArray(pNegQPos), pNegQPosLoads, bus.getVoltageLevel()));
         }
         if (!pNegQNegLoads.isEmpty()) {
-            loadsToMerge.add(new LoadsToMerge(P_NEG_Q_NEG, BusState.createBusStateFromArray(pNegQNeg), pNegQNegLoads));
+            loadsToMerge.add(new LoadsToMerge(P_NEG_Q_NEG, BusState.createBusStateFromArray(pNegQNeg), pNegQNegLoads, bus.getVoltageLevel()));
         }
 
         return loadsToMerge;
@@ -130,18 +130,6 @@ public final class LoadsMerger {
             return load.getTerminal().getQ() >= 0 ? P_POS_Q_POS : P_POS_Q_NEG;
         } else {
             return load.getTerminal().getQ() >= 0 ? P_NEG_Q_POS : P_NEG_Q_NEG;
-        }
-    }
-
-    private static class LoadsMerging {
-        private final BusState busState;
-        private final LoadAdder loadAdder;
-        private final Iterable<Load> loadsToMerge;
-
-        public LoadsMerging(LoadAdder loadAdder, Iterable<Load> loadsToMerge, BusState busState) {
-            this.loadAdder = loadAdder;
-            this.loadsToMerge = loadsToMerge;
-            this.busState = busState;
         }
     }
 }
