@@ -126,8 +126,8 @@ public final class NetworkResultsUpdater {
     }
 
     private static void update(Terminal target, Terminal mergedSource, BusState busState) {
-        target.setP(target.getP() / busState.getP() * mergedSource.getP());
-        target.setQ(target.getQ() / busState.getQ() * mergedSource.getQ());
+        target.setP(mergedSource.getP() * target.getP() / busState.getP());
+        target.setQ(mergedSource.getQ() * target.getQ() / busState.getQ());
         if (mergedSource.isConnected()) {
             target.connect();
         } else {
