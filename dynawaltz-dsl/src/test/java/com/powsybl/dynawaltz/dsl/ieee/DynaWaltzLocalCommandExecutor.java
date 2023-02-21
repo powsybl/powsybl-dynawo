@@ -38,14 +38,11 @@ public class DynaWaltzLocalCommandExecutor implements LocalCommandExecutor {
     private final String networkId;
     private final DynaWaltzParameters dynaWaltzParameters;
     private final String baseDirName;
-    private final String busSystem;
-
-    public DynaWaltzLocalCommandExecutor(FileSystem fileSystem, String networkId, DynaWaltzParameters dynaWaltzParameters, String baseDir, String busSystem) {
+    public DynaWaltzLocalCommandExecutor(FileSystem fileSystem, String networkId, DynaWaltzParameters dynaWaltzParameters, String baseDir) {
         this.fileSystem = Objects.requireNonNull(fileSystem);
         this.networkId = Objects.requireNonNull(networkId);
         this.dynaWaltzParameters = Objects.requireNonNull(dynaWaltzParameters);
         this.baseDirName = baseDir;
-        this.busSystem = busSystem;
     }
 
     protected void validateInputs(Path workingDir) throws IOException {
@@ -55,7 +52,7 @@ public class DynaWaltzLocalCommandExecutor implements LocalCommandExecutor {
         compareXml(getClass().getResourceAsStream("/" + baseDirName + "/dynawaltz-inputs/models.par"), Files.newInputStream(workingDir.resolve(fileSystem.getPath(dynaWaltzParameters.getParametersFile()).getFileName().toString())));
         compareXml(getClass().getResourceAsStream("/" + baseDirName + "/dynawaltz-inputs/network.par"), Files.newInputStream(workingDir.resolve(fileSystem.getPath(dynaWaltzParameters.getNetwork().getParametersFile()).getFileName().toString())));
         compareXml(getClass().getResourceAsStream("/" + baseDirName + "/dynawaltz-inputs/solvers.par"), Files.newInputStream(workingDir.resolve(fileSystem.getPath(dynaWaltzParameters.getSolver().getParametersFile()).getFileName().toString())));
-        compareXml(getClass().getResourceAsStream("/" + baseDirName + "/dynawaltz-inputs/" + busSystem + "bus.par"), Files.newInputStream(workingDir.resolve(networkId + ".par")));
+        compareXml(getClass().getResourceAsStream("/" + baseDirName + "/dynawaltz-inputs/" + networkId + ".par"), Files.newInputStream(workingDir.resolve(networkId + ".par")));
         compareXml(getClass().getResourceAsStream("/" + baseDirName + "/dynawaltz-inputs/powsybl_dynawaltz.crv"), Files.newInputStream(workingDir.resolve(CRV_FILENAME)));
     }
 
