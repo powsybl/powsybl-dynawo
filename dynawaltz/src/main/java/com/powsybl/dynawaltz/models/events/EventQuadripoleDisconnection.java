@@ -26,14 +26,12 @@ import static com.powsybl.dynawaltz.DynaWaltzParametersDatabase.ParameterType.BO
  */
 public class EventQuadripoleDisconnection extends AbstractEventModel {
 
-    private final String lineStaticId;
     private final boolean disconnectOrigin;
     private final boolean disconnectExtremity;
 
-    public EventQuadripoleDisconnection(String eventModelId, String staticId, double startTime,
+    public EventQuadripoleDisconnection(String eventModelId, String lineStaticId, double startTime,
                                         boolean disconnectOrigin, boolean disconnectExtremity) {
-        super(eventModelId, startTime);
-        this.lineStaticId = staticId;
+        super(eventModelId, lineStaticId, startTime);
         this.disconnectOrigin = disconnectOrigin;
         this.disconnectExtremity = disconnectExtremity;
     }
@@ -53,15 +51,11 @@ public class EventQuadripoleDisconnection extends AbstractEventModel {
 
     @Override
     public List<Model> getModelsConnectedTo(DynaWaltzContext context) {
-        BlackBoxModel connectedBbm = context.getStaticIdBlackBoxModelMap().get(lineStaticId);
+        BlackBoxModel connectedBbm = context.getStaticIdBlackBoxModelMap().get(getEquipmentStaticId());
         if (connectedBbm == null) {
-            return List.of(context.getNetworkModel().getDefaultLineModel(lineStaticId, Branch.Side.ONE));
+            return List.of(context.getNetworkModel().getDefaultLineModel(getEquipmentStaticId(), Branch.Side.ONE));
         }
         return List.of(connectedBbm);
-    }
-
-    public String getLineStaticId() {
-        return lineStaticId;
     }
 
     @Override

@@ -14,16 +14,18 @@ import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension;
 import com.powsybl.dynamicsimulation.groovy.GroovyDynamicModelsSupplier;
 import com.powsybl.dynamicsimulation.groovy.GroovyExtension;
 import com.powsybl.dynawaltz.DynaWaltzProvider;
+import com.powsybl.dynawaltz.dsl.automatons.CurrentLimitAutomatonGroovyExtension;
 import com.powsybl.dynawaltz.dsl.models.buses.BusGroovyExtension;
-import com.powsybl.dynawaltz.dsl.models.generators.GeneratorModelGroovyExtension;
+import com.powsybl.dynawaltz.dsl.models.generators.GeneratorFictitiousGroovyExtension;
+import com.powsybl.dynawaltz.dsl.models.generators.GeneratorSynchronousGroovyExtension;
 import com.powsybl.dynawaltz.dsl.models.lines.LineGroovyExtension;
 import com.powsybl.dynawaltz.dsl.models.loads.LoadAlphaBetaGroovyExtension;
 import com.powsybl.dynawaltz.dsl.models.loads.LoadOneTransformerGroovyExtension;
 import com.powsybl.dynawaltz.models.AbstractBlackBoxModel;
 import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton;
-import com.powsybl.dynawaltz.dsl.automatons.CurrentLimitAutomatonGroovyExtension;
 import com.powsybl.dynawaltz.models.buses.StandardBus;
-import com.powsybl.dynawaltz.models.generators.*;
+import com.powsybl.dynawaltz.models.generators.GeneratorFictitious;
+import com.powsybl.dynawaltz.models.generators.GeneratorSynchronous;
 import com.powsybl.dynawaltz.models.lines.StandardLine;
 import com.powsybl.dynawaltz.models.loads.LoadAlphaBeta;
 import com.powsybl.dynawaltz.models.loads.LoadOneTransformer;
@@ -157,11 +159,12 @@ public class DynaWaltzGroovyDynamicModelsSupplierTest {
     }
 
     private void validateExtension(DynamicModelGroovyExtension extension) {
+
         boolean isLoadAlphaBetaExtension = extension instanceof LoadAlphaBetaGroovyExtension;
         boolean isLoadOneTransformerExtension = extension instanceof LoadOneTransformerGroovyExtension;
-
         boolean isLoadExtension = isLoadAlphaBetaExtension || isLoadOneTransformerExtension;
-        boolean isGeneratorExtension = extension instanceof GeneratorModelGroovyExtension;
+
+        boolean isGeneratorExtension = extension instanceof GeneratorSynchronousGroovyExtension || extension instanceof GeneratorFictitiousGroovyExtension;
         boolean isBusExtension = extension instanceof BusGroovyExtension;
         boolean isLineExtension = extension instanceof LineGroovyExtension;
         boolean isDynamicModelExtension = isLoadExtension || isGeneratorExtension || isBusExtension || isLineExtension;
@@ -220,11 +223,6 @@ public class DynaWaltzGroovyDynamicModelsSupplierTest {
             Identifiable<?> identifiable = network.getIdentifiable(generatorSynchronous.getStaticId().orElse(null));
             assertEquals("BBM_" + identifiable.getId(), generatorSynchronous.getDynamicModelId());
             assertEquals("GSFWPR", generatorSynchronous.getParameterSetId());
-            assertTrue(identifiable instanceof Generator);
-        } else if (generatorSynchronous.getLib().equals("GeneratorSynchronousFourWindingsProportionalRegulationsStepPm")) {
-            Identifiable<?> identifiable = network.getIdentifiable(generatorSynchronous.getStaticId().orElse(null));
-            assertEquals("BBM_" + identifiable.getId(), generatorSynchronous.getDynamicModelId());
-            assertEquals("GSFWPRSP", generatorSynchronous.getParameterSetId());
             assertTrue(identifiable instanceof Generator);
         } else if (generatorSynchronous.getLib().equals("GeneratorSynchronousThreeWindings")) {
             Identifiable<?> identifiable = network.getIdentifiable(generatorSynchronous.getStaticId().orElse(null));

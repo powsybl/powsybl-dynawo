@@ -25,12 +25,10 @@ import static com.powsybl.dynawaltz.DynaWaltzParametersDatabase.ParameterType.BO
  */
 public class EventSetPointBoolean extends AbstractEventModel {
 
-    private final String generatorStaticId;
     private final boolean stateEvent;
 
-    public EventSetPointBoolean(String eventModelId, String staticId, double startTime, boolean stateEvent) {
-        super(eventModelId, startTime);
-        this.generatorStaticId = staticId;
+    public EventSetPointBoolean(String eventModelId, String generatorStaticId, double startTime, boolean stateEvent) {
+        super(eventModelId, generatorStaticId, startTime);
         this.stateEvent = stateEvent;
     }
 
@@ -49,9 +47,9 @@ public class EventSetPointBoolean extends AbstractEventModel {
 
     @Override
     public List<Model> getModelsConnectedTo(DynaWaltzContext context) {
-        BlackBoxModel connectedBbm = context.getStaticIdBlackBoxModelMap().get(generatorStaticId);
+        BlackBoxModel connectedBbm = context.getStaticIdBlackBoxModelMap().get(getEquipmentStaticId());
         if (connectedBbm == null) {
-            throw new PowsyblException("Cannot find generator '" + generatorStaticId + "' among the dynamic models provided");
+            throw new PowsyblException("Cannot find generator '" + getEquipmentStaticId() + "' among the dynamic models provided");
         }
         return List.of(connectedBbm);
     }

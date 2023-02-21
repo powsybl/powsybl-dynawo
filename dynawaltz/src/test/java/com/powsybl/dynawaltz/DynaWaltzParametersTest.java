@@ -31,6 +31,7 @@ public class DynaWaltzParametersTest {
     private final String parametersFile = "/home/user/parametersFile";
     private final String networkParametersFile = "/home/user/networkParametersFile";
     private final String solverParametersFile = "/home/user/solverParametersFile";
+    private final boolean mergeLoads = true;
 
     private InMemoryPlatformConfig platformConfig;
     private FileSystem fileSystem;
@@ -43,6 +44,7 @@ public class DynaWaltzParametersTest {
         moduleConfig.setStringProperty("parametersFile", parametersFile);
         moduleConfig.setStringProperty("network.parametersFile", networkParametersFile);
         moduleConfig.setStringProperty("solver.parametersFile", solverParametersFile);
+        moduleConfig.setStringProperty("mergeLoads", String.valueOf(mergeLoads));
     }
 
     @After
@@ -70,6 +72,7 @@ public class DynaWaltzParametersTest {
         assertEquals(solverType, parameters.getSolver().getType());
         assertEquals(solverParametersFile, parameters.getSolver().getParametersFile());
         assertEquals(solverParametersId, parameters.getSolver().getParametersId());
+        assertEquals(mergeLoads, parameters.isMergeLoads());
     }
 
     @Test
@@ -82,5 +85,6 @@ public class DynaWaltzParametersTest {
         assertEquals(DynaWaltzParameters.DEFAULT_SOLVER_TYPE, parameters.getSolver().getType());
         assertEquals(solverParametersFile, parameters.getSolver().getParametersFile());
         assertEquals(DynaWaltzParameters.DEFAULT_SOLVER_PAR_ID, parameters.getSolver().getParametersId());
+        assertEquals(DynaWaltzParameters.DEFAULT_MERGE_LOADS, parameters.isMergeLoads());
     }
 }

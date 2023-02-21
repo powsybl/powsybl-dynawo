@@ -24,14 +24,22 @@ import static org.junit.Assert.assertNotNull;
 /**
  * @author Guillem Jané Guasch <janeg at aia.es>
  */
-public class DynawoResultsNetworkUpdateTest extends AbstractConverterTest {
+public class NetworkResultsUpdaterTest extends AbstractConverterTest {
 
     @Test
     public void testUpdateNodeBreaker() throws IOException {
         Network expected = createTestCaseNodeBreaker();
         Network actual = createTestCaseNodeBreaker();
         reset(actual);
-        DynawoResultsNetworkUpdate.update(actual, expected);
+        NetworkResultsUpdater.update(actual, expected, false);
+        compare(expected, actual);
+    }
+
+    @Test
+    public void testUpdateNodeBreakerWithMergedLoads() throws IOException {
+        Network expected = createTestCaseNodeBreaker();
+        Network actual = createTestCaseNodeBreaker();
+        NetworkResultsUpdater.update(actual, LoadsMerger.mergeLoads(expected), true);
         compare(expected, actual);
     }
 
@@ -49,7 +57,7 @@ public class DynawoResultsNetworkUpdateTest extends AbstractConverterTest {
         Path pexpectedAsBusBreaker = tmpDir.resolve("expected-as-busbreaker.xiidm");
         NetworkXml.write(expected, new ExportOptions().setTopologyLevel(TopologyLevel.BUS_BREAKER), pexpectedAsBusBreaker);
         Network expectedBusBreaker = NetworkXml.read(pexpectedAsBusBreaker);
-        DynawoResultsNetworkUpdate.update(actual, expectedBusBreaker);
+        NetworkResultsUpdater.update(actual, expectedBusBreaker, false);
 
         compare(expected, actual);
     }
@@ -59,7 +67,15 @@ public class DynawoResultsNetworkUpdateTest extends AbstractConverterTest {
         Network expected = createTestCaseBusBranch();
         Network actual = createTestCaseBusBranch();
         reset(actual);
-        DynawoResultsNetworkUpdate.update(actual, expected);
+        NetworkResultsUpdater.update(actual, expected, false);
+        compare(expected, actual);
+    }
+
+    @Test
+    public void testUpdateBusBranchWithMergedLoads() throws IOException {
+        Network expected = createTestCaseBusBranch();
+        Network actual = createTestCaseBusBranch();
+        NetworkResultsUpdater.update(actual, LoadsMerger.mergeLoads(expected), true);
         compare(expected, actual);
     }
 
@@ -68,7 +84,7 @@ public class DynawoResultsNetworkUpdateTest extends AbstractConverterTest {
         Network expected = createTestMicro();
         Network actual = createTestMicro();
         reset(actual);
-        DynawoResultsNetworkUpdate.update(actual, expected);
+        NetworkResultsUpdater.update(actual, expected, false);
         compare(expected, actual);
     }
 
@@ -97,7 +113,7 @@ public class DynawoResultsNetworkUpdateTest extends AbstractConverterTest {
 
         Network actual = createTestMicro();
         reset(actual);
-        DynawoResultsNetworkUpdate.update(actual, expected);
+        NetworkResultsUpdater.update(actual, expected, false);
         compare(expected, actual);
     }
 

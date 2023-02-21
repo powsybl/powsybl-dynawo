@@ -14,16 +14,15 @@ import com.powsybl.dynamicsimulation.groovy.EventModelGroovyExtension;
 import com.powsybl.dynamicsimulation.groovy.GroovyEventModelsSupplier;
 import com.powsybl.dynamicsimulation.groovy.GroovyExtension;
 import com.powsybl.dynawaltz.DynaWaltzProvider;
-import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
-import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection;
 import com.powsybl.dynawaltz.dsl.events.EventQuadripoleDisconnectionGroovyExtension;
 import com.powsybl.dynawaltz.dsl.events.EventSetPointBooleanGroovyExtension;
+import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
+import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection;
 import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.Line;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.NetworkFactory;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -69,7 +68,7 @@ public class DynaWaltzGroovyEventModelsSupplierTest {
 
         List<EventModel> eventModels = supplier.get(network);
         int numLines = network.getLineCount();
-        int expectedEventModelsSize =  numLines;
+        int expectedEventModelsSize = numLines;
         assertEquals(expectedEventModelsSize, eventModels.size());
         eventModels.forEach(this::validateModel);
     }
@@ -91,7 +90,7 @@ public class DynaWaltzGroovyEventModelsSupplierTest {
         assertTrue(eventModel instanceof AbstractPureDynamicBlackBoxModel);
         AbstractPureDynamicBlackBoxModel blackBoxEventModel = (AbstractPureDynamicBlackBoxModel) eventModel;
         if (blackBoxEventModel instanceof EventQuadripoleDisconnection) {
-            Identifiable<?> identifiable = network.getIdentifiable(((EventQuadripoleDisconnection) blackBoxEventModel).getLineStaticId());
+            Identifiable<?> identifiable = network.getIdentifiable(((EventQuadripoleDisconnection) blackBoxEventModel).getEquipmentStaticId());
             assertEquals("EM_" + identifiable.getId(), blackBoxEventModel.getDynamicModelId());
             assertEquals(blackBoxEventModel.getDynamicModelId(), blackBoxEventModel.getParameterSetId());
             assertTrue(identifiable instanceof Line);

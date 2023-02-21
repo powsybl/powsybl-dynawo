@@ -7,37 +7,33 @@
 package com.powsybl.dynawaltz.dsl.models.generators
 
 import com.google.auto.service.AutoService
-import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
+import com.powsybl.dynawaltz.dsl.AbstractDynamicModelBuilder
+import com.powsybl.dynawaltz.dsl.AbstractPowsyblDynawoGroovyExtension
 import com.powsybl.dynawaltz.models.generators.GeneratorFictitious
-
-import java.util.function.Consumer
 
 /**
  * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class GeneratorFictitiousGroovyExtension extends GeneratorModelGroovyExtension {
+class GeneratorFictitiousGroovyExtension extends AbstractPowsyblDynawoGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
-    void load(Binding binding, Consumer<DynamicModel> consumer) {
-        binding.GeneratorFictitious = { Closure<Void> closure ->
-            def cloned = closure.clone()
-            GeneratorModelSpec generatorModelSpec = new GeneratorModelSpec()
-
-            cloned.delegate = generatorModelSpec
-            cloned()
-
-            if (!generatorModelSpec.staticId) {
-                throw new DslException("'staticId' field is not set")
-            }
-            if (!generatorModelSpec.parameterSetId) {
-                throw new DslException("'parameterSetId' field is not set")
-            }
-
-            String dynamicModelId = generatorModelSpec.dynamicModelId ? generatorModelSpec.dynamicModelId : generatorModelSpec.staticId
-            consumer.accept(new GeneratorFictitious(dynamicModelId, generatorModelSpec.staticId, generatorModelSpec.parameterSetId))
-        }
+    GeneratorFictitiousGroovyExtension() {
+        modelTags = ["GeneratorFictitious"]
     }
 
+    @Override
+    protected GeneratorFictitiousBuilder createBuilder(String currentTag) {
+        new GeneratorFictitiousBuilder()
+    }
+
+    static class GeneratorFictitiousBuilder extends AbstractDynamicModelBuilder {
+
+        @Override
+        GeneratorFictitious build() {
+            checkData()
+            new GeneratorFictitious(dynamicModelId, staticId, parameterSetId)
+        }
+    }
 }

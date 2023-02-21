@@ -82,6 +82,6 @@ public class DynaFlowTest extends AbstractDynawoTest {
                         Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), Reporter.NO_OP)
                 .join()
                 .getResult();
-        assertEquals(LoadFlowResult.ComponentResult.Status.FAILED, result.getPreContingencyResult().getStatus()); // FIXME
+        assertEquals(LoadFlowResult.ComponentResult.Status.CONVERGED, result.getPreContingencyResult().getStatus());
     }
 }
