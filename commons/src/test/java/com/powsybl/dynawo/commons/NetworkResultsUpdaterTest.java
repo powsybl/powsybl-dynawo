@@ -8,8 +8,6 @@ package com.powsybl.dynawo.commons;
 
 import com.powsybl.commons.datasource.ResourceDataSource;
 import com.powsybl.commons.datasource.ResourceSet;
-import com.powsybl.commons.test.AbstractConverterTest;
-import com.powsybl.commons.test.ComparisonUtils;
 import com.powsybl.dynawo.commons.loadmerge.LoadsMerger;
 import com.powsybl.dynawo.commons.loadmerge.NetworkResultsUpdater;
 import com.powsybl.iidm.network.*;
@@ -18,15 +16,12 @@ import com.powsybl.iidm.xml.NetworkXml;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-
-import static org.junit.Assert.assertNotNull;
 
 /**
  * @author Guillem Jané Guasch <janeg at aia.es>
  */
-public class NetworkResultsUpdaterTest extends AbstractConverterTest {
+public class NetworkResultsUpdaterTest extends AbstractDynawoCommonsTest {
 
     @Test
     public void testUpdateNodeBreaker() throws IOException {
@@ -117,17 +112,6 @@ public class NetworkResultsUpdaterTest extends AbstractConverterTest {
         reset(actual);
         NetworkResultsUpdater.update(actual, expected, false);
         compare(expected, actual);
-    }
-
-    private void compare(Network expected, Network actual) throws IOException {
-        Path pexpected = tmpDir.resolve("expected.xiidm");
-        assertNotNull(pexpected);
-        Path pactual = tmpDir.resolve("actual.xiidm");
-        assertNotNull(pactual);
-        NetworkXml.write(expected, pexpected);
-        actual.setCaseDate(expected.getCaseDate());
-        NetworkXml.write(actual, pactual);
-        ComparisonUtils.compareXml(Files.newInputStream(pexpected), Files.newInputStream(pactual));
     }
 
     private static Network createTestCaseBusBranch() {
