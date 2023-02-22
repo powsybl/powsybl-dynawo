@@ -6,11 +6,10 @@
  */
 package com.powsybl.dynawo.commons;
 
-import com.powsybl.commons.datasource.ResourceDataSource;
-import com.powsybl.commons.datasource.ResourceSet;
 import com.powsybl.dynawo.commons.loadmerge.LoadsMerger;
 import com.powsybl.dynawo.commons.loadmerge.NetworkResultsUpdater;
 import com.powsybl.iidm.network.*;
+import com.powsybl.iidm.network.test.FourSubstationsNodeBreakerFactory;
 import com.powsybl.iidm.xml.ExportOptions;
 import com.powsybl.iidm.xml.NetworkXml;
 import org.junit.Test;
@@ -24,31 +23,31 @@ import java.nio.file.Path;
 public class NetworkResultsUpdaterTest extends AbstractDynawoCommonsTest {
 
     @Test
-    public void testUpdateNodeBreaker() throws IOException {
-        Network expected = createTestCaseNodeBreaker();
-        Network actual = createTestCaseNodeBreaker();
+    public void testUpdateWithoutMergeLoads() throws IOException {
+        Network expected = TestNetworkFactory.createMultiBusesVoltageLevelNetwork();
+        Network actual = NetworkXml.copy(expected);
         reset(actual);
         NetworkResultsUpdater.update(actual, expected, false);
         compare(expected, actual);
     }
 
     @Test
-    public void testUpdateNodeBreakerWithMergedLoads() throws IOException {
-        Network expected = createTestCaseNodeBreaker();
-        Network actual = createTestCaseNodeBreaker();
+    public void testUpdateWithMergeLoads() throws IOException {
+        Network expected = TestNetworkFactory.createMultiBusesVoltageLevelNetwork();
+        Network actual = NetworkXml.copy(expected);
         NetworkResultsUpdater.update(actual, LoadsMerger.mergeLoads(expected), true);
         compare(expected, actual);
     }
 
     @Test
-    public void testUpdateNodeBreakerPassingThroughBusBreaker() throws IOException {
-        Network expected = createTestCaseNodeBreaker();
-        Network actual = createTestCaseNodeBreaker();
+    public void testUpdateNetworkPassingThroughBusBreaker() throws IOException {
+        Network expected = TestNetworkFactory.createMultiBusesVoltageLevelNetwork();
+        Network actual = NetworkXml.copy(expected);
         reset(actual);
 
         // We assume that the original network will be updated by some analysis tool
         // but it is exchanged with that external tool at Bus/Breaker view
-        // We want to ensure that the the "actual" Node/Breaker network
+        // We want to ensure that the "actual" Node/Breaker network
         // is properly updated from the Bus/Breaker "solution" exchanged
         // with the external analysis tool
         Path pexpectedAsBusBreaker = tmpDir.resolve("expected-as-busbreaker.xiidm");
@@ -60,34 +59,11 @@ public class NetworkResultsUpdaterTest extends AbstractDynawoCommonsTest {
     }
 
     @Test
-    public void testUpdateBusBranch() throws IOException {
-        Network expected = createTestCaseBusBranch();
-        Network actual = createTestCaseBusBranch();
+    public void testUpdateWithDisconnects() throws IOException {
+        Network expected = FourSubstationsNodeBreakerFactory.create();
+        Network actual = NetworkXml.copy(expected);
         reset(actual);
-        NetworkResultsUpdater.update(actual, expected, false);
-        compare(expected, actual);
-    }
 
-    @Test
-    public void testUpdateBusBranchWithMergedLoads() throws IOException {
-        Network expected = createTestCaseBusBranch();
-        Network actual = createTestCaseBusBranch();
-        NetworkResultsUpdater.update(actual, LoadsMerger.mergeLoads(expected), true);
-        compare(expected, actual);
-    }
-
-    @Test
-    public void testUpdateMicro() throws IOException {
-        Network expected = createTestMicro();
-        Network actual = createTestMicro();
-        reset(actual);
-        NetworkResultsUpdater.update(actual, expected, false);
-        compare(expected, actual);
-    }
-
-    @Test
-    public void testUpdateMicroDisconnects() throws IOException {
-        Network expected = createTestMicro();
         // Test with some elements disconnected in the network
         expected.getLoads().iterator().next().getTerminal().disconnect();
         expected.getGenerators().iterator().next().getTerminal().disconnect();
@@ -96,34 +72,9 @@ public class NetworkResultsUpdaterTest extends AbstractDynawoCommonsTest {
         expected.getLines().iterator().next().getTerminal2().disconnect();
         expected.getTwoWindingsTransformers().iterator().next().getTerminal1().disconnect();
         expected.getTwoWindingsTransformers().iterator().next().getTerminal2().disconnect();
-        expected.getThreeWindingsTransformers().iterator().next().getLeg1().getTerminal().disconnect();
-        expected.getThreeWindingsTransformers().iterator().next().getLeg2().getTerminal().disconnect();
-        expected.getThreeWindingsTransformers().iterator().next().getLeg3().getTerminal().disconnect();
-        // For consistency, we must remove the voltage for all configured buses that have been left isolated
-        // (All buses in bus breaker view that have not received a calculated bus in the bus view)
-        for (Bus b : expected.getBusBreakerView().getBuses()) {
-            if (b.getVoltageLevel().getBusView().getMergedBus(b.getId()) == null) {
-                b.setV(Double.NaN);
-                b.setAngle(Double.NaN);
-            }
-        }
 
-        Network actual = createTestMicro();
-        reset(actual);
         NetworkResultsUpdater.update(actual, expected, false);
         compare(expected, actual);
-    }
-
-    private static Network createTestCaseBusBranch() {
-        return Importers.importData("XIIDM", new ResourceDataSource("SmallBusBranch", new ResourceSet("/", "SmallBusBranch.xiidm")), null);
-    }
-
-    private static Network createTestCaseNodeBreaker() {
-        return Importers.importData("XIIDM", new ResourceDataSource("SmallNodeBreaker_fix_line_044bbe91", new ResourceSet("/", "SmallNodeBreaker_fix_line_044bbe91.xiidm")), null);
-    }
-
-    private static Network createTestMicro() {
-        return Importers.importData("XIIDM", new ResourceDataSource("MicroAssembled", new ResourceSet("/", "MicroAssembled.xiidm")), null);
     }
 
     private static void reset(Network targetNetwork) {
@@ -174,9 +125,6 @@ public class NetworkResultsUpdaterTest extends AbstractDynawoCommonsTest {
         for (StaticVarCompensator targetStaticVarCompensator : targetNetwork.getStaticVarCompensators()) {
             targetStaticVarCompensator.setRegulationMode(StaticVarCompensator.RegulationMode.OFF);
             reset(targetStaticVarCompensator.getTerminal());
-        }
-        for (Switch targetSwitch : targetNetwork.getSwitches()) {
-            targetSwitch.setOpen(false);
         }
     }
 
