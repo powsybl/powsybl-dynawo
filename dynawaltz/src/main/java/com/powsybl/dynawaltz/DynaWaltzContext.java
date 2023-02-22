@@ -140,7 +140,10 @@ public class DynaWaltzContext {
     }
 
     public Model getDynamicModelOrDefaultBus(Terminal terminal) {
-        String staticId = terminal.getBusBreakerView().getConnectableBus().getId();
+        return getDynamicModelOrDefaultBus(terminal.getBusBreakerView().getConnectableBus().getId());
+    }
+
+    public Model getDynamicModelOrDefaultBus(String staticId) {
         BlackBoxModel bbm = staticIdBlackBoxModelMap.get(staticId);
         if (bbm == null) {
             return networkModel.getDefaultBusModel(staticId);
