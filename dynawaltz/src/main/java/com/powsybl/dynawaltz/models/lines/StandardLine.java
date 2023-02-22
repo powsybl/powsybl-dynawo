@@ -8,7 +8,6 @@ import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.VarMapping;
 import com.powsybl.dynawaltz.models.buses.BusModel;
 import com.powsybl.iidm.network.Branch;
-import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.Line;
 
 import java.util.ArrayList;
@@ -20,8 +19,8 @@ public class StandardLine extends AbstractBlackBoxModel implements LineModel {
 
     private final String sidePostfix;
 
-    public StandardLine(String dynamicModelId, String statidId, String parameterSetId, Branch.Side side) {
-        super(dynamicModelId, statidId, parameterSetId);
+    public StandardLine(String dynamicModelId, String staticId, String parameterSetId, Branch.Side side) {
+        super(dynamicModelId, staticId, parameterSetId);
         this.sidePostfix = LineModel.getSuffix(side);
     }
 
@@ -49,17 +48,13 @@ public class StandardLine extends AbstractBlackBoxModel implements LineModel {
     }
 
     @Override
-    public List<Model> getModelsConnectedTo(DynaWaltzContext dynaWaltzContext) {
-        Line line = dynaWaltzContext.getNetwork().getLine(getStaticId().orElse(null));
+    public List<Model> getModelsConnectedTo(DynaWaltzContext context) {
+        Line line = context.getNetwork().getLine(getStaticId().orElse(null));
         if (line == null) {
-            throw new PowsyblException("Line static id unkwown: " + getStaticId());
+            throw new PowsyblException("Line static id unknown: " + getStaticId());
         }
-        List<Model> connectedBbm = new ArrayList<>();
-        for (Bus b : dynaWaltzContext.getNetwork().getBusBreakerView().getBuses()) {
-            if (b.getLineStream().anyMatch(l -> l.equals(line))) {
-                connectedBbm.add(dynaWaltzContext.getStaticIdBlackBoxModel(b.getId()));
-            }
-        }
+        List<Model> connectedBbm = new ArrayList<>(2);
+        line.getTerminals().forEach(t -> connectedBbm.add(context.getDynamicModelOrDefaultBus(t)));
         return connectedBbm;
     }
 

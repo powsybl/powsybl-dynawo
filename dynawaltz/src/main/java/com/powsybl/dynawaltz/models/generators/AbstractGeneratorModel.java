@@ -8,7 +8,10 @@ package com.powsybl.dynawaltz.models.generators;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
-import com.powsybl.dynawaltz.models.*;
+import com.powsybl.dynawaltz.models.AbstractBlackBoxModel;
+import com.powsybl.dynawaltz.models.Model;
+import com.powsybl.dynawaltz.models.VarConnection;
+import com.powsybl.dynawaltz.models.VarMapping;
 import com.powsybl.dynawaltz.models.buses.BusModel;
 import com.powsybl.iidm.network.Generator;
 
@@ -56,12 +59,7 @@ public abstract class AbstractGeneratorModel extends AbstractBlackBoxModel imple
         if (generator == null) {
             throw new PowsyblException("Generator static id unknown: " + staticId);
         }
-        String connectedStaticId = generator.getTerminal().getBusBreakerView().getConnectableBus().getId();
-        BlackBoxModel connectedBbm = context.getStaticIdBlackBoxModel(connectedStaticId);
-        if (connectedBbm == null) {
-            return List.of(context.getNetworkModel().getDefaultBusModel(connectedStaticId));
-        }
-        return List.of(connectedBbm);
+        return List.of(context.getDynamicModelOrDefaultBus(generator.getTerminal()));
     }
 
     @Override

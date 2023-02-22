@@ -14,7 +14,9 @@ import com.powsybl.dynawaltz.models.*;
 import com.powsybl.dynawaltz.models.generators.GeneratorSynchronousModel;
 import com.powsybl.dynawaltz.models.utils.ConnectedModelTypes;
 import com.powsybl.dynawaltz.xml.MacroStaticReference;
+import com.powsybl.iidm.network.Branch;
 import com.powsybl.iidm.network.Network;
+import com.powsybl.iidm.network.Terminal;
 
 import java.nio.file.FileSystem;
 import java.nio.file.Path;
@@ -121,8 +123,29 @@ public class DynaWaltzContext {
         return macroStaticReferences.values();
     }
 
-    public BlackBoxModel getStaticIdBlackBoxModel(String staticId) {
-        return staticIdBlackBoxModelMap.get(staticId);
+    public Model getDynamicModelOrThrows(String staticId) {
+        BlackBoxModel bbm = staticIdBlackBoxModelMap.get(staticId);
+        if (bbm == null) {
+            throw new PowsyblException("Cannot find the equipment '" + staticId + "' among the dynamic models provided");
+        }
+        return bbm;
+    }
+
+    public Model getDynamicModelOrDefaultLine(String staticId, Branch.Side side) {
+        BlackBoxModel bbm = staticIdBlackBoxModelMap.get(staticId);
+        if (bbm == null) {
+            return networkModel.getDefaultLineModel(staticId, side);
+        }
+        return bbm;
+    }
+
+    public Model getDynamicModelOrDefaultBus(Terminal terminal) {
+        String staticId = terminal.getBusBreakerView().getConnectableBus().getId();
+        BlackBoxModel bbm = staticIdBlackBoxModelMap.get(staticId);
+        if (bbm == null) {
+            return networkModel.getDefaultBusModel(staticId);
+        }
+        return bbm;
     }
 
     private BlackBoxModel mergeDuplicateStaticId(BlackBoxModel bbm1, BlackBoxModel bbm2) {
@@ -217,10 +240,6 @@ public class DynaWaltzContext {
     private static DynaWaltzParametersDatabase loadDatabase(String filename, PlatformConfig platformConfig) {
         FileSystem fs = getFileSystem(platformConfig);
         return DynaWaltzParametersDatabase.load(fs.getPath(filename));
-    }
-
-    public NetworkModel getNetworkModel() {
-        return networkModel;
     }
 
     public String getParFile() {

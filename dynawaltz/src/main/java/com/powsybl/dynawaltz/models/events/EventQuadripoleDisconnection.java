@@ -8,7 +8,6 @@ package com.powsybl.dynawaltz.models.events;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
-import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.Model;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.lines.LineModel;
@@ -51,11 +50,7 @@ public class EventQuadripoleDisconnection extends AbstractEventModel {
 
     @Override
     public List<Model> getModelsConnectedTo(DynaWaltzContext context) {
-        BlackBoxModel connectedBbm = context.getStaticIdBlackBoxModel(getEquipmentStaticId());
-        if (connectedBbm == null) {
-            return List.of(context.getNetworkModel().getDefaultLineModel(getEquipmentStaticId(), Branch.Side.ONE));
-        }
-        return List.of(connectedBbm);
+        return List.of(context.getDynamicModelOrDefaultLine(getEquipmentStaticId(), Branch.Side.ONE));
     }
 
     @Override
