@@ -7,14 +7,10 @@
 package com.powsybl.dynawaltz.dsl.events
 
 import com.google.auto.service.AutoService
-import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.EventModel
 import com.powsybl.dynamicsimulation.groovy.EventModelGroovyExtension
-
-import com.powsybl.dynawaltz.DynaWaltzProvider
+import com.powsybl.dynawaltz.dsl.AbstractPowsyblDynawoGroovyExtension
 import com.powsybl.dynawaltz.models.events.EventSetPointBoolean
-
-import java.util.function.Consumer
 
 /**
  * An implementation of {@link EventModelGroovyExtension} that adds the <pre>EventSetPointBoolean</pre> keyword to the DSL
@@ -22,53 +18,29 @@ import java.util.function.Consumer
  * @author Mathieu BAGUE {@literal <mathieu.bague at rte-france.com>}
  */
 @AutoService(EventModelGroovyExtension.class)
-class EventSetPointBooleanGroovyExtension implements EventModelGroovyExtension {
+class EventSetPointBooleanGroovyExtension extends AbstractPowsyblDynawoGroovyExtension<EventModel> implements EventModelGroovyExtension {
 
-    static class EventSetPointBooleanSpec {
-        String eventModelId
-        String staticId
-        double startTime
+    EventSetPointBooleanGroovyExtension() {
+        modelTags = ["EventSetPointBoolean"]
+    }
+
+    @Override
+    protected EventSetPointBooleanBuilder createBuilder(String currentTag) {
+        new EventSetPointBooleanBuilder()
+    }
+
+    static class EventSetPointBooleanBuilder extends AbstractEventModelBuilder {
+
         boolean stateEvent
-
-        void eventModelId(String eventModelId) {
-            this.eventModelId = eventModelId
-        }
-
-        void staticId(String staticId) {
-            this.staticId = staticId
-        }
-
-        void startTime(double startTime) {
-            this.startTime = startTime
-        }
 
         void stateEvent(boolean stateEvent) {
             this.stateEvent = stateEvent
         }
-    }
 
-    String getName() {
-        return DynaWaltzProvider.NAME
-    }
-
-    void load(Binding binding, Consumer<EventModel> consumer) {
-        binding.EventSetPointBoolean = { Closure<Void> closure ->
-            def cloned = closure.clone()
-            EventSetPointBooleanSpec eventSetPointBooleanSpec = new EventSetPointBooleanSpec()
-
-            cloned.delegate = eventSetPointBooleanSpec
-            cloned()
-
-            if (!eventSetPointBooleanSpec.staticId) {
-                throw new DslException("'staticId' field is not set");
-            }
-            if (!eventSetPointBooleanSpec.startTime) {
-                throw new DslException("'startTime' field is not set")
-            }
-
-            String eventModelId = eventSetPointBooleanSpec.eventModelId ? eventSetPointBooleanSpec.eventModelId : eventSetPointBooleanSpec.staticId
-            consumer.accept(new EventSetPointBoolean(eventModelId, eventSetPointBooleanSpec.staticId,
-                    eventSetPointBooleanSpec.startTime, eventSetPointBooleanSpec.stateEvent))
+        @Override
+        EventModel build() {
+            checkData()
+            new EventSetPointBoolean(eventModelId, staticId, startTime, stateEvent)
         }
     }
 }
