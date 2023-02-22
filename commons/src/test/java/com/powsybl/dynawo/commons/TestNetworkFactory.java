@@ -7,7 +7,10 @@
  */
 package com.powsybl.dynawo.commons;
 
+import com.powsybl.dynawo.commons.loadmerge.LoadState;
 import com.powsybl.iidm.network.*;
+
+import java.util.List;
 
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
@@ -54,6 +57,46 @@ public final class TestNetworkFactory {
                 .getTerminal().setP(7.1).setQ(-4.1);
 
         network.newLine().setId("l1").setVoltageLevel1(vl1.getId()).setNode1(5).setVoltageLevel2(vl2.getId()).setBus2(b1.getId())
+                .setR(1).setX(3).setG1(0).setG2(0).setB1(0).setB2(0).add();
+        return network;
+    }
+
+    /**
+     * Create a test network with two voltage levels in the same substation, one of node breaker topology kind, one of
+     * bus breaker topology kind. Each voltage level contains loads which correspond to the given <code>loadStates</code>
+     * @param loadStates the list of states corresponding to the loads to create
+     * @return the test network generated
+     */
+    static Network createMultiLoadsBusesNetwork(List<LoadState> loadStates) {
+        Network network = Network.create("multiLoads", "test");
+        Substation s = network.newSubstation().setId("substation").add();
+
+        // First node breaker voltage level
+        VoltageLevel vl1 = s.newVoltageLevel().setId("vl1").setNominalV(250).setTopologyKind(TopologyKind.NODE_BREAKER).add();
+        vl1.getNodeBreakerView().newBusbarSection().setId("Busbar").setNode(0).add();
+        for (int i = 0; i < loadStates.size(); i++) {
+            LoadState loadState = loadStates.get(i);
+            vl1.getNodeBreakerView().newDisconnector().setNode1(0).setNode2(i + 1).setId("d" + (i + 1)).add();
+            vl1.newLoad().setId("load" + (i + 1)).setNode(i + 1).setP0(loadState.getP0()).setQ0(loadState.getQ0()).add()
+                    .getTerminal().setP(loadState.getP()).setQ(loadState.getQ());
+        }
+        vl1.getNodeBreakerView().newDisconnector().setNode1(0).setNode2(loadStates.size() + 1).setId("d" + (loadStates.size() + 1)).add();
+
+        // Second bus breaker voltage level
+        VoltageLevel vl2 = s.newVoltageLevel().setId("vl2").setNominalV(250).setTopologyKind(TopologyKind.BUS_BREAKER).add();
+        Bus b1 = vl2.getBusBreakerView().newBus().setId("b1").add();
+        Bus b2 = vl2.getBusBreakerView().newBus().setId("b2").add();
+        vl2.getBusBreakerView().newSwitch().setId("c1").setBus1(b1.getId()).setBus2(b2.getId()).add();
+        vl2.newGenerator().setId("g1").setBus(b1.getId()).setTargetP(101).setTargetV(390).setMinP(0).setMaxP(150).setVoltageRegulatorOn(true).add();
+
+        for (int i = 0; i < loadStates.size(); i++) {
+            LoadState loadState = loadStates.get(i);
+            vl2.newLoad().setId("load" + (loadStates.size() + i + 1)).setBus(b2.getId()).setP0(loadState.getP0()).setQ0(loadState.getQ0()).add()
+                    .getTerminal().setP(loadState.getP()).setQ(loadState.getQ());
+        }
+
+        // Line between the two voltage levels
+        network.newLine().setId("l1").setVoltageLevel1(vl1.getId()).setNode1(loadStates.size() + 1).setVoltageLevel2(vl2.getId()).setBus2(b1.getId())
                 .setR(1).setX(3).setG1(0).setG2(0).setB1(0).setB2(0).add();
         return network;
     }

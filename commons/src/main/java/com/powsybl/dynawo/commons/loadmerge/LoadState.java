@@ -19,7 +19,7 @@ public final class LoadState {
     private final double p0;
     private final double q0;
 
-    private LoadState(double p, double q, double p0, double q0) {
+    public LoadState(double p, double q, double p0, double q0) {
         this.p = p;
         this.q = q;
         this.p0 = p0;
