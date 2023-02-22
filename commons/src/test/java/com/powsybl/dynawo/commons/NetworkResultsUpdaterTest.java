@@ -7,7 +7,6 @@
 package com.powsybl.dynawo.commons;
 
 import com.powsybl.dynawo.commons.loadmerge.LoadsMerger;
-import com.powsybl.dynawo.commons.loadmerge.NetworkResultsUpdater;
 import com.powsybl.iidm.network.*;
 import com.powsybl.iidm.network.test.FourSubstationsNodeBreakerFactory;
 import com.powsybl.iidm.xml.ExportOptions;

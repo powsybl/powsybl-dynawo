@@ -5,10 +5,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawo.commons.loadmerge;
+package com.powsybl.dynawo.commons;
 
 import com.google.common.collect.Iterables;
 import com.powsybl.commons.PowsyblException;
+import com.powsybl.dynawo.commons.loadmerge.LoadPowers;
+import com.powsybl.dynawo.commons.loadmerge.LoadState;
+import com.powsybl.dynawo.commons.loadmerge.LoadsMerger;
 import com.powsybl.iidm.network.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

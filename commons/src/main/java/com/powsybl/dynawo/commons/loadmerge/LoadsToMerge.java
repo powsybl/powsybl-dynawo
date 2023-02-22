@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * @author Laurent Isertial <laurent.issertial at rte-france.com>
  */
-class LoadsToMerge {
+public class LoadsToMerge {
     private final LoadPowers loadPowers;
     private final LoadState mergedState;
     private final List<Load> loads;

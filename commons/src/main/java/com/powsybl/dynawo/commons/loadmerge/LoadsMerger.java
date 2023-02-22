@@ -71,7 +71,7 @@ public final class LoadsMerger {
         return loadsToMerge;
     }
 
-    static List<LoadsToMerge> getLoadsToMergeList(Bus bus) {
+    public static List<LoadsToMerge> getLoadsToMergeList(Bus bus) {
 
         double[] pPosQPos = {0, 0, 0, 0};
         double[] pPosQNeg = {0, 0, 0, 0};
@@ -125,7 +125,7 @@ public final class LoadsMerger {
         arr[3] += load.getQ0();
     }
 
-    static LoadPowers getLoadPowers(Load load) {
+    public static LoadPowers getLoadPowers(Load load) {
         if (load.getTerminal().getP() >= 0) {
             return load.getTerminal().getQ() >= 0 ? P_POS_Q_POS : P_POS_Q_NEG;
         } else {

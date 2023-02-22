@@ -10,7 +10,7 @@ package com.powsybl.dynawo.commons.loadmerge;
 /**
  * @author Laurent Isertial <laurent.issertial at rte-france.com>
  */
-enum LoadPowers {
+public enum LoadPowers {
     P_POS_Q_POS(".pppq"),
     P_POS_Q_NEG(".ppnq"),
     P_NEG_Q_POS(".nppq"),

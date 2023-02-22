@@ -18,7 +18,7 @@ import com.powsybl.dynawaltz.xml.JobsXml;
 import com.powsybl.dynawaltz.xml.ParametersXml;
 import com.powsybl.dynawo.commons.DynawoUtil;
 import com.powsybl.dynawo.commons.loadmerge.LoadsMerger;
-import com.powsybl.dynawo.commons.loadmerge.NetworkResultsUpdater;
+import com.powsybl.dynawo.commons.NetworkResultsUpdater;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.xml.NetworkXml;
 import com.powsybl.timeseries.TimeSeries;
