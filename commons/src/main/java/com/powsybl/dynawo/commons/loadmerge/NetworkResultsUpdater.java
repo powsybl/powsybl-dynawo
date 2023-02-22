@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -156,9 +157,8 @@ public final class NetworkResultsUpdater {
         Map<LoadPowers, Terminal> mergedLoadsTerminal = busSource.getLoadStream()
                 .collect(Collectors.toMap(LoadsMerger::getLoadPowers, Load::getTerminal));
         LoadsMerger.getLoadsToMergeList(busTarget).forEach(unmergedLoads -> {
-            Terminal mergedLoadTerminal = mergedLoadsTerminal.computeIfAbsent(unmergedLoads.getLoadPowers(), k -> {
-                throw new PowsyblException("Missing merged load in bus " + k);
-            });
+            Terminal mergedLoadTerminal = Optional.ofNullable(mergedLoadsTerminal.get(unmergedLoads.getLoadPowers()))
+                    .orElseThrow(() -> new PowsyblException("Missing merged load in bus " + busTarget.getId()));
             for (Load load : unmergedLoads.getLoads()) {
                 if (unmergedLoads.isSingle()) {
                     update(load.getTerminal(), mergedLoadTerminal);
