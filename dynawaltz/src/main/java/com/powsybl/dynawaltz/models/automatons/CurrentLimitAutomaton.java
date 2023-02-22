@@ -45,7 +45,7 @@ public class CurrentLimitAutomaton extends AbstractPureDynamicBlackBoxModel {
         if (line == null) {
             throw new PowsyblException("Unknown line static id: " + lineStaticId);
         }
-        BlackBoxModel connectedBbm = context.getStaticIdBlackBoxModelMap().get(line.getId());
+        BlackBoxModel connectedBbm = context.getStaticIdBlackBoxModel(line.getId());
         if (connectedBbm == null) {
             return List.of(context.getNetworkModel().getDefaultLineModel(lineStaticId, side));
         }

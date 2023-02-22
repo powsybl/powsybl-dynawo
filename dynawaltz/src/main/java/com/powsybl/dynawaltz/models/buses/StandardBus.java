@@ -83,7 +83,7 @@ public class StandardBus extends AbstractBlackBoxModel implements BusModel {
         List<Model> connectedBbm = new ArrayList<>();
         for (Generator g : dynaWaltzContext.getNetwork().getGenerators()) {
             if (g.getTerminal().getBusBreakerView().getConnectableBus().equals(bus)) {
-                connectedBbm.add(dynaWaltzContext.getStaticIdBlackBoxModelMap().get(g.getId()));
+                connectedBbm.add(dynaWaltzContext.getStaticIdBlackBoxModel(g.getId()));
             }
         }
         return connectedBbm;

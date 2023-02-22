@@ -112,7 +112,7 @@ public class OmegaRef extends AbstractPureDynamicBlackBoxModel {
             throw new PowsyblException("Generator " + generatorModel.getLib() + " not found in DynaWaltz context. Id : " + generatorModel.getDynamicModelId());
         }
         String connectedStaticId = generator.getTerminal().getBusBreakerView().getConnectableBus().getId();
-        BusModel busModel = (BusModel) context.getStaticIdBlackBoxModelMap().get(connectedStaticId);
+        BusModel busModel = (BusModel) context.getStaticIdBlackBoxModel(connectedStaticId);
         if (busModel == null) {
             busModel = context.getNetworkModel().getDefaultBusModel(connectedStaticId);
         }

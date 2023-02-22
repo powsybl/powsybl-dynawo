@@ -36,6 +36,7 @@ public class DynaWaltzContext {
     private final DynaWaltzParametersDatabase parametersDatabase;
     private final List<BlackBoxModel> dynamicModels;
     private final List<BlackBoxModel> eventModels;
+    private final Map<String, BlackBoxModel> staticIdBlackBoxModelMap;
     private final List<Curve> curves;
     private final Map<String, MacroStaticReference> macroStaticReferences = new LinkedHashMap<>();
     private final Map<ConnectedModelTypes, MacroConnector> connectorsMap = new LinkedHashMap<>();
@@ -58,7 +59,10 @@ public class DynaWaltzContext {
         this.network = Objects.requireNonNull(network);
         this.workingVariantId = Objects.requireNonNull(workingVariantId);
         this.dynamicModels = Objects.requireNonNull(dynamicModels);
-        this.eventModels = Objects.requireNonNull(eventModels);
+        this.eventModels = checkEventModelIdUniqueness(Objects.requireNonNull(eventModels));
+        this.staticIdBlackBoxModelMap = getInputBlackBoxDynamicModelStream()
+                .filter(blackBoxModel -> blackBoxModel.getStaticId().isPresent())
+                .collect(Collectors.toMap(bbm -> bbm.getStaticId().get(), Function.identity(), this::mergeDuplicateStaticId, LinkedHashMap::new));
         this.curves = Objects.requireNonNull(curves);
         this.parameters = Objects.requireNonNull(parameters);
         this.dynaWaltzParameters = Objects.requireNonNull(dynaWaltzParameters);
@@ -117,14 +121,26 @@ public class DynaWaltzContext {
         return macroStaticReferences.values();
     }
 
-    public Map<String, BlackBoxModel> getStaticIdBlackBoxModelMap() {
-        return getInputBlackBoxDynamicModelStream()
-                .filter(blackBoxModel -> blackBoxModel.getStaticId().isPresent())
-                .collect(Collectors.toMap(bbm -> bbm.getStaticId().get(), Function.identity(), this::mergeDuplicateStaticId, LinkedHashMap::new));
+    public BlackBoxModel getStaticIdBlackBoxModel(String staticId) {
+        return staticIdBlackBoxModelMap.get(staticId);
     }
 
     private BlackBoxModel mergeDuplicateStaticId(BlackBoxModel bbm1, BlackBoxModel bbm2) {
-        throw new AssertionError("Duplicate staticId " + bbm1.getStaticId());
+        throw new PowsyblException("Duplicate staticId: " + bbm1.getStaticId().orElseThrow());
+    }
+
+    private static List<BlackBoxModel> checkEventModelIdUniqueness(List<BlackBoxModel> eventModels) {
+        Set<String> dynamicIds = new HashSet<>();
+        Set<String> duplicates = new HashSet<>();
+        for (BlackBoxModel bbm : eventModels) {
+            if (!dynamicIds.add(bbm.getDynamicModelId())) {
+                duplicates.add(bbm.getDynamicModelId());
+            }
+        }
+        if (!duplicates.isEmpty()) {
+            throw new PowsyblException("Duplicate dynamicId: " + duplicates);
+        }
+        return eventModels;
     }
 
     public Collection<MacroConnector> getMacroConnectors() {
