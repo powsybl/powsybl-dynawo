@@ -10,7 +10,6 @@ package com.powsybl.dynawo.commons;
 import com.google.common.collect.Iterables;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawo.commons.loadmerge.LoadPowers;
-import com.powsybl.dynawo.commons.loadmerge.LoadState;
 import com.powsybl.dynawo.commons.loadmerge.LoadsMerger;
 import com.powsybl.iidm.network.*;
 import org.slf4j.Logger;
@@ -124,14 +123,16 @@ public final class NetworkResultsUpdater {
         target.setQ(source.getQ());
         if (source.isConnected()) {
             target.connect();
-        } else if (!source.isConnected()) {
+        } else {
             target.disconnect();
         }
     }
 
-    private static void update(Terminal target, Terminal mergedSource, LoadState mergedLoadState) {
-        target.setP(mergedSource.getP() * target.getP() / mergedLoadState.getP());
-        target.setQ(mergedSource.getQ() * target.getQ() / mergedLoadState.getQ());
+    private static void update(Terminal target, Terminal mergedSource, double targetGroupP, double targetGroupQ) {
+        double pRatio = target.getP() / targetGroupP;
+        double qRatio = target.getQ() / targetGroupQ;
+        target.setP(mergedSource.getP() * pRatio);
+        target.setQ(mergedSource.getQ() * qRatio);
         if (mergedSource.isConnected()) {
             target.connect();
         } else {
@@ -159,15 +160,15 @@ public final class NetworkResultsUpdater {
         }
         Map<LoadPowers, Terminal> mergedLoadsTerminal = busSource.getLoadStream()
                 .collect(Collectors.toMap(LoadsMerger::getLoadPowers, Load::getTerminal));
-        LoadsMerger.getLoadsToMergeList(busTarget).forEach(unmergedLoads -> {
-            Terminal mergedLoadTerminal = Optional.ofNullable(mergedLoadsTerminal.get(unmergedLoads.getLoadPowers()))
+        LoadsMerger.getLoadPowersGrouping(busTarget).forEach((loadPowers, loadsGroup) -> {
+            Terminal mergedLoadTerminal = Optional.ofNullable(mergedLoadsTerminal.get(loadPowers))
                     .orElseThrow(() -> new PowsyblException("Missing merged load in bus " + busTarget.getId()));
-            for (Load load : unmergedLoads.getLoads()) {
-                if (unmergedLoads.isSingle()) {
-                    update(load.getTerminal(), mergedLoadTerminal);
-                } else {
-                    update(load.getTerminal(), mergedLoadTerminal, unmergedLoads.getMergedState());
-                }
+            if (loadsGroup.size() == 1) {
+                update(loadsGroup.get(0).getTerminal(), mergedLoadTerminal);
+            } else {
+                double groupP = loadsGroup.stream().map(Load::getTerminal).mapToDouble(Terminal::getP).sum();
+                double groupQ = loadsGroup.stream().map(Load::getTerminal).mapToDouble(Terminal::getQ).sum();
+                loadsGroup.forEach(load -> update(load.getTerminal(), mergedLoadTerminal, groupP, groupQ));
             }
         });
     }

@@ -5,9 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawo.commons.loadmerge;
-
-import com.powsybl.commons.PowsyblException;
+package com.powsybl.dynawo.commons;
 
 /**
  * @author Laurent Isertial <laurent.issertial at rte-france.com>
@@ -24,13 +22,6 @@ public final class LoadState {
         this.q = q;
         this.p0 = p0;
         this.q0 = q0;
-    }
-
-    static LoadState createLoadStateFromArray(double[] arr) {
-        if (arr.length != 4) {
-            throw new PowsyblException("Wrong initialisation array size : " + arr.length);
-        }
-        return new LoadState(arr[0], arr[1], arr[2], arr[3]);
     }
 
     public double getP0() {

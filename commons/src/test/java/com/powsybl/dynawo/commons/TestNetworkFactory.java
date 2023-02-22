@@ -7,7 +7,6 @@
  */
 package com.powsybl.dynawo.commons;
 
-import com.powsybl.dynawo.commons.loadmerge.LoadState;
 import com.powsybl.iidm.network.*;
 
 import java.util.List;

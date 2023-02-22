@@ -9,6 +9,7 @@ package com.powsybl.dynawo.commons.loadmerge;
 
 import com.powsybl.iidm.network.Load;
 import com.powsybl.iidm.network.LoadAdder;
+import com.powsybl.iidm.network.Terminal;
 import com.powsybl.iidm.network.VoltageLevel;
 
 import java.util.List;
@@ -18,23 +19,37 @@ import java.util.List;
  */
 public class LoadsToMerge {
     private final LoadPowers loadPowers;
-    private final LoadState mergedState;
     private final List<Load> loads;
     private final LoadAdder loadAdder;
+    private final double mergedP;
+    private final double mergedQ;
 
-    public LoadsToMerge(LoadPowers loadPowers, LoadState mergedState, List<Load> loads, VoltageLevel voltageLevel) {
+    public LoadsToMerge(LoadPowers loadPowers, List<Load> loads, VoltageLevel voltageLevel) {
         this.loadPowers = loadPowers;
-        this.mergedState = mergedState;
         this.loads = loads;
         this.loadAdder = isSingle() ? null : voltageLevel.newLoad();
+        this.mergedP = loads.stream().map(Load::getTerminal).mapToDouble(Terminal::getP).sum();
+        this.mergedQ = loads.stream().map(Load::getTerminal).mapToDouble(Terminal::getQ).sum();
     }
 
     public LoadPowers getLoadPowers() {
         return loadPowers;
     }
 
-    public LoadState getMergedState() {
-        return mergedState;
+    public double getMergedP0() {
+        return loads.stream().mapToDouble(Load::getP0).sum();
+    }
+
+    public double getMergedQ0() {
+        return loads.stream().mapToDouble(Load::getQ0).sum();
+    }
+
+    public double getMergedP() {
+        return mergedP;
+    }
+
+    public double getMergedQ() {
+        return mergedQ;
     }
 
     public List<Load> getLoads() {

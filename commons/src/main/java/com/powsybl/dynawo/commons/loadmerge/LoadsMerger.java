@@ -12,7 +12,9 @@ import com.powsybl.iidm.network.*;
 import com.powsybl.iidm.xml.NetworkXml;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.powsybl.dynawo.commons.loadmerge.LoadPowers.*;
@@ -38,11 +40,11 @@ public final class LoadsMerger {
 
         for (LoadsToMerge loadsToMerge : loadsToMergeList) {
             loadsToMerge.getLoads().forEach(Connectable::remove);
-            loadsToMerge.getLoadAdder().setP0(loadsToMerge.getMergedState().getP0());
-            loadsToMerge.getLoadAdder().setQ0(loadsToMerge.getMergedState().getQ0());
+            loadsToMerge.getLoadAdder().setP0(loadsToMerge.getMergedP0());
+            loadsToMerge.getLoadAdder().setQ0(loadsToMerge.getMergedQ0());
             Load load = loadsToMerge.getLoadAdder().add();
-            load.getTerminal().setP(loadsToMerge.getMergedState().getP());
-            load.getTerminal().setQ(loadsToMerge.getMergedState().getQ());
+            load.getTerminal().setP(loadsToMerge.getMergedP());
+            load.getTerminal().setQ(loadsToMerge.getMergedQ());
         }
 
         return mergedLoadsNetwork;
@@ -72,57 +74,17 @@ public final class LoadsMerger {
     }
 
     public static List<LoadsToMerge> getLoadsToMergeList(Bus bus) {
-
-        double[] pPosQPos = {0, 0, 0, 0};
-        double[] pPosQNeg = {0, 0, 0, 0};
-        double[] pNegQPos = {0, 0, 0, 0};
-        double[] pNegQNeg = {0, 0, 0, 0};
-        List<Load> pPosQPosLoads = new ArrayList<>();
-        List<Load> pPosQNegLoads = new ArrayList<>();
-        List<Load> pNegQPosLoads = new ArrayList<>();
-        List<Load> pNegQNegLoads = new ArrayList<>();
-
         List<LoadsToMerge> loadsToMerge = new ArrayList<>();
-
-        for (Load load : bus.getLoads()) {
-            switch (getLoadPowers(load)) {
-                case P_POS_Q_POS:
-                    addLoad(pPosQPos, pPosQPosLoads, load);
-                    break;
-                case P_POS_Q_NEG:
-                    addLoad(pPosQNeg, pPosQNegLoads, load);
-                    break;
-                case P_NEG_Q_POS:
-                    addLoad(pNegQPos, pNegQPosLoads, load);
-                    break;
-                case P_NEG_Q_NEG:
-                    addLoad(pNegQNeg, pNegQNegLoads, load);
-                    break;
-            }
-        }
-
-        if (!pPosQPosLoads.isEmpty()) {
-            loadsToMerge.add(new LoadsToMerge(P_POS_Q_POS, LoadState.createLoadStateFromArray(pPosQPos), pPosQPosLoads, bus.getVoltageLevel()));
-        }
-        if (!pPosQNegLoads.isEmpty()) {
-            loadsToMerge.add(new LoadsToMerge(P_POS_Q_NEG, LoadState.createLoadStateFromArray(pPosQNeg), pPosQNegLoads, bus.getVoltageLevel()));
-        }
-        if (!pNegQPosLoads.isEmpty()) {
-            loadsToMerge.add(new LoadsToMerge(P_NEG_Q_POS, LoadState.createLoadStateFromArray(pNegQPos), pNegQPosLoads, bus.getVoltageLevel()));
-        }
-        if (!pNegQNegLoads.isEmpty()) {
-            loadsToMerge.add(new LoadsToMerge(P_NEG_Q_NEG, LoadState.createLoadStateFromArray(pNegQNeg), pNegQNegLoads, bus.getVoltageLevel()));
-        }
-
+        getLoadPowersGrouping(bus).forEach((loadPowers, loads) -> loadsToMerge.add(new LoadsToMerge(loadPowers, loads, bus.getVoltageLevel())));
         return loadsToMerge;
     }
 
-    private static void addLoad(double[] arr, List<Load> loadList, Load load) {
-        loadList.add(load);
-        arr[0] += load.getTerminal().getP();
-        arr[1] += load.getTerminal().getQ();
-        arr[2] += load.getP0();
-        arr[3] += load.getQ0();
+    public static Map<LoadPowers, List<Load>> getLoadPowersGrouping(Bus bus) {
+        EnumMap<LoadPowers, List<Load>> loadsGrouping = new EnumMap<>(LoadPowers.class);
+        for (Load load : bus.getLoads()) {
+            loadsGrouping.computeIfAbsent(getLoadPowers(load), k ->  new ArrayList<>()).add(load);
+        }
+        return loadsGrouping;
     }
 
     public static LoadPowers getLoadPowers(Load load) {
