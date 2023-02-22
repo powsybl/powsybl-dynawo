@@ -125,9 +125,9 @@ public final class NetworkResultsUpdater {
         }
     }
 
-    private static void update(Terminal target, Terminal mergedSource, BusState busState) {
-        target.setP(mergedSource.getP() * target.getP() / busState.getP());
-        target.setQ(mergedSource.getQ() * target.getQ() / busState.getQ());
+    private static void update(Terminal target, Terminal mergedSource, LoadState mergedLoadState) {
+        target.setP(mergedSource.getP() * target.getP() / mergedLoadState.getP());
+        target.setQ(mergedSource.getQ() * target.getQ() / mergedLoadState.getQ());
         if (mergedSource.isConnected()) {
             target.connect();
         } else {
@@ -163,7 +163,7 @@ public final class NetworkResultsUpdater {
                 if (unmergedLoads.isSingle()) {
                     update(load.getTerminal(), mergedLoadTerminal);
                 } else {
-                    update(load.getTerminal(), mergedLoadTerminal, unmergedLoads.getBusState());
+                    update(load.getTerminal(), mergedLoadTerminal, unmergedLoads.getMergedState());
                 }
             }
         });

@@ -18,13 +18,13 @@ import java.util.List;
  */
 class LoadsToMerge {
     private final LoadPowers loadPowers;
-    private final BusState busState;
+    private final LoadState mergedState;
     private final List<Load> loads;
     private final LoadAdder loadAdder;
 
-    public LoadsToMerge(LoadPowers loadPowers, BusState busState, List<Load> loads, VoltageLevel voltageLevel) {
+    public LoadsToMerge(LoadPowers loadPowers, LoadState mergedState, List<Load> loads, VoltageLevel voltageLevel) {
         this.loadPowers = loadPowers;
-        this.busState = busState;
+        this.mergedState = mergedState;
         this.loads = loads;
         this.loadAdder = isSingle() ? null : voltageLevel.newLoad();
     }
@@ -33,8 +33,8 @@ class LoadsToMerge {
         return loadPowers;
     }
 
-    public BusState getBusState() {
-        return busState;
+    public LoadState getMergedState() {
+        return mergedState;
     }
 
     public List<Load> getLoads() {

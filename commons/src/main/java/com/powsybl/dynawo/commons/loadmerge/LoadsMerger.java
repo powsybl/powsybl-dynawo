@@ -38,11 +38,11 @@ public final class LoadsMerger {
 
         for (LoadsToMerge loadsToMerge : loadsToMergeList) {
             loadsToMerge.getLoads().forEach(Connectable::remove);
-            loadsToMerge.getLoadAdder().setP0(loadsToMerge.getBusState().getP0());
-            loadsToMerge.getLoadAdder().setQ0(loadsToMerge.getBusState().getQ0());
+            loadsToMerge.getLoadAdder().setP0(loadsToMerge.getMergedState().getP0());
+            loadsToMerge.getLoadAdder().setQ0(loadsToMerge.getMergedState().getQ0());
             Load load = loadsToMerge.getLoadAdder().add();
-            load.getTerminal().setP(loadsToMerge.getBusState().getP());
-            load.getTerminal().setQ(loadsToMerge.getBusState().getQ());
+            load.getTerminal().setP(loadsToMerge.getMergedState().getP());
+            load.getTerminal().setQ(loadsToMerge.getMergedState().getQ());
         }
 
         return mergedLoadsNetwork;
@@ -102,16 +102,16 @@ public final class LoadsMerger {
         }
 
         if (!pPosQPosLoads.isEmpty()) {
-            loadsToMerge.add(new LoadsToMerge(P_POS_Q_POS, BusState.createBusStateFromArray(pPosQPos), pPosQPosLoads, bus.getVoltageLevel()));
+            loadsToMerge.add(new LoadsToMerge(P_POS_Q_POS, LoadState.createLoadStateFromArray(pPosQPos), pPosQPosLoads, bus.getVoltageLevel()));
         }
         if (!pPosQNegLoads.isEmpty()) {
-            loadsToMerge.add(new LoadsToMerge(P_POS_Q_NEG, BusState.createBusStateFromArray(pPosQNeg), pPosQNegLoads, bus.getVoltageLevel()));
+            loadsToMerge.add(new LoadsToMerge(P_POS_Q_NEG, LoadState.createLoadStateFromArray(pPosQNeg), pPosQNegLoads, bus.getVoltageLevel()));
         }
         if (!pNegQPosLoads.isEmpty()) {
-            loadsToMerge.add(new LoadsToMerge(P_NEG_Q_POS, BusState.createBusStateFromArray(pNegQPos), pNegQPosLoads, bus.getVoltageLevel()));
+            loadsToMerge.add(new LoadsToMerge(P_NEG_Q_POS, LoadState.createLoadStateFromArray(pNegQPos), pNegQPosLoads, bus.getVoltageLevel()));
         }
         if (!pNegQNegLoads.isEmpty()) {
-            loadsToMerge.add(new LoadsToMerge(P_NEG_Q_NEG, BusState.createBusStateFromArray(pNegQNeg), pNegQNegLoads, bus.getVoltageLevel()));
+            loadsToMerge.add(new LoadsToMerge(P_NEG_Q_NEG, LoadState.createLoadStateFromArray(pNegQNeg), pNegQNegLoads, bus.getVoltageLevel()));
         }
 
         return loadsToMerge;

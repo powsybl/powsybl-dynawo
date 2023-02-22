@@ -12,25 +12,25 @@ import com.powsybl.commons.PowsyblException;
 /**
  * @author Laurent Isertial <laurent.issertial at rte-france.com>
  */
-public final class BusState {
+public final class LoadState {
 
     private final double p;
     private final double q;
     private final double p0;
     private final double q0;
 
-    private BusState(double p, double q, double p0, double q0) {
+    private LoadState(double p, double q, double p0, double q0) {
         this.p = p;
         this.q = q;
         this.p0 = p0;
         this.q0 = q0;
     }
 
-    static BusState createBusStateFromArray(double[] arr) {
+    static LoadState createLoadStateFromArray(double[] arr) {
         if (arr.length != 4) {
             throw new PowsyblException("Wrong initialisation array size : " + arr.length);
         }
-        return new BusState(arr[0], arr[1], arr[2], arr[3]);
+        return new LoadState(arr[0], arr[1], arr[2], arr[3]);
     }
 
     public double getP0() {
