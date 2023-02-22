@@ -126,12 +126,19 @@ public class DynaWaltzContext {
     }
 
     private BlackBoxModel mergeDuplicateStaticId(BlackBoxModel bbm1, BlackBoxModel bbm2) {
-        throw new AssertionError("Duplicate staticId " + bbm1.getStaticId());
+        throw new PowsyblException("Duplicate staticId: " + bbm1.getStaticId().orElseThrow());
     }
 
     private static List<BlackBoxModel> checkEventModelIdUniqueness(List<BlackBoxModel> eventModels) {
-        if (eventModels.stream().map(BlackBoxModel::getDynamicModelId).distinct().count() < eventModels.size()) {
-            throw new AssertionError("Duplicate dynamicId");
+        Set<String> dynamicIds = new HashSet<>();
+        Set<String> duplicates = new HashSet<>();
+        for (BlackBoxModel bbm : eventModels) {
+            if (!dynamicIds.add(bbm.getDynamicModelId())) {
+                duplicates.add(bbm.getDynamicModelId());
+            }
+        }
+        if (!duplicates.isEmpty()) {
+            throw new PowsyblException("Duplicate dynamicId: " + duplicates);
         }
         return eventModels;
     }
