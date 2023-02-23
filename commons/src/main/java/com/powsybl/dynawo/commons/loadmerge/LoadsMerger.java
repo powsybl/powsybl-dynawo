@@ -91,10 +91,10 @@ public final class LoadsMerger {
     }
 
     public static LoadPowers getLoadPowers(Load load) {
-        if (load.getTerminal().getP() >= 0) {
-            return load.getTerminal().getQ() >= 0 ? P_POS_Q_POS : P_POS_Q_NEG;
+        if (load.getP0() >= 0) {
+            return load.getQ0() >= 0 ? P_POS_Q_POS : P_POS_Q_NEG;
         } else {
-            return load.getTerminal().getQ() >= 0 ? P_NEG_Q_POS : P_NEG_Q_NEG;
+            return load.getQ0() >= 0 ? P_NEG_Q_POS : P_NEG_Q_NEG;
         }
     }
 }
