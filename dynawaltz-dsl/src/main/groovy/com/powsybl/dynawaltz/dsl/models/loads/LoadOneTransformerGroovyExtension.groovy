@@ -6,15 +6,12 @@
  */
 package com.powsybl.dynawaltz.dsl.models.loads
 
-import com.powsybl.dynawaltz.models.loads.LoadOneTransformer
-
-import java.util.function.Consumer
-
 import com.google.auto.service.AutoService
-import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
-import com.powsybl.dynawaltz.DynaWaltzProvider
+import com.powsybl.dynawaltz.dsl.AbstractDynamicModelBuilder
+import com.powsybl.dynawaltz.dsl.AbstractPowsyblDynawoGroovyExtension
+import com.powsybl.dynawaltz.models.loads.LoadOneTransformer
 
 /**
  * An implementation of {@link DynamicModelGroovyExtension} that adds the <pre>LoadOneTransformer</pre> keyword to the DSL
@@ -22,48 +19,22 @@ import com.powsybl.dynawaltz.DynaWaltzProvider
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class LoadOneTransformerGroovyExtension implements DynamicModelGroovyExtension {
+class LoadOneTransformerGroovyExtension extends AbstractPowsyblDynawoGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
-    static class LoadOneTransformerSpec {
-        String dynamicModelId
-        String staticId
-        String parameterSetId
-
-        void dynamicModelId(String dynamicModelId) {
-            this.dynamicModelId = dynamicModelId
-        }
-
-        void staticId(String staticId) {
-            this.staticId = staticId
-        }
-
-        void parameterSetId(String parameterSetId) {
-            this.parameterSetId = parameterSetId
-        }
+    LoadOneTransformerGroovyExtension() {
+        modelTags = ["LoadOneTransformer"]
     }
 
-    String getName() {
-        return DynaWaltzProvider.NAME
+    @Override
+    protected LoadOneTransformerBuilder createBuilder(String currentTag) {
+        new LoadOneTransformerBuilder()
     }
-    
-    void load(Binding binding, Consumer<DynamicModel> consumer) {
-        binding.LoadOneTransformer = { Closure<Void> closure ->
-            def cloned = closure.clone()
-            LoadOneTransformerSpec loadOneTransformerSpec = new LoadOneTransformerSpec()
-    
-            cloned.delegate = loadOneTransformerSpec
-            cloned()
 
-            if (!loadOneTransformerSpec.staticId) {
-                throw new DslException("'staticId' field is not set");
-            }
-            if (!loadOneTransformerSpec.parameterSetId) {
-                throw new DslException("'parameterSetId' field is not set")
-            }
-
-            String dynamicModelId = loadOneTransformerSpec.dynamicModelId ? loadOneTransformerSpec.dynamicModelId : loadOneTransformerSpec.staticId
-            consumer.accept(new LoadOneTransformer(dynamicModelId, loadOneTransformerSpec.staticId, loadOneTransformerSpec.parameterSetId))
+    static class LoadOneTransformerBuilder extends AbstractDynamicModelBuilder {
+        @Override
+        LoadOneTransformer build() {
+            checkData()
+            new LoadOneTransformer(dynamicModelId, staticId, parameterSetId)
         }
     }
-
 }
