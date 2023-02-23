@@ -6,15 +6,15 @@
  */
 package com.powsybl.dynawaltz.dsl.ieee14;
 
-import static org.junit.Assert.assertNotNull;
-
-import java.io.IOException;
-
+import com.powsybl.dynamicsimulation.DynamicSimulationResult;
 import com.powsybl.dynawaltz.dsl.ieee.AbstractIeeeTest;
+import com.powsybl.dynawaltz.dsl.ieee.DynaWaltzLocalCommandExecutor;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.powsybl.dynamicsimulation.DynamicSimulationResult;
+import java.io.IOException;
+
+import static org.junit.Assert.assertNotNull;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -37,7 +37,7 @@ public class Ieee14MacroConnectsTest extends AbstractIeeeTest {
 
     @Test
     public void testSimulation() throws Exception {
-        Ieee14MacroconnectsLocalCommandExecutor commandExecutor = new Ieee14MacroconnectsLocalCommandExecutor(fileSystem, network, getDynaWaltzSimulationParameters(parameters));
+        DynaWaltzLocalCommandExecutor commandExecutor = new DynaWaltzLocalCommandExecutor(fileSystem, network.getId(), getDynaWaltzSimulationParameters(parameters), getWorkingDirName());
         DynamicSimulationResult result = runSimulation(commandExecutor);
         assertNotNull(result);
     }

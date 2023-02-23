@@ -6,6 +6,7 @@
  */
 package com.powsybl.dynawaltz.xml;
 
+import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
@@ -16,6 +17,9 @@ import org.xml.sax.SAXException;
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -47,6 +51,19 @@ public class DynamicModelsXmlTest extends DynaWaltzTestUtil {
 
         DydXml.write(tmpDir, context);
         validate("dyd.xsd", "dyd_fictitious.xml", tmpDir.resolve(DynaWaltzConstants.DYD_FILENAME));
+    }
+
+    @Test
+    public void duplicateStaticId() {
+        dynamicModels.clear();
+        network.getGeneratorStream().forEach(gen -> {
+            if (gen.getId().equals("GEN5") || gen.getId().equals("GEN6")) {
+                dynamicModels.add(new GeneratorFictitious("BBM_" + gen.getId(), "duplicateID", "GF"));
+            }
+        });
+        String workingVariantId = network.getVariantManager().getWorkingVariantId();
+        Exception e = assertThrows(PowsyblException.class, () -> new DynaWaltzContext(network, workingVariantId, dynamicModels, eventModels, curves, null, null));
+        assertEquals("Duplicate staticId: duplicateID", e.getMessage());
     }
 
 }

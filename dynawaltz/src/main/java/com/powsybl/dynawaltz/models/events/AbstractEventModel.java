@@ -23,11 +23,17 @@ import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
  */
 public abstract class AbstractEventModel extends AbstractPureDynamicBlackBoxModel implements EventModel {
 
+    private final String equipmentStaticId;
     private final double startTime;
 
-    protected AbstractEventModel(String dynamicModelId, double startTime) {
+    protected AbstractEventModel(String dynamicModelId, String equipmentStaticId, double startTime) {
         super(dynamicModelId, dynamicModelId);
+        this.equipmentStaticId = equipmentStaticId;
         this.startTime = startTime;
+    }
+
+    public String getEquipmentStaticId() {
+        return equipmentStaticId;
     }
 
     @Override
