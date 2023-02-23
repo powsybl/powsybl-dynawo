@@ -265,8 +265,9 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         return mergeLoads;
     }
 
-    public void setMergeLoads(boolean mergeLoads) {
+    public DynaFlowParameters setMergeLoads(boolean mergeLoads) {
         this.mergeLoads = mergeLoads;
+        return this;
     }
 
     @Override

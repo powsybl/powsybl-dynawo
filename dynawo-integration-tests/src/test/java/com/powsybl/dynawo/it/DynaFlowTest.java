@@ -53,7 +53,7 @@ public class DynaFlowTest extends AbstractDynawoTest {
         DynaFlowConfig config = new DynaFlowConfig(Path.of("/dynaflow-launcher"), false);
         loadFlowProvider = new DynaFlowProvider(() -> config);
         loadFlowParameters = new LoadFlowParameters();
-        dynaFlowLoadFlowParameters = new DynaFlowParameters();
+        dynaFlowLoadFlowParameters = new DynaFlowParameters().setMergeLoads(false);
         securityAnalysisProvider = new DynaFlowSecurityAnalysisProvider(() -> config);
         securityAnalysisParameters = new SecurityAnalysisParameters();
         loadFlowParameters.addExtension(DynaFlowParameters.class, dynaFlowLoadFlowParameters);
