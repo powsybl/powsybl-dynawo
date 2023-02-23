@@ -30,9 +30,9 @@ import com.powsybl.security.detectors.DefaultLimitViolationDetector;
 import com.powsybl.security.extensions.ActivePowerExtension;
 import com.powsybl.security.extensions.CurrentExtension;
 import com.powsybl.security.results.PostContingencyResult;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +41,9 @@ import org.xmlunit.builder.Input;
 import org.xmlunit.diff.Diff;
 
 import javax.xml.transform.Source;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
@@ -53,7 +55,7 @@ import java.util.Objects;
 import java.util.concurrent.ForkJoinPool;
 
 import static com.powsybl.dynaflow.DynaFlowConstants.*;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -74,13 +76,13 @@ public class DynaFlowSecurityAnalysisTest {
         }
     }
 
-    @Before
+    @BeforeEach
     public void setUp() {
         fileSystem = Jimfs.newFileSystem(Configuration.unix());
         platformConfig = new InMemoryPlatformConfig(fileSystem);
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws IOException {
         fileSystem.close();
     }

@@ -21,8 +21,8 @@ import com.powsybl.security.LimitViolationFilter;
 import com.powsybl.security.SecurityAnalysisParameters;
 import com.powsybl.security.SecurityAnalysisResult;
 import com.powsybl.security.detectors.DefaultLimitViolationDetector;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.nio.file.Path;
 import java.util.Collections;
@@ -34,7 +34,7 @@ import static org.junit.Assert.*;
 /**
  * @author Geoffroy Jamgotchian <geoffroy.jamgotchian at rte-france.com>
  */
-public class DynaFlowTest extends AbstractDynawoTest {
+class DynaFlowTest extends AbstractDynawoTest {
 
     private DynaFlowProvider loadFlowProvider;
 
@@ -47,8 +47,8 @@ public class DynaFlowTest extends AbstractDynawoTest {
     private SecurityAnalysisParameters securityAnalysisParameters;
 
     @Override
-    @Before
-    public void setUp() throws Exception {
+    @BeforeEach
+    void setUp() throws Exception {
         super.setUp();
         DynaFlowConfig config = new DynaFlowConfig(Path.of("/dynaflow-launcher"), false);
         loadFlowProvider = new DynaFlowProvider(() -> config);
@@ -60,7 +60,7 @@ public class DynaFlowTest extends AbstractDynawoTest {
     }
 
     @Test
-    public void testLf() {
+    void testLf() {
         Network network = IeeeCdfNetworkFactory.create14();
         LoadFlowResult result = loadFlowProvider.run(network, computationManager, VariantManagerConstants.INITIAL_VARIANT_ID, loadFlowParameters)
                 .join();
@@ -72,7 +72,7 @@ public class DynaFlowTest extends AbstractDynawoTest {
     }
 
     @Test
-    public void testSa() {
+    void testSa() {
         Network network = IeeeCdfNetworkFactory.create14();
         List<Contingency> contingencies = network.getLineStream()
                 .map(l -> Contingency.line(l.getId()))

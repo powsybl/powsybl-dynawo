@@ -9,19 +9,19 @@ package com.powsybl.dynawo.commons;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.test.AbstractConverterTest;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class DynawoVersionTest extends AbstractConverterTest {
+class DynawoVersionTest extends AbstractConverterTest {
 
     private static final DynawoVersion DV_MIN = new DynawoVersion(1, 3, 0);
 
     @Test
-    public void testDynawoVersionCreation() {
+    void testDynawoVersionCreation() {
         assertEquals("1.3.4", new DynawoVersion(1, 3, 4).toString());
         assertEquals("1.10.4", DynawoVersion.createFromString("1.10.4").toString());
         assertEquals("1.10.4", DynawoVersion.createFromString("1:10:4", ":").toString());
@@ -35,7 +35,7 @@ public class DynawoVersionTest extends AbstractConverterTest {
     }
 
     @Test
-    public void testEquals() {
+    void testEquals() {
         DynawoVersion dv1 = DV_MIN;
         DynawoVersion dv2 = DynawoVersion.createFromString("1.3");
         assertEquals(DV_MIN, dv1);
@@ -45,7 +45,7 @@ public class DynawoVersionTest extends AbstractConverterTest {
     }
 
     @Test
-    public void testVersionEqual() {
+    void testVersionEqual() {
         DynawoVersion dv1 = DynawoVersion.createFromString("1.3.0");
         DynawoVersion dv2 = DynawoVersion.createFromString("1.3");
         DynawoVersion dv3 = DynawoVersion.createFromString("1.3.0.0");
@@ -55,7 +55,7 @@ public class DynawoVersionTest extends AbstractConverterTest {
     }
 
     @Test
-    public void testVersionAboveMin() {
+    void testVersionAboveMin() {
         DynawoVersion dv1 = DynawoVersion.createFromString("1.3.1");
         DynawoVersion dv2 = DynawoVersion.createFromString("2.1");
         DynawoVersion dv3 = DynawoVersion.createFromString("1.3.0.1");
@@ -65,7 +65,7 @@ public class DynawoVersionTest extends AbstractConverterTest {
     }
 
     @Test
-    public void testVersionBelowMin() {
+    void testVersionBelowMin() {
         DynawoVersion dv1 = DynawoVersion.createFromString("1.2.0");
         DynawoVersion dv2 = DynawoVersion.createFromString("1");
         assertEquals(1, DV_MIN.compareTo(dv1));

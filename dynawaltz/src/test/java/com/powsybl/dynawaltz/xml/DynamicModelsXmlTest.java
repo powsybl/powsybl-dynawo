@@ -11,7 +11,7 @@ import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
 import com.powsybl.dynawaltz.models.generators.GeneratorFictitious;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
 import javax.xml.stream.XMLStreamException;
@@ -24,10 +24,10 @@ import static org.junit.Assert.assertThrows;
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class DynamicModelsXmlTest extends DynaWaltzTestUtil {
+class DynamicModelsXmlTest extends DynaWaltzTestUtil {
 
     @Test
-    public void writeDynamicModel() throws SAXException, IOException, XMLStreamException {
+    void writeDynamicModel() throws SAXException, IOException, XMLStreamException {
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynaWaltzParameters dynawoParameters = DynaWaltzParameters.load();
         DynaWaltzContext context = new DynaWaltzContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, new ArrayList<>(), curves, parameters, dynawoParameters);
@@ -37,7 +37,7 @@ public class DynamicModelsXmlTest extends DynaWaltzTestUtil {
     }
 
     @Test
-    public void writeDynamicModelWithLoadsAndOnlyOneFictitiousGenerator() throws SAXException, IOException, XMLStreamException {
+    void writeDynamicModelWithLoadsAndOnlyOneFictitiousGenerator() throws SAXException, IOException, XMLStreamException {
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynaWaltzParameters dynawoParameters = DynaWaltzParameters.load();
         dynamicModels.clear();

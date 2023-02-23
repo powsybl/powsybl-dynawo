@@ -6,24 +6,23 @@
  */
 package com.powsybl.dynawaltz.json;
 
-import java.io.IOException;
-
-import org.junit.Test;
-
-import com.powsybl.commons.test.AbstractConverterTest;
 import com.powsybl.commons.config.InMemoryPlatformConfig;
 import com.powsybl.commons.config.MapModuleConfig;
+import com.powsybl.commons.test.AbstractConverterTest;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynamicsimulation.json.JsonDynamicSimulationParameters;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
+import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class DynaWaltzParametersSerializerTest extends AbstractConverterTest {
+class DynaWaltzParametersSerializerTest extends AbstractConverterTest {
 
     @Test
-    public void roundTripParameters() throws IOException {
+    void roundTripParameters() throws IOException {
         String parametersFile = "/home/user/parametersFile";
         String networkParametersFile = "/home/user/networkParametersFile";
         String solverParametersFile = "/home/user/solverParametersFile";

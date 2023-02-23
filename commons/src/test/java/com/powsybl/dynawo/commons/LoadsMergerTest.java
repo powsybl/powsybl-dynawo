@@ -9,7 +9,7 @@ package com.powsybl.dynawo.commons;
 
 import com.powsybl.dynawo.commons.loadmerge.LoadsMerger;
 import com.powsybl.iidm.network.Network;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.List;
@@ -17,16 +17,16 @@ import java.util.List;
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  */
-public class LoadsMergerTest extends AbstractDynawoCommonsTest {
+class LoadsMergerTest extends AbstractDynawoCommonsTest {
 
     @Test
-    public void multiBusesInVoltageLevel() throws IOException {
+    void multiBusesInVoltageLevel() throws IOException {
         Network network = TestNetworkFactory.createMultiBusesVoltageLevelNetwork();
         compare("/mergedLoadsMultiBusesVl.xiidm", LoadsMerger.mergeLoads(network));
     }
 
     @Test
-    public void mergeLoadsPpQp() throws IOException {
+    void mergeLoadsPpQp() throws IOException {
         List<LoadState> loadStates = List.of(
                 new LoadState(36.1, 4.0, 36.0, 4.0),
                 new LoadState(10.1, 7.2, 10.3, 7.5));
@@ -35,7 +35,7 @@ public class LoadsMergerTest extends AbstractDynawoCommonsTest {
     }
 
     @Test
-    public void mergeLoadsPpQn() throws IOException {
+    void mergeLoadsPpQn() throws IOException {
         List<LoadState> loadStates = List.of(
                 new LoadState(36.1, -4.0, 36.0, -4.0),
                 new LoadState(10.1, -7.2, 10.3, -7.5));
@@ -44,7 +44,7 @@ public class LoadsMergerTest extends AbstractDynawoCommonsTest {
     }
 
     @Test
-    public void mergeLoadsPnQn() throws IOException {
+    void mergeLoadsPnQn() throws IOException {
         List<LoadState> loadStates = List.of(
                 new LoadState(-36.1, -4.0, -36.0, -4.0),
                 new LoadState(-10.1, -7.2, -10.3, -7.5));
@@ -53,7 +53,7 @@ public class LoadsMergerTest extends AbstractDynawoCommonsTest {
     }
 
     @Test
-    public void mergeLoadsPnQp() throws IOException {
+    void mergeLoadsPnQp() throws IOException {
         List<LoadState> loadStates = List.of(
                 new LoadState(-36.1, 4.0, -36.0, 4.0),
                 new LoadState(-10.1, 7.2, -10.3, 7.5));
@@ -62,7 +62,7 @@ public class LoadsMergerTest extends AbstractDynawoCommonsTest {
     }
 
     @Test
-    public void mergeThreeLoadsGroups() throws IOException {
+    void mergeThreeLoadsGroups() throws IOException {
         List<LoadState> loadStates = List.of(
                 new LoadState(-36.1, 4.0, -36.0, 4.0),
                 new LoadState(36.1, -4.0, 36.0, -4.0),
@@ -75,7 +75,7 @@ public class LoadsMergerTest extends AbstractDynawoCommonsTest {
     }
 
     @Test
-    public void nonMergeableLoads() throws IOException {
+    void nonMergeableLoads() throws IOException {
         List<LoadState> loadStates = List.of(
                 new LoadState(6.1, 1.0, 36.0, 2.0),
                 new LoadState(-3.3, 3.0, -26.0, 3.0),

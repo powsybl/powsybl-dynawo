@@ -9,10 +9,9 @@ package com.powsybl.dynawo.it;
 import com.powsybl.computation.ComputationManager;
 import com.powsybl.computation.local.test.ComputationDockerConfig;
 import com.powsybl.computation.local.test.DockerLocalComputationManager;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.io.TempDir;
 
 import java.io.InputStream;
 import java.nio.file.Path;
@@ -27,24 +26,21 @@ public abstract class AbstractDynawoTest {
 
     private static final String DOCKER_IMAGE_ID = "powsybl/java-dynawo:" + DYNAWO_VERSION;
 
-    @Rule
-    public final TemporaryFolder tempFolder = new TemporaryFolder();
-
-    protected Path localDir;
+    @TempDir
+    Path localDir;
 
     protected ComputationManager computationManager;
 
-    @Before
-    public void setUp() throws Exception {
-        localDir = tempFolder.getRoot().toPath();
+    @BeforeEach
+    void setUp() throws Exception {
         Path dockerDir = Path.of("/home/powsybl");
         ComputationDockerConfig config = new ComputationDockerConfig()
                 .setDockerImageId(DOCKER_IMAGE_ID);
         computationManager = new DockerLocalComputationManager(localDir, dockerDir, config);
     }
 
-    @After
-    public void tearDown() {
+    @AfterEach
+    void tearDown() {
         computationManager.close();
     }
 

@@ -9,7 +9,7 @@ package com.powsybl.dynawaltz.xml;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
 import javax.xml.stream.XMLStreamException;

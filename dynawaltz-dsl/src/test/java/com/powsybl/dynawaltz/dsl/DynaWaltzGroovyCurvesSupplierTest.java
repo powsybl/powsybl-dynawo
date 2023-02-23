@@ -20,9 +20,9 @@ import com.powsybl.iidm.network.Generator;
 import com.powsybl.iidm.network.Load;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.file.FileSystem;
@@ -31,18 +31,18 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class DynaWaltzGroovyCurvesSupplierTest {
+class DynaWaltzGroovyCurvesSupplierTest {
 
     private FileSystem fileSystem;
     private Network network;
 
-    @Before
-    public void setup() throws IOException {
+    @BeforeEach
+    void setup() throws IOException {
         fileSystem = Jimfs.newFileSystem(Configuration.unix());
         network = EurostagTutorialExample1Factory.create();
 
@@ -52,13 +52,13 @@ public class DynaWaltzGroovyCurvesSupplierTest {
         Files.copy(Objects.requireNonNull(getClass().getResourceAsStream("/curves_variables.groovy")), fileSystem.getPath("/curves_variables.groovy"));
     }
 
-    @After
-    public void tearDown() throws IOException {
+    @AfterEach
+    void tearDown() throws IOException {
         fileSystem.close();
     }
 
     @Test
-    public void test() {
+    void test() {
         List<CurveGroovyExtension> extensions = validateGroovyExtension();
         CurvesSupplier supplier = new GroovyCurvesSupplier(fileSystem.getPath("/curves.groovy"), extensions);
         List<Curve> curves = supplier.get(network);
@@ -67,7 +67,7 @@ public class DynaWaltzGroovyCurvesSupplierTest {
     }
 
     @Test
-    public void testModelIdStaticIdDefined() {
+    void testModelIdStaticIdDefined() {
         List<CurveGroovyExtension> extensions = validateGroovyExtension();
         CurvesSupplier supplier = new GroovyCurvesSupplier(fileSystem.getPath("/curves_dynamicModelId_staticId.groovy"), extensions);
         DslException exception = assertThrows(DslException.class, () -> supplier.get(network));
@@ -75,7 +75,7 @@ public class DynaWaltzGroovyCurvesSupplierTest {
     }
 
     @Test
-    public void testVariableNotDefined() {
+    void testVariableNotDefined() {
         List<CurveGroovyExtension> extensions = validateGroovyExtension();
         CurvesSupplier supplier = new GroovyCurvesSupplier(fileSystem.getPath("/curves_variable.groovy"), extensions);
         DslException exception = assertThrows(DslException.class, () -> supplier.get(network));
@@ -83,7 +83,7 @@ public class DynaWaltzGroovyCurvesSupplierTest {
     }
 
     @Test
-    public void testVariablesNotDefined() {
+    void testVariablesNotDefined() {
         List<CurveGroovyExtension> extensions = validateGroovyExtension();
         CurvesSupplier supplier = new GroovyCurvesSupplier(fileSystem.getPath("/curves_variables.groovy"), extensions);
         DslException exception = assertThrows(DslException.class, () -> supplier.get(network));

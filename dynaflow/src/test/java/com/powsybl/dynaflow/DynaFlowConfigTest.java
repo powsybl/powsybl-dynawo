@@ -10,39 +10,39 @@ import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
 import com.powsybl.commons.config.InMemoryPlatformConfig;
 import com.powsybl.commons.config.MapModuleConfig;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Path;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  *
  * @author Guillaume Pernin <guillaume.pernin at rte-france.com>
  */
-public class DynaFlowConfigTest {
+class DynaFlowConfigTest {
 
     private FileSystem fileSystem;
     private final boolean debug = true;
     private final String homeDir = "homeDir";
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         fileSystem = Jimfs.newFileSystem(Configuration.windows());
     }
 
-    @After
-    public void tearDown() throws IOException {
+    @AfterEach
+    void tearDown() throws IOException {
         fileSystem.close();
     }
 
     @Test
-    public void fromPlatformConfigTest() {
+    void fromPlatformConfigTest() {
         InMemoryPlatformConfig platformConfig = new InMemoryPlatformConfig(fileSystem);
 
         MapModuleConfig moduleConfig = platformConfig.createModuleConfig("dynaflow");
@@ -55,7 +55,7 @@ public class DynaFlowConfigTest {
     }
 
     @Test
-    public void fromPlatformConfigNull() {
+    void fromPlatformConfigNull() {
         InMemoryPlatformConfig platformConfig = new InMemoryPlatformConfig(fileSystem);
 
         DynaFlowConfig config = DynaFlowConfig.fromPlatformConfig(platformConfig);
@@ -63,7 +63,7 @@ public class DynaFlowConfigTest {
     }
 
     @Test
-    public void checkGetters() {
+    void checkGetters() {
         Path pathHomeDir = fileSystem.getPath(homeDir);
         DynaFlowConfig config = new DynaFlowConfig(pathHomeDir, debug);
 

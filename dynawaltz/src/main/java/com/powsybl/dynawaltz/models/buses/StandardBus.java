@@ -76,9 +76,10 @@ public class StandardBus extends AbstractBlackBoxModel implements BusModel {
 
     @Override
     public List<Model> getModelsConnectedTo(DynaWaltzContext dynaWaltzContext) {
-        Bus bus = dynaWaltzContext.getNetwork().getBusBreakerView().getBus(getStaticId().orElse(null));
+        String staticId = getStaticId().orElse(null);
+        Bus bus = dynaWaltzContext.getNetwork().getBusBreakerView().getBus(staticId);
         if (bus == null) {
-            throw new PowsyblException("Bus static id unknown: " + getStaticId());
+            throw new PowsyblException("Bus static id unknown: " + staticId);
         }
         List<Model> connectedBbm = new ArrayList<>();
         for (Generator g : dynaWaltzContext.getNetwork().getGenerators()) {
