@@ -22,7 +22,6 @@ public final class DynaFlowConstants {
 
     public static final String OUTPUT_IIDM_FILENAME = "outputIIDM.xml";
 
-    public static final String CONSTRAINTS_FILENAME = "constraints.xml";
     public static final String OUTPUT_RESULTS_FILENAME = "results.json";
 
     public enum OutputTypes {

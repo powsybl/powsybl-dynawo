@@ -172,8 +172,9 @@ public class DynaFlowSecurityAnalysis {
                 } else {
                     // Build the results from the output networks written by DynaFlow
                     PreContingencyResult preContingencyResult = getPreContingencyResult(network);
+                    Path constraintsDir = workingDir.resolve(DYNAWO_CONSTRAINTS_FOLDER);
                     List<PostContingencyResult> contingenciesResults = contingencies.stream()
-                        .map(c -> getPostContingencyResult(network, workingDir, c))
+                        .map(c -> getPostContingencyResult(network, constraintsDir, c))
                         .collect(Collectors.toList());
                     return new SecurityAnalysisReport(
                         new SecurityAnalysisResult(preContingencyResult, contingenciesResults, Collections.emptyList())
@@ -189,31 +190,20 @@ public class DynaFlowSecurityAnalysis {
         return new PreContingencyResult(LoadFlowResult.ComponentResult.Status.CONVERGED, new LimitViolationsResult(limitViolations), networkResult);
     }
 
-    private static PostContingencyResult getPostContingencyResult(Network network, Path workingDir, Contingency c) {
-        Path folder = workingDir.resolve(c.getId());
-        return new PostContingencyResult(c, statusFromOutputNetwork(folder), limitViolationsFromOutputNetwork(network, folder));
+    private static PostContingencyResult getPostContingencyResult(Network network, Path constraintsDir, Contingency c) {
+        Path constraintsFile = constraintsDir.resolve("constraints_" + c.getId() + ".xml");
+        return new PostContingencyResult(c,
+                Files.exists(constraintsFile) ? PostContingencyComputationStatus.CONVERGED : PostContingencyComputationStatus.FAILED,
+                limitViolationsFromOutputNetwork(network, constraintsFile));
     }
 
-    private static PostContingencyComputationStatus statusFromOutputNetwork(Path folder) {
-        Path outputNetworkPath = outputNetworkPath(folder);
-        return Files.exists(outputNetworkPath) ? PostContingencyComputationStatus.CONVERGED : PostContingencyComputationStatus.FAILED;
-    }
-
-    private static LimitViolationsResult limitViolationsFromOutputNetwork(Network network, Path folder) {
+    private static LimitViolationsResult limitViolationsFromOutputNetwork(Network network, Path constraintsFile) {
         List<LimitViolation> limitViolations;
-        Path outputNetworkPath = outputNetworkPath(folder);
-        if (Files.exists(outputNetworkPath)) {
-            limitViolations = ConstraintsReader.read(network, outputNetworkPath);
+        if (Files.exists(constraintsFile)) {
+            limitViolations = ConstraintsReader.read(network, constraintsFile);
         } else {
             limitViolations = Collections.emptyList();
         }
         return new LimitViolationsResult(limitViolations);
-    }
-
-    private static Path outputNetworkPath(Path folder) {
-        return folder
-            .resolve(DYNAFLOW_OUTPUT_FOLDER)
-            .resolve(DYNAWO_CONSTRAINTS_FOLDER)
-            .resolve(DYNAWO_OUTPUT_CONSTRAINTS_FILENAME);
     }
 }

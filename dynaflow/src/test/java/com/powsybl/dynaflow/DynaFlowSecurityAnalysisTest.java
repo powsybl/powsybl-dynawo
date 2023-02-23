@@ -212,10 +212,8 @@ public class DynaFlowSecurityAnalysisTest {
 
         private void copyOutputs(Path workingDir) throws IOException {
             if (Files.exists(workingDir.resolve(IIDM_FILENAME))) {
-                Path output = Files.createDirectories(workingDir.resolve("BaseCase").resolve("outputs").resolve("constraints").toAbsolutePath());
-                copyFile("/SmallBusBranch/dynaflow-outputs/BaseCase-constraints.xml", output.resolve(CONSTRAINTS_FILENAME));
-                output = Files.createDirectories(workingDir.resolve("contingency1").resolve("outputs").resolve("constraints").toAbsolutePath());
-                copyFile("/SmallBusBranch/dynaflow-outputs/contingency1-constraints.xml", output.resolve(CONSTRAINTS_FILENAME));
+                Path output = Files.createDirectories(workingDir.resolve("constraints").toAbsolutePath());
+                copyFile("/SmallBusBranch/dynaflow-outputs/contingency1-constraints.xml", output.resolve("constraints_contingency1.xml"));
             }
         }
 
