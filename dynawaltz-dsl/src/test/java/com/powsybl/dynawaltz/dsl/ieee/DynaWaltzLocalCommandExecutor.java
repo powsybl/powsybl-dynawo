@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.*;
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>

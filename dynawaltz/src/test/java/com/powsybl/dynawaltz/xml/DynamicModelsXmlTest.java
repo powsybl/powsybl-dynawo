@@ -18,8 +18,8 @@ import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -54,7 +54,7 @@ class DynamicModelsXmlTest extends DynaWaltzTestUtil {
     }
 
     @Test
-    public void duplicateStaticId() {
+    void duplicateStaticId() {
         dynamicModels.clear();
         network.getGeneratorStream().forEach(gen -> {
             if (gen.getId().equals("GEN5") || gen.getId().equals("GEN6")) {
