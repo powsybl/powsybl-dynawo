@@ -52,7 +52,6 @@ public final class LoadsMerger {
 
     private static List<LoadsToMerge> mergeLoads(Bus bus) {
         return getLoadsToMergeList(bus).stream()
-                .filter(loadsToMerge -> !loadsToMerge.isSingle())
                 .map(loadsToMerge -> mergeLoads(bus, loadsToMerge))
                 .collect(Collectors.toList());
     }
@@ -75,7 +74,11 @@ public final class LoadsMerger {
 
     public static List<LoadsToMerge> getLoadsToMergeList(Bus bus) {
         List<LoadsToMerge> loadsToMerge = new ArrayList<>();
-        getLoadPowersGrouping(bus).forEach((loadPowers, loads) -> loadsToMerge.add(new LoadsToMerge(loadPowers, loads, bus.getVoltageLevel())));
+        getLoadPowersGrouping(bus).forEach((loadPowers, loads) -> {
+            if (loads.size() > 1) {
+                loadsToMerge.add(new LoadsToMerge(loadPowers, loads, bus.getVoltageLevel().newLoad()));
+            }
+        });
         return loadsToMerge;
     }
 

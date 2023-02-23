@@ -10,7 +10,6 @@ package com.powsybl.dynawo.commons.loadmerge;
 import com.powsybl.iidm.network.Load;
 import com.powsybl.iidm.network.LoadAdder;
 import com.powsybl.iidm.network.Terminal;
-import com.powsybl.iidm.network.VoltageLevel;
 
 import java.util.List;
 
@@ -24,10 +23,10 @@ public class LoadsToMerge {
     private final double mergedP;
     private final double mergedQ;
 
-    public LoadsToMerge(LoadPowers loadPowers, List<Load> loads, VoltageLevel voltageLevel) {
+    public LoadsToMerge(LoadPowers loadPowers, List<Load> loads, LoadAdder loadAdder) {
         this.loadPowers = loadPowers;
         this.loads = loads;
-        this.loadAdder = isSingle() ? null : voltageLevel.newLoad();
+        this.loadAdder = loadAdder;
         this.mergedP = loads.stream().map(Load::getTerminal).mapToDouble(Terminal::getP).sum();
         this.mergedQ = loads.stream().map(Load::getTerminal).mapToDouble(Terminal::getQ).sum();
     }
@@ -58,9 +57,5 @@ public class LoadsToMerge {
 
     public LoadAdder getLoadAdder() {
         return loadAdder;
-    }
-
-    public boolean isSingle() {
-        return loads.size() == 1;
     }
 }
