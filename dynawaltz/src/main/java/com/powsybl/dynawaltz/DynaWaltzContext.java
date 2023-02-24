@@ -11,7 +11,9 @@ import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.models.*;
+import com.powsybl.dynawaltz.models.buses.BusModel;
 import com.powsybl.dynawaltz.models.generators.GeneratorSynchronousModel;
+import com.powsybl.dynawaltz.models.lines.LineModel;
 import com.powsybl.dynawaltz.models.utils.ConnectedModelTypes;
 import com.powsybl.dynawaltz.xml.MacroStaticReference;
 import com.powsybl.iidm.network.Branch;
@@ -131,24 +133,30 @@ public class DynaWaltzContext {
         return bbm;
     }
 
-    public Model getDynamicModelOrDefaultLine(String staticId, Branch.Side side) {
+    public LineModel getDynamicModelOrDefaultLine(String staticId, Branch.Side side) {
         BlackBoxModel bbm = staticIdBlackBoxModelMap.get(staticId);
         if (bbm == null) {
             return networkModel.getDefaultLineModel(staticId, side);
         }
-        return bbm;
+        if (bbm instanceof LineModel) {
+            return (LineModel) bbm;
+        }
+        throw new PowsyblException("The model identified by the static id " + staticId + " is not a line model");
     }
 
-    public Model getDynamicModelOrDefaultBus(Terminal terminal) {
+    public BusModel getDynamicModelOrDefaultBus(Terminal terminal) {
         return getDynamicModelOrDefaultBus(terminal.getBusBreakerView().getConnectableBus().getId());
     }
 
-    public Model getDynamicModelOrDefaultBus(String staticId) {
+    public BusModel getDynamicModelOrDefaultBus(String staticId) {
         BlackBoxModel bbm = staticIdBlackBoxModelMap.get(staticId);
         if (bbm == null) {
             return networkModel.getDefaultBusModel(staticId);
         }
-        return bbm;
+        if (bbm instanceof BusModel) {
+            return (BusModel) bbm;
+        }
+        throw new PowsyblException("The model identified by the static id " + staticId + " is not a bus model");
     }
 
     private BlackBoxModel mergeDuplicateStaticId(BlackBoxModel bbm1, BlackBoxModel bbm2) {
