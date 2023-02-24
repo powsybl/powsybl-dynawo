@@ -22,8 +22,7 @@ public class LoadsMergerTest extends AbstractDynawoCommonsTest {
     @Test
     public void multiBusesInVoltageLevel() throws IOException {
         Network network = TestNetworkFactory.createMultiBusesVoltageLevelNetwork();
-        Network expectedIidm = Network.read("mergedLoadsMultiBusesVl.xiidm", getClass().getResourceAsStream("/mergedLoadsMultiBusesVl.xiidm"));
-        compare(expectedIidm, LoadsMerger.mergeLoads(network));
+        compare("/mergedLoadsMultiBusesVl.xiidm", LoadsMerger.mergeLoads(network));
     }
 
     @Test
@@ -32,8 +31,7 @@ public class LoadsMergerTest extends AbstractDynawoCommonsTest {
                 new LoadState(36.1, 4.0, 36.0, 4.0),
                 new LoadState(10.1, 7.2, 10.3, 7.5));
         Network network = TestNetworkFactory.createMultiLoadsBusesNetwork(loadStates);
-        Network expectedIidm = Network.read("mergedLoadsPpQp.xiidm", getClass().getResourceAsStream("/mergedLoadsPpQp.xiidm"));
-        compare(expectedIidm, LoadsMerger.mergeLoads(network));
+        compare("/mergedLoadsPpQp.xiidm", LoadsMerger.mergeLoads(network));
     }
 
     @Test
@@ -42,8 +40,7 @@ public class LoadsMergerTest extends AbstractDynawoCommonsTest {
                 new LoadState(36.1, -4.0, 36.0, -4.0),
                 new LoadState(10.1, -7.2, 10.3, -7.5));
         Network network = TestNetworkFactory.createMultiLoadsBusesNetwork(loadStates);
-        Network expectedIidm = Network.read("mergedLoadsPpQn.xiidm", getClass().getResourceAsStream("/mergedLoadsPpQn.xiidm"));
-        compare(expectedIidm, LoadsMerger.mergeLoads(network));
+        compare("/mergedLoadsPpQn.xiidm", LoadsMerger.mergeLoads(network));
     }
 
     @Test
@@ -52,8 +49,7 @@ public class LoadsMergerTest extends AbstractDynawoCommonsTest {
                 new LoadState(-36.1, -4.0, -36.0, -4.0),
                 new LoadState(-10.1, -7.2, -10.3, -7.5));
         Network network = TestNetworkFactory.createMultiLoadsBusesNetwork(loadStates);
-        Network expectedIidm = Network.read("mergedLoadsPnQn.xiidm", getClass().getResourceAsStream("/mergedLoadsPnQn.xiidm"));
-        compare(expectedIidm, LoadsMerger.mergeLoads(network));
+        compare("/mergedLoadsPnQn.xiidm", LoadsMerger.mergeLoads(network));
     }
 
     @Test
@@ -62,8 +58,7 @@ public class LoadsMergerTest extends AbstractDynawoCommonsTest {
                 new LoadState(-36.1, 4.0, -36.0, 4.0),
                 new LoadState(-10.1, 7.2, -10.3, 7.5));
         Network network = TestNetworkFactory.createMultiLoadsBusesNetwork(loadStates);
-        Network expectedIidm = Network.read("mergedLoadsPnQp.xiidm", getClass().getResourceAsStream("/mergedLoadsPnQp.xiidm"));
-        compare(expectedIidm, LoadsMerger.mergeLoads(network));
+        compare("/mergedLoadsPnQp.xiidm", LoadsMerger.mergeLoads(network));
     }
 
     @Test
@@ -76,8 +71,7 @@ public class LoadsMergerTest extends AbstractDynawoCommonsTest {
                 new LoadState(10.1, -7.2, 10.3, -7.5),
                 new LoadState(-10.1, -7.2, -10.3, -7.5));
         Network network = TestNetworkFactory.createMultiLoadsBusesNetwork(loadStates);
-        Network expectedIidm = Network.read("mergedThreeLoadsGroups.xiidm", getClass().getResourceAsStream("/mergedThreeLoadsGroups.xiidm"));
-        compare(expectedIidm, LoadsMerger.mergeLoads(network));
+        compare("/mergedThreeLoadsGroups.xiidm", LoadsMerger.mergeLoads(network));
     }
 
     @Test
@@ -88,7 +82,6 @@ public class LoadsMergerTest extends AbstractDynawoCommonsTest {
                 new LoadState(36.1, -1.0, 16.0, -4.0),
                 new LoadState(-5.5, -2.0, -46.0, -5.0));
         Network network = TestNetworkFactory.createMultiLoadsBusesNetwork(loadStates);
-        Network expectedIidm = Network.read("nonMergeableLoads.xiidm", getClass().getResourceAsStream("/nonMergeableLoads.xiidm"));
-        compare(expectedIidm, LoadsMerger.mergeLoads(network));
+        compare("/nonMergeableLoads.xiidm", LoadsMerger.mergeLoads(network));
     }
 }

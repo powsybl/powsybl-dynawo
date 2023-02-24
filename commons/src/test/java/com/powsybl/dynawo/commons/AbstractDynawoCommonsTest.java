@@ -12,25 +12,30 @@ import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.xml.NetworkXml;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Objects;
 
 import static com.powsybl.commons.test.ComparisonUtils.compareTxt;
-import static org.junit.Assert.assertNotNull;
 
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  */
 public abstract class AbstractDynawoCommonsTest extends AbstractConverterTest {
 
+    protected void compare(String expectedIidmResource, Network actual) throws IOException {
+        InputStream expected = Objects.requireNonNull(getClass().getResourceAsStream(expectedIidmResource));
+        compareTxt(expected, getInputStream(actual, tmpDir.resolve("actual.xiidm")));
+    }
+
     protected void compare(Network expected, Network actual) throws IOException {
-        Path pExpected = tmpDir.resolve("expected.xiidm");
-        assertNotNull(pExpected);
-        Path pActual = tmpDir.resolve("actual.xiidm");
-        assertNotNull(pActual);
-        NetworkXml.write(expected, pExpected);
-        actual.setCaseDate(expected.getCaseDate());
-        NetworkXml.write(actual, pActual);
-        compareTxt(Files.newInputStream(pExpected), Files.newInputStream(pActual));
+        compareTxt(getInputStream(expected, tmpDir.resolve("expected.xiidm")),
+                getInputStream(actual, tmpDir.resolve("actual.xiidm")));
+    }
+
+    private InputStream getInputStream(Network n, Path path) throws IOException {
+        NetworkXml.write(n, path);
+        return Files.newInputStream(path);
     }
 }
