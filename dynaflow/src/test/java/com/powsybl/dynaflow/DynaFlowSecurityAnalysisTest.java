@@ -60,7 +60,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class DynaFlowSecurityAnalysisTest {
+class DynaFlowSecurityAnalysisTest {
 
     private static final String SECURITY_ANALYSIS_RESULTS_FILENAME = "securityAnalysisResults.json";
 
@@ -77,13 +77,13 @@ public class DynaFlowSecurityAnalysisTest {
     }
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         fileSystem = Jimfs.newFileSystem(Configuration.unix());
         platformConfig = new InMemoryPlatformConfig(fileSystem);
     }
 
     @AfterEach
-    public void tearDown() throws IOException {
+    void tearDown() throws IOException {
         fileSystem.close();
     }
 
@@ -117,13 +117,13 @@ public class DynaFlowSecurityAnalysisTest {
     }
 
     @Test
-    public void testDefaultProvider() {
+    void testDefaultProvider() {
         SecurityAnalysis.Runner dynawoSecurityAnalysisRunner = SecurityAnalysis.find();
         assertEquals(DYNAFLOW_NAME, dynawoSecurityAnalysisRunner.getName());
     }
 
     @Test
-    public void test() throws IOException {
+    void test() throws IOException {
         Network network = EurostagTutorialExample1Factory.create();
         ((Bus) network.getIdentifiable("NHV1")).setV(380.0);
         ((Bus) network.getIdentifiable("NHV2")).setV(380.0);
@@ -254,7 +254,7 @@ public class DynaFlowSecurityAnalysisTest {
     }
 
     @Test
-    public void testSecurityAnalysisOutputs() throws IOException {
+    void testSecurityAnalysisOutputs() throws IOException {
         Path workingDir = Files.createDirectory(fileSystem.getPath("SmallBusBranch"));
 
         // Load network

@@ -38,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * @author Guillaume Pernin <guillaume.pernin at rte-france.com>
  */
-public class DynaFlowProviderTest extends AbstractConverterTest {
+class DynaFlowProviderTest extends AbstractConverterTest {
 
     private String homeDir;
     private DynaFlowConfig config;
@@ -53,7 +53,7 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
     }
 
     @Test
-    public void checkVersionCommand() {
+    void checkVersionCommand() {
         Path pathHomeDir = fileSystem.getPath(homeDir);
         String program = pathHomeDir.resolve("dynaflow-launcher.sh").toString();
 
@@ -64,7 +64,7 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
     }
 
     @Test
-    public void checkExecutionCommand() {
+    void checkExecutionCommand() {
         String program = fileSystem.getPath(homeDir).resolve("dynaflow-launcher.sh").toString();
 
         String executionCommand = provider.getCommand(config).toString(0);
@@ -121,7 +121,7 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
     }
 
     @Test
-    public void testWithoutMergeLoads() throws Exception {
+    void testWithoutMergeLoads() throws Exception {
         Network network = createTestNetwork();
         LoadFlow.Runner dynaFlowSimulation = LoadFlow.find();
         LoadFlowParameters params = LoadFlowParameters.load();
@@ -144,7 +144,7 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
     }
 
     @Test
-    public void testWithMergeLoads() throws Exception {
+    void testWithMergeLoads() throws Exception {
         Network network = createTestNetwork();
         LoadFlow.Runner dynaFlowSimulation = LoadFlow.find();
         LoadFlowParameters params = LoadFlowParameters.load();
@@ -165,7 +165,7 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
     }
 
     @Test
-    public void testFail() throws Exception {
+    void testFail() throws Exception {
         Network network = Network.create("empty", "test");
         LoadFlow.Runner dynaFlowSimulation = LoadFlow.find();
         LoadFlowParameters params = LoadFlowParameters.load();
@@ -180,7 +180,7 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
     }
 
     @Test
-    public void testCallingBadVersionDynaFlow() throws Exception {
+    void testCallingBadVersionDynaFlow() throws Exception {
         Network network = Network.create("empty", "test");
         LoadFlow.Runner dynaFlowSimulation = LoadFlow.find();
         LoadFlowParameters params = LoadFlowParameters.load();
@@ -192,7 +192,7 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
     }
 
     @Test
-    public void testUpdateSpecificParameters() {
+    void testUpdateSpecificParameters() {
         Map<String, String> properties = Map.of(
                 "svcRegulationOn", "true",
                 "shuntRegulationOn", "true",
