@@ -20,6 +20,8 @@ import java.util.stream.Collectors;
 import static com.powsybl.dynawo.commons.loadmerge.LoadPowers.*;
 
 /**
+ * @author Florian Dupuy <florian.dupuy at rte-france.com>
+ * @author Laurent Isertial <laurent.issertial at rte-france.com>
  * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
  */
 public final class LoadsMerger {
