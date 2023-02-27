@@ -8,18 +8,18 @@
 
 package com.powsybl.dynawaltz.models.utils;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 /**
  * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
  */
-public class ConnectedModelTypesTest {
+class ConnectedModelTypesTest {
 
     @Test
-    public void twoConnectedModelTypesEqual() {
+    void twoConnectedModelTypesEqual() {
         ConnectedModelTypes connectedModelTypes1 = ConnectedModelTypes.of("a", "b");
         ConnectedModelTypes connectedModelTypes2 = ConnectedModelTypes.of("b", "a");
 
@@ -27,7 +27,7 @@ public class ConnectedModelTypesTest {
     }
 
     @Test
-    public void twoConnectedModelTypesNotEqual() {
+    void twoConnectedModelTypesNotEqual() {
         ConnectedModelTypes connectedModelTypes1 = ConnectedModelTypes.of("a", "b");
         ConnectedModelTypes connectedModelTypes2 = ConnectedModelTypes.of("a", "c");
 

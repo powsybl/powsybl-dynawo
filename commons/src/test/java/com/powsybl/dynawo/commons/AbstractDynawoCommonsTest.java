@@ -22,7 +22,7 @@ import static com.powsybl.commons.test.ComparisonUtils.compareTxt;
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  */
-public abstract class AbstractDynawoCommonsTest extends AbstractConverterTest {
+abstract class AbstractDynawoCommonsTest extends AbstractConverterTest {
 
     protected void compare(String expectedIidmResource, Network actual) throws IOException {
         InputStream expected = Objects.requireNonNull(getClass().getResourceAsStream(expectedIidmResource));

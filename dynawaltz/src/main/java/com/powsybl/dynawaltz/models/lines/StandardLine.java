@@ -50,9 +50,10 @@ public class StandardLine extends AbstractBlackBoxModel implements LineModel {
 
     @Override
     public List<Model> getModelsConnectedTo(DynaWaltzContext dynaWaltzContext) {
-        Line line = dynaWaltzContext.getNetwork().getLine(getStaticId().orElse(null));
+        String staticId = getStaticId().orElse(null);
+        Line line = dynaWaltzContext.getNetwork().getLine(staticId);
         if (line == null) {
-            throw new PowsyblException("Line static id unkwown: " + getStaticId());
+            throw new PowsyblException("Line static id unkwown: " + staticId);
         }
         List<Model> connectedBbm = new ArrayList<>();
         for (Bus b : dynaWaltzContext.getNetwork().getBusBreakerView().getBuses()) {

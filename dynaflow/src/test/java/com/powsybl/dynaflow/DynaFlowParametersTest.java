@@ -16,9 +16,9 @@ import com.powsybl.dynaflow.DynaFlowConstants.OutputTypes;
 import com.powsybl.dynaflow.DynaFlowConstants.StartingPointMode;
 import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
 import com.powsybl.loadflow.LoadFlowParameters;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,29 +28,29 @@ import java.util.*;
 
 import static com.powsybl.commons.test.ComparisonUtils.compareTxt;
 import static com.powsybl.dynaflow.DynaFlowProvider.MODULE_SPECIFIC_PARAMETERS;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
  * @author Guillaume Pernin <guillaume.pernin at rte-france.com>
  */
-public class DynaFlowParametersTest extends AbstractConverterTest {
+class DynaFlowParametersTest extends AbstractConverterTest {
 
     private InMemoryPlatformConfig platformConfig;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         fileSystem = Jimfs.newFileSystem(Configuration.unix());
         platformConfig = new InMemoryPlatformConfig(fileSystem);
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws IOException {
         fileSystem.close();
     }
 
     @Test
-    public void checkParameters() {
+    void checkParameters() {
         boolean svcRegulationOn = true;
         boolean shuntRegulationOn = false;
         boolean automaticSlackBusOn = true;
@@ -107,7 +107,7 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
     }
 
     @Test
-    public void checkDefaultParameters() {
+    void checkDefaultParameters() {
         LoadFlowParameters parameters = LoadFlowParameters.load(platformConfig);
         DynaFlowParameters parametersExt = parameters.getExtension(DynaFlowParameters.class);
         assertNotNull(parametersExt);
@@ -132,7 +132,7 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
     }
 
     @Test
-    public void checkAllParametersAssignedToString() {
+    void checkAllParametersAssignedToString() {
         LoadFlowParameters parameters = LoadFlowParameters.load(platformConfig);
         DynaFlowParameters parametersExt = parameters.getExtension(DynaFlowParameters.class);
         boolean svcRegulationOn = true;
@@ -191,7 +191,7 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
     }
 
     @Test
-    public void defaultParametersSerialization() throws IOException {
+    void defaultParametersSerialization() throws IOException {
         LoadFlowParameters lfParameters = LoadFlowParameters.load(platformConfig);
         lfParameters.setNoGeneratorReactiveLimits(true);
         lfParameters.setPhaseShifterRegulationOn(false);
@@ -210,7 +210,7 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
     }
 
     @Test
-    public void parametersSerialization() throws IOException {
+    void parametersSerialization() throws IOException {
         LoadFlowParameters lfParameters = LoadFlowParameters.load(platformConfig);
         lfParameters.setNoGeneratorReactiveLimits(true);
         lfParameters.setPhaseShifterRegulationOn(false);
@@ -244,7 +244,7 @@ public class DynaFlowParametersTest extends AbstractConverterTest {
     }
 
     @Test
-    public void loadMapDynaflowParameters() {
+    void loadMapDynaflowParameters() {
 
         boolean svcRegulationOn = true;
         boolean shuntRegulationOn = true;

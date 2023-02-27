@@ -11,7 +11,7 @@ import com.powsybl.iidm.network.*;
 import com.powsybl.iidm.network.test.FourSubstationsNodeBreakerFactory;
 import com.powsybl.iidm.xml.ExportOptions;
 import com.powsybl.iidm.xml.NetworkXml;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -19,10 +19,10 @@ import java.nio.file.Path;
 /**
  * @author Guillem Jané Guasch <janeg at aia.es>
  */
-public class NetworkResultsUpdaterTest extends AbstractDynawoCommonsTest {
+class NetworkResultsUpdaterTest extends AbstractDynawoCommonsTest {
 
     @Test
-    public void testUpdateWithoutMergeLoads() throws IOException {
+    void testUpdateWithoutMergeLoads() throws IOException {
         Network expected = TestNetworkFactory.createMultiBusesVoltageLevelNetwork();
         Network actual = NetworkXml.copy(expected);
         reset(actual);
@@ -31,7 +31,7 @@ public class NetworkResultsUpdaterTest extends AbstractDynawoCommonsTest {
     }
 
     @Test
-    public void testUpdateWithMergeLoads() throws IOException {
+    void testUpdateWithMergeLoads() throws IOException {
         Network expected = TestNetworkFactory.createMultiBusesVoltageLevelNetwork();
         Network actual = NetworkXml.copy(expected);
         NetworkResultsUpdater.update(actual, LoadsMerger.mergeLoads(expected), true);
@@ -39,7 +39,7 @@ public class NetworkResultsUpdaterTest extends AbstractDynawoCommonsTest {
     }
 
     @Test
-    public void testUpdateNetworkPassingThroughBusBreaker() throws IOException {
+    void testUpdateNetworkPassingThroughBusBreaker() throws IOException {
         Network expected = TestNetworkFactory.createMultiBusesVoltageLevelNetwork();
         Network actual = NetworkXml.copy(expected);
         reset(actual);
@@ -58,7 +58,7 @@ public class NetworkResultsUpdaterTest extends AbstractDynawoCommonsTest {
     }
 
     @Test
-    public void testUpdateWithDisconnects() throws IOException {
+    void testUpdateWithDisconnects() throws IOException {
         Network expected = FourSubstationsNodeBreakerFactory.create();
         Network actual = NetworkXml.copy(expected);
         reset(actual);

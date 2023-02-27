@@ -6,41 +6,40 @@
  */
 package com.powsybl.dynawaltz;
 
-import static org.junit.Assert.assertEquals;
-
-import java.io.IOException;
-import java.nio.file.FileSystem;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
 import com.powsybl.commons.config.InMemoryPlatformConfig;
 import com.powsybl.commons.config.MapModuleConfig;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
+import java.nio.file.FileSystem;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class DynaWaltzConfigTest {
+class DynaWaltzConfigTest {
 
     private InMemoryPlatformConfig platformConfig;
     private FileSystem fileSystem;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         fileSystem = Jimfs.newFileSystem(Configuration.unix());
         platformConfig = new InMemoryPlatformConfig(fileSystem);
     }
 
-    @After
-    public void tearDown() throws IOException {
+    @AfterEach
+    void tearDown() throws IOException {
         fileSystem.close();
     }
 
     @Test
-    public void checkConfig() {
+    void checkConfig() {
         String homeDir = "homeDir";
         boolean debug = true;
 

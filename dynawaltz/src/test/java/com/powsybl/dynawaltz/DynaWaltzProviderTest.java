@@ -17,7 +17,7 @@ import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.Substation;
 import com.powsybl.iidm.network.TopologyKind;
 import com.powsybl.iidm.network.VoltageLevel;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -29,13 +29,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ForkJoinPool;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class DynaWaltzProviderTest {
+class DynaWaltzProviderTest {
 
     private static final String OUTPUT_IIDM_FILENAME = "outputIIDM.xml";
 
@@ -74,7 +74,7 @@ public class DynaWaltzProviderTest {
     }
 
     @Test
-    public void testWithMergeLoads() throws Exception {
+    void testWithMergeLoads() throws Exception {
         try (FileSystem fs = Jimfs.newFileSystem(Configuration.unix())) {
             Network network = createTestNetwork();
 
@@ -92,7 +92,7 @@ public class DynaWaltzProviderTest {
     }
 
     @Test
-    public void testWithoutMergeLoads() throws Exception {
+    void testWithoutMergeLoads() throws Exception {
         try (FileSystem fs = Jimfs.newFileSystem(Configuration.unix())) {
             Network network = createTestNetwork();
 
@@ -114,7 +114,7 @@ public class DynaWaltzProviderTest {
     }
 
     @Test
-    public void testFail() throws Exception {
+    void testFail() throws Exception {
         try (FileSystem fs = Jimfs.newFileSystem(Configuration.unix())) {
             Network network = createTestNetwork();
 
@@ -133,7 +133,7 @@ public class DynaWaltzProviderTest {
     }
 
     @Test
-    public void testWithoutCurves() throws Exception {
+    void testWithoutCurves() throws Exception {
         try (FileSystem fs = Jimfs.newFileSystem(Configuration.unix())) {
             Network network = createTestNetwork();
 

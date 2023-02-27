@@ -6,47 +6,42 @@
  */
 package com.powsybl.dynawaltz;
 
+import com.google.common.jimfs.Configuration;
+import com.google.common.jimfs.Jimfs;
+import com.powsybl.commons.PowsyblException;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
+import java.nio.file.Path;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-
-import com.google.common.jimfs.Configuration;
-import com.google.common.jimfs.Jimfs;
-import com.powsybl.commons.PowsyblException;
-
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class DynaWaltzParametersDatabaseTest {
-
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
+class DynaWaltzParametersDatabaseTest {
 
     private FileSystem fileSystem;
 
-    @Before
-    public void setUp() throws IOException {
+    @BeforeEach
+    void setUp() throws IOException {
         fileSystem = Jimfs.newFileSystem(Configuration.unix());
         Files.copy(getClass().getResourceAsStream("/models.par"), fileSystem.getPath("/models.par"));
         Files.copy(getClass().getResourceAsStream("/models_misspelled.par"), fileSystem.getPath("/models_misspelled.par"));
     }
 
-    @After
-    public void tearDown() throws IOException {
+    @AfterEach
+    void tearDown() throws IOException {
         fileSystem.close();
     }
 
     @Test
-    public void checkParameters() {
+    void checkParameters() {
         DynaWaltzParametersDatabase parametersDatabase = DynaWaltzParametersDatabase.load(fileSystem.getPath("/models.par"));
         assertNotNull(parametersDatabase.getParameterSet("LoadAlphaBeta"));
         assertEquals(1.5, parametersDatabase.getDouble("LoadAlphaBeta", "load_alpha"), 1e-6);
@@ -59,18 +54,16 @@ public class DynaWaltzParametersDatabaseTest {
     }
 
     @Test
-    public void checkParametersMisspelled() {
-        exception.expect(PowsyblException.class);
-        exception.expectMessage("Unexpected element: sett");
-
-        DynaWaltzParametersDatabase.load(fileSystem.getPath("/models_misspelled.par"));
+    void checkParametersMisspelled() {
+        Path path = fileSystem.getPath("/models_misspelled.par");
+        PowsyblException e = assertThrows(PowsyblException.class, () -> DynaWaltzParametersDatabase.load(path));
+        assertEquals("Unexpected element: sett", e.getMessage());
     }
 
     @Test
-    public void checkParametersNotFound() {
-        exception.expect(UncheckedIOException.class);
-        exception.expectMessage("NoSuchFileException: /file.par");
-
-        DynaWaltzParametersDatabase.load(fileSystem.getPath("/file.par"));
+    void checkParametersNotFound() {
+        Path path = fileSystem.getPath("/file.par");
+        UncheckedIOException e = assertThrows(UncheckedIOException.class, () -> DynaWaltzParametersDatabase.load(path));
+        assertEquals("java.nio.file.NoSuchFileException: /file.par", e.getMessage());
     }
 }
