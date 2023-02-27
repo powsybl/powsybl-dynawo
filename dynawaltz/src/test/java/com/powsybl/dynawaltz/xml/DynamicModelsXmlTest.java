@@ -11,6 +11,7 @@ import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
 import com.powsybl.dynawaltz.models.generators.GeneratorFictitious;
+import com.powsybl.iidm.network.Branch;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
@@ -66,4 +67,20 @@ public class DynamicModelsXmlTest extends DynaWaltzTestUtil {
         assertEquals("Duplicate staticId: duplicateID", e.getMessage());
     }
 
+    @Test
+    public void testDynamicModelGetterException() {
+        DynaWaltzContext dc = new DynaWaltzContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, eventModels, curves, DynamicSimulationParameters.load(), DynaWaltzParameters.load());
+
+        // dynamic model
+        Exception e = assertThrows(PowsyblException.class, () -> dc.getDynamicModelOrThrows("wrongID"));
+        assertEquals("Cannot find the equipment 'wrongID' among the dynamic models provided", e.getMessage());
+
+        // bus
+        e = assertThrows(PowsyblException.class, () -> dc.getDynamicModelOrDefaultBus("GEN5"));
+        assertEquals("The model identified by the static id GEN5 is not a bus model", e.getMessage());
+
+        //line
+        e = assertThrows(PowsyblException.class, () -> dc.getDynamicModelOrDefaultLine("GEN5", Branch.Side.ONE));
+        assertEquals("The model identified by the static id GEN5 is not a line model", e.getMessage());
+    }
 }
