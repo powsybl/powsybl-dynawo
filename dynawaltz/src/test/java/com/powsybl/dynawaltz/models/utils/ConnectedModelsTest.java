@@ -9,19 +9,19 @@
 package com.powsybl.dynawaltz.models.utils;
 
 import com.powsybl.dynawaltz.models.BlackBoxModel;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockito.Mockito.mock;
 
 /**
  * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
  */
-public class ConnectedModelsTest {
+class ConnectedModelsTest {
 
     @Test
-    public void twoConnectedModelsEqual() {
+    void twoConnectedModelsEqual() {
         BlackBoxModel bbm1 = mock(BlackBoxModel.class);
         BlackBoxModel bbm2 = mock(BlackBoxModel.class);
 
@@ -32,7 +32,7 @@ public class ConnectedModelsTest {
     }
 
     @Test
-    public void twoConnectedModelsNotEqual() {
+    void twoConnectedModelsNotEqual() {
         ConnectedModels connectedModels1 = ConnectedModels.of(mock(BlackBoxModel.class), mock(BlackBoxModel.class));
         ConnectedModels connectedModels2 = ConnectedModels.of(mock(BlackBoxModel.class), mock(BlackBoxModel.class));
 

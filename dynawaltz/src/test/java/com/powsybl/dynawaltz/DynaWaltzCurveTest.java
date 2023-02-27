@@ -6,17 +6,17 @@
  */
 package com.powsybl.dynawaltz;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Test;
 
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class DynaWaltzCurveTest {
+class DynaWaltzCurveTest {
 
     @Test
-    public void test() {
+    void test() {
         DynaWaltzCurve curve = new DynaWaltzCurve("busId", "variable");
 
         assertEquals("busId", curve.getModelId());

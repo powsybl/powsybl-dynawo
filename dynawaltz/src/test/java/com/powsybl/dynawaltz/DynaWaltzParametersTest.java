@@ -6,27 +6,26 @@
  */
 package com.powsybl.dynawaltz;
 
-import static org.junit.Assert.assertEquals;
+import com.google.common.jimfs.Configuration;
+import com.google.common.jimfs.Jimfs;
+import com.powsybl.commons.config.InMemoryPlatformConfig;
+import com.powsybl.commons.config.MapModuleConfig;
+import com.powsybl.commons.config.ModuleConfig;
+import com.powsybl.dynawaltz.DynaWaltzParameters.SolverType;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.util.Optional;
 
-import com.powsybl.commons.config.ModuleConfig;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
-import com.google.common.jimfs.Configuration;
-import com.google.common.jimfs.Jimfs;
-import com.powsybl.commons.config.InMemoryPlatformConfig;
-import com.powsybl.commons.config.MapModuleConfig;
-import com.powsybl.dynawaltz.DynaWaltzParameters.SolverType;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class DynaWaltzParametersTest {
+class DynaWaltzParametersTest {
 
     private final String parametersFile = "/home/user/parametersFile";
     private final String networkParametersFile = "/home/user/networkParametersFile";
@@ -36,8 +35,8 @@ public class DynaWaltzParametersTest {
     private InMemoryPlatformConfig platformConfig;
     private FileSystem fileSystem;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         fileSystem = Jimfs.newFileSystem(Configuration.unix());
         platformConfig = new InMemoryPlatformConfig(fileSystem);
         MapModuleConfig moduleConfig = platformConfig.createModuleConfig("dynawaltz-default-parameters");
@@ -47,13 +46,13 @@ public class DynaWaltzParametersTest {
         moduleConfig.setStringProperty("mergeLoads", String.valueOf(mergeLoads));
     }
 
-    @After
-    public void tearDown() throws IOException {
+    @AfterEach
+    void tearDown() throws IOException {
         fileSystem.close();
     }
 
     @Test
-    public void checkParameters() {
+    void checkParameters() {
         String networkParametersId = "networkParametersId";
         SolverType solverType = SolverType.IDA;
         String solverParametersId = "solverParametersId";
@@ -76,7 +75,7 @@ public class DynaWaltzParametersTest {
     }
 
     @Test
-    public void checkDefaultParameters() {
+    void checkDefaultParameters() {
 
         DynaWaltzParameters parameters = DynaWaltzParameters.load(platformConfig);
         assertEquals(parametersFile, parameters.getParametersFile());

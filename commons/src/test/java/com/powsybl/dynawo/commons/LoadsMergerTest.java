@@ -1,68 +1,87 @@
+/**
+ * Copyright (c) 2023, RTE (http://www.rte-france.com/)
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ */
 package com.powsybl.dynawo.commons;
 
-import com.powsybl.commons.test.AbstractConverterTest;
-import com.powsybl.iidm.network.*;
-import com.powsybl.iidm.xml.NetworkXml;
-import org.junit.Test;
+import com.powsybl.dynawo.commons.loadmerge.LoadsMerger;
+import com.powsybl.iidm.network.Network;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.util.List;
 
-import static com.powsybl.commons.test.ComparisonUtils.compareTxt;
-import static org.junit.Assert.assertNotNull;
-
-public class LoadsMergerTest extends AbstractConverterTest {
+/**
+ * @author Florian Dupuy <florian.dupuy at rte-france.com>
+ */
+class LoadsMergerTest extends AbstractDynawoCommonsTest {
 
     @Test
-    public void mergeLoads() throws IOException {
-        Network network = createTestNetwork();
-        Network expectedIidm = Network.read("mergedLoads.xiidm", getClass().getResourceAsStream("/mergedLoads.xiidm"));
-        compare(expectedIidm, LoadsMerger.mergeLoads(network));
+    void multiBusesInVoltageLevel() throws IOException {
+        Network network = TestNetworkFactory.createMultiBusesVoltageLevelNetwork();
+        compare("/mergedLoadsMultiBusesVl.xiidm", LoadsMerger.mergeLoads(network));
     }
 
-    private static Network createTestNetwork() {
-        Network network = Network.create("test", "test");
-        Substation s = network.newSubstation().setId("substation").add();
-
-        VoltageLevel vl1 = s.newVoltageLevel().setId("vl1").setNominalV(250).setTopologyKind(TopologyKind.NODE_BREAKER).add();
-        vl1.getNodeBreakerView().newBusbarSection().setId("Busbar1").setNode(0).add();
-        vl1.getNodeBreakerView().newBusbarSection().setId("Busbar2").setNode(4).add();
-        vl1.getNodeBreakerView().newDisconnector().setNode1(0).setNode2(1).setId("d1").add();
-        vl1.getNodeBreakerView().newDisconnector().setNode1(0).setNode2(2).setId("d2").add();
-        vl1.getNodeBreakerView().newDisconnector().setNode1(0).setNode2(3).setId("d3").add();
-        vl1.getNodeBreakerView().newBreaker().setNode1(0).setNode2(4).setId("coupler").setOpen(true).add();
-        vl1.getNodeBreakerView().newDisconnector().setNode1(0).setNode2(5).setId("d4").add();
-        vl1.getNodeBreakerView().newDisconnector().setNode1(4).setNode2(6).setId("d5").add();
-        vl1.newLoad().setId("load1").setP0(10.0).setQ0(5.0).setNode(1).add();
-        vl1.newLoad().setId("load2").setP0(12.0).setQ0(1.0).setNode(2).add();
-        vl1.newLoad().setId("load3").setP0(22.0).setQ0(3.0).setNode(3).add();
-        vl1.newLoad().setId("load4").setP0(-2.0).setQ0(-1.0).setNode(6).add();
-
-        VoltageLevel vl2 = s.newVoltageLevel().setId("vl2").setNominalV(250).setTopologyKind(TopologyKind.BUS_BREAKER).add();
-        Bus b1 = vl2.getBusBreakerView().newBus().setId("b1").add();
-        Bus b2 = vl2.getBusBreakerView().newBus().setId("b2").add();
-        Bus b3 = vl2.getBusBreakerView().newBus().setId("b3").add();
-        vl2.getBusBreakerView().newSwitch().setId("c1").setBus1(b1.getId()).setBus2(b2.getId()).add();
-        vl2.getBusBreakerView().newSwitch().setId("c2").setBus1(b2.getId()).setBus2(b3.getId()).add();
-        vl2.newGenerator().setId("g1").setBus(b1.getId()).setTargetP(101).setTargetV(390).setMinP(0).setMaxP(150).setVoltageRegulatorOn(true).add();
-        vl2.newLoad().setId("load5").setP0(37.0).setQ0(1.0).setBus(b2.getId()).add();
-        vl2.newLoad().setId("load6").setP0(13.0).setQ0(6.0).setBus(b2.getId()).add();
-        vl2.newLoad().setId("load7").setP0(7.0).setQ0(-4.0).setBus(b3.getId()).add();
-
-        network.newLine().setId("l1").setVoltageLevel1(vl1.getId()).setNode1(5).setVoltageLevel2(vl2.getId()).setBus2(b1.getId())
-                .setR(1).setX(3).setG1(0).setG2(0).setB1(0).setB2(0).add();
-        return network;
+    @Test
+    void mergeLoadsPpQp() throws IOException {
+        List<LoadState> loadStates = List.of(
+                new LoadState(36.1, 4.0, 36.0, 4.0),
+                new LoadState(10.1, 7.2, 10.3, 7.5));
+        Network network = TestNetworkFactory.createMultiLoadsBusesNetwork(loadStates);
+        compare("/mergedLoadsPpQp.xiidm", LoadsMerger.mergeLoads(network));
     }
 
-    private void compare(Network expected, Network actual) throws IOException {
-        Path pexpected = tmpDir.resolve("expected.xiidm");
-        assertNotNull(pexpected);
-        Path pactual = tmpDir.resolve("actual.xiidm");
-        assertNotNull(pactual);
-        NetworkXml.write(expected, pexpected);
-        actual.setCaseDate(expected.getCaseDate());
-        NetworkXml.write(actual, pactual);
-        compareTxt(Files.newInputStream(pexpected), Files.newInputStream(pactual));
+    @Test
+    void mergeLoadsPpQn() throws IOException {
+        List<LoadState> loadStates = List.of(
+                new LoadState(36.1, -4.0, 36.0, -4.0),
+                new LoadState(10.1, -7.2, 10.3, -7.5));
+        Network network = TestNetworkFactory.createMultiLoadsBusesNetwork(loadStates);
+        compare("/mergedLoadsPpQn.xiidm", LoadsMerger.mergeLoads(network));
+    }
+
+    @Test
+    void mergeLoadsPnQn() throws IOException {
+        List<LoadState> loadStates = List.of(
+                new LoadState(-36.1, -4.0, -36.0, -4.0),
+                new LoadState(-10.1, -7.2, -10.3, -7.5));
+        Network network = TestNetworkFactory.createMultiLoadsBusesNetwork(loadStates);
+        compare("/mergedLoadsPnQn.xiidm", LoadsMerger.mergeLoads(network));
+    }
+
+    @Test
+    void mergeLoadsPnQp() throws IOException {
+        List<LoadState> loadStates = List.of(
+                new LoadState(-36.1, 4.0, -36.0, 4.0),
+                new LoadState(-10.1, 7.2, -10.3, 7.5));
+        Network network = TestNetworkFactory.createMultiLoadsBusesNetwork(loadStates);
+        compare("/mergedLoadsPnQp.xiidm", LoadsMerger.mergeLoads(network));
+    }
+
+    @Test
+    void mergeThreeLoadsGroups() throws IOException {
+        List<LoadState> loadStates = List.of(
+                new LoadState(-36.1, 4.0, -36.0, 4.0),
+                new LoadState(36.1, -4.0, 36.0, -4.0),
+                new LoadState(-36.1, -4.0, -36.0, -4.0),
+                new LoadState(-10.1, 7.2, -10.3, 7.5),
+                new LoadState(10.1, -7.2, 10.3, -7.5),
+                new LoadState(-10.1, -7.2, -10.3, -7.5));
+        Network network = TestNetworkFactory.createMultiLoadsBusesNetwork(loadStates);
+        compare("/mergedThreeLoadsGroups.xiidm", LoadsMerger.mergeLoads(network));
+    }
+
+    @Test
+    void nonMergeableLoads() throws IOException {
+        List<LoadState> loadStates = List.of(
+                new LoadState(6.1, 1.0, 36.0, 2.0),
+                new LoadState(-3.3, 3.0, -26.0, 3.0),
+                new LoadState(36.1, -1.0, 16.0, -4.0),
+                new LoadState(-5.5, -2.0, -46.0, -5.0));
+        Network network = TestNetworkFactory.createMultiLoadsBusesNetwork(loadStates);
+        compare("/nonMergeableLoads.xiidm", LoadsMerger.mergeLoads(network));
     }
 }
