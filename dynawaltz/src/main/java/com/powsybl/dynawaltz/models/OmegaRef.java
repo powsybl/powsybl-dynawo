@@ -11,6 +11,7 @@ import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParametersDatabase;
 import com.powsybl.dynawaltz.models.buses.BusModel;
 import com.powsybl.dynawaltz.models.generators.GeneratorSynchronousModel;
+import com.powsybl.dynawaltz.models.utils.BusUtils;
 import com.powsybl.dynawaltz.xml.ParametersXml;
 import com.powsybl.iidm.network.Generator;
 import org.apache.commons.lang3.tuple.Pair;
@@ -111,7 +112,7 @@ public class OmegaRef extends AbstractPureDynamicBlackBoxModel {
         if (generator == null) {
             throw new PowsyblException("Generator " + generatorModel.getLib() + " not found in DynaWaltz context. Id : " + generatorModel.getDynamicModelId());
         }
-        return context.getDynamicModelOrDefaultBus(generator.getTerminal());
+        return context.getDynamicModelOrDefaultBus(BusUtils.getConnectableBusStaticId(generator));
     }
 
     @Override

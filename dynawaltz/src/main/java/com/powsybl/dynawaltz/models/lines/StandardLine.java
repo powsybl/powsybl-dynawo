@@ -7,6 +7,7 @@ import com.powsybl.dynawaltz.models.Model;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.VarMapping;
 import com.powsybl.dynawaltz.models.buses.BusModel;
+import com.powsybl.dynawaltz.models.utils.BusUtils;
 import com.powsybl.iidm.network.Branch;
 import com.powsybl.iidm.network.Line;
 
@@ -55,7 +56,7 @@ public class StandardLine extends AbstractBlackBoxModel implements LineModel {
             throw new PowsyblException("Line static id unknown: " + getStaticId());
         }
         List<Model> connectedBbm = new ArrayList<>(2);
-        line.getTerminals().forEach(t -> connectedBbm.add(context.getDynamicModelOrDefaultBus(t)));
+        line.getTerminals().forEach(t -> connectedBbm.add(context.getDynamicModelOrDefaultBus(BusUtils.getConnectableBusStaticId(t))));
         return connectedBbm;
     }
 

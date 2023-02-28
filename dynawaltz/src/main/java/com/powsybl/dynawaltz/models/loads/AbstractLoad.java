@@ -10,6 +10,7 @@ import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractBlackBoxModel;
 import com.powsybl.dynawaltz.models.Model;
+import com.powsybl.dynawaltz.models.utils.BusUtils;
 import com.powsybl.iidm.network.Load;
 
 import java.util.List;
@@ -31,6 +32,6 @@ public abstract class AbstractLoad extends AbstractBlackBoxModel {
         if (load == null) {
             throw new PowsyblException("Load static id unknown: " + staticId);
         }
-        return List.of(context.getDynamicModelOrDefaultBus(load.getTerminal()));
+        return List.of(context.getDynamicModelOrDefaultBus(BusUtils.getConnectableBusStaticId(load)));
     }
 }
