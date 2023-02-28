@@ -18,7 +18,6 @@ import com.powsybl.dynawaltz.models.utils.ConnectedModelTypes;
 import com.powsybl.dynawaltz.xml.MacroStaticReference;
 import com.powsybl.iidm.network.Branch;
 import com.powsybl.iidm.network.Network;
-import com.powsybl.iidm.network.Terminal;
 
 import java.nio.file.FileSystem;
 import java.nio.file.Path;
@@ -142,10 +141,6 @@ public class DynaWaltzContext {
             return (LineModel) bbm;
         }
         throw new PowsyblException("The model identified by the static id " + staticId + " is not a line model");
-    }
-
-    public BusModel getDynamicModelOrDefaultBus(Terminal terminal) {
-        return getDynamicModelOrDefaultBus(terminal.getBusBreakerView().getConnectableBus().getId());
     }
 
     public BusModel getDynamicModelOrDefaultBus(String staticId) {
