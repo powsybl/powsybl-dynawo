@@ -13,22 +13,11 @@ import com.powsybl.iidm.network.Branch;
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  */
 public interface LineModel extends Model {
-    String getIVarName();
+    String getIVarName(Branch.Side side);
 
     String getStateVarName();
 
     String getDesactivateCurrentLimitsVarName();
 
     String getStateValueVarName();
-
-    static String getSuffix(Branch.Side side) {
-        switch (side) {
-            case ONE:
-                return "Side1";
-            case TWO:
-                return "Side2";
-            default:
-                throw new AssertionError("Unexpected Side value: " + side);
-        }
-    }
 }

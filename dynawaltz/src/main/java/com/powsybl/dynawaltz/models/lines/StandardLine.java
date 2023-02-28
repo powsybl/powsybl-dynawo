@@ -8,21 +8,18 @@ import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.VarMapping;
 import com.powsybl.dynawaltz.models.buses.BusModel;
 import com.powsybl.dynawaltz.models.utils.BusUtils;
+import com.powsybl.dynawaltz.models.utils.LineSideUtils;
 import com.powsybl.iidm.network.Branch;
 import com.powsybl.iidm.network.Line;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class StandardLine extends AbstractBlackBoxModel implements LineModel {
 
-    private final String sidePostfix;
+    private final Map<String, Branch.Side> busSideConnection = new HashMap<>();
 
-    public StandardLine(String dynamicModelId, String staticId, String parameterSetId, Branch.Side side) {
+    public StandardLine(String dynamicModelId, String staticId, String parameterSetId) {
         super(dynamicModelId, staticId, parameterSetId);
-        this.sidePostfix = LineModel.getSuffix(side);
     }
 
     @Override
@@ -40,7 +37,7 @@ public class StandardLine extends AbstractBlackBoxModel implements LineModel {
         if (connected instanceof BusModel) {
             BusModel busModel = (BusModel) connected;
             return Arrays.asList(
-                    new VarConnection(getIVarName(), busModel.getNumCCVarName()),
+                    new VarConnection(getIVarName(busSideConnection.get(busModel.getStaticId().orElseThrow())), busModel.getNumCCVarName()),
                     new VarConnection(getStateVarName(), busModel.getTerminalVarName())
             );
         } else {
@@ -56,7 +53,11 @@ public class StandardLine extends AbstractBlackBoxModel implements LineModel {
             throw new PowsyblException("Line static id unknown: " + getStaticId());
         }
         List<Model> connectedBbm = new ArrayList<>(2);
-        line.getTerminals().forEach(t -> connectedBbm.add(context.getDynamicModelOrDefaultBus(BusUtils.getConnectableBusStaticId(t))));
+        line.getTerminals().forEach(t -> {
+            BusModel busModel = context.getDynamicModelOrDefaultBus(BusUtils.getConnectableBusStaticId(t));
+            busSideConnection.put(busModel.getStaticId().orElseThrow(), line.getSide(t));
+            connectedBbm.add(busModel);
+        });
         return connectedBbm;
     }
 
@@ -66,8 +67,8 @@ public class StandardLine extends AbstractBlackBoxModel implements LineModel {
     }
 
     @Override
-    public String getIVarName() {
-        return getDynamicModelId() + sidePostfix;
+    public String getIVarName(Branch.Side side) {
+        return getDynamicModelId() + LineSideUtils.getSuffix(side);
     }
 
     @Override

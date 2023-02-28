@@ -12,6 +12,7 @@ import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawaltz.models.Model;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.lines.LineModel;
+import com.powsybl.dynawaltz.models.utils.LineSideUtils;
 import com.powsybl.iidm.network.Branch;
 
 import java.util.Arrays;
@@ -38,8 +39,13 @@ public class CurrentLimitAutomaton extends AbstractPureDynamicBlackBoxModel {
     }
 
     @Override
+    public String getName() {
+        return getLib() + LineSideUtils.getSuffix(side);
+    }
+
+    @Override
     public List<Model> getModelsConnectedTo(DynaWaltzContext context) {
-        return List.of(context.getDynamicModelOrDefaultLine(lineStaticId, side));
+        return List.of(context.getDynamicModelOrDefaultLine(lineStaticId));
     }
 
     @Override
@@ -49,7 +55,7 @@ public class CurrentLimitAutomaton extends AbstractPureDynamicBlackBoxModel {
         }
         LineModel connectedLineModel = (LineModel) connected;
         return Arrays.asList(
-                new VarConnection("currentLimitAutomaton_IMonitored", connectedLineModel.getIVarName()),
+                new VarConnection("currentLimitAutomaton_IMonitored", connectedLineModel.getIVarName(side)),
                 new VarConnection("currentLimitAutomaton_order", connectedLineModel.getStateVarName()),
                 new VarConnection("currentLimitAutomaton_AutomatonExists", connectedLineModel.getDesactivateCurrentLimitsVarName())
         );

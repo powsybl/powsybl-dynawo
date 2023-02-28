@@ -87,7 +87,7 @@ public final class LoadsMerger {
     public static Map<LoadPowers, List<Load>> getLoadPowersGrouping(Bus bus) {
         EnumMap<LoadPowers, List<Load>> loadsGrouping = new EnumMap<>(LoadPowers.class);
         for (Load load : bus.getLoads()) {
-            loadsGrouping.computeIfAbsent(getLoadPowers(load), k ->  new ArrayList<>()).add(load);
+            loadsGrouping.computeIfAbsent(getLoadPowers(load), k -> new ArrayList<>()).add(load);
         }
         return loadsGrouping;
     }

@@ -12,7 +12,6 @@ import com.powsybl.dynawaltz.models.Model;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.lines.LineModel;
 import com.powsybl.dynawaltz.xml.ParametersXml;
-import com.powsybl.iidm.network.Branch;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -50,7 +49,7 @@ public class EventQuadripoleDisconnection extends AbstractEventModel {
 
     @Override
     public List<Model> getModelsConnectedTo(DynaWaltzContext context) {
-        return List.of(context.getDynamicModelOrDefaultLine(getEquipmentStaticId(), Branch.Side.ONE));
+        return List.of(context.getDynamicModelOrDefaultLine(getEquipmentStaticId()));
     }
 
     @Override
