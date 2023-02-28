@@ -16,7 +16,6 @@ import com.powsybl.dynawaltz.models.generators.GeneratorSynchronousModel;
 import com.powsybl.dynawaltz.models.lines.LineModel;
 import com.powsybl.dynawaltz.models.utils.ConnectedModelTypes;
 import com.powsybl.dynawaltz.xml.MacroStaticReference;
-import com.powsybl.iidm.network.Branch;
 import com.powsybl.iidm.network.Network;
 
 import java.nio.file.FileSystem;
@@ -132,10 +131,10 @@ public class DynaWaltzContext {
         return bbm;
     }
 
-    public LineModel getDynamicModelOrDefaultLine(String staticId, Branch.Side side) {
+    public LineModel getDynamicModelOrDefaultLine(String staticId) {
         BlackBoxModel bbm = staticIdBlackBoxModelMap.get(staticId);
         if (bbm == null) {
-            return networkModel.getDefaultLineModel(staticId, side);
+            return networkModel.getDefaultLineModel(staticId);
         }
         if (bbm instanceof LineModel) {
             return (LineModel) bbm;

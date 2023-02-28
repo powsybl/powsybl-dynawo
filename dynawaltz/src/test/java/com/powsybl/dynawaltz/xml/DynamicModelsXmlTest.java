@@ -11,7 +11,6 @@ import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
 import com.powsybl.dynawaltz.models.generators.GeneratorFictitious;
-import com.powsybl.iidm.network.Branch;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
@@ -80,7 +79,7 @@ class DynamicModelsXmlTest extends DynaWaltzTestUtil {
         assertEquals("The model identified by the static id GEN5 is not a bus model", e.getMessage());
 
         //line
-        e = assertThrows(PowsyblException.class, () -> dc.getDynamicModelOrDefaultLine("GEN5", Branch.Side.ONE));
+        e = assertThrows(PowsyblException.class, () -> dc.getDynamicModelOrDefaultLine("GEN5"));
         assertEquals("The model identified by the static id GEN5 is not a line model", e.getMessage());
     }
 }
