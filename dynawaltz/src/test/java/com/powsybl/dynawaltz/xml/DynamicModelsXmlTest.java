@@ -68,7 +68,7 @@ class DynamicModelsXmlTest extends DynaWaltzTestUtil {
     }
 
     @Test
-    public void testDynamicModelGetterException() {
+    void testDynamicModelGetterException() {
         DynaWaltzContext dc = new DynaWaltzContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, eventModels, curves, DynamicSimulationParameters.load(), DynaWaltzParameters.load());
 
         // dynamic model
