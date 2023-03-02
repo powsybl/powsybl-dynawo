@@ -10,22 +10,19 @@ package com.powsybl.dynawaltz.models.buses;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
-import com.powsybl.dynawaltz.models.Model;
-import com.powsybl.dynawaltz.models.VarConnection;
-import com.powsybl.dynawaltz.models.generators.GeneratorModel;
 import com.powsybl.iidm.network.Network;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
  * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
+ * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 class StandardBusTest {
 
@@ -37,29 +34,6 @@ class StandardBusTest {
     }
 
     @Test
-    void getVarConnectionsWithException() {
-        Model model = mock(Model.class);
-        PowsyblException e = assertThrows(PowsyblException.class, () -> standardBus.getVarConnectionsWith(model));
-        assertEquals("StandardBusModel can only connect to GeneratorModel", e.getMessage());
-    }
-
-    @Test
-    void getVarConnectionsWithGetValues() {
-        GeneratorModel generatorModel = mock(GeneratorModel.class);
-        List<VarConnection> varConnectionList = standardBus.getVarConnectionsWith(generatorModel);
-        assertNotNull(varConnectionList);
-        assertEquals(2, varConnectionList.size());
-
-        VarConnection firstVarConnection = varConnectionList.get(0);
-        assertEquals(firstVarConnection.getVar1(), standardBus.getTerminalVarName());
-        assertEquals(firstVarConnection.getVar2(), generatorModel.getTerminalVarName());
-
-        VarConnection secondVarConnection = varConnectionList.get(1);
-        assertEquals(secondVarConnection.getVar1(), standardBus.getSwitchOffSignalVarName());
-        assertEquals(secondVarConnection.getVar2(), generatorModel.getSwitchOffSignalNodeVarName());
-    }
-
-    @Test
     void getModelsConnectedToException() {
         DynaWaltzContext dynaWaltzContext = mock(DynaWaltzContext.class);
         Network network = mock(Network.class);
@@ -68,7 +42,7 @@ class StandardBusTest {
         when(network.getBusBreakerView()).thenReturn(busBreakerView);
         when(busBreakerView.getBus(anyString())).thenReturn(null);
 
-        PowsyblException e = assertThrows(PowsyblException.class, () -> standardBus.getModelsConnectedTo(dynaWaltzContext));
+        PowsyblException e = assertThrows(PowsyblException.class, () -> standardBus.createMacroConnections(dynaWaltzContext));
         assertEquals("Bus static id unknown: staticId", e.getMessage());
     }
 }

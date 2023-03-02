@@ -39,6 +39,7 @@ import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -56,8 +57,8 @@ class DynaWaltzGroovyDynamicModelsSupplierTest {
         fileSystem = Jimfs.newFileSystem(Configuration.unix());
         network = createEurostagTutorialExample1WithMoreGens();
 
-        Files.copy(getClass().getResourceAsStream("/dynamicModels.groovy"), fileSystem.getPath("/dynamicModels.groovy"));
-        Files.copy(getClass().getResourceAsStream("/models.par"), fileSystem.getPath("/models.par"));
+        Files.copy(Objects.requireNonNull(getClass().getResourceAsStream("/dynamicModels.groovy")), fileSystem.getPath("/dynamicModels.groovy"));
+        Files.copy(Objects.requireNonNull(getClass().getResourceAsStream("/models.par")), fileSystem.getPath("/models.par"));
     }
 
     @AfterEach
@@ -169,8 +170,7 @@ class DynaWaltzGroovyDynamicModelsSupplierTest {
         boolean isLineExtension = extension instanceof LineGroovyExtension;
         boolean isDynamicModelExtension = isLoadExtension || isGeneratorExtension || isBusExtension || isLineExtension;
 
-        boolean isCurrentLimitAutomatonExtension = extension instanceof CurrentLimitAutomatonGroovyExtension;
-        boolean isAutomatonExtension = isCurrentLimitAutomatonExtension;
+        boolean isAutomatonExtension = extension instanceof CurrentLimitAutomatonGroovyExtension;
 
         assertTrue(isDynamicModelExtension || isAutomatonExtension);
     }
@@ -214,25 +214,34 @@ class DynaWaltzGroovyDynamicModelsSupplierTest {
     }
 
     private void validateGeneratorSynchronous(GeneratorSynchronous generatorSynchronous) {
-        if (generatorSynchronous.getLib().equals("GeneratorSynchronousThreeWindingsProportionalRegulations")) {
-            Identifiable<?> identifiable = network.getIdentifiable(generatorSynchronous.getStaticId().orElse(null));
-            assertEquals("BBM_" + identifiable.getId(), generatorSynchronous.getDynamicModelId());
-            assertEquals("GSTWPR", generatorSynchronous.getParameterSetId());
-            assertTrue(identifiable instanceof Generator);
-        } else if (generatorSynchronous.getLib().equals("GeneratorSynchronousFourWindingsProportionalRegulations")) {
-            Identifiable<?> identifiable = network.getIdentifiable(generatorSynchronous.getStaticId().orElse(null));
-            assertEquals("BBM_" + identifiable.getId(), generatorSynchronous.getDynamicModelId());
-            assertEquals("GSFWPR", generatorSynchronous.getParameterSetId());
-            assertTrue(identifiable instanceof Generator);
-        } else if (generatorSynchronous.getLib().equals("GeneratorSynchronousThreeWindings")) {
-            Identifiable<?> identifiable = network.getIdentifiable(generatorSynchronous.getStaticId().orElse(null));
-            assertEquals("BBM_" + identifiable.getId(), generatorSynchronous.getDynamicModelId());
-            assertEquals("GSTW", generatorSynchronous.getParameterSetId());
-        } else if (generatorSynchronous.getLib().equals("GeneratorSynchronousFourWindings")) {
-            Identifiable<?> identifiable = network.getIdentifiable(generatorSynchronous.getStaticId().orElse(null));
-            assertEquals("BBM_" + identifiable.getId(), generatorSynchronous.getDynamicModelId());
-            assertEquals("GSFW", generatorSynchronous.getParameterSetId());
-            assertTrue(identifiable instanceof Generator);
+        switch (generatorSynchronous.getLib()) {
+            case "GeneratorSynchronousThreeWindingsProportionalRegulations": {
+                Identifiable<?> identifiable = network.getIdentifiable(generatorSynchronous.getStaticId().orElse(null));
+                assertEquals("BBM_" + identifiable.getId(), generatorSynchronous.getDynamicModelId());
+                assertEquals("GSTWPR", generatorSynchronous.getParameterSetId());
+                assertTrue(identifiable instanceof Generator);
+                break;
+            }
+            case "GeneratorSynchronousFourWindingsProportionalRegulations": {
+                Identifiable<?> identifiable = network.getIdentifiable(generatorSynchronous.getStaticId().orElse(null));
+                assertEquals("BBM_" + identifiable.getId(), generatorSynchronous.getDynamicModelId());
+                assertEquals("GSFWPR", generatorSynchronous.getParameterSetId());
+                assertTrue(identifiable instanceof Generator);
+                break;
+            }
+            case "GeneratorSynchronousThreeWindings": {
+                Identifiable<?> identifiable = network.getIdentifiable(generatorSynchronous.getStaticId().orElse(null));
+                assertEquals("BBM_" + identifiable.getId(), generatorSynchronous.getDynamicModelId());
+                assertEquals("GSTW", generatorSynchronous.getParameterSetId());
+                break;
+            }
+            case "GeneratorSynchronousFourWindings": {
+                Identifiable<?> identifiable = network.getIdentifiable(generatorSynchronous.getStaticId().orElse(null));
+                assertEquals("BBM_" + identifiable.getId(), generatorSynchronous.getDynamicModelId());
+                assertEquals("GSFW", generatorSynchronous.getParameterSetId());
+                assertTrue(identifiable instanceof Generator);
+                break;
+            }
         }
     }
 }

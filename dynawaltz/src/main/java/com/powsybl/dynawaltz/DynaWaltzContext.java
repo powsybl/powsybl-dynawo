@@ -11,12 +11,10 @@ import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.models.*;
-import com.powsybl.dynawaltz.models.buses.BusModel;
 import com.powsybl.dynawaltz.models.generators.GeneratorSynchronousModel;
-import com.powsybl.dynawaltz.models.lines.LineModel;
-import com.powsybl.dynawaltz.models.utils.ConnectedModelTypes;
 import com.powsybl.dynawaltz.xml.MacroStaticReference;
 import com.powsybl.iidm.network.Network;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.nio.file.FileSystem;
 import java.nio.file.Path;
@@ -28,6 +26,7 @@ import java.util.stream.Stream;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
+ * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 public class DynaWaltzContext {
 
@@ -41,10 +40,10 @@ public class DynaWaltzContext {
     private final Map<String, BlackBoxModel> staticIdBlackBoxModelMap;
     private final List<Curve> curves;
     private final Map<String, MacroStaticReference> macroStaticReferences = new LinkedHashMap<>();
-    private final Map<ConnectedModelTypes, MacroConnector> connectorsMap = new LinkedHashMap<>();
-    private final Map<ConnectedModelTypes, MacroConnector> eventConnectorsMap = new LinkedHashMap<>();
-    private final Map<BlackBoxModel, List<Model>> modelsConnections = new LinkedHashMap<>();
-    private final Map<BlackBoxModel, List<Model>> eventModelsConnections = new LinkedHashMap<>();
+    private final List<MacroConnect> macroConnectList = new ArrayList<>();
+    private final Map<String, MacroConnector> macroConnectorsMap = new LinkedHashMap<>();
+    private final List<MacroConnect> eventMacroConnectList = new ArrayList<>();
+    private final Map<String, MacroConnector> eventMacroConnectorsMap = new LinkedHashMap<>();
     private final NetworkModel networkModel = new NetworkModel();
 
     private final OmegaRef omegaRef;
@@ -76,26 +75,13 @@ public class DynaWaltzContext {
                 .collect(Collectors.toList());
         this.omegaRef = new OmegaRef(synchronousGenerators);
 
-        for (BlackBoxModel bbm : Stream.concat(dynamicModels.stream(), Stream.of(omegaRef)).collect(Collectors.toList())) {
+        for (BlackBoxModel bbm : getBlackBoxDynamicModelStream().collect(Collectors.toList())) {
             macroStaticReferences.computeIfAbsent(bbm.getName(), k -> new MacroStaticReference(k, bbm.getVarsMapping()));
-
-            List<Model> modelsConnected = bbm.getModelsConnectedTo(this);
-            modelsConnections.put(bbm, modelsConnected);
-
-            for (Model connectedBbm : modelsConnected) {
-                var key = ConnectedModelTypes.of(bbm.getName(), connectedBbm.getName());
-                connectorsMap.computeIfAbsent(key, k -> createMacroConnector(bbm, connectedBbm));
-            }
+            bbm.createMacroConnections(this);
         }
 
         for (BlackBoxModel bbem : eventModels) {
-            List<Model> modelsConnected = bbem.getModelsConnectedTo(this);
-            eventModelsConnections.put(bbem, modelsConnected);
-
-            for (Model connectedBbm : modelsConnected) {
-                var key = ConnectedModelTypes.of(bbem.getName(), connectedBbm.getName());
-                eventConnectorsMap.computeIfAbsent(key, k -> createMacroConnector(bbem, connectedBbm));
-            }
+            bbem.createMacroConnections(this);
         }
     }
 
@@ -123,34 +109,19 @@ public class DynaWaltzContext {
         return macroStaticReferences.values();
     }
 
-    public Model getDynamicModelOrThrows(String staticId) {
+    public <T extends Model> T getDynamicModel(String staticId, Class<T> clazz, boolean defaultIfNotFound) {
         BlackBoxModel bbm = staticIdBlackBoxModelMap.get(staticId);
         if (bbm == null) {
-            throw new PowsyblException("Cannot find the equipment '" + staticId + "' among the dynamic models provided");
+            if (defaultIfNotFound) {
+                return networkModel.getDefaultModel(staticId, clazz);
+            } else {
+                throw new PowsyblException("Cannot find the equipment '" + staticId + "' among the dynamic models provided");
+            }
         }
-        return bbm;
-    }
-
-    public LineModel getDynamicModelOrDefaultLine(String staticId) {
-        BlackBoxModel bbm = staticIdBlackBoxModelMap.get(staticId);
-        if (bbm == null) {
-            return networkModel.getDefaultLineModel(staticId);
+        if (clazz.isInstance(bbm)) {
+            return clazz.cast(bbm);
         }
-        if (bbm instanceof LineModel) {
-            return (LineModel) bbm;
-        }
-        throw new PowsyblException("The model identified by the static id " + staticId + " is not a line model");
-    }
-
-    public BusModel getDynamicModelOrDefaultBus(String staticId) {
-        BlackBoxModel bbm = staticIdBlackBoxModelMap.get(staticId);
-        if (bbm == null) {
-            return networkModel.getDefaultBusModel(staticId);
-        }
-        if (bbm instanceof BusModel) {
-            return (BusModel) bbm;
-        }
-        throw new PowsyblException("The model identified by the static id " + staticId + " is not a bus model");
+        throw new PowsyblException("The model identified by the static id " + staticId + " is not the correct model");
     }
 
     private BlackBoxModel mergeDuplicateStaticId(BlackBoxModel bbm1, BlackBoxModel bbm2) {
@@ -171,32 +142,40 @@ public class DynaWaltzContext {
         return eventModels;
     }
 
-    public Collection<MacroConnector> getMacroConnectors() {
-        return connectorsMap.values();
+    public void addMacroConnect(String macroConnectorId, List<Pair<String, String>> attributesFrom, List<Pair<String, String>> attributesTo) {
+        macroConnectList.add(new MacroConnect(macroConnectorId, attributesFrom, attributesTo));
     }
 
-    public MacroConnector getMacroConnector(Model model1, Model model2) {
-        return connectorsMap.get(ConnectedModelTypes.of(model1.getName(), model2.getName()));
+    public List<MacroConnect> getMacroConnectList() {
+        return macroConnectList;
+    }
+
+    public void addMacroConnector(String macroConId, List<VarConnection> varConnections) {
+        macroConnectorsMap.computeIfAbsent(macroConId, k -> new MacroConnector(macroConId, varConnections));
+    }
+
+    public Collection<MacroConnector> getMacroConnectors() {
+        return macroConnectorsMap.values();
+    }
+
+    public void addEventMacroConnect(String macroConnectorId, List<Pair<String, String>> attributesFrom, List<Pair<String, String>> attributesTo) {
+        eventMacroConnectList.add(new MacroConnect(macroConnectorId, attributesFrom, attributesTo));
+    }
+
+    public List<MacroConnect> getEventMacroConnectList() {
+        return eventMacroConnectList;
+    }
+
+    public void addEventMacroConnector(String macroConId, List<VarConnection> varConnections) {
+        eventMacroConnectorsMap.computeIfAbsent(macroConId, k -> new MacroConnector(macroConId, varConnections));
     }
 
     public Collection<MacroConnector> getEventMacroConnectors() {
-        return eventConnectorsMap.values();
+        return eventMacroConnectorsMap.values();
     }
 
-    public MacroConnector getEventMacroConnector(BlackBoxModel event, Model model) {
-        return eventConnectorsMap.get(ConnectedModelTypes.of(event.getName(), model.getName()));
-    }
-
-    private MacroConnector createMacroConnector(BlackBoxModel bbm, Model model) {
-        return new MacroConnector(bbm.getName(), model.getName(), bbm.getVarConnectionsWith(model));
-    }
-
-    public Map<BlackBoxModel, List<Model>> getModelsConnections() {
-        return modelsConnections;
-    }
-
-    public Map<BlackBoxModel, List<Model>> getEventModelsConnections() {
-        return eventModelsConnections;
+    public boolean isWithoutBlackBoxDynamicModel(String staticId) {
+        return getInputBlackBoxDynamicModelStream().noneMatch(d -> staticId.equals(d.getStaticId().orElseThrow()));
     }
 
     private Stream<BlackBoxModel> getInputBlackBoxDynamicModelStream() {
