@@ -6,10 +6,8 @@
  */
 package com.powsybl.dynawaltz.models.automatons;
 
-import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
-import com.powsybl.dynawaltz.models.Model;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.lines.LineModel;
 import com.powsybl.dynawaltz.models.utils.LineSideUtils;
@@ -21,6 +19,7 @@ import java.util.Objects;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
+ * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 public class CurrentLimitAutomaton extends AbstractPureDynamicBlackBoxModel {
 
@@ -44,20 +43,15 @@ public class CurrentLimitAutomaton extends AbstractPureDynamicBlackBoxModel {
     }
 
     @Override
-    public List<Model> getModelsConnectedTo(DynaWaltzContext context) {
-        return List.of(context.getDynamicModelOrDefaultLine(lineStaticId));
+    public void createMacroConnections(DynaWaltzContext context) {
+        createMacroConnections(lineStaticId, LineModel.class, true, this::getVarConnectionsWithLine, context);
     }
 
-    @Override
-    public List<VarConnection> getVarConnectionsWith(Model connected) {
-        if (!(connected instanceof LineModel)) {
-            throw new PowsyblException("CurrentLimitAutomaton can only connect to LineModel");
-        }
-        LineModel connectedLineModel = (LineModel) connected;
+    private List<VarConnection> getVarConnectionsWithLine(LineModel connected) {
         return Arrays.asList(
-                new VarConnection("currentLimitAutomaton_IMonitored", connectedLineModel.getIVarName(side)),
-                new VarConnection("currentLimitAutomaton_order", connectedLineModel.getStateVarName()),
-                new VarConnection("currentLimitAutomaton_AutomatonExists", connectedLineModel.getDesactivateCurrentLimitsVarName())
+                new VarConnection("currentLimitAutomaton_IMonitored", connected.getIVarName(side)),
+                new VarConnection("currentLimitAutomaton_order", connected.getStateVarName()),
+                new VarConnection("currentLimitAutomaton_AutomatonExists", connected.getDesactivateCurrentLimitsVarName())
         );
     }
 

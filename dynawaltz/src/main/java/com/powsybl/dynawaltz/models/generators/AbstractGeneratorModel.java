@@ -9,7 +9,6 @@ package com.powsybl.dynawaltz.models.generators;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractBlackBoxModel;
-import com.powsybl.dynawaltz.models.Model;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.VarMapping;
 import com.powsybl.dynawaltz.models.buses.BusModel;
@@ -22,6 +21,7 @@ import java.util.Objects;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
+ * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 public abstract class AbstractGeneratorModel extends AbstractBlackBoxModel implements GeneratorModel {
 
@@ -54,24 +54,19 @@ public abstract class AbstractGeneratorModel extends AbstractBlackBoxModel imple
     }
 
     @Override
-    public List<Model> getModelsConnectedTo(DynaWaltzContext context) {
+    public void createMacroConnections(DynaWaltzContext context) {
         String staticId = getStaticId().orElse(null); // cannot be empty as checked in constructor
         Generator generator = context.getNetwork().getGenerator(staticId);
         if (generator == null) {
             throw new PowsyblException("Generator static id unknown: " + staticId);
         }
-        return List.of(context.getDynamicModelOrDefaultBus(BusUtils.getConnectableBusStaticId(generator)));
+        createMacroConnections(BusUtils.getConnectableBusStaticId(generator), BusModel.class, true, this::getVarConnectionsWithBus, context);
     }
 
-    @Override
-    public List<VarConnection> getVarConnectionsWith(Model connected) {
-        if (!(connected instanceof BusModel)) {
-            throw new PowsyblException("GeneratorModel can only connect to BusModel");
-        }
-        BusModel connectedBusModel = (BusModel) connected;
+    private List<VarConnection> getVarConnectionsWithBus(BusModel connected) {
         return Arrays.asList(
-                new VarConnection(getTerminalVarName(), connectedBusModel.getTerminalVarName()),
-                new VarConnection(getSwitchOffSignalNodeVarName(), connectedBusModel.getSwitchOffSignalVarName())
+                new VarConnection(getTerminalVarName(), connected.getTerminalVarName()),
+                new VarConnection(getSwitchOffSignalNodeVarName(), connected.getSwitchOffSignalVarName())
         );
     }
 

@@ -6,8 +6,6 @@
  */
 package com.powsybl.dynawaltz.models.loads;
 
-import com.powsybl.commons.PowsyblException;
-import com.powsybl.dynawaltz.models.Model;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.VarMapping;
 import com.powsybl.dynawaltz.models.buses.BusModel;
@@ -17,6 +15,7 @@ import java.util.List;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
+ * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 public class LoadAlphaBeta extends AbstractLoad {
 
@@ -40,14 +39,10 @@ public class LoadAlphaBeta extends AbstractLoad {
     }
 
     @Override
-    public List<VarConnection> getVarConnectionsWith(Model connected) {
-        if (!(connected instanceof BusModel)) {
-            throw new PowsyblException("LoadAlphaBeta can only connect to BusModel");
-        }
-        BusModel connectedBusModel = (BusModel) connected;
+    protected List<VarConnection> getVarConnectionsWithBus(BusModel connected) {
         return Arrays.asList(
-                new VarConnection("load_terminal", connectedBusModel.getTerminalVarName()),
-                new VarConnection("load_switchOffSignal1", connectedBusModel.getSwitchOffSignalVarName())
+                new VarConnection("load_terminal", connected.getTerminalVarName()),
+                new VarConnection("load_switchOffSignal1", connected.getSwitchOffSignalVarName())
         );
     }
 }

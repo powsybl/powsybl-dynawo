@@ -10,25 +10,22 @@ package com.powsybl.dynawaltz.models.buses;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractBlackBoxModel;
-import com.powsybl.dynawaltz.models.Model;
 import com.powsybl.dynawaltz.models.VarConnection;
-import com.powsybl.dynawaltz.models.VarMapping;
 import com.powsybl.dynawaltz.models.generators.GeneratorModel;
 import com.powsybl.iidm.network.Bus;
+import com.powsybl.iidm.network.Identifiable;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
-
 /**
  * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
+ * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 public class StandardBus extends AbstractBlackBoxModel implements BusModel {
 
@@ -42,17 +39,9 @@ public class StandardBus extends AbstractBlackBoxModel implements BusModel {
     }
 
     @Override
-    public List<VarMapping> getVarsMapping() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public void write(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
-        writer.writeStartElement(DYN_URI, "blackBoxModel");
+    protected void writeDynamicAttributes(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
         writer.writeAttribute("id", getDynamicModelId());
         writer.writeAttribute("lib", getLib());
-        writer.writeAttribute("staticId", getStaticId().orElse(null));
-        writer.writeEndElement();
     }
 
     @Override
@@ -62,26 +51,27 @@ public class StandardBus extends AbstractBlackBoxModel implements BusModel {
         return attributesConnectTo;
     }
 
-    @Override
-    public List<VarConnection> getVarConnectionsWith(Model connected) {
-        if (!(connected instanceof GeneratorModel)) {
-            throw new PowsyblException("StandardBusModel can only connect to GeneratorModel");
-        }
-        GeneratorModel connectedGeneratorModel = (GeneratorModel) connected;
+    public List<VarConnection> getVarConnectionsWithGenerator(GeneratorModel connected) {
         return Arrays.asList(
-                new VarConnection(getTerminalVarName(), connectedGeneratorModel.getTerminalVarName()),
-                new VarConnection(getSwitchOffSignalVarName(), connectedGeneratorModel.getSwitchOffSignalNodeVarName())
+                new VarConnection(getTerminalVarName(), connected.getTerminalVarName()),
+                new VarConnection(getSwitchOffSignalVarName(), connected.getSwitchOffSignalNodeVarName())
         );
     }
 
+    /**
+     * Creates connections only with generators without a dynamic model
+     */
     @Override
-    public List<Model> getModelsConnectedTo(DynaWaltzContext context) {
+    public void createMacroConnections(DynaWaltzContext context) {
         String staticId = getStaticId().orElse(null);
         Bus bus = context.getNetwork().getBusBreakerView().getBus(staticId);
         if (bus == null) {
             throw new PowsyblException("Bus static id unknown: " + staticId);
         }
-        return bus.getGeneratorStream().map(g -> context.getDynamicModelOrThrows(g.getId())).collect(Collectors.toList());
+        List<String> staticIds = bus.getGeneratorStream().map(Identifiable::getId).filter(context::isWithoutBlackBoxDynamicModel).collect(Collectors.toList());
+        if (!staticIds.isEmpty()) {
+            createMacroConnectionsWithIndex1(staticIds, GeneratorModel.class, false, this::getVarConnectionsWithGenerator, context);
+        }
     }
 
     @Override
