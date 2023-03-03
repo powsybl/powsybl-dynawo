@@ -175,7 +175,7 @@ public class DynaWaltzContext {
     }
 
     public boolean isWithoutBlackBoxDynamicModel(String staticId) {
-        return getInputBlackBoxDynamicModelStream().noneMatch(d -> staticId.equals(d.getStaticId().orElseThrow()));
+        return !staticIdBlackBoxModelMap.containsKey(staticId);
     }
 
     private Stream<BlackBoxModel> getInputBlackBoxDynamicModelStream() {
