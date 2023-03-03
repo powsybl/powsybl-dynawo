@@ -10,8 +10,6 @@ package com.powsybl.dynawaltz.models.buses;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractBlackBoxModel;
-import com.powsybl.dynawaltz.models.VarConnection;
-import com.powsybl.dynawaltz.models.generators.GeneratorModel;
 import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.Identifiable;
 import org.apache.commons.lang3.tuple.Pair;
@@ -19,9 +17,8 @@ import org.apache.commons.lang3.tuple.Pair;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
@@ -51,27 +48,27 @@ public class StandardBus extends AbstractBlackBoxModel implements BusModel {
         return attributesConnectTo;
     }
 
-    public List<VarConnection> getVarConnectionsWithGenerator(GeneratorModel connected) {
-        return Arrays.asList(
-                new VarConnection(getTerminalVarName(), connected.getTerminalVarName()),
-                new VarConnection(getSwitchOffSignalVarName(), connected.getSwitchOffSignalNodeVarName())
-        );
-    }
-
-    /**
-     * Creates connections only with generators without a dynamic model
-     */
     @Override
     public void createMacroConnections(DynaWaltzContext context) {
+        // Buses with a dynamical model can only connect to equipment with a dynamic model
         String staticId = getStaticId().orElse(null);
         Bus bus = context.getNetwork().getBusBreakerView().getBus(staticId);
         if (bus == null) {
             throw new PowsyblException("Bus static id unknown: " + staticId);
         }
-        List<String> staticIds = bus.getGeneratorStream().map(Identifiable::getId).filter(context::isWithoutBlackBoxDynamicModel).collect(Collectors.toList());
-        if (!staticIds.isEmpty()) {
-            createMacroConnectionsWithIndex1(staticIds, GeneratorModel.class, false, this::getVarConnectionsWithGenerator, context);
-        }
+        checkLinkedDynamicModels(bus.getGeneratorStream(), "generator", context);
+        checkLinkedDynamicModels(bus.getLineStream(), "line", context);
+        checkLinkedDynamicModels(bus.getLoadStream(), "load", context);
+    }
+
+    private <T extends Identifiable<T>> void checkLinkedDynamicModels(Stream<T> stream, String equipmentName, DynaWaltzContext context) {
+        stream.map(Identifiable::getId)
+                .filter(context::isWithoutBlackBoxDynamicModel)
+                .findAny()
+                .ifPresent(id -> {
+                    throw new PowsyblException(String.format("The %s %s linked to the standard bus %s does not possess a dynamic model",
+                            equipmentName, id, getStaticId().orElse(null)));
+                });
     }
 
     @Override
