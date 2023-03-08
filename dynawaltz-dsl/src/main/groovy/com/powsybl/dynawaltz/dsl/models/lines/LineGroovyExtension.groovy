@@ -13,7 +13,6 @@ import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractDynamicModelBuilder
 import com.powsybl.dynawaltz.dsl.AbstractPowsyblDynawoGroovyExtension
 import com.powsybl.dynawaltz.models.lines.StandardLine
-import com.powsybl.iidm.network.Branch
 
 /**
  * An implementation of {@link DynamicModelGroovyExtension} that adds the <pre>Line</pre> keyword to the DSL
@@ -34,20 +33,10 @@ class LineGroovyExtension extends AbstractPowsyblDynawoGroovyExtension<DynamicMo
 
     static class LineBuilder extends AbstractDynamicModelBuilder {
 
-        Branch.Side side
-
-        LineBuilder() {
-            side = Branch.Side.ONE
-        }
-
-        void side(Branch.Side side) {
-            this.side = side
-        }
-
         @Override
         StandardLine build() {
             checkData()
-            new StandardLine(dynamicModelId, staticId, parameterSetId, side)
+            new StandardLine(dynamicModelId, staticId, parameterSetId)
         }
     }
 }

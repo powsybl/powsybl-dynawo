@@ -8,11 +8,9 @@ package com.powsybl.dynawaltz.models;
 
 import com.powsybl.dynawaltz.models.buses.DefaultBusModel;
 import com.powsybl.dynawaltz.models.lines.DefaultLineModel;
-import com.powsybl.iidm.network.Branch;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
@@ -23,13 +21,13 @@ public class NetworkModel {
     private final Map<String, DefaultBusModel> defaultBusModelMap = new HashMap<>();
     private final Map<String, DefaultLineModel> defaultLineModelMap = new HashMap<>();
     private final Function<String, DefaultBusModel> busModelFactory = DefaultBusModel::new;
-    private final BiFunction<String, Branch.Side, DefaultLineModel> lineModelFactory = DefaultLineModel::new;
+    private final Function<String, DefaultLineModel> lineModelFactory = DefaultLineModel::new;
 
     public DefaultBusModel getDefaultBusModel(String staticId) {
         return defaultBusModelMap.computeIfAbsent(staticId, key -> busModelFactory.apply(staticId));
     }
 
-    public DefaultLineModel getDefaultLineModel(String staticId, Branch.Side side) {
-        return defaultLineModelMap.computeIfAbsent(staticId, key -> lineModelFactory.apply(staticId, side));
+    public DefaultLineModel getDefaultLineModel(String staticId) {
+        return defaultLineModelMap.computeIfAbsent(staticId, key -> lineModelFactory.apply(staticId));
     }
 }
