@@ -53,7 +53,7 @@ public class StandardLine extends AbstractBlackBoxModel implements LineModel {
         String staticId = getStaticId().orElse(null);
         Line line = context.getNetwork().getLine(staticId);
         if (line == null) {
-            throw new PowsyblException("Line static id unknown: " + getStaticId());
+            throw new PowsyblException("Line static id unknown: " + staticId);
         }
         List<Model> connectedBbm = new ArrayList<>(2);
         line.getTerminals().forEach(t -> connectedBbm.add(context.getDynamicModelOrDefaultBus(BusUtils.getConnectableBusStaticId(t))));
