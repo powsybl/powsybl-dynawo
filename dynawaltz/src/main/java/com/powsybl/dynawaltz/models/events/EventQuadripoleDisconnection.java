@@ -8,12 +8,10 @@ package com.powsybl.dynawaltz.models.events;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
-import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.Model;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.lines.LineModel;
 import com.powsybl.dynawaltz.xml.ParametersXml;
-import com.powsybl.iidm.network.Branch;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -26,14 +24,12 @@ import static com.powsybl.dynawaltz.DynaWaltzParametersDatabase.ParameterType.BO
  */
 public class EventQuadripoleDisconnection extends AbstractEventModel {
 
-    private final String lineStaticId;
     private final boolean disconnectOrigin;
     private final boolean disconnectExtremity;
 
-    public EventQuadripoleDisconnection(String eventModelId, String staticId, double startTime,
+    public EventQuadripoleDisconnection(String eventModelId, String lineStaticId, double startTime,
                                         boolean disconnectOrigin, boolean disconnectExtremity) {
-        super(eventModelId, startTime);
-        this.lineStaticId = staticId;
+        super(eventModelId, lineStaticId, startTime);
         this.disconnectOrigin = disconnectOrigin;
         this.disconnectExtremity = disconnectExtremity;
     }
@@ -53,15 +49,7 @@ public class EventQuadripoleDisconnection extends AbstractEventModel {
 
     @Override
     public List<Model> getModelsConnectedTo(DynaWaltzContext context) {
-        BlackBoxModel connectedBbm = context.getStaticIdBlackBoxModelMap().get(lineStaticId);
-        if (connectedBbm == null) {
-            return List.of(context.getNetworkModel().getDefaultLineModel(lineStaticId, Branch.Side.ONE));
-        }
-        return List.of(connectedBbm);
-    }
-
-    public String getLineStaticId() {
-        return lineStaticId;
+        return List.of(context.getDynamicModelOrDefaultLine(getEquipmentStaticId()));
     }
 
     @Override

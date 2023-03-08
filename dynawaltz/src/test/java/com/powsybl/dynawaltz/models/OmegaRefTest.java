@@ -10,37 +10,37 @@ package com.powsybl.dynawaltz.models;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.models.buses.BusModel;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.xml.stream.XMLStreamException;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
 /**
  * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
  */
-public class OmegaRefTest {
+class OmegaRefTest {
 
     private OmegaRef omegaRef;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         omegaRef = new OmegaRef(Collections.emptyList());
     }
 
-    @Test(expected = PowsyblException.class)
-    public void getVarConnectionsWithException() {
+    @Test
+    void getVarConnectionsWithException() {
         Model model = mock(Model.class);
-        omegaRef.getVarConnectionsWith(model);
+        PowsyblException e = assertThrows(PowsyblException.class, () -> omegaRef.getVarConnectionsWith(model));
+        assertEquals("OmegaRef can only connect to GeneratorModel and BusModel", e.getMessage());
     }
 
     @Test
-    public void getVarConnectionsWithVarConnectionBus() {
+    void getVarConnectionsWithVarConnectionBus() {
         BusModel busModel = mock(BusModel.class);
         List<VarConnection> varConnectionList = omegaRef.getVarConnectionsWith(busModel);
         assertNotNull(varConnectionList);
@@ -50,9 +50,10 @@ public class OmegaRefTest {
         assertEquals(busModel.getNumCCVarName(), varConnection.getVar2());
     }
 
-    @Test(expected = PowsyblException.class)
-    public void writeMacroConnectException() throws XMLStreamException {
+    @Test
+    void writeMacroConnectException() throws XMLStreamException {
         Model model = mock(Model.class);
-        omegaRef.writeMacroConnect(null, null, null, model);
+        PowsyblException e = assertThrows(PowsyblException.class, () -> omegaRef.writeMacroConnect(null, null, null, model));
+        assertEquals("OmegaRef can only connect to GeneratorSynchronousModel and BusModel", e.getMessage());
     }
 }

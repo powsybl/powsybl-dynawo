@@ -17,8 +17,8 @@ import com.powsybl.iidm.xml.NetworkXml;
 import com.powsybl.loadflow.LoadFlow;
 import com.powsybl.loadflow.LoadFlowParameters;
 import com.powsybl.loadflow.LoadFlowResult;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,18 +33,18 @@ import java.util.concurrent.ForkJoinPool;
 
 import static com.powsybl.commons.test.ComparisonUtils.compareXml;
 import static com.powsybl.dynaflow.DynaFlowConstants.*;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Guillaume Pernin <guillaume.pernin at rte-france.com>
  */
-public class DynaFlowProviderTest extends AbstractConverterTest {
+class DynaFlowProviderTest extends AbstractConverterTest {
 
     private Path homeDir;
     private DynaFlowConfig config;
     private DynaFlowProvider provider;
 
-    @Before
+    @BeforeEach
     public void setUp() throws IOException {
         super.setUp();
         homeDir = fileSystem.getPath("/home/dynaflow");
@@ -53,7 +53,7 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
     }
 
     @Test
-    public void checkVersionCommand() {
+    void checkVersionCommand() {
         String program = homeDir.resolve("dynaflow-launcher.sh").toString();
         String versionCommand = DynaFlowProvider.getVersionCommand(config).toString(0);
         String expectedVersionCommand = "[" + program + ", --version]";
@@ -61,7 +61,7 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
     }
 
     @Test
-    public void checkExecutionCommand() {
+    void checkExecutionCommand() {
         String program = homeDir.resolve("dynaflow-launcher.sh").toString();
         String executionCommand = DynaFlowProvider.getCommand(config).toString(0);
         String expectedExecutionCommand = "[" + program + ", --network, " + IIDM_FILENAME + ", --config, " + CONFIG_FILENAME + "]";
@@ -116,7 +116,7 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
     }
 
     @Test
-    public void testWithoutMergeLoads() throws Exception {
+    void testWithoutMergeLoads() throws Exception {
         Network network = createTestNetwork();
         LoadFlow.Runner dynaFlowSimulation = LoadFlow.find();
         LoadFlowParameters params = LoadFlowParameters.load();
@@ -139,7 +139,7 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
     }
 
     @Test
-    public void testWithMergeLoads() throws Exception {
+    void testWithMergeLoads() throws Exception {
         Network network = createTestNetwork();
         LoadFlow.Runner dynaFlowSimulation = LoadFlow.find();
         LoadFlowParameters params = LoadFlowParameters.load();
@@ -160,7 +160,7 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
     }
 
     @Test
-    public void testFail() throws Exception {
+    void testFail() throws Exception {
         Network network = Network.create("empty", "test");
         LoadFlow.Runner dynaFlowSimulation = LoadFlow.find();
         LoadFlowParameters params = LoadFlowParameters.load();
@@ -175,18 +175,19 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
     }
 
     @Test
-    public void testCallingBadVersionDynawo() throws Exception {
+    void testCallingBadVersionDynaFlow() throws Exception {
         Network network = Network.create("empty", "test");
         LoadFlow.Runner dynaFlowSimulation = LoadFlow.find();
         LoadFlowParameters params = LoadFlowParameters.load();
 
         LocalCommandExecutor commandExecutor = new EmptyLocalCommandExecutorMock("/dynawo_bad_version.out");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
-        assertThrows(PowsyblException.class, () -> dynaFlowSimulation.run(network, computationManager, params));
+        PowsyblException e = assertThrows(PowsyblException.class, () -> dynaFlowSimulation.run(network, computationManager, params));
+        assertEquals("DynaFlow version not supported. Must be >= 1.3.0", e.getMessage());
     }
 
     @Test
-    public void testUpdateSpecificParameters() {
+    void testUpdateSpecificParameters() {
         Map<String, String> properties = Map.of(
                 "svcRegulationOn", "true",
                 "shuntRegulationOn", "true",

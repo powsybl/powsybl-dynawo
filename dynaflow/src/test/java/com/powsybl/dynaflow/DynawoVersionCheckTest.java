@@ -16,9 +16,9 @@ import com.powsybl.computation.local.LocalCommandExecutor;
 import com.powsybl.computation.local.LocalComputationConfig;
 import com.powsybl.computation.local.LocalComputationManager;
 import com.powsybl.dynawo.commons.DynawoUtil;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.io.IOException;
@@ -31,13 +31,13 @@ import java.util.Objects;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.ForkJoinPool;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
  * @author Guillaume Pernin <guillaume.pernin at rte-france.com>
  */
-public class DynawoVersionCheckTest {
+class DynawoVersionCheckTest {
 
     private FileSystem fileSystem;
     private final ExecutionEnvironment env = Mockito.mock(ExecutionEnvironment.class);
@@ -65,45 +65,39 @@ public class DynawoVersionCheckTest {
         }
     }
 
-    private static class EmptyCommandExecutorMock extends AbstractLocalCommandExecutor {
-
-        public EmptyCommandExecutorMock() {
-        }
-
-        @Override
-        public int execute(String program, List<String> args, Path outFile, Path errFile, Path workingDir, Map<String, String> env) {
-            return 0;
-        }
-    }
-
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         fileSystem = Jimfs.newFileSystem(Configuration.unix());
     }
 
-    @After
-    public void tearDown() throws IOException {
+    @AfterEach
+    void tearDown() throws IOException {
         fileSystem.close();
     }
 
     @Test
-    public void versionTest() throws IOException {
+    void versionTest() throws IOException {
         LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynawo_version.out");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
         assertTrue(DynawoUtil.checkDynawoVersion(env, computationManager, versionCmd, true));
     }
 
     @Test
-    public void badVersionTest() throws IOException {
+    void badVersionTest() throws IOException {
         LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynawo_bad_version.out");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
         assertFalse(DynawoUtil.checkDynawoVersion(env, computationManager, versionCmd, true));
     }
 
     @Test
-    public void versionTestNotExistingFile() throws IOException {
-        LocalCommandExecutor commandExecutor = new EmptyCommandExecutorMock();
+    void versionTestNotExistingFile() throws IOException {
+        Command badVersionCmd = new SimpleCommandBuilder()
+                .id("does_not_exist")
+                .program("dummy")
+                .build();
+        LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynaflow_version.out");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
-        assertThrows(CompletionException.class, () -> DynawoUtil.checkDynawoVersion(env, computationManager, versionCmd, true));
+        CompletionException e = assertThrows(CompletionException.class, () -> DynawoUtil.checkDynawoVersion(env, computationManager, badVersionCmd, true));
+        assertEquals("com.powsybl.commons.PowsyblException: No output for DynaFlow version command", e.getMessage());
     }
 }

@@ -34,9 +34,9 @@ import com.powsybl.security.extensions.CurrentExtension;
 import com.powsybl.security.interceptors.SecurityAnalysisInterceptor;
 import com.powsybl.security.results.PostContingencyResult;
 import com.powsybl.security.strategy.OperatorStrategy;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +45,9 @@ import org.xmlunit.builder.Input;
 import org.xmlunit.diff.Diff;
 
 import javax.xml.transform.Source;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
@@ -57,12 +59,12 @@ import java.util.Objects;
 import java.util.concurrent.ForkJoinPool;
 
 import static com.powsybl.dynaflow.DynaFlowConstants.*;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class DynaFlowSecurityAnalysisTest {
+class DynaFlowSecurityAnalysisTest {
 
     private static final String SECURITY_ANALYSIS_RESULTS_FILENAME = "securityAnalysisResults.json";
 
@@ -78,14 +80,14 @@ public class DynaFlowSecurityAnalysisTest {
         }
     }
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         fileSystem = Jimfs.newFileSystem(Configuration.unix());
         platformConfig = new InMemoryPlatformConfig(fileSystem);
     }
 
-    @After
-    public void tearDown() throws IOException {
+    @AfterEach
+    void tearDown() throws IOException {
         fileSystem.close();
     }
 
@@ -119,13 +121,13 @@ public class DynaFlowSecurityAnalysisTest {
     }
 
     @Test
-    public void testDefaultProvider() {
+    void testDefaultProvider() {
         SecurityAnalysis.Runner dynawoSecurityAnalysisRunner = SecurityAnalysis.find();
         assertEquals(DYNAFLOW_NAME, dynawoSecurityAnalysisRunner.getName());
     }
 
     @Test
-    public void test() throws IOException {
+    void test() throws IOException {
         Network network = EurostagTutorialExample1Factory.create();
         ((Bus) network.getIdentifiable("NHV1")).setV(380.0);
         ((Bus) network.getIdentifiable("NHV2")).setV(380.0);
@@ -281,7 +283,7 @@ public class DynaFlowSecurityAnalysisTest {
     }
 
     @Test
-    public void testSecurityAnalysisOutputs() throws IOException {
+    void testSecurityAnalysisOutputs() throws IOException {
         Path workingDir = Files.createDirectory(fileSystem.getPath("SmallBusBranch"));
 
         // Load network

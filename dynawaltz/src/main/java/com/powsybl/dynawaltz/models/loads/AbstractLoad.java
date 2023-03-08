@@ -9,8 +9,8 @@ package com.powsybl.dynawaltz.models.loads;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractBlackBoxModel;
-import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.Model;
+import com.powsybl.dynawaltz.models.utils.BusUtils;
 import com.powsybl.iidm.network.Load;
 
 import java.util.List;
@@ -32,11 +32,6 @@ public abstract class AbstractLoad extends AbstractBlackBoxModel {
         if (load == null) {
             throw new PowsyblException("Load static id unknown: " + staticId);
         }
-        String connectedStaticId = load.getTerminal().getBusBreakerView().getConnectableBus().getId();
-        BlackBoxModel connectedBbm = context.getStaticIdBlackBoxModelMap().get(connectedStaticId);
-        if (connectedBbm == null) {
-            return List.of(context.getNetworkModel().getDefaultBusModel(connectedStaticId));
-        }
-        return List.of(connectedBbm);
+        return List.of(context.getDynamicModelOrDefaultBus(BusUtils.getConnectableBusStaticId(load)));
     }
 }

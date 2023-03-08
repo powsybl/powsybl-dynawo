@@ -9,7 +9,7 @@ package com.powsybl.dynawaltz.xml;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
 import javax.xml.stream.XMLStreamException;
@@ -18,10 +18,10 @@ import java.io.IOException;
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class CurvesXmlTest extends DynaWaltzTestUtil {
+class CurvesXmlTest extends DynaWaltzTestUtil {
 
     @Test
-    public void writeCurve() throws SAXException, IOException, XMLStreamException {
+    void writeCurve() throws SAXException, IOException, XMLStreamException {
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynaWaltzParameters dynawoParameters = DynaWaltzParameters.load();
         DynaWaltzContext context = new DynaWaltzContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, eventModels, curves, parameters, dynawoParameters);

@@ -14,43 +14,45 @@ import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension;
 import com.powsybl.dynamicsimulation.groovy.GroovyDynamicModelsSupplier;
 import com.powsybl.dynamicsimulation.groovy.GroovyExtension;
 import com.powsybl.dynawaltz.DynaWaltzProvider;
+import com.powsybl.dynawaltz.dsl.automatons.CurrentLimitAutomatonGroovyExtension;
 import com.powsybl.dynawaltz.dsl.models.buses.BusGroovyExtension;
-import com.powsybl.dynawaltz.dsl.models.generators.GeneratorModelGroovyExtension;
+import com.powsybl.dynawaltz.dsl.models.generators.GeneratorFictitiousGroovyExtension;
+import com.powsybl.dynawaltz.dsl.models.generators.GeneratorSynchronousGroovyExtension;
 import com.powsybl.dynawaltz.dsl.models.lines.LineGroovyExtension;
 import com.powsybl.dynawaltz.dsl.models.loads.LoadAlphaBetaGroovyExtension;
 import com.powsybl.dynawaltz.dsl.models.loads.LoadOneTransformerGroovyExtension;
 import com.powsybl.dynawaltz.models.AbstractBlackBoxModel;
 import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton;
-import com.powsybl.dynawaltz.dsl.automatons.CurrentLimitAutomatonGroovyExtension;
 import com.powsybl.dynawaltz.models.buses.StandardBus;
-import com.powsybl.dynawaltz.models.generators.*;
+import com.powsybl.dynawaltz.models.generators.GeneratorFictitious;
+import com.powsybl.dynawaltz.models.generators.GeneratorSynchronous;
 import com.powsybl.dynawaltz.models.lines.StandardLine;
 import com.powsybl.dynawaltz.models.loads.LoadAlphaBeta;
 import com.powsybl.dynawaltz.models.loads.LoadOneTransformer;
 import com.powsybl.iidm.network.*;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class DynaWaltzGroovyDynamicModelsSupplierTest {
+class DynaWaltzGroovyDynamicModelsSupplierTest {
 
     private FileSystem fileSystem;
     private Network network;
 
-    @Before
-    public void setup() throws IOException {
+    @BeforeEach
+    void setup() throws IOException {
         fileSystem = Jimfs.newFileSystem(Configuration.unix());
         network = createEurostagTutorialExample1WithMoreGens();
 
@@ -58,13 +60,13 @@ public class DynaWaltzGroovyDynamicModelsSupplierTest {
         Files.copy(getClass().getResourceAsStream("/models.par"), fileSystem.getPath("/models.par"));
     }
 
-    @After
-    public void tearDown() throws IOException {
+    @AfterEach
+    void tearDown() throws IOException {
         fileSystem.close();
     }
 
     @Test
-    public void test() {
+    void test() {
 
         List<DynamicModelGroovyExtension> extensions = GroovyExtension.find(DynamicModelGroovyExtension.class, DynaWaltzProvider.NAME);
         assertEquals(7, extensions.size());
@@ -157,11 +159,12 @@ public class DynaWaltzGroovyDynamicModelsSupplierTest {
     }
 
     private void validateExtension(DynamicModelGroovyExtension extension) {
+
         boolean isLoadAlphaBetaExtension = extension instanceof LoadAlphaBetaGroovyExtension;
         boolean isLoadOneTransformerExtension = extension instanceof LoadOneTransformerGroovyExtension;
-
         boolean isLoadExtension = isLoadAlphaBetaExtension || isLoadOneTransformerExtension;
-        boolean isGeneratorExtension = extension instanceof GeneratorModelGroovyExtension;
+
+        boolean isGeneratorExtension = extension instanceof GeneratorSynchronousGroovyExtension || extension instanceof GeneratorFictitiousGroovyExtension;
         boolean isBusExtension = extension instanceof BusGroovyExtension;
         boolean isLineExtension = extension instanceof LineGroovyExtension;
         boolean isDynamicModelExtension = isLoadExtension || isGeneratorExtension || isBusExtension || isLineExtension;

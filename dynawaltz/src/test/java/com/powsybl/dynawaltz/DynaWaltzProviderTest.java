@@ -18,8 +18,8 @@ import com.powsybl.iidm.network.Substation;
 import com.powsybl.iidm.network.TopologyKind;
 import com.powsybl.iidm.network.VoltageLevel;
 import org.apache.commons.lang3.SystemUtils;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -31,20 +31,20 @@ import java.util.Map;
 import java.util.concurrent.ForkJoinPool;
 
 import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.JOBS_FILENAME;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class DynaWaltzProviderTest extends AbstractConverterTest {
+class DynaWaltzProviderTest extends AbstractConverterTest {
 
     private static final String OUTPUT_IIDM_FILENAME = "outputIIDM.xml";
     private final String extension = SystemUtils.IS_OS_WINDOWS ? ".cmd" : ".sh";
     private Path homeDir;
     private DynaWaltzConfig config;
 
-    @Before
+    @BeforeEach
     public void setUp() throws IOException {
         super.setUp();
         homeDir = fileSystem.getPath("/home/dynawaltz");
@@ -83,29 +83,7 @@ public class DynaWaltzProviderTest extends AbstractConverterTest {
     }
 
     @Test
-    public void checkVersionCommand() {
-        String program = homeDir.resolve("dynawo" + extension).toString();
-        if (SystemUtils.IS_OS_WINDOWS) {
-            program = program.replace("/", "\\");
-        }
-        String versionCommand = DynaWaltzProvider.getVersionCommand(config).toString(0);
-        String expectedVersionCommand = "[" + program + ", version]";
-        assertEquals(expectedVersionCommand, versionCommand);
-    }
-
-    @Test
-    public void checkExecutionCommand() {
-        String program = homeDir.resolve("dynawo" + extension).toString();
-        if (SystemUtils.IS_OS_WINDOWS) {
-            program = program.replace("/", "\\");
-        }
-        String versionCommand = DynaWaltzProvider.getCommand(config).toString(0);
-        String expectedVersionCommand = "[[" + program + ", jobs, " + JOBS_FILENAME + "]]";
-        assertEquals(expectedVersionCommand, versionCommand);
-    }
-
-    @Test
-    public void testWithMergeLoads() throws Exception {
+    void testWithMergeLoads() throws Exception {
         Network network = createTestNetwork();
         LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynawo_version.out", "/mergedLoads.xiidm");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(tmpDir, 1), commandExecutor, ForkJoinPool.commonPool());
@@ -118,7 +96,7 @@ public class DynaWaltzProviderTest extends AbstractConverterTest {
     }
 
     @Test
-    public void testWithoutMergeLoads() throws Exception {
+    void testWithoutMergeLoads() throws Exception {
         Network network = createTestNetwork();
         LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynawo_version.out", "/noMergedLoads.xiidm");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(tmpDir, 1), commandExecutor, ForkJoinPool.commonPool());
@@ -136,22 +114,8 @@ public class DynaWaltzProviderTest extends AbstractConverterTest {
     }
 
     @Test
-    public void testWithoutCurves() throws Exception {
-        Network network = Network.create("test", "test");
-        LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynawo_version.out", "/test.xiidm");
-        ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(tmpDir, 1), commandExecutor, ForkJoinPool.commonPool());
-        DynamicSimulation.Runner dynawoSimulation = DynamicSimulation.find();
-        assertEquals(DynaWaltzProvider.NAME, dynawoSimulation.getName());
-        DynamicSimulationResult result = dynawoSimulation.run(network, n -> Collections.emptyList(), EventModelsSupplier.empty(),
-                new CurvesSupplierMock(), network.getVariantManager().getWorkingVariantId(),
-                computationManager, DynamicSimulationParameters.load());
-        assertNotNull(result);
-        assertFalse(result.isOk());
-    }
-
-    @Test
-    public void testFail() throws Exception {
-        Network network = Network.create("test", "test");
+    void testFail() throws Exception {
+        Network network = createTestNetwork();
         LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynawo_version.out", null);
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(tmpDir, 1), commandExecutor, ForkJoinPool.commonPool());
         DynamicSimulation.Runner dynawoSimulation = DynamicSimulation.find();
@@ -164,7 +128,43 @@ public class DynaWaltzProviderTest extends AbstractConverterTest {
     }
 
     @Test
-    public void testCallingBadVersionDynawo() throws Exception {
+    void testWithoutCurves() throws Exception {
+        Network network = createTestNetwork();
+        LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynawo_version.out", "/test.xiidm");
+        ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(tmpDir, 1), commandExecutor, ForkJoinPool.commonPool());
+        DynamicSimulation.Runner dynawoSimulation = DynamicSimulation.find();
+        assertEquals(DynaWaltzProvider.NAME, dynawoSimulation.getName());
+        DynamicSimulationResult result = dynawoSimulation.run(network, n -> Collections.emptyList(), EventModelsSupplier.empty(),
+                new CurvesSupplierMock(), network.getVariantManager().getWorkingVariantId(),
+                computationManager, DynamicSimulationParameters.load());
+        assertNotNull(result);
+        assertFalse(result.isOk());
+    }
+
+    @Test
+    void checkVersionCommand() {
+        String program = homeDir.resolve("dynawo" + extension).toString();
+        if (SystemUtils.IS_OS_WINDOWS) {
+            program = program.replace("/", "\\");
+        }
+        String versionCommand = DynaWaltzProvider.getVersionCommand(config).toString(0);
+        String expectedVersionCommand = "[" + program + ", version]";
+        assertEquals(expectedVersionCommand, versionCommand);
+    }
+
+    @Test
+    void checkExecutionCommand() {
+        String program = homeDir.resolve("dynawo" + extension).toString();
+        if (SystemUtils.IS_OS_WINDOWS) {
+            program = program.replace("/", "\\");
+        }
+        String versionCommand = DynaWaltzProvider.getCommand(config).toString(0);
+        String expectedVersionCommand = "[[" + program + ", jobs, " + JOBS_FILENAME + "]]";
+        assertEquals(expectedVersionCommand, versionCommand);
+    }
+
+    @Test
+    void testCallingBadVersionDynawo() throws Exception {
         Network network = Network.create("test", "test");
         LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynawo_bad_version.out", null);
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(tmpDir, 1), commandExecutor, ForkJoinPool.commonPool());

@@ -11,7 +11,9 @@ import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.models.*;
+import com.powsybl.dynawaltz.models.buses.BusModel;
 import com.powsybl.dynawaltz.models.generators.GeneratorSynchronousModel;
+import com.powsybl.dynawaltz.models.lines.LineModel;
 import com.powsybl.dynawaltz.models.utils.ConnectedModelTypes;
 import com.powsybl.dynawaltz.xml.MacroStaticReference;
 import com.powsybl.iidm.network.Network;
@@ -36,6 +38,7 @@ public class DynaWaltzContext {
     private final DynaWaltzParametersDatabase parametersDatabase;
     private final List<BlackBoxModel> dynamicModels;
     private final List<BlackBoxModel> eventModels;
+    private final Map<String, BlackBoxModel> staticIdBlackBoxModelMap;
     private final List<Curve> curves;
     private final Map<String, MacroStaticReference> macroStaticReferences = new LinkedHashMap<>();
     private final Map<ConnectedModelTypes, MacroConnector> connectorsMap = new LinkedHashMap<>();
@@ -58,7 +61,10 @@ public class DynaWaltzContext {
         this.network = Objects.requireNonNull(network);
         this.workingVariantId = Objects.requireNonNull(workingVariantId);
         this.dynamicModels = Objects.requireNonNull(dynamicModels);
-        this.eventModels = Objects.requireNonNull(eventModels);
+        this.eventModels = checkEventModelIdUniqueness(Objects.requireNonNull(eventModels));
+        this.staticIdBlackBoxModelMap = getInputBlackBoxDynamicModelStream()
+                .filter(blackBoxModel -> blackBoxModel.getStaticId().isPresent())
+                .collect(Collectors.toMap(bbm -> bbm.getStaticId().get(), Function.identity(), this::mergeDuplicateStaticId, LinkedHashMap::new));
         this.curves = Objects.requireNonNull(curves);
         this.parameters = Objects.requireNonNull(parameters);
         this.dynaWaltzParameters = Objects.requireNonNull(dynaWaltzParameters);
@@ -117,14 +123,52 @@ public class DynaWaltzContext {
         return macroStaticReferences.values();
     }
 
-    public Map<String, BlackBoxModel> getStaticIdBlackBoxModelMap() {
-        return getInputBlackBoxDynamicModelStream()
-                .filter(blackBoxModel -> blackBoxModel.getStaticId().isPresent())
-                .collect(Collectors.toMap(bbm -> bbm.getStaticId().get(), Function.identity(), this::mergeDuplicateStaticId, LinkedHashMap::new));
+    public Model getDynamicModelOrThrows(String staticId) {
+        BlackBoxModel bbm = staticIdBlackBoxModelMap.get(staticId);
+        if (bbm == null) {
+            throw new PowsyblException("Cannot find the equipment '" + staticId + "' among the dynamic models provided");
+        }
+        return bbm;
+    }
+
+    public LineModel getDynamicModelOrDefaultLine(String staticId) {
+        BlackBoxModel bbm = staticIdBlackBoxModelMap.get(staticId);
+        if (bbm == null) {
+            return networkModel.getDefaultLineModel(staticId);
+        }
+        if (bbm instanceof LineModel) {
+            return (LineModel) bbm;
+        }
+        throw new PowsyblException("The model identified by the static id " + staticId + " is not a line model");
+    }
+
+    public BusModel getDynamicModelOrDefaultBus(String staticId) {
+        BlackBoxModel bbm = staticIdBlackBoxModelMap.get(staticId);
+        if (bbm == null) {
+            return networkModel.getDefaultBusModel(staticId);
+        }
+        if (bbm instanceof BusModel) {
+            return (BusModel) bbm;
+        }
+        throw new PowsyblException("The model identified by the static id " + staticId + " is not a bus model");
     }
 
     private BlackBoxModel mergeDuplicateStaticId(BlackBoxModel bbm1, BlackBoxModel bbm2) {
-        throw new AssertionError("Duplicate staticId " + bbm1.getStaticId());
+        throw new PowsyblException("Duplicate staticId: " + bbm1.getStaticId().orElseThrow());
+    }
+
+    private static List<BlackBoxModel> checkEventModelIdUniqueness(List<BlackBoxModel> eventModels) {
+        Set<String> dynamicIds = new HashSet<>();
+        Set<String> duplicates = new HashSet<>();
+        for (BlackBoxModel bbm : eventModels) {
+            if (!dynamicIds.add(bbm.getDynamicModelId())) {
+                duplicates.add(bbm.getDynamicModelId());
+            }
+        }
+        if (!duplicates.isEmpty()) {
+            throw new PowsyblException("Duplicate dynamicId: " + duplicates);
+        }
+        return eventModels;
     }
 
     public Collection<MacroConnector> getMacroConnectors() {
@@ -201,10 +245,6 @@ public class DynaWaltzContext {
     private static DynaWaltzParametersDatabase loadDatabase(String filename, PlatformConfig platformConfig) {
         FileSystem fs = getFileSystem(platformConfig);
         return DynaWaltzParametersDatabase.load(fs.getPath(filename));
-    }
-
-    public NetworkModel getNetworkModel() {
-        return networkModel;
     }
 
     public String getParFile() {

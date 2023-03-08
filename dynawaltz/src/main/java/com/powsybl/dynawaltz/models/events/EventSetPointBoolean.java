@@ -8,7 +8,6 @@ package com.powsybl.dynawaltz.models.events;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
-import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.Model;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.generators.GeneratorModel;
@@ -25,12 +24,10 @@ import static com.powsybl.dynawaltz.DynaWaltzParametersDatabase.ParameterType.BO
  */
 public class EventSetPointBoolean extends AbstractEventModel {
 
-    private final String generatorStaticId;
     private final boolean stateEvent;
 
-    public EventSetPointBoolean(String eventModelId, String staticId, double startTime, boolean stateEvent) {
-        super(eventModelId, startTime);
-        this.generatorStaticId = staticId;
+    public EventSetPointBoolean(String eventModelId, String generatorStaticId, double startTime, boolean stateEvent) {
+        super(eventModelId, generatorStaticId, startTime);
         this.stateEvent = stateEvent;
     }
 
@@ -49,11 +46,7 @@ public class EventSetPointBoolean extends AbstractEventModel {
 
     @Override
     public List<Model> getModelsConnectedTo(DynaWaltzContext context) {
-        BlackBoxModel connectedBbm = context.getStaticIdBlackBoxModelMap().get(generatorStaticId);
-        if (connectedBbm == null) {
-            throw new PowsyblException("Cannot find generator '" + generatorStaticId + "' among the dynamic models provided");
-        }
-        return List.of(connectedBbm);
+        return List.of(context.getDynamicModelOrThrows(getEquipmentStaticId()));
     }
 
     @Override

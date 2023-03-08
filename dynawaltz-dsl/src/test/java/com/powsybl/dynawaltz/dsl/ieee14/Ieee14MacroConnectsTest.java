@@ -6,23 +6,23 @@
  */
 package com.powsybl.dynawaltz.dsl.ieee14;
 
-import static org.junit.Assert.assertNotNull;
+import com.powsybl.dynamicsimulation.DynamicSimulationResult;
+import com.powsybl.dynawaltz.dsl.ieee.AbstractIeeeTest;
+import com.powsybl.dynawaltz.dsl.ieee.DynaWaltzLocalCommandExecutor;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import com.powsybl.dynawaltz.dsl.ieee.AbstractIeeeTest;
-import org.junit.Before;
-import org.junit.Test;
-
-import com.powsybl.dynamicsimulation.DynamicSimulationResult;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class Ieee14MacroConnectsTest extends AbstractIeeeTest {
+class Ieee14MacroConnectsTest extends AbstractIeeeTest {
 
-    @Before
-    public void setup() throws IOException {
+    @BeforeEach
+    void setup() throws IOException {
         super.setup(
                 "/ieee14-macroconnects/config/models.par",
                 "/ieee14-macroconnects/config/network.par",
@@ -36,8 +36,8 @@ public class Ieee14MacroConnectsTest extends AbstractIeeeTest {
     }
 
     @Test
-    public void testSimulation() throws Exception {
-        Ieee14MacroconnectsLocalCommandExecutor commandExecutor = new Ieee14MacroconnectsLocalCommandExecutor(fileSystem, network, getDynaWaltzSimulationParameters(parameters), "/dynawo_version.out");
+    void testSimulation() throws Exception {
+        DynaWaltzLocalCommandExecutor commandExecutor = new DynaWaltzLocalCommandExecutor(fileSystem, network.getId(), getDynaWaltzSimulationParameters(parameters), getWorkingDirName(), "/dynawo_version.out");
         DynamicSimulationResult result = runSimulation(commandExecutor);
         assertNotNull(result);
     }
