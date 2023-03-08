@@ -7,8 +7,8 @@ import com.powsybl.dynawaltz.models.Model;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.VarMapping;
 import com.powsybl.dynawaltz.models.buses.BusModel;
+import com.powsybl.dynawaltz.models.utils.BusUtils;
 import com.powsybl.iidm.network.Branch;
-import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.Line;
 
 import java.util.ArrayList;
@@ -20,8 +20,8 @@ public class StandardLine extends AbstractBlackBoxModel implements LineModel {
 
     private final String sidePostfix;
 
-    public StandardLine(String dynamicModelId, String statidId, String parameterSetId, Branch.Side side) {
-        super(dynamicModelId, statidId, parameterSetId);
+    public StandardLine(String dynamicModelId, String staticId, String parameterSetId, Branch.Side side) {
+        super(dynamicModelId, staticId, parameterSetId);
         this.sidePostfix = LineModel.getSuffix(side);
     }
 
@@ -49,18 +49,14 @@ public class StandardLine extends AbstractBlackBoxModel implements LineModel {
     }
 
     @Override
-    public List<Model> getModelsConnectedTo(DynaWaltzContext dynaWaltzContext) {
+    public List<Model> getModelsConnectedTo(DynaWaltzContext context) {
         String staticId = getStaticId().orElse(null);
-        Line line = dynaWaltzContext.getNetwork().getLine(staticId);
+        Line line = context.getNetwork().getLine(staticId);
         if (line == null) {
-            throw new PowsyblException("Line static id unkwown: " + staticId);
+            throw new PowsyblException("Line static id unknown: " + staticId);
         }
-        List<Model> connectedBbm = new ArrayList<>();
-        for (Bus b : dynaWaltzContext.getNetwork().getBusBreakerView().getBuses()) {
-            if (b.getLineStream().anyMatch(l -> l.equals(line))) {
-                connectedBbm.add(dynaWaltzContext.getStaticIdBlackBoxModel(b.getId()));
-            }
-        }
+        List<Model> connectedBbm = new ArrayList<>(2);
+        line.getTerminals().forEach(t -> connectedBbm.add(context.getDynamicModelOrDefaultBus(BusUtils.getConnectableBusStaticId(t))));
         return connectedBbm;
     }
 

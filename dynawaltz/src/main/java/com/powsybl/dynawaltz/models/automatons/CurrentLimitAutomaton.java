@@ -9,12 +9,10 @@ package com.powsybl.dynawaltz.models.automatons;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
-import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.Model;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.lines.LineModel;
 import com.powsybl.iidm.network.Branch;
-import com.powsybl.iidm.network.Line;
 
 import java.util.Arrays;
 import java.util.List;
@@ -41,15 +39,7 @@ public class CurrentLimitAutomaton extends AbstractPureDynamicBlackBoxModel {
 
     @Override
     public List<Model> getModelsConnectedTo(DynaWaltzContext context) {
-        Line line = context.getNetwork().getLine(lineStaticId);
-        if (line == null) {
-            throw new PowsyblException("Unknown line static id: " + lineStaticId);
-        }
-        BlackBoxModel connectedBbm = context.getStaticIdBlackBoxModel(line.getId());
-        if (connectedBbm == null) {
-            return List.of(context.getNetworkModel().getDefaultLineModel(lineStaticId, side));
-        }
-        return List.of(connectedBbm);
+        return List.of(context.getDynamicModelOrDefaultLine(lineStaticId, side));
     }
 
     @Override

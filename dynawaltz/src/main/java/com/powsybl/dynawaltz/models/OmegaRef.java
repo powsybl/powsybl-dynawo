@@ -11,6 +11,7 @@ import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParametersDatabase;
 import com.powsybl.dynawaltz.models.buses.BusModel;
 import com.powsybl.dynawaltz.models.generators.GeneratorSynchronousModel;
+import com.powsybl.dynawaltz.models.utils.BusUtils;
 import com.powsybl.dynawaltz.xml.ParametersXml;
 import com.powsybl.iidm.network.Generator;
 import org.apache.commons.lang3.tuple.Pair;
@@ -27,7 +28,7 @@ import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 
 /**
  * OmegaRef is a special model: its role is to synchronize the generators' frequency. The corresponding black
- * box model XML entry is serialized only once. For each generator synchronised through the OmegaRef model, there will be
+ * box model XML entry is serialized only once. For each generator synchronized through the OmegaRef model, there will be
  * one XML entry for the connection with the generator's dynamic model, and one XML entry for the connection with the
  * NETWORK dynamic model. There are thus two macroConnectors defined for OmegaRef: one to connect it to a generator's
  * dynamic model and one to connect it to the NETWORK model.
@@ -65,7 +66,7 @@ public class OmegaRef extends AbstractPureDynamicBlackBoxModel {
         writer.writeStartElement(DYN_URI, "set");
         writer.writeAttribute("id", getParameterSetId());
 
-        // The dynamic models are declared in the DYD following the order of dynamic models supplier.
+        // The dynamic models are declared in the DYD following the order of dynamic models' supplier.
         // The OmegaRef parameters index the weight of each generator according to that declaration order.
         for (Map.Entry<GeneratorSynchronousModel, Integer> e : synchronousGenerators.entrySet()) {
             GeneratorSynchronousModel generator = e.getKey();
@@ -111,12 +112,7 @@ public class OmegaRef extends AbstractPureDynamicBlackBoxModel {
         if (generator == null) {
             throw new PowsyblException("Generator " + generatorModel.getLib() + " not found in DynaWaltz context. Id : " + generatorModel.getDynamicModelId());
         }
-        String connectedStaticId = generator.getTerminal().getBusBreakerView().getConnectableBus().getId();
-        BusModel busModel = (BusModel) context.getStaticIdBlackBoxModel(connectedStaticId);
-        if (busModel == null) {
-            busModel = context.getNetworkModel().getDefaultBusModel(connectedStaticId);
-        }
-        return busModel;
+        return context.getDynamicModelOrDefaultBus(BusUtils.getConnectableBusStaticId(generator));
     }
 
     @Override

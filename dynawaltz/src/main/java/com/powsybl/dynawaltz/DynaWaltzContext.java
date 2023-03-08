@@ -11,9 +11,12 @@ import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.models.*;
+import com.powsybl.dynawaltz.models.buses.BusModel;
 import com.powsybl.dynawaltz.models.generators.GeneratorSynchronousModel;
+import com.powsybl.dynawaltz.models.lines.LineModel;
 import com.powsybl.dynawaltz.models.utils.ConnectedModelTypes;
 import com.powsybl.dynawaltz.xml.MacroStaticReference;
+import com.powsybl.iidm.network.Branch;
 import com.powsybl.iidm.network.Network;
 
 import java.nio.file.FileSystem;
@@ -121,8 +124,34 @@ public class DynaWaltzContext {
         return macroStaticReferences.values();
     }
 
-    public BlackBoxModel getStaticIdBlackBoxModel(String staticId) {
-        return staticIdBlackBoxModelMap.get(staticId);
+    public Model getDynamicModelOrThrows(String staticId) {
+        BlackBoxModel bbm = staticIdBlackBoxModelMap.get(staticId);
+        if (bbm == null) {
+            throw new PowsyblException("Cannot find the equipment '" + staticId + "' among the dynamic models provided");
+        }
+        return bbm;
+    }
+
+    public LineModel getDynamicModelOrDefaultLine(String staticId, Branch.Side side) {
+        BlackBoxModel bbm = staticIdBlackBoxModelMap.get(staticId);
+        if (bbm == null) {
+            return networkModel.getDefaultLineModel(staticId, side);
+        }
+        if (bbm instanceof LineModel) {
+            return (LineModel) bbm;
+        }
+        throw new PowsyblException("The model identified by the static id " + staticId + " is not a line model");
+    }
+
+    public BusModel getDynamicModelOrDefaultBus(String staticId) {
+        BlackBoxModel bbm = staticIdBlackBoxModelMap.get(staticId);
+        if (bbm == null) {
+            return networkModel.getDefaultBusModel(staticId);
+        }
+        if (bbm instanceof BusModel) {
+            return (BusModel) bbm;
+        }
+        throw new PowsyblException("The model identified by the static id " + staticId + " is not a bus model");
     }
 
     private BlackBoxModel mergeDuplicateStaticId(BlackBoxModel bbm1, BlackBoxModel bbm2) {
@@ -217,10 +246,6 @@ public class DynaWaltzContext {
     private static DynaWaltzParametersDatabase loadDatabase(String filename, PlatformConfig platformConfig) {
         FileSystem fs = getFileSystem(platformConfig);
         return DynaWaltzParametersDatabase.load(fs.getPath(filename));
-    }
-
-    public NetworkModel getNetworkModel() {
-        return networkModel;
     }
 
     public String getParFile() {
