@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ForkJoinPool;
 
-import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.JOBS_FILENAME;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -40,14 +39,11 @@ import static org.junit.jupiter.api.Assertions.*;
 class DynaWaltzProviderTest extends AbstractConverterTest {
 
     private static final String OUTPUT_IIDM_FILENAME = "outputIIDM.xml";
-    private final String extension = SystemUtils.IS_OS_WINDOWS ? ".cmd" : ".sh";
-    private Path homeDir;
     private DynaWaltzConfig config;
 
     @BeforeEach
     public void setUp() throws IOException {
         super.setUp();
-        homeDir = fileSystem.getPath("/home/dynawaltz");
         config = DynaWaltzConfig.load();
     }
 
@@ -143,24 +139,22 @@ class DynaWaltzProviderTest extends AbstractConverterTest {
 
     @Test
     void checkVersionCommand() {
-        String program = homeDir.resolve("dynawo" + extension).toString();
-        if (SystemUtils.IS_OS_WINDOWS) {
-            program = program.replace("/", "\\");
-        }
         String versionCommand = DynaWaltzProvider.getVersionCommand(config).toString(0);
-        String expectedVersionCommand = "[" + program + ", version]";
-        assertEquals(expectedVersionCommand, versionCommand);
+        if (SystemUtils.IS_OS_WINDOWS) {
+            assertEquals("[\\home\\dynawaltz\\dynawo.cmd, version]", versionCommand);
+        } else {
+            assertEquals("[/home/dynawaltz/dynawo.sh, version]", versionCommand);
+        }
     }
 
     @Test
     void checkExecutionCommand() {
-        String program = homeDir.resolve("dynawo" + extension).toString();
-        if (SystemUtils.IS_OS_WINDOWS) {
-            program = program.replace("/", "\\");
-        }
         String versionCommand = DynaWaltzProvider.getCommand(config).toString(0);
-        String expectedVersionCommand = "[[" + program + ", jobs, " + JOBS_FILENAME + "]]";
-        assertEquals(expectedVersionCommand, versionCommand);
+        if (SystemUtils.IS_OS_WINDOWS) {
+            assertEquals("[[\\home\\dynawaltz\\dynawo.cmd, jobs, powsybl_dynawaltz.jobs]]", versionCommand);
+        } else {
+            assertEquals("[[/home/dynawaltz/dynawo.sh, jobs, powsybl_dynawaltz.jobs]]", versionCommand);
+        }
     }
 
     @Test
