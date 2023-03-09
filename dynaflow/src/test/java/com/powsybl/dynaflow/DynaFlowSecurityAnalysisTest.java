@@ -181,7 +181,7 @@ class DynaFlowSecurityAnalysisTest {
     }
 
     @Test
-    public void testCallingBadVersionDynawo() throws IOException {
+    void testCallingBadVersionDynawo() throws IOException {
         Network network = EurostagTutorialExample1Factory.create();
 
         Contingency contingency = Contingency.builder("NHV1_NHV2_2_contingency")
