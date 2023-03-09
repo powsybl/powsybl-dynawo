@@ -89,7 +89,7 @@ class DynaWaltzGroovyDynamicModelsSupplierTest {
     private static Network createEurostagTutorialExample1WithMoreGens() {
         Network network = EurostagTutorialExample1Factory.create(NetworkFactory.findDefault());
 
-        VoltageLevel vlgen  = network.getVoltageLevel("VLGEN");
+        VoltageLevel vlgen = network.getVoltageLevel("VLGEN");
         Bus ngen = vlgen.getBusBreakerView().getBus("NGEN");
         vlgen.newGenerator()
             .setId("GEN2")
@@ -146,7 +146,7 @@ class DynaWaltzGroovyDynamicModelsSupplierTest {
             .setTargetP(-1.3)
             .setTargetQ(0.9)
             .add();
-        VoltageLevel vlload  = network.getVoltageLevel("VLLOAD");
+        VoltageLevel vlload = network.getVoltageLevel("VLLOAD");
         Bus nload = vlload.getBusBreakerView().getBus("NLOAD");
         vlload.newLoad()
             .setId("LOAD2")

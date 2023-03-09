@@ -9,6 +9,7 @@ package com.powsybl.dynaflow;
 import com.google.common.io.ByteStreams;
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
+import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.config.InMemoryPlatformConfig;
 import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.reporter.Reporter;
@@ -26,10 +27,13 @@ import com.powsybl.iidm.network.VariantManagerConstants;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import com.powsybl.loadflow.LoadFlowResult;
 import com.powsybl.security.*;
+import com.powsybl.security.action.Action;
 import com.powsybl.security.detectors.DefaultLimitViolationDetector;
 import com.powsybl.security.extensions.ActivePowerExtension;
 import com.powsybl.security.extensions.CurrentExtension;
+import com.powsybl.security.interceptors.SecurityAnalysisInterceptor;
 import com.powsybl.security.results.PostContingencyResult;
+import com.powsybl.security.strategy.OperatorStrategy;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -139,7 +143,7 @@ class DynaFlowSecurityAnalysisTest {
                 .endTemporaryLimit()
                 .add();
 
-        LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynaflow_version.out",
+        LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynawo_version.out",
                 "/security_analysis_result.json");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
 
@@ -176,6 +180,31 @@ class DynaFlowSecurityAnalysisTest {
         assertEquals(95.0, extension2.getPreContingencyValue(), 0.0);
     }
 
+    @Test
+    void testCallingBadVersionDynawo() throws IOException {
+        Network network = EurostagTutorialExample1Factory.create();
+
+        Contingency contingency = Contingency.builder("NHV1_NHV2_2_contingency")
+                .addBranch("NHV1_NHV2_2")
+                .build();
+        contingency = Mockito.spy(contingency);
+        Mockito.when(contingency.toModification()).thenReturn(new DynaFlowSecurityAnalysisTestNetworkModification());
+        ContingenciesProvider contingenciesProvider = Mockito.mock(ContingenciesProvider.class);
+        Mockito.when(contingenciesProvider.getContingencies(network)).thenReturn(Collections.singletonList(contingency));
+        LimitViolationFilter filter = new LimitViolationFilter();
+
+        LocalCommandExecutor commandExecutor = new SecurityAnalysisLocalCommandExecutorMock("/dynawo_bad_version.out");
+        ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
+
+        SecurityAnalysisParameters sap = SecurityAnalysisParameters.load(platformConfig);
+        DefaultLimitViolationDetector dlvd = new DefaultLimitViolationDetector();
+        List<SecurityAnalysisInterceptor> interceptors = Collections.emptyList();
+        List<OperatorStrategy> operatorStrategies = Collections.emptyList();
+        List<Action> actions = Collections.emptyList();
+        assertThrows(PowsyblException.class, () -> SecurityAnalysis.run(network, VariantManagerConstants.INITIAL_VARIANT_ID, contingenciesProvider,
+                sap, computationManager, filter, dlvd, interceptors, operatorStrategies, actions));
+    }
+
     private static class SecurityAnalysisLocalCommandExecutorMock extends AbstractLocalCommandExecutor {
 
         private static final Logger LOGGER = LoggerFactory.getLogger(SecurityAnalysisLocalCommandExecutorMock.class);
@@ -187,7 +216,7 @@ class DynaFlowSecurityAnalysisTest {
         }
 
         @Override
-        public int execute(String program, List<String> args, Path outFile, Path errFile, Path workingDir, Map<String, String> env) throws IOException, InterruptedException {
+        public int execute(String program, List<String> args, Path outFile, Path errFile, Path workingDir, Map<String, String> env) {
             try {
                 if (args.get(0).equals("--version")) {
                     copyFile(stdOutFileRef, errFile);
@@ -264,7 +293,7 @@ class DynaFlowSecurityAnalysisTest {
         Files.copy(getClass().getResourceAsStream("/SmallBusBranch/powsybl-inputs/contingencies.groovy"), workingDir.resolve("contingencies.groovy"));
         ContingenciesProvider contingenciesProvider = new GroovyDslContingenciesProvider(workingDir.resolve("contingencies.groovy"));
 
-        LocalCommandExecutor commandExecutor = new SecurityAnalysisLocalCommandExecutorMock("/dynaflow_version.out");
+        LocalCommandExecutor commandExecutor = new SecurityAnalysisLocalCommandExecutorMock("/dynawo_version.out");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(workingDir, 1), commandExecutor, ForkJoinPool.commonPool());
 
         LimitViolationFilter filter = new LimitViolationFilter();

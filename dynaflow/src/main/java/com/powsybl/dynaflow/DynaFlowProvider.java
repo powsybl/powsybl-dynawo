@@ -9,7 +9,6 @@ package com.powsybl.dynaflow;
 import com.google.auto.service.AutoService;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
-import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.extensions.Extension;
 import com.powsybl.commons.extensions.ExtensionJsonSerializer;
@@ -17,11 +16,10 @@ import com.powsybl.commons.parameters.Parameter;
 import com.powsybl.computation.*;
 import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
 import com.powsybl.dynaflow.json.JsonDynaFlowParametersSerializer;
-import com.powsybl.dynawo.commons.DynawoConstants;
 import com.powsybl.dynawo.commons.DynawoUtil;
+import com.powsybl.dynawo.commons.NetworkResultsUpdater;
 import com.powsybl.dynawo.commons.PowsyblDynawoVersion;
 import com.powsybl.dynawo.commons.loadmerge.LoadsMerger;
-import com.powsybl.dynawo.commons.NetworkResultsUpdater;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.xml.NetworkXml;
 import com.powsybl.loadflow.LoadFlowParameters;
@@ -114,9 +112,7 @@ public class DynaFlowProvider implements LoadFlowProvider {
         DynaFlowConfig config = Objects.requireNonNull(configSupplier.get());
         ExecutionEnvironment env = new ExecutionEnvironment(config.createEnv(), WORKING_DIR_PREFIX, config.isDebug());
         Command versionCmd = getVersionCommand(config);
-        if (!DynaFlowUtil.checkDynaFlowVersion(env, computationManager, versionCmd)) {
-            throw new PowsyblException("DynaFlow version not supported. Must be >= " + DynawoConstants.VERSION_MIN);
-        }
+        DynawoUtil.requireDynawoMinVersion(env, computationManager, versionCmd, true);
         return computationManager.execute(env, new DynaFlowHandler(network, workingStateId, dynaFlowParameters, loadFlowParameters, config));
     }
 

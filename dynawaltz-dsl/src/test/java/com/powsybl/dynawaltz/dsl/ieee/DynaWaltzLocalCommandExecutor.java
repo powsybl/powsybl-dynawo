@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -38,12 +39,14 @@ public class DynaWaltzLocalCommandExecutor implements LocalCommandExecutor {
     private final String networkId;
     private final DynaWaltzParameters dynaWaltzParameters;
     private final String baseDirName;
+    private final String stdOutFileRef;
 
-    public DynaWaltzLocalCommandExecutor(FileSystem fileSystem, String networkId, DynaWaltzParameters dynaWaltzParameters, String baseDir) {
+    public DynaWaltzLocalCommandExecutor(FileSystem fileSystem, String networkId, DynaWaltzParameters dynaWaltzParameters, String baseDir, String stdOutFileRef) {
         this.fileSystem = Objects.requireNonNull(fileSystem);
         this.networkId = Objects.requireNonNull(networkId);
         this.dynaWaltzParameters = Objects.requireNonNull(dynaWaltzParameters);
         this.baseDirName = baseDir;
+        this.stdOutFileRef = stdOutFileRef;
     }
 
     protected void validateInputs(Path workingDir) throws IOException {
@@ -70,8 +73,12 @@ public class DynaWaltzLocalCommandExecutor implements LocalCommandExecutor {
     @Override
     public int execute(String program, long timeoutSeconds, List<String> args, Path outFile, Path errFile, Path workingDir, Map<String, String> env) {
         try {
-            validateInputs(workingDir);
-            copyOutputs(workingDir);
+            if (args.get(0).equals("version")) {
+                copyFile(stdOutFileRef, outFile);
+            } else {
+                validateInputs(workingDir);
+                copyOutputs(workingDir);
+            }
         } catch (Throwable throwable) {
             LOGGER.error(throwable.toString(), throwable);
             return -1;
@@ -85,6 +92,12 @@ public class DynaWaltzLocalCommandExecutor implements LocalCommandExecutor {
 
     @Override
     public void stopForcibly(Path workingDir) {
+    }
+
+    protected void copyFile(String source, Path target) throws IOException {
+        try (InputStream is = Objects.requireNonNull(getClass().getResourceAsStream(source))) {
+            Files.copy(is, target, StandardCopyOption.REPLACE_EXISTING);
+        }
     }
 
     protected static void compareXml(InputStream expected, InputStream actual) {
