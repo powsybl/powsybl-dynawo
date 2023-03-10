@@ -5,9 +5,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-
 package com.powsybl.dynawaltz.models.generators;
 
+/**
+ * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
+ */
 public interface OmegaRefGeneratorModel extends GeneratorModel {
     String getOmegaRefPuVarName();
 }

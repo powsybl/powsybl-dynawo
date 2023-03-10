@@ -15,8 +15,8 @@ import com.powsybl.dynawaltz.dsl.AbstractPowsyblDynawoGroovyExtension
 import com.powsybl.dynawaltz.models.generators.OmegaRefGenerator
 
 /**
- * An implementation of {@link DynamicModelGroovyExtension} that adds the <pre>GeneratorPQ</pre> keyword to the DSL
- *
+ * @author Florian Dupuy <florian.dupuy at rte-france.com>
+ * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
  */
 @AutoService(DynamicModelGroovyExtension.class)
 class OmegaRefGeneratorGroovyExtension extends AbstractPowsyblDynawoGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
