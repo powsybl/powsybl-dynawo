@@ -6,22 +6,19 @@
  */
 package com.powsybl.dynaflow;
 
-import com.powsybl.commons.AbstractConverterTest;
 import com.powsybl.commons.PowsyblException;
-import com.powsybl.commons.datasource.ResourceDataSource;
-import com.powsybl.commons.datasource.ResourceSet;
+import com.powsybl.commons.test.AbstractConverterTest;
 import com.powsybl.computation.ComputationManager;
 import com.powsybl.computation.local.LocalCommandExecutor;
 import com.powsybl.computation.local.LocalComputationConfig;
 import com.powsybl.computation.local.LocalComputationManager;
-import com.powsybl.iidm.network.Importers;
-import com.powsybl.iidm.network.Network;
+import com.powsybl.iidm.network.*;
 import com.powsybl.iidm.xml.NetworkXml;
 import com.powsybl.loadflow.LoadFlow;
 import com.powsybl.loadflow.LoadFlowParameters;
 import com.powsybl.loadflow.LoadFlowResult;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,43 +31,39 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ForkJoinPool;
 
-import static com.powsybl.commons.ComparisonUtils.compareXml;
+import static com.powsybl.commons.test.ComparisonUtils.compareXml;
 import static com.powsybl.dynaflow.DynaFlowConstants.*;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Guillaume Pernin <guillaume.pernin at rte-france.com>
  */
-public class DynaFlowProviderTest extends AbstractConverterTest {
+class DynaFlowProviderTest extends AbstractConverterTest {
 
-    private String homeDir;
+    private Path homeDir;
     private DynaFlowConfig config;
     private DynaFlowProvider provider;
 
-    @Before
+    @BeforeEach
     public void setUp() throws IOException {
         super.setUp();
-        homeDir = "/home/dynaflow";
+        homeDir = fileSystem.getPath("/home/dynaflow");
         config = DynaFlowConfig.fromPropertyFile();
         provider = new DynaFlowProvider();
     }
 
     @Test
-    public void checkVersionCommand() {
-        Path pathHomeDir = fileSystem.getPath(homeDir);
-        String program = pathHomeDir.resolve("dynaflow-launcher.sh").toString();
-
+    void checkVersionCommand() {
+        String program = homeDir.resolve("dynaflow-launcher.sh").toString();
         String versionCommand = DynaFlowProvider.getVersionCommand(config).toString(0);
         String expectedVersionCommand = "[" + program + ", --version]";
-
         assertEquals(expectedVersionCommand, versionCommand);
     }
 
     @Test
-    public void checkExecutionCommand() {
-        String program = fileSystem.getPath(homeDir).resolve("dynaflow-launcher.sh").toString();
-
-        String executionCommand = provider.getCommand(config).toString(0);
+    void checkExecutionCommand() {
+        String program = homeDir.resolve("dynaflow-launcher.sh").toString();
+        String executionCommand = DynaFlowProvider.getCommand(config).toString(0);
         String expectedExecutionCommand = "[" + program + ", --network, " + IIDM_FILENAME + ", --config, " + CONFIG_FILENAME + "]";
         assertEquals(expectedExecutionCommand, executionCommand);
     }
@@ -115,7 +108,6 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
             try {
                 copyFile(stdOutFileRef, errFile);
                 Files.createDirectories(workingDir.resolve("outputs").resolve("finalState"));
-
                 return 0;
             } catch (IOException e) {
                 throw new UncheckedIOException(e);
@@ -124,73 +116,78 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
     }
 
     @Test
-    public void test() throws Exception {
-        Network network = createTestSmallBusBranch();
+    void testWithoutMergeLoads() throws Exception {
+        Network network = createTestNetwork();
         LoadFlow.Runner dynaFlowSimulation = LoadFlow.find();
         LoadFlowParameters params = LoadFlowParameters.load();
+        DynaFlowParameters dynaFlowParameters = params.getExtension(DynaFlowParameters.class);
+        dynaFlowParameters.setMergeLoads(false);
 
         assertEquals(DYNAFLOW_NAME, dynaFlowSimulation.getName());
-        assertEquals(VERSION, DynaFlowVersion.of(dynaFlowSimulation.getVersion()).get());
 
-        LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynaflow_version.out",
-                "/SmallBusBranch_outputIIDM.xml", "/results.json");
-        ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
-        LoadFlowResult result = dynaFlowSimulation.run(network, computationManager, params);
-        assertNotNull(result);
-        assertTrue(result.isOk());
-    }
-
-    @Test
-    public void testFail() throws Exception {
-        Network network = createTestSmallBusBranch();
-        LoadFlow.Runner dynaFlowSimulation = LoadFlow.find();
-        LoadFlowParameters params = LoadFlowParameters.load();
-
-        assertEquals(DYNAFLOW_NAME, dynaFlowSimulation.getName());
-        assertEquals(VERSION, DynaFlowVersion.of(dynaFlowSimulation.getVersion()).get());
-
-        LocalCommandExecutor commandExecutor = new EmptyLocalCommandExecutorMock("/dynaflow_version.out");
-        ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
-        LoadFlowResult result = dynaFlowSimulation.run(network, computationManager, params);
-        assertNotNull(result);
-        assertFalse(result.isOk());
-    }
-
-    @Test(expected = PowsyblException.class)
-    public void testCallingBadVersionDynaFlow() throws Exception {
-        Network network = createTestSmallBusBranch();
-        LoadFlow.Runner dynaFlowSimulation = LoadFlow.find();
-        LoadFlowParameters params = LoadFlowParameters.load();
-
-        LocalCommandExecutor commandExecutor = new EmptyLocalCommandExecutorMock("/dynaflow_bad_version.out");
-        ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
-        LoadFlowResult result = dynaFlowSimulation.run(network, computationManager, params);
-    }
-
-    @Test
-    public void testUpdate() throws Exception {
-        Network network = createTestSmallBusBranch();
-        LoadFlow.Runner dynaFlowSimulation = LoadFlow.find();
-        LoadFlowParameters params = LoadFlowParameters.load();
-
-        assertEquals(DYNAFLOW_NAME, dynaFlowSimulation.getName());
-        assertEquals(VERSION, DynaFlowVersion.of(dynaFlowSimulation.getVersion()).get());
-
-        LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynaflow_version.out",
-                "/SmallBusBranch_outputIIDM.xml", "/results.json");
+        LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynawo_version.out",
+                "/output.xiidm", "/results.json");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
         LoadFlowResult result = dynaFlowSimulation.run(network, computationManager, params);
         assertNotNull(result);
         assertTrue(result.isOk());
 
-        InputStream pReferenceOutput = getClass().getResourceAsStream("/SmallBusBranch_outputIIDM.xml");
+        InputStream pReferenceOutput = getClass().getResourceAsStream("/output.xiidm");
         Network expectedNetwork = NetworkXml.read(pReferenceOutput);
 
         compare(expectedNetwork, network);
     }
 
     @Test
-    public void testUpdateSpecificParameters() {
+    void testWithMergeLoads() throws Exception {
+        Network network = createTestNetwork();
+        LoadFlow.Runner dynaFlowSimulation = LoadFlow.find();
+        LoadFlowParameters params = LoadFlowParameters.load();
+
+        assertEquals(DYNAFLOW_NAME, dynaFlowSimulation.getName());
+
+        LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynawo_version.out",
+                "/outputMergedLoads.xiidm", "/results.json");
+        ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
+        LoadFlowResult result = dynaFlowSimulation.run(network, computationManager, params);
+        assertNotNull(result);
+        assertTrue(result.isOk());
+
+        InputStream pReferenceOutput = getClass().getResourceAsStream("/output.xiidm");
+        Network expectedNetwork = NetworkXml.read(pReferenceOutput);
+
+        compare(expectedNetwork, network);
+    }
+
+    @Test
+    void testFail() throws Exception {
+        Network network = Network.create("empty", "test");
+        LoadFlow.Runner dynaFlowSimulation = LoadFlow.find();
+        LoadFlowParameters params = LoadFlowParameters.load();
+
+        assertEquals(DYNAFLOW_NAME, dynaFlowSimulation.getName());
+
+        LocalCommandExecutor commandExecutor = new EmptyLocalCommandExecutorMock("/dynawo_version.out");
+        ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
+        LoadFlowResult result = dynaFlowSimulation.run(network, computationManager, params);
+        assertNotNull(result);
+        assertFalse(result.isOk());
+    }
+
+    @Test
+    void testCallingBadVersionDynaFlow() throws Exception {
+        Network network = Network.create("empty", "test");
+        LoadFlow.Runner dynaFlowSimulation = LoadFlow.find();
+        LoadFlowParameters params = LoadFlowParameters.load();
+
+        LocalCommandExecutor commandExecutor = new EmptyLocalCommandExecutorMock("/dynawo_bad_version.out");
+        ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
+        PowsyblException e = assertThrows(PowsyblException.class, () -> dynaFlowSimulation.run(network, computationManager, params));
+        assertEquals("DynaFlow version not supported. Must be >= 1.3.0", e.getMessage());
+    }
+
+    @Test
+    void testUpdateSpecificParameters() {
         Map<String, String> properties = Map.of(
                 "svcRegulationOn", "true",
                 "shuntRegulationOn", "true",
@@ -222,8 +219,27 @@ public class DynaFlowProviderTest extends AbstractConverterTest {
         compareXml(Files.newInputStream(pexpected), Files.newInputStream(pactual));
     }
 
-    private static Network createTestSmallBusBranch() {
-        return Importers.importData("XIIDM", new ResourceDataSource("SmallBusBranch", new ResourceSet("/", "SmallBusBranch.xiidm")), null);
-    }
+    private static Network createTestNetwork() {
+        Network network = Network.create("test", "test");
+        Substation s = network.newSubstation().setId("substation").add();
 
+        VoltageLevel vl1 = s.newVoltageLevel().setId("vl1").setNominalV(400).setTopologyKind(TopologyKind.NODE_BREAKER).add();
+        vl1.getNodeBreakerView().newBusbarSection().setId("Busbar").setNode(0).add();
+        vl1.getNodeBreakerView().newDisconnector().setNode1(0).setNode2(1).setId("d1").add();
+        vl1.getNodeBreakerView().newDisconnector().setNode1(0).setNode2(2).setId("d2").add();
+        vl1.getNodeBreakerView().newDisconnector().setNode1(0).setNode2(3).setId("d3").add();
+        vl1.newLoad().setId("load1").setP0(10.0).setQ0(5.0).setNode(1).add();
+        vl1.newLoad().setId("load2").setP0(12.0).setQ0(1.0).setNode(2).add();
+
+        VoltageLevel vl2 = s.newVoltageLevel().setId("vl2").setNominalV(400).setTopologyKind(TopologyKind.BUS_BREAKER).add();
+        Bus b1 = vl2.getBusBreakerView().newBus().setId("b1").add();
+        vl2.getBusBreakerView().newBus().setId("b2").add();
+        vl2.getBusBreakerView().newSwitch().setId("c").setBus1("b1").setBus2("b2").add();
+        vl2.newGenerator().setId("g1").setBus("b1").setTargetP(101).setTargetV(390).setMinP(0).setMaxP(150).setVoltageRegulatorOn(true).add();
+        vl2.newLoad().setId("load3").setP0(77.0).setQ0(1.0).setBus("b2").add();
+
+        network.newLine().setId("l1").setVoltageLevel1(vl1.getId()).setNode1(3).setVoltageLevel2(vl2.getId()).setBus2(b1.getId())
+                .setR(1).setX(3).setG1(0).setG2(0).setB1(0).setB2(0).add();
+        return network;
+    }
 }

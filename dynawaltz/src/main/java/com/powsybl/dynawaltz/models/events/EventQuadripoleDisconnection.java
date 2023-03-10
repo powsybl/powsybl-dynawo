@@ -8,25 +8,30 @@ package com.powsybl.dynawaltz.models.events;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
-import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
-import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.Model;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.lines.LineModel;
-import com.powsybl.iidm.network.Branch;
+import com.powsybl.dynawaltz.xml.ParametersXml;
 
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 import java.util.List;
+
+import static com.powsybl.dynawaltz.DynaWaltzParametersDatabase.ParameterType.BOOL;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class EventQuadripoleDisconnection extends AbstractPureDynamicBlackBoxModel {
+public class EventQuadripoleDisconnection extends AbstractEventModel {
 
-    private final String lineStaticId;
+    private final boolean disconnectOrigin;
+    private final boolean disconnectExtremity;
 
-    public EventQuadripoleDisconnection(String eventModelId, String staticId, String parameterSetId) {
-        super(eventModelId, parameterSetId);
-        this.lineStaticId = staticId;
+    public EventQuadripoleDisconnection(String eventModelId, String lineStaticId, double startTime,
+                                        boolean disconnectOrigin, boolean disconnectExtremity) {
+        super(eventModelId, lineStaticId, startTime);
+        this.disconnectOrigin = disconnectOrigin;
+        this.disconnectExtremity = disconnectExtremity;
     }
 
     @Override
@@ -44,14 +49,12 @@ public class EventQuadripoleDisconnection extends AbstractPureDynamicBlackBoxMod
 
     @Override
     public List<Model> getModelsConnectedTo(DynaWaltzContext context) {
-        BlackBoxModel connectedBbm = context.getStaticIdBlackBoxModelMap().get(lineStaticId);
-        if (connectedBbm == null) {
-            return List.of(context.getNetworkModel().getDefaultLineModel(lineStaticId, Branch.Side.ONE));
-        }
-        return List.of(connectedBbm);
+        return List.of(context.getDynamicModelOrDefaultLine(getEquipmentStaticId()));
     }
 
-    public String getLineStaticId() {
-        return lineStaticId;
+    @Override
+    protected void writeEventSpecificParameters(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
+        ParametersXml.writeParameter(writer, BOOL, "event_disconnectOrigin", Boolean.toString(disconnectOrigin));
+        ParametersXml.writeParameter(writer, BOOL, "event_disconnectExtremity", Boolean.toString(disconnectExtremity));
     }
 }

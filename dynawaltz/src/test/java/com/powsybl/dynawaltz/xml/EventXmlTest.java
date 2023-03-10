@@ -6,28 +6,31 @@
  */
 package com.powsybl.dynawaltz.xml;
 
+import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
-import com.powsybl.dynawaltz.models.BlackBoxModel;
+import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection;
+import com.powsybl.dynawaltz.models.events.EventSetPointBoolean;
 import com.powsybl.dynawaltz.models.generators.GeneratorSynchronous;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
-import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class EventXmlTest extends DynaWaltzTestUtil {
+class EventXmlTest extends DynaWaltzTestUtil {
 
     @Test
-    public void writeDynamicModel() throws SAXException, IOException, XMLStreamException {
-        List<BlackBoxModel> dynamicModels = List.of(
-                new GeneratorSynchronous("BBM_GEN2", "GEN2", "GSFWPR", "GeneratorSynchronousFourWindingsProportionalRegulations")
-        );
+    void writeDynamicModel() throws SAXException, IOException, XMLStreamException {
+        dynamicModels.clear();
+        dynamicModels.add(new GeneratorSynchronous("BBM_GEN2", "GEN2", "GSFWPR", "GeneratorSynchronousFourWindingsProportionalRegulations"));
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynaWaltzParameters dynawoParameters = DynaWaltzParameters.load();
         DynaWaltzContext context = new DynaWaltzContext(network, network.getVariantManager().getWorkingVariantId(),
@@ -35,6 +38,20 @@ public class EventXmlTest extends DynaWaltzTestUtil {
 
         DydXml.write(tmpDir, context);
         validate("dyd.xsd", "events.xml", tmpDir.resolve(DynaWaltzConstants.DYD_FILENAME));
+    }
+
+    @Test
+    void duplicateEventId() {
+        eventModels.clear();
+        network.getLineStream().forEach(l -> eventModels.add(new EventQuadripoleDisconnection("duplicateID", l.getId(), 5, false, true)));
+        network.getGeneratorStream().forEach(g -> {
+            if (g.getId().equals("GEN2") || g.getId().equals("GEN4")) {
+                eventModels.add(new EventSetPointBoolean("duplicateID2", g.getId(), 1, true));
+            }
+        });
+        String workingVariantId = network.getVariantManager().getWorkingVariantId();
+        Exception e = assertThrows(PowsyblException.class, () -> new DynaWaltzContext(network, workingVariantId, dynamicModels, eventModels, curves, null, null));
+        assertEquals("Duplicate dynamicId: [duplicateID, duplicateID2]", e.getMessage());
     }
 
 }

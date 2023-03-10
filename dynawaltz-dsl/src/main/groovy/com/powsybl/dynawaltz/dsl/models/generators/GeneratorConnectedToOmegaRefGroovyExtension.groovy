@@ -8,9 +8,10 @@
 package com.powsybl.dynawaltz.dsl.models.generators
 
 import com.google.auto.service.AutoService
-import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
+import com.powsybl.dynawaltz.dsl.AbstractDynamicModelBuilder
+import com.powsybl.dynawaltz.dsl.AbstractPowsyblDynawoGroovyExtension
 import com.powsybl.dynawaltz.models.generators.GeneratorConnectedToOmegaRef
 
 import java.util.function.Consumer
@@ -20,37 +21,32 @@ import java.util.function.Consumer
  *
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class GeneratorConnectedToOmegaRefGroovyExtension extends GeneratorModelGroovyExtension {
+class GeneratorConnectedToOmegaRefGroovyExtension extends AbstractPowsyblDynawoGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
-    private static final String CONNECTED_TO_OMEGA_REF_GENERATORS_LIBS = "connectedToOmegaRefGeneratorsLibs"
+    private static final String CONNECTED_TO_OMEGA_REF_GENERATORS = "connectedToOmegaRefGenerators"
 
-    void load(Binding binding, Consumer<DynamicModel> consumer) {
+    GeneratorConnectedToOmegaRefGroovyExtension() {
         ConfigSlurper config = new ConfigSlurper()
-        def cfg = config.parse(this.getClass().getClassLoader().getResource(GENERATORS_CONFIG)).get(CONNECTED_TO_OMEGA_REF_GENERATORS_LIBS)
-        for (String gen : cfg.keySet()) {
-            binding.setVariable(gen, generatorClosure(consumer, gen))
-        }
+        modelTags = config.parse(this.getClass().getClassLoader().getResource(MODELS_CONFIG)).get(CONNECTED_TO_OMEGA_REF_GENERATORS).keySet() as List
     }
 
-    def generatorClosure = {
-        Consumer<DynamicModel> consumer, String generator -> {
-            Closure<Void> closure -> {
-                def cloned = closure.clone()
-                GeneratorModelSpec generatorModelSpec = new GeneratorModelSpec()
+    @Override
+    protected GeneratorConnectedToOmegaRefBuilder createBuilder(String currentTag) {
+        new GeneratorConnectedToOmegaRefBuilder(currentTag)
+    }
 
-                cloned.delegate = generatorModelSpec
-                cloned()
+    static class GeneratorConnectedToOmegaRefBuilder extends AbstractDynamicModelBuilder {
 
-                if (!generatorModelSpec.staticId) {
-                    throw new DslException("'staticId' field is not set")
-                }
-                if (!generatorModelSpec.parameterSetId) {
-                    throw new DslException("'parameterSetId' field is not set")
-                }
+        String tag
 
-                String dynamicModelId = generatorModelSpec.dynamicModelId ? generatorModelSpec.dynamicModelId : generatorModelSpec.staticId
-                consumer.accept(new GeneratorConnectedToOmegaRef(dynamicModelId, generatorModelSpec.staticId, generatorModelSpec.parameterSetId, generator))
-            }
+        GeneratorConnectedToOmegaRefBuilder(String tag) {
+            this.tag = tag
+        }
+
+        @Override
+        GeneratorConnectedToOmegaRef build() {
+            checkData()
+            new GeneratorConnectedToOmegaRef(dynamicModelId, staticId, parameterSetId, tag)
         }
     }
 }

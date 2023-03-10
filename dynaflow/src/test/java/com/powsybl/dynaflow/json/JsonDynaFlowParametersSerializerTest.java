@@ -6,29 +6,29 @@
  */
 package com.powsybl.dynaflow.json;
 
-import com.powsybl.commons.AbstractConverterTest;
+import com.powsybl.commons.test.AbstractConverterTest;
 import com.powsybl.commons.config.InMemoryPlatformConfig;
 import com.powsybl.dynaflow.DynaFlowConstants;
 import com.powsybl.dynaflow.DynaFlowParameters;
 import com.powsybl.loadflow.LoadFlowParameters;
 import com.powsybl.loadflow.json.JsonLoadFlowParameters;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
  * @author Guillaume Pernin <guillaume.pernin at rte-france.com>
  */
-public class JsonDynaFlowParametersSerializerTest extends AbstractConverterTest {
+class JsonDynaFlowParametersSerializerTest extends AbstractConverterTest {
 
     @Test
-    public void testDeserialize() {
+    void testDeserialize() {
 
         double expectedDsoVoltageLevelValue = 987.6;
         String expectedSettingPath = "path/to/settingFile";
@@ -65,7 +65,7 @@ public class JsonDynaFlowParametersSerializerTest extends AbstractConverterTest 
     }
 
     @Test
-    public void roundTripParameters() throws IOException {
+    void roundTripParameters() throws IOException {
         InMemoryPlatformConfig platformConfig = new InMemoryPlatformConfig(fileSystem);
 
         LoadFlowParameters parameters = LoadFlowParameters.load(platformConfig);
@@ -95,7 +95,7 @@ public class JsonDynaFlowParametersSerializerTest extends AbstractConverterTest 
     }
 
     @Test
-    public void serializeWithDefaultDynaflowParameters() throws IOException {
+    void serializeWithDefaultDynaflowParameters() throws IOException {
         InMemoryPlatformConfig platformConfig = new InMemoryPlatformConfig(fileSystem);
 
         LoadFlowParameters parameters = LoadFlowParameters.load(platformConfig);

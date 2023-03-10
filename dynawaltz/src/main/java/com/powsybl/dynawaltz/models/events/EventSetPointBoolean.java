@@ -8,24 +8,27 @@ package com.powsybl.dynawaltz.models.events;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
-import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
-import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.Model;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.generators.GeneratorModel;
+import com.powsybl.dynawaltz.xml.ParametersXml;
 
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 import java.util.List;
+
+import static com.powsybl.dynawaltz.DynaWaltzParametersDatabase.ParameterType.BOOL;
 
 /**
  * @author Mathieu BAGUE {@literal <mathieu.bague at rte-france.com>}
  */
-public class EventSetPointBoolean extends AbstractPureDynamicBlackBoxModel {
+public class EventSetPointBoolean extends AbstractEventModel {
 
-    private final String generatorStaticId;
+    private final boolean stateEvent;
 
-    public EventSetPointBoolean(String eventModelId, String staticId, String parameterSetId) {
-        super(eventModelId, parameterSetId);
-        this.generatorStaticId = staticId;
+    public EventSetPointBoolean(String eventModelId, String generatorStaticId, double startTime, boolean stateEvent) {
+        super(eventModelId, generatorStaticId, startTime);
+        this.stateEvent = stateEvent;
     }
 
     @Override
@@ -43,10 +46,11 @@ public class EventSetPointBoolean extends AbstractPureDynamicBlackBoxModel {
 
     @Override
     public List<Model> getModelsConnectedTo(DynaWaltzContext context) {
-        BlackBoxModel connectedBbm = context.getStaticIdBlackBoxModelMap().get(generatorStaticId);
-        if (connectedBbm == null) {
-            throw new PowsyblException("Cannot find generator '" + generatorStaticId + "' among the dynamic models provided");
-        }
-        return List.of(connectedBbm);
+        return List.of(context.getDynamicModelOrThrows(getEquipmentStaticId()));
+    }
+
+    @Override
+    protected void writeEventSpecificParameters(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
+        ParametersXml.writeParameter(writer, BOOL, "event_stateEvent1", Boolean.toString(stateEvent));
     }
 }

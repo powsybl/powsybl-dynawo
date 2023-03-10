@@ -8,5 +8,7 @@
 EventQuadripoleDisconnection {
     staticId "_BUS____1-BUS____5-1_AC"
     eventModelId "DISCONNECT_LINE"
-    parameterSetId "EQD"
+    startTime 5
+    disconnectOrigin false
+    disconnectExtremity true
 }

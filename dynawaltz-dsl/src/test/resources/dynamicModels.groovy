@@ -50,12 +50,6 @@ for (Generator gen : network.generators) {
             dynamicModelId "BBM_" + gen.id
             parameterSetId "GSTW"
         }
-    } else if (gen.id == "GEN5") {
-        GeneratorSynchronousFourWindingsProportionalRegulationsStepPm {
-            staticId gen.id
-            dynamicModelId "BBM_" + gen.id
-            parameterSetId "GSFWPRSP"
-        }
     } else if (gen.id == "GEN6") {
         GeneratorFictitious {
             staticId gen.id
@@ -83,6 +77,12 @@ for (Line line : network.lines) {
         dynamicModelId "BBM_" + line.id
         parameterSetId "CLA"
         side Branch.Side.TWO
+    }
+
+    Line {
+        staticId line.id
+        dynamicModelId "BBM_" + line.id
+        parameterSetId "SL"
     }
 }
 

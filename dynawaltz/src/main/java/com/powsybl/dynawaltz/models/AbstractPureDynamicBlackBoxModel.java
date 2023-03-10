@@ -6,15 +6,13 @@
  */
 package com.powsybl.dynawaltz.models;
 
-import com.powsybl.dynamicsimulation.EventModel;
-
 import java.util.Collections;
 import java.util.List;
 
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  */
-public abstract class AbstractPureDynamicBlackBoxModel extends AbstractBlackBoxModel implements EventModel {
+public abstract class AbstractPureDynamicBlackBoxModel extends AbstractBlackBoxModel {
 
     protected AbstractPureDynamicBlackBoxModel(String dynamicModelId, String parameterSetId) {
         super(dynamicModelId, null, parameterSetId);

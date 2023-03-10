@@ -14,38 +14,37 @@ import com.powsybl.dynamicsimulation.groovy.EventModelGroovyExtension;
 import com.powsybl.dynamicsimulation.groovy.GroovyEventModelsSupplier;
 import com.powsybl.dynamicsimulation.groovy.GroovyExtension;
 import com.powsybl.dynawaltz.DynaWaltzProvider;
-import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
-import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection;
 import com.powsybl.dynawaltz.dsl.events.EventQuadripoleDisconnectionGroovyExtension;
 import com.powsybl.dynawaltz.dsl.events.EventSetPointBooleanGroovyExtension;
+import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
+import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection;
 import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.Line;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.NetworkFactory;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class DynaWaltzGroovyEventModelsSupplierTest {
+class DynaWaltzGroovyEventModelsSupplierTest {
 
     private FileSystem fileSystem;
     private Network network;
 
-    @Before
-    public void setup() throws IOException {
+    @BeforeEach
+    void setup() throws IOException {
         fileSystem = Jimfs.newFileSystem(Configuration.unix());
         network = createEurostagTutorialExample1WithMoreGens();
 
@@ -53,13 +52,13 @@ public class DynaWaltzGroovyEventModelsSupplierTest {
         Files.copy(getClass().getResourceAsStream("/models.par"), fileSystem.getPath("/models.par"));
     }
 
-    @After
-    public void tearDown() throws IOException {
+    @AfterEach
+    void tearDown() throws IOException {
         fileSystem.close();
     }
 
     @Test
-    public void test() {
+    void test() {
 
         List<EventModelGroovyExtension> extensions = GroovyExtension.find(EventModelGroovyExtension.class, DynaWaltzProvider.NAME);
         assertEquals(2, extensions.size());
@@ -69,7 +68,7 @@ public class DynaWaltzGroovyEventModelsSupplierTest {
 
         List<EventModel> eventModels = supplier.get(network);
         int numLines = network.getLineCount();
-        int expectedEventModelsSize =  numLines;
+        int expectedEventModelsSize = numLines;
         assertEquals(expectedEventModelsSize, eventModels.size());
         eventModels.forEach(this::validateModel);
     }
@@ -91,9 +90,9 @@ public class DynaWaltzGroovyEventModelsSupplierTest {
         assertTrue(eventModel instanceof AbstractPureDynamicBlackBoxModel);
         AbstractPureDynamicBlackBoxModel blackBoxEventModel = (AbstractPureDynamicBlackBoxModel) eventModel;
         if (blackBoxEventModel instanceof EventQuadripoleDisconnection) {
-            Identifiable<?> identifiable = network.getIdentifiable(((EventQuadripoleDisconnection) blackBoxEventModel).getLineStaticId());
+            Identifiable<?> identifiable = network.getIdentifiable(((EventQuadripoleDisconnection) blackBoxEventModel).getEquipmentStaticId());
             assertEquals("EM_" + identifiable.getId(), blackBoxEventModel.getDynamicModelId());
-            assertEquals("EQD", blackBoxEventModel.getParameterSetId());
+            assertEquals(blackBoxEventModel.getDynamicModelId(), blackBoxEventModel.getParameterSetId());
             assertTrue(identifiable instanceof Line);
         }
     }

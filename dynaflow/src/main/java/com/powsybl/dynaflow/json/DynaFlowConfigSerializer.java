@@ -70,7 +70,7 @@ public final class DynaFlowConfigSerializer {
             if (dynaFlowParameters.getStopTime() != null) {
                 jsonGenerator.writeNumberField("StopTime", dynaFlowParameters.getStopTime());
             }
-            if (dynaFlowParameters.getPrecision() != null) {
+            if (dynaFlowParameters.getPrecision() != null && !Double.isNaN(dynaFlowParameters.getPrecision())) {
                 jsonGenerator.writeNumberField("Precision", dynaFlowParameters.getPrecision());
             }
             if (dynaFlowParameters.getSa() != null) {
@@ -90,7 +90,7 @@ public final class DynaFlowConfigSerializer {
             if (dynaFlowParameters.getStartingPointMode() != null) {
                 jsonGenerator.writeStringField("StartingPointMode", dynaFlowParameters.getStartingPointMode().getName());
             }
-            jsonGenerator.writeStringField("OutputDir", workingDir.toAbsolutePath().toString());
+            jsonGenerator.writeStringField("OutputDir", workingDir.toString());
             jsonGenerator.writeEndObject();
             jsonGenerator.writeEndObject();
         } catch (IOException e) {

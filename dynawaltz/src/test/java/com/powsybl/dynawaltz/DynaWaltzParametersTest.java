@@ -6,58 +6,63 @@
  */
 package com.powsybl.dynawaltz;
 
-import static org.junit.Assert.assertEquals;
-
-import java.io.IOException;
-import java.nio.file.FileSystem;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
 import com.powsybl.commons.config.InMemoryPlatformConfig;
 import com.powsybl.commons.config.MapModuleConfig;
+import com.powsybl.commons.config.ModuleConfig;
 import com.powsybl.dynawaltz.DynaWaltzParameters.SolverType;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
+import java.nio.file.FileSystem;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class DynaWaltzParametersTest {
+class DynaWaltzParametersTest {
 
     private final String parametersFile = "/home/user/parametersFile";
     private final String networkParametersFile = "/home/user/networkParametersFile";
     private final String solverParametersFile = "/home/user/solverParametersFile";
+    private final boolean mergeLoads = true;
 
     private InMemoryPlatformConfig platformConfig;
     private FileSystem fileSystem;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         fileSystem = Jimfs.newFileSystem(Configuration.unix());
         platformConfig = new InMemoryPlatformConfig(fileSystem);
         MapModuleConfig moduleConfig = platformConfig.createModuleConfig("dynawaltz-default-parameters");
         moduleConfig.setStringProperty("parametersFile", parametersFile);
         moduleConfig.setStringProperty("network.parametersFile", networkParametersFile);
         moduleConfig.setStringProperty("solver.parametersFile", solverParametersFile);
+        moduleConfig.setStringProperty("mergeLoads", String.valueOf(mergeLoads));
     }
 
-    @After
-    public void tearDown() throws IOException {
+    @AfterEach
+    void tearDown() throws IOException {
         fileSystem.close();
     }
 
     @Test
-    public void checkParameters() {
+    void checkParameters() {
         String networkParametersId = "networkParametersId";
         SolverType solverType = SolverType.IDA;
         String solverParametersId = "solverParametersId";
 
-        MapModuleConfig moduleConfig = (MapModuleConfig) platformConfig.getModuleConfig("dynawaltz-default-parameters");
-        moduleConfig.setStringProperty("network.parametersId", networkParametersId);
-        moduleConfig.setStringProperty("solver.type", solverType.toString());
-        moduleConfig.setStringProperty("solver.parametersId", solverParametersId);
+        Optional<ModuleConfig> moduleConfig = platformConfig.getOptionalModuleConfig("dynawaltz-default-parameters");
+        moduleConfig.filter(MapModuleConfig.class::isInstance).map(MapModuleConfig.class::cast).ifPresent(c -> {
+            c.setStringProperty("network.parametersId", networkParametersId);
+            c.setStringProperty("solver.type", solverType.toString());
+            c.setStringProperty("solver.parametersId", solverParametersId);
+        });
 
         DynaWaltzParameters parameters = DynaWaltzParameters.load(platformConfig);
         assertEquals(parametersFile, parameters.getParametersFile());
@@ -66,10 +71,11 @@ public class DynaWaltzParametersTest {
         assertEquals(solverType, parameters.getSolver().getType());
         assertEquals(solverParametersFile, parameters.getSolver().getParametersFile());
         assertEquals(solverParametersId, parameters.getSolver().getParametersId());
+        assertEquals(mergeLoads, parameters.isMergeLoads());
     }
 
     @Test
-    public void checkDefaultParameters() {
+    void checkDefaultParameters() {
 
         DynaWaltzParameters parameters = DynaWaltzParameters.load(platformConfig);
         assertEquals(parametersFile, parameters.getParametersFile());
@@ -78,5 +84,6 @@ public class DynaWaltzParametersTest {
         assertEquals(DynaWaltzParameters.DEFAULT_SOLVER_TYPE, parameters.getSolver().getType());
         assertEquals(solverParametersFile, parameters.getSolver().getParametersFile());
         assertEquals(DynaWaltzParameters.DEFAULT_SOLVER_PAR_ID, parameters.getSolver().getParametersId());
+        assertEquals(DynaWaltzParameters.DEFAULT_MERGE_LOADS, parameters.isMergeLoads());
     }
 }

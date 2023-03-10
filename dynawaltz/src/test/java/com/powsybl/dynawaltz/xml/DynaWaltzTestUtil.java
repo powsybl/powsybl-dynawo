@@ -6,7 +6,7 @@
  */
 package com.powsybl.dynawaltz.xml;
 
-import com.powsybl.commons.AbstractConverterTest;
+import com.powsybl.commons.test.AbstractConverterTest;
 import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynawaltz.DynaWaltzCurve;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
@@ -14,15 +14,15 @@ import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton;
 import com.powsybl.dynawaltz.models.buses.StandardBus;
 import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection;
 import com.powsybl.dynawaltz.models.events.EventSetPointBoolean;
-import com.powsybl.dynawaltz.models.generators.*;
+import com.powsybl.dynawaltz.models.generators.GeneratorConnectedToOmegaRef;
+import com.powsybl.dynawaltz.models.generators.GeneratorFictitious;
+import com.powsybl.dynawaltz.models.generators.GeneratorSynchronous;
+import com.powsybl.dynawaltz.models.lines.StandardLine;
 import com.powsybl.dynawaltz.models.loads.LoadAlphaBeta;
 import com.powsybl.dynawaltz.models.loads.LoadOneTransformer;
 import com.powsybl.iidm.network.*;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
-import junit.framework.AssertionFailedError;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.BeforeEach;
 import org.xml.sax.SAXException;
 
 import javax.xml.XMLConstants;
@@ -37,23 +37,20 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.powsybl.commons.ComparisonUtils.compareXml;
+import static com.powsybl.commons.test.ComparisonUtils.compareXml;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 public class DynaWaltzTestUtil extends AbstractConverterTest {
 
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
-
     protected Network network;
     protected List<BlackBoxModel> dynamicModels;
     protected List<BlackBoxModel> eventModels;
     protected List<Curve> curves;
 
-    @Before
-    public void setup() {
+    @BeforeEach
+    void setup() {
 
         network = createEurostagTutorialExample1WithMoreLoads();
 
@@ -85,8 +82,6 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
                 dynamicModels.add(new GeneratorSynchronous("BBM_" + g.getId(), g.getId(), "GSFW", "GeneratorSynchronousFourWindings"));
             } else if (g.getId().equals("GEN4")) {
                 dynamicModels.add(new GeneratorSynchronous("BBM_" + g.getId(), g.getId(), "GSTW", "GeneratorSynchronousThreeWindings"));
-            } else if (g.getId().equals("GEN5")) {
-                dynamicModels.add(new GeneratorSynchronous("BBM_" + g.getId(), g.getId(), "GSFWPRSP", "GeneratorSynchronousFourWindingsProportionalRegulationsStepPm"));
             } else if (g.getId().equals("GEN6")) {
                 dynamicModels.add(new GeneratorFictitious("BBM_" + g.getId(), g.getId(), "GF"));
             } else if (g.getId().equals("GEN7")) {
@@ -96,26 +91,27 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
             }
         });
         network.getBusBreakerView().getBuses().forEach(b -> {
-            if (b.getId().equals("NGEN")) {
+            if (b.getId().equals("NHV2") || b.getId().equals("NHV1")) {
                 dynamicModels.add(new StandardBus("BBM_" + b.getId(), b.getId(), "SB"));
+            }
+        });
+        network.getLineStream().forEach(l -> {
+            if (l.getId().equals("NHV1_NHV2_1")) {
+                dynamicModels.add(new StandardLine("Line_" + l.getId(), l.getId(), "SL"));
             }
         });
 
         // Events
         eventModels = new ArrayList<>();
-        network.getLineStream().forEach(l -> {
-            eventModels.add(new EventQuadripoleDisconnection("EM_" + l.getId(), l.getId(), "EQD"));
-        });
+        network.getLineStream().forEach(l -> eventModels.add(new EventQuadripoleDisconnection("EM_" + l.getId(), l.getId(), 5, false, true)));
         network.getGeneratorStream().forEach(g -> {
             if (g.getId().equals("GEN2")) {
-                eventModels.add(new EventSetPointBoolean("EM_" + g.getId(), g.getId(), "ESPB"));
+                eventModels.add(new EventSetPointBoolean("EM_" + g.getId(), g.getId(), 1, true));
             }
         });
 
         // Automatons
-        network.getLineStream().forEach(l -> {
-            dynamicModels.add(new CurrentLimitAutomaton("BBM_" + l.getId(), l.getId(), "CLA", Branch.Side.ONE));
-        });
+        network.getLineStream().forEach(l -> dynamicModels.add(new CurrentLimitAutomaton("BBM_" + l.getId(), l.getId(), "CLA", Branch.Side.ONE)));
     }
 
     public void validate(String schemaDefinition, String expectedResourceName, Path xmlFile) throws SAXException, IOException {
@@ -222,18 +218,5 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
             .setTargetQ(0.2)
             .add();
         return network;
-    }
-
-    public static <T extends Throwable> T assertThrows(Class<T> expectedType, Runnable runnable) {
-        try {
-            runnable.run();
-        } catch (Throwable actualException) {
-            if (expectedType.isInstance(actualException)) {
-                return (T) actualException;
-            } else {
-                throw new AssertionFailedError(String.format("Expected %s to be thrown, but %s was thrown", expectedType.getCanonicalName(), actualException.getClass().getCanonicalName()));
-            }
-        }
-        throw new AssertionFailedError(String.format("Expected %s to be thrown, but nothing was thrown.", expectedType.getCanonicalName()));
     }
 }

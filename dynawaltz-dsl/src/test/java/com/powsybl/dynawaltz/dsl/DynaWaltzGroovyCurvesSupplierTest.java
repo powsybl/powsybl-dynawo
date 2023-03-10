@@ -6,21 +6,6 @@
  */
 package com.powsybl.dynawaltz.dsl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.io.IOException;
-import java.nio.file.FileSystem;
-import java.nio.file.Files;
-import java.util.Arrays;
-import java.util.List;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
 import com.powsybl.dsl.DslException;
@@ -35,88 +20,81 @@ import com.powsybl.iidm.network.Generator;
 import com.powsybl.iidm.network.Load;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
+import java.nio.file.FileSystem;
+import java.nio.file.Files;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class DynaWaltzGroovyCurvesSupplierTest {
-
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
+class DynaWaltzGroovyCurvesSupplierTest {
 
     private FileSystem fileSystem;
     private Network network;
 
-    @Before
-    public void setup() throws IOException {
+    @BeforeEach
+    void setup() throws IOException {
         fileSystem = Jimfs.newFileSystem(Configuration.unix());
         network = EurostagTutorialExample1Factory.create();
 
-        Files.copy(getClass().getResourceAsStream("/curves.groovy"), fileSystem.getPath("/curves.groovy"));
-        Files.copy(getClass().getResourceAsStream("/curves_dynamicModelId_staticId.groovy"), fileSystem.getPath("/curves_dynamicModelId_staticId.groovy"));
-        Files.copy(getClass().getResourceAsStream("/curves_variable.groovy"), fileSystem.getPath("/curves_variable.groovy"));
-        Files.copy(getClass().getResourceAsStream("/curves_variables.groovy"), fileSystem.getPath("/curves_variables.groovy"));
+        Files.copy(Objects.requireNonNull(getClass().getResourceAsStream("/curves.groovy")), fileSystem.getPath("/curves.groovy"));
+        Files.copy(Objects.requireNonNull(getClass().getResourceAsStream("/curves_dynamicModelId_staticId.groovy")), fileSystem.getPath("/curves_dynamicModelId_staticId.groovy"));
+        Files.copy(Objects.requireNonNull(getClass().getResourceAsStream("/curves_variable.groovy")), fileSystem.getPath("/curves_variable.groovy"));
+        Files.copy(Objects.requireNonNull(getClass().getResourceAsStream("/curves_variables.groovy")), fileSystem.getPath("/curves_variables.groovy"));
     }
 
-    @After
-    public void tearDown() throws IOException {
+    @AfterEach
+    void tearDown() throws IOException {
         fileSystem.close();
     }
 
     @Test
-    public void test() {
-
-        List<CurveGroovyExtension> extensions = GroovyExtension.find(CurveGroovyExtension.class, DynaWaltzProvider.NAME);
-        assertEquals(1, extensions.size());
-        assertTrue(extensions.get(0) instanceof DynaWaltzCurveGroovyExtension);
-
+    void test() {
+        List<CurveGroovyExtension> extensions = validateGroovyExtension();
         CurvesSupplier supplier = new GroovyCurvesSupplier(fileSystem.getPath("/curves.groovy"), extensions);
-
         List<Curve> curves = supplier.get(network);
         assertEquals(11, curves.size());
         curves.forEach(this::validateCurve);
     }
 
     @Test
-    public void testModelIdStaticIdDefined() {
-
-        exception.expect(DslException.class);
-        exception.expectMessage("Both staticId and dynamicModelId are defined");
-
-        List<CurveGroovyExtension> extensions = GroovyExtension.find(CurveGroovyExtension.class, DynaWaltzProvider.NAME);
-        assertEquals(1, extensions.size());
-        assertTrue(extensions.get(0) instanceof DynaWaltzCurveGroovyExtension);
-
+    void testModelIdStaticIdDefined() {
+        List<CurveGroovyExtension> extensions = validateGroovyExtension();
         CurvesSupplier supplier = new GroovyCurvesSupplier(fileSystem.getPath("/curves_dynamicModelId_staticId.groovy"), extensions);
-        supplier.get(network);
+        DslException exception = assertThrows(DslException.class, () -> supplier.get(network));
+        assertEquals("Both staticId and dynamicModelId are defined", exception.getMessage());
     }
 
     @Test
-    public void testVariableNotDefined() {
-
-        exception.expect(DslException.class);
-        exception.expectMessage("'variables' field is not set");
-
-        List<CurveGroovyExtension> extensions = GroovyExtension.find(CurveGroovyExtension.class, DynaWaltzProvider.NAME);
-        assertEquals(1, extensions.size());
-        assertTrue(extensions.get(0) instanceof DynaWaltzCurveGroovyExtension);
-
+    void testVariableNotDefined() {
+        List<CurveGroovyExtension> extensions = validateGroovyExtension();
         CurvesSupplier supplier = new GroovyCurvesSupplier(fileSystem.getPath("/curves_variable.groovy"), extensions);
-        supplier.get(network);
+        DslException exception = assertThrows(DslException.class, () -> supplier.get(network));
+        assertEquals("'variables' field is not set", exception.getMessage());
     }
 
     @Test
-    public void testVariablesNotDefined() {
+    void testVariablesNotDefined() {
+        List<CurveGroovyExtension> extensions = validateGroovyExtension();
+        CurvesSupplier supplier = new GroovyCurvesSupplier(fileSystem.getPath("/curves_variables.groovy"), extensions);
+        DslException exception = assertThrows(DslException.class, () -> supplier.get(network));
+        assertEquals("'variables' field is not set", exception.getMessage());
+    }
 
-        exception.expect(DslException.class);
-        exception.expectMessage("'variables' field is not set");
-
+    private List<CurveGroovyExtension> validateGroovyExtension() {
         List<CurveGroovyExtension> extensions = GroovyExtension.find(CurveGroovyExtension.class, DynaWaltzProvider.NAME);
         assertEquals(1, extensions.size());
         assertTrue(extensions.get(0) instanceof DynaWaltzCurveGroovyExtension);
-
-        CurvesSupplier supplier = new GroovyCurvesSupplier(fileSystem.getPath("/curves_variables.groovy"), extensions);
-        supplier.get(network);
+        return extensions;
     }
 
     private void validateCurve(Curve curve) {

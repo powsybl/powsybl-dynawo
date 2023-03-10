@@ -14,41 +14,47 @@ import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension;
 import com.powsybl.dynamicsimulation.groovy.GroovyDynamicModelsSupplier;
 import com.powsybl.dynamicsimulation.groovy.GroovyExtension;
 import com.powsybl.dynawaltz.DynaWaltzProvider;
+import com.powsybl.dynawaltz.dsl.automatons.CurrentLimitAutomatonGroovyExtension;
 import com.powsybl.dynawaltz.dsl.models.buses.BusGroovyExtension;
-import com.powsybl.dynawaltz.dsl.models.generators.GeneratorModelGroovyExtension;
+import com.powsybl.dynawaltz.dsl.models.generators.GeneratorConnectedToOmegaRefGroovyExtension;
+import com.powsybl.dynawaltz.dsl.models.generators.GeneratorFictitiousGroovyExtension;
+import com.powsybl.dynawaltz.dsl.models.generators.GeneratorSynchronousGroovyExtension;
+import com.powsybl.dynawaltz.dsl.models.lines.LineGroovyExtension;
 import com.powsybl.dynawaltz.dsl.models.loads.LoadAlphaBetaGroovyExtension;
 import com.powsybl.dynawaltz.dsl.models.loads.LoadOneTransformerGroovyExtension;
 import com.powsybl.dynawaltz.models.AbstractBlackBoxModel;
 import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton;
-import com.powsybl.dynawaltz.dsl.automatons.CurrentLimitAutomatonGroovyExtension;
 import com.powsybl.dynawaltz.models.buses.StandardBus;
-import com.powsybl.dynawaltz.models.generators.*;
+import com.powsybl.dynawaltz.models.generators.GeneratorConnectedToOmegaRef;
+import com.powsybl.dynawaltz.models.generators.GeneratorFictitious;
+import com.powsybl.dynawaltz.models.generators.GeneratorSynchronous;
+import com.powsybl.dynawaltz.models.lines.StandardLine;
 import com.powsybl.dynawaltz.models.loads.LoadAlphaBeta;
 import com.powsybl.dynawaltz.models.loads.LoadOneTransformer;
 import com.powsybl.iidm.network.*;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class DynaWaltzGroovyDynamicModelsSupplierTest {
+class DynaWaltzGroovyDynamicModelsSupplierTest {
 
     private FileSystem fileSystem;
     private Network network;
 
-    @Before
-    public void setup() throws IOException {
+    @BeforeEach
+    void setup() throws IOException {
         fileSystem = Jimfs.newFileSystem(Configuration.unix());
         network = createEurostagTutorialExample1WithMoreGens();
 
@@ -56,16 +62,16 @@ public class DynaWaltzGroovyDynamicModelsSupplierTest {
         Files.copy(getClass().getResourceAsStream("/models.par"), fileSystem.getPath("/models.par"));
     }
 
-    @After
-    public void tearDown() throws IOException {
+    @AfterEach
+    void tearDown() throws IOException {
         fileSystem.close();
     }
 
     @Test
-    public void test() {
+    void test() {
 
         List<DynamicModelGroovyExtension> extensions = GroovyExtension.find(DynamicModelGroovyExtension.class, DynaWaltzProvider.NAME);
-        assertEquals(7, extensions.size());
+        assertEquals(8, extensions.size());
         extensions.forEach(this::validateExtension);
 
         DynamicModelsSupplier supplier = new GroovyDynamicModelsSupplier(fileSystem.getPath("/dynamicModels.groovy"), extensions);
@@ -76,7 +82,8 @@ public class DynaWaltzGroovyDynamicModelsSupplierTest {
         int numGenerators = network.getGeneratorCount();
         int numLines = network.getLineCount();
         long numBuses = network.getBusBreakerView().getBusStream().count();
-        int expectedDynamicModelsSize = numLoads + numGenerators + numLines + (int) numBuses;
+        long numAutomatons = dynamicModels.stream().filter(CurrentLimitAutomaton.class::isInstance).count();
+        int expectedDynamicModelsSize = numLoads + numGenerators + numLines + (int) numBuses + (int) numAutomatons;
         assertEquals(expectedDynamicModelsSize, dynamicModels.size());
         dynamicModels.forEach(this::validateModel);
     }
@@ -84,7 +91,7 @@ public class DynaWaltzGroovyDynamicModelsSupplierTest {
     private static Network createEurostagTutorialExample1WithMoreGens() {
         Network network = EurostagTutorialExample1Factory.create(NetworkFactory.findDefault());
 
-        VoltageLevel vlgen  = network.getVoltageLevel("VLGEN");
+        VoltageLevel vlgen = network.getVoltageLevel("VLGEN");
         Bus ngen = vlgen.getBusBreakerView().getBus("NGEN");
         vlgen.newGenerator()
             .setId("GEN2")
@@ -152,7 +159,7 @@ public class DynaWaltzGroovyDynamicModelsSupplierTest {
             .setTargetP(-1.3)
             .setTargetQ(0.9)
             .add();
-        VoltageLevel vlload  = network.getVoltageLevel("VLLOAD");
+        VoltageLevel vlload = network.getVoltageLevel("VLLOAD");
         Bus nload = vlload.getBusBreakerView().getBus("NLOAD");
         vlload.newLoad()
             .setId("LOAD2")
@@ -165,13 +172,15 @@ public class DynaWaltzGroovyDynamicModelsSupplierTest {
     }
 
     private void validateExtension(DynamicModelGroovyExtension extension) {
+
         boolean isLoadAlphaBetaExtension = extension instanceof LoadAlphaBetaGroovyExtension;
         boolean isLoadOneTransformerExtension = extension instanceof LoadOneTransformerGroovyExtension;
-
         boolean isLoadExtension = isLoadAlphaBetaExtension || isLoadOneTransformerExtension;
-        boolean isGeneratorExtension = extension instanceof GeneratorModelGroovyExtension;
+
+        boolean isGeneratorExtension = extension instanceof GeneratorSynchronousGroovyExtension || extension instanceof GeneratorFictitiousGroovyExtension || extension instanceof GeneratorConnectedToOmegaRefGroovyExtension;
         boolean isBusExtension = extension instanceof BusGroovyExtension;
-        boolean isDynamicModelExtension = isLoadExtension || isGeneratorExtension || isBusExtension;
+        boolean isLineExtension = extension instanceof LineGroovyExtension;
+        boolean isDynamicModelExtension = isLoadExtension || isGeneratorExtension || isBusExtension || isLineExtension;
 
         boolean isCurrentLimitAutomatonExtension = extension instanceof CurrentLimitAutomatonGroovyExtension;
         boolean isAutomatonExtension = isCurrentLimitAutomatonExtension;
@@ -214,6 +223,11 @@ public class DynaWaltzGroovyDynamicModelsSupplierTest {
             assertEquals("BBM_" + identifiable.getId(), blackBoxModel.getDynamicModelId());
             assertEquals("SB", blackBoxModel.getParameterSetId());
             assertTrue(identifiable instanceof Bus);
+        } else if (blackBoxModel instanceof StandardLine) {
+            Identifiable<?> identifiable = network.getIdentifiable(blackBoxModel.getStaticId().orElse(null));
+            assertEquals("BBM_" + identifiable.getId(), blackBoxModel.getDynamicModelId());
+            assertEquals("SL", blackBoxModel.getParameterSetId());
+            assertTrue(identifiable instanceof Line);
         }
     }
 
@@ -227,11 +241,6 @@ public class DynaWaltzGroovyDynamicModelsSupplierTest {
             Identifiable<?> identifiable = network.getIdentifiable(generatorSynchronous.getStaticId().orElse(null));
             assertEquals("BBM_" + identifiable.getId(), generatorSynchronous.getDynamicModelId());
             assertEquals("GSFWPR", generatorSynchronous.getParameterSetId());
-            assertTrue(identifiable instanceof Generator);
-        } else if (generatorSynchronous.getLib().equals("GeneratorSynchronousFourWindingsProportionalRegulationsStepPm")) {
-            Identifiable<?> identifiable = network.getIdentifiable(generatorSynchronous.getStaticId().orElse(null));
-            assertEquals("BBM_" + identifiable.getId(), generatorSynchronous.getDynamicModelId());
-            assertEquals("GSFWPRSP", generatorSynchronous.getParameterSetId());
             assertTrue(identifiable instanceof Generator);
         } else if (generatorSynchronous.getLib().equals("GeneratorSynchronousThreeWindings")) {
             Identifiable<?> identifiable = network.getIdentifiable(generatorSynchronous.getStaticId().orElse(null));

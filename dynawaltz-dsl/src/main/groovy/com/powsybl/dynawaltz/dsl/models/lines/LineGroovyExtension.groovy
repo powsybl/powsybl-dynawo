@@ -1,0 +1,42 @@
+/**
+ * Copyright (c) 2022, RTE (http://www.rte-france.com/)
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ */
+package com.powsybl.dynawaltz.dsl.models.lines
+
+import com.google.auto.service.AutoService
+import com.powsybl.dynamicsimulation.DynamicModel
+import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
+import com.powsybl.dynawaltz.dsl.AbstractDynamicModelBuilder
+import com.powsybl.dynawaltz.dsl.AbstractPowsyblDynawoGroovyExtension
+import com.powsybl.dynawaltz.models.lines.StandardLine
+
+/**
+ * An implementation of {@link DynamicModelGroovyExtension} that adds the <pre>Line</pre> keyword to the DSL
+ *
+ * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
+ */
+@AutoService(DynamicModelGroovyExtension.class)
+class LineGroovyExtension extends AbstractPowsyblDynawoGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+
+    LineGroovyExtension() {
+        modelTags = ["Line"]
+    }
+
+    @Override
+    protected LineBuilder createBuilder(String currentTag) {
+        new LineBuilder()
+    }
+
+    static class LineBuilder extends AbstractDynamicModelBuilder {
+
+        @Override
+        StandardLine build() {
+            checkData()
+            new StandardLine(dynamicModelId, staticId, parameterSetId)
+        }
+    }
+}

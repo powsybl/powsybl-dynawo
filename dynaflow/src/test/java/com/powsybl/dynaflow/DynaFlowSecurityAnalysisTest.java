@@ -9,6 +9,7 @@ package com.powsybl.dynaflow;
 import com.google.common.io.ByteStreams;
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
+import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.config.InMemoryPlatformConfig;
 import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.reporter.Reporter;
@@ -26,13 +27,16 @@ import com.powsybl.iidm.network.VariantManagerConstants;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import com.powsybl.loadflow.LoadFlowResult;
 import com.powsybl.security.*;
+import com.powsybl.security.action.Action;
 import com.powsybl.security.detectors.DefaultLimitViolationDetector;
 import com.powsybl.security.extensions.ActivePowerExtension;
 import com.powsybl.security.extensions.CurrentExtension;
+import com.powsybl.security.interceptors.SecurityAnalysisInterceptor;
 import com.powsybl.security.results.PostContingencyResult;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import com.powsybl.security.strategy.OperatorStrategy;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +45,9 @@ import org.xmlunit.builder.Input;
 import org.xmlunit.diff.Diff;
 
 import javax.xml.transform.Source;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
@@ -53,15 +59,14 @@ import java.util.Objects;
 import java.util.concurrent.ForkJoinPool;
 
 import static com.powsybl.dynaflow.DynaFlowConstants.*;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class DynaFlowSecurityAnalysisTest {
+class DynaFlowSecurityAnalysisTest {
 
-    private static final String SECURITY_ANALISIS_RESULTS_FILENAME = "securityAnalysisResults.json";
-    private static final String DYNAWO_PROVIDER_NAME = "DynawoSecurityAnalysis";
+    private static final String SECURITY_ANALYSIS_RESULTS_FILENAME = "securityAnalysisResults.json";
 
     private FileSystem fileSystem;
     private PlatformConfig platformConfig;
@@ -75,25 +80,25 @@ public class DynaFlowSecurityAnalysisTest {
         }
     }
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         fileSystem = Jimfs.newFileSystem(Configuration.unix());
         platformConfig = new InMemoryPlatformConfig(fileSystem);
     }
 
-    @After
-    public void tearDown() throws IOException {
+    @AfterEach
+    void tearDown() throws IOException {
         fileSystem.close();
     }
 
     private static class LocalCommandExecutorMock extends AbstractLocalCommandExecutor {
 
         private final String stdOutFileRef;
-        private final String outputSecurityAnalisisResult;
+        private final String outputSecurityAnalysisResult;
 
-        public LocalCommandExecutorMock(String stdoutFileRef, String outputSecurityAnalisisResult) {
+        public LocalCommandExecutorMock(String stdoutFileRef, String outputSecurityAnalysisResult) {
             this.stdOutFileRef = Objects.requireNonNull(stdoutFileRef);
-            this.outputSecurityAnalisisResult = Objects.requireNonNull(outputSecurityAnalisisResult);
+            this.outputSecurityAnalysisResult = Objects.requireNonNull(outputSecurityAnalysisResult);
         }
 
         @Override
@@ -106,7 +111,7 @@ public class DynaFlowSecurityAnalysisTest {
                     assertEquals("--config", args.get(2));
                     assertEquals("--contingencies", args.get(4));
                     Files.createDirectories(workingDir.resolve("outputs"));
-                    copyFile(outputSecurityAnalisisResult, workingDir.resolve("outputs").resolve(SECURITY_ANALISIS_RESULTS_FILENAME));
+                    copyFile(outputSecurityAnalysisResult, workingDir.resolve("outputs").resolve(SECURITY_ANALYSIS_RESULTS_FILENAME));
                 }
                 return 0;
             } catch (IOException e) {
@@ -116,14 +121,13 @@ public class DynaFlowSecurityAnalysisTest {
     }
 
     @Test
-    public void testDefaultProvider() {
+    void testDefaultProvider() {
         SecurityAnalysis.Runner dynawoSecurityAnalysisRunner = SecurityAnalysis.find();
-        assertEquals(DYNAWO_PROVIDER_NAME, dynawoSecurityAnalysisRunner.getName());
-        assertEquals("1.0", dynawoSecurityAnalysisRunner.getVersion());
+        assertEquals(DYNAFLOW_NAME, dynawoSecurityAnalysisRunner.getName());
     }
 
     @Test
-    public void test() throws IOException {
+    void test() throws IOException {
         Network network = EurostagTutorialExample1Factory.create();
         ((Bus) network.getIdentifiable("NHV1")).setV(380.0);
         ((Bus) network.getIdentifiable("NHV2")).setV(380.0);
@@ -139,8 +143,8 @@ public class DynaFlowSecurityAnalysisTest {
                 .endTemporaryLimit()
                 .add();
 
-        LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynaflow_version.out",
-                "/security_analisis_result.json");
+        LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynawo_version.out",
+                "/security_analysis_result.json");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
 
         Contingency contingency = Contingency.builder("NHV1_NHV2_2_contingency")
@@ -176,6 +180,31 @@ public class DynaFlowSecurityAnalysisTest {
         assertEquals(95.0, extension2.getPreContingencyValue(), 0.0);
     }
 
+    @Test
+    void testCallingBadVersionDynawo() throws IOException {
+        Network network = EurostagTutorialExample1Factory.create();
+
+        Contingency contingency = Contingency.builder("NHV1_NHV2_2_contingency")
+                .addBranch("NHV1_NHV2_2")
+                .build();
+        contingency = Mockito.spy(contingency);
+        Mockito.when(contingency.toModification()).thenReturn(new DynaFlowSecurityAnalysisTestNetworkModification());
+        ContingenciesProvider contingenciesProvider = Mockito.mock(ContingenciesProvider.class);
+        Mockito.when(contingenciesProvider.getContingencies(network)).thenReturn(Collections.singletonList(contingency));
+        LimitViolationFilter filter = new LimitViolationFilter();
+
+        LocalCommandExecutor commandExecutor = new SecurityAnalysisLocalCommandExecutorMock("/dynawo_bad_version.out");
+        ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
+
+        SecurityAnalysisParameters sap = SecurityAnalysisParameters.load(platformConfig);
+        DefaultLimitViolationDetector dlvd = new DefaultLimitViolationDetector();
+        List<SecurityAnalysisInterceptor> interceptors = Collections.emptyList();
+        List<OperatorStrategy> operatorStrategies = Collections.emptyList();
+        List<Action> actions = Collections.emptyList();
+        assertThrows(PowsyblException.class, () -> SecurityAnalysis.run(network, VariantManagerConstants.INITIAL_VARIANT_ID, contingenciesProvider,
+                sap, computationManager, filter, dlvd, interceptors, operatorStrategies, actions));
+    }
+
     private static class SecurityAnalysisLocalCommandExecutorMock extends AbstractLocalCommandExecutor {
 
         private static final Logger LOGGER = LoggerFactory.getLogger(SecurityAnalysisLocalCommandExecutorMock.class);
@@ -187,7 +216,7 @@ public class DynaFlowSecurityAnalysisTest {
         }
 
         @Override
-        public int execute(String program, List<String> args, Path outFile, Path errFile, Path workingDir, Map<String, String> env) throws IOException, InterruptedException {
+        public int execute(String program, List<String> args, Path outFile, Path errFile, Path workingDir, Map<String, String> env) {
             try {
                 if (args.get(0).equals("--version")) {
                     copyFile(stdOutFileRef, errFile);
@@ -224,7 +253,7 @@ public class DynaFlowSecurityAnalysisTest {
             Diff myDiff = DiffBuilder.compare(control).withTest(test).ignoreWhitespace().ignoreComments().build();
             boolean hasDiff = myDiff.hasDifferences();
             if (hasDiff) {
-                System.err.println(myDiff.toString());
+                System.err.println(myDiff);
             }
             assertFalse(hasDiff);
         }
@@ -254,7 +283,7 @@ public class DynaFlowSecurityAnalysisTest {
     }
 
     @Test
-    public void testSecurityAnalysisOutputs() throws IOException {
+    void testSecurityAnalysisOutputs() throws IOException {
         Path workingDir = Files.createDirectory(fileSystem.getPath("SmallBusBranch"));
 
         // Load network
@@ -264,7 +293,7 @@ public class DynaFlowSecurityAnalysisTest {
         Files.copy(getClass().getResourceAsStream("/SmallBusBranch/powsybl-inputs/contingencies.groovy"), workingDir.resolve("contingencies.groovy"));
         ContingenciesProvider contingenciesProvider = new GroovyDslContingenciesProvider(workingDir.resolve("contingencies.groovy"));
 
-        LocalCommandExecutor commandExecutor = new SecurityAnalysisLocalCommandExecutorMock("/dynaflow_version.out");
+        LocalCommandExecutor commandExecutor = new SecurityAnalysisLocalCommandExecutorMock("/dynawo_version.out");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(workingDir, 1), commandExecutor, ForkJoinPool.commonPool());
 
         LimitViolationFilter filter = new LimitViolationFilter();
