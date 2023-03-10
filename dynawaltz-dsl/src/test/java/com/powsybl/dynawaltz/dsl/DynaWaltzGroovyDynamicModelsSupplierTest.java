@@ -16,6 +16,7 @@ import com.powsybl.dynamicsimulation.groovy.GroovyExtension;
 import com.powsybl.dynawaltz.DynaWaltzProvider;
 import com.powsybl.dynawaltz.dsl.automatons.CurrentLimitAutomatonGroovyExtension;
 import com.powsybl.dynawaltz.dsl.models.buses.BusGroovyExtension;
+import com.powsybl.dynawaltz.dsl.models.generators.OmegaRefGeneratorGroovyExtension;
 import com.powsybl.dynawaltz.dsl.models.generators.GeneratorFictitiousGroovyExtension;
 import com.powsybl.dynawaltz.dsl.models.generators.GeneratorSynchronousGroovyExtension;
 import com.powsybl.dynawaltz.dsl.models.lines.LineGroovyExtension;
@@ -24,6 +25,7 @@ import com.powsybl.dynawaltz.dsl.models.loads.LoadOneTransformerGroovyExtension;
 import com.powsybl.dynawaltz.models.AbstractBlackBoxModel;
 import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton;
 import com.powsybl.dynawaltz.models.buses.StandardBus;
+import com.powsybl.dynawaltz.models.generators.OmegaRefGenerator;
 import com.powsybl.dynawaltz.models.generators.GeneratorFictitious;
 import com.powsybl.dynawaltz.models.generators.GeneratorSynchronous;
 import com.powsybl.dynawaltz.models.lines.StandardLine;
@@ -69,7 +71,7 @@ class DynaWaltzGroovyDynamicModelsSupplierTest {
     void test() {
 
         List<DynamicModelGroovyExtension> extensions = GroovyExtension.find(DynamicModelGroovyExtension.class, DynaWaltzProvider.NAME);
-        assertEquals(7, extensions.size());
+        assertEquals(8, extensions.size());
         extensions.forEach(this::validateExtension);
 
         DynamicModelsSupplier supplier = new GroovyDynamicModelsSupplier(fileSystem.getPath("/dynamicModels.groovy"), extensions);
@@ -146,6 +148,17 @@ class DynaWaltzGroovyDynamicModelsSupplierTest {
             .setTargetP(-1.3)
             .setTargetQ(0.9)
             .add();
+        vlgen.newGenerator()
+            .setId("GEN7")
+            .setBus(ngen.getId())
+            .setConnectableBus(ngen.getId())
+            .setMinP(-9999.99)
+            .setMaxP(9999.99)
+            .setVoltageRegulatorOn(true)
+            .setTargetV(24.5)
+            .setTargetP(-1.3)
+            .setTargetQ(0.9)
+            .add();
         VoltageLevel vlload = network.getVoltageLevel("VLLOAD");
         Bus nload = vlload.getBusBreakerView().getBus("NLOAD");
         vlload.newLoad()
@@ -164,7 +177,7 @@ class DynaWaltzGroovyDynamicModelsSupplierTest {
         boolean isLoadOneTransformerExtension = extension instanceof LoadOneTransformerGroovyExtension;
         boolean isLoadExtension = isLoadAlphaBetaExtension || isLoadOneTransformerExtension;
 
-        boolean isGeneratorExtension = extension instanceof GeneratorSynchronousGroovyExtension || extension instanceof GeneratorFictitiousGroovyExtension;
+        boolean isGeneratorExtension = extension instanceof GeneratorSynchronousGroovyExtension || extension instanceof GeneratorFictitiousGroovyExtension || extension instanceof OmegaRefGeneratorGroovyExtension;
         boolean isBusExtension = extension instanceof BusGroovyExtension;
         boolean isLineExtension = extension instanceof LineGroovyExtension;
         boolean isDynamicModelExtension = isLoadExtension || isGeneratorExtension || isBusExtension || isLineExtension;
@@ -194,6 +207,11 @@ class DynaWaltzGroovyDynamicModelsSupplierTest {
             Identifiable<?> identifiable = network.getIdentifiable(blackBoxModel.getStaticId().orElse(null));
             assertEquals("BBM_" + identifiable.getId(), blackBoxModel.getDynamicModelId());
             assertEquals("GF", blackBoxModel.getParameterSetId());
+            assertTrue(identifiable instanceof Generator);
+        } else if (blackBoxModel instanceof OmegaRefGenerator) {
+            Identifiable<?> identifiable = network.getIdentifiable(blackBoxModel.getStaticId().orElse(null));
+            assertEquals("BBM_" + identifiable.getId(), blackBoxModel.getDynamicModelId());
+            assertEquals("GPQ", blackBoxModel.getParameterSetId());
             assertTrue(identifiable instanceof Generator);
         } else if (blackBoxModel instanceof CurrentLimitAutomaton) {
             Identifiable<?> identifiable = network.getIdentifiable(((CurrentLimitAutomaton) blackBoxModel).getLineStaticId());

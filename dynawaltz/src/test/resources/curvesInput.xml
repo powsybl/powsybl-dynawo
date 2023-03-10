@@ -36,6 +36,11 @@
   <dyn:curve model="GEN6" variable="generator_UStatorPu"/>
   <dyn:curve model="GEN6" variable="voltageRegulator_UcEfdP"/>
   <dyn:curve model="GEN6" variable="voltageRegulator_EfdPu"/>
+  <dyn:curve model="GEN7" variable="generator_omegaPu"/>
+  <dyn:curve model="GEN7" variable="generator_PGen"/>
+  <dyn:curve model="GEN7" variable="generator_UStatorPu"/>
+  <dyn:curve model="GEN7" variable="voltageRegulator_UcEfdP"/>
+  <dyn:curve model="GEN7" variable="voltageRegulator_EfdPu"/>
   <dyn:curve model="NHV1_1" variable="generator_omegaPu"/>
   <dyn:curve model="NHV1_1" variable="generator_PGen"/>
   <dyn:curve model="NHV1_1" variable="generator_UStatorPu"/>
