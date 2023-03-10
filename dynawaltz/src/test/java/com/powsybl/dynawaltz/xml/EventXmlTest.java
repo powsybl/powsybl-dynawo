@@ -13,22 +13,22 @@ import com.powsybl.dynawaltz.DynaWaltzParameters;
 import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection;
 import com.powsybl.dynawaltz.models.events.EventSetPointBoolean;
 import com.powsybl.dynawaltz.models.generators.GeneratorSynchronous;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class EventXmlTest extends DynaWaltzTestUtil {
+class EventXmlTest extends DynaWaltzTestUtil {
 
     @Test
-    public void writeDynamicModel() throws SAXException, IOException, XMLStreamException {
+    void writeDynamicModel() throws SAXException, IOException, XMLStreamException {
         dynamicModels.clear();
         dynamicModels.add(new GeneratorSynchronous("BBM_GEN2", "GEN2", "GSFWPR", "GeneratorSynchronousFourWindingsProportionalRegulations"));
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
@@ -41,7 +41,7 @@ public class EventXmlTest extends DynaWaltzTestUtil {
     }
 
     @Test
-    public void duplicateEventId() {
+    void duplicateEventId() {
         eventModels.clear();
         network.getLineStream().forEach(l -> eventModels.add(new EventQuadripoleDisconnection("duplicateID", l.getId(), 5, false, true)));
         network.getGeneratorStream().forEach(g -> {

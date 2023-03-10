@@ -9,20 +9,20 @@ package com.powsybl.dynawaltz.dsl.ieee57;
 import com.powsybl.dynamicsimulation.DynamicSimulationResult;
 import com.powsybl.dynawaltz.dsl.ieee.AbstractIeeeTest;
 import com.powsybl.dynawaltz.dsl.ieee.DynaWaltzLocalCommandExecutor;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class Ieee57DisconnectGeneratorTest extends AbstractIeeeTest {
+class Ieee57DisconnectGeneratorTest extends AbstractIeeeTest {
 
-    @Before
-    public void setup() throws IOException {
+    @BeforeEach
+    void setup() throws IOException {
         super.setup(
             "/ieee57-disconnectgenerator/config/models.par",
             "/ieee57-disconnectgenerator/config/network.par",
@@ -35,8 +35,8 @@ public class Ieee57DisconnectGeneratorTest extends AbstractIeeeTest {
     }
 
     @Test
-    public void testSimulation() throws Exception {
-        DynaWaltzLocalCommandExecutor commandExecutor = new DynaWaltzLocalCommandExecutor(fileSystem, network.getId(), getDynaWaltzSimulationParameters(parameters), getWorkingDirName());
+    void testSimulation() throws Exception {
+        DynaWaltzLocalCommandExecutor commandExecutor = new DynaWaltzLocalCommandExecutor(fileSystem, network.getId(), getDynaWaltzSimulationParameters(parameters), getWorkingDirName(), "/dynawo_version.out");
         DynamicSimulationResult result = runSimulation(commandExecutor);
         assertNotNull(result);
     }

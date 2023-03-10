@@ -11,23 +11,23 @@ import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
 import com.powsybl.dynawaltz.models.generators.GeneratorFictitious;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class DynamicModelsXmlTest extends DynaWaltzTestUtil {
+class DynamicModelsXmlTest extends DynaWaltzTestUtil {
 
     @Test
-    public void writeDynamicModel() throws SAXException, IOException, XMLStreamException {
+    void writeDynamicModel() throws SAXException, IOException, XMLStreamException {
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynaWaltzParameters dynawoParameters = DynaWaltzParameters.load();
         DynaWaltzContext context = new DynaWaltzContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, new ArrayList<>(), curves, parameters, dynawoParameters);
@@ -37,7 +37,7 @@ public class DynamicModelsXmlTest extends DynaWaltzTestUtil {
     }
 
     @Test
-    public void writeDynamicModelWithLoadsAndOnlyOneFictitiousGenerator() throws SAXException, IOException, XMLStreamException {
+    void writeDynamicModelWithLoadsAndOnlyOneFictitiousGenerator() throws SAXException, IOException, XMLStreamException {
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynaWaltzParameters dynawoParameters = DynaWaltzParameters.load();
         dynamicModels.clear();
@@ -54,7 +54,7 @@ public class DynamicModelsXmlTest extends DynaWaltzTestUtil {
     }
 
     @Test
-    public void duplicateStaticId() {
+    void duplicateStaticId() {
         dynamicModels.clear();
         network.getGeneratorStream().forEach(gen -> {
             if (gen.getId().equals("GEN5") || gen.getId().equals("GEN6")) {
@@ -66,4 +66,20 @@ public class DynamicModelsXmlTest extends DynaWaltzTestUtil {
         assertEquals("Duplicate staticId: duplicateID", e.getMessage());
     }
 
+    @Test
+    void testDynamicModelGetterException() {
+        DynaWaltzContext dc = new DynaWaltzContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, eventModels, curves, DynamicSimulationParameters.load(), DynaWaltzParameters.load());
+
+        // dynamic model
+        Exception e = assertThrows(PowsyblException.class, () -> dc.getDynamicModelOrThrows("wrongID"));
+        assertEquals("Cannot find the equipment 'wrongID' among the dynamic models provided", e.getMessage());
+
+        // bus
+        e = assertThrows(PowsyblException.class, () -> dc.getDynamicModelOrDefaultBus("GEN5"));
+        assertEquals("The model identified by the static id GEN5 is not a bus model", e.getMessage());
+
+        //line
+        e = assertThrows(PowsyblException.class, () -> dc.getDynamicModelOrDefaultLine("GEN5"));
+        assertEquals("The model identified by the static id GEN5 is not a line model", e.getMessage());
+    }
 }

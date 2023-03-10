@@ -20,19 +20,19 @@ import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.VariantManagerConstants;
 import com.powsybl.timeseries.DoubleTimeSeries;
 import com.powsybl.timeseries.StringTimeSeries;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Geoffroy Jamgotchian <geoffroy.jamgotchian at rte-france.com>
  */
-public class DynaWaltzTest extends AbstractDynawoTest {
+class DynaWaltzTest extends AbstractDynawoTest {
 
     private DynamicSimulationProvider provider;
 
@@ -41,8 +41,8 @@ public class DynaWaltzTest extends AbstractDynawoTest {
     private DynaWaltzParameters dynaWaltzParameters;
 
     @Override
-    @Before
-    public void setUp() throws Exception {
+    @BeforeEach
+    void setUp() throws Exception {
         super.setUp();
         provider = new DynaWaltzProvider(PlatformConfig.defaultConfig(), new DynaWaltzConfig("/dynawo", false));
         parameters = new DynamicSimulationParameters()
@@ -53,7 +53,7 @@ public class DynaWaltzTest extends AbstractDynawoTest {
     }
 
     @Test
-    public void test() throws IOException {
+    void test() throws IOException {
         Network network = Network.read(new ResourceDataSource("IEEE14", new ResourceSet("/ieee14-disconnectline", "IEEE14.iidm")));
 
         GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(

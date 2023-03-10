@@ -15,7 +15,6 @@ import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.VarMapping;
 import com.powsybl.dynawaltz.models.generators.GeneratorModel;
 import com.powsybl.iidm.network.Bus;
-import com.powsybl.iidm.network.Generator;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.xml.stream.XMLStreamException;
@@ -24,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 
@@ -75,18 +75,13 @@ public class StandardBus extends AbstractBlackBoxModel implements BusModel {
     }
 
     @Override
-    public List<Model> getModelsConnectedTo(DynaWaltzContext dynaWaltzContext) {
-        Bus bus = dynaWaltzContext.getNetwork().getBusBreakerView().getBus(getStaticId().orElse(null));
+    public List<Model> getModelsConnectedTo(DynaWaltzContext context) {
+        String staticId = getStaticId().orElse(null);
+        Bus bus = context.getNetwork().getBusBreakerView().getBus(staticId);
         if (bus == null) {
-            throw new PowsyblException("Bus static id unknown: " + getStaticId());
+            throw new PowsyblException("Bus static id unknown: " + staticId);
         }
-        List<Model> connectedBbm = new ArrayList<>();
-        for (Generator g : dynaWaltzContext.getNetwork().getGenerators()) {
-            if (g.getTerminal().getBusBreakerView().getConnectableBus().equals(bus)) {
-                connectedBbm.add(dynaWaltzContext.getStaticIdBlackBoxModel(g.getId()));
-            }
-        }
-        return connectedBbm;
+        return bus.getGeneratorStream().map(g -> context.getDynamicModelOrThrows(g.getId())).collect(Collectors.toList());
     }
 
     @Override

@@ -21,7 +21,7 @@ import com.powsybl.dynawaltz.models.loads.LoadAlphaBeta;
 import com.powsybl.dynawaltz.models.loads.LoadOneTransformer;
 import com.powsybl.iidm.network.*;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.xml.sax.SAXException;
 
 import javax.xml.XMLConstants;
@@ -48,8 +48,8 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
     protected List<BlackBoxModel> eventModels;
     protected List<Curve> curves;
 
-    @Before
-    public void setup() {
+    @BeforeEach
+    void setup() {
 
         network = createEurostagTutorialExample1WithMoreLoads();
 
@@ -94,7 +94,7 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
         });
         network.getLineStream().forEach(l -> {
             if (l.getId().equals("NHV1_NHV2_1")) {
-                dynamicModels.add(new StandardLine("Line_" + l.getId(), l.getId(), "SL", Branch.Side.ONE));
+                dynamicModels.add(new StandardLine("Line_" + l.getId(), l.getId(), "SL"));
             }
         });
 

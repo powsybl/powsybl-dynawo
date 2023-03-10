@@ -17,8 +17,9 @@ import com.powsybl.dynawaltz.xml.DydXml;
 import com.powsybl.dynawaltz.xml.JobsXml;
 import com.powsybl.dynawaltz.xml.ParametersXml;
 import com.powsybl.dynawo.commons.DynawoUtil;
-import com.powsybl.dynawo.commons.LoadsMerger;
+import com.powsybl.dynawo.commons.loadmerge.LoadsMerger;
 import com.powsybl.dynawo.commons.NetworkResultsUpdater;
+import com.powsybl.dynawo.commons.PowsyblDynawoVersion;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.xml.NetworkXml;
 import com.powsybl.timeseries.TimeSeries;
@@ -46,7 +47,6 @@ import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.*;
 public class DynaWaltzProvider implements DynamicSimulationProvider {
 
     public static final String NAME = "DynaWaltz";
-    public static final String VERSION = "1.4.0";
     private static final String DYNAWO_CMD_NAME = "dynawo";
     private static final String WORKING_DIR_PREFIX = "powsybl_dynawaltz_";
     private static final String OUTPUT_IIDM_FILENAME = "outputIIDM.xml";
@@ -75,7 +75,31 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
 
     @Override
     public String getVersion() {
-        return VERSION;
+        return new PowsyblDynawoVersion().getMavenProjectVersion();
+    }
+
+    public static Command getCommand(DynaWaltzConfig dynaWaltzConfig) {
+        return new GroupCommandBuilder()
+                .id("dyn_fs")
+                .subCommand()
+                .program(getProgram(dynaWaltzConfig))
+                .args("jobs", JOBS_FILENAME)
+                .add()
+                .build();
+    }
+
+    public static Command getVersionCommand(DynaWaltzConfig dynaWaltzConfig) {
+        List<String> args = Collections.singletonList("version");
+        return new SimpleCommandBuilder()
+                .id("dynawo_version")
+                .program(getProgram(dynaWaltzConfig))
+                .args(args)
+                .build();
+    }
+
+    private static String getProgram(DynaWaltzConfig dynaWaltzConfig) {
+        String extension = SystemUtils.IS_OS_WINDOWS ? ".cmd" : ".sh";
+        return Paths.get(dynaWaltzConfig.getHomeDir()).resolve(DYNAWO_CMD_NAME + extension).toString();
     }
 
     @Override
@@ -86,7 +110,6 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
         Objects.requireNonNull(curvesSupplier);
         Objects.requireNonNull(workingVariantId);
         Objects.requireNonNull(parameters);
-
         DynaWaltzParameters dynaWaltzParameters = getDynaWaltzSimulationParameters(parameters);
         return run(network, dynamicModelsSupplier, eventModelsSupplier, curvesSupplier, workingVariantId, computationManager, parameters, dynaWaltzParameters);
     }
@@ -104,6 +127,8 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
 
         network.getVariantManager().setWorkingVariant(workingVariantId);
         ExecutionEnvironment execEnv = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, dynaWaltzConfig.isDebug());
+        Command versionCmd = getVersionCommand(dynaWaltzConfig);
+        DynawoUtil.requireDynawoMinVersion(execEnv, computationManager, versionCmd, false);
 
         List<BlackBoxModel> blackBoxModels = dynamicModelsSupplier.get(network).stream()
                 .filter(BlackBoxModel.class::isInstance)
@@ -140,7 +165,7 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
                 Files.delete(curvesPath);
             }
             writeInputFiles(workingDir);
-            Command cmd = createCommand();
+            Command cmd = getCommand(dynaWaltzConfig);
             return Collections.singletonList(new CommandExecution(cmd, 1));
         }
 
@@ -182,21 +207,6 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
             } catch (XMLStreamException e) {
                 throw new UncheckedXmlStreamException(e);
             }
-        }
-
-        private Command createCommand() {
-            return new GroupCommandBuilder()
-                .id("dyn_fs")
-                .subCommand()
-                .program(getProgram())
-                .args("jobs", JOBS_FILENAME)
-                .add()
-                .build();
-        }
-
-        private String getProgram() {
-            String extension = SystemUtils.IS_OS_WINDOWS ? ".cmd" : ".sh";
-            return Paths.get(dynaWaltzConfig.getHomeDir()).resolve(DYNAWO_CMD_NAME + extension).toString();
         }
     }
 }

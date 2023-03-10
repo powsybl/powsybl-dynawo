@@ -14,13 +14,12 @@ import com.powsybl.dynawaltz.models.Model;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.generators.GeneratorModel;
 import com.powsybl.iidm.network.Network;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -28,23 +27,24 @@ import static org.mockito.Mockito.when;
 /**
  * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
  */
-public class StandardBusTest {
+class StandardBusTest {
 
     private StandardBus standardBus;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         standardBus = new StandardBus("dynamicModelId", "staticId", "parameterSetId");
     }
 
-    @Test(expected = PowsyblException.class)
-    public void getVarConnectionsWithException() {
+    @Test
+    void getVarConnectionsWithException() {
         Model model = mock(Model.class);
-        standardBus.getVarConnectionsWith(model);
+        PowsyblException e = assertThrows(PowsyblException.class, () -> standardBus.getVarConnectionsWith(model));
+        assertEquals("StandardBusModel can only connect to GeneratorModel", e.getMessage());
     }
 
     @Test
-    public void getVarConnectionsWithGetValues() {
+    void getVarConnectionsWithGetValues() {
         GeneratorModel generatorModel = mock(GeneratorModel.class);
         List<VarConnection> varConnectionList = standardBus.getVarConnectionsWith(generatorModel);
         assertNotNull(varConnectionList);
@@ -59,8 +59,8 @@ public class StandardBusTest {
         assertEquals(secondVarConnection.getVar2(), generatorModel.getSwitchOffSignalNodeVarName());
     }
 
-    @Test(expected = PowsyblException.class)
-    public void getModelsConnectedToException() {
+    @Test
+    void getModelsConnectedToException() {
         DynaWaltzContext dynaWaltzContext = mock(DynaWaltzContext.class);
         Network network = mock(Network.class);
         Network.BusBreakerView busBreakerView = mock(Network.BusBreakerView.class);
@@ -68,6 +68,7 @@ public class StandardBusTest {
         when(network.getBusBreakerView()).thenReturn(busBreakerView);
         when(busBreakerView.getBus(anyString())).thenReturn(null);
 
-        standardBus.getModelsConnectedTo(dynaWaltzContext);
+        PowsyblException e = assertThrows(PowsyblException.class, () -> standardBus.getModelsConnectedTo(dynaWaltzContext));
+        assertEquals("Bus static id unknown: staticId", e.getMessage());
     }
 }
