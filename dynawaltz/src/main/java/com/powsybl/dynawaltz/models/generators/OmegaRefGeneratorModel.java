@@ -8,6 +8,6 @@
 
 package com.powsybl.dynawaltz.models.generators;
 
-public interface GeneratorConnectedToOmegaRefModel extends GeneratorModel {
+public interface OmegaRefGeneratorModel extends GeneratorModel {
     String getOmegaRefPuVarName();
 }

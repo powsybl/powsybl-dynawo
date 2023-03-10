@@ -12,20 +12,18 @@ import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractDynamicModelBuilder
 import com.powsybl.dynawaltz.dsl.AbstractPowsyblDynawoGroovyExtension
-import com.powsybl.dynawaltz.models.generators.GeneratorConnectedToOmegaRef
-
-import java.util.function.Consumer
+import com.powsybl.dynawaltz.models.generators.OmegaRefGenerator
 
 /**
  * An implementation of {@link DynamicModelGroovyExtension} that adds the <pre>GeneratorPQ</pre> keyword to the DSL
  *
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class GeneratorConnectedToOmegaRefGroovyExtension extends AbstractPowsyblDynawoGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+class OmegaRefGeneratorGroovyExtension extends AbstractPowsyblDynawoGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
     private static final String CONNECTED_TO_OMEGA_REF_GENERATORS = "connectedToOmegaRefGenerators"
 
-    GeneratorConnectedToOmegaRefGroovyExtension() {
+    OmegaRefGeneratorGroovyExtension() {
         ConfigSlurper config = new ConfigSlurper()
         modelTags = config.parse(this.getClass().getClassLoader().getResource(MODELS_CONFIG)).get(CONNECTED_TO_OMEGA_REF_GENERATORS).keySet() as List
     }
@@ -44,9 +42,9 @@ class GeneratorConnectedToOmegaRefGroovyExtension extends AbstractPowsyblDynawoG
         }
 
         @Override
-        GeneratorConnectedToOmegaRef build() {
+        OmegaRefGenerator build() {
             checkData()
-            new GeneratorConnectedToOmegaRef(dynamicModelId, staticId, parameterSetId, tag)
+            new OmegaRefGenerator(dynamicModelId, staticId, parameterSetId, tag)
         }
     }
 }

@@ -14,7 +14,7 @@ import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton;
 import com.powsybl.dynawaltz.models.buses.StandardBus;
 import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection;
 import com.powsybl.dynawaltz.models.events.EventSetPointBoolean;
-import com.powsybl.dynawaltz.models.generators.GeneratorConnectedToOmegaRef;
+import com.powsybl.dynawaltz.models.generators.OmegaRefGenerator;
 import com.powsybl.dynawaltz.models.generators.GeneratorFictitious;
 import com.powsybl.dynawaltz.models.generators.GeneratorSynchronous;
 import com.powsybl.dynawaltz.models.lines.StandardLine;
@@ -85,7 +85,7 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
             } else if (g.getId().equals("GEN6")) {
                 dynamicModels.add(new GeneratorFictitious("BBM_" + g.getId(), g.getId(), "GF"));
             } else if (g.getId().equals("GEN7")) {
-                dynamicModels.add(new GeneratorConnectedToOmegaRef("BBM_" + g.getId(), g.getId(), "GPQ", "GeneratorPQ"));
+                dynamicModels.add(new OmegaRefGenerator("BBM_" + g.getId(), g.getId(), "GPQ", "GeneratorPQ"));
             } else {
                 dynamicModels.add(new GeneratorSynchronous("BBM_" + g.getId(), g.getId(), "GSTWPR", "GeneratorSynchronousThreeWindingsProportionalRegulations"));
             }

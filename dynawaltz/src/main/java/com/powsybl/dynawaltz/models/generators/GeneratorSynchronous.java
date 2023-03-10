@@ -8,7 +8,7 @@ package com.powsybl.dynawaltz.models.generators;
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  */
-public class GeneratorSynchronous extends GeneratorConnectedToOmegaRef
+public class GeneratorSynchronous extends OmegaRefGenerator
         implements GeneratorSynchronousModel {
 
     public GeneratorSynchronous(String dynamicModelId, String staticId, String parameterSetId, String generatorLib) {

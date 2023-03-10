@@ -8,11 +8,11 @@
 
 package com.powsybl.dynawaltz.models.generators;
 
-public class GeneratorConnectedToOmegaRef extends AbstractGeneratorModel implements GeneratorConnectedToOmegaRefModel {
+public class OmegaRefGenerator extends AbstractGeneratorModel implements OmegaRefGeneratorModel {
 
     private final String generatorLib;
 
-    public GeneratorConnectedToOmegaRef(String dynamicModelId, String staticId, String parameterSetId, String generatorLib) {
+    public OmegaRefGenerator(String dynamicModelId, String staticId, String parameterSetId, String generatorLib) {
         super(dynamicModelId, staticId, parameterSetId,
                 "generator_terminal",
                 "generator_switchOffSignal1",

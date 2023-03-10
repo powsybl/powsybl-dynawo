@@ -53,6 +53,6 @@ class OmegaRefTest {
     void writeMacroConnectException() {
         Model model = mock(Model.class);
         PowsyblException e = assertThrows(PowsyblException.class, () -> omegaRef.writeMacroConnect(null, null, null, model));
-        assertEquals("OmegaRef can only connect to GeneratorConnectedToOmegaRefModel and BusModel", e.getMessage());
+        assertEquals("OmegaRef can only connect to OmegaRefGeneratorModel and BusModel", e.getMessage());
     }
 }
