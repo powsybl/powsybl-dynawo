@@ -19,24 +19,23 @@ import com.powsybl.dynawaltz.models.generators.GeneratorSynchronous
 @AutoService(DynamicModelGroovyExtension.class)
 class GeneratorSynchronousGroovyExtension extends AbstractPowsyblDynawoGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
-    protected static final String GENERATORS_CONFIG = "synchronous_generators.cfg"
     protected static final String SYNCHRONOUS_GENERATORS = "synchronousGenerators"
 
     GeneratorSynchronousGroovyExtension() {
         ConfigSlurper config = new ConfigSlurper()
-        modelTags = config.parse(this.getClass().getClassLoader().getResource(GENERATORS_CONFIG)).get(SYNCHRONOUS_GENERATORS).keySet() as List
+        modelTags = config.parse(this.getClass().getClassLoader().getResource(MODELS_CONFIG)).get(SYNCHRONOUS_GENERATORS).keySet() as List
     }
 
     @Override
-    protected GeneratorBuilder createBuilder(String currentTag) {
-        new GeneratorBuilder(currentTag)
+    protected GeneratorSynchronousBuilder createBuilder(String currentTag) {
+        new GeneratorSynchronousBuilder(currentTag)
     }
 
-    static class GeneratorBuilder extends AbstractDynamicModelBuilder {
+    static class GeneratorSynchronousBuilder extends AbstractDynamicModelBuilder {
 
         String tag
 
-        GeneratorBuilder(String tag) {
+        GeneratorSynchronousBuilder(String tag) {
             this.tag = tag
         }
 

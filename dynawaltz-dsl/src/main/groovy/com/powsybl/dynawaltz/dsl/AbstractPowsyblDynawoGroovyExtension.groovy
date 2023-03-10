@@ -17,6 +17,8 @@ import java.util.function.Consumer
  */
 abstract class AbstractPowsyblDynawoGroovyExtension<T> {
 
+    protected static final String MODELS_CONFIG = "models.cfg"
+
     protected List<String> modelTags
 
     abstract protected ModelBuilder<T> createBuilder(String currentTag)

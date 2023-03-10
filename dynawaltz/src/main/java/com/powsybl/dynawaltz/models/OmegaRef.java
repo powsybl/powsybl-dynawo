@@ -10,6 +10,7 @@ import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParametersDatabase;
 import com.powsybl.dynawaltz.models.buses.BusModel;
+import com.powsybl.dynawaltz.models.generators.OmegaRefGeneratorModel;
 import com.powsybl.dynawaltz.models.generators.GeneratorSynchronousModel;
 import com.powsybl.dynawaltz.models.utils.BusUtils;
 import com.powsybl.dynawaltz.xml.ParametersXml;
@@ -39,13 +40,13 @@ public class OmegaRef extends AbstractPureDynamicBlackBoxModel {
 
     public static final String OMEGA_REF_ID = "OMEGA_REF";
     private static final String OMEGA_REF_PARAMETER_SET_ID = "OMEGA_REF";
-    private final Map<GeneratorSynchronousModel, Integer> synchronousGenerators = new LinkedHashMap<>();
-    private final Map<BusModel, List<GeneratorSynchronousModel>> busGeneratorListMap = new LinkedHashMap<>();
+    private final Map<OmegaRefGeneratorModel, Integer> synchronousGenerators = new LinkedHashMap<>();
+    private final Map<BusModel, List<OmegaRefGeneratorModel>> busGeneratorListMap = new LinkedHashMap<>();
 
-    public OmegaRef(List<GeneratorSynchronousModel> synchronousGenerators) {
+    public OmegaRef(List<OmegaRefGeneratorModel> synchronousGenerators) {
         super(OMEGA_REF_ID, OMEGA_REF_PARAMETER_SET_ID);
         int i = 0;
-        for (GeneratorSynchronousModel synchronousGenerator : synchronousGenerators) {
+        for (OmegaRefGeneratorModel synchronousGenerator : synchronousGenerators) {
             this.synchronousGenerators.put(synchronousGenerator, i++);
         }
     }
@@ -68,8 +69,8 @@ public class OmegaRef extends AbstractPureDynamicBlackBoxModel {
 
         // The dynamic models are declared in the DYD following the order of dynamic models' supplier.
         // The OmegaRef parameters index the weight of each generator according to that declaration order.
-        for (Map.Entry<GeneratorSynchronousModel, Integer> e : synchronousGenerators.entrySet()) {
-            GeneratorSynchronousModel generator = e.getKey();
+        for (Map.Entry<OmegaRefGeneratorModel, Integer> e : synchronousGenerators.entrySet()) {
+            OmegaRefGeneratorModel generator = e.getKey();
             double h = parDB.getDouble(generator.getParameterSetId(), "generator_H");
             double snom = parDB.getDouble(generator.getParameterSetId(), "generator_SNom");
 
@@ -90,6 +91,12 @@ public class OmegaRef extends AbstractPureDynamicBlackBoxModel {
                     new VarConnection("omegaRef_grp_@INDEX@", connectedGeneratorModel.getOmegaRefPuVarName()),
                     new VarConnection("running_grp_@INDEX@", connectedGeneratorModel.getRunningVarName())
             );
+        } else if (connected instanceof OmegaRefGeneratorModel) {
+            OmegaRefGeneratorModel connectedOmegaRefGeneratorModel = (OmegaRefGeneratorModel) connected;
+            return Arrays.asList(
+                    new VarConnection("omegaRef_grp_@INDEX@", connectedOmegaRefGeneratorModel.getOmegaRefPuVarName()),
+                    new VarConnection("running_grp_@INDEX@", connectedOmegaRefGeneratorModel.getRunningVarName())
+            );
         } else if (connected instanceof BusModel) {
             return List.of(new VarConnection("numcc_node_@INDEX@", ((BusModel) connected).getNumCCVarName()));
         } else {
@@ -99,7 +106,7 @@ public class OmegaRef extends AbstractPureDynamicBlackBoxModel {
 
     @Override
     public List<Model> getModelsConnectedTo(DynaWaltzContext context) throws PowsyblException {
-        for (GeneratorSynchronousModel g : synchronousGenerators.keySet()) {
+        for (OmegaRefGeneratorModel g : synchronousGenerators.keySet()) {
             BusModel bus = getBusAssociatedTo(g, context);
             busGeneratorListMap.computeIfAbsent(bus, k -> new ArrayList<>()).add(g);
         }
@@ -107,7 +114,7 @@ public class OmegaRef extends AbstractPureDynamicBlackBoxModel {
                 .collect(Collectors.toList());
     }
 
-    private BusModel getBusAssociatedTo(GeneratorSynchronousModel generatorModel, DynaWaltzContext context) {
+    private BusModel getBusAssociatedTo(OmegaRefGeneratorModel generatorModel, DynaWaltzContext context) {
         Generator generator = generatorModel.getStaticId().map(staticId -> context.getNetwork().getGenerator(staticId)).orElse(null);
         if (generator == null) {
             throw new PowsyblException("Generator " + generatorModel.getLib() + " not found in DynaWaltz context. Id : " + generatorModel.getDynamicModelId());
@@ -122,21 +129,21 @@ public class OmegaRef extends AbstractPureDynamicBlackBoxModel {
 
     @Override
     public void writeMacroConnect(XMLStreamWriter writer, DynaWaltzContext context, MacroConnector macroConnector, Model connected) throws XMLStreamException {
-        if (connected instanceof GeneratorSynchronousModel) {
-            List<Pair<String, String>> attributesConnectFrom = getAttributesConnectFrom((GeneratorSynchronousModel) connected);
+        if (connected instanceof OmegaRefGeneratorModel) {
+            List<Pair<String, String>> attributesConnectFrom = getAttributesConnectFrom((OmegaRefGeneratorModel) connected);
             macroConnector.writeMacroConnect(writer, attributesConnectFrom, connected.getMacroConnectToAttributes());
         } else if (connected instanceof BusModel) {
             BusModel bus = (BusModel) connected;
-            for (GeneratorSynchronousModel g : busGeneratorListMap.get(bus)) {
+            for (OmegaRefGeneratorModel g : busGeneratorListMap.get(bus)) {
                 List<Pair<String, String>> attributesConnectFrom = getAttributesConnectFrom(g);
                 macroConnector.writeMacroConnect(writer, attributesConnectFrom, bus.getMacroConnectToAttributes());
             }
         } else {
-            throw new PowsyblException("OmegaRef can only connect to GeneratorSynchronousModel and BusModel");
+            throw new PowsyblException("OmegaRef can only connect to OmegaRefGeneratorModel and BusModel");
         }
     }
 
-    private List<Pair<String, String>> getAttributesConnectFrom(GeneratorSynchronousModel generator) {
+    private List<Pair<String, String>> getAttributesConnectFrom(OmegaRefGeneratorModel generator) {
         int index = synchronousGenerators.get(generator);
         return List.of(
                 Pair.of("id1", OMEGA_REF_ID),

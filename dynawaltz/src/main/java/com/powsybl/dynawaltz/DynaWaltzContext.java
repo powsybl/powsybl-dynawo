@@ -12,7 +12,7 @@ import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.models.*;
 import com.powsybl.dynawaltz.models.buses.BusModel;
-import com.powsybl.dynawaltz.models.generators.GeneratorSynchronousModel;
+import com.powsybl.dynawaltz.models.generators.OmegaRefGeneratorModel;
 import com.powsybl.dynawaltz.models.lines.LineModel;
 import com.powsybl.dynawaltz.models.utils.ConnectedModelTypes;
 import com.powsybl.dynawaltz.xml.MacroStaticReference;
@@ -70,9 +70,9 @@ public class DynaWaltzContext {
         this.dynaWaltzParameters = Objects.requireNonNull(dynaWaltzParameters);
         this.platformConfig = Objects.requireNonNull(platformConfig);
         this.parametersDatabase = loadDatabase(dynaWaltzParameters.getParametersFile(), platformConfig);
-        List<GeneratorSynchronousModel> synchronousGenerators = dynamicModels.stream()
-                .filter(GeneratorSynchronousModel.class::isInstance)
-                .map(GeneratorSynchronousModel.class::cast)
+        List<OmegaRefGeneratorModel> synchronousGenerators = dynamicModels.stream()
+                .filter(OmegaRefGeneratorModel.class::isInstance)
+                .map(OmegaRefGeneratorModel.class::cast)
                 .collect(Collectors.toList());
         this.omegaRef = new OmegaRef(synchronousGenerators);
 
