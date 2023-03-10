@@ -35,6 +35,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static com.powsybl.commons.test.ComparisonUtils.compareXml;
 
@@ -93,9 +94,7 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
             }
         });
         network.getLineStream().forEach(l -> {
-            if (l.getId().equals("NHV1_NHV2_1")) {
-                dynamicModels.add(new StandardLine("Line_" + l.getId(), l.getId(), "SL"));
-            }
+            dynamicModels.add(new StandardLine("Line_" + l.getId(), l.getId(), "SL"));
         });
 
         // Events
@@ -118,7 +117,7 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
         Schema schema = factory.newSchema(xsd);
         Validator validator = schema.newValidator();
         validator.validate(xml);
-        compareXml(getClass().getResourceAsStream("/" + expectedResourceName), Files.newInputStream(xmlFile));
+        compareXml(Objects.requireNonNull(getClass().getResourceAsStream("/" + expectedResourceName)), Files.newInputStream(xmlFile));
     }
 
     private static Network createEurostagTutorialExample1WithMoreLoads() {
