@@ -9,10 +9,20 @@
 package com.powsybl.dynawaltz.models.buses;
 
 import com.powsybl.commons.PowsyblException;
+import com.powsybl.dynamicsimulation.Curve;
+import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.DynaWaltzContext;
+import com.powsybl.dynawaltz.DynaWaltzParameters;
+import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.iidm.network.Network;
+import com.powsybl.iidm.network.NetworkFactory;
+import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -44,5 +54,23 @@ class StandardBusTest {
 
         PowsyblException e = assertThrows(PowsyblException.class, () -> standardBus.createMacroConnections(dynaWaltzContext));
         assertEquals("Bus static id unknown: staticId", e.getMessage());
+    }
+
+    @Test
+    void connectionToModelWithoutDynamicModelException() {
+        Network network = EurostagTutorialExample1Factory.create(NetworkFactory.findDefault());
+        List<BlackBoxModel> dynamicModels = new ArrayList<>();
+        network.getBusBreakerView().getBuses().forEach(b -> {
+            if (b.getId().equals("NHV1")) {
+                dynamicModels.add(new StandardBus("BBM_" + b.getId(), b.getId(), "SB"));
+            }
+        });
+        DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
+        DynaWaltzParameters dynawoParameters = DynaWaltzParameters.load();
+        String workingVariantId = network.getVariantManager().getWorkingVariantId();
+        List<BlackBoxModel> events = Collections.emptyList();
+        List<Curve> curves = Collections.emptyList();
+        PowsyblException e = assertThrows(PowsyblException.class, () -> new DynaWaltzContext(network, workingVariantId, dynamicModels, events, curves, parameters, dynawoParameters));
+        assertEquals("The line NHV1_NHV2_1 linked to the standard bus NHV1 does not possess a dynamic model", e.getMessage());
     }
 }

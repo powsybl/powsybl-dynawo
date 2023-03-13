@@ -22,11 +22,6 @@ public final class MacroConnector {
     private final List<VarConnection> varConnections;
     private final String id;
 
-    public MacroConnector(String name1, String name2, List<VarConnection> varConnections) {
-        this.id = createMacroConnectorId(name1, name2);
-        this.varConnections = varConnections;
-    }
-
     public MacroConnector(String id, List<VarConnection> varConnections) {
         this.id = id;
         this.varConnections = varConnections;
