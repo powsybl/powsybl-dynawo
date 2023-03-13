@@ -15,6 +15,7 @@ import com.powsybl.computation.SimpleCommandBuilder;
 import com.powsybl.computation.local.LocalCommandExecutor;
 import com.powsybl.computation.local.LocalComputationConfig;
 import com.powsybl.computation.local.LocalComputationManager;
+import com.powsybl.dynawo.commons.DynawoUtil;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author Guillaume Pernin <guillaume.pernin at rte-france.com>
  */
-class DynaFlowVersionCheckTest {
+class DynawoVersionCheckTest {
 
     private FileSystem fileSystem;
     private final ExecutionEnvironment env = Mockito.mock(ExecutionEnvironment.class);
@@ -54,10 +55,9 @@ class DynaFlowVersionCheckTest {
         }
 
         @Override
-        public int execute(String program, List<String> args, Path outFile, Path errFile, Path workingDir, Map<String, String> env) throws IOException, InterruptedException {
+        public int execute(String program, List<String> args, Path outFile, Path errFile, Path workingDir, Map<String, String> env) {
             try {
-                copyFile(stdOutFileRef, workingDir.resolve("dynaflow_version_0.err"));
-
+                copyFile(stdOutFileRef, errFile);
                 return 0;
             } catch (IOException e) {
                 throw new UncheckedIOException(e);
@@ -77,16 +77,16 @@ class DynaFlowVersionCheckTest {
 
     @Test
     void versionTest() throws IOException {
-        LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynaflow_version.out");
+        LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynawo_version.out");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
-        assertTrue(DynaFlowUtil.checkDynaFlowVersion(env, computationManager, versionCmd));
+        assertTrue(DynawoUtil.checkDynawoVersion(env, computationManager, versionCmd, true));
     }
 
     @Test
     void badVersionTest() throws IOException {
-        LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynaflow_bad_version.out");
+        LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynawo_bad_version.out");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
-        assertFalse(DynaFlowUtil.checkDynaFlowVersion(env, computationManager, versionCmd));
+        assertFalse(DynawoUtil.checkDynawoVersion(env, computationManager, versionCmd, true));
     }
 
     @Test
@@ -97,7 +97,7 @@ class DynaFlowVersionCheckTest {
                 .build();
         LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynaflow_version.out");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
-        CompletionException e = assertThrows(CompletionException.class, () -> DynaFlowUtil.checkDynaFlowVersion(env, computationManager, badVersionCmd));
+        CompletionException e = assertThrows(CompletionException.class, () -> DynawoUtil.checkDynawoVersion(env, computationManager, badVersionCmd, true));
         assertEquals("com.powsybl.commons.PowsyblException: No output for DynaFlow version command", e.getMessage());
     }
 }
