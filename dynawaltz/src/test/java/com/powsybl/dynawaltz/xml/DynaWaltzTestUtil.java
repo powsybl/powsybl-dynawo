@@ -14,6 +14,7 @@ import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton;
 import com.powsybl.dynawaltz.models.buses.StandardBus;
 import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection;
 import com.powsybl.dynawaltz.models.events.EventSetPointBoolean;
+import com.powsybl.dynawaltz.models.generators.OmegaRefGenerator;
 import com.powsybl.dynawaltz.models.generators.GeneratorFictitious;
 import com.powsybl.dynawaltz.models.generators.GeneratorSynchronous;
 import com.powsybl.dynawaltz.models.lines.StandardLine;
@@ -83,6 +84,8 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
                 dynamicModels.add(new GeneratorSynchronous("BBM_" + g.getId(), g.getId(), "GSTW", "GeneratorSynchronousThreeWindings"));
             } else if (g.getId().equals("GEN6")) {
                 dynamicModels.add(new GeneratorFictitious("BBM_" + g.getId(), g.getId(), "GF"));
+            } else if (g.getId().equals("GEN7")) {
+                dynamicModels.add(new OmegaRefGenerator("BBM_" + g.getId(), g.getId(), "GPQ", "GeneratorPQ"));
             } else {
                 dynamicModels.add(new GeneratorSynchronous("BBM_" + g.getId(), g.getId(), "GSTWPR", "GeneratorSynchronousThreeWindingsProportionalRegulations"));
             }
@@ -179,6 +182,17 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
             .add();
         vlgen.newGenerator()
             .setId("GEN6")
+            .setBus(ngen.getId())
+            .setConnectableBus(ngen.getId())
+            .setMinP(-9999.99)
+            .setMaxP(9999.99)
+            .setVoltageRegulatorOn(true)
+            .setTargetV(24.5)
+            .setTargetP(-0.3)
+            .setTargetQ(0.7)
+            .add();
+        vlgen.newGenerator()
+            .setId("GEN7")
             .setBus(ngen.getId())
             .setConnectableBus(ngen.getId())
             .setMinP(-9999.99)
