@@ -5,6 +5,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 package com.powsybl.dynawaltz.models.generators;
+
+import com.powsybl.dynawaltz.models.VarConnection;
+
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  */
@@ -15,8 +21,16 @@ public class GeneratorSynchronous extends OmegaRefGenerator
         super(dynamicModelId, staticId, parameterSetId, generatorLib);
     }
 
-    @Override
-    public String getOmegaPuVarName() {
+    protected String getOmegaPuVarName() {
         return "generator_omegaPu";
+    }
+
+    @Override
+    public List<VarConnection> getOmegaRefVarConnections() {
+        return Arrays.asList(
+                new VarConnection("omega_grp_@INDEX@", getOmegaPuVarName()),
+                new VarConnection("omegaRef_grp_@INDEX@", getOmegaRefPuVarName()),
+                new VarConnection("running_grp_@INDEX@", getRunningVarName())
+        );
     }
 }

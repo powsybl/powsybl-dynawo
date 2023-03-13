@@ -11,7 +11,7 @@ import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.models.*;
-import com.powsybl.dynawaltz.models.generators.GeneratorSynchronousModel;
+import com.powsybl.dynawaltz.models.generators.OmegaRefGeneratorModel;
 import com.powsybl.dynawaltz.xml.MacroStaticReference;
 import com.powsybl.iidm.network.Network;
 import org.apache.commons.lang3.tuple.Pair;
@@ -69,11 +69,10 @@ public class DynaWaltzContext {
         this.dynaWaltzParameters = Objects.requireNonNull(dynaWaltzParameters);
         this.platformConfig = Objects.requireNonNull(platformConfig);
         this.parametersDatabase = loadDatabase(dynaWaltzParameters.getParametersFile(), platformConfig);
-        List<GeneratorSynchronousModel> synchronousGenerators = dynamicModels.stream()
-                .filter(GeneratorSynchronousModel.class::isInstance)
-                .map(GeneratorSynchronousModel.class::cast)
-                .collect(Collectors.toList());
-        this.omegaRef = new OmegaRef(synchronousGenerators);
+        this.omegaRef = new OmegaRef(dynamicModels.stream()
+                .filter(OmegaRefGeneratorModel.class::isInstance)
+                .map(OmegaRefGeneratorModel.class::cast)
+                .collect(Collectors.toList()));
 
         for (BlackBoxModel bbm : getBlackBoxDynamicModelStream().collect(Collectors.toList())) {
             macroStaticReferences.computeIfAbsent(bbm.getName(), k -> new MacroStaticReference(k, bbm.getVarsMapping()));
