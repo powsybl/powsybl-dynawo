@@ -92,11 +92,9 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
                 dynamicModels.add(new StandardBus("BBM_" + b.getId(), b.getId(), "SB"));
             }
         });
-        network.getLineStream().forEach(l -> {
-            if (l.getId().equals("NHV1_NHV2_1")) {
-                dynamicModels.add(new StandardLine("Line_" + l.getId(), l.getId(), "SL"));
-            }
-        });
+        network.getLineStream().forEach(l ->
+                dynamicModels.add(new StandardLine("Line_" + l.getId(), l.getId(), "SL"))
+        );
 
         // Events
         eventModels = new ArrayList<>();
