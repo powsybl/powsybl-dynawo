@@ -38,18 +38,13 @@ public class CurrentLimitAutomaton extends AbstractPureDynamicBlackBoxModel {
     }
 
     @Override
-    public String getName() {
-        return getLib() + LineSideUtils.getSuffix(side);
-    }
-
-    @Override
     public void createMacroConnections(DynaWaltzContext context) {
-        createMacroConnections(lineStaticId, LineModel.class, true, this::getVarConnectionsWithLine, context);
+        createMacroConnectionsWithParametrizedConnector(lineStaticId, LineModel.class, true, this::getVarConnectionsWithLine, LineSideUtils.getSuffix(side), context);
     }
 
-    private List<VarConnection> getVarConnectionsWithLine(LineModel connected) {
+    private List<VarConnection> getVarConnectionsWithLine(LineModel connected, String suffix) {
         return Arrays.asList(
-                new VarConnection("currentLimitAutomaton_IMonitored", connected.getIVarName(side)),
+                new VarConnection("currentLimitAutomaton_IMonitored", connected.getIVarName(suffix)),
                 new VarConnection("currentLimitAutomaton_order", connected.getStateVarName()),
                 new VarConnection("currentLimitAutomaton_AutomatonExists", connected.getDesactivateCurrentLimitsVarName())
         );
