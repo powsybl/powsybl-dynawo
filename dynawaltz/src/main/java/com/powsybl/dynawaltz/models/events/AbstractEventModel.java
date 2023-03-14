@@ -10,7 +10,6 @@ package com.powsybl.dynawaltz.models.events;
 import com.powsybl.dynamicsimulation.EventModel;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
-import com.powsybl.dynawaltz.models.MacroConnector;
 import com.powsybl.dynawaltz.models.Model;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.xml.ParametersXml;
@@ -65,8 +64,7 @@ public abstract class AbstractEventModel extends AbstractPureDynamicBlackBoxMode
 
     @Override
     protected <T extends Model> void createMacroConnections(T connectedModel, Function<T, List<VarConnection>> varConnectionsSupplier, Integer index, DynaWaltzContext context) {
-        String macroConnectorId = MacroConnector.createMacroConnectorId(getName(), connectedModel.getName());
-        context.addEventMacroConnector(macroConnectorId, varConnectionsSupplier.apply(connectedModel));
+        String macroConnectorId = context.addEventMacroConnector(getName(), connectedModel.getName(), varConnectionsSupplier.apply(connectedModel));
         context.addEventMacroConnect(macroConnectorId, getMacroConnectFromAttributes(index), connectedModel.getMacroConnectToAttributes());
     }
 }

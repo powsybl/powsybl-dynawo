@@ -149,8 +149,16 @@ public class DynaWaltzContext {
         return macroConnectList;
     }
 
-    public void addMacroConnector(String macroConId, List<VarConnection> varConnections) {
-        macroConnectorsMap.computeIfAbsent(macroConId, k -> new MacroConnector(macroConId, varConnections));
+    public String addMacroConnector(String name1, String name2, List<VarConnection> varConnections) {
+        String macroConnectorId = MacroConnector.createMacroConnectorId(name1, name2);
+        macroConnectorsMap.computeIfAbsent(macroConnectorId, k -> new MacroConnector(macroConnectorId, varConnections));
+        return macroConnectorId;
+    }
+
+    public String addMacroConnector(String name1, String name2, String parametrizedName, List<VarConnection> varConnections) {
+        String macroConnectorId = MacroConnector.createMacroConnectorId(name1, name2, parametrizedName);
+        macroConnectorsMap.computeIfAbsent(macroConnectorId, k -> new MacroConnector(macroConnectorId, varConnections));
+        return macroConnectorId;
     }
 
     public Collection<MacroConnector> getMacroConnectors() {
@@ -165,8 +173,10 @@ public class DynaWaltzContext {
         return eventMacroConnectList;
     }
 
-    public void addEventMacroConnector(String macroConId, List<VarConnection> varConnections) {
-        eventMacroConnectorsMap.computeIfAbsent(macroConId, k -> new MacroConnector(macroConId, varConnections));
+    public String addEventMacroConnector(String name1, String name2, List<VarConnection> varConnections) {
+        String macroConnectorId = MacroConnector.createMacroConnectorId(name1, name2);
+        eventMacroConnectorsMap.computeIfAbsent(macroConnectorId, k -> new MacroConnector(macroConnectorId, varConnections));
+        return macroConnectorId;
     }
 
     public Collection<MacroConnector> getEventMacroConnectors() {

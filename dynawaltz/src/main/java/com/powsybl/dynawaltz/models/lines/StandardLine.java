@@ -14,20 +14,15 @@ import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.buses.BusModel;
 import com.powsybl.dynawaltz.models.utils.BusUtils;
 import com.powsybl.dynawaltz.models.utils.LineSideUtils;
-import com.powsybl.iidm.network.Branch;
 import com.powsybl.iidm.network.Line;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 public class StandardLine extends AbstractBlackBoxModel implements LineModel {
-
-    private final Map<String, Branch.Side> busSideConnection = new HashMap<>();
 
     public StandardLine(String dynamicModelId, String staticId, String parameterSetId) {
         super(dynamicModelId, staticId, parameterSetId);
@@ -38,9 +33,9 @@ public class StandardLine extends AbstractBlackBoxModel implements LineModel {
         return "Line";
     }
 
-    private List<VarConnection> getVarConnectionsWithBus(BusModel connected) {
+    private List<VarConnection> getVarConnectionsWithBus(BusModel connected, String suffix) {
         return Arrays.asList(
-                new VarConnection(getIVarName(busSideConnection.get(connected.getStaticId().orElseThrow())), connected.getNumCCVarName()),
+                new VarConnection(getIVarName(suffix), connected.getNumCCVarName()),
                 new VarConnection(getStateVarName(), connected.getTerminalVarName())
         );
     }
@@ -54,19 +49,18 @@ public class StandardLine extends AbstractBlackBoxModel implements LineModel {
         }
         line.getTerminals().forEach(t -> {
             String busStaticId = BusUtils.getConnectableBusStaticId(t);
-            busSideConnection.put(busStaticId, line.getSide(t));
-            createMacroConnections(busStaticId, BusModel.class, false, this::getVarConnectionsWithBus, context);
+            createMacroConnectionsWithParametrizedConnector(busStaticId, BusModel.class, true, this::getVarConnectionsWithBus, LineSideUtils.getSuffix(line.getSide(t)), context);
         });
     }
 
     @Override
     public String getName() {
-        return getLib();
+        return getDynamicModelId();
     }
 
     @Override
-    public String getIVarName(Branch.Side side) {
-        return getDynamicModelId() + LineSideUtils.getSuffix(side);
+    public String getIVarName(String sideSuffix) {
+        return getDynamicModelId() + sideSuffix;
     }
 
     @Override

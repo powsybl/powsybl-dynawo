@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
@@ -132,8 +133,13 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel {
     }
 
     protected <T extends Model> void createMacroConnections(T connectedModel, Function<T, List<VarConnection>> varConnectionsSupplier, Integer index, DynaWaltzContext context) {
-        String macroConnectorId = MacroConnector.createMacroConnectorId(getName(), connectedModel.getName());
-        context.addMacroConnector(macroConnectorId, varConnectionsSupplier.apply(connectedModel));
+        String macroConnectorId = context.addMacroConnector(getName(), connectedModel.getName(), varConnectionsSupplier.apply(connectedModel));
         context.addMacroConnect(macroConnectorId, getMacroConnectFromAttributes(index), connectedModel.getMacroConnectToAttributes());
+    }
+
+    protected <T extends Model> void createMacroConnectionsWithParametrizedConnector(String modelStaticId, Class<T> modelClass, boolean defaultIfNotFound, BiFunction<T, String, List<VarConnection>> varConnectionsSupplier, String parametrizedName, DynaWaltzContext context) {
+        T connectedModel = context.getDynamicModel(modelStaticId, modelClass, defaultIfNotFound);
+        String macroConnectorId = context.addMacroConnector(getName(), connectedModel.getName(), parametrizedName, varConnectionsSupplier.apply(connectedModel, parametrizedName));
+        context.addMacroConnect(macroConnectorId, getMacroConnectFromAttributes(null), connectedModel.getMacroConnectToAttributes());
     }
 }

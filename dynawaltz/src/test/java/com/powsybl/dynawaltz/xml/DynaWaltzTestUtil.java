@@ -14,9 +14,9 @@ import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton;
 import com.powsybl.dynawaltz.models.buses.StandardBus;
 import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection;
 import com.powsybl.dynawaltz.models.events.EventSetPointBoolean;
-import com.powsybl.dynawaltz.models.generators.OmegaRefGenerator;
 import com.powsybl.dynawaltz.models.generators.GeneratorFictitious;
 import com.powsybl.dynawaltz.models.generators.GeneratorSynchronous;
+import com.powsybl.dynawaltz.models.generators.OmegaRefGenerator;
 import com.powsybl.dynawaltz.models.lines.StandardLine;
 import com.powsybl.dynawaltz.models.loads.LoadAlphaBeta;
 import com.powsybl.dynawaltz.models.loads.LoadOneTransformer;
@@ -36,8 +36,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-import static com.powsybl.commons.test.ComparisonUtils.compareXml;
+import static com.powsybl.commons.test.ComparisonUtils.compareTxt;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -119,7 +120,7 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
         Schema schema = factory.newSchema(xsd);
         Validator validator = schema.newValidator();
         validator.validate(xml);
-        compareXml(getClass().getResourceAsStream("/" + expectedResourceName), Files.newInputStream(xmlFile));
+        compareTxt(Objects.requireNonNull(getClass().getResourceAsStream("/" + expectedResourceName)), Files.newInputStream(xmlFile));
     }
 
     private static Network createEurostagTutorialExample1WithMoreLoads() {
