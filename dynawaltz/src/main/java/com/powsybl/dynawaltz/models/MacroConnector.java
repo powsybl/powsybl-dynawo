@@ -27,6 +27,10 @@ public final class MacroConnector {
         this.varConnections = varConnections;
     }
 
+    public static String createMacroConnectorId(String name1) {
+        return MACRO_CONNECTOR_PREFIX + name1;
+    }
+
     public static String createMacroConnectorId(String name1, String name2) {
         return MACRO_CONNECTOR_PREFIX + name1 + "-" + name2;
     }

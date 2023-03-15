@@ -18,6 +18,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 
@@ -141,5 +142,10 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel {
         T connectedModel = context.getDynamicModel(modelStaticId, modelClass, defaultIfNotFound);
         String macroConnectorId = context.addMacroConnector(getName(), connectedModel.getName(), parametrizedName, varConnectionsSupplier.apply(connectedModel, parametrizedName));
         context.addMacroConnect(macroConnectorId, getMacroConnectFromAttributes(null), connectedModel.getMacroConnectToAttributes());
+    }
+
+    protected final void createStaticMacroConnections(Supplier<List<VarConnection>> varConnectionsSupplier, DynaWaltzContext context) {
+        String macroConnectorId = context.addMacroConnector(getName(), varConnectionsSupplier.get());
+        context.addMacroConnect(macroConnectorId, getMacroConnectFromAttributes(null));
     }
 }
