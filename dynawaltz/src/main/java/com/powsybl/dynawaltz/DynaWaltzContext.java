@@ -14,7 +14,6 @@ import com.powsybl.dynawaltz.models.*;
 import com.powsybl.dynawaltz.models.generators.OmegaRefGeneratorModel;
 import com.powsybl.dynawaltz.xml.MacroStaticReference;
 import com.powsybl.iidm.network.Network;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.nio.file.FileSystem;
 import java.nio.file.Path;
@@ -141,7 +140,7 @@ public class DynaWaltzContext {
         return eventModels;
     }
 
-    public void addMacroConnect(String macroConnectorId, List<Pair<String, String>> attributesFrom, List<Pair<String, String>> attributesTo) {
+    public void addMacroConnect(String macroConnectorId, List<MacroConnectAttribute> attributesFrom, List<MacroConnectAttribute> attributesTo) {
         macroConnectList.add(new MacroConnect(macroConnectorId, attributesFrom, attributesTo));
     }
 
@@ -165,7 +164,7 @@ public class DynaWaltzContext {
         return macroConnectorsMap.values();
     }
 
-    public void addEventMacroConnect(String macroConnectorId, List<Pair<String, String>> attributesFrom, List<Pair<String, String>> attributesTo) {
+    public void addEventMacroConnect(String macroConnectorId, List<MacroConnectAttribute> attributesFrom, List<MacroConnectAttribute> attributesTo) {
         eventMacroConnectList.add(new MacroConnect(macroConnectorId, attributesFrom, attributesTo));
     }
 

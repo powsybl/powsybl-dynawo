@@ -94,4 +94,9 @@ public abstract class AbstractGeneratorModel extends AbstractBlackBoxModel imple
     public String getRunningVarName() {
         return runningVarName;
     }
+
+    @Override
+    public String getQStatorPuVarName() {
+        return "generator_QStatorPu";
+    }
 }
