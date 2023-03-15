@@ -11,6 +11,8 @@ import com.powsybl.dynawaltz.models.buses.BusModel;
 import com.powsybl.dynawaltz.models.buses.DefaultBusModel;
 import com.powsybl.dynawaltz.models.lines.DefaultLineModel;
 import com.powsybl.dynawaltz.models.lines.LineModel;
+import com.powsybl.dynawaltz.models.shunts.DefaultShuntModel;
+import com.powsybl.dynawaltz.models.shunts.ShuntModel;
 
 import java.util.Map;
 
@@ -24,7 +26,8 @@ public class NetworkModel {
 
     public NetworkModel() {
         factoryMap = Map.of(BusModel.class, new DefaultModelFactory<BusModel>(DefaultBusModel::new),
-                LineModel.class, new DefaultModelFactory<LineModel>(DefaultLineModel::new));
+                LineModel.class, new DefaultModelFactory<LineModel>(DefaultLineModel::new),
+                ShuntModel.class, new DefaultModelFactory<ShuntModel>(DefaultShuntModel::new));
     }
 
     public <T extends Model> T getDefaultModel(String staticId, Class<T> clazz) {
