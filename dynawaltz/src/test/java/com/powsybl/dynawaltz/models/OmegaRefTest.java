@@ -5,7 +5,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-
 package com.powsybl.dynawaltz.models;
 
 import com.powsybl.commons.PowsyblException;
@@ -13,7 +12,6 @@ import com.powsybl.dynawaltz.models.buses.BusModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.xml.stream.XMLStreamException;
 import java.util.Collections;
 import java.util.List;
 
@@ -51,9 +49,9 @@ class OmegaRefTest {
     }
 
     @Test
-    void writeMacroConnectException() throws XMLStreamException {
+    void writeMacroConnectException() {
         Model model = mock(Model.class);
         PowsyblException e = assertThrows(PowsyblException.class, () -> omegaRef.writeMacroConnect(null, null, null, model));
-        assertEquals("OmegaRef can only connect to GeneratorSynchronousModel and BusModel", e.getMessage());
+        assertEquals("OmegaRef can only connect to OmegaRefGeneratorModel and BusModel", e.getMessage());
     }
 }
