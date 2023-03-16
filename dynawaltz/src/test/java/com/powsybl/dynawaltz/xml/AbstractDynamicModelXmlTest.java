@@ -38,7 +38,7 @@ import static com.powsybl.commons.test.ComparisonUtils.compareTxt;
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-abstract class AbstractDynamicModelXmlTest extends AbstractConverterTest {
+public abstract class AbstractDynamicModelXmlTest extends AbstractConverterTest {
 
     protected Network network = EurostagTutorialExample1Factory.create(NetworkFactory.findDefault());
     protected List<BlackBoxModel> dynamicModels = new ArrayList<>();
@@ -71,7 +71,7 @@ abstract class AbstractDynamicModelXmlTest extends AbstractConverterTest {
         context = new DynaWaltzContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, new ArrayList<>(), curves, parameters, dynawoParameters);
     }
 
-    abstract void createStaticModels();
+    protected abstract void createStaticModels();
 
-    abstract void createDynamicModels();
+    protected abstract void createDynamicModels();
 }

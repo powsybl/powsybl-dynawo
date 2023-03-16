@@ -35,4 +35,13 @@ public class DefaultBusModel extends AbstractNetworkModel implements BusModel {
     public String getNumCCVarName() {
         return "@NAME@_numcc";
     }
+
+    @Override
+    public String getUImpinVarName() {
+        return "@NAME@_U";
+    }
+
+    public String getUpuImpinVarName() {
+        return "@NAME@_Upu";
+    }
 }

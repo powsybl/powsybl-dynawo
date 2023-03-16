@@ -17,4 +17,8 @@ public interface BusModel extends Model {
     String getSwitchOffSignalVarName();
 
     String getNumCCVarName();
+
+    String getUImpinVarName();
+
+    String getUpuImpinVarName();
 }

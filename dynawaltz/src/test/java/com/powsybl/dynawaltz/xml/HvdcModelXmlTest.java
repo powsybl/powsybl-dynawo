@@ -24,7 +24,7 @@ import java.io.IOException;
 class HvdcModelXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
-    void createStaticModels() {
+    protected void createStaticModels() {
         VoltageLevel vlhv = network.getVoltageLevel("VLHV1");
         Bus nhv = vlhv.getBusBreakerView().getBus("NHV1");
         VscConverterStation cs1 = vlhv.newVscConverterStation()
@@ -62,7 +62,7 @@ class HvdcModelXmlTest extends AbstractDynamicModelXmlTest {
     }
 
     @Override
-    void createDynamicModels() {
+    protected void createDynamicModels() {
         network.getHvdcLineStream().forEach(hvdc -> dynamicModels.add(new HvdcModel("BBM_" + hvdc.getId(), hvdc.getId(), "hv", "HvdcPV")));
     }
 
