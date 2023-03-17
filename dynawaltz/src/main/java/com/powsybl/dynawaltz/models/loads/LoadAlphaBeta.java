@@ -9,6 +9,8 @@ package com.powsybl.dynawaltz.models.loads;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.VarMapping;
 import com.powsybl.dynawaltz.models.buses.BusModel;
+import com.powsybl.dynawaltz.models.buses.DefaultBusModel;
+import com.powsybl.dynawaltz.models.buses.StandardBus;
 
 import java.util.Arrays;
 import java.util.List;
@@ -40,9 +42,12 @@ public class LoadAlphaBeta extends AbstractLoad {
 
     @Override
     protected List<VarConnection> getVarConnectionsWithBus(BusModel connected) {
-        return Arrays.asList(
-                new VarConnection("load_terminal", connected.getTerminalVarName()),
-                new VarConnection("load_switchOffSignal1", connected.getSwitchOffSignalVarName())
-        );
+        VarConnection terminalsConnection = new VarConnection("load_terminal", connected.getTerminalVarName());
+        if (connected instanceof StandardBus) {
+            return List.of(terminalsConnection);
+        } else {
+            VarConnection switchOffConnection = new VarConnection("load_switchOffSignal1", connected.getSwitchOffSignalVarName());
+            return List.of(terminalsConnection, switchOffConnection);
+        }
     }
 }
