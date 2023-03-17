@@ -10,17 +10,21 @@ import com.powsybl.commons.test.AbstractConverterTest;
 import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynawaltz.DynaWaltzCurve;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
+import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton;
 import com.powsybl.dynawaltz.models.buses.StandardBus;
 import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection;
 import com.powsybl.dynawaltz.models.events.EventSetPointBoolean;
-import com.powsybl.dynawaltz.models.generators.OmegaRefGenerator;
 import com.powsybl.dynawaltz.models.generators.GeneratorFictitious;
 import com.powsybl.dynawaltz.models.generators.GeneratorSynchronous;
+import com.powsybl.dynawaltz.models.generators.OmegaRefGenerator;
 import com.powsybl.dynawaltz.models.lines.StandardLine;
 import com.powsybl.dynawaltz.models.loads.LoadAlphaBeta;
 import com.powsybl.dynawaltz.models.loads.LoadOneTransformer;
-import com.powsybl.iidm.network.*;
+import com.powsybl.iidm.network.Bus;
+import com.powsybl.iidm.network.Network;
+import com.powsybl.iidm.network.NetworkFactory;
+import com.powsybl.iidm.network.VoltageLevel;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.BeforeEach;
 import org.xml.sax.SAXException;
@@ -36,8 +40,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-import static com.powsybl.commons.test.ComparisonUtils.compareXml;
+import static com.powsybl.commons.test.ComparisonUtils.compareTxt;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -95,11 +100,9 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
                 dynamicModels.add(new StandardBus("BBM_" + b.getId(), b.getId(), "SB"));
             }
         });
-        network.getLineStream().forEach(l -> {
-            if (l.getId().equals("NHV1_NHV2_1")) {
-                dynamicModels.add(new StandardLine("Line_" + l.getId(), l.getId(), "SL"));
-            }
-        });
+        network.getLineStream().forEach(l ->
+                dynamicModels.add(new StandardLine("Line_" + l.getId(), l.getId(), "SL"))
+        );
 
         // Events
         eventModels = new ArrayList<>();
@@ -111,7 +114,7 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
         });
 
         // Automatons
-        network.getLineStream().forEach(l -> dynamicModels.add(new CurrentLimitAutomaton("BBM_" + l.getId(), l.getId(), "CLA", Branch.Side.ONE)));
+        network.getLineStream().forEach(l -> dynamicModels.add(new CurrentLimitAutomaton("BBM_" + l.getId(), l.getId(), "CLA", Side.ONE)));
     }
 
     public void validate(String schemaDefinition, String expectedResourceName, Path xmlFile) throws SAXException, IOException {
@@ -121,7 +124,7 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
         Schema schema = factory.newSchema(xsd);
         Validator validator = schema.newValidator();
         validator.validate(xml);
-        compareXml(getClass().getResourceAsStream("/" + expectedResourceName), Files.newInputStream(xmlFile));
+        compareTxt(Objects.requireNonNull(getClass().getResourceAsStream("/" + expectedResourceName)), Files.newInputStream(xmlFile));
     }
 
     private static Network createEurostagTutorialExample1WithMoreLoads() {

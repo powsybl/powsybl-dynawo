@@ -6,11 +6,18 @@
  */
 package com.powsybl.dynawaltz.models;
 
+import com.powsybl.dynawaltz.DynaWaltzContext;
+
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 import java.util.Collections;
 import java.util.List;
 
+import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
+
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
+ * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 public abstract class AbstractPureDynamicBlackBoxModel extends AbstractBlackBoxModel {
 
@@ -22,5 +29,11 @@ public abstract class AbstractPureDynamicBlackBoxModel extends AbstractBlackBoxM
     public final List<VarMapping> getVarsMapping() {
         // No static-dynamic mapping as purely dynamic
         return Collections.emptyList();
+    }
+
+    @Override
+    public void write(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
+        writer.writeEmptyElement(DYN_URI, "blackBoxModel");
+        writeDynamicAttributes(writer, context);
     }
 }

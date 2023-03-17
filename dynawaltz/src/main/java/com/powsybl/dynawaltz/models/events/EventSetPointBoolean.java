@@ -6,9 +6,7 @@
  */
 package com.powsybl.dynawaltz.models.events;
 
-import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
-import com.powsybl.dynawaltz.models.Model;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.generators.GeneratorModel;
 import com.powsybl.dynawaltz.xml.ParametersXml;
@@ -21,6 +19,7 @@ import static com.powsybl.dynawaltz.DynaWaltzParametersDatabase.ParameterType.BO
 
 /**
  * @author Mathieu BAGUE {@literal <mathieu.bague at rte-france.com>}
+ * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 public class EventSetPointBoolean extends AbstractEventModel {
 
@@ -36,17 +35,13 @@ public class EventSetPointBoolean extends AbstractEventModel {
         return "EventSetPointBoolean";
     }
 
-    @Override
-    public List<VarConnection> getVarConnectionsWith(Model connected) {
-        if (!(connected instanceof GeneratorModel)) {
-            throw new PowsyblException("EventSetPointBoolean can only connect to GeneratorModel");
-        }
-        return List.of(new VarConnection("event_state1", ((GeneratorModel) connected).getSwitchOffSignalEventVarName()));
+    private List<VarConnection> getVarConnectionsWithGenerator(GeneratorModel connected) {
+        return List.of(new VarConnection("event_state1", connected.getSwitchOffSignalEventVarName()));
     }
 
     @Override
-    public List<Model> getModelsConnectedTo(DynaWaltzContext context) {
-        return List.of(context.getDynamicModelOrThrows(getEquipmentStaticId()));
+    public void createMacroConnections(DynaWaltzContext context) {
+        createMacroConnections(getEquipmentStaticId(), GeneratorModel.class, this::getVarConnectionsWithGenerator, context);
     }
 
     @Override

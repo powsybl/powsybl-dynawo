@@ -1,22 +1,29 @@
+/**
+ * Copyright (c) 2023, RTE (http://www.rte-france.com)
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ */
 package com.powsybl.dynawaltz.models.lines;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractBlackBoxModel;
-import com.powsybl.dynawaltz.models.Model;
+import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.VarConnection;
-import com.powsybl.dynawaltz.models.VarMapping;
 import com.powsybl.dynawaltz.models.buses.BusModel;
 import com.powsybl.dynawaltz.models.utils.BusUtils;
-import com.powsybl.dynawaltz.models.utils.LineSideUtils;
-import com.powsybl.iidm.network.Branch;
+import com.powsybl.dynawaltz.models.utils.SideConverter;
 import com.powsybl.iidm.network.Line;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 
+/**
+ * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ */
 public class StandardLine extends AbstractBlackBoxModel implements LineModel {
-
-    private final Map<String, Branch.Side> busSideConnection = new HashMap<>();
 
     public StandardLine(String dynamicModelId, String staticId, String parameterSetId) {
         super(dynamicModelId, staticId, parameterSetId);
@@ -27,48 +34,34 @@ public class StandardLine extends AbstractBlackBoxModel implements LineModel {
         return "Line";
     }
 
-    @Override
-    public List<VarMapping> getVarsMapping() {
-        return Collections.emptyList();
+    private List<VarConnection> getVarConnectionsWithBus(BusModel connected, Side side) {
+        return Arrays.asList(
+                new VarConnection(getIVarName(side), connected.getNumCCVarName()),
+                new VarConnection(getStateVarName(), connected.getTerminalVarName())
+        );
     }
 
     @Override
-    public List<VarConnection> getVarConnectionsWith(Model connected) {
-        if (connected instanceof BusModel) {
-            BusModel busModel = (BusModel) connected;
-            return Arrays.asList(
-                    new VarConnection(getIVarName(busSideConnection.get(busModel.getStaticId().orElseThrow())), busModel.getNumCCVarName()),
-                    new VarConnection(getStateVarName(), busModel.getTerminalVarName())
-            );
-        } else {
-            throw new PowsyblException("StandardLineModel can only connect to BusModel");
-        }
-    }
-
-    @Override
-    public List<Model> getModelsConnectedTo(DynaWaltzContext context) {
+    public void createMacroConnections(DynaWaltzContext context) {
         String staticId = getStaticId().orElse(null);
         Line line = context.getNetwork().getLine(staticId);
         if (line == null) {
-            throw new PowsyblException("Line static id unknown: " + staticId);
+            throw new PowsyblException("Line static id unknown: " + getStaticId());
         }
-        List<Model> connectedBbm = new ArrayList<>(2);
         line.getTerminals().forEach(t -> {
-            BusModel busModel = context.getDynamicModelOrDefaultBus(BusUtils.getConnectableBusStaticId(t));
-            busSideConnection.put(busModel.getStaticId().orElseThrow(), line.getSide(t));
-            connectedBbm.add(busModel);
+            String busStaticId = BusUtils.getConnectableBusStaticId(t);
+            createMacroConnections(busStaticId, BusModel.class, this::getVarConnectionsWithBus, context, SideConverter.convert(line.getSide(t)));
         });
-        return connectedBbm;
     }
 
     @Override
     public String getName() {
-        return getLib();
+        return getDynamicModelId();
     }
 
     @Override
-    public String getIVarName(Branch.Side side) {
-        return getDynamicModelId() + LineSideUtils.getSuffix(side);
+    public String getIVarName(Side side) {
+        return getDynamicModelId() + side.getSideSuffix();
     }
 
     @Override
