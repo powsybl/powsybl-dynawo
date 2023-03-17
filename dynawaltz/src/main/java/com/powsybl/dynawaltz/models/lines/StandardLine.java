@@ -10,10 +10,11 @@ package com.powsybl.dynawaltz.models.lines;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractBlackBoxModel;
+import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.buses.BusModel;
 import com.powsybl.dynawaltz.models.utils.BusUtils;
-import com.powsybl.dynawaltz.models.utils.LineSideUtils;
+import com.powsybl.dynawaltz.models.utils.SideConverter;
 import com.powsybl.iidm.network.Line;
 
 import java.util.Arrays;
@@ -33,9 +34,9 @@ public class StandardLine extends AbstractBlackBoxModel implements LineModel {
         return "Line";
     }
 
-    private List<VarConnection> getVarConnectionsWithBus(BusModel connected, String suffix) {
+    private List<VarConnection> getVarConnectionsWithBus(BusModel connected, Side side) {
         return Arrays.asList(
-                new VarConnection(getIVarName(suffix), connected.getNumCCVarName()),
+                new VarConnection(getIVarName(side), connected.getNumCCVarName()),
                 new VarConnection(getStateVarName(), connected.getTerminalVarName())
         );
     }
@@ -49,7 +50,7 @@ public class StandardLine extends AbstractBlackBoxModel implements LineModel {
         }
         line.getTerminals().forEach(t -> {
             String busStaticId = BusUtils.getConnectableBusStaticId(t);
-            createMacroConnectionsWithParametrizedConnector(busStaticId, BusModel.class, true, this::getVarConnectionsWithBus, LineSideUtils.getSuffix(line.getSide(t)), context);
+            createMacroConnections(busStaticId, BusModel.class, this::getVarConnectionsWithBus, context, SideConverter.convert(line.getSide(t)));
         });
     }
 
@@ -59,8 +60,8 @@ public class StandardLine extends AbstractBlackBoxModel implements LineModel {
     }
 
     @Override
-    public String getIVarName(String sideSuffix) {
-        return getDynamicModelId() + sideSuffix;
+    public String getIVarName(Side side) {
+        return getDynamicModelId() + side.getSideSuffix();
     }
 
     @Override

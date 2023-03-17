@@ -12,7 +12,9 @@ import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractDynamicModelBuilder
 import com.powsybl.dynawaltz.dsl.AbstractPowsyblDynawoGroovyExtension
+import com.powsybl.dynawaltz.models.Side
 import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton
+import com.powsybl.dynawaltz.models.utils.SideConverter
 import com.powsybl.iidm.network.Branch
 
 /**
@@ -34,10 +36,10 @@ class CurrentLimitAutomatonGroovyExtension extends AbstractPowsyblDynawoGroovyEx
 
     static class CurrentLimitAutomatonBuilder extends AbstractDynamicModelBuilder {
 
-        Branch.Side side
+        Side side
 
         void side(Branch.Side side) {
-            this.side = side
+            this.side = SideConverter.convert(side)
         }
 
         @Override

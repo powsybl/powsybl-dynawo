@@ -34,7 +34,7 @@ public abstract class AbstractLoad extends AbstractBlackBoxModel {
         if (load == null) {
             throw new PowsyblException("Load static id unknown: " + staticId);
         }
-        createMacroConnections(BusUtils.getConnectableBusStaticId(load), BusModel.class, true, this::getVarConnectionsWithBus, context);
+        createMacroConnections(BusUtils.getConnectableBusStaticId(load), BusModel.class, this::getVarConnectionsWithBus, context);
     }
 
     abstract List<VarConnection> getVarConnectionsWithBus(BusModel connected);

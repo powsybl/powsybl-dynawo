@@ -87,8 +87,8 @@ public class OmegaRef extends AbstractPureDynamicBlackBoxModel {
     public void createMacroConnections(DynaWaltzContext context) throws PowsyblException {
         int index = 0;
         for (OmegaRefGeneratorModel gen : omegaRefGenerators) {
-            createMacroConnectionsWithParametrizedConnect(gen, this::getVarConnectionsWithOmegaRefGenerator, context, MacroConnectAttribute.ofIndex1(index));
-            createMacroConnectionsWithParametrizedConnect(getBusAssociatedTo(gen, context), BusModel.class, true, this::getVarConnectionsWithBus, context, MacroConnectAttribute.ofIndex1(index));
+            createMacroConnections(gen, getVarConnectionsWithOmegaRefGenerator(gen), context, MacroConnectAttribute.ofIndex1(index));
+            createMacroConnections(getBusAssociatedTo(gen, context), BusModel.class, this::getVarConnectionsWithBus, context, MacroConnectAttribute.ofIndex1(index));
             index++;
         }
     }

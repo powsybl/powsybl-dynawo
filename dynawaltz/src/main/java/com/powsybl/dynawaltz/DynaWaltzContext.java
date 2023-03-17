@@ -107,14 +107,10 @@ public class DynaWaltzContext {
         return macroStaticReferences.values();
     }
 
-    public <T extends Model> T getDynamicModel(String staticId, Class<T> clazz, boolean defaultIfNotFound) {
+    public <T extends Model> T getDynamicModel(String staticId, Class<T> clazz) {
         BlackBoxModel bbm = staticIdBlackBoxModelMap.get(staticId);
         if (bbm == null) {
-            if (defaultIfNotFound) {
-                return networkModel.getDefaultModel(staticId, clazz);
-            } else {
-                throw new PowsyblException("Cannot find the equipment '" + staticId + "' among the dynamic models provided");
-            }
+            return networkModel.getDefaultModel(staticId, clazz);
         }
         if (clazz.isInstance(bbm)) {
             return clazz.cast(bbm);
@@ -154,8 +150,8 @@ public class DynaWaltzContext {
         return macroConnectorId;
     }
 
-    public String addMacroConnector(String name1, String name2, String parametrizedName, List<VarConnection> varConnections) {
-        String macroConnectorId = MacroConnector.createMacroConnectorId(name1, name2, parametrizedName);
+    public String addMacroConnector(String name1, String name2, Side side, List<VarConnection> varConnections) {
+        String macroConnectorId = MacroConnector.createMacroConnectorId(name1, name2, side);
         macroConnectorsMap.computeIfAbsent(macroConnectorId, k -> new MacroConnector(macroConnectorId, varConnections));
         return macroConnectorId;
     }
