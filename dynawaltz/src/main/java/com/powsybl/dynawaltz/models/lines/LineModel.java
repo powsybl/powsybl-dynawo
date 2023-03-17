@@ -7,13 +7,13 @@
 package com.powsybl.dynawaltz.models.lines;
 
 import com.powsybl.dynawaltz.models.Model;
-import com.powsybl.iidm.network.Branch;
+import com.powsybl.dynawaltz.models.Side;
 
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  */
 public interface LineModel extends Model {
-    String getIVarName(Branch.Side side);
+    String getIVarName(Side side);
 
     String getStateVarName();
 

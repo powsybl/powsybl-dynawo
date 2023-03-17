@@ -6,28 +6,32 @@
  */
 package com.powsybl.dynawaltz.models;
 
+import com.powsybl.commons.PowsyblException;
+import com.powsybl.dynawaltz.models.buses.BusModel;
 import com.powsybl.dynawaltz.models.buses.DefaultBusModel;
 import com.powsybl.dynawaltz.models.lines.DefaultLineModel;
+import com.powsybl.dynawaltz.models.lines.LineModel;
 
-import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
 
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
+ * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 public class NetworkModel {
 
-    private final Map<String, DefaultBusModel> defaultBusModelMap = new HashMap<>();
-    private final Map<String, DefaultLineModel> defaultLineModelMap = new HashMap<>();
-    private final Function<String, DefaultBusModel> busModelFactory = DefaultBusModel::new;
-    private final Function<String, DefaultLineModel> lineModelFactory = DefaultLineModel::new;
+    private final Map<Class<? extends Model>, DefaultModelFactory<? extends Model>> factoryMap;
 
-    public DefaultBusModel getDefaultBusModel(String staticId) {
-        return defaultBusModelMap.computeIfAbsent(staticId, key -> busModelFactory.apply(staticId));
+    public NetworkModel() {
+        factoryMap = Map.of(BusModel.class, new DefaultModelFactory<BusModel>(DefaultBusModel::new),
+                LineModel.class, new DefaultModelFactory<LineModel>(DefaultLineModel::new));
     }
 
-    public DefaultLineModel getDefaultLineModel(String staticId) {
-        return defaultLineModelMap.computeIfAbsent(staticId, key -> lineModelFactory.apply(staticId));
+    public <T extends Model> T getDefaultModel(String staticId, Class<T> clazz) {
+        DefaultModelFactory<T> dmf = (DefaultModelFactory<T>) factoryMap.get(clazz);
+        if (dmf != null) {
+            return dmf.getDefaultModel(staticId);
+        }
+        throw new PowsyblException("Default model not implemented for " + clazz.getSimpleName());
     }
 }

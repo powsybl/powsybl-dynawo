@@ -10,5 +10,4 @@ package com.powsybl.dynawaltz.models.generators;
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  */
 public interface GeneratorSynchronousModel extends OmegaRefGeneratorModel {
-    String getOmegaPuVarName();
 }

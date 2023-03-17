@@ -21,23 +21,23 @@ import com.powsybl.dynawaltz.models.generators.OmegaRefGenerator
 @AutoService(DynamicModelGroovyExtension.class)
 class OmegaRefGeneratorGroovyExtension extends AbstractPowsyblDynawoGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
-    private static final String CONNECTED_TO_OMEGA_REF_GENERATORS = "connectedToOmegaRefGenerators"
+    private static final String OMEGA_REF_GENERATORS = "omegaRefGenerators"
 
     OmegaRefGeneratorGroovyExtension() {
         ConfigSlurper config = new ConfigSlurper()
-        modelTags = config.parse(this.getClass().getClassLoader().getResource(MODELS_CONFIG)).get(CONNECTED_TO_OMEGA_REF_GENERATORS).keySet() as List
+        modelTags = config.parse(this.getClass().getClassLoader().getResource(MODELS_CONFIG)).get(OMEGA_REF_GENERATORS).keySet() as List
     }
 
     @Override
-    protected GeneratorConnectedToOmegaRefBuilder createBuilder(String currentTag) {
-        new GeneratorConnectedToOmegaRefBuilder(currentTag)
+    protected OmegaRefGeneratorBuilder createBuilder(String currentTag) {
+        new OmegaRefGeneratorBuilder(currentTag)
     }
 
-    static class GeneratorConnectedToOmegaRefBuilder extends AbstractDynamicModelBuilder {
+    static class OmegaRefGeneratorBuilder extends AbstractDynamicModelBuilder {
 
         String tag
 
-        GeneratorConnectedToOmegaRefBuilder(String tag) {
+        OmegaRefGeneratorBuilder(String tag) {
             this.tag = tag
         }
 

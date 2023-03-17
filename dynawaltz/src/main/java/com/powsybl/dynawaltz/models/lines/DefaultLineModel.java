@@ -7,8 +7,7 @@
 package com.powsybl.dynawaltz.models.lines;
 
 import com.powsybl.dynawaltz.models.AbstractNetworkModel;
-import com.powsybl.dynawaltz.models.utils.LineSideUtils;
-import com.powsybl.iidm.network.Branch;
+import com.powsybl.dynawaltz.models.Side;
 
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
@@ -25,8 +24,8 @@ public class DefaultLineModel extends AbstractNetworkModel implements LineModel 
     }
 
     @Override
-    public String getIVarName(Branch.Side side) {
-        return "@NAME@_i" + LineSideUtils.getSuffix(side);
+    public String getIVarName(Side side) {
+        return "@NAME@_i" + side.getSideSuffix();
     }
 
     @Override

@@ -9,16 +9,14 @@ package com.powsybl.dynawaltz.xml;
 
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
+import com.powsybl.dynawaltz.models.MacroConnect;
 import com.powsybl.dynawaltz.models.MacroConnector;
-import com.powsybl.dynawaltz.models.Model;
-import com.powsybl.dynawaltz.models.utils.ConnectedModels;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.DYD_FILENAME;
 
@@ -53,14 +51,8 @@ public final class DydXml {
         for (MacroStaticReference macroStaticReference : context.getMacroStaticReferences()) {
             macroStaticReference.write(writer);
         }
-        Set<ConnectedModels> allConnectedModels = context.getModelsConnections().entrySet().stream()
-                .flatMap(e -> e.getValue().stream().map(m -> ConnectedModels.of(e.getKey(), m)))
-                .collect(Collectors.toCollection(LinkedHashSet::new));
-        for (ConnectedModels modelsConnected : allConnectedModels) {
-            BlackBoxModel bbm = modelsConnected.getBlackBoxModel();
-            Model connected = modelsConnected.getModel();
-            MacroConnector macroConnector = context.getMacroConnector(bbm, connected);
-            bbm.writeMacroConnect(writer, context, macroConnector, connected);
+        for (MacroConnect macroConnect : context.getMacroConnectList()) {
+            macroConnect.write(writer);
         }
     }
 
@@ -71,11 +63,8 @@ public final class DydXml {
         for (MacroConnector macroConnector : context.getEventMacroConnectors()) {
             macroConnector.write(writer);
         }
-        for (Map.Entry<BlackBoxModel, List<Model>> bbmMapping : context.getEventModelsConnections().entrySet()) {
-            BlackBoxModel event = bbmMapping.getKey();
-            for (Model connected : bbmMapping.getValue()) {
-                event.writeMacroConnect(writer, context, context.getEventMacroConnector(event, connected), connected);
-            }
+        for (MacroConnect macroConnect : context.getEventMacroConnectList()) {
+            macroConnect.write(writer);
         }
     }
 }

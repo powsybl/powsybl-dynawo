@@ -7,9 +7,14 @@
  */
 package com.powsybl.dynawaltz.models.generators;
 
+import com.powsybl.dynawaltz.models.VarConnection;
+
+import java.util.List;
+
 /**
  * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
  */
 public interface OmegaRefGeneratorModel extends GeneratorModel {
-    String getOmegaRefPuVarName();
+
+    List<VarConnection> getOmegaRefVarConnections();
 }
