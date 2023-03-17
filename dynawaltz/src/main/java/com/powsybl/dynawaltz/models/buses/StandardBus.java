@@ -56,19 +56,6 @@ public class StandardBus extends AbstractBlackBoxModel implements BusModel {
         if (bus == null) {
             throw new PowsyblException("Bus static id unknown: " + staticId);
         }
-        checkLinkedDynamicModels(bus.getGeneratorStream(), "generator", context);
-        checkLinkedDynamicModels(bus.getLineStream(), "line", context);
-        checkLinkedDynamicModels(bus.getLoadStream(), "load", context);
-    }
-
-    private <T extends Identifiable<T>> void checkLinkedDynamicModels(Stream<T> stream, String equipmentName, DynaWaltzContext context) {
-        stream.map(Identifiable::getId)
-                .filter(context::isWithoutBlackBoxDynamicModel)
-                .findAny()
-                .ifPresent(id -> {
-                    throw new PowsyblException(String.format("The %s %s linked to the standard bus %s does not possess a dynamic model",
-                            equipmentName, id, getStaticId().orElse(null)));
-                });
     }
 
     @Override
