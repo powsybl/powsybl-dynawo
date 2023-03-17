@@ -70,11 +70,11 @@ public class StandardBus extends AbstractBlackBoxModel implements BusModel {
 
     @Override
     public String getSwitchOffSignalVarName() {
-        return "bus_switchOff";
+        throw new UnsupportedOperationException("switchOffSignal variable not implemented in StandardBus dynawo's model");
     }
 
     @Override
     public String getNumCCVarName() {
-        return "@NAME@_numcc";
+        throw new UnsupportedOperationException("numCC variable not implemented in StandardBus dynawo's model");
     }
 }
