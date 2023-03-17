@@ -24,4 +24,8 @@ public enum Side {
     public String getSideSuffix() {
         return sideSuffix;
     }
+
+    public int getSideNumber() {
+        return ordinal() + 1;
+    }
 }
