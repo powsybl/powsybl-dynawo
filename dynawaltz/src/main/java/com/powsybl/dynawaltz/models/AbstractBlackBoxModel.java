@@ -14,6 +14,7 @@ import javax.xml.stream.XMLStreamWriter;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -99,6 +100,11 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel {
         }
     }
 
+    protected final void createMacroConnections(Supplier<List<VarConnection>> varConnectionsSupplier, DynaWaltzContext context) {
+        String macroConnectorId = context.addMacroConnector(getName(), varConnectionsSupplier.get());
+        context.addMacroConnect(macroConnectorId, getMacroConnectFromAttributes());
+    }
+
     protected <T extends Model> void createMacroConnections(String modelStaticId, Class<T> modelClass, Function<T, List<VarConnection>> varConnectionsSupplier, DynaWaltzContext context) {
         T connectedModel = context.getDynamicModel(modelStaticId, modelClass);
         String macroConnectorId = context.addMacroConnector(getName(), connectedModel.getName(), varConnectionsSupplier.apply(connectedModel));
@@ -123,5 +129,21 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel {
         T connectedModel = context.getDynamicModel(modelStaticId, modelClass);
         String macroConnectorId = context.addMacroConnector(getName(), connectedModel.getName(), side, varConnectionsSupplier.apply(connectedModel, side));
         context.addMacroConnect(macroConnectorId, getMacroConnectFromAttributes(), connectedModel.getMacroConnectToAttributes());
+    }
+
+    /**
+     * Suffixes MacroConnector id with string
+     */
+    protected <T extends Model> void createMacroConnections(String modelStaticId, Class<T> modelClass, BiFunction<T, String, List<VarConnection>> varConnectionsSupplier, DynaWaltzContext context, String parametrizedName) {
+        T connectedModel = context.getDynamicModel(modelStaticId, modelClass);
+        String macroConnectorId = context.addMacroConnector(getName(), connectedModel.getName(), parametrizedName, varConnectionsSupplier.apply(connectedModel, parametrizedName));
+        context.addMacroConnect(macroConnectorId, getMacroConnectFromAttributes(), connectedModel.getMacroConnectToAttributes());
+    }
+
+    protected final <T extends Model> void createMacroConnections(String modelStaticId, Class<T> modelClass, BiFunction<T, String, List<VarConnection>> varConnectionsSupplier, DynaWaltzContext context, String parametrizedName, MacroConnectAttribute... connectFromAttributes) {
+        T connectedModel = context.getDynamicModel(modelStaticId, modelClass);
+        String macroConnectorId = context.addMacroConnector(getName(), connectedModel.getName(), parametrizedName, varConnectionsSupplier.apply(connectedModel, parametrizedName));
+        List<MacroConnectAttribute> fromAttributes = Stream.concat(getMacroConnectFromAttributes().stream(), Arrays.stream(connectFromAttributes)).collect(Collectors.toList());
+        context.addMacroConnect(macroConnectorId, fromAttributes, connectedModel.getMacroConnectToAttributes());
     }
 }

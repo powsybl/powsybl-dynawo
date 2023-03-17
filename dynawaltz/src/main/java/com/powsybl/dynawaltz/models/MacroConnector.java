@@ -39,6 +39,10 @@ public final class MacroConnector {
         return MACRO_CONNECTOR_PREFIX + name1 + side.getSideSuffix() + "-" + name2;
     }
 
+    public static String createMacroConnectorId(String name1, String name2, String name1Suffix) {
+        return MACRO_CONNECTOR_PREFIX + name1 + name1Suffix + "-" + name2;
+    }
+
     public void write(XMLStreamWriter writer) throws XMLStreamException {
         writer.writeStartElement(DYN_URI, "macroConnector");
         writer.writeAttribute("id", id);

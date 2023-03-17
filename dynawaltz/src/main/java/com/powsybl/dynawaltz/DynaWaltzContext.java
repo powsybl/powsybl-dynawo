@@ -140,7 +140,7 @@ public class DynaWaltzContext {
         macroConnectList.add(new MacroConnect(macroConnectorId, attributesFrom, attributesTo));
     }
 
-    public void addMacroConnect(String macroConnectorId, List<Pair<String, String>> attributesFrom) {
+    public void addMacroConnect(String macroConnectorId, List<MacroConnectAttribute> attributesFrom) {
         macroConnectList.add(new MacroConnect(macroConnectorId, attributesFrom));
     }
 
@@ -162,6 +162,12 @@ public class DynaWaltzContext {
 
     public String addMacroConnector(String name1, String name2, Side side, List<VarConnection> varConnections) {
         String macroConnectorId = MacroConnector.createMacroConnectorId(name1, name2, side);
+        macroConnectorsMap.computeIfAbsent(macroConnectorId, k -> new MacroConnector(macroConnectorId, varConnections));
+        return macroConnectorId;
+    }
+
+    public String addMacroConnector(String name1, String name2, String name1Suffix, List<VarConnection> varConnections) {
+        String macroConnectorId = MacroConnector.createMacroConnectorId(name1, name2, name1Suffix);
         macroConnectorsMap.computeIfAbsent(macroConnectorId, k -> new MacroConnector(macroConnectorId, varConnections));
         return macroConnectorId;
     }
