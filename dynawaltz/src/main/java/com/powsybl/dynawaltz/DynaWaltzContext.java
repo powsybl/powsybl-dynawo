@@ -14,7 +14,6 @@ import com.powsybl.dynawaltz.models.*;
 import com.powsybl.dynawaltz.models.generators.OmegaRefGeneratorModel;
 import com.powsybl.dynawaltz.xml.MacroStaticReference;
 import com.powsybl.iidm.network.Network;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.nio.file.FileSystem;
 import java.nio.file.Path;
@@ -108,14 +107,10 @@ public class DynaWaltzContext {
         return macroStaticReferences.values();
     }
 
-    public <T extends Model> T getDynamicModel(String staticId, Class<T> clazz, boolean defaultIfNotFound) {
+    public <T extends Model> T getDynamicModel(String staticId, Class<T> clazz) {
         BlackBoxModel bbm = staticIdBlackBoxModelMap.get(staticId);
         if (bbm == null) {
-            if (defaultIfNotFound) {
-                return networkModel.getDefaultModel(staticId, clazz);
-            } else {
-                throw new PowsyblException("Cannot find the equipment '" + staticId + "' among the dynamic models provided");
-            }
+            return networkModel.getDefaultModel(staticId, clazz);
         }
         if (clazz.isInstance(bbm)) {
             return clazz.cast(bbm);
@@ -141,7 +136,7 @@ public class DynaWaltzContext {
         return eventModels;
     }
 
-    public void addMacroConnect(String macroConnectorId, List<Pair<String, String>> attributesFrom, List<Pair<String, String>> attributesTo) {
+    public void addMacroConnect(String macroConnectorId, List<MacroConnectAttribute> attributesFrom, List<MacroConnectAttribute> attributesTo) {
         macroConnectList.add(new MacroConnect(macroConnectorId, attributesFrom, attributesTo));
     }
 
@@ -165,8 +160,8 @@ public class DynaWaltzContext {
         return macroConnectorId;
     }
 
-    public String addMacroConnector(String name1, String name2, String parametrizedName, List<VarConnection> varConnections) {
-        String macroConnectorId = MacroConnector.createMacroConnectorId(name1, name2, parametrizedName);
+    public String addMacroConnector(String name1, String name2, Side side, List<VarConnection> varConnections) {
+        String macroConnectorId = MacroConnector.createMacroConnectorId(name1, name2, side);
         macroConnectorsMap.computeIfAbsent(macroConnectorId, k -> new MacroConnector(macroConnectorId, varConnections));
         return macroConnectorId;
     }
@@ -175,7 +170,7 @@ public class DynaWaltzContext {
         return macroConnectorsMap.values();
     }
 
-    public void addEventMacroConnect(String macroConnectorId, List<Pair<String, String>> attributesFrom, List<Pair<String, String>> attributesTo) {
+    public void addEventMacroConnect(String macroConnectorId, List<MacroConnectAttribute> attributesFrom, List<MacroConnectAttribute> attributesTo) {
         eventMacroConnectList.add(new MacroConnect(macroConnectorId, attributesFrom, attributesTo));
     }
 

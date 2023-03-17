@@ -60,7 +60,7 @@ public abstract class AbstractGeneratorModel extends AbstractBlackBoxModel imple
         if (generator == null) {
             throw new PowsyblException("Generator static id unknown: " + staticId);
         }
-        createMacroConnections(BusUtils.getConnectableBusStaticId(generator), BusModel.class, true, this::getVarConnectionsWithBus, context);
+        createMacroConnections(BusUtils.getConnectableBusStaticId(generator), BusModel.class, this::getVarConnectionsWithBus, context);
     }
 
     private List<VarConnection> getVarConnectionsWithBus(BusModel connected) {

@@ -11,7 +11,6 @@ import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
 import com.powsybl.dynawaltz.models.generators.GeneratorFictitious;
-import com.powsybl.dynawaltz.models.generators.GeneratorModel;
 import com.powsybl.dynawaltz.models.generators.GeneratorSynchronousModel;
 import com.powsybl.dynawaltz.models.lines.LineModel;
 import org.junit.jupiter.api.Test;
@@ -74,16 +73,12 @@ class DynamicModelsXmlTest extends DynaWaltzTestUtil {
     void testDynamicModelGetterException() {
         DynaWaltzContext dc = new DynaWaltzContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, eventModels, curves, DynamicSimulationParameters.load(), DynaWaltzParameters.load());
 
-        // throws exception id not found
-        Exception e = assertThrows(PowsyblException.class, () -> dc.getDynamicModel("wrongID", GeneratorModel.class, false));
-        assertEquals("Cannot find the equipment 'wrongID' among the dynamic models provided", e.getMessage());
-
         // incorrect model
-        e = assertThrows(PowsyblException.class, () -> dc.getDynamicModel("GEN5", LineModel.class, true));
+        Exception e = assertThrows(PowsyblException.class, () -> dc.getDynamicModel("GEN5", LineModel.class));
         assertEquals("The model identified by the static id GEN5 is not the correct model", e.getMessage());
 
         // default model not implemented
-        e = assertThrows(PowsyblException.class, () -> dc.getDynamicModel("unknownID", GeneratorSynchronousModel.class, true));
+        e = assertThrows(PowsyblException.class, () -> dc.getDynamicModel("unknownID", GeneratorSynchronousModel.class));
         assertEquals("Default model not implemented for GeneratorSynchronousModel", e.getMessage());
     }
 }

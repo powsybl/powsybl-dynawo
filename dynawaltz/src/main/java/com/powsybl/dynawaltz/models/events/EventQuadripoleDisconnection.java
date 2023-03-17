@@ -44,7 +44,7 @@ public class EventQuadripoleDisconnection extends AbstractEventModel {
 
     @Override
     public void createMacroConnections(DynaWaltzContext context) {
-        createMacroConnections(getEquipmentStaticId(), LineModel.class, true, this::getVarConnectionsWithLine, context);
+        createMacroConnections(getEquipmentStaticId(), LineModel.class, this::getVarConnectionsWithLine, context);
     }
 
     @Override

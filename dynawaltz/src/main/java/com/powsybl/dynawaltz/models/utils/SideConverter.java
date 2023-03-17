@@ -7,22 +7,23 @@
  */
 package com.powsybl.dynawaltz.models.utils;
 
+import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.iidm.network.Branch;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public final class LineSideUtils {
+public final class SideConverter {
 
-    private LineSideUtils() {
+    private SideConverter() {
     }
 
-    public static String getSuffix(Branch.Side side) {
+    public static Side convert(Branch.Side side) {
         switch (side) {
             case ONE:
-                return "Side1";
+                return Side.ONE;
             case TWO:
-                return "Side2";
+                return Side.TWO;
             default:
                 throw new AssertionError("Unexpected Side value: " + side);
         }

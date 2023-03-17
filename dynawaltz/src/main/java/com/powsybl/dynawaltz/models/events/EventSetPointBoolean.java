@@ -41,7 +41,7 @@ public class EventSetPointBoolean extends AbstractEventModel {
 
     @Override
     public void createMacroConnections(DynaWaltzContext context) {
-        createMacroConnections(getEquipmentStaticId(), GeneratorModel.class, false, this::getVarConnectionsWithGenerator, context);
+        createMacroConnections(getEquipmentStaticId(), GeneratorModel.class, this::getVarConnectionsWithGenerator, context);
     }
 
     @Override

@@ -7,8 +7,6 @@
  */
 package com.powsybl.dynawaltz.models;
 
-import org.apache.commons.lang3.tuple.Pair;
-
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.util.List;
@@ -21,10 +19,10 @@ import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 public final class MacroConnect {
 
     private final String id;
-    private final List<Pair<String, String>> attributesFrom;
-    private final List<Pair<String, String>> attributesTo;
+    private final List<MacroConnectAttribute> attributesFrom;
+    private final List<MacroConnectAttribute> attributesTo;
 
-    public MacroConnect(String id, List<Pair<String, String>> attributesFrom, List<Pair<String, String>> attributesTo) {
+    public MacroConnect(String id, List<MacroConnectAttribute> attributesFrom, List<MacroConnectAttribute> attributesTo) {
         this.id = id;
         this.attributesFrom = attributesFrom;
         this.attributesTo = attributesTo;
@@ -43,11 +41,11 @@ public final class MacroConnect {
     public void write(XMLStreamWriter writer) throws XMLStreamException {
         writer.writeEmptyElement(DYN_URI, "macroConnect");
         writer.writeAttribute("connector", id);
-        for (Pair<String, String> attribute : attributesFrom) {
-            writer.writeAttribute(attribute.getKey(), attribute.getValue());
+        for (MacroConnectAttribute attribute : attributesFrom) {
+            writer.writeAttribute(attribute.getName(), attribute.getValue());
         }
-        for (Pair<String, String> attribute : attributesTo) {
-            writer.writeAttribute(attribute.getKey(), attribute.getValue());
+        for (MacroConnectAttribute attribute : attributesTo) {
+            writer.writeAttribute(attribute.getName(), attribute.getValue());
         }
     }
 }

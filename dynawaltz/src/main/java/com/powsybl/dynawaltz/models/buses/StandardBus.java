@@ -10,9 +10,9 @@ package com.powsybl.dynawaltz.models.buses;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractBlackBoxModel;
+import com.powsybl.dynawaltz.models.MacroConnectAttribute;
 import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.Identifiable;
-import org.apache.commons.lang3.tuple.Pair;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -42,9 +42,9 @@ public class StandardBus extends AbstractBlackBoxModel implements BusModel {
     }
 
     @Override
-    public List<Pair<String, String>> getMacroConnectToAttributes() {
-        List<Pair<String, String>> attributesConnectTo = new ArrayList<>(super.getMacroConnectToAttributes());
-        attributesConnectTo.add(Pair.of("name2", getStaticId().orElse(null)));
+    public List<MacroConnectAttribute> getMacroConnectToAttributes() {
+        List<MacroConnectAttribute> attributesConnectTo = new ArrayList<>(super.getMacroConnectToAttributes());
+        attributesConnectTo.add(MacroConnectAttribute.of("name2", getStaticId().orElse(null)));
         return attributesConnectTo;
     }
 

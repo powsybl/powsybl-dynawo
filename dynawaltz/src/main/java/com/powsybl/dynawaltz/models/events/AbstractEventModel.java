@@ -63,8 +63,9 @@ public abstract class AbstractEventModel extends AbstractPureDynamicBlackBoxMode
     protected abstract void writeEventSpecificParameters(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException;
 
     @Override
-    protected <T extends Model> void createMacroConnections(T connectedModel, Function<T, List<VarConnection>> varConnectionsSupplier, Integer index, DynaWaltzContext context) {
+    protected final <T extends Model> void createMacroConnections(String modelStaticId, Class<T> modelClass, Function<T, List<VarConnection>> varConnectionsSupplier, DynaWaltzContext context) {
+        T connectedModel = context.getDynamicModel(modelStaticId, modelClass);
         String macroConnectorId = context.addEventMacroConnector(getName(), connectedModel.getName(), varConnectionsSupplier.apply(connectedModel));
-        context.addEventMacroConnect(macroConnectorId, getMacroConnectFromAttributes(index), connectedModel.getMacroConnectToAttributes());
+        context.addEventMacroConnect(macroConnectorId, getMacroConnectFromAttributes(), connectedModel.getMacroConnectToAttributes());
     }
 }

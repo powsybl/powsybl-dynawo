@@ -18,7 +18,6 @@ import com.powsybl.iidm.network.Generator;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.powsybl.dynawaltz.DynaWaltzParametersDatabase.ParameterType.DOUBLE;
 import static com.powsybl.dynawaltz.DynaWaltzParametersDatabase.ParameterType.INT;
@@ -86,9 +85,12 @@ public class OmegaRef extends AbstractPureDynamicBlackBoxModel {
 
     @Override
     public void createMacroConnections(DynaWaltzContext context) throws PowsyblException {
-        List<String> busStaticIds = omegaRefGenerators.stream().map(g -> getBusAssociatedTo(g, context)).collect(Collectors.toList());
-        createMacroConnectionsWithIndex1(omegaRefGenerators, this::getVarConnectionsWithOmegaRefGenerator, context);
-        createMacroConnectionsWithIndex1(busStaticIds, BusModel.class, true, this::getVarConnectionsWithBus, context);
+        int index = 0;
+        for (OmegaRefGeneratorModel gen : omegaRefGenerators) {
+            createMacroConnections(gen, getVarConnectionsWithOmegaRefGenerator(gen), context, MacroConnectAttribute.ofIndex1(index));
+            createMacroConnections(getBusAssociatedTo(gen, context), BusModel.class, this::getVarConnectionsWithBus, context, MacroConnectAttribute.ofIndex1(index));
+            index++;
+        }
     }
 
     private String getBusAssociatedTo(OmegaRefGeneratorModel generatorModel, DynaWaltzContext context) {
