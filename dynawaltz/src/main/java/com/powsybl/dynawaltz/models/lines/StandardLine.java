@@ -17,7 +17,6 @@ import com.powsybl.dynawaltz.models.utils.BusUtils;
 import com.powsybl.dynawaltz.models.utils.SideConverter;
 import com.powsybl.iidm.network.Line;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**

@@ -9,7 +9,6 @@ package com.powsybl.dynawaltz.models.loads;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.VarMapping;
 import com.powsybl.dynawaltz.models.buses.BusModel;
-import com.powsybl.dynawaltz.models.buses.DefaultBusModel;
 import com.powsybl.dynawaltz.models.buses.StandardBus;
 
 import java.util.Arrays;
