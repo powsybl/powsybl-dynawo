@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
-    <dyn:blackBoxModel id="BBM_HVDC_L" lib="HvdcPV" parFile="models.par" parId="hv" staticId="HVDC_L">
+    <dyn:blackBoxModel id="BBM_L" lib="HvdcPV" parFile="models.par" parId="hv" staticId="L">
         <dyn:macroStaticRef id="MSR_HvdcPV"/>
     </dyn:blackBoxModel>
     <dyn:macroConnector id="MC_HvdcPV">
@@ -17,5 +17,5 @@
         <dyn:staticRef var="hvdc_QInj2Pu" staticVar="q2"/>
         <dyn:staticRef var="hvdc_state" staticVar="state2"/>
     </dyn:macroStaticReference>
-    <dyn:macroConnect connector="MC_HvdcPV" id1="BBM_HVDC_L" id2="NETWORK"/>
+    <dyn:macroConnect connector="MC_HvdcPV" id1="BBM_L" id2="NETWORK"/>
 </dyn:dynamicModelsArchitecture>

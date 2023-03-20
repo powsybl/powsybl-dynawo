@@ -14,8 +14,9 @@ import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.iidm.network.Network;
-import com.powsybl.iidm.network.NetworkFactory;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.xml.sax.SAXException;
 
@@ -40,17 +41,29 @@ import static com.powsybl.commons.test.ComparisonUtils.compareTxt;
  */
 public abstract class AbstractDynamicModelXmlTest extends AbstractConverterTest {
 
-    protected Network network = EurostagTutorialExample1Factory.create(NetworkFactory.findDefault());
+    protected static Network network;
     protected List<BlackBoxModel> dynamicModels = new ArrayList<>();
     protected List<BlackBoxModel> eventModels = new ArrayList<>();
     protected List<Curve> curves = new ArrayList<>();
     protected DynaWaltzContext context;
 
+    @BeforeAll
+    static void loadNetwork() {
+        network = EurostagTutorialExample1Factory.create();
+    }
+
     @BeforeEach
     void setup() {
-        createStaticModels();
-        createDynamicModels();
+        addStaticModels();
+        addDynamicModels();
         setupDynawaltzContext();
+    }
+
+    @AfterEach
+    void clear() {
+        dynamicModels.clear();
+        eventModels.clear();
+        curves.clear();
     }
 
     public void validate(String schemaDefinition, String expectedResourceName, Path xmlFile) throws SAXException, IOException {
@@ -71,7 +84,9 @@ public abstract class AbstractDynamicModelXmlTest extends AbstractConverterTest 
         context = new DynaWaltzContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, new ArrayList<>(), curves, parameters, dynawoParameters);
     }
 
-    protected abstract void createStaticModels();
+    protected void addStaticModels() {
+        // empty
+    }
 
-    protected abstract void createDynamicModels();
+    protected abstract void addDynamicModels();
 }

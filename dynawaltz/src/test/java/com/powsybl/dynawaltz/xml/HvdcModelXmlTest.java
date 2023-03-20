@@ -8,10 +8,8 @@
 package com.powsybl.dynawaltz.xml;
 
 import com.powsybl.dynawaltz.models.hvdc.HvdcModel;
-import com.powsybl.iidm.network.Bus;
-import com.powsybl.iidm.network.HvdcLine;
-import com.powsybl.iidm.network.VoltageLevel;
-import com.powsybl.iidm.network.VscConverterStation;
+import com.powsybl.iidm.network.test.HvdcTestNetwork;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
@@ -23,46 +21,13 @@ import java.io.IOException;
  */
 class HvdcModelXmlTest extends AbstractDynamicModelXmlTest {
 
-    @Override
-    protected void createStaticModels() {
-        VoltageLevel vlhv = network.getVoltageLevel("VLHV1");
-        Bus nhv = vlhv.getBusBreakerView().getBus("NHV1");
-        VscConverterStation cs1 = vlhv.newVscConverterStation()
-                .setId("C1")
-                .setName("Converter1")
-                .setConnectableBus(nhv.getId())
-                .setBus(nhv.getId())
-                .setLossFactor(1.1f)
-                .setVoltageSetpoint(405.0)
-                .setVoltageRegulatorOn(true)
-                .add();
-        VoltageLevel vlgen = network.getVoltageLevel("VLHV2");
-        Bus nhv2 = vlgen.getBusBreakerView().getBus("NHV2");
-        VscConverterStation cs2 = vlgen.newVscConverterStation()
-                .setId("C2")
-                .setName("Converter2")
-                .setConnectableBus(nhv2.getId())
-                .setBus(nhv2.getId())
-                .setLossFactor(1.1f)
-                .setReactivePowerSetpoint(123)
-                .setVoltageRegulatorOn(false)
-                .setRegulatingTerminal(cs1.getTerminal())
-                .add();
-        network.newHvdcLine()
-                .setId("HVDC_L")
-                .setName("HVDC")
-                .setConverterStationId1(cs1.getId())
-                .setConverterStationId2(cs2.getId())
-                .setR(1)
-                .setNominalV(400)
-                .setConvertersMode(HvdcLine.ConvertersMode.SIDE_1_INVERTER_SIDE_2_RECTIFIER)
-                .setMaxP(300.0)
-                .setActivePowerSetpoint(280)
-                .add();
+    @BeforeAll
+    static void loadNetwork() {
+        network = HvdcTestNetwork.createVsc();
     }
 
     @Override
-    protected void createDynamicModels() {
+    protected void addDynamicModels() {
         network.getHvdcLineStream().forEach(hvdc -> dynamicModels.add(new HvdcModel("BBM_" + hvdc.getId(), hvdc.getId(), "hv", "HvdcPV")));
     }
 
