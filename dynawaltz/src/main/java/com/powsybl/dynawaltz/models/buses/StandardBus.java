@@ -12,11 +12,13 @@ import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractBlackBoxModel;
 import com.powsybl.dynawaltz.models.MacroConnectAttribute;
 import com.powsybl.iidm.network.Bus;
+import com.powsybl.iidm.network.Identifiable;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
@@ -54,6 +56,19 @@ public class StandardBus extends AbstractBlackBoxModel implements BusModel {
         if (bus == null) {
             throw new PowsyblException("Bus static id unknown: " + staticId);
         }
+        checkLinkedDynamicModels(bus.getGeneratorStream(), "generator", context);
+        checkLinkedDynamicModels(bus.getLineStream(), "line", context);
+        checkLinkedDynamicModels(bus.getLoadStream(), "load", context);
+    }
+
+    private <T extends Identifiable<T>> void checkLinkedDynamicModels(Stream<T> stream, String equipmentName, DynaWaltzContext context) {
+        stream.map(Identifiable::getId)
+                .filter(context::isWithoutBlackBoxDynamicModel)
+                .findAny()
+                .ifPresent(id -> {
+                    throw new PowsyblException(String.format("The %s %s linked to the standard bus %s does not possess a dynamic model",
+                            equipmentName, id, getStaticId().orElse(null)));
+                });
     }
 
     @Override
