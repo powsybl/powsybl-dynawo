@@ -9,7 +9,8 @@ package com.powsybl.dynawaltz.models.loads;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractBlackBoxModel;
-import com.powsybl.dynawaltz.models.Model;
+import com.powsybl.dynawaltz.models.VarConnection;
+import com.powsybl.dynawaltz.models.buses.BusModel;
 import com.powsybl.dynawaltz.models.utils.BusUtils;
 import com.powsybl.iidm.network.Load;
 
@@ -18,6 +19,7 @@ import java.util.Objects;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
+ * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 public abstract class AbstractLoad extends AbstractBlackBoxModel {
 
@@ -26,12 +28,14 @@ public abstract class AbstractLoad extends AbstractBlackBoxModel {
     }
 
     @Override
-    public List<Model> getModelsConnectedTo(DynaWaltzContext context) {
+    public void createMacroConnections(DynaWaltzContext context) {
         String staticId = getStaticId().orElse(null); // cannot be empty as checked in constructor
         Load load = context.getNetwork().getLoad(staticId);
         if (load == null) {
             throw new PowsyblException("Load static id unknown: " + staticId);
         }
-        return List.of(context.getDynamicModelOrDefaultBus(BusUtils.getConnectableBusStaticId(load)));
+        createMacroConnections(BusUtils.getConnectableBusStaticId(load), BusModel.class, this::getVarConnectionsWithBus, context);
     }
+
+    abstract List<VarConnection> getVarConnectionsWithBus(BusModel connected);
 }

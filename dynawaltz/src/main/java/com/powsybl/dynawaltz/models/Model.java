@@ -7,7 +7,6 @@
 package com.powsybl.dynawaltz.models;
 
 import com.powsybl.dynamicsimulation.DynamicModel;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,5 +19,5 @@ public interface Model extends DynamicModel {
 
     String getName();
 
-    List<Pair<String, String>> getMacroConnectToAttributes();
+    List<MacroConnectAttribute> getMacroConnectToAttributes();
 }

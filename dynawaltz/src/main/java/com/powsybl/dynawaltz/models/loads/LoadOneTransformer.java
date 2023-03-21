@@ -6,17 +6,17 @@
  */
 package com.powsybl.dynawaltz.models.loads;
 
-import com.powsybl.commons.PowsyblException;
-import com.powsybl.dynawaltz.models.Model;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.VarMapping;
 import com.powsybl.dynawaltz.models.buses.BusModel;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
+ * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 public class LoadOneTransformer extends AbstractLoad {
 
@@ -39,16 +39,20 @@ public class LoadOneTransformer extends AbstractLoad {
         return VAR_MAPPING;
     }
 
+    private String getTerminalVarName() {
+        return "transformer_terminal";
+    }
+
     @Override
-    public List<VarConnection> getVarConnectionsWith(Model connected) {
-        if (!(connected instanceof BusModel)) {
-            throw new PowsyblException("LoadOneTransformer can only connect to BusModel");
-        }
-        BusModel connectedBusModel = (BusModel) connected;
-        return Arrays.asList(
-                new VarConnection("transformer_terminal", connectedBusModel.getTerminalVarName()),
-                new VarConnection("transformer_switchOffSignal1", connectedBusModel.getSwitchOffSignalVarName()),
-                new VarConnection("load_switchOffSignal1", connectedBusModel.getSwitchOffSignalVarName())
-        );
+    protected List<VarConnection> getVarConnectionsWithBus(BusModel connected) {
+        List<VarConnection> varConnections = new ArrayList<>(3);
+        varConnections.add(new VarConnection(getTerminalVarName(), connected.getTerminalVarName()));
+        connected.getSwitchOffSignalVarName()
+                .map(switchOff -> new VarConnection("transformer_switchOffSignal1", switchOff))
+                .ifPresent(varConnections::add);
+        connected.getSwitchOffSignalVarName()
+                .map(switchOff -> new VarConnection("load_switchOffSignal1", switchOff))
+                .ifPresent(varConnections::add);
+        return varConnections;
     }
 }

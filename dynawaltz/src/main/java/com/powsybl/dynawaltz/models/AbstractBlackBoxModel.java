@@ -8,18 +8,20 @@ package com.powsybl.dynawaltz.models;
 
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.xml.MacroStaticReference;
-import org.apache.commons.lang3.tuple.Pair;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 
 /**
  * @author Luma Zamarreño <zamarrenolm at aia.es>
+ * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 public abstract class AbstractBlackBoxModel implements BlackBoxModel {
 
@@ -55,23 +57,23 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel {
         // method empty by default to be redefined by specific models
     }
 
-    @Override
-    public void writeMacroConnect(XMLStreamWriter writer, DynaWaltzContext context, MacroConnector macroConnector, Model connected) throws XMLStreamException {
-        macroConnector.writeMacroConnect(writer, getMacroConnectFromAttributes(), connected.getMacroConnectToAttributes());
-    }
-
-    protected List<Pair<String, String>> getMacroConnectFromAttributes() {
-        return List.of(Pair.of("id1", getDynamicModelId()));
+    protected List<MacroConnectAttribute> getMacroConnectFromAttributes() {
+        return List.of(MacroConnectAttribute.of("id1", getDynamicModelId()));
     }
 
     @Override
-    public List<Pair<String, String>> getMacroConnectToAttributes() {
-        return List.of(Pair.of("id2", getDynamicModelId()));
+    public List<MacroConnectAttribute> getMacroConnectToAttributes() {
+        return List.of(MacroConnectAttribute.of("id2", getDynamicModelId()));
     }
 
     @Override
     public String getParFile(DynaWaltzContext context) {
         return context.getParFile();
+    }
+
+    @Override
+    public List<VarMapping> getVarsMapping() {
+        return Collections.emptyList();
     }
 
     protected void writeDynamicAttributes(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
@@ -83,25 +85,43 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel {
 
     @Override
     public void write(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
-        if (staticId != null) {
-            writeBlackBoxModel(writer, context);
+        boolean hasVarMapping = !getVarsMapping().isEmpty();
+        if (hasVarMapping) {
+            writer.writeStartElement(DYN_URI, "blackBoxModel");
         } else {
-            writePureDynamicBlackBoxModel(writer, context);
+            writer.writeEmptyElement(DYN_URI, "blackBoxModel");
         }
-    }
-
-    protected void writeBlackBoxModel(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
-        writer.writeStartElement(DYN_URI, "blackBoxModel");
         writeDynamicAttributes(writer, context);
-        writer.writeAttribute("staticId", staticId);
-        if (!getVarsMapping().isEmpty()) {
+        writer.writeAttribute("staticId", getStaticId().orElseThrow());
+        if (hasVarMapping) {
             MacroStaticReference.writeMacroStaticRef(writer, getLib());
+            writer.writeEndElement();
         }
-        writer.writeEndElement();
     }
 
-    protected void writePureDynamicBlackBoxModel(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
-        writer.writeEmptyElement(DYN_URI, "blackBoxModel");
-        writeDynamicAttributes(writer, context);
+    protected <T extends Model> void createMacroConnections(String modelStaticId, Class<T> modelClass, Function<T, List<VarConnection>> varConnectionsSupplier, DynaWaltzContext context) {
+        T connectedModel = context.getDynamicModel(modelStaticId, modelClass);
+        String macroConnectorId = context.addMacroConnector(getName(), connectedModel.getName(), varConnectionsSupplier.apply(connectedModel));
+        context.addMacroConnect(macroConnectorId, getMacroConnectFromAttributes(), connectedModel.getMacroConnectToAttributes());
+    }
+
+    protected final <T extends Model> void createMacroConnections(T connectedModel, List<VarConnection> varConnections, DynaWaltzContext context, MacroConnectAttribute... connectFromAttributes) {
+        String macroConnectorId = context.addMacroConnector(getName(), connectedModel.getName(), varConnections);
+        List<MacroConnectAttribute> fromAttributes = Stream.concat(getMacroConnectFromAttributes().stream(), Arrays.stream(connectFromAttributes)).collect(Collectors.toList());
+        context.addMacroConnect(macroConnectorId, fromAttributes, connectedModel.getMacroConnectToAttributes());
+    }
+
+    protected final <T extends Model> void createMacroConnections(String modelStaticId, Class<T> modelClass, Function<T, List<VarConnection>> varConnectionsSupplier, DynaWaltzContext context, MacroConnectAttribute... connectFromAttributes) {
+        T connectedModel = context.getDynamicModel(modelStaticId, modelClass);
+        createMacroConnections(connectedModel, varConnectionsSupplier.apply(connectedModel), context, connectFromAttributes);
+    }
+
+    /**
+     * Suffixes MacroConnector id with side name
+     */
+    protected final <T extends Model> void createMacroConnections(String modelStaticId, Class<T> modelClass, BiFunction<T, Side, List<VarConnection>> varConnectionsSupplier, DynaWaltzContext context, Side side) {
+        T connectedModel = context.getDynamicModel(modelStaticId, modelClass);
+        String macroConnectorId = context.addMacroConnector(getName(), connectedModel.getName(), side, varConnectionsSupplier.apply(connectedModel, side));
+        context.addMacroConnect(macroConnectorId, getMacroConnectFromAttributes(), connectedModel.getMacroConnectToAttributes());
     }
 }

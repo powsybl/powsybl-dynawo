@@ -1,7 +1,6 @@
 package com.powsybl.dynawaltz.models;
 
 import com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
 import java.util.Objects;
@@ -21,10 +20,10 @@ public abstract class AbstractNetworkModel implements Model {
     }
 
     @Override
-    public List<Pair<String, String>> getMacroConnectToAttributes() {
+    public List<MacroConnectAttribute> getMacroConnectToAttributes() {
         return List.of(
-                Pair.of("id2", DynaWaltzXmlConstants.NETWORK),
-                Pair.of("name2", staticId)
+                MacroConnectAttribute.of("id2", DynaWaltzXmlConstants.NETWORK),
+                MacroConnectAttribute.of("name2", staticId)
         );
     }
 }

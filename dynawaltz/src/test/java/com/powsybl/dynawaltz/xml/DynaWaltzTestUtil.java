@@ -10,13 +10,14 @@ import com.powsybl.commons.test.AbstractConverterTest;
 import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynawaltz.DynaWaltzCurve;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
+import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton;
 import com.powsybl.dynawaltz.models.buses.StandardBus;
 import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection;
 import com.powsybl.dynawaltz.models.events.EventSetPointBoolean;
-import com.powsybl.dynawaltz.models.generators.OmegaRefGenerator;
 import com.powsybl.dynawaltz.models.generators.GeneratorFictitious;
 import com.powsybl.dynawaltz.models.generators.GeneratorSynchronous;
+import com.powsybl.dynawaltz.models.generators.OmegaRefGenerator;
 import com.powsybl.dynawaltz.models.lines.StandardLine;
 import com.powsybl.dynawaltz.models.loads.LoadAlphaBeta;
 import com.powsybl.dynawaltz.models.loads.LoadOneTransformer;
@@ -36,8 +37,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-import static com.powsybl.commons.test.ComparisonUtils.compareXml;
+import static com.powsybl.commons.test.ComparisonUtils.compareTxt;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -56,6 +58,7 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
 
         curves = new ArrayList<>();
         network.getBusBreakerView().getBusStream().forEach(b -> curves.add(new DynaWaltzCurve("NETWORK", b.getId() + "_Upu_value")));
+
         // A curve is made up of the id of the dynamic model and the variable to plot.
         // The static id of the generator is used as the id of the dynamic model (dynamicModelId).
         network.getGeneratorStream().forEach(g -> {
@@ -90,16 +93,12 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
                 dynamicModels.add(new GeneratorSynchronous("BBM_" + g.getId(), g.getId(), "GSTWPR", "GeneratorSynchronousThreeWindingsProportionalRegulations"));
             }
         });
-        network.getBusBreakerView().getBuses().forEach(b -> {
-            if (b.getId().equals("NHV2") || b.getId().equals("NHV1")) {
-                dynamicModels.add(new StandardBus("BBM_" + b.getId(), b.getId(), "SB"));
-            }
-        });
-        network.getLineStream().forEach(l -> {
-            if (l.getId().equals("NHV1_NHV2_1")) {
-                dynamicModels.add(new StandardLine("Line_" + l.getId(), l.getId(), "SL"));
-            }
-        });
+
+        Bus standardBus = network.getBusBreakerView().getBus("NLOAD");
+        dynamicModels.add(new StandardBus("BBM_" + standardBus.getId(), standardBus.getId(), "SB"));
+
+        Line standardLine = network.getLine("NHV1_NHV2_1");
+        dynamicModels.add(new StandardLine("Line_" + standardLine.getId(), standardLine.getId(), "SL"));
 
         // Events
         eventModels = new ArrayList<>();
@@ -111,7 +110,8 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
         });
 
         // Automatons
-        network.getLineStream().forEach(l -> dynamicModels.add(new CurrentLimitAutomaton("BBM_" + l.getId(), l.getId(), "CLA", Branch.Side.ONE)));
+        network.getLineStream().filter(line -> line != standardLine)
+                .forEach(l -> dynamicModels.add(new CurrentLimitAutomaton("BBM_" + l.getId(), l.getId(), "CLA", Side.ONE)));
     }
 
     public void validate(String schemaDefinition, String expectedResourceName, Path xmlFile) throws SAXException, IOException {
@@ -121,7 +121,7 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
         Schema schema = factory.newSchema(xsd);
         Validator validator = schema.newValidator();
         validator.validate(xml);
-        compareXml(getClass().getResourceAsStream("/" + expectedResourceName), Files.newInputStream(xmlFile));
+        compareTxt(Objects.requireNonNull(getClass().getResourceAsStream("/" + expectedResourceName)), Files.newInputStream(xmlFile));
     }
 
     private static Network createEurostagTutorialExample1WithMoreLoads() {

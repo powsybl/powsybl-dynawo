@@ -7,6 +7,11 @@
  */
 package com.powsybl.dynawaltz.models.generators;
 
+import com.powsybl.dynawaltz.models.VarConnection;
+
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
  */
@@ -24,9 +29,16 @@ public class OmegaRefGenerator extends AbstractGeneratorModel implements OmegaRe
         this.generatorLib = generatorLib;
     }
 
-    @Override
-    public String getOmegaRefPuVarName() {
+    protected String getOmegaRefPuVarName() {
         return "generator_omegaRefPu";
+    }
+
+    @Override
+    public List<VarConnection> getOmegaRefVarConnections() {
+        return Arrays.asList(
+                new VarConnection("omegaRef_grp_@INDEX@", getOmegaRefPuVarName()),
+                new VarConnection("running_grp_@INDEX@", getRunningVarName())
+        );
     }
 
     @Override
