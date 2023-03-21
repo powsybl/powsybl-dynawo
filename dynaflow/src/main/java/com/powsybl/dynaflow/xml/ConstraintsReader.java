@@ -8,6 +8,7 @@ import com.powsybl.commons.xml.XmlUtil;
 import com.powsybl.iidm.network.*;
 import com.powsybl.security.LimitViolation;
 import com.powsybl.security.LimitViolationType;
+import com.powsybl.security.comparator.LimitViolationComparator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,11 +75,18 @@ public final class ConstraintsReader {
                 Integer acceptableDuration = XmlUtil.readOptionalIntegerAttribute(reader, ACCEPTABLE_DURATION);
 
                 getLimitViolation(network, name, kind, limit, 1f, value, side, acceptableDuration)
-                        .ifPresent(limitViolations::add);
+                        .ifPresent(lvRead -> addIfNotPresent(lvRead, limitViolations));
             });
             return limitViolations;
         } catch (XMLStreamException e) {
             throw new UncheckedXmlStreamException(e);
+        }
+    }
+
+    private static void addIfNotPresent(LimitViolation lvRead, List<LimitViolation> limitViolations) {
+        LimitViolationComparator comparator = new LimitViolationComparator();
+        if (limitViolations.stream().noneMatch(lv -> comparator.compare(lvRead, lv) == 0)) {
+            limitViolations.add(lvRead);
         }
     }
 
