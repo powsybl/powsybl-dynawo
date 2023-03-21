@@ -14,7 +14,6 @@ import javax.xml.stream.XMLStreamWriter;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -100,8 +99,8 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel {
         }
     }
 
-    protected final void createMacroConnections(Supplier<List<VarConnection>> varConnectionsSupplier, DynaWaltzContext context) {
-        String macroConnectorId = context.addMacroConnector(getName(), varConnectionsSupplier.get());
+    protected final void createMacroConnections(List<VarConnection> varConnections, DynaWaltzContext context) {
+        String macroConnectorId = context.addMacroConnector(getName(), varConnections);
         context.addMacroConnect(macroConnectorId, getMacroConnectFromAttributes());
     }
 

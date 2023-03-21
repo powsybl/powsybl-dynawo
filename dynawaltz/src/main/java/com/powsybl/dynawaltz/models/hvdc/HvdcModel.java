@@ -47,7 +47,7 @@ public class HvdcModel extends AbstractBlackBoxModel {
         if (hvdc == null) {
             throw new PowsyblException("Hvdc static id unknown: " + staticId);
         }
-        createMacroConnections(this::getVarConnectionsWithConverters, context);
+        createMacroConnections(getVarConnectionsWithConverters(), context);
     }
 
     @Override

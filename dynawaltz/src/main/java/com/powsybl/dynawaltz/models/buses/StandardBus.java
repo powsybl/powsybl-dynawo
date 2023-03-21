@@ -18,6 +18,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
@@ -92,11 +93,12 @@ public class StandardBus extends AbstractBlackBoxModel implements BusModel {
     }
 
     @Override
-    public String getUImpinVarName() {
-        return "@NAME@_U";
+    public Optional<String> getUImpinVarName() {
+        return Optional.empty();
     }
 
-    public String getUpuImpinVarName() {
-        return "@NAME@_Upu";
+    @Override
+    public Optional<String> getUpuImpinVarName() {
+        return Optional.empty();
     }
 }

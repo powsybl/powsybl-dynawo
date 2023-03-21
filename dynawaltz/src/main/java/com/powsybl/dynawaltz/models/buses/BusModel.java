@@ -8,6 +8,8 @@ package com.powsybl.dynawaltz.models.buses;
 
 import com.powsybl.dynawaltz.models.Model;
 
+import java.util.Optional;
+
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  */
@@ -18,7 +20,7 @@ public interface BusModel extends Model {
 
     String getNumCCVarName();
 
-    String getUImpinVarName();
+    Optional<String> getUImpinVarName();
 
-    String getUpuImpinVarName();
+    Optional<String> getUpuImpinVarName();
 }

@@ -8,6 +8,8 @@ package com.powsybl.dynawaltz.models.buses;
 
 import com.powsybl.dynawaltz.models.AbstractNetworkModel;
 
+import java.util.Optional;
+
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  */
@@ -37,11 +39,12 @@ public class DefaultBusModel extends AbstractNetworkModel implements BusModel {
     }
 
     @Override
-    public String getUImpinVarName() {
-        return "@NAME@_U";
+    public Optional<String> getUImpinVarName() {
+        return Optional.of("@NAME@_U");
     }
 
-    public String getUpuImpinVarName() {
-        return "@NAME@_Upu";
+    @Override
+    public Optional<String> getUpuImpinVarName() {
+        return Optional.of("@NAME@_Upu");
     }
 }

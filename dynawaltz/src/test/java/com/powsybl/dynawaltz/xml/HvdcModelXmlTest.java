@@ -9,7 +9,6 @@ package com.powsybl.dynawaltz.xml;
 
 import com.powsybl.dynawaltz.models.hvdc.HvdcModel;
 import com.powsybl.iidm.network.test.HvdcTestNetwork;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
@@ -21,8 +20,8 @@ import java.io.IOException;
  */
 class HvdcModelXmlTest extends AbstractDynamicModelXmlTest {
 
-    @BeforeAll
-    static void loadNetwork() {
+    @Override
+    protected void setupNetwork() {
         network = HvdcTestNetwork.createVsc();
     }
 
