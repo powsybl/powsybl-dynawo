@@ -8,6 +8,8 @@ import com.powsybl.commons.xml.XmlUtil;
 import com.powsybl.iidm.network.*;
 import com.powsybl.security.LimitViolation;
 import com.powsybl.security.LimitViolationType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
@@ -20,8 +22,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public final class ConstraintsReader {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ConstraintsReader.class);
 
     private static final String CONSTRAINTS_ELEMENT_NAME = "constraints";
     private static final String CONSTRAINT_ELEMENT_NAME = "constraint";
@@ -35,6 +40,7 @@ public final class ConstraintsReader {
     private static final String ACCEPTABLE_DURATION = "acceptableDuration";
 
     private static final Supplier<XMLInputFactory> XML_INPUT_FACTORY_SUPPLIER = Suppliers.memoize(XMLInputFactory::newInstance);
+    public static final String DYN_CALCULATED_BUS_PREFIX = "calculatedBus_";
 
     public static List<LimitViolation> read(Network network, Path xmlFile) {
         try (InputStream is = Files.newInputStream(xmlFile)) {
@@ -55,7 +61,6 @@ public final class ConstraintsReader {
             }
 
             XmlUtil.readUntilEndElement(CONSTRAINTS_ELEMENT_NAME, reader, () -> {
-                float limitReduction = 1f;
                 if (!reader.getLocalName().equals(CONSTRAINT_ELEMENT_NAME)) {
                     throw new AssertionError();
                 }
@@ -67,24 +72,46 @@ public final class ConstraintsReader {
                 double value = XmlUtil.readOptionalDoubleAttribute(reader, VALUE);
                 Integer side = XmlUtil.readOptionalIntegerAttribute(reader, SIDE);
                 Integer acceptableDuration = XmlUtil.readOptionalIntegerAttribute(reader, ACCEPTABLE_DURATION);
-                Identifiable<?> id = network.getIdentifiable(name);
-                LimitViolation limitViolation;
-                if (id instanceof Branch) {
-                    Branch<?> branch = (Branch<?>) id;
-                    limitViolation = new LimitViolation(branch.getId(), branch.getOptionalName().orElse(null),
-                            toLimitViolationType(kind), kind, acceptableDuration != null ? acceptableDuration : Integer.MAX_VALUE,
-                            limit, limitReduction, value, toBranchSide(side));
-                    limitViolations.add(limitViolation);
-                } else if (id instanceof Bus) {
-                    VoltageLevel vl = ((Bus) id).getVoltageLevel();
-                    limitViolation = new LimitViolation(vl.getId(), vl.getOptionalName().orElse(null),
-                            toLimitViolationType(kind), limit, limitReduction, value);
-                    limitViolations.add(limitViolation);
-                }
+
+                getLimitViolation(network, name, kind, limit, 1f, value, side, acceptableDuration)
+                        .ifPresent(limitViolations::add);
             });
             return limitViolations;
         } catch (XMLStreamException e) {
             throw new UncheckedXmlStreamException(e);
+        }
+    }
+
+    private static Optional<LimitViolation> getLimitViolation(Network network, String name, String kind, double limit,
+                                                              float limitReduction, double value, Integer side, Integer acceptableDuration) {
+        if (name.matches(DYN_CALCULATED_BUS_PREFIX + ".*_\\d*")) {
+            String vlId = name.substring(DYN_CALCULATED_BUS_PREFIX.length(), name.lastIndexOf("_"));
+            VoltageLevel vl = network.getVoltageLevel(vlId);
+            if (vl != null) {
+                return Optional.of(new LimitViolation(vl.getId(), vl.getOptionalName().orElse(null),
+                        toLimitViolationType(kind), limit, limitReduction, value));
+            } else {
+                LOGGER.warn("Constraint on dynawo-calculated bus {} with unknown voltage level {}", name, vlId);
+                return Optional.empty();
+            }
+        } else {
+            Identifiable<?> identifiable = network.getIdentifiable(name);
+            if (identifiable instanceof Branch) {
+                Branch<?> branch = (Branch<?>) identifiable;
+                return Optional.of(new LimitViolation(branch.getId(), branch.getOptionalName().orElse(null),
+                        toLimitViolationType(kind), kind, acceptableDuration != null ? acceptableDuration : Integer.MAX_VALUE,
+                        limit, limitReduction, value, toBranchSide(side)));
+            } else if (identifiable instanceof Bus) {
+                VoltageLevel vl = ((Bus) identifiable).getVoltageLevel();
+                return Optional.of(new LimitViolation(vl.getId(), vl.getOptionalName().orElse(null),
+                        toLimitViolationType(kind), limit, limitReduction, value));
+            } else if (identifiable != null) {
+                return Optional.of(new LimitViolation(identifiable.getId(), identifiable.getOptionalName().orElse(null),
+                        toLimitViolationType(kind), limit, limitReduction, value));
+            } else {
+                LOGGER.warn("Unknown equipment/bus {} for limit violation in result constraints file", name);
+                return Optional.empty();
+            }
         }
     }
 
