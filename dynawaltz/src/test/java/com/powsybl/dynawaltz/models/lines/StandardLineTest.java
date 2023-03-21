@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  */
-public class StandardLineTest {
+class StandardLineTest {
 
     @Test
     void connectionToCurrentLimitAutomatonException() {
