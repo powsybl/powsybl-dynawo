@@ -30,21 +30,15 @@
     <dyn:blackBoxModel id="BBM_NHV1_1" lib="GeneratorSynchronousThreeWindingsProportionalRegulations" parFile="models.par" parId="GSTWPR" staticId="NHV1_1">
         <dyn:macroStaticRef id="MSR_GeneratorSynchronousThreeWindingsProportionalRegulations"/>
     </dyn:blackBoxModel>
-    <dyn:blackBoxModel id="BBM_NHV1" lib="Bus" staticId="NHV1"/>
-    <dyn:blackBoxModel id="BBM_NHV2" lib="Bus" staticId="NHV2"/>
+    <dyn:blackBoxModel id="BBM_NLOAD" lib="Bus" staticId="NLOAD"/>
     <dyn:blackBoxModel id="Line_NHV1_NHV2_1" lib="Line" parFile="models.par" parId="SL" staticId="NHV1_NHV2_1"/>
-    <dyn:blackBoxModel id="Line_NHV1_NHV2_2" lib="Line" parFile="models.par" parId="SL" staticId="NHV1_NHV2_2"/>
-    <dyn:blackBoxModel id="BBM_NHV1_NHV2_1" lib="CurrentLimitAutomaton" parFile="models.par" parId="CLA"/>
     <dyn:blackBoxModel id="BBM_NHV1_NHV2_2" lib="CurrentLimitAutomaton" parFile="models.par" parId="CLA"/>
     <dyn:blackBoxModel id="OMEGA_REF" lib="DYNModelOmegaRef" parFile="sim1.par" parId="OMEGA_REF"/>
-    <dyn:macroConnector id="MC_LoadAlphaBeta-NetworkBus">
-        <dyn:connect var1="load_terminal" var2="@NAME@_ACPIN"/>
-        <dyn:connect var1="load_switchOffSignal1" var2="@NAME@_switchOff"/>
+    <dyn:macroConnector id="MC_LoadAlphaBeta-Bus">
+        <dyn:connect var1="load_terminal" var2="bus_terminal"/>
     </dyn:macroConnector>
-    <dyn:macroConnector id="MC_LoadOneTransformer-NetworkBus">
-        <dyn:connect var1="transformer_terminal" var2="@NAME@_ACPIN"/>
-        <dyn:connect var1="transformer_switchOffSignal1" var2="@NAME@_switchOff"/>
-        <dyn:connect var1="load_switchOffSignal1" var2="@NAME@_switchOff"/>
+    <dyn:macroConnector id="MC_LoadOneTransformer-Bus">
+        <dyn:connect var1="transformer_terminal" var2="bus_terminal"/>
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_GeneratorSynchronousThreeWindingsProportionalRegulations-NetworkBus">
         <dyn:connect var1="generator_terminal" var2="@NAME@_ACPIN"/>
@@ -70,35 +64,16 @@
         <dyn:connect var1="generator_terminal" var2="@NAME@_ACPIN"/>
         <dyn:connect var1="generator_switchOffSignal1" var2="@NAME@_switchOff"/>
     </dyn:macroConnector>
-    <dyn:macroConnector id="MC_GeneratorSynchronousThreeWindingsProportionalRegulations-Bus">
-        <dyn:connect var1="generator_terminal" var2="bus_terminal"/>
-        <dyn:connect var1="generator_switchOffSignal1" var2="bus_switchOff"/>
+    <dyn:macroConnector id="MC_Line_NHV1_NHV2_1Side1-NetworkBus">
+        <dyn:connect var1="line_terminal1" var2="@NAME@_ACPIN"/>
     </dyn:macroConnector>
-    <dyn:macroConnector id="MC_Line_NHV1_NHV2_1Side1-Bus">
-        <dyn:connect var1="Line_NHV1_NHV2_1Side1" var2="@NAME@_numcc"/>
-        <dyn:connect var1="Line_NHV1_NHV2_1_state" var2="bus_terminal"/>
+    <dyn:macroConnector id="MC_Line_NHV1_NHV2_1Side2-NetworkBus">
+        <dyn:connect var1="line_terminal2" var2="@NAME@_ACPIN"/>
     </dyn:macroConnector>
-    <dyn:macroConnector id="MC_Line_NHV1_NHV2_1Side2-Bus">
-        <dyn:connect var1="Line_NHV1_NHV2_1Side2" var2="@NAME@_numcc"/>
-        <dyn:connect var1="Line_NHV1_NHV2_1_state" var2="bus_terminal"/>
-    </dyn:macroConnector>
-    <dyn:macroConnector id="MC_Line_NHV1_NHV2_2Side1-Bus">
-        <dyn:connect var1="Line_NHV1_NHV2_2Side1" var2="@NAME@_numcc"/>
-        <dyn:connect var1="Line_NHV1_NHV2_2_state" var2="bus_terminal"/>
-    </dyn:macroConnector>
-    <dyn:macroConnector id="MC_Line_NHV1_NHV2_2Side2-Bus">
-        <dyn:connect var1="Line_NHV1_NHV2_2Side2" var2="@NAME@_numcc"/>
-        <dyn:connect var1="Line_NHV1_NHV2_2_state" var2="bus_terminal"/>
-    </dyn:macroConnector>
-    <dyn:macroConnector id="MC_CurrentLimitAutomatonSide1-Line_NHV1_NHV2_1">
-        <dyn:connect var1="currentLimitAutomaton_IMonitored" var2="Line_NHV1_NHV2_1Side1"/>
-        <dyn:connect var1="currentLimitAutomaton_order" var2="Line_NHV1_NHV2_1_state"/>
-        <dyn:connect var1="currentLimitAutomaton_AutomatonExists" var2="Line_NHV1_NHV2_1_desactivate_currentLimits"/>
-    </dyn:macroConnector>
-    <dyn:macroConnector id="MC_CurrentLimitAutomatonSide1-Line_NHV1_NHV2_2">
-        <dyn:connect var1="currentLimitAutomaton_IMonitored" var2="Line_NHV1_NHV2_2Side1"/>
-        <dyn:connect var1="currentLimitAutomaton_order" var2="Line_NHV1_NHV2_2_state"/>
-        <dyn:connect var1="currentLimitAutomaton_AutomatonExists" var2="Line_NHV1_NHV2_2_desactivate_currentLimits"/>
+    <dyn:macroConnector id="MC_CurrentLimitAutomatonSide1-NetworkLine">
+        <dyn:connect var1="currentLimitAutomaton_IMonitored" var2="@NAME@_iSide1"/>
+        <dyn:connect var1="currentLimitAutomaton_order" var2="@NAME@_state"/>
+        <dyn:connect var1="currentLimitAutomaton_AutomatonExists" var2="@NAME@_desactivate_currentLimits"/>
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_DYNModelOmegaRef-GeneratorSynchronousThreeWindingsProportionalRegulations">
         <dyn:connect var1="omega_grp_@INDEX@" var2="generator_omegaPu"/>
@@ -126,9 +101,6 @@
     <dyn:macroConnector id="MC_DYNModelOmegaRef-GeneratorPQ">
         <dyn:connect var1="omegaRef_grp_@INDEX@" var2="generator_omegaRefPu"/>
         <dyn:connect var1="running_grp_@INDEX@" var2="generator_running"/>
-    </dyn:macroConnector>
-    <dyn:macroConnector id="MC_DYNModelOmegaRef-Bus">
-        <dyn:connect var1="numcc_node_@INDEX@" var2="@NAME@_numcc"/>
     </dyn:macroConnector>
     <dyn:macroStaticReference id="MSR_LoadAlphaBeta">
         <dyn:staticRef var="load_PPu" staticVar="p"/>
@@ -170,8 +142,8 @@
         <dyn:staticRef var="generator_QGenPu" staticVar="q"/>
         <dyn:staticRef var="generator_state" staticVar="state"/>
     </dyn:macroStaticReference>
-    <dyn:macroConnect connector="MC_LoadAlphaBeta-NetworkBus" id1="BBM_LOAD" id2="NETWORK" name2="NLOAD"/>
-    <dyn:macroConnect connector="MC_LoadOneTransformer-NetworkBus" id1="BBM_LOAD2" id2="NETWORK" name2="NLOAD"/>
+    <dyn:macroConnect connector="MC_LoadAlphaBeta-Bus" id1="BBM_LOAD" id2="BBM_NLOAD" name2="NLOAD"/>
+    <dyn:macroConnect connector="MC_LoadOneTransformer-Bus" id1="BBM_LOAD2" id2="BBM_NLOAD" name2="NLOAD"/>
     <dyn:macroConnect connector="MC_GeneratorSynchronousThreeWindingsProportionalRegulations-NetworkBus" id1="BBM_GEN" id2="NETWORK" name2="NGEN"/>
     <dyn:macroConnect connector="MC_GeneratorSynchronousFourWindingsProportionalRegulations-NetworkBus" id1="BBM_GEN2" id2="NETWORK" name2="NGEN"/>
     <dyn:macroConnect connector="MC_GeneratorSynchronousFourWindings-NetworkBus" id1="BBM_GEN3" id2="NETWORK" name2="NGEN"/>
@@ -179,13 +151,10 @@
     <dyn:macroConnect connector="MC_GeneratorSynchronousThreeWindingsProportionalRegulations-NetworkBus" id1="BBM_GEN5" id2="NETWORK" name2="NGEN"/>
     <dyn:macroConnect connector="MC_GeneratorFictitious-NetworkBus" id1="BBM_GEN6" id2="NETWORK" name2="NGEN"/>
     <dyn:macroConnect connector="MC_GeneratorPQ-NetworkBus" id1="BBM_GEN7" id2="NETWORK" name2="NGEN"/>
-    <dyn:macroConnect connector="MC_GeneratorSynchronousThreeWindingsProportionalRegulations-Bus" id1="BBM_NHV1_1" id2="BBM_NHV1" name2="NHV1"/>
-    <dyn:macroConnect connector="MC_Line_NHV1_NHV2_1Side1-Bus" id1="Line_NHV1_NHV2_1" id2="BBM_NHV1" name2="NHV1"/>
-    <dyn:macroConnect connector="MC_Line_NHV1_NHV2_1Side2-Bus" id1="Line_NHV1_NHV2_1" id2="BBM_NHV2" name2="NHV2"/>
-    <dyn:macroConnect connector="MC_Line_NHV1_NHV2_2Side1-Bus" id1="Line_NHV1_NHV2_2" id2="BBM_NHV1" name2="NHV1"/>
-    <dyn:macroConnect connector="MC_Line_NHV1_NHV2_2Side2-Bus" id1="Line_NHV1_NHV2_2" id2="BBM_NHV2" name2="NHV2"/>
-    <dyn:macroConnect connector="MC_CurrentLimitAutomatonSide1-Line_NHV1_NHV2_1" id1="BBM_NHV1_NHV2_1" id2="Line_NHV1_NHV2_1"/>
-    <dyn:macroConnect connector="MC_CurrentLimitAutomatonSide1-Line_NHV1_NHV2_2" id1="BBM_NHV1_NHV2_2" id2="Line_NHV1_NHV2_2"/>
+    <dyn:macroConnect connector="MC_GeneratorSynchronousThreeWindingsProportionalRegulations-NetworkBus" id1="BBM_NHV1_1" id2="NETWORK" name2="NHV1"/>
+    <dyn:macroConnect connector="MC_Line_NHV1_NHV2_1Side1-NetworkBus" id1="Line_NHV1_NHV2_1" id2="NETWORK" name2="NHV1"/>
+    <dyn:macroConnect connector="MC_Line_NHV1_NHV2_1Side2-NetworkBus" id1="Line_NHV1_NHV2_1" id2="NETWORK" name2="NHV2"/>
+    <dyn:macroConnect connector="MC_CurrentLimitAutomatonSide1-NetworkLine" id1="BBM_NHV1_NHV2_2" id2="NETWORK" name2="NHV1_NHV2_2"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorSynchronousThreeWindingsProportionalRegulations" id1="OMEGA_REF" index1="0" id2="BBM_GEN"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRef-NetworkBus" id1="OMEGA_REF" index1="0" id2="NETWORK" name2="NGEN"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorSynchronousFourWindingsProportionalRegulations" id1="OMEGA_REF" index1="1" id2="BBM_GEN2"/>
@@ -199,5 +168,5 @@
     <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorPQ" id1="OMEGA_REF" index1="5" id2="BBM_GEN7"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRef-NetworkBus" id1="OMEGA_REF" index1="5" id2="NETWORK" name2="NGEN"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorSynchronousThreeWindingsProportionalRegulations" id1="OMEGA_REF" index1="6" id2="BBM_NHV1_1"/>
-    <dyn:macroConnect connector="MC_DYNModelOmegaRef-Bus" id1="OMEGA_REF" index1="6" id2="BBM_NHV1" name2="NHV1"/>
+    <dyn:macroConnect connector="MC_DYNModelOmegaRef-NetworkBus" id1="OMEGA_REF" index1="6" id2="NETWORK" name2="NHV1"/>
 </dyn:dynamicModelsArchitecture>

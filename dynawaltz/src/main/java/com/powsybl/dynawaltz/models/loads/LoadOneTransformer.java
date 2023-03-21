@@ -10,6 +10,7 @@ import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.VarMapping;
 import com.powsybl.dynawaltz.models.buses.BusModel;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -38,12 +39,20 @@ public class LoadOneTransformer extends AbstractLoad {
         return VAR_MAPPING;
     }
 
+    private String getTerminalVarName() {
+        return "transformer_terminal";
+    }
+
     @Override
     protected List<VarConnection> getVarConnectionsWithBus(BusModel connected) {
-        return Arrays.asList(
-                new VarConnection("transformer_terminal", connected.getTerminalVarName()),
-                new VarConnection("transformer_switchOffSignal1", connected.getSwitchOffSignalVarName()),
-                new VarConnection("load_switchOffSignal1", connected.getSwitchOffSignalVarName())
-        );
+        List<VarConnection> varConnections = new ArrayList<>(3);
+        varConnections.add(new VarConnection(getTerminalVarName(), connected.getTerminalVarName()));
+        connected.getSwitchOffSignalVarName()
+                .map(switchOff -> new VarConnection("transformer_switchOffSignal1", switchOff))
+                .ifPresent(varConnections::add);
+        connected.getSwitchOffSignalVarName()
+                .map(switchOff -> new VarConnection("load_switchOffSignal1", switchOff))
+                .ifPresent(varConnections::add);
+        return varConnections;
     }
 }

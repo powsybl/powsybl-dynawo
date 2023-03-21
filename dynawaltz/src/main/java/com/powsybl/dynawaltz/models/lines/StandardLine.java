@@ -17,7 +17,6 @@ import com.powsybl.dynawaltz.models.utils.BusUtils;
 import com.powsybl.dynawaltz.models.utils.SideConverter;
 import com.powsybl.iidm.network.Line;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -35,10 +34,11 @@ public class StandardLine extends AbstractBlackBoxModel implements LineModel {
     }
 
     private List<VarConnection> getVarConnectionsWithBus(BusModel connected, Side side) {
-        return Arrays.asList(
-                new VarConnection(getIVarName(side), connected.getNumCCVarName()),
-                new VarConnection(getStateVarName(), connected.getTerminalVarName())
-        );
+        return List.of(new VarConnection(getTerminalVarName(side), connected.getTerminalVarName()));
+    }
+
+    private String getTerminalVarName(Side side) {
+        return "line_terminal" + side.getSideNumber();
     }
 
     @Override
@@ -60,22 +60,22 @@ public class StandardLine extends AbstractBlackBoxModel implements LineModel {
     }
 
     @Override
-    public String getIVarName(Side side) {
-        return getDynamicModelId() + side.getSideSuffix();
-    }
-
-    @Override
     public String getStateVarName() {
-        return getDynamicModelId() + "_state";
-    }
-
-    @Override
-    public String getDesactivateCurrentLimitsVarName() {
-        return getDynamicModelId() + "_desactivate_currentLimits";
+        return "line_state";
     }
 
     @Override
     public String getStateValueVarName() {
-        return getDynamicModelId() + "_state_value";
+        return "line_state_value";
+    }
+
+    @Override
+    public String getIVarName(Side side) {
+        throw new UnsupportedOperationException("i variable not implemented in StandardLine dynawo's model");
+    }
+
+    @Override
+    public String getDesactivateCurrentLimitsVarName() {
+        throw new UnsupportedOperationException("deactivateCurrentLimits variable not implemented in StandardLine dynawo's model");
     }
 }
