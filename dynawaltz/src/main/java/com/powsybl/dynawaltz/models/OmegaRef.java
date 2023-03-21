@@ -17,6 +17,7 @@ import com.powsybl.iidm.network.Generator;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
+import java.util.Collections;
 import java.util.List;
 
 import static com.powsybl.dynawaltz.DynaWaltzParametersDatabase.ParameterType.DOUBLE;
@@ -80,7 +81,9 @@ public class OmegaRef extends AbstractPureDynamicBlackBoxModel {
     }
 
     private List<VarConnection> getVarConnectionsWithBus(BusModel connected) {
-        return List.of(new VarConnection("numcc_node_@INDEX@", connected.getNumCCVarName()));
+        return connected.getNumCCVarName()
+                .map(numCCVarName -> List.of(new VarConnection("numcc_node_@INDEX@", numCCVarName)))
+                .orElse(Collections.emptyList());
     }
 
     @Override

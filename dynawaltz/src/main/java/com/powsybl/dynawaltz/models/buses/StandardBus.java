@@ -83,13 +83,13 @@ public class StandardBus extends AbstractBlackBoxModel implements BusModel {
     }
 
     @Override
-    public String getSwitchOffSignalVarName() {
-        return "bus_switchOff";
+    public Optional<String> getSwitchOffSignalVarName() {
+        return Optional.empty();
     }
 
     @Override
-    public String getNumCCVarName() {
-        return "@NAME@_numcc";
+    public Optional<String> getNumCCVarName() {
+        return Optional.empty();
     }
 
     @Override

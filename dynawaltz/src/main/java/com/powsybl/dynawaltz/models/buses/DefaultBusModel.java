@@ -29,13 +29,13 @@ public class DefaultBusModel extends AbstractNetworkModel implements BusModel {
     }
 
     @Override
-    public String getSwitchOffSignalVarName() {
-        return "@NAME@_switchOff";
+    public Optional<String> getSwitchOffSignalVarName() {
+        return Optional.of("@NAME@_switchOff");
     }
 
     @Override
-    public String getNumCCVarName() {
-        return "@NAME@_numcc";
+    public Optional<String> getNumCCVarName() {
+        return Optional.of("@NAME@_numcc");
     }
 
     @Override

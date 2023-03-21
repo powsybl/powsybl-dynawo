@@ -15,6 +15,7 @@ import com.powsybl.dynawaltz.models.buses.BusModel;
 import com.powsybl.dynawaltz.models.utils.BusUtils;
 import com.powsybl.iidm.network.Generator;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -64,10 +65,12 @@ public abstract class AbstractGeneratorModel extends AbstractBlackBoxModel imple
     }
 
     private List<VarConnection> getVarConnectionsWithBus(BusModel connected) {
-        return Arrays.asList(
-                new VarConnection(getTerminalVarName(), connected.getTerminalVarName()),
-                new VarConnection(getSwitchOffSignalNodeVarName(), connected.getSwitchOffSignalVarName())
-        );
+        List<VarConnection> varConnections = new ArrayList<>(2);
+        varConnections.add(new VarConnection(getTerminalVarName(), connected.getTerminalVarName()));
+        connected.getSwitchOffSignalVarName()
+                .map(switchOff -> new VarConnection(getSwitchOffSignalNodeVarName(), switchOff))
+                .ifPresent(varConnections::add);
+        return varConnections;
     }
 
     @Override

@@ -21,10 +21,7 @@ import com.powsybl.dynawaltz.models.generators.OmegaRefGenerator;
 import com.powsybl.dynawaltz.models.lines.StandardLine;
 import com.powsybl.dynawaltz.models.loads.LoadAlphaBeta;
 import com.powsybl.dynawaltz.models.loads.LoadOneTransformer;
-import com.powsybl.iidm.network.Bus;
-import com.powsybl.iidm.network.Network;
-import com.powsybl.iidm.network.NetworkFactory;
-import com.powsybl.iidm.network.VoltageLevel;
+import com.powsybl.iidm.network.*;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.BeforeEach;
 import org.xml.sax.SAXException;
@@ -61,6 +58,7 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
 
         curves = new ArrayList<>();
         network.getBusBreakerView().getBusStream().forEach(b -> curves.add(new DynaWaltzCurve("NETWORK", b.getId() + "_Upu_value")));
+
         // A curve is made up of the id of the dynamic model and the variable to plot.
         // The static id of the generator is used as the id of the dynamic model (dynamicModelId).
         network.getGeneratorStream().forEach(g -> {
@@ -95,14 +93,12 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
                 dynamicModels.add(new GeneratorSynchronous("BBM_" + g.getId(), g.getId(), "GSTWPR", "GeneratorSynchronousThreeWindingsProportionalRegulations"));
             }
         });
-        network.getBusBreakerView().getBuses().forEach(b -> {
-            if (b.getId().equals("NHV2") || b.getId().equals("NHV1")) {
-                dynamicModels.add(new StandardBus("BBM_" + b.getId(), b.getId(), "SB"));
-            }
-        });
-        network.getLineStream().forEach(l ->
-                dynamicModels.add(new StandardLine("Line_" + l.getId(), l.getId(), "SL"))
-        );
+
+        Bus standardBus = network.getBusBreakerView().getBus("NLOAD");
+        dynamicModels.add(new StandardBus("BBM_" + standardBus.getId(), standardBus.getId(), "SB"));
+
+        Line standardLine = network.getLine("NHV1_NHV2_1");
+        dynamicModels.add(new StandardLine("Line_" + standardLine.getId(), standardLine.getId(), "SL"));
 
         // Events
         eventModels = new ArrayList<>();
@@ -114,7 +110,8 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
         });
 
         // Automatons
-        network.getLineStream().forEach(l -> dynamicModels.add(new CurrentLimitAutomaton("BBM_" + l.getId(), l.getId(), "CLA", Side.ONE)));
+        network.getLineStream().filter(line -> line != standardLine)
+                .forEach(l -> dynamicModels.add(new CurrentLimitAutomaton("BBM_" + l.getId(), l.getId(), "CLA", Side.ONE)));
     }
 
     public void validate(String schemaDefinition, String expectedResourceName, Path xmlFile) throws SAXException, IOException {

@@ -16,9 +16,9 @@ import java.util.Optional;
 public interface BusModel extends Model {
     String getTerminalVarName();
 
-    String getSwitchOffSignalVarName();
+    Optional<String> getSwitchOffSignalVarName();
 
-    String getNumCCVarName();
+    Optional<String> getNumCCVarName();
 
     Optional<String> getUImpinVarName();
 
