@@ -12,10 +12,10 @@ import com.powsybl.dynawaltz.models.AbstractBlackBoxModel;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.VarMapping;
 import com.powsybl.dynawaltz.models.buses.BusModel;
-import com.powsybl.dynawaltz.models.buses.StandardBus;
 import com.powsybl.dynawaltz.models.utils.BusUtils;
 import com.powsybl.iidm.network.Generator;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -65,13 +65,12 @@ public abstract class AbstractGeneratorModel extends AbstractBlackBoxModel imple
     }
 
     private List<VarConnection> getVarConnectionsWithBus(BusModel connected) {
-        VarConnection terminalsConnection = new VarConnection(getTerminalVarName(), connected.getTerminalVarName());
-        if (connected instanceof StandardBus) {
-            return List.of(terminalsConnection);
-        } else {
-            VarConnection sosConnection = new VarConnection(getSwitchOffSignalNodeVarName(), connected.getSwitchOffSignalVarName());
-            return List.of(terminalsConnection, sosConnection);
-        }
+        List<VarConnection> varConnections = new ArrayList<>(2);
+        varConnections.add(new VarConnection(getTerminalVarName(), connected.getTerminalVarName()));
+        connected.getSwitchOffSignalVarName()
+                .map(switchOff -> new VarConnection(getSwitchOffSignalNodeVarName(), switchOff))
+                .ifPresent(varConnections::add);
+        return varConnections;
     }
 
     @Override

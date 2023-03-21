@@ -18,6 +18,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
@@ -82,12 +83,12 @@ public class StandardBus extends AbstractBlackBoxModel implements BusModel {
     }
 
     @Override
-    public String getSwitchOffSignalVarName() {
-        throw new UnsupportedOperationException("switchOffSignal variable not implemented in StandardBus dynawo's model");
+    public Optional<String> getSwitchOffSignalVarName() {
+        return Optional.empty();
     }
 
     @Override
-    public String getNumCCVarName() {
-        throw new UnsupportedOperationException("numCC variable not implemented in StandardBus dynawo's model");
+    public Optional<String> getNumCCVarName() {
+        return Optional.empty();
     }
 }

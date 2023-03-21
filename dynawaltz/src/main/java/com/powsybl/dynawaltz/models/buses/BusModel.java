@@ -8,13 +8,15 @@ package com.powsybl.dynawaltz.models.buses;
 
 import com.powsybl.dynawaltz.models.Model;
 
+import java.util.Optional;
+
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  */
 public interface BusModel extends Model {
     String getTerminalVarName();
 
-    String getSwitchOffSignalVarName();
+    Optional<String> getSwitchOffSignalVarName();
 
-    String getNumCCVarName();
+    Optional<String> getNumCCVarName();
 }
