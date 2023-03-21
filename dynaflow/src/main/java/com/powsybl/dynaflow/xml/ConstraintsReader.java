@@ -85,6 +85,8 @@ public final class ConstraintsReader {
     private static Optional<LimitViolation> getLimitViolation(Network network, String name, String kind, double limit,
                                                               float limitReduction, double value, Integer side, Integer acceptableDuration) {
         if (name.matches(DYN_CALCULATED_BUS_PREFIX + ".*_\\d*")) {
+            // FIXME: the voltage level information should be directly referenced
+            // The naming corresponds to buses which are calculated in dynawo: https://github.com/dynawo/dynawo/blob/8f1e20e43db7ec4d2e4982deac8307dfa8d0dbec/dynawo/sources/Modeler/DataInterface/PowSyblIIDM/DYNVoltageLevelInterfaceIIDM.cpp#L290
             String vlId = name.substring(DYN_CALCULATED_BUS_PREFIX.length(), name.lastIndexOf("_"));
             VoltageLevel vl = network.getVoltageLevel(vlId);
             if (vl != null) {
