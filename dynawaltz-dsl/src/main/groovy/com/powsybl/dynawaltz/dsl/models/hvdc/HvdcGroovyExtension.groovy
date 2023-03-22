@@ -20,8 +20,11 @@ import com.powsybl.dynawaltz.models.hvdc.HvdcModel
 @AutoService(DynamicModelGroovyExtension.class)
 class HvdcGroovyExtension extends AbstractPowsyblDynawoGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
+    protected static final String HVDC = "hvdc"
+
     HvdcGroovyExtension() {
-        modelTags = ["HvdcPV"]
+        ConfigSlurper config = new ConfigSlurper()
+        modelTags = config.parse(this.getClass().getClassLoader().getResource(MODELS_CONFIG)).get(HVDC).keySet() as List
     }
 
     @Override
