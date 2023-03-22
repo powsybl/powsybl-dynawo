@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) 2023, RTE (http://www.rte-france.com)
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ */
 package com.powsybl.dynaflow.xml;
 
 import com.google.common.base.Supplier;
@@ -25,6 +32,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * @author Marcos de Miguel <demiguelm at aia.es>
+ * @author Florian Dupuy <florian.dupuy at rte-france.com>
+ */
 public final class ConstraintsReader {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ConstraintsReader.class);
@@ -66,8 +77,8 @@ public final class ConstraintsReader {
                     throw new AssertionError();
                 }
                 String name = reader.getAttributeValue(null, MODEL_NAME);
-                String description = reader.getAttributeValue(null, DESCRIPTION);
-                String type = reader.getAttributeValue(null, TYPE);
+                reader.getAttributeValue(null, DESCRIPTION); // description: unused
+                reader.getAttributeValue(null, TYPE); // type: unused
                 String kind = reader.getAttributeValue(null, KIND);
                 double limit = XmlUtil.readOptionalDoubleAttribute(reader, LIMIT);
                 double value = XmlUtil.readOptionalDoubleAttribute(reader, VALUE);
@@ -136,14 +147,17 @@ public final class ConstraintsReader {
     }
 
     private static LimitViolationType toLimitViolationType(String kind) {
-        if (kind.equals("UInfUmin")) {
-            return LimitViolationType.LOW_VOLTAGE;
-        } else if (kind.equals("USupUmax")) {
-            return LimitViolationType.HIGH_VOLTAGE;
-        } else if (kind.equals("OverloadOpen") || kind.equals("OverloadUp") || kind.equals("PATL")) {
-            return LimitViolationType.CURRENT;
-        } else {
-            throw new PowsyblException("Unexpect violation type " + kind);
+        switch (kind) {
+            case "UInfUmin":
+                return LimitViolationType.LOW_VOLTAGE;
+            case "USupUmax":
+                return LimitViolationType.HIGH_VOLTAGE;
+            case "OverloadOpen":
+            case "OverloadUp":
+            case "PATL":
+                return LimitViolationType.CURRENT;
+            default:
+                throw new PowsyblException("Unexpect violation type " + kind);
         }
     }
 
