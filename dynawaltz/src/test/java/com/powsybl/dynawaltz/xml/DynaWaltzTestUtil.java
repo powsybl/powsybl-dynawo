@@ -12,7 +12,6 @@ import com.powsybl.dynawaltz.DynaWaltzCurve;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton;
-import com.powsybl.dynawaltz.models.buses.StandardBus;
 import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection;
 import com.powsybl.dynawaltz.models.events.EventSetPointBoolean;
 import com.powsybl.dynawaltz.models.generators.GeneratorFictitious;
@@ -93,9 +92,6 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
                 dynamicModels.add(new GeneratorSynchronous("BBM_" + g.getId(), g.getId(), "GSTWPR", "GeneratorSynchronousThreeWindingsProportionalRegulations"));
             }
         });
-
-        Bus standardBus = network.getBusBreakerView().getBus("NLOAD");
-        dynamicModels.add(new StandardBus("BBM_" + standardBus.getId(), standardBus.getId(), "SB"));
 
         Line standardLine = network.getLine("NHV1_NHV2_1");
         dynamicModels.add(new StandardLine("Line_" + standardLine.getId(), standardLine.getId(), "SL"));
