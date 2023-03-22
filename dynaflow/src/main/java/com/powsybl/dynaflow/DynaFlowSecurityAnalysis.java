@@ -51,7 +51,6 @@ public class DynaFlowSecurityAnalysis {
     private static final String SECURITY_ANALYSIS_RESULTS_FILENAME = "securityAnalysisResults.json";
     private static final String DYNAFLOW_OUTPUT_FOLDER = "outputs";
     private static final String DYNAWO_CONSTRAINTS_FOLDER = "constraints";
-    private static final String DYNAWO_OUTPUT_CONSTRAINTS_FILENAME = "constraints.xml";
 
     private final Supplier<DynaFlowConfig> configSupplier;
 
