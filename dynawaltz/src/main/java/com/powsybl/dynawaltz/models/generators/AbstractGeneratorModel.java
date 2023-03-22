@@ -102,34 +102,4 @@ public abstract class AbstractGeneratorModel extends AbstractBlackBoxModel imple
     public String getQStatorPuVarName() {
         return "generator_QStatorPu";
     }
-
-    @Override
-    public String getLevelKVarName() {
-        return "reactivePowerControlLoop_levelK";
-    }
-
-    @Override
-    public String getLevelKValidVarName() {
-        return "reactivePowerControlLoop_levelKValid";
-    }
-
-    @Override
-    public String getAreaActiveVarName() {
-        return "reactivePowerControlLoop_areaActive";
-    }
-
-    @Override
-    public String getGroupParticipatingVarName() {
-        return "reactivePowerControlLoop_groupParticipating";
-    }
-
-    @Override
-    public String getLimUQUpVarName() {
-        return "reactivePowerControlLoop_limUQUp";
-    }
-
-    @Override
-    public String getLimUQDownVarName() {
-        return "reactivePowerControlLoop_limUQDown";
-    }
 }

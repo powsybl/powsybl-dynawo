@@ -23,17 +23,4 @@ public interface GeneratorModel extends BlackBoxModel {
     String getRunningVarName();
 
     String getQStatorPuVarName();
-
-    String getLevelKVarName();
-
-    String getLevelKValidVarName();
-
-    String getAreaActiveVarName();
-
-    String getGroupParticipatingVarName();
-
-    String getLimUQUpVarName();
-
-    String getLimUQDownVarName();
-
 }
