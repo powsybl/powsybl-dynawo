@@ -54,20 +54,17 @@ class DynaFlowSecurityAnalysisTest extends AbstractConverterTest {
         private final String inputFile;
         private final String contingencyFile;
         private final List<String> contingencyIds;
-        private final String outputSecurityAnalysisResult;
         private final List<String> constraints;
 
         public LocalCommandExecutorMock(String stdoutFileRef, String inputFile) {
-            this(stdoutFileRef, inputFile, null, List.of(), null, List.of());
+            this(stdoutFileRef, inputFile, null, List.of(), List.of());
         }
 
-        public LocalCommandExecutorMock(String stdoutFileRef, String inputFile, String contingencyFile, List<String> contingencyIds,
-                                        String outputSecurityAnalysisResult, List<String> outputConstraints) {
+        public LocalCommandExecutorMock(String stdoutFileRef, String inputFile, String contingencyFile, List<String> contingencyIds, List<String> outputConstraints) {
             this.stdOutFileRef = Objects.requireNonNull(stdoutFileRef);
             this.inputFile = inputFile;
             this.contingencyFile = contingencyFile;
             this.contingencyIds = contingencyIds;
-            this.outputSecurityAnalysisResult = outputSecurityAnalysisResult;
             this.constraints = outputConstraints;
         }
 
@@ -98,14 +95,9 @@ class DynaFlowSecurityAnalysisTest extends AbstractConverterTest {
         }
 
         private void copyOutputs(Path workingDir) throws IOException {
-            Path results = Files.createDirectories(workingDir.resolve("outputs")).resolve("securityAnalysisResults.json");
             Path constraintsFolder = Files.createDirectories(workingDir.resolve("constraints"));
-            if (outputSecurityAnalysisResult != null) {
-                copyFile(outputSecurityAnalysisResult, results);
-            } else {
-                for (int i = 0; i < contingencyIds.size(); i++) {
-                    copyFile(constraints.get(i), constraintsFolder.resolve("constraints_" + contingencyIds.get(i) + ".xml"));
-                }
+            for (int i = 0; i < contingencyIds.size(); i++) {
+                copyFile(constraints.get(i), constraintsFolder.resolve("constraints_" + contingencyIds.get(i) + ".xml"));
             }
         }
     }
@@ -127,8 +119,7 @@ class DynaFlowSecurityAnalysisTest extends AbstractConverterTest {
 
         LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynawo_version.out",
                 "/SecurityAnalysis/input.xiidm", "/SecurityAnalysis/contingencies.json",
-                contingencyIds, null,
-                List.of("/SecurityAnalysis/constraints1.xml", "/SecurityAnalysis/constraints2.xml"));
+                contingencyIds, List.of("/SecurityAnalysis/constraints1.xml", "/SecurityAnalysis/constraints2.xml"));
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
 
         SecurityAnalysisReport report = SecurityAnalysis.run(network, n -> contingencies, SecurityAnalysisParameters.load(), computationManager);

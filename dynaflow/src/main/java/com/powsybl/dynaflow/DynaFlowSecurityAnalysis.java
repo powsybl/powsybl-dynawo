@@ -23,7 +23,6 @@ import com.powsybl.loadflow.LoadFlowResult;
 import com.powsybl.security.*;
 import com.powsybl.security.interceptors.CurrentLimitViolationInterceptor;
 import com.powsybl.security.interceptors.SecurityAnalysisInterceptor;
-import com.powsybl.security.json.SecurityAnalysisResultDeserializer;
 import com.powsybl.security.results.NetworkResult;
 import com.powsybl.security.results.PostContingencyResult;
 import com.powsybl.security.results.PreContingencyResult;
@@ -48,8 +47,6 @@ public class DynaFlowSecurityAnalysis {
     private static final String WORKING_DIR_PREFIX = "dynaflow_sa_";
     private static final String DYNAFLOW_LAUNCHER_PROGRAM_NAME = "dynaflow-launcher.sh";
     private static final String CONTINGENCIES_FILENAME = "contingencies.json";
-    private static final String SECURITY_ANALYSIS_RESULTS_FILENAME = "securityAnalysisResults.json";
-    private static final String DYNAFLOW_OUTPUT_FOLDER = "outputs";
     private static final String DYNAWO_CONSTRAINTS_FOLDER = "constraints";
 
     private final Supplier<DynaFlowConfig> configSupplier;
@@ -163,21 +160,18 @@ public class DynaFlowSecurityAnalysis {
                 super.after(workingDir, report);
                 network.getVariantManager().setWorkingVariant(workingVariantId);
 
-                // If the results have already been prepared, just read them ...
-                Path saOutput = workingDir.resolve(DYNAFLOW_OUTPUT_FOLDER).resolve(SECURITY_ANALYSIS_RESULTS_FILENAME);
-                if (Files.exists(saOutput)) {
-                    return new SecurityAnalysisReport(SecurityAnalysisResultDeserializer.read(saOutput));
-                } else {
-                    // Build the results from the output networks written by DynaFlow
-                    PreContingencyResult preContingencyResult = getPreContingencyResult(network);
-                    Path constraintsDir = workingDir.resolve(DYNAWO_CONSTRAINTS_FOLDER);
-                    List<PostContingencyResult> contingenciesResults = contingencies.stream()
-                        .map(c -> getPostContingencyResult(network, constraintsDir, c))
-                        .collect(Collectors.toList());
-                    return new SecurityAnalysisReport(
-                        new SecurityAnalysisResult(preContingencyResult, contingenciesResults, Collections.emptyList())
-                    );
-                }
+                // Build the pre-contingency results from the input network
+                PreContingencyResult preContingencyResult = getPreContingencyResult(network);
+                Path constraintsDir = workingDir.resolve(DYNAWO_CONSTRAINTS_FOLDER);
+
+                // Build the post-contingency results from the constraints files written by dynawo
+                List<PostContingencyResult> contingenciesResults = contingencies.stream()
+                    .map(c -> getPostContingencyResult(network, constraintsDir, c))
+                    .collect(Collectors.toList());
+
+                return new SecurityAnalysisReport(
+                    new SecurityAnalysisResult(preContingencyResult, contingenciesResults, Collections.emptyList())
+                );
             }
         });
     }
