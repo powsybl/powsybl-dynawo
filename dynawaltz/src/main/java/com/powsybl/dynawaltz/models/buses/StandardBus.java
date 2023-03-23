@@ -12,14 +12,12 @@ import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractBlackBoxModel;
 import com.powsybl.dynawaltz.models.MacroConnectAttribute;
 import com.powsybl.iidm.network.Bus;
-import com.powsybl.iidm.network.Identifiable;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 /**
  * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
@@ -57,18 +55,17 @@ public class StandardBus extends AbstractBlackBoxModel implements BusModel {
         if (bus == null) {
             throw new PowsyblException("Bus static id unknown: " + staticId);
         }
-        checkLinkedDynamicModels(bus.getGeneratorStream(), "generator", context);
-        checkLinkedDynamicModels(bus.getLineStream(), "line", context);
-        checkLinkedDynamicModels(bus.getLoadStream(), "load", context);
+        checkLinkedDynamicModels(bus, context);
     }
 
-    private <T extends Identifiable<T>> void checkLinkedDynamicModels(Stream<T> stream, String equipmentName, DynaWaltzContext context) {
-        stream.map(Identifiable::getId)
+    private void checkLinkedDynamicModels(Bus bus, DynaWaltzContext context) {
+        bus.getConnectedTerminalStream()
+                .map(t -> t.getConnectable().getId())
                 .filter(context::isWithoutBlackBoxDynamicModel)
                 .findAny()
                 .ifPresent(id -> {
-                    throw new PowsyblException(String.format("The %s %s linked to the standard bus %s does not possess a dynamic model",
-                            equipmentName, id, getStaticId().orElse(null)));
+                    throw new PowsyblException(String.format("The equipment %s linked to the standard bus %s does not possess a dynamic model",
+                            id, getStaticId().orElse(null)));
                 });
     }
 
@@ -89,6 +86,16 @@ public class StandardBus extends AbstractBlackBoxModel implements BusModel {
 
     @Override
     public Optional<String> getNumCCVarName() {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<String> getUImpinVarName() {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<String> getUpuImpinVarName() {
         return Optional.empty();
     }
 }
