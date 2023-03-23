@@ -19,4 +19,8 @@ public interface BusModel extends Model {
     Optional<String> getSwitchOffSignalVarName();
 
     Optional<String> getNumCCVarName();
+
+    Optional<String> getUImpinVarName();
+
+    Optional<String> getUpuImpinVarName();
 }

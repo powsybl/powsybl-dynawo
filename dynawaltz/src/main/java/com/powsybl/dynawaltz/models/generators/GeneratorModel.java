@@ -21,4 +21,6 @@ public interface GeneratorModel extends BlackBoxModel {
     String getSwitchOffSignalAutomatonVarName();
 
     String getRunningVarName();
+
+    String getQStatorPuVarName();
 }
