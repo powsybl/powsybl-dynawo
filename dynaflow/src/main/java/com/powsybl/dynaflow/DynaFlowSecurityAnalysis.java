@@ -190,18 +190,11 @@ public class DynaFlowSecurityAnalysis {
 
     private static PostContingencyResult getPostContingencyResult(Network network, Path constraintsDir, Contingency c) {
         Path constraintsFile = constraintsDir.resolve("constraints_" + c.getId() + ".xml");
-        return new PostContingencyResult(c,
-                Files.exists(constraintsFile) ? PostContingencyComputationStatus.CONVERGED : PostContingencyComputationStatus.FAILED,
-                limitViolationsFromOutputNetwork(network, constraintsFile));
-    }
-
-    private static LimitViolationsResult limitViolationsFromOutputNetwork(Network network, Path constraintsFile) {
-        List<LimitViolation> limitViolations;
         if (Files.exists(constraintsFile)) {
-            limitViolations = ConstraintsReader.read(network, constraintsFile);
+            return new PostContingencyResult(c, PostContingencyComputationStatus.CONVERGED,
+                    new LimitViolationsResult(ConstraintsReader.read(network, constraintsFile)));
         } else {
-            limitViolations = Collections.emptyList();
+            return new PostContingencyResult(c, PostContingencyComputationStatus.FAILED, Collections.emptyList());
         }
-        return new LimitViolationsResult(limitViolations);
     }
 }
