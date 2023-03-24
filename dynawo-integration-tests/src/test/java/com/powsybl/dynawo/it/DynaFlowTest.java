@@ -14,15 +14,15 @@ import com.powsybl.dynaflow.DynaFlowParameters;
 import com.powsybl.dynaflow.DynaFlowProvider;
 import com.powsybl.dynaflow.DynaFlowSecurityAnalysisProvider;
 import com.powsybl.ieeecdf.converter.IeeeCdfNetworkFactory;
-import com.powsybl.iidm.network.Branch;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.VariantManagerConstants;
 import com.powsybl.loadflow.LoadFlowParameters;
 import com.powsybl.loadflow.LoadFlowResult;
-import com.powsybl.security.*;
+import com.powsybl.security.LimitViolationFilter;
+import com.powsybl.security.SecurityAnalysisParameters;
+import com.powsybl.security.SecurityAnalysisResult;
 import com.powsybl.security.detectors.DefaultLimitViolationDetector;
 import com.powsybl.security.json.SecurityAnalysisResultSerializer;
-import com.powsybl.security.results.PostContingencyResult;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
