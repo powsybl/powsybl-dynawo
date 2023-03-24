@@ -53,15 +53,12 @@ public class DynaFlowSecurityAnalysis {
 
     private final ComputationManager computationManager;
     private final Network network;
-    private final LimitViolationDetector violationDetector;
     private final LimitViolationFilter violationFilter;
     private final List<SecurityAnalysisInterceptor> interceptors;
 
-    public DynaFlowSecurityAnalysis(Network network, LimitViolationDetector detector,
-                                    LimitViolationFilter filter, ComputationManager computationManager,
+    public DynaFlowSecurityAnalysis(Network network, LimitViolationFilter filter, ComputationManager computationManager,
                                     Supplier<DynaFlowConfig> configSupplier) {
         this.network = Objects.requireNonNull(network);
-        this.violationDetector = Objects.requireNonNull(detector);
         this.violationFilter = Objects.requireNonNull(filter);
         this.interceptors = new ArrayList<>();
         this.computationManager = Objects.requireNonNull(computationManager);
