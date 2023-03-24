@@ -144,14 +144,14 @@ class DynaFlowSecurityAnalysisTest extends AbstractConverterTest {
         Network network = EurostagTutorialExample1Factory.create();
         network.setCaseDate(DateTime.parse("2023-03-23T16:40:48.060+01:00"));
 
-        // Changing the network for having some precontingencies violations
+        // Changing the network for having some pre-contingencies violations
         network.getBusBreakerView().getBus("NHV1").setV(380.0);
         network.getBusBreakerView().getBus("NHV2").setV(380.0);
         Line line = network.getLine("NHV1_NHV2_1");
         line.getTerminal1().setP(560.0).setQ(550.0);
         line.getTerminal2().setP(560.0).setQ(550.0);
 
-        // Adding strong current limits to have some current limit violations
+        // Adding strong current limits to have some post-contingencies current limit violations
         line.newCurrentLimits1().setPermanentLimit(40.0).add();
         line.newCurrentLimits2()
                 .beginTemporaryLimit().setName("10'").setAcceptableDuration(10 * 60).setValue(450.0).endTemporaryLimit()
