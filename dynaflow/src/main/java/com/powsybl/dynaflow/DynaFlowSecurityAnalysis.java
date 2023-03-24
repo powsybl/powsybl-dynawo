@@ -161,12 +161,12 @@ public class DynaFlowSecurityAnalysis {
                 network.getVariantManager().setWorkingVariant(workingVariantId);
 
                 // Build the pre-contingency results from the input network
-                PreContingencyResult preContingencyResult = getPreContingencyResult(network);
+                PreContingencyResult preContingencyResult = getPreContingencyResult(network, violationFilter);
                 Path constraintsDir = workingDir.resolve(DYNAWO_CONSTRAINTS_FOLDER);
 
                 // Build the post-contingency results from the constraints files written by dynawo
                 List<PostContingencyResult> contingenciesResults = contingencies.stream()
-                    .map(c -> getPostContingencyResult(network, constraintsDir, c))
+                    .map(c -> getPostContingencyResult(network, violationFilter, constraintsDir, c))
                     .collect(Collectors.toList());
 
                 return new SecurityAnalysisReport(
@@ -176,17 +176,20 @@ public class DynaFlowSecurityAnalysis {
         });
     }
 
-    private static PreContingencyResult getPreContingencyResult(Network network) {
+    private static PreContingencyResult getPreContingencyResult(Network network, LimitViolationFilter violationFilter) {
         List<LimitViolation> limitViolations = Security.checkLimits(network);
+        List<LimitViolation> filteredViolations = violationFilter.apply(limitViolations, network);
         NetworkResult networkResult = new NetworkResult(Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
-        return new PreContingencyResult(LoadFlowResult.ComponentResult.Status.CONVERGED, new LimitViolationsResult(limitViolations), networkResult);
+        return new PreContingencyResult(LoadFlowResult.ComponentResult.Status.CONVERGED, new LimitViolationsResult(filteredViolations), networkResult);
     }
 
-    private static PostContingencyResult getPostContingencyResult(Network network, Path constraintsDir, Contingency c) {
+    private static PostContingencyResult getPostContingencyResult(Network network, LimitViolationFilter violationFilter,
+                                                                  Path constraintsDir, Contingency c) {
         Path constraintsFile = constraintsDir.resolve("constraints_" + c.getId() + ".xml");
         if (Files.exists(constraintsFile)) {
-            return new PostContingencyResult(c, PostContingencyComputationStatus.CONVERGED,
-                    new LimitViolationsResult(ConstraintsReader.read(network, constraintsFile)));
+            List<LimitViolation> limitViolationsRead = ConstraintsReader.read(network, constraintsFile);
+            List<LimitViolation> limitViolationsFiltered = violationFilter.apply(limitViolationsRead, network);
+            return new PostContingencyResult(c, PostContingencyComputationStatus.CONVERGED, new LimitViolationsResult(limitViolationsFiltered));
         } else {
             return new PostContingencyResult(c, PostContingencyComputationStatus.FAILED, Collections.emptyList());
         }
