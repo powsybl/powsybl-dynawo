@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class TransformerFixedRatio extends AbstractBlackBoxModel implements TransformerModel {
+public class TransformerFixedRatio extends AbstractBlackBoxModel {
 
     private final String transformerLib;
 
