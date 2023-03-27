@@ -16,7 +16,6 @@ import com.powsybl.dynawaltz.DynaWaltzProvider;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.transformers.TransformerFixedRatio;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
@@ -30,12 +29,7 @@ class DynamicModelsSupplierTest {
 
     private static final String FOLDER_NAME = "/dynamicModels/";
 
-    private static List<DynamicModelGroovyExtension> EXTENSIONS;
-
-    @BeforeAll
-    static void extensionsSetup() {
-        EXTENSIONS = GroovyExtension.find(DynamicModelGroovyExtension.class, DynaWaltzProvider.NAME);
-    }
+    private static final List<DynamicModelGroovyExtension> EXTENSIONS = GroovyExtension.find(DynamicModelGroovyExtension.class, DynaWaltzProvider.NAME);
 
     @Test
     void testTransformer() {

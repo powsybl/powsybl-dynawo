@@ -10,12 +10,10 @@ package dynamicModels
 
 import com.powsybl.iidm.network.TwoWindingsTransformer
 
-for (TwoWindingsTransformer twoWindingsTransformer : network.twoWindingsTransformers) {
-    if (twoWindingsTransformer.id == "NGEN_NHV1") {
-        TransformerFixedRatio {
-            staticId twoWindingsTransformer.id
-            dynamicModelId "BBM_" + twoWindingsTransformer.id
-            parameterSetId "TFR"
-        }
-    }
+TwoWindingsTransformer twoWindingsTransformer = network.getTwoWindingsTransformer("NGEN_NHV1")
+
+TransformerFixedRatio {
+    staticId twoWindingsTransformer.id
+    dynamicModelId "BBM_" + twoWindingsTransformer.id
+    parameterSetId "TFR"
 }
