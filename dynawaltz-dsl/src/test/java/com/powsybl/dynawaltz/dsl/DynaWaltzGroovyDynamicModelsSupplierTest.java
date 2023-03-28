@@ -23,6 +23,7 @@ import com.powsybl.dynawaltz.dsl.models.hvdc.HvdcGroovyExtension;
 import com.powsybl.dynawaltz.dsl.models.lines.LineGroovyExtension;
 import com.powsybl.dynawaltz.dsl.models.loads.LoadAlphaBetaGroovyExtension;
 import com.powsybl.dynawaltz.dsl.models.loads.LoadOneTransformerGroovyExtension;
+import com.powsybl.dynawaltz.dsl.models.transformers.TransformerFixedRatioGroovyExtension;
 import com.powsybl.dynawaltz.models.AbstractBlackBoxModel;
 import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton;
 import com.powsybl.dynawaltz.models.buses.StandardBus;
@@ -73,7 +74,7 @@ class DynaWaltzGroovyDynamicModelsSupplierTest {
     void test() {
 
         List<DynamicModelGroovyExtension> extensions = GroovyExtension.find(DynamicModelGroovyExtension.class, DynaWaltzProvider.NAME);
-        assertEquals(9, extensions.size());
+        assertEquals(10, extensions.size());
         extensions.forEach(this::validateExtension);
 
         DynamicModelsSupplier supplier = new GroovyDynamicModelsSupplier(fileSystem.getPath("/dynamicModels.groovy"), extensions);
@@ -182,7 +183,8 @@ class DynaWaltzGroovyDynamicModelsSupplierTest {
         boolean isGeneratorExtension = extension instanceof GeneratorSynchronousGroovyExtension || extension instanceof GeneratorFictitiousGroovyExtension || extension instanceof OmegaRefGeneratorGroovyExtension;
         boolean isBusExtension = extension instanceof BusGroovyExtension;
         boolean isLineExtension = extension instanceof LineGroovyExtension;
-        boolean isDynamicModelExtension = isLoadExtension || isGeneratorExtension || isBusExtension || isLineExtension || isHvdcExtension;
+        boolean isTransformerExtension = extension instanceof TransformerFixedRatioGroovyExtension;
+        boolean isDynamicModelExtension = isLoadExtension || isGeneratorExtension || isBusExtension || isLineExtension || isHvdcExtension || isTransformerExtension;
         boolean isAutomatonExtension = extension instanceof CurrentLimitAutomatonGroovyExtension;
 
         assertTrue(isDynamicModelExtension || isAutomatonExtension);
