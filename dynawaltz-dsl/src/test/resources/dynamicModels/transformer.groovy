@@ -8,12 +8,8 @@
 
 package dynamicModels
 
-import com.powsybl.iidm.network.TwoWindingsTransformer
-
-TwoWindingsTransformer twoWindingsTransformer = network.getTwoWindingsTransformer("NGEN_NHV1")
-
 TransformerFixedRatio {
-    staticId twoWindingsTransformer.id
-    dynamicModelId "BBM_" + twoWindingsTransformer.id
+    staticId "NGEN_NHV1"
+    dynamicModelId "BBM_NGEN_NHV1"
     parameterSetId "TFR"
 }
