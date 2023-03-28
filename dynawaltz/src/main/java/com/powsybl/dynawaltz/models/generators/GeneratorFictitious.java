@@ -17,7 +17,7 @@ public class GeneratorFictitious extends AbstractGeneratorModel {
                 "generator_switchOffSignal1",
                 "generator_switchOffSignal2",
                 "generator_switchOffSignal3",
-                "generator_fictitious");
+                "generator_running");
     }
 
     @Override

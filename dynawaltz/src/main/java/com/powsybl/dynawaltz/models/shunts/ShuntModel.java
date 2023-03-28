@@ -5,27 +5,17 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.models;
+package com.powsybl.dynawaltz.models.shunts;
+
+import com.powsybl.dynawaltz.models.Model;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public enum Side {
+public interface ShuntModel extends Model {
+    String getStateVarName();
 
-    ONE("Side1"),
-    TWO("Side2");
+    String getIsCapacitorVarName();
 
-    private final String sideSuffix;
-
-    Side(String sideSuffix) {
-        this.sideSuffix = sideSuffix;
-    }
-
-    public String getSideSuffix() {
-        return sideSuffix;
-    }
-
-    public int getSideNumber() {
-        return ordinal() + 1;
-    }
+    String getIsAvailableVarName();
 }
