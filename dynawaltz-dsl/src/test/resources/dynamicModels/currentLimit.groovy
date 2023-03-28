@@ -8,8 +8,11 @@
 
 package dynamicModels
 
-TransformerFixedRatio {
-    staticId "NGEN_NHV1"
-    dynamicModelId "BBM_NGEN_NHV1"
-    parameterSetId "TFR"
+import com.powsybl.iidm.network.Branch
+
+CurrentLimitAutomaton {
+    staticId "NHV1_NHV2_1"
+    dynamicModelId "AM_NHV1_NHV2_1"
+    parameterSetId "CLA"
+    side Branch.Side.TWO
 }
