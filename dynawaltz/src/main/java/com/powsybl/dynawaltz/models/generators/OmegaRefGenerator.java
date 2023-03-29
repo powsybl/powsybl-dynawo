@@ -8,6 +8,7 @@
 package com.powsybl.dynawaltz.models.generators;
 
 import com.powsybl.dynawaltz.models.VarConnection;
+import com.powsybl.iidm.network.Generator;
 
 import java.util.Arrays;
 import java.util.List;
@@ -19,8 +20,8 @@ public class OmegaRefGenerator extends AbstractGeneratorModel implements OmegaRe
 
     private final String generatorLib;
 
-    public OmegaRefGenerator(String dynamicModelId, String staticId, String parameterSetId, String generatorLib) {
-        super(dynamicModelId, staticId, parameterSetId,
+    public OmegaRefGenerator(String dynamicModelId, Generator generator, String parameterSetId, String generatorLib) {
+        super(dynamicModelId, generator, parameterSetId,
                 "generator_terminal",
                 "generator_switchOffSignal1",
                 "generator_switchOffSignal2",

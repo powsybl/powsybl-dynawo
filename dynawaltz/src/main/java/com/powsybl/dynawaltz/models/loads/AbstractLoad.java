@@ -6,7 +6,6 @@
  */
 package com.powsybl.dynawaltz.models.loads;
 
-import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractBlackBoxModel;
 import com.powsybl.dynawaltz.models.VarConnection;
@@ -23,17 +22,15 @@ import java.util.Objects;
  */
 public abstract class AbstractLoad extends AbstractBlackBoxModel {
 
-    protected AbstractLoad(String dynamicModelId, String staticId, String parameterSetId) {
-        super(dynamicModelId, Objects.requireNonNull(staticId), parameterSetId);
+    protected final Load load;
+
+    protected AbstractLoad(String dynamicModelId, Load load, String parameterSetId) {
+        super(dynamicModelId, Objects.requireNonNull(load).getId(), parameterSetId);
+        this.load = Objects.requireNonNull(load);
     }
 
     @Override
     public void createMacroConnections(DynaWaltzContext context) {
-        String staticId = getStaticId().orElse(null); // cannot be empty as checked in constructor
-        Load load = context.getNetwork().getLoad(staticId);
-        if (load == null) {
-            throw new PowsyblException("Load static id unknown: " + staticId);
-        }
         createMacroConnections(BusUtils.getConnectableBusStaticId(load), BusModel.class, this::getVarConnectionsWithBus, context);
     }
 

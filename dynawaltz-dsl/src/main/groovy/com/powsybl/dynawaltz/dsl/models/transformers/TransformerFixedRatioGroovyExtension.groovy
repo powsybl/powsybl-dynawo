@@ -8,39 +8,52 @@
 package com.powsybl.dynawaltz.dsl.models.transformers
 
 import com.google.auto.service.AutoService
+import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
-import com.powsybl.dynawaltz.dsl.AbstractDynamicModelBuilder
-import com.powsybl.dynawaltz.dsl.AbstractPowsyblDynawoGroovyExtension
+import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
+import com.powsybl.dynawaltz.dsl.models.builders.AbstractDynamicModelBuilder
 import com.powsybl.dynawaltz.models.transformers.TransformerFixedRatio
+import com.powsybl.iidm.network.Network
+import com.powsybl.iidm.network.TwoWindingsTransformer
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class TransformerFixedRatioGroovyExtension extends AbstractPowsyblDynawoGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+class TransformerFixedRatioGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
     TransformerFixedRatioGroovyExtension() {
         modelTags = ["TransformerFixedRatio"]
     }
 
     @Override
-    protected TransformerBuilder createBuilder(String currentTag) {
-        new TransformerBuilder(currentTag)
+    protected TransformerBuilder createBuilder(Network network, String currentTag) {
+        new TransformerBuilder(network, currentTag)
     }
 
     static class TransformerBuilder extends AbstractDynamicModelBuilder {
 
+        TwoWindingsTransformer transformer
         String tag
 
-        TransformerBuilder(String tag) {
+        TransformerBuilder(Network network, String tag) {
+            super(network)
             this.tag = tag
+        }
+
+        void checkData() {
+            super.checkData()
+            transformer = network.getTwoWindingsTransformer(staticId)
+            if (transformer == null) {
+                throw new DslException("Transformer static id unknown: " + staticId)
+            }
         }
 
         @Override
         TransformerFixedRatio build() {
             checkData()
-            new TransformerFixedRatio(dynamicModelId, staticId, parameterSetId, tag)
+            new TransformerFixedRatio(dynamicModelId, transformer, parameterSetId, tag)
         }
     }
 }

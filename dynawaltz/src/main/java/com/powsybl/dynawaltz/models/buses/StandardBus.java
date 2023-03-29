@@ -17,6 +17,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -25,8 +26,11 @@ import java.util.Optional;
  */
 public class StandardBus extends AbstractBlackBoxModel implements BusModel {
 
-    public StandardBus(String dynamicModelId, String staticId, String parameterSetId) {
-        super(dynamicModelId, staticId, parameterSetId);
+    private final Bus bus;
+
+    public StandardBus(String dynamicModelId, Bus bus, String parameterSetId) {
+        super(dynamicModelId, bus.getId(), parameterSetId);
+        this.bus = Objects.requireNonNull(bus);
     }
 
     @Override
@@ -49,12 +53,6 @@ public class StandardBus extends AbstractBlackBoxModel implements BusModel {
 
     @Override
     public void createMacroConnections(DynaWaltzContext context) {
-        // Buses with a dynamical model can only connect to equipment with a dynamic model
-        String staticId = getStaticId().orElse(null);
-        Bus bus = context.getNetwork().getBusBreakerView().getBus(staticId);
-        if (bus == null) {
-            throw new PowsyblException("Bus static id unknown: " + staticId);
-        }
         checkLinkedDynamicModels(bus, context);
     }
 

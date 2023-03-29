@@ -72,29 +72,29 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
         dynamicModels = new ArrayList<>();
         network.getLoadStream().forEach(l -> {
             if (l.getId().equals("LOAD2")) {
-                dynamicModels.add(new LoadOneTransformer("BBM_" + l.getId(), l.getId(), "LOT"));
+                dynamicModels.add(new LoadOneTransformer("BBM_" + l.getId(), l, "LOT"));
             } else {
-                dynamicModels.add(new LoadAlphaBeta("BBM_" + l.getId(), l.getId(), "LAB"));
+                dynamicModels.add(new LoadAlphaBeta("BBM_" + l.getId(), l, "LAB"));
             }
         });
         network.getGeneratorStream().forEach(g -> {
             if (g.getId().equals("GEN2")) {
-                dynamicModels.add(new GeneratorSynchronous("BBM_" + g.getId(), g.getId(), "GSFWPR", "GeneratorSynchronousFourWindingsProportionalRegulations"));
+                dynamicModels.add(new GeneratorSynchronous("BBM_" + g.getId(), g, "GSFWPR", "GeneratorSynchronousFourWindingsProportionalRegulations"));
             } else if (g.getId().equals("GEN3")) {
-                dynamicModels.add(new GeneratorSynchronous("BBM_" + g.getId(), g.getId(), "GSFW", "GeneratorSynchronousFourWindings"));
+                dynamicModels.add(new GeneratorSynchronous("BBM_" + g.getId(), g, "GSFW", "GeneratorSynchronousFourWindings"));
             } else if (g.getId().equals("GEN4")) {
-                dynamicModels.add(new GeneratorSynchronous("BBM_" + g.getId(), g.getId(), "GSTW", "GeneratorSynchronousThreeWindings"));
+                dynamicModels.add(new GeneratorSynchronous("BBM_" + g.getId(), g, "GSTW", "GeneratorSynchronousThreeWindings"));
             } else if (g.getId().equals("GEN6")) {
-                dynamicModels.add(new GeneratorFictitious("BBM_" + g.getId(), g.getId(), "GF"));
+                dynamicModels.add(new GeneratorFictitious("BBM_" + g.getId(), g, "GF"));
             } else if (g.getId().equals("GEN7")) {
-                dynamicModels.add(new OmegaRefGenerator("BBM_" + g.getId(), g.getId(), "GPQ", "GeneratorPQ"));
+                dynamicModels.add(new OmegaRefGenerator("BBM_" + g.getId(), g, "GPQ", "GeneratorPQ"));
             } else {
-                dynamicModels.add(new GeneratorSynchronous("BBM_" + g.getId(), g.getId(), "GSTWPR", "GeneratorSynchronousThreeWindingsProportionalRegulations"));
+                dynamicModels.add(new GeneratorSynchronous("BBM_" + g.getId(), g, "GSTWPR", "GeneratorSynchronousThreeWindingsProportionalRegulations"));
             }
         });
 
         Line standardLine = network.getLine("NHV1_NHV2_1");
-        dynamicModels.add(new StandardLine("Line_" + standardLine.getId(), standardLine.getId(), "SL"));
+        dynamicModels.add(new StandardLine("Line_" + standardLine.getId(), standardLine, "SL"));
 
         // Events
         eventModels = new ArrayList<>();

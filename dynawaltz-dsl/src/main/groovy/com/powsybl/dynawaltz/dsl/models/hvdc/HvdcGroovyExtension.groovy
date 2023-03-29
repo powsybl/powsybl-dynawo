@@ -8,17 +8,20 @@
 package com.powsybl.dynawaltz.dsl.models.hvdc
 
 import com.google.auto.service.AutoService
+import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
-import com.powsybl.dynawaltz.dsl.AbstractDynamicModelBuilder
-import com.powsybl.dynawaltz.dsl.AbstractPowsyblDynawoGroovyExtension
+import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
+import com.powsybl.dynawaltz.dsl.models.builders.AbstractDynamicModelBuilder
 import com.powsybl.dynawaltz.models.hvdc.HvdcModel
+import com.powsybl.iidm.network.HvdcLine
+import com.powsybl.iidm.network.Network
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class HvdcGroovyExtension extends AbstractPowsyblDynawoGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+class HvdcGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
     protected static final String HVDC = "hvdc"
 
@@ -28,22 +31,32 @@ class HvdcGroovyExtension extends AbstractPowsyblDynawoGroovyExtension<DynamicMo
     }
 
     @Override
-    protected HvdcBuilder createBuilder(String currentTag) {
-        new HvdcBuilder(currentTag)
+    protected HvdcBuilder createBuilder(Network network, String currentTag) {
+        new HvdcBuilder(network, currentTag)
     }
 
     static class HvdcBuilder extends AbstractDynamicModelBuilder {
 
+        HvdcLine hvdc
         String tag
 
-        HvdcBuilder(String tag) {
+        HvdcBuilder(Network network, String tag) {
+            super(network)
             this.tag = tag
+        }
+
+        void checkData() {
+            super.checkData()
+            hvdc = network.getHvdcLine(staticId)
+            if (hvdc == null) {
+                throw new DslException("Hvdc line static id unknown: " + staticId)
+            }
         }
 
         @Override
         HvdcModel build() {
             checkData()
-            new HvdcModel(dynamicModelId, staticId, parameterSetId, tag)
+            new HvdcModel(dynamicModelId, hvdc, parameterSetId, tag)
         }
     }
 }

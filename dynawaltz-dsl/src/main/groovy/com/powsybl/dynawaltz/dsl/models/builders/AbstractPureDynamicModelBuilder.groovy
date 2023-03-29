@@ -6,10 +6,11 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-package com.powsybl.dynawaltz.dsl
+package com.powsybl.dynawaltz.dsl.models.builders
 
 import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
+import com.powsybl.dynawaltz.dsl.ModelBuilder
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>

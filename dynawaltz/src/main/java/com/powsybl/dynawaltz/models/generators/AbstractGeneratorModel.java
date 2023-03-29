@@ -6,7 +6,6 @@
  */
 package com.powsybl.dynawaltz.models.generators;
 
-import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractBlackBoxModel;
 import com.powsybl.dynawaltz.models.VarConnection;
@@ -31,17 +30,19 @@ public abstract class AbstractGeneratorModel extends AbstractBlackBoxModel imple
             new VarMapping("generator_QGenPu", "q"),
             new VarMapping("generator_state", "state"));
 
+    private final Generator generator;
     private final String terminalVarName;
     private final String switchOffSignalNodeVarName;
     private final String switchOffSignalEventVarName;
     private final String switchOffSignalAutomatonVarName;
     private final String runningVarName;
 
-    protected AbstractGeneratorModel(String dynamicModelId, String staticId, String parameterSetId,
-                                  String terminalVarName, String switchOffSignalNodeVarName,
-                                  String switchOffSignalEventVarName, String switchOffSignalAutomatonVarName,
-                                  String runningVarName) {
-        super(dynamicModelId, Objects.requireNonNull(staticId), parameterSetId);
+    protected AbstractGeneratorModel(String dynamicModelId, Generator generator, String parameterSetId,
+                                     String terminalVarName, String switchOffSignalNodeVarName,
+                                     String switchOffSignalEventVarName, String switchOffSignalAutomatonVarName,
+                                     String runningVarName) {
+        super(dynamicModelId, Objects.requireNonNull(generator).getId(), parameterSetId);
+        this.generator = generator;
         this.terminalVarName = terminalVarName;
         this.switchOffSignalNodeVarName = switchOffSignalNodeVarName;
         this.switchOffSignalEventVarName = switchOffSignalEventVarName;
@@ -56,11 +57,6 @@ public abstract class AbstractGeneratorModel extends AbstractBlackBoxModel imple
 
     @Override
     public void createMacroConnections(DynaWaltzContext context) {
-        String staticId = getStaticId().orElse(null); // cannot be empty as checked in constructor
-        Generator generator = context.getNetwork().getGenerator(staticId);
-        if (generator == null) {
-            throw new PowsyblException("Generator static id unknown: " + staticId);
-        }
         createMacroConnections(BusUtils.getConnectableBusStaticId(generator), BusModel.class, this::getVarConnectionsWithBus, context);
     }
 

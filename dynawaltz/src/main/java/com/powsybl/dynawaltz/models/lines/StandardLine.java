@@ -7,7 +7,6 @@
  */
 package com.powsybl.dynawaltz.models.lines;
 
-import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractBlackBoxModel;
 import com.powsybl.dynawaltz.models.Side;
@@ -18,14 +17,18 @@ import com.powsybl.dynawaltz.models.utils.SideConverter;
 import com.powsybl.iidm.network.Line;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 public class StandardLine extends AbstractBlackBoxModel implements LineModel {
 
-    public StandardLine(String dynamicModelId, String staticId, String parameterSetId) {
-        super(dynamicModelId, staticId, parameterSetId);
+    private final Line line;
+
+    public StandardLine(String dynamicModelId, Line line, String parameterSetId) {
+        super(dynamicModelId, line.getId(), parameterSetId);
+        this.line = Objects.requireNonNull(line);
     }
 
     @Override
@@ -43,11 +46,6 @@ public class StandardLine extends AbstractBlackBoxModel implements LineModel {
 
     @Override
     public void createMacroConnections(DynaWaltzContext context) {
-        String staticId = getStaticId().orElse(null);
-        Line line = context.getNetwork().getLine(staticId);
-        if (line == null) {
-            throw new PowsyblException("Line static id unknown: " + getStaticId());
-        }
         line.getTerminals().forEach(t -> {
             String busStaticId = BusUtils.getConnectableBusStaticId(t);
             createMacroConnections(busStaticId, BusModel.class, this::getVarConnectionsWithBus, context, SideConverter.convert(line.getSide(t)));

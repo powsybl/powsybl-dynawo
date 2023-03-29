@@ -46,7 +46,7 @@ class DynamicModelsXmlTest extends DynaWaltzTestUtil {
         dynamicModels.clear();
         network.getGeneratorStream().forEach(gen -> {
             if (gen.getId().equals("GEN6")) {
-                dynamicModels.add(new GeneratorFictitious("BBM_" + gen.getId(), gen.getId(), "GF"));
+                dynamicModels.add(new GeneratorFictitious("BBM_" + gen.getId(), gen, "GF"));
             }
         });
 
@@ -61,12 +61,12 @@ class DynamicModelsXmlTest extends DynaWaltzTestUtil {
         dynamicModels.clear();
         network.getGeneratorStream().forEach(gen -> {
             if (gen.getId().equals("GEN5") || gen.getId().equals("GEN6")) {
-                dynamicModels.add(new GeneratorFictitious("BBM_" + gen.getId(), "duplicateID", "GF"));
+                dynamicModels.add(new GeneratorFictitious("BBM_" + gen.getId(), network.getGenerator("GEN5"), "GF"));
             }
         });
         String workingVariantId = network.getVariantManager().getWorkingVariantId();
         Exception e = assertThrows(PowsyblException.class, () -> new DynaWaltzContext(network, workingVariantId, dynamicModels, eventModels, curves, null, null));
-        assertEquals("Duplicate staticId: duplicateID", e.getMessage());
+        assertEquals("Duplicate staticId: GEN5", e.getMessage());
     }
 
     @Test
