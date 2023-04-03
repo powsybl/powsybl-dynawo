@@ -7,7 +7,7 @@
 package com.powsybl.dynawaltz.models.loads;
 
 import com.powsybl.dynawaltz.DynaWaltzContext;
-import com.powsybl.dynawaltz.models.AbstractBlackBoxModel;
+import com.powsybl.dynawaltz.models.AbstractEquipmentBlackBoxModel;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.buses.BusModel;
 import com.powsybl.dynawaltz.models.utils.BusUtils;
@@ -20,18 +20,15 @@ import java.util.Objects;
  * @author Marcos de Miguel <demiguelm at aia.es>
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public abstract class AbstractLoad extends AbstractBlackBoxModel {
-
-    protected final Load load;
+public abstract class AbstractLoad extends AbstractEquipmentBlackBoxModel<Load> {
 
     protected AbstractLoad(String dynamicModelId, Load load, String parameterSetId) {
-        super(dynamicModelId, Objects.requireNonNull(load).getId(), parameterSetId);
-        this.load = Objects.requireNonNull(load);
+        super(dynamicModelId, parameterSetId, Objects.requireNonNull(load));
     }
 
     @Override
     public void createMacroConnections(DynaWaltzContext context) {
-        createMacroConnections(BusUtils.getConnectableBusStaticId(load), BusModel.class, this::getVarConnectionsWithBus, context);
+        createMacroConnections(BusUtils.getConnectableBusStaticId(equipment), BusModel.class, this::getVarConnectionsWithBus, context);
     }
 
     abstract List<VarConnection> getVarConnectionsWithBus(BusModel connected);

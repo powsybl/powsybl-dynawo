@@ -97,7 +97,7 @@ public class OmegaRef extends AbstractPureDynamicBlackBoxModel {
     }
 
     private String getBusAssociatedTo(OmegaRefGeneratorModel generatorModel, DynaWaltzContext context) {
-        Generator generator = generatorModel.getStaticId().map(staticId -> context.getNetwork().getGenerator(staticId)).orElse(null);
+        Generator generator = context.getNetwork().getGenerator(generatorModel.getStaticId());
         if (generator == null) {
             throw new PowsyblException("Generator " + generatorModel.getLib() + " not found in DynaWaltz context. Id : " + generatorModel.getDynamicModelId());
         }

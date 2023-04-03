@@ -7,7 +7,7 @@
 package com.powsybl.dynawaltz.models.generators;
 
 import com.powsybl.dynawaltz.DynaWaltzContext;
-import com.powsybl.dynawaltz.models.AbstractBlackBoxModel;
+import com.powsybl.dynawaltz.models.AbstractEquipmentBlackBoxModel;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.VarMapping;
 import com.powsybl.dynawaltz.models.buses.BusModel;
@@ -23,14 +23,13 @@ import java.util.Objects;
  * @author Marcos de Miguel <demiguelm at aia.es>
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public abstract class AbstractGeneratorModel extends AbstractBlackBoxModel implements GeneratorModel {
+public abstract class AbstractGeneratorModel extends AbstractEquipmentBlackBoxModel<Generator> implements GeneratorModel {
 
     protected static final List<VarMapping> VAR_MAPPING = Arrays.asList(
             new VarMapping("generator_PGenPu", "p"),
             new VarMapping("generator_QGenPu", "q"),
             new VarMapping("generator_state", "state"));
 
-    private final Generator generator;
     private final String terminalVarName;
     private final String switchOffSignalNodeVarName;
     private final String switchOffSignalEventVarName;
@@ -41,8 +40,7 @@ public abstract class AbstractGeneratorModel extends AbstractBlackBoxModel imple
                                      String terminalVarName, String switchOffSignalNodeVarName,
                                      String switchOffSignalEventVarName, String switchOffSignalAutomatonVarName,
                                      String runningVarName) {
-        super(dynamicModelId, Objects.requireNonNull(generator).getId(), parameterSetId);
-        this.generator = generator;
+        super(dynamicModelId, parameterSetId, Objects.requireNonNull(generator));
         this.terminalVarName = terminalVarName;
         this.switchOffSignalNodeVarName = switchOffSignalNodeVarName;
         this.switchOffSignalEventVarName = switchOffSignalEventVarName;
@@ -57,7 +55,7 @@ public abstract class AbstractGeneratorModel extends AbstractBlackBoxModel imple
 
     @Override
     public void createMacroConnections(DynaWaltzContext context) {
-        createMacroConnections(BusUtils.getConnectableBusStaticId(generator), BusModel.class, this::getVarConnectionsWithBus, context);
+        createMacroConnections(BusUtils.getConnectableBusStaticId(equipment), BusModel.class, this::getVarConnectionsWithBus, context);
     }
 
     private List<VarConnection> getVarConnectionsWithBus(BusModel connected) {

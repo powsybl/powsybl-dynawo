@@ -9,7 +9,7 @@ package com.powsybl.dynawaltz.models.buses;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
-import com.powsybl.dynawaltz.models.AbstractBlackBoxModel;
+import com.powsybl.dynawaltz.models.AbstractEquipmentBlackBoxModel;
 import com.powsybl.dynawaltz.models.MacroConnectAttribute;
 import com.powsybl.iidm.network.Bus;
 
@@ -24,13 +24,10 @@ import java.util.Optional;
  * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class StandardBus extends AbstractBlackBoxModel implements BusModel {
-
-    private final Bus bus;
+public class StandardBus extends AbstractEquipmentBlackBoxModel<Bus> implements BusModel {
 
     public StandardBus(String dynamicModelId, Bus bus, String parameterSetId) {
-        super(dynamicModelId, bus.getId(), parameterSetId);
-        this.bus = Objects.requireNonNull(bus);
+        super(dynamicModelId, parameterSetId, Objects.requireNonNull(bus));
     }
 
     @Override
@@ -47,13 +44,13 @@ public class StandardBus extends AbstractBlackBoxModel implements BusModel {
     @Override
     public List<MacroConnectAttribute> getMacroConnectToAttributes() {
         List<MacroConnectAttribute> attributesConnectTo = new ArrayList<>(super.getMacroConnectToAttributes());
-        attributesConnectTo.add(MacroConnectAttribute.of("name2", getStaticId().orElse(null)));
+        attributesConnectTo.add(MacroConnectAttribute.of("name2", getStaticId()));
         return attributesConnectTo;
     }
 
     @Override
     public void createMacroConnections(DynaWaltzContext context) {
-        checkLinkedDynamicModels(bus, context);
+        checkLinkedDynamicModels(equipment, context);
     }
 
     private void checkLinkedDynamicModels(Bus bus, DynaWaltzContext context) {
@@ -63,7 +60,7 @@ public class StandardBus extends AbstractBlackBoxModel implements BusModel {
                 .findAny()
                 .ifPresent(id -> {
                     throw new PowsyblException(String.format("The equipment %s linked to the standard bus %s does not possess a dynamic model",
-                            id, getStaticId().orElse(null)));
+                            id, getStaticId()));
                 });
     }
 

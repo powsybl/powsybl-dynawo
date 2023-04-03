@@ -8,7 +8,7 @@
 package com.powsybl.dynawaltz.models.hvdc;
 
 import com.powsybl.dynawaltz.DynaWaltzContext;
-import com.powsybl.dynawaltz.models.AbstractBlackBoxModel;
+import com.powsybl.dynawaltz.models.AbstractEquipmentBlackBoxModel;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.VarMapping;
 import com.powsybl.iidm.network.HvdcLine;
@@ -20,7 +20,7 @@ import java.util.Objects;
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class HvdcModel extends AbstractBlackBoxModel {
+public class HvdcModel extends AbstractEquipmentBlackBoxModel<HvdcLine> {
     private static final List<VarMapping> VAR_MAPPING = Arrays.asList(
             new VarMapping("hvdc_PInj1Pu", "p1"),
             new VarMapping("hvdc_QInj1Pu", "q1"),
@@ -29,12 +29,10 @@ public class HvdcModel extends AbstractBlackBoxModel {
             new VarMapping("hvdc_QInj2Pu", "q2"),
             new VarMapping("hvdc_state", "state2"));
 
-    private final HvdcLine hvdc;
     private final String hvdcLib;
 
     public HvdcModel(String dynamicModelId, HvdcLine hvdc, String parameterSetId, String hvdcLib) {
-        super(dynamicModelId, hvdc.getId(), parameterSetId);
-        this.hvdc = Objects.requireNonNull(hvdc);
+        super(dynamicModelId, parameterSetId, Objects.requireNonNull(hvdc));
         this.hvdcLib = hvdcLib;
     }
 

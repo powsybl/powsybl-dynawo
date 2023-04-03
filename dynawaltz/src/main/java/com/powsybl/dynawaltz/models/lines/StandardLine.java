@@ -8,7 +8,7 @@
 package com.powsybl.dynawaltz.models.lines;
 
 import com.powsybl.dynawaltz.DynaWaltzContext;
-import com.powsybl.dynawaltz.models.AbstractBlackBoxModel;
+import com.powsybl.dynawaltz.models.AbstractEquipmentBlackBoxModel;
 import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.buses.BusModel;
@@ -22,13 +22,10 @@ import java.util.Objects;
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class StandardLine extends AbstractBlackBoxModel implements LineModel {
-
-    private final Line line;
+public class StandardLine extends AbstractEquipmentBlackBoxModel<Line> implements LineModel {
 
     public StandardLine(String dynamicModelId, Line line, String parameterSetId) {
-        super(dynamicModelId, line.getId(), parameterSetId);
-        this.line = Objects.requireNonNull(line);
+        super(dynamicModelId, parameterSetId, Objects.requireNonNull(line));
     }
 
     @Override
@@ -46,9 +43,9 @@ public class StandardLine extends AbstractBlackBoxModel implements LineModel {
 
     @Override
     public void createMacroConnections(DynaWaltzContext context) {
-        line.getTerminals().forEach(t -> {
+        equipment.getTerminals().forEach(t -> {
             String busStaticId = BusUtils.getConnectableBusStaticId(t);
-            createMacroConnections(busStaticId, BusModel.class, this::getVarConnectionsWithBus, context, SideConverter.convert(line.getSide(t)));
+            createMacroConnections(busStaticId, BusModel.class, this::getVarConnectionsWithBus, context, SideConverter.convert(equipment.getSide(t)));
         });
     }
 

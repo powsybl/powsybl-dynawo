@@ -6,16 +6,9 @@
  */
 package com.powsybl.dynawaltz.models;
 
-import com.powsybl.dynamicsimulation.DynamicModel;
-
-import java.util.List;
-
 /**
- * @author Florian Dupuy <florian.dupuy at rte-france.com>
+ * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public interface Model extends DynamicModel {
-
-    String getName();
-
-    List<MacroConnectAttribute> getMacroConnectToAttributes();
+public interface EquipmentBlackBoxModelModel extends BlackBoxModel {
+    String getStaticId();
 }
