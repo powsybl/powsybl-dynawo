@@ -22,8 +22,15 @@ import java.util.Objects;
  */
 public abstract class AbstractLoad extends AbstractEquipmentBlackBoxModel<Load> {
 
-    protected AbstractLoad(String dynamicModelId, Load load, String parameterSetId) {
+    protected final String terminalVarName;
+
+    protected AbstractLoad(String dynamicModelId, Load load, String parameterSetId, String terminalVarName) {
         super(dynamicModelId, parameterSetId, Objects.requireNonNull(load));
+        this.terminalVarName = terminalVarName;
+    }
+
+    protected String getTerminalVarName() {
+        return terminalVarName;
     }
 
     @Override

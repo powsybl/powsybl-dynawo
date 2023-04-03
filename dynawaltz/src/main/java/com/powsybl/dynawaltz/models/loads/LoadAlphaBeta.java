@@ -27,7 +27,7 @@ public class LoadAlphaBeta extends AbstractLoad {
             new VarMapping("load_state", "state"));
 
     public LoadAlphaBeta(String dynamicModelId, Load load, String parameterSetId) {
-        super(dynamicModelId, load, parameterSetId);
+        super(dynamicModelId, load, parameterSetId, "load_terminal");
     }
 
     @Override
@@ -38,10 +38,6 @@ public class LoadAlphaBeta extends AbstractLoad {
     @Override
     public List<VarMapping> getVarsMapping() {
         return VAR_MAPPING;
-    }
-
-    private String getTerminalVarName() {
-        return "load_terminal";
     }
 
     @Override

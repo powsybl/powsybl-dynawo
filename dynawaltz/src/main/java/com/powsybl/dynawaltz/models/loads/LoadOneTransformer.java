@@ -27,7 +27,7 @@ public class LoadOneTransformer extends AbstractLoad {
             new VarMapping("transformer_state", "state"));
 
     public LoadOneTransformer(String dynamicModelId, Load load, String parameterSetId) {
-        super(dynamicModelId, load, parameterSetId);
+        super(dynamicModelId, load, parameterSetId, "transformer_terminal");
     }
 
     @Override
@@ -38,10 +38,6 @@ public class LoadOneTransformer extends AbstractLoad {
     @Override
     public List<VarMapping> getVarsMapping() {
         return VAR_MAPPING;
-    }
-
-    private String getTerminalVarName() {
-        return "transformer_terminal";
     }
 
     @Override
