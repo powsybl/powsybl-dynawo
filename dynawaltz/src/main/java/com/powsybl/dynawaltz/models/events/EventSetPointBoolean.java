@@ -9,6 +9,7 @@ package com.powsybl.dynawaltz.models.events;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.xml.ParametersXml;
+import com.powsybl.iidm.network.IdentifiableType;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -24,8 +25,9 @@ public class EventSetPointBoolean extends AbstractEventModel {
 
     private final boolean disconnect;
 
+    //TODO handle Load
     public EventSetPointBoolean(String disconnectableStaticId, double startTime, boolean disconnect) {
-        super(generateEventId(disconnectableStaticId, disconnect), disconnectableStaticId, startTime);
+        super(generateEventId(disconnectableStaticId, disconnect), disconnectableStaticId, IdentifiableType.GENERATOR, startTime);
         this.disconnect = disconnect;
     }
 

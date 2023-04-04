@@ -28,11 +28,13 @@ public abstract class AbstractEventModel extends AbstractPureDynamicBlackBoxMode
     private static final String DISCONNECT_PREFIX = "Disconnect_";
     protected static final String CONNECT_PREFIX = "Connect_";
     private final String equipmentStaticId;
+    private final IdentifiableType equipmentType;
     private final double startTime;
 
-    protected AbstractEventModel(String dynamicModelId, String equipmentStaticId, double startTime) {
+    protected AbstractEventModel(String dynamicModelId, String equipmentStaticId, IdentifiableType equipmentType, double startTime) {
         super(dynamicModelId, dynamicModelId);
         this.equipmentStaticId = equipmentStaticId;
+        this.equipmentType = equipmentType;
         this.startTime = startTime;
     }
 
@@ -43,6 +45,10 @@ public abstract class AbstractEventModel extends AbstractPureDynamicBlackBoxMode
 
     public String getEquipmentStaticId() {
         return equipmentStaticId;
+    }
+
+    public IdentifiableType getEquipmentType() {
+        return equipmentType;
     }
 
     @Override

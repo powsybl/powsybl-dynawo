@@ -26,14 +26,14 @@ public class EventQuadripoleDisconnection extends AbstractEventModel {
     private final boolean disconnectOrigin;
     private final boolean disconnectExtremity;
 
-    public EventQuadripoleDisconnection(String disconnectableStaticId, double startTime, boolean disconnectOrigin, boolean disconnectExtremity) {
-        super(generateEventId(disconnectableStaticId, disconnectOrigin || disconnectExtremity), disconnectableStaticId, startTime);
+    public EventQuadripoleDisconnection(String disconnectableStaticId, IdentifiableType type, double startTime, boolean disconnectOrigin, boolean disconnectExtremity) {
+        super(generateEventId(disconnectableStaticId, disconnectOrigin || disconnectExtremity), disconnectableStaticId, type, startTime);
         this.disconnectOrigin = disconnectOrigin;
         this.disconnectExtremity = disconnectExtremity;
     }
 
-    public EventQuadripoleDisconnection(String disconnectableStaticId, double startTime) {
-        this(disconnectableStaticId, startTime, true, true);
+    public EventQuadripoleDisconnection(String disconnectableStaticId, IdentifiableType type, double startTime) {
+        this(disconnectableStaticId, type, startTime, true, true);
     }
 
     @Override
@@ -47,7 +47,7 @@ public class EventQuadripoleDisconnection extends AbstractEventModel {
 
     @Override
     public void createMacroConnections(DynaWaltzContext context) {
-        createMacroConnections(getEquipmentStaticId(), IdentifiableType.LINE, QuadripoleDisconnectableEquipment.class, this::getVarConnectionsWithQuadripoleEquipment, context);
+        createMacroConnections(getEquipmentStaticId(), getEquipmentType(), QuadripoleDisconnectableEquipment.class, this::getVarConnectionsWithQuadripoleEquipment, context);
     }
 
     @Override
