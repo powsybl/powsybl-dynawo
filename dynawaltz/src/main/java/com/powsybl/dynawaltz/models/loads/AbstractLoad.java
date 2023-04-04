@@ -22,7 +22,7 @@ import java.util.Objects;
  * @author Marcos de Miguel <demiguelm at aia.es>
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public abstract class AbstractLoad extends AbstractBlackBoxModel implements DisconnectableEquipment {
+public abstract class AbstractLoad extends AbstractBlackBoxModel implements LoadModel, DisconnectableEquipment {
 
     protected AbstractLoad(String dynamicModelId, String staticId, String parameterSetId) {
         super(dynamicModelId, Objects.requireNonNull(staticId), parameterSetId);
@@ -41,7 +41,12 @@ public abstract class AbstractLoad extends AbstractBlackBoxModel implements Disc
     abstract List<VarConnection> getVarConnectionsWithBus(BusModel connected);
 
     @Override
-    public String getDisconnectableVarName() {
+    public String getSwitchOffSignalNodeVarName() {
         return "load_switchOffSignal2";
+    }
+
+    @Override
+    public String getDisconnectableVarName() {
+        return getSwitchOffSignalNodeVarName();
     }
 }

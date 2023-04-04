@@ -26,7 +26,6 @@ import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 public abstract class AbstractEventModel extends AbstractPureDynamicBlackBoxModel implements EventModel {
 
     private static final String DISCONNECT_PREFIX = "Disconnect_";
-    protected static final String CONNECT_PREFIX = "Connect_";
     private final String equipmentStaticId;
     private final IdentifiableType equipmentType;
     private final double startTime;
@@ -38,9 +37,8 @@ public abstract class AbstractEventModel extends AbstractPureDynamicBlackBoxMode
         this.startTime = startTime;
     }
 
-    //TODO handle connect
-    protected static String generateEventId(String equipmentStaticId, boolean disconnect) {
-        return disconnect ? DISCONNECT_PREFIX + equipmentStaticId : CONNECT_PREFIX + equipmentStaticId;
+    protected static String generateEventId(String equipmentStaticId) {
+        return DISCONNECT_PREFIX + equipmentStaticId;
     }
 
     public String getEquipmentStaticId() {
