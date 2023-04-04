@@ -49,6 +49,7 @@
         <dyn:macroStaticRef id="MSR_GeneratorSynchronousThreeWindingsProportionalRegulations"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="OMEGA_REF" lib="DYNModelOmegaRef" parFile="ieee14bus.par" parId="OMEGA_REF"/>
+    <dyn:blackBoxModel id="DISCONNECT_LINE" lib="EventQuadripoleDisconnection" parFile="ieee14bus.par" parId="DISCONNECT_LINE"/>
     <dyn:macroConnector id="MC_LoadAlphaBeta-NetworkBus">
         <dyn:connect var1="load_terminal" var2="@NAME@_ACPIN"/>
         <dyn:connect var1="load_switchOffSignal1" var2="@NAME@_switchOff"/>
@@ -73,6 +74,9 @@
         <dyn:connect var1="omega_grp_@INDEX@" var2="generator_omegaPu"/>
         <dyn:connect var1="omegaRef_grp_@INDEX@" var2="generator_omegaRefPu"/>
         <dyn:connect var1="running_grp_@INDEX@" var2="generator_running"/>
+    </dyn:macroConnector>
+    <dyn:macroConnector id="MC_EventQuadripoleDisconnection-NetworkLine">
+        <dyn:connect var1="event_state1_value" var2="@NAME@_state_value"/>
     </dyn:macroConnector>
     <dyn:macroStaticReference id="MSR_LoadAlphaBeta">
         <dyn:staticRef var="load_PPu" staticVar="p"/>
@@ -115,9 +119,5 @@
     <dyn:macroConnect connector="MC_DYNModelOmegaRef-NetworkBus" id1="OMEGA_REF" index1="3" id2="NETWORK" name2="_BUS____6_TN"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorSynchronousThreeWindingsProportionalRegulations" id1="OMEGA_REF" index1="4" id2="_GEN____8_SM"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRef-NetworkBus" id1="OMEGA_REF" index1="4" id2="NETWORK" name2="_BUS____8_TN"/>
-    <dyn:blackBoxModel id="DISCONNECT_LINE" lib="EventQuadripoleDisconnection" parFile="ieee14bus.par" parId="DISCONNECT_LINE"/>
-    <dyn:macroConnector id="MC_EventQuadripoleDisconnection-NetworkLine">
-        <dyn:connect var1="event_state1_value" var2="@NAME@_state_value"/>
-    </dyn:macroConnector>
     <dyn:macroConnect connector="MC_EventQuadripoleDisconnection-NetworkLine" id1="DISCONNECT_LINE" id2="NETWORK" name2="_BUS____1-BUS____5-1_AC"/>
 </dyn:dynamicModelsArchitecture>

@@ -10,14 +10,10 @@ package com.powsybl.dynawaltz.models.events;
 import com.powsybl.dynamicsimulation.EventModel;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
-import com.powsybl.dynawaltz.models.Model;
-import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.xml.ParametersXml;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-import java.util.List;
-import java.util.function.Function;
 
 import static com.powsybl.dynawaltz.DynaWaltzParametersDatabase.ParameterType.DOUBLE;
 import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
@@ -61,11 +57,4 @@ public abstract class AbstractEventModel extends AbstractPureDynamicBlackBoxMode
     }
 
     protected abstract void writeEventSpecificParameters(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException;
-
-    @Override
-    protected final <T extends Model> void createMacroConnections(String modelStaticId, Class<T> modelClass, Function<T, List<VarConnection>> varConnectionsSupplier, DynaWaltzContext context) {
-        T connectedModel = context.getDynamicModel(modelStaticId, modelClass);
-        String macroConnectorId = context.addEventMacroConnector(getName(), connectedModel.getName(), varConnectionsSupplier.apply(connectedModel));
-        context.addEventMacroConnect(macroConnectorId, getMacroConnectFromAttributes(), connectedModel.getMacroConnectToAttributes());
-    }
 }

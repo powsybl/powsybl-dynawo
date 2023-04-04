@@ -4,6 +4,9 @@
         <dyn:macroStaticRef id="MSR_GeneratorSynchronousFourWindingsProportionalRegulations"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="OMEGA_REF" lib="DYNModelOmegaRef" parFile="sim1.par" parId="OMEGA_REF"/>
+    <dyn:blackBoxModel id="EM_NHV1_NHV2_1" lib="EventQuadripoleDisconnection" parFile="sim1.par" parId="EM_NHV1_NHV2_1"/>
+    <dyn:blackBoxModel id="EM_NHV1_NHV2_2" lib="EventQuadripoleDisconnection" parFile="sim1.par" parId="EM_NHV1_NHV2_2"/>
+    <dyn:blackBoxModel id="EM_GEN2" lib="EventSetPointBoolean" parFile="sim1.par" parId="EM_GEN2"/>
     <dyn:macroConnector id="MC_GeneratorSynchronousFourWindingsProportionalRegulations-NetworkBus">
         <dyn:connect var1="generator_terminal" var2="@NAME@_ACPIN"/>
         <dyn:connect var1="generator_switchOffSignal1" var2="@NAME@_switchOff"/>
@@ -16,6 +19,12 @@
     <dyn:macroConnector id="MC_DYNModelOmegaRef-NetworkBus">
         <dyn:connect var1="numcc_node_@INDEX@" var2="@NAME@_numcc"/>
     </dyn:macroConnector>
+    <dyn:macroConnector id="MC_EventQuadripoleDisconnection-NetworkLine">
+        <dyn:connect var1="event_state1_value" var2="@NAME@_state_value"/>
+    </dyn:macroConnector>
+    <dyn:macroConnector id="MC_EventSetPointBoolean-GeneratorSynchronousFourWindingsProportionalRegulations">
+        <dyn:connect var1="event_state1" var2="generator_switchOffSignal2"/>
+    </dyn:macroConnector>
     <dyn:macroStaticReference id="MSR_GeneratorSynchronousFourWindingsProportionalRegulations">
         <dyn:staticRef var="generator_PGenPu" staticVar="p"/>
         <dyn:staticRef var="generator_QGenPu" staticVar="q"/>
@@ -24,15 +33,6 @@
     <dyn:macroConnect connector="MC_GeneratorSynchronousFourWindingsProportionalRegulations-NetworkBus" id1="BBM_GEN2" id2="NETWORK" name2="NGEN"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorSynchronousFourWindingsProportionalRegulations" id1="OMEGA_REF" index1="0" id2="BBM_GEN2"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRef-NetworkBus" id1="OMEGA_REF" index1="0" id2="NETWORK" name2="NGEN"/>
-    <dyn:blackBoxModel id="EM_NHV1_NHV2_1" lib="EventQuadripoleDisconnection" parFile="sim1.par" parId="EM_NHV1_NHV2_1"/>
-    <dyn:blackBoxModel id="EM_NHV1_NHV2_2" lib="EventQuadripoleDisconnection" parFile="sim1.par" parId="EM_NHV1_NHV2_2"/>
-    <dyn:blackBoxModel id="EM_GEN2" lib="EventSetPointBoolean" parFile="sim1.par" parId="EM_GEN2"/>
-    <dyn:macroConnector id="MC_EventQuadripoleDisconnection-NetworkLine">
-        <dyn:connect var1="event_state1_value" var2="@NAME@_state_value"/>
-    </dyn:macroConnector>
-    <dyn:macroConnector id="MC_EventSetPointBoolean-GeneratorSynchronousFourWindingsProportionalRegulations">
-        <dyn:connect var1="event_state1" var2="generator_switchOffSignal2"/>
-    </dyn:macroConnector>
     <dyn:macroConnect connector="MC_EventQuadripoleDisconnection-NetworkLine" id1="EM_NHV1_NHV2_1" id2="NETWORK" name2="NHV1_NHV2_1"/>
     <dyn:macroConnect connector="MC_EventQuadripoleDisconnection-NetworkLine" id1="EM_NHV1_NHV2_2" id2="NETWORK" name2="NHV1_NHV2_2"/>
     <dyn:macroConnect connector="MC_EventSetPointBoolean-GeneratorSynchronousFourWindingsProportionalRegulations" id1="EM_GEN2" id2="BBM_GEN2"/>
