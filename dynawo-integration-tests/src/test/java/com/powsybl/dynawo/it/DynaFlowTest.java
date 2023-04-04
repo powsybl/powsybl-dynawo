@@ -69,7 +69,7 @@ class DynaFlowTest extends AbstractDynawoTest {
 
     @Test
     void testLf() {
-        Network network = IeeeCdfNetworkFactory.create14();
+        Network network = IeeeCdfNetworkFactory.create14Solved();
         LoadFlowResult result = loadFlowProvider.run(network, computationManager, VariantManagerConstants.INITIAL_VARIANT_ID, loadFlowParameters)
                 .join();
         assertTrue(result.isOk());
@@ -81,7 +81,7 @@ class DynaFlowTest extends AbstractDynawoTest {
 
     @Test
     void testSa() throws IOException {
-        Network network = IeeeCdfNetworkFactory.create14();
+        Network network = IeeeCdfNetworkFactory.create14Solved();
 
         // Changing limits to have some post-contingencies limit violations
         network.getLineStream().forEach(l -> l.newCurrentLimits1().setPermanentLimit(200.).add());
