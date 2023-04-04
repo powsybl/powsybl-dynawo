@@ -41,8 +41,6 @@ public class DynaWaltzContext {
     private final Map<String, MacroStaticReference> macroStaticReferences = new LinkedHashMap<>();
     private final List<MacroConnect> macroConnectList = new ArrayList<>();
     private final Map<String, MacroConnector> macroConnectorsMap = new LinkedHashMap<>();
-    private final List<MacroConnect> eventMacroConnectList = new ArrayList<>();
-    private final Map<String, MacroConnector> eventMacroConnectorsMap = new LinkedHashMap<>();
     private final NetworkModel networkModel = new NetworkModel();
 
     private final OmegaRef omegaRef;
@@ -174,24 +172,6 @@ public class DynaWaltzContext {
 
     public Collection<MacroConnector> getMacroConnectors() {
         return macroConnectorsMap.values();
-    }
-
-    public void addEventMacroConnect(String macroConnectorId, List<MacroConnectAttribute> attributesFrom, List<MacroConnectAttribute> attributesTo) {
-        eventMacroConnectList.add(new MacroConnect(macroConnectorId, attributesFrom, attributesTo));
-    }
-
-    public List<MacroConnect> getEventMacroConnectList() {
-        return eventMacroConnectList;
-    }
-
-    public String addEventMacroConnector(String name1, String name2, List<VarConnection> varConnections) {
-        String macroConnectorId = MacroConnector.createMacroConnectorId(name1, name2);
-        eventMacroConnectorsMap.computeIfAbsent(macroConnectorId, k -> new MacroConnector(macroConnectorId, varConnections));
-        return macroConnectorId;
-    }
-
-    public Collection<MacroConnector> getEventMacroConnectors() {
-        return eventMacroConnectorsMap.values();
     }
 
     public boolean isWithoutBlackBoxDynamicModel(String staticId) {

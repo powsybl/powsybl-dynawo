@@ -36,13 +36,11 @@ public final class DydXml {
     }
 
     private static void write(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
-        writeDynamicModels(writer, context);
-        writeEvents(writer, context);
-    }
-
-    private static void writeDynamicModels(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
         // loop over the values of the map indexed by dynamicIds to write only once objects with the same dynamicId
         for (BlackBoxModel model : context.getBlackBoxDynamicModels()) {
+            model.write(writer, context);
+        }
+        for (BlackBoxModel model : context.getBlackBoxEventModels()) {
             model.write(writer, context);
         }
         for (MacroConnector macroConnector : context.getMacroConnectors()) {
@@ -52,18 +50,6 @@ public final class DydXml {
             macroStaticReference.write(writer);
         }
         for (MacroConnect macroConnect : context.getMacroConnectList()) {
-            macroConnect.write(writer);
-        }
-    }
-
-    private static void writeEvents(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
-        for (BlackBoxModel model : context.getBlackBoxEventModels()) {
-            model.write(writer, context);
-        }
-        for (MacroConnector macroConnector : context.getEventMacroConnectors()) {
-            macroConnector.write(writer);
-        }
-        for (MacroConnect macroConnect : context.getEventMacroConnectList()) {
             macroConnect.write(writer);
         }
     }
