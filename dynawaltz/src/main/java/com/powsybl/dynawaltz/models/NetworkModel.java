@@ -14,7 +14,9 @@ import com.powsybl.dynawaltz.models.lines.DefaultLineModel;
 import com.powsybl.dynawaltz.models.lines.LineModel;
 import com.powsybl.dynawaltz.models.shunts.DefaultShuntModel;
 import com.powsybl.dynawaltz.models.shunts.ShuntModel;
+import com.powsybl.dynawaltz.models.transformers.DefaultTransformerModel;
 import com.powsybl.dynawaltz.models.transformers.TransformerFixedRatio;
+import com.powsybl.dynawaltz.models.transformers.TransformerModel;
 import com.powsybl.iidm.network.IdentifiableType;
 
 import java.util.EnumMap;
@@ -32,7 +34,8 @@ public class NetworkModel {
     public NetworkModel() {
         factoryMap = Map.of(BusModel.class, new DefaultModelFactory<BusModel>(DefaultBusModel::new),
                 LineModel.class, new DefaultModelFactory<LineModel>(DefaultLineModel::new),
-                ShuntModel.class, new DefaultModelFactory<ShuntModel>(DefaultShuntModel::new));
+                ShuntModel.class, new DefaultModelFactory<ShuntModel>(DefaultShuntModel::new),
+                TransformerModel.class, new DefaultModelFactory<TransformerModel>(DefaultTransformerModel::new));
 
         //TODO associate powSybl - dynawo
         powSyBlTypeToModel.put(IdentifiableType.BUS, BusModel.class);
