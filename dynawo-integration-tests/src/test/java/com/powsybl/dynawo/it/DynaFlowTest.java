@@ -62,7 +62,7 @@ class DynaFlowTest extends AbstractDynawoTest {
 
     @Test
     void testLf() {
-        Network network = IeeeCdfNetworkFactory.create14();
+        Network network = IeeeCdfNetworkFactory.create14Solved();
         LoadFlowResult result = loadFlowProvider.run(network, computationManager, VariantManagerConstants.INITIAL_VARIANT_ID, loadFlowParameters)
                 .join();
         assertTrue(result.isOk());
@@ -74,7 +74,7 @@ class DynaFlowTest extends AbstractDynawoTest {
 
     @Test
     void testSa() {
-        Network network = IeeeCdfNetworkFactory.create14();
+        Network network = IeeeCdfNetworkFactory.create14Solved();
         List<Contingency> contingencies = network.getLineStream()
                 .map(l -> Contingency.line(l.getId()))
                 .collect(Collectors.toList());
