@@ -8,8 +8,9 @@
 
 package dynamicModels
 
-TransformerFixedRatio {
-    staticId "NGEN_NHV1"
-    dynamicModelId "BBM_NGEN_NHV1"
-    parameterSetId "TFR"
+Line {
+    staticId "NHV1_NHV2_1"
+    dynamicModelId "BBM_NHV1_NHV2_1"
+    parameterSetId "LINE"
 }
+
