@@ -13,6 +13,7 @@ import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.models.*;
 import com.powsybl.dynawaltz.models.generators.OmegaRefGeneratorModel;
 import com.powsybl.dynawaltz.xml.MacroStaticReference;
+import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Network;
 
 import java.nio.file.FileSystem;
@@ -112,6 +113,17 @@ public class DynaWaltzContext {
         }
         if (clazz.isInstance(bbm)) {
             return clazz.cast(bbm);
+        }
+        throw new PowsyblException("The model identified by the static id " + staticId + " is not the correct model");
+    }
+
+    public <T extends Model> T getDynamicModel(String staticId, IdentifiableType equipmentType, Class<T> connectableClass) {
+        BlackBoxModel bbm = staticIdBlackBoxModelMap.get(staticId);
+        if (bbm == null) {
+            return networkModel.getDefaultModel(staticId, equipmentType, connectableClass);
+        }
+        if (connectableClass.isInstance(bbm)) {
+            return connectableClass.cast(bbm);
         }
         throw new PowsyblException("The model identified by the static id " + staticId + " is not the correct model");
     }

@@ -12,6 +12,7 @@ import com.powsybl.dynawaltz.models.AbstractBlackBoxModel;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.VarMapping;
 import com.powsybl.dynawaltz.models.buses.BusModel;
+import com.powsybl.dynawaltz.models.events.DisconnectableEquipment;
 import com.powsybl.dynawaltz.models.utils.BusUtils;
 import com.powsybl.iidm.network.Generator;
 
@@ -24,7 +25,7 @@ import java.util.Objects;
  * @author Marcos de Miguel <demiguelm at aia.es>
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public abstract class AbstractGeneratorModel extends AbstractBlackBoxModel implements GeneratorModel {
+public abstract class AbstractGeneratorModel extends AbstractBlackBoxModel implements GeneratorModel, DisconnectableEquipment {
 
     protected static final List<VarMapping> VAR_MAPPING = Arrays.asList(
             new VarMapping("generator_PGenPu", "p"),
@@ -101,5 +102,10 @@ public abstract class AbstractGeneratorModel extends AbstractBlackBoxModel imple
     @Override
     public String getQStatorPuVarName() {
         return "generator_QStatorPu";
+    }
+
+    @Override
+    public String getDisconnectableVarName() {
+        return switchOffSignalEventVarName;
     }
 }

@@ -11,6 +11,7 @@ import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractBlackBoxModel;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.buses.BusModel;
+import com.powsybl.dynawaltz.models.events.DisconnectableEquipment;
 import com.powsybl.dynawaltz.models.utils.BusUtils;
 import com.powsybl.iidm.network.Load;
 
@@ -21,7 +22,7 @@ import java.util.Objects;
  * @author Marcos de Miguel <demiguelm at aia.es>
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public abstract class AbstractLoad extends AbstractBlackBoxModel {
+public abstract class AbstractLoad extends AbstractBlackBoxModel implements DisconnectableEquipment {
 
     protected AbstractLoad(String dynamicModelId, String staticId, String parameterSetId) {
         super(dynamicModelId, Objects.requireNonNull(staticId), parameterSetId);
@@ -38,4 +39,9 @@ public abstract class AbstractLoad extends AbstractBlackBoxModel {
     }
 
     abstract List<VarConnection> getVarConnectionsWithBus(BusModel connected);
+
+    @Override
+    public String getDisconnectableVarName() {
+        return "load_switchOffSignal2";
+    }
 }

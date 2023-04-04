@@ -8,7 +8,6 @@ package com.powsybl.dynawaltz.models.events;
 
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.VarConnection;
-import com.powsybl.dynawaltz.models.generators.GeneratorModel;
 import com.powsybl.dynawaltz.xml.ParametersXml;
 
 import javax.xml.stream.XMLStreamException;
@@ -23,11 +22,15 @@ import static com.powsybl.dynawaltz.DynaWaltzParametersDatabase.ParameterType.BO
  */
 public class EventSetPointBoolean extends AbstractEventModel {
 
-    private final boolean stateEvent;
+    private final boolean disconnect;
 
-    public EventSetPointBoolean(String eventModelId, String generatorStaticId, double startTime, boolean stateEvent) {
-        super(eventModelId, generatorStaticId, startTime);
-        this.stateEvent = stateEvent;
+    public EventSetPointBoolean(String disconnectableStaticId, double startTime, boolean disconnect) {
+        super(generateEventId(disconnectableStaticId, disconnect), disconnectableStaticId, startTime);
+        this.disconnect = disconnect;
+    }
+
+    public EventSetPointBoolean(String disconnectableStaticId, double startTime) {
+        this(disconnectableStaticId, startTime, true);
     }
 
     @Override
@@ -35,17 +38,17 @@ public class EventSetPointBoolean extends AbstractEventModel {
         return "EventSetPointBoolean";
     }
 
-    private List<VarConnection> getVarConnectionsWithGenerator(GeneratorModel connected) {
-        return List.of(new VarConnection("event_state1", connected.getSwitchOffSignalEventVarName()));
+    private List<VarConnection> getVarConnectionsWithDisconnectable(DisconnectableEquipment connected) {
+        return List.of(new VarConnection("event_state1", connected.getDisconnectableVarName()));
     }
 
     @Override
     public void createMacroConnections(DynaWaltzContext context) {
-        createMacroConnections(getEquipmentStaticId(), GeneratorModel.class, this::getVarConnectionsWithGenerator, context);
+        createMacroConnections(getEquipmentStaticId(), DisconnectableEquipment.class, this::getVarConnectionsWithDisconnectable, context);
     }
 
     @Override
     protected void writeEventSpecificParameters(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
-        ParametersXml.writeParameter(writer, BOOL, "event_stateEvent1", Boolean.toString(stateEvent));
+        ParametersXml.writeParameter(writer, BOOL, "event_stateEvent1", Boolean.toString(disconnect));
     }
 }

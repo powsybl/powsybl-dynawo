@@ -98,10 +98,10 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
 
         // Events
         eventModels = new ArrayList<>();
-        network.getLineStream().forEach(l -> eventModels.add(new EventQuadripoleDisconnection("EM_" + l.getId(), l.getId(), 5, false, true)));
+        network.getLineStream().forEach(l -> eventModels.add(new EventQuadripoleDisconnection(l.getId(), 5, false, true)));
         network.getGeneratorStream().forEach(g -> {
             if (g.getId().equals("GEN2")) {
-                eventModels.add(new EventSetPointBoolean("EM_" + g.getId(), g.getId(), 1, true));
+                eventModels.add(new EventSetPointBoolean(g.getId(), 1));
             }
         });
 
