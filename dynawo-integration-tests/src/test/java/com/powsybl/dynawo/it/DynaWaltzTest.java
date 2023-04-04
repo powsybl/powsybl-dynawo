@@ -54,23 +54,23 @@ class DynaWaltzTest extends AbstractDynawoTest {
 
     @Test
     void test() throws IOException {
-        Network network = Network.read(new ResourceDataSource("IEEE14", new ResourceSet("/ieee14-disconnectline", "IEEE14.iidm")));
+        Network network = Network.read(new ResourceDataSource("IEEE14", new ResourceSet("/ieee14", "IEEE14.iidm")));
 
         GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
-                getResourceAsStream("/ieee14-disconnectline/dynamicModels.groovy"),
+                getResourceAsStream("/ieee14/disconnectline/dynamicModels.groovy"),
                 GroovyExtension.find(DynamicModelGroovyExtension.class, DynaWaltzProvider.NAME));
 
         GroovyEventModelsSupplier eventModelsSupplier = new GroovyEventModelsSupplier(
-                getResourceAsStream("/ieee14-disconnectline/eventModels.groovy"),
+                getResourceAsStream("/ieee14/disconnectline/eventModels.groovy"),
                 GroovyExtension.find(EventModelGroovyExtension.class, DynaWaltzProvider.NAME));
 
         GroovyCurvesSupplier curvesSupplier = new GroovyCurvesSupplier(
-                getResourceAsStream("/ieee14-disconnectline/curves.groovy"),
+                getResourceAsStream("/ieee14/disconnectline/curves.groovy"),
                 GroovyExtension.find(CurveGroovyExtension.class, DynaWaltzProvider.NAME));
 
         // FIXME waiting for being able to pass parameters as an input stream
         for (String parFileName : List.of("models.par", "network.par", "solvers.par")) {
-            Files.copy(getResourceAsStream("/ieee14-disconnectline/" + parFileName), localDir.resolve(parFileName));
+            Files.copy(getResourceAsStream("/ieee14/disconnectline/" + parFileName), localDir.resolve(parFileName));
         }
 
         // FIXME this should not be dependent of the run, all par file should be provider through an input stream

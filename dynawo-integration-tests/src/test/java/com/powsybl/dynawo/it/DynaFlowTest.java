@@ -6,6 +6,8 @@
  */
 package com.powsybl.dynawo.it;
 
+import com.powsybl.commons.datasource.ResourceDataSource;
+import com.powsybl.commons.datasource.ResourceSet;
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.commons.test.ComparisonUtils;
 import com.powsybl.contingency.Contingency;
@@ -80,13 +82,20 @@ class DynaFlowTest extends AbstractDynawoTest {
     }
 
     @Test
-    void testSa() throws IOException {
-        Network network = IeeeCdfNetworkFactory.create14Solved();
+    void testSaBb() throws IOException {
+        Network network = Network.read(new ResourceDataSource("IEEE14", new ResourceSet("/ieee14", "IEEE14.iidm")));
 
-        // Changing limits to have some post-contingencies limit violations
-        network.getLineStream().forEach(l -> l.newCurrentLimits1().setPermanentLimit(200.).add());
-        network.getVoltageLevelStream().forEach(vl -> vl.setHighVoltageLimit(vl.getNominalV() * 1.1));
-        network.getVoltageLevelStream().forEach(vl -> vl.setLowVoltageLimit(vl.getNominalV() * 0.99));
+        // Changing limits to have some pre- and post-contingencies limit violations
+        network.getLine("_BUS____1-BUS____5-1_AC").newCurrentLimits1().setPermanentLimit(500.).add();
+        network.getLine("_BUS____1-BUS____2-1_AC").newCurrentLimits1()
+                .beginTemporaryLimit().setName("tl").setAcceptableDuration(120).setValue(1200).endTemporaryLimit()
+                .setPermanentLimit(1500.)
+                .add();
+        network.getVoltageLevelStream().forEach(vl -> vl.setHighVoltageLimit(vl.getNominalV() * 1.09));
+        network.getVoltageLevelStream().forEach(vl -> vl.setLowVoltageLimit(vl.getNominalV() * 0.97));
+
+        // Launching a load flow before the security analysis is required
+        loadFlowProvider.run(network, computationManager, VariantManagerConstants.INITIAL_VARIANT_ID, loadFlowParameters).join();
 
         List<Contingency> contingencies = network.getLineStream()
                 .map(l -> Contingency.line(l.getId()))
@@ -99,7 +108,7 @@ class DynaFlowTest extends AbstractDynawoTest {
 
         StringWriter serializedResult = new StringWriter();
         SecurityAnalysisResultSerializer.write(result, serializedResult);
-        InputStream expected = Objects.requireNonNull(getClass().getResourceAsStream("/sa_bb_results.json"));
+        InputStream expected = Objects.requireNonNull(getClass().getResourceAsStream("/ieee14/security-analysis/sa_bb_results.json"));
         ComparisonUtils.compareTxt(expected, serializedResult.toString());
     }
 
@@ -118,7 +127,7 @@ class DynaFlowTest extends AbstractDynawoTest {
 
         StringWriter serializedResult = new StringWriter();
         SecurityAnalysisResultSerializer.write(result, serializedResult);
-        InputStream expected = Objects.requireNonNull(getClass().getResourceAsStream("/sa_nb_results.json"));
+        InputStream expected = Objects.requireNonNull(getClass().getResourceAsStream("/ieee14/security-analysis/sa_nb_results.json"));
         ComparisonUtils.compareTxt(expected, serializedResult.toString());
     }
 }

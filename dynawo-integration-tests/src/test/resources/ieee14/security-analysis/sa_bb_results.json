@@ -1,0 +1,767 @@
+{
+  "version" : "1.4",
+  "preContingencyResult" : {
+    "status" : "CONVERGED",
+    "limitViolationsResult" : {
+      "limitViolations" : [ {
+        "subjectId" : "_BUS____1-BUS____5-1_AC",
+        "subjectName" : "BUS    1-BUS    5-1",
+        "limitType" : "CURRENT",
+        "limitName" : "permanent",
+        "limit" : 500.0,
+        "limitReduction" : 1.0,
+        "value" : 596.8074979043256,
+        "side" : "ONE"
+      } ],
+      "actionsTaken" : [ ]
+    },
+    "networkResult" : {
+      "branchResults" : [ ],
+      "busResults" : [ ],
+      "threeWindingsTransformerResults" : [ ]
+    }
+  },
+  "postContingencyResults" : [ {
+    "contingency" : {
+      "id" : "_BUS___10-BUS___11-1_AC",
+      "elements" : [ {
+        "id" : "_BUS___10-BUS___11-1_AC",
+        "type" : "LINE"
+      } ]
+    },
+    "status" : "CONVERGED",
+    "limitViolationsResult" : {
+      "limitViolations" : [ {
+        "subjectId" : "_BUS____1-BUS____5-1_AC",
+        "subjectName" : "BUS    1-BUS    5-1",
+        "limitType" : "CURRENT",
+        "limitName" : "PATL",
+        "limit" : 500.00000000000006,
+        "limitReduction" : 1.0,
+        "value" : 596.8074979043256,
+        "side" : "ONE"
+      }, {
+        "subjectId" : "_BUS____8_VL",
+        "subjectName" : "BUS    8_VL",
+        "limitType" : "HIGH_VOLTAGE",
+        "limitName" : "USupUmax",
+        "limit" : 15.042000000000002,
+        "limitReduction" : 1.0,
+        "value" : 15.042000001061153
+      } ],
+      "actionsTaken" : [ ]
+    },
+    "networkResult" : {
+      "branchResults" : [ ],
+      "busResults" : [ ],
+      "threeWindingsTransformerResults" : [ ]
+    },
+    "connectivityResult" : {
+      "createdSynchronousComponentCount" : 0,
+      "createdConnectedComponentCount" : 0,
+      "disconnectedLoadActivePower" : 0.0,
+      "disconnectedGenerationActivePower" : 0.0,
+      "disconnectedElements" : [ ]
+    }
+  }, {
+    "contingency" : {
+      "id" : "_BUS___12-BUS___13-1_AC",
+      "elements" : [ {
+        "id" : "_BUS___12-BUS___13-1_AC",
+        "type" : "LINE"
+      } ]
+    },
+    "status" : "CONVERGED",
+    "limitViolationsResult" : {
+      "limitViolations" : [ {
+        "subjectId" : "_BUS____1-BUS____5-1_AC",
+        "subjectName" : "BUS    1-BUS    5-1",
+        "limitType" : "CURRENT",
+        "limitName" : "PATL",
+        "limit" : 500.00000000000006,
+        "limitReduction" : 1.0,
+        "value" : 596.8074979043256,
+        "side" : "ONE"
+      } ],
+      "actionsTaken" : [ ]
+    },
+    "networkResult" : {
+      "branchResults" : [ ],
+      "busResults" : [ ],
+      "threeWindingsTransformerResults" : [ ]
+    },
+    "connectivityResult" : {
+      "createdSynchronousComponentCount" : 0,
+      "createdConnectedComponentCount" : 0,
+      "disconnectedLoadActivePower" : 0.0,
+      "disconnectedGenerationActivePower" : 0.0,
+      "disconnectedElements" : [ ]
+    }
+  }, {
+    "contingency" : {
+      "id" : "_BUS___13-BUS___14-1_AC",
+      "elements" : [ {
+        "id" : "_BUS___13-BUS___14-1_AC",
+        "type" : "LINE"
+      } ]
+    },
+    "status" : "CONVERGED",
+    "limitViolationsResult" : {
+      "limitViolations" : [ {
+        "subjectId" : "_BUS____1-BUS____5-1_AC",
+        "subjectName" : "BUS    1-BUS    5-1",
+        "limitType" : "CURRENT",
+        "limitName" : "PATL",
+        "limit" : 500.00000000000006,
+        "limitReduction" : 1.0,
+        "value" : 596.8074979043256,
+        "side" : "ONE"
+      }, {
+        "subjectId" : "_BUS____8_VL",
+        "subjectName" : "BUS    8_VL",
+        "limitType" : "HIGH_VOLTAGE",
+        "limitName" : "USupUmax",
+        "limit" : 15.042000000000002,
+        "limitReduction" : 1.0,
+        "value" : 15.042000001897073
+      } ],
+      "actionsTaken" : [ ]
+    },
+    "networkResult" : {
+      "branchResults" : [ ],
+      "busResults" : [ ],
+      "threeWindingsTransformerResults" : [ ]
+    },
+    "connectivityResult" : {
+      "createdSynchronousComponentCount" : 0,
+      "createdConnectedComponentCount" : 0,
+      "disconnectedLoadActivePower" : 0.0,
+      "disconnectedGenerationActivePower" : 0.0,
+      "disconnectedElements" : [ ]
+    }
+  }, {
+    "contingency" : {
+      "id" : "_BUS____1-BUS____2-1_AC",
+      "elements" : [ {
+        "id" : "_BUS____1-BUS____2-1_AC",
+        "type" : "LINE"
+      } ]
+    },
+    "status" : "CONVERGED",
+    "limitViolationsResult" : {
+      "limitViolations" : [ {
+        "subjectId" : "_BUS____1-BUS____5-1_AC",
+        "subjectName" : "BUS    1-BUS    5-1",
+        "limitType" : "CURRENT",
+        "limitName" : "PATL",
+        "limit" : 500.00000000000006,
+        "limitReduction" : 1.0,
+        "value" : 596.8074979043256,
+        "side" : "ONE"
+      }, {
+        "subjectId" : "_BUS____4-BUS____5-1_AC",
+        "subjectName" : "BUS    4-BUS    5-1",
+        "limitType" : "CURRENT",
+        "limitName" : "PATL",
+        "limit" : 836.74,
+        "limitReduction" : 1.0,
+        "value" : 1178.1967030075305,
+        "side" : "ONE"
+      }, {
+        "subjectId" : "_BUS____3_VL",
+        "subjectName" : "BUS    3_VL",
+        "limitType" : "LOW_VOLTAGE",
+        "limitName" : "UInfUmin",
+        "limit" : 66.92999999999999,
+        "limitReduction" : 1.0,
+        "value" : 66.04302591364225
+      }, {
+        "subjectId" : "_BUS____4_VL",
+        "subjectName" : "BUS    4_VL",
+        "limitType" : "LOW_VOLTAGE",
+        "limitName" : "UInfUmin",
+        "limit" : 66.92999999999999,
+        "limitReduction" : 1.0,
+        "value" : 65.72762039108571
+      }, {
+        "subjectId" : "_BUS____5_VL",
+        "subjectName" : "BUS    5_VL",
+        "limitType" : "LOW_VOLTAGE",
+        "limitName" : "UInfUmin",
+        "limit" : 66.92999999999999,
+        "limitReduction" : 1.0,
+        "value" : 65.52250008634476
+      }, {
+        "subjectId" : "_BUS___14_VL",
+        "subjectName" : "BUS   14_VL",
+        "limitType" : "LOW_VOLTAGE",
+        "limitName" : "UInfUmin",
+        "limit" : 13.386000000000001,
+        "limitReduction" : 1.0,
+        "value" : 13.348620218077935
+      }, {
+        "subjectId" : "_BUS____2_VL",
+        "subjectName" : "BUS    2_VL",
+        "limitType" : "LOW_VOLTAGE",
+        "limitName" : "UInfUmin",
+        "limit" : 66.92999999999999,
+        "limitReduction" : 1.0,
+        "value" : 66.79275331121715
+      }, {
+        "subjectId" : "_BUS___10_VL",
+        "subjectName" : "BUS   10_VL",
+        "limitType" : "LOW_VOLTAGE",
+        "limitName" : "UInfUmin",
+        "limit" : 13.386000000000001,
+        "limitReduction" : 1.0,
+        "value" : 13.3776580871495
+      }, {
+        "subjectId" : "_BUS____9_VL",
+        "subjectName" : "BUS    9_VL",
+        "limitType" : "LOW_VOLTAGE",
+        "limitName" : "UInfUmin",
+        "limit" : 13.386000000000001,
+        "limitReduction" : 1.0,
+        "value" : 13.38439596457008
+      } ],
+      "actionsTaken" : [ ]
+    },
+    "networkResult" : {
+      "branchResults" : [ ],
+      "busResults" : [ ],
+      "threeWindingsTransformerResults" : [ ]
+    },
+    "connectivityResult" : {
+      "createdSynchronousComponentCount" : 0,
+      "createdConnectedComponentCount" : 0,
+      "disconnectedLoadActivePower" : 0.0,
+      "disconnectedGenerationActivePower" : 0.0,
+      "disconnectedElements" : [ ]
+    }
+  }, {
+    "contingency" : {
+      "id" : "_BUS____1-BUS____5-1_AC",
+      "elements" : [ {
+        "id" : "_BUS____1-BUS____5-1_AC",
+        "type" : "LINE"
+      } ]
+    },
+    "status" : "CONVERGED",
+    "limitViolationsResult" : {
+      "limitViolations" : [ {
+        "subjectId" : "_BUS____1-BUS____2-1_AC",
+        "subjectName" : "BUS    1-BUS    2-1",
+        "limitType" : "CURRENT",
+        "limitName" : "OverloadUp",
+        "acceptableDuration" : 120,
+        "limit" : 1500.0,
+        "limitReduction" : 1.0,
+        "value" : 1882.2348668192342,
+        "side" : "ONE"
+      } ],
+      "actionsTaken" : [ ]
+    },
+    "networkResult" : {
+      "branchResults" : [ ],
+      "busResults" : [ ],
+      "threeWindingsTransformerResults" : [ ]
+    },
+    "connectivityResult" : {
+      "createdSynchronousComponentCount" : 0,
+      "createdConnectedComponentCount" : 0,
+      "disconnectedLoadActivePower" : 0.0,
+      "disconnectedGenerationActivePower" : 0.0,
+      "disconnectedElements" : [ ]
+    }
+  }, {
+    "contingency" : {
+      "id" : "_BUS____2-BUS____3-1_AC",
+      "elements" : [ {
+        "id" : "_BUS____2-BUS____3-1_AC",
+        "type" : "LINE"
+      } ]
+    },
+    "status" : "CONVERGED",
+    "limitViolationsResult" : {
+      "limitViolations" : [ {
+        "subjectId" : "_BUS____1-BUS____5-1_AC",
+        "subjectName" : "BUS    1-BUS    5-1",
+        "limitType" : "CURRENT",
+        "limitName" : "PATL",
+        "limit" : 500.00000000000006,
+        "limitReduction" : 1.0,
+        "value" : 596.8074979043256,
+        "side" : "ONE"
+      }, {
+        "subjectId" : "_BUS____3_VL",
+        "subjectName" : "BUS    3_VL",
+        "limitType" : "LOW_VOLTAGE",
+        "limitName" : "UInfUmin",
+        "limit" : 66.92999999999999,
+        "limitReduction" : 1.0,
+        "value" : 66.39712313695317
+      }, {
+        "subjectId" : "_BUS____4-BUS____5-1_AC",
+        "subjectName" : "BUS    4-BUS    5-1",
+        "limitType" : "CURRENT",
+        "limitName" : "PATL",
+        "limit" : 836.74,
+        "limitReduction" : 1.0,
+        "value" : 843.5741007221512,
+        "side" : "ONE"
+      }, {
+        "subjectId" : "_BUS____3-BUS____4-1_AC",
+        "subjectName" : "BUS    3-BUS    4-1",
+        "limitType" : "CURRENT",
+        "limitName" : "PATL",
+        "limit" : 836.74,
+        "limitReduction" : 1.0,
+        "value" : 839.9381833149292,
+        "side" : "ONE"
+      } ],
+      "actionsTaken" : [ ]
+    },
+    "networkResult" : {
+      "branchResults" : [ ],
+      "busResults" : [ ],
+      "threeWindingsTransformerResults" : [ ]
+    },
+    "connectivityResult" : {
+      "createdSynchronousComponentCount" : 0,
+      "createdConnectedComponentCount" : 0,
+      "disconnectedLoadActivePower" : 0.0,
+      "disconnectedGenerationActivePower" : 0.0,
+      "disconnectedElements" : [ ]
+    }
+  }, {
+    "contingency" : {
+      "id" : "_BUS____2-BUS____4-1_AC",
+      "elements" : [ {
+        "id" : "_BUS____2-BUS____4-1_AC",
+        "type" : "LINE"
+      } ]
+    },
+    "status" : "CONVERGED",
+    "limitViolationsResult" : {
+      "limitViolations" : [ {
+        "subjectId" : "_BUS____1-BUS____5-1_AC",
+        "subjectName" : "BUS    1-BUS    5-1",
+        "limitType" : "CURRENT",
+        "limitName" : "PATL",
+        "limit" : 500.00000000000006,
+        "limitReduction" : 1.0,
+        "value" : 596.8074979043256,
+        "side" : "ONE"
+      }, {
+        "subjectId" : "_BUS____8_VL",
+        "subjectName" : "BUS    8_VL",
+        "limitType" : "HIGH_VOLTAGE",
+        "limitName" : "USupUmax",
+        "limit" : 15.042000000000002,
+        "limitReduction" : 1.0,
+        "value" : 15.042000000491042
+      } ],
+      "actionsTaken" : [ ]
+    },
+    "networkResult" : {
+      "branchResults" : [ ],
+      "busResults" : [ ],
+      "threeWindingsTransformerResults" : [ ]
+    },
+    "connectivityResult" : {
+      "createdSynchronousComponentCount" : 0,
+      "createdConnectedComponentCount" : 0,
+      "disconnectedLoadActivePower" : 0.0,
+      "disconnectedGenerationActivePower" : 0.0,
+      "disconnectedElements" : [ ]
+    }
+  }, {
+    "contingency" : {
+      "id" : "_BUS____2-BUS____5-1_AC",
+      "elements" : [ {
+        "id" : "_BUS____2-BUS____5-1_AC",
+        "type" : "LINE"
+      } ]
+    },
+    "status" : "CONVERGED",
+    "limitViolationsResult" : {
+      "limitViolations" : [ {
+        "subjectId" : "_BUS____1-BUS____5-1_AC",
+        "subjectName" : "BUS    1-BUS    5-1",
+        "limitType" : "CURRENT",
+        "limitName" : "PATL",
+        "limit" : 500.00000000000006,
+        "limitReduction" : 1.0,
+        "value" : 596.8074979043256,
+        "side" : "ONE"
+      }, {
+        "subjectId" : "_BUS____8_VL",
+        "subjectName" : "BUS    8_VL",
+        "limitType" : "HIGH_VOLTAGE",
+        "limitName" : "USupUmax",
+        "limit" : 15.042000000000002,
+        "limitReduction" : 1.0,
+        "value" : 15.042000009140898
+      } ],
+      "actionsTaken" : [ ]
+    },
+    "networkResult" : {
+      "branchResults" : [ ],
+      "busResults" : [ ],
+      "threeWindingsTransformerResults" : [ ]
+    },
+    "connectivityResult" : {
+      "createdSynchronousComponentCount" : 0,
+      "createdConnectedComponentCount" : 0,
+      "disconnectedLoadActivePower" : 0.0,
+      "disconnectedGenerationActivePower" : 0.0,
+      "disconnectedElements" : [ ]
+    }
+  }, {
+    "contingency" : {
+      "id" : "_BUS____3-BUS____4-1_AC",
+      "elements" : [ {
+        "id" : "_BUS____3-BUS____4-1_AC",
+        "type" : "LINE"
+      } ]
+    },
+    "status" : "CONVERGED",
+    "limitViolationsResult" : {
+      "limitViolations" : [ {
+        "subjectId" : "_BUS____1-BUS____5-1_AC",
+        "subjectName" : "BUS    1-BUS    5-1",
+        "limitType" : "CURRENT",
+        "limitName" : "PATL",
+        "limit" : 500.00000000000006,
+        "limitReduction" : 1.0,
+        "value" : 596.8074979043256,
+        "side" : "ONE"
+      }, {
+        "subjectId" : "_BUS____8_VL",
+        "subjectName" : "BUS    8_VL",
+        "limitType" : "HIGH_VOLTAGE",
+        "limitName" : "USupUmax",
+        "limit" : 15.042000000000002,
+        "limitReduction" : 1.0,
+        "value" : 15.042000000033678
+      } ],
+      "actionsTaken" : [ ]
+    },
+    "networkResult" : {
+      "branchResults" : [ ],
+      "busResults" : [ ],
+      "threeWindingsTransformerResults" : [ ]
+    },
+    "connectivityResult" : {
+      "createdSynchronousComponentCount" : 0,
+      "createdConnectedComponentCount" : 0,
+      "disconnectedLoadActivePower" : 0.0,
+      "disconnectedGenerationActivePower" : 0.0,
+      "disconnectedElements" : [ ]
+    }
+  }, {
+    "contingency" : {
+      "id" : "_BUS____4-BUS____5-1_AC",
+      "elements" : [ {
+        "id" : "_BUS____4-BUS____5-1_AC",
+        "type" : "LINE"
+      } ]
+    },
+    "status" : "CONVERGED",
+    "limitViolationsResult" : {
+      "limitViolations" : [ {
+        "subjectId" : "_BUS____8_VL",
+        "subjectName" : "BUS    8_VL",
+        "limitType" : "HIGH_VOLTAGE",
+        "limitName" : "USupUmax",
+        "limit" : 15.042000000000002,
+        "limitReduction" : 1.0,
+        "value" : 15.042000014432785
+      } ],
+      "actionsTaken" : [ ]
+    },
+    "networkResult" : {
+      "branchResults" : [ ],
+      "busResults" : [ ],
+      "threeWindingsTransformerResults" : [ ]
+    },
+    "connectivityResult" : {
+      "createdSynchronousComponentCount" : 0,
+      "createdConnectedComponentCount" : 0,
+      "disconnectedLoadActivePower" : 0.0,
+      "disconnectedGenerationActivePower" : 0.0,
+      "disconnectedElements" : [ ]
+    }
+  }, {
+    "contingency" : {
+      "id" : "_BUS____6-BUS___11-1_AC",
+      "elements" : [ {
+        "id" : "_BUS____6-BUS___11-1_AC",
+        "type" : "LINE"
+      } ]
+    },
+    "status" : "CONVERGED",
+    "limitViolationsResult" : {
+      "limitViolations" : [ {
+        "subjectId" : "_BUS____1-BUS____5-1_AC",
+        "subjectName" : "BUS    1-BUS    5-1",
+        "limitType" : "CURRENT",
+        "limitName" : "PATL",
+        "limit" : 500.00000000000006,
+        "limitReduction" : 1.0,
+        "value" : 596.8074979043256,
+        "side" : "ONE"
+      }, {
+        "subjectId" : "_BUS____8_VL",
+        "subjectName" : "BUS    8_VL",
+        "limitType" : "HIGH_VOLTAGE",
+        "limitName" : "USupUmax",
+        "limit" : 15.042000000000002,
+        "limitReduction" : 1.0,
+        "value" : 15.042000015828775
+      } ],
+      "actionsTaken" : [ ]
+    },
+    "networkResult" : {
+      "branchResults" : [ ],
+      "busResults" : [ ],
+      "threeWindingsTransformerResults" : [ ]
+    },
+    "connectivityResult" : {
+      "createdSynchronousComponentCount" : 0,
+      "createdConnectedComponentCount" : 0,
+      "disconnectedLoadActivePower" : 0.0,
+      "disconnectedGenerationActivePower" : 0.0,
+      "disconnectedElements" : [ ]
+    }
+  }, {
+    "contingency" : {
+      "id" : "_BUS____6-BUS___12-1_AC",
+      "elements" : [ {
+        "id" : "_BUS____6-BUS___12-1_AC",
+        "type" : "LINE"
+      } ]
+    },
+    "status" : "CONVERGED",
+    "limitViolationsResult" : {
+      "limitViolations" : [ {
+        "subjectId" : "_BUS____1-BUS____5-1_AC",
+        "subjectName" : "BUS    1-BUS    5-1",
+        "limitType" : "CURRENT",
+        "limitName" : "PATL",
+        "limit" : 500.00000000000006,
+        "limitReduction" : 1.0,
+        "value" : 596.8074979043256,
+        "side" : "ONE"
+      } ],
+      "actionsTaken" : [ ]
+    },
+    "networkResult" : {
+      "branchResults" : [ ],
+      "busResults" : [ ],
+      "threeWindingsTransformerResults" : [ ]
+    },
+    "connectivityResult" : {
+      "createdSynchronousComponentCount" : 0,
+      "createdConnectedComponentCount" : 0,
+      "disconnectedLoadActivePower" : 0.0,
+      "disconnectedGenerationActivePower" : 0.0,
+      "disconnectedElements" : [ ]
+    }
+  }, {
+    "contingency" : {
+      "id" : "_BUS____6-BUS___13-1_AC",
+      "elements" : [ {
+        "id" : "_BUS____6-BUS___13-1_AC",
+        "type" : "LINE"
+      } ]
+    },
+    "status" : "CONVERGED",
+    "limitViolationsResult" : {
+      "limitViolations" : [ {
+        "subjectId" : "_BUS____1-BUS____5-1_AC",
+        "subjectName" : "BUS    1-BUS    5-1",
+        "limitType" : "CURRENT",
+        "limitName" : "PATL",
+        "limit" : 500.00000000000006,
+        "limitReduction" : 1.0,
+        "value" : 596.8074979043256,
+        "side" : "ONE"
+      }, {
+        "subjectId" : "_BUS____8_VL",
+        "subjectName" : "BUS    8_VL",
+        "limitType" : "HIGH_VOLTAGE",
+        "limitName" : "USupUmax",
+        "limit" : 15.042000000000002,
+        "limitReduction" : 1.0,
+        "value" : 15.042000011509883
+      } ],
+      "actionsTaken" : [ ]
+    },
+    "networkResult" : {
+      "branchResults" : [ ],
+      "busResults" : [ ],
+      "threeWindingsTransformerResults" : [ ]
+    },
+    "connectivityResult" : {
+      "createdSynchronousComponentCount" : 0,
+      "createdConnectedComponentCount" : 0,
+      "disconnectedLoadActivePower" : 0.0,
+      "disconnectedGenerationActivePower" : 0.0,
+      "disconnectedElements" : [ ]
+    }
+  }, {
+    "contingency" : {
+      "id" : "_BUS____7-BUS____8-1_AC",
+      "elements" : [ {
+        "id" : "_BUS____7-BUS____8-1_AC",
+        "type" : "LINE"
+      } ]
+    },
+    "status" : "CONVERGED",
+    "limitViolationsResult" : {
+      "limitViolations" : [ {
+        "subjectId" : "_BUS____1-BUS____5-1_AC",
+        "subjectName" : "BUS    1-BUS    5-1",
+        "limitType" : "CURRENT",
+        "limitName" : "PATL",
+        "limit" : 500.00000000000006,
+        "limitReduction" : 1.0,
+        "value" : 596.8074979043256,
+        "side" : "ONE"
+      } ],
+      "actionsTaken" : [ ]
+    },
+    "networkResult" : {
+      "branchResults" : [ ],
+      "busResults" : [ ],
+      "threeWindingsTransformerResults" : [ ]
+    },
+    "connectivityResult" : {
+      "createdSynchronousComponentCount" : 0,
+      "createdConnectedComponentCount" : 0,
+      "disconnectedLoadActivePower" : 0.0,
+      "disconnectedGenerationActivePower" : 0.0,
+      "disconnectedElements" : [ ]
+    }
+  }, {
+    "contingency" : {
+      "id" : "_BUS____7-BUS____9-1_AC",
+      "elements" : [ {
+        "id" : "_BUS____7-BUS____9-1_AC",
+        "type" : "LINE"
+      } ]
+    },
+    "status" : "CONVERGED",
+    "limitViolationsResult" : {
+      "limitViolations" : [ {
+        "subjectId" : "_BUS____1-BUS____5-1_AC",
+        "subjectName" : "BUS    1-BUS    5-1",
+        "limitType" : "CURRENT",
+        "limitName" : "PATL",
+        "limit" : 500.00000000000006,
+        "limitReduction" : 1.0,
+        "value" : 596.8074979043256,
+        "side" : "ONE"
+      } ],
+      "actionsTaken" : [ ]
+    },
+    "networkResult" : {
+      "branchResults" : [ ],
+      "busResults" : [ ],
+      "threeWindingsTransformerResults" : [ ]
+    },
+    "connectivityResult" : {
+      "createdSynchronousComponentCount" : 0,
+      "createdConnectedComponentCount" : 0,
+      "disconnectedLoadActivePower" : 0.0,
+      "disconnectedGenerationActivePower" : 0.0,
+      "disconnectedElements" : [ ]
+    }
+  }, {
+    "contingency" : {
+      "id" : "_BUS____9-BUS___10-1_AC",
+      "elements" : [ {
+        "id" : "_BUS____9-BUS___10-1_AC",
+        "type" : "LINE"
+      } ]
+    },
+    "status" : "CONVERGED",
+    "limitViolationsResult" : {
+      "limitViolations" : [ {
+        "subjectId" : "_BUS____1-BUS____5-1_AC",
+        "subjectName" : "BUS    1-BUS    5-1",
+        "limitType" : "CURRENT",
+        "limitName" : "PATL",
+        "limit" : 500.00000000000006,
+        "limitReduction" : 1.0,
+        "value" : 596.8074979043256,
+        "side" : "ONE"
+      }, {
+        "subjectId" : "_BUS____8_VL",
+        "subjectName" : "BUS    8_VL",
+        "limitType" : "HIGH_VOLTAGE",
+        "limitName" : "USupUmax",
+        "limit" : 15.042000000000002,
+        "limitReduction" : 1.0,
+        "value" : 15.04200000911756
+      } ],
+      "actionsTaken" : [ ]
+    },
+    "networkResult" : {
+      "branchResults" : [ ],
+      "busResults" : [ ],
+      "threeWindingsTransformerResults" : [ ]
+    },
+    "connectivityResult" : {
+      "createdSynchronousComponentCount" : 0,
+      "createdConnectedComponentCount" : 0,
+      "disconnectedLoadActivePower" : 0.0,
+      "disconnectedGenerationActivePower" : 0.0,
+      "disconnectedElements" : [ ]
+    }
+  }, {
+    "contingency" : {
+      "id" : "_BUS____9-BUS___14-1_AC",
+      "elements" : [ {
+        "id" : "_BUS____9-BUS___14-1_AC",
+        "type" : "LINE"
+      } ]
+    },
+    "status" : "CONVERGED",
+    "limitViolationsResult" : {
+      "limitViolations" : [ {
+        "subjectId" : "_BUS____1-BUS____5-1_AC",
+        "subjectName" : "BUS    1-BUS    5-1",
+        "limitType" : "CURRENT",
+        "limitName" : "PATL",
+        "limit" : 500.00000000000006,
+        "limitReduction" : 1.0,
+        "value" : 596.8074979043256,
+        "side" : "ONE"
+      }, {
+        "subjectId" : "_BUS____8_VL",
+        "subjectName" : "BUS    8_VL",
+        "limitType" : "HIGH_VOLTAGE",
+        "limitName" : "USupUmax",
+        "limit" : 15.042000000000002,
+        "limitReduction" : 1.0,
+        "value" : 15.042000020174058
+      } ],
+      "actionsTaken" : [ ]
+    },
+    "networkResult" : {
+      "branchResults" : [ ],
+      "busResults" : [ ],
+      "threeWindingsTransformerResults" : [ ]
+    },
+    "connectivityResult" : {
+      "createdSynchronousComponentCount" : 0,
+      "createdConnectedComponentCount" : 0,
+      "disconnectedLoadActivePower" : 0.0,
+      "disconnectedGenerationActivePower" : 0.0,
+      "disconnectedElements" : [ ]
+    }
+  } ],
+  "operatorStrategyResults" : [ ]
+}

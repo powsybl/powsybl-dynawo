@@ -49,12 +49,14 @@
       }, {
         "subjectId" : "S1VL1",
         "limitType" : "LOW_VOLTAGE",
+        "limitName" : "UInfUmin",
         "limit" : 220.0,
         "limitReduction" : 1.0,
         "value" : 217.00207119259946
       }, {
         "subjectId" : "S1VL2",
         "limitType" : "LOW_VOLTAGE",
+        "limitName" : "UInfUmin",
         "limit" : 390.0,
         "limitReduction" : 1.0,
         "value" : 386.2058712263733
@@ -135,12 +137,14 @@
       }, {
         "subjectId" : "S1VL1",
         "limitType" : "LOW_VOLTAGE",
+        "limitName" : "UInfUmin",
         "limit" : 220.0,
         "limitReduction" : 1.0,
         "value" : 217.81590499678393
       }, {
         "subjectId" : "S1VL2",
         "limitType" : "LOW_VOLTAGE",
+        "limitName" : "UInfUmin",
         "limit" : 390.0,
         "limitReduction" : 1.0,
         "value" : 387.652177298043
