@@ -11,6 +11,7 @@ import com.powsybl.dynamicsimulation.EventModel;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawaltz.xml.ParametersXml;
+import com.powsybl.iidm.network.IdentifiableType;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -24,6 +25,8 @@ import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
  */
 public abstract class AbstractEventModel extends AbstractPureDynamicBlackBoxModel implements EventModel {
 
+    private static final String DISCONNECT_PREFIX = "Disconnect_";
+    protected static final String CONNECT_PREFIX = "Connect_";
     private final String equipmentStaticId;
     private final double startTime;
 
@@ -31,6 +34,11 @@ public abstract class AbstractEventModel extends AbstractPureDynamicBlackBoxMode
         super(dynamicModelId, dynamicModelId);
         this.equipmentStaticId = equipmentStaticId;
         this.startTime = startTime;
+    }
+
+    //TODO handle connect
+    protected static String generateEventId(String equipmentStaticId, boolean disconnect) {
+        return disconnect ? DISCONNECT_PREFIX + equipmentStaticId : CONNECT_PREFIX + equipmentStaticId;
     }
 
     public String getEquipmentStaticId() {

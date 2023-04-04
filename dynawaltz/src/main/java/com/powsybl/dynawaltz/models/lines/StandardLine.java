@@ -12,6 +12,7 @@ import com.powsybl.dynawaltz.models.AbstractEquipmentBlackBoxModel;
 import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.buses.BusModel;
+import com.powsybl.dynawaltz.models.events.QuadripoleDisconnectableEquipment;
 import com.powsybl.dynawaltz.models.utils.BusUtils;
 import com.powsybl.dynawaltz.models.utils.SideConverter;
 import com.powsybl.iidm.network.Line;
@@ -22,7 +23,7 @@ import java.util.Objects;
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class StandardLine extends AbstractEquipmentBlackBoxModel<Line> implements LineModel {
+public class StandardLine extends AbstractEquipmentBlackBoxModel<Line> implements LineModel, QuadripoleDisconnectableEquipment {
 
     public StandardLine(String dynamicModelId, Line line, String parameterSetId) {
         super(dynamicModelId, parameterSetId, Objects.requireNonNull(line));
@@ -72,5 +73,10 @@ public class StandardLine extends AbstractEquipmentBlackBoxModel<Line> implement
     @Override
     public String getDesactivateCurrentLimitsVarName() {
         throw new UnsupportedOperationException("deactivateCurrentLimits variable not implemented in StandardLine dynawo's model");
+    }
+
+    @Override
+    public String getDisconnectableVarName() {
+        return getStateValueVarName();
     }
 }

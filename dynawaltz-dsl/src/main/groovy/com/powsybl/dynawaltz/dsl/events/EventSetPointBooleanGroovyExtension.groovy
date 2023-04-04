@@ -11,6 +11,7 @@ import com.powsybl.dynamicsimulation.EventModel
 import com.powsybl.dynamicsimulation.groovy.EventModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractPureDynamicGroovyExtension
 import com.powsybl.dynawaltz.models.events.EventSetPointBoolean
+import com.powsybl.iidm.network.Network
 
 /**
  * An implementation of {@link EventModelGroovyExtension} that adds the <pre>EventSetPointBoolean</pre> keyword to the DSL
@@ -21,26 +22,24 @@ import com.powsybl.dynawaltz.models.events.EventSetPointBoolean
 class EventSetPointBooleanGroovyExtension extends AbstractPureDynamicGroovyExtension<EventModel> implements EventModelGroovyExtension {
 
     EventSetPointBooleanGroovyExtension() {
-        modelTags = ["EventSetPointBoolean"]
+        modelTags = ["Disconnect"]
     }
 
     @Override
-    protected EventSetPointBooleanBuilder createBuilder() {
-        new EventSetPointBooleanBuilder()
+    protected EventSetPointBooleanBuilder createBuilder(Network network) {
+        new EventSetPointBooleanBuilder(network)
     }
 
     static class EventSetPointBooleanBuilder extends AbstractEventModelBuilder {
 
-        boolean stateEvent
-
-        void stateEvent(boolean stateEvent) {
-            this.stateEvent = stateEvent
+        EventSetPointBooleanBuilder(Network network) {
+            super(network)
         }
 
         @Override
         EventModel build() {
             checkData()
-            new EventSetPointBoolean(eventModelId, staticId, startTime, stateEvent)
+            new EventSetPointBoolean(staticId, startTime)
         }
     }
 }
