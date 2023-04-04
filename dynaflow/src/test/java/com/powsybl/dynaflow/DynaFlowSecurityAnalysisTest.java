@@ -6,99 +6,66 @@
  */
 package com.powsybl.dynaflow;
 
-import com.google.common.io.ByteStreams;
-import com.google.common.jimfs.Configuration;
-import com.google.common.jimfs.Jimfs;
 import com.powsybl.commons.PowsyblException;
-import com.powsybl.commons.config.InMemoryPlatformConfig;
-import com.powsybl.commons.config.PlatformConfig;
-import com.powsybl.commons.reporter.Reporter;
+import com.powsybl.commons.test.AbstractConverterTest;
 import com.powsybl.computation.ComputationManager;
 import com.powsybl.computation.local.LocalCommandExecutor;
 import com.powsybl.computation.local.LocalComputationConfig;
 import com.powsybl.computation.local.LocalComputationManager;
 import com.powsybl.contingency.ContingenciesProvider;
 import com.powsybl.contingency.Contingency;
-import com.powsybl.contingency.dsl.GroovyDslContingenciesProvider;
-import com.powsybl.iidm.modification.AbstractNetworkModification;
-import com.powsybl.iidm.network.Bus;
-import com.powsybl.iidm.network.Network;
-import com.powsybl.iidm.network.VariantManagerConstants;
+import com.powsybl.iidm.network.*;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import com.powsybl.loadflow.LoadFlowResult;
-import com.powsybl.security.*;
-import com.powsybl.security.action.Action;
-import com.powsybl.security.detectors.DefaultLimitViolationDetector;
-import com.powsybl.security.extensions.ActivePowerExtension;
-import com.powsybl.security.extensions.CurrentExtension;
-import com.powsybl.security.interceptors.SecurityAnalysisInterceptor;
-import com.powsybl.security.results.PostContingencyResult;
-import com.powsybl.security.strategy.OperatorStrategy;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import com.powsybl.security.SecurityAnalysis;
+import com.powsybl.security.SecurityAnalysisParameters;
+import com.powsybl.security.SecurityAnalysisReport;
+import com.powsybl.security.SecurityAnalysisResult;
+import com.powsybl.security.json.SecurityAnalysisResultSerializer;
+import org.joda.time.DateTime;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.xmlunit.builder.DiffBuilder;
-import org.xmlunit.builder.Input;
-import org.xmlunit.diff.Diff;
 
-import javax.xml.transform.Source;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.io.UncheckedIOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ForkJoinPool;
+import java.util.stream.Collectors;
 
-import static com.powsybl.dynaflow.DynaFlowConstants.*;
+import static com.powsybl.commons.test.ComparisonUtils.compareTxt;
+import static com.powsybl.commons.test.ComparisonUtils.compareXml;
+import static com.powsybl.dynaflow.DynaFlowConstants.DYNAFLOW_NAME;
+import static com.powsybl.dynaflow.DynaFlowConstants.IIDM_FILENAME;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-class DynaFlowSecurityAnalysisTest {
-
-    private static final String SECURITY_ANALYSIS_RESULTS_FILENAME = "securityAnalysisResults.json";
-
-    private FileSystem fileSystem;
-    private PlatformConfig platformConfig;
-
-    static class DynaFlowSecurityAnalysisTestNetworkModification extends AbstractNetworkModification {
-        @Override
-        public void apply(Network network, boolean throwException, ComputationManager computationManager, Reporter reporter) {
-            network.getLine("NHV1_NHV2_2").getTerminal1().disconnect();
-            network.getLine("NHV1_NHV2_2").getTerminal2().disconnect();
-            network.getLine("NHV1_NHV2_1").getTerminal2().setP(600.0);
-        }
-    }
-
-    @BeforeEach
-    void setUp() {
-        fileSystem = Jimfs.newFileSystem(Configuration.unix());
-        platformConfig = new InMemoryPlatformConfig(fileSystem);
-    }
-
-    @AfterEach
-    void tearDown() throws IOException {
-        fileSystem.close();
-    }
+class DynaFlowSecurityAnalysisTest extends AbstractConverterTest {
 
     private static class LocalCommandExecutorMock extends AbstractLocalCommandExecutor {
 
         private final String stdOutFileRef;
-        private final String outputSecurityAnalysisResult;
+        private final String inputFile;
+        private final String contingencyFile;
+        private final List<String> contingencyIds;
+        private final List<String> constraints;
 
-        public LocalCommandExecutorMock(String stdoutFileRef, String outputSecurityAnalysisResult) {
+        public LocalCommandExecutorMock(String stdoutFileRef, String inputFile) {
+            this(stdoutFileRef, inputFile, null, List.of(), List.of());
+        }
+
+        public LocalCommandExecutorMock(String stdoutFileRef, String inputFile, String contingencyFile, List<String> contingencyIds, List<String> outputConstraints) {
             this.stdOutFileRef = Objects.requireNonNull(stdoutFileRef);
-            this.outputSecurityAnalysisResult = Objects.requireNonNull(outputSecurityAnalysisResult);
+            this.inputFile = inputFile;
+            this.contingencyFile = contingencyFile;
+            this.contingencyIds = contingencyIds;
+            this.constraints = outputConstraints;
         }
 
         @Override
@@ -107,15 +74,30 @@ class DynaFlowSecurityAnalysisTest {
                 if (args.get(0).equals("--version")) {
                     copyFile(stdOutFileRef, errFile);
                 } else {
-                    assertEquals("--network", args.get(0));
-                    assertEquals("--config", args.get(2));
-                    assertEquals("--contingencies", args.get(4));
-                    Files.createDirectories(workingDir.resolve("outputs"));
-                    copyFile(outputSecurityAnalysisResult, workingDir.resolve("outputs").resolve(SECURITY_ANALYSIS_RESULTS_FILENAME));
+                    assertEquals("--network network.xiidm --config config.json --contingencies contingencies.json", String.join(" ", args));
+                    validateInputs(workingDir);
+                    copyOutputs(workingDir);
                 }
                 return 0;
             } catch (IOException e) {
                 throw new UncheckedIOException(e);
+            }
+        }
+
+        private void validateInputs(Path workingDir) throws IOException {
+            if (inputFile != null) {
+                compareXml(getClass().getResourceAsStream(inputFile), Files.newInputStream(workingDir.resolve(IIDM_FILENAME)));
+            }
+            if (contingencyFile != null) {
+                InputStream contingencyIs = Objects.requireNonNull(getClass().getResourceAsStream(contingencyFile));
+                compareTxt(contingencyIs, Files.newInputStream(workingDir.resolve("contingencies.json")));
+            }
+        }
+
+        private void copyOutputs(Path workingDir) throws IOException {
+            Path constraintsFolder = Files.createDirectories(workingDir.resolve("constraints"));
+            for (int i = 0; i < contingencyIds.size(); i++) {
+                copyFile(constraints.get(i), constraintsFolder.resolve("constraints_" + contingencyIds.get(i) + ".xml"));
             }
         }
     }
@@ -128,190 +110,67 @@ class DynaFlowSecurityAnalysisTest {
 
     @Test
     void test() throws IOException {
-        Network network = EurostagTutorialExample1Factory.create();
-        ((Bus) network.getIdentifiable("NHV1")).setV(380.0);
-        ((Bus) network.getIdentifiable("NHV2")).setV(380.0);
-        network.getLine("NHV1_NHV2_1").getTerminal1().setP(560.0).setQ(550.0);
-        network.getLine("NHV1_NHV2_1").getTerminal2().setP(560.0).setQ(550.0);
-        network.getLine("NHV1_NHV2_1").newCurrentLimits1().setPermanentLimit(1500.0).add();
-        network.getLine("NHV1_NHV2_1").newCurrentLimits2()
-                .setPermanentLimit(1200.0)
-                .beginTemporaryLimit()
-                .setName("10'")
-                .setAcceptableDuration(10 * 60)
-                .setValue(1300.0)
-                .endTemporaryLimit()
-                .add();
+        Network network = buildNetwork();
+
+        Contingency contingency1 = Contingency.builder("NHV1_NHV2_2_contingency").addBranch("NHV1_NHV2_2").build();
+        Contingency contingency2 = Contingency.builder("NB_NGEN_contingency").addBranch("NB_NGEN").build();
+        List<Contingency> contingencies = List.of(contingency1, contingency2);
+        List<String> contingencyIds = contingencies.stream().map(Contingency::getId).collect(Collectors.toList());
 
         LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynawo_version.out",
-                "/security_analysis_result.json");
+                "/SecurityAnalysis/input.xiidm", "/SecurityAnalysis/contingencies.json",
+                contingencyIds, List.of("/SecurityAnalysis/constraints1.xml", "/SecurityAnalysis/constraints2.xml"));
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
 
-        Contingency contingency = Contingency.builder("NHV1_NHV2_2_contingency")
-                .addBranch("NHV1_NHV2_2")
-                .build();
-        contingency = Mockito.spy(contingency);
-        Mockito.when(contingency.toModification()).thenReturn(new DynaFlowSecurityAnalysisTestNetworkModification());
-        ContingenciesProvider contingenciesProvider = Mockito.mock(ContingenciesProvider.class);
-        Mockito.when(contingenciesProvider.getContingencies(network)).thenReturn(Collections.singletonList(contingency));
-
-        LimitViolationFilter filter = new LimitViolationFilter();
-
-        SecurityAnalysisReport report = SecurityAnalysis.run(network, VariantManagerConstants.INITIAL_VARIANT_ID, contingenciesProvider,
-                SecurityAnalysisParameters.load(platformConfig), computationManager, filter, new DefaultLimitViolationDetector(), Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
+        SecurityAnalysisReport report = SecurityAnalysis.run(network, n -> contingencies, SecurityAnalysisParameters.load(), computationManager);
         SecurityAnalysisResult result = report.getResult();
-
         assertEquals(LoadFlowResult.ComponentResult.Status.CONVERGED, result.getPreContingencyResult().getStatus());
-        assertEquals(1, result.getPreContingencyResult().getLimitViolationsResult().getLimitViolations().size());
-        PostContingencyResult postcontingencyResult = result.getPostContingencyResults().get(0);
-        assertEquals(PostContingencyComputationStatus.CONVERGED, postcontingencyResult.getStatus());
-        assertEquals(3, postcontingencyResult.getLimitViolationsResult().getLimitViolations().size());
-        LimitViolation violation = postcontingencyResult.getLimitViolationsResult().getLimitViolations().get(0);
-        assertEquals(LimitViolationType.CURRENT, violation.getLimitType());
-        assertEquals("NHV1_NHV2_2", violation.getSubjectId());
 
-        ActivePowerExtension extension1 = violation.getExtension(ActivePowerExtension.class);
-        assertNotNull(extension1);
-        assertEquals(220.0, extension1.getPreContingencyValue(), 0.0);
-        assertEquals(230.0, extension1.getPostContingencyValue(), 0.0);
-
-        CurrentExtension extension2 = violation.getExtension(CurrentExtension.class);
-        assertNotNull(extension2);
-        assertEquals(95.0, extension2.getPreContingencyValue(), 0.0);
+        StringWriter writer = new StringWriter();
+        SecurityAnalysisResultSerializer.write(result, writer);
+        compareTxt(Objects.requireNonNull(getClass().getResourceAsStream("/SecurityAnalysis/result.json")), writer.toString());
     }
 
     @Test
     void testCallingBadVersionDynawo() throws IOException {
-        Network network = EurostagTutorialExample1Factory.create();
-
-        Contingency contingency = Contingency.builder("NHV1_NHV2_2_contingency")
-                .addBranch("NHV1_NHV2_2")
-                .build();
-        contingency = Mockito.spy(contingency);
-        Mockito.when(contingency.toModification()).thenReturn(new DynaFlowSecurityAnalysisTestNetworkModification());
-        ContingenciesProvider contingenciesProvider = Mockito.mock(ContingenciesProvider.class);
-        Mockito.when(contingenciesProvider.getContingencies(network)).thenReturn(Collections.singletonList(contingency));
-        LimitViolationFilter filter = new LimitViolationFilter();
-
-        LocalCommandExecutor commandExecutor = new SecurityAnalysisLocalCommandExecutorMock("/dynawo_bad_version.out");
+        Network network = Network.create("test", "test");
+        ContingenciesProvider contingenciesProvider = n -> List.of();
+        LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynawo_bad_version.out", null);
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
-
-        SecurityAnalysisParameters sap = SecurityAnalysisParameters.load(platformConfig);
-        DefaultLimitViolationDetector dlvd = new DefaultLimitViolationDetector();
-        List<SecurityAnalysisInterceptor> interceptors = Collections.emptyList();
-        List<OperatorStrategy> operatorStrategies = Collections.emptyList();
-        List<Action> actions = Collections.emptyList();
-        assertThrows(PowsyblException.class, () -> SecurityAnalysis.run(network, VariantManagerConstants.INITIAL_VARIANT_ID, contingenciesProvider,
-                sap, computationManager, filter, dlvd, interceptors, operatorStrategies, actions));
+        SecurityAnalysisParameters sap = SecurityAnalysisParameters.load();
+        assertThrows(PowsyblException.class, () -> SecurityAnalysis.run(network, contingenciesProvider, sap, computationManager));
     }
 
-    private static class SecurityAnalysisLocalCommandExecutorMock extends AbstractLocalCommandExecutor {
+    private static Network buildNetwork() {
+        Network network = EurostagTutorialExample1Factory.create();
+        network.setCaseDate(DateTime.parse("2023-03-23T16:40:48.060+01:00"));
 
-        private static final Logger LOGGER = LoggerFactory.getLogger(SecurityAnalysisLocalCommandExecutorMock.class);
+        // Changing the network for having some pre-contingencies violations
+        network.getBusBreakerView().getBus("NHV1").setV(380.0);
+        network.getBusBreakerView().getBus("NHV2").setV(380.0);
+        Line line = network.getLine("NHV1_NHV2_1");
+        line.getTerminal1().setP(560.0).setQ(550.0);
+        line.getTerminal2().setP(560.0).setQ(550.0);
 
-        private final String stdOutFileRef;
+        // Adding strong current limits to have some post-contingencies current limit violations
+        line.newCurrentLimits1().setPermanentLimit(40.0).add();
+        line.newCurrentLimits2()
+                .beginTemporaryLimit().setName("10'").setAcceptableDuration(10 * 60).setValue(450.0).endTemporaryLimit()
+                .setPermanentLimit(1000)
+                .add();
 
-        public SecurityAnalysisLocalCommandExecutorMock(String stdoutFileRef) {
-            this.stdOutFileRef = Objects.requireNonNull(stdoutFileRef);
-        }
+        // Adding a node breaker voltage level to the network
+        Substation sNb = network.newSubstation().setId("NB_S").add();
+        VoltageLevel vlNb = sNb.newVoltageLevel().setId("NB_VL").setTopologyKind(TopologyKind.NODE_BREAKER)
+                .setNominalV(400).setHighVoltageLimit(405).setLowVoltageLimit(395).add();
+        vlNb.getNodeBreakerView().newBusbarSection().setId("NB_BBS").setNode(0).add();
+        vlNb.getNodeBreakerView().newBreaker().setId("NB_BG").setNode1(0).setNode2(1).setRetained(true).add();
+        vlNb.getNodeBreakerView().newDisconnector().setId("NB_DL").setNode1(0).setNode2(2).add();
+        vlNb.newGenerator().setId("NB_GEN").setNode(1).setTargetP(8).setTargetV(390).setMinP(0).setMaxP(11).setVoltageRegulatorOn(true).add();
+        Line lineNbBb = network.newLine().setId("NB_NGEN").setVoltageLevel1(vlNb.getId()).setNode1(2).setVoltageLevel2("VLGEN").setBus2("NGEN")
+                .setR(3.0).setX(33.0).setB1(193E-6).setB2(193E-6).add();
+        lineNbBb.newCurrentLimits1().setPermanentLimit(41).add();
 
-        @Override
-        public int execute(String program, List<String> args, Path outFile, Path errFile, Path workingDir, Map<String, String> env) {
-            try {
-                if (args.get(0).equals("--version")) {
-                    copyFile(stdOutFileRef, errFile);
-                } else {
-                    validateInputs(workingDir);
-                    copyOutputs(workingDir);
-                }
-            } catch (Throwable throwable) {
-                LOGGER.error(throwable.toString(), throwable);
-                return -1;
-            }
-            return 0;
-        }
-
-        private void validateInputs(Path workingDir) throws IOException {
-            if (Files.exists(workingDir.resolve(IIDM_FILENAME))) {
-                compareXml(getClass().getResourceAsStream("/SmallBusBranch/dynaflow-inputs/powsybl_dynaflow.xiidm"), Files.newInputStream(workingDir.resolve(IIDM_FILENAME)));
-                compareTxt(getClass().getResourceAsStream("/SmallBusBranch/dynaflow-inputs/contingencies.json"), Files.newInputStream(workingDir.resolve("contingencies.json")));
-            }
-        }
-
-        private void copyOutputs(Path workingDir) throws IOException {
-            if (Files.exists(workingDir.resolve(IIDM_FILENAME))) {
-                Path output = Files.createDirectories(workingDir.resolve("BaseCase").resolve("outputs").resolve("finalState").toAbsolutePath());
-                copyFile("/SmallBusBranch/dynaflow-outputs/BaseCase-outputIIDM.xml", output.resolve(OUTPUT_IIDM_FILENAME));
-                output = Files.createDirectories(workingDir.resolve("contingency1").resolve("outputs").resolve("finalState").toAbsolutePath());
-                copyFile("/SmallBusBranch/dynaflow-outputs/contingency1-outputIIDM.xml", output.resolve(OUTPUT_IIDM_FILENAME));
-            }
-        }
-
-        private static void compareXml(InputStream expected, InputStream actual) {
-            Source control = Input.fromStream(expected).build();
-            Source test = Input.fromStream(actual).build();
-            Diff myDiff = DiffBuilder.compare(control).withTest(test).ignoreWhitespace().ignoreComments().build();
-            boolean hasDiff = myDiff.hasDifferences();
-            if (hasDiff) {
-                System.err.println(myDiff);
-            }
-            assertFalse(hasDiff);
-        }
-
-        private static void compareTxt(InputStream expected, InputStream actual) {
-            try {
-                compareTxt(expected, new String(ByteStreams.toByteArray(actual), StandardCharsets.UTF_8));
-            } catch (IOException e) {
-                throw new UncheckedIOException(e);
-            }
-        }
-
-        private static void compareTxt(InputStream expected, String actual) {
-            try {
-                String expectedStr = normalizeLineSeparator(new String(ByteStreams.toByteArray(expected), StandardCharsets.UTF_8));
-                String actualStr = normalizeLineSeparator(actual);
-                assertEquals(expectedStr, actualStr);
-            } catch (IOException e) {
-                throw new UncheckedIOException(e);
-            }
-        }
-
-        private static String normalizeLineSeparator(String str) {
-            return str.replace("\r\n", "\n")
-                    .replace("\r", "\n");
-        }
-    }
-
-    @Test
-    void testSecurityAnalysisOutputs() throws IOException {
-        Path workingDir = Files.createDirectory(fileSystem.getPath("SmallBusBranch"));
-
-        // Load network
-        Files.copy(getClass().getResourceAsStream("/SmallBusBranch/powsybl-inputs/SmallBusBranch.xiidm"), workingDir.resolve("network.iidm"));
-        Network network = Network.read(workingDir.resolve("network.iidm"));
-
-        Files.copy(getClass().getResourceAsStream("/SmallBusBranch/powsybl-inputs/contingencies.groovy"), workingDir.resolve("contingencies.groovy"));
-        ContingenciesProvider contingenciesProvider = new GroovyDslContingenciesProvider(workingDir.resolve("contingencies.groovy"));
-
-        LocalCommandExecutor commandExecutor = new SecurityAnalysisLocalCommandExecutorMock("/dynawo_version.out");
-        ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(workingDir, 1), commandExecutor, ForkJoinPool.commonPool());
-
-        LimitViolationFilter filter = new LimitViolationFilter();
-        SecurityAnalysisReport report = SecurityAnalysis.run(network, VariantManagerConstants.INITIAL_VARIANT_ID, contingenciesProvider,
-                SecurityAnalysisParameters.load(platformConfig), computationManager, filter, new DefaultLimitViolationDetector(), Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
-        SecurityAnalysisResult result = report.getResult();
-
-        PostContingencyResult postcontingencyResult = result.getPostContingencyResults().get(0);
-        assertEquals(PostContingencyComputationStatus.CONVERGED, postcontingencyResult.getStatus());
-        assertEquals(3, postcontingencyResult.getLimitViolationsResult().getLimitViolations().size());
-        LimitViolation violation = postcontingencyResult.getLimitViolationsResult().getLimitViolations().get(0);
-        assertEquals(LimitViolationType.CURRENT, violation.getLimitType());
-        assertEquals("_045e3524-c766-11e1-8775-005056c00008", violation.getSubjectId());
-        violation = postcontingencyResult.getLimitViolationsResult().getLimitViolations().get(1);
-        assertEquals(LimitViolationType.CURRENT, violation.getLimitType());
-        assertEquals("_0476c63a-c766-11e1-8775-005056c00008", violation.getSubjectId());
-        violation = postcontingencyResult.getLimitViolationsResult().getLimitViolations().get(2);
-        assertEquals(LimitViolationType.CURRENT, violation.getLimitType());
-        assertEquals("_044c81e3-c766-11e1-8775-005056c00008", violation.getSubjectId());
+        return network;
     }
 }

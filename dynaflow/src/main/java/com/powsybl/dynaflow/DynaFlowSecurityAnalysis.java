@@ -15,15 +15,14 @@ import com.powsybl.contingency.Contingency;
 import com.powsybl.contingency.contingency.list.ContingencyList;
 import com.powsybl.contingency.json.ContingencyJsonModule;
 import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
+import com.powsybl.dynaflow.xml.ConstraintsReader;
 import com.powsybl.dynawo.commons.DynawoUtil;
 import com.powsybl.iidm.network.Network;
-import com.powsybl.iidm.xml.NetworkXml;
 import com.powsybl.loadflow.LoadFlowParameters;
 import com.powsybl.loadflow.LoadFlowResult;
 import com.powsybl.security.*;
 import com.powsybl.security.interceptors.CurrentLimitViolationInterceptor;
 import com.powsybl.security.interceptors.SecurityAnalysisInterceptor;
-import com.powsybl.security.json.SecurityAnalysisResultDeserializer;
 import com.powsybl.security.results.NetworkResult;
 import com.powsybl.security.results.PostContingencyResult;
 import com.powsybl.security.results.PreContingencyResult;
@@ -48,24 +47,18 @@ public class DynaFlowSecurityAnalysis {
     private static final String WORKING_DIR_PREFIX = "dynaflow_sa_";
     private static final String DYNAFLOW_LAUNCHER_PROGRAM_NAME = "dynaflow-launcher.sh";
     private static final String CONTINGENCIES_FILENAME = "contingencies.json";
-    private static final String SECURITY_ANALYSIS_RESULTS_FILENAME = "securityAnalysisResults.json";
-    private static final String DYNAFLOW_OUTPUT_FOLDER = "outputs";
-    private static final String DYNAWO_FINAL_STATE_FOLDER = "finalState";
-    private static final String DYNAWO_OUTPUT_NETWORK_FILENAME = "outputIIDM.xml";
+    private static final String DYNAWO_CONSTRAINTS_FOLDER = "constraints";
 
     private final Supplier<DynaFlowConfig> configSupplier;
 
     private final ComputationManager computationManager;
     private final Network network;
-    private final LimitViolationDetector violationDetector;
     private final LimitViolationFilter violationFilter;
     private final List<SecurityAnalysisInterceptor> interceptors;
 
-    public DynaFlowSecurityAnalysis(Network network, LimitViolationDetector detector,
-                                    LimitViolationFilter filter, ComputationManager computationManager,
+    public DynaFlowSecurityAnalysis(Network network, LimitViolationFilter filter, ComputationManager computationManager,
                                     Supplier<DynaFlowConfig> configSupplier) {
         this.network = Objects.requireNonNull(network);
-        this.violationDetector = Objects.requireNonNull(detector);
         this.violationFilter = Objects.requireNonNull(filter);
         this.interceptors = new ArrayList<>();
         this.computationManager = Objects.requireNonNull(computationManager);
@@ -125,7 +118,6 @@ public class DynaFlowSecurityAnalysis {
         // TODO(Luma) Take into account also Security Analysis parameters
         LoadFlowParameters loadFlowParameters = securityAnalysisParameters.getLoadFlowParameters();
         DynaFlowParameters dynaFlowParameters = getParametersExt(loadFlowParameters);
-        dynaFlowParameters.setChosenOutputs(Collections.singletonList(DynaFlowConstants.OutputTypes.STEADYSTATE.name()));
         DynaFlowConfigSerializer.serialize(loadFlowParameters, dynaFlowParameters, Path.of("."), workingDir.resolve(CONFIG_FILENAME));
     }
 
@@ -165,56 +157,38 @@ public class DynaFlowSecurityAnalysis {
                 super.after(workingDir, report);
                 network.getVariantManager().setWorkingVariant(workingVariantId);
 
-                // If the results have already been prepared, just read them ...
-                Path saOutput = workingDir.resolve(DYNAFLOW_OUTPUT_FOLDER).resolve(SECURITY_ANALYSIS_RESULTS_FILENAME);
-                if (Files.exists(saOutput)) {
-                    return new SecurityAnalysisReport(SecurityAnalysisResultDeserializer.read(saOutput));
-                } else {
-                    // Build the results from the output networks written by DynaFlow
-                    PreContingencyResult preContingencyResult = getPreContingencyResult(network);
-                    List<PostContingencyResult> contingenciesResults = contingencies.stream()
-                        .map(c -> getPostContingencyResult(workingDir, c))
-                        .collect(Collectors.toList());
-                    return new SecurityAnalysisReport(
-                        new SecurityAnalysisResult(preContingencyResult, contingenciesResults, Collections.emptyList())
-                    );
-                }
+                // Build the pre-contingency results from the input network
+                PreContingencyResult preContingencyResult = getPreContingencyResult(network, violationFilter);
+                Path constraintsDir = workingDir.resolve(DYNAWO_CONSTRAINTS_FOLDER);
+
+                // Build the post-contingency results from the constraints files written by dynawo
+                List<PostContingencyResult> contingenciesResults = contingencies.stream()
+                    .map(c -> getPostContingencyResult(network, violationFilter, constraintsDir, c))
+                    .collect(Collectors.toList());
+
+                return new SecurityAnalysisReport(
+                    new SecurityAnalysisResult(preContingencyResult, contingenciesResults, Collections.emptyList())
+                );
             }
         });
     }
 
-    private static PreContingencyResult getPreContingencyResult(Network network) {
+    private static PreContingencyResult getPreContingencyResult(Network network, LimitViolationFilter violationFilter) {
         List<LimitViolation> limitViolations = Security.checkLimits(network);
+        List<LimitViolation> filteredViolations = violationFilter.apply(limitViolations, network);
         NetworkResult networkResult = new NetworkResult(Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
-        return new PreContingencyResult(LoadFlowResult.ComponentResult.Status.CONVERGED, new LimitViolationsResult(limitViolations), networkResult);
+        return new PreContingencyResult(LoadFlowResult.ComponentResult.Status.CONVERGED, new LimitViolationsResult(filteredViolations), networkResult);
     }
 
-    private static PostContingencyResult getPostContingencyResult(Path workingDir, Contingency c) {
-        Path folder = workingDir.resolve(c.getId());
-        return new PostContingencyResult(c, statusFromOutputNetwork(folder), limitViolationsFromOutputNetwork(folder));
-    }
-
-    private static PostContingencyComputationStatus statusFromOutputNetwork(Path folder) {
-        Path outputNetworkPath = outputNetworkPath(folder);
-        return Files.exists(outputNetworkPath) ? PostContingencyComputationStatus.CONVERGED : PostContingencyComputationStatus.FAILED;
-    }
-
-    private static LimitViolationsResult limitViolationsFromOutputNetwork(Path folder) {
-        List<LimitViolation> limitViolations;
-        Path outputNetworkPath = outputNetworkPath(folder);
-        if (Files.exists(outputNetworkPath)) {
-            Network outputNetwork = NetworkXml.read(outputNetworkPath);
-            limitViolations = Security.checkLimits(outputNetwork);
+    private static PostContingencyResult getPostContingencyResult(Network network, LimitViolationFilter violationFilter,
+                                                                  Path constraintsDir, Contingency c) {
+        Path constraintsFile = constraintsDir.resolve("constraints_" + c.getId() + ".xml");
+        if (Files.exists(constraintsFile)) {
+            List<LimitViolation> limitViolationsRead = ConstraintsReader.read(network, constraintsFile);
+            List<LimitViolation> limitViolationsFiltered = violationFilter.apply(limitViolationsRead, network);
+            return new PostContingencyResult(c, PostContingencyComputationStatus.CONVERGED, new LimitViolationsResult(limitViolationsFiltered));
         } else {
-            limitViolations = Collections.emptyList();
+            return new PostContingencyResult(c, PostContingencyComputationStatus.FAILED, Collections.emptyList());
         }
-        return new LimitViolationsResult(limitViolations);
-    }
-
-    private static Path outputNetworkPath(Path folder) {
-        return folder
-            .resolve(DYNAFLOW_OUTPUT_FOLDER)
-            .resolve(DYNAWO_FINAL_STATE_FOLDER)
-            .resolve(DYNAWO_OUTPUT_NETWORK_FILENAME);
     }
 }

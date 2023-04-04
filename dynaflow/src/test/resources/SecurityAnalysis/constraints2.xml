@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<constraints xmlns="http://www.rte-france.com/dynawo">
+    <constraint modelName="NHV1_NHV2_1" description="permanent limit side 1" time="0" type="Line" kind="PATL" limit="40" value="42.342868742367081" side="1"/>
+</constraints>

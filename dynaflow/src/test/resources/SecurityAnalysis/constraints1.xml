@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<constraints xmlns="http://www.rte-france.com/dynawo">
+    <constraint modelName="NB_BBS" description="U &lt; Umin" time="0" type="Bus" kind="UInfUmin" limit="395" value="390"/>
+    <constraint modelName="NB_NGEN" description="permanent limit side 1" time="0" type="Line" kind="PATL" limit="41" value="44.571440781438817" side="1"/>
+    <constraint modelName="NHV1_NHV2_1" description="permanent limit side 1" time="0" type="Line" kind="PATL" limit="40" value="42.342868742367081" side="1"/>
+    <constraint modelName="calculatedBus_NB_VL_1" description="U &lt; Umin" time="0" type="Bus" kind="UInfUmin" limit="395" value="390"/>
+    <constraint modelName="NHV1_NHV2_1" description="overload 600 side 2" time="30" type="Line" kind="OverloadUp" limit="1000" value="1005.5945782585499" side="2" acceptableDuration="600"/>
+    <constraint modelName="NHV1_NHV2_1" description="permanent limit side 2" time="30" type="Line" kind="PATL" limit="1000" value="1005.5945782585499" side="2"/>
+</constraints>

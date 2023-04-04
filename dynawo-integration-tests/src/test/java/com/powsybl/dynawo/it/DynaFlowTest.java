@@ -6,7 +6,10 @@
  */
 package com.powsybl.dynawo.it;
 
+import com.powsybl.commons.datasource.ResourceDataSource;
+import com.powsybl.commons.datasource.ResourceSet;
 import com.powsybl.commons.reporter.Reporter;
+import com.powsybl.commons.test.ComparisonUtils;
 import com.powsybl.contingency.Contingency;
 import com.powsybl.dynaflow.DynaFlowConfig;
 import com.powsybl.dynaflow.DynaFlowParameters;
@@ -15,18 +18,24 @@ import com.powsybl.dynaflow.DynaFlowSecurityAnalysisProvider;
 import com.powsybl.ieeecdf.converter.IeeeCdfNetworkFactory;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.VariantManagerConstants;
+import com.powsybl.iidm.network.test.FourSubstationsNodeBreakerFactory;
 import com.powsybl.loadflow.LoadFlowParameters;
 import com.powsybl.loadflow.LoadFlowResult;
 import com.powsybl.security.LimitViolationFilter;
 import com.powsybl.security.SecurityAnalysisParameters;
 import com.powsybl.security.SecurityAnalysisResult;
 import com.powsybl.security.detectors.DefaultLimitViolationDetector;
+import com.powsybl.security.json.SecurityAnalysisResultSerializer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -73,8 +82,21 @@ class DynaFlowTest extends AbstractDynawoTest {
     }
 
     @Test
-    void testSa() {
-        Network network = IeeeCdfNetworkFactory.create14Solved();
+    void testSaBb() throws IOException {
+        Network network = Network.read(new ResourceDataSource("IEEE14", new ResourceSet("/ieee14", "IEEE14.iidm")));
+
+        // Changing limits to have some pre- and post-contingencies limit violations
+        network.getLine("_BUS____1-BUS____5-1_AC").newCurrentLimits1().setPermanentLimit(500.).add();
+        network.getLine("_BUS____1-BUS____2-1_AC").newCurrentLimits1()
+                .beginTemporaryLimit().setName("tl").setAcceptableDuration(120).setValue(1200).endTemporaryLimit()
+                .setPermanentLimit(1500.)
+                .add();
+        network.getVoltageLevelStream().forEach(vl -> vl.setHighVoltageLimit(vl.getNominalV() * 1.09));
+        network.getVoltageLevelStream().forEach(vl -> vl.setLowVoltageLimit(vl.getNominalV() * 0.97));
+
+        // Launching a load flow before the security analysis is required
+        loadFlowProvider.run(network, computationManager, VariantManagerConstants.INITIAL_VARIANT_ID, loadFlowParameters).join();
+
         List<Contingency> contingencies = network.getLineStream()
                 .map(l -> Contingency.line(l.getId()))
                 .collect(Collectors.toList());
@@ -83,6 +105,29 @@ class DynaFlowTest extends AbstractDynawoTest {
                         Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), Reporter.NO_OP)
                 .join()
                 .getResult();
-        assertEquals(LoadFlowResult.ComponentResult.Status.CONVERGED, result.getPreContingencyResult().getStatus());
+
+        StringWriter serializedResult = new StringWriter();
+        SecurityAnalysisResultSerializer.write(result, serializedResult);
+        InputStream expected = Objects.requireNonNull(getClass().getResourceAsStream("/ieee14/security-analysis/sa_bb_results.json"));
+        ComparisonUtils.compareTxt(expected, serializedResult.toString());
+    }
+
+    @Test
+    void testSaNb() throws IOException {
+        Network network = FourSubstationsNodeBreakerFactory.create();
+
+        List<Contingency> contingencies = network.getGeneratorStream()
+                .map(g -> Contingency.generator(g.getId()))
+                .collect(Collectors.toList());
+        SecurityAnalysisResult result = securityAnalysisProvider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID, new DefaultLimitViolationDetector(),
+                        new LimitViolationFilter(), computationManager, securityAnalysisParameters, n -> contingencies, Collections.emptyList(),
+                        Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), Reporter.NO_OP)
+                .join()
+                .getResult();
+
+        StringWriter serializedResult = new StringWriter();
+        SecurityAnalysisResultSerializer.write(result, serializedResult);
+        InputStream expected = Objects.requireNonNull(getClass().getResourceAsStream("/ieee14/security-analysis/sa_nb_results.json"));
+        ComparisonUtils.compareTxt(expected, serializedResult.toString());
     }
 }

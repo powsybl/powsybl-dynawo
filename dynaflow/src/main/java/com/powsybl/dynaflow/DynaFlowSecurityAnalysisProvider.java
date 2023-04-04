@@ -58,6 +58,9 @@ public class DynaFlowSecurityAnalysisProvider implements SecurityAnalysisProvide
                                                          List<Action> actions,
                                                          List<StateMonitor> monitors,
                                                          Reporter reporter) {
+        if (detector != null) {
+            LOG.error("LimitViolationDetector is not used in Dynaflow implementation.");
+        }
         if (monitors != null && !monitors.isEmpty()) {
             LOG.error("Monitoring is not possible with Dynaflow implementation. There will not be supplementary information about monitored equipment.");
         }
@@ -70,7 +73,7 @@ public class DynaFlowSecurityAnalysisProvider implements SecurityAnalysisProvide
         if (actions != null && !actions.isEmpty()) {
             LOG.error("Actions are not implemented in Dynaflow");
         }
-        DynaFlowSecurityAnalysis securityAnalysis = new DynaFlowSecurityAnalysis(network, detector, filter, computationManager, configSupplier);
+        DynaFlowSecurityAnalysis securityAnalysis = new DynaFlowSecurityAnalysis(network, filter, computationManager, configSupplier);
         interceptors.forEach(securityAnalysis::addInterceptor);
         return securityAnalysis.run(workingVariantId, parameters, contingenciesProvider);
     }

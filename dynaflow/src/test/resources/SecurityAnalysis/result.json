@@ -1,0 +1,130 @@
+{
+  "version" : "1.4",
+  "preContingencyResult" : {
+    "status" : "CONVERGED",
+    "limitViolationsResult" : {
+      "limitViolations" : [ {
+        "subjectId" : "NHV1_NHV2_1",
+        "limitType" : "CURRENT",
+        "limitName" : "permanent",
+        "limit" : 40.0,
+        "limitReduction" : 1.0,
+        "value" : 1192.5631358010583,
+        "side" : "ONE"
+      }, {
+        "subjectId" : "NHV1_NHV2_1",
+        "limitType" : "CURRENT",
+        "limitName" : "permanent",
+        "limit" : 1000.0,
+        "limitReduction" : 1.0,
+        "value" : 1192.5631358010583,
+        "side" : "TWO"
+      } ],
+      "actionsTaken" : [ ]
+    },
+    "networkResult" : {
+      "branchResults" : [ ],
+      "busResults" : [ ],
+      "threeWindingsTransformerResults" : [ ]
+    }
+  },
+  "postContingencyResults" : [ {
+    "contingency" : {
+      "id" : "NHV1_NHV2_2_contingency",
+      "elements" : [ {
+        "id" : "NHV1_NHV2_2",
+        "type" : "BRANCH"
+      } ]
+    },
+    "status" : "CONVERGED",
+    "limitViolationsResult" : {
+      "limitViolations" : [ {
+        "subjectId" : "NB_BBS",
+        "limitType" : "LOW_VOLTAGE",
+        "limitName" : "UInfUmin",
+        "limit" : 395.0,
+        "limitReduction" : 1.0,
+        "value" : 390.0
+      }, {
+        "subjectId" : "NB_NGEN",
+        "limitType" : "CURRENT",
+        "limitName" : "PATL",
+        "limit" : 41.0,
+        "limitReduction" : 1.0,
+        "value" : 44.57144078143882,
+        "side" : "ONE"
+      }, {
+        "subjectId" : "NHV1_NHV2_1",
+        "limitType" : "CURRENT",
+        "limitName" : "PATL",
+        "limit" : 40.0,
+        "limitReduction" : 1.0,
+        "value" : 42.34286874236708,
+        "side" : "ONE"
+      }, {
+        "subjectId" : "NB_VL",
+        "limitType" : "LOW_VOLTAGE",
+        "limitName" : "UInfUmin",
+        "limit" : 395.0,
+        "limitReduction" : 1.0,
+        "value" : 390.0
+      }, {
+        "subjectId" : "NHV1_NHV2_1",
+        "limitType" : "CURRENT",
+        "limitName" : "OverloadUp",
+        "acceptableDuration" : 600,
+        "limit" : 1000.0,
+        "limitReduction" : 1.0,
+        "value" : 1005.5945782585499,
+        "side" : "TWO"
+      } ],
+      "actionsTaken" : [ ]
+    },
+    "networkResult" : {
+      "branchResults" : [ ],
+      "busResults" : [ ],
+      "threeWindingsTransformerResults" : [ ]
+    },
+    "connectivityResult" : {
+      "createdSynchronousComponentCount" : 0,
+      "createdConnectedComponentCount" : 0,
+      "disconnectedLoadActivePower" : 0.0,
+      "disconnectedGenerationActivePower" : 0.0,
+      "disconnectedElements" : [ ]
+    }
+  }, {
+    "contingency" : {
+      "id" : "NB_NGEN_contingency",
+      "elements" : [ {
+        "id" : "NB_NGEN",
+        "type" : "BRANCH"
+      } ]
+    },
+    "status" : "CONVERGED",
+    "limitViolationsResult" : {
+      "limitViolations" : [ {
+        "subjectId" : "NHV1_NHV2_1",
+        "limitType" : "CURRENT",
+        "limitName" : "PATL",
+        "limit" : 40.0,
+        "limitReduction" : 1.0,
+        "value" : 42.34286874236708,
+        "side" : "ONE"
+      } ],
+      "actionsTaken" : [ ]
+    },
+    "networkResult" : {
+      "branchResults" : [ ],
+      "busResults" : [ ],
+      "threeWindingsTransformerResults" : [ ]
+    },
+    "connectivityResult" : {
+      "createdSynchronousComponentCount" : 0,
+      "createdConnectedComponentCount" : 0,
+      "disconnectedLoadActivePower" : 0.0,
+      "disconnectedGenerationActivePower" : 0.0,
+      "disconnectedElements" : [ ]
+    }
+  } ],
+  "operatorStrategyResults" : [ ]
+}

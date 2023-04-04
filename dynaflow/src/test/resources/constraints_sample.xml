@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!--Some comments before constraints-->
+<constraints xmlns="http://www.rte-france.com/dynawo">
+    <constraint modelName="calculatedBus_xxx_01" description="descr1" time="0" type="Bus" kind="UInfUmin" limit="395" value="390"/>
+    <!--Comments within constraints-->
+    <constraint modelName="calculatedBus_S1VL1_01" description="descr2" time="0" type="Bus" kind="UInfUmin" limit="390" value="380"/>
+    <constraint modelName="LINE_S2S3" description="descr3" time="30" type="Line" kind="OverloadUp" limit="1000" value="1005" side="2" acceptableDuration="600"/>
+    <constraint modelName="LINE_S2S3" description="descr4" time="30" type="Line" kind="PATL" limit="1000" value="1005" side="2"/>
+    <constraint modelName="LD1" description="descr5" time="0" type="Load" kind="PATL" limit="41" value="44.571440781438817" side="1"/>
+    <constraint modelName="S1VL1_0" description="descr6" time="0" type="Bus" kind="UInfUmin" limit="170" value="150"/>
+    <constraint modelName="LINE_S2S3" description="descr7" time="35" type="Line" kind="OverloadUp" limit="1200" value="1205" side="2" acceptableDuration="300"/>
+</constraints>

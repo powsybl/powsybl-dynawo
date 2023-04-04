@@ -1,0 +1,218 @@
+{
+  "version" : "1.4",
+  "preContingencyResult" : {
+    "status" : "CONVERGED",
+    "limitViolationsResult" : {
+      "limitViolations" : [ ],
+      "actionsTaken" : [ ]
+    },
+    "networkResult" : {
+      "branchResults" : [ ],
+      "busResults" : [ ],
+      "threeWindingsTransformerResults" : [ ]
+    }
+  },
+  "postContingencyResults" : [ {
+    "contingency" : {
+      "id" : "GH1",
+      "elements" : [ {
+        "id" : "GH1",
+        "type" : "GENERATOR"
+      } ]
+    },
+    "status" : "CONVERGED",
+    "limitViolationsResult" : {
+      "limitViolations" : [ {
+        "subjectId" : "S1VL1_BBS",
+        "subjectName" : "S1VL1_BBS",
+        "limitType" : "LOW_VOLTAGE",
+        "limitName" : "UInfUmin",
+        "limit" : 220.0,
+        "limitReduction" : 1.0,
+        "value" : 217.00207119259946
+      }, {
+        "subjectId" : "S1VL2_BBS1",
+        "subjectName" : "S1VL2_BBS1",
+        "limitType" : "LOW_VOLTAGE",
+        "limitName" : "UInfUmin",
+        "limit" : 390.0,
+        "limitReduction" : 1.0,
+        "value" : 386.2058712263733
+      }, {
+        "subjectId" : "S1VL2_BBS2",
+        "subjectName" : "S1VL2_BBS2",
+        "limitType" : "LOW_VOLTAGE",
+        "limitName" : "UInfUmin",
+        "limit" : 390.0,
+        "limitReduction" : 1.0,
+        "value" : 386.2058712263733
+      }, {
+        "subjectId" : "S1VL1",
+        "limitType" : "LOW_VOLTAGE",
+        "limitName" : "UInfUmin",
+        "limit" : 220.0,
+        "limitReduction" : 1.0,
+        "value" : 217.00207119259946
+      }, {
+        "subjectId" : "S1VL2",
+        "limitType" : "LOW_VOLTAGE",
+        "limitName" : "UInfUmin",
+        "limit" : 390.0,
+        "limitReduction" : 1.0,
+        "value" : 386.2058712263733
+      } ],
+      "actionsTaken" : [ ]
+    },
+    "networkResult" : {
+      "branchResults" : [ ],
+      "busResults" : [ ],
+      "threeWindingsTransformerResults" : [ ]
+    },
+    "connectivityResult" : {
+      "createdSynchronousComponentCount" : 0,
+      "createdConnectedComponentCount" : 0,
+      "disconnectedLoadActivePower" : 0.0,
+      "disconnectedGenerationActivePower" : 0.0,
+      "disconnectedElements" : [ ]
+    }
+  }, {
+    "contingency" : {
+      "id" : "GH2",
+      "elements" : [ {
+        "id" : "GH2",
+        "type" : "GENERATOR"
+      } ]
+    },
+    "status" : "CONVERGED",
+    "limitViolationsResult" : {
+      "limitViolations" : [ ],
+      "actionsTaken" : [ ]
+    },
+    "networkResult" : {
+      "branchResults" : [ ],
+      "busResults" : [ ],
+      "threeWindingsTransformerResults" : [ ]
+    },
+    "connectivityResult" : {
+      "createdSynchronousComponentCount" : 0,
+      "createdConnectedComponentCount" : 0,
+      "disconnectedLoadActivePower" : 0.0,
+      "disconnectedGenerationActivePower" : 0.0,
+      "disconnectedElements" : [ ]
+    }
+  }, {
+    "contingency" : {
+      "id" : "GH3",
+      "elements" : [ {
+        "id" : "GH3",
+        "type" : "GENERATOR"
+      } ]
+    },
+    "status" : "CONVERGED",
+    "limitViolationsResult" : {
+      "limitViolations" : [ {
+        "subjectId" : "S1VL1_BBS",
+        "subjectName" : "S1VL1_BBS",
+        "limitType" : "LOW_VOLTAGE",
+        "limitName" : "UInfUmin",
+        "limit" : 220.0,
+        "limitReduction" : 1.0,
+        "value" : 217.81590499678393
+      }, {
+        "subjectId" : "S1VL2_BBS1",
+        "subjectName" : "S1VL2_BBS1",
+        "limitType" : "LOW_VOLTAGE",
+        "limitName" : "UInfUmin",
+        "limit" : 390.0,
+        "limitReduction" : 1.0,
+        "value" : 387.652177298043
+      }, {
+        "subjectId" : "S1VL2_BBS2",
+        "subjectName" : "S1VL2_BBS2",
+        "limitType" : "LOW_VOLTAGE",
+        "limitName" : "UInfUmin",
+        "limit" : 390.0,
+        "limitReduction" : 1.0,
+        "value" : 387.652177298043
+      }, {
+        "subjectId" : "S1VL1",
+        "limitType" : "LOW_VOLTAGE",
+        "limitName" : "UInfUmin",
+        "limit" : 220.0,
+        "limitReduction" : 1.0,
+        "value" : 217.81590499678393
+      }, {
+        "subjectId" : "S1VL2",
+        "limitType" : "LOW_VOLTAGE",
+        "limitName" : "UInfUmin",
+        "limit" : 390.0,
+        "limitReduction" : 1.0,
+        "value" : 387.652177298043
+      } ],
+      "actionsTaken" : [ ]
+    },
+    "networkResult" : {
+      "branchResults" : [ ],
+      "busResults" : [ ],
+      "threeWindingsTransformerResults" : [ ]
+    },
+    "connectivityResult" : {
+      "createdSynchronousComponentCount" : 0,
+      "createdConnectedComponentCount" : 0,
+      "disconnectedLoadActivePower" : 0.0,
+      "disconnectedGenerationActivePower" : 0.0,
+      "disconnectedElements" : [ ]
+    }
+  }, {
+    "contingency" : {
+      "id" : "GTH1",
+      "elements" : [ {
+        "id" : "GTH1",
+        "type" : "GENERATOR"
+      } ]
+    },
+    "status" : "FAILED",
+    "limitViolationsResult" : {
+      "limitViolations" : [ ],
+      "actionsTaken" : [ ]
+    },
+    "networkResult" : {
+      "branchResults" : [ ],
+      "busResults" : [ ],
+      "threeWindingsTransformerResults" : [ ]
+    },
+    "connectivityResult" : {
+      "createdSynchronousComponentCount" : 0,
+      "createdConnectedComponentCount" : 0,
+      "disconnectedLoadActivePower" : 0.0,
+      "disconnectedGenerationActivePower" : 0.0,
+      "disconnectedElements" : [ ]
+    }
+  }, {
+    "contingency" : {
+      "id" : "GTH2",
+      "elements" : [ {
+        "id" : "GTH2",
+        "type" : "GENERATOR"
+      } ]
+    },
+    "status" : "FAILED",
+    "limitViolationsResult" : {
+      "limitViolations" : [ ],
+      "actionsTaken" : [ ]
+    },
+    "networkResult" : {
+      "branchResults" : [ ],
+      "busResults" : [ ],
+      "threeWindingsTransformerResults" : [ ]
+    },
+    "connectivityResult" : {
+      "createdSynchronousComponentCount" : 0,
+      "createdConnectedComponentCount" : 0,
+      "disconnectedLoadActivePower" : 0.0,
+      "disconnectedGenerationActivePower" : 0.0,
+      "disconnectedElements" : [ ]
+    }
+  } ],
+  "operatorStrategyResults" : [ ]
+}
