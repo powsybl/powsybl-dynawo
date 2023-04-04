@@ -99,7 +99,7 @@ class DynaFlowTest extends AbstractDynawoTest {
 
         StringWriter serializedResult = new StringWriter();
         SecurityAnalysisResultSerializer.write(result, serializedResult);
-        InputStream expected = Objects.requireNonNull(getClass().getResourceAsStream("/security_analysis_result.json"));
+        InputStream expected = Objects.requireNonNull(getClass().getResourceAsStream("/sa_bb_results.json"));
         ComparisonUtils.compareTxt(expected, serializedResult.toString());
     }
 
@@ -118,7 +118,7 @@ class DynaFlowTest extends AbstractDynawoTest {
 
         StringWriter serializedResult = new StringWriter();
         SecurityAnalysisResultSerializer.write(result, serializedResult);
-        InputStream expected = Objects.requireNonNull(getClass().getResourceAsStream("/security_analysis_result.json"));
+        InputStream expected = Objects.requireNonNull(getClass().getResourceAsStream("/sa_nb_results.json"));
         ComparisonUtils.compareTxt(expected, serializedResult.toString());
     }
 }
