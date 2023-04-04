@@ -1,6 +1,7 @@
 [ {
   "subjectId" : "S1VL1",
   "limitType" : "LOW_VOLTAGE",
+  "limitName" : "UInfUmin",
   "limit" : 390.0,
   "limitReduction" : 1.0,
   "value" : 380.0

@@ -6,6 +6,7 @@
       "limitViolations" : [ {
         "subjectId" : "NHV1_NHV2_1",
         "limitType" : "CURRENT",
+        "limitName" : "permanent",
         "limit" : 40.0,
         "limitReduction" : 1.0,
         "value" : 1192.5631358010583,
@@ -13,6 +14,7 @@
       }, {
         "subjectId" : "NHV1_NHV2_1",
         "limitType" : "CURRENT",
+        "limitName" : "permanent",
         "limit" : 1000.0,
         "limitReduction" : 1.0,
         "value" : 1192.5631358010583,
@@ -62,6 +64,7 @@
       }, {
         "subjectId" : "NB_VL",
         "limitType" : "LOW_VOLTAGE",
+        "limitName" : "UInfUmin",
         "limit" : 395.0,
         "limitReduction" : 1.0,
         "value" : 390.0
