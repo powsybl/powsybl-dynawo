@@ -8,8 +8,8 @@
 
 package dynamicModels
 
-TransformerFixedRatio {
-    staticId "NGEN_NHV1"
-    dynamicModelId "BBM_NGEN_NHV1"
-    parameterSetId "TFR"
+GeneratorSynchronousFourWindingsProportionalRegulations {
+    staticId "GEN"
+    dynamicModelId "BBM_GEN"
+    parameterSetId "GSFWPR"
 }
