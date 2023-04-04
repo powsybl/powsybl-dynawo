@@ -23,21 +23,23 @@ import static com.powsybl.dynawaltz.DynaWaltzParametersDatabase.ParameterType.BO
  */
 public class EventSetPointBoolean extends AbstractEventModel {
 
+    private static final String DYNAMIC_MODEL_LIB = "EventSetPointBoolean";
+    private static final String DEFAULT_MODEL_LIB = "EventConnectedStatus";
+
     private final boolean disconnect;
 
-    //TODO handle Load
-    public EventSetPointBoolean(String disconnectableStaticId, double startTime, boolean disconnect) {
-        super(generateEventId(disconnectableStaticId, disconnect), disconnectableStaticId, IdentifiableType.GENERATOR, startTime);
+    public EventSetPointBoolean(String disconnectableStaticId, IdentifiableType type, double startTime, boolean disconnect) {
+        super(generateEventId(disconnectableStaticId), disconnectableStaticId, type, startTime);
         this.disconnect = disconnect;
     }
 
-    public EventSetPointBoolean(String disconnectableStaticId, double startTime) {
-        this(disconnectableStaticId, startTime, true);
+    public EventSetPointBoolean(String disconnectableStaticId, IdentifiableType type, double startTime) {
+        this(disconnectableStaticId, type, startTime, true);
     }
 
     @Override
     public String getLib() {
-        return "EventSetPointBoolean";
+        return null;
     }
 
     private List<VarConnection> getVarConnectionsWithDisconnectable(DisconnectableEquipment connected) {
@@ -46,11 +48,24 @@ public class EventSetPointBoolean extends AbstractEventModel {
 
     @Override
     public void createMacroConnections(DynaWaltzContext context) {
-        createMacroConnections(getEquipmentStaticId(), DisconnectableEquipment.class, this::getVarConnectionsWithDisconnectable, context);
+        createMacroConnections(getEquipmentStaticId(), getEquipmentType(), DisconnectableEquipment.class, this::getVarConnectionsWithDisconnectable, context);
     }
 
     @Override
     protected void writeEventSpecificParameters(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
         ParametersXml.writeParameter(writer, BOOL, "event_stateEvent1", Boolean.toString(disconnect));
+    }
+
+    @Override
+    public String getName() {
+        return DYNAMIC_MODEL_LIB;
+    }
+
+    @Override
+    protected void writeDynamicAttributes(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
+        writer.writeAttribute("id", getDynamicModelId());
+        writer.writeAttribute("lib", context.isWithoutBlackBoxDynamicModel(getEquipmentStaticId()) ? DEFAULT_MODEL_LIB : DYNAMIC_MODEL_LIB);
+        writer.writeAttribute("parFile", getParFile(context));
+        writer.writeAttribute("parId", getParameterSetId());
     }
 }

@@ -27,7 +27,7 @@ public class EventQuadripoleDisconnection extends AbstractEventModel {
     private final boolean disconnectExtremity;
 
     public EventQuadripoleDisconnection(String disconnectableStaticId, IdentifiableType type, double startTime, boolean disconnectOrigin, boolean disconnectExtremity) {
-        super(generateEventId(disconnectableStaticId, disconnectOrigin || disconnectExtremity), disconnectableStaticId, type, startTime);
+        super(generateEventId(disconnectableStaticId), disconnectableStaticId, type, startTime);
         this.disconnectOrigin = disconnectOrigin;
         this.disconnectExtremity = disconnectExtremity;
     }

@@ -21,7 +21,7 @@ import java.util.Objects;
  * @author Marcos de Miguel <demiguelm at aia.es>
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public abstract class AbstractLoad extends AbstractEquipmentBlackBoxModel<Load> implements DisconnectableEquipment {
+public abstract class AbstractLoad extends AbstractEquipmentBlackBoxModel<Load> implements LoadModel, DisconnectableEquipment {
 
     protected final String terminalVarName;
 
@@ -42,7 +42,12 @@ public abstract class AbstractLoad extends AbstractEquipmentBlackBoxModel<Load> 
     abstract List<VarConnection> getVarConnectionsWithBus(BusModel connected);
 
     @Override
-    public String getDisconnectableVarName() {
+    public String getSwitchOffSignalNodeVarName() {
         return "load_switchOffSignal2";
+    }
+
+    @Override
+    public String getDisconnectableVarName() {
+        return getSwitchOffSignalNodeVarName();
     }
 }

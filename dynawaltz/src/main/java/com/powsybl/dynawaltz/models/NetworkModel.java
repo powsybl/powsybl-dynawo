@@ -11,6 +11,8 @@ import com.powsybl.dynawaltz.models.buses.BusModel;
 import com.powsybl.dynawaltz.models.buses.DefaultBusModel;
 import com.powsybl.dynawaltz.models.lines.DefaultLineModel;
 import com.powsybl.dynawaltz.models.lines.LineModel;
+import com.powsybl.dynawaltz.models.loads.DefaultLoadModel;
+import com.powsybl.dynawaltz.models.loads.LoadModel;
 import com.powsybl.dynawaltz.models.shunts.DefaultShuntModel;
 import com.powsybl.dynawaltz.models.shunts.ShuntModel;
 import com.powsybl.dynawaltz.models.transformers.DefaultTransformerModel;
@@ -32,12 +34,14 @@ public class NetworkModel {
     public NetworkModel() {
         factoryMap = Map.of(BusModel.class, new DefaultModelFactory<BusModel>(DefaultBusModel::new),
                 LineModel.class, new DefaultModelFactory<LineModel>(DefaultLineModel::new),
+                LoadModel.class, new DefaultModelFactory<LoadModel>(DefaultLoadModel::new),
                 ShuntModel.class, new DefaultModelFactory<ShuntModel>(DefaultShuntModel::new),
                 TransformerModel.class, new DefaultModelFactory<TransformerModel>(DefaultTransformerModel::new));
 
         //TODO use a static method in EquipmentModel interface instead ?
         powSyBlTypeToModel.put(IdentifiableType.BUS, BusModel.class);
         powSyBlTypeToModel.put(IdentifiableType.LINE, LineModel.class);
+        powSyBlTypeToModel.put(IdentifiableType.LOAD, LoadModel.class);
         powSyBlTypeToModel.put(IdentifiableType.SHUNT_COMPENSATOR, ShuntModel.class);
         powSyBlTypeToModel.put(IdentifiableType.TWO_WINDINGS_TRANSFORMER, TransformerModel.class);
     }

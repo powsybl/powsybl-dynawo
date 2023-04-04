@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
+    <dyn:blackBoxModel id="BBM_GEN" lib="GeneratorFictitious" parFile="models.par" parId="GF" staticId="GEN">
+        <dyn:macroStaticRef id="MSR_GeneratorFictitious"/>
+    </dyn:blackBoxModel>
+    <dyn:macroConnector id="MC_GeneratorFictitious-NetworkBus">
+        <dyn:connect var1="generator_terminal" var2="@NAME@_ACPIN"/>
+        <dyn:connect var1="generator_switchOffSignal1" var2="@NAME@_switchOff"/>
+    </dyn:macroConnector>
+    <dyn:macroStaticReference id="MSR_GeneratorFictitious">
+        <dyn:staticRef var="generator_PGenPu" staticVar="p"/>
+        <dyn:staticRef var="generator_QGenPu" staticVar="q"/>
+        <dyn:staticRef var="generator_state" staticVar="state"/>
+    </dyn:macroStaticReference>
+    <dyn:macroConnect connector="MC_GeneratorFictitious-NetworkBus" id1="BBM_GEN" id2="NETWORK" name2="NGEN"/>
+    <dyn:blackBoxModel id="Disconnect_GEN" lib="EventSetPointBoolean" parFile="sim1.par" parId="Disconnect_GEN"/>
+    <dyn:blackBoxModel id="Disconnect_LOAD" lib="EventConnectedStatus" parFile="sim1.par" parId="Disconnect_LOAD"/>
+    <dyn:macroConnector id="MC_EventSetPointBoolean-GeneratorFictitious">
+        <dyn:connect var1="event_state1" var2="generator_switchOffSignal2"/>
+    </dyn:macroConnector>
+    <dyn:macroConnector id="MC_EventSetPointBoolean-NetworkLoad">
+        <dyn:connect var1="event_state1" var2="load_switchOffSignal2"/>
+    </dyn:macroConnector>
+    <dyn:macroConnect connector="MC_EventSetPointBoolean-GeneratorFictitious" id1="Disconnect_GEN" id2="BBM_GEN"/>
+    <dyn:macroConnect connector="MC_EventSetPointBoolean-NetworkLoad" id1="Disconnect_LOAD" id2="NETWORK" name2="LOAD"/>
+</dyn:dynamicModelsArchitecture>
