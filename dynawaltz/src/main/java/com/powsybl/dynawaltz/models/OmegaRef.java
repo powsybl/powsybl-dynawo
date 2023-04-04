@@ -11,9 +11,7 @@ import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParametersDatabase;
 import com.powsybl.dynawaltz.models.buses.BusModel;
 import com.powsybl.dynawaltz.models.generators.OmegaRefGeneratorModel;
-import com.powsybl.dynawaltz.models.utils.BusUtils;
 import com.powsybl.dynawaltz.xml.ParametersXml;
-import com.powsybl.iidm.network.Generator;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -91,17 +89,9 @@ public class OmegaRef extends AbstractPureDynamicBlackBoxModel {
         int index = 0;
         for (OmegaRefGeneratorModel gen : omegaRefGenerators) {
             createMacroConnections(gen, getVarConnectionsWithOmegaRefGenerator(gen), context, MacroConnectAttribute.ofIndex1(index));
-            createMacroConnections(getBusAssociatedTo(gen, context), BusModel.class, this::getVarConnectionsWithBus, context, MacroConnectAttribute.ofIndex1(index));
+            createMacroConnections(gen.getConnectableBusId(), BusModel.class, this::getVarConnectionsWithBus, context, MacroConnectAttribute.ofIndex1(index));
             index++;
         }
-    }
-
-    private String getBusAssociatedTo(OmegaRefGeneratorModel generatorModel, DynaWaltzContext context) {
-        Generator generator = context.getNetwork().getGenerator(generatorModel.getStaticId());
-        if (generator == null) {
-            throw new PowsyblException("Generator " + generatorModel.getLib() + " not found in DynaWaltz context. Id : " + generatorModel.getDynamicModelId());
-        }
-        return BusUtils.getConnectableBusStaticId(generator);
     }
 
     @Override

@@ -13,6 +13,8 @@ import com.powsybl.iidm.network.Generator;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.powsybl.dynawaltz.models.utils.BusUtils.getConnectableBusStaticId;
+
 /**
  * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
  */
@@ -40,6 +42,11 @@ public class OmegaRefGenerator extends AbstractGeneratorModel implements OmegaRe
                 new VarConnection("omegaRef_grp_@INDEX@", getOmegaRefPuVarName()),
                 new VarConnection("running_grp_@INDEX@", getRunningVarName())
         );
+    }
+
+    @Override
+    public String getConnectableBusId() {
+        return getConnectableBusStaticId(equipment);
     }
 
     @Override
