@@ -39,6 +39,7 @@
       "limitViolations" : [ {
         "subjectId" : "NB_BBS",
         "limitType" : "LOW_VOLTAGE",
+        "limitName" : "UInfUmin",
         "limit" : 395.0,
         "limitReduction" : 1.0,
         "value" : 390.0

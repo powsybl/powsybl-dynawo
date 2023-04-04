@@ -16,6 +16,7 @@ import com.powsybl.contingency.ContingenciesProvider;
 import com.powsybl.contingency.Contingency;
 import com.powsybl.iidm.network.*;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
+import com.powsybl.loadflow.LoadFlowResult;
 import com.powsybl.security.SecurityAnalysis;
 import com.powsybl.security.SecurityAnalysisParameters;
 import com.powsybl.security.SecurityAnalysisReport;
@@ -40,8 +41,7 @@ import static com.powsybl.commons.test.ComparisonUtils.compareTxt;
 import static com.powsybl.commons.test.ComparisonUtils.compareXml;
 import static com.powsybl.dynaflow.DynaFlowConstants.DYNAFLOW_NAME;
 import static com.powsybl.dynaflow.DynaFlowConstants.IIDM_FILENAME;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -124,6 +124,7 @@ class DynaFlowSecurityAnalysisTest extends AbstractConverterTest {
 
         SecurityAnalysisReport report = SecurityAnalysis.run(network, n -> contingencies, SecurityAnalysisParameters.load(), computationManager);
         SecurityAnalysisResult result = report.getResult();
+        assertEquals(LoadFlowResult.ComponentResult.Status.CONVERGED, result.getPreContingencyResult().getStatus());
 
         StringWriter writer = new StringWriter();
         SecurityAnalysisResultSerializer.write(result, writer);

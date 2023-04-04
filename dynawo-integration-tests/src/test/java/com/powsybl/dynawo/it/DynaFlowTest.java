@@ -16,6 +16,7 @@ import com.powsybl.dynaflow.DynaFlowSecurityAnalysisProvider;
 import com.powsybl.ieeecdf.converter.IeeeCdfNetworkFactory;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.VariantManagerConstants;
+import com.powsybl.iidm.network.test.FourSubstationsNodeBreakerFactory;
 import com.powsybl.loadflow.LoadFlowParameters;
 import com.powsybl.loadflow.LoadFlowResult;
 import com.powsybl.security.LimitViolationFilter;
@@ -89,6 +90,25 @@ class DynaFlowTest extends AbstractDynawoTest {
 
         List<Contingency> contingencies = network.getLineStream()
                 .map(l -> Contingency.line(l.getId()))
+                .collect(Collectors.toList());
+        SecurityAnalysisResult result = securityAnalysisProvider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID, new DefaultLimitViolationDetector(),
+                        new LimitViolationFilter(), computationManager, securityAnalysisParameters, n -> contingencies, Collections.emptyList(),
+                        Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), Reporter.NO_OP)
+                .join()
+                .getResult();
+
+        StringWriter serializedResult = new StringWriter();
+        SecurityAnalysisResultSerializer.write(result, serializedResult);
+        InputStream expected = Objects.requireNonNull(getClass().getResourceAsStream("/security_analysis_result.json"));
+        ComparisonUtils.compareTxt(expected, serializedResult.toString());
+    }
+
+    @Test
+    void testSaNb() throws IOException {
+        Network network = FourSubstationsNodeBreakerFactory.create();
+
+        List<Contingency> contingencies = network.getGeneratorStream()
+                .map(g -> Contingency.generator(g.getId()))
                 .collect(Collectors.toList());
         SecurityAnalysisResult result = securityAnalysisProvider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID, new DefaultLimitViolationDetector(),
                         new LimitViolationFilter(), computationManager, securityAnalysisParameters, n -> contingencies, Collections.emptyList(),

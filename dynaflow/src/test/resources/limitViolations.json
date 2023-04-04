@@ -1,0 +1,24 @@
+[ {
+  "subjectId" : "S1VL1",
+  "limitType" : "LOW_VOLTAGE",
+  "limit" : 390.0,
+  "limitReduction" : 1.0,
+  "value" : 380.0
+}, {
+  "subjectId" : "LD1",
+  "limitType" : "CURRENT",
+  "limitName" : "PATL",
+  "limit" : 41.0,
+  "limitReduction" : 1.0,
+  "value" : 44.57144078143882,
+  "side" : "ONE"
+}, {
+  "subjectId" : "LINE_S2S3",
+  "limitType" : "CURRENT",
+  "limitName" : "OverloadUp",
+  "acceptableDuration" : 300,
+  "limit" : 1200.0,
+  "limitReduction" : 1.0,
+  "value" : 1205.0,
+  "side" : "TWO"
+} ]

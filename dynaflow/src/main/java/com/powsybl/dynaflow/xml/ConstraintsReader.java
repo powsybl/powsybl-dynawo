@@ -62,7 +62,7 @@ public final class ConstraintsReader {
         }
     }
 
-    private static List<LimitViolation> read(Network network, InputStream is) {
+    public static List<LimitViolation> read(Network network, InputStream is) {
         List<LimitViolation> limitViolations = new ArrayList<>();
 
         try {
@@ -83,10 +83,10 @@ public final class ConstraintsReader {
                 double limit = XmlUtil.readOptionalDoubleAttribute(reader, LIMIT);
                 double value = XmlUtil.readOptionalDoubleAttribute(reader, VALUE);
                 Integer side = XmlUtil.readOptionalIntegerAttribute(reader, SIDE);
-                Integer acceptableDuration = XmlUtil.readOptionalIntegerAttribute(reader, ACCEPTABLE_DURATION);
+                Integer acceptableDuration = XmlUtil.readOptionalIntegerAttribute(reader, ACCEPTABLE_DURATION, Integer.MAX_VALUE);
 
                 getLimitViolation(network, name, kind, limit, 1f, value, side, acceptableDuration)
-                        .ifPresent(lvRead -> addIfNotPresent(lvRead, limitViolations));
+                        .ifPresent(lvRead -> addOrDismiss(lvRead, limitViolations));
             });
             return limitViolations;
         } catch (XMLStreamException e) {
@@ -94,10 +94,19 @@ public final class ConstraintsReader {
         }
     }
 
-    private static void addIfNotPresent(LimitViolation lvRead, List<LimitViolation> limitViolations) {
+    private static void addOrDismiss(LimitViolation lvRead, List<LimitViolation> limitViolations) {
         LimitViolationComparator comparator = new LimitViolationComparator();
-        if (limitViolations.stream().noneMatch(lv -> comparator.compare(lvRead, lv) == 0)) {
-            limitViolations.add(lvRead);
+        limitViolations.stream().filter(lv -> comparator.compare(lvRead, lv) == 0).findFirst()
+                .ifPresentOrElse(
+                    lv -> replaceLimitViolationIfStronger(lvRead, lv, limitViolations),
+                    () -> limitViolations.add(lvRead));
+    }
+
+    private static void replaceLimitViolationIfStronger(LimitViolation newLimitViolation, LimitViolation similarLimitViolation,
+                                                        List<LimitViolation> limitViolations) {
+        if (newLimitViolation.getAcceptableDuration() < similarLimitViolation.getAcceptableDuration()) {
+            limitViolations.remove(similarLimitViolation);
+            limitViolations.add(newLimitViolation);
         }
     }
 
@@ -117,27 +126,25 @@ public final class ConstraintsReader {
             }
         } else {
             Identifiable<?> identifiable = network.getIdentifiable(name);
-            if (identifiable instanceof Branch) {
-                Branch<?> branch = (Branch<?>) identifiable;
-                return Optional.of(new LimitViolation(branch.getId(), branch.getOptionalName().orElse(null),
-                        toLimitViolationType(kind), kind, acceptableDuration != null ? acceptableDuration : Integer.MAX_VALUE,
+            if (identifiable == null) {
+                LOGGER.warn("Unknown equipment/bus {} for limit violation in result constraints file", name);
+                return Optional.empty();
+            } else if (identifiable instanceof Branch || !(identifiable instanceof Bus)) {
+                return Optional.of(new LimitViolation(identifiable.getId(), identifiable.getOptionalName().orElse(null),
+                        toLimitViolationType(kind), kind, acceptableDuration,
                         limit, limitReduction, value, toBranchSide(side)));
-            } else if (identifiable instanceof Bus) {
+            } else {
                 VoltageLevel vl = ((Bus) identifiable).getVoltageLevel();
                 return Optional.of(new LimitViolation(vl.getId(), vl.getOptionalName().orElse(null),
                         toLimitViolationType(kind), limit, limitReduction, value));
-            } else if (identifiable != null) {
-                return Optional.of(new LimitViolation(identifiable.getId(), identifiable.getOptionalName().orElse(null),
-                        toLimitViolationType(kind), limit, limitReduction, value));
-            } else {
-                LOGGER.warn("Unknown equipment/bus {} for limit violation in result constraints file", name);
-                return Optional.empty();
             }
         }
     }
 
-    private static Branch.Side toBranchSide(int side) {
-        if (side == 1) {
+    private static Branch.Side toBranchSide(Integer side) {
+        if (side == null) {
+            return null;
+        } else if (side == 1) {
             return Branch.Side.ONE;
         } else if (side == 2) {
             return Branch.Side.TWO;
