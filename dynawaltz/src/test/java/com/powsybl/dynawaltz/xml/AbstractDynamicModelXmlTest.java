@@ -74,7 +74,7 @@ public abstract class AbstractDynamicModelXmlTest extends AbstractConverterTest 
     void setupDynawaltzContext() {
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynaWaltzParameters dynawoParameters = DynaWaltzParameters.load();
-        context = new DynaWaltzContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, new ArrayList<>(), curves, parameters, dynawoParameters);
+        context = new DynaWaltzContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, eventModels, curves, parameters, dynawoParameters);
     }
 
     protected abstract void setupNetwork();

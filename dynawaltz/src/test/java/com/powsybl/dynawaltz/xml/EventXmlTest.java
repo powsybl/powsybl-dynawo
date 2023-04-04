@@ -13,6 +13,7 @@ import com.powsybl.dynawaltz.DynaWaltzParameters;
 import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection;
 import com.powsybl.dynawaltz.models.events.EventSetPointBoolean;
 import com.powsybl.dynawaltz.models.generators.GeneratorSynchronous;
+import com.powsybl.iidm.network.IdentifiableType;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
@@ -43,8 +44,8 @@ class EventXmlTest extends DynaWaltzTestUtil {
     @Test
     void duplicateEventId() {
         eventModels.clear();
-        eventModels.add(new EventQuadripoleDisconnection("NHV1_NHV2_1", 5));
-        eventModels.add(new EventQuadripoleDisconnection("NHV1_NHV2_1", 5, true, false));
+        eventModels.add(new EventQuadripoleDisconnection("NHV1_NHV2_1", IdentifiableType.LINE, 5));
+        eventModels.add(new EventQuadripoleDisconnection("NHV1_NHV2_1", IdentifiableType.LINE, 5, true, false));
         eventModels.add(new EventSetPointBoolean("GEN2", 1, true));
         eventModels.add(new EventSetPointBoolean("GEN2", 1, false));
         String workingVariantId = network.getVariantManager().getWorkingVariantId();

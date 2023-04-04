@@ -9,13 +9,11 @@ package com.powsybl.dynawaltz.models;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.models.buses.BusModel;
 import com.powsybl.dynawaltz.models.buses.DefaultBusModel;
-import com.powsybl.dynawaltz.models.hvdc.HvdcModel;
 import com.powsybl.dynawaltz.models.lines.DefaultLineModel;
 import com.powsybl.dynawaltz.models.lines.LineModel;
 import com.powsybl.dynawaltz.models.shunts.DefaultShuntModel;
 import com.powsybl.dynawaltz.models.shunts.ShuntModel;
 import com.powsybl.dynawaltz.models.transformers.DefaultTransformerModel;
-import com.powsybl.dynawaltz.models.transformers.TransformerFixedRatio;
 import com.powsybl.dynawaltz.models.transformers.TransformerModel;
 import com.powsybl.iidm.network.IdentifiableType;
 
@@ -37,12 +35,11 @@ public class NetworkModel {
                 ShuntModel.class, new DefaultModelFactory<ShuntModel>(DefaultShuntModel::new),
                 TransformerModel.class, new DefaultModelFactory<TransformerModel>(DefaultTransformerModel::new));
 
-        //TODO associate powSybl - dynawo
+        //TODO use a static method in EquipmentModel interface instead ?
         powSyBlTypeToModel.put(IdentifiableType.BUS, BusModel.class);
-        powSyBlTypeToModel.put(IdentifiableType.HVDC_LINE, HvdcModel.class);
         powSyBlTypeToModel.put(IdentifiableType.LINE, LineModel.class);
         powSyBlTypeToModel.put(IdentifiableType.SHUNT_COMPENSATOR, ShuntModel.class);
-        powSyBlTypeToModel.put(IdentifiableType.TWO_WINDINGS_TRANSFORMER, TransformerFixedRatio.class);
+        powSyBlTypeToModel.put(IdentifiableType.TWO_WINDINGS_TRANSFORMER, TransformerModel.class);
     }
 
     public <T extends Model> T getDefaultModel(String staticId, Class<T> clazz) {
