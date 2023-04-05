@@ -29,11 +29,6 @@ public class DefaultGeneratorModel extends AbstractNetworkModel implements Gener
     }
 
     @Override
-    public String getTerminalVarName() {
-        return "@NAME@_terminal";
-    }
-
-    @Override
     public String getDisconnectableVarName() {
         return getStateValueVarName();
     }

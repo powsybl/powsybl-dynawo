@@ -68,7 +68,6 @@ public abstract class AbstractGeneratorModel extends AbstractEquipmentBlackBoxMo
         return varConnections;
     }
 
-    @Override
     public String getTerminalVarName() {
         return terminalVarName;
     }
