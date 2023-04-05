@@ -42,7 +42,7 @@ class DynaWaltzParametersDatabaseTest {
 
     @Test
     void checkParameters() {
-        DynaWaltzParametersDatabase parametersDatabase = DynaWaltzParametersDatabase.load(fileSystem.getPath("/models.par"));
+        ParametersSet parametersDatabase = ParametersSet.load(fileSystem.getPath("/models.par"));
         assertNotNull(parametersDatabase.getParameterSet("LoadAlphaBeta"));
         assertEquals(1.5, parametersDatabase.getDouble("LoadAlphaBeta", "load_alpha"), 1e-6);
         assertEquals(2.5, parametersDatabase.getDouble("LoadAlphaBeta", "load_beta"), 1e-6);
@@ -56,14 +56,14 @@ class DynaWaltzParametersDatabaseTest {
     @Test
     void checkParametersMisspelled() {
         Path path = fileSystem.getPath("/models_misspelled.par");
-        PowsyblException e = assertThrows(PowsyblException.class, () -> DynaWaltzParametersDatabase.load(path));
+        PowsyblException e = assertThrows(PowsyblException.class, () -> ParametersSet.load(path));
         assertEquals("Unexpected element: sett", e.getMessage());
     }
 
     @Test
     void checkParametersNotFound() {
         Path path = fileSystem.getPath("/file.par");
-        UncheckedIOException e = assertThrows(UncheckedIOException.class, () -> DynaWaltzParametersDatabase.load(path));
+        UncheckedIOException e = assertThrows(UncheckedIOException.class, () -> ParametersSet.load(path));
         assertEquals("java.nio.file.NoSuchFileException: /file.par", e.getMessage());
     }
 }

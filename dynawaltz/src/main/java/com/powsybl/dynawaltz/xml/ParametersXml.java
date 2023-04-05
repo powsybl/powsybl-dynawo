@@ -7,21 +7,15 @@
 
 package com.powsybl.dynawaltz.xml;
 
-import com.powsybl.commons.PowsyblException;
-import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
-import com.powsybl.dynawaltz.DynaWaltzParametersDatabase;
+import com.powsybl.dynawaltz.ParametersSet;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.FileSystem;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.util.Objects;
 
 import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
@@ -38,24 +32,18 @@ public final class ParametersXml {
         Objects.requireNonNull(workingDir);
 
         DynaWaltzParameters parameters = context.getDynaWaltzParameters();
-        copy(parameters.getParametersFile(), workingDir, context.getPlatformConfig());
-        copy(parameters.getNetwork().getParametersFile(), workingDir, context.getPlatformConfig());
-        copy(parameters.getSolver().getParametersFile(), workingDir, context.getPlatformConfig());
+        write(parameters.getModelsParameters(), DynaWaltzParameters.DEFAULT_PARAMETERS_FILE, workingDir);
+        write(parameters.getNetwork().getParameters(), DynaWaltzParameters.DEFAULT_NETWORK_PARAMETERS_FILE, workingDir);
+        write(parameters.getSolver().getParameters(), DynaWaltzParameters.DEFAULT_SOLVER_PARAMETERS_FILE, workingDir);
 
         // Write parameterSet that needs to be generated (OmegaRef...)
         Path file = workingDir.resolve(context.getSimulationParFile());
         XmlUtil.write(file, context, "parametersSet", ParametersXml::write);
     }
 
-    private static void copy(String filename, Path workingDir, PlatformConfig platformConfig) throws IOException {
-        FileSystem fs = platformConfig.getConfigDir()
-                .map(Path::getFileSystem)
-                .orElseThrow(() -> new PowsyblException("A configuration directory should be defined"));
-        Path source = fs.getPath(filename);
-        if (!Files.exists(source)) {
-            throw new FileNotFoundException("File not found: " + filename);
-        }
-        Files.copy(source, workingDir.resolve(source.getFileName().toString()), StandardCopyOption.REPLACE_EXISTING);
+    private static void write(ParametersSet parametersSet, String filename, Path workingDir) {
+        Path parametersPath = workingDir.resolve(filename);
+        parametersSet.write(parametersPath);
     }
 
     private static void write(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
@@ -64,7 +52,7 @@ public final class ParametersXml {
         }
     }
 
-    public static void writeParameter(XMLStreamWriter writer, DynaWaltzParametersDatabase.ParameterType type, String name, String value) throws XMLStreamException {
+    public static void writeParameter(XMLStreamWriter writer, ParametersSet.ParameterType type, String name, String value) throws XMLStreamException {
         writer.writeEmptyElement(DYN_URI, "par");
         writer.writeAttribute("type", type.toString());
         writer.writeAttribute("name", name);

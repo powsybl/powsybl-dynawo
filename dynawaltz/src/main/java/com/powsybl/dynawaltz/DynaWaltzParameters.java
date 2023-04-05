@@ -6,6 +6,10 @@
  */
 package com.powsybl.dynawaltz;
 
+import java.io.InputStream;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -23,9 +27,9 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
     public static final String DEFAULT_NETWORK_PAR_ID = "1";
     public static final String DEFAULT_SOLVER_PAR_ID = "1";
     public static final boolean DEFAULT_MERGE_LOADS = true;
-    private static final String DEFAULT_PARAMETERS_FILE = "models.par";
-    private static final String DEFAULT_NETWORK_PARAMETERS_FILE = "network.par";
-    private static final String DEFAULT_SOLVER_PARAMETERS_FILE = "solvers.par";
+    public static final String DEFAULT_PARAMETERS_FILE = "models.par";
+    public static final String DEFAULT_NETWORK_PARAMETERS_FILE = "network.par";
+    public static final String DEFAULT_SOLVER_PARAMETERS_FILE = "solvers.par";
 
     public enum SolverType {
         SIM,
@@ -34,20 +38,28 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
 
     public static class Network {
 
+        private String parametersId;
+        private ParametersSet parameters;
+
         public Network() {
         }
 
-        public Network(String parametersFile, String parametersId) {
-            this.parametersFile = Objects.requireNonNull(parametersFile);
-            this.parametersId = Objects.requireNonNull(parametersId);
+        public ParametersSet getParameters() {
+            return parameters;
         }
 
-        public String getParametersFile() {
-            return parametersFile;
+        public Network setParameters(ParametersSet parameters) {
+            this.parameters = Objects.requireNonNull(parameters);
+            return this;
         }
 
-        public Network setParametersFile(String parametersFile) {
-            this.parametersFile = Objects.requireNonNull(parametersFile);
+        public Network setParameters(Path parametersFile) {
+            this.parameters = ParametersSet.load(parametersFile);
+            return this;
+        }
+
+        public Network setParameters(InputStream parametersFile) {
+            this.parameters = ParametersSet.load(parametersFile);
             return this;
         }
 
@@ -59,20 +71,15 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
             this.parametersId = Objects.requireNonNull(parametersId);
             return this;
         }
-
-        private String parametersFile;
-        private String parametersId;
     }
 
     public static class Solver {
 
-        public Solver() {
-        }
+        private String parametersId;
+        private SolverType type;
+        private ParametersSet parameters;
 
-        public Solver(SolverType type, String parametersFile, String parametersId) {
-            this.type = Objects.requireNonNull(type);
-            this.parametersFile = Objects.requireNonNull(parametersFile);
-            this.parametersId = Objects.requireNonNull(parametersId);
+        public Solver() {
         }
 
         public SolverType getType() {
@@ -84,12 +91,22 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
             return this;
         }
 
-        public String getParametersFile() {
-            return parametersFile;
+        public ParametersSet getParameters() {
+            return parameters;
         }
 
-        public Solver setParametersFile(String parametersFile) {
-            this.parametersFile = Objects.requireNonNull(parametersFile);
+        public Solver setParameters(ParametersSet parameters) {
+            this.parameters = Objects.requireNonNull(parameters);
+            return this;
+        }
+
+        public Solver setParameters(Path parametersFile) {
+            this.parameters = ParametersSet.load(parametersFile);
+            return this;
+        }
+
+        public Solver setParameters(InputStream parametersFile) {
+            this.parameters = ParametersSet.load(parametersFile);
             return this;
         }
 
@@ -101,10 +118,6 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
             this.parametersId = Objects.requireNonNull(parametersId);
             return this;
         }
-
-        private SolverType type;
-        private String parametersFile;
-        private String parametersId;
     }
 
     /**
@@ -118,6 +131,10 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
      * Load parameters from a provided platform configuration.
      */
     public static DynaWaltzParameters load(PlatformConfig platformConfig) {
+        return load(platformConfig, FileSystems.getDefault());
+    }
+
+    protected static DynaWaltzParameters load(PlatformConfig platformConfig, FileSystem fileSystem) {
         Optional<ModuleConfig> config = platformConfig.getOptionalModuleConfig("dynawaltz-default-parameters");
 
         // File with all the dynamic models' parameters for the simulation
@@ -143,10 +160,14 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
         // If merging loads on each bus to simplify dynawo's analysis
         boolean mergeLoads = config.flatMap(c -> c.getOptionalBooleanProperty("mergeLoads")).orElse(DEFAULT_MERGE_LOADS);
 
-        return new DynaWaltzParameters(parametersFile, networkParametersFile, networkParametersId, solverType, solverParametersFile, solverParametersId, mergeLoads);
+        return new DynaWaltzParameters()
+                .setParametersFile(fileSystem.getPath(parametersFile))
+                .setNetwork(new Network().setParametersId(networkParametersId).setParameters(fileSystem.getPath(networkParametersFile)))
+                .setSolver(new Solver().setParametersId(solverParametersId).setType(solverType).setParameters(fileSystem.getPath(solverParametersFile)))
+                .setMergeLoads(mergeLoads);
     }
 
-    private String parametersFile;
+    private ParametersSet modelsParameters;
     private Network network;
     private Solver solver;
     private boolean mergeLoads;
@@ -154,25 +175,27 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
     public DynaWaltzParameters() {
     }
 
-    public DynaWaltzParameters(String parametersFile, String networkParametersFile, String networkParametersId, SolverType solverType, String solverParametersFile,
-                            String solverParametersId, boolean mergeLoads) {
-        this.parametersFile = Objects.requireNonNull(parametersFile);
-        this.network = new Network(networkParametersFile, networkParametersId);
-        this.solver = new Solver(solverType, solverParametersFile, solverParametersId);
-        this.mergeLoads = mergeLoads;
-    }
-
     @Override
     public String getName() {
         return "DynaWaltzParameters";
     }
 
-    public String getParametersFile() {
-        return parametersFile;
+    public ParametersSet getModelsParameters() {
+        return modelsParameters;
     }
 
-    public DynaWaltzParameters setParametersFile(String parametersFile) {
-        this.parametersFile = Objects.requireNonNull(parametersFile);
+    public DynaWaltzParameters setParametersFile(ParametersSet modelsParameters) {
+        this.modelsParameters = Objects.requireNonNull(modelsParameters);
+        return this;
+    }
+
+    public DynaWaltzParameters setParametersFile(Path modelsParametersFile) {
+        this.modelsParameters = ParametersSet.load(modelsParametersFile);
+        return this;
+    }
+
+   public DynaWaltzParameters setParametersFile(InputStream modelsParametersFile) {
+        this.modelsParameters = ParametersSet.load(modelsParametersFile);
         return this;
     }
 
@@ -198,7 +221,8 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
         return mergeLoads;
     }
 
-    public void setMergeLoads(boolean mergeLoads) {
+    public DynaWaltzParameters setMergeLoads(boolean mergeLoads) {
         this.mergeLoads = mergeLoads;
+        return this;
     }
 }

@@ -49,7 +49,7 @@ public final class JobsXml {
         DynaWaltzParameters parameters = context.getDynaWaltzParameters();
         writer.writeEmptyElement(DYN_URI, "solver");
         writer.writeAttribute("lib", parameters.getSolver().getType().equals(SolverType.IDA) ? "dynawo_SolverIDA" : "dynawo_SolverSIM");
-        writer.writeAttribute("parFile", Paths.get(parameters.getSolver().getParametersFile()).getFileName().toString());
+        writer.writeAttribute("parFile", DynaWaltzParameters.DEFAULT_SOLVER_PARAMETERS_FILE);
         writer.writeAttribute("parId", parameters.getSolver().getParametersId());
     }
 
@@ -60,7 +60,7 @@ public final class JobsXml {
 
         writer.writeEmptyElement(DYN_URI, "network");
         writer.writeAttribute("iidmFile", NETWORK_FILENAME);
-        writer.writeAttribute("parFile", Paths.get(parameters.getNetwork().getParametersFile()).getFileName().toString());
+        writer.writeAttribute("parFile", DynaWaltzParameters.DEFAULT_NETWORK_PARAMETERS_FILE);
         writer.writeAttribute("parId", parameters.getNetwork().getParametersId());
 
         writer.writeEmptyElement(DYN_URI, "dynModels");

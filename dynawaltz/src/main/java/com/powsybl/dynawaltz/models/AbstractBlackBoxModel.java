@@ -7,6 +7,7 @@
 package com.powsybl.dynawaltz.models;
 
 import com.powsybl.dynawaltz.DynaWaltzContext;
+import com.powsybl.dynawaltz.DynaWaltzParameters;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -62,7 +63,7 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel {
 
     @Override
     public String getParFile(DynaWaltzContext context) {
-        return context.getParFile();
+        return DynaWaltzParameters.DEFAULT_PARAMETERS_FILE;
     }
 
     @Override

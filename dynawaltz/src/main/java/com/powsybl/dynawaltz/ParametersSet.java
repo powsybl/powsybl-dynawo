@@ -15,20 +15,22 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.UncheckedIOException;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public final class DynaWaltzParametersDatabase {
+public final class ParametersSet {
+
+    public void write(Path parametersPath) {
+        // TODO
+    }
 
     public enum ParameterType {
         DOUBLE,
@@ -62,10 +64,10 @@ public final class DynaWaltzParametersDatabase {
         private final String value;
     }
 
-    public static class ParameterSet {
+    public static class Set {
 
-        public ParameterSet() {
-            this.parameters = new HashMap<>();
+        public Set() {
+            this.parameters = new LinkedHashMap<>();
         }
 
         public void addParameter(String name, ParameterType type, String value) {
@@ -80,16 +82,15 @@ public final class DynaWaltzParametersDatabase {
 
     }
 
-    public static DynaWaltzParametersDatabase load(Path parametersFile) {
-        return read(parametersFile);
+
+    private final Map<String, Set> parameterSets;
+
+    private ParametersSet() {
+        this.parameterSets = new LinkedHashMap<>();
     }
 
-    private DynaWaltzParametersDatabase() {
-        this.parameterSets = new HashMap<>();
-    }
-
-    private void addParameterSet(String parameterSetId, ParameterSet parameterSet) {
-        parameterSets.put(parameterSetId, parameterSet);
+    private void addParameterSet(String parameterSetId, Set set) {
+        parameterSets.put(parameterSetId, set);
     }
 
     public boolean getBool(String parameterSetId, String parameterName) {
@@ -112,18 +113,18 @@ public final class DynaWaltzParametersDatabase {
         return parameter.getValue();
     }
 
-    public ParameterSet getParameterSet(String parameterSetId) {
-        ParameterSet parameterSet = parameterSets.get(parameterSetId);
-        if (parameterSet == null) {
+    public Set getParameterSet(String parameterSetId) {
+        Set set = parameterSets.get(parameterSetId);
+        if (set == null) {
             throw new IllegalArgumentException("ParameterSet not found: " + parameterSetId);
         }
-        return parameterSet;
+        return set;
     }
 
     public Parameter getParameter(String parameterSetId, String parameterName) {
-        ParameterSet parameterSet = getParameterSet(parameterSetId);
+        Set set = getParameterSet(parameterSetId);
 
-        Parameter parameter = parameterSet.getParameter(parameterName);
+        Parameter parameter = set.getParameter(parameterName);
         if (parameter == null) {
             throw new IllegalArgumentException("Parameter not found: " + parameterSetId + "." + parameterName);
         }
@@ -138,20 +139,30 @@ public final class DynaWaltzParametersDatabase {
         return parameter;
     }
 
-    private static DynaWaltzParametersDatabase read(Path parametersFile) {
-        Objects.requireNonNull(parametersFile);
+    public static ParametersSet load(InputStream parametersFile) {
+        ParametersSet parametersDatabase = new ParametersSet();
+        try {
+            XMLInputFactory factory = XMLInputFactory.newInstance();
+            factory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+            factory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+            XMLStreamReader xmlReader = factory.createXMLStreamReader(parametersFile);
+            read(xmlReader, parametersDatabase);
+            xmlReader.close();
+        } catch (XMLStreamException e) {
+            throw new UncheckedXmlStreamException(e);
+        }
+        return parametersDatabase;
+    }
 
-        DynaWaltzParametersDatabase parametersDatabase = new DynaWaltzParametersDatabase();
+    public static ParametersSet load(Path parametersFile) {
+        ParametersSet parametersDatabase = new ParametersSet();
         try (Reader reader = Files.newBufferedReader(parametersFile, StandardCharsets.UTF_8)) {
             XMLInputFactory factory = XMLInputFactory.newInstance();
             factory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
             factory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
             XMLStreamReader xmlReader = factory.createXMLStreamReader(reader);
-            try {
-                read(xmlReader, parametersDatabase);
-            } finally {
-                xmlReader.close();
-            }
+            read(xmlReader, parametersDatabase);
+            xmlReader.close();
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         } catch (XMLStreamException e) {
@@ -160,37 +171,31 @@ public final class DynaWaltzParametersDatabase {
         return parametersDatabase;
     }
 
-    private static void read(XMLStreamReader xmlReader, DynaWaltzParametersDatabase parametersDatabase) {
-        try {
-            int state = xmlReader.next();
-            while (state == XMLStreamConstants.COMMENT) {
-                state = xmlReader.next();
-            }
-            XmlUtil.readUntilEndElement("parametersSet", xmlReader, () -> {
-                if (xmlReader.getLocalName().equals("set")) {
-                    String parameterSetId = xmlReader.getAttributeValue(null, "id");
-                    ParameterSet parameterSet = new ParameterSet();
-                    XmlUtil.readUntilEndElement("set", xmlReader, () -> {
-                        String name = xmlReader.getAttributeValue(null, "name");
-                        ParameterType type = ParameterType.valueOf(xmlReader.getAttributeValue(null, "type"));
-                        if (xmlReader.getLocalName().equals("par")) {
-                            String value = xmlReader.getAttributeValue(null, "value");
-                            parameterSet.addParameter(name, type, value);
-                        } else if (xmlReader.getLocalName().equals("reference")) {
-                            // Not supported
-                        } else {
-                            throw new PowsyblException("Unexpected element: " + xmlReader.getLocalName());
-                        }
-                    });
-                    parametersDatabase.addParameterSet(parameterSetId, parameterSet);
-                } else {
-                    throw new PowsyblException("Unexpected element: " + xmlReader.getLocalName());
-                }
-            });
-        } catch (XMLStreamException e) {
-            throw new UncheckedXmlStreamException(e);
+    private static void read(XMLStreamReader xmlReader, ParametersSet parametersDatabase) throws XMLStreamException {
+        int state = xmlReader.next();
+        while (state == XMLStreamConstants.COMMENT) {
+            state = xmlReader.next();
         }
+        XmlUtil.readUntilEndElement("parametersSet", xmlReader, () -> {
+            if (xmlReader.getLocalName().equals("set")) {
+                String parameterSetId = xmlReader.getAttributeValue(null, "id");
+                Set set = new Set();
+                XmlUtil.readUntilEndElement("set", xmlReader, () -> {
+                    String name = xmlReader.getAttributeValue(null, "name");
+                    ParameterType type = ParameterType.valueOf(xmlReader.getAttributeValue(null, "type"));
+                    if (xmlReader.getLocalName().equals("par")) {
+                        String value = xmlReader.getAttributeValue(null, "value");
+                        set.addParameter(name, type, value);
+                    } else if (xmlReader.getLocalName().equals("reference")) {
+                        // Not supported
+                    } else {
+                        throw new PowsyblException("Unexpected element: " + xmlReader.getLocalName());
+                    }
+                });
+                parametersDatabase.addParameterSet(parameterSetId, set);
+            } else {
+                throw new PowsyblException("Unexpected element: " + xmlReader.getLocalName());
+            }
+        });
     }
-
-    private final Map<String, ParameterSet> parameterSets;
 }
