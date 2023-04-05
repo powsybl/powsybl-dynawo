@@ -83,10 +83,6 @@ public abstract class AbstractGeneratorModel extends AbstractBlackBoxModel imple
         return switchOffSignalNodeVarName;
     }
 
-    public String getSwitchOffSignalEventVarName() {
-        return switchOffSignalEventVarName;
-    }
-
     public String getSwitchOffSignalAutomatonVarName() {
         return switchOffSignalAutomatonVarName;
     }
