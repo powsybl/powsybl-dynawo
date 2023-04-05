@@ -74,7 +74,6 @@ public abstract class AbstractGeneratorModel extends AbstractBlackBoxModel imple
         return varConnections;
     }
 
-    @Override
     public String getTerminalVarName() {
         return terminalVarName;
     }

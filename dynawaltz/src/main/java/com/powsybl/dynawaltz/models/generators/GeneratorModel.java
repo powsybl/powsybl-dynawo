@@ -12,5 +12,5 @@ import com.powsybl.dynawaltz.models.Model;
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  */
 public interface GeneratorModel extends Model {
-    String getTerminalVarName();
+
 }
