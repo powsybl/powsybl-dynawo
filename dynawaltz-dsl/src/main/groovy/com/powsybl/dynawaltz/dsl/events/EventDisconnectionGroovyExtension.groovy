@@ -11,7 +11,9 @@ import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.EventModel
 import com.powsybl.dynamicsimulation.groovy.EventModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractPureDynamicGroovyExtension
+import com.powsybl.dynawaltz.models.events.AbstractEventModel
 import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection
+import com.powsybl.dynawaltz.models.events.EventSetPointBoolean
 import com.powsybl.iidm.network.Branch
 import com.powsybl.iidm.network.Identifiable
 import com.powsybl.iidm.network.IdentifiableType
@@ -20,15 +22,18 @@ import com.powsybl.iidm.network.Network
 /**
  * An implementation of {@link EventModelGroovyExtension} that adds the <pre>EventQuadripoleDisconnection</pre> keyword to the DSL
  *
+ * @author Laurent Issertial <laurent.issertial at rte-france.com>
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 @AutoService(EventModelGroovyExtension.class)
-class EventQuadripoleDisconnectionGroovyExtension extends AbstractPureDynamicGroovyExtension<EventModel> implements EventModelGroovyExtension {
+class EventDisconnectionGroovyExtension extends AbstractPureDynamicGroovyExtension<EventModel> implements EventModelGroovyExtension {
 
-    private static final EnumSet<IdentifiableType> connectableEquipments = EnumSet.of(IdentifiableType.LINE, IdentifiableType.TWO_WINDINGS_TRANSFORMER)
+    private static final EnumSet<IdentifiableType> connectableEquipments = EnumSet.of(IdentifiableType.GENERATOR, IdentifiableType.LOAD)
 
-    EventQuadripoleDisconnectionGroovyExtension() {
-        modelTags = ["DisconnectQuadripole"]
+    private static final EnumSet<IdentifiableType> connectableQuadripoleEquipments = EnumSet.of(IdentifiableType.LINE, IdentifiableType.TWO_WINDINGS_TRANSFORMER)
+
+    EventDisconnectionGroovyExtension() {
+        modelTags = ["Disconnect"]
     }
 
     @Override
@@ -38,15 +43,20 @@ class EventQuadripoleDisconnectionGroovyExtension extends AbstractPureDynamicGro
 
     static class EventQuadripoleDisconnectionBuilder extends AbstractEventModelBuilder {
 
+        boolean disconnectSide = false
+        boolean isEquipment = false
+        boolean isQuadripoleEquipment = false
+
         boolean disconnectOrigin = true
         boolean disconnectExtremity = true
-
+        IdentifiableType identifiableType
 
         EventQuadripoleDisconnectionBuilder(Network network) {
             super(network)
         }
 
         void disconnectOnly(Branch.Side side) {
+            disconnectSide = true
             switch(side) {
                 case Branch.Side.ONE :
                     disconnectOrigin = true
@@ -65,15 +75,23 @@ class EventQuadripoleDisconnectionGroovyExtension extends AbstractPureDynamicGro
             if (identifiable == null) {
                 throw new DslException("Identifiable static id unknown: " + getStaticId())
             }
-            if (!connectableEquipments.contains(identifiable.getType())) {
+            identifiableType = identifiable.getType()
+            isEquipment = connectableEquipments.contains(identifiableType)
+            isQuadripoleEquipment = connectableQuadripoleEquipments.contains(identifiableType)
+            if (!isEquipment && !isQuadripoleEquipment) {
                 throw new DslException("Equipment " + getStaticId() + " cannot be disconnected")
+            } else if(isEquipment && disconnectSide) {
+                throw new DslException("Equipment " + getStaticId() + " is not a quadripole")
             }
         }
 
         @Override
-        EventQuadripoleDisconnection build() {
+        AbstractEventModel build() {
             checkData()
-            new EventQuadripoleDisconnection(staticId, startTime, disconnectOrigin, disconnectExtremity)
+            if(isEquipment)
+                new EventSetPointBoolean(staticId, identifiableType, startTime)
+            else if (isQuadripoleEquipment)
+                new EventQuadripoleDisconnection(staticId, identifiableType, startTime, disconnectOrigin, disconnectExtremity)
         }
     }
 }

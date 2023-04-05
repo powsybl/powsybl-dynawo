@@ -32,7 +32,7 @@ class DisconnectQuadripoleEventXmlTest extends AbstractDynamicModelXmlTest {
     }
 
     @Test
-    void writeDisconnectQuadripoleModel() throws SAXException, IOException, XMLStreamException {
+    void writeDisconnectModel() throws SAXException, IOException, XMLStreamException {
         DydXml.write(tmpDir, context);
         ParametersXml.write(tmpDir, context);
         validate("dyd.xsd", "disconnect_quadripole_dyd.xml", tmpDir.resolve(DynaWaltzConstants.DYD_FILENAME));

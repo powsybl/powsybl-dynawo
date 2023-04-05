@@ -7,7 +7,7 @@
 
 import com.powsybl.iidm.network.Branch
 
-DisconnectQuadripole {
+Disconnect {
     staticId "_BUS____1-BUS____5-1_AC"
     startTime 5
     disconnectOnly Branch.Side.TWO
