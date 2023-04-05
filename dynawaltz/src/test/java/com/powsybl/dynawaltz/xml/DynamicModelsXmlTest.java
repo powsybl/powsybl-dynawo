@@ -10,9 +10,12 @@ import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
+import com.powsybl.dynawaltz.models.events.DisconnectableEquipment;
+import com.powsybl.dynawaltz.models.events.QuadripoleDisconnectableEquipment;
 import com.powsybl.dynawaltz.models.generators.GeneratorFictitious;
 import com.powsybl.dynawaltz.models.generators.GeneratorSynchronousModel;
 import com.powsybl.dynawaltz.models.lines.LineModel;
+import com.powsybl.iidm.network.IdentifiableType;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
@@ -80,5 +83,22 @@ class DynamicModelsXmlTest extends DynaWaltzTestUtil {
         // default model not implemented
         e = assertThrows(PowsyblException.class, () -> dc.getDynamicModel("unknownID", GeneratorSynchronousModel.class));
         assertEquals("Default model not implemented for GeneratorSynchronousModel", e.getMessage());
+    }
+
+    @Test
+    void testDynamicModelGetterFromIdentifiableTypeException() {
+        DynaWaltzContext dc = new DynaWaltzContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, eventModels, curves, DynamicSimulationParameters.load(), DynaWaltzParameters.load());
+
+        // incorrect model
+        Exception e = assertThrows(PowsyblException.class, () -> dc.getDynamicModel("GEN5", IdentifiableType.GENERATOR, LineModel.class));
+        assertEquals("The model identified by the static id GEN5 is not the correct model", e.getMessage());
+
+        // dynamic model not found
+        e = assertThrows(PowsyblException.class, () -> dc.getDynamicModel("unknownID", IdentifiableType.DANGLING_LINE, DisconnectableEquipment.class));
+        assertEquals("No dynamic model associated with DANGLING_LINE", e.getMessage());
+
+        // requested interface not implemented
+        e = assertThrows(PowsyblException.class, () -> dc.getDynamicModel("unknownID", IdentifiableType.GENERATOR, QuadripoleDisconnectableEquipment.class));
+        assertEquals("Default model does not implement QuadripoleDisconnectableEquipment interface", e.getMessage());
     }
 }

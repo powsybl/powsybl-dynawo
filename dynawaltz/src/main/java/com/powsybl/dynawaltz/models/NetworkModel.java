@@ -60,6 +60,9 @@ public class NetworkModel {
     public <T extends Model> T getDefaultModel(String staticId, IdentifiableType equipmentType, Class<T> connectableClass) {
 
         Class<? extends Model> equipmentClass = powSyBlTypeToModel.get(equipmentType);
+        if (equipmentClass == null) {
+            throw new PowsyblException("No dynamic model associated with " + equipmentType);
+        }
         DefaultModelFactory<? extends Model> dmf = factoryMap.get(equipmentClass);
         if (dmf != null) {
             Model defaultModel = dmf.getDefaultModel(staticId);
