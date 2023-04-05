@@ -8,10 +8,10 @@
 
 package eventModels
 
-EventQuadripoleDisconnection {
+import com.powsybl.iidm.network.Branch
+
+Disconnect {
     staticId "NHV1_NHV2_1"
-    eventModelId "EM_NHV1_NHV2_1"
     startTime 4
-    disconnectOrigin false
-    disconnectExtremity true
+    disconnectOnly Branch.Side.ONE
 }

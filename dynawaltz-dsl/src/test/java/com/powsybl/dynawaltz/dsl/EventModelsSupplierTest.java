@@ -37,7 +37,7 @@ class EventModelsSupplierTest extends AbstractModelSupplierTest {
 
     @Test
     void testGroovyExtensionCount() {
-        assertEquals(2, EXTENSIONS.size());
+        assertEquals(1, EXTENSIONS.size());
     }
 
     @ParameterizedTest(name = "{0}")
@@ -60,8 +60,8 @@ class EventModelsSupplierTest extends AbstractModelSupplierTest {
 
     private static Stream<Arguments> provideEventModelData() {
         return Stream.of(
-                Arguments.of("quadripoleDisconnection", EventQuadripoleDisconnection.class, EurostagTutorialExample1Factory.create(), "NHV1_NHV2_1", "EM_NHV1_NHV2_1", "EventQuadripoleDisconnection", 4),
-                Arguments.of("setPointBoolean", EventSetPointBoolean.class, EurostagTutorialExample1Factory.create(), "GEN", "EM_GEN", "EventSetPointBoolean", 1)
+                Arguments.of("quadripoleDisconnection", EventQuadripoleDisconnection.class, EurostagTutorialExample1Factory.create(), "NHV1_NHV2_1", "Disconnect_NHV1_NHV2_1", "EventQuadripoleDisconnection", 4),
+                Arguments.of("equipmentDisconnection", EventSetPointBoolean.class, EurostagTutorialExample1Factory.create(), "GEN", "Disconnect_GEN", null, 1)
         );
     }
 
