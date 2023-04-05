@@ -47,12 +47,10 @@ class EventXmlTest extends DynaWaltzTestUtil {
         eventModels.add(new EventQuadripoleDisconnection("NHV1_NHV2_1", IdentifiableType.LINE, 5));
         eventModels.add(new EventQuadripoleDisconnection("NHV1_NHV2_1", IdentifiableType.LINE, 5, true, false));
         eventModels.add(new EventSetPointBoolean("GEN2", IdentifiableType.GENERATOR, 1, true));
-        eventModels.add(new EventSetPointBoolean("GEN2", IdentifiableType.GENERATOR,1, false));
+        eventModels.add(new EventSetPointBoolean("GEN2", IdentifiableType.GENERATOR, 1, false));
         String workingVariantId = network.getVariantManager().getWorkingVariantId();
         Exception e = assertThrows(PowsyblException.class, () -> new DynaWaltzContext(network, workingVariantId, dynamicModels, eventModels, curves, null, null));
-        //TODO fix TU
-        assertEquals("Duplicate dynamicId: [Disconnect_NHV1_NHV2_1]", e.getMessage());
-        //assertEquals("Duplicate dynamicId: [duplicateID, duplicateID2]", e.getMessage());
+        assertEquals("Duplicate dynamicId: [Disconnect_NHV1_NHV2_1, Disconnect_GEN2]", e.getMessage());
     }
 
 }

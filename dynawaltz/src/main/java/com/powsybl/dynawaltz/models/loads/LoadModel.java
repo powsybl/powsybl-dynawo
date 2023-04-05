@@ -14,5 +14,4 @@ import com.powsybl.dynawaltz.models.Model;
  */
 public interface LoadModel extends Model {
 
-    String getSwitchOffSignalNodeVarName();
 }

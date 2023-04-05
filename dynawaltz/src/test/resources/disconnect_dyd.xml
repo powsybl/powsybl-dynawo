@@ -19,7 +19,7 @@
         <dyn:connect var1="event_state1" var2="generator_switchOffSignal2"/>
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_EventSetPointBoolean-NetworkLoad">
-        <dyn:connect var1="event_state1" var2="load_switchOffSignal2"/>
+        <dyn:connect var1="event_state1" var2="@NAME@_state_value"/>
     </dyn:macroConnector>
     <dyn:macroConnect connector="MC_EventSetPointBoolean-GeneratorFictitious" id1="Disconnect_GEN" id2="BBM_GEN"/>
     <dyn:macroConnect connector="MC_EventSetPointBoolean-NetworkLoad" id1="Disconnect_LOAD" id2="NETWORK" name2="LOAD"/>

@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.models.loads;
+package com.powsybl.dynawaltz.models.generators;
 
 import com.powsybl.dynawaltz.models.AbstractNetworkModel;
 import com.powsybl.dynawaltz.models.events.DisconnectableEquipment;
@@ -13,19 +13,24 @@ import com.powsybl.dynawaltz.models.events.DisconnectableEquipment;
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class DefaultLoadModel extends AbstractNetworkModel implements LoadModel, DisconnectableEquipment {
+public class DefaultGeneratorModel extends AbstractNetworkModel implements GeneratorModel, DisconnectableEquipment {
 
-    public DefaultLoadModel(String staticId) {
+    public DefaultGeneratorModel(String staticId) {
         super(staticId);
     }
 
     @Override
     public String getName() {
-        return "NetworkLoad";
+        return "NetworkGenerator";
     }
 
     public String getStateValueVarName() {
         return "@NAME@_state_value";
+    }
+
+    @Override
+    public String getTerminalVarName() {
+        return "@NAME@_terminal";
     }
 
     @Override

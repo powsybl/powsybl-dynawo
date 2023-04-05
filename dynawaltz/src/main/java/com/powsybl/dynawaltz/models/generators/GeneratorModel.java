@@ -13,14 +13,4 @@ import com.powsybl.dynawaltz.models.EquipmentBlackBoxModelModel;
  */
 public interface GeneratorModel extends EquipmentBlackBoxModelModel {
     String getTerminalVarName();
-
-    String getSwitchOffSignalNodeVarName();
-
-    String getSwitchOffSignalEventVarName();
-
-    String getSwitchOffSignalAutomatonVarName();
-
-    String getRunningVarName();
-
-    String getQStatorPuVarName();
 }

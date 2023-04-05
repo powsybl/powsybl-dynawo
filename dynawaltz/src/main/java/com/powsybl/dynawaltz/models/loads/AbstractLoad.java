@@ -41,7 +41,6 @@ public abstract class AbstractLoad extends AbstractEquipmentBlackBoxModel<Load> 
 
     abstract List<VarConnection> getVarConnectionsWithBus(BusModel connected);
 
-    @Override
     public String getSwitchOffSignalNodeVarName() {
         return "load_switchOffSignal2";
     }
