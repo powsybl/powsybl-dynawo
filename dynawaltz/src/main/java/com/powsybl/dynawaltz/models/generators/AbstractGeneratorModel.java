@@ -79,27 +79,22 @@ public abstract class AbstractGeneratorModel extends AbstractBlackBoxModel imple
         return terminalVarName;
     }
 
-    @Override
     public String getSwitchOffSignalNodeVarName() {
         return switchOffSignalNodeVarName;
     }
 
-    @Override
     public String getSwitchOffSignalEventVarName() {
         return switchOffSignalEventVarName;
     }
 
-    @Override
     public String getSwitchOffSignalAutomatonVarName() {
         return switchOffSignalAutomatonVarName;
     }
 
-    @Override
     public String getRunningVarName() {
         return runningVarName;
     }
 
-    @Override
     public String getQStatorPuVarName() {
         return "generator_QStatorPu";
     }
