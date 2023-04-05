@@ -8,9 +8,7 @@
 
 package eventModels
 
-EventSetPointBoolean {
+Disconnect {
     staticId "GEN"
-    eventModelId "EM_GEN"
     startTime 1
-    stateEvent true
 }

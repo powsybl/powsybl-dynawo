@@ -8,6 +8,7 @@ package com.powsybl.dynawaltz.models;
 
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.xml.MacroStaticReference;
+import com.powsybl.iidm.network.IdentifiableType;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -119,6 +120,12 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel {
     protected final <T extends Model> void createMacroConnections(String modelStaticId, Class<T> modelClass, Function<T, List<VarConnection>> varConnectionsSupplier, DynaWaltzContext context, MacroConnectAttribute... connectFromAttributes) {
         T connectedModel = context.getDynamicModel(modelStaticId, modelClass);
         createMacroConnections(connectedModel, varConnectionsSupplier.apply(connectedModel), context, connectFromAttributes);
+    }
+
+    protected <T extends Model> void createMacroConnections(String modelStaticId, IdentifiableType equipmentType, Class<T> modelClass, Function<T, List<VarConnection>> varConnectionsSupplier, DynaWaltzContext context) {
+        T connectedModel = context.getDynamicModel(modelStaticId, equipmentType, modelClass);
+        String macroConnectorId = context.addMacroConnector(getName(), connectedModel.getName(), varConnectionsSupplier.apply(connectedModel));
+        context.addMacroConnect(macroConnectorId, getMacroConnectFromAttributes(), connectedModel.getMacroConnectToAttributes());
     }
 
     /**
