@@ -9,7 +9,7 @@ import com.powsybl.iidm.network.Line
 import com.powsybl.iidm.network.Branch
 
 for (Line line : network.lines) {
-    DisconnectQuadripole {
+    Disconnect {
         staticId line.id
         startTime 4
         disconnectOnly Branch.Side.TWO
