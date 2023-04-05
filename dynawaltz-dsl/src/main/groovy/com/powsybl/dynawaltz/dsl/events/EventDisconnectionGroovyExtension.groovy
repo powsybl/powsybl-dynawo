@@ -17,6 +17,7 @@ import com.powsybl.dynawaltz.models.events.EventSetPointBoolean
 import com.powsybl.iidm.network.Branch
 import com.powsybl.iidm.network.Identifiable
 import com.powsybl.iidm.network.IdentifiableType
+import com.powsybl.iidm.network.Line
 import com.powsybl.iidm.network.Network
 
 /**
@@ -49,7 +50,7 @@ class EventDisconnectionGroovyExtension extends AbstractPureDynamicGroovyExtensi
 
         boolean disconnectOrigin = true
         boolean disconnectExtremity = true
-        IdentifiableType identifiableType
+        Identifiable<? extends Identifiable> identifiable
 
         EventQuadripoleDisconnectionBuilder(Network network) {
             super(network)
@@ -71,13 +72,12 @@ class EventDisconnectionGroovyExtension extends AbstractPureDynamicGroovyExtensi
 
         void checkData() {
             super.checkData()
-            Identifiable<?> identifiable = network.getIdentifiable(staticId)
+            identifiable = network.getIdentifiable(staticId)
             if (identifiable == null) {
                 throw new DslException("Identifiable static id unknown: " + getStaticId())
             }
-            identifiableType = identifiable.getType()
-            isEquipment = connectableEquipments.contains(identifiableType)
-            isQuadripoleEquipment = connectableQuadripoleEquipments.contains(identifiableType)
+            isEquipment = connectableEquipments.contains(identifiable.getType())
+            isQuadripoleEquipment = connectableQuadripoleEquipments.contains(identifiable.getType())
             if (!isEquipment && !isQuadripoleEquipment) {
                 throw new DslException("Equipment " + getStaticId() + " cannot be disconnected")
             } else if(isEquipment && disconnectSide) {
@@ -89,9 +89,9 @@ class EventDisconnectionGroovyExtension extends AbstractPureDynamicGroovyExtensi
         AbstractEventModel build() {
             checkData()
             if(isEquipment)
-                new EventSetPointBoolean(staticId, identifiableType, startTime)
+                new EventSetPointBoolean(identifiable, startTime)
             else if (isQuadripoleEquipment)
-                new EventQuadripoleDisconnection(staticId, identifiableType, startTime, disconnectOrigin, disconnectExtremity)
+                new EventQuadripoleDisconnection(identifiable, startTime, disconnectOrigin, disconnectExtremity)
         }
     }
 }

@@ -9,7 +9,8 @@ package com.powsybl.dynawaltz.models.events;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.xml.ParametersXml;
-import com.powsybl.iidm.network.IdentifiableType;
+import com.powsybl.iidm.network.Generator;
+import com.powsybl.iidm.network.Load;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -28,13 +29,22 @@ public class EventSetPointBoolean extends AbstractEventModel {
 
     private final boolean disconnect;
 
-    public EventSetPointBoolean(String disconnectableStaticId, IdentifiableType type, double startTime, boolean disconnect) {
-        super(generateEventId(disconnectableStaticId), disconnectableStaticId, type, startTime);
+    public EventSetPointBoolean(Generator equipment, double startTime, boolean disconnect) {
+        super(equipment, startTime);
         this.disconnect = disconnect;
     }
 
-    public EventSetPointBoolean(String disconnectableStaticId, IdentifiableType type, double startTime) {
-        this(disconnectableStaticId, type, startTime, true);
+    public EventSetPointBoolean(Generator equipment, double startTime) {
+        this(equipment, startTime, true);
+    }
+
+    public EventSetPointBoolean(Load equipment, double startTime, boolean disconnect) {
+        super(equipment, startTime);
+        this.disconnect = disconnect;
+    }
+
+    public EventSetPointBoolean(Load equipment, double startTime) {
+        this(equipment, startTime, true);
     }
 
     @Override
@@ -48,7 +58,7 @@ public class EventSetPointBoolean extends AbstractEventModel {
 
     @Override
     public void createMacroConnections(DynaWaltzContext context) {
-        createMacroConnections(getEquipmentStaticId(), getEquipmentType(), DisconnectableEquipment.class, this::getVarConnectionsWithDisconnectable, context);
+        createMacroConnections(getEquipment(), DisconnectableEquipment.class, this::getVarConnectionsWithDisconnectable, context);
     }
 
     @Override
@@ -64,7 +74,7 @@ public class EventSetPointBoolean extends AbstractEventModel {
     @Override
     protected void writeDynamicAttributes(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
         writer.writeAttribute("id", getDynamicModelId());
-        writer.writeAttribute("lib", context.isWithoutBlackBoxDynamicModel(getEquipmentStaticId()) ? DEFAULT_MODEL_LIB : DYNAMIC_MODEL_LIB);
+        writer.writeAttribute("lib", context.isWithoutBlackBoxDynamicModel(getEquipment().getId()) ? DEFAULT_MODEL_LIB : DYNAMIC_MODEL_LIB);
         writer.writeAttribute("parFile", getParFile(context));
         writer.writeAttribute("parId", getParameterSetId());
     }

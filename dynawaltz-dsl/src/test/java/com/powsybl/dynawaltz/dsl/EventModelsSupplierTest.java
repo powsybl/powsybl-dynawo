@@ -53,7 +53,7 @@ class EventModelsSupplierTest extends AbstractModelSupplierTest {
     void assertEventModel(AbstractEventModel em, String dynamicId, String equipmentStaticId, String lib, double startTime) {
         assertEquals(dynamicId, em.getDynamicModelId());
         assertTrue(em.getStaticId().isEmpty());
-        assertEquals(equipmentStaticId, em.getEquipmentStaticId());
+        assertEquals(equipmentStaticId, em.getEquipment().getId());
         assertEquals(dynamicId, em.getParameterSetId());
         assertEquals(lib, em.getLib());
         assertEquals(startTime, em.getStartTime());

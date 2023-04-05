@@ -19,6 +19,7 @@ import com.powsybl.dynawaltz.models.shunts.DefaultShuntModel;
 import com.powsybl.dynawaltz.models.shunts.ShuntModel;
 import com.powsybl.dynawaltz.models.transformers.DefaultTransformerModel;
 import com.powsybl.dynawaltz.models.transformers.TransformerModel;
+import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.IdentifiableType;
 
 import java.util.EnumMap;
@@ -57,19 +58,19 @@ public class NetworkModel {
         throw new PowsyblException("Default model not implemented for " + clazz.getSimpleName());
     }
 
-    public <T extends Model> T getDefaultModel(String staticId, IdentifiableType equipmentType, Class<T> connectableClass) {
+    public <T extends Model> T getDefaultModel(Identifiable<?> equipment, Class<T> connectableClass) {
 
-        Class<? extends Model> equipmentClass = powSyBlTypeToModel.get(equipmentType);
+        Class<? extends Model> equipmentClass = powSyBlTypeToModel.get(equipment.getType());
         if (equipmentClass == null) {
-            throw new PowsyblException("No dynamic model associated with " + equipmentType);
+            throw new PowsyblException("No dynamic model associated with " + equipment.getType());
         }
         DefaultModelFactory<? extends Model> dmf = factoryMap.get(equipmentClass);
         if (dmf != null) {
-            Model defaultModel = dmf.getDefaultModel(staticId);
+            Model defaultModel = dmf.getDefaultModel(equipment.getId());
             if (connectableClass.isInstance(defaultModel)) {
                 return connectableClass.cast(defaultModel);
             }
-            throw new PowsyblException("Default model does not implement " + connectableClass.getSimpleName() + " interface");
+            throw new PowsyblException("Default model " + defaultModel.getClass().getSimpleName() + " does not implement " + connectableClass.getSimpleName() + " interface");
         }
         throw new PowsyblException("Default model not implemented for " + equipmentClass.getSimpleName());
     }
