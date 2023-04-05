@@ -27,8 +27,8 @@ class DisconnectQuadripoleEventXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void addDynamicModels() {
-        eventModels.add(new EventQuadripoleDisconnection("NHV1_NHV2_1", network.getIdentifiable("NHV1_NHV2_1").getType(), 1));
-        eventModels.add(new EventQuadripoleDisconnection("NGEN_NHV1", network.getIdentifiable("NGEN_NHV1").getType(), 1, true, false));
+        eventModels.add(new EventQuadripoleDisconnection(network.getLine("NHV1_NHV2_1"), 1));
+        eventModels.add(new EventQuadripoleDisconnection(network.getTwoWindingsTransformer("NGEN_NHV1"), 1, true, false));
     }
 
     @Test

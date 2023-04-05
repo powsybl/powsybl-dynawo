@@ -9,7 +9,8 @@ package com.powsybl.dynawaltz.models.events;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.xml.ParametersXml;
-import com.powsybl.iidm.network.IdentifiableType;
+import com.powsybl.iidm.network.Line;
+import com.powsybl.iidm.network.TwoWindingsTransformer;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -26,14 +27,24 @@ public class EventQuadripoleDisconnection extends AbstractEventModel {
     private final boolean disconnectOrigin;
     private final boolean disconnectExtremity;
 
-    public EventQuadripoleDisconnection(String disconnectableStaticId, IdentifiableType type, double startTime, boolean disconnectOrigin, boolean disconnectExtremity) {
-        super(generateEventId(disconnectableStaticId), disconnectableStaticId, type, startTime);
+    public EventQuadripoleDisconnection(Line equipment, double startTime, boolean disconnectOrigin, boolean disconnectExtremity) {
+        super(equipment, startTime);
         this.disconnectOrigin = disconnectOrigin;
         this.disconnectExtremity = disconnectExtremity;
     }
 
-    public EventQuadripoleDisconnection(String disconnectableStaticId, IdentifiableType type, double startTime) {
-        this(disconnectableStaticId, type, startTime, true, true);
+    public EventQuadripoleDisconnection(TwoWindingsTransformer equipment, double startTime, boolean disconnectOrigin, boolean disconnectExtremity) {
+        super(equipment, startTime);
+        this.disconnectOrigin = disconnectOrigin;
+        this.disconnectExtremity = disconnectExtremity;
+    }
+
+    public EventQuadripoleDisconnection(Line equipment, double startTime) {
+        this(equipment, startTime, true, true);
+    }
+
+    public EventQuadripoleDisconnection(TwoWindingsTransformer equipment, double startTime) {
+        this(equipment, startTime, true, true);
     }
 
     @Override
@@ -47,7 +58,7 @@ public class EventQuadripoleDisconnection extends AbstractEventModel {
 
     @Override
     public void createMacroConnections(DynaWaltzContext context) {
-        createMacroConnections(getEquipmentStaticId(), getEquipmentType(), QuadripoleDisconnectableEquipment.class, this::getVarConnectionsWithQuadripoleEquipment, context);
+        createMacroConnections(getEquipment(), QuadripoleDisconnectableEquipment.class, this::getVarConnectionsWithQuadripoleEquipment, context);
     }
 
     @Override

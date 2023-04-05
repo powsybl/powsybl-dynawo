@@ -11,7 +11,7 @@ import com.powsybl.dynamicsimulation.EventModel;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawaltz.xml.ParametersXml;
-import com.powsybl.iidm.network.IdentifiableType;
+import com.powsybl.iidm.network.Identifiable;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -26,14 +26,12 @@ import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 public abstract class AbstractEventModel extends AbstractPureDynamicBlackBoxModel implements EventModel {
 
     private static final String DISCONNECT_PREFIX = "Disconnect_";
-    private final String equipmentStaticId;
-    private final IdentifiableType equipmentType;
+    private final Identifiable<?> equipment;
     private final double startTime;
 
-    protected AbstractEventModel(String dynamicModelId, String equipmentStaticId, IdentifiableType equipmentType, double startTime) {
-        super(dynamicModelId, dynamicModelId);
-        this.equipmentStaticId = equipmentStaticId;
-        this.equipmentType = equipmentType;
+    protected AbstractEventModel(Identifiable<?> equipment, double startTime) {
+        super(generateEventId(equipment.getId()));
+        this.equipment = equipment;
         this.startTime = startTime;
     }
 
@@ -41,12 +39,8 @@ public abstract class AbstractEventModel extends AbstractPureDynamicBlackBoxMode
         return DISCONNECT_PREFIX + equipmentStaticId;
     }
 
-    public String getEquipmentStaticId() {
-        return equipmentStaticId;
-    }
-
-    public IdentifiableType getEquipmentType() {
-        return equipmentType;
+    public Identifiable<?> getEquipment() {
+        return equipment;
     }
 
     @Override
