@@ -67,4 +67,10 @@ public class TransformerFixedRatio extends AbstractBlackBoxModel implements Tran
     public String getDisconnectableVarName() {
         return getStateValueVarName();
     }
+
+    //TODO check correct value
+    @Override
+    public List<VarConnection> getTapChangerBlockerVarConnections() {
+        return List.of(new VarConnection(TAP_CHANGER_BLOCKING_BLOCKED_T, "transformer_TAP_CHANGER_locked_value"));
+    }
 }

@@ -10,11 +10,14 @@ import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.xml.ParametersXml;
 import com.powsybl.iidm.network.Generator;
+import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Load;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 
 import static com.powsybl.dynawaltz.DynaWaltzParametersDatabase.ParameterType.BOOL;
 
@@ -23,6 +26,8 @@ import static com.powsybl.dynawaltz.DynaWaltzParametersDatabase.ParameterType.BO
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 public class EventSetPointBoolean extends AbstractEventModel {
+
+    private static final Set<IdentifiableType> COMPATIBLE_EQUIPMENTS = EnumSet.of(IdentifiableType.GENERATOR, IdentifiableType.LOAD);
 
     private static final String DYNAMIC_MODEL_LIB = "EventSetPointBoolean";
     private static final String DEFAULT_MODEL_LIB = "EventConnectedStatus";
@@ -45,6 +50,10 @@ public class EventSetPointBoolean extends AbstractEventModel {
 
     public EventSetPointBoolean(Load equipment, double startTime) {
         this(equipment, startTime, true);
+    }
+
+    public static boolean isCompatibleEquipment(IdentifiableType type) {
+        return COMPATIBLE_EQUIPMENTS.contains(type);
     }
 
     @Override

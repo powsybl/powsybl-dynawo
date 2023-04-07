@@ -16,8 +16,6 @@ import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection
 import com.powsybl.dynawaltz.models.events.EventSetPointBoolean
 import com.powsybl.iidm.network.Branch
 import com.powsybl.iidm.network.Identifiable
-import com.powsybl.iidm.network.IdentifiableType
-import com.powsybl.iidm.network.Line
 import com.powsybl.iidm.network.Network
 
 /**
@@ -28,10 +26,6 @@ import com.powsybl.iidm.network.Network
  */
 @AutoService(EventModelGroovyExtension.class)
 class EventDisconnectionGroovyExtension extends AbstractPureDynamicGroovyExtension<EventModel> implements EventModelGroovyExtension {
-
-    private static final EnumSet<IdentifiableType> connectableEquipments = EnumSet.of(IdentifiableType.GENERATOR, IdentifiableType.LOAD)
-
-    private static final EnumSet<IdentifiableType> connectableQuadripoleEquipments = EnumSet.of(IdentifiableType.LINE, IdentifiableType.TWO_WINDINGS_TRANSFORMER)
 
     EventDisconnectionGroovyExtension() {
         modelTags = ["Disconnect"]
@@ -76,8 +70,8 @@ class EventDisconnectionGroovyExtension extends AbstractPureDynamicGroovyExtensi
             if (identifiable == null) {
                 throw new DslException("Identifiable static id unknown: " + getStaticId())
             }
-            isEquipment = connectableEquipments.contains(identifiable.getType())
-            isQuadripoleEquipment = connectableQuadripoleEquipments.contains(identifiable.getType())
+            isEquipment = EventSetPointBoolean.isCompatibleEquipment(identifiable.getType())
+            isQuadripoleEquipment = EventQuadripoleDisconnection.isCompatibleEquipment(identifiable.getType())
             if (!isEquipment && !isQuadripoleEquipment) {
                 throw new DslException("Equipment " + getStaticId() + " cannot be disconnected")
             } else if(isEquipment && disconnectSide) {

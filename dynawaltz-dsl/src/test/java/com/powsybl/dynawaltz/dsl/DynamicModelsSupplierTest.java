@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawaltz.dsl;
 
+import com.powsybl.dsl.DslException;
 import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynamicsimulation.DynamicModelsSupplier;
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension;
@@ -15,6 +16,7 @@ import com.powsybl.dynamicsimulation.groovy.GroovyExtension;
 import com.powsybl.dynawaltz.DynaWaltzProvider;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton;
+import com.powsybl.dynawaltz.models.automatons.TapChangerBlockingAutomaton;
 import com.powsybl.dynawaltz.models.buses.StandardBus;
 import com.powsybl.dynawaltz.models.generators.GeneratorFictitious;
 import com.powsybl.dynawaltz.models.generators.GeneratorSynchronous;
@@ -35,8 +37,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
@@ -48,7 +49,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
 
     @Test
     void testGroovyExtensionCount() {
-        assertEquals(10, EXTENSIONS.size());
+        assertEquals(11, EXTENSIONS.size());
     }
 
     @ParameterizedTest(name = "{0}")
@@ -75,6 +76,27 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
         assertEquals("NHV1_NHV2_1", bbm.getLineStaticId());
     }
 
+    @Test
+    void testTapChangerBlockingAutomaton() {
+        DynamicModelsSupplier supplier = new GroovyDynamicModelsSupplier(getResourceAsStream("tapChanger"), EXTENSIONS);
+        List<DynamicModel> dynamicModels = supplier.get(EurostagTutorialExample1Factory.create());
+        assertEquals(1, dynamicModels.size());
+        assertTrue(dynamicModels.get(0) instanceof TapChangerBlockingAutomaton);
+        TapChangerBlockingAutomaton bbm = (TapChangerBlockingAutomaton) dynamicModels.get(0);
+        assertEquals("ZAB", bbm.getDynamicModelId());
+        assertTrue(bbm.getStaticId().isEmpty());
+        assertEquals("ZAB", bbm.getParameterSetId());
+        assertEquals("TapChangerBlockingAutomaton1", bbm.getLib());
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("provideExceptionsModel")
+    void testDslExceptions(String groovyScriptName, Network network, String exceptionMessage) {
+        DynamicModelsSupplier supplier = new GroovyDynamicModelsSupplier(getResourceAsStream(groovyScriptName), EXTENSIONS);
+        Exception e = assertThrows(DslException.class, () -> supplier.get(network));
+        assertEquals(exceptionMessage, e.getMessage());
+    }
+
     void assertBlackBoxModel(BlackBoxModel bbm, String dynamicId, String staticId, String parameterId, String lib) {
         assertEquals(dynamicId, bbm.getDynamicModelId());
         assertEquals(staticId, bbm.getStaticId().orElseThrow());
@@ -93,6 +115,13 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                 Arguments.of("gen", GeneratorSynchronous.class, EurostagTutorialExample1Factory.create(), "GEN", "BBM_GEN", "GSFWPR", "GeneratorSynchronousFourWindingsProportionalRegulations"),
                 Arguments.of("omegaGen", OmegaRefGenerator.class, EurostagTutorialExample1Factory.create(), "GEN", "BBM_GEN", "GPQ", "GeneratorPQ"),
                 Arguments.of("transformer", TransformerFixedRatio.class, EurostagTutorialExample1Factory.create(), "NGEN_NHV1", "BBM_NGEN_NHV1", "TFR", "TransformerFixedRatio")
+        );
+    }
+
+    private static Stream<Arguments> provideExceptionsModel() {
+        return Stream.of(
+                Arguments.of("tapChangerBusException", EurostagTutorialExample1Factory.create(), "Bus static id unknown: LOAD"),
+                Arguments.of("tapChangerCompatibleException", EurostagTutorialExample1Factory.create(), "GENERATOR GEN is not compatible")
         );
     }
 
