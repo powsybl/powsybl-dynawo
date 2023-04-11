@@ -50,7 +50,7 @@ class TapChangerBlockingAutomatonXmlTest extends AbstractDynamicModelXmlTest {
         dynamicModels.add(new TapChangerBlockingAutomaton("TapChanger1", "TapChangerPar",
                 network.getTwoWindingsTransformerStream().collect(Collectors.toList()),
                 List.of(network.getLoad("LOAD"), network.getLoad("LOAD2")),
-                network.getBusBreakerView().getBus("NHV1")));
+                List.of(network.getBusBreakerView().getBus("NHV1"), network.getBusBreakerView().getBus("NHV2"))));
     }
 
     @Test
@@ -64,7 +64,7 @@ class TapChangerBlockingAutomatonXmlTest extends AbstractDynamicModelXmlTest {
     @Test
     void testMonitoredEquipmentsLimit() {
 
-        Bus bus = network.getBusBreakerView().getBus("NHV1");
+        List<Bus> buses = List.of(network.getBusBreakerView().getBus("NHV1"));
         List<TwoWindingsTransformer> emptyTransformerList = Collections.emptyList();
         List<TwoWindingsTransformer> transformers = new ArrayList<>();
         //TODO replace list with set ?
@@ -79,14 +79,14 @@ class TapChangerBlockingAutomatonXmlTest extends AbstractDynamicModelXmlTest {
                 new TapChangerBlockingAutomaton("TapChanger1",
                     "TapChangerPar",
                     emptyTransformerList,
-                    bus));
+                    buses));
         assertEquals("No Tap changers to monitor", e.getMessage());
 
         e = assertThrows(PowsyblException.class, () ->
                 new TapChangerBlockingAutomaton("TapChanger1",
                         "TapChangerPar",
                         transformers,
-                        bus));
+                        buses));
         assertEquals("Tap changer blocking automaton can only handle 5 equipments at the same time", e.getMessage());
     }
 }

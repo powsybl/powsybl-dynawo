@@ -33,13 +33,13 @@ public class TapChangerBlockingAutomaton extends AbstractPureDynamicBlackBoxMode
 
     private final List<TwoWindingsTransformer> transformers;
     private final List<Load> loadsWithTransformer;
-    private final Bus uMeasurement;
+    private final List<Bus> uMeasurements;
 
-    public TapChangerBlockingAutomaton(String dynamicModelId, String parameterSetId, List<TwoWindingsTransformer> transformers, List<Load> loadsWithTransformer, Bus uMeasurement) {
+    public TapChangerBlockingAutomaton(String dynamicModelId, String parameterSetId, List<TwoWindingsTransformer> transformers, List<Load> loadsWithTransformer, List<Bus> uMeasurements) {
         super(dynamicModelId, parameterSetId);
         this.transformers = transformers;
         this.loadsWithTransformer = loadsWithTransformer;
-        this.uMeasurement = uMeasurement;
+        this.uMeasurements = uMeasurements;
         if (transformers.isEmpty() && loadsWithTransformer.isEmpty()) {
             throw new PowsyblException("No Tap changers to monitor");
         }
@@ -48,8 +48,8 @@ public class TapChangerBlockingAutomaton extends AbstractPureDynamicBlackBoxMode
         }
     }
 
-    public TapChangerBlockingAutomaton(String dynamicModelId, String parameterSetId, List<TwoWindingsTransformer> transformers, Bus uMeasurement) {
-        this(dynamicModelId, parameterSetId, transformers, Collections.emptyList(), uMeasurement);
+    public TapChangerBlockingAutomaton(String dynamicModelId, String parameterSetId, List<TwoWindingsTransformer> transformers, List<Bus> uMeasurements) {
+        this(dynamicModelId, parameterSetId, transformers, Collections.emptyList(), uMeasurements);
     }
 
     public static boolean isCompatibleEquipment(IdentifiableType type) {
@@ -71,7 +71,9 @@ public class TapChangerBlockingAutomaton extends AbstractPureDynamicBlackBoxMode
         for (Load load : loadsWithTransformer) {
             createMacroConnections(load, TapChangerModel.class, this::getVarConnectionsWithTapChanger, context);
         }
-        createMacroConnections(uMeasurement.getId(), BusModel.class, this::getVarConnectionsWithBus, context);
+        for (Bus bus : uMeasurements) {
+            createMacroConnections(bus.getId(), BusModel.class, this::getVarConnectionsWithBus, context);
+        }
     }
 
     private List<VarConnection> getVarConnectionsWithTapChanger(TapChangerModel connected) {

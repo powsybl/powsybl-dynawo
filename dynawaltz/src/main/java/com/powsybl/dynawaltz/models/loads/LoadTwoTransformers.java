@@ -7,12 +7,24 @@
  */
 package com.powsybl.dynawaltz.models.loads;
 
+import com.powsybl.dynawaltz.models.VarConnection;
+import com.powsybl.dynawaltz.models.VarMapping;
+import com.powsybl.dynawaltz.models.buses.BusModel;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class LoadTwoTransformers extends LoadOneTransformer {
+public class LoadTwoTransformers extends AbstractLoad {
 
     //TODO see varmapping & var connections
+    protected static final List<VarMapping> VAR_MAPPING = Arrays.asList(
+            new VarMapping("transformerT_P1Pu_value", "p"),
+            new VarMapping("transformerT_Q1Pu_value", "q"),
+            new VarMapping("transformerT_state", "state"));
 
     public LoadTwoTransformers(String dynamicModelId, String staticId, String parameterSetId) {
         super(dynamicModelId, staticId, parameterSetId);
@@ -21,5 +33,23 @@ public class LoadTwoTransformers extends LoadOneTransformer {
     @Override
     public String getLib() {
         return "LoadTwoTransformers";
+    }
+
+    @Override
+    protected List<VarConnection> getVarConnectionsWithBus(BusModel connected) {
+        List<VarConnection> varConnections = new ArrayList<>(3);
+        varConnections.add(new VarConnection("transformerT_terminal", connected.getTerminalVarName()));
+        connected.getSwitchOffSignalVarName()
+                .ifPresent(switchOff -> {
+                    varConnections.add(new VarConnection("transformerT_switchOffSignal1", switchOff));
+                    varConnections.add(new VarConnection("transformerD_switchOffSignal1", switchOff));
+                    varConnections.add(new VarConnection("load_switchOffSignal1", switchOff));
+                });
+        return varConnections;
+    }
+
+    @Override
+    public List<VarMapping> getVarsMapping() {
+        return VAR_MAPPING;
     }
 }

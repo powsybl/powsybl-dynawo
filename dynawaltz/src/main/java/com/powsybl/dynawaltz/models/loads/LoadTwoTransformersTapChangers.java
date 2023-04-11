@@ -8,6 +8,7 @@
 package com.powsybl.dynawaltz.models.loads;
 
 import com.powsybl.dynawaltz.models.VarConnection;
+import com.powsybl.dynawaltz.models.buses.BusModel;
 import com.powsybl.dynawaltz.models.transformers.TapChangerModel;
 
 import java.util.List;
@@ -24,6 +25,17 @@ public class LoadTwoTransformersTapChangers extends LoadTwoTransformers implemen
     @Override
     public String getLib() {
         return "LoadTwoTransformersTapChangers";
+    }
+
+    @Override
+    protected List<VarConnection> getVarConnectionsWithBus(BusModel connected) {
+        List<VarConnection> varConnections = super.getVarConnectionsWithBus(connected);
+        connected.getSwitchOffSignalVarName()
+                .ifPresent(switchOff -> {
+                    varConnections.add(new VarConnection("tapChangerT_switchOffSignal1", switchOff));
+                    varConnections.add(new VarConnection("tapChangerD_switchOffSignal1", switchOff));
+                });
+        return varConnections;
     }
 
     @Override

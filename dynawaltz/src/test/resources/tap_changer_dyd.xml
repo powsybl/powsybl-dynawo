@@ -59,4 +59,5 @@
     <dyn:macroConnect connector="MC_TapChangerBlockingAutomaton1-LoadOneTransformerTapChanger" id1="TapChanger1" id2="BBM_LOAD"/>
     <dyn:macroConnect connector="MC_TapChangerBlockingAutomaton1-LoadTwoTransformersTapChangers" id1="TapChanger1" id2="BBM_LOAD2"/>
     <dyn:macroConnect connector="MC_TapChangerBlockingAutomaton1-NetworkBus" id1="TapChanger1" id2="NETWORK" name2="NHV1"/>
+    <dyn:macroConnect connector="MC_TapChangerBlockingAutomaton1-NetworkBus" id1="TapChanger1" id2="NETWORK" name2="NHV2"/>
 </dyn:dynamicModelsArchitecture>

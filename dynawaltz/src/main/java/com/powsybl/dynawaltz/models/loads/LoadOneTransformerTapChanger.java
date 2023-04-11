@@ -8,6 +8,7 @@
 package com.powsybl.dynawaltz.models.loads;
 
 import com.powsybl.dynawaltz.models.VarConnection;
+import com.powsybl.dynawaltz.models.buses.BusModel;
 import com.powsybl.dynawaltz.models.transformers.TapChangerModel;
 
 import java.util.List;
@@ -29,7 +30,16 @@ public class LoadOneTransformerTapChanger extends LoadOneTransformer implements 
     }
 
     @Override
+    protected List<VarConnection> getVarConnectionsWithBus(BusModel connected) {
+        List<VarConnection> varConnections = super.getVarConnectionsWithBus(connected);
+        connected.getSwitchOffSignalVarName()
+                .map(switchOff -> new VarConnection("tapChanger_switchOffSignal1", switchOff))
+                .ifPresent(varConnections::add);
+        return varConnections;
+    }
+
+    @Override
     public List<VarConnection> getTapChangerBlockerVarConnections() {
-        return List.of(new VarConnection(TAP_CHANGER_BLOCKING_BLOCKED_T, "tapChanger_locked"));
+        return getTapChangerVarConnections();
     }
 }
