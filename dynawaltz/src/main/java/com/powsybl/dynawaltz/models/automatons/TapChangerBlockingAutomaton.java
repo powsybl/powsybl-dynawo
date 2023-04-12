@@ -33,14 +33,16 @@ public class TapChangerBlockingAutomaton extends AbstractPureDynamicBlackBoxMode
 
     private final List<TwoWindingsTransformer> transformers;
     private final List<Load> loadsWithTransformer;
+    private final List<String> tapChangerAutomatonIds;
     private final List<Bus> uMeasurements;
 
-    public TapChangerBlockingAutomaton(String dynamicModelId, String parameterSetId, List<TwoWindingsTransformer> transformers, List<Load> loadsWithTransformer, List<Bus> uMeasurements) {
+    public TapChangerBlockingAutomaton(String dynamicModelId, String parameterSetId, List<TwoWindingsTransformer> transformers, List<Load> loadsWithTransformer, List<String> tapChangerAutomatonIds, List<Bus> uMeasurements) {
         super(dynamicModelId, parameterSetId);
         this.transformers = transformers;
         this.loadsWithTransformer = loadsWithTransformer;
+        this.tapChangerAutomatonIds = tapChangerAutomatonIds;
         this.uMeasurements = uMeasurements;
-        if (transformers.isEmpty() && loadsWithTransformer.isEmpty()) {
+        if (transformers.isEmpty() && loadsWithTransformer.isEmpty() && tapChangerAutomatonIds.isEmpty()) {
             throw new PowsyblException("No Tap changers to monitor");
         }
         if (uMeasurements.size() > MAX_MEASUREMENTS) {
@@ -48,8 +50,12 @@ public class TapChangerBlockingAutomaton extends AbstractPureDynamicBlackBoxMode
         }
     }
 
+    public TapChangerBlockingAutomaton(String dynamicModelId, String parameterSetId, List<TwoWindingsTransformer> transformers, List<Load> loadsWithTransformer, List<Bus> uMeasurements) {
+        this(dynamicModelId, parameterSetId, transformers, loadsWithTransformer, Collections.emptyList(), uMeasurements);
+    }
+
     public TapChangerBlockingAutomaton(String dynamicModelId, String parameterSetId, List<TwoWindingsTransformer> transformers, List<Bus> uMeasurements) {
-        this(dynamicModelId, parameterSetId, transformers, Collections.emptyList(), uMeasurements);
+        this(dynamicModelId, parameterSetId, transformers, Collections.emptyList(), Collections.emptyList(), uMeasurements);
     }
 
     public static boolean isCompatibleEquipment(IdentifiableType type) {
@@ -63,12 +69,14 @@ public class TapChangerBlockingAutomaton extends AbstractPureDynamicBlackBoxMode
 
     @Override
     public void createMacroConnections(DynaWaltzContext context) {
-        //TODO no index ?
         for (TwoWindingsTransformer transformer : transformers) {
             createMacroConnections(transformer, TapChangerModel.class, this::getVarConnectionsWithTapChanger, context);
         }
         for (Load load : loadsWithTransformer) {
             createMacroConnections(load, TapChangerModel.class, this::getVarConnectionsWithTapChanger, context);
+        }
+        for (String id : tapChangerAutomatonIds) {
+            createPureDynamicMacroConnections(id, TapChangerModel.class, this::getVarConnectionsWithTapChanger, context);
         }
         for (Bus bus : uMeasurements) {
             createMacroConnections(bus.getId(), BusModel.class, this::getVarConnectionsWithBus, context);

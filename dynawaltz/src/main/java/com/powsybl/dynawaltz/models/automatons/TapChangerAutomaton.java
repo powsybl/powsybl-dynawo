@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawaltz.models.automatons;
 
+import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawaltz.models.TransformerSide;
@@ -15,8 +16,8 @@ import com.powsybl.dynawaltz.models.loads.LoadWithTransformers;
 import com.powsybl.dynawaltz.models.transformers.TapChangerModel;
 import com.powsybl.iidm.network.Load;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
@@ -28,12 +29,17 @@ public class TapChangerAutomaton extends AbstractPureDynamicBlackBoxModel implem
 
     public TapChangerAutomaton(String dynamicModelId, String parameterSetId, Load load, TransformerSide side) {
         super(dynamicModelId, parameterSetId);
-        this.load = load;
-        this.side = side;
+        this.load = Objects.requireNonNull(load);
+        this.side = Objects.requireNonNull(side);
     }
 
     public TapChangerAutomaton(String dynamicModelId, String parameterSetId, Load load) {
         this(dynamicModelId, parameterSetId, load, TransformerSide.NONE);
+    }
+
+    @Override
+    public String getName() {
+        return getLib() + side.getSideSuffix();
     }
 
     @Override
@@ -50,9 +56,16 @@ public class TapChangerAutomaton extends AbstractPureDynamicBlackBoxModel implem
         return connected.getTapChangerVarConnections(side);
     }
 
-    //TODO
     @Override
     public List<VarConnection> getTapChangerBlockerVarConnections() {
-        return Collections.emptyList();
+        switch (side) {
+            case NONE:
+            case HIGH_VOLTAGE:
+                return List.of(new VarConnection(TAP_CHANGER_BLOCKING_BLOCKED_T, "tapChanger_locked"));
+            case LOW_VOLTAGE:
+                return List.of(new VarConnection(TAP_CHANGER_BLOCKING_BLOCKED_D, "tapChanger_locked"));
+            default:
+                throw new PowsyblException("Transformer side not initialized");
+        }
     }
 }

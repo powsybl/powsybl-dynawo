@@ -30,6 +30,8 @@ import java.util.stream.Stream;
  */
 public class DynaWaltzContext {
 
+    private static final String MODEL_ID_EXCEPTION = "The model identified by the static id %s is not the correct model";
+
     private final Network network;
     private final String workingVariantId;
     private final DynamicSimulationParameters parameters;
@@ -114,7 +116,7 @@ public class DynaWaltzContext {
         if (clazz.isInstance(bbm)) {
             return clazz.cast(bbm);
         }
-        throw new PowsyblException("The model identified by the static id " + staticId + " is not the correct model");
+        throw new PowsyblException(String.format(MODEL_ID_EXCEPTION, staticId));
     }
 
     public <T extends Model> T getDynamicModel(Identifiable<?> equipment, Class<T> connectableClass) {
@@ -125,7 +127,21 @@ public class DynaWaltzContext {
         if (connectableClass.isInstance(bbm)) {
             return connectableClass.cast(bbm);
         }
-        throw new PowsyblException("The model identified by the static id " + equipment.getId() + " is not the correct model");
+        throw new PowsyblException(String.format(MODEL_ID_EXCEPTION, equipment.getId()));
+    }
+
+    public <T extends Model> T getPureDynamicModel(String staticId, Class<T> connectableClass) {
+        BlackBoxModel bbm = dynamicModels.stream()
+                .filter(dm -> staticId.equalsIgnoreCase(dm.getDynamicModelId()))
+                .findFirst()
+                .orElseThrow(
+                    () -> {
+                        throw new PowsyblException("Pure dynamic model " + staticId + " not found");
+                    });
+        if (connectableClass.isInstance(bbm)) {
+            return connectableClass.cast(bbm);
+        }
+        throw new PowsyblException(String.format(MODEL_ID_EXCEPTION, staticId));
     }
 
     private BlackBoxModel mergeDuplicateStaticId(BlackBoxModel bbm1, BlackBoxModel bbm2) {

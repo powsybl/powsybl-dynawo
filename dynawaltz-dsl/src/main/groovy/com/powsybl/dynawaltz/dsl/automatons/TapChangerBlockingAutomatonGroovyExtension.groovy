@@ -44,6 +44,7 @@ class TapChangerBlockingAutomatonGroovyExtension extends AbstractPureDynamicGroo
         List<Load> loads = []
         List<TwoWindingsTransformer> transformers = []
         List<Bus> uMeasurement = []
+        List<String> tapChangerAutomatonIds = []
 
         TCBAutomatonBuilder(Network network) {
             this.network = network
@@ -52,23 +53,24 @@ class TapChangerBlockingAutomatonGroovyExtension extends AbstractPureDynamicGroo
         void transformers(String[] staticIds) {
             staticIds.each {
                 Identifiable<? extends Identifiable> equipment = checkEquipment(it)
-                switch (equipment.getType()) {
-                    case IdentifiableType.LOAD:
-                        loads.add((Load)equipment)
-                        break
-                    case IdentifiableType.TWO_WINDINGS_TRANSFORMER:
-                        transformers.add((TwoWindingsTransformer)equipment)
-                        break
+                if (equipment == null) {
+                    tapChangerAutomatonIds.add(it)
+                } else {
+                    switch (equipment.getType()) {
+                        case IdentifiableType.LOAD:
+                            loads.add((Load)equipment)
+                            break
+                        case IdentifiableType.TWO_WINDINGS_TRANSFORMER:
+                            transformers.add((TwoWindingsTransformer)equipment)
+                            break
+                    }
                 }
             }
         }
 
         Identifiable<? extends Identifiable> checkEquipment(String staticId) {
             Identifiable<? extends Identifiable> equipment = network.getIdentifiable(staticId)
-            if (equipment == null) {
-                throw new DslException("Equipment static id unknown: " + staticId)
-            }
-            if (!TapChangerBlockingAutomaton.isCompatibleEquipment(equipment.getType())) {
+            if (equipment != null && !TapChangerBlockingAutomaton.isCompatibleEquipment(equipment.getType())) {
                 throw new DslException(equipment.getType().toString() + " " + staticId + " is not compatible")
             }
             return equipment
@@ -97,7 +99,7 @@ class TapChangerBlockingAutomatonGroovyExtension extends AbstractPureDynamicGroo
         @Override
         TapChangerBlockingAutomaton build() {
             checkData()
-            new TapChangerBlockingAutomaton(dynamicModelId, parameterSetId, transformers, loads, uMeasurement)
+            new TapChangerBlockingAutomaton(dynamicModelId, parameterSetId, transformers, loads, tapChangerAutomatonIds, uMeasurement)
         }
     }
 }
