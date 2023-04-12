@@ -21,6 +21,8 @@ import com.powsybl.iidm.network.Load
 import com.powsybl.iidm.network.Network
 import com.powsybl.iidm.network.TwoWindingsTransformer
 
+import java.util.stream.Collectors
+
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
@@ -41,7 +43,7 @@ class TapChangerBlockingAutomatonGroovyExtension extends AbstractPureDynamicGroo
         Network network
         List<Load> loads = []
         List<TwoWindingsTransformer> transformers = []
-        Bus uMeasurement
+        List<Bus> uMeasurement = []
 
         TCBAutomatonBuilder(Network network) {
             this.network = network
@@ -73,10 +75,23 @@ class TapChangerBlockingAutomatonGroovyExtension extends AbstractPureDynamicGroo
         }
 
         void UMeasurement(String staticId) {
-            this.uMeasurement = network.getBusBreakerView().getBus(staticId)
-            if (uMeasurement == null) {
+            Bus bus = network.getBusBreakerView().getBus(staticId)
+            if (bus == null) {
                 throw new DslException("Bus static id unknown: " + staticId)
             }
+            uMeasurement.add(bus)
+        }
+
+        void UMeasurement(List<String> staticIds) {
+            uMeasurement = staticIds.stream()
+                    .map {
+                        Bus bus = network.getBusBreakerView().getBus(it)
+                        if (bus == null) {
+                            throw new DslException("Bus static id unknown: " + it)
+                        }
+                        return bus
+                    }
+                    .collect(Collectors.toList())
         }
 
         @Override

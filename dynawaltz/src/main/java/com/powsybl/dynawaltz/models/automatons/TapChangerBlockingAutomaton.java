@@ -29,7 +29,7 @@ import java.util.Set;
 public class TapChangerBlockingAutomaton extends AbstractPureDynamicBlackBoxModel {
 
     private static final Set<IdentifiableType> COMPATIBLE_EQUIPMENTS = EnumSet.of(IdentifiableType.LOAD, IdentifiableType.TWO_WINDINGS_TRANSFORMER);
-    private static final int MAX_TRANSFORMER_NUMBER = 5;
+    private static final int MAX_MEASUREMENTS = 5;
 
     private final List<TwoWindingsTransformer> transformers;
     private final List<Load> loadsWithTransformer;
@@ -43,8 +43,8 @@ public class TapChangerBlockingAutomaton extends AbstractPureDynamicBlackBoxMode
         if (transformers.isEmpty() && loadsWithTransformer.isEmpty()) {
             throw new PowsyblException("No Tap changers to monitor");
         }
-        if (transformers.size() + loadsWithTransformer.size() > MAX_TRANSFORMER_NUMBER) {
-            throw new PowsyblException("Tap changer blocking automaton can only handle " + MAX_TRANSFORMER_NUMBER + " equipments at the same time");
+        if (uMeasurements.size() > MAX_MEASUREMENTS) {
+            throw new PowsyblException("Tap changer blocking automaton can only handle " + MAX_MEASUREMENTS + " measurement points at the same time");
         }
     }
 
@@ -56,10 +56,9 @@ public class TapChangerBlockingAutomaton extends AbstractPureDynamicBlackBoxMode
         return COMPATIBLE_EQUIPMENTS.contains(type);
     }
 
-    //TODO verify lib name
     @Override
     public String getLib() {
-        return "TapChangerBlockingAutomaton1";
+        return "TapChangerBlockingArea";
     }
 
     @Override

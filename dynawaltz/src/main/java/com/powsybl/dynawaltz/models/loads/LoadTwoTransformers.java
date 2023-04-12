@@ -7,6 +7,8 @@
  */
 package com.powsybl.dynawaltz.models.loads;
 
+import com.powsybl.commons.PowsyblException;
+import com.powsybl.dynawaltz.models.TransformerSide;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.VarMapping;
 import com.powsybl.dynawaltz.models.buses.BusModel;
@@ -18,9 +20,8 @@ import java.util.List;
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class LoadTwoTransformers extends AbstractLoad {
+public class LoadTwoTransformers extends AbstractLoad implements LoadWithTransformers {
 
-    //TODO see varmapping & var connections
     protected static final List<VarMapping> VAR_MAPPING = Arrays.asList(
             new VarMapping("transformerT_P1Pu_value", "p"),
             new VarMapping("transformerT_Q1Pu_value", "q"),
@@ -46,6 +47,17 @@ public class LoadTwoTransformers extends AbstractLoad {
                     varConnections.add(new VarConnection("load_switchOffSignal1", switchOff));
                 });
         return varConnections;
+    }
+
+    @Override
+    public List<VarConnection> getTapChangerVarConnections(TransformerSide side) {
+        if (TransformerSide.NONE == side) {
+            throw new PowsyblException("LoadTwoTransformers must have a side connected to the Tap changer automaton");
+        }
+        String transformerPrefix = "transformer" + side.getSideSuffix();
+        return List.of(new VarConnection("tapChanger_tap", transformerPrefix + "_tap"),
+                new VarConnection("tapChanger_UMonitored", transformerPrefix + "_U2Pu"),
+                new VarConnection("tapChanger_switchOffSignal1", transformerPrefix + "_switchOffSignal1"));
     }
 
     @Override

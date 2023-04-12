@@ -7,6 +7,8 @@
  */
 package com.powsybl.dynawaltz.models.loads;
 
+import com.powsybl.commons.PowsyblException;
+import com.powsybl.dynawaltz.models.TransformerSide;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.buses.BusModel;
 import com.powsybl.dynawaltz.models.transformers.TapChangerModel;
@@ -17,8 +19,6 @@ import java.util.List;
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 public class LoadOneTransformerTapChanger extends LoadOneTransformer implements TapChangerModel {
-
-    //TODO see varmapping & var connections
 
     public LoadOneTransformerTapChanger(String dynamicModelId, String staticId, String parameterSetId) {
         super(dynamicModelId, staticId, parameterSetId);
@@ -39,7 +39,12 @@ public class LoadOneTransformerTapChanger extends LoadOneTransformer implements 
     }
 
     @Override
+    public List<VarConnection> getTapChangerVarConnections(TransformerSide side) {
+        throw new PowsyblException("LoadOneTransformerTapChanger already have a tap changer");
+    }
+
+    @Override
     public List<VarConnection> getTapChangerBlockerVarConnections() {
-        return getTapChangerVarConnections();
+        return List.of(new VarConnection(TAP_CHANGER_BLOCKING_BLOCKED_T, "tapChanger_locked"));
     }
 }

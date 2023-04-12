@@ -8,12 +8,10 @@
 
 package dynamicModels
 
-import com.powsybl.dynawaltz.models.TransformerSide
 
-
-TapChangerAutomaton {
-    dynamicModelId "TC"
-    parameterSetId "tc"
-    staticId "LOAD"
-    side TransformerSide.HIGH_VOLTAGE
+TapChangerBlockingAutomaton {
+    dynamicModelId "ZAB"
+    parameterSetId "ZAB"
+    UMeasurement "NGEN"
+    transformers "NGEN_NHV1", "NHV2_NLOAD", "LOAD"
 }

@@ -6,6 +6,8 @@
  */
 package com.powsybl.dynawaltz.models.loads;
 
+import com.powsybl.commons.PowsyblException;
+import com.powsybl.dynawaltz.models.TransformerSide;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.VarMapping;
 import com.powsybl.dynawaltz.models.buses.BusModel;
@@ -13,8 +15,6 @@ import com.powsybl.dynawaltz.models.buses.BusModel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static com.powsybl.dynawaltz.models.transformers.TapChangerModel.TAP_CHANGER_BLOCKING_BLOCKED_T;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -58,7 +58,12 @@ public class LoadOneTransformer extends AbstractLoad implements LoadWithTransfor
     }
 
     @Override
-    public List<VarConnection> getTapChangerVarConnections() {
-        return List.of(new VarConnection(TAP_CHANGER_BLOCKING_BLOCKED_T, "tapChanger_locked"));
+    public List<VarConnection> getTapChangerVarConnections(TransformerSide side) {
+        if (TransformerSide.NONE != side) {
+            throw new PowsyblException("LoadOneTransformer doesn't have a transformer side");
+        }
+        return List.of(new VarConnection("tapChanger_tap", "transformer_tap"),
+                new VarConnection("tapChanger_UMonitored", "transformer_U2Pu_value"),
+                new VarConnection("tapChanger_switchOffSignal1", "transformer_switchOffSignal1"));
     }
 }

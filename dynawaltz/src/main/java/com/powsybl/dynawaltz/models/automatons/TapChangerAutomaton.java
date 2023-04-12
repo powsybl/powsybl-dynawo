@@ -9,6 +9,7 @@ package com.powsybl.dynawaltz.models.automatons;
 
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
+import com.powsybl.dynawaltz.models.TransformerSide;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.loads.LoadWithTransformers;
 import com.powsybl.dynawaltz.models.transformers.TapChangerModel;
@@ -23,10 +24,16 @@ import java.util.List;
 public class TapChangerAutomaton extends AbstractPureDynamicBlackBoxModel implements TapChangerModel {
 
     private final Load load;
+    private final TransformerSide side;
 
-    protected TapChangerAutomaton(String dynamicModelId, String parameterSetId, Load load) {
+    public TapChangerAutomaton(String dynamicModelId, String parameterSetId, Load load, TransformerSide side) {
         super(dynamicModelId, parameterSetId);
         this.load = load;
+        this.side = side;
+    }
+
+    public TapChangerAutomaton(String dynamicModelId, String parameterSetId, Load load) {
+        this(dynamicModelId, parameterSetId, load, TransformerSide.NONE);
     }
 
     @Override
@@ -39,11 +46,11 @@ public class TapChangerAutomaton extends AbstractPureDynamicBlackBoxModel implem
         createMacroConnections(load, LoadWithTransformers.class, this::getVarConnectionsWithLoadWithTransformers, context);
     }
 
-    //TODO add varco
     private List<VarConnection> getVarConnectionsWithLoadWithTransformers(LoadWithTransformers connected) {
-        return List.of(new VarConnection("TODO", connected.getStaticId().orElseThrow()));
+        return connected.getTapChangerVarConnections(side);
     }
 
+    //TODO
     @Override
     public List<VarConnection> getTapChangerBlockerVarConnections() {
         return Collections.emptyList();

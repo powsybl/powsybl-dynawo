@@ -10,6 +10,7 @@ package com.powsybl.dynawaltz.xml;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.loads.*;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -29,13 +30,18 @@ class LoadsModelXmlTest extends AbstractParametrizedDynamicModelXmlTest {
     private static final String LOAD_NAME = "LOAD";
     private static final String DYN_LOAD_NAME = "BBM_" + LOAD_NAME;
 
-    @Override
-    protected void setupNetwork(String dydName, BlackBoxModel bbm) {
+    @BeforeEach
+    void setup(String dydName, BlackBoxModel bbm) {
+        setupNetwork();
+        addDynamicModels(bbm);
+        setupDynawaltzContext();
+    }
+
+    protected void setupNetwork() {
         network = EurostagTutorialExample1Factory.create();
     }
 
-    @Override
-    protected void addDynamicModels(String dydName, BlackBoxModel bbm) {
+    protected void addDynamicModels(BlackBoxModel bbm) {
         dynamicModels.add(bbm);
     }
 

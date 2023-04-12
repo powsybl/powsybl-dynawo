@@ -7,6 +7,8 @@
  */
 package com.powsybl.dynawaltz.models.loads;
 
+import com.powsybl.commons.PowsyblException;
+import com.powsybl.dynawaltz.models.TransformerSide;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.buses.BusModel;
 import com.powsybl.dynawaltz.models.transformers.TapChangerModel;
@@ -36,6 +38,11 @@ public class LoadTwoTransformersTapChangers extends LoadTwoTransformers implemen
                     varConnections.add(new VarConnection("tapChangerD_switchOffSignal1", switchOff));
                 });
         return varConnections;
+    }
+
+    @Override
+    public List<VarConnection> getTapChangerVarConnections(TransformerSide side) {
+        throw new PowsyblException("LoadTwoTransformersTapChangers already have a tap changer");
     }
 
     @Override

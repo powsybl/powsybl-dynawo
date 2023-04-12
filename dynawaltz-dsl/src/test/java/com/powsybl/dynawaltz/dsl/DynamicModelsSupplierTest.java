@@ -16,6 +16,7 @@ import com.powsybl.dynamicsimulation.groovy.GroovyExtension;
 import com.powsybl.dynawaltz.DynaWaltzProvider;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton;
+import com.powsybl.dynawaltz.models.automatons.TapChangerAutomaton;
 import com.powsybl.dynawaltz.models.automatons.TapChangerBlockingAutomaton;
 import com.powsybl.dynawaltz.models.buses.StandardBus;
 import com.powsybl.dynawaltz.models.generators.GeneratorFictitious;
@@ -48,7 +49,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
 
     @Test
     void testGroovyExtensionCount() {
-        assertEquals(14, EXTENSIONS.size());
+        assertEquals(15, EXTENSIONS.size());
     }
 
     @ParameterizedTest(name = "{0}")
@@ -76,8 +77,21 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
     }
 
     @Test
-    void testTapChangerBlockingAutomaton() {
+    void testTapChangerAutomaton() {
         DynamicModelsSupplier supplier = new GroovyDynamicModelsSupplier(getResourceAsStream("tapChanger"), EXTENSIONS);
+        List<DynamicModel> dynamicModels = supplier.get(EurostagTutorialExample1Factory.create());
+        assertEquals(1, dynamicModels.size());
+        assertTrue(dynamicModels.get(0) instanceof TapChangerAutomaton);
+        TapChangerAutomaton bbm = (TapChangerAutomaton) dynamicModels.get(0);
+        assertEquals("TC", bbm.getDynamicModelId());
+        assertTrue(bbm.getStaticId().isEmpty());
+        assertEquals("tc", bbm.getParameterSetId());
+        assertEquals("TapChangerAutomaton", bbm.getLib());
+    }
+
+    @Test
+    void testTapChangerBlockingAutomaton() {
+        DynamicModelsSupplier supplier = new GroovyDynamicModelsSupplier(getResourceAsStream("tapChangerBlocking"), EXTENSIONS);
         List<DynamicModel> dynamicModels = supplier.get(EurostagTutorialExample1Factory.create());
         assertEquals(1, dynamicModels.size());
         assertTrue(dynamicModels.get(0) instanceof TapChangerBlockingAutomaton);
@@ -85,7 +99,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
         assertEquals("ZAB", bbm.getDynamicModelId());
         assertTrue(bbm.getStaticId().isEmpty());
         assertEquals("ZAB", bbm.getParameterSetId());
-        assertEquals("TapChangerBlockingAutomaton1", bbm.getLib());
+        assertEquals("TapChangerBlockingArea", bbm.getLib());
     }
 
     @ParameterizedTest(name = "{0}")

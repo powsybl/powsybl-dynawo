@@ -21,7 +21,6 @@ import org.xml.sax.SAXException;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -47,7 +46,7 @@ class TapChangerBlockingAutomatonXmlTest extends AbstractDynamicModelXmlTest {
         dynamicModels.add(new TransformerFixedRatio("BBM_NGEN_NHV1", "NGEN_NHV1", "transformer", "TransformerFixedRatio"));
         dynamicModels.add(new LoadOneTransformerTapChanger("BBM_LOAD", "LOAD", "lot"));
         dynamicModels.add(new LoadTwoTransformersTapChangers("BBM_LOAD2", "LOAD2", "ltt"));
-        dynamicModels.add(new TapChangerBlockingAutomaton("TapChanger1", "TapChangerPar",
+        dynamicModels.add(new TapChangerBlockingAutomaton("BBM_TapChangerBlocking", "TapChangerPar",
                 network.getTwoWindingsTransformerStream().collect(Collectors.toList()),
                 List.of(network.getLoad("LOAD"), network.getLoad("LOAD2")),
                 List.of(network.getBusBreakerView().getBus("NHV1"), network.getBusBreakerView().getBus("NHV2"))));
@@ -57,7 +56,7 @@ class TapChangerBlockingAutomatonXmlTest extends AbstractDynamicModelXmlTest {
     void writeModel() throws SAXException, IOException, XMLStreamException {
         DydXml.write(tmpDir, context);
         ParametersXml.write(tmpDir, context);
-        validate("dyd.xsd", "tap_changer_dyd.xml", tmpDir.resolve(DynaWaltzConstants.DYD_FILENAME));
+        validate("dyd.xsd", "tap_changer_blocking_dyd.xml", tmpDir.resolve(DynaWaltzConstants.DYD_FILENAME));
     }
 
     //TODO change test class ? + add test with load without transfo
@@ -65,15 +64,14 @@ class TapChangerBlockingAutomatonXmlTest extends AbstractDynamicModelXmlTest {
     void testMonitoredEquipmentsLimit() {
 
         List<Bus> buses = List.of(network.getBusBreakerView().getBus("NHV1"));
+        List<TwoWindingsTransformer> transformers = List.of(network.getTwoWindingsTransformer("NGEN_NHV1"));
+        List<Bus> tooManyBuses = List.of(network.getBusBreakerView().getBus("NHV1"),
+                network.getBusBreakerView().getBus("NHV1"),
+                network.getBusBreakerView().getBus("NHV1"),
+                network.getBusBreakerView().getBus("NHV1"),
+                network.getBusBreakerView().getBus("NHV1"),
+                network.getBusBreakerView().getBus("NHV1"));
         List<TwoWindingsTransformer> emptyTransformerList = Collections.emptyList();
-        List<TwoWindingsTransformer> transformers = new ArrayList<>();
-        //TODO replace list with set ?
-        transformers.add(network.getTwoWindingsTransformer("NGEN_NHV1"));
-        transformers.add(network.getTwoWindingsTransformer("NGEN_NHV1"));
-        transformers.add(network.getTwoWindingsTransformer("NGEN_NHV1"));
-        transformers.add(network.getTwoWindingsTransformer("NGEN_NHV1"));
-        transformers.add(network.getTwoWindingsTransformer("NGEN_NHV1"));
-        transformers.add(network.getTwoWindingsTransformer("NGEN_NHV1"));
 
         Exception e = assertThrows(PowsyblException.class, () ->
                 new TapChangerBlockingAutomaton("TapChanger1",
@@ -86,7 +84,7 @@ class TapChangerBlockingAutomatonXmlTest extends AbstractDynamicModelXmlTest {
                 new TapChangerBlockingAutomaton("TapChanger1",
                         "TapChangerPar",
                         transformers,
-                        buses));
-        assertEquals("Tap changer blocking automaton can only handle 5 equipments at the same time", e.getMessage());
+                        tooManyBuses));
+        assertEquals("Tap changer blocking automaton can only handle 5 measurement points at the same time", e.getMessage());
     }
 }

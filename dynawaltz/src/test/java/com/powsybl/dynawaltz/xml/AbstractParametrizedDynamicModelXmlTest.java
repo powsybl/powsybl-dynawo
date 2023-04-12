@@ -14,7 +14,6 @@ import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.iidm.network.Network;
-import org.junit.jupiter.api.BeforeEach;
 import org.xml.sax.SAXException;
 
 import javax.xml.XMLConstants;
@@ -43,17 +42,6 @@ abstract class AbstractParametrizedDynamicModelXmlTest extends AbstractConverter
     protected List<BlackBoxModel> eventModels = new ArrayList<>();
     protected List<Curve> curves = new ArrayList<>();
     protected DynaWaltzContext context;
-
-    @BeforeEach
-    void setup(String dydName, BlackBoxModel bbm) {
-        setupNetwork(dydName, bbm);
-        addDynamicModels(dydName, bbm);
-        setupDynawaltzContext();
-    }
-
-    protected abstract void setupNetwork(String dydName, BlackBoxModel bbm);
-
-    protected abstract void addDynamicModels(String dydName, BlackBoxModel bbm);
 
     public void validate(String schemaDefinition, String expectedResourceName, Path xmlFile) throws SAXException, IOException {
         InputStream expected = Objects.requireNonNull(getClass().getResourceAsStream("/" + expectedResourceName));
