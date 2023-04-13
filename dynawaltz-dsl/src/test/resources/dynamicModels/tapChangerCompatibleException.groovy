@@ -9,7 +9,7 @@
 package dynamicModels
 
 
-TapChangerBlockingAutomaton {
+TapChangerBlockingAutomaton1 {
     dynamicModelId "ZAB"
     parameterSetId "ZAB"
     UMeasurement "NGEN"

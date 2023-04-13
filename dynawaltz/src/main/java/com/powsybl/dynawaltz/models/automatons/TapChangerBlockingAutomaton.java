@@ -18,10 +18,7 @@ import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Load;
 import com.powsybl.iidm.network.TwoWindingsTransformer;
 
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
@@ -35,8 +32,9 @@ public class TapChangerBlockingAutomaton extends AbstractPureDynamicBlackBoxMode
     private final List<Load> loadsWithTransformer;
     private final List<String> tapChangerAutomatonIds;
     private final List<Bus> uMeasurements;
+    private final String automatonLib;
 
-    public TapChangerBlockingAutomaton(String dynamicModelId, String parameterSetId, List<TwoWindingsTransformer> transformers, List<Load> loadsWithTransformer, List<String> tapChangerAutomatonIds, List<Bus> uMeasurements) {
+    public TapChangerBlockingAutomaton(String dynamicModelId, String parameterSetId, List<TwoWindingsTransformer> transformers, List<Load> loadsWithTransformer, List<String> tapChangerAutomatonIds, List<Bus> uMeasurements, String automatonLib) {
         super(dynamicModelId, parameterSetId);
         this.transformers = transformers;
         this.loadsWithTransformer = loadsWithTransformer;
@@ -48,14 +46,15 @@ public class TapChangerBlockingAutomaton extends AbstractPureDynamicBlackBoxMode
         if (uMeasurements.size() > MAX_MEASUREMENTS) {
             throw new PowsyblException("Tap changer blocking automaton can only handle " + MAX_MEASUREMENTS + " measurement points at the same time");
         }
+        this.automatonLib = Objects.requireNonNull(automatonLib);
     }
 
-    public TapChangerBlockingAutomaton(String dynamicModelId, String parameterSetId, List<TwoWindingsTransformer> transformers, List<Load> loadsWithTransformer, List<Bus> uMeasurements) {
-        this(dynamicModelId, parameterSetId, transformers, loadsWithTransformer, Collections.emptyList(), uMeasurements);
+    public TapChangerBlockingAutomaton(String dynamicModelId, String parameterSetId, List<TwoWindingsTransformer> transformers, List<Load> loadsWithTransformer, List<Bus> uMeasurements, String automatonLib) {
+        this(dynamicModelId, parameterSetId, transformers, loadsWithTransformer, Collections.emptyList(), uMeasurements, automatonLib);
     }
 
-    public TapChangerBlockingAutomaton(String dynamicModelId, String parameterSetId, List<TwoWindingsTransformer> transformers, List<Bus> uMeasurements) {
-        this(dynamicModelId, parameterSetId, transformers, Collections.emptyList(), Collections.emptyList(), uMeasurements);
+    public TapChangerBlockingAutomaton(String dynamicModelId, String parameterSetId, List<TwoWindingsTransformer> transformers, List<Bus> uMeasurements, String automatonLib) {
+        this(dynamicModelId, parameterSetId, transformers, Collections.emptyList(), Collections.emptyList(), uMeasurements, automatonLib);
     }
 
     public static boolean isCompatibleEquipment(IdentifiableType type) {
@@ -64,7 +63,7 @@ public class TapChangerBlockingAutomaton extends AbstractPureDynamicBlackBoxMode
 
     @Override
     public String getLib() {
-        return "TapChangerBlockingArea";
+        return automatonLib;
     }
 
     @Override

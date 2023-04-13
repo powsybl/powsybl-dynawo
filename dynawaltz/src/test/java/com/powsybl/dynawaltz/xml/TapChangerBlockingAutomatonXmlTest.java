@@ -49,7 +49,8 @@ class TapChangerBlockingAutomatonXmlTest extends AbstractDynamicModelXmlTest {
         dynamicModels.add(new TapChangerBlockingAutomaton("BBM_TapChangerBlocking", "TapChangerPar",
                 network.getTwoWindingsTransformerStream().collect(Collectors.toList()),
                 List.of(network.getLoad("LOAD"), network.getLoad("LOAD2")),
-                List.of(network.getBusBreakerView().getBus("NHV1"), network.getBusBreakerView().getBus("NHV2"))));
+                List.of(network.getBusBreakerView().getBus("NHV1"), network.getBusBreakerView().getBus("NHV2")),
+                "TapChangerBlockingAutomaton1"));
     }
 
     @Test
@@ -77,14 +78,16 @@ class TapChangerBlockingAutomatonXmlTest extends AbstractDynamicModelXmlTest {
                 new TapChangerBlockingAutomaton("TapChanger1",
                     "TapChangerPar",
                     emptyTransformerList,
-                    buses));
+                    buses,
+                    "TapChangerBlockingAutomaton1"));
         assertEquals("No Tap changers to monitor", e.getMessage());
 
         e = assertThrows(PowsyblException.class, () ->
                 new TapChangerBlockingAutomaton("TapChanger1",
                         "TapChangerPar",
                         transformers,
-                        tooManyBuses));
+                        tooManyBuses,
+                        "TapChangerBlockingAutomaton1"));
         assertEquals("Tap changer blocking automaton can only handle 5 measurement points at the same time", e.getMessage());
     }
 }

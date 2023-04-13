@@ -32,7 +32,7 @@ class EventDisconnectionGroovyExtension extends AbstractPureDynamicGroovyExtensi
     }
 
     @Override
-    protected EventQuadripoleDisconnectionBuilder createBuilder(Network network) {
+    protected EventQuadripoleDisconnectionBuilder createBuilder(String tag, Network network) {
         new EventQuadripoleDisconnectionBuilder(network)
     }
 

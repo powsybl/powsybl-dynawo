@@ -99,7 +99,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
         assertEquals("ZAB", bbm.getDynamicModelId());
         assertTrue(bbm.getStaticId().isEmpty());
         assertEquals("ZAB", bbm.getParameterSetId());
-        assertEquals("TapChangerBlockingArea", bbm.getLib());
+        assertEquals("TapChangerBlockingAutomaton1", bbm.getLib());
     }
 
     @ParameterizedTest(name = "{0}")

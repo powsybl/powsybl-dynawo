@@ -15,7 +15,6 @@ import com.powsybl.dynawaltz.dsl.AbstractPureDynamicGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractPureDynamicModelBuilder
 import com.powsybl.dynawaltz.models.TransformerSide
 import com.powsybl.dynawaltz.models.automatons.TapChangerAutomaton
-import com.powsybl.dynawaltz.models.automatons.TapChangerBlockingAutomaton
 import com.powsybl.iidm.network.*
 
 /**
@@ -29,7 +28,7 @@ class TapChangerAutomatonGroovyExtension extends AbstractPureDynamicGroovyExtens
     }
 
     @Override
-    protected TapChangerAutomatonBuilder createBuilder(Network network) {
+    protected TapChangerAutomatonBuilder createBuilder(String tag, Network network) {
         new TapChangerAutomatonBuilder(network)
     }
 

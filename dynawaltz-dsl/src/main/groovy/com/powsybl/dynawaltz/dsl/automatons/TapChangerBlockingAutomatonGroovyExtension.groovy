@@ -29,13 +29,16 @@ import java.util.stream.Collectors
 @AutoService(DynamicModelGroovyExtension.class)
 class TapChangerBlockingAutomatonGroovyExtension extends AbstractPureDynamicGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
+    protected static final String TCB_AUTOMATONS = "tapChangerBlockingAutomatons"
+
     TapChangerBlockingAutomatonGroovyExtension() {
-        modelTags = ["TapChangerBlockingAutomaton"]
+        ConfigSlurper config = new ConfigSlurper()
+        modelTags = config.parse(this.getClass().getClassLoader().getResource(MODELS_CONFIG)).get(TCB_AUTOMATONS).keySet() as List
     }
 
     @Override
-    protected TCBAutomatonBuilder createBuilder(Network network) {
-        new TCBAutomatonBuilder(network)
+    protected TCBAutomatonBuilder createBuilder(String tag, Network network) {
+        new TCBAutomatonBuilder(tag, network)
     }
 
     static class TCBAutomatonBuilder extends AbstractPureDynamicModelBuilder {
@@ -45,8 +48,10 @@ class TapChangerBlockingAutomatonGroovyExtension extends AbstractPureDynamicGroo
         List<TwoWindingsTransformer> transformers = []
         List<Bus> uMeasurement = []
         List<String> tapChangerAutomatonIds = []
+        String tag
 
-        TCBAutomatonBuilder(Network network) {
+        TCBAutomatonBuilder(String tag, Network network) {
+            this.tag = tag
             this.network = network
         }
 
@@ -99,7 +104,7 @@ class TapChangerBlockingAutomatonGroovyExtension extends AbstractPureDynamicGroo
         @Override
         TapChangerBlockingAutomaton build() {
             checkData()
-            new TapChangerBlockingAutomaton(dynamicModelId, parameterSetId, transformers, loads, tapChangerAutomatonIds, uMeasurement)
+            new TapChangerBlockingAutomaton(dynamicModelId, parameterSetId, transformers, loads, tapChangerAutomatonIds, uMeasurement, tag)
         }
     }
 }
