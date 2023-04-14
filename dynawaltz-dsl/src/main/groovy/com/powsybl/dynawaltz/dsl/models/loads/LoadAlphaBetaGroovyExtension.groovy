@@ -21,8 +21,11 @@ import com.powsybl.dynawaltz.models.loads.LoadAlphaBeta
 @AutoService(DynamicModelGroovyExtension.class)
 class LoadAlphaBetaGroovyExtension extends AbstractPowsyblDynawoGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
+    private static final String LOADS = "loadsAlphaBeta"
+
     LoadAlphaBetaGroovyExtension() {
-        modelTags = ["LoadAlphaBeta"]
+        ConfigSlurper config = new ConfigSlurper()
+        modelTags = config.parse(this.getClass().getClassLoader().getResource(MODELS_CONFIG)).get(LOADS).keySet() as List
     }
 
     @Override
