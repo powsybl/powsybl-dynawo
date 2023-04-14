@@ -23,10 +23,12 @@ import com.powsybl.dynawaltz.models.hvdc.HvdcModel;
 import com.powsybl.dynawaltz.models.lines.StandardLine;
 import com.powsybl.dynawaltz.models.loads.LoadAlphaBeta;
 import com.powsybl.dynawaltz.models.loads.LoadOneTransformer;
+import com.powsybl.dynawaltz.models.svcs.StaticVarCompensatorModel;
 import com.powsybl.dynawaltz.models.transformers.TransformerFixedRatio;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import com.powsybl.iidm.network.test.HvdcTestNetwork;
+import com.powsybl.iidm.network.test.SvcTestCaseFactory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -91,7 +93,8 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                 Arguments.of("genFictitious", GeneratorFictitious.class, EurostagTutorialExample1Factory.create(), "GEN", "BBM_GEN", "GF", "GeneratorFictitious"),
                 Arguments.of("gen", GeneratorSynchronous.class, EurostagTutorialExample1Factory.create(), "GEN", "BBM_GEN", "GSFWPR", "GeneratorSynchronousFourWindingsProportionalRegulations"),
                 Arguments.of("omegaGen", OmegaRefGenerator.class, EurostagTutorialExample1Factory.create(), "GEN", "BBM_GEN", "GPQ", "GeneratorPQ"),
-                Arguments.of("transformer", TransformerFixedRatio.class, EurostagTutorialExample1Factory.create(), "NGEN_NHV1", "BBM_NGEN_NHV1", "TFR", "TransformerFixedRatio")
+                Arguments.of("transformer", TransformerFixedRatio.class, EurostagTutorialExample1Factory.create(), "NGEN_NHV1", "BBM_NGEN_NHV1", "TFR", "TransformerFixedRatio"),
+                Arguments.of("svc", StaticVarCompensatorModel.class, SvcTestCaseFactory.create(), "SVC2", "BBM_SVC", "svc", "StaticVarCompensatorPV")
         );
     }
 
