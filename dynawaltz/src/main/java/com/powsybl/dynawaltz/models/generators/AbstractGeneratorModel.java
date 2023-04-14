@@ -17,7 +17,6 @@ import com.powsybl.iidm.network.Generator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>

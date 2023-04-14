@@ -17,7 +17,6 @@ import com.powsybl.dynawaltz.models.utils.SideConverter;
 import com.powsybl.iidm.network.Line;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>

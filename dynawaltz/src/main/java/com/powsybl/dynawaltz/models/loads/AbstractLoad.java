@@ -14,7 +14,6 @@ import com.powsybl.dynawaltz.models.utils.BusUtils;
 import com.powsybl.iidm.network.Load;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
