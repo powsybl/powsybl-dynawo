@@ -12,6 +12,7 @@ import com.powsybl.iidm.network.Generator;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import static com.powsybl.dynawaltz.models.utils.BusUtils.getConnectableBusStaticId;
 
@@ -29,7 +30,7 @@ public class OmegaRefGenerator extends AbstractGeneratorModel implements OmegaRe
                 "generator_switchOffSignal2",
                 "generator_switchOffSignal3",
                 "generator_running");
-        this.generatorLib = generatorLib;
+        this.generatorLib = Objects.requireNonNull(generatorLib);
     }
 
     protected String getOmegaRefPuVarName() {

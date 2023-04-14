@@ -32,8 +32,8 @@ public class HvdcModel extends AbstractEquipmentBlackBoxModel<HvdcLine> {
     private final String hvdcLib;
 
     public HvdcModel(String dynamicModelId, HvdcLine hvdc, String parameterSetId, String hvdcLib) {
-        super(dynamicModelId, parameterSetId, Objects.requireNonNull(hvdc));
-        this.hvdcLib = hvdcLib;
+        super(dynamicModelId, parameterSetId, hvdc);
+        this.hvdcLib = Objects.requireNonNull(hvdcLib);
     }
 
     public String getLib() {

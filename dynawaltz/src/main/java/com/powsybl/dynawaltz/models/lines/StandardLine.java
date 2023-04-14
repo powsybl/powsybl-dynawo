@@ -25,7 +25,7 @@ import java.util.Objects;
 public class StandardLine extends AbstractEquipmentBlackBoxModel<Line> implements LineModel {
 
     public StandardLine(String dynamicModelId, Line line, String parameterSetId) {
-        super(dynamicModelId, parameterSetId, Objects.requireNonNull(line));
+        super(dynamicModelId, parameterSetId, line);
     }
 
     @Override

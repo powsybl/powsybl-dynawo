@@ -27,7 +27,7 @@ import java.util.Optional;
 public class StandardBus extends AbstractEquipmentBlackBoxModel<Bus> implements BusModel {
 
     public StandardBus(String dynamicModelId, Bus bus, String parameterSetId) {
-        super(dynamicModelId, parameterSetId, Objects.requireNonNull(bus));
+        super(dynamicModelId, parameterSetId, bus);
     }
 
     @Override

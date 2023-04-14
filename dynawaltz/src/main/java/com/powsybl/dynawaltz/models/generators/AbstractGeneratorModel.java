@@ -40,7 +40,7 @@ public abstract class AbstractGeneratorModel extends AbstractEquipmentBlackBoxMo
                                      String terminalVarName, String switchOffSignalNodeVarName,
                                      String switchOffSignalEventVarName, String switchOffSignalAutomatonVarName,
                                      String runningVarName) {
-        super(dynamicModelId, parameterSetId, Objects.requireNonNull(generator));
+        super(dynamicModelId, parameterSetId, generator);
         this.terminalVarName = terminalVarName;
         this.switchOffSignalNodeVarName = switchOffSignalNodeVarName;
         this.switchOffSignalEventVarName = switchOffSignalEventVarName;
