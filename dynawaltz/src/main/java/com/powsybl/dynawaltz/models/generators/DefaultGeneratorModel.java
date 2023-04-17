@@ -62,4 +62,8 @@ public class DefaultGeneratorModel extends AbstractNetworkModel implements Gener
     public String getQStatorPuVarName() {
         return "@NAME@_QStatorPu";
     }
+
+    public String getUpuVarName() {
+        return "@NAME@_UPu";
+    }
 }
