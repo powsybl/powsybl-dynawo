@@ -14,10 +14,13 @@ import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension;
 import com.powsybl.dynamicsimulation.groovy.GroovyDynamicModelsSupplier;
 import com.powsybl.dynamicsimulation.groovy.GroovyExtension;
 import com.powsybl.dynawaltz.DynaWaltzProvider;
+import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.EquipmentBlackBoxModelModel;
 import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton;
 import com.powsybl.dynawaltz.models.automatons.TapChangerAutomaton;
 import com.powsybl.dynawaltz.models.automatons.TapChangerBlockingAutomaton;
+import com.powsybl.dynawaltz.models.automatons.phaseshifters.PhaseShifterIAutomaton;
+import com.powsybl.dynawaltz.models.automatons.phaseshifters.PhaseShifterPAutomaton;
 import com.powsybl.dynawaltz.models.buses.StandardBus;
 import com.powsybl.dynawaltz.models.generators.GeneratorFictitious;
 import com.powsybl.dynawaltz.models.generators.GeneratorSynchronous;
@@ -59,29 +62,14 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
         assertEquipmentBlackBoxModel(modelClass.cast(dynamicModels.get(0)), dynamicId, staticId, parameterId, lib);
     }
 
-    @Test
-    void testCurrentLimitAutomaton() {
-        DynamicModelsSupplier supplier = new GroovyDynamicModelsSupplier(getResourceAsStream("currentLimit"), EXTENSIONS);
-        List<DynamicModel> dynamicModels = supplier.get(EurostagTutorialExample1Factory.create());
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("provideAutomatonModelData")
+    void testAutomatonDynamicModels(String groovyScriptName, Class<? extends BlackBoxModel> modelClass, Network network, String dynamicId, String parameterId, String lib) {
+        DynamicModelsSupplier supplier = new GroovyDynamicModelsSupplier(getResourceAsStream(groovyScriptName), EXTENSIONS);
+        List<DynamicModel> dynamicModels = supplier.get(network);
         assertEquals(1, dynamicModels.size());
-        assertTrue(dynamicModels.get(0) instanceof CurrentLimitAutomaton);
-        CurrentLimitAutomaton bbm = (CurrentLimitAutomaton) dynamicModels.get(0);
-        assertEquals("AM_NHV1_NHV2_1", bbm.getDynamicModelId());
-        assertEquals("CLA", bbm.getParameterSetId());
-        assertEquals("CurrentLimitAutomaton", bbm.getLib());
-        assertEquals("NHV1_NHV2_1", bbm.getLineStaticId());
-    }
-
-    @Test
-    void testTapChangerAutomaton() {
-        DynamicModelsSupplier supplier = new GroovyDynamicModelsSupplier(getResourceAsStream("tapChanger"), EXTENSIONS);
-        List<DynamicModel> dynamicModels = supplier.get(EurostagTutorialExample1Factory.create());
-        assertEquals(1, dynamicModels.size());
-        assertTrue(dynamicModels.get(0) instanceof TapChangerAutomaton);
-        TapChangerAutomaton bbm = (TapChangerAutomaton) dynamicModels.get(0);
-        assertEquals("TC", bbm.getDynamicModelId());
-        assertEquals("tc", bbm.getParameterSetId());
-        assertEquals("TapChangerAutomaton", bbm.getLib());
+        assertTrue(modelClass.isInstance(dynamicModels.get(0)));
+        assertPureDynamicBlackBoxModel(modelClass.cast(dynamicModels.get(0)), dynamicId, parameterId, lib);
     }
 
     @Test
@@ -111,6 +99,12 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
         assertEquals(lib, bbm.getLib());
     }
 
+    void assertPureDynamicBlackBoxModel(BlackBoxModel bbm, String dynamicId, String parameterId, String lib) {
+        assertEquals(dynamicId, bbm.getDynamicModelId());
+        assertEquals(parameterId, bbm.getParameterSetId());
+        assertEquals(lib, bbm.getLib());
+    }
+
     private static Stream<Arguments> provideEquipmentModelData() {
         return Stream.of(
                 Arguments.of("bus", StandardBus.class, EurostagTutorialExample1Factory.create(), "NGEN", "BBM_NGEN", "SB", "Bus"),
@@ -129,8 +123,18 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
         );
     }
 
+    private static  Stream<Arguments> provideAutomatonModelData() {
+        return Stream.of(
+                Arguments.of("currentLimit", CurrentLimitAutomaton.class, EurostagTutorialExample1Factory.create(), "AM_NHV1_NHV2_1", "CLA", "CurrentLimitAutomaton"),
+                Arguments.of("tapChanger", TapChangerAutomaton.class, EurostagTutorialExample1Factory.create(), "TC", "tc", "TapChangerAutomaton"),
+                Arguments.of("phaseShifterI", PhaseShifterIAutomaton.class, EurostagTutorialExample1Factory.create(), "PS_NGEN_NHV1", "ps", "PhaseShifterI"),
+                Arguments.of("phaseShifterP", PhaseShifterPAutomaton.class, EurostagTutorialExample1Factory.create(), "PS_NGEN_NHV1", "ps", "PhaseShifterP")
+        );
+    }
+
     private static Stream<Arguments> provideExceptionsModel() {
         return Stream.of(
+                Arguments.of("phaseShifterTransformerException", EurostagTutorialExample1Factory.create(), "Transformer static id unknown: NGEN"),
                 Arguments.of("tapChangerBusException", EurostagTutorialExample1Factory.create(), "Bus static id unknown: LOAD"),
                 Arguments.of("tapChangerCompatibleException", EurostagTutorialExample1Factory.create(), "GENERATOR GEN is not compatible")
         );
