@@ -14,4 +14,11 @@ public interface TransformerModel extends TapChangerModel {
 
     String getStateValueVarName();
 
+    String getStepVarName();
+
+    String getIMonitoredVarName();
+
+    String getPMonitoredVarName();
+
+    String getDisableInternalTapChangerVarName();
 }

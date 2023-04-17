@@ -64,6 +64,26 @@ public class TransformerFixedRatio extends AbstractBlackBoxModel implements Tran
     }
 
     @Override
+    public String getStepVarName() {
+        return "transformer_step";
+    }
+
+    @Override
+    public String getIMonitoredVarName() {
+        return "transformer_i1";
+    }
+
+    @Override
+    public String getPMonitoredVarName() {
+        return "transformer_P1";
+    }
+
+    @Override
+    public String getDisableInternalTapChangerVarName() {
+        return "transformer_disable_internal_tapChanger";
+    }
+
+    @Override
     public String getDisconnectableVarName() {
         return getStateValueVarName();
     }
