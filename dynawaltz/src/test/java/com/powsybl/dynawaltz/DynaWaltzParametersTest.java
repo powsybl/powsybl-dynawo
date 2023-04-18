@@ -6,18 +6,18 @@
  */
 package com.powsybl.dynawaltz;
 
-import com.google.common.jimfs.Configuration;
-import com.google.common.jimfs.Jimfs;
 import com.powsybl.commons.config.InMemoryPlatformConfig;
 import com.powsybl.commons.config.MapModuleConfig;
+import com.powsybl.commons.test.AbstractConverterTest;
+import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
+import com.powsybl.dynamicsimulation.json.JsonDynamicSimulationParameters;
 import com.powsybl.dynawaltz.DynaWaltzParameters.SolverType;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.nio.file.FileSystem;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -25,66 +25,39 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-class DynaWaltzParametersTest {
+class DynaWaltzParametersTest extends AbstractConverterTest {
 
     public static final String USER_HOME = "/home/user/";
 
     private InMemoryPlatformConfig platformConfig;
-    private FileSystem fileSystem;
 
     @BeforeEach
-    void setUp() throws IOException {
-        fileSystem = Jimfs.newFileSystem(Configuration.unix());
+    public void setUp() throws IOException {
+        super.setUp();
         platformConfig = new InMemoryPlatformConfig(fileSystem);
     }
 
     private void copyFile(String name, String parametersFile) throws IOException {
+        Path path = platformConfig.getConfigDir()
+                .map(cd -> cd.resolve(fileSystem.getPath(parametersFile)))
+                .orElse(fileSystem.getPath(parametersFile));
         Objects.requireNonNull(getClass().getResourceAsStream(name))
-                .transferTo(Files.newOutputStream(fileSystem.getPath(parametersFile)));
-    }
-
-    @AfterEach
-    void tearDown() throws IOException {
-        fileSystem.close();
+                .transferTo(Files.newOutputStream(path));
     }
 
     @Test
     void checkParameters() throws IOException {
-        String parametersFile = USER_HOME + "parametersFile";
-        String networkParametersFile = USER_HOME + "networkParametersFile";
-        String solverParametersFile = USER_HOME + "solverParametersFile";
         String networkParametersId = "networkParametersId";
         SolverType solverType = SolverType.IDA;
         String solverParametersId = "solverParametersId";
-
-        MapModuleConfig moduleConfig = platformConfig.createModuleConfig("dynawaltz-default-parameters");
-        moduleConfig.setStringProperty("parametersFile", parametersFile);
-        moduleConfig.setStringProperty("network.parametersFile", networkParametersFile);
-        moduleConfig.setStringProperty("solver.parametersFile", solverParametersFile);
         boolean mergeLoads = true;
-        moduleConfig.setStringProperty("mergeLoads", String.valueOf(mergeLoads));
-        moduleConfig.setStringProperty("network.parametersId", networkParametersId);
-        moduleConfig.setStringProperty("solver.type", solverType.toString());
-        moduleConfig.setStringProperty("solver.parametersId", solverParametersId);
-
-        Files.createDirectories(fileSystem.getPath(USER_HOME));
-        copyFile("/parametersSet/models.par", parametersFile);
-        copyFile("/parametersSet/network.par", networkParametersFile);
-        copyFile("/parametersSet/solvers.par", solverParametersFile);
+        initPlatformConfig(networkParametersId, solverType, solverParametersId, mergeLoads);
 
         DynaWaltzParameters parameters = DynaWaltzParameters.load(platformConfig, fileSystem);
 
-        ParametersSet modelsParameters = parameters.getModelsParameters();
-        ParametersSet.Parameter booleanParameter = modelsParameters.getParameterSet("test").getParameter("boolean");
-        assertEquals("true", booleanParameter.getValue());
-        assertEquals("boolean", booleanParameter.getName());
-        assertEquals(ParametersSet.ParameterType.BOOL, booleanParameter.getType());
-        ParametersSet.Parameter stringParameter = modelsParameters.getParameter("test", "string");
-        assertEquals("aString", stringParameter.getValue());
-        assertEquals("string", stringParameter.getName());
-        assertEquals(ParametersSet.ParameterType.STRING, stringParameter.getType());
+        checModelParameters(parameters.getModelsParameters());
 
-        ParametersSet networkParameters = parameters.getNetwork().getParameters();
+        ParametersSet networkParameters = parameters.getNetwork().getParametersSet();
         assertEquals(networkParametersId, parameters.getNetwork().getParametersId());
         ParametersSet.Parameter loadTp = networkParameters.getParameter(networkParametersId, "load_Tp");
         assertEquals("90", loadTp.getValue());
@@ -96,7 +69,7 @@ class DynaWaltzParametersTest {
         assertEquals(ParametersSet.ParameterType.BOOL, loadControllable.getType());
 
         DynaWaltzParameters.Solver solver = parameters.getSolver();
-        ParametersSet solverParameters = solver.getParameters();
+        ParametersSet solverParameters = solver.getParametersSet();
         assertEquals(solverParametersId, solver.getParametersId());
         assertEquals(solverType, solver.getType());
         ParametersSet.Parameter order = solverParameters.getParameter(solverParametersId, "order");
@@ -112,6 +85,43 @@ class DynaWaltzParametersTest {
     }
 
     @Test
+    void roundTripParametersSerializing() throws IOException {
+        String networkParametersId = "networkParametersId";
+        SolverType solverType = SolverType.IDA;
+        String solverParametersId = "solverParametersId";
+        boolean mergeLoads = false;
+        initPlatformConfig(networkParametersId, solverType, solverParametersId, mergeLoads);
+
+        DynamicSimulationParameters dynamicSimulationParameters = new DynamicSimulationParameters()
+                .setStartTime(0)
+                .setStopTime(3600);
+        DynaWaltzParameters dynawoParameters = DynaWaltzParameters.load(platformConfig);
+        dynamicSimulationParameters.addExtension(DynaWaltzParameters.class, dynawoParameters);
+        roundTripTest(dynamicSimulationParameters, JsonDynamicSimulationParameters::write,
+                JsonDynamicSimulationParameters::read, "/DynaWaltzParameters.json");
+    }
+
+    private void initPlatformConfig(String networkParametersId, SolverType solverType, String solverParametersId, boolean mergeLoads) throws IOException {
+        String parametersFile = USER_HOME + "parametersFile";
+        String networkParametersFile = USER_HOME + "networkParametersFile";
+        String solverParametersFile = USER_HOME + "solverParametersFile";
+
+        MapModuleConfig moduleConfig = platformConfig.createModuleConfig("dynawaltz-default-parameters");
+        moduleConfig.setStringProperty("parametersFile", parametersFile);
+        moduleConfig.setStringProperty("network.parametersFile", networkParametersFile);
+        moduleConfig.setStringProperty("solver.parametersFile", solverParametersFile);
+        moduleConfig.setStringProperty("mergeLoads", String.valueOf(mergeLoads));
+        moduleConfig.setStringProperty("network.parametersId", networkParametersId);
+        moduleConfig.setStringProperty("solver.type", solverType.toString());
+        moduleConfig.setStringProperty("solver.parametersId", solverParametersId);
+
+        Files.createDirectories(fileSystem.getPath(USER_HOME));
+        copyFile("/parametersSet/models.par", parametersFile);
+        copyFile("/parametersSet/network.par", networkParametersFile);
+        copyFile("/parametersSet/solvers.par", solverParametersFile);
+    }
+
+    @Test
     void checkDefaultParameters() throws IOException {
         Files.createDirectories(fileSystem.getPath(USER_HOME));
         copyFile("/parametersSet/models.par", DynaWaltzParameters.DEFAULT_PARAMETERS_FILE);
@@ -119,12 +129,23 @@ class DynaWaltzParametersTest {
         copyFile("/parametersSet/solvers.par", DynaWaltzParameters.DEFAULT_SOLVER_PARAMETERS_FILE);
 
         DynaWaltzParameters parameters = DynaWaltzParameters.load(platformConfig, fileSystem);
-//        assertEquals(parametersFile, parameters.getParametersFile()); FIXME
-//        assertEquals(networkParametersFile, parameters.getNetwork().getParametersFile()); FIXME
+        checModelParameters(parameters.getModelsParameters());
+//        assertEquals(networkParametersFile, parameters.getNetwork().getParametersFile()); FIXME: should be empty
         assertEquals(DynaWaltzParameters.DEFAULT_NETWORK_PAR_ID, parameters.getNetwork().getParametersId());
         assertEquals(DynaWaltzParameters.DEFAULT_SOLVER_TYPE, parameters.getSolver().getType());
-//        assertEquals(solverParametersFile, parameters.getSolver().getParametersFile()); FIXME
+//        assertEquals(solverParametersFile, parameters.getSolver().getParametersFile()); FIXME: should be empty
         assertEquals(DynaWaltzParameters.DEFAULT_SOLVER_PAR_ID, parameters.getSolver().getParametersId());
         assertEquals(DynaWaltzParameters.DEFAULT_MERGE_LOADS, parameters.isMergeLoads());
+    }
+
+    private static void checModelParameters(ParametersSet modelsParameters) {
+        ParametersSet.Parameter booleanParameter = modelsParameters.getParameterSet("test").getParameter("boolean");
+        assertEquals("true", booleanParameter.getValue());
+        assertEquals("boolean", booleanParameter.getName());
+        assertEquals(ParametersSet.ParameterType.BOOL, booleanParameter.getType());
+        ParametersSet.Parameter stringParameter = modelsParameters.getParameter("test", "string");
+        assertEquals("aString", stringParameter.getValue());
+        assertEquals("string", stringParameter.getName());
+        assertEquals(ParametersSet.ParameterType.STRING, stringParameter.getType());
     }
 }

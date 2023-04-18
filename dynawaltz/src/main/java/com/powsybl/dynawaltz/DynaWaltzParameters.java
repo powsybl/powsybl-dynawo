@@ -43,29 +43,29 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
     public static class Network {
 
         private String parametersId;
-        private ParametersSet parameters;
+        private ParametersSet parametersSet;
 
         public Network() {
         }
 
-        public ParametersSet getParameters() {
-            return parameters;
+        public ParametersSet getParametersSet() {
+            return parametersSet;
         }
 
-        public Network setParameters(ParametersSet parameters) {
-            this.parameters = Objects.requireNonNull(parameters);
+        public Network setParametersSet(ParametersSet parametersSet) {
+            this.parametersSet = Objects.requireNonNull(parametersSet);
             return this;
         }
 
         @JsonIgnore
         public Network setParameters(Path parametersFile) {
-            this.parameters = ParametersSet.load(parametersFile);
+            this.parametersSet = ParametersSet.load(parametersFile);
             return this;
         }
 
         @JsonIgnore
         public Network setParameters(InputStream parametersFile) {
-            this.parameters = ParametersSet.load(parametersFile);
+            this.parametersSet = ParametersSet.load(parametersFile);
             return this;
         }
 
@@ -83,7 +83,7 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
 
         private String parametersId;
         private SolverType type;
-        private ParametersSet parameters;
+        private ParametersSet parametersSet;
 
         public Solver() {
         }
@@ -97,24 +97,24 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
             return this;
         }
 
-        public ParametersSet getParameters() {
-            return parameters;
+        public ParametersSet getParametersSet() {
+            return parametersSet;
         }
 
-        public Solver setParameters(ParametersSet parameters) {
-            this.parameters = Objects.requireNonNull(parameters);
+        public Solver setParametersSet(ParametersSet parametersSet) {
+            this.parametersSet = Objects.requireNonNull(parametersSet);
             return this;
         }
 
         @JsonIgnore
         public Solver setParameters(Path parametersFile) {
-            this.parameters = ParametersSet.load(parametersFile);
+            this.parametersSet = ParametersSet.load(parametersFile);
             return this;
         }
 
         @JsonIgnore
         public Solver setParameters(InputStream parametersFile) {
-            this.parameters = ParametersSet.load(parametersFile);
+            this.parametersSet = ParametersSet.load(parametersFile);
             return this;
         }
 

@@ -6,6 +6,7 @@
  */
 package com.powsybl.dynawaltz;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
 import com.powsybl.commons.xml.XmlUtil;
@@ -41,7 +42,9 @@ public final class ParametersSet {
 
     public static class Parameter {
 
-        public Parameter(String name, ParameterType type, String value) {
+        public Parameter(@JsonProperty("name") String name,
+                         @JsonProperty("type") ParameterType type,
+                         @JsonProperty("value") String value) {
             this.name = Objects.requireNonNull(name);
             this.type = Objects.requireNonNull(type);
             this.value = Objects.requireNonNull(value);
@@ -72,6 +75,10 @@ public final class ParametersSet {
 
         public void addParameter(String name, ParameterType type, String value) {
             parameters.put(name, new Parameter(name, type, value));
+        }
+
+        public Map<String, Parameter> getParameters() {
+            return parameters;
         }
 
         public Parameter getParameter(String name) {
@@ -159,19 +166,17 @@ public final class ParametersSet {
 
     public static ParametersSet load(Path parametersFile) {
         ParametersSet parametersDatabase = new ParametersSet();
-        if (Files.exists(parametersFile)) {
-            try (Reader reader = Files.newBufferedReader(parametersFile, StandardCharsets.UTF_8)) {
-                XMLInputFactory factory = XMLInputFactory.newInstance();
-                factory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
-                factory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
-                XMLStreamReader xmlReader = factory.createXMLStreamReader(reader);
-                read(xmlReader, parametersDatabase);
-                xmlReader.close();
-            } catch (IOException e) {
-                throw new UncheckedIOException(e);
-            } catch (XMLStreamException e) {
-                throw new UncheckedXmlStreamException(e);
-            }
+        try (Reader reader = Files.newBufferedReader(parametersFile, StandardCharsets.UTF_8)) {
+            XMLInputFactory factory = XMLInputFactory.newInstance();
+            factory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+            factory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+            XMLStreamReader xmlReader = factory.createXMLStreamReader(reader);
+            read(xmlReader, parametersDatabase);
+            xmlReader.close();
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        } catch (XMLStreamException e) {
+            throw new UncheckedXmlStreamException(e);
         }
         return parametersDatabase;
     }

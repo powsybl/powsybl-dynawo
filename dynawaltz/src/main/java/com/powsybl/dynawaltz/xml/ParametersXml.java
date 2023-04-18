@@ -33,8 +33,8 @@ public final class ParametersXml {
 
         DynaWaltzParameters parameters = context.getDynaWaltzParameters();
         write(parameters.getModelsParameters(), DynaWaltzParameters.MODELS_OUTPUT_PARAMETERS_FILE, workingDir);
-        write(parameters.getNetwork().getParameters(), DynaWaltzParameters.NETWORK_OUTPUT_PARAMETERS_FILE, workingDir);
-        write(parameters.getSolver().getParameters(), DynaWaltzParameters.SOLVER_OUTPUT_PARAMETERS_FILE, workingDir);
+        write(parameters.getNetwork().getParametersSet(), DynaWaltzParameters.NETWORK_OUTPUT_PARAMETERS_FILE, workingDir);
+        write(parameters.getSolver().getParametersSet(), DynaWaltzParameters.SOLVER_OUTPUT_PARAMETERS_FILE, workingDir);
 
         // Write parameterSet that needs to be generated (OmegaRef...)
         Path file = workingDir.resolve(context.getSimulationParFile());

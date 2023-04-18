@@ -5,14 +5,65 @@
   "extensions" : {
     "DynaWaltzParameters" : {
       "modelsParameters" : {
-        "parameterSets" : { }
+        "parameterSets" : {
+          "test" : {
+            "parameters" : {
+              "boolean" : {
+                "name" : "boolean",
+                "type" : "BOOL",
+                "value" : "true"
+              },
+              "string" : {
+                "name" : "string",
+                "type" : "STRING",
+                "value" : "aString"
+              }
+            }
+          }
+        }
       },
       "network" : {
-        "parametersId" : "1"
+        "parametersId" : "networkParametersId",
+        "parametersSet" : {
+          "parameterSets" : {
+            "networkParametersId" : {
+              "parameters" : {
+                "load_Tp" : {
+                  "name" : "load_Tp",
+                  "type" : "DOUBLE",
+                  "value" : "90"
+                },
+                "load_isControllable" : {
+                  "name" : "load_isControllable",
+                  "type" : "BOOL",
+                  "value" : "false"
+                }
+              }
+            }
+          }
+        }
       },
       "solver" : {
-        "parametersId" : "1",
-        "type" : "SIM"
+        "parametersId" : "solverParametersId",
+        "type" : "IDA",
+        "parametersSet" : {
+          "parameterSets" : {
+            "solverParametersId" : {
+              "parameters" : {
+                "order" : {
+                  "name" : "order",
+                  "type" : "INT",
+                  "value" : "1"
+                },
+                "absAccuracy" : {
+                  "name" : "absAccuracy",
+                  "type" : "DOUBLE",
+                  "value" : "1e-4"
+                }
+              }
+            }
+          }
+        }
       },
       "mergeLoads" : false
     }
