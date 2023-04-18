@@ -11,11 +11,14 @@ import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.parameters.ParameterType;
 import com.powsybl.dynawaltz.xml.ParametersXml;
 import com.powsybl.iidm.network.Generator;
+import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Load;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Mathieu BAGUE {@literal <mathieu.bague at rte-france.com>}
@@ -23,13 +26,15 @@ import java.util.List;
  */
 public class EventInjectionDisconnection extends AbstractEventModel {
 
+    private static final String EVENT_PREFIX = "Disconnect_";
+    private static final Set<IdentifiableType> COMPATIBLE_EQUIPMENTS = EnumSet.of(IdentifiableType.GENERATOR, IdentifiableType.LOAD);
     private static final String DYNAMIC_MODEL_LIB = "EventSetPointBoolean";
     private static final String DEFAULT_MODEL_LIB = "EventConnectedStatus";
 
     private final boolean disconnect;
 
     public EventInjectionDisconnection(Generator equipment, double startTime, boolean disconnect) {
-        super(equipment, startTime);
+        super(equipment, startTime, EVENT_PREFIX);
         this.disconnect = disconnect;
     }
 
@@ -38,7 +43,7 @@ public class EventInjectionDisconnection extends AbstractEventModel {
     }
 
     public EventInjectionDisconnection(Load equipment, double startTime, boolean disconnect) {
-        super(equipment, startTime);
+        super(equipment, startTime, EVENT_PREFIX);
         this.disconnect = disconnect;
     }
 
@@ -62,6 +67,7 @@ public class EventInjectionDisconnection extends AbstractEventModel {
 
     @Override
     protected void writeEventSpecificParameters(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
+        ParametersXml.writeParameter(writer, ParameterType.DOUBLE, "event_tEvent", Double.toString(getStartTime()));
         ParametersXml.writeParameter(writer, ParameterType.BOOL, "event_stateEvent1", Boolean.toString(disconnect));
     }
 
