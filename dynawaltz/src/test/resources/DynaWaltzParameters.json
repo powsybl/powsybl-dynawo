@@ -4,15 +4,15 @@
   "stopTime" : 3600,
   "extensions" : {
     "DynaWaltzParameters" : {
-      "parametersFile" : "/home/user/parametersFile",
+      "modelsParameters" : {
+        "parameterSets" : { }
+      },
       "network" : {
-        "parametersFile" : "/home/user/networkParametersFile",
         "parametersId" : "1"
       },
       "solver" : {
-        "type" : "SIM",
-        "parametersFile" : "/home/user/solverParametersFile",
-        "parametersId" : "1"
+        "parametersId" : "1",
+        "type" : "SIM"
       },
       "mergeLoads" : false
     }

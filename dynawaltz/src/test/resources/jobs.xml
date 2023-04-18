@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dyn:jobs xmlns:dyn="http://www.rte-france.com/dynawo">
     <dyn:job name="Job">
-        <dyn:solver lib="dynawo_SolverIDA" parFile="solver.par" parId="1"/>
+        <dyn:solver lib="dynawo_SolverIDA" parFile="solversOut.par" parId="1"/>
         <dyn:modeler compileDir="outputs/compilation">
-            <dyn:network iidmFile="powsybl_dynawaltz.xiidm" parFile="network.par" parId="1"/>
+            <dyn:network iidmFile="powsybl_dynawaltz.xiidm" parFile="networkOut.par" parId="1"/>
             <dyn:dynModels dydFile="powsybl_dynawaltz.dyd"/>
             <dyn:precompiledModels useStandardModels="true"/>
             <dyn:modelicaModels useStandardModels="false"/>

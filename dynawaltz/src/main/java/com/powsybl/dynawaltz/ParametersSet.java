@@ -82,11 +82,14 @@ public final class ParametersSet {
 
     }
 
-
     private final Map<String, Set> parameterSets;
 
     private ParametersSet() {
         this.parameterSets = new LinkedHashMap<>();
+    }
+
+    public Map<String, Set> getParameterSets() {
+        return parameterSets;
     }
 
     private void addParameterSet(String parameterSetId, Set set) {
@@ -156,17 +159,19 @@ public final class ParametersSet {
 
     public static ParametersSet load(Path parametersFile) {
         ParametersSet parametersDatabase = new ParametersSet();
-        try (Reader reader = Files.newBufferedReader(parametersFile, StandardCharsets.UTF_8)) {
-            XMLInputFactory factory = XMLInputFactory.newInstance();
-            factory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
-            factory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
-            XMLStreamReader xmlReader = factory.createXMLStreamReader(reader);
-            read(xmlReader, parametersDatabase);
-            xmlReader.close();
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        } catch (XMLStreamException e) {
-            throw new UncheckedXmlStreamException(e);
+        if (Files.exists(parametersFile)) {
+            try (Reader reader = Files.newBufferedReader(parametersFile, StandardCharsets.UTF_8)) {
+                XMLInputFactory factory = XMLInputFactory.newInstance();
+                factory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+                factory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+                XMLStreamReader xmlReader = factory.createXMLStreamReader(reader);
+                read(xmlReader, parametersDatabase);
+                xmlReader.close();
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            } catch (XMLStreamException e) {
+                throw new UncheckedXmlStreamException(e);
+            }
         }
         return parametersDatabase;
     }

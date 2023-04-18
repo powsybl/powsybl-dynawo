@@ -14,7 +14,6 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Objects;
 
 import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.*;
@@ -49,7 +48,7 @@ public final class JobsXml {
         DynaWaltzParameters parameters = context.getDynaWaltzParameters();
         writer.writeEmptyElement(DYN_URI, "solver");
         writer.writeAttribute("lib", parameters.getSolver().getType().equals(SolverType.IDA) ? "dynawo_SolverIDA" : "dynawo_SolverSIM");
-        writer.writeAttribute("parFile", DynaWaltzParameters.DEFAULT_SOLVER_PARAMETERS_FILE);
+        writer.writeAttribute("parFile", DynaWaltzParameters.SOLVER_OUTPUT_PARAMETERS_FILE);
         writer.writeAttribute("parId", parameters.getSolver().getParametersId());
     }
 
@@ -60,7 +59,7 @@ public final class JobsXml {
 
         writer.writeEmptyElement(DYN_URI, "network");
         writer.writeAttribute("iidmFile", NETWORK_FILENAME);
-        writer.writeAttribute("parFile", DynaWaltzParameters.DEFAULT_NETWORK_PARAMETERS_FILE);
+        writer.writeAttribute("parFile", DynaWaltzParameters.NETWORK_OUTPUT_PARAMETERS_FILE);
         writer.writeAttribute("parId", parameters.getNetwork().getParametersId());
 
         writer.writeEmptyElement(DYN_URI, "dynModels");

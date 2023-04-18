@@ -13,6 +13,7 @@ import java.nio.file.Path;
 import java.util.Objects;
 import java.util.Optional;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.powsybl.commons.config.ModuleConfig;
 import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.extensions.AbstractExtension;
@@ -30,6 +31,9 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
     public static final String DEFAULT_PARAMETERS_FILE = "models.par";
     public static final String DEFAULT_NETWORK_PARAMETERS_FILE = "network.par";
     public static final String DEFAULT_SOLVER_PARAMETERS_FILE = "solvers.par";
+    public static final String MODELS_OUTPUT_PARAMETERS_FILE = "modelsOut.par";
+    public static final String NETWORK_OUTPUT_PARAMETERS_FILE = "networkOut.par";
+    public static final String SOLVER_OUTPUT_PARAMETERS_FILE = "solversOut.par";
 
     public enum SolverType {
         SIM,
@@ -53,11 +57,13 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
             return this;
         }
 
+        @JsonIgnore
         public Network setParameters(Path parametersFile) {
             this.parameters = ParametersSet.load(parametersFile);
             return this;
         }
 
+        @JsonIgnore
         public Network setParameters(InputStream parametersFile) {
             this.parameters = ParametersSet.load(parametersFile);
             return this;
@@ -100,11 +106,13 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
             return this;
         }
 
+        @JsonIgnore
         public Solver setParameters(Path parametersFile) {
             this.parameters = ParametersSet.load(parametersFile);
             return this;
         }
 
+        @JsonIgnore
         public Solver setParameters(InputStream parametersFile) {
             this.parameters = ParametersSet.load(parametersFile);
             return this;
@@ -189,11 +197,13 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
         return this;
     }
 
+    @JsonIgnore
     public DynaWaltzParameters setParametersFile(Path modelsParametersFile) {
         this.modelsParameters = ParametersSet.load(modelsParametersFile);
         return this;
     }
 
+    @JsonIgnore
    public DynaWaltzParameters setParametersFile(InputStream modelsParametersFile) {
         this.modelsParameters = ParametersSet.load(modelsParametersFile);
         return this;
