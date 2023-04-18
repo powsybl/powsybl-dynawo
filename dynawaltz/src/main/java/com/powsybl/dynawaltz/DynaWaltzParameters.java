@@ -175,7 +175,7 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
         boolean mergeLoads = config.flatMap(c -> c.getOptionalBooleanProperty("mergeLoads")).orElse(DEFAULT_MERGE_LOADS);
 
         return new DynaWaltzParameters()
-                .setParametersFile(parametersPath)
+                .setParameters(parametersPath)
                 .setNetwork(new Network().setParametersId(networkParametersId).setParameters(networkParametersPath))
                 .setSolver(new Solver().setParametersId(solverParametersId).setType(solverType).setParameters(solverParametersPath))
                 .setMergeLoads(mergeLoads);
@@ -198,19 +198,19 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
         return modelsParameters;
     }
 
-    public DynaWaltzParameters setParametersFile(ParametersSet modelsParameters) {
+    public DynaWaltzParameters setParameters(ParametersSet modelsParameters) {
         this.modelsParameters = Objects.requireNonNull(modelsParameters);
         return this;
     }
 
     @JsonIgnore
-    public DynaWaltzParameters setParametersFile(Path modelsParametersFile) {
+    public DynaWaltzParameters setParameters(Path modelsParametersFile) {
         this.modelsParameters = ParametersSet.load(modelsParametersFile);
         return this;
     }
 
     @JsonIgnore
-   public DynaWaltzParameters setParametersFile(InputStream modelsParametersFile) {
+   public DynaWaltzParameters setParameters(InputStream modelsParametersFile) {
         this.modelsParameters = ParametersSet.load(modelsParametersFile);
         return this;
     }
