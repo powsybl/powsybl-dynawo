@@ -142,14 +142,18 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
         return load(platformConfig, FileSystems.getDefault());
     }
 
-    protected static DynaWaltzParameters load(PlatformConfig platformConfig, FileSystem fileSystem) {
+    public static DynaWaltzParameters load(PlatformConfig platformConfig, FileSystem fileSystem) {
         Optional<ModuleConfig> config = platformConfig.getOptionalModuleConfig("dynawaltz-default-parameters");
 
         // File with all the dynamic models' parameters for the simulation
         String parametersFile = config.map(c -> c.getStringProperty("parametersFile")).orElse(DEFAULT_PARAMETERS_FILE);
+        Path parametersPath = platformConfig.getConfigDir().map(configDir -> configDir.resolve(parametersFile))
+                .orElse(fileSystem.getPath(parametersFile));
 
         // File with all the network's parameters for the simulation
         String networkParametersFile = config.map(c -> c.getStringProperty("network.parametersFile")).orElse(DEFAULT_NETWORK_PARAMETERS_FILE);
+        Path networkParametersPath = platformConfig.getConfigDir().map(configDir -> configDir.resolve(networkParametersFile))
+                .orElse(fileSystem.getPath(networkParametersFile));
 
         // Identifies the set of network parameters that will be used in the simulation.
         String networkParametersId = config.flatMap(c -> c.getOptionalStringProperty("network.parametersId")).orElse(DEFAULT_NETWORK_PAR_ID);
@@ -161,6 +165,8 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
 
         // File with all the solvers' parameters for the simulation
         String solverParametersFile = config.flatMap(c -> c.getOptionalStringProperty("solver.parametersFile")).orElse(DEFAULT_SOLVER_PARAMETERS_FILE);
+        Path solverParametersPath = platformConfig.getConfigDir().map(configDir -> configDir.resolve(solverParametersFile))
+                .orElse(fileSystem.getPath(solverParametersFile));
 
         // Identifies the set of solver parameters that will be used in the simulation
         String solverParametersId = config.flatMap(c -> c.getOptionalStringProperty("solver.parametersId")).orElse(DEFAULT_SOLVER_PAR_ID);
@@ -169,9 +175,9 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
         boolean mergeLoads = config.flatMap(c -> c.getOptionalBooleanProperty("mergeLoads")).orElse(DEFAULT_MERGE_LOADS);
 
         return new DynaWaltzParameters()
-                .setParametersFile(fileSystem.getPath(parametersFile))
-                .setNetwork(new Network().setParametersId(networkParametersId).setParameters(fileSystem.getPath(networkParametersFile)))
-                .setSolver(new Solver().setParametersId(solverParametersId).setType(solverType).setParameters(fileSystem.getPath(solverParametersFile)))
+                .setParametersFile(parametersPath)
+                .setNetwork(new Network().setParametersId(networkParametersId).setParameters(networkParametersPath))
+                .setSolver(new Solver().setParametersId(solverParametersId).setType(solverType).setParameters(solverParametersPath))
                 .setMergeLoads(mergeLoads);
     }
 

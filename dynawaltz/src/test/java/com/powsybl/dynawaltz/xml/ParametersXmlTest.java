@@ -6,6 +6,7 @@
  */
 package com.powsybl.dynawaltz.xml;
 
+import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
@@ -23,7 +24,7 @@ class ParametersXmlTest extends DynaWaltzTestUtil {
     @Test
     void writeOmegaRef() throws SAXException, IOException, XMLStreamException {
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
-        DynaWaltzParameters dynawoParameters = DynaWaltzParameters.load();
+        DynaWaltzParameters dynawoParameters = DynaWaltzParameters.load(PlatformConfig.defaultConfig(), fileSystem);
         DynaWaltzContext context = new DynaWaltzContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, eventModels, curves, parameters, dynawoParameters);
 
         DydXml.write(tmpDir, context);
