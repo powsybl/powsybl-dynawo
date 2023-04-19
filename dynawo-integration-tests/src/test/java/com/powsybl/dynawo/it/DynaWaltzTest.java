@@ -7,6 +7,8 @@
 package com.powsybl.dynawo.it;
 
 import com.powsybl.commons.config.PlatformConfig;
+import com.powsybl.commons.datasource.ResourceDataSource;
+import com.powsybl.commons.datasource.ResourceSet;
 import com.powsybl.dynamicsimulation.*;
 import com.powsybl.dynamicsimulation.groovy.*;
 import com.powsybl.dynawaltz.DynaWaltzConfig;
@@ -51,7 +53,7 @@ class DynaWaltzTest extends AbstractDynawoTest {
 
     @Test
     void testIeee14() throws IOException {
-        Network network = SvcTestCaseFactory.create();
+        Network network = Network.read(new ResourceDataSource("IEEE14", new ResourceSet("/ieee14", "IEEE14.iidm")));
 
         GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
                 getResourceAsStream("/ieee14/disconnectline/dynamicModels.groovy"),
