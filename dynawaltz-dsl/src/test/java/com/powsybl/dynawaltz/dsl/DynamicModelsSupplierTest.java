@@ -50,7 +50,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
 
     @Test
     void testGroovyExtensionCount() {
-        assertEquals(10, EXTENSIONS.size());
+        assertEquals(11, EXTENSIONS.size());
     }
 
     @ParameterizedTest(name = "{0}")
