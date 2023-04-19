@@ -13,6 +13,5 @@ import com.powsybl.dynawaltz.models.Model;
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 public interface DisconnectableEquipment extends Model {
-
     String getDisconnectableVarName();
 }

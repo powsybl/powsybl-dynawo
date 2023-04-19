@@ -28,7 +28,7 @@ class DisconnectEventXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void addDynamicModels() {
-        dynamicModels.add(new GeneratorFictitious("BBM_GEN", "GEN", "GF"));
+        dynamicModels.add(new GeneratorFictitious("BBM_GEN", network.getGenerator("GEN"), "GF"));
         eventModels.add(new EventSetPointBoolean(network.getGenerator("GEN"), 1));
         eventModels.add(new EventSetPointBoolean(network.getLoad("LOAD"), 1));
     }

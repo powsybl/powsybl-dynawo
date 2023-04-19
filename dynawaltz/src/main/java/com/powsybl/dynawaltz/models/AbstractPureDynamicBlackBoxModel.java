@@ -26,7 +26,7 @@ public abstract class AbstractPureDynamicBlackBoxModel extends AbstractBlackBoxM
     }
 
     protected AbstractPureDynamicBlackBoxModel(String dynamicModelId) {
-        super(dynamicModelId, null, dynamicModelId);
+        super(dynamicModelId, dynamicModelId);
     }
 
     @Override
