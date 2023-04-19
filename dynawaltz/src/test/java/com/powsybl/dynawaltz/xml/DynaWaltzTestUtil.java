@@ -107,7 +107,7 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
 
         // Automatons
         network.getLineStream().filter(line -> line != standardLine)
-                .forEach(l -> dynamicModels.add(new CurrentLimitAutomaton("BBM_" + l.getId(), l.getId(), "CLA", Side.ONE)));
+                .forEach(l -> dynamicModels.add(new CurrentLimitAutomaton("BBM_" + l.getId(), "CLA", l, Side.ONE)));
     }
 
     public void validate(String schemaDefinition, String expectedResourceName, Path xmlFile) throws SAXException, IOException {

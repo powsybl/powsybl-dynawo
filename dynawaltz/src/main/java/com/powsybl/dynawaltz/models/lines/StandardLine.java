@@ -76,7 +76,7 @@ public class StandardLine extends AbstractBlackBoxModel implements LineModel, Qu
     }
 
     @Override
-    public String getDesactivateCurrentLimitsVarName() {
+    public String getDeactivateCurrentLimitsVarName() {
         throw new UnsupportedOperationException("deactivateCurrentLimits variable not implemented in StandardLine dynawo's model");
     }
 

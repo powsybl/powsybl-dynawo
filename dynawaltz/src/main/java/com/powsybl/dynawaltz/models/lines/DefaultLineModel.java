@@ -40,7 +40,7 @@ public class DefaultLineModel extends AbstractNetworkModel implements LineModel,
     }
 
     @Override
-    public String getDesactivateCurrentLimitsVarName() {
+    public String getDeactivateCurrentLimitsVarName() {
         return "@NAME@_desactivate_currentLimits";
     }
 

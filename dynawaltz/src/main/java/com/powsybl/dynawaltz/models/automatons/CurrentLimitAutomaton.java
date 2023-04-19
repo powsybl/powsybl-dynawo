@@ -10,11 +10,12 @@ import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.VarConnection;
-import com.powsybl.dynawaltz.models.lines.LineModel;
+import com.powsybl.iidm.network.Identifiable;
+import com.powsybl.iidm.network.IdentifiableType;
+import com.powsybl.iidm.network.Line;
+import com.powsybl.iidm.network.TwoWindingsTransformer;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -22,13 +23,21 @@ import java.util.Objects;
  */
 public class CurrentLimitAutomaton extends AbstractPureDynamicBlackBoxModel {
 
-    private final Side side;
-    private final String lineStaticId;
+    private static final Set<IdentifiableType> COMPATIBLE_EQUIPMENTS = EnumSet.of(IdentifiableType.LINE, IdentifiableType.TWO_WINDINGS_TRANSFORMER);
 
-    public CurrentLimitAutomaton(String dynamicModelId, String staticId, String parameterSetId, Side side) {
+    private final Identifiable<?> quadripoleEquipment;
+    private final Side side;
+
+    public CurrentLimitAutomaton(String dynamicModelId, String parameterSetId, Line line, Side side) {
         super(dynamicModelId, parameterSetId);
+        this.quadripoleEquipment = Objects.requireNonNull(line);
         this.side = Objects.requireNonNull(side);
-        this.lineStaticId = staticId;
+    }
+
+    public CurrentLimitAutomaton(String dynamicModelId, String parameterSetId, TwoWindingsTransformer transformer, Side side) {
+        super(dynamicModelId, parameterSetId);
+        this.quadripoleEquipment = Objects.requireNonNull(transformer);
+        this.side = Objects.requireNonNull(side);
     }
 
     @Override
@@ -38,18 +47,18 @@ public class CurrentLimitAutomaton extends AbstractPureDynamicBlackBoxModel {
 
     @Override
     public void createMacroConnections(DynaWaltzContext context) {
-        createMacroConnections(lineStaticId, LineModel.class, this::getVarConnectionsWithLine, context, side);
+        createMacroConnections(quadripoleEquipment, QuadripoleModel.class, this::getVarConnectionsWithQuadripole, context);
     }
 
-    private List<VarConnection> getVarConnectionsWithLine(LineModel connected, Side side) {
+    private List<VarConnection> getVarConnectionsWithQuadripole(QuadripoleModel connected) {
         return Arrays.asList(
                 new VarConnection("currentLimitAutomaton_IMonitored", connected.getIVarName(side)),
                 new VarConnection("currentLimitAutomaton_order", connected.getStateVarName()),
-                new VarConnection("currentLimitAutomaton_AutomatonExists", connected.getDesactivateCurrentLimitsVarName())
+                new VarConnection("currentLimitAutomaton_AutomatonExists", connected.getDeactivateCurrentLimitsVarName())
         );
     }
 
-    public String getLineStaticId() {
-        return lineStaticId;
+    public static boolean isCompatibleEquipment(IdentifiableType type) {
+        return COMPATIBLE_EQUIPMENTS.contains(type);
     }
 }

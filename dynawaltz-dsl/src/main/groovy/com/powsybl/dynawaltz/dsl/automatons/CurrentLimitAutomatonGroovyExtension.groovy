@@ -11,11 +11,13 @@ import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractDynamicModelBuilder
-import com.powsybl.dynawaltz.dsl.AbstractPowsyblDynawoGroovyExtension
+import com.powsybl.dynawaltz.dsl.AbstractPureDynamicGroovyExtension
 import com.powsybl.dynawaltz.models.Side
 import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton
 import com.powsybl.dynawaltz.models.utils.SideConverter
 import com.powsybl.iidm.network.Branch
+import com.powsybl.iidm.network.Identifiable
+import com.powsybl.iidm.network.Network
 
 /**
  * An implementation of {@link DynamicModelGroovyExtension} that adds the <pre>CurrentLimitAutomaton</pre> keyword to the DSL
@@ -23,20 +25,26 @@ import com.powsybl.iidm.network.Branch
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class CurrentLimitAutomatonGroovyExtension extends AbstractPowsyblDynawoGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+class CurrentLimitAutomatonGroovyExtension extends AbstractPureDynamicGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
     CurrentLimitAutomatonGroovyExtension() {
         modelTags = ["CurrentLimitAutomaton"]
     }
 
     @Override
-    protected CurrentLimitAutomatonBuilder createBuilder(String currentTag) {
-        new CurrentLimitAutomatonBuilder()
+    protected CurrentLimitAutomatonBuilder createBuilder(String currentTag, Network network) {
+        new CurrentLimitAutomatonBuilder(network)
     }
 
     static class CurrentLimitAutomatonBuilder extends AbstractDynamicModelBuilder {
 
+        Network network
+        Identifiable<? extends Identifiable> equipment
         Side side
+
+        CurrentLimitAutomatonBuilder(Network network) {
+            this.network = network
+        }
 
         void side(Branch.Side side) {
             this.side = SideConverter.convert(side)
@@ -45,6 +53,13 @@ class CurrentLimitAutomatonGroovyExtension extends AbstractPowsyblDynawoGroovyEx
         @Override
         void checkData() {
             super.checkData()
+            equipment = network.getIdentifiable(staticId)
+            if (equipment == null) {
+                throw new DslException("Identifiable static id unknown: " + getStaticId())
+            }
+            if(!CurrentLimitAutomaton.isCompatibleEquipment(equipment.getType())) {
+                throw new DslException("Equipment ${staticId} is not a quadripole")
+            }
             if (!side) {
                 throw new DslException("'side' field is not set")
             }
@@ -53,7 +68,7 @@ class CurrentLimitAutomatonGroovyExtension extends AbstractPowsyblDynawoGroovyEx
         @Override
         CurrentLimitAutomaton build() {
             checkData()
-            new CurrentLimitAutomaton(dynamicModelId, staticId, parameterSetId, side)
+            new CurrentLimitAutomaton(dynamicModelId, parameterSetId, equipment, side)
         }
     }
 }
