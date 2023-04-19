@@ -17,4 +17,6 @@ import java.util.List;
 public interface OmegaRefGeneratorModel extends GeneratorModel {
 
     List<VarConnection> getOmegaRefVarConnections();
+
+    String getConnectableBusId();
 }

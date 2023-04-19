@@ -13,7 +13,7 @@ import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension;
 import com.powsybl.dynamicsimulation.groovy.GroovyDynamicModelsSupplier;
 import com.powsybl.dynamicsimulation.groovy.GroovyExtension;
 import com.powsybl.dynawaltz.DynaWaltzProvider;
-import com.powsybl.dynawaltz.models.BlackBoxModel;
+import com.powsybl.dynawaltz.models.EquipmentBlackBoxModelModel;
 import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton;
 import com.powsybl.dynawaltz.models.buses.StandardBus;
 import com.powsybl.dynawaltz.models.generators.GeneratorFictitious;
@@ -53,12 +53,12 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("provideEquipmentModelData")
-    void testEquipmentDynamicModels(String groovyScriptName, Class<? extends BlackBoxModel> modelClass, Network network, String staticId, String dynamicId, String parameterId, String lib) {
+    void testEquipmentDynamicModels(String groovyScriptName, Class<? extends EquipmentBlackBoxModelModel> modelClass, Network network, String staticId, String dynamicId, String parameterId, String lib) {
         DynamicModelsSupplier supplier = new GroovyDynamicModelsSupplier(getResourceAsStream(groovyScriptName), EXTENSIONS);
         List<DynamicModel> dynamicModels = supplier.get(network);
         assertEquals(1, dynamicModels.size());
         assertTrue(modelClass.isInstance(dynamicModels.get(0)));
-        assertBlackBoxModel(modelClass.cast(dynamicModels.get(0)), dynamicId, staticId, parameterId, lib);
+        assertEquipmentBlackBoxModel(modelClass.cast(dynamicModels.get(0)), dynamicId, staticId, parameterId, lib);
     }
 
     @Test
@@ -69,15 +69,14 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
         assertTrue(dynamicModels.get(0) instanceof CurrentLimitAutomaton);
         CurrentLimitAutomaton bbm = (CurrentLimitAutomaton) dynamicModels.get(0);
         assertEquals("AM_NHV1_NHV2_1", bbm.getDynamicModelId());
-        assertTrue(bbm.getStaticId().isEmpty());
         assertEquals("CLA", bbm.getParameterSetId());
         assertEquals("CurrentLimitAutomaton", bbm.getLib());
         assertEquals("NHV1_NHV2_1", bbm.getLineStaticId());
     }
 
-    void assertBlackBoxModel(BlackBoxModel bbm, String dynamicId, String staticId, String parameterId, String lib) {
+    void assertEquipmentBlackBoxModel(EquipmentBlackBoxModelModel bbm, String dynamicId, String staticId, String parameterId, String lib) {
         assertEquals(dynamicId, bbm.getDynamicModelId());
-        assertEquals(staticId, bbm.getStaticId().orElseThrow());
+        assertEquals(staticId, bbm.getStaticId());
         assertEquals(parameterId, bbm.getParameterSetId());
         assertEquals(lib, bbm.getLib());
     }

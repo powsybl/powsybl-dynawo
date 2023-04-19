@@ -8,9 +8,12 @@
 package com.powsybl.dynawaltz.models.generators;
 
 import com.powsybl.dynawaltz.models.VarConnection;
+import com.powsybl.iidm.network.Generator;
 
 import java.util.Arrays;
 import java.util.List;
+
+import static com.powsybl.dynawaltz.models.utils.BusUtils.getConnectableBusStaticId;
 
 /**
  * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
@@ -19,8 +22,8 @@ public class OmegaRefGenerator extends AbstractGeneratorModel implements OmegaRe
 
     private final String generatorLib;
 
-    public OmegaRefGenerator(String dynamicModelId, String staticId, String parameterSetId, String generatorLib) {
-        super(dynamicModelId, staticId, parameterSetId,
+    public OmegaRefGenerator(String dynamicModelId, Generator generator, String parameterSetId, String generatorLib) {
+        super(dynamicModelId, generator, parameterSetId,
                 "generator_terminal",
                 "generator_switchOffSignal1",
                 "generator_switchOffSignal2",
@@ -39,6 +42,11 @@ public class OmegaRefGenerator extends AbstractGeneratorModel implements OmegaRe
                 new VarConnection("omegaRef_grp_@INDEX@", getOmegaRefPuVarName()),
                 new VarConnection("running_grp_@INDEX@", getRunningVarName())
         );
+    }
+
+    @Override
+    public String getConnectableBusId() {
+        return getConnectableBusStaticId(equipment);
     }
 
     @Override

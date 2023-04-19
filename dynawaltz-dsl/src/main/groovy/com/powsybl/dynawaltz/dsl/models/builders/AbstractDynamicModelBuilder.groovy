@@ -6,19 +6,26 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-package com.powsybl.dynawaltz.dsl
+package com.powsybl.dynawaltz.dsl.models.builders
 
 import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
+import com.powsybl.dynawaltz.dsl.ModelBuilder
+import com.powsybl.iidm.network.Network
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 abstract class AbstractDynamicModelBuilder implements ModelBuilder<DynamicModel> {
 
+    Network network
     String dynamicModelId
     String staticId
     String parameterSetId
+
+    AbstractDynamicModelBuilder(Network network) {
+        this.network = network
+    }
 
     void dynamicModelId(String dynamicModelId) {
         this.dynamicModelId = dynamicModelId

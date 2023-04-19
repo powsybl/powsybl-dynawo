@@ -6,9 +6,8 @@
  */
 package com.powsybl.dynawaltz.models.loads;
 
-import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
-import com.powsybl.dynawaltz.models.AbstractBlackBoxModel;
+import com.powsybl.dynawaltz.models.AbstractEquipmentBlackBoxModel;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.buses.BusModel;
 import com.powsybl.dynawaltz.models.utils.BusUtils;
@@ -21,20 +20,22 @@ import java.util.Objects;
  * @author Marcos de Miguel <demiguelm at aia.es>
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public abstract class AbstractLoad extends AbstractBlackBoxModel {
+public abstract class AbstractLoad extends AbstractEquipmentBlackBoxModel<Load> {
 
-    protected AbstractLoad(String dynamicModelId, String staticId, String parameterSetId) {
-        super(dynamicModelId, Objects.requireNonNull(staticId), parameterSetId);
+    protected final String terminalVarName;
+
+    protected AbstractLoad(String dynamicModelId, Load load, String parameterSetId, String terminalVarName) {
+        super(dynamicModelId, parameterSetId, Objects.requireNonNull(load));
+        this.terminalVarName = terminalVarName;
+    }
+
+    protected String getTerminalVarName() {
+        return terminalVarName;
     }
 
     @Override
     public void createMacroConnections(DynaWaltzContext context) {
-        String staticId = getStaticId().orElse(null); // cannot be empty as checked in constructor
-        Load load = context.getNetwork().getLoad(staticId);
-        if (load == null) {
-            throw new PowsyblException("Load static id unknown: " + staticId);
-        }
-        createMacroConnections(BusUtils.getConnectableBusStaticId(load), BusModel.class, this::getVarConnectionsWithBus, context);
+        createMacroConnections(BusUtils.getConnectableBusStaticId(equipment), BusModel.class, this::getVarConnectionsWithBus, context);
     }
 
     abstract List<VarConnection> getVarConnectionsWithBus(BusModel connected);
