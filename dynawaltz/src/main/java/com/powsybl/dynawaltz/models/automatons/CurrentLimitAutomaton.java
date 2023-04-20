@@ -17,14 +17,12 @@ import java.util.*;
  * @author Marcos de Miguel <demiguelm at aia.es>
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class CurrentLimitAutomaton extends AbstractPureDynamicBlackBoxModel {
+public class CurrentLimitAutomaton extends CurrentLimitTwoLevelsAutomaton {
 
-    private final Branch<?> quadripoleEquipment;
     private final Side side;
 
     public CurrentLimitAutomaton(String dynamicModelId, String parameterSetId, Branch<?> quadripoleEquipment, Side side) {
-        super(dynamicModelId, parameterSetId);
-        this.quadripoleEquipment = Objects.requireNonNull(quadripoleEquipment);
+        super(dynamicModelId, parameterSetId, quadripoleEquipment);
         this.side = Objects.requireNonNull(side);
     }
 

@@ -13,9 +13,8 @@ import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractDynamicModelBuilder
 import com.powsybl.dynawaltz.dsl.AbstractPureDynamicGroovyExtension
-import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton
 import com.powsybl.dynawaltz.models.automatons.CurrentLimitTwoLevelsAutomaton
-import com.powsybl.iidm.network.Identifiable
+import com.powsybl.iidm.network.Branch
 import com.powsybl.iidm.network.Network
 
 /**
@@ -36,7 +35,7 @@ class CurrentLimitTwoLevelsAutomatonGroovyExtension extends AbstractPureDynamicG
     static class CurrentLimitAutomatonTwoLevelBuilder extends AbstractDynamicModelBuilder {
 
         Network network
-        Identifiable<? extends Identifiable> equipment
+        Branch<? extends Branch> equipment
 
         CurrentLimitAutomatonTwoLevelBuilder(Network network) {
             this.network = network
@@ -45,11 +44,8 @@ class CurrentLimitTwoLevelsAutomatonGroovyExtension extends AbstractPureDynamicG
         @Override
         void checkData() {
             super.checkData()
-            equipment = network.getIdentifiable(staticId)
+            equipment = network.getBranch(staticId)
             if (equipment == null) {
-                throw new DslException("Identifiable static id unknown: ${getStaticId()}")
-            }
-            if(!CurrentLimitAutomaton.isCompatibleEquipment(equipment.getType())) {
                 throw new DslException("Equipment ${staticId} is not a quadripole")
             }
         }
