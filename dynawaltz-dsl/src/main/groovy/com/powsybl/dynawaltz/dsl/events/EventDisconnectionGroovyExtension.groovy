@@ -14,7 +14,7 @@ import com.powsybl.dynamicsimulation.groovy.EventModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractPureDynamicGroovyExtension
 import com.powsybl.dynawaltz.models.events.AbstractEventModel
 import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection
-import com.powsybl.dynawaltz.models.events.EventSetPointBoolean
+import com.powsybl.dynawaltz.models.events.EventInjectionDisconnection
 import com.powsybl.iidm.network.Branch
 import com.powsybl.iidm.network.Identifiable
 import com.powsybl.iidm.network.IdentifiableType
@@ -86,7 +86,7 @@ class EventDisconnectionGroovyExtension extends AbstractPureDynamicGroovyExtensi
         AbstractEventModel build() {
             checkData()
             if(isEquipment)
-                new EventSetPointBoolean(identifiable, startTime)
+                new EventInjectionDisconnection(identifiable, startTime)
             else if (isQuadripoleEquipment)
                 new EventQuadripoleDisconnection(identifiable, startTime, disconnectOrigin, disconnectExtremity)
         }

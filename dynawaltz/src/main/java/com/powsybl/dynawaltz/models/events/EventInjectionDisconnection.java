@@ -22,28 +22,28 @@ import static com.powsybl.dynawaltz.DynaWaltzParametersDatabase.ParameterType.BO
  * @author Mathieu BAGUE {@literal <mathieu.bague at rte-france.com>}
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class EventSetPointBoolean extends AbstractEventModel {
+public class EventInjectionDisconnection extends AbstractEventModel {
 
     private static final String DYNAMIC_MODEL_LIB = "EventSetPointBoolean";
     private static final String DEFAULT_MODEL_LIB = "EventConnectedStatus";
 
     private final boolean disconnect;
 
-    public EventSetPointBoolean(Generator equipment, double startTime, boolean disconnect) {
+    public EventInjectionDisconnection(Generator equipment, double startTime, boolean disconnect) {
         super(equipment, startTime);
         this.disconnect = disconnect;
     }
 
-    public EventSetPointBoolean(Generator equipment, double startTime) {
+    public EventInjectionDisconnection(Generator equipment, double startTime) {
         this(equipment, startTime, true);
     }
 
-    public EventSetPointBoolean(Load equipment, double startTime, boolean disconnect) {
+    public EventInjectionDisconnection(Load equipment, double startTime, boolean disconnect) {
         super(equipment, startTime);
         this.disconnect = disconnect;
     }
 
-    public EventSetPointBoolean(Load equipment, double startTime) {
+    public EventInjectionDisconnection(Load equipment, double startTime) {
         this(equipment, startTime, true);
     }
 
@@ -68,7 +68,7 @@ public class EventSetPointBoolean extends AbstractEventModel {
 
     @Override
     public String getName() {
-        return DYNAMIC_MODEL_LIB;
+        return EventInjectionDisconnection.class.getSimpleName();
     }
 
     @Override

@@ -7,7 +7,7 @@
  */
 package com.powsybl.dynawaltz.xml;
 
-import com.powsybl.dynawaltz.models.events.EventSetPointBoolean;
+import com.powsybl.dynawaltz.models.events.EventInjectionDisconnection;
 import com.powsybl.dynawaltz.models.generators.GeneratorFictitious;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.Test;
@@ -29,8 +29,8 @@ class DisconnectEventXmlTest extends AbstractDynamicModelXmlTest {
     @Override
     protected void addDynamicModels() {
         dynamicModels.add(new GeneratorFictitious("BBM_GEN", network.getGenerator("GEN"), "GF"));
-        eventModels.add(new EventSetPointBoolean(network.getGenerator("GEN"), 1));
-        eventModels.add(new EventSetPointBoolean(network.getLoad("LOAD"), 1));
+        eventModels.add(new EventInjectionDisconnection(network.getGenerator("GEN"), 1));
+        eventModels.add(new EventInjectionDisconnection(network.getLoad("LOAD"), 1));
     }
 
     @Test
