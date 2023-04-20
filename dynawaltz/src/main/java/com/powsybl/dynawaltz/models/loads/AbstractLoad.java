@@ -14,7 +14,6 @@ import com.powsybl.dynawaltz.models.utils.BusUtils;
 import com.powsybl.iidm.network.Load;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -25,7 +24,7 @@ public abstract class AbstractLoad extends AbstractEquipmentBlackBoxModel<Load> 
     protected final String terminalVarName;
 
     protected AbstractLoad(String dynamicModelId, Load load, String parameterSetId, String terminalVarName) {
-        super(dynamicModelId, parameterSetId, Objects.requireNonNull(load));
+        super(dynamicModelId, parameterSetId, load);
         this.terminalVarName = terminalVarName;
     }
 

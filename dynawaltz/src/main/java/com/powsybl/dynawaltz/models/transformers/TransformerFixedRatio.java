@@ -27,8 +27,8 @@ public class TransformerFixedRatio extends AbstractEquipmentBlackBoxModel<TwoWin
     private final String transformerLib;
 
     public TransformerFixedRatio(String dynamicModelId, TwoWindingsTransformer transformer, String parameterSetId, String lib) {
-        super(dynamicModelId, parameterSetId, Objects.requireNonNull(transformer));
-        this.transformerLib = lib;
+        super(dynamicModelId, parameterSetId, transformer);
+        this.transformerLib = Objects.requireNonNull(lib);
     }
 
     @Override
