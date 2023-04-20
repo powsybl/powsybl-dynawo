@@ -41,9 +41,8 @@ public final class ParametersXml {
         XmlUtil.write(file, context, "parametersSet", ParametersXml::write);
     }
 
-    private static void write(ParametersSet parametersSet, String filename, Path workingDir) {
-        Path parametersPath = workingDir.resolve(filename);
-        parametersSet.write(parametersPath);
+    private static void write(ParametersSet parametersSet, String filename, Path workingDir) throws IOException, XMLStreamException {
+        parametersSet.write(workingDir.resolve(filename));
     }
 
     private static void write(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
@@ -57,5 +56,13 @@ public final class ParametersXml {
         writer.writeAttribute("type", type.toString());
         writer.writeAttribute("name", name);
         writer.writeAttribute("value", value);
+    }
+
+    public static void writeReference(XMLStreamWriter writer, ParametersSet.ParameterType type, String name, String origData, String origName) throws XMLStreamException {
+        writer.writeEmptyElement(DYN_URI, "reference");
+        writer.writeAttribute("type", type.toString());
+        writer.writeAttribute("name", name);
+        writer.writeAttribute("origData", origData);
+        writer.writeAttribute("origName", origName);
     }
 }
