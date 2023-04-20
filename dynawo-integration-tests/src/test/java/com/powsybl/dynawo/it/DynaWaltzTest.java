@@ -22,10 +22,6 @@ import com.powsybl.timeseries.StringTimeSeries;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -52,30 +48,29 @@ class DynaWaltzTest extends AbstractDynawoTest {
     }
 
     @Test
-    void testIeee14() throws IOException {
+    void testIeee14() {
         Network network = Network.read(new ResourceDataSource("IEEE14", new ResourceSet("/ieee14", "IEEE14.iidm")));
 
-        String testFolder = "/ieee14/disconnectline/";
         GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
-                getResourceAsStream(testFolder + "dynamicModels.groovy"),
+                getResourceAsStream("/ieee14/disconnectline/dynamicModels.groovy"),
                 GroovyExtension.find(DynamicModelGroovyExtension.class, DynaWaltzProvider.NAME));
 
         GroovyEventModelsSupplier eventModelsSupplier = new GroovyEventModelsSupplier(
-                getResourceAsStream(testFolder + "eventModels.groovy"),
+                getResourceAsStream("/ieee14/disconnectline/eventModels.groovy"),
                 GroovyExtension.find(EventModelGroovyExtension.class, DynaWaltzProvider.NAME));
 
         GroovyCurvesSupplier curvesSupplier = new GroovyCurvesSupplier(
-                getResourceAsStream(testFolder + "curves.groovy"),
+                getResourceAsStream("/ieee14/disconnectline/curves.groovy"),
                 GroovyExtension.find(CurveGroovyExtension.class, DynaWaltzProvider.NAME));
 
-        dynaWaltzParameters.setParameters(getResourceAsStream(testFolder + "models.par"))
+        dynaWaltzParameters.setParameters(getResourceAsStream("/ieee14/disconnectline/models.par"))
                 .setNetwork(new DynaWaltzParameters.Network()
                         .setParametersId("8")
-                        .setParameters(getResourceAsStream(testFolder + "network.par")))
+                        .setParameters(getResourceAsStream("/ieee14/disconnectline/network.par")))
                 .setSolver(new DynaWaltzParameters.Solver()
                         .setType(DynaWaltzParameters.SolverType.IDA)
                         .setParametersId("2")
-                        .setParameters(getResourceAsStream(testFolder + "solvers.par")));
+                        .setParameters(getResourceAsStream("/ieee14/disconnectline/solvers.par")));
 
         DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, curvesSupplier,
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters)
@@ -92,27 +87,21 @@ class DynaWaltzTest extends AbstractDynawoTest {
     }
 
     @Test
-    void testSvc() throws IOException {
+    void testSvc() {
         Network network = SvcTestCaseFactory.create();
 
         GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
                 getResourceAsStream("/svc/dynamicModels.groovy"),
                 GroovyExtension.find(DynamicModelGroovyExtension.class, DynaWaltzProvider.NAME));
 
-        // FIXME waiting for being able to pass parameters as an input stream
-        for (String parFileName : List.of("models.par", "network.par", "solvers.par")) {
-            Files.copy(getResourceAsStream("/svc/" + parFileName), localDir.resolve(parFileName));
-        }
-
-        // FIXME this should not be dependent of the run, all par file should be provider through an input stream
-        dynaWaltzParameters.setParametersFile(localDir.resolve("models.par").toString())
+        dynaWaltzParameters.setParameters(getResourceAsStream("/svc/models.par"))
                 .setNetwork(new DynaWaltzParameters.Network()
                         .setParametersId("8")
-                        .setParametersFile(localDir.resolve("network.par").toString()))
+                        .setParameters(getResourceAsStream("/svc/network.par")))
                 .setSolver(new DynaWaltzParameters.Solver()
                         .setType(DynaWaltzParameters.SolverType.IDA)
                         .setParametersId("2")
-                        .setParametersFile(localDir.resolve("solvers.par").toString()));
+                        .setParameters(getResourceAsStream("/svc/solvers.par")));
 
         DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, EventModelsSupplier.empty(), CurvesSupplier.empty(),
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters)
@@ -126,27 +115,21 @@ class DynaWaltzTest extends AbstractDynawoTest {
     }
 
     @Test
-    void testHvdc() throws IOException {
+    void testHvdc() {
         Network network = Network.read(new ResourceDataSource("HvdcPowerTransfer", new ResourceSet("/hvdc", "HvdcPowerTransfer.iidm")));
 
         GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
                 getResourceAsStream("/hvdc/dynamicModels.groovy"),
                 GroovyExtension.find(DynamicModelGroovyExtension.class, DynaWaltzProvider.NAME));
 
-        // FIXME waiting for being able to pass parameters as an input stream
-        for (String parFileName : List.of("models.par", "network.par", "solvers.par")) {
-            Files.copy(getResourceAsStream("/hvdc/" + parFileName), localDir.resolve(parFileName));
-        }
-
-        // FIXME this should not be dependent of the run, all par file should be provider through an input stream
-        dynaWaltzParameters.setParametersFile(localDir.resolve("models.par").toString())
+        dynaWaltzParameters.setParameters(getResourceAsStream("/hvdc/models.par"))
                 .setNetwork(new DynaWaltzParameters.Network()
                         .setParametersId("8")
-                        .setParametersFile(localDir.resolve("network.par").toString()))
+                        .setParameters(getResourceAsStream("/hvdc/network.par")))
                 .setSolver(new DynaWaltzParameters.Solver()
                         .setType(DynaWaltzParameters.SolverType.IDA)
                         .setParametersId("2")
-                        .setParametersFile(localDir.resolve("solvers.par").toString()));
+                        .setParameters(getResourceAsStream("/hvdc/solvers.par")));
 
         DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, EventModelsSupplier.empty(), CurvesSupplier.empty(),
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters)
