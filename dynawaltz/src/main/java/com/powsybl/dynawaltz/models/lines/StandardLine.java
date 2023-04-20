@@ -18,7 +18,6 @@ import com.powsybl.dynawaltz.models.utils.SideConverter;
 import com.powsybl.iidm.network.Line;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
@@ -26,7 +25,7 @@ import java.util.Objects;
 public class StandardLine extends AbstractEquipmentBlackBoxModel<Line> implements LineModel, QuadripoleDisconnectableEquipment {
 
     public StandardLine(String dynamicModelId, Line line, String parameterSetId) {
-        super(dynamicModelId, parameterSetId, Objects.requireNonNull(line));
+        super(dynamicModelId, parameterSetId, line);
     }
 
     @Override

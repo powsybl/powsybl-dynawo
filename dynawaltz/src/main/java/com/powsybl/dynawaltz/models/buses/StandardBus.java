@@ -17,7 +17,6 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -27,7 +26,7 @@ import java.util.Optional;
 public class StandardBus extends AbstractEquipmentBlackBoxModel<Bus> implements BusModel {
 
     public StandardBus(String dynamicModelId, Bus bus, String parameterSetId) {
-        super(dynamicModelId, parameterSetId, Objects.requireNonNull(bus));
+        super(dynamicModelId, parameterSetId, bus);
     }
 
     @Override

@@ -14,6 +14,8 @@ import com.powsybl.iidm.network.Identifiable;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
+import java.util.Objects;
+
 import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 
 /**
@@ -26,7 +28,7 @@ public abstract class AbstractEquipmentBlackBoxModel<T extends Identifiable<?>> 
 
     protected AbstractEquipmentBlackBoxModel(String dynamicModelId, String parameterSetId, T equipment) {
         super(dynamicModelId, parameterSetId);
-        this.equipment = equipment;
+        this.equipment = Objects.requireNonNull(equipment);
     }
 
     @Override
