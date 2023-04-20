@@ -16,6 +16,7 @@ import com.powsybl.dynamicsimulation.groovy.GroovyExtension;
 import com.powsybl.dynawaltz.DynaWaltzProvider;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton;
+import com.powsybl.dynawaltz.models.automatons.CurrentLimitTwoLevelsAutomaton;
 import com.powsybl.dynawaltz.models.automatons.TapChangerAutomaton;
 import com.powsybl.dynawaltz.models.automatons.TapChangerBlockingAutomaton;
 import com.powsybl.dynawaltz.models.automatons.phaseshifters.PhaseShifterIAutomaton;
@@ -51,7 +52,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
 
     @Test
     void testGroovyExtensionCount() {
-        assertEquals(17, EXTENSIONS.size());
+        assertEquals(18, EXTENSIONS.size());
     }
 
     @ParameterizedTest(name = "{0}")
@@ -129,6 +130,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
     private static  Stream<Arguments> provideAutomatonModelData() {
         return Stream.of(
                 Arguments.of("currentLimit", CurrentLimitAutomaton.class, EurostagTutorialExample1Factory.create(), "AM_NHV1_NHV2_1", "CLA", "CurrentLimitAutomaton"),
+                Arguments.of("currentLimitTwoLevels", CurrentLimitTwoLevelsAutomaton.class, EurostagTutorialExample1Factory.create(), "AM_NHV1_NHV2_1", "CLA", "CurrentLimitAutomatonTwoLevels"),
                 Arguments.of("tapChanger", TapChangerAutomaton.class, EurostagTutorialExample1Factory.create(), "TC", "tc", "TapChangerAutomaton"),
                 Arguments.of("phaseShifterI", PhaseShifterIAutomaton.class, EurostagTutorialExample1Factory.create(), "PS_NGEN_NHV1", "ps", "PhaseShifterI"),
                 Arguments.of("phaseShifterP", PhaseShifterPAutomaton.class, EurostagTutorialExample1Factory.create(), "PS_NGEN_NHV1", "ps", "PhaseShifterP")
