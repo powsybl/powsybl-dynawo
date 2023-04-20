@@ -115,7 +115,7 @@ public class DynaWaltzContext {
         if (clazz.isInstance(bbm)) {
             return clazz.cast(bbm);
         }
-        throw new PowsyblException("The model identified by the static id " + staticId + " is not the correct model");
+        throw new PowsyblException("The model identified by the static id " + staticId + " does not match not the expected model (" + clazz.getSimpleName() + ")");
     }
 
     public <T extends Model> T getDynamicModel(Identifiable<?> equipment, Class<T> connectableClass) {
@@ -126,7 +126,7 @@ public class DynaWaltzContext {
         if (connectableClass.isInstance(bbm)) {
             return connectableClass.cast(bbm);
         }
-        throw new PowsyblException("The model identified by the static id " + equipment.getId() + " is not the correct model");
+        throw new PowsyblException("The model identified by the static id " + equipment.getId() + " does not match not the expected model (" + connectableClass.getSimpleName() + ")");
     }
 
     private EquipmentBlackBoxModelModel mergeDuplicateStaticId(EquipmentBlackBoxModelModel bbm1, EquipmentBlackBoxModelModel bbm2) {

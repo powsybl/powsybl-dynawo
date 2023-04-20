@@ -76,9 +76,9 @@ class EventDisconnectionGroovyExtension extends AbstractPureDynamicGroovyExtensi
             isEquipment = connectableEquipments.contains(identifiable.getType())
             isQuadripoleEquipment = connectableQuadripoleEquipments.contains(identifiable.getType())
             if (!isEquipment && !isQuadripoleEquipment) {
-                throw new DslException("Equipment " + getStaticId() + " cannot be disconnected")
+                throw new DslException("Equipment ${getStaticId()} cannot be disconnected")
             } else if(isEquipment && disconnectSide) {
-                throw new DslException("Equipment " + getStaticId() + " is not a quadripole")
+                throw new DslException("'disconnectSide' has been set but ${identifiable.getType() } ${getStaticId()} is not a quadripole with a disconnectable side")
             }
         }
 
