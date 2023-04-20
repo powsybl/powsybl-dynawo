@@ -9,10 +9,14 @@ package com.powsybl.dynawaltz.models.hvdc;
 
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractEquipmentBlackBoxModel;
+import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.VarMapping;
+import com.powsybl.dynawaltz.models.buses.BusModel;
+import com.powsybl.dynawaltz.models.utils.BusUtils;
 import com.powsybl.iidm.network.HvdcLine;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -42,7 +46,8 @@ public class HvdcModel extends AbstractEquipmentBlackBoxModel<HvdcLine> {
 
     @Override
     public void createMacroConnections(DynaWaltzContext context) {
-        createMacroConnections(getVarConnectionsWithConverters(), context);
+        createMacroConnections(BusUtils.getConnectableBusStaticId(equipment.getConverterStation1().getTerminal()), BusModel.class, this::getVarConnectionsWithBus, context, Side.ONE);
+        createMacroConnections(BusUtils.getConnectableBusStaticId(equipment.getConverterStation2().getTerminal()), BusModel.class, this::getVarConnectionsWithBus, context, Side.TWO);
     }
 
     @Override
@@ -50,12 +55,12 @@ public class HvdcModel extends AbstractEquipmentBlackBoxModel<HvdcLine> {
         return VAR_MAPPING;
     }
 
-    public List<VarConnection> getVarConnectionsWithConverters() {
-        return Arrays.asList(
-                new VarConnection("hvdc_terminal1", "@STATIC_ID@@NODE1@_ACPIN"),
-                new VarConnection("hvdc_switchOffSignal1Side1", "@STATIC_ID@@NODE1@_switchOff"),
-                new VarConnection("hvdc_terminal2", "@STATIC_ID@@NODE2@_ACPIN"),
-                new VarConnection("hvdc_switchOffSignal1Side2", "@STATIC_ID@@NODE2@_switchOff")
-        );
+    private List<VarConnection> getVarConnectionsWithBus(BusModel connected, Side side) {
+        List<VarConnection> varConnections = new ArrayList<>(2);
+        varConnections.add(new VarConnection("hvdc_terminal" + side.getSideNumber(), connected.getTerminalVarName()));
+        connected.getSwitchOffSignalVarName()
+                .map(switchOff -> new VarConnection("hvdc_switchOffSignal1" + side.getSideSuffix(), switchOff))
+                .ifPresent(varConnections::add);
+        return varConnections;
     }
 }
