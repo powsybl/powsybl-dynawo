@@ -8,7 +8,7 @@ package com.powsybl.dynawaltz.models;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
-import com.powsybl.dynawaltz.ParametersSet;
+import com.powsybl.dynawaltz.parameters.ParametersSet;
 import com.powsybl.dynawaltz.models.buses.BusModel;
 import com.powsybl.dynawaltz.models.generators.OmegaRefGeneratorModel;
 import com.powsybl.dynawaltz.xml.ParametersXml;
@@ -18,8 +18,8 @@ import javax.xml.stream.XMLStreamWriter;
 import java.util.Collections;
 import java.util.List;
 
-import static com.powsybl.dynawaltz.ParametersSet.ParameterType.DOUBLE;
-import static com.powsybl.dynawaltz.ParametersSet.ParameterType.INT;
+import static com.powsybl.dynawaltz.parameters.ParameterType.DOUBLE;
+import static com.powsybl.dynawaltz.parameters.ParameterType.INT;
 import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 
 /**

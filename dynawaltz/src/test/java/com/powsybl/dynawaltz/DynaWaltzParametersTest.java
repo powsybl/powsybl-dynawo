@@ -12,6 +12,9 @@ import com.powsybl.commons.test.AbstractConverterTest;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynamicsimulation.json.JsonDynamicSimulationParameters;
 import com.powsybl.dynawaltz.DynaWaltzParameters.SolverType;
+import com.powsybl.dynawaltz.parameters.Parameter;
+import com.powsybl.dynawaltz.parameters.ParameterType;
+import com.powsybl.dynawaltz.parameters.ParametersSet;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -59,27 +62,27 @@ class DynaWaltzParametersTest extends AbstractConverterTest {
 
         ParametersSet networkParameters = parameters.getNetwork().getParametersSet();
         assertEquals(networkParametersId, parameters.getNetwork().getParametersId());
-        ParametersSet.Parameter loadTp = networkParameters.getParameter(networkParametersId, "load_Tp");
+        Parameter loadTp = networkParameters.getParameter(networkParametersId, "load_Tp");
         assertEquals("90", loadTp.getValue());
         assertEquals("load_Tp", loadTp.getName());
-        assertEquals(ParametersSet.ParameterType.DOUBLE, loadTp.getType());
-        ParametersSet.Parameter loadControllable = networkParameters.getParameter(networkParametersId, "load_isControllable");
+        assertEquals(ParameterType.DOUBLE, loadTp.getType());
+        Parameter loadControllable = networkParameters.getParameter(networkParametersId, "load_isControllable");
         assertEquals("false", loadControllable.getValue());
         assertEquals("load_isControllable", loadControllable.getName());
-        assertEquals(ParametersSet.ParameterType.BOOL, loadControllable.getType());
+        assertEquals(ParameterType.BOOL, loadControllable.getType());
 
         DynaWaltzParameters.Solver solver = parameters.getSolver();
         ParametersSet solverParameters = solver.getParametersSet();
         assertEquals(solverParametersId, solver.getParametersId());
         assertEquals(solverType, solver.getType());
-        ParametersSet.Parameter order = solverParameters.getParameter(solverParametersId, "order");
+        Parameter order = solverParameters.getParameter(solverParametersId, "order");
         assertEquals("1", order.getValue());
         assertEquals("order", order.getName());
-        assertEquals(ParametersSet.ParameterType.INT, order.getType());
-        ParametersSet.Parameter absAccuracy = solverParameters.getParameter(solverParametersId, "absAccuracy");
+        assertEquals(ParameterType.INT, order.getType());
+        Parameter absAccuracy = solverParameters.getParameter(solverParametersId, "absAccuracy");
         assertEquals("1e-4", absAccuracy.getValue());
         assertEquals("absAccuracy", absAccuracy.getName());
-        assertEquals(ParametersSet.ParameterType.DOUBLE, absAccuracy.getType());
+        assertEquals(ParameterType.DOUBLE, absAccuracy.getType());
 
         assertEquals(mergeLoads, parameters.isMergeLoads());
     }
@@ -139,13 +142,13 @@ class DynaWaltzParametersTest extends AbstractConverterTest {
     }
 
     private static void checModelParameters(ParametersSet modelsParameters) {
-        ParametersSet.Parameter booleanParameter = modelsParameters.getParameterSet("test").getParameter("boolean");
+        Parameter booleanParameter = modelsParameters.getParameterSet("test").getParameter("boolean");
         assertEquals("true", booleanParameter.getValue());
         assertEquals("boolean", booleanParameter.getName());
-        assertEquals(ParametersSet.ParameterType.BOOL, booleanParameter.getType());
-        ParametersSet.Parameter stringParameter = modelsParameters.getParameter("test", "string");
+        assertEquals(ParameterType.BOOL, booleanParameter.getType());
+        Parameter stringParameter = modelsParameters.getParameter("test", "string");
         assertEquals("aString", stringParameter.getValue());
         assertEquals("string", stringParameter.getName());
-        assertEquals(ParametersSet.ParameterType.STRING, stringParameter.getType());
+        assertEquals(ParameterType.STRING, stringParameter.getType());
     }
 }

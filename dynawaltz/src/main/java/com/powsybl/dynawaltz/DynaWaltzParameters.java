@@ -18,6 +18,7 @@ import com.powsybl.commons.config.ModuleConfig;
 import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.extensions.AbstractExtension;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
+import com.powsybl.dynawaltz.parameters.ParametersSet;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>

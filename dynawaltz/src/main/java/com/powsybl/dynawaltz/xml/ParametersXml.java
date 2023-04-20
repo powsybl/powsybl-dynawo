@@ -9,7 +9,8 @@ package com.powsybl.dynawaltz.xml;
 
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
-import com.powsybl.dynawaltz.ParametersSet;
+import com.powsybl.dynawaltz.parameters.ParameterType;
+import com.powsybl.dynawaltz.parameters.ParametersSet;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
 
 import javax.xml.stream.XMLStreamException;
@@ -51,14 +52,14 @@ public final class ParametersXml {
         }
     }
 
-    public static void writeParameter(XMLStreamWriter writer, ParametersSet.ParameterType type, String name, String value) throws XMLStreamException {
+    public static void writeParameter(XMLStreamWriter writer, ParameterType type, String name, String value) throws XMLStreamException {
         writer.writeEmptyElement(DYN_URI, "par");
         writer.writeAttribute("type", type.toString());
         writer.writeAttribute("name", name);
         writer.writeAttribute("value", value);
     }
 
-    public static void writeReference(XMLStreamWriter writer, ParametersSet.ParameterType type, String name, String origData, String origName) throws XMLStreamException {
+    public static void writeReference(XMLStreamWriter writer, ParameterType type, String name, String origData, String origName) throws XMLStreamException {
         writer.writeEmptyElement(DYN_URI, "reference");
         writer.writeAttribute("type", type.toString());
         writer.writeAttribute("name", name);

@@ -12,23 +12,21 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Objects;
 
 /**
+ * @author Marcos de Miguel <demiguelm at aia.es>
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  */
-public class Reference {
+public class Parameter {
 
     private final String name;
     private final ParameterType type;
-    private final String origData;
-    private final String origName;
+    private final String value;
 
-    public Reference(@JsonProperty("name") String name,
+    public Parameter(@JsonProperty("name") String name,
                      @JsonProperty("type") ParameterType type,
-                     @JsonProperty("origData") String origData,
-                     @JsonProperty("origData") String origName) {
+                     @JsonProperty("value") String value) {
         this.name = Objects.requireNonNull(name);
         this.type = Objects.requireNonNull(type);
-        this.origData = Objects.requireNonNull(origData);
-        this.origName = Objects.requireNonNull(origName);
+        this.value = Objects.requireNonNull(value);
     }
 
     public String getName() {
@@ -39,11 +37,8 @@ public class Reference {
         return type;
     }
 
-    public String getOrigData() {
-        return origData;
+    public String getValue() {
+        return value;
     }
 
-    public String getOrigName() {
-        return origName;
-    }
 }
