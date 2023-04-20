@@ -16,7 +16,6 @@ import com.powsybl.dynawaltz.models.Side
 import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton
 import com.powsybl.dynawaltz.models.utils.SideConverter
 import com.powsybl.iidm.network.Branch
-import com.powsybl.iidm.network.Identifiable
 import com.powsybl.iidm.network.Network
 
 /**
@@ -39,7 +38,7 @@ class CurrentLimitAutomatonGroovyExtension extends AbstractPureDynamicGroovyExte
     static class CurrentLimitAutomatonBuilder extends AbstractDynamicModelBuilder {
 
         Network network
-        Identifiable<? extends Identifiable> equipment
+        Branch<? extends Branch> equipment
         Side side
 
         CurrentLimitAutomatonBuilder(Network network) {
@@ -53,11 +52,8 @@ class CurrentLimitAutomatonGroovyExtension extends AbstractPureDynamicGroovyExte
         @Override
         void checkData() {
             super.checkData()
-            equipment = network.getIdentifiable(staticId)
+            equipment = network.getBranch(staticId)
             if (equipment == null) {
-                throw new DslException("Identifiable static id unknown: " + getStaticId())
-            }
-            if(!CurrentLimitAutomaton.isCompatibleEquipment(equipment.getType())) {
                 throw new DslException("Equipment ${staticId} is not a quadripole")
             }
             if (!side) {
