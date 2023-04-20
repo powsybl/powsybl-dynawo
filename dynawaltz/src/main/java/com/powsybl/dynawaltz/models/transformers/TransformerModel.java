@@ -14,8 +14,6 @@ import com.powsybl.dynawaltz.models.automatons.QuadripoleModel;
  */
 public interface TransformerModel extends QuadripoleModel {
 
-    String getStateValueVarName();
-
     String getStepVarName();
 
     String getIMonitoredVarName();

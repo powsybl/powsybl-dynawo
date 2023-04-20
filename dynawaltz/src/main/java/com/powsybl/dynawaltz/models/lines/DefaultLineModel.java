@@ -8,12 +8,11 @@ package com.powsybl.dynawaltz.models.lines;
 
 import com.powsybl.dynawaltz.models.AbstractNetworkModel;
 import com.powsybl.dynawaltz.models.Side;
-import com.powsybl.dynawaltz.models.events.QuadripoleDisconnectableEquipment;
 
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  */
-public class DefaultLineModel extends AbstractNetworkModel implements LineModel, QuadripoleDisconnectableEquipment {
+public class DefaultLineModel extends AbstractNetworkModel implements LineModel {
 
     public DefaultLineModel(String staticId) {
         super(staticId);
@@ -42,10 +41,5 @@ public class DefaultLineModel extends AbstractNetworkModel implements LineModel,
     @Override
     public String getDeactivateCurrentLimitsVarName() {
         return "@NAME@_desactivate_currentLimits";
-    }
-
-    @Override
-    public String getDisconnectableVarName() {
-        return getStateValueVarName();
     }
 }

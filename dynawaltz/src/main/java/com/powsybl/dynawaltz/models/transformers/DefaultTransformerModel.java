@@ -10,14 +10,13 @@ package com.powsybl.dynawaltz.models.transformers;
 import com.powsybl.dynawaltz.models.AbstractNetworkModel;
 import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.VarConnection;
-import com.powsybl.dynawaltz.models.events.QuadripoleDisconnectableEquipment;
 
 import java.util.List;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class DefaultTransformerModel extends AbstractNetworkModel implements TransformerModel, QuadripoleDisconnectableEquipment, TapChangerModel {
+public class DefaultTransformerModel extends AbstractNetworkModel implements TransformerModel, TapChangerModel {
 
     public DefaultTransformerModel(String staticId) {
         super(staticId);
@@ -51,11 +50,6 @@ public class DefaultTransformerModel extends AbstractNetworkModel implements Tra
     @Override
     public String getDisableInternalTapChangerVarName() {
         return "@NAME@_disable_internal_tapChanger";
-    }
-
-    @Override
-    public String getDisconnectableVarName() {
-        return getStateValueVarName();
     }
 
     @Override

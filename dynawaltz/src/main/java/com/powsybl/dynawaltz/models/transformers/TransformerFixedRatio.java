@@ -13,7 +13,6 @@ import com.powsybl.dynawaltz.models.AbstractBlackBoxModel;
 import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.buses.BusModel;
-import com.powsybl.dynawaltz.models.events.QuadripoleDisconnectableEquipment;
 import com.powsybl.dynawaltz.models.utils.BusUtils;
 import com.powsybl.dynawaltz.models.utils.SideConverter;
 import com.powsybl.iidm.network.TwoWindingsTransformer;
@@ -23,7 +22,7 @@ import java.util.List;
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class TransformerFixedRatio extends AbstractBlackBoxModel implements TransformerModel, QuadripoleDisconnectableEquipment, TapChangerModel {
+public class TransformerFixedRatio extends AbstractBlackBoxModel implements TransformerModel, TapChangerModel {
 
     private final String transformerLib;
 
@@ -81,11 +80,6 @@ public class TransformerFixedRatio extends AbstractBlackBoxModel implements Tran
     @Override
     public String getDisableInternalTapChangerVarName() {
         return "transformer_disable_internal_tapChanger";
-    }
-
-    @Override
-    public String getDisconnectableVarName() {
-        return getStateValueVarName();
     }
 
     //TODO check correct value
