@@ -9,8 +9,7 @@ package com.powsybl.dynawaltz.models.events;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.xml.ParametersXml;
-import com.powsybl.iidm.network.Line;
-import com.powsybl.iidm.network.TwoWindingsTransformer;
+import com.powsybl.iidm.network.Branch;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -27,23 +26,13 @@ public class EventQuadripoleDisconnection extends AbstractEventModel {
     private final boolean disconnectOrigin;
     private final boolean disconnectExtremity;
 
-    public EventQuadripoleDisconnection(Line equipment, double startTime, boolean disconnectOrigin, boolean disconnectExtremity) {
+    public EventQuadripoleDisconnection(Branch<?> equipment, double startTime, boolean disconnectOrigin, boolean disconnectExtremity) {
         super(equipment, startTime);
         this.disconnectOrigin = disconnectOrigin;
         this.disconnectExtremity = disconnectExtremity;
     }
 
-    public EventQuadripoleDisconnection(TwoWindingsTransformer equipment, double startTime, boolean disconnectOrigin, boolean disconnectExtremity) {
-        super(equipment, startTime);
-        this.disconnectOrigin = disconnectOrigin;
-        this.disconnectExtremity = disconnectExtremity;
-    }
-
-    public EventQuadripoleDisconnection(Line equipment, double startTime) {
-        this(equipment, startTime, true, true);
-    }
-
-    public EventQuadripoleDisconnection(TwoWindingsTransformer equipment, double startTime) {
+    public EventQuadripoleDisconnection(Branch<?> equipment, double startTime) {
         this(equipment, startTime, true, true);
     }
 
