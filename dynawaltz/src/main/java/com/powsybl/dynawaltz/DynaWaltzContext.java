@@ -36,7 +36,7 @@ public class DynaWaltzContext {
     private final DynaWaltzParametersDatabase parametersDatabase;
     private final List<BlackBoxModel> dynamicModels;
     private final List<BlackBoxModel> eventModels;
-    private final Map<String, BlackBoxModel> staticIdBlackBoxModelMap;
+    private final Map<String, EquipmentBlackBoxModelModel> staticIdBlackBoxModelMap;
     private final List<Curve> curves;
     private final Map<String, MacroStaticReference> macroStaticReferences = new LinkedHashMap<>();
     private final List<MacroConnect> macroConnectList = new ArrayList<>();
@@ -59,8 +59,9 @@ public class DynaWaltzContext {
         this.dynamicModels = Objects.requireNonNull(dynamicModels);
         this.eventModels = checkEventModelIdUniqueness(Objects.requireNonNull(eventModels));
         this.staticIdBlackBoxModelMap = getInputBlackBoxDynamicModelStream()
-                .filter(blackBoxModel -> blackBoxModel.getStaticId().isPresent())
-                .collect(Collectors.toMap(bbm -> bbm.getStaticId().get(), Function.identity(), this::mergeDuplicateStaticId, LinkedHashMap::new));
+                .filter(EquipmentBlackBoxModelModel.class::isInstance)
+                .map(EquipmentBlackBoxModelModel.class::cast)
+                .collect(Collectors.toMap(EquipmentBlackBoxModelModel::getStaticId, Function.identity(), this::mergeDuplicateStaticId, LinkedHashMap::new));
         this.curves = Objects.requireNonNull(curves);
         this.parameters = Objects.requireNonNull(parameters);
         this.dynaWaltzParameters = Objects.requireNonNull(dynaWaltzParameters);
@@ -116,8 +117,8 @@ public class DynaWaltzContext {
         throw new PowsyblException("The model identified by the static id " + staticId + " is not the correct model");
     }
 
-    private BlackBoxModel mergeDuplicateStaticId(BlackBoxModel bbm1, BlackBoxModel bbm2) {
-        throw new PowsyblException("Duplicate staticId: " + bbm1.getStaticId().orElseThrow());
+    private EquipmentBlackBoxModelModel mergeDuplicateStaticId(EquipmentBlackBoxModelModel bbm1, EquipmentBlackBoxModelModel bbm2) {
+        throw new PowsyblException("Duplicate staticId: " + bbm1.getStaticId());
     }
 
     private static List<BlackBoxModel> checkEventModelIdUniqueness(List<BlackBoxModel> eventModels) {

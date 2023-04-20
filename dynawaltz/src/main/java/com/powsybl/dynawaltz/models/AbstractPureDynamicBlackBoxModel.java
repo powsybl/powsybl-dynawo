@@ -22,7 +22,7 @@ import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 public abstract class AbstractPureDynamicBlackBoxModel extends AbstractBlackBoxModel {
 
     protected AbstractPureDynamicBlackBoxModel(String dynamicModelId, String parameterSetId) {
-        super(dynamicModelId, null, parameterSetId);
+        super(dynamicModelId, parameterSetId);
     }
 
     @Override

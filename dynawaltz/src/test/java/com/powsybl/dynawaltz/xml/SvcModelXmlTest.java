@@ -7,8 +7,8 @@
  */
 package com.powsybl.dynawaltz.xml;
 
-import com.powsybl.dynawaltz.models.transformers.TransformerFixedRatio;
-import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
+import com.powsybl.dynawaltz.models.svcs.StaticVarCompensatorModel;
+import com.powsybl.iidm.network.test.SvcTestCaseFactory;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
@@ -18,21 +18,21 @@ import java.io.IOException;
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-class TransformerModelXmlTest extends AbstractDynamicModelXmlTest {
+class SvcModelXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void setupNetwork() {
-        network = EurostagTutorialExample1Factory.create();
+        network = SvcTestCaseFactory.create();
     }
 
     @Override
     protected void addDynamicModels() {
-        dynamicModels.add(new TransformerFixedRatio("BBM_NGEN_NHV1", network.getTwoWindingsTransformer("NGEN_NHV1"), "TFR", "TransformerFixedRatio"));
+        dynamicModels.add(new StaticVarCompensatorModel("BBM_SVC2", network.getStaticVarCompensator("SVC2"), "svc", "StaticVarCompensator"));
     }
 
     @Test
-    void writeModel() throws SAXException, IOException, XMLStreamException {
+    void writeSvcModel() throws SAXException, IOException, XMLStreamException {
         DydXml.write(tmpDir, context);
-        validate("dyd.xsd", "tfr_dyd.xml", tmpDir.resolve(DynaWaltzConstants.DYD_FILENAME));
+        validate("dyd.xsd", "svc_dyd.xml", tmpDir.resolve(DynaWaltzConstants.DYD_FILENAME));
     }
 }

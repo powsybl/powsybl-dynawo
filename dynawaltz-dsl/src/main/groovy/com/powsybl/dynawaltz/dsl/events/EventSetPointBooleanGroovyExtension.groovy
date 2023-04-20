@@ -9,7 +9,7 @@ package com.powsybl.dynawaltz.dsl.events
 import com.google.auto.service.AutoService
 import com.powsybl.dynamicsimulation.EventModel
 import com.powsybl.dynamicsimulation.groovy.EventModelGroovyExtension
-import com.powsybl.dynawaltz.dsl.AbstractPowsyblDynawoGroovyExtension
+import com.powsybl.dynawaltz.dsl.AbstractPureDynamicGroovyExtension
 import com.powsybl.dynawaltz.models.events.EventSetPointBoolean
 
 /**
@@ -18,14 +18,14 @@ import com.powsybl.dynawaltz.models.events.EventSetPointBoolean
  * @author Mathieu BAGUE {@literal <mathieu.bague at rte-france.com>}
  */
 @AutoService(EventModelGroovyExtension.class)
-class EventSetPointBooleanGroovyExtension extends AbstractPowsyblDynawoGroovyExtension<EventModel> implements EventModelGroovyExtension {
+class EventSetPointBooleanGroovyExtension extends AbstractPureDynamicGroovyExtension<EventModel> implements EventModelGroovyExtension {
 
     EventSetPointBooleanGroovyExtension() {
         modelTags = ["EventSetPointBoolean"]
     }
 
     @Override
-    protected EventSetPointBooleanBuilder createBuilder(String currentTag) {
+    protected EventSetPointBooleanBuilder createBuilder() {
         new EventSetPointBooleanBuilder()
     }
 

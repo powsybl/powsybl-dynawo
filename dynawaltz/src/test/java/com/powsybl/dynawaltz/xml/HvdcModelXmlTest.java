@@ -27,7 +27,7 @@ class HvdcModelXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void addDynamicModels() {
-        network.getHvdcLineStream().forEach(hvdc -> dynamicModels.add(new HvdcModel("BBM_" + hvdc.getId(), hvdc.getId(), "hv", "HvdcPV")));
+        network.getHvdcLineStream().forEach(hvdc -> dynamicModels.add(new HvdcModel("BBM_" + hvdc.getId(), hvdc, "hv", "HvdcPV")));
     }
 
     @Test

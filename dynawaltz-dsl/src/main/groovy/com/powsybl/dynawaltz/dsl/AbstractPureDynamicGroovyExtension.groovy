@@ -15,13 +15,11 @@ import java.util.function.Consumer
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-abstract class AbstractPowsyblDynawoGroovyExtension<T> {
-
-    protected static final String MODELS_CONFIG = "models.cfg"
+abstract class AbstractPureDynamicGroovyExtension<T> {
 
     protected List<String> modelTags
 
-    abstract protected ModelBuilder<T> createBuilder(String currentTag)
+    abstract protected ModelBuilder<T> createBuilder();
 
     String getName() {
         return DynaWaltzProvider.NAME
@@ -31,7 +29,7 @@ abstract class AbstractPowsyblDynawoGroovyExtension<T> {
         modelTags.forEach {
             binding.setVariable(it, { Closure<Void> closure ->
                 def cloned = closure.clone()
-                ModelBuilder<T> builder = createBuilder(it)
+                ModelBuilder<T> builder = createBuilder()
                 cloned.delegate = builder
                 cloned()
                 consumer.accept(builder.build())
