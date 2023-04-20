@@ -129,4 +129,38 @@ class DynaWaltzTest extends AbstractDynawoTest {
         assertEquals(1, timeLine.toArray().length);
         assertNull(timeLine.toArray()[0]); // FIXME
     }
+
+    @Test
+    void testHvdc() throws IOException {
+        Network network = Network.read(new ResourceDataSource("HvdcPowerTransfer", new ResourceSet("/hvdc", "HvdcPowerTransfer.iidm")));
+
+        GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
+                getResourceAsStream("/hvdc/dynamicModels.groovy"),
+                GroovyExtension.find(DynamicModelGroovyExtension.class, DynaWaltzProvider.NAME));
+
+        // FIXME waiting for being able to pass parameters as an input stream
+        for (String parFileName : List.of("models.par", "network.par", "solvers.par")) {
+            Files.copy(getResourceAsStream("/hvdc/" + parFileName), localDir.resolve(parFileName));
+        }
+
+        // FIXME this should not be dependent of the run, all par file should be provider through an input stream
+        dynaWaltzParameters.setParametersFile(localDir.resolve("models.par").toString())
+                .setNetwork(new DynaWaltzParameters.Network()
+                        .setParametersId("8")
+                        .setParametersFile(localDir.resolve("network.par").toString()))
+                .setSolver(new DynaWaltzParameters.Solver()
+                        .setType(DynaWaltzParameters.SolverType.IDA)
+                        .setParametersId("2")
+                        .setParametersFile(localDir.resolve("solvers.par").toString()));
+
+        DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, EventModelsSupplier.empty(), CurvesSupplier.empty(),
+                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters)
+                .join();
+
+        assertTrue(result.isOk());
+        assertEquals(0, result.getCurves().size());
+        StringTimeSeries timeLine = result.getTimeLine();
+        assertEquals(1, timeLine.toArray().length);
+        assertNull(timeLine.toArray()[0]); // FIXME
+    }
 }
