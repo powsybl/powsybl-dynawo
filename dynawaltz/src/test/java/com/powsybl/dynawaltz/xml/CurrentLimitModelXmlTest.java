@@ -9,7 +9,7 @@ package com.powsybl.dynawaltz.xml;
 
 import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton;
-import com.powsybl.iidm.network.test.HvdcTestNetwork;
+import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
@@ -23,12 +23,13 @@ class CurrentLimitModelXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void setupNetwork() {
-        network = HvdcTestNetwork.createVsc();
+        network = EurostagTutorialExample1Factory.create();
     }
 
     @Override
     protected void addDynamicModels() {
-        dynamicModels.add(new CurrentLimitAutomaton("BBM_CLA", "cla", network.getLine("NHV1_NHV2_1"), Side.ONE));
+        dynamicModels.add(new CurrentLimitAutomaton("BBM_CLA_LINE", "cla", network.getLine("NHV1_NHV2_1"), Side.ONE));
+        dynamicModels.add(new CurrentLimitAutomaton("BBM_CLA_TRANSFORMER", "cla", network.getTwoWindingsTransformer("NGEN_NHV1"), Side.TWO));
     }
 
     @Test

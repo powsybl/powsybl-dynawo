@@ -137,6 +137,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
 
     private static Stream<Arguments> provideExceptionsModel() {
         return Stream.of(
+                Arguments.of("currentLimitQuadripoleException", EurostagTutorialExample1Factory.create(), "Equipment NGEN is not a quadripole"),
                 Arguments.of("phaseShifterTransformerException", EurostagTutorialExample1Factory.create(), "Transformer static id unknown: NGEN"),
                 Arguments.of("tapChangerBusException", EurostagTutorialExample1Factory.create(), "Bus static id unknown: LOAD"),
                 Arguments.of("tapChangerCompatibleException", EurostagTutorialExample1Factory.create(), "GENERATOR GEN is not compatible")

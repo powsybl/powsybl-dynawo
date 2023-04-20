@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class TransformerFixedRatio extends AbstractBlackBoxModel implements TransformerModel, QuadripoleDisconnectableEquipment {
+public class TransformerFixedRatio extends AbstractBlackBoxModel implements TransformerModel, QuadripoleDisconnectableEquipment, TapChangerModel {
 
     private final String transformerLib;
 
@@ -92,5 +92,20 @@ public class TransformerFixedRatio extends AbstractBlackBoxModel implements Tran
     @Override
     public List<VarConnection> getTapChangerBlockerVarConnections() {
         return List.of(new VarConnection(TAP_CHANGER_BLOCKING_BLOCKED_T, "transformer_TAP_CHANGER_locked_value"));
+    }
+
+    @Override
+    public String getIVarName(Side side) {
+        return null;
+    }
+
+    @Override
+    public String getStateVarName() {
+        return null;
+    }
+
+    @Override
+    public String getDeactivateCurrentLimitsVarName() {
+        return null;
     }
 }

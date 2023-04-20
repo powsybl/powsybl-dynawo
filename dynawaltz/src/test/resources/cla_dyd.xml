@@ -1,21 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
-    <dyn:blackBoxModel id="BBM_L" lib="HvdcPV" parFile="models.par" parId="hv" staticId="L">
-        <dyn:macroStaticRef id="MSR_HvdcPV"/>
-    </dyn:blackBoxModel>
-    <dyn:macroConnector id="MC_HvdcPV">
-        <dyn:connect var1="hvdc_terminal1" var2="@STATIC_ID@@NODE1@_ACPIN"/>
-        <dyn:connect var1="hvdc_switchOffSignal1Side1" var2="@STATIC_ID@@NODE1@_switchOff"/>
-        <dyn:connect var1="hvdc_terminal2" var2="@STATIC_ID@@NODE2@_ACPIN"/>
-        <dyn:connect var1="hvdc_switchOffSignal1Side2" var2="@STATIC_ID@@NODE2@_switchOff"/>
+    <dyn:blackBoxModel id="BBM_CLA_LINE" lib="CurrentLimitAutomaton" parFile="models.par" parId="cla"/>
+    <dyn:blackBoxModel id="BBM_CLA_TRANSFORMER" lib="CurrentLimitAutomaton" parFile="models.par" parId="cla"/>
+    <dyn:macroConnector id="MC_CurrentLimitAutomatonSide1-NetworkLine">
+        <dyn:connect var1="currentLimitAutomaton_IMonitored" var2="@NAME@_iSide1"/>
+        <dyn:connect var1="currentLimitAutomaton_order" var2="@NAME@_state"/>
+        <dyn:connect var1="currentLimitAutomaton_AutomatonExists" var2="@NAME@_desactivate_currentLimits"/>
     </dyn:macroConnector>
-    <dyn:macroStaticReference id="MSR_HvdcPV">
-        <dyn:staticRef var="hvdc_PInj1Pu" staticVar="p1"/>
-        <dyn:staticRef var="hvdc_QInj1Pu" staticVar="q1"/>
-        <dyn:staticRef var="hvdc_state" staticVar="state1"/>
-        <dyn:staticRef var="hvdc_PInj2Pu" staticVar="p2"/>
-        <dyn:staticRef var="hvdc_QInj2Pu" staticVar="q2"/>
-        <dyn:staticRef var="hvdc_state" staticVar="state2"/>
-    </dyn:macroStaticReference>
-    <dyn:macroConnect connector="MC_HvdcPV" id1="BBM_L" id2="NETWORK"/>
+    <dyn:macroConnector id="MC_CurrentLimitAutomatonSide2-NetworkTransformer">
+        <dyn:connect var1="currentLimitAutomaton_IMonitored" var2="@NAME@_iSide2"/>
+        <dyn:connect var1="currentLimitAutomaton_order" var2="@NAME@_state"/>
+        <dyn:connect var1="currentLimitAutomaton_AutomatonExists" var2="@NAME@_desactivate_currentLimits"/>
+    </dyn:macroConnector>
+    <dyn:macroConnect connector="MC_CurrentLimitAutomatonSide1-NetworkLine" id1="BBM_CLA_LINE" id2="NETWORK" name2="NHV1_NHV2_1"/>
+    <dyn:macroConnect connector="MC_CurrentLimitAutomatonSide2-NetworkTransformer" id1="BBM_CLA_TRANSFORMER" id2="NETWORK" name2="NGEN_NHV1"/>
 </dyn:dynamicModelsArchitecture>
