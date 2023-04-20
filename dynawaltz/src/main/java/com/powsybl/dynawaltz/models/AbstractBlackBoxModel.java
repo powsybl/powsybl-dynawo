@@ -63,7 +63,7 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel {
 
     @Override
     public String getParFile(DynaWaltzContext context) {
-        return DynaWaltzParameters.DEFAULT_PARAMETERS_FILE;
+        return DynaWaltzParameters.MODELS_OUTPUT_PARAMETERS_FILE;
     }
 
     @Override
