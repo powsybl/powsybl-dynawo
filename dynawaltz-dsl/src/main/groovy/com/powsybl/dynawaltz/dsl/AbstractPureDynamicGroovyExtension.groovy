@@ -9,6 +9,7 @@
 package com.powsybl.dynawaltz.dsl
 
 import com.powsybl.dynawaltz.DynaWaltzProvider
+import com.powsybl.iidm.network.Network
 
 import java.util.function.Consumer
 
@@ -19,7 +20,7 @@ abstract class AbstractPureDynamicGroovyExtension<T> {
 
     protected List<String> modelTags
 
-    abstract protected ModelBuilder<T> createBuilder();
+    abstract protected ModelBuilder<T> createBuilder(Network network);
 
     String getName() {
         return DynaWaltzProvider.NAME
@@ -29,7 +30,7 @@ abstract class AbstractPureDynamicGroovyExtension<T> {
         modelTags.forEach {
             binding.setVariable(it, { Closure<Void> closure ->
                 def cloned = closure.clone()
-                ModelBuilder<T> builder = createBuilder()
+                ModelBuilder<T> builder = createBuilder(binding.getVariable("network") as Network)
                 cloned.delegate = builder
                 cloned()
                 consumer.accept(builder.build())

@@ -5,13 +5,15 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
+package com.powsybl.dynawaltz.models.transformers;
 
-package eventModels
+import com.powsybl.dynawaltz.models.Model;
 
-import com.powsybl.iidm.network.Branch
+/**
+ * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ */
+public interface TransformerModel extends Model {
 
-Disconnect {
-    staticId "NHV1_NHV2_1"
-    startTime 4
-    disconnectOnly Branch.Side.ONE
+    String getStateValueVarName();
+
 }

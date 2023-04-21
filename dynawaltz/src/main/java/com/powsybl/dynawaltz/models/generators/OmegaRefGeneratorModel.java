@@ -16,7 +16,15 @@ import java.util.List;
  */
 public interface OmegaRefGeneratorModel extends GeneratorModel {
 
+    String getRunningVarName();
+
     List<VarConnection> getOmegaRefVarConnections();
 
     String getConnectableBusId();
+
+    String getLib();
+
+    String getDynamicModelId();
+
+    String getParameterSetId();
 }
