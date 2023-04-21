@@ -11,18 +11,19 @@ package com.powsybl.dynawaltz.dsl.events
 import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.EventModel
 import com.powsybl.dynawaltz.dsl.ModelBuilder
+import com.powsybl.iidm.network.Network
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 abstract class AbstractEventModelBuilder implements ModelBuilder<EventModel> {
 
-    String eventModelId
+    Network network
     String staticId
     double startTime
 
-    void eventModelId(String eventModelId) {
-        this.eventModelId = eventModelId
+    AbstractEventModelBuilder(Network network) {
+       this.network =  network
     }
 
     void staticId(String staticId) {
@@ -39,9 +40,6 @@ abstract class AbstractEventModelBuilder implements ModelBuilder<EventModel> {
         }
         if (!startTime) {
             throw new DslException("'startTime' field is not set")
-        }
-        if (!eventModelId) {
-            eventModelId = staticId
         }
     }
 

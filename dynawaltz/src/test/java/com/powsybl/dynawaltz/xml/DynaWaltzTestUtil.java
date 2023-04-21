@@ -13,7 +13,7 @@ import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton;
 import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection;
-import com.powsybl.dynawaltz.models.events.EventSetPointBoolean;
+import com.powsybl.dynawaltz.models.events.EventInjectionDisconnection;
 import com.powsybl.dynawaltz.models.generators.GeneratorFictitious;
 import com.powsybl.dynawaltz.models.generators.GeneratorSynchronous;
 import com.powsybl.dynawaltz.models.generators.OmegaRefGenerator;
@@ -98,10 +98,10 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
 
         // Events
         eventModels = new ArrayList<>();
-        network.getLineStream().forEach(l -> eventModels.add(new EventQuadripoleDisconnection("EM_" + l.getId(), l.getId(), 5, false, true)));
+        network.getLineStream().forEach(l -> eventModels.add(new EventQuadripoleDisconnection(l, 5, false, true)));
         network.getGeneratorStream().forEach(g -> {
             if (g.getId().equals("GEN2")) {
-                eventModels.add(new EventSetPointBoolean("EM_" + g.getId(), g.getId(), 1, true));
+                eventModels.add(new EventInjectionDisconnection(g, 1));
             }
         });
 
