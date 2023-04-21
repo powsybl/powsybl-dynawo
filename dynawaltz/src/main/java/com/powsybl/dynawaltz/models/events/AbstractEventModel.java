@@ -16,7 +16,7 @@ import com.powsybl.iidm.network.Identifiable;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
-import static com.powsybl.dynawaltz.DynaWaltzParametersDatabase.ParameterType.DOUBLE;
+import static com.powsybl.dynawaltz.parameters.ParameterType.DOUBLE;
 import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 
 /**

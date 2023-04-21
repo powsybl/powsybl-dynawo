@@ -8,7 +8,7 @@ package com.powsybl.dynawaltz.models;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
-import com.powsybl.dynawaltz.DynaWaltzParametersDatabase;
+import com.powsybl.dynawaltz.DynaWaltzParameters;
 import com.powsybl.dynawaltz.models.buses.BusModel;
 import com.powsybl.dynawaltz.models.generators.GeneratorSynchronousModel;
 import com.powsybl.dynawaltz.models.generators.OmegaRefGeneratorModel;
@@ -19,8 +19,8 @@ import javax.xml.stream.XMLStreamWriter;
 import java.util.Collections;
 import java.util.List;
 
-import static com.powsybl.dynawaltz.DynaWaltzParametersDatabase.ParameterType.DOUBLE;
-import static com.powsybl.dynawaltz.DynaWaltzParametersDatabase.ParameterType.INT;
+import static com.powsybl.dynawaltz.parameters.ParameterType.DOUBLE;
+import static com.powsybl.dynawaltz.parameters.ParameterType.INT;
 import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 
 /**
@@ -55,7 +55,7 @@ public class OmegaRef extends AbstractPureDynamicBlackBoxModel {
 
     @Override
     public void writeParameters(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
-        DynaWaltzParametersDatabase parDB = context.getParametersDatabase();
+        DynaWaltzParameters dynaWaltzParameters = context.getDynaWaltzParameters();
 
         writer.writeStartElement(DYN_URI, "set");
         writer.writeAttribute("id", getParameterSetId());
@@ -66,8 +66,8 @@ public class OmegaRef extends AbstractPureDynamicBlackBoxModel {
         for (OmegaRefGeneratorModel generator : omegaRefGenerators) {
             double weightGen = 0;
             if (generator instanceof GeneratorSynchronousModel) {
-                double h = parDB.getDouble(generator.getParameterSetId(), "generator_H");
-                double snom = parDB.getDouble(generator.getParameterSetId(), "generator_SNom");
+                double h = dynaWaltzParameters.getModelParameters(generator.getParameterSetId()).getDouble("generator_H");
+                double snom = dynaWaltzParameters.getModelParameters(generator.getParameterSetId()).getDouble("generator_SNom");
                 weightGen = h * snom;
             }
             ParametersXml.writeParameter(writer, DOUBLE, "weight_gen_" + index, Double.toString(weightGen));

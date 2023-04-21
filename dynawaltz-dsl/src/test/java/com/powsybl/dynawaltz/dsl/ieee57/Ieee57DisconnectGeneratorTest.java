@@ -25,13 +25,13 @@ class Ieee57DisconnectGeneratorTest extends AbstractIeeeTest {
     void setup() throws IOException {
         super.setup(
             "/ieee57-disconnectgenerator/config/models.par",
-            "/ieee57-disconnectgenerator/config/network.par",
-            "/ieee57-disconnectgenerator/config/solvers.par",
+            "/ieee57-disconnectgenerator/config/network.par", "51",
+            "/ieee57-disconnectgenerator/config/solvers.par", "2",
             "/ieee57-disconnectgenerator/powsybl-inputs/IEEE57.iidm",
             "/ieee57-disconnectgenerator/powsybl-inputs/dynamicModels.groovy",
             "/ieee57-disconnectgenerator/powsybl-inputs/eventModels.groovy",
             "/ieee57-disconnectgenerator/powsybl-inputs/curves.groovy",
-            "/ieee57-disconnectgenerator/powsybl-inputs/dynaWaltzParameters.json");
+            0, 30);
     }
 
     @Test

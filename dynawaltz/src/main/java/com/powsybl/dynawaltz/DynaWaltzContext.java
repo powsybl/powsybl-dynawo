@@ -7,7 +7,6 @@
 package com.powsybl.dynawaltz;
 
 import com.powsybl.commons.PowsyblException;
-import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.models.*;
@@ -16,9 +15,6 @@ import com.powsybl.dynawaltz.xml.MacroStaticReference;
 import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.Network;
 
-import java.nio.file.FileSystem;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -34,7 +30,6 @@ public class DynaWaltzContext {
     private final String workingVariantId;
     private final DynamicSimulationParameters parameters;
     private final DynaWaltzParameters dynaWaltzParameters;
-    private final DynaWaltzParametersDatabase parametersDatabase;
     private final List<BlackBoxModel> dynamicModels;
     private final List<BlackBoxModel> eventModels;
     private final Map<String, EquipmentBlackBoxModelModel> staticIdBlackBoxModelMap;
@@ -45,16 +40,9 @@ public class DynaWaltzContext {
     private final NetworkModel networkModel = new NetworkModel();
 
     private final OmegaRef omegaRef;
-    private final PlatformConfig platformConfig;
 
     public DynaWaltzContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
                             List<Curve> curves, DynamicSimulationParameters parameters, DynaWaltzParameters dynaWaltzParameters) {
-        this(network, workingVariantId, dynamicModels, eventModels, curves, parameters, dynaWaltzParameters, PlatformConfig.defaultConfig());
-    }
-
-    public DynaWaltzContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
-                            List<Curve> curves, DynamicSimulationParameters parameters, DynaWaltzParameters dynaWaltzParameters,
-                            PlatformConfig platformConfig) {
         this.network = Objects.requireNonNull(network);
         this.workingVariantId = Objects.requireNonNull(workingVariantId);
         this.dynamicModels = Objects.requireNonNull(dynamicModels);
@@ -66,8 +54,6 @@ public class DynaWaltzContext {
         this.curves = Objects.requireNonNull(curves);
         this.parameters = Objects.requireNonNull(parameters);
         this.dynaWaltzParameters = Objects.requireNonNull(dynaWaltzParameters);
-        this.platformConfig = Objects.requireNonNull(platformConfig);
-        this.parametersDatabase = loadDatabase(dynaWaltzParameters.getParametersFile(), platformConfig);
         this.omegaRef = new OmegaRef(dynamicModels.stream()
                 .filter(OmegaRefGeneratorModel.class::isInstance)
                 .map(OmegaRefGeneratorModel.class::cast)
@@ -97,10 +83,6 @@ public class DynaWaltzContext {
 
     public DynaWaltzParameters getDynaWaltzParameters() {
         return dynaWaltzParameters;
-    }
-
-    public DynaWaltzParametersDatabase getParametersDatabase() {
-        return parametersDatabase;
     }
 
     public Collection<MacroStaticReference> getMacroStaticReferences() {
@@ -228,26 +210,7 @@ public class DynaWaltzContext {
         return !curves.isEmpty();
     }
 
-    private static FileSystem getFileSystem(PlatformConfig platformConfig) {
-        return platformConfig.getConfigDir()
-                .map(Path::getFileSystem)
-                .orElseThrow(() -> new PowsyblException("A configuration directory should be defined"));
-    }
-
-    private static DynaWaltzParametersDatabase loadDatabase(String filename, PlatformConfig platformConfig) {
-        FileSystem fs = getFileSystem(platformConfig);
-        return DynaWaltzParametersDatabase.load(fs.getPath(filename));
-    }
-
-    public String getParFile() {
-        return Paths.get(getDynaWaltzParameters().getParametersFile()).getFileName().toString();
-    }
-
     public String getSimulationParFile() {
         return getNetwork().getId() + ".par";
-    }
-
-    public PlatformConfig getPlatformConfig() {
-        return platformConfig;
     }
 }

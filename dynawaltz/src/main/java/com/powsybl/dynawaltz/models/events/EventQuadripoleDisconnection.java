@@ -15,7 +15,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.util.List;
 
-import static com.powsybl.dynawaltz.DynaWaltzParametersDatabase.ParameterType.BOOL;
+import static com.powsybl.dynawaltz.parameters.ParameterType.BOOL;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
