@@ -24,77 +24,129 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
+ * @author Florian Dupuy <florian.dupuy at rte-france.com>
  */
 public final class ParametersXml {
 
     private ParametersXml() {
     }
 
-    public static Map<String, ParametersSet> load(InputStream parametersFile) {
-        Map<String, ParametersSet> setsMap = new LinkedHashMap<>();
+    public static List<ParametersSet> load(InputStream parametersFile) {
         try {
-            XMLInputFactory factory = XMLInputFactory.newInstance();
-            factory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
-            factory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
-            XMLStreamReader xmlReader = factory.createXMLStreamReader(parametersFile);
-            read(xmlReader, setsMap);
-            xmlReader.close();
+            XMLStreamReader xmlReader = createXmlInputFactory().createXMLStreamReader(parametersFile);
+            return readAndClose(xmlReader);
         } catch (XMLStreamException e) {
             throw new UncheckedXmlStreamException(e);
         }
-        return setsMap;
     }
 
-    public static Map<String, ParametersSet> load(Path parametersFile) {
-        Map<String, ParametersSet> setsMap = new LinkedHashMap<>();
+    public static ParametersSet load(InputStream parametersFile, String parameterSetId) {
+        try {
+            XMLStreamReader xmlReader = createXmlInputFactory().createXMLStreamReader(parametersFile);
+            return readOneSetAndClose(xmlReader, parameterSetId);
+        } catch (XMLStreamException e) {
+            throw new UncheckedXmlStreamException(e);
+        }
+    }
+
+    public static List<ParametersSet> load(Path parametersFile) {
         try (Reader reader = Files.newBufferedReader(parametersFile, StandardCharsets.UTF_8)) {
-            XMLInputFactory factory = XMLInputFactory.newInstance();
-            factory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
-            factory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
-            XMLStreamReader xmlReader = factory.createXMLStreamReader(reader);
-            read(xmlReader, setsMap);
-            xmlReader.close();
+            XMLStreamReader xmlReader = createXmlInputFactory().createXMLStreamReader(reader);
+            return readAndClose(xmlReader);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         } catch (XMLStreamException e) {
             throw new UncheckedXmlStreamException(e);
         }
-        return setsMap;
     }
 
-    private static void read(XMLStreamReader xmlReader, Map<String, ParametersSet> parametersSets) throws XMLStreamException {
-        int state = xmlReader.next();
-        while (state == XMLStreamConstants.COMMENT) {
-            state = xmlReader.next();
+    public static ParametersSet load(Path parametersFile, String parameterSetId) {
+        try (Reader reader = Files.newBufferedReader(parametersFile, StandardCharsets.UTF_8)) {
+            XMLStreamReader xmlReader = createXmlInputFactory().createXMLStreamReader(reader);
+            return readOneSetAndClose(xmlReader, parameterSetId);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        } catch (XMLStreamException e) {
+            throw new UncheckedXmlStreamException(e);
         }
+    }
+
+    private static List<ParametersSet> readAndClose(XMLStreamReader xmlReader) throws XMLStreamException {
+        List<ParametersSet> parametersSets = new ArrayList<>();
+        skipComments(xmlReader);
         com.powsybl.commons.xml.XmlUtil.readUntilEndElement("parametersSet", xmlReader, () -> {
-            if (xmlReader.getLocalName().equals("set")) {
-                String parameterSetId = xmlReader.getAttributeValue(null, "id");
-                ParametersSet parametersSet = new ParametersSet(parameterSetId);
+            if (!xmlReader.getLocalName().equals("set")) {
+                xmlReader.close();
+                throw new PowsyblException("Unexpected element: " + xmlReader.getLocalName());
+            }
+            String parameterSetIdRead = xmlReader.getAttributeValue(null, "id");
+            ParametersSet parametersSet = new ParametersSet(parameterSetIdRead);
+            fillParametersSet(xmlReader, parametersSet);
+            parametersSets.add(parametersSet);
+        });
+        xmlReader.close();
+        return parametersSets;
+    }
+
+    private static ParametersSet readOneSetAndClose(XMLStreamReader xmlReader, String parameterSetId) throws XMLStreamException {
+        ParametersSet parametersSet = new ParametersSet(parameterSetId);
+        AtomicBoolean found = new AtomicBoolean(false);
+        skipComments(xmlReader);
+        com.powsybl.commons.xml.XmlUtil.readUntilEndElement("parametersSet", xmlReader, () -> {
+            if (found.get()) {
+                return;
+            }
+            if (!xmlReader.getLocalName().equals("set")) {
+                xmlReader.close();
+                throw new PowsyblException("Unexpected element: " + xmlReader.getLocalName());
+            }
+            if (xmlReader.getAttributeValue(null, "id").equals(parameterSetId)) {
+                fillParametersSet(xmlReader, parametersSet);
+                found.set(true);
+            } else {
                 com.powsybl.commons.xml.XmlUtil.readUntilEndElement("set", xmlReader, () -> {
-                    String name = xmlReader.getAttributeValue(null, "name");
-                    ParameterType type = ParameterType.valueOf(xmlReader.getAttributeValue(null, "type"));
-                    if (xmlReader.getLocalName().equals("par")) {
-                        String value = xmlReader.getAttributeValue(null, "value");
-                        parametersSet.addParameter(name, type, value);
-                    } else if (xmlReader.getLocalName().equals("reference")) {
-                        String origData = xmlReader.getAttributeValue(null, "origData");
-                        String origName = xmlReader.getAttributeValue(null, "origName");
-                        parametersSet.addReference(name, type, origData, origName);
-                    } else {
-                        throw new PowsyblException("Unexpected element: " + xmlReader.getLocalName());
-                    }
                 });
-                parametersSets.put(parameterSetId, parametersSet);
+            }
+        });
+        xmlReader.close();
+        return parametersSet;
+    }
+
+    private static void fillParametersSet(XMLStreamReader xmlReader, ParametersSet parametersSet) throws XMLStreamException {
+        com.powsybl.commons.xml.XmlUtil.readUntilEndElement("set", xmlReader, () -> {
+            String name = xmlReader.getAttributeValue(null, "name");
+            ParameterType type = ParameterType.valueOf(xmlReader.getAttributeValue(null, "type"));
+            if (xmlReader.getLocalName().equals("par")) {
+                String value = xmlReader.getAttributeValue(null, "value");
+                parametersSet.addParameter(name, type, value);
+            } else if (xmlReader.getLocalName().equals("reference")) {
+                String origData = xmlReader.getAttributeValue(null, "origData");
+                String origName = xmlReader.getAttributeValue(null, "origName");
+                parametersSet.addReference(name, type, origData, origName);
             } else {
                 throw new PowsyblException("Unexpected element: " + xmlReader.getLocalName());
             }
         });
+    }
+
+    private static XMLInputFactory createXmlInputFactory() {
+        XMLInputFactory factory = XMLInputFactory.newInstance();
+        factory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+        factory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+        return factory;
+    }
+
+    private static void skipComments(XMLStreamReader xmlReader) throws XMLStreamException {
+        int state = xmlReader.next();
+        while (state == XMLStreamConstants.COMMENT) {
+            state = xmlReader.next();
+        }
     }
 
     public static void write(Path workingDir, DynaWaltzContext context) throws IOException, XMLStreamException {

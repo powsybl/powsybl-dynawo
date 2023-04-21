@@ -20,7 +20,7 @@ import java.io.UncheckedIOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Map;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -45,17 +45,18 @@ class DynaWaltzParametersDatabaseTest {
 
     @Test
     void checkParameters() {
-        Map<String, ParametersSet> setsMap = ParametersXml.load(fileSystem.getPath("/models.par"));
+        List<ParametersSet> setsMap = ParametersXml.load(fileSystem.getPath("/models.par"));
+        DynaWaltzParameters dParameters = new DynaWaltzParameters().setModelsParameters(setsMap);
 
-        ParametersSet set1 = setsMap.get("LoadAlphaBeta");
+        ParametersSet set1 = dParameters.getModelParameters("LoadAlphaBeta");
         assertEquals(1.5, set1.getDouble("load_alpha"), 1e-6);
         assertEquals(2.5, set1.getDouble("load_beta"), 1e-6);
 
-        ParametersSet set2 = setsMap.get("GeneratorSynchronousFourWindingsProportionalRegulations");
+        ParametersSet set2 = dParameters.getModelParameters("GeneratorSynchronousFourWindingsProportionalRegulations");
         assertEquals(5.4, set2.getDouble("generator_H"), 1e-6);
         assertEquals(1, set2.getInt("generator_ExcitationPu"));
 
-        ParametersSet set3 = setsMap.get("test");
+        ParametersSet set3 = dParameters.getModelParameters("test");
         assertTrue(set3.getBool("boolean"));
         assertEquals("aString", set3.getString("string"));
     }

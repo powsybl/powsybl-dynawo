@@ -16,6 +16,7 @@ import com.powsybl.dynamicsimulation.*;
 import com.powsybl.dynamicsimulation.groovy.*;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
 import com.powsybl.dynawaltz.DynaWaltzProvider;
+import com.powsybl.dynawaltz.xml.ParametersXml;
 import com.powsybl.iidm.network.Network;
 import org.junit.jupiter.api.AfterEach;
 
@@ -94,9 +95,9 @@ public abstract class AbstractIeeeTest {
                 .setStopTime(stopTime);
         DynaWaltzParameters dynaWaltzParameters = new DynaWaltzParameters();
         parameters.addExtension(DynaWaltzParameters.class, dynaWaltzParameters);
-        dynaWaltzParameters.setModelsParameters(getClass().getResourceAsStream(parametersFile))
-                .setNetworkParameters(getClass().getResourceAsStream(networkParametersFile), networkParametersId)
-                .setSolverParameters(getClass().getResourceAsStream(solverParametersFile), solverParametersId)
+        dynaWaltzParameters.setModelsParameters(ParametersXml.load(getClass().getResourceAsStream(parametersFile)))
+                .setNetworkParameters(ParametersXml.load(getClass().getResourceAsStream(networkParametersFile), networkParametersId))
+                .setSolverParameters(ParametersXml.load(getClass().getResourceAsStream(solverParametersFile), solverParametersId))
                 .setSolverType(DynaWaltzParameters.SolverType.IDA);
     }
 
