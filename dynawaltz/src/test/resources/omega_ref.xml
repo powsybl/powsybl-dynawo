@@ -6,21 +6,21 @@
         <dyn:par type="DOUBLE" name="weight_gen_2" value="6539.400000000001"/>
         <dyn:par type="DOUBLE" name="weight_gen_3" value="6539.400000000001"/>
         <dyn:par type="DOUBLE" name="weight_gen_4" value="6539.400000000001"/>
-        <dyn:par type="DOUBLE" name="weight_gen_5" value="6539.400000000001"/>
+        <dyn:par type="DOUBLE" name="weight_gen_5" value="0.0"/>
         <dyn:par type="DOUBLE" name="weight_gen_6" value="6539.400000000001"/>
         <dyn:par type="INT" name="nbGen" value="7"/>
     </dyn:set>
-    <dyn:set id="EM_NHV1_NHV2_1">
+    <dyn:set id="Disconnect_NHV1_NHV2_1">
         <dyn:par type="DOUBLE" name="event_tEvent" value="5.0"/>
         <dyn:par type="BOOL" name="event_disconnectOrigin" value="false"/>
         <dyn:par type="BOOL" name="event_disconnectExtremity" value="true"/>
     </dyn:set>
-    <dyn:set id="EM_NHV1_NHV2_2">
+    <dyn:set id="Disconnect_NHV1_NHV2_2">
         <dyn:par type="DOUBLE" name="event_tEvent" value="5.0"/>
         <dyn:par type="BOOL" name="event_disconnectOrigin" value="false"/>
         <dyn:par type="BOOL" name="event_disconnectExtremity" value="true"/>
     </dyn:set>
-    <dyn:set id="EM_GEN2">
+    <dyn:set id="Disconnect_GEN2">
         <dyn:par type="DOUBLE" name="event_tEvent" value="1.0"/>
         <dyn:par type="BOOL" name="event_stateEvent1" value="true"/>
     </dyn:set>

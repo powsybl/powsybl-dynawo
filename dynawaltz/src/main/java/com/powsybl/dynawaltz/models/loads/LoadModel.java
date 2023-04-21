@@ -5,12 +5,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
+package com.powsybl.dynawaltz.models.loads;
 
-package eventModels
+import com.powsybl.dynawaltz.models.Model;
 
-EventSetPointBoolean {
-    staticId "GEN"
-    eventModelId "EM_GEN"
-    startTime 1
-    stateEvent true
+/**
+ * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ */
+public interface LoadModel extends Model {
+
 }

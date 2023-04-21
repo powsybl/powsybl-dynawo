@@ -5,10 +5,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-EventQuadripoleDisconnection {
+import com.powsybl.iidm.network.Branch
+
+Disconnect {
     staticId "_BUS____1-BUS____5-1_AC"
-    eventModelId "DISCONNECT_LINE"
     startTime 5
-    disconnectOrigin false
-    disconnectExtremity true
+    disconnectOnly Branch.Side.TWO
 }

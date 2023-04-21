@@ -9,11 +9,20 @@ package com.powsybl.dynawaltz.models;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.models.buses.BusModel;
 import com.powsybl.dynawaltz.models.buses.DefaultBusModel;
+import com.powsybl.dynawaltz.models.generators.GeneratorModel;
+import com.powsybl.dynawaltz.models.generators.DefaultGeneratorModel;
 import com.powsybl.dynawaltz.models.lines.DefaultLineModel;
 import com.powsybl.dynawaltz.models.lines.LineModel;
+import com.powsybl.dynawaltz.models.loads.DefaultLoadModel;
+import com.powsybl.dynawaltz.models.loads.LoadModel;
 import com.powsybl.dynawaltz.models.shunts.DefaultShuntModel;
 import com.powsybl.dynawaltz.models.shunts.ShuntModel;
+import com.powsybl.dynawaltz.models.transformers.DefaultTransformerModel;
+import com.powsybl.dynawaltz.models.transformers.TransformerModel;
+import com.powsybl.iidm.network.Identifiable;
+import com.powsybl.iidm.network.IdentifiableType;
 
+import java.util.EnumMap;
 import java.util.Map;
 
 /**
@@ -22,12 +31,23 @@ import java.util.Map;
  */
 public class NetworkModel {
 
+    private final Map<IdentifiableType, Class<? extends Model>> powSyBlTypeToModel = new EnumMap<>(IdentifiableType.class);
     private final Map<Class<? extends Model>, DefaultModelFactory<? extends Model>> factoryMap;
 
     public NetworkModel() {
         factoryMap = Map.of(BusModel.class, new DefaultModelFactory<BusModel>(DefaultBusModel::new),
+                GeneratorModel.class, new DefaultModelFactory<GeneratorModel>(DefaultGeneratorModel::new),
                 LineModel.class, new DefaultModelFactory<LineModel>(DefaultLineModel::new),
-                ShuntModel.class, new DefaultModelFactory<ShuntModel>(DefaultShuntModel::new));
+                LoadModel.class, new DefaultModelFactory<LoadModel>(DefaultLoadModel::new),
+                ShuntModel.class, new DefaultModelFactory<ShuntModel>(DefaultShuntModel::new),
+                TransformerModel.class, new DefaultModelFactory<TransformerModel>(DefaultTransformerModel::new));
+
+        powSyBlTypeToModel.put(IdentifiableType.BUS, BusModel.class);
+        powSyBlTypeToModel.put(IdentifiableType.GENERATOR, GeneratorModel.class);
+        powSyBlTypeToModel.put(IdentifiableType.LINE, LineModel.class);
+        powSyBlTypeToModel.put(IdentifiableType.LOAD, LoadModel.class);
+        powSyBlTypeToModel.put(IdentifiableType.SHUNT_COMPENSATOR, ShuntModel.class);
+        powSyBlTypeToModel.put(IdentifiableType.TWO_WINDINGS_TRANSFORMER, TransformerModel.class);
     }
 
     public <T extends Model> T getDefaultModel(String staticId, Class<T> clazz) {
@@ -36,5 +56,22 @@ public class NetworkModel {
             return dmf.getDefaultModel(staticId);
         }
         throw new PowsyblException("Default model not implemented for " + clazz.getSimpleName());
+    }
+
+    public <T extends Model> T getDefaultModel(Identifiable<?> equipment, Class<T> connectableClass) {
+
+        Class<? extends Model> equipmentClass = powSyBlTypeToModel.get(equipment.getType());
+        if (equipmentClass == null) {
+            throw new PowsyblException("No dynamic model associated with " + equipment.getType());
+        }
+        DefaultModelFactory<? extends Model> dmf = factoryMap.get(equipmentClass);
+        if (dmf != null) {
+            Model defaultModel = dmf.getDefaultModel(equipment.getId());
+            if (connectableClass.isInstance(defaultModel)) {
+                return connectableClass.cast(defaultModel);
+            }
+            throw new PowsyblException("Default model " + defaultModel.getClass().getSimpleName() + " does not implement " + connectableClass.getSimpleName() + " interface");
+        }
+        throw new PowsyblException("Default model not implemented for " + equipmentClass.getSimpleName());
     }
 }

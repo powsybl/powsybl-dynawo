@@ -11,7 +11,7 @@ import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
 import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection;
-import com.powsybl.dynawaltz.models.events.EventSetPointBoolean;
+import com.powsybl.dynawaltz.models.events.EventInjectionDisconnection;
 import com.powsybl.dynawaltz.models.generators.GeneratorSynchronous;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
@@ -43,15 +43,13 @@ class EventXmlTest extends DynaWaltzTestUtil {
     @Test
     void duplicateEventId() {
         eventModels.clear();
-        network.getLineStream().forEach(l -> eventModels.add(new EventQuadripoleDisconnection("duplicateID", l.getId(), 5, false, true)));
-        network.getGeneratorStream().forEach(g -> {
-            if (g.getId().equals("GEN2") || g.getId().equals("GEN4")) {
-                eventModels.add(new EventSetPointBoolean("duplicateID2", g.getId(), 1, true));
-            }
-        });
+        eventModels.add(new EventQuadripoleDisconnection(network.getLine("NHV1_NHV2_1"), 5));
+        eventModels.add(new EventQuadripoleDisconnection(network.getLine("NHV1_NHV2_1"), 5, true, false));
+        eventModels.add(new EventInjectionDisconnection(network.getGenerator("GEN2"), 1, true));
+        eventModels.add(new EventInjectionDisconnection(network.getGenerator("GEN2"), 1, false));
         String workingVariantId = network.getVariantManager().getWorkingVariantId();
         Exception e = assertThrows(PowsyblException.class, () -> new DynaWaltzContext(network, workingVariantId, dynamicModels, eventModels, curves, null, null));
-        assertEquals("Duplicate dynamicId: [duplicateID, duplicateID2]", e.getMessage());
+        assertEquals("Duplicate dynamicId: [Disconnect_NHV1_NHV2_1, Disconnect_GEN2]", e.getMessage());
     }
 
 }

@@ -6,21 +6,11 @@
  */
 package com.powsybl.dynawaltz.models.generators;
 
-import com.powsybl.dynawaltz.models.EquipmentBlackBoxModelModel;
+import com.powsybl.dynawaltz.models.Model;
 
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  */
-public interface GeneratorModel extends EquipmentBlackBoxModelModel {
+public interface GeneratorModel extends Model {
     String getTerminalVarName();
-
-    String getSwitchOffSignalNodeVarName();
-
-    String getSwitchOffSignalEventVarName();
-
-    String getSwitchOffSignalAutomatonVarName();
-
-    String getRunningVarName();
-
-    String getQStatorPuVarName();
 }

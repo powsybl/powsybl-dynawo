@@ -12,6 +12,7 @@ import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.models.*;
 import com.powsybl.dynawaltz.models.generators.OmegaRefGeneratorModel;
 import com.powsybl.dynawaltz.xml.MacroStaticReference;
+import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.Network;
 
 import java.util.*;
@@ -96,7 +97,18 @@ public class DynaWaltzContext {
         if (clazz.isInstance(bbm)) {
             return clazz.cast(bbm);
         }
-        throw new PowsyblException("The model identified by the static id " + staticId + " is not the correct model");
+        throw new PowsyblException("The model identified by the static id " + staticId + " does not match not the expected model (" + clazz.getSimpleName() + ")");
+    }
+
+    public <T extends Model> T getDynamicModel(Identifiable<?> equipment, Class<T> connectableClass) {
+        BlackBoxModel bbm = staticIdBlackBoxModelMap.get(equipment.getId());
+        if (bbm == null) {
+            return networkModel.getDefaultModel(equipment, connectableClass);
+        }
+        if (connectableClass.isInstance(bbm)) {
+            return connectableClass.cast(bbm);
+        }
+        throw new PowsyblException("The model identified by the static id " + equipment.getId() + " does not match not the expected model (" + connectableClass.getSimpleName() + ")");
     }
 
     private EquipmentBlackBoxModelModel mergeDuplicateStaticId(EquipmentBlackBoxModelModel bbm1, EquipmentBlackBoxModelModel bbm2) {
