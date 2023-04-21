@@ -127,9 +127,9 @@ class DynaWaltzParametersTest extends AbstractConverterTest {
     @Test
     void checkDefaultParameters() throws IOException {
         Files.createDirectories(fileSystem.getPath(USER_HOME));
-        copyFile("/parametersSet/models.par", DynaWaltzParameters.DEFAULT_PARAMETERS_FILE);
-        copyFile("/parametersSet/network.par", DynaWaltzParameters.DEFAULT_NETWORK_PARAMETERS_FILE);
-        copyFile("/parametersSet/solvers.par", DynaWaltzParameters.DEFAULT_SOLVER_PARAMETERS_FILE);
+        copyFile("/parametersSet/models.par", DynaWaltzParameters.DEFAULT_INPUT_PARAMETERS_FILE);
+        copyFile("/parametersSet/network.par", DynaWaltzParameters.DEFAULT_INPUT_NETWORK_PARAMETERS_FILE);
+        copyFile("/parametersSet/solvers.par", DynaWaltzParameters.DEFAULT_INPUT_SOLVER_PARAMETERS_FILE);
 
         DynaWaltzParameters parameters = DynaWaltzParameters.load(platformConfig, fileSystem);
         checModelParameters(parameters);
