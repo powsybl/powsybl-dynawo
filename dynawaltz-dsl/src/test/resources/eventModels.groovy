@@ -6,14 +6,12 @@
  */
 
 import com.powsybl.iidm.network.Line
-
+import com.powsybl.iidm.network.Branch
 
 for (Line line : network.lines) {
-    EventQuadripoleDisconnection {
+    Disconnect {
         staticId line.id
-        eventModelId "EM_" + line.id
         startTime 4
-        disconnectOrigin false
-        disconnectExtremity true
+        disconnectOnly Branch.Side.TWO
     }
 }

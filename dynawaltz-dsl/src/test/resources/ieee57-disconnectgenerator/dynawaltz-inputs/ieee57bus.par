@@ -10,7 +10,7 @@
         <dyn:par type="DOUBLE" name="weight_gen_6" value="9281.25"/>
         <dyn:par type="INT" name="nbGen" value="7"/>
     </dyn:set>
-    <dyn:set id="DisconnectGenerator">
+    <dyn:set id="Disconnect__GEN___12_SM">
         <dyn:par type="DOUBLE" name="event_tEvent" value="1.0"/>
         <dyn:par type="BOOL" name="event_stateEvent1" value="true"/>
     </dyn:set>

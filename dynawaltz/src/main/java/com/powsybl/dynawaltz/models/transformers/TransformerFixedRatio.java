@@ -12,6 +12,7 @@ import com.powsybl.dynawaltz.models.AbstractEquipmentBlackBoxModel;
 import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.buses.BusModel;
+import com.powsybl.dynawaltz.models.events.QuadripoleDisconnectableEquipment;
 import com.powsybl.dynawaltz.models.utils.BusUtils;
 import com.powsybl.dynawaltz.models.utils.SideConverter;
 import com.powsybl.iidm.network.TwoWindingsTransformer;
@@ -22,7 +23,7 @@ import java.util.Objects;
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class TransformerFixedRatio extends AbstractEquipmentBlackBoxModel<TwoWindingsTransformer> {
+public class TransformerFixedRatio extends AbstractEquipmentBlackBoxModel<TwoWindingsTransformer> implements TransformerModel, QuadripoleDisconnectableEquipment {
 
     private final String transformerLib;
 
@@ -50,5 +51,15 @@ public class TransformerFixedRatio extends AbstractEquipmentBlackBoxModel<TwoWin
             String busStaticId = BusUtils.getConnectableBusStaticId(t);
             createMacroConnections(busStaticId, BusModel.class, this::getVarConnectionsWithBus, context, SideConverter.convert(equipment.getSide(t)));
         });
+    }
+
+    @Override
+    public String getStateValueVarName() {
+        return "transformer_state_value";
+    }
+
+    @Override
+    public String getDisconnectableVarName() {
+        return getStateValueVarName();
     }
 }

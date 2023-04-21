@@ -5,9 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-EventSetPointBoolean {
+Disconnect {
     staticId "_GEN___12_SM"
-    eventModelId "DisconnectGenerator"
     startTime 1
-    stateEvent true
 }
