@@ -6,7 +6,8 @@
  */
 package com.powsybl.dynawaltz;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import com.powsybl.commons.config.ModuleConfig;
 import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.extensions.AbstractExtension;
@@ -18,10 +19,7 @@ import java.io.InputStream;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -44,7 +42,7 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
         IDA
     }
 
-    private Map<String, ParametersSet> modelsParameters;
+    private Map<String, ParametersSet> modelsParameters = new HashMap<>();
     private ParametersSet networkParameters;
     private ParametersSet solverParameters;
     private SolverType solverType;
@@ -113,18 +111,24 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
         return modelsParameters.get(parameterSetId);
     }
 
+    @JsonGetter("modelsParameters")
     public Collection<ParametersSet> getModelParameters() {
         return modelsParameters.values();
     }
 
-    @JsonIgnore
+    @JsonSetter("modelsParameters")
+    public DynaWaltzParameters setModelsParameters(Collection<ParametersSet> parametersSets) {
+        modelsParameters = new HashMap<>();
+        parametersSets.forEach(parametersSet -> modelsParameters.put(parametersSet.getId(), parametersSet));
+        return this;
+    }
+
     public DynaWaltzParameters setModelsParameters(Path modelsParametersFile) {
         this.modelsParameters = ParametersXml.load(modelsParametersFile);
         return this;
     }
 
-    @JsonIgnore
-   public DynaWaltzParameters setModelsParameters(InputStream modelsParametersFile) {
+    public DynaWaltzParameters setModelsParameters(InputStream modelsParametersFile) {
         this.modelsParameters = ParametersXml.load(modelsParametersFile);
         return this;
     }
@@ -133,7 +137,7 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
         this.networkParameters = ParametersXml.load(networkParameters).getOrDefault(networkParametersId, new ParametersSet(networkParametersId));
         return this;
     }
-    
+
     public DynaWaltzParameters setNetworkParameters(InputStream networkParameters, String networkParametersId) {
         this.networkParameters = ParametersXml.load(networkParameters).getOrDefault(networkParametersId, new ParametersSet(networkParametersId));
         return this;

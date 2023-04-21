@@ -24,7 +24,7 @@ public class Reference {
     public Reference(@JsonProperty("name") String name,
                      @JsonProperty("type") ParameterType type,
                      @JsonProperty("origData") String origData,
-                     @JsonProperty("origData") String origName) {
+                     @JsonProperty("origName") String origName) {
         this.name = Objects.requireNonNull(name);
         this.type = Objects.requireNonNull(type);
         this.origData = Objects.requireNonNull(origData);
