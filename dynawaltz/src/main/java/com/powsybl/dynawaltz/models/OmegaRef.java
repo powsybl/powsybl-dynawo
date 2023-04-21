@@ -10,6 +10,7 @@ import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParametersDatabase;
 import com.powsybl.dynawaltz.models.buses.BusModel;
+import com.powsybl.dynawaltz.models.generators.GeneratorSynchronousModel;
 import com.powsybl.dynawaltz.models.generators.OmegaRefGeneratorModel;
 import com.powsybl.dynawaltz.xml.ParametersXml;
 
@@ -63,9 +64,13 @@ public class OmegaRef extends AbstractPureDynamicBlackBoxModel {
         // The OmegaRef parameters index the weight of each generator according to that declaration order.
         int index = 0;
         for (OmegaRefGeneratorModel generator : omegaRefGenerators) {
-            double h = parDB.getDouble(generator.getParameterSetId(), "generator_H");
-            double snom = parDB.getDouble(generator.getParameterSetId(), "generator_SNom");
-            ParametersXml.writeParameter(writer, DOUBLE, "weight_gen_" + index, Double.toString(h * snom));
+            double weightGen = 0;
+            if (generator instanceof GeneratorSynchronousModel) {
+                double h = parDB.getDouble(generator.getParameterSetId(), "generator_H");
+                double snom = parDB.getDouble(generator.getParameterSetId(), "generator_SNom");
+                weightGen = h * snom;
+            }
+            ParametersXml.writeParameter(writer, DOUBLE, "weight_gen_" + index, Double.toString(weightGen));
             index++;
         }
 
