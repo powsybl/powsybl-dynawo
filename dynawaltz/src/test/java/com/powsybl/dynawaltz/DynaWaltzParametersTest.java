@@ -134,7 +134,7 @@ class DynaWaltzParametersTest extends AbstractConverterTest {
         DynaWaltzParameters parameters = DynaWaltzParameters.load(platformConfig, fileSystem);
         checModelParameters(parameters);
 
-        assertEquals(DynaWaltzParameters.DEFAULT_NETWORK_PAR_ID ,parameters.getNetworkParameters().getId());
+        assertEquals(DynaWaltzParameters.DEFAULT_NETWORK_PAR_ID, parameters.getNetworkParameters().getId());
         assertTrue(parameters.getNetworkParameters().getParameters().isEmpty());
         assertTrue(parameters.getNetworkParameters().getReferences().isEmpty());
 
