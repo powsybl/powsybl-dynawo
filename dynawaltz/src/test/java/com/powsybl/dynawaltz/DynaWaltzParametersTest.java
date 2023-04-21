@@ -24,6 +24,7 @@ import java.nio.file.Path;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -60,8 +61,8 @@ class DynaWaltzParametersTest extends AbstractConverterTest {
 
         checModelParameters(parameters);
 
-        assertEquals(networkParametersId, parameters.getNetwork().getParametersId());
-        Set networkParameters = parameters.getNetwork().getParametersSet().get(networkParametersId);
+        assertEquals(networkParametersId, parameters.getNetworkParameters().getId());
+        Set networkParameters = parameters.getNetworkParameters();
         Parameter loadTp = networkParameters.getParameter("load_Tp");
         assertEquals("90", loadTp.getValue());
         assertEquals("load_Tp", loadTp.getName());
@@ -71,10 +72,9 @@ class DynaWaltzParametersTest extends AbstractConverterTest {
         assertEquals("load_isControllable", loadControllable.getName());
         assertEquals(ParameterType.BOOL, loadControllable.getType());
 
-        DynaWaltzParameters.Solver solver = parameters.getSolver();
-        assertEquals(solverParametersId, solver.getParametersId());
-        Set solverParameters = solver.getParametersSet().get(solverParametersId);
-        assertEquals(solverType, solver.getType());
+        Set solverParameters = parameters.getSolverParameters();
+        assertEquals(solverParametersId, solverParameters.getId());
+        assertEquals(solverType, parameters.getSolverType());
         Parameter order = solverParameters.getParameter("order");
         assertEquals("1", order.getValue());
         assertEquals("order", order.getName());
@@ -133,20 +133,25 @@ class DynaWaltzParametersTest extends AbstractConverterTest {
 
         DynaWaltzParameters parameters = DynaWaltzParameters.load(platformConfig, fileSystem);
         checModelParameters(parameters);
-//        assertEquals(networkParametersFile, parameters.getNetwork().getParametersFile()); FIXME: should be empty
-        assertEquals(DynaWaltzParameters.DEFAULT_NETWORK_PAR_ID, parameters.getNetwork().getParametersId());
-        assertEquals(DynaWaltzParameters.DEFAULT_SOLVER_TYPE, parameters.getSolver().getType());
-//        assertEquals(solverParametersFile, parameters.getSolver().getParametersFile()); FIXME: should be empty
-        assertEquals(DynaWaltzParameters.DEFAULT_SOLVER_PAR_ID, parameters.getSolver().getParametersId());
+
+        assertEquals(DynaWaltzParameters.DEFAULT_NETWORK_PAR_ID ,parameters.getNetworkParameters().getId());
+        assertTrue(parameters.getNetworkParameters().getParameters().isEmpty());
+        assertTrue(parameters.getNetworkParameters().getReferences().isEmpty());
+
+        assertEquals(DynaWaltzParameters.DEFAULT_SOLVER_TYPE, parameters.getSolverType());
+        assertEquals(DynaWaltzParameters.DEFAULT_SOLVER_PAR_ID, parameters.getSolverParameters().getId());
+        assertTrue(parameters.getSolverParameters().getParameters().isEmpty());
+        assertTrue(parameters.getSolverParameters().getReferences().isEmpty());
+
         assertEquals(DynaWaltzParameters.DEFAULT_MERGE_LOADS, parameters.isMergeLoads());
     }
 
     private static void checModelParameters(DynaWaltzParameters dynaWaltzParameters) {
-        Parameter booleanParameter = dynaWaltzParameters.getModelParameterSet("test").getParameter("boolean");
+        Parameter booleanParameter = dynaWaltzParameters.getModelParameters("test").getParameter("boolean");
         assertEquals("true", booleanParameter.getValue());
         assertEquals("boolean", booleanParameter.getName());
         assertEquals(ParameterType.BOOL, booleanParameter.getType());
-        Parameter stringParameter = dynaWaltzParameters.getModelParameterSet("test").getParameter("string");
+        Parameter stringParameter = dynaWaltzParameters.getModelParameters("test").getParameter("string");
         assertEquals("aString", stringParameter.getValue());
         assertEquals("string", stringParameter.getName());
         assertEquals(ParameterType.STRING, stringParameter.getType());

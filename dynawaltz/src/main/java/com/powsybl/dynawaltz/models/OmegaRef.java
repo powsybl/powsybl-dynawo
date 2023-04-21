@@ -63,8 +63,8 @@ public class OmegaRef extends AbstractPureDynamicBlackBoxModel {
         // The OmegaRef parameters index the weight of each generator according to that declaration order.
         int index = 0;
         for (OmegaRefGeneratorModel generator : omegaRefGenerators) {
-            double h = dynaWaltzParameters.getModelParameterSet(generator.getParameterSetId()).getDouble("generator_H");
-            double snom = dynaWaltzParameters.getModelParameterSet(generator.getParameterSetId()).getDouble("generator_SNom");
+            double h = dynaWaltzParameters.getModelParameters(generator.getParameterSetId()).getDouble("generator_H");
+            double snom = dynaWaltzParameters.getModelParameters(generator.getParameterSetId()).getDouble("generator_SNom");
             ParametersXml.writeParameter(writer, DOUBLE, "weight_gen_" + index, Double.toString(h * snom));
             index++;
         }

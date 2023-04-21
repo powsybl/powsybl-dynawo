@@ -47,9 +47,9 @@ public final class JobsXml {
     private static void writeSolver(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
         DynaWaltzParameters parameters = context.getDynaWaltzParameters();
         writer.writeEmptyElement(DYN_URI, "solver");
-        writer.writeAttribute("lib", parameters.getSolver().getType().equals(SolverType.IDA) ? "dynawo_SolverIDA" : "dynawo_SolverSIM");
+        writer.writeAttribute("lib", parameters.getSolverType().equals(SolverType.IDA) ? "dynawo_SolverIDA" : "dynawo_SolverSIM");
         writer.writeAttribute("parFile", DynaWaltzParameters.SOLVER_OUTPUT_PARAMETERS_FILE);
-        writer.writeAttribute("parId", parameters.getSolver().getParametersId());
+        writer.writeAttribute("parId", parameters.getSolverParameters().getId());
     }
 
     private static void writeModeler(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
@@ -60,7 +60,7 @@ public final class JobsXml {
         writer.writeEmptyElement(DYN_URI, "network");
         writer.writeAttribute("iidmFile", NETWORK_FILENAME);
         writer.writeAttribute("parFile", DynaWaltzParameters.NETWORK_OUTPUT_PARAMETERS_FILE);
-        writer.writeAttribute("parId", parameters.getNetwork().getParametersId());
+        writer.writeAttribute("parId", parameters.getNetworkParameters().getId());
 
         writer.writeEmptyElement(DYN_URI, "dynModels");
         writer.writeAttribute("dydFile", DYD_FILENAME);

@@ -13,6 +13,7 @@ import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
 import com.powsybl.dynawaltz.parameters.*;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
+import com.powsybl.dynawaltz.parameters.Set;
 
 import javax.xml.XMLConstants;
 import javax.xml.stream.*;
@@ -20,10 +21,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 
@@ -36,35 +34,35 @@ public final class ParametersXml {
     }
 
     public static Map<String, Set> load(InputStream parametersFile) {
-        Map<String, Set> parametersDatabase = new HashMap<>();
+        Map<String, Set> setsMap = new HashMap<>();
         try {
             XMLInputFactory factory = XMLInputFactory.newInstance();
             factory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
             factory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
             XMLStreamReader xmlReader = factory.createXMLStreamReader(parametersFile);
-            read(xmlReader, parametersDatabase);
+            read(xmlReader, setsMap);
             xmlReader.close();
         } catch (XMLStreamException e) {
             throw new UncheckedXmlStreamException(e);
         }
-        return parametersDatabase;
+        return setsMap;
     }
 
     public static Map<String, Set> load(Path parametersFile) {
-        Map<String, Set> parametersDatabase = new HashMap<>();
+        Map<String, Set> setsMap = new HashMap<>();
         try (Reader reader = Files.newBufferedReader(parametersFile, StandardCharsets.UTF_8)) {
             XMLInputFactory factory = XMLInputFactory.newInstance();
             factory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
             factory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
             XMLStreamReader xmlReader = factory.createXMLStreamReader(reader);
-            read(xmlReader, parametersDatabase);
+            read(xmlReader, setsMap);
             xmlReader.close();
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         } catch (XMLStreamException e) {
             throw new UncheckedXmlStreamException(e);
         }
-        return parametersDatabase;
+        return setsMap;
     }
 
     private static void read(XMLStreamReader xmlReader, Map<String, Set> parametersSets) throws XMLStreamException {
@@ -101,9 +99,9 @@ public final class ParametersXml {
         Objects.requireNonNull(workingDir);
 
         DynaWaltzParameters parameters = context.getDynaWaltzParameters();
-        write(parameters.getModelParameterSets(), DynaWaltzParameters.MODELS_OUTPUT_PARAMETERS_FILE, workingDir);
-        write(parameters.getNetworkParameterSets(), DynaWaltzParameters.NETWORK_OUTPUT_PARAMETERS_FILE, workingDir);
-        write(parameters.getSolverParameterSets(), DynaWaltzParameters.SOLVER_OUTPUT_PARAMETERS_FILE, workingDir);
+        write(parameters.getModelParameters(), DynaWaltzParameters.MODELS_OUTPUT_PARAMETERS_FILE, workingDir);
+        write(List.of(parameters.getNetworkParameters()), DynaWaltzParameters.NETWORK_OUTPUT_PARAMETERS_FILE, workingDir);
+        write(List.of(parameters.getSolverParameters()), DynaWaltzParameters.SOLVER_OUTPUT_PARAMETERS_FILE, workingDir);
 
         // Write parameterSet that needs to be generated (OmegaRef...)
         Path file = workingDir.resolve(context.getSimulationParFile());

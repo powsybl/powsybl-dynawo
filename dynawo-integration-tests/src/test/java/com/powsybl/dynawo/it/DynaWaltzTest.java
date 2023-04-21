@@ -63,14 +63,10 @@ class DynaWaltzTest extends AbstractDynawoTest {
                 getResourceAsStream("/ieee14/disconnectline/curves.groovy"),
                 GroovyExtension.find(CurveGroovyExtension.class, DynaWaltzProvider.NAME));
 
-        dynaWaltzParameters.setParameters(getResourceAsStream("/ieee14/disconnectline/models.par"))
-                .setNetwork(new DynaWaltzParameters.Network()
-                        .setParametersId("8")
-                        .setParameters(getResourceAsStream("/ieee14/disconnectline/network.par")))
-                .setSolver(new DynaWaltzParameters.Solver()
-                        .setType(DynaWaltzParameters.SolverType.IDA)
-                        .setParametersId("2")
-                        .setParameters(getResourceAsStream("/ieee14/disconnectline/solvers.par")));
+        dynaWaltzParameters.setModelsParameters(getResourceAsStream("/ieee14/disconnectline/models.par"))
+                .setNetworkParameters(getResourceAsStream("/ieee14/disconnectline/network.par"), "8")
+                .setSolverParameters(getResourceAsStream("/ieee14/disconnectline/solvers.par"), "2")
+                .setSolverType(DynaWaltzParameters.SolverType.IDA);
 
         DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, curvesSupplier,
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters)
@@ -94,14 +90,10 @@ class DynaWaltzTest extends AbstractDynawoTest {
                 getResourceAsStream("/svc/dynamicModels.groovy"),
                 GroovyExtension.find(DynamicModelGroovyExtension.class, DynaWaltzProvider.NAME));
 
-        dynaWaltzParameters.setParameters(getResourceAsStream("/svc/models.par"))
-                .setNetwork(new DynaWaltzParameters.Network()
-                        .setParametersId("8")
-                        .setParameters(getResourceAsStream("/svc/network.par")))
-                .setSolver(new DynaWaltzParameters.Solver()
-                        .setType(DynaWaltzParameters.SolverType.IDA)
-                        .setParametersId("2")
-                        .setParameters(getResourceAsStream("/svc/solvers.par")));
+        dynaWaltzParameters.setModelsParameters(getResourceAsStream("/svc/models.par"))
+                .setNetworkParameters(getResourceAsStream("/svc/network.par"), "8")
+                .setSolverParameters(getResourceAsStream("/svc/solvers.par"), "2")
+                .setSolverType(DynaWaltzParameters.SolverType.IDA);
 
         DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, EventModelsSupplier.empty(), CurvesSupplier.empty(),
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters)
@@ -122,14 +114,10 @@ class DynaWaltzTest extends AbstractDynawoTest {
                 getResourceAsStream("/hvdc/dynamicModels.groovy"),
                 GroovyExtension.find(DynamicModelGroovyExtension.class, DynaWaltzProvider.NAME));
 
-        dynaWaltzParameters.setParameters(getResourceAsStream("/hvdc/models.par"))
-                .setNetwork(new DynaWaltzParameters.Network()
-                        .setParametersId("8")
-                        .setParameters(getResourceAsStream("/hvdc/network.par")))
-                .setSolver(new DynaWaltzParameters.Solver()
-                        .setType(DynaWaltzParameters.SolverType.IDA)
-                        .setParametersId("2")
-                        .setParameters(getResourceAsStream("/hvdc/solvers.par")));
+        dynaWaltzParameters.setModelsParameters(getResourceAsStream("/hvdc/models.par"))
+                .setNetworkParameters(getResourceAsStream("/hvdc/network.par"), "8")
+                .setSolverParameters(getResourceAsStream("/hvdc/solvers.par"), "2")
+                .setSolverType(DynaWaltzParameters.SolverType.IDA);
 
         DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, EventModelsSupplier.empty(), CurvesSupplier.empty(),
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters)

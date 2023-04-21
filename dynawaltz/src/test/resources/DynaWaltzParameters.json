@@ -4,68 +4,56 @@
   "stopTime" : 3600,
   "extensions" : {
     "DynaWaltzParameters" : {
-      "modelsParameters" : {
-        "parameterSets" : {
-          "test" : {
-            "parameters" : {
-              "boolean" : {
-                "name" : "boolean",
-                "type" : "BOOL",
-                "value" : "true"
-              },
-              "string" : {
-                "name" : "string",
-                "type" : "STRING",
-                "value" : "aString"
-              }
-            }
+      "networkParameters" : {
+        "id" : "networkParametersId",
+        "parameters" : {
+          "load_Tp" : {
+            "name" : "load_Tp",
+            "type" : "DOUBLE",
+            "value" : "90"
+          },
+          "load_isControllable" : {
+            "name" : "load_isControllable",
+            "type" : "BOOL",
+            "value" : "false"
           }
-        }
+        },
+        "references" : [ ]
       },
-      "network" : {
-        "parametersId" : "networkParametersId",
-        "parametersSet" : {
-          "parameterSets" : {
-            "networkParametersId" : {
-              "parameters" : {
-                "load_Tp" : {
-                  "name" : "load_Tp",
-                  "type" : "DOUBLE",
-                  "value" : "90"
-                },
-                "load_isControllable" : {
-                  "name" : "load_isControllable",
-                  "type" : "BOOL",
-                  "value" : "false"
-                }
-              }
-            }
+      "solverParameters" : {
+        "id" : "solverParametersId",
+        "parameters" : {
+          "order" : {
+            "name" : "order",
+            "type" : "INT",
+            "value" : "1"
+          },
+          "absAccuracy" : {
+            "name" : "absAccuracy",
+            "type" : "DOUBLE",
+            "value" : "1e-4"
           }
-        }
+        },
+        "references" : [ ]
       },
-      "solver" : {
-        "parametersId" : "solverParametersId",
-        "type" : "IDA",
-        "parametersSet" : {
-          "parameterSets" : {
-            "solverParametersId" : {
-              "parameters" : {
-                "order" : {
-                  "name" : "order",
-                  "type" : "INT",
-                  "value" : "1"
-                },
-                "absAccuracy" : {
-                  "name" : "absAccuracy",
-                  "type" : "DOUBLE",
-                  "value" : "1e-4"
-                }
-              }
-            }
+      "solverType" : "IDA",
+      "mergeLoads" : false,
+      "modelParameters" : [ {
+        "id" : "test",
+        "parameters" : {
+          "boolean" : {
+            "name" : "boolean",
+            "type" : "BOOL",
+            "value" : "true"
+          },
+          "string" : {
+            "name" : "string",
+            "type" : "STRING",
+            "value" : "aString"
           }
-        }
-      },
-      "mergeLoads" : false
+        },
+        "references" : [ ]
+      } ]
     }
   }
 }
