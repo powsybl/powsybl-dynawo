@@ -14,7 +14,7 @@ import com.powsybl.dynamicsimulation.json.JsonDynamicSimulationParameters;
 import com.powsybl.dynawaltz.DynaWaltzParameters.SolverType;
 import com.powsybl.dynawaltz.parameters.Parameter;
 import com.powsybl.dynawaltz.parameters.ParameterType;
-import com.powsybl.dynawaltz.parameters.Set;
+import com.powsybl.dynawaltz.parameters.ParametersSet;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -62,7 +62,7 @@ class DynaWaltzParametersTest extends AbstractConverterTest {
         checModelParameters(parameters);
 
         assertEquals(networkParametersId, parameters.getNetworkParameters().getId());
-        Set networkParameters = parameters.getNetworkParameters();
+        ParametersSet networkParameters = parameters.getNetworkParameters();
         Parameter loadTp = networkParameters.getParameter("load_Tp");
         assertEquals("90", loadTp.getValue());
         assertEquals("load_Tp", loadTp.getName());
@@ -72,7 +72,7 @@ class DynaWaltzParametersTest extends AbstractConverterTest {
         assertEquals("load_isControllable", loadControllable.getName());
         assertEquals(ParameterType.BOOL, loadControllable.getType());
 
-        Set solverParameters = parameters.getSolverParameters();
+        ParametersSet solverParameters = parameters.getSolverParameters();
         assertEquals(solverParametersId, solverParameters.getId());
         assertEquals(solverType, parameters.getSolverType());
         Parameter order = solverParameters.getParameter("order");

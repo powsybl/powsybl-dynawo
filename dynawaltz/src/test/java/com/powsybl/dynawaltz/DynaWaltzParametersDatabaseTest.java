@@ -9,7 +9,7 @@ package com.powsybl.dynawaltz;
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
 import com.powsybl.commons.PowsyblException;
-import com.powsybl.dynawaltz.parameters.Set;
+import com.powsybl.dynawaltz.parameters.ParametersSet;
 import com.powsybl.dynawaltz.xml.ParametersXml;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,17 +45,17 @@ class DynaWaltzParametersDatabaseTest {
 
     @Test
     void checkParameters() {
-        Map<String, Set> setsMap = ParametersXml.load(fileSystem.getPath("/models.par"));
+        Map<String, ParametersSet> setsMap = ParametersXml.load(fileSystem.getPath("/models.par"));
 
-        Set set1 = setsMap.get("LoadAlphaBeta");
+        ParametersSet set1 = setsMap.get("LoadAlphaBeta");
         assertEquals(1.5, set1.getDouble("load_alpha"), 1e-6);
         assertEquals(2.5, set1.getDouble("load_beta"), 1e-6);
 
-        Set set2 = setsMap.get("GeneratorSynchronousFourWindingsProportionalRegulations");
+        ParametersSet set2 = setsMap.get("GeneratorSynchronousFourWindingsProportionalRegulations");
         assertEquals(5.4, set2.getDouble("generator_H"), 1e-6);
         assertEquals(1, set2.getInt("generator_ExcitationPu"));
 
-        Set set3 = setsMap.get("test");
+        ParametersSet set3 = setsMap.get("test");
         assertTrue(set3.getBool("boolean"));
         assertEquals("aString", set3.getString("string"));
     }

@@ -13,7 +13,7 @@ import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
 import com.powsybl.dynawaltz.parameters.*;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
-import com.powsybl.dynawaltz.parameters.Set;
+import com.powsybl.dynawaltz.parameters.ParametersSet;
 
 import javax.xml.XMLConstants;
 import javax.xml.stream.*;
@@ -33,8 +33,8 @@ public final class ParametersXml {
     private ParametersXml() {
     }
 
-    public static Map<String, Set> load(InputStream parametersFile) {
-        Map<String, Set> setsMap = new HashMap<>();
+    public static Map<String, ParametersSet> load(InputStream parametersFile) {
+        Map<String, ParametersSet> setsMap = new HashMap<>();
         try {
             XMLInputFactory factory = XMLInputFactory.newInstance();
             factory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
@@ -48,8 +48,8 @@ public final class ParametersXml {
         return setsMap;
     }
 
-    public static Map<String, Set> load(Path parametersFile) {
-        Map<String, Set> setsMap = new HashMap<>();
+    public static Map<String, ParametersSet> load(Path parametersFile) {
+        Map<String, ParametersSet> setsMap = new HashMap<>();
         try (Reader reader = Files.newBufferedReader(parametersFile, StandardCharsets.UTF_8)) {
             XMLInputFactory factory = XMLInputFactory.newInstance();
             factory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
@@ -65,7 +65,7 @@ public final class ParametersXml {
         return setsMap;
     }
 
-    private static void read(XMLStreamReader xmlReader, Map<String, Set> parametersSets) throws XMLStreamException {
+    private static void read(XMLStreamReader xmlReader, Map<String, ParametersSet> parametersSets) throws XMLStreamException {
         int state = xmlReader.next();
         while (state == XMLStreamConstants.COMMENT) {
             state = xmlReader.next();
@@ -73,22 +73,22 @@ public final class ParametersXml {
         com.powsybl.commons.xml.XmlUtil.readUntilEndElement("parametersSet", xmlReader, () -> {
             if (xmlReader.getLocalName().equals("set")) {
                 String parameterSetId = xmlReader.getAttributeValue(null, "id");
-                Set set = new Set(parameterSetId);
+                ParametersSet parametersSet = new ParametersSet(parameterSetId);
                 com.powsybl.commons.xml.XmlUtil.readUntilEndElement("set", xmlReader, () -> {
                     String name = xmlReader.getAttributeValue(null, "name");
                     ParameterType type = ParameterType.valueOf(xmlReader.getAttributeValue(null, "type"));
                     if (xmlReader.getLocalName().equals("par")) {
                         String value = xmlReader.getAttributeValue(null, "value");
-                        set.addParameter(name, type, value);
+                        parametersSet.addParameter(name, type, value);
                     } else if (xmlReader.getLocalName().equals("reference")) {
                         String origData = xmlReader.getAttributeValue(null, "origData");
                         String origName = xmlReader.getAttributeValue(null, "origName");
-                        set.addReference(name, type, origData, origName);
+                        parametersSet.addReference(name, type, origData, origName);
                     } else {
                         throw new PowsyblException("Unexpected element: " + xmlReader.getLocalName());
                     }
                 });
-                parametersSets.put(parameterSetId, set);
+                parametersSets.put(parameterSetId, parametersSet);
             } else {
                 throw new PowsyblException("Unexpected element: " + xmlReader.getLocalName());
             }
@@ -114,7 +114,7 @@ public final class ParametersXml {
         }
     }
 
-    private static void write(Collection<Set> parametersSets, String filename, Path workingDir) throws IOException, XMLStreamException {
+    private static void write(Collection<ParametersSet> parametersSets, String filename, Path workingDir) throws IOException, XMLStreamException {
         Path parametersPath = workingDir.resolve(filename);
         try (Writer writer = Files.newBufferedWriter(parametersPath, StandardCharsets.UTF_8)) {
             XMLStreamWriter xmlWriter = XmlStreamWriterFactory.newInstance(writer);
@@ -123,8 +123,8 @@ public final class ParametersXml {
                 xmlWriter.setPrefix("", DYN_URI);
                 xmlWriter.writeStartElement(DYN_URI, "parametersSet");
                 xmlWriter.writeNamespace("", DYN_URI);
-                for (Set set : parametersSets) {
-                    writeSet(xmlWriter, set);
+                for (ParametersSet parametersSet : parametersSets) {
+                    writeParametersSet(xmlWriter, parametersSet);
                 }
                 xmlWriter.writeEndElement();
                 xmlWriter.writeEndDocument();
@@ -134,13 +134,13 @@ public final class ParametersXml {
         }
     }
 
-    private static void writeSet(XMLStreamWriter xmlWriter, Set set) throws XMLStreamException {
+    private static void writeParametersSet(XMLStreamWriter xmlWriter, ParametersSet parametersSet) throws XMLStreamException {
         xmlWriter.writeStartElement(DYN_URI, "set");
-        xmlWriter.writeAttribute("id", set.getId());
-        for (Parameter par : set.getParameters().values()) {
+        xmlWriter.writeAttribute("id", parametersSet.getId());
+        for (Parameter par : parametersSet.getParameters().values()) {
             ParametersXml.writeParameter(xmlWriter, par.getType(), par.getName(), par.getValue());
         }
-        for (Reference par : set.getReferences()) {
+        for (Reference par : parametersSet.getReferences()) {
             ParametersXml.writeReference(xmlWriter, par.getType(), par.getName(), par.getOrigData(), par.getOrigName());
         }
         xmlWriter.writeEndElement();

@@ -19,14 +19,14 @@ import java.util.Map;
  * @author Marcos de Miguel <demiguelm at aia.es>
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  */
-public class Set {
+public class ParametersSet {
 
     private final Map<String, Parameter> parameters = new LinkedHashMap<>();
 
     private final List<Reference> references = new ArrayList<>();
     private final String id;
 
-    public Set(@JsonProperty("id") String id) {
+    public ParametersSet(@JsonProperty("id") String id) {
         this.id = id;
     }
 
