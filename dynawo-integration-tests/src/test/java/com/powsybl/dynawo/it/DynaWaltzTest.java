@@ -6,7 +6,6 @@
  */
 package com.powsybl.dynawo.it;
 
-import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.datasource.ResourceDataSource;
 import com.powsybl.commons.datasource.ResourceSet;
 import com.powsybl.dynamicsimulation.*;
@@ -43,7 +42,7 @@ class DynaWaltzTest extends AbstractDynawoTest {
     @BeforeEach
     void setUp() throws Exception {
         super.setUp();
-        provider = new DynaWaltzProvider(PlatformConfig.defaultConfig(), new DynaWaltzConfig("/dynawo", false));
+        provider = new DynaWaltzProvider(new DynaWaltzConfig("/dynawo", false));
         parameters = new DynamicSimulationParameters()
                 .setStartTime(1)
                 .setStopTime(100);

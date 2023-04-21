@@ -34,6 +34,8 @@ import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
  */
 public final class ParametersXml {
 
+    public static final String PARAMETERS_SET_ELEMENT_NAME = "parametersSet";
+
     private ParametersXml() {
     }
 
@@ -80,10 +82,9 @@ public final class ParametersXml {
     private static List<ParametersSet> readAndClose(XMLStreamReader xmlReader) throws XMLStreamException {
         List<ParametersSet> parametersSets = new ArrayList<>();
         skipComments(xmlReader);
-        com.powsybl.commons.xml.XmlUtil.readUntilEndElement("parametersSet", xmlReader, () -> {
+        com.powsybl.commons.xml.XmlUtil.readUntilEndElement(PARAMETERS_SET_ELEMENT_NAME, xmlReader, () -> {
             if (!xmlReader.getLocalName().equals("set")) {
-                xmlReader.close();
-                throw new PowsyblException("Unexpected element: " + xmlReader.getLocalName());
+                closeAndThrowException(xmlReader, xmlReader.getLocalName());
             }
             String parameterSetIdRead = xmlReader.getAttributeValue(null, "id");
             ParametersSet parametersSet = new ParametersSet(parameterSetIdRead);
@@ -98,13 +99,12 @@ public final class ParametersXml {
         ParametersSet parametersSet = new ParametersSet(parameterSetId);
         AtomicBoolean found = new AtomicBoolean(false);
         skipComments(xmlReader);
-        com.powsybl.commons.xml.XmlUtil.readUntilEndElement("parametersSet", xmlReader, () -> {
+        com.powsybl.commons.xml.XmlUtil.readUntilEndElement(PARAMETERS_SET_ELEMENT_NAME, xmlReader, () -> {
             if (found.get()) {
                 return;
             }
             if (!xmlReader.getLocalName().equals("set")) {
-                xmlReader.close();
-                throw new PowsyblException("Unexpected element: " + xmlReader.getLocalName());
+                closeAndThrowException(xmlReader, xmlReader.getLocalName());
             }
             if (xmlReader.getAttributeValue(null, "id").equals(parameterSetId)) {
                 fillParametersSet(xmlReader, parametersSet);
@@ -130,7 +130,7 @@ public final class ParametersXml {
                 String origName = xmlReader.getAttributeValue(null, "origName");
                 parametersSet.addReference(name, type, origData, origName);
             } else {
-                throw new PowsyblException("Unexpected element: " + xmlReader.getLocalName());
+                closeAndThrowException(xmlReader, xmlReader.getLocalName());
             }
         });
     }
@@ -149,6 +149,11 @@ public final class ParametersXml {
         }
     }
 
+    private static void closeAndThrowException(XMLStreamReader xmlReader, String unexpectedElement) throws XMLStreamException {
+        xmlReader.close();
+        throw new PowsyblException("Unexpected element: " + unexpectedElement);
+    }
+
     public static void write(Path workingDir, DynaWaltzContext context) throws IOException, XMLStreamException {
         Objects.requireNonNull(workingDir);
 
@@ -159,7 +164,7 @@ public final class ParametersXml {
 
         // Write parameterSet that needs to be generated (OmegaRef...)
         Path file = workingDir.resolve(context.getSimulationParFile());
-        XmlUtil.write(file, context, "parametersSet", ParametersXml::write);
+        XmlUtil.write(file, context, PARAMETERS_SET_ELEMENT_NAME, ParametersXml::write);
     }
 
     private static void write(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
@@ -175,7 +180,7 @@ public final class ParametersXml {
             try {
                 xmlWriter.writeStartDocument(StandardCharsets.UTF_8.toString(), "1.0");
                 xmlWriter.setPrefix("", DYN_URI);
-                xmlWriter.writeStartElement(DYN_URI, "parametersSet");
+                xmlWriter.writeStartElement(DYN_URI, PARAMETERS_SET_ELEMENT_NAME);
                 xmlWriter.writeNamespace("", DYN_URI);
                 for (ParametersSet parametersSet : parametersSets) {
                     writeParametersSet(xmlWriter, parametersSet);
