@@ -9,7 +9,8 @@ package com.powsybl.dynawaltz;
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
 import com.powsybl.commons.PowsyblException;
-import com.powsybl.dynawaltz.parameters.ParametersSet;
+import com.powsybl.dynawaltz.parameters.Set;
+import com.powsybl.dynawaltz.xml.ParametersXml;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,6 +20,7 @@ import java.io.UncheckedIOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -43,28 +45,32 @@ class DynaWaltzParametersDatabaseTest {
 
     @Test
     void checkParameters() {
-        ParametersSet parametersDatabase = ParametersSet.load(fileSystem.getPath("/models.par"));
-        assertNotNull(parametersDatabase.getParameterSet("LoadAlphaBeta"));
-        assertEquals(1.5, parametersDatabase.getDouble("LoadAlphaBeta", "load_alpha"), 1e-6);
-        assertEquals(2.5, parametersDatabase.getDouble("LoadAlphaBeta", "load_beta"), 1e-6);
-        assertNotNull(parametersDatabase.getParameterSet("GeneratorSynchronousFourWindingsProportionalRegulations"));
-        assertEquals(5.4, parametersDatabase.getDouble("GeneratorSynchronousFourWindingsProportionalRegulations", "generator_H"), 1e-6);
-        assertEquals(1, parametersDatabase.getInt("GeneratorSynchronousFourWindingsProportionalRegulations", "generator_ExcitationPu"));
-        assertTrue(parametersDatabase.getBool("test", "boolean"));
-        assertEquals("aString", parametersDatabase.getString("test", "string"));
+        Map<String, Set> setsMap = ParametersXml.load(fileSystem.getPath("/models.par"));
+
+        Set set1 = setsMap.get("LoadAlphaBeta");
+        assertEquals(1.5, set1.getDouble("load_alpha"), 1e-6);
+        assertEquals(2.5, set1.getDouble("load_beta"), 1e-6);
+
+        Set set2 = setsMap.get("GeneratorSynchronousFourWindingsProportionalRegulations");
+        assertEquals(5.4, set2.getDouble("generator_H"), 1e-6);
+        assertEquals(1, set2.getInt("generator_ExcitationPu"));
+
+        Set set3 = setsMap.get("test");
+        assertTrue(set3.getBool("boolean"));
+        assertEquals("aString", set3.getString("string"));
     }
 
     @Test
     void checkParametersMisspelled() {
         Path path = fileSystem.getPath("/models_misspelled.par");
-        PowsyblException e = assertThrows(PowsyblException.class, () -> ParametersSet.load(path));
+        PowsyblException e = assertThrows(PowsyblException.class, () -> ParametersXml.load(path));
         assertEquals("Unexpected element: sett", e.getMessage());
     }
 
     @Test
     void checkParametersNotFound() {
         Path path = fileSystem.getPath("/file.par");
-        UncheckedIOException e = assertThrows(UncheckedIOException.class, () -> ParametersSet.load(path));
+        UncheckedIOException e = assertThrows(UncheckedIOException.class, () -> ParametersXml.load(path));
         assertEquals("java.nio.file.NoSuchFileException: /file.par", e.getMessage());
     }
 }

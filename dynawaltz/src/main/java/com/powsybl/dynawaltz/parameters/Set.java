@@ -7,6 +7,9 @@
  */
 package com.powsybl.dynawaltz.parameters;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.powsybl.commons.PowsyblException;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -21,6 +24,11 @@ public class Set {
     private final Map<String, Parameter> parameters = new LinkedHashMap<>();
 
     private final List<Reference> references = new ArrayList<>();
+    private final String id;
+
+    public Set(@JsonProperty("id") String id) {
+        this.id = id;
+    }
 
     public void addParameter(String name, ParameterType type, String value) {
         parameters.put(name, new Parameter(name, type, value));
@@ -28,6 +36,10 @@ public class Set {
 
     public void addReference(String name, ParameterType type, String origData, String origName) {
         references.add(new Reference(name, type, origData, origName));
+    }
+
+    public String getId() {
+        return id;
     }
 
     public Map<String, Parameter> getParameters() {
@@ -38,7 +50,39 @@ public class Set {
         return references;
     }
 
-    public Parameter getParameter(String name) {
-        return parameters.get(name);
+    public boolean getBool(String parameterName) {
+        Parameter parameter = getParameter(parameterName, ParameterType.BOOL);
+        return Boolean.parseBoolean(parameter.getValue());
+    }
+
+    public double getDouble(String parameterName) {
+        Parameter parameter = getParameter(parameterName, ParameterType.DOUBLE);
+        return Double.parseDouble(parameter.getValue());
+    }
+
+    public int getInt(String parameterName) {
+        Parameter parameter = getParameter(parameterName, ParameterType.INT);
+        return Integer.parseInt(parameter.getValue());
+    }
+
+    public String getString(String parameterName) {
+        Parameter parameter = getParameter(parameterName, ParameterType.STRING);
+        return parameter.getValue();
+    }
+
+    public Parameter getParameter(String parameterName) {
+        Parameter parameter = parameters.get(parameterName);
+        if (parameter == null) {
+            throw new IllegalArgumentException("Parameter " + parameterName + " not found in set " + id);
+        }
+        return parameter;
+    }
+
+    private Parameter getParameter(String parameterName, ParameterType type) {
+        Parameter parameter = getParameter(parameterName);
+        if (parameter.getType() != type) {
+            throw new PowsyblException("Invalid parameter type: " + parameter.getType() + " (" + type + " expected)");
+        }
+        return parameter;
     }
 }

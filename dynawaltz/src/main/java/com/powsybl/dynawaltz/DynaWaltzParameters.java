@@ -6,19 +6,22 @@
  */
 package com.powsybl.dynawaltz;
 
-import java.io.InputStream;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
-import java.util.Objects;
-import java.util.Optional;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.powsybl.commons.config.ModuleConfig;
 import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.extensions.AbstractExtension;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
-import com.powsybl.dynawaltz.parameters.ParametersSet;
+import com.powsybl.dynawaltz.parameters.Set;
+import com.powsybl.dynawaltz.xml.ParametersXml;
+
+import java.io.InputStream;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -36,6 +39,14 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
     public static final String NETWORK_OUTPUT_PARAMETERS_FILE = "networkOut.par";
     public static final String SOLVER_OUTPUT_PARAMETERS_FILE = "solversOut.par";
 
+    public Collection<Set> getNetworkParameterSets() {
+        return network.getParametersSet().values();
+    }
+
+    public Collection<Set> getSolverParameterSets() {
+        return solver.getParametersSet().values();
+    }
+
     public enum SolverType {
         SIM,
         IDA
@@ -44,29 +55,24 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
     public static class Network {
 
         private String parametersId;
-        private ParametersSet parametersSet;
+        private Map<String, Set> parametersSet;
 
         public Network() {
         }
 
-        public ParametersSet getParametersSet() {
+        public Map<String, Set> getParametersSet() {
             return parametersSet;
-        }
-
-        public Network setParametersSet(ParametersSet parametersSet) {
-            this.parametersSet = Objects.requireNonNull(parametersSet);
-            return this;
         }
 
         @JsonIgnore
         public Network setParameters(Path parametersFile) {
-            this.parametersSet = ParametersSet.load(parametersFile);
+            this.parametersSet = ParametersXml.load(parametersFile);
             return this;
         }
 
         @JsonIgnore
         public Network setParameters(InputStream parametersFile) {
-            this.parametersSet = ParametersSet.load(parametersFile);
+            this.parametersSet = ParametersXml.load(parametersFile);
             return this;
         }
 
@@ -84,7 +90,7 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
 
         private String parametersId;
         private SolverType type;
-        private ParametersSet parametersSet;
+        private Map<String, Set> parametersSet;
 
         public Solver() {
         }
@@ -98,24 +104,19 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
             return this;
         }
 
-        public ParametersSet getParametersSet() {
+        public Map<String, Set> getParametersSet() {
             return parametersSet;
-        }
-
-        public Solver setParametersSet(ParametersSet parametersSet) {
-            this.parametersSet = Objects.requireNonNull(parametersSet);
-            return this;
         }
 
         @JsonIgnore
         public Solver setParameters(Path parametersFile) {
-            this.parametersSet = ParametersSet.load(parametersFile);
+            this.parametersSet = ParametersXml.load(parametersFile);
             return this;
         }
 
         @JsonIgnore
         public Solver setParameters(InputStream parametersFile) {
-            this.parametersSet = ParametersSet.load(parametersFile);
+            this.parametersSet = ParametersXml.load(parametersFile);
             return this;
         }
 
@@ -182,7 +183,7 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
                 .setMergeLoads(mergeLoads);
     }
 
-    private ParametersSet modelsParameters;
+    private Map<String, Set> modelsParameters;
     private Network network;
     private Solver solver;
     private boolean mergeLoads;
@@ -195,24 +196,23 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
         return "DynaWaltzParameters";
     }
 
-    public ParametersSet getModelsParameters() {
-        return modelsParameters;
+    public Set getModelParameterSet(String parameterSetId) {
+        return modelsParameters.get(parameterSetId);
     }
 
-    public DynaWaltzParameters setParameters(ParametersSet modelsParameters) {
-        this.modelsParameters = Objects.requireNonNull(modelsParameters);
-        return this;
+    public Collection<Set> getModelParameterSets() {
+        return modelsParameters.values();
     }
 
     @JsonIgnore
     public DynaWaltzParameters setParameters(Path modelsParametersFile) {
-        this.modelsParameters = ParametersSet.load(modelsParametersFile);
+        this.modelsParameters = ParametersXml.load(modelsParametersFile);
         return this;
     }
 
     @JsonIgnore
    public DynaWaltzParameters setParameters(InputStream modelsParametersFile) {
-        this.modelsParameters = ParametersSet.load(modelsParametersFile);
+        this.modelsParameters = ParametersXml.load(modelsParametersFile);
         return this;
     }
 
