@@ -25,13 +25,13 @@ class Ieee14MacroConnectsTest extends AbstractIeeeTest {
     void setup() throws IOException {
         super.setup(
                 "/ieee14-macroconnects/config/models.par",
-                "/ieee14-macroconnects/config/network.par",
-                "/ieee14-macroconnects/config/solvers.par",
+                "/ieee14-macroconnects/config/network.par", "8",
+                "/ieee14-macroconnects/config/solvers.par", "2",
                 "/ieee14-macroconnects/powsybl-inputs/IEEE14.iidm",
                 "/ieee14-macroconnects/powsybl-inputs/dynamicModels.groovy",
                 null,
                 "/ieee14-macroconnects/powsybl-inputs/curves.groovy",
-                "/ieee14-macroconnects/powsybl-inputs/dynaWaltzParameters.json"
+                0, 100
         );
     }
 

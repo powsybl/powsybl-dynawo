@@ -11,9 +11,11 @@ import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
-import com.powsybl.dynawaltz.parameters.*;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
+import com.powsybl.dynawaltz.parameters.Parameter;
+import com.powsybl.dynawaltz.parameters.ParameterType;
 import com.powsybl.dynawaltz.parameters.ParametersSet;
+import com.powsybl.dynawaltz.parameters.Reference;
 
 import javax.xml.XMLConstants;
 import javax.xml.stream.*;
@@ -34,7 +36,7 @@ public final class ParametersXml {
     }
 
     public static Map<String, ParametersSet> load(InputStream parametersFile) {
-        Map<String, ParametersSet> setsMap = new HashMap<>();
+        Map<String, ParametersSet> setsMap = new LinkedHashMap<>();
         try {
             XMLInputFactory factory = XMLInputFactory.newInstance();
             factory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
@@ -49,7 +51,7 @@ public final class ParametersXml {
     }
 
     public static Map<String, ParametersSet> load(Path parametersFile) {
-        Map<String, ParametersSet> setsMap = new HashMap<>();
+        Map<String, ParametersSet> setsMap = new LinkedHashMap<>();
         try (Reader reader = Files.newBufferedReader(parametersFile, StandardCharsets.UTF_8)) {
             XMLInputFactory factory = XMLInputFactory.newInstance();
             factory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");

@@ -42,7 +42,7 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
         IDA
     }
 
-    private Map<String, ParametersSet> modelsParameters = new HashMap<>();
+    private Map<String, ParametersSet> modelsParameters = new LinkedHashMap<>();
     private ParametersSet networkParameters;
     private ParametersSet solverParameters;
     private SolverType solverType;
@@ -118,7 +118,7 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
 
     @JsonSetter("modelsParameters")
     public DynaWaltzParameters setModelsParameters(Collection<ParametersSet> parametersSets) {
-        modelsParameters = new HashMap<>();
+        modelsParameters = new LinkedHashMap<>();
         parametersSets.forEach(parametersSet -> modelsParameters.put(parametersSet.getId(), parametersSet));
         return this;
     }

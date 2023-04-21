@@ -14,7 +14,6 @@ import com.powsybl.computation.local.LocalComputationConfig;
 import com.powsybl.computation.local.LocalComputationManager;
 import com.powsybl.dynamicsimulation.*;
 import com.powsybl.dynamicsimulation.groovy.*;
-import com.powsybl.dynamicsimulation.json.JsonDynamicSimulationParameters;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
 import com.powsybl.dynawaltz.DynaWaltzProvider;
 import com.powsybl.iidm.network.Network;
@@ -51,19 +50,13 @@ public abstract class AbstractIeeeTest {
 
     public abstract String getWorkingDirName();
 
-    protected void setup(String parametersFile, String networkParametersFile, String solverParametersFile, String networkFile,
-        String dynamicModelsFile, String eventModelsFile, String curvesFile, String parametersJson) throws IOException {
+    protected void setup(String parametersFile, String networkParametersFile, String networkParametersId, String solverParametersFile, String solverParametersId, String networkFile,
+                         String dynamicModelsFile, String eventModelsFile, String curvesFile, int startTime, int stopTime) throws IOException {
 
         // The parameter files are copied into the PlatformConfig filesystem,
         // that filesystem is the one that DynaWaltzContext and ParametersXml will use to read the parameters
         fileSystem = PlatformConfig.defaultConfig().getConfigDir().map(Path::getFileSystem).orElseThrow(AssertionError::new);
         workingDir = Files.createDirectory(fileSystem.getPath(getWorkingDirName()));
-
-        // Copy parameter files
-        Path configDir = Files.createDirectory(workingDir.resolve("config"));
-        Files.copy(getClass().getResourceAsStream(parametersFile), configDir.resolve("models.par"));
-        Files.copy(getClass().getResourceAsStream(networkParametersFile), configDir.resolve("parametersSet/network.par"));
-        Files.copy(getClass().getResourceAsStream(solverParametersFile), configDir.resolve("parametersSet/solvers.par"));
 
         // Load network
         Files.copy(getClass().getResourceAsStream(networkFile), workingDir.resolve("network.iidm"));
@@ -96,9 +89,15 @@ public abstract class AbstractIeeeTest {
             curvesSupplier = CurvesSupplier.empty();
         }
 
-        // Parameters
-        Files.copy(getClass().getResourceAsStream(parametersJson), workingDir.resolve("dynaWaltzParameters.json"));
-        parameters = JsonDynamicSimulationParameters.read(workingDir.resolve("dynaWaltzParameters.json"));
+        parameters = new DynamicSimulationParameters()
+                .setStartTime(startTime)
+                .setStopTime(stopTime);
+        DynaWaltzParameters dynaWaltzParameters = new DynaWaltzParameters();
+        parameters.addExtension(DynaWaltzParameters.class, dynaWaltzParameters);
+        dynaWaltzParameters.setModelsParameters(getClass().getResourceAsStream(parametersFile))
+                .setNetworkParameters(getClass().getResourceAsStream(networkParametersFile), networkParametersId)
+                .setSolverParameters(getClass().getResourceAsStream(solverParametersFile), solverParametersId)
+                .setSolverType(DynaWaltzParameters.SolverType.IDA);
     }
 
     protected DynaWaltzParameters getDynaWaltzSimulationParameters(DynamicSimulationParameters parameters) {
