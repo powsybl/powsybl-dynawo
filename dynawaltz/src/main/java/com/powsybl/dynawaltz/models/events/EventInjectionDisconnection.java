@@ -8,6 +8,7 @@ package com.powsybl.dynawaltz.models.events;
 
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.VarConnection;
+import com.powsybl.dynawaltz.parameters.ParameterType;
 import com.powsybl.dynawaltz.xml.ParametersXml;
 import com.powsybl.iidm.network.Generator;
 import com.powsybl.iidm.network.Load;
@@ -15,8 +16,6 @@ import com.powsybl.iidm.network.Load;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.util.List;
-
-import static com.powsybl.dynawaltz.DynaWaltzParametersDatabase.ParameterType.BOOL;
 
 /**
  * @author Mathieu BAGUE {@literal <mathieu.bague at rte-france.com>}
@@ -63,7 +62,7 @@ public class EventInjectionDisconnection extends AbstractEventModel {
 
     @Override
     protected void writeEventSpecificParameters(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
-        ParametersXml.writeParameter(writer, BOOL, "event_stateEvent1", Boolean.toString(disconnect));
+        ParametersXml.writeParameter(writer, ParameterType.BOOL, "event_stateEvent1", Boolean.toString(disconnect));
     }
 
     @Override
