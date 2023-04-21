@@ -22,6 +22,8 @@ public class LoadsToMerge {
     private final LoadAdder loadAdder;
     private final double mergedP;
     private final double mergedQ;
+    private final double mergedP0;
+    private final double mergedQ0;
 
     public LoadsToMerge(LoadPowers loadPowers, List<Load> loads, LoadAdder loadAdder) {
         this.loadPowers = loadPowers;
@@ -29,6 +31,8 @@ public class LoadsToMerge {
         this.loadAdder = loadAdder;
         this.mergedP = loads.stream().map(Load::getTerminal).mapToDouble(Terminal::getP).sum();
         this.mergedQ = loads.stream().map(Load::getTerminal).mapToDouble(Terminal::getQ).sum();
+        this.mergedP0 = loads.stream().mapToDouble(Load::getP0).sum();
+        this.mergedQ0 = loads.stream().mapToDouble(Load::getQ0).sum();
     }
 
     public LoadPowers getLoadPowers() {
@@ -36,11 +40,11 @@ public class LoadsToMerge {
     }
 
     public double getMergedP0() {
-        return loads.stream().mapToDouble(Load::getP0).sum();
+        return mergedP0;
     }
 
     public double getMergedQ0() {
-        return loads.stream().mapToDouble(Load::getQ0).sum();
+        return mergedQ0;
     }
 
     public double getMergedP() {
