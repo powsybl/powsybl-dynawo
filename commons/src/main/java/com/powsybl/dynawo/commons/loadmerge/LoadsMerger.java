@@ -39,20 +39,14 @@ public final class LoadsMerger {
     }
 
     private static void mergeLoadsInVoltageLevel(VoltageLevel vl) {
+        // we need to build the list of loads to merge beforehand as the buses of this voltage level
+        // will be invalidated once a load is removed
         List<LoadsToMerge> loadsToMergeList = vl.getBusBreakerView().getBusStream()
                 .filter(bus -> bus.getLoadStream().count() > 1)
                 .flatMap(LoadsMerger::getLoadsToMergeStream)
                 .collect(Collectors.toList());
 
-        for (LoadsToMerge loadsToMerge : loadsToMergeList) {
-            loadsToMerge.removeLoads();
-            Load load = loadsToMerge.getLoadAdder()
-                    .setP0(loadsToMerge.getMergedP0())
-                    .setQ0(loadsToMerge.getMergedQ0())
-                    .add();
-            load.getTerminal().setP(loadsToMerge.getMergedP());
-            load.getTerminal().setQ(loadsToMerge.getMergedQ());
-        }
+        loadsToMergeList.forEach(LoadsToMerge::merge);
     }
 
     private static Stream<LoadsToMerge> getLoadsToMergeStream(Bus bus) {

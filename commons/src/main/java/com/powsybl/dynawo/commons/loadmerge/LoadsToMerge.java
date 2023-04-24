@@ -48,27 +48,14 @@ public class LoadsToMerge {
         return loadAdder;
     }
 
-    public double getMergedP0() {
-        return mergedP0;
-    }
-
-    public double getMergedQ0() {
-        return mergedQ0;
-    }
-
-    public double getMergedP() {
-        return mergedP;
-    }
-
-    public double getMergedQ() {
-        return mergedQ;
-    }
-
-    public LoadAdder getLoadAdder() {
-        return loadAdder;
-    }
-
-    public void removeLoads() {
+    public void merge() {
         loads.forEach(Connectable::remove);
+        loads.clear();
+        Load load = loadAdder
+                .setP0(mergedP0)
+                .setQ0(mergedQ0)
+                .add();
+        load.getTerminal().setP(mergedP);
+        load.getTerminal().setQ(mergedQ);
     }
 }
