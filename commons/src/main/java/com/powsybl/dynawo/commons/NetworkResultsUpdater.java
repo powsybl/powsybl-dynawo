@@ -159,8 +159,8 @@ public final class NetworkResultsUpdater {
             return;
         }
         Map<LoadPowersSigns, Terminal> mergedLoadsTerminal = busSource.getLoadStream()
-                .collect(Collectors.toMap(LoadsMerger::getLoadPowers, Load::getTerminal));
-        LoadsMerger.getLoadPowersGrouping(busTarget).forEach((loadPowersSigns, loadsGroup) -> {
+                .collect(Collectors.toMap(LoadsMerger::getLoadPowersSigns, Load::getTerminal));
+        LoadsMerger.getLoadPowersSignsGrouping(busTarget).forEach((loadPowersSigns, loadsGroup) -> {
             Terminal mergedLoadTerminal = Optional.ofNullable(mergedLoadsTerminal.get(loadPowersSigns))
                     .orElseThrow(() -> new PowsyblException("Missing merged load in bus " + busTarget.getId()));
             if (loadsGroup.size() == 1) {

@@ -10,10 +10,8 @@ package com.powsybl.dynawo.commons.loadmerge;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.iidm.network.*;
 import com.powsybl.iidm.xml.NetworkXml;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -55,7 +53,7 @@ public final class LoadsMerger {
 
     public static List<LoadsToMerge> getLoadsToMergeList(Bus bus) {
         List<LoadsToMerge> loadsToMerge = new ArrayList<>();
-        getLoadPowersGrouping(bus).forEach((loadPowersSigns, loads) -> {
+        getLoadPowersSignsGrouping(bus).forEach((loadPowersSigns, loads) -> {
             if (loads.size() > 1) {
                 loadsToMerge.add(new LoadsToMerge(loadPowersSigns, loads, bus));
             }
@@ -63,15 +61,15 @@ public final class LoadsMerger {
         return loadsToMerge;
     }
 
-    public static Map<LoadPowersSigns, List<Load>> getLoadPowersGrouping(Bus bus) {
+    public static Map<LoadPowersSigns, List<Load>> getLoadPowersSignsGrouping(Bus bus) {
         EnumMap<LoadPowersSigns, List<Load>> loadsGrouping = new EnumMap<>(LoadPowersSigns.class);
         for (Load load : bus.getLoads()) {
-            loadsGrouping.computeIfAbsent(getLoadPowers(load), k -> new ArrayList<>()).add(load);
+            loadsGrouping.computeIfAbsent(getLoadPowersSigns(load), k -> new ArrayList<>()).add(load);
         }
         return loadsGrouping;
     }
 
-    public static LoadPowersSigns getLoadPowers(Load load) {
+    public static LoadPowersSigns getLoadPowersSigns(Load load) {
         if (load.getP0() >= 0) {
             return load.getQ0() >= 0 ? P_POS_Q_POS : P_POS_Q_NEG;
         } else {
