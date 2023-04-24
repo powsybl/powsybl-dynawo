@@ -25,7 +25,7 @@ public interface BlackBoxModel extends Model {
 
     List<VarMapping> getVarsMapping();
 
-    void createMacroConnections(DynaWaltzContext dynaWaltzContext);
+    void createMacroConnections(DynaWaltzContext context);
 
     String getParFile(DynaWaltzContext context);
 

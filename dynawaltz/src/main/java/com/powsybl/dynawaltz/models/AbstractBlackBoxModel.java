@@ -7,18 +7,19 @@
 package com.powsybl.dynawaltz.models;
 
 import com.powsybl.dynawaltz.DynaWaltzContext;
-import com.powsybl.dynawaltz.xml.MacroStaticReference;
+import com.powsybl.dynawaltz.DynaWaltzParameters;
 import com.powsybl.iidm.network.Identifiable;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 
 /**
  * @author Luma Zamarreño <zamarrenolm at aia.es>
@@ -27,17 +28,11 @@ import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 public abstract class AbstractBlackBoxModel implements BlackBoxModel {
 
     private final String dynamicModelId;
-    private final String staticId;
     private final String parameterSetId;
 
-    protected AbstractBlackBoxModel(String dynamicModelId, String staticId, String parameterSetId) {
+    protected AbstractBlackBoxModel(String dynamicModelId, String parameterSetId) {
         this.dynamicModelId = Objects.requireNonNull(dynamicModelId);
-        this.staticId = staticId;
         this.parameterSetId = Objects.requireNonNull(parameterSetId);
-    }
-
-    public Optional<String> getStaticId() {
-        return Optional.ofNullable(staticId);
     }
 
     @Override
@@ -69,7 +64,7 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel {
 
     @Override
     public String getParFile(DynaWaltzContext context) {
-        return context.getParFile();
+        return DynaWaltzParameters.MODELS_OUTPUT_PARAMETERS_FILE;
     }
 
     @Override
@@ -82,22 +77,6 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel {
         writer.writeAttribute("lib", getLib());
         writer.writeAttribute("parFile", getParFile(context));
         writer.writeAttribute("parId", getParameterSetId());
-    }
-
-    @Override
-    public void write(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
-        boolean hasVarMapping = !getVarsMapping().isEmpty();
-        if (hasVarMapping) {
-            writer.writeStartElement(DYN_URI, "blackBoxModel");
-        } else {
-            writer.writeEmptyElement(DYN_URI, "blackBoxModel");
-        }
-        writeDynamicAttributes(writer, context);
-        writer.writeAttribute("staticId", getStaticId().orElseThrow());
-        if (hasVarMapping) {
-            MacroStaticReference.writeMacroStaticRef(writer, getLib());
-            writer.writeEndElement();
-        }
     }
 
     protected final void createMacroConnections(List<VarConnection> varConnections, DynaWaltzContext context) {

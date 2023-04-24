@@ -7,9 +7,8 @@
  */
 package com.powsybl.dynawaltz.models.transformers;
 
-import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
-import com.powsybl.dynawaltz.models.AbstractBlackBoxModel;
+import com.powsybl.dynawaltz.models.AbstractEquipmentBlackBoxModel;
 import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.buses.BusModel;
@@ -19,17 +18,18 @@ import com.powsybl.dynawaltz.models.utils.SideConverter;
 import com.powsybl.iidm.network.TwoWindingsTransformer;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class TransformerFixedRatio extends AbstractBlackBoxModel implements TransformerModel, QuadripoleDisconnectableEquipment {
+public class TransformerFixedRatio extends AbstractEquipmentBlackBoxModel<TwoWindingsTransformer> implements TransformerModel, QuadripoleDisconnectableEquipment {
 
     private final String transformerLib;
 
-    public TransformerFixedRatio(String dynamicModelId, String staticId, String parameterSetId, String lib) {
-        super(dynamicModelId, staticId, parameterSetId);
-        this.transformerLib = lib;
+    public TransformerFixedRatio(String dynamicModelId, TwoWindingsTransformer transformer, String parameterSetId, String lib) {
+        super(dynamicModelId, parameterSetId, transformer);
+        this.transformerLib = Objects.requireNonNull(lib);
     }
 
     @Override
@@ -47,14 +47,9 @@ public class TransformerFixedRatio extends AbstractBlackBoxModel implements Tran
 
     @Override
     public void createMacroConnections(DynaWaltzContext context) {
-        String staticId = getStaticId().orElse(null);
-        TwoWindingsTransformer transformer = context.getNetwork().getTwoWindingsTransformer(staticId);
-        if (transformer == null) {
-            throw new PowsyblException("Transformer static id unknown: " + staticId);
-        }
-        transformer.getTerminals().forEach(t -> {
+        equipment.getTerminals().forEach(t -> {
             String busStaticId = BusUtils.getConnectableBusStaticId(t);
-            createMacroConnections(busStaticId, BusModel.class, this::getVarConnectionsWithBus, context, SideConverter.convert(transformer.getSide(t)));
+            createMacroConnections(busStaticId, BusModel.class, this::getVarConnectionsWithBus, context, SideConverter.convert(equipment.getSide(t)));
         });
     }
 

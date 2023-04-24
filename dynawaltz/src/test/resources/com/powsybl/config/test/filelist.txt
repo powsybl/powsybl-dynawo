@@ -1,4 +1,4 @@
 config.yml
-models.par
-network.par
-solver.par
+configModels.par
+configNetwork.par
+configSolver.par

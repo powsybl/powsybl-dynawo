@@ -13,7 +13,7 @@ import com.powsybl.dynamicsimulation.groovy.*;
 import com.powsybl.dynawaltz.DynaWaltzProvider;
 import com.powsybl.dynawaltz.models.events.AbstractEventModel;
 import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection;
-import com.powsybl.dynawaltz.models.events.EventSetPointBoolean;
+import com.powsybl.dynawaltz.models.events.EventInjectionDisconnection;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.Test;
@@ -52,7 +52,6 @@ class EventModelsSupplierTest extends AbstractModelSupplierTest {
 
     void assertEventModel(AbstractEventModel em, String dynamicId, String equipmentStaticId, String lib, double startTime) {
         assertEquals(dynamicId, em.getDynamicModelId());
-        assertTrue(em.getStaticId().isEmpty());
         assertEquals(equipmentStaticId, em.getEquipment().getId());
         assertEquals(dynamicId, em.getParameterSetId());
         assertEquals(lib, em.getLib());
@@ -62,7 +61,7 @@ class EventModelsSupplierTest extends AbstractModelSupplierTest {
     private static Stream<Arguments> provideEventModelData() {
         return Stream.of(
                 Arguments.of("quadripoleDisconnection", EventQuadripoleDisconnection.class, EurostagTutorialExample1Factory.create(), "NHV1_NHV2_1", "Disconnect_NHV1_NHV2_1", "EventQuadripoleDisconnection", 4),
-                Arguments.of("equipmentDisconnection", EventSetPointBoolean.class, EurostagTutorialExample1Factory.create(), "GEN", "Disconnect_GEN", null, 1)
+                Arguments.of("equipmentDisconnection", EventInjectionDisconnection.class, EurostagTutorialExample1Factory.create(), "GEN", "Disconnect_GEN", null, 1)
         );
     }
 

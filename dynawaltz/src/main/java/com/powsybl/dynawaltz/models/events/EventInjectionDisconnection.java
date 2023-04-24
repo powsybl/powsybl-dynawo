@@ -8,52 +8,42 @@ package com.powsybl.dynawaltz.models.events;
 
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.VarConnection;
+import com.powsybl.dynawaltz.parameters.ParameterType;
 import com.powsybl.dynawaltz.xml.ParametersXml;
 import com.powsybl.iidm.network.Generator;
-import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Load;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-import java.util.EnumSet;
 import java.util.List;
-import java.util.Set;
-
-import static com.powsybl.dynawaltz.DynaWaltzParametersDatabase.ParameterType.BOOL;
 
 /**
  * @author Mathieu BAGUE {@literal <mathieu.bague at rte-france.com>}
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class EventSetPointBoolean extends AbstractEventModel {
-
-    private static final Set<IdentifiableType> COMPATIBLE_EQUIPMENTS = EnumSet.of(IdentifiableType.GENERATOR, IdentifiableType.LOAD);
+public class EventInjectionDisconnection extends AbstractEventModel {
 
     private static final String DYNAMIC_MODEL_LIB = "EventSetPointBoolean";
     private static final String DEFAULT_MODEL_LIB = "EventConnectedStatus";
 
     private final boolean disconnect;
 
-    public EventSetPointBoolean(Generator equipment, double startTime, boolean disconnect) {
+    public EventInjectionDisconnection(Generator equipment, double startTime, boolean disconnect) {
         super(equipment, startTime);
         this.disconnect = disconnect;
     }
 
-    public EventSetPointBoolean(Generator equipment, double startTime) {
+    public EventInjectionDisconnection(Generator equipment, double startTime) {
         this(equipment, startTime, true);
     }
 
-    public EventSetPointBoolean(Load equipment, double startTime, boolean disconnect) {
+    public EventInjectionDisconnection(Load equipment, double startTime, boolean disconnect) {
         super(equipment, startTime);
         this.disconnect = disconnect;
     }
 
-    public EventSetPointBoolean(Load equipment, double startTime) {
+    public EventInjectionDisconnection(Load equipment, double startTime) {
         this(equipment, startTime, true);
-    }
-
-    public static boolean isCompatibleEquipment(IdentifiableType type) {
-        return COMPATIBLE_EQUIPMENTS.contains(type);
     }
 
     @Override
@@ -72,12 +62,12 @@ public class EventSetPointBoolean extends AbstractEventModel {
 
     @Override
     protected void writeEventSpecificParameters(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
-        ParametersXml.writeParameter(writer, BOOL, "event_stateEvent1", Boolean.toString(disconnect));
+        ParametersXml.writeParameter(writer, ParameterType.BOOL, "event_stateEvent1", Boolean.toString(disconnect));
     }
 
     @Override
     public String getName() {
-        return DYNAMIC_MODEL_LIB;
+        return EventInjectionDisconnection.class.getSimpleName();
     }
 
     @Override

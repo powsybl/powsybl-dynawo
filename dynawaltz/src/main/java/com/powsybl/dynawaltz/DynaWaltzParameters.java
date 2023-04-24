@@ -6,16 +6,23 @@
  */
 package com.powsybl.dynawaltz;
 
-import java.util.Objects;
-import java.util.Optional;
-
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import com.powsybl.commons.config.ModuleConfig;
 import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.extensions.AbstractExtension;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
+import com.powsybl.dynawaltz.parameters.ParametersSet;
+import com.powsybl.dynawaltz.xml.ParametersXml;
+
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.util.*;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
+ * @author Florian Dupuy <florian.dupuy at rte-france.com>
  */
 public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationParameters> {
 
@@ -23,89 +30,23 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
     public static final String DEFAULT_NETWORK_PAR_ID = "1";
     public static final String DEFAULT_SOLVER_PAR_ID = "1";
     public static final boolean DEFAULT_MERGE_LOADS = true;
-    private static final String DEFAULT_PARAMETERS_FILE = "models.par";
-    private static final String DEFAULT_NETWORK_PARAMETERS_FILE = "network.par";
-    private static final String DEFAULT_SOLVER_PARAMETERS_FILE = "solvers.par";
+    public static final String DEFAULT_INPUT_PARAMETERS_FILE = "models.par";
+    public static final String DEFAULT_INPUT_NETWORK_PARAMETERS_FILE = "network.par";
+    public static final String DEFAULT_INPUT_SOLVER_PARAMETERS_FILE = "solvers.par";
+    public static final String MODELS_OUTPUT_PARAMETERS_FILE = "models.par";
+    public static final String NETWORK_OUTPUT_PARAMETERS_FILE = "network.par";
+    public static final String SOLVER_OUTPUT_PARAMETERS_FILE = "solvers.par";
 
     public enum SolverType {
         SIM,
         IDA
     }
 
-    public static class Network {
-
-        public Network() {
-        }
-
-        public Network(String parametersFile, String parametersId) {
-            this.parametersFile = Objects.requireNonNull(parametersFile);
-            this.parametersId = Objects.requireNonNull(parametersId);
-        }
-
-        public String getParametersFile() {
-            return parametersFile;
-        }
-
-        public Network setParametersFile(String parametersFile) {
-            this.parametersFile = Objects.requireNonNull(parametersFile);
-            return this;
-        }
-
-        public String getParametersId() {
-            return parametersId;
-        }
-
-        public Network setParametersId(String parametersId) {
-            this.parametersId = Objects.requireNonNull(parametersId);
-            return this;
-        }
-
-        private String parametersFile;
-        private String parametersId;
-    }
-
-    public static class Solver {
-
-        public Solver() {
-        }
-
-        public Solver(SolverType type, String parametersFile, String parametersId) {
-            this.type = Objects.requireNonNull(type);
-            this.parametersFile = Objects.requireNonNull(parametersFile);
-            this.parametersId = Objects.requireNonNull(parametersId);
-        }
-
-        public SolverType getType() {
-            return type;
-        }
-
-        public Solver setType(SolverType type) {
-            this.type = Objects.requireNonNull(type);
-            return this;
-        }
-
-        public String getParametersFile() {
-            return parametersFile;
-        }
-
-        public Solver setParametersFile(String parametersFile) {
-            this.parametersFile = Objects.requireNonNull(parametersFile);
-            return this;
-        }
-
-        public String getParametersId() {
-            return parametersId;
-        }
-
-        public Solver setParametersId(String parametersId) {
-            this.parametersId = Objects.requireNonNull(parametersId);
-            return this;
-        }
-
-        private SolverType type;
-        private String parametersFile;
-        private String parametersId;
-    }
+    private Map<String, ParametersSet> modelsParameters = new LinkedHashMap<>();
+    private ParametersSet networkParameters;
+    private ParametersSet solverParameters;
+    private SolverType solverType;
+    private boolean mergeLoads;
 
     /**
      * Loads parameters from the default platform configuration.
@@ -118,13 +59,21 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
      * Load parameters from a provided platform configuration.
      */
     public static DynaWaltzParameters load(PlatformConfig platformConfig) {
+        return load(platformConfig, FileSystems.getDefault());
+    }
+
+    public static DynaWaltzParameters load(PlatformConfig platformConfig, FileSystem fileSystem) {
         Optional<ModuleConfig> config = platformConfig.getOptionalModuleConfig("dynawaltz-default-parameters");
 
         // File with all the dynamic models' parameters for the simulation
-        String parametersFile = config.map(c -> c.getStringProperty("parametersFile")).orElse(DEFAULT_PARAMETERS_FILE);
+        String parametersFile = config.map(c -> c.getStringProperty("parametersFile")).orElse(DEFAULT_INPUT_PARAMETERS_FILE);
+        Path parametersPath = platformConfig.getConfigDir().map(configDir -> configDir.resolve(parametersFile))
+                .orElse(fileSystem.getPath(parametersFile));
 
         // File with all the network's parameters for the simulation
-        String networkParametersFile = config.map(c -> c.getStringProperty("network.parametersFile")).orElse(DEFAULT_NETWORK_PARAMETERS_FILE);
+        String networkParametersFile = config.map(c -> c.getStringProperty("network.parametersFile")).orElse(DEFAULT_INPUT_NETWORK_PARAMETERS_FILE);
+        Path networkParametersPath = platformConfig.getConfigDir().map(configDir -> configDir.resolve(networkParametersFile))
+                .orElse(fileSystem.getPath(networkParametersFile));
 
         // Identifies the set of network parameters that will be used in the simulation.
         String networkParametersId = config.flatMap(c -> c.getOptionalStringProperty("network.parametersId")).orElse(DEFAULT_NETWORK_PAR_ID);
@@ -135,7 +84,9 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
         SolverType solverType = config.flatMap(c -> c.getOptionalEnumProperty("solver.type", SolverType.class)).orElse(DEFAULT_SOLVER_TYPE);
 
         // File with all the solvers' parameters for the simulation
-        String solverParametersFile = config.flatMap(c -> c.getOptionalStringProperty("solver.parametersFile")).orElse(DEFAULT_SOLVER_PARAMETERS_FILE);
+        String solverParametersFile = config.flatMap(c -> c.getOptionalStringProperty("solver.parametersFile")).orElse(DEFAULT_INPUT_SOLVER_PARAMETERS_FILE);
+        Path solverParametersPath = platformConfig.getConfigDir().map(configDir -> configDir.resolve(solverParametersFile))
+                .orElse(fileSystem.getPath(solverParametersFile));
 
         // Identifies the set of solver parameters that will be used in the simulation
         String solverParametersId = config.flatMap(c -> c.getOptionalStringProperty("solver.parametersId")).orElse(DEFAULT_SOLVER_PAR_ID);
@@ -143,23 +94,17 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
         // If merging loads on each bus to simplify dynawo's analysis
         boolean mergeLoads = config.flatMap(c -> c.getOptionalBooleanProperty("mergeLoads")).orElse(DEFAULT_MERGE_LOADS);
 
-        return new DynaWaltzParameters(parametersFile, networkParametersFile, networkParametersId, solverType, solverParametersFile, solverParametersId, mergeLoads);
-    }
+        // Load xml files
+        List<ParametersSet> modelsParameters = ParametersXml.load(parametersPath);
+        ParametersSet networkParameters = ParametersXml.load(networkParametersPath, networkParametersId);
+        ParametersSet solverParameters = ParametersXml.load(solverParametersPath, solverParametersId);
 
-    private String parametersFile;
-    private Network network;
-    private Solver solver;
-    private boolean mergeLoads;
-
-    public DynaWaltzParameters() {
-    }
-
-    public DynaWaltzParameters(String parametersFile, String networkParametersFile, String networkParametersId, SolverType solverType, String solverParametersFile,
-                            String solverParametersId, boolean mergeLoads) {
-        this.parametersFile = Objects.requireNonNull(parametersFile);
-        this.network = new Network(networkParametersFile, networkParametersId);
-        this.solver = new Solver(solverType, solverParametersFile, solverParametersId);
-        this.mergeLoads = mergeLoads;
+        return new DynaWaltzParameters()
+                .setModelsParameters(modelsParameters)
+                .setNetworkParameters(networkParameters)
+                .setSolverParameters(solverParameters)
+                .setSolverType(solverType)
+                .setMergeLoads(mergeLoads);
     }
 
     @Override
@@ -167,38 +112,55 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
         return "DynaWaltzParameters";
     }
 
-    public String getParametersFile() {
-        return parametersFile;
+    public ParametersSet getModelParameters(String parameterSetId) {
+        return modelsParameters.get(parameterSetId);
     }
 
-    public DynaWaltzParameters setParametersFile(String parametersFile) {
-        this.parametersFile = Objects.requireNonNull(parametersFile);
+    @JsonGetter("modelsParameters")
+    public Collection<ParametersSet> getModelParameters() {
+        return modelsParameters.values();
+    }
+
+    @JsonSetter("modelsParameters")
+    public DynaWaltzParameters setModelsParameters(Collection<ParametersSet> parametersSets) {
+        modelsParameters = new LinkedHashMap<>();
+        parametersSets.forEach(parametersSet -> modelsParameters.put(parametersSet.getId(), parametersSet));
         return this;
     }
 
-    public Network getNetwork() {
-        return network;
-    }
-
-    public DynaWaltzParameters setNetwork(Network network) {
-        this.network = Objects.requireNonNull(network);
+    public DynaWaltzParameters setNetworkParameters(ParametersSet networkParameters) {
+        this.networkParameters = Objects.requireNonNull(networkParameters);
         return this;
     }
 
-    public Solver getSolver() {
-        return solver;
+    public ParametersSet getNetworkParameters() {
+        return networkParameters;
     }
 
-    public DynaWaltzParameters setSolver(Solver solver) {
-        this.solver = Objects.requireNonNull(solver);
+    public DynaWaltzParameters setSolverParameters(ParametersSet solverParameters) {
+        this.solverParameters = Objects.requireNonNull(solverParameters);
         return this;
+    }
+
+    public ParametersSet getSolverParameters() {
+        return solverParameters;
+    }
+
+    public DynaWaltzParameters setSolverType(SolverType solverType) {
+        this.solverType = solverType;
+        return this;
+    }
+
+    public SolverType getSolverType() {
+        return solverType;
     }
 
     public boolean isMergeLoads() {
         return mergeLoads;
     }
 
-    public void setMergeLoads(boolean mergeLoads) {
+    public DynaWaltzParameters setMergeLoads(boolean mergeLoads) {
         this.mergeLoads = mergeLoads;
+        return this;
     }
 }
