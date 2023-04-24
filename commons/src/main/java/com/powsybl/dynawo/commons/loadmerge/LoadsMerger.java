@@ -15,6 +15,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.powsybl.dynawo.commons.loadmerge.LoadPowersSigns.*;
 
@@ -30,21 +31,26 @@ public final class LoadsMerger {
 
     public static Network mergeLoads(Network network) throws PowsyblException {
         Network mergedLoadsNetwork = NetworkXml.copy(network);
-
-        mergedLoadsNetwork.getBusBreakerView().getBusStream()
-                .filter(bus -> bus.getLoadStream().count() > 1)
-                .flatMap(bus -> getLoadsToMergeList(bus).stream())
-                .forEach(loadsToMerge  -> {
-                    loadsToMerge.removeLoads();
-                    Load load = loadsToMerge.getLoadAdder()
-                            .setP0(loadsToMerge.getMergedP0())
-                            .setQ0(loadsToMerge.getMergedQ0())
-                            .add();
-                    load.getTerminal().setP(loadsToMerge.getMergedP());
-                    load.getTerminal().setQ(loadsToMerge.getMergedQ());
-                });
-
+        mergedLoadsNetwork.getVoltageLevelStream()
+                .map(vl -> vl.getBusBreakerView().getBusStream())
+                .forEach(LoadsMerger::mergeLoadsInVoltageLevel);
         return mergedLoadsNetwork;
+    }
+
+    private static void mergeLoadsInVoltageLevel(Stream<Bus> busStream) {
+        List<LoadsToMerge> loadsToMergeList = busStream.filter(bus -> bus.getLoadStream().count() > 1)
+                .flatMap(bus -> getLoadsToMergeList(bus).stream())
+                .collect(Collectors.toList());
+
+        for (LoadsToMerge loadsToMerge : loadsToMergeList) {
+            loadsToMerge.removeLoads();
+            Load load = loadsToMerge.getLoadAdder()
+                    .setP0(loadsToMerge.getMergedP0())
+                    .setQ0(loadsToMerge.getMergedQ0())
+                    .add();
+            load.getTerminal().setP(loadsToMerge.getMergedP());
+            load.getTerminal().setQ(loadsToMerge.getMergedQ());
+        }
     }
 
     public static List<LoadsToMerge> getLoadsToMergeList(Bus bus) {
