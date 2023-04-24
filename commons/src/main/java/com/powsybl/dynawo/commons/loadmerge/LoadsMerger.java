@@ -8,10 +8,15 @@
 package com.powsybl.dynawo.commons.loadmerge;
 
 import com.powsybl.commons.PowsyblException;
-import com.powsybl.iidm.network.*;
+import com.powsybl.iidm.network.Bus;
+import com.powsybl.iidm.network.Load;
+import com.powsybl.iidm.network.Network;
+import com.powsybl.iidm.network.VoltageLevel;
 import com.powsybl.iidm.xml.NetworkXml;
 
-import java.util.*;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -29,15 +34,14 @@ public final class LoadsMerger {
 
     public static Network mergeLoads(Network network) throws PowsyblException {
         Network mergedLoadsNetwork = NetworkXml.copy(network);
-        mergedLoadsNetwork.getVoltageLevelStream()
-                .map(vl -> vl.getBusBreakerView().getBusStream())
-                .forEach(LoadsMerger::mergeLoadsInVoltageLevel);
+        mergedLoadsNetwork.getVoltageLevelStream().forEach(LoadsMerger::mergeLoadsInVoltageLevel);
         return mergedLoadsNetwork;
     }
 
-    private static void mergeLoadsInVoltageLevel(Stream<Bus> busStream) {
-        List<LoadsToMerge> loadsToMergeList = busStream.filter(bus -> bus.getLoadStream().count() > 1)
-                .flatMap(bus -> getLoadsToMergeList(bus).stream())
+    private static void mergeLoadsInVoltageLevel(VoltageLevel vl) {
+        List<LoadsToMerge> loadsToMergeList = vl.getBusBreakerView().getBusStream()
+                .filter(bus -> bus.getLoadStream().count() > 1)
+                .flatMap(LoadsMerger::getLoadsToMergeStream)
                 .collect(Collectors.toList());
 
         for (LoadsToMerge loadsToMerge : loadsToMergeList) {
@@ -51,22 +55,15 @@ public final class LoadsMerger {
         }
     }
 
-    public static List<LoadsToMerge> getLoadsToMergeList(Bus bus) {
-        List<LoadsToMerge> loadsToMerge = new ArrayList<>();
-        getLoadPowersSignsGrouping(bus).forEach((loadPowersSigns, loads) -> {
-            if (loads.size() > 1) {
-                loadsToMerge.add(new LoadsToMerge(loadPowersSigns, loads, bus));
-            }
-        });
-        return loadsToMerge;
+    private static Stream<LoadsToMerge> getLoadsToMergeStream(Bus bus) {
+        return getLoadPowersSignsGrouping(bus).entrySet().stream()
+                .filter(e -> e.getValue().size() > 1)
+                .map(e -> new LoadsToMerge(e.getKey(), e.getValue(), bus));
     }
 
     public static Map<LoadPowersSigns, List<Load>> getLoadPowersSignsGrouping(Bus bus) {
-        EnumMap<LoadPowersSigns, List<Load>> loadsGrouping = new EnumMap<>(LoadPowersSigns.class);
-        for (Load load : bus.getLoads()) {
-            loadsGrouping.computeIfAbsent(getLoadPowersSigns(load), k -> new ArrayList<>()).add(load);
-        }
-        return loadsGrouping;
+        return bus.getLoadStream().collect(Collectors.groupingBy(
+                LoadsMerger::getLoadPowersSigns, () -> new EnumMap<>(LoadPowersSigns.class), Collectors.toList()));
     }
 
     public static LoadPowersSigns getLoadPowersSigns(Load load) {
