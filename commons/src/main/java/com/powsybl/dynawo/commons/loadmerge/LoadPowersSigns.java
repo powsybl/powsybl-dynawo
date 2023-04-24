@@ -10,7 +10,7 @@ package com.powsybl.dynawo.commons.loadmerge;
 /**
  * @author Laurent Isertial <laurent.issertial at rte-france.com>
  */
-public enum LoadPowers {
+public enum LoadPowersSigns {
     P_POS_Q_POS(".pppq"),
     P_POS_Q_NEG(".ppnq"),
     P_NEG_Q_POS(".nppq"),
@@ -18,7 +18,7 @@ public enum LoadPowers {
 
     private final String mergeLoadSuffixId;
 
-    LoadPowers(String suffix) {
+    LoadPowersSigns(String suffix) {
         mergeLoadSuffixId = suffix;
     }
 

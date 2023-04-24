@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.powsybl.dynawo.commons.loadmerge.LoadPowers.*;
+import static com.powsybl.dynawo.commons.loadmerge.LoadPowersSigns.*;
 
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
@@ -76,23 +76,23 @@ public final class LoadsMerger {
 
     public static List<LoadsToMerge> getLoadsToMergeList(Bus bus) {
         List<LoadsToMerge> loadsToMerge = new ArrayList<>();
-        getLoadPowersGrouping(bus).forEach((loadPowers, loads) -> {
+        getLoadPowersGrouping(bus).forEach((loadPowersSigns, loads) -> {
             if (loads.size() > 1) {
-                loadsToMerge.add(new LoadsToMerge(loadPowers, loads, bus.getVoltageLevel().newLoad()));
+                loadsToMerge.add(new LoadsToMerge(loadPowersSigns, loads, bus.getVoltageLevel().newLoad()));
             }
         });
         return loadsToMerge;
     }
 
-    public static Map<LoadPowers, List<Load>> getLoadPowersGrouping(Bus bus) {
-        EnumMap<LoadPowers, List<Load>> loadsGrouping = new EnumMap<>(LoadPowers.class);
+    public static Map<LoadPowersSigns, List<Load>> getLoadPowersGrouping(Bus bus) {
+        EnumMap<LoadPowersSigns, List<Load>> loadsGrouping = new EnumMap<>(LoadPowersSigns.class);
         for (Load load : bus.getLoads()) {
             loadsGrouping.computeIfAbsent(getLoadPowers(load), k -> new ArrayList<>()).add(load);
         }
         return loadsGrouping;
     }
 
-    public static LoadPowers getLoadPowers(Load load) {
+    public static LoadPowersSigns getLoadPowers(Load load) {
         if (load.getP0() >= 0) {
             return load.getQ0() >= 0 ? P_POS_Q_POS : P_POS_Q_NEG;
         } else {

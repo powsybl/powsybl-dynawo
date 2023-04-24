@@ -17,7 +17,7 @@ import java.util.List;
  * @author Laurent Isertial <laurent.issertial at rte-france.com>
  */
 public class LoadsToMerge {
-    private final LoadPowers loadPowers;
+    private final LoadPowersSigns loadPowersSigns;
     private final List<Load> loads;
     private final LoadAdder loadAdder;
     private final double mergedP;
@@ -25,8 +25,8 @@ public class LoadsToMerge {
     private final double mergedP0;
     private final double mergedQ0;
 
-    public LoadsToMerge(LoadPowers loadPowers, List<Load> loads, LoadAdder loadAdder) {
-        this.loadPowers = loadPowers;
+    public LoadsToMerge(LoadPowersSigns loadPowersSigns, List<Load> loads, LoadAdder loadAdder) {
+        this.loadPowersSigns = loadPowersSigns;
         this.loads = loads;
         this.loadAdder = loadAdder;
         this.mergedP = loads.stream().map(Load::getTerminal).mapToDouble(Terminal::getP).sum();
@@ -35,8 +35,8 @@ public class LoadsToMerge {
         this.mergedQ0 = loads.stream().mapToDouble(Load::getQ0).sum();
     }
 
-    public LoadPowers getLoadPowers() {
-        return loadPowers;
+    public LoadPowersSigns getLoadPowers() {
+        return loadPowersSigns;
     }
 
     public double getMergedP0() {
