@@ -12,6 +12,7 @@ import com.powsybl.dynawaltz.models.TransformerSide;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.VarMapping;
 import com.powsybl.dynawaltz.models.buses.BusModel;
+import com.powsybl.iidm.network.Load;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,8 +28,8 @@ public class LoadTwoTransformers extends AbstractLoad implements LoadWithTransfo
             new VarMapping("transformerT_Q1Pu_value", "q"),
             new VarMapping("transformerT_state", "state"));
 
-    public LoadTwoTransformers(String dynamicModelId, String staticId, String parameterSetId) {
-        super(dynamicModelId, staticId, parameterSetId);
+    public LoadTwoTransformers(String dynamicModelId, Load load, String parameterSetId) {
+        super(dynamicModelId, load, parameterSetId, "transformer_terminal");
     }
 
     @Override

@@ -10,30 +10,35 @@ package com.powsybl.dynawaltz.dsl.models.loads
 import com.google.auto.service.AutoService
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
-import com.powsybl.dynawaltz.dsl.AbstractDynamicModelBuilder
-import com.powsybl.dynawaltz.dsl.AbstractPowsyblDynawoGroovyExtension
+import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
 import com.powsybl.dynawaltz.models.loads.LoadOneTransformerTapChanger
+import com.powsybl.iidm.network.Network
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class LoadOneTransformerTapChangerGroovyExtension extends AbstractPowsyblDynawoGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+class LoadOneTransformerTapChangerGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
     LoadOneTransformerTapChangerGroovyExtension() {
         modelTags = ["LoadOneTransformerTapChanger"]
     }
 
     @Override
-    protected LoadOneTransformerTapChangerBuilder createBuilder(String currentTag) {
-        new LoadOneTransformerTapChangerBuilder()
+    protected LoadOneTransformerTapChangerBuilder createBuilder(Network network, String currentTag) {
+        new LoadOneTransformerTapChangerBuilder(network)
     }
 
-    static class LoadOneTransformerTapChangerBuilder extends AbstractDynamicModelBuilder {
+    static class LoadOneTransformerTapChangerBuilder extends AbstractLoadModelBuilder {
+
+        LoadOneTransformerTapChangerBuilder(Network network) {
+            super(network)
+        }
+
         @Override
         LoadOneTransformerTapChanger build() {
             checkData()
-            new LoadOneTransformerTapChanger(dynamicModelId, staticId, parameterSetId)
+            new LoadOneTransformerTapChanger(dynamicModelId, load, parameterSetId)
         }
     }
 }

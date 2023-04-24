@@ -24,8 +24,7 @@ import com.powsybl.dynawaltz.models.generators.GeneratorSynchronous;
 import com.powsybl.dynawaltz.models.generators.OmegaRefGenerator;
 import com.powsybl.dynawaltz.models.hvdc.HvdcModel;
 import com.powsybl.dynawaltz.models.lines.StandardLine;
-import com.powsybl.dynawaltz.models.loads.LoadAlphaBeta;
-import com.powsybl.dynawaltz.models.loads.LoadOneTransformer;
+import com.powsybl.dynawaltz.models.loads.*;
 import com.powsybl.dynawaltz.models.svcs.StaticVarCompensatorModel;
 import com.powsybl.dynawaltz.models.transformers.TransformerFixedRatio;
 import com.powsybl.iidm.network.Network;
@@ -49,11 +48,6 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
 
     private static final String FOLDER_NAME = "/dynamicModels/";
     private static final List<DynamicModelGroovyExtension> EXTENSIONS = GroovyExtension.find(DynamicModelGroovyExtension.class, DynaWaltzProvider.NAME);
-
-    @Test
-    void testGroovyExtensionCount() {
-        assertEquals(11, EXTENSIONS.size());
-    }
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("provideEquipmentModelData")
@@ -86,7 +80,6 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
         assertTrue(dynamicModels.get(0) instanceof TapChangerAutomaton);
         TapChangerAutomaton bbm = (TapChangerAutomaton) dynamicModels.get(0);
         assertEquals("TC", bbm.getDynamicModelId());
-        assertTrue(bbm.getStaticId().isEmpty());
         assertEquals("tc", bbm.getParameterSetId());
         assertEquals("TapChangerAutomaton", bbm.getLib());
     }
@@ -99,7 +92,6 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
         assertTrue(dynamicModels.get(0) instanceof TapChangerBlockingAutomaton);
         TapChangerBlockingAutomaton bbm = (TapChangerBlockingAutomaton) dynamicModels.get(0);
         assertEquals("ZAB", bbm.getDynamicModelId());
-        assertTrue(bbm.getStaticId().isEmpty());
         assertEquals("ZAB", bbm.getParameterSetId());
         assertEquals("TapChangerBlockingAutomaton1", bbm.getLib());
     }

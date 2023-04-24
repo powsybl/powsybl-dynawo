@@ -43,9 +43,9 @@ class TapChangerBlockingAutomatonXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void addDynamicModels() {
-        dynamicModels.add(new TransformerFixedRatio("BBM_NGEN_NHV1", "NGEN_NHV1", "transformer", "TransformerFixedRatio"));
-        dynamicModels.add(new LoadOneTransformerTapChanger("BBM_LOAD", "LOAD", "lot"));
-        dynamicModels.add(new LoadTwoTransformersTapChangers("BBM_LOAD2", "LOAD2", "ltt"));
+        dynamicModels.add(new TransformerFixedRatio("BBM_NGEN_NHV1", network.getTwoWindingsTransformer("NGEN_NHV1"), "transformer", "TransformerFixedRatio"));
+        dynamicModels.add(new LoadOneTransformerTapChanger("BBM_LOAD", network.getLoad("LOAD"), "lot"));
+        dynamicModels.add(new LoadTwoTransformersTapChangers("BBM_LOAD2", network.getLoad("LOAD2"), "ltt"));
         dynamicModels.add(new TapChangerBlockingAutomaton("BBM_TapChangerBlocking", "TapChangerPar",
                 network.getTwoWindingsTransformerStream().collect(Collectors.toList()),
                 List.of(network.getLoad("LOAD"), network.getLoad("LOAD2")),
@@ -59,7 +59,6 @@ class TapChangerBlockingAutomatonXmlTest extends AbstractDynamicModelXmlTest {
         validate("dyd.xsd", "tap_changer_blocking_dyd.xml", tmpDir.resolve(DynaWaltzConstants.DYD_FILENAME));
     }
 
-    //TODO change test class ? + add test with load without transfo
     @Test
     void testMonitoredEquipmentsLimit() {
 

@@ -7,12 +7,10 @@
  */
 package com.powsybl.dynawaltz.models.transformers;
 
-import com.powsybl.dynawaltz.models.Model;
-
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public interface TransformerModel extends Model {
+public interface TransformerModel extends TapChangerModel {
 
     String getStateValueVarName();
 

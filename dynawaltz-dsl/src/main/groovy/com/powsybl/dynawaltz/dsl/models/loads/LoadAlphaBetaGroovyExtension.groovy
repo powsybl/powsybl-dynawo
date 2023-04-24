@@ -7,13 +7,10 @@
 package com.powsybl.dynawaltz.dsl.models.loads
 
 import com.google.auto.service.AutoService
-import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
-import com.powsybl.dynawaltz.dsl.models.builders.AbstractDynamicModelBuilder
 import com.powsybl.dynawaltz.models.loads.LoadAlphaBeta
-import com.powsybl.iidm.network.Load
 import com.powsybl.iidm.network.Network
 
 /**
@@ -36,20 +33,10 @@ class LoadAlphaBetaGroovyExtension extends AbstractEquipmentGroovyExtension<Dyna
         new LoadAlphaBetaBuilder(network)
     }
 
-    static class LoadAlphaBetaBuilder extends AbstractDynamicModelBuilder {
-
-        Load load
+    static class LoadAlphaBetaBuilder extends AbstractLoadModelBuilder {
 
         LoadAlphaBetaBuilder(Network network) {
             super(network)
-        }
-
-        void checkData() {
-            super.checkData()
-            load = network.getLoad(staticId)
-            if (load == null) {
-                throw new DslException("Load static id unknown: " + staticId)
-            }
         }
 
         @Override

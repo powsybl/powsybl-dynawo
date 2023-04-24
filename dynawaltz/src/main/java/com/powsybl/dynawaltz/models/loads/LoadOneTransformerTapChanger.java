@@ -12,6 +12,7 @@ import com.powsybl.dynawaltz.models.TransformerSide;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.buses.BusModel;
 import com.powsybl.dynawaltz.models.transformers.TapChangerModel;
+import com.powsybl.iidm.network.Load;
 
 import java.util.List;
 
@@ -20,8 +21,8 @@ import java.util.List;
  */
 public class LoadOneTransformerTapChanger extends LoadOneTransformer implements TapChangerModel {
 
-    public LoadOneTransformerTapChanger(String dynamicModelId, String staticId, String parameterSetId) {
-        super(dynamicModelId, staticId, parameterSetId);
+    public LoadOneTransformerTapChanger(String dynamicModelId, Load load, String parameterSetId) {
+        super(dynamicModelId, load, parameterSetId);
     }
 
     @Override

@@ -12,7 +12,7 @@ import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractPureDynamicGroovyExtension
-import com.powsybl.dynawaltz.dsl.AbstractPureDynamicModelBuilder
+import com.powsybl.dynawaltz.dsl.models.builders.AbstractPureDynamicModelBuilder
 import com.powsybl.dynawaltz.models.TransformerSide
 import com.powsybl.dynawaltz.models.automatons.TapChangerAutomaton
 import com.powsybl.iidm.network.*
@@ -28,7 +28,7 @@ class TapChangerAutomatonGroovyExtension extends AbstractPureDynamicGroovyExtens
     }
 
     @Override
-    protected TapChangerAutomatonBuilder createBuilder(String tag, Network network) {
+    protected TapChangerAutomatonBuilder createBuilder(Network network) {
         new TapChangerAutomatonBuilder(network)
     }
 
