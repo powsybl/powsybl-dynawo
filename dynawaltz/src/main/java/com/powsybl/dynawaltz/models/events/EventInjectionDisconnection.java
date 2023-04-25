@@ -7,11 +7,14 @@
 package com.powsybl.dynawaltz.models.events;
 
 import com.powsybl.dynawaltz.DynaWaltzContext;
+import com.powsybl.dynawaltz.models.InjectionModel;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.parameters.ParameterType;
 import com.powsybl.dynawaltz.xml.ParametersXml;
 import com.powsybl.iidm.network.Generator;
 import com.powsybl.iidm.network.Load;
+import com.powsybl.iidm.network.ShuntCompensator;
+import com.powsybl.iidm.network.StaticVarCompensator;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -46,18 +49,36 @@ public class EventInjectionDisconnection extends AbstractEventModel {
         this(equipment, startTime, true);
     }
 
+    public EventInjectionDisconnection(StaticVarCompensator equipment, double startTime, boolean disconnect) {
+        super(equipment, startTime);
+        this.disconnect = disconnect;
+    }
+
+    public EventInjectionDisconnection(StaticVarCompensator equipment, double startTime) {
+        this(equipment, startTime, true);
+    }
+
+    public EventInjectionDisconnection(ShuntCompensator equipment, double startTime, boolean disconnect) {
+        super(equipment, startTime);
+        this.disconnect = disconnect;
+    }
+
+    public EventInjectionDisconnection(ShuntCompensator equipment, double startTime) {
+        this(equipment, startTime, true);
+    }
+
     @Override
     public String getLib() {
         return null;
     }
 
-    private List<VarConnection> getVarConnectionsWithDisconnectable(DisconnectableEquipment connected) {
-        return List.of(new VarConnection("event_state1", connected.getDisconnectableVarName()));
+    private List<VarConnection> getVarConnectionsWithInjectionModel(InjectionModel connected) {
+        return List.of(new VarConnection("event_state1", connected.getSwitchOffSignalEventVarName()));
     }
 
     @Override
     public void createMacroConnections(DynaWaltzContext context) {
-        createMacroConnections(getEquipment(), DisconnectableEquipment.class, this::getVarConnectionsWithDisconnectable, context);
+        createMacroConnections(getEquipment(), InjectionModel.class, this::getVarConnectionsWithInjectionModel, context);
     }
 
     @Override

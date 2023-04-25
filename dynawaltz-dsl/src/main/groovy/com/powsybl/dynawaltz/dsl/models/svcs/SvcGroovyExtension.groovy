@@ -13,7 +13,6 @@ import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
 import com.powsybl.dynawaltz.dsl.models.builders.AbstractDynamicModelBuilder
-import com.powsybl.dynawaltz.models.svcs.StaticVarCompensatorModel
 import com.powsybl.iidm.network.Network
 import com.powsybl.iidm.network.StaticVarCompensator
 
@@ -54,9 +53,9 @@ class SvcGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel> 
         }
 
         @Override
-        StaticVarCompensatorModel build() {
+        com.powsybl.dynawaltz.models.svcs.StaticVarCompensator build() {
             checkData()
-            new StaticVarCompensatorModel(dynamicModelId, svc, parameterSetId, tag)
+            new com.powsybl.dynawaltz.models.svcs.StaticVarCompensator(dynamicModelId, svc, parameterSetId, tag)
         }
     }
 }

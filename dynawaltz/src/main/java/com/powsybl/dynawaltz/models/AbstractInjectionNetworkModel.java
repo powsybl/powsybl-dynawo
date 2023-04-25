@@ -5,13 +5,18 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.models.loads;
-
-import com.powsybl.dynawaltz.models.InjectionModel;
+package com.powsybl.dynawaltz.models;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public interface LoadModel extends InjectionModel {
+public abstract class AbstractInjectionNetworkModel extends AbstractNetworkModel {
 
+    protected AbstractInjectionNetworkModel(String staticId) {
+        super(staticId);
+    }
+
+    public String getSwitchOffSignalEventVarName() {
+        return "@NAME@_switchOffSignal2";
+    }
 }
