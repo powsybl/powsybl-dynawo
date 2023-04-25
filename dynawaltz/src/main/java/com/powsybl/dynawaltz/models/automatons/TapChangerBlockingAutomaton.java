@@ -42,7 +42,7 @@ public class TapChangerBlockingAutomaton extends AbstractPureDynamicBlackBoxMode
         if (transformers.isEmpty() && loadsWithTransformer.isEmpty() && tapChangerAutomatonIds.isEmpty()) {
             throw new PowsyblException("No Tap changers to monitor");
         }
-        if (uMeasurements.size() == 0) {
+        if (uMeasurements.isEmpty()) {
             throw new PowsyblException("No measurement points");
         }
         if (uMeasurements.size() > MAX_MEASUREMENTS) {
