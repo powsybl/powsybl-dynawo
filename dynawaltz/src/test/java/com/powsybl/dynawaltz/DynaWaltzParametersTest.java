@@ -6,6 +6,7 @@
  */
 package com.powsybl.dynawaltz;
 
+import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.config.InMemoryPlatformConfig;
 import com.powsybl.commons.config.MapModuleConfig;
 import com.powsybl.commons.test.AbstractConverterTest;
@@ -23,8 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -59,7 +59,7 @@ class DynaWaltzParametersTest extends AbstractConverterTest {
 
         DynaWaltzParameters parameters = DynaWaltzParameters.load(platformConfig, fileSystem);
 
-        checModelParameters(parameters);
+        checkModelParameters(parameters);
 
         assertEquals(networkParametersId, parameters.getNetworkParameters().getId());
         ParametersSet networkParameters = parameters.getNetworkParameters();
@@ -132,7 +132,7 @@ class DynaWaltzParametersTest extends AbstractConverterTest {
         copyFile("/parametersSet/solvers.par", DynaWaltzParameters.DEFAULT_INPUT_SOLVER_PARAMETERS_FILE);
 
         DynaWaltzParameters parameters = DynaWaltzParameters.load(platformConfig, fileSystem);
-        checModelParameters(parameters);
+        checkModelParameters(parameters);
 
         assertEquals(DynaWaltzParameters.DEFAULT_NETWORK_PAR_ID, parameters.getNetworkParameters().getId());
         assertTrue(parameters.getNetworkParameters().getParameters().isEmpty());
@@ -140,13 +140,23 @@ class DynaWaltzParametersTest extends AbstractConverterTest {
 
         assertEquals(DynaWaltzParameters.DEFAULT_SOLVER_TYPE, parameters.getSolverType());
         assertEquals(DynaWaltzParameters.DEFAULT_SOLVER_PAR_ID, parameters.getSolverParameters().getId());
-        assertTrue(parameters.getSolverParameters().getParameters().isEmpty());
-        assertTrue(parameters.getSolverParameters().getReferences().isEmpty());
+        assertEquals("1", parameters.getSolverParameters().getId());
 
         assertEquals(DynaWaltzParameters.DEFAULT_MERGE_LOADS, parameters.isMergeLoads());
     }
 
-    private static void checModelParameters(DynaWaltzParameters dynaWaltzParameters) {
+    @Test
+    void checkException() throws IOException {
+        Files.createDirectories(fileSystem.getPath(USER_HOME));
+        copyFile("/parametersSet/models.par", DynaWaltzParameters.DEFAULT_INPUT_PARAMETERS_FILE);
+        copyFile("/parametersSet/network.par", DynaWaltzParameters.DEFAULT_INPUT_NETWORK_PARAMETERS_FILE);
+        copyFile("/parametersSet/solversMissingDefault.par", DynaWaltzParameters.DEFAULT_INPUT_SOLVER_PARAMETERS_FILE);
+
+        PowsyblException e = assertThrows(PowsyblException.class, () -> DynaWaltzParameters.load(platformConfig, fileSystem));
+        assertEquals("Could not find parameters set with id='1' in file '/work/inmemory/solvers.par'", e.getMessage());
+    }
+
+    private static void checkModelParameters(DynaWaltzParameters dynaWaltzParameters) {
         Parameter booleanParameter = dynaWaltzParameters.getModelParameters("test").getParameter("boolean");
         assertEquals("true", booleanParameter.getValue());
         assertEquals("boolean", booleanParameter.getName());

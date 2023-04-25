@@ -16,8 +16,6 @@ import com.powsybl.dynawaltz.parameters.Parameter;
 import com.powsybl.dynawaltz.parameters.ParameterType;
 import com.powsybl.dynawaltz.parameters.ParametersSet;
 import com.powsybl.dynawaltz.parameters.Reference;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.xml.XMLConstants;
 import javax.xml.stream.*;
@@ -29,7 +27,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
@@ -40,7 +37,6 @@ import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
  */
 public final class ParametersXml {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ParametersXml.class);
     public static final String PARAMETERS_SET_ELEMENT_NAME = "parametersSet";
 
     private ParametersXml() {
@@ -58,7 +54,7 @@ public final class ParametersXml {
     public static ParametersSet load(InputStream parametersFile, String parameterSetId) {
         try {
             XMLStreamReader xmlReader = createXmlInputFactory().createXMLStreamReader(parametersFile);
-            ParametersSet parametersSet =readOneSetAndClose(xmlReader, parameterSetId);
+            ParametersSet parametersSet = readOneSetAndClose(xmlReader, parameterSetId);
             if (parametersSet == null) {
                 throw new PowsyblException("Could not find parameters set with id='" + parameterSetId + "' in given input stream");
             }
