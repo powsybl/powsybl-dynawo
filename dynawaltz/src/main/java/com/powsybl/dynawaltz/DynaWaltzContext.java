@@ -115,7 +115,7 @@ public class DynaWaltzContext {
 
     public <T extends Model> T getPureDynamicModel(String staticId, Class<T> connectableClass) {
         BlackBoxModel bbm = dynamicModels.stream()
-                .filter(dm -> staticId.equalsIgnoreCase(dm.getDynamicModelId()))
+                .filter(dm -> staticId.equals(dm.getDynamicModelId()))
                 .findFirst()
                 .orElseThrow(() -> {
                     throw new PowsyblException("Pure dynamic model " + staticId + " not found");
