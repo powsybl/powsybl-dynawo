@@ -11,6 +11,8 @@ import com.powsybl.dynawaltz.models.buses.BusModel;
 import com.powsybl.dynawaltz.models.buses.DefaultBusModel;
 import com.powsybl.dynawaltz.models.generators.GeneratorModel;
 import com.powsybl.dynawaltz.models.generators.DefaultGeneratorModel;
+import com.powsybl.dynawaltz.models.hvdc.DefaultHvdcModel;
+import com.powsybl.dynawaltz.models.hvdc.HvdcModel;
 import com.powsybl.dynawaltz.models.lines.DefaultLineModel;
 import com.powsybl.dynawaltz.models.lines.LineModel;
 import com.powsybl.dynawaltz.models.loads.DefaultLoadModel;
@@ -37,6 +39,7 @@ public class NetworkModel {
     public NetworkModel() {
         factoryMap = Map.of(BusModel.class, new DefaultModelFactory<BusModel>(DefaultBusModel::new),
                 GeneratorModel.class, new DefaultModelFactory<GeneratorModel>(DefaultGeneratorModel::new),
+                HvdcModel.class, new DefaultModelFactory<HvdcModel>(DefaultHvdcModel::new),
                 LineModel.class, new DefaultModelFactory<LineModel>(DefaultLineModel::new),
                 LoadModel.class, new DefaultModelFactory<LoadModel>(DefaultLoadModel::new),
                 ShuntModel.class, new DefaultModelFactory<ShuntModel>(DefaultShuntModel::new),
@@ -44,6 +47,7 @@ public class NetworkModel {
 
         powSyBlTypeToModel.put(IdentifiableType.BUS, BusModel.class);
         powSyBlTypeToModel.put(IdentifiableType.GENERATOR, GeneratorModel.class);
+        powSyBlTypeToModel.put(IdentifiableType.HVDC_LINE, HvdcModel.class);
         powSyBlTypeToModel.put(IdentifiableType.LINE, LineModel.class);
         powSyBlTypeToModel.put(IdentifiableType.LOAD, LoadModel.class);
         powSyBlTypeToModel.put(IdentifiableType.SHUNT_COMPENSATOR, ShuntModel.class);

@@ -13,9 +13,11 @@ import com.powsybl.dynamicsimulation.EventModel
 import com.powsybl.dynamicsimulation.groovy.EventModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractPureDynamicGroovyExtension
 import com.powsybl.dynawaltz.models.events.AbstractEventModel
+import com.powsybl.dynawaltz.models.events.EventHvdcDisconnection
 import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection
 import com.powsybl.dynawaltz.models.events.EventInjectionDisconnection
 import com.powsybl.iidm.network.Branch
+import com.powsybl.iidm.network.HvdcLine
 import com.powsybl.iidm.network.Identifiable
 import com.powsybl.iidm.network.IdentifiableType
 import com.powsybl.iidm.network.Network
@@ -42,12 +44,13 @@ class EventDisconnectionGroovyExtension extends AbstractPureDynamicGroovyExtensi
     static class EventQuadripoleDisconnectionBuilder extends AbstractEventModelBuilder {
 
         boolean disconnectSide = false
-        boolean isEquipment = false
-        boolean isQuadripoleEquipment = false
+        private disconnectionType = DisconnectionType.NONE
 
         boolean disconnectOrigin = true
         boolean disconnectExtremity = true
         Identifiable<? extends Identifiable> identifiable
+
+        private enum DisconnectionType {INJECTION, QUADRIPOLE, HVDC, NONE}
 
         EventQuadripoleDisconnectionBuilder(Network network) {
             super(network)
@@ -73,22 +76,36 @@ class EventDisconnectionGroovyExtension extends AbstractPureDynamicGroovyExtensi
             if (identifiable == null) {
                 throw new DslException("Identifiable static id unknown: " + getStaticId())
             }
-            isEquipment = connectableEquipments.contains(identifiable.getType())
-            isQuadripoleEquipment = connectableQuadripoleEquipments.contains(identifiable.getType())
-            if (!isEquipment && !isQuadripoleEquipment) {
-                throw new DslException("Equipment ${getStaticId()} cannot be disconnected")
-            } else if(isEquipment && disconnectSide) {
+            disconnectionType()
+            if (DisconnectionType.INJECTION == disconnectionType && disconnectSide) {
                 throw new DslException("'disconnectSide' has been set but ${identifiable.getType() } ${getStaticId()} is not a quadripole with a disconnectable side")
+            }
+        }
+
+        private void disconnectionType() {
+            IdentifiableType type = identifiable.getType()
+            if (connectableEquipments.contains(type)) {
+                disconnectionType = DisconnectionType.INJECTION
+            } else if (connectableQuadripoleEquipments.contains(type)) {
+                disconnectionType = DisconnectionType.QUADRIPOLE
+            } else if(IdentifiableType.HVDC_LINE == type) {
+                disconnectionType = DisconnectionType.HVDC
             }
         }
 
         @Override
         AbstractEventModel build() {
             checkData()
-            if(isEquipment)
-                new EventInjectionDisconnection(identifiable, startTime)
-            else if (isQuadripoleEquipment)
-                new EventQuadripoleDisconnection(identifiable, startTime, disconnectOrigin, disconnectExtremity)
+            switch(disconnectionType) {
+                case DisconnectionType.INJECTION :
+                    return new EventInjectionDisconnection(identifiable, startTime)
+                case DisconnectionType.QUADRIPOLE :
+                    return new EventQuadripoleDisconnection(identifiable, startTime, disconnectOrigin, disconnectExtremity)
+                case DisconnectionType.HVDC :
+                    return new EventHvdcDisconnection((HvdcLine) identifiable, startTime, disconnectOrigin, disconnectExtremity)
+                default :
+                    throw new DslException("Equipment ${getStaticId()} cannot be disconnected")
+            }
         }
     }
 }

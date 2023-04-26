@@ -7,7 +7,8 @@
  */
 package com.powsybl.dynawaltz.xml;
 
-import com.powsybl.dynawaltz.models.hvdc.HvdcModel;
+import com.powsybl.dynawaltz.models.events.EventHvdcDisconnection;
+import com.powsybl.dynawaltz.models.hvdc.HvdcPv;
 import com.powsybl.iidm.network.test.HvdcTestNetwork;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
@@ -15,10 +16,11 @@ import org.xml.sax.SAXException;
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 
+//TODO use parametrized tests
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-class HvdcModelXmlTest extends AbstractDynamicModelXmlTest {
+class DisconnectHvdcPvEventXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void setupNetwork() {
@@ -27,12 +29,15 @@ class HvdcModelXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void addDynamicModels() {
-        network.getHvdcLineStream().forEach(hvdc -> dynamicModels.add(new HvdcModel("BBM_" + hvdc.getId(), hvdc, "hv", "HvdcPV")));
+        dynamicModels.add(new HvdcPv("BBM_HVDC", network.getHvdcLine("L"), "hvdc", "HvdcPV"));
+        eventModels.add(new EventHvdcDisconnection(network.getHvdcLine("L"), 1, true, false));
     }
 
     @Test
-    void writeHvdcModel() throws SAXException, IOException, XMLStreamException {
+    void writeDisconnectModel() throws SAXException, IOException, XMLStreamException {
         DydXml.write(tmpDir, context);
-        validate("dyd.xsd", "hvdc_dyd.xml", tmpDir.resolve(DynaWaltzConstants.DYD_FILENAME));
+        ParametersXml.write(tmpDir, context);
+        validate("dyd.xsd", "disconnect_hvdc_pv_dyd.xml", tmpDir.resolve(DynaWaltzConstants.DYD_FILENAME));
+        validate("parameters.xsd", "disconnect_hvdc_par.xml", tmpDir.resolve(context.getSimulationParFile()));
     }
 }
