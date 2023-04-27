@@ -33,7 +33,7 @@ public class OmegaRefGenerator extends AbstractGeneratorModel implements OmegaRe
         this.generatorLib = Objects.requireNonNull(generatorLib);
     }
 
-    protected String getOmegaRefPuVarName() {
+    public String getOmegaRefPuVarName() {
         return "generator_omegaRefPu";
     }
 

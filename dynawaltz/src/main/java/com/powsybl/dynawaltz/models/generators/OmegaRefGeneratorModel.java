@@ -20,6 +20,8 @@ public interface OmegaRefGeneratorModel extends GeneratorModel {
 
     List<VarConnection> getOmegaRefVarConnections();
 
+    String getOmegaRefPuVarName();
+
     String getConnectableBusId();
 
     String getLib();

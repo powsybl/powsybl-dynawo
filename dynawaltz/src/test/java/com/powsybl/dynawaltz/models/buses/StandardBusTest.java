@@ -47,6 +47,6 @@ class StandardBusTest {
         List<BlackBoxModel> events = Collections.emptyList();
         List<Curve> curves = Collections.emptyList();
         PowsyblException e = assertThrows(PowsyblException.class, () -> new DynaWaltzContext(network, workingVariantId, dynamicModels, events, curves, parameters, dynawoParameters));
-        assertEquals("The equipment NHV1_NHV2_1 linked to the standard bus NHV1 does not possess a dynamic model", e.getMessage());
+        assertEquals("The equipment NHV1_NHV2_1 linked to the StandardBus NHV1 does not possess a dynamic model", e.getMessage());
     }
 }

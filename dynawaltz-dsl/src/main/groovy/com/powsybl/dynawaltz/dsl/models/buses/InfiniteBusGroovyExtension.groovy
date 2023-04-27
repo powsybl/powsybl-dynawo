@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2022, RTE (http://www.rte-france.com/)
+ * Copyright (c) 2023, RTE (http://www.rte-france.com/)
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -11,36 +11,40 @@ import com.google.auto.service.AutoService
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
-import com.powsybl.dynawaltz.models.buses.StandardBus
+import com.powsybl.dynawaltz.models.buses.InfiniteBus
 import com.powsybl.iidm.network.Network
 
 /**
- * An implementation of {@link DynamicModelGroovyExtension} that adds the <pre>Bus</pre> keyword to the DSL
- *
- * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
+ * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class BusGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+class InfiniteBusGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
-    BusGroovyExtension() {
-        modelTags = ["Bus"]
+    protected static final String BUSES = "infiniteBuses"
+
+    InfiniteBusGroovyExtension() {
+        ConfigSlurper config = new ConfigSlurper()
+        modelTags = config.parse(this.getClass().getClassLoader().getResource(MODELS_CONFIG)).get(BUSES).keySet() as List
     }
 
     @Override
     protected BusBuilder createBuilder(Network network, String currentTag) {
-        new BusBuilder(network)
+        new BusBuilder(network, currentTag)
     }
 
     static class BusBuilder extends AbstractBusBuilder {
 
-        BusBuilder(Network network) {
+        String tag
+
+        BusBuilder(Network network, String tag) {
             super(network)
+            this.tag = tag
         }
 
         @Override
-        StandardBus build() {
+        InfiniteBus build() {
             checkData()
-            new StandardBus(dynamicModelId, bus, parameterSetId)
+            new InfiniteBus(dynamicModelId, bus, parameterSetId, tag)
         }
     }
 }
