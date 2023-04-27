@@ -16,7 +16,11 @@ public abstract class AbstractInjectionNetworkModel extends AbstractNetworkModel
         super(staticId);
     }
 
+    public String getStateValueVarName() {
+        return "@NAME@_state_value";
+    }
+
     public String getSwitchOffSignalEventVarName() {
-        return "@NAME@_switchOffSignal2";
+        return getStateValueVarName();
     }
 }
