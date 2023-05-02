@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dyn:parametersSet xmlns:dyn="http://www.rte-france.com/dynawo">
+    <dyn:set id="OMEGA_REF">
+        <dyn:par type="DOUBLE" name="weight_gen_0" value="0.0"/>
+        <dyn:par type="DOUBLE" name="weight_gen_1" value="6539.400000000001"/>
+        <dyn:par type="INT" name="nbGen" value="2"/>
+    </dyn:set>
+    <dyn:set id="Step_GEN">
+        <dyn:par type="DOUBLE" name="event_tEvent" value="1.0"/>
+        <dyn:par type="DOUBLE" name="event_stateEvent1" value="1.1"/>
+    </dyn:set>
+    <dyn:set id="Step_GEN2">
+        <dyn:par type="DOUBLE" name="step_Value0" value="0.0"/>
+        <dyn:par type="DOUBLE" name="step_tStep" value="1.0"/>
+        <dyn:par type="BOOL" name="step_Height" value="1.2"/>
+    </dyn:set>
+    <dyn:set id="Step_GEN3">
+        <dyn:par type="DOUBLE" name="step_Value0" value="0.0"/>
+        <dyn:par type="DOUBLE" name="step_tStep" value="1.0"/>
+        <dyn:par type="BOOL" name="step_Height" value="1.3"/>
+    </dyn:set>
+    <dyn:set id="Step_LOAD">
+        <dyn:par type="DOUBLE" name="event_tEvent" value="10.0"/>
+        <dyn:par type="DOUBLE" name="event_stateEvent1" value="1.2"/>
+    </dyn:set>
+    <dyn:set id="Step_LOAD2">
+        <dyn:par type="DOUBLE" name="step_Value0" value="0.0"/>
+        <dyn:par type="DOUBLE" name="step_tStep" value="10.0"/>
+        <dyn:par type="BOOL" name="step_Height" value="1.3"/>
+    </dyn:set>
+</dyn:parametersSet>

@@ -12,11 +12,12 @@ import com.powsybl.iidm.network.Generator;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.powsybl.dynawaltz.models.utils.BusUtils.getConnectableBusStaticId;
+
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  */
-public class GeneratorSynchronous extends OmegaRefGenerator
-        implements GeneratorSynchronousModel {
+public class GeneratorSynchronous extends AbstractGeneratorModel implements GeneratorSynchronousModel {
 
     public GeneratorSynchronous(String dynamicModelId, Generator generator, String parameterSetId, String generatorLib) {
         super(dynamicModelId, generator, parameterSetId, generatorLib);
@@ -33,5 +34,14 @@ public class GeneratorSynchronous extends OmegaRefGenerator
                 new VarConnection("omegaRef_grp_@INDEX@", getOmegaRefPuVarName()),
                 new VarConnection("running_grp_@INDEX@", getRunningVarName())
         );
+    }
+
+    public String getOmegaRefPuVarName() {
+        return "generator_omegaRefPu";
+    }
+
+    @Override
+    public String getConnectableBusId() {
+        return getConnectableBusStaticId(equipment);
     }
 }

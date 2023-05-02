@@ -11,8 +11,10 @@ import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
-import com.powsybl.dynawaltz.dsl.models.builders.AbstractDynamicModelBuilder
+import com.powsybl.dynawaltz.dsl.EquipmentConfig
+import com.powsybl.dynawaltz.dsl.models.builders.AbstractConfigDynamicModelBuilder
 import com.powsybl.dynawaltz.models.generators.GeneratorSynchronous
+import com.powsybl.dynawaltz.models.generators.GeneratorSynchronousControllable
 import com.powsybl.iidm.network.Generator
 import com.powsybl.iidm.network.Network
 
@@ -25,23 +27,20 @@ class GeneratorSynchronousGroovyExtension extends AbstractEquipmentGroovyExtensi
     protected static final String SYNCHRONOUS_GENERATORS = "synchronousGenerators"
 
     GeneratorSynchronousGroovyExtension() {
-        ConfigSlurper config = new ConfigSlurper()
-        modelTags = config.parse(this.getClass().getClassLoader().getResource(MODELS_CONFIG)).get(SYNCHRONOUS_GENERATORS).keySet() as List
+        super(SYNCHRONOUS_GENERATORS)
     }
 
     @Override
-    protected GeneratorSynchronousBuilder createBuilder(Network network, String currentTag) {
-        new GeneratorSynchronousBuilder(network, currentTag)
+    protected GeneratorSynchronousBuilder createBuilder(Network network, EquipmentConfig equipmentConfig) {
+        new GeneratorSynchronousBuilder(network, equipmentConfig)
     }
 
-    static class GeneratorSynchronousBuilder extends AbstractDynamicModelBuilder {
+    static class GeneratorSynchronousBuilder extends AbstractConfigDynamicModelBuilder {
 
         Generator generator
-        String tag
 
-        GeneratorSynchronousBuilder(Network network, String tag) {
-            super(network)
-            this.tag = tag
+        GeneratorSynchronousBuilder(Network network, EquipmentConfig equipmentConfig) {
+            super(network, equipmentConfig)
         }
 
         void checkData() {
@@ -55,7 +54,11 @@ class GeneratorSynchronousGroovyExtension extends AbstractEquipmentGroovyExtensi
         @Override
         GeneratorSynchronous build() {
             checkData()
-            new GeneratorSynchronous(dynamicModelId, generator, parameterSetId, tag)
+            if (equipmentConfig.isControllable()) {
+                new GeneratorSynchronousControllable(dynamicModelId, generator, parameterSetId, equipmentConfig.lib)
+            } else {
+                new GeneratorSynchronous(dynamicModelId, generator, parameterSetId, equipmentConfig.lib)
+            }
         }
     }
 }

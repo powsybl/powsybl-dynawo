@@ -12,7 +12,8 @@ import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
-import com.powsybl.dynawaltz.dsl.models.builders.AbstractDynamicModelBuilder
+import com.powsybl.dynawaltz.dsl.EquipmentConfig
+import com.powsybl.dynawaltz.dsl.models.builders.AbstractConfigDynamicModelBuilder
 import com.powsybl.dynawaltz.models.hvdc.HvdcModel
 import com.powsybl.iidm.network.HvdcLine
 import com.powsybl.iidm.network.Network
@@ -26,23 +27,20 @@ class HvdcGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel>
     protected static final String HVDC = "hvdc"
 
     HvdcGroovyExtension() {
-        ConfigSlurper config = new ConfigSlurper()
-        modelTags = config.parse(this.getClass().getClassLoader().getResource(MODELS_CONFIG)).get(HVDC).keySet() as List
+        super(HVDC)
     }
 
     @Override
-    protected HvdcBuilder createBuilder(Network network, String currentTag) {
-        new HvdcBuilder(network, currentTag)
+    protected HvdcBuilder createBuilder(Network network, EquipmentConfig equipmentConfig) {
+        new HvdcBuilder(network, equipmentConfig)
     }
 
-    static class HvdcBuilder extends AbstractDynamicModelBuilder {
+    static class HvdcBuilder extends AbstractConfigDynamicModelBuilder {
 
         HvdcLine hvdc
-        String tag
 
-        HvdcBuilder(Network network, String tag) {
-            super(network)
-            this.tag = tag
+        HvdcBuilder(Network network, EquipmentConfig equipmentConfig) {
+            super(network, equipmentConfig)
         }
 
         void checkData() {
@@ -56,7 +54,7 @@ class HvdcGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel>
         @Override
         HvdcModel build() {
             checkData()
-            new HvdcModel(dynamicModelId, hvdc, parameterSetId, tag)
+            new HvdcModel(dynamicModelId, hvdc, parameterSetId, equipmentConfig.lib)
         }
     }
 }

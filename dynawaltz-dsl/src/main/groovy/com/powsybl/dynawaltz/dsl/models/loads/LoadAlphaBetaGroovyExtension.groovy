@@ -10,7 +10,11 @@ import com.google.auto.service.AutoService
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
+import com.powsybl.dynawaltz.dsl.EquipmentConfig
+import com.powsybl.dynawaltz.dsl.models.builders.AbstractConfigDynamicModelBuilder
 import com.powsybl.dynawaltz.models.loads.LoadAlphaBeta
+import com.powsybl.dynawaltz.models.loads.LoadAlphaBetaControllable
+import com.powsybl.iidm.network.Load
 import com.powsybl.iidm.network.Network
 
 /**
@@ -24,25 +28,29 @@ class LoadAlphaBetaGroovyExtension extends AbstractEquipmentGroovyExtension<Dyna
     private static final String LOADS = "loadsAlphaBeta"
 
     LoadAlphaBetaGroovyExtension() {
-        ConfigSlurper config = new ConfigSlurper()
-        modelTags = config.parse(this.getClass().getClassLoader().getResource(MODELS_CONFIG)).get(LOADS).keySet() as List
+        super(LOADS)
     }
 
     @Override
-    protected LoadAlphaBetaBuilder createBuilder(Network network, String currentTag) {
-        new LoadAlphaBetaBuilder(network)
+    protected LoadAlphaBetaBuilder createBuilder(Network network, EquipmentConfig equipmentConfig) {
+        new LoadAlphaBetaBuilder(network, equipmentConfig)
     }
 
-    static class LoadAlphaBetaBuilder extends AbstractLoadModelBuilder {
+    static class LoadAlphaBetaBuilder extends AbstractConfigDynamicModelBuilder {
 
-        LoadAlphaBetaBuilder(Network network) {
-            super(network)
+        Load load
+        LoadAlphaBetaBuilder(Network network, EquipmentConfig equipmentConfig) {
+            super(network, equipmentConfig)
         }
 
         @Override
         LoadAlphaBeta build() {
             checkData()
-            new LoadAlphaBeta(dynamicModelId, load, parameterSetId)
+            if (equipmentConfig.isControllable()) {
+                new LoadAlphaBetaControllable(dynamicModelId, load, parameterSetId, equipmentConfig.lib)
+            } else {
+                new LoadAlphaBeta(dynamicModelId, load, parameterSetId, equipmentConfig.lib)
+            }
         }
     }
 }

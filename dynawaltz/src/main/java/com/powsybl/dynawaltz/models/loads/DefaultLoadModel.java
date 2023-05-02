@@ -8,12 +8,13 @@
 package com.powsybl.dynawaltz.models.loads;
 
 import com.powsybl.dynawaltz.models.AbstractNetworkModel;
+import com.powsybl.dynawaltz.models.events.ControllableEquipment;
 import com.powsybl.dynawaltz.models.events.DisconnectableEquipment;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class DefaultLoadModel extends AbstractNetworkModel implements LoadModel, DisconnectableEquipment {
+public class DefaultLoadModel extends AbstractNetworkModel implements LoadModel, DisconnectableEquipment, ControllableEquipment {
 
     public DefaultLoadModel(String staticId) {
         super(staticId);
@@ -31,5 +32,10 @@ public class DefaultLoadModel extends AbstractNetworkModel implements LoadModel,
     @Override
     public String getDisconnectableVarName() {
         return getStateValueVarName();
+    }
+
+    @Override
+    public String getDeltaPVarName() {
+        return "@NAME@_DeltaPc";
     }
 }

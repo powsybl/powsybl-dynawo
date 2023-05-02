@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) 2022, RTE (http://www.rte-france.com)
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,8 +12,10 @@ import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
-import com.powsybl.dynawaltz.dsl.models.builders.AbstractDynamicModelBuilder
+import com.powsybl.dynawaltz.dsl.EquipmentConfig
+import com.powsybl.dynawaltz.dsl.models.builders.AbstractConfigDynamicModelBuilder
 import com.powsybl.dynawaltz.models.generators.OmegaRefGenerator
+import com.powsybl.dynawaltz.models.generators.OmegaRefGeneratorControllable
 import com.powsybl.iidm.network.Generator
 import com.powsybl.iidm.network.Network
 
@@ -27,23 +29,20 @@ class OmegaRefGeneratorGroovyExtension extends AbstractEquipmentGroovyExtension<
     private static final String OMEGA_REF_GENERATORS = "omegaRefGenerators"
 
     OmegaRefGeneratorGroovyExtension() {
-        ConfigSlurper config = new ConfigSlurper()
-        modelTags = config.parse(this.getClass().getClassLoader().getResource(MODELS_CONFIG)).get(OMEGA_REF_GENERATORS).keySet() as List
+        super(OMEGA_REF_GENERATORS)
     }
 
     @Override
-    protected OmegaRefGeneratorBuilder createBuilder(Network network, String currentTag) {
-        new OmegaRefGeneratorBuilder(network, currentTag)
+    protected OmegaRefGeneratorBuilder createBuilder(Network network, EquipmentConfig equipmentConfig) {
+        new OmegaRefGeneratorBuilder(network, equipmentConfig)
     }
 
-    static class OmegaRefGeneratorBuilder extends AbstractDynamicModelBuilder {
+    static class OmegaRefGeneratorBuilder extends AbstractConfigDynamicModelBuilder {
 
         Generator generator
-        String tag
 
-        OmegaRefGeneratorBuilder(Network network, String tag) {
-            super(network)
-            this.tag = tag
+        OmegaRefGeneratorBuilder(Network network, EquipmentConfig equipmentConfig) {
+            super(network, equipmentConfig)
         }
 
         void checkData() {
@@ -57,7 +56,11 @@ class OmegaRefGeneratorGroovyExtension extends AbstractEquipmentGroovyExtension<
         @Override
         OmegaRefGenerator build() {
             checkData()
-            new OmegaRefGenerator(dynamicModelId, generator, parameterSetId, tag)
+            if (equipmentConfig.isControllable()) {
+                new OmegaRefGeneratorControllable(dynamicModelId, generator, parameterSetId, equipmentConfig.lib)
+            } else {
+                new OmegaRefGenerator(dynamicModelId, generator, parameterSetId, equipmentConfig.lib)
+            }
         }
     }
 }
