@@ -5,6 +5,7 @@
     <dyn:macroConnector id="MC_PhaseShifterI-TransformerFixedRatio">
         <dyn:connect var1="phaseShifter_tap" var2="transformer_step"/>
         <dyn:connect var1="phaseShifter_iMonitored" var2="transformer_i1"/>
+        <dyn:connect var1="phaseShifter_P" var2="transformer_P1"/>
         <dyn:connect var1="phaseShifter_AutomatonExists" var2="transformer_disable_internal_tapChanger"/>
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_TransformerFixedRatioSide1-NetworkBus">
