@@ -46,5 +46,6 @@ class ActivePowerVariationEventXmlTest extends AbstractDynamicModelXmlTest {
         ParametersXml.write(tmpDir, context);
         validate("dyd.xsd", "apv_dyd.xml", tmpDir.resolve(DynaWaltzConstants.DYD_FILENAME));
         validate("parameters.xsd", "apv_par.xml", tmpDir.resolve(context.getSimulationParFile()));
+        validate("parameters.xsd", "apv_network_par.xml", tmpDir.resolve("network.par"));
     }
 }

@@ -20,6 +20,7 @@ import javax.xml.stream.XMLStreamWriter;
 import java.util.EnumSet;
 import java.util.List;
 
+import static com.powsybl.dynawaltz.parameters.ParameterType.BOOL;
 import static com.powsybl.dynawaltz.parameters.ParameterType.DOUBLE;
 
 /**
@@ -33,15 +34,18 @@ public class EventActivePowerVariation extends AbstractEventModel {
     private static final String DEFAULT_MODEL_LIB = "EventSetPointReal";
 
     private final double deltaP;
+    private final boolean isLoad;
 
     public EventActivePowerVariation(Load equipment, double startTime, double deltaP) {
         super(equipment, startTime, EVENT_PREFIX);
         this.deltaP = deltaP;
+        this.isLoad = true;
     }
 
     public EventActivePowerVariation(Generator equipment, double startTime, double deltaP) {
         super(equipment, startTime, EVENT_PREFIX);
         this.deltaP = deltaP;
+        this.isLoad = false;
     }
 
     public static boolean isConnectable(IdentifiableType type) {
@@ -76,6 +80,9 @@ public class EventActivePowerVariation extends AbstractEventModel {
 
     @Override
     protected void writeEventSpecificParameters(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
+        if (isLoad) {
+            context.getDynaWaltzParameters().getNetworkParameters().addParameter(getEquipment().getId() + "_isControllable", BOOL, Boolean.TRUE.toString());
+        }
         if (context.isWithoutBlackBoxDynamicModel(getEquipment())) {
             ParametersXml.writeParameter(writer, DOUBLE, "event_tEvent", Double.toString(getStartTime()));
             ParametersXml.writeParameter(writer, DOUBLE, "event_stateEvent1", Double.toString(deltaP));

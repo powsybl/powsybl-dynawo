@@ -10,7 +10,7 @@
         <par type="DOUBLE" name="load_alphaLong" value="0"/>
         <par type="DOUBLE" name="load_beta" value="2"/>
         <par type="DOUBLE" name="load_betaLong" value="0"/>
-        <par type="BOOL" name="load_isControllable" value="true"/>
+        <par type="BOOL" name="load_isControllable" value="false"/>
         <par type="BOOL" name="load_isRestorative" value="false"/>
         <par type="DOUBLE" name="load_zPMax" value="100"/>
         <par type="DOUBLE" name="load_zQMax" value="100"/>
