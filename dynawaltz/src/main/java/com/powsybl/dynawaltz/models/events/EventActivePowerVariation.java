@@ -79,10 +79,15 @@ public class EventActivePowerVariation extends AbstractEventModel {
     }
 
     @Override
-    protected void writeEventSpecificParameters(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
+    public void writeParameters(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
+        super.writeParameters(writer, context);
         if (isLoad) {
-            context.getDynaWaltzParameters().getNetworkParameters().addParameter(getEquipment().getId() + "_isControllable", BOOL, Boolean.TRUE.toString());
+            context.getDynaWaltzParameters().getNetworkParameters().addParameter(getEquipment().getId() + "_isControllable", BOOL, Boolean.toString(true));
         }
+    }
+
+    @Override
+    protected void writeEventSpecificParameters(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
         if (context.isWithoutBlackBoxDynamicModel(getEquipment())) {
             ParametersXml.writeParameter(writer, DOUBLE, "event_tEvent", Double.toString(getStartTime()));
             ParametersXml.writeParameter(writer, DOUBLE, "event_stateEvent1", Double.toString(deltaP));
