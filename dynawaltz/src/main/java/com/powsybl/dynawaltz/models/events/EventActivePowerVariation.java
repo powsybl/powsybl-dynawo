@@ -12,13 +12,14 @@ import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.xml.ParametersXml;
 import com.powsybl.iidm.network.Generator;
+import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Load;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
+import java.util.EnumSet;
 import java.util.List;
 
-import static com.powsybl.dynawaltz.parameters.ParameterType.BOOL;
 import static com.powsybl.dynawaltz.parameters.ParameterType.DOUBLE;
 
 /**
@@ -26,6 +27,7 @@ import static com.powsybl.dynawaltz.parameters.ParameterType.DOUBLE;
  */
 public class EventActivePowerVariation extends AbstractEventModel {
 
+    private static final EnumSet<IdentifiableType> CONNECTABLE_EQUIPMENTS = EnumSet.of(IdentifiableType.GENERATOR, IdentifiableType.LOAD);
     private static final String EVENT_PREFIX = "Step_";
     private static final String DYNAMIC_MODEL_LIB = "Step";
     private static final String DEFAULT_MODEL_LIB = "EventSetPointReal";
@@ -40,6 +42,10 @@ public class EventActivePowerVariation extends AbstractEventModel {
     public EventActivePowerVariation(Generator equipment, double startTime, double deltaP) {
         super(equipment, startTime, EVENT_PREFIX);
         this.deltaP = deltaP;
+    }
+
+    public static boolean isConnectable(IdentifiableType type) {
+        return CONNECTABLE_EQUIPMENTS.contains(type);
     }
 
     @Override
@@ -76,7 +82,7 @@ public class EventActivePowerVariation extends AbstractEventModel {
         } else {
             ParametersXml.writeParameter(writer, DOUBLE, "step_Value0", Double.toString(0));
             ParametersXml.writeParameter(writer, DOUBLE, "step_tStep", Double.toString(getStartTime()));
-            ParametersXml.writeParameter(writer, BOOL, "step_Height", Double.toString(deltaP));
+            ParametersXml.writeParameter(writer, DOUBLE, "step_Height", Double.toString(deltaP));
         }
     }
 

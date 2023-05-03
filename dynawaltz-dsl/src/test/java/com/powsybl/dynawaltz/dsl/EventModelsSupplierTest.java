@@ -12,6 +12,7 @@ import com.powsybl.dynamicsimulation.EventModelsSupplier;
 import com.powsybl.dynamicsimulation.groovy.*;
 import com.powsybl.dynawaltz.DynaWaltzProvider;
 import com.powsybl.dynawaltz.models.events.AbstractEventModel;
+import com.powsybl.dynawaltz.models.events.EventActivePowerVariation;
 import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection;
 import com.powsybl.dynawaltz.models.events.EventInjectionDisconnection;
 import com.powsybl.dynawaltz.models.events.NodeFaultEvent;
@@ -49,7 +50,9 @@ class EventModelsSupplierTest extends AbstractModelSupplierTest {
         assertEquals(dynamicId, em.getDynamicModelId());
         assertEquals(equipmentStaticId, em.getEquipment().getId());
         assertEquals(dynamicId, em.getParameterSetId());
-        assertEquals(lib, em.getLib());
+        if (lib != null) {
+            assertEquals(lib, em.getLib());
+        }
         assertEquals(startTime, em.getStartTime());
     }
 
@@ -57,7 +60,8 @@ class EventModelsSupplierTest extends AbstractModelSupplierTest {
         return Stream.of(
                 Arguments.of("quadripoleDisconnection", EventQuadripoleDisconnection.class, EurostagTutorialExample1Factory.create(), "NHV1_NHV2_1", "Disconnect_NHV1_NHV2_1", "EventQuadripoleDisconnection", 4),
                 Arguments.of("equipmentDisconnection", EventInjectionDisconnection.class, EurostagTutorialExample1Factory.create(), "GEN", "Disconnect_GEN", null, 1),
-                Arguments.of("nodeFault", NodeFaultEvent.class, EurostagTutorialExample1Factory.create(), "NGEN", "Node_Fault_NGEN", "NodeFault", 1)
+                Arguments.of("nodeFault", NodeFaultEvent.class, EurostagTutorialExample1Factory.create(), "NGEN", "Node_Fault_NGEN", "NodeFault", 1),
+                Arguments.of("step", EventActivePowerVariation.class, EurostagTutorialExample1Factory.create(), "LOAD", "Step_LOAD", null, 2)
         );
     }
 

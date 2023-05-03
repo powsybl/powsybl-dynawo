@@ -141,4 +141,39 @@ class DynaWaltzTest extends AbstractDynawoTest {
         assertEquals(1, timeLine.toArray().length);
         assertNull(timeLine.toArray()[0]); // FIXME
     }
+
+    @Test
+    void testSmib() {
+        Network network = Network.read(new ResourceDataSource("SMIB", new ResourceSet("/smib", "SMIB.iidm")));
+
+        GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
+                getResourceAsStream("/smib/dynamicModels.groovy"),
+                GroovyExtension.find(DynamicModelGroovyExtension.class, DynaWaltzProvider.NAME));
+
+        GroovyEventModelsSupplier eventModelsSupplier = new GroovyEventModelsSupplier(
+                getResourceAsStream("/smib/eventModels.groovy"),
+                GroovyExtension.find(EventModelGroovyExtension.class, DynaWaltzProvider.NAME));
+
+        GroovyCurvesSupplier curvesSupplier = new GroovyCurvesSupplier(
+                getResourceAsStream("/smib/curves.groovy"),
+                GroovyExtension.find(CurveGroovyExtension.class, DynaWaltzProvider.NAME));
+
+        List<ParametersSet> modelsParameters = ParametersXml.load(getResourceAsStream("/smib/SMIB.par"));
+        ParametersSet networkParameters = ParametersXml.load(getResourceAsStream("/smib/network.par"), "8");
+        ParametersSet solverParameters = ParametersXml.load(getResourceAsStream("/smib/solvers.par"), "1");
+        dynaWaltzParameters.setModelsParameters(modelsParameters)
+                .setNetworkParameters(networkParameters)
+                .setSolverParameters(solverParameters)
+                .setSolverType(DynaWaltzParameters.SolverType.IDA);
+
+        DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, curvesSupplier,
+                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters)
+                .join();
+
+        assertTrue(result.isOk());
+        assertEquals(0, result.getCurves().size());
+        StringTimeSeries timeLine = result.getTimeLine();
+        assertEquals(1, timeLine.toArray().length);
+        assertNull(timeLine.toArray()[0]); // FIXME
+    }
 }
