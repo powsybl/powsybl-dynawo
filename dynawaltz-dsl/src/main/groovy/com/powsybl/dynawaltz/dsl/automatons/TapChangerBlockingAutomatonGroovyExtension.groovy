@@ -76,7 +76,7 @@ class TapChangerBlockingAutomatonGroovyExtension extends AbstractPureDynamicGroo
             return equipment
         }
 
-        void UMeasurement(String[] staticIds) {
+        void uMeasurement(String[] staticIds) {
             uMeasurement = staticIds.collect {
                 Bus bus = network.getBusBreakerView().getBus(it)
                 if (bus == null) {
