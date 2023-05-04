@@ -152,6 +152,12 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel {
         context.addMacroConnect(macroConnectorId, getMacroConnectFromAttributes(), connectedModel.getMacroConnectToAttributes());
     }
 
+    protected <T extends Model> void createMacroConnections(Identifiable<?> equipment, Class<T> modelClass, Function<T, List<VarConnection>> varConnectionsSupplier, DynaWaltzContext context, String parametrizedName) {
+        T connectedModel = context.getDynamicModel(equipment, modelClass);
+        String macroConnectorId = context.addMacroConnector(getName(), connectedModel.getName(), parametrizedName, varConnectionsSupplier.apply(connectedModel));
+        context.addMacroConnect(macroConnectorId, getMacroConnectFromAttributes(), connectedModel.getMacroConnectToAttributes());
+    }
+
     protected final <T extends Model> void createMacroConnections(String modelStaticId, Class<T> modelClass, BiFunction<T, String, List<VarConnection>> varConnectionsSupplier, DynaWaltzContext context, String parametrizedName, MacroConnectAttribute... connectFromAttributes) {
         T connectedModel = context.getDynamicModel(modelStaticId, modelClass);
         String macroConnectorId = context.addMacroConnector(getName(), connectedModel.getName(), parametrizedName, varConnectionsSupplier.apply(connectedModel, parametrizedName));

@@ -11,8 +11,8 @@ package dynamicModels
 import com.powsybl.iidm.network.Branch
 
 CurrentLimitAutomaton {
-    staticId "NGEN"
     dynamicModelId "CLA_NGEN"
     parameterSetId "CLA"
-    side Branch.Side.TWO
+    iMeasurement "NGEN"
+    iMeasurementSide Branch.Side.TWO
 }

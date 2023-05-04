@@ -72,10 +72,12 @@
     <dyn:macroConnector id="MC_Line_NHV1_NHV2_1Side2-NetworkBus">
         <dyn:connect var1="line_terminal2" var2="@NAME@_ACPIN"/>
     </dyn:macroConnector>
-    <dyn:macroConnector id="MC_CurrentLimitAutomatonSide1-NetworkLine">
+    <dyn:macroConnector id="MC_CurrentLimitAutomatonMeasureSide1-NetworkLine">
         <dyn:connect var1="currentLimitAutomaton_IMonitored" var2="@NAME@_iSide1"/>
-        <dyn:connect var1="currentLimitAutomaton_order" var2="@NAME@_state"/>
         <dyn:connect var1="currentLimitAutomaton_AutomatonExists" var2="@NAME@_desactivate_currentLimits"/>
+    </dyn:macroConnector>
+    <dyn:macroConnector id="MC_CurrentLimitAutomatonControl-NetworkLine">
+        <dyn:connect var1="currentLimitAutomaton_order" var2="@NAME@_state"/>
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_DYNModelOmegaRef-GeneratorSynchronousThreeWindingsProportionalRegulations">
         <dyn:connect var1="omega_grp_@INDEX@" var2="generator_omegaPu"/>
@@ -156,7 +158,8 @@
     <dyn:macroConnect connector="MC_GeneratorSynchronousThreeWindingsProportionalRegulations-NetworkBus" id1="BBM_NHV1_1" id2="NETWORK" name2="NHV1"/>
     <dyn:macroConnect connector="MC_Line_NHV1_NHV2_1Side1-NetworkBus" id1="Line_NHV1_NHV2_1" id2="NETWORK" name2="NHV1"/>
     <dyn:macroConnect connector="MC_Line_NHV1_NHV2_1Side2-NetworkBus" id1="Line_NHV1_NHV2_1" id2="NETWORK" name2="NHV2"/>
-    <dyn:macroConnect connector="MC_CurrentLimitAutomatonSide1-NetworkLine" id1="BBM_NHV1_NHV2_2" id2="NETWORK" name2="NHV1_NHV2_2"/>
+    <dyn:macroConnect connector="MC_CurrentLimitAutomatonMeasureSide1-NetworkLine" id1="BBM_NHV1_NHV2_2" id2="NETWORK" name2="NHV1_NHV2_2"/>
+    <dyn:macroConnect connector="MC_CurrentLimitAutomatonControl-NetworkLine" id1="BBM_NHV1_NHV2_2" id2="NETWORK" name2="NHV1_NHV2_2"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorSynchronousThreeWindingsProportionalRegulations" id1="OMEGA_REF" index1="0" id2="BBM_GEN"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRef-NetworkBus" id1="OMEGA_REF" index1="0" id2="NETWORK" name2="NGEN"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorSynchronousFourWindingsProportionalRegulations" id1="OMEGA_REF" index1="1" id2="BBM_GEN2"/>

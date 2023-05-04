@@ -2,16 +2,29 @@
 <dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
     <dyn:blackBoxModel id="BBM_CLA_LINE" lib="CurrentLimitAutomaton" parFile="models.par" parId="cla"/>
     <dyn:blackBoxModel id="BBM_CLA_TRANSFORMER" lib="CurrentLimitAutomaton" parFile="models.par" parId="cla"/>
-    <dyn:macroConnector id="MC_CurrentLimitAutomatonSide1-NetworkLine">
+    <dyn:blackBoxModel id="BBM_CLA_LINE2" lib="CurrentLimitAutomaton" parFile="models.par" parId="cla"/>
+    <dyn:macroConnector id="MC_CurrentLimitAutomatonMeasureSide1-NetworkLine">
         <dyn:connect var1="currentLimitAutomaton_IMonitored" var2="@NAME@_iSide1"/>
-        <dyn:connect var1="currentLimitAutomaton_order" var2="@NAME@_state"/>
         <dyn:connect var1="currentLimitAutomaton_AutomatonExists" var2="@NAME@_desactivate_currentLimits"/>
     </dyn:macroConnector>
-    <dyn:macroConnector id="MC_CurrentLimitAutomatonSide2-NetworkTransformer">
+    <dyn:macroConnector id="MC_CurrentLimitAutomatonControl-NetworkLine">
+        <dyn:connect var1="currentLimitAutomaton_order" var2="@NAME@_state"/>
+    </dyn:macroConnector>
+    <dyn:macroConnector id="MC_CurrentLimitAutomatonMeasureSide2-NetworkTransformer">
         <dyn:connect var1="currentLimitAutomaton_IMonitored" var2="@NAME@_iSide2"/>
-        <dyn:connect var1="currentLimitAutomaton_order" var2="@NAME@_state"/>
         <dyn:connect var1="currentLimitAutomaton_AutomatonExists" var2="@NAME@_desactivate_currentLimits"/>
     </dyn:macroConnector>
-    <dyn:macroConnect connector="MC_CurrentLimitAutomatonSide1-NetworkLine" id1="BBM_CLA_LINE" id2="NETWORK" name2="NHV1_NHV2_1"/>
-    <dyn:macroConnect connector="MC_CurrentLimitAutomatonSide2-NetworkTransformer" id1="BBM_CLA_TRANSFORMER" id2="NETWORK" name2="NGEN_NHV1"/>
+    <dyn:macroConnector id="MC_CurrentLimitAutomatonControl-NetworkTransformer">
+        <dyn:connect var1="currentLimitAutomaton_order" var2="@NAME@_state"/>
+    </dyn:macroConnector>
+    <dyn:macroConnector id="MC_CurrentLimitAutomatonMeasureSide2-NetworkLine">
+        <dyn:connect var1="currentLimitAutomaton_IMonitored" var2="@NAME@_iSide2"/>
+        <dyn:connect var1="currentLimitAutomaton_AutomatonExists" var2="@NAME@_desactivate_currentLimits"/>
+    </dyn:macroConnector>
+    <dyn:macroConnect connector="MC_CurrentLimitAutomatonMeasureSide1-NetworkLine" id1="BBM_CLA_LINE" id2="NETWORK" name2="NHV1_NHV2_1"/>
+    <dyn:macroConnect connector="MC_CurrentLimitAutomatonControl-NetworkLine" id1="BBM_CLA_LINE" id2="NETWORK" name2="NHV1_NHV2_1"/>
+    <dyn:macroConnect connector="MC_CurrentLimitAutomatonMeasureSide2-NetworkTransformer" id1="BBM_CLA_TRANSFORMER" id2="NETWORK" name2="NGEN_NHV1"/>
+    <dyn:macroConnect connector="MC_CurrentLimitAutomatonControl-NetworkTransformer" id1="BBM_CLA_TRANSFORMER" id2="NETWORK" name2="NGEN_NHV1"/>
+    <dyn:macroConnect connector="MC_CurrentLimitAutomatonMeasureSide2-NetworkLine" id1="BBM_CLA_LINE2" id2="NETWORK" name2="NHV1_NHV2_2"/>
+    <dyn:macroConnect connector="MC_CurrentLimitAutomatonControl-NetworkLine" id1="BBM_CLA_LINE2" id2="NETWORK" name2="NHV1_NHV2_1"/>
 </dyn:dynamicModelsArchitecture>
