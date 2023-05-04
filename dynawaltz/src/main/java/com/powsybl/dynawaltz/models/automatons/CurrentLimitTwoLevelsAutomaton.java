@@ -8,7 +8,6 @@
 package com.powsybl.dynawaltz.models.automatons;
 
 import com.powsybl.dynawaltz.DynaWaltzContext;
-import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.iidm.network.*;
@@ -18,17 +17,22 @@ import java.util.*;
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class CurrentLimitTwoLevelsAutomaton extends AbstractPureDynamicBlackBoxModel {
+public class CurrentLimitTwoLevelsAutomaton extends CurrentLimitAutomaton {
 
-    private final Branch<?> quadripoleEquipment;
+    protected static final String FIRST_MEASURE_SUFFIX = MEASURE_SUFFIX + "1";
+    protected static final String SECOND_MEASURE_SUFFIX = MEASURE_SUFFIX + "2";
 
-    public CurrentLimitTwoLevelsAutomaton(String dynamicModelId, String parameterSetId, Branch<?> quadripoleEquipment) {
-        super(dynamicModelId, parameterSetId);
-        this.quadripoleEquipment = Objects.requireNonNull(quadripoleEquipment);
+    private final Branch<?> secondMeasuredQuadripole;
+    private final Side secondMeasuredSide;
+
+    public CurrentLimitTwoLevelsAutomaton(String dynamicModelId, String parameterSetId, Branch<?> measuredQuadripole, Side measuredSide, Branch<?> secondMeasuredQuadripole, Side secondMeasuredSide, Branch<?> controlledQuadripole) {
+        super(dynamicModelId, parameterSetId, measuredQuadripole, measuredSide, controlledQuadripole);
+        this.secondMeasuredQuadripole = Objects.requireNonNull(secondMeasuredQuadripole);
+        this.secondMeasuredSide = Objects.requireNonNull(secondMeasuredSide);
     }
 
-    protected final Identifiable<?> getEquipment() {
-        return quadripoleEquipment;
+    public CurrentLimitTwoLevelsAutomaton(String dynamicModelId, String parameterSetId, Branch<?> measuredQuadripole, Side measuredSide, Branch<?> secondMeasuredQuadripole, Side secondMeasuredSide) {
+        this(dynamicModelId, parameterSetId, measuredQuadripole, measuredSide, secondMeasuredQuadripole, secondMeasuredSide, measuredQuadripole);
     }
 
     @Override
@@ -38,15 +42,20 @@ public class CurrentLimitTwoLevelsAutomaton extends AbstractPureDynamicBlackBoxM
 
     @Override
     public void createMacroConnections(DynaWaltzContext context) {
-        createMacroConnections(getEquipment(), QuadripoleModel.class, this::getVarConnectionsWithQuadripole, context);
+        createMacroConnections(measuredQuadripole, QuadripoleModel.class, this::getVarConnectionsWithMeasuredQuadripole, context, FIRST_MEASURE_SUFFIX + measuredSide.getSideSuffix());
+        createMacroConnections(secondMeasuredQuadripole, QuadripoleModel.class, this::getVarConnectionsWithSecondMeasuredQuadripole, context, SECOND_MEASURE_SUFFIX + secondMeasuredSide.getSideSuffix());
+        createMacroConnections(controlledQuadripole, QuadripoleModel.class, this::getVarConnectionsWithControlledQuadripole, context, CONTROL_SUFFIX);
     }
 
-    private List<VarConnection> getVarConnectionsWithQuadripole(QuadripoleModel connected) {
+    @Override
+    protected List<VarConnection> getVarConnectionsWithMeasuredQuadripole(QuadripoleModel connected) {
         return Arrays.asList(
-                new VarConnection("currentLimitAutomaton_IMonitored1", connected.getIVarName(Side.ONE)),
-                new VarConnection("currentLimitAutomaton_IMonitored2", connected.getIVarName(Side.TWO)),
-                new VarConnection("currentLimitAutomaton_order", connected.getStateVarName()),
+                new VarConnection("currentLimitAutomaton_IMonitored1", connected.getIVarName(measuredSide)),
                 new VarConnection("currentLimitAutomaton_AutomatonExists", connected.getDeactivateCurrentLimitsVarName())
         );
+    }
+
+    private List<VarConnection> getVarConnectionsWithSecondMeasuredQuadripole(QuadripoleModel connected) {
+        return List.of(new VarConnection("currentLimitAutomaton_IMonitored2", connected.getIVarName(secondMeasuredSide)));
     }
 }

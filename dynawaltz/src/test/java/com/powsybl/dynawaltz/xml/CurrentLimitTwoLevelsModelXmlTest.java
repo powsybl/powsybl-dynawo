@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawaltz.xml;
 
+import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.automatons.CurrentLimitTwoLevelsAutomaton;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.Test;
@@ -27,8 +28,7 @@ class CurrentLimitTwoLevelsModelXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void addDynamicModels() {
-        dynamicModels.add(new CurrentLimitTwoLevelsAutomaton("BBM_CLA_LINE", "cla", network.getLine("NHV1_NHV2_1")));
-        dynamicModels.add(new CurrentLimitTwoLevelsAutomaton("BBM_CLA_TRANSFORMER", "cla", network.getTwoWindingsTransformer("NGEN_NHV1")));
+        dynamicModels.add(new CurrentLimitTwoLevelsAutomaton("BBM_CLA_TWO_LEVELS", "cla", network.getLine("NHV1_NHV2_1"), Side.TWO, network.getLine("NHV1_NHV2_2"), Side.ONE, network.getTwoWindingsTransformer("NGEN_NHV1")));
     }
 
     @Test

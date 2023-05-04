@@ -11,9 +11,11 @@ import com.google.auto.service.AutoService
 import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
-import com.powsybl.dynawaltz.dsl.AbstractDynamicModelBuilder
 import com.powsybl.dynawaltz.dsl.AbstractPureDynamicGroovyExtension
+import com.powsybl.dynawaltz.models.Side
+import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton
 import com.powsybl.dynawaltz.models.automatons.CurrentLimitTwoLevelsAutomaton
+import com.powsybl.dynawaltz.models.utils.SideConverter
 import com.powsybl.iidm.network.Branch
 import com.powsybl.iidm.network.Network
 
@@ -32,28 +34,55 @@ class CurrentLimitTwoLevelsAutomatonGroovyExtension extends AbstractPureDynamicG
         new CurrentLimitAutomatonTwoLevelBuilder(network)
     }
 
-    static class CurrentLimitAutomatonTwoLevelBuilder extends AbstractDynamicModelBuilder {
+    static class CurrentLimitAutomatonTwoLevelBuilder extends CurrentLimitAutomatonGroovyExtension.CurrentLimitAutomatonBuilder {
 
-        Network network
-        Branch<? extends Branch> equipment
+        Branch<? extends Branch> equipment2
+        Side side2
 
         CurrentLimitAutomatonTwoLevelBuilder(Network network) {
-            this.network = network
+            super(network)
         }
+
+        void iMeasurement1(String staticId) {
+            iMeasurement(staticId)
+        }
+
+        void iMeasurement1Side(Branch.Side side) {
+            iMeasurementSide(side)
+        }
+
+        void iMeasurement2(String staticId) {
+            equipment2 = network.getBranch(staticId)
+            if (!equipment2) {
+                throw new DslException("Equipment ${staticId} is not a quadripole")
+            }
+        }
+
+        void iMeasurement2Side(Branch.Side side) {
+            this.side2 = SideConverter.convert(side)
+        }
+
 
         @Override
         void checkData() {
             super.checkData()
-            equipment = network.getBranch(staticId)
-            if (equipment == null) {
-                throw new DslException("Equipment ${staticId} is not a quadripole")
+            if (!equipment2) {
+                throw new DslException("'iMeasurement2' field is not set")
+            }
+            if (!side2) {
+                throw new DslException("'iMeasurement2Side' field is not set")
             }
         }
 
         @Override
         CurrentLimitTwoLevelsAutomaton build() {
             checkData()
-            new CurrentLimitTwoLevelsAutomaton(dynamicModelId, parameterSetId, equipment)
+            if (!controlledEquipment) {
+                new CurrentLimitTwoLevelsAutomaton(dynamicModelId, parameterSetId, equipment, side, equipment2, side2)
+
+            } else {
+                new CurrentLimitTwoLevelsAutomaton(dynamicModelId, parameterSetId, equipment, side, equipment2, side2, controlledEquipment)
+            }
         }
     }
 }
