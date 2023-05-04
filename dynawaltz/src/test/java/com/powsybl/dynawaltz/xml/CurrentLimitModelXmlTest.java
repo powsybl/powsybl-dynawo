@@ -30,10 +30,11 @@ class CurrentLimitModelXmlTest extends AbstractDynamicModelXmlTest {
     protected void addDynamicModels() {
         dynamicModels.add(new CurrentLimitAutomaton("BBM_CLA_LINE", "cla", network.getLine("NHV1_NHV2_1"), Side.ONE));
         dynamicModels.add(new CurrentLimitAutomaton("BBM_CLA_TRANSFORMER", "cla", network.getTwoWindingsTransformer("NGEN_NHV1"), Side.TWO));
+        dynamicModels.add(new CurrentLimitAutomaton("BBM_CLA_LINE2", "cla", network.getLine("NHV1_NHV2_2"), Side.TWO, network.getLine("NHV1_NHV2_1")));
     }
 
     @Test
-    void writeHvdcModel() throws SAXException, IOException, XMLStreamException {
+    void writeModel() throws SAXException, IOException, XMLStreamException {
         DydXml.write(tmpDir, context);
         validate("dyd.xsd", "cla_dyd.xml", tmpDir.resolve(DynaWaltzConstants.DYD_FILENAME));
     }

@@ -89,10 +89,10 @@ for (Generator gen : network.generators) {
 
 for (Line line : network.lines) {
     CurrentLimitAutomaton {
-        staticId line.id
         dynamicModelId "BBM_" + line.id
         parameterSetId "CLA"
-        side Branch.Side.TWO
+        iMeasurement line.id
+        iMeasurementSide Branch.Side.TWO
     }
 }
 ```
