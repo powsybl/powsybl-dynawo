@@ -16,6 +16,8 @@ import com.powsybl.iidm.network.Load;
 
 import java.util.List;
 
+import static com.powsybl.dynawaltz.models.TransformerSide.NONE;
+
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
@@ -46,6 +48,6 @@ public class LoadOneTransformerTapChanger extends LoadOneTransformer implements 
 
     @Override
     public List<VarConnection> getTapChangerBlockerVarConnections() {
-        return List.of(new VarConnection(getTapChangerBlockingVarName(TransformerSide.NONE), "tapChanger_locked"));
+        return List.of(new VarConnection(getTapChangerBlockingVarName(NONE), "tapChanger_locked"));
     }
 }

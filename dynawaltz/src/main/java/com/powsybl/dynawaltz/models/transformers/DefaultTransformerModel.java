@@ -8,11 +8,12 @@
 package com.powsybl.dynawaltz.models.transformers;
 
 import com.powsybl.dynawaltz.models.AbstractNetworkModel;
-import com.powsybl.dynawaltz.models.TransformerSide;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.events.QuadripoleDisconnectableEquipment;
 
 import java.util.List;
+
+import static com.powsybl.dynawaltz.models.TransformerSide.NONE;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
@@ -40,6 +41,6 @@ public class DefaultTransformerModel extends AbstractNetworkModel implements Tra
 
     @Override
     public List<VarConnection> getTapChangerBlockerVarConnections() {
-        return List.of(new VarConnection(getTapChangerBlockingVarName(TransformerSide.NONE), "@NAME@_TAP_CHANGER_locked_value"));
+        return List.of(new VarConnection(getTapChangerBlockingVarName(NONE), "@NAME@_TAP_CHANGER_locked_value"));
     }
 }

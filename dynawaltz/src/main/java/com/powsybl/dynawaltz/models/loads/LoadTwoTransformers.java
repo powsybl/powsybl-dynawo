@@ -18,15 +18,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.powsybl.dynawaltz.models.TransformerSide.*;
+
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 public class LoadTwoTransformers extends AbstractLoad implements LoadWithTransformers {
 
     protected static final List<VarMapping> VAR_MAPPING = Arrays.asList(
-            new VarMapping("transformerT_P1Pu_value", "p"),
-            new VarMapping("transformerT_Q1Pu_value", "q"),
-            new VarMapping("transformerT_state", "state"));
+            new VarMapping(getTransformerVar(HIGH_VOLTAGE, "P1Pu_value"), "p"),
+            new VarMapping(getTransformerVar(HIGH_VOLTAGE, "Q1Pu_value"), "q"),
+            new VarMapping(getTransformerVar(HIGH_VOLTAGE, "state"), "state"));
 
     public LoadTwoTransformers(String dynamicModelId, Load load, String parameterSetId) {
         super(dynamicModelId, load, parameterSetId, "transformer_terminal");
@@ -40,11 +42,11 @@ public class LoadTwoTransformers extends AbstractLoad implements LoadWithTransfo
     @Override
     protected List<VarConnection> getVarConnectionsWithBus(BusModel connected) {
         List<VarConnection> varConnections = new ArrayList<>(3);
-        varConnections.add(new VarConnection("transformerT_terminal", connected.getTerminalVarName()));
+        varConnections.add(new VarConnection(getTransformerVar(HIGH_VOLTAGE, "terminal"), connected.getTerminalVarName()));
         connected.getSwitchOffSignalVarName()
                 .ifPresent(switchOff -> {
-                    varConnections.add(new VarConnection("transformerT_switchOffSignal1", switchOff));
-                    varConnections.add(new VarConnection("transformerD_switchOffSignal1", switchOff));
+                    varConnections.add(new VarConnection(getTransformerVar(HIGH_VOLTAGE, "switchOffSignal1"), switchOff));
+                    varConnections.add(new VarConnection(getTransformerVar(LOW_VOLTAGE, "switchOffSignal1"), switchOff));
                     varConnections.add(new VarConnection("load_switchOffSignal1", switchOff));
                 });
         return varConnections;
@@ -52,17 +54,20 @@ public class LoadTwoTransformers extends AbstractLoad implements LoadWithTransfo
 
     @Override
     public List<VarConnection> getTapChangerVarConnections(TransformerSide side) {
-        if (TransformerSide.NONE == side) {
+        if (NONE == side) {
             throw new PowsyblException("LoadTwoTransformers must have a side connected to the Tap changer automaton");
         }
-        String transformerPrefix = "transformer" + side.getSideSuffix();
-        return List.of(new VarConnection("tapChanger_tap", transformerPrefix + "_tap"),
-                new VarConnection("tapChanger_UMonitored", transformerPrefix + "_U2Pu"),
-                new VarConnection("tapChanger_switchOffSignal1", transformerPrefix + "_switchOffSignal1"));
+        return List.of(new VarConnection("tapChanger_tap", getTransformerVar(side, "tap")),
+                new VarConnection("tapChanger_UMonitored", getTransformerVar(side, "U2Pu")),
+                new VarConnection("tapChanger_switchOffSignal1", getTransformerVar(side, "switchOffSignal1")));
     }
 
     @Override
     public List<VarMapping> getVarsMapping() {
         return VAR_MAPPING;
+    }
+
+    private static String getTransformerVar(TransformerSide side, String suffix) {
+        return "transformer" + side.getSideSuffix() + "_" + suffix;
     }
 }

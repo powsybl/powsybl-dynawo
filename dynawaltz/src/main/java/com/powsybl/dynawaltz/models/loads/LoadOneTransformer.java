@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.powsybl.dynawaltz.models.TransformerSide.NONE;
+
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
@@ -56,7 +58,7 @@ public class LoadOneTransformer extends AbstractLoad implements LoadWithTransfor
 
     @Override
     public List<VarConnection> getTapChangerVarConnections(TransformerSide side) {
-        if (TransformerSide.NONE != side) {
+        if (NONE != side) {
             throw new PowsyblException("LoadOneTransformer doesn't have a transformer side");
         }
         return List.of(new VarConnection("tapChanger_tap", "transformer_tap"),

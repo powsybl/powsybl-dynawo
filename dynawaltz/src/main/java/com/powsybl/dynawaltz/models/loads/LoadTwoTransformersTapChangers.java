@@ -16,6 +16,9 @@ import com.powsybl.iidm.network.Load;
 
 import java.util.List;
 
+import static com.powsybl.dynawaltz.models.TransformerSide.HIGH_VOLTAGE;
+import static com.powsybl.dynawaltz.models.TransformerSide.LOW_VOLTAGE;
+
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
@@ -35,8 +38,8 @@ public class LoadTwoTransformersTapChangers extends LoadTwoTransformers implemen
         List<VarConnection> varConnections = super.getVarConnectionsWithBus(connected);
         connected.getSwitchOffSignalVarName()
                 .ifPresent(switchOff -> {
-                    varConnections.add(new VarConnection(getSwitchOffSignal(TransformerSide.HIGH_VOLTAGE), switchOff));
-                    varConnections.add(new VarConnection(getSwitchOffSignal(TransformerSide.LOW_VOLTAGE), switchOff));
+                    varConnections.add(new VarConnection(getSwitchOffSignal(HIGH_VOLTAGE), switchOff));
+                    varConnections.add(new VarConnection(getSwitchOffSignal(LOW_VOLTAGE), switchOff));
                 });
         return varConnections;
     }
@@ -48,8 +51,8 @@ public class LoadTwoTransformersTapChangers extends LoadTwoTransformers implemen
 
     @Override
     public List<VarConnection> getTapChangerBlockerVarConnections() {
-        return List.of(getTapChangerBlockerVarConnection(TransformerSide.LOW_VOLTAGE),
-                getTapChangerBlockerVarConnection(TransformerSide.HIGH_VOLTAGE));
+        return List.of(getTapChangerBlockerVarConnection(LOW_VOLTAGE),
+                getTapChangerBlockerVarConnection(HIGH_VOLTAGE));
     }
 
     private VarConnection getTapChangerBlockerVarConnection(TransformerSide side) {
