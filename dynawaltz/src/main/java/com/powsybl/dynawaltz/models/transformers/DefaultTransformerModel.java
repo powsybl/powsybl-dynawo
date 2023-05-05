@@ -35,6 +35,26 @@ public class DefaultTransformerModel extends AbstractNetworkModel implements Tra
     }
 
     @Override
+    public String getStepVarName() {
+        return "@NAME@_step";
+    }
+
+    @Override
+    public String getIMonitoredVarName() {
+        return "@NAME@_i1";
+    }
+
+    @Override
+    public String getPMonitoredVarName() {
+        return "@NAME@_P1";
+    }
+
+    @Override
+    public String getDisableInternalTapChangerVarName() {
+        return "@NAME@_disable_internal_tapChanger";
+    }
+
+    @Override
     public String getDisconnectableVarName() {
         return getStateValueVarName();
     }

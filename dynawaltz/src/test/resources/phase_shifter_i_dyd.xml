@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
+    <dyn:blackBoxModel id="BBM_phase_shifter" lib="PhaseShifterI" parFile="models.par" parId="ps"/>
+    <dyn:blackBoxModel id="BBM_NGEN_NHV1" lib="TransformerFixedRatio" parFile="models.par" parId="tt" staticId="NGEN_NHV1"/>
+    <dyn:macroConnector id="MC_PhaseShifterI-TransformerFixedRatio">
+        <dyn:connect var1="phaseShifter_tap" var2="transformer_step"/>
+        <dyn:connect var1="phaseShifter_iMonitored" var2="transformer_i1"/>
+        <dyn:connect var1="phaseShifter_P" var2="transformer_P1"/>
+        <dyn:connect var1="phaseShifter_AutomatonExists" var2="transformer_disable_internal_tapChanger"/>
+    </dyn:macroConnector>
+    <dyn:macroConnector id="MC_TransformerFixedRatioSide1-NetworkBus">
+        <dyn:connect var1="transformer_terminal1" var2="@NAME@_ACPIN"/>
+    </dyn:macroConnector>
+    <dyn:macroConnector id="MC_TransformerFixedRatioSide2-NetworkBus">
+        <dyn:connect var1="transformer_terminal2" var2="@NAME@_ACPIN"/>
+    </dyn:macroConnector>
+    <dyn:macroConnect connector="MC_PhaseShifterI-TransformerFixedRatio" id1="BBM_phase_shifter" id2="BBM_NGEN_NHV1"/>
+    <dyn:macroConnect connector="MC_TransformerFixedRatioSide1-NetworkBus" id1="BBM_NGEN_NHV1" id2="NETWORK" name2="NGEN"/>
+    <dyn:macroConnect connector="MC_TransformerFixedRatioSide2-NetworkBus" id1="BBM_NGEN_NHV1" id2="NETWORK" name2="NHV1"/>
+</dyn:dynamicModelsArchitecture>
