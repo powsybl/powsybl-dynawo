@@ -92,6 +92,11 @@ public abstract class AbstractGeneratorModel extends AbstractEquipmentBlackBoxMo
     }
 
     @Override
+    public String getUPuVarName() {
+        return "generator_UPu";
+    }
+
+    @Override
     public String getDisconnectableVarName() {
         return getSwitchOffSignalEventVarName();
     }

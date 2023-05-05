@@ -23,4 +23,6 @@ public interface GeneratorModel extends Model {
     String getRunningVarName();
 
     String getQStatorPuVarName();
+
+    String getUPuVarName();
 }
