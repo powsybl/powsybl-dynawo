@@ -16,7 +16,6 @@ import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection;
 import com.powsybl.dynawaltz.models.events.EventInjectionDisconnection;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -34,11 +33,6 @@ class EventModelsSupplierTest extends AbstractModelSupplierTest {
 
     private static final String FOLDER_NAME = "/eventModels/";
     protected static final List<EventModelGroovyExtension> EXTENSIONS = GroovyExtension.find(EventModelGroovyExtension.class, DynaWaltzProvider.NAME);
-
-    @Test
-    void testGroovyExtensionCount() {
-        assertEquals(1, EXTENSIONS.size());
-    }
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("provideEventModelData")

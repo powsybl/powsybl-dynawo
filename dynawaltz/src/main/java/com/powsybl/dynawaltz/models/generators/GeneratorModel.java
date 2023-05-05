@@ -13,4 +13,14 @@ import com.powsybl.dynawaltz.models.Model;
  */
 public interface GeneratorModel extends Model {
     String getTerminalVarName();
+
+    String getSwitchOffSignalNodeVarName();
+
+    String getSwitchOffSignalEventVarName();
+
+    String getSwitchOffSignalAutomatonVarName();
+
+    String getRunningVarName();
+
+    String getQStatorPuVarName();
 }

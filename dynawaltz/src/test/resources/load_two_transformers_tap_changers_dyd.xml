@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
+    <dyn:blackBoxModel id="BBM_LOAD" lib="LoadTwoTransformersTapChangers" parFile="models.par" parId="LTTTC" staticId="LOAD">
+        <dyn:macroStaticRef id="MSR_LoadTwoTransformersTapChangers"/>
+    </dyn:blackBoxModel>
+    <dyn:macroConnector id="MC_LoadTwoTransformersTapChangers-NetworkBus">
+        <dyn:connect var1="transformerT_terminal" var2="@NAME@_ACPIN"/>
+        <dyn:connect var1="transformerT_switchOffSignal1" var2="@NAME@_switchOff"/>
+        <dyn:connect var1="transformerD_switchOffSignal1" var2="@NAME@_switchOff"/>
+        <dyn:connect var1="load_switchOffSignal1" var2="@NAME@_switchOff"/>
+        <dyn:connect var1="tapChangerT_switchOffSignal1" var2="@NAME@_switchOff"/>
+        <dyn:connect var1="tapChangerD_switchOffSignal1" var2="@NAME@_switchOff"/>
+    </dyn:macroConnector>
+    <dyn:macroStaticReference id="MSR_LoadTwoTransformersTapChangers">
+        <dyn:staticRef var="transformerT_P1Pu_value" staticVar="p"/>
+        <dyn:staticRef var="transformerT_Q1Pu_value" staticVar="q"/>
+        <dyn:staticRef var="transformerT_state" staticVar="state"/>
+    </dyn:macroStaticReference>
+    <dyn:macroConnect connector="MC_LoadTwoTransformersTapChangers-NetworkBus" id1="BBM_LOAD" id2="NETWORK" name2="NLOAD"/>
+</dyn:dynamicModelsArchitecture>
