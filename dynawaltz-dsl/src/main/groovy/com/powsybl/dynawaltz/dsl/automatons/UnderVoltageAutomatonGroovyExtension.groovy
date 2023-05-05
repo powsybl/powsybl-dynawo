@@ -12,7 +12,7 @@ import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractPureDynamicGroovyExtension
-import com.powsybl.dynawaltz.dsl.AbstractPureDynamicModelBuilder
+import com.powsybl.dynawaltz.dsl.models.builders.AbstractPureDynamicModelBuilder
 import com.powsybl.dynawaltz.models.automatons.UnderVoltageAutomaton
 import com.powsybl.iidm.network.Generator
 import com.powsybl.iidm.network.Network
@@ -28,7 +28,7 @@ class UnderVoltageAutomatonGroovyExtension extends AbstractPureDynamicGroovyExte
     }
 
     @Override
-    protected UnderVoltageAutomatonBuilder createBuilder(String tag, Network network) {
+    protected UnderVoltageAutomatonBuilder createBuilder(Network network) {
         new UnderVoltageAutomatonBuilder(network)
     }
 
