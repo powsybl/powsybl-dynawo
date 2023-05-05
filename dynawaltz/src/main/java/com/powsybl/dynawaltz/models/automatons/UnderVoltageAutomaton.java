@@ -41,7 +41,7 @@ public class UnderVoltageAutomaton extends AbstractPureDynamicBlackBoxModel {
 
     protected List<VarConnection> getVarConnectionsWithGenerator(GeneratorModel connected) {
         return Arrays.asList(
-                new VarConnection("underVoltageAutomaton_UMonitoredPu", connected.getUpuVarName()),
+                new VarConnection("underVoltageAutomaton_UMonitoredPu", connected.getUPuVarName()),
                 new VarConnection("underVoltageAutomaton_switchOffSignal", connected.getSwitchOffSignalAutomatonVarName())
         );
     }

@@ -63,7 +63,7 @@ public class DefaultGeneratorModel extends AbstractNetworkModel implements Gener
         return "@NAME@_QStatorPu";
     }
 
-    public String getUpuVarName() {
+    public String getUPuVarName() {
         return "@NAME@_UPu";
     }
 }

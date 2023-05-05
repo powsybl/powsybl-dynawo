@@ -92,7 +92,7 @@ public abstract class AbstractGeneratorModel extends AbstractEquipmentBlackBoxMo
     }
 
     @Override
-    public String getUpuVarName() {
+    public String getUPuVarName() {
         return "generator_UPu";
     }
 
