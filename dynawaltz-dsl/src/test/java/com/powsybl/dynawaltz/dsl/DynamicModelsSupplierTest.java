@@ -35,7 +35,6 @@ import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import com.powsybl.iidm.network.test.HvdcTestNetwork;
 import com.powsybl.iidm.network.test.SvcTestCaseFactory;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -71,18 +70,6 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
         assertEquals(1, dynamicModels.size());
         assertTrue(modelClass.isInstance(dynamicModels.get(0)));
         assertPureDynamicBlackBoxModel(modelClass.cast(dynamicModels.get(0)), dynamicId, parameterId, lib);
-    }
-
-    @Test
-    void testTapChangerBlockingAutomaton() {
-        DynamicModelsSupplier supplier = new GroovyDynamicModelsSupplier(getResourceAsStream("tapChangerBlocking"), EXTENSIONS);
-        List<DynamicModel> dynamicModels = supplier.get(EurostagTutorialExample1Factory.create());
-        assertEquals(1, dynamicModels.size());
-        assertTrue(dynamicModels.get(0) instanceof TapChangerBlockingAutomaton);
-        TapChangerBlockingAutomaton bbm = (TapChangerBlockingAutomaton) dynamicModels.get(0);
-        assertEquals("ZAB", bbm.getDynamicModelId());
-        assertEquals("ZAB", bbm.getParameterSetId());
-        assertEquals("TapChangerBlockingAutomaton1", bbm.getLib());
     }
 
     @ParameterizedTest(name = "{0}")
@@ -128,6 +115,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
         return Stream.of(
                 Arguments.of("currentLimit", CurrentLimitAutomaton.class, EurostagTutorialExample1Factory.create(), "AM_NHV1_NHV2_1", "CLA", "CurrentLimitAutomaton"),
                 Arguments.of("tapChanger", TapChangerAutomaton.class, EurostagTutorialExample1Factory.create(), "TC", "tc", "TapChangerAutomaton"),
+                Arguments.of("tapChangerBlocking", TapChangerBlockingAutomaton.class, EurostagTutorialExample1Factory.create(), "ZAB", "ZAB", "TapChangerBlockingAutomaton1"),
                 Arguments.of("phaseShifterI", PhaseShifterIAutomaton.class, EurostagTutorialExample1Factory.create(), "PS_NGEN_NHV1", "ps", "PhaseShifterI"),
                 Arguments.of("phaseShifterP", PhaseShifterPAutomaton.class, EurostagTutorialExample1Factory.create(), "PS_NGEN_NHV1", "ps", "PhaseShifterP"),
                 Arguments.of("underVoltage", UnderVoltageAutomaton.class, EurostagTutorialExample1Factory.create(), "UV_GEN", "uv", "UnderVoltageAutomaton")
