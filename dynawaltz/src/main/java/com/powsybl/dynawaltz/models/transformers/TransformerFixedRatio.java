@@ -10,6 +10,7 @@ package com.powsybl.dynawaltz.models.transformers;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractEquipmentBlackBoxModel;
 import com.powsybl.dynawaltz.models.Side;
+import com.powsybl.dynawaltz.models.TransformerSide;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.buses.BusModel;
 import com.powsybl.dynawaltz.models.events.QuadripoleDisconnectableEquipment;
@@ -65,6 +66,6 @@ public class TransformerFixedRatio extends AbstractEquipmentBlackBoxModel<TwoWin
 
     @Override
     public List<VarConnection> getTapChangerBlockerVarConnections() {
-        return List.of(new VarConnection(TAP_CHANGER_BLOCKING_BLOCKED_T, "transformer_TAP_CHANGER_locked_value"));
+        return List.of(new VarConnection(getTapChangerBlockingVarName(TransformerSide.NONE), "transformer_TAP_CHANGER_locked_value"));
     }
 }

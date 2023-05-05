@@ -113,17 +113,17 @@ public class DynaWaltzContext {
         throw new PowsyblException(String.format(MODEL_ID_EXCEPTION, equipment.getId(), connectableClass.getSimpleName()));
     }
 
-    public <T extends Model> T getPureDynamicModel(String staticId, Class<T> connectableClass) {
+    public <T extends Model> T getPureDynamicModel(String dynamicId, Class<T> connectableClass) {
         BlackBoxModel bbm = dynamicModels.stream()
-                .filter(dm -> staticId.equals(dm.getDynamicModelId()))
+                .filter(dm -> dynamicId.equals(dm.getDynamicModelId()))
                 .findFirst()
                 .orElseThrow(() -> {
-                    throw new PowsyblException("Pure dynamic model " + staticId + " not found");
+                    throw new PowsyblException("Pure dynamic model " + dynamicId + " not found");
                 });
         if (connectableClass.isInstance(bbm)) {
             return connectableClass.cast(bbm);
         }
-        throw new PowsyblException(String.format(MODEL_ID_EXCEPTION, staticId, connectableClass.getSimpleName()));
+        throw new PowsyblException(String.format(MODEL_ID_EXCEPTION, dynamicId, connectableClass.getSimpleName()));
     }
 
     private EquipmentBlackBoxModelModel mergeDuplicateStaticId(EquipmentBlackBoxModelModel bbm1, EquipmentBlackBoxModelModel bbm2) {

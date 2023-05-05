@@ -46,6 +46,6 @@ public class LoadOneTransformerTapChanger extends LoadOneTransformer implements 
 
     @Override
     public List<VarConnection> getTapChangerBlockerVarConnections() {
-        return List.of(new VarConnection(TAP_CHANGER_BLOCKING_BLOCKED_T, "tapChanger_locked"));
+        return List.of(new VarConnection(getTapChangerBlockingVarName(TransformerSide.NONE), "tapChanger_locked"));
     }
 }

@@ -35,8 +35,8 @@ public class LoadTwoTransformersTapChangers extends LoadTwoTransformers implemen
         List<VarConnection> varConnections = super.getVarConnectionsWithBus(connected);
         connected.getSwitchOffSignalVarName()
                 .ifPresent(switchOff -> {
-                    varConnections.add(new VarConnection("tapChangerT_switchOffSignal1", switchOff));
-                    varConnections.add(new VarConnection("tapChangerD_switchOffSignal1", switchOff));
+                    varConnections.add(new VarConnection(getSwitchOffSignal(TransformerSide.HIGH_VOLTAGE), switchOff));
+                    varConnections.add(new VarConnection(getSwitchOffSignal(TransformerSide.LOW_VOLTAGE), switchOff));
                 });
         return varConnections;
     }
@@ -48,7 +48,15 @@ public class LoadTwoTransformersTapChangers extends LoadTwoTransformers implemen
 
     @Override
     public List<VarConnection> getTapChangerBlockerVarConnections() {
-        return List.of(new VarConnection(TAP_CHANGER_BLOCKING_BLOCKED_D, "tapChangerD_locked"),
-            new VarConnection(TAP_CHANGER_BLOCKING_BLOCKED_T, "tapChangerT_locked"));
+        return List.of(getTapChangerBlockerVarConnection(TransformerSide.LOW_VOLTAGE),
+                getTapChangerBlockerVarConnection(TransformerSide.HIGH_VOLTAGE));
+    }
+
+    private VarConnection getTapChangerBlockerVarConnection(TransformerSide side) {
+        return new VarConnection(getTapChangerBlockingVarName(side), "tapChanger" + side.getSideSuffix() + "_locked");
+    }
+
+    private String getSwitchOffSignal(TransformerSide side) {
+        return "tapChanger" + side.getSideSuffix() + "_switchOffSignal1";
     }
 }
