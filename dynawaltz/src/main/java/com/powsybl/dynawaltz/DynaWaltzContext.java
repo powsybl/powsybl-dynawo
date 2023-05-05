@@ -26,6 +26,8 @@ import java.util.stream.Stream;
  */
 public class DynaWaltzContext {
 
+    private static final String MODEL_ID_EXCEPTION = "The model identified by the static id %s does not match the expected model (%s)";
+
     private final Network network;
     private final String workingVariantId;
     private final DynamicSimulationParameters parameters;
@@ -97,7 +99,7 @@ public class DynaWaltzContext {
         if (clazz.isInstance(bbm)) {
             return clazz.cast(bbm);
         }
-        throw new PowsyblException("The model identified by the static id " + staticId + " does not match not the expected model (" + clazz.getSimpleName() + ")");
+        throw new PowsyblException(String.format(MODEL_ID_EXCEPTION, staticId, clazz.getSimpleName()));
     }
 
     public <T extends Model> T getDynamicModel(Identifiable<?> equipment, Class<T> connectableClass) {
@@ -108,7 +110,20 @@ public class DynaWaltzContext {
         if (connectableClass.isInstance(bbm)) {
             return connectableClass.cast(bbm);
         }
-        throw new PowsyblException("The model identified by the static id " + equipment.getId() + " does not match not the expected model (" + connectableClass.getSimpleName() + ")");
+        throw new PowsyblException(String.format(MODEL_ID_EXCEPTION, equipment.getId(), connectableClass.getSimpleName()));
+    }
+
+    public <T extends Model> T getPureDynamicModel(String dynamicId, Class<T> connectableClass) {
+        BlackBoxModel bbm = dynamicModels.stream()
+                .filter(dm -> dynamicId.equals(dm.getDynamicModelId()))
+                .findFirst()
+                .orElseThrow(() -> {
+                    throw new PowsyblException("Pure dynamic model " + dynamicId + " not found");
+                });
+        if (connectableClass.isInstance(bbm)) {
+            return connectableClass.cast(bbm);
+        }
+        throw new PowsyblException(String.format(MODEL_ID_EXCEPTION, dynamicId, connectableClass.getSimpleName()));
     }
 
     private EquipmentBlackBoxModelModel mergeDuplicateStaticId(EquipmentBlackBoxModelModel bbm1, EquipmentBlackBoxModelModel bbm2) {

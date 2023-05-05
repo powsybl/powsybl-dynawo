@@ -77,7 +77,7 @@ class DynamicModelsXmlTest extends DynaWaltzTestUtil {
 
         // incorrect model
         Exception e = assertThrows(PowsyblException.class, () -> dc.getDynamicModel("GEN5", LineModel.class));
-        assertEquals("The model identified by the static id GEN5 does not match not the expected model (LineModel)", e.getMessage());
+        assertEquals("The model identified by the static id GEN5 does not match the expected model (LineModel)", e.getMessage());
 
         // default model not implemented
         e = assertThrows(PowsyblException.class, () -> dc.getDynamicModel("unknownID", GeneratorSynchronousModel.class));
@@ -91,7 +91,7 @@ class DynamicModelsXmlTest extends DynaWaltzTestUtil {
         // incorrect model
         Identifiable<?> gen = network.getIdentifiable("GEN5");
         Exception e = assertThrows(PowsyblException.class, () -> dc.getDynamicModel(gen, LineModel.class));
-        assertEquals("The model identified by the static id GEN5 does not match not the expected model (LineModel)", e.getMessage());
+        assertEquals("The model identified by the static id GEN5 does not match the expected model (LineModel)", e.getMessage());
 
         // dynamic model not found
         Identifiable<?> substation = network.getIdentifiable("P1");

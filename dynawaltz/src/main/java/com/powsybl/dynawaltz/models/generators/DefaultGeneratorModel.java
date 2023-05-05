@@ -37,4 +37,29 @@ public class DefaultGeneratorModel extends AbstractNetworkModel implements Gener
     public String getTerminalVarName() {
         return "@NAME@_terminal";
     }
+
+    @Override
+    public String getSwitchOffSignalNodeVarName() {
+        return "@NAME@_switchOffSignal1";
+    }
+
+    @Override
+    public String getSwitchOffSignalEventVarName() {
+        return "@NAME@_switchOffSignal2";
+    }
+
+    @Override
+    public String getSwitchOffSignalAutomatonVarName() {
+        return "@NAME@_switchOffSignal3";
+    }
+
+    @Override
+    public String getRunningVarName() {
+        return "@NAME@_running";
+    }
+
+    @Override
+    public String getQStatorPuVarName() {
+        return "@NAME@_QStatorPu";
+    }
 }

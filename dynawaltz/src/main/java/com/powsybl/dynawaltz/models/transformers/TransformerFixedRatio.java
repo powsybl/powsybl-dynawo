@@ -20,6 +20,8 @@ import com.powsybl.iidm.network.TwoWindingsTransformer;
 import java.util.List;
 import java.util.Objects;
 
+import static com.powsybl.dynawaltz.models.TransformerSide.NONE;
+
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
@@ -61,5 +63,10 @@ public class TransformerFixedRatio extends AbstractEquipmentBlackBoxModel<TwoWin
     @Override
     public String getDisconnectableVarName() {
         return getStateValueVarName();
+    }
+
+    @Override
+    public List<VarConnection> getTapChangerBlockerVarConnections() {
+        return List.of(new VarConnection(getTapChangerBlockingVarName(NONE), "transformer_TAP_CHANGER_locked_value"));
     }
 }
