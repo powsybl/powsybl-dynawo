@@ -9,7 +9,7 @@
 package com.powsybl.dynawaltz.dsl.automatons
 
 import com.powsybl.dsl.DslException
-import com.powsybl.dynawaltz.dsl.AbstractPureDynamicModelBuilder
+import com.powsybl.dynawaltz.dsl.models.builders.AbstractPureDynamicModelBuilder
 import com.powsybl.iidm.network.Network
 import com.powsybl.iidm.network.TwoWindingsTransformer
 
