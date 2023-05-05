@@ -25,6 +25,7 @@ import static com.powsybl.dynawaltz.models.TransformerSide.*;
  */
 public class LoadTwoTransformers extends AbstractLoad implements LoadWithTransformers {
 
+    public static final String SWITCH_OFF_SIGNAL_NAME = "switchOffSignal1";
     protected static final List<VarMapping> VAR_MAPPING = Arrays.asList(
             new VarMapping(getTransformerVar(HIGH_VOLTAGE, "P1Pu_value"), "p"),
             new VarMapping(getTransformerVar(HIGH_VOLTAGE, "Q1Pu_value"), "q"),
@@ -45,8 +46,8 @@ public class LoadTwoTransformers extends AbstractLoad implements LoadWithTransfo
         varConnections.add(new VarConnection(getTransformerVar(HIGH_VOLTAGE, "terminal"), connected.getTerminalVarName()));
         connected.getSwitchOffSignalVarName()
                 .ifPresent(switchOff -> {
-                    varConnections.add(new VarConnection(getTransformerVar(HIGH_VOLTAGE, "switchOffSignal1"), switchOff));
-                    varConnections.add(new VarConnection(getTransformerVar(LOW_VOLTAGE, "switchOffSignal1"), switchOff));
+                    varConnections.add(new VarConnection(getTransformerVar(HIGH_VOLTAGE, SWITCH_OFF_SIGNAL_NAME), switchOff));
+                    varConnections.add(new VarConnection(getTransformerVar(LOW_VOLTAGE, SWITCH_OFF_SIGNAL_NAME), switchOff));
                     varConnections.add(new VarConnection("load_switchOffSignal1", switchOff));
                 });
         return varConnections;
@@ -59,7 +60,7 @@ public class LoadTwoTransformers extends AbstractLoad implements LoadWithTransfo
         }
         return List.of(new VarConnection("tapChanger_tap", getTransformerVar(side, "tap")),
                 new VarConnection("tapChanger_UMonitored", getTransformerVar(side, "U2Pu")),
-                new VarConnection("tapChanger_switchOffSignal1", getTransformerVar(side, "switchOffSignal1")));
+                new VarConnection("tapChanger_switchOffSignal1", getTransformerVar(side, SWITCH_OFF_SIGNAL_NAME)));
     }
 
     @Override
