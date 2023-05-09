@@ -12,6 +12,6 @@ NodeFault {
     staticId "NGEN"
     startTime 1
     faultTime 0.1
-    RPu 0
-    XPu 0.01
+    rPu 0
+    xPu 0.01
 }

@@ -47,11 +47,11 @@ class NodeFaultEventGroovyExtension extends AbstractPureDynamicGroovyExtension<E
             this.faultTime = faultTime
         }
 
-        void RPu(double rPu) {
+        void rPu(double rPu) {
             this.rPu = rPu
         }
 
-        void XPu(double xPu) {
+        void xPu(double xPu) {
             this.xPu = xPu
         }
 
@@ -65,10 +65,10 @@ class NodeFaultEventGroovyExtension extends AbstractPureDynamicGroovyExtension<E
                 throw new DslException("NodeFault ${bus.getId()} fault time should be strictly positive (${faultTime})")
             }
             if (rPu < 0) {
-                throw new DslException("NodeFault ${bus.getId()} RPu should be positive (${rPu})")
+                throw new DslException("NodeFault ${bus.getId()} rPu should be positive (${rPu})")
             }
             if (xPu < 0) {
-                throw new DslException("NodeFault ${bus.getId()} XPu should be positive (${xPu})")
+                throw new DslException("NodeFault ${bus.getId()} xPu should be positive (${xPu})")
             }
         }
 
