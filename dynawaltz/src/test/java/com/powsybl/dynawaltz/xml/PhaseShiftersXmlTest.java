@@ -34,12 +34,12 @@ class PhaseShiftersXmlTest extends AbstractParametrizedDynamicModelXmlTest {
     private static final String DYN_NAME = "BBM_" + PHASE_SHIFTER_NAME;
 
     @FunctionalInterface
-    public interface TriFunction {
-        AbstractPhaseShifterAutomaton apply(String a, TwoWindingsTransformer b, String c);
+    public interface PhaseShifterAutomatonFactory {
+        AbstractPhaseShifterAutomaton create(String dynamicModelId, TwoWindingsTransformer twoWindingsTransformer, String parameterSetId);
     }
 
     @BeforeEach
-    void setup(String dydName, TriFunction phaseShifterConstructor, boolean dynamicTransformer) {
+    void setup(String dydName, PhaseShifterAutomatonFactory phaseShifterConstructor, boolean dynamicTransformer) {
         setupNetwork();
         addDynamicModels(phaseShifterConstructor, dynamicTransformer);
         setupDynawaltzContext();
@@ -49,8 +49,8 @@ class PhaseShiftersXmlTest extends AbstractParametrizedDynamicModelXmlTest {
         network = EurostagTutorialExample1Factory.create();
     }
 
-    protected void addDynamicModels(TriFunction phaseShifterConstructor, boolean dynamicTransformer) {
-        dynamicModels.add(phaseShifterConstructor.apply(DYN_NAME, network.getTwoWindingsTransformer("NGEN_NHV1"), "ps"));
+    protected void addDynamicModels(PhaseShifterAutomatonFactory phaseShifterConstructor, boolean dynamicTransformer) {
+        dynamicModels.add(phaseShifterConstructor.create(DYN_NAME, network.getTwoWindingsTransformer("NGEN_NHV1"), "ps"));
         if (dynamicTransformer) {
             dynamicModels.add(new TransformerFixedRatio("BBM_NGEN_NHV1", network.getTwoWindingsTransformer("NGEN_NHV1"), "tt", "TransformerFixedRatio"));
         }
@@ -58,15 +58,15 @@ class PhaseShiftersXmlTest extends AbstractParametrizedDynamicModelXmlTest {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("providePhaseShifter")
-    void writeLoadModel(String dydName, TriFunction phaseShifterConstructor, boolean dynamicTransformer) throws SAXException, IOException, XMLStreamException {
+    void writeLoadModel(String dydName, PhaseShifterAutomatonFactory phaseShifterConstructor, boolean dynamicTransformer) throws SAXException, IOException, XMLStreamException {
         DydXml.write(tmpDir, context);
         validate("dyd.xsd", dydName + ".xml", tmpDir.resolve(DynaWaltzConstants.DYD_FILENAME));
     }
 
     private static Stream<Arguments> providePhaseShifter() {
         return Stream.of(
-                Arguments.of("phase_shifter_i_dyd", (TriFunction) PhaseShifterIAutomaton::new, true),
-                Arguments.of("phase_shifter_p_dyd", (TriFunction) PhaseShifterPAutomaton::new, false)
+                Arguments.of("phase_shifter_i_dyd", (PhaseShifterAutomatonFactory) PhaseShifterIAutomaton::new, true),
+                Arguments.of("phase_shifter_p_dyd", (PhaseShifterAutomatonFactory) PhaseShifterPAutomaton::new, false)
         );
     }
 }
