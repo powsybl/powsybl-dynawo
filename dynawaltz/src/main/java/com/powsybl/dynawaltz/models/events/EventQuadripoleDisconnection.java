@@ -11,13 +11,10 @@ import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.parameters.ParameterType;
 import com.powsybl.dynawaltz.xml.ParametersXml;
 import com.powsybl.iidm.network.Branch;
-import com.powsybl.iidm.network.IdentifiableType;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-import java.util.EnumSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -26,7 +23,6 @@ import java.util.Set;
 public class EventQuadripoleDisconnection extends AbstractEventModel {
 
     private static final String EVENT_PREFIX = "Disconnect_";
-    private static final Set<IdentifiableType> COMPATIBLE_EQUIPMENTS = EnumSet.of(IdentifiableType.LINE, IdentifiableType.TWO_WINDINGS_TRANSFORMER);
     private final boolean disconnectOrigin;
     private final boolean disconnectExtremity;
 

@@ -11,14 +11,11 @@ import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.parameters.ParameterType;
 import com.powsybl.dynawaltz.xml.ParametersXml;
 import com.powsybl.iidm.network.Generator;
-import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Load;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-import java.util.EnumSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author Mathieu BAGUE {@literal <mathieu.bague at rte-france.com>}
@@ -27,7 +24,6 @@ import java.util.Set;
 public class EventInjectionDisconnection extends AbstractEventModel {
 
     private static final String EVENT_PREFIX = "Disconnect_";
-    private static final Set<IdentifiableType> COMPATIBLE_EQUIPMENTS = EnumSet.of(IdentifiableType.GENERATOR, IdentifiableType.LOAD);
     private static final String DYNAMIC_MODEL_LIB = "EventSetPointBoolean";
     private static final String DEFAULT_MODEL_LIB = "EventConnectedStatus";
 
