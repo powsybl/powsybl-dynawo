@@ -139,6 +139,11 @@
                 <artifactId>powsybl-dynawaltz-dsl</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.powsybl</groupId>
+                <artifactId>powsybl-dynawo-integration-tests</artifactId>
+                <version>${project.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

@@ -11,7 +11,6 @@ package com.powsybl.dynawaltz.models;
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 public enum TransformerSide {
-//TODO rename
     HIGH_VOLTAGE("T"),
     LOW_VOLTAGE("D"),
     NONE("");

@@ -48,7 +48,7 @@ class DynamicModelsXmlTest extends DynaWaltzTestUtil {
         dynamicModels.clear();
         network.getGeneratorStream().forEach(gen -> {
             if (gen.getId().equals("GEN6")) {
-                dynamicModels.add(new GeneratorFictitious("BBM_" + gen.getId(), gen.getId(), "GF"));
+                dynamicModels.add(new GeneratorFictitious("BBM_" + gen.getId(), gen, "GF"));
             }
         });
 
@@ -63,12 +63,12 @@ class DynamicModelsXmlTest extends DynaWaltzTestUtil {
         dynamicModels.clear();
         network.getGeneratorStream().forEach(gen -> {
             if (gen.getId().equals("GEN5") || gen.getId().equals("GEN6")) {
-                dynamicModels.add(new GeneratorFictitious("BBM_" + gen.getId(), "duplicateID", "GF"));
+                dynamicModels.add(new GeneratorFictitious("BBM_" + gen.getId(), network.getGenerator("GEN5"), "GF"));
             }
         });
         String workingVariantId = network.getVariantManager().getWorkingVariantId();
         Exception e = assertThrows(PowsyblException.class, () -> new DynaWaltzContext(network, workingVariantId, dynamicModels, eventModels, curves, null, null));
-        assertEquals("Duplicate staticId: duplicateID", e.getMessage());
+        assertEquals("Duplicate staticId: GEN5", e.getMessage());
     }
 
     @Test
@@ -77,7 +77,7 @@ class DynamicModelsXmlTest extends DynaWaltzTestUtil {
 
         // incorrect model
         Exception e = assertThrows(PowsyblException.class, () -> dc.getDynamicModel("GEN5", LineModel.class));
-        assertEquals("The model identified by the static id GEN5 is not the correct model", e.getMessage());
+        assertEquals("The model identified by the static id GEN5 does not match the expected model (LineModel)", e.getMessage());
 
         // default model not implemented
         e = assertThrows(PowsyblException.class, () -> dc.getDynamicModel("unknownID", GeneratorSynchronousModel.class));
@@ -91,7 +91,7 @@ class DynamicModelsXmlTest extends DynaWaltzTestUtil {
         // incorrect model
         Identifiable<?> gen = network.getIdentifiable("GEN5");
         Exception e = assertThrows(PowsyblException.class, () -> dc.getDynamicModel(gen, LineModel.class));
-        assertEquals("The model identified by the static id GEN5 is not the correct model", e.getMessage());
+        assertEquals("The model identified by the static id GEN5 does not match the expected model (LineModel)", e.getMessage());
 
         // dynamic model not found
         Identifiable<?> substation = network.getIdentifiable("P1");

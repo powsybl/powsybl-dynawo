@@ -6,9 +6,8 @@
  */
 package com.powsybl.dynawaltz.models.generators;
 
-import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
-import com.powsybl.dynawaltz.models.AbstractBlackBoxModel;
+import com.powsybl.dynawaltz.models.AbstractEquipmentBlackBoxModel;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.VarMapping;
 import com.powsybl.dynawaltz.models.buses.BusModel;
@@ -19,13 +18,12 @@ import com.powsybl.iidm.network.Generator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public abstract class AbstractGeneratorModel extends AbstractBlackBoxModel implements GeneratorModel, DisconnectableEquipment {
+public abstract class AbstractGeneratorModel extends AbstractEquipmentBlackBoxModel<Generator> implements GeneratorModel, DisconnectableEquipment {
 
     protected static final List<VarMapping> VAR_MAPPING = Arrays.asList(
             new VarMapping("generator_PGenPu", "p"),
@@ -38,11 +36,11 @@ public abstract class AbstractGeneratorModel extends AbstractBlackBoxModel imple
     private final String switchOffSignalAutomatonVarName;
     private final String runningVarName;
 
-    protected AbstractGeneratorModel(String dynamicModelId, String staticId, String parameterSetId,
-                                  String terminalVarName, String switchOffSignalNodeVarName,
-                                  String switchOffSignalEventVarName, String switchOffSignalAutomatonVarName,
-                                  String runningVarName) {
-        super(dynamicModelId, Objects.requireNonNull(staticId), parameterSetId);
+    protected AbstractGeneratorModel(String dynamicModelId, Generator generator, String parameterSetId,
+                                     String terminalVarName, String switchOffSignalNodeVarName,
+                                     String switchOffSignalEventVarName, String switchOffSignalAutomatonVarName,
+                                     String runningVarName) {
+        super(dynamicModelId, parameterSetId, generator);
         this.terminalVarName = terminalVarName;
         this.switchOffSignalNodeVarName = switchOffSignalNodeVarName;
         this.switchOffSignalEventVarName = switchOffSignalEventVarName;
@@ -57,12 +55,7 @@ public abstract class AbstractGeneratorModel extends AbstractBlackBoxModel imple
 
     @Override
     public void createMacroConnections(DynaWaltzContext context) {
-        String staticId = getStaticId().orElse(null); // cannot be empty as checked in constructor
-        Generator generator = context.getNetwork().getGenerator(staticId);
-        if (generator == null) {
-            throw new PowsyblException("Generator static id unknown: " + staticId);
-        }
-        createMacroConnections(BusUtils.getConnectableBusStaticId(generator), BusModel.class, this::getVarConnectionsWithBus, context);
+        createMacroConnections(BusUtils.getConnectableBusStaticId(equipment), BusModel.class, this::getVarConnectionsWithBus, context);
     }
 
     private List<VarConnection> getVarConnectionsWithBus(BusModel connected) {
@@ -82,6 +75,10 @@ public abstract class AbstractGeneratorModel extends AbstractBlackBoxModel imple
         return switchOffSignalNodeVarName;
     }
 
+    public String getSwitchOffSignalEventVarName() {
+        return switchOffSignalEventVarName;
+    }
+
     public String getSwitchOffSignalAutomatonVarName() {
         return switchOffSignalAutomatonVarName;
     }
@@ -95,7 +92,12 @@ public abstract class AbstractGeneratorModel extends AbstractBlackBoxModel imple
     }
 
     @Override
+    public String getUPuVarName() {
+        return "generator_UPu";
+    }
+
+    @Override
     public String getDisconnectableVarName() {
-        return switchOffSignalEventVarName;
+        return getSwitchOffSignalEventVarName();
     }
 }

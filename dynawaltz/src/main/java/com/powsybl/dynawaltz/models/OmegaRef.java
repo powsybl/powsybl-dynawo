@@ -8,20 +8,19 @@ package com.powsybl.dynawaltz.models;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
-import com.powsybl.dynawaltz.DynaWaltzParametersDatabase;
+import com.powsybl.dynawaltz.DynaWaltzParameters;
 import com.powsybl.dynawaltz.models.buses.BusModel;
+import com.powsybl.dynawaltz.models.generators.GeneratorSynchronousModel;
 import com.powsybl.dynawaltz.models.generators.OmegaRefGeneratorModel;
-import com.powsybl.dynawaltz.models.utils.BusUtils;
 import com.powsybl.dynawaltz.xml.ParametersXml;
-import com.powsybl.iidm.network.Generator;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.util.Collections;
 import java.util.List;
 
-import static com.powsybl.dynawaltz.DynaWaltzParametersDatabase.ParameterType.DOUBLE;
-import static com.powsybl.dynawaltz.DynaWaltzParametersDatabase.ParameterType.INT;
+import static com.powsybl.dynawaltz.parameters.ParameterType.DOUBLE;
+import static com.powsybl.dynawaltz.parameters.ParameterType.INT;
 import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 
 /**
@@ -56,7 +55,7 @@ public class OmegaRef extends AbstractPureDynamicBlackBoxModel {
 
     @Override
     public void writeParameters(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
-        DynaWaltzParametersDatabase parDB = context.getParametersDatabase();
+        DynaWaltzParameters dynaWaltzParameters = context.getDynaWaltzParameters();
 
         writer.writeStartElement(DYN_URI, "set");
         writer.writeAttribute("id", getParameterSetId());
@@ -65,9 +64,13 @@ public class OmegaRef extends AbstractPureDynamicBlackBoxModel {
         // The OmegaRef parameters index the weight of each generator according to that declaration order.
         int index = 0;
         for (OmegaRefGeneratorModel generator : omegaRefGenerators) {
-            double h = parDB.getDouble(generator.getParameterSetId(), "generator_H");
-            double snom = parDB.getDouble(generator.getParameterSetId(), "generator_SNom");
-            ParametersXml.writeParameter(writer, DOUBLE, "weight_gen_" + index, Double.toString(h * snom));
+            double weightGen = 0;
+            if (generator instanceof GeneratorSynchronousModel) {
+                double h = dynaWaltzParameters.getModelParameters(generator.getParameterSetId()).getDouble("generator_H");
+                double snom = dynaWaltzParameters.getModelParameters(generator.getParameterSetId()).getDouble("generator_SNom");
+                weightGen = h * snom;
+            }
+            ParametersXml.writeParameter(writer, DOUBLE, "weight_gen_" + index, Double.toString(weightGen));
             index++;
         }
 
@@ -91,17 +94,9 @@ public class OmegaRef extends AbstractPureDynamicBlackBoxModel {
         int index = 0;
         for (OmegaRefGeneratorModel gen : omegaRefGenerators) {
             createMacroConnections(gen, getVarConnectionsWithOmegaRefGenerator(gen), context, MacroConnectAttribute.ofIndex1(index));
-            createMacroConnections(getBusAssociatedTo(gen, context), BusModel.class, this::getVarConnectionsWithBus, context, MacroConnectAttribute.ofIndex1(index));
+            createMacroConnections(gen.getConnectableBusId(), BusModel.class, this::getVarConnectionsWithBus, context, MacroConnectAttribute.ofIndex1(index));
             index++;
         }
-    }
-
-    private String getBusAssociatedTo(OmegaRefGeneratorModel generatorModel, DynaWaltzContext context) {
-        Generator generator = generatorModel.getStaticId().map(staticId -> context.getNetwork().getGenerator(staticId)).orElse(null);
-        if (generator == null) {
-            throw new PowsyblException("Generator " + generatorModel.getLib() + " not found in DynaWaltz context. Id : " + generatorModel.getDynamicModelId());
-        }
-        return BusUtils.getConnectableBusStaticId(generator);
     }
 
     @Override

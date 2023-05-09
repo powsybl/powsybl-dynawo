@@ -10,30 +10,35 @@ package com.powsybl.dynawaltz.dsl.models.loads
 import com.google.auto.service.AutoService
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
-import com.powsybl.dynawaltz.dsl.AbstractDynamicModelBuilder
-import com.powsybl.dynawaltz.dsl.AbstractPowsyblDynawoGroovyExtension
+import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
 import com.powsybl.dynawaltz.models.loads.LoadTwoTransformers
+import com.powsybl.iidm.network.Network
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class LoadTwoTransformersGroovyExtension extends AbstractPowsyblDynawoGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+class LoadTwoTransformersGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
     LoadTwoTransformersGroovyExtension() {
         modelTags = ["LoadTwoTransformers"]
     }
 
     @Override
-    protected LoadTwoTransformersBuilder createBuilder(String currentTag) {
-        new LoadTwoTransformersBuilder()
+    protected LoadTwoTransformersBuilder createBuilder(Network network, String currentTag) {
+        new LoadTwoTransformersBuilder(network)
     }
 
-    static class LoadTwoTransformersBuilder extends AbstractDynamicModelBuilder {
+    static class LoadTwoTransformersBuilder extends AbstractLoadModelBuilder {
+
+        LoadTwoTransformersBuilder(Network network) {
+            super(network)
+        }
+
         @Override
         LoadTwoTransformers build() {
             checkData()
-            new LoadTwoTransformers(dynamicModelId, staticId, parameterSetId)
+            new LoadTwoTransformers(dynamicModelId, load, parameterSetId)
         }
     }
 }

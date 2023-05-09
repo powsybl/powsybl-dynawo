@@ -35,9 +35,9 @@ class TapChangerAutomatonXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void addDynamicModels() {
-        dynamicModels.add(new LoadOneTransformer("BBM_LOAD", "LOAD", "LOT"));
-        dynamicModels.add(new LoadTwoTransformers("BBM_LOAD2", "LOAD2", "LTT"));
-        dynamicModels.add(new LoadTwoTransformers("BBM_LOAD3", "LOAD3", "LTT"));
+        dynamicModels.add(new LoadOneTransformer("BBM_LOAD", network.getLoad("LOAD"), "LOT"));
+        dynamicModels.add(new LoadTwoTransformers("BBM_LOAD2", network.getLoad("LOAD2"), "LTT"));
+        dynamicModels.add(new LoadTwoTransformers("BBM_LOAD3", network.getLoad("LOAD3"), "LTT"));
         dynamicModels.add(new TapChangerAutomaton("BBM_TC", "tc", network.getLoad("LOAD")));
         dynamicModels.add(new TapChangerAutomaton("BBM_TC2", "tc", network.getLoad("LOAD2"), TransformerSide.LOW_VOLTAGE));
         dynamicModels.add(new TapChangerAutomaton("BBM_TC3", "tc", network.getLoad("LOAD3"), TransformerSide.HIGH_VOLTAGE));

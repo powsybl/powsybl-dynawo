@@ -9,13 +9,11 @@ package com.powsybl.dynawaltz.models;
 import com.powsybl.dynamicsimulation.DynamicModel;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  */
 public interface Model extends DynamicModel {
-    Optional<String> getStaticId();
 
     String getName();
 

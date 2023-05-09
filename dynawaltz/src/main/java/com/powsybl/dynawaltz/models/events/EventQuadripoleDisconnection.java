@@ -8,19 +8,14 @@ package com.powsybl.dynawaltz.models.events;
 
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.VarConnection;
-import com.powsybl.dynawaltz.models.automatons.QuadripoleModel;
 import com.powsybl.dynawaltz.xml.ParametersXml;
-import com.powsybl.iidm.network.IdentifiableType;
-import com.powsybl.iidm.network.Line;
-import com.powsybl.iidm.network.TwoWindingsTransformer;
+import com.powsybl.iidm.network.Branch;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-import java.util.EnumSet;
 import java.util.List;
-import java.util.Set;
 
-import static com.powsybl.dynawaltz.DynaWaltzParametersDatabase.ParameterType.BOOL;
+import static com.powsybl.dynawaltz.parameters.ParameterType.BOOL;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -28,33 +23,17 @@ import static com.powsybl.dynawaltz.DynaWaltzParametersDatabase.ParameterType.BO
  */
 public class EventQuadripoleDisconnection extends AbstractEventModel {
 
-    private static final Set<IdentifiableType> COMPATIBLE_EQUIPMENTS = EnumSet.of(IdentifiableType.LINE, IdentifiableType.TWO_WINDINGS_TRANSFORMER);
-
     private final boolean disconnectOrigin;
     private final boolean disconnectExtremity;
 
-    public EventQuadripoleDisconnection(Line equipment, double startTime, boolean disconnectOrigin, boolean disconnectExtremity) {
+    public EventQuadripoleDisconnection(Branch<?> equipment, double startTime, boolean disconnectOrigin, boolean disconnectExtremity) {
         super(equipment, startTime);
         this.disconnectOrigin = disconnectOrigin;
         this.disconnectExtremity = disconnectExtremity;
     }
 
-    public EventQuadripoleDisconnection(TwoWindingsTransformer equipment, double startTime, boolean disconnectOrigin, boolean disconnectExtremity) {
-        super(equipment, startTime);
-        this.disconnectOrigin = disconnectOrigin;
-        this.disconnectExtremity = disconnectExtremity;
-    }
-
-    public EventQuadripoleDisconnection(Line equipment, double startTime) {
+    public EventQuadripoleDisconnection(Branch<?> equipment, double startTime) {
         this(equipment, startTime, true, true);
-    }
-
-    public EventQuadripoleDisconnection(TwoWindingsTransformer equipment, double startTime) {
-        this(equipment, startTime, true, true);
-    }
-
-    public static boolean isCompatibleEquipment(IdentifiableType type) {
-        return COMPATIBLE_EQUIPMENTS.contains(type);
     }
 
     @Override
@@ -62,13 +41,13 @@ public class EventQuadripoleDisconnection extends AbstractEventModel {
         return "EventQuadripoleDisconnection";
     }
 
-    private List<VarConnection> getVarConnectionsWithQuadripoleEquipment(QuadripoleModel connected) {
+    private List<VarConnection> getVarConnectionsWithQuadripoleEquipment(QuadripoleDisconnectableEquipment connected) {
         return List.of(new VarConnection("event_state1_value", connected.getDisconnectableVarName()));
     }
 
     @Override
     public void createMacroConnections(DynaWaltzContext context) {
-        createMacroConnections(getEquipment(), QuadripoleModel.class, this::getVarConnectionsWithQuadripoleEquipment, context);
+        createMacroConnections(getEquipment(), QuadripoleDisconnectableEquipment.class, this::getVarConnectionsWithQuadripoleEquipment, context);
     }
 
     @Override

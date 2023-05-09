@@ -12,6 +12,7 @@ import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.TransformerSide;
 import com.powsybl.dynawaltz.models.automatons.TapChangerAutomaton;
 import com.powsybl.dynawaltz.models.loads.*;
+import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,6 +20,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -34,33 +36,33 @@ class TapChangerAutomatonExceptionsXmlTest extends AbstractParametrizedDynamicMo
     private static final String DYN_LOAD_NAME = "BBM_" + LOAD_NAME;
 
     @BeforeEach
-    void setup(TransformerSide side, BlackBoxModel load, String exceptionMessage) {
+    void setup(TransformerSide side, Function<Network, BlackBoxModel> loadConstructor, String exceptionMessage) {
         setupNetwork();
-        addDynamicModels(side, load);
+        addDynamicModels(side, loadConstructor);
     }
 
     protected void setupNetwork() {
         network = EurostagTutorialExample1Factory.create();
     }
 
-    protected void addDynamicModels(TransformerSide side, BlackBoxModel load) {
-        dynamicModels.add(load);
+    protected void addDynamicModels(TransformerSide side, Function< Network, BlackBoxModel> loadConstructor) {
+        dynamicModels.add(loadConstructor.apply(network));
         dynamicModels.add(new TapChangerAutomaton("BBM_TC", "tc", network.getLoad(LOAD_NAME), side));
     }
 
     @ParameterizedTest
     @MethodSource("provideTapChangers")
-    void testExceptions(TransformerSide side, BlackBoxModel load, String exceptionMessage) {
+    void testExceptions(TransformerSide side, Function< Network, BlackBoxModel> loadConstructor, String exceptionMessage) {
         Exception e = assertThrows(PowsyblException.class, this::setupDynawaltzContext);
         assertEquals(exceptionMessage, e.getMessage());
     }
 
     private static Stream<Arguments> provideTapChangers() {
         return Stream.of(
-                Arguments.of(TransformerSide.HIGH_VOLTAGE, new LoadOneTransformer(DYN_LOAD_NAME, LOAD_NAME, "LOT"), "LoadOneTransformer doesn't have a transformer side"),
-                Arguments.of(TransformerSide.NONE, new LoadOneTransformerTapChanger(DYN_LOAD_NAME, LOAD_NAME, "LOTTC"), "LoadOneTransformerTapChanger already have a tap changer"),
-                Arguments.of(TransformerSide.NONE, new LoadTwoTransformers(DYN_LOAD_NAME, LOAD_NAME, "LTT"), "LoadTwoTransformers must have a side connected to the Tap changer automaton"),
-                Arguments.of(TransformerSide.HIGH_VOLTAGE, new LoadTwoTransformersTapChangers(DYN_LOAD_NAME, LOAD_NAME, "LTTTC"), "LoadTwoTransformersTapChangers already have a tap changer")
+                Arguments.of(TransformerSide.HIGH_VOLTAGE, (Function<Network, BlackBoxModel>) n -> new LoadOneTransformer(DYN_LOAD_NAME, n.getLoad(LOAD_NAME), "LOT"), "LoadOneTransformer doesn't have a transformer side"),
+                Arguments.of(TransformerSide.NONE, (Function<Network, BlackBoxModel>) n -> new LoadOneTransformerTapChanger(DYN_LOAD_NAME, n.getLoad(LOAD_NAME), "LOTTC"), "LoadOneTransformerTapChanger already have a tap changer"),
+                Arguments.of(TransformerSide.NONE, (Function<Network, BlackBoxModel>) n -> new LoadTwoTransformers(DYN_LOAD_NAME, n.getLoad(LOAD_NAME), "LTT"), "LoadTwoTransformers must have a side connected to the Tap changer automaton"),
+                Arguments.of(TransformerSide.HIGH_VOLTAGE, (Function<Network, BlackBoxModel>) n -> new LoadTwoTransformersTapChangers(DYN_LOAD_NAME, n.getLoad(LOAD_NAME), "LTTTC"), "LoadTwoTransformersTapChangers already have a tap changer")
         );
     }
 }

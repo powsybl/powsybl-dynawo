@@ -15,6 +15,9 @@ import java.lang.reflect.Parameter;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ */
 public class MappedParameterContext implements ParameterContext {
 
     private final int index;

@@ -7,12 +7,12 @@
  */
 package com.powsybl.dynawaltz.models.transformers;
 
-import com.powsybl.dynawaltz.models.automatons.QuadripoleModel;
-
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public interface TransformerModel extends QuadripoleModel {
+public interface TransformerModel extends TapChangerModel {
+
+    String getStateValueVarName();
 
     String getStepVarName();
 

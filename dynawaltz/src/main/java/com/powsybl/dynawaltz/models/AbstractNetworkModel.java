@@ -4,7 +4,6 @@ import com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 public abstract class AbstractNetworkModel implements Model {
 
@@ -14,9 +13,8 @@ public abstract class AbstractNetworkModel implements Model {
         this.staticId = Objects.requireNonNull(staticId);
     }
 
-    @Override
-    public Optional<String> getStaticId() {
-        return Optional.of(staticId);
+    public String getStaticId() {
+        return staticId;
     }
 
     @Override

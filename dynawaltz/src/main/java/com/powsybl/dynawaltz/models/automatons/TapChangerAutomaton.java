@@ -7,7 +7,6 @@
  */
 package com.powsybl.dynawaltz.models.automatons;
 
-import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawaltz.models.TransformerSide;
@@ -58,14 +57,6 @@ public class TapChangerAutomaton extends AbstractPureDynamicBlackBoxModel implem
 
     @Override
     public List<VarConnection> getTapChangerBlockerVarConnections() {
-        switch (side) {
-            case NONE:
-            case HIGH_VOLTAGE:
-                return List.of(new VarConnection(TAP_CHANGER_BLOCKING_BLOCKED_T, "tapChanger_locked"));
-            case LOW_VOLTAGE:
-                return List.of(new VarConnection(TAP_CHANGER_BLOCKING_BLOCKED_D, "tapChanger_locked"));
-            default:
-                throw new PowsyblException("Transformer side not initialized");
-        }
+        return List.of(new VarConnection(getTapChangerBlockingVarName(side), "tapChanger_locked"));
     }
 }

@@ -48,7 +48,7 @@ class PhaseShiftersXmlTest extends AbstractParametrizedDynamicModelXmlTest {
     protected void addDynamicModels(Function<Network, BlackBoxModel> phaseShifterConstructor, boolean dynamicTransformer) {
         dynamicModels.add(phaseShifterConstructor.apply(network));
         if (dynamicTransformer) {
-            dynamicModels.add(new TransformerFixedRatio("BBM_NGEN_NHV1", "NGEN_NHV1", "tt", "TransformerFixedRatio"));
+            dynamicModels.add(new TransformerFixedRatio("BBM_NGEN_NHV1", network.getTwoWindingsTransformer("NGEN_NHV1"), "tt", "TransformerFixedRatio"));
         }
     }
 

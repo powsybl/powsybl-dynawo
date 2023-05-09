@@ -11,10 +11,13 @@ import com.powsybl.dynawaltz.models.TransformerSide;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.VarMapping;
 import com.powsybl.dynawaltz.models.buses.BusModel;
+import com.powsybl.iidm.network.Load;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static com.powsybl.dynawaltz.models.TransformerSide.NONE;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -27,8 +30,8 @@ public class LoadOneTransformer extends AbstractLoad implements LoadWithTransfor
             new VarMapping("transformer_Q1Pu_value", "q"),
             new VarMapping("transformer_state", "state"));
 
-    public LoadOneTransformer(String dynamicModelId, String staticId, String parameterSetId) {
-        super(dynamicModelId, staticId, parameterSetId);
+    public LoadOneTransformer(String dynamicModelId, Load load, String parameterSetId) {
+        super(dynamicModelId, load, parameterSetId, "transformer_terminal");
     }
 
     @Override
@@ -39,10 +42,6 @@ public class LoadOneTransformer extends AbstractLoad implements LoadWithTransfor
     @Override
     public List<VarMapping> getVarsMapping() {
         return VAR_MAPPING;
-    }
-
-    private String getTerminalVarName() {
-        return "transformer_terminal";
     }
 
     @Override
@@ -59,7 +58,7 @@ public class LoadOneTransformer extends AbstractLoad implements LoadWithTransfor
 
     @Override
     public List<VarConnection> getTapChangerVarConnections(TransformerSide side) {
-        if (TransformerSide.NONE != side) {
+        if (NONE != side) {
             throw new PowsyblException("LoadOneTransformer doesn't have a transformer side");
         }
         return List.of(new VarConnection("tapChanger_tap", "transformer_tap"),
