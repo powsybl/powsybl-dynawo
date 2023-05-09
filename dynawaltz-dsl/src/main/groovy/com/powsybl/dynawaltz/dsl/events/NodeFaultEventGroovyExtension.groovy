@@ -28,7 +28,7 @@ class NodeFaultEventGroovyExtension extends AbstractPureDynamicGroovyExtension<E
     }
 
     @Override
-    protected NodeFaultEventBuilder createBuilder(String tag, Network network) {
+    protected NodeFaultEventBuilder createBuilder(Network network) {
         new NodeFaultEventBuilder(network)
     }
 

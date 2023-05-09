@@ -10,14 +10,13 @@ package com.powsybl.dynawaltz.models.events;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.buses.BusModel;
+import com.powsybl.dynawaltz.parameters.ParameterType;
 import com.powsybl.dynawaltz.xml.ParametersXml;
 import com.powsybl.iidm.network.Bus;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.util.List;
-
-import static com.powsybl.dynawaltz.DynaWaltzParametersDatabase.ParameterType.DOUBLE;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
@@ -53,9 +52,9 @@ public class NodeFaultEvent extends AbstractEventModel {
 
     @Override
     protected void writeEventSpecificParameters(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
-        ParametersXml.writeParameter(writer, DOUBLE, "fault_RPu", Double.toString(rPu));
-        ParametersXml.writeParameter(writer, DOUBLE, "fault_XPu", Double.toString(xPu));
-        ParametersXml.writeParameter(writer, DOUBLE, "fault_tBegin", Double.toString(getStartTime()));
-        ParametersXml.writeParameter(writer, DOUBLE, "fault_tEnd", Double.toString(getStartTime() + faultTime));
+        ParametersXml.writeParameter(writer, ParameterType.DOUBLE, "fault_RPu", Double.toString(rPu));
+        ParametersXml.writeParameter(writer, ParameterType.DOUBLE, "fault_XPu", Double.toString(xPu));
+        ParametersXml.writeParameter(writer, ParameterType.DOUBLE, "fault_tBegin", Double.toString(getStartTime()));
+        ParametersXml.writeParameter(writer, ParameterType.DOUBLE, "fault_tEnd", Double.toString(getStartTime() + faultTime));
     }
 }
