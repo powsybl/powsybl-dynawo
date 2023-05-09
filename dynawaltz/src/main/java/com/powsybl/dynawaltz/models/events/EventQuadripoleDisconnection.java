@@ -43,7 +43,7 @@ public class EventQuadripoleDisconnection extends AbstractEventModel {
     }
 
     private List<VarConnection> getVarConnectionsWithQuadripoleEquipment(QuadripoleModel connected) {
-        return List.of(new VarConnection("event_state1_value", connected.getDisconnectableVarName()));
+        return List.of(new VarConnection("event_state1_value", connected.getStateValueVarName()));
     }
 
     @Override

@@ -80,11 +80,6 @@ public class TransformerFixedRatio extends AbstractEquipmentBlackBoxModel<TwoWin
     }
 
     @Override
-    public String getDisconnectableVarName() {
-        return getStateValueVarName();
-    }
-
-    @Override
     public List<VarConnection> getTapChangerBlockerVarConnections() {
         return List.of(new VarConnection(getTapChangerBlockingVarName(NONE), "transformer_TAP_CHANGER_locked_value"));
     }

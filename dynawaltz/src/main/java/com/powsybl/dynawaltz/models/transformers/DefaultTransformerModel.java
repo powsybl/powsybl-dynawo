@@ -55,11 +55,6 @@ public class DefaultTransformerModel extends AbstractNetworkModel implements Tra
     }
 
     @Override
-    public String getDisconnectableVarName() {
-        return getStateValueVarName();
-    }
-
-    @Override
     public List<VarConnection> getTapChangerBlockerVarConnections() {
         return List.of(new VarConnection(getTapChangerBlockingVarName(NONE), "@NAME@_TAP_CHANGER_locked_value"));
     }

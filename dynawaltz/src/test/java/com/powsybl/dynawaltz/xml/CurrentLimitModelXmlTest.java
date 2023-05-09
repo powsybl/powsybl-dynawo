@@ -9,6 +9,7 @@ package com.powsybl.dynawaltz.xml;
 
 import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton;
+import com.powsybl.dynawaltz.models.transformers.TransformerFixedRatio;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
@@ -30,7 +31,8 @@ class CurrentLimitModelXmlTest extends AbstractDynamicModelXmlTest {
     protected void addDynamicModels() {
         dynamicModels.add(new CurrentLimitAutomaton("BBM_CLA_LINE", "cla", network.getLine("NHV1_NHV2_1"), Side.ONE));
         dynamicModels.add(new CurrentLimitAutomaton("BBM_CLA_TRANSFORMER", "cla", network.getTwoWindingsTransformer("NGEN_NHV1"), Side.TWO));
-        dynamicModels.add(new CurrentLimitAutomaton("BBM_CLA_LINE2", "cla", network.getLine("NHV1_NHV2_2"), Side.TWO, network.getLine("NHV1_NHV2_1")));
+        dynamicModels.add(new TransformerFixedRatio("BBM_TRANSFORMER", network.getTwoWindingsTransformer("NHV2_NLOAD"), "tf", "TransformerFixedRatio"));
+        dynamicModels.add(new CurrentLimitAutomaton("BBM_CLA_TRANSFORMER2", "cla", network.getTwoWindingsTransformer("NHV2_NLOAD"), Side.TWO, network.getLine("NHV1_NHV2_1")));
     }
 
     @Test
