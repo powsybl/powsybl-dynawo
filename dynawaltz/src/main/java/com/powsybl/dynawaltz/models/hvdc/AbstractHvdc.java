@@ -36,7 +36,7 @@ public abstract class AbstractHvdc extends AbstractEquipmentBlackBoxModel<HvdcLi
 
     private final String hvdcLib;
 
-    public AbstractHvdc(String dynamicModelId, HvdcLine hvdc, String parameterSetId, String hvdcLib) {
+    protected AbstractHvdc(String dynamicModelId, HvdcLine hvdc, String parameterSetId, String hvdcLib) {
         super(dynamicModelId, parameterSetId, hvdc);
         this.hvdcLib = Objects.requireNonNull(hvdcLib);
     }

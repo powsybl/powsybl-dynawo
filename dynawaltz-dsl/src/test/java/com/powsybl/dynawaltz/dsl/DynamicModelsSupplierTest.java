@@ -97,14 +97,13 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
     private static Stream<Arguments> provideEquipmentModelData() {
         return Stream.of(
                 Arguments.of("bus", StandardBus.class, EurostagTutorialExample1Factory.create(), "NGEN", "BBM_NGEN", "SB", "Bus"),
-                Arguments.of("loadAB", LoadAlphaBeta.class, EurostagTutorialExample1Factory.create(), "LOAD", "LOAD", "LAB", "LoadAlphaBeta"),
-                Arguments.of("loadTransformer", LoadOneTransformer.class, EurostagTutorialExample1Factory.create(), "LOAD", "LOAD", "LOT", "LoadOneTransformer"),
                 Arguments.of("hvdcPv", HvdcPv.class, HvdcTestNetwork.createVsc(), "L", "BBM_HVDC_L", "HVDC", "HvdcPV"),
                 Arguments.of("hvdcVsc", HvdcVsc.class, HvdcTestNetwork.createVsc(), "L", "BBM_HVDC_L", "HVDC", "HvdcVSC"),
+                Arguments.of("loadAB", LoadAlphaBeta.class, EurostagTutorialExample1Factory.create(), "LOAD", "LOAD", "LAB", "LoadAlphaBeta"),
+                Arguments.of("loadTransformer", LoadOneTransformer.class, EurostagTutorialExample1Factory.create(), "LOAD", "LOAD", "LOT", "LoadOneTransformer"),
                 Arguments.of("loadTransformerTapChanger", LoadOneTransformerTapChanger.class, EurostagTutorialExample1Factory.create(), "LOAD", "LOAD", "LOT", "LoadOneTransformerTapChanger"),
                 Arguments.of("loadTwoTransformers", LoadTwoTransformers.class, EurostagTutorialExample1Factory.create(), "LOAD", "LOAD", "LTT", "LoadTwoTransformers"),
                 Arguments.of("loadTwoTransformersTapChangers", LoadTwoTransformersTapChangers.class, EurostagTutorialExample1Factory.create(), "LOAD", "LOAD", "LTT", "LoadTwoTransformersTapChangers"),
-                Arguments.of("hvdc", HvdcModel.class, HvdcTestNetwork.createVsc(), "L", "BBM_HVDC_L", "HVDC", "HvdcPV"),
                 Arguments.of("line", StandardLine.class, EurostagTutorialExample1Factory.create(), "NHV1_NHV2_1", "BBM_NHV1_NHV2_1", "LINE", "Line"),
                 Arguments.of("genFictitious", GeneratorFictitious.class, EurostagTutorialExample1Factory.create(), "GEN", "BBM_GEN", "GF", "GeneratorFictitious"),
                 Arguments.of("gen", GeneratorSynchronous.class, EurostagTutorialExample1Factory.create(), "GEN", "BBM_GEN", "GSFWPR", "GeneratorSynchronousFourWindingsProportionalRegulations"),
