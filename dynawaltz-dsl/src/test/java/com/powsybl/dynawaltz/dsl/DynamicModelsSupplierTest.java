@@ -29,7 +29,7 @@ import com.powsybl.dynawaltz.models.generators.OmegaRefGenerator;
 import com.powsybl.dynawaltz.models.hvdc.HvdcModel;
 import com.powsybl.dynawaltz.models.lines.StandardLine;
 import com.powsybl.dynawaltz.models.loads.*;
-import com.powsybl.dynawaltz.models.svcs.StaticVarCompensatorModel;
+import com.powsybl.dynawaltz.models.svcs.StaticVarCompensator;
 import com.powsybl.dynawaltz.models.transformers.TransformerFixedRatio;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
