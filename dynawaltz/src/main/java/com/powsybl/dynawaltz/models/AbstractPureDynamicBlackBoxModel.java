@@ -29,10 +29,6 @@ public abstract class AbstractPureDynamicBlackBoxModel extends AbstractBlackBoxM
         super(dynamicModelId, dynamicModelId);
     }
 
-    protected AbstractPureDynamicBlackBoxModel(String dynamicModelId) {
-        super(dynamicModelId, null, dynamicModelId);
-    }
-
     @Override
     public final List<VarMapping> getVarsMapping() {
         // No static-dynamic mapping as purely dynamic

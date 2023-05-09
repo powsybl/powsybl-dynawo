@@ -13,8 +13,6 @@ import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractPureDynamicGroovyExtension
 import com.powsybl.dynawaltz.dsl.models.builders.AbstractPureDynamicModelBuilder
-import com.powsybl.dynawaltz.dsl.AbstractPureDynamicGroovyExtension
-import com.powsybl.dynawaltz.dsl.AbstractPureDynamicModelBuilder
 import com.powsybl.dynawaltz.models.Side
 import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton
 import com.powsybl.dynawaltz.models.utils.SideConverter
@@ -34,7 +32,7 @@ class CurrentLimitAutomatonGroovyExtension extends AbstractPureDynamicGroovyExte
     }
 
     @Override
-    protected CurrentLimitAutomatonBuilder createBuilder(String currentTag, Network network) {
+    protected CurrentLimitAutomatonBuilder createBuilder(Network network) {
         new CurrentLimitAutomatonBuilder(network)
     }
 
@@ -83,7 +81,6 @@ class CurrentLimitAutomatonGroovyExtension extends AbstractPureDynamicGroovyExte
             checkData()
             if (!controlledEquipment) {
                 new CurrentLimitAutomaton(dynamicModelId, parameterSetId, equipment, side)
-
             } else {
                 new CurrentLimitAutomaton(dynamicModelId, parameterSetId, equipment, side, controlledEquipment)
             }

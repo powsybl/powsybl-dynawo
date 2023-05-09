@@ -12,7 +12,6 @@ import com.powsybl.dynawaltz.models.AbstractEquipmentBlackBoxModel;
 import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.buses.BusModel;
-import com.powsybl.dynawaltz.models.events.QuadripoleDisconnectableEquipment;
 import com.powsybl.dynawaltz.models.utils.BusUtils;
 import com.powsybl.dynawaltz.models.utils.SideConverter;
 import com.powsybl.iidm.network.TwoWindingsTransformer;
@@ -25,7 +24,7 @@ import static com.powsybl.dynawaltz.models.TransformerSide.NONE;
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class TransformerFixedRatio extends AbstractEquipmentBlackBoxModel<TwoWindingsTransformer> implements TransformerModel, QuadripoleDisconnectableEquipment {
+public class TransformerFixedRatio extends AbstractEquipmentBlackBoxModel<TwoWindingsTransformer> implements TransformerModel, TapChangerModel {
 
     private final String transformerLib;
 
@@ -88,5 +87,20 @@ public class TransformerFixedRatio extends AbstractEquipmentBlackBoxModel<TwoWin
     @Override
     public List<VarConnection> getTapChangerBlockerVarConnections() {
         return List.of(new VarConnection(getTapChangerBlockingVarName(NONE), "transformer_TAP_CHANGER_locked_value"));
+    }
+
+    @Override
+    public String getIVarName(Side side) {
+        return "transformer_i" + side.getSideSuffix();
+    }
+
+    @Override
+    public String getStateVarName() {
+        return "transformer_state";
+    }
+
+    @Override
+    public String getDeactivateCurrentLimitsVarName() {
+        return "transformer_desactivate_currentLimits";
     }
 }

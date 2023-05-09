@@ -9,8 +9,6 @@ package com.powsybl.dynawaltz.models;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
 import com.powsybl.iidm.network.Identifiable;
-import com.powsybl.dynawaltz.xml.MacroStaticReference;
-import com.powsybl.iidm.network.Identifiable;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;

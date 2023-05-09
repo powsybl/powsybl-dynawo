@@ -8,6 +8,7 @@ package com.powsybl.dynawaltz.models.events;
 
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.VarConnection;
+import com.powsybl.dynawaltz.models.automatons.QuadripoleModel;
 import com.powsybl.dynawaltz.xml.ParametersXml;
 import com.powsybl.iidm.network.Branch;
 
@@ -41,13 +42,13 @@ public class EventQuadripoleDisconnection extends AbstractEventModel {
         return "EventQuadripoleDisconnection";
     }
 
-    private List<VarConnection> getVarConnectionsWithQuadripoleEquipment(QuadripoleDisconnectableEquipment connected) {
+    private List<VarConnection> getVarConnectionsWithQuadripoleEquipment(QuadripoleModel connected) {
         return List.of(new VarConnection("event_state1_value", connected.getDisconnectableVarName()));
     }
 
     @Override
     public void createMacroConnections(DynaWaltzContext context) {
-        createMacroConnections(getEquipment(), QuadripoleDisconnectableEquipment.class, this::getVarConnectionsWithQuadripoleEquipment, context);
+        createMacroConnections(getEquipment(), QuadripoleModel.class, this::getVarConnectionsWithQuadripoleEquipment, context);
     }
 
     @Override
