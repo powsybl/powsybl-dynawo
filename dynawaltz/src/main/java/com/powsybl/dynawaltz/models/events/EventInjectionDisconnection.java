@@ -8,13 +8,9 @@ package com.powsybl.dynawaltz.models.events;
 
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.VarConnection;
-import com.powsybl.dynawaltz.parameters.ParameterType;
-import com.powsybl.dynawaltz.xml.ParametersXml;
 import com.powsybl.iidm.network.Generator;
 import com.powsybl.iidm.network.Load;
 
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
 import java.util.List;
 
 /**
@@ -23,11 +19,8 @@ import java.util.List;
  */
 public class EventInjectionDisconnection extends AbstractDynamicLibEventDisconnection {
 
-    private final boolean disconnect;
-
     public EventInjectionDisconnection(Generator equipment, double startTime, boolean disconnect) {
-        super(equipment, startTime, EVENT_PREFIX);
-        this.disconnect = disconnect;
+        super(equipment, startTime, disconnect);
     }
 
     public EventInjectionDisconnection(Generator equipment, double startTime) {
@@ -35,8 +28,7 @@ public class EventInjectionDisconnection extends AbstractDynamicLibEventDisconne
     }
 
     public EventInjectionDisconnection(Load equipment, double startTime, boolean disconnect) {
-        super(equipment, startTime, EVENT_PREFIX);
-        this.disconnect = disconnect;
+        super(equipment, startTime, disconnect);
     }
 
     public EventInjectionDisconnection(Load equipment, double startTime) {
@@ -50,11 +42,5 @@ public class EventInjectionDisconnection extends AbstractDynamicLibEventDisconne
     @Override
     public void createMacroConnections(DynaWaltzContext context) {
         createMacroConnections(getEquipment(), DisconnectableEquipment.class, this::getVarConnectionsWithDisconnectable, context);
-    }
-
-    @Override
-    protected void writeEventSpecificParameters(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
-        ParametersXml.writeParameter(writer, ParameterType.DOUBLE, "event_tEvent", Double.toString(getStartTime()));
-        ParametersXml.writeParameter(writer, ParameterType.BOOL, "event_stateEvent1", Boolean.toString(disconnect));
     }
 }

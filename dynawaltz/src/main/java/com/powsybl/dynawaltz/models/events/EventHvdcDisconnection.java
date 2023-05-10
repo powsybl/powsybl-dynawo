@@ -11,12 +11,8 @@ import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.hvdc.HvdcModel;
-import com.powsybl.dynawaltz.parameters.ParameterType;
-import com.powsybl.dynawaltz.xml.ParametersXml;
 import com.powsybl.iidm.network.HvdcLine;
 
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
 import java.util.List;
 
 /**
@@ -28,7 +24,7 @@ public class EventHvdcDisconnection extends AbstractDynamicLibEventDisconnection
     private final boolean disconnectExtremity;
 
     public EventHvdcDisconnection(HvdcLine equipment, double startTime, boolean disconnectOrigin, boolean disconnectExtremity) {
-        super(equipment, startTime);
+        super(equipment, startTime, disconnectOrigin || disconnectExtremity);
         this.disconnectOrigin = disconnectOrigin;
         this.disconnectExtremity = disconnectExtremity;
     }
@@ -55,10 +51,5 @@ public class EventHvdcDisconnection extends AbstractDynamicLibEventDisconnection
         } else if (disconnectExtremity) {
             createMacroConnections(getEquipment(), HvdcModel.class, this::getVarConnectionsWithHvdcModelSide, context, Side.TWO);
         }
-    }
-
-    @Override
-    protected void writeEventSpecificParameters(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
-        ParametersXml.writeParameter(writer, ParameterType.BOOL, "event_stateEvent1", Boolean.toString(disconnectOrigin || disconnectExtremity));
     }
 }
