@@ -26,13 +26,14 @@ import java.util.List;
  */
 public class EventInjectionDisconnection extends AbstractEventModel {
 
+    private static final String EVENT_PREFIX = "Disconnect_";
     private static final String DYNAMIC_MODEL_LIB = "EventSetPointBoolean";
     private static final String DEFAULT_MODEL_LIB = "EventConnectedStatus";
 
     private final boolean disconnect;
 
     public EventInjectionDisconnection(Generator equipment, double startTime, boolean disconnect) {
-        super(equipment, startTime);
+        super(equipment, startTime, EVENT_PREFIX);
         this.disconnect = disconnect;
     }
 
@@ -41,7 +42,7 @@ public class EventInjectionDisconnection extends AbstractEventModel {
     }
 
     public EventInjectionDisconnection(Load equipment, double startTime, boolean disconnect) {
-        super(equipment, startTime);
+        super(equipment, startTime, EVENT_PREFIX);
         this.disconnect = disconnect;
     }
 
@@ -83,6 +84,7 @@ public class EventInjectionDisconnection extends AbstractEventModel {
 
     @Override
     protected void writeEventSpecificParameters(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
+        ParametersXml.writeParameter(writer, ParameterType.DOUBLE, "event_tEvent", Double.toString(getStartTime()));
         ParametersXml.writeParameter(writer, ParameterType.BOOL, "event_stateEvent1", Boolean.toString(disconnect));
     }
 
