@@ -51,7 +51,7 @@ public class EventInjectionDisconnection extends AbstractEventModel {
     }
 
     public EventInjectionDisconnection(StaticVarCompensator equipment, double startTime, boolean disconnect) {
-        super(equipment, startTime);
+        super(equipment, startTime, EVENT_PREFIX);
         this.disconnect = disconnect;
     }
 
@@ -60,7 +60,7 @@ public class EventInjectionDisconnection extends AbstractEventModel {
     }
 
     public EventInjectionDisconnection(ShuntCompensator equipment, double startTime, boolean disconnect) {
-        super(equipment, startTime);
+        super(equipment, startTime, EVENT_PREFIX);
         this.disconnect = disconnect;
     }
 
