@@ -6,7 +6,7 @@
  */
 package com.powsybl.dynawaltz.models.automatons;
 
-import com.powsybl.dynawaltz.DynaWaltzContext;
+import com.powsybl.dynawaltz.MacroConnectionsAdder;
 import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.VarConnection;
@@ -37,8 +37,8 @@ public class CurrentLimitAutomaton extends AbstractPureDynamicBlackBoxModel {
     }
 
     @Override
-    public void createMacroConnections(DynaWaltzContext context) {
-        createMacroConnections(lineStaticId, LineModel.class, this::getVarConnectionsWithLine, context, side);
+    public void createMacroConnections(MacroConnectionsAdder adder) {
+        adder.createMacroConnections(this, lineStaticId, LineModel.class, this::getVarConnectionsWithLine, side);
     }
 
     private List<VarConnection> getVarConnectionsWithLine(LineModel connected, Side side) {

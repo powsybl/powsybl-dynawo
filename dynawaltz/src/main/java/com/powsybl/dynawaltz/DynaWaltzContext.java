@@ -26,7 +26,8 @@ import java.util.stream.Stream;
  */
 public class DynaWaltzContext {
 
-    private final Network network;
+    protected final Network network;
+    protected final MacroConnectionsAdder macroConnectionsAdder;
     private final String workingVariantId;
     private final DynamicSimulationParameters parameters;
     private final DynaWaltzParameters dynaWaltzParameters;
@@ -59,13 +60,14 @@ public class DynaWaltzContext {
                 .map(OmegaRefGeneratorModel.class::cast)
                 .collect(Collectors.toList()));
 
+        this.macroConnectionsAdder = new MacroConnectionsAdder(this, macroConnectList, macroConnectorsMap);
         for (BlackBoxModel bbm : getBlackBoxDynamicModelStream().collect(Collectors.toList())) {
             macroStaticReferences.computeIfAbsent(bbm.getName(), k -> new MacroStaticReference(k, bbm.getVarsMapping()));
-            bbm.createMacroConnections(this);
+            bbm.createMacroConnections(macroConnectionsAdder);
         }
 
         for (BlackBoxModel bbem : eventModels) {
-            bbem.createMacroConnections(this);
+            bbem.createMacroConnections(macroConnectionsAdder);
         }
     }
 
@@ -129,40 +131,8 @@ public class DynaWaltzContext {
         return eventModels;
     }
 
-    public void addMacroConnect(String macroConnectorId, List<MacroConnectAttribute> attributesFrom, List<MacroConnectAttribute> attributesTo) {
-        macroConnectList.add(new MacroConnect(macroConnectorId, attributesFrom, attributesTo));
-    }
-
-    public void addMacroConnect(String macroConnectorId, List<MacroConnectAttribute> attributesFrom) {
-        macroConnectList.add(new MacroConnect(macroConnectorId, attributesFrom));
-    }
-
     public List<MacroConnect> getMacroConnectList() {
         return macroConnectList;
-    }
-
-    public String addMacroConnector(String name1, List<VarConnection> varConnections) {
-        String macroConnectorId = MacroConnector.createMacroConnectorId(name1);
-        macroConnectorsMap.computeIfAbsent(macroConnectorId, k -> new MacroConnector(macroConnectorId, varConnections));
-        return macroConnectorId;
-    }
-
-    public String addMacroConnector(String name1, String name2, List<VarConnection> varConnections) {
-        String macroConnectorId = MacroConnector.createMacroConnectorId(name1, name2);
-        macroConnectorsMap.computeIfAbsent(macroConnectorId, k -> new MacroConnector(macroConnectorId, varConnections));
-        return macroConnectorId;
-    }
-
-    public String addMacroConnector(String name1, String name2, Side side, List<VarConnection> varConnections) {
-        String macroConnectorId = MacroConnector.createMacroConnectorId(name1, name2, side);
-        macroConnectorsMap.computeIfAbsent(macroConnectorId, k -> new MacroConnector(macroConnectorId, varConnections));
-        return macroConnectorId;
-    }
-
-    public String addMacroConnector(String name1, String name2, String name1Suffix, List<VarConnection> varConnections) {
-        String macroConnectorId = MacroConnector.createMacroConnectorId(name1, name2, name1Suffix);
-        macroConnectorsMap.computeIfAbsent(macroConnectorId, k -> new MacroConnector(macroConnectorId, varConnections));
-        return macroConnectorId;
     }
 
     public Collection<MacroConnector> getMacroConnectors() {

@@ -7,7 +7,7 @@
  */
 package com.powsybl.dynawaltz.models.transformers;
 
-import com.powsybl.dynawaltz.DynaWaltzContext;
+import com.powsybl.dynawaltz.MacroConnectionsAdder;
 import com.powsybl.dynawaltz.models.AbstractEquipmentBlackBoxModel;
 import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.VarConnection;
@@ -46,10 +46,10 @@ public class TransformerFixedRatio extends AbstractEquipmentBlackBoxModel<TwoWin
     }
 
     @Override
-    public void createMacroConnections(DynaWaltzContext context) {
+    public void createMacroConnections(MacroConnectionsAdder adder) {
         equipment.getTerminals().forEach(t -> {
             String busStaticId = BusUtils.getConnectableBusStaticId(t);
-            createMacroConnections(busStaticId, BusModel.class, this::getVarConnectionsWithBus, context, SideConverter.convert(equipment.getSide(t)));
+            adder.createMacroConnections(this, busStaticId, BusModel.class, this::getVarConnectionsWithBus, SideConverter.convert(equipment.getSide(t)));
         });
     }
 

@@ -9,6 +9,7 @@ package com.powsybl.dynawaltz.models;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
+import com.powsybl.dynawaltz.MacroConnectionsAdder;
 import com.powsybl.dynawaltz.models.buses.BusModel;
 import com.powsybl.dynawaltz.models.generators.GeneratorSynchronousModel;
 import com.powsybl.dynawaltz.models.generators.OmegaRefGeneratorModel;
@@ -90,11 +91,11 @@ public class OmegaRef extends AbstractPureDynamicBlackBoxModel {
     }
 
     @Override
-    public void createMacroConnections(DynaWaltzContext context) throws PowsyblException {
+    public void createMacroConnections(MacroConnectionsAdder adder) throws PowsyblException {
         int index = 0;
         for (OmegaRefGeneratorModel gen : omegaRefGenerators) {
-            createMacroConnections(gen, getVarConnectionsWithOmegaRefGenerator(gen), context, MacroConnectAttribute.ofIndex1(index));
-            createMacroConnections(gen.getConnectableBusId(), BusModel.class, this::getVarConnectionsWithBus, context, MacroConnectAttribute.ofIndex1(index));
+            adder.createMacroConnections(this, gen, getVarConnectionsWithOmegaRefGenerator(gen), MacroConnectAttribute.ofIndex1(index));
+            adder.createMacroConnections(this, gen.getConnectableBusId(), BusModel.class, this::getVarConnectionsWithBus, MacroConnectAttribute.ofIndex1(index));
             index++;
         }
     }

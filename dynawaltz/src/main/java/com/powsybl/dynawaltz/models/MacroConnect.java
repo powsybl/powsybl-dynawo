@@ -38,6 +38,14 @@ public final class MacroConnect {
         return List.of(MacroConnectAttribute.of("id2", "NETWORK"));
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public List<MacroConnectAttribute> getAttributesFrom() {
+        return attributesFrom;
+    }
+
     public void write(XMLStreamWriter writer) throws XMLStreamException {
         writer.writeEmptyElement(DYN_URI, "macroConnect");
         writer.writeAttribute("connector", id);

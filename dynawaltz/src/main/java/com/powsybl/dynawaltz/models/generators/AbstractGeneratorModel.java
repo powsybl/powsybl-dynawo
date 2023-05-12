@@ -6,7 +6,7 @@
  */
 package com.powsybl.dynawaltz.models.generators;
 
-import com.powsybl.dynawaltz.DynaWaltzContext;
+import com.powsybl.dynawaltz.MacroConnectionsAdder;
 import com.powsybl.dynawaltz.models.AbstractEquipmentBlackBoxModel;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.VarMapping;
@@ -54,8 +54,8 @@ public abstract class AbstractGeneratorModel extends AbstractEquipmentBlackBoxMo
     }
 
     @Override
-    public void createMacroConnections(DynaWaltzContext context) {
-        createMacroConnections(BusUtils.getConnectableBusStaticId(equipment), BusModel.class, this::getVarConnectionsWithBus, context);
+    public void createMacroConnections(MacroConnectionsAdder adder) {
+        adder.createMacroConnections(this, BusUtils.getConnectableBusStaticId(equipment), BusModel.class, this::getVarConnectionsWithBus);
     }
 
     private List<VarConnection> getVarConnectionsWithBus(BusModel connected) {
