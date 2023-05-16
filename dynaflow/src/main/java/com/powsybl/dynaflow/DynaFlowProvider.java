@@ -14,23 +14,14 @@ import com.powsybl.commons.extensions.Extension;
 import com.powsybl.commons.extensions.ExtensionJsonSerializer;
 import com.powsybl.commons.parameters.Parameter;
 import com.powsybl.computation.*;
-import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
 import com.powsybl.dynaflow.json.JsonDynaFlowParametersSerializer;
 import com.powsybl.dynawo.commons.DynawoUtil;
-import com.powsybl.dynawo.commons.NetworkResultsUpdater;
 import com.powsybl.dynawo.commons.PowsyblDynawoVersion;
-import com.powsybl.dynawo.commons.loadmerge.LoadsMerger;
 import com.powsybl.iidm.network.Network;
-import com.powsybl.iidm.xml.NetworkXml;
 import com.powsybl.loadflow.LoadFlowParameters;
 import com.powsybl.loadflow.LoadFlowProvider;
 import com.powsybl.loadflow.LoadFlowResult;
-import com.powsybl.loadflow.LoadFlowResultImpl;
-import com.powsybl.loadflow.json.LoadFlowResultDeserializer;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
@@ -108,11 +99,12 @@ public class DynaFlowProvider implements LoadFlowProvider {
         Objects.requireNonNull(computationManager);
         Objects.requireNonNull(workingStateId);
         Objects.requireNonNull(loadFlowParameters);
+
         DynaFlowParameters dynaFlowParameters = getParametersExt(loadFlowParameters);
         DynaFlowConfig config = Objects.requireNonNull(configSupplier.get());
         ExecutionEnvironment env = new ExecutionEnvironment(config.createEnv(), WORKING_DIR_PREFIX, config.isDebug());
-        Command versionCmd = getVersionCommand(config);
-        DynawoUtil.requireDynawoMinVersion(env, computationManager, versionCmd, true);
+        DynawoUtil.requireDynawoMinVersion(env, computationManager, getVersionCommand(config), true);
+
         return computationManager.execute(env, new DynaFlowHandler(network, workingStateId, dynaFlowParameters, loadFlowParameters, config));
     }
 
@@ -140,63 +132,5 @@ public class DynaFlowProvider implements LoadFlowProvider {
     @Override
     public void updateSpecificParameters(Extension<LoadFlowParameters> extension, Map<String, String> properties) {
         getParametersExt(extension.getExtendable()).update(properties);
-    }
-
-    private static class DynaFlowHandler extends AbstractExecutionHandler<LoadFlowResult> {
-        private final Network network;
-        private final Network dynawoInput;
-        private final String workingStateId;
-        private final DynaFlowParameters dynaFlowParameters;
-        private final LoadFlowParameters loadFlowParameters;
-        private final DynaFlowConfig config;
-
-        public DynaFlowHandler(Network network, String workingStateId, DynaFlowParameters dynaFlowParameters, LoadFlowParameters loadFlowParameters, DynaFlowConfig config) {
-            this.network = network;
-            this.workingStateId = workingStateId;
-            this.dynaFlowParameters = dynaFlowParameters;
-            this.loadFlowParameters = loadFlowParameters;
-            this.config = config;
-            this.dynawoInput = this.dynaFlowParameters.isMergeLoads() ? LoadsMerger.mergeLoads(this.network) : this.network;
-        }
-
-        @Override
-        public List<CommandExecution> before(Path workingDir) throws IOException {
-            network.getVariantManager().setWorkingVariant(workingStateId);
-            DynawoUtil.writeIidm(dynawoInput, workingDir.resolve(IIDM_FILENAME));
-            DynaFlowConfigSerializer.serialize(loadFlowParameters, dynaFlowParameters, Path.of("."), workingDir.resolve(CONFIG_FILENAME));
-            return Collections.singletonList(createCommandExecution(config));
-        }
-
-        private static CommandExecution createCommandExecution(DynaFlowConfig config) {
-            Command cmd = getCommand(config);
-            return new CommandExecution(cmd, 1, 0);
-        }
-
-        @Override
-        public LoadFlowResult after(Path workingDir, ExecutionReport report) {
-            report.log();
-            network.getVariantManager().setWorkingVariant(workingStateId);
-            boolean status = true;
-            Path outputNetworkFile = workingDir.resolve("outputs").resolve("finalState").resolve(OUTPUT_IIDM_FILENAME);
-            if (Files.exists(outputNetworkFile)) {
-                NetworkResultsUpdater.update(network, NetworkXml.read(outputNetworkFile), dynaFlowParameters.isMergeLoads());
-            } else {
-                status = false;
-            }
-            Path resultsPath = workingDir.resolve(OUTPUT_RESULTS_FILENAME);
-            if (!Files.exists(resultsPath)) {
-                Map<String, String> metrics = new HashMap<>();
-                List<LoadFlowResult.ComponentResult> componentResults = new ArrayList<>(1);
-                componentResults.add(new LoadFlowResultImpl.ComponentResultImpl(0,
-                        0,
-                        status ? LoadFlowResult.ComponentResult.Status.CONVERGED : LoadFlowResult.ComponentResult.Status.FAILED,
-                        0,
-                        "not-found",
-                        0.,
-                        Double.NaN));
-                return new LoadFlowResultImpl(status, metrics, null, componentResults);
-            }
-            return LoadFlowResultDeserializer.read(resultsPath);
-        }
     }
 }

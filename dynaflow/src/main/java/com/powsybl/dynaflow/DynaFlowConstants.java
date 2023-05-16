@@ -24,6 +24,8 @@ public final class DynaFlowConstants {
 
     public static final String OUTPUT_RESULTS_FILENAME = "results.json";
 
+    public static final String CONTINGENCIES_FILENAME = "contingencies.json";
+
     public enum OutputTypes {
         STEADYSTATE,
         LOSTEQ,

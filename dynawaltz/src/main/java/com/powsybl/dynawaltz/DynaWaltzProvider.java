@@ -8,31 +8,14 @@ package com.powsybl.dynawaltz;
 
 import com.google.auto.service.AutoService;
 import com.powsybl.commons.config.PlatformConfig;
-import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
 import com.powsybl.computation.*;
 import com.powsybl.dynamicsimulation.*;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
-import com.powsybl.dynawaltz.xml.CurvesXml;
-import com.powsybl.dynawaltz.xml.DydXml;
-import com.powsybl.dynawaltz.xml.JobsXml;
-import com.powsybl.dynawaltz.xml.ParametersXml;
 import com.powsybl.dynawo.commons.DynawoUtil;
-import com.powsybl.dynawo.commons.loadmerge.LoadsMerger;
-import com.powsybl.dynawo.commons.NetworkResultsUpdater;
 import com.powsybl.dynawo.commons.PowsyblDynawoVersion;
 import com.powsybl.iidm.network.Network;
-import com.powsybl.iidm.xml.NetworkXml;
-import com.powsybl.timeseries.TimeSeries;
-import com.powsybl.timeseries.TimeSeries.TimeFormat;
-import com.powsybl.timeseries.TimeSeriesConstants;
-import com.powsybl.timeseries.TimeSeriesCsvConfig;
 import org.apache.commons.lang3.SystemUtils;
 
-import javax.xml.stream.XMLStreamException;
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -42,6 +25,7 @@ import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.*;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
+ * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 @AutoService(DynamicSimulationProvider.class)
 public class DynaWaltzProvider implements DynamicSimulationProvider {
@@ -49,7 +33,6 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
     public static final String NAME = "DynaWaltz";
     private static final String DYNAWO_CMD_NAME = "dynawo";
     private static final String WORKING_DIR_PREFIX = "powsybl_dynawaltz_";
-    private static final String OUTPUT_IIDM_FILENAME = "outputIIDM.xml";
 
     private final DynaWaltzConfig dynaWaltzConfig;
 
@@ -107,8 +90,14 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
         Objects.requireNonNull(curvesSupplier);
         Objects.requireNonNull(workingVariantId);
         Objects.requireNonNull(parameters);
+
         DynaWaltzParameters dynaWaltzParameters = getDynaWaltzSimulationParameters(parameters);
-        return run(network, dynamicModelsSupplier, eventModelsSupplier, curvesSupplier, workingVariantId, computationManager, parameters, dynaWaltzParameters);
+        network.getVariantManager().setWorkingVariant(workingVariantId);
+        ExecutionEnvironment execEnv = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, dynaWaltzConfig.isDebug());
+        DynawoUtil.requireDynawoMinVersion(execEnv, computationManager, getVersionCommand(dynaWaltzConfig), false);
+        DynaWaltzContext context = setupContext(network, dynamicModelsSupplier, eventModelsSupplier, curvesSupplier, workingVariantId, parameters, dynaWaltzParameters);
+
+        return computationManager.execute(execEnv, new DynaWaltzHandler(context, dynaWaltzConfig));
     }
 
     private DynaWaltzParameters getDynaWaltzSimulationParameters(DynamicSimulationParameters parameters) {
@@ -119,14 +108,8 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
         return dynaWaltzParameters;
     }
 
-    private CompletableFuture<DynamicSimulationResult> run(Network network, DynamicModelsSupplier dynamicModelsSupplier, EventModelsSupplier eventsModelsSupplier, CurvesSupplier curvesSupplier,
-                                                           String workingVariantId, ComputationManager computationManager, DynamicSimulationParameters parameters, DynaWaltzParameters dynaWaltzParameters) {
-
-        network.getVariantManager().setWorkingVariant(workingVariantId);
-        ExecutionEnvironment execEnv = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, dynaWaltzConfig.isDebug());
-        Command versionCmd = getVersionCommand(dynaWaltzConfig);
-        DynawoUtil.requireDynawoMinVersion(execEnv, computationManager, versionCmd, false);
-
+    private DynaWaltzContext setupContext(Network network, DynamicModelsSupplier dynamicModelsSupplier, EventModelsSupplier eventsModelsSupplier, CurvesSupplier curvesSupplier,
+                                          String workingVariantId, DynamicSimulationParameters parameters, DynaWaltzParameters dynaWaltzParameters) {
         List<BlackBoxModel> blackBoxModels = dynamicModelsSupplier.get(network).stream()
                 .filter(BlackBoxModel.class::isInstance)
                 .map(BlackBoxModel.class::cast)
@@ -135,75 +118,6 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
                 .filter(BlackBoxModel.class::isInstance)
                 .map(BlackBoxModel.class::cast)
                 .collect(Collectors.toList());
-        DynaWaltzContext context = new DynaWaltzContext(network, workingVariantId, blackBoxModels, blackBoxEventModels, curvesSupplier.get(network), parameters, dynaWaltzParameters);
-        return computationManager.execute(execEnv, new DynaWaltzHandler(context));
-    }
-
-    private final class DynaWaltzHandler extends AbstractExecutionHandler<DynamicSimulationResult> {
-
-        private final DynaWaltzContext context;
-        private final Network dynawoInput;
-
-        public DynaWaltzHandler(DynaWaltzContext context) {
-            this.context = context;
-            this.dynawoInput = context.getDynaWaltzParameters().isMergeLoads()
-                    ? LoadsMerger.mergeLoads(context.getNetwork())
-                    : context.getNetwork();
-        }
-
-        @Override
-        public List<CommandExecution> before(Path workingDir) throws IOException {
-            Path outputNetworkFile = workingDir.resolve("outputs").resolve("finalState").resolve(OUTPUT_IIDM_FILENAME);
-            if (Files.exists(outputNetworkFile)) {
-                Files.delete(outputNetworkFile);
-            }
-            Path curvesPath = workingDir.resolve(CURVES_OUTPUT_PATH).toAbsolutePath().resolve(CURVES_FILENAME);
-            if (Files.exists(curvesPath)) {
-                Files.delete(curvesPath);
-            }
-            writeInputFiles(workingDir);
-            Command cmd = getCommand(dynaWaltzConfig);
-            return Collections.singletonList(new CommandExecution(cmd, 1));
-        }
-
-        @Override
-        public DynamicSimulationResult after(Path workingDir, ExecutionReport report) throws IOException {
-            super.after(workingDir, report);
-            context.getNetwork().getVariantManager().setWorkingVariant(context.getWorkingVariantId());
-            boolean status = true;
-            Path outputNetworkFile = workingDir.resolve("outputs").resolve("finalState").resolve(OUTPUT_IIDM_FILENAME);
-            if (Files.exists(outputNetworkFile)) {
-                NetworkResultsUpdater.update(context.getNetwork(), NetworkXml.read(outputNetworkFile), context.getDynaWaltzParameters().isMergeLoads());
-            } else {
-                status = false;
-            }
-            Path curvesPath = workingDir.resolve(CURVES_OUTPUT_PATH).toAbsolutePath().resolve(CURVES_FILENAME);
-            Map<String, TimeSeries> curves = new HashMap<>();
-            if (Files.exists(curvesPath)) {
-                Map<Integer, List<TimeSeries>> curvesPerVersion = TimeSeries.parseCsv(curvesPath, new TimeSeriesCsvConfig(TimeSeriesConstants.DEFAULT_SEPARATOR, false, TimeFormat.FRACTIONS_OF_SECOND));
-                curvesPerVersion.values().forEach(l -> l.forEach(curve -> curves.put(curve.getMetadata().getName(), curve)));
-            } else {
-                if (context.withCurves()) {
-                    status = false;
-                }
-            }
-            return new DynamicSimulationResultImpl(status, null, curves, DynamicSimulationResult.emptyTimeLine());
-        }
-
-        private void writeInputFiles(Path workingDir) {
-            try {
-                DynawoUtil.writeIidm(dynawoInput, workingDir.resolve(NETWORK_FILENAME));
-                JobsXml.write(workingDir, context);
-                DydXml.write(workingDir, context);
-                ParametersXml.write(workingDir, context);
-                if (context.withCurves()) {
-                    CurvesXml.write(workingDir, context);
-                }
-            } catch (IOException e) {
-                throw new UncheckedIOException(e);
-            } catch (XMLStreamException e) {
-                throw new UncheckedXmlStreamException(e);
-            }
-        }
+        return new DynaWaltzContext(network, workingVariantId, blackBoxModels, blackBoxEventModels, curvesSupplier.get(network), parameters, dynaWaltzParameters);
     }
 }

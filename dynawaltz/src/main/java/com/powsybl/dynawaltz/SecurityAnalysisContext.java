@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
  */
 public class SecurityAnalysisContext extends DynaWaltzContext {
 
+    //TODO discuss start time
     private static final double START_TIME = 10.0;
     private final List<ContingencyEventModels> contingencyEventModels;
 
