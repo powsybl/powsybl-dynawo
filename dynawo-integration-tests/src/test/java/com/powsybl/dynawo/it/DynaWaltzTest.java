@@ -164,14 +164,15 @@ class DynaWaltzTest extends AbstractDynawoTest {
         dynaWaltzParameters.setModelsParameters(modelsParameters)
                 .setNetworkParameters(networkParameters)
                 .setSolverParameters(solverParameters)
-                .setSolverType(DynaWaltzParameters.SolverType.IDA);
+                .setSolverType(DynaWaltzParameters.SolverType.IDA)
+                .setWriteFinalState(false);
 
         DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, curvesSupplier,
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters)
                 .join();
 
         assertTrue(result.isOk());
-        assertEquals(0, result.getCurves().size());
+        assertEquals(35, result.getCurves().size());
         StringTimeSeries timeLine = result.getTimeLine();
         assertEquals(1, timeLine.toArray().length);
         assertNull(timeLine.toArray()[0]); // FIXME
