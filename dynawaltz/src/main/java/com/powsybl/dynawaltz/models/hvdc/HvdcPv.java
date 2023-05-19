@@ -7,13 +7,20 @@
  */
 package com.powsybl.dynawaltz.models.hvdc;
 
-import com.powsybl.dynawaltz.models.Model;
 import com.powsybl.dynawaltz.models.Side;
+import com.powsybl.iidm.network.HvdcLine;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public interface HvdcModel extends Model {
+public class HvdcPv extends AbstractHvdc {
 
-    String getSwitchOffSignalEventVarName(Side side);
+    public HvdcPv(String dynamicModelId, HvdcLine hvdc, String parameterSetId, String hvdcLib) {
+        super(dynamicModelId, hvdc, parameterSetId, hvdcLib);
+    }
+
+    @Override
+    public String getSwitchOffSignalEventVarName(Side side) {
+        return "hvdc_switchOffSignal2" + side.getSideSuffix();
+    }
 }

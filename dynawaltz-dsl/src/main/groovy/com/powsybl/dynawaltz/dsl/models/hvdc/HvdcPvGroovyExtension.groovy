@@ -8,13 +8,11 @@
 package com.powsybl.dynawaltz.dsl.models.hvdc
 
 import com.google.auto.service.AutoService
-import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
 import com.powsybl.dynawaltz.dsl.EquipmentConfig
-import com.powsybl.dynawaltz.dsl.models.builders.AbstractDynamicModelBuilder
-import com.powsybl.dynawaltz.models.hvdc.HvdcModel
+import com.powsybl.dynawaltz.models.hvdc.HvdcPv
 import com.powsybl.iidm.network.HvdcLine
 import com.powsybl.iidm.network.Network
 
@@ -22,12 +20,12 @@ import com.powsybl.iidm.network.Network
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class HvdcGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+class HvdcPvGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
-    protected static final String HVDC = "hvdc"
+    protected static final String HVDC_PV = "hvdcPv"
 
-    HvdcGroovyExtension() {
-        super(HVDC)
+    HvdcPvGroovyExtension() {
+        super(HVDC_PV)
     }
 
     @Override
@@ -35,9 +33,8 @@ class HvdcGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel>
         new HvdcBuilder(network, equipmentConfig)
     }
 
-    static class HvdcBuilder extends AbstractDynamicModelBuilder {
+    static class HvdcBuilder extends AbstractHvdcBuilder {
 
-        HvdcLine hvdc
         EquipmentConfig equipmentConfig
 
         HvdcBuilder(Network network, EquipmentConfig equipmentConfig) {
@@ -45,18 +42,10 @@ class HvdcGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel>
             this.equipmentConfig = equipmentConfig
         }
 
-        void checkData() {
-            super.checkData()
-            hvdc = network.getHvdcLine(staticId)
-            if (hvdc == null) {
-                throw new DslException("Hvdc line static id unknown: " + staticId)
-            }
-        }
-
         @Override
-        HvdcModel build() {
+        HvdcPv build() {
             checkData()
-            new HvdcModel(dynamicModelId, hvdc, parameterSetId, equipmentConfig.lib)
+            new HvdcPv(dynamicModelId, hvdc, parameterSetId, equipmentConfig.lib)
         }
     }
 }

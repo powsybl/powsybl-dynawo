@@ -5,15 +5,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.models.hvdc;
 
-import com.powsybl.dynawaltz.models.Model;
-import com.powsybl.dynawaltz.models.Side;
+package dynamicModels
 
-/**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
- */
-public interface HvdcModel extends Model {
-
-    String getSwitchOffSignalEventVarName(Side side);
+HvdcVSC {
+    staticId "L"
+    dynamicModelId "BBM_HVDC_L"
+    parameterSetId "HVDC"
 }
+

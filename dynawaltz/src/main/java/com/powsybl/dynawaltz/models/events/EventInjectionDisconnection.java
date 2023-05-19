@@ -8,30 +8,19 @@ package com.powsybl.dynawaltz.models.events;
 
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.VarConnection;
-import com.powsybl.dynawaltz.parameters.ParameterType;
-import com.powsybl.dynawaltz.xml.ParametersXml;
 import com.powsybl.iidm.network.Generator;
 import com.powsybl.iidm.network.Load;
 
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
 import java.util.List;
 
 /**
  * @author Mathieu BAGUE {@literal <mathieu.bague at rte-france.com>}
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class EventInjectionDisconnection extends AbstractEventModel {
-
-    private static final String EVENT_PREFIX = "Disconnect_";
-    private static final String DYNAMIC_MODEL_LIB = "EventSetPointBoolean";
-    private static final String DEFAULT_MODEL_LIB = "EventConnectedStatus";
-
-    private final boolean disconnect;
+public class EventInjectionDisconnection extends AbstractDynamicLibEventDisconnection {
 
     public EventInjectionDisconnection(Generator equipment, double startTime, boolean disconnect) {
-        super(equipment, startTime, EVENT_PREFIX);
-        this.disconnect = disconnect;
+        super(equipment, startTime, disconnect);
     }
 
     public EventInjectionDisconnection(Generator equipment, double startTime) {
@@ -39,44 +28,19 @@ public class EventInjectionDisconnection extends AbstractEventModel {
     }
 
     public EventInjectionDisconnection(Load equipment, double startTime, boolean disconnect) {
-        super(equipment, startTime, EVENT_PREFIX);
-        this.disconnect = disconnect;
+        super(equipment, startTime, disconnect);
     }
 
     public EventInjectionDisconnection(Load equipment, double startTime) {
         this(equipment, startTime, true);
     }
 
-    @Override
-    public String getLib() {
-        return null;
-    }
-
     private List<VarConnection> getVarConnectionsWithDisconnectable(DisconnectableEquipment connected) {
-        return List.of(new VarConnection("event_state1", connected.getDisconnectableVarName()));
+        return List.of(new VarConnection(DISCONNECTION_VAR_CONNECT, connected.getDisconnectableVarName()));
     }
 
     @Override
     public void createMacroConnections(DynaWaltzContext context) {
         createMacroConnections(getEquipment(), DisconnectableEquipment.class, this::getVarConnectionsWithDisconnectable, context);
-    }
-
-    @Override
-    protected void writeEventSpecificParameters(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
-        ParametersXml.writeParameter(writer, ParameterType.DOUBLE, "event_tEvent", Double.toString(getStartTime()));
-        ParametersXml.writeParameter(writer, ParameterType.BOOL, "event_stateEvent1", Boolean.toString(disconnect));
-    }
-
-    @Override
-    public String getName() {
-        return EventInjectionDisconnection.class.getSimpleName();
-    }
-
-    @Override
-    protected void writeDynamicAttributes(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
-        writer.writeAttribute("id", getDynamicModelId());
-        writer.writeAttribute("lib", context.isWithoutBlackBoxDynamicModel(getEquipment()) ? DEFAULT_MODEL_LIB : DYNAMIC_MODEL_LIB);
-        writer.writeAttribute("parFile", getParFile(context));
-        writer.writeAttribute("parId", getParameterSetId());
     }
 }
