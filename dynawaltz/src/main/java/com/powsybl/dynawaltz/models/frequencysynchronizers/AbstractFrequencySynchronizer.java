@@ -18,12 +18,12 @@ import java.util.List;
  */
 public abstract class AbstractFrequencySynchronizer extends AbstractPureDynamicBlackBoxModel implements FrequencySynchronizerModel {
 
-    public static final String OMEGA_REF_ID = "OMEGA_REF";
-    private static final String OMEGA_REF_PARAMETER_SET_ID = "OMEGA_REF";
+    private static final String FREQUENCY_SYNCHRONIZER_ID = "FREQ_SYNC";
+    private static final String FREQUENCY_SYNCHRONIZER_PARAMETER_SET_ID = "FREQ_SYNC_PAR";
     protected final List<OmegaRefGeneratorModel> omegaRefGenerators;
 
     protected AbstractFrequencySynchronizer(List<OmegaRefGeneratorModel> omegaRefGenerators) {
-        super(OMEGA_REF_ID, OMEGA_REF_PARAMETER_SET_ID);
+        super(FREQUENCY_SYNCHRONIZER_ID, FREQUENCY_SYNCHRONIZER_PARAMETER_SET_ID);
         this.omegaRefGenerators = omegaRefGenerators;
     }
 

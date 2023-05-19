@@ -5,7 +5,7 @@
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="BBM_TR" lib="TransformerFixedRatio" parFile="models.par" parId="t" staticId="NGEN_NHV1"/>
     <dyn:blackBoxModel id="BBM_BUS" lib="InfiniteBus" parFile="models.par" parId="ib" staticId="NGEN"/>
-    <dyn:blackBoxModel id="OMEGA_REF" lib="SetPoint" parFile="sim1.par" parId="OMEGA_REF"/>
+    <dyn:blackBoxModel id="FREQ_SYNC" lib="SetPoint" parFile="sim1.par" parId="FREQ_SYNC_PAR"/>
     <dyn:macroConnector id="MC_GeneratorPQ-InfiniteBus">
         <dyn:connect var1="generator_terminal" var2="infiniteBus_terminal"/>
     </dyn:macroConnector>
@@ -26,5 +26,5 @@
     <dyn:macroConnect connector="MC_GeneratorPQ-InfiniteBus" id1="BBM_GEN" id2="BBM_BUS" name2="NGEN"/>
     <dyn:macroConnect connector="MC_TransformerFixedRatioSide1-InfiniteBus" id1="BBM_TR" id2="BBM_BUS" name2="NGEN"/>
     <dyn:macroConnect connector="MC_TransformerFixedRatioSide2-NetworkBus" id1="BBM_TR" id2="NETWORK" name2="NHV1"/>
-    <dyn:macroConnect connector="MC_SetPoint-GeneratorPQ" id1="OMEGA_REF" id2="BBM_GEN"/>
+    <dyn:macroConnect connector="MC_SetPoint-GeneratorPQ" id1="FREQ_SYNC" id2="BBM_GEN"/>
 </dyn:dynamicModelsArchitecture>
