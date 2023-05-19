@@ -74,10 +74,6 @@ public abstract class AbstractGeneratorModel extends AbstractEquipmentBlackBoxMo
         return "generator_switchOffSignal2";
     }
 
-    public String getSwitchOffSignalEventVarName() {
-        return switchOffSignalEventVarName;
-    }
-
     public String getSwitchOffSignalAutomatonVarName() {
         return "generator_switchOffSignal3";
     }

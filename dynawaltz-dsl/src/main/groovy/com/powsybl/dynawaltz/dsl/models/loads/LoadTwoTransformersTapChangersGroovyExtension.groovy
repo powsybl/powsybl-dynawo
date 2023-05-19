@@ -11,6 +11,7 @@ import com.google.auto.service.AutoService
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
+import com.powsybl.dynawaltz.dsl.AbstractSimpleEquipmentGroovyExtension
 import com.powsybl.dynawaltz.models.loads.LoadTwoTransformersTapChangers
 import com.powsybl.iidm.network.Network
 
@@ -18,14 +19,14 @@ import com.powsybl.iidm.network.Network
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class LoadTwoTransformersTapChangersGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+class LoadTwoTransformersTapChangersGroovyExtension extends AbstractSimpleEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
     LoadTwoTransformersTapChangersGroovyExtension() {
-        modelTags = ["LoadTwoTransformersTapChangers"]
+        modelTag = "LoadTwoTransformersTapChangers"
     }
 
     @Override
-    protected LoadTwoTransformersTapChangersBuilder createBuilder(Network network, String currentTag) {
+    protected LoadTwoTransformersTapChangersBuilder createBuilder(Network network) {
         new LoadTwoTransformersTapChangersBuilder(network)
     }
 

@@ -20,7 +20,7 @@ abstract class AbstractEquipmentGroovyExtension<T> {
     protected static final String MODELS_CONFIG = "models.cfg"
     protected static final String MODELS_PROPERTIES = "properties"
 
-    protected List<EquipmentConfig> equipmentConfigs
+    protected final List<EquipmentConfig> equipmentConfigs
 
     AbstractEquipmentGroovyExtension(String modelTag) {
         ConfigSlurper config = new ConfigSlurper()

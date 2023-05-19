@@ -11,7 +11,6 @@ import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
 import com.powsybl.dynawaltz.dsl.EquipmentConfig
-import com.powsybl.dynawaltz.dsl.models.builders.AbstractConfigDynamicModelBuilder
 import com.powsybl.dynawaltz.models.loads.LoadAlphaBeta
 import com.powsybl.dynawaltz.models.loads.LoadAlphaBetaControllable
 import com.powsybl.iidm.network.Load
@@ -36,11 +35,13 @@ class LoadAlphaBetaGroovyExtension extends AbstractEquipmentGroovyExtension<Dyna
         new LoadAlphaBetaBuilder(network, equipmentConfig)
     }
 
-    static class LoadAlphaBetaBuilder extends AbstractConfigDynamicModelBuilder {
+    static class LoadAlphaBetaBuilder extends AbstractLoadModelBuilder {
 
-        Load load
+        EquipmentConfig equipmentConfig;
+
         LoadAlphaBetaBuilder(Network network, EquipmentConfig equipmentConfig) {
-            super(network, equipmentConfig)
+            super(network)
+            this.equipmentConfig = equipmentConfig;
         }
 
         @Override

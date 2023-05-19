@@ -9,7 +9,7 @@
     <dyn:blackBoxModel id="BBM_LOADC" lib="LoadAlphaBeta" parFile="models.par" parId="load" staticId="LOAD2">
         <dyn:macroStaticRef id="MSR_LoadAlphaBeta"/>
     </dyn:blackBoxModel>
-    <dyn:blackBoxModel id="OMEGA_REF" lib="DYNModelOmegaRef" parFile="sim1.par" parId="OMEGA_REF"/>
+    <dyn:blackBoxModel id="FREQ_SYNC" lib="DYNModelOmegaRef" parFile="sim1.par" parId="FREQ_SYNC_PAR"/>
     <dyn:blackBoxModel id="Step_GEN" lib="EventSetPointReal" parFile="sim1.par" parId="Step_GEN"/>
     <dyn:blackBoxModel id="Step_GEN2" lib="Step" parFile="sim1.par" parId="Step_GEN2"/>
     <dyn:blackBoxModel id="Step_GEN3" lib="Step" parFile="sim1.par" parId="Step_GEN3"/>
@@ -72,10 +72,10 @@
     <dyn:macroConnect connector="MC_GeneratorPV-NetworkBus" id1="BBM_GENC" id2="NETWORK" name2="N1"/>
     <dyn:macroConnect connector="MC_GeneratorSynchronousFourWindingsGoverPropVRPropInt-NetworkBus" id1="BBM_GENC2" id2="NETWORK" name2="N2"/>
     <dyn:macroConnect connector="MC_LoadAlphaBeta-NetworkBus" id1="BBM_LOADC" id2="NETWORK" name2="N1"/>
-    <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorPV" id1="OMEGA_REF" index1="0" id2="BBM_GENC"/>
-    <dyn:macroConnect connector="MC_DYNModelOmegaRef-NetworkBus" id1="OMEGA_REF" index1="0" id2="NETWORK" name2="N1"/>
-    <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorSynchronousFourWindingsGoverPropVRPropInt" id1="OMEGA_REF" index1="1" id2="BBM_GENC2"/>
-    <dyn:macroConnect connector="MC_DYNModelOmegaRef-NetworkBus" id1="OMEGA_REF" index1="1" id2="NETWORK" name2="N2"/>
+    <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorPV" id1="FREQ_SYNC" index1="0" id2="BBM_GENC"/>
+    <dyn:macroConnect connector="MC_DYNModelOmegaRef-NetworkBus" id1="FREQ_SYNC" index1="0" id2="NETWORK" name2="N1"/>
+    <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorSynchronousFourWindingsGoverPropVRPropInt" id1="FREQ_SYNC" index1="1" id2="BBM_GENC2"/>
+    <dyn:macroConnect connector="MC_DYNModelOmegaRef-NetworkBus" id1="FREQ_SYNC" index1="1" id2="NETWORK" name2="N2"/>
     <dyn:macroConnect connector="MC_EventActivePowerVariation-NetworkGenerator" id1="Step_GEN" id2="NETWORK" name2="GEN"/>
     <dyn:macroConnect connector="MC_EventActivePowerVariation-GeneratorPV" id1="Step_GEN2" id2="BBM_GENC"/>
     <dyn:macroConnect connector="MC_EventActivePowerVariation-GeneratorSynchronousFourWindingsGoverPropVRPropInt" id1="Step_GEN3" id2="BBM_GENC2"/>
