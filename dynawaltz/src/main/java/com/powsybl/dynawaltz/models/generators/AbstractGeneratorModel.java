@@ -44,10 +44,10 @@ public abstract class AbstractGeneratorModel extends AbstractEquipmentBlackBoxMo
 
     @Override
     public void createMacroConnections(DynaWaltzContext context) {
-        createMacroConnections(BusUtils.getConnectableBusStaticId(equipment), BusModel.class, this::getVarConnectionsWithBus, context);
+        createMacroConnections(BusUtils.getConnectableBusStaticId(equipment), BusModel.class, this::getVarConnectionsWith, context);
     }
 
-    private List<VarConnection> getVarConnectionsWithBus(BusModel connected) {
+    private List<VarConnection> getVarConnectionsWith(BusModel connected) {
         List<VarConnection> varConnections = new ArrayList<>(2);
         varConnections.add(new VarConnection(getTerminalVarName(), connected.getTerminalVarName()));
         connected.getSwitchOffSignalVarName()

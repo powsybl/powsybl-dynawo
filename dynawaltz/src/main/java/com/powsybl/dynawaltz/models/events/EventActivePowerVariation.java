@@ -59,11 +59,11 @@ public class EventActivePowerVariation extends AbstractEventModel {
         return EventActivePowerVariation.class.getSimpleName();
     }
 
-    private List<VarConnection> getVarConnectionsWithDefaultControllableEquipment(ControllableEquipment connected) {
+    private List<VarConnection> getVarConnectionsWithDefault(ControllableEquipment connected) {
         return List.of(new VarConnection("event_state1", connected.getDeltaPVarName()));
     }
 
-    private List<VarConnection> getVarConnectionsWithControllableEquipment(ControllableEquipment connected) {
+    private List<VarConnection> getVarConnectionsWith(ControllableEquipment connected) {
         return List.of(new VarConnection("step_step_value", connected.getDeltaPVarName()));
     }
 
@@ -71,7 +71,7 @@ public class EventActivePowerVariation extends AbstractEventModel {
     public void createMacroConnections(DynaWaltzContext context) {
         createMacroConnections(getEquipment(),
                 ControllableEquipment.class,
-                context.isWithoutBlackBoxDynamicModel(getEquipment()) ? this::getVarConnectionsWithDefaultControllableEquipment : this::getVarConnectionsWithControllableEquipment,
+                context.isWithoutBlackBoxDynamicModel(getEquipment()) ? this::getVarConnectionsWithDefault : this::getVarConnectionsWith,
                 context);
     }
 

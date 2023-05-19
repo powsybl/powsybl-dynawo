@@ -70,24 +70,24 @@ public class TapChangerBlockingAutomaton extends AbstractPureDynamicBlackBoxMode
     @Override
     public void createMacroConnections(DynaWaltzContext context) {
         for (TwoWindingsTransformer transformer : transformers) {
-            createMacroConnections(transformer, TapChangerModel.class, this::getVarConnectionsWithTapChanger, context);
+            createMacroConnections(transformer, TapChangerModel.class, this::getVarConnectionsWith, context);
         }
         for (Load load : loadsWithTransformer) {
-            createMacroConnections(load, TapChangerModel.class, this::getVarConnectionsWithTapChanger, context);
+            createMacroConnections(load, TapChangerModel.class, this::getVarConnectionsWith, context);
         }
         for (String id : tapChangerAutomatonIds) {
-            createPureDynamicMacroConnections(id, TapChangerModel.class, this::getVarConnectionsWithTapChanger, context);
+            createPureDynamicMacroConnections(id, TapChangerModel.class, this::getVarConnectionsWith, context);
         }
         for (Bus bus : uMeasurements) {
-            createMacroConnections(bus.getId(), BusModel.class, this::getVarConnectionsWithBus, context);
+            createMacroConnections(bus.getId(), BusModel.class, this::getVarConnectionsWith, context);
         }
     }
 
-    private List<VarConnection> getVarConnectionsWithTapChanger(TapChangerModel connected) {
+    private List<VarConnection> getVarConnectionsWith(TapChangerModel connected) {
         return connected.getTapChangerBlockerVarConnections();
     }
 
-    private List<VarConnection> getVarConnectionsWithBus(BusModel connected) {
+    private List<VarConnection> getVarConnectionsWith(BusModel connected) {
         return connected.getUImpinVarName()
                 .map(uImpinVarName -> List.of(new VarConnection("tapChangerBlocking_UMonitored", uImpinVarName)))
                 .orElse(Collections.emptyList());

@@ -48,10 +48,10 @@ public class TapChangerAutomaton extends AbstractPureDynamicBlackBoxModel implem
 
     @Override
     public void createMacroConnections(DynaWaltzContext context) {
-        createMacroConnections(load, LoadWithTransformers.class, this::getVarConnectionsWithLoadWithTransformers, context);
+        createMacroConnections(load, LoadWithTransformers.class, this::getVarConnectionsWith, context);
     }
 
-    private List<VarConnection> getVarConnectionsWithLoadWithTransformers(LoadWithTransformers connected) {
+    private List<VarConnection> getVarConnectionsWith(LoadWithTransformers connected) {
         return connected.getTapChangerVarConnections(side);
     }
 

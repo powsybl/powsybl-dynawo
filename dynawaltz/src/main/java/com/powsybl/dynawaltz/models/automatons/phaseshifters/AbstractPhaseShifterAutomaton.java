@@ -30,8 +30,8 @@ public abstract class AbstractPhaseShifterAutomaton extends AbstractPureDynamicB
 
     @Override
     public void createMacroConnections(DynaWaltzContext context) {
-        createMacroConnections(transformer, TransformerModel.class, this::getVarConnectionsWithTransformer, context);
+        createMacroConnections(transformer, TransformerModel.class, this::getVarConnectionsWith, context);
     }
 
-    protected abstract List<VarConnection> getVarConnectionsWithTransformer(TransformerModel connected);
+    protected abstract List<VarConnection> getVarConnectionsWith(TransformerModel connected);
 }

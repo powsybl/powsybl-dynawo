@@ -36,10 +36,10 @@ public class UnderVoltageAutomaton extends AbstractPureDynamicBlackBoxModel {
 
     @Override
     public void createMacroConnections(DynaWaltzContext context) {
-        createMacroConnections(generator, GeneratorModel.class, this::getVarConnectionsWithGenerator, context);
+        createMacroConnections(generator, GeneratorModel.class, this::getVarConnectionsWith, context);
     }
 
-    protected List<VarConnection> getVarConnectionsWithGenerator(GeneratorModel connected) {
+    protected List<VarConnection> getVarConnectionsWith(GeneratorModel connected) {
         return Arrays.asList(
                 new VarConnection("underVoltageAutomaton_UMonitoredPu", connected.getUPuVarName()),
                 new VarConnection("underVoltageAutomaton_switchOffSignal", connected.getSwitchOffSignalAutomatonVarName())

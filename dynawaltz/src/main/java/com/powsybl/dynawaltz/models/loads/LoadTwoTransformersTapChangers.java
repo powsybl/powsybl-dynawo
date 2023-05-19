@@ -34,8 +34,8 @@ public class LoadTwoTransformersTapChangers extends LoadTwoTransformers implemen
     }
 
     @Override
-    protected List<VarConnection> getVarConnectionsWithBus(BusModel connected) {
-        List<VarConnection> varConnections = super.getVarConnectionsWithBus(connected);
+    protected List<VarConnection> getVarConnectionsWith(BusModel connected) {
+        List<VarConnection> varConnections = super.getVarConnectionsWith(connected);
         connected.getSwitchOffSignalVarName()
                 .ifPresent(switchOff -> {
                     varConnections.add(new VarConnection(getSwitchOffSignal(HIGH_VOLTAGE), switchOff));

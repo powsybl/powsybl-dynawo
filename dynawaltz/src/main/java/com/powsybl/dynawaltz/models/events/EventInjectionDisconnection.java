@@ -54,12 +54,12 @@ public class EventInjectionDisconnection extends AbstractDynamicLibEventDisconne
         this(equipment, startTime, true);
     }
 
-    private List<VarConnection> getVarConnectionsWithInjectionModel(InjectionModel connected) {
+    private List<VarConnection> getVarConnectionsWith(InjectionModel connected) {
         return List.of(new VarConnection(DISCONNECTION_VAR_CONNECT, connected.getSwitchOffSignalEventVarName()));
     }
 
     @Override
     public void createMacroConnections(DynaWaltzContext context) {
-        createMacroConnections(getEquipment(), InjectionModel.class, this::getVarConnectionsWithInjectionModel, context);
+        createMacroConnections(getEquipment(), InjectionModel.class, this::getVarConnectionsWith, context);
     }
 }

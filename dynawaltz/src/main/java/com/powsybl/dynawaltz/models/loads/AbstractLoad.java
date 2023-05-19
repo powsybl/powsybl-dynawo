@@ -34,10 +34,10 @@ public abstract class AbstractLoad extends AbstractEquipmentBlackBoxModel<Load> 
 
     @Override
     public void createMacroConnections(DynaWaltzContext context) {
-        createMacroConnections(BusUtils.getConnectableBusStaticId(equipment), BusModel.class, this::getVarConnectionsWithBus, context);
+        createMacroConnections(BusUtils.getConnectableBusStaticId(equipment), BusModel.class, this::getVarConnectionsWith, context);
     }
 
-    abstract List<VarConnection> getVarConnectionsWithBus(BusModel connected);
+    abstract List<VarConnection> getVarConnectionsWith(BusModel connected);
 
     @Override
     public String getSwitchOffSignalEventVarName() {
