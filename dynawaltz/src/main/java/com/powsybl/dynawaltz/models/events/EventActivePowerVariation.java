@@ -34,18 +34,15 @@ public class EventActivePowerVariation extends AbstractEventModel {
     private static final String DEFAULT_MODEL_LIB = "EventSetPointReal";
 
     private final double deltaP;
-    private final boolean isLoad;
 
     public EventActivePowerVariation(Load equipment, double startTime, double deltaP) {
         super(equipment, startTime, EVENT_PREFIX);
         this.deltaP = deltaP;
-        this.isLoad = true;
     }
 
     public EventActivePowerVariation(Generator equipment, double startTime, double deltaP) {
         super(equipment, startTime, EVENT_PREFIX);
         this.deltaP = deltaP;
-        this.isLoad = false;
     }
 
     public static boolean isConnectable(IdentifiableType type) {
@@ -81,7 +78,7 @@ public class EventActivePowerVariation extends AbstractEventModel {
     @Override
     public void writeParameters(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
         super.writeParameters(writer, context);
-        if (isLoad) {
+        if (getEquipment().getType() == IdentifiableType.LOAD) {
             context.getDynaWaltzParameters().getNetworkParameters().addParameter(getEquipment().getId() + "_isControllable", BOOL, Boolean.toString(true));
         }
     }
