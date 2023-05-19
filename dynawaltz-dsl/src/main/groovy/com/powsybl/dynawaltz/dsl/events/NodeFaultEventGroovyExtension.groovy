@@ -9,10 +9,8 @@ package com.powsybl.dynawaltz.dsl.events
 
 import com.google.auto.service.AutoService
 import com.powsybl.dsl.DslException
-import com.powsybl.dynamicsimulation.EventModel
 import com.powsybl.dynamicsimulation.groovy.EventModelGroovyExtension
-import com.powsybl.dynawaltz.dsl.AbstractPureDynamicGroovyExtension
-import com.powsybl.dynawaltz.models.events.AbstractEventModel
+import com.powsybl.dynawaltz.dsl.AbstractEventGroovyExtension
 import com.powsybl.dynawaltz.models.events.NodeFaultEvent
 import com.powsybl.iidm.network.Bus
 import com.powsybl.iidm.network.Network
@@ -21,7 +19,7 @@ import com.powsybl.iidm.network.Network
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 @AutoService(EventModelGroovyExtension.class)
-class NodeFaultEventGroovyExtension extends AbstractPureDynamicGroovyExtension<EventModel> implements EventModelGroovyExtension {
+class NodeFaultEventGroovyExtension extends AbstractEventGroovyExtension<NodeFaultEvent> {
 
     NodeFaultEventGroovyExtension() {
         modelTags = ["NodeFault"]
@@ -73,7 +71,7 @@ class NodeFaultEventGroovyExtension extends AbstractPureDynamicGroovyExtension<E
         }
 
         @Override
-        AbstractEventModel build() {
+        NodeFaultEvent build() {
             checkData()
             new NodeFaultEvent(bus, startTime, faultTime, rPu, xPu)
         }

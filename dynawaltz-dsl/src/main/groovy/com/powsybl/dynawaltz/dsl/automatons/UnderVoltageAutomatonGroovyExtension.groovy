@@ -9,9 +9,8 @@ package com.powsybl.dynawaltz.dsl.automatons
 
 import com.google.auto.service.AutoService
 import com.powsybl.dsl.DslException
-import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
-import com.powsybl.dynawaltz.dsl.AbstractPureDynamicGroovyExtension
+import com.powsybl.dynawaltz.dsl.AbstractPureDynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.models.builders.AbstractPureDynamicModelBuilder
 import com.powsybl.dynawaltz.models.automatons.UnderVoltageAutomaton
 import com.powsybl.iidm.network.Generator
@@ -21,7 +20,7 @@ import com.powsybl.iidm.network.Network
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class UnderVoltageAutomatonGroovyExtension extends AbstractPureDynamicGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+class UnderVoltageAutomatonGroovyExtension extends AbstractPureDynamicModelGroovyExtension<UnderVoltageAutomaton> {
 
     UnderVoltageAutomatonGroovyExtension() {
         modelTags = ["UnderVoltage"]

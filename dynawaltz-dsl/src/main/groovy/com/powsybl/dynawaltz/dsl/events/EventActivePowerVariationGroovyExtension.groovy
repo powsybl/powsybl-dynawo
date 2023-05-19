@@ -11,7 +11,8 @@ import com.google.auto.service.AutoService
 import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.EventModel
 import com.powsybl.dynamicsimulation.groovy.EventModelGroovyExtension
-import com.powsybl.dynawaltz.dsl.AbstractPureDynamicGroovyExtension
+import com.powsybl.dynawaltz.dsl.AbstractEventGroovyExtension
+import com.powsybl.dynawaltz.dsl.AbstractPureDynamicModelGroovyExtension
 import com.powsybl.dynawaltz.models.events.AbstractEventModel
 import com.powsybl.dynawaltz.models.events.EventActivePowerVariation
 import com.powsybl.iidm.network.Identifiable
@@ -22,7 +23,7 @@ import com.powsybl.iidm.network.Network
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 @AutoService(EventModelGroovyExtension.class)
-class EventActivePowerVariationGroovyExtension extends AbstractPureDynamicGroovyExtension<EventModel> implements EventModelGroovyExtension {
+class EventActivePowerVariationGroovyExtension extends AbstractEventGroovyExtension<EventActivePowerVariation> {
 
     private static final EnumSet<IdentifiableType> connectableEquipments = EnumSet.of(IdentifiableType.GENERATOR, IdentifiableType.LOAD)
 
@@ -60,7 +61,7 @@ class EventActivePowerVariationGroovyExtension extends AbstractPureDynamicGroovy
         }
 
         @Override
-        AbstractEventModel build() {
+        EventActivePowerVariation build() {
             checkData()
             new EventActivePowerVariation(identifiable, startTime, deltaP)
         }

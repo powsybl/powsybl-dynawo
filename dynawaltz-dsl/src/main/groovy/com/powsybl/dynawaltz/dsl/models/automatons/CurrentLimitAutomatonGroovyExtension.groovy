@@ -11,7 +11,7 @@ import com.google.auto.service.AutoService
 import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
-import com.powsybl.dynawaltz.dsl.AbstractPureDynamicGroovyExtension
+import com.powsybl.dynawaltz.dsl.AbstractPureDynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.models.builders.AbstractPureDynamicModelBuilder
 import com.powsybl.dynawaltz.models.Side
 import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton
@@ -25,7 +25,7 @@ import com.powsybl.iidm.network.Network
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class CurrentLimitAutomatonGroovyExtension extends AbstractPureDynamicGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+class CurrentLimitAutomatonGroovyExtension extends AbstractPureDynamicModelGroovyExtension<CurrentLimitAutomaton> {
 
     CurrentLimitAutomatonGroovyExtension() {
         modelTags = ["CurrentLimitAutomaton"]

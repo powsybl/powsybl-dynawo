@@ -8,25 +8,29 @@
 
 package com.powsybl.dynawaltz.dsl
 
+import com.powsybl.dynamicsimulation.EventModel
+import com.powsybl.dynamicsimulation.groovy.EventModelGroovyExtension
 import com.powsybl.dynawaltz.DynaWaltzProvider
 import com.powsybl.iidm.network.Network
 
 import java.util.function.Consumer
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Florian Dupuy <florian.dupuy at rte-france.com>
  */
-abstract class AbstractPureDynamicGroovyExtension<T> {
+abstract class AbstractEventGroovyExtension<T extends EventModel> implements EventModelGroovyExtension {
 
     protected List<String> modelTags
 
     abstract protected ModelBuilder<T> createBuilder(Network network);
 
+    @Override
     String getName() {
         return DynaWaltzProvider.NAME
     }
 
-    void load(Binding binding, Consumer<T> consumer) {
+    @Override
+    void load(Binding binding, Consumer<EventModel> consumer) {
         modelTags.forEach {
             binding.setVariable(it, { Closure<Void> closure ->
                 def cloned = closure.clone()

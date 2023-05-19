@@ -8,9 +8,8 @@
 package com.powsybl.dynawaltz.dsl.automatons
 
 import com.google.auto.service.AutoService
-import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
-import com.powsybl.dynawaltz.dsl.AbstractPureDynamicGroovyExtension
+import com.powsybl.dynawaltz.dsl.AbstractPureDynamicModelGroovyExtension
 import com.powsybl.dynawaltz.models.automatons.phaseshifters.PhaseShifterIAutomaton
 import com.powsybl.iidm.network.Network
 
@@ -18,7 +17,7 @@ import com.powsybl.iidm.network.Network
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class PhaseShifterIAutomatonGroovyExtension extends AbstractPureDynamicGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+class PhaseShifterIAutomatonGroovyExtension extends AbstractPureDynamicModelGroovyExtension<PhaseShifterIAutomaton> {
 
     PhaseShifterIAutomatonGroovyExtension() {
         modelTags = ["PhaseShifterI"]
