@@ -45,7 +45,7 @@ public class SetPoint extends AbstractFrequencySynchronizer {
     }
 
     private List<VarConnection> getVarConnectionsWithOmegaRefGenerator(OmegaRefGeneratorModel connected) {
-        return List.of(new VarConnection("setPoint_setPoint", connected.getOmegaRefPuVarName()));
+        return connected.getSetPointVarConnections();
     }
 
     @Override

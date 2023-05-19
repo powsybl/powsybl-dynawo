@@ -10,7 +10,6 @@ package com.powsybl.dynawaltz.models.generators;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.iidm.network.Generator;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -39,9 +38,16 @@ public class OmegaRefGenerator extends AbstractGeneratorModel implements OmegaRe
 
     @Override
     public List<VarConnection> getOmegaRefVarConnections() {
-        return Arrays.asList(
+        return List.of(
                 new VarConnection("omegaRef_grp_@INDEX@", getOmegaRefPuVarName()),
                 new VarConnection("running_grp_@INDEX@", getRunningVarName())
+        );
+    }
+
+    @Override
+    public List<VarConnection> getSetPointVarConnections() {
+        return List.of(
+                new VarConnection("setPoint_setPoint", getOmegaRefPuVarName())
         );
     }
 
