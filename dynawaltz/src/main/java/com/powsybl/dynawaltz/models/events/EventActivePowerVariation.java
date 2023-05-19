@@ -98,7 +98,6 @@ public class EventActivePowerVariation extends AbstractEventModel {
         }
     }
 
-    //TODO mutualize ?
     @Override
     protected void writeDynamicAttributes(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
         writer.writeAttribute("id", getDynamicModelId());
