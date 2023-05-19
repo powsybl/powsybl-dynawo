@@ -8,7 +8,6 @@
 package com.powsybl.dynawaltz.dsl.models.buses
 
 import com.google.auto.service.AutoService
-import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
 import com.powsybl.dynawaltz.dsl.EquipmentConfig
@@ -19,7 +18,7 @@ import com.powsybl.iidm.network.Network
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class InfiniteBusGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+class InfiniteBusGroovyExtension extends AbstractEquipmentGroovyExtension<InfiniteBus> {
 
     protected static final String BUSES = "infiniteBuses"
 

@@ -7,7 +7,10 @@
  */
 package com.powsybl.dynawaltz.dsl
 
+import com.powsybl.dynamicsimulation.DynamicModel
+import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.DynaWaltzProvider
+import com.powsybl.dynawaltz.models.EquipmentBlackBoxModelModel
 import com.powsybl.iidm.network.Network
 
 import java.util.function.Consumer
@@ -15,7 +18,7 @@ import java.util.function.Consumer
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-abstract class AbstractEquipmentGroovyExtension<T> {
+abstract class AbstractEquipmentGroovyExtension<T extends EquipmentBlackBoxModelModel> implements DynamicModelGroovyExtension {
 
     protected static final String MODELS_CONFIG = "models.cfg"
     protected static final String MODELS_PROPERTIES = "properties"
@@ -34,11 +37,13 @@ abstract class AbstractEquipmentGroovyExtension<T> {
 
     abstract protected ModelBuilder<T> createBuilder(Network network, EquipmentConfig equipmentConfig);
 
+    @Override
     String getName() {
         return DynaWaltzProvider.NAME
     }
 
-    void load(Binding binding, Consumer<T> consumer) {
+    @Override
+    void load(Binding binding, Consumer<DynamicModel> consumer) {
         equipmentConfigs.forEach {
             binding.setVariable(it.lib, { Closure<Void> closure ->
                 def cloned = closure.clone()

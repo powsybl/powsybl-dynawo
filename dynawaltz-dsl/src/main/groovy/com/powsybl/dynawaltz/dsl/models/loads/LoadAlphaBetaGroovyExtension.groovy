@@ -7,13 +7,11 @@
 package com.powsybl.dynawaltz.dsl.models.loads
 
 import com.google.auto.service.AutoService
-import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
 import com.powsybl.dynawaltz.dsl.EquipmentConfig
 import com.powsybl.dynawaltz.models.loads.LoadAlphaBeta
 import com.powsybl.dynawaltz.models.loads.LoadAlphaBetaControllable
-import com.powsybl.iidm.network.Load
 import com.powsybl.iidm.network.Network
 
 /**
@@ -22,7 +20,7 @@ import com.powsybl.iidm.network.Network
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class LoadAlphaBetaGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+class LoadAlphaBetaGroovyExtension extends AbstractEquipmentGroovyExtension<LoadAlphaBeta> {
 
     private static final String LOADS = "loadsAlphaBeta"
 

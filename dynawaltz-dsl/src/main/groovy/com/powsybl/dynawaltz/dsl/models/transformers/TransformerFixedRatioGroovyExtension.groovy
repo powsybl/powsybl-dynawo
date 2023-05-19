@@ -9,7 +9,6 @@ package com.powsybl.dynawaltz.dsl.models.transformers
 
 import com.google.auto.service.AutoService
 import com.powsybl.dsl.DslException
-import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
 import com.powsybl.dynawaltz.dsl.EquipmentConfig
@@ -22,7 +21,7 @@ import com.powsybl.iidm.network.TwoWindingsTransformer
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class TransformerFixedRatioGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+class TransformerFixedRatioGroovyExtension extends AbstractEquipmentGroovyExtension<TransformerFixedRatio> {
 
     private static final String TRANSFORMERS = "transformers"
 

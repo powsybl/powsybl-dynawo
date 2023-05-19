@@ -9,7 +9,6 @@ package com.powsybl.dynawaltz.dsl.models.generators
 
 import com.google.auto.service.AutoService
 import com.powsybl.dsl.DslException
-import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
 import com.powsybl.dynawaltz.dsl.EquipmentConfig
@@ -24,7 +23,7 @@ import com.powsybl.iidm.network.Network
  * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class OmegaRefGeneratorGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+class OmegaRefGeneratorGroovyExtension extends AbstractEquipmentGroovyExtension<OmegaRefGenerator> {
 
     private static final String OMEGA_REF_GENERATORS = "omegaRefGenerators"
 

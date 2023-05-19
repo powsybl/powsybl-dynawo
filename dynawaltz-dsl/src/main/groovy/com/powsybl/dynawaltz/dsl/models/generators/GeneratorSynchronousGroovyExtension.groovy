@@ -8,7 +8,6 @@ package com.powsybl.dynawaltz.dsl.models.generators
 
 import com.google.auto.service.AutoService
 import com.powsybl.dsl.DslException
-import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
 import com.powsybl.dynawaltz.dsl.EquipmentConfig
@@ -22,7 +21,7 @@ import com.powsybl.iidm.network.Network
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class GeneratorSynchronousGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+class GeneratorSynchronousGroovyExtension extends AbstractEquipmentGroovyExtension<GeneratorSynchronous> {
 
     protected static final String SYNCHRONOUS_GENERATORS = "synchronousGenerators"
 
