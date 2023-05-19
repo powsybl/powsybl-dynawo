@@ -12,7 +12,7 @@ import com.powsybl.dynawaltz.DynaWaltzParameters;
 import com.powsybl.dynawaltz.models.MacroConnectAttribute;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.buses.BusModel;
-import com.powsybl.dynawaltz.models.generators.GeneratorSynchronousModel;
+import com.powsybl.dynawaltz.models.generators.SynchronousGeneratorModel;
 import com.powsybl.dynawaltz.models.generators.SynchronizedGeneratorModel;
 import com.powsybl.dynawaltz.xml.ParametersXml;
 
@@ -58,7 +58,7 @@ public class OmegaRef extends AbstractFrequencySynchronizer {
         int index = 0;
         for (SynchronizedGeneratorModel generator : synchronizedGenerators) {
             double weightGen = 0;
-            if (generator instanceof GeneratorSynchronousModel) {
+            if (generator instanceof SynchronousGeneratorModel) {
                 double h = dynaWaltzParameters.getModelParameters(generator.getParameterSetId()).getDouble("generator_H");
                 double snom = dynaWaltzParameters.getModelParameters(generator.getParameterSetId()).getDouble("generator_SNom");
                 weightGen = h * snom;

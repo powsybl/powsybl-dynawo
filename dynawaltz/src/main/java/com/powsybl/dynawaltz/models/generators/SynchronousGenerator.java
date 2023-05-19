@@ -15,13 +15,13 @@ import java.util.List;
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  */
-public class GeneratorSynchronous extends SynchronizedGenerator implements GeneratorSynchronousModel {
+public class SynchronousGenerator extends SynchronizedGenerator implements SynchronousGeneratorModel {
 
-    public GeneratorSynchronous(String dynamicModelId, Generator generator, String parameterSetId, String generatorLib) {
+    public SynchronousGenerator(String dynamicModelId, Generator generator, String parameterSetId, String generatorLib) {
         super(dynamicModelId, generator, parameterSetId, generatorLib);
     }
 
-    protected String getOmegaPuVarName() {
+    public String getOmegaPuVarName() {
         return "generator_omegaPu";
     }
 

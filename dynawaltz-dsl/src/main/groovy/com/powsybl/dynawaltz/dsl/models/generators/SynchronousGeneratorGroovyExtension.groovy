@@ -13,8 +13,8 @@ import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
 import com.powsybl.dynawaltz.dsl.EquipmentConfig
 import com.powsybl.dynawaltz.dsl.models.builders.AbstractDynamicModelBuilder
-import com.powsybl.dynawaltz.models.generators.GeneratorSynchronous
-import com.powsybl.dynawaltz.models.generators.GeneratorSynchronousControllable
+import com.powsybl.dynawaltz.models.generators.SynchronousGenerator
+import com.powsybl.dynawaltz.models.generators.SynchronousGeneratorControllable
 import com.powsybl.iidm.network.Generator
 import com.powsybl.iidm.network.Network
 
@@ -22,11 +22,11 @@ import com.powsybl.iidm.network.Network
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class GeneratorSynchronousGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+class SynchronousGeneratorGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
     protected static final String SYNCHRONOUS_GENERATORS = "synchronousGenerators"
 
-    GeneratorSynchronousGroovyExtension() {
+    SynchronousGeneratorGroovyExtension() {
         super(SYNCHRONOUS_GENERATORS)
     }
 
@@ -35,26 +35,26 @@ class GeneratorSynchronousGroovyExtension extends AbstractEquipmentGroovyExtensi
     }
 
     @Override
-    protected GeneratorSynchronousBuilder createBuilder(Network network, EquipmentConfig equipmentConfig) {
-        new GeneratorSynchronousBuilder(network, equipmentConfig)
+    protected SynchronousGeneratorBuilder createBuilder(Network network, EquipmentConfig equipmentConfig) {
+        new SynchronousGeneratorBuilder(network, equipmentConfig)
     }
 
-    static class GeneratorSynchronousBuilder extends AbstractGeneratorBuilder {
+    static class SynchronousGeneratorBuilder extends AbstractGeneratorBuilder {
 
         EquipmentConfig equipmentConfig
 
-        GeneratorSynchronousBuilder(Network network, EquipmentConfig equipmentConfig) {
+        SynchronousGeneratorBuilder(Network network, EquipmentConfig equipmentConfig) {
             super(network)
             this.equipmentConfig = equipmentConfig
         }
 
         @Override
-        GeneratorSynchronous build() {
+        SynchronousGenerator build() {
             checkData()
             if (equipmentConfig.isControllable()) {
-                new GeneratorSynchronousControllable(dynamicModelId, generator, parameterSetId, equipmentConfig.lib)
+                new SynchronousGeneratorControllable(dynamicModelId, generator, parameterSetId, equipmentConfig.lib)
             } else {
-                new GeneratorSynchronous(dynamicModelId, generator, parameterSetId, equipmentConfig.lib)
+                new SynchronousGenerator(dynamicModelId, generator, parameterSetId, equipmentConfig.lib)
             }
         }
     }

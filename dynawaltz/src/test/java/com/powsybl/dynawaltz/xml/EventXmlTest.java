@@ -12,7 +12,7 @@ import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
 import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection;
 import com.powsybl.dynawaltz.models.events.EventInjectionDisconnection;
-import com.powsybl.dynawaltz.models.generators.GeneratorSynchronous;
+import com.powsybl.dynawaltz.models.generators.SynchronousGenerator;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
@@ -30,7 +30,7 @@ class EventXmlTest extends DynaWaltzTestUtil {
     @Test
     void writeDynamicModel() throws SAXException, IOException, XMLStreamException {
         dynamicModels.clear();
-        dynamicModels.add(new GeneratorSynchronous("BBM_GEN2", network.getGenerator("GEN2"), "GSFWPR", "GeneratorSynchronousFourWindingsProportionalRegulations"));
+        dynamicModels.add(new SynchronousGenerator("BBM_GEN2", network.getGenerator("GEN2"), "GSFWPR", "GeneratorSynchronousFourWindingsProportionalRegulations"));
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynaWaltzParameters dynawoParameters = DynaWaltzParameters.load();
         DynaWaltzContext context = new DynaWaltzContext(network, network.getVariantManager().getWorkingVariantId(),
