@@ -8,7 +8,7 @@
 
 package dynamicModels
 
-LoadAlphaBeta {
+LoadAlphaBetaRestorative {
     staticId "LOAD"
     parameterSetId "LAB"
 }

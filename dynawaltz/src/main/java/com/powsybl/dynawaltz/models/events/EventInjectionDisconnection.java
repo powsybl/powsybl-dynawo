@@ -75,7 +75,7 @@ public class EventInjectionDisconnection extends AbstractEventModel {
     @Override
     protected void writeDynamicAttributes(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
         writer.writeAttribute("id", getDynamicModelId());
-        writer.writeAttribute("lib", context.isWithoutBlackBoxDynamicModel(getEquipment().getId()) ? DEFAULT_MODEL_LIB : DYNAMIC_MODEL_LIB);
+        writer.writeAttribute("lib", context.isWithoutBlackBoxDynamicModel(getEquipment()) ? DEFAULT_MODEL_LIB : DYNAMIC_MODEL_LIB);
         writer.writeAttribute("parFile", getParFile(context));
         writer.writeAttribute("parId", getParameterSetId());
     }

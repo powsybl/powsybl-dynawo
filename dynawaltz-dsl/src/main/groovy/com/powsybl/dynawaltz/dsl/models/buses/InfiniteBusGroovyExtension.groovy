@@ -11,6 +11,7 @@ import com.google.auto.service.AutoService
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
+import com.powsybl.dynawaltz.dsl.EquipmentConfig
 import com.powsybl.dynawaltz.models.buses.InfiniteBus
 import com.powsybl.iidm.network.Network
 
@@ -23,28 +24,27 @@ class InfiniteBusGroovyExtension extends AbstractEquipmentGroovyExtension<Dynami
     protected static final String BUSES = "infiniteBuses"
 
     InfiniteBusGroovyExtension() {
-        ConfigSlurper config = new ConfigSlurper()
-        modelTags = config.parse(this.getClass().getClassLoader().getResource(MODELS_CONFIG)).get(BUSES).keySet() as List
+        super(BUSES)
     }
 
     @Override
-    protected BusBuilder createBuilder(Network network, String currentTag) {
-        new BusBuilder(network, currentTag)
+    protected BusBuilder createBuilder(Network network, EquipmentConfig equipmentConfig) {
+        new BusBuilder(network, equipmentConfig)
     }
 
     static class BusBuilder extends AbstractBusBuilder {
 
-        String tag
+        EquipmentConfig equipmentConfig
 
-        BusBuilder(Network network, String tag) {
+        BusBuilder(Network network, EquipmentConfig equipmentConfig) {
             super(network)
-            this.tag = tag
+            this.equipmentConfig = equipmentConfig
         }
 
         @Override
         InfiniteBus build() {
             checkData()
-            new InfiniteBus(dynamicModelId, bus, parameterSetId, tag)
+            new InfiniteBus(dynamicModelId, bus, parameterSetId, equipmentConfig.lib)
         }
     }
 }

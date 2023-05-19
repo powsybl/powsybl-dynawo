@@ -8,8 +8,8 @@
 
 package dynamicModels
 
-GeneratorSynchronousThreeWindings {
-    staticId "GEN"
-    dynamicModelId "BBM_GEN"
-    parameterSetId "GSFWPR"
+LoadAlphaBeta {
+    staticId "LOAD"
+    parameterSetId "LAB"
 }
+

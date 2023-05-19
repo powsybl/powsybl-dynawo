@@ -195,6 +195,10 @@ public class DynaWaltzContext {
         return !staticIdBlackBoxModelMap.containsKey(staticId);
     }
 
+    public boolean isWithoutBlackBoxDynamicModel(Identifiable<?> equipment) {
+        return !staticIdBlackBoxModelMap.containsKey(equipment.getId());
+    }
+
     private Stream<BlackBoxModel> getInputBlackBoxDynamicModelStream() {
         //Doesn't include the OmegaRef, it only concerns the DynamicModels provided by the user
         return dynamicModels.stream();

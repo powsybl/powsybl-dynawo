@@ -10,7 +10,7 @@ package com.powsybl.dynawaltz.dsl.models.buses
 import com.google.auto.service.AutoService
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
-import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
+import com.powsybl.dynawaltz.dsl.AbstractSimpleEquipmentGroovyExtension
 import com.powsybl.dynawaltz.models.buses.StandardBus
 import com.powsybl.iidm.network.Network
 
@@ -20,14 +20,14 @@ import com.powsybl.iidm.network.Network
  * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class BusGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+class BusGroovyExtension extends AbstractSimpleEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
     BusGroovyExtension() {
-        modelTags = ["Bus"]
+        modelTag = "Bus"
     }
 
     @Override
-    protected BusBuilder createBuilder(Network network, String currentTag) {
+    protected BusBuilder createBuilder(Network network) {
         new BusBuilder(network)
     }
 

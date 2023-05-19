@@ -20,19 +20,21 @@ import java.util.List;
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 public class LoadAlphaBeta extends AbstractLoad {
-
     protected static final List<VarMapping> VAR_MAPPING = Arrays.asList(
             new VarMapping("load_PPu", "p"),
             new VarMapping("load_QPu", "q"),
             new VarMapping("load_state", "state"));
 
-    public LoadAlphaBeta(String dynamicModelId, Load load, String parameterSetId) {
+    private final String lib;
+
+    public LoadAlphaBeta(String dynamicModelId, Load load, String parameterSetId, String lib) {
         super(dynamicModelId, load, parameterSetId, "load_terminal");
+        this.lib = lib;
     }
 
     @Override
     public String getLib() {
-        return "LoadAlphaBeta";
+        return lib;
     }
 
     @Override
