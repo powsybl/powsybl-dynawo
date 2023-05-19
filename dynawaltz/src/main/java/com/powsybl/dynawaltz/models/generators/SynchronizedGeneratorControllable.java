@@ -13,9 +13,9 @@ import com.powsybl.iidm.network.Generator;
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class OmegaRefGeneratorControllable extends OmegaRefGenerator implements ControllableEquipment {
+public class SynchronizedGeneratorControllable extends SynchronizedGenerator implements ControllableEquipment {
 
-    public OmegaRefGeneratorControllable(String dynamicModelId, Generator generator, String parameterSetId, String generatorLib) {
+    public SynchronizedGeneratorControllable(String dynamicModelId, Generator generator, String parameterSetId, String generatorLib) {
         super(dynamicModelId, generator, parameterSetId, generatorLib);
     }
 

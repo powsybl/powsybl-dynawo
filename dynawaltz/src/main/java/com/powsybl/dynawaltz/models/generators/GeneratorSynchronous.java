@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  */
-public class GeneratorSynchronous extends OmegaRefGenerator implements GeneratorSynchronousModel {
+public class GeneratorSynchronous extends SynchronizedGenerator implements GeneratorSynchronousModel {
 
     public GeneratorSynchronous(String dynamicModelId, Generator generator, String parameterSetId, String generatorLib) {
         super(dynamicModelId, generator, parameterSetId, generatorLib);

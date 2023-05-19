@@ -9,7 +9,7 @@ package com.powsybl.dynawaltz.models.frequencysynchronizers;
 
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
-import com.powsybl.dynawaltz.models.generators.OmegaRefGeneratorModel;
+import com.powsybl.dynawaltz.models.generators.SynchronizedGeneratorModel;
 
 import java.util.List;
 
@@ -20,16 +20,16 @@ public abstract class AbstractFrequencySynchronizer extends AbstractPureDynamicB
 
     private static final String FREQUENCY_SYNCHRONIZER_ID = "FREQ_SYNC";
     private static final String FREQUENCY_SYNCHRONIZER_PARAMETER_SET_ID = "FREQ_SYNC_PAR";
-    protected final List<OmegaRefGeneratorModel> omegaRefGenerators;
+    protected final List<SynchronizedGeneratorModel> synchronizedGenerators;
 
-    protected AbstractFrequencySynchronizer(List<OmegaRefGeneratorModel> omegaRefGenerators) {
+    protected AbstractFrequencySynchronizer(List<SynchronizedGeneratorModel> synchronizedGenerators) {
         super(FREQUENCY_SYNCHRONIZER_ID, FREQUENCY_SYNCHRONIZER_PARAMETER_SET_ID);
-        this.omegaRefGenerators = omegaRefGenerators;
+        this.synchronizedGenerators = synchronizedGenerators;
     }
 
     @Override
     public boolean isEmpty() {
-        return omegaRefGenerators.isEmpty();
+        return synchronizedGenerators.isEmpty();
     }
 
     @Override

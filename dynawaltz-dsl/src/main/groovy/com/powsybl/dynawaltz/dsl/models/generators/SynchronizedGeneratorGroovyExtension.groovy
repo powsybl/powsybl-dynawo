@@ -14,8 +14,8 @@ import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
 import com.powsybl.dynawaltz.dsl.EquipmentConfig
 import com.powsybl.dynawaltz.dsl.models.builders.AbstractDynamicModelBuilder
-import com.powsybl.dynawaltz.models.generators.OmegaRefGenerator
-import com.powsybl.dynawaltz.models.generators.OmegaRefGeneratorControllable
+import com.powsybl.dynawaltz.models.generators.SynchronizedGenerator
+import com.powsybl.dynawaltz.models.generators.SynchronizedGeneratorControllable
 import com.powsybl.iidm.network.Generator
 import com.powsybl.iidm.network.Network
 
@@ -24,35 +24,35 @@ import com.powsybl.iidm.network.Network
  * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class OmegaRefGeneratorGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+class SynchronizedGeneratorGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
-    private static final String OMEGA_REF_GENERATORS = "omegaRefGenerators"
+    private static final String OMEGA_REF_GENERATORS = "synchronizedGenerators"
 
-    OmegaRefGeneratorGroovyExtension() {
+    SynchronizedGeneratorGroovyExtension() {
         super(OMEGA_REF_GENERATORS)
     }
 
     @Override
-    protected OmegaRefGeneratorBuilder createBuilder(Network network, EquipmentConfig equipmentConfig) {
-        new OmegaRefGeneratorBuilder(network, equipmentConfig)
+    protected SynchronizedGeneratorBuilder createBuilder(Network network, EquipmentConfig equipmentConfig) {
+        new SynchronizedGeneratorBuilder(network, equipmentConfig)
     }
 
     static class OmegaRefGeneratorBuilder extends AbstractGeneratorBuilder {
 
         EquipmentConfig equipmentConfig
 
-        OmegaRefGeneratorBuilder(Network network, EquipmentConfig equipmentConfig) {
+        SynchronizedGeneratorBuilder(Network network, EquipmentConfig equipmentConfig) {
             super(network)
             this.equipmentConfig = equipmentConfig
         }
 
         @Override
-        OmegaRefGenerator build() {
+        SynchronizedGenerator build() {
             checkData()
             if (equipmentConfig.isControllable()) {
-                new OmegaRefGeneratorControllable(dynamicModelId, generator, parameterSetId, equipmentConfig.lib)
+                new SynchronizedGeneratorControllable(dynamicModelId, generator, parameterSetId, equipmentConfig.lib)
             } else {
-                new OmegaRefGenerator(dynamicModelId, generator, parameterSetId, equipmentConfig.lib)
+                new SynchronizedGenerator(dynamicModelId, generator, parameterSetId, equipmentConfig.lib)
             }
         }
     }
