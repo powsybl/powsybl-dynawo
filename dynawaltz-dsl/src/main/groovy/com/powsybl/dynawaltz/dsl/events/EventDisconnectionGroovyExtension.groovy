@@ -28,9 +28,9 @@ import com.powsybl.iidm.network.Network
 @AutoService(EventModelGroovyExtension.class)
 class EventDisconnectionGroovyExtension extends AbstractPureDynamicGroovyExtension<EventModel> implements EventModelGroovyExtension {
 
-    private static final EnumSet<IdentifiableType> connectableEquipments = EnumSet.of(IdentifiableType.GENERATOR, IdentifiableType.LOAD)
+    private static final EnumSet<IdentifiableType> CONNECTABLE_INJECTIONS = EnumSet.of(IdentifiableType.GENERATOR, IdentifiableType.LOAD)
 
-    private static final EnumSet<IdentifiableType> connectableQuadripoleEquipments = EnumSet.of(IdentifiableType.LINE, IdentifiableType.TWO_WINDINGS_TRANSFORMER)
+    private static final EnumSet<IdentifiableType> CONNECTABLE_QUADRIPOLES = EnumSet.of(IdentifiableType.LINE, IdentifiableType.TWO_WINDINGS_TRANSFORMER)
 
     EventDisconnectionGroovyExtension() {
         modelTags = ["Disconnect"]
@@ -84,11 +84,11 @@ class EventDisconnectionGroovyExtension extends AbstractPureDynamicGroovyExtensi
 
         private void disconnectionType() {
             IdentifiableType type = identifiable.getType()
-            if (connectableEquipments.contains(type)) {
+            if (CONNECTABLE_INJECTIONS.contains(type)) {
                 disconnectionType = DisconnectionType.INJECTION
-            } else if (connectableQuadripoleEquipments.contains(type)) {
+            } else if (CONNECTABLE_QUADRIPOLES.contains(type)) {
                 disconnectionType = DisconnectionType.QUADRIPOLE
-            } else if(IdentifiableType.HVDC_LINE == type) {
+            } else if (IdentifiableType.HVDC_LINE == type) {
                 disconnectionType = DisconnectionType.HVDC
             }
         }
