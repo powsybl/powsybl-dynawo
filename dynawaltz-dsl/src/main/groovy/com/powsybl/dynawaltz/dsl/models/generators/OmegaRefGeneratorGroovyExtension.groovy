@@ -13,7 +13,7 @@ import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
 import com.powsybl.dynawaltz.dsl.EquipmentConfig
-import com.powsybl.dynawaltz.dsl.models.builders.AbstractConfigDynamicModelBuilder
+import com.powsybl.dynawaltz.dsl.models.builders.AbstractDynamicModelBuilder
 import com.powsybl.dynawaltz.models.generators.OmegaRefGenerator
 import com.powsybl.dynawaltz.models.generators.OmegaRefGeneratorControllable
 import com.powsybl.iidm.network.Generator
@@ -37,12 +37,14 @@ class OmegaRefGeneratorGroovyExtension extends AbstractEquipmentGroovyExtension<
         new OmegaRefGeneratorBuilder(network, equipmentConfig)
     }
 
-    static class OmegaRefGeneratorBuilder extends AbstractConfigDynamicModelBuilder {
+    static class OmegaRefGeneratorBuilder extends AbstractDynamicModelBuilder {
 
         Generator generator
+        EquipmentConfig equipmentConfig
 
         OmegaRefGeneratorBuilder(Network network, EquipmentConfig equipmentConfig) {
-            super(network, equipmentConfig)
+            super(network, )
+            this.equipmentConfig = equipmentConfig
         }
 
         void checkData() {

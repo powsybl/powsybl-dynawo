@@ -13,7 +13,7 @@ import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
 import com.powsybl.dynawaltz.dsl.EquipmentConfig
-import com.powsybl.dynawaltz.dsl.models.builders.AbstractConfigDynamicModelBuilder
+import com.powsybl.dynawaltz.dsl.models.builders.AbstractDynamicModelBuilder
 import com.powsybl.dynawaltz.models.hvdc.HvdcModel
 import com.powsybl.iidm.network.HvdcLine
 import com.powsybl.iidm.network.Network
@@ -35,12 +35,14 @@ class HvdcGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel>
         new HvdcBuilder(network, equipmentConfig)
     }
 
-    static class HvdcBuilder extends AbstractConfigDynamicModelBuilder {
+    static class HvdcBuilder extends AbstractDynamicModelBuilder {
 
         HvdcLine hvdc
+        EquipmentConfig equipmentConfig
 
         HvdcBuilder(Network network, EquipmentConfig equipmentConfig) {
-            super(network, equipmentConfig)
+            super(network)
+            this.equipmentConfig = equipmentConfig
         }
 
         void checkData() {

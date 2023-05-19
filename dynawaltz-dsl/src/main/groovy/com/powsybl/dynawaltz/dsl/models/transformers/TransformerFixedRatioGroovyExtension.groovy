@@ -13,7 +13,7 @@ import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
 import com.powsybl.dynawaltz.dsl.EquipmentConfig
-import com.powsybl.dynawaltz.dsl.models.builders.AbstractConfigDynamicModelBuilder
+import com.powsybl.dynawaltz.dsl.models.builders.AbstractDynamicModelBuilder
 import com.powsybl.dynawaltz.models.transformers.TransformerFixedRatio
 import com.powsybl.iidm.network.Network
 import com.powsybl.iidm.network.TwoWindingsTransformer
@@ -35,12 +35,14 @@ class TransformerFixedRatioGroovyExtension extends AbstractEquipmentGroovyExtens
         new TransformerBuilder(network, equipmentConfig)
     }
 
-    static class TransformerBuilder extends AbstractConfigDynamicModelBuilder {
+    static class TransformerBuilder extends AbstractDynamicModelBuilder {
 
         TwoWindingsTransformer transformer
+        EquipmentConfig equipmentConfig
 
         TransformerBuilder(Network network, EquipmentConfig equipmentConfig) {
-            super(network, equipmentConfig)
+            super(network)
+            this.equipmentConfig = equipmentConfig
         }
 
         void checkData() {

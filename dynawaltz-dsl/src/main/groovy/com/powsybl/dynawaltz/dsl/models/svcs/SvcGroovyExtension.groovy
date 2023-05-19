@@ -13,7 +13,7 @@ import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
 import com.powsybl.dynawaltz.dsl.EquipmentConfig
-import com.powsybl.dynawaltz.dsl.models.builders.AbstractConfigDynamicModelBuilder
+import com.powsybl.dynawaltz.dsl.models.builders.AbstractDynamicModelBuilder
 import com.powsybl.dynawaltz.models.svcs.StaticVarCompensatorModel
 import com.powsybl.iidm.network.Network
 import com.powsybl.iidm.network.StaticVarCompensator
@@ -35,12 +35,14 @@ class SvcGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel> 
         new SvcBuilder(network, equipmentConfig)
     }
 
-    static class SvcBuilder extends AbstractConfigDynamicModelBuilder {
+    static class SvcBuilder extends AbstractDynamicModelBuilder {
 
         StaticVarCompensator svc
+        EquipmentConfig equipmentConfig
 
         SvcBuilder(Network network, EquipmentConfig equipmentConfig) {
-            super(network, equipmentConfig)
+            super(network)
+            this.equipmentConfig = equipmentConfig
         }
 
         void checkData() {

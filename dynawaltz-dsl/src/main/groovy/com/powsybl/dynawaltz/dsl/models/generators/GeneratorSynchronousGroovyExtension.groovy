@@ -12,7 +12,7 @@ import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
 import com.powsybl.dynawaltz.dsl.EquipmentConfig
-import com.powsybl.dynawaltz.dsl.models.builders.AbstractConfigDynamicModelBuilder
+import com.powsybl.dynawaltz.dsl.models.builders.AbstractDynamicModelBuilder
 import com.powsybl.dynawaltz.models.generators.GeneratorSynchronous
 import com.powsybl.dynawaltz.models.generators.GeneratorSynchronousControllable
 import com.powsybl.iidm.network.Generator
@@ -35,12 +35,14 @@ class GeneratorSynchronousGroovyExtension extends AbstractEquipmentGroovyExtensi
         new GeneratorSynchronousBuilder(network, equipmentConfig)
     }
 
-    static class GeneratorSynchronousBuilder extends AbstractConfigDynamicModelBuilder {
+    static class GeneratorSynchronousBuilder extends AbstractDynamicModelBuilder {
 
         Generator generator
+        EquipmentConfig equipmentConfig
 
         GeneratorSynchronousBuilder(Network network, EquipmentConfig equipmentConfig) {
-            super(network, equipmentConfig)
+            super(network)
+            this.equipmentConfig = equipmentConfig
         }
 
         void checkData() {
