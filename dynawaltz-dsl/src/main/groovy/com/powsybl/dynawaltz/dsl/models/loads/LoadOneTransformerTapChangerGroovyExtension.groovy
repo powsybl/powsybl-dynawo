@@ -8,9 +8,7 @@
 package com.powsybl.dynawaltz.dsl.models.loads
 
 import com.google.auto.service.AutoService
-import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
-import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractSimpleEquipmentGroovyExtension
 import com.powsybl.dynawaltz.models.loads.LoadOneTransformerTapChanger
 import com.powsybl.iidm.network.Network
@@ -19,7 +17,7 @@ import com.powsybl.iidm.network.Network
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class LoadOneTransformerTapChangerGroovyExtension extends AbstractSimpleEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+class LoadOneTransformerTapChangerGroovyExtension extends AbstractSimpleEquipmentGroovyExtension<LoadOneTransformerTapChanger> {
 
     LoadOneTransformerTapChangerGroovyExtension() {
         modelTag = "LoadOneTransformerTapChanger"

@@ -9,7 +9,6 @@ package com.powsybl.dynawaltz.dsl.models.lines
 
 import com.google.auto.service.AutoService
 import com.powsybl.dsl.DslException
-import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractSimpleEquipmentGroovyExtension
 import com.powsybl.dynawaltz.dsl.models.builders.AbstractDynamicModelBuilder
@@ -23,7 +22,7 @@ import com.powsybl.iidm.network.Network
  * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class LineGroovyExtension extends AbstractSimpleEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+class LineGroovyExtension extends AbstractSimpleEquipmentGroovyExtension<StandardLine> {
 
     LineGroovyExtension() {
         modelTag = "Line"
