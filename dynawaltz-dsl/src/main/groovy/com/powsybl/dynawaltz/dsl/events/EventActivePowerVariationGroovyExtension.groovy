@@ -31,16 +31,16 @@ class EventActivePowerVariationGroovyExtension extends AbstractPureDynamicGroovy
     }
 
     @Override
-    protected EventAVPBuilder createBuilder(Network network) {
-        new EventAVPBuilder(network)
+    protected EventAPVBuilder createBuilder(Network network) {
+        new EventAPVBuilder(network)
     }
 
-    static class EventAVPBuilder extends AbstractEventModelBuilder {
+    static class EventAPVBuilder extends AbstractEventModelBuilder {
 
         double deltaP
         Identifiable<? extends Identifiable> identifiable
 
-        EventAVPBuilder(Network network) {
+        EventAPVBuilder(Network network) {
             super(network)
         }
 
