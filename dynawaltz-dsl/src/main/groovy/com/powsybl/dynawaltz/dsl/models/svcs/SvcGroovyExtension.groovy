@@ -12,6 +12,7 @@ import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
+import com.powsybl.dynawaltz.dsl.EquipmentConfig
 import com.powsybl.dynawaltz.dsl.models.builders.AbstractDynamicModelBuilder
 import com.powsybl.dynawaltz.models.svcs.StaticVarCompensatorModel
 import com.powsybl.iidm.network.Network
@@ -26,23 +27,22 @@ class SvcGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel> 
     protected static final String SVC = "staticVarCompensators"
 
     SvcGroovyExtension() {
-        ConfigSlurper config = new ConfigSlurper()
-        modelTags = config.parse(this.getClass().getClassLoader().getResource(MODELS_CONFIG)).get(SVC).keySet() as List
+        super(SVC)
     }
 
     @Override
-    protected SvcBuilder createBuilder(Network network, String currentTag) {
-        new SvcBuilder(network, currentTag)
+    protected SvcBuilder createBuilder(Network network, EquipmentConfig equipmentConfig) {
+        new SvcBuilder(network, equipmentConfig)
     }
 
     static class SvcBuilder extends AbstractDynamicModelBuilder {
 
         StaticVarCompensator svc
-        String tag
+        EquipmentConfig equipmentConfig
 
-        SvcBuilder(Network network, String tag) {
+        SvcBuilder(Network network, EquipmentConfig equipmentConfig) {
             super(network)
-            this.tag = tag
+            this.equipmentConfig = equipmentConfig
         }
 
         void checkData() {
@@ -56,7 +56,7 @@ class SvcGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel> 
         @Override
         StaticVarCompensatorModel build() {
             checkData()
-            new StaticVarCompensatorModel(dynamicModelId, svc, parameterSetId, tag)
+            new StaticVarCompensatorModel(dynamicModelId, svc, parameterSetId, equipmentConfig.lib)
         }
     }
 }

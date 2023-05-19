@@ -11,7 +11,7 @@ import com.google.auto.service.AutoService
 import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
-import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
+import com.powsybl.dynawaltz.dsl.AbstractSimpleEquipmentGroovyExtension
 import com.powsybl.dynawaltz.dsl.models.builders.AbstractDynamicModelBuilder
 import com.powsybl.dynawaltz.models.lines.StandardLine
 import com.powsybl.iidm.network.Line
@@ -23,14 +23,14 @@ import com.powsybl.iidm.network.Network
  * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class LineGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+class LineGroovyExtension extends AbstractSimpleEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
     LineGroovyExtension() {
-        modelTags = ["Line"]
+        modelTag = "Line"
     }
 
     @Override
-    protected LineBuilder createBuilder(Network network, String currentTag) {
+    protected LineBuilder createBuilder(Network network) {
         new LineBuilder(network)
     }
 

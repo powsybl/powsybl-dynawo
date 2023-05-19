@@ -10,13 +10,11 @@ package com.powsybl.dynawaltz.dsl;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynamicsimulation.EventModel;
 import com.powsybl.dynamicsimulation.EventModelsSupplier;
-import com.powsybl.dynamicsimulation.groovy.*;
+import com.powsybl.dynamicsimulation.groovy.EventModelGroovyExtension;
+import com.powsybl.dynamicsimulation.groovy.GroovyEventModelsSupplier;
+import com.powsybl.dynamicsimulation.groovy.GroovyExtension;
 import com.powsybl.dynawaltz.DynaWaltzProvider;
-import com.powsybl.dynawaltz.models.events.AbstractEventModel;
-import com.powsybl.dynawaltz.models.events.EventHvdcDisconnection;
-import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection;
-import com.powsybl.dynawaltz.models.events.EventInjectionDisconnection;
-import com.powsybl.dynawaltz.models.events.NodeFaultEvent;
+import com.powsybl.dynawaltz.models.events.*;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import com.powsybl.iidm.network.test.HvdcTestNetwork;
@@ -65,7 +63,8 @@ class EventModelsSupplierTest extends AbstractModelSupplierTest {
                 Arguments.of("quadripoleDisconnection", EventQuadripoleDisconnection.class, EurostagTutorialExample1Factory.create(), "NHV1_NHV2_1", "Disconnect_NHV1_NHV2_1", "EventQuadripoleDisconnection", 4),
                 Arguments.of("equipmentDisconnection", EventInjectionDisconnection.class, EurostagTutorialExample1Factory.create(), "GEN", "Disconnect_GEN", null, 1),
                 Arguments.of("hvdcDisconnection", EventHvdcDisconnection.class, HvdcTestNetwork.createVsc(), "L", "Disconnect_L", null, 2),
-                Arguments.of("nodeFault", NodeFaultEvent.class, EurostagTutorialExample1Factory.create(), "NGEN", "Node_Fault_NGEN", "NodeFault", 1)
+                Arguments.of("nodeFault", NodeFaultEvent.class, EurostagTutorialExample1Factory.create(), "NGEN", "Node_Fault_NGEN", "NodeFault", 1),
+                Arguments.of("step", EventActivePowerVariation.class, EurostagTutorialExample1Factory.create(), "LOAD", "Step_LOAD", null, 2)
         );
     }
 

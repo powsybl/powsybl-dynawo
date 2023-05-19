@@ -22,10 +22,9 @@ import com.powsybl.dynawaltz.models.automatons.TapChangerBlockingAutomaton;
 import com.powsybl.dynawaltz.models.automatons.UnderVoltageAutomaton;
 import com.powsybl.dynawaltz.models.automatons.phaseshifters.PhaseShifterIAutomaton;
 import com.powsybl.dynawaltz.models.automatons.phaseshifters.PhaseShifterPAutomaton;
+import com.powsybl.dynawaltz.models.buses.InfiniteBus;
 import com.powsybl.dynawaltz.models.buses.StandardBus;
-import com.powsybl.dynawaltz.models.generators.GeneratorFictitious;
-import com.powsybl.dynawaltz.models.generators.GeneratorSynchronous;
-import com.powsybl.dynawaltz.models.generators.OmegaRefGenerator;
+import com.powsybl.dynawaltz.models.generators.*;
 import com.powsybl.dynawaltz.models.hvdc.HvdcPv;
 import com.powsybl.dynawaltz.models.hvdc.HvdcVsc;
 import com.powsybl.dynawaltz.models.lines.StandardLine;
@@ -99,15 +98,19 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                 Arguments.of("bus", StandardBus.class, EurostagTutorialExample1Factory.create(), "NGEN", "BBM_NGEN", "SB", "Bus"),
                 Arguments.of("hvdcPv", HvdcPv.class, HvdcTestNetwork.createVsc(), "L", "BBM_HVDC_L", "HVDC", "HvdcPV"),
                 Arguments.of("hvdcVsc", HvdcVsc.class, HvdcTestNetwork.createVsc(), "L", "BBM_HVDC_L", "HVDC", "HvdcVSC"),
-                Arguments.of("loadAB", LoadAlphaBeta.class, EurostagTutorialExample1Factory.create(), "LOAD", "LOAD", "LAB", "LoadAlphaBeta"),
+                Arguments.of("loadAB", LoadAlphaBeta.class, EurostagTutorialExample1Factory.create(), "LOAD", "LOAD", "LAB", "LoadAlphaBetaRestorative"),
+                Arguments.of("loadABControllable", LoadAlphaBetaControllable.class, EurostagTutorialExample1Factory.create(), "LOAD", "LOAD", "LAB", "LoadAlphaBeta"),
                 Arguments.of("loadTransformer", LoadOneTransformer.class, EurostagTutorialExample1Factory.create(), "LOAD", "LOAD", "LOT", "LoadOneTransformer"),
                 Arguments.of("loadTransformerTapChanger", LoadOneTransformerTapChanger.class, EurostagTutorialExample1Factory.create(), "LOAD", "LOAD", "LOT", "LoadOneTransformerTapChanger"),
                 Arguments.of("loadTwoTransformers", LoadTwoTransformers.class, EurostagTutorialExample1Factory.create(), "LOAD", "LOAD", "LTT", "LoadTwoTransformers"),
                 Arguments.of("loadTwoTransformersTapChangers", LoadTwoTransformersTapChangers.class, EurostagTutorialExample1Factory.create(), "LOAD", "LOAD", "LTT", "LoadTwoTransformersTapChangers"),
+                Arguments.of("infiniteBus", InfiniteBus.class, HvdcTestNetwork.createVsc(), "B1", "BBM_BUS", "b", "InfiniteBusWithVariations"),
                 Arguments.of("line", StandardLine.class, EurostagTutorialExample1Factory.create(), "NHV1_NHV2_1", "BBM_NHV1_NHV2_1", "LINE", "Line"),
                 Arguments.of("genFictitious", GeneratorFictitious.class, EurostagTutorialExample1Factory.create(), "GEN", "BBM_GEN", "GF", "GeneratorFictitious"),
-                Arguments.of("gen", GeneratorSynchronous.class, EurostagTutorialExample1Factory.create(), "GEN", "BBM_GEN", "GSFWPR", "GeneratorSynchronousFourWindingsProportionalRegulations"),
+                Arguments.of("gen", GeneratorSynchronous.class, EurostagTutorialExample1Factory.create(), "GEN", "BBM_GEN", "GSFWPR", "GeneratorSynchronousThreeWindings"),
+                Arguments.of("genControllable", GeneratorSynchronousControllable.class, EurostagTutorialExample1Factory.create(), "GEN", "BBM_GEN", "GSFWPR", "GeneratorSynchronousFourWindingsProportionalRegulations"),
                 Arguments.of("omegaGen", OmegaRefGenerator.class, EurostagTutorialExample1Factory.create(), "GEN", "BBM_GEN", "GPQ", "GeneratorPQ"),
+                Arguments.of("omegaGenControllable", OmegaRefGeneratorControllable.class, EurostagTutorialExample1Factory.create(), "GEN", "BBM_GEN", "GPQ", "GeneratorPV"),
                 Arguments.of("transformer", TransformerFixedRatio.class, EurostagTutorialExample1Factory.create(), "NGEN_NHV1", "BBM_NGEN_NHV1", "TFR", "TransformerFixedRatio"),
                 Arguments.of("svc", StaticVarCompensatorModel.class, SvcTestCaseFactory.create(), "SVC2", "BBM_SVC", "svc", "StaticVarCompensatorPV")
         );

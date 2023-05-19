@@ -11,6 +11,7 @@ import com.google.auto.service.AutoService
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
+import com.powsybl.dynawaltz.dsl.EquipmentConfig
 import com.powsybl.dynawaltz.models.hvdc.HvdcVsc
 import com.powsybl.iidm.network.Network
 
@@ -23,25 +24,27 @@ class HvdcVscGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicMod
     protected static final String HVDC_VSC = "hvdcVsc"
 
     HvdcVscGroovyExtension() {
-        ConfigSlurper config = new ConfigSlurper()
-        modelTags = config.parse(this.getClass().getClassLoader().getResource(MODELS_CONFIG)).get(HVDC_VSC).keySet() as List
+        super(HVDC_VSC)
     }
 
     @Override
-    protected HvdcBuilder createBuilder(Network network, String currentTag) {
-        new HvdcBuilder(network, currentTag)
+    protected HvdcBuilder createBuilder(Network network, EquipmentConfig equipmentConfig) {
+        new HvdcBuilder(network, equipmentConfig)
     }
 
     static class HvdcBuilder extends AbstractHvdcBuilder {
 
-        HvdcBuilder(Network network, String tag) {
-            super(network, tag)
+        EquipmentConfig equipmentConfig
+
+        HvdcBuilder(Network network, EquipmentConfig equipmentConfig) {
+            super(network)
+            this.equipmentConfig = equipmentConfig
         }
 
         @Override
         HvdcVsc build() {
             checkData()
-            new HvdcVsc(dynamicModelId, hvdc, parameterSetId, tag)
+            new HvdcVsc(dynamicModelId, hvdc, parameterSetId, equipmentConfig.lib)
         }
     }
 }

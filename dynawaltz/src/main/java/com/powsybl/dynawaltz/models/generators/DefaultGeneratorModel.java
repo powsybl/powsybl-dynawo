@@ -8,12 +8,13 @@
 package com.powsybl.dynawaltz.models.generators;
 
 import com.powsybl.dynawaltz.models.AbstractNetworkModel;
+import com.powsybl.dynawaltz.models.events.ControllableEquipment;
 import com.powsybl.dynawaltz.models.events.DisconnectableEquipment;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class DefaultGeneratorModel extends AbstractNetworkModel implements GeneratorModel, DisconnectableEquipment {
+public class DefaultGeneratorModel extends AbstractNetworkModel implements GeneratorModel, DisconnectableEquipment, ControllableEquipment {
 
     public DefaultGeneratorModel(String staticId) {
         super(staticId);
@@ -63,7 +64,13 @@ public class DefaultGeneratorModel extends AbstractNetworkModel implements Gener
         return "@NAME@_QStatorPu";
     }
 
+    @Override
     public String getUPuVarName() {
         return "@NAME@_UPu";
+    }
+
+    @Override
+    public String getDeltaPVarName() {
+        return "@NAME@_Pc";
     }
 }

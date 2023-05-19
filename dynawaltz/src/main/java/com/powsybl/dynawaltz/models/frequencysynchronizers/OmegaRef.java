@@ -4,11 +4,13 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package com.powsybl.dynawaltz.models;
+package com.powsybl.dynawaltz.models.frequencysynchronizers;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
+import com.powsybl.dynawaltz.models.MacroConnectAttribute;
+import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.buses.BusModel;
 import com.powsybl.dynawaltz.models.generators.GeneratorSynchronousModel;
 import com.powsybl.dynawaltz.models.generators.OmegaRefGeneratorModel;
@@ -33,19 +35,10 @@ import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
  * @author Marcos de Miguel <demiguelm at aia.es>
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class OmegaRef extends AbstractPureDynamicBlackBoxModel {
-
-    public static final String OMEGA_REF_ID = "OMEGA_REF";
-    private static final String OMEGA_REF_PARAMETER_SET_ID = "OMEGA_REF";
-    private final List<OmegaRefGeneratorModel> omegaRefGenerators;
+public class OmegaRef extends AbstractFrequencySynchronizer {
 
     public OmegaRef(List<OmegaRefGeneratorModel> omegaRefGenerators) {
-        super(OMEGA_REF_ID, OMEGA_REF_PARAMETER_SET_ID);
-        this.omegaRefGenerators = omegaRefGenerators;
-    }
-
-    public boolean isEmpty() {
-        return omegaRefGenerators.isEmpty();
+        super(omegaRefGenerators);
     }
 
     @Override
@@ -97,10 +90,5 @@ public class OmegaRef extends AbstractPureDynamicBlackBoxModel {
             createMacroConnections(gen.getConnectableBusId(), BusModel.class, this::getVarConnectionsWithBus, context, MacroConnectAttribute.ofIndex1(index));
             index++;
         }
-    }
-
-    @Override
-    public String getParFile(DynaWaltzContext context) {
-        return context.getSimulationParFile();
     }
 }

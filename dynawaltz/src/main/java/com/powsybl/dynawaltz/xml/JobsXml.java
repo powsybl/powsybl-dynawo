@@ -92,7 +92,7 @@ public final class JobsXml {
         writer.writeAttribute("exportMode", "TXT");
 
         writer.writeEmptyElement(DYN_URI, "finalState");
-        writer.writeAttribute("exportIIDMFile", "true");
+        writer.writeAttribute("exportIIDMFile", Boolean.toString(context.getDynaWaltzParameters().isWriteFinalState()));
         writer.writeAttribute("exportDumpFile", "false");
 
         if (context.withCurves()) {

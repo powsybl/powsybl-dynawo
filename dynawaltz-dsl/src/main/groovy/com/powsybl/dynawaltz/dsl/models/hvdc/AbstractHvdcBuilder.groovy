@@ -18,11 +18,9 @@ import com.powsybl.iidm.network.Network
 abstract class AbstractHvdcBuilder extends AbstractDynamicModelBuilder {
 
     HvdcLine hvdc
-    String tag
 
-    AbstractHvdcBuilder(Network network, String tag) {
+    AbstractHvdcBuilder(Network network) {
         super(network)
-        this.tag = tag
     }
 
     void checkData() {
