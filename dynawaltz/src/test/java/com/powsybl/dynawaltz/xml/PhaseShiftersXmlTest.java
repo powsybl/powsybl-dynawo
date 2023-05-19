@@ -7,11 +7,11 @@
  */
 package com.powsybl.dynawaltz.xml;
 
-import com.powsybl.dynawaltz.models.BlackBoxModel;
+import com.powsybl.dynawaltz.models.automatons.phaseshifters.AbstractPhaseShifterAutomaton;
 import com.powsybl.dynawaltz.models.automatons.phaseshifters.PhaseShifterIAutomaton;
 import com.powsybl.dynawaltz.models.automatons.phaseshifters.PhaseShifterPAutomaton;
 import com.powsybl.dynawaltz.models.transformers.TransformerFixedRatio;
-import com.powsybl.iidm.network.Network;
+import com.powsybl.iidm.network.TwoWindingsTransformer;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,7 +22,6 @@ import org.xml.sax.SAXException;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
 /**
@@ -34,8 +33,13 @@ class PhaseShiftersXmlTest extends AbstractParametrizedDynamicModelXmlTest {
     private static final String PHASE_SHIFTER_NAME = "phase_shifter";
     private static final String DYN_NAME = "BBM_" + PHASE_SHIFTER_NAME;
 
+    @FunctionalInterface
+    public interface PhaseShifterAutomatonFactory {
+        AbstractPhaseShifterAutomaton create(String dynamicModelId, TwoWindingsTransformer twoWindingsTransformer, String parameterSetId);
+    }
+
     @BeforeEach
-    void setup(String dydName, Function<Network, BlackBoxModel> phaseShifterConstructor, boolean dynamicTransformer) {
+    void setup(String dydName, PhaseShifterAutomatonFactory phaseShifterConstructor, boolean dynamicTransformer) {
         setupNetwork();
         addDynamicModels(phaseShifterConstructor, dynamicTransformer);
         setupDynawaltzContext();
@@ -45,8 +49,8 @@ class PhaseShiftersXmlTest extends AbstractParametrizedDynamicModelXmlTest {
         network = EurostagTutorialExample1Factory.create();
     }
 
-    protected void addDynamicModels(Function<Network, BlackBoxModel> phaseShifterConstructor, boolean dynamicTransformer) {
-        dynamicModels.add(phaseShifterConstructor.apply(network));
+    protected void addDynamicModels(PhaseShifterAutomatonFactory phaseShifterConstructor, boolean dynamicTransformer) {
+        dynamicModels.add(phaseShifterConstructor.create(DYN_NAME, network.getTwoWindingsTransformer("NGEN_NHV1"), "ps"));
         if (dynamicTransformer) {
             dynamicModels.add(new TransformerFixedRatio("BBM_NGEN_NHV1", network.getTwoWindingsTransformer("NGEN_NHV1"), "tt", "TransformerFixedRatio"));
         }
@@ -54,15 +58,15 @@ class PhaseShiftersXmlTest extends AbstractParametrizedDynamicModelXmlTest {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("providePhaseShifter")
-    void writeLoadModel(String dydName, Function<Network, BlackBoxModel> phaseShifterConstructor, boolean dynamicTransformer) throws SAXException, IOException, XMLStreamException {
+    void writeLoadModel(String dydName, PhaseShifterAutomatonFactory phaseShifterConstructor, boolean dynamicTransformer) throws SAXException, IOException, XMLStreamException {
         DydXml.write(tmpDir, context);
         validate("dyd.xsd", dydName + ".xml", tmpDir.resolve(DynaWaltzConstants.DYD_FILENAME));
     }
 
     private static Stream<Arguments> providePhaseShifter() {
         return Stream.of(
-                Arguments.of("phase_shifter_i_dyd", (Function<Network, BlackBoxModel>) n -> new PhaseShifterIAutomaton(DYN_NAME, n.getTwoWindingsTransformer("NGEN_NHV1"), "ps"), true),
-                Arguments.of("phase_shifter_p_dyd", (Function<Network, BlackBoxModel>) n -> new PhaseShifterPAutomaton(DYN_NAME, n.getTwoWindingsTransformer("NGEN_NHV1"), "ps"), false)
+                Arguments.of("phase_shifter_i_dyd", (PhaseShifterAutomatonFactory) PhaseShifterIAutomaton::new, true),
+                Arguments.of("phase_shifter_p_dyd", (PhaseShifterAutomatonFactory) PhaseShifterPAutomaton::new, false)
         );
     }
 }
