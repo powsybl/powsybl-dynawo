@@ -29,7 +29,7 @@ import com.powsybl.dynawaltz.models.hvdc.HvdcPv;
 import com.powsybl.dynawaltz.models.hvdc.HvdcVsc;
 import com.powsybl.dynawaltz.models.lines.StandardLine;
 import com.powsybl.dynawaltz.models.loads.*;
-import com.powsybl.dynawaltz.models.svcs.StaticVarCompensatorModel;
+import com.powsybl.dynawaltz.models.svcs.StaticVarCompensator;
 import com.powsybl.dynawaltz.models.transformers.TransformerFixedRatio;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
@@ -112,7 +112,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                 Arguments.of("omegaGen", OmegaRefGenerator.class, EurostagTutorialExample1Factory.create(), "GEN", "BBM_GEN", "GPQ", "GeneratorPQ"),
                 Arguments.of("omegaGenControllable", OmegaRefGeneratorControllable.class, EurostagTutorialExample1Factory.create(), "GEN", "BBM_GEN", "GPQ", "GeneratorPV"),
                 Arguments.of("transformer", TransformerFixedRatio.class, EurostagTutorialExample1Factory.create(), "NGEN_NHV1", "BBM_NGEN_NHV1", "TFR", "TransformerFixedRatio"),
-                Arguments.of("svc", StaticVarCompensatorModel.class, SvcTestCaseFactory.create(), "SVC2", "BBM_SVC", "svc", "StaticVarCompensatorPV")
+                Arguments.of("svc", StaticVarCompensator.class, SvcTestCaseFactory.create(), "SVC2", "BBM_SVC", "svc", "StaticVarCompensatorPV")
         );
     }
 

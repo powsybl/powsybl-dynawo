@@ -19,6 +19,8 @@ import com.powsybl.dynawaltz.models.loads.DefaultLoadModel;
 import com.powsybl.dynawaltz.models.loads.LoadModel;
 import com.powsybl.dynawaltz.models.shunts.DefaultShuntModel;
 import com.powsybl.dynawaltz.models.shunts.ShuntModel;
+import com.powsybl.dynawaltz.models.svcs.DefaultStaticVarCompensatorModel;
+import com.powsybl.dynawaltz.models.svcs.StaticVarCompensatorModel;
 import com.powsybl.dynawaltz.models.transformers.DefaultTransformerModel;
 import com.powsybl.dynawaltz.models.transformers.TransformerModel;
 import com.powsybl.iidm.network.Identifiable;
@@ -43,6 +45,7 @@ public class NetworkModel {
                 LineModel.class, new DefaultModelFactory<LineModel>(DefaultLineModel::new),
                 LoadModel.class, new DefaultModelFactory<LoadModel>(DefaultLoadModel::new),
                 ShuntModel.class, new DefaultModelFactory<ShuntModel>(DefaultShuntModel::new),
+                StaticVarCompensatorModel.class, new DefaultModelFactory<StaticVarCompensatorModel>(DefaultStaticVarCompensatorModel::new),
                 TransformerModel.class, new DefaultModelFactory<TransformerModel>(DefaultTransformerModel::new));
 
         powSyBlTypeToModel.put(IdentifiableType.BUS, BusModel.class);
@@ -51,6 +54,7 @@ public class NetworkModel {
         powSyBlTypeToModel.put(IdentifiableType.LINE, LineModel.class);
         powSyBlTypeToModel.put(IdentifiableType.LOAD, LoadModel.class);
         powSyBlTypeToModel.put(IdentifiableType.SHUNT_COMPENSATOR, ShuntModel.class);
+        powSyBlTypeToModel.put(IdentifiableType.STATIC_VAR_COMPENSATOR, StaticVarCompensatorModel.class);
         powSyBlTypeToModel.put(IdentifiableType.TWO_WINDINGS_TRANSFORMER, TransformerModel.class);
     }
 

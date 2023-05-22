@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dyn:parametersSet xmlns:dyn="http://www.rte-france.com/dynawo">
-    <dyn:set id="Disconnect_GEN">
+    <dyn:set id="Disconnect_G1">
         <dyn:par type="DOUBLE" name="event_tEvent" value="1.0"/>
         <dyn:par type="BOOL" name="event_stateEvent1" value="true"/>
     </dyn:set>
-    <dyn:set id="Disconnect_LOAD">
+    <dyn:set id="Disconnect_L2">
+        <dyn:par type="DOUBLE" name="event_tEvent" value="1.0"/>
+        <dyn:par type="BOOL" name="event_stateEvent1" value="true"/>
+    </dyn:set>
+    <dyn:set id="Disconnect_SVC2">
+        <dyn:par type="DOUBLE" name="event_tEvent" value="1.0"/>
+        <dyn:par type="BOOL" name="event_stateEvent1" value="true"/>
+    </dyn:set>
+    <dyn:set id="Disconnect_SH1">
         <dyn:par type="DOUBLE" name="event_tEvent" value="1.0"/>
         <dyn:par type="BOOL" name="event_stateEvent1" value="true"/>
     </dyn:set>

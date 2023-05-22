@@ -7,9 +7,12 @@
 package com.powsybl.dynawaltz.models.events;
 
 import com.powsybl.dynawaltz.DynaWaltzContext;
+import com.powsybl.dynawaltz.models.InjectionModel;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.iidm.network.Generator;
 import com.powsybl.iidm.network.Load;
+import com.powsybl.iidm.network.ShuntCompensator;
+import com.powsybl.iidm.network.StaticVarCompensator;
 
 import java.util.List;
 
@@ -35,12 +38,28 @@ public class EventInjectionDisconnection extends AbstractDynamicLibEventDisconne
         this(equipment, startTime, true);
     }
 
-    private List<VarConnection> getVarConnectionsWithDisconnectable(DisconnectableEquipment connected) {
-        return List.of(new VarConnection(DISCONNECTION_VAR_CONNECT, connected.getDisconnectableVarName()));
+    public EventInjectionDisconnection(StaticVarCompensator equipment, double startTime, boolean disconnect) {
+        super(equipment, startTime, disconnect);
+    }
+
+    public EventInjectionDisconnection(StaticVarCompensator equipment, double startTime) {
+        this(equipment, startTime, true);
+    }
+
+    public EventInjectionDisconnection(ShuntCompensator equipment, double startTime, boolean disconnect) {
+        super(equipment, startTime, disconnect);
+    }
+
+    public EventInjectionDisconnection(ShuntCompensator equipment, double startTime) {
+        this(equipment, startTime, true);
+    }
+
+    private List<VarConnection> getVarConnectionsWithInjectionModel(InjectionModel connected) {
+        return List.of(new VarConnection(DISCONNECTION_VAR_CONNECT, connected.getSwitchOffSignalEventVarName()));
     }
 
     @Override
     public void createMacroConnections(DynaWaltzContext context) {
-        createMacroConnections(getEquipment(), DisconnectableEquipment.class, this::getVarConnectionsWithDisconnectable, context);
+        createMacroConnections(getEquipment(), InjectionModel.class, this::getVarConnectionsWithInjectionModel, context);
     }
 }

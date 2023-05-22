@@ -7,14 +7,13 @@
  */
 package com.powsybl.dynawaltz.models.generators;
 
-import com.powsybl.dynawaltz.models.AbstractNetworkModel;
+import com.powsybl.dynawaltz.models.AbstractInjectionNetworkModel;
 import com.powsybl.dynawaltz.models.events.ControllableEquipment;
-import com.powsybl.dynawaltz.models.events.DisconnectableEquipment;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class DefaultGeneratorModel extends AbstractNetworkModel implements GeneratorModel, DisconnectableEquipment, ControllableEquipment {
+public class DefaultGeneratorModel extends AbstractInjectionNetworkModel implements GeneratorModel, ControllableEquipment {
 
     public DefaultGeneratorModel(String staticId) {
         super(staticId);
@@ -23,15 +22,6 @@ public class DefaultGeneratorModel extends AbstractNetworkModel implements Gener
     @Override
     public String getName() {
         return "NetworkGenerator";
-    }
-
-    public String getStateValueVarName() {
-        return "@NAME@_state_value";
-    }
-
-    @Override
-    public String getDisconnectableVarName() {
-        return getStateValueVarName();
     }
 
     @Override
