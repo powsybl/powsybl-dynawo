@@ -7,12 +7,12 @@
  */
 package com.powsybl.dynawaltz.models.shunts;
 
-import com.powsybl.dynawaltz.models.AbstractNetworkModel;
+import com.powsybl.dynawaltz.models.AbstractInjectionNetworkModel;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class DefaultShuntModel extends AbstractNetworkModel implements ShuntModel {
+public class DefaultShuntModel extends AbstractInjectionNetworkModel implements ShuntModel {
 
     public DefaultShuntModel(String staticId) {
         super(staticId);

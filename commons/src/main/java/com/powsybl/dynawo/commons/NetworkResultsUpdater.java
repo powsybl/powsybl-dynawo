@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -91,8 +92,10 @@ public final class NetworkResultsUpdater {
         // We choose to iterate over BusBreakerView buses instead of BusView buses because they are more stable:
         // a use-case when we need to export a node/breaker network to bus/breaker to Dynawo exists,
         // and reading the results from Dynawo-exported bus/breaker will end up with different ids at BusView level
+        Map<String, Bus> targetNetworkBusBreakerViewBusById = targetNetwork.getBusBreakerView().getBusStream()
+                .collect(Collectors.toMap(Identifiable::getId, Function.identity())); // it is needed to pre-index into a map as in network store n.getBusBreakerView().getBus(id) is slow
         for (Bus sourceBus : sourceNetwork.getBusBreakerView().getBuses()) {
-            Bus targetBus = targetNetwork.getBusBreakerView().getBus(sourceBus.getId());
+            Bus targetBus = targetNetworkBusBreakerViewBusById.get(sourceBus.getId());
             if (targetBus == null) {
                 LOG.error("Source bus {} not found in target network. Voltage not updated ({}, {})", sourceBus.getId(), sourceBus.getV(), sourceBus.getAngle());
             } else {

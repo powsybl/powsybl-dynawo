@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dyn:parametersSet xmlns:dyn="http://www.rte-france.com/dynawo">
-    <dyn:set id="OMEGA_REF">
+    <dyn:set id="FREQ_SYNC_PAR">
         <dyn:par type="DOUBLE" name="weight_gen_0" value="6539.400000000001"/>
         <dyn:par type="DOUBLE" name="weight_gen_1" value="6539.400000000001"/>
         <dyn:par type="DOUBLE" name="weight_gen_2" value="6539.400000000001"/>

@@ -10,7 +10,7 @@ import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
-import com.powsybl.dynawaltz.models.events.DisconnectableEquipment;
+import com.powsybl.dynawaltz.models.InjectionModel;
 import com.powsybl.dynawaltz.models.generators.GeneratorFictitious;
 import com.powsybl.dynawaltz.models.generators.GeneratorSynchronousModel;
 import com.powsybl.dynawaltz.models.lines.LineModel;
@@ -95,12 +95,12 @@ class DynamicModelsXmlTest extends DynaWaltzTestUtil {
 
         // dynamic model not found
         Identifiable<?> substation = network.getIdentifiable("P1");
-        e = assertThrows(PowsyblException.class, () -> dc.getDynamicModel(substation, DisconnectableEquipment.class));
+        e = assertThrows(PowsyblException.class, () -> dc.getDynamicModel(substation, InjectionModel.class));
         assertEquals("No dynamic model associated with SUBSTATION", e.getMessage());
 
         // requested interface not implemented
         Identifiable<?> transformer = network.getIdentifiable("NGEN_NHV1");
-        e = assertThrows(PowsyblException.class, () -> dc.getDynamicModel(transformer, DisconnectableEquipment.class));
-        assertEquals("Default model DefaultTransformerModel does not implement DisconnectableEquipment interface", e.getMessage());
+        e = assertThrows(PowsyblException.class, () -> dc.getDynamicModel(transformer, InjectionModel.class));
+        assertEquals("Default model DefaultTransformerModel does not implement InjectionModel interface", e.getMessage());
     }
 }

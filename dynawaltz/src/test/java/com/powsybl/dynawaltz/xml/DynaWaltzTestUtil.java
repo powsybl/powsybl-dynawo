@@ -74,7 +74,7 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
             if (l.getId().equals("LOAD2")) {
                 dynamicModels.add(new LoadOneTransformer("BBM_" + l.getId(), l, "LOT"));
             } else {
-                dynamicModels.add(new LoadAlphaBeta("BBM_" + l.getId(), l, "LAB"));
+                dynamicModels.add(new LoadAlphaBeta("BBM_" + l.getId(), l, "LAB", "LoadAlphaBeta"));
             }
         });
         network.getGeneratorStream().forEach(g -> {

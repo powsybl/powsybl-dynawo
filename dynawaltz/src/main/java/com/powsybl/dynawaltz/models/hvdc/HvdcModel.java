@@ -7,60 +7,13 @@
  */
 package com.powsybl.dynawaltz.models.hvdc;
 
-import com.powsybl.dynawaltz.DynaWaltzContext;
-import com.powsybl.dynawaltz.models.AbstractEquipmentBlackBoxModel;
+import com.powsybl.dynawaltz.models.Model;
 import com.powsybl.dynawaltz.models.Side;
-import com.powsybl.dynawaltz.models.VarConnection;
-import com.powsybl.dynawaltz.models.VarMapping;
-import com.powsybl.dynawaltz.models.buses.BusModel;
-import com.powsybl.dynawaltz.models.utils.BusUtils;
-import com.powsybl.iidm.network.HvdcLine;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class HvdcModel extends AbstractEquipmentBlackBoxModel<HvdcLine> {
-    private static final List<VarMapping> VAR_MAPPING = Arrays.asList(
-            new VarMapping("hvdc_PInj1Pu", "p1"),
-            new VarMapping("hvdc_QInj1Pu", "q1"),
-            new VarMapping("hvdc_state", "state1"),
-            new VarMapping("hvdc_PInj2Pu", "p2"),
-            new VarMapping("hvdc_QInj2Pu", "q2"),
-            new VarMapping("hvdc_state", "state2"));
+public interface HvdcModel extends Model {
 
-    private final String hvdcLib;
-
-    public HvdcModel(String dynamicModelId, HvdcLine hvdc, String parameterSetId, String hvdcLib) {
-        super(dynamicModelId, parameterSetId, hvdc);
-        this.hvdcLib = Objects.requireNonNull(hvdcLib);
-    }
-
-    public String getLib() {
-        return hvdcLib;
-    }
-
-    @Override
-    public void createMacroConnections(DynaWaltzContext context) {
-        createMacroConnections(BusUtils.getConnectableBusStaticId(equipment.getConverterStation1().getTerminal()), BusModel.class, this::getVarConnectionsWithBus, context, Side.ONE);
-        createMacroConnections(BusUtils.getConnectableBusStaticId(equipment.getConverterStation2().getTerminal()), BusModel.class, this::getVarConnectionsWithBus, context, Side.TWO);
-    }
-
-    @Override
-    public List<VarMapping> getVarsMapping() {
-        return VAR_MAPPING;
-    }
-
-    private List<VarConnection> getVarConnectionsWithBus(BusModel connected, Side side) {
-        List<VarConnection> varConnections = new ArrayList<>(2);
-        varConnections.add(new VarConnection("hvdc_terminal" + side.getSideNumber(), connected.getTerminalVarName()));
-        connected.getSwitchOffSignalVarName()
-                .map(switchOff -> new VarConnection("hvdc_switchOffSignal1" + side.getSideSuffix(), switchOff))
-                .ifPresent(varConnections::add);
-        return varConnections;
-    }
+    String getSwitchOffSignalEventVarName(Side side);
 }

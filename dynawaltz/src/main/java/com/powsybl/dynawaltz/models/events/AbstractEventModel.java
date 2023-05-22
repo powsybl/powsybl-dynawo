@@ -10,13 +10,11 @@ package com.powsybl.dynawaltz.models.events;
 import com.powsybl.dynamicsimulation.EventModel;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
-import com.powsybl.dynawaltz.xml.ParametersXml;
 import com.powsybl.iidm.network.Identifiable;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
-import static com.powsybl.dynawaltz.parameters.ParameterType.DOUBLE;
 import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 
 /**
@@ -25,18 +23,17 @@ import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
  */
 public abstract class AbstractEventModel extends AbstractPureDynamicBlackBoxModel implements EventModel {
 
-    private static final String DISCONNECT_PREFIX = "Disconnect_";
     private final Identifiable<?> equipment;
     private final double startTime;
 
-    protected AbstractEventModel(Identifiable<?> equipment, double startTime) {
-        super(generateEventId(equipment.getId()));
+    protected AbstractEventModel(Identifiable<?> equipment, double startTime, String eventPrefix) {
+        super(generateEventId(equipment.getId(), eventPrefix));
         this.equipment = equipment;
         this.startTime = startTime;
     }
 
-    protected static String generateEventId(String equipmentStaticId) {
-        return DISCONNECT_PREFIX + equipmentStaticId;
+    private static String generateEventId(String equipmentStaticId, String eventPrefix) {
+        return eventPrefix + equipmentStaticId;
     }
 
     public Identifiable<?> getEquipment() {
@@ -57,7 +54,6 @@ public abstract class AbstractEventModel extends AbstractPureDynamicBlackBoxMode
     public void writeParameters(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
         writer.writeStartElement(DYN_URI, "set");
         writer.writeAttribute("id", getParameterSetId());
-        ParametersXml.writeParameter(writer, DOUBLE, "event_tEvent", Double.toString(getStartTime()));
         writeEventSpecificParameters(writer, context);
         writer.writeEndElement();
     }

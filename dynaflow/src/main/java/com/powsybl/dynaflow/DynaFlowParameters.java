@@ -103,7 +103,8 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
             new Parameter(Sa.TIME_OF_EVENT, ParameterType.DOUBLE, "Time of event", 10d),
             new Parameter(CHOSEN_OUTPUTS, ParameterType.STRING_LIST, "Chosen outputs", Collections.emptyList(), getEnumPossibleValues(OutputTypes.class), ParameterScope.TECHNICAL),
             new Parameter(TIME_STEP, ParameterType.DOUBLE, "Time step", 10d),
-            new Parameter(STARTING_POINT_MODE, ParameterType.STRING, "Starting point mode", StartingPointMode.WARM.name(), getEnumPossibleValues(StartingPointMode.class)));
+            new Parameter(STARTING_POINT_MODE, ParameterType.STRING, "Starting point mode", StartingPointMode.WARM.name(), getEnumPossibleValues(StartingPointMode.class)),
+            new Parameter(MERGE_LOADS, ParameterType.BOOLEAN, "Merge loads connected to same bus", Boolean.TRUE));
 
     private Boolean svcRegulationOn = null;
     private Boolean shuntRegulationOn = null;

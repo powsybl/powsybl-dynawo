@@ -11,41 +11,30 @@ import com.powsybl.dynawaltz.models.AbstractEquipmentBlackBoxModel;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.VarMapping;
 import com.powsybl.dynawaltz.models.buses.BusModel;
-import com.powsybl.dynawaltz.models.events.DisconnectableEquipment;
 import com.powsybl.dynawaltz.models.utils.BusUtils;
 import com.powsybl.iidm.network.Generator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public abstract class AbstractGeneratorModel extends AbstractEquipmentBlackBoxModel<Generator> implements GeneratorModel, DisconnectableEquipment {
+public abstract class AbstractGeneratorModel extends AbstractEquipmentBlackBoxModel<Generator> implements GeneratorModel {
 
     protected static final List<VarMapping> VAR_MAPPING = Arrays.asList(
             new VarMapping("generator_PGenPu", "p"),
             new VarMapping("generator_QGenPu", "q"),
             new VarMapping("generator_state", "state"));
 
-    private final String terminalVarName;
-    private final String switchOffSignalNodeVarName;
-    private final String switchOffSignalEventVarName;
-    private final String switchOffSignalAutomatonVarName;
-    private final String runningVarName;
+    protected final String lib;
 
-    protected AbstractGeneratorModel(String dynamicModelId, Generator generator, String parameterSetId,
-                                     String terminalVarName, String switchOffSignalNodeVarName,
-                                     String switchOffSignalEventVarName, String switchOffSignalAutomatonVarName,
-                                     String runningVarName) {
+    protected AbstractGeneratorModel(String dynamicModelId, Generator generator, String parameterSetId, String lib) {
         super(dynamicModelId, parameterSetId, generator);
-        this.terminalVarName = terminalVarName;
-        this.switchOffSignalNodeVarName = switchOffSignalNodeVarName;
-        this.switchOffSignalEventVarName = switchOffSignalEventVarName;
-        this.switchOffSignalAutomatonVarName = switchOffSignalAutomatonVarName;
-        this.runningVarName = runningVarName;
+        this.lib = Objects.requireNonNull(lib);
     }
 
     @Override
@@ -67,24 +56,30 @@ public abstract class AbstractGeneratorModel extends AbstractEquipmentBlackBoxMo
         return varConnections;
     }
 
+    @Override
+    public String getLib() {
+        return lib;
+    }
+
     public String getTerminalVarName() {
-        return terminalVarName;
+        return "generator_terminal";
     }
 
     public String getSwitchOffSignalNodeVarName() {
-        return switchOffSignalNodeVarName;
+        return "generator_switchOffSignal1";
     }
 
+    @Override
     public String getSwitchOffSignalEventVarName() {
-        return switchOffSignalEventVarName;
+        return "generator_switchOffSignal2";
     }
 
     public String getSwitchOffSignalAutomatonVarName() {
-        return switchOffSignalAutomatonVarName;
+        return "generator_switchOffSignal3";
     }
 
     public String getRunningVarName() {
-        return runningVarName;
+        return "generator_running";
     }
 
     public String getQStatorPuVarName() {
@@ -94,10 +89,5 @@ public abstract class AbstractGeneratorModel extends AbstractEquipmentBlackBoxMo
     @Override
     public String getUPuVarName() {
         return "generator_UPu";
-    }
-
-    @Override
-    public String getDisconnectableVarName() {
-        return getSwitchOffSignalEventVarName();
     }
 }
