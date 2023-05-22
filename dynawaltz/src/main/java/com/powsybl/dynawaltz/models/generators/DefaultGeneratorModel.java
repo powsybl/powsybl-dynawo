@@ -8,11 +8,12 @@
 package com.powsybl.dynawaltz.models.generators;
 
 import com.powsybl.dynawaltz.models.AbstractInjectionNetworkModel;
+import com.powsybl.dynawaltz.models.events.ControllableEquipment;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class DefaultGeneratorModel extends AbstractInjectionNetworkModel implements GeneratorModel {
+public class DefaultGeneratorModel extends AbstractInjectionNetworkModel implements GeneratorModel, ControllableEquipment {
 
     public DefaultGeneratorModel(String staticId) {
         super(staticId);
@@ -53,7 +54,13 @@ public class DefaultGeneratorModel extends AbstractInjectionNetworkModel impleme
         return "@NAME@_QStatorPu";
     }
 
+    @Override
     public String getUPuVarName() {
         return "@NAME@_UPu";
+    }
+
+    @Override
+    public String getDeltaPVarName() {
+        return "@NAME@_Pc";
     }
 }

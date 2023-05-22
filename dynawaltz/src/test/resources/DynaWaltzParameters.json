@@ -38,6 +38,7 @@
       },
       "solverType" : "IDA",
       "mergeLoads" : false,
+      "writeFinalState" : true,
       "modelsParameters" : [ {
         "id" : "test",
         "parameters" : {

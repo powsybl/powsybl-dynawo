@@ -36,6 +36,7 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
     public static final String MODELS_OUTPUT_PARAMETERS_FILE = "models.par";
     public static final String NETWORK_OUTPUT_PARAMETERS_FILE = "network.par";
     public static final String SOLVER_OUTPUT_PARAMETERS_FILE = "solvers.par";
+    private static final boolean DEFAULT_WRITE_FINAL_STATE = true;
 
     public enum SolverType {
         SIM,
@@ -47,6 +48,7 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
     private ParametersSet solverParameters;
     private SolverType solverType;
     private boolean mergeLoads;
+    private boolean writeFinalState = DEFAULT_WRITE_FINAL_STATE;
 
     /**
      * Loads parameters from the default platform configuration.
@@ -94,6 +96,9 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
         // If merging loads on each bus to simplify dynawo's analysis
         boolean mergeLoads = config.flatMap(c -> c.getOptionalBooleanProperty("mergeLoads")).orElse(DEFAULT_MERGE_LOADS);
 
+        // Writes final state IIDM
+        boolean writeFinalState = config.flatMap(c -> c.getOptionalBooleanProperty("writeFinalState")).orElse(DEFAULT_WRITE_FINAL_STATE);
+
         // Load xml files
         List<ParametersSet> modelsParameters = ParametersXml.load(parametersPath);
         ParametersSet networkParameters = ParametersXml.load(networkParametersPath, networkParametersId);
@@ -104,7 +109,8 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
                 .setNetworkParameters(networkParameters)
                 .setSolverParameters(solverParameters)
                 .setSolverType(solverType)
-                .setMergeLoads(mergeLoads);
+                .setMergeLoads(mergeLoads)
+                .setWriteFinalState(writeFinalState);
     }
 
     @Override
@@ -162,5 +168,14 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
     public DynaWaltzParameters setMergeLoads(boolean mergeLoads) {
         this.mergeLoads = mergeLoads;
         return this;
+    }
+
+    public DynaWaltzParameters setWriteFinalState(boolean writeFinalState) {
+        this.writeFinalState = writeFinalState;
+        return this;
+    }
+
+    public boolean isWriteFinalState() {
+        return writeFinalState;
     }
 }

@@ -171,11 +171,13 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
             super.after(workingDir, report);
             context.getNetwork().getVariantManager().setWorkingVariant(context.getWorkingVariantId());
             boolean status = true;
-            Path outputNetworkFile = workingDir.resolve("outputs").resolve("finalState").resolve(OUTPUT_IIDM_FILENAME);
-            if (Files.exists(outputNetworkFile)) {
-                NetworkResultsUpdater.update(context.getNetwork(), NetworkXml.read(outputNetworkFile), context.getDynaWaltzParameters().isMergeLoads());
-            } else {
-                status = false;
+            if (context.getDynaWaltzParameters().isWriteFinalState()) {
+                Path outputNetworkFile = workingDir.resolve("outputs").resolve("finalState").resolve(OUTPUT_IIDM_FILENAME);
+                if (Files.exists(outputNetworkFile)) {
+                    NetworkResultsUpdater.update(context.getNetwork(), NetworkXml.read(outputNetworkFile), context.getDynaWaltzParameters().isMergeLoads());
+                } else {
+                    status = false;
+                }
             }
             Path curvesPath = workingDir.resolve(CURVES_OUTPUT_PATH).toAbsolutePath().resolve(CURVES_FILENAME);
             Map<String, TimeSeries> curves = new HashMap<>();

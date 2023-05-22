@@ -9,7 +9,7 @@
     <dyn:blackBoxModel id="BBM_GEN_SYNCHRO2" lib="GeneratorSynchronousThreeWindingsPmConstVRNordic" parFile="models.par" parId="GSTW" staticId="GEN3">
         <dyn:macroStaticRef id="MSR_GeneratorSynchronousThreeWindingsPmConstVRNordic"/>
     </dyn:blackBoxModel>
-    <dyn:blackBoxModel id="OMEGA_REF" lib="DYNModelOmegaRef" parFile="sim1.par" parId="OMEGA_REF"/>
+    <dyn:blackBoxModel id="FREQ_SYNC" lib="DYNModelOmegaRef" parFile="sim1.par" parId="FREQ_SYNC_PAR"/>
     <dyn:macroConnector id="MC_GeneratorSynchronousFourWindingsPmConstVRNordic-NetworkBus">
         <dyn:connect var1="generator_terminal" var2="@NAME@_ACPIN"/>
         <dyn:connect var1="generator_switchOffSignal1" var2="@NAME@_switchOff"/>
@@ -57,10 +57,10 @@
     <dyn:macroConnect connector="MC_GeneratorSynchronousFourWindingsPmConstVRNordic-NetworkBus" id1="BBM_GEN_SYNCHRO" id2="NETWORK" name2="NGEN"/>
     <dyn:macroConnect connector="MC_GeneratorPQ-NetworkBus" id1="BBM_GEN_PQ" id2="NETWORK" name2="N1"/>
     <dyn:macroConnect connector="MC_GeneratorSynchronousThreeWindingsPmConstVRNordic-NetworkBus" id1="BBM_GEN_SYNCHRO2" id2="NETWORK" name2="N2"/>
-    <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorSynchronousFourWindingsPmConstVRNordic" id1="OMEGA_REF" index1="0" id2="BBM_GEN_SYNCHRO"/>
-    <dyn:macroConnect connector="MC_DYNModelOmegaRef-NetworkBus" id1="OMEGA_REF" index1="0" id2="NETWORK" name2="NGEN"/>
-    <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorPQ" id1="OMEGA_REF" index1="1" id2="BBM_GEN_PQ"/>
-    <dyn:macroConnect connector="MC_DYNModelOmegaRef-NetworkBus" id1="OMEGA_REF" index1="1" id2="NETWORK" name2="N1"/>
-    <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorSynchronousThreeWindingsPmConstVRNordic" id1="OMEGA_REF" index1="2" id2="BBM_GEN_SYNCHRO2"/>
-    <dyn:macroConnect connector="MC_DYNModelOmegaRef-NetworkBus" id1="OMEGA_REF" index1="2" id2="NETWORK" name2="N2"/>
+    <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorSynchronousFourWindingsPmConstVRNordic" id1="FREQ_SYNC" index1="0" id2="BBM_GEN_SYNCHRO"/>
+    <dyn:macroConnect connector="MC_DYNModelOmegaRef-NetworkBus" id1="FREQ_SYNC" index1="0" id2="NETWORK" name2="NGEN"/>
+    <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorPQ" id1="FREQ_SYNC" index1="1" id2="BBM_GEN_PQ"/>
+    <dyn:macroConnect connector="MC_DYNModelOmegaRef-NetworkBus" id1="FREQ_SYNC" index1="1" id2="NETWORK" name2="N1"/>
+    <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorSynchronousThreeWindingsPmConstVRNordic" id1="FREQ_SYNC" index1="2" id2="BBM_GEN_SYNCHRO2"/>
+    <dyn:macroConnect connector="MC_DYNModelOmegaRef-NetworkBus" id1="FREQ_SYNC" index1="2" id2="NETWORK" name2="N2"/>
 </dyn:dynamicModelsArchitecture>

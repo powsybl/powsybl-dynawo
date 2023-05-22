@@ -8,11 +8,12 @@
 package com.powsybl.dynawaltz.models.loads;
 
 import com.powsybl.dynawaltz.models.AbstractInjectionNetworkModel;
+import com.powsybl.dynawaltz.models.events.ControllableEquipment;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class DefaultLoadModel extends AbstractInjectionNetworkModel implements LoadModel {
+public class DefaultLoadModel extends AbstractInjectionNetworkModel implements LoadModel, ControllableEquipment {
 
     public DefaultLoadModel(String staticId) {
         super(staticId);
@@ -21,5 +22,10 @@ public class DefaultLoadModel extends AbstractInjectionNetworkModel implements L
     @Override
     public String getName() {
         return "NetworkLoad";
+    }
+
+    @Override
+    public String getDeltaPVarName() {
+        return "@NAME@_DeltaPc";
     }
 }
