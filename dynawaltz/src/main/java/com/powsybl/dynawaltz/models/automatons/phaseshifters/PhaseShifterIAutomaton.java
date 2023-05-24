@@ -32,6 +32,7 @@ public class PhaseShifterIAutomaton extends AbstractPhaseShifterAutomaton {
         return Arrays.asList(
                 new VarConnection("phaseShifter_tap", connected.getStepVarName()),
                 new VarConnection("phaseShifter_iMonitored", connected.getIMonitoredVarName()),
+                new VarConnection("phaseShifter_P", connected.getPMonitoredVarName()),
                 new VarConnection("phaseShifter_AutomatonExists", connected.getDisableInternalTapChangerVarName())
         );
     }

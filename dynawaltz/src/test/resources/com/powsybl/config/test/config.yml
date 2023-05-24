@@ -7,10 +7,10 @@ dynawaltz:
   debug: false
 
 dynawaltz-default-parameters:
-    parametersFile: /work/unittests/models.par
-    network.parametersFile: /work/unittests/network.par
+    parametersFile: /work/unittests/configModels.par
+    network.parametersFile: /work/unittests/configNetwork.par
     network.parametersId: "1"
     solver.type: IDA
-    solver.parametersFile: /work/unittests/solver.par
+    solver.parametersFile: /work/unittests/configSolver.par
     solver.parametersId: "1"
 

@@ -7,26 +7,20 @@
  */
 package com.powsybl.dynawaltz.models.buses;
 
-import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
-import com.powsybl.dynawaltz.models.AbstractBlackBoxModel;
-import com.powsybl.dynawaltz.models.MacroConnectAttribute;
 import com.powsybl.iidm.network.Bus;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class StandardBus extends AbstractBlackBoxModel implements BusModel {
+public class StandardBus extends AbstractBus {
 
-    public StandardBus(String dynamicModelId, String staticId, String parameterSetId) {
-        super(dynamicModelId, staticId, parameterSetId);
+    public StandardBus(String dynamicModelId, Bus bus, String parameterSetId) {
+        super(dynamicModelId, bus, parameterSetId);
     }
 
     @Override
@@ -41,61 +35,7 @@ public class StandardBus extends AbstractBlackBoxModel implements BusModel {
     }
 
     @Override
-    public List<MacroConnectAttribute> getMacroConnectToAttributes() {
-        List<MacroConnectAttribute> attributesConnectTo = new ArrayList<>(super.getMacroConnectToAttributes());
-        attributesConnectTo.add(MacroConnectAttribute.of("name2", getStaticId().orElse(null)));
-        return attributesConnectTo;
-    }
-
-    @Override
-    public void createMacroConnections(DynaWaltzContext context) {
-        // Buses with a dynamical model can only connect to equipment with a dynamic model
-        String staticId = getStaticId().orElse(null);
-        Bus bus = context.getNetwork().getBusBreakerView().getBus(staticId);
-        if (bus == null) {
-            throw new PowsyblException("Bus static id unknown: " + staticId);
-        }
-        checkLinkedDynamicModels(bus, context);
-    }
-
-    private void checkLinkedDynamicModels(Bus bus, DynaWaltzContext context) {
-        bus.getConnectedTerminalStream()
-                .map(t -> t.getConnectable().getId())
-                .filter(context::isWithoutBlackBoxDynamicModel)
-                .findAny()
-                .ifPresent(id -> {
-                    throw new PowsyblException(String.format("The equipment %s linked to the standard bus %s does not possess a dynamic model",
-                            id, getStaticId().orElse(null)));
-                });
-    }
-
-    @Override
-    public String getName() {
-        return getLib();
-    }
-
-    @Override
     public String getTerminalVarName() {
         return "bus_terminal";
-    }
-
-    @Override
-    public Optional<String> getSwitchOffSignalVarName() {
-        return Optional.empty();
-    }
-
-    @Override
-    public Optional<String> getNumCCVarName() {
-        return Optional.empty();
-    }
-
-    @Override
-    public Optional<String> getUImpinVarName() {
-        return Optional.empty();
-    }
-
-    @Override
-    public Optional<String> getUpuImpinVarName() {
-        return Optional.empty();
     }
 }

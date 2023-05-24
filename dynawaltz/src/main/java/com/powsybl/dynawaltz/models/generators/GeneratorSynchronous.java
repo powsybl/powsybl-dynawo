@@ -7,6 +7,7 @@
 package com.powsybl.dynawaltz.models.generators;
 
 import com.powsybl.dynawaltz.models.VarConnection;
+import com.powsybl.iidm.network.Generator;
 
 import java.util.Arrays;
 import java.util.List;
@@ -14,11 +15,10 @@ import java.util.List;
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  */
-public class GeneratorSynchronous extends OmegaRefGenerator
-        implements GeneratorSynchronousModel {
+public class GeneratorSynchronous extends OmegaRefGenerator implements GeneratorSynchronousModel {
 
-    public GeneratorSynchronous(String dynamicModelId, String staticId, String parameterSetId, String generatorLib) {
-        super(dynamicModelId, staticId, parameterSetId, generatorLib);
+    public GeneratorSynchronous(String dynamicModelId, Generator generator, String parameterSetId, String generatorLib) {
+        super(dynamicModelId, generator, parameterSetId, generatorLib);
     }
 
     protected String getOmegaPuVarName() {

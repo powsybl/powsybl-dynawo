@@ -6,22 +6,15 @@
  */
 package com.powsybl.dynawaltz.models.generators;
 
+import com.powsybl.iidm.network.Generator;
+
 /**
  * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
+ * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 public class GeneratorFictitious extends AbstractGeneratorModel {
 
-    public GeneratorFictitious(String dynamicModelId, String staticId, String parameterSetId) {
-        super(dynamicModelId, staticId, parameterSetId,
-                "generator_terminal",
-                "generator_switchOffSignal1",
-                "generator_switchOffSignal2",
-                "generator_switchOffSignal3",
-                "generator_running");
-    }
-
-    @Override
-    public String getLib() {
-        return "GeneratorFictitious";
+    public GeneratorFictitious(String dynamicModelId, Generator generator, String parameterSetId) {
+        super(dynamicModelId, generator, parameterSetId, "GeneratorFictitious");
     }
 }

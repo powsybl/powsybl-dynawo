@@ -10,9 +10,11 @@ import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.VarConnection;
-import com.powsybl.iidm.network.*;
+import com.powsybl.iidm.network.Branch;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -26,21 +28,23 @@ public class CurrentLimitAutomaton extends AbstractPureDynamicBlackBoxModel {
     protected final Branch<?> measuredQuadripole;
     protected final Side measuredSide;
     protected final Branch<?> controlledQuadripole;
+    protected final String lib;
 
-    public CurrentLimitAutomaton(String dynamicModelId, String parameterSetId, Branch<?> measuredQuadripole, Side measuredSide, Branch<?> controlledQuadripole) {
+    public CurrentLimitAutomaton(String dynamicModelId, String parameterSetId, Branch<?> measuredQuadripole, Side measuredSide, Branch<?> controlledQuadripole, String lib) {
         super(dynamicModelId, parameterSetId);
         this.measuredQuadripole = Objects.requireNonNull(measuredQuadripole);
         this.measuredSide = Objects.requireNonNull(measuredSide);
         this.controlledQuadripole = Objects.requireNonNull(controlledQuadripole);
+        this.lib = lib;
     }
 
-    public CurrentLimitAutomaton(String dynamicModelId, String parameterSetId, Branch<?> measuredQuadripole, Side measuredSide) {
-        this(dynamicModelId, parameterSetId, measuredQuadripole, measuredSide, measuredQuadripole);
+    public CurrentLimitAutomaton(String dynamicModelId, String parameterSetId, Branch<?> measuredQuadripole, Side measuredSide, String lib) {
+        this(dynamicModelId, parameterSetId, measuredQuadripole, measuredSide, measuredQuadripole, lib);
     }
 
     @Override
     public String getLib() {
-        return "CurrentLimitAutomaton";
+        return lib;
     }
 
     @Override

@@ -12,16 +12,19 @@ import com.powsybl.dynawaltz.models.TransformerSide;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.buses.BusModel;
 import com.powsybl.dynawaltz.models.transformers.TapChangerModel;
+import com.powsybl.iidm.network.Load;
 
 import java.util.List;
+
+import static com.powsybl.dynawaltz.models.TransformerSide.NONE;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 public class LoadOneTransformerTapChanger extends LoadOneTransformer implements TapChangerModel {
 
-    public LoadOneTransformerTapChanger(String dynamicModelId, String staticId, String parameterSetId) {
-        super(dynamicModelId, staticId, parameterSetId);
+    public LoadOneTransformerTapChanger(String dynamicModelId, Load load, String parameterSetId) {
+        super(dynamicModelId, load, parameterSetId);
     }
 
     @Override
@@ -45,6 +48,6 @@ public class LoadOneTransformerTapChanger extends LoadOneTransformer implements 
 
     @Override
     public List<VarConnection> getTapChangerBlockerVarConnections() {
-        return List.of(new VarConnection(TAP_CHANGER_BLOCKING_BLOCKED_T, "tapChanger_locked"));
+        return List.of(new VarConnection(getTapChangerBlockingVarName(NONE), "tapChanger_locked"));
     }
 }

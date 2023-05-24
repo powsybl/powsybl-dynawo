@@ -22,8 +22,4 @@ public interface QuadripoleModel extends Model {
     String getStateValueVarName();
 
     String getDeactivateCurrentLimitsVarName();
-
-    default String getDisconnectableVarName() {
-        return getStateValueVarName();
-    }
 }

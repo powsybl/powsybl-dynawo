@@ -20,13 +20,15 @@ import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.Optional;
 
+/**
+ * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ */
 public class CustomParameterResolver implements BeforeEachMethodAdapter, ParameterResolver {
 
     private ParameterResolver parameterisedTestParameterResolver = null;
 
     @Override
-    public void invokeBeforeEachMethod(ExtensionContext context, ExtensionRegistry registry)
-            throws Throwable {
+    public void invokeBeforeEachMethod(ExtensionContext context, ExtensionRegistry registry) {
         Optional<ParameterResolver> resolverOptional = registry.getExtensions(ParameterResolver.class)
                 .stream()
                 .filter(parameterResolver ->
@@ -34,9 +36,9 @@ public class CustomParameterResolver implements BeforeEachMethodAdapter, Paramet
                                 .contains("ParameterizedTestParameterResolver")
                 )
                 .findFirst();
-        if (!resolverOptional.isPresent()) {
+        if (resolverOptional.isEmpty()) {
             throw new IllegalStateException(
-                    "ParameterizedTestParameterResolver missed in the registry. Probably it's not a Parameterized Test");
+                    "ParameterizedTestParameterResolver missing");
         } else {
             parameterisedTestParameterResolver = resolverOptional.get();
         }

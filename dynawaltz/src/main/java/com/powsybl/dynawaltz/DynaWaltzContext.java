@@ -7,18 +7,18 @@
 package com.powsybl.dynawaltz;
 
 import com.powsybl.commons.PowsyblException;
-import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.models.*;
+import com.powsybl.dynawaltz.models.buses.InfiniteBus;
+import com.powsybl.dynawaltz.models.frequencysynchronizers.FrequencySynchronizerModel;
+import com.powsybl.dynawaltz.models.frequencysynchronizers.OmegaRef;
+import com.powsybl.dynawaltz.models.frequencysynchronizers.SetPoint;
 import com.powsybl.dynawaltz.models.generators.OmegaRefGeneratorModel;
 import com.powsybl.dynawaltz.xml.MacroStaticReference;
 import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.Network;
 
-import java.nio.file.FileSystem;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -30,49 +30,36 @@ import java.util.stream.Stream;
  */
 public class DynaWaltzContext {
 
-    private static final String MODEL_ID_EXCEPTION = "The model identified by the static id %s is not the correct model";
+    private static final String MODEL_ID_EXCEPTION = "The model identified by the static id %s does not match the expected model (%s)";
 
     private final Network network;
     private final String workingVariantId;
     private final DynamicSimulationParameters parameters;
     private final DynaWaltzParameters dynaWaltzParameters;
-    private final DynaWaltzParametersDatabase parametersDatabase;
     private final List<BlackBoxModel> dynamicModels;
     private final List<BlackBoxModel> eventModels;
-    private final Map<String, BlackBoxModel> staticIdBlackBoxModelMap;
+    private final Map<String, EquipmentBlackBoxModelModel> staticIdBlackBoxModelMap;
     private final List<Curve> curves;
     private final Map<String, MacroStaticReference> macroStaticReferences = new LinkedHashMap<>();
     private final List<MacroConnect> macroConnectList = new ArrayList<>();
     private final Map<String, MacroConnector> macroConnectorsMap = new LinkedHashMap<>();
     private final NetworkModel networkModel = new NetworkModel();
-
-    private final OmegaRef omegaRef;
-    private final PlatformConfig platformConfig;
+    private final FrequencySynchronizerModel frequencySynchronizer;
 
     public DynaWaltzContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
                             List<Curve> curves, DynamicSimulationParameters parameters, DynaWaltzParameters dynaWaltzParameters) {
-        this(network, workingVariantId, dynamicModels, eventModels, curves, parameters, dynaWaltzParameters, PlatformConfig.defaultConfig());
-    }
-
-    public DynaWaltzContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
-                            List<Curve> curves, DynamicSimulationParameters parameters, DynaWaltzParameters dynaWaltzParameters,
-                            PlatformConfig platformConfig) {
         this.network = Objects.requireNonNull(network);
         this.workingVariantId = Objects.requireNonNull(workingVariantId);
         this.dynamicModels = Objects.requireNonNull(dynamicModels);
         this.eventModels = checkEventModelIdUniqueness(Objects.requireNonNull(eventModels));
         this.staticIdBlackBoxModelMap = getInputBlackBoxDynamicModelStream()
-                .filter(blackBoxModel -> blackBoxModel.getStaticId().isPresent())
-                .collect(Collectors.toMap(bbm -> bbm.getStaticId().get(), Function.identity(), this::mergeDuplicateStaticId, LinkedHashMap::new));
+                .filter(EquipmentBlackBoxModelModel.class::isInstance)
+                .map(EquipmentBlackBoxModelModel.class::cast)
+                .collect(Collectors.toMap(EquipmentBlackBoxModelModel::getStaticId, Function.identity(), this::mergeDuplicateStaticId, LinkedHashMap::new));
         this.curves = Objects.requireNonNull(curves);
         this.parameters = Objects.requireNonNull(parameters);
         this.dynaWaltzParameters = Objects.requireNonNull(dynaWaltzParameters);
-        this.platformConfig = Objects.requireNonNull(platformConfig);
-        this.parametersDatabase = loadDatabase(dynaWaltzParameters.getParametersFile(), platformConfig);
-        this.omegaRef = new OmegaRef(dynamicModels.stream()
-                .filter(OmegaRefGeneratorModel.class::isInstance)
-                .map(OmegaRefGeneratorModel.class::cast)
-                .collect(Collectors.toList()));
+        this.frequencySynchronizer = setupFrequencySynchronizer(dynamicModels.stream().anyMatch(InfiniteBus.class::isInstance) ? SetPoint::new : OmegaRef::new);
 
         for (BlackBoxModel bbm : getBlackBoxDynamicModelStream().collect(Collectors.toList())) {
             macroStaticReferences.computeIfAbsent(bbm.getName(), k -> new MacroStaticReference(k, bbm.getVarsMapping()));
@@ -82,6 +69,13 @@ public class DynaWaltzContext {
         for (BlackBoxModel bbem : eventModels) {
             bbem.createMacroConnections(this);
         }
+    }
+
+    private FrequencySynchronizerModel setupFrequencySynchronizer(Function<List<OmegaRefGeneratorModel>, FrequencySynchronizerModel> fsConstructor) {
+        return fsConstructor.apply(dynamicModels.stream()
+                .filter(OmegaRefGeneratorModel.class::isInstance)
+                .map(OmegaRefGeneratorModel.class::cast)
+                .collect(Collectors.toList()));
     }
 
     public Network getNetwork() {
@@ -100,10 +94,6 @@ public class DynaWaltzContext {
         return dynaWaltzParameters;
     }
 
-    public DynaWaltzParametersDatabase getParametersDatabase() {
-        return parametersDatabase;
-    }
-
     public Collection<MacroStaticReference> getMacroStaticReferences() {
         return macroStaticReferences.values();
     }
@@ -116,7 +106,7 @@ public class DynaWaltzContext {
         if (clazz.isInstance(bbm)) {
             return clazz.cast(bbm);
         }
-        throw new PowsyblException(String.format(MODEL_ID_EXCEPTION, staticId));
+        throw new PowsyblException(String.format(MODEL_ID_EXCEPTION, staticId, clazz.getSimpleName()));
     }
 
     public <T extends Model> T getDynamicModel(Identifiable<?> equipment, Class<T> connectableClass) {
@@ -127,25 +117,24 @@ public class DynaWaltzContext {
         if (connectableClass.isInstance(bbm)) {
             return connectableClass.cast(bbm);
         }
-        throw new PowsyblException(String.format(MODEL_ID_EXCEPTION, equipment.getId()));
+        throw new PowsyblException(String.format(MODEL_ID_EXCEPTION, equipment.getId(), connectableClass.getSimpleName()));
     }
 
-    public <T extends Model> T getPureDynamicModel(String staticId, Class<T> connectableClass) {
+    public <T extends Model> T getPureDynamicModel(String dynamicId, Class<T> connectableClass) {
         BlackBoxModel bbm = dynamicModels.stream()
-                .filter(dm -> staticId.equalsIgnoreCase(dm.getDynamicModelId()))
+                .filter(dm -> dynamicId.equals(dm.getDynamicModelId()))
                 .findFirst()
-                .orElseThrow(
-                    () -> {
-                        throw new PowsyblException("Pure dynamic model " + staticId + " not found");
-                    });
+                .orElseThrow(() -> {
+                    throw new PowsyblException("Pure dynamic model " + dynamicId + " not found");
+                });
         if (connectableClass.isInstance(bbm)) {
             return connectableClass.cast(bbm);
         }
-        throw new PowsyblException(String.format(MODEL_ID_EXCEPTION, staticId));
+        throw new PowsyblException(String.format(MODEL_ID_EXCEPTION, dynamicId, connectableClass.getSimpleName()));
     }
 
-    private BlackBoxModel mergeDuplicateStaticId(BlackBoxModel bbm1, BlackBoxModel bbm2) {
-        throw new PowsyblException("Duplicate staticId: " + bbm1.getStaticId().orElseThrow());
+    private EquipmentBlackBoxModelModel mergeDuplicateStaticId(EquipmentBlackBoxModelModel bbm1, EquipmentBlackBoxModelModel bbm2) {
+        throw new PowsyblException("Duplicate staticId: " + bbm1.getStaticId());
     }
 
     private static List<BlackBoxModel> checkEventModelIdUniqueness(List<BlackBoxModel> eventModels) {
@@ -206,16 +195,20 @@ public class DynaWaltzContext {
         return !staticIdBlackBoxModelMap.containsKey(staticId);
     }
 
+    public boolean isWithoutBlackBoxDynamicModel(Identifiable<?> equipment) {
+        return !staticIdBlackBoxModelMap.containsKey(equipment.getId());
+    }
+
     private Stream<BlackBoxModel> getInputBlackBoxDynamicModelStream() {
         //Doesn't include the OmegaRef, it only concerns the DynamicModels provided by the user
         return dynamicModels.stream();
     }
 
     public Stream<BlackBoxModel> getBlackBoxDynamicModelStream() {
-        if (omegaRef.isEmpty()) {
+        if (frequencySynchronizer.isEmpty()) {
             return getInputBlackBoxDynamicModelStream();
         }
-        return Stream.concat(getInputBlackBoxDynamicModelStream(), Stream.of(omegaRef));
+        return Stream.concat(getInputBlackBoxDynamicModelStream(), Stream.of(frequencySynchronizer));
     }
 
     public List<BlackBoxModel> getBlackBoxDynamicModels() {
@@ -243,26 +236,7 @@ public class DynaWaltzContext {
         return !curves.isEmpty();
     }
 
-    private static FileSystem getFileSystem(PlatformConfig platformConfig) {
-        return platformConfig.getConfigDir()
-                .map(Path::getFileSystem)
-                .orElseThrow(() -> new PowsyblException("A configuration directory should be defined"));
-    }
-
-    private static DynaWaltzParametersDatabase loadDatabase(String filename, PlatformConfig platformConfig) {
-        FileSystem fs = getFileSystem(platformConfig);
-        return DynaWaltzParametersDatabase.load(fs.getPath(filename));
-    }
-
-    public String getParFile() {
-        return Paths.get(getDynaWaltzParameters().getParametersFile()).getFileName().toString();
-    }
-
     public String getSimulationParFile() {
         return getNetwork().getId() + ".par";
-    }
-
-    public PlatformConfig getPlatformConfig() {
-        return platformConfig;
     }
 }

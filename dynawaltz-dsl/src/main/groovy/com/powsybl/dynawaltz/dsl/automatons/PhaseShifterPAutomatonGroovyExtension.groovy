@@ -25,7 +25,7 @@ class PhaseShifterPAutomatonGroovyExtension extends AbstractPureDynamicGroovyExt
     }
 
     @Override
-    protected PhaseShifterPAutomatonBuilder createBuilder(String tag, Network network) {
+    protected PhaseShifterPAutomatonBuilder createBuilder(Network network) {
         new PhaseShifterPAutomatonBuilder(network)
     }
 

@@ -12,16 +12,20 @@ import com.powsybl.dynawaltz.models.TransformerSide;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.buses.BusModel;
 import com.powsybl.dynawaltz.models.transformers.TapChangerModel;
+import com.powsybl.iidm.network.Load;
 
 import java.util.List;
+
+import static com.powsybl.dynawaltz.models.TransformerSide.HIGH_VOLTAGE;
+import static com.powsybl.dynawaltz.models.TransformerSide.LOW_VOLTAGE;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 public class LoadTwoTransformersTapChangers extends LoadTwoTransformers implements TapChangerModel {
 
-    public LoadTwoTransformersTapChangers(String dynamicModelId, String staticId, String parameterSetId) {
-        super(dynamicModelId, staticId, parameterSetId);
+    public LoadTwoTransformersTapChangers(String dynamicModelId, Load load, String parameterSetId) {
+        super(dynamicModelId, load, parameterSetId);
     }
 
     @Override
@@ -34,8 +38,8 @@ public class LoadTwoTransformersTapChangers extends LoadTwoTransformers implemen
         List<VarConnection> varConnections = super.getVarConnectionsWithBus(connected);
         connected.getSwitchOffSignalVarName()
                 .ifPresent(switchOff -> {
-                    varConnections.add(new VarConnection("tapChangerT_switchOffSignal1", switchOff));
-                    varConnections.add(new VarConnection("tapChangerD_switchOffSignal1", switchOff));
+                    varConnections.add(new VarConnection(getSwitchOffSignal(HIGH_VOLTAGE), switchOff));
+                    varConnections.add(new VarConnection(getSwitchOffSignal(LOW_VOLTAGE), switchOff));
                 });
         return varConnections;
     }
@@ -47,7 +51,15 @@ public class LoadTwoTransformersTapChangers extends LoadTwoTransformers implemen
 
     @Override
     public List<VarConnection> getTapChangerBlockerVarConnections() {
-        return List.of(new VarConnection(TAP_CHANGER_BLOCKING_BLOCKED_D, "tapChangerD_locked"),
-            new VarConnection(TAP_CHANGER_BLOCKING_BLOCKED_T, "tapChangerT_locked"));
+        return List.of(getTapChangerBlockerVarConnection(LOW_VOLTAGE),
+                getTapChangerBlockerVarConnection(HIGH_VOLTAGE));
+    }
+
+    private VarConnection getTapChangerBlockerVarConnection(TransformerSide side) {
+        return new VarConnection(getTapChangerBlockingVarName(side), "tapChanger" + side.getSideSuffix() + "_locked");
+    }
+
+    private String getSwitchOffSignal(TransformerSide side) {
+        return "tapChanger" + side.getSideSuffix() + "_switchOffSignal1";
     }
 }

@@ -8,11 +8,14 @@
 package com.powsybl.dynawaltz.dsl.models.lines
 
 import com.google.auto.service.AutoService
+import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
-import com.powsybl.dynawaltz.dsl.AbstractDynamicModelBuilder
-import com.powsybl.dynawaltz.dsl.AbstractPowsyblDynawoGroovyExtension
+import com.powsybl.dynawaltz.dsl.AbstractSimpleEquipmentGroovyExtension
+import com.powsybl.dynawaltz.dsl.models.builders.AbstractDynamicModelBuilder
 import com.powsybl.dynawaltz.models.lines.StandardLine
+import com.powsybl.iidm.network.Line
+import com.powsybl.iidm.network.Network
 
 /**
  * An implementation of {@link DynamicModelGroovyExtension} that adds the <pre>Line</pre> keyword to the DSL
@@ -20,23 +23,37 @@ import com.powsybl.dynawaltz.models.lines.StandardLine
  * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class LineGroovyExtension extends AbstractPowsyblDynawoGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+class LineGroovyExtension extends AbstractSimpleEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
     LineGroovyExtension() {
-        modelTags = ["Line"]
+        modelTag = "Line"
     }
 
     @Override
-    protected LineBuilder createBuilder(String currentTag) {
-        new LineBuilder()
+    protected LineBuilder createBuilder(Network network) {
+        new LineBuilder(network)
     }
 
     static class LineBuilder extends AbstractDynamicModelBuilder {
 
+        Line line
+
+        LineBuilder(Network network) {
+            super(network)
+        }
+
+        void checkData() {
+            super.checkData()
+            line = network.getLine(staticId)
+            if (line == null) {
+                throw new DslException("Line static id unknown: " + getStaticId())
+            }
+        }
+
         @Override
         StandardLine build() {
             checkData()
-            new StandardLine(dynamicModelId, staticId, parameterSetId)
+            new StandardLine(dynamicModelId, line, parameterSetId)
         }
     }
 }

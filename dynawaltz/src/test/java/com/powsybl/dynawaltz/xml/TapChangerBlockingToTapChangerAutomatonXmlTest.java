@@ -28,8 +28,7 @@ class TapChangerBlockingToTapChangerAutomatonXmlTest extends TapChangerAutomaton
                 Collections.emptyList(),
                 Collections.emptyList(),
                 List.of("BBM_TC", "BBM_TC2", "BBM_TC3"),
-                List.of(network.getBusBreakerView().getBus("NHV1")),
-                "TapChangerBlockingAutomaton1"));
+                List.of(network.getBusBreakerView().getBus("NHV1"))));
     }
 
     @Test

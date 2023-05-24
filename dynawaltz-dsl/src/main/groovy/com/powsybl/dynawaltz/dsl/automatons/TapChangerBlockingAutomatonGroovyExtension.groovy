@@ -12,7 +12,7 @@ import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractPureDynamicGroovyExtension
-import com.powsybl.dynawaltz.dsl.AbstractPureDynamicModelBuilder
+import com.powsybl.dynawaltz.dsl.models.builders.AbstractPureDynamicModelBuilder
 import com.powsybl.dynawaltz.models.automatons.TapChangerBlockingAutomaton
 import com.powsybl.iidm.network.Bus
 import com.powsybl.iidm.network.Identifiable
@@ -29,16 +29,13 @@ import java.util.stream.Collectors
 @AutoService(DynamicModelGroovyExtension.class)
 class TapChangerBlockingAutomatonGroovyExtension extends AbstractPureDynamicGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
-    protected static final String TCB_AUTOMATONS = "tapChangerBlockingAutomatons"
-
     TapChangerBlockingAutomatonGroovyExtension() {
-        ConfigSlurper config = new ConfigSlurper()
-        modelTags = config.parse(this.getClass().getClassLoader().getResource(MODELS_CONFIG)).get(TCB_AUTOMATONS).keySet() as List
+        modelTags = ["TapChangerBlockingAutomaton"]
     }
 
     @Override
-    protected TCBAutomatonBuilder createBuilder(String tag, Network network) {
-        new TCBAutomatonBuilder(tag, network)
+    protected TCBAutomatonBuilder createBuilder(Network network) {
+        new TCBAutomatonBuilder(network)
     }
 
     static class TCBAutomatonBuilder extends AbstractPureDynamicModelBuilder {
@@ -48,10 +45,8 @@ class TapChangerBlockingAutomatonGroovyExtension extends AbstractPureDynamicGroo
         List<TwoWindingsTransformer> transformers = []
         List<Bus> uMeasurement = []
         List<String> tapChangerAutomatonIds = []
-        String tag
 
-        TCBAutomatonBuilder(String tag, Network network) {
-            this.tag = tag
+        TCBAutomatonBuilder(Network network) {
             this.network = network
         }
 
@@ -81,30 +76,20 @@ class TapChangerBlockingAutomatonGroovyExtension extends AbstractPureDynamicGroo
             return equipment
         }
 
-        void UMeasurement(String staticId) {
-            Bus bus = network.getBusBreakerView().getBus(staticId)
-            if (bus == null) {
-                throw new DslException("Bus static id unknown: " + staticId)
+        void uMeasurement(String[] staticIds) {
+            uMeasurement = staticIds.collect {
+                Bus bus = network.getBusBreakerView().getBus(it)
+                if (bus == null) {
+                    throw new DslException("Bus static id unknown: " + it)
+                }
+                return bus
             }
-            uMeasurement.add(bus)
-        }
-
-        void UMeasurement(List<String> staticIds) {
-            uMeasurement = staticIds.stream()
-                    .map {
-                        Bus bus = network.getBusBreakerView().getBus(it)
-                        if (bus == null) {
-                            throw new DslException("Bus static id unknown: " + it)
-                        }
-                        return bus
-                    }
-                    .collect(Collectors.toList())
         }
 
         @Override
         TapChangerBlockingAutomaton build() {
             checkData()
-            new TapChangerBlockingAutomaton(dynamicModelId, parameterSetId, transformers, loads, tapChangerAutomatonIds, uMeasurement, tag)
+            new TapChangerBlockingAutomaton(dynamicModelId, parameterSetId, transformers, loads, tapChangerAutomatonIds, uMeasurement)
         }
     }
 }

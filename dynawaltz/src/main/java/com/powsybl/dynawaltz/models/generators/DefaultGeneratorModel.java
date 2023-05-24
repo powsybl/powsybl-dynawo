@@ -7,13 +7,13 @@
  */
 package com.powsybl.dynawaltz.models.generators;
 
-import com.powsybl.dynawaltz.models.AbstractNetworkModel;
-import com.powsybl.dynawaltz.models.events.DisconnectableEquipment;
+import com.powsybl.dynawaltz.models.AbstractInjectionNetworkModel;
+import com.powsybl.dynawaltz.models.events.ControllableEquipment;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class DefaultGeneratorModel extends AbstractNetworkModel implements GeneratorModel, DisconnectableEquipment {
+public class DefaultGeneratorModel extends AbstractInjectionNetworkModel implements GeneratorModel, ControllableEquipment {
 
     public DefaultGeneratorModel(String staticId) {
         super(staticId);
@@ -24,12 +24,43 @@ public class DefaultGeneratorModel extends AbstractNetworkModel implements Gener
         return "NetworkGenerator";
     }
 
-    public String getStateValueVarName() {
-        return "@NAME@_state_value";
+    @Override
+    public String getTerminalVarName() {
+        return "@NAME@_terminal";
     }
 
     @Override
-    public String getDisconnectableVarName() {
-        return getStateValueVarName();
+    public String getSwitchOffSignalNodeVarName() {
+        return "@NAME@_switchOffSignal1";
+    }
+
+    @Override
+    public String getSwitchOffSignalEventVarName() {
+        return "@NAME@_switchOffSignal2";
+    }
+
+    @Override
+    public String getSwitchOffSignalAutomatonVarName() {
+        return "@NAME@_switchOffSignal3";
+    }
+
+    @Override
+    public String getRunningVarName() {
+        return "@NAME@_running";
+    }
+
+    @Override
+    public String getQStatorPuVarName() {
+        return "@NAME@_QStatorPu";
+    }
+
+    @Override
+    public String getUPuVarName() {
+        return "@NAME@_UPu";
+    }
+
+    @Override
+    public String getDeltaPVarName() {
+        return "@NAME@_Pc";
     }
 }

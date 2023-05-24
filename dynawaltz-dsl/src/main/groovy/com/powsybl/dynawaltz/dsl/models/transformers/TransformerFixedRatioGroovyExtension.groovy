@@ -8,39 +8,55 @@
 package com.powsybl.dynawaltz.dsl.models.transformers
 
 import com.google.auto.service.AutoService
+import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
-import com.powsybl.dynawaltz.dsl.AbstractDynamicModelBuilder
-import com.powsybl.dynawaltz.dsl.AbstractPowsyblDynawoGroovyExtension
+import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
+import com.powsybl.dynawaltz.dsl.EquipmentConfig
+import com.powsybl.dynawaltz.dsl.models.builders.AbstractDynamicModelBuilder
 import com.powsybl.dynawaltz.models.transformers.TransformerFixedRatio
+import com.powsybl.iidm.network.Network
+import com.powsybl.iidm.network.TwoWindingsTransformer
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class TransformerFixedRatioGroovyExtension extends AbstractPowsyblDynawoGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+class TransformerFixedRatioGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+
+    private static final String TRANSFORMERS = "transformers"
 
     TransformerFixedRatioGroovyExtension() {
-        modelTags = ["TransformerFixedRatio"]
+        super(TRANSFORMERS)
     }
 
     @Override
-    protected TransformerBuilder createBuilder(String currentTag) {
-        new TransformerBuilder(currentTag)
+    protected TransformerBuilder createBuilder(Network network, EquipmentConfig equipmentConfig) {
+        new TransformerBuilder(network, equipmentConfig)
     }
 
     static class TransformerBuilder extends AbstractDynamicModelBuilder {
 
-        String tag
+        TwoWindingsTransformer transformer
+        EquipmentConfig equipmentConfig
 
-        TransformerBuilder(String tag) {
-            this.tag = tag
+        TransformerBuilder(Network network, EquipmentConfig equipmentConfig) {
+            super(network)
+            this.equipmentConfig = equipmentConfig
+        }
+
+        void checkData() {
+            super.checkData()
+            transformer = network.getTwoWindingsTransformer(staticId)
+            if (transformer == null) {
+                throw new DslException("Transformer static id unknown: " + staticId)
+            }
         }
 
         @Override
         TransformerFixedRatio build() {
             checkData()
-            new TransformerFixedRatio(dynamicModelId, staticId, parameterSetId, tag)
+            new TransformerFixedRatio(dynamicModelId, transformer, parameterSetId, equipmentConfig.lib)
         }
     }
 }

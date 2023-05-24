@@ -7,42 +7,60 @@
 package com.powsybl.dynawaltz.dsl.models.generators
 
 import com.google.auto.service.AutoService
+import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
-import com.powsybl.dynawaltz.dsl.AbstractDynamicModelBuilder
-import com.powsybl.dynawaltz.dsl.AbstractPowsyblDynawoGroovyExtension
+import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
+import com.powsybl.dynawaltz.dsl.EquipmentConfig
+import com.powsybl.dynawaltz.dsl.models.builders.AbstractDynamicModelBuilder
 import com.powsybl.dynawaltz.models.generators.GeneratorSynchronous
+import com.powsybl.dynawaltz.models.generators.GeneratorSynchronousControllable
+import com.powsybl.iidm.network.Generator
+import com.powsybl.iidm.network.Network
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class GeneratorSynchronousGroovyExtension extends AbstractPowsyblDynawoGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+class GeneratorSynchronousGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
     protected static final String SYNCHRONOUS_GENERATORS = "synchronousGenerators"
 
     GeneratorSynchronousGroovyExtension() {
-        ConfigSlurper config = new ConfigSlurper()
-        modelTags = config.parse(this.getClass().getClassLoader().getResource(MODELS_CONFIG)).get(SYNCHRONOUS_GENERATORS).keySet() as List
+        super(SYNCHRONOUS_GENERATORS)
     }
 
     @Override
-    protected GeneratorSynchronousBuilder createBuilder(String currentTag) {
-        new GeneratorSynchronousBuilder(currentTag)
+    protected GeneratorSynchronousBuilder createBuilder(Network network, EquipmentConfig equipmentConfig) {
+        new GeneratorSynchronousBuilder(network, equipmentConfig)
     }
 
     static class GeneratorSynchronousBuilder extends AbstractDynamicModelBuilder {
 
-        String tag
+        Generator generator
+        EquipmentConfig equipmentConfig
 
-        GeneratorSynchronousBuilder(String tag) {
-            this.tag = tag
+        GeneratorSynchronousBuilder(Network network, EquipmentConfig equipmentConfig) {
+            super(network)
+            this.equipmentConfig = equipmentConfig
+        }
+
+        void checkData() {
+            super.checkData()
+            generator = network.getGenerator(staticId)
+            if (generator == null) {
+                throw new DslException("Generator static id unknown: " + staticId)
+            }
         }
 
         @Override
         GeneratorSynchronous build() {
             checkData()
-            new GeneratorSynchronous(dynamicModelId, staticId, parameterSetId, tag)
+            if (equipmentConfig.isControllable()) {
+                new GeneratorSynchronousControllable(dynamicModelId, generator, parameterSetId, equipmentConfig.lib)
+            } else {
+                new GeneratorSynchronous(dynamicModelId, generator, parameterSetId, equipmentConfig.lib)
+            }
         }
     }
 }

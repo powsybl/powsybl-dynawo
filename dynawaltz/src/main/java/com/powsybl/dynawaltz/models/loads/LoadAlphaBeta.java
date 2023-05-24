@@ -9,6 +9,7 @@ package com.powsybl.dynawaltz.models.loads;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.VarMapping;
 import com.powsybl.dynawaltz.models.buses.BusModel;
+import com.powsybl.iidm.network.Load;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,28 +20,26 @@ import java.util.List;
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 public class LoadAlphaBeta extends AbstractLoad {
-
     protected static final List<VarMapping> VAR_MAPPING = Arrays.asList(
             new VarMapping("load_PPu", "p"),
             new VarMapping("load_QPu", "q"),
             new VarMapping("load_state", "state"));
 
-    public LoadAlphaBeta(String dynamicModelId, String staticId, String parameterSetId) {
-        super(dynamicModelId, staticId, parameterSetId);
+    private final String lib;
+
+    public LoadAlphaBeta(String dynamicModelId, Load load, String parameterSetId, String lib) {
+        super(dynamicModelId, load, parameterSetId, "load_terminal");
+        this.lib = lib;
     }
 
     @Override
     public String getLib() {
-        return "LoadAlphaBeta";
+        return lib;
     }
 
     @Override
     public List<VarMapping> getVarsMapping() {
         return VAR_MAPPING;
-    }
-
-    private String getTerminalVarName() {
-        return "load_terminal";
     }
 
     @Override

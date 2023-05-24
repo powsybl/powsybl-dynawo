@@ -10,9 +10,9 @@ package com.powsybl.dynawaltz.dsl.models.buses
 import com.google.auto.service.AutoService
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
-import com.powsybl.dynawaltz.dsl.AbstractDynamicModelBuilder
-import com.powsybl.dynawaltz.dsl.AbstractPowsyblDynawoGroovyExtension
+import com.powsybl.dynawaltz.dsl.AbstractSimpleEquipmentGroovyExtension
 import com.powsybl.dynawaltz.models.buses.StandardBus
+import com.powsybl.iidm.network.Network
 
 /**
  * An implementation of {@link DynamicModelGroovyExtension} that adds the <pre>Bus</pre> keyword to the DSL
@@ -20,23 +20,27 @@ import com.powsybl.dynawaltz.models.buses.StandardBus
  * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class BusGroovyExtension extends AbstractPowsyblDynawoGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+class BusGroovyExtension extends AbstractSimpleEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
     BusGroovyExtension() {
-        modelTags = ["Bus"]
+        modelTag = "Bus"
     }
 
     @Override
-    protected BusBuilder createBuilder(String currentTag) {
-        new BusBuilder()
+    protected BusBuilder createBuilder(Network network) {
+        new BusBuilder(network)
     }
 
-    static class BusBuilder extends AbstractDynamicModelBuilder {
+    static class BusBuilder extends AbstractBusBuilder {
+
+        BusBuilder(Network network) {
+            super(network)
+        }
 
         @Override
         StandardBus build() {
             checkData()
-            new StandardBus(dynamicModelId, staticId, parameterSetId)
+            new StandardBus(dynamicModelId, bus, parameterSetId)
         }
     }
 }

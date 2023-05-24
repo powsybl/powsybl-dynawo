@@ -9,9 +9,12 @@ package com.powsybl.dynawaltz.dsl.models.loads
 import com.google.auto.service.AutoService
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
-import com.powsybl.dynawaltz.dsl.AbstractDynamicModelBuilder
-import com.powsybl.dynawaltz.dsl.AbstractPowsyblDynawoGroovyExtension
+import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
+import com.powsybl.dynawaltz.dsl.EquipmentConfig
 import com.powsybl.dynawaltz.models.loads.LoadAlphaBeta
+import com.powsybl.dynawaltz.models.loads.LoadAlphaBetaControllable
+import com.powsybl.iidm.network.Load
+import com.powsybl.iidm.network.Network
 
 /**
  * An implementation of {@link DynamicModelGroovyExtension} that adds the <pre>LoadAlphaBeta</pre> keyword to the DSL
@@ -19,22 +22,36 @@ import com.powsybl.dynawaltz.models.loads.LoadAlphaBeta
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class LoadAlphaBetaGroovyExtension extends AbstractPowsyblDynawoGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+class LoadAlphaBetaGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+
+    private static final String LOADS = "loadsAlphaBeta"
 
     LoadAlphaBetaGroovyExtension() {
-        modelTags = ["LoadAlphaBeta"]
+        super(LOADS)
     }
 
     @Override
-    protected LoadAlphaBetaBuilder createBuilder(String currentTag) {
-        new LoadAlphaBetaBuilder()
+    protected LoadAlphaBetaBuilder createBuilder(Network network, EquipmentConfig equipmentConfig) {
+        new LoadAlphaBetaBuilder(network, equipmentConfig)
     }
 
-    static class LoadAlphaBetaBuilder extends AbstractDynamicModelBuilder {
+    static class LoadAlphaBetaBuilder extends AbstractLoadModelBuilder {
+
+        EquipmentConfig equipmentConfig;
+
+        LoadAlphaBetaBuilder(Network network, EquipmentConfig equipmentConfig) {
+            super(network)
+            this.equipmentConfig = equipmentConfig;
+        }
+
         @Override
         LoadAlphaBeta build() {
             checkData()
-            new LoadAlphaBeta(dynamicModelId, staticId, parameterSetId)
+            if (equipmentConfig.isControllable()) {
+                new LoadAlphaBetaControllable(dynamicModelId, load, parameterSetId, equipmentConfig.lib)
+            } else {
+                new LoadAlphaBeta(dynamicModelId, load, parameterSetId, equipmentConfig.lib)
+            }
         }
     }
 }

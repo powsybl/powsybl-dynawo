@@ -51,8 +51,6 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
     private static final String WORKING_DIR_PREFIX = "powsybl_dynawaltz_";
     private static final String OUTPUT_IIDM_FILENAME = "outputIIDM.xml";
 
-    private final PlatformConfig platformConfig;
-
     private final DynaWaltzConfig dynaWaltzConfig;
 
     public DynaWaltzProvider() {
@@ -60,11 +58,10 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
     }
 
     public DynaWaltzProvider(PlatformConfig platformConfig) {
-        this(platformConfig, DynaWaltzConfig.load(platformConfig));
+        this(DynaWaltzConfig.load(platformConfig));
     }
 
-    public DynaWaltzProvider(PlatformConfig platformConfig, DynaWaltzConfig dynawoConfig) {
-        this.platformConfig = Objects.requireNonNull(platformConfig);
+    public DynaWaltzProvider(DynaWaltzConfig dynawoConfig) {
         this.dynaWaltzConfig = Objects.requireNonNull(dynawoConfig);
     }
 
@@ -138,7 +135,7 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
                 .filter(BlackBoxModel.class::isInstance)
                 .map(BlackBoxModel.class::cast)
                 .collect(Collectors.toList());
-        DynaWaltzContext context = new DynaWaltzContext(network, workingVariantId, blackBoxModels, blackBoxEventModels, curvesSupplier.get(network), parameters, dynaWaltzParameters, platformConfig);
+        DynaWaltzContext context = new DynaWaltzContext(network, workingVariantId, blackBoxModels, blackBoxEventModels, curvesSupplier.get(network), parameters, dynaWaltzParameters);
         return computationManager.execute(execEnv, new DynaWaltzHandler(context));
     }
 
@@ -174,11 +171,13 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
             super.after(workingDir, report);
             context.getNetwork().getVariantManager().setWorkingVariant(context.getWorkingVariantId());
             boolean status = true;
-            Path outputNetworkFile = workingDir.resolve("outputs").resolve("finalState").resolve(OUTPUT_IIDM_FILENAME);
-            if (Files.exists(outputNetworkFile)) {
-                NetworkResultsUpdater.update(context.getNetwork(), NetworkXml.read(outputNetworkFile), context.getDynaWaltzParameters().isMergeLoads());
-            } else {
-                status = false;
+            if (context.getDynaWaltzParameters().isWriteFinalState()) {
+                Path outputNetworkFile = workingDir.resolve("outputs").resolve("finalState").resolve(OUTPUT_IIDM_FILENAME);
+                if (Files.exists(outputNetworkFile)) {
+                    NetworkResultsUpdater.update(context.getNetwork(), NetworkXml.read(outputNetworkFile), context.getDynaWaltzParameters().isMergeLoads());
+                } else {
+                    status = false;
+                }
             }
             Path curvesPath = workingDir.resolve(CURVES_OUTPUT_PATH).toAbsolutePath().resolve(CURVES_FILENAME);
             Map<String, TimeSeries> curves = new HashMap<>();

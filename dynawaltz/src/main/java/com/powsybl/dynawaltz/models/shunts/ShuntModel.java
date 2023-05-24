@@ -7,12 +7,12 @@
  */
 package com.powsybl.dynawaltz.models.shunts;
 
-import com.powsybl.dynawaltz.models.Model;
+import com.powsybl.dynawaltz.models.InjectionModel;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public interface ShuntModel extends Model {
+public interface ShuntModel extends InjectionModel {
     String getStateVarName();
 
     String getIsCapacitorVarName();

@@ -10,7 +10,7 @@ import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
-import com.powsybl.dynawaltz.models.events.DisconnectableEquipment;
+import com.powsybl.dynawaltz.models.InjectionModel;
 import com.powsybl.dynawaltz.models.generators.GeneratorFictitious;
 import com.powsybl.dynawaltz.models.generators.GeneratorSynchronousModel;
 import com.powsybl.dynawaltz.models.lines.LineModel;
@@ -48,7 +48,7 @@ class DynamicModelsXmlTest extends DynaWaltzTestUtil {
         dynamicModels.clear();
         network.getGeneratorStream().forEach(gen -> {
             if (gen.getId().equals("GEN6")) {
-                dynamicModels.add(new GeneratorFictitious("BBM_" + gen.getId(), gen.getId(), "GF"));
+                dynamicModels.add(new GeneratorFictitious("BBM_" + gen.getId(), gen, "GF"));
             }
         });
 
@@ -63,12 +63,12 @@ class DynamicModelsXmlTest extends DynaWaltzTestUtil {
         dynamicModels.clear();
         network.getGeneratorStream().forEach(gen -> {
             if (gen.getId().equals("GEN5") || gen.getId().equals("GEN6")) {
-                dynamicModels.add(new GeneratorFictitious("BBM_" + gen.getId(), "duplicateID", "GF"));
+                dynamicModels.add(new GeneratorFictitious("BBM_" + gen.getId(), network.getGenerator("GEN5"), "GF"));
             }
         });
         String workingVariantId = network.getVariantManager().getWorkingVariantId();
         Exception e = assertThrows(PowsyblException.class, () -> new DynaWaltzContext(network, workingVariantId, dynamicModels, eventModels, curves, null, null));
-        assertEquals("Duplicate staticId: duplicateID", e.getMessage());
+        assertEquals("Duplicate staticId: GEN5", e.getMessage());
     }
 
     @Test
@@ -77,7 +77,7 @@ class DynamicModelsXmlTest extends DynaWaltzTestUtil {
 
         // incorrect model
         Exception e = assertThrows(PowsyblException.class, () -> dc.getDynamicModel("GEN5", LineModel.class));
-        assertEquals("The model identified by the static id GEN5 is not the correct model", e.getMessage());
+        assertEquals("The model identified by the static id GEN5 does not match the expected model (LineModel)", e.getMessage());
 
         // default model not implemented
         e = assertThrows(PowsyblException.class, () -> dc.getDynamicModel("unknownID", GeneratorSynchronousModel.class));
@@ -91,16 +91,16 @@ class DynamicModelsXmlTest extends DynaWaltzTestUtil {
         // incorrect model
         Identifiable<?> gen = network.getIdentifiable("GEN5");
         Exception e = assertThrows(PowsyblException.class, () -> dc.getDynamicModel(gen, LineModel.class));
-        assertEquals("The model identified by the static id GEN5 is not the correct model", e.getMessage());
+        assertEquals("The model identified by the static id GEN5 does not match the expected model (LineModel)", e.getMessage());
 
         // dynamic model not found
         Identifiable<?> substation = network.getIdentifiable("P1");
-        e = assertThrows(PowsyblException.class, () -> dc.getDynamicModel(substation, DisconnectableEquipment.class));
+        e = assertThrows(PowsyblException.class, () -> dc.getDynamicModel(substation, InjectionModel.class));
         assertEquals("No dynamic model associated with SUBSTATION", e.getMessage());
 
         // requested interface not implemented
         Identifiable<?> transformer = network.getIdentifiable("NGEN_NHV1");
-        e = assertThrows(PowsyblException.class, () -> dc.getDynamicModel(transformer, DisconnectableEquipment.class));
-        assertEquals("Default model DefaultTransformerModel does not implement DisconnectableEquipment interface", e.getMessage());
+        e = assertThrows(PowsyblException.class, () -> dc.getDynamicModel(transformer, InjectionModel.class));
+        assertEquals("Default model DefaultTransformerModel does not implement InjectionModel interface", e.getMessage());
     }
 }
