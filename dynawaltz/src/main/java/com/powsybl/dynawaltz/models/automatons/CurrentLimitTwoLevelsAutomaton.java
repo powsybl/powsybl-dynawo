@@ -10,9 +10,11 @@ package com.powsybl.dynawaltz.models.automatons;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.VarConnection;
-import com.powsybl.iidm.network.*;
+import com.powsybl.iidm.network.Branch;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
@@ -25,19 +27,14 @@ public class CurrentLimitTwoLevelsAutomaton extends CurrentLimitAutomaton {
     private final Branch<?> secondMeasuredQuadripole;
     private final Side secondMeasuredSide;
 
-    public CurrentLimitTwoLevelsAutomaton(String dynamicModelId, String parameterSetId, Branch<?> measuredQuadripole, Side measuredSide, Branch<?> secondMeasuredQuadripole, Side secondMeasuredSide, Branch<?> controlledQuadripole) {
-        super(dynamicModelId, parameterSetId, measuredQuadripole, measuredSide, controlledQuadripole);
+    public CurrentLimitTwoLevelsAutomaton(String dynamicModelId, String parameterSetId, Branch<?> measuredQuadripole, Side measuredSide, Branch<?> secondMeasuredQuadripole, Side secondMeasuredSide, Branch<?> controlledQuadripole, String lib) {
+        super(dynamicModelId, parameterSetId, measuredQuadripole, measuredSide, controlledQuadripole, lib);
         this.secondMeasuredQuadripole = Objects.requireNonNull(secondMeasuredQuadripole);
         this.secondMeasuredSide = Objects.requireNonNull(secondMeasuredSide);
     }
 
-    public CurrentLimitTwoLevelsAutomaton(String dynamicModelId, String parameterSetId, Branch<?> measuredQuadripole, Side measuredSide, Branch<?> secondMeasuredQuadripole, Side secondMeasuredSide) {
-        this(dynamicModelId, parameterSetId, measuredQuadripole, measuredSide, secondMeasuredQuadripole, secondMeasuredSide, measuredQuadripole);
-    }
-
-    @Override
-    public String getLib() {
-        return "CurrentLimitAutomatonTwoLevels";
+    public CurrentLimitTwoLevelsAutomaton(String dynamicModelId, String parameterSetId, Branch<?> measuredQuadripole, Side measuredSide, Branch<?> secondMeasuredQuadripole, Side secondMeasuredSide, String lib) {
+        this(dynamicModelId, parameterSetId, measuredQuadripole, measuredSide, secondMeasuredQuadripole, secondMeasuredSide, measuredQuadripole, lib);
     }
 
     @Override

@@ -13,7 +13,6 @@ import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractPureDynamicGroovyExtension
 import com.powsybl.dynawaltz.models.Side
-import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton
 import com.powsybl.dynawaltz.models.automatons.CurrentLimitTwoLevelsAutomaton
 import com.powsybl.dynawaltz.models.utils.SideConverter
 import com.powsybl.iidm.network.Branch
@@ -25,13 +24,15 @@ import com.powsybl.iidm.network.Network
 @AutoService(DynamicModelGroovyExtension.class)
 class CurrentLimitTwoLevelsAutomatonGroovyExtension extends AbstractPureDynamicGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
+    private static final LIB = "CurrentLimitAutomatonTwoLevels"
+
     CurrentLimitTwoLevelsAutomatonGroovyExtension() {
-        modelTags = ["CurrentLimitAutomatonTwoLevels"]
+        modelTags = [LIB]
     }
 
     @Override
-    protected CurrentLimitAutomatonTwoLevelBuilder createBuilder(String currentTag, Network network) {
-        new CurrentLimitAutomatonTwoLevelBuilder(network)
+    protected CurrentLimitAutomatonTwoLevelBuilder createBuilder(Network network) {
+        new CurrentLimitAutomatonTwoLevelBuilder(network, LIB)
     }
 
     static class CurrentLimitAutomatonTwoLevelBuilder extends CurrentLimitAutomatonGroovyExtension.CurrentLimitAutomatonBuilder {
@@ -39,8 +40,8 @@ class CurrentLimitTwoLevelsAutomatonGroovyExtension extends AbstractPureDynamicG
         Branch<? extends Branch> equipment2
         Side side2
 
-        CurrentLimitAutomatonTwoLevelBuilder(Network network) {
-            super(network)
+        CurrentLimitAutomatonTwoLevelBuilder(Network network, String lib) {
+            super(network, lib)
         }
 
         void iMeasurement1(String staticId) {
@@ -78,10 +79,10 @@ class CurrentLimitTwoLevelsAutomatonGroovyExtension extends AbstractPureDynamicG
         CurrentLimitTwoLevelsAutomaton build() {
             checkData()
             if (!controlledEquipment) {
-                new CurrentLimitTwoLevelsAutomaton(dynamicModelId, parameterSetId, equipment, side, equipment2, side2)
+                new CurrentLimitTwoLevelsAutomaton(dynamicModelId, parameterSetId, equipment, side, equipment2, side2, lib)
 
             } else {
-                new CurrentLimitTwoLevelsAutomaton(dynamicModelId, parameterSetId, equipment, side, equipment2, side2, controlledEquipment)
+                new CurrentLimitTwoLevelsAutomaton(dynamicModelId, parameterSetId, equipment, side, equipment2, side2, controlledEquipment, lib)
             }
         }
     }

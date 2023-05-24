@@ -28,7 +28,7 @@ class CurrentLimitTwoLevelsModelXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void addDynamicModels() {
-        dynamicModels.add(new CurrentLimitTwoLevelsAutomaton("BBM_CLA_TWO_LEVELS", "cla", network.getLine("NHV1_NHV2_1"), Side.TWO, network.getLine("NHV1_NHV2_2"), Side.ONE, network.getTwoWindingsTransformer("NGEN_NHV1")));
+        dynamicModels.add(new CurrentLimitTwoLevelsAutomaton("BBM_CLA_TWO_LEVELS", "cla", network.getLine("NHV1_NHV2_1"), Side.TWO, network.getLine("NHV1_NHV2_2"), Side.ONE, network.getTwoWindingsTransformer("NGEN_NHV1"), "CurrentLimitAutomatonTwoLevels"));
     }
 
     @Test
