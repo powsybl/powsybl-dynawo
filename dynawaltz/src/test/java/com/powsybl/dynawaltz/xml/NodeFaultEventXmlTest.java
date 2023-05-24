@@ -36,5 +36,6 @@ class NodeFaultEventXmlTest extends AbstractDynamicModelXmlTest {
         ParametersXml.write(tmpDir, context);
         validate("dyd.xsd", "node_fault_dyd.xml", tmpDir.resolve(DynaWaltzConstants.DYD_FILENAME));
         validate("parameters.xsd", "node_fault_par.xml", tmpDir.resolve(context.getSimulationParFile()));
+        validate("parameters.xsd", "node_network_par.xml", tmpDir.resolve("network.par"));
     }
 }
