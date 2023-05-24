@@ -42,7 +42,7 @@ class StandardLineTest {
 
         List<BlackBoxModel> dynamicModels = new ArrayList<>();
         dynamicModels.add(new StandardLine("BBM_l", l, "SL"));
-        dynamicModels.add(new CurrentLimitAutomaton("BBM_CLA", "CLA", l, Side.ONE));
+        dynamicModels.add(new CurrentLimitAutomaton("BBM_CLA", "CLA", l, Side.ONE, "CurrentLimitAutomaton"));
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynaWaltzParameters dynawoParameters = DynaWaltzParameters.load();
         String workingVariantId = network.getVariantManager().getWorkingVariantId();

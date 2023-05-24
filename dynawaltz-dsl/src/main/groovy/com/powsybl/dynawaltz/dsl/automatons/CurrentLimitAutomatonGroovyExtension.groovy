@@ -1,11 +1,11 @@
-/*
+/**
  * Copyright (c) 2023, RTE (http://www.rte-france.com/)
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.dsl.models.automatons
+package com.powsybl.dynawaltz.dsl.automatons
 
 import com.google.auto.service.AutoService
 import com.powsybl.dsl.DslException
@@ -28,12 +28,16 @@ import com.powsybl.iidm.network.Network
 class CurrentLimitAutomatonGroovyExtension extends AbstractPureDynamicGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
     CurrentLimitAutomatonGroovyExtension() {
-        modelTags = ["CurrentLimitAutomaton"]
+        modelTags = [getLib()]
     }
 
     @Override
     protected CurrentLimitAutomatonBuilder createBuilder(Network network) {
-        new CurrentLimitAutomatonBuilder(network)
+        new CurrentLimitAutomatonBuilder(network, getLib())
+    }
+
+    protected String getLib() {
+        return "CurrentLimitAutomaton"
     }
 
     static class CurrentLimitAutomatonBuilder extends AbstractPureDynamicModelBuilder {
@@ -42,9 +46,11 @@ class CurrentLimitAutomatonGroovyExtension extends AbstractPureDynamicGroovyExte
         Branch<? extends Branch> equipment
         Side side
         Branch<? extends Branch> controlledEquipment
+        String lib
 
-        CurrentLimitAutomatonBuilder(Network network) {
+        CurrentLimitAutomatonBuilder(Network network, String lib) {
             this.network = network
+            this.lib = lib
         }
 
         void iMeasurement(String staticId) {
@@ -80,9 +86,9 @@ class CurrentLimitAutomatonGroovyExtension extends AbstractPureDynamicGroovyExte
         CurrentLimitAutomaton build() {
             checkData()
             if (!controlledEquipment) {
-                new CurrentLimitAutomaton(dynamicModelId, parameterSetId, equipment, side)
+                new CurrentLimitAutomaton(dynamicModelId, parameterSetId, equipment, side, lib)
             } else {
-                new CurrentLimitAutomaton(dynamicModelId, parameterSetId, equipment, side, controlledEquipment)
+                new CurrentLimitAutomaton(dynamicModelId, parameterSetId, equipment, side, controlledEquipment, lib)
             }
         }
     }
