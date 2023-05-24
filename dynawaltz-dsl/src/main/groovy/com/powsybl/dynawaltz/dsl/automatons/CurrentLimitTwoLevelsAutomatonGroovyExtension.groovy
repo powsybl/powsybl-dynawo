@@ -24,15 +24,17 @@ import com.powsybl.iidm.network.Network
 @AutoService(DynamicModelGroovyExtension.class)
 class CurrentLimitTwoLevelsAutomatonGroovyExtension extends AbstractPureDynamicGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
-    private static final LIB = "CurrentLimitAutomatonTwoLevels"
-
     CurrentLimitTwoLevelsAutomatonGroovyExtension() {
-        modelTags = [LIB]
+        modelTags = [getLib()]
+    }
+
+    protected String getLib() {
+        return "CurrentLimitAutomatonTwoLevels"
     }
 
     @Override
     protected CurrentLimitAutomatonTwoLevelBuilder createBuilder(Network network) {
-        new CurrentLimitAutomatonTwoLevelBuilder(network, LIB)
+        new CurrentLimitAutomatonTwoLevelBuilder(network, getLib())
     }
 
     static class CurrentLimitAutomatonTwoLevelBuilder extends CurrentLimitAutomatonGroovyExtension.CurrentLimitAutomatonBuilder {

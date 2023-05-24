@@ -16,11 +16,7 @@ import com.powsybl.dynamicsimulation.groovy.GroovyExtension;
 import com.powsybl.dynawaltz.DynaWaltzProvider;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.EquipmentBlackBoxModelModel;
-import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton;
-import com.powsybl.dynawaltz.models.automatons.CurrentLimitTwoLevelsAutomaton;
-import com.powsybl.dynawaltz.models.automatons.TapChangerAutomaton;
-import com.powsybl.dynawaltz.models.automatons.TapChangerBlockingAutomaton;
-import com.powsybl.dynawaltz.models.automatons.UnderVoltageAutomaton;
+import com.powsybl.dynawaltz.models.automatons.*;
 import com.powsybl.dynawaltz.models.automatons.phaseshifters.PhaseShifterIAutomaton;
 import com.powsybl.dynawaltz.models.automatons.phaseshifters.PhaseShifterPAutomaton;
 import com.powsybl.dynawaltz.models.buses.InfiniteBus;
@@ -117,7 +113,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
         );
     }
 
-    private static  Stream<Arguments> provideAutomatonModelData() {
+    private static Stream<Arguments> provideAutomatonModelData() {
         return Stream.of(
                 Arguments.of("currentLimit", CurrentLimitAutomaton.class, EurostagTutorialExample1Factory.create(), "AM_NHV1_NHV2_1", "CLA", "CurrentLimitAutomaton"),
                 Arguments.of("currentLimitTwoLevels", CurrentLimitTwoLevelsAutomaton.class, EurostagTutorialExample1Factory.create(), "AM_NHV1_NHV2_1", "CLA", "CurrentLimitAutomatonTwoLevels"),
