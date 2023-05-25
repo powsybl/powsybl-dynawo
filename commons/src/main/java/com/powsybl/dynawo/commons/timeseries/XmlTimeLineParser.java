@@ -1,10 +1,11 @@
 /**
- * Copyright (c) 2020, RTE (http://www.rte-france.com)
+ * Copyright (c) 2023, RTE (http://www.rte-france.com/)
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawo.timeseries;
+package com.powsybl.dynawo.commons.timeseries;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -12,9 +13,6 @@ import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -26,10 +24,13 @@ import javax.xml.stream.XMLStreamReader;
 
 import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
 import com.powsybl.commons.xml.XmlUtil;
-import com.powsybl.timeseries.TimeSeries;
+import com.powsybl.timeseries.StringTimeSeries;
 import com.powsybl.timeseries.TimeSeriesException;
 
+import static com.powsybl.dynawo.commons.timeseries.TimeSeriesConstants.*;
+
 /**
+ * @author Laurent Issertial <laurent.issertial at rte-france.com>
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 public final class XmlTimeLineParser {
@@ -37,7 +38,7 @@ public final class XmlTimeLineParser {
     private XmlTimeLineParser() {
     }
 
-    public static Map<String, TimeSeries> parseXml(Path timeLineFile) {
+    public static Map<String, StringTimeSeries> parseXml(Path timeLineFile) {
         Objects.requireNonNull(timeLineFile);
 
         try (Reader reader = Files.newBufferedReader(timeLineFile, StandardCharsets.UTF_8)) {
@@ -49,40 +50,41 @@ public final class XmlTimeLineParser {
         }
     }
 
-    public static Map<String, TimeSeries> parseXml(Reader reader) throws XMLStreamException {
+    public static Map<String, StringTimeSeries> parseXml(Reader reader) throws XMLStreamException {
 
-        Map<String, TimeSeries> timeLineSeries = new HashMap<>();
+        Map<String, StringTimeSeries> timeLineSeries;
         XMLInputFactory factory = XMLInputFactory.newInstance();
         factory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
         factory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
         XMLStreamReader xmlReader = null;
         try {
             xmlReader = factory.createXMLStreamReader(reader);
-            read(xmlReader, timeLineSeries);
+            timeLineSeries = read(xmlReader);
         } finally {
-            xmlReader.close();
+            if (xmlReader !=  null) {
+                xmlReader.close();
+            }
         }
         return timeLineSeries;
     }
 
-    private static void read(XMLStreamReader xmlReader, Map<String, TimeSeries> timeLineSeries) throws XMLStreamException {
-        List<String> names = Arrays.asList("modelName", "message");
-        ParsingContext context = new ParsingContext(names);
+    private static Map<String, StringTimeSeries> read(XMLStreamReader xmlReader) throws XMLStreamException {
+        TimeSeriesBuilder context = new TimeSeriesBuilder(VALUES);
         int state = xmlReader.next();
         while (state == XMLStreamConstants.COMMENT) {
             state = xmlReader.next();
         }
         XmlUtil.readUntilEndElement("timeline", xmlReader, () -> {
             if (xmlReader.getLocalName().equals("event")) {
-                String time = xmlReader.getAttributeValue(null, "time");
-                String modelName = xmlReader.getAttributeValue(null, "modelName");
-                String message = xmlReader.getAttributeValue(null, "message");
+                String time = xmlReader.getAttributeValue(null, TIME);
+                String modelName = xmlReader.getAttributeValue(null, MODEL_NAME);
+                String message = xmlReader.getAttributeValue(null, MESSAGE);
                 if (time == null || modelName == null || message == null) {
-                    throw new TimeSeriesException("Columns of line " + context.times.size() + " are inconsistent with header");
+                    throw new TimeSeriesException("Columns of line " + context.linesParsed() + " are inconsistent with header");
                 }
-                context.parseLine(Arrays.asList(time, modelName, message));
+                context.parseLine(time, modelName, message);
             }
         });
-        timeLineSeries.putAll(context.createTimeSeries());
+        return context.createTimeSeries();
     }
 }

@@ -57,6 +57,10 @@
             <groupId>com.powsybl</groupId>
             <artifactId>powsybl-tools</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.powsybl</groupId>
+            <artifactId>powsybl-time-series-api</artifactId>
+        </dependency>
 
         <!-- Test dependencies -->
         <dependency>
