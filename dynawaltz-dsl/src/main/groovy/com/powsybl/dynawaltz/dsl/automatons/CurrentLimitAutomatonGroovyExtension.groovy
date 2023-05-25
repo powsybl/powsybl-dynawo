@@ -78,7 +78,7 @@ class CurrentLimitAutomatonGroovyExtension extends AbstractPureDynamicGroovyExte
                 throw new DslException("'iMeasurement' field is not set")
             }
             if (!side) {
-                throw new DslException("'side' field is not set")
+                throw new DslException("'iMeasurementSide' field is not set")
             }
         }
 
