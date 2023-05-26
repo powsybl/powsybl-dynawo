@@ -18,7 +18,6 @@ import com.univocity.parsers.csv.CsvParserSettings;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.StringReader;
 import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -47,14 +46,6 @@ public final class CsvTimeLineParser {
         }
     }
 
-    public static Map<String, StringTimeSeries> parseCsv(String csv, char separator) {
-        try (BufferedReader reader = new BufferedReader(new StringReader(csv))) {
-            return parseCsv(reader, separator);
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
-    }
-
     static Map<String, StringTimeSeries> parseCsv(BufferedReader reader, char separator) {
         Objects.requireNonNull(reader);
         TimeSeriesCsvConfig timeSeriesCsvConfig = new TimeSeriesCsvConfig(separator, false, TimeSeries.TimeFormat.DATE_TIME);
@@ -65,16 +56,11 @@ public final class CsvTimeLineParser {
         settings.setMaxColumns(timeSeriesCsvConfig.getMaxColumns());
         CsvParser csvParser = new CsvParser(settings);
         ResultIterator<String[], com.univocity.parsers.common.ParsingContext> iterator = csvParser.iterate(reader).iterator();
-
-        try {
-            TimeSeriesBuilder context = new TimeSeriesBuilder(VALUES);
-            return read(iterator, context);
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
+        TimeSeriesBuilder context = new TimeSeriesBuilder(VALUES);
+        return read(iterator, context);
     }
 
-    static Map<String, StringTimeSeries> read(ResultIterator<String[], ParsingContext> iterator, TimeSeriesBuilder context) throws IOException {
+    static Map<String, StringTimeSeries> read(ResultIterator<String[], ParsingContext> iterator, TimeSeriesBuilder context) {
 
         while (iterator.hasNext()) {
             String[] tokens = iterator.next();

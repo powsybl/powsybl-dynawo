@@ -9,8 +9,9 @@ package com.powsybl.dynawo.commons;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URISyntaxException;
+import java.nio.file.Path;
 import java.util.Map;
 import java.util.Objects;
 
@@ -26,13 +27,13 @@ import org.junit.jupiter.api.Test;
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class XmlTimeLineParserTest {
+class XmlTimeLineParserTest {
 
     @Test
-    public void test() throws XMLStreamException {
+    void test() throws XMLStreamException {
 
-        InputStream xml = Objects.requireNonNull(getClass().getResourceAsStream("/timeline.xml"));
-        Map<String, StringTimeSeries> timeSeries = XmlTimeLineParser.parseXml(new InputStreamReader(xml));
+        InputStreamReader xml = new InputStreamReader(Objects.requireNonNull(getClass().getResourceAsStream("/timeline.xml")));
+        Map<String, StringTimeSeries> timeSeries = XmlTimeLineParser.parseXml(xml);
 
         assertEquals(2, timeSeries.size());
 
@@ -49,10 +50,16 @@ public class XmlTimeLineParserTest {
     }
 
     @Test
-    public void testInconsistentFile() {
+    void parseFromPath() throws URISyntaxException {
+        Path path = Path.of(Objects.requireNonNull(getClass().getResource("/timeline.xml")).toURI());
+        Map<String, StringTimeSeries> timeSeries = XmlTimeLineParser.parseXml(path);
+        assertEquals(2, timeSeries.size());
+    }
 
-        InputStream xml = Objects.requireNonNull(getClass().getResourceAsStream("/wrongTimeline.xml"));
-        Exception e = assertThrows(TimeSeriesException.class, () -> XmlTimeLineParser.parseXml(new InputStreamReader(xml)));
+    @Test
+    void testInconsistentFile() {
+        InputStreamReader xml = new InputStreamReader(Objects.requireNonNull(getClass().getResourceAsStream("/wrongTimeline.xml")));
+        Exception e = assertThrows(TimeSeriesException.class, () -> XmlTimeLineParser.parseXml(xml));
         assertEquals("Columns of line 1 are inconsistent with header", e.getMessage());
     }
 }

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!-- Dynawo timeline -->
 <timeline xmlns="http://www.rte-france.com/dynawo">
   <event time="0" modelName="GEN____8_SM" message="PMIN : activation"/>
   <event time="0.030691068513160655" modelName="GEN____3_SM" message="PMIN : activation"/>

@@ -11,7 +11,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.util.Map;
@@ -29,14 +28,14 @@ import org.junit.jupiter.params.provider.ValueSource;
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public class CsvTimeLineParserTest {
+class CsvTimeLineParserTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"/timeline.log", "/timelineWithQuotes.log"})
-    public void testTimeline(String fileName) throws URISyntaxException {
+    void testTimeline(String fileName) throws URISyntaxException {
 
-        URI uri = Objects.requireNonNull(getClass().getResource(fileName)).toURI();
-        Map<String, StringTimeSeries> timeSeries = CsvTimeLineParser.parseCsv(Path.of(uri), '|');
+        Path path = Path.of(Objects.requireNonNull(getClass().getResource(fileName)).toURI());
+        Map<String, StringTimeSeries> timeSeries = CsvTimeLineParser.parseCsv(path);
 
         assertEquals(2, timeSeries.size());
 
@@ -53,9 +52,9 @@ public class CsvTimeLineParserTest {
     }
 
     @Test
-    public void testInconsistentFile() throws URISyntaxException {
-        URI uri = Objects.requireNonNull(getClass().getResource("/wrongTimeline.log")).toURI();
-        Exception e = assertThrows(TimeSeriesException.class, () -> CsvTimeLineParser.parseCsv(Path.of(uri), '|'));
+    void testInconsistentFile() throws URISyntaxException {
+        Path path = Path.of(Objects.requireNonNull(getClass().getResource("/wrongTimeline.log")).toURI());
+        Exception e = assertThrows(TimeSeriesException.class, () -> CsvTimeLineParser.parseCsv(path, '|'));
         assertEquals("Columns of line 1 are inconsistent with header", e.getMessage());
     }
 }
