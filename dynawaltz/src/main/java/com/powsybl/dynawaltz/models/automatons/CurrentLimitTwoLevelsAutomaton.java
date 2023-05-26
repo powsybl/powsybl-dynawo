@@ -33,10 +33,6 @@ public class CurrentLimitTwoLevelsAutomaton extends CurrentLimitAutomaton {
         this.secondMeasuredSide = Objects.requireNonNull(secondMeasuredSide);
     }
 
-    public CurrentLimitTwoLevelsAutomaton(String dynamicModelId, String parameterSetId, Branch<?> measuredQuadripole, Side measuredSide, Branch<?> secondMeasuredQuadripole, Side secondMeasuredSide, String lib) {
-        this(dynamicModelId, parameterSetId, measuredQuadripole, measuredSide, secondMeasuredQuadripole, secondMeasuredSide, measuredQuadripole, lib);
-    }
-
     @Override
     public void createMacroConnections(DynaWaltzContext context) {
         createMacroConnections(measuredQuadripole, QuadripoleModel.class, this::getVarConnectionsWithMeasuredQuadripole, context, FIRST_MEASURE_SUFFIX + measuredSide.getSideSuffix());

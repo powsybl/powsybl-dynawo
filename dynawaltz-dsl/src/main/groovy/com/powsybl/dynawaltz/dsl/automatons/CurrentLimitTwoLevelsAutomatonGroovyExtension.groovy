@@ -65,7 +65,6 @@ class CurrentLimitTwoLevelsAutomatonGroovyExtension extends AbstractPureDynamicG
             this.side2 = SideConverter.convert(side)
         }
 
-
         @Override
         void checkData() {
             super.checkData()
@@ -80,12 +79,7 @@ class CurrentLimitTwoLevelsAutomatonGroovyExtension extends AbstractPureDynamicG
         @Override
         CurrentLimitTwoLevelsAutomaton build() {
             checkData()
-            if (!controlledEquipment) {
-                new CurrentLimitTwoLevelsAutomaton(dynamicModelId, parameterSetId, equipment, side, equipment2, side2, lib)
-
-            } else {
-                new CurrentLimitTwoLevelsAutomaton(dynamicModelId, parameterSetId, equipment, side, equipment2, side2, controlledEquipment, lib)
-            }
+            new CurrentLimitTwoLevelsAutomaton(dynamicModelId, parameterSetId, equipment, side, equipment2, side2, controlledEquipment, lib)
         }
     }
 }

@@ -80,16 +80,15 @@ class CurrentLimitAutomatonGroovyExtension extends AbstractPureDynamicGroovyExte
             if (!side) {
                 throw new DslException("'iMeasurementSide' field is not set")
             }
+            if (!controlledEquipment) {
+                throw new DslException("'controlledEquipment' field is not set")
+            }
         }
 
         @Override
         CurrentLimitAutomaton build() {
             checkData()
-            if (!controlledEquipment) {
-                new CurrentLimitAutomaton(dynamicModelId, parameterSetId, equipment, side, lib)
-            } else {
-                new CurrentLimitAutomaton(dynamicModelId, parameterSetId, equipment, side, controlledEquipment, lib)
-            }
+            new CurrentLimitAutomaton(dynamicModelId, parameterSetId, equipment, side, controlledEquipment, lib)
         }
     }
 }
