@@ -31,13 +31,13 @@ class CurrentLimitAutomatonGroovyExtension extends AbstractPureDynamicGroovyExte
         modelTags = [getLib()]
     }
 
-    protected String getLib() {
-        return "CurrentLimitAutomaton"
-    }
-
     @Override
     protected CurrentLimitAutomatonBuilder createBuilder(Network network) {
         new CurrentLimitAutomatonBuilder(network, getLib())
+    }
+
+    protected String getLib() {
+        return "CurrentLimitAutomaton"
     }
 
     static class CurrentLimitAutomatonBuilder extends AbstractPureDynamicModelBuilder {
