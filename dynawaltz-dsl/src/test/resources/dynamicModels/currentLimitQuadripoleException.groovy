@@ -5,14 +5,14 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.models.events;
 
-import com.powsybl.dynawaltz.models.Model;
+package dynamicModels
 
-/**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
- */
-public interface QuadripoleDisconnectableEquipment extends Model {
+import com.powsybl.iidm.network.Branch
 
-    String getDisconnectableVarName();
+CurrentLimitAutomaton {
+    dynamicModelId "CLA_NGEN"
+    parameterSetId "CLA"
+    iMeasurement "NGEN"
+    iMeasurementSide Branch.Side.TWO
 }
