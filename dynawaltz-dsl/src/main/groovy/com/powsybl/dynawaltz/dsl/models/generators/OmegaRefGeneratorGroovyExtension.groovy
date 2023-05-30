@@ -37,22 +37,13 @@ class OmegaRefGeneratorGroovyExtension extends AbstractEquipmentGroovyExtension<
         new OmegaRefGeneratorBuilder(network, equipmentConfig)
     }
 
-    static class OmegaRefGeneratorBuilder extends AbstractDynamicModelBuilder {
+    static class OmegaRefGeneratorBuilder extends AbstractGeneratorBuilder {
 
-        Generator generator
         EquipmentConfig equipmentConfig
 
         OmegaRefGeneratorBuilder(Network network, EquipmentConfig equipmentConfig) {
-            super(network, )
+            super(network)
             this.equipmentConfig = equipmentConfig
-        }
-
-        void checkData() {
-            super.checkData()
-            generator = network.getGenerator(staticId)
-            if (generator == null) {
-                throw new DslException("Generator static id unknown: " + staticId)
-            }
         }
 
         @Override

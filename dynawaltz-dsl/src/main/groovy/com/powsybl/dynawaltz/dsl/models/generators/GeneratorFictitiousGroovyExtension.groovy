@@ -31,20 +31,10 @@ class GeneratorFictitiousGroovyExtension extends AbstractSimpleEquipmentGroovyEx
         new GeneratorFictitiousBuilder(network)
     }
 
-    static class GeneratorFictitiousBuilder extends AbstractDynamicModelBuilder {
-
-        Generator generator
+    static class GeneratorFictitiousBuilder extends AbstractGeneratorBuilder {
 
         GeneratorFictitiousBuilder(Network network) {
             super(network)
-        }
-
-        void checkData() {
-            super.checkData()
-            generator = network.getGenerator(staticId)
-            if (generator == null) {
-                throw new DslException("Generator static id unknown: " + staticId)
-            }
         }
 
         @Override

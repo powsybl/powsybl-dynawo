@@ -13,7 +13,6 @@ import com.powsybl.iidm.network.Branch
 CurrentLimitAutomaton {
     dynamicModelId "CLA_NGEN"
     parameterSetId "CLA"
-    controlledQuadripole "NHV1_NHV2_2"
-    iMeasurement "NGEN"
+    iMeasurement "NHV1_NHV2_1"
     iMeasurementSide Branch.Side.TWO
 }

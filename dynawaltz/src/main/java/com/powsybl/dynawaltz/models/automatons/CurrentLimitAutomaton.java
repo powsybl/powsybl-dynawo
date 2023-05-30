@@ -22,13 +22,13 @@ import java.util.Objects;
  */
 public class CurrentLimitAutomaton extends AbstractPureDynamicBlackBoxModel {
 
-    private static final String MEASURE_SUFFIX = "Measure";
-    private static final String CONTROL_SUFFIX = "Control";
+    protected static final String MEASURE_SUFFIX = "Measure";
+    protected static final String CONTROL_SUFFIX = "Control";
 
-    private final Branch<?> measuredQuadripole;
-    private final Side measuredSide;
-    private final Branch<?> controlledQuadripole;
-    private final String lib;
+    protected final Branch<?> measuredQuadripole;
+    protected final Side measuredSide;
+    protected final Branch<?> controlledQuadripole;
+    protected final String lib;
 
     public CurrentLimitAutomaton(String dynamicModelId, String parameterSetId, Branch<?> measuredQuadripole, Side measuredSide, Branch<?> controlledQuadripole, String lib) {
         super(dynamicModelId, parameterSetId);
@@ -53,14 +53,14 @@ public class CurrentLimitAutomaton extends AbstractPureDynamicBlackBoxModel {
         createMacroConnections(controlledQuadripole, QuadripoleModel.class, this::getVarConnectionsWithControlledQuadripole, context, CONTROL_SUFFIX);
     }
 
-    private List<VarConnection> getVarConnectionsWithMeasuredQuadripole(QuadripoleModel connected) {
+    protected List<VarConnection> getVarConnectionsWithMeasuredQuadripole(QuadripoleModel connected) {
         return Arrays.asList(
                 new VarConnection("currentLimitAutomaton_IMonitored", connected.getIVarName(measuredSide)),
                 new VarConnection("currentLimitAutomaton_AutomatonExists", connected.getDeactivateCurrentLimitsVarName())
         );
     }
 
-    private List<VarConnection> getVarConnectionsWithControlledQuadripole(QuadripoleModel connected) {
+    protected List<VarConnection> getVarConnectionsWithControlledQuadripole(QuadripoleModel connected) {
         return List.of(new VarConnection("currentLimitAutomaton_order", connected.getStateVarName()));
     }
 }

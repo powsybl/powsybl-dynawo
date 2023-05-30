@@ -7,7 +7,8 @@
  */
 package com.powsybl.dynawaltz.xml;
 
-import com.powsybl.dynawaltz.models.events.NodeFaultEvent;
+import com.powsybl.dynawaltz.models.Side;
+import com.powsybl.dynawaltz.models.automatons.CurrentLimitTwoLevelsAutomaton;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
@@ -18,7 +19,7 @@ import java.io.IOException;
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-class NodeFaultEventXmlTest extends AbstractDynamicModelXmlTest {
+class CurrentLimitTwoLevelsModelXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void setupNetwork() {
@@ -27,15 +28,12 @@ class NodeFaultEventXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void addDynamicModels() {
-        eventModels.add(new NodeFaultEvent(network.getBusBreakerView().getBus("NGEN"), 10, 0.1, 0, 0.01));
+        dynamicModels.add(new CurrentLimitTwoLevelsAutomaton("BBM_CLA_TWO_LEVELS", "cla", network.getLine("NHV1_NHV2_1"), Side.TWO, network.getLine("NHV1_NHV2_2"), Side.ONE, network.getTwoWindingsTransformer("NGEN_NHV1"), "CurrentLimitAutomatonTwoLevels"));
     }
 
     @Test
     void writeModel() throws SAXException, IOException, XMLStreamException {
         DydXml.write(tmpDir, context);
-        ParametersXml.write(tmpDir, context);
-        validate("dyd.xsd", "node_fault_dyd.xml", tmpDir.resolve(DynaWaltzConstants.DYD_FILENAME));
-        validate("parameters.xsd", "node_fault_par.xml", tmpDir.resolve(context.getSimulationParFile()));
-        validate("parameters.xsd", "node_network_par.xml", tmpDir.resolve("network.par"));
+        validate("dyd.xsd", "cla_tl_dyd.xml", tmpDir.resolve(DynaWaltzConstants.DYD_FILENAME));
     }
 }

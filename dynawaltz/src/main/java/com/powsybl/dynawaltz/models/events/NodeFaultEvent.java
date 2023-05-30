@@ -18,6 +18,8 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.util.List;
 
+import static com.powsybl.dynawaltz.parameters.ParameterType.BOOL;
+
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
@@ -48,6 +50,12 @@ public class NodeFaultEvent extends AbstractEventModel {
 
     private List<VarConnection> getVarConnectionsWithBus(BusModel connected) {
         return List.of(new VarConnection("fault_terminal", connected.getTerminalVarName()));
+    }
+
+    @Override
+    public void writeParameters(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
+        super.writeParameters(writer, context);
+        context.getDynaWaltzParameters().getNetworkParameters().addParameter(getEquipment().getId() + "_hasShortCircuitCapabilities", BOOL, Boolean.toString(true));
     }
 
     @Override
