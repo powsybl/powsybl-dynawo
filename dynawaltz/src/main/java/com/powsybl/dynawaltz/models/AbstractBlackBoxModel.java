@@ -96,6 +96,11 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel {
         createMacroConnections(connectedModel, varConnectionsSupplier.apply(connectedModel), context, connectFromAttributes);
     }
 
+    protected final <T extends Model> void createMacroConnections(Identifiable<?> equipment, Class<T> modelClass, Function<T, List<VarConnection>> varConnectionsSupplier, DynaWaltzContext context, MacroConnectAttribute... connectFromAttributes) {
+        T connectedModel = context.getDynamicModel(equipment, modelClass);
+        createMacroConnections(connectedModel, varConnectionsSupplier.apply(connectedModel), context, connectFromAttributes);
+    }
+
     protected <T extends Model> void createMacroConnections(Identifiable<?> equipment, Class<T> modelClass, Function<T, List<VarConnection>> varConnectionsSupplier, DynaWaltzContext context) {
         T connectedModel = context.getDynamicModel(equipment, modelClass);
         String macroConnectorId = context.addMacroConnector(getName(), connectedModel.getName(), varConnectionsSupplier.apply(connectedModel));
@@ -130,5 +135,12 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel {
         T connectedModel = context.getPureDynamicModel(dynamicId, modelClass);
         String macroConnectorId = context.addMacroConnector(getName(), connectedModel.getName(), varConnectionsSupplier.apply(connectedModel));
         context.addMacroConnect(macroConnectorId, getMacroConnectFromAttributes(), connectedModel.getMacroConnectToAttributes());
+    }
+
+    protected final <T extends Model> void createMacroConnections(Identifiable<?> equipment, Class<T> modelClass, BiFunction<T, String, List<VarConnection>> varConnectionsSupplier, DynaWaltzContext context, String parametrizedName, MacroConnectAttribute... connectFromAttributes) {
+        T connectedModel = context.getDynamicModel(equipment, modelClass);
+        String macroConnectorId = context.addMacroConnector(getName(), connectedModel.getName(), parametrizedName, varConnectionsSupplier.apply(connectedModel, parametrizedName));
+        List<MacroConnectAttribute> fromAttributes = Stream.concat(getMacroConnectFromAttributes().stream(), Arrays.stream(connectFromAttributes)).collect(Collectors.toList());
+        context.addMacroConnect(macroConnectorId, fromAttributes, connectedModel.getMacroConnectToAttributes());
     }
 }
