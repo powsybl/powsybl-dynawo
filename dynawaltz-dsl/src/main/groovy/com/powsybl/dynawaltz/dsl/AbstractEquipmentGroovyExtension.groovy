@@ -29,10 +29,7 @@ abstract class AbstractEquipmentGroovyExtension<T> {
     protected AbstractEquipmentGroovyExtension(String modelTag, URL modelConfigUrl) {
         ConfigSlurper config = new ConfigSlurper()
         equipmentConfigs = config.parse(modelConfigUrl).get(modelTag).collect {
-            def lib = it.key
-            (it.value.containsKey(MODELS_PROPERTIES))
-                    ? new EquipmentConfig(lib, it.value.get(MODELS_PROPERTIES).collect{it.toUpperCase() as EnumEquipmentProperty})
-                    : new EquipmentConfig(lib)
+            new EquipmentConfig(it.key as String, it.value.get(MODELS_PROPERTIES).collect{it.toUpperCase()} as String[])
         }
     }
 
