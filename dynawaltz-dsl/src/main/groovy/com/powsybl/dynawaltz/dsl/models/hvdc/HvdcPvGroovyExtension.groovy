@@ -28,6 +28,10 @@ class HvdcPvGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicMode
         super(HVDC_PV)
     }
 
+    protected HvdcPvGroovyExtension(URL config) {
+        super(HVDC_PV, config)
+    }
+
     @Override
     protected HvdcBuilder createBuilder(Network network, EquipmentConfig equipmentConfig) {
         new HvdcBuilder(network, equipmentConfig)

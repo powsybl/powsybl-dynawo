@@ -30,27 +30,22 @@ class GeneratorSynchronousGroovyExtension extends AbstractEquipmentGroovyExtensi
         super(SYNCHRONOUS_GENERATORS)
     }
 
+    protected GeneratorSynchronousGroovyExtension(URL config) {
+        super(SYNCHRONOUS_GENERATORS, config)
+    }
+
     @Override
     protected GeneratorSynchronousBuilder createBuilder(Network network, EquipmentConfig equipmentConfig) {
         new GeneratorSynchronousBuilder(network, equipmentConfig)
     }
 
-    static class GeneratorSynchronousBuilder extends AbstractDynamicModelBuilder {
+    static class GeneratorSynchronousBuilder extends AbstractGeneratorBuilder {
 
-        Generator generator
         EquipmentConfig equipmentConfig
 
         GeneratorSynchronousBuilder(Network network, EquipmentConfig equipmentConfig) {
             super(network)
             this.equipmentConfig = equipmentConfig
-        }
-
-        void checkData() {
-            super.checkData()
-            generator = network.getGenerator(staticId)
-            if (generator == null) {
-                throw new DslException("Generator static id unknown: " + staticId)
-            }
         }
 
         @Override
