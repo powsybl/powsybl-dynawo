@@ -30,6 +30,10 @@ class GeneratorSynchronousGroovyExtension extends AbstractEquipmentGroovyExtensi
         super(SYNCHRONOUS_GENERATORS)
     }
 
+    protected GeneratorSynchronousGroovyExtension(URL config) {
+        super(SYNCHRONOUS_GENERATORS, config)
+    }
+
     @Override
     protected GeneratorSynchronousBuilder createBuilder(Network network, EquipmentConfig equipmentConfig) {
         new GeneratorSynchronousBuilder(network, equipmentConfig)
