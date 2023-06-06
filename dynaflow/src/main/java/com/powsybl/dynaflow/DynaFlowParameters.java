@@ -101,7 +101,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
             new Parameter(STOP_TIME, ParameterType.DOUBLE, "Stop time", 100d),
             new Parameter(PRECISION_NAME, ParameterType.DOUBLE, "Precision", Double.NaN),
             new Parameter(Sa.TIME_OF_EVENT, ParameterType.DOUBLE, "Time of event", 10d),
-            new Parameter(CHOSEN_OUTPUTS, ParameterType.STRING_LIST, "Chosen outputs", Collections.emptyList(), getEnumPossibleValues(OutputTypes.class), ParameterScope.TECHNICAL),
+            new Parameter(CHOSEN_OUTPUTS, ParameterType.STRING_LIST, "Chosen outputs", List.of(OutputTypes.TIMELINE.name()), getEnumPossibleValues(OutputTypes.class), ParameterScope.TECHNICAL),
             new Parameter(TIME_STEP, ParameterType.DOUBLE, "Time step", 10d),
             new Parameter(STARTING_POINT_MODE, ParameterType.STRING, "Starting point mode", StartingPointMode.WARM.name(), getEnumPossibleValues(StartingPointMode.class)),
             new Parameter(MERGE_LOADS, ParameterType.BOOLEAN, "Merge loads connected to same bus", Boolean.TRUE));
@@ -117,7 +117,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
     private Double stopTime = null;
     private Double precision = null;
     private Sa securityAnalysis = null;
-    private List<String> chosenOutputs = null;
+    private List<String> chosenOutputs = List.of(OutputTypes.TIMELINE.name());
     private Double timeStep = null;
     private StartingPointMode startingPointMode = null;
     private boolean mergeLoads = true;

@@ -20,6 +20,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -44,6 +45,10 @@ public final class CsvTimeLineParser implements TimeLineParser {
     }
 
     public static List<TimelineEntry> parse(Path file, char separator) {
+        if (!Files.exists(file)) {
+            return Collections.emptyList();
+        }
+
         try (BufferedReader reader = Files.newBufferedReader(file, StandardCharsets.UTF_8)) {
             return parse(reader, separator);
         } catch (IOException e) {

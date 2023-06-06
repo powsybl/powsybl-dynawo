@@ -22,6 +22,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -37,6 +38,9 @@ public final class XmlTimeLineParser implements TimeLineParser {
 
     public List<TimelineEntry> parse(Path timeLineFile) {
         Objects.requireNonNull(timeLineFile);
+        if (!Files.exists(timeLineFile)) {
+            return Collections.emptyList();
+        }
 
         try (Reader reader = Files.newBufferedReader(timeLineFile, StandardCharsets.UTF_8)) {
             return parse(reader);
