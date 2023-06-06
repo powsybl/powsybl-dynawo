@@ -82,7 +82,6 @@ for (Load load : network.loads) {
 for (Generator gen : network.generators) {
     GeneratorSynchronousThreeWindingsProportionalRegulations {
         staticId gen.id
-        dynamicModelId "BBM_" + gen.id
         parameterSetId "GSTWPR"
     }
 }
@@ -91,6 +90,7 @@ for (Line line : network.lines) {
     CurrentLimitAutomaton {
         dynamicModelId "BBM_" + line.id
         parameterSetId "CLA"
+        controlledQuadripole line.id
         iMeasurement line.id
         iMeasurementSide Branch.Side.TWO
     }
