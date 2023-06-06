@@ -24,12 +24,7 @@ import java.util.List;
 public class StandardLine extends AbstractEquipmentBlackBoxModel<Line> implements LineModel {
 
     public StandardLine(String dynamicModelId, Line line, String parameterSetId) {
-        super(dynamicModelId, parameterSetId, line);
-    }
-
-    @Override
-    public String getLib() {
-        return "Line";
+        super(dynamicModelId, parameterSetId, line, "Line");
     }
 
     private List<VarConnection> getVarConnectionsWith(BusModel connected, Side side) {

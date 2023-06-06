@@ -16,24 +16,21 @@ import com.powsybl.dynawaltz.models.utils.BusUtils;
 import com.powsybl.iidm.network.Generator;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 public class Wecc extends AbstractEquipmentBlackBoxModel<Generator> {
 
-    private final String weccLib;
     private final List<VarMapping> varsMapping;
     protected final String weccPrefix;
 
-    public Wecc(String dynamicModelId, Generator generator, String parameterSetId, String weccLib) {
-        super(dynamicModelId, parameterSetId, generator);
-        this.weccLib = Objects.requireNonNull(weccLib);
+    public Wecc(String dynamicModelId, Generator generator, String parameterSetId, String lib) {
+        super(dynamicModelId, parameterSetId, generator, lib);
         //TODO refactor ?
-        weccPrefix = weccLib.length() > 1 && Character.isUpperCase(weccLib.charAt(1))
-                ? weccLib.substring(0, weccLib.indexOf("Wecc"))
-                : weccLib.substring(0, weccLib.indexOf("Wecc")).toLowerCase();
+        weccPrefix = lib.length() > 1 && Character.isUpperCase(lib.charAt(1))
+                ? lib.substring(0, lib.indexOf("Wecc"))
+                : lib.substring(0, lib.indexOf("Wecc")).toLowerCase();
         varsMapping = List.of(
                 new VarMapping(weccPrefix + "_measurements_PPuSnRef", "p"),
                 new VarMapping(weccPrefix + "_measurements_QPuSnRef", "q"),
@@ -47,11 +44,6 @@ public class Wecc extends AbstractEquipmentBlackBoxModel<Generator> {
 
     private List<VarConnection> getVarConnectionsWith(BusModel connected) {
         return List.of(new VarConnection(weccPrefix + "_terminal", connected.getTerminalVarName()));
-    }
-
-    @Override
-    public String getLib() {
-        return weccLib;
     }
 
     @Override
