@@ -18,18 +18,30 @@ import java.util.function.Consumer
 abstract class AbstractEquipmentGroovyExtension<T> {
 
     protected static final String MODELS_CONFIG = "models.cfg"
+    protected static final String MODELS_PROPERTIES = "properties"
 
-    protected List<String> modelTags
+    protected final List<EquipmentConfig> equipmentConfigs
 
-    abstract protected ModelBuilder<T> createBuilder(Network network, String currentTag);
+    AbstractEquipmentGroovyExtension(String modelTag) {
+        this(modelTag, AbstractEquipmentGroovyExtension.class.getClassLoader().getResource(MODELS_CONFIG))
+    }
+
+    protected AbstractEquipmentGroovyExtension(String modelTag, URL modelConfigUrl) {
+        ConfigSlurper config = new ConfigSlurper()
+        equipmentConfigs = config.parse(modelConfigUrl).get(modelTag).collect {
+            new EquipmentConfig(it.key as String, it.value.get(MODELS_PROPERTIES).collect{it.toUpperCase()} as String[])
+        }
+    }
+
+    abstract protected ModelBuilder<T> createBuilder(Network network, EquipmentConfig equipmentConfig);
 
     String getName() {
         return DynaWaltzProvider.NAME
     }
 
     void load(Binding binding, Consumer<T> consumer) {
-        modelTags.forEach {
-            binding.setVariable(it, { Closure<Void> closure ->
+        equipmentConfigs.forEach {
+            binding.setVariable(it.lib, { Closure<Void> closure ->
                 def cloned = closure.clone()
                 ModelBuilder<T> builder = createBuilder(binding.getVariable("network") as Network, it)
                 cloned.delegate = builder

@@ -10,6 +10,10 @@ import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.models.*;
+import com.powsybl.dynawaltz.models.buses.InfiniteBus;
+import com.powsybl.dynawaltz.models.frequencysynchronizers.FrequencySynchronizerModel;
+import com.powsybl.dynawaltz.models.frequencysynchronizers.OmegaRef;
+import com.powsybl.dynawaltz.models.frequencysynchronizers.SetPoint;
 import com.powsybl.dynawaltz.models.generators.OmegaRefGeneratorModel;
 import com.powsybl.dynawaltz.xml.MacroStaticReference;
 import com.powsybl.iidm.network.Identifiable;
@@ -40,8 +44,7 @@ public class DynaWaltzContext {
     private final List<MacroConnect> macroConnectList = new ArrayList<>();
     private final Map<String, MacroConnector> macroConnectorsMap = new LinkedHashMap<>();
     private final NetworkModel networkModel = new NetworkModel();
-
-    private final OmegaRef omegaRef;
+    private final FrequencySynchronizerModel frequencySynchronizer;
 
     public DynaWaltzContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
                             List<Curve> curves, DynamicSimulationParameters parameters, DynaWaltzParameters dynaWaltzParameters) {
@@ -56,10 +59,7 @@ public class DynaWaltzContext {
         this.curves = Objects.requireNonNull(curves);
         this.parameters = Objects.requireNonNull(parameters);
         this.dynaWaltzParameters = Objects.requireNonNull(dynaWaltzParameters);
-        this.omegaRef = new OmegaRef(dynamicModels.stream()
-                .filter(OmegaRefGeneratorModel.class::isInstance)
-                .map(OmegaRefGeneratorModel.class::cast)
-                .collect(Collectors.toList()));
+        this.frequencySynchronizer = setupFrequencySynchronizer(dynamicModels.stream().anyMatch(InfiniteBus.class::isInstance) ? SetPoint::new : OmegaRef::new);
 
         for (BlackBoxModel bbm : getBlackBoxDynamicModelStream().collect(Collectors.toList())) {
             macroStaticReferences.computeIfAbsent(bbm.getName(), k -> new MacroStaticReference(k, bbm.getVarsMapping()));
@@ -69,6 +69,13 @@ public class DynaWaltzContext {
         for (BlackBoxModel bbem : eventModels) {
             bbem.createMacroConnections(this);
         }
+    }
+
+    private FrequencySynchronizerModel setupFrequencySynchronizer(Function<List<OmegaRefGeneratorModel>, FrequencySynchronizerModel> fsConstructor) {
+        return fsConstructor.apply(dynamicModels.stream()
+                .filter(OmegaRefGeneratorModel.class::isInstance)
+                .map(OmegaRefGeneratorModel.class::cast)
+                .collect(Collectors.toList()));
     }
 
     public Network getNetwork() {
@@ -188,16 +195,20 @@ public class DynaWaltzContext {
         return !staticIdBlackBoxModelMap.containsKey(staticId);
     }
 
+    public boolean isWithoutBlackBoxDynamicModel(Identifiable<?> equipment) {
+        return !staticIdBlackBoxModelMap.containsKey(equipment.getId());
+    }
+
     private Stream<BlackBoxModel> getInputBlackBoxDynamicModelStream() {
         //Doesn't include the OmegaRef, it only concerns the DynamicModels provided by the user
         return dynamicModels.stream();
     }
 
     public Stream<BlackBoxModel> getBlackBoxDynamicModelStream() {
-        if (omegaRef.isEmpty()) {
+        if (frequencySynchronizer.isEmpty()) {
             return getInputBlackBoxDynamicModelStream();
         }
-        return Stream.concat(getInputBlackBoxDynamicModelStream(), Stream.of(omegaRef));
+        return Stream.concat(getInputBlackBoxDynamicModelStream(), Stream.of(frequencySynchronizer));
     }
 
     public List<BlackBoxModel> getBlackBoxDynamicModels() {

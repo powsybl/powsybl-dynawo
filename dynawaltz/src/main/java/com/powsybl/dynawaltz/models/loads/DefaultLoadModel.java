@@ -7,13 +7,13 @@
  */
 package com.powsybl.dynawaltz.models.loads;
 
-import com.powsybl.dynawaltz.models.AbstractNetworkModel;
-import com.powsybl.dynawaltz.models.events.DisconnectableEquipment;
+import com.powsybl.dynawaltz.models.AbstractInjectionNetworkModel;
+import com.powsybl.dynawaltz.models.events.ControllableEquipment;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class DefaultLoadModel extends AbstractNetworkModel implements LoadModel, DisconnectableEquipment {
+public class DefaultLoadModel extends AbstractInjectionNetworkModel implements LoadModel, ControllableEquipment {
 
     public DefaultLoadModel(String staticId) {
         super(staticId);
@@ -24,12 +24,8 @@ public class DefaultLoadModel extends AbstractNetworkModel implements LoadModel,
         return "NetworkLoad";
     }
 
-    public String getStateValueVarName() {
-        return "@NAME@_state_value";
-    }
-
     @Override
-    public String getDisconnectableVarName() {
-        return getStateValueVarName();
+    public String getDeltaPVarName() {
+        return "@NAME@_DeltaPc";
     }
 }

@@ -12,8 +12,8 @@ import com.powsybl.dynawaltz.DynaWaltzCurve;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton;
-import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection;
 import com.powsybl.dynawaltz.models.events.EventInjectionDisconnection;
+import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection;
 import com.powsybl.dynawaltz.models.generators.GeneratorFictitious;
 import com.powsybl.dynawaltz.models.generators.GeneratorSynchronous;
 import com.powsybl.dynawaltz.models.generators.OmegaRefGenerator;
@@ -74,7 +74,7 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
             if (l.getId().equals("LOAD2")) {
                 dynamicModels.add(new LoadOneTransformer("BBM_" + l.getId(), l, "LOT"));
             } else {
-                dynamicModels.add(new LoadAlphaBeta("BBM_" + l.getId(), l, "LAB"));
+                dynamicModels.add(new LoadAlphaBeta("BBM_" + l.getId(), l, "LAB", "LoadAlphaBeta"));
             }
         });
         network.getGeneratorStream().forEach(g -> {
@@ -107,7 +107,7 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
 
         // Automatons
         network.getLineStream().filter(line -> line != standardLine)
-                .forEach(l -> dynamicModels.add(new CurrentLimitAutomaton("BBM_" + l.getId(), l.getId(), "CLA", Side.ONE)));
+                .forEach(l -> dynamicModels.add(new CurrentLimitAutomaton("BBM_" + l.getId(), "CLA", l, Side.ONE, "CurrentLimitAutomaton")));
     }
 
     public void validate(String schemaDefinition, String expectedResourceName, Path xmlFile) throws SAXException, IOException {

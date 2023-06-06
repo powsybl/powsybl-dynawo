@@ -34,16 +34,18 @@ for (Generator gen : network.generators) {
 }
 
 CurrentLimitAutomaton {
-    staticId "_BUS____2-BUS____4-1_AC"
     dynamicModelId "CLA_2_4"
     parameterSetId "CLA_2_4"
-    side Branch.Side.TWO
+    controlledQuadripole "_BUS____2-BUS____4-1_AC"
+    iMeasurement "_BUS____2-BUS____4-1_AC"
+    iMeasurementSide Branch.Side.TWO
 }
 
 CurrentLimitAutomaton {
-    staticId "_BUS____2-BUS____5-1_AC"
     dynamicModelId "CLA_2_5"
     parameterSetId "CLA_2_5"
-    side Branch.Side.TWO
+    controlledQuadripole "_BUS____2-BUS____5-1_AC"
+    iMeasurement "_BUS____2-BUS____5-1_AC"
+    iMeasurementSide Branch.Side.TWO
 }
 

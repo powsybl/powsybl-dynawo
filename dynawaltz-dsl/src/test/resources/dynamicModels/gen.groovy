@@ -8,7 +8,7 @@
 
 package dynamicModels
 
-GeneratorSynchronousFourWindingsProportionalRegulations {
+GeneratorSynchronousThreeWindings {
     staticId "GEN"
     dynamicModelId "BBM_GEN"
     parameterSetId "GSFWPR"

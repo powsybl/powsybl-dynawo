@@ -12,6 +12,7 @@ import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
+import com.powsybl.dynawaltz.dsl.EquipmentConfig
 import com.powsybl.dynawaltz.dsl.models.builders.AbstractDynamicModelBuilder
 import com.powsybl.dynawaltz.models.transformers.TransformerFixedRatio
 import com.powsybl.iidm.network.Network
@@ -23,23 +24,25 @@ import com.powsybl.iidm.network.TwoWindingsTransformer
 @AutoService(DynamicModelGroovyExtension.class)
 class TransformerFixedRatioGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
+    private static final String TRANSFORMERS = "transformers"
+
     TransformerFixedRatioGroovyExtension() {
-        modelTags = ["TransformerFixedRatio"]
+        super(TRANSFORMERS)
     }
 
     @Override
-    protected TransformerBuilder createBuilder(Network network, String currentTag) {
-        new TransformerBuilder(network, currentTag)
+    protected TransformerBuilder createBuilder(Network network, EquipmentConfig equipmentConfig) {
+        new TransformerBuilder(network, equipmentConfig)
     }
 
     static class TransformerBuilder extends AbstractDynamicModelBuilder {
 
         TwoWindingsTransformer transformer
-        String tag
+        EquipmentConfig equipmentConfig
 
-        TransformerBuilder(Network network, String tag) {
+        TransformerBuilder(Network network, EquipmentConfig equipmentConfig) {
             super(network)
-            this.tag = tag
+            this.equipmentConfig = equipmentConfig
         }
 
         void checkData() {
@@ -53,7 +56,7 @@ class TransformerFixedRatioGroovyExtension extends AbstractEquipmentGroovyExtens
         @Override
         TransformerFixedRatio build() {
             checkData()
-            new TransformerFixedRatio(dynamicModelId, transformer, parameterSetId, tag)
+            new TransformerFixedRatio(dynamicModelId, transformer, parameterSetId, equipmentConfig.lib)
         }
     }
 }

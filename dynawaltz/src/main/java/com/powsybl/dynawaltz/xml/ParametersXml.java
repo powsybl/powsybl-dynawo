@@ -157,14 +157,14 @@ public final class ParametersXml {
     public static void write(Path workingDir, DynaWaltzContext context) throws IOException, XMLStreamException {
         Objects.requireNonNull(workingDir);
 
+        // Write parameterSet that needs to be generated (OmegaRef...)
+        Path file = workingDir.resolve(context.getSimulationParFile());
+        XmlUtil.write(file, context, PARAMETERS_SET_ELEMENT_NAME, ParametersXml::write);
+
         DynaWaltzParameters parameters = context.getDynaWaltzParameters();
         write(parameters.getModelParameters(), DynaWaltzParameters.MODELS_OUTPUT_PARAMETERS_FILE, workingDir);
         write(List.of(parameters.getNetworkParameters()), DynaWaltzParameters.NETWORK_OUTPUT_PARAMETERS_FILE, workingDir);
         write(List.of(parameters.getSolverParameters()), DynaWaltzParameters.SOLVER_OUTPUT_PARAMETERS_FILE, workingDir);
-
-        // Write parameterSet that needs to be generated (OmegaRef...)
-        Path file = workingDir.resolve(context.getSimulationParFile());
-        XmlUtil.write(file, context, PARAMETERS_SET_ELEMENT_NAME, ParametersXml::write);
     }
 
     private static void write(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {

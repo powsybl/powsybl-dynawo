@@ -10,7 +10,7 @@ import com.google.auto.service.AutoService
 import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
-import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
+import com.powsybl.dynawaltz.dsl.AbstractSimpleEquipmentGroovyExtension
 import com.powsybl.dynawaltz.dsl.models.builders.AbstractDynamicModelBuilder
 import com.powsybl.dynawaltz.models.generators.GeneratorFictitious
 import com.powsybl.iidm.network.Generator
@@ -20,31 +20,21 @@ import com.powsybl.iidm.network.Network
  * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class GeneratorFictitiousGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+class GeneratorFictitiousGroovyExtension extends AbstractSimpleEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
     GeneratorFictitiousGroovyExtension() {
-        modelTags = ["GeneratorFictitious"]
+        modelTag = "GeneratorFictitious"
     }
 
     @Override
-    protected GeneratorFictitiousBuilder createBuilder(Network network, String currentTag) {
+    protected GeneratorFictitiousBuilder createBuilder(Network network) {
         new GeneratorFictitiousBuilder(network)
     }
 
-    static class GeneratorFictitiousBuilder extends AbstractDynamicModelBuilder {
-
-        Generator generator
+    static class GeneratorFictitiousBuilder extends AbstractGeneratorBuilder {
 
         GeneratorFictitiousBuilder(Network network) {
             super(network)
-        }
-
-        void checkData() {
-            super.checkData()
-            generator = network.getGenerator(staticId)
-            if (generator == null) {
-                throw new DslException("Generator static id unknown: " + staticId)
-            }
         }
 
         @Override

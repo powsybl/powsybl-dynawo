@@ -1,11 +1,11 @@
-/*
+/**
  * Copyright (c) 2023, RTE (http://www.rte-france.com/)
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.dsl.models.automatons
+package com.powsybl.dynawaltz.dsl.automatons
 
 import com.google.auto.service.AutoService
 import com.powsybl.dsl.DslException
@@ -28,42 +28,67 @@ import com.powsybl.iidm.network.Network
 class CurrentLimitAutomatonGroovyExtension extends AbstractPureDynamicGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
     CurrentLimitAutomatonGroovyExtension() {
-        modelTags = ["CurrentLimitAutomaton"]
+        modelTags = [getLib()]
     }
 
     @Override
     protected CurrentLimitAutomatonBuilder createBuilder(Network network) {
-        new CurrentLimitAutomatonBuilder()
+        new CurrentLimitAutomatonBuilder(network, getLib())
+    }
+
+    protected String getLib() {
+        return "CurrentLimitAutomaton"
     }
 
     static class CurrentLimitAutomatonBuilder extends AbstractPureDynamicModelBuilder {
 
-        String lineStaticId
+        Network network
+        Branch<? extends Branch> equipment
         Side side
+        Branch<? extends Branch> controlledEquipment
+        String lib
 
-        void staticId(String staticId) {
-            this.lineStaticId = staticId
+        CurrentLimitAutomatonBuilder(Network network, String lib) {
+            this.network = network
+            this.lib = lib
         }
 
-        void side(Branch.Side side) {
+        void iMeasurement(String staticId) {
+            equipment = network.getBranch(staticId)
+            if (equipment == null) {
+                throw new DslException("Equipment ${staticId} is not a quadripole")
+            }
+        }
+
+        void iMeasurementSide(Branch.Side side) {
             this.side = SideConverter.convert(side)
+        }
+
+        void controlledQuadripole(String staticId) {
+            controlledEquipment = network.getBranch(staticId)
+            if (controlledEquipment == null) {
+                throw new DslException("Controlled equipment ${staticId} is not a quadripole")
+            }
         }
 
         @Override
         void checkData() {
             super.checkData()
-            if (!side) {
-                throw new DslException("'side' field is not set")
+            if (!equipment) {
+                throw new DslException("'iMeasurement' field is not set")
             }
-            if (!dynamicModelId) {
-                dynamicModelId = lineStaticId
+            if (!side) {
+                throw new DslException("'iMeasurementSide' field is not set")
+            }
+            if (!controlledEquipment) {
+                throw new DslException("'controlledEquipment' field is not set")
             }
         }
 
         @Override
         CurrentLimitAutomaton build() {
             checkData()
-            new CurrentLimitAutomaton(dynamicModelId, lineStaticId, parameterSetId, side)
+            new CurrentLimitAutomaton(dynamicModelId, parameterSetId, equipment, side, controlledEquipment, lib)
         }
     }
 }

@@ -50,7 +50,7 @@
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="CLA_2_4" lib="CurrentLimitAutomaton" parFile="models.par" parId="CLA_2_4"/>
     <dyn:blackBoxModel id="CLA_2_5" lib="CurrentLimitAutomaton" parFile="models.par" parId="CLA_2_5"/>
-    <dyn:blackBoxModel id="OMEGA_REF" lib="DYNModelOmegaRef" parFile="ieee14bus.par" parId="OMEGA_REF"/>
+    <dyn:blackBoxModel id="FREQ_SYNC" lib="DYNModelOmegaRef" parFile="ieee14bus.par" parId="FREQ_SYNC_PAR"/>
     <dyn:blackBoxModel id="Disconnect__BUS____1-BUS____5-1_AC" lib="EventQuadripoleDisconnection" parFile="ieee14bus.par" parId="Disconnect__BUS____1-BUS____5-1_AC"/>
     <dyn:macroConnector id="MC_LoadAlphaBeta-NetworkBus">
         <dyn:connect var1="load_terminal" var2="@NAME@_ACPIN"/>
@@ -64,10 +64,12 @@
         <dyn:connect var1="generator_terminal" var2="@NAME@_ACPIN"/>
         <dyn:connect var1="generator_switchOffSignal1" var2="@NAME@_switchOff"/>
     </dyn:macroConnector>
-    <dyn:macroConnector id="MC_CurrentLimitAutomatonSide2-NetworkLine">
+    <dyn:macroConnector id="MC_CurrentLimitAutomatonMeasureSide2-NetworkLine">
         <dyn:connect var1="currentLimitAutomaton_IMonitored" var2="@NAME@_iSide2"/>
-        <dyn:connect var1="currentLimitAutomaton_order" var2="@NAME@_state"/>
         <dyn:connect var1="currentLimitAutomaton_AutomatonExists" var2="@NAME@_desactivate_currentLimits"/>
+    </dyn:macroConnector>
+    <dyn:macroConnector id="MC_CurrentLimitAutomatonControl-NetworkLine">
+        <dyn:connect var1="currentLimitAutomaton_order" var2="@NAME@_state"/>
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_DYNModelOmegaRef-GeneratorSynchronousFourWindingsProportionalRegulations">
         <dyn:connect var1="omega_grp_@INDEX@" var2="generator_omegaPu"/>
@@ -116,17 +118,19 @@
     <dyn:macroConnect connector="MC_GeneratorSynchronousFourWindingsProportionalRegulations-NetworkBus" id1="_GEN____3_SM" id2="NETWORK" name2="_BUS____3_TN"/>
     <dyn:macroConnect connector="MC_GeneratorSynchronousThreeWindingsProportionalRegulations-NetworkBus" id1="_GEN____6_SM" id2="NETWORK" name2="_BUS____6_TN"/>
     <dyn:macroConnect connector="MC_GeneratorSynchronousThreeWindingsProportionalRegulations-NetworkBus" id1="_GEN____8_SM" id2="NETWORK" name2="_BUS____8_TN"/>
-    <dyn:macroConnect connector="MC_CurrentLimitAutomatonSide2-NetworkLine" id1="CLA_2_4" id2="NETWORK" name2="_BUS____2-BUS____4-1_AC"/>
-    <dyn:macroConnect connector="MC_CurrentLimitAutomatonSide2-NetworkLine" id1="CLA_2_5" id2="NETWORK" name2="_BUS____2-BUS____5-1_AC"/>
-    <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorSynchronousFourWindingsProportionalRegulations" id1="OMEGA_REF" index1="0" id2="_GEN____1_SM"/>
-    <dyn:macroConnect connector="MC_DYNModelOmegaRef-NetworkBus" id1="OMEGA_REF" index1="0" id2="NETWORK" name2="_BUS____1_TN"/>
-    <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorSynchronousFourWindingsProportionalRegulations" id1="OMEGA_REF" index1="1" id2="_GEN____2_SM"/>
-    <dyn:macroConnect connector="MC_DYNModelOmegaRef-NetworkBus" id1="OMEGA_REF" index1="1" id2="NETWORK" name2="_BUS____2_TN"/>
-    <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorSynchronousFourWindingsProportionalRegulations" id1="OMEGA_REF" index1="2" id2="_GEN____3_SM"/>
-    <dyn:macroConnect connector="MC_DYNModelOmegaRef-NetworkBus" id1="OMEGA_REF" index1="2" id2="NETWORK" name2="_BUS____3_TN"/>
-    <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorSynchronousThreeWindingsProportionalRegulations" id1="OMEGA_REF" index1="3" id2="_GEN____6_SM"/>
-    <dyn:macroConnect connector="MC_DYNModelOmegaRef-NetworkBus" id1="OMEGA_REF" index1="3" id2="NETWORK" name2="_BUS____6_TN"/>
-    <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorSynchronousThreeWindingsProportionalRegulations" id1="OMEGA_REF" index1="4" id2="_GEN____8_SM"/>
-    <dyn:macroConnect connector="MC_DYNModelOmegaRef-NetworkBus" id1="OMEGA_REF" index1="4" id2="NETWORK" name2="_BUS____8_TN"/>
+    <dyn:macroConnect connector="MC_CurrentLimitAutomatonMeasureSide2-NetworkLine" id1="CLA_2_4" id2="NETWORK" name2="_BUS____2-BUS____4-1_AC"/>
+    <dyn:macroConnect connector="MC_CurrentLimitAutomatonControl-NetworkLine" id1="CLA_2_4" id2="NETWORK" name2="_BUS____2-BUS____4-1_AC"/>
+    <dyn:macroConnect connector="MC_CurrentLimitAutomatonMeasureSide2-NetworkLine" id1="CLA_2_5" id2="NETWORK" name2="_BUS____2-BUS____5-1_AC"/>
+    <dyn:macroConnect connector="MC_CurrentLimitAutomatonControl-NetworkLine" id1="CLA_2_5" id2="NETWORK" name2="_BUS____2-BUS____5-1_AC"/>
+    <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorSynchronousFourWindingsProportionalRegulations" id1="FREQ_SYNC" index1="0" id2="_GEN____1_SM"/>
+    <dyn:macroConnect connector="MC_DYNModelOmegaRef-NetworkBus" id1="FREQ_SYNC" index1="0" id2="NETWORK" name2="_BUS____1_TN"/>
+    <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorSynchronousFourWindingsProportionalRegulations" id1="FREQ_SYNC" index1="1" id2="_GEN____2_SM"/>
+    <dyn:macroConnect connector="MC_DYNModelOmegaRef-NetworkBus" id1="FREQ_SYNC" index1="1" id2="NETWORK" name2="_BUS____2_TN"/>
+    <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorSynchronousFourWindingsProportionalRegulations" id1="FREQ_SYNC" index1="2" id2="_GEN____3_SM"/>
+    <dyn:macroConnect connector="MC_DYNModelOmegaRef-NetworkBus" id1="FREQ_SYNC" index1="2" id2="NETWORK" name2="_BUS____3_TN"/>
+    <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorSynchronousThreeWindingsProportionalRegulations" id1="FREQ_SYNC" index1="3" id2="_GEN____6_SM"/>
+    <dyn:macroConnect connector="MC_DYNModelOmegaRef-NetworkBus" id1="FREQ_SYNC" index1="3" id2="NETWORK" name2="_BUS____6_TN"/>
+    <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorSynchronousThreeWindingsProportionalRegulations" id1="FREQ_SYNC" index1="4" id2="_GEN____8_SM"/>
+    <dyn:macroConnect connector="MC_DYNModelOmegaRef-NetworkBus" id1="FREQ_SYNC" index1="4" id2="NETWORK" name2="_BUS____8_TN"/>
     <dyn:macroConnect connector="MC_EventQuadripoleDisconnection-NetworkLine" id1="Disconnect__BUS____1-BUS____5-1_AC" id2="NETWORK" name2="_BUS____1-BUS____5-1_AC"/>
 </dyn:dynamicModelsArchitecture>

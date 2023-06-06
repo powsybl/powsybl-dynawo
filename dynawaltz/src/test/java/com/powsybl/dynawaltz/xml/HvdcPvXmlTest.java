@@ -7,7 +7,7 @@
  */
 package com.powsybl.dynawaltz.xml;
 
-import com.powsybl.dynawaltz.models.hvdc.HvdcModel;
+import com.powsybl.dynawaltz.models.hvdc.HvdcPv;
 import com.powsybl.iidm.network.test.HvdcTestNetwork;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
@@ -18,7 +18,7 @@ import java.io.IOException;
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-class HvdcModelXmlTest extends AbstractDynamicModelXmlTest {
+class HvdcPvXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void setupNetwork() {
@@ -27,7 +27,7 @@ class HvdcModelXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void addDynamicModels() {
-        network.getHvdcLineStream().forEach(hvdc -> dynamicModels.add(new HvdcModel("BBM_" + hvdc.getId(), hvdc, "hv", "HvdcPV")));
+        network.getHvdcLineStream().forEach(hvdc -> dynamicModels.add(new HvdcPv("BBM_" + hvdc.getId(), hvdc, "hv", "HvdcPV")));
     }
 
     @Test
