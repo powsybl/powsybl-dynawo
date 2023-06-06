@@ -12,8 +12,6 @@ import com.univocity.parsers.common.ParsingContext;
 import com.univocity.parsers.common.ResultIterator;
 import com.univocity.parsers.csv.CsvParser;
 import com.univocity.parsers.csv.CsvParserSettings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -25,31 +23,35 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static com.powsybl.dynawo.commons.timeline.TimeSeriesConstants.NB_COLUMNS;
-
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public final class CsvTimeLineParser {
+public final class CsvTimeLineParser implements TimeLineParser {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CsvTimeLineParser.class);
+    private static final int NB_COLUMNS = 3;
+    private final char separator;
 
-    private CsvTimeLineParser() {
+    public CsvTimeLineParser() {
+        this('|');
     }
 
-    public static List<Event> parseCsv(Path file) {
-        return parseCsv(file, '|');
+    public CsvTimeLineParser(char separator) {
+        this.separator = separator;
     }
 
-    public static List<Event> parseCsv(Path file, char separator) {
+    public List<Event> parse(Path file) {
+        return parse(file, separator);
+    }
+
+    public static List<Event> parse(Path file, char separator) {
         try (BufferedReader reader = Files.newBufferedReader(file, StandardCharsets.UTF_8)) {
-            return parseCsv(reader, separator);
+            return parse(reader, separator);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
     }
 
-    static List<Event> parseCsv(BufferedReader reader, char separator) {
+    static List<Event> parse(BufferedReader reader, char separator) {
         Objects.requireNonNull(reader);
         CsvParserSettings settings = new CsvParserSettings();
         settings.getFormat().setDelimiter(separator);
@@ -62,7 +64,7 @@ public final class CsvTimeLineParser {
     }
 
     static List<Event> read(ResultIterator<String[], ParsingContext> iterator) {
-        List<Event> timeLineSeries = new ArrayList<>();
+        List<Event> timeline = new ArrayList<>();
         int iLine = 0;
         while (iterator.hasNext()) {
             iLine++;
@@ -70,20 +72,10 @@ public final class CsvTimeLineParser {
             if (tokens.length != NB_COLUMNS) {
                 throw new PowsyblException("Columns of line " + iLine + " are inconsistent");
             }
-            String time = tokens[0];
-            String modelName = tokens[1];
-            String message = tokens[2];
-            if (time == null || modelName == null || message == null) {
-                LOGGER.warn("Inconsistent event entry (time: '{}', modelName: '{}', message: '{}')", time, modelName, message);
-            } else {
-                try {
-                    double timeD = Double.parseDouble(time);
-                    timeLineSeries.add(new Event(timeD, modelName, message));
-                } catch (NumberFormatException e) {
-                    LOGGER.warn("Inconsistent time entry '{}'", time);
-                }
-            }
+            TimeLineUtil.createEvent(tokens[0], tokens[1], tokens[2])
+                    .ifPresent(timeline::add);
         }
-        return timeLineSeries;
+        return timeline;
     }
+
 }

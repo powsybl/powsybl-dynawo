@@ -9,8 +9,6 @@ package com.powsybl.dynawo.commons.timeline;
 
 import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
 import com.powsybl.commons.xml.XmlUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.xml.XMLConstants;
 import javax.xml.stream.XMLInputFactory;
@@ -27,24 +25,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static com.powsybl.dynawo.commons.timeline.TimeSeriesConstants.*;
-
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
-public final class XmlTimeLineParser {
+public final class XmlTimeLineParser implements TimeLineParser {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(XmlTimeLineParser.class);
+    private static final String TIME = "time";
+    private static final String MODEL_NAME = "modelName";
+    private static final String MESSAGE = "message";
 
-    private XmlTimeLineParser() {
-    }
-
-    public static List<Event> parseXml(Path timeLineFile) {
+    public List<Event> parse(Path timeLineFile) {
         Objects.requireNonNull(timeLineFile);
 
         try (Reader reader = Files.newBufferedReader(timeLineFile, StandardCharsets.UTF_8)) {
-            return parseXml(reader);
+            return parse(reader);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         } catch (XMLStreamException e) {
@@ -52,7 +47,7 @@ public final class XmlTimeLineParser {
         }
     }
 
-    public static List<Event> parseXml(Reader reader) throws XMLStreamException {
+    public static List<Event> parse(Reader reader) throws XMLStreamException {
 
         List<Event> timeLineSeries;
         XMLInputFactory factory = XMLInputFactory.newInstance();
@@ -81,16 +76,8 @@ public final class XmlTimeLineParser {
                 String time = xmlReader.getAttributeValue(null, TIME);
                 String modelName = xmlReader.getAttributeValue(null, MODEL_NAME);
                 String message = xmlReader.getAttributeValue(null, MESSAGE);
-                if (time == null || modelName == null || message == null) {
-                    LOGGER.warn("Inconsistent event entry (time: '{}', modelName: '{}', message: '{}')", time, modelName, message);
-                } else {
-                    try {
-                        double timeD = Double.parseDouble(time);
-                        timeline.add(new Event(timeD, modelName, message));
-                    } catch (NumberFormatException e) {
-                        LOGGER.warn("Inconsistent time entry '{}'", time);
-                    }
-                }
+                TimeLineUtil.createEvent(time, modelName, message)
+                        .ifPresent(timeline::add);
             }
         });
         return timeline;

@@ -8,8 +8,6 @@
 package com.powsybl.dynawo.commons.timeline;
 
 import com.powsybl.commons.PowsyblException;
-import com.powsybl.dynawo.commons.timeline.CsvTimeLineParser;
-import com.powsybl.dynawo.commons.timeline.Event;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -33,7 +31,7 @@ class CsvTimeLineParserTest {
     void testTimeline(String fileName) throws URISyntaxException {
 
         Path path = Path.of(Objects.requireNonNull(getClass().getResource(fileName)).toURI());
-        List<Event> timeline = CsvTimeLineParser.parseCsv(path);
+        List<Event> timeline = new CsvTimeLineParser().parse(path);
 
         assertEquals(5, timeline.size());
         assertEquals("PMIN : activation", timeline.get(0).getMessage());
@@ -53,7 +51,7 @@ class CsvTimeLineParserTest {
     @Test
     void testInconsistentFile() throws URISyntaxException {
         Path path = Path.of(Objects.requireNonNull(getClass().getResource("/wrongTimeline.log")).toURI());
-        Exception e = assertThrows(PowsyblException.class, () -> CsvTimeLineParser.parseCsv(path, '|'));
+        Exception e = assertThrows(PowsyblException.class, () -> CsvTimeLineParser.parse(path, '|'));
         assertEquals("Columns of line 2 are inconsistent", e.getMessage());
     }
 }
