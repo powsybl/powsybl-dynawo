@@ -6,6 +6,7 @@
  */
 package com.powsybl.dynawaltz.models.generators;
 
+import com.powsybl.dynawaltz.DynaWaltzParameters;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.iidm.network.Generator;
 
@@ -15,7 +16,7 @@ import java.util.List;
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  */
-public class SynchronousGenerator extends SynchronizedGenerator implements SynchronousGeneratorModel {
+public class SynchronousGenerator extends SynchronizedGenerator {
 
     public SynchronousGenerator(String dynamicModelId, Generator generator, String parameterSetId, String generatorLib) {
         super(dynamicModelId, generator, parameterSetId, generatorLib);
@@ -32,5 +33,12 @@ public class SynchronousGenerator extends SynchronizedGenerator implements Synch
                 new VarConnection("omegaRef_grp_@INDEX@", getOmegaRefPuVarName()),
                 new VarConnection("running_grp_@INDEX@", getRunningVarName())
         );
+    }
+
+    @Override
+    public double getWeightGen(DynaWaltzParameters dynaWaltzParameters) {
+        double h = dynaWaltzParameters.getModelParameters(getParameterSetId()).getDouble("generator_H");
+        double sNom = dynaWaltzParameters.getModelParameters(getParameterSetId()).getDouble("generator_SNom");
+        return h * sNom;
     }
 }

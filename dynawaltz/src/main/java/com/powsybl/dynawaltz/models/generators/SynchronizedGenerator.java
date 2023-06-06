@@ -8,6 +8,7 @@
 package com.powsybl.dynawaltz.models.generators;
 
 import com.powsybl.dynawaltz.models.VarConnection;
+import com.powsybl.dynawaltz.models.frequencysynchronizers.FrequencySynchronizedModel;
 import com.powsybl.iidm.network.Generator;
 
 import java.util.List;
@@ -18,7 +19,7 @@ import static com.powsybl.dynawaltz.models.utils.BusUtils.getConnectableBusStati
  * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class SynchronizedGenerator extends AbstractGeneratorModel implements SynchronizedGeneratorModel {
+public class SynchronizedGenerator extends AbstractGeneratorModel implements FrequencySynchronizedModel {
 
     public SynchronizedGenerator(String dynamicModelId, Generator generator, String parameterSetId, String generatorLib) {
         super(dynamicModelId, generator, parameterSetId, generatorLib);
@@ -45,7 +46,7 @@ public class SynchronizedGenerator extends AbstractGeneratorModel implements Syn
     }
 
     @Override
-    public String getConnectableBusId() {
+    public String getConnectedBusId() {
         return getConnectableBusStaticId(equipment);
     }
 }

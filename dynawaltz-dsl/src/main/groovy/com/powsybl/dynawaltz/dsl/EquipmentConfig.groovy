@@ -4,6 +4,7 @@ package com.powsybl.dynawaltz.dsl
 class EquipmentConfig {
 
     static final String CONTROLLABLE_PROPERTY = "CONTROLLABLE"
+    static final String SYNCHRONIZED_PROPERTY = "SYNCHRONIZED"
 
     String lib
     List<String> properties
@@ -20,6 +21,10 @@ class EquipmentConfig {
 
     boolean isControllable() {
         properties.contains(CONTROLLABLE_PROPERTY)
+    }
+
+    boolean isSynchronized() {
+        properties.contains(SYNCHRONIZED_PROPERTY)
     }
 
     boolean hasProperty(String property) {
