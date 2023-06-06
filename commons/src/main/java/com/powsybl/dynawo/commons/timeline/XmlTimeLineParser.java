@@ -35,7 +35,7 @@ public final class XmlTimeLineParser implements TimeLineParser {
     private static final String MODEL_NAME = "modelName";
     private static final String MESSAGE = "message";
 
-    public List<Event> parse(Path timeLineFile) {
+    public List<TimelineEntry> parse(Path timeLineFile) {
         Objects.requireNonNull(timeLineFile);
 
         try (Reader reader = Files.newBufferedReader(timeLineFile, StandardCharsets.UTF_8)) {
@@ -47,9 +47,9 @@ public final class XmlTimeLineParser implements TimeLineParser {
         }
     }
 
-    public static List<Event> parse(Reader reader) throws XMLStreamException {
+    public static List<TimelineEntry> parse(Reader reader) throws XMLStreamException {
 
-        List<Event> timeLineSeries;
+        List<TimelineEntry> timeLineSeries;
         XMLInputFactory factory = XMLInputFactory.newInstance();
         factory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
         factory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
@@ -65,8 +65,8 @@ public final class XmlTimeLineParser implements TimeLineParser {
         return timeLineSeries;
     }
 
-    private static List<Event> read(XMLStreamReader xmlReader) throws XMLStreamException {
-        List<Event> timeline = new ArrayList<>();
+    private static List<TimelineEntry> read(XMLStreamReader xmlReader) throws XMLStreamException {
+        List<TimelineEntry> timeline = new ArrayList<>();
         int state = xmlReader.next();
         while (state == XMLStreamConstants.COMMENT) {
             state = xmlReader.next();

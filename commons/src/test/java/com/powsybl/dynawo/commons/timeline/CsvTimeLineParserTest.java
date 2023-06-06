@@ -31,7 +31,7 @@ class CsvTimeLineParserTest {
     void testTimeline(String fileName) throws URISyntaxException {
 
         Path path = Path.of(Objects.requireNonNull(getClass().getResource(fileName)).toURI());
-        List<Event> timeline = new CsvTimeLineParser().parse(path);
+        List<TimelineEntry> timeline = new CsvTimeLineParser().parse(path);
 
         assertEquals(5, timeline.size());
         assertEquals("PMIN : activation", timeline.get(0).getMessage());

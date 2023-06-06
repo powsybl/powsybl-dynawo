@@ -39,11 +39,11 @@ public final class CsvTimeLineParser implements TimeLineParser {
         this.separator = separator;
     }
 
-    public List<Event> parse(Path file) {
+    public List<TimelineEntry> parse(Path file) {
         return parse(file, separator);
     }
 
-    public static List<Event> parse(Path file, char separator) {
+    public static List<TimelineEntry> parse(Path file, char separator) {
         try (BufferedReader reader = Files.newBufferedReader(file, StandardCharsets.UTF_8)) {
             return parse(reader, separator);
         } catch (IOException e) {
@@ -51,7 +51,7 @@ public final class CsvTimeLineParser implements TimeLineParser {
         }
     }
 
-    static List<Event> parse(BufferedReader reader, char separator) {
+    static List<TimelineEntry> parse(BufferedReader reader, char separator) {
         Objects.requireNonNull(reader);
         CsvParserSettings settings = new CsvParserSettings();
         settings.getFormat().setDelimiter(separator);
@@ -63,8 +63,8 @@ public final class CsvTimeLineParser implements TimeLineParser {
         return read(iterator);
     }
 
-    static List<Event> read(ResultIterator<String[], ParsingContext> iterator) {
-        List<Event> timeline = new ArrayList<>();
+    static List<TimelineEntry> read(ResultIterator<String[], ParsingContext> iterator) {
+        List<TimelineEntry> timeline = new ArrayList<>();
         int iLine = 0;
         while (iterator.hasNext()) {
             iLine++;

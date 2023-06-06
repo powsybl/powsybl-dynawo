@@ -27,7 +27,7 @@ class XmlTimeLineParserTest {
     void test() throws XMLStreamException {
 
         InputStreamReader xml = new InputStreamReader(Objects.requireNonNull(getClass().getResourceAsStream("/timeline.xml")));
-        List<Event> timeline = XmlTimeLineParser.parse(xml);
+        List<TimelineEntry> timeline = XmlTimeLineParser.parse(xml);
 
         assertEquals(5, timeline.size());
         assertEquals("PMIN : activation", timeline.get(0).getMessage());
@@ -47,14 +47,14 @@ class XmlTimeLineParserTest {
     @Test
     void parseFromPath() throws URISyntaxException {
         Path path = Path.of(Objects.requireNonNull(getClass().getResource("/timeline.xml")).toURI());
-        List<Event> timeline = new XmlTimeLineParser().parse(path);
+        List<TimelineEntry> timeline = new XmlTimeLineParser().parse(path);
         assertEquals(5, timeline.size());
     }
 
     @Test
     void testInconsistentFile() throws XMLStreamException {
         InputStreamReader xml = new InputStreamReader(Objects.requireNonNull(getClass().getResourceAsStream("/wrongTimeline.xml")));
-        List<Event> timeline = XmlTimeLineParser.parse(xml);
+        List<TimelineEntry> timeline = XmlTimeLineParser.parse(xml);
         assertEquals(4, timeline.size());
     }
 }
