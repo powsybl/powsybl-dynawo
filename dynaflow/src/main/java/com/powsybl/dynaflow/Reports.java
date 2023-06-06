@@ -10,7 +10,7 @@ package com.powsybl.dynaflow;
 import com.powsybl.commons.reporter.Report;
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.commons.reporter.TypedValue;
-import com.powsybl.dynawo.commons.timeline.Event;
+import com.powsybl.dynawo.commons.timeline.TimelineEntry;
 
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
@@ -34,13 +34,13 @@ public final class Reports {
                 "contingencyId", contingencyId);
     }
 
-    public static void reportTimelineEvent(Reporter reporter, Event e) {
+    public static void reportTimelineEvent(Reporter reporter, TimelineEntry timelineEntry) {
         reporter.report(Report.builder()
                 .withKey("DynawoTimelineEvent")
                 .withDefaultMessage("[t=${time}] ${message} on equipment '${identifiableId}'")
-                .withTypedValue("time", e.getTime(), TIME_MS)
-                .withTypedValue("identifiableId", e.getModelName(), ID)
-                .withValue("message", e.getMessage())
+                .withTypedValue("time", timelineEntry.getTime(), TIME_MS)
+                .withTypedValue("identifiableId", timelineEntry.getModelName(), ID)
+                .withValue("message", timelineEntry.getMessage())
                 .withSeverity(TypedValue.TRACE_SEVERITY)
                 .build());
     }

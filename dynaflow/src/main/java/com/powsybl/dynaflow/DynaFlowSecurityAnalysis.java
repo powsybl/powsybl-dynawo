@@ -18,7 +18,7 @@ import com.powsybl.contingency.json.ContingencyJsonModule;
 import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
 import com.powsybl.dynaflow.xml.ConstraintsReader;
 import com.powsybl.dynawo.commons.DynawoUtil;
-import com.powsybl.dynawo.commons.timeline.Event;
+import com.powsybl.dynawo.commons.timeline.TimelineEntry;
 import com.powsybl.dynawo.commons.timeline.XmlTimeLineParser;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.loadflow.LoadFlowParameters;
@@ -205,7 +205,7 @@ public class DynaFlowSecurityAnalysis {
         }
     }
 
-    private List<Event> getTimeline(Path constraintsDir, Contingency c) {
+    private List<TimelineEntry> getTimeline(Path constraintsDir, Contingency c) {
         Path timelineFile = constraintsDir.resolve("timeline_" + c.getId() + ".xml");
         return new XmlTimeLineParser().parse(timelineFile);
     }
