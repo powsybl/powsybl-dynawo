@@ -1,4 +1,4 @@
-package com.powsybl.dynawo.commons.timeseries;
+package com.powsybl.dynawo.commons.timeline;
 
 final class TimeSeriesConstants {
 

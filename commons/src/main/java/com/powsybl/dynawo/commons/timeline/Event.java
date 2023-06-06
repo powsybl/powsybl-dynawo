@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawo.commons.timeseries;
+package com.powsybl.dynawo.commons.timeline;
 
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>

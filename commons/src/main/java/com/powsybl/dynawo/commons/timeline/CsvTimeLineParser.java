@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawo.commons.timeseries;
+package com.powsybl.dynawo.commons.timeline;
 
 import com.powsybl.commons.PowsyblException;
 import com.univocity.parsers.common.ParsingContext;
@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static com.powsybl.dynawo.commons.timeseries.TimeSeriesConstants.NB_COLUMNS;
+import static com.powsybl.dynawo.commons.timeline.TimeSeriesConstants.NB_COLUMNS;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>

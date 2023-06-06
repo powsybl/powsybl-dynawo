@@ -5,10 +5,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawo.commons;
+package com.powsybl.dynawo.commons.timeline;
 
-import com.powsybl.dynawo.commons.timeseries.Event;
-import com.powsybl.dynawo.commons.timeseries.XmlTimeLineParser;
+import com.powsybl.dynawo.commons.timeline.Event;
+import com.powsybl.dynawo.commons.timeline.XmlTimeLineParser;
 import org.junit.jupiter.api.Test;
 
 import javax.xml.stream.XMLStreamException;

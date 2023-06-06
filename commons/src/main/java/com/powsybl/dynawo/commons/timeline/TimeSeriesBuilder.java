@@ -1,4 +1,4 @@
-package com.powsybl.dynawo.commons.timeseries;
+package com.powsybl.dynawo.commons.timeline;
 
 import com.powsybl.timeseries.*;
 import org.apache.commons.lang3.tuple.Pair;
