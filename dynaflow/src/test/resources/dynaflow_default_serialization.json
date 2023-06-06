@@ -17,6 +17,8 @@
   "hvdcAcEmulation" : true,
   "dcPowerFactor" : 1.0,
   "extensions" : {
-    "DynaFlowParameters" : { }
+    "DynaFlowParameters" : {
+      "chosenOutputs" : [ "TIMELINE" ]
+    }
   }
 }
