@@ -6,10 +6,13 @@
  */
 package com.powsybl.dynawo.it;
 
+import com.google.common.io.ByteStreams;
 import com.powsybl.commons.datasource.ResourceDataSource;
 import com.powsybl.commons.datasource.ResourceSet;
 import com.powsybl.commons.reporter.Reporter;
+import com.powsybl.commons.reporter.ReporterModel;
 import com.powsybl.commons.test.ComparisonUtils;
+import com.powsybl.commons.test.TestUtil;
 import com.powsybl.contingency.Contingency;
 import com.powsybl.dynaflow.DynaFlowConfig;
 import com.powsybl.dynaflow.DynaFlowParameters;
@@ -32,6 +35,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
@@ -100,11 +104,20 @@ class DynaFlowTest extends AbstractDynawoTest {
         List<Contingency> contingencies = network.getLineStream()
                 .map(l -> Contingency.line(l.getId()))
                 .collect(Collectors.toList());
+
+        ReporterModel reporter = new ReporterModel("root", "Root message");
         SecurityAnalysisResult result = securityAnalysisProvider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID, new DefaultLimitViolationDetector(),
                         new LimitViolationFilter(), computationManager, securityAnalysisParameters, n -> contingencies, Collections.emptyList(),
-                        Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), Reporter.NO_OP)
+                        Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), reporter)
                 .join()
                 .getResult();
+
+        StringWriter sw = new StringWriter();
+        reporter.export(sw);
+        InputStream refStream = Objects.requireNonNull(getClass().getResourceAsStream("/ieee14/security-analysis/timeline_report.txt"));
+        String refLogExport = TestUtil.normalizeLineSeparator(new String(ByteStreams.toByteArray(refStream), StandardCharsets.UTF_8));
+        String logExport = TestUtil.normalizeLineSeparator(sw.toString());
+        assertEquals(refLogExport, logExport);
 
         StringWriter serializedResult = new StringWriter();
         SecurityAnalysisResultSerializer.write(result, serializedResult);

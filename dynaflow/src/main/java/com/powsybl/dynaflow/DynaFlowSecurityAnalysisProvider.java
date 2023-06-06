@@ -64,9 +64,6 @@ public class DynaFlowSecurityAnalysisProvider implements SecurityAnalysisProvide
         if (monitors != null && !monitors.isEmpty()) {
             LOG.error("Monitoring is not possible with Dynaflow implementation. There will not be supplementary information about monitored equipment.");
         }
-        if (reporter != Reporter.NO_OP) {
-            LOG.warn("Reporters are not used in Dynaflow implementation");
-        }
         if (operatorStrategies != null && !operatorStrategies.isEmpty()) {
             LOG.error("Strategies are not implemented in Dynaflow");
         }
@@ -75,7 +72,9 @@ public class DynaFlowSecurityAnalysisProvider implements SecurityAnalysisProvide
         }
         DynaFlowSecurityAnalysis securityAnalysis = new DynaFlowSecurityAnalysis(network, filter, computationManager, configSupplier);
         interceptors.forEach(securityAnalysis::addInterceptor);
-        return securityAnalysis.run(workingVariantId, parameters, contingenciesProvider);
+
+        Reporter dfsaReporter = Reports.createDynaFlowSecurityAnalysisReporter(reporter, network.getId());
+        return securityAnalysis.run(workingVariantId, parameters, contingenciesProvider, dfsaReporter);
     }
 
     @Override
