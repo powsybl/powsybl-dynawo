@@ -7,25 +7,25 @@
  */
 package com.powsybl.dynawo.commons.timeseries;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.io.UncheckedIOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Map;
-import java.util.Objects;
+import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
+import com.powsybl.commons.xml.XmlUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.xml.XMLConstants;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-
-import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
-import com.powsybl.commons.xml.XmlUtil;
-import com.powsybl.timeseries.StringTimeSeries;
-import com.powsybl.timeseries.TimeSeriesException;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.UncheckedIOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 import static com.powsybl.dynawo.commons.timeseries.TimeSeriesConstants.*;
 
@@ -35,10 +35,12 @@ import static com.powsybl.dynawo.commons.timeseries.TimeSeriesConstants.*;
  */
 public final class XmlTimeLineParser {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(XmlTimeLineParser.class);
+
     private XmlTimeLineParser() {
     }
 
-    public static Map<String, StringTimeSeries> parseXml(Path timeLineFile) {
+    public static List<Event> parseXml(Path timeLineFile) {
         Objects.requireNonNull(timeLineFile);
 
         try (Reader reader = Files.newBufferedReader(timeLineFile, StandardCharsets.UTF_8)) {
@@ -50,9 +52,9 @@ public final class XmlTimeLineParser {
         }
     }
 
-    public static Map<String, StringTimeSeries> parseXml(Reader reader) throws XMLStreamException {
+    public static List<Event> parseXml(Reader reader) throws XMLStreamException {
 
-        Map<String, StringTimeSeries> timeLineSeries;
+        List<Event> timeLineSeries;
         XMLInputFactory factory = XMLInputFactory.newInstance();
         factory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
         factory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
@@ -68,8 +70,8 @@ public final class XmlTimeLineParser {
         return timeLineSeries;
     }
 
-    private static Map<String, StringTimeSeries> read(XMLStreamReader xmlReader) throws XMLStreamException {
-        TimeSeriesBuilder context = new TimeSeriesBuilder(VALUES);
+    private static List<Event> read(XMLStreamReader xmlReader) throws XMLStreamException {
+        List<Event> timeline = new ArrayList<>();
         int state = xmlReader.next();
         while (state == XMLStreamConstants.COMMENT) {
             state = xmlReader.next();
@@ -80,11 +82,17 @@ public final class XmlTimeLineParser {
                 String modelName = xmlReader.getAttributeValue(null, MODEL_NAME);
                 String message = xmlReader.getAttributeValue(null, MESSAGE);
                 if (time == null || modelName == null || message == null) {
-                    throw new TimeSeriesException("Columns of line " + context.linesParsed() + " are inconsistent with header");
+                    LOGGER.warn("Inconsistent event entry (time: '{}', modelName: '{}', message: '{}')", time, modelName, message);
+                } else {
+                    try {
+                        double timeD = Double.parseDouble(time);
+                        timeline.add(new Event(timeD, modelName, message));
+                    } catch (NumberFormatException e) {
+                        LOGGER.warn("Inconsistent time entry '{}'", time);
+                    }
                 }
-                context.parseLine(time, modelName, message);
             }
         });
-        return context.createTimeSeries();
+        return timeline;
     }
 }

@@ -7,22 +7,20 @@
  */
 package com.powsybl.dynawo.commons;
 
-import static org.junit.jupiter.api.Assertions.*;
-
+import com.powsybl.commons.PowsyblException;
+import com.powsybl.dynawo.commons.timeseries.CsvTimeLineParser;
+import com.powsybl.dynawo.commons.timeseries.Event;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.net.URISyntaxException;
 import java.nio.file.Path;
-import java.util.Map;
+import java.util.List;
 import java.util.Objects;
 
-import com.powsybl.dynawo.commons.timeseries.CsvTimeLineParser;
-
-import com.powsybl.timeseries.StringTimeSeries;
-import com.powsybl.timeseries.TimeSeriesDataType;
-import com.powsybl.timeseries.TimeSeriesException;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
@@ -35,26 +33,27 @@ class CsvTimeLineParserTest {
     void testTimeline(String fileName) throws URISyntaxException {
 
         Path path = Path.of(Objects.requireNonNull(getClass().getResource(fileName)).toURI());
-        Map<String, StringTimeSeries> timeSeries = CsvTimeLineParser.parseCsv(path);
+        List<Event> timeline = CsvTimeLineParser.parseCsv(path);
 
-        assertEquals(2, timeSeries.size());
-
-        StringTimeSeries ts1 = timeSeries.get("modelName");
-        StringTimeSeries ts2 = timeSeries.get("message");
-
-        assertEquals("modelName", ts1.getMetadata().getName());
-        assertEquals(TimeSeriesDataType.STRING, ts1.getMetadata().getDataType());
-        assertArrayEquals(new String[] {"GEN____8_SM", "GEN____3_SM", "GEN____8_SM", "GEN____3_SM", "GEN____8_SM"}, ts1.toArray());
-
-        assertEquals("message", ts2.getMetadata().getName());
-        assertEquals(TimeSeriesDataType.STRING, ts2.getMetadata().getDataType());
-        assertArrayEquals(new String[] {"PMIN : activation", "PMIN : activation", "PMIN : deactivation", "PMIN : deactivation", "PMIN : activation"}, ts2.toArray());
+        assertEquals(5, timeline.size());
+        assertEquals("PMIN : activation", timeline.get(0).getMessage());
+        assertEquals("GEN____8_SM", timeline.get(0).getModelName());
+        assertEquals(0., timeline.get(0).getTime(), 1e-9);
+        assertEquals("PMIN : activation", timeline.get(1).getMessage());
+        assertEquals("GEN____3_SM", timeline.get(1).getModelName());
+        assertEquals(0.0306911, timeline.get(1).getTime(), 1e-9);
+        assertEquals("PMIN : deactivation", timeline.get(2).getMessage());
+        assertEquals("GEN____8_SM", timeline.get(2).getModelName());
+        assertEquals("PMIN : deactivation", timeline.get(3).getMessage());
+        assertEquals("GEN____3_SM", timeline.get(3).getModelName());
+        assertEquals("PMIN : activation", timeline.get(4).getMessage());
+        assertEquals("GEN____8_SM", timeline.get(4).getModelName());
     }
 
     @Test
     void testInconsistentFile() throws URISyntaxException {
         Path path = Path.of(Objects.requireNonNull(getClass().getResource("/wrongTimeline.log")).toURI());
-        Exception e = assertThrows(TimeSeriesException.class, () -> CsvTimeLineParser.parseCsv(path, '|'));
-        assertEquals("Columns of line 1 are inconsistent with header", e.getMessage());
+        Exception e = assertThrows(PowsyblException.class, () -> CsvTimeLineParser.parseCsv(path, '|'));
+        assertEquals("Columns of line 2 are inconsistent", e.getMessage());
     }
 }
