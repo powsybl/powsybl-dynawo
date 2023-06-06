@@ -16,10 +16,12 @@ import com.powsybl.dynawaltz.DynaWaltzParameters.SolverType;
 import com.powsybl.dynawaltz.parameters.Parameter;
 import com.powsybl.dynawaltz.parameters.ParameterType;
 import com.powsybl.dynawaltz.parameters.ParametersSet;
+import com.powsybl.dynawaltz.xml.ParametersXml;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
@@ -152,8 +154,13 @@ class DynaWaltzParametersTest extends AbstractConverterTest {
         copyFile("/parametersSet/network.par", DynaWaltzParameters.DEFAULT_INPUT_NETWORK_PARAMETERS_FILE);
         copyFile("/parametersSet/solversMissingDefault.par", DynaWaltzParameters.DEFAULT_INPUT_SOLVER_PARAMETERS_FILE);
 
-        PowsyblException e = assertThrows(PowsyblException.class, () -> DynaWaltzParameters.load(platformConfig, fileSystem));
-        assertEquals("Could not find parameters set with id='1' in file '/work/inmemory/solvers.par'", e.getMessage());
+        PowsyblException e1 = assertThrows(PowsyblException.class, () -> DynaWaltzParameters.load(platformConfig, fileSystem));
+        assertEquals("Could not find parameters set with id='1' in file '/work/inmemory/solvers.par'", e1.getMessage());
+
+        try (InputStream is = getClass().getResourceAsStream("/parametersSet/solvers.par")) {
+            PowsyblException e2 = assertThrows(PowsyblException.class, () -> ParametersXml.load(is, "2"));
+            assertEquals("Could not find parameters set with id='2' in given input stream", e2.getMessage());
+        }
     }
 
     private static void checkModelParameters(DynaWaltzParameters dynaWaltzParameters) {
