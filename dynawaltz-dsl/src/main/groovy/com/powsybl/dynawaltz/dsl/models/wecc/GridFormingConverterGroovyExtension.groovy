@@ -13,44 +13,39 @@ import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
 import com.powsybl.dynawaltz.dsl.EquipmentConfig
 import com.powsybl.dynawaltz.dsl.models.generators.AbstractGeneratorBuilder
-import com.powsybl.dynawaltz.models.wecc.SynchronizedWecc
-import com.powsybl.dynawaltz.models.wecc.Wecc
+import com.powsybl.dynawaltz.models.wecc.GridFormingConverter
 import com.powsybl.iidm.network.Network
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class WtWeccGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+class GridFormingConverterGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
-    private static final String WECC = "wecc"
+    private static final String GRID_FORMING_CONVERTER = "gridFormingConverter"
 
-    WtWeccGroovyExtension() {
-        super(WECC)
+    GridFormingConverterGroovyExtension() {
+        super(GRID_FORMING_CONVERTER)
     }
 
     @Override
-    protected WtWeccBuilder createBuilder(Network network, EquipmentConfig equipmentConfig) {
-        new WtWeccBuilder(network, equipmentConfig)
+    protected GridFormingConverterBuilder createBuilder(Network network, EquipmentConfig equipmentConfig) {
+        new GridFormingConverterBuilder(network, equipmentConfig)
     }
 
-    static class WtWeccBuilder extends AbstractGeneratorBuilder {
+    static class GridFormingConverterBuilder extends AbstractGeneratorBuilder {
 
         EquipmentConfig equipmentConfig
 
-        WtWeccBuilder(Network network, EquipmentConfig equipmentConfig) {
+        GridFormingConverterBuilder(Network network, EquipmentConfig equipmentConfig) {
             super(network)
             this.equipmentConfig = equipmentConfig
         }
 
         @Override
-        Wecc build() {
+        GridFormingConverter build() {
             checkData()
-            if (equipmentConfig.isSynchronized()) {
-                new SynchronizedWecc(dynamicModelId, generator, parameterSetId, equipmentConfig.lib)
-            } else {
-                new Wecc(dynamicModelId, generator, parameterSetId, equipmentConfig.lib)
-            }
+            new GridFormingConverter(dynamicModelId, generator, parameterSetId, equipmentConfig.lib)
         }
     }
 }

@@ -28,6 +28,7 @@ import com.powsybl.dynawaltz.models.lines.StandardLine;
 import com.powsybl.dynawaltz.models.loads.*;
 import com.powsybl.dynawaltz.models.svcs.StaticVarCompensator;
 import com.powsybl.dynawaltz.models.transformers.TransformerFixedRatio;
+import com.powsybl.dynawaltz.models.wecc.GridFormingConverter;
 import com.powsybl.dynawaltz.models.wecc.SynchronizedWecc;
 import com.powsybl.dynawaltz.models.wecc.Wecc;
 import com.powsybl.iidm.network.Network;
@@ -112,7 +113,8 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                 Arguments.of("/dynamicModels/transformer.groovy", TransformerFixedRatio.class, EurostagTutorialExample1Factory.create(), "NGEN_NHV1", "BBM_NGEN_NHV1", "TFR", "TransformerFixedRatio"),
                 Arguments.of("/dynamicModels/svc.groovy", StaticVarCompensator.class, SvcTestCaseFactory.create(), "SVC2", "BBM_SVC", "svc", "StaticVarCompensatorPV"),
                 Arguments.of("/dynamicModels/wecc.groovy", Wecc.class, EurostagTutorialExample1Factory.create(), "GEN", "BBM_WT", "Wind", "WT4BWeccCurrentSource"),
-                Arguments.of("/dynamicModels/weccSynchro.groovy", SynchronizedWecc.class, EurostagTutorialExample1Factory.create(), "GEN", "BBM_WT", "Wind", "WTG4AWeccCurrentSource")
+                Arguments.of("/dynamicModels/weccSynchro.groovy", SynchronizedWecc.class, EurostagTutorialExample1Factory.create(), "GEN", "BBM_WT", "Wind", "WTG4AWeccCurrentSource"),
+                Arguments.of("/dynamicModels/gridFormingConverter.groovy", GridFormingConverter.class, EurostagTutorialExample1Factory.create(), "GEN", "BBM_GFC", "GF", "GridFormingConverterMatchingControl")
         );
     }
 

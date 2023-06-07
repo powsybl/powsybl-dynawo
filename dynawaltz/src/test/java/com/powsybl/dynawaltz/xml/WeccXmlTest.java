@@ -8,6 +8,7 @@
 package com.powsybl.dynawaltz.xml;
 
 import com.powsybl.dynawaltz.models.BlackBoxModel;
+import com.powsybl.dynawaltz.models.wecc.GridFormingConverter;
 import com.powsybl.dynawaltz.models.wecc.SynchronizedWecc;
 import com.powsybl.dynawaltz.models.wecc.Wecc;
 import com.powsybl.iidm.network.Network;
@@ -28,13 +29,13 @@ import java.util.stream.Stream;
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 @ExtendWith(CustomParameterResolver.class)
-class WtWeccXmlTest extends AbstractParametrizedDynamicModelXmlTest {
+class WeccXmlTest extends AbstractParametrizedDynamicModelXmlTest {
 
     private static final String STATIC_ID = "GEN";
     private static final String DYN_WT_NAME = "BBM_WT";
 
     @BeforeEach
-    void setup(String dydName, boolean isSynchronized, Function< Network, BlackBoxModel> loadConstructor) {
+    void setup(String dydName, String parName, Function< Network, BlackBoxModel> loadConstructor) {
         setupNetwork();
         addDynamicModels(loadConstructor);
         setupDynawaltzContext();
@@ -49,21 +50,22 @@ class WtWeccXmlTest extends AbstractParametrizedDynamicModelXmlTest {
     }
 
     @ParameterizedTest(name = "{0}")
-    @MethodSource("provideWtWecc")
-    void writeModel(String dydName, boolean isSynchronized, Function< Network, BlackBoxModel> constructor) throws SAXException, IOException, XMLStreamException {
+    @MethodSource("provideWecc")
+    void writeModel(String dydName, String parName, Function< Network, BlackBoxModel> constructor) throws SAXException, IOException, XMLStreamException {
         DydXml.write(tmpDir, context);
         ParametersXml.write(tmpDir, context);
         validate("dyd.xsd", dydName, tmpDir.resolve(DynaWaltzConstants.DYD_FILENAME));
-        if (isSynchronized) {
-            validate("parameters.xsd", "wt_wecc_par.xml", tmpDir.resolve(context.getSimulationParFile()));
+        if (!parName.isEmpty()) {
+            validate("parameters.xsd", parName, tmpDir.resolve(context.getSimulationParFile()));
         }
     }
 
-    private static Stream<Arguments> provideWtWecc() {
+    private static Stream<Arguments> provideWecc() {
         return Stream.of(
-                Arguments.of("wt_wecc_dyd.xml", false, (Function<Network, BlackBoxModel>) n -> new Wecc(DYN_WT_NAME, n.getGenerator(STATIC_ID), "Wind", "WT4AWeccCurrentSource")),
-                Arguments.of("wt_wecc_synchro_dyd.xml", true, (Function<Network, BlackBoxModel>) n -> new SynchronizedWecc(DYN_WT_NAME, n.getGenerator(STATIC_ID), "Wind", "WTG4BWeccCurrentSource")),
-                Arguments.of("wt_wecc_pv_dyd.xml", true, (Function<Network, BlackBoxModel>) n -> new SynchronizedWecc(DYN_WT_NAME, n.getGenerator(STATIC_ID), "Wind", "PhotovoltaicsWeccCurrentSource"))
+                Arguments.of("wecc_wt_dyd.xml", "", (Function<Network, BlackBoxModel>) n -> new Wecc(DYN_WT_NAME, n.getGenerator(STATIC_ID), "Wind", "WT4AWeccCurrentSource")),
+                Arguments.of("wecc_wt_synchro_dyd.xml", "wecc_wt_par.xml", (Function<Network, BlackBoxModel>) n -> new SynchronizedWecc(DYN_WT_NAME, n.getGenerator(STATIC_ID), "Wind", "WTG4BWeccCurrentSource")),
+                Arguments.of("wecc_pv_dyd.xml", "wecc_wt_par.xml", (Function<Network, BlackBoxModel>) n -> new SynchronizedWecc(DYN_WT_NAME, n.getGenerator(STATIC_ID), "Wind", "PhotovoltaicsWeccCurrentSource")),
+                Arguments.of("grid_forming_converter_dyd.xml", "grid_forming_converter_par.xml", (Function<Network, BlackBoxModel>) n -> new GridFormingConverter("BBM_GFC", n.getGenerator(STATIC_ID), "GF", "GridFormingConverterDroopControl"))
         );
     }
 }
