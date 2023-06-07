@@ -43,8 +43,8 @@ class CurrentLimitAutomatonGroovyExtension extends AbstractPureDynamicGroovyExte
     static class CurrentLimitAutomatonBuilder extends AbstractPureDynamicModelBuilder {
 
         Network network
-        Branch<? extends Branch> equipment
-        Side side
+        Branch<? extends Branch> iMeasurement
+        Side iMeasurementSide
         Branch<? extends Branch> controlledEquipment
         String lib
 
@@ -54,14 +54,14 @@ class CurrentLimitAutomatonGroovyExtension extends AbstractPureDynamicGroovyExte
         }
 
         void iMeasurement(String staticId) {
-            equipment = network.getBranch(staticId)
-            if (equipment == null) {
-                throw new DslException("Equipment ${staticId} is not a quadripole")
+            iMeasurement = network.getBranch(staticId)
+            if (iMeasurement == null) {
+                throw new DslException("I measurement equipment ${staticId} is not a quadripole")
             }
         }
 
         void iMeasurementSide(Branch.Side side) {
-            this.side = SideConverter.convert(side)
+            this.iMeasurementSide = SideConverter.convert(side)
         }
 
         void controlledQuadripole(String staticId) {
@@ -74,10 +74,10 @@ class CurrentLimitAutomatonGroovyExtension extends AbstractPureDynamicGroovyExte
         @Override
         void checkData() {
             super.checkData()
-            if (!equipment) {
+            if (!iMeasurement) {
                 throw new DslException("'iMeasurement' field is not set")
             }
-            if (!side) {
+            if (!iMeasurementSide) {
                 throw new DslException("'iMeasurementSide' field is not set")
             }
             if (!controlledEquipment) {
@@ -88,7 +88,7 @@ class CurrentLimitAutomatonGroovyExtension extends AbstractPureDynamicGroovyExte
         @Override
         CurrentLimitAutomaton build() {
             checkData()
-            new CurrentLimitAutomaton(dynamicModelId, parameterSetId, equipment, side, controlledEquipment, lib)
+            new CurrentLimitAutomaton(dynamicModelId, parameterSetId, iMeasurement, iMeasurementSide, controlledEquipment, lib)
         }
     }
 }
