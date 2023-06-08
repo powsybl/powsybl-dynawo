@@ -43,7 +43,7 @@ class TapChangerBlockingAutomatonGroovyExtension extends AbstractPureDynamicGroo
         Network network
         List<Load> loads = []
         List<TwoWindingsTransformer> transformers = []
-        List<Bus> uMeasurement = []
+        List<Bus> uMeasurements = []
         List<String> tapChangerAutomatonIds = []
 
         TCBAutomatonBuilder(Network network) {
@@ -76,8 +76,8 @@ class TapChangerBlockingAutomatonGroovyExtension extends AbstractPureDynamicGroo
             return equipment
         }
 
-        void uMeasurement(String[] staticIds) {
-            uMeasurement = staticIds.collect {
+        void uMeasurements(String[] staticIds) {
+            uMeasurements = staticIds.collect {
                 Bus bus = network.getBusBreakerView().getBus(it)
                 if (bus == null) {
                     throw new DslException("Bus static id unknown: " + it)
@@ -89,7 +89,7 @@ class TapChangerBlockingAutomatonGroovyExtension extends AbstractPureDynamicGroo
         @Override
         TapChangerBlockingAutomaton build() {
             checkData()
-            new TapChangerBlockingAutomaton(dynamicModelId, parameterSetId, transformers, loads, tapChangerAutomatonIds, uMeasurement)
+            new TapChangerBlockingAutomaton(dynamicModelId, parameterSetId, transformers, loads, tapChangerAutomatonIds, uMeasurements)
         }
     }
 }
