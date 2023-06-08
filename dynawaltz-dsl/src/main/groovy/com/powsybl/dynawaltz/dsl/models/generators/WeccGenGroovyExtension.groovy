@@ -5,51 +5,50 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.dsl.models.wecc
+package com.powsybl.dynawaltz.dsl.models.generators
 
 import com.google.auto.service.AutoService
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
 import com.powsybl.dynawaltz.dsl.EquipmentConfig
-import com.powsybl.dynawaltz.dsl.models.generators.AbstractGeneratorBuilder
-import com.powsybl.dynawaltz.models.wecc.SynchronizedWecc
-import com.powsybl.dynawaltz.models.wecc.Wecc
+import com.powsybl.dynawaltz.models.generators.SynchronizedWeccGen
+import com.powsybl.dynawaltz.models.generators.WeccGen
 import com.powsybl.iidm.network.Network
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class WtWeccGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+class WeccGenGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
     private static final String WECC = "wecc"
 
-    WtWeccGroovyExtension() {
+    WeccGenGroovyExtension() {
         super(WECC)
     }
 
     @Override
-    protected WtWeccBuilder createBuilder(Network network, EquipmentConfig equipmentConfig) {
-        new WtWeccBuilder(network, equipmentConfig)
+    protected WeccGenBuilder createBuilder(Network network, EquipmentConfig equipmentConfig) {
+        new WeccGenBuilder(network, equipmentConfig)
     }
 
-    static class WtWeccBuilder extends AbstractGeneratorBuilder {
+    static class WeccGenBuilder extends AbstractGeneratorBuilder {
 
         EquipmentConfig equipmentConfig
 
-        WtWeccBuilder(Network network, EquipmentConfig equipmentConfig) {
+        WeccGenBuilder(Network network, EquipmentConfig equipmentConfig) {
             super(network)
             this.equipmentConfig = equipmentConfig
         }
 
         @Override
-        Wecc build() {
+        WeccGen build() {
             checkData()
             if (equipmentConfig.isSynchronized()) {
-                new SynchronizedWecc(dynamicModelId, generator, parameterSetId, equipmentConfig.lib)
+                new SynchronizedWeccGen(dynamicModelId, generator, parameterSetId, equipmentConfig.lib, equipmentConfig.prefix)
             } else {
-                new Wecc(dynamicModelId, generator, parameterSetId, equipmentConfig.lib)
+                new WeccGen(dynamicModelId, generator, parameterSetId, equipmentConfig.lib, equipmentConfig.prefix)
             }
         }
     }

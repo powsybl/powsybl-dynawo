@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.models.wecc;
+package com.powsybl.dynawaltz.models.generators;
 
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractEquipmentBlackBoxModel;
@@ -16,21 +16,19 @@ import com.powsybl.dynawaltz.models.utils.BusUtils;
 import com.powsybl.iidm.network.Generator;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class Wecc extends AbstractEquipmentBlackBoxModel<Generator> {
+public class WeccGen extends AbstractEquipmentBlackBoxModel<Generator> {
 
     private final List<VarMapping> varsMapping;
     protected final String weccPrefix;
 
-    public Wecc(String dynamicModelId, Generator generator, String parameterSetId, String lib) {
+    public WeccGen(String dynamicModelId, Generator generator, String parameterSetId, String lib, String weccPrefix) {
         super(dynamicModelId, parameterSetId, generator, lib);
-        //TODO refactor ?
-        weccPrefix = lib.length() > 1 && Character.isUpperCase(lib.charAt(1))
-                ? lib.substring(0, lib.indexOf("Wecc"))
-                : lib.substring(0, lib.indexOf("Wecc")).toLowerCase();
+        this.weccPrefix = Objects.requireNonNull(weccPrefix);
         varsMapping = List.of(
                 new VarMapping(weccPrefix + "_measurements_PPuSnRef", "p"),
                 new VarMapping(weccPrefix + "_measurements_QPuSnRef", "q"),

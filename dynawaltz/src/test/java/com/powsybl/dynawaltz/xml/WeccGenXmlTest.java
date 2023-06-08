@@ -8,9 +8,9 @@
 package com.powsybl.dynawaltz.xml;
 
 import com.powsybl.dynawaltz.models.BlackBoxModel;
-import com.powsybl.dynawaltz.models.wecc.GridFormingConverter;
-import com.powsybl.dynawaltz.models.wecc.SynchronizedWecc;
-import com.powsybl.dynawaltz.models.wecc.Wecc;
+import com.powsybl.dynawaltz.models.generators.GridFormingConverter;
+import com.powsybl.dynawaltz.models.generators.SynchronizedWeccGen;
+import com.powsybl.dynawaltz.models.generators.WeccGen;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,7 +29,7 @@ import java.util.stream.Stream;
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 @ExtendWith(CustomParameterResolver.class)
-class WeccXmlTest extends AbstractParametrizedDynamicModelXmlTest {
+class WeccGenXmlTest extends AbstractParametrizedDynamicModelXmlTest {
 
     private static final String STATIC_ID = "GEN";
     private static final String DYN_WT_NAME = "BBM_WT";
@@ -62,9 +62,9 @@ class WeccXmlTest extends AbstractParametrizedDynamicModelXmlTest {
 
     private static Stream<Arguments> provideWecc() {
         return Stream.of(
-                Arguments.of("wecc_wt_dyd.xml", "", (Function<Network, BlackBoxModel>) n -> new Wecc(DYN_WT_NAME, n.getGenerator(STATIC_ID), "Wind", "WT4AWeccCurrentSource")),
-                Arguments.of("wecc_wt_synchro_dyd.xml", "wecc_wt_par.xml", (Function<Network, BlackBoxModel>) n -> new SynchronizedWecc(DYN_WT_NAME, n.getGenerator(STATIC_ID), "Wind", "WTG4BWeccCurrentSource")),
-                Arguments.of("wecc_pv_dyd.xml", "wecc_wt_par.xml", (Function<Network, BlackBoxModel>) n -> new SynchronizedWecc(DYN_WT_NAME, n.getGenerator(STATIC_ID), "Wind", "PhotovoltaicsWeccCurrentSource")),
+                Arguments.of("wecc_wt_dyd.xml", "", (Function<Network, BlackBoxModel>) n -> new WeccGen(DYN_WT_NAME, n.getGenerator(STATIC_ID), "Wind", "WT4AWeccCurrentSource", "WT4A")),
+                Arguments.of("wecc_wt_synchro_dyd.xml", "wecc_wt_par.xml", (Function<Network, BlackBoxModel>) n -> new SynchronizedWeccGen(DYN_WT_NAME, n.getGenerator(STATIC_ID), "Wind", "WTG4BWeccCurrentSource", "WTG4B")),
+                Arguments.of("wecc_pv_dyd.xml", "wecc_wt_par.xml", (Function<Network, BlackBoxModel>) n -> new SynchronizedWeccGen(DYN_WT_NAME, n.getGenerator(STATIC_ID), "Wind", "PhotovoltaicsWeccCurrentSource", "photovoltaics")),
                 Arguments.of("grid_forming_converter_dyd.xml", "grid_forming_converter_par.xml", (Function<Network, BlackBoxModel>) n -> new GridFormingConverter("BBM_GFC", n.getGenerator(STATIC_ID), "GF", "GridFormingConverterDroopControl"))
         );
     }
