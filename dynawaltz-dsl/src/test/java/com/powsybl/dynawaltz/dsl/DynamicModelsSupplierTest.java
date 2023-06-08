@@ -127,7 +127,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
 
     private static Stream<Arguments> provideExceptionsModel() {
         return Stream.of(
-                Arguments.of("currentLimitQuadripoleException", EurostagTutorialExample1Factory.create(), "Equipment NGEN is not a quadripole"),
+                Arguments.of("currentLimitQuadripoleException", EurostagTutorialExample1Factory.create(), "I measurement equipment NGEN is not a quadripole"),
                 Arguments.of("currentLimitMissingControlledException", EurostagTutorialExample1Factory.create(), "'controlledEquipment' field is not set"),
                 Arguments.of("phaseShifterTransformerException", EurostagTutorialExample1Factory.create(), "Transformer static id unknown: NGEN"),
                 Arguments.of("tapChangerBusException", EurostagTutorialExample1Factory.create(), "Bus static id unknown: LOAD"),
