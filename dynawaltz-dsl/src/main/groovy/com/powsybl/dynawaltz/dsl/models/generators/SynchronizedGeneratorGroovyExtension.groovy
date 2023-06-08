@@ -8,15 +8,12 @@
 package com.powsybl.dynawaltz.dsl.models.generators
 
 import com.google.auto.service.AutoService
-import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
 import com.powsybl.dynawaltz.dsl.EquipmentConfig
-import com.powsybl.dynawaltz.dsl.models.builders.AbstractDynamicModelBuilder
 import com.powsybl.dynawaltz.models.generators.SynchronizedGenerator
 import com.powsybl.dynawaltz.models.generators.SynchronizedGeneratorControllable
-import com.powsybl.iidm.network.Generator
 import com.powsybl.iidm.network.Network
 
 /**
@@ -26,10 +23,10 @@ import com.powsybl.iidm.network.Network
 @AutoService(DynamicModelGroovyExtension.class)
 class SynchronizedGeneratorGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
-    private static final String OMEGA_REF_GENERATORS = "synchronizedGenerators"
+    private static final String SYNCHRONIZED_GENERATORS = "synchronizedGenerators"
 
     SynchronizedGeneratorGroovyExtension() {
-        super(OMEGA_REF_GENERATORS)
+        super(SYNCHRONIZED_GENERATORS)
     }
 
     @Override
@@ -37,7 +34,7 @@ class SynchronizedGeneratorGroovyExtension extends AbstractEquipmentGroovyExtens
         new SynchronizedGeneratorBuilder(network, equipmentConfig)
     }
 
-    static class OmegaRefGeneratorBuilder extends AbstractGeneratorBuilder {
+    static class SynchronizedGeneratorBuilder extends AbstractGeneratorBuilder {
 
         EquipmentConfig equipmentConfig
 
