@@ -72,7 +72,7 @@ public class OmegaRef extends AbstractFrequencySynchronizer {
         writer.writeEndElement();
     }
 
-    private List<VarConnection> getVarConnectionsWith(OmegaRefGeneratorModel connected) {
+    private List<VarConnection> getVarConnectionsWith(SynchronizedGeneratorModel connected) {
         return connected.getOmegaRefVarConnections();
     }
 
@@ -85,7 +85,7 @@ public class OmegaRef extends AbstractFrequencySynchronizer {
     @Override
     public void createMacroConnections(DynaWaltzContext context) throws PowsyblException {
         int index = 0;
-        for (OmegaRefGeneratorModel gen : omegaRefGenerators) {
+        for (SynchronizedGeneratorModel gen : synchronizedGenerators) {
             createMacroConnections(gen, getVarConnectionsWith(gen), context, MacroConnectAttribute.ofIndex1(index));
             createMacroConnections(gen.getConnectableBusId(), BusModel.class, this::getVarConnectionsWith, context, MacroConnectAttribute.ofIndex1(index));
             index++;

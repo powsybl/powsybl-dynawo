@@ -49,18 +49,18 @@ public class CurrentLimitAutomaton extends AbstractPureDynamicBlackBoxModel {
 
     @Override
     public void createMacroConnections(DynaWaltzContext context) {
-        createMacroConnections(measuredQuadripole, QuadripoleModel.class, this::getVarConnectionsWith, context, MEASURE_SUFFIX + measuredSide.getSideSuffix());
-        createMacroConnections(controlledQuadripole, QuadripoleModel.class, this::getVarConnectionsWith, context, CONTROL_SUFFIX);
+        createMacroConnections(measuredQuadripole, QuadripoleModel.class, this::getVarConnectionsWithMeasuredQuadripole, context, MEASURE_SUFFIX + measuredSide.getSideSuffix());
+        createMacroConnections(controlledQuadripole, QuadripoleModel.class, this::getVarConnectionsWithControlledQuadripole, context, CONTROL_SUFFIX);
     }
 
-    protected List<VarConnection> getVarConnectionsWith(QuadripoleModel connected) {
+    protected List<VarConnection> getVarConnectionsWithMeasuredQuadripole(QuadripoleModel connected) {
         return Arrays.asList(
                 new VarConnection("currentLimitAutomaton_IMonitored", connected.getIVarName(measuredSide)),
                 new VarConnection("currentLimitAutomaton_AutomatonExists", connected.getDeactivateCurrentLimitsVarName())
         );
     }
 
-    protected List<VarConnection> getVarConnectionsWith(QuadripoleModel connected) {
+    protected List<VarConnection> getVarConnectionsWithControlledQuadripole(QuadripoleModel connected) {
         return List.of(new VarConnection("currentLimitAutomaton_order", connected.getStateVarName()));
     }
 }
