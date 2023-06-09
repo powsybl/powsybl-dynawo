@@ -18,9 +18,9 @@ import static com.powsybl.dynawaltz.models.utils.BusUtils.getConnectableBusStati
  * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class OmegaRefGenerator extends AbstractGeneratorModel implements OmegaRefGeneratorModel {
+public class SynchronizedGenerator extends AbstractGeneratorModel implements SynchronizedGeneratorModel {
 
-    public OmegaRefGenerator(String dynamicModelId, Generator generator, String parameterSetId, String generatorLib) {
+    public SynchronizedGenerator(String dynamicModelId, Generator generator, String parameterSetId, String generatorLib) {
         super(dynamicModelId, generator, parameterSetId, generatorLib);
     }
 

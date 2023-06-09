@@ -7,8 +7,8 @@
  */
 package com.powsybl.dynawaltz.xml;
 
-import com.powsybl.dynawaltz.models.generators.GeneratorSynchronous;
-import com.powsybl.dynawaltz.models.generators.OmegaRefGenerator;
+import com.powsybl.dynawaltz.models.generators.SynchronousGenerator;
+import com.powsybl.dynawaltz.models.generators.SynchronizedGenerator;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
@@ -28,9 +28,9 @@ class OmegaRefModelXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void addDynamicModels() {
-        dynamicModels.add(new GeneratorSynchronous("BBM_GEN_SYNCHRO", network.getGenerator("GEN"), "GSFW", "GeneratorSynchronousFourWindingsPmConstVRNordic"));
-        dynamicModels.add(new OmegaRefGenerator("BBM_GEN_PQ", network.getGenerator("GEN2"), "GPQ", "GeneratorPQ"));
-        dynamicModels.add(new GeneratorSynchronous("BBM_GEN_SYNCHRO2", network.getGenerator("GEN3"), "GSTW", "GeneratorSynchronousThreeWindingsPmConstVRNordic"));
+        dynamicModels.add(new SynchronousGenerator("BBM_GEN_SYNCHRO", network.getGenerator("GEN"), "GSFW", "GeneratorSynchronousFourWindingsPmConstVRNordic"));
+        dynamicModels.add(new SynchronizedGenerator("BBM_GEN_PQ", network.getGenerator("GEN2"), "GPQ", "GeneratorPQ"));
+        dynamicModels.add(new SynchronousGenerator("BBM_GEN_SYNCHRO2", network.getGenerator("GEN3"), "GSTW", "GeneratorSynchronousThreeWindingsPmConstVRNordic"));
     }
 
     @Test

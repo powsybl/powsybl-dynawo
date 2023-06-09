@@ -13,14 +13,14 @@ import com.powsybl.iidm.network.Generator;
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class OmegaRefGeneratorControllable extends OmegaRefGenerator implements ControllableEquipment {
+public class SynchronousGeneratorControllable extends SynchronousGenerator implements ControllableEquipment {
 
-    public OmegaRefGeneratorControllable(String dynamicModelId, Generator generator, String parameterSetId, String generatorLib) {
+    public SynchronousGeneratorControllable(String dynamicModelId, Generator generator, String parameterSetId, String generatorLib) {
         super(dynamicModelId, generator, parameterSetId, generatorLib);
     }
 
     @Override
     public String getDeltaPVarName() {
-        return "generator_deltaPmRefPu_value";
+        return "governor_deltaPmRefPu";
     }
 }
