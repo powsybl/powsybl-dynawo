@@ -12,6 +12,6 @@ package dynamicModels
 TapChangerBlockingAutomaton {
     dynamicModelId "ZAB"
     parameterSetId "ZAB"
-    uMeasurement "NGEN"
+    uMeasurements "NGEN"
     transformers "GEN", "NHV2_NLOAD"
 }
