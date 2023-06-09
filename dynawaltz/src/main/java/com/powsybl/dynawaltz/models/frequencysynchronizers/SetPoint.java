@@ -10,7 +10,7 @@ package com.powsybl.dynawaltz.models.frequencysynchronizers;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.VarConnection;
-import com.powsybl.dynawaltz.models.generators.OmegaRefGeneratorModel;
+import com.powsybl.dynawaltz.models.generators.SynchronizedGeneratorModel;
 import com.powsybl.dynawaltz.xml.ParametersXml;
 
 import javax.xml.stream.XMLStreamException;
@@ -27,8 +27,8 @@ import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
  */
 public class SetPoint extends AbstractFrequencySynchronizer {
 
-    public SetPoint(List<OmegaRefGeneratorModel> omegaRefGenerators) {
-        super(omegaRefGenerators);
+    public SetPoint(List<SynchronizedGeneratorModel> synchronizedGenerators) {
+        super(synchronizedGenerators);
     }
 
     @Override
@@ -44,14 +44,14 @@ public class SetPoint extends AbstractFrequencySynchronizer {
         writer.writeEndElement();
     }
 
-    private List<VarConnection> getVarConnectionsWithOmegaRefGenerator(OmegaRefGeneratorModel connected) {
+    private List<VarConnection> getVarConnectionsWithSynchronizedGenerator(SynchronizedGeneratorModel connected) {
         return connected.getSetPointVarConnections();
     }
 
     @Override
     public void createMacroConnections(DynaWaltzContext context) throws PowsyblException {
-        for (OmegaRefGeneratorModel gen : omegaRefGenerators) {
-            createMacroConnections(gen, getVarConnectionsWithOmegaRefGenerator(gen), context);
+        for (SynchronizedGeneratorModel gen : synchronizedGenerators) {
+            createMacroConnections(gen, getVarConnectionsWithSynchronizedGenerator(gen), context);
         }
     }
 }

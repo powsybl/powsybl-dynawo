@@ -8,7 +8,7 @@
 package com.powsybl.dynawaltz.xml;
 
 import com.powsybl.dynawaltz.models.buses.InfiniteBus;
-import com.powsybl.dynawaltz.models.generators.OmegaRefGenerator;
+import com.powsybl.dynawaltz.models.generators.SynchronizedGenerator;
 import com.powsybl.dynawaltz.models.transformers.TransformerFixedRatio;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.Test;
@@ -29,7 +29,7 @@ class SetPointInfiniteBusModelXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void addDynamicModels() {
-        dynamicModels.add(new OmegaRefGenerator("BBM_GEN", network.getGenerator("GEN"), "pq", "GeneratorPQ"));
+        dynamicModels.add(new SynchronizedGenerator("BBM_GEN", network.getGenerator("GEN"), "pq", "GeneratorPQ"));
         dynamicModels.add(new TransformerFixedRatio("BBM_TR", network.getTwoWindingsTransformer("NGEN_NHV1"), "t", "TransformerFixedRatio"));
         dynamicModels.add(new InfiniteBus("BBM_BUS", network.getBusBreakerView().getBus("NGEN"), "ib", "InfiniteBus"));
     }

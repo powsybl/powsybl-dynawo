@@ -9,7 +9,7 @@ package com.powsybl.dynawaltz.xml;
 
 import com.powsybl.dynawaltz.models.events.EventActivePowerVariation;
 import com.powsybl.dynawaltz.models.generators.GeneratorSynchronousControllable;
-import com.powsybl.dynawaltz.models.generators.OmegaRefGeneratorControllable;
+import com.powsybl.dynawaltz.models.generators.SynchronizedGeneratorControllable;
 import com.powsybl.dynawaltz.models.loads.LoadAlphaBetaControllable;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.Test;
@@ -30,7 +30,7 @@ class ActivePowerVariationEventXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void addDynamicModels() {
-        dynamicModels.add(new OmegaRefGeneratorControllable("BBM_GENC", network.getGenerator("GEN2"), "GPV", "GeneratorPV"));
+        dynamicModels.add(new SynchronizedGeneratorControllable("BBM_GENC", network.getGenerator("GEN2"), "GPV", "GeneratorPV"));
         dynamicModels.add(new GeneratorSynchronousControllable("BBM_GENC2", network.getGenerator("GEN3"), "GSTWPR", "GeneratorSynchronousFourWindingsGoverPropVRPropInt"));
         dynamicModels.add(new LoadAlphaBetaControllable("BBM_LOADC", network.getLoad("LOAD2"), "load", "LoadAlphaBeta"));
         eventModels.add(new EventActivePowerVariation(network.getGenerator("GEN"), 1, 1.1));

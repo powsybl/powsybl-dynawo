@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
  */
-public interface OmegaRefGeneratorModel extends GeneratorModel {
+public interface SynchronizedGeneratorModel extends GeneratorModel {
 
     String getRunningVarName();
 
