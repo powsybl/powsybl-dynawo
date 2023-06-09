@@ -39,8 +39,8 @@ class CurrentLimitTwoLevelsAutomatonGroovyExtension extends AbstractPureDynamicG
 
     static class CurrentLimitAutomatonTwoLevelBuilder extends CurrentLimitAutomatonGroovyExtension.CurrentLimitAutomatonBuilder {
 
-        Branch<? extends Branch> equipment2
-        Side side2
+        Branch<? extends Branch> iMeasurement2
+        Side iMeasurement2Side
 
         CurrentLimitAutomatonTwoLevelBuilder(Network network, String lib) {
             super(network, lib)
@@ -55,23 +55,23 @@ class CurrentLimitTwoLevelsAutomatonGroovyExtension extends AbstractPureDynamicG
         }
 
         void iMeasurement2(String staticId) {
-            equipment2 = network.getBranch(staticId)
-            if (!equipment2) {
+            iMeasurement2 = network.getBranch(staticId)
+            if (!iMeasurement2) {
                 throw new DslException("Equipment ${staticId} is not a quadripole")
             }
         }
 
         void iMeasurement2Side(Branch.Side side) {
-            this.side2 = SideConverter.convert(side)
+            this.iMeasurement2Side = SideConverter.convert(side)
         }
 
         @Override
         void checkData() {
             super.checkData()
-            if (!equipment2) {
+            if (!iMeasurement2) {
                 throw new DslException("'iMeasurement2' field is not set")
             }
-            if (!side2) {
+            if (!iMeasurement2Side) {
                 throw new DslException("'iMeasurement2Side' field is not set")
             }
         }
@@ -79,7 +79,7 @@ class CurrentLimitTwoLevelsAutomatonGroovyExtension extends AbstractPureDynamicG
         @Override
         CurrentLimitTwoLevelsAutomaton build() {
             checkData()
-            new CurrentLimitTwoLevelsAutomaton(dynamicModelId, parameterSetId, equipment, side, equipment2, side2, controlledEquipment, lib)
+            new CurrentLimitTwoLevelsAutomaton(dynamicModelId, parameterSetId, iMeasurement, iMeasurementSide, iMeasurement2, iMeasurement2Side, controlledEquipment, lib)
         }
     }
 }
