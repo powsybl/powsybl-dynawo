@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.dsl.models.svcs
+package com.powsybl.dynawaltz.dsl.models.svarcs
 
 import com.google.auto.service.AutoService
 import com.powsybl.dsl.DslException
@@ -21,12 +21,12 @@ import com.powsybl.iidm.network.StaticVarCompensator
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class SvcGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+class SvarcGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
-    protected static final String SVC = "staticVarCompensators"
+    protected static final String SVARC = "staticVarCompensators"
 
-    SvcGroovyExtension() {
-        super(SVC)
+    SvarcGroovyExtension() {
+        super(SVARC)
     }
 
     @Override
@@ -36,7 +36,7 @@ class SvcGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel> 
 
     static class SvcBuilder extends AbstractDynamicModelBuilder {
 
-        StaticVarCompensator svc
+        StaticVarCompensator svarc
         EquipmentConfig equipmentConfig
 
         SvcBuilder(Network network, EquipmentConfig equipmentConfig) {
@@ -46,16 +46,16 @@ class SvcGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel> 
 
         void checkData() {
             super.checkData()
-            svc = network.getStaticVarCompensator(staticId)
-            if (svc == null) {
+            svarc = network.getStaticVarCompensator(staticId)
+            if (svarc == null) {
                 throw new DslException("Static var compensator static id unknown: " + staticId)
             }
         }
 
         @Override
-        com.powsybl.dynawaltz.models.svcs.StaticVarCompensator build() {
+        com.powsybl.dynawaltz.models.svarcs.StaticVarCompensator build() {
             checkData()
-            new com.powsybl.dynawaltz.models.svcs.StaticVarCompensator(dynamicModelId, svc, parameterSetId, equipmentConfig.lib)
+            new com.powsybl.dynawaltz.models.svarcs.StaticVarCompensator(dynamicModelId, svarc, parameterSetId, equipmentConfig.lib)
         }
     }
 }
