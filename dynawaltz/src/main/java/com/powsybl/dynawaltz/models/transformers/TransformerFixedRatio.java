@@ -38,7 +38,7 @@ public class TransformerFixedRatio extends AbstractEquipmentBlackBoxModel<TwoWin
         return transformerLib;
     }
 
-    private List<VarConnection> getVarConnectionsWithBus(BusModel connected, Side side) {
+    private List<VarConnection> getVarConnectionsWith(BusModel connected, Side side) {
         return List.of(new VarConnection(getTerminalVarName(side), connected.getTerminalVarName()));
     }
 
@@ -50,7 +50,7 @@ public class TransformerFixedRatio extends AbstractEquipmentBlackBoxModel<TwoWin
     public void createMacroConnections(DynaWaltzContext context) {
         equipment.getTerminals().forEach(t -> {
             String busStaticId = BusUtils.getConnectableBusStaticId(t);
-            createMacroConnections(busStaticId, BusModel.class, this::getVarConnectionsWithBus, context, SideConverter.convert(equipment.getSide(t)));
+            createMacroConnections(busStaticId, BusModel.class, this::getVarConnectionsWith, context, SideConverter.convert(equipment.getSide(t)));
         });
     }
 

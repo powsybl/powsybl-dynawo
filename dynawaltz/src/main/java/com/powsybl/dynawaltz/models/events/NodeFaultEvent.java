@@ -45,10 +45,10 @@ public class NodeFaultEvent extends AbstractEventModel {
 
     @Override
     public void createMacroConnections(DynaWaltzContext context) {
-        createMacroConnections(getEquipment(), BusModel.class, this::getVarConnectionsWithBus, context);
+        createMacroConnections(getEquipment(), BusModel.class, this::getVarConnectionsWith, context);
     }
 
-    private List<VarConnection> getVarConnectionsWithBus(BusModel connected) {
+    private List<VarConnection> getVarConnectionsWith(BusModel connected) {
         return List.of(new VarConnection("fault_terminal", connected.getTerminalVarName()));
     }
 

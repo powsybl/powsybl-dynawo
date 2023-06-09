@@ -43,7 +43,7 @@ public class LoadAlphaBeta extends AbstractLoad {
     }
 
     @Override
-    protected List<VarConnection> getVarConnectionsWithBus(BusModel connected) {
+    protected List<VarConnection> getVarConnectionsWith(BusModel connected) {
         List<VarConnection> varConnections = new ArrayList<>(2);
         varConnections.add(new VarConnection(getTerminalVarName(), connected.getTerminalVarName()));
         connected.getSwitchOffSignalVarName()

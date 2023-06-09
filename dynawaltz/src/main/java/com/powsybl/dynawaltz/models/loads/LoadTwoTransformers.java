@@ -41,7 +41,7 @@ public class LoadTwoTransformers extends AbstractLoad implements LoadWithTransfo
     }
 
     @Override
-    protected List<VarConnection> getVarConnectionsWithBus(BusModel connected) {
+    protected List<VarConnection> getVarConnectionsWith(BusModel connected) {
         List<VarConnection> varConnections = new ArrayList<>(3);
         varConnections.add(new VarConnection(getTransformerVar(HIGH_VOLTAGE, "terminal"), connected.getTerminalVarName()));
         connected.getSwitchOffSignalVarName()

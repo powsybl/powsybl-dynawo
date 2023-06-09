@@ -33,8 +33,8 @@ public class LoadOneTransformerTapChanger extends LoadOneTransformer implements 
     }
 
     @Override
-    protected List<VarConnection> getVarConnectionsWithBus(BusModel connected) {
-        List<VarConnection> varConnections = super.getVarConnectionsWithBus(connected);
+    protected List<VarConnection> getVarConnectionsWith(BusModel connected) {
+        List<VarConnection> varConnections = super.getVarConnectionsWith(connected);
         connected.getSwitchOffSignalVarName()
                 .map(switchOff -> new VarConnection("tapChanger_switchOffSignal1", switchOff))
                 .ifPresent(varConnections::add);

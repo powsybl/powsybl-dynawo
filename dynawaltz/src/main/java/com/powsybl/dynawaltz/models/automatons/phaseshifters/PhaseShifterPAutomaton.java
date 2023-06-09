@@ -28,7 +28,7 @@ public class PhaseShifterPAutomaton extends AbstractPhaseShifterAutomaton {
         return "PhaseShifterP";
     }
 
-    protected List<VarConnection> getVarConnectionsWithTransformer(TransformerModel connected) {
+    protected List<VarConnection> getVarConnectionsWith(TransformerModel connected) {
         return Arrays.asList(
                 new VarConnection("phaseShifter_tap", connected.getStepVarName()),
                 new VarConnection("phaseShifter_PMonitored", connected.getPMonitoredVarName()),
