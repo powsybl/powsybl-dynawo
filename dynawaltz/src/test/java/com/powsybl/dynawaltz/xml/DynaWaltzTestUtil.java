@@ -15,7 +15,7 @@ import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton;
 import com.powsybl.dynawaltz.models.events.EventInjectionDisconnection;
 import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection;
 import com.powsybl.dynawaltz.models.generators.GeneratorFictitious;
-import com.powsybl.dynawaltz.models.generators.GeneratorSynchronous;
+import com.powsybl.dynawaltz.models.generators.SynchronousGenerator;
 import com.powsybl.dynawaltz.models.generators.SynchronizedGenerator;
 import com.powsybl.dynawaltz.models.lines.StandardLine;
 import com.powsybl.dynawaltz.models.loads.LoadAlphaBeta;
@@ -79,17 +79,17 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
         });
         network.getGeneratorStream().forEach(g -> {
             if (g.getId().equals("GEN2")) {
-                dynamicModels.add(new GeneratorSynchronous("BBM_" + g.getId(), g, "GSFWPR", "GeneratorSynchronousFourWindingsProportionalRegulations"));
+                dynamicModels.add(new SynchronousGenerator("BBM_" + g.getId(), g, "GSFWPR", "GeneratorSynchronousFourWindingsProportionalRegulations"));
             } else if (g.getId().equals("GEN3")) {
-                dynamicModels.add(new GeneratorSynchronous("BBM_" + g.getId(), g, "GSFW", "GeneratorSynchronousFourWindings"));
+                dynamicModels.add(new SynchronousGenerator("BBM_" + g.getId(), g, "GSFW", "GeneratorSynchronousFourWindings"));
             } else if (g.getId().equals("GEN4")) {
-                dynamicModels.add(new GeneratorSynchronous("BBM_" + g.getId(), g, "GSTW", "GeneratorSynchronousThreeWindings"));
+                dynamicModels.add(new SynchronousGenerator("BBM_" + g.getId(), g, "GSTW", "GeneratorSynchronousThreeWindings"));
             } else if (g.getId().equals("GEN6")) {
                 dynamicModels.add(new GeneratorFictitious("BBM_" + g.getId(), g, "GF"));
             } else if (g.getId().equals("GEN7")) {
                 dynamicModels.add(new SynchronizedGenerator("BBM_" + g.getId(), g, "GPQ", "GeneratorPQ"));
             } else {
-                dynamicModels.add(new GeneratorSynchronous("BBM_" + g.getId(), g, "GSTWPR", "GeneratorSynchronousThreeWindingsProportionalRegulations"));
+                dynamicModels.add(new SynchronousGenerator("BBM_" + g.getId(), g, "GSTWPR", "GeneratorSynchronousThreeWindingsProportionalRegulations"));
             }
         });
 
