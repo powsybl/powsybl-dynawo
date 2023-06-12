@@ -9,7 +9,6 @@ package com.powsybl.dynawaltz.models.frequencysynchronizers;
 
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
-import com.powsybl.dynawaltz.models.generators.SynchronizedGeneratorModel;
 
 import java.util.List;
 
