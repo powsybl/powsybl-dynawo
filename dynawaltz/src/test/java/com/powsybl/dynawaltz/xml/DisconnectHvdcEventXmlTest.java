@@ -54,7 +54,7 @@ class DisconnectHvdcEventXmlTest extends AbstractParametrizedDynamicModelXmlTest
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("provideModels")
-    void writeLoadModel(String dydName, Function< Network, BlackBoxModel> hvdcConstructor, Function< Network, BlackBoxModel> disconnectConstructor) throws SAXException, IOException, XMLStreamException {
+    void writeModel(String dydName, Function< Network, BlackBoxModel> hvdcConstructor, Function< Network, BlackBoxModel> disconnectConstructor) throws SAXException, IOException, XMLStreamException {
         DydXml.write(tmpDir, context);
         ParametersXml.write(tmpDir, context);
         validate("dyd.xsd", dydName, tmpDir.resolve(DynaWaltzConstants.DYD_FILENAME));
@@ -73,7 +73,6 @@ class DisconnectHvdcEventXmlTest extends AbstractParametrizedDynamicModelXmlTest
                 Arguments.of("disconnect_hvdc_vsc_dyd.xml",
                         (Function<Network, BlackBoxModel>) n -> new HvdcVsc(DYN_HVDC_NAME, n.getHvdcLine(HVDC_NAME), "hvdc", "HvdcVsc"),
                         (Function<Network, BlackBoxModel>) n -> new EventHvdcDisconnection(n.getHvdcLine(HVDC_NAME), 1, false, true))
-
         );
     }
 }

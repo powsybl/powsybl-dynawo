@@ -33,14 +33,16 @@ public abstract class AbstractHvdc extends AbstractEquipmentBlackBoxModel<HvdcLi
             new VarMapping("hvdc_QInj2Pu", "q2"),
             new VarMapping("hvdc_state", "state2"));
 
+    protected static final String TERMINAL_PREFIX = "hvdc_terminal";
+
     protected AbstractHvdc(String dynamicModelId, HvdcLine hvdc, String parameterSetId, String lib) {
         super(dynamicModelId, parameterSetId, hvdc, lib);
     }
 
     @Override
     public void createMacroConnections(DynaWaltzContext context) {
-        createMacroConnections(BusUtils.getConnectableBusStaticId(equipment.getConverterStation1().getTerminal()), BusModel.class, this::getVarConnectionsWithBus, context, Side.ONE);
-        createMacroConnections(BusUtils.getConnectableBusStaticId(equipment.getConverterStation2().getTerminal()), BusModel.class, this::getVarConnectionsWithBus, context, Side.TWO);
+        createMacroConnections(BusUtils.getConnectableBusStaticId(equipment.getConverterStation1().getTerminal()), BusModel.class, this::getVarConnectionsWith, context, Side.ONE);
+        createMacroConnections(BusUtils.getConnectableBusStaticId(equipment.getConverterStation2().getTerminal()), BusModel.class, this::getVarConnectionsWith, context, Side.TWO);
     }
 
     @Override
@@ -48,12 +50,16 @@ public abstract class AbstractHvdc extends AbstractEquipmentBlackBoxModel<HvdcLi
         return VAR_MAPPING;
     }
 
-    private List<VarConnection> getVarConnectionsWithBus(BusModel connected, Side side) {
+    protected List<VarConnection> getVarConnectionsWith(BusModel connected, Side side) {
         List<VarConnection> varConnections = new ArrayList<>(2);
-        varConnections.add(new VarConnection("hvdc_terminal" + side.getSideNumber(), connected.getTerminalVarName()));
+        varConnections.add(getSimpleVarConnectionWithBus(connected, side));
         connected.getSwitchOffSignalVarName()
                 .map(switchOff -> new VarConnection("hvdc_switchOffSignal1" + side.getSideSuffix(), switchOff))
                 .ifPresent(varConnections::add);
         return varConnections;
+    }
+
+    protected final VarConnection getSimpleVarConnectionWithBus(BusModel connected, Side side) {
+        return new VarConnection(TERMINAL_PREFIX + side.getSideNumber(), connected.getTerminalVarName());
     }
 }
