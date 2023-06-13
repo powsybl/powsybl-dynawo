@@ -21,7 +21,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.function.Function;
+import java.util.function.BiFunction;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -34,32 +34,37 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class DisconnectionExceptionXmlTest extends AbstractParametrizedDynamicModelXmlTest {
 
     @BeforeEach
-    void setup(String lib, Function<HvdcLine, BlackBoxModel> constructor) {
+    void setup(String exception, Side side, BiFunction<HvdcLine, Side, BlackBoxModel> constructor) {
         setupNetwork();
-        addDynamicModels(constructor);
+        addDynamicModels(side, constructor);
     }
 
     protected void setupNetwork() {
         network = HvdcTestNetwork.createVsc();
     }
 
-    protected void addDynamicModels(Function<HvdcLine, BlackBoxModel> constructor) {
+    protected void addDynamicModels(Side side, BiFunction<HvdcLine, Side, BlackBoxModel> constructor) {
         HvdcLine hvdc = network.getHvdcLine("L");
-        dynamicModels.add(constructor.apply(hvdc));
-        eventModels.add(new EventHvdcDisconnection(hvdc, 1, true, false));
+        dynamicModels.add(constructor.apply(hvdc, side));
+        boolean disconnectOrigin = Side.ONE == side;
+        eventModels.add(new EventHvdcDisconnection(hvdc, 1, disconnectOrigin, !disconnectOrigin));
     }
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("provideModels")
-    void disconnectionOnDanglingSide(String lib, Function<HvdcLine, BlackBoxModel> constructor) {
+    void disconnectionOnDanglingSide(String exception, Side side, BiFunction<HvdcLine, Side, BlackBoxModel> constructor) {
         Exception e = assertThrows(PowsyblException.class, this::setupDynawaltzContext);
-        assertEquals("Equipment " + lib + " side 1 is dangling and can't be disconnected with an event", e.getMessage());
+        assertEquals(exception, e.getMessage());
     }
 
     private static Stream<Arguments> provideModels() {
         return Stream.of(
-                Arguments.of("HvdcPVDangling", (Function<HvdcLine, BlackBoxModel>) hvdc -> new HvdcPvDangling("BBM_L", hvdc, "hvdc", "HvdcPVDangling", Side.ONE)),
-                Arguments.of("HvdcVSCDanglingUdc", (Function<HvdcLine, BlackBoxModel>) hvdc -> new HvdcVscDangling("BBM_L", hvdc, "hvdc", "HvdcVSCDanglingUdc", Side.ONE))
+                Arguments.of("Equipment HvdcPVDangling side 1 is dangling and can't be disconnected with an event",
+                        Side.ONE,
+                        (BiFunction<HvdcLine, Side, BlackBoxModel>) (hvdc, side) -> new HvdcPvDangling("BBM_L", hvdc, "hvdc", "HvdcPVDangling", side)),
+                Arguments.of("Equipment HvdcVSCDanglingUdc side 2 is dangling and can't be disconnected with an event",
+                        Side.TWO,
+                        (BiFunction<HvdcLine, Side, BlackBoxModel>) (hvdc, side) -> new HvdcVscDangling("BBM_L", hvdc, "hvdc", "HvdcVSCDanglingUdc", side))
         );
     }
 }
