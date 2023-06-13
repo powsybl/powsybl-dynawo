@@ -6,6 +6,8 @@ import com.powsybl.dynawaltz.models.buses.BusModel;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 
 public final class DanglingSide {
 
@@ -25,15 +27,13 @@ public final class DanglingSide {
         return side.getSideNumber();
     }
 
-    boolean isSide1Dangling() {
-        return Side.ONE == side;
+    public void createMacroConnections(BiFunction<BusModel, Side, List<VarConnection>> basicVarConnectionsSupplier,
+                                       BiConsumer<BiFunction<BusModel, Side, List<VarConnection>>, Side> connectionCreator) {
+        connectionCreator.accept(this::getVarConnectionsWith, side);
+        connectionCreator.accept(basicVarConnectionsSupplier, side.getOppositeSide());
     }
 
-    boolean isSide2Dangling() {
-        return Side.TWO == side;
-    }
-
-    public List<VarConnection> getVarConnectionsWith(BusModel connected) {
+    private List<VarConnection> getVarConnectionsWith(BusModel connected, Side side) {
         return List.of(new VarConnection(prefix + side.getSideNumber(), connected.getTerminalVarName()));
     }
 }
