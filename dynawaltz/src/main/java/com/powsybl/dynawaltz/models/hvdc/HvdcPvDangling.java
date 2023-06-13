@@ -12,6 +12,7 @@ import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.buses.BusModel;
 import com.powsybl.dynawaltz.models.utils.BusUtils;
+import com.powsybl.dynawaltz.models.utils.SideConverter;
 import com.powsybl.iidm.network.HvdcLine;
 
 /**
@@ -28,13 +29,13 @@ public class HvdcPvDangling extends HvdcPv {
 
     @Override
     public void createMacroConnections(DynaWaltzContext context) {
-        if (danglingSide.isSide1Dangling()) {
-            createMacroConnections(BusUtils.getConnectableBusStaticId(equipment.getConverterStation1().getTerminal()), BusModel.class, danglingSide::getVarConnectionsWith, context, Side.ONE);
-            createMacroConnections(BusUtils.getConnectableBusStaticId(equipment.getConverterStation2().getTerminal()), BusModel.class, this::getVarConnectionsWith, context, Side.TWO);
-        } else {
-            createMacroConnections(BusUtils.getConnectableBusStaticId(equipment.getConverterStation1().getTerminal()), BusModel.class, this::getVarConnectionsWith, context, Side.ONE);
-            createMacroConnections(BusUtils.getConnectableBusStaticId(equipment.getConverterStation2().getTerminal()), BusModel.class, danglingSide::getVarConnectionsWith, context, Side.TWO);
-        }
+        danglingSide.createMacroConnections(
+            this::getVarConnectionsWith,
+            (varCoSupplier, side) ->
+            createMacroConnections(
+                    BusUtils.getConnectableBusStaticId(equipment.getConverterStation(SideConverter.convert(side)).getTerminal()),
+                    BusModel.class, varCoSupplier, context, side)
+        );
     }
 
     @Override
