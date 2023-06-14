@@ -6,13 +6,13 @@
  */
 package com.powsybl.dynawaltz.models.lines;
 
-import com.powsybl.dynawaltz.models.AbstractNetworkModel;
+import com.powsybl.dynawaltz.models.defaultmodels.AbstractDefaultModel;
 import com.powsybl.dynawaltz.models.Side;
 
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  */
-public class DefaultLineModel extends AbstractNetworkModel implements LineModel {
+public class DefaultLineModel extends AbstractDefaultModel implements LineModel {
 
     public DefaultLineModel(String staticId) {
         super(staticId);
@@ -20,7 +20,7 @@ public class DefaultLineModel extends AbstractNetworkModel implements LineModel 
 
     @Override
     public String getName() {
-        return "NetworkLine";
+        return "DefaultLine";
     }
 
     @Override

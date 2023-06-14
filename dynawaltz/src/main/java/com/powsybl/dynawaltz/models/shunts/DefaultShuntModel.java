@@ -7,12 +7,12 @@
  */
 package com.powsybl.dynawaltz.models.shunts;
 
-import com.powsybl.dynawaltz.models.AbstractInjectionNetworkModel;
+import com.powsybl.dynawaltz.models.defaultmodels.AbstractInjectionDefaultModel;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class DefaultShuntModel extends AbstractInjectionNetworkModel implements ShuntModel {
+public class DefaultShuntModel extends AbstractInjectionDefaultModel implements ShuntModel {
 
     public DefaultShuntModel(String staticId) {
         super(staticId);
@@ -20,7 +20,7 @@ public class DefaultShuntModel extends AbstractInjectionNetworkModel implements 
 
     @Override
     public String getName() {
-        return "NetworkShunt";
+        return "DefaultShunt";
     }
 
     @Override

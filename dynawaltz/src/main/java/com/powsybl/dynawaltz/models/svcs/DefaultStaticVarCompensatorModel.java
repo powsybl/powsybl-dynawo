@@ -1,8 +1,8 @@
 package com.powsybl.dynawaltz.models.svcs;
 
-import com.powsybl.dynawaltz.models.AbstractInjectionNetworkModel;
+import com.powsybl.dynawaltz.models.defaultmodels.AbstractInjectionDefaultModel;
 
-public class DefaultStaticVarCompensatorModel extends AbstractInjectionNetworkModel implements StaticVarCompensatorModel {
+public class DefaultStaticVarCompensatorModel extends AbstractInjectionDefaultModel implements StaticVarCompensatorModel {
 
     public DefaultStaticVarCompensatorModel(String staticId) {
         super(staticId);
@@ -10,6 +10,6 @@ public class DefaultStaticVarCompensatorModel extends AbstractInjectionNetworkMo
 
     @Override
     public String getName() {
-        return "NetworkStaticVarCompensator";
+        return "DefaultStaticVarCompensator";
     }
 }
