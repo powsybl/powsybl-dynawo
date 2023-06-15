@@ -63,6 +63,7 @@ public class NetworkModel {
         if (dmf != null) {
             return dmf.getDefaultModel(staticId);
         }
+
         throw new PowsyblException("Default model not implemented for " + clazz.getSimpleName());
     }
 

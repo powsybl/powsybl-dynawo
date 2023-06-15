@@ -38,7 +38,7 @@ public class DynaWaltzContext {
     private final DynaWaltzParameters dynaWaltzParameters;
     private final List<BlackBoxModel> dynamicModels;
     private final List<BlackBoxModel> eventModels;
-    private final Map<String, EquipmentBlackBoxModelModel> staticIdBlackBoxModelMap;
+    private final Map<String, EquipmentBlackBoxModel> staticIdBlackBoxModelMap;
     private final List<Curve> curves;
     private final Map<String, MacroStaticReference> macroStaticReferences = new LinkedHashMap<>();
     private final List<MacroConnect> macroConnectList = new ArrayList<>();
@@ -53,9 +53,9 @@ public class DynaWaltzContext {
         this.dynamicModels = Objects.requireNonNull(dynamicModels);
         this.eventModels = checkEventModelIdUniqueness(Objects.requireNonNull(eventModels));
         this.staticIdBlackBoxModelMap = getInputBlackBoxDynamicModelStream()
-                .filter(EquipmentBlackBoxModelModel.class::isInstance)
-                .map(EquipmentBlackBoxModelModel.class::cast)
-                .collect(Collectors.toMap(EquipmentBlackBoxModelModel::getStaticId, Function.identity(), this::mergeDuplicateStaticId, LinkedHashMap::new));
+                .filter(EquipmentBlackBoxModel.class::isInstance)
+                .map(EquipmentBlackBoxModel.class::cast)
+                .collect(Collectors.toMap(EquipmentBlackBoxModel::getStaticId, Function.identity(), this::mergeDuplicateStaticId, LinkedHashMap::new));
         this.curves = Objects.requireNonNull(curves);
         this.parameters = Objects.requireNonNull(parameters);
         this.dynaWaltzParameters = Objects.requireNonNull(dynaWaltzParameters);
@@ -133,7 +133,7 @@ public class DynaWaltzContext {
         throw new PowsyblException(String.format(MODEL_ID_EXCEPTION, dynamicId, connectableClass.getSimpleName()));
     }
 
-    private EquipmentBlackBoxModelModel mergeDuplicateStaticId(EquipmentBlackBoxModelModel bbm1, EquipmentBlackBoxModelModel bbm2) {
+    private EquipmentBlackBoxModel mergeDuplicateStaticId(EquipmentBlackBoxModel bbm1, EquipmentBlackBoxModel bbm2) {
         throw new PowsyblException("Duplicate staticId: " + bbm1.getStaticId());
     }
 

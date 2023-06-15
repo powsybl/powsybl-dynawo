@@ -15,7 +15,7 @@ import com.powsybl.dynamicsimulation.groovy.GroovyDynamicModelsSupplier;
 import com.powsybl.dynamicsimulation.groovy.GroovyExtension;
 import com.powsybl.dynawaltz.DynaWaltzProvider;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
-import com.powsybl.dynawaltz.models.EquipmentBlackBoxModelModel;
+import com.powsybl.dynawaltz.models.EquipmentBlackBoxModel;
 import com.powsybl.dynawaltz.models.automatons.*;
 import com.powsybl.dynawaltz.models.automatons.phaseshifters.PhaseShifterIAutomaton;
 import com.powsybl.dynawaltz.models.automatons.phaseshifters.PhaseShifterPAutomaton;
@@ -51,7 +51,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("provideEquipmentModelData")
-    void testEquipmentDynamicModels(String groovyScriptName, Class<? extends EquipmentBlackBoxModelModel> modelClass, Network network, String staticId, String dynamicId, String parameterId, String lib) {
+    void testEquipmentDynamicModels(String groovyScriptName, Class<? extends EquipmentBlackBoxModel> modelClass, Network network, String staticId, String dynamicId, String parameterId, String lib) {
         DynamicModelsSupplier supplier = new GroovyDynamicModelsSupplier(getResourceAsStream(groovyScriptName), EXTENSIONS);
         List<DynamicModel> dynamicModels = supplier.get(network);
         assertEquals(1, dynamicModels.size());
@@ -77,7 +77,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
         assertEquals(exceptionMessage, e.getMessage());
     }
 
-    void assertEquipmentBlackBoxModel(EquipmentBlackBoxModelModel bbm, String dynamicId, String staticId, String parameterId, String lib) {
+    void assertEquipmentBlackBoxModel(EquipmentBlackBoxModel bbm, String dynamicId, String staticId, String parameterId, String lib) {
         assertEquals(dynamicId, bbm.getDynamicModelId());
         assertEquals(staticId, bbm.getStaticId());
         assertEquals(parameterId, bbm.getParameterSetId());
