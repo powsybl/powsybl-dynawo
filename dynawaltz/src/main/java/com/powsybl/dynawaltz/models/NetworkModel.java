@@ -63,7 +63,7 @@ public class NetworkModel {
         if (dmf != null) {
             return dmf.getDefaultModel(staticId);
         }
-        throw new PowsyblException("Default model not implemented for " + clazz.getSimpleName());
+        throw new PowsyblException(staticId + " Default model not implemented for " + clazz.getSimpleName());
     }
 
     public <T extends Model> T getDefaultModel(Identifiable<?> equipment, Class<T> connectableClass) {
@@ -78,8 +78,8 @@ public class NetworkModel {
             if (connectableClass.isInstance(defaultModel)) {
                 return connectableClass.cast(defaultModel);
             }
-            throw new PowsyblException("Default model " + defaultModel.getClass().getSimpleName() + " does not implement " + connectableClass.getSimpleName() + " interface");
+            throw new PowsyblException(equipment.getId() + " Default model " + defaultModel.getClass().getSimpleName() + " does not implement " + connectableClass.getSimpleName() + " interface");
         }
-        throw new PowsyblException("Default model not implemented for " + equipmentClass.getSimpleName());
+        throw new PowsyblException(equipment.getId() + " Default model not implemented for " + equipmentClass.getSimpleName());
     }
 }

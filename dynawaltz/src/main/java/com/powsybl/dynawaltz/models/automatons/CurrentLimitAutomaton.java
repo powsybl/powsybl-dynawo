@@ -8,6 +8,7 @@ package com.powsybl.dynawaltz.models.automatons;
 
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
+import com.powsybl.dynawaltz.models.MacroConnectAttribute;
 import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.iidm.network.Branch;
@@ -49,8 +50,8 @@ public class CurrentLimitAutomaton extends AbstractPureDynamicBlackBoxModel {
 
     @Override
     public void createMacroConnections(DynaWaltzContext context) {
-        createMacroConnections(measuredQuadripole, QuadripoleModel.class, this::getVarConnectionsWithMeasuredQuadripole, context, MEASURE_SUFFIX + measuredSide.getSideSuffix());
-        createMacroConnections(controlledQuadripole, QuadripoleModel.class, this::getVarConnectionsWithControlledQuadripole, context, CONTROL_SUFFIX);
+        createMacroConnections(measuredQuadripole, QuadripoleModel.class, this::getVarConnectionsWithMeasuredQuadripole, context, MEASURE_SUFFIX + measuredSide.getSideSuffix(), MacroConnectAttribute.of("name2", measuredQuadripole.getId()));
+        createMacroConnections(controlledQuadripole, QuadripoleModel.class, this::getVarConnectionsWithControlledQuadripole, context, CONTROL_SUFFIX, MacroConnectAttribute.of("name2", controlledQuadripole.getId()));
     }
 
     protected List<VarConnection> getVarConnectionsWithMeasuredQuadripole(QuadripoleModel connected) {

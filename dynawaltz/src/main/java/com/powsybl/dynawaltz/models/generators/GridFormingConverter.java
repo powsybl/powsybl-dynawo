@@ -82,4 +82,9 @@ public class GridFormingConverter extends AbstractEquipmentBlackBoxModel<Generat
     public List<VarMapping> getVarsMapping() {
         return VAR_MAPPING;
     }
+
+    @Override
+    public String getBlackBoxModelId() {
+        return getDynamicModelId();
+    }
 }

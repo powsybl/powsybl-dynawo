@@ -54,12 +54,12 @@ public abstract class AbstractHvdc extends AbstractEquipmentBlackBoxModel<HvdcLi
         List<VarConnection> varConnections = new ArrayList<>(2);
         varConnections.add(getSimpleVarConnectionWithBus(connected, side));
         connected.getSwitchOffSignalVarName()
-                .map(switchOff -> new VarConnection("hvdc_switchOffSignal1" + side.getSideSuffix(), switchOff))
+                .map(switchOff -> new VarConnection("hvdc_switchOffSignal1" + side.getSideSuffix(), switchOff.replace("NODE", "NODE" + side.getSideNumber())))
                 .ifPresent(varConnections::add);
         return varConnections;
     }
 
     protected final VarConnection getSimpleVarConnectionWithBus(BusModel connected, Side side) {
-        return new VarConnection(TERMINAL_PREFIX + side.getSideNumber(), connected.getTerminalVarName());
+        return new VarConnection(TERMINAL_PREFIX + side.getSideNumber(), connected.getTerminalVarName().replace("NODE", "NODE" + side.getSideNumber()));
     }
 }

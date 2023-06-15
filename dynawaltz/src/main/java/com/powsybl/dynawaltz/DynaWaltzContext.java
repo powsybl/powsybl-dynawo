@@ -30,7 +30,7 @@ import java.util.stream.Stream;
  */
 public class DynaWaltzContext {
 
-    private static final String MODEL_ID_EXCEPTION = "The model identified by the static id %s does not match the expected model (%s)";
+    private static final String MODEL_ID_EXCEPTION = "The model identified by the static id %s does not match the expected model (%s), instead got %s.";
 
     private final Network network;
     private final String workingVariantId;
@@ -52,16 +52,17 @@ public class DynaWaltzContext {
         this.workingVariantId = Objects.requireNonNull(workingVariantId);
         this.dynamicModels = Objects.requireNonNull(dynamicModels);
         this.eventModels = checkEventModelIdUniqueness(Objects.requireNonNull(eventModels));
-        this.staticIdBlackBoxModelMap = getInputBlackBoxDynamicModelStream()
+        this.staticIdBlackBoxModelMap = new ArrayList<>(dynamicModels).stream()
                 .filter(EquipmentBlackBoxModelModel.class::isInstance)
                 .map(EquipmentBlackBoxModelModel.class::cast)
-                .collect(Collectors.toMap(EquipmentBlackBoxModelModel::getStaticId, Function.identity(), this::mergeDuplicateStaticId, LinkedHashMap::new));
+                .collect(Collectors.toMap(EquipmentBlackBoxModelModel::getStaticId, Function.identity(),
+                    (bbm1, bbm2) -> mergeDuplicateStaticId(bbm1, bbm2, dynamicModels), LinkedHashMap::new));
         this.curves = Objects.requireNonNull(curves);
         this.parameters = Objects.requireNonNull(parameters);
         this.dynaWaltzParameters = Objects.requireNonNull(dynaWaltzParameters);
         this.frequencySynchronizer = setupFrequencySynchronizer(dynamicModels.stream().anyMatch(InfiniteBus.class::isInstance) ? SetPoint::new : OmegaRef::new);
 
-        for (BlackBoxModel bbm : getBlackBoxDynamicModelStream().collect(Collectors.toList())) {
+        for (BlackBoxModel bbm : getBlackBoxDynamicModels()) {
             macroStaticReferences.computeIfAbsent(bbm.getName(), k -> new MacroStaticReference(k, bbm.getVarsMapping()));
             bbm.createMacroConnections(this);
         }
@@ -106,7 +107,7 @@ public class DynaWaltzContext {
         if (clazz.isInstance(bbm)) {
             return clazz.cast(bbm);
         }
-        throw new PowsyblException(String.format(MODEL_ID_EXCEPTION, staticId, clazz.getSimpleName()));
+        throw new PowsyblException(String.format(MODEL_ID_EXCEPTION, staticId, clazz.getSimpleName(), bbm.getName()));
     }
 
     public <T extends Model> T getDynamicModel(Identifiable<?> equipment, Class<T> connectableClass) {
@@ -117,7 +118,7 @@ public class DynaWaltzContext {
         if (connectableClass.isInstance(bbm)) {
             return connectableClass.cast(bbm);
         }
-        throw new PowsyblException(String.format(MODEL_ID_EXCEPTION, equipment.getId(), connectableClass.getSimpleName()));
+        throw new PowsyblException(String.format(MODEL_ID_EXCEPTION, equipment.getId(), connectableClass.getSimpleName(), bbm.getName()));
     }
 
     public <T extends Model> T getPureDynamicModel(String dynamicId, Class<T> connectableClass) {
@@ -130,11 +131,13 @@ public class DynaWaltzContext {
         if (connectableClass.isInstance(bbm)) {
             return connectableClass.cast(bbm);
         }
-        throw new PowsyblException(String.format(MODEL_ID_EXCEPTION, dynamicId, connectableClass.getSimpleName()));
+        throw new PowsyblException(String.format(MODEL_ID_EXCEPTION, dynamicId, connectableClass.getSimpleName(), bbm.getName()));
     }
 
-    private EquipmentBlackBoxModelModel mergeDuplicateStaticId(EquipmentBlackBoxModelModel bbm1, EquipmentBlackBoxModelModel bbm2) {
-        throw new PowsyblException("Duplicate staticId: " + bbm1.getStaticId());
+    private EquipmentBlackBoxModelModel mergeDuplicateStaticId(EquipmentBlackBoxModelModel bbm1, EquipmentBlackBoxModelModel bbm2, List<BlackBoxModel> dynamicModels) {
+        dynamicModels.remove(bbm2);
+        return bbm1;
+        // throw new PowsyblException("Duplicate staticId: " + bbm1.getStaticId());
     }
 
     private static List<BlackBoxModel> checkEventModelIdUniqueness(List<BlackBoxModel> eventModels) {
@@ -200,7 +203,7 @@ public class DynaWaltzContext {
     }
 
     private Stream<BlackBoxModel> getInputBlackBoxDynamicModelStream() {
-        //Doesn't include the OmegaRef, it only concerns the DynamicModels provided by the user
+        // Doesn't include the OmegaRef, it only concerns the DynamicModels provided by the user
         return dynamicModels.stream();
     }
 
@@ -212,7 +215,12 @@ public class DynaWaltzContext {
     }
 
     public List<BlackBoxModel> getBlackBoxDynamicModels() {
-        return getBlackBoxDynamicModelStream().collect(Collectors.toList());
+//        List<BlackBoxModel> list = new ArrayList<>(staticIdBlackBoxModelMap.values());
+//        if (!frequencySynchronizer.isEmpty()) {
+//            list.add(frequencySynchronizer);
+//        }
+//        return list;
+        return getBlackBoxDynamicModelStream().distinct().collect(Collectors.toList());
     }
 
     public List<BlackBoxModel> getBlackBoxModels() {

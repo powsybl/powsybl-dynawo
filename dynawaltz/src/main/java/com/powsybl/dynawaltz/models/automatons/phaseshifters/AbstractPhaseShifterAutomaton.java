@@ -9,6 +9,7 @@ package com.powsybl.dynawaltz.models.automatons.phaseshifters;
 
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
+import com.powsybl.dynawaltz.models.MacroConnectAttribute;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.transformers.TransformerModel;
 import com.powsybl.iidm.network.TwoWindingsTransformer;
@@ -30,7 +31,7 @@ public abstract class AbstractPhaseShifterAutomaton extends AbstractPureDynamicB
 
     @Override
     public void createMacroConnections(DynaWaltzContext context) {
-        createMacroConnections(transformer, TransformerModel.class, this::getVarConnectionsWith, context);
+        createMacroConnections(transformer, TransformerModel.class, this::getVarConnectionsWith, context, MacroConnectAttribute.of("name2", transformer.getId()));
     }
 
     protected abstract List<VarConnection> getVarConnectionsWith(TransformerModel connected);

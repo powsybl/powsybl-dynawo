@@ -38,7 +38,11 @@ class PhaseShifterIAutomatonGroovyExtension extends AbstractPureDynamicGroovyExt
         @Override
         PhaseShifterIAutomaton build() {
             checkData()
-            new PhaseShifterIAutomaton(dynamicModelId, transformer, parameterSetId)
+            if (transformer) {
+                new PhaseShifterIAutomaton(dynamicModelId, transformer, parameterSetId)
+            } else {
+                println("PhaseShifterI " + dynamicModelId + " not instantiated.")
+            }
         }
     }
 }

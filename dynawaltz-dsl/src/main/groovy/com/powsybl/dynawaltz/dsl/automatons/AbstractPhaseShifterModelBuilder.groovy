@@ -27,9 +27,9 @@ abstract class AbstractPhaseShifterModelBuilder extends AbstractPureDynamicModel
 
     void transformer(String staticId) {
         this.transformer = network.getTwoWindingsTransformer(staticId)
-        if (transformer == null) {
+        /*if (transformer == null) {
             throw new DslException("Transformer static id unknown: " + staticId)
-        }
+        }*/
     }
 
 }

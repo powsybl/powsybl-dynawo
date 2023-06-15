@@ -36,6 +36,26 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        AbstractBlackBoxModel model = (AbstractBlackBoxModel) obj;
+        return dynamicModelId == model.dynamicModelId;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(dynamicModelId);
+    }
+
+    @Override
     public String getName() {
         return getLib();
     }
@@ -131,6 +151,13 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel {
         context.addMacroConnect(macroConnectorId, getMacroConnectFromAttributes(), connectedModel.getMacroConnectToAttributes());
     }
 
+    protected <T extends Model> void createMacroConnections(Identifiable<?> equipment, Class<T> modelClass, Function<T, List<VarConnection>> varConnectionsSupplier, DynaWaltzContext context, String parametrizedName, MacroConnectAttribute... connectFromAttributes) {
+        T connectedModel = context.getDynamicModel(equipment, modelClass);
+        String macroConnectorId = context.addMacroConnector(getName(), connectedModel.getName(), parametrizedName, varConnectionsSupplier.apply(connectedModel));
+        List<MacroConnectAttribute> fromAttributes = Stream.concat(getMacroConnectFromAttributes().stream(), Arrays.stream(connectFromAttributes)).collect(Collectors.toList());
+        context.addMacroConnect(macroConnectorId, fromAttributes, connectedModel.getMacroConnectToAttributes());
+    }
+
     protected <T extends Model> void createPureDynamicMacroConnections(String dynamicId, Class<T> modelClass, Function<T, List<VarConnection>> varConnectionsSupplier, DynaWaltzContext context) {
         T connectedModel = context.getPureDynamicModel(dynamicId, modelClass);
         String macroConnectorId = context.addMacroConnector(getName(), connectedModel.getName(), varConnectionsSupplier.apply(connectedModel));
@@ -142,5 +169,11 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel {
         String macroConnectorId = context.addMacroConnector(getName(), connectedModel.getName(), parametrizedName, varConnectionsSupplier.apply(connectedModel, parametrizedName));
         List<MacroConnectAttribute> fromAttributes = Stream.concat(getMacroConnectFromAttributes().stream(), Arrays.stream(connectFromAttributes)).collect(Collectors.toList());
         context.addMacroConnect(macroConnectorId, fromAttributes, connectedModel.getMacroConnectToAttributes());
+    }
+
+    protected <T extends Model> void createMacroConnections(Identifiable<?> equipment, Class<T> modelClass, BiFunction<T, String, List<VarConnection>> varConnectionsSupplier, DynaWaltzContext context, String parametrizedName) {
+        T connectedModel = context.getDynamicModel(equipment, modelClass);
+        String macroConnectorId = context.addMacroConnector(getName(), connectedModel.getName(), parametrizedName, varConnectionsSupplier.apply(connectedModel, parametrizedName));
+        context.addMacroConnect(macroConnectorId, getMacroConnectFromAttributes(), connectedModel.getMacroConnectToAttributes());
     }
 }

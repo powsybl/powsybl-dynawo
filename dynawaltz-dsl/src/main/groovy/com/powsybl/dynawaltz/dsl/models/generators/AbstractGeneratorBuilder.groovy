@@ -26,8 +26,8 @@ abstract class AbstractGeneratorBuilder extends AbstractDynamicModelBuilder {
     void checkData() {
         super.checkData()
         generator = network.getGenerator(staticId)
-        if (generator == null) {
+        /*if (generator == null) {
             throw new DslException("Generator static id unknown: " + staticId)
-        }
+        }*/
     }
 }

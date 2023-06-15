@@ -79,17 +79,21 @@ class TapChangerBlockingAutomatonGroovyExtension extends AbstractPureDynamicGroo
         void uMeasurements(String[] staticIds) {
             uMeasurements = staticIds.collect {
                 Bus bus = network.getBusBreakerView().getBus(it)
-                if (bus == null) {
+                /*if (bus == null) {
                     throw new DslException("Bus static id unknown: " + it)
-                }
+                }*/
                 return bus
-            }
+            } - null
         }
 
         @Override
         TapChangerBlockingAutomaton build() {
             checkData()
-            new TapChangerBlockingAutomaton(dynamicModelId, parameterSetId, transformers, loads, tapChangerAutomatonIds, uMeasurements)
+            if (uMeasurements) {
+                new TapChangerBlockingAutomaton(dynamicModelId, parameterSetId, transformers, loads, tapChangerAutomatonIds, uMeasurements)
+            } else {
+                println("TapChangerBlockingAutomaton " + dynamicModelId + " not instantiated.")
+            }
         }
     }
 }

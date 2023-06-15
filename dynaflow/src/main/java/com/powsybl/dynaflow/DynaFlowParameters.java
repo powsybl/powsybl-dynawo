@@ -120,7 +120,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
     private List<String> chosenOutputs = List.of(OutputTypes.TIMELINE.name());
     private Double timeStep = null;
     private StartingPointMode startingPointMode = null;
-    private boolean mergeLoads = true;
+    private boolean mergeLoads = false;
 
     public Boolean getSvcRegulationOn() {
         return svcRegulationOn;

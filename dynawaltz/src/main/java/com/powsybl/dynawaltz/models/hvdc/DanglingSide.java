@@ -34,6 +34,6 @@ public final class DanglingSide {
     }
 
     private List<VarConnection> getVarConnectionsWith(BusModel connected, Side side) {
-        return List.of(new VarConnection(prefix + side.getSideNumber(), connected.getTerminalVarName()));
+        return List.of(new VarConnection(prefix + side.getSideNumber(), connected.getTerminalVarName().replace("NODE", "NODE" + side.getSideNumber())));
     }
 }

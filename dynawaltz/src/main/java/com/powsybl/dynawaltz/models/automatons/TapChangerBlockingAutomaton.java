@@ -10,6 +10,7 @@ package com.powsybl.dynawaltz.models.automatons;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
+import com.powsybl.dynawaltz.models.MacroConnectAttribute;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.buses.BusModel;
 import com.powsybl.dynawaltz.models.transformers.TapChangerModel;
@@ -19,6 +20,7 @@ import com.powsybl.iidm.network.Load;
 import com.powsybl.iidm.network.TwoWindingsTransformer;
 
 import java.util.*;
+import java.util.function.BiFunction;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
@@ -67,10 +69,9 @@ public class TapChangerBlockingAutomaton extends AbstractPureDynamicBlackBoxMode
         return "TapChangerBlockingAutomaton" + uMeasurements.size();
     }
 
-    @Override
     public void createMacroConnections(DynaWaltzContext context) {
         for (TwoWindingsTransformer transformer : transformers) {
-            createMacroConnections(transformer, TapChangerModel.class, this::getVarConnectionsWith, context);
+            createMacroConnections(transformer, TapChangerModel.class, this::getVarConnectionsWith, context, MacroConnectAttribute.of("name2", transformer.getId()));
         }
         for (Load load : loadsWithTransformer) {
             createMacroConnections(load, TapChangerModel.class, this::getVarConnectionsWith, context);
@@ -78,8 +79,14 @@ public class TapChangerBlockingAutomaton extends AbstractPureDynamicBlackBoxMode
         for (String id : tapChangerAutomatonIds) {
             createPureDynamicMacroConnections(id, TapChangerModel.class, this::getVarConnectionsWith, context);
         }
+        int i = 1;
         for (Bus bus : uMeasurements) {
-            createMacroConnections(bus.getId(), BusModel.class, this::getVarConnectionsWith, context);
+            if (uMeasurements.size() == 1) {
+                createMacroConnections(bus, BusModel.class, (BiFunction<BusModel, String, List<VarConnection>>) this::getVarConnectionsWith, context, "", MacroConnectAttribute.of("name2", bus.getId()));
+            } else {
+                createMacroConnections(bus, BusModel.class, (BiFunction<BusModel, String, List<VarConnection>>) this::getVarConnectionsWith, context, String.valueOf(i), MacroConnectAttribute.of("name2", bus.getId()));
+            }
+            i++;
         }
     }
 
@@ -87,9 +94,9 @@ public class TapChangerBlockingAutomaton extends AbstractPureDynamicBlackBoxMode
         return connected.getTapChangerBlockerVarConnections();
     }
 
-    private List<VarConnection> getVarConnectionsWith(BusModel connected) {
+    private List<VarConnection> getVarConnectionsWith(BusModel connected, String suffix) {
         return connected.getUImpinVarName()
-                .map(uImpinVarName -> List.of(new VarConnection("tapChangerBlocking_UMonitored", uImpinVarName)))
+                .map(uImpinVarName -> List.of(new VarConnection("tapChangerBlocking_UMonitored" + suffix, uImpinVarName)))
                 .orElse(Collections.emptyList());
     }
 }

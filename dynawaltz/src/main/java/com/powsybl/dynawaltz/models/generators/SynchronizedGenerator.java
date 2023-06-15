@@ -49,4 +49,9 @@ public class SynchronizedGenerator extends AbstractGeneratorModel implements Fre
     public String getConnectedBusId() {
         return getConnectableBusStaticId(equipment);
     }
+
+    @Override
+    public String getBlackBoxModelId() {
+        return getDynamicModelId();
+    }
 }

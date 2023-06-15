@@ -47,7 +47,7 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
     private ParametersSet networkParameters;
     private ParametersSet solverParameters;
     private SolverType solverType;
-    private boolean mergeLoads;
+    private boolean mergeLoads = false;
     private boolean writeFinalState = DEFAULT_WRITE_FINAL_STATE;
 
     /**

@@ -40,4 +40,6 @@ public interface FrequencySynchronizedModel extends Model {
     String getRunningVarName();
 
     String getConnectedBusId();
+
+    String getBlackBoxModelId();
 }

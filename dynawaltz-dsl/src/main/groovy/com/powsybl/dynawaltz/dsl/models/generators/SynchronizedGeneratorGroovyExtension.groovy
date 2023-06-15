@@ -50,10 +50,25 @@ class SynchronizedGeneratorGroovyExtension extends AbstractEquipmentGroovyExtens
         @Override
         SynchronizedGenerator build() {
             checkData()
-            if (equipmentConfig.isControllable()) {
-                new SynchronizedGeneratorControllable(dynamicModelId, generator, parameterSetId, equipmentConfig.lib)
+            if (generator && generator.getTerminal().isConnected() &&
+                    generator.getTerminal().getBusBreakerView().getBus().getConnectedComponent().getNum() == 0) {
+                if (generator.voltageRegulatorOn) {
+                    if (equipmentConfig.isControllable()) {
+                        new SynchronizedGeneratorControllable(dynamicModelId, generator, parameterSetId, equipmentConfig.lib)
+                    } else {
+                        new SynchronizedGenerator(dynamicModelId, generator, parameterSetId, equipmentConfig.lib)
+                    }
+                } else {
+                    println(equipmentConfig.lib + " " + dynamicModelId + " not instantiated because " + staticId + " voltage regulator is off.")
+                }
             } else {
-                new SynchronizedGenerator(dynamicModelId, generator, parameterSetId, equipmentConfig.lib)
+                if (!generator) {
+                    println(equipmentConfig.lib + " " + dynamicModelId + " not instantiated because " + staticId + " not present in network.")
+                } else if (!generator.getTerminal().isConnected()) {
+                    println(equipmentConfig.lib + " " + dynamicModelId + " not instantiated because " + staticId + " not connected.")
+                } else if (generator.getTerminal().getBusBreakerView().getBus().getConnectedComponent().getNum() > 0) {
+                    println(equipmentConfig.lib + " " + dynamicModelId + " not instantiated because " + staticId + " not in main connected component.")
+                }
             }
         }
     }

@@ -9,6 +9,7 @@ package com.powsybl.dynawaltz.models.frequencysynchronizers;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
+import com.powsybl.dynawaltz.models.AbstractEquipmentBlackBoxModel;
 import com.powsybl.dynawaltz.models.MacroConnectAttribute;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.buses.BusModel;
@@ -79,7 +80,7 @@ public class OmegaRef extends AbstractFrequencySynchronizer {
         int index = 0;
         for (FrequencySynchronizedModel eq : synchronizedEquipments) {
             createMacroConnections(eq, getVarConnectionsWith(eq), context, MacroConnectAttribute.ofIndex1(index));
-            createMacroConnections(eq.getConnectedBusId(), BusModel.class, this::getVarConnectionsWith, context, MacroConnectAttribute.ofIndex1(index));
+            createMacroConnections(eq.getConnectedBusId(), BusModel.class, this::getVarConnectionsWith, context, MacroConnectAttribute.ofIndex1(index), MacroConnectAttribute.of("name2", context.getPureDynamicModel(eq.getBlackBoxModelId(), AbstractEquipmentBlackBoxModel.class).getStaticId()));
             index++;
         }
     }

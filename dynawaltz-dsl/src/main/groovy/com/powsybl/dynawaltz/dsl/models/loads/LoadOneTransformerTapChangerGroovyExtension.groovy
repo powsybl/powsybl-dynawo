@@ -39,7 +39,9 @@ class LoadOneTransformerTapChangerGroovyExtension extends AbstractSimpleEquipmen
         @Override
         LoadOneTransformerTapChanger build() {
             checkData()
-            new LoadOneTransformerTapChanger(dynamicModelId, load, parameterSetId)
+            if (load) {
+                new LoadOneTransformerTapChanger(dynamicModelId, load, parameterSetId)
+            }
         }
     }
 }

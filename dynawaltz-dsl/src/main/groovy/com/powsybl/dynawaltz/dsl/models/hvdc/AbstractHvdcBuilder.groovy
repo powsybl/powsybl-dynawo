@@ -41,8 +41,8 @@ abstract class AbstractHvdcBuilder extends AbstractDynamicModelBuilder {
     void checkData() {
         super.checkData()
         hvdc = network.getHvdcLine(staticId)
-        if (hvdc == null) {
+        /*if (hvdc == null) {
             throw new DslException("Hvdc line static id unknown: " + staticId)
-        }
+        }*/
     }
 }

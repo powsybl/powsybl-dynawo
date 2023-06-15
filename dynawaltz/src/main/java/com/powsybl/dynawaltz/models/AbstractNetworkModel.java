@@ -20,8 +20,7 @@ public abstract class AbstractNetworkModel implements Model {
     @Override
     public List<MacroConnectAttribute> getMacroConnectToAttributes() {
         return List.of(
-                MacroConnectAttribute.of("id2", DynaWaltzXmlConstants.NETWORK),
-                MacroConnectAttribute.of("name2", staticId)
+                MacroConnectAttribute.of("id2", DynaWaltzXmlConstants.NETWORK)
         );
     }
 }

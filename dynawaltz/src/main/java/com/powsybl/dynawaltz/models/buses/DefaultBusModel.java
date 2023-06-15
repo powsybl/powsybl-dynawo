@@ -25,17 +25,17 @@ public class DefaultBusModel extends AbstractNetworkModel implements BusModel {
 
     @Override
     public String getTerminalVarName() {
-        return "@NAME@_ACPIN";
+        return "@STATIC_ID@@NODE@_ACPIN";
     }
 
     @Override
     public Optional<String> getSwitchOffSignalVarName() {
-        return Optional.of("@NAME@_switchOff");
+        return Optional.of("@STATIC_ID@@NODE@_switchOff");
     }
 
     @Override
     public Optional<String> getNumCCVarName() {
-        return Optional.of("@NAME@_numcc");
+        return Optional.of("@@NAME@@@NODE@_numcc");
     }
 
     @Override

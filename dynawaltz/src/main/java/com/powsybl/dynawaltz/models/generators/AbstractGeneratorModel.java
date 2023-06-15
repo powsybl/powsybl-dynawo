@@ -53,6 +53,11 @@ public abstract class AbstractGeneratorModel extends AbstractEquipmentBlackBoxMo
     }
 
     public String getTerminalVarName() {
+        if (getLib().contains("TfoAux")) {
+            return "coupling_terminal1";
+        } else if (getLib().contains("Tfo")) {
+            return "transformer_terminal1";
+        }
         return "generator_terminal";
     }
 

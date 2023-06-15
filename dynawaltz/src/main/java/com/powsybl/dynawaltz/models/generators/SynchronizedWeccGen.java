@@ -25,4 +25,9 @@ public class SynchronizedWeccGen extends WeccGen implements FrequencySynchronize
     public String getConnectedBusId() {
         return getConnectableBusStaticId(equipment);
     }
+
+    @Override
+    public String getBlackBoxModelId() {
+        return getDynamicModelId();
+    }
 }

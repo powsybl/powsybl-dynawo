@@ -46,10 +46,17 @@ class HvdcPvGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicMode
         @Override
         HvdcPv build() {
             checkData()
-            if (equipmentConfig.isDangling()) {
-                new HvdcPvDangling(dynamicModelId, hvdc, parameterSetId, equipmentConfig.lib, danglingSide)
+            println dynamicModelId
+            println hvdc.getConverterStation1().getTerminal().isConnected()
+            println hvdc.getConverterStation2().getTerminal().isConnected()
+            if (hvdc && hvdc.getConverterStation1().getTerminal().isConnected() && hvdc.getConverterStation2().getTerminal().isConnected()) {
+                if (equipmentConfig.isDangling()) {
+                    new HvdcPvDangling(dynamicModelId, hvdc, parameterSetId, equipmentConfig.lib, danglingSide)
+                } else {
+                    new HvdcPv(dynamicModelId, hvdc, parameterSetId, equipmentConfig.lib)
+                }
             } else {
-                new HvdcPv(dynamicModelId, hvdc, parameterSetId, equipmentConfig.lib)
+                println(equipmentConfig.lib + " " + dynamicModelId + " not instantiated.")
             }
         }
     }

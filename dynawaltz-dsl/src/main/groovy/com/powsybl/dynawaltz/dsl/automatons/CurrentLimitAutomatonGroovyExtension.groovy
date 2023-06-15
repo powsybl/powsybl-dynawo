@@ -55,9 +55,9 @@ class CurrentLimitAutomatonGroovyExtension extends AbstractPureDynamicGroovyExte
 
         void iMeasurement(String staticId) {
             iMeasurement = network.getBranch(staticId)
-            if (iMeasurement == null) {
+            /*if (iMeasurement == null) {
                 throw new DslException("I measurement equipment ${staticId} is not a quadripole")
-            }
+            }*/
         }
 
         void iMeasurementSide(Branch.Side side) {
@@ -66,29 +66,33 @@ class CurrentLimitAutomatonGroovyExtension extends AbstractPureDynamicGroovyExte
 
         void controlledQuadripole(String staticId) {
             controlledEquipment = network.getBranch(staticId)
-            if (controlledEquipment == null) {
+            /*if (controlledEquipment == null) {
                 throw new DslException("Controlled equipment ${staticId} is not a quadripole")
-            }
+            }*/
         }
 
         @Override
         void checkData() {
             super.checkData()
-            if (!iMeasurement) {
+            /*if (!iMeasurement) {
                 throw new DslException("'iMeasurement' field is not set")
-            }
+            }*/
             if (!iMeasurementSide) {
                 throw new DslException("'iMeasurementSide' field is not set")
             }
-            if (!controlledEquipment) {
+            /*if (!controlledEquipment) {
                 throw new DslException("'controlledEquipment' field is not set")
-            }
+            }*/
         }
 
         @Override
         CurrentLimitAutomaton build() {
             checkData()
-            new CurrentLimitAutomaton(dynamicModelId, parameterSetId, iMeasurement, iMeasurementSide, controlledEquipment, lib)
+            if (iMeasurement && controlledEquipment) {
+                new CurrentLimitAutomaton(dynamicModelId, parameterSetId, iMeasurement, iMeasurementSide, controlledEquipment, lib)
+            } else {
+                println("CurrentLimitAutomaton " + dynamicModelId + " not instantiated.")
+            }
         }
     }
 }
