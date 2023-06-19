@@ -13,6 +13,7 @@ import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
 import com.powsybl.dynawaltz.dsl.EquipmentConfig
 import com.powsybl.dynawaltz.models.hvdc.HvdcVsc
+import com.powsybl.dynawaltz.models.hvdc.HvdcVscDangling
 import com.powsybl.iidm.network.Network
 
 /**
@@ -34,17 +35,21 @@ class HvdcVscGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicMod
 
     static class HvdcBuilder extends AbstractHvdcBuilder {
 
-        EquipmentConfig equipmentConfig
-
         HvdcBuilder(Network network, EquipmentConfig equipmentConfig) {
-            super(network)
-            this.equipmentConfig = equipmentConfig
+            super(network, equipmentConfig)
         }
 
         @Override
         HvdcVsc build() {
-            checkData()
-            new HvdcVsc(dynamicModelId, hvdc, parameterSetId, equipmentConfig.lib)
+            if (isInstantiable()) {
+                if (equipmentConfig.isDangling()) {
+                    new HvdcVscDangling(dynamicModelId, equipment, parameterSetId, equipmentConfig.lib, danglingSide)
+                } else {
+                    new HvdcVsc(dynamicModelId, equipment, parameterSetId, equipmentConfig.lib)
+                }
+            } else {
+                null
+            }
         }
     }
 }

@@ -7,27 +7,46 @@
  */
 package com.powsybl.dynawaltz.dsl.models.hvdc
 
-import com.powsybl.dsl.DslException
-import com.powsybl.dynawaltz.dsl.models.builders.AbstractDynamicModelBuilder
+import com.powsybl.dynawaltz.dsl.EquipmentConfig
+import com.powsybl.dynawaltz.dsl.models.builders.AbstractEquipmentModelBuilder
+import com.powsybl.dynawaltz.models.Side
+import com.powsybl.dynawaltz.models.utils.SideConverter
+import com.powsybl.iidm.network.Branch
 import com.powsybl.iidm.network.HvdcLine
+import com.powsybl.iidm.network.IdentifiableType
 import com.powsybl.iidm.network.Network
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-abstract class AbstractHvdcBuilder extends AbstractDynamicModelBuilder {
+abstract class AbstractHvdcBuilder extends AbstractEquipmentModelBuilder<HvdcLine> {
 
-    HvdcLine hvdc
+    Side danglingSide
 
-    AbstractHvdcBuilder(Network network) {
-        super(network)
+    AbstractHvdcBuilder(Network network, EquipmentConfig equipmentConfig) {
+        super(network, equipmentConfig, IdentifiableType.HVDC_LINE)
     }
 
-    void checkData() {
-        super.checkData()
-        hvdc = network.getHvdcLine(staticId)
-        if (hvdc == null) {
-            throw new DslException("Hvdc line static id unknown: " + staticId)
+    void dangling(Branch.Side danglingSide) {
+        this.danglingSide = SideConverter.convert(danglingSide)
+    }
+
+    @Override
+    protected boolean checkData() {
+        def isInstantiable = super.checkData()
+        def isDangling = equipmentConfig.isDangling()
+        if (isDangling && !danglingSide) {
+            LOGGER.warn("'dangling' field is not set")
+            isInstantiable = false
+        } else if (!isDangling && danglingSide) {
+            LOGGER.warn("'dangling' field is set on a non dangling hvdc : ${equipmentConfig.lib}")
+            isInstantiable = false
         }
+        isInstantiable
+    }
+
+    @Override
+    protected HvdcLine getEquipment() {
+        network.getHvdcLine(staticId)
     }
 }

@@ -11,6 +11,7 @@ import com.google.auto.service.AutoService
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractSimpleEquipmentGroovyExtension
+import com.powsybl.dynawaltz.dsl.EquipmentConfig
 import com.powsybl.dynawaltz.models.buses.StandardBus
 import com.powsybl.iidm.network.Network
 
@@ -23,24 +24,24 @@ import com.powsybl.iidm.network.Network
 class BusGroovyExtension extends AbstractSimpleEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
     BusGroovyExtension() {
-        modelTag = "Bus"
+        super("Bus")
     }
 
     @Override
-    protected BusBuilder createBuilder(Network network) {
-        new BusBuilder(network)
+    protected BusBuilder createBuilder(Network network, EquipmentConfig equipmentConfig) {
+        new BusBuilder(network, equipmentConfig)
     }
 
     static class BusBuilder extends AbstractBusBuilder {
 
-        BusBuilder(Network network) {
-            super(network)
+        BusBuilder(Network network, EquipmentConfig equipmentConfig) {
+            super(network, equipmentConfig)
         }
 
         @Override
         StandardBus build() {
-            checkData()
-            new StandardBus(dynamicModelId, bus, parameterSetId)
+            isInstantiable() ? new StandardBus(dynamicModelId, equipment, parameterSetId)
+                : null
         }
     }
 }

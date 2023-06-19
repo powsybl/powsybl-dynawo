@@ -7,27 +7,23 @@
  */
 package com.powsybl.dynawaltz.dsl.models.generators
 
-import com.powsybl.dsl.DslException
-import com.powsybl.dynawaltz.dsl.models.builders.AbstractDynamicModelBuilder
+import com.powsybl.dynawaltz.dsl.EquipmentConfig
+import com.powsybl.dynawaltz.dsl.models.builders.AbstractEquipmentModelBuilder
 import com.powsybl.iidm.network.Generator
+import com.powsybl.iidm.network.IdentifiableType
 import com.powsybl.iidm.network.Network
 
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  */
-abstract class AbstractGeneratorBuilder extends AbstractDynamicModelBuilder {
+abstract class AbstractGeneratorBuilder extends AbstractEquipmentModelBuilder<Generator> {
 
-    Generator generator
-
-    AbstractGeneratorBuilder(Network network) {
-        super(network)
+    AbstractGeneratorBuilder(Network network, EquipmentConfig equipmentConfig) {
+        super(network, equipmentConfig, IdentifiableType.GENERATOR)
     }
 
-    void checkData() {
-        super.checkData()
-        generator = network.getGenerator(staticId)
-        if (generator == null) {
-            throw new DslException("Generator static id unknown: " + staticId)
-        }
+    @Override
+    protected Generator getEquipment() {
+        network.getGenerator(staticId)
     }
 }

@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) 2023, RTE (http://www.rte-france.com/)
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,13 +8,13 @@
 package com.powsybl.dynawaltz.dsl.models.transformers
 
 import com.google.auto.service.AutoService
-import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
 import com.powsybl.dynawaltz.dsl.EquipmentConfig
-import com.powsybl.dynawaltz.dsl.models.builders.AbstractDynamicModelBuilder
+import com.powsybl.dynawaltz.dsl.models.builders.AbstractEquipmentModelBuilder
 import com.powsybl.dynawaltz.models.transformers.TransformerFixedRatio
+import com.powsybl.iidm.network.IdentifiableType
 import com.powsybl.iidm.network.Network
 import com.powsybl.iidm.network.TwoWindingsTransformer
 
@@ -35,28 +35,21 @@ class TransformerFixedRatioGroovyExtension extends AbstractEquipmentGroovyExtens
         new TransformerBuilder(network, equipmentConfig)
     }
 
-    static class TransformerBuilder extends AbstractDynamicModelBuilder {
-
-        TwoWindingsTransformer transformer
-        EquipmentConfig equipmentConfig
+    static class TransformerBuilder extends AbstractEquipmentModelBuilder<TwoWindingsTransformer> {
 
         TransformerBuilder(Network network, EquipmentConfig equipmentConfig) {
-            super(network)
-            this.equipmentConfig = equipmentConfig
+            super(network, equipmentConfig, IdentifiableType.TWO_WINDINGS_TRANSFORMER)
         }
 
-        void checkData() {
-            super.checkData()
-            transformer = network.getTwoWindingsTransformer(staticId)
-            if (transformer == null) {
-                throw new DslException("Transformer static id unknown: " + staticId)
-            }
+        @Override
+        protected TwoWindingsTransformer getEquipment() {
+            network.getTwoWindingsTransformer(staticId)
         }
 
         @Override
         TransformerFixedRatio build() {
-            checkData()
-            new TransformerFixedRatio(dynamicModelId, transformer, parameterSetId, equipmentConfig.lib)
+            isInstantiable() ? new TransformerFixedRatio(dynamicModelId, equipment, parameterSetId, equipmentConfig.lib)
+                    : null
         }
     }
 }

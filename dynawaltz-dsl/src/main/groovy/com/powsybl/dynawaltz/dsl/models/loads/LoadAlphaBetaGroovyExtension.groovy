@@ -13,7 +13,6 @@ import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
 import com.powsybl.dynawaltz.dsl.EquipmentConfig
 import com.powsybl.dynawaltz.models.loads.LoadAlphaBeta
 import com.powsybl.dynawaltz.models.loads.LoadAlphaBetaControllable
-import com.powsybl.iidm.network.Load
 import com.powsybl.iidm.network.Network
 
 /**
@@ -37,20 +36,20 @@ class LoadAlphaBetaGroovyExtension extends AbstractEquipmentGroovyExtension<Dyna
 
     static class LoadAlphaBetaBuilder extends AbstractLoadModelBuilder {
 
-        EquipmentConfig equipmentConfig;
-
         LoadAlphaBetaBuilder(Network network, EquipmentConfig equipmentConfig) {
-            super(network)
-            this.equipmentConfig = equipmentConfig;
+            super(network, equipmentConfig)
         }
 
         @Override
         LoadAlphaBeta build() {
-            checkData()
-            if (equipmentConfig.isControllable()) {
-                new LoadAlphaBetaControllable(dynamicModelId, load, parameterSetId, equipmentConfig.lib)
+            if (isInstantiable()) {
+                if (equipmentConfig.isControllable()) {
+                    new LoadAlphaBetaControllable(dynamicModelId, equipment, parameterSetId, equipmentConfig.lib)
+                } else {
+                    new LoadAlphaBeta(dynamicModelId, equipment, parameterSetId, equipmentConfig.lib)
+                }
             } else {
-                new LoadAlphaBeta(dynamicModelId, load, parameterSetId, equipmentConfig.lib)
+                null
             }
         }
     }

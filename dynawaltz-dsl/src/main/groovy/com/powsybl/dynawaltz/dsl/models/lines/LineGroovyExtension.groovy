@@ -8,12 +8,13 @@
 package com.powsybl.dynawaltz.dsl.models.lines
 
 import com.google.auto.service.AutoService
-import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractSimpleEquipmentGroovyExtension
-import com.powsybl.dynawaltz.dsl.models.builders.AbstractDynamicModelBuilder
+import com.powsybl.dynawaltz.dsl.EquipmentConfig
+import com.powsybl.dynawaltz.dsl.models.builders.AbstractEquipmentModelBuilder
 import com.powsybl.dynawaltz.models.lines.StandardLine
+import com.powsybl.iidm.network.IdentifiableType
 import com.powsybl.iidm.network.Line
 import com.powsybl.iidm.network.Network
 
@@ -26,34 +27,29 @@ import com.powsybl.iidm.network.Network
 class LineGroovyExtension extends AbstractSimpleEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
     LineGroovyExtension() {
-        modelTag = "Line"
+        super("Line")
     }
 
     @Override
-    protected LineBuilder createBuilder(Network network) {
-        new LineBuilder(network)
+    protected LineBuilder createBuilder(Network network, EquipmentConfig equipmentConfig) {
+        new LineBuilder(network, equipmentConfig)
     }
 
-    static class LineBuilder extends AbstractDynamicModelBuilder {
+    static class LineBuilder extends AbstractEquipmentModelBuilder<Line> {
 
-        Line line
-
-        LineBuilder(Network network) {
-            super(network)
+        LineBuilder(Network network, EquipmentConfig equipmentConfig) {
+            super(network, equipmentConfig, IdentifiableType.LINE)
         }
 
-        void checkData() {
-            super.checkData()
-            line = network.getLine(staticId)
-            if (line == null) {
-                throw new DslException("Line static id unknown: " + getStaticId())
-            }
+        @Override
+        protected Line getEquipment() {
+            network.getLine(staticId)
         }
 
         @Override
         StandardLine build() {
-            checkData()
-            new StandardLine(dynamicModelId, line, parameterSetId)
+            isInstantiable() ? new StandardLine(dynamicModelId, equipment, parameterSetId)
+                    : null
         }
     }
 }
