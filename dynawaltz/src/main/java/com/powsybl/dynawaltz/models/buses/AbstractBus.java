@@ -22,8 +22,8 @@ import java.util.Optional;
  */
 public abstract class AbstractBus extends AbstractEquipmentBlackBoxModel<Bus> implements BusModel {
 
-    protected AbstractBus(String dynamicModelId, Bus bus, String parameterSetId) {
-        super(dynamicModelId, parameterSetId, bus);
+    protected AbstractBus(String dynamicModelId, Bus bus, String parameterSetId, String lib) {
+        super(dynamicModelId, parameterSetId, bus, lib);
     }
 
     @Override

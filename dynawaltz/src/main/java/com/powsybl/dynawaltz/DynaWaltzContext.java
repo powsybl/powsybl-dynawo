@@ -11,10 +11,10 @@ import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.models.*;
 import com.powsybl.dynawaltz.models.buses.InfiniteBus;
+import com.powsybl.dynawaltz.models.frequencysynchronizers.FrequencySynchronizedModel;
 import com.powsybl.dynawaltz.models.frequencysynchronizers.FrequencySynchronizerModel;
 import com.powsybl.dynawaltz.models.frequencysynchronizers.OmegaRef;
 import com.powsybl.dynawaltz.models.frequencysynchronizers.SetPoint;
-import com.powsybl.dynawaltz.models.generators.SynchronizedGeneratorModel;
 import com.powsybl.dynawaltz.xml.MacroStaticReference;
 import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.Network;
@@ -71,10 +71,10 @@ public class DynaWaltzContext {
         }
     }
 
-    private FrequencySynchronizerModel setupFrequencySynchronizer(Function<List<SynchronizedGeneratorModel>, FrequencySynchronizerModel> fsConstructor) {
+    private FrequencySynchronizerModel setupFrequencySynchronizer(Function<List<FrequencySynchronizedModel>, FrequencySynchronizerModel> fsConstructor) {
         return fsConstructor.apply(dynamicModels.stream()
-                .filter(SynchronizedGeneratorModel.class::isInstance)
-                .map(SynchronizedGeneratorModel.class::cast)
+                .filter(FrequencySynchronizedModel.class::isInstance)
+                .map(FrequencySynchronizedModel.class::cast)
                 .collect(Collectors.toList()));
     }
 

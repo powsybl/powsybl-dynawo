@@ -19,7 +19,6 @@ import com.powsybl.iidm.network.HvdcLine;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
@@ -34,15 +33,8 @@ public abstract class AbstractHvdc extends AbstractEquipmentBlackBoxModel<HvdcLi
             new VarMapping("hvdc_QInj2Pu", "q2"),
             new VarMapping("hvdc_state", "state2"));
 
-    private final String hvdcLib;
-
-    protected AbstractHvdc(String dynamicModelId, HvdcLine hvdc, String parameterSetId, String hvdcLib) {
-        super(dynamicModelId, parameterSetId, hvdc);
-        this.hvdcLib = Objects.requireNonNull(hvdcLib);
-    }
-
-    public String getLib() {
-        return hvdcLib;
+    protected AbstractHvdc(String dynamicModelId, HvdcLine hvdc, String parameterSetId, String lib) {
+        super(dynamicModelId, parameterSetId, hvdc, lib);
     }
 
     @Override

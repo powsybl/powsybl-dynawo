@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
+    <dyn:blackBoxModel id="BBM_WT" lib="WTG4BWeccCurrentSource" parFile="models.par" parId="Wind" staticId="GEN">
+        <dyn:macroStaticRef id="MSR_WTG4BWeccCurrentSource"/>
+    </dyn:blackBoxModel>
+    <dyn:blackBoxModel id="FREQ_SYNC" lib="DYNModelOmegaRef" parFile="sim1.par" parId="FREQ_SYNC_PAR"/>
+    <dyn:macroConnector id="MC_WTG4BWeccCurrentSource-NetworkBus">
+        <dyn:connect var1="WTG4B_terminal" var2="@NAME@_ACPIN"/>
+    </dyn:macroConnector>
+    <dyn:macroConnector id="MC_DYNModelOmegaRef-WTG4BWeccCurrentSource">
+        <dyn:connect var1="omegaRef_grp_@INDEX@" var2="WTG4B_omegaRefPu"/>
+        <dyn:connect var1="running_grp_@INDEX@" var2="WTG4B_injector_running"/>
+    </dyn:macroConnector>
+    <dyn:macroConnector id="MC_DYNModelOmegaRef-NetworkBus">
+        <dyn:connect var1="numcc_node_@INDEX@" var2="@NAME@_numcc"/>
+    </dyn:macroConnector>
+    <dyn:macroStaticReference id="MSR_WTG4BWeccCurrentSource">
+        <dyn:staticRef var="WTG4B_measurements_PPuSnRef" staticVar="p"/>
+        <dyn:staticRef var="WTG4B_measurements_QPuSnRef" staticVar="q"/>
+        <dyn:staticRef var="WTG4B_injector_state" staticVar="state"/>
+    </dyn:macroStaticReference>
+    <dyn:macroConnect connector="MC_WTG4BWeccCurrentSource-NetworkBus" id1="BBM_WT" id2="NETWORK" name2="NGEN"/>
+    <dyn:macroConnect connector="MC_DYNModelOmegaRef-WTG4BWeccCurrentSource" id1="FREQ_SYNC" index1="0" id2="BBM_WT"/>
+    <dyn:macroConnect connector="MC_DYNModelOmegaRef-NetworkBus" id1="FREQ_SYNC" index1="0" id2="NETWORK" name2="NGEN"/>
+</dyn:dynamicModelsArchitecture>
