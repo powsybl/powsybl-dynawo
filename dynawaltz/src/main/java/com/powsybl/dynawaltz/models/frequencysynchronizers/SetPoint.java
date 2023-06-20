@@ -43,14 +43,14 @@ public class SetPoint extends AbstractFrequencySynchronizer {
         writer.writeEndElement();
     }
 
-    private List<VarConnection> getVarConnectionsWithOmegaRefGenerator(FrequencySynchronizedModel connected) {
+    private List<VarConnection> getVarConnectionsWith(FrequencySynchronizedModel connected) {
         return connected.getSetPointVarConnections();
     }
 
     @Override
     public void createMacroConnections(DynaWaltzContext context) throws PowsyblException {
         for (FrequencySynchronizedModel eq : synchronizedEquipments) {
-            createMacroConnections(eq, getVarConnectionsWithOmegaRefGenerator(eq), context);
+            createMacroConnections(eq, getVarConnectionsWith(eq), context);
         }
     }
 }
