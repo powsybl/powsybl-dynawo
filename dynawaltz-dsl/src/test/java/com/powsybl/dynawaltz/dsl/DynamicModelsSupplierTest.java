@@ -23,7 +23,9 @@ import com.powsybl.dynawaltz.models.buses.InfiniteBus;
 import com.powsybl.dynawaltz.models.buses.StandardBus;
 import com.powsybl.dynawaltz.models.generators.*;
 import com.powsybl.dynawaltz.models.hvdc.HvdcPv;
+import com.powsybl.dynawaltz.models.hvdc.HvdcPvDangling;
 import com.powsybl.dynawaltz.models.hvdc.HvdcVsc;
+import com.powsybl.dynawaltz.models.hvdc.HvdcVscDangling;
 import com.powsybl.dynawaltz.models.lines.StandardLine;
 import com.powsybl.dynawaltz.models.loads.*;
 import com.powsybl.dynawaltz.models.svcs.StaticVarCompensator;
@@ -97,6 +99,8 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                 Arguments.of("/dynamicModels/bus.groovy", StandardBus.class, EurostagTutorialExample1Factory.create(), "NGEN", "BBM_NGEN", "SB", "Bus"),
                 Arguments.of("/dynamicModels/hvdcPv.groovy", HvdcPv.class, HvdcTestNetwork.createVsc(), "L", "BBM_HVDC_L", "HVDC", "HvdcPV"),
                 Arguments.of("/dynamicModels/hvdcVsc.groovy", HvdcVsc.class, HvdcTestNetwork.createVsc(), "L", "BBM_HVDC_L", "HVDC", "HvdcVSC"),
+                Arguments.of("/dynamicModels/hvdcPvDangling.groovy", HvdcPvDangling.class, HvdcTestNetwork.createVsc(), "L", "BBM_HVDC_L", "HVDC", "HvdcPVDanglingDiagramPQ"),
+                Arguments.of("/dynamicModels/hvdcVscDangling.groovy", HvdcVscDangling.class, HvdcTestNetwork.createVsc(), "L", "BBM_HVDC_L", "HVDC", "HvdcVSCDanglingUdc"),
                 Arguments.of("/dynamicModels/loadAB.groovy", LoadAlphaBeta.class, EurostagTutorialExample1Factory.create(), "LOAD", "LOAD", "LAB", "LoadAlphaBetaRestorative"),
                 Arguments.of("/dynamicModels/loadABControllable.groovy", LoadAlphaBetaControllable.class, EurostagTutorialExample1Factory.create(), "LOAD", "LOAD", "LAB", "LoadAlphaBeta"),
                 Arguments.of("/dynamicModels/loadTransformer.groovy", LoadOneTransformer.class, EurostagTutorialExample1Factory.create(), "LOAD", "LOAD", "LOT", "LoadOneTransformer"),
@@ -137,7 +141,8 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                 Arguments.of("/dynamicModels/phaseShifterTransformerException.groovy", EurostagTutorialExample1Factory.create(), "Transformer static id unknown: NGEN"),
                 Arguments.of("/dynamicModels/tapChangerBusException.groovy", EurostagTutorialExample1Factory.create(), "Bus static id unknown: LOAD"),
                 Arguments.of("/dynamicModels/tapChangerCompatibleException.groovy", EurostagTutorialExample1Factory.create(), "GENERATOR GEN is not compatible"),
-                Arguments.of("/dynamicModels/underVoltageGeneratorException.groovy", EurostagTutorialExample1Factory.create(), "Generator static id unknown: NGEN")
+                Arguments.of("/dynamicModels/underVoltageGeneratorException.groovy", EurostagTutorialExample1Factory.create(), "Generator static id unknown: NGEN"),
+                Arguments.of("/dynamicModels/danglingHvdcException.groovy", HvdcTestNetwork.createVsc(), "'dangling' field is set on a non dangling hvdc : HvdcPV")
         );
     }
 }

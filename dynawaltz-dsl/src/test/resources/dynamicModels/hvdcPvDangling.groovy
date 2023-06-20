@@ -8,8 +8,11 @@
 
 package dynamicModels
 
-HvdcVSC {
+import com.powsybl.iidm.network.Branch
+
+HvdcPVDanglingDiagramPQ {
     staticId "L"
     dynamicModelId "BBM_HVDC_L"
     parameterSetId "HVDC"
+    dangling Branch.Side.ONE
 }

@@ -8,7 +8,11 @@
 package com.powsybl.dynawaltz.dsl.models.hvdc
 
 import com.powsybl.dsl.DslException
+import com.powsybl.dynawaltz.dsl.EquipmentConfig
 import com.powsybl.dynawaltz.dsl.models.builders.AbstractDynamicModelBuilder
+import com.powsybl.dynawaltz.models.Side
+import com.powsybl.dynawaltz.models.utils.SideConverter
+import com.powsybl.iidm.network.Branch
 import com.powsybl.iidm.network.HvdcLine
 import com.powsybl.iidm.network.Network
 
@@ -18,9 +22,20 @@ import com.powsybl.iidm.network.Network
 abstract class AbstractHvdcBuilder extends AbstractDynamicModelBuilder {
 
     HvdcLine hvdc
+    EquipmentConfig equipmentConfig
+    Side danglingSide
 
-    AbstractHvdcBuilder(Network network) {
+    AbstractHvdcBuilder(Network network, EquipmentConfig equipmentConfig) {
         super(network)
+        this.equipmentConfig = equipmentConfig
+    }
+
+    void dangling(Branch.Side danglingSide) {
+        if (equipmentConfig.isDangling()) {
+            this.danglingSide = SideConverter.convert(danglingSide)
+        } else {
+            throw new DslException("'dangling' field is set on a non dangling hvdc : ${equipmentConfig.lib}")
+        }
     }
 
     void checkData() {

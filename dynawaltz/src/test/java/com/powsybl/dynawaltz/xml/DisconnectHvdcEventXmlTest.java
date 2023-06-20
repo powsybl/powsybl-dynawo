@@ -8,9 +8,12 @@
 package com.powsybl.dynawaltz.xml;
 
 import com.powsybl.dynawaltz.models.BlackBoxModel;
+import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.events.EventHvdcDisconnection;
 import com.powsybl.dynawaltz.models.hvdc.HvdcPv;
+import com.powsybl.dynawaltz.models.hvdc.HvdcPvDangling;
 import com.powsybl.dynawaltz.models.hvdc.HvdcVsc;
+import com.powsybl.dynawaltz.models.hvdc.HvdcVscDangling;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.HvdcTestNetwork;
 import org.junit.jupiter.api.BeforeEach;
@@ -54,7 +57,7 @@ class DisconnectHvdcEventXmlTest extends AbstractParametrizedDynamicModelXmlTest
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("provideModels")
-    void writeLoadModel(String dydName, Function< Network, BlackBoxModel> hvdcConstructor, Function< Network, BlackBoxModel> disconnectConstructor) throws SAXException, IOException, XMLStreamException {
+    void writeModel(String dydName, Function< Network, BlackBoxModel> hvdcConstructor, Function< Network, BlackBoxModel> disconnectConstructor) throws SAXException, IOException, XMLStreamException {
         DydXml.write(tmpDir, context);
         ParametersXml.write(tmpDir, context);
         validate("dyd.xsd", dydName, tmpDir.resolve(DynaWaltzConstants.DYD_FILENAME));
@@ -72,8 +75,13 @@ class DisconnectHvdcEventXmlTest extends AbstractParametrizedDynamicModelXmlTest
                         (Function<Network, BlackBoxModel>) n -> new EventHvdcDisconnection(n.getHvdcLine(HVDC_NAME), 1, true, false)),
                 Arguments.of("disconnect_hvdc_vsc_dyd.xml",
                         (Function<Network, BlackBoxModel>) n -> new HvdcVsc(DYN_HVDC_NAME, n.getHvdcLine(HVDC_NAME), "hvdc", "HvdcVsc"),
+                        (Function<Network, BlackBoxModel>) n -> new EventHvdcDisconnection(n.getHvdcLine(HVDC_NAME), 1, false, true)),
+                Arguments.of("disconnect_hvdc_pv_dangling_dyd.xml",
+                        (Function<Network, BlackBoxModel>) n -> new HvdcPvDangling(DYN_HVDC_NAME, n.getHvdcLine(HVDC_NAME), "hvdc", "HvdcPVDangling", Side.TWO),
+                        (Function<Network, BlackBoxModel>) n -> new EventHvdcDisconnection(n.getHvdcLine(HVDC_NAME), 1, true, false)),
+                Arguments.of("disconnect_hvdc_vsc_dangling_dyd.xml",
+                        (Function<Network, BlackBoxModel>) n -> new HvdcVscDangling(DYN_HVDC_NAME, n.getHvdcLine(HVDC_NAME), "hvdc", "HvdcVSCDanglingUdc", Side.ONE),
                         (Function<Network, BlackBoxModel>) n -> new EventHvdcDisconnection(n.getHvdcLine(HVDC_NAME), 1, false, true))
-
         );
     }
 }
