@@ -9,6 +9,7 @@ package com.powsybl.dynawaltz.models.utils;
 
 import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.iidm.network.Branch;
+import com.powsybl.iidm.network.HvdcLine;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
@@ -26,6 +27,17 @@ public final class SideConverter {
                 return Side.TWO;
             default:
                 throw new AssertionError("Unexpected Side value: " + side);
+        }
+    }
+
+    public static HvdcLine.Side convert(Side side) {
+        switch (side) {
+            case ONE :
+                return HvdcLine.Side.ONE;
+            case TWO :
+                return HvdcLine.Side.TWO;
+            default :
+                throw new IllegalArgumentException("Unexpected Side value: " + side);
         }
     }
 }

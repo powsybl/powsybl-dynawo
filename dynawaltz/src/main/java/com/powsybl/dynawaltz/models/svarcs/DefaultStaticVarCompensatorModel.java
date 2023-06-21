@@ -1,4 +1,4 @@
-package com.powsybl.dynawaltz.models.svcs;
+package com.powsybl.dynawaltz.models.svarcs;
 
 import com.powsybl.dynawaltz.models.defaultmodels.AbstractInjectionDefaultModel;
 

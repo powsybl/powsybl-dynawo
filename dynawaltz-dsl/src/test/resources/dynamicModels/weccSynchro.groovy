@@ -8,8 +8,8 @@
 
 package dynamicModels
 
-HvdcVSC {
-    staticId "L"
-    dynamicModelId "BBM_HVDC_L"
-    parameterSetId "HVDC"
+WTG4AWeccCurrentSource {
+    staticId "GEN"
+    dynamicModelId "BBM_WT"
+    parameterSetId "Wind"
 }

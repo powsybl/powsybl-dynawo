@@ -5,9 +5,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.models.svcs;
 
-import com.powsybl.dynawaltz.models.InjectionModel;
+package dynamicModels
 
-public interface StaticVarCompensatorModel extends InjectionModel {
+GridFormingConverterMatchingControl {
+    staticId "GEN"
+    dynamicModelId "BBM_GFC"
+    parameterSetId "GF"
 }

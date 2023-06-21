@@ -5,11 +5,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
+package com.powsybl.dynawaltz.models.svarcs;
 
-package dynamicModels
+import com.powsybl.dynawaltz.models.InjectionModel;
 
-HvdcVSC {
-    staticId "L"
-    dynamicModelId "BBM_HVDC_L"
-    parameterSetId "HVDC"
+public interface StaticVarCompensatorModel extends InjectionModel {
 }

@@ -13,4 +13,3 @@ HvdcPV {
     dynamicModelId "BBM_HVDC_L"
     parameterSetId "HVDC"
 }
-

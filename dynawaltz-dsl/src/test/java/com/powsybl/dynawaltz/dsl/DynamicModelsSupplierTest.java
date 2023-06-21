@@ -23,11 +23,16 @@ import com.powsybl.dynawaltz.models.buses.InfiniteBus;
 import com.powsybl.dynawaltz.models.buses.StandardBus;
 import com.powsybl.dynawaltz.models.generators.*;
 import com.powsybl.dynawaltz.models.hvdc.HvdcPv;
+import com.powsybl.dynawaltz.models.hvdc.HvdcPvDangling;
 import com.powsybl.dynawaltz.models.hvdc.HvdcVsc;
+import com.powsybl.dynawaltz.models.hvdc.HvdcVscDangling;
 import com.powsybl.dynawaltz.models.lines.StandardLine;
 import com.powsybl.dynawaltz.models.loads.*;
-import com.powsybl.dynawaltz.models.svcs.StaticVarCompensator;
+import com.powsybl.dynawaltz.models.svarcs.StaticVarCompensator;
 import com.powsybl.dynawaltz.models.transformers.TransformerFixedRatio;
+import com.powsybl.dynawaltz.models.generators.GridFormingConverter;
+import com.powsybl.dynawaltz.models.generators.SynchronizedWeccGen;
+import com.powsybl.dynawaltz.models.generators.WeccGen;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import com.powsybl.iidm.network.test.HvdcTestNetwork;
@@ -46,7 +51,6 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
 
-    private static final String FOLDER_NAME = "/dynamicModels/";
     private static final List<DynamicModelGroovyExtension> EXTENSIONS = GroovyExtension.find(DynamicModelGroovyExtension.class, DynaWaltzProvider.NAME);
 
     @ParameterizedTest(name = "{0}")
@@ -92,52 +96,53 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
 
     private static Stream<Arguments> provideEquipmentModelData() {
         return Stream.of(
-                Arguments.of("bus", StandardBus.class, EurostagTutorialExample1Factory.create(), "NGEN", "BBM_NGEN", "SB", "Bus"),
-                Arguments.of("hvdcPv", HvdcPv.class, HvdcTestNetwork.createVsc(), "L", "BBM_HVDC_L", "HVDC", "HvdcPV"),
-                Arguments.of("hvdcVsc", HvdcVsc.class, HvdcTestNetwork.createVsc(), "L", "BBM_HVDC_L", "HVDC", "HvdcVSC"),
-                Arguments.of("loadAB", LoadAlphaBeta.class, EurostagTutorialExample1Factory.create(), "LOAD", "LOAD", "LAB", "LoadAlphaBetaRestorative"),
-                Arguments.of("loadABControllable", LoadAlphaBetaControllable.class, EurostagTutorialExample1Factory.create(), "LOAD", "LOAD", "LAB", "LoadAlphaBeta"),
-                Arguments.of("loadTransformer", LoadOneTransformer.class, EurostagTutorialExample1Factory.create(), "LOAD", "LOAD", "LOT", "LoadOneTransformer"),
-                Arguments.of("loadTransformerTapChanger", LoadOneTransformerTapChanger.class, EurostagTutorialExample1Factory.create(), "LOAD", "LOAD", "LOT", "LoadOneTransformerTapChanger"),
-                Arguments.of("loadTwoTransformers", LoadTwoTransformers.class, EurostagTutorialExample1Factory.create(), "LOAD", "LOAD", "LTT", "LoadTwoTransformers"),
-                Arguments.of("loadTwoTransformersTapChangers", LoadTwoTransformersTapChangers.class, EurostagTutorialExample1Factory.create(), "LOAD", "LOAD", "LTT", "LoadTwoTransformersTapChangers"),
-                Arguments.of("infiniteBus", InfiniteBus.class, HvdcTestNetwork.createVsc(), "B1", "BBM_BUS", "b", "InfiniteBusWithVariations"),
-                Arguments.of("line", StandardLine.class, EurostagTutorialExample1Factory.create(), "NHV1_NHV2_1", "BBM_NHV1_NHV2_1", "LINE", "Line"),
-                Arguments.of("genFictitious", GeneratorFictitious.class, EurostagTutorialExample1Factory.create(), "GEN", "BBM_GEN", "GF", "GeneratorFictitious"),
-                Arguments.of("gen", SynchronousGenerator.class, EurostagTutorialExample1Factory.create(), "GEN", "BBM_GEN", "GSFWPR", "GeneratorSynchronousThreeWindings"),
-                Arguments.of("genControllable", SynchronousGeneratorControllable.class, EurostagTutorialExample1Factory.create(), "GEN", "BBM_GEN", "GSFWPR", "GeneratorSynchronousFourWindingsProportionalRegulations"),
-                Arguments.of("omegaGen", SynchronizedGenerator.class, EurostagTutorialExample1Factory.create(), "GEN", "BBM_GEN", "GPQ", "GeneratorPQ"),
-                Arguments.of("omegaGenControllable", SynchronizedGeneratorControllable.class, EurostagTutorialExample1Factory.create(), "GEN", "BBM_GEN", "GPQ", "GeneratorPV"),
-                Arguments.of("transformer", TransformerFixedRatio.class, EurostagTutorialExample1Factory.create(), "NGEN_NHV1", "BBM_NGEN_NHV1", "TFR", "TransformerFixedRatio"),
-                Arguments.of("svc", StaticVarCompensator.class, SvcTestCaseFactory.create(), "SVC2", "BBM_SVC", "svc", "StaticVarCompensatorPV")
+                Arguments.of("/dynamicModels/bus.groovy", StandardBus.class, EurostagTutorialExample1Factory.create(), "NGEN", "BBM_NGEN", "SB", "Bus"),
+                Arguments.of("/dynamicModels/hvdcPv.groovy", HvdcPv.class, HvdcTestNetwork.createVsc(), "L", "BBM_HVDC_L", "HVDC", "HvdcPV"),
+                Arguments.of("/dynamicModels/hvdcVsc.groovy", HvdcVsc.class, HvdcTestNetwork.createVsc(), "L", "BBM_HVDC_L", "HVDC", "HvdcVSC"),
+                Arguments.of("/dynamicModels/hvdcPvDangling.groovy", HvdcPvDangling.class, HvdcTestNetwork.createVsc(), "L", "BBM_HVDC_L", "HVDC", "HvdcPVDanglingDiagramPQ"),
+                Arguments.of("/dynamicModels/hvdcVscDangling.groovy", HvdcVscDangling.class, HvdcTestNetwork.createVsc(), "L", "BBM_HVDC_L", "HVDC", "HvdcVSCDanglingUdc"),
+                Arguments.of("/dynamicModels/loadAB.groovy", LoadAlphaBeta.class, EurostagTutorialExample1Factory.create(), "LOAD", "LOAD", "LAB", "LoadAlphaBetaRestorative"),
+                Arguments.of("/dynamicModels/loadABControllable.groovy", LoadAlphaBetaControllable.class, EurostagTutorialExample1Factory.create(), "LOAD", "LOAD", "LAB", "LoadAlphaBeta"),
+                Arguments.of("/dynamicModels/loadTransformer.groovy", LoadOneTransformer.class, EurostagTutorialExample1Factory.create(), "LOAD", "LOAD", "LOT", "LoadOneTransformer"),
+                Arguments.of("/dynamicModels/loadTransformerTapChanger.groovy", LoadOneTransformerTapChanger.class, EurostagTutorialExample1Factory.create(), "LOAD", "LOAD", "LOT", "LoadOneTransformerTapChanger"),
+                Arguments.of("/dynamicModels/loadTwoTransformers.groovy", LoadTwoTransformers.class, EurostagTutorialExample1Factory.create(), "LOAD", "LOAD", "LTT", "LoadTwoTransformers"),
+                Arguments.of("/dynamicModels/loadTwoTransformersTapChangers.groovy", LoadTwoTransformersTapChangers.class, EurostagTutorialExample1Factory.create(), "LOAD", "LOAD", "LTT", "LoadTwoTransformersTapChangers"),
+                Arguments.of("/dynamicModels/infiniteBus.groovy", InfiniteBus.class, HvdcTestNetwork.createVsc(), "B1", "BBM_BUS", "b", "InfiniteBusWithVariations"),
+                Arguments.of("/dynamicModels/line.groovy", StandardLine.class, EurostagTutorialExample1Factory.create(), "NHV1_NHV2_1", "BBM_NHV1_NHV2_1", "LINE", "Line"),
+                Arguments.of("/dynamicModels/genFictitious.groovy", GeneratorFictitious.class, EurostagTutorialExample1Factory.create(), "GEN", "BBM_GEN", "GF", "GeneratorFictitious"),
+                Arguments.of("/dynamicModels/gen.groovy", SynchronousGenerator.class, EurostagTutorialExample1Factory.create(), "GEN", "BBM_GEN", "GSFWPR", "GeneratorSynchronousThreeWindings"),
+                Arguments.of("/dynamicModels/genControllable.groovy", SynchronousGeneratorControllable.class, EurostagTutorialExample1Factory.create(), "GEN", "BBM_GEN", "GSFWPR", "GeneratorSynchronousFourWindingsProportionalRegulations"),
+                Arguments.of("/dynamicModels/omegaGen.groovy", SynchronizedGenerator.class, EurostagTutorialExample1Factory.create(), "GEN", "BBM_GEN", "GPQ", "GeneratorPQ"),
+                Arguments.of("/dynamicModels/omegaGenControllable.groovy", SynchronizedGeneratorControllable.class, EurostagTutorialExample1Factory.create(), "GEN", "BBM_GEN", "GPQ", "GeneratorPV"),
+                Arguments.of("/dynamicModels/transformer.groovy", TransformerFixedRatio.class, EurostagTutorialExample1Factory.create(), "NGEN_NHV1", "BBM_NGEN_NHV1", "TFR", "TransformerFixedRatio"),
+                Arguments.of("/dynamicModels/svarc.groovy", StaticVarCompensator.class, SvcTestCaseFactory.create(), "SVC2", "BBM_SVARC", "svarc", "StaticVarCompensatorPV"),
+                Arguments.of("/dynamicModels/wecc.groovy", WeccGen.class, EurostagTutorialExample1Factory.create(), "GEN", "BBM_WT", "Wind", "WT4BWeccCurrentSource"),
+                Arguments.of("/dynamicModels/weccSynchro.groovy", SynchronizedWeccGen.class, EurostagTutorialExample1Factory.create(), "GEN", "BBM_WT", "Wind", "WTG4AWeccCurrentSource"),
+                Arguments.of("/dynamicModels/gridFormingConverter.groovy", GridFormingConverter.class, EurostagTutorialExample1Factory.create(), "GEN", "BBM_GFC", "GF", "GridFormingConverterMatchingControl")
         );
     }
 
     private static Stream<Arguments> provideAutomatonModelData() {
         return Stream.of(
-                Arguments.of("currentLimit", CurrentLimitAutomaton.class, EurostagTutorialExample1Factory.create(), "AM_NHV1_NHV2_1", "CLA", "CurrentLimitAutomaton"),
-                Arguments.of("currentLimitTwoLevels", CurrentLimitTwoLevelsAutomaton.class, EurostagTutorialExample1Factory.create(), "AM_NHV1_NHV2_1", "CLA", "CurrentLimitAutomatonTwoLevels"),
-                Arguments.of("tapChanger", TapChangerAutomaton.class, EurostagTutorialExample1Factory.create(), "TC", "tc", "TapChangerAutomaton"),
-                Arguments.of("tapChangerBlocking", TapChangerBlockingAutomaton.class, EurostagTutorialExample1Factory.create(), "ZAB", "ZAB", "TapChangerBlockingAutomaton1"),
-                Arguments.of("phaseShifterI", PhaseShifterIAutomaton.class, EurostagTutorialExample1Factory.create(), "PS_NGEN_NHV1", "ps", "PhaseShifterI"),
-                Arguments.of("phaseShifterP", PhaseShifterPAutomaton.class, EurostagTutorialExample1Factory.create(), "PS_NGEN_NHV1", "ps", "PhaseShifterP"),
-                Arguments.of("underVoltage", UnderVoltageAutomaton.class, EurostagTutorialExample1Factory.create(), "UV_GEN", "uv", "UnderVoltageAutomaton")
+                Arguments.of("/dynamicModels/currentLimit.groovy", CurrentLimitAutomaton.class, EurostagTutorialExample1Factory.create(), "AM_NHV1_NHV2_1", "CLA", "CurrentLimitAutomaton"),
+                Arguments.of("/dynamicModels/currentLimitTwoLevels.groovy", CurrentLimitTwoLevelsAutomaton.class, EurostagTutorialExample1Factory.create(), "AM_NHV1_NHV2_1", "CLA", "CurrentLimitAutomatonTwoLevels"),
+                Arguments.of("/dynamicModels/tapChanger.groovy", TapChangerAutomaton.class, EurostagTutorialExample1Factory.create(), "TC", "tc", "TapChangerAutomaton"),
+                Arguments.of("/dynamicModels/tapChangerBlocking.groovy", TapChangerBlockingAutomaton.class, EurostagTutorialExample1Factory.create(), "ZAB", "ZAB", "TapChangerBlockingAutomaton1"),
+                Arguments.of("/dynamicModels/phaseShifterI.groovy", PhaseShifterIAutomaton.class, EurostagTutorialExample1Factory.create(), "PS_NGEN_NHV1", "ps", "PhaseShifterI"),
+                Arguments.of("/dynamicModels/phaseShifterP.groovy", PhaseShifterPAutomaton.class, EurostagTutorialExample1Factory.create(), "PS_NGEN_NHV1", "ps", "PhaseShifterP"),
+                Arguments.of("/dynamicModels/underVoltage.groovy", UnderVoltageAutomaton.class, EurostagTutorialExample1Factory.create(), "UV_GEN", "uv", "UnderVoltageAutomaton")
         );
     }
 
     private static Stream<Arguments> provideExceptionsModel() {
         return Stream.of(
-                Arguments.of("currentLimitQuadripoleException", EurostagTutorialExample1Factory.create(), "I measurement equipment NGEN is not a quadripole"),
-                Arguments.of("currentLimitMissingControlledException", EurostagTutorialExample1Factory.create(), "'controlledEquipment' field is not set"),
-                Arguments.of("phaseShifterTransformerException", EurostagTutorialExample1Factory.create(), "Transformer static id unknown: NGEN"),
-                Arguments.of("tapChangerBusException", EurostagTutorialExample1Factory.create(), "Bus static id unknown: LOAD"),
-                Arguments.of("tapChangerCompatibleException", EurostagTutorialExample1Factory.create(), "GENERATOR GEN is not compatible"),
-                Arguments.of("underVoltageGeneratorException", EurostagTutorialExample1Factory.create(), "Generator static id unknown: NGEN")
+                Arguments.of("/dynamicModels/currentLimitQuadripoleException.groovy", EurostagTutorialExample1Factory.create(), "I measurement equipment NGEN is not a quadripole"),
+                Arguments.of("/dynamicModels/currentLimitMissingControlledException.groovy", EurostagTutorialExample1Factory.create(), "'controlledEquipment' field is not set"),
+                Arguments.of("/dynamicModels/phaseShifterTransformerException.groovy", EurostagTutorialExample1Factory.create(), "Transformer static id unknown: NGEN"),
+                Arguments.of("/dynamicModels/tapChangerBusException.groovy", EurostagTutorialExample1Factory.create(), "Bus static id unknown: LOAD"),
+                Arguments.of("/dynamicModels/tapChangerCompatibleException.groovy", EurostagTutorialExample1Factory.create(), "GENERATOR GEN is not compatible"),
+                Arguments.of("/dynamicModels/underVoltageGeneratorException.groovy", EurostagTutorialExample1Factory.create(), "Generator static id unknown: NGEN"),
+                Arguments.of("/dynamicModels/danglingHvdcException.groovy", HvdcTestNetwork.createVsc(), "'dangling' field is set on a non dangling hvdc : HvdcPV")
         );
-    }
-
-    @Override
-    String getFolderName() {
-        return FOLDER_NAME;
     }
 }
