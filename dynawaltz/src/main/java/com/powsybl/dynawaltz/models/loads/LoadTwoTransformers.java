@@ -32,12 +32,11 @@ public class LoadTwoTransformers extends AbstractLoad implements LoadWithTransfo
             new VarMapping(getTransformerVar(HIGH_VOLTAGE, "state"), "state"));
 
     public LoadTwoTransformers(String dynamicModelId, Load load, String parameterSetId) {
-        super(dynamicModelId, load, parameterSetId, "transformer_terminal");
+        this(dynamicModelId, load, parameterSetId, "LoadTwoTransformers");
     }
 
-    @Override
-    public String getLib() {
-        return "LoadTwoTransformers";
+    protected LoadTwoTransformers(String dynamicModelId, Load load, String parameterSetId, String lib) {
+        super(dynamicModelId, load, parameterSetId, lib, "transformer_terminal");
     }
 
     @Override

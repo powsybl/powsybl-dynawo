@@ -51,5 +51,4 @@ class EventXmlTest extends DynaWaltzTestUtil {
         Exception e = assertThrows(PowsyblException.class, () -> new DynaWaltzContext(network, workingVariantId, dynamicModels, eventModels, curves, null, null));
         assertEquals("Duplicate dynamicId: [Disconnect_NHV1_NHV2_1, Disconnect_GEN2]", e.getMessage());
     }
-
 }

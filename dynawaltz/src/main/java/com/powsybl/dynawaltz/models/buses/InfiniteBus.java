@@ -14,16 +14,8 @@ import com.powsybl.iidm.network.Bus;
  */
 public class InfiniteBus extends AbstractBus {
 
-    private final String lib;
-
     public InfiniteBus(String dynamicModelId, Bus bus, String parameterSetId, String lib) {
-        super(dynamicModelId, bus, parameterSetId);
-        this.lib = lib;
-    }
-
-    @Override
-    public String getLib() {
-        return lib;
+        super(dynamicModelId, bus, parameterSetId, lib);
     }
 
     @Override

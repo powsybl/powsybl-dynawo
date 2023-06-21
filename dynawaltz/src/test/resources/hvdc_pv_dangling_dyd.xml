@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
+    <dyn:blackBoxModel id="BBM_L" lib="HvdcPVDangling" parFile="models.par" parId="hv" staticId="L">
+        <dyn:macroStaticRef id="MSR_HvdcPVDangling"/>
+    </dyn:blackBoxModel>
+    <dyn:macroConnector id="MC_HvdcPVDanglingSide1-NetworkBus">
+        <dyn:connect var1="hvdc_terminal1" var2="@NAME@_ACPIN"/>
+    </dyn:macroConnector>
+    <dyn:macroConnector id="MC_HvdcPVDanglingSide2-NetworkBus">
+        <dyn:connect var1="hvdc_terminal2" var2="@NAME@_ACPIN"/>
+        <dyn:connect var1="hvdc_switchOffSignal1Side2" var2="@NAME@_switchOff"/>
+    </dyn:macroConnector>
+    <dyn:macroStaticReference id="MSR_HvdcPVDangling">
+        <dyn:staticRef var="hvdc_PInj1Pu" staticVar="p1"/>
+        <dyn:staticRef var="hvdc_QInj1Pu" staticVar="q1"/>
+        <dyn:staticRef var="hvdc_state" staticVar="state1"/>
+        <dyn:staticRef var="hvdc_PInj2Pu" staticVar="p2"/>
+        <dyn:staticRef var="hvdc_QInj2Pu" staticVar="q2"/>
+        <dyn:staticRef var="hvdc_state" staticVar="state2"/>
+    </dyn:macroStaticReference>
+    <dyn:macroConnect connector="MC_HvdcPVDanglingSide1-NetworkBus" id1="BBM_L" id2="NETWORK" name2="B1"/>
+    <dyn:macroConnect connector="MC_HvdcPVDanglingSide2-NetworkBus" id1="BBM_L" id2="NETWORK" name2="VL2_2"/>
+</dyn:dynamicModelsArchitecture>
