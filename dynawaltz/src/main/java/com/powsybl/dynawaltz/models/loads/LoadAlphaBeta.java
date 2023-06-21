@@ -25,16 +25,8 @@ public class LoadAlphaBeta extends AbstractLoad {
             new VarMapping("load_QPu", "q"),
             new VarMapping("load_state", "state"));
 
-    private final String lib;
-
     public LoadAlphaBeta(String dynamicModelId, Load load, String parameterSetId, String lib) {
-        super(dynamicModelId, load, parameterSetId, "load_terminal");
-        this.lib = lib;
-    }
-
-    @Override
-    public String getLib() {
-        return lib;
+        super(dynamicModelId, load, parameterSetId, lib, "load_terminal");
     }
 
     @Override

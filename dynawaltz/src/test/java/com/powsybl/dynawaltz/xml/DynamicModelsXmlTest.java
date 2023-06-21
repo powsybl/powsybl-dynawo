@@ -12,8 +12,8 @@ import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
 import com.powsybl.dynawaltz.models.InjectionModel;
 import com.powsybl.dynawaltz.models.generators.GeneratorFictitious;
-import com.powsybl.dynawaltz.models.generators.SynchronousGeneratorModel;
 import com.powsybl.dynawaltz.models.lines.LineModel;
+import com.powsybl.dynawaltz.models.transformers.TapChangerModel;
 import com.powsybl.iidm.network.Identifiable;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
@@ -80,8 +80,8 @@ class DynamicModelsXmlTest extends DynaWaltzTestUtil {
         assertEquals("The model identified by the static id GEN5 does not match the expected model (LineModel)", e.getMessage());
 
         // default model not implemented
-        e = assertThrows(PowsyblException.class, () -> dc.getDynamicModel("unknownID", SynchronousGeneratorModel.class));
-        assertEquals("Default model not implemented for SynchronousGeneratorModel", e.getMessage());
+        e = assertThrows(PowsyblException.class, () -> dc.getDynamicModel("unknownID", TapChangerModel.class));
+        assertEquals("Default model not implemented for TapChangerModel", e.getMessage());
     }
 
     @Test

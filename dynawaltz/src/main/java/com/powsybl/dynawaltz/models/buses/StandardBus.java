@@ -20,12 +20,7 @@ import javax.xml.stream.XMLStreamWriter;
 public class StandardBus extends AbstractBus {
 
     public StandardBus(String dynamicModelId, Bus bus, String parameterSetId) {
-        super(dynamicModelId, bus, parameterSetId);
-    }
-
-    @Override
-    public String getLib() {
-        return "Bus";
+        super(dynamicModelId, bus, parameterSetId, "Bus");
     }
 
     @Override
