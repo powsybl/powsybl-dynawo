@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.models.svcs;
+package com.powsybl.dynawaltz.models.svarcs;
 
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractEquipmentBlackBoxModel;
@@ -28,8 +28,8 @@ public class StaticVarCompensator extends AbstractEquipmentBlackBoxModel<com.pow
             new VarMapping("SVarC_injector_state", "state"),
             new VarMapping("SVarC_modeHandling_mode_value", "regulatingMode"));
 
-    public StaticVarCompensator(String dynamicModelId, com.powsybl.iidm.network.StaticVarCompensator svc, String parameterSetId, String lib) {
-        super(dynamicModelId, parameterSetId, svc, lib);
+    public StaticVarCompensator(String dynamicModelId, com.powsybl.iidm.network.StaticVarCompensator svarc, String parameterSetId, String lib) {
+        super(dynamicModelId, parameterSetId, svarc, lib);
     }
 
     @Override

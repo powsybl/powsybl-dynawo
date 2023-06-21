@@ -26,8 +26,8 @@ public final class BusUtils {
         return getConnectableBusStaticId(generator.getTerminal());
     }
 
-    public static String getConnectableBusStaticId(StaticVarCompensator svc) {
-        return getConnectableBusStaticId(svc.getTerminal());
+    public static String getConnectableBusStaticId(StaticVarCompensator svarc) {
+        return getConnectableBusStaticId(svarc.getTerminal());
     }
 
     public static String getConnectableBusStaticId(HvdcLine hvdc, Side side) {

@@ -28,7 +28,7 @@ import com.powsybl.dynawaltz.models.hvdc.HvdcVsc;
 import com.powsybl.dynawaltz.models.hvdc.HvdcVscDangling;
 import com.powsybl.dynawaltz.models.lines.StandardLine;
 import com.powsybl.dynawaltz.models.loads.*;
-import com.powsybl.dynawaltz.models.svcs.StaticVarCompensator;
+import com.powsybl.dynawaltz.models.svarcs.StaticVarCompensator;
 import com.powsybl.dynawaltz.models.transformers.TransformerFixedRatio;
 import com.powsybl.dynawaltz.models.generators.GridFormingConverter;
 import com.powsybl.dynawaltz.models.generators.SynchronizedWeccGen;
@@ -115,7 +115,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                 Arguments.of("/dynamicModels/omegaGen.groovy", SynchronizedGenerator.class, EurostagTutorialExample1Factory.create(), "GEN", "BBM_GEN", "GPQ", "GeneratorPQ"),
                 Arguments.of("/dynamicModels/omegaGenControllable.groovy", SynchronizedGeneratorControllable.class, EurostagTutorialExample1Factory.create(), "GEN", "BBM_GEN", "GPQ", "GeneratorPV"),
                 Arguments.of("/dynamicModels/transformer.groovy", TransformerFixedRatio.class, EurostagTutorialExample1Factory.create(), "NGEN_NHV1", "BBM_NGEN_NHV1", "TFR", "TransformerFixedRatio"),
-                Arguments.of("/dynamicModels/svc.groovy", StaticVarCompensator.class, SvcTestCaseFactory.create(), "SVC2", "BBM_SVC", "svc", "StaticVarCompensatorPV"),
+                Arguments.of("/dynamicModels/svarc.groovy", StaticVarCompensator.class, SvcTestCaseFactory.create(), "SVC2", "BBM_SVARC", "svarc", "StaticVarCompensatorPV"),
                 Arguments.of("/dynamicModels/wecc.groovy", WeccGen.class, EurostagTutorialExample1Factory.create(), "GEN", "BBM_WT", "Wind", "WT4BWeccCurrentSource"),
                 Arguments.of("/dynamicModels/weccSynchro.groovy", SynchronizedWeccGen.class, EurostagTutorialExample1Factory.create(), "GEN", "BBM_WT", "Wind", "WTG4AWeccCurrentSource"),
                 Arguments.of("/dynamicModels/gridFormingConverter.groovy", GridFormingConverter.class, EurostagTutorialExample1Factory.create(), "GEN", "BBM_GFC", "GF", "GridFormingConverterMatchingControl")
