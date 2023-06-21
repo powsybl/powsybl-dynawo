@@ -10,6 +10,6 @@ public class DefaultStaticVarCompensatorModel extends AbstractInjectionDefaultMo
 
     @Override
     public String getName() {
-        return "DefaultStaticVarCompensator";
+        return "NetworkStaticVarCompensator";
     }
 }
