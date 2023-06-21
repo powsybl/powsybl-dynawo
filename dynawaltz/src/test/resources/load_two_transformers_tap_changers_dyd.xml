@@ -3,7 +3,7 @@
     <dyn:blackBoxModel id="BBM_LOAD" lib="LoadTwoTransformersTapChangers" parFile="models.par" parId="LTTTC" staticId="LOAD">
         <dyn:macroStaticRef id="MSR_LoadTwoTransformersTapChangers"/>
     </dyn:blackBoxModel>
-    <dyn:macroConnector id="MC_LoadTwoTransformersTapChangers-NetworkBus">
+    <dyn:macroConnector id="MC_LoadTwoTransformersTapChangers-DefaultBus">
         <dyn:connect var1="transformerT_terminal" var2="@NAME@_ACPIN"/>
         <dyn:connect var1="transformerT_switchOffSignal1" var2="@NAME@_switchOff"/>
         <dyn:connect var1="transformerD_switchOffSignal1" var2="@NAME@_switchOff"/>
@@ -16,5 +16,5 @@
         <dyn:staticRef var="transformerT_Q1Pu_value" staticVar="q"/>
         <dyn:staticRef var="transformerT_state" staticVar="state"/>
     </dyn:macroStaticReference>
-    <dyn:macroConnect connector="MC_LoadTwoTransformersTapChangers-NetworkBus" id1="BBM_LOAD" id2="NETWORK" name2="NLOAD"/>
+    <dyn:macroConnect connector="MC_LoadTwoTransformersTapChangers-DefaultBus" id1="BBM_LOAD" id2="NETWORK" name2="NLOAD"/>
 </dyn:dynamicModelsArchitecture>

@@ -7,7 +7,7 @@
  */
 package com.powsybl.dynawaltz.models.transformers;
 
-import com.powsybl.dynawaltz.models.AbstractNetworkModel;
+import com.powsybl.dynawaltz.models.defaultmodels.AbstractDefaultModel;
 import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.VarConnection;
 
@@ -18,7 +18,7 @@ import static com.powsybl.dynawaltz.models.TransformerSide.NONE;
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class DefaultTransformerModel extends AbstractNetworkModel implements TransformerModel, TapChangerModel {
+public class DefaultTransformerModel extends AbstractDefaultModel implements TransformerModel, TapChangerModel {
 
     public DefaultTransformerModel(String staticId) {
         super(staticId);
@@ -26,7 +26,7 @@ public class DefaultTransformerModel extends AbstractNetworkModel implements Tra
 
     @Override
     public String getName() {
-        return "NetworkTransformer";
+        return "DefaultTransformer";
     }
 
     @Override

@@ -4,9 +4,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package com.powsybl.dynawaltz.models;
+package com.powsybl.dynawaltz.models.defaultmodels;
 
 import com.powsybl.commons.PowsyblException;
+import com.powsybl.dynawaltz.models.Model;
 import com.powsybl.dynawaltz.models.buses.BusModel;
 import com.powsybl.dynawaltz.models.buses.DefaultBusModel;
 import com.powsybl.dynawaltz.models.generators.GeneratorModel;
@@ -33,12 +34,12 @@ import java.util.Map;
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class NetworkModel {
+public class DefaultModelsHandler {
 
     private final Map<IdentifiableType, Class<? extends Model>> powSyBlTypeToModel = new EnumMap<>(IdentifiableType.class);
     private final Map<Class<? extends Model>, DefaultModelFactory<? extends Model>> factoryMap;
 
-    public NetworkModel() {
+    public DefaultModelsHandler() {
         factoryMap = Map.of(BusModel.class, new DefaultModelFactory<BusModel>(DefaultBusModel::new),
                 GeneratorModel.class, new DefaultModelFactory<GeneratorModel>(DefaultGeneratorModel::new),
                 HvdcModel.class, new DefaultModelFactory<HvdcModel>(DefaultHvdcModel::new),

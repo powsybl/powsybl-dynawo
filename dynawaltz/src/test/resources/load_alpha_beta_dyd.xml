@@ -3,7 +3,7 @@
     <dyn:blackBoxModel id="BBM_LOAD" lib="LoadAlphaBeta" parFile="models.par" parId="LAB" staticId="LOAD">
         <dyn:macroStaticRef id="MSR_LoadAlphaBeta"/>
     </dyn:blackBoxModel>
-    <dyn:macroConnector id="MC_LoadAlphaBeta-NetworkBus">
+    <dyn:macroConnector id="MC_LoadAlphaBeta-DefaultBus">
         <dyn:connect var1="load_terminal" var2="@NAME@_ACPIN"/>
         <dyn:connect var1="load_switchOffSignal1" var2="@NAME@_switchOff"/>
     </dyn:macroConnector>
@@ -12,5 +12,5 @@
         <dyn:staticRef var="load_QPu" staticVar="q"/>
         <dyn:staticRef var="load_state" staticVar="state"/>
     </dyn:macroStaticReference>
-    <dyn:macroConnect connector="MC_LoadAlphaBeta-NetworkBus" id1="BBM_LOAD" id2="NETWORK" name2="NLOAD"/>
+    <dyn:macroConnect connector="MC_LoadAlphaBeta-DefaultBus" id1="BBM_LOAD" id2="NETWORK" name2="NLOAD"/>
 </dyn:dynamicModelsArchitecture>

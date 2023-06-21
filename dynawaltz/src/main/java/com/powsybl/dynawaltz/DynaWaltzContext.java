@@ -11,6 +11,7 @@ import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.models.*;
 import com.powsybl.dynawaltz.models.buses.InfiniteBus;
+import com.powsybl.dynawaltz.models.defaultmodels.DefaultModelsHandler;
 import com.powsybl.dynawaltz.models.frequencysynchronizers.FrequencySynchronizedModel;
 import com.powsybl.dynawaltz.models.frequencysynchronizers.FrequencySynchronizerModel;
 import com.powsybl.dynawaltz.models.frequencysynchronizers.OmegaRef;
@@ -43,7 +44,7 @@ public class DynaWaltzContext {
     private final Map<String, MacroStaticReference> macroStaticReferences = new LinkedHashMap<>();
     private final List<MacroConnect> macroConnectList = new ArrayList<>();
     private final Map<String, MacroConnector> macroConnectorsMap = new LinkedHashMap<>();
-    private final NetworkModel networkModel = new NetworkModel();
+    private final DefaultModelsHandler defaultModelsHandler = new DefaultModelsHandler();
     private final FrequencySynchronizerModel frequencySynchronizer;
 
     public DynaWaltzContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
@@ -101,7 +102,7 @@ public class DynaWaltzContext {
     public <T extends Model> T getDynamicModel(String staticId, Class<T> clazz) {
         BlackBoxModel bbm = staticIdBlackBoxModelMap.get(staticId);
         if (bbm == null) {
-            return networkModel.getDefaultModel(staticId, clazz);
+            return defaultModelsHandler.getDefaultModel(staticId, clazz);
         }
         if (clazz.isInstance(bbm)) {
             return clazz.cast(bbm);
@@ -112,7 +113,7 @@ public class DynaWaltzContext {
     public <T extends Model> T getDynamicModel(Identifiable<?> equipment, Class<T> connectableClass) {
         BlackBoxModel bbm = staticIdBlackBoxModelMap.get(equipment.getId());
         if (bbm == null) {
-            return networkModel.getDefaultModel(equipment, connectableClass);
+            return defaultModelsHandler.getDefaultModel(equipment, connectableClass);
         }
         if (connectableClass.isInstance(bbm)) {
             return connectableClass.cast(bbm);
