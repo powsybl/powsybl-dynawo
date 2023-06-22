@@ -7,13 +7,13 @@
  */
 package com.powsybl.dynawaltz.models.generators;
 
-import com.powsybl.dynawaltz.models.AbstractInjectionNetworkModel;
+import com.powsybl.dynawaltz.models.defaultmodels.AbstractInjectionDefaultModel;
 import com.powsybl.dynawaltz.models.events.ControllableEquipment;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class DefaultGeneratorModel extends AbstractInjectionNetworkModel implements GeneratorModel, ControllableEquipment {
+public class DefaultGeneratorModel extends AbstractInjectionDefaultModel implements GeneratorModel, ControllableEquipment {
 
     public DefaultGeneratorModel(String staticId) {
         super(staticId);
@@ -21,7 +21,7 @@ public class DefaultGeneratorModel extends AbstractInjectionNetworkModel impleme
 
     @Override
     public String getName() {
-        return "NetworkGenerator";
+        return "DefaultGenerator";
     }
 
     @Override

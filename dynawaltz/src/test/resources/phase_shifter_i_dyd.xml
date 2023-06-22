@@ -8,13 +8,13 @@
         <dyn:connect var1="phaseShifter_P" var2="transformer_P1"/>
         <dyn:connect var1="phaseShifter_AutomatonExists" var2="transformer_disable_internal_tapChanger"/>
     </dyn:macroConnector>
-    <dyn:macroConnector id="MC_TransformerFixedRatioSide1-NetworkBus">
+    <dyn:macroConnector id="MC_TransformerFixedRatioSide1-DefaultBus">
         <dyn:connect var1="transformer_terminal1" var2="@NAME@_ACPIN"/>
     </dyn:macroConnector>
-    <dyn:macroConnector id="MC_TransformerFixedRatioSide2-NetworkBus">
+    <dyn:macroConnector id="MC_TransformerFixedRatioSide2-DefaultBus">
         <dyn:connect var1="transformer_terminal2" var2="@NAME@_ACPIN"/>
     </dyn:macroConnector>
     <dyn:macroConnect connector="MC_PhaseShifterI-TransformerFixedRatio" id1="BBM_phase_shifter" id2="BBM_NGEN_NHV1"/>
-    <dyn:macroConnect connector="MC_TransformerFixedRatioSide1-NetworkBus" id1="BBM_NGEN_NHV1" id2="NETWORK" name2="NGEN"/>
-    <dyn:macroConnect connector="MC_TransformerFixedRatioSide2-NetworkBus" id1="BBM_NGEN_NHV1" id2="NETWORK" name2="NHV1"/>
+    <dyn:macroConnect connector="MC_TransformerFixedRatioSide1-DefaultBus" id1="BBM_NGEN_NHV1" id2="NETWORK" name2="NGEN"/>
+    <dyn:macroConnect connector="MC_TransformerFixedRatioSide2-DefaultBus" id1="BBM_NGEN_NHV1" id2="NETWORK" name2="NHV1"/>
 </dyn:dynamicModelsArchitecture>

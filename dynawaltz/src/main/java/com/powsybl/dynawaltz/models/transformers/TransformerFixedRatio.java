@@ -17,7 +17,6 @@ import com.powsybl.dynawaltz.models.utils.SideConverter;
 import com.powsybl.iidm.network.TwoWindingsTransformer;
 
 import java.util.List;
-import java.util.Objects;
 
 import static com.powsybl.dynawaltz.models.TransformerSide.NONE;
 
@@ -26,16 +25,8 @@ import static com.powsybl.dynawaltz.models.TransformerSide.NONE;
  */
 public class TransformerFixedRatio extends AbstractEquipmentBlackBoxModel<TwoWindingsTransformer> implements TransformerModel, TapChangerModel {
 
-    private final String transformerLib;
-
     public TransformerFixedRatio(String dynamicModelId, TwoWindingsTransformer transformer, String parameterSetId, String lib) {
-        super(dynamicModelId, parameterSetId, transformer);
-        this.transformerLib = Objects.requireNonNull(lib);
-    }
-
-    @Override
-    public String getLib() {
-        return transformerLib;
+        super(dynamicModelId, parameterSetId, transformer, lib);
     }
 
     private List<VarConnection> getVarConnectionsWith(BusModel connected, Side side) {

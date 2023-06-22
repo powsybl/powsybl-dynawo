@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.models.svcs;
+package com.powsybl.dynawaltz.models.svarcs;
 
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractEquipmentBlackBoxModel;
@@ -16,7 +16,6 @@ import com.powsybl.dynawaltz.models.utils.BusUtils;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
@@ -29,11 +28,8 @@ public class StaticVarCompensator extends AbstractEquipmentBlackBoxModel<com.pow
             new VarMapping("SVarC_injector_state", "state"),
             new VarMapping("SVarC_modeHandling_mode_value", "regulatingMode"));
 
-    private final String compensatorLib;
-
-    public StaticVarCompensator(String dynamicModelId, com.powsybl.iidm.network.StaticVarCompensator svc, String parameterSetId, String compensatorLib) {
-        super(dynamicModelId, parameterSetId, svc);
-        this.compensatorLib = Objects.requireNonNull(compensatorLib);
+    public StaticVarCompensator(String dynamicModelId, com.powsybl.iidm.network.StaticVarCompensator svarc, String parameterSetId, String lib) {
+        super(dynamicModelId, parameterSetId, svarc, lib);
     }
 
     @Override
@@ -48,11 +44,6 @@ public class StaticVarCompensator extends AbstractEquipmentBlackBoxModel<com.pow
     @Override
     public List<VarMapping> getVarsMapping() {
         return VAR_MAPPING;
-    }
-
-    @Override
-    public String getLib() {
-        return compensatorLib;
     }
 
     @Override

@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
     <dyn:blackBoxModel id="BBM_CLA_TWO_LEVELS" lib="CurrentLimitAutomatonTwoLevels" parFile="models.par" parId="cla"/>
-    <dyn:macroConnector id="MC_CurrentLimitAutomatonTwoLevelsMeasure1Side2-NetworkLine">
+    <dyn:macroConnector id="MC_CurrentLimitAutomatonTwoLevelsMeasure1Side2-DefaultLine">
         <dyn:connect var1="currentLimitAutomaton_IMonitored1" var2="@NAME@_iSide2"/>
         <dyn:connect var1="currentLimitAutomaton_AutomatonExists" var2="@NAME@_desactivate_currentLimits"/>
     </dyn:macroConnector>
-    <dyn:macroConnector id="MC_CurrentLimitAutomatonTwoLevelsMeasure2Side1-NetworkLine">
+    <dyn:macroConnector id="MC_CurrentLimitAutomatonTwoLevelsMeasure2Side1-DefaultLine">
         <dyn:connect var1="currentLimitAutomaton_IMonitored2" var2="@NAME@_iSide1"/>
     </dyn:macroConnector>
-    <dyn:macroConnector id="MC_CurrentLimitAutomatonTwoLevelsControl-NetworkTransformer">
+    <dyn:macroConnector id="MC_CurrentLimitAutomatonTwoLevelsControl-DefaultTransformer">
         <dyn:connect var1="currentLimitAutomaton_order" var2="@NAME@_state"/>
     </dyn:macroConnector>
-    <dyn:macroConnect connector="MC_CurrentLimitAutomatonTwoLevelsMeasure1Side2-NetworkLine" id1="BBM_CLA_TWO_LEVELS" id2="NETWORK" name2="NHV1_NHV2_1"/>
-    <dyn:macroConnect connector="MC_CurrentLimitAutomatonTwoLevelsMeasure2Side1-NetworkLine" id1="BBM_CLA_TWO_LEVELS" id2="NETWORK" name2="NHV1_NHV2_2"/>
-    <dyn:macroConnect connector="MC_CurrentLimitAutomatonTwoLevelsControl-NetworkTransformer" id1="BBM_CLA_TWO_LEVELS" id2="NETWORK" name2="NGEN_NHV1"/>
+    <dyn:macroConnect connector="MC_CurrentLimitAutomatonTwoLevelsMeasure1Side2-DefaultLine" id1="BBM_CLA_TWO_LEVELS" id2="NETWORK" name2="NHV1_NHV2_1"/>
+    <dyn:macroConnect connector="MC_CurrentLimitAutomatonTwoLevelsMeasure2Side1-DefaultLine" id1="BBM_CLA_TWO_LEVELS" id2="NETWORK" name2="NHV1_NHV2_2"/>
+    <dyn:macroConnect connector="MC_CurrentLimitAutomatonTwoLevelsControl-DefaultTransformer" id1="BBM_CLA_TWO_LEVELS" id2="NETWORK" name2="NGEN_NHV1"/>
 </dyn:dynamicModelsArchitecture>

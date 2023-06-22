@@ -7,13 +7,13 @@
  */
 package com.powsybl.dynawaltz.models.hvdc;
 
-import com.powsybl.dynawaltz.models.AbstractNetworkModel;
+import com.powsybl.dynawaltz.models.defaultmodels.AbstractDefaultModel;
 import com.powsybl.dynawaltz.models.Side;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class DefaultHvdcModel extends AbstractNetworkModel implements HvdcModel {
+public class DefaultHvdcModel extends AbstractDefaultModel implements HvdcModel {
 
     public DefaultHvdcModel(String staticId) {
         super(staticId);
@@ -21,7 +21,7 @@ public class DefaultHvdcModel extends AbstractNetworkModel implements HvdcModel 
 
     @Override
     public String getName() {
-        return "NetworkHvdc";
+        return "DefaultHvdc";
     }
 
     @Override

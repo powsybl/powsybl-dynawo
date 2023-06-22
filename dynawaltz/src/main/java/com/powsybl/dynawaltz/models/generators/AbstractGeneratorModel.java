@@ -17,7 +17,6 @@ import com.powsybl.iidm.network.Generator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
@@ -30,11 +29,8 @@ public abstract class AbstractGeneratorModel extends AbstractEquipmentBlackBoxMo
             new VarMapping("generator_QGenPu", "q"),
             new VarMapping("generator_state", "state"));
 
-    protected final String lib;
-
     protected AbstractGeneratorModel(String dynamicModelId, Generator generator, String parameterSetId, String lib) {
-        super(dynamicModelId, parameterSetId, generator);
-        this.lib = Objects.requireNonNull(lib);
+        super(dynamicModelId, parameterSetId, generator, lib);
     }
 
     @Override
@@ -54,11 +50,6 @@ public abstract class AbstractGeneratorModel extends AbstractEquipmentBlackBoxMo
                 .map(switchOff -> new VarConnection(getSwitchOffSignalNodeVarName(), switchOff))
                 .ifPresent(varConnections::add);
         return varConnections;
-    }
-
-    @Override
-    public String getLib() {
-        return lib;
     }
 
     public String getTerminalVarName() {

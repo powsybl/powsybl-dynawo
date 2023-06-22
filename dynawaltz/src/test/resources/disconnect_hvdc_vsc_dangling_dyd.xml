@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
+    <dyn:blackBoxModel id="BBM_HVDC" lib="HvdcVSCDanglingUdc" parFile="models.par" parId="hvdc" staticId="L">
+        <dyn:macroStaticRef id="MSR_HvdcVSCDanglingUdc"/>
+    </dyn:blackBoxModel>
+    <dyn:blackBoxModel id="Disconnect_L" lib="EventSetPointBoolean" parFile="hvdctest.par" parId="Disconnect_L"/>
+    <dyn:macroConnector id="MC_HvdcVSCDanglingUdcSide1-DefaultBus">
+        <dyn:connect var1="hvdc_terminal1" var2="@NAME@_ACPIN"/>
+    </dyn:macroConnector>
+    <dyn:macroConnector id="MC_HvdcVSCDanglingUdcSide2-DefaultBus">
+        <dyn:connect var1="hvdc_terminal2" var2="@NAME@_ACPIN"/>
+        <dyn:connect var1="hvdc_switchOffSignal1Side2" var2="@NAME@_switchOff"/>
+    </dyn:macroConnector>
+    <dyn:macroConnector id="MC_EventHvdcDisconnectionSide2-HvdcVSCDanglingUdc">
+        <dyn:connect var1="event_state1" var2="hvdc_Conv2_switchOffSignal2"/>
+    </dyn:macroConnector>
+    <dyn:macroStaticReference id="MSR_HvdcVSCDanglingUdc">
+        <dyn:staticRef var="hvdc_PInj1Pu" staticVar="p1"/>
+        <dyn:staticRef var="hvdc_QInj1Pu" staticVar="q1"/>
+        <dyn:staticRef var="hvdc_state" staticVar="state1"/>
+        <dyn:staticRef var="hvdc_PInj2Pu" staticVar="p2"/>
+        <dyn:staticRef var="hvdc_QInj2Pu" staticVar="q2"/>
+        <dyn:staticRef var="hvdc_state" staticVar="state2"/>
+    </dyn:macroStaticReference>
+    <dyn:macroConnect connector="MC_HvdcVSCDanglingUdcSide1-DefaultBus" id1="BBM_HVDC" id2="NETWORK" name2="B1"/>
+    <dyn:macroConnect connector="MC_HvdcVSCDanglingUdcSide2-DefaultBus" id1="BBM_HVDC" id2="NETWORK" name2="VL2_2"/>
+    <dyn:macroConnect connector="MC_EventHvdcDisconnectionSide2-HvdcVSCDanglingUdc" id1="Disconnect_L" id2="BBM_HVDC"/>
+</dyn:dynamicModelsArchitecture>

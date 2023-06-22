@@ -28,4 +28,8 @@ public enum Side {
     public int getSideNumber() {
         return ordinal() + 1;
     }
+
+    public Side getOppositeSide() {
+        return this == ONE ? TWO : ONE;
+    }
 }

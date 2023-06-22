@@ -23,8 +23,8 @@ public abstract class AbstractLoad extends AbstractEquipmentBlackBoxModel<Load> 
 
     protected final String terminalVarName;
 
-    protected AbstractLoad(String dynamicModelId, Load load, String parameterSetId, String terminalVarName) {
-        super(dynamicModelId, parameterSetId, load);
+    protected AbstractLoad(String dynamicModelId, Load load, String parameterSetId, String lib, String terminalVarName) {
+        super(dynamicModelId, parameterSetId, load, lib);
         this.terminalVarName = terminalVarName;
     }
 
