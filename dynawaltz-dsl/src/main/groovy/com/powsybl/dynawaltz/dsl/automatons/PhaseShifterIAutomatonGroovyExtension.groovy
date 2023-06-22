@@ -20,25 +20,26 @@ import com.powsybl.iidm.network.Network
 @AutoService(DynamicModelGroovyExtension.class)
 class PhaseShifterIAutomatonGroovyExtension extends AbstractPureDynamicGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
+    private static final String LIB = "PhaseShifterI"
+
     PhaseShifterIAutomatonGroovyExtension() {
-        modelTags = ["PhaseShifterI"]
+        modelTags = [LIB]
     }
 
     @Override
     protected PhaseShifterPAutomatonBuilder createBuilder(Network network) {
-        new PhaseShifterPAutomatonBuilder(network)
+        new PhaseShifterPAutomatonBuilder(network, LIB)
     }
 
     static class PhaseShifterPAutomatonBuilder extends AbstractPhaseShifterModelBuilder {
 
-        PhaseShifterPAutomatonBuilder(Network network) {
-            super(network)
+        PhaseShifterPAutomatonBuilder(Network network, String lib) {
+            super(network, lib)
         }
 
         @Override
         PhaseShifterIAutomaton build() {
-            checkData()
-            new PhaseShifterIAutomaton(dynamicModelId, transformer, parameterSetId)
+            isInstantiable() ? new PhaseShifterIAutomaton(dynamicModelId, dslTransformer.equipment, parameterSetId) : null
         }
     }
 }

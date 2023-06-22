@@ -42,7 +42,7 @@ class TransformerFixedRatioGroovyExtension extends AbstractEquipmentGroovyExtens
         }
 
         @Override
-        protected TwoWindingsTransformer getEquipment() {
+        protected TwoWindingsTransformer findEquipment(String staticId) {
             network.getTwoWindingsTransformer(staticId)
         }
 

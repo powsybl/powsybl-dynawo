@@ -12,11 +12,14 @@ import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractPureDynamicGroovyExtension
+import com.powsybl.dynawaltz.dsl.DslEquipment
 import com.powsybl.dynawaltz.dsl.models.builders.AbstractPureDynamicModelBuilder
 import com.powsybl.dynawaltz.models.Side
 import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton
 import com.powsybl.dynawaltz.models.utils.SideConverter
 import com.powsybl.iidm.network.Branch
+import com.powsybl.iidm.network.Generator
+import com.powsybl.iidm.network.IdentifiableType
 import com.powsybl.iidm.network.Network
 
 /**
@@ -37,26 +40,25 @@ class CurrentLimitAutomatonGroovyExtension extends AbstractPureDynamicGroovyExte
     }
 
     protected String getLib() {
-        return "CurrentLimitAutomaton"
+        "CurrentLimitAutomaton"
     }
 
     static class CurrentLimitAutomatonBuilder extends AbstractPureDynamicModelBuilder {
 
-        Network network
-        Branch<? extends Branch> iMeasurement
-        Side iMeasurementSide
-        Branch<? extends Branch> controlledEquipment
-        String lib
+        protected final DslEquipment<Branch> iMeasurement
+        protected Side iMeasurementSide
+        protected final DslEquipment<Branch> controlledEquipment
 
         CurrentLimitAutomatonBuilder(Network network, String lib) {
-            this.network = network
-            this.lib = lib
+            super(network, lib)
+            iMeasurement = new DslEquipment<>("I measurement quadripole", "iMeasurement")
+            controlledEquipment = new DslEquipment<>("Controlled quadripole", "controlledQuadripole")
         }
 
         void iMeasurement(String staticId) {
-            iMeasurement = network.getBranch(staticId)
-            if (iMeasurement == null) {
-                throw new DslException("I measurement equipment ${staticId} is not a quadripole")
+            iMeasurement.tap {
+                it.staticId = staticId
+                equipment = network.getBranch(staticId)
             }
         }
 
@@ -65,30 +67,28 @@ class CurrentLimitAutomatonGroovyExtension extends AbstractPureDynamicGroovyExte
         }
 
         void controlledQuadripole(String staticId) {
-            controlledEquipment = network.getBranch(staticId)
-            if (controlledEquipment == null) {
-                throw new DslException("Controlled equipment ${staticId} is not a quadripole")
+            controlledEquipment.tap {
+                it.staticId = staticId
+                equipment = network.getBranch(staticId)
             }
         }
 
         @Override
         void checkData() {
             super.checkData()
-            if (!iMeasurement) {
-                throw new DslException("'iMeasurement' field is not set")
-            }
+            checkEquipmentData(controlledEquipment)
+            checkEquipmentData(iMeasurement)
             if (!iMeasurementSide) {
-                throw new DslException("'iMeasurementSide' field is not set")
-            }
-            if (!controlledEquipment) {
-                throw new DslException("'controlledEquipment' field is not set")
+                LOGGER.warn("'iMeasurementSide' field is not set")
+                isInstantiable = false
             }
         }
 
         @Override
         CurrentLimitAutomaton build() {
-            checkData()
-            new CurrentLimitAutomaton(dynamicModelId, parameterSetId, iMeasurement, iMeasurementSide, controlledEquipment, lib)
+            isInstantiable() ? new CurrentLimitAutomaton(dynamicModelId, parameterSetId,
+                    iMeasurement.equipment, iMeasurementSide, controlledEquipment.equipment, lib)
+                    : null
         }
     }
 }

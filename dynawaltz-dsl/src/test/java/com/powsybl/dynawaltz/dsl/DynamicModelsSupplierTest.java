@@ -7,7 +7,6 @@
  */
 package com.powsybl.dynawaltz.dsl;
 
-import com.powsybl.dsl.DslException;
 import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynamicsimulation.DynamicModelsSupplier;
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension;
@@ -74,14 +73,6 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
     }
 
     @ParameterizedTest(name = "{0}")
-    @MethodSource("provideExceptionsModel")
-    void testDslExceptions(String groovyScriptName, Network network, String exceptionMessage) {
-        DynamicModelsSupplier supplier = new GroovyDynamicModelsSupplier(getResourceAsStream(groovyScriptName), EXTENSIONS);
-        Exception e = assertThrows(DslException.class, () -> supplier.get(network));
-        assertEquals(exceptionMessage, e.getMessage());
-    }
-
-    @ParameterizedTest(name = "{0}")
     @MethodSource("provideWarningsModel")
     void testDslWarnings(String groovyScriptName, Network network) {
         DynamicModelsSupplier supplier = new GroovyDynamicModelsSupplier(getResourceAsStream(groovyScriptName), EXTENSIONS);
@@ -143,25 +134,22 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
         );
     }
 
-    private static Stream<Arguments> provideExceptionsModel() {
-        return Stream.of(
-                Arguments.of("/dynamicModels/currentLimitQuadripoleException.groovy", EurostagTutorialExample1Factory.create(), "I measurement equipment NGEN is not a quadripole"),
-                Arguments.of("/dynamicModels/currentLimitMissingControlledException.groovy", EurostagTutorialExample1Factory.create(), "'controlledEquipment' field is not set"),
-                Arguments.of("/dynamicModels/phaseShifterTransformerException.groovy", EurostagTutorialExample1Factory.create(), "Transformer static id unknown: NGEN"),
-                Arguments.of("/dynamicModels/tapChangerBusException.groovy", EurostagTutorialExample1Factory.create(), "Bus static id unknown: LOAD"),
-                Arguments.of("/dynamicModels/tapChangerCompatibleException.groovy", EurostagTutorialExample1Factory.create(), "GENERATOR GEN is not compatible"),
-                Arguments.of("/dynamicModels/underVoltageGeneratorException.groovy", EurostagTutorialExample1Factory.create(), "Generator static id unknown: NGEN")
-                //Arguments.of("/dynamicModels/missingDanglingProperty.groovy", HvdcTestNetwork.createVsc(), "'dangling' field is set on a non dangling hvdc : HvdcPV")
-        );
-    }
-
     private static Stream<Arguments> provideWarningsModel() {
         return Stream.of(
                 Arguments.of("/warnings/missingStaticId.groovy", EurostagTutorialExample1Factory.create()),
                 Arguments.of("/warnings/missingParameterId.groovy", EurostagTutorialExample1Factory.create()),
                 Arguments.of("/warnings/missingEquipment.groovy", EurostagTutorialExample1Factory.create()),
                 Arguments.of("/warnings/missingDangling.groovy", HvdcTestNetwork.createVsc()),
-                Arguments.of("/warnings/missingDanglingProperty.groovy", HvdcTestNetwork.createVsc())
-        );
+                Arguments.of("/warnings/missingDanglingProperty.groovy", HvdcTestNetwork.createVsc()),
+                Arguments.of("/warnings/underVoltageMissingGenerator.groovy", EurostagTutorialExample1Factory.create()),
+                Arguments.of("/warnings/phaseShifterMissingTransformer.groovy", EurostagTutorialExample1Factory.create()),
+                Arguments.of("/warnings/claMissingMeasurement.groovy", EurostagTutorialExample1Factory.create()),
+                Arguments.of("/warnings/claMissingMeasurementSide.groovy", EurostagTutorialExample1Factory.create()),
+                Arguments.of("/warnings/claMissingControlled.groovy", EurostagTutorialExample1Factory.create()),
+                Arguments.of("/warnings/cla2MissingMeasurement2.groovy", EurostagTutorialExample1Factory.create()),
+                Arguments.of("/warnings/cla2MissingMeasurementSide2.groovy", EurostagTutorialExample1Factory.create()),
+                Arguments.of("/warnings/tapChangerMissingBus.groovy", EurostagTutorialExample1Factory.create()),
+                Arguments.of("/warnings/tapChangerCompatible.groovy", EurostagTutorialExample1Factory.create())
+                );
     }
 }

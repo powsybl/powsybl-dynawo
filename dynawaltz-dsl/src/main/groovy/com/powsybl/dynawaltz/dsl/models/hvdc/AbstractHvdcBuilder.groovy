@@ -21,7 +21,7 @@ import com.powsybl.iidm.network.Network
  */
 abstract class AbstractHvdcBuilder extends AbstractEquipmentModelBuilder<HvdcLine> {
 
-    Side danglingSide
+    protected Side danglingSide
 
     AbstractHvdcBuilder(Network network, EquipmentConfig equipmentConfig) {
         super(network, equipmentConfig, IdentifiableType.HVDC_LINE)
@@ -32,8 +32,8 @@ abstract class AbstractHvdcBuilder extends AbstractEquipmentModelBuilder<HvdcLin
     }
 
     @Override
-    protected boolean checkData() {
-        def isInstantiable = super.checkData()
+    protected void checkData() {
+        super.checkData()
         def isDangling = equipmentConfig.isDangling()
         if (isDangling && !danglingSide) {
             LOGGER.warn("'dangling' field is not set")
@@ -42,11 +42,10 @@ abstract class AbstractHvdcBuilder extends AbstractEquipmentModelBuilder<HvdcLin
             LOGGER.warn("'dangling' field is set on a non dangling hvdc : ${equipmentConfig.lib}")
             isInstantiable = false
         }
-        isInstantiable
     }
 
     @Override
-    protected HvdcLine getEquipment() {
+    protected HvdcLine findEquipment(String staticId) {
         network.getHvdcLine(staticId)
     }
 }

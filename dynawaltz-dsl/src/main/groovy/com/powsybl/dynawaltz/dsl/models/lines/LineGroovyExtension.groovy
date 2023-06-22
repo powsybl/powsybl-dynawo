@@ -42,7 +42,7 @@ class LineGroovyExtension extends AbstractSimpleEquipmentGroovyExtension<Dynamic
         }
 
         @Override
-        protected Line getEquipment() {
+        protected Line findEquipment(String staticId) {
             network.getLine(staticId)
         }
 

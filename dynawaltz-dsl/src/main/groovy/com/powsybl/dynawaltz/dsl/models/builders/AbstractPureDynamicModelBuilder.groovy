@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) 2023, RTE (http://www.rte-france.com/)
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,33 +7,35 @@
  */
 package com.powsybl.dynawaltz.dsl.models.builders
 
-import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
-import com.powsybl.dynawaltz.dsl.ModelBuilder
+import com.powsybl.iidm.network.Network
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-abstract class AbstractPureDynamicModelBuilder implements ModelBuilder<DynamicModel> {
+abstract class AbstractPureDynamicModelBuilder extends AbstractDynamicModelBuilder {
 
-    String dynamicModelId
-    String parameterSetId
+    protected final String lib
 
-    void dynamicModelId(String dynamicModelId) {
-        this.dynamicModelId = dynamicModelId
+    AbstractPureDynamicModelBuilder(Network network, String lib) {
+        super(network)
+        this.lib = lib
     }
 
-    void parameterSetId(String parameterSetId) {
-        this.parameterSetId = parameterSetId
-    }
-
-    void checkData() {
+    protected void checkData() {
         if (!dynamicModelId) {
-            throw new DslException("'dynamicModelId' field is not set")
+            LOGGER.warn("'dynamicModelId' field is not set")
+            isInstantiable = false
         }
         if (!parameterSetId) {
-            throw new DslException("'parameterSetId' field is not set")
+            LOGGER.warn("'parameterSetId' field is not set")
+            isInstantiable = false
         }
+    }
+
+    @Override
+    String getLib() {
+        lib
     }
 
     @Override

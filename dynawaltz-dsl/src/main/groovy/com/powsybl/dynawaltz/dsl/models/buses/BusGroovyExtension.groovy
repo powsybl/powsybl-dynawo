@@ -40,7 +40,7 @@ class BusGroovyExtension extends AbstractSimpleEquipmentGroovyExtension<DynamicM
 
         @Override
         StandardBus build() {
-            isInstantiable() ? new StandardBus(dynamicModelId, equipment, parameterSetId)
+            isInstantiable() ? new StandardBus(dynamicModelId, dslEquipment.equipment, parameterSetId)
                 : null
         }
     }

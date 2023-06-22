@@ -23,7 +23,7 @@ abstract class AbstractGeneratorBuilder extends AbstractEquipmentModelBuilder<Ge
     }
 
     @Override
-    protected Generator getEquipment() {
+    protected Generator findEquipment(String staticId) {
         network.getGenerator(staticId)
     }
 }

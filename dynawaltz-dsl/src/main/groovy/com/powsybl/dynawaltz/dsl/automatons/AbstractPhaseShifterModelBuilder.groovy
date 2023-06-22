@@ -5,11 +5,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-
 package com.powsybl.dynawaltz.dsl.automatons
 
-import com.powsybl.dsl.DslException
+import com.powsybl.dynawaltz.dsl.DslEquipment
 import com.powsybl.dynawaltz.dsl.models.builders.AbstractPureDynamicModelBuilder
+import com.powsybl.iidm.network.IdentifiableType
 import com.powsybl.iidm.network.Network
 import com.powsybl.iidm.network.TwoWindingsTransformer
 
@@ -18,18 +18,23 @@ import com.powsybl.iidm.network.TwoWindingsTransformer
  */
 abstract class AbstractPhaseShifterModelBuilder extends AbstractPureDynamicModelBuilder {
 
-    Network network
-    TwoWindingsTransformer transformer
+    protected final DslEquipment<TwoWindingsTransformer> dslTransformer
 
-    AbstractPhaseShifterModelBuilder(Network network) {
-        this.network = network
+    AbstractPhaseShifterModelBuilder(Network network, String lib) {
+        super(network, lib)
+        dslTransformer = new DslEquipment<>(IdentifiableType.TWO_WINDINGS_TRANSFORMER)
     }
 
     void transformer(String staticId) {
-        this.transformer = network.getTwoWindingsTransformer(staticId)
-        if (transformer == null) {
-            throw new DslException("Transformer static id unknown: " + staticId)
+        dslTransformer.tap {
+            it.staticId = staticId
+            equipment = network.getTwoWindingsTransformer(staticId)
         }
     }
 
+    @Override
+    protected void checkData() {
+        super.checkData()
+        checkEquipmentData(dslTransformer)
+    }
 }

@@ -23,7 +23,7 @@ abstract class AbstractLoadModelBuilder extends AbstractEquipmentModelBuilder<Lo
     }
 
     @Override
-    protected Load getEquipment() {
+    protected Load findEquipment(String staticId) {
         network.getLoad(staticId)
     }
 }

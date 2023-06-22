@@ -36,7 +36,6 @@ class InfiniteBusGroovyExtension extends AbstractEquipmentGroovyExtension<Dynami
 
         BusBuilder(Network network, EquipmentConfig equipmentConfig) {
             super(network, equipmentConfig)
-            this.equipmentConfig = equipmentConfig
         }
 
         @Override

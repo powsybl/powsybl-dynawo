@@ -6,13 +6,16 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-package dynamicModels
+package warnings
 
 import com.powsybl.iidm.network.Branch
 
-CurrentLimitAutomaton {
+CurrentLimitAutomatonTwoLevels {
     dynamicModelId "CLA_NGEN"
     parameterSetId "CLA"
-    iMeasurement "NHV1_NHV2_1"
-    iMeasurementSide Branch.Side.TWO
+    controlledQuadripole "NHV1_NHV2_2"
+    iMeasurement1 "NHV1_NHV2_1"
+    iMeasurement1Side Branch.Side.TWO
+    iMeasurement2 "NGEN"
+    iMeasurement2Side Branch.Side.ONE
 }

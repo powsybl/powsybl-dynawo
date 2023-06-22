@@ -42,7 +42,7 @@ class SvarcGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel
         }
 
         @Override
-        protected StaticSvarc getEquipment() {
+        protected StaticSvarc findEquipment(String staticId) {
             network.getStaticVarCompensator(staticId)
         }
 

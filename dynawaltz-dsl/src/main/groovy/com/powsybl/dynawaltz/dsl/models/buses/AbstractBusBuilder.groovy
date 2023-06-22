@@ -23,7 +23,7 @@ abstract class AbstractBusBuilder extends AbstractEquipmentModelBuilder<Bus> {
     }
 
     @Override
-    protected Bus getEquipment() {
+    protected Bus findEquipment(String staticId) {
        network.getBusBreakerView().getBus(staticId)
     }
 }

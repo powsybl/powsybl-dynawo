@@ -6,12 +6,11 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-package dynamicModels
+package warnings
 
 
-TapChangerBlockingAutomaton {
-    dynamicModelId "ZAB"
-    parameterSetId "ZAB"
-    uMeasurements "NGEN"
-    transformers "GEN", "NHV2_NLOAD"
+PhaseShifterI {
+    dynamicModelId "PS_NGEN_NHV1"
+    parameterSetId "ps"
+    transformer "NGEN"
 }

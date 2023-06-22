@@ -5,10 +5,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-
 package com.powsybl.dynawaltz.dsl.models.builders
 
 import com.powsybl.dynamicsimulation.DynamicModel
+import com.powsybl.dynawaltz.dsl.DslEquipment
 import com.powsybl.dynawaltz.dsl.EquipmentConfig
 import com.powsybl.dynawaltz.dsl.ModelBuilder
 import com.powsybl.iidm.network.Identifiable
@@ -20,65 +20,45 @@ import org.slf4j.LoggerFactory
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-abstract class AbstractEquipmentModelBuilder<T extends Identifiable> implements ModelBuilder<DynamicModel> {
+abstract class AbstractEquipmentModelBuilder<T extends Identifiable> extends AbstractDynamicModelBuilder {
 
-    protected static final Logger LOGGER = LoggerFactory.getLogger(this.class)
+    protected final EquipmentConfig equipmentConfig
+    protected final DslEquipment<T> dslEquipment
 
-    protected Network network
-    protected EquipmentConfig equipmentConfig
-    protected String dynamicModelId
-    protected String staticId
-    protected String parameterSetId
-    protected T equipment
-    private IdentifiableType equipmentType
-
-    AbstractEquipmentModelBuilder(Network network, EquipmentConfig equipmentConfig, IdentifiableType equipmentType) {
-        this.network = network
+    protected AbstractEquipmentModelBuilder(Network network, EquipmentConfig equipmentConfig, IdentifiableType equipmentType) {
+        super(network)
         this.equipmentConfig = equipmentConfig
-        this.equipmentType = equipmentType
-    }
-
-    void dynamicModelId(String dynamicModelId) {
-        this.dynamicModelId = dynamicModelId
+        this.dslEquipment = new DslEquipment<T>(equipmentType)
     }
 
     void staticId(String staticId) {
-        this.staticId = staticId
-        equipment = getEquipment()
-    }
-
-    void parameterSetId(String parameterSetId) {
-        this.parameterSetId = parameterSetId
-    }
-
-    protected boolean checkData() {
-        def isInstantiable = true
-        if (!staticId) {
-            LOGGER.warn("'staticId' field is not set")
-            isInstantiable = false
-        } else if (!equipment) {
-            LOGGER.warn("$equipmentType static id unknown : $staticId")
-            isInstantiable = false
+        dslEquipment.tap {
+            it.staticId = staticId
+            equipment = findEquipment(staticId)
         }
+    }
+
+    @Override
+    protected void checkData() {
+        checkEquipmentData(dslEquipment)
         if (!parameterSetId) {
             LOGGER.warn("'parameterSetId' field is not set")
             isInstantiable = false
         }
         if (!dynamicModelId) {
-            dynamicModelId = staticId
-        }
-        isInstantiable
-    }
-
-    protected final boolean isInstantiable() {
-        checkData().tap {
-            if (!it) {
-                LOGGER.warn("${equipmentConfig.lib} cannot be instantiated")
-            }
+            dynamicModelId = dslEquipment.staticId
         }
     }
 
-    abstract protected T getEquipment();
+    abstract protected T findEquipment(String staticId);
+
+    T getEquipment() {
+        dslEquipment.equipment
+    }
+
+    String getLib() {
+        equipmentConfig.getLib()
+    }
 
     @Override
     abstract DynamicModel build();

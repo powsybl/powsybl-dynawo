@@ -7,7 +7,7 @@ import com.powsybl.iidm.network.ShuntCompensator
 import com.powsybl.iidm.network.TwoWindingsTransformer
 
 final class BuildersUtil {
-
+//TODO a virer ?
     private BuildersUtil() {
     }
 

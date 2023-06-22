@@ -8,10 +8,10 @@
 package com.powsybl.dynawaltz.dsl.automatons
 
 import com.google.auto.service.AutoService
-import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractPureDynamicGroovyExtension
+import com.powsybl.dynawaltz.dsl.DslEquipment
 import com.powsybl.dynawaltz.dsl.models.builders.AbstractPureDynamicModelBuilder
 import com.powsybl.dynawaltz.models.TransformerSide
 import com.powsybl.dynawaltz.models.automatons.TapChangerAutomaton
@@ -23,29 +23,31 @@ import com.powsybl.iidm.network.*
 @AutoService(DynamicModelGroovyExtension.class)
 class TapChangerAutomatonGroovyExtension extends AbstractPureDynamicGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
+    private static final String LIB = "TapChangerAutomaton"
+
     TapChangerAutomatonGroovyExtension() {
-        modelTags = ["TapChangerAutomaton"]
+        modelTags = [LIB]
     }
 
     @Override
     protected TapChangerAutomatonBuilder createBuilder(Network network) {
-        new TapChangerAutomatonBuilder(network)
+        new TapChangerAutomatonBuilder(network, LIB)
     }
 
     static class TapChangerAutomatonBuilder extends AbstractPureDynamicModelBuilder {
 
-        Network network
-        Load load
-        TransformerSide side = TransformerSide.NONE
+        protected final DslEquipment<Load> dslLoad
+        protected TransformerSide side = TransformerSide.NONE
 
-        TapChangerAutomatonBuilder(Network network) {
-            this.network = network
+        TapChangerAutomatonBuilder(Network network, String lib) {
+            super(network, lib)
+            dslLoad = new DslEquipment<>(IdentifiableType.LOAD)
         }
 
         void staticId(String staticId) {
-            this.load = network.getLoad(staticId)
-            if (load == null) {
-                throw new DslException("Load static id unknown: " + staticId)
+            dslLoad.tap {
+                it.staticId = staticId
+                equipment = network.getLoad(staticId)
             }
         }
 
@@ -54,9 +56,14 @@ class TapChangerAutomatonGroovyExtension extends AbstractPureDynamicGroovyExtens
         }
 
         @Override
+        protected void checkData() {
+            super.checkData()
+            checkEquipmentData(dslLoad)
+        }
+
+        @Override
         TapChangerAutomaton build() {
-            checkData()
-            new TapChangerAutomaton(dynamicModelId, parameterSetId, load, side)
+            isInstantiable() ? new TapChangerAutomaton(dynamicModelId, parameterSetId, dslLoad.equipment, side) : null
         }
     }
 }
