@@ -31,7 +31,10 @@ class DslEquipment<T extends Identifiable> {
     }
 
     DslEquipment(IdentifiableType identifiableType) {
-        this.equipmentType = identifiableType.toString()
-        fieldName = "staticId"
+        this(identifiableType, "staticId")
+    }
+
+    DslEquipment(String equipmentType) {
+        this(equipmentType, "staticId")
     }
 }

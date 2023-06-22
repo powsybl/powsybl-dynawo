@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.dsl.models.builders
+package com.powsybl.dynawaltz.dsl.builders
 
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynawaltz.dsl.DslEquipment
@@ -17,25 +17,15 @@ import org.slf4j.LoggerFactory
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-abstract class AbstractDynamicModelBuilder implements ModelBuilder<DynamicModel> {
+abstract class AbstractDynamicModelBuilder {
 
     protected static final Logger LOGGER = LoggerFactory.getLogger(this.class)
 
     protected final Network network
-    protected String dynamicModelId
-    protected String parameterSetId
     protected boolean isInstantiable = true
 
     protected AbstractDynamicModelBuilder(Network network) {
         this.network = network
-    }
-
-    void dynamicModelId(String dynamicModelId) {
-        this.dynamicModelId = dynamicModelId
-    }
-
-    void parameterSetId(String parameterSetId) {
-        this.parameterSetId = parameterSetId
     }
 
     abstract protected void checkData()
@@ -58,8 +48,5 @@ abstract class AbstractDynamicModelBuilder implements ModelBuilder<DynamicModel>
         isInstantiable
     }
 
-    abstract String getLib()
-
-    @Override
-    abstract DynamicModel build();
+    abstract protected String getLib()
 }

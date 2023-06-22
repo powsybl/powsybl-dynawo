@@ -8,14 +8,15 @@
 package com.powsybl.dynawaltz.dsl.events
 
 import com.google.auto.service.AutoService
-import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.EventModel
 import com.powsybl.dynamicsimulation.groovy.EventModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractPureDynamicGroovyExtension
-import com.powsybl.dynawaltz.models.events.AbstractEventModel
+import com.powsybl.dynawaltz.dsl.DslEquipment
+import com.powsybl.dynawaltz.dsl.builders.AbstractEventModelBuilder
 import com.powsybl.dynawaltz.models.events.EventActivePowerVariation
 import com.powsybl.iidm.network.Identifiable
 import com.powsybl.iidm.network.IdentifiableType
+import com.powsybl.iidm.network.Injection
 import com.powsybl.iidm.network.Network
 
 /**
@@ -24,24 +25,25 @@ import com.powsybl.iidm.network.Network
 @AutoService(EventModelGroovyExtension.class)
 class EventActivePowerVariationGroovyExtension extends AbstractPureDynamicGroovyExtension<EventModel> implements EventModelGroovyExtension {
 
+    private static final String TAG = "Step"
+
     private static final EnumSet<IdentifiableType> connectableEquipments = EnumSet.of(IdentifiableType.GENERATOR, IdentifiableType.LOAD)
 
     EventActivePowerVariationGroovyExtension() {
-        modelTags = ["Step"]
+        modelTags = [TAG]
     }
 
     @Override
     protected EventAPVBuilder createBuilder(Network network) {
-        new EventAPVBuilder(network)
+        new EventAPVBuilder(network, TAG)
     }
 
     static class EventAPVBuilder extends AbstractEventModelBuilder {
 
-        double deltaP
-        Identifiable<? extends Identifiable> identifiable
+        protected double deltaP
 
-        EventAPVBuilder(Network network) {
-            super(network)
+        EventAPVBuilder(Network network, String tag) {
+            super(network, new DslEquipment<Injection>("Generator/Load"), tag)
         }
 
         void deltaP(double deltaP) {
@@ -50,19 +52,24 @@ class EventActivePowerVariationGroovyExtension extends AbstractPureDynamicGroovy
 
         void checkData() {
             super.checkData()
-            identifiable = network.getIdentifiable(staticId)
-            if (identifiable == null) {
-                throw new DslException("Identifiable static id unknown: " + getStaticId())
+            if (dslEquipment.equipment && !EventActivePowerVariation.isConnectable(dslEquipment.equipment.type)) {
+                LOGGER.warn("${dslEquipment.equipment?.type} ${dslEquipment.staticId} cannot be disconnected")
+                isInstantiable = false
             }
-            if (!EventActivePowerVariation.isConnectable(identifiable.getType())) {
-                throw new DslException("Equipment ${getStaticId()} cannot be disconnected")
+            if (!deltaP) {
+                LOGGER.warn("'deltaP' field is not set")
+                isInstantiable = false
             }
         }
 
         @Override
-        AbstractEventModel build() {
-            checkData()
-            new EventActivePowerVariation(identifiable, startTime, deltaP)
+        protected Identifiable findEquipment(String staticId) {
+            network.getIdentifiable(staticId)
+        }
+
+        @Override
+        EventActivePowerVariation build() {
+            isInstantiable() ? new EventActivePowerVariation(dslEquipment.equipment, startTime, deltaP) : null
         }
     }
 }

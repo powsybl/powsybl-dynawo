@@ -8,7 +8,7 @@
 package com.powsybl.dynawaltz.dsl.automatons
 
 import com.powsybl.dynawaltz.dsl.DslEquipment
-import com.powsybl.dynawaltz.dsl.models.builders.AbstractPureDynamicModelBuilder
+import com.powsybl.dynawaltz.dsl.builders.AbstractPureDynamicModelBuilder
 import com.powsybl.iidm.network.IdentifiableType
 import com.powsybl.iidm.network.Network
 import com.powsybl.iidm.network.TwoWindingsTransformer

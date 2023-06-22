@@ -32,7 +32,6 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class EventModelsSupplierTest extends AbstractModelSupplierTest {
 
-    private static final String FOLDER_NAME = "/eventModels/";
     protected static final List<EventModelGroovyExtension> EXTENSIONS = GroovyExtension.find(EventModelGroovyExtension.class, DynaWaltzProvider.NAME);
 
     @ParameterizedTest(name = "{0}")
@@ -43,6 +42,15 @@ class EventModelsSupplierTest extends AbstractModelSupplierTest {
         assertEquals(1, eventModels.size());
         assertTrue(modelClass.isInstance(eventModels.get(0)));
         assertEventModel(modelClass.cast(eventModels.get(0)), dynamicId, equipmentStaticId, lib, startTime);
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("provideWarningsModel")
+    void testDslWarnings(String groovyScriptName, Network network) {
+        EventModelsSupplier supplier = new GroovyEventModelsSupplier(getResourceAsStream(groovyScriptName), EXTENSIONS);
+        List<EventModel> eventModels = supplier.get(network);
+        assertEquals(1, eventModels.size());
+        assertNull(eventModels.get(0));
     }
 
     void assertEventModel(AbstractEventModel em, String dynamicId, String equipmentStaticId, String lib, double startTime) {
@@ -60,16 +68,22 @@ class EventModelsSupplierTest extends AbstractModelSupplierTest {
 
     private static Stream<Arguments> provideEventModelData() {
         return Stream.of(
-                Arguments.of("quadripoleDisconnection", EventQuadripoleDisconnection.class, EurostagTutorialExample1Factory.create(), "NHV1_NHV2_1", "Disconnect_NHV1_NHV2_1", "EventQuadripoleDisconnection", 4),
-                Arguments.of("equipmentDisconnection", EventInjectionDisconnection.class, EurostagTutorialExample1Factory.create(), "GEN", "Disconnect_GEN", null, 1),
-                Arguments.of("hvdcDisconnection", EventHvdcDisconnection.class, HvdcTestNetwork.createVsc(), "L", "Disconnect_L", null, 2),
-                Arguments.of("nodeFault", NodeFaultEvent.class, EurostagTutorialExample1Factory.create(), "NGEN", "Node_Fault_NGEN", "NodeFault", 1),
-                Arguments.of("step", EventActivePowerVariation.class, EurostagTutorialExample1Factory.create(), "LOAD", "Step_LOAD", null, 2)
+                Arguments.of("/eventModels/quadripoleDisconnection.groovy", EventQuadripoleDisconnection.class, EurostagTutorialExample1Factory.create(), "NHV1_NHV2_1", "Disconnect_NHV1_NHV2_1", "EventQuadripoleDisconnection", 4),
+                Arguments.of("/eventModels/equipmentDisconnection.groovy", EventInjectionDisconnection.class, EurostagTutorialExample1Factory.create(), "GEN", "Disconnect_GEN", null, 1),
+                Arguments.of("/eventModels/hvdcDisconnection.groovy", EventHvdcDisconnection.class, HvdcTestNetwork.createVsc(), "L", "Disconnect_L", null, 2),
+                Arguments.of("/eventModels/nodeFault.groovy", NodeFaultEvent.class, EurostagTutorialExample1Factory.create(), "NGEN", "Node_Fault_NGEN", "NodeFault", 1),
+                Arguments.of("/eventModels/step.groovy", EventActivePowerVariation.class, EurostagTutorialExample1Factory.create(), "LOAD", "Step_LOAD", null, 2)
         );
     }
 
-    @Override
-    String getFolderName() {
-        return FOLDER_NAME;
+    private static Stream<Arguments> provideWarningsModel() {
+        return Stream.of(
+                Arguments.of("/eventWarnings/missingStaticId.groovy", EurostagTutorialExample1Factory.create()),
+                Arguments.of("/eventWarnings/missingStartTime.groovy", EurostagTutorialExample1Factory.create()),
+                Arguments.of("/eventWarnings/missingNodeFaultParameters.groovy", EurostagTutorialExample1Factory.create()),
+                Arguments.of("/eventWarnings/missingAPVParameters.groovy", EurostagTutorialExample1Factory.create()),
+                Arguments.of("/eventWarnings/missingDisconnectionEquipment.groovy", EurostagTutorialExample1Factory.create()),
+                Arguments.of("/eventWarnings/missingDisconnectionSide.groovy", EurostagTutorialExample1Factory.create())
+        );
     }
 }

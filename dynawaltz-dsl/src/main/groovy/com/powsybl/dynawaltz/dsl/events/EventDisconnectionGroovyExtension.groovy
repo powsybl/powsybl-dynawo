@@ -8,10 +8,11 @@
 package com.powsybl.dynawaltz.dsl.events
 
 import com.google.auto.service.AutoService
-import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.EventModel
 import com.powsybl.dynamicsimulation.groovy.EventModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractPureDynamicGroovyExtension
+import com.powsybl.dynawaltz.dsl.DslEquipment
+import com.powsybl.dynawaltz.dsl.builders.AbstractEventModelBuilder
 import com.powsybl.dynawaltz.models.events.AbstractEventModel
 import com.powsybl.dynawaltz.models.events.EventHvdcDisconnection
 import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection
@@ -28,37 +29,38 @@ import com.powsybl.iidm.network.Network
 @AutoService(EventModelGroovyExtension.class)
 class EventDisconnectionGroovyExtension extends AbstractPureDynamicGroovyExtension<EventModel> implements EventModelGroovyExtension {
 
+    private static final String TAG = "Disconnect"
+
     private static final EnumSet<IdentifiableType> CONNECTABLE_INJECTIONS = EnumSet.of(IdentifiableType.GENERATOR, IdentifiableType.LOAD)
 
     private static final EnumSet<IdentifiableType> CONNECTABLE_QUADRIPOLES = EnumSet.of(IdentifiableType.LINE, IdentifiableType.TWO_WINDINGS_TRANSFORMER)
 
     EventDisconnectionGroovyExtension() {
-        modelTags = ["Disconnect"]
+        modelTags = [TAG]
     }
 
     @Override
     protected EventQuadripoleDisconnectionBuilder createBuilder(Network network) {
-        new EventQuadripoleDisconnectionBuilder(network)
+        new EventQuadripoleDisconnectionBuilder(network, TAG)
     }
 
     static class EventQuadripoleDisconnectionBuilder extends AbstractEventModelBuilder {
 
-        boolean disconnectSide = false
+        private boolean disconnectSide = false
         private disconnectionType = DisconnectionType.NONE
 
-        boolean disconnectOrigin = true
-        boolean disconnectExtremity = true
-        Identifiable<? extends Identifiable> identifiable
+        protected boolean disconnectOrigin = true
+        protected boolean disconnectExtremity = true
 
         private enum DisconnectionType {INJECTION, QUADRIPOLE, HVDC, NONE}
 
-        EventQuadripoleDisconnectionBuilder(Network network) {
-            super(network)
+        EventQuadripoleDisconnectionBuilder(Network network, String tag) {
+            super(network, new DslEquipment<Identifiable>("Disconnectable equipment"), tag)
         }
 
         void disconnectOnly(Branch.Side side) {
             disconnectSide = true
-            switch(side) {
+            switch (side) {
                 case Branch.Side.ONE :
                     disconnectOrigin = true
                     disconnectExtremity = false
@@ -72,39 +74,52 @@ class EventDisconnectionGroovyExtension extends AbstractPureDynamicGroovyExtensi
 
         void checkData() {
             super.checkData()
-            identifiable = network.getIdentifiable(staticId)
-            if (identifiable == null) {
-                throw new DslException("Identifiable static id unknown: " + getStaticId())
-            }
             disconnectionType()
-            if (DisconnectionType.INJECTION == disconnectionType && disconnectSide) {
-                throw new DslException("'disconnectSide' has been set but ${identifiable.getType() } ${getStaticId()} is not a quadripole with a disconnectable side")
+            if(dslEquipment.equipment) {
+                if (disconnectionType == DisconnectionType.NONE) {
+                    LOGGER.warn("${dslEquipment.equipment?.type} ${dslEquipment.staticId} cannot be disconnected")
+                    isInstantiable = false
+                }
+                if (DisconnectionType.INJECTION == disconnectionType && disconnectSide) {
+                    LOGGER.warn("'disconnectSide' has been set but ${dslEquipment.equipment?.type} ${dslEquipment.staticId} is not a quadripole with a disconnectable side")
+                    isInstantiable = false
+                }
             }
         }
 
         private void disconnectionType() {
-            IdentifiableType type = identifiable.getType()
-            if (CONNECTABLE_INJECTIONS.contains(type)) {
-                disconnectionType = DisconnectionType.INJECTION
-            } else if (CONNECTABLE_QUADRIPOLES.contains(type)) {
-                disconnectionType = DisconnectionType.QUADRIPOLE
-            } else if (IdentifiableType.HVDC_LINE == type) {
-                disconnectionType = DisconnectionType.HVDC
+            IdentifiableType type = dslEquipment?.equipment?.type
+            if (type) {
+                if (CONNECTABLE_INJECTIONS.contains(type)) {
+                    disconnectionType = DisconnectionType.INJECTION
+                } else if (CONNECTABLE_QUADRIPOLES.contains(type)) {
+                    disconnectionType = DisconnectionType.QUADRIPOLE
+                } else if (IdentifiableType.HVDC_LINE == type) {
+                    disconnectionType = DisconnectionType.HVDC
+                }
             }
         }
 
         @Override
+        protected Identifiable findEquipment(String staticId) {
+            network.getIdentifiable(staticId)
+        }
+
+        @Override
         AbstractEventModel build() {
-            checkData()
-            switch(disconnectionType) {
-                case DisconnectionType.INJECTION :
-                    return new EventInjectionDisconnection(identifiable, startTime)
-                case DisconnectionType.QUADRIPOLE :
-                    return new EventQuadripoleDisconnection(identifiable, startTime, disconnectOrigin, disconnectExtremity)
-                case DisconnectionType.HVDC :
-                    return new EventHvdcDisconnection((HvdcLine) identifiable, startTime, disconnectOrigin, disconnectExtremity)
-                default :
-                    throw new DslException("Equipment ${getStaticId()} cannot be disconnected")
+            if (isInstantiable()) {
+                switch(disconnectionType) {
+                    case DisconnectionType.INJECTION :
+                        return new EventInjectionDisconnection(dslEquipment.equipment, startTime)
+                    case DisconnectionType.QUADRIPOLE :
+                        return new EventQuadripoleDisconnection(dslEquipment.equipment, startTime, disconnectOrigin, disconnectExtremity)
+                    case DisconnectionType.HVDC :
+                        return new EventHvdcDisconnection((HvdcLine) dslEquipment.equipment, startTime, disconnectOrigin, disconnectExtremity)
+                    default :
+                        return null
+                }
+            } else {
+                null
             }
         }
     }

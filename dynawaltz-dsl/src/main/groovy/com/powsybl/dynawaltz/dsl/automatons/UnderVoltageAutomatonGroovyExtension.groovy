@@ -12,7 +12,7 @@ import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractPureDynamicGroovyExtension
 import com.powsybl.dynawaltz.dsl.DslEquipment
-import com.powsybl.dynawaltz.dsl.models.builders.AbstractPureDynamicModelBuilder
+import com.powsybl.dynawaltz.dsl.builders.AbstractPureDynamicModelBuilder
 import com.powsybl.dynawaltz.models.automatons.UnderVoltageAutomaton
 import com.powsybl.iidm.network.Generator
 import com.powsybl.iidm.network.IdentifiableType

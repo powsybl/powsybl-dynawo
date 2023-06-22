@@ -8,7 +8,7 @@
 package com.powsybl.dynawaltz.dsl.models.buses
 
 import com.powsybl.dynawaltz.dsl.EquipmentConfig
-import com.powsybl.dynawaltz.dsl.models.builders.AbstractEquipmentModelBuilder
+import com.powsybl.dynawaltz.dsl.builders.AbstractEquipmentModelBuilder
 import com.powsybl.iidm.network.Bus
 import com.powsybl.iidm.network.IdentifiableType
 import com.powsybl.iidm.network.Network

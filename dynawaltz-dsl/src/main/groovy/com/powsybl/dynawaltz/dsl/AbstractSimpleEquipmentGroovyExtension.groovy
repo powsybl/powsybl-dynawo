@@ -24,7 +24,7 @@ abstract class AbstractSimpleEquipmentGroovyExtension<T> {
     }
 
 
-    abstract protected ModelBuilder<T> createBuilder(Network network, EquipmentConfig equipmentConfig);
+    abstract protected ModelBuilder<T> createBuilder(Network network, EquipmentConfig equipmentConfig)
 
     String getName() {
         DynaWaltzProvider.NAME

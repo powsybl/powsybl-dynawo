@@ -8,13 +8,10 @@
 package com.powsybl.dynawaltz.dsl.automatons
 
 import com.google.auto.service.AutoService
-import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractPureDynamicGroovyExtension
-import com.powsybl.dynawaltz.dsl.DslEquipment
-import com.powsybl.dynawaltz.dsl.DslEquipmentList
-import com.powsybl.dynawaltz.dsl.models.builders.AbstractPureDynamicModelBuilder
+import com.powsybl.dynawaltz.dsl.builders.AbstractPureDynamicModelBuilder
 import com.powsybl.dynawaltz.models.automatons.TapChangerBlockingAutomaton
 import com.powsybl.iidm.network.Bus
 import com.powsybl.iidm.network.Identifiable
@@ -22,8 +19,6 @@ import com.powsybl.iidm.network.IdentifiableType
 import com.powsybl.iidm.network.Load
 import com.powsybl.iidm.network.Network
 import com.powsybl.iidm.network.TwoWindingsTransformer
-
-import java.util.stream.Collectors
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>

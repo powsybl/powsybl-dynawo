@@ -19,7 +19,7 @@ abstract class AbstractPureDynamicGroovyExtension<T> {
 
     protected List<String> modelTags
 
-    abstract protected ModelBuilder<T> createBuilder(Network network);
+    abstract protected ModelBuilder<T> createBuilder(Network network)
 
     String getName() {
         DynaWaltzProvider.NAME

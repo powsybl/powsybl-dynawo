@@ -8,13 +8,14 @@
 package com.powsybl.dynawaltz.dsl.events
 
 import com.google.auto.service.AutoService
-import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.EventModel
 import com.powsybl.dynamicsimulation.groovy.EventModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractPureDynamicGroovyExtension
-import com.powsybl.dynawaltz.models.events.AbstractEventModel
+import com.powsybl.dynawaltz.dsl.DslEquipment
+import com.powsybl.dynawaltz.dsl.builders.AbstractEventModelBuilder
 import com.powsybl.dynawaltz.models.events.NodeFaultEvent
 import com.powsybl.iidm.network.Bus
+import com.powsybl.iidm.network.IdentifiableType
 import com.powsybl.iidm.network.Network
 
 /**
@@ -23,24 +24,25 @@ import com.powsybl.iidm.network.Network
 @AutoService(EventModelGroovyExtension.class)
 class NodeFaultEventGroovyExtension extends AbstractPureDynamicGroovyExtension<EventModel> implements EventModelGroovyExtension {
 
+    private static final String TAG = "NodeFault"
+
     NodeFaultEventGroovyExtension() {
-        modelTags = ["NodeFault"]
+        modelTags = [TAG]
     }
 
     @Override
     protected NodeFaultEventBuilder createBuilder(Network network) {
-        new NodeFaultEventBuilder(network)
+        new NodeFaultEventBuilder(network, TAG)
     }
 
     static class NodeFaultEventBuilder extends AbstractEventModelBuilder {
 
-        Bus bus
-        double faultTime
-        double rPu
-        double xPu
+        protected double faultTime
+        protected double rPu
+        protected double xPu
 
-        NodeFaultEventBuilder(Network network) {
-            super(network)
+        NodeFaultEventBuilder(Network network,String tag) {
+            super(network, new DslEquipment<Bus>(IdentifiableType.BUS), tag)
         }
 
         void faultTime(double faultTime) {
@@ -55,27 +57,30 @@ class NodeFaultEventGroovyExtension extends AbstractPureDynamicGroovyExtension<E
             this.xPu = xPu
         }
 
+        protected Bus findEquipment(String staticId) {
+            network.getBusBreakerView().getBus(staticId)
+        }
+
+        @Override
         void checkData() {
             super.checkData()
-            this.bus = network.getBusBreakerView().getBus(staticId)
-            if (bus == null) {
-                throw new DslException("Bus static id unknown: " + staticId)
-            }
             if (faultTime <= 0) {
-                throw new DslException("NodeFault ${bus.getId()} fault time should be strictly positive (${faultTime})")
+                LOGGER.warn("Fault time should be strictly positive (${faultTime})")
+                isInstantiable = false
             }
             if (rPu < 0) {
-                throw new DslException("NodeFault ${bus.getId()} rPu should be positive (${rPu})")
+                LOGGER.warn("rPu should be positive (${rPu})")
+                isInstantiable = false
             }
             if (xPu < 0) {
-                throw new DslException("NodeFault ${bus.getId()} xPu should be positive (${xPu})")
+                LOGGER.warn("xPu should be positive (${xPu})")
+                isInstantiable = false
             }
         }
 
         @Override
-        AbstractEventModel build() {
-            checkData()
-            new NodeFaultEvent(bus, startTime, faultTime, rPu, xPu)
+        NodeFaultEvent build() {
+            isInstantiable() ? new NodeFaultEvent(dslEquipment.equipment, startTime, faultTime, rPu, xPu) : null
         }
     }
 }
