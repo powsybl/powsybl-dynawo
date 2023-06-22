@@ -12,8 +12,6 @@ import com.powsybl.dynawaltz.DynaWaltzParameters;
 import com.powsybl.dynawaltz.models.MacroConnectAttribute;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.buses.BusModel;
-import com.powsybl.dynawaltz.models.generators.SynchronousGeneratorModel;
-import com.powsybl.dynawaltz.models.generators.SynchronizedGeneratorModel;
 import com.powsybl.dynawaltz.xml.ParametersXml;
 
 import javax.xml.stream.XMLStreamException;
@@ -37,8 +35,8 @@ import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
  */
 public class OmegaRef extends AbstractFrequencySynchronizer {
 
-    public OmegaRef(List<SynchronizedGeneratorModel> synchronizedGenerators) {
-        super(synchronizedGenerators);
+    public OmegaRef(List<FrequencySynchronizedModel> synchronizedEquipments) {
+        super(synchronizedEquipments);
     }
 
     @Override
@@ -56,23 +54,17 @@ public class OmegaRef extends AbstractFrequencySynchronizer {
         // The dynamic models are declared in the DYD following the order of dynamic models' supplier.
         // The OmegaRef parameters index the weight of each generator according to that declaration order.
         int index = 0;
-        for (SynchronizedGeneratorModel generator : synchronizedGenerators) {
-            double weightGen = 0;
-            if (generator instanceof SynchronousGeneratorModel) {
-                double h = dynaWaltzParameters.getModelParameters(generator.getParameterSetId()).getDouble("generator_H");
-                double snom = dynaWaltzParameters.getModelParameters(generator.getParameterSetId()).getDouble("generator_SNom");
-                weightGen = h * snom;
-            }
-            ParametersXml.writeParameter(writer, DOUBLE, "weight_gen_" + index, Double.toString(weightGen));
+        for (FrequencySynchronizedModel eq : synchronizedEquipments) {
+            ParametersXml.writeParameter(writer, DOUBLE, "weight_gen_" + index, Double.toString(eq.getWeightGen(dynaWaltzParameters)));
             index++;
         }
 
-        ParametersXml.writeParameter(writer, INT, "nbGen", Long.toString(synchronizedGenerators.size()));
+        ParametersXml.writeParameter(writer, INT, "nbGen", Long.toString(synchronizedEquipments.size()));
 
         writer.writeEndElement();
     }
 
-    private List<VarConnection> getVarConnectionsWith(SynchronizedGeneratorModel connected) {
+    private List<VarConnection> getVarConnectionsWith(FrequencySynchronizedModel connected) {
         return connected.getOmegaRefVarConnections();
     }
 
@@ -85,9 +77,9 @@ public class OmegaRef extends AbstractFrequencySynchronizer {
     @Override
     public void createMacroConnections(DynaWaltzContext context) throws PowsyblException {
         int index = 0;
-        for (SynchronizedGeneratorModel gen : synchronizedGenerators) {
-            createMacroConnections(gen, getVarConnectionsWith(gen), context, MacroConnectAttribute.ofIndex1(index));
-            createMacroConnections(gen.getConnectableBusId(), BusModel.class, this::getVarConnectionsWith, context, MacroConnectAttribute.ofIndex1(index));
+        for (FrequencySynchronizedModel eq : synchronizedEquipments) {
+            createMacroConnections(eq, getVarConnectionsWith(eq), context, MacroConnectAttribute.ofIndex1(index));
+            createMacroConnections(eq.getConnectedBusId(), BusModel.class, this::getVarConnectionsWith, context, MacroConnectAttribute.ofIndex1(index));
             index++;
         }
     }

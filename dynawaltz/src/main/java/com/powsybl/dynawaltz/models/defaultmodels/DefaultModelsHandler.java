@@ -4,13 +4,14 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package com.powsybl.dynawaltz.models;
+package com.powsybl.dynawaltz.models.defaultmodels;
 
 import com.powsybl.commons.PowsyblException;
+import com.powsybl.dynawaltz.models.Model;
 import com.powsybl.dynawaltz.models.buses.BusModel;
 import com.powsybl.dynawaltz.models.buses.DefaultBusModel;
-import com.powsybl.dynawaltz.models.generators.GeneratorModel;
 import com.powsybl.dynawaltz.models.generators.DefaultGeneratorModel;
+import com.powsybl.dynawaltz.models.generators.GeneratorModel;
 import com.powsybl.dynawaltz.models.hvdc.DefaultHvdcModel;
 import com.powsybl.dynawaltz.models.hvdc.HvdcModel;
 import com.powsybl.dynawaltz.models.lines.DefaultLineModel;
@@ -19,8 +20,8 @@ import com.powsybl.dynawaltz.models.loads.DefaultLoadModel;
 import com.powsybl.dynawaltz.models.loads.LoadModel;
 import com.powsybl.dynawaltz.models.shunts.DefaultShuntModel;
 import com.powsybl.dynawaltz.models.shunts.ShuntModel;
-import com.powsybl.dynawaltz.models.svcs.DefaultStaticVarCompensatorModel;
-import com.powsybl.dynawaltz.models.svcs.StaticVarCompensatorModel;
+import com.powsybl.dynawaltz.models.svarcs.DefaultStaticVarCompensatorModel;
+import com.powsybl.dynawaltz.models.svarcs.StaticVarCompensatorModel;
 import com.powsybl.dynawaltz.models.transformers.DefaultTransformerModel;
 import com.powsybl.dynawaltz.models.transformers.TransformerModel;
 import com.powsybl.iidm.network.Identifiable;
@@ -33,12 +34,12 @@ import java.util.Map;
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class NetworkModel {
+public class DefaultModelsHandler {
 
     private final Map<IdentifiableType, Class<? extends Model>> powSyBlTypeToModel = new EnumMap<>(IdentifiableType.class);
     private final Map<Class<? extends Model>, DefaultModelFactory<? extends Model>> factoryMap;
 
-    public NetworkModel() {
+    public DefaultModelsHandler() {
         factoryMap = Map.of(BusModel.class, new DefaultModelFactory<BusModel>(DefaultBusModel::new),
                 GeneratorModel.class, new DefaultModelFactory<GeneratorModel>(DefaultGeneratorModel::new),
                 HvdcModel.class, new DefaultModelFactory<HvdcModel>(DefaultHvdcModel::new),

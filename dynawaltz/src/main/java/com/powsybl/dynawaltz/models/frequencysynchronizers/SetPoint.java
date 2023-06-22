@@ -10,7 +10,6 @@ package com.powsybl.dynawaltz.models.frequencysynchronizers;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.VarConnection;
-import com.powsybl.dynawaltz.models.generators.SynchronizedGeneratorModel;
 import com.powsybl.dynawaltz.xml.ParametersXml;
 
 import javax.xml.stream.XMLStreamException;
@@ -27,8 +26,8 @@ import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
  */
 public class SetPoint extends AbstractFrequencySynchronizer {
 
-    public SetPoint(List<SynchronizedGeneratorModel> synchronizedGenerators) {
-        super(synchronizedGenerators);
+    public SetPoint(List<FrequencySynchronizedModel> synchronizedEquipments) {
+        super(synchronizedEquipments);
     }
 
     @Override
@@ -44,14 +43,14 @@ public class SetPoint extends AbstractFrequencySynchronizer {
         writer.writeEndElement();
     }
 
-    private List<VarConnection> getVarConnectionsWith(SynchronizedGeneratorModel connected) {
+    private List<VarConnection> getVarConnectionsWith(FrequencySynchronizedModel connected) {
         return connected.getSetPointVarConnections();
     }
 
     @Override
     public void createMacroConnections(DynaWaltzContext context) throws PowsyblException {
-        for (SynchronizedGeneratorModel gen : synchronizedGenerators) {
-            createMacroConnections(gen, getVarConnectionsWith(gen), context);
+        for (FrequencySynchronizedModel eq : synchronizedEquipments) {
+            createMacroConnections(eq, getVarConnectionsWith(eq), context);
         }
     }
 }

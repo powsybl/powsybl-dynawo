@@ -4,11 +4,11 @@
         <dyn:macroStaticRef id="MSR_HvdcVsc"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="Disconnect_L" lib="EventSetPointBoolean" parFile="hvdctest.par" parId="Disconnect_L"/>
-    <dyn:macroConnector id="MC_HvdcVscSide1-NetworkBus">
+    <dyn:macroConnector id="MC_HvdcVscSide1-DefaultBus">
         <dyn:connect var1="hvdc_terminal1" var2="@NAME@_ACPIN"/>
         <dyn:connect var1="hvdc_switchOffSignal1Side1" var2="@NAME@_switchOff"/>
     </dyn:macroConnector>
-    <dyn:macroConnector id="MC_HvdcVscSide2-NetworkBus">
+    <dyn:macroConnector id="MC_HvdcVscSide2-DefaultBus">
         <dyn:connect var1="hvdc_terminal2" var2="@NAME@_ACPIN"/>
         <dyn:connect var1="hvdc_switchOffSignal1Side2" var2="@NAME@_switchOff"/>
     </dyn:macroConnector>
@@ -23,7 +23,7 @@
         <dyn:staticRef var="hvdc_QInj2Pu" staticVar="q2"/>
         <dyn:staticRef var="hvdc_state" staticVar="state2"/>
     </dyn:macroStaticReference>
-    <dyn:macroConnect connector="MC_HvdcVscSide1-NetworkBus" id1="BBM_HVDC" id2="NETWORK" name2="B1"/>
-    <dyn:macroConnect connector="MC_HvdcVscSide2-NetworkBus" id1="BBM_HVDC" id2="NETWORK" name2="VL2_2"/>
+    <dyn:macroConnect connector="MC_HvdcVscSide1-DefaultBus" id1="BBM_HVDC" id2="NETWORK" name2="B1"/>
+    <dyn:macroConnect connector="MC_HvdcVscSide2-DefaultBus" id1="BBM_HVDC" id2="NETWORK" name2="VL2_2"/>
     <dyn:macroConnect connector="MC_EventHvdcDisconnectionSide2-HvdcVsc" id1="Disconnect_L" id2="BBM_HVDC"/>
 </dyn:dynamicModelsArchitecture>

@@ -5,14 +5,14 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.models;
+package com.powsybl.dynawaltz.models.defaultmodels;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public abstract class AbstractInjectionNetworkModel extends AbstractNetworkModel {
+public abstract class AbstractInjectionDefaultModel extends AbstractDefaultModel {
 
-    protected AbstractInjectionNetworkModel(String staticId) {
+    protected AbstractInjectionDefaultModel(String staticId) {
         super(staticId);
     }
 
