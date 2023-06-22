@@ -6,8 +6,8 @@
  */
 package com.powsybl.dynawaltz.models.lines;
 
-import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.defaultmodels.AbstractDefaultModel;
+import com.powsybl.dynawaltz.models.Side;
 
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>

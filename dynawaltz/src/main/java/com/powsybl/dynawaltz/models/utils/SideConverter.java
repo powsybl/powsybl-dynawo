@@ -32,11 +32,11 @@ public final class SideConverter {
 
     public static HvdcLine.Side convert(Side side) {
         switch (side) {
-            case ONE:
+            case ONE :
                 return HvdcLine.Side.ONE;
-            case TWO:
+            case TWO :
                 return HvdcLine.Side.TWO;
-            default:
+            default :
                 throw new IllegalArgumentException("Unexpected Side value: " + side);
         }
     }

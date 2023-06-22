@@ -29,8 +29,8 @@ public class HvdcVscDangling extends HvdcVsc {
     @Override
     public void createMacroConnections(DynaWaltzContext context) {
         danglingSide.createMacroConnections(
-                this::getVarConnectionsWith,
-                (varCoSupplier, side) -> createMacroConnections(BusUtils.getConnectableBusStaticId(equipment, side), BusModel.class, varCoSupplier, context, side)
+            this::getVarConnectionsWith,
+            (varCoSupplier, side) -> createMacroConnections(BusUtils.getConnectableBusStaticId(equipment, side), BusModel.class, varCoSupplier, context, side)
         );
     }
 

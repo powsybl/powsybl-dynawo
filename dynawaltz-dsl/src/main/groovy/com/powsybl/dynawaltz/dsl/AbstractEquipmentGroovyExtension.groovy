@@ -33,7 +33,7 @@ abstract class AbstractEquipmentGroovyExtension<T> {
             new EquipmentConfig(
                     it.key as String,
                     it.value.get(MODEL_PREFIX) as String,
-                    it.value.get(MODEL_PROPERTIES).collect { it.toUpperCase() } as String[]
+                    it.value.get(MODEL_PROPERTIES).collect{it.toUpperCase()} as String[]
             )
         }
     }

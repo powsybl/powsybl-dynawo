@@ -37,7 +37,7 @@ class HvdcXmlTest extends AbstractParametrizedDynamicModelXmlTest {
     private static final String DYN_NAME = "BBM_" + HVDC_NAME;
 
     @BeforeEach
-    void setup(String dydName, Function<Network, BlackBoxModel> constructor) {
+    void setup(String dydName, Function< Network, BlackBoxModel> constructor) {
         setupNetwork();
         addDynamicModels(constructor);
         setupDynawaltzContext();
@@ -47,13 +47,13 @@ class HvdcXmlTest extends AbstractParametrizedDynamicModelXmlTest {
         network = HvdcTestNetwork.createVsc();
     }
 
-    protected void addDynamicModels(Function<Network, BlackBoxModel> constructor) {
+    protected void addDynamicModels(Function< Network, BlackBoxModel> constructor) {
         dynamicModels.add(constructor.apply(network));
     }
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("provideHvdc")
-    void writeHvdcModel(String dydName, Function<Network, BlackBoxModel> constructor) throws SAXException, IOException, XMLStreamException {
+    void writeHvdcModel(String dydName, Function< Network, BlackBoxModel> constructor) throws SAXException, IOException, XMLStreamException {
         DydXml.write(tmpDir, context);
         validate("dyd.xsd", dydName, tmpDir.resolve(DynaWaltzConstants.DYD_FILENAME));
     }

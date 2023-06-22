@@ -7,8 +7,8 @@
  */
 package com.powsybl.dynawaltz.models.hvdc;
 
-import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.defaultmodels.AbstractDefaultModel;
+import com.powsybl.dynawaltz.models.Side;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>

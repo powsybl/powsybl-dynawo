@@ -35,7 +35,7 @@ class WeccGenXmlTest extends AbstractParametrizedDynamicModelXmlTest {
     private static final String DYN_WT_NAME = "BBM_WT";
 
     @BeforeEach
-    void setup(String dydName, String parName, Function<Network, BlackBoxModel> loadConstructor) {
+    void setup(String dydName, String parName, Function< Network, BlackBoxModel> loadConstructor) {
         setupNetwork();
         addDynamicModels(loadConstructor);
         setupDynawaltzContext();
@@ -45,13 +45,13 @@ class WeccGenXmlTest extends AbstractParametrizedDynamicModelXmlTest {
         network = EurostagTutorialExample1Factory.create();
     }
 
-    protected void addDynamicModels(Function<Network, BlackBoxModel> constructor) {
+    protected void addDynamicModels(Function< Network, BlackBoxModel> constructor) {
         dynamicModels.add(constructor.apply(network));
     }
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("provideWecc")
-    void writeModel(String dydName, String parName, Function<Network, BlackBoxModel> constructor) throws SAXException, IOException, XMLStreamException {
+    void writeModel(String dydName, String parName, Function< Network, BlackBoxModel> constructor) throws SAXException, IOException, XMLStreamException {
         DydXml.write(tmpDir, context);
         ParametersXml.write(tmpDir, context);
         validate("dyd.xsd", dydName, tmpDir.resolve(DynaWaltzConstants.DYD_FILENAME));

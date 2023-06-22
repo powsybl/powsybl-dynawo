@@ -7,9 +7,9 @@
  */
 package com.powsybl.dynawaltz.models.transformers;
 
+import com.powsybl.dynawaltz.models.defaultmodels.AbstractDefaultModel;
 import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.VarConnection;
-import com.powsybl.dynawaltz.models.defaultmodels.AbstractDefaultModel;
 
 import java.util.List;
 
