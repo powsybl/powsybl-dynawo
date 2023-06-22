@@ -10,8 +10,8 @@ import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.models.Model;
 import com.powsybl.dynawaltz.models.buses.BusModel;
 import com.powsybl.dynawaltz.models.buses.DefaultBusModel;
-import com.powsybl.dynawaltz.models.generators.DefaultGeneratorModel;
 import com.powsybl.dynawaltz.models.generators.GeneratorModel;
+import com.powsybl.dynawaltz.models.generators.DefaultGeneratorModel;
 import com.powsybl.dynawaltz.models.hvdc.DefaultHvdcModel;
 import com.powsybl.dynawaltz.models.hvdc.HvdcModel;
 import com.powsybl.dynawaltz.models.lines.DefaultLineModel;
@@ -64,7 +64,6 @@ public class DefaultModelsHandler {
         if (dmf != null) {
             return dmf.getDefaultModel(staticId);
         }
-
         throw new PowsyblException("Default model not implemented for " + clazz.getSimpleName());
     }
 
