@@ -10,6 +10,9 @@ package com.powsybl.dynawaltz.models;
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public interface InjectionModel extends Model {
-    String getSwitchOffSignalEventVarName();
+public interface MacroConnectionSuffix {
+
+    String getIdSuffix();
+
+    String getConnectionSuffix();
 }

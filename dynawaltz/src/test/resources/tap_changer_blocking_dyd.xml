@@ -28,21 +28,24 @@
         <dyn:connect var1="tapChangerT_switchOffSignal1" var2="@NAME@_switchOff"/>
         <dyn:connect var1="tapChangerD_switchOffSignal1" var2="@NAME@_switchOff"/>
     </dyn:macroConnector>
-    <dyn:macroConnector id="MC_TapChangerBlockingAutomaton2-TransformerFixedRatio">
+    <dyn:macroConnector id="MC_TapChangerBlockingAutomaton-TransformerFixedRatio">
         <dyn:connect var1="tapChangerBlocking_blockedT" var2="transformer_TAP_CHANGER_locked_value"/>
     </dyn:macroConnector>
-    <dyn:macroConnector id="MC_TapChangerBlockingAutomaton2-DefaultTransformer">
+    <dyn:macroConnector id="MC_TapChangerBlockingAutomaton-DefaultTransformer">
         <dyn:connect var1="tapChangerBlocking_blockedT" var2="@NAME@_TAP_CHANGER_locked_value"/>
     </dyn:macroConnector>
-    <dyn:macroConnector id="MC_TapChangerBlockingAutomaton2-LoadOneTransformerTapChanger">
+    <dyn:macroConnector id="MC_TapChangerBlockingAutomaton-LoadOneTransformerTapChanger">
         <dyn:connect var1="tapChangerBlocking_blockedT" var2="tapChanger_locked"/>
     </dyn:macroConnector>
-    <dyn:macroConnector id="MC_TapChangerBlockingAutomaton2-LoadTwoTransformersTapChangers">
+    <dyn:macroConnector id="MC_TapChangerBlockingAutomaton-LoadTwoTransformersTapChangers">
         <dyn:connect var1="tapChangerBlocking_blockedD" var2="tapChangerD_locked"/>
         <dyn:connect var1="tapChangerBlocking_blockedT" var2="tapChangerT_locked"/>
     </dyn:macroConnector>
-    <dyn:macroConnector id="MC_TapChangerBlockingAutomaton2-DefaultBus">
+    <dyn:macroConnector id="MC_TapChangerBlockingAutomatonMeasure1-DefaultBus">
         <dyn:connect var1="tapChangerBlocking_UMonitored" var2="@NAME@_U"/>
+    </dyn:macroConnector>
+    <dyn:macroConnector id="MC_TapChangerBlockingAutomatonMeasure2-DefaultBus">
+        <dyn:connect var1="tapChangerBlocking_UMonitored2" var2="@NAME@_U"/>
     </dyn:macroConnector>
     <dyn:macroStaticReference id="MSR_LoadOneTransformerTapChanger">
         <dyn:staticRef var="transformer_P1Pu_value" staticVar="p"/>
@@ -58,10 +61,10 @@
     <dyn:macroConnect connector="MC_TransformerFixedRatioSide2-DefaultBus" id1="BBM_NGEN_NHV1" id2="NETWORK" name2="NHV1"/>
     <dyn:macroConnect connector="MC_LoadOneTransformerTapChanger-DefaultBus" id1="BBM_LOAD" id2="NETWORK" name2="NLOAD"/>
     <dyn:macroConnect connector="MC_LoadTwoTransformersTapChangers-DefaultBus" id1="BBM_LOAD2" id2="NETWORK" name2="NLOAD"/>
-    <dyn:macroConnect connector="MC_TapChangerBlockingAutomaton2-TransformerFixedRatio" id1="BBM_TapChangerBlocking" id2="BBM_NGEN_NHV1"/>
-    <dyn:macroConnect connector="MC_TapChangerBlockingAutomaton2-DefaultTransformer" id1="BBM_TapChangerBlocking" id2="NETWORK" name2="NHV2_NLOAD"/>
-    <dyn:macroConnect connector="MC_TapChangerBlockingAutomaton2-LoadOneTransformerTapChanger" id1="BBM_TapChangerBlocking" id2="BBM_LOAD"/>
-    <dyn:macroConnect connector="MC_TapChangerBlockingAutomaton2-LoadTwoTransformersTapChangers" id1="BBM_TapChangerBlocking" id2="BBM_LOAD2"/>
-    <dyn:macroConnect connector="MC_TapChangerBlockingAutomaton2-DefaultBus" id1="BBM_TapChangerBlocking" id2="NETWORK" name2="NHV1"/>
-    <dyn:macroConnect connector="MC_TapChangerBlockingAutomaton2-DefaultBus" id1="BBM_TapChangerBlocking" id2="NETWORK" name2="NHV2"/>
+    <dyn:macroConnect connector="MC_TapChangerBlockingAutomaton-TransformerFixedRatio" id1="BBM_TapChangerBlocking" id2="BBM_NGEN_NHV1"/>
+    <dyn:macroConnect connector="MC_TapChangerBlockingAutomaton-DefaultTransformer" id1="BBM_TapChangerBlocking" id2="NETWORK" name2="NHV2_NLOAD"/>
+    <dyn:macroConnect connector="MC_TapChangerBlockingAutomaton-LoadOneTransformerTapChanger" id1="BBM_TapChangerBlocking" id2="BBM_LOAD"/>
+    <dyn:macroConnect connector="MC_TapChangerBlockingAutomaton-LoadTwoTransformersTapChangers" id1="BBM_TapChangerBlocking" id2="BBM_LOAD2"/>
+    <dyn:macroConnect connector="MC_TapChangerBlockingAutomatonMeasure1-DefaultBus" id1="BBM_TapChangerBlocking" id2="NETWORK" name2="NHV1"/>
+    <dyn:macroConnect connector="MC_TapChangerBlockingAutomatonMeasure2-DefaultBus" id1="BBM_TapChangerBlocking" id2="NETWORK" name2="NHV2"/>
 </dyn:dynamicModelsArchitecture>
