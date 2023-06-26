@@ -15,13 +15,13 @@
         <dyn:connect var1="transformer_terminal2" var2="@NAME@_ACPIN"/>
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_LoadOneTransformerTapChanger-DefaultBus">
-        <dyn:connect var1="transformer_terminal" var2="@NAME@_ACPIN"/>
+        <dyn:connect var1="transformer_terminal1" var2="@NAME@_ACPIN"/>
         <dyn:connect var1="transformer_switchOffSignal1" var2="@NAME@_switchOff"/>
         <dyn:connect var1="load_switchOffSignal1" var2="@NAME@_switchOff"/>
         <dyn:connect var1="tapChanger_switchOffSignal1" var2="@NAME@_switchOff"/>
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_LoadTwoTransformersTapChangers-DefaultBus">
-        <dyn:connect var1="transformerT_terminal" var2="@NAME@_ACPIN"/>
+        <dyn:connect var1="transformerT_terminal1" var2="@NAME@_ACPIN"/>
         <dyn:connect var1="transformerT_switchOffSignal1" var2="@NAME@_switchOff"/>
         <dyn:connect var1="transformerD_switchOffSignal1" var2="@NAME@_switchOff"/>
         <dyn:connect var1="load_switchOffSignal1" var2="@NAME@_switchOff"/>
