@@ -41,20 +41,17 @@ class UnderVoltageAutomatonGroovyExtension extends AbstractPureDynamicGroovyExte
 
         UnderVoltageAutomatonBuilder(Network network, String lib) {
             super(network, lib)
-            dslGenerator = new DslEquipment<>(IdentifiableType.GENERATOR)
+            dslGenerator = new DslEquipment<>(IdentifiableType.GENERATOR, "generator")
         }
 
         void generator(String staticId) {
-            dslGenerator.tap {
-                it.staticId = staticId
-                equipment = network.getGenerator(staticId)
-            }
+            dslGenerator.addEquipment(staticId, network::getGenerator)
         }
 
         @Override
         protected void checkData() {
             super.checkData()
-            checkEquipmentData(dslGenerator)
+            isInstantiable &= dslGenerator.checkEquipmentData(LOGGER)
         }
 
         @Override

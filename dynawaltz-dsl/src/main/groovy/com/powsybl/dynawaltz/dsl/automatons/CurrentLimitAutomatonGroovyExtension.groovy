@@ -53,10 +53,7 @@ class CurrentLimitAutomatonGroovyExtension extends AbstractPureDynamicGroovyExte
         }
 
         void iMeasurement(String staticId) {
-            iMeasurement.tap {
-                it.staticId = staticId
-                equipment = network.getBranch(staticId)
-            }
+            iMeasurement.addEquipment(staticId, network::getBranch)
         }
 
         void iMeasurementSide(Branch.Side side) {
@@ -64,17 +61,14 @@ class CurrentLimitAutomatonGroovyExtension extends AbstractPureDynamicGroovyExte
         }
 
         void controlledQuadripole(String staticId) {
-            controlledEquipment.tap {
-                it.staticId = staticId
-                equipment = network.getBranch(staticId)
-            }
+            controlledEquipment.addEquipment(staticId, network::getBranch)
         }
 
         @Override
         void checkData() {
             super.checkData()
-            checkEquipmentData(controlledEquipment)
-            checkEquipmentData(iMeasurement)
+            isInstantiable &= controlledEquipment.checkEquipmentData(LOGGER)
+                    && iMeasurement.checkEquipmentData(LOGGER)
             if (!iMeasurementSide) {
                 LOGGER.warn("'iMeasurementSide' field is not set")
                 isInstantiable = false

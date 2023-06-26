@@ -35,7 +35,7 @@ class NodeFaultEventGroovyExtension extends AbstractPureDynamicGroovyExtension<E
         new NodeFaultEventBuilder(network, TAG)
     }
 
-    static class NodeFaultEventBuilder extends AbstractEventModelBuilder {
+    static class NodeFaultEventBuilder extends AbstractEventModelBuilder<Bus> {
 
         protected double faultTime
         protected double rPu

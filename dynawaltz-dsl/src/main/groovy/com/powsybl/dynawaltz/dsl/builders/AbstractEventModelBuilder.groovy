@@ -17,24 +17,21 @@ import com.powsybl.iidm.network.Network
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-abstract class AbstractEventModelBuilder extends AbstractDynamicModelBuilder implements ModelBuilder<EventModel> {
+abstract class AbstractEventModelBuilder<T extends Identifiable> extends AbstractDynamicModelBuilder implements ModelBuilder<EventModel> {
 
-    protected final DslEquipment<Identifiable> dslEquipment
+    protected final DslEquipment<T> dslEquipment
     protected final String tag
     protected String staticId
     protected double startTime
 
-    AbstractEventModelBuilder(Network network, DslEquipment<Identifiable> dslEquipment, String tag) {
+    AbstractEventModelBuilder(Network network, DslEquipment<T> dslEquipment, String tag) {
         super(network)
         this.dslEquipment = dslEquipment
         this.tag = tag
     }
 
     void staticId(String staticId) {
-        dslEquipment.tap {
-            it.staticId = staticId
-            equipment = findEquipment(staticId)
-        }
+        dslEquipment.addEquipment(staticId, this::findEquipment)
     }
 
     void startTime(double startTime) {
@@ -43,7 +40,7 @@ abstract class AbstractEventModelBuilder extends AbstractDynamicModelBuilder imp
 
     @Override
     protected void checkData() {
-        checkEquipmentData(dslEquipment)
+        isInstantiable &= dslEquipment.checkEquipmentData(LOGGER)
         if (!startTime) {
             LOGGER.warn("'startTime' field is not set")
             isInstantiable = false

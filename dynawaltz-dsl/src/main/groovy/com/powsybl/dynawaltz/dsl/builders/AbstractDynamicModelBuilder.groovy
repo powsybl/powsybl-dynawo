@@ -7,9 +7,6 @@
  */
 package com.powsybl.dynawaltz.dsl.builders
 
-import com.powsybl.dynamicsimulation.DynamicModel
-import com.powsybl.dynawaltz.dsl.DslEquipment
-import com.powsybl.dynawaltz.dsl.ModelBuilder
 import com.powsybl.iidm.network.Network
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -29,16 +26,6 @@ abstract class AbstractDynamicModelBuilder {
     }
 
     abstract protected void checkData()
-
-    protected void checkEquipmentData(DslEquipment dslEquipment) {
-        if (!dslEquipment.staticId) {
-            LOGGER.warn("'${dslEquipment.fieldName}' field is not set")
-            isInstantiable = false
-        } else if (!dslEquipment.equipment) {
-            LOGGER.warn("${dslEquipment.equipmentType} static id unknown : ${dslEquipment.staticId}")
-            isInstantiable = false
-        }
-    }
 
     protected final boolean isInstantiable() {
         checkData()

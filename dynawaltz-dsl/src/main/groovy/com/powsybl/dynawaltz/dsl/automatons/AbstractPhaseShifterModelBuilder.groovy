@@ -22,19 +22,16 @@ abstract class AbstractPhaseShifterModelBuilder extends AbstractPureDynamicModel
 
     AbstractPhaseShifterModelBuilder(Network network, String lib) {
         super(network, lib)
-        dslTransformer = new DslEquipment<>(IdentifiableType.TWO_WINDINGS_TRANSFORMER)
+        dslTransformer = new DslEquipment<>(IdentifiableType.TWO_WINDINGS_TRANSFORMER, "transformer")
     }
 
     void transformer(String staticId) {
-        dslTransformer.tap {
-            it.staticId = staticId
-            equipment = network.getTwoWindingsTransformer(staticId)
-        }
+        dslTransformer.addEquipment(staticId, network::getTwoWindingsTransformer)
     }
 
     @Override
     protected void checkData() {
         super.checkData()
-        checkEquipmentData(dslTransformer)
+        isInstantiable &= dslTransformer.checkEquipmentData(LOGGER)
     }
 }

@@ -57,10 +57,7 @@ class CurrentLimitTwoLevelsAutomatonGroovyExtension extends AbstractPureDynamicG
         }
 
         void iMeasurement2(String staticId) {
-            iMeasurement2.tap {
-                it.staticId = staticId
-                equipment = network.getBranch(staticId)
-            }
+            iMeasurement2.addEquipment(staticId, network::getBranch)
         }
 
         void iMeasurement2Side(Branch.Side side) {
@@ -70,7 +67,7 @@ class CurrentLimitTwoLevelsAutomatonGroovyExtension extends AbstractPureDynamicG
         @Override
         void checkData() {
             super.checkData()
-            checkEquipmentData(iMeasurement2)
+            isInstantiable &= iMeasurement2.checkEquipmentData(LOGGER)
             if (!iMeasurement2Side) {
                 LOGGER.warn("'iMeasurement2Side' field is not set")
                 isInstantiable = false

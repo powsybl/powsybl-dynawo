@@ -12,6 +12,7 @@ import com.powsybl.dynamicsimulation.EventModel
 import com.powsybl.dynamicsimulation.groovy.EventModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractPureDynamicGroovyExtension
 import com.powsybl.dynawaltz.dsl.DslEquipment
+import com.powsybl.dynawaltz.dsl.DslVariousEquipment
 import com.powsybl.dynawaltz.dsl.builders.AbstractEventModelBuilder
 import com.powsybl.dynawaltz.models.events.AbstractEventModel
 import com.powsybl.dynawaltz.models.events.EventHvdcDisconnection
@@ -44,7 +45,7 @@ class EventDisconnectionGroovyExtension extends AbstractPureDynamicGroovyExtensi
         new EventQuadripoleDisconnectionBuilder(network, TAG)
     }
 
-    static class EventQuadripoleDisconnectionBuilder extends AbstractEventModelBuilder {
+    static class EventQuadripoleDisconnectionBuilder extends AbstractEventModelBuilder<Identifiable> {
 
         private boolean disconnectSide = false
         private disconnectionType = DisconnectionType.NONE
@@ -74,7 +75,7 @@ class EventDisconnectionGroovyExtension extends AbstractPureDynamicGroovyExtensi
 
         void checkData() {
             super.checkData()
-            disconnectionType()
+            disconnectionType(dslEquipment?.equipment?.type)
             if(dslEquipment.equipment) {
                 if (disconnectionType == DisconnectionType.NONE) {
                     LOGGER.warn("${dslEquipment.equipment?.type} ${dslEquipment.staticId} cannot be disconnected")
@@ -87,8 +88,7 @@ class EventDisconnectionGroovyExtension extends AbstractPureDynamicGroovyExtensi
             }
         }
 
-        private void disconnectionType() {
-            IdentifiableType type = dslEquipment?.equipment?.type
+        boolean disconnectionType(IdentifiableType type) {
             if (type) {
                 if (CONNECTABLE_INJECTIONS.contains(type)) {
                     disconnectionType = DisconnectionType.INJECTION
@@ -98,6 +98,7 @@ class EventDisconnectionGroovyExtension extends AbstractPureDynamicGroovyExtensi
                     disconnectionType = DisconnectionType.HVDC
                 }
             }
+            disconnectionType != DisconnectionType.NONE
         }
 
         @Override

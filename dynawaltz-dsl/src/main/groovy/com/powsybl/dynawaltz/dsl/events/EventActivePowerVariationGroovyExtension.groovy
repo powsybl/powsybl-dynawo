@@ -11,11 +11,10 @@ import com.google.auto.service.AutoService
 import com.powsybl.dynamicsimulation.EventModel
 import com.powsybl.dynamicsimulation.groovy.EventModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractPureDynamicGroovyExtension
-import com.powsybl.dynawaltz.dsl.DslEquipment
+import com.powsybl.dynawaltz.dsl.DslVariousEquipment
 import com.powsybl.dynawaltz.dsl.builders.AbstractEventModelBuilder
 import com.powsybl.dynawaltz.models.events.EventActivePowerVariation
 import com.powsybl.iidm.network.Identifiable
-import com.powsybl.iidm.network.IdentifiableType
 import com.powsybl.iidm.network.Injection
 import com.powsybl.iidm.network.Network
 
@@ -27,8 +26,6 @@ class EventActivePowerVariationGroovyExtension extends AbstractPureDynamicGroovy
 
     private static final String TAG = "Step"
 
-    private static final EnumSet<IdentifiableType> connectableEquipments = EnumSet.of(IdentifiableType.GENERATOR, IdentifiableType.LOAD)
-
     EventActivePowerVariationGroovyExtension() {
         modelTags = [TAG]
     }
@@ -38,12 +35,12 @@ class EventActivePowerVariationGroovyExtension extends AbstractPureDynamicGroovy
         new EventAPVBuilder(network, TAG)
     }
 
-    static class EventAPVBuilder extends AbstractEventModelBuilder {
+    static class EventAPVBuilder extends AbstractEventModelBuilder<Injection> {
 
         protected double deltaP
 
         EventAPVBuilder(Network network, String tag) {
-            super(network, new DslEquipment<Injection>("Generator/Load"), tag)
+            super(network, new DslVariousEquipment<Injection>("Generator/Load", EventActivePowerVariation::isConnectable), tag)
         }
 
         void deltaP(double deltaP) {

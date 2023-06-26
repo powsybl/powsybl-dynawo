@@ -32,10 +32,7 @@ abstract class AbstractEquipmentModelBuilder<T extends Identifiable> extends Abs
     }
 
     void staticId(String staticId) {
-        dslEquipment.tap {
-            it.staticId = staticId
-            equipment = findEquipment(staticId)
-        }
+        dslEquipment.addEquipment(staticId, this::findEquipment)
     }
 
     void dynamicModelId(String dynamicModelId) {
@@ -48,7 +45,7 @@ abstract class AbstractEquipmentModelBuilder<T extends Identifiable> extends Abs
 
     @Override
     protected void checkData() {
-        checkEquipmentData(dslEquipment)
+        isInstantiable = dslEquipment.checkEquipmentData(LOGGER)
         if (!parameterSetId) {
             LOGGER.warn("'parameterSetId' field is not set")
             isInstantiable = false

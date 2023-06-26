@@ -45,10 +45,7 @@ class TapChangerAutomatonGroovyExtension extends AbstractPureDynamicGroovyExtens
         }
 
         void staticId(String staticId) {
-            dslLoad.tap {
-                it.staticId = staticId
-                equipment = network.getLoad(staticId)
-            }
+            dslLoad.addEquipment(staticId, network::getLoad)
         }
 
         void side(TransformerSide side) {
@@ -58,7 +55,7 @@ class TapChangerAutomatonGroovyExtension extends AbstractPureDynamicGroovyExtens
         @Override
         protected void checkData() {
             super.checkData()
-            checkEquipmentData(dslLoad)
+            isInstantiable &= dslLoad.checkEquipmentData(LOGGER)
         }
 
         @Override

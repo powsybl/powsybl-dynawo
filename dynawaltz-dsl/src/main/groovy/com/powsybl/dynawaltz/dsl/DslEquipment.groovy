@@ -9,6 +9,9 @@ package com.powsybl.dynawaltz.dsl
 
 import com.powsybl.iidm.network.Identifiable
 import com.powsybl.iidm.network.IdentifiableType
+import org.slf4j.Logger
+
+import java.util.function.Function
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
@@ -36,5 +39,21 @@ class DslEquipment<T extends Identifiable> {
 
     DslEquipment(String equipmentType) {
         this(equipmentType, "staticId")
+    }
+
+    void addEquipment(String equipmentId, Function<String, T> equipmentSupplier) {
+        staticId = equipmentId
+        equipment = equipmentSupplier(staticId)
+    }
+
+    boolean checkEquipmentData(Logger logger) {
+        if (!staticId) {
+            logger.warn("'${fieldName}' field is not set")
+            return false
+        } else if (!equipment) {
+            logger.warn("${equipmentType} static id unknown : ${staticId}")
+            return false
+        }
+        true
     }
 }
