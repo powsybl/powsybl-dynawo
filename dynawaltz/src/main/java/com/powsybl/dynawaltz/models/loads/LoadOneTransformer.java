@@ -35,7 +35,7 @@ public class LoadOneTransformer extends AbstractLoad implements LoadWithTransfor
     }
 
     protected LoadOneTransformer(String dynamicModelId, Load load, String parameterSetId, String lib) {
-        super(dynamicModelId, load, parameterSetId, lib, "transformer_terminal");
+        super(dynamicModelId, load, parameterSetId, lib, "transformer_terminal1");
     }
 
     @Override

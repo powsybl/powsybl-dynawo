@@ -36,13 +36,13 @@ public class LoadTwoTransformers extends AbstractLoad implements LoadWithTransfo
     }
 
     protected LoadTwoTransformers(String dynamicModelId, Load load, String parameterSetId, String lib) {
-        super(dynamicModelId, load, parameterSetId, lib, "transformer_terminal");
+        super(dynamicModelId, load, parameterSetId, lib, getTransformerVar(HIGH_VOLTAGE, "terminal1"));
     }
 
     @Override
     protected List<VarConnection> getVarConnectionsWith(BusModel connected) {
         List<VarConnection> varConnections = new ArrayList<>(3);
-        varConnections.add(new VarConnection(getTransformerVar(HIGH_VOLTAGE, "terminal"), connected.getTerminalVarName()));
+        varConnections.add(new VarConnection(getTerminalVarName(), connected.getTerminalVarName()));
         connected.getSwitchOffSignalVarName()
                 .ifPresent(switchOff -> {
                     varConnections.add(new VarConnection(getTransformerVar(HIGH_VOLTAGE, SWITCH_OFF_SIGNAL_NAME), switchOff));
