@@ -6,21 +6,21 @@
  */
 package com.powsybl.dynawaltz.models.buses;
 
-import com.powsybl.dynawaltz.models.AbstractNetworkModel;
+import com.powsybl.dynawaltz.models.defaultmodels.AbstractDefaultModel;
 
 import java.util.Optional;
 
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  */
-public class DefaultBusModel extends AbstractNetworkModel implements BusModel {
+public class DefaultBusModel extends AbstractDefaultModel implements BusModel {
     public DefaultBusModel(String staticId) {
         super(staticId);
     }
 
     @Override
     public String getName() {
-        return "NetworkBus";
+        return "DefaultBus";
     }
 
     @Override

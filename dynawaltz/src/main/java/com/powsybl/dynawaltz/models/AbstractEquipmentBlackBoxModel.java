@@ -13,7 +13,6 @@ import com.powsybl.iidm.network.Identifiable;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-
 import java.util.Objects;
 
 import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
@@ -22,18 +21,25 @@ import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
  * @author Luma Zamarreño <zamarrenolm at aia.es>
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public abstract class AbstractEquipmentBlackBoxModel<T extends Identifiable<?>> extends AbstractBlackBoxModel implements EquipmentBlackBoxModelModel {
+public abstract class AbstractEquipmentBlackBoxModel<T extends Identifiable<?>> extends AbstractBlackBoxModel implements EquipmentBlackBoxModel {
 
     protected final T equipment;
+    private final String lib;
 
-    protected AbstractEquipmentBlackBoxModel(String dynamicModelId, String parameterSetId, T equipment) {
+    protected AbstractEquipmentBlackBoxModel(String dynamicModelId, String parameterSetId, T equipment, String lib) {
         super(dynamicModelId, parameterSetId);
         this.equipment = Objects.requireNonNull(equipment);
+        this.lib = Objects.requireNonNull(lib);
     }
 
     @Override
     public String getStaticId() {
         return equipment.getId();
+    }
+
+    @Override
+    public String getLib() {
+        return lib;
     }
 
     @Override

@@ -10,8 +10,8 @@ import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
-import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection;
 import com.powsybl.dynawaltz.models.events.EventInjectionDisconnection;
+import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection;
 import com.powsybl.dynawaltz.models.generators.SynchronousGenerator;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
@@ -51,5 +51,4 @@ class EventXmlTest extends DynaWaltzTestUtil {
         Exception e = assertThrows(PowsyblException.class, () -> new DynaWaltzContext(network, workingVariantId, dynamicModels, eventModels, curves, null, null));
         assertEquals("Duplicate dynamicId: [Disconnect_NHV1_NHV2_1, Disconnect_GEN2]", e.getMessage());
     }
-
 }

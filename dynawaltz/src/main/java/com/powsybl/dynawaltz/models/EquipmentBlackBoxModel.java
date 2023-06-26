@@ -10,6 +10,6 @@ package com.powsybl.dynawaltz.models;
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public interface EquipmentBlackBoxModelModel extends BlackBoxModel {
+public interface EquipmentBlackBoxModel extends BlackBoxModel {
     String getStaticId();
 }

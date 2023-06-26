@@ -1,15 +1,17 @@
-package com.powsybl.dynawaltz.models;
+package com.powsybl.dynawaltz.models.defaultmodels;
 
+import com.powsybl.dynawaltz.models.MacroConnectAttribute;
+import com.powsybl.dynawaltz.models.Model;
 import com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants;
 
 import java.util.List;
 import java.util.Objects;
 
-public abstract class AbstractNetworkModel implements Model {
+public abstract class AbstractDefaultModel implements Model {
 
     private final String staticId;
 
-    protected AbstractNetworkModel(String staticId) {
+    protected AbstractDefaultModel(String staticId) {
         this.staticId = Objects.requireNonNull(staticId);
     }
 
