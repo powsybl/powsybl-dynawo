@@ -18,8 +18,23 @@ import java.util.List;
  */
 public class SynchronousGenerator extends SynchronizedGenerator {
 
+    private static final String DEFAULT_TERMINAL_VAR_NAME = "generator_terminal";
+
+    private final String terminalVarName;
+
+    public SynchronousGenerator(String dynamicModelId, Generator generator, String parameterSetId, String generatorLib, String terminalVarNamePrefix) {
+        super(dynamicModelId, generator, parameterSetId, generatorLib);
+        terminalVarName = terminalVarNamePrefix != null ? terminalVarNamePrefix + "_terminal1" : DEFAULT_TERMINAL_VAR_NAME;
+    }
+
     public SynchronousGenerator(String dynamicModelId, Generator generator, String parameterSetId, String generatorLib) {
         super(dynamicModelId, generator, parameterSetId, generatorLib);
+        terminalVarName = DEFAULT_TERMINAL_VAR_NAME;
+    }
+
+    @Override
+    public String getTerminalVarName() {
+        return terminalVarName;
     }
 
     public String getOmegaPuVarName() {

@@ -49,9 +49,9 @@ class SynchronousGeneratorGroovyExtension extends AbstractEquipmentGroovyExtensi
         SynchronousGenerator build() {
             checkData()
             if (equipmentConfig.isControllable()) {
-                new SynchronousGeneratorControllable(dynamicModelId, generator, parameterSetId, equipmentConfig.lib)
+                new SynchronousGeneratorControllable(dynamicModelId, generator, parameterSetId, equipmentConfig.lib, equipmentConfig.prefix)
             } else {
-                new SynchronousGenerator(dynamicModelId, generator, parameterSetId, equipmentConfig.lib)
+                new SynchronousGenerator(dynamicModelId, generator, parameterSetId, equipmentConfig.lib, equipmentConfig.prefix)
             }
         }
     }
