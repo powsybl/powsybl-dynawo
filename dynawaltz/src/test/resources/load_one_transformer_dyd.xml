@@ -4,14 +4,14 @@
         <dyn:macroStaticRef id="MSR_LoadOneTransformer"/>
     </dyn:blackBoxModel>
     <dyn:macroConnector id="MC_LoadOneTransformer-DefaultBus">
-        <dyn:connect var1="transformer_terminal1" var2="@NAME@_ACPIN"/>
-        <dyn:connect var1="transformer_switchOffSignal1" var2="@NAME@_switchOff"/>
-        <dyn:connect var1="load_switchOffSignal1" var2="@NAME@_switchOff"/>
+        <dyn:connect var1="transformer_terminal1" var2="@STATIC_ID@@NODE@_ACPIN"/>
+        <dyn:connect var1="transformer_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
+        <dyn:connect var1="load_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
     </dyn:macroConnector>
     <dyn:macroStaticReference id="MSR_LoadOneTransformer">
         <dyn:staticRef var="transformer_P1Pu_value" staticVar="p"/>
         <dyn:staticRef var="transformer_Q1Pu_value" staticVar="q"/>
         <dyn:staticRef var="transformer_state" staticVar="state"/>
     </dyn:macroStaticReference>
-    <dyn:macroConnect connector="MC_LoadOneTransformer-DefaultBus" id1="BBM_LOAD" id2="NETWORK" name2="NLOAD"/>
+    <dyn:macroConnect connector="MC_LoadOneTransformer-DefaultBus" id1="BBM_LOAD" id2="NETWORK"/>
 </dyn:dynamicModelsArchitecture>

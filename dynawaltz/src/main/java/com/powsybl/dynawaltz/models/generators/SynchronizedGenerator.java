@@ -13,8 +13,6 @@ import com.powsybl.iidm.network.Generator;
 
 import java.util.List;
 
-import static com.powsybl.dynawaltz.models.utils.BusUtils.getConnectableBusStaticId;
-
 /**
  * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
@@ -43,10 +41,5 @@ public class SynchronizedGenerator extends AbstractGeneratorModel implements Fre
     @Override
     public String getOmegaRefPuVarName() {
         return "generator_omegaRefPu";
-    }
-
-    @Override
-    public String getConnectedBusId() {
-        return getConnectableBusStaticId(equipment);
     }
 }

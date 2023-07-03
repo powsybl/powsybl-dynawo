@@ -8,8 +8,8 @@ package com.powsybl.dynawaltz.models.defaultmodels;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.models.Model;
-import com.powsybl.dynawaltz.models.buses.BusModel;
-import com.powsybl.dynawaltz.models.buses.DefaultBusModel;
+import com.powsybl.dynawaltz.models.buses.DefaultMeasurementPoint;
+import com.powsybl.dynawaltz.models.buses.MeasurementPoint;
 import com.powsybl.dynawaltz.models.generators.GeneratorModel;
 import com.powsybl.dynawaltz.models.generators.DefaultGeneratorModel;
 import com.powsybl.dynawaltz.models.hvdc.DefaultHvdcModel;
@@ -40,7 +40,7 @@ public class DefaultModelsHandler {
     private final Map<Class<? extends Model>, DefaultModelFactory<? extends Model>> factoryMap;
 
     public DefaultModelsHandler() {
-        factoryMap = Map.of(BusModel.class, new DefaultModelFactory<BusModel>(DefaultBusModel::new),
+        factoryMap = Map.of(MeasurementPoint.class, new DefaultModelFactory<MeasurementPoint>(DefaultMeasurementPoint::new),
                 GeneratorModel.class, new DefaultModelFactory<GeneratorModel>(DefaultGeneratorModel::new),
                 HvdcModel.class, new DefaultModelFactory<HvdcModel>(DefaultHvdcModel::new),
                 LineModel.class, new DefaultModelFactory<LineModel>(DefaultLineModel::new),
@@ -49,7 +49,7 @@ public class DefaultModelsHandler {
                 StaticVarCompensatorModel.class, new DefaultModelFactory<StaticVarCompensatorModel>(DefaultStaticVarCompensatorModel::new),
                 TransformerModel.class, new DefaultModelFactory<TransformerModel>(DefaultTransformerModel::new));
 
-        powSyBlTypeToModel.put(IdentifiableType.BUS, BusModel.class);
+        powSyBlTypeToModel.put(IdentifiableType.BUS, MeasurementPoint.class);
         powSyBlTypeToModel.put(IdentifiableType.GENERATOR, GeneratorModel.class);
         powSyBlTypeToModel.put(IdentifiableType.HVDC_LINE, HvdcModel.class);
         powSyBlTypeToModel.put(IdentifiableType.LINE, LineModel.class);

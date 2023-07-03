@@ -10,7 +10,7 @@ import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.models.TransformerSide;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.VarMapping;
-import com.powsybl.dynawaltz.models.buses.BusModel;
+import com.powsybl.dynawaltz.models.buses.ConnectionPoint;
 import com.powsybl.iidm.network.Load;
 
 import java.util.ArrayList;
@@ -44,7 +44,7 @@ public class LoadOneTransformer extends AbstractLoad implements LoadWithTransfor
     }
 
     @Override
-    protected List<VarConnection> getVarConnectionsWith(BusModel connected) {
+    protected List<VarConnection> getVarConnectionsWith(ConnectionPoint connected) {
         List<VarConnection> varConnections = new ArrayList<>(3);
         varConnections.add(new VarConnection(getTerminalVarName(), connected.getTerminalVarName()));
         connected.getSwitchOffSignalVarName()

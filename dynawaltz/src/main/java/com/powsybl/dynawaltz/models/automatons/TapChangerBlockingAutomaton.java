@@ -10,9 +10,9 @@ package com.powsybl.dynawaltz.models.automatons;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
-import com.powsybl.dynawaltz.models.MeasurementPoint;
+import com.powsybl.dynawaltz.models.MeasurementPointSuffix;
 import com.powsybl.dynawaltz.models.VarConnection;
-import com.powsybl.dynawaltz.models.buses.BusModel;
+import com.powsybl.dynawaltz.models.buses.MeasurementPoint;
 import com.powsybl.dynawaltz.models.transformers.TapChangerModel;
 import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.IdentifiableType;
@@ -86,7 +86,7 @@ public class TapChangerBlockingAutomaton extends AbstractPureDynamicBlackBoxMode
         }
         int i = 1;
         for (Bus bus : uMeasurements) {
-            createMacroConnections(bus, BusModel.class, this::getVarConnectionsWith, context, MeasurementPoint.of(i));
+            createMacroConnections(bus, MeasurementPoint.class, this::getVarConnectionsWith, context, MeasurementPointSuffix.of(i));
             i++;
         }
     }
@@ -95,7 +95,7 @@ public class TapChangerBlockingAutomaton extends AbstractPureDynamicBlackBoxMode
         return connected.getTapChangerBlockerVarConnections();
     }
 
-    private List<VarConnection> getVarConnectionsWith(BusModel connected, String suffix) {
+    private List<VarConnection> getVarConnectionsWith(MeasurementPoint connected, String suffix) {
         return connected.getUImpinVarName()
                 .map(uImpinVarName -> List.of(new VarConnection("tapChangerBlocking_UMonitored" + suffix, uImpinVarName)))
                 .orElse(Collections.emptyList());

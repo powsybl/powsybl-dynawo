@@ -10,7 +10,9 @@ import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.models.*;
+import com.powsybl.dynawaltz.models.buses.ConnectionPoint;
 import com.powsybl.dynawaltz.models.buses.InfiniteBus;
+import com.powsybl.dynawaltz.models.buses.StaticDefaultBusModel;
 import com.powsybl.dynawaltz.models.defaultmodels.DefaultModelsHandler;
 import com.powsybl.dynawaltz.models.frequencysynchronizers.FrequencySynchronizedModel;
 import com.powsybl.dynawaltz.models.frequencysynchronizers.FrequencySynchronizerModel;
@@ -134,6 +136,17 @@ public class DynaWaltzContext {
         throw new PowsyblException(String.format(MODEL_ID_EXCEPTION, dynamicId, connectableClass.getSimpleName()));
     }
 
+    public ConnectionPoint getConnectionPointDynamicModel(String staticId) {
+        BlackBoxModel bbm = staticIdBlackBoxModelMap.get(staticId);
+        if (bbm == null) {
+            return StaticDefaultBusModel.getInstance();
+        }
+        if (bbm instanceof ConnectionPoint) {
+            return (ConnectionPoint) bbm;
+        }
+        throw new PowsyblException(String.format(MODEL_ID_EXCEPTION, staticId, "ConnectionPoint"));
+    }
+
     private EquipmentBlackBoxModel mergeDuplicateStaticId(EquipmentBlackBoxModel bbm1, EquipmentBlackBoxModel bbm2) {
         throw new PowsyblException("Duplicate staticId: " + bbm1.getStaticId());
     }
@@ -156,18 +169,8 @@ public class DynaWaltzContext {
         macroConnectList.add(new MacroConnect(macroConnectorId, attributesFrom, attributesTo));
     }
 
-    public void addMacroConnect(String macroConnectorId, List<MacroConnectAttribute> attributesFrom) {
-        macroConnectList.add(new MacroConnect(macroConnectorId, attributesFrom));
-    }
-
     public List<MacroConnect> getMacroConnectList() {
         return macroConnectList;
-    }
-
-    public String addMacroConnector(String name1, List<VarConnection> varConnections) {
-        String macroConnectorId = MacroConnector.createMacroConnectorId(name1);
-        macroConnectorsMap.computeIfAbsent(macroConnectorId, k -> new MacroConnector(macroConnectorId, varConnections));
-        return macroConnectorId;
     }
 
     public String addMacroConnector(String name1, String name2, List<VarConnection> varConnections) {

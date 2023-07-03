@@ -11,8 +11,7 @@ import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractEquipmentBlackBoxModel;
 import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.VarConnection;
-import com.powsybl.dynawaltz.models.buses.BusModel;
-import com.powsybl.dynawaltz.models.utils.BusUtils;
+import com.powsybl.dynawaltz.models.buses.ConnectionPoint;
 import com.powsybl.dynawaltz.models.utils.SideConverter;
 import com.powsybl.iidm.network.TwoWindingsTransformer;
 
@@ -29,7 +28,7 @@ public class TransformerFixedRatio extends AbstractEquipmentBlackBoxModel<TwoWin
         super(dynamicModelId, parameterSetId, transformer, lib);
     }
 
-    private List<VarConnection> getVarConnectionsWith(BusModel connected, Side side) {
+    private List<VarConnection> getVarConnectionsWith(ConnectionPoint connected, Side side) {
         return List.of(new VarConnection(getTerminalVarName(side), connected.getTerminalVarName()));
     }
 
@@ -39,10 +38,7 @@ public class TransformerFixedRatio extends AbstractEquipmentBlackBoxModel<TwoWin
 
     @Override
     public void createMacroConnections(DynaWaltzContext context) {
-        equipment.getTerminals().forEach(t -> {
-            String busStaticId = BusUtils.getConnectableBusStaticId(t);
-            createMacroConnections(busStaticId, BusModel.class, this::getVarConnectionsWith, context, SideConverter.convert(equipment.getSide(t)));
-        });
+        equipment.getTerminals().forEach(t -> createTerminalMacroConnections(t, this::getVarConnectionsWith, context, SideConverter.convert(equipment.getSide(t))));
     }
 
     @Override
