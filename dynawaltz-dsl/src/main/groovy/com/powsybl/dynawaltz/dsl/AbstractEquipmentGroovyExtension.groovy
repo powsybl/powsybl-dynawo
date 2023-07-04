@@ -51,7 +51,9 @@ abstract class AbstractEquipmentGroovyExtension<T> {
                 ModelBuilder<T> builder = createBuilder(binding.getVariable("network") as Network, it)
                 cloned.delegate = builder
                 cloned()
-                consumer.accept(builder.build())
+                builder.build()?.tap {
+                    consumer.accept(it)
+                }
             })
         }
     }

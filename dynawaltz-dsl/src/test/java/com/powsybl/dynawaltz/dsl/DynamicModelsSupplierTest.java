@@ -76,9 +76,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
     @MethodSource("provideWarningsModel")
     void testDslWarnings(String groovyScriptName, Network network) {
         DynamicModelsSupplier supplier = new GroovyDynamicModelsSupplier(getResourceAsStream(groovyScriptName), EXTENSIONS);
-        List<DynamicModel> dynamicModels = supplier.get(network);
-        assertEquals(1, dynamicModels.size());
-        assertNull(dynamicModels.get(0));
+        assertTrue(supplier.get(network).isEmpty());
     }
 
     void assertEquipmentBlackBoxModel(EquipmentBlackBoxModel bbm, String dynamicId, String staticId, String parameterId, String lib) {

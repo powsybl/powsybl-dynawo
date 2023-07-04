@@ -48,9 +48,7 @@ class EventModelsSupplierTest extends AbstractModelSupplierTest {
     @MethodSource("provideWarningsModel")
     void testDslWarnings(String groovyScriptName, Network network) {
         EventModelsSupplier supplier = new GroovyEventModelsSupplier(getResourceAsStream(groovyScriptName), EXTENSIONS);
-        List<EventModel> eventModels = supplier.get(network);
-        assertEquals(1, eventModels.size());
-        assertNull(eventModels.get(0));
+        assertTrue(supplier.get(network).isEmpty());
     }
 
     void assertEventModel(AbstractEventModel em, String dynamicId, String equipmentStaticId, String lib, double startTime) {
