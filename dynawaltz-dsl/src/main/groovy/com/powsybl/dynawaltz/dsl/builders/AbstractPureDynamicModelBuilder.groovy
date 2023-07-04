@@ -23,6 +23,7 @@ abstract class AbstractPureDynamicModelBuilder extends AbstractDynamicModelBuild
     AbstractPureDynamicModelBuilder(Network network, String lib) {
         super(network)
         this.lib = lib
+        LOGGER.info("Automaton $lib building...")
     }
 
     void dynamicModelId(String dynamicModelId) {

@@ -29,6 +29,7 @@ abstract class AbstractEquipmentModelBuilder<T extends Identifiable> extends Abs
         super(network)
         this.equipmentConfig = equipmentConfig
         this.dslEquipment = new DslEquipment<T>(equipmentType)
+        LOGGER.info("Equipment ${equipmentConfig.getLib()} building...")
     }
 
     void staticId(String staticId) {

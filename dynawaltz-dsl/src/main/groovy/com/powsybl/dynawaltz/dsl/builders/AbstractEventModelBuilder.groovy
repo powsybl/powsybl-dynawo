@@ -28,6 +28,8 @@ abstract class AbstractEventModelBuilder<T extends Identifiable> extends Abstrac
         super(network)
         this.dslEquipment = dslEquipment
         this.tag = tag
+        LOGGER.info("Event $tag building...")
+
     }
 
     void staticId(String staticId) {

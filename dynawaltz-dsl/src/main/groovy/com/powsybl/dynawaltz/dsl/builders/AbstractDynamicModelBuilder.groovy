@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory
  */
 abstract class AbstractDynamicModelBuilder {
 
-    protected static final Logger LOGGER = LoggerFactory.getLogger(this.class)
+    protected static final Logger LOGGER = LoggerFactory.getLogger("DynamicModelBuilder")
 
     protected final Network network
     protected boolean isInstantiable = true
@@ -29,9 +29,8 @@ abstract class AbstractDynamicModelBuilder {
 
     protected final boolean isInstantiable() {
         checkData()
-        if (!isInstantiable) {
-            LOGGER.warn("${getLib()} cannot be instantiated")
-        }
+        isInstantiable ? LOGGER.info("${getLib()} instanciation successful")
+             : LOGGER.warn("${getLib()} cannot be instantiated")
         isInstantiable
     }
 
