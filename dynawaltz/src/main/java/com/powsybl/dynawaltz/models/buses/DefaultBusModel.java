@@ -15,18 +15,21 @@ import java.util.List;
 import java.util.Optional;
 
 /**
+ * Used for the connection between an equipment and a bus.
+ * Since the equipment static id (@STATIC_ID@ in varname) is the only information needed in order to create var connections,
+ * DefaultBusModel is implemented as a singleton
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public final class StaticDefaultBusModel implements ConnectionPoint {
+public final class DefaultBusModel implements ConnectionPoint {
 
-    private static StaticDefaultBusModel INSTANCE;
+    private static DefaultBusModel INSTANCE;
 
-    private StaticDefaultBusModel() {
+    private DefaultBusModel() {
     }
 
-    public static StaticDefaultBusModel getInstance() {
+    public static DefaultBusModel getInstance() {
         if (INSTANCE == null) {
-            INSTANCE = new StaticDefaultBusModel();
+            INSTANCE = new DefaultBusModel();
         }
         return INSTANCE;
     }

@@ -12,7 +12,7 @@ import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.models.*;
 import com.powsybl.dynawaltz.models.buses.AbstractBus;
 import com.powsybl.dynawaltz.models.buses.ConnectionPoint;
-import com.powsybl.dynawaltz.models.buses.StaticDefaultBusModel;
+import com.powsybl.dynawaltz.models.buses.DefaultBusModel;
 import com.powsybl.dynawaltz.models.defaultmodels.DefaultModelsHandler;
 import com.powsybl.dynawaltz.models.frequencysynchronizers.FrequencySynchronizedModel;
 import com.powsybl.dynawaltz.models.frequencysynchronizers.FrequencySynchronizerModel;
@@ -139,7 +139,7 @@ public class DynaWaltzContext {
     public ConnectionPoint getConnectionPointDynamicModel(String staticId) {
         BlackBoxModel bbm = staticIdBlackBoxModelMap.get(staticId);
         if (bbm == null) {
-            return StaticDefaultBusModel.getInstance();
+            return DefaultBusModel.getInstance();
         }
         if (bbm instanceof ConnectionPoint) {
             return (ConnectionPoint) bbm;

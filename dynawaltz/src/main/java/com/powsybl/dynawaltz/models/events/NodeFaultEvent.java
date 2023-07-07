@@ -9,7 +9,7 @@ package com.powsybl.dynawaltz.models.events;
 
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.VarConnection;
-import com.powsybl.dynawaltz.models.buses.ConnectionPoint;
+import com.powsybl.dynawaltz.models.buses.MeasurementPoint;
 import com.powsybl.dynawaltz.parameters.ParameterType;
 import com.powsybl.dynawaltz.xml.ParametersXml;
 import com.powsybl.iidm.network.Bus;
@@ -45,10 +45,10 @@ public class NodeFaultEvent extends AbstractEventModel {
 
     @Override
     public void createMacroConnections(DynaWaltzContext context) {
-        createTerminalMacroConnections((Bus) getEquipment(), this::getVarConnectionsWith, context);
+        createMacroConnections(getEquipment(), MeasurementPoint.class, this::getVarConnectionsWith, context);
     }
 
-    private List<VarConnection> getVarConnectionsWith(ConnectionPoint connected) {
+    private List<VarConnection> getVarConnectionsWith(MeasurementPoint connected) {
         return List.of(new VarConnection("fault_terminal", connected.getTerminalVarName()));
     }
 

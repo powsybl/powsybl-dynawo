@@ -16,6 +16,8 @@ import java.util.Optional;
  */
 public interface MeasurementPoint extends Model {
 
+    String getTerminalVarName();
+
     Optional<String> getUImpinVarName();
 
     Optional<String> getUpuImpinVarName();

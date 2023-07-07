@@ -27,6 +27,11 @@ public class DefaultMeasurementPoint extends AbstractDefaultModel implements Mea
     }
 
     @Override
+    public String getTerminalVarName() {
+        return "@NAME@_ACPIN";
+    }
+
+    @Override
     public Optional<String> getUImpinVarName() {
         return Optional.of("@NAME@_U");
     }
