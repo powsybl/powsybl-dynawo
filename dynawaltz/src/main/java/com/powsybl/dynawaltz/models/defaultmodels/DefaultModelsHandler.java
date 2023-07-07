@@ -26,6 +26,8 @@ import com.powsybl.dynawaltz.models.transformers.DefaultTransformerModel;
 import com.powsybl.dynawaltz.models.transformers.TransformerModel;
 import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.IdentifiableType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -35,6 +37,8 @@ import java.util.Map;
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 public class DefaultModelsHandler {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultModelsHandler.class);
 
     private final Map<IdentifiableType, Class<? extends Model>> powSyBlTypeToModel = new EnumMap<>(IdentifiableType.class);
     private final Map<Class<? extends Model>, DefaultModelFactory<? extends Model>> factoryMap;
@@ -68,6 +72,10 @@ public class DefaultModelsHandler {
     }
 
     public <T extends Model> T getDefaultModel(Identifiable<?> equipment, Class<T> connectableClass) {
+        return getDefaultModel(equipment, connectableClass, true);
+    }
+
+    public <T extends Model> T getDefaultModel(Identifiable<?> equipment, Class<T> connectableClass, boolean throwException) {
 
         Class<? extends Model> equipmentClass = powSyBlTypeToModel.get(equipment.getType());
         if (equipmentClass == null) {
@@ -79,8 +87,18 @@ public class DefaultModelsHandler {
             if (connectableClass.isInstance(defaultModel)) {
                 return connectableClass.cast(defaultModel);
             }
-            throw new PowsyblException("Default model " + defaultModel.getClass().getSimpleName() + " does not implement " + connectableClass.getSimpleName() + " interface");
+            if (throwException) {
+                throw new PowsyblException("Default model " + defaultModel.getClass().getSimpleName() + " does not implement " + connectableClass.getSimpleName() + " interface");
+            } else {
+                LOGGER.warn("Default model {} does not implement {} interface", defaultModel.getClass().getSimpleName(), connectableClass.getSimpleName());
+                return null;
+            }
         }
-        throw new PowsyblException("Default model not implemented for " + equipmentClass.getSimpleName());
+        if (throwException) {
+            throw new PowsyblException("Default model not implemented for " + equipmentClass.getSimpleName());
+        } else {
+            LOGGER.warn("Default model not implemented for {}", equipmentClass.getSimpleName());
+            return null;
+        }
     }
 }
