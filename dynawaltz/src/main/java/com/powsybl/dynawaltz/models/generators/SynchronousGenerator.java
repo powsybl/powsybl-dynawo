@@ -12,29 +12,28 @@ import com.powsybl.iidm.network.Generator;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  */
 public class SynchronousGenerator extends SynchronizedGenerator {
 
-    private static final String DEFAULT_TERMINAL_VAR_NAME = "generator_terminal";
+    private final EnumGeneratorComponent generatorComponent;
 
-    private final String terminalVarName;
-
-    public SynchronousGenerator(String dynamicModelId, Generator generator, String parameterSetId, String generatorLib, String terminalVarNamePrefix) {
+    public SynchronousGenerator(String dynamicModelId, Generator generator, String parameterSetId, String generatorLib, EnumGeneratorComponent generatorComponent) {
         super(dynamicModelId, generator, parameterSetId, generatorLib);
-        terminalVarName = terminalVarNamePrefix != null ? terminalVarNamePrefix + "_terminal1" : DEFAULT_TERMINAL_VAR_NAME;
+        this.generatorComponent = Objects.requireNonNull(generatorComponent);
     }
 
     public SynchronousGenerator(String dynamicModelId, Generator generator, String parameterSetId, String generatorLib) {
         super(dynamicModelId, generator, parameterSetId, generatorLib);
-        terminalVarName = DEFAULT_TERMINAL_VAR_NAME;
+        generatorComponent = EnumGeneratorComponent.NONE;
     }
 
     @Override
     public String getTerminalVarName() {
-        return terminalVarName;
+        return generatorComponent.getTerminalVarName();
     }
 
     public String getOmegaPuVarName() {
