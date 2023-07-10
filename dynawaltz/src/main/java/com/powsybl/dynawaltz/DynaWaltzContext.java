@@ -57,12 +57,17 @@ public class DynaWaltzContext {
                             List<Curve> curves, DynamicSimulationParameters parameters, DynaWaltzParameters dynaWaltzParameters) {
         this.network = Objects.requireNonNull(network);
         this.workingVariantId = Objects.requireNonNull(workingVariantId);
-        this.dynamicModels = Objects.requireNonNull(dynamicModels);
+        this.dynamicModels = checkDuplicateStaticId(Objects.requireNonNull(dynamicModels));
         this.eventModels = checkEventModelIdUniqueness(Objects.requireNonNull(eventModels));
         this.staticIdBlackBoxModelMap = getInputBlackBoxDynamicModelStream()
                 .filter(EquipmentBlackBoxModel.class::isInstance)
                 .map(EquipmentBlackBoxModel.class::cast)
-                .collect(Collectors.toMap(EquipmentBlackBoxModel::getStaticId, Function.identity(), this::mergeDuplicateStaticId, LinkedHashMap::new));
+                .collect(Collectors.toMap(EquipmentBlackBoxModel::getStaticId,
+                        Function.identity(),
+                        (bbm1, bbm2) -> {
+                            throw new PowsyblException("Duplicate staticId: " + bbm1.getStaticId());
+                        },
+                        LinkedHashMap::new));
         this.curves = Objects.requireNonNull(curves);
         this.parameters = Objects.requireNonNull(parameters);
         this.dynaWaltzParameters = Objects.requireNonNull(dynaWaltzParameters);
@@ -163,8 +168,20 @@ public class DynaWaltzContext {
         }
     }
 
-    private EquipmentBlackBoxModel mergeDuplicateStaticId(EquipmentBlackBoxModel bbm1, EquipmentBlackBoxModel bbm2) {
-        throw new PowsyblException("Duplicate staticId: " + bbm1.getStaticId());
+    private static List<BlackBoxModel> checkDuplicateStaticId(List<BlackBoxModel> dynamicModels) {
+        Set<String> staticIds = new HashSet<>();
+        Set<BlackBoxModel> duplicates = new HashSet<>();
+        for (BlackBoxModel bbm : dynamicModels) {
+            if (bbm instanceof EquipmentBlackBoxModel) {
+                EquipmentBlackBoxModel eBbm = (EquipmentBlackBoxModel) bbm;
+                if (!staticIds.add(eBbm.getStaticId())) {
+                    duplicates.add(eBbm);
+                    LOGGER.warn("Duplicate static id found: {} -> dynamic model {} {} will be skipped", eBbm.getStaticId(), eBbm.getLib(), eBbm.getDynamicModelId());
+                }
+            }
+        }
+        dynamicModels.removeAll(duplicates);
+        return dynamicModels;
     }
 
     private static List<BlackBoxModel> checkEventModelIdUniqueness(List<BlackBoxModel> eventModels) {
@@ -230,7 +247,7 @@ public class DynaWaltzContext {
     }
 
     private Stream<BlackBoxModel> getInputBlackBoxDynamicModelStream() {
-        //Doesn't include the OmegaRef, it only concerns the DynamicModels provided by the user
+        // Doesn't include the OmegaRef, it only concerns the DynamicModels provided by the user
         return dynamicModels.stream();
     }
 
