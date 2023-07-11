@@ -11,9 +11,8 @@ import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
 import com.powsybl.dynawaltz.dsl.EquipmentConfig
-import com.powsybl.dynawaltz.models.loads.LoadAlphaBeta
-import com.powsybl.dynawaltz.models.loads.LoadAlphaBetaControllable
-import com.powsybl.iidm.network.Load
+import com.powsybl.dynawaltz.models.loads.BaseLoad
+import com.powsybl.dynawaltz.models.loads.BaseLoadControllable
 import com.powsybl.iidm.network.Network
 
 /**
@@ -22,11 +21,11 @@ import com.powsybl.iidm.network.Network
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class LoadAlphaBetaGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+class BaseLoadGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
-    private static final String LOADS = "loadsAlphaBeta"
+    private static final String LOADS = "baseLoads"
 
-    LoadAlphaBetaGroovyExtension() {
+    BaseLoadGroovyExtension() {
         super(LOADS)
     }
 
@@ -45,12 +44,12 @@ class LoadAlphaBetaGroovyExtension extends AbstractEquipmentGroovyExtension<Dyna
         }
 
         @Override
-        LoadAlphaBeta build() {
+        BaseLoad build() {
             checkData()
             if (equipmentConfig.isControllable()) {
-                new LoadAlphaBetaControllable(dynamicModelId, load, parameterSetId, equipmentConfig.lib)
+                new BaseLoadControllable(dynamicModelId, load, parameterSetId, equipmentConfig.lib)
             } else {
-                new LoadAlphaBeta(dynamicModelId, load, parameterSetId, equipmentConfig.lib)
+                new BaseLoad(dynamicModelId, load, parameterSetId, equipmentConfig.lib)
             }
         }
     }
