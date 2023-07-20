@@ -62,7 +62,7 @@ public final class XmlTimeLineParser implements TimeLineParser {
             xmlReader = factory.createXMLStreamReader(reader);
             timeLineSeries = read(xmlReader);
         } finally {
-            if (xmlReader !=  null) {
+            if (xmlReader != null) {
                 xmlReader.close();
             }
         }
