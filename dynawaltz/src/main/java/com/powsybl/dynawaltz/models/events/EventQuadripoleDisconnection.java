@@ -27,14 +27,22 @@ public class EventQuadripoleDisconnection extends AbstractEventModel {
     private final boolean disconnectOrigin;
     private final boolean disconnectExtremity;
 
-    public EventQuadripoleDisconnection(Branch<?> equipment, double startTime, boolean disconnectOrigin, boolean disconnectExtremity) {
-        super(equipment, startTime);
+    public EventQuadripoleDisconnection(Branch<?> equipment, double startTime, boolean disconnectOrigin, boolean disconnectExtremity, String parFileName) {
+        super(equipment, startTime, parFileName);
         this.disconnectOrigin = disconnectOrigin;
         this.disconnectExtremity = disconnectExtremity;
     }
 
+    public EventQuadripoleDisconnection(Branch<?> equipment, double startTime, boolean disconnectOrigin, boolean disconnectExtremity) {
+        this(equipment, startTime, disconnectOrigin, disconnectExtremity, null);
+    }
+
+    public EventQuadripoleDisconnection(Branch<?> equipment, double startTime, String parFileName) {
+        this(equipment, startTime, true, true, parFileName);
+    }
+
     public EventQuadripoleDisconnection(Branch<?> equipment, double startTime) {
-        this(equipment, startTime, true, true);
+        this(equipment, startTime, true, true, null);
     }
 
     @Override

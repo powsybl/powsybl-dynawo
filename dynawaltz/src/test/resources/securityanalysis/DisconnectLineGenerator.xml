@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
-    <dyn:blackBoxModel id="Disconnect_NHV1_NHV2_1" lib="EventQuadripoleDisconnection" parFile="sim1.par" parId="Disconnect_NHV1_NHV2_1"/>
-    <dyn:blackBoxModel id="Disconnect_GEN2" lib="EventSetPointBoolean" parFile="sim1.par" parId="Disconnect_GEN2"/>
+    <dyn:blackBoxModel id="Disconnect_NHV1_NHV2_1" lib="EventQuadripoleDisconnection" parFile="DisconnectLineGenerator.par" parId="Disconnect_NHV1_NHV2_1"/>
+    <dyn:blackBoxModel id="Disconnect_GEN2" lib="EventSetPointBoolean" parFile="DisconnectLineGenerator.par" parId="Disconnect_GEN2"/>
     <dyn:macroConnector id="MC_EventInjectionDisconnection-GeneratorSynchronousFourWindingsProportionalRegulations">
         <dyn:connect var1="event_state1" var2="generator_switchOffSignal2"/>
     </dyn:macroConnector>

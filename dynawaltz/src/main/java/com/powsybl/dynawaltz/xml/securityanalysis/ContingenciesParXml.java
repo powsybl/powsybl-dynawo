@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawaltz.xml.securityanalysis;
 
+import com.powsybl.contingency.Contingency;
 import com.powsybl.dynawaltz.ContingencyEventModels;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.SecurityAnalysisContext;
@@ -32,7 +33,7 @@ public final class ContingenciesParXml {
     public static void write(Path workingDir, SecurityAnalysisContext context) throws IOException, XMLStreamException {
         Objects.requireNonNull(workingDir);
         for (ContingencyEventModels model : context.getContingencyEventModels()) {
-            Path file = workingDir.resolve(model.getId() + ".par");
+            Path file = workingDir.resolve(createParFileName(model.getContingency()));
             XmlUtil.write(file, context, PARAMETERS_SET_ELEMENT_NAME, ContingenciesParXml::writeEvent, model);
         }
     }
@@ -41,5 +42,9 @@ public final class ContingenciesParXml {
         for (BlackBoxModel ev : model.getEventModels()) {
             ev.writeParameters(writer, context);
         }
+    }
+
+    public static String createParFileName(Contingency contingency) {
+        return contingency.getId() + ".par";
     }
 }

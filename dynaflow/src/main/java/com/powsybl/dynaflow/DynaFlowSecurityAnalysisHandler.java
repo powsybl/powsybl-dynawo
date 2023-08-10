@@ -18,14 +18,14 @@ import com.powsybl.contingency.Contingency;
 import com.powsybl.contingency.contingency.list.ContingencyList;
 import com.powsybl.contingency.json.ContingencyJsonModule;
 import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
-import com.powsybl.dynaflow.xml.ConstraintsReader;
 import com.powsybl.dynawo.commons.DynawoUtil;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.loadflow.LoadFlowParameters;
-import com.powsybl.loadflow.LoadFlowResult;
-import com.powsybl.security.*;
+import com.powsybl.security.LimitViolationFilter;
+import com.powsybl.security.SecurityAnalysisParameters;
+import com.powsybl.security.SecurityAnalysisReport;
+import com.powsybl.security.SecurityAnalysisResult;
 import com.powsybl.security.interceptors.SecurityAnalysisInterceptor;
-import com.powsybl.security.results.NetworkResult;
 import com.powsybl.security.results.PostContingencyResult;
 import com.powsybl.security.results.PreContingencyResult;
 
@@ -35,7 +35,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.powsybl.dynaflow.DynaFlowConstants.*;
 
@@ -43,8 +42,6 @@ import static com.powsybl.dynaflow.DynaFlowConstants.*;
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 public final class DynaFlowSecurityAnalysisHandler extends AbstractExecutionHandler<SecurityAnalysisReport> {
-
-    private static final String DYNAWO_CONSTRAINTS_FOLDER = "constraints";
 
     private final DynaFlowConfig config;
     private final Network network;
@@ -82,13 +79,11 @@ public final class DynaFlowSecurityAnalysisHandler extends AbstractExecutionHand
         network.getVariantManager().setWorkingVariant(workingVariantId);
 
         // Build the pre-contingency results from the input network
-        PreContingencyResult preContingencyResult = getPreContingencyResult(network, violationFilter);
+        PreContingencyResult preContingencyResult = ContingencyResultsUtils.getPreContingencyResult(network, violationFilter);
         Path constraintsDir = workingDir.resolve(DYNAWO_CONSTRAINTS_FOLDER);
 
         // Build the post-contingency results from the constraints files written by dynawo
-        List<PostContingencyResult> contingenciesResults = contingencies.stream()
-                .map(c -> getPostContingencyResult(network, violationFilter, constraintsDir, c))
-                .collect(Collectors.toList());
+        List<PostContingencyResult> contingenciesResults = ContingencyResultsUtils.getPostContingencyResults(network, violationFilter, constraintsDir, contingencies);
 
         return new SecurityAnalysisReport(
                 new SecurityAnalysisResult(preContingencyResult, contingenciesResults, Collections.emptyList())
@@ -123,24 +118,5 @@ public final class DynaFlowSecurityAnalysisHandler extends AbstractExecutionHand
             parametersExt = new DynaFlowParameters();
         }
         return parametersExt;
-    }
-
-    private static PreContingencyResult getPreContingencyResult(Network network, LimitViolationFilter violationFilter) {
-        List<LimitViolation> limitViolations = Security.checkLimits(network);
-        List<LimitViolation> filteredViolations = violationFilter.apply(limitViolations, network);
-        NetworkResult networkResult = new NetworkResult(Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
-        return new PreContingencyResult(LoadFlowResult.ComponentResult.Status.CONVERGED, new LimitViolationsResult(filteredViolations), networkResult);
-    }
-
-    private static PostContingencyResult getPostContingencyResult(Network network, LimitViolationFilter violationFilter,
-                                                                  Path constraintsDir, Contingency c) {
-        Path constraintsFile = constraintsDir.resolve("constraints_" + c.getId() + ".xml");
-        if (Files.exists(constraintsFile)) {
-            List<LimitViolation> limitViolationsRead = ConstraintsReader.read(network, constraintsFile);
-            List<LimitViolation> limitViolationsFiltered = violationFilter.apply(limitViolationsRead, network);
-            return new PostContingencyResult(c, PostContingencyComputationStatus.CONVERGED, new LimitViolationsResult(limitViolationsFiltered));
-        } else {
-            return new PostContingencyResult(c, PostContingencyComputationStatus.FAILED, Collections.emptyList());
-        }
     }
 }

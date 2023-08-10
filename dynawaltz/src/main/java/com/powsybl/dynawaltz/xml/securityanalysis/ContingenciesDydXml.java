@@ -32,7 +32,7 @@ public final class ContingenciesDydXml {
     public static void write(Path workingDir, SecurityAnalysisContext context) throws IOException, XMLStreamException {
         Objects.requireNonNull(workingDir);
         for (ContingencyEventModels model : context.getContingencyEventModels()) {
-            Path file = workingDir.resolve(model.getId() + ".dyd");
+            Path file = workingDir.resolve(createDydFileName(model));
             XmlUtil.write(file, context, "dynamicModelsArchitecture", ContingenciesDydXml::writeEvent, model);
         }
     }
@@ -47,5 +47,9 @@ public final class ContingenciesDydXml {
         for (MacroConnect mc : model.getMacroConnectList()) {
             mc.write(writer);
         }
+    }
+
+    public static String createDydFileName(ContingencyEventModels contingency) {
+        return contingency.getId() + ".dyd";
     }
 }

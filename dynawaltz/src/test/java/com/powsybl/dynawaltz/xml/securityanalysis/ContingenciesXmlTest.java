@@ -8,10 +8,10 @@
 package com.powsybl.dynawaltz.xml.securityanalysis;
 
 import com.powsybl.contingency.Contingency;
-import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
 import com.powsybl.dynawaltz.SecurityAnalysisContext;
 import com.powsybl.dynawaltz.xml.DynaWaltzTestUtil;
+import com.powsybl.security.dynamic.DynamicSecurityAnalysisParameters;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
@@ -26,15 +26,15 @@ class ContingenciesXmlTest extends DynaWaltzTestUtil {
 
     @Test
     void writeDyds() throws SAXException, IOException, XMLStreamException {
-        DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
-        DynaWaltzParameters dynawoParameters = DynaWaltzParameters.load();
+        DynamicSecurityAnalysisParameters parameters = DynamicSecurityAnalysisParameters.load();
+        DynaWaltzParameters dynawaltzParameters = DynaWaltzParameters.load();
         List<Contingency> contingencies = List.of(
                 Contingency.load("LOAD"),
                 Contingency.builder("DisconnectLineGenerator")
                         .addLine("NHV1_NHV2_1")
                         .addGenerator("GEN2")
                         .build());
-        SecurityAnalysisContext context = new SecurityAnalysisContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, eventModels, curves, parameters, dynawoParameters, contingencies);
+        SecurityAnalysisContext context = new SecurityAnalysisContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, eventModels, parameters, dynawaltzParameters, contingencies);
 
         ContingenciesDydXml.write(tmpDir, context);
         ContingenciesParXml.write(tmpDir, context);

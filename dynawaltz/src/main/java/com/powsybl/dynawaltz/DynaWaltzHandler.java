@@ -37,14 +37,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.powsybl.dynaflow.DynaFlowConstants.OUTPUT_IIDM_FILENAME;
 import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.*;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 public final class DynaWaltzHandler extends AbstractExecutionHandler<DynamicSimulationResult> {
-
-    private static final String OUTPUT_IIDM_FILENAME = "outputIIDM.xml";
 
     private final DynaWaltzContext context;
     private final Network dynawoInput;

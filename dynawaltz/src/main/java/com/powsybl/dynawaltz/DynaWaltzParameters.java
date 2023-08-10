@@ -107,6 +107,14 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
                 .setMergeLoads(mergeLoads);
     }
 
+    public static DynaWaltzParameters load(DynamicSimulationParameters parameters) {
+        DynaWaltzParameters dynaWaltzParameters = parameters.getExtension(DynaWaltzParameters.class);
+        if (dynaWaltzParameters == null) {
+            dynaWaltzParameters = DynaWaltzParameters.load();
+        }
+        return dynaWaltzParameters;
+    }
+
     @Override
     public String getName() {
         return "DynaWaltzParameters";

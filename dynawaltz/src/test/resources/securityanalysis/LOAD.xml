@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
-    <dyn:blackBoxModel id="Disconnect_LOAD" lib="EventSetPointBoolean" parFile="sim1.par" parId="Disconnect_LOAD"/>
+    <dyn:blackBoxModel id="Disconnect_LOAD" lib="EventSetPointBoolean" parFile="LOAD.par" parId="Disconnect_LOAD"/>
     <dyn:macroConnector id="MC_EventInjectionDisconnection-LoadAlphaBeta">
         <dyn:connect var1="event_state1" var2="load_switchOffSignal2"/>
     </dyn:macroConnector>

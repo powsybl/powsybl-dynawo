@@ -29,22 +29,38 @@ public class EventInjectionDisconnection extends AbstractEventModel {
 
     private final boolean disconnect;
 
-    public EventInjectionDisconnection(Generator equipment, double startTime, boolean disconnect) {
-        super(equipment, startTime);
+    public EventInjectionDisconnection(Generator equipment, double startTime, boolean disconnect, String parFileName) {
+        super(equipment, startTime, parFileName);
         this.disconnect = disconnect;
+    }
+
+    public EventInjectionDisconnection(Generator equipment, double startTime, boolean disconnect) {
+        this(equipment, startTime, disconnect, null);
+    }
+
+    public EventInjectionDisconnection(Generator equipment, double startTime, String parFileName) {
+        this(equipment, startTime, true, parFileName);
     }
 
     public EventInjectionDisconnection(Generator equipment, double startTime) {
-        this(equipment, startTime, true);
+        this(equipment, startTime, true, null);
     }
 
-    public EventInjectionDisconnection(Load equipment, double startTime, boolean disconnect) {
-        super(equipment, startTime);
+    public EventInjectionDisconnection(Load equipment, double startTime, boolean disconnect, String parFileName) {
+        super(equipment, startTime, parFileName);
         this.disconnect = disconnect;
     }
 
+    public EventInjectionDisconnection(Load equipment, double startTime, boolean disconnect) {
+        this(equipment, startTime, disconnect, null);
+    }
+
+    public EventInjectionDisconnection(Load equipment, double startTime, String parFileNam) {
+        this(equipment, startTime, true, parFileNam);
+    }
+
     public EventInjectionDisconnection(Load equipment, double startTime) {
-        this(equipment, startTime, true);
+        this(equipment, startTime, true, null);
     }
 
     @Override

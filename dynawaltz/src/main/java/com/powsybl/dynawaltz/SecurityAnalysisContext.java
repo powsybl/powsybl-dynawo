@@ -10,19 +10,16 @@ package com.powsybl.dynawaltz;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.contingency.Contingency;
 import com.powsybl.contingency.ContingencyElement;
-import com.powsybl.dynamicsimulation.Curve;
-import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.MacroConnect;
 import com.powsybl.dynawaltz.models.MacroConnector;
 import com.powsybl.dynawaltz.models.events.EventInjectionDisconnection;
 import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection;
+import com.powsybl.dynawaltz.xml.securityanalysis.ContingenciesParXml;
 import com.powsybl.iidm.network.Network;
+import com.powsybl.security.dynamic.DynamicSecurityAnalysisParameters;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -30,16 +27,18 @@ import java.util.stream.Collectors;
  */
 public class SecurityAnalysisContext extends DynaWaltzContext {
 
-    //TODO discuss start time
-    private static final double START_TIME = 10.0;
     private final List<ContingencyEventModels> contingencyEventModels;
+    private final DynamicSecurityAnalysisParameters.DynamicContingenciesParameters dynamicContingenciesParameters;
 
-    public SecurityAnalysisContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels, List<Curve> curves, DynamicSimulationParameters parameters, DynaWaltzParameters dynaWaltzParameters, List<Contingency> contingencies) {
-        super(network, workingVariantId, dynamicModels, eventModels, curves, parameters, dynaWaltzParameters);
+    public SecurityAnalysisContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
+                                   DynamicSecurityAnalysisParameters parameters, DynaWaltzParameters dynaWaltzParameters, List<Contingency> contingencies) {
+
+        super(network, workingVariantId, dynamicModels, eventModels, Collections.emptyList(), parameters.getDynamicSimulationParameters(), dynaWaltzParameters);
+        this.dynamicContingenciesParameters = parameters.getDynamicContingenciesParameters();
         this.contingencyEventModels = contingencies.stream()
                 .map(c -> {
                     List<BlackBoxModel> contEventModels = c.getElements().stream()
-                            .map(this::createContingencyEventModel)
+                            .map(ce -> this.createContingencyEventModel(ce, ContingenciesParXml.createParFileName(c)))
                             .collect(Collectors.toList());
                     Map<String, MacroConnector> macroConnectorsMap = new HashMap<>();
                     List<MacroConnect> macroConnects = new ArrayList<>();
@@ -53,15 +52,15 @@ public class SecurityAnalysisContext extends DynaWaltzContext {
                 .collect(Collectors.toList());
     }
 
-    private BlackBoxModel createContingencyEventModel(ContingencyElement element) {
+    private BlackBoxModel createContingencyEventModel(ContingencyElement element, String parFileName) {
         switch (element.getType()) {
             case GENERATOR:
-                return new EventInjectionDisconnection(network.getGenerator(element.getId()), START_TIME);
+                return new EventInjectionDisconnection(network.getGenerator(element.getId()), dynamicContingenciesParameters.getContingenciesStartTime(), parFileName);
             case LOAD:
-                return new EventInjectionDisconnection(network.getLoad(element.getId()), START_TIME);
+                return new EventInjectionDisconnection(network.getLoad(element.getId()), dynamicContingenciesParameters.getContingenciesStartTime(), parFileName);
             case LINE:
             case TWO_WINDINGS_TRANSFORMER:
-                return new EventQuadripoleDisconnection(network.getBranch(element.getId()), START_TIME);
+                return new EventQuadripoleDisconnection(network.getBranch(element.getId()), dynamicContingenciesParameters.getContingenciesStartTime(), parFileName);
             default:
                 throw new PowsyblException("Contingency element " + element.getType() + " not supported");
         }

@@ -28,11 +28,17 @@ public abstract class AbstractEventModel extends AbstractPureDynamicBlackBoxMode
     private static final String DISCONNECT_PREFIX = "Disconnect_";
     private final Identifiable<?> equipment;
     private final double startTime;
+    private final String parFileName;
 
-    protected AbstractEventModel(Identifiable<?> equipment, double startTime) {
+    protected AbstractEventModel(Identifiable<?> equipment, double startTime, String parFileName) {
         super(generateEventId(equipment.getId()));
         this.equipment = equipment;
         this.startTime = startTime;
+        this.parFileName = parFileName;
+    }
+
+    protected AbstractEventModel(Identifiable<?> equipment, double startTime) {
+        this(equipment, startTime, null);
     }
 
     protected static String generateEventId(String equipmentStaticId) {
@@ -50,7 +56,7 @@ public abstract class AbstractEventModel extends AbstractPureDynamicBlackBoxMode
 
     @Override
     public String getParFile(DynaWaltzContext context) {
-        return context.getSimulationParFile();
+        return parFileName != null ? parFileName : context.getSimulationParFile();
     }
 
     @Override
