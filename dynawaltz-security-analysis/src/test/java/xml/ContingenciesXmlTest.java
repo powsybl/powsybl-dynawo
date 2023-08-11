@@ -5,11 +5,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.xml.securityanalysis;
+package xml;
 
 import com.powsybl.contingency.Contingency;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
-import com.powsybl.dynawaltz.SecurityAnalysisContext;
+import com.powsybl.dynawaltz.security.SecurityAnalysisContext;
+import com.powsybl.dynawaltz.security.xml.ContingenciesDydXml;
+import com.powsybl.dynawaltz.security.xml.ContingenciesParXml;
 import com.powsybl.dynawaltz.xml.DynaWaltzTestUtil;
 import com.powsybl.security.dynamic.DynamicSecurityAnalysisParameters;
 import org.junit.jupiter.api.Test;
@@ -38,10 +40,10 @@ class ContingenciesXmlTest extends DynaWaltzTestUtil {
 
         ContingenciesDydXml.write(tmpDir, context);
         ContingenciesParXml.write(tmpDir, context);
-        validate("dyd.xsd", "securityanalysis/LOAD.xml", tmpDir.resolve("LOAD.dyd"));
-        validate("dyd.xsd", "securityanalysis/DisconnectLineGenerator.xml", tmpDir.resolve("DisconnectLineGenerator.dyd"));
-        validate("parameters.xsd", "securityanalysis/LOAD_par.xml", tmpDir.resolve("LOAD.par"));
-        validate("parameters.xsd", "securityanalysis/DisconnectLineGenerator_par.xml", tmpDir.resolve("DisconnectLineGenerator.par"));
+        validate("dyd.xsd", "LOAD.xml", tmpDir.resolve("LOAD.dyd"));
+        validate("dyd.xsd", "DisconnectLineGenerator.xml", tmpDir.resolve("DisconnectLineGenerator.dyd"));
+        validate("parameters.xsd", "LOAD_par.xml", tmpDir.resolve("LOAD.par"));
+        validate("parameters.xsd", "DisconnectLineGenerator_par.xml", tmpDir.resolve("DisconnectLineGenerator.par"));
     }
 
 }

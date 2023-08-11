@@ -33,4 +33,6 @@ public final class DynawoConstants {
             "hvdcAngleDroopActivePowerControl",
             "hvdcOperatorActivePowerRange",
             "standbyAutomaton");
+
+    public static final String OUTPUT_IIDM_FILENAME = "outputIIDM.xml";
 }

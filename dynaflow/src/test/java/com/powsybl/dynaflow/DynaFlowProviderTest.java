@@ -33,6 +33,7 @@ import java.util.concurrent.ForkJoinPool;
 
 import static com.powsybl.commons.test.ComparisonUtils.compareXml;
 import static com.powsybl.dynaflow.DynaFlowConstants.*;
+import static com.powsybl.dynawo.commons.DynawoConstants.OUTPUT_IIDM_FILENAME;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**

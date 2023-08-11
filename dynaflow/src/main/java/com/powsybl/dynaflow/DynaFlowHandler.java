@@ -29,6 +29,7 @@ import java.util.*;
 
 import static com.powsybl.dynaflow.DynaFlowConstants.*;
 import static com.powsybl.dynaflow.DynaFlowConstants.OUTPUT_RESULTS_FILENAME;
+import static com.powsybl.dynawo.commons.DynawoConstants.OUTPUT_IIDM_FILENAME;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>

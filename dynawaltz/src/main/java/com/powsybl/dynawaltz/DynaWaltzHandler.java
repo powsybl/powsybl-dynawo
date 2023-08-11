@@ -37,8 +37,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.powsybl.dynaflow.DynaFlowConstants.OUTPUT_IIDM_FILENAME;
 import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.*;
+import static com.powsybl.dynawo.commons.DynawoConstants.OUTPUT_IIDM_FILENAME;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>

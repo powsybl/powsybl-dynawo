@@ -5,11 +5,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.xml.securityanalysis;
+package com.powsybl.dynawaltz.security.xml;
 
-import com.powsybl.dynawaltz.ContingencyEventModels;
-import com.powsybl.dynawaltz.SecurityAnalysisContext;
-import com.powsybl.dynawaltz.xml.XmlUtil;
+import com.powsybl.dynawaltz.security.ContingencyEventModels;
+import com.powsybl.dynawaltz.security.SecurityAnalysisContext;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -31,10 +30,10 @@ public final class MultipleJobsXml {
         Objects.requireNonNull(workingDir);
         Path file = workingDir.resolve(MULTIPLE_JOBS_FILENAME);
 
-        XmlUtil.write(file, context, "multipleJobs", MultipleJobsXml::writeContingency, false);
+        XmlUtil.write(file, context, "multipleJobs", MultipleJobsXml::writeContingencies);
     }
 
-    private static void writeContingency(XMLStreamWriter writer, SecurityAnalysisContext context) throws XMLStreamException {
+    private static void writeContingencies(XMLStreamWriter writer, SecurityAnalysisContext context) throws XMLStreamException {
         writer.writeStartElement("scenarios");
         writer.writeAttribute("jobsFile", JOBS_FILENAME);
         for (ContingencyEventModels model : context.getContingencyEventModels()) {

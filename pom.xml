@@ -52,6 +52,7 @@
         <module>dynawaltz</module>
         <module>dynawaltz-dsl</module>
         <module>distribution</module>
+        <module>dynawaltz-security-analysis</module>
     </modules>
 
     <properties>

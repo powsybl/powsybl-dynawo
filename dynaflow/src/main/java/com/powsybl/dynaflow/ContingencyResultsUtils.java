@@ -30,6 +30,9 @@ public final class ContingencyResultsUtils {
     private ContingencyResultsUtils() {
     }
 
+    /**
+     * Build the pre-contingency results from the input network
+     */
     public static PreContingencyResult getPreContingencyResult(Network network, LimitViolationFilter violationFilter) {
         List<LimitViolation> limitViolations = Security.checkLimits(network);
         List<LimitViolation> filteredViolations = violationFilter.apply(limitViolations, network);
@@ -37,6 +40,9 @@ public final class ContingencyResultsUtils {
         return new PreContingencyResult(LoadFlowResult.ComponentResult.Status.CONVERGED, new LimitViolationsResult(filteredViolations), networkResult);
     }
 
+    /**
+     * Build the post-contingency results from the constraints files written by dynawo
+     */
     public static List<PostContingencyResult> getPostContingencyResults(Network network, LimitViolationFilter violationFilter,
                                                                   Path constraintsDir, List<Contingency> contingencies) {
         return contingencies.stream()

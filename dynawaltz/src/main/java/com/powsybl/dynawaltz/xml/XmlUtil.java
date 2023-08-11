@@ -7,9 +7,7 @@
 
 package com.powsybl.dynawaltz.xml;
 
-import com.powsybl.dynawaltz.ContingencyEventModels;
 import com.powsybl.dynawaltz.DynaWaltzContext;
-import com.powsybl.dynawaltz.SecurityAnalysisContext;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -33,28 +31,14 @@ public final class XmlUtil {
         void write(XMLStreamWriter writer, DynaWaltzContext dynaWaltzContext) throws XMLStreamException;
     }
 
-    @FunctionalInterface
-    public interface XmlDynawaltzContingencyWriter {
-        void writeContingency(XMLStreamWriter writer, SecurityAnalysisContext dynaWaltzContext) throws XMLStreamException;
-    }
-
-    @FunctionalInterface
-    public interface XmlDynawaltzEventWriter {
-        void writeEvent(XMLStreamWriter writer, SecurityAnalysisContext dynaWaltzContext, ContingencyEventModels model) throws XMLStreamException;
-    }
-
     private XmlUtil() {
     }
 
     public static void write(Path file, DynaWaltzContext context, String elementName, XmlDynawaltzWriter xmlDynawaltzWriter) throws IOException, XMLStreamException {
-        write(file, context, elementName, xmlDynawaltzWriter, true);
-    }
-
-    public static void write(Path file, SecurityAnalysisContext context, String elementName, XmlDynawaltzEventWriter xmlDynawaltzEventWriter, ContingencyEventModels model) throws IOException, XMLStreamException {
         Objects.requireNonNull(file);
         Objects.requireNonNull(context);
         Objects.requireNonNull(elementName);
-        Objects.requireNonNull(xmlDynawaltzEventWriter);
+        Objects.requireNonNull(xmlDynawaltzWriter);
 
         try (Writer writer = Files.newBufferedWriter(file, StandardCharsets.UTF_8)) {
             XMLStreamWriter xmlWriter = XmlStreamWriterFactory.newInstance(writer);
@@ -64,67 +48,7 @@ public final class XmlUtil {
                 xmlWriter.writeStartElement(DYN_URI, elementName);
                 xmlWriter.writeNamespace(DYN_PREFIX, DYN_URI);
 
-                xmlDynawaltzEventWriter.writeEvent(xmlWriter, context, model);
-
-                xmlWriter.writeEndElement();
-                xmlWriter.writeEndDocument();
-            } finally {
-                xmlWriter.close();
-            }
-        }
-    }
-
-    // TODO factorize
-    public static void write(Path file, DynaWaltzContext context, String elementName, XmlDynawaltzWriter xmlDynawaltzWriter, boolean withPrefix) throws IOException, XMLStreamException {
-        Objects.requireNonNull(file);
-        Objects.requireNonNull(context);
-        Objects.requireNonNull(elementName);
-        Objects.requireNonNull(xmlDynawaltzWriter);
-
-        try (Writer writer = Files.newBufferedWriter(file, StandardCharsets.UTF_8)) {
-            XMLStreamWriter xmlWriter = XmlStreamWriterFactory.newInstance(writer);
-            try {
-                xmlWriter.writeStartDocument(StandardCharsets.UTF_8.toString(), "1.0");
-                if (withPrefix) {
-                    xmlWriter.setPrefix(DYN_PREFIX, DYN_URI);
-                    xmlWriter.writeStartElement(DYN_URI, elementName);
-                    xmlWriter.writeNamespace(DYN_PREFIX, DYN_URI);
-                } else {
-                    xmlWriter.writeStartElement(elementName);
-                    xmlWriter.writeNamespace("", DYN_URI);
-                }
-
                 xmlDynawaltzWriter.write(xmlWriter, context);
-
-                xmlWriter.writeEndElement();
-                xmlWriter.writeEndDocument();
-            } finally {
-                xmlWriter.close();
-            }
-        }
-    }
-
-    // TODO factorize
-    public static void write(Path file, SecurityAnalysisContext context, String elementName, XmlDynawaltzContingencyWriter xmlDynawaltzWriter, boolean withPrefix) throws IOException, XMLStreamException {
-        Objects.requireNonNull(file);
-        Objects.requireNonNull(context);
-        Objects.requireNonNull(elementName);
-        Objects.requireNonNull(xmlDynawaltzWriter);
-
-        try (Writer writer = Files.newBufferedWriter(file, StandardCharsets.UTF_8)) {
-            XMLStreamWriter xmlWriter = XmlStreamWriterFactory.newInstance(writer);
-            try {
-                xmlWriter.writeStartDocument(StandardCharsets.UTF_8.toString(), "1.0");
-                if (withPrefix) {
-                    xmlWriter.setPrefix(DYN_PREFIX, DYN_URI);
-                    xmlWriter.writeStartElement(DYN_URI, elementName);
-                    xmlWriter.writeNamespace(DYN_PREFIX, DYN_URI);
-                } else {
-                    xmlWriter.writeStartElement(elementName);
-                    xmlWriter.writeNamespace("", DYN_URI);
-                }
-
-                xmlDynawaltzWriter.writeContingency(xmlWriter, context);
 
                 xmlWriter.writeEndElement();
                 xmlWriter.writeEndDocument();

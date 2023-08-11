@@ -26,6 +26,7 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 import static com.powsybl.dynaflow.DynaFlowConstants.*;
+import static com.powsybl.dynawo.commons.DynawoConstants.OUTPUT_IIDM_FILENAME;
 
 /**
  *

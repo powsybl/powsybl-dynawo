@@ -20,13 +20,7 @@ public final class DynaFlowConstants {
 
     public static final String IIDM_FILENAME = "network.xiidm";
 
-    public static final String OUTPUT_IIDM_FILENAME = "outputIIDM.xml";
-
     public static final String OUTPUT_RESULTS_FILENAME = "results.json";
-
-    public static final String CONTINGENCIES_FILENAME = "contingencies.json";
-
-    public static final String DYNAWO_CONSTRAINTS_FOLDER = "constraints";
 
     public enum OutputTypes {
         STEADYSTATE,

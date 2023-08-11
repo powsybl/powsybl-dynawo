@@ -68,5 +68,11 @@
             <artifactId>powsybl-iidm-impl</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.powsybl</groupId>
+            <artifactId>powsybl-iidm-test</artifactId>
+            <version>5.4.0-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>

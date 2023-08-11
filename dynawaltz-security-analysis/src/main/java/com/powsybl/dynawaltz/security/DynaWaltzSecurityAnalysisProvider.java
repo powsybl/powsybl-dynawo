@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz;
+package com.powsybl.dynawaltz.security;
 
 import com.google.auto.service.AutoService;
 import com.powsybl.commons.config.PlatformConfig;
@@ -18,7 +18,10 @@ import com.powsybl.contingency.ContingenciesProvider;
 import com.powsybl.contingency.Contingency;
 import com.powsybl.dynamicsimulation.DynamicModelsSupplier;
 import com.powsybl.dynamicsimulation.EventModelsSupplier;
+import com.powsybl.dynawaltz.DynaWaltzParameters;
+import com.powsybl.dynawaltz.DynaWaltzProvider;
 import com.powsybl.dynawaltz.models.utils.BlackBoxSupplierUtils;
+import com.powsybl.dynawaltz.xml.DynaWaltzConstants;
 import com.powsybl.dynawo.commons.DynawoConfigFactory;
 import com.powsybl.dynawo.commons.DynawoUtil;
 import com.powsybl.dynawo.commons.PowsyblDynawoVersion;
@@ -40,10 +43,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
-
-import static com.powsybl.dynawaltz.DynaWaltzProvider.NAME;
-import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.AGGREGATED_RESULTS;
-import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.MULTIPLE_JOBS_FILENAME;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
@@ -128,7 +127,7 @@ public class DynaWaltzSecurityAnalysisProvider implements DynamicSecurityAnalysi
     // TODO choose another name ? (needed for models supplier)
     @Override
     public String getName() {
-        return NAME;
+        return DynaWaltzProvider.NAME;
     }
 
     @Override
@@ -139,9 +138,8 @@ public class DynaWaltzSecurityAnalysisProvider implements DynamicSecurityAnalysi
     public static Command getCommand(SimpleDynawoConfig config) {
         List<String> args = Arrays.asList(
                 "SA",
-               // "--directory", INPUT_DIRECTORY,
-                "--input", MULTIPLE_JOBS_FILENAME,
-                "--output", AGGREGATED_RESULTS);
+                "--input", DynaWaltzConstants.MULTIPLE_JOBS_FILENAME,
+                "--output", DynaWaltzConstants.AGGREGATED_RESULTS);
         return new SimpleCommandBuilder()
                 .id("dynawaltz_sa")
                 .program(getProgram(config))

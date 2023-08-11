@@ -33,6 +33,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
 import static com.powsybl.dynaflow.DynaFlowConstants.*;
+import static com.powsybl.dynaflow.SecurityAnalysisConstants.CONTINGENCIES_FILENAME;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>

@@ -5,17 +5,19 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz;
+package com.powsybl.dynawaltz.security;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.contingency.Contingency;
 import com.powsybl.contingency.ContingencyElement;
+import com.powsybl.dynawaltz.DynaWaltzContext;
+import com.powsybl.dynawaltz.DynaWaltzParameters;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.MacroConnect;
 import com.powsybl.dynawaltz.models.MacroConnector;
 import com.powsybl.dynawaltz.models.events.EventInjectionDisconnection;
 import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection;
-import com.powsybl.dynawaltz.xml.securityanalysis.ContingenciesParXml;
+import com.powsybl.dynawaltz.security.xml.ContingenciesParXml;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.security.dynamic.DynamicSecurityAnalysisParameters;
 

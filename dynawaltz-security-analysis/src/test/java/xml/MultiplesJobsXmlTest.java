@@ -5,11 +5,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.xml.securityanalysis;
+package xml;
 
 import com.powsybl.contingency.Contingency;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
-import com.powsybl.dynawaltz.SecurityAnalysisContext;
+import com.powsybl.dynawaltz.security.SecurityAnalysisContext;
+import com.powsybl.dynawaltz.security.xml.MultipleJobsXml;
 import com.powsybl.dynawaltz.xml.DynaWaltzConstants;
 import com.powsybl.dynawaltz.xml.DynaWaltzTestUtil;
 import com.powsybl.security.dynamic.DynamicSecurityAnalysisParameters;
@@ -38,7 +39,7 @@ class MultiplesJobsXmlTest extends DynaWaltzTestUtil {
         SecurityAnalysisContext context = new SecurityAnalysisContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, eventModels, parameters, dynawaltzParameters, contingencies);
 
         MultipleJobsXml.write(tmpDir, context);
-        validate("securityanalysis/multipleJobs.xsd", "securityanalysis/multipleJobs.xml", tmpDir.resolve(DynaWaltzConstants.MULTIPLE_JOBS_FILENAME));
+        validate("multipleJobs.xsd", "multipleJobs.xml", tmpDir.resolve(DynaWaltzConstants.MULTIPLE_JOBS_FILENAME));
     }
 
 }
