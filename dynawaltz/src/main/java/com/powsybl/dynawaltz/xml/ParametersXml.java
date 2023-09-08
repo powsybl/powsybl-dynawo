@@ -206,10 +206,10 @@ public final class ParametersXml {
         xmlWriter.writeStartElement(DYN_URI, "set");
         xmlWriter.writeAttribute("id", parametersSet.getId());
         for (Parameter par : parametersSet.getParameters().values()) {
-            ParametersXml.writeParameter(xmlWriter, par.getType(), par.getName(), par.getValue());
+            ParametersXml.writeParameter(xmlWriter, par.type(), par.name(), par.value());
         }
         for (Reference par : parametersSet.getReferences()) {
-            ParametersXml.writeReference(xmlWriter, par.getType(), par.getName(), par.getOrigData(), par.getOrigName());
+            ParametersXml.writeReference(xmlWriter, par.type(), par.name(), par.origData(), par.origName());
         }
         xmlWriter.writeEndElement();
     }

@@ -20,24 +20,18 @@ public final class SideConverter {
     }
 
     public static Side convert(Branch.Side side) {
-        switch (side) {
-            case ONE:
-                return Side.ONE;
-            case TWO:
-                return Side.TWO;
-            default:
-                throw new AssertionError("Unexpected Side value: " + side);
-        }
+        return switch (side) {
+            case ONE -> Side.ONE;
+            case TWO -> Side.TWO;
+            default -> throw new AssertionError("Unexpected Side value: " + side);
+        };
     }
 
     public static HvdcLine.Side convert(Side side) {
-        switch (side) {
-            case ONE :
-                return HvdcLine.Side.ONE;
-            case TWO :
-                return HvdcLine.Side.TWO;
-            default :
-                throw new IllegalArgumentException("Unexpected Side value: " + side);
-        }
+        return switch (side) {
+            case ONE -> HvdcLine.Side.ONE;
+            case TWO -> HvdcLine.Side.TWO;
+            default -> throw new IllegalArgumentException("Unexpected Side value: " + side);
+        };
     }
 }

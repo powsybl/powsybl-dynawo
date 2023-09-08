@@ -135,8 +135,8 @@ public final class ConstraintsReader {
             if (identifiable == null) {
                 LOGGER.warn("Unknown equipment/bus {} for limit violation in result constraints file", name);
             }
-            if (identifiable instanceof Bus) {
-                identifiable = ((Bus) identifiable).getVoltageLevel(); // Limit violation on buses are identified by their voltage level id
+            if (identifiable instanceof Bus bus) {
+                identifiable = bus.getVoltageLevel(); // Limit violation on buses are identified by their voltage level id
             }
             return Optional.ofNullable(identifiable);
         }
@@ -155,18 +155,12 @@ public final class ConstraintsReader {
     }
 
     private static LimitViolationType toLimitViolationType(String kind) {
-        switch (kind) {
-            case "UInfUmin":
-                return LimitViolationType.LOW_VOLTAGE;
-            case "USupUmax":
-                return LimitViolationType.HIGH_VOLTAGE;
-            case "OverloadOpen":
-            case "OverloadUp":
-            case "PATL":
-                return LimitViolationType.CURRENT;
-            default:
-                throw new PowsyblException("Unexpect violation type " + kind);
-        }
+        return switch (kind) {
+            case "UInfUmin" -> LimitViolationType.LOW_VOLTAGE;
+            case "USupUmax" -> LimitViolationType.HIGH_VOLTAGE;
+            case "OverloadOpen", "OverloadUp", "PATL" -> LimitViolationType.CURRENT;
+            default -> throw new PowsyblException("Unexpect violation type " + kind);
+        };
     }
 
     private ConstraintsReader() {

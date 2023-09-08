@@ -13,13 +13,9 @@ import java.util.Objects;
 
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
+ * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class Reference {
-
-    private final String name;
-    private final ParameterType type;
-    private final String origData;
-    private final String origName;
+public record Reference(String name, ParameterType type, String origData, String origName) {
 
     public Reference(@JsonProperty("name") String name,
                      @JsonProperty("type") ParameterType type,
@@ -29,21 +25,5 @@ public class Reference {
         this.type = Objects.requireNonNull(type);
         this.origData = Objects.requireNonNull(origData);
         this.origName = Objects.requireNonNull(origName);
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public ParameterType getType() {
-        return type;
-    }
-
-    public String getOrigData() {
-        return origData;
-    }
-
-    public String getOrigName() {
-        return origName;
     }
 }

@@ -36,7 +36,7 @@ public final class MacroStaticReference {
         writer.writeStartElement(DYN_URI, "macroStaticReference");
         writer.writeAttribute("id", MACRO_STATIC_REFERENCE_PREFIX + lib);
         for (VarMapping varMapping : varMappings) {
-            writeStaticRef(writer, varMapping.getDynamicVar(), varMapping.getStaticVar());
+            writeStaticRef(writer, varMapping.dynamicVar(), varMapping.staticVar());
         }
         writer.writeEndElement();
     }
