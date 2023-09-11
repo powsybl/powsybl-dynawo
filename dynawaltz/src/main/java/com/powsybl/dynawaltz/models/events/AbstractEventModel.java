@@ -10,12 +10,10 @@ package com.powsybl.dynawaltz.models.events;
 import com.powsybl.dynamicsimulation.EventModel;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
+import com.powsybl.dynawaltz.parameters.ParametersSet;
 import com.powsybl.iidm.network.Identifiable;
 
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
-
-import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
+import java.util.function.Consumer;
 
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
@@ -51,12 +49,11 @@ public abstract class AbstractEventModel extends AbstractPureDynamicBlackBoxMode
     }
 
     @Override
-    public void writeParameters(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
-        writer.writeStartElement(DYN_URI, "set");
-        writer.writeAttribute("id", getParameterSetId());
-        writeEventSpecificParameters(writer, context);
-        writer.writeEndElement();
+    public void createDynamicModelParameters(DynaWaltzContext context, Consumer<ParametersSet> parametersAdder) {
+        ParametersSet paramSet = new ParametersSet(getParameterSetId());
+        createEventSpecificParameters(paramSet, context);
+        parametersAdder.accept(paramSet);
     }
 
-    protected abstract void writeEventSpecificParameters(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException;
+    protected abstract void createEventSpecificParameters(ParametersSet paramSet, DynaWaltzContext context);
 }

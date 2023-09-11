@@ -10,15 +10,13 @@ package com.powsybl.dynawaltz.models.events;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.buses.BusModel;
-import com.powsybl.dynawaltz.parameters.ParameterType;
-import com.powsybl.dynawaltz.xml.ParametersXml;
+import com.powsybl.dynawaltz.parameters.ParametersSet;
 import com.powsybl.iidm.network.Bus;
 
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
 import java.util.List;
 
 import static com.powsybl.dynawaltz.parameters.ParameterType.BOOL;
+import static com.powsybl.dynawaltz.parameters.ParameterType.DOUBLE;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
@@ -53,16 +51,15 @@ public class NodeFaultEvent extends AbstractEventModel {
     }
 
     @Override
-    public void writeParameters(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
-        super.writeParameters(writer, context);
-        context.getDynaWaltzParameters().getNetworkParameters().addParameter(getEquipment().getId() + "_hasShortCircuitCapabilities", BOOL, Boolean.toString(true));
+    protected void createEventSpecificParameters(ParametersSet paramSet, DynaWaltzContext context) {
+        paramSet.addParameter("fault_RPu", DOUBLE, Double.toString(rPu));
+        paramSet.addParameter("fault_XPu", DOUBLE, Double.toString(xPu));
+        paramSet.addParameter("fault_tBegin", DOUBLE, Double.toString(getStartTime()));
+        paramSet.addParameter("fault_tEnd", DOUBLE, Double.toString(getStartTime() + faultTime));
     }
 
     @Override
-    protected void writeEventSpecificParameters(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
-        ParametersXml.writeParameter(writer, ParameterType.DOUBLE, "fault_RPu", Double.toString(rPu));
-        ParametersXml.writeParameter(writer, ParameterType.DOUBLE, "fault_XPu", Double.toString(xPu));
-        ParametersXml.writeParameter(writer, ParameterType.DOUBLE, "fault_tBegin", Double.toString(getStartTime()));
-        ParametersXml.writeParameter(writer, ParameterType.DOUBLE, "fault_tEnd", Double.toString(getStartTime() + faultTime));
+    public void createNetworkParameter(ParametersSet networkParameters) {
+        networkParameters.addParameter(getEquipment().getId() + "_hasShortCircuitCapabilities", BOOL, Boolean.toString(true));
     }
 }
