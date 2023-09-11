@@ -44,7 +44,7 @@ public final class LoadsMerger {
         List<LoadsToMerge> loadsToMergeList = vl.getBusBreakerView().getBusStream()
                 .filter(bus -> bus.getLoadStream().count() > 1)
                 .flatMap(LoadsMerger::getLoadsToMergeStream)
-                .collect(Collectors.toList());
+                .toList();
 
         loadsToMergeList.forEach(LoadsToMerge::merge);
     }
