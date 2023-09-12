@@ -9,10 +9,8 @@ package com.powsybl.dynawaltz.dsl
 
 import com.powsybl.dynawaltz.DynaWaltzProvider
 import com.powsybl.iidm.network.Network
-import groovy.json.JsonSlurper
 
 import java.util.function.Consumer
-
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */

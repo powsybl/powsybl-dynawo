@@ -16,12 +16,12 @@ import org.apache.groovy.json.internal.LazyMap
 @Singleton
 class ModelsSlurper {
 
-    protected static final String MODEL_LIB = "lib"
-    protected static final String MODEL_PREFIX = "prefix"
-    protected static final String MODEL_PROPERTIES = "properties"
+    private static final String MODEL_LIB = "lib"
+    private static final String MODEL_PREFIX = "prefix"
+    private static final String MODEL_PROPERTIES = "properties"
 
-    final slurper = new JsonSlurper()
-    final Map<URL, LazyMap> libsList = new HashMap<>()
+    private final slurper = new JsonSlurper()
+    private final Map<URL, LazyMap> libsList = new HashMap<>()
 
     def getEquipmentConfigs(URL url, String modelTag) {
         libsList.computeIfAbsent(url, u -> slurper.parse(u))[modelTag].collect() {
