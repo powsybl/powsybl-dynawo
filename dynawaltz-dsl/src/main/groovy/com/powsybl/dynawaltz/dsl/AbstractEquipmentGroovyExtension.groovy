@@ -9,6 +9,7 @@ package com.powsybl.dynawaltz.dsl
 
 import com.powsybl.dynawaltz.DynaWaltzProvider
 import com.powsybl.iidm.network.Network
+import groovy.json.JsonSlurper
 
 import java.util.function.Consumer
 
@@ -17,9 +18,7 @@ import java.util.function.Consumer
  */
 abstract class AbstractEquipmentGroovyExtension<T> {
 
-    protected static final String MODELS_CONFIG = "models.cfg"
-    protected static final String MODEL_PREFIX = "prefix"
-    protected static final String MODEL_PROPERTIES = "properties"
+    protected static final String MODELS_CONFIG = "models.json"
 
     protected final List<EquipmentConfig> equipmentConfigs
 
@@ -28,14 +27,7 @@ abstract class AbstractEquipmentGroovyExtension<T> {
     }
 
     protected AbstractEquipmentGroovyExtension(String modelTag, URL modelConfigUrl) {
-        ConfigSlurper config = new ConfigSlurper()
-        equipmentConfigs = config.parse(modelConfigUrl).get(modelTag).collect {
-            new EquipmentConfig(
-                    it.key as String,
-                    it.value.get(MODEL_PREFIX) as String,
-                    it.value.get(MODEL_PROPERTIES).collect{it.toUpperCase()} as String[]
-            )
-        }
+        equipmentConfigs = ModelsSlurper.instance.getEquipmentConfigs(modelConfigUrl, modelTag)
     }
 
     abstract protected ModelBuilder<T> createBuilder(Network network, EquipmentConfig equipmentConfig);
