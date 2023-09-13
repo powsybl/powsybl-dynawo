@@ -23,7 +23,6 @@ public final class SideConverter {
         return switch (side) {
             case ONE -> Side.ONE;
             case TWO -> Side.TWO;
-            default -> throw new AssertionError("Unexpected Side value: " + side);
         };
     }
 
@@ -31,7 +30,6 @@ public final class SideConverter {
         return switch (side) {
             case ONE -> HvdcLine.Side.ONE;
             case TWO -> HvdcLine.Side.TWO;
-            default -> throw new IllegalArgumentException("Unexpected Side value: " + side);
         };
     }
 }
