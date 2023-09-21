@@ -136,7 +136,8 @@ public final class ParametersXml {
             } else if (xmlReader.getLocalName().equals("reference")) {
                 String origData = xmlReader.getAttributeValue(null, "origData");
                 String origName = xmlReader.getAttributeValue(null, "origName");
-                parametersSet.addReference(name, type, origData, origName);
+                String componentId = xmlReader.getAttributeValue(null, "componentId");
+                parametersSet.addReference(name, type, origData, origName, componentId);
             } else {
                 closeAndThrowException(xmlReader, xmlReader.getLocalName());
             }
@@ -200,7 +201,7 @@ public final class ParametersXml {
             ParametersXml.writeParameter(xmlWriter, par.getType(), par.getName(), par.getValue());
         }
         for (Reference par : parametersSet.getReferences()) {
-            ParametersXml.writeReference(xmlWriter, par.getType(), par.getName(), par.getOrigData(), par.getOrigName());
+            ParametersXml.writeReference(xmlWriter, par.getType(), par.getName(), par.getOrigData(), par.getOrigName(), par.getComponentId());
         }
         xmlWriter.writeEndElement();
     }
@@ -212,11 +213,14 @@ public final class ParametersXml {
         writer.writeAttribute("value", value);
     }
 
-    public static void writeReference(XMLStreamWriter writer, ParameterType type, String name, String origData, String origName) throws XMLStreamException {
+    public static void writeReference(XMLStreamWriter writer, ParameterType type, String name, String origData, String origName, String componentId) throws XMLStreamException {
         writer.writeEmptyElement(DYN_URI, "reference");
         writer.writeAttribute("type", type.toString());
         writer.writeAttribute("name", name);
         writer.writeAttribute("origData", origData);
         writer.writeAttribute("origName", origName);
+        if (componentId != null) {
+            writer.writeAttribute("componentId", componentId);
+        }
     }
 }
