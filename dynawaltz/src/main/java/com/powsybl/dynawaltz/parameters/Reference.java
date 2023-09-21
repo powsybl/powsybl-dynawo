@@ -20,15 +20,18 @@ public class Reference {
     private final ParameterType type;
     private final String origData;
     private final String origName;
+    private final String componentId;
 
     public Reference(@JsonProperty("name") String name,
                      @JsonProperty("type") ParameterType type,
                      @JsonProperty("origData") String origData,
-                     @JsonProperty("origName") String origName) {
+                     @JsonProperty("origName") String origName,
+                     @JsonProperty("componentId") String componentId) {
         this.name = Objects.requireNonNull(name);
         this.type = Objects.requireNonNull(type);
         this.origData = Objects.requireNonNull(origData);
         this.origName = Objects.requireNonNull(origName);
+        this.componentId = componentId;
     }
 
     public String getName() {
@@ -45,5 +48,9 @@ public class Reference {
 
     public String getOrigName() {
         return origName;
+    }
+
+    public String getComponentId() {
+        return componentId;
     }
 }
