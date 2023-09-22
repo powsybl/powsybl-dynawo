@@ -13,9 +13,9 @@ import com.powsybl.iidm.network.HvdcLine;
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class HvdcPv extends AbstractHvdc {
+public class HvdcP extends AbstractHvdc {
 
-    public HvdcPv(String dynamicModelId, HvdcLine hvdc, String parameterSetId, String hvdcLib) {
+    public HvdcP(String dynamicModelId, HvdcLine hvdc, String parameterSetId, String hvdcLib) {
         super(dynamicModelId, hvdc, parameterSetId, hvdcLib);
     }
 

@@ -12,8 +12,8 @@ import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
 import com.powsybl.dynawaltz.dsl.EquipmentConfig
-import com.powsybl.dynawaltz.models.hvdc.HvdcPv
-import com.powsybl.dynawaltz.models.hvdc.HvdcPvDangling
+import com.powsybl.dynawaltz.models.hvdc.HvdcP
+import com.powsybl.dynawaltz.models.hvdc.HvdcPDangling
 import com.powsybl.iidm.network.Network
 
 /**
@@ -44,12 +44,12 @@ class HvdcPGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel
         }
 
         @Override
-        HvdcPv build() {
+        HvdcP build() {
             checkData()
             if (equipmentConfig.isDangling()) {
-                new HvdcPvDangling(dynamicModelId, hvdc, parameterSetId, equipmentConfig.lib, danglingSide)
+                new HvdcPDangling(dynamicModelId, hvdc, parameterSetId, equipmentConfig.lib, danglingSide)
             } else {
-                new HvdcPv(dynamicModelId, hvdc, parameterSetId, equipmentConfig.lib)
+                new HvdcP(dynamicModelId, hvdc, parameterSetId, equipmentConfig.lib)
             }
         }
     }
