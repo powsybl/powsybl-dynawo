@@ -63,11 +63,11 @@ public class DynaWaltzContext {
                 .filter(EquipmentBlackBoxModel.class::isInstance)
                 .map(EquipmentBlackBoxModel.class::cast)
                 .collect(Collectors.toMap(EquipmentBlackBoxModel::getStaticId,
-                        Function.identity(),
-                        (bbm1, bbm2) -> {
-                            throw new PowsyblException("Duplicate staticId: " + bbm1.getStaticId());
-                        },
-                        LinkedHashMap::new));
+                    Function.identity(),
+                    (bbm1, bbm2) -> {
+                        throw new PowsyblException("Duplicate staticId: " + bbm1.getStaticId());
+                    },
+                    LinkedHashMap::new));
         this.curves = Objects.requireNonNull(curves);
         this.parameters = Objects.requireNonNull(parameters);
         this.dynaWaltzParameters = Objects.requireNonNull(dynaWaltzParameters);
@@ -170,18 +170,18 @@ public class DynaWaltzContext {
 
     private static List<BlackBoxModel> checkDuplicateStaticId(List<BlackBoxModel> dynamicModels) {
         Set<String> staticIds = new HashSet<>();
-        Set<BlackBoxModel> duplicates = new HashSet<>();
-        for (BlackBoxModel bbm : dynamicModels) {
-            if (bbm instanceof EquipmentBlackBoxModel) {
-                EquipmentBlackBoxModel eBbm = (EquipmentBlackBoxModel) bbm;
-                if (!staticIds.add(eBbm.getStaticId())) {
-                    duplicates.add(eBbm);
-                    LOGGER.warn("Duplicate static id found: {} -> dynamic model {} {} will be skipped", eBbm.getStaticId(), eBbm.getLib(), eBbm.getDynamicModelId());
-                }
-            }
-        }
-        dynamicModels.removeAll(duplicates);
-        return dynamicModels;
+        return dynamicModels.stream()
+                .filter(bbm -> {
+                    if (bbm instanceof EquipmentBlackBoxModel) {
+                        EquipmentBlackBoxModel eBbm = (EquipmentBlackBoxModel) bbm;
+                        if (!staticIds.add(eBbm.getStaticId())) {
+                            LOGGER.warn("Duplicate static id found: {} -> dynamic model {} {} will be skipped", eBbm.getStaticId(), eBbm.getLib(), eBbm.getDynamicModelId());
+                            return false;
+                        }
+                    }
+                    return true;
+                })
+                .collect(Collectors.toList());
     }
 
     private static List<BlackBoxModel> checkEventModelIdUniqueness(List<BlackBoxModel> eventModels) {
