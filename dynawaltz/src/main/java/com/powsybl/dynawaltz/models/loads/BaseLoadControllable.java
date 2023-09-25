@@ -13,9 +13,9 @@ import com.powsybl.iidm.network.Load;
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class LoadAlphaBetaControllable extends LoadAlphaBeta implements ControllableEquipment {
+public class BaseLoadControllable extends BaseLoad implements ControllableEquipment {
 
-    public LoadAlphaBetaControllable(String dynamicModelId, Load load, String parameterSetId, String lib) {
+    public BaseLoadControllable(String dynamicModelId, Load load, String parameterSetId, String lib) {
         super(dynamicModelId, load, parameterSetId, lib);
     }
 
