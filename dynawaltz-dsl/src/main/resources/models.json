@@ -96,7 +96,7 @@
       "lib": "GeneratorPVDiagramPQ"
     }
   ],
-  "hvdcPv": [
+  "hvdcP": [
     {
       "lib": "HvdcPV"
     },
