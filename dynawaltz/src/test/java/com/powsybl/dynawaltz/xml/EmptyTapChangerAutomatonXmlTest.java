@@ -8,7 +8,7 @@
 package com.powsybl.dynawaltz.xml;
 
 import com.powsybl.dynawaltz.models.automatons.TapChangerAutomaton;
-import com.powsybl.dynawaltz.models.loads.LoadAlphaBeta;
+import com.powsybl.dynawaltz.models.loads.BaseLoad;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
@@ -28,7 +28,7 @@ class EmptyTapChangerAutomatonXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void addDynamicModels() {
-        dynamicModels.add(new LoadAlphaBeta("BBM_LOAD", network.getLoad("LOAD"), "LAB", "LoadAlphaBeta"));
+        dynamicModels.add(new BaseLoad("BBM_LOAD", network.getLoad("LOAD"), "LAB", "LoadAlphaBeta"));
         dynamicModels.add(new TapChangerAutomaton("BBM_TC", "tc", network.getLoad("LOAD")));
     }
 
