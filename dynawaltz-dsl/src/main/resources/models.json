@@ -19,7 +19,10 @@
       "lib": "GeneratorSynchronousFourWindingsPmConstVRNordic"
     },
     {
-      "lib": "GeneratorSynchronousFourWindingsPmConstVRNordicTfo"
+      "lib": "GeneratorSynchronousFourWindingsPmConstVRNordicTfo",
+      "properties": [
+        "Transformer"
+      ]
     },
     {
       "lib": "GeneratorSynchronousFourWindingsProportionalRegulations",
@@ -49,7 +52,10 @@
       "lib": "GeneratorSynchronousThreeWindingsGoverNordicVRNordic"
     },
     {
-      "lib": "GeneratorSynchronousThreeWindingsGoverNordicVRNordicTfo"
+      "lib": "GeneratorSynchronousThreeWindingsGoverNordicVRNordicTfo",
+      "properties": [
+        "Transformer"
+      ]
     },
     {
       "lib": "GeneratorSynchronousThreeWindingsGoverPropVRPropInt",
@@ -61,7 +67,10 @@
       "lib": "GeneratorSynchronousThreeWindingsPmConstVRNordic"
     },
     {
-      "lib": "GeneratorSynchronousThreeWindingsPmConstVRNordicTfo"
+      "lib": "GeneratorSynchronousThreeWindingsPmConstVRNordicTfo",
+      "properties": [
+        "Transformer"
+      ]
     },
     {
       "lib": "GeneratorSynchronousThreeWindingsProportionalRegulations",

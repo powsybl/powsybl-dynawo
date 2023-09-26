@@ -81,6 +81,16 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
         assertEquals(exceptionMessage, e.getMessage());
     }
 
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("provideGenerator")
+    void testGeneratorPrefixes(String groovyScriptName, Class<? extends GeneratorModel> modelClass, Network network, String terminalVarName) {
+        DynamicModelsSupplier supplier = new GroovyDynamicModelsSupplier(getResourceAsStream(groovyScriptName), EXTENSIONS);
+        List<DynamicModel> dynamicModels = supplier.get(network);
+        assertEquals(1, dynamicModels.size());
+        assertTrue(modelClass.isInstance(dynamicModels.get(0)));
+        assertEquals(terminalVarName, modelClass.cast(dynamicModels.get(0)).getTerminalVarName());
+    }
+
     void assertEquipmentBlackBoxModel(EquipmentBlackBoxModel bbm, String dynamicId, String staticId, String parameterId, String lib) {
         assertEquals(dynamicId, bbm.getDynamicModelId());
         assertEquals(staticId, bbm.getStaticId());
@@ -143,6 +153,13 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                 Arguments.of("/dynamicModels/tapChangerCompatibleException.groovy", EurostagTutorialExample1Factory.create(), "GENERATOR GEN is not compatible"),
                 Arguments.of("/dynamicModels/underVoltageGeneratorException.groovy", EurostagTutorialExample1Factory.create(), "Generator static id unknown: NGEN"),
                 Arguments.of("/dynamicModels/danglingHvdcException.groovy", HvdcTestNetwork.createVsc(), "'dangling' field is set on a non dangling hvdc : HvdcPV")
+        );
+    }
+
+    private static Stream<Arguments> provideGenerator() {
+        return Stream.of(
+                Arguments.of("/dynamicModels/gen.groovy", SynchronousGenerator.class, EurostagTutorialExample1Factory.create(), "generator_terminal"),
+                Arguments.of("/dynamicModels/genTfo.groovy", SynchronousGenerator.class, EurostagTutorialExample1Factory.create(), "transformer_terminal1")
         );
     }
 }
