@@ -65,15 +65,15 @@ class NodeFaultEventGroovyExtension extends AbstractPureDynamicGroovyExtension<E
         void checkData() {
             super.checkData()
             if (faultTime <= 0) {
-                LOGGER.warn("Fault time should be strictly positive (${faultTime})")
+                LOGGER.warn("${getLib()}: Fault time should be strictly positive (${faultTime})")
                 isInstantiable = false
             }
             if (rPu < 0) {
-                LOGGER.warn("rPu should be positive (${rPu})")
+                LOGGER.warn("${getLib()}: rPu should be positive (${rPu})")
                 isInstantiable = false
             }
             if (xPu < 0) {
-                LOGGER.warn("xPu should be positive (${xPu})")
+                LOGGER.warn("${getLib()}: xPu should be positive (${xPu})")
                 isInstantiable = false
             }
         }

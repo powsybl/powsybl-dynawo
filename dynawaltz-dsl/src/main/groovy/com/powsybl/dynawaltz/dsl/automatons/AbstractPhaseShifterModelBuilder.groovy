@@ -32,6 +32,6 @@ abstract class AbstractPhaseShifterModelBuilder extends AbstractPureDynamicModel
     @Override
     protected void checkData() {
         super.checkData()
-        isInstantiable &= dslTransformer.checkEquipmentData(LOGGER)
+        isInstantiable &= dslTransformer.checkEquipmentData(LOGGER, getLib())
     }
 }

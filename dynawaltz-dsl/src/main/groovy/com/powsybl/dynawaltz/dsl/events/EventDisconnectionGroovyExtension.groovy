@@ -12,7 +12,6 @@ import com.powsybl.dynamicsimulation.EventModel
 import com.powsybl.dynamicsimulation.groovy.EventModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractPureDynamicGroovyExtension
 import com.powsybl.dynawaltz.dsl.DslEquipment
-import com.powsybl.dynawaltz.dsl.DslVariousEquipment
 import com.powsybl.dynawaltz.dsl.builders.AbstractEventModelBuilder
 import com.powsybl.dynawaltz.models.events.AbstractEventModel
 import com.powsybl.dynawaltz.models.events.EventHvdcDisconnection
@@ -78,11 +77,11 @@ class EventDisconnectionGroovyExtension extends AbstractPureDynamicGroovyExtensi
             disconnectionType(dslEquipment?.equipment?.type)
             if(dslEquipment.equipment) {
                 if (disconnectionType == DisconnectionType.NONE) {
-                    LOGGER.warn("${dslEquipment.equipment?.type} ${dslEquipment.staticId} cannot be disconnected")
+                    LOGGER.warn("${getLib()}: ${dslEquipment.equipment?.type} ${dslEquipment.staticId} cannot be disconnected")
                     isInstantiable = false
                 }
                 if (DisconnectionType.INJECTION == disconnectionType && disconnectSide) {
-                    LOGGER.warn("'disconnectSide' has been set but ${dslEquipment.equipment?.type} ${dslEquipment.staticId} is not a quadripole with a disconnectable side")
+                    LOGGER.warn("'${getLib()}: disconnectSide' has been set but ${dslEquipment.equipment?.type} ${dslEquipment.staticId} is not a quadripole with a disconnectable side")
                     isInstantiable = false
                 }
             }

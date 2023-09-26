@@ -14,6 +14,8 @@ import org.slf4j.Logger
 import java.util.function.Function
 
 /**
+ * Represents an equipment field identified by a static ID in the groovy script
+ * Verifies if the corresponding equipment with the specified type exists, log the error otherwise
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 class DslEquipment<T extends Identifiable> {
@@ -46,12 +48,12 @@ class DslEquipment<T extends Identifiable> {
         equipment = equipmentSupplier(staticId)
     }
 
-    boolean checkEquipmentData(Logger logger) {
+    boolean checkEquipmentData(Logger logger, String lib) {
         if (!staticId) {
-            logger.warn("'${fieldName}' field is not set")
+            logger.warn("$lib: '$fieldName' field is not set")
             return false
         } else if (!equipment) {
-            logger.warn("${equipmentType} static id unknown : ${staticId}")
+            logger.warn("$lib: $equipmentType static id unknown : $staticId")
             return false
         }
         true

@@ -36,10 +36,10 @@ abstract class AbstractHvdcBuilder extends AbstractEquipmentModelBuilder<HvdcLin
         super.checkData()
         def isDangling = equipmentConfig.isDangling()
         if (isDangling && !danglingSide) {
-            LOGGER.warn("'dangling' field is not set")
+            LOGGER.warn("${getLib()}: 'dangling' field is not set")
             isInstantiable = false
         } else if (!isDangling && danglingSide) {
-            LOGGER.warn("'dangling' field is set on a non dangling hvdc : ${equipmentConfig.lib}")
+            LOGGER.warn("${getLib()}: 'dangling' field is set on a non dangling hvdc")
             isInstantiable = false
         }
     }

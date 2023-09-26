@@ -29,7 +29,6 @@ abstract class AbstractEquipmentModelBuilder<T extends Identifiable> extends Abs
         super(network)
         this.equipmentConfig = equipmentConfig
         this.dslEquipment = new DslEquipment<T>(equipmentType)
-        LOGGER.info("Equipment ${equipmentConfig.getLib()} building...")
     }
 
     void staticId(String staticId) {
@@ -46,9 +45,9 @@ abstract class AbstractEquipmentModelBuilder<T extends Identifiable> extends Abs
 
     @Override
     protected void checkData() {
-        isInstantiable = dslEquipment.checkEquipmentData(LOGGER)
+        isInstantiable = dslEquipment.checkEquipmentData(LOGGER, getLib())
         if (!parameterSetId) {
-            LOGGER.warn("'parameterSetId' field is not set")
+            LOGGER.warn("${getLib()}: 'parameterSetId' field is not set")
             isInstantiable = false
         }
         if (!dynamicModelId) {

@@ -67,9 +67,9 @@ class CurrentLimitTwoLevelsAutomatonGroovyExtension extends AbstractPureDynamicG
         @Override
         void checkData() {
             super.checkData()
-            isInstantiable &= iMeasurement2.checkEquipmentData(LOGGER)
+            isInstantiable &= iMeasurement2.checkEquipmentData(LOGGER, getLib())
             if (!iMeasurement2Side) {
-                LOGGER.warn("'iMeasurement2Side' field is not set")
+                LOGGER.warn("${getLib()}: 'iMeasurement2Side' field is not set")
                 isInstantiable = false
             }
         }

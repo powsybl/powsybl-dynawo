@@ -51,7 +51,7 @@ class UnderVoltageAutomatonGroovyExtension extends AbstractPureDynamicGroovyExte
         @Override
         protected void checkData() {
             super.checkData()
-            isInstantiable &= dslGenerator.checkEquipmentData(LOGGER)
+            isInstantiable &= dslGenerator.checkEquipmentData(LOGGER, getLib())
         }
 
         @Override

@@ -69,7 +69,7 @@ class TapChangerBlockingAutomatonGroovyExtension extends AbstractPureDynamicGroo
         Identifiable<? extends Identifiable> checkEquipment(String staticId) {
             network.getIdentifiable(staticId)?.tap {
                 if (!TapChangerBlockingAutomaton.isCompatibleEquipment(type)) {
-                    LOGGER.warn("$type $staticId is not compatible")
+                    LOGGER.warn("${getLib()}: $type $staticId is not compatible")
                 }
             }
         }
@@ -78,7 +78,7 @@ class TapChangerBlockingAutomatonGroovyExtension extends AbstractPureDynamicGroo
             uMeasurements = staticIds.collect {
                 def bus = network.busBreakerView.getBus(it)
                 if (!bus) {
-                    LOGGER.warn("$IdentifiableType.BUS static id unknown : $it")
+                    LOGGER.warn("${getLib()}: $IdentifiableType.BUS static id unknown : $it")
                 }
                 bus
             }
@@ -87,17 +87,17 @@ class TapChangerBlockingAutomatonGroovyExtension extends AbstractPureDynamicGroo
         @Override
         protected void checkData() {
             if (!uMeasurements) {
-                LOGGER.warn("'uMeasurements' field is not set")
+                LOGGER.warn("${getLib()}: 'uMeasurements' field is not set")
                 isInstantiable = false
             } else {
                 uMeasurements -= null
                 if (!uMeasurements) {
-                    LOGGER.warn("'uMeasurements' is empty")
+                    LOGGER.warn("${getLib()}: 'uMeasurements' is empty")
                     isInstantiable = false
                 }
             }
             if(!loads && !transformers && !tapChangerAutomatonIds) {
-                LOGGER.warn("'transformers' field is empty")
+                LOGGER.warn("${getLib()}: 'transformers' field is empty")
                 isInstantiable = false
             }
         }

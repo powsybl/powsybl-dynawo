@@ -29,7 +29,7 @@ abstract class AbstractDynamicModelBuilder {
 
     protected final boolean isInstantiable() {
         checkData()
-        isInstantiable ? LOGGER.info("${getLib()} instanciation successful")
+        isInstantiable ? LOGGER.debug("${getLib()} instanciation successful")
              : LOGGER.warn("${getLib()} cannot be instantiated")
         isInstantiable
     }

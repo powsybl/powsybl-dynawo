@@ -28,8 +28,6 @@ abstract class AbstractEventModelBuilder<T extends Identifiable> extends Abstrac
         super(network)
         this.dslEquipment = dslEquipment
         this.tag = tag
-        LOGGER.info("Event $tag building...")
-
     }
 
     void staticId(String staticId) {
@@ -42,9 +40,9 @@ abstract class AbstractEventModelBuilder<T extends Identifiable> extends Abstrac
 
     @Override
     protected void checkData() {
-        isInstantiable &= dslEquipment.checkEquipmentData(LOGGER)
+        isInstantiable &= dslEquipment.checkEquipmentData(LOGGER, getLib())
         if (!startTime) {
-            LOGGER.warn("'startTime' field is not set")
+            LOGGER.warn("${getLib()}: 'startTime' field is not set")
             isInstantiable = false
         }
     }

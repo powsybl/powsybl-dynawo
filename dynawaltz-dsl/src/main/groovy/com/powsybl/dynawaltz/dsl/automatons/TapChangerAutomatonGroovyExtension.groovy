@@ -55,7 +55,7 @@ class TapChangerAutomatonGroovyExtension extends AbstractPureDynamicGroovyExtens
         @Override
         protected void checkData() {
             super.checkData()
-            isInstantiable &= dslLoad.checkEquipmentData(LOGGER)
+            isInstantiable &= dslLoad.checkEquipmentData(LOGGER, getLib())
         }
 
         @Override

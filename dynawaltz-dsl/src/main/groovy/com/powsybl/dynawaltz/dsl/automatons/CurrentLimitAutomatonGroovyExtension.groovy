@@ -67,10 +67,10 @@ class CurrentLimitAutomatonGroovyExtension extends AbstractPureDynamicGroovyExte
         @Override
         void checkData() {
             super.checkData()
-            isInstantiable &= controlledEquipment.checkEquipmentData(LOGGER)
-            isInstantiable &= iMeasurement.checkEquipmentData(LOGGER)
+            isInstantiable &= controlledEquipment.checkEquipmentData(LOGGER, getLib())
+            isInstantiable &= iMeasurement.checkEquipmentData(LOGGER, getLib())
             if (!iMeasurementSide) {
-                LOGGER.warn("'iMeasurementSide' field is not set")
+                LOGGER.warn("${getLib()}: 'iMeasurementSide' field is not set")
                 isInstantiable = false
             }
         }

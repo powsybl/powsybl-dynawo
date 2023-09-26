@@ -11,7 +11,7 @@ import com.google.auto.service.AutoService
 import com.powsybl.dynamicsimulation.EventModel
 import com.powsybl.dynamicsimulation.groovy.EventModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractPureDynamicGroovyExtension
-import com.powsybl.dynawaltz.dsl.DslVariousEquipment
+import com.powsybl.dynawaltz.dsl.DslFilteredEquipment
 import com.powsybl.dynawaltz.dsl.builders.AbstractEventModelBuilder
 import com.powsybl.dynawaltz.models.events.EventActivePowerVariation
 import com.powsybl.iidm.network.Identifiable
@@ -40,7 +40,7 @@ class EventActivePowerVariationGroovyExtension extends AbstractPureDynamicGroovy
         protected double deltaP
 
         EventAPVBuilder(Network network, String tag) {
-            super(network, new DslVariousEquipment<Injection>("Generator/Load", EventActivePowerVariation::isConnectable), tag)
+            super(network, new DslFilteredEquipment<Injection>("Generator/Load", EventActivePowerVariation::isConnectable), tag)
         }
 
         void deltaP(double deltaP) {
@@ -50,11 +50,11 @@ class EventActivePowerVariationGroovyExtension extends AbstractPureDynamicGroovy
         void checkData() {
             super.checkData()
             if (dslEquipment.equipment && !EventActivePowerVariation.isConnectable(dslEquipment.equipment.type)) {
-                LOGGER.warn("${dslEquipment.equipment?.type} ${dslEquipment.staticId} cannot be disconnected")
+                LOGGER.warn("${getLib()}: ${dslEquipment.equipment?.type} ${dslEquipment.staticId} cannot be disconnected")
                 isInstantiable = false
             }
             if (!deltaP) {
-                LOGGER.warn("'deltaP' field is not set")
+                LOGGER.warn("${getLib()}: 'deltaP' field is not set")
                 isInstantiable = false
             }
         }

@@ -23,7 +23,6 @@ abstract class AbstractPureDynamicModelBuilder extends AbstractDynamicModelBuild
     AbstractPureDynamicModelBuilder(Network network, String lib) {
         super(network)
         this.lib = lib
-        LOGGER.info("Automaton $lib building...")
     }
 
     void dynamicModelId(String dynamicModelId) {
@@ -37,11 +36,11 @@ abstract class AbstractPureDynamicModelBuilder extends AbstractDynamicModelBuild
     @Override
     protected void checkData() {
         if (!dynamicModelId) {
-            LOGGER.warn("'dynamicModelId' field is not set")
+            LOGGER.warn("${getLib()}: 'dynamicModelId' field is not set")
             isInstantiable = false
         }
         if (!parameterSetId) {
-            LOGGER.warn("'parameterSetId' field is not set")
+            LOGGER.warn("${getLib()}: 'parameterSetId' field is not set")
             isInstantiable = false
         }
     }
