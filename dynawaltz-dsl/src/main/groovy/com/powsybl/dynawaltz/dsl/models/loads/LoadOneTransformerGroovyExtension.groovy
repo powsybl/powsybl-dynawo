@@ -10,6 +10,7 @@ import com.google.auto.service.AutoService
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractSimpleEquipmentGroovyExtension
+import com.powsybl.dynawaltz.dsl.EquipmentConfig
 import com.powsybl.dynawaltz.models.loads.LoadOneTransformer
 import com.powsybl.iidm.network.Network
 
@@ -22,24 +23,23 @@ import com.powsybl.iidm.network.Network
 class LoadOneTransformerGroovyExtension extends AbstractSimpleEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
     LoadOneTransformerGroovyExtension() {
-        modelTag = "LoadOneTransformer"
+        super("LoadOneTransformer")
     }
 
     @Override
-    protected LoadOneTransformerBuilder createBuilder(Network network) {
-        new LoadOneTransformerBuilder(network)
+    protected LoadOneTransformerBuilder createBuilder(Network network, EquipmentConfig equipmentConfig) {
+        new LoadOneTransformerBuilder(network, equipmentConfig)
     }
 
     static class LoadOneTransformerBuilder extends AbstractLoadModelBuilder {
 
-        LoadOneTransformerBuilder(Network network) {
-            super(network)
+        LoadOneTransformerBuilder(Network network, EquipmentConfig equipmentConfig) {
+            super(network, equipmentConfig)
         }
 
         @Override
         LoadOneTransformer build() {
-            checkData()
-            new LoadOneTransformer(dynamicModelId, load, parameterSetId)
+            isInstantiable() ? new LoadOneTransformer(dynamicModelId, equipment, parameterSetId) : null
         }
     }
 }

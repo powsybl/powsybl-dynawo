@@ -8,14 +8,15 @@
 package com.powsybl.dynawaltz.dsl.models.svarcs
 
 import com.google.auto.service.AutoService
-import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
+import com.powsybl.dynawaltz.dsl.builders.AbstractEquipmentModelBuilder
+import com.powsybl.dynawaltz.models.svarcs.StaticVarCompensator as DynamicSvarc
 import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
 import com.powsybl.dynawaltz.dsl.EquipmentConfig
-import com.powsybl.dynawaltz.dsl.models.builders.AbstractDynamicModelBuilder
+import com.powsybl.iidm.network.IdentifiableType
 import com.powsybl.iidm.network.Network
-import com.powsybl.iidm.network.StaticVarCompensator
+import com.powsybl.iidm.network.StaticVarCompensator as StaticSvarc
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
@@ -34,28 +35,21 @@ class SvarcGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel
         new SvcBuilder(network, equipmentConfig)
     }
 
-    static class SvcBuilder extends AbstractDynamicModelBuilder {
-
-        StaticVarCompensator svarc
-        EquipmentConfig equipmentConfig
+    static class SvcBuilder extends AbstractEquipmentModelBuilder<StaticSvarc> {
 
         SvcBuilder(Network network, EquipmentConfig equipmentConfig) {
-            super(network)
-            this.equipmentConfig = equipmentConfig
-        }
-
-        void checkData() {
-            super.checkData()
-            svarc = network.getStaticVarCompensator(staticId)
-            if (svarc == null) {
-                throw new DslException("Static var compensator static id unknown: " + staticId)
-            }
+            super(network, equipmentConfig, IdentifiableType.STATIC_VAR_COMPENSATOR)
         }
 
         @Override
-        com.powsybl.dynawaltz.models.svarcs.StaticVarCompensator build() {
-            checkData()
-            new com.powsybl.dynawaltz.models.svarcs.StaticVarCompensator(dynamicModelId, svarc, parameterSetId, equipmentConfig.lib)
+        protected StaticSvarc findEquipment(String staticId) {
+            network.getStaticVarCompensator(staticId)
+        }
+
+        @Override
+        DynamicSvarc build() {
+            isInstantiable() ? new DynamicSvarc(dynamicModelId, equipment, parameterSetId, equipmentConfig.lib)
+                    : null
         }
     }
 }

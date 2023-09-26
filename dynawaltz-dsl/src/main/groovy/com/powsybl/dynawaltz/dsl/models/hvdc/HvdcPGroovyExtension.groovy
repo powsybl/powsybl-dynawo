@@ -45,11 +45,14 @@ class HvdcPGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel
 
         @Override
         HvdcP build() {
-            checkData()
-            if (equipmentConfig.isDangling()) {
-                new HvdcPDangling(dynamicModelId, hvdc, parameterSetId, equipmentConfig.lib, danglingSide)
+            if (isInstantiable()) {
+                if (equipmentConfig.isDangling()) {
+                    new HvdcPDangling(dynamicModelId, equipment, parameterSetId, equipmentConfig.lib, danglingSide)
+                } else {
+                    new HvdcP(dynamicModelId, equipment, parameterSetId, equipmentConfig.lib)
+                }
             } else {
-                new HvdcP(dynamicModelId, hvdc, parameterSetId, equipmentConfig.lib)
+                null
             }
         }
     }

@@ -20,6 +20,8 @@ import com.powsybl.dynawaltz.parameters.ParametersSet;
 import com.powsybl.dynawaltz.xml.MacroStaticReference;
 import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.Network;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.function.Function;
@@ -32,7 +34,9 @@ import java.util.stream.Stream;
  */
 public class DynaWaltzContext {
 
+    protected static final Logger LOGGER = LoggerFactory.getLogger(DynaWaltzContext.class);
     private static final String MODEL_ID_EXCEPTION = "The model identified by the static id %s does not match the expected model (%s)";
+    private static final String MODEL_ID_LOG = "The model identified by the static id {} does not match the expected model ({})";
 
     private final Network network;
     private final String workingVariantId;
@@ -117,27 +121,46 @@ public class DynaWaltzContext {
     }
 
     public <T extends Model> T getDynamicModel(Identifiable<?> equipment, Class<T> connectableClass) {
-        BlackBoxModel bbm = staticIdBlackBoxModelMap.get(equipment.getId());
-        if (bbm == null) {
-            return defaultModelsHandler.getDefaultModel(equipment, connectableClass);
-        }
-        if (connectableClass.isInstance(bbm)) {
-            return connectableClass.cast(bbm);
-        }
-        throw new PowsyblException(String.format(MODEL_ID_EXCEPTION, equipment.getId(), connectableClass.getSimpleName()));
+        return getDynamicModel(equipment, connectableClass, true);
     }
 
-    public <T extends Model> T getPureDynamicModel(String dynamicId, Class<T> connectableClass) {
-        BlackBoxModel bbm = dynamicModels.stream()
-                .filter(dm -> dynamicId.equals(dm.getDynamicModelId()))
-                .findFirst()
-                .orElseThrow(() -> {
-                    throw new PowsyblException("Pure dynamic model " + dynamicId + " not found");
-                });
+    public <T extends Model> T getDynamicModel(Identifiable<?> equipment, Class<T> connectableClass, boolean throwException) {
+        BlackBoxModel bbm = staticIdBlackBoxModelMap.get(equipment.getId());
+        if (bbm == null) {
+            return defaultModelsHandler.getDefaultModel(equipment, connectableClass, throwException);
+        }
         if (connectableClass.isInstance(bbm)) {
             return connectableClass.cast(bbm);
         }
-        throw new PowsyblException(String.format(MODEL_ID_EXCEPTION, dynamicId, connectableClass.getSimpleName()));
+        if (throwException) {
+            throw new PowsyblException(String.format(MODEL_ID_EXCEPTION, equipment.getId(), connectableClass.getSimpleName()));
+        } else {
+            LOGGER.warn(MODEL_ID_LOG, equipment.getId(), connectableClass.getSimpleName());
+            return null;
+        }
+    }
+
+    public <T extends Model> T getPureDynamicModel(String dynamicId, Class<T> connectableClass, boolean throwException) {
+        BlackBoxModel bbm = dynamicModels.stream()
+                .filter(dm -> dynamicId.equals(dm.getDynamicModelId()))
+                .findFirst().orElse(null);
+        if (bbm == null) {
+            if (throwException) {
+                throw new PowsyblException("Pure dynamic model " + dynamicId + " not found");
+            } else {
+                LOGGER.warn("Pure dynamic model {} not found", dynamicId);
+                return null;
+            }
+        }
+        if (connectableClass.isInstance(bbm)) {
+            return connectableClass.cast(bbm);
+        }
+        if (throwException) {
+            throw new PowsyblException(String.format(MODEL_ID_EXCEPTION, dynamicId, connectableClass.getSimpleName()));
+        } else {
+            LOGGER.warn(MODEL_ID_LOG, dynamicId, connectableClass.getSimpleName());
+            return null;
+        }
     }
 
     private EquipmentBlackBoxModel mergeDuplicateStaticId(EquipmentBlackBoxModel bbm1, EquipmentBlackBoxModel bbm2) {

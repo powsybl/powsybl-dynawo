@@ -17,21 +17,28 @@ import java.util.function.Consumer
  */
 abstract class AbstractSimpleEquipmentGroovyExtension<T> {
 
-    protected String modelTag
+    protected EquipmentConfig equipmentConfig
 
-    abstract protected ModelBuilder<T> createBuilder(Network network);
+    AbstractSimpleEquipmentGroovyExtension(String modelTag) {
+        equipmentConfig = new EquipmentConfig(modelTag)
+    }
+
+
+    abstract protected ModelBuilder<T> createBuilder(Network network, EquipmentConfig equipmentConfig)
 
     String getName() {
-        return DynaWaltzProvider.NAME
+        DynaWaltzProvider.NAME
     }
 
     void load(Binding binding, Consumer<T> consumer) {
-        binding.setVariable(modelTag, { Closure<Void> closure ->
+        binding.setVariable(equipmentConfig.lib, { Closure<Void> closure ->
             def cloned = closure.clone()
-            ModelBuilder<T> builder = createBuilder(binding.getVariable("network") as Network)
+            ModelBuilder<T> builder = createBuilder(binding.getVariable("network") as Network, equipmentConfig)
             cloned.delegate = builder
             cloned()
-            consumer.accept(builder.build())
+            builder.build()?.tap {
+                consumer.accept(it)
+            }
         })
     }
 }

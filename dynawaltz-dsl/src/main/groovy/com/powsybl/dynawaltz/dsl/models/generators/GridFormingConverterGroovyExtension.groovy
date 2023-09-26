@@ -34,17 +34,14 @@ class GridFormingConverterGroovyExtension extends AbstractEquipmentGroovyExtensi
 
     static class GridFormingConverterBuilder extends AbstractGeneratorBuilder {
 
-        EquipmentConfig equipmentConfig
-
         GridFormingConverterBuilder(Network network, EquipmentConfig equipmentConfig) {
-            super(network)
-            this.equipmentConfig = equipmentConfig
+            super(network, equipmentConfig)
         }
 
         @Override
         GridFormingConverter build() {
-            checkData()
-            new GridFormingConverter(dynamicModelId, generator, parameterSetId, equipmentConfig.lib)
+            isInstantiable() ? new GridFormingConverter(dynamicModelId, equipment, parameterSetId, equipmentConfig.lib)
+                    : null
         }
     }
 }

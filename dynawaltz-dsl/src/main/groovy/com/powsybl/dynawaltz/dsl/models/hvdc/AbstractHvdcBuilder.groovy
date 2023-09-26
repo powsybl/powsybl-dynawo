@@ -7,42 +7,45 @@
  */
 package com.powsybl.dynawaltz.dsl.models.hvdc
 
-import com.powsybl.dsl.DslException
 import com.powsybl.dynawaltz.dsl.EquipmentConfig
-import com.powsybl.dynawaltz.dsl.models.builders.AbstractDynamicModelBuilder
+import com.powsybl.dynawaltz.dsl.builders.AbstractEquipmentModelBuilder
 import com.powsybl.dynawaltz.models.Side
 import com.powsybl.dynawaltz.models.utils.SideConverter
 import com.powsybl.iidm.network.Branch
 import com.powsybl.iidm.network.HvdcLine
+import com.powsybl.iidm.network.IdentifiableType
 import com.powsybl.iidm.network.Network
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-abstract class AbstractHvdcBuilder extends AbstractDynamicModelBuilder {
+abstract class AbstractHvdcBuilder extends AbstractEquipmentModelBuilder<HvdcLine> {
 
-    HvdcLine hvdc
-    EquipmentConfig equipmentConfig
-    Side danglingSide
+    protected Side danglingSide
 
     AbstractHvdcBuilder(Network network, EquipmentConfig equipmentConfig) {
-        super(network)
-        this.equipmentConfig = equipmentConfig
+        super(network, equipmentConfig, IdentifiableType.HVDC_LINE)
     }
 
     void dangling(Branch.Side danglingSide) {
-        if (equipmentConfig.isDangling()) {
-            this.danglingSide = SideConverter.convert(danglingSide)
-        } else {
-            throw new DslException("'dangling' field is set on a non dangling hvdc : ${equipmentConfig.lib}")
+        this.danglingSide = SideConverter.convert(danglingSide)
+    }
+
+    @Override
+    protected void checkData() {
+        super.checkData()
+        def isDangling = equipmentConfig.isDangling()
+        if (isDangling && !danglingSide) {
+            LOGGER.warn("${getLib()}: 'dangling' field is not set")
+            isInstantiable = false
+        } else if (!isDangling && danglingSide) {
+            LOGGER.warn("${getLib()}: 'dangling' field is set on a non dangling hvdc")
+            isInstantiable = false
         }
     }
 
-    void checkData() {
-        super.checkData()
-        hvdc = network.getHvdcLine(staticId)
-        if (hvdc == null) {
-            throw new DslException("Hvdc line static id unknown: " + staticId)
-        }
+    @Override
+    protected HvdcLine findEquipment(String staticId) {
+        network.getHvdcLine(staticId)
     }
 }

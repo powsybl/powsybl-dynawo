@@ -18,7 +18,11 @@ import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Load;
 import com.powsybl.iidm.network.TwoWindingsTransformer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 import java.util.*;
 
 /**
@@ -26,6 +30,7 @@ import java.util.*;
  */
 public class TapChangerBlockingAutomaton extends AbstractPureDynamicBlackBoxModel {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(TapChangerBlockingAutomaton.class);
     private static final Set<IdentifiableType> COMPATIBLE_EQUIPMENTS = EnumSet.of(IdentifiableType.LOAD, IdentifiableType.TWO_WINDINGS_TRANSFORMER);
     private static final int MAX_MEASUREMENTS = 5;
 
@@ -33,6 +38,7 @@ public class TapChangerBlockingAutomaton extends AbstractPureDynamicBlackBoxMode
     private final List<Load> loadsWithTransformer;
     private final List<String> tapChangerAutomatonIds;
     private final List<Bus> uMeasurements;
+    private boolean isConnected = true;
 
     public TapChangerBlockingAutomaton(String dynamicModelId, String parameterSetId, List<TwoWindingsTransformer> transformers, List<Load> loadsWithTransformer, List<String> tapChangerAutomatonIds, List<Bus> uMeasurements) {
         super(dynamicModelId, parameterSetId);
@@ -78,16 +84,27 @@ public class TapChangerBlockingAutomaton extends AbstractPureDynamicBlackBoxMode
         for (TwoWindingsTransformer transformer : transformers) {
             createMacroConnections(transformer, TapChangerModel.class, this::getVarConnectionsWith, context);
         }
+        int skippedTapChangers = 0;
         for (Load load : loadsWithTransformer) {
-            createMacroConnections(load, TapChangerModel.class, this::getVarConnectionsWith, context);
+            boolean isSkipped = createMacroConnectionsOrSkip(load, TapChangerModel.class, this::getVarConnectionsWith, context);
+            if (isSkipped) {
+                skippedTapChangers++;
+            }
         }
         for (String id : tapChangerAutomatonIds) {
-            createPureDynamicMacroConnections(id, TapChangerModel.class, this::getVarConnectionsWith, context);
+            if (createTcaMacroConnectionsOrSkip(id, context)) {
+                skippedTapChangers++;
+            }
         }
-        int i = 1;
-        for (Bus bus : uMeasurements) {
-            createMacroConnections(bus, BusModel.class, this::getVarConnectionsWith, context, MeasurementPoint.of(i));
-            i++;
+        if (!transformers.isEmpty() || skippedTapChangers < (loadsWithTransformer.size() + tapChangerAutomatonIds.size())) {
+            int i = 1;
+            for (Bus bus : uMeasurements) {
+                createMacroConnections(bus, BusModel.class, this::getVarConnectionsWith, context, MeasurementPoint.of(i));
+                i++;
+            }
+        } else {
+            isConnected = false;
+            LOGGER.warn("None of TapChangerBlockingAutomaton {} equipments are TapChangerModel, the automaton will be skipped", getDynamicModelId());
         }
     }
 
@@ -99,5 +116,22 @@ public class TapChangerBlockingAutomaton extends AbstractPureDynamicBlackBoxMode
         return connected.getUImpinVarName()
                 .map(uImpinVarName -> List.of(new VarConnection("tapChangerBlocking_UMonitored" + suffix, uImpinVarName)))
                 .orElse(Collections.emptyList());
+    }
+
+    private boolean createTcaMacroConnectionsOrSkip(String dynamicId, DynaWaltzContext context) {
+        TapChangerAutomaton connectedModel = context.getPureDynamicModel(dynamicId, TapChangerAutomaton.class, false);
+        if (connectedModel != null && connectedModel.isConnected(context)) {
+            String macroConnectorId = context.addMacroConnector(getName(), connectedModel.getName(), getVarConnectionsWith(connectedModel));
+            context.addMacroConnect(macroConnectorId, getMacroConnectFromAttributes(), connectedModel.getMacroConnectToAttributes());
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public void write(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
+        if (isConnected) {
+            super.write(writer, context);
+        }
     }
 }

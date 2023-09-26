@@ -34,17 +34,14 @@ class InfiniteBusGroovyExtension extends AbstractEquipmentGroovyExtension<Dynami
 
     static class BusBuilder extends AbstractBusBuilder {
 
-        EquipmentConfig equipmentConfig
-
         BusBuilder(Network network, EquipmentConfig equipmentConfig) {
-            super(network)
-            this.equipmentConfig = equipmentConfig
+            super(network, equipmentConfig)
         }
 
         @Override
         InfiniteBus build() {
-            checkData()
-            new InfiniteBus(dynamicModelId, bus, parameterSetId, equipmentConfig.lib)
+            isInstantiable() ? new InfiniteBus(dynamicModelId, equipment, parameterSetId, equipmentConfig.lib)
+                    : null
         }
     }
 }

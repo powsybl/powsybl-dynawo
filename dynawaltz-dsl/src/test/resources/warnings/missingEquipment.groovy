@@ -6,11 +6,10 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-package dynamicModels
+package warnings
 
-
-UnderVoltage {
-    dynamicModelId "UV_GEN"
-    parameterSetId "uv"
-    generator "NGEN"
+LoadAlphaBeta {
+    staticId "GEN"
+    parameterSetId "LAB"
 }
+

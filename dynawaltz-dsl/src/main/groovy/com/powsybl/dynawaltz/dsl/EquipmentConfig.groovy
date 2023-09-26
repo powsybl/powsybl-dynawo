@@ -28,6 +28,12 @@ class EquipmentConfig {
         this.properties = properties ? properties.collect{it.toUpperCase()} as List<String> : [] as List<String>
     }
 
+    EquipmentConfig(String lib) {
+        this.lib = lib
+        this.prefix = ""
+        this.properties = []
+    }
+
     boolean isControllable() {
         properties.contains(CONTROLLABLE_PROPERTY)
     }

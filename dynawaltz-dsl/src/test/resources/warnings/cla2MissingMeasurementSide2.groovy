@@ -6,12 +6,15 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-package dynamicModels
+package warnings
 
+import com.powsybl.iidm.network.Branch
 
-TapChangerBlockingAutomaton {
-    dynamicModelId "ZAB"
-    parameterSetId "ZAB"
-    uMeasurements "NGEN"
-    transformers "GEN", "NHV2_NLOAD"
+CurrentLimitAutomatonTwoLevels {
+    dynamicModelId "CLA_NGEN"
+    parameterSetId "CLA"
+    controlledQuadripole "NHV1_NHV2_2"
+    iMeasurement1 "NHV1_NHV2_1"
+    iMeasurement1Side Branch.Side.TWO
+    iMeasurement2 "NHV1_NHV2_2"
 }
