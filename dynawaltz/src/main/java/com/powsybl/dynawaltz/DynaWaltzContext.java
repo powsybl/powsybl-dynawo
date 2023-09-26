@@ -167,11 +167,9 @@ public class DynaWaltzContext {
         Set<String> staticIds = new HashSet<>();
         return dynamicModels.stream()
                 .filter(bbm -> {
-                    if (bbm instanceof EquipmentBlackBoxModel eBbm) {
-                        if (!staticIds.add(eBbm.getStaticId())) {
-                            LOGGER.warn("Duplicate static id found: {} -> dynamic model {} {} will be skipped", eBbm.getStaticId(), eBbm.getLib(), eBbm.getDynamicModelId());
-                            return false;
-                        }
+                    if (bbm instanceof EquipmentBlackBoxModel eBbm && !staticIds.add(eBbm.getStaticId())) {
+                        LOGGER.warn("Duplicate static id found: {} -> dynamic model {} {} will be skipped", eBbm.getStaticId(), eBbm.getLib(), eBbm.getDynamicModelId());
+                        return false;
                     }
                     return true;
                 })
