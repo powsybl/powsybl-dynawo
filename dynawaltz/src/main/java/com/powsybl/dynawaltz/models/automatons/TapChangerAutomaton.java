@@ -14,7 +14,11 @@ import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.loads.LoadWithTransformers;
 import com.powsybl.dynawaltz.models.transformers.TapChangerModel;
 import com.powsybl.iidm.network.Load;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 import java.util.List;
 import java.util.Objects;
 
@@ -23,8 +27,18 @@ import java.util.Objects;
  */
 public class TapChangerAutomaton extends AbstractPureDynamicBlackBoxModel implements TapChangerModel {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(TapChangerAutomaton.class);
+
     private final Load load;
     private final TransformerSide side;
+
+    private ConnectionState connection = ConnectionState.NOT_SET;
+
+    private enum ConnectionState {
+        CONNECTED,
+        NOT_CONNECTED,
+        NOT_SET
+    }
 
     public TapChangerAutomaton(String dynamicModelId, String parameterSetId, Load load, TransformerSide side) {
         super(dynamicModelId, parameterSetId);
@@ -48,7 +62,15 @@ public class TapChangerAutomaton extends AbstractPureDynamicBlackBoxModel implem
 
     @Override
     public void createMacroConnections(DynaWaltzContext context) {
-        createMacroConnections(load, LoadWithTransformers.class, this::getVarConnectionsWith, context);
+        if (ConnectionState.NOT_SET == connection) {
+            boolean isSkipped = createMacroConnectionsOrSkip(load, LoadWithTransformers.class, this::getVarConnectionsWith, context);
+            if (isSkipped) {
+                connection = ConnectionState.NOT_CONNECTED;
+                LOGGER.warn("TapChangerAutomaton {} load does not possess a transformer, the automaton will be skipped", getDynamicModelId());
+            } else {
+                connection = ConnectionState.CONNECTED;
+            }
+        }
     }
 
     private List<VarConnection> getVarConnectionsWith(LoadWithTransformers connected) {
@@ -58,5 +80,19 @@ public class TapChangerAutomaton extends AbstractPureDynamicBlackBoxModel implem
     @Override
     public List<VarConnection> getTapChangerBlockerVarConnections() {
         return List.of(new VarConnection(getTapChangerBlockingVarName(side), "tapChanger_locked"));
+    }
+
+    @Override
+    public void write(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
+        if (ConnectionState.CONNECTED == connection) {
+            super.write(writer, context);
+        }
+    }
+
+    public boolean isConnected(DynaWaltzContext context) {
+        if (ConnectionState.NOT_SET == connection) {
+            createMacroConnections(context);
+        }
+        return ConnectionState.CONNECTED == connection;
     }
 }
