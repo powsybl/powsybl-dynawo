@@ -51,6 +51,10 @@
             <groupId>com.powsybl</groupId>
             <artifactId>powsybl-dynawaltz</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.groovy</groupId>
+            <artifactId>groovy-json</artifactId>
+        </dependency>
 
         <!-- Test dependencies -->
         <dependency>

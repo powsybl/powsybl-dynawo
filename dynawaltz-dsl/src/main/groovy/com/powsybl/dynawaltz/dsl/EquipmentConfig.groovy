@@ -14,7 +14,7 @@ class EquipmentConfig {
     EquipmentConfig(String lib, String prefix, String... properties) {
         this.lib = lib
         this.prefix = prefix
-        this.properties = properties
+        this.properties = properties ? properties.collect{it.toUpperCase()} as List<String> : [] as List<String>
     }
 
     boolean isControllable() {
