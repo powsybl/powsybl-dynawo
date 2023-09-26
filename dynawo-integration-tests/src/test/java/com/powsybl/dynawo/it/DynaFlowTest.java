@@ -40,7 +40,6 @@ import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -103,7 +102,7 @@ class DynaFlowTest extends AbstractDynawoTest {
 
         List<Contingency> contingencies = network.getLineStream()
                 .map(l -> Contingency.line(l.getId()))
-                .collect(Collectors.toList());
+                .toList();
 
         ReporterModel reporter = new ReporterModel("root", "Root message");
         SecurityAnalysisResult result = securityAnalysisProvider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID, new DefaultLimitViolationDetector(),
@@ -131,7 +130,7 @@ class DynaFlowTest extends AbstractDynawoTest {
 
         List<Contingency> contingencies = network.getGeneratorStream()
                 .map(g -> Contingency.generator(g.getId()))
-                .collect(Collectors.toList());
+                .toList();
         SecurityAnalysisResult result = securityAnalysisProvider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID, new DefaultLimitViolationDetector(),
                         new LimitViolationFilter(), computationManager, securityAnalysisParameters, n -> contingencies, Collections.emptyList(),
                         Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), Reporter.NO_OP)

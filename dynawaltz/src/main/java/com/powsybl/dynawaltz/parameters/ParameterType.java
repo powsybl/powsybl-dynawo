@@ -15,5 +15,5 @@ public enum ParameterType {
     DOUBLE,
     INT,
     BOOL,
-    STRING;
+    STRING
 }

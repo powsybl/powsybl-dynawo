@@ -5,11 +5,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawo.commons;
 
-/**
- * @author Laurent Isertial <laurent.issertial at rte-france.com>
- */
-public record LoadState(double p, double q, double p0, double q0) {
+package dynamicModels
 
+GeneratorSynchronousThreeWindingsPmConstVRNordicTfo {
+    staticId "GEN"
+    dynamicModelId "BBM_GEN"
+    parameterSetId "GSFWPR"
 }

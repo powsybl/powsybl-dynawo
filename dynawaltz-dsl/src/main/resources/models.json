@@ -1,0 +1,292 @@
+{
+  "synchronousGenerators": [
+    {
+      "lib": "GeneratorSynchronousFourWindings"
+    },
+    {
+      "lib": "GeneratorSynchronousFourWindingsGoverPropVRPropInt",
+      "properties": [
+        "Controllable"
+      ]
+    },
+    {
+      "lib": "GeneratorSynchronousFourWindingsGovSteam1ExcIEEEST4B"
+    },
+    {
+      "lib": "GeneratorSynchronousFourWindingsGovSteam1ExcIEEEST4BPssIEEE2B"
+    },
+    {
+      "lib": "GeneratorSynchronousFourWindingsPmConstVRNordic"
+    },
+    {
+      "lib": "GeneratorSynchronousFourWindingsPmConstVRNordicTfo",
+      "properties": [
+        "Transformer"
+      ]
+    },
+    {
+      "lib": "GeneratorSynchronousFourWindingsProportionalRegulations",
+      "properties": [
+        "Controllable"
+      ]
+    },
+    {
+      "lib": "GeneratorSynchronousFourWindingsTGov1Sexs"
+    },
+    {
+      "lib": "GeneratorSynchronousFourWindingsTGov1SexsPss2A"
+    },
+    {
+      "lib": "GeneratorSynchronousFourWindingsVRKundur"
+    },
+    {
+      "lib": "GeneratorSynchronousFourWindingsVRKundurPssKundur"
+    },
+    {
+      "lib": "GeneratorSynchronousProportionalRegulationsInternalParameters"
+    },
+    {
+      "lib": "GeneratorSynchronousThreeWindings"
+    },
+    {
+      "lib": "GeneratorSynchronousThreeWindingsGoverNordicVRNordic"
+    },
+    {
+      "lib": "GeneratorSynchronousThreeWindingsGoverNordicVRNordicTfo",
+      "properties": [
+        "Transformer"
+      ]
+    },
+    {
+      "lib": "GeneratorSynchronousThreeWindingsGoverPropVRPropInt",
+      "properties": [
+        "Controllable"
+      ]
+    },
+    {
+      "lib": "GeneratorSynchronousThreeWindingsPmConstVRNordic"
+    },
+    {
+      "lib": "GeneratorSynchronousThreeWindingsPmConstVRNordicTfo",
+      "properties": [
+        "Transformer"
+      ]
+    },
+    {
+      "lib": "GeneratorSynchronousThreeWindingsProportionalRegulations",
+      "properties": [
+        "Controllable"
+      ]
+    }
+  ],
+  "synchronizedGenerators": [
+    {
+      "lib": "GeneratorPQ"
+    },
+    {
+      "lib": "GeneratorPV",
+      "properties": [
+        "Controllable"
+      ]
+    },
+    {
+      "lib": "GeneratorPVFixed"
+    },
+    {
+      "lib": "GeneratorPVDiagramPQ"
+    }
+  ],
+  "hvdcP": [
+    {
+      "lib": "HvdcPV"
+    },
+    {
+      "lib": "HvdcPVEmulation"
+    },
+    {
+      "lib": "HvdcPVEmulationSet"
+    },
+    {
+      "lib": "HvdcPVDiagramPQ"
+    },
+    {
+      "lib": "HvdcPVDiagramPQEmulation"
+    },
+    {
+      "lib": "HvdcPVDiagramPQEmulationSet"
+    },
+    {
+      "lib": "HvdcPTanPhi"
+    },
+    {
+      "lib": "HvdcPTanPhiDiagramPQ"
+    },
+    {
+      "lib": "HvdcPVDangling",
+      "properties": [
+        "Dangling"
+      ]
+    },
+    {
+      "lib": "HvdcPVDanglingDiagramPQ",
+      "properties": [
+        "Dangling"
+      ]
+    },
+    {
+      "lib": "HvdcPTanPhiDangling",
+      "properties": [
+        "Dangling"
+      ]
+    },
+    {
+      "lib": "HvdcPTanPhiDanglingDiagramPQ",
+      "properties": [
+        "Dangling"
+      ]
+    }
+  ],
+  "hvdcVsc": [
+    {
+      "lib": "HvdcVSC"
+    },
+    {
+      "lib": "HvdcVSCEmulation"
+    },
+    {
+      "lib": "HvdcVSCDanglingP",
+      "properties": [
+        "Dangling"
+      ]
+    },
+    {
+      "lib": "HvdcVSCDanglingUdc",
+      "properties": [
+        "Dangling"
+      ]
+    }
+  ],
+  "infiniteBuses": [
+    {
+      "lib": "InfiniteBus"
+    },
+    {
+      "lib": "InfiniteBusWithImpedance"
+    },
+    {
+      "lib": "InfiniteBusWithVariations"
+    }
+  ],
+  "baseLoads": [
+    {
+      "lib": "LoadAlphaBeta",
+      "properties": [
+        "Controllable"
+      ]
+    },
+    {
+      "lib": "LoadAlphaBetaRestorative"
+    },
+    {
+      "lib": "LoadAlphaBetaRestorativeLimitsRecalc"
+    },
+    {
+      "lib": "LoadAlphaBetaMotor"
+    },
+    {
+      "lib": "LoadPQ"
+    }
+  ],
+  "staticVarCompensators": [
+    {
+      "lib": "StaticVarCompensator"
+    },
+    {
+      "lib": "StaticVarCompensatorPV"
+    },
+    {
+      "lib": "StaticVarCompensatorPVModeHandling"
+    },
+    {
+      "lib": "StaticVarCompensatorPVRemote"
+    },
+    {
+      "lib": "StaticVarCompensatorPVRemoteModeHandling"
+    },
+    {
+      "lib": "StaticVarCompensatorPVProp"
+    },
+    {
+      "lib": "StaticVarCompensatorPVPropModeHandling"
+    },
+    {
+      "lib": "StaticVarCompensatorPVPropRemote"
+    },
+    {
+      "lib": "StaticVarCompensatorPVPropRemoteModeHandling"
+    }
+  ],
+  "transformers": [
+    {
+      "lib": "TransformerFixedRatio"
+    }
+  ],
+  "wecc": [
+    {
+      "lib": "WTG4AWeccCurrentSource",
+      "prefix": "WTG4A",
+      "properties": [
+        "Synchronized"
+      ]
+    },
+    {
+      "lib": "WTG4BWeccCurrentSource",
+      "prefix": "WTG4B",
+      "properties": [
+        "Synchronized"
+      ]
+    },
+    {
+      "lib": "WT4AWeccCurrentSource",
+      "prefix": "WT4A"
+    },
+    {
+      "lib": "WT4BWeccCurrentSource",
+      "prefix": "WT4B"
+    },
+    {
+      "lib": "PhotovoltaicsWeccCurrentSource",
+      "prefix": "WTG4A",
+      "properties": [
+        "Synchronized"
+      ]
+    },
+    {
+      "lib": "PhotovoltaicsWeccVoltageSource",
+      "prefix": "photovoltaics",
+      "properties": [
+        "Synchronized"
+      ]
+    }
+  ],
+  "gridFormingConverter": [
+    {
+      "lib": "GridFormingConverterDroopControl",
+      "properties": [
+        "Synchronized"
+      ]
+    },
+    {
+      "lib": "GridFormingConverterMatchingControl",
+      "properties": [
+        "Synchronized"
+      ]
+    },
+    {
+      "lib": "GridFormingConverterDispatchableVirtualOscillatorControl",
+      "properties": [
+        "Synchronized"
+      ]
+    }
+  ]
+}

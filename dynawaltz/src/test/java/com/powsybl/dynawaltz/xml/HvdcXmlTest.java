@@ -9,8 +9,8 @@ package com.powsybl.dynawaltz.xml;
 
 import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.Side;
-import com.powsybl.dynawaltz.models.hvdc.HvdcPv;
-import com.powsybl.dynawaltz.models.hvdc.HvdcPvDangling;
+import com.powsybl.dynawaltz.models.hvdc.HvdcP;
+import com.powsybl.dynawaltz.models.hvdc.HvdcPDangling;
 import com.powsybl.dynawaltz.models.hvdc.HvdcVsc;
 import com.powsybl.dynawaltz.models.hvdc.HvdcVscDangling;
 import com.powsybl.iidm.network.Network;
@@ -60,9 +60,9 @@ class HvdcXmlTest extends AbstractParametrizedDynamicModelXmlTest {
 
     private static Stream<Arguments> provideHvdc() {
         return Stream.of(
-                Arguments.of("hvdc_pv_dyd.xml", (Function<Network, BlackBoxModel>) n -> new HvdcPv(DYN_NAME, n.getHvdcLine(HVDC_NAME), "hv", "HvdcPV")),
+                Arguments.of("hvdc_p_dyd.xml", (Function<Network, BlackBoxModel>) n -> new HvdcP(DYN_NAME, n.getHvdcLine(HVDC_NAME), "hv", "HvdcPV")),
                 Arguments.of("hvdc_vsc_dyd.xml", (Function<Network, BlackBoxModel>) n -> new HvdcVsc(DYN_NAME, n.getHvdcLine(HVDC_NAME), "hv", "HvdcVSC")),
-                Arguments.of("hvdc_pv_dangling_dyd.xml", (Function<Network, BlackBoxModel>) n -> new HvdcPvDangling(DYN_NAME, n.getHvdcLine(HVDC_NAME), "hv", "HvdcPVDangling", Side.ONE)),
+                Arguments.of("hvdc_p_dangling_dyd.xml", (Function<Network, BlackBoxModel>) n -> new HvdcPDangling(DYN_NAME, n.getHvdcLine(HVDC_NAME), "hv", "HvdcPVDangling", Side.ONE)),
                 Arguments.of("hvdc_vsc_dangling_dyd.xml", (Function<Network, BlackBoxModel>) n -> new HvdcVscDangling(DYN_NAME, n.getHvdcLine(HVDC_NAME), "hv", "HvdcVSCDanglingP", Side.TWO))
         );
     }
