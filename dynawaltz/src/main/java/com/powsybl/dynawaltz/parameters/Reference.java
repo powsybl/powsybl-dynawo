@@ -15,15 +15,17 @@ import java.util.Objects;
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public record Reference(String name, ParameterType type, String origData, String origName) {
+public record Reference(String name, ParameterType type, String origData, String origName, String componentId) {
 
     public Reference(@JsonProperty("name") String name,
                      @JsonProperty("type") ParameterType type,
                      @JsonProperty("origData") String origData,
-                     @JsonProperty("origName") String origName) {
+                     @JsonProperty("origName") String origName,
+                     @JsonProperty("componentId") String componentId) {
         this.name = Objects.requireNonNull(name);
         this.type = Objects.requireNonNull(type);
         this.origData = Objects.requireNonNull(origData);
         this.origName = Objects.requireNonNull(origName);
+        this.componentId = componentId;
     }
 }

@@ -34,8 +34,8 @@ public class ParametersSet {
         parameters.put(name, new Parameter(name, type, value));
     }
 
-    public void addReference(String name, ParameterType type, String origData, String origName) {
-        references.add(new Reference(name, type, origData, origName));
+    public void addReference(String name, ParameterType type, String origData, String origName, String componentId) {
+        references.add(new Reference(name, type, origData, origName, componentId));
     }
 
     public String getId() {
