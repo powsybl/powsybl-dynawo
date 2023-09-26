@@ -5,7 +5,9 @@
     },
     {
       "lib": "GeneratorSynchronousFourWindingsGoverPropVRPropInt",
-      "properties": ["Controllable"]
+      "properties": [
+        "Controllable"
+      ]
     },
     {
       "lib": "GeneratorSynchronousFourWindingsGovSteam1ExcIEEEST4B"
@@ -21,7 +23,9 @@
     },
     {
       "lib": "GeneratorSynchronousFourWindingsProportionalRegulations",
-      "properties": ["Controllable"]
+      "properties": [
+        "Controllable"
+      ]
     },
     {
       "lib": "GeneratorSynchronousFourWindingsTGov1Sexs"
@@ -49,7 +53,9 @@
     },
     {
       "lib": "GeneratorSynchronousThreeWindingsGoverPropVRPropInt",
-      "properties": ["Controllable"]
+      "properties": [
+        "Controllable"
+      ]
     },
     {
       "lib": "GeneratorSynchronousThreeWindingsPmConstVRNordic"
@@ -59,17 +65,20 @@
     },
     {
       "lib": "GeneratorSynchronousThreeWindingsProportionalRegulations",
-      "properties": ["Controllable"]
+      "properties": [
+        "Controllable"
+      ]
     }
- ],
-
+  ],
   "synchronizedGenerators": [
     {
       "lib": "GeneratorPQ"
     },
     {
       "lib": "GeneratorPV",
-      "properties": ["Controllable"]
+      "properties": [
+        "Controllable"
+      ]
     },
     {
       "lib": "GeneratorPVFixed"
@@ -78,7 +87,6 @@
       "lib": "GeneratorPVDiagramPQ"
     }
   ],
-
   "hvdcPv": [
     {
       "lib": "HvdcPV"
@@ -106,22 +114,29 @@
     },
     {
       "lib": "HvdcPVDangling",
-      "properties": ["Dangling"]
+      "properties": [
+        "Dangling"
+      ]
     },
     {
       "lib": "HvdcPVDanglingDiagramPQ",
-      "properties": ["Dangling"]
+      "properties": [
+        "Dangling"
+      ]
     },
     {
       "lib": "HvdcPTanPhiDangling",
-      "properties": ["Dangling"]
+      "properties": [
+        "Dangling"
+      ]
     },
     {
       "lib": "HvdcPTanPhiDanglingDiagramPQ",
-      "properties": ["Dangling"]
+      "properties": [
+        "Dangling"
+      ]
     }
   ],
-  
   "hvdcVsc": [
     {
       "lib": "HvdcVSC"
@@ -131,14 +146,17 @@
     },
     {
       "lib": "HvdcVSCDanglingP",
-      "properties": ["Dangling"]
+      "properties": [
+        "Dangling"
+      ]
     },
     {
       "lib": "HvdcVSCDanglingUdc",
-      "properties": ["Dangling"]
+      "properties": [
+        "Dangling"
+      ]
     }
   ],
-
   "infiniteBuses": [
     {
       "lib": "InfiniteBus"
@@ -150,11 +168,12 @@
       "lib": "InfiniteBusWithVariations"
     }
   ],
-  
-  "loadsAlphaBeta": [
+  "baseLoads": [
     {
       "lib": "LoadAlphaBeta",
-      "properties": ["Controllable"]
+      "properties": [
+        "Controllable"
+      ]
     },
     {
       "lib": "LoadAlphaBetaRestorative"
@@ -164,9 +183,11 @@
     },
     {
       "lib": "LoadAlphaBetaMotor"
+    },
+    {
+      "lib": "LoadPQ"
     }
   ],
-
   "staticVarCompensators": [
     {
       "lib": "StaticVarCompensator"
@@ -196,23 +217,25 @@
       "lib": "StaticVarCompensatorPVPropRemoteModeHandling"
     }
   ],
-
   "transformers": [
     {
       "lib": "TransformerFixedRatio"
     }
   ],
-
   "wecc": [
     {
       "lib": "WTG4AWeccCurrentSource",
       "prefix": "WTG4A",
-      "properties": ["Synchronized"]
+      "properties": [
+        "Synchronized"
+      ]
     },
     {
       "lib": "WTG4BWeccCurrentSource",
       "prefix": "WTG4B",
-      "properties": ["Synchronized"]
+      "properties": [
+        "Synchronized"
+      ]
     },
     {
       "lib": "WT4AWeccCurrentSource",
@@ -225,27 +248,36 @@
     {
       "lib": "PhotovoltaicsWeccCurrentSource",
       "prefix": "WTG4A",
-      "properties": ["Synchronized"]
+      "properties": [
+        "Synchronized"
+      ]
     },
     {
       "lib": "PhotovoltaicsWeccVoltageSource",
       "prefix": "photovoltaics",
-      "properties": ["Synchronized"]
+      "properties": [
+        "Synchronized"
+      ]
     }
-    ],
-
+  ],
   "gridFormingConverter": [
     {
       "lib": "GridFormingConverterDroopControl",
-      "properties": ["Synchronized"]
+      "properties": [
+        "Synchronized"
+      ]
     },
     {
       "lib": "GridFormingConverterMatchingControl",
-      "properties": ["Synchronized"]
+      "properties": [
+        "Synchronized"
+      ]
     },
     {
       "lib": "GridFormingConverterDispatchableVirtualOscillatorControl",
-      "properties": ["Synchronized"]
+      "properties": [
+        "Synchronized"
+      ]
     }
   ]
 }
