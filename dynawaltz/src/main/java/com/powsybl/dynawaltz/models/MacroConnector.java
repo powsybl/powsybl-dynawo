@@ -48,8 +48,8 @@ public final class MacroConnector {
         writer.writeAttribute("id", id);
         for (VarConnection varConnection : this.varConnections) {
             writer.writeEmptyElement(DYN_URI, "connect");
-            writer.writeAttribute("var1", varConnection.getVar1());
-            writer.writeAttribute("var2", varConnection.getVar2());
+            writer.writeAttribute("var1", varConnection.var1());
+            writer.writeAttribute("var2", varConnection.var2());
         }
         writer.writeEndElement();
     }

@@ -21,8 +21,6 @@ import com.powsybl.iidm.network.Load
 import com.powsybl.iidm.network.Network
 import com.powsybl.iidm.network.TwoWindingsTransformer
 
-import java.util.stream.Collectors
-
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
