@@ -66,25 +66,25 @@ class DynaWaltzParametersTest extends AbstractConverterTest {
         assertEquals(networkParametersId, parameters.getNetworkParameters().getId());
         ParametersSet networkParameters = parameters.getNetworkParameters();
         Parameter loadTp = networkParameters.getParameter("load_Tp");
-        assertEquals("90", loadTp.getValue());
-        assertEquals("load_Tp", loadTp.getName());
-        assertEquals(ParameterType.DOUBLE, loadTp.getType());
+        assertEquals("90", loadTp.value());
+        assertEquals("load_Tp", loadTp.name());
+        assertEquals(ParameterType.DOUBLE, loadTp.type());
         Parameter loadControllable = networkParameters.getParameter("load_isControllable");
-        assertEquals("false", loadControllable.getValue());
-        assertEquals("load_isControllable", loadControllable.getName());
-        assertEquals(ParameterType.BOOL, loadControllable.getType());
+        assertEquals("false", loadControllable.value());
+        assertEquals("load_isControllable", loadControllable.name());
+        assertEquals(ParameterType.BOOL, loadControllable.type());
 
         ParametersSet solverParameters = parameters.getSolverParameters();
         assertEquals(solverParametersId, solverParameters.getId());
         assertEquals(solverType, parameters.getSolverType());
         Parameter order = solverParameters.getParameter("order");
-        assertEquals("1", order.getValue());
-        assertEquals("order", order.getName());
-        assertEquals(ParameterType.INT, order.getType());
+        assertEquals("1", order.value());
+        assertEquals("order", order.name());
+        assertEquals(ParameterType.INT, order.type());
         Parameter absAccuracy = solverParameters.getParameter("absAccuracy");
-        assertEquals("1e-4", absAccuracy.getValue());
-        assertEquals("absAccuracy", absAccuracy.getName());
-        assertEquals(ParameterType.DOUBLE, absAccuracy.getType());
+        assertEquals("1e-4", absAccuracy.value());
+        assertEquals("absAccuracy", absAccuracy.name());
+        assertEquals(ParameterType.DOUBLE, absAccuracy.type());
 
         assertEquals(mergeLoads, parameters.isMergeLoads());
     }
@@ -165,12 +165,12 @@ class DynaWaltzParametersTest extends AbstractConverterTest {
 
     private static void checkModelParameters(DynaWaltzParameters dynaWaltzParameters) {
         Parameter booleanParameter = dynaWaltzParameters.getModelParameters("test").getParameter("boolean");
-        assertEquals("true", booleanParameter.getValue());
-        assertEquals("boolean", booleanParameter.getName());
-        assertEquals(ParameterType.BOOL, booleanParameter.getType());
+        assertEquals("true", booleanParameter.value());
+        assertEquals("boolean", booleanParameter.name());
+        assertEquals(ParameterType.BOOL, booleanParameter.type());
         Parameter stringParameter = dynaWaltzParameters.getModelParameters("test").getParameter("string");
-        assertEquals("aString", stringParameter.getValue());
-        assertEquals("string", stringParameter.getName());
-        assertEquals(ParameterType.STRING, stringParameter.getType());
+        assertEquals("aString", stringParameter.value());
+        assertEquals("string", stringParameter.name());
+        assertEquals(ParameterType.STRING, stringParameter.type());
     }
 }

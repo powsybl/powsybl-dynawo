@@ -35,7 +35,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ForkJoinPool;
-import java.util.stream.Collectors;
 
 import static com.powsybl.commons.test.ComparisonUtils.compareTxt;
 import static com.powsybl.commons.test.ComparisonUtils.compareXml;
@@ -115,7 +114,7 @@ class DynaFlowSecurityAnalysisTest extends AbstractConverterTest {
         Contingency contingency1 = Contingency.builder("NHV1_NHV2_2_contingency").addBranch("NHV1_NHV2_2").build();
         Contingency contingency2 = Contingency.builder("NB_NGEN_contingency").addBranch("NB_NGEN").build();
         List<Contingency> contingencies = List.of(contingency1, contingency2);
-        List<String> contingencyIds = contingencies.stream().map(Contingency::getId).collect(Collectors.toList());
+        List<String> contingencyIds = contingencies.stream().map(Contingency::getId).toList();
 
         LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynawo_version.out",
                 "/SecurityAnalysis/input.xiidm", "/SecurityAnalysis/contingencies.json",

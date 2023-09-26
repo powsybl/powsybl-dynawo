@@ -9,28 +9,8 @@ package com.powsybl.dynawo.commons.timeline;
 
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
+ * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class TimelineEntry {
+public record TimelineEntry(double time, String modelName, String message) {
 
-    private final double time;
-    private final String modelName;
-    private final String message;
-
-    public TimelineEntry(double time, String modelName, String message) {
-        this.time = time;
-        this.modelName = modelName;
-        this.message = message;
-    }
-
-    public double getTime() {
-        return time;
-    }
-
-    public String getModelName() {
-        return modelName;
-    }
-
-    public String getMessage() {
-        return message;
-    }
 }

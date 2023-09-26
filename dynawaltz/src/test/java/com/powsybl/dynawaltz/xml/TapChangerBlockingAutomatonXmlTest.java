@@ -23,7 +23,6 @@ import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -47,7 +46,7 @@ class TapChangerBlockingAutomatonXmlTest extends AbstractDynamicModelXmlTest {
         dynamicModels.add(new LoadOneTransformerTapChanger("BBM_LOAD", network.getLoad("LOAD"), "lot"));
         dynamicModels.add(new LoadTwoTransformersTapChangers("BBM_LOAD2", network.getLoad("LOAD2"), "ltt"));
         dynamicModels.add(new TapChangerBlockingAutomaton("BBM_TapChangerBlocking", "TapChangerPar",
-                network.getTwoWindingsTransformerStream().collect(Collectors.toList()),
+                network.getTwoWindingsTransformerStream().toList(),
                 List.of(network.getLoad("LOAD"), network.getLoad("LOAD2")),
                 List.of(network.getBusBreakerView().getBus("NHV1"), network.getBusBreakerView().getBus("NHV2"))));
     }

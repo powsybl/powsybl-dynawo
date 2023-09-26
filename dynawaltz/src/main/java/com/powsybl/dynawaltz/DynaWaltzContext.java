@@ -62,7 +62,7 @@ public class DynaWaltzContext {
         this.dynaWaltzParameters = Objects.requireNonNull(dynaWaltzParameters);
         this.frequencySynchronizer = setupFrequencySynchronizer(dynamicModels.stream().anyMatch(InfiniteBus.class::isInstance) ? SetPoint::new : OmegaRef::new);
 
-        for (BlackBoxModel bbm : getBlackBoxDynamicModelStream().collect(Collectors.toList())) {
+        for (BlackBoxModel bbm : getBlackBoxDynamicModelStream().toList()) {
             macroStaticReferences.computeIfAbsent(bbm.getName(), k -> new MacroStaticReference(k, bbm.getVarsMapping()));
             bbm.createMacroConnections(this);
         }
@@ -76,7 +76,7 @@ public class DynaWaltzContext {
         return fsConstructor.apply(dynamicModels.stream()
                 .filter(FrequencySynchronizedModel.class::isInstance)
                 .map(FrequencySynchronizedModel.class::cast)
-                .collect(Collectors.toList()));
+                .toList());
     }
 
     public Network getNetwork() {
@@ -213,7 +213,7 @@ public class DynaWaltzContext {
     }
 
     public List<BlackBoxModel> getBlackBoxDynamicModels() {
-        return getBlackBoxDynamicModelStream().collect(Collectors.toList());
+        return getBlackBoxDynamicModelStream().toList();
     }
 
     public List<BlackBoxModel> getBlackBoxModels() {

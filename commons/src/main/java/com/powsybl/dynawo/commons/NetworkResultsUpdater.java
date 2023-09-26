@@ -149,8 +149,9 @@ public final class NetworkResultsUpdater {
                 update(targetNetwork.getLoad(sourceLoad.getId()).getTerminal(), sourceLoad.getTerminal());
             }
         } else {
+            Map<String, Bus> sourceBusesById = sourceNetwork.getBusBreakerView().getBusStream().collect(Collectors.toMap(Identifiable::getId, Function.identity()));
             for (Bus busTarget : targetNetwork.getBusBreakerView().getBuses()) {
-                updateLoads(busTarget, sourceNetwork.getBusBreakerView().getBus(busTarget.getId()));
+                updateLoads(busTarget, sourceBusesById.get(busTarget.getId()));
             }
         }
     }
