@@ -107,9 +107,9 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
     private static Stream<Arguments> provideEquipmentModelData() {
         return Stream.of(
                 Arguments.of("/dynamicModels/bus.groovy", StandardBus.class, EurostagTutorialExample1Factory.create(), "NGEN", "BBM_NGEN", "SB", "Bus"),
-                Arguments.of("/dynamicModels/hvdcPv.groovy", HvdcPv.class, HvdcTestNetwork.createVsc(), "L", "BBM_HVDC_L", "HVDC", "HvdcPV"),
+                Arguments.of("/dynamicModels/hvdcP.groovy", HvdcPv.class, HvdcTestNetwork.createVsc(), "L", "BBM_HVDC_L", "HVDC", "HvdcPV"),
                 Arguments.of("/dynamicModels/hvdcVsc.groovy", HvdcVsc.class, HvdcTestNetwork.createVsc(), "L", "BBM_HVDC_L", "HVDC", "HvdcVSC"),
-                Arguments.of("/dynamicModels/hvdcPvDangling.groovy", HvdcPvDangling.class, HvdcTestNetwork.createVsc(), "L", "BBM_HVDC_L", "HVDC", "HvdcPVDanglingDiagramPQ"),
+                Arguments.of("/dynamicModels/hvdcPDangling.groovy", HvdcPvDangling.class, HvdcTestNetwork.createVsc(), "L", "BBM_HVDC_L", "HVDC", "HvdcPVDanglingDiagramPQ"),
                 Arguments.of("/dynamicModels/hvdcVscDangling.groovy", HvdcVscDangling.class, HvdcTestNetwork.createVsc(), "L", "BBM_HVDC_L", "HVDC", "HvdcVSCDanglingUdc"),
                 Arguments.of("/dynamicModels/loadAB.groovy", BaseLoad.class, EurostagTutorialExample1Factory.create(), "LOAD", "LOAD", "LAB", "LoadAlphaBetaRestorative"),
                 Arguments.of("/dynamicModels/loadABControllable.groovy", BaseLoadControllable.class, EurostagTutorialExample1Factory.create(), "LOAD", "LOAD", "LAB", "LoadAlphaBeta"),

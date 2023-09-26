@@ -20,16 +20,16 @@ import com.powsybl.iidm.network.Network
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class HvdcPvGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+class HvdcPGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
-    protected static final String HVDC_PV = "hvdcPv"
+    protected static final String HVDC_P = "hvdcP"
 
-    HvdcPvGroovyExtension() {
-        super(HVDC_PV)
+    HvdcPGroovyExtension() {
+        super(HVDC_P)
     }
 
-    protected HvdcPvGroovyExtension(URL config) {
-        super(HVDC_PV, config)
+    protected HvdcPGroovyExtension(URL config) {
+        super(HVDC_P, config)
     }
 
     @Override
