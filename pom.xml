@@ -144,6 +144,12 @@
                 <artifactId>powsybl-dynawo-integration-tests</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.apache.groovy</groupId>
+                <artifactId>groovy-json</artifactId>
+                <version>${groovy.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
