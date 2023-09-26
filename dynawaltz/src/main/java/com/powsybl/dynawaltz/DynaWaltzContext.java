@@ -62,12 +62,7 @@ public class DynaWaltzContext {
         this.staticIdBlackBoxModelMap = getInputBlackBoxDynamicModelStream()
                 .filter(EquipmentBlackBoxModel.class::isInstance)
                 .map(EquipmentBlackBoxModel.class::cast)
-                .collect(Collectors.toMap(EquipmentBlackBoxModel::getStaticId,
-                    Function.identity(),
-                    (bbm1, bbm2) -> {
-                        throw new PowsyblException("Duplicate staticId: " + bbm1.getStaticId());
-                    },
-                    LinkedHashMap::new));
+                .collect(Collectors.toMap(EquipmentBlackBoxModel::getStaticId, Function.identity()));
         this.curves = Objects.requireNonNull(curves);
         this.parameters = Objects.requireNonNull(parameters);
         this.dynaWaltzParameters = Objects.requireNonNull(dynaWaltzParameters);
