@@ -10,14 +10,7 @@ package com.powsybl.dynawaltz.models;
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class MacroConnectAttribute {
-    private final String name;
-    private final String value;
-
-    public MacroConnectAttribute(String name, String value) {
-        this.name = name;
-        this.value = value;
-    }
+public record MacroConnectAttribute(String name, String value) {
 
     public static MacroConnectAttribute of(String name, String value) {
         return new MacroConnectAttribute(name, value);
@@ -25,13 +18,5 @@ public class MacroConnectAttribute {
 
     public static MacroConnectAttribute ofIndex1(int index) {
         return new MacroConnectAttribute("index1", String.valueOf(index));
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getValue() {
-        return value;
     }
 }

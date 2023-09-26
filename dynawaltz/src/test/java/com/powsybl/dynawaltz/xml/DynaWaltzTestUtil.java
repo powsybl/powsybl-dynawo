@@ -18,7 +18,7 @@ import com.powsybl.dynawaltz.models.generators.GeneratorFictitious;
 import com.powsybl.dynawaltz.models.generators.SynchronousGenerator;
 import com.powsybl.dynawaltz.models.generators.SynchronizedGenerator;
 import com.powsybl.dynawaltz.models.lines.StandardLine;
-import com.powsybl.dynawaltz.models.loads.LoadAlphaBeta;
+import com.powsybl.dynawaltz.models.loads.BaseLoad;
 import com.powsybl.dynawaltz.models.loads.LoadOneTransformer;
 import com.powsybl.iidm.network.*;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
@@ -74,7 +74,7 @@ public class DynaWaltzTestUtil extends AbstractConverterTest {
             if (l.getId().equals("LOAD2")) {
                 dynamicModels.add(new LoadOneTransformer("BBM_" + l.getId(), l, "LOT"));
             } else {
-                dynamicModels.add(new LoadAlphaBeta("BBM_" + l.getId(), l, "LAB", "LoadAlphaBeta"));
+                dynamicModels.add(new BaseLoad("BBM_" + l.getId(), l, "LAB", "LoadAlphaBeta"));
             }
         });
         network.getGeneratorStream().forEach(g -> {

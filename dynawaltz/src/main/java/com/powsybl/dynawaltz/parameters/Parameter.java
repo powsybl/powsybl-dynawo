@@ -14,12 +14,9 @@ import java.util.Objects;
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
+ * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class Parameter {
-
-    private final String name;
-    private final ParameterType type;
-    private final String value;
+public record Parameter(String name, ParameterType type, String value) {
 
     public Parameter(@JsonProperty("name") String name,
                      @JsonProperty("type") ParameterType type,
@@ -27,18 +24,6 @@ public class Parameter {
         this.name = Objects.requireNonNull(name);
         this.type = Objects.requireNonNull(type);
         this.value = Objects.requireNonNull(value);
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public ParameterType getType() {
-        return type;
-    }
-
-    public String getValue() {
-        return value;
     }
 
 }

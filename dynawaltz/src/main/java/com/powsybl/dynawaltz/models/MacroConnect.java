@@ -42,10 +42,10 @@ public final class MacroConnect {
         writer.writeEmptyElement(DYN_URI, "macroConnect");
         writer.writeAttribute("connector", id);
         for (MacroConnectAttribute attribute : attributesFrom) {
-            writer.writeAttribute(attribute.getName(), attribute.getValue());
+            writer.writeAttribute(attribute.name(), attribute.value());
         }
         for (MacroConnectAttribute attribute : attributesTo) {
-            writer.writeAttribute(attribute.getName(), attribute.getValue());
+            writer.writeAttribute(attribute.name(), attribute.value());
         }
     }
 }

@@ -37,7 +37,6 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import static com.powsybl.dynaflow.DynaFlowConstants.CONFIG_FILENAME;
 import static com.powsybl.dynaflow.DynaFlowConstants.IIDM_FILENAME;
@@ -170,7 +169,7 @@ public class DynaFlowSecurityAnalysis {
                 Path constraintsDir = workingDir.resolve(DYNAWO_CONSTRAINTS_FOLDER);
                 List<PostContingencyResult> contingenciesResults = contingencies.stream()
                     .map(c -> getPostContingencyResult(network, violationFilter, constraintsDir, c))
-                    .collect(Collectors.toList());
+                    .toList();
 
                 // Report the timeline events from the timeline files written by dynawo
                 Path timelineDir = workingDir.resolve(DYNAWO_TIMELINE_FOLDER);

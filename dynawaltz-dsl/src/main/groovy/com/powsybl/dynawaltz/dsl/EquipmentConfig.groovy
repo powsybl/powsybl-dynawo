@@ -15,6 +15,8 @@ class EquipmentConfig {
     static final String CONTROLLABLE_PROPERTY = "CONTROLLABLE"
     static final String DANGLING_PROPERTY = "DANGLING"
     static final String SYNCHRONIZED_PROPERTY = "SYNCHRONIZED"
+    static final String TRANSFORMER_PROPERTY = "TRANSFORMER"
+    static final String AUXILIARY_PROPERTY = "AUXILIARY"
 
     final String lib
     final String prefix
@@ -23,7 +25,7 @@ class EquipmentConfig {
     EquipmentConfig(String lib, String prefix, String... properties) {
         this.lib = lib
         this.prefix = prefix
-        this.properties = properties
+        this.properties = properties ? properties.collect{it.toUpperCase()} as List<String> : [] as List<String>
     }
 
     EquipmentConfig(String lib) {
@@ -42,6 +44,14 @@ class EquipmentConfig {
 
     boolean isSynchronized() {
         properties.contains(SYNCHRONIZED_PROPERTY)
+    }
+
+    boolean hasTransformer() {
+        properties.contains(TRANSFORMER_PROPERTY)
+    }
+
+    boolean hasAuxiliary() {
+        properties.contains(AUXILIARY_PROPERTY)
     }
 
     boolean hasProperty(String property) {

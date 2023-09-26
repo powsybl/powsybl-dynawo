@@ -79,6 +79,16 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
         assertTrue(supplier.get(network).isEmpty());
     }
 
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("provideGenerator")
+    void testGeneratorPrefixes(String groovyScriptName, Class<? extends GeneratorModel> modelClass, Network network, String terminalVarName) {
+        DynamicModelsSupplier supplier = new GroovyDynamicModelsSupplier(getResourceAsStream(groovyScriptName), EXTENSIONS);
+        List<DynamicModel> dynamicModels = supplier.get(network);
+        assertEquals(1, dynamicModels.size());
+        assertTrue(modelClass.isInstance(dynamicModels.get(0)));
+        assertEquals(terminalVarName, modelClass.cast(dynamicModels.get(0)).getTerminalVarName());
+    }
+
     void assertEquipmentBlackBoxModel(EquipmentBlackBoxModel bbm, String dynamicId, String staticId, String parameterId, String lib) {
         assertEquals(dynamicId, bbm.getDynamicModelId());
         assertEquals(staticId, bbm.getStaticId());
@@ -99,8 +109,8 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                 Arguments.of("/dynamicModels/hvdcVsc.groovy", HvdcVsc.class, HvdcTestNetwork.createVsc(), "L", "BBM_HVDC_L", "HVDC", "HvdcVSC"),
                 Arguments.of("/dynamicModels/hvdcPvDangling.groovy", HvdcPvDangling.class, HvdcTestNetwork.createVsc(), "L", "BBM_HVDC_L", "HVDC", "HvdcPVDanglingDiagramPQ"),
                 Arguments.of("/dynamicModels/hvdcVscDangling.groovy", HvdcVscDangling.class, HvdcTestNetwork.createVsc(), "L", "BBM_HVDC_L", "HVDC", "HvdcVSCDanglingUdc"),
-                Arguments.of("/dynamicModels/loadAB.groovy", LoadAlphaBeta.class, EurostagTutorialExample1Factory.create(), "LOAD", "LOAD", "LAB", "LoadAlphaBetaRestorative"),
-                Arguments.of("/dynamicModels/loadABControllable.groovy", LoadAlphaBetaControllable.class, EurostagTutorialExample1Factory.create(), "LOAD", "LOAD", "LAB", "LoadAlphaBeta"),
+                Arguments.of("/dynamicModels/loadAB.groovy", BaseLoad.class, EurostagTutorialExample1Factory.create(), "LOAD", "LOAD", "LAB", "LoadAlphaBetaRestorative"),
+                Arguments.of("/dynamicModels/loadABControllable.groovy", BaseLoadControllable.class, EurostagTutorialExample1Factory.create(), "LOAD", "LOAD", "LAB", "LoadAlphaBeta"),
                 Arguments.of("/dynamicModels/loadTransformer.groovy", LoadOneTransformer.class, EurostagTutorialExample1Factory.create(), "LOAD", "LOAD", "LOT", "LoadOneTransformer"),
                 Arguments.of("/dynamicModels/loadTransformerTapChanger.groovy", LoadOneTransformerTapChanger.class, EurostagTutorialExample1Factory.create(), "LOAD", "LOAD", "LOT", "LoadOneTransformerTapChanger"),
                 Arguments.of("/dynamicModels/loadTwoTransformers.groovy", LoadTwoTransformers.class, EurostagTutorialExample1Factory.create(), "LOAD", "LOAD", "LTT", "LoadTwoTransformers"),
@@ -149,5 +159,12 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                 Arguments.of("/warnings/tapChangerMissingBus.groovy", EurostagTutorialExample1Factory.create()),
                 Arguments.of("/warnings/tapChangerCompatible.groovy", EurostagTutorialExample1Factory.create())
                 );
+    }
+
+    private static Stream<Arguments> provideGenerator() {
+        return Stream.of(
+                Arguments.of("/dynamicModels/gen.groovy", SynchronousGenerator.class, EurostagTutorialExample1Factory.create(), "generator_terminal"),
+                Arguments.of("/dynamicModels/genTfo.groovy", SynchronousGenerator.class, EurostagTutorialExample1Factory.create(), "transformer_terminal1")
+        );
     }
 }
