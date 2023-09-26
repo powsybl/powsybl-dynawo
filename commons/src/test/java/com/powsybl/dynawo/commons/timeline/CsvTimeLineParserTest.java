@@ -34,18 +34,18 @@ class CsvTimeLineParserTest {
         List<TimelineEntry> timeline = new CsvTimeLineParser().parse(path);
 
         assertEquals(5, timeline.size());
-        assertEquals("PMIN : activation", timeline.get(0).getMessage());
-        assertEquals("GEN____8_SM", timeline.get(0).getModelName());
-        assertEquals(0., timeline.get(0).getTime(), 1e-9);
-        assertEquals("PMIN : activation", timeline.get(1).getMessage());
-        assertEquals("GEN____3_SM", timeline.get(1).getModelName());
-        assertEquals(0.0306911, timeline.get(1).getTime(), 1e-9);
-        assertEquals("PMIN : deactivation", timeline.get(2).getMessage());
-        assertEquals("GEN____8_SM", timeline.get(2).getModelName());
-        assertEquals("PMIN : deactivation", timeline.get(3).getMessage());
-        assertEquals("GEN____3_SM", timeline.get(3).getModelName());
-        assertEquals("PMIN : activation", timeline.get(4).getMessage());
-        assertEquals("GEN____8_SM", timeline.get(4).getModelName());
+        assertEquals("PMIN : activation", timeline.get(0).message());
+        assertEquals("GEN____8_SM", timeline.get(0).modelName());
+        assertEquals(0., timeline.get(0).time(), 1e-9);
+        assertEquals("PMIN : activation", timeline.get(1).message());
+        assertEquals("GEN____3_SM", timeline.get(1).modelName());
+        assertEquals(0.0306911, timeline.get(1).time(), 1e-9);
+        assertEquals("PMIN : deactivation", timeline.get(2).message());
+        assertEquals("GEN____8_SM", timeline.get(2).modelName());
+        assertEquals("PMIN : deactivation", timeline.get(3).message());
+        assertEquals("GEN____3_SM", timeline.get(3).modelName());
+        assertEquals("PMIN : activation", timeline.get(4).message());
+        assertEquals("GEN____8_SM", timeline.get(4).modelName());
     }
 
     @Test

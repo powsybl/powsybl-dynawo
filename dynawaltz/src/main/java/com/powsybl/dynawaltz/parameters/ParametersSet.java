@@ -52,22 +52,22 @@ public class ParametersSet {
 
     public boolean getBool(String parameterName) {
         Parameter parameter = getParameter(parameterName, ParameterType.BOOL);
-        return Boolean.parseBoolean(parameter.getValue());
+        return Boolean.parseBoolean(parameter.value());
     }
 
     public double getDouble(String parameterName) {
         Parameter parameter = getParameter(parameterName, ParameterType.DOUBLE);
-        return Double.parseDouble(parameter.getValue());
+        return Double.parseDouble(parameter.value());
     }
 
     public int getInt(String parameterName) {
         Parameter parameter = getParameter(parameterName, ParameterType.INT);
-        return Integer.parseInt(parameter.getValue());
+        return Integer.parseInt(parameter.value());
     }
 
     public String getString(String parameterName) {
         Parameter parameter = getParameter(parameterName, ParameterType.STRING);
-        return parameter.getValue();
+        return parameter.value();
     }
 
     public Parameter getParameter(String parameterName) {
@@ -80,8 +80,8 @@ public class ParametersSet {
 
     private Parameter getParameter(String parameterName, ParameterType type) {
         Parameter parameter = getParameter(parameterName);
-        if (parameter.getType() != type) {
-            throw new PowsyblException("Invalid parameter type: " + parameter.getType() + " (" + type + " expected)");
+        if (parameter.type() != type) {
+            throw new PowsyblException("Invalid parameter type: " + parameter.type() + " (" + type + " expected)");
         }
         return parameter;
     }
