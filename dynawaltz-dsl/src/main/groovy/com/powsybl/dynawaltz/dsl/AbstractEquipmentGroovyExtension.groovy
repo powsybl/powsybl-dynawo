@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) 2023, RTE (http://www.rte-france.com/)
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -28,10 +28,10 @@ abstract class AbstractEquipmentGroovyExtension<T> {
         equipmentConfigs = ModelsSlurper.instance.getEquipmentConfigs(modelConfigUrl, modelTag)
     }
 
-    abstract protected ModelBuilder<T> createBuilder(Network network, EquipmentConfig equipmentConfig);
+    abstract protected ModelBuilder<T> createBuilder(Network network, EquipmentConfig equipmentConfig)
 
     String getName() {
-        return DynaWaltzProvider.NAME
+        DynaWaltzProvider.NAME
     }
 
     void load(Binding binding, Consumer<T> consumer) {
@@ -41,7 +41,9 @@ abstract class AbstractEquipmentGroovyExtension<T> {
                 ModelBuilder<T> builder = createBuilder(binding.getVariable("network") as Network, it)
                 cloned.delegate = builder
                 cloned()
-                consumer.accept(builder.build())
+                builder.build()?.tap {
+                    consumer.accept(it)
+                }
             })
         }
     }

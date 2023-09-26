@@ -40,11 +40,8 @@ class SynchronousGeneratorGroovyExtension extends AbstractEquipmentGroovyExtensi
 
     static class SynchronousGeneratorBuilder extends AbstractGeneratorBuilder {
 
-        EquipmentConfig equipmentConfig
-
         SynchronousGeneratorBuilder(Network network, EquipmentConfig equipmentConfig) {
-            super(network)
-            this.equipmentConfig = equipmentConfig
+            super(network, equipmentConfig)
         }
 
         protected EnumGeneratorComponent getGeneratorComponent() {
@@ -62,11 +59,14 @@ class SynchronousGeneratorGroovyExtension extends AbstractEquipmentGroovyExtensi
 
         @Override
         SynchronousGenerator build() {
-            checkData()
-            if (equipmentConfig.isControllable()) {
-                new SynchronousGeneratorControllable(dynamicModelId, generator, parameterSetId, equipmentConfig.lib, getGeneratorComponent())
+            if (isInstantiable()) {
+                if (equipmentConfig.isControllable()) {
+                    new SynchronousGeneratorControllable(dynamicModelId, equipment, parameterSetId, equipmentConfig.lib, getGeneratorComponent())
+                } else {
+                    new SynchronousGenerator(dynamicModelId, equipment, parameterSetId, equipmentConfig.lib, getGeneratorComponent())
+                }
             } else {
-                new SynchronousGenerator(dynamicModelId, generator, parameterSetId, equipmentConfig.lib, getGeneratorComponent())
+                null
             }
         }
     }

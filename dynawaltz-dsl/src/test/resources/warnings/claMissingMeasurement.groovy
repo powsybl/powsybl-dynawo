@@ -5,12 +5,15 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.dsl
 
-/**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
- */
-interface ModelBuilder<T> {
+package warnings
 
-    T build()
+import com.powsybl.iidm.network.Branch
+
+CurrentLimitAutomaton {
+    dynamicModelId "CLA_NGEN"
+    parameterSetId "CLA"
+    controlledQuadripole "NHV1_NHV2_2"
+    iMeasurement "NGEN"
+    iMeasurementSide Branch.Side.TWO
 }

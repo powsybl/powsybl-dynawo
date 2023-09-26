@@ -36,20 +36,20 @@ class BaseLoadGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicMo
 
     static class LoadAlphaBetaBuilder extends AbstractLoadModelBuilder {
 
-        EquipmentConfig equipmentConfig;
-
         LoadAlphaBetaBuilder(Network network, EquipmentConfig equipmentConfig) {
-            super(network)
-            this.equipmentConfig = equipmentConfig;
+            super(network, equipmentConfig)
         }
 
         @Override
         BaseLoad build() {
-            checkData()
-            if (equipmentConfig.isControllable()) {
-                new BaseLoadControllable(dynamicModelId, load, parameterSetId, equipmentConfig.lib)
+            if (isInstantiable()) {
+                if (equipmentConfig.isControllable()) {
+                    new BaseLoadControllable(dynamicModelId, equipment, parameterSetId, equipmentConfig.lib)
+                } else {
+                    new BaseLoad(dynamicModelId, equipment, parameterSetId, equipmentConfig.lib)
+                }
             } else {
-                new BaseLoad(dynamicModelId, load, parameterSetId, equipmentConfig.lib)
+                null
             }
         }
     }

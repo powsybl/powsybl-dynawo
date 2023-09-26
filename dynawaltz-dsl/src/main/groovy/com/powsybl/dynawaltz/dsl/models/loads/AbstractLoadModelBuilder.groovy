@@ -7,27 +7,23 @@
  */
 package com.powsybl.dynawaltz.dsl.models.loads
 
-import com.powsybl.dsl.DslException
-import com.powsybl.dynawaltz.dsl.models.builders.AbstractDynamicModelBuilder
+import com.powsybl.dynawaltz.dsl.EquipmentConfig
+import com.powsybl.dynawaltz.dsl.builders.AbstractEquipmentModelBuilder
+import com.powsybl.iidm.network.IdentifiableType
 import com.powsybl.iidm.network.Load
 import com.powsybl.iidm.network.Network
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-abstract class AbstractLoadModelBuilder extends AbstractDynamicModelBuilder {
+abstract class AbstractLoadModelBuilder extends AbstractEquipmentModelBuilder<Load> {
 
-    Load load
-
-    AbstractLoadModelBuilder(Network network) {
-        super(network)
+    AbstractLoadModelBuilder(Network network, EquipmentConfig equipmentConfig) {
+        super(network, equipmentConfig, IdentifiableType.LOAD)
     }
 
-    void checkData() {
-        super.checkData()
-        load = network.getLoad(staticId)
-        if (load == null) {
-            throw new DslException("Load static id unknown: " + staticId)
-        }
+    @Override
+    protected Load findEquipment(String staticId) {
+        network.getLoad(staticId)
     }
 }

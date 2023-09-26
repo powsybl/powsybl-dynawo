@@ -12,6 +12,7 @@ import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractPureDynamicGroovyExtension
+import com.powsybl.dynawaltz.dsl.DslEquipment
 import com.powsybl.dynawaltz.models.Side
 import com.powsybl.dynawaltz.models.automatons.CurrentLimitTwoLevelsAutomaton
 import com.powsybl.dynawaltz.models.utils.SideConverter
@@ -29,7 +30,7 @@ class CurrentLimitTwoLevelsAutomatonGroovyExtension extends AbstractPureDynamicG
     }
 
     protected String getLib() {
-        return "CurrentLimitAutomatonTwoLevels"
+        "CurrentLimitAutomatonTwoLevels"
     }
 
     @Override
@@ -39,11 +40,12 @@ class CurrentLimitTwoLevelsAutomatonGroovyExtension extends AbstractPureDynamicG
 
     static class CurrentLimitAutomatonTwoLevelBuilder extends CurrentLimitAutomatonGroovyExtension.CurrentLimitAutomatonBuilder {
 
-        Branch<? extends Branch> iMeasurement2
-        Side iMeasurement2Side
+        protected final DslEquipment<Branch> iMeasurement2
+        protected Side iMeasurement2Side
 
         CurrentLimitAutomatonTwoLevelBuilder(Network network, String lib) {
             super(network, lib)
+            iMeasurement2 = new DslEquipment<>("I measurement 2 quadripole", "iMeasurement2")
         }
 
         void iMeasurement1(String staticId) {
@@ -55,10 +57,7 @@ class CurrentLimitTwoLevelsAutomatonGroovyExtension extends AbstractPureDynamicG
         }
 
         void iMeasurement2(String staticId) {
-            iMeasurement2 = network.getBranch(staticId)
-            if (!iMeasurement2) {
-                throw new DslException("Equipment ${staticId} is not a quadripole")
-            }
+            iMeasurement2.addEquipment(staticId, network::getBranch)
         }
 
         void iMeasurement2Side(Branch.Side side) {
@@ -68,18 +67,19 @@ class CurrentLimitTwoLevelsAutomatonGroovyExtension extends AbstractPureDynamicG
         @Override
         void checkData() {
             super.checkData()
-            if (!iMeasurement2) {
-                throw new DslException("'iMeasurement2' field is not set")
-            }
+            isInstantiable &= iMeasurement2.checkEquipmentData(LOGGER, getLib())
             if (!iMeasurement2Side) {
-                throw new DslException("'iMeasurement2Side' field is not set")
+                LOGGER.warn("${getLib()}: 'iMeasurement2Side' field is not set")
+                isInstantiable = false
             }
         }
 
         @Override
         CurrentLimitTwoLevelsAutomaton build() {
-            checkData()
-            new CurrentLimitTwoLevelsAutomaton(dynamicModelId, parameterSetId, iMeasurement, iMeasurementSide, iMeasurement2, iMeasurement2Side, controlledEquipment, lib)
+            isInstantiable() ? new CurrentLimitTwoLevelsAutomaton(dynamicModelId, parameterSetId,
+                    iMeasurement.equipment, iMeasurementSide, iMeasurement2.equipment, iMeasurement2Side,
+                    controlledEquipment.equipment, lib)
+                    : null
         }
     }
 }

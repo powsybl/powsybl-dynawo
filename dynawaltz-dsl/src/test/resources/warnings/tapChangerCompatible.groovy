@@ -5,12 +5,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.dsl
 
-/**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
- */
-interface ModelBuilder<T> {
+package warnings
 
-    T build()
+
+TapChangerBlockingAutomaton {
+    dynamicModelId "ZAB"
+    parameterSetId "ZAB"
+    uMeasurements "NGEN"
+    transformers "GEN"
 }

@@ -44,6 +44,13 @@ class EventModelsSupplierTest extends AbstractModelSupplierTest {
         assertEventModel(modelClass.cast(eventModels.get(0)), dynamicId, equipmentStaticId, lib, startTime);
     }
 
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("provideWarningsModel")
+    void testDslWarnings(String groovyScriptName, Network network) {
+        EventModelsSupplier supplier = new GroovyEventModelsSupplier(getResourceAsStream(groovyScriptName), EXTENSIONS);
+        assertTrue(supplier.get(network).isEmpty());
+    }
+
     void assertEventModel(AbstractEventModel em, String dynamicId, String equipmentStaticId, String lib, double startTime) {
         assertEquals(dynamicId, em.getDynamicModelId());
         assertEquals(equipmentStaticId, em.getEquipment().getId());
@@ -64,6 +71,17 @@ class EventModelsSupplierTest extends AbstractModelSupplierTest {
                 Arguments.of("/eventModels/hvdcDisconnection.groovy", EventHvdcDisconnection.class, HvdcTestNetwork.createVsc(), "L", "Disconnect_L", null, 2),
                 Arguments.of("/eventModels/nodeFault.groovy", NodeFaultEvent.class, EurostagTutorialExample1Factory.create(), "NGEN", "Node_Fault_NGEN", "NodeFault", 1),
                 Arguments.of("/eventModels/step.groovy", EventActivePowerVariation.class, EurostagTutorialExample1Factory.create(), "LOAD", "Step_LOAD", null, 2)
+        );
+    }
+
+    private static Stream<Arguments> provideWarningsModel() {
+        return Stream.of(
+                Arguments.of("/eventWarnings/missingStaticId.groovy", EurostagTutorialExample1Factory.create()),
+                Arguments.of("/eventWarnings/missingStartTime.groovy", EurostagTutorialExample1Factory.create()),
+                Arguments.of("/eventWarnings/missingNodeFaultParameters.groovy", EurostagTutorialExample1Factory.create()),
+                Arguments.of("/eventWarnings/missingAPVParameters.groovy", EurostagTutorialExample1Factory.create()),
+                Arguments.of("/eventWarnings/missingDisconnectionEquipment.groovy", EurostagTutorialExample1Factory.create()),
+                Arguments.of("/eventWarnings/missingDisconnectionSide.groovy", EurostagTutorialExample1Factory.create())
         );
     }
 }
