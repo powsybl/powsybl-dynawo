@@ -17,11 +17,11 @@ import com.powsybl.iidm.network.HvdcLine;
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class HvdcPvDangling extends HvdcPv {
+public class HvdcPDangling extends HvdcP {
 
     private final DanglingSide danglingSide;
 
-    public HvdcPvDangling(String dynamicModelId, HvdcLine hvdc, String parameterSetId, String hvdcLib, Side danglingSide) {
+    public HvdcPDangling(String dynamicModelId, HvdcLine hvdc, String parameterSetId, String hvdcLib, Side danglingSide) {
         super(dynamicModelId, hvdc, parameterSetId, hvdcLib);
         this.danglingSide = new DanglingSide(TERMINAL_PREFIX, danglingSide);
     }

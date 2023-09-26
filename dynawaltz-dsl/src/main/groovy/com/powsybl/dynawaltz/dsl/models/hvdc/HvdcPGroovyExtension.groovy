@@ -12,24 +12,24 @@ import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
 import com.powsybl.dynawaltz.dsl.EquipmentConfig
-import com.powsybl.dynawaltz.models.hvdc.HvdcPv
-import com.powsybl.dynawaltz.models.hvdc.HvdcPvDangling
+import com.powsybl.dynawaltz.models.hvdc.HvdcP
+import com.powsybl.dynawaltz.models.hvdc.HvdcPDangling
 import com.powsybl.iidm.network.Network
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class HvdcPvGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+class HvdcPGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
-    protected static final String HVDC_PV = "hvdcPv"
+    protected static final String HVDC_P = "hvdcP"
 
-    HvdcPvGroovyExtension() {
-        super(HVDC_PV)
+    HvdcPGroovyExtension() {
+        super(HVDC_P)
     }
 
-    protected HvdcPvGroovyExtension(URL config) {
-        super(HVDC_PV, config)
+    protected HvdcPGroovyExtension(URL config) {
+        super(HVDC_P, config)
     }
 
     @Override
@@ -44,12 +44,12 @@ class HvdcPvGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicMode
         }
 
         @Override
-        HvdcPv build() {
+        HvdcP build() {
             if (isInstantiable()) {
                 if (equipmentConfig.isDangling()) {
-                    new HvdcPvDangling(dynamicModelId, equipment, parameterSetId, equipmentConfig.lib, danglingSide)
+                    new HvdcPDangling(dynamicModelId, equipment, parameterSetId, equipmentConfig.lib, danglingSide)
                 } else {
-                    new HvdcPv(dynamicModelId, equipment, parameterSetId, equipmentConfig.lib)
+                    new HvdcP(dynamicModelId, equipment, parameterSetId, equipmentConfig.lib)
                 }
             } else {
                 null

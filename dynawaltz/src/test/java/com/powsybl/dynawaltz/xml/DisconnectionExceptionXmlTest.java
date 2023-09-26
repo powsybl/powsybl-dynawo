@@ -11,7 +11,7 @@ import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.events.EventHvdcDisconnection;
-import com.powsybl.dynawaltz.models.hvdc.HvdcPvDangling;
+import com.powsybl.dynawaltz.models.hvdc.HvdcPDangling;
 import com.powsybl.dynawaltz.models.hvdc.HvdcVscDangling;
 import com.powsybl.iidm.network.HvdcLine;
 import com.powsybl.iidm.network.test.HvdcTestNetwork;
@@ -61,7 +61,7 @@ class DisconnectionExceptionXmlTest extends AbstractParametrizedDynamicModelXmlT
         return Stream.of(
                 Arguments.of("Equipment HvdcPVDangling side 1 is dangling and can't be disconnected with an event",
                         Side.ONE,
-                        (BiFunction<HvdcLine, Side, BlackBoxModel>) (hvdc, side) -> new HvdcPvDangling("BBM_L", hvdc, "hvdc", "HvdcPVDangling", side)),
+                        (BiFunction<HvdcLine, Side, BlackBoxModel>) (hvdc, side) -> new HvdcPDangling("BBM_L", hvdc, "hvdc", "HvdcPVDangling", side)),
                 Arguments.of("Equipment HvdcVSCDanglingUdc side 2 is dangling and can't be disconnected with an event",
                         Side.TWO,
                         (BiFunction<HvdcLine, Side, BlackBoxModel>) (hvdc, side) -> new HvdcVscDangling("BBM_L", hvdc, "hvdc", "HvdcVSCDanglingUdc", side))
