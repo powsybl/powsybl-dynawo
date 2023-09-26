@@ -11,7 +11,6 @@ import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
-import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.parameters.Parameter;
 import com.powsybl.dynawaltz.parameters.ParameterType;
 import com.powsybl.dynawaltz.parameters.ParametersSet;
@@ -29,6 +28,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_PREFIX;
 import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 
 /**
@@ -167,31 +167,22 @@ public final class ParametersXml {
     public static void write(Path workingDir, DynaWaltzContext context) throws IOException, XMLStreamException {
         Objects.requireNonNull(workingDir);
 
-        // Write parameterSet that needs to be generated (OmegaRef...)
-        Path file = workingDir.resolve(context.getSimulationParFile());
-        XmlUtil.write(file, context, PARAMETERS_SET_ELEMENT_NAME, ParametersXml::write);
-
+        write(context.getDynamicModelsParameters(), context.getSimulationParFile(), workingDir, DYN_PREFIX);
         DynaWaltzParameters parameters = context.getDynaWaltzParameters();
-        write(parameters.getModelParameters(), DynaWaltzParameters.MODELS_OUTPUT_PARAMETERS_FILE, workingDir);
-        write(List.of(parameters.getNetworkParameters()), DynaWaltzParameters.NETWORK_OUTPUT_PARAMETERS_FILE, workingDir);
-        write(List.of(parameters.getSolverParameters()), DynaWaltzParameters.SOLVER_OUTPUT_PARAMETERS_FILE, workingDir);
+        write(parameters.getModelParameters(), DynaWaltzParameters.MODELS_OUTPUT_PARAMETERS_FILE, workingDir, "");
+        write(List.of(parameters.getNetworkParameters()), DynaWaltzParameters.NETWORK_OUTPUT_PARAMETERS_FILE, workingDir, "");
+        write(List.of(parameters.getSolverParameters()), DynaWaltzParameters.SOLVER_OUTPUT_PARAMETERS_FILE, workingDir, "");
     }
 
-    private static void write(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
-        for (BlackBoxModel model : context.getBlackBoxModels()) {
-            model.writeParameters(writer, context);
-        }
-    }
-
-    private static void write(Collection<ParametersSet> parametersSets, String filename, Path workingDir) throws IOException, XMLStreamException {
+    private static void write(Collection<ParametersSet> parametersSets, String filename, Path workingDir, String dynPrefix) throws IOException, XMLStreamException {
         Path parametersPath = workingDir.resolve(filename);
         try (Writer writer = Files.newBufferedWriter(parametersPath, StandardCharsets.UTF_8)) {
             XMLStreamWriter xmlWriter = XmlStreamWriterFactory.newInstance(writer);
             try {
                 xmlWriter.writeStartDocument(StandardCharsets.UTF_8.toString(), "1.0");
-                xmlWriter.setPrefix("", DYN_URI);
+                xmlWriter.setPrefix(dynPrefix, DYN_URI);
                 xmlWriter.writeStartElement(DYN_URI, PARAMETERS_SET_ELEMENT_NAME);
-                xmlWriter.writeNamespace("", DYN_URI);
+                xmlWriter.writeNamespace(dynPrefix, DYN_URI);
                 for (ParametersSet parametersSet : parametersSets) {
                     writeParametersSet(xmlWriter, parametersSet);
                 }

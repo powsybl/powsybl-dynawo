@@ -16,6 +16,7 @@ import com.powsybl.dynawaltz.models.frequencysynchronizers.FrequencySynchronized
 import com.powsybl.dynawaltz.models.frequencysynchronizers.FrequencySynchronizerModel;
 import com.powsybl.dynawaltz.models.frequencysynchronizers.OmegaRef;
 import com.powsybl.dynawaltz.models.frequencysynchronizers.SetPoint;
+import com.powsybl.dynawaltz.parameters.ParametersSet;
 import com.powsybl.dynawaltz.xml.MacroStaticReference;
 import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.Network;
@@ -50,6 +51,7 @@ public class DynaWaltzContext {
     private final Map<String, MacroConnector> macroConnectorsMap = new LinkedHashMap<>();
     private final DefaultModelsHandler defaultModelsHandler = new DefaultModelsHandler();
     private final FrequencySynchronizerModel frequencySynchronizer;
+    private final List<ParametersSet> dynamicModelsParameters = new ArrayList<>();
 
     public DynaWaltzContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
                             List<Curve> curves, DynamicSimulationParameters parameters, DynaWaltzParameters dynaWaltzParameters) {
@@ -69,10 +71,14 @@ public class DynaWaltzContext {
         for (BlackBoxModel bbm : getBlackBoxDynamicModelStream().toList()) {
             macroStaticReferences.computeIfAbsent(bbm.getName(), k -> new MacroStaticReference(k, bbm.getVarsMapping()));
             bbm.createMacroConnections(this);
+            bbm.createDynamicModelParameters(this, dynamicModelsParameters::add);
         }
 
+        ParametersSet networkParameters = getDynaWaltzParameters().getNetworkParameters();
         for (BlackBoxModel bbem : eventModels) {
             bbem.createMacroConnections(this);
+            bbem.createDynamicModelParameters(this, dynamicModelsParameters::add);
+            bbem.createNetworkParameter(networkParameters);
         }
     }
 
@@ -239,11 +245,6 @@ public class DynaWaltzContext {
         return getBlackBoxDynamicModelStream().toList();
     }
 
-    public List<BlackBoxModel> getBlackBoxModels() {
-        return Stream.concat(getBlackBoxDynamicModelStream(), getBlackBoxEventModelStream())
-                .collect(Collectors.toList());
-    }
-
     public Stream<BlackBoxModel> getBlackBoxEventModelStream() {
         return eventModels.stream();
     }
@@ -258,6 +259,10 @@ public class DynaWaltzContext {
 
     public boolean withCurves() {
         return !curves.isEmpty();
+    }
+
+    public List<ParametersSet> getDynamicModelsParameters() {
+        return dynamicModelsParameters;
     }
 
     public String getSimulationParFile() {

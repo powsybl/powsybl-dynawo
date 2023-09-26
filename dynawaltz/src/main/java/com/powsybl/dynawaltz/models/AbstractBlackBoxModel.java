@@ -8,6 +8,7 @@ package com.powsybl.dynawaltz.models;
 
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
+import com.powsybl.dynawaltz.parameters.ParametersSet;
 import com.powsybl.iidm.network.Identifiable;
 
 import javax.xml.stream.XMLStreamException;
@@ -17,6 +18,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -49,7 +51,12 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel {
     }
 
     @Override
-    public void writeParameters(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
+    public void createDynamicModelParameters(DynaWaltzContext context, Consumer<ParametersSet> parametersAdder) {
+        // method empty by default to be redefined by specific models
+    }
+
+    @Override
+    public void createNetworkParameter(ParametersSet networkParameters) {
         // method empty by default to be redefined by specific models
     }
 

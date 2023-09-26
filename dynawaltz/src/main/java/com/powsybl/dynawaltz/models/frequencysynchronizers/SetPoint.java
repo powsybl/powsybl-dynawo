@@ -10,14 +10,12 @@ package com.powsybl.dynawaltz.models.frequencysynchronizers;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.VarConnection;
-import com.powsybl.dynawaltz.xml.ParametersXml;
+import com.powsybl.dynawaltz.parameters.ParametersSet;
 
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
 import java.util.List;
+import java.util.function.Consumer;
 
 import static com.powsybl.dynawaltz.parameters.ParameterType.DOUBLE;
-import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 
 /**
  * Special generators' frequency synchronizer used when an Infinite Bus is present in the model.
@@ -36,11 +34,10 @@ public class SetPoint extends AbstractFrequencySynchronizer {
     }
 
     @Override
-    public void writeParameters(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
-        writer.writeStartElement(DYN_URI, "set");
-        writer.writeAttribute("id", getParameterSetId());
-        ParametersXml.writeParameter(writer, DOUBLE, "setPoint_Value0", Double.toString(1));
-        writer.writeEndElement();
+    public void createDynamicModelParameters(DynaWaltzContext context, Consumer<ParametersSet> parametersAdder) {
+        ParametersSet paramSet = new ParametersSet(getParameterSetId());
+        paramSet.addParameter("setPoint_Value0", DOUBLE, Double.toString(1));
+        parametersAdder.accept(paramSet);
     }
 
     private List<VarConnection> getVarConnectionsWith(FrequencySynchronizedModel connected) {

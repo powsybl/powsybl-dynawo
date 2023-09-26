@@ -10,7 +10,7 @@ package com.powsybl.dynawaltz.models.events;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.VarConnection;
-import com.powsybl.dynawaltz.xml.ParametersXml;
+import com.powsybl.dynawaltz.parameters.ParametersSet;
 import com.powsybl.iidm.network.Generator;
 import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Load;
@@ -76,22 +76,14 @@ public class EventActivePowerVariation extends AbstractEventModel {
     }
 
     @Override
-    public void writeParameters(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
-        super.writeParameters(writer, context);
-        if (getEquipment().getType() == IdentifiableType.LOAD) {
-            context.getDynaWaltzParameters().getNetworkParameters().addParameter(getEquipment().getId() + "_isControllable", BOOL, Boolean.toString(true));
-        }
-    }
-
-    @Override
-    protected void writeEventSpecificParameters(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
+    protected void createEventSpecificParameters(ParametersSet paramSet, DynaWaltzContext context) {
         if (context.isWithoutBlackBoxDynamicModel(getEquipment())) {
-            ParametersXml.writeParameter(writer, DOUBLE, "event_tEvent", Double.toString(getStartTime()));
-            ParametersXml.writeParameter(writer, DOUBLE, "event_stateEvent1", Double.toString(deltaP));
+            paramSet.addParameter("event_tEvent", DOUBLE, Double.toString(getStartTime()));
+            paramSet.addParameter("event_stateEvent1", DOUBLE, Double.toString(deltaP));
         } else {
-            ParametersXml.writeParameter(writer, DOUBLE, "step_Value0", Double.toString(0));
-            ParametersXml.writeParameter(writer, DOUBLE, "step_tStep", Double.toString(getStartTime()));
-            ParametersXml.writeParameter(writer, DOUBLE, "step_Height", Double.toString(deltaP));
+            paramSet.addParameter("step_Value0", DOUBLE, Double.toString(0));
+            paramSet.addParameter("step_tStep", DOUBLE, Double.toString(getStartTime()));
+            paramSet.addParameter("step_Height", DOUBLE, Double.toString(deltaP));
         }
     }
 
@@ -101,5 +93,12 @@ public class EventActivePowerVariation extends AbstractEventModel {
         writer.writeAttribute("lib", context.isWithoutBlackBoxDynamicModel(getEquipment()) ? DEFAULT_MODEL_LIB : DYNAMIC_MODEL_LIB);
         writer.writeAttribute("parFile", getParFile(context));
         writer.writeAttribute("parId", getParameterSetId());
+    }
+
+    @Override
+    public void createNetworkParameter(ParametersSet networkParameters) {
+        if (getEquipment().getType() == IdentifiableType.LOAD) {
+            networkParameters.addParameter(getEquipment().getId() + "_isControllable", BOOL, Boolean.toString(true));
+        }
     }
 }

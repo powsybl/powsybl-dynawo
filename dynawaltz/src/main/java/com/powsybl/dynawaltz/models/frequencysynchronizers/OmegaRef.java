@@ -12,16 +12,14 @@ import com.powsybl.dynawaltz.DynaWaltzParameters;
 import com.powsybl.dynawaltz.models.MacroConnectAttribute;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.buses.BusModel;
-import com.powsybl.dynawaltz.xml.ParametersXml;
+import com.powsybl.dynawaltz.parameters.ParametersSet;
 
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
 import static com.powsybl.dynawaltz.parameters.ParameterType.DOUBLE;
 import static com.powsybl.dynawaltz.parameters.ParameterType.INT;
-import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 
 /**
  * OmegaRef is a special model: its role is to synchronize the generators' frequency. The corresponding black
@@ -45,23 +43,18 @@ public class OmegaRef extends AbstractFrequencySynchronizer {
     }
 
     @Override
-    public void writeParameters(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
+    public void createDynamicModelParameters(DynaWaltzContext context, Consumer<ParametersSet> parametersAdder) {
+        ParametersSet paramSet = new ParametersSet(getParameterSetId());
         DynaWaltzParameters dynaWaltzParameters = context.getDynaWaltzParameters();
-
-        writer.writeStartElement(DYN_URI, "set");
-        writer.writeAttribute("id", getParameterSetId());
-
         // The dynamic models are declared in the DYD following the order of dynamic models' supplier.
         // The OmegaRef parameters index the weight of each generator according to that declaration order.
         int index = 0;
         for (FrequencySynchronizedModel eq : synchronizedEquipments) {
-            ParametersXml.writeParameter(writer, DOUBLE, "weight_gen_" + index, Double.toString(eq.getWeightGen(dynaWaltzParameters)));
+            paramSet.addParameter("weight_gen_" + index, DOUBLE, Double.toString(eq.getWeightGen(dynaWaltzParameters)));
             index++;
         }
-
-        ParametersXml.writeParameter(writer, INT, "nbGen", Long.toString(synchronizedEquipments.size()));
-
-        writer.writeEndElement();
+        paramSet.addParameter("nbGen", INT, Long.toString(synchronizedEquipments.size()));
+        parametersAdder.accept(paramSet);
     }
 
     private List<VarConnection> getVarConnectionsWith(FrequencySynchronizedModel connected) {
