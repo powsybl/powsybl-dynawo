@@ -25,6 +25,10 @@ abstract class AbstractPureDynamicGroovyExtension<T> {
         DynaWaltzProvider.NAME
     }
 
+    List<String> getModelNames() {
+        modelTags
+    }
+
     void load(Binding binding, Consumer<T> consumer) {
         modelTags.forEach {
             binding.setVariable(it, { Closure<Void> closure ->
