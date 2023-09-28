@@ -57,8 +57,8 @@ public class DynaWaltzContext {
                             List<Curve> curves, DynamicSimulationParameters parameters, DynaWaltzParameters dynaWaltzParameters) {
         this.network = Objects.requireNonNull(network);
         this.workingVariantId = Objects.requireNonNull(workingVariantId);
-        this.dynamicModels = checkDuplicateStaticId(Objects.requireNonNull(dynamicModels));
-        this.eventModels = checkEventModelIdUniqueness(Objects.requireNonNull(eventModels));
+        this.dynamicModels = checkDuplicateDynamicId(checkDuplicateStaticId(Objects.requireNonNull(dynamicModels.stream()))).toList();
+        this.eventModels = checkDuplicateDynamicId(Objects.requireNonNull(eventModels.stream())).toList();
         this.staticIdBlackBoxModelMap = getInputBlackBoxDynamicModelStream()
                 .filter(EquipmentBlackBoxModel.class::isInstance)
                 .map(EquipmentBlackBoxModel.class::cast)
@@ -163,31 +163,28 @@ public class DynaWaltzContext {
         }
     }
 
-    private static List<BlackBoxModel> checkDuplicateStaticId(List<BlackBoxModel> dynamicModels) {
+    private static Stream<BlackBoxModel> checkDuplicateStaticId(Stream<BlackBoxModel> bbmStream) {
         Set<String> staticIds = new HashSet<>();
-        return dynamicModels.stream()
+        return bbmStream
                 .filter(bbm -> {
                     if (bbm instanceof EquipmentBlackBoxModel eBbm && !staticIds.add(eBbm.getStaticId())) {
                         LOGGER.warn("Duplicate static id found: {} -> dynamic model {} {} will be skipped", eBbm.getStaticId(), eBbm.getLib(), eBbm.getDynamicModelId());
                         return false;
                     }
                     return true;
-                })
-                .collect(Collectors.toList());
+                });
     }
 
-    private static List<BlackBoxModel> checkEventModelIdUniqueness(List<BlackBoxModel> eventModels) {
+    private static Stream<BlackBoxModel> checkDuplicateDynamicId(Stream<BlackBoxModel> bbmStream) {
         Set<String> dynamicIds = new HashSet<>();
-        Set<String> duplicates = new HashSet<>();
-        for (BlackBoxModel bbm : eventModels) {
-            if (!dynamicIds.add(bbm.getDynamicModelId())) {
-                duplicates.add(bbm.getDynamicModelId());
-            }
-        }
-        if (!duplicates.isEmpty()) {
-            throw new PowsyblException("Duplicate dynamicId: " + duplicates);
-        }
-        return eventModels;
+        return bbmStream
+                .filter(bbm -> {
+                    if (!dynamicIds.add(bbm.getDynamicModelId())) {
+                        LOGGER.warn("Duplicate dynamic id found: {} -> model {} will be skipped", bbm.getDynamicModelId(), bbm.getName());
+                        return false;
+                    }
+                    return true;
+                });
     }
 
     public void addMacroConnect(String macroConnectorId, List<MacroConnectAttribute> attributesFrom, List<MacroConnectAttribute> attributesTo) {
@@ -259,7 +256,7 @@ public class DynaWaltzContext {
     }
 
     public List<BlackBoxModel> getBlackBoxEventModels() {
-        return Collections.unmodifiableList(eventModels);
+        return eventModels;
     }
 
     public List<Curve> getCurves() {
