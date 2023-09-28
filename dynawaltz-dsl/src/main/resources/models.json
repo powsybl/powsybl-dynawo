@@ -234,36 +234,36 @@
   "wecc": [
     {
       "lib": "WTG4AWeccCurrentSource",
-      "prefix": "WTG4A",
+      "internalModelPrefix": "WTG4A",
       "properties": [
         "Synchronized"
       ]
     },
     {
       "lib": "WTG4BWeccCurrentSource",
-      "prefix": "WTG4B",
+      "internalModelPrefix": "WTG4B",
       "properties": [
         "Synchronized"
       ]
     },
     {
       "lib": "WT4AWeccCurrentSource",
-      "prefix": "WT4A"
+      "internalModelPrefix": "WT4A"
     },
     {
       "lib": "WT4BWeccCurrentSource",
-      "prefix": "WT4B"
+      "internalModelPrefix": "WT4B"
     },
     {
       "lib": "PhotovoltaicsWeccCurrentSource",
-      "prefix": "WTG4A",
+      "internalModelPrefix": "WTG4A",
       "properties": [
         "Synchronized"
       ]
     },
     {
       "lib": "PhotovoltaicsWeccVoltageSource",
-      "prefix": "photovoltaics",
+      "internalModelPrefix": "photovoltaics",
       "properties": [
         "Synchronized"
       ]
