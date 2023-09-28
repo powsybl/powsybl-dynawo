@@ -34,6 +34,10 @@ abstract class AbstractEquipmentGroovyExtension<T> {
         DynaWaltzProvider.NAME
     }
 
+    List<String> getModelNames() {
+        equipmentConfigs.collect(eq -> eq.lib)
+    }
+
     void load(Binding binding, Consumer<T> consumer) {
         equipmentConfigs.forEach {
             binding.setVariable(it.lib, { Closure<Void> closure ->
