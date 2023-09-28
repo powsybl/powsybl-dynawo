@@ -43,9 +43,9 @@ class WeccGenGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicMod
         WeccGen build() {
             if (isInstantiable()) {
                 if (equipmentConfig.isSynchronized()) {
-                    new SynchronizedWeccGen(dynamicModelId, equipment, parameterSetId, equipmentConfig.lib, equipmentConfig.prefix)
+                    new SynchronizedWeccGen(dynamicModelId, equipment, parameterSetId, equipmentConfig.lib, equipmentConfig.internalModelPrefix)
                 } else {
-                    new WeccGen(dynamicModelId, equipment, parameterSetId, equipmentConfig.lib, equipmentConfig.prefix)
+                    new WeccGen(dynamicModelId, equipment, parameterSetId, equipmentConfig.lib, equipmentConfig.internalModelPrefix)
                 }
             } else {
                 null

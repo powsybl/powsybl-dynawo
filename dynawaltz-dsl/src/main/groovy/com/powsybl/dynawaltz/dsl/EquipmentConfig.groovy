@@ -19,18 +19,18 @@ class EquipmentConfig {
     static final String AUXILIARY_PROPERTY = "AUXILIARY"
 
     final String lib
-    final String prefix
+    final String internalModelPrefix
     final List<String> properties
 
-    EquipmentConfig(String lib, String prefix, String... properties) {
+    EquipmentConfig(String lib, String internalModelPrefix, String... properties) {
         this.lib = lib
-        this.prefix = prefix
+        this.internalModelPrefix = internalModelPrefix
         this.properties = properties ? properties.collect{it.toUpperCase()} as List<String> : [] as List<String>
     }
 
     EquipmentConfig(String lib) {
         this.lib = lib
-        this.prefix = ""
+        this.internalModelPrefix = ""
         this.properties = []
     }
 
