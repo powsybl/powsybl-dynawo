@@ -36,7 +36,7 @@ class EventModelsSupplierTest extends AbstractModelSupplierTest {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("provideEventModelData")
-    void testEventModels(String groovyScriptName, Class<? extends AbstractEventModel> modelClass, Network network, String equipmentStaticId, String dynamicId, String lib, double startTime) {
+    void testEventModels(String groovyScriptName, Class<? extends AbstractEvent> modelClass, Network network, String equipmentStaticId, String dynamicId, String lib, double startTime) {
         EventModelsSupplier supplier = new GroovyEventModelsSupplier(getResourceAsStream(groovyScriptName), EXTENSIONS);
         List<EventModel> eventModels = supplier.get(network);
         assertEquals(1, eventModels.size());
@@ -51,7 +51,7 @@ class EventModelsSupplierTest extends AbstractModelSupplierTest {
         assertTrue(supplier.get(network).isEmpty());
     }
 
-    void assertEventModel(AbstractEventModel em, String dynamicId, String equipmentStaticId, String lib, double startTime) {
+    void assertEventModel(AbstractEvent em, String dynamicId, String equipmentStaticId, String lib, double startTime) {
         assertEquals(dynamicId, em.getDynamicModelId());
         assertEquals(equipmentStaticId, em.getEquipment().getId());
         assertEquals(dynamicId, em.getParameterSetId());

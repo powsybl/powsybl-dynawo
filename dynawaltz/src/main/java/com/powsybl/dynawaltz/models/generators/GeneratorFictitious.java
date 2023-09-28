@@ -12,7 +12,7 @@ import com.powsybl.iidm.network.Generator;
  * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class GeneratorFictitious extends AbstractGeneratorModel {
+public class GeneratorFictitious extends AbstractGenerator {
 
     public GeneratorFictitious(String dynamicModelId, Generator generator, String parameterSetId) {
         super(dynamicModelId, generator, parameterSetId, "GeneratorFictitious");
