@@ -18,9 +18,9 @@ import static com.powsybl.dynawaltz.models.TransformerSide.NONE;
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class DefaultTransformerModel extends AbstractDefaultModel implements TransformerModel, TapChangerModel {
+public class DefaultTransformer extends AbstractDefaultModel implements TransformerModel, TapChangerModel {
 
-    public DefaultTransformerModel(String staticId) {
+    public DefaultTransformer(String staticId) {
         super(staticId);
     }
 

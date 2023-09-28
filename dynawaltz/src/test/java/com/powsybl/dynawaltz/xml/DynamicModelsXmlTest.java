@@ -67,8 +67,8 @@ class DynamicModelsXmlTest extends DynaWaltzTestUtil {
             }
         });
         String workingVariantId = network.getVariantManager().getWorkingVariantId();
-        Exception e = assertThrows(PowsyblException.class, () -> new DynaWaltzContext(network, workingVariantId, dynamicModels, eventModels, curves, null, null));
-        assertEquals("Duplicate staticId: GEN5", e.getMessage());
+        DynaWaltzContext context = new DynaWaltzContext(network, workingVariantId, dynamicModels, eventModels, curves, DynamicSimulationParameters.load(), DynaWaltzParameters.load());
+        assertEquals(1, context.getBlackBoxDynamicModels().size());
     }
 
     @Test
@@ -101,6 +101,6 @@ class DynamicModelsXmlTest extends DynaWaltzTestUtil {
         // requested interface not implemented
         Identifiable<?> transformer = network.getIdentifiable("NGEN_NHV1");
         e = assertThrows(PowsyblException.class, () -> dc.getDynamicModel(transformer, InjectionModel.class));
-        assertEquals("Default model DefaultTransformerModel does not implement InjectionModel interface", e.getMessage());
+        assertEquals("Default model DefaultTransformer does not implement InjectionModel interface", e.getMessage());
     }
 }

@@ -13,8 +13,8 @@ import java.util.Optional;
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  */
-public class DefaultBusModel extends AbstractDefaultModel implements BusModel {
-    public DefaultBusModel(String staticId) {
+public class DefaultBus extends AbstractDefaultModel implements BusModel {
+    public DefaultBus(String staticId) {
         super(staticId);
     }
 

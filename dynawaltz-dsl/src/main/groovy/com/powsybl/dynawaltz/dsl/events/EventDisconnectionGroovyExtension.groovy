@@ -13,7 +13,7 @@ import com.powsybl.dynamicsimulation.groovy.EventModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractPureDynamicGroovyExtension
 import com.powsybl.dynawaltz.dsl.DslEquipment
 import com.powsybl.dynawaltz.dsl.builders.AbstractEventModelBuilder
-import com.powsybl.dynawaltz.models.events.AbstractEventModel
+import com.powsybl.dynawaltz.models.events.AbstractEvent
 import com.powsybl.dynawaltz.models.events.EventHvdcDisconnection
 import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection
 import com.powsybl.dynawaltz.models.events.EventInjectionDisconnection
@@ -106,7 +106,7 @@ class EventDisconnectionGroovyExtension extends AbstractPureDynamicGroovyExtensi
         }
 
         @Override
-        AbstractEventModel build() {
+        AbstractEvent build() {
             if (isInstantiable()) {
                 switch(disconnectionType) {
                     case DisconnectionType.INJECTION :

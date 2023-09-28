@@ -21,7 +21,7 @@ import static com.powsybl.dynawaltz.parameters.ParameterType.DOUBLE;
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class NodeFaultEvent extends AbstractEventModel {
+public class NodeFaultEvent extends AbstractEvent {
 
     private static final String EVENT_PREFIX = "Node_Fault_";
 
