@@ -19,7 +19,7 @@ import static com.powsybl.dynawaltz.models.utils.BusUtils.getConnectableBusStati
  * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class SynchronizedGenerator extends AbstractGeneratorModel implements FrequencySynchronizedModel {
+public class SynchronizedGenerator extends AbstractGenerator implements FrequencySynchronizedModel {
 
     public SynchronizedGenerator(String dynamicModelId, Generator generator, String parameterSetId, String generatorLib) {
         super(dynamicModelId, generator, parameterSetId, generatorLib);

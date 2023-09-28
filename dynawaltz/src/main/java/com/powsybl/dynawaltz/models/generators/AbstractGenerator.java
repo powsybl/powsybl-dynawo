@@ -22,14 +22,14 @@ import java.util.List;
  * @author Marcos de Miguel <demiguelm at aia.es>
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public abstract class AbstractGeneratorModel extends AbstractEquipmentBlackBoxModel<Generator> implements GeneratorModel {
+public abstract class AbstractGenerator extends AbstractEquipmentBlackBoxModel<Generator> implements GeneratorModel {
 
     protected static final List<VarMapping> VAR_MAPPING = Arrays.asList(
             new VarMapping("generator_PGenPu", "p"),
             new VarMapping("generator_QGenPu", "q"),
             new VarMapping("generator_state", "state"));
 
-    protected AbstractGeneratorModel(String dynamicModelId, Generator generator, String parameterSetId, String lib) {
+    protected AbstractGenerator(String dynamicModelId, Generator generator, String parameterSetId, String lib) {
         super(dynamicModelId, parameterSetId, generator, lib);
     }
 
