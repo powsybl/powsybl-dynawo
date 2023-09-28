@@ -67,8 +67,8 @@ class DynamicModelsXmlTest extends DynaWaltzTestUtil {
             }
         });
         String workingVariantId = network.getVariantManager().getWorkingVariantId();
-        Exception e = assertThrows(PowsyblException.class, () -> new DynaWaltzContext(network, workingVariantId, dynamicModels, eventModels, curves, null, null));
-        assertEquals("Duplicate staticId: GEN5", e.getMessage());
+        DynaWaltzContext context = new DynaWaltzContext(network, workingVariantId, dynamicModels, eventModels, curves, DynamicSimulationParameters.load(), DynaWaltzParameters.load());
+        assertEquals(1, context.getBlackBoxDynamicModels().size());
     }
 
     @Test
