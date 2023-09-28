@@ -17,7 +17,7 @@ import org.apache.groovy.json.internal.LazyMap
 class ModelsSlurper {
 
     private static final String MODEL_LIB = "lib"
-    private static final String MODEL_PREFIX = "prefix"
+    private static final String MODEL_PREFIX = "internalModelPrefix"
     private static final String MODEL_PROPERTIES = "properties"
 
     private final slurper = new JsonSlurper()
