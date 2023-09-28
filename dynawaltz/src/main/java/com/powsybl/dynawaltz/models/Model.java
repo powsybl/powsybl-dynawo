@@ -7,6 +7,7 @@
 package com.powsybl.dynawaltz.models;
 
 import com.powsybl.dynamicsimulation.DynamicModel;
+import com.powsybl.dynawaltz.models.macroconnections.MacroConnectAttribute;
 
 import java.util.List;
 

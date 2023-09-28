@@ -9,8 +9,8 @@ package com.powsybl.dynawaltz.xml;
 
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
-import com.powsybl.dynawaltz.models.MacroConnect;
-import com.powsybl.dynawaltz.models.MacroConnector;
+import com.powsybl.dynawaltz.models.macroconnections.MacroConnect;
+import com.powsybl.dynawaltz.models.macroconnections.MacroConnector;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
