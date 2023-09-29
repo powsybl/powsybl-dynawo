@@ -12,6 +12,7 @@ import com.powsybl.dynawaltz.models.Model;
 import java.util.Optional;
 
 /**
+ * Interface for buses used by automatons for measure
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 public interface MeasurementPoint extends Model {

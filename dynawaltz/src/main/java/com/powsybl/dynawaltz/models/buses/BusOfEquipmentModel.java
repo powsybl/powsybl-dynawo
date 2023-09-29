@@ -10,6 +10,8 @@ package com.powsybl.dynawaltz.models.buses;
 import com.powsybl.dynawaltz.models.Model;
 
 /**
+ * View of equipment from the bus to which it is connected
+ * Used by FrequencySynchronizer in order to get NummCC var name
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 public interface BusOfEquipmentModel extends Model {
