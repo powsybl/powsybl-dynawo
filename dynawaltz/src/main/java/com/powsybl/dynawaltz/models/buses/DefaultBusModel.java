@@ -22,16 +22,16 @@ import java.util.Optional;
  */
 public final class DefaultBusModel implements ConnectionPoint {
 
-    private static DefaultBusModel INSTANCE;
+    private static DefaultBusModel instance;
 
     private DefaultBusModel() {
     }
 
     public static DefaultBusModel getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new DefaultBusModel();
+        if (instance == null) {
+            instance = new DefaultBusModel();
         }
-        return INSTANCE;
+        return instance;
     }
 
     @Override
