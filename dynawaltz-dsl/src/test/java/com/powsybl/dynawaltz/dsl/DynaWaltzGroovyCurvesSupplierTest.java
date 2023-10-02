@@ -23,6 +23,9 @@ import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.IOException;
 import java.nio.file.FileSystem;
@@ -30,6 +33,7 @@ import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -66,28 +70,21 @@ class DynaWaltzGroovyCurvesSupplierTest {
         curves.forEach(this::validateCurve);
     }
 
-    @Test
-    void testModelIdStaticIdDefined() {
+    @ParameterizedTest(name = "{1}")
+    @MethodSource("provideFileError")
+    void testScriptError(String fileName, String error) {
         List<CurveGroovyExtension> extensions = validateGroovyExtension();
-        CurvesSupplier supplier = new GroovyCurvesSupplier(fileSystem.getPath("/curves_dynamicModelId_staticId.groovy"), extensions);
+        CurvesSupplier supplier = new GroovyCurvesSupplier(fileSystem.getPath(fileName), extensions);
         DslException exception = assertThrows(DslException.class, () -> supplier.get(network));
-        assertEquals("Both staticId and dynamicModelId are defined", exception.getMessage());
+        assertEquals(error, exception.getMessage());
     }
 
-    @Test
-    void testVariableNotDefined() {
-        List<CurveGroovyExtension> extensions = validateGroovyExtension();
-        CurvesSupplier supplier = new GroovyCurvesSupplier(fileSystem.getPath("/curves_variable.groovy"), extensions);
-        DslException exception = assertThrows(DslException.class, () -> supplier.get(network));
-        assertEquals("'variables' field is not set", exception.getMessage());
-    }
-
-    @Test
-    void testVariablesNotDefined() {
-        List<CurveGroovyExtension> extensions = validateGroovyExtension();
-        CurvesSupplier supplier = new GroovyCurvesSupplier(fileSystem.getPath("/curves_variables.groovy"), extensions);
-        DslException exception = assertThrows(DslException.class, () -> supplier.get(network));
-        assertEquals("'variables' field is not set", exception.getMessage());
+    private static Stream<Arguments> provideFileError() {
+        return Stream.of(
+                Arguments.of("/curves_dynamicModelId_staticId.groovy", "Both staticId and dynamicModelId are defined"),
+                Arguments.of("/curves_variable.groovy", "'variables' field is not set"),
+                Arguments.of("/curves_variables.groovy", "'variables' field is not set")
+        );
     }
 
     private List<CurveGroovyExtension> validateGroovyExtension() {

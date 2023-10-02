@@ -21,7 +21,7 @@ import java.util.function.Consumer;
  */
 public abstract class AbstractEvent extends AbstractPureDynamicBlackBoxModel implements EventModel {
 
-    private final Identifiable<?> equipment;
+    private final Identifiable<? extends Identifiable<?>> equipment;
     private final double startTime;
 
     protected AbstractEvent(Identifiable<?> equipment, double startTime, String eventPrefix) {

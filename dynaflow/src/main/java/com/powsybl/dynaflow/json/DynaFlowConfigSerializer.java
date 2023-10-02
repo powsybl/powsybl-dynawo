@@ -54,7 +54,7 @@ public final class DynaFlowConfigSerializer {
             if (dynaFlowParameters.getDsoVoltageLevel() != null) {
                 jsonGenerator.writeNumberField("DsoVoltageLevel", dynaFlowParameters.getDsoVoltageLevel());
             }
-            jsonGenerator.writeBooleanField("InfiniteReactiveLimits", lfParameters.isNoGeneratorReactiveLimits());
+            jsonGenerator.writeBooleanField("InfiniteReactiveLimits", !lfParameters.isUseReactiveLimits());
             if (dynaFlowParameters.getActivePowerCompensation() != null) {
                 jsonGenerator.writeStringField("ActivePowerCompensation", dynaFlowParameters.getActivePowerCompensation().name());
             }
