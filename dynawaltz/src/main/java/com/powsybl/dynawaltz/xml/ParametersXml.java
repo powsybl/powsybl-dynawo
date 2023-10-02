@@ -11,7 +11,6 @@ import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
-import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.parameters.Parameter;
 import com.powsybl.dynawaltz.parameters.ParameterType;
 import com.powsybl.dynawaltz.parameters.ParametersSet;
@@ -29,6 +28,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_PREFIX;
 import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 
 /**
@@ -136,7 +136,8 @@ public final class ParametersXml {
             } else if (xmlReader.getLocalName().equals("reference")) {
                 String origData = xmlReader.getAttributeValue(null, "origData");
                 String origName = xmlReader.getAttributeValue(null, "origName");
-                parametersSet.addReference(name, type, origData, origName);
+                String componentId = xmlReader.getAttributeValue(null, "componentId");
+                parametersSet.addReference(name, type, origData, origName, componentId);
             } else {
                 closeAndThrowException(xmlReader, xmlReader.getLocalName());
             }
@@ -166,31 +167,22 @@ public final class ParametersXml {
     public static void write(Path workingDir, DynaWaltzContext context) throws IOException, XMLStreamException {
         Objects.requireNonNull(workingDir);
 
-        // Write parameterSet that needs to be generated (OmegaRef...)
-        Path file = workingDir.resolve(context.getSimulationParFile());
-        XmlUtil.write(file, context, PARAMETERS_SET_ELEMENT_NAME, ParametersXml::write);
-
+        write(context.getDynamicModelsParameters(), context.getSimulationParFile(), workingDir, DYN_PREFIX);
         DynaWaltzParameters parameters = context.getDynaWaltzParameters();
-        write(parameters.getModelParameters(), DynaWaltzParameters.MODELS_OUTPUT_PARAMETERS_FILE, workingDir);
-        write(List.of(parameters.getNetworkParameters()), DynaWaltzParameters.NETWORK_OUTPUT_PARAMETERS_FILE, workingDir);
-        write(List.of(parameters.getSolverParameters()), DynaWaltzParameters.SOLVER_OUTPUT_PARAMETERS_FILE, workingDir);
+        write(parameters.getModelParameters(), DynaWaltzParameters.MODELS_OUTPUT_PARAMETERS_FILE, workingDir, "");
+        write(List.of(parameters.getNetworkParameters()), DynaWaltzParameters.NETWORK_OUTPUT_PARAMETERS_FILE, workingDir, "");
+        write(List.of(parameters.getSolverParameters()), DynaWaltzParameters.SOLVER_OUTPUT_PARAMETERS_FILE, workingDir, "");
     }
 
-    private static void write(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
-        for (BlackBoxModel model : context.getBlackBoxModels()) {
-            model.writeParameters(writer, context);
-        }
-    }
-
-    private static void write(Collection<ParametersSet> parametersSets, String filename, Path workingDir) throws IOException, XMLStreamException {
+    private static void write(Collection<ParametersSet> parametersSets, String filename, Path workingDir, String dynPrefix) throws IOException, XMLStreamException {
         Path parametersPath = workingDir.resolve(filename);
         try (Writer writer = Files.newBufferedWriter(parametersPath, StandardCharsets.UTF_8)) {
             XMLStreamWriter xmlWriter = XmlStreamWriterFactory.newInstance(writer);
             try {
                 xmlWriter.writeStartDocument(StandardCharsets.UTF_8.toString(), "1.0");
-                xmlWriter.setPrefix("", DYN_URI);
+                xmlWriter.setPrefix(dynPrefix, DYN_URI);
                 xmlWriter.writeStartElement(DYN_URI, PARAMETERS_SET_ELEMENT_NAME);
-                xmlWriter.writeNamespace("", DYN_URI);
+                xmlWriter.writeNamespace(dynPrefix, DYN_URI);
                 for (ParametersSet parametersSet : parametersSets) {
                     writeParametersSet(xmlWriter, parametersSet);
                 }
@@ -206,10 +198,10 @@ public final class ParametersXml {
         xmlWriter.writeStartElement(DYN_URI, "set");
         xmlWriter.writeAttribute("id", parametersSet.getId());
         for (Parameter par : parametersSet.getParameters().values()) {
-            ParametersXml.writeParameter(xmlWriter, par.getType(), par.getName(), par.getValue());
+            ParametersXml.writeParameter(xmlWriter, par.type(), par.name(), par.value());
         }
         for (Reference par : parametersSet.getReferences()) {
-            ParametersXml.writeReference(xmlWriter, par.getType(), par.getName(), par.getOrigData(), par.getOrigName());
+            ParametersXml.writeReference(xmlWriter, par.type(), par.name(), par.origData(), par.origName(), par.componentId());
         }
         xmlWriter.writeEndElement();
     }
@@ -221,11 +213,14 @@ public final class ParametersXml {
         writer.writeAttribute("value", value);
     }
 
-    public static void writeReference(XMLStreamWriter writer, ParameterType type, String name, String origData, String origName) throws XMLStreamException {
+    public static void writeReference(XMLStreamWriter writer, ParameterType type, String name, String origData, String origName, String componentId) throws XMLStreamException {
         writer.writeEmptyElement(DYN_URI, "reference");
         writer.writeAttribute("type", type.toString());
         writer.writeAttribute("name", name);
         writer.writeAttribute("origData", origData);
         writer.writeAttribute("origName", origName);
+        if (componentId != null) {
+            writer.writeAttribute("componentId", componentId);
+        }
     }
 }

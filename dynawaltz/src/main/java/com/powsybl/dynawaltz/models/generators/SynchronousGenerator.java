@@ -12,14 +12,28 @@ import com.powsybl.iidm.network.Generator;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  */
 public class SynchronousGenerator extends SynchronizedGenerator {
 
+    private final EnumGeneratorComponent generatorComponent;
+
+    public SynchronousGenerator(String dynamicModelId, Generator generator, String parameterSetId, String generatorLib, EnumGeneratorComponent generatorComponent) {
+        super(dynamicModelId, generator, parameterSetId, generatorLib);
+        this.generatorComponent = Objects.requireNonNull(generatorComponent);
+    }
+
     public SynchronousGenerator(String dynamicModelId, Generator generator, String parameterSetId, String generatorLib) {
         super(dynamicModelId, generator, parameterSetId, generatorLib);
+        generatorComponent = EnumGeneratorComponent.NONE;
+    }
+
+    @Override
+    public String getTerminalVarName() {
+        return generatorComponent.getTerminalVarName();
     }
 
     public String getOmegaPuVarName() {

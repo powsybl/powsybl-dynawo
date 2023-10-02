@@ -10,7 +10,7 @@ package com.powsybl.dynawaltz.models.buses;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractEquipmentBlackBoxModel;
-import com.powsybl.dynawaltz.models.MacroConnectAttribute;
+import com.powsybl.dynawaltz.models.macroconnections.MacroConnectAttribute;
 import com.powsybl.iidm.network.Bus;
 
 import java.util.ArrayList;

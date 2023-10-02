@@ -8,11 +8,10 @@
 package com.powsybl.dynawaltz.dsl.automatons
 
 import com.google.auto.service.AutoService
-import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractPureDynamicGroovyExtension
-import com.powsybl.dynawaltz.dsl.models.builders.AbstractPureDynamicModelBuilder
+import com.powsybl.dynawaltz.dsl.builders.AbstractPureDynamicModelBuilder
 import com.powsybl.dynawaltz.models.automatons.TapChangerBlockingAutomaton
 import com.powsybl.iidm.network.Bus
 import com.powsybl.iidm.network.Identifiable
@@ -21,33 +20,32 @@ import com.powsybl.iidm.network.Load
 import com.powsybl.iidm.network.Network
 import com.powsybl.iidm.network.TwoWindingsTransformer
 
-import java.util.stream.Collectors
-
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 @AutoService(DynamicModelGroovyExtension.class)
 class TapChangerBlockingAutomatonGroovyExtension extends AbstractPureDynamicGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
+    private static final String LIB = "TapChangerBlockingAutomaton"
+
     TapChangerBlockingAutomatonGroovyExtension() {
-        modelTags = ["TapChangerBlockingAutomaton"]
+        modelTags = [LIB]
     }
 
     @Override
     protected TCBAutomatonBuilder createBuilder(Network network) {
-        new TCBAutomatonBuilder(network)
+        new TCBAutomatonBuilder(network, LIB)
     }
 
     static class TCBAutomatonBuilder extends AbstractPureDynamicModelBuilder {
 
-        Network network
         List<Load> loads = []
         List<TwoWindingsTransformer> transformers = []
         List<Bus> uMeasurements = []
         List<String> tapChangerAutomatonIds = []
 
-        TCBAutomatonBuilder(Network network) {
-            this.network = network
+        TCBAutomatonBuilder(Network network, String lib) {
+            super(network, lib)
         }
 
         void transformers(String[] staticIds) {
@@ -69,27 +67,46 @@ class TapChangerBlockingAutomatonGroovyExtension extends AbstractPureDynamicGroo
         }
 
         Identifiable<? extends Identifiable> checkEquipment(String staticId) {
-            Identifiable<? extends Identifiable> equipment = network.getIdentifiable(staticId)
-            if (equipment != null && !TapChangerBlockingAutomaton.isCompatibleEquipment(equipment.getType())) {
-                throw new DslException(equipment.getType().toString() + " " + staticId + " is not compatible")
+            network.getIdentifiable(staticId)?.tap {
+                if (!TapChangerBlockingAutomaton.isCompatibleEquipment(type)) {
+                    LOGGER.warn("${getLib()}: $type $staticId is not compatible")
+                }
             }
-            return equipment
         }
 
         void uMeasurements(String[] staticIds) {
             uMeasurements = staticIds.collect {
-                Bus bus = network.getBusBreakerView().getBus(it)
-                if (bus == null) {
-                    throw new DslException("Bus static id unknown: " + it)
+                def bus = network.busBreakerView.getBus(it)
+                if (!bus) {
+                    LOGGER.warn("${getLib()}: $IdentifiableType.BUS static id unknown : $it")
                 }
-                return bus
+                bus
+            }
+        }
+
+        @Override
+        protected void checkData() {
+            if (!uMeasurements) {
+                LOGGER.warn("${getLib()}: 'uMeasurements' field is not set")
+                isInstantiable = false
+            } else {
+                uMeasurements -= null
+                if (!uMeasurements) {
+                    LOGGER.warn("${getLib()}: 'uMeasurements' is empty")
+                    isInstantiable = false
+                }
+            }
+            if(!loads && !transformers && !tapChangerAutomatonIds) {
+                LOGGER.warn("${getLib()}: 'transformers' field is empty")
+                isInstantiable = false
             }
         }
 
         @Override
         TapChangerBlockingAutomaton build() {
-            checkData()
-            new TapChangerBlockingAutomaton(dynamicModelId, parameterSetId, transformers, loads, tapChangerAutomatonIds, uMeasurements)
+            isInstantiable() ? new TapChangerBlockingAutomaton(dynamicModelId, parameterSetId,
+                    transformers, loads, tapChangerAutomatonIds, uMeasurements)
+                    : null
         }
     }
 }

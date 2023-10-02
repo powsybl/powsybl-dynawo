@@ -52,13 +52,13 @@ class DynaWaltzCurveGroovyExtension implements CurveGroovyExtension {
     }
 
     String getName() {
-        return DynaWaltzProvider.NAME;
+        DynaWaltzProvider.NAME
     }
 
     DynaWaltzCurve dynawoCurve(CurvesSpec curveSpec, Consumer<Curve> consumer) {
         
         if (curveSpec.staticId && curveSpec.dynamicModelId) {
-            throw new DslException("Both staticId and dynamicModelId are defined");
+            throw new DslException("Both staticId and dynamicModelId are defined")
         }
         if (!curveSpec.variables) {
             throw new DslException("'variables' field is not set")

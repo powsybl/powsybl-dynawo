@@ -7,10 +7,12 @@
 package com.powsybl.dynawaltz.models;
 
 import com.powsybl.dynawaltz.DynaWaltzContext;
+import com.powsybl.dynawaltz.parameters.ParametersSet;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
@@ -31,5 +33,7 @@ public interface BlackBoxModel extends Model {
 
     void write(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException;
 
-    void writeParameters(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException;
+    void createDynamicModelParameters(DynaWaltzContext context, Consumer<ParametersSet> parametersAdder);
+
+    void createNetworkParameter(ParametersSet networkParameters);
 }

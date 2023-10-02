@@ -7,10 +7,12 @@
 package com.powsybl.dynawaltz.dsl.models.generators
 
 import com.google.auto.service.AutoService
+import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
 import com.powsybl.dynawaltz.dsl.EquipmentConfig
+import com.powsybl.dynawaltz.models.generators.EnumGeneratorComponent
 import com.powsybl.dynawaltz.models.generators.SynchronousGenerator
 import com.powsybl.dynawaltz.models.generators.SynchronousGeneratorControllable
 import com.powsybl.iidm.network.Network
@@ -38,20 +40,33 @@ class SynchronousGeneratorGroovyExtension extends AbstractEquipmentGroovyExtensi
 
     static class SynchronousGeneratorBuilder extends AbstractGeneratorBuilder {
 
-        EquipmentConfig equipmentConfig
-
         SynchronousGeneratorBuilder(Network network, EquipmentConfig equipmentConfig) {
-            super(network)
-            this.equipmentConfig = equipmentConfig
+            super(network, equipmentConfig)
+        }
+
+        protected EnumGeneratorComponent getGeneratorComponent() {
+            def aux = equipmentConfig.hasAuxiliary()
+            def transfo = equipmentConfig.hasTransformer()
+            if (aux && transfo) {
+                return EnumGeneratorComponent.AUXILIARY_TRANSFORMER
+            } else if (transfo) {
+                return EnumGeneratorComponent.TRANSFORMER
+            } else if (aux) {
+                throw new DslException("Generator component auxiliary without transformer is not supported")
+            }
+            EnumGeneratorComponent.NONE
         }
 
         @Override
         SynchronousGenerator build() {
-            checkData()
-            if (equipmentConfig.isControllable()) {
-                new SynchronousGeneratorControllable(dynamicModelId, generator, parameterSetId, equipmentConfig.lib)
+            if (isInstantiable()) {
+                if (equipmentConfig.isControllable()) {
+                    new SynchronousGeneratorControllable(dynamicModelId, equipment, parameterSetId, equipmentConfig.lib, getGeneratorComponent())
+                } else {
+                    new SynchronousGenerator(dynamicModelId, equipment, parameterSetId, equipmentConfig.lib, getGeneratorComponent())
+                }
             } else {
-                new SynchronousGenerator(dynamicModelId, generator, parameterSetId, equipmentConfig.lib)
+                null
             }
         }
     }

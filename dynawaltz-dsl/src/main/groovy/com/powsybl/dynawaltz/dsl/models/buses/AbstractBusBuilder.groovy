@@ -7,27 +7,23 @@
  */
 package com.powsybl.dynawaltz.dsl.models.buses
 
-import com.powsybl.dsl.DslException
-import com.powsybl.dynawaltz.dsl.models.builders.AbstractDynamicModelBuilder
+import com.powsybl.dynawaltz.dsl.EquipmentConfig
+import com.powsybl.dynawaltz.dsl.builders.AbstractEquipmentModelBuilder
 import com.powsybl.iidm.network.Bus
+import com.powsybl.iidm.network.IdentifiableType
 import com.powsybl.iidm.network.Network
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-abstract class AbstractBusBuilder extends AbstractDynamicModelBuilder {
+abstract class AbstractBusBuilder extends AbstractEquipmentModelBuilder<Bus> {
 
-    Bus bus
-
-    AbstractBusBuilder(Network network) {
-        super(network)
+    AbstractBusBuilder(Network network, EquipmentConfig equipmentConfig) {
+        super(network, equipmentConfig, IdentifiableType.BUS)
     }
 
-    void checkData() {
-        super.checkData()
-        bus = network.getBusBreakerView().getBus(staticId)
-        if (bus == null) {
-            throw new DslException("Bus static id unknown: " + staticId)
-        }
+    @Override
+    protected Bus findEquipment(String staticId) {
+       network.getBusBreakerView().getBus(staticId)
     }
 }

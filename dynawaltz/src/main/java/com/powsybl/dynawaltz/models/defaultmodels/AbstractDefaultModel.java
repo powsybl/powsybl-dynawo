@@ -1,6 +1,6 @@
 package com.powsybl.dynawaltz.models.defaultmodels;
 
-import com.powsybl.dynawaltz.models.MacroConnectAttribute;
+import com.powsybl.dynawaltz.models.macroconnections.MacroConnectAttribute;
 import com.powsybl.dynawaltz.models.Model;
 import com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants;
 

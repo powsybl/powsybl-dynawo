@@ -10,8 +10,8 @@ package com.powsybl.dynawaltz.dsl.models.loads
 import com.google.auto.service.AutoService
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
-import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractSimpleEquipmentGroovyExtension
+import com.powsybl.dynawaltz.dsl.EquipmentConfig
 import com.powsybl.dynawaltz.models.loads.LoadTwoTransformers
 import com.powsybl.iidm.network.Network
 
@@ -22,24 +22,23 @@ import com.powsybl.iidm.network.Network
 class LoadTwoTransformersGroovyExtension extends AbstractSimpleEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
     LoadTwoTransformersGroovyExtension() {
-        modelTag = "LoadTwoTransformers"
+        super("LoadTwoTransformers")
     }
 
     @Override
-    protected LoadTwoTransformersBuilder createBuilder(Network network) {
-        new LoadTwoTransformersBuilder(network)
+    protected LoadTwoTransformersBuilder createBuilder(Network network, EquipmentConfig equipmentConfig) {
+        new LoadTwoTransformersBuilder(network, equipmentConfig)
     }
 
     static class LoadTwoTransformersBuilder extends AbstractLoadModelBuilder {
 
-        LoadTwoTransformersBuilder(Network network) {
-            super(network)
+        LoadTwoTransformersBuilder(Network network, EquipmentConfig equipmentConfig) {
+            super(network, equipmentConfig)
         }
 
         @Override
         LoadTwoTransformers build() {
-            checkData()
-            new LoadTwoTransformers(dynamicModelId, load, parameterSetId)
+            isInstantiable() ? new LoadTwoTransformers(dynamicModelId, equipment, parameterSetId) : null
         }
     }
 }

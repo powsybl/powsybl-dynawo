@@ -38,9 +38,9 @@ public final class Reports {
         reporter.report(Report.builder()
                 .withKey("DynawoTimelineEvent")
                 .withDefaultMessage("[t=${time}] ${message} on equipment '${identifiableId}'")
-                .withTypedValue("time", timelineEntry.getTime(), TIME_MS)
-                .withTypedValue("identifiableId", timelineEntry.getModelName(), ID)
-                .withValue("message", timelineEntry.getMessage())
+                .withTypedValue("time", timelineEntry.time(), TIME_MS)
+                .withTypedValue("identifiableId", timelineEntry.modelName(), ID)
+                .withValue("message", timelineEntry.message())
                 .withSeverity(TypedValue.TRACE_SEVERITY)
                 .build());
     }

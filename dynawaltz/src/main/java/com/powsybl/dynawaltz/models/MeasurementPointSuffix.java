@@ -7,6 +7,8 @@
  */
 package com.powsybl.dynawaltz.models;
 
+import com.powsybl.dynawaltz.models.macroconnections.MacroConnectionSuffix;
+
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */

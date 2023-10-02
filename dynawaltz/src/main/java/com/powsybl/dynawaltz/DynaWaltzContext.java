@@ -12,15 +12,21 @@ import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.models.*;
 import com.powsybl.dynawaltz.models.buses.AbstractBus;
 import com.powsybl.dynawaltz.models.buses.ConnectionPoint;
-import com.powsybl.dynawaltz.models.buses.DefaultBusModel;
+import com.powsybl.dynawaltz.models.buses.DefaultBus;
 import com.powsybl.dynawaltz.models.defaultmodels.DefaultModelsHandler;
 import com.powsybl.dynawaltz.models.frequencysynchronizers.FrequencySynchronizedModel;
 import com.powsybl.dynawaltz.models.frequencysynchronizers.FrequencySynchronizerModel;
 import com.powsybl.dynawaltz.models.frequencysynchronizers.OmegaRef;
 import com.powsybl.dynawaltz.models.frequencysynchronizers.SetPoint;
+import com.powsybl.dynawaltz.models.macroconnections.MacroConnect;
+import com.powsybl.dynawaltz.models.macroconnections.MacroConnectAttribute;
+import com.powsybl.dynawaltz.models.macroconnections.MacroConnector;
+import com.powsybl.dynawaltz.parameters.ParametersSet;
 import com.powsybl.dynawaltz.xml.MacroStaticReference;
 import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.Network;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.function.Function;
@@ -33,7 +39,9 @@ import java.util.stream.Stream;
  */
 public class DynaWaltzContext {
 
+    protected static final Logger LOGGER = LoggerFactory.getLogger(DynaWaltzContext.class);
     private static final String MODEL_ID_EXCEPTION = "The model identified by the static id %s does not match the expected model (%s)";
+    private static final String MODEL_ID_LOG = "The model identified by the static id {} does not match the expected model ({})";
 
     private final Network network;
     private final String workingVariantId;
@@ -48,29 +56,34 @@ public class DynaWaltzContext {
     private final Map<String, MacroConnector> macroConnectorsMap = new LinkedHashMap<>();
     private final DefaultModelsHandler defaultModelsHandler = new DefaultModelsHandler();
     private final FrequencySynchronizerModel frequencySynchronizer;
+    private final List<ParametersSet> dynamicModelsParameters = new ArrayList<>();
 
     public DynaWaltzContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
                             List<Curve> curves, DynamicSimulationParameters parameters, DynaWaltzParameters dynaWaltzParameters) {
         this.network = Objects.requireNonNull(network);
         this.workingVariantId = Objects.requireNonNull(workingVariantId);
-        this.dynamicModels = Objects.requireNonNull(dynamicModels);
+        this.dynamicModels = checkDuplicateStaticId(Objects.requireNonNull(dynamicModels));
         this.eventModels = checkEventModelIdUniqueness(Objects.requireNonNull(eventModels));
         this.staticIdBlackBoxModelMap = getInputBlackBoxDynamicModelStream()
                 .filter(EquipmentBlackBoxModel.class::isInstance)
                 .map(EquipmentBlackBoxModel.class::cast)
-                .collect(Collectors.toMap(EquipmentBlackBoxModel::getStaticId, Function.identity(), this::mergeDuplicateStaticId, LinkedHashMap::new));
+                .collect(Collectors.toMap(EquipmentBlackBoxModel::getStaticId, Function.identity()));
         this.curves = Objects.requireNonNull(curves);
         this.parameters = Objects.requireNonNull(parameters);
         this.dynaWaltzParameters = Objects.requireNonNull(dynaWaltzParameters);
         this.frequencySynchronizer = setupFrequencySynchronizer(dynamicModels.stream().anyMatch(AbstractBus.class::isInstance) ? SetPoint::new : OmegaRef::new);
 
-        for (BlackBoxModel bbm : getBlackBoxDynamicModelStream().collect(Collectors.toList())) {
+        for (BlackBoxModel bbm : getBlackBoxDynamicModelStream().toList()) {
             macroStaticReferences.computeIfAbsent(bbm.getName(), k -> new MacroStaticReference(k, bbm.getVarsMapping()));
             bbm.createMacroConnections(this);
+            bbm.createDynamicModelParameters(this, dynamicModelsParameters::add);
         }
 
+        ParametersSet networkParameters = getDynaWaltzParameters().getNetworkParameters();
         for (BlackBoxModel bbem : eventModels) {
             bbem.createMacroConnections(this);
+            bbem.createDynamicModelParameters(this, dynamicModelsParameters::add);
+            bbem.createNetworkParameter(networkParameters);
         }
     }
 
@@ -78,7 +91,7 @@ public class DynaWaltzContext {
         return fsConstructor.apply(dynamicModels.stream()
                 .filter(FrequencySynchronizedModel.class::isInstance)
                 .map(FrequencySynchronizedModel.class::cast)
-                .collect(Collectors.toList()));
+                .toList());
     }
 
     public Network getNetwork() {
@@ -113,33 +126,52 @@ public class DynaWaltzContext {
     }
 
     public <T extends Model> T getDynamicModel(Identifiable<?> equipment, Class<T> connectableClass) {
-        BlackBoxModel bbm = staticIdBlackBoxModelMap.get(equipment.getId());
-        if (bbm == null) {
-            return defaultModelsHandler.getDefaultModel(equipment, connectableClass);
-        }
-        if (connectableClass.isInstance(bbm)) {
-            return connectableClass.cast(bbm);
-        }
-        throw new PowsyblException(String.format(MODEL_ID_EXCEPTION, equipment.getId(), connectableClass.getSimpleName()));
+        return getDynamicModel(equipment, connectableClass, true);
     }
 
-    public <T extends Model> T getPureDynamicModel(String dynamicId, Class<T> connectableClass) {
-        BlackBoxModel bbm = dynamicModels.stream()
-                .filter(dm -> dynamicId.equals(dm.getDynamicModelId()))
-                .findFirst()
-                .orElseThrow(() -> {
-                    throw new PowsyblException("Pure dynamic model " + dynamicId + " not found");
-                });
+    public <T extends Model> T getDynamicModel(Identifiable<?> equipment, Class<T> connectableClass, boolean throwException) {
+        BlackBoxModel bbm = staticIdBlackBoxModelMap.get(equipment.getId());
+        if (bbm == null) {
+            return defaultModelsHandler.getDefaultModel(equipment, connectableClass, throwException);
+        }
         if (connectableClass.isInstance(bbm)) {
             return connectableClass.cast(bbm);
         }
-        throw new PowsyblException(String.format(MODEL_ID_EXCEPTION, dynamicId, connectableClass.getSimpleName()));
+        if (throwException) {
+            throw new PowsyblException(String.format(MODEL_ID_EXCEPTION, equipment.getId(), connectableClass.getSimpleName()));
+        } else {
+            LOGGER.warn(MODEL_ID_LOG, equipment.getId(), connectableClass.getSimpleName());
+            return null;
+        }
+    }
+
+    public <T extends Model> T getPureDynamicModel(String dynamicId, Class<T> connectableClass, boolean throwException) {
+        BlackBoxModel bbm = dynamicModels.stream()
+                .filter(dm -> dynamicId.equals(dm.getDynamicModelId()))
+                .findFirst().orElse(null);
+        if (bbm == null) {
+            if (throwException) {
+                throw new PowsyblException("Pure dynamic model " + dynamicId + " not found");
+            } else {
+                LOGGER.warn("Pure dynamic model {} not found", dynamicId);
+                return null;
+            }
+        }
+        if (connectableClass.isInstance(bbm)) {
+            return connectableClass.cast(bbm);
+        }
+        if (throwException) {
+            throw new PowsyblException(String.format(MODEL_ID_EXCEPTION, dynamicId, connectableClass.getSimpleName()));
+        } else {
+            LOGGER.warn(MODEL_ID_LOG, dynamicId, connectableClass.getSimpleName());
+            return null;
+        }
     }
 
     public ConnectionPoint getConnectionPointDynamicModel(String staticId) {
         BlackBoxModel bbm = staticIdBlackBoxModelMap.get(staticId);
         if (bbm == null) {
-            return DefaultBusModel.getInstance();
+            return DefaultBus.getInstance();
         }
         if (bbm instanceof ConnectionPoint) {
             return (ConnectionPoint) bbm;
@@ -147,8 +179,17 @@ public class DynaWaltzContext {
         throw new PowsyblException(String.format(MODEL_ID_EXCEPTION, staticId, "ConnectionPoint"));
     }
 
-    private EquipmentBlackBoxModel mergeDuplicateStaticId(EquipmentBlackBoxModel bbm1, EquipmentBlackBoxModel bbm2) {
-        throw new PowsyblException("Duplicate staticId: " + bbm1.getStaticId());
+    private static List<BlackBoxModel> checkDuplicateStaticId(List<BlackBoxModel> dynamicModels) {
+        Set<String> staticIds = new HashSet<>();
+        return dynamicModels.stream()
+                .filter(bbm -> {
+                    if (bbm instanceof EquipmentBlackBoxModel eBbm && !staticIds.add(eBbm.getStaticId())) {
+                        LOGGER.warn("Duplicate static id found: {} -> dynamic model {} {} will be skipped", eBbm.getStaticId(), eBbm.getLib(), eBbm.getDynamicModelId());
+                        return false;
+                    }
+                    return true;
+                })
+                .collect(Collectors.toList());
     }
 
     private static List<BlackBoxModel> checkEventModelIdUniqueness(List<BlackBoxModel> eventModels) {
@@ -204,7 +245,7 @@ public class DynaWaltzContext {
     }
 
     private Stream<BlackBoxModel> getInputBlackBoxDynamicModelStream() {
-        //Doesn't include the OmegaRef, it only concerns the DynamicModels provided by the user
+        // Doesn't include the OmegaRef, it only concerns the DynamicModels provided by the user
         return dynamicModels.stream();
     }
 
@@ -216,12 +257,7 @@ public class DynaWaltzContext {
     }
 
     public List<BlackBoxModel> getBlackBoxDynamicModels() {
-        return getBlackBoxDynamicModelStream().collect(Collectors.toList());
-    }
-
-    public List<BlackBoxModel> getBlackBoxModels() {
-        return Stream.concat(getBlackBoxDynamicModelStream(), getBlackBoxEventModelStream())
-                .collect(Collectors.toList());
+        return getBlackBoxDynamicModelStream().toList();
     }
 
     public Stream<BlackBoxModel> getBlackBoxEventModelStream() {
@@ -238,6 +274,10 @@ public class DynaWaltzContext {
 
     public boolean withCurves() {
         return !curves.isEmpty();
+    }
+
+    public List<ParametersSet> getDynamicModelsParameters() {
+        return dynamicModelsParameters;
     }
 
     public String getSimulationParFile() {

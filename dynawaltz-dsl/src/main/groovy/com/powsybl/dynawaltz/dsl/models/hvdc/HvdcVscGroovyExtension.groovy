@@ -41,11 +41,14 @@ class HvdcVscGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicMod
 
         @Override
         HvdcVsc build() {
-            checkData()
-            if (equipmentConfig.isDangling()) {
-                new HvdcVscDangling(dynamicModelId, hvdc, parameterSetId, equipmentConfig.lib, danglingSide)
+            if (isInstantiable()) {
+                if (equipmentConfig.isDangling()) {
+                    new HvdcVscDangling(dynamicModelId, equipment, parameterSetId, equipmentConfig.lib, danglingSide)
+                } else {
+                    new HvdcVsc(dynamicModelId, equipment, parameterSetId, equipmentConfig.lib)
+                }
             } else {
-                new HvdcVsc(dynamicModelId, hvdc, parameterSetId, equipmentConfig.lib)
+                null
             }
         }
     }

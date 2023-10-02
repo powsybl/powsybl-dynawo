@@ -9,19 +9,19 @@ package com.powsybl.dynawaltz.models.events;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.automatons.QuadripoleModel;
-import com.powsybl.dynawaltz.parameters.ParameterType;
-import com.powsybl.dynawaltz.xml.ParametersXml;
+import com.powsybl.dynawaltz.parameters.ParametersSet;
 import com.powsybl.iidm.network.Branch;
 
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
 import java.util.List;
+
+import static com.powsybl.dynawaltz.parameters.ParameterType.BOOL;
+import static com.powsybl.dynawaltz.parameters.ParameterType.DOUBLE;
 
 /**
  * @author Marcos de Miguel <demiguelm at aia.es>
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class EventQuadripoleDisconnection extends AbstractEventModel {
+public class EventQuadripoleDisconnection extends AbstractEvent {
 
     private static final String EVENT_PREFIX = "Disconnect_";
     private final boolean disconnectOrigin;
@@ -52,9 +52,9 @@ public class EventQuadripoleDisconnection extends AbstractEventModel {
     }
 
     @Override
-    protected void writeEventSpecificParameters(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
-        ParametersXml.writeParameter(writer, ParameterType.DOUBLE, "event_tEvent", Double.toString(getStartTime()));
-        ParametersXml.writeParameter(writer, ParameterType.BOOL, "event_disconnectOrigin", Boolean.toString(disconnectOrigin));
-        ParametersXml.writeParameter(writer, ParameterType.BOOL, "event_disconnectExtremity", Boolean.toString(disconnectExtremity));
+    protected void createEventSpecificParameters(ParametersSet paramSet, DynaWaltzContext context) {
+        paramSet.addParameter("event_tEvent", DOUBLE, Double.toString(getStartTime()));
+        paramSet.addParameter("event_disconnectOrigin", BOOL, Boolean.toString(disconnectOrigin));
+        paramSet.addParameter("event_disconnectExtremity", BOOL, Boolean.toString(disconnectExtremity));
     }
 }

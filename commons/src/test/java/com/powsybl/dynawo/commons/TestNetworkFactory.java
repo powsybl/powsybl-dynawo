@@ -79,8 +79,8 @@ public final class TestNetworkFactory {
         for (int i = 0; i < loadStates.size(); i++) {
             LoadState loadState = loadStates.get(i);
             vl1.getNodeBreakerView().newDisconnector().setNode1(0).setNode2(i + 1).setId("d" + (i + 1)).add();
-            vl1.newLoad().setId("load" + (i + 1)).setNode(i + 1).setP0(loadState.getP0()).setQ0(loadState.getQ0()).add()
-                    .getTerminal().setP(loadState.getP()).setQ(loadState.getQ());
+            vl1.newLoad().setId("load" + (i + 1)).setNode(i + 1).setP0(loadState.p0()).setQ0(loadState.q0()).add()
+                    .getTerminal().setP(loadState.p()).setQ(loadState.q());
         }
         vl1.getNodeBreakerView().newDisconnector().setNode1(0).setNode2(loadStates.size() + 1).setId("d" + (loadStates.size() + 1)).add();
 
@@ -93,8 +93,8 @@ public final class TestNetworkFactory {
 
         for (int i = 0; i < loadStates.size(); i++) {
             LoadState loadState = loadStates.get(i);
-            vl2.newLoad().setId("load" + (loadStates.size() + i + 1)).setBus(b2.getId()).setP0(loadState.getP0()).setQ0(loadState.getQ0()).add()
-                    .getTerminal().setP(loadState.getP()).setQ(loadState.getQ());
+            vl2.newLoad().setId("load" + (loadStates.size() + i + 1)).setBus(b2.getId()).setP0(loadState.p0()).setQ0(loadState.q0()).add()
+                    .getTerminal().setP(loadState.p()).setQ(loadState.q());
         }
 
         // Line between the two voltage levels

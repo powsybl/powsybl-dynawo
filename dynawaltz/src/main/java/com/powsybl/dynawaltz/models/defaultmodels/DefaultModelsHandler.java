@@ -11,21 +11,23 @@ import com.powsybl.dynawaltz.models.Model;
 import com.powsybl.dynawaltz.models.buses.DefaultMeasurementPoint;
 import com.powsybl.dynawaltz.models.buses.MeasurementPoint;
 import com.powsybl.dynawaltz.models.generators.GeneratorModel;
-import com.powsybl.dynawaltz.models.generators.DefaultGeneratorModel;
-import com.powsybl.dynawaltz.models.hvdc.DefaultHvdcModel;
+import com.powsybl.dynawaltz.models.generators.DefaultGenerator;
+import com.powsybl.dynawaltz.models.hvdc.DefaultHvdc;
 import com.powsybl.dynawaltz.models.hvdc.HvdcModel;
-import com.powsybl.dynawaltz.models.lines.DefaultLineModel;
+import com.powsybl.dynawaltz.models.lines.DefaultLine;
 import com.powsybl.dynawaltz.models.lines.LineModel;
-import com.powsybl.dynawaltz.models.loads.DefaultLoadModel;
+import com.powsybl.dynawaltz.models.loads.DefaultLoad;
 import com.powsybl.dynawaltz.models.loads.LoadModel;
-import com.powsybl.dynawaltz.models.shunts.DefaultShuntModel;
+import com.powsybl.dynawaltz.models.shunts.DefaultShunt;
 import com.powsybl.dynawaltz.models.shunts.ShuntModel;
-import com.powsybl.dynawaltz.models.svarcs.DefaultStaticVarCompensatorModel;
+import com.powsybl.dynawaltz.models.svarcs.DefaultStaticVarCompensator;
 import com.powsybl.dynawaltz.models.svarcs.StaticVarCompensatorModel;
-import com.powsybl.dynawaltz.models.transformers.DefaultTransformerModel;
+import com.powsybl.dynawaltz.models.transformers.DefaultTransformer;
 import com.powsybl.dynawaltz.models.transformers.TransformerModel;
 import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.IdentifiableType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -36,18 +38,20 @@ import java.util.Map;
  */
 public class DefaultModelsHandler {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultModelsHandler.class);
+
     private final Map<IdentifiableType, Class<? extends Model>> powSyBlTypeToModel = new EnumMap<>(IdentifiableType.class);
     private final Map<Class<? extends Model>, DefaultModelFactory<? extends Model>> factoryMap;
 
     public DefaultModelsHandler() {
         factoryMap = Map.of(MeasurementPoint.class, new DefaultModelFactory<MeasurementPoint>(DefaultMeasurementPoint::new),
-                GeneratorModel.class, new DefaultModelFactory<GeneratorModel>(DefaultGeneratorModel::new),
-                HvdcModel.class, new DefaultModelFactory<HvdcModel>(DefaultHvdcModel::new),
-                LineModel.class, new DefaultModelFactory<LineModel>(DefaultLineModel::new),
-                LoadModel.class, new DefaultModelFactory<LoadModel>(DefaultLoadModel::new),
-                ShuntModel.class, new DefaultModelFactory<ShuntModel>(DefaultShuntModel::new),
-                StaticVarCompensatorModel.class, new DefaultModelFactory<StaticVarCompensatorModel>(DefaultStaticVarCompensatorModel::new),
-                TransformerModel.class, new DefaultModelFactory<TransformerModel>(DefaultTransformerModel::new));
+                GeneratorModel.class, new DefaultModelFactory<GeneratorModel>(DefaultGenerator::new),
+                HvdcModel.class, new DefaultModelFactory<HvdcModel>(DefaultHvdc::new),
+                LineModel.class, new DefaultModelFactory<LineModel>(DefaultLine::new),
+                LoadModel.class, new DefaultModelFactory<LoadModel>(DefaultLoad::new),
+                ShuntModel.class, new DefaultModelFactory<ShuntModel>(DefaultShunt::new),
+                StaticVarCompensatorModel.class, new DefaultModelFactory<StaticVarCompensatorModel>(DefaultStaticVarCompensator::new),
+                TransformerModel.class, new DefaultModelFactory<TransformerModel>(DefaultTransformer::new));
 
         powSyBlTypeToModel.put(IdentifiableType.BUS, MeasurementPoint.class);
         powSyBlTypeToModel.put(IdentifiableType.GENERATOR, GeneratorModel.class);
@@ -68,6 +72,10 @@ public class DefaultModelsHandler {
     }
 
     public <T extends Model> T getDefaultModel(Identifiable<?> equipment, Class<T> connectableClass) {
+        return getDefaultModel(equipment, connectableClass, true);
+    }
+
+    public <T extends Model> T getDefaultModel(Identifiable<?> equipment, Class<T> connectableClass, boolean throwException) {
 
         Class<? extends Model> equipmentClass = powSyBlTypeToModel.get(equipment.getType());
         if (equipmentClass == null) {
@@ -79,8 +87,18 @@ public class DefaultModelsHandler {
             if (connectableClass.isInstance(defaultModel)) {
                 return connectableClass.cast(defaultModel);
             }
-            throw new PowsyblException("Default model " + defaultModel.getClass().getSimpleName() + " does not implement " + connectableClass.getSimpleName() + " interface");
+            if (throwException) {
+                throw new PowsyblException("Default model " + defaultModel.getClass().getSimpleName() + " does not implement " + connectableClass.getSimpleName() + " interface");
+            } else {
+                LOGGER.warn("Default model {} does not implement {} interface", defaultModel.getClass().getSimpleName(), connectableClass.getSimpleName());
+                return null;
+            }
         }
-        throw new PowsyblException("Default model not implemented for " + equipmentClass.getSimpleName());
+        if (throwException) {
+            throw new PowsyblException("Default model not implemented for " + equipmentClass.getSimpleName());
+        } else {
+            LOGGER.warn("Default model not implemented for {}", equipmentClass.getSimpleName());
+            return null;
+        }
     }
 }

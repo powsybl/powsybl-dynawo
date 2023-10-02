@@ -35,20 +35,20 @@ class WeccGenGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicMod
 
     static class WeccGenBuilder extends AbstractGeneratorBuilder {
 
-        EquipmentConfig equipmentConfig
-
         WeccGenBuilder(Network network, EquipmentConfig equipmentConfig) {
-            super(network)
-            this.equipmentConfig = equipmentConfig
+            super(network, equipmentConfig)
         }
 
         @Override
         WeccGen build() {
-            checkData()
-            if (equipmentConfig.isSynchronized()) {
-                new SynchronizedWeccGen(dynamicModelId, generator, parameterSetId, equipmentConfig.lib, equipmentConfig.prefix)
+            if (isInstantiable()) {
+                if (equipmentConfig.isSynchronized()) {
+                    new SynchronizedWeccGen(dynamicModelId, equipment, parameterSetId, equipmentConfig.lib, equipmentConfig.internalModelPrefix)
+                } else {
+                    new WeccGen(dynamicModelId, equipment, parameterSetId, equipmentConfig.lib, equipmentConfig.internalModelPrefix)
+                }
             } else {
-                new WeccGen(dynamicModelId, generator, parameterSetId, equipmentConfig.lib, equipmentConfig.prefix)
+                null
             }
         }
     }

@@ -9,17 +9,19 @@ package com.powsybl.dynawaltz.models.events;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
-import com.powsybl.dynawaltz.parameters.ParameterType;
-import com.powsybl.dynawaltz.xml.ParametersXml;
+import com.powsybl.dynawaltz.parameters.ParametersSet;
 import com.powsybl.iidm.network.Identifiable;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
+import static com.powsybl.dynawaltz.parameters.ParameterType.BOOL;
+import static com.powsybl.dynawaltz.parameters.ParameterType.DOUBLE;
+
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public abstract class AbstractDynamicLibEventDisconnection extends AbstractEventModel {
+public abstract class AbstractDynamicLibEventDisconnection extends AbstractEvent {
 
     private static final String EVENT_PREFIX = "Disconnect_";
     private static final String DYNAMIC_MODEL_LIB = "EventSetPointBoolean";
@@ -52,8 +54,8 @@ public abstract class AbstractDynamicLibEventDisconnection extends AbstractEvent
     }
 
     @Override
-    protected void writeEventSpecificParameters(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
-        ParametersXml.writeParameter(writer, ParameterType.DOUBLE, "event_tEvent", Double.toString(getStartTime()));
-        ParametersXml.writeParameter(writer, ParameterType.BOOL, "event_stateEvent1", Boolean.toString(disconnect));
+    protected void createEventSpecificParameters(ParametersSet paramSet, DynaWaltzContext context) {
+        paramSet.addParameter("event_tEvent", DOUBLE, Double.toString(getStartTime()));
+        paramSet.addParameter("event_stateEvent1", BOOL, Boolean.toString(disconnect));
     }
 }
