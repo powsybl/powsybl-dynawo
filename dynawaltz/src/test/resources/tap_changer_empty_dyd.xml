@@ -4,13 +4,13 @@
         <dyn:macroStaticRef id="MSR_LoadAlphaBeta"/>
     </dyn:blackBoxModel>
     <dyn:macroConnector id="MC_LoadAlphaBeta-DefaultBus">
-        <dyn:connect var1="load_terminal" var2="@NAME@_ACPIN"/>
-        <dyn:connect var1="load_switchOffSignal1" var2="@NAME@_switchOff"/>
+        <dyn:connect var1="load_terminal" var2="@STATIC_ID@@NODE@_ACPIN"/>
+        <dyn:connect var1="load_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
     </dyn:macroConnector>
     <dyn:macroStaticReference id="MSR_LoadAlphaBeta">
         <dyn:staticRef var="load_PPu" staticVar="p"/>
         <dyn:staticRef var="load_QPu" staticVar="q"/>
         <dyn:staticRef var="load_state" staticVar="state"/>
     </dyn:macroStaticReference>
-    <dyn:macroConnect connector="MC_LoadAlphaBeta-DefaultBus" id1="BBM_LOAD" id2="NETWORK" name2="NLOAD"/>
+    <dyn:macroConnect connector="MC_LoadAlphaBeta-DefaultBus" id1="BBM_LOAD" id2="NETWORK"/>
 </dyn:dynamicModelsArchitecture>

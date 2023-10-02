@@ -15,7 +15,6 @@ import com.powsybl.dynawaltz.models.buses.BusOfEquipmentModel;
 import com.powsybl.dynawaltz.models.buses.DefaultBusOfEquipment;
 import com.powsybl.dynawaltz.parameters.ParametersSet;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
