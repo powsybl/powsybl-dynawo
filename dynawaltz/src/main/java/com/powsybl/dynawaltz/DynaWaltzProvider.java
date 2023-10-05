@@ -223,7 +223,7 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
                 DumpFileParameters dumpFileParameters = context.getDynaWaltzParameters().getDumpFileParameters();
                 if (dumpFileParameters.useDumpFile()) {
                     Path dumpFilePath = dumpFileParameters.getDumpFilePath();
-                    if(dumpFilePath != null) {
+                    if (dumpFilePath != null) {
                         Files.copy(dumpFilePath, workingDir.resolve(dumpFileParameters.dumpFile()), StandardCopyOption.REPLACE_EXISTING);
                     }
                 }
