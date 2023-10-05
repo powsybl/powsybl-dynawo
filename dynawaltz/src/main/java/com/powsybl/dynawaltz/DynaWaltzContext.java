@@ -173,8 +173,8 @@ public class DynaWaltzContext {
         if (bbm == null) {
             return DefaultBus.getInstance();
         }
-        if (bbm instanceof ConnectionPoint) {
-            return (ConnectionPoint) bbm;
+        if (bbm instanceof ConnectionPoint cp) {
+            return cp;
         }
         throw new PowsyblException(String.format(MODEL_ID_EXCEPTION, staticId, "ConnectionPoint"));
     }
