@@ -6,6 +6,7 @@
  */
 package com.powsybl.dynawaltz.xml;
 
+import com.powsybl.dynawaltz.DumpFileParameters;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
 import com.powsybl.dynawaltz.DynaWaltzParameters.SolverType;
@@ -65,6 +66,12 @@ public final class JobsXml {
         writer.writeEmptyElement(DYN_URI, "dynModels");
         writer.writeAttribute("dydFile", DYD_FILENAME);
 
+        DumpFileParameters dumpFileParameters = parameters.getDumpFileParameters();
+        if (dumpFileParameters.useDumpFile()) {
+            writer.writeEmptyElement(DYN_URI, "initialState");
+            writer.writeAttribute("file", dumpFileParameters.dumpFile());
+        }
+
         writer.writeEmptyElement(DYN_URI, "precompiledModels");
         writer.writeAttribute("useStandardModels", "true");
 
@@ -93,7 +100,7 @@ public final class JobsXml {
 
         writer.writeEmptyElement(DYN_URI, "finalState");
         writer.writeAttribute("exportIIDMFile", Boolean.toString(context.getDynaWaltzParameters().isWriteFinalState()));
-        writer.writeAttribute("exportDumpFile", "false");
+        writer.writeAttribute("exportDumpFile", Boolean.toString(context.getDynaWaltzParameters().getDumpFileParameters().exportDumpFile()));
 
         if (context.withCurves()) {
             writer.writeEmptyElement(DYN_URI, "curves");

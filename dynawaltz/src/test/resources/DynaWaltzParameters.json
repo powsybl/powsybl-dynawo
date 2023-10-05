@@ -39,6 +39,12 @@
       "solverType" : "IDA",
       "mergeLoads" : false,
       "writeFinalState" : true,
+      "dumpFileParameters" : {
+        "exportDumpFile" : false,
+        "useDumpFile" : false,
+        "exportDumpFileFolder" : null,
+        "dumpFile" : null
+      },
       "modelsParameters" : [ {
         "id" : "test",
         "parameters" : {

@@ -14,9 +14,12 @@ import com.powsybl.commons.extensions.AbstractExtension;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.parameters.ParametersSet;
 import com.powsybl.dynawaltz.xml.ParametersXml;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
@@ -38,6 +41,8 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
     public static final String SOLVER_OUTPUT_PARAMETERS_FILE = "solvers.par";
     private static final boolean DEFAULT_WRITE_FINAL_STATE = true;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(DynaWaltzParameters.class);
+
     public enum SolverType {
         SIM,
         IDA
@@ -49,6 +54,7 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
     private SolverType solverType;
     private boolean mergeLoads;
     private boolean writeFinalState = DEFAULT_WRITE_FINAL_STATE;
+    private DumpFileParameters dumpFileParameters;
 
     /**
      * Loads parameters from the default platform configuration.
@@ -99,6 +105,24 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
         // Writes final state IIDM
         boolean writeFinalState = config.flatMap(c -> c.getOptionalBooleanProperty("writeFinalState")).orElse(DEFAULT_WRITE_FINAL_STATE);
 
+        // Dump file config
+        boolean exportDumpFile = config.flatMap(c -> c.getOptionalBooleanProperty("dump.export")).orElse(DumpFileParameters.DEFAULT_EXPORT_DUMP);
+        String exportDumpFileFolder = config.flatMap(c -> c.getOptionalStringProperty("dump.exportFolder")).orElse(DumpFileParameters.DEFAULT_DUMP_FOLDER);
+        Path exportDumpFileFolderPath = exportDumpFileFolder != null ? fileSystem.getPath(exportDumpFileFolder) : null;
+        boolean exportFolderNotFound = exportDumpFileFolderPath == null || !Files.exists(exportDumpFileFolderPath);
+        if (exportDumpFile && exportFolderNotFound) {
+            LOGGER.warn("Folder {} set in 'exportDumpFileFolder' property cannot be found, exportDumpFile property will be set to false ", exportDumpFileFolder);
+            exportDumpFile = false;
+        }
+        boolean useDumpFile = config.flatMap(c -> c.getOptionalBooleanProperty("dump.useAsInput")).orElse(DumpFileParameters.DEFAULT_USE_DUMP);
+        String dumpFile = config.flatMap(c -> c.getOptionalStringProperty("dump.fileName")).orElse(DumpFileParameters.DEFAULT_DUMP_NAME);
+        if (useDumpFile && (exportFolderNotFound || dumpFile == null || !Files.exists(exportDumpFileFolderPath.resolve(dumpFile)))) {
+            LOGGER.warn("File {} set in 'dumpFile' property cannot be found, useDumpFile property will be set to false ", dumpFile);
+            useDumpFile = false;
+        }
+
+        DumpFileParameters dumpFileParameters = new DumpFileParameters(exportDumpFile, useDumpFile, exportDumpFileFolderPath, dumpFile);
+
         // Load xml files
         List<ParametersSet> modelsParameters = ParametersXml.load(parametersPath);
         ParametersSet networkParameters = ParametersXml.load(networkParametersPath, networkParametersId);
@@ -110,7 +134,8 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
                 .setSolverParameters(solverParameters)
                 .setSolverType(solverType)
                 .setMergeLoads(mergeLoads)
-                .setWriteFinalState(writeFinalState);
+                .setWriteFinalState(writeFinalState)
+                .setDumpFileParameters(dumpFileParameters);
     }
 
     @Override
@@ -177,5 +202,19 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
 
     public boolean isWriteFinalState() {
         return writeFinalState;
+    }
+
+    public DumpFileParameters getDumpFileParameters() {
+        return dumpFileParameters;
+    }
+
+    public DynaWaltzParameters setDumpFileParameters(DumpFileParameters dumpFileParameters) {
+        this.dumpFileParameters = dumpFileParameters;
+        return this;
+    }
+
+    public DynaWaltzParameters setDefaultDumpFileParameters() {
+        this.dumpFileParameters = DumpFileParameters.createDefaultDumpFileParameters();
+        return this;
     }
 }

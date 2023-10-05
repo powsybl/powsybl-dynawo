@@ -110,6 +110,30 @@ class DynaWaltzProviderTest extends AbstractConverterTest {
     }
 
     @Test
+    void testWithDump() throws Exception {
+        Path folderPath = tmpDir.resolve("dumpFiles");
+        Files.createDirectory(folderPath);
+        String fileProperty = "dumpFile.dmp";
+        Files.createFile(folderPath.resolve(fileProperty));
+
+        Network network = createTestNetwork();
+        LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynawo_version.out", "/noMergedLoads.xiidm");
+        ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(tmpDir, 1), commandExecutor, ForkJoinPool.commonPool());
+        DynamicSimulation.Runner dynawoSimulation = DynamicSimulation.find();
+        DynamicSimulationParameters dynamicSimulationParameters = DynamicSimulationParameters.load();
+        DynaWaltzParameters dynaWaltzParameters = DynaWaltzParameters.load()
+                .setMergeLoads(false)
+                .setDumpFileParameters(new DumpFileParameters(true, true, folderPath, fileProperty));
+        dynamicSimulationParameters.addExtension(DynaWaltzParameters.class, dynaWaltzParameters);
+
+        assertEquals(DynaWaltzProvider.NAME, dynawoSimulation.getName());
+        DynamicSimulationResult result = dynawoSimulation.run(network, n -> Collections.emptyList(), EventModelsSupplier.empty(),
+                CurvesSupplier.empty(), network.getVariantManager().getWorkingVariantId(),
+                computationManager, dynamicSimulationParameters);
+        assertNotNull(result);
+    }
+
+    @Test
     void testFail() throws Exception {
         Network network = createTestNetwork();
         LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynawo_version.out", null);
