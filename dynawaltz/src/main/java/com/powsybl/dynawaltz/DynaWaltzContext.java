@@ -24,7 +24,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -170,7 +169,7 @@ public class DynaWaltzContext {
     }
 
     protected static Predicate<BlackBoxModel> distinctByStaticId() {
-        Set<Object> seen = ConcurrentHashMap.newKeySet();
+        Set<String> seen = new HashSet<>();
         return bbm -> {
             if (bbm instanceof EquipmentBlackBoxModel eBbm && !seen.add(eBbm.getStaticId())) {
                 LOGGER.warn("Duplicate static id found: {} -> dynamic model {} {} will be skipped", eBbm.getStaticId(), eBbm.getLib(), eBbm.getDynamicModelId());
@@ -181,7 +180,7 @@ public class DynaWaltzContext {
     }
 
     protected static Predicate<BlackBoxModel> distinctByDynamicId() {
-        Set<Object> seen = ConcurrentHashMap.newKeySet();
+        Set<String> seen = new HashSet<>();
         return bbm -> {
             if (!seen.add(bbm.getDynamicModelId())) {
                 LOGGER.warn("Duplicate dynamic id found: {} -> model {} will be skipped", bbm.getDynamicModelId(), bbm.getName());
