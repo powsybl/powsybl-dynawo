@@ -22,6 +22,12 @@ public final class Reports {
     private Reports() {
     }
 
+    public static Reporter createDynaFlowReporter(Reporter reporter, String networkId) {
+        return reporter.createSubReporter("dynaflow",
+                "Dynaflow loadflow on network '${networkId}'",
+                "networkId", networkId);
+    }
+
     public static Reporter createDynaFlowSecurityAnalysisReporter(Reporter reporter, String networkId) {
         return reporter.createSubReporter("dynaflowSa",
                 "Dynaflow security analysis on network '${networkId}'",
