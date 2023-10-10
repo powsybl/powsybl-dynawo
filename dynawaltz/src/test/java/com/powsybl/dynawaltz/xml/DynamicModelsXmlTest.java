@@ -114,6 +114,6 @@ class DynamicModelsXmlTest extends DynaWaltzTestUtil {
         // requested interface not implemented
         Identifiable<?> transformer = network.getIdentifiable("NGEN_NHV1");
         e = assertThrows(PowsyblException.class, () -> dc.getDynamicModel(transformer, InjectionModel.class));
-        assertEquals("Default model DefaultTransformerModel does not implement InjectionModel interface", e.getMessage());
+        assertEquals("Default model DefaultTransformer does not implement InjectionModel interface", e.getMessage());
     }
 }

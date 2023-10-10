@@ -30,6 +30,10 @@ abstract class AbstractSimpleEquipmentGroovyExtension<T> {
         DynaWaltzProvider.NAME
     }
 
+    List<String> getModelNames() {
+        List.of(equipmentConfig.lib)
+    }
+
     void load(Binding binding, Consumer<T> consumer) {
         binding.setVariable(equipmentConfig.lib, { Closure<Void> closure ->
             def cloned = closure.clone()
