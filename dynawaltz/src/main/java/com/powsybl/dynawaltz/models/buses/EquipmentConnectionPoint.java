@@ -8,18 +8,25 @@
 package com.powsybl.dynawaltz.models.buses;
 
 import com.powsybl.dynawaltz.models.Model;
+import com.powsybl.dynawaltz.models.Side;
 
 import java.util.Optional;
 
 /**
- * Interface for buses used by automatons for measure
+ * Interface use for buses by equipments for connection with the network
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public interface MeasurementPoint extends Model {
+public interface EquipmentConnectionPoint extends Model {
 
     String getTerminalVarName();
 
-    Optional<String> getUImpinVarName();
+    default String getTerminalVarName(Side side) {
+        return getTerminalVarName();
+    }
 
-    Optional<String> getUpuImpinVarName();
+    Optional<String> getSwitchOffSignalVarName();
+
+    default Optional<String> getSwitchOffSignalVarName(Side side) {
+        return getSwitchOffSignalVarName();
+    }
 }

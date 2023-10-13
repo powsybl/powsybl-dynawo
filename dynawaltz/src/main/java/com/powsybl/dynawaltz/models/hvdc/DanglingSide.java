@@ -2,7 +2,7 @@ package com.powsybl.dynawaltz.models.hvdc;
 
 import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.VarConnection;
-import com.powsybl.dynawaltz.models.buses.ConnectionPoint;
+import com.powsybl.dynawaltz.models.buses.EquipmentConnectionPoint;
 
 import java.util.List;
 import java.util.Objects;
@@ -27,13 +27,13 @@ public final class DanglingSide {
         return side.getSideNumber();
     }
 
-    public void createMacroConnections(BiFunction<ConnectionPoint, Side, List<VarConnection>> basicVarConnectionsSupplier,
-                                       BiConsumer<BiFunction<ConnectionPoint, Side, List<VarConnection>>, Side> connectionCreator) {
+    public void createMacroConnections(BiFunction<EquipmentConnectionPoint, Side, List<VarConnection>> basicVarConnectionsSupplier,
+                                       BiConsumer<BiFunction<EquipmentConnectionPoint, Side, List<VarConnection>>, Side> connectionCreator) {
         connectionCreator.accept(this::getVarConnectionsWith, side);
         connectionCreator.accept(basicVarConnectionsSupplier, side.getOppositeSide());
     }
 
-    private List<VarConnection> getVarConnectionsWith(ConnectionPoint connected, Side side) {
+    private List<VarConnection> getVarConnectionsWith(EquipmentConnectionPoint connected, Side side) {
         return List.of(new VarConnection(prefix + side.getSideNumber(), connected.getTerminalVarName(side)));
     }
 }

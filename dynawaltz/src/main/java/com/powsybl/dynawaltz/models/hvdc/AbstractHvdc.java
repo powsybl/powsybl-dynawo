@@ -12,7 +12,7 @@ import com.powsybl.dynawaltz.models.AbstractEquipmentBlackBoxModel;
 import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.VarMapping;
-import com.powsybl.dynawaltz.models.buses.ConnectionPoint;
+import com.powsybl.dynawaltz.models.buses.EquipmentConnectionPoint;
 import com.powsybl.iidm.network.HvdcLine;
 
 import java.util.ArrayList;
@@ -49,7 +49,7 @@ public abstract class AbstractHvdc extends AbstractEquipmentBlackBoxModel<HvdcLi
         return VAR_MAPPING;
     }
 
-    protected List<VarConnection> getVarConnectionsWith(ConnectionPoint connected, Side side) {
+    protected List<VarConnection> getVarConnectionsWith(EquipmentConnectionPoint connected, Side side) {
         List<VarConnection> varConnections = new ArrayList<>(2);
         varConnections.add(getSimpleVarConnectionWithBus(connected, side));
         connected.getSwitchOffSignalVarName(side)
@@ -58,7 +58,7 @@ public abstract class AbstractHvdc extends AbstractEquipmentBlackBoxModel<HvdcLi
         return varConnections;
     }
 
-    protected final VarConnection getSimpleVarConnectionWithBus(ConnectionPoint connected, Side side) {
+    protected final VarConnection getSimpleVarConnectionWithBus(EquipmentConnectionPoint connected, Side side) {
         return new VarConnection(TERMINAL_PREFIX + side.getSideNumber(), connected.getTerminalVarName(side));
     }
 }

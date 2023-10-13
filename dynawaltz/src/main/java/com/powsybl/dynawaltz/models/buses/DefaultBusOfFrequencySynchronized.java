@@ -2,9 +2,9 @@ package com.powsybl.dynawaltz.models.buses;
 
 import com.powsybl.dynawaltz.models.defaultmodels.AbstractDefaultModel;
 
-public class DefaultBusOfEquipment extends AbstractDefaultModel implements BusOfEquipmentModel {
+public class DefaultBusOfFrequencySynchronized extends AbstractDefaultModel implements BusOfFrequencySynchronizedModel {
 
-    public DefaultBusOfEquipment(String staticId) {
+    public DefaultBusOfFrequencySynchronized(String staticId) {
         super(staticId);
     }
 

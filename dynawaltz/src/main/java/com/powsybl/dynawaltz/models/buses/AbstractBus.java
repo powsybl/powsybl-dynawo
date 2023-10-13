@@ -20,7 +20,7 @@ import java.util.Optional;
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public abstract class AbstractBus extends AbstractEquipmentBlackBoxModel<Bus> implements ConnectionPoint, MeasurementPoint {
+public abstract class AbstractBus extends AbstractEquipmentBlackBoxModel<Bus> implements EquipmentConnectionPoint, ActionConnectionPoint {
 
     protected AbstractBus(String dynamicModelId, Bus bus, String parameterSetId, String lib) {
         super(dynamicModelId, parameterSetId, bus, lib);

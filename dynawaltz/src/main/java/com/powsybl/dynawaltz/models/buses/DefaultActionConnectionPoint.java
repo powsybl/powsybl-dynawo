@@ -15,9 +15,9 @@ import java.util.Optional;
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  * @author Florian Dupuy <florian.dupuy at rte-france.com>
  */
-public class DefaultMeasurementPoint extends AbstractDefaultModel implements MeasurementPoint {
+public class DefaultActionConnectionPoint extends AbstractDefaultModel implements ActionConnectionPoint {
 
-    public DefaultMeasurementPoint(String staticId) {
+    public DefaultActionConnectionPoint(String staticId) {
         super(staticId);
     }
 

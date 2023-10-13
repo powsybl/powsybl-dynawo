@@ -11,7 +11,7 @@ import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractEquipmentBlackBoxModel;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.VarMapping;
-import com.powsybl.dynawaltz.models.buses.ConnectionPoint;
+import com.powsybl.dynawaltz.models.buses.EquipmentConnectionPoint;
 
 import java.util.Arrays;
 import java.util.List;
@@ -36,7 +36,7 @@ public class StaticVarCompensator extends AbstractEquipmentBlackBoxModel<com.pow
         createTerminalMacroConnections(equipment, this::getVarConnectionsWith, context);
     }
 
-    private List<VarConnection> getVarConnectionsWith(ConnectionPoint connected) {
+    private List<VarConnection> getVarConnectionsWith(EquipmentConnectionPoint connected) {
         return List.of(new VarConnection("SVarC_terminal", connected.getTerminalVarName()));
     }
 

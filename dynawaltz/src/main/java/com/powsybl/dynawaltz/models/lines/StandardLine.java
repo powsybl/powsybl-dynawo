@@ -11,7 +11,7 @@ import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractEquipmentBlackBoxModel;
 import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.VarConnection;
-import com.powsybl.dynawaltz.models.buses.ConnectionPoint;
+import com.powsybl.dynawaltz.models.buses.EquipmentConnectionPoint;
 import com.powsybl.dynawaltz.models.utils.SideConverter;
 import com.powsybl.iidm.network.Line;
 
@@ -26,7 +26,7 @@ public class StandardLine extends AbstractEquipmentBlackBoxModel<Line> implement
         super(dynamicModelId, parameterSetId, line, "Line");
     }
 
-    private List<VarConnection> getVarConnectionsWith(ConnectionPoint connected, Side side) {
+    private List<VarConnection> getVarConnectionsWith(EquipmentConnectionPoint connected, Side side) {
         return List.of(new VarConnection(getTerminalVarName(side), connected.getTerminalVarName()));
     }
 

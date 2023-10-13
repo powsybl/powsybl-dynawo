@@ -11,8 +11,8 @@ import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
 import com.powsybl.dynawaltz.models.macroconnections.MacroConnectAttribute;
 import com.powsybl.dynawaltz.models.VarConnection;
-import com.powsybl.dynawaltz.models.buses.BusOfEquipmentModel;
-import com.powsybl.dynawaltz.models.buses.DefaultBusOfEquipment;
+import com.powsybl.dynawaltz.models.buses.BusOfFrequencySynchronizedModel;
+import com.powsybl.dynawaltz.models.buses.DefaultBusOfFrequencySynchronized;
 import com.powsybl.dynawaltz.parameters.ParametersSet;
 
 import java.util.List;
@@ -61,7 +61,7 @@ public class OmegaRef extends AbstractFrequencySynchronizer {
         return connected.getOmegaRefVarConnections();
     }
 
-    private List<VarConnection> getVarConnectionsWith(BusOfEquipmentModel connected) {
+    private List<VarConnection> getVarConnectionsWith(BusOfFrequencySynchronizedModel connected) {
         return List.of(new VarConnection("numcc_node_@INDEX@", connected.getNumCCVarName()));
     }
 
@@ -70,7 +70,7 @@ public class OmegaRef extends AbstractFrequencySynchronizer {
         int index = 0;
         for (FrequencySynchronizedModel eq : synchronizedEquipments) {
             createMacroConnections(eq, getVarConnectionsWith(eq), context, MacroConnectAttribute.ofIndex1(index));
-            BusOfEquipmentModel busOf = new DefaultBusOfEquipment(eq.getStaticId());
+            BusOfFrequencySynchronizedModel busOf = new DefaultBusOfFrequencySynchronized(eq.getStaticId());
             createMacroConnections(busOf, getVarConnectionsWith(busOf), context, MacroConnectAttribute.ofIndex1(index));
             index++;
         }

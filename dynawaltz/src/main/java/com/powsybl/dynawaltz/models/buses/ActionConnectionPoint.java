@@ -9,12 +9,17 @@ package com.powsybl.dynawaltz.models.buses;
 
 import com.powsybl.dynawaltz.models.Model;
 
+import java.util.Optional;
+
 /**
- * View of equipment from the bus to which it is connected
- * Used by FrequencySynchronizer in order to get NummCC var name
+ * Interface for buses used by automatons for measure or event for various actions
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public interface BusOfEquipmentModel extends Model {
+public interface ActionConnectionPoint extends Model {
 
-    String getNumCCVarName();
+    String getTerminalVarName();
+
+    Optional<String> getUImpinVarName();
+
+    Optional<String> getUpuImpinVarName();
 }
