@@ -50,7 +50,6 @@ public class DynaFlowSecurityAnalysis {
     private static final String DYNAFLOW_LAUNCHER_PROGRAM_NAME = "dynaflow-launcher.sh";
     private static final String CONTINGENCIES_FILENAME = "contingencies.json";
     private static final String DYNAWO_CONSTRAINTS_FOLDER = "constraints";
-    private static final String DYNAWO_TIMELINE_FOLDER = "timeLine";
 
     private final Supplier<DynaFlowConfig> configSupplier;
 
@@ -172,7 +171,7 @@ public class DynaFlowSecurityAnalysis {
                     .toList();
 
                 // Report the timeline events from the timeline files written by dynawo
-                Path timelineDir = workingDir.resolve(DYNAWO_TIMELINE_FOLDER);
+                Path timelineDir = workingDir.resolve(DynaFlowConstants.DYNAWO_TIMELINE_FOLDER);
                 contingencies.forEach(c -> {
                     Reporter contingencyReporter = Reports.createDynaFlowTimelineReporter(reporter, c.getId());
                     getTimeline(timelineDir, c).forEach(e -> Reports.reportTimelineEvent(contingencyReporter, e));
@@ -204,8 +203,8 @@ public class DynaFlowSecurityAnalysis {
         }
     }
 
-    private List<TimelineEntry> getTimeline(Path constraintsDir, Contingency c) {
-        Path timelineFile = constraintsDir.resolve("timeline_" + c.getId() + ".xml");
+    private List<TimelineEntry> getTimeline(Path timelineDir, Contingency c) {
+        Path timelineFile = timelineDir.resolve("timeline_" + c.getId() + ".xml");
         return new XmlTimeLineParser().parse(timelineFile);
     }
 }
