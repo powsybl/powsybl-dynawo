@@ -14,6 +14,7 @@ import com.powsybl.dynawaltz.models.VarMapping;
 import com.powsybl.dynawaltz.models.buses.EquipmentConnectionPoint;
 import com.powsybl.iidm.network.extensions.StandbyAutomaton;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -22,7 +23,7 @@ import java.util.List;
  */
 public class StaticVarCompensator extends AbstractEquipmentBlackBoxModel<com.powsybl.iidm.network.StaticVarCompensator> implements StaticVarCompensatorModel {
 
-    private static final List<VarMapping> VAR_MAPPING = Arrays.asList(
+    private static final List<VarMapping> VAR_MAPPING = List.of(
             new VarMapping("SVarC_injector_PInjPu", "p"),
             new VarMapping("SVarC_injector_QInjPu", "q"),
             new VarMapping("SVarC_injector_state", "state"));
@@ -43,10 +44,14 @@ public class StaticVarCompensator extends AbstractEquipmentBlackBoxModel<com.pow
     @Override
     public List<VarMapping> getVarsMapping() {
         StandbyAutomaton standbyAutomaton = equipment.getExtension(StandbyAutomaton.class);
-        if (standbyAutomaton != null) {
-            VAR_MAPPING.add(new VarMapping("SVarC_modeHandling_mode_value", "regulatingMode"));
+        if (standbyAutomaton == null) {
+            return VAR_MAPPING;
+        } else {
+            List<VarMapping> varsMappingExt = new ArrayList<>(VAR_MAPPING);
+            varsMappingExt.add(new VarMapping("SVarC_modeHandling_mode_value", "regulatingMode"));
+            return varsMappingExt;
         }
-        return VAR_MAPPING;
+
     }
 
     @Override
