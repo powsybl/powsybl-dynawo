@@ -8,8 +8,8 @@ package com.powsybl.dynawaltz.models.defaultmodels;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.models.Model;
-import com.powsybl.dynawaltz.models.buses.BusModel;
-import com.powsybl.dynawaltz.models.buses.DefaultBus;
+import com.powsybl.dynawaltz.models.buses.DefaultActionConnectionPoint;
+import com.powsybl.dynawaltz.models.buses.ActionConnectionPoint;
 import com.powsybl.dynawaltz.models.generators.GeneratorModel;
 import com.powsybl.dynawaltz.models.generators.DefaultGenerator;
 import com.powsybl.dynawaltz.models.hvdc.DefaultHvdc;
@@ -44,7 +44,7 @@ public class DefaultModelsHandler {
     private final Map<Class<? extends Model>, DefaultModelFactory<? extends Model>> factoryMap;
 
     public DefaultModelsHandler() {
-        factoryMap = Map.of(BusModel.class, new DefaultModelFactory<BusModel>(DefaultBus::new),
+        factoryMap = Map.of(ActionConnectionPoint.class, new DefaultModelFactory<ActionConnectionPoint>(DefaultActionConnectionPoint::new),
                 GeneratorModel.class, new DefaultModelFactory<GeneratorModel>(DefaultGenerator::new),
                 HvdcModel.class, new DefaultModelFactory<HvdcModel>(DefaultHvdc::new),
                 LineModel.class, new DefaultModelFactory<LineModel>(DefaultLine::new),
@@ -53,7 +53,9 @@ public class DefaultModelsHandler {
                 StaticVarCompensatorModel.class, new DefaultModelFactory<StaticVarCompensatorModel>(DefaultStaticVarCompensator::new),
                 TransformerModel.class, new DefaultModelFactory<TransformerModel>(DefaultTransformer::new));
 
-        powSyBlTypeToModel.put(IdentifiableType.BUS, BusModel.class);
+        // When using the bus equipment DefaultModelsHandler will always instantiate the DefaultActionConnectionPoint default model,
+        // for EquipmentConnectionPoint the DefaultBus singleton will be accessed via DynaWaltzContext::getConnectionPointDynamicModel
+        powSyBlTypeToModel.put(IdentifiableType.BUS, ActionConnectionPoint.class);
         powSyBlTypeToModel.put(IdentifiableType.GENERATOR, GeneratorModel.class);
         powSyBlTypeToModel.put(IdentifiableType.HVDC_LINE, HvdcModel.class);
         powSyBlTypeToModel.put(IdentifiableType.LINE, LineModel.class);

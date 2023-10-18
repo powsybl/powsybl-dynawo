@@ -10,7 +10,9 @@ import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.models.*;
-import com.powsybl.dynawaltz.models.buses.InfiniteBus;
+import com.powsybl.dynawaltz.models.buses.AbstractBus;
+import com.powsybl.dynawaltz.models.buses.EquipmentConnectionPoint;
+import com.powsybl.dynawaltz.models.buses.DefaultEquipmentConnectionPoint;
 import com.powsybl.dynawaltz.models.defaultmodels.DefaultModelsHandler;
 import com.powsybl.dynawaltz.models.frequencysynchronizers.FrequencySynchronizedModel;
 import com.powsybl.dynawaltz.models.frequencysynchronizers.FrequencySynchronizerModel;
@@ -74,7 +76,7 @@ public class DynaWaltzContext {
         this.curves = Objects.requireNonNull(curves);
         this.parameters = Objects.requireNonNull(parameters);
         this.dynaWaltzParameters = Objects.requireNonNull(dynaWaltzParameters);
-        this.frequencySynchronizer = setupFrequencySynchronizer(dynamicModels.stream().anyMatch(InfiniteBus.class::isInstance) ? SetPoint::new : OmegaRef::new);
+        this.frequencySynchronizer = setupFrequencySynchronizer(dynamicModels.stream().anyMatch(AbstractBus.class::isInstance) ? SetPoint::new : OmegaRef::new);
 
         for (BlackBoxModel bbm : getBlackBoxDynamicModelStream().toList()) {
             macroStaticReferences.computeIfAbsent(bbm.getName(), k -> new MacroStaticReference(k, bbm.getVarsMapping()));
@@ -171,6 +173,17 @@ public class DynaWaltzContext {
         }
     }
 
+    public EquipmentConnectionPoint getConnectionPointDynamicModel(String staticId) {
+        BlackBoxModel bbm = staticIdBlackBoxModelMap.get(staticId);
+        if (bbm == null) {
+            return DefaultEquipmentConnectionPoint.getInstance();
+        }
+        if (bbm instanceof EquipmentConnectionPoint cp) {
+            return cp;
+        }
+        throw new PowsyblException(String.format(MODEL_ID_EXCEPTION, staticId, "ConnectionPoint"));
+    }
+
     protected static Predicate<BlackBoxModel> distinctByStaticId() {
         Set<String> seen = new HashSet<>();
         return bbm -> {
@@ -197,18 +210,8 @@ public class DynaWaltzContext {
         macroConnectList.add(new MacroConnect(macroConnectorId, attributesFrom, attributesTo));
     }
 
-    public void addMacroConnect(String macroConnectorId, List<MacroConnectAttribute> attributesFrom) {
-        macroConnectList.add(new MacroConnect(macroConnectorId, attributesFrom));
-    }
-
     public List<MacroConnect> getMacroConnectList() {
         return macroConnectList;
-    }
-
-    public String addMacroConnector(String name1, List<VarConnection> varConnections) {
-        String macroConnectorId = MacroConnector.createMacroConnectorId(name1);
-        macroConnectorsMap.computeIfAbsent(macroConnectorId, k -> new MacroConnector(macroConnectorId, varConnections));
-        return macroConnectorId;
     }
 
     public String addMacroConnector(String name1, String name2, List<VarConnection> varConnections) {

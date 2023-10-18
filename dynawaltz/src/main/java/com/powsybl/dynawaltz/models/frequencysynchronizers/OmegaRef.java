@@ -11,10 +11,10 @@ import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
 import com.powsybl.dynawaltz.models.macroconnections.MacroConnectAttribute;
 import com.powsybl.dynawaltz.models.VarConnection;
-import com.powsybl.dynawaltz.models.buses.BusModel;
+import com.powsybl.dynawaltz.models.buses.BusOfFrequencySynchronizedModel;
+import com.powsybl.dynawaltz.models.buses.DefaultBusOfFrequencySynchronized;
 import com.powsybl.dynawaltz.parameters.ParametersSet;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -61,10 +61,8 @@ public class OmegaRef extends AbstractFrequencySynchronizer {
         return connected.getOmegaRefVarConnections();
     }
 
-    private List<VarConnection> getVarConnectionsWith(BusModel connected) {
-        return connected.getNumCCVarName()
-                .map(numCCVarName -> List.of(new VarConnection("numcc_node_@INDEX@", numCCVarName)))
-                .orElse(Collections.emptyList());
+    private List<VarConnection> getVarConnectionsWith(BusOfFrequencySynchronizedModel connected) {
+        return List.of(new VarConnection("numcc_node_@INDEX@", connected.getNumCCVarName()));
     }
 
     @Override
@@ -72,7 +70,9 @@ public class OmegaRef extends AbstractFrequencySynchronizer {
         int index = 0;
         for (FrequencySynchronizedModel eq : synchronizedEquipments) {
             createMacroConnections(eq, getVarConnectionsWith(eq), context, MacroConnectAttribute.ofIndex1(index));
-            createMacroConnections(eq.getConnectedBusId(), BusModel.class, this::getVarConnectionsWith, context, MacroConnectAttribute.ofIndex1(index));
+            // If a bus with a dynamic model is found SetPoint is used in place of OmegaRef, thus at this point we don't have to handle dynamic model buses
+            BusOfFrequencySynchronizedModel busOf = new DefaultBusOfFrequencySynchronized(eq.getStaticId());
+            createMacroConnections(busOf, getVarConnectionsWith(busOf), context, MacroConnectAttribute.ofIndex1(index));
             index++;
         }
     }

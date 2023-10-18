@@ -10,8 +10,6 @@ package com.powsybl.dynawaltz.models.generators;
 import com.powsybl.dynawaltz.models.frequencysynchronizers.FrequencySynchronizedModel;
 import com.powsybl.iidm.network.Generator;
 
-import static com.powsybl.dynawaltz.models.utils.BusUtils.getConnectableBusStaticId;
-
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
@@ -29,10 +27,5 @@ public class SynchronizedWeccGen extends WeccGen implements FrequencySynchronize
     @Override
     public String getRunningVarName() {
         return weccPrefix + "_injector_running";
-    }
-
-    @Override
-    public String getConnectedBusId() {
-        return getConnectableBusStaticId(equipment);
     }
 }

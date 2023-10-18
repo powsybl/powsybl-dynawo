@@ -12,8 +12,7 @@ import com.powsybl.dynawaltz.models.AbstractEquipmentBlackBoxModel;
 import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.VarMapping;
-import com.powsybl.dynawaltz.models.buses.BusModel;
-import com.powsybl.dynawaltz.models.utils.BusUtils;
+import com.powsybl.dynawaltz.models.buses.EquipmentConnectionPoint;
 import com.powsybl.iidm.network.HvdcLine;
 
 import java.util.ArrayList;
@@ -41,8 +40,8 @@ public abstract class AbstractHvdc extends AbstractEquipmentBlackBoxModel<HvdcLi
 
     @Override
     public void createMacroConnections(DynaWaltzContext context) {
-        createMacroConnections(BusUtils.getConnectableBusStaticId(equipment.getConverterStation1().getTerminal()), BusModel.class, this::getVarConnectionsWith, context, Side.ONE);
-        createMacroConnections(BusUtils.getConnectableBusStaticId(equipment.getConverterStation2().getTerminal()), BusModel.class, this::getVarConnectionsWith, context, Side.TWO);
+        createTerminalMacroConnections(equipment, this::getVarConnectionsWith, context, Side.ONE);
+        createTerminalMacroConnections(equipment, this::getVarConnectionsWith, context, Side.TWO);
     }
 
     @Override
@@ -50,16 +49,16 @@ public abstract class AbstractHvdc extends AbstractEquipmentBlackBoxModel<HvdcLi
         return VAR_MAPPING;
     }
 
-    protected List<VarConnection> getVarConnectionsWith(BusModel connected, Side side) {
+    protected List<VarConnection> getVarConnectionsWith(EquipmentConnectionPoint connected, Side side) {
         List<VarConnection> varConnections = new ArrayList<>(2);
         varConnections.add(getSimpleVarConnectionWithBus(connected, side));
-        connected.getSwitchOffSignalVarName()
+        connected.getSwitchOffSignalVarName(side)
                 .map(switchOff -> new VarConnection("hvdc_switchOffSignal1" + side.getSideSuffix(), switchOff))
                 .ifPresent(varConnections::add);
         return varConnections;
     }
 
-    protected final VarConnection getSimpleVarConnectionWithBus(BusModel connected, Side side) {
-        return new VarConnection(TERMINAL_PREFIX + side.getSideNumber(), connected.getTerminalVarName());
+    protected final VarConnection getSimpleVarConnectionWithBus(EquipmentConnectionPoint connected, Side side) {
+        return new VarConnection(TERMINAL_PREFIX + side.getSideNumber(), connected.getTerminalVarName(side));
     }
 }

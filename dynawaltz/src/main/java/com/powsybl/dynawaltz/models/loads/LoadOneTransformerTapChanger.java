@@ -10,7 +10,7 @@ package com.powsybl.dynawaltz.models.loads;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.models.TransformerSide;
 import com.powsybl.dynawaltz.models.VarConnection;
-import com.powsybl.dynawaltz.models.buses.BusModel;
+import com.powsybl.dynawaltz.models.buses.EquipmentConnectionPoint;
 import com.powsybl.dynawaltz.models.transformers.TapChangerModel;
 import com.powsybl.iidm.network.Load;
 
@@ -28,7 +28,7 @@ public class LoadOneTransformerTapChanger extends LoadOneTransformer implements 
     }
 
     @Override
-    protected List<VarConnection> getVarConnectionsWith(BusModel connected) {
+    protected List<VarConnection> getVarConnectionsWith(EquipmentConnectionPoint connected) {
         List<VarConnection> varConnections = super.getVarConnectionsWith(connected);
         connected.getSwitchOffSignalVarName()
                 .map(switchOff -> new VarConnection("tapChanger_switchOffSignal1", switchOff))
