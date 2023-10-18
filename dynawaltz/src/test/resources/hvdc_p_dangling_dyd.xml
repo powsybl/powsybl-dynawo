@@ -3,10 +3,10 @@
     <dyn:blackBoxModel id="BBM_L" lib="HvdcPVDangling" parFile="models.par" parId="hv" staticId="L">
         <dyn:macroStaticRef id="MSR_HvdcPVDangling"/>
     </dyn:blackBoxModel>
-    <dyn:macroConnector id="MC_HvdcPVDanglingSide1-DefaultBus">
+    <dyn:macroConnector id="MC_HvdcPVDanglingSide1-DefaultEquipmentConnectionPoint">
         <dyn:connect var1="hvdc_terminal1" var2="@STATIC_ID@@NODE1@_ACPIN"/>
     </dyn:macroConnector>
-    <dyn:macroConnector id="MC_HvdcPVDanglingSide2-DefaultBus">
+    <dyn:macroConnector id="MC_HvdcPVDanglingSide2-DefaultEquipmentConnectionPoint">
         <dyn:connect var1="hvdc_terminal2" var2="@STATIC_ID@@NODE2@_ACPIN"/>
         <dyn:connect var1="hvdc_switchOffSignal1Side2" var2="@STATIC_ID@@NODE2@_switchOff"/>
     </dyn:macroConnector>
@@ -18,6 +18,6 @@
         <dyn:staticRef var="hvdc_QInj2Pu" staticVar="q2"/>
         <dyn:staticRef var="hvdc_state" staticVar="state2"/>
     </dyn:macroStaticReference>
-    <dyn:macroConnect connector="MC_HvdcPVDanglingSide1-DefaultBus" id1="BBM_L" id2="NETWORK"/>
-    <dyn:macroConnect connector="MC_HvdcPVDanglingSide2-DefaultBus" id1="BBM_L" id2="NETWORK"/>
+    <dyn:macroConnect connector="MC_HvdcPVDanglingSide1-DefaultEquipmentConnectionPoint" id1="BBM_L" id2="NETWORK"/>
+    <dyn:macroConnect connector="MC_HvdcPVDanglingSide2-DefaultEquipmentConnectionPoint" id1="BBM_L" id2="NETWORK"/>
 </dyn:dynamicModelsArchitecture>

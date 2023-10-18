@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
     <dyn:blackBoxModel id="BBM_NGEN_NHV1" lib="TransformerFixedRatio" parFile="models.par" parId="TFR" staticId="NGEN_NHV1"/>
-    <dyn:macroConnector id="MC_TransformerFixedRatioSide1-DefaultBus">
+    <dyn:macroConnector id="MC_TransformerFixedRatioSide1-DefaultEquipmentConnectionPoint">
         <dyn:connect var1="transformer_terminal1" var2="@STATIC_ID@@NODE@_ACPIN"/>
     </dyn:macroConnector>
-    <dyn:macroConnector id="MC_TransformerFixedRatioSide2-DefaultBus">
+    <dyn:macroConnector id="MC_TransformerFixedRatioSide2-DefaultEquipmentConnectionPoint">
         <dyn:connect var1="transformer_terminal2" var2="@STATIC_ID@@NODE@_ACPIN"/>
     </dyn:macroConnector>
-    <dyn:macroConnect connector="MC_TransformerFixedRatioSide1-DefaultBus" id1="BBM_NGEN_NHV1" id2="NETWORK"/>
-    <dyn:macroConnect connector="MC_TransformerFixedRatioSide2-DefaultBus" id1="BBM_NGEN_NHV1" id2="NETWORK"/>
+    <dyn:macroConnect connector="MC_TransformerFixedRatioSide1-DefaultEquipmentConnectionPoint" id1="BBM_NGEN_NHV1" id2="NETWORK"/>
+    <dyn:macroConnect connector="MC_TransformerFixedRatioSide2-DefaultEquipmentConnectionPoint" id1="BBM_NGEN_NHV1" id2="NETWORK"/>
 </dyn:dynamicModelsArchitecture>

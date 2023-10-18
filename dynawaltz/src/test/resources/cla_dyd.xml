@@ -18,10 +18,10 @@
     <dyn:macroConnector id="MC_CurrentLimitAutomatonControl-DefaultTransformer">
         <dyn:connect var1="currentLimitAutomaton_order" var2="@NAME@_state"/>
     </dyn:macroConnector>
-    <dyn:macroConnector id="MC_TransformerFixedRatioSide1-DefaultBus">
+    <dyn:macroConnector id="MC_TransformerFixedRatioSide1-DefaultEquipmentConnectionPoint">
         <dyn:connect var1="transformer_terminal1" var2="@STATIC_ID@@NODE@_ACPIN"/>
     </dyn:macroConnector>
-    <dyn:macroConnector id="MC_TransformerFixedRatioSide2-DefaultBus">
+    <dyn:macroConnector id="MC_TransformerFixedRatioSide2-DefaultEquipmentConnectionPoint">
         <dyn:connect var1="transformer_terminal2" var2="@STATIC_ID@@NODE@_ACPIN"/>
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_CurrentLimitAutomatonMeasureSide2-TransformerFixedRatio">
@@ -32,8 +32,8 @@
     <dyn:macroConnect connector="MC_CurrentLimitAutomatonControl-DefaultLine" id1="BBM_CLA_LINE" id2="NETWORK" name2="NHV1_NHV2_1"/>
     <dyn:macroConnect connector="MC_CurrentLimitAutomatonMeasureSide2-DefaultTransformer" id1="BBM_CLA_TRANSFORMER" id2="NETWORK" name2="NGEN_NHV1"/>
     <dyn:macroConnect connector="MC_CurrentLimitAutomatonControl-DefaultTransformer" id1="BBM_CLA_TRANSFORMER" id2="NETWORK" name2="NGEN_NHV1"/>
-    <dyn:macroConnect connector="MC_TransformerFixedRatioSide1-DefaultBus" id1="BBM_TRANSFORMER" id2="NETWORK"/>
-    <dyn:macroConnect connector="MC_TransformerFixedRatioSide2-DefaultBus" id1="BBM_TRANSFORMER" id2="NETWORK"/>
+    <dyn:macroConnect connector="MC_TransformerFixedRatioSide1-DefaultEquipmentConnectionPoint" id1="BBM_TRANSFORMER" id2="NETWORK"/>
+    <dyn:macroConnect connector="MC_TransformerFixedRatioSide2-DefaultEquipmentConnectionPoint" id1="BBM_TRANSFORMER" id2="NETWORK"/>
     <dyn:macroConnect connector="MC_CurrentLimitAutomatonMeasureSide2-TransformerFixedRatio" id1="BBM_CLA_TRANSFORMER2" id2="BBM_TRANSFORMER"/>
     <dyn:macroConnect connector="MC_CurrentLimitAutomatonControl-DefaultLine" id1="BBM_CLA_TRANSFORMER2" id2="NETWORK" name2="NHV1_NHV2_1"/>
 </dyn:dynamicModelsArchitecture>

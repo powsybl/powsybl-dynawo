@@ -23,7 +23,7 @@ public class DefaultActionConnectionPoint extends AbstractDefaultModel implement
 
     @Override
     public String getName() {
-        return "DefaultMeasurementPoint";
+        return "DefaultActionConnectionPoint";
     }
 
     @Override

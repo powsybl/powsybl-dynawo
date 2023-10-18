@@ -33,7 +33,7 @@ public final class DefaultEquipmentConnectionPoint implements EquipmentConnectio
 
     @Override
     public String getName() {
-        return "DefaultBus";
+        return "DefaultEquipmentConnectionPoint";
     }
 
     @Override
