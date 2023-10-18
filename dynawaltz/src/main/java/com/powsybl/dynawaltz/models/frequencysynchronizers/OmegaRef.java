@@ -70,6 +70,7 @@ public class OmegaRef extends AbstractFrequencySynchronizer {
         int index = 0;
         for (FrequencySynchronizedModel eq : synchronizedEquipments) {
             createMacroConnections(eq, getVarConnectionsWith(eq), context, MacroConnectAttribute.ofIndex1(index));
+            // If a bus with a dynamic model is found SetPoint is used in place of OmegaRef, thus at this point we don't have to handle dynamic model buses
             BusOfFrequencySynchronizedModel busOf = new DefaultBusOfFrequencySynchronized(eq.getStaticId());
             createMacroConnections(busOf, getVarConnectionsWith(busOf), context, MacroConnectAttribute.ofIndex1(index));
             index++;

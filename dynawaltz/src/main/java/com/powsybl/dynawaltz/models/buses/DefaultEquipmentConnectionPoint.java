@@ -20,14 +20,14 @@ import java.util.Optional;
  * DefaultBusModel is implemented as a singleton
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public final class DefaultBus implements EquipmentConnectionPoint {
+public final class DefaultEquipmentConnectionPoint implements EquipmentConnectionPoint {
 
-    private static final DefaultBus INSTANCE = new DefaultBus();
+    private static final DefaultEquipmentConnectionPoint INSTANCE = new DefaultEquipmentConnectionPoint();
 
-    private DefaultBus() {
+    private DefaultEquipmentConnectionPoint() {
     }
 
-    public static DefaultBus getInstance() {
+    public static DefaultEquipmentConnectionPoint getInstance() {
         return INSTANCE;
     }
 

@@ -53,6 +53,8 @@ public class DefaultModelsHandler {
                 StaticVarCompensatorModel.class, new DefaultModelFactory<StaticVarCompensatorModel>(DefaultStaticVarCompensator::new),
                 TransformerModel.class, new DefaultModelFactory<TransformerModel>(DefaultTransformer::new));
 
+        // When using the bus equipment DefaultModelsHandler will always instantiate the DefaultActionConnectionPoint default model,
+        // for EquipmentConnectionPoint the DefaultBus singleton will be accessed via DynaWaltzContext::getConnectionPointDynamicModel
         powSyBlTypeToModel.put(IdentifiableType.BUS, ActionConnectionPoint.class);
         powSyBlTypeToModel.put(IdentifiableType.GENERATOR, GeneratorModel.class);
         powSyBlTypeToModel.put(IdentifiableType.HVDC_LINE, HvdcModel.class);
