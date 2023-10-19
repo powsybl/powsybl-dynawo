@@ -31,6 +31,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static com.powsybl.commons.reporter.Reporter.NO_OP;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**

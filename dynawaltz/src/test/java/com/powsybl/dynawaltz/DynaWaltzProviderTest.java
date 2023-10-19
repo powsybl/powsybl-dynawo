@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ForkJoinPool;
 
+import static com.powsybl.commons.reporter.Reporter.NO_OP;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -88,7 +89,7 @@ class DynaWaltzProviderTest extends AbstractSerDeTest {
         assertEquals(DynaWaltzProvider.NAME, dynawoSimulation.getName());
         DynamicSimulationResult result = dynawoSimulation.run(network, (n, r) -> Collections.emptyList(), EventModelsSupplier.empty(),
                 CurvesSupplier.empty(), network.getVariantManager().getWorkingVariantId(),
-                computationManager, DynamicSimulationParameters.load());
+                computationManager, DynamicSimulationParameters.load(), NO_OP);
         assertNotNull(result);
     }
 
@@ -130,7 +131,7 @@ class DynaWaltzProviderTest extends AbstractSerDeTest {
         assertEquals(DynaWaltzProvider.NAME, dynawoSimulation.getName());
         DynamicSimulationResult result = dynawoSimulation.run(network, (n, r) -> Collections.emptyList(), EventModelsSupplier.empty(),
                 CurvesSupplier.empty(), network.getVariantManager().getWorkingVariantId(),
-                computationManager, dynamicSimulationParameters);
+                computationManager, dynamicSimulationParameters, NO_OP);
         assertNotNull(result);
     }
 
@@ -143,7 +144,7 @@ class DynaWaltzProviderTest extends AbstractSerDeTest {
         assertEquals(DynaWaltzProvider.NAME, dynawoSimulation.getName());
         DynamicSimulationResult result = dynawoSimulation.run(network, (n, r) -> Collections.emptyList(), EventModelsSupplier.empty(),
                 CurvesSupplier.empty(), network.getVariantManager().getWorkingVariantId(),
-                computationManager, DynamicSimulationParameters.load());
+                computationManager, DynamicSimulationParameters.load(), NO_OP);
         assertNotNull(result);
         assertFalse(result.isOk());
     }
@@ -157,7 +158,7 @@ class DynaWaltzProviderTest extends AbstractSerDeTest {
         assertEquals(DynaWaltzProvider.NAME, dynawoSimulation.getName());
         DynamicSimulationResult result = dynawoSimulation.run(network, (n, r) -> Collections.emptyList(), EventModelsSupplier.empty(),
                 new CurvesSupplierMock(), network.getVariantManager().getWorkingVariantId(),
-                computationManager, DynamicSimulationParameters.load());
+                computationManager, DynamicSimulationParameters.load(), NO_OP);
         assertNotNull(result);
         assertFalse(result.isOk());
     }
