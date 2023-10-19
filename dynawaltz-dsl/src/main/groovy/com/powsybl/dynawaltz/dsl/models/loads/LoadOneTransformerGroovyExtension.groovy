@@ -7,7 +7,7 @@
 package com.powsybl.dynawaltz.dsl.models.loads
 
 import com.google.auto.service.AutoService
-import com.powsybl.dynamicsimulation.DynamicModel
+import com.powsybl.commons.reporter.Reporter
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractSimpleEquipmentGroovyExtension
 import com.powsybl.dynawaltz.dsl.EquipmentConfig
@@ -20,21 +20,21 @@ import com.powsybl.iidm.network.Network
  * @author Marcos de Miguel <demiguelm at aia.es>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class LoadOneTransformerGroovyExtension extends AbstractSimpleEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+class LoadOneTransformerGroovyExtension extends AbstractSimpleEquipmentGroovyExtension {
 
     LoadOneTransformerGroovyExtension() {
         super("LoadOneTransformer")
     }
 
     @Override
-    protected LoadOneTransformerBuilder createBuilder(Network network, EquipmentConfig equipmentConfig) {
-        new LoadOneTransformerBuilder(network, equipmentConfig)
+    protected LoadOneTransformerBuilder createBuilder(Network network, EquipmentConfig equipmentConfig, Reporter reporter) {
+        new LoadOneTransformerBuilder(network, equipmentConfig, reporter)
     }
 
     static class LoadOneTransformerBuilder extends AbstractLoadModelBuilder {
 
-        LoadOneTransformerBuilder(Network network, EquipmentConfig equipmentConfig) {
-            super(network, equipmentConfig)
+        LoadOneTransformerBuilder(Network network, EquipmentConfig equipmentConfig, Reporter reporter) {
+            super(network, equipmentConfig, reporter)
         }
 
         @Override

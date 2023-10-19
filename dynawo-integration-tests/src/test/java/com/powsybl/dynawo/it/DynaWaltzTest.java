@@ -25,6 +25,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static com.powsybl.commons.reporter.Reporter.NO_OP;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -75,7 +76,7 @@ class DynaWaltzTest extends AbstractDynawoTest {
                 .setSolverType(DynaWaltzParameters.SolverType.IDA);
 
         DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, curvesSupplier,
-                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters)
+                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, NO_OP)
                 .join();
 
         assertTrue(result.isOk());
@@ -105,7 +106,7 @@ class DynaWaltzTest extends AbstractDynawoTest {
                 .setSolverType(DynaWaltzParameters.SolverType.IDA);
 
         DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, EventModelsSupplier.empty(), CurvesSupplier.empty(),
-                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters)
+                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, NO_OP)
                 .join();
 
         assertTrue(result.isOk());
@@ -132,7 +133,7 @@ class DynaWaltzTest extends AbstractDynawoTest {
                 .setSolverType(DynaWaltzParameters.SolverType.IDA);
 
         DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, EventModelsSupplier.empty(), CurvesSupplier.empty(),
-                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters)
+                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, NO_OP)
                 .join();
 
         assertTrue(result.isOk());
@@ -168,7 +169,7 @@ class DynaWaltzTest extends AbstractDynawoTest {
                 .setWriteFinalState(false);
 
         DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, curvesSupplier,
-                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters)
+                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, NO_OP)
                 .join();
 
         assertTrue(result.isOk());

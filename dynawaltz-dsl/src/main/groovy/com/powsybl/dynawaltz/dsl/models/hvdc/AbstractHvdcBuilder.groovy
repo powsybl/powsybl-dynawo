@@ -7,7 +7,9 @@
  */
 package com.powsybl.dynawaltz.dsl.models.hvdc
 
+import com.powsybl.commons.reporter.Reporter
 import com.powsybl.dynawaltz.dsl.EquipmentConfig
+import com.powsybl.dynawaltz.dsl.Reporters
 import com.powsybl.dynawaltz.dsl.builders.AbstractEquipmentModelBuilder
 import com.powsybl.dynawaltz.models.Side
 import com.powsybl.dynawaltz.models.utils.SideConverter
@@ -23,8 +25,8 @@ abstract class AbstractHvdcBuilder extends AbstractEquipmentModelBuilder<HvdcLin
 
     protected Side danglingSide
 
-    AbstractHvdcBuilder(Network network, EquipmentConfig equipmentConfig) {
-        super(network, equipmentConfig, IdentifiableType.HVDC_LINE)
+    AbstractHvdcBuilder(Network network, EquipmentConfig equipmentConfig, Reporter reporter) {
+        super(network, equipmentConfig, IdentifiableType.HVDC_LINE, reporter)
     }
 
     void dangling(Branch.Side danglingSide) {
@@ -36,10 +38,10 @@ abstract class AbstractHvdcBuilder extends AbstractEquipmentModelBuilder<HvdcLin
         super.checkData()
         def isDangling = equipmentConfig.isDangling()
         if (isDangling && !danglingSide) {
-            LOGGER.warn("${getLib()}: 'dangling' field is not set")
+            Reporters.reportFieldNotSet(reporter, "dangling")
             isInstantiable = false
         } else if (!isDangling && danglingSide) {
-            LOGGER.warn("${getLib()}: 'dangling' field is set on a non dangling hvdc")
+            Reporters.reportFieldSetWithWrongEquipment(reporter, "dangling",  equipmentConfig.getLib())
             isInstantiable = false
         }
     }

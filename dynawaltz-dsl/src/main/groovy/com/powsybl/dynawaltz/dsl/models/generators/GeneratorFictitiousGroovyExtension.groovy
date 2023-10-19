@@ -7,7 +7,7 @@
 package com.powsybl.dynawaltz.dsl.models.generators
 
 import com.google.auto.service.AutoService
-import com.powsybl.dynamicsimulation.DynamicModel
+import com.powsybl.commons.reporter.Reporter
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractSimpleEquipmentGroovyExtension
 import com.powsybl.dynawaltz.dsl.EquipmentConfig
@@ -18,21 +18,21 @@ import com.powsybl.iidm.network.Network
  * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class GeneratorFictitiousGroovyExtension extends AbstractSimpleEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+class GeneratorFictitiousGroovyExtension extends AbstractSimpleEquipmentGroovyExtension {
 
     GeneratorFictitiousGroovyExtension() {
         super("GeneratorFictitious")
     }
 
     @Override
-    protected GeneratorFictitiousBuilder createBuilder(Network network, EquipmentConfig equipmentConfig) {
-        new GeneratorFictitiousBuilder(network, equipmentConfig)
+    protected GeneratorFictitiousBuilder createBuilder(Network network, EquipmentConfig equipmentConfig, Reporter reporter) {
+        new GeneratorFictitiousBuilder(network, equipmentConfig, reporter)
     }
 
     static class GeneratorFictitiousBuilder extends AbstractGeneratorBuilder {
 
-        GeneratorFictitiousBuilder(Network network, EquipmentConfig equipmentConfig) {
-            super(network, equipmentConfig)
+        GeneratorFictitiousBuilder(Network network, EquipmentConfig equipmentConfig, Reporter reporter) {
+            super(network, equipmentConfig, reporter)
         }
 
         @Override

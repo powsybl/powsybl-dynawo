@@ -8,7 +8,7 @@
 package com.powsybl.dynawaltz.dsl.models.generators
 
 import com.google.auto.service.AutoService
-import com.powsybl.dynamicsimulation.DynamicModel
+import com.powsybl.commons.reporter.Reporter
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
 import com.powsybl.dynawaltz.dsl.EquipmentConfig
@@ -21,7 +21,7 @@ import com.powsybl.iidm.network.Network
  * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class SynchronizedGeneratorGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+class SynchronizedGeneratorGroovyExtension extends AbstractEquipmentGroovyExtension {
 
     private static final String SYNCHRONIZED_GENERATORS = "synchronizedGenerators"
 
@@ -34,14 +34,14 @@ class SynchronizedGeneratorGroovyExtension extends AbstractEquipmentGroovyExtens
     }
 
     @Override
-    protected SynchronizedGeneratorBuilder createBuilder(Network network, EquipmentConfig equipmentConfig) {
-        new SynchronizedGeneratorBuilder(network, equipmentConfig)
+    protected SynchronizedGeneratorBuilder createBuilder(Network network, EquipmentConfig equipmentConfig, Reporter reporter) {
+        new SynchronizedGeneratorBuilder(network, equipmentConfig, reporter)
     }
 
     static class SynchronizedGeneratorBuilder extends AbstractGeneratorBuilder {
 
-        SynchronizedGeneratorBuilder(Network network, EquipmentConfig equipmentConfig) {
-            super(network, equipmentConfig)
+        SynchronizedGeneratorBuilder(Network network, EquipmentConfig equipmentConfig, Reporter reporter) {
+            super(network, equipmentConfig, reporter)
         }
 
         @Override

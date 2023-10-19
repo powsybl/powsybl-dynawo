@@ -7,6 +7,9 @@
  */
 package com.powsybl.dynawaltz.dsl
 
+import com.powsybl.commons.reporter.Reporter
+import com.powsybl.dynamicsimulation.DynamicModel
+import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.DynaWaltzProvider
 import com.powsybl.iidm.network.Network
 
@@ -15,7 +18,7 @@ import java.util.function.Consumer
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-abstract class AbstractSimpleEquipmentGroovyExtension<T> {
+abstract class AbstractSimpleEquipmentGroovyExtension implements DynamicModelGroovyExtension {
 
     protected EquipmentConfig equipmentConfig
 
@@ -23,21 +26,25 @@ abstract class AbstractSimpleEquipmentGroovyExtension<T> {
         equipmentConfig = new EquipmentConfig(modelTag)
     }
 
+    abstract protected ModelBuilder<DynamicModel> createBuilder(Network network, EquipmentConfig equipmentConfig, Reporter reporter)
 
-    abstract protected ModelBuilder<T> createBuilder(Network network, EquipmentConfig equipmentConfig)
-
+    @Override
     String getName() {
         DynaWaltzProvider.NAME
     }
 
+    @Override
     List<String> getModelNames() {
         List.of(equipmentConfig.lib)
     }
 
-    void load(Binding binding, Consumer<T> consumer) {
+    @Override
+    void load(Binding binding, Consumer<DynamicModel> consumer, Reporter reporter) {
         binding.setVariable(equipmentConfig.lib, { Closure<Void> closure ->
             def cloned = closure.clone()
-            ModelBuilder<T> builder = createBuilder(binding.getVariable("network") as Network, equipmentConfig)
+            ModelBuilder<DynamicModel> builder = createBuilder(binding.getVariable("network") as Network,
+                    equipmentConfig,
+                    Reporters.createModelBuilderReporter(reporter, equipmentConfig.lib))
             cloned.delegate = builder
             cloned()
             builder.build()?.tap {

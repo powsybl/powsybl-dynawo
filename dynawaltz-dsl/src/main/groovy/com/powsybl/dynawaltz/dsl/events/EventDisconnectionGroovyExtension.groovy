@@ -8,10 +8,12 @@
 package com.powsybl.dynawaltz.dsl.events
 
 import com.google.auto.service.AutoService
+import com.powsybl.commons.reporter.Reporter
 import com.powsybl.dynamicsimulation.EventModel
 import com.powsybl.dynamicsimulation.groovy.EventModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractPureDynamicGroovyExtension
 import com.powsybl.dynawaltz.dsl.DslEquipment
+import com.powsybl.dynawaltz.dsl.Reporters
 import com.powsybl.dynawaltz.dsl.builders.AbstractEventModelBuilder
 import com.powsybl.dynawaltz.models.events.AbstractEvent
 import com.powsybl.dynawaltz.models.events.EventHvdcDisconnection
@@ -40,8 +42,8 @@ class EventDisconnectionGroovyExtension extends AbstractPureDynamicGroovyExtensi
     }
 
     @Override
-    protected EventQuadripoleDisconnectionBuilder createBuilder(Network network) {
-        new EventQuadripoleDisconnectionBuilder(network, TAG)
+    protected EventQuadripoleDisconnectionBuilder createBuilder(Network network, Reporter reporter) {
+        new EventQuadripoleDisconnectionBuilder(network, TAG, reporter)
     }
 
     static class EventQuadripoleDisconnectionBuilder extends AbstractEventModelBuilder<Identifiable> {
@@ -54,8 +56,8 @@ class EventDisconnectionGroovyExtension extends AbstractPureDynamicGroovyExtensi
 
         private enum DisconnectionType {INJECTION, QUADRIPOLE, HVDC, NONE}
 
-        EventQuadripoleDisconnectionBuilder(Network network, String tag) {
-            super(network, new DslEquipment<Identifiable>("Disconnectable equipment"), tag)
+        EventQuadripoleDisconnectionBuilder(Network network, String tag, Reporter reporter) {
+            super(network, new DslEquipment<Identifiable>("Disconnectable equipment"), tag, reporter)
         }
 
         void disconnectOnly(Branch.Side side) {
@@ -74,20 +76,20 @@ class EventDisconnectionGroovyExtension extends AbstractPureDynamicGroovyExtensi
 
         void checkData() {
             super.checkData()
-            disconnectionType(dslEquipment?.equipment?.type)
+            setDisconnectionType(dslEquipment?.equipment?.type)
             if(dslEquipment.equipment) {
                 if (disconnectionType == DisconnectionType.NONE) {
-                    LOGGER.warn("${getLib()}: ${dslEquipment.equipment?.type} ${dslEquipment.staticId} cannot be disconnected")
+                    Reporters.reportStaticIdUnknown(reporter, "staticId", dslEquipment.staticId, "Disconnectable equipment")
                     isInstantiable = false
                 }
                 if (DisconnectionType.INJECTION == disconnectionType && disconnectSide) {
-                    LOGGER.warn("'${getLib()}: disconnectSide' has been set but ${dslEquipment.equipment?.type} ${dslEquipment.staticId} is not a quadripole with a disconnectable side")
+                    Reporters.reportFieldSetWithWrongEquipment(reporter, "disconnectSide", dslEquipment.equipment?.type, dslEquipment.staticId)
                     isInstantiable = false
                 }
             }
         }
 
-        boolean disconnectionType(IdentifiableType type) {
+        void setDisconnectionType(IdentifiableType type) {
             if (type) {
                 if (CONNECTABLE_INJECTIONS.contains(type)) {
                     disconnectionType = DisconnectionType.INJECTION
@@ -97,7 +99,6 @@ class EventDisconnectionGroovyExtension extends AbstractPureDynamicGroovyExtensi
                     disconnectionType = DisconnectionType.HVDC
                 }
             }
-            disconnectionType != DisconnectionType.NONE
         }
 
         @Override

@@ -7,6 +7,7 @@
 package com.powsybl.dynawaltz.dsl
 
 import com.google.auto.service.AutoService
+import com.powsybl.commons.reporter.Reporter
 import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.Curve
 import com.powsybl.dynamicsimulation.groovy.CurveGroovyExtension
@@ -51,6 +52,7 @@ class DynaWaltzCurveGroovyExtension implements CurveGroovyExtension {
         }
     }
 
+    @Override
     String getName() {
         DynaWaltzProvider.NAME
     }
@@ -76,7 +78,8 @@ class DynaWaltzCurveGroovyExtension implements CurveGroovyExtension {
         }
     }
 
-    void load(Binding binding, Consumer<Curve> consumer) {
+    @Override
+    void load(Binding binding, Consumer<Curve> consumer, Reporter reporter) {
         binding.curve = { Closure<Void> closure ->
             def cloned = closure.clone()
             CurvesSpec curveSpec = new CurvesSpec()

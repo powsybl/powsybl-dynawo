@@ -8,7 +8,7 @@
 package com.powsybl.dynawaltz.dsl.models.transformers
 
 import com.google.auto.service.AutoService
-import com.powsybl.dynamicsimulation.DynamicModel
+import com.powsybl.commons.reporter.Reporter
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
 import com.powsybl.dynawaltz.dsl.EquipmentConfig
@@ -22,7 +22,7 @@ import com.powsybl.iidm.network.TwoWindingsTransformer
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class TransformerFixedRatioGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+class TransformerFixedRatioGroovyExtension extends AbstractEquipmentGroovyExtension {
 
     private static final String TRANSFORMERS = "transformers"
 
@@ -31,14 +31,14 @@ class TransformerFixedRatioGroovyExtension extends AbstractEquipmentGroovyExtens
     }
 
     @Override
-    protected TransformerBuilder createBuilder(Network network, EquipmentConfig equipmentConfig) {
-        new TransformerBuilder(network, equipmentConfig)
+    protected TransformerBuilder createBuilder(Network network, EquipmentConfig equipmentConfig, Reporter reporter) {
+        new TransformerBuilder(network, equipmentConfig, reporter)
     }
 
     static class TransformerBuilder extends AbstractEquipmentModelBuilder<TwoWindingsTransformer> {
 
-        TransformerBuilder(Network network, EquipmentConfig equipmentConfig) {
-            super(network, equipmentConfig, IdentifiableType.TWO_WINDINGS_TRANSFORMER)
+        TransformerBuilder(Network network, EquipmentConfig equipmentConfig, Reporter reporter) {
+            super(network, equipmentConfig, IdentifiableType.TWO_WINDINGS_TRANSFORMER, reporter)
         }
 
         @Override

@@ -8,7 +8,7 @@
 package com.powsybl.dynawaltz.dsl.models.loads
 
 import com.google.auto.service.AutoService
-import com.powsybl.dynamicsimulation.DynamicModel
+import com.powsybl.commons.reporter.Reporter
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractSimpleEquipmentGroovyExtension
 import com.powsybl.dynawaltz.dsl.EquipmentConfig
@@ -19,21 +19,21 @@ import com.powsybl.iidm.network.Network
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class LoadTwoTransformersTapChangersGroovyExtension extends AbstractSimpleEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+class LoadTwoTransformersTapChangersGroovyExtension extends AbstractSimpleEquipmentGroovyExtension {
 
     LoadTwoTransformersTapChangersGroovyExtension() {
         super("LoadTwoTransformersTapChangers")
     }
 
     @Override
-    protected LoadTwoTransformersTapChangersBuilder createBuilder(Network network, EquipmentConfig equipmentConfig) {
-        new LoadTwoTransformersTapChangersBuilder(network, equipmentConfig)
+    protected LoadTwoTransformersTapChangersBuilder createBuilder(Network network, EquipmentConfig equipmentConfig, Reporter reporter) {
+        new LoadTwoTransformersTapChangersBuilder(network, equipmentConfig, reporter)
     }
 
     static class LoadTwoTransformersTapChangersBuilder extends AbstractLoadModelBuilder {
 
-        LoadTwoTransformersTapChangersBuilder(Network network, EquipmentConfig equipmentConfig) {
-            super(network, equipmentConfig)
+        LoadTwoTransformersTapChangersBuilder(Network network, EquipmentConfig equipmentConfig, Reporter reporter) {
+            super(network, equipmentConfig, reporter)
         }
 
         @Override

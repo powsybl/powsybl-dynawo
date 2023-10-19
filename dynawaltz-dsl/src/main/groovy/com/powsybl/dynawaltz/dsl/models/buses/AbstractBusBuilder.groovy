@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawaltz.dsl.models.buses
 
+import com.powsybl.commons.reporter.Reporter
 import com.powsybl.dynawaltz.dsl.EquipmentConfig
 import com.powsybl.dynawaltz.dsl.builders.AbstractEquipmentModelBuilder
 import com.powsybl.iidm.network.Bus
@@ -18,8 +19,8 @@ import com.powsybl.iidm.network.Network
  */
 abstract class AbstractBusBuilder extends AbstractEquipmentModelBuilder<Bus> {
 
-    AbstractBusBuilder(Network network, EquipmentConfig equipmentConfig) {
-        super(network, equipmentConfig, IdentifiableType.BUS)
+    AbstractBusBuilder(Network network, EquipmentConfig equipmentConfig, Reporter reporter) {
+        super(network, equipmentConfig, IdentifiableType.BUS, reporter)
     }
 
     @Override

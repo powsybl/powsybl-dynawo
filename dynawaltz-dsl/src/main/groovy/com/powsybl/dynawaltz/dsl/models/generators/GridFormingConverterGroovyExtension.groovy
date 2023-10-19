@@ -8,7 +8,7 @@
 package com.powsybl.dynawaltz.dsl.models.generators
 
 import com.google.auto.service.AutoService
-import com.powsybl.dynamicsimulation.DynamicModel
+import com.powsybl.commons.reporter.Reporter
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
 import com.powsybl.dynawaltz.dsl.EquipmentConfig
@@ -19,7 +19,7 @@ import com.powsybl.iidm.network.Network
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class GridFormingConverterGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+class GridFormingConverterGroovyExtension extends AbstractEquipmentGroovyExtension {
 
     private static final String GRID_FORMING_CONVERTER = "gridFormingConverter"
 
@@ -28,14 +28,14 @@ class GridFormingConverterGroovyExtension extends AbstractEquipmentGroovyExtensi
     }
 
     @Override
-    protected GridFormingConverterBuilder createBuilder(Network network, EquipmentConfig equipmentConfig) {
-        new GridFormingConverterBuilder(network, equipmentConfig)
+    protected GridFormingConverterBuilder createBuilder(Network network, EquipmentConfig equipmentConfig, Reporter reporter) {
+        new GridFormingConverterBuilder(network, equipmentConfig, reporter)
     }
 
     static class GridFormingConverterBuilder extends AbstractGeneratorBuilder {
 
-        GridFormingConverterBuilder(Network network, EquipmentConfig equipmentConfig) {
-            super(network, equipmentConfig)
+        GridFormingConverterBuilder(Network network, EquipmentConfig equipmentConfig, Reporter reporter) {
+            super(network, equipmentConfig, reporter)
         }
 
         @Override

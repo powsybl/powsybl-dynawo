@@ -8,7 +8,7 @@
 package com.powsybl.dynawaltz.dsl.models.svarcs
 
 import com.google.auto.service.AutoService
-import com.powsybl.dynamicsimulation.DynamicModel
+import com.powsybl.commons.reporter.Reporter
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.builders.AbstractEquipmentModelBuilder
 import com.powsybl.dynawaltz.models.svarcs.StaticVarCompensator as DynamicSvarc
@@ -22,7 +22,7 @@ import com.powsybl.iidm.network.StaticVarCompensator as StaticSvarc
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class SvarcGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+class SvarcGroovyExtension extends AbstractEquipmentGroovyExtension {
 
     protected static final String SVARC = "staticVarCompensators"
 
@@ -31,14 +31,14 @@ class SvarcGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel
     }
 
     @Override
-    protected SvcBuilder createBuilder(Network network, EquipmentConfig equipmentConfig) {
-        new SvcBuilder(network, equipmentConfig)
+    protected SvcBuilder createBuilder(Network network, EquipmentConfig equipmentConfig, Reporter reporter) {
+        new SvcBuilder(network, equipmentConfig, reporter)
     }
 
     static class SvcBuilder extends AbstractEquipmentModelBuilder<StaticSvarc> {
 
-        SvcBuilder(Network network, EquipmentConfig equipmentConfig) {
-            super(network, equipmentConfig, IdentifiableType.STATIC_VAR_COMPENSATOR)
+        SvcBuilder(Network network, EquipmentConfig equipmentConfig, Reporter reporter) {
+            super(network, equipmentConfig, IdentifiableType.STATIC_VAR_COMPENSATOR, reporter)
         }
 
         @Override

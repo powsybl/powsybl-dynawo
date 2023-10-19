@@ -8,6 +8,7 @@
 package com.powsybl.dynawaltz.dsl.automatons
 
 import com.google.auto.service.AutoService
+import com.powsybl.commons.reporter.Reporter
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractPureDynamicGroovyExtension
@@ -31,16 +32,16 @@ class UnderVoltageAutomatonGroovyExtension extends AbstractPureDynamicGroovyExte
     }
 
     @Override
-    protected UnderVoltageAutomatonBuilder createBuilder(Network network) {
-        new UnderVoltageAutomatonBuilder(network, LIB)
+    protected UnderVoltageAutomatonBuilder createBuilder(Network network, Reporter reporter) {
+        new UnderVoltageAutomatonBuilder(network, LIB, reporter)
     }
 
     static class UnderVoltageAutomatonBuilder extends AbstractPureDynamicModelBuilder {
 
         protected final DslEquipment<Generator> dslGenerator
 
-        UnderVoltageAutomatonBuilder(Network network, String lib) {
-            super(network, lib)
+        UnderVoltageAutomatonBuilder(Network network, String lib, Reporter reporter) {
+            super(network, lib, reporter)
             dslGenerator = new DslEquipment<>(IdentifiableType.GENERATOR, "generator")
         }
 
@@ -51,7 +52,7 @@ class UnderVoltageAutomatonGroovyExtension extends AbstractPureDynamicGroovyExte
         @Override
         protected void checkData() {
             super.checkData()
-            isInstantiable &= dslGenerator.checkEquipmentData(LOGGER, getLib())
+            isInstantiable &= dslGenerator.checkEquipmentData(reporter)
         }
 
         @Override

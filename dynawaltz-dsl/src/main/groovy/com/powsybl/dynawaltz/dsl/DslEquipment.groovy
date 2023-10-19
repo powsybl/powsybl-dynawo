@@ -7,9 +7,9 @@
  */
 package com.powsybl.dynawaltz.dsl
 
+import com.powsybl.commons.reporter.Reporter
 import com.powsybl.iidm.network.Identifiable
 import com.powsybl.iidm.network.IdentifiableType
-import org.slf4j.Logger
 
 import java.util.function.Function
 
@@ -48,12 +48,12 @@ class DslEquipment<T extends Identifiable> {
         equipment = equipmentSupplier(staticId)
     }
 
-    boolean checkEquipmentData(Logger logger, String lib) {
+    boolean checkEquipmentData(Reporter reporter) {
         if (!staticId) {
-            logger.warn("$lib: '$fieldName' field is not set")
+            Reporters.reportFieldNotSet(reporter, fieldName)
             return false
         } else if (!equipment) {
-            logger.warn("$lib: $equipmentType static id unknown : $staticId")
+            Reporters.reportStaticIdUnknown(reporter, fieldName, staticId, equipmentType)
             return false
         }
         true

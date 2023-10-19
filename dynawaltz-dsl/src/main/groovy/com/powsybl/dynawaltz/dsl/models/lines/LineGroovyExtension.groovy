@@ -8,7 +8,7 @@
 package com.powsybl.dynawaltz.dsl.models.lines
 
 import com.google.auto.service.AutoService
-import com.powsybl.dynamicsimulation.DynamicModel
+import com.powsybl.commons.reporter.Reporter
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractSimpleEquipmentGroovyExtension
 import com.powsybl.dynawaltz.dsl.EquipmentConfig
@@ -24,21 +24,21 @@ import com.powsybl.iidm.network.Network
  * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class LineGroovyExtension extends AbstractSimpleEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+class LineGroovyExtension extends AbstractSimpleEquipmentGroovyExtension {
 
     LineGroovyExtension() {
         super("Line")
     }
 
     @Override
-    protected LineBuilder createBuilder(Network network, EquipmentConfig equipmentConfig) {
-        new LineBuilder(network, equipmentConfig)
+    protected LineBuilder createBuilder(Network network, EquipmentConfig equipmentConfig, Reporter reporter) {
+        new LineBuilder(network, equipmentConfig, reporter)
     }
 
     static class LineBuilder extends AbstractEquipmentModelBuilder<Line> {
 
-        LineBuilder(Network network, EquipmentConfig equipmentConfig) {
-            super(network, equipmentConfig, IdentifiableType.LINE)
+        LineBuilder(Network network, EquipmentConfig equipmentConfig, Reporter reporter) {
+            super(network, equipmentConfig, IdentifiableType.LINE, reporter)
         }
 
         @Override

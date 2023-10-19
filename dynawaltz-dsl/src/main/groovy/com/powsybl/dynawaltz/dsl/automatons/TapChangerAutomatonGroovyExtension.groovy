@@ -8,6 +8,7 @@
 package com.powsybl.dynawaltz.dsl.automatons
 
 import com.google.auto.service.AutoService
+import com.powsybl.commons.reporter.Reporter
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractPureDynamicGroovyExtension
@@ -30,8 +31,8 @@ class TapChangerAutomatonGroovyExtension extends AbstractPureDynamicGroovyExtens
     }
 
     @Override
-    protected TapChangerAutomatonBuilder createBuilder(Network network) {
-        new TapChangerAutomatonBuilder(network, LIB)
+    protected TapChangerAutomatonBuilder createBuilder(Network network, Reporter reporter) {
+        new TapChangerAutomatonBuilder(network, LIB, reporter)
     }
 
     static class TapChangerAutomatonBuilder extends AbstractPureDynamicModelBuilder {
@@ -39,8 +40,8 @@ class TapChangerAutomatonGroovyExtension extends AbstractPureDynamicGroovyExtens
         protected final DslEquipment<Load> dslLoad
         protected TransformerSide side = TransformerSide.NONE
 
-        TapChangerAutomatonBuilder(Network network, String lib) {
-            super(network, lib)
+        TapChangerAutomatonBuilder(Network network, String lib, Reporter reporter) {
+            super(network, lib, reporter)
             dslLoad = new DslEquipment<>(IdentifiableType.LOAD)
         }
 
@@ -55,7 +56,7 @@ class TapChangerAutomatonGroovyExtension extends AbstractPureDynamicGroovyExtens
         @Override
         protected void checkData() {
             super.checkData()
-            isInstantiable &= dslLoad.checkEquipmentData(LOGGER, getLib())
+            isInstantiable &= dslLoad.checkEquipmentData(reporter)
         }
 
         @Override

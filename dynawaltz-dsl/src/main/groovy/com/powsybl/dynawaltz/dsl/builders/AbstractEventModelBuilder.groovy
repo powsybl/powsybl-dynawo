@@ -8,9 +8,11 @@
 
 package com.powsybl.dynawaltz.dsl.builders
 
+import com.powsybl.commons.reporter.Reporter
 import com.powsybl.dynamicsimulation.EventModel
 import com.powsybl.dynawaltz.dsl.DslEquipment
 import com.powsybl.dynawaltz.dsl.ModelBuilder
+import com.powsybl.dynawaltz.dsl.Reporters
 import com.powsybl.iidm.network.Identifiable
 import com.powsybl.iidm.network.Network
 
@@ -24,8 +26,8 @@ abstract class AbstractEventModelBuilder<T extends Identifiable> extends Abstrac
     protected String staticId
     protected double startTime
 
-    AbstractEventModelBuilder(Network network, DslEquipment<T> dslEquipment, String tag) {
-        super(network)
+    AbstractEventModelBuilder(Network network, DslEquipment<T> dslEquipment, String tag, Reporter reporter) {
+        super(network, reporter)
         this.dslEquipment = dslEquipment
         this.tag = tag
     }
@@ -40,19 +42,14 @@ abstract class AbstractEventModelBuilder<T extends Identifiable> extends Abstrac
 
     @Override
     protected void checkData() {
-        isInstantiable &= dslEquipment.checkEquipmentData(LOGGER, getLib())
+        isInstantiable &= dslEquipment.checkEquipmentData(reporter)
         if (!startTime) {
-            LOGGER.warn("${getLib()}: 'startTime' field is not set")
+            Reporters.reportFieldNotSet(reporter, "startTime")
             isInstantiable = false
         }
     }
 
     abstract protected Identifiable findEquipment(String staticId)
-
-    @Override
-    protected String getLib() {
-        tag
-    }
 
     @Override
     abstract EventModel build()

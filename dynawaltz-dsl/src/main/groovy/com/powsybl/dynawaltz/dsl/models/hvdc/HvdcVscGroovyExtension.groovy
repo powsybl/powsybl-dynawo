@@ -8,7 +8,7 @@
 package com.powsybl.dynawaltz.dsl.models.hvdc
 
 import com.google.auto.service.AutoService
-import com.powsybl.dynamicsimulation.DynamicModel
+import com.powsybl.commons.reporter.Reporter
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
 import com.powsybl.dynawaltz.dsl.EquipmentConfig
@@ -20,7 +20,7 @@ import com.powsybl.iidm.network.Network
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class HvdcVscGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+class HvdcVscGroovyExtension extends AbstractEquipmentGroovyExtension {
 
     protected static final String HVDC_VSC = "hvdcVsc"
 
@@ -29,14 +29,14 @@ class HvdcVscGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicMod
     }
 
     @Override
-    protected HvdcBuilder createBuilder(Network network, EquipmentConfig equipmentConfig) {
-        new HvdcBuilder(network, equipmentConfig)
+    protected HvdcBuilder createBuilder(Network network, EquipmentConfig equipmentConfig, Reporter reporter) {
+        new HvdcBuilder(network, equipmentConfig, reporter)
     }
 
     static class HvdcBuilder extends AbstractHvdcBuilder {
 
-        HvdcBuilder(Network network, EquipmentConfig equipmentConfig) {
-            super(network, equipmentConfig)
+        HvdcBuilder(Network network, EquipmentConfig equipmentConfig, Reporter reporter) {
+            super(network, equipmentConfig, reporter)
         }
 
         @Override

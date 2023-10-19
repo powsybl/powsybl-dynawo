@@ -9,6 +9,7 @@ package com.powsybl.dynawaltz;
 import com.google.auto.service.AutoService;
 import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
+import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.computation.*;
 import com.powsybl.dynamicsimulation.*;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
@@ -101,14 +102,15 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
 
     @Override
     public CompletableFuture<DynamicSimulationResult> run(Network network, DynamicModelsSupplier dynamicModelsSupplier, EventModelsSupplier eventModelsSupplier, CurvesSupplier curvesSupplier, String workingVariantId,
-                                                          ComputationManager computationManager, DynamicSimulationParameters parameters) {
+                                                          ComputationManager computationManager, DynamicSimulationParameters parameters, Reporter reporter) {
         Objects.requireNonNull(dynamicModelsSupplier);
         Objects.requireNonNull(eventModelsSupplier);
         Objects.requireNonNull(curvesSupplier);
         Objects.requireNonNull(workingVariantId);
         Objects.requireNonNull(parameters);
+        Objects.requireNonNull(reporter);
         DynaWaltzParameters dynaWaltzParameters = getDynaWaltzSimulationParameters(parameters);
-        return run(network, dynamicModelsSupplier, eventModelsSupplier, curvesSupplier, workingVariantId, computationManager, parameters, dynaWaltzParameters);
+        return run(network, dynamicModelsSupplier, eventModelsSupplier, curvesSupplier, workingVariantId, computationManager, parameters, dynaWaltzParameters, reporter);
     }
 
     private DynaWaltzParameters getDynaWaltzSimulationParameters(DynamicSimulationParameters parameters) {
@@ -120,22 +122,22 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
     }
 
     private CompletableFuture<DynamicSimulationResult> run(Network network, DynamicModelsSupplier dynamicModelsSupplier, EventModelsSupplier eventsModelsSupplier, CurvesSupplier curvesSupplier,
-                                                           String workingVariantId, ComputationManager computationManager, DynamicSimulationParameters parameters, DynaWaltzParameters dynaWaltzParameters) {
+                                                           String workingVariantId, ComputationManager computationManager, DynamicSimulationParameters parameters, DynaWaltzParameters dynaWaltzParameters, Reporter reporter) {
 
         network.getVariantManager().setWorkingVariant(workingVariantId);
         ExecutionEnvironment execEnv = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, dynaWaltzConfig.isDebug());
         Command versionCmd = getVersionCommand(dynaWaltzConfig);
         DynawoUtil.requireDynawoMinVersion(execEnv, computationManager, versionCmd, false);
 
-        List<BlackBoxModel> blackBoxModels = dynamicModelsSupplier.get(network).stream()
+        List<BlackBoxModel> blackBoxModels = dynamicModelsSupplier.get(network, reporter).stream()
                 .filter(BlackBoxModel.class::isInstance)
                 .map(BlackBoxModel.class::cast)
                 .collect(Collectors.toList());
-        List<BlackBoxModel> blackBoxEventModels = eventsModelsSupplier.get(network).stream()
+        List<BlackBoxModel> blackBoxEventModels = eventsModelsSupplier.get(network, reporter).stream()
                 .filter(BlackBoxModel.class::isInstance)
                 .map(BlackBoxModel.class::cast)
                 .collect(Collectors.toList());
-        DynaWaltzContext context = new DynaWaltzContext(network, workingVariantId, blackBoxModels, blackBoxEventModels, curvesSupplier.get(network), parameters, dynaWaltzParameters);
+        DynaWaltzContext context = new DynaWaltzContext(network, workingVariantId, blackBoxModels, blackBoxEventModels, curvesSupplier.get(network, reporter), parameters, dynaWaltzParameters);
         return computationManager.execute(execEnv, new DynaWaltzHandler(context));
     }
 

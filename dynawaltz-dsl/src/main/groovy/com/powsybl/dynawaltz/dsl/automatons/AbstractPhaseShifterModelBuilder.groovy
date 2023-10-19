@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawaltz.dsl.automatons
 
+import com.powsybl.commons.reporter.Reporter
 import com.powsybl.dynawaltz.dsl.DslEquipment
 import com.powsybl.dynawaltz.dsl.builders.AbstractPureDynamicModelBuilder
 import com.powsybl.iidm.network.IdentifiableType
@@ -20,8 +21,8 @@ abstract class AbstractPhaseShifterModelBuilder extends AbstractPureDynamicModel
 
     protected final DslEquipment<TwoWindingsTransformer> dslTransformer
 
-    AbstractPhaseShifterModelBuilder(Network network, String lib) {
-        super(network, lib)
+    AbstractPhaseShifterModelBuilder(Network network, String lib, Reporter reporter) {
+        super(network, lib, reporter)
         dslTransformer = new DslEquipment<>(IdentifiableType.TWO_WINDINGS_TRANSFORMER, "transformer")
     }
 
@@ -32,6 +33,6 @@ abstract class AbstractPhaseShifterModelBuilder extends AbstractPureDynamicModel
     @Override
     protected void checkData() {
         super.checkData()
-        isInstantiable &= dslTransformer.checkEquipmentData(LOGGER, getLib())
+        isInstantiable &= dslTransformer.checkEquipmentData(reporter)
     }
 }
