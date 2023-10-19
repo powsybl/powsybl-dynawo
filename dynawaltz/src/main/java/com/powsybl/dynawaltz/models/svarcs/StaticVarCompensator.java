@@ -15,7 +15,6 @@ import com.powsybl.dynawaltz.models.buses.EquipmentConnectionPoint;
 import com.powsybl.iidm.network.extensions.StandbyAutomaton;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
