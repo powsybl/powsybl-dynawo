@@ -124,20 +124,21 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
     private CompletableFuture<DynamicSimulationResult> run(Network network, DynamicModelsSupplier dynamicModelsSupplier, EventModelsSupplier eventsModelsSupplier, CurvesSupplier curvesSupplier,
                                                            String workingVariantId, ComputationManager computationManager, DynamicSimulationParameters parameters, DynaWaltzParameters dynaWaltzParameters, Reporter reporter) {
 
+        Reporter dsReporter = DynawaltzReports.createDynaWaltzReporter(reporter, network.getId());
         network.getVariantManager().setWorkingVariant(workingVariantId);
         ExecutionEnvironment execEnv = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, dynaWaltzConfig.isDebug());
         Command versionCmd = getVersionCommand(dynaWaltzConfig);
         DynawoUtil.requireDynawoMinVersion(execEnv, computationManager, versionCmd, false);
 
-        List<BlackBoxModel> blackBoxModels = dynamicModelsSupplier.get(network, reporter).stream()
+        List<BlackBoxModel> blackBoxModels = dynamicModelsSupplier.get(network, dsReporter).stream()
                 .filter(BlackBoxModel.class::isInstance)
                 .map(BlackBoxModel.class::cast)
                 .collect(Collectors.toList());
-        List<BlackBoxModel> blackBoxEventModels = eventsModelsSupplier.get(network, reporter).stream()
+        List<BlackBoxModel> blackBoxEventModels = eventsModelsSupplier.get(network, dsReporter).stream()
                 .filter(BlackBoxModel.class::isInstance)
                 .map(BlackBoxModel.class::cast)
                 .collect(Collectors.toList());
-        DynaWaltzContext context = new DynaWaltzContext(network, workingVariantId, blackBoxModels, blackBoxEventModels, curvesSupplier.get(network, reporter), parameters, dynaWaltzParameters);
+        DynaWaltzContext context = new DynaWaltzContext(network, workingVariantId, blackBoxModels, blackBoxEventModels, curvesSupplier.get(network, dsReporter), parameters, dynaWaltzParameters, reporter);
         return computationManager.execute(execEnv, new DynaWaltzHandler(context));
     }
 
