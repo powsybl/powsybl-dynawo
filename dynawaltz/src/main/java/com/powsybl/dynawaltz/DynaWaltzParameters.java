@@ -8,14 +8,13 @@ package com.powsybl.dynawaltz;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.config.ModuleConfig;
 import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.extensions.AbstractExtension;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.parameters.ParametersSet;
 import com.powsybl.dynawaltz.xml.ParametersXml;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
@@ -40,8 +39,6 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
     public static final String NETWORK_OUTPUT_PARAMETERS_FILE = "network.par";
     public static final String SOLVER_OUTPUT_PARAMETERS_FILE = "solvers.par";
     private static final boolean DEFAULT_WRITE_FINAL_STATE = true;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(DynaWaltzParameters.class);
 
     public enum SolverType {
         SIM,
@@ -111,14 +108,12 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
         Path exportDumpFileFolderPath = exportDumpFileFolder != null ? fileSystem.getPath(exportDumpFileFolder) : null;
         boolean exportFolderNotFound = exportDumpFileFolderPath == null || !Files.exists(exportDumpFileFolderPath);
         if (exportDumpFile && exportFolderNotFound) {
-            LOGGER.warn("Folder {} set in 'exportDumpFileFolder' property cannot be found, exportDumpFile property will be set to false ", exportDumpFileFolder);
-            exportDumpFile = false;
+            throw new PowsyblException("Folder " + exportDumpFileFolder + " set in 'exportDumpFileFolder' property not be found");
         }
         boolean useDumpFile = config.flatMap(c -> c.getOptionalBooleanProperty("dump.useAsInput")).orElse(DumpFileParameters.DEFAULT_USE_DUMP);
         String dumpFile = config.flatMap(c -> c.getOptionalStringProperty("dump.fileName")).orElse(DumpFileParameters.DEFAULT_DUMP_NAME);
         if (useDumpFile && (exportFolderNotFound || dumpFile == null || !Files.exists(exportDumpFileFolderPath.resolve(dumpFile)))) {
-            LOGGER.warn("File {} set in 'dumpFile' property cannot be found, useDumpFile property will be set to false ", dumpFile);
-            useDumpFile = false;
+            throw new PowsyblException("File " + dumpFile + " set in 'dumpFile' property not be found");
         }
 
         DumpFileParameters dumpFileParameters = new DumpFileParameters(exportDumpFile, useDumpFile, exportDumpFileFolderPath, dumpFile);

@@ -217,13 +217,8 @@ class DynaWaltzParametersTest extends AbstractConverterTest {
         String folderProperty = USER_HOME + "wrongFolder";
         String fileProperty = "dumpFile.dmp";
         initDumpFilePlatformConfig(folderProperty, fileProperty);
-        DynaWaltzParameters parameters = DynaWaltzParameters.load(platformConfig, fileSystem);
-        DumpFileParameters dumpFileParameters = parameters.getDumpFileParameters();
-
-        assertFalse(dumpFileParameters.exportDumpFile());
-        assertFalse(dumpFileParameters.useDumpFile());
-        assertEquals(folderProperty, dumpFileParameters.exportDumpFileFolder().toString());
-        assertEquals(fileProperty, dumpFileParameters.dumpFile());
+        PowsyblException e = assertThrows(PowsyblException.class, () -> DynaWaltzParameters.load(platformConfig, fileSystem));
+        assertEquals("Folder /home/user/wrongFolder set in 'exportDumpFileFolder' property not be found", e.getMessage());
     }
 
     @Test
@@ -231,13 +226,8 @@ class DynaWaltzParametersTest extends AbstractConverterTest {
         String folderProperty = USER_HOME + "dumpFiles";
         String fileProperty = "wrongFile.dmp";
         initDumpFilePlatformConfig(folderProperty, fileProperty);
-        DynaWaltzParameters parameters = DynaWaltzParameters.load(platformConfig, fileSystem);
-        DumpFileParameters dumpFileParameters = parameters.getDumpFileParameters();
-
-        assertTrue(dumpFileParameters.exportDumpFile());
-        assertFalse(dumpFileParameters.useDumpFile());
-        assertEquals(folderProperty, dumpFileParameters.exportDumpFileFolder().toString());
-        assertEquals(fileProperty, dumpFileParameters.dumpFile());
+        PowsyblException e = assertThrows(PowsyblException.class, () -> DynaWaltzParameters.load(platformConfig, fileSystem));
+        assertEquals("File wrongFile.dmp set in 'dumpFile' property not be found", e.getMessage());
     }
 
     private static void checkModelParameters(DynaWaltzParameters dynaWaltzParameters) {
