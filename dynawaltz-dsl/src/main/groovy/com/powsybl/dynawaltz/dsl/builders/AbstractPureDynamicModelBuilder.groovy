@@ -48,5 +48,10 @@ abstract class AbstractPureDynamicModelBuilder extends AbstractDynamicModelBuild
     }
 
     @Override
+    String getModelId() {
+        dynamicModelId ?: "unknownDynamicId"
+    }
+
+    @Override
     abstract DynamicModel build()
 }

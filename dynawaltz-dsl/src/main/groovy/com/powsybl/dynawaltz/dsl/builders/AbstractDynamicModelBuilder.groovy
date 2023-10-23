@@ -34,7 +34,9 @@ abstract class AbstractDynamicModelBuilder {
 
     protected final boolean isInstantiable() {
         checkData()
-        isInstantiable ? Reporters.reportModelInstantiation(reporter) : Reporters.reportModelInstantiationFailure(reporter)
+        isInstantiable ? Reporters.reportModelInstantiation(reporter, getModelId()) : Reporters.reportModelInstantiationFailure(reporter, getModelId())
         isInstantiable
     }
+
+    abstract protected String getModelId()
 }

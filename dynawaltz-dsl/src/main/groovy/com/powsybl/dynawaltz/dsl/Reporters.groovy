@@ -26,18 +26,20 @@ final class Reporters {
                 "lib", lib)
     }
 
-    static void reportModelInstantiation(Reporter reporter) {
+    static void reportModelInstantiation(Reporter reporter, String dynamicId) {
         reporter.report(Report.builder()
                 .withKey("modelInstantiation")
-                .withDefaultMessage('Instantiation successful')
+                .withDefaultMessage('Model ${dynamicId} instantiation successful')
+                .withValue("dynamicId", dynamicId)
                 .withSeverity(TypedValue.TRACE_SEVERITY)
                 .build())
     }
 
-    static void reportModelInstantiationFailure(Reporter reporter) {
+    static void reportModelInstantiationFailure(Reporter reporter, String dynamicId) {
         reporter.report(Report.builder()
                 .withKey("modelInstantiation")
-                .withDefaultMessage('Model cannot be instantiated')
+                .withDefaultMessage('Model ${dynamicId} cannot be instantiated')
+                .withValue("dynamicId", dynamicId)
                 .withSeverity(TypedValue.WARN_SEVERITY)
                 .build())
     }
