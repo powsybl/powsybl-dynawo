@@ -14,6 +14,7 @@ import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
 import com.powsybl.dynawaltz.dsl.EquipmentConfig
 import com.powsybl.dynawaltz.models.generators.SynchronizedGenerator
 import com.powsybl.dynawaltz.models.generators.SynchronizedGeneratorControllable
+import com.powsybl.iidm.network.Generator
 import com.powsybl.iidm.network.Network
 
 /**
@@ -47,14 +48,67 @@ class SynchronizedGeneratorGroovyExtension extends AbstractEquipmentGroovyExtens
         @Override
         SynchronizedGenerator build() {
             if (isInstantiable()) {
-                if (equipmentConfig.isControllable()) {
-                    new SynchronizedGeneratorControllable(dynamicModelId, equipment, parameterSetId, equipmentConfig.lib)
+                def epsilon = 0.0001
+                if (equipment && equipment.getTerminal().isConnected() &&
+                        equipment.getTerminal().getBusBreakerView().getBus().getConnectedComponent().getNum() == 0 &&
+                        !equipment.getTerminal().getBusBreakerView().getBus().getV().isNaN()) {
+                    if (!equipment.voltageRegulatorOn) {
+                        if (!equipment.getExtensionByName("activePowerControl").isParticipate()) {
+                            println(equipmentConfig.lib + " " + dynamicModelId + " not instantiated because " + dslEquipment.staticId + " is out of voltage and frequency control.")
+                        } else if (Math.abs(generator.getTerminal().getP()) < epsilon) { // <=> Si Pc = 0
+                            println(equipmentConfig.lib + " " + dynamicModelId + " not instantiated because " + dslEquipment.staticId + " is out of voltage control with Pc == 0.")
+                        } else if (equipmentConfig.lib != "GeneratorPQInfiniteLimits") {
+                            // hors reglage de tension seulement
+                            // Il faut remplacer le parameterSetId par un nouveau et supprimer l'ancien
+                            println("Dynamic data substitution for " + dslEquipment.staticId + " (= groupPfQ because out of voltage control)")
+                            new SynchronizedGenerator(dynamicModelId, equipment, parameterSetId, "GeneratorPQInfiniteLimits")
+                        } else { // le groupe est inchange
+                            if (equipmentConfig.isControllable()) {
+                                new SynchronizedGeneratorControllable(dynamicModelId, equipment, parameterSetId, equipmentConfig.lib)
+                            } else {
+                                new SynchronizedGenerator(dynamicModelId, equipment, parameterSetId, equipmentConfig.lib)
+                            }
+                        }
+                    } else if (!equipment.getExtensionByName("activePowerControl").isParticipate() || Math.abs(equipment.getTerminal().getP()) < epsilon) {
+                        // hors reglage de frequence seulement
+                        def parameterName = (equipmentConfig.lib == "GeneratorPQInfiniteLimits" || equipmentConfig.lib == "GeneratorPV") ? "generator_AlphaPuPNom" : "governor_KGover"
+                        // dynaWaltzParameters.getModelParameters(getParameterSetId()).getDouble(parameterName).setValue(0.)
+                        println("Parameter " + parameterName + " modified for equipment " + dslEquipment.staticId + " (= 0 because out of frequency regulation)")
+                        if (equipmentConfig.isControllable()) {
+                            new SynchronizedGeneratorControllable(dynamicModelId, equipment, parameterSetId, equipmentConfig.lib)
+                        } else {
+                            new SynchronizedGenerator(dynamicModelId, equipment, parameterSetId, equipmentConfig.lib)
+                        }
+                    } else if (equipmentConfig.lib != "GeneratorPQInfiniteLimits" && !isDiagramCoherent(equipment)) {
+                        // Il faut remplacer le parameterSetId par un nouveau et supprimer l'ancien
+                        println("Dynamic data substitution for equipment " + dslEquipment.staticId + " (= groupPfQ because of inconsistent diagram")
+                        new SynchronizedGenerator(dynamicModelId, equipment, parameterSetId, "GeneratorPQInfiniteLimits")
+                    } else { // le groupe est inchange
+                        if (equipmentConfig.isControllable()) {
+                            new SynchronizedGeneratorControllable(dynamicModelId, equipment, parameterSetId, equipmentConfig.lib)
+                        } else {
+                            new SynchronizedGenerator(dynamicModelId, equipment, parameterSetId, equipmentConfig.lib)
+                        }
+                    }
                 } else {
-                    new SynchronizedGenerator(dynamicModelId, equipment, parameterSetId, equipmentConfig.lib)
+                    if (!equipment) {
+                        println(equipmentConfig.lib + " " + dynamicModelId + " not instantiated because " + dslEquipment.staticId + " not present in network.")
+                    } else if (!equipment.getTerminal().isConnected()) {
+                        println(equipmentConfig.lib + " " + dynamicModelId + " not instantiated because " + dslEquipment.staticId + " not connected.")
+                    } else if (equipment.getTerminal().getBusBreakerView().getBus().getConnectedComponent().getNum() > 0) {
+                        println(equipmentConfig.lib + " " + dynamicModelId + " not instantiated because " + dslEquipment.staticId + " not in main connected component.")
+                    } else if (equipment.getTerminal().getBusBreakerView().getBus().getV().isNaN()) {
+                        println(equipmentConfig.lib + " " + dynamicModelId + " not instantiated because " + dslEquipment.staticId + "'s voltage level if off.")
+                    }
+                    null
                 }
             } else {
                 null
             }
+        }
+
+        boolean isDiagramCoherent(Generator generator) {
+            true
         }
     }
 }
