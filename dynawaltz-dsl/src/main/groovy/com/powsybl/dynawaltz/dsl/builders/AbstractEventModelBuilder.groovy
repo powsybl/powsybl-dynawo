@@ -13,6 +13,7 @@ import com.powsybl.dynamicsimulation.EventModel
 import com.powsybl.dynawaltz.dsl.DslEquipment
 import com.powsybl.dynawaltz.dsl.ModelBuilder
 import com.powsybl.dynawaltz.dsl.Reporters
+import com.powsybl.dynawaltz.models.events.AbstractEvent
 import com.powsybl.iidm.network.Identifiable
 import com.powsybl.iidm.network.Network
 
@@ -50,6 +51,11 @@ abstract class AbstractEventModelBuilder<T extends Identifiable> extends Abstrac
     }
 
     abstract protected Identifiable findEquipment(String staticId)
+
+    @Override
+    String getModelId() {
+        AbstractEvent.generateEventId(tag + "_", dslEquipment.staticId ?: "unknownStaticId")
+    }
 
     @Override
     abstract EventModel build()

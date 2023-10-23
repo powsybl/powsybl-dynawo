@@ -65,5 +65,10 @@ abstract class AbstractEquipmentModelBuilder<T extends Identifiable> extends Abs
     }
 
     @Override
+    String getModelId() {
+        dynamicModelId ?: "unknownDynamicId"
+    }
+
+    @Override
     abstract DynamicModel build()
 }
