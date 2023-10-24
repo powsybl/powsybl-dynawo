@@ -7,10 +7,10 @@
  */
 package com.powsybl.dynawaltz.models.events;
 
-import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.hvdc.HvdcModel;
+import com.powsybl.dynawaltz.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.iidm.network.HvdcLine;
 
 import java.util.List;
@@ -43,13 +43,13 @@ public class EventHvdcDisconnection extends AbstractDynamicLibEventDisconnection
     }
 
     @Override
-    public void createMacroConnections(DynaWaltzContext context) {
+    public void createMacroConnections(MacroConnectionsAdder adder) {
         if (disconnectOrigin && disconnectExtremity) {
-            createMacroConnections(getEquipment(), HvdcModel.class, this::getVarConnectionsWithHvdcModel, context);
+            adder.createMacroConnections(this, getEquipment(), HvdcModel.class, this::getVarConnectionsWithHvdcModel);
         } else if (disconnectOrigin) {
-            createMacroConnections(getEquipment(), HvdcModel.class, this::getVarConnectionsWithHvdcModelSide, context, Side.ONE);
+            adder.createMacroConnections(this, getEquipment(), HvdcModel.class, this::getVarConnectionsWithHvdcModelSide, Side.ONE);
         } else if (disconnectExtremity) {
-            createMacroConnections(getEquipment(), HvdcModel.class, this::getVarConnectionsWithHvdcModelSide, context, Side.TWO);
+            adder.createMacroConnections(this, getEquipment(), HvdcModel.class, this::getVarConnectionsWithHvdcModelSide, Side.TWO);
         }
     }
 }

@@ -7,9 +7,9 @@
  */
 package com.powsybl.dynawaltz.models.automatons;
 
-import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.VarConnection;
+import com.powsybl.dynawaltz.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.iidm.network.Branch;
 
 import java.util.Arrays;
@@ -34,10 +34,10 @@ public class CurrentLimitTwoLevelsAutomaton extends CurrentLimitAutomaton {
     }
 
     @Override
-    public void createMacroConnections(DynaWaltzContext context) {
-        createMacroConnections(measuredQuadripole, QuadripoleModel.class, this::getVarConnectionsWithMeasuredQuadripole, context, FIRST_MEASURE_SUFFIX + measuredSide.getSideSuffix());
-        createMacroConnections(secondMeasuredQuadripole, QuadripoleModel.class, this::getVarConnectionsWithSecondMeasuredQuadripole, context, SECOND_MEASURE_SUFFIX + secondMeasuredSide.getSideSuffix());
-        createMacroConnections(controlledQuadripole, QuadripoleModel.class, this::getVarConnectionsWithControlledQuadripole, context, CONTROL_SUFFIX);
+    public void createMacroConnections(MacroConnectionsAdder adder) {
+        adder.createMacroConnections(this, measuredQuadripole, QuadripoleModel.class, this::getVarConnectionsWithMeasuredQuadripole, FIRST_MEASURE_SUFFIX + measuredSide.getSideSuffix());
+        adder.createMacroConnections(this, secondMeasuredQuadripole, QuadripoleModel.class, this::getVarConnectionsWithSecondMeasuredQuadripole, SECOND_MEASURE_SUFFIX + secondMeasuredSide.getSideSuffix());
+        adder.createMacroConnections(this, controlledQuadripole, QuadripoleModel.class, this::getVarConnectionsWithControlledQuadripole, CONTROL_SUFFIX);
     }
 
     @Override

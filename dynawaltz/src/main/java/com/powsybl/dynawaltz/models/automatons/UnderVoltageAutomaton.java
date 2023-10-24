@@ -7,10 +7,10 @@
  */
 package com.powsybl.dynawaltz.models.automatons;
 
-import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.generators.GeneratorModel;
+import com.powsybl.dynawaltz.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.iidm.network.Generator;
 
 import java.util.Arrays;
@@ -35,8 +35,8 @@ public class UnderVoltageAutomaton extends AbstractPureDynamicBlackBoxModel {
     }
 
     @Override
-    public void createMacroConnections(DynaWaltzContext context) {
-        createMacroConnections(generator, GeneratorModel.class, this::getVarConnectionsWith, context);
+    public void createMacroConnections(MacroConnectionsAdder adder) {
+        adder.createMacroConnections(this, generator, GeneratorModel.class, this::getVarConnectionsWith);
     }
 
     protected List<VarConnection> getVarConnectionsWith(GeneratorModel connected) {

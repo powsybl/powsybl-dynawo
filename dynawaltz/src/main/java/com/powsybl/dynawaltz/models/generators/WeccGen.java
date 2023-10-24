@@ -7,11 +7,11 @@
  */
 package com.powsybl.dynawaltz.models.generators;
 
-import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractEquipmentBlackBoxModel;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.VarMapping;
 import com.powsybl.dynawaltz.models.buses.EquipmentConnectionPoint;
+import com.powsybl.dynawaltz.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.iidm.network.Generator;
 
 import java.util.List;
@@ -35,8 +35,8 @@ public class WeccGen extends AbstractEquipmentBlackBoxModel<Generator> {
     }
 
     @Override
-    public void createMacroConnections(DynaWaltzContext context) {
-        createTerminalMacroConnections(equipment, this::getVarConnectionsWith, context);
+    public void createMacroConnections(MacroConnectionsAdder adder) {
+        adder.createTerminalMacroConnections(this, equipment.getTerminal(), this::getVarConnectionsWith);
     }
 
     private List<VarConnection> getVarConnectionsWith(EquipmentConnectionPoint connected) {

@@ -7,11 +7,11 @@
  */
 package com.powsybl.dynawaltz.models.lines;
 
-import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractEquipmentBlackBoxModel;
 import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.buses.EquipmentConnectionPoint;
+import com.powsybl.dynawaltz.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawaltz.models.utils.SideConverter;
 import com.powsybl.iidm.network.Line;
 
@@ -35,8 +35,8 @@ public class StandardLine extends AbstractEquipmentBlackBoxModel<Line> implement
     }
 
     @Override
-    public void createMacroConnections(DynaWaltzContext context) {
-        equipment.getTerminals().forEach(t -> createTerminalMacroConnections(t, this::getVarConnectionsWith, context, SideConverter.convert(equipment.getSide(t))));
+    public void createMacroConnections(MacroConnectionsAdder adder) {
+        equipment.getTerminals().forEach(t -> adder.createTerminalMacroConnections(this, t, this::getVarConnectionsWith, SideConverter.convert(equipment.getSide(t))));
     }
 
     @Override

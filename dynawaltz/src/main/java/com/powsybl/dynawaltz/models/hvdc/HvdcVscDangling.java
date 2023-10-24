@@ -8,8 +8,8 @@
 package com.powsybl.dynawaltz.models.hvdc;
 
 import com.powsybl.commons.PowsyblException;
-import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.Side;
+import com.powsybl.dynawaltz.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.iidm.network.HvdcLine;
 
 /**
@@ -25,10 +25,10 @@ public class HvdcVscDangling extends HvdcVsc {
     }
 
     @Override
-    public void createMacroConnections(DynaWaltzContext context) {
+    public void createMacroConnections(MacroConnectionsAdder adder) {
         danglingSide.createMacroConnections(
             this::getVarConnectionsWith,
-            (varCoSupplier, side) -> createTerminalMacroConnections(equipment, varCoSupplier, context, side)
+            (varCoSupplier, side) -> adder.createTerminalMacroConnections(this, equipment, varCoSupplier, side)
         );
     }
 

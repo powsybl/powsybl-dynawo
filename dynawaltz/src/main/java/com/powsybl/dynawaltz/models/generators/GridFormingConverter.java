@@ -7,13 +7,15 @@
  */
 package com.powsybl.dynawaltz.models.generators;
 
-import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
 import com.powsybl.dynawaltz.models.AbstractEquipmentBlackBoxModel;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.VarMapping;
 import com.powsybl.dynawaltz.models.buses.EquipmentConnectionPoint;
 import com.powsybl.dynawaltz.models.frequencysynchronizers.FrequencySynchronizedModel;
+import com.powsybl.dynawaltz.models.macroconnections.MacroConnectionsAdder;
+import com.powsybl.dynawaltz.models.utils.BusUtils;
+import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.Generator;
 
 import java.util.Arrays;
@@ -34,8 +36,8 @@ public class GridFormingConverter extends AbstractEquipmentBlackBoxModel<Generat
     }
 
     @Override
-    public void createMacroConnections(DynaWaltzContext context) {
-        createTerminalMacroConnections(equipment, this::getVarConnectionsWith, context);
+    public void createMacroConnections(MacroConnectionsAdder adder) {
+        adder.createTerminalMacroConnections(this, equipment.getTerminal(), this::getVarConnectionsWith);
     }
 
     private List<VarConnection> getVarConnectionsWith(EquipmentConnectionPoint connected) {
@@ -73,5 +75,10 @@ public class GridFormingConverter extends AbstractEquipmentBlackBoxModel<Generat
     @Override
     public List<VarMapping> getVarsMapping() {
         return VAR_MAPPING;
+    }
+
+    @Override
+    public Bus getConnectesBus() {
+        return BusUtils.getConnectableBus(equipment);
     }
 }

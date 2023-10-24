@@ -9,10 +9,11 @@ package com.powsybl.dynawaltz.models.frequencysynchronizers;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
-import com.powsybl.dynawaltz.models.macroconnections.MacroConnectAttribute;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.buses.BusOfFrequencySynchronizedModel;
 import com.powsybl.dynawaltz.models.buses.DefaultBusOfFrequencySynchronized;
+import com.powsybl.dynawaltz.models.macroconnections.MacroConnectAttribute;
+import com.powsybl.dynawaltz.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawaltz.parameters.ParametersSet;
 
 import java.util.List;
@@ -61,18 +62,18 @@ public class OmegaRef extends AbstractFrequencySynchronizer {
         return connected.getOmegaRefVarConnections();
     }
 
-    private List<VarConnection> getVarConnectionsWith(BusOfFrequencySynchronizedModel connected) {
+    private List<VarConnection> getVarConnectionsWithBus(BusOfFrequencySynchronizedModel connected) {
         return List.of(new VarConnection("numcc_node_@INDEX@", connected.getNumCCVarName()));
     }
 
     @Override
-    public void createMacroConnections(DynaWaltzContext context) throws PowsyblException {
+    public void createMacroConnections(MacroConnectionsAdder adder) throws PowsyblException {
         int index = 0;
         for (FrequencySynchronizedModel eq : synchronizedEquipments) {
-            createMacroConnections(eq, getVarConnectionsWith(eq), context, MacroConnectAttribute.ofIndex1(index));
+            adder.createMacroConnections(this, eq, getVarConnectionsWith(eq), MacroConnectAttribute.ofIndex1(index));
             // If a bus with a dynamic model is found SetPoint is used in place of OmegaRef, thus at this point we don't have to handle dynamic model buses
-            BusOfFrequencySynchronizedModel busOf = new DefaultBusOfFrequencySynchronized(eq.getStaticId());
-            createMacroConnections(busOf, getVarConnectionsWith(busOf), context, MacroConnectAttribute.ofIndex1(index));
+            BusOfFrequencySynchronizedModel busOf = new DefaultBusOfFrequencySynchronized(eq.getConnectesBus().getId(), eq.getStaticId());
+            adder.createMacroConnections(this, busOf, getVarConnectionsWithBus(busOf), MacroConnectAttribute.ofIndex1(index));
             index++;
         }
     }

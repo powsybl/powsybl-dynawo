@@ -10,6 +10,7 @@ package com.powsybl.dynawaltz.models.events;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.VarConnection;
+import com.powsybl.dynawaltz.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawaltz.parameters.ParametersSet;
 import com.powsybl.iidm.network.Generator;
 import com.powsybl.iidm.network.IdentifiableType;
@@ -68,11 +69,11 @@ public class EventActivePowerVariation extends AbstractEvent {
     }
 
     @Override
-    public void createMacroConnections(DynaWaltzContext context) {
-        createMacroConnections(getEquipment(),
+    public void createMacroConnections(MacroConnectionsAdder adder) {
+        adder.createMacroConnections(this,
+                getEquipment(),
                 ControllableEquipment.class,
-                context.isWithoutBlackBoxDynamicModel(getEquipment()) ? this::getVarConnectionsWithDefault : this::getVarConnectionsWith,
-                context);
+                adder.isWithoutBlackBoxDynamicModel(getEquipment()) ? this::getVarConnectionsWithDefault : this::getVarConnectionsWith);
     }
 
     @Override
