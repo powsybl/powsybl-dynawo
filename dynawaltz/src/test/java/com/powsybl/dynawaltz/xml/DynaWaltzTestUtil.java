@@ -41,7 +41,7 @@ import java.util.Objects;
 import static com.powsybl.commons.test.ComparisonUtils.compareTxt;
 
 /**
- * @author Marcos de Miguel <demiguelm at aia.es>
+ * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  */
 public class DynaWaltzTestUtil extends AbstractConverterTest {
 

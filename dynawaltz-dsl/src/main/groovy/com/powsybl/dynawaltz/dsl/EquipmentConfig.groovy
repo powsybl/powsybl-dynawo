@@ -8,7 +8,7 @@
 package com.powsybl.dynawaltz.dsl
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 class EquipmentConfig {
 

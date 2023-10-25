@@ -15,7 +15,7 @@ import java.util.Objects;
 
 /**
  *
- * @author Guillaume Pernin <guillaume.pernin at rte-france.com>
+ * @author Guillaume Pernin {@literal <guillaume.pernin at rte-france.com>}
  */
 public class DynaFlowConfig {
 

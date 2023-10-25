@@ -20,7 +20,7 @@ import static com.powsybl.dynawaltz.models.TransformerSide.HIGH_VOLTAGE;
 import static com.powsybl.dynawaltz.models.TransformerSide.LOW_VOLTAGE;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class LoadTwoTransformersTapChangers extends LoadTwoTransformers implements TapChangerModel {
 

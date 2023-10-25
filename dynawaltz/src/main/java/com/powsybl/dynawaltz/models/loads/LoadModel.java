@@ -10,7 +10,7 @@ package com.powsybl.dynawaltz.models.loads;
 import com.powsybl.dynawaltz.models.InjectionModel;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public interface LoadModel extends InjectionModel {
 

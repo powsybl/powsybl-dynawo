@@ -27,8 +27,8 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
- * @author Marcos de Miguel <demiguelm at aia.es>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
+ * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  */
 public final class XmlTimeLineParser implements TimeLineParser {
 

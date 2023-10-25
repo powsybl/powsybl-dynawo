@@ -13,7 +13,7 @@ import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
 import java.util.List;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public abstract class AbstractFrequencySynchronizer extends AbstractPureDynamicBlackBoxModel implements FrequencySynchronizerModel {
 

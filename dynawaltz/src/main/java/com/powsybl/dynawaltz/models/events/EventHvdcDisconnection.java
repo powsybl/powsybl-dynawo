@@ -16,7 +16,7 @@ import com.powsybl.iidm.network.HvdcLine;
 import java.util.List;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class EventHvdcDisconnection extends AbstractDynamicLibEventDisconnection {
 

@@ -12,7 +12,7 @@ import com.powsybl.dynawaltz.models.Model;
 /**
  * View of frequency synchronized equipment from the bus to which it is connected
  * Used by FrequencySynchronizer in order to get NummCC var name
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public interface BusOfFrequencySynchronizedModel extends Model {
 

@@ -36,7 +36,7 @@ import static com.powsybl.dynaflow.DynaFlowConstants.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * @author Guillaume Pernin <guillaume.pernin at rte-france.com>
+ * @author Guillaume Pernin {@literal <guillaume.pernin at rte-france.com>}
  */
 class DynaFlowProviderTest extends AbstractConverterTest {
 
