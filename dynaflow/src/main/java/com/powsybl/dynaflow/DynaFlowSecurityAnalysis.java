@@ -42,7 +42,7 @@ import static com.powsybl.dynaflow.DynaFlowConstants.CONFIG_FILENAME;
 import static com.powsybl.dynaflow.DynaFlowConstants.IIDM_FILENAME;
 
 /**
- * @author Luma Zamarreno <zamarrenolm at aia.es>
+ * @author Luma Zamarreno {@literal <zamarrenolm at aia.es>}
  */
 public class DynaFlowSecurityAnalysis {
 

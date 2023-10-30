@@ -28,7 +28,7 @@ import java.util.function.Supplier;
 import static com.powsybl.dynaflow.DynaFlowConstants.*;
 
 /**
- * @author Marcos de Miguel <demiguelm at aia.es>
+ * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  */
 @AutoService(SecurityAnalysisProvider.class)
 public class DynaFlowSecurityAnalysisProvider implements SecurityAnalysisProvider {

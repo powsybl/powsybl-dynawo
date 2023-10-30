@@ -23,9 +23,9 @@ import java.util.stream.Stream;
 import static com.powsybl.dynawo.commons.loadmerge.LoadPowersSigns.*;
 
 /**
- * @author Florian Dupuy <florian.dupuy at rte-france.com>
- * @author Laurent Isertial <laurent.issertial at rte-france.com>
- * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
+ * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
+ * @author Laurent Isertial {@literal <laurent.issertial at rte-france.com>}
+ * @author Dimitri Baudrier {@literal <dimitri.baudrier at rte-france.com>}
  */
 public final class LoadsMerger {
 

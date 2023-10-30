@@ -15,8 +15,8 @@ import com.powsybl.iidm.network.Load;
 import java.util.List;
 
 /**
- * @author Marcos de Miguel <demiguelm at aia.es>
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public abstract class AbstractLoad extends AbstractEquipmentBlackBoxModel<Load> implements LoadModel {
 

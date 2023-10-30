@@ -24,7 +24,7 @@ import java.io.IOException;
 
 /**
  *
- * @author Guillaume Pernin <guillaume.pernin at rte-france.com>
+ * @author Guillaume Pernin {@literal <guillaume.pernin at rte-france.com>}
  */
 @AutoService(ExtensionJsonSerializer.class)
 public class JsonDynaFlowParametersSerializer implements ExtensionJsonSerializer<LoadFlowParameters, DynaFlowParameters> {

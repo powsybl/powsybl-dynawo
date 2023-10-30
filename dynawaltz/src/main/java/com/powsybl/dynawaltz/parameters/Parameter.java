@@ -12,9 +12,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Objects;
 
 /**
- * @author Marcos de Miguel <demiguelm at aia.es>
- * @author Florian Dupuy <florian.dupuy at rte-france.com>
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
+ * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public record Parameter(String name, ParameterType type, String value) {
 

@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * @author Guillaume Pernin <guillaume.pernin at rte-france.com>
+ * @author Guillaume Pernin {@literal <guillaume.pernin at rte-france.com>}
  */
 public final class DynaFlowConstants {
 

@@ -16,7 +16,7 @@ import java.util.function.Predicate
 /**
  * Same as DslEquipment but the equipment type could be different subtypes of the specified T type
  * (for example a load OR a generator with T as an Injection)
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 class DslFilteredEquipment<T extends Identifiable> extends DslEquipment<T> {
 

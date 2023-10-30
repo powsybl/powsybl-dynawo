@@ -14,7 +14,7 @@ import java.util.Optional;
 
 /**
  * Interface use for buses by equipments for connection with the network
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public interface EquipmentConnectionPoint extends Model {
 

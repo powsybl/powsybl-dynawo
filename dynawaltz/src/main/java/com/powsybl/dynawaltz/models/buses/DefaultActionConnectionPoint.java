@@ -12,8 +12,8 @@ import com.powsybl.dynawaltz.models.defaultmodels.AbstractDefaultModel;
 import java.util.Optional;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
- * @author Florian Dupuy <florian.dupuy at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
+ * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
  */
 public class DefaultActionConnectionPoint extends AbstractDefaultModel implements ActionConnectionPoint {
 

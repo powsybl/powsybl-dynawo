@@ -11,7 +11,7 @@ import com.powsybl.dynawaltz.models.Model;
 import com.powsybl.dynawaltz.models.Side;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public interface HvdcModel extends Model {
 

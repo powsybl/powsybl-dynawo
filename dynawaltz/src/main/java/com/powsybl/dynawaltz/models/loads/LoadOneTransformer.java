@@ -20,8 +20,8 @@ import java.util.List;
 import static com.powsybl.dynawaltz.models.TransformerSide.NONE;
 
 /**
- * @author Marcos de Miguel <demiguelm at aia.es>
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class LoadOneTransformer extends AbstractLoad implements LoadWithTransformers {
 

@@ -10,7 +10,7 @@ package com.powsybl.dynawaltz.models.frequencysynchronizers;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public interface FrequencySynchronizerModel extends BlackBoxModel {
 

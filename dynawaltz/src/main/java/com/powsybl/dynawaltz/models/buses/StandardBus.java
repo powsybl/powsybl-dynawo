@@ -14,8 +14,8 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
 /**
- * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Dimitri Baudrier {@literal <dimitri.baudrier at rte-france.com>}
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class StandardBus extends AbstractBus {
 
