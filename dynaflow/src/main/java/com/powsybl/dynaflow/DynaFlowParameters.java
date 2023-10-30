@@ -28,7 +28,7 @@ import java.util.stream.Stream;
 import static com.powsybl.dynaflow.DynaFlowProvider.MODULE_SPECIFIC_PARAMETERS;
 
 /**
- * @author Guillaume Pernin <guillaume.pernin at rte-france.com>
+ * @author Guillaume Pernin {@literal <guillaume.pernin at rte-france.com>}
  */
 public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
 

@@ -24,7 +24,7 @@ import static com.powsybl.dynawo.commons.DynawoConstants.IIDM_EXTENSIONS;
 import static com.powsybl.dynawo.commons.DynawoConstants.IIDM_VERSION;
 
 /**
- * @author Geoffroy Jamgotchian <geoffroy.jamgotchian at rte-france.com>
+ * @author Geoffroy Jamgotchian {@literal <geoffroy.jamgotchian at rte-france.com>}
  */
 public final class DynawoUtil {
 

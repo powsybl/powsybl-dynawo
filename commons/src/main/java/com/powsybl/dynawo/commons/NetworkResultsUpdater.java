@@ -21,7 +21,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * @author Guillem Jané Guasch <janeg at aia.es>
+ * @author Guillem Jané Guasch {@literal <janeg at aia.es>}
  */
 public final class NetworkResultsUpdater {
 

@@ -19,7 +19,7 @@ import java.util.function.Consumer
 /**
  * An implementation of {@link CurveGroovyExtension} that adds the <pre>curve</pre> keyword to the DSL
  *
- * @author Mathieu Bague <mathieu.bague@rte-france.com>
+ * @author Mathieu Bague {@literal <mathieu.bague@rte-france.com>}
  */
 @AutoService(CurveGroovyExtension.class)
 class DynaWaltzCurveGroovyExtension implements CurveGroovyExtension {

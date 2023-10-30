@@ -12,7 +12,7 @@ import com.powsybl.tools.AbstractVersion;
 import com.powsybl.tools.Version;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 @AutoService(Version.class)
 public class PowsyblDynawoVersion extends AbstractVersion {

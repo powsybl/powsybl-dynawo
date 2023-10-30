@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
 import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.*;
 
 /**
- * @author Marcos de Miguel <demiguelm at aia.es>
+ * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  */
 @AutoService(DynamicSimulationProvider.class)
 public class DynaWaltzProvider implements DynamicSimulationProvider {

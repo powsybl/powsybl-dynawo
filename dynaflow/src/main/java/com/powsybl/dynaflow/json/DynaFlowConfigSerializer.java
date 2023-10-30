@@ -21,7 +21,7 @@ import java.nio.file.Path;
 
 /**
  *
- * @author Guillaume Pernin <guillaume.pernin at rte-france.com>
+ * @author Guillaume Pernin {@literal <guillaume.pernin at rte-france.com>}
  */
 public final class DynaFlowConfigSerializer {
 

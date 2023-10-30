@@ -17,7 +17,7 @@ import com.powsybl.iidm.network.extensions.StandbyAutomaton;
 import java.util.List;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class StaticVarCompensator extends AbstractEquipmentBlackBoxModel<com.powsybl.iidm.network.StaticVarCompensator> implements StaticVarCompensatorModel {
 

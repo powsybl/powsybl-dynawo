@@ -22,7 +22,7 @@ import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_PREFIX;
 import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 
 /**
- * @author Mathieu Bague <mathieu.bague@rte-france.com>
+ * @author Mathieu Bague {@literal <mathieu.bague@rte-france.com>}
  */
 public final class XmlUtil {
 

@@ -16,7 +16,7 @@ import java.nio.file.StandardCopyOption;
 
 /**
  *
- * @author Guillaume Pernin <guillaume.pernin at rte-france.com>
+ * @author Guillaume Pernin {@literal <guillaume.pernin at rte-france.com>}
  */
 abstract class AbstractLocalCommandExecutor implements LocalCommandExecutor {
 

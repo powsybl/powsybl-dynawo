@@ -28,8 +28,8 @@ import static com.powsybl.dynawaltz.parameters.ParameterType.INT;
  * NETWORK dynamic model. There are thus two macroConnectors defined for OmegaRef: one to connect it to a generator's
  * dynamic model and one to connect it to the NETWORK model.
  *
- * @author Marcos de Miguel <demiguelm at aia.es>
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class OmegaRef extends AbstractFrequencySynchronizer {
 

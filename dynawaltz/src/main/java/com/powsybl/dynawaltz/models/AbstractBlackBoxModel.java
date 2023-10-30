@@ -30,8 +30,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * @author Luma Zamarreño <zamarrenolm at aia.es>
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Luma Zamarreño {@literal <zamarrenolm at aia.es>}
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public abstract class AbstractBlackBoxModel implements BlackBoxModel {
 
