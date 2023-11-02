@@ -10,7 +10,10 @@ package com.powsybl.dynawaltz.models.hvdc;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.Side;
+import com.powsybl.iidm.network.HvdcConverterStation;
 import com.powsybl.iidm.network.HvdcLine;
+
+import java.util.List;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -38,5 +41,10 @@ public class HvdcVscDangling extends HvdcVsc {
             throw new PowsyblException(String.format("Equipment %s side %s is dangling and can't be disconnected with an event", getLib(), danglingSide.getSideNumber()));
         }
         return super.getSwitchOffSignalEventVarName(side);
+    }
+
+    @Override
+    public List<HvdcConverterStation<?>> getConnectedStations() {
+        return List.of(danglingSide.isDangling(Side.ONE) ? equipment.getConverterStation2() : equipment.getConverterStation1());
     }
 }

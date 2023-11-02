@@ -7,12 +7,13 @@
 package com.powsybl.dynawaltz;
 
 import com.powsybl.commons.PowsyblException;
+import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.models.*;
 import com.powsybl.dynawaltz.models.buses.AbstractBus;
-import com.powsybl.dynawaltz.models.buses.EquipmentConnectionPoint;
 import com.powsybl.dynawaltz.models.buses.DefaultEquipmentConnectionPoint;
+import com.powsybl.dynawaltz.models.buses.EquipmentConnectionPoint;
 import com.powsybl.dynawaltz.models.defaultmodels.DefaultModelsHandler;
 import com.powsybl.dynawaltz.models.frequencysynchronizers.FrequencySynchronizedModel;
 import com.powsybl.dynawaltz.models.frequencysynchronizers.FrequencySynchronizerModel;
@@ -63,9 +64,17 @@ public class DynaWaltzContext {
                             List<Curve> curves, DynamicSimulationParameters parameters, DynaWaltzParameters dynaWaltzParameters) {
         this.network = Objects.requireNonNull(network);
         this.workingVariantId = Objects.requireNonNull(workingVariantId);
-        this.dynamicModels = Objects.requireNonNull(dynamicModels).stream()
-                .filter(distinctByDynamicId().and(distinctByStaticId()))
+        this.parameters = Objects.requireNonNull(parameters);
+        this.dynaWaltzParameters = Objects.requireNonNull(dynaWaltzParameters);
+
+        Iterator<DataOptimizer> dataOptimizers = dynaWaltzParameters.isUseModelOptimizers() ? ServiceLoader.load(DataOptimizer.class).iterator() : Collections.emptyIterator();
+        this.dynamicModels = runOptimizers(dataOptimizers,
+                Objects.requireNonNull(dynamicModels)
+                .stream()
+                .filter(distinctByDynamicId().and(distinctByStaticId())),
+                Reporter.NO_OP)
                 .toList();
+
         this.eventModels = Objects.requireNonNull(eventModels).stream()
                 .filter(distinctByDynamicId())
                 .toList();
@@ -74,8 +83,6 @@ public class DynaWaltzContext {
                 .map(EquipmentBlackBoxModel.class::cast)
                 .collect(Collectors.toMap(EquipmentBlackBoxModel::getStaticId, Function.identity()));
         this.curves = Objects.requireNonNull(curves);
-        this.parameters = Objects.requireNonNull(parameters);
-        this.dynaWaltzParameters = Objects.requireNonNull(dynaWaltzParameters);
         this.frequencySynchronizer = setupFrequencySynchronizer(dynamicModels.stream().anyMatch(AbstractBus.class::isInstance) ? SetPoint::new : OmegaRef::new);
 
         for (BlackBoxModel bbm : getBlackBoxDynamicModelStream().toList()) {
@@ -97,6 +104,10 @@ public class DynaWaltzContext {
                 .filter(FrequencySynchronizedModel.class::isInstance)
                 .map(FrequencySynchronizedModel.class::cast)
                 .toList());
+    }
+
+    private Stream<BlackBoxModel> runOptimizers(Iterator<DataOptimizer> dataOptimizers, Stream<BlackBoxModel> inputData, Reporter reporter) {
+        return dataOptimizers.hasNext() ? runOptimizers(dataOptimizers, dataOptimizers.next().optimizeModels(inputData, dynaWaltzParameters, reporter), reporter) : inputData;
     }
 
     public Network getNetwork() {

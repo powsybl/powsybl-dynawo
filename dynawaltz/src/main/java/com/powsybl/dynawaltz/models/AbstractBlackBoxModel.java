@@ -36,7 +36,7 @@ import java.util.stream.Stream;
 public abstract class AbstractBlackBoxModel implements BlackBoxModel {
 
     private final String dynamicModelId;
-    private final String parameterSetId;
+    private String parameterSetId;
 
     protected AbstractBlackBoxModel(String dynamicModelId, String parameterSetId) {
         this.dynamicModelId = Objects.requireNonNull(dynamicModelId);
@@ -54,6 +54,10 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel {
 
     public String getParameterSetId() {
         return parameterSetId;
+    }
+
+    public void setParameterSetId(String parameterSetId) {
+        this.parameterSetId = parameterSetId;
     }
 
     @Override

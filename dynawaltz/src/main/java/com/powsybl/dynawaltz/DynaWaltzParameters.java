@@ -37,6 +37,7 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
     public static final String NETWORK_OUTPUT_PARAMETERS_FILE = "network.par";
     public static final String SOLVER_OUTPUT_PARAMETERS_FILE = "solvers.par";
     private static final boolean DEFAULT_WRITE_FINAL_STATE = true;
+    private static final boolean DEFAULT_USE_MODEL_OPTIMIZERS = false;
 
     public enum SolverType {
         SIM,
@@ -49,6 +50,7 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
     private SolverType solverType;
     private boolean mergeLoads;
     private boolean writeFinalState = DEFAULT_WRITE_FINAL_STATE;
+    private boolean useModelOptimizers = DEFAULT_USE_MODEL_OPTIMIZERS;
 
     /**
      * Loads parameters from the default platform configuration.
@@ -99,6 +101,8 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
         // Writes final state IIDM
         boolean writeFinalState = config.flatMap(c -> c.getOptionalBooleanProperty("writeFinalState")).orElse(DEFAULT_WRITE_FINAL_STATE);
 
+        boolean useModelOptimizers = config.flatMap(c -> c.getOptionalBooleanProperty("useOptimizers")).orElse(DEFAULT_USE_MODEL_OPTIMIZERS);
+
         // Load xml files
         List<ParametersSet> modelsParameters = ParametersXml.load(parametersPath);
         ParametersSet networkParameters = ParametersXml.load(networkParametersPath, networkParametersId);
@@ -110,12 +114,17 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
                 .setSolverParameters(solverParameters)
                 .setSolverType(solverType)
                 .setMergeLoads(mergeLoads)
-                .setWriteFinalState(writeFinalState);
+                .setWriteFinalState(writeFinalState)
+                .setUseModelOptimizers(useModelOptimizers);
     }
 
     @Override
     public String getName() {
         return "DynaWaltzParameters";
+    }
+
+    public void addModelParameters(ParametersSet parameterSet) {
+        modelsParameters.put(parameterSet.getId(), parameterSet);
     }
 
     public ParametersSet getModelParameters(String parameterSetId) {
@@ -177,5 +186,14 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
 
     public boolean isWriteFinalState() {
         return writeFinalState;
+    }
+
+    public boolean isUseModelOptimizers() {
+        return useModelOptimizers;
+    }
+
+    public DynaWaltzParameters setUseModelOptimizers(boolean useModelOptimizers) {
+        this.useModelOptimizers = useModelOptimizers;
+        return this;
     }
 }
