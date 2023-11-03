@@ -65,11 +65,11 @@ class DynaWaltzParametersTest extends AbstractConverterTest {
 
         assertEquals(networkParametersId, parameters.getNetworkParameters().getId());
         ParametersSet networkParameters = parameters.getNetworkParameters();
-        Parameter loadTp = networkParameters.getParameter("load_Tp");
+        Parameter loadTp = networkParameters.getParameterOrThrows("load_Tp");
         assertEquals("90", loadTp.value());
         assertEquals("load_Tp", loadTp.name());
         assertEquals(ParameterType.DOUBLE, loadTp.type());
-        Parameter loadControllable = networkParameters.getParameter("load_isControllable");
+        Parameter loadControllable = networkParameters.getParameterOrThrows("load_isControllable");
         assertEquals("false", loadControllable.value());
         assertEquals("load_isControllable", loadControllable.name());
         assertEquals(ParameterType.BOOL, loadControllable.type());
@@ -77,11 +77,11 @@ class DynaWaltzParametersTest extends AbstractConverterTest {
         ParametersSet solverParameters = parameters.getSolverParameters();
         assertEquals(solverParametersId, solverParameters.getId());
         assertEquals(solverType, parameters.getSolverType());
-        Parameter order = solverParameters.getParameter("order");
+        Parameter order = solverParameters.getParameterOrThrows("order");
         assertEquals("1", order.value());
         assertEquals("order", order.name());
         assertEquals(ParameterType.INT, order.type());
-        Parameter absAccuracy = solverParameters.getParameter("absAccuracy");
+        Parameter absAccuracy = solverParameters.getParameterOrThrows("absAccuracy");
         assertEquals("1e-4", absAccuracy.value());
         assertEquals("absAccuracy", absAccuracy.name());
         assertEquals(ParameterType.DOUBLE, absAccuracy.type());
@@ -164,11 +164,11 @@ class DynaWaltzParametersTest extends AbstractConverterTest {
     }
 
     private static void checkModelParameters(DynaWaltzParameters dynaWaltzParameters) {
-        Parameter booleanParameter = dynaWaltzParameters.getModelParameters("test").getParameter("boolean");
+        Parameter booleanParameter = dynaWaltzParameters.getModelParameters("test").getParameterOrThrows("boolean");
         assertEquals("true", booleanParameter.value());
         assertEquals("boolean", booleanParameter.name());
         assertEquals(ParameterType.BOOL, booleanParameter.type());
-        Parameter stringParameter = dynaWaltzParameters.getModelParameters("test").getParameter("string");
+        Parameter stringParameter = dynaWaltzParameters.getModelParameters("test").getParameterOrThrows("string");
         assertEquals("aString", stringParameter.value());
         assertEquals("string", stringParameter.name());
         assertEquals(ParameterType.STRING, stringParameter.type());

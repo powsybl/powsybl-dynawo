@@ -101,7 +101,7 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
         // Writes final state IIDM
         boolean writeFinalState = config.flatMap(c -> c.getOptionalBooleanProperty("writeFinalState")).orElse(DEFAULT_WRITE_FINAL_STATE);
 
-        boolean useModelOptimizers = config.flatMap(c -> c.getOptionalBooleanProperty("useOptimizers")).orElse(DEFAULT_USE_MODEL_OPTIMIZERS);
+        boolean useModelOptimizers = config.flatMap(c -> c.getOptionalBooleanProperty("useModelOptimizers")).orElse(DEFAULT_USE_MODEL_OPTIMIZERS);
 
         // Load xml files
         List<ParametersSet> modelsParameters = ParametersXml.load(parametersPath);
