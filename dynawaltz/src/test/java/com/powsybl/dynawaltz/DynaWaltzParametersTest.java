@@ -57,7 +57,8 @@ class DynaWaltzParametersTest extends AbstractConverterTest {
         SolverType solverType = SolverType.IDA;
         String solverParametersId = "solverParametersId";
         boolean mergeLoads = true;
-        initPlatformConfig(networkParametersId, solverType, solverParametersId, mergeLoads);
+        boolean useModelOptimizers = true;
+        initPlatformConfig(networkParametersId, solverType, solverParametersId, mergeLoads, useModelOptimizers);
 
         DynaWaltzParameters parameters = DynaWaltzParameters.load(platformConfig, fileSystem);
 
@@ -87,6 +88,7 @@ class DynaWaltzParametersTest extends AbstractConverterTest {
         assertEquals(ParameterType.DOUBLE, absAccuracy.type());
 
         assertEquals(mergeLoads, parameters.isMergeLoads());
+        assertEquals(useModelOptimizers, parameters.isUseModelOptimizers());
     }
 
     @Test
@@ -95,7 +97,7 @@ class DynaWaltzParametersTest extends AbstractConverterTest {
         SolverType solverType = SolverType.IDA;
         String solverParametersId = "solverParametersId";
         boolean mergeLoads = false;
-        initPlatformConfig(networkParametersId, solverType, solverParametersId, mergeLoads);
+        initPlatformConfig(networkParametersId, solverType, solverParametersId, mergeLoads, false);
 
         DynamicSimulationParameters dynamicSimulationParameters = new DynamicSimulationParameters()
                 .setStartTime(0)
@@ -106,7 +108,7 @@ class DynaWaltzParametersTest extends AbstractConverterTest {
                 JsonDynamicSimulationParameters::read, "/DynaWaltzParameters.json");
     }
 
-    private void initPlatformConfig(String networkParametersId, SolverType solverType, String solverParametersId, boolean mergeLoads) throws IOException {
+    private void initPlatformConfig(String networkParametersId, SolverType solverType, String solverParametersId, boolean mergeLoads, boolean useModelOptimizers) throws IOException {
         String parametersFile = USER_HOME + "parametersFile";
         String networkParametersFile = USER_HOME + "networkParametersFile";
         String solverParametersFile = USER_HOME + "solverParametersFile";
@@ -119,6 +121,7 @@ class DynaWaltzParametersTest extends AbstractConverterTest {
         moduleConfig.setStringProperty("network.parametersId", networkParametersId);
         moduleConfig.setStringProperty("solver.type", solverType.toString());
         moduleConfig.setStringProperty("solver.parametersId", solverParametersId);
+        moduleConfig.setStringProperty("useModelOptimizers", String.valueOf(useModelOptimizers));
 
         Files.createDirectories(fileSystem.getPath(USER_HOME));
         copyFile("/parametersSet/models.par", parametersFile);
@@ -145,6 +148,7 @@ class DynaWaltzParametersTest extends AbstractConverterTest {
         assertEquals("1", parameters.getSolverParameters().getId());
 
         assertEquals(DynaWaltzParameters.DEFAULT_MERGE_LOADS, parameters.isMergeLoads());
+        assertEquals(DynaWaltzParameters.DEFAULT_USE_MODEL_OPTIMIZERS, parameters.isUseModelOptimizers());
     }
 
     @Test

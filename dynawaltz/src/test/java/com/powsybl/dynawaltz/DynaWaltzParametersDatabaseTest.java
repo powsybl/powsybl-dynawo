@@ -74,4 +74,13 @@ class DynaWaltzParametersDatabaseTest {
         UncheckedIOException e = assertThrows(UncheckedIOException.class, () -> ParametersXml.load(path));
         assertEquals("java.nio.file.NoSuchFileException: /file.par", e.getMessage());
     }
+
+    @Test
+    void addParametersSet() {
+        DynaWaltzParameters dParameters = new DynaWaltzParameters();
+        ParametersSet set = new ParametersSet("test");
+        dParameters.addModelParameters(set);
+        assertEquals(1, dParameters.getModelParameters().size());
+        assertEquals(set, dParameters.getModelParameters("test"));
+    }
 }

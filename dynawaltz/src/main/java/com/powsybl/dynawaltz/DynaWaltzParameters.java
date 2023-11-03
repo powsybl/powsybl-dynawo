@@ -37,7 +37,7 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
     public static final String NETWORK_OUTPUT_PARAMETERS_FILE = "network.par";
     public static final String SOLVER_OUTPUT_PARAMETERS_FILE = "solvers.par";
     private static final boolean DEFAULT_WRITE_FINAL_STATE = true;
-    private static final boolean DEFAULT_USE_MODEL_OPTIMIZERS = false;
+    public static final boolean DEFAULT_USE_MODEL_OPTIMIZERS = false;
 
     public enum SolverType {
         SIM,

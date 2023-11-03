@@ -67,7 +67,7 @@ public class DynaWaltzContext {
         this.parameters = Objects.requireNonNull(parameters);
         this.dynaWaltzParameters = Objects.requireNonNull(dynaWaltzParameters);
 
-        Iterator<DataOptimizer> dataOptimizers = dynaWaltzParameters.isUseModelOptimizers() ? ServiceLoader.load(DataOptimizer.class).iterator() : Collections.emptyIterator();
+        Iterator<ModelOptimizer> dataOptimizers = dynaWaltzParameters.isUseModelOptimizers() ? ServiceLoader.load(ModelOptimizer.class).iterator() : Collections.emptyIterator();
         this.dynamicModels = runOptimizers(dataOptimizers,
                 Objects.requireNonNull(dynamicModels)
                 .stream()
@@ -106,7 +106,7 @@ public class DynaWaltzContext {
                 .toList());
     }
 
-    private Stream<BlackBoxModel> runOptimizers(Iterator<DataOptimizer> dataOptimizers, Stream<BlackBoxModel> inputData, Reporter reporter) {
+    private Stream<BlackBoxModel> runOptimizers(Iterator<ModelOptimizer> dataOptimizers, Stream<BlackBoxModel> inputData, Reporter reporter) {
         return dataOptimizers.hasNext() ? runOptimizers(dataOptimizers, dataOptimizers.next().optimizeModels(inputData, dynaWaltzParameters, reporter), reporter) : inputData;
     }
 
