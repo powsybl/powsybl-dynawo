@@ -53,7 +53,7 @@ public class DynaFlowProvider implements LoadFlowProvider {
     private final Supplier<DynaFlowConfig> configSupplier;
 
     public DynaFlowProvider() {
-        this(DynaFlowConfig::fromPropertyFile);
+        this(DynaFlowConfig::load);
     }
 
     public DynaFlowProvider(Supplier<DynaFlowConfig> configSupplier) {
@@ -61,7 +61,7 @@ public class DynaFlowProvider implements LoadFlowProvider {
     }
 
     private static String getProgram(DynaFlowConfig config) {
-        return config.getHomeDir().resolve("dynaflow-launcher.sh").toString();
+        return config.getProgram(DynaFlowConstants.DYNAFLOW_LAUNCHER_PROGRAM_NAME);
     }
 
     public static Command getCommand(DynaFlowConfig config) {

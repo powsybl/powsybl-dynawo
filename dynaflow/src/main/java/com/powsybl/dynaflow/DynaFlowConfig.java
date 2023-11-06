@@ -7,49 +7,39 @@
 package com.powsybl.dynaflow;
 
 import com.google.common.collect.ImmutableMap;
+import com.powsybl.commons.config.ModuleConfig;
 import com.powsybl.commons.config.PlatformConfig;
+import com.powsybl.dynawo.commons.DynawoConfig;
 
 import java.nio.file.Path;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  *
  * @author Guillaume Pernin {@literal <guillaume.pernin at rte-france.com>}
  */
-public class DynaFlowConfig {
+public class DynaFlowConfig extends DynawoConfig {
 
-    private static final boolean DEFAULT_DEBUG = false;
+    private static final String DYNAFLOW_MODULE_NAME = "dynaflow";
 
-    private final Path homeDir;
-    private final boolean debug;
+    public static DynaFlowConfig load() {
+        return load(DynaFlowConfig::new, DYNAFLOW_MODULE_NAME);
+    }
+
+    public static DynaFlowConfig load(PlatformConfig platformConfig) {
+        return load(DynaFlowConfig::new, DYNAFLOW_MODULE_NAME, platformConfig);
+    }
 
     public DynaFlowConfig(Path homeDir, boolean debug) {
-        this.homeDir = Objects.requireNonNull(homeDir);
-        this.debug = debug;
+        super(homeDir, debug);
     }
 
-    public static DynaFlowConfig fromPropertyFile() {
-        return fromPlatformConfig(PlatformConfig.defaultConfig());
-    }
-
-    public static DynaFlowConfig fromPlatformConfig(PlatformConfig platformConfig) {
-        Objects.requireNonNull(platformConfig);
-        return platformConfig.getOptionalModuleConfig("dynaflow")
-                .map(config -> new DynaFlowConfig(config.getPathProperty("homeDir"), config.getBooleanProperty("debug", DEFAULT_DEBUG)))
-                .orElse(null);
+    private DynaFlowConfig(ModuleConfig config) {
+        super(config);
     }
 
     public Map<String, String> createEnv() {
         return ImmutableMap.<String, String>builder()
                 .build();
-    }
-
-    public boolean isDebug() {
-        return debug;
-    }
-
-    public Path getHomeDir() {
-        return homeDir;
     }
 }

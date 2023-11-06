@@ -48,7 +48,7 @@ class DynaFlowProviderTest extends AbstractConverterTest {
     public void setUp() throws IOException {
         super.setUp();
         homeDir = fileSystem.getPath("/home/dynaflow");
-        config = DynaFlowConfig.fromPropertyFile();
+        config = DynaFlowConfig.load();
         provider = new DynaFlowProvider();
     }
 

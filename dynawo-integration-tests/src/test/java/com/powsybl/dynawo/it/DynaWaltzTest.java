@@ -23,6 +23,7 @@ import com.powsybl.timeseries.StringTimeSeries;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.nio.file.Path;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -42,7 +43,7 @@ class DynaWaltzTest extends AbstractDynawoTest {
     @BeforeEach
     void setUp() throws Exception {
         super.setUp();
-        provider = new DynaWaltzProvider(new DynaWaltzConfig("/dynawo", false));
+        provider = new DynaWaltzProvider(new DynaWaltzConfig(Path.of("/dynawo"), false));
         parameters = new DynamicSimulationParameters()
                 .setStartTime(1)
                 .setStopTime(100);

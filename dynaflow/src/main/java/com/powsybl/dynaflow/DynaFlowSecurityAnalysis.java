@@ -47,7 +47,6 @@ import static com.powsybl.dynaflow.DynaFlowConstants.IIDM_FILENAME;
 public class DynaFlowSecurityAnalysis {
 
     private static final String WORKING_DIR_PREFIX = "dynaflow_sa_";
-    private static final String DYNAFLOW_LAUNCHER_PROGRAM_NAME = "dynaflow-launcher.sh";
     private static final String CONTINGENCIES_FILENAME = "contingencies.json";
     private static final String DYNAWO_CONSTRAINTS_FOLDER = "constraints";
 
@@ -78,7 +77,7 @@ public class DynaFlowSecurityAnalysis {
     }
 
     private static String getProgram(DynaFlowConfig config) {
-        return config.getHomeDir().resolve(DYNAFLOW_LAUNCHER_PROGRAM_NAME).toString();
+        return config.getProgram(DynaFlowConstants.DYNAFLOW_LAUNCHER_PROGRAM_NAME);
     }
 
     public static Command getCommand(DynaFlowConfig config) {
