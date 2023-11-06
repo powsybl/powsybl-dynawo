@@ -22,9 +22,7 @@ import java.util.Objects;
  */
 public abstract class AbstractDynawoTest {
 
-    private static final String DYNAWO_VERSION = "1.4.1";
-
-    private static final String DOCKER_IMAGE_ID = "powsybl/java-dynawo:" + DYNAWO_VERSION;
+    private static final String DOCKER_IMAGE_ID = "powsybl/java-dynawo:2.1.0";
 
     @TempDir
     Path localDir;

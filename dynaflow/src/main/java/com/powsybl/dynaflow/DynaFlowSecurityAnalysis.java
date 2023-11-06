@@ -142,7 +142,7 @@ public class DynaFlowSecurityAnalysis {
         DynaFlowConfig config = Objects.requireNonNull(configSupplier.get());
         ExecutionEnvironment env = new ExecutionEnvironment(config.createEnv(), WORKING_DIR_PREFIX, config.isDebug());
         Command versionCmd = getVersionCommand(config);
-        DynawoUtil.requireDynawoMinVersion(env, computationManager, versionCmd, true);
+        DynawoUtil.requireDynaMinVersion(env, computationManager, versionCmd, DynaFlowConstants.DYNAFLOW_LAUNCHER_PROGRAM_NAME, true);
         List<Contingency> contingencies = contingenciesProvider.getContingencies(network);
         return computationManager.execute(env, new AbstractExecutionHandler<>() {
             @Override

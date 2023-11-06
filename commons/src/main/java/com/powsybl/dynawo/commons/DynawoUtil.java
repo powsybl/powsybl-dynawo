@@ -40,9 +40,10 @@ public final class DynawoUtil {
         network.write("XIIDM", params, file);
     }
 
-    public static void requireDynawoMinVersion(ExecutionEnvironment env, ComputationManager computationManager, Command versionCmd, boolean fromErr) {
+    public static void requireDynaMinVersion(ExecutionEnvironment env, ComputationManager computationManager, Command versionCmd,
+                                             String dynaName, boolean fromErr) {
         if (!checkDynawoVersion(env, computationManager, versionCmd, fromErr)) {
-            throw new PowsyblException("DynaFlow version not supported. Must be >= " + DynawoConstants.VERSION_MIN);
+            throw new PowsyblException(dynaName + " version not supported. Must be >= " + DynawoConstants.VERSION_MIN);
         }
     }
 

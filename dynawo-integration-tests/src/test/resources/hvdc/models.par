@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <parametersSet xmlns="http://www.rte-france.com/dynawo">
   <set id="1">
+    <par type="BOOL" name="generator_UseApproximation" value="false"/>
     <par type="INT" name="generator_ExcitationPu" value="1"/>
     <par type="DOUBLE" name="generator_md" value="0.215"/>
     <par type="DOUBLE" name="generator_mq" value="0.215"/>

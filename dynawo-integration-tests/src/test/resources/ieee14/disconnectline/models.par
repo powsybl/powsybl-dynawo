@@ -9,6 +9,7 @@
         <reference type="DOUBLE" name="load_UPhase0" origData="IIDM" origName="angle_pu"/>
     </set>
     <set id="GSFWPR_GEN____1_SM">
+        <par type="BOOL" name="generator_UseApproximation" value="false"/>
         <par type="INT" name="generator_ExcitationPu" value="1"/>
         <par type="DOUBLE" name="generator_md" value="0.215"/>
         <par type="DOUBLE" name="generator_mq" value="0.215"/>
@@ -61,6 +62,7 @@
         <reference name="generator_UPhase0" origData="IIDM" origName="angle_pu" type="DOUBLE"/>
     </set>
     <set id="GSFWPR_GEN____2_SM">
+        <par type="BOOL" name="generator_UseApproximation" value="false"/>
         <par type="INT" name="generator_ExcitationPu" value="1"/>
         <par type="DOUBLE" name="generator_md" value="0.084"/>
         <par type="DOUBLE" name="generator_mq" value="0.084"/>
@@ -113,6 +115,7 @@
         <reference name="generator_UPhase0" origData="IIDM" origName="angle_pu" type="DOUBLE"/>
     </set>
     <set id="GSFWPR_GEN____3_SM">
+        <par type="BOOL" name="generator_UseApproximation" value="false"/>
         <par type="INT" name="generator_ExcitationPu" value="1"/>
         <par type="DOUBLE" name="generator_md" value="0.05"/>
         <par type="DOUBLE" name="generator_mq" value="0.05"/>
@@ -165,6 +168,7 @@
         <reference name="generator_UPhase0" origData="IIDM" origName="angle_pu" type="DOUBLE"/>
     </set>
     <set id="GSTWPR_GEN____6_SM">
+        <par type="BOOL" name="generator_UseApproximation" value="false"/>
         <par type="INT" name="generator_ExcitationPu" value="1"/>
         <par type="DOUBLE" name="generator_md" value="0.16"/>
         <par type="DOUBLE" name="generator_mq" value="0.16"/>
@@ -215,6 +219,7 @@
         <reference name="generator_UPhase0" origData="IIDM" origName="angle_pu" type="DOUBLE"/>
     </set>
     <set id="GSTWPR_GEN____8_SM">
+        <par type="BOOL" name="generator_UseApproximation" value="false"/>
         <par type="INT" name="generator_ExcitationPu" value="1"/>
         <par type="DOUBLE" name="generator_md" value="0"/>
         <par type="DOUBLE" name="generator_mq" value="0"/>

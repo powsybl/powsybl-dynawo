@@ -12,6 +12,7 @@ import com.powsybl.computation.ComputationManager;
 import com.powsybl.computation.local.LocalCommandExecutor;
 import com.powsybl.computation.local.LocalComputationConfig;
 import com.powsybl.computation.local.LocalComputationManager;
+import com.powsybl.dynawo.commons.DynawoConstants;
 import com.powsybl.iidm.network.*;
 import com.powsybl.iidm.xml.NetworkXml;
 import com.powsybl.loadflow.LoadFlow;
@@ -189,7 +190,7 @@ class DynaFlowProviderTest extends AbstractConverterTest {
         LocalCommandExecutor commandExecutor = new EmptyLocalCommandExecutorMock("/dynawo_bad_version.out");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
         PowsyblException e = assertThrows(PowsyblException.class, () -> dynaFlowSimulation.run(network, computationManager, params));
-        assertEquals("DynaFlow version not supported. Must be >= 1.3.0", e.getMessage());
+        assertEquals("dynaflow-launcher version not supported. Must be >= " + DynawoConstants.VERSION_MIN, e.getMessage());
     }
 
     @Test

@@ -16,6 +16,7 @@ import com.powsybl.dynawaltz.xml.CurvesXml;
 import com.powsybl.dynawaltz.xml.DydXml;
 import com.powsybl.dynawaltz.xml.JobsXml;
 import com.powsybl.dynawaltz.xml.ParametersXml;
+import com.powsybl.dynawo.commons.DynawoConstants;
 import com.powsybl.dynawo.commons.DynawoUtil;
 import com.powsybl.dynawo.commons.NetworkResultsUpdater;
 import com.powsybl.dynawo.commons.PowsyblDynawoVersion;
@@ -121,7 +122,7 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
         network.getVariantManager().setWorkingVariant(workingVariantId);
         ExecutionEnvironment execEnv = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, dynaWaltzConfig.isDebug());
         Command versionCmd = getVersionCommand(dynaWaltzConfig);
-        DynawoUtil.requireDynawoMinVersion(execEnv, computationManager, versionCmd, false);
+        DynawoUtil.requireDynaMinVersion(execEnv, computationManager, versionCmd, DynawoConstants.DYNAWO_CMD_NAME, false);
 
         List<BlackBoxModel> blackBoxModels = dynamicModelsSupplier.get(network).stream()
                 .filter(BlackBoxModel.class::isInstance)
