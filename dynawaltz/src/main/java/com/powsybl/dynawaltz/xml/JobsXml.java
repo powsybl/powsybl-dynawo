@@ -20,7 +20,7 @@ import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.*;
 import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 
 /**
- * @author Marcos de Miguel <demiguelm at aia.es>
+ * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  */
 public final class JobsXml {
 

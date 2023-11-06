@@ -12,18 +12,15 @@ import com.powsybl.dynawaltz.DynaWaltzParameters;
 import com.powsybl.dynawaltz.models.AbstractEquipmentBlackBoxModel;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.VarMapping;
-import com.powsybl.dynawaltz.models.buses.BusModel;
+import com.powsybl.dynawaltz.models.buses.EquipmentConnectionPoint;
 import com.powsybl.dynawaltz.models.frequencysynchronizers.FrequencySynchronizedModel;
-import com.powsybl.dynawaltz.models.utils.BusUtils;
 import com.powsybl.iidm.network.Generator;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static com.powsybl.dynawaltz.models.utils.BusUtils.getConnectableBusStaticId;
-
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class GridFormingConverter extends AbstractEquipmentBlackBoxModel<Generator> implements FrequencySynchronizedModel {
 
@@ -38,10 +35,10 @@ public class GridFormingConverter extends AbstractEquipmentBlackBoxModel<Generat
 
     @Override
     public void createMacroConnections(DynaWaltzContext context) {
-        createMacroConnections(BusUtils.getConnectableBusStaticId(equipment), BusModel.class, this::getVarConnectionsWith, context);
+        createTerminalMacroConnections(equipment, this::getVarConnectionsWith, context);
     }
 
-    private List<VarConnection> getVarConnectionsWith(BusModel connected) {
+    private List<VarConnection> getVarConnectionsWith(EquipmentConnectionPoint connected) {
         return List.of(new VarConnection("converter_terminal", connected.getTerminalVarName()));
     }
 
@@ -57,11 +54,6 @@ public class GridFormingConverter extends AbstractEquipmentBlackBoxModel<Generat
     @Override
     public String getRunningVarName() {
         return "converter_running";
-    }
-
-    @Override
-    public String getConnectedBusId() {
-        return getConnectableBusStaticId(equipment);
     }
 
     @Override

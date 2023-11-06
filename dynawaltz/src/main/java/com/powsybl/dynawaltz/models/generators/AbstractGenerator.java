@@ -10,8 +10,7 @@ import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractEquipmentBlackBoxModel;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.VarMapping;
-import com.powsybl.dynawaltz.models.buses.BusModel;
-import com.powsybl.dynawaltz.models.utils.BusUtils;
+import com.powsybl.dynawaltz.models.buses.EquipmentConnectionPoint;
 import com.powsybl.iidm.network.Generator;
 
 import java.util.ArrayList;
@@ -19,8 +18,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * @author Marcos de Miguel <demiguelm at aia.es>
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public abstract class AbstractGenerator extends AbstractEquipmentBlackBoxModel<Generator> implements GeneratorModel {
 
@@ -40,10 +39,10 @@ public abstract class AbstractGenerator extends AbstractEquipmentBlackBoxModel<G
 
     @Override
     public void createMacroConnections(DynaWaltzContext context) {
-        createMacroConnections(BusUtils.getConnectableBusStaticId(equipment), BusModel.class, this::getVarConnectionsWith, context);
+        createTerminalMacroConnections(equipment, this::getVarConnectionsWith, context);
     }
 
-    private List<VarConnection> getVarConnectionsWith(BusModel connected) {
+    private List<VarConnection> getVarConnectionsWith(EquipmentConnectionPoint connected) {
         List<VarConnection> varConnections = new ArrayList<>(2);
         varConnections.add(new VarConnection(getTerminalVarName(), connected.getTerminalVarName()));
         connected.getSwitchOffSignalVarName()

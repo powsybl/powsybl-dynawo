@@ -11,7 +11,7 @@ import com.powsybl.dynawaltz.models.events.ControllableEquipment;
 import com.powsybl.iidm.network.Load;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class BaseLoadControllable extends BaseLoad implements ControllableEquipment {
 

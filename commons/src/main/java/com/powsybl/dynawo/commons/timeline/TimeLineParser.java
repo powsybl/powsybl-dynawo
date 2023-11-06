@@ -11,7 +11,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 /**
- * @author Florian Dupuy <florian.dupuy at rte-france.com>
+ * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
  */
 public interface TimeLineParser {
     List<TimelineEntry> parse(Path timeLineFile);

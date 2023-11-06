@@ -12,7 +12,7 @@ import com.powsybl.iidm.network.*;
 import java.util.List;
 
 /**
- * @author Laurent Isertial <laurent.issertial at rte-france.com>
+ * @author Laurent Isertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class LoadsToMerge {
     private static final String MERGE_LOAD_PREFIX_ID = "merged_load_.";

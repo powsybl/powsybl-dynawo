@@ -10,7 +10,7 @@ import com.powsybl.dynawaltz.models.defaultmodels.AbstractDefaultModel;
 import com.powsybl.dynawaltz.models.Side;
 
 /**
- * @author Florian Dupuy <florian.dupuy at rte-france.com>
+ * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
  */
 public class DefaultLine extends AbstractDefaultModel implements LineModel {
 

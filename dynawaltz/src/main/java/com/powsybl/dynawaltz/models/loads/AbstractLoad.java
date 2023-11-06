@@ -9,15 +9,14 @@ package com.powsybl.dynawaltz.models.loads;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractEquipmentBlackBoxModel;
 import com.powsybl.dynawaltz.models.VarConnection;
-import com.powsybl.dynawaltz.models.buses.BusModel;
-import com.powsybl.dynawaltz.models.utils.BusUtils;
+import com.powsybl.dynawaltz.models.buses.EquipmentConnectionPoint;
 import com.powsybl.iidm.network.Load;
 
 import java.util.List;
 
 /**
- * @author Marcos de Miguel <demiguelm at aia.es>
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public abstract class AbstractLoad extends AbstractEquipmentBlackBoxModel<Load> implements LoadModel {
 
@@ -34,10 +33,10 @@ public abstract class AbstractLoad extends AbstractEquipmentBlackBoxModel<Load> 
 
     @Override
     public void createMacroConnections(DynaWaltzContext context) {
-        createMacroConnections(BusUtils.getConnectableBusStaticId(equipment), BusModel.class, this::getVarConnectionsWith, context);
+        createTerminalMacroConnections(equipment, this::getVarConnectionsWith, context);
     }
 
-    abstract List<VarConnection> getVarConnectionsWith(BusModel connected);
+    abstract List<VarConnection> getVarConnectionsWith(EquipmentConnectionPoint connected);
 
     @Override
     public String getSwitchOffSignalEventVarName() {

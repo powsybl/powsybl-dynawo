@@ -10,12 +10,10 @@ package com.powsybl.dynawaltz.models.hvdc;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.Side;
-import com.powsybl.dynawaltz.models.buses.BusModel;
-import com.powsybl.dynawaltz.models.utils.BusUtils;
 import com.powsybl.iidm.network.HvdcLine;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class HvdcVscDangling extends HvdcVsc {
 
@@ -30,7 +28,7 @@ public class HvdcVscDangling extends HvdcVsc {
     public void createMacroConnections(DynaWaltzContext context) {
         danglingSide.createMacroConnections(
             this::getVarConnectionsWith,
-            (varCoSupplier, side) -> createMacroConnections(BusUtils.getConnectableBusStaticId(equipment, side), BusModel.class, varCoSupplier, context, side)
+            (varCoSupplier, side) -> createTerminalMacroConnections(equipment, varCoSupplier, context, side)
         );
     }
 

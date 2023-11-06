@@ -10,19 +10,19 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * @author Guillaume Pernin <guillaume.pernin at rte-france.com>
+ * @author Guillaume Pernin {@literal <guillaume.pernin at rte-france.com>}
  */
 public final class DynaFlowConstants {
 
     public static final String DYNAFLOW_NAME = "DynaFlow";
-
     public static final String CONFIG_FILENAME = "config.json";
-
     public static final String IIDM_FILENAME = "network.xiidm";
-
     public static final String OUTPUT_IIDM_FILENAME = "outputIIDM.xml";
-
     public static final String OUTPUT_RESULTS_FILENAME = "results.json";
+    static final String DYNAFLOW_OUTPUTS_FOLDER = "outputs";
+    static final String DYNAWO_TIMELINE_FOLDER = "timeLine";
+    static final String DYNAFLOW_TIMELINE_FILE = "timeline.xml";
+
 
     public enum OutputTypes {
         STEADYSTATE,

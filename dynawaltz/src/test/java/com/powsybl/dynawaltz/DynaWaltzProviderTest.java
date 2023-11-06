@@ -33,8 +33,8 @@ import java.util.concurrent.ForkJoinPool;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * @author Florian Dupuy <florian.dupuy at rte-france.com>
- * @author Marcos de Miguel <demiguelm at aia.es>
+ * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
+ * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  */
 class DynaWaltzProviderTest extends AbstractConverterTest {
 

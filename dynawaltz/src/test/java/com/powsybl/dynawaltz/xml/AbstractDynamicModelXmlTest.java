@@ -35,7 +35,7 @@ import java.util.Objects;
 import static com.powsybl.commons.test.ComparisonUtils.compareTxt;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public abstract class AbstractDynamicModelXmlTest extends AbstractConverterTest {
 
