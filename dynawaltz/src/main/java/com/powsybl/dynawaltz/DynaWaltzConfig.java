@@ -6,43 +6,32 @@
  */
 package com.powsybl.dynawaltz;
 
-import com.powsybl.commons.PowsyblException;
+import com.powsybl.commons.config.ModuleConfig;
 import com.powsybl.commons.config.PlatformConfig;
+import com.powsybl.dynawo.commons.DynawoConfig;
 
-import java.util.Objects;
+import java.nio.file.Path;
 
 /**
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  */
-public class DynaWaltzConfig {
+public class DynaWaltzConfig extends DynawoConfig {
+
+    private static final String DYNAWALTZ_MODULE_NAME = "dynawaltz";
 
     public static DynaWaltzConfig load() {
-        return load(PlatformConfig.defaultConfig());
+        return load(DynaWaltzConfig::new, DYNAWALTZ_MODULE_NAME);
     }
 
     public static DynaWaltzConfig load(PlatformConfig platformConfig) {
-        return platformConfig.getOptionalModuleConfig("dynawaltz")
-                .map(moduleConfig -> new DynaWaltzConfig(
-                        moduleConfig.getStringProperty("homeDir"),
-                        moduleConfig.getBooleanProperty("debug", DEBUG_DEFAULT)))
-                .orElseThrow(() -> new PowsyblException("PlatformConfig incomplete: Module dynawaltz not found"));
+        return load(DynaWaltzConfig::new, DYNAWALTZ_MODULE_NAME, platformConfig);
     }
 
-    public DynaWaltzConfig(String homeDir, boolean debug) {
-        this.homeDir = Objects.requireNonNull(homeDir);
-        this.debug = debug;
+    public DynaWaltzConfig(Path homeDir, boolean debug) {
+        super(homeDir, debug);
     }
 
-    public String getHomeDir() {
-        return homeDir;
+    private DynaWaltzConfig(ModuleConfig config) {
+        super(config);
     }
-
-    public boolean isDebug() {
-        return debug;
-    }
-
-    private final String homeDir;
-    private final boolean debug;
-
-    private static final boolean DEBUG_DEFAULT = false;
 }

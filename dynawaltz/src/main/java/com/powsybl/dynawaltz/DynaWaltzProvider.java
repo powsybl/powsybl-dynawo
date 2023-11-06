@@ -16,24 +16,23 @@ import com.powsybl.dynawaltz.xml.CurvesXml;
 import com.powsybl.dynawaltz.xml.DydXml;
 import com.powsybl.dynawaltz.xml.JobsXml;
 import com.powsybl.dynawaltz.xml.ParametersXml;
+import com.powsybl.dynawo.commons.DynawoConstants;
 import com.powsybl.dynawo.commons.DynawoUtil;
-import com.powsybl.dynawo.commons.loadmerge.LoadsMerger;
 import com.powsybl.dynawo.commons.NetworkResultsUpdater;
 import com.powsybl.dynawo.commons.PowsyblDynawoVersion;
+import com.powsybl.dynawo.commons.loadmerge.LoadsMerger;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.xml.NetworkXml;
 import com.powsybl.timeseries.TimeSeries;
 import com.powsybl.timeseries.TimeSeries.TimeFormat;
 import com.powsybl.timeseries.TimeSeriesConstants;
 import com.powsybl.timeseries.TimeSeriesCsvConfig;
-import org.apache.commons.lang3.SystemUtils;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
@@ -47,7 +46,6 @@ import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.*;
 public class DynaWaltzProvider implements DynamicSimulationProvider {
 
     public static final String NAME = "DynaWaltz";
-    private static final String DYNAWO_CMD_NAME = "dynawo";
     private static final String WORKING_DIR_PREFIX = "powsybl_dynawaltz_";
     private static final String OUTPUT_IIDM_FILENAME = "outputIIDM.xml";
 
@@ -79,7 +77,7 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
         return new GroupCommandBuilder()
                 .id("dyn_fs")
                 .subCommand()
-                .program(getProgram(dynaWaltzConfig))
+                .program(dynaWaltzConfig.getProgram())
                 .args("jobs", JOBS_FILENAME)
                 .add()
                 .build();
@@ -89,14 +87,9 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
         List<String> args = Collections.singletonList("version");
         return new SimpleCommandBuilder()
                 .id("dynawo_version")
-                .program(getProgram(dynaWaltzConfig))
+                .program(dynaWaltzConfig.getProgram())
                 .args(args)
                 .build();
-    }
-
-    private static String getProgram(DynaWaltzConfig dynaWaltzConfig) {
-        String extension = SystemUtils.IS_OS_WINDOWS ? ".cmd" : ".sh";
-        return Paths.get(dynaWaltzConfig.getHomeDir()).resolve(DYNAWO_CMD_NAME + extension).toString();
     }
 
     @Override
@@ -125,7 +118,7 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
         network.getVariantManager().setWorkingVariant(workingVariantId);
         ExecutionEnvironment execEnv = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, dynaWaltzConfig.isDebug());
         Command versionCmd = getVersionCommand(dynaWaltzConfig);
-        DynawoUtil.requireDynawoMinVersion(execEnv, computationManager, versionCmd, false);
+        DynawoUtil.requireDynaMinVersion(execEnv, computationManager, versionCmd, DynawoConstants.DYNAWO_CMD_NAME, false);
 
         List<BlackBoxModel> blackBoxModels = dynamicModelsSupplier.get(network).stream()
                 .filter(BlackBoxModel.class::isInstance)
