@@ -26,7 +26,7 @@ public final class DynawoConstants {
 
     static final String DYNAWO_CMD_NAME = "dynawo";
 
-    public static final DynawoVersion VERSION_MIN = new DynawoVersion(1, 3, 0);
+    public static final DynawoVersion VERSION_MIN = new DynawoVersion(1, 5, 0);
 
     public static final List<String> IIDM_EXTENSIONS = List.of(
             "activePowerControl",
