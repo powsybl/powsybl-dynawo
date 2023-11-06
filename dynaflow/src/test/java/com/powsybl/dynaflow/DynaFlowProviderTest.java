@@ -17,6 +17,7 @@ import com.powsybl.iidm.xml.NetworkXml;
 import com.powsybl.loadflow.LoadFlow;
 import com.powsybl.loadflow.LoadFlowParameters;
 import com.powsybl.loadflow.LoadFlowResult;
+import org.apache.commons.lang3.SystemUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -62,8 +63,13 @@ class DynaFlowProviderTest extends AbstractConverterTest {
 
     @Test
     void checkExecutionCommand() {
-        String program = homeDir.resolve("dynaflow-launcher.sh").toString();
         String executionCommand = DynaFlowProvider.getCommand(config).toString(0);
+        String program;
+        if (SystemUtils.IS_OS_WINDOWS) {
+            program = homeDir.resolve("dynaflow-launcher.cmd").toString();
+        } else {
+            program = homeDir.resolve("dynaflow-launcher.sh").toString();
+        }
         String expectedExecutionCommand = "[" + program + ", --network, " + IIDM_FILENAME + ", --config, " + CONFIG_FILENAME + "]";
         assertEquals(expectedExecutionCommand, executionCommand);
     }
