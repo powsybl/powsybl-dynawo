@@ -86,20 +86,15 @@ public class ParametersSet {
         return parameter.value();
     }
 
-    public Parameter getParameter(String parameterName) {
-        return parameters.get(parameterName);
+    public boolean hasParameter(String parameterName) {
+        return parameters.containsKey(parameterName);
     }
 
-    public Parameter getParameterOrThrows(String parameterName) {
+    private Parameter getParameterOrThrows(String parameterName, ParameterType type) {
         Parameter parameter = parameters.get(parameterName);
         if (parameter == null) {
             throw new IllegalArgumentException("Parameter " + parameterName + " not found in set " + id);
         }
-        return parameter;
-    }
-
-    private Parameter getParameterOrThrows(String parameterName, ParameterType type) {
-        Parameter parameter = getParameterOrThrows(parameterName);
         if (parameter.type() != type) {
             throw new PowsyblException("Invalid parameter type: " + parameter.type() + " (" + type + " expected)");
         }

@@ -15,7 +15,6 @@ import com.powsybl.dynamicsimulation.json.JsonDynamicSimulationParameters;
 import com.powsybl.dynawaltz.DynaWaltzParameters.SolverType;
 import com.powsybl.dynawaltz.parameters.Parameter;
 import com.powsybl.dynawaltz.parameters.ParameterType;
-import com.powsybl.dynawaltz.parameters.ParametersSet;
 import com.powsybl.dynawaltz.xml.ParametersXml;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Map;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -65,24 +65,24 @@ class DynaWaltzParametersTest extends AbstractConverterTest {
         checkModelParameters(parameters);
 
         assertEquals(networkParametersId, parameters.getNetworkParameters().getId());
-        ParametersSet networkParameters = parameters.getNetworkParameters();
-        Parameter loadTp = networkParameters.getParameterOrThrows("load_Tp");
+        Map<String, Parameter> networkParameters = parameters.getNetworkParameters().getParameters();
+        Parameter loadTp = networkParameters.get("load_Tp");
         assertEquals("90", loadTp.value());
         assertEquals("load_Tp", loadTp.name());
         assertEquals(ParameterType.DOUBLE, loadTp.type());
-        Parameter loadControllable = networkParameters.getParameterOrThrows("load_isControllable");
+        Parameter loadControllable = networkParameters.get("load_isControllable");
         assertEquals("false", loadControllable.value());
         assertEquals("load_isControllable", loadControllable.name());
         assertEquals(ParameterType.BOOL, loadControllable.type());
 
-        ParametersSet solverParameters = parameters.getSolverParameters();
-        assertEquals(solverParametersId, solverParameters.getId());
+        Map<String, Parameter> solverParameters = parameters.getSolverParameters().getParameters();
+        assertEquals(solverParametersId, parameters.getSolverParameters().getId());
         assertEquals(solverType, parameters.getSolverType());
-        Parameter order = solverParameters.getParameterOrThrows("order");
+        Parameter order = solverParameters.get("order");
         assertEquals("1", order.value());
         assertEquals("order", order.name());
         assertEquals(ParameterType.INT, order.type());
-        Parameter absAccuracy = solverParameters.getParameterOrThrows("absAccuracy");
+        Parameter absAccuracy = solverParameters.get("absAccuracy");
         assertEquals("1e-4", absAccuracy.value());
         assertEquals("absAccuracy", absAccuracy.name());
         assertEquals(ParameterType.DOUBLE, absAccuracy.type());
@@ -168,11 +168,11 @@ class DynaWaltzParametersTest extends AbstractConverterTest {
     }
 
     private static void checkModelParameters(DynaWaltzParameters dynaWaltzParameters) {
-        Parameter booleanParameter = dynaWaltzParameters.getModelParameters("test").getParameterOrThrows("boolean");
+        Parameter booleanParameter = dynaWaltzParameters.getModelParameters("test").getParameters().get("boolean");
         assertEquals("true", booleanParameter.value());
         assertEquals("boolean", booleanParameter.name());
         assertEquals(ParameterType.BOOL, booleanParameter.type());
-        Parameter stringParameter = dynaWaltzParameters.getModelParameters("test").getParameterOrThrows("string");
+        Parameter stringParameter = dynaWaltzParameters.getModelParameters("test").getParameters().get("string");
         assertEquals("aString", stringParameter.value());
         assertEquals("string", stringParameter.name());
         assertEquals(ParameterType.STRING, stringParameter.type());
