@@ -77,7 +77,7 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
         return new GroupCommandBuilder()
                 .id("dyn_fs")
                 .subCommand()
-                .program(getProgram(dynaWaltzConfig))
+                .program(dynaWaltzConfig.getProgram())
                 .args("jobs", JOBS_FILENAME)
                 .add()
                 .build();
@@ -87,13 +87,9 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
         List<String> args = Collections.singletonList("version");
         return new SimpleCommandBuilder()
                 .id("dynawo_version")
-                .program(getProgram(dynaWaltzConfig))
+                .program(dynaWaltzConfig.getProgram())
                 .args(args)
                 .build();
-    }
-
-    private static String getProgram(DynaWaltzConfig dynaWaltzConfig) {
-        return dynaWaltzConfig.getProgram();
     }
 
     @Override
