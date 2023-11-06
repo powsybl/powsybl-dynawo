@@ -14,6 +14,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public final class DynaFlowConstants {
 
+    public static final String DYNAFLOW_LAUNCHER_PROGRAM_NAME = "dynaflow-launcher";
     public static final String DYNAFLOW_NAME = "DynaFlow";
     public static final String CONFIG_FILENAME = "config.json";
     public static final String IIDM_FILENAME = "network.xiidm";

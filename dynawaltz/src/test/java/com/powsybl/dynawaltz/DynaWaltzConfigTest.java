@@ -47,7 +47,7 @@ class DynaWaltzConfigTest {
         moduleConfig.setStringProperty("homeDir", homeDir);
         moduleConfig.setStringProperty("debug", Boolean.toString(debug));
         DynaWaltzConfig config = DynaWaltzConfig.load(platformConfig);
-        assertEquals(homeDir, config.getHomeDir());
+        assertEquals(homeDir, config.getHomeDir().toString());
         assertEquals(debug, config.isDebug());
     }
 

@@ -38,7 +38,7 @@ public class DynaFlowSecurityAnalysisProvider implements SecurityAnalysisProvide
     private final Supplier<DynaFlowConfig> configSupplier;
 
     public DynaFlowSecurityAnalysisProvider() {
-        this(DynaFlowConfig::fromPropertyFile);
+        this(DynaFlowConfig::load);
     }
 
     public DynaFlowSecurityAnalysisProvider(Supplier<DynaFlowConfig> configSupplier) {
