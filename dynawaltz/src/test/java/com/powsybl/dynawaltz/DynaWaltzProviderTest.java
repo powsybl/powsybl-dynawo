@@ -152,7 +152,7 @@ class DynaWaltzProviderTest extends AbstractConverterTest {
     void checkExecutionCommand() {
         String versionCommand = DynaWaltzProvider.getCommand(config).toString(0);
         if (SystemUtils.IS_OS_WINDOWS) {
-            assertEquals("[[\\home\\dynawaltz\\dynawo.cmd, jobs, powsybl_dynawaltz.jobs]]", versionCommand);
+            assertEquals("[[/home/dynawaltz/dynawo.cmd, jobs, powsybl_dynawaltz.jobs]]", versionCommand);
         } else {
             assertEquals("[[/home/dynawaltz/dynawo.sh, jobs, powsybl_dynawaltz.jobs]]", versionCommand);
         }
