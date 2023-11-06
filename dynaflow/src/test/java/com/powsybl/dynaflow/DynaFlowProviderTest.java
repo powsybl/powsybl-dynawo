@@ -56,23 +56,20 @@ class DynaFlowProviderTest extends AbstractConverterTest {
 
     @Test
     void checkVersionCommand() {
-        String program = homeDir.resolve("dynaflow-launcher.sh").toString();
         String versionCommand = DynaFlowProvider.getVersionCommand(config).toString(0);
-        String expectedVersionCommand = "[" + program + ", --version]";
+        String expectedVersionCommand = "[" + getProgram(homeDir) + ", --version]";
         assertEquals(expectedVersionCommand, versionCommand);
     }
 
     @Test
     void checkExecutionCommand() {
         String executionCommand = DynaFlowProvider.getCommand(config).toString(0);
-        String program;
-        if (SystemUtils.IS_OS_WINDOWS) {
-            program = homeDir.resolve("dynaflow-launcher.cmd").toString();
-        } else {
-            program = homeDir.resolve("dynaflow-launcher.sh").toString();
-        }
-        String expectedExecutionCommand = "[" + program + ", --network, " + IIDM_FILENAME + ", --config, " + CONFIG_FILENAME + "]";
+        String expectedExecutionCommand = "[" + getProgram(homeDir) + ", --network, " + IIDM_FILENAME + ", --config, " + CONFIG_FILENAME + "]";
         assertEquals(expectedExecutionCommand, executionCommand);
+    }
+
+    private static String getProgram(Path homeDir) {
+        return homeDir.resolve(SystemUtils.IS_OS_WINDOWS ? "dynaflow-launcher.cmd" : "dynaflow-launcher.sh").toString();
     }
 
     private static class LocalCommandExecutorMock extends AbstractLocalCommandExecutor {
