@@ -10,7 +10,7 @@ package com.powsybl.dynawaltz.models.loads;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.models.TransformerSide;
 import com.powsybl.dynawaltz.models.VarConnection;
-import com.powsybl.dynawaltz.models.buses.BusModel;
+import com.powsybl.dynawaltz.models.buses.EquipmentConnectionPoint;
 import com.powsybl.dynawaltz.models.transformers.TapChangerModel;
 import com.powsybl.iidm.network.Load;
 
@@ -20,7 +20,7 @@ import static com.powsybl.dynawaltz.models.TransformerSide.HIGH_VOLTAGE;
 import static com.powsybl.dynawaltz.models.TransformerSide.LOW_VOLTAGE;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class LoadTwoTransformersTapChangers extends LoadTwoTransformers implements TapChangerModel {
 
@@ -29,7 +29,7 @@ public class LoadTwoTransformersTapChangers extends LoadTwoTransformers implemen
     }
 
     @Override
-    protected List<VarConnection> getVarConnectionsWith(BusModel connected) {
+    protected List<VarConnection> getVarConnectionsWith(EquipmentConnectionPoint connected) {
         List<VarConnection> varConnections = super.getVarConnectionsWith(connected);
         connected.getSwitchOffSignalVarName()
                 .ifPresent(switchOff -> {

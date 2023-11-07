@@ -12,7 +12,7 @@ import com.powsybl.iidm.xml.IidmXmlVersion;
 import java.util.List;
 
 /**
- * @author Geoffroy Jamgotchian <geoffroy.jamgotchian at rte-france.com>
+ * @author Geoffroy Jamgotchian {@literal <geoffroy.jamgotchian at rte-france.com>}
  */
 public final class DynawoConstants {
 
@@ -24,7 +24,9 @@ public final class DynawoConstants {
      */
     public static final String IIDM_VERSION = IidmXmlVersion.V_1_4.toString(".");
 
-    public static final DynawoVersion VERSION_MIN = new DynawoVersion(1, 3, 0);
+    public static final String DYNAWO_CMD_NAME = "dynawo";
+
+    public static final DynawoVersion VERSION_MIN = new DynawoVersion(1, 5, 0);
 
     public static final List<String> IIDM_EXTENSIONS = List.of(
             "activePowerControl",

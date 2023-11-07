@@ -23,8 +23,8 @@ import java.nio.file.Path;
 import java.util.*;
 
 /**
- * @author Marcos de Miguel <demiguelm at aia.es>
- * @author Florian Dupuy <florian.dupuy at rte-france.com>
+ * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
+ * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
  */
 public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationParameters> {
 

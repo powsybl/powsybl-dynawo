@@ -16,7 +16,7 @@ import com.powsybl.dynawaltz.models.loads.LoadTwoTransformers
 import com.powsybl.iidm.network.Network
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 @AutoService(DynamicModelGroovyExtension.class)
 class LoadTwoTransformersGroovyExtension extends AbstractSimpleEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {

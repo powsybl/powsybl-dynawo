@@ -16,8 +16,9 @@ import java.util.List;
 import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 
 /**
- * @author Florian Dupuy <florian.dupuy at rte-france.com>
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * Superclass for automaton & event black box models (model without IIDM static id)
+ * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public abstract class AbstractPureDynamicBlackBoxModel extends AbstractBlackBoxModel {
 

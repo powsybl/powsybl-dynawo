@@ -10,7 +10,9 @@ import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.models.*;
-import com.powsybl.dynawaltz.models.buses.InfiniteBus;
+import com.powsybl.dynawaltz.models.buses.AbstractBus;
+import com.powsybl.dynawaltz.models.buses.EquipmentConnectionPoint;
+import com.powsybl.dynawaltz.models.buses.DefaultEquipmentConnectionPoint;
 import com.powsybl.dynawaltz.models.defaultmodels.DefaultModelsHandler;
 import com.powsybl.dynawaltz.models.frequencysynchronizers.FrequencySynchronizedModel;
 import com.powsybl.dynawaltz.models.frequencysynchronizers.FrequencySynchronizerModel;
@@ -28,12 +30,13 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * @author Marcos de Miguel <demiguelm at aia.es>
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class DynaWaltzContext {
 
@@ -60,8 +63,12 @@ public class DynaWaltzContext {
                             List<Curve> curves, DynamicSimulationParameters parameters, DynaWaltzParameters dynaWaltzParameters) {
         this.network = Objects.requireNonNull(network);
         this.workingVariantId = Objects.requireNonNull(workingVariantId);
-        this.dynamicModels = checkDuplicateStaticId(Objects.requireNonNull(dynamicModels));
-        this.eventModels = checkEventModelIdUniqueness(Objects.requireNonNull(eventModels));
+        this.dynamicModels = Objects.requireNonNull(dynamicModels).stream()
+                .filter(distinctByDynamicId().and(distinctByStaticId()))
+                .toList();
+        this.eventModels = Objects.requireNonNull(eventModels).stream()
+                .filter(distinctByDynamicId())
+                .toList();
         this.staticIdBlackBoxModelMap = getInputBlackBoxDynamicModelStream()
                 .filter(EquipmentBlackBoxModel.class::isInstance)
                 .map(EquipmentBlackBoxModel.class::cast)
@@ -69,7 +76,7 @@ public class DynaWaltzContext {
         this.curves = Objects.requireNonNull(curves);
         this.parameters = Objects.requireNonNull(parameters);
         this.dynaWaltzParameters = Objects.requireNonNull(dynaWaltzParameters);
-        this.frequencySynchronizer = setupFrequencySynchronizer(dynamicModels.stream().anyMatch(InfiniteBus.class::isInstance) ? SetPoint::new : OmegaRef::new);
+        this.frequencySynchronizer = setupFrequencySynchronizer(dynamicModels.stream().anyMatch(AbstractBus.class::isInstance) ? SetPoint::new : OmegaRef::new);
 
         for (BlackBoxModel bbm : getBlackBoxDynamicModelStream().toList()) {
             macroStaticReferences.computeIfAbsent(bbm.getName(), k -> new MacroStaticReference(k, bbm.getVarsMapping()));
@@ -166,49 +173,45 @@ public class DynaWaltzContext {
         }
     }
 
-    private static List<BlackBoxModel> checkDuplicateStaticId(List<BlackBoxModel> dynamicModels) {
-        Set<String> staticIds = new HashSet<>();
-        return dynamicModels.stream()
-                .filter(bbm -> {
-                    if (bbm instanceof EquipmentBlackBoxModel eBbm && !staticIds.add(eBbm.getStaticId())) {
-                        LOGGER.warn("Duplicate static id found: {} -> dynamic model {} {} will be skipped", eBbm.getStaticId(), eBbm.getLib(), eBbm.getDynamicModelId());
-                        return false;
-                    }
-                    return true;
-                })
-                .collect(Collectors.toList());
+    public EquipmentConnectionPoint getConnectionPointDynamicModel(String staticId) {
+        BlackBoxModel bbm = staticIdBlackBoxModelMap.get(staticId);
+        if (bbm == null) {
+            return DefaultEquipmentConnectionPoint.getInstance();
+        }
+        if (bbm instanceof EquipmentConnectionPoint cp) {
+            return cp;
+        }
+        throw new PowsyblException(String.format(MODEL_ID_EXCEPTION, staticId, "ConnectionPoint"));
     }
 
-    private static List<BlackBoxModel> checkEventModelIdUniqueness(List<BlackBoxModel> eventModels) {
-        Set<String> dynamicIds = new HashSet<>();
-        Set<String> duplicates = new HashSet<>();
-        for (BlackBoxModel bbm : eventModels) {
-            if (!dynamicIds.add(bbm.getDynamicModelId())) {
-                duplicates.add(bbm.getDynamicModelId());
+    protected static Predicate<BlackBoxModel> distinctByStaticId() {
+        Set<String> seen = new HashSet<>();
+        return bbm -> {
+            if (bbm instanceof EquipmentBlackBoxModel eBbm && !seen.add(eBbm.getStaticId())) {
+                LOGGER.warn("Duplicate static id found: {} -> dynamic model {} {} will be skipped", eBbm.getStaticId(), eBbm.getLib(), eBbm.getDynamicModelId());
+                return false;
             }
-        }
-        if (!duplicates.isEmpty()) {
-            throw new PowsyblException("Duplicate dynamicId: " + duplicates);
-        }
-        return eventModels;
+            return true;
+        };
+    }
+
+    protected static Predicate<BlackBoxModel> distinctByDynamicId() {
+        Set<String> seen = new HashSet<>();
+        return bbm -> {
+            if (!seen.add(bbm.getDynamicModelId())) {
+                LOGGER.warn("Duplicate dynamic id found: {} -> model {} will be skipped", bbm.getDynamicModelId(), bbm.getName());
+                return false;
+            }
+            return true;
+        };
     }
 
     public void addMacroConnect(String macroConnectorId, List<MacroConnectAttribute> attributesFrom, List<MacroConnectAttribute> attributesTo) {
         macroConnectList.add(new MacroConnect(macroConnectorId, attributesFrom, attributesTo));
     }
 
-    public void addMacroConnect(String macroConnectorId, List<MacroConnectAttribute> attributesFrom) {
-        macroConnectList.add(new MacroConnect(macroConnectorId, attributesFrom));
-    }
-
     public List<MacroConnect> getMacroConnectList() {
         return macroConnectList;
-    }
-
-    public String addMacroConnector(String name1, List<VarConnection> varConnections) {
-        String macroConnectorId = MacroConnector.createMacroConnectorId(name1);
-        macroConnectorsMap.computeIfAbsent(macroConnectorId, k -> new MacroConnector(macroConnectorId, varConnections));
-        return macroConnectorId;
     }
 
     public String addMacroConnector(String name1, String name2, List<VarConnection> varConnections) {
@@ -262,7 +265,7 @@ public class DynaWaltzContext {
     }
 
     public List<BlackBoxModel> getBlackBoxEventModels() {
-        return Collections.unmodifiableList(eventModels);
+        return eventModels;
     }
 
     public List<Curve> getCurves() {

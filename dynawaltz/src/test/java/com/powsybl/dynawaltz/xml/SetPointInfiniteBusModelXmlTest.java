@@ -18,7 +18,7 @@ import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 class SetPointInfiniteBusModelXmlTest extends AbstractDynamicModelXmlTest {
 

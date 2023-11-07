@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 /**
- * @author Marcos de Miguel <demiguelm at aia.es>
+ * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  */
 class JobsXmlTest extends DynaWaltzTestUtil {
 

@@ -15,7 +15,7 @@ import com.powsybl.dynawaltz.models.generators.GeneratorFictitious
 import com.powsybl.iidm.network.Network
 
 /**
- * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
+ * @author Dimitri Baudrier {@literal <dimitri.baudrier at rte-france.com>}
  */
 @AutoService(DynamicModelGroovyExtension.class)
 class GeneratorFictitiousGroovyExtension extends AbstractSimpleEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {

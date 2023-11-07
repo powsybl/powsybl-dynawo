@@ -20,7 +20,7 @@ import java.util.Objects;
 import static com.powsybl.commons.test.ComparisonUtils.compareTxt;
 
 /**
- * @author Florian Dupuy <florian.dupuy at rte-france.com>
+ * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
  */
 abstract class AbstractDynawoCommonsTest extends AbstractConverterTest {
 

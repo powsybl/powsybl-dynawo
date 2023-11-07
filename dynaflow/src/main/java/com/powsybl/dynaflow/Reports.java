@@ -13,13 +13,19 @@ import com.powsybl.commons.reporter.TypedValue;
 import com.powsybl.dynawo.commons.timeline.TimelineEntry;
 
 /**
- * @author Florian Dupuy <florian.dupuy at rte-france.com>
+ * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
  */
 public final class Reports {
     private static final String TIME_MS = "timeMsTypedValue";
     private static final String ID = "idTypedValue";
 
     private Reports() {
+    }
+
+    public static Reporter createDynaFlowReporter(Reporter reporter, String networkId) {
+        return reporter.createSubReporter("dynaflow",
+                "Dynaflow loadflow on network '${networkId}'",
+                "networkId", networkId);
     }
 
     public static Reporter createDynaFlowSecurityAnalysisReporter(Reporter reporter, String networkId) {

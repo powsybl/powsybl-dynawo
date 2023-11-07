@@ -8,7 +8,7 @@ package com.powsybl.dynawaltz.models.loads;
 
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.VarMapping;
-import com.powsybl.dynawaltz.models.buses.BusModel;
+import com.powsybl.dynawaltz.models.buses.EquipmentConnectionPoint;
 import com.powsybl.iidm.network.Load;
 
 import java.util.ArrayList;
@@ -16,8 +16,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * @author Marcos de Miguel <demiguelm at aia.es>
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class BaseLoad extends AbstractLoad {
     protected static final List<VarMapping> VAR_MAPPING = Arrays.asList(
@@ -35,7 +35,7 @@ public class BaseLoad extends AbstractLoad {
     }
 
     @Override
-    protected List<VarConnection> getVarConnectionsWith(BusModel connected) {
+    protected List<VarConnection> getVarConnectionsWith(EquipmentConnectionPoint connected) {
         List<VarConnection> varConnections = new ArrayList<>(2);
         varConnections.add(new VarConnection(getTerminalVarName(), connected.getTerminalVarName()));
         connected.getSwitchOffSignalVarName()

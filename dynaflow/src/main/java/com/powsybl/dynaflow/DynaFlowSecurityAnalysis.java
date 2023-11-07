@@ -42,15 +42,13 @@ import static com.powsybl.dynaflow.DynaFlowConstants.CONFIG_FILENAME;
 import static com.powsybl.dynaflow.DynaFlowConstants.IIDM_FILENAME;
 
 /**
- * @author Luma Zamarreno <zamarrenolm at aia.es>
+ * @author Luma Zamarreno {@literal <zamarrenolm at aia.es>}
  */
 public class DynaFlowSecurityAnalysis {
 
     private static final String WORKING_DIR_PREFIX = "dynaflow_sa_";
-    private static final String DYNAFLOW_LAUNCHER_PROGRAM_NAME = "dynaflow-launcher.sh";
     private static final String CONTINGENCIES_FILENAME = "contingencies.json";
     private static final String DYNAWO_CONSTRAINTS_FOLDER = "constraints";
-    private static final String DYNAWO_TIMELINE_FOLDER = "timeLine";
 
     private final Supplier<DynaFlowConfig> configSupplier;
 
@@ -79,7 +77,7 @@ public class DynaFlowSecurityAnalysis {
     }
 
     private static String getProgram(DynaFlowConfig config) {
-        return config.getHomeDir().resolve(DYNAFLOW_LAUNCHER_PROGRAM_NAME).toString();
+        return config.getProgram(DynaFlowConstants.DYNAFLOW_LAUNCHER_PROGRAM_NAME);
     }
 
     public static Command getCommand(DynaFlowConfig config) {
@@ -144,7 +142,7 @@ public class DynaFlowSecurityAnalysis {
         DynaFlowConfig config = Objects.requireNonNull(configSupplier.get());
         ExecutionEnvironment env = new ExecutionEnvironment(config.createEnv(), WORKING_DIR_PREFIX, config.isDebug());
         Command versionCmd = getVersionCommand(config);
-        DynawoUtil.requireDynawoMinVersion(env, computationManager, versionCmd, true);
+        DynawoUtil.requireDynaMinVersion(env, computationManager, versionCmd, DynaFlowConstants.DYNAFLOW_LAUNCHER_PROGRAM_NAME, true);
         List<Contingency> contingencies = contingenciesProvider.getContingencies(network);
         return computationManager.execute(env, new AbstractExecutionHandler<>() {
             @Override
@@ -172,7 +170,7 @@ public class DynaFlowSecurityAnalysis {
                     .toList();
 
                 // Report the timeline events from the timeline files written by dynawo
-                Path timelineDir = workingDir.resolve(DYNAWO_TIMELINE_FOLDER);
+                Path timelineDir = workingDir.resolve(DynaFlowConstants.DYNAWO_TIMELINE_FOLDER);
                 contingencies.forEach(c -> {
                     Reporter contingencyReporter = Reports.createDynaFlowTimelineReporter(reporter, c.getId());
                     getTimeline(timelineDir, c).forEach(e -> Reports.reportTimelineEvent(contingencyReporter, e));
@@ -204,8 +202,8 @@ public class DynaFlowSecurityAnalysis {
         }
     }
 
-    private List<TimelineEntry> getTimeline(Path constraintsDir, Contingency c) {
-        Path timelineFile = constraintsDir.resolve("timeline_" + c.getId() + ".xml");
+    private List<TimelineEntry> getTimeline(Path timelineDir, Contingency c) {
+        Path timelineFile = timelineDir.resolve("timeline_" + c.getId() + ".xml");
         return new XmlTimeLineParser().parse(timelineFile);
     }
 }

@@ -45,7 +45,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * @author Geoffroy Jamgotchian <geoffroy.jamgotchian at rte-france.com>
+ * @author Geoffroy Jamgotchian {@literal <geoffroy.jamgotchian at rte-france.com>}
  */
 class DynaFlowTest extends AbstractDynawoTest {
 
@@ -54,8 +54,6 @@ class DynaFlowTest extends AbstractDynawoTest {
     private DynaFlowSecurityAnalysisProvider securityAnalysisProvider;
 
     private LoadFlowParameters loadFlowParameters;
-
-    private DynaFlowParameters dynaFlowLoadFlowParameters;
 
     private SecurityAnalysisParameters securityAnalysisParameters;
 
@@ -66,22 +64,37 @@ class DynaFlowTest extends AbstractDynawoTest {
         DynaFlowConfig config = new DynaFlowConfig(Path.of("/dynaflow-launcher"), false);
         loadFlowProvider = new DynaFlowProvider(() -> config);
         loadFlowParameters = new LoadFlowParameters();
-        dynaFlowLoadFlowParameters = new DynaFlowParameters();
         securityAnalysisProvider = new DynaFlowSecurityAnalysisProvider(() -> config);
         securityAnalysisParameters = new SecurityAnalysisParameters();
-        loadFlowParameters.addExtension(DynaFlowParameters.class, dynaFlowLoadFlowParameters);
+        loadFlowParameters.addExtension(DynaFlowParameters.class, new DynaFlowParameters());
     }
 
     @Test
-    void testLf() {
+    void testLf() throws IOException {
         Network network = IeeeCdfNetworkFactory.create14Solved();
-        LoadFlowResult result = loadFlowProvider.run(network, computationManager, VariantManagerConstants.INITIAL_VARIANT_ID, loadFlowParameters)
+        network.getLine("L6-13-1").newCurrentLimits1()
+                .beginTemporaryLimit().setName("1").setAcceptableDuration(60).setValue(100).endTemporaryLimit()
+                .beginTemporaryLimit().setName("2").setAcceptableDuration(120).setValue(110).endTemporaryLimit()
+                .setPermanentLimit(200)
+                .add();
+
+        ReporterModel reporter = new ReporterModel("root", "testLf root reporter");
+        LoadFlowResult result = loadFlowProvider.run(network, computationManager, VariantManagerConstants.INITIAL_VARIANT_ID, loadFlowParameters, reporter)
                 .join();
+
         assertTrue(result.isOk());
         assertEquals(1, result.getComponentResults().size());
         LoadFlowResult.ComponentResult componentResult = result.getComponentResults().get(0);
         assertEquals(LoadFlowResult.ComponentResult.Status.CONVERGED, componentResult.getStatus());
         assertEquals("B4", componentResult.getSlackBusId());
+
+        StringWriter sw = new StringWriter();
+        reporter.export(sw);
+        System.out.println(sw);
+        InputStream refStream = Objects.requireNonNull(getClass().getResourceAsStream("/loadflow_timeline_report.txt"));
+        String refLogExport = TestUtil.normalizeLineSeparator(new String(ByteStreams.toByteArray(refStream), StandardCharsets.UTF_8));
+        String logExport = TestUtil.normalizeLineSeparator(sw.toString());
+        assertEquals(refLogExport, logExport);
     }
 
     @Test

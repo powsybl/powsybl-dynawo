@@ -10,7 +10,7 @@ package com.powsybl.dynawaltz.models.buses;
 import com.powsybl.iidm.network.Bus;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class InfiniteBus extends AbstractBus {
 
