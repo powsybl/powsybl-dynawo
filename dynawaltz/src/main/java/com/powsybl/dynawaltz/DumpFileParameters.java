@@ -13,7 +13,7 @@ import java.nio.file.Path;
 import java.util.Objects;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 @JsonIgnoreProperties(value = { "dumpFilePath" })
 public record DumpFileParameters(boolean exportDumpFile, boolean useDumpFile, Path dumpFileFolder, String dumpFile) {
