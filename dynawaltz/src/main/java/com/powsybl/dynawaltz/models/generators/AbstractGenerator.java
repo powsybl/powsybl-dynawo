@@ -10,8 +10,7 @@ import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractEquipmentBlackBoxModel;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.VarMapping;
-import com.powsybl.dynawaltz.models.buses.BusModel;
-import com.powsybl.dynawaltz.models.utils.BusUtils;
+import com.powsybl.dynawaltz.models.buses.EquipmentConnectionPoint;
 import com.powsybl.iidm.network.Generator;
 
 import java.util.ArrayList;
@@ -19,17 +18,17 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * @author Marcos de Miguel <demiguelm at aia.es>
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public abstract class AbstractGeneratorModel extends AbstractEquipmentBlackBoxModel<Generator> implements GeneratorModel {
+public abstract class AbstractGenerator extends AbstractEquipmentBlackBoxModel<Generator> implements GeneratorModel {
 
     protected static final List<VarMapping> VAR_MAPPING = Arrays.asList(
             new VarMapping("generator_PGenPu", "p"),
             new VarMapping("generator_QGenPu", "q"),
             new VarMapping("generator_state", "state"));
 
-    protected AbstractGeneratorModel(String dynamicModelId, Generator generator, String parameterSetId, String lib) {
+    protected AbstractGenerator(String dynamicModelId, Generator generator, String parameterSetId, String lib) {
         super(dynamicModelId, parameterSetId, generator, lib);
     }
 
@@ -40,10 +39,10 @@ public abstract class AbstractGeneratorModel extends AbstractEquipmentBlackBoxMo
 
     @Override
     public void createMacroConnections(DynaWaltzContext context) {
-        createMacroConnections(BusUtils.getConnectableBusStaticId(equipment), BusModel.class, this::getVarConnectionsWith, context);
+        createTerminalMacroConnections(equipment, this::getVarConnectionsWith, context);
     }
 
-    private List<VarConnection> getVarConnectionsWith(BusModel connected) {
+    private List<VarConnection> getVarConnectionsWith(EquipmentConnectionPoint connected) {
         List<VarConnection> varConnections = new ArrayList<>(2);
         varConnections.add(new VarConnection(getTerminalVarName(), connected.getTerminalVarName()));
         connected.getSwitchOffSignalVarName()

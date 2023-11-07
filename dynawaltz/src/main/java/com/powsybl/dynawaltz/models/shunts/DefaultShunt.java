@@ -10,11 +10,11 @@ package com.powsybl.dynawaltz.models.shunts;
 import com.powsybl.dynawaltz.models.defaultmodels.AbstractInjectionDefaultModel;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class DefaultShuntModel extends AbstractInjectionDefaultModel implements ShuntModel {
+public class DefaultShunt extends AbstractInjectionDefaultModel implements ShuntModel {
 
-    public DefaultShuntModel(String staticId) {
+    public DefaultShunt(String staticId) {
         super(staticId);
     }
 

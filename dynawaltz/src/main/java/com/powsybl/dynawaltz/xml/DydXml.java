@@ -9,8 +9,8 @@ package com.powsybl.dynawaltz.xml;
 
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
-import com.powsybl.dynawaltz.models.MacroConnect;
-import com.powsybl.dynawaltz.models.MacroConnector;
+import com.powsybl.dynawaltz.models.macroconnections.MacroConnect;
+import com.powsybl.dynawaltz.models.macroconnections.MacroConnector;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -21,7 +21,7 @@ import java.util.Objects;
 import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.DYD_FILENAME;
 
 /**
- * @author Mathieu Bague <mathieu.bague@rte-france.com>
+ * @author Mathieu Bague {@literal <mathieu.bague@rte-france.com>}
  */
 public final class DydXml {
 

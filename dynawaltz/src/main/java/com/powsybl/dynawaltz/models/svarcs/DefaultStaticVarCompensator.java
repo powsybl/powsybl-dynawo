@@ -10,11 +10,11 @@ package com.powsybl.dynawaltz.models.svarcs;
 import com.powsybl.dynawaltz.models.defaultmodels.AbstractInjectionDefaultModel;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class DefaultStaticVarCompensatorModel extends AbstractInjectionDefaultModel implements StaticVarCompensatorModel {
+public class DefaultStaticVarCompensator extends AbstractInjectionDefaultModel implements StaticVarCompensatorModel {
 
-    public DefaultStaticVarCompensatorModel(String staticId) {
+    public DefaultStaticVarCompensator(String staticId) {
         super(staticId);
     }
 

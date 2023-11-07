@@ -14,7 +14,7 @@ import java.util.function.Consumer
 
 /**
  * Superclass for automaton & event groovy extensions
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 abstract class AbstractPureDynamicGroovyExtension<T> {
 
@@ -24,6 +24,10 @@ abstract class AbstractPureDynamicGroovyExtension<T> {
 
     String getName() {
         DynaWaltzProvider.NAME
+    }
+
+    List<String> getModelNames() {
+        modelTags
     }
 
     void load(Binding binding, Consumer<T> consumer) {

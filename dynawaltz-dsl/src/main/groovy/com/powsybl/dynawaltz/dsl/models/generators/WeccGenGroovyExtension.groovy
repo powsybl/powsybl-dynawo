@@ -17,7 +17,7 @@ import com.powsybl.dynawaltz.models.generators.WeccGen
 import com.powsybl.iidm.network.Network
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 @AutoService(DynamicModelGroovyExtension.class)
 class WeccGenGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
@@ -43,9 +43,9 @@ class WeccGenGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicMod
         WeccGen build() {
             if (isInstantiable()) {
                 if (equipmentConfig.isSynchronized()) {
-                    new SynchronizedWeccGen(dynamicModelId, equipment, parameterSetId, equipmentConfig.lib, equipmentConfig.prefix)
+                    new SynchronizedWeccGen(dynamicModelId, equipment, parameterSetId, equipmentConfig.lib, equipmentConfig.internalModelPrefix)
                 } else {
-                    new WeccGen(dynamicModelId, equipment, parameterSetId, equipmentConfig.lib, equipmentConfig.prefix)
+                    new WeccGen(dynamicModelId, equipment, parameterSetId, equipmentConfig.lib, equipmentConfig.internalModelPrefix)
                 }
             } else {
                 null

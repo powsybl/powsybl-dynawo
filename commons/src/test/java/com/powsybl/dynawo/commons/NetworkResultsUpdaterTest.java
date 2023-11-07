@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 /**
- * @author Guillem Jané Guasch <janeg at aia.es>
+ * @author Guillem Jané Guasch {@literal <janeg at aia.es>}
  */
 class NetworkResultsUpdaterTest extends AbstractDynawoCommonsTest {
 

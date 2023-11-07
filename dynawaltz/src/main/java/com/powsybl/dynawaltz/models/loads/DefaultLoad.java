@@ -11,11 +11,11 @@ import com.powsybl.dynawaltz.models.defaultmodels.AbstractInjectionDefaultModel;
 import com.powsybl.dynawaltz.models.events.ControllableEquipment;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class DefaultLoadModel extends AbstractInjectionDefaultModel implements LoadModel, ControllableEquipment {
+public class DefaultLoad extends AbstractInjectionDefaultModel implements LoadModel, ControllableEquipment {
 
-    public DefaultLoadModel(String staticId) {
+    public DefaultLoad(String staticId) {
         super(staticId);
     }
 

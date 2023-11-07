@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * @author Florian Dupuy <florian.dupuy at rte-france.com>
+ * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
  */
 class LoadsMergerTest extends AbstractDynawoCommonsTest {
 

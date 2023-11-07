@@ -41,6 +41,7 @@
   </set>
   <!-- Generator -->
   <set id="5">
+    <par type="BOOL" name="generator_UseApproximation" value="false"/>
     <par type="DOUBLE" name="generator_md" value="0.1"/>
     <par type="DOUBLE" name="generator_mq" value="0.1"/>
     <par type="DOUBLE" name="generator_nd" value="6"/>

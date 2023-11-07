@@ -11,13 +11,13 @@ import groovy.json.JsonSlurper
 import org.apache.groovy.json.internal.LazyMap
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 @Singleton
 class ModelsSlurper {
 
     private static final String MODEL_LIB = "lib"
-    private static final String MODEL_PREFIX = "prefix"
+    private static final String MODEL_PREFIX = "internalModelPrefix"
     private static final String MODEL_PROPERTIES = "properties"
 
     private final slurper = new JsonSlurper()

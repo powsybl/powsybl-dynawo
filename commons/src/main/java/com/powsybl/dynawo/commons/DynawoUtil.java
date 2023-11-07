@@ -24,7 +24,7 @@ import static com.powsybl.dynawo.commons.DynawoConstants.IIDM_EXTENSIONS;
 import static com.powsybl.dynawo.commons.DynawoConstants.IIDM_VERSION;
 
 /**
- * @author Geoffroy Jamgotchian <geoffroy.jamgotchian at rte-france.com>
+ * @author Geoffroy Jamgotchian {@literal <geoffroy.jamgotchian at rte-france.com>}
  */
 public final class DynawoUtil {
 
@@ -40,9 +40,10 @@ public final class DynawoUtil {
         network.write("XIIDM", params, file);
     }
 
-    public static void requireDynawoMinVersion(ExecutionEnvironment env, ComputationManager computationManager, Command versionCmd, boolean fromErr) {
+    public static void requireDynaMinVersion(ExecutionEnvironment env, ComputationManager computationManager, Command versionCmd,
+                                             String dynaName, boolean fromErr) {
         if (!checkDynawoVersion(env, computationManager, versionCmd, fromErr)) {
-            throw new PowsyblException("DynaFlow version not supported. Must be >= " + DynawoConstants.VERSION_MIN);
+            throw new PowsyblException(dynaName + " version not supported. Must be >= " + DynawoConstants.VERSION_MIN);
         }
     }
 

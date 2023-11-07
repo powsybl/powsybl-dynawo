@@ -7,11 +7,10 @@
  */
 package com.powsybl.dynawaltz.models.utils;
 
-import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.iidm.network.*;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public final class BusUtils {
 
@@ -22,19 +21,7 @@ public final class BusUtils {
         return terminal.getBusBreakerView().getConnectableBus().getId();
     }
 
-    public static String getConnectableBusStaticId(Generator generator) {
-        return getConnectableBusStaticId(generator.getTerminal());
-    }
-
-    public static String getConnectableBusStaticId(StaticVarCompensator svarc) {
-        return getConnectableBusStaticId(svarc.getTerminal());
-    }
-
-    public static String getConnectableBusStaticId(HvdcLine hvdc, Side side) {
-        return getConnectableBusStaticId(hvdc.getConverterStation(SideConverter.convert(side)).getTerminal());
-    }
-
-    public static String getConnectableBusStaticId(Load load) {
-        return getConnectableBusStaticId(load.getTerminal());
+    public static String getConnectableBusStaticId(Injection<?> injection) {
+        return getConnectableBusStaticId(injection.getTerminal());
     }
 }

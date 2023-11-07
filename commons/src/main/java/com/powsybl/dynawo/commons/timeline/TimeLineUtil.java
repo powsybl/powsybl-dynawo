@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Optional;
 
 /**
- * @author Florian Dupuy <florian.dupuy at rte-france.com>
+ * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
  */
 public final class TimeLineUtil {
 

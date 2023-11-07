@@ -23,12 +23,13 @@ import com.powsybl.timeseries.StringTimeSeries;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.nio.file.Path;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * @author Geoffroy Jamgotchian <geoffroy.jamgotchian at rte-france.com>
+ * @author Geoffroy Jamgotchian {@literal <geoffroy.jamgotchian at rte-france.com>}
  */
 class DynaWaltzTest extends AbstractDynawoTest {
 
@@ -42,7 +43,7 @@ class DynaWaltzTest extends AbstractDynawoTest {
     @BeforeEach
     void setUp() throws Exception {
         super.setUp();
-        provider = new DynaWaltzProvider(new DynaWaltzConfig("/dynawo", false));
+        provider = new DynaWaltzProvider(new DynaWaltzConfig(Path.of("/dynawo"), false));
         parameters = new DynamicSimulationParameters()
                 .setStartTime(1)
                 .setStopTime(100);
@@ -82,7 +83,7 @@ class DynaWaltzTest extends AbstractDynawoTest {
         assertEquals(41, result.getCurves().size());
         DoubleTimeSeries ts1 = (DoubleTimeSeries) result.getCurve("_GEN____1_SM_generator_UStatorPu");
         assertEquals("_GEN____1_SM_generator_UStatorPu", ts1.getMetadata().getName());
-        assertEquals(586, ts1.toArray().length);
+        assertEquals(587, ts1.toArray().length);
         StringTimeSeries timeLine = result.getTimeLine();
         assertEquals(1, timeLine.toArray().length);
         assertNull(timeLine.toArray()[0]); // FIXME

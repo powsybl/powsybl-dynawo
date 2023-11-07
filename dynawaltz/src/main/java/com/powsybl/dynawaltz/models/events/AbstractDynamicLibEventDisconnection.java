@@ -19,9 +19,9 @@ import static com.powsybl.dynawaltz.parameters.ParameterType.BOOL;
 import static com.powsybl.dynawaltz.parameters.ParameterType.DOUBLE;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public abstract class AbstractDynamicLibEventDisconnection extends AbstractEventModel {
+public abstract class AbstractDynamicLibEventDisconnection extends AbstractEvent {
 
     private static final String EVENT_PREFIX = "Disconnect_";
     private static final String DYNAMIC_MODEL_LIB = "EventSetPointBoolean";

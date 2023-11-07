@@ -10,9 +10,9 @@ package com.powsybl.dynawaltz.models.automatons;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
-import com.powsybl.dynawaltz.models.MeasurementPoint;
+import com.powsybl.dynawaltz.models.MeasurementPointSuffix;
 import com.powsybl.dynawaltz.models.VarConnection;
-import com.powsybl.dynawaltz.models.buses.BusModel;
+import com.powsybl.dynawaltz.models.buses.ActionConnectionPoint;
 import com.powsybl.dynawaltz.models.transformers.TapChangerModel;
 import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.IdentifiableType;
@@ -26,7 +26,7 @@ import javax.xml.stream.XMLStreamWriter;
 import java.util.*;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class TapChangerBlockingAutomaton extends AbstractPureDynamicBlackBoxModel {
 
@@ -99,7 +99,7 @@ public class TapChangerBlockingAutomaton extends AbstractPureDynamicBlackBoxMode
         if (!transformers.isEmpty() || skippedTapChangers < (loadsWithTransformer.size() + tapChangerAutomatonIds.size())) {
             int i = 1;
             for (Bus bus : uMeasurements) {
-                createMacroConnections(bus, BusModel.class, this::getVarConnectionsWith, context, MeasurementPoint.of(i));
+                createMacroConnections(bus, ActionConnectionPoint.class, this::getVarConnectionsWith, context, MeasurementPointSuffix.of(i));
                 i++;
             }
         } else {
@@ -112,7 +112,7 @@ public class TapChangerBlockingAutomaton extends AbstractPureDynamicBlackBoxMode
         return connected.getTapChangerBlockerVarConnections();
     }
 
-    private List<VarConnection> getVarConnectionsWith(BusModel connected, String suffix) {
+    private List<VarConnection> getVarConnectionsWith(ActionConnectionPoint connected, String suffix) {
         return connected.getUImpinVarName()
                 .map(uImpinVarName -> List.of(new VarConnection("tapChangerBlocking_UMonitored" + suffix, uImpinVarName)))
                 .orElse(Collections.emptyList());

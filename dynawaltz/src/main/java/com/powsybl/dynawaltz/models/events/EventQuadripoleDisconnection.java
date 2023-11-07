@@ -18,10 +18,10 @@ import static com.powsybl.dynawaltz.parameters.ParameterType.BOOL;
 import static com.powsybl.dynawaltz.parameters.ParameterType.DOUBLE;
 
 /**
- * @author Marcos de Miguel <demiguelm at aia.es>
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class EventQuadripoleDisconnection extends AbstractEventModel {
+public class EventQuadripoleDisconnection extends AbstractEvent {
 
     private static final String EVENT_PREFIX = "Disconnect_";
     private final boolean disconnectOrigin;

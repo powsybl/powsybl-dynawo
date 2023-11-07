@@ -10,7 +10,7 @@ package com.powsybl.dynawaltz.models.buses;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractEquipmentBlackBoxModel;
-import com.powsybl.dynawaltz.models.MacroConnectAttribute;
+import com.powsybl.dynawaltz.models.macroconnections.MacroConnectAttribute;
 import com.powsybl.iidm.network.Bus;
 
 import java.util.ArrayList;
@@ -18,9 +18,9 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public abstract class AbstractBus extends AbstractEquipmentBlackBoxModel<Bus> implements BusModel {
+public abstract class AbstractBus extends AbstractEquipmentBlackBoxModel<Bus> implements EquipmentConnectionPoint, ActionConnectionPoint {
 
     protected AbstractBus(String dynamicModelId, Bus bus, String parameterSetId, String lib) {
         super(dynamicModelId, parameterSetId, bus, lib);
@@ -56,11 +56,6 @@ public abstract class AbstractBus extends AbstractEquipmentBlackBoxModel<Bus> im
 
     @Override
     public Optional<String> getSwitchOffSignalVarName() {
-        return Optional.empty();
-    }
-
-    @Override
-    public Optional<String> getNumCCVarName() {
         return Optional.empty();
     }
 

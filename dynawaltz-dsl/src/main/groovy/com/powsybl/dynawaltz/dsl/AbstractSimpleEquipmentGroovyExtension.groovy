@@ -13,7 +13,7 @@ import com.powsybl.iidm.network.Network
 import java.util.function.Consumer
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 abstract class AbstractSimpleEquipmentGroovyExtension<T> {
 
@@ -28,6 +28,10 @@ abstract class AbstractSimpleEquipmentGroovyExtension<T> {
 
     String getName() {
         DynaWaltzProvider.NAME
+    }
+
+    List<String> getModelNames() {
+        List.of(equipmentConfig.lib)
     }
 
     void load(Binding binding, Consumer<T> consumer) {

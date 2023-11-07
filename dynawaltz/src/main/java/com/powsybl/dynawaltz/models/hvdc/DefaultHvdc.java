@@ -11,11 +11,11 @@ import com.powsybl.dynawaltz.models.defaultmodels.AbstractDefaultModel;
 import com.powsybl.dynawaltz.models.Side;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class DefaultHvdcModel extends AbstractDefaultModel implements HvdcModel {
+public class DefaultHvdc extends AbstractDefaultModel implements HvdcModel {
 
-    public DefaultHvdcModel(String staticId) {
+    public DefaultHvdc(String staticId) {
         super(staticId);
     }
 

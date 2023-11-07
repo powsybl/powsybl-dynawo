@@ -16,7 +16,7 @@ import java.util.function.Function
 /**
  * Represents an equipment field identified by a static ID in the groovy script
  * Verifies if the corresponding equipment with the specified type exists, log the error otherwise
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 class DslEquipment<T extends Identifiable> {
 

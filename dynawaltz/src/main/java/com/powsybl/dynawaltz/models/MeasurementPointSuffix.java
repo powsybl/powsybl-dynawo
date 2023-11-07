@@ -7,26 +7,28 @@
  */
 package com.powsybl.dynawaltz.models;
 
+import com.powsybl.dynawaltz.models.macroconnections.MacroConnectionSuffix;
+
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public final class MeasurementPoint implements MacroConnectionSuffix {
+public final class MeasurementPointSuffix implements MacroConnectionSuffix {
 
     private static final String MEASURE_PREFIX = "Measure";
 
     private final String idSuffix;
     private final String connectionSuffix;
 
-    private MeasurementPoint(String idSuffix, String connectionSuffix) {
+    private MeasurementPointSuffix(String idSuffix, String connectionSuffix) {
         this.idSuffix = idSuffix;
         this.connectionSuffix = connectionSuffix;
     }
 
-    public static MeasurementPoint of(int i) {
+    public static MeasurementPointSuffix of(int i) {
         if (i < 1) {
             throw new IllegalArgumentException();
         }
-        return new MeasurementPoint(MEASURE_PREFIX + i, i != 1 ? String.valueOf(i) : "");
+        return new MeasurementPointSuffix(MEASURE_PREFIX + i, i != 1 ? String.valueOf(i) : "");
     }
 
     public String getIdSuffix() {

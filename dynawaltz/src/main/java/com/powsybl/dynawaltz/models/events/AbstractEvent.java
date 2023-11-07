@@ -16,15 +16,15 @@ import com.powsybl.iidm.network.Identifiable;
 import java.util.function.Consumer;
 
 /**
- * @author Florian Dupuy <florian.dupuy at rte-france.com>
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public abstract class AbstractEventModel extends AbstractPureDynamicBlackBoxModel implements EventModel {
+public abstract class AbstractEvent extends AbstractPureDynamicBlackBoxModel implements EventModel {
 
-    private final Identifiable<?> equipment;
+    private final Identifiable<? extends Identifiable<?>> equipment;
     private final double startTime;
 
-    protected AbstractEventModel(Identifiable<?> equipment, double startTime, String eventPrefix) {
+    protected AbstractEvent(Identifiable<?> equipment, double startTime, String eventPrefix) {
         super(generateEventId(equipment.getId(), eventPrefix));
         this.equipment = equipment;
         this.startTime = startTime;
