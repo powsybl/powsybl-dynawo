@@ -193,7 +193,7 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
             if (dumpFileParameters.exportDumpFile()) {
                 Path outputDumpFile = workingDir.resolve(OUTPUTS_FOLDER).resolve(FINAL_STATE_FOLDER).resolve(OUTPUT_DUMP_FILENAME);
                 if (Files.exists(outputDumpFile)) {
-                    Files.copy(outputDumpFile, dumpFileParameters.exportDumpFileFolder().resolve(workingDir.getFileName() + "_" + OUTPUT_DUMP_FILENAME), StandardCopyOption.REPLACE_EXISTING);
+                    Files.copy(outputDumpFile, dumpFileParameters.dumpFileFolder().resolve(workingDir.getFileName() + "_" + OUTPUT_DUMP_FILENAME), StandardCopyOption.REPLACE_EXISTING);
                 } else {
                     LOGGER.warn("Dump file {} not found, export will be skipped", OUTPUT_DUMP_FILENAME);
                 }

@@ -42,7 +42,7 @@
       "dumpFileParameters" : {
         "exportDumpFile" : false,
         "useDumpFile" : false,
-        "exportDumpFileFolder" : null,
+        "dumpFileFolder" : null,
         "dumpFile" : null
       },
       "modelsParameters" : [ {

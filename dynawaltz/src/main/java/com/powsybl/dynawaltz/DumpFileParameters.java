@@ -16,7 +16,7 @@ import java.util.Objects;
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 @JsonIgnoreProperties(value = { "dumpFilePath" })
-public record DumpFileParameters(boolean exportDumpFile, boolean useDumpFile, Path exportDumpFileFolder, String dumpFile) {
+public record DumpFileParameters(boolean exportDumpFile, boolean useDumpFile, Path dumpFileFolder, String dumpFile) {
 
     public static final boolean DEFAULT_EXPORT_DUMP = false;
     public static final boolean DEFAULT_USE_DUMP = false;
@@ -25,10 +25,10 @@ public record DumpFileParameters(boolean exportDumpFile, boolean useDumpFile, Pa
 
     public DumpFileParameters {
         if (useDumpFile) {
-            Objects.requireNonNull(exportDumpFileFolder);
+            Objects.requireNonNull(dumpFileFolder);
             Objects.requireNonNull(dumpFile);
         } else if (exportDumpFile) {
-            Objects.requireNonNull(exportDumpFileFolder);
+            Objects.requireNonNull(dumpFileFolder);
         }
     }
 
@@ -37,8 +37,8 @@ public record DumpFileParameters(boolean exportDumpFile, boolean useDumpFile, Pa
     }
 
     public Path getDumpFilePath() {
-        return exportDumpFileFolder != null ?
-                exportDumpFileFolder.resolve(dumpFile)
+        return dumpFileFolder != null ?
+                dumpFileFolder.resolve(dumpFile)
                 : null;
     }
 }

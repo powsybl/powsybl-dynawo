@@ -108,12 +108,12 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
         Path exportDumpFileFolderPath = exportDumpFileFolder != null ? fileSystem.getPath(exportDumpFileFolder) : null;
         boolean exportFolderNotFound = exportDumpFileFolderPath == null || !Files.exists(exportDumpFileFolderPath);
         if (exportDumpFile && exportFolderNotFound) {
-            throw new PowsyblException("Folder " + exportDumpFileFolder + " set in 'exportDumpFileFolder' property not be found");
+            throw new PowsyblException("Folder " + exportDumpFileFolder + " set in 'dumpFileFolder' property cannot be found");
         }
         boolean useDumpFile = config.flatMap(c -> c.getOptionalBooleanProperty("dump.useAsInput")).orElse(DumpFileParameters.DEFAULT_USE_DUMP);
         String dumpFile = config.flatMap(c -> c.getOptionalStringProperty("dump.fileName")).orElse(DumpFileParameters.DEFAULT_DUMP_NAME);
         if (useDumpFile && (exportFolderNotFound || dumpFile == null || !Files.exists(exportDumpFileFolderPath.resolve(dumpFile)))) {
-            throw new PowsyblException("File " + dumpFile + " set in 'dumpFile' property not be found");
+            throw new PowsyblException("File " + dumpFile + " set in 'dumpFile' property cannot be found");
         }
 
         DumpFileParameters dumpFileParameters = new DumpFileParameters(exportDumpFile, useDumpFile, exportDumpFileFolderPath, dumpFile);

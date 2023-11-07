@@ -99,7 +99,7 @@ class DynaWaltzParametersTest extends AbstractConverterTest {
 
         assertTrue(dumpFileParameters.exportDumpFile());
         assertTrue(dumpFileParameters.useDumpFile());
-        assertEquals(folderProperty, dumpFileParameters.exportDumpFileFolder().toString());
+        assertEquals(folderProperty, dumpFileParameters.dumpFileFolder().toString());
         assertEquals(fileProperty, dumpFileParameters.dumpFile());
     }
 
@@ -192,7 +192,7 @@ class DynaWaltzParametersTest extends AbstractConverterTest {
         DumpFileParameters dumpFileParameters = parameters.getDumpFileParameters();
         assertEquals(DumpFileParameters.DEFAULT_EXPORT_DUMP, dumpFileParameters.exportDumpFile());
         assertEquals(DumpFileParameters.DEFAULT_USE_DUMP, dumpFileParameters.useDumpFile());
-        assertNull(dumpFileParameters.exportDumpFileFolder());
+        assertNull(dumpFileParameters.dumpFileFolder());
         assertEquals(DumpFileParameters.DEFAULT_DUMP_NAME, dumpFileParameters.dumpFile());
     }
 
@@ -218,7 +218,7 @@ class DynaWaltzParametersTest extends AbstractConverterTest {
         String fileProperty = "dumpFile.dmp";
         initDumpFilePlatformConfig(folderProperty, fileProperty);
         PowsyblException e = assertThrows(PowsyblException.class, () -> DynaWaltzParameters.load(platformConfig, fileSystem));
-        assertEquals("Folder /home/user/wrongFolder set in 'exportDumpFileFolder' property not be found", e.getMessage());
+        assertEquals("Folder /home/user/wrongFolder set in 'dumpFileFolder' property cannot be found", e.getMessage());
     }
 
     @Test
@@ -227,7 +227,7 @@ class DynaWaltzParametersTest extends AbstractConverterTest {
         String fileProperty = "wrongFile.dmp";
         initDumpFilePlatformConfig(folderProperty, fileProperty);
         PowsyblException e = assertThrows(PowsyblException.class, () -> DynaWaltzParameters.load(platformConfig, fileSystem));
-        assertEquals("File wrongFile.dmp set in 'dumpFile' property not be found", e.getMessage());
+        assertEquals("File wrongFile.dmp set in 'dumpFile' property cannot be found", e.getMessage());
     }
 
     private static void checkModelParameters(DynaWaltzParameters dynaWaltzParameters) {
