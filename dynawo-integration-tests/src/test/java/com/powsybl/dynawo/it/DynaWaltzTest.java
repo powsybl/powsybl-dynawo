@@ -111,14 +111,13 @@ class DynaWaltzTest extends AbstractDynawoTest {
                 GroovyExtension.find(CurveGroovyExtension.class, DynaWaltzProvider.NAME));
 
         Path dumpDir = Files.createDirectory(localDir.resolve("dumpFiles"));
-        Path dumpFile;
 
         // Export dump
         parameters.setStopTime(30);
         List<ParametersSet> modelsParameters = ParametersXml.load(getResourceAsStream("/ieee14/disconnectline/models.par"));
         ParametersSet networkParameters = ParametersXml.load(getResourceAsStream("/ieee14/disconnectline/network.par"), "8");
         ParametersSet solverParameters = ParametersXml.load(getResourceAsStream("/ieee14/disconnectline/solvers.par"), "2");
-        DumpFileParameters dumpFileParameters = new DumpFileParameters(true, false, dumpDir, null);
+        DumpFileParameters dumpFileParameters = DumpFileParameters.createExportDumpFileParameters(dumpDir);
         dynaWaltzParameters.setModelsParameters(modelsParameters)
                 .setNetworkParameters(networkParameters)
                 .setSolverParameters(solverParameters)
@@ -133,11 +132,12 @@ class DynaWaltzTest extends AbstractDynawoTest {
         //Use exported dump as input
         parameters.setStartTime(30);
         parameters.setStopTime(100);
+
+        String dumpFile;
         try (Stream<Path> stream = Files.list(dumpDir)) {
-            dumpFile = stream.findFirst().orElseThrow();
+            dumpFile = stream.findFirst().map(Path::getFileName).map(Path::toString).orElseThrow();
         }
-        dumpFileParameters = new DumpFileParameters(false, true, dumpDir, dumpFile.getFileName().toString());
-        dynaWaltzParameters.setDumpFileParameters(dumpFileParameters);
+        dynaWaltzParameters.setDumpFileParameters(DumpFileParameters.createImportDumpFileParameters(dumpDir, dumpFile));
 
         result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, curvesSupplier,
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters)

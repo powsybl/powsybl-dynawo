@@ -36,6 +36,18 @@ public record DumpFileParameters(boolean exportDumpFile, boolean useDumpFile, Pa
         return new DumpFileParameters(DEFAULT_EXPORT_DUMP, DEFAULT_USE_DUMP, null, DEFAULT_DUMP_NAME);
     }
 
+    public static DumpFileParameters createExportDumpFileParameters(Path dumpFileFolder) {
+        return new DumpFileParameters(true, false, dumpFileFolder, null);
+    }
+
+    public static DumpFileParameters createImportDumpFileParameters(Path dumpFileFolder, String dumpFile) {
+        return new DumpFileParameters(false, true, dumpFileFolder, dumpFile);
+    }
+
+    public static DumpFileParameters createImportExportDumpFileParameters(Path dumpFileFolder, String dumpFile) {
+        return new DumpFileParameters(true, true, dumpFileFolder, dumpFile);
+    }
+
     public Path getDumpFilePath() {
         return dumpFileFolder != null ?
                 dumpFileFolder.resolve(dumpFile)

@@ -36,7 +36,7 @@ class JobsXmlTest extends DynaWaltzTestUtil {
     void writeJobWithDumpFile() throws SAXException, IOException, XMLStreamException {
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynaWaltzParameters dynawoParameters = DynaWaltzParameters.load()
-                .setDumpFileParameters(new DumpFileParameters(true, true, Path.of("/dumpFiles"), "dump.dmp"));
+                .setDumpFileParameters(DumpFileParameters.createImportExportDumpFileParameters(Path.of("/dumpFiles"), "dump.dmp"));
         DynaWaltzContext context = new DynaWaltzContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, eventModels, curves, parameters, dynawoParameters);
 
         JobsXml.write(tmpDir, context);

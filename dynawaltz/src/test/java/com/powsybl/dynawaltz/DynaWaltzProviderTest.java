@@ -124,7 +124,7 @@ class DynaWaltzProviderTest extends AbstractConverterTest {
         DynamicSimulationParameters dynamicSimulationParameters = DynamicSimulationParameters.load();
         DynaWaltzParameters dynaWaltzParameters = DynaWaltzParameters.load()
                 .setMergeLoads(false)
-                .setDumpFileParameters(new DumpFileParameters(true, true, folderPath, fileProperty));
+                .setDumpFileParameters(DumpFileParameters.createImportExportDumpFileParameters(folderPath, fileProperty));
         dynamicSimulationParameters.addExtension(DynaWaltzParameters.class, dynaWaltzParameters);
 
         assertEquals(DynaWaltzProvider.NAME, dynawoSimulation.getName());
