@@ -133,7 +133,7 @@ class DynaWaltzTest extends AbstractDynawoTest {
         //Use exported dump as input
         parameters.setStartTime(30);
         parameters.setStopTime(100);
-        try(Stream<Path> stream = Files.list(dumpDir)) {
+        try (Stream<Path> stream = Files.list(dumpDir)) {
             dumpFile = stream.findFirst().orElseThrow();
         }
         dumpFileParameters = new DumpFileParameters(false, true, dumpDir, dumpFile.getFileName().toString());
