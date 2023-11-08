@@ -10,6 +10,7 @@ import com.powsybl.commons.datasource.ResourceDataSource;
 import com.powsybl.commons.datasource.ResourceSet;
 import com.powsybl.dynamicsimulation.*;
 import com.powsybl.dynamicsimulation.groovy.*;
+import com.powsybl.dynawaltz.DumpFileParameters;
 import com.powsybl.dynawaltz.DynaWaltzConfig;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
 import com.powsybl.dynawaltz.DynaWaltzProvider;
@@ -23,8 +24,11 @@ import com.powsybl.timeseries.StringTimeSeries;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -88,6 +92,59 @@ class DynaWaltzTest extends AbstractDynawoTest {
         StringTimeSeries timeLine = result.getTimeLine();
         assertEquals(1, timeLine.toArray().length);
         assertNull(timeLine.toArray()[0]); // FIXME
+    }
+
+    @Test
+    void testIeee14WithDump() throws IOException {
+        Network network = Network.read(new ResourceDataSource("IEEE14", new ResourceSet("/ieee14", "IEEE14.iidm")));
+
+        GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
+                getResourceAsStream("/ieee14/disconnectline/dynamicModels.groovy"),
+                GroovyExtension.find(DynamicModelGroovyExtension.class, DynaWaltzProvider.NAME));
+
+        GroovyEventModelsSupplier eventModelsSupplier = new GroovyEventModelsSupplier(
+                getResourceAsStream("/ieee14/disconnectline/eventModels.groovy"),
+                GroovyExtension.find(EventModelGroovyExtension.class, DynaWaltzProvider.NAME));
+
+        GroovyCurvesSupplier curvesSupplier = new GroovyCurvesSupplier(
+                getResourceAsStream("/ieee14/disconnectline/curves.groovy"),
+                GroovyExtension.find(CurveGroovyExtension.class, DynaWaltzProvider.NAME));
+
+        Path dumpDir = Files.createDirectory(localDir.resolve("dumpFiles"));
+        Path dumpFile;
+
+        // Export dump
+        parameters.setStopTime(30);
+        List<ParametersSet> modelsParameters = ParametersXml.load(getResourceAsStream("/ieee14/disconnectline/models.par"));
+        ParametersSet networkParameters = ParametersXml.load(getResourceAsStream("/ieee14/disconnectline/network.par"), "8");
+        ParametersSet solverParameters = ParametersXml.load(getResourceAsStream("/ieee14/disconnectline/solvers.par"), "2");
+        DumpFileParameters dumpFileParameters = new DumpFileParameters(true, false, dumpDir, null);
+        dynaWaltzParameters.setModelsParameters(modelsParameters)
+                .setNetworkParameters(networkParameters)
+                .setSolverParameters(solverParameters)
+                .setSolverType(DynaWaltzParameters.SolverType.IDA)
+                .setDumpFileParameters(dumpFileParameters);
+
+        DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, curvesSupplier,
+                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters)
+                .join();
+        assertTrue(result.isOk());
+
+        //Use exported dump as input
+        parameters.setStartTime(30);
+        parameters.setStopTime(100);
+        try(Stream<Path> stream = Files.list(dumpDir)) {
+            dumpFile = stream.findFirst().orElseThrow();
+        }
+        dumpFileParameters = new DumpFileParameters(false, true, dumpDir, dumpFile.getFileName().toString());
+        dynaWaltzParameters.setDumpFileParameters(dumpFileParameters);
+
+        result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, curvesSupplier,
+                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters)
+                .join();
+
+        assertTrue(result.isOk());
+
     }
 
     @Test
