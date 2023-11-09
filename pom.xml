@@ -69,6 +69,9 @@
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
+            <modules>
+                <module>dynawo-integration-tests</module>
+            </modules>
             <build>
                 <plugins>
                     <plugin>
