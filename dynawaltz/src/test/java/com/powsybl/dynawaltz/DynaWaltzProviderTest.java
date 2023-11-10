@@ -130,9 +130,9 @@ class DynaWaltzProviderTest extends AbstractConverterTest {
         dynamicSimulationParameters.addExtension(DynaWaltzParameters.class, dynaWaltzParameters);
 
         assertEquals(DynaWaltzProvider.NAME, dynawoSimulation.getName());
-        DynamicSimulationResult result = dynawoSimulation.run(network, n -> Collections.emptyList(), EventModelsSupplier.empty(),
+        DynamicSimulationResult result = dynawoSimulation.run(network, (n, r) -> Collections.emptyList(), EventModelsSupplier.empty(),
                 CurvesSupplier.empty(), network.getVariantManager().getWorkingVariantId(),
-                computationManager, dynamicSimulationParameters);
+                computationManager, dynamicSimulationParameters, NO_OP);
         assertNotNull(result);
     }
 
@@ -196,7 +196,7 @@ class DynaWaltzProviderTest extends AbstractConverterTest {
         CurvesSupplier cs = CurvesSupplier.empty();
         String wvId = network.getVariantManager().getWorkingVariantId();
         DynamicSimulationParameters dsp = DynamicSimulationParameters.load();
-        PowsyblException e = assertThrows(PowsyblException.class, () -> dynawoSimulation.run(network, dms, ems, cs, wvId, computationManager, dsp));
+        PowsyblException e = assertThrows(PowsyblException.class, () -> dynawoSimulation.run(network, dms, ems, cs, wvId, computationManager, dsp, NO_OP));
         assertEquals("dynawo version not supported. Must be >= " + DynawoConstants.VERSION_MIN, e.getMessage());
     }
 

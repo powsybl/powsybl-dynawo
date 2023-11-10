@@ -126,7 +126,7 @@ class DynaWaltzTest extends AbstractDynawoTest {
                 .setDumpFileParameters(dumpFileParameters);
 
         DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, curvesSupplier,
-                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters)
+                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, NO_OP)
                 .join();
         assertTrue(result.isOk());
 
@@ -141,7 +141,7 @@ class DynaWaltzTest extends AbstractDynawoTest {
         dynaWaltzParameters.setDumpFileParameters(DumpFileParameters.createImportDumpFileParameters(dumpDir, dumpFile));
 
         result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, curvesSupplier,
-                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters)
+                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, NO_OP)
                 .join();
 
         assertTrue(result.isOk());
