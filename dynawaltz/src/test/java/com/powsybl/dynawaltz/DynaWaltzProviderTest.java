@@ -195,7 +195,7 @@ class DynaWaltzProviderTest extends AbstractSerDeTest {
         CurvesSupplier cs = CurvesSupplier.empty();
         String wvId = network.getVariantManager().getWorkingVariantId();
         DynamicSimulationParameters dsp = DynamicSimulationParameters.load();
-        PowsyblException e = assertThrows(PowsyblException.class, () -> dynawoSimulation.run(network, dms, ems, cs, wvId, computationManager, dsp));
+        PowsyblException e = assertThrows(PowsyblException.class, () -> dynawoSimulation.run(network, dms, ems, cs, wvId, computationManager, dsp, NO_OP));
         assertEquals("dynawo version not supported. Must be >= " + DynawoConstants.VERSION_MIN, e.getMessage());
     }
 
