@@ -12,8 +12,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Objects;
 
 /**
- * @author Florian Dupuy <florian.dupuy at rte-france.com>
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public record Reference(String name, ParameterType type, String origData, String origName, String componentId) {
 

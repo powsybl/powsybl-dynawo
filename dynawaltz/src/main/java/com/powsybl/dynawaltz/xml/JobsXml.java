@@ -6,6 +6,7 @@
  */
 package com.powsybl.dynawaltz.xml;
 
+import com.powsybl.dynawaltz.DumpFileParameters;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
 import com.powsybl.dynawaltz.DynaWaltzParameters.SolverType;
@@ -20,7 +21,7 @@ import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.*;
 import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 
 /**
- * @author Marcos de Miguel <demiguelm at aia.es>
+ * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  */
 public final class JobsXml {
 
@@ -65,11 +66,17 @@ public final class JobsXml {
         writer.writeEmptyElement(DYN_URI, "dynModels");
         writer.writeAttribute("dydFile", DYD_FILENAME);
 
+        DumpFileParameters dumpFileParameters = parameters.getDumpFileParameters();
+        if (dumpFileParameters.useDumpFile()) {
+            writer.writeEmptyElement(DYN_URI, "initialState");
+            writer.writeAttribute("file", dumpFileParameters.dumpFile());
+        }
+
         writer.writeEmptyElement(DYN_URI, "precompiledModels");
-        writer.writeAttribute("useStandardModels", "true");
+        writer.writeAttribute("useStandardModels", Boolean.toString(true));
 
         writer.writeEmptyElement(DYN_URI, "modelicaModels");
-        writer.writeAttribute("useStandardModels", "false");
+        writer.writeAttribute("useStandardModels", Boolean.toString(false));
 
         writer.writeEndElement();
     }
@@ -85,15 +92,15 @@ public final class JobsXml {
         writer.writeAttribute("directory", "outputs");
 
         writer.writeEmptyElement(DYN_URI, "dumpInitValues");
-        writer.writeAttribute("local", "false");
-        writer.writeAttribute("global", "false");
+        writer.writeAttribute("local", Boolean.toString(false));
+        writer.writeAttribute("global", Boolean.toString(false));
 
         writer.writeEmptyElement(DYN_URI, "timeline");
         writer.writeAttribute("exportMode", "TXT");
 
         writer.writeEmptyElement(DYN_URI, "finalState");
         writer.writeAttribute("exportIIDMFile", Boolean.toString(context.getDynaWaltzParameters().isWriteFinalState()));
-        writer.writeAttribute("exportDumpFile", "false");
+        writer.writeAttribute("exportDumpFile", Boolean.toString(context.getDynaWaltzParameters().getDumpFileParameters().exportDumpFile()));
 
         if (context.withCurves()) {
             writer.writeEmptyElement(DYN_URI, "curves");

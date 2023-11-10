@@ -13,7 +13,7 @@ import com.powsybl.commons.reporter.TypedValue;
 import com.powsybl.dynawo.commons.timeline.TimelineEntry;
 
 /**
- * @author Florian Dupuy <florian.dupuy at rte-france.com>
+ * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
  */
 public final class Reports {
     private static final String TIME_MS = "timeMsTypedValue";

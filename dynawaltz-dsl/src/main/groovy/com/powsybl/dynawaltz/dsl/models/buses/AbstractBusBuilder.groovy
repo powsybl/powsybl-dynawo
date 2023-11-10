@@ -15,7 +15,7 @@ import com.powsybl.iidm.network.IdentifiableType
 import com.powsybl.iidm.network.Network
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 abstract class AbstractBusBuilder extends AbstractEquipmentModelBuilder<Bus> {
 

@@ -9,7 +9,7 @@ package com.powsybl.dynawaltz.models.generators;
 import com.powsybl.dynawaltz.models.InjectionModel;
 
 /**
- * @author Florian Dupuy <florian.dupuy at rte-france.com>
+ * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
  */
 public interface GeneratorModel extends InjectionModel {
     String getTerminalVarName();

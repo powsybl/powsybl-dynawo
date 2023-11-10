@@ -20,7 +20,7 @@ import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 
 /**
- * @author Marcos de Miguel <demiguelm at aia.es>
+ * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  */
 class EventXmlTest extends DynaWaltzTestUtil {
 

@@ -18,7 +18,7 @@ import com.powsybl.iidm.network.Identifiable
 import com.powsybl.iidm.network.Network
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 abstract class AbstractEventModelBuilder<T extends Identifiable> extends AbstractDynamicModelBuilder implements ModelBuilder<EventModel> {
 

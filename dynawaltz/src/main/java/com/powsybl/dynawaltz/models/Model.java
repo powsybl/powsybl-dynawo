@@ -12,7 +12,7 @@ import com.powsybl.dynawaltz.models.macroconnections.MacroConnectAttribute;
 import java.util.List;
 
 /**
- * @author Florian Dupuy <florian.dupuy at rte-france.com>
+ * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
  */
 public interface Model extends DynamicModel {
 

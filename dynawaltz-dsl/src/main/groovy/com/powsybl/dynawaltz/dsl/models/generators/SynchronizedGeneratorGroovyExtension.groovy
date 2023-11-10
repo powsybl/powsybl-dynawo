@@ -17,8 +17,8 @@ import com.powsybl.dynawaltz.models.generators.SynchronizedGeneratorControllable
 import com.powsybl.iidm.network.Network
 
 /**
- * @author Florian Dupuy <florian.dupuy at rte-france.com>
- * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
+ * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
+ * @author Dimitri Baudrier {@literal <dimitri.baudrier at rte-france.com>}
  */
 @AutoService(DynamicModelGroovyExtension.class)
 class SynchronizedGeneratorGroovyExtension extends AbstractEquipmentGroovyExtension {

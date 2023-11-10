@@ -22,7 +22,7 @@ import com.powsybl.dynamicsimulation.json.JsonDynamicSimulationParameters.Extens
 import com.powsybl.dynawaltz.DynaWaltzParameters;
 
 /**
- * @author Marcos de Miguel <demiguelm at aia.es>
+ * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  */
 @AutoService(ExtensionSerializer.class)
 public class DynaWaltzSimulationParametersSerializer implements JsonDynamicSimulationParameters.ExtensionSerializer<DynaWaltzParameters> {

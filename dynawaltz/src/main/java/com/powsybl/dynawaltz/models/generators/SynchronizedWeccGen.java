@@ -11,7 +11,7 @@ import com.powsybl.dynawaltz.models.frequencysynchronizers.FrequencySynchronized
 import com.powsybl.iidm.network.Generator;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class SynchronizedWeccGen extends WeccGen implements FrequencySynchronizedModel {
 

@@ -42,12 +42,11 @@ import static com.powsybl.dynaflow.DynaFlowConstants.CONFIG_FILENAME;
 import static com.powsybl.dynaflow.DynaFlowConstants.IIDM_FILENAME;
 
 /**
- * @author Luma Zamarreno <zamarrenolm at aia.es>
+ * @author Luma Zamarreno {@literal <zamarrenolm at aia.es>}
  */
 public class DynaFlowSecurityAnalysis {
 
     private static final String WORKING_DIR_PREFIX = "dynaflow_sa_";
-    private static final String DYNAFLOW_LAUNCHER_PROGRAM_NAME = "dynaflow-launcher.sh";
     private static final String CONTINGENCIES_FILENAME = "contingencies.json";
     private static final String DYNAWO_CONSTRAINTS_FOLDER = "constraints";
 
@@ -78,7 +77,7 @@ public class DynaFlowSecurityAnalysis {
     }
 
     private static String getProgram(DynaFlowConfig config) {
-        return config.getHomeDir().resolve(DYNAFLOW_LAUNCHER_PROGRAM_NAME).toString();
+        return config.getProgram(DynaFlowConstants.DYNAFLOW_LAUNCHER_PROGRAM_NAME);
     }
 
     public static Command getCommand(DynaFlowConfig config) {
@@ -143,7 +142,7 @@ public class DynaFlowSecurityAnalysis {
         DynaFlowConfig config = Objects.requireNonNull(configSupplier.get());
         ExecutionEnvironment env = new ExecutionEnvironment(config.createEnv(), WORKING_DIR_PREFIX, config.isDebug());
         Command versionCmd = getVersionCommand(config);
-        DynawoUtil.requireDynawoMinVersion(env, computationManager, versionCmd, true);
+        DynawoUtil.requireDynaMinVersion(env, computationManager, versionCmd, DynaFlowConstants.DYNAFLOW_LAUNCHER_PROGRAM_NAME, true);
         List<Contingency> contingencies = contingenciesProvider.getContingencies(network);
         return computationManager.execute(env, new AbstractExecutionHandler<>() {
             @Override

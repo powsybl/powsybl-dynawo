@@ -25,7 +25,7 @@ import javax.xml.stream.XMLStreamWriter;
 import java.util.*;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class TapChangerBlockingAutomaton extends AbstractPureDynamicBlackBoxModel {
 

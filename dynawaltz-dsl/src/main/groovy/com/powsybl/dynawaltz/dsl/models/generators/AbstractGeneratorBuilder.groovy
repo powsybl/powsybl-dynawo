@@ -15,7 +15,7 @@ import com.powsybl.iidm.network.IdentifiableType
 import com.powsybl.iidm.network.Network
 
 /**
- * @author Florian Dupuy <florian.dupuy at rte-france.com>
+ * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
  */
 abstract class AbstractGeneratorBuilder extends AbstractEquipmentModelBuilder<Generator> {
 

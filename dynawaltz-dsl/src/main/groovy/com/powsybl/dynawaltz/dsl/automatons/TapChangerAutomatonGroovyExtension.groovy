@@ -19,7 +19,7 @@ import com.powsybl.dynawaltz.models.automatons.TapChangerAutomaton
 import com.powsybl.iidm.network.*
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 @AutoService(DynamicModelGroovyExtension.class)
 class TapChangerAutomatonGroovyExtension extends AbstractPureDynamicGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {

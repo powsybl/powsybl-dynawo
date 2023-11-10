@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class TapChangerAutomaton extends AbstractPureDynamicBlackBoxModel implements TapChangerModel {
 

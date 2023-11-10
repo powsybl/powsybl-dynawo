@@ -21,7 +21,7 @@ import java.nio.file.Path;
 
 /**
  *
- * @author Guillaume Pernin <guillaume.pernin at rte-france.com>
+ * @author Guillaume Pernin {@literal <guillaume.pernin at rte-france.com>}
  */
 public final class DynaFlowConfigSerializer {
 
@@ -42,34 +42,20 @@ public final class DynaFlowConfigSerializer {
         try {
             jsonGenerator.writeStartObject();
             jsonGenerator.writeObjectFieldStart("dfl-config");
-            if (dynaFlowParameters.getSvcRegulationOn() != null) {
-                jsonGenerator.writeBooleanField("SVCRegulationOn", dynaFlowParameters.getSvcRegulationOn());
-            }
-            if (dynaFlowParameters.getShuntRegulationOn() != null) {
-                jsonGenerator.writeBooleanField("ShuntRegulationOn", dynaFlowParameters.getShuntRegulationOn());
-            }
-            if (dynaFlowParameters.getAutomaticSlackBusOn() != null) {
-                jsonGenerator.writeBooleanField("AutomaticSlackBusOn", dynaFlowParameters.getAutomaticSlackBusOn());
-            }
-            if (dynaFlowParameters.getDsoVoltageLevel() != null) {
-                jsonGenerator.writeNumberField("DsoVoltageLevel", dynaFlowParameters.getDsoVoltageLevel());
-            }
-            jsonGenerator.writeBooleanField("InfiniteReactiveLimits", lfParameters.isNoGeneratorReactiveLimits());
+            writeNonNullField(jsonGenerator, "SVCRegulationOn", dynaFlowParameters.getSvcRegulationOn());
+            writeNonNullField(jsonGenerator, "ShuntRegulationOn", dynaFlowParameters.getShuntRegulationOn());
+            writeNonNullField(jsonGenerator, "AutomaticSlackBusOn", dynaFlowParameters.getAutomaticSlackBusOn());
+            writeNonNullField(jsonGenerator, "DsoVoltageLevel", dynaFlowParameters.getDsoVoltageLevel());
+            jsonGenerator.writeBooleanField("InfiniteReactiveLimits", !lfParameters.isUseReactiveLimits());
+
             if (dynaFlowParameters.getActivePowerCompensation() != null) {
                 jsonGenerator.writeStringField("ActivePowerCompensation", dynaFlowParameters.getActivePowerCompensation().name());
             }
-            if (dynaFlowParameters.getSettingPath() != null) {
-                jsonGenerator.writeStringField("SettingPath", dynaFlowParameters.getSettingPath());
-            }
-            if (dynaFlowParameters.getAssemblingPath() != null) {
-                jsonGenerator.writeStringField("AssemblingPath", dynaFlowParameters.getAssemblingPath());
-            }
-            if (dynaFlowParameters.getStartTime() != null) {
-                jsonGenerator.writeNumberField("StartTime", dynaFlowParameters.getStartTime());
-            }
-            if (dynaFlowParameters.getStopTime() != null) {
-                jsonGenerator.writeNumberField("StopTime", dynaFlowParameters.getStopTime());
-            }
+            writeNonNullField(jsonGenerator, "SettingPath", dynaFlowParameters.getSettingPath());
+            writeNonNullField(jsonGenerator, "AssemblingPath", dynaFlowParameters.getAssemblingPath());
+            writeNonNullField(jsonGenerator, "StartTime", dynaFlowParameters.getStartTime());
+            writeNonNullField(jsonGenerator, "StopTime", dynaFlowParameters.getStopTime());
+
             if (dynaFlowParameters.getPrecision() != null && !Double.isNaN(dynaFlowParameters.getPrecision())) {
                 jsonGenerator.writeNumberField("Precision", dynaFlowParameters.getPrecision());
             }
@@ -84,9 +70,8 @@ public final class DynaFlowConfigSerializer {
                 }
                 jsonGenerator.writeEndArray();
             }
-            if (dynaFlowParameters.getTimeStep() != null) {
-                jsonGenerator.writeNumberField("TimeStep", dynaFlowParameters.getTimeStep());
-            }
+
+            writeNonNullField(jsonGenerator, "TimeStep", dynaFlowParameters.getTimeStep());
             if (dynaFlowParameters.getStartingPointMode() != null) {
                 jsonGenerator.writeStringField("StartingPointMode", dynaFlowParameters.getStartingPointMode().getName());
             }
@@ -95,6 +80,24 @@ public final class DynaFlowConfigSerializer {
             jsonGenerator.writeEndObject();
         } catch (IOException e) {
             throw new UncheckedIOException(e);
+        }
+    }
+
+    private static void writeNonNullField(JsonGenerator jsonGenerator, String fieldName, Boolean value) throws IOException {
+        if (value != null) {
+            jsonGenerator.writeBooleanField(fieldName, value);
+        }
+    }
+
+    private static void writeNonNullField(JsonGenerator jsonGenerator, String fieldName, Double value) throws IOException {
+        if (value != null) {
+            jsonGenerator.writeNumberField(fieldName, value);
+        }
+    }
+
+    private static void writeNonNullField(JsonGenerator jsonGenerator, String fieldName, String value) throws IOException {
+        if (value != null) {
+            jsonGenerator.writeStringField(fieldName, value);
         }
     }
 }

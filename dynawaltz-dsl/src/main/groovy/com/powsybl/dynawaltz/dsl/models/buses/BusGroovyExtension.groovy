@@ -18,7 +18,7 @@ import com.powsybl.iidm.network.Network
 /**
  * An implementation of {@link DynamicModelGroovyExtension} that adds the <pre>Bus</pre> keyword to the DSL
  *
- * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
+ * @author Dimitri Baudrier {@literal <dimitri.baudrier at rte-france.com>}
  */
 @AutoService(DynamicModelGroovyExtension.class)
 class BusGroovyExtension extends AbstractSimpleEquipmentGroovyExtension {

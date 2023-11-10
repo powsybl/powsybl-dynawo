@@ -18,7 +18,7 @@ import com.powsybl.iidm.network.Line;
 import java.util.List;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class StandardLine extends AbstractEquipmentBlackBoxModel<Line> implements LineModel {
 

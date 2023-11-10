@@ -14,7 +14,8 @@ import com.powsybl.dynawaltz.dsl.Reporters
 import com.powsybl.iidm.network.Network
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * Superclass for automaton & event model builders
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 abstract class AbstractPureDynamicModelBuilder extends AbstractDynamicModelBuilder implements ModelBuilder<DynamicModel> {
 

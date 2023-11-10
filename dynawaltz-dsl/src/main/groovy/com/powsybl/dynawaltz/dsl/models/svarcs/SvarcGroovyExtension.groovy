@@ -19,7 +19,7 @@ import com.powsybl.iidm.network.Network
 import com.powsybl.iidm.network.StaticVarCompensator as StaticSvarc
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 @AutoService(DynamicModelGroovyExtension.class)
 class SvarcGroovyExtension extends AbstractEquipmentGroovyExtension {

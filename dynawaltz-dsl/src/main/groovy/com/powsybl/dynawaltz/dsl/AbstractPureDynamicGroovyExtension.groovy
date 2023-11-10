@@ -15,7 +15,8 @@ import com.powsybl.iidm.network.Network
 import java.util.function.Consumer
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * Superclass for automaton & event groovy extensions
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 abstract class AbstractPureDynamicGroovyExtension<T> implements GroovyExtension<T> {
 
