@@ -240,4 +240,28 @@ class DynaWaltzTest extends AbstractDynawoTest {
         assertEquals(1, timeLine.toArray().length);
         assertNull(timeLine.toArray()[0]); // FIXME
     }
+
+    @Test
+    void testSimulationError() {
+        Network network = Network.read(new ResourceDataSource("powsybl_dynawaltz", new ResourceSet("/error", "powsybl_dynawaltz.xiidm")));
+
+        GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
+                getResourceAsStream("/error/models.groovy"),
+                GroovyExtension.find(DynamicModelGroovyExtension.class, DynaWaltzProvider.NAME));
+
+        dynaWaltzParameters.setModelsParameters(ParametersXml.load(getResourceAsStream("/error/models.par")))
+                .setNetworkParameters(ParametersXml.load(getResourceAsStream("/error/network.par"), "NETWORK"))
+                .setSolverParameters(ParametersXml.load(getResourceAsStream("/error/solvers.par"), "3"))
+                .setSolverType(DynaWaltzParameters.SolverType.IDA)
+                .setDefaultDumpFileParameters();
+
+        DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, EventModelsSupplier.empty(), CurvesSupplier.empty(),
+                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, NO_OP)
+                .join();
+
+        assertFalse(result.isOk());
+        assertNotNull(result.getLogs());
+        assertEquals(1, result.getTimeLine().toArray().length);
+        assertTrue(result.getCurves().isEmpty());
+    }
 }

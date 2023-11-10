@@ -30,6 +30,11 @@ public final class DynawaltzReports {
                 "Dynawaltz models processing");
     }
 
+    public static Reporter createDynaWaltzTimelineReporter(Reporter reporter) {
+        return reporter.createSubReporter("dynawaltzTimeline",
+                "Dynawaltz Timeline");
+    }
+
     public static void reportDuplicateStaticId(Reporter reporter, String duplicateId, String modelName, String dynamicId) {
         reporter.report(Report.builder()
                 .withKey("duplicateId")

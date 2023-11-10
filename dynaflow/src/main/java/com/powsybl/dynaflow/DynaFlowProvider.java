@@ -17,6 +17,7 @@ import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.computation.*;
 import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
 import com.powsybl.dynaflow.json.JsonDynaFlowParametersSerializer;
+import com.powsybl.dynawo.commons.CommonReports;
 import com.powsybl.dynawo.commons.DynawoUtil;
 import com.powsybl.dynawo.commons.NetworkResultsUpdater;
 import com.powsybl.dynawo.commons.PowsyblDynawoVersion;
@@ -38,6 +39,7 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 import static com.powsybl.dynaflow.DynaFlowConstants.*;
+import static com.powsybl.dynawo.commons.DynawoConstants.DYNAWO_TIMELINE_FOLDER;
 
 /**
  *
@@ -213,7 +215,7 @@ public class DynaFlowProvider implements LoadFlowProvider {
                     .resolve(DYNAWO_TIMELINE_FOLDER)
                     .resolve(DYNAFLOW_TIMELINE_FILE);
             List<TimelineEntry> tl = new XmlTimeLineParser().parse(timelineFile);
-            tl.forEach(e -> Reports.reportTimelineEvent(dfReporter, e));
+            tl.forEach(e -> CommonReports.reportTimelineEvent(dfReporter, e));
         }
     }
 }

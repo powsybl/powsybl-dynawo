@@ -17,11 +17,9 @@ import com.powsybl.dynawaltz.xml.CurvesXml;
 import com.powsybl.dynawaltz.xml.DydXml;
 import com.powsybl.dynawaltz.xml.JobsXml;
 import com.powsybl.dynawaltz.xml.ParametersXml;
-import com.powsybl.dynawo.commons.DynawoConstants;
-import com.powsybl.dynawo.commons.DynawoUtil;
-import com.powsybl.dynawo.commons.NetworkResultsUpdater;
-import com.powsybl.dynawo.commons.PowsyblDynawoVersion;
+import com.powsybl.dynawo.commons.*;
 import com.powsybl.dynawo.commons.loadmerge.LoadsMerger;
+import com.powsybl.dynawo.commons.timeline.CsvTimeLineParser;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.xml.NetworkXml;
 import com.powsybl.timeseries.TimeSeries;
@@ -42,6 +40,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.*;
+import static com.powsybl.dynawo.commons.DynawoConstants.DYNAWO_TIMELINE_FOLDER;
 
 /**
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
@@ -54,8 +53,11 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
 
     private static final String OUTPUTS_FOLDER = "outputs";
     private static final String FINAL_STATE_FOLDER = "finalState";
+    private static final String LOGS_FOLDER = "logs";
     private static final String OUTPUT_IIDM_FILENAME = "outputIIDM.xml";
     private static final String OUTPUT_DUMP_FILENAME = "outputState.dmp";
+    private static final String TIMELINE_FILENAME = "timeline.log";
+    private static final String LOGS_FILENAME = "dynawaltz.log";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DynaWaltzProvider.class);
 
@@ -141,19 +143,21 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
                 .map(BlackBoxModel.class::cast)
                 .collect(Collectors.toList());
         DynaWaltzContext context = new DynaWaltzContext(network, workingVariantId, blackBoxModels, blackBoxEventModels, curvesSupplier.get(network, dsReporter), parameters, dynaWaltzParameters, reporter);
-        return computationManager.execute(execEnv, new DynaWaltzHandler(context));
+        return computationManager.execute(execEnv, new DynaWaltzHandler(context, reporter));
     }
 
     private final class DynaWaltzHandler extends AbstractExecutionHandler<DynamicSimulationResult> {
 
         private final DynaWaltzContext context;
         private final Network dynawoInput;
+        private final Reporter reporter;
 
-        public DynaWaltzHandler(DynaWaltzContext context) {
+        public DynaWaltzHandler(DynaWaltzContext context, Reporter reporter) {
             this.context = context;
             this.dynawoInput = context.getDynaWaltzParameters().isMergeLoads()
                     ? LoadsMerger.mergeLoads(context.getNetwork())
                     : context.getNetwork();
+            this.reporter = reporter;
         }
 
         @Override
@@ -173,13 +177,13 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
 
         @Override
         public DynamicSimulationResult after(Path workingDir, ExecutionReport report) throws IOException {
-            super.after(workingDir, report);
+            Path outputsFolder = workingDir.resolve(OUTPUTS_FOLDER);
             context.getNetwork().getVariantManager().setWorkingVariant(context.getWorkingVariantId());
             DynaWaltzParameters parameters = context.getDynaWaltzParameters();
             DumpFileParameters dumpFileParameters = parameters.getDumpFileParameters();
             boolean status = true;
             if (parameters.isWriteFinalState()) {
-                Path outputNetworkFile = workingDir.resolve(OUTPUTS_FOLDER).resolve(FINAL_STATE_FOLDER).resolve(OUTPUT_IIDM_FILENAME);
+                Path outputNetworkFile = outputsFolder.resolve(FINAL_STATE_FOLDER).resolve(OUTPUT_IIDM_FILENAME);
                 if (Files.exists(outputNetworkFile)) {
                     NetworkResultsUpdater.update(context.getNetwork(), NetworkXml.read(outputNetworkFile), context.getDynaWaltzParameters().isMergeLoads());
                 } else {
@@ -187,24 +191,46 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
                 }
             }
             if (dumpFileParameters.exportDumpFile()) {
-                Path outputDumpFile = workingDir.resolve(OUTPUTS_FOLDER).resolve(FINAL_STATE_FOLDER).resolve(OUTPUT_DUMP_FILENAME);
+                Path outputDumpFile = outputsFolder.resolve(FINAL_STATE_FOLDER).resolve(OUTPUT_DUMP_FILENAME);
                 if (Files.exists(outputDumpFile)) {
                     Files.copy(outputDumpFile, dumpFileParameters.dumpFileFolder().resolve(workingDir.getFileName() + "_" + OUTPUT_DUMP_FILENAME), StandardCopyOption.REPLACE_EXISTING);
                 } else {
                     LOGGER.warn("Dump file {} not found, export will be skipped", OUTPUT_DUMP_FILENAME);
                 }
             }
-            Path curvesPath = workingDir.resolve(CURVES_OUTPUT_PATH).toAbsolutePath().resolve(CURVES_FILENAME);
-            Map<String, TimeSeries> curves = new HashMap<>();
-            if (Files.exists(curvesPath)) {
-                Map<Integer, List<TimeSeries>> curvesPerVersion = TimeSeries.parseCsv(curvesPath, new TimeSeriesCsvConfig(TimeSeriesConstants.DEFAULT_SEPARATOR, false, TimeFormat.FRACTIONS_OF_SECOND));
-                curvesPerVersion.values().forEach(l -> l.forEach(curve -> curves.put(curve.getMetadata().getName(), curve)));
+
+            //Timeline
+            Path timelineFile = outputsFolder.resolve(DYNAWO_TIMELINE_FOLDER).resolve(TIMELINE_FILENAME);
+            if (Files.exists(timelineFile)) {
+                Reporter timelineReporter = DynawaltzReports.createDynaWaltzTimelineReporter(reporter);
+                new CsvTimeLineParser().parse(timelineFile).forEach(e -> CommonReports.reportTimelineEvent(timelineReporter, e));
             } else {
-                if (context.withCurves()) {
+                LOGGER.warn("Timeline file not found");
+            }
+
+            //Dynawo log
+            String logs = null;
+            Path logFile = outputsFolder.resolve(LOGS_FOLDER).resolve(LOGS_FILENAME);
+            if (Files.exists(logFile)) {
+                logs = Files.readString(logFile);
+            } else {
+                LOGGER.warn("Dynawo logs file not found");
+            }
+
+            //Curves
+            Map<String, TimeSeries> curves = new HashMap<>();
+            if (context.withCurves()) {
+                Path curvesPath = workingDir.resolve(CURVES_OUTPUT_PATH).toAbsolutePath().resolve(CURVES_FILENAME);
+                if (Files.exists(curvesPath)) {
+                    Map<Integer, List<TimeSeries>> curvesPerVersion = TimeSeries.parseCsv(curvesPath, new TimeSeriesCsvConfig(TimeSeriesConstants.DEFAULT_SEPARATOR, false, TimeFormat.FRACTIONS_OF_SECOND));
+                    curvesPerVersion.values().forEach(l -> l.forEach(curve -> curves.put(curve.getMetadata().getName(), curve)));
+                } else {
+                    LOGGER.warn("Curves folder not found");
                     status = false;
                 }
             }
-            return new DynamicSimulationResultImpl(status, null, curves, DynamicSimulationResult.emptyTimeLine());
+
+            return new DynamicSimulationResultImpl(status, logs, curves, DynamicSimulationResult.emptyTimeLine());
         }
 
         private void writeInputFiles(Path workingDir) {
