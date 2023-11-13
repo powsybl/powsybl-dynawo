@@ -1,0 +1,12 @@
+2023-11-09 11:36:53 | INFO |  ============================================================
+2023-11-09 11:36:53 | INFO | DYNAWO VERSION  :     1.4.1
+2023-11-09 11:36:53 | INFO |  ============================================================
+2023-11-09 11:36:53 | INFO |
+2023-11-13 11:36:53 | INFO |         time | iter num   order (k)      time step (h)
+2023-11-13 11:36:53 | INFO | -----------------------------------------------------------------------
+2023-11-13 11:36:53 | INFO |        0.000 |        0           0              0.010
+2023-11-09 11:36:58 | TRACE | Algebraic mode change for model CONST.TG6 at t = 0
+2023-11-09 11:36:58 |  | Algebraic mode change for model CONST.TG7 at t = 0
+2023-11-09 11:36:58 | DEBUG | call of SolverReInit i.e. a new symbolic and numerical factorization will be performed
+2023-11-09 11:36:59 | WARN | five consecutive steps have been taken that satisfy a scaled step length test
+2023-11-09 11:36:59 | ERROR | KINSOL fails to solve the problem ( DYNSolverKINAlgRestoration.cpp:394 )

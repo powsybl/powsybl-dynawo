@@ -10,6 +10,7 @@ package com.powsybl.dynawo.commons;
 import com.powsybl.commons.reporter.Report;
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.commons.reporter.TypedValue;
+import com.powsybl.dynawo.commons.dynawologs.LogEntry;
 import com.powsybl.dynawo.commons.timeline.TimelineEntry;
 
 /**
@@ -23,6 +24,11 @@ public final class CommonReports {
     private CommonReports() {
     }
 
+    public static Reporter createDynawoLogReporter(Reporter reporter) {
+        return reporter.createSubReporter("dynawoLog",
+                "Dynawo Log");
+    }
+
     public static void reportTimelineEvent(Reporter reporter, TimelineEntry timelineEntry) {
         reporter.report(Report.builder()
                 .withKey("DynawoTimelineEvent")
@@ -31,6 +37,15 @@ public final class CommonReports {
                 .withTypedValue("identifiableId", timelineEntry.modelName(), ID)
                 .withValue("message", timelineEntry.message())
                 .withSeverity(TypedValue.TRACE_SEVERITY)
+                .build());
+    }
+
+    public static void reportLogEvent(Reporter reporter, LogEntry logEntry) {
+        reporter.report(Report.builder()
+                .withKey("DynawoTimelineEvent")
+                .withDefaultMessage("${message}")
+                .withValue("message", logEntry.message())
+                .withSeverity(logEntry.severity())
                 .build());
     }
 }

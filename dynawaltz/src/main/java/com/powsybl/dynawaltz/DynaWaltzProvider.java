@@ -18,6 +18,7 @@ import com.powsybl.dynawaltz.xml.DydXml;
 import com.powsybl.dynawaltz.xml.JobsXml;
 import com.powsybl.dynawaltz.xml.ParametersXml;
 import com.powsybl.dynawo.commons.*;
+import com.powsybl.dynawo.commons.dynawologs.CsvLogParser;
 import com.powsybl.dynawo.commons.loadmerge.LoadsMerger;
 import com.powsybl.dynawo.commons.timeline.CsvTimeLineParser;
 import com.powsybl.iidm.network.Network;
@@ -213,6 +214,8 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
             Path logFile = outputsFolder.resolve(LOGS_FOLDER).resolve(LOGS_FILENAME);
             if (Files.exists(logFile)) {
                 logs = Files.readString(logFile);
+                Reporter logReporter = CommonReports.createDynawoLogReporter(reporter);
+                new CsvLogParser().parse(logFile).forEach(e -> CommonReports.reportLogEvent(logReporter, e));
             } else {
                 LOGGER.warn("Dynawo logs file not found");
             }

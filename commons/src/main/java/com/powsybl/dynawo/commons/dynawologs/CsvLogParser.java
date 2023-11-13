@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawo.commons.timeline;
+package com.powsybl.dynawo.commons.dynawologs;
 
 import com.powsybl.dynawo.commons.AbstractCsvParser;
 
@@ -14,26 +14,28 @@ import java.util.Optional;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public final class CsvTimeLineParser extends AbstractCsvParser<TimelineEntry> implements TimeLineParser {
+public final class CsvLogParser extends AbstractCsvParser<LogEntry> {
 
-    private static final int NB_COLUMNS = 3;
+    private static final int NB_COLUMNS = 4;
 
-    public CsvTimeLineParser() {
+    public CsvLogParser() {
         this(DEFAULT_SEPARATOR);
     }
 
-    public CsvTimeLineParser(char separator) {
+    public CsvLogParser(char separator) {
         super(separator);
     }
 
+    //TODO fix dynawo.log use of |
     @Override
-    protected Optional<TimelineEntry> createEntry(String[] tokens) {
-        return TimeLineUtil.createEvent(tokens[0], tokens[1], tokens[2]);
+    protected Optional<LogEntry> createEntry(String[] tokens) {
+        return tokens.length == NB_COLUMNS ? LogUtils.createLog(tokens[1], tokens[2] + " " + tokens[3])
+            : LogUtils.createLog(tokens[1], tokens[2]);
     }
 
     @Override
     protected boolean hasCorrectNbColumns(int tokensSize) {
-        return NB_COLUMNS == tokensSize;
+        return tokensSize == NB_COLUMNS - 1 || tokensSize == NB_COLUMNS;
     }
 
     @Override
