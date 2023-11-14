@@ -139,7 +139,7 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
     }
 
     public ParametersSet getModelParameters(String parameterSetId) {
-        return modelsParameters.get(parameterSetId);
+        return Objects.requireNonNull(modelsParameters.get(parameterSetId), "Model parameter set " + parameterSetId + " not found");
     }
 
     @JsonGetter("modelsParameters")
