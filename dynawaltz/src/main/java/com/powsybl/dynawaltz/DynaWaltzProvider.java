@@ -18,6 +18,7 @@ import com.powsybl.dynawaltz.xml.DydXml;
 import com.powsybl.dynawaltz.xml.JobsXml;
 import com.powsybl.dynawaltz.xml.ParametersXml;
 import com.powsybl.dynawo.commons.*;
+import com.powsybl.dynawo.commons.PowsyblDynawoVersion;
 import com.powsybl.dynawo.commons.dynawologs.CsvLogParser;
 import com.powsybl.dynawo.commons.loadmerge.LoadsMerger;
 import com.powsybl.dynawo.commons.timeline.CsvTimeLineParser;
@@ -63,7 +64,6 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
     private static final String LOGS_FILENAME = "dynawaltz.log";
     private static final String ERROR_FILENAME = "dyn_fs_0.err";
     private static final String DYNAWO_ERROR_PATTERN = "DYN Error: ";
-
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DynaWaltzProvider.class);
 
@@ -203,7 +203,7 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
 
             // Error file
             Path errorFile = workingDir.resolve(ERROR_FILENAME);
-            if(Files.exists(errorFile)) {
+            if (Files.exists(errorFile)) {
                 Matcher errorMatcher = Pattern.compile(DYNAWO_ERROR_PATTERN + "(.*)")
                         .matcher(Files.readString(errorFile));
                 if (!errorMatcher.find()) {

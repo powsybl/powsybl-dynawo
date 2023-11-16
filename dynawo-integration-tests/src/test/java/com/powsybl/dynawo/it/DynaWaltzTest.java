@@ -50,7 +50,7 @@ class DynaWaltzTest extends AbstractDynawoTest {
         super.setUp();
         provider = new DynaWaltzProvider(new DynaWaltzConfig(Path.of("/dynawo"), false));
         parameters = new DynamicSimulationParameters()
-                .setStartTime(0)
+                .setStartTime(1)
                 .setStopTime(100);
         dynaWaltzParameters = new DynaWaltzParameters();
         parameters.addExtension(DynaWaltzParameters.class, dynaWaltzParameters);
@@ -258,13 +258,18 @@ class DynaWaltzTest extends AbstractDynawoTest {
                 getResourceAsStream("/error/models.groovy"),
                 GroovyExtension.find(DynamicModelGroovyExtension.class, DynaWaltzProvider.NAME));
 
+        GroovyEventModelsSupplier eventModelsSupplier = new GroovyEventModelsSupplier(
+                getResourceAsStream("/error/eventModels.groovy"),
+                GroovyExtension.find(EventModelGroovyExtension.class, DynaWaltzProvider.NAME));
+
+        parameters.setStopTime(200);
         dynaWaltzParameters.setModelsParameters(ParametersXml.load(getResourceAsStream("/error/models.par")))
                 .setNetworkParameters(ParametersXml.load(getResourceAsStream("/error/network.par"), "NETWORK"))
                 .setSolverParameters(ParametersXml.load(getResourceAsStream("/error/solvers.par"), "3"))
                 .setSolverType(DynaWaltzParameters.SolverType.SIM)
                 .setDefaultDumpFileParameters();
 
-        DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, EventModelsSupplier.empty(), CurvesSupplier.empty(),
+        DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, CurvesSupplier.empty(),
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, NO_OP)
                 .join();
 
