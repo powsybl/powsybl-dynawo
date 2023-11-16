@@ -38,6 +38,8 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.*;
@@ -59,6 +61,9 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
     private static final String OUTPUT_DUMP_FILENAME = "outputState.dmp";
     private static final String TIMELINE_FILENAME = "timeline.log";
     private static final String LOGS_FILENAME = "dynawaltz.log";
+    private static final String ERROR_FILENAME = "dyn_fs_0.err";
+    private static final String DYNAWO_ERROR_PATTERN = "DYN Error: ";
+
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DynaWaltzProvider.class);
 
@@ -182,58 +187,81 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
             context.getNetwork().getVariantManager().setWorkingVariant(context.getWorkingVariantId());
             DynaWaltzParameters parameters = context.getDynaWaltzParameters();
             DumpFileParameters dumpFileParameters = parameters.getDumpFileParameters();
-            boolean status = true;
-            if (parameters.isWriteFinalState()) {
-                Path outputNetworkFile = outputsFolder.resolve(FINAL_STATE_FOLDER).resolve(OUTPUT_IIDM_FILENAME);
-                if (Files.exists(outputNetworkFile)) {
-                    NetworkResultsUpdater.update(context.getNetwork(), NetworkXml.read(outputNetworkFile), context.getDynaWaltzParameters().isMergeLoads());
-                } else {
-                    status = false;
-                }
-            }
-            if (dumpFileParameters.exportDumpFile()) {
-                Path outputDumpFile = outputsFolder.resolve(FINAL_STATE_FOLDER).resolve(OUTPUT_DUMP_FILENAME);
-                if (Files.exists(outputDumpFile)) {
-                    Files.copy(outputDumpFile, dumpFileParameters.dumpFileFolder().resolve(workingDir.getFileName() + "_" + OUTPUT_DUMP_FILENAME), StandardCopyOption.REPLACE_EXISTING);
-                } else {
-                    LOGGER.warn("Dump file {} not found, export will be skipped", OUTPUT_DUMP_FILENAME);
-                }
-            }
 
-            //Timeline
-            Path timelineFile = outputsFolder.resolve(DYNAWO_TIMELINE_FOLDER).resolve(TIMELINE_FILENAME);
-            if (Files.exists(timelineFile)) {
-                Reporter timelineReporter = DynawaltzReports.createDynaWaltzTimelineReporter(reporter);
-                new CsvTimeLineParser().parse(timelineFile).forEach(e -> CommonReports.reportTimelineEvent(timelineReporter, e));
-            } else {
-                LOGGER.warn("Timeline file not found");
-            }
+            DynamicSimulationResult.Status status = DynamicSimulationResult.Status.SUCCEED;
+            String error = "";
+            Map<String, TimeSeries> curves = new HashMap<>();
 
             //Dynawo log
-            String logs = null;
             Path logFile = outputsFolder.resolve(LOGS_FOLDER).resolve(LOGS_FILENAME);
             if (Files.exists(logFile)) {
-                logs = Files.readString(logFile);
                 Reporter logReporter = CommonReports.createDynawoLogReporter(reporter);
                 new CsvLogParser().parse(logFile).forEach(e -> CommonReports.reportLogEvent(logReporter, e));
             } else {
                 LOGGER.warn("Dynawo logs file not found");
             }
 
-            //Curves
-            Map<String, TimeSeries> curves = new HashMap<>();
-            if (context.withCurves()) {
-                Path curvesPath = workingDir.resolve(CURVES_OUTPUT_PATH).toAbsolutePath().resolve(CURVES_FILENAME);
-                if (Files.exists(curvesPath)) {
-                    Map<Integer, List<TimeSeries>> curvesPerVersion = TimeSeries.parseCsv(curvesPath, new TimeSeriesCsvConfig(TimeSeriesConstants.DEFAULT_SEPARATOR, false, TimeFormat.FRACTIONS_OF_SECOND));
-                    curvesPerVersion.values().forEach(l -> l.forEach(curve -> curves.put(curve.getMetadata().getName(), curve)));
+            // Error file
+            Path errorFile = workingDir.resolve(ERROR_FILENAME);
+            if(Files.exists(errorFile)) {
+                Matcher errorMatcher = Pattern.compile(DYNAWO_ERROR_PATTERN + "(.*)")
+                        .matcher(Files.readString(errorFile));
+                if (!errorMatcher.find()) {
+
+                    //Update network
+                    if (parameters.isWriteFinalState()) {
+                        Path outputNetworkFile = outputsFolder.resolve(FINAL_STATE_FOLDER).resolve(OUTPUT_IIDM_FILENAME);
+                        if (Files.exists(outputNetworkFile)) {
+                            NetworkResultsUpdater.update(context.getNetwork(), NetworkXml.read(outputNetworkFile), context.getDynaWaltzParameters().isMergeLoads());
+                        } else {
+                            LOGGER.warn("Output IIDM file not found");
+                            status = DynamicSimulationResult.Status.FAILED;
+                            error = "Dynawo Output IIDM file not found";
+                        }
+                    }
+
+                    //Dump file
+                    if (dumpFileParameters.exportDumpFile()) {
+                        Path outputDumpFile = outputsFolder.resolve(FINAL_STATE_FOLDER).resolve(OUTPUT_DUMP_FILENAME);
+                        if (Files.exists(outputDumpFile)) {
+                            Files.copy(outputDumpFile, dumpFileParameters.dumpFileFolder().resolve(workingDir.getFileName() + "_" + OUTPUT_DUMP_FILENAME), StandardCopyOption.REPLACE_EXISTING);
+                        } else {
+                            LOGGER.warn("Dump file {} not found, export will be skipped", OUTPUT_DUMP_FILENAME);
+                        }
+                    }
+
+                    //Timeline
+                    Path timelineFile = outputsFolder.resolve(DYNAWO_TIMELINE_FOLDER).resolve(TIMELINE_FILENAME);
+                    if (Files.exists(timelineFile)) {
+                        Reporter timelineReporter = DynawaltzReports.createDynaWaltzTimelineReporter(reporter);
+                        new CsvTimeLineParser().parse(timelineFile).forEach(e -> CommonReports.reportTimelineEvent(timelineReporter, e));
+                    } else {
+                        LOGGER.warn("Timeline file not found");
+                    }
+
+                    //Curves
+                    if (context.withCurves()) {
+                        Path curvesPath = workingDir.resolve(CURVES_OUTPUT_PATH).toAbsolutePath().resolve(CURVES_FILENAME);
+                        if (Files.exists(curvesPath)) {
+                            Map<Integer, List<TimeSeries>> curvesPerVersion = TimeSeries.parseCsv(curvesPath, new TimeSeriesCsvConfig(TimeSeriesConstants.DEFAULT_SEPARATOR, false, TimeFormat.FRACTIONS_OF_SECOND));
+                            curvesPerVersion.values().forEach(l -> l.forEach(curve -> curves.put(curve.getMetadata().getName(), curve)));
+                        } else {
+                            LOGGER.warn("Curves folder not found");
+                            status = DynamicSimulationResult.Status.FAILED;
+                            error = "Dynawo curves folder not found";
+                        }
+                    }
                 } else {
-                    LOGGER.warn("Curves folder not found");
-                    status = false;
+                    status = DynamicSimulationResult.Status.FAILED;
+                    error = errorMatcher.group().substring(DYNAWO_ERROR_PATTERN.length());
                 }
+            } else {
+                LOGGER.warn("Error file not found");
+                status = DynamicSimulationResult.Status.FAILED;
+                error = "Dynawo error log file not found";
             }
 
-            return new DynamicSimulationResultImpl(status, logs, curves, DynamicSimulationResult.emptyTimeLine());
+            return new DynamicSimulationResultImpl(status, error, curves, DynamicSimulationResult.emptyTimeLine());
         }
 
         private void writeInputFiles(Path workingDir) {
