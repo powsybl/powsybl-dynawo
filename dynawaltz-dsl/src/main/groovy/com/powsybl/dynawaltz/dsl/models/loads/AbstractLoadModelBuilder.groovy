@@ -14,7 +14,7 @@ import com.powsybl.iidm.network.Load
 import com.powsybl.iidm.network.Network
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 abstract class AbstractLoadModelBuilder extends AbstractEquipmentModelBuilder<Load> {
 

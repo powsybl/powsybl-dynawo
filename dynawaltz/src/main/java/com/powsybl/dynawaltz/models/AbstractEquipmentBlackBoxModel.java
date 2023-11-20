@@ -18,8 +18,8 @@ import java.util.Objects;
 import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 
 /**
- * @author Luma Zamarreño <zamarrenolm at aia.es>
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Luma Zamarreño {@literal <zamarrenolm at aia.es>}
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public abstract class AbstractEquipmentBlackBoxModel<T extends Identifiable<?>> extends AbstractBlackBoxModel implements EquipmentBlackBoxModel {
 

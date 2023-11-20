@@ -12,7 +12,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 abstract class AbstractDynamicModelBuilder {
 

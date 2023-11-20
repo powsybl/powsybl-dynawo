@@ -28,7 +28,7 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 @ExtendWith(CustomParameterResolver.class)
 class HvdcXmlTest extends AbstractParametrizedDynamicModelXmlTest {

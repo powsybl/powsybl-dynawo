@@ -31,7 +31,7 @@ import java.util.concurrent.ForkJoinPool;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * @author Marcos de Miguel <demiguelm at aia.es>
+ * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  */
 public abstract class AbstractIeeeTest {
 
@@ -98,7 +98,8 @@ public abstract class AbstractIeeeTest {
         dynaWaltzParameters.setModelsParameters(ParametersXml.load(getClass().getResourceAsStream(parametersFile)))
                 .setNetworkParameters(ParametersXml.load(getClass().getResourceAsStream(networkParametersFile), networkParametersId))
                 .setSolverParameters(ParametersXml.load(getClass().getResourceAsStream(solverParametersFile), solverParametersId))
-                .setSolverType(DynaWaltzParameters.SolverType.IDA);
+                .setSolverType(DynaWaltzParameters.SolverType.IDA)
+                .setDefaultDumpFileParameters();
     }
 
     protected DynaWaltzParameters getDynaWaltzSimulationParameters(DynamicSimulationParameters parameters) {

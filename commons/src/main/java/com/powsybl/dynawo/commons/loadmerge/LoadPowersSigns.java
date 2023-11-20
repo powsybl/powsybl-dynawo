@@ -8,7 +8,7 @@
 package com.powsybl.dynawo.commons.loadmerge;
 
 /**
- * @author Laurent Isertial <laurent.issertial at rte-france.com>
+ * @author Laurent Isertial {@literal <laurent.issertial at rte-france.com>}
  */
 public enum LoadPowersSigns {
     P_POS_Q_POS(".pppq"),

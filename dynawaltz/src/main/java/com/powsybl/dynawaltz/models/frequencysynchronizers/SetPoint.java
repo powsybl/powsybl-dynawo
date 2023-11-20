@@ -21,7 +21,7 @@ import static com.powsybl.dynawaltz.parameters.ParameterType.DOUBLE;
 /**
  * Special generators' frequency synchronizer used when an Infinite Bus is present in the model.
  *
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class SetPoint extends AbstractFrequencySynchronizer {
 

@@ -7,7 +7,7 @@
 package com.powsybl.dynawaltz.xml;
 
 /**
- * @author Marcos de Miguel <demiguelm at aia.es>
+ * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  */
 public final class DynaWaltzXmlConstants {
 

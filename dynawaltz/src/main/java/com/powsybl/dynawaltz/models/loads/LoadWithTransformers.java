@@ -14,7 +14,7 @@ import com.powsybl.dynawaltz.models.VarConnection;
 import java.util.List;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public interface LoadWithTransformers extends Model {
 

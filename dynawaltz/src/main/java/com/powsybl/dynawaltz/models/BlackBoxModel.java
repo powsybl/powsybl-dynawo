@@ -17,8 +17,8 @@ import java.util.List;
 import java.util.function.Consumer;
 
 /**
- * @author Florian Dupuy <florian.dupuy at rte-france.com>
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public interface BlackBoxModel extends Model {
     String getDynamicModelId();

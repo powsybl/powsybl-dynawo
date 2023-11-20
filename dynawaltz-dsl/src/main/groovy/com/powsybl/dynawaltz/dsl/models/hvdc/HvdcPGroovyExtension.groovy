@@ -17,7 +17,7 @@ import com.powsybl.dynawaltz.models.hvdc.HvdcPDangling
 import com.powsybl.iidm.network.Network
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 @AutoService(DynamicModelGroovyExtension.class)
 class HvdcPGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {

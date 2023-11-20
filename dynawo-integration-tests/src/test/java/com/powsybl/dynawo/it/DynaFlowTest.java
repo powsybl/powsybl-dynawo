@@ -45,7 +45,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * @author Geoffroy Jamgotchian <geoffroy.jamgotchian at rte-france.com>
+ * @author Geoffroy Jamgotchian {@literal <geoffroy.jamgotchian at rte-france.com>}
  */
 class DynaFlowTest extends AbstractDynawoTest {
 
@@ -54,8 +54,6 @@ class DynaFlowTest extends AbstractDynawoTest {
     private DynaFlowSecurityAnalysisProvider securityAnalysisProvider;
 
     private LoadFlowParameters loadFlowParameters;
-
-    private DynaFlowParameters dynaFlowLoadFlowParameters;
 
     private SecurityAnalysisParameters securityAnalysisParameters;
 
@@ -66,10 +64,9 @@ class DynaFlowTest extends AbstractDynawoTest {
         DynaFlowConfig config = new DynaFlowConfig(Path.of("/dynaflow-launcher"), false);
         loadFlowProvider = new DynaFlowProvider(() -> config);
         loadFlowParameters = new LoadFlowParameters();
-        dynaFlowLoadFlowParameters = new DynaFlowParameters();
         securityAnalysisProvider = new DynaFlowSecurityAnalysisProvider(() -> config);
         securityAnalysisParameters = new SecurityAnalysisParameters();
-        loadFlowParameters.addExtension(DynaFlowParameters.class, dynaFlowLoadFlowParameters);
+        loadFlowParameters.addExtension(DynaFlowParameters.class, new DynaFlowParameters());
     }
 
     @Test

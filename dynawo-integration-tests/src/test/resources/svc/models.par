@@ -9,6 +9,7 @@
         <reference type="DOUBLE" name="load_UPhase0" origData="IIDM" origName="angle_pu"/>
     </set>
     <set id="GSFWPR_G1">
+        <par type="BOOL" name="generator_UseApproximation" value="false"/>
         <par type="INT" name="generator_ExcitationPu" value="1"/>
         <par type="DOUBLE" name="generator_md" value="0.215"/>
         <par type="DOUBLE" name="generator_mq" value="0.215"/>

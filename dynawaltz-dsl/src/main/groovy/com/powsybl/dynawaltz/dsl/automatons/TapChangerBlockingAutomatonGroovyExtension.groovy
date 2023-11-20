@@ -21,7 +21,7 @@ import com.powsybl.iidm.network.Network
 import com.powsybl.iidm.network.TwoWindingsTransformer
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 @AutoService(DynamicModelGroovyExtension.class)
 class TapChangerBlockingAutomatonGroovyExtension extends AbstractPureDynamicGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {

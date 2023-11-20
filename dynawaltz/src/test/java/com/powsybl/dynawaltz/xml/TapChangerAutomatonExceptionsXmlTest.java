@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 @ExtendWith(CustomParameterResolver.class)
 class TapChangerAutomatonExceptionsXmlTest extends AbstractParametrizedDynamicModelXmlTest {

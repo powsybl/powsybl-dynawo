@@ -12,7 +12,7 @@ import com.powsybl.iidm.network.Branch;
 import com.powsybl.iidm.network.HvdcLine;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public final class SideConverter {
 

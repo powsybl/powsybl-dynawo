@@ -16,8 +16,8 @@ import com.powsybl.iidm.network.Generator;
 import java.util.List;
 
 /**
- * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Dimitri Baudrier {@literal <dimitri.baudrier at rte-france.com>}
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class SynchronizedGenerator extends AbstractGenerator implements FrequencySynchronizedModel {
 

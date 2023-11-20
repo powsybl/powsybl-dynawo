@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class MappedParameterContext implements ParameterContext {
 

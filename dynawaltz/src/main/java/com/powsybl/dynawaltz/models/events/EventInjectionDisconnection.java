@@ -18,7 +18,7 @@ import java.util.List;
 
 /**
  * @author Mathieu BAGUE {@literal <mathieu.bague at rte-france.com>}
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class EventInjectionDisconnection extends AbstractDynamicLibEventDisconnection {
 

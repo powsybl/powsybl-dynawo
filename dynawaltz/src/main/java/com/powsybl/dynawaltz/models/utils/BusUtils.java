@@ -10,7 +10,7 @@ package com.powsybl.dynawaltz.models.utils;
 import com.powsybl.iidm.network.*;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public final class BusUtils {
 

@@ -8,6 +8,7 @@ package com.powsybl.dynaflow;
 
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
+import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.config.InMemoryPlatformConfig;
 import com.powsybl.commons.config.MapModuleConfig;
 import org.junit.jupiter.api.AfterEach;
@@ -18,12 +19,11 @@ import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Path;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
- * @author Guillaume Pernin <guillaume.pernin at rte-france.com>
+ * @author Guillaume Pernin {@literal <guillaume.pernin at rte-france.com>}
  */
 class DynaFlowConfigTest {
 
@@ -49,7 +49,7 @@ class DynaFlowConfigTest {
         moduleConfig.setStringProperty("homeDir", homeDir);
         moduleConfig.setStringProperty("debug", Boolean.toString(debug));
 
-        DynaFlowConfig config = DynaFlowConfig.fromPlatformConfig(platformConfig);
+        DynaFlowConfig config = DynaFlowConfig.load(platformConfig);
         assertEquals(homeDir, config.getHomeDir().toString());
         assertEquals(debug, config.isDebug());
     }
@@ -57,9 +57,8 @@ class DynaFlowConfigTest {
     @Test
     void fromPlatformConfigNull() {
         InMemoryPlatformConfig platformConfig = new InMemoryPlatformConfig(fileSystem);
-
-        DynaFlowConfig config = DynaFlowConfig.fromPlatformConfig(platformConfig);
-        assertNull(config);
+        PowsyblException e = assertThrows(PowsyblException.class, () -> DynaFlowConfig.load(platformConfig));
+        assertEquals("PlatformConfig incomplete: Module dynaflow not found", e.getMessage());
     }
 
     @Test

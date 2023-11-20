@@ -18,8 +18,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * @author Marcos de Miguel <demiguelm at aia.es>
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public abstract class AbstractGenerator extends AbstractEquipmentBlackBoxModel<Generator> implements GeneratorModel {
 

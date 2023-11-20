@@ -13,7 +13,7 @@ import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.Generator;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class SynchronizedWeccGen extends WeccGen implements FrequencySynchronizedModel {
 

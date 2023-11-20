@@ -15,7 +15,7 @@ import javax.xml.stream.XMLStreamWriter;
 import java.io.Writer;
 
 /**
- * @author Mathieu Bague <mathieu.bague@rte-france.com>
+ * @author Mathieu Bague {@literal <mathieu.bague@rte-france.com>}
  */
 public final class XmlStreamWriterFactory {
 
