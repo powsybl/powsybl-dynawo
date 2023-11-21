@@ -46,7 +46,7 @@ public class DefaultModelHandlerTest {
     @Test
     void noInterfaceImplementationLog() {
         Generator gen = network.getGenerator("GEN");
-        Model model =  defaultModelHandler.getDefaultModel(gen, LoadModel.class, false);
+        Model model = defaultModelHandler.getDefaultModel(gen, LoadModel.class, false);
         assertNull(model);
     }
 
