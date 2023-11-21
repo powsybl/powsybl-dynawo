@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class DefaultModelHandlerTest {
+class DefaultModelHandlerTest {
 
     protected Network network = EurostagTutorialExample1Factory.create();
     protected DefaultModelsHandler defaultModelHandler = new DefaultModelsHandler();
