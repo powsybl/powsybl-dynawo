@@ -21,16 +21,13 @@ import static java.util.stream.Collectors.groupingBy;
  * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class DefaultModelsHandler {
+public final class DefaultModelsHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultModelsHandler.class);
 
     private final Map<IdentifiableType, List<DefaultModelConfiguration>> configurations = EnumSet.allOf(DefaultModelConfiguration.class)
             .stream()
             .collect(groupingBy(DefaultModelConfiguration::getIdentifiableType));
-
-    public DefaultModelsHandler() {
-    }
 
     public <T extends Model> T getDefaultModel(Identifiable<?> equipment, Class<T> connectableClass, boolean throwException) {
         DefaultModelConfiguration conf = findConfiguration(equipment.getType(), connectableClass);
@@ -49,7 +46,7 @@ public class DefaultModelsHandler {
     private <T extends Model> DefaultModelConfiguration findConfiguration(IdentifiableType type, Class<T> connectableClass) {
         List<DefaultModelConfiguration> configurationList = configurations.get(type);
         if (configurationList == null) {
-            throw new PowsyblException("No dynamic model associated with " + type);
+            throw new PowsyblException("No default model configuration for " + type);
         }
         if (configurationList.size() == 1) {
             return configurationList.get(0);
@@ -59,7 +56,7 @@ public class DefaultModelsHandler {
                     return configuration;
                 }
             }
+            throw new PowsyblException("No default model configuration for " + type + " - " + connectableClass.getSimpleName());
         }
-        throw new PowsyblException("No default model configuration for " + type + " - " + connectableClass.getSimpleName());
     }
 }
