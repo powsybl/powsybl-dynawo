@@ -16,7 +16,7 @@ import java.util.List;
 import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 
 /**
- * Superclass for automaton & event black box models (model without IIDM static id)
+ * Superclass for automaton and event black box models (model without IIDM static id)
  * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
