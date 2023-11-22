@@ -22,7 +22,7 @@ import com.powsybl.dynawo.commons.NetworkResultsUpdater;
 import com.powsybl.dynawo.commons.PowsyblDynawoVersion;
 import com.powsybl.dynawo.commons.loadmerge.LoadsMerger;
 import com.powsybl.iidm.network.Network;
-import com.powsybl.iidm.xml.NetworkXml;
+import com.powsybl.iidm.serde.NetworkSerDe;
 import com.powsybl.timeseries.TimeSeries;
 import com.powsybl.timeseries.TimeSeries.TimeFormat;
 import com.powsybl.timeseries.TimeSeriesConstants;
@@ -178,7 +178,7 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
             if (parameters.isWriteFinalState()) {
                 Path outputNetworkFile = workingDir.resolve(OUTPUTS_FOLDER).resolve(FINAL_STATE_FOLDER).resolve(OUTPUT_IIDM_FILENAME);
                 if (Files.exists(outputNetworkFile)) {
-                    NetworkResultsUpdater.update(context.getNetwork(), NetworkXml.read(outputNetworkFile), context.getDynaWaltzParameters().isMergeLoads());
+                    NetworkResultsUpdater.update(context.getNetwork(), NetworkSerDe.read(outputNetworkFile), context.getDynaWaltzParameters().isMergeLoads());
                 } else {
                     status = false;
                 }

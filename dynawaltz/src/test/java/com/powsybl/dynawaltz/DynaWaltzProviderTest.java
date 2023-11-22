@@ -7,7 +7,7 @@
 package com.powsybl.dynawaltz;
 
 import com.powsybl.commons.PowsyblException;
-import com.powsybl.commons.test.AbstractConverterTest;
+import com.powsybl.commons.test.AbstractSerDeTest;
 import com.powsybl.computation.ComputationManager;
 import com.powsybl.computation.local.LocalCommandExecutor;
 import com.powsybl.computation.local.LocalComputationConfig;
@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  */
-class DynaWaltzProviderTest extends AbstractConverterTest {
+class DynaWaltzProviderTest extends AbstractSerDeTest {
 
     private static final String OUTPUT_IIDM_FILENAME = "outputIIDM.xml";
     private DynaWaltzConfig config;

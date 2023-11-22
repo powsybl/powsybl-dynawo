@@ -7,7 +7,7 @@
 package com.powsybl.dynaflow;
 
 import com.powsybl.commons.PowsyblException;
-import com.powsybl.commons.test.AbstractConverterTest;
+import com.powsybl.commons.test.AbstractSerDeTest;
 import com.powsybl.computation.ComputationManager;
 import com.powsybl.computation.local.LocalCommandExecutor;
 import com.powsybl.computation.local.LocalComputationConfig;
@@ -45,7 +45,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  */
-class DynaFlowSecurityAnalysisTest extends AbstractConverterTest {
+class DynaFlowSecurityAnalysisTest extends AbstractSerDeTest {
 
     private static class LocalCommandExecutorMock extends AbstractLocalCommandExecutor {
 

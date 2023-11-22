@@ -7,9 +7,9 @@
  */
 package com.powsybl.dynawo.commons;
 
-import com.powsybl.commons.test.AbstractConverterTest;
+import com.powsybl.commons.test.AbstractSerDeTest;
 import com.powsybl.iidm.network.Network;
-import com.powsybl.iidm.xml.NetworkXml;
+import com.powsybl.iidm.serde.NetworkSerDe;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,7 +22,7 @@ import static com.powsybl.commons.test.ComparisonUtils.compareTxt;
 /**
  * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
  */
-abstract class AbstractDynawoCommonsTest extends AbstractConverterTest {
+abstract class AbstractDynawoCommonsTest extends AbstractSerDeTest {
 
     protected void compare(String expectedIidmResource, Network actual) throws IOException {
         InputStream expected = Objects.requireNonNull(getClass().getResourceAsStream(expectedIidmResource));
@@ -35,7 +35,7 @@ abstract class AbstractDynawoCommonsTest extends AbstractConverterTest {
     }
 
     private InputStream getInputStream(Network n, Path path) throws IOException {
-        NetworkXml.write(n, path);
+        NetworkSerDe.write(n, path);
         return Files.newInputStream(path);
     }
 }

@@ -93,8 +93,8 @@ public final class ParametersXml {
     private static List<ParametersSet> readAndClose(XMLStreamReader xmlReader) throws XMLStreamException {
         List<ParametersSet> parametersSets = new ArrayList<>();
         skipComments(xmlReader);
-        com.powsybl.commons.xml.XmlUtil.readUntilEndElement(PARAMETERS_SET_ELEMENT_NAME, xmlReader, () -> {
-            if (!xmlReader.getLocalName().equals("set")) {
+        com.powsybl.commons.xml.XmlUtil.readSubElements(xmlReader, name -> {
+            if (!name.equals("set")) {
                 closeAndThrowException(xmlReader, xmlReader.getLocalName());
             }
             String parameterSetIdRead = xmlReader.getAttributeValue(null, "id");
@@ -107,7 +107,7 @@ public final class ParametersXml {
     private static ParametersSet readOneSetAndClose(XMLStreamReader xmlReader, String parameterSetId) throws XMLStreamException {
         AtomicReference<ParametersSet> parametersSet = new AtomicReference<>();
         skipComments(xmlReader);
-        com.powsybl.commons.xml.XmlUtil.readUntilEndElement(PARAMETERS_SET_ELEMENT_NAME, xmlReader, () -> {
+        com.powsybl.commons.xml.XmlUtil.readSubElements(xmlReader, name -> {
             if (parametersSet.get() != null) {
                 return;
             }
@@ -117,8 +117,7 @@ public final class ParametersXml {
             if (xmlReader.getAttributeValue(null, "id").equals(parameterSetId)) {
                 parametersSet.set(createParametersSet(xmlReader, parameterSetId));
             } else {
-                com.powsybl.commons.xml.XmlUtil.readUntilEndElement("set", xmlReader, () -> {
-                });
+                com.powsybl.commons.xml.XmlUtil.readSubElements(xmlReader);
             }
         });
         xmlReader.close();
@@ -127,7 +126,7 @@ public final class ParametersXml {
 
     private static ParametersSet createParametersSet(XMLStreamReader xmlReader, String parameterSetId) throws XMLStreamException {
         ParametersSet parametersSet = new ParametersSet(parameterSetId);
-        com.powsybl.commons.xml.XmlUtil.readUntilEndElement("set", xmlReader, () -> {
+        com.powsybl.commons.xml.XmlUtil.readSubElements(xmlReader, elementName -> {
             String name = xmlReader.getAttributeValue(null, "name");
             ParameterType type = ParameterType.valueOf(xmlReader.getAttributeValue(null, "type"));
             if (xmlReader.getLocalName().equals("par")) {

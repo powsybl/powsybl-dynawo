@@ -11,7 +11,7 @@ import com.google.common.io.CharStreams;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.computation.*;
 import com.powsybl.iidm.network.Network;
-import com.powsybl.iidm.xml.XMLExporter;
+import com.powsybl.iidm.serde.XMLExporter;
 
 import java.io.IOException;
 import java.io.InputStream;

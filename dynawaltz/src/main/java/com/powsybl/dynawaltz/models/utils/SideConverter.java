@@ -10,6 +10,7 @@ package com.powsybl.dynawaltz.models.utils;
 import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.iidm.network.Branch;
 import com.powsybl.iidm.network.HvdcLine;
+import com.powsybl.iidm.network.TwoSides;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -19,17 +20,17 @@ public final class SideConverter {
     private SideConverter() {
     }
 
-    public static Side convert(Branch.Side side) {
+    public static Side convert(TwoSides side) {
         return switch (side) {
             case ONE -> Side.ONE;
             case TWO -> Side.TWO;
         };
     }
 
-    public static HvdcLine.Side convert(Side side) {
+    public static TwoSides convert(Side side) {
         return switch (side) {
-            case ONE -> HvdcLine.Side.ONE;
-            case TWO -> HvdcLine.Side.TWO;
+            case ONE -> TwoSides.ONE;
+            case TWO -> TwoSides.TWO;
         };
     }
 }

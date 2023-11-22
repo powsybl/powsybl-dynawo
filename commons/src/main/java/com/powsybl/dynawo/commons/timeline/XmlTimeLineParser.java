@@ -75,8 +75,8 @@ public final class XmlTimeLineParser implements TimeLineParser {
         while (state == XMLStreamConstants.COMMENT) {
             state = xmlReader.next();
         }
-        XmlUtil.readUntilEndElement("timeline", xmlReader, () -> {
-            if (xmlReader.getLocalName().equals("event")) {
+        XmlUtil.readSubElements(xmlReader, elementName -> {
+            if (elementName.equals("event")) {
                 String time = xmlReader.getAttributeValue(null, TIME);
                 String modelName = xmlReader.getAttributeValue(null, MODEL_NAME);
                 String message = xmlReader.getAttributeValue(null, MESSAGE);
@@ -84,6 +84,7 @@ public final class XmlTimeLineParser implements TimeLineParser {
                         .ifPresent(timeline::add);
             }
         });
+
         return timeline;
     }
 }
