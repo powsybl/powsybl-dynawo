@@ -20,7 +20,6 @@ import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.VariantManagerConstants;
 import com.powsybl.iidm.network.test.SvcTestCaseFactory;
 import com.powsybl.timeseries.DoubleTimeSeries;
-import com.powsybl.timeseries.StringTimeSeries;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -50,7 +49,7 @@ class DynaWaltzTest extends AbstractDynawoTest {
         super.setUp();
         provider = new DynaWaltzProvider(new DynaWaltzConfig(Path.of("/dynawo"), false));
         parameters = new DynamicSimulationParameters()
-                .setStartTime(1)
+                .setStartTime(0)
                 .setStopTime(100);
         dynaWaltzParameters = new DynaWaltzParameters();
         parameters.addExtension(DynaWaltzParameters.class, dynaWaltzParameters);
@@ -86,15 +85,14 @@ class DynaWaltzTest extends AbstractDynawoTest {
                 .join();
 
         assertEquals(DynamicSimulationResult.Status.SUCCEED, result.getStatus());
-        assertTrue(result.isOk());
-        assertTrue(result.getError().isEmpty());
+        assertTrue(result.getStatusText().isEmpty());
         assertEquals(41, result.getCurves().size());
         DoubleTimeSeries ts1 = (DoubleTimeSeries) result.getCurve("_GEN____1_SM_generator_UStatorPu");
         assertEquals("_GEN____1_SM_generator_UStatorPu", ts1.getMetadata().getName());
         assertEquals(587, ts1.toArray().length);
-        StringTimeSeries timeLine = result.getTimeLine();
-        assertEquals(1, timeLine.toArray().length);
-        assertNull(timeLine.toArray()[0]); // FIXME
+        List<TimelineEvent> timeLine = result.getTimeLine();
+        assertEquals(23, timeLine.size());
+        checkFirstTimeLineEvent(timeLine.get(0), 0,"_GEN____8_SM", "PMIN : activation");
     }
 
     @Test
@@ -130,7 +128,7 @@ class DynaWaltzTest extends AbstractDynawoTest {
         DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, curvesSupplier,
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, NO_OP)
                 .join();
-        assertTrue(result.isOk());
+        assertEquals(DynamicSimulationResult.Status.SUCCEED, result.getStatus());
 
         //Use exported dump as input
         parameters.setStartTime(30);
@@ -147,8 +145,6 @@ class DynaWaltzTest extends AbstractDynawoTest {
                 .join();
 
         assertEquals(DynamicSimulationResult.Status.SUCCEED, result.getStatus());
-        assertTrue(result.isOk());
-        assertTrue(result.getError().isEmpty());
     }
 
     @Test
@@ -173,12 +169,11 @@ class DynaWaltzTest extends AbstractDynawoTest {
                 .join();
 
         assertEquals(DynamicSimulationResult.Status.SUCCEED, result.getStatus());
-        assertTrue(result.isOk());
-        assertTrue(result.getError().isEmpty());
+        assertTrue(result.getStatusText().isEmpty());
         assertTrue(result.getCurves().isEmpty());
-        StringTimeSeries timeLine = result.getTimeLine();
-        assertEquals(1, timeLine.toArray().length);
-        assertNull(timeLine.toArray()[0]); // FIXME
+        List<TimelineEvent> timeLine = result.getTimeLine();
+        assertEquals(1, timeLine.size());
+        checkFirstTimeLineEvent(timeLine.get(0), 0, "G1", "PMIN : activation");
     }
 
     @Test
@@ -203,12 +198,11 @@ class DynaWaltzTest extends AbstractDynawoTest {
                 .join();
 
         assertEquals(DynamicSimulationResult.Status.SUCCEED, result.getStatus());
-        assertTrue(result.isOk());
-        assertTrue(result.getError().isEmpty());
+        assertTrue(result.getStatusText().isEmpty());
         assertTrue(result.getCurves().isEmpty());
-        StringTimeSeries timeLine = result.getTimeLine();
-        assertEquals(1, timeLine.toArray().length);
-        assertNull(timeLine.toArray()[0]); // FIXME
+        List<TimelineEvent> timeLine = result.getTimeLine();
+        assertEquals(7, timeLine.size());
+        checkFirstTimeLineEvent(timeLine.get(0), 30.0, "_BUS____5-BUS____6-1_PS", "Tap +1");
     }
 
     @Test
@@ -242,12 +236,10 @@ class DynaWaltzTest extends AbstractDynawoTest {
                 .join();
 
         assertEquals(DynamicSimulationResult.Status.SUCCEED, result.getStatus());
-        assertTrue(result.isOk());
-        assertTrue(result.getError().isEmpty());
+        assertTrue(result.getStatusText().isEmpty());
         assertEquals(35, result.getCurves().size());
-        StringTimeSeries timeLine = result.getTimeLine();
-        assertEquals(1, timeLine.toArray().length);
-        assertNull(timeLine.toArray()[0]); // FIXME
+        List<TimelineEvent> timeLine = result.getTimeLine();
+        assertTrue(timeLine.isEmpty());
     }
 
     @Test
@@ -274,9 +266,14 @@ class DynaWaltzTest extends AbstractDynawoTest {
                 .join();
 
         assertEquals(DynamicSimulationResult.Status.FAILED, result.getStatus());
-        assertFalse(result.isOk());
-        assertEquals("time step <= 0.1 s for more than 10 iterations ( DYNSolverCommonFixedTimeStep.cpp:419 )", result.getError());
-        assertEquals(DynamicSimulationResult.emptyTimeLine(), result.getTimeLine());
+        assertEquals("time step <= 0.1 s for more than 10 iterations ( DYNSolverCommonFixedTimeStep.cpp:419 )", result.getStatusText());
+        assertTrue(result.getTimeLine().isEmpty());
         assertTrue(result.getCurves().isEmpty());
+    }
+
+    private void checkFirstTimeLineEvent(TimelineEvent event, double time, String modelName, String message) {
+        assertEquals(time, event.time());
+        assertEquals(modelName, event.modelName());
+        assertEquals(message, event.message());
     }
 }

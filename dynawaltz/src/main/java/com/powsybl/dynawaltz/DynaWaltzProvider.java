@@ -189,7 +189,8 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
             DumpFileParameters dumpFileParameters = parameters.getDumpFileParameters();
 
             DynamicSimulationResult.Status status = DynamicSimulationResult.Status.SUCCEED;
-            String error = "";
+            String statusText = "";
+            List<TimelineEvent> timeline = new ArrayList<>();
             Map<String, TimeSeries> curves = new HashMap<>();
 
             //Dynawo log
@@ -216,7 +217,7 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
                         } else {
                             LOGGER.warn("Output IIDM file not found");
                             status = DynamicSimulationResult.Status.FAILED;
-                            error = "Dynawo Output IIDM file not found";
+                            statusText = "Dynawo Output IIDM file not found";
                         }
                     }
 
@@ -234,7 +235,10 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
                     Path timelineFile = outputsFolder.resolve(DYNAWO_TIMELINE_FOLDER).resolve(TIMELINE_FILENAME);
                     if (Files.exists(timelineFile)) {
                         Reporter timelineReporter = DynawaltzReports.createDynaWaltzTimelineReporter(reporter);
-                        new CsvTimeLineParser().parse(timelineFile).forEach(e -> CommonReports.reportTimelineEvent(timelineReporter, e));
+                        new CsvTimeLineParser().parse(timelineFile).forEach(e -> {
+                            CommonReports.reportTimelineEvent(timelineReporter, e);
+                            timeline.add(new TimelineEvent(e.time(), e.modelName(), e.message()));
+                        });
                     } else {
                         LOGGER.warn("Timeline file not found");
                     }
@@ -248,20 +252,20 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
                         } else {
                             LOGGER.warn("Curves folder not found");
                             status = DynamicSimulationResult.Status.FAILED;
-                            error = "Dynawo curves folder not found";
+                            statusText = "Dynawo curves folder not found";
                         }
                     }
                 } else {
                     status = DynamicSimulationResult.Status.FAILED;
-                    error = errorMatcher.group().substring(DYNAWO_ERROR_PATTERN.length());
+                    statusText = errorMatcher.group().substring(DYNAWO_ERROR_PATTERN.length());
                 }
             } else {
                 LOGGER.warn("Error file not found");
                 status = DynamicSimulationResult.Status.FAILED;
-                error = "Dynawo error log file not found";
+                statusText = "Dynawo error log file not found";
             }
 
-            return new DynamicSimulationResultImpl(status, error, curves, DynamicSimulationResult.emptyTimeLine());
+            return new DynamicSimulationResultImpl(status, statusText, curves, timeline);
         }
 
         private void writeInputFiles(Path workingDir) {
