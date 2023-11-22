@@ -92,7 +92,7 @@ class DynaWaltzTest extends AbstractDynawoTest {
         assertEquals(587, ts1.toArray().length);
         List<TimelineEvent> timeLine = result.getTimeLine();
         assertEquals(23, timeLine.size());
-        checkFirstTimeLineEvent(timeLine.get(0), 0,"_GEN____8_SM", "PMIN : activation");
+        checkFirstTimeLineEvent(timeLine.get(0), 0, "_GEN____8_SM", "PMIN : activation");
     }
 
     @Test
