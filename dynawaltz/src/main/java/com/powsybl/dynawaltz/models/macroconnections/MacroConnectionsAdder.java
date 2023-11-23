@@ -204,6 +204,13 @@ public final class MacroConnectionsAdder {
         return true;
     }
 
+    /**
+     * Verifies if a connection can be created with the specified equipment/model combination without creating macro connections
+     */
+    public <T extends Model> boolean checkMacroConnections(Identifiable<?> equipment, Class<T> modelClass) {
+        return dynamicModelGetter.getDynamicModel(equipment, modelClass, false) != null;
+    }
+
     private <T extends Model> void addMacroConnections(T connectedModel, String macroConnectorId, MacroConnect mc, Function<T, List<VarConnection>> varConnectionsSupplier) {
         macroConnectAdder.accept(mc);
         macroConnectorAdder.accept(macroConnectorId, k -> new MacroConnector(macroConnectorId, varConnectionsSupplier.apply(connectedModel)));
