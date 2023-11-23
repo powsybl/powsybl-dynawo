@@ -8,7 +8,7 @@ package com.powsybl.dynawaltz;
 
 import com.google.auto.service.AutoService;
 import com.powsybl.commons.config.PlatformConfig;
-import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
+import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.computation.*;
 import com.powsybl.dynamicsimulation.*;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
@@ -22,7 +22,7 @@ import com.powsybl.dynawo.commons.NetworkResultsUpdater;
 import com.powsybl.dynawo.commons.PowsyblDynawoVersion;
 import com.powsybl.dynawo.commons.loadmerge.LoadsMerger;
 import com.powsybl.iidm.network.Network;
-import com.powsybl.iidm.xml.NetworkXml;
+import com.powsybl.iidm.serde.NetworkSerDe;
 import com.powsybl.timeseries.TimeSeries;
 import com.powsybl.timeseries.TimeSeries.TimeFormat;
 import com.powsybl.timeseries.TimeSeriesConstants;
@@ -30,9 +30,7 @@ import com.powsybl.timeseries.TimeSeriesCsvConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -103,7 +101,7 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
 
     @Override
     public CompletableFuture<DynamicSimulationResult> run(Network network, DynamicModelsSupplier dynamicModelsSupplier, EventModelsSupplier eventModelsSupplier, CurvesSupplier curvesSupplier, String workingVariantId,
-                                                          ComputationManager computationManager, DynamicSimulationParameters parameters) {
+                                                          ComputationManager computationManager, DynamicSimulationParameters parameters, Reporter reporter) {
         Objects.requireNonNull(dynamicModelsSupplier);
         Objects.requireNonNull(eventModelsSupplier);
         Objects.requireNonNull(curvesSupplier);
@@ -178,7 +176,7 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
             if (parameters.isWriteFinalState()) {
                 Path outputNetworkFile = workingDir.resolve(OUTPUTS_FOLDER).resolve(FINAL_STATE_FOLDER).resolve(OUTPUT_IIDM_FILENAME);
                 if (Files.exists(outputNetworkFile)) {
-                    NetworkResultsUpdater.update(context.getNetwork(), NetworkXml.read(outputNetworkFile), context.getDynaWaltzParameters().isMergeLoads());
+                    NetworkResultsUpdater.update(context.getNetwork(), NetworkSerDe.read(outputNetworkFile), context.getDynaWaltzParameters().isMergeLoads());
                 } else {
                     status = false;
                 }
@@ -204,27 +202,20 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
             return new DynamicSimulationResultImpl(status, null, curves, DynamicSimulationResult.emptyTimeLine());
         }
 
-        private void writeInputFiles(Path workingDir) {
-            try {
-                DynawoUtil.writeIidm(dynawoInput, workingDir.resolve(NETWORK_FILENAME));
-                JobsXml.write(workingDir, context);
-                DydXml.write(workingDir, context);
-                ParametersXml.write(workingDir, context);
-                if (context.withCurves()) {
-                    CurvesXml.write(workingDir, context);
+        private void writeInputFiles(Path workingDir) throws IOException {
+            DynawoUtil.writeIidm(dynawoInput, workingDir.resolve(NETWORK_FILENAME));
+            JobsXml.write(workingDir, context);
+            DydXml.write(workingDir, context);
+            ParametersXml.write(workingDir, context);
+            if (context.withCurves()) {
+                CurvesXml.write(workingDir, context);
+            }
+            DumpFileParameters dumpFileParameters = context.getDynaWaltzParameters().getDumpFileParameters();
+            if (dumpFileParameters.useDumpFile()) {
+                Path dumpFilePath = dumpFileParameters.getDumpFilePath();
+                if (dumpFilePath != null) {
+                    Files.copy(dumpFilePath, workingDir.resolve(dumpFileParameters.dumpFile()), StandardCopyOption.REPLACE_EXISTING);
                 }
-                DumpFileParameters dumpFileParameters = context.getDynaWaltzParameters().getDumpFileParameters();
-                if (dumpFileParameters.useDumpFile()) {
-                    Path dumpFilePath = dumpFileParameters.getDumpFilePath();
-                    if (dumpFilePath != null) {
-                        Files.copy(dumpFilePath, workingDir.resolve(dumpFileParameters.dumpFile()), StandardCopyOption.REPLACE_EXISTING);
-                    }
-                }
-
-            } catch (IOException e) {
-                throw new UncheckedIOException(e);
-            } catch (XMLStreamException e) {
-                throw new UncheckedXmlStreamException(e);
             }
         }
     }

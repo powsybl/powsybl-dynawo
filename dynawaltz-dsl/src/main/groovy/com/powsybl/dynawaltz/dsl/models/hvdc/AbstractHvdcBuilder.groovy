@@ -15,6 +15,7 @@ import com.powsybl.iidm.network.Branch
 import com.powsybl.iidm.network.HvdcLine
 import com.powsybl.iidm.network.IdentifiableType
 import com.powsybl.iidm.network.Network
+import com.powsybl.iidm.network.TwoSides
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -27,7 +28,7 @@ abstract class AbstractHvdcBuilder extends AbstractEquipmentModelBuilder<HvdcLin
         super(network, equipmentConfig, IdentifiableType.HVDC_LINE)
     }
 
-    void dangling(Branch.Side danglingSide) {
+    void dangling(TwoSides danglingSide) {
         this.danglingSide = SideConverter.convert(danglingSide)
     }
 

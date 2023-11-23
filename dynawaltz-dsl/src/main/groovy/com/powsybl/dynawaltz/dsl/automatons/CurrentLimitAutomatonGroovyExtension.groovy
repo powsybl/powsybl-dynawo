@@ -18,6 +18,7 @@ import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton
 import com.powsybl.dynawaltz.models.utils.SideConverter
 import com.powsybl.iidm.network.Branch
 import com.powsybl.iidm.network.Network
+import com.powsybl.iidm.network.TwoSides
 
 /**
  * An implementation of {@link DynamicModelGroovyExtension} that adds the <pre>CurrentLimitAutomaton</pre> keyword to the DSL
@@ -56,7 +57,7 @@ class CurrentLimitAutomatonGroovyExtension extends AbstractPureDynamicGroovyExte
             iMeasurement.addEquipment(staticId, network::getBranch)
         }
 
-        void iMeasurementSide(Branch.Side side) {
+        void iMeasurementSide(TwoSides side) {
             this.iMeasurementSide = SideConverter.convert(side)
         }
 

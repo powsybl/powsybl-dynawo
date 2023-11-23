@@ -22,6 +22,7 @@ import com.powsybl.iidm.network.HvdcLine
 import com.powsybl.iidm.network.Identifiable
 import com.powsybl.iidm.network.IdentifiableType
 import com.powsybl.iidm.network.Network
+import com.powsybl.iidm.network.TwoSides
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -58,7 +59,7 @@ class EventDisconnectionGroovyExtension extends AbstractPureDynamicGroovyExtensi
             super(network, new DslEquipment<Identifiable>("Disconnectable equipment"), tag)
         }
 
-        void disconnectOnly(Branch.Side side) {
+        void disconnectOnly(TwoSides side) {
             disconnectSide = true
             switch (side) {
                 case Branch.Side.ONE :

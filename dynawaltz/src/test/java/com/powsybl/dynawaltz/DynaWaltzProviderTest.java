@@ -7,7 +7,8 @@
 package com.powsybl.dynawaltz;
 
 import com.powsybl.commons.PowsyblException;
-import com.powsybl.commons.test.AbstractConverterTest;
+import com.powsybl.commons.reporter.Reporter;
+import com.powsybl.commons.test.AbstractSerDeTest;
 import com.powsybl.computation.ComputationManager;
 import com.powsybl.computation.local.LocalCommandExecutor;
 import com.powsybl.computation.local.LocalComputationConfig;
@@ -37,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  */
-class DynaWaltzProviderTest extends AbstractConverterTest {
+class DynaWaltzProviderTest extends AbstractSerDeTest {
 
     private static final String OUTPUT_IIDM_FILENAME = "outputIIDM.xml";
     private DynaWaltzConfig config;
@@ -49,9 +50,8 @@ class DynaWaltzProviderTest extends AbstractConverterTest {
     }
 
     public static class CurvesSupplierMock implements CurvesSupplier {
-
         @Override
-        public List<Curve> get(Network network) {
+        public List<Curve> get(Network network, Reporter reporter) {
             return Collections.singletonList(new DynaWaltzCurve("bus", "uPu"));
         }
     }
@@ -86,7 +86,7 @@ class DynaWaltzProviderTest extends AbstractConverterTest {
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(tmpDir, 1), commandExecutor, ForkJoinPool.commonPool());
         DynamicSimulation.Runner dynawoSimulation = DynamicSimulation.find();
         assertEquals(DynaWaltzProvider.NAME, dynawoSimulation.getName());
-        DynamicSimulationResult result = dynawoSimulation.run(network, n -> Collections.emptyList(), EventModelsSupplier.empty(),
+        DynamicSimulationResult result = dynawoSimulation.run(network, (n, r) -> Collections.emptyList(), EventModelsSupplier.empty(),
                 CurvesSupplier.empty(), network.getVariantManager().getWorkingVariantId(),
                 computationManager, DynamicSimulationParameters.load());
         assertNotNull(result);
@@ -104,7 +104,7 @@ class DynaWaltzProviderTest extends AbstractConverterTest {
         dynamicSimulationParameters.addExtension(DynaWaltzParameters.class, dynaWaltzParameters);
 
         assertEquals(DynaWaltzProvider.NAME, dynawoSimulation.getName());
-        DynamicSimulationResult result = dynawoSimulation.run(network, n -> Collections.emptyList(), EventModelsSupplier.empty(),
+        DynamicSimulationResult result = dynawoSimulation.run(network, (n, r) -> Collections.emptyList(), EventModelsSupplier.empty(),
                 CurvesSupplier.empty(), network.getVariantManager().getWorkingVariantId(),
                 computationManager, dynamicSimulationParameters);
         assertNotNull(result);
@@ -128,7 +128,7 @@ class DynaWaltzProviderTest extends AbstractConverterTest {
         dynamicSimulationParameters.addExtension(DynaWaltzParameters.class, dynaWaltzParameters);
 
         assertEquals(DynaWaltzProvider.NAME, dynawoSimulation.getName());
-        DynamicSimulationResult result = dynawoSimulation.run(network, n -> Collections.emptyList(), EventModelsSupplier.empty(),
+        DynamicSimulationResult result = dynawoSimulation.run(network, (n, r) -> Collections.emptyList(), EventModelsSupplier.empty(),
                 CurvesSupplier.empty(), network.getVariantManager().getWorkingVariantId(),
                 computationManager, dynamicSimulationParameters);
         assertNotNull(result);
@@ -141,7 +141,7 @@ class DynaWaltzProviderTest extends AbstractConverterTest {
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(tmpDir, 1), commandExecutor, ForkJoinPool.commonPool());
         DynamicSimulation.Runner dynawoSimulation = DynamicSimulation.find();
         assertEquals(DynaWaltzProvider.NAME, dynawoSimulation.getName());
-        DynamicSimulationResult result = dynawoSimulation.run(network, n -> Collections.emptyList(), EventModelsSupplier.empty(),
+        DynamicSimulationResult result = dynawoSimulation.run(network, (n, r) -> Collections.emptyList(), EventModelsSupplier.empty(),
                 CurvesSupplier.empty(), network.getVariantManager().getWorkingVariantId(),
                 computationManager, DynamicSimulationParameters.load());
         assertNotNull(result);
@@ -155,7 +155,7 @@ class DynaWaltzProviderTest extends AbstractConverterTest {
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(tmpDir, 1), commandExecutor, ForkJoinPool.commonPool());
         DynamicSimulation.Runner dynawoSimulation = DynamicSimulation.find();
         assertEquals(DynaWaltzProvider.NAME, dynawoSimulation.getName());
-        DynamicSimulationResult result = dynawoSimulation.run(network, n -> Collections.emptyList(), EventModelsSupplier.empty(),
+        DynamicSimulationResult result = dynawoSimulation.run(network, (n, r) -> Collections.emptyList(), EventModelsSupplier.empty(),
                 new CurvesSupplierMock(), network.getVariantManager().getWorkingVariantId(),
                 computationManager, DynamicSimulationParameters.load());
         assertNotNull(result);
@@ -189,7 +189,7 @@ class DynaWaltzProviderTest extends AbstractConverterTest {
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(tmpDir, 1), commandExecutor, ForkJoinPool.commonPool());
         DynamicSimulation.Runner dynawoSimulation = DynamicSimulation.find();
         assertEquals(DynaWaltzProvider.NAME, dynawoSimulation.getName());
-        DynamicModelsSupplier dms = n -> Collections.emptyList();
+        DynamicModelsSupplier dms = (n, r) -> Collections.emptyList();
         EventModelsSupplier ems = EventModelsSupplier.empty();
         CurvesSupplier cs = CurvesSupplier.empty();
         String wvId = network.getVariantManager().getWorkingVariantId();
