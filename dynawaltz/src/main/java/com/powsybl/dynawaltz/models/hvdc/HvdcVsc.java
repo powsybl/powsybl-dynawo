@@ -7,8 +7,8 @@
  */
 package com.powsybl.dynawaltz.models.hvdc;
 
-import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.iidm.network.HvdcLine;
+import com.powsybl.iidm.network.TwoSides;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -20,7 +20,7 @@ public class HvdcVsc extends AbstractHvdc {
     }
 
     @Override
-    public String getSwitchOffSignalEventVarName(Side side) {
-        return "hvdc_Conv" + side.getSideNumber() + "_switchOffSignal2";
+    public String getSwitchOffSignalEventVarName(TwoSides side) {
+        return "hvdc_Conv" + side.getNum() + "_switchOffSignal2";
     }
 }

@@ -10,13 +10,12 @@ import com.powsybl.commons.test.AbstractSerDeTest;
 import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynawaltz.DynaWaltzCurve;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
-import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton;
 import com.powsybl.dynawaltz.models.events.EventInjectionDisconnection;
 import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection;
 import com.powsybl.dynawaltz.models.generators.GeneratorFictitious;
-import com.powsybl.dynawaltz.models.generators.SynchronousGenerator;
 import com.powsybl.dynawaltz.models.generators.SynchronizedGenerator;
+import com.powsybl.dynawaltz.models.generators.SynchronousGenerator;
 import com.powsybl.dynawaltz.models.lines.StandardLine;
 import com.powsybl.dynawaltz.models.loads.BaseLoad;
 import com.powsybl.dynawaltz.models.loads.LoadOneTransformer;
@@ -107,7 +106,7 @@ public class DynaWaltzTestUtil extends AbstractSerDeTest {
 
         // Automatons
         network.getLineStream().filter(line -> line != standardLine)
-                .forEach(l -> dynamicModels.add(new CurrentLimitAutomaton("BBM_" + l.getId(), "CLA", l, Side.ONE, "CurrentLimitAutomaton")));
+                .forEach(l -> dynamicModels.add(new CurrentLimitAutomaton("BBM_" + l.getId(), "CLA", l, TwoSides.ONE, "CurrentLimitAutomaton")));
     }
 
     public void validate(String schemaDefinition, String expectedResourceName, Path xmlFile) throws SAXException, IOException {

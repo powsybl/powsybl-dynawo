@@ -7,9 +7,9 @@
  */
 package com.powsybl.dynawaltz.models.buses;
 
-import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.macroconnections.MacroConnectAttribute;
 import com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants;
+import com.powsybl.iidm.network.TwoSides;
 
 import java.util.List;
 import java.util.Optional;
@@ -42,8 +42,8 @@ public final class DefaultEquipmentConnectionPoint implements EquipmentConnectio
     }
 
     @Override
-    public String getTerminalVarName(Side side) {
-        return "@STATIC_ID@@NODE" + side.getSideNumber() + "@_ACPIN";
+    public String getTerminalVarName(TwoSides side) {
+        return "@STATIC_ID@@NODE" + side.getNum() + "@_ACPIN";
     }
 
     @Override
@@ -52,8 +52,8 @@ public final class DefaultEquipmentConnectionPoint implements EquipmentConnectio
     }
 
     @Override
-    public Optional<String> getSwitchOffSignalVarName(Side side) {
-        return Optional.of("@STATIC_ID@@NODE" + side.getSideNumber() + "@_switchOff");
+    public Optional<String> getSwitchOffSignalVarName(TwoSides side) {
+        return Optional.of("@STATIC_ID@@NODE" + side.getNum() + "@_switchOff");
     }
 
     @Override

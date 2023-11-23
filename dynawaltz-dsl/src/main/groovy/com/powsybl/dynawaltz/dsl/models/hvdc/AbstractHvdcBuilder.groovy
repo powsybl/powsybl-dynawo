@@ -11,8 +11,6 @@ import com.powsybl.commons.reporter.Reporter
 import com.powsybl.dynawaltz.dsl.EquipmentConfig
 import com.powsybl.dynawaltz.dsl.Reporters
 import com.powsybl.dynawaltz.dsl.builders.AbstractEquipmentModelBuilder
-import com.powsybl.dynawaltz.models.Side
-import com.powsybl.dynawaltz.models.utils.SideConverter
 import com.powsybl.iidm.network.HvdcLine
 import com.powsybl.iidm.network.IdentifiableType
 import com.powsybl.iidm.network.Network
@@ -23,14 +21,14 @@ import com.powsybl.iidm.network.TwoSides
  */
 abstract class AbstractHvdcBuilder extends AbstractEquipmentModelBuilder<HvdcLine> {
 
-    protected Side danglingSide
+    protected TwoSides danglingSide
 
     AbstractHvdcBuilder(Network network, EquipmentConfig equipmentConfig, Reporter reporter) {
         super(network, equipmentConfig, IdentifiableType.HVDC_LINE, reporter)
     }
 
     void dangling(TwoSides danglingSide) {
-        this.danglingSide = SideConverter.convert(danglingSide)
+        this.danglingSide = danglingSide
     }
 
     @Override
