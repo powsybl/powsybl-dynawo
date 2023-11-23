@@ -8,10 +8,10 @@
 
 package eventModels
 
-import com.powsybl.iidm.network.Branch
+import com.powsybl.iidm.network.TwoSides
 
 Disconnect {
     staticId "L"
     startTime 2
-    disconnectOnly Branch.Side.TWO
+    disconnectOnly TwoSides.TWO
 }

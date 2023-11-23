@@ -8,14 +8,14 @@
 
 package warnings
 
-import com.powsybl.iidm.network.Branch
+import com.powsybl.iidm.network.TwoSides
 
 CurrentLimitAutomatonTwoLevels {
     dynamicModelId "CLA_NGEN"
     parameterSetId "CLA"
     controlledQuadripole "NHV1_NHV2_2"
     iMeasurement1 "NHV1_NHV2_1"
-    iMeasurement1Side Branch.Side.TWO
+    iMeasurement1Side TwoSides.TWO
     iMeasurement2 "NGEN"
-    iMeasurement2Side Branch.Side.ONE
+    iMeasurement2Side TwoSides.ONE
 }

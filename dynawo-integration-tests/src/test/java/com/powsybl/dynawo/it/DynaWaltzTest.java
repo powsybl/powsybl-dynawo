@@ -8,6 +8,7 @@ package com.powsybl.dynawo.it;
 
 import com.powsybl.commons.datasource.ResourceDataSource;
 import com.powsybl.commons.datasource.ResourceSet;
+import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynamicsimulation.*;
 import com.powsybl.dynamicsimulation.groovy.*;
 import com.powsybl.dynawaltz.DumpFileParameters;
@@ -81,7 +82,7 @@ class DynaWaltzTest extends AbstractDynawoTest {
                 .setDefaultDumpFileParameters();
 
         DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, curvesSupplier,
-                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters)
+                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, Reporter.NO_OP)
                 .join();
 
         assertTrue(result.isOk());
@@ -125,7 +126,7 @@ class DynaWaltzTest extends AbstractDynawoTest {
                 .setDumpFileParameters(dumpFileParameters);
 
         DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, curvesSupplier,
-                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters)
+                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, Reporter.NO_OP)
                 .join();
         assertTrue(result.isOk());
 
@@ -140,7 +141,7 @@ class DynaWaltzTest extends AbstractDynawoTest {
         dynaWaltzParameters.setDumpFileParameters(DumpFileParameters.createImportDumpFileParameters(dumpDir, dumpFile));
 
         result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, curvesSupplier,
-                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters)
+                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, Reporter.NO_OP)
                 .join();
 
         assertTrue(result.isOk());
@@ -165,7 +166,7 @@ class DynaWaltzTest extends AbstractDynawoTest {
                 .setDefaultDumpFileParameters();
 
         DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, EventModelsSupplier.empty(), CurvesSupplier.empty(),
-                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters)
+                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, Reporter.NO_OP)
                 .join();
 
         assertTrue(result.isOk());
@@ -193,7 +194,7 @@ class DynaWaltzTest extends AbstractDynawoTest {
                 .setDefaultDumpFileParameters();
 
         DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, EventModelsSupplier.empty(), CurvesSupplier.empty(),
-                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters)
+                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, Reporter.NO_OP)
                 .join();
 
         assertTrue(result.isOk());
@@ -230,7 +231,7 @@ class DynaWaltzTest extends AbstractDynawoTest {
                 .setDefaultDumpFileParameters();
 
         DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, curvesSupplier,
-                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters)
+                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, Reporter.NO_OP)
                 .join();
 
         assertTrue(result.isOk());

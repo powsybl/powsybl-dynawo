@@ -7,8 +7,10 @@
  */
 package com.powsybl.dynawaltz.dsl.builders
 
+import com.powsybl.commons.reporter.Reporter
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynawaltz.dsl.ModelBuilder
+import com.powsybl.dynawaltz.dsl.Reporters
 import com.powsybl.iidm.network.Network
 
 /**
@@ -21,8 +23,8 @@ abstract class AbstractPureDynamicModelBuilder extends AbstractDynamicModelBuild
     protected String parameterSetId
     protected final String lib
 
-    AbstractPureDynamicModelBuilder(Network network, String lib) {
-        super(network)
+    AbstractPureDynamicModelBuilder(Network network, String lib, Reporter reporter) {
+        super(network, reporter)
         this.lib = lib
     }
 
@@ -37,18 +39,18 @@ abstract class AbstractPureDynamicModelBuilder extends AbstractDynamicModelBuild
     @Override
     protected void checkData() {
         if (!dynamicModelId) {
-            LOGGER.warn("${getLib()}: 'dynamicModelId' field is not set")
+            Reporters.reportFieldNotSet(reporter, "dynamicModelId")
             isInstantiable = false
         }
         if (!parameterSetId) {
-            LOGGER.warn("${getLib()}: 'parameterSetId' field is not set")
+            Reporters.reportFieldNotSet(reporter, "dynamicModelId")
             isInstantiable = false
         }
     }
 
     @Override
-    protected String getLib() {
-        lib
+    String getModelId() {
+        dynamicModelId ?: "unknownDynamicId"
     }
 
     @Override

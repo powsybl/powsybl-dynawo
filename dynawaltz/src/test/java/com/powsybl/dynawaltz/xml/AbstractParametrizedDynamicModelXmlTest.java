@@ -7,7 +7,7 @@
  */
 package com.powsybl.dynawaltz.xml;
 
-import com.powsybl.commons.test.AbstractConverterTest;
+import com.powsybl.commons.test.AbstractSerDeTest;
 import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.DynaWaltzContext;
@@ -35,7 +35,7 @@ import static com.powsybl.commons.test.ComparisonUtils.compareTxt;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-abstract class AbstractParametrizedDynamicModelXmlTest extends AbstractConverterTest {
+abstract class AbstractParametrizedDynamicModelXmlTest extends AbstractSerDeTest {
 
     protected Network network;
     protected List<BlackBoxModel> dynamicModels = new ArrayList<>();

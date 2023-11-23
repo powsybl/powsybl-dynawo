@@ -8,7 +8,7 @@
 package com.powsybl.dynawaltz.dsl.models.loads
 
 import com.google.auto.service.AutoService
-import com.powsybl.dynamicsimulation.DynamicModel
+import com.powsybl.commons.reporter.Reporter
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractSimpleEquipmentGroovyExtension
 import com.powsybl.dynawaltz.dsl.EquipmentConfig
@@ -19,21 +19,21 @@ import com.powsybl.iidm.network.Network
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class LoadTwoTransformersGroovyExtension extends AbstractSimpleEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+class LoadTwoTransformersGroovyExtension extends AbstractSimpleEquipmentGroovyExtension {
 
     LoadTwoTransformersGroovyExtension() {
         super("LoadTwoTransformers")
     }
 
     @Override
-    protected LoadTwoTransformersBuilder createBuilder(Network network, EquipmentConfig equipmentConfig) {
-        new LoadTwoTransformersBuilder(network, equipmentConfig)
+    protected LoadTwoTransformersBuilder createBuilder(Network network, EquipmentConfig equipmentConfig, Reporter reporter) {
+        new LoadTwoTransformersBuilder(network, equipmentConfig, reporter)
     }
 
     static class LoadTwoTransformersBuilder extends AbstractLoadModelBuilder {
 
-        LoadTwoTransformersBuilder(Network network, EquipmentConfig equipmentConfig) {
-            super(network, equipmentConfig)
+        LoadTwoTransformersBuilder(Network network, EquipmentConfig equipmentConfig, Reporter reporter) {
+            super(network, equipmentConfig, reporter)
         }
 
         @Override
