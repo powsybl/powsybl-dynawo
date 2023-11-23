@@ -72,10 +72,13 @@ public final class ConstraintsReader {
                 state = reader.next();
             }
 
+            if (!CONSTRAINTS_ELEMENT_NAME.equals(reader.getLocalName())) {
+                throw new PowsyblException("Unknown element name '" + reader.getLocalName() + "' in constraints file");
+            }
             XmlUtil.readSubElements(reader, elementName -> {
                 try {
                     if (!elementName.equals(CONSTRAINT_ELEMENT_NAME)) {
-                        throw new PowsyblException("Unknown element name '" + elementName + "' in constraints file");
+                        throw new PowsyblException("Unknown element name '" + elementName + "' in constraints tag");
                     }
                     String name = reader.getAttributeValue(null, MODEL_NAME);
                     reader.getAttributeValue(null, DESCRIPTION); // description: unused
