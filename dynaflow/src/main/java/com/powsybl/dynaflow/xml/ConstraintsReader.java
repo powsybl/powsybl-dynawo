@@ -167,12 +167,7 @@ public final class ConstraintsReader {
         if (side == null) {
             return null;
         }
-        return switch (side) {
-            case 1 -> ThreeSides.ONE;
-            case 2 -> ThreeSides.TWO;
-            case 3 -> ThreeSides.THREE;
-            default -> null;
-        };
+        return ThreeSides.valueOf(side);
     }
 
     private static LimitViolationType toLimitViolationType(String kind) {
