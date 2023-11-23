@@ -15,14 +15,9 @@ import com.powsybl.dynawaltz.dsl.DslEquipment
 import com.powsybl.dynawaltz.dsl.builders.AbstractEventModelBuilder
 import com.powsybl.dynawaltz.models.events.AbstractEvent
 import com.powsybl.dynawaltz.models.events.EventHvdcDisconnection
-import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection
 import com.powsybl.dynawaltz.models.events.EventInjectionDisconnection
-import com.powsybl.iidm.network.Branch
-import com.powsybl.iidm.network.HvdcLine
-import com.powsybl.iidm.network.Identifiable
-import com.powsybl.iidm.network.IdentifiableType
-import com.powsybl.iidm.network.Network
-import com.powsybl.iidm.network.TwoSides
+import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection
+import com.powsybl.iidm.network.*
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -62,11 +57,11 @@ class EventDisconnectionGroovyExtension extends AbstractPureDynamicGroovyExtensi
         void disconnectOnly(TwoSides side) {
             disconnectSide = true
             switch (side) {
-                case Branch.Side.ONE :
+                case TwoSides.ONE :
                     disconnectOrigin = true
                     disconnectExtremity = false
                     break
-                case Branch.Side.TWO :
+                case TwoSides.TWO :
                     disconnectOrigin = false
                     disconnectExtremity = true
                     break

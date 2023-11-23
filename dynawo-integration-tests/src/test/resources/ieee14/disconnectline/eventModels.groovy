@@ -10,5 +10,5 @@ import com.powsybl.iidm.network.Branch
 Disconnect {
     staticId "_BUS____1-BUS____5-1_AC"
     startTime 1
-    disconnectOnly Branch.Side.TWO
+    disconnectOnly TwoSides.TWO
 }

@@ -8,11 +8,11 @@
 
 package warnings
 
-import com.powsybl.iidm.network.Branch
+import com.powsybl.iidm.network.TwoSides
 
 HvdcPV {
     staticId "L"
     dynamicModelId "BBM_HVDC_L"
     parameterSetId "HVDC"
-    dangling Branch.Side.ONE
+    dangling TwoSides.ONE
 }

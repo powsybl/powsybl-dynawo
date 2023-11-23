@@ -11,7 +11,6 @@ import com.powsybl.dynawaltz.dsl.EquipmentConfig
 import com.powsybl.dynawaltz.dsl.builders.AbstractEquipmentModelBuilder
 import com.powsybl.dynawaltz.models.Side
 import com.powsybl.dynawaltz.models.utils.SideConverter
-import com.powsybl.iidm.network.Branch
 import com.powsybl.iidm.network.HvdcLine
 import com.powsybl.iidm.network.IdentifiableType
 import com.powsybl.iidm.network.Network
