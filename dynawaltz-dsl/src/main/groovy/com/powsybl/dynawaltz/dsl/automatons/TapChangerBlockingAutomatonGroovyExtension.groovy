@@ -8,9 +8,11 @@
 package com.powsybl.dynawaltz.dsl.automatons
 
 import com.google.auto.service.AutoService
+import com.powsybl.commons.reporter.Reporter
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractPureDynamicGroovyExtension
+import com.powsybl.dynawaltz.dsl.Reporters
 import com.powsybl.dynawaltz.dsl.builders.AbstractPureDynamicModelBuilder
 import com.powsybl.dynawaltz.models.automatons.TapChangerBlockingAutomaton
 import com.powsybl.iidm.network.Bus
@@ -33,8 +35,8 @@ class TapChangerBlockingAutomatonGroovyExtension extends AbstractPureDynamicGroo
     }
 
     @Override
-    protected TCBAutomatonBuilder createBuilder(Network network) {
-        new TCBAutomatonBuilder(network, LIB)
+    protected TCBAutomatonBuilder createBuilder(Network network, Reporter reporter) {
+        new TCBAutomatonBuilder(network, LIB, reporter)
     }
 
     static class TCBAutomatonBuilder extends AbstractPureDynamicModelBuilder {
@@ -44,8 +46,8 @@ class TapChangerBlockingAutomatonGroovyExtension extends AbstractPureDynamicGroo
         List<Bus> uMeasurements = []
         List<String> tapChangerAutomatonIds = []
 
-        TCBAutomatonBuilder(Network network, String lib) {
-            super(network, lib)
+        TCBAutomatonBuilder(Network network, String lib, Reporter reporter) {
+            super(network, lib, reporter)
         }
 
         void transformers(String[] staticIds) {
@@ -69,7 +71,7 @@ class TapChangerBlockingAutomatonGroovyExtension extends AbstractPureDynamicGroo
         Identifiable<? extends Identifiable> checkEquipment(String staticId) {
             network.getIdentifiable(staticId)?.tap {
                 if (!TapChangerBlockingAutomaton.isCompatibleEquipment(type)) {
-                    LOGGER.warn("${getLib()}: $type $staticId is not compatible")
+                    Reporters.reportStaticIdUnknown(reporter, "uMeasurements", staticId, "LOAD/TWO_WINDINGS_TRANSFORMER")
                 }
             }
         }
@@ -78,7 +80,7 @@ class TapChangerBlockingAutomatonGroovyExtension extends AbstractPureDynamicGroo
             uMeasurements = staticIds.collect {
                 def bus = network.busBreakerView.getBus(it)
                 if (!bus) {
-                    LOGGER.warn("${getLib()}: $IdentifiableType.BUS static id unknown : $it")
+                    Reporters.reportStaticIdUnknown(reporter, "uMeasurements", it, IdentifiableType.BUS.toString())
                 }
                 bus
             }
@@ -87,17 +89,17 @@ class TapChangerBlockingAutomatonGroovyExtension extends AbstractPureDynamicGroo
         @Override
         protected void checkData() {
             if (!uMeasurements) {
-                LOGGER.warn("${getLib()}: 'uMeasurements' field is not set")
+                Reporters.reportFieldNotSet(reporter, "uMeasurements")
                 isInstantiable = false
             } else {
                 uMeasurements -= null
                 if (!uMeasurements) {
-                    LOGGER.warn("${getLib()}: 'uMeasurements' is empty")
+                    Reporters.reportEmptyList(reporter, "uMeasurements")
                     isInstantiable = false
                 }
             }
             if(!loads && !transformers && !tapChangerAutomatonIds) {
-                LOGGER.warn("${getLib()}: 'transformers' field is empty")
+                Reporters.reportEmptyList(reporter, "transformers")
                 isInstantiable = false
             }
         }

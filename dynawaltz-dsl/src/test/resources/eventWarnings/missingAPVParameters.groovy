@@ -9,6 +9,6 @@
 package eventWarnings
 
 Step {
-    staticId "NGEN"
+    staticId "SVC2"
     startTime 2
 }

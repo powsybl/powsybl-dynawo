@@ -8,15 +8,18 @@
 package com.powsybl.dynawaltz.dsl.automatons
 
 import com.google.auto.service.AutoService
+import com.powsybl.commons.reporter.Reporter
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractPureDynamicGroovyExtension
 import com.powsybl.dynawaltz.dsl.DslEquipment
+import com.powsybl.dynawaltz.dsl.Reporters
 import com.powsybl.dynawaltz.dsl.builders.AbstractPureDynamicModelBuilder
 import com.powsybl.dynawaltz.models.Side
 import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton
 import com.powsybl.dynawaltz.models.utils.SideConverter
 import com.powsybl.iidm.network.Branch
+import com.powsybl.iidm.network.IdentifiableType
 import com.powsybl.iidm.network.Network
 import com.powsybl.iidm.network.TwoSides
 
@@ -33,8 +36,8 @@ class CurrentLimitAutomatonGroovyExtension extends AbstractPureDynamicGroovyExte
     }
 
     @Override
-    protected CurrentLimitAutomatonBuilder createBuilder(Network network) {
-        new CurrentLimitAutomatonBuilder(network, getLib())
+    protected CurrentLimitAutomatonBuilder createBuilder(Network network, Reporter reporter) {
+        new CurrentLimitAutomatonBuilder(network, getLib(), reporter)
     }
 
     protected String getLib() {
@@ -47,10 +50,10 @@ class CurrentLimitAutomatonGroovyExtension extends AbstractPureDynamicGroovyExte
         protected Side iMeasurementSide
         protected final DslEquipment<Branch> controlledEquipment
 
-        CurrentLimitAutomatonBuilder(Network network, String lib) {
-            super(network, lib)
-            iMeasurement = new DslEquipment<>("I measurement quadripole", "iMeasurement")
-            controlledEquipment = new DslEquipment<>("Controlled quadripole", "controlledQuadripole")
+        CurrentLimitAutomatonBuilder(Network network, String lib, Reporter reporter) {
+            super(network, lib, reporter)
+            iMeasurement = new DslEquipment<>("Quadripole", "iMeasurement")
+            controlledEquipment = new DslEquipment<>("Quadripole", "controlledQuadripole")
         }
 
         void iMeasurement(String staticId) {
@@ -68,10 +71,10 @@ class CurrentLimitAutomatonGroovyExtension extends AbstractPureDynamicGroovyExte
         @Override
         void checkData() {
             super.checkData()
-            isInstantiable &= controlledEquipment.checkEquipmentData(LOGGER, getLib())
-            isInstantiable &= iMeasurement.checkEquipmentData(LOGGER, getLib())
+            isInstantiable &= controlledEquipment.checkEquipmentData(reporter)
+            isInstantiable &= iMeasurement.checkEquipmentData(reporter)
             if (!iMeasurementSide) {
-                LOGGER.warn("${getLib()}: 'iMeasurementSide' field is not set")
+                Reporters.reportFieldNotSet(reporter, "iMeasurementSide")
                 isInstantiable = false
             }
         }

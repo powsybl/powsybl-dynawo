@@ -8,10 +8,12 @@
 package com.powsybl.dynawaltz.dsl.events
 
 import com.google.auto.service.AutoService
+import com.powsybl.commons.reporter.Reporter
 import com.powsybl.dynamicsimulation.EventModel
 import com.powsybl.dynamicsimulation.groovy.EventModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractPureDynamicGroovyExtension
 import com.powsybl.dynawaltz.dsl.DslEquipment
+import com.powsybl.dynawaltz.dsl.Reporters
 import com.powsybl.dynawaltz.dsl.builders.AbstractEventModelBuilder
 import com.powsybl.dynawaltz.models.events.NodeFaultEvent
 import com.powsybl.iidm.network.Bus
@@ -31,8 +33,8 @@ class NodeFaultEventGroovyExtension extends AbstractPureDynamicGroovyExtension<E
     }
 
     @Override
-    protected NodeFaultEventBuilder createBuilder(Network network) {
-        new NodeFaultEventBuilder(network, TAG)
+    protected NodeFaultEventBuilder createBuilder(Network network, Reporter reporter) {
+        new NodeFaultEventBuilder(network, TAG, reporter)
     }
 
     static class NodeFaultEventBuilder extends AbstractEventModelBuilder<Bus> {
@@ -41,8 +43,8 @@ class NodeFaultEventGroovyExtension extends AbstractPureDynamicGroovyExtension<E
         protected double rPu
         protected double xPu
 
-        NodeFaultEventBuilder(Network network,String tag) {
-            super(network, new DslEquipment<Bus>(IdentifiableType.BUS), tag)
+        NodeFaultEventBuilder(Network network,String tag, Reporter reporter) {
+            super(network, new DslEquipment<Bus>(IdentifiableType.BUS), tag, reporter)
         }
 
         void faultTime(double faultTime) {
@@ -65,15 +67,15 @@ class NodeFaultEventGroovyExtension extends AbstractPureDynamicGroovyExtension<E
         void checkData() {
             super.checkData()
             if (faultTime <= 0) {
-                LOGGER.warn("${getLib()}: Fault time should be strictly positive (${faultTime})")
+                Reporters.reportCrossThreshold(reporter, "faultTime", faultTime, "strictly positive")
                 isInstantiable = false
             }
             if (rPu < 0) {
-                LOGGER.warn("${getLib()}: rPu should be positive (${rPu})")
+                Reporters.reportCrossThreshold(reporter, "rPu", rPu, "positive")
                 isInstantiable = false
             }
             if (xPu < 0) {
-                LOGGER.warn("${getLib()}: xPu should be positive (${xPu})")
+                Reporters.reportCrossThreshold(reporter, "xPu", xPu, "positive")
                 isInstantiable = false
             }
         }
