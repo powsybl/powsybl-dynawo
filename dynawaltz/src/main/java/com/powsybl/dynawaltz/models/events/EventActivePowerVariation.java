@@ -21,6 +21,7 @@ import java.util.List;
 
 import static com.powsybl.dynawaltz.parameters.ParameterType.BOOL;
 import static com.powsybl.dynawaltz.parameters.ParameterType.DOUBLE;
+import static java.lang.Boolean.TRUE;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -51,7 +52,7 @@ public class EventActivePowerVariation extends AbstractEvent implements ContextD
 
     @Override
     public String getLib() {
-        return equipmentHasDynamicModel.getValue() ? DYNAMIC_MODEL_LIB : DEFAULT_MODEL_LIB;
+        return TRUE == equipmentHasDynamicModel.getValue() ? DYNAMIC_MODEL_LIB : DEFAULT_MODEL_LIB;
     }
 
     @Override
@@ -60,7 +61,7 @@ public class EventActivePowerVariation extends AbstractEvent implements ContextD
     }
 
     private List<VarConnection> getVarConnectionsWith(ControllableEquipment connected) {
-        return List.of(equipmentHasDynamicModel.getValue() ? new VarConnection("step_step_value", connected.getDeltaPVarName())
+        return List.of(TRUE == equipmentHasDynamicModel.getValue() ? new VarConnection("step_step_value", connected.getDeltaPVarName())
                 : new VarConnection("event_state1", connected.getDeltaPVarName()));
     }
 
@@ -74,7 +75,7 @@ public class EventActivePowerVariation extends AbstractEvent implements ContextD
 
     @Override
     protected void createEventSpecificParameters(ParametersSet paramSet) {
-        if (equipmentHasDynamicModel.getValue()) {
+        if (TRUE == equipmentHasDynamicModel.getValue()) {
             paramSet.addParameter("step_Value0", DOUBLE, Double.toString(0));
             paramSet.addParameter("step_tStep", DOUBLE, Double.toString(getStartTime()));
             paramSet.addParameter("step_Height", DOUBLE, Double.toString(deltaP));

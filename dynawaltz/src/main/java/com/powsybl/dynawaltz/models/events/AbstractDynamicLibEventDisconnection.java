@@ -14,6 +14,7 @@ import com.powsybl.iidm.network.Identifiable;
 
 import static com.powsybl.dynawaltz.parameters.ParameterType.BOOL;
 import static com.powsybl.dynawaltz.parameters.ParameterType.DOUBLE;
+import static java.lang.Boolean.TRUE;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -35,7 +36,7 @@ public abstract class AbstractDynamicLibEventDisconnection extends AbstractEvent
 
     @Override
     public String getLib() {
-        return equipmentHasDynamicModel.getValue() ? DYNAMIC_MODEL_LIB : DEFAULT_MODEL_LIB;
+        return TRUE == equipmentHasDynamicModel.getValue() ? DYNAMIC_MODEL_LIB : DEFAULT_MODEL_LIB;
     }
 
     @Override
