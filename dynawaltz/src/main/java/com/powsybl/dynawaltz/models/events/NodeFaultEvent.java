@@ -7,7 +7,6 @@
  */
 package com.powsybl.dynawaltz.models.events;
 
-import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.buses.ActionConnectionPoint;
 import com.powsybl.dynawaltz.models.macroconnections.MacroConnectionsAdder;
@@ -52,7 +51,7 @@ public class NodeFaultEvent extends AbstractEvent {
     }
 
     @Override
-    protected void createEventSpecificParameters(ParametersSet paramSet, DynaWaltzContext context) {
+    protected void createEventSpecificParameters(ParametersSet paramSet) {
         paramSet.addParameter("fault_RPu", DOUBLE, Double.toString(rPu));
         paramSet.addParameter("fault_XPu", DOUBLE, Double.toString(xPu));
         paramSet.addParameter("fault_tBegin", DOUBLE, Double.toString(getStartTime()));

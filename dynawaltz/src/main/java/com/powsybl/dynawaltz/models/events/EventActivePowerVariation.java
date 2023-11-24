@@ -7,17 +7,15 @@
  */
 package com.powsybl.dynawaltz.models.events;
 
-import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.macroconnections.MacroConnectionsAdder;
+import com.powsybl.dynawaltz.models.utils.LateInitField;
 import com.powsybl.dynawaltz.parameters.ParametersSet;
 import com.powsybl.iidm.network.Generator;
 import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Load;
 
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -27,7 +25,7 @@ import static com.powsybl.dynawaltz.parameters.ParameterType.DOUBLE;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class EventActivePowerVariation extends AbstractEvent {
+public class EventActivePowerVariation extends AbstractEvent implements ContextDependentEvent {
 
     private static final EnumSet<IdentifiableType> CONNECTABLE_EQUIPMENTS = EnumSet.of(IdentifiableType.GENERATOR, IdentifiableType.LOAD);
     private static final String EVENT_PREFIX = "Step_";
@@ -35,6 +33,7 @@ public class EventActivePowerVariation extends AbstractEvent {
     private static final String DEFAULT_MODEL_LIB = "EventSetPointReal";
 
     private final double deltaP;
+    private final LateInitField<Boolean> equipmentHasDynamicModel = new LateInitField<>();
 
     public EventActivePowerVariation(Load equipment, double startTime, double deltaP) {
         super(equipment, startTime, EVENT_PREFIX);
@@ -52,7 +51,7 @@ public class EventActivePowerVariation extends AbstractEvent {
 
     @Override
     public String getLib() {
-        throw new PowsyblException("The associated library depends on context");
+        return equipmentHasDynamicModel.getValue() ? DYNAMIC_MODEL_LIB : DEFAULT_MODEL_LIB;
     }
 
     @Override
@@ -60,12 +59,9 @@ public class EventActivePowerVariation extends AbstractEvent {
         return EventActivePowerVariation.class.getSimpleName();
     }
 
-    private List<VarConnection> getVarConnectionsWithDefault(ControllableEquipment connected) {
-        return List.of(new VarConnection("event_state1", connected.getDeltaPVarName()));
-    }
-
     private List<VarConnection> getVarConnectionsWith(ControllableEquipment connected) {
-        return List.of(new VarConnection("step_step_value", connected.getDeltaPVarName()));
+        return List.of(equipmentHasDynamicModel.getValue() ? new VarConnection("step_step_value", connected.getDeltaPVarName())
+                : new VarConnection("event_state1", connected.getDeltaPVarName()));
     }
 
     @Override
@@ -73,27 +69,19 @@ public class EventActivePowerVariation extends AbstractEvent {
         adder.createMacroConnections(this,
                 getEquipment(),
                 ControllableEquipment.class,
-                adder.isWithoutBlackBoxDynamicModel(getEquipment()) ? this::getVarConnectionsWithDefault : this::getVarConnectionsWith);
+                this::getVarConnectionsWith);
     }
 
     @Override
-    protected void createEventSpecificParameters(ParametersSet paramSet, DynaWaltzContext context) {
-        if (context.isWithoutBlackBoxDynamicModel(getEquipment())) {
-            paramSet.addParameter("event_tEvent", DOUBLE, Double.toString(getStartTime()));
-            paramSet.addParameter("event_stateEvent1", DOUBLE, Double.toString(deltaP));
-        } else {
+    protected void createEventSpecificParameters(ParametersSet paramSet) {
+        if (equipmentHasDynamicModel.getValue()) {
             paramSet.addParameter("step_Value0", DOUBLE, Double.toString(0));
             paramSet.addParameter("step_tStep", DOUBLE, Double.toString(getStartTime()));
             paramSet.addParameter("step_Height", DOUBLE, Double.toString(deltaP));
+        } else {
+            paramSet.addParameter("event_tEvent", DOUBLE, Double.toString(getStartTime()));
+            paramSet.addParameter("event_stateEvent1", DOUBLE, Double.toString(deltaP));
         }
-    }
-
-    @Override
-    protected void writeDynamicAttributes(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
-        writer.writeAttribute("id", getDynamicModelId());
-        writer.writeAttribute("lib", context.isWithoutBlackBoxDynamicModel(getEquipment()) ? DEFAULT_MODEL_LIB : DYNAMIC_MODEL_LIB);
-        writer.writeAttribute("parFile", getParFile(context));
-        writer.writeAttribute("parId", getParameterSetId());
     }
 
     @Override
@@ -101,5 +89,10 @@ public class EventActivePowerVariation extends AbstractEvent {
         if (getEquipment().getType() == IdentifiableType.LOAD) {
             networkParameters.addParameter(getEquipment().getId() + "_isControllable", BOOL, Boolean.toString(true));
         }
+    }
+
+    @Override
+    public final void setEquipmentHasDynamicModel(DynaWaltzContext context) {
+        this.equipmentHasDynamicModel.setValue(hasDynamicModel(context));
     }
 }

@@ -43,17 +43,13 @@ public final class MacroConnectionsAdder {
 
     private final DynamicModelGetter dynamicModelGetter;
     private final PureDynamicModelGetter pureDynamicModelGetter;
-    private final Predicate<Identifiable<?>> dynamicModelPredicate;
     private Consumer<MacroConnect> macroConnectAdder;
     private BiConsumer<String, Function<String, MacroConnector>> macroConnectorAdder;
 
     public MacroConnectionsAdder(DynamicModelGetter dynamicModelGetter, PureDynamicModelGetter pureDynamicModelGetter,
-                                 Predicate<Identifiable<?>> dynamicModelPredicate,
-                                 Consumer<MacroConnect> macroConnectAdder,
-                                 BiConsumer<String, Function<String, MacroConnector>> macroConnectorAdder) {
+                                 Consumer<MacroConnect> macroConnectAdder, BiConsumer<String, Function<String, MacroConnector>> macroConnectorAdder) {
         this.dynamicModelGetter = dynamicModelGetter;
         this.pureDynamicModelGetter = pureDynamicModelGetter;
-        this.dynamicModelPredicate = dynamicModelPredicate;
         this.macroConnectAdder = macroConnectAdder;
         this.macroConnectorAdder = macroConnectorAdder;
     }
@@ -219,11 +215,6 @@ public final class MacroConnectionsAdder {
     private <T extends Model> void addMacroConnections(T connectedModel, String macroConnectorId, MacroConnect mc, BiFunction<T, String, List<VarConnection>> varConnectionsSupplier, String parametrizedName) {
         macroConnectAdder.accept(mc);
         macroConnectorAdder.accept(macroConnectorId, k -> new MacroConnector(macroConnectorId, varConnectionsSupplier.apply(connectedModel, parametrizedName)));
-    }
-
-    //TODO use context method instead ?
-    public boolean isWithoutBlackBoxDynamicModel(Identifiable<?> equipment) {
-        return dynamicModelPredicate.test(equipment);
     }
 
     public void setMacroConnectAdder(Consumer<MacroConnect> macroConnectAdder) {

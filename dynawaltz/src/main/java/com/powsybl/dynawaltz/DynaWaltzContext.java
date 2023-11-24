@@ -9,9 +9,13 @@ package com.powsybl.dynawaltz;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
-import com.powsybl.dynawaltz.models.*;
+import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
+import com.powsybl.dynawaltz.models.BlackBoxModel;
+import com.powsybl.dynawaltz.models.EquipmentBlackBoxModel;
+import com.powsybl.dynawaltz.models.Model;
 import com.powsybl.dynawaltz.models.buses.AbstractBus;
 import com.powsybl.dynawaltz.models.defaultmodels.DefaultModelsHandler;
+import com.powsybl.dynawaltz.models.events.ContextDependentEvent;
 import com.powsybl.dynawaltz.models.frequencysynchronizers.FrequencySynchronizedModel;
 import com.powsybl.dynawaltz.models.frequencysynchronizers.FrequencySynchronizerModel;
 import com.powsybl.dynawaltz.models.frequencysynchronizers.OmegaRef;
@@ -62,23 +66,26 @@ public class DynaWaltzContext {
                             List<Curve> curves, DynamicSimulationParameters parameters, DynaWaltzParameters dynaWaltzParameters) {
         this.network = Objects.requireNonNull(network);
         this.workingVariantId = Objects.requireNonNull(workingVariantId);
+
         this.dynamicModels = Objects.requireNonNull(dynamicModels).stream()
                 .filter(distinctByDynamicId().and(distinctByStaticId()))
-                .toList();
-        this.eventModels = Objects.requireNonNull(eventModels).stream()
-                .filter(distinctByDynamicId())
                 .toList();
         this.staticIdBlackBoxModelMap = getInputBlackBoxDynamicModelStream()
                 .filter(EquipmentBlackBoxModel.class::isInstance)
                 .map(EquipmentBlackBoxModel.class::cast)
                 .collect(Collectors.toMap(EquipmentBlackBoxModel::getStaticId, Function.identity()));
+
+        this.eventModels = Objects.requireNonNull(eventModels).stream()
+                .filter(distinctByDynamicId())
+                .map(setLateInitEventField())
+                .toList();
+
         this.curves = Objects.requireNonNull(curves);
         this.parameters = Objects.requireNonNull(parameters);
         this.dynaWaltzParameters = Objects.requireNonNull(dynaWaltzParameters);
         this.frequencySynchronizer = setupFrequencySynchronizer(dynamicModels.stream().anyMatch(AbstractBus.class::isInstance) ? SetPoint::new : OmegaRef::new);
         this.macroConnectionsAdder = new MacroConnectionsAdder(this::getDynamicModel,
                 this::getPureDynamicModel,
-                this::isWithoutBlackBoxDynamicModel,
                 macroConnectList::add,
                 macroConnectorsMap::computeIfAbsent);
 
@@ -185,16 +192,25 @@ public class DynaWaltzContext {
         };
     }
 
+    protected Function<BlackBoxModel, BlackBoxModel> setLateInitEventField() {
+        return blackBoxModel -> {
+            if (blackBoxModel instanceof ContextDependentEvent event) {
+                event.setEquipmentHasDynamicModel(this);
+            }
+            return blackBoxModel;
+        };
+    }
+
+    public boolean hasDynamicModel(Identifiable<?> equipment) {
+        return staticIdBlackBoxModelMap.containsKey(equipment.getId());
+    }
+
     public List<MacroConnect> getMacroConnectList() {
         return macroConnectList;
     }
 
     public Collection<MacroConnector> getMacroConnectors() {
         return macroConnectorsMap.values();
-    }
-
-    public boolean isWithoutBlackBoxDynamicModel(Identifiable<?> equipment) {
-        return !staticIdBlackBoxModelMap.containsKey(equipment.getId());
     }
 
     private Stream<BlackBoxModel> getInputBlackBoxDynamicModelStream() {
