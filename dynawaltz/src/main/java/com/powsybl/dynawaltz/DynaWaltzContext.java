@@ -47,7 +47,6 @@ public class DynaWaltzContext {
     private static final String MODEL_ID_EXCEPTION = "The model identified by the static id %s does not match the expected model (%s)";
     private static final String MODEL_ID_LOG = "The model identified by the static id {} does not match the expected model ({})";
 
-    private final Reporter reporter;
     private final Network network;
     private final String workingVariantId;
     private final DynamicSimulationParameters parameters;
@@ -72,12 +71,12 @@ public class DynaWaltzContext {
     public DynaWaltzContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
                             List<Curve> curves, DynamicSimulationParameters parameters, DynaWaltzParameters dynaWaltzParameters, Reporter reporter) {
 
-        this.reporter = DynawaltzReports.createDynaWaltzContextReporter(reporter);
+        Reporter contextReporter = DynawaltzReports.createDynaWaltzContextReporter(reporter);
         this.network = Objects.requireNonNull(network);
         this.workingVariantId = Objects.requireNonNull(workingVariantId);
 
         this.dynamicModels = Objects.requireNonNull(dynamicModels).stream()
-                .filter(distinctByDynamicId(reporter).and(distinctByStaticId(reporter)))
+                .filter(distinctByDynamicId(contextReporter).and(distinctByStaticId(contextReporter)))
                 .toList();
         this.staticIdBlackBoxModelMap = getInputBlackBoxDynamicModelStream()
                 .filter(EquipmentBlackBoxModel.class::isInstance)
@@ -85,7 +84,7 @@ public class DynaWaltzContext {
                 .collect(Collectors.toMap(EquipmentBlackBoxModel::getStaticId, Function.identity()));
 
         this.eventModels = Objects.requireNonNull(eventModels).stream()
-                .filter(distinctByDynamicId())
+                .filter(distinctByDynamicId(contextReporter))
                 .map(setLateInitEventField())
                 .toList();
 
@@ -96,7 +95,8 @@ public class DynaWaltzContext {
         this.macroConnectionsAdder = new MacroConnectionsAdder(this::getDynamicModel,
                 this::getPureDynamicModel,
                 macroConnectList::add,
-                macroConnectorsMap::computeIfAbsent);
+                macroConnectorsMap::computeIfAbsent,
+                contextReporter);
 
         for (BlackBoxModel bbm : getBlackBoxDynamicModelStream().toList()) {
             macroStaticReferences.computeIfAbsent(bbm.getName(), k -> new MacroStaticReference(k, bbm.getVarsMapping()));
@@ -260,9 +260,5 @@ public class DynaWaltzContext {
 
     public String getSimulationParFile() {
         return getNetwork().getId() + ".par";
-    }
-
-    public Reporter getReporter() {
-        return reporter;
     }
 }

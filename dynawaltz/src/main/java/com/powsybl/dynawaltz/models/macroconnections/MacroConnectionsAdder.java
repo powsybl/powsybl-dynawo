@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawaltz.models.macroconnections;
 
+import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.Model;
 import com.powsybl.dynawaltz.models.Side;
@@ -22,7 +23,10 @@ import com.powsybl.iidm.network.Terminal;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.*;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -41,17 +45,19 @@ public final class MacroConnectionsAdder {
         <T extends Model> T getPureDynamicModel(String dynamicId, Class<T> connectableClass, boolean throwException);
     }
 
+    private final Reporter reporter;
     private final DynamicModelGetter dynamicModelGetter;
     private final PureDynamicModelGetter pureDynamicModelGetter;
     private Consumer<MacroConnect> macroConnectAdder;
     private BiConsumer<String, Function<String, MacroConnector>> macroConnectorAdder;
 
-    public MacroConnectionsAdder(DynamicModelGetter dynamicModelGetter, PureDynamicModelGetter pureDynamicModelGetter,
-                                 Consumer<MacroConnect> macroConnectAdder, BiConsumer<String, Function<String, MacroConnector>> macroConnectorAdder) {
+    public MacroConnectionsAdder(DynamicModelGetter dynamicModelGetter, PureDynamicModelGetter pureDynamicModelGetter, Consumer<MacroConnect> macroConnectAdder,
+                                 BiConsumer<String, Function<String, MacroConnector>> macroConnectorAdder, Reporter reporter) {
         this.dynamicModelGetter = dynamicModelGetter;
         this.pureDynamicModelGetter = pureDynamicModelGetter;
         this.macroConnectAdder = macroConnectAdder;
         this.macroConnectorAdder = macroConnectorAdder;
+        this.reporter = reporter;
     }
 
     /**
@@ -223,5 +229,9 @@ public final class MacroConnectionsAdder {
 
     public void setMacroConnectorAdder(BiConsumer<String, Function<String, MacroConnector>> macroConnectorAdder) {
         this.macroConnectorAdder = macroConnectorAdder;
+    }
+
+    public Reporter getReporter() {
+        return reporter;
     }
 }

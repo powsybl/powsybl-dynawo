@@ -103,7 +103,7 @@ public class TapChangerBlockingAutomaton extends AbstractPureDynamicBlackBoxMode
             }
         } else {
             isConnected = false;
-            DynawaltzReports.reportEmptyTapChangerBlockingAutomaton(context.getReporter(), getDynamicModelId());
+            DynawaltzReports.reportEmptyTapChangerBlockingAutomaton(adder.getReporter(), getDynamicModelId());
         }
     }
 
