@@ -9,6 +9,7 @@ package com.powsybl.dynawaltz.models.automatons;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
+import com.powsybl.dynawaltz.DynawaltzReports;
 import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawaltz.models.MeasurementPointSuffix;
 import com.powsybl.dynawaltz.models.VarConnection;
@@ -19,8 +20,6 @@ import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Load;
 import com.powsybl.iidm.network.TwoWindingsTransformer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -31,7 +30,6 @@ import java.util.*;
  */
 public class TapChangerBlockingAutomaton extends AbstractPureDynamicBlackBoxModel {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TapChangerBlockingAutomaton.class);
     private static final Set<IdentifiableType> COMPATIBLE_EQUIPMENTS = EnumSet.of(IdentifiableType.LOAD, IdentifiableType.TWO_WINDINGS_TRANSFORMER);
     private static final int MAX_MEASUREMENTS = 5;
 
@@ -105,7 +103,7 @@ public class TapChangerBlockingAutomaton extends AbstractPureDynamicBlackBoxMode
             }
         } else {
             isConnected = false;
-            LOGGER.warn("None of TapChangerBlockingAutomaton {} equipments are TapChangerModel, the automaton will be skipped", getDynamicModelId());
+            DynawaltzReports.reportEmptyTapChangerBlockingAutomaton(context.getReporter(), getDynamicModelId());
         }
     }
 

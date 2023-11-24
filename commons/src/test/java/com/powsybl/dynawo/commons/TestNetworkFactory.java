@@ -8,8 +8,8 @@
 package com.powsybl.dynawo.commons;
 
 import com.powsybl.iidm.network.*;
-import org.joda.time.DateTime;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 
 /**
@@ -22,7 +22,7 @@ public final class TestNetworkFactory {
 
     static Network createMultiBusesVoltageLevelNetwork() {
         Network network = Network.create("multiBusesVl", "test")
-                .setCaseDate(DateTime.parse("2023-02-17T05:41:11.194+01:00"));
+                .setCaseDate(ZonedDateTime.parse("2023-02-17T05:41:11.194+01:00"));
         Substation s = network.newSubstation().setId("substation").add();
 
         VoltageLevel vl1 = s.newVoltageLevel().setId("vl1").setNominalV(250).setTopologyKind(TopologyKind.NODE_BREAKER).add();
@@ -70,7 +70,7 @@ public final class TestNetworkFactory {
      */
     static Network createMultiLoadsBusesNetwork(List<LoadState> loadStates) {
         Network network = Network.create("multiLoads", "test")
-                .setCaseDate(DateTime.parse("2023-02-17T05:41:11.194+01:00"));
+                .setCaseDate(ZonedDateTime.parse("2023-02-17T05:41:11.194+01:00"));
         Substation s = network.newSubstation().setId("substation").add();
 
         // First node breaker voltage level

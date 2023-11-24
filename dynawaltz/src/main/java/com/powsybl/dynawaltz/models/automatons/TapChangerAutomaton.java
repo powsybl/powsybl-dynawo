@@ -8,6 +8,7 @@
 package com.powsybl.dynawaltz.models.automatons;
 
 import com.powsybl.dynawaltz.DynaWaltzContext;
+import com.powsybl.dynawaltz.DynawaltzReports;
 import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawaltz.models.TransformerSide;
 import com.powsybl.dynawaltz.models.VarConnection;
@@ -15,8 +16,6 @@ import com.powsybl.dynawaltz.models.loads.LoadWithTransformers;
 import com.powsybl.dynawaltz.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawaltz.models.transformers.TapChangerModel;
 import com.powsybl.iidm.network.Load;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -27,8 +26,6 @@ import java.util.Objects;
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class TapChangerAutomaton extends AbstractPureDynamicBlackBoxModel implements TapChangerModel {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(TapChangerAutomaton.class);
 
     private final Load load;
     private final TransformerSide side;
@@ -67,7 +64,7 @@ public class TapChangerAutomaton extends AbstractPureDynamicBlackBoxModel implem
             boolean isSkipped = adder.createMacroConnectionsOrSkip(this, load, LoadWithTransformers.class, this::getVarConnectionsWith);
             if (isSkipped) {
                 connection = ConnectionState.NOT_CONNECTED;
-                LOGGER.warn("TapChangerAutomaton {} load does not possess a transformer, the automaton will be skipped", getDynamicModelId());
+                DynawaltzReports.reportEmptyTapChanger(context.getReporter(), getDynamicModelId());
             } else {
                 connection = ConnectionState.CONNECTED;
             }

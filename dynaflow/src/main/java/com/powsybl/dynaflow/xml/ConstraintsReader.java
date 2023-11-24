@@ -72,26 +72,50 @@ public final class ConstraintsReader {
                 state = reader.next();
             }
 
-            XmlUtil.readUntilEndElement(CONSTRAINTS_ELEMENT_NAME, reader, () -> {
-                if (!reader.getLocalName().equals(CONSTRAINT_ELEMENT_NAME)) {
-                    throw new AssertionError();
-                }
-                String name = reader.getAttributeValue(null, MODEL_NAME);
-                reader.getAttributeValue(null, DESCRIPTION); // description: unused
-                reader.getAttributeValue(null, TYPE); // type: unused
-                String kind = reader.getAttributeValue(null, KIND);
-                double limit = XmlUtil.readOptionalDoubleAttribute(reader, LIMIT);
-                double value = XmlUtil.readOptionalDoubleAttribute(reader, VALUE);
-                Integer side = XmlUtil.readOptionalIntegerAttribute(reader, SIDE);
-                Integer acceptableDuration = XmlUtil.readOptionalIntegerAttribute(reader, ACCEPTABLE_DURATION, Integer.MAX_VALUE);
+            if (!CONSTRAINTS_ELEMENT_NAME.equals(reader.getLocalName())) {
+                throw new PowsyblException("Unknown element name '" + reader.getLocalName() + "' in constraints file");
+            }
+            XmlUtil.readSubElements(reader, elementName -> {
+                try {
+                    if (!elementName.equals(CONSTRAINT_ELEMENT_NAME)) {
+                        throw new PowsyblException("Unknown element name '" + elementName + "' in constraints tag");
+                    }
+                    String name = reader.getAttributeValue(null, MODEL_NAME);
+                    reader.getAttributeValue(null, DESCRIPTION); // description: unused
+                    reader.getAttributeValue(null, TYPE); // type: unused
+                    String kind = reader.getAttributeValue(null, KIND);
+                    double limit = readDouble(reader, LIMIT);
+                    double value = readDouble(reader, VALUE);
+                    Integer side = readInteger(reader, SIDE);
+                    Integer acceptableDuration = readInteger(reader, ACCEPTABLE_DURATION, Integer.MAX_VALUE);
+                    XmlUtil.readEndElementOrThrow(reader);
 
-                getLimitViolation(network, name, kind, limit, 1f, value, side, acceptableDuration)
-                        .ifPresent(lvRead -> addOrDismiss(lvRead, limitViolations));
+                    getLimitViolation(network, name, kind, limit, 1f, value, side, acceptableDuration)
+                            .ifPresent(lvRead -> addOrDismiss(lvRead, limitViolations));
+
+                } catch (XMLStreamException e) {
+                    throw new UncheckedXmlStreamException(e);
+                }
             });
             return limitViolations;
         } catch (XMLStreamException e) {
             throw new UncheckedXmlStreamException(e);
         }
+    }
+
+    private static double readDouble(XMLStreamReader reader, String name) {
+        String doubleStr = reader.getAttributeValue(null, name);
+        return doubleStr != null ? Double.parseDouble(doubleStr) : Double.NaN;
+    }
+
+    private static Integer readInteger(XMLStreamReader reader, String name) {
+        String intStr = reader.getAttributeValue(null, name);
+        return intStr != null ? Integer.valueOf(intStr) : null;
+    }
+
+    private static int readInteger(XMLStreamReader reader, String name, int defaultValue) {
+        String intStr = reader.getAttributeValue(null, name);
+        return intStr != null ? Integer.parseInt(intStr) : defaultValue;
     }
 
     private static void addOrDismiss(LimitViolation lvRead, List<LimitViolation> limitViolations) {
@@ -117,7 +141,7 @@ public final class ConstraintsReader {
                 .map(identifiable -> new LimitViolation(
                         identifiable.getId(), identifiable.getOptionalName().orElse(null),
                         toLimitViolationType(kind), kind, acceptableDuration,
-                        limit, limitReduction, value, toBranchSide(side)));
+                        limit, limitReduction, value, toThreeSides(side)));
     }
 
     private static Optional<Identifiable<?>> getLimitViolationIdentifiable(Network network, String name) {
@@ -142,16 +166,11 @@ public final class ConstraintsReader {
         }
     }
 
-    private static Branch.Side toBranchSide(Integer side) {
+    private static ThreeSides toThreeSides(Integer side) {
         if (side == null) {
             return null;
-        } else if (side == 1) {
-            return Branch.Side.ONE;
-        } else if (side == 2) {
-            return Branch.Side.TWO;
-        } else {
-            return null;
         }
+        return ThreeSides.valueOf(side);
     }
 
     private static LimitViolationType toLimitViolationType(String kind) {

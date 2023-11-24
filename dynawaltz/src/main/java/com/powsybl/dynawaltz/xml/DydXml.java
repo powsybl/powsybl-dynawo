@@ -16,26 +16,24 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Objects;
 
 import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.DYD_FILENAME;
 
 /**
  * @author Mathieu Bague {@literal <mathieu.bague@rte-france.com>}
  */
-public final class DydXml {
+public final class DydXml extends AbstractXmlDynawaltzWriter {
 
     private DydXml() {
+        super(DYD_FILENAME, "dynamicModelsArchitecture");
     }
 
-    public static void write(Path workingDir, DynaWaltzContext context) throws IOException, XMLStreamException {
-        Objects.requireNonNull(workingDir);
-        Path file = workingDir.resolve(DYD_FILENAME);
-
-        XmlUtil.write(file, context, "dynamicModelsArchitecture", DydXml::write);
+    public static void write(Path workingDir, DynaWaltzContext context) throws IOException {
+        new DydXml().createXmlFileFromContext(workingDir, context);
     }
 
-    private static void write(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
+    @Override
+    public void write(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
         // loop over the values of the map indexed by dynamicIds to write only once objects with the same dynamicId
         for (BlackBoxModel model : context.getBlackBoxDynamicModels()) {
             model.write(writer, context);

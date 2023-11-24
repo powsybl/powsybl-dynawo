@@ -18,6 +18,7 @@ import com.powsybl.dynawaltz.models.events.*;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import com.powsybl.iidm.network.test.HvdcTestNetwork;
+import com.powsybl.iidm.network.test.SvcTestCaseFactory;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -46,9 +47,10 @@ class EventModelsSupplierTest extends AbstractModelSupplierTest {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("provideWarningsModel")
-    void testDslWarnings(String groovyScriptName, Network network) {
+    void testDslWarnings(String groovyScriptName, Network network, String report) {
         EventModelsSupplier supplier = new GroovyEventModelsSupplier(getResourceAsStream(groovyScriptName), EXTENSIONS);
-        assertTrue(supplier.get(network).isEmpty());
+        assertTrue(supplier.get(network, reporter).isEmpty());
+        checkReporter(report);
     }
 
     void assertEventModel(AbstractEvent em, String dynamicId, String equipmentStaticId, String lib, double startTime) {
@@ -76,12 +78,55 @@ class EventModelsSupplierTest extends AbstractModelSupplierTest {
 
     private static Stream<Arguments> provideWarningsModel() {
         return Stream.of(
-                Arguments.of("/eventWarnings/missingStaticId.groovy", EurostagTutorialExample1Factory.create()),
-                Arguments.of("/eventWarnings/missingStartTime.groovy", EurostagTutorialExample1Factory.create()),
-                Arguments.of("/eventWarnings/missingNodeFaultParameters.groovy", EurostagTutorialExample1Factory.create()),
-                Arguments.of("/eventWarnings/missingAPVParameters.groovy", EurostagTutorialExample1Factory.create()),
-                Arguments.of("/eventWarnings/missingDisconnectionEquipment.groovy", EurostagTutorialExample1Factory.create()),
-                Arguments.of("/eventWarnings/missingDisconnectionSide.groovy", EurostagTutorialExample1Factory.create())
+                Arguments.of("/eventWarnings/missingStaticId.groovy", EurostagTutorialExample1Factory.create(),
+                        """
+                        + DSL tests
+                          + Groovy Event Models Supplier
+                            + DSL model builder for NodeFault
+                               'staticId' field value 'GEN' not found for equipment type(s) BUS
+                               Model NodeFault_GEN cannot be instantiated
+                        """),
+                Arguments.of("/eventWarnings/missingStartTime.groovy", EurostagTutorialExample1Factory.create(),
+                        """
+                        + DSL tests
+                          + Groovy Event Models Supplier
+                            + DSL model builder for NodeFault
+                               'startTime' field is not set
+                               Model NodeFault_NGEN cannot be instantiated
+                        """),
+                Arguments.of("/eventWarnings/missingNodeFaultParameters.groovy", EurostagTutorialExample1Factory.create(),
+                        """
+                        + DSL tests
+                          + Groovy Event Models Supplier
+                            + DSL model builder for NodeFault
+                               faultTime should be strictly positive (0.0)
+                               Model NodeFault_NGEN cannot be instantiated
+                        """),
+                Arguments.of("/eventWarnings/missingAPVParameters.groovy", SvcTestCaseFactory.create(),
+                        """
+                        + DSL tests
+                          + Groovy Event Models Supplier
+                            + DSL model builder for Step
+                               'staticId' field value 'SVC2' not found for equipment type(s) GENERATOR/LOAD
+                               'deltaP' field is not set
+                               Model Step_SVC2 cannot be instantiated
+                         """),
+                Arguments.of("/eventWarnings/missingDisconnectionEquipment.groovy", EurostagTutorialExample1Factory.create(),
+                        """
+                        + DSL tests
+                          + Groovy Event Models Supplier
+                            + DSL model builder for Disconnect
+                               'staticId' field value 'NGEN' not found for equipment type(s) Disconnectable equipment
+                               Model Disconnect_NGEN cannot be instantiated
+                        """),
+                Arguments.of("/eventWarnings/missingDisconnectionSide.groovy", EurostagTutorialExample1Factory.create(),
+                        """
+                        + DSL tests
+                          + Groovy Event Models Supplier
+                            + DSL model builder for Disconnect
+                               'disconnectSide' field is set but GENERATOR GEN does not possess this option
+                               Model Disconnect_GEN cannot be instantiated
+                        """)
         );
     }
 }

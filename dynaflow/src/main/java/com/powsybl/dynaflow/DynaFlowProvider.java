@@ -24,7 +24,7 @@ import com.powsybl.dynawo.commons.loadmerge.LoadsMerger;
 import com.powsybl.dynawo.commons.timeline.TimelineEntry;
 import com.powsybl.dynawo.commons.timeline.XmlTimeLineParser;
 import com.powsybl.iidm.network.Network;
-import com.powsybl.iidm.xml.NetworkXml;
+import com.powsybl.iidm.serde.NetworkSerDe;
 import com.powsybl.loadflow.LoadFlowParameters;
 import com.powsybl.loadflow.LoadFlowProvider;
 import com.powsybl.loadflow.LoadFlowResult;
@@ -187,7 +187,7 @@ public class DynaFlowProvider implements LoadFlowProvider {
             boolean status = true;
             Path outputNetworkFile = workingDir.resolve("outputs").resolve("finalState").resolve(OUTPUT_IIDM_FILENAME);
             if (Files.exists(outputNetworkFile)) {
-                NetworkResultsUpdater.update(network, NetworkXml.read(outputNetworkFile), dynaFlowParameters.isMergeLoads());
+                NetworkResultsUpdater.update(network, NetworkSerDe.read(outputNetworkFile), dynaFlowParameters.isMergeLoads());
             } else {
                 status = false;
             }
