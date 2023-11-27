@@ -51,20 +51,15 @@ public final class DynawaltzReports {
                 .build());
     }
 
-    public static void reportEmptyTapChanger(Reporter reporter, String dynamicId) {
+    public static void reportEmptyAutomaton(Reporter reporter, String automatonName, String dynamicId, String expectedModels, boolean hasEquipmentList) {
+        String message = hasEquipmentList ? "None of ${automatonName} ${dynamicId} equipments are ${expectedModels}, the automaton will be skipped"
+                : "${automatonName} ${dynamicId} equipment is not a ${expectedModels}, the automaton will be skipped";
         reporter.report(Report.builder()
-                .withKey("emptyTC")
-                .withDefaultMessage("TapChangerAutomaton ${dynamicId} load does not possess a transformer, the automaton will be skipped")
+                .withKey("emptyAutomaton")
+                .withDefaultMessage(message)
+                .withValue("automatonName", automatonName)
                 .withValue("dynamicId", dynamicId)
-                .withSeverity(TypedValue.WARN_SEVERITY)
-                .build());
-    }
-
-    public static void reportEmptyTapChangerBlockingAutomaton(Reporter reporter, String dynamicId) {
-        reporter.report(Report.builder()
-                .withKey("emptyTCB")
-                .withDefaultMessage("None of TapChangerBlockingAutomaton {} equipments are TapChangerModel, the automaton will be skipped")
-                .withValue("dynamicId", dynamicId)
+                .withValue("expectedModels", expectedModels)
                 .withSeverity(TypedValue.WARN_SEVERITY)
                 .build());
     }
