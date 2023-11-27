@@ -210,7 +210,7 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
                     if (parameters.isWriteFinalState()) {
                         Path outputNetworkFile = outputsFolder.resolve(FINAL_STATE_FOLDER).resolve(OUTPUT_IIDM_FILENAME);
                         if (Files.exists(outputNetworkFile)) {
-                            NetworkResultsUpdater.update(context.getNetwork(), NetworkXml.read(outputNetworkFile), context.getDynaWaltzParameters().isMergeLoads());
+                            NetworkResultsUpdater.update(context.getNetwork(), NetworkSerDe.read(outputNetworkFile), context.getDynaWaltzParameters().isMergeLoads());
                         } else {
                             LOGGER.warn("Output IIDM file not found");
                             status = DynamicSimulationResult.Status.FAILED;

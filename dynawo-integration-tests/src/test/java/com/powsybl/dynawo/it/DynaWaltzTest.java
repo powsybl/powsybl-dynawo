@@ -8,7 +8,6 @@ package com.powsybl.dynawo.it;
 
 import com.powsybl.commons.datasource.ResourceDataSource;
 import com.powsybl.commons.datasource.ResourceSet;
-import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynamicsimulation.*;
 import com.powsybl.dynamicsimulation.groovy.*;
 import com.powsybl.dynawaltz.DumpFileParameters;
