@@ -30,7 +30,7 @@ public abstract class AbstractCsvParser<T> {
 
     private final char separator;
 
-    public AbstractCsvParser(char separator) {
+    protected AbstractCsvParser(char separator) {
         this.separator = separator;
     }
 

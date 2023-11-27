@@ -18,7 +18,7 @@ import java.util.Optional;
  */
 public final class LogUtils {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CsvLogParser.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LogUtils.class);
     private static final String EMPTY_START = "======";
     private static final String EMPTY_BREAKER = "------";
 

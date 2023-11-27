@@ -50,8 +50,9 @@ class CsvTimeLineParserTest {
 
     @Test
     void testInconsistentFile() throws URISyntaxException {
+        CsvTimeLineParser parser = new CsvTimeLineParser('|');
         Path path = Path.of(Objects.requireNonNull(getClass().getResource("/wrongTimeline.log")).toURI());
-        Exception e = assertThrows(PowsyblException.class, () -> new CsvTimeLineParser('|').parse(path));
+        Exception e = assertThrows(PowsyblException.class, () -> parser.parse(path));
         assertEquals("Columns of line 2 are inconsistent", e.getMessage());
     }
 }

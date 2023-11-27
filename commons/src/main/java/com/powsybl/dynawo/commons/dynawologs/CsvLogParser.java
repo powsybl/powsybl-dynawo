@@ -26,7 +26,6 @@ public final class CsvLogParser extends AbstractCsvParser<LogEntry> {
         super(separator);
     }
 
-    //TODO fix dynawo.log use of |
     @Override
     protected Optional<LogEntry> createEntry(String[] tokens) {
         return tokens.length == NB_COLUMNS ? LogUtils.createLog(tokens[1], tokens[2] + " " + tokens[3])

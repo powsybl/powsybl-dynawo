@@ -155,6 +155,11 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
         private final Network dynawoInput;
         private final Reporter reporter;
 
+        private final List<TimelineEvent> timeline = new ArrayList<>();
+        private final Map<String, TimeSeries> curves = new HashMap<>();
+        private DynamicSimulationResult.Status status = DynamicSimulationResult.Status.SUCCEED;
+        private String statusText = "";
+
         public DynaWaltzHandler(DynaWaltzContext context, Reporter reporter) {
             this.context = context;
             this.dynawoInput = context.getDynaWaltzParameters().isMergeLoads()
@@ -180,77 +185,28 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
 
         @Override
         public DynamicSimulationResult after(Path workingDir, ExecutionReport report) throws IOException {
+
             Path outputsFolder = workingDir.resolve(OUTPUTS_FOLDER);
             context.getNetwork().getVariantManager().setWorkingVariant(context.getWorkingVariantId());
             DynaWaltzParameters parameters = context.getDynaWaltzParameters();
             DumpFileParameters dumpFileParameters = parameters.getDumpFileParameters();
 
-            DynamicSimulationResult.Status status = DynamicSimulationResult.Status.SUCCEED;
-            String statusText = "";
-            List<TimelineEvent> timeline = new ArrayList<>();
-            Map<String, TimeSeries> curves = new HashMap<>();
-
-            //Dynawo log
-            Path logFile = outputsFolder.resolve(LOGS_FOLDER).resolve(LOGS_FILENAME);
-            if (Files.exists(logFile)) {
-                Reporter logReporter = CommonReports.createDynawoLogReporter(reporter);
-                new CsvLogParser().parse(logFile).forEach(e -> CommonReports.reportLogEvent(logReporter, e));
-            } else {
-                LOGGER.warn("Dynawo logs file not found");
-            }
-
+            setDynawoLog(outputsFolder);
             // Error file
             Path errorFile = workingDir.resolve(ERROR_FILENAME);
             if (Files.exists(errorFile)) {
                 Matcher errorMatcher = Pattern.compile(DYNAWO_ERROR_PATTERN + "(.*)")
                         .matcher(Files.readString(errorFile));
                 if (!errorMatcher.find()) {
-
-                    //Update network
                     if (parameters.isWriteFinalState()) {
-                        Path outputNetworkFile = outputsFolder.resolve(FINAL_STATE_FOLDER).resolve(OUTPUT_IIDM_FILENAME);
-                        if (Files.exists(outputNetworkFile)) {
-                            NetworkResultsUpdater.update(context.getNetwork(), NetworkSerDe.read(outputNetworkFile), context.getDynaWaltzParameters().isMergeLoads());
-                        } else {
-                            LOGGER.warn("Output IIDM file not found");
-                            status = DynamicSimulationResult.Status.FAILED;
-                            statusText = "Dynawo Output IIDM file not found";
-                        }
+                        updateNetwork(outputsFolder);
                     }
-
-                    //Dump file
                     if (dumpFileParameters.exportDumpFile()) {
-                        Path outputDumpFile = outputsFolder.resolve(FINAL_STATE_FOLDER).resolve(OUTPUT_DUMP_FILENAME);
-                        if (Files.exists(outputDumpFile)) {
-                            Files.copy(outputDumpFile, dumpFileParameters.dumpFileFolder().resolve(workingDir.getFileName() + "_" + OUTPUT_DUMP_FILENAME), StandardCopyOption.REPLACE_EXISTING);
-                        } else {
-                            LOGGER.warn("Dump file {} not found, export will be skipped", OUTPUT_DUMP_FILENAME);
-                        }
+                        setDumpFile(outputsFolder, dumpFileParameters.dumpFileFolder(), workingDir.getFileName());
                     }
-
-                    //Timeline
-                    Path timelineFile = outputsFolder.resolve(DYNAWO_TIMELINE_FOLDER).resolve(TIMELINE_FILENAME);
-                    if (Files.exists(timelineFile)) {
-                        Reporter timelineReporter = DynawaltzReports.createDynaWaltzTimelineReporter(reporter);
-                        new CsvTimeLineParser().parse(timelineFile).forEach(e -> {
-                            CommonReports.reportTimelineEvent(timelineReporter, e);
-                            timeline.add(new TimelineEvent(e.time(), e.modelName(), e.message()));
-                        });
-                    } else {
-                        LOGGER.warn("Timeline file not found");
-                    }
-
-                    //Curves
+                    setTimeline(outputsFolder);
                     if (context.withCurves()) {
-                        Path curvesPath = workingDir.resolve(CURVES_OUTPUT_PATH).toAbsolutePath().resolve(CURVES_FILENAME);
-                        if (Files.exists(curvesPath)) {
-                            Map<Integer, List<TimeSeries>> curvesPerVersion = TimeSeries.parseCsv(curvesPath, new TimeSeriesCsvConfig(TimeSeriesConstants.DEFAULT_SEPARATOR, false, TimeFormat.FRACTIONS_OF_SECOND));
-                            curvesPerVersion.values().forEach(l -> l.forEach(curve -> curves.put(curve.getMetadata().getName(), curve)));
-                        } else {
-                            LOGGER.warn("Curves folder not found");
-                            status = DynamicSimulationResult.Status.FAILED;
-                            statusText = "Dynawo curves folder not found";
-                        }
+                        setCurves(workingDir);
                     }
                 } else {
                     status = DynamicSimulationResult.Status.FAILED;
@@ -263,6 +219,61 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
             }
 
             return new DynamicSimulationResultImpl(status, statusText, curves, timeline);
+        }
+
+        private void setDynawoLog(Path outputsFolder) {
+            Path logFile = outputsFolder.resolve(LOGS_FOLDER).resolve(LOGS_FILENAME);
+            if (Files.exists(logFile)) {
+                Reporter logReporter = CommonReports.createDynawoLogReporter(reporter);
+                new CsvLogParser().parse(logFile).forEach(e -> CommonReports.reportLogEvent(logReporter, e));
+            } else {
+                LOGGER.warn("Dynawo logs file not found");
+            }
+        }
+
+        private void updateNetwork(Path outputsFolder) {
+            Path outputNetworkFile = outputsFolder.resolve(FINAL_STATE_FOLDER).resolve(OUTPUT_IIDM_FILENAME);
+            if (Files.exists(outputNetworkFile)) {
+                NetworkResultsUpdater.update(context.getNetwork(), NetworkSerDe.read(outputNetworkFile), context.getDynaWaltzParameters().isMergeLoads());
+            } else {
+                LOGGER.warn("Output IIDM file not found");
+                status = DynamicSimulationResult.Status.FAILED;
+                statusText = "Dynawo Output IIDM file not found";
+            }
+        }
+
+        private void setDumpFile(Path outputsFolder, Path dumpFileFolder, Path fileName) throws IOException {
+            Path outputDumpFile = outputsFolder.resolve(FINAL_STATE_FOLDER).resolve(OUTPUT_DUMP_FILENAME);
+            if (Files.exists(outputDumpFile)) {
+                Files.copy(outputDumpFile, dumpFileFolder.resolve(fileName + "_" + OUTPUT_DUMP_FILENAME), StandardCopyOption.REPLACE_EXISTING);
+            } else {
+                LOGGER.warn("Dump file {} not found, export will be skipped", OUTPUT_DUMP_FILENAME);
+            }
+        }
+
+        private void setTimeline(Path outputsFolder) {
+            Path timelineFile = outputsFolder.resolve(DYNAWO_TIMELINE_FOLDER).resolve(TIMELINE_FILENAME);
+            if (Files.exists(timelineFile)) {
+                Reporter timelineReporter = DynawaltzReports.createDynaWaltzTimelineReporter(reporter);
+                new CsvTimeLineParser().parse(timelineFile).forEach(e -> {
+                    CommonReports.reportTimelineEvent(timelineReporter, e);
+                    timeline.add(new TimelineEvent(e.time(), e.modelName(), e.message()));
+                });
+            } else {
+                LOGGER.warn("Timeline file not found");
+            }
+        }
+
+        private void setCurves(Path workingDir) {
+            Path curvesPath = workingDir.resolve(CURVES_OUTPUT_PATH).toAbsolutePath().resolve(CURVES_FILENAME);
+            if (Files.exists(curvesPath)) {
+                Map<Integer, List<TimeSeries>> curvesPerVersion = TimeSeries.parseCsv(curvesPath, new TimeSeriesCsvConfig(TimeSeriesConstants.DEFAULT_SEPARATOR, false, TimeFormat.FRACTIONS_OF_SECOND));
+                curvesPerVersion.values().forEach(l -> l.forEach(curve -> curves.put(curve.getMetadata().getName(), curve)));
+            } else {
+                LOGGER.warn("Curves folder not found");
+                status = DynamicSimulationResult.Status.FAILED;
+                statusText = "Dynawo curves folder not found";
+            }
         }
 
         private void writeInputFiles(Path workingDir) throws IOException {
