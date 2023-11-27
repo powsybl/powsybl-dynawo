@@ -7,14 +7,14 @@
 package com.powsybl.dynaflow;
 
 import com.powsybl.commons.PowsyblException;
-import com.powsybl.commons.test.AbstractConverterTest;
+import com.powsybl.commons.test.AbstractSerDeTest;
 import com.powsybl.computation.ComputationManager;
 import com.powsybl.computation.local.LocalCommandExecutor;
 import com.powsybl.computation.local.LocalComputationConfig;
 import com.powsybl.computation.local.LocalComputationManager;
 import com.powsybl.dynawo.commons.DynawoConstants;
 import com.powsybl.iidm.network.*;
-import com.powsybl.iidm.xml.NetworkXml;
+import com.powsybl.iidm.serde.NetworkSerDe;
 import com.powsybl.loadflow.LoadFlow;
 import com.powsybl.loadflow.LoadFlowParameters;
 import com.powsybl.loadflow.LoadFlowResult;
@@ -40,7 +40,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * @author Guillaume Pernin {@literal <guillaume.pernin at rte-france.com>}
  */
-class DynaFlowProviderTest extends AbstractConverterTest {
+class DynaFlowProviderTest extends AbstractSerDeTest {
 
     private Path homeDir;
     private DynaFlowConfig config;
@@ -137,7 +137,7 @@ class DynaFlowProviderTest extends AbstractConverterTest {
         assertTrue(result.isOk());
 
         InputStream pReferenceOutput = getClass().getResourceAsStream("/output.xiidm");
-        Network expectedNetwork = NetworkXml.read(pReferenceOutput);
+        Network expectedNetwork = NetworkSerDe.read(pReferenceOutput);
 
         compare(expectedNetwork, network);
     }
@@ -158,7 +158,7 @@ class DynaFlowProviderTest extends AbstractConverterTest {
         assertTrue(result.isOk());
 
         InputStream pReferenceOutput = getClass().getResourceAsStream("/output.xiidm");
-        Network expectedNetwork = NetworkXml.read(pReferenceOutput);
+        Network expectedNetwork = NetworkSerDe.read(pReferenceOutput);
 
         compare(expectedNetwork, network);
     }
@@ -217,9 +217,9 @@ class DynaFlowProviderTest extends AbstractConverterTest {
         assertNotNull(pexpected);
         Path pactual = tmpDir.resolve("actual.xiidm");
         assertNotNull(pactual);
-        NetworkXml.write(expected, pexpected);
+        NetworkSerDe.write(expected, pexpected);
         actual.setCaseDate(expected.getCaseDate());
-        NetworkXml.write(actual, pactual);
+        NetworkSerDe.write(actual, pactual);
         compareXml(Files.newInputStream(pexpected), Files.newInputStream(pactual));
     }
 

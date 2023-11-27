@@ -37,7 +37,7 @@ public final class DynawaltzReports {
 
     public static void reportDuplicateStaticId(Reporter reporter, String duplicateId, String modelName, String dynamicId) {
         reporter.report(Report.builder()
-                .withKey("duplicateId")
+                .withKey("duplicateStaticId")
                 .withDefaultMessage("Duplicate static id found: ${duplicateId} -> model ${modelName} ${dynamicId} will be skipped")
                 .withValue("duplicateId", duplicateId)
                 .withValue("modelName", modelName)
@@ -48,7 +48,7 @@ public final class DynawaltzReports {
 
     public static void reportDuplicateDynamicId(Reporter reporter, String duplicateId, String modelName) {
         reporter.report(Report.builder()
-                .withKey("duplicateId")
+                .withKey("duplicateDynamicId")
                 .withDefaultMessage("Duplicate dynamic id found: ${duplicateId} -> model ${modelName} will be skipped")
                 .withValue("duplicateId", duplicateId)
                 .withValue("modelName", modelName)

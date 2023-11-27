@@ -7,7 +7,7 @@
 package com.powsybl.dynaflow;
 
 import com.powsybl.commons.PowsyblException;
-import com.powsybl.commons.test.AbstractConverterTest;
+import com.powsybl.commons.test.AbstractSerDeTest;
 import com.powsybl.computation.ComputationManager;
 import com.powsybl.computation.local.LocalCommandExecutor;
 import com.powsybl.computation.local.LocalComputationConfig;
@@ -22,7 +22,6 @@ import com.powsybl.security.SecurityAnalysisParameters;
 import com.powsybl.security.SecurityAnalysisReport;
 import com.powsybl.security.SecurityAnalysisResult;
 import com.powsybl.security.json.SecurityAnalysisResultSerializer;
-import org.joda.time.DateTime;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -31,6 +30,7 @@ import java.io.StringWriter;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -40,12 +40,13 @@ import static com.powsybl.commons.test.ComparisonUtils.compareTxt;
 import static com.powsybl.commons.test.ComparisonUtils.compareXml;
 import static com.powsybl.dynaflow.DynaFlowConstants.DYNAFLOW_NAME;
 import static com.powsybl.dynaflow.DynaFlowConstants.IIDM_FILENAME;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  */
-class DynaFlowSecurityAnalysisTest extends AbstractConverterTest {
+class DynaFlowSecurityAnalysisTest extends AbstractSerDeTest {
 
     private static class LocalCommandExecutorMock extends AbstractLocalCommandExecutor {
 
@@ -142,7 +143,7 @@ class DynaFlowSecurityAnalysisTest extends AbstractConverterTest {
 
     private static Network buildNetwork() {
         Network network = EurostagTutorialExample1Factory.create();
-        network.setCaseDate(DateTime.parse("2023-03-23T16:40:48.060+01:00"));
+        network.setCaseDate(ZonedDateTime.parse("2023-03-23T16:40:48.060+01:00"));
 
         // Changing the network for having some pre-contingencies violations
         network.getBusBreakerView().getBus("NHV1").setV(380.0);

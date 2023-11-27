@@ -8,6 +8,7 @@
 package com.powsybl.dynawaltz.dsl;
 
 import com.powsybl.commons.reporter.ReporterModel;
+import com.powsybl.commons.test.TestUtil;
 
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -29,6 +30,6 @@ abstract class AbstractModelSupplierTest {
     protected void checkReporter(String report) {
         StringWriter sw = new StringWriter();
         reporter.export(sw);
-        assertEquals(report, sw.toString());
+        assertEquals(report, TestUtil.normalizeLineSeparator(sw.toString()));
     }
 }

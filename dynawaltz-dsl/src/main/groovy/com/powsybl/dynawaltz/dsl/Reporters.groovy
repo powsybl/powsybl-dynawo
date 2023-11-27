@@ -66,7 +66,7 @@ final class Reporters {
 
     static void reportStaticIdUnknown(Reporter reporter, String fieldName, String staticId, String equipmentType) {
         reporter.report(Report.builder()
-                .withKey("fieldNotSet")
+                .withKey("staticIdUnknown")
                 .withDefaultMessage('\'${fieldName}\' field value \'${staticId}\' not found for equipment type(s) ${equipmentType}')
                 .withValue("equipmentType", equipmentType)
                 .withValue("fieldName", fieldName)

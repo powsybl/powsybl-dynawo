@@ -8,7 +8,6 @@
 package com.powsybl.dynawo.commons;
 
 import com.powsybl.commons.PowsyblException;
-import com.powsybl.commons.test.AbstractConverterTest;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -16,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-class DynawoVersionTest extends AbstractConverterTest {
+class DynawoVersionTest {
 
     private static final DynawoVersion DV_MIN = new DynawoVersion(1, 3, 0);
 

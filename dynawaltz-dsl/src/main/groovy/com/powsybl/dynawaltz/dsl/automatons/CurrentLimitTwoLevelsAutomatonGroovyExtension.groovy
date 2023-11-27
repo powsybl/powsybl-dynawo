@@ -9,7 +9,6 @@ package com.powsybl.dynawaltz.dsl.automatons
 
 import com.google.auto.service.AutoService
 import com.powsybl.commons.reporter.Reporter
-import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractPureDynamicGroovyExtension
@@ -20,6 +19,7 @@ import com.powsybl.dynawaltz.models.automatons.CurrentLimitTwoLevelsAutomaton
 import com.powsybl.dynawaltz.models.utils.SideConverter
 import com.powsybl.iidm.network.Branch
 import com.powsybl.iidm.network.Network
+import com.powsybl.iidm.network.TwoSides
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -54,7 +54,7 @@ class CurrentLimitTwoLevelsAutomatonGroovyExtension extends AbstractPureDynamicG
             iMeasurement(staticId)
         }
 
-        void iMeasurement1Side(Branch.Side side) {
+        void iMeasurement1Side(TwoSides side) {
             iMeasurementSide(side)
         }
 
@@ -62,7 +62,7 @@ class CurrentLimitTwoLevelsAutomatonGroovyExtension extends AbstractPureDynamicG
             iMeasurement2.addEquipment(staticId, network::getBranch)
         }
 
-        void iMeasurement2Side(Branch.Side side) {
+        void iMeasurement2Side(TwoSides side) {
             this.iMeasurement2Side = SideConverter.convert(side)
         }
 
