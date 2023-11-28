@@ -7,20 +7,24 @@
  */
 package com.powsybl.dynawaltz.dsl
 
+import com.powsybl.commons.reporter.Reporter
+import com.powsybl.dynamicsimulation.groovy.GroovyExtension
 import com.powsybl.dynawaltz.DynaWaltzProvider
 import com.powsybl.iidm.network.Network
 
 import java.util.function.Consumer
 
 /**
+ * Superclass for automaton & event groovy extensions
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-abstract class AbstractPureDynamicGroovyExtension<T> {
+abstract class AbstractPureDynamicGroovyExtension<T> implements GroovyExtension<T> {
 
     protected List<String> modelTags
 
-    abstract protected ModelBuilder<T> createBuilder(Network network)
+    abstract protected ModelBuilder<T> createBuilder(Network network, Reporter reporter)
 
+    @Override
     String getName() {
         DynaWaltzProvider.NAME
     }
@@ -29,11 +33,13 @@ abstract class AbstractPureDynamicGroovyExtension<T> {
         modelTags
     }
 
-    void load(Binding binding, Consumer<T> consumer) {
+    @Override
+    void load(Binding binding, Consumer<T> consumer, Reporter reporter) {
         modelTags.forEach {
             binding.setVariable(it, { Closure<Void> closure ->
                 def cloned = closure.clone()
-                ModelBuilder<T> builder = createBuilder(binding.getVariable("network") as Network)
+                ModelBuilder<T> builder = createBuilder(binding.getVariable("network") as Network,
+                        Reporters.createModelBuilderReporter(reporter, it))
                 cloned.delegate = builder
                 cloned()
                 builder.build()?.tap {

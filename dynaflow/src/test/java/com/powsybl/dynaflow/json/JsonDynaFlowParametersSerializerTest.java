@@ -6,8 +6,8 @@
  */
 package com.powsybl.dynaflow.json;
 
-import com.powsybl.commons.test.AbstractConverterTest;
 import com.powsybl.commons.config.InMemoryPlatformConfig;
+import com.powsybl.commons.test.AbstractSerDeTest;
 import com.powsybl.dynaflow.DynaFlowConstants;
 import com.powsybl.dynaflow.DynaFlowParameters;
 import com.powsybl.loadflow.LoadFlowParameters;
@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author Guillaume Pernin {@literal <guillaume.pernin at rte-france.com>}
  */
-class JsonDynaFlowParametersSerializerTest extends AbstractConverterTest {
+class JsonDynaFlowParametersSerializerTest extends AbstractSerDeTest {
 
     @Test
     void testDeserialize() {

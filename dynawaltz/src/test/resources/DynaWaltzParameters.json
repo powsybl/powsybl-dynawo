@@ -40,6 +40,12 @@
       "mergeLoads" : false,
       "writeFinalState" : true,
       "useModelOptimizers" : false,
+      "dumpFileParameters" : {
+        "exportDumpFile" : false,
+        "useDumpFile" : false,
+        "dumpFileFolder" : null,
+        "dumpFile" : null
+      },
       "modelsParameters" : [ {
         "id" : "test",
         "parameters" : {

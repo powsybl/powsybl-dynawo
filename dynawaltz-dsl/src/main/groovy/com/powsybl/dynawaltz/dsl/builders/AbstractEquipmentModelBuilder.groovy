@@ -7,10 +7,12 @@
  */
 package com.powsybl.dynawaltz.dsl.builders
 
+import com.powsybl.commons.reporter.Reporter
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynawaltz.dsl.DslEquipment
 import com.powsybl.dynawaltz.dsl.EquipmentConfig
 import com.powsybl.dynawaltz.dsl.ModelBuilder
+import com.powsybl.dynawaltz.dsl.Reporters
 import com.powsybl.iidm.network.Identifiable
 import com.powsybl.iidm.network.IdentifiableType
 import com.powsybl.iidm.network.Network
@@ -25,8 +27,8 @@ abstract class AbstractEquipmentModelBuilder<T extends Identifiable> extends Abs
     protected final EquipmentConfig equipmentConfig
     protected final DslEquipment<T> dslEquipment
 
-    protected AbstractEquipmentModelBuilder(Network network, EquipmentConfig equipmentConfig, IdentifiableType equipmentType) {
-        super(network)
+    protected AbstractEquipmentModelBuilder(Network network, EquipmentConfig equipmentConfig, IdentifiableType equipmentType, Reporter reporter) {
+        super(network, reporter)
         this.equipmentConfig = equipmentConfig
         this.dslEquipment = new DslEquipment<T>(equipmentType)
     }
@@ -45,12 +47,13 @@ abstract class AbstractEquipmentModelBuilder<T extends Identifiable> extends Abs
 
     @Override
     protected void checkData() {
-        isInstantiable = dslEquipment.checkEquipmentData(LOGGER, getLib())
+        isInstantiable = dslEquipment.checkEquipmentData(reporter)
         if (!parameterSetId) {
-            LOGGER.warn("${getLib()}: 'parameterSetId' field is not set")
+            Reporters.reportFieldNotSet(reporter, "parameterSetId")
             isInstantiable = false
         }
         if (!dynamicModelId) {
+            Reporters.reportFieldReplacement(reporter, "dynamicModelId", "staticId", dslEquipment.staticId ?: "(unknown staticId)")
             dynamicModelId = dslEquipment.staticId
         }
     }
@@ -62,8 +65,8 @@ abstract class AbstractEquipmentModelBuilder<T extends Identifiable> extends Abs
     }
 
     @Override
-    String getLib() {
-        equipmentConfig.getLib()
+    String getModelId() {
+        dynamicModelId ?: "unknownDynamicId"
     }
 
     @Override

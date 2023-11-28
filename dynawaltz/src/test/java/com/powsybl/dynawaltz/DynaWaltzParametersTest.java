@@ -9,7 +9,7 @@ package com.powsybl.dynawaltz;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.config.InMemoryPlatformConfig;
 import com.powsybl.commons.config.MapModuleConfig;
-import com.powsybl.commons.test.AbstractConverterTest;
+import com.powsybl.commons.test.AbstractSerDeTest;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynamicsimulation.json.JsonDynamicSimulationParameters;
 import com.powsybl.dynawaltz.DynaWaltzParameters.SolverType;
@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  */
-class DynaWaltzParametersTest extends AbstractConverterTest {
+class DynaWaltzParametersTest extends AbstractSerDeTest {
 
     public static final String USER_HOME = "/home/user/";
 
@@ -92,6 +92,20 @@ class DynaWaltzParametersTest extends AbstractConverterTest {
     }
 
     @Test
+    void checkDumpFileParameters() throws IOException {
+        String folderProperty = USER_HOME + "dumpFiles";
+        String fileProperty = "dumpFile.dmp";
+        initDumpFilePlatformConfig(folderProperty, fileProperty);
+        DynaWaltzParameters parameters = DynaWaltzParameters.load(platformConfig, fileSystem);
+        DumpFileParameters dumpFileParameters = parameters.getDumpFileParameters();
+
+        assertTrue(dumpFileParameters.exportDumpFile());
+        assertTrue(dumpFileParameters.useDumpFile());
+        assertEquals(folderProperty, dumpFileParameters.dumpFileFolder().toString());
+        assertEquals(fileProperty, dumpFileParameters.dumpFile());
+    }
+
+    @Test
     void roundTripParametersSerializing() throws IOException {
         String networkParametersId = "networkParametersId";
         SolverType solverType = SolverType.IDA;
@@ -129,6 +143,26 @@ class DynaWaltzParametersTest extends AbstractConverterTest {
         copyFile("/parametersSet/solvers.par", solverParametersFile);
     }
 
+    private void initDumpFilePlatformConfig(String folderProperty, String fileProperty) throws IOException {
+        Files.createDirectories(fileSystem.getPath(USER_HOME));
+        copyFile("/parametersSet/models.par", DynaWaltzParameters.DEFAULT_INPUT_PARAMETERS_FILE);
+        copyFile("/parametersSet/network.par", DynaWaltzParameters.DEFAULT_INPUT_NETWORK_PARAMETERS_FILE);
+        copyFile("/parametersSet/solvers.par", DynaWaltzParameters.DEFAULT_INPUT_SOLVER_PARAMETERS_FILE);
+
+        String folderName = USER_HOME + "dumpFiles";
+        Files.createDirectories(fileSystem.getPath(folderName));
+        String fileName = "dumpFile.dmp";
+        Files.createFile(fileSystem.getPath(folderName, fileName));
+        MapModuleConfig moduleConfig = platformConfig.createModuleConfig("dynawaltz-default-parameters");
+        moduleConfig.setStringProperty("parametersFile", DynaWaltzParameters.DEFAULT_INPUT_PARAMETERS_FILE);
+        moduleConfig.setStringProperty("network.parametersFile", DynaWaltzParameters.DEFAULT_INPUT_NETWORK_PARAMETERS_FILE);
+        moduleConfig.setStringProperty("dump.export", Boolean.toString(true));
+        moduleConfig.setStringProperty("dump.useAsInput", Boolean.toString(true));
+        moduleConfig.setStringProperty("dump.exportFolder", folderProperty);
+        moduleConfig.setStringProperty("dump.fileName", fileProperty);
+
+    }
+
     @Test
     void checkDefaultParameters() throws IOException {
         Files.createDirectories(fileSystem.getPath(USER_HOME));
@@ -152,6 +186,21 @@ class DynaWaltzParametersTest extends AbstractConverterTest {
     }
 
     @Test
+    void checkDefaultDumpParameters() throws IOException {
+        Files.createDirectories(fileSystem.getPath(USER_HOME));
+        copyFile("/parametersSet/models.par", DynaWaltzParameters.DEFAULT_INPUT_PARAMETERS_FILE);
+        copyFile("/parametersSet/network.par", DynaWaltzParameters.DEFAULT_INPUT_NETWORK_PARAMETERS_FILE);
+        copyFile("/parametersSet/solvers.par", DynaWaltzParameters.DEFAULT_INPUT_SOLVER_PARAMETERS_FILE);
+
+        DynaWaltzParameters parameters = DynaWaltzParameters.load(platformConfig, fileSystem);
+        DumpFileParameters dumpFileParameters = parameters.getDumpFileParameters();
+        assertEquals(DumpFileParameters.DEFAULT_EXPORT_DUMP, dumpFileParameters.exportDumpFile());
+        assertEquals(DumpFileParameters.DEFAULT_USE_DUMP, dumpFileParameters.useDumpFile());
+        assertNull(dumpFileParameters.dumpFileFolder());
+        assertEquals(DumpFileParameters.DEFAULT_DUMP_NAME, dumpFileParameters.dumpFile());
+    }
+
+    @Test
     void checkException() throws IOException {
         Files.createDirectories(fileSystem.getPath(USER_HOME));
         copyFile("/parametersSet/models.par", DynaWaltzParameters.DEFAULT_INPUT_PARAMETERS_FILE);
@@ -165,6 +214,24 @@ class DynaWaltzParametersTest extends AbstractConverterTest {
             PowsyblException e2 = assertThrows(PowsyblException.class, () -> ParametersXml.load(is, "2"));
             assertEquals("Could not find parameters set with id='2' in given input stream", e2.getMessage());
         }
+    }
+
+    @Test
+    void dumpFilesFolderNotFound() throws IOException {
+        String folderProperty = USER_HOME + "wrongFolder";
+        String fileProperty = "dumpFile.dmp";
+        initDumpFilePlatformConfig(folderProperty, fileProperty);
+        PowsyblException e = assertThrows(PowsyblException.class, () -> DynaWaltzParameters.load(platformConfig, fileSystem));
+        assertEquals("Folder /home/user/wrongFolder set in 'dumpFileFolder' property cannot be found", e.getMessage());
+    }
+
+    @Test
+    void dumpFileNotFound() throws IOException {
+        String folderProperty = USER_HOME + "dumpFiles";
+        String fileProperty = "wrongFile.dmp";
+        initDumpFilePlatformConfig(folderProperty, fileProperty);
+        PowsyblException e = assertThrows(PowsyblException.class, () -> DynaWaltzParameters.load(platformConfig, fileSystem));
+        assertEquals("File wrongFile.dmp set in 'dumpFile' property cannot be found", e.getMessage());
     }
 
     private static void checkModelParameters(DynaWaltzParameters dynaWaltzParameters) {

@@ -6,7 +6,7 @@
  */
 package com.powsybl.dynawaltz.xml;
 
-import com.powsybl.commons.test.AbstractConverterTest;
+import com.powsybl.commons.test.AbstractSerDeTest;
 import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynawaltz.DynaWaltzCurve;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
@@ -43,7 +43,7 @@ import static com.powsybl.commons.test.ComparisonUtils.compareTxt;
 /**
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  */
-public class DynaWaltzTestUtil extends AbstractConverterTest {
+public class DynaWaltzTestUtil extends AbstractSerDeTest {
 
     protected Network network;
     protected List<BlackBoxModel> dynamicModels;

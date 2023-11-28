@@ -39,40 +39,11 @@ public final class NetworkResultsUpdater {
         for (DanglingLine sourceDangling : sourceNetwork.getDanglingLines()) {
             update(targetNetwork.getDanglingLine(sourceDangling.getId()).getTerminal(), sourceDangling.getTerminal());
         }
-        for (HvdcLine sourceHvdcLine : sourceNetwork.getHvdcLines()) {
-            Terminal targetTerminal1 = targetNetwork.getHvdcLine(sourceHvdcLine.getId()).getConverterStation(HvdcLine.Side.ONE).getTerminal();
-            Terminal targetTerminal2 = targetNetwork.getHvdcLine(sourceHvdcLine.getId()).getConverterStation(HvdcLine.Side.TWO).getTerminal();
-            Terminal sourceTerminal1 = sourceHvdcLine.getConverterStation(HvdcLine.Side.ONE).getTerminal();
-            Terminal sourceTerminal2 = sourceHvdcLine.getConverterStation(HvdcLine.Side.TWO).getTerminal();
-            update(targetTerminal1, sourceTerminal1);
-            update(targetTerminal2, sourceTerminal2);
-        }
-        for (TwoWindingsTransformer sourceTwoWindingsTransformer : sourceNetwork.getTwoWindingsTransformers()) {
-            Terminal targetTerminal1 = targetNetwork.getTwoWindingsTransformer(sourceTwoWindingsTransformer.getId()).getTerminal1();
-            Terminal targetTerminal2 = targetNetwork.getTwoWindingsTransformer(sourceTwoWindingsTransformer.getId()).getTerminal2();
-            Terminal sourceTerminal1 = sourceTwoWindingsTransformer.getTerminal1();
-            Terminal sourceTerminal2 = sourceTwoWindingsTransformer.getTerminal2();
-            update(targetTerminal1, sourceTerminal1);
-            update(targetTerminal2, sourceTerminal2);
 
-            PhaseTapChanger sourcePhaseTapChanger = sourceTwoWindingsTransformer.getPhaseTapChanger();
-            PhaseTapChanger targetPhaseTapChanger = targetNetwork.getTwoWindingsTransformer(sourceTwoWindingsTransformer.getId()).getPhaseTapChanger();
-            if (targetPhaseTapChanger != null) {
-                targetPhaseTapChanger.setTapPosition(sourcePhaseTapChanger.getTapPosition());
-            }
+        updateHvdcLines(targetNetwork, sourceNetwork.getHvdcLines());
+        updateTwoWindingsTransformers(targetNetwork, sourceNetwork.getTwoWindingsTransformers());
+        updateThreeWindingsTransformers(targetNetwork, sourceNetwork.getThreeWindingsTransformers());
 
-            RatioTapChanger sourceRatioTapChanger = sourceTwoWindingsTransformer.getRatioTapChanger();
-            RatioTapChanger targetRatioTapChanger = targetNetwork.getTwoWindingsTransformer(sourceTwoWindingsTransformer.getId()).getRatioTapChanger();
-            if (targetRatioTapChanger != null) {
-                targetRatioTapChanger.setTapPosition(sourceRatioTapChanger.getTapPosition());
-            }
-        }
-        for (ThreeWindingsTransformer sourceThreeWindingsTransformer : sourceNetwork.getThreeWindingsTransformers()) {
-            ThreeWindingsTransformer targetThreeWindingsTransformer = targetNetwork.getThreeWindingsTransformer(sourceThreeWindingsTransformer.getId());
-            update(targetThreeWindingsTransformer.getLeg1(), sourceThreeWindingsTransformer.getLeg1());
-            update(targetThreeWindingsTransformer.getLeg2(), sourceThreeWindingsTransformer.getLeg2());
-            update(targetThreeWindingsTransformer.getLeg3(), sourceThreeWindingsTransformer.getLeg3());
-        }
         for (Generator sourceGenerator : sourceNetwork.getGenerators()) {
             update(targetNetwork.getGenerator(sourceGenerator.getId()).getTerminal(), sourceGenerator.getTerminal());
         }
@@ -102,6 +73,49 @@ public final class NetworkResultsUpdater {
                 targetBus.setV(sourceBus.getV());
                 targetBus.setAngle(sourceBus.getAngle());
             }
+        }
+    }
+
+    private static void updateHvdcLines(Network targetNetwork, Iterable<HvdcLine> hvdcLines) {
+        for (HvdcLine sourceHvdcLine : hvdcLines) {
+            Terminal targetTerminal1 = targetNetwork.getHvdcLine(sourceHvdcLine.getId()).getConverterStation(TwoSides.ONE).getTerminal();
+            Terminal targetTerminal2 = targetNetwork.getHvdcLine(sourceHvdcLine.getId()).getConverterStation(TwoSides.TWO).getTerminal();
+            Terminal sourceTerminal1 = sourceHvdcLine.getConverterStation(TwoSides.ONE).getTerminal();
+            Terminal sourceTerminal2 = sourceHvdcLine.getConverterStation(TwoSides.TWO).getTerminal();
+            update(targetTerminal1, sourceTerminal1);
+            update(targetTerminal2, sourceTerminal2);
+        }
+    }
+
+    private static void updateTwoWindingsTransformers(Network targetNetwork, Iterable<TwoWindingsTransformer> twoWindingsTransformers) {
+        for (TwoWindingsTransformer sourceTwoWindingsTransformer : twoWindingsTransformers) {
+            Terminal targetTerminal1 = targetNetwork.getTwoWindingsTransformer(sourceTwoWindingsTransformer.getId()).getTerminal1();
+            Terminal targetTerminal2 = targetNetwork.getTwoWindingsTransformer(sourceTwoWindingsTransformer.getId()).getTerminal2();
+            Terminal sourceTerminal1 = sourceTwoWindingsTransformer.getTerminal1();
+            Terminal sourceTerminal2 = sourceTwoWindingsTransformer.getTerminal2();
+            update(targetTerminal1, sourceTerminal1);
+            update(targetTerminal2, sourceTerminal2);
+
+            PhaseTapChanger sourcePhaseTapChanger = sourceTwoWindingsTransformer.getPhaseTapChanger();
+            PhaseTapChanger targetPhaseTapChanger = targetNetwork.getTwoWindingsTransformer(sourceTwoWindingsTransformer.getId()).getPhaseTapChanger();
+            if (targetPhaseTapChanger != null) {
+                targetPhaseTapChanger.setTapPosition(sourcePhaseTapChanger.getTapPosition());
+            }
+
+            RatioTapChanger sourceRatioTapChanger = sourceTwoWindingsTransformer.getRatioTapChanger();
+            RatioTapChanger targetRatioTapChanger = targetNetwork.getTwoWindingsTransformer(sourceTwoWindingsTransformer.getId()).getRatioTapChanger();
+            if (targetRatioTapChanger != null) {
+                targetRatioTapChanger.setTapPosition(sourceRatioTapChanger.getTapPosition());
+            }
+        }
+    }
+
+    private static void updateThreeWindingsTransformers(Network targetNetwork, Iterable<ThreeWindingsTransformer> threeWindingsTransformers) {
+        for (ThreeWindingsTransformer sourceThreeWindingsTransformer : threeWindingsTransformers) {
+            ThreeWindingsTransformer targetThreeWindingsTransformer = targetNetwork.getThreeWindingsTransformer(sourceThreeWindingsTransformer.getId());
+            update(targetThreeWindingsTransformer.getLeg1(), sourceThreeWindingsTransformer.getLeg1());
+            update(targetThreeWindingsTransformer.getLeg2(), sourceThreeWindingsTransformer.getLeg2());
+            update(targetThreeWindingsTransformer.getLeg3(), sourceThreeWindingsTransformer.getLeg3());
         }
     }
 

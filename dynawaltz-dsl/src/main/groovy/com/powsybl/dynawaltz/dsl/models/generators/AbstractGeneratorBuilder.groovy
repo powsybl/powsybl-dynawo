@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawaltz.dsl.models.generators
 
+import com.powsybl.commons.reporter.Reporter
 import com.powsybl.dynawaltz.dsl.EquipmentConfig
 import com.powsybl.dynawaltz.dsl.builders.AbstractEquipmentModelBuilder
 import com.powsybl.iidm.network.Generator
@@ -18,8 +19,8 @@ import com.powsybl.iidm.network.Network
  */
 abstract class AbstractGeneratorBuilder extends AbstractEquipmentModelBuilder<Generator> {
 
-    AbstractGeneratorBuilder(Network network, EquipmentConfig equipmentConfig) {
-        super(network, equipmentConfig, IdentifiableType.GENERATOR)
+    AbstractGeneratorBuilder(Network network, EquipmentConfig equipmentConfig, Reporter reporter) {
+        super(network, equipmentConfig, IdentifiableType.GENERATOR, reporter)
     }
 
     @Override

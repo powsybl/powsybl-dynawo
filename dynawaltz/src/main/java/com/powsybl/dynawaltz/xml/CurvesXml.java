@@ -14,7 +14,6 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Objects;
 
 import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.CRV_FILENAME;
 import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
@@ -22,19 +21,18 @@ import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 /**
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  */
-public final class CurvesXml {
+public final class CurvesXml extends AbstractXmlDynawaltzWriter {
 
     private CurvesXml() {
+        super(CRV_FILENAME, "curvesInput");
     }
 
-    public static void write(Path workingDir, DynaWaltzContext context) throws IOException, XMLStreamException {
-        Objects.requireNonNull(workingDir);
-        Path file = workingDir.resolve(CRV_FILENAME);
-
-        XmlUtil.write(file, context, "curvesInput", CurvesXml::write);
+    public static void write(Path workingDir, DynaWaltzContext context) throws IOException {
+        new CurvesXml().createXmlFileFromContext(workingDir, context);
     }
 
-    private static void write(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
+    @Override
+    public void write(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
         for (Curve curve : context.getCurves()) {
             DynaWaltzCurve dynCurve = (DynaWaltzCurve) curve;
             writer.writeEmptyElement(DYN_URI, "curve");

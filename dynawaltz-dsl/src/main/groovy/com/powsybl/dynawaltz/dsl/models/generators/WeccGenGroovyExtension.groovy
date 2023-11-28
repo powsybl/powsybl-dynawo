@@ -8,7 +8,7 @@
 package com.powsybl.dynawaltz.dsl.models.generators
 
 import com.google.auto.service.AutoService
-import com.powsybl.dynamicsimulation.DynamicModel
+import com.powsybl.commons.reporter.Reporter
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
 import com.powsybl.dynawaltz.dsl.EquipmentConfig
@@ -20,7 +20,7 @@ import com.powsybl.iidm.network.Network
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class WeccGenGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+class WeccGenGroovyExtension extends AbstractEquipmentGroovyExtension {
 
     private static final String WECC = "wecc"
 
@@ -29,14 +29,14 @@ class WeccGenGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicMod
     }
 
     @Override
-    protected WeccGenBuilder createBuilder(Network network, EquipmentConfig equipmentConfig) {
-        new WeccGenBuilder(network, equipmentConfig)
+    protected WeccGenBuilder createBuilder(Network network, EquipmentConfig equipmentConfig, Reporter reporter) {
+        new WeccGenBuilder(network, equipmentConfig, reporter)
     }
 
     static class WeccGenBuilder extends AbstractGeneratorBuilder {
 
-        WeccGenBuilder(Network network, EquipmentConfig equipmentConfig) {
-            super(network, equipmentConfig)
+        WeccGenBuilder(Network network, EquipmentConfig equipmentConfig, Reporter reporter) {
+            super(network, equipmentConfig, reporter)
         }
 
         @Override

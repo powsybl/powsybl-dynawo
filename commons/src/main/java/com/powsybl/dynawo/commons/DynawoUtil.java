@@ -11,7 +11,7 @@ import com.google.common.io.CharStreams;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.computation.*;
 import com.powsybl.iidm.network.Network;
-import com.powsybl.iidm.xml.XMLExporter;
+import com.powsybl.iidm.serde.AbstractTreeDataExporter;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,14 +35,15 @@ public final class DynawoUtil {
         Objects.requireNonNull(network);
         Objects.requireNonNull(file);
         Properties params = new Properties();
-        params.setProperty(XMLExporter.VERSION, IIDM_VERSION);
-        params.setProperty(XMLExporter.EXTENSIONS_LIST, String.join(",", IIDM_EXTENSIONS));
+        params.setProperty(AbstractTreeDataExporter.VERSION, IIDM_VERSION);
+        params.setProperty(AbstractTreeDataExporter.EXTENSIONS_LIST, String.join(",", IIDM_EXTENSIONS));
         network.write("XIIDM", params, file);
     }
 
-    public static void requireDynawoMinVersion(ExecutionEnvironment env, ComputationManager computationManager, Command versionCmd, boolean fromErr) {
+    public static void requireDynaMinVersion(ExecutionEnvironment env, ComputationManager computationManager, Command versionCmd,
+                                             String dynaName, boolean fromErr) {
         if (!checkDynawoVersion(env, computationManager, versionCmd, fromErr)) {
-            throw new PowsyblException("DynaFlow version not supported. Must be >= " + DynawoConstants.VERSION_MIN);
+            throw new PowsyblException(dynaName + " version not supported. Must be >= " + DynawoConstants.VERSION_MIN);
         }
     }
 

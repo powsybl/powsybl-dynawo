@@ -7,7 +7,7 @@
  */
 package com.powsybl.dynawo.commons;
 
-import com.powsybl.iidm.xml.IidmXmlVersion;
+import com.powsybl.iidm.serde.IidmVersion;
 
 import java.util.List;
 
@@ -22,9 +22,11 @@ public final class DynawoConstants {
     /**
      * write the network to XIIDM v1.4 because currently Dynawo does not support versions above
      */
-    public static final String IIDM_VERSION = IidmXmlVersion.V_1_4.toString(".");
+    public static final String IIDM_VERSION = IidmVersion.V_1_4.toString(".");
 
-    public static final DynawoVersion VERSION_MIN = new DynawoVersion(1, 3, 0);
+    public static final String DYNAWO_CMD_NAME = "dynawo";
+
+    public static final DynawoVersion VERSION_MIN = new DynawoVersion(1, 5, 0);
 
     public static final List<String> IIDM_EXTENSIONS = List.of(
             "activePowerControl",
