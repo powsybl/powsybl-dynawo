@@ -134,7 +134,7 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
                 .setSolverType(solverType)
                 .setMergeLoads(mergeLoads)
                 .setWriteFinalState(writeFinalState)
-                .setUseModelOptimizers(useModelOptimizers);
+                .setUseModelOptimizers(useModelOptimizers)
                 .setDumpFileParameters(dumpFileParameters);
     }
 
