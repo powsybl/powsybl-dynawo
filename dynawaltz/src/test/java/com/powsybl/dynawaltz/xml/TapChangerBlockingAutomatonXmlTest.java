@@ -44,7 +44,7 @@ class TapChangerBlockingAutomatonXmlTest extends AbstractDynamicModelXmlTest {
     protected void addDynamicModels() {
         dynamicModels.add(new TransformerFixedRatio("BBM_NGEN_NHV1", network.getTwoWindingsTransformer("NGEN_NHV1"), "transformer", "TransformerFixedRatio"));
         dynamicModels.add(new LoadOneTransformerTapChanger("BBM_LOAD", network.getLoad("LOAD"), "lot"));
-        dynamicModels.add(new LoadTwoTransformersTapChangers("BBM_LOAD2", network.getLoad("LOAD2"), "ltt"));
+        dynamicModels.add(new LoadTwoTransformersTapChangers("BBM_LOAD2", network.getLoad("LOAD2"), "ltt", "LoadTwoTransformersTapChangers"));
         dynamicModels.add(new TapChangerBlockingAutomaton("BBM_TapChangerBlocking", "TapChangerPar",
                 network.getTwoWindingsTransformerStream().toList(),
                 List.of(network.getLoad("LOAD"), network.getLoad("LOAD2")),
