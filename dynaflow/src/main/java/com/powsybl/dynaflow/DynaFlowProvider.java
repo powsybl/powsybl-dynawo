@@ -38,6 +38,7 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 import static com.powsybl.dynaflow.DynaFlowConstants.*;
+import static com.powsybl.dynaflow.DynaFlowParameters.*;
 
 /**
  *
@@ -121,6 +122,11 @@ public class DynaFlowProvider implements LoadFlowProvider {
     }
 
     @Override
+    public Optional<Class<? extends Extension<LoadFlowParameters>>> getSpecificParametersClass() {
+        return Optional.of(DynaFlowParameters.class);
+    }
+
+    @Override
     public Optional<Extension<LoadFlowParameters>> loadSpecificParameters(PlatformConfig platformConfig) {
         // if not specified, dynaflow parameters must be default here
         return Optional.of(DynaFlowParameters.load(platformConfig));
@@ -129,6 +135,26 @@ public class DynaFlowProvider implements LoadFlowProvider {
     @Override
     public Optional<Extension<LoadFlowParameters>> loadSpecificParameters(Map<String, String> properties) {
         return Optional.of(DynaFlowParameters.load(properties));
+    }
+
+    @Override
+    public Map<String, String> createMapFromSpecificParameters(Extension<LoadFlowParameters> extension) {
+        return Map.ofEntries(
+                Map.entry(SVC_REGULATION_ON, Boolean.toString(((DynaFlowParameters) extension).getSvcRegulationOn())),
+                Map.entry(SHUNT_REGULATION_ON, Boolean.toString(((DynaFlowParameters) extension).getShuntRegulationOn())),
+                Map.entry(AUTOMATIC_SLACK_BUS_ON, Boolean.toString(((DynaFlowParameters) extension).getAutomaticSlackBusOn())),
+                Map.entry(DSO_VOLTAGE_LEVEL, Double.toString(((DynaFlowParameters) extension).getDsoVoltageLevel())),
+                Map.entry(ACTIVE_POWER_COMPENSATION, ((DynaFlowParameters) extension).getActivePowerCompensation().name()),
+                Map.entry(SETTING_PATH, ((DynaFlowParameters) extension).getSettingPath()),
+                Map.entry(ASSEMBLING_PATH, ((DynaFlowParameters) extension).getAssemblingPath()),
+                Map.entry(START_TIME, Double.toString(((DynaFlowParameters) extension).getStartTime())),
+                Map.entry(STOP_TIME, Double.toString(((DynaFlowParameters) extension).getStopTime())),
+                Map.entry(PRECISION_NAME, Double.toString(((DynaFlowParameters) extension).getPrecision())),
+                Map.entry(Sa.TIME_OF_EVENT, Double.toString(((DynaFlowParameters) extension).getSa().getTimeOfEvent())),
+                Map.entry(CHOSEN_OUTPUTS, String.join(", ", ((DynaFlowParameters) extension).getChosenOutputs())),
+                Map.entry(TIME_STEP, Double.toString(((DynaFlowParameters) extension).getTimeStep())),
+                Map.entry(STARTING_POINT_MODE, ((DynaFlowParameters) extension).getStartingPointMode().name()),
+                Map.entry(MERGE_LOADS, Boolean.toString(((DynaFlowParameters) extension).isMergeLoads())));
     }
 
     @Override
