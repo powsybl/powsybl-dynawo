@@ -84,10 +84,10 @@ public final class ConstraintsReader {
                     reader.getAttributeValue(null, DESCRIPTION); // description: unused
                     reader.getAttributeValue(null, TYPE); // type: unused
                     String kind = reader.getAttributeValue(null, KIND);
-                    double limit = readDouble(reader, LIMIT);
-                    double value = readDouble(reader, VALUE);
-                    Integer side = readInteger(reader, SIDE);
-                    Integer acceptableDuration = readInteger(reader, ACCEPTABLE_DURATION, Integer.MAX_VALUE);
+                    double limit = XmlUtil.readDoubleAttribute(reader, LIMIT, Double.NaN);
+                    double value = XmlUtil.readDoubleAttribute(reader, VALUE, Double.NaN);
+                    Integer side = XmlUtil.readIntegerAttribute(reader, SIDE);
+                    int acceptableDuration = XmlUtil.readIntAttribute(reader, ACCEPTABLE_DURATION, Integer.MAX_VALUE);
                     XmlUtil.readEndElementOrThrow(reader);
 
                     getLimitViolation(network, name, kind, limit, 1f, value, side, acceptableDuration)
@@ -101,21 +101,6 @@ public final class ConstraintsReader {
         } catch (XMLStreamException e) {
             throw new UncheckedXmlStreamException(e);
         }
-    }
-
-    private static double readDouble(XMLStreamReader reader, String name) {
-        String doubleStr = reader.getAttributeValue(null, name);
-        return doubleStr != null ? Double.parseDouble(doubleStr) : Double.NaN;
-    }
-
-    private static Integer readInteger(XMLStreamReader reader, String name) {
-        String intStr = reader.getAttributeValue(null, name);
-        return intStr != null ? Integer.valueOf(intStr) : null;
-    }
-
-    private static int readInteger(XMLStreamReader reader, String name, int defaultValue) {
-        String intStr = reader.getAttributeValue(null, name);
-        return intStr != null ? Integer.parseInt(intStr) : defaultValue;
     }
 
     private static void addOrDismiss(LimitViolation lvRead, List<LimitViolation> limitViolations) {

@@ -119,7 +119,7 @@ public final class ParametersXml {
             if (idSetRead.equals(parameterSetId)) {
                 parametersSet.set(createParametersSet(xmlReader, parameterSetId));
             } else {
-                XmlUtil.readSubElements(xmlReader);
+                XmlUtil.skipSubElements(xmlReader);
             }
         });
         xmlReader.close();
