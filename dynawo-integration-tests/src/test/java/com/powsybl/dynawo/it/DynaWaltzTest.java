@@ -84,7 +84,7 @@ class DynaWaltzTest extends AbstractDynawoTest {
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, NO_OP)
                 .join();
 
-        assertEquals(DynamicSimulationResult.Status.SUCCEED, result.getStatus());
+        assertEquals(DynamicSimulationResult.Status.SUCCESS, result.getStatus());
         assertTrue(result.getStatusText().isEmpty());
         assertEquals(41, result.getCurves().size());
         DoubleTimeSeries ts1 = (DoubleTimeSeries) result.getCurve("_GEN____1_SM_generator_UStatorPu");
@@ -128,7 +128,7 @@ class DynaWaltzTest extends AbstractDynawoTest {
         DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, curvesSupplier,
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, NO_OP)
                 .join();
-        assertEquals(DynamicSimulationResult.Status.SUCCEED, result.getStatus());
+        assertEquals(DynamicSimulationResult.Status.SUCCESS, result.getStatus());
 
         //Use exported dump as input
         parameters.setStartTime(30);
@@ -144,7 +144,7 @@ class DynaWaltzTest extends AbstractDynawoTest {
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, NO_OP)
                 .join();
 
-        assertEquals(DynamicSimulationResult.Status.SUCCEED, result.getStatus());
+        assertEquals(DynamicSimulationResult.Status.SUCCESS, result.getStatus());
     }
 
     @Test
@@ -168,7 +168,7 @@ class DynaWaltzTest extends AbstractDynawoTest {
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, NO_OP)
                 .join();
 
-        assertEquals(DynamicSimulationResult.Status.SUCCEED, result.getStatus());
+        assertEquals(DynamicSimulationResult.Status.SUCCESS, result.getStatus());
         assertTrue(result.getStatusText().isEmpty());
         assertTrue(result.getCurves().isEmpty());
         List<TimelineEvent> timeLine = result.getTimeLine();
@@ -197,7 +197,7 @@ class DynaWaltzTest extends AbstractDynawoTest {
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, NO_OP)
                 .join();
 
-        assertEquals(DynamicSimulationResult.Status.SUCCEED, result.getStatus());
+        assertEquals(DynamicSimulationResult.Status.SUCCESS, result.getStatus());
         assertTrue(result.getStatusText().isEmpty());
         assertTrue(result.getCurves().isEmpty());
         List<TimelineEvent> timeLine = result.getTimeLine();
@@ -235,7 +235,7 @@ class DynaWaltzTest extends AbstractDynawoTest {
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, NO_OP)
                 .join();
 
-        assertEquals(DynamicSimulationResult.Status.SUCCEED, result.getStatus());
+        assertEquals(DynamicSimulationResult.Status.SUCCESS, result.getStatus());
         assertTrue(result.getStatusText().isEmpty());
         assertEquals(35, result.getCurves().size());
         List<TimelineEvent> timeLine = result.getTimeLine();
@@ -265,7 +265,7 @@ class DynaWaltzTest extends AbstractDynawoTest {
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, NO_OP)
                 .join();
 
-        assertEquals(DynamicSimulationResult.Status.FAILED, result.getStatus());
+        assertEquals(DynamicSimulationResult.Status.FAILURE, result.getStatus());
         assertEquals("time step <= 0.1 s for more than 10 iterations ( DYNSolverCommonFixedTimeStep.cpp:419 )", result.getStatusText());
         assertTrue(result.getTimeLine().isEmpty());
         assertTrue(result.getCurves().isEmpty());

@@ -157,7 +157,7 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
 
         private final List<TimelineEvent> timeline = new ArrayList<>();
         private final Map<String, TimeSeries> curves = new HashMap<>();
-        private DynamicSimulationResult.Status status = DynamicSimulationResult.Status.SUCCEED;
+        private DynamicSimulationResult.Status status = DynamicSimulationResult.Status.SUCCESS;
         private String statusText = "";
 
         public DynaWaltzHandler(DynaWaltzContext context, Reporter reporter) {
@@ -209,12 +209,12 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
                         setCurves(workingDir);
                     }
                 } else {
-                    status = DynamicSimulationResult.Status.FAILED;
+                    status = DynamicSimulationResult.Status.FAILURE;
                     statusText = errorMatcher.group().substring(DYNAWO_ERROR_PATTERN.length());
                 }
             } else {
                 LOGGER.warn("Error file not found");
-                status = DynamicSimulationResult.Status.FAILED;
+                status = DynamicSimulationResult.Status.FAILURE;
                 statusText = "Dynawo error log file not found";
             }
 
@@ -237,7 +237,7 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
                 NetworkResultsUpdater.update(context.getNetwork(), NetworkSerDe.read(outputNetworkFile), context.getDynaWaltzParameters().isMergeLoads());
             } else {
                 LOGGER.warn("Output IIDM file not found");
-                status = DynamicSimulationResult.Status.FAILED;
+                status = DynamicSimulationResult.Status.FAILURE;
                 statusText = "Dynawo Output IIDM file not found";
             }
         }
@@ -271,7 +271,7 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
                 curvesPerVersion.values().forEach(l -> l.forEach(curve -> curves.put(curve.getMetadata().getName(), curve)));
             } else {
                 LOGGER.warn("Curves folder not found");
-                status = DynamicSimulationResult.Status.FAILED;
+                status = DynamicSimulationResult.Status.FAILURE;
                 statusText = "Dynawo curves folder not found";
             }
         }
