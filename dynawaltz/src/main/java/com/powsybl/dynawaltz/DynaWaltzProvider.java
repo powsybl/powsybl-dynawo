@@ -23,6 +23,7 @@ import com.powsybl.dynawo.commons.loadmerge.LoadsMerger;
 import com.powsybl.dynawo.commons.timeline.CsvTimeLineParser;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.serde.NetworkSerDe;
+import com.powsybl.timeseries.DoubleTimeSeries;
 import com.powsybl.timeseries.TimeSeries;
 import com.powsybl.timeseries.TimeSeries.TimeFormat;
 import com.powsybl.timeseries.TimeSeriesConstants;
@@ -156,7 +157,7 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
         private final Reporter reporter;
 
         private final List<TimelineEvent> timeline = new ArrayList<>();
-        private final Map<String, TimeSeries> curves = new HashMap<>();
+        private final Map<String, DoubleTimeSeries> curves = new HashMap<>();
         private DynamicSimulationResult.Status status = DynamicSimulationResult.Status.SUCCESS;
         private String statusText = "";
 
@@ -267,8 +268,8 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
         private void setCurves(Path workingDir) {
             Path curvesPath = workingDir.resolve(CURVES_OUTPUT_PATH).toAbsolutePath().resolve(CURVES_FILENAME);
             if (Files.exists(curvesPath)) {
-                Map<Integer, List<TimeSeries>> curvesPerVersion = TimeSeries.parseCsv(curvesPath, new TimeSeriesCsvConfig(TimeSeriesConstants.DEFAULT_SEPARATOR, false, TimeFormat.FRACTIONS_OF_SECOND));
-                curvesPerVersion.values().forEach(l -> l.forEach(curve -> curves.put(curve.getMetadata().getName(), curve)));
+                TimeSeries.parseCsv(curvesPath, new TimeSeriesCsvConfig(TimeSeriesConstants.DEFAULT_SEPARATOR, false, TimeFormat.FRACTIONS_OF_SECOND))
+                        .values().forEach(l -> l.forEach(curve -> curves.put(curve.getMetadata().getName(), (DoubleTimeSeries) curve)));
             } else {
                 LOGGER.warn("Curves folder not found");
                 status = DynamicSimulationResult.Status.FAILURE;
