@@ -32,23 +32,22 @@ public final class LogUtils {
             if (emptyMessage(message)) {
                 LOGGER.debug("Empty message, the entry will be skipped : {}", message);
             } else {
-                try {
-                    return Optional.of(new LogEntry(convertDynawoLog(severity), message));
-                } catch (IllegalArgumentException e) {
-                    LOGGER.warn("Inconsistent severity entry '{}'", severity);
-                }
+                return convertDynawoLog(severity).map(severityTypedValue -> new LogEntry(severityTypedValue, message));
             }
         }
         return Optional.empty();
     }
 
-    private static TypedValue convertDynawoLog(String severity) {
+    private static Optional<TypedValue> convertDynawoLog(String severity) {
         return switch (severity) {
-            case "DEBUG" -> TypedValue.DEBUG_SEVERITY;
-            case "INFO" -> TypedValue.INFO_SEVERITY;
-            case "WARN" -> TypedValue.WARN_SEVERITY;
-            case "ERROR" -> TypedValue.ERROR_SEVERITY;
-            default -> throw new IllegalArgumentException();
+            case "DEBUG" -> Optional.of(TypedValue.DEBUG_SEVERITY);
+            case "INFO" -> Optional.of(TypedValue.INFO_SEVERITY);
+            case "WARN" -> Optional.of(TypedValue.WARN_SEVERITY);
+            case "ERROR" -> Optional.of(TypedValue.ERROR_SEVERITY);
+            default -> {
+                LOGGER.warn("Inconsistent severity entry '{}'", severity);
+                yield Optional.empty();
+            }
         };
     }
 
