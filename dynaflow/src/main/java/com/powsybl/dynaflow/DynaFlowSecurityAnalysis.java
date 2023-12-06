@@ -17,6 +17,7 @@ import com.powsybl.contingency.contingency.list.ContingencyList;
 import com.powsybl.contingency.json.ContingencyJsonModule;
 import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
 import com.powsybl.dynaflow.xml.ConstraintsReader;
+import com.powsybl.dynawo.commons.CommonReports;
 import com.powsybl.dynawo.commons.DynawoUtil;
 import com.powsybl.dynawo.commons.timeline.TimelineEntry;
 import com.powsybl.dynawo.commons.timeline.XmlTimeLineParser;
@@ -40,6 +41,7 @@ import java.util.function.Supplier;
 
 import static com.powsybl.dynaflow.DynaFlowConstants.CONFIG_FILENAME;
 import static com.powsybl.dynaflow.DynaFlowConstants.IIDM_FILENAME;
+import static com.powsybl.dynawo.commons.DynawoConstants.DYNAWO_TIMELINE_FOLDER;
 
 /**
  * @author Luma Zamarreno {@literal <zamarrenolm at aia.es>}
@@ -170,10 +172,10 @@ public class DynaFlowSecurityAnalysis {
                     .toList();
 
                 // Report the timeline events from the timeline files written by dynawo
-                Path timelineDir = workingDir.resolve(DynaFlowConstants.DYNAWO_TIMELINE_FOLDER);
+                Path timelineDir = workingDir.resolve(DYNAWO_TIMELINE_FOLDER);
                 contingencies.forEach(c -> {
                     Reporter contingencyReporter = Reports.createDynaFlowTimelineReporter(reporter, c.getId());
-                    getTimeline(timelineDir, c).forEach(e -> Reports.reportTimelineEvent(contingencyReporter, e));
+                    getTimeline(timelineDir, c).forEach(e -> CommonReports.reportTimelineEvent(contingencyReporter, e));
                 });
 
                 return new SecurityAnalysisReport(

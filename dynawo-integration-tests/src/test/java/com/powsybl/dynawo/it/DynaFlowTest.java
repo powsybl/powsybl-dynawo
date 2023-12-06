@@ -111,7 +111,15 @@ class DynaFlowTest extends AbstractDynawoTest {
         network.getVoltageLevelStream().forEach(vl -> vl.setLowVoltageLimit(vl.getNominalV() * 0.97));
 
         // Launching a load flow before the security analysis is required
-        loadFlowProvider.run(network, computationManager, VariantManagerConstants.INITIAL_VARIANT_ID, loadFlowParameters).join();
+        ReporterModel reporterLf = new ReporterModel("root", "Root message");
+        loadFlowProvider.run(network, computationManager, VariantManagerConstants.INITIAL_VARIANT_ID, loadFlowParameters, reporterLf).join();
+
+        StringWriter swReporterLf = new StringWriter();
+        reporterLf.export(swReporterLf);
+        InputStream refStreamLf = Objects.requireNonNull(getClass().getResourceAsStream("/ieee14/security-analysis/timeline_report_lf.txt"));
+        String refLogExportLf = TestUtil.normalizeLineSeparator(new String(ByteStreams.toByteArray(refStreamLf), StandardCharsets.UTF_8));
+        String logExportLf = TestUtil.normalizeLineSeparator(swReporterLf.toString());
+        assertEquals(refLogExportLf, logExportLf);
 
         List<Contingency> contingencies = network.getLineStream()
                 .map(l -> Contingency.line(l.getId()))
@@ -124,12 +132,12 @@ class DynaFlowTest extends AbstractDynawoTest {
                 .join()
                 .getResult();
 
-        StringWriter sw = new StringWriter();
-        reporter.export(sw);
-        InputStream refStream = Objects.requireNonNull(getClass().getResourceAsStream("/ieee14/security-analysis/timeline_report.txt"));
-        String refLogExport = TestUtil.normalizeLineSeparator(new String(ByteStreams.toByteArray(refStream), StandardCharsets.UTF_8));
-        String logExport = TestUtil.normalizeLineSeparator(sw.toString());
-        assertEquals(refLogExport, logExport);
+        StringWriter swReporterAs = new StringWriter();
+        reporter.export(swReporterAs);
+        InputStream refStreamReporterAs = Objects.requireNonNull(getClass().getResourceAsStream("/ieee14/security-analysis/timeline_report_as.txt"));
+        String refLogExportAs = TestUtil.normalizeLineSeparator(new String(ByteStreams.toByteArray(refStreamReporterAs), StandardCharsets.UTF_8));
+        String logExportAs = TestUtil.normalizeLineSeparator(swReporterAs.toString());
+        assertEquals(refLogExportAs, logExportAs);
 
         StringWriter serializedResult = new StringWriter();
         SecurityAnalysisResultSerializer.write(result, serializedResult);
