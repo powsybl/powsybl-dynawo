@@ -107,7 +107,7 @@ class DynaWaltzProviderTest extends AbstractSerDeTest {
         assertEquals(DynaWaltzProvider.NAME, dynawoSimulation.getName());
         DynamicSimulationResult result = dynawoSimulation.run(network, (n, r) -> Collections.emptyList(), EventModelsSupplier.empty(),
                 CurvesSupplier.empty(), network.getVariantManager().getWorkingVariantId(),
-                computationManager, dynamicSimulationParameters);
+                computationManager, dynamicSimulationParameters, NO_OP);
         assertNotNull(result);
     }
 

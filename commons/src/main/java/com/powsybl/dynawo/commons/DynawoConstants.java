@@ -26,6 +26,8 @@ public final class DynawoConstants {
 
     public static final String DYNAWO_CMD_NAME = "dynawo";
 
+    public static final String DYNAWO_TIMELINE_FOLDER = "timeLine";
+
     public static final DynawoVersion VERSION_MIN = new DynawoVersion(1, 5, 0);
 
     public static final List<String> IIDM_EXTENSIONS = List.of(
