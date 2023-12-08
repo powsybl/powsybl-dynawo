@@ -26,6 +26,7 @@ import com.powsybl.dynawaltz.parameters.ParametersSet;
 import com.powsybl.dynawaltz.xml.MacroStaticReference;
 import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.Network;
+import com.powsybl.iidm.network.TwoSides;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -229,7 +230,7 @@ public class DynaWaltzContext {
         return macroConnectorId;
     }
 
-    public String addMacroConnector(String name1, String name2, Side side, List<VarConnection> varConnections) {
+    public String addMacroConnector(String name1, String name2, TwoSides side, List<VarConnection> varConnections) {
         String macroConnectorId = MacroConnector.createMacroConnectorId(name1, name2, side);
         macroConnectorsMap.computeIfAbsent(macroConnectorId, k -> new MacroConnector(macroConnectorId, varConnections));
         return macroConnectorId;

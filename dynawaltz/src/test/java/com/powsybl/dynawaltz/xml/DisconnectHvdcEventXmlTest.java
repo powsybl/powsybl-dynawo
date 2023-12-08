@@ -8,13 +8,13 @@
 package com.powsybl.dynawaltz.xml;
 
 import com.powsybl.dynawaltz.models.BlackBoxModel;
-import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.events.EventHvdcDisconnection;
 import com.powsybl.dynawaltz.models.hvdc.HvdcP;
 import com.powsybl.dynawaltz.models.hvdc.HvdcPDangling;
 import com.powsybl.dynawaltz.models.hvdc.HvdcVsc;
 import com.powsybl.dynawaltz.models.hvdc.HvdcVscDangling;
 import com.powsybl.iidm.network.Network;
+import com.powsybl.iidm.network.TwoSides;
 import com.powsybl.iidm.network.test.HvdcTestNetwork;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -77,10 +77,10 @@ class DisconnectHvdcEventXmlTest extends AbstractParametrizedDynamicModelXmlTest
                         (Function<Network, BlackBoxModel>) n -> new HvdcVsc(DYN_HVDC_NAME, n.getHvdcLine(HVDC_NAME), "hvdc", "HvdcVsc"),
                         (Function<Network, BlackBoxModel>) n -> new EventHvdcDisconnection(n.getHvdcLine(HVDC_NAME), 1, false, true)),
                 Arguments.of("disconnect_hvdc_pv_dangling_dyd.xml",
-                        (Function<Network, BlackBoxModel>) n -> new HvdcPDangling(DYN_HVDC_NAME, n.getHvdcLine(HVDC_NAME), "hvdc", "HvdcPVDangling", Side.TWO),
+                        (Function<Network, BlackBoxModel>) n -> new HvdcPDangling(DYN_HVDC_NAME, n.getHvdcLine(HVDC_NAME), "hvdc", "HvdcPVDangling", TwoSides.TWO),
                         (Function<Network, BlackBoxModel>) n -> new EventHvdcDisconnection(n.getHvdcLine(HVDC_NAME), 1, true, false)),
                 Arguments.of("disconnect_hvdc_vsc_dangling_dyd.xml",
-                        (Function<Network, BlackBoxModel>) n -> new HvdcVscDangling(DYN_HVDC_NAME, n.getHvdcLine(HVDC_NAME), "hvdc", "HvdcVSCDanglingUdc", Side.ONE),
+                        (Function<Network, BlackBoxModel>) n -> new HvdcVscDangling(DYN_HVDC_NAME, n.getHvdcLine(HVDC_NAME), "hvdc", "HvdcVSCDanglingUdc", TwoSides.ONE),
                         (Function<Network, BlackBoxModel>) n -> new EventHvdcDisconnection(n.getHvdcLine(HVDC_NAME), 1, false, true))
         );
     }

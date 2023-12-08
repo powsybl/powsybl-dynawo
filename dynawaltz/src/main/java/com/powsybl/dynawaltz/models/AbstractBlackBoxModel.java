@@ -8,13 +8,11 @@ package com.powsybl.dynawaltz.models;
 
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
+import com.powsybl.dynawaltz.models.buses.EquipmentConnectionPoint;
 import com.powsybl.dynawaltz.models.macroconnections.MacroConnectAttribute;
 import com.powsybl.dynawaltz.models.macroconnections.MacroConnectionSuffix;
-import com.powsybl.dynawaltz.parameters.ParametersSet;
-import com.powsybl.iidm.network.Identifiable;
-import com.powsybl.dynawaltz.models.buses.EquipmentConnectionPoint;
 import com.powsybl.dynawaltz.models.utils.BusUtils;
-import com.powsybl.dynawaltz.models.utils.SideConverter;
+import com.powsybl.dynawaltz.parameters.ParametersSet;
 import com.powsybl.iidm.network.*;
 
 import javax.xml.stream.XMLStreamException;
@@ -142,13 +140,13 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel {
     /**
      * Suffixes MacroConnector id with side name
      */
-    protected final <T extends Model> void createMacroConnections(String modelStaticId, Class<T> modelClass, BiFunction<T, Side, List<VarConnection>> varConnectionsSupplier, DynaWaltzContext context, Side side) {
+    protected final <T extends Model> void createMacroConnections(String modelStaticId, Class<T> modelClass, BiFunction<T, TwoSides, List<VarConnection>> varConnectionsSupplier, DynaWaltzContext context, TwoSides side) {
         T connectedModel = context.getDynamicModel(modelStaticId, modelClass);
         String macroConnectorId = context.addMacroConnector(getName(), connectedModel.getName(), side, varConnectionsSupplier.apply(connectedModel, side));
         context.addMacroConnect(macroConnectorId, getMacroConnectFromAttributes(), connectedModel.getMacroConnectToAttributes());
     }
 
-    protected final <T extends Model> void createMacroConnections(Identifiable<?> equipment, Class<T> modelClass, BiFunction<T, Side, List<VarConnection>> varConnectionsSupplier, DynaWaltzContext context, Side side) {
+    protected final <T extends Model> void createMacroConnections(Identifiable<?> equipment, Class<T> modelClass, BiFunction<T, TwoSides, List<VarConnection>> varConnectionsSupplier, DynaWaltzContext context, TwoSides side) {
         T connectedModel = context.getDynamicModel(equipment, modelClass);
         String macroConnectorId = context.addMacroConnector(getName(), connectedModel.getName(), side, varConnectionsSupplier.apply(connectedModel, side));
         context.addMacroConnect(macroConnectorId, getMacroConnectFromAttributes(), connectedModel.getMacroConnectToAttributes());
@@ -182,14 +180,14 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel {
         context.addMacroConnect(macroConnectorId, getMacroConnectFromAttributes(), connectedModel.getMacroConnectToAttributes());
     }
 
-    protected final void createTerminalMacroConnections(Terminal terminal, BiFunction<EquipmentConnectionPoint, Side, List<VarConnection>> varConnectionsSupplier, DynaWaltzContext context, Side side) {
+    protected final void createTerminalMacroConnections(Terminal terminal, BiFunction<EquipmentConnectionPoint, TwoSides, List<VarConnection>> varConnectionsSupplier, DynaWaltzContext context, TwoSides side) {
         EquipmentConnectionPoint connectedModel = context.getConnectionPointDynamicModel(BusUtils.getConnectableBusStaticId(terminal));
         String macroConnectorId = context.addMacroConnector(getName(), connectedModel.getName(), side, varConnectionsSupplier.apply(connectedModel, side));
         context.addMacroConnect(macroConnectorId, getMacroConnectFromAttributes(), connectedModel.getMacroConnectToAttributes());
     }
 
-    protected final void createTerminalMacroConnections(HvdcLine hvdc, BiFunction<EquipmentConnectionPoint, Side, List<VarConnection>> varConnectionsSupplier, DynaWaltzContext context, Side side) {
-        HvdcConverterStation<?> station = hvdc.getConverterStation(SideConverter.convert(side));
+    protected final void createTerminalMacroConnections(HvdcLine hvdc, BiFunction<EquipmentConnectionPoint, TwoSides, List<VarConnection>> varConnectionsSupplier, DynaWaltzContext context, TwoSides side) {
+        HvdcConverterStation<?> station = hvdc.getConverterStation(side);
         createTerminalMacroConnections(station.getTerminal(), varConnectionsSupplier, context, side);
     }
 }

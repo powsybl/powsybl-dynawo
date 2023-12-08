@@ -1,8 +1,9 @@
 package com.powsybl.dynawaltz.models.hvdc;
 
-import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.buses.EquipmentConnectionPoint;
+import com.powsybl.dynawaltz.models.utils.SideUtils;
+import com.powsybl.iidm.network.TwoSides;
 
 import java.util.List;
 import java.util.Objects;
@@ -12,28 +13,28 @@ import java.util.function.BiFunction;
 public final class DanglingSide {
 
     private final String prefix;
-    private final Side side;
+    private final TwoSides side;
 
-    public DanglingSide(String prefix, Side side) {
+    public DanglingSide(String prefix, TwoSides side) {
         this.prefix = Objects.requireNonNull(prefix);
         this.side = Objects.requireNonNull(side);
     }
 
-    boolean isDangling(Side side) {
+    boolean isDangling(TwoSides side) {
         return this.side == side;
     }
 
     public int getSideNumber() {
-        return side.getSideNumber();
+        return side.getNum();
     }
 
-    public void createMacroConnections(BiFunction<EquipmentConnectionPoint, Side, List<VarConnection>> basicVarConnectionsSupplier,
-                                       BiConsumer<BiFunction<EquipmentConnectionPoint, Side, List<VarConnection>>, Side> connectionCreator) {
+    public void createMacroConnections(BiFunction<EquipmentConnectionPoint, TwoSides, List<VarConnection>> basicVarConnectionsSupplier,
+                                       BiConsumer<BiFunction<EquipmentConnectionPoint, TwoSides, List<VarConnection>>, TwoSides> connectionCreator) {
         connectionCreator.accept(this::getVarConnectionsWith, side);
-        connectionCreator.accept(basicVarConnectionsSupplier, side.getOppositeSide());
+        connectionCreator.accept(basicVarConnectionsSupplier, SideUtils.getOppositeSide(side));
     }
 
-    private List<VarConnection> getVarConnectionsWith(EquipmentConnectionPoint connected, Side side) {
-        return List.of(new VarConnection(prefix + side.getSideNumber(), connected.getTerminalVarName(side)));
+    private List<VarConnection> getVarConnectionsWith(EquipmentConnectionPoint connected, TwoSides side) {
+        return List.of(new VarConnection(prefix + side.getNum(), connected.getTerminalVarName(side)));
     }
 }

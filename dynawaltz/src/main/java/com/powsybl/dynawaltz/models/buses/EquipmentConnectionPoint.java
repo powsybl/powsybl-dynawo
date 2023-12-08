@@ -8,7 +8,7 @@
 package com.powsybl.dynawaltz.models.buses;
 
 import com.powsybl.dynawaltz.models.Model;
-import com.powsybl.dynawaltz.models.Side;
+import com.powsybl.iidm.network.TwoSides;
 
 import java.util.Optional;
 
@@ -20,13 +20,13 @@ public interface EquipmentConnectionPoint extends Model {
 
     String getTerminalVarName();
 
-    default String getTerminalVarName(Side side) {
+    default String getTerminalVarName(TwoSides side) {
         return getTerminalVarName();
     }
 
     Optional<String> getSwitchOffSignalVarName();
 
-    default Optional<String> getSwitchOffSignalVarName(Side side) {
+    default Optional<String> getSwitchOffSignalVarName(TwoSides side) {
         return getSwitchOffSignalVarName();
     }
 }

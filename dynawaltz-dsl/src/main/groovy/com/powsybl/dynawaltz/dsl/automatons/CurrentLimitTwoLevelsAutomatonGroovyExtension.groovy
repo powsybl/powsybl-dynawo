@@ -14,9 +14,7 @@ import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractPureDynamicGroovyExtension
 import com.powsybl.dynawaltz.dsl.DslEquipment
 import com.powsybl.dynawaltz.dsl.Reporters
-import com.powsybl.dynawaltz.models.Side
 import com.powsybl.dynawaltz.models.automatons.CurrentLimitTwoLevelsAutomaton
-import com.powsybl.dynawaltz.models.utils.SideConverter
 import com.powsybl.iidm.network.Branch
 import com.powsybl.iidm.network.Network
 import com.powsybl.iidm.network.TwoSides
@@ -43,7 +41,7 @@ class CurrentLimitTwoLevelsAutomatonGroovyExtension extends AbstractPureDynamicG
     static class CurrentLimitAutomatonTwoLevelBuilder extends CurrentLimitAutomatonGroovyExtension.CurrentLimitAutomatonBuilder {
 
         protected final DslEquipment<Branch> iMeasurement2
-        protected Side iMeasurement2Side
+        protected TwoSides iMeasurement2Side
 
         CurrentLimitAutomatonTwoLevelBuilder(Network network, String lib, Reporter reporter) {
             super(network, lib, reporter)
@@ -63,7 +61,7 @@ class CurrentLimitTwoLevelsAutomatonGroovyExtension extends AbstractPureDynamicG
         }
 
         void iMeasurement2Side(TwoSides side) {
-            this.iMeasurement2Side = SideConverter.convert(side)
+            this.iMeasurement2Side = side
         }
 
         @Override
