@@ -13,7 +13,7 @@ import com.powsybl.commons.reporter.TypedValue
 import com.powsybl.iidm.network.IdentifiableType
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 final class Reporters {
 
