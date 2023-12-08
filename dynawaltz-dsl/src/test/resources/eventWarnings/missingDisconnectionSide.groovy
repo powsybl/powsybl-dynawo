@@ -8,10 +8,10 @@
 
 package eventWarnings
 
-import com.powsybl.iidm.network.Branch
+import com.powsybl.iidm.network.TwoSides
 
 Disconnect {
     staticId "GEN"
     startTime 1
-    disconnectOnly Branch.Side.ONE
+    disconnectOnly TwoSides.ONE
 }

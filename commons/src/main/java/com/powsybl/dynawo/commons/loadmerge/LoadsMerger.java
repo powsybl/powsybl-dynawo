@@ -12,7 +12,7 @@ import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.Load;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.VoltageLevel;
-import com.powsybl.iidm.xml.NetworkXml;
+import com.powsybl.iidm.serde.NetworkSerDe;
 
 import java.util.EnumMap;
 import java.util.List;
@@ -33,7 +33,7 @@ public final class LoadsMerger {
     }
 
     public static Network mergeLoads(Network network) throws PowsyblException {
-        Network mergedLoadsNetwork = NetworkXml.copy(network);
+        Network mergedLoadsNetwork = NetworkSerDe.copy(network);
         mergedLoadsNetwork.getVoltageLevelStream().forEach(LoadsMerger::mergeLoadsInVoltageLevel);
         return mergedLoadsNetwork;
     }

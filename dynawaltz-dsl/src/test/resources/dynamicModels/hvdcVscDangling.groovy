@@ -8,11 +8,11 @@
 
 package dynamicModels
 
-import com.powsybl.iidm.network.Branch
+import com.powsybl.iidm.network.TwoSides
 
 HvdcVSCDanglingUdc {
     staticId "L"
     dynamicModelId "BBM_HVDC_L"
     parameterSetId "HVDC"
-    dangling Branch.Side.TWO
+    dangling TwoSides.TWO
 }

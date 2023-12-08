@@ -5,16 +5,14 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-
-import com.powsybl.iidm.network.Branch
 import com.powsybl.iidm.network.Bus
+import com.powsybl.iidm.network.Generator
 import com.powsybl.iidm.network.Line
 import com.powsybl.iidm.network.Load
-import com.powsybl.iidm.network.Generator
-
+import com.powsybl.iidm.network.TwoSides
 
 for (Load load : network.loads) {
-    if (load == "LOAD2") {
+    if (load.id == "LOAD2") {
         LoadOneTransformer {
             staticId load.id
             // dynamicModelId "BBM_" + load.id (dynamicModelId could be optional and equal to staticId)
@@ -76,7 +74,7 @@ for (Line line : network.lines) {
         dynamicModelId "BBM_" + line.id
         parameterSetId "CLA"
         iMeasurement line.id
-        iMeasurementSide Branch.Side.TWO
+        iMeasurementSide TwoSides.TWO
     }
 
     Line {
