@@ -8,14 +8,14 @@
 
 package dynamicModels
 
-import com.powsybl.iidm.network.Branch
+import com.powsybl.iidm.network.TwoSides
 
 CurrentLimitAutomatonTwoLevels {
     dynamicModelId "AM_NHV1_NHV2_1"
     parameterSetId "CLA"
     controlledQuadripole "NHV1_NHV2_2"
     iMeasurement1 "NHV1_NHV2_1"
-    iMeasurement1Side Branch.Side.TWO
+    iMeasurement1Side TwoSides.TWO
     iMeasurement2 "NGEN_NHV1"
-    iMeasurement2Side Branch.Side.ONE
+    iMeasurement2Side TwoSides.ONE
 }

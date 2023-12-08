@@ -7,80 +7,37 @@
  */
 package com.powsybl.dynawo.commons.timeline;
 
-import com.powsybl.commons.PowsyblException;
-import com.univocity.parsers.common.ParsingContext;
-import com.univocity.parsers.common.ResultIterator;
-import com.univocity.parsers.csv.CsvParser;
-import com.univocity.parsers.csv.CsvParserSettings;
+import com.powsybl.dynawo.commons.AbstractCsvParser;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public final class CsvTimeLineParser implements TimeLineParser {
+public final class CsvTimeLineParser extends AbstractCsvParser<TimelineEntry> implements TimeLineParser {
 
     private static final int NB_COLUMNS = 3;
-    private final char separator;
 
     public CsvTimeLineParser() {
-        this('|');
+        this(DEFAULT_SEPARATOR);
     }
 
     public CsvTimeLineParser(char separator) {
-        this.separator = separator;
+        super(separator);
     }
 
-    public List<TimelineEntry> parse(Path file) {
-        return parse(file, separator);
+    @Override
+    protected Optional<TimelineEntry> createEntry(String[] tokens) {
+        return TimeLineUtil.createEvent(tokens[0], tokens[1], tokens[2]);
     }
 
-    public static List<TimelineEntry> parse(Path file, char separator) {
-        if (!Files.exists(file)) {
-            return Collections.emptyList();
-        }
-
-        try (BufferedReader reader = Files.newBufferedReader(file, StandardCharsets.UTF_8)) {
-            return parse(reader, separator);
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
+    @Override
+    protected boolean hasCorrectNbColumns(int tokensSize) {
+        return NB_COLUMNS == tokensSize;
     }
 
-    static List<TimelineEntry> parse(BufferedReader reader, char separator) {
-        Objects.requireNonNull(reader);
-        CsvParserSettings settings = new CsvParserSettings();
-        settings.getFormat().setDelimiter(separator);
-        settings.getFormat().setQuoteEscape('"');
-        settings.getFormat().setLineSeparator(System.lineSeparator());
-        settings.setMaxColumns(NB_COLUMNS);
-        CsvParser csvParser = new CsvParser(settings);
-        ResultIterator<String[], ParsingContext> iterator = csvParser.iterate(reader).iterator();
-        return read(iterator);
+    @Override
+    protected int getNbColumns() {
+        return NB_COLUMNS;
     }
-
-    static List<TimelineEntry> read(ResultIterator<String[], ParsingContext> iterator) {
-        List<TimelineEntry> timeline = new ArrayList<>();
-        int iLine = 0;
-        while (iterator.hasNext()) {
-            iLine++;
-            String[] tokens = iterator.next();
-            if (tokens.length != NB_COLUMNS) {
-                throw new PowsyblException("Columns of line " + iLine + " are inconsistent");
-            }
-            TimeLineUtil.createEvent(tokens[0], tokens[1], tokens[2])
-                    .ifPresent(timeline::add);
-        }
-        return timeline;
-    }
-
 }
