@@ -92,7 +92,7 @@ for (Line line : network.lines) {
         parameterSetId "CLA"
         controlledQuadripole line.id
         iMeasurement line.id
-        iMeasurementSide Branch.Side.TWO
+        iMeasurementSide TwoSides.TWO
     }
 }
 ```

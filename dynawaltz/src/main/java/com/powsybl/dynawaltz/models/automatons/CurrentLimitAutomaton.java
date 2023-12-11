@@ -8,9 +8,10 @@ package com.powsybl.dynawaltz.models.automatons;
 
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
-import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.VarConnection;
+import com.powsybl.dynawaltz.models.utils.SideUtils;
 import com.powsybl.iidm.network.Branch;
+import com.powsybl.iidm.network.TwoSides;
 
 import java.util.Arrays;
 import java.util.List;
@@ -26,11 +27,11 @@ public class CurrentLimitAutomaton extends AbstractPureDynamicBlackBoxModel {
     protected static final String CONTROL_SUFFIX = "Control";
 
     protected final Branch<?> measuredQuadripole;
-    protected final Side measuredSide;
+    protected final TwoSides measuredSide;
     protected final Branch<?> controlledQuadripole;
     protected final String lib;
 
-    public CurrentLimitAutomaton(String dynamicModelId, String parameterSetId, Branch<?> measuredQuadripole, Side measuredSide, Branch<?> controlledQuadripole, String lib) {
+    public CurrentLimitAutomaton(String dynamicModelId, String parameterSetId, Branch<?> measuredQuadripole, TwoSides measuredSide, Branch<?> controlledQuadripole, String lib) {
         super(dynamicModelId, parameterSetId);
         this.measuredQuadripole = Objects.requireNonNull(measuredQuadripole);
         this.measuredSide = Objects.requireNonNull(measuredSide);
@@ -38,7 +39,7 @@ public class CurrentLimitAutomaton extends AbstractPureDynamicBlackBoxModel {
         this.lib = lib;
     }
 
-    public CurrentLimitAutomaton(String dynamicModelId, String parameterSetId, Branch<?> measuredQuadripole, Side measuredSide, String lib) {
+    public CurrentLimitAutomaton(String dynamicModelId, String parameterSetId, Branch<?> measuredQuadripole, TwoSides measuredSide, String lib) {
         this(dynamicModelId, parameterSetId, measuredQuadripole, measuredSide, measuredQuadripole, lib);
     }
 
@@ -49,7 +50,7 @@ public class CurrentLimitAutomaton extends AbstractPureDynamicBlackBoxModel {
 
     @Override
     public void createMacroConnections(DynaWaltzContext context) {
-        createMacroConnections(measuredQuadripole, QuadripoleModel.class, this::getVarConnectionsWithMeasuredQuadripole, context, MEASURE_SUFFIX + measuredSide.getSideSuffix());
+        createMacroConnections(measuredQuadripole, QuadripoleModel.class, this::getVarConnectionsWithMeasuredQuadripole, context, MEASURE_SUFFIX + SideUtils.getSideSuffix(measuredSide));
         createMacroConnections(controlledQuadripole, QuadripoleModel.class, this::getVarConnectionsWithControlledQuadripole, context, CONTROL_SUFFIX);
     }
 

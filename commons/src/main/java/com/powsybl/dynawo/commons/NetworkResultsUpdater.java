@@ -78,10 +78,10 @@ public final class NetworkResultsUpdater {
 
     private static void updateHvdcLines(Network targetNetwork, Iterable<HvdcLine> hvdcLines) {
         for (HvdcLine sourceHvdcLine : hvdcLines) {
-            Terminal targetTerminal1 = targetNetwork.getHvdcLine(sourceHvdcLine.getId()).getConverterStation(HvdcLine.Side.ONE).getTerminal();
-            Terminal targetTerminal2 = targetNetwork.getHvdcLine(sourceHvdcLine.getId()).getConverterStation(HvdcLine.Side.TWO).getTerminal();
-            Terminal sourceTerminal1 = sourceHvdcLine.getConverterStation(HvdcLine.Side.ONE).getTerminal();
-            Terminal sourceTerminal2 = sourceHvdcLine.getConverterStation(HvdcLine.Side.TWO).getTerminal();
+            Terminal targetTerminal1 = targetNetwork.getHvdcLine(sourceHvdcLine.getId()).getConverterStation(TwoSides.ONE).getTerminal();
+            Terminal targetTerminal2 = targetNetwork.getHvdcLine(sourceHvdcLine.getId()).getConverterStation(TwoSides.TWO).getTerminal();
+            Terminal sourceTerminal1 = sourceHvdcLine.getConverterStation(TwoSides.ONE).getTerminal();
+            Terminal sourceTerminal2 = sourceHvdcLine.getConverterStation(TwoSides.TWO).getTerminal();
             update(targetTerminal1, sourceTerminal1);
             update(targetTerminal2, sourceTerminal2);
         }

@@ -8,10 +8,12 @@
 package com.powsybl.dynawaltz.dsl.events
 
 import com.google.auto.service.AutoService
+import com.powsybl.commons.reporter.Reporter
 import com.powsybl.dynamicsimulation.EventModel
 import com.powsybl.dynamicsimulation.groovy.EventModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractPureDynamicGroovyExtension
 import com.powsybl.dynawaltz.dsl.DslFilteredEquipment
+import com.powsybl.dynawaltz.dsl.Reporters
 import com.powsybl.dynawaltz.dsl.builders.AbstractEventModelBuilder
 import com.powsybl.dynawaltz.models.events.EventActivePowerVariation
 import com.powsybl.iidm.network.Identifiable
@@ -31,16 +33,16 @@ class EventActivePowerVariationGroovyExtension extends AbstractPureDynamicGroovy
     }
 
     @Override
-    protected EventAPVBuilder createBuilder(Network network) {
-        new EventAPVBuilder(network, TAG)
+    protected EventAPVBuilder createBuilder(Network network, Reporter reporter) {
+        new EventAPVBuilder(network, TAG, reporter)
     }
 
     static class EventAPVBuilder extends AbstractEventModelBuilder<Injection> {
 
         protected double deltaP
 
-        EventAPVBuilder(Network network, String tag) {
-            super(network, new DslFilteredEquipment<Injection>("Generator/Load", EventActivePowerVariation::isConnectable), tag)
+        EventAPVBuilder(Network network, String tag, Reporter reporter) {
+            super(network, new DslFilteredEquipment<Injection>("GENERATOR/LOAD", EventActivePowerVariation::isConnectable), tag, reporter)
         }
 
         void deltaP(double deltaP) {
@@ -49,12 +51,8 @@ class EventActivePowerVariationGroovyExtension extends AbstractPureDynamicGroovy
 
         void checkData() {
             super.checkData()
-            if (dslEquipment.equipment && !EventActivePowerVariation.isConnectable(dslEquipment.equipment.type)) {
-                LOGGER.warn("${getLib()}: ${dslEquipment.equipment?.type} ${dslEquipment.staticId} cannot be disconnected")
-                isInstantiable = false
-            }
             if (!deltaP) {
-                LOGGER.warn("${getLib()}: 'deltaP' field is not set")
+                Reporters.reportFieldNotSet(reporter, "deltaP")
                 isInstantiable = false
             }
         }

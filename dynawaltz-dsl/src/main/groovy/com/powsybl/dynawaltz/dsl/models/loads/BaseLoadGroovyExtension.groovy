@@ -7,7 +7,7 @@
 package com.powsybl.dynawaltz.dsl.models.loads
 
 import com.google.auto.service.AutoService
-import com.powsybl.dynamicsimulation.DynamicModel
+import com.powsybl.commons.reporter.Reporter
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
 import com.powsybl.dynawaltz.dsl.EquipmentConfig
@@ -21,7 +21,7 @@ import com.powsybl.iidm.network.Network
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  */
 @AutoService(DynamicModelGroovyExtension.class)
-class BaseLoadGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
+class BaseLoadGroovyExtension extends AbstractEquipmentGroovyExtension {
 
     private static final String LOADS = "baseLoads"
 
@@ -30,14 +30,14 @@ class BaseLoadGroovyExtension extends AbstractEquipmentGroovyExtension<DynamicMo
     }
 
     @Override
-    protected LoadAlphaBetaBuilder createBuilder(Network network, EquipmentConfig equipmentConfig) {
-        new LoadAlphaBetaBuilder(network, equipmentConfig)
+    protected LoadAlphaBetaBuilder createBuilder(Network network, EquipmentConfig equipmentConfig, Reporter reporter) {
+        new LoadAlphaBetaBuilder(network, equipmentConfig, reporter)
     }
 
     static class LoadAlphaBetaBuilder extends AbstractLoadModelBuilder {
 
-        LoadAlphaBetaBuilder(Network network, EquipmentConfig equipmentConfig) {
-            super(network, equipmentConfig)
+        LoadAlphaBetaBuilder(Network network, EquipmentConfig equipmentConfig, Reporter reporter) {
+            super(network, equipmentConfig, reporter)
         }
 
         @Override

@@ -7,6 +7,7 @@
 package com.powsybl.dynawaltz;
 
 import com.powsybl.commons.PowsyblException;
+import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.models.*;
@@ -25,6 +26,7 @@ import com.powsybl.dynawaltz.parameters.ParametersSet;
 import com.powsybl.dynawaltz.xml.MacroStaticReference;
 import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.Network;
+import com.powsybl.iidm.network.TwoSides;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,6 +46,7 @@ public class DynaWaltzContext {
     private static final String MODEL_ID_EXCEPTION = "The model identified by the static id %s does not match the expected model (%s)";
     private static final String MODEL_ID_LOG = "The model identified by the static id {} does not match the expected model ({})";
 
+    private final Reporter reporter;
     private final Network network;
     private final String workingVariantId;
     private final DynamicSimulationParameters parameters;
@@ -61,13 +64,20 @@ public class DynaWaltzContext {
 
     public DynaWaltzContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
                             List<Curve> curves, DynamicSimulationParameters parameters, DynaWaltzParameters dynaWaltzParameters) {
+        this(network, workingVariantId, dynamicModels, eventModels, curves, parameters, dynaWaltzParameters, Reporter.NO_OP);
+    }
+
+    public DynaWaltzContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
+                            List<Curve> curves, DynamicSimulationParameters parameters, DynaWaltzParameters dynaWaltzParameters, Reporter reporter) {
+
+        this.reporter = DynawaltzReports.createDynaWaltzContextReporter(reporter);
         this.network = Objects.requireNonNull(network);
         this.workingVariantId = Objects.requireNonNull(workingVariantId);
         this.dynamicModels = Objects.requireNonNull(dynamicModels).stream()
-                .filter(distinctByDynamicId().and(distinctByStaticId()))
+                .filter(distinctByDynamicId(reporter).and(distinctByStaticId(reporter)))
                 .toList();
         this.eventModels = Objects.requireNonNull(eventModels).stream()
-                .filter(distinctByDynamicId())
+                .filter(distinctByDynamicId(reporter))
                 .toList();
         this.staticIdBlackBoxModelMap = getInputBlackBoxDynamicModelStream()
                 .filter(EquipmentBlackBoxModel.class::isInstance)
@@ -184,22 +194,22 @@ public class DynaWaltzContext {
         throw new PowsyblException(String.format(MODEL_ID_EXCEPTION, staticId, "ConnectionPoint"));
     }
 
-    protected static Predicate<BlackBoxModel> distinctByStaticId() {
+    protected static Predicate<BlackBoxModel> distinctByStaticId(Reporter reporter) {
         Set<String> seen = new HashSet<>();
         return bbm -> {
             if (bbm instanceof EquipmentBlackBoxModel eBbm && !seen.add(eBbm.getStaticId())) {
-                LOGGER.warn("Duplicate static id found: {} -> dynamic model {} {} will be skipped", eBbm.getStaticId(), eBbm.getLib(), eBbm.getDynamicModelId());
+                DynawaltzReports.reportDuplicateStaticId(reporter, eBbm.getStaticId(), eBbm.getLib(), eBbm.getDynamicModelId());
                 return false;
             }
             return true;
         };
     }
 
-    protected static Predicate<BlackBoxModel> distinctByDynamicId() {
+    protected static Predicate<BlackBoxModel> distinctByDynamicId(Reporter reporter) {
         Set<String> seen = new HashSet<>();
         return bbm -> {
             if (!seen.add(bbm.getDynamicModelId())) {
-                LOGGER.warn("Duplicate dynamic id found: {} -> model {} will be skipped", bbm.getDynamicModelId(), bbm.getName());
+                DynawaltzReports.reportDuplicateDynamicId(reporter, bbm.getDynamicModelId(), bbm.getName());
                 return false;
             }
             return true;
@@ -220,7 +230,7 @@ public class DynaWaltzContext {
         return macroConnectorId;
     }
 
-    public String addMacroConnector(String name1, String name2, Side side, List<VarConnection> varConnections) {
+    public String addMacroConnector(String name1, String name2, TwoSides side, List<VarConnection> varConnections) {
         String macroConnectorId = MacroConnector.createMacroConnectorId(name1, name2, side);
         macroConnectorsMap.computeIfAbsent(macroConnectorId, k -> new MacroConnector(macroConnectorId, varConnections));
         return macroConnectorId;
@@ -282,5 +292,9 @@ public class DynaWaltzContext {
 
     public String getSimulationParFile() {
         return getNetwork().getId() + ".par";
+    }
+
+    public Reporter getReporter() {
+        return reporter;
     }
 }

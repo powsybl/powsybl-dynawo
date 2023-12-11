@@ -21,7 +21,6 @@ public final class DynaFlowConstants {
     public static final String OUTPUT_IIDM_FILENAME = "outputIIDM.xml";
     public static final String OUTPUT_RESULTS_FILENAME = "results.json";
     static final String DYNAFLOW_OUTPUTS_FOLDER = "outputs";
-    static final String DYNAWO_TIMELINE_FOLDER = "timeLine";
     static final String DYNAFLOW_TIMELINE_FILE = "timeline.xml";
 
 

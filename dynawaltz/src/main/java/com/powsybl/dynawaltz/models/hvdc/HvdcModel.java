@@ -8,12 +8,12 @@
 package com.powsybl.dynawaltz.models.hvdc;
 
 import com.powsybl.dynawaltz.models.Model;
-import com.powsybl.dynawaltz.models.Side;
+import com.powsybl.iidm.network.TwoSides;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public interface HvdcModel extends Model {
 
-    String getSwitchOffSignalEventVarName(Side side);
+    String getSwitchOffSignalEventVarName(TwoSides side);
 }

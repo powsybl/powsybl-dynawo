@@ -8,14 +8,14 @@
 package com.powsybl.dynawaltz.models.automatons;
 
 import com.powsybl.dynawaltz.models.Model;
-import com.powsybl.dynawaltz.models.Side;
+import com.powsybl.iidm.network.TwoSides;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public interface QuadripoleModel extends Model {
 
-    String getIVarName(Side side);
+    String getIVarName(TwoSides side);
 
     String getStateVarName();
 

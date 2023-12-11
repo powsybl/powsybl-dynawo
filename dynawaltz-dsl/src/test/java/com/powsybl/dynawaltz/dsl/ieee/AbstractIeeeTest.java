@@ -28,6 +28,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 
+import static com.powsybl.commons.reporter.Reporter.NO_OP;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -69,7 +70,7 @@ public abstract class AbstractIeeeTest {
             List<DynamicModelGroovyExtension> dynamicModelGroovyExtensions = GroovyExtension.find(DynamicModelGroovyExtension.class, DynaWaltzProvider.NAME);
             dynamicModelsSupplier = new GroovyDynamicModelsSupplier(workingDir.resolve("dynamicModels.groovy"), dynamicModelGroovyExtensions);
         } else {
-            dynamicModelsSupplier = n -> Collections.emptyList();
+            dynamicModelsSupplier = (n, NO_OP) -> Collections.emptyList();
         }
 
         // Event models
@@ -116,7 +117,7 @@ public abstract class AbstractIeeeTest {
         assertEquals(DynaWaltzProvider.NAME, dynawoSimulation.getName());
         return dynawoSimulation.run(network, dynamicModelsSupplier, eventModelsSupplier,
             curvesSupplier, network.getVariantManager().getWorkingVariantId(),
-            computationManager, parameters);
+            computationManager, parameters, NO_OP);
     }
 
 }

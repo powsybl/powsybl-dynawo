@@ -5,10 +5,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import com.powsybl.iidm.network.Branch
-import com.powsybl.iidm.network.Load
 import com.powsybl.iidm.network.Generator
-
+import com.powsybl.iidm.network.Load
+import com.powsybl.iidm.network.TwoSides
 
 for (Load load : network.loads) {
     if (load.id != "_LOAD___8_EC") {
@@ -38,7 +37,7 @@ CurrentLimitAutomaton {
     parameterSetId "CLA_2_4"
     controlledQuadripole "_BUS____2-BUS____4-1_AC"
     iMeasurement "_BUS____2-BUS____4-1_AC"
-    iMeasurementSide Branch.Side.TWO
+    iMeasurementSide TwoSides.TWO
 }
 
 CurrentLimitAutomaton {
@@ -46,6 +45,6 @@ CurrentLimitAutomaton {
     parameterSetId "CLA_2_5"
     controlledQuadripole "_BUS____2-BUS____5-1_AC"
     iMeasurement "_BUS____2-BUS____5-1_AC"
-    iMeasurementSide Branch.Side.TWO
+    iMeasurementSide TwoSides.TWO
 }
 
