@@ -7,7 +7,9 @@
  */
 package com.powsybl.dynawaltz.xml;
 
+import com.powsybl.commons.reporter.ReporterModel;
 import com.powsybl.commons.test.AbstractSerDeTest;
+import com.powsybl.commons.test.TestUtil;
 import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.DynaWaltzContext;
@@ -26,6 +28,7 @@ import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -33,6 +36,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.powsybl.commons.test.ComparisonUtils.compareTxt;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -44,6 +48,7 @@ public abstract class AbstractDynamicModelXmlTest extends AbstractSerDeTest {
     protected List<BlackBoxModel> eventModels = new ArrayList<>();
     protected List<Curve> curves = new ArrayList<>();
     protected DynaWaltzContext context;
+    protected ReporterModel reporter = new ReporterModel("testDyd", "Test DYD");
 
     @BeforeEach
     void setup() {
@@ -74,10 +79,16 @@ public abstract class AbstractDynamicModelXmlTest extends AbstractSerDeTest {
     void setupDynawaltzContext() {
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynaWaltzParameters dynawoParameters = DynaWaltzParameters.load();
-        context = new DynaWaltzContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, eventModels, curves, parameters, dynawoParameters);
+        context = new DynaWaltzContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, eventModels, curves, parameters, dynawoParameters, reporter);
     }
 
     protected abstract void setupNetwork();
 
     protected abstract void addDynamicModels();
+
+    protected void checkReporter(String report) {
+        StringWriter sw = new StringWriter();
+        reporter.export(sw);
+        assertEquals(report, TestUtil.normalizeLineSeparator(sw.toString()));
+    }
 }
