@@ -12,7 +12,7 @@ import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.commons.reporter.TypedValue;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public final class DynawaltzReports {
 
@@ -28,6 +28,11 @@ public final class DynawaltzReports {
     public static Reporter createDynaWaltzContextReporter(Reporter reporter) {
         return reporter.createSubReporter("dynawaltzContext",
                 "Dynawaltz models processing");
+    }
+
+    public static Reporter createDynaWaltzTimelineReporter(Reporter reporter) {
+        return reporter.createSubReporter("dynawaltzTimeline",
+                "Dynawaltz Timeline");
     }
 
     public static void reportDuplicateStaticId(Reporter reporter, String duplicateId, String modelName, String dynamicId) {
