@@ -12,7 +12,7 @@ import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.commons.reporter.TypedValue;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public final class DynawaltzReports {
 
@@ -28,6 +28,11 @@ public final class DynawaltzReports {
     public static Reporter createDynaWaltzContextReporter(Reporter reporter) {
         return reporter.createSubReporter("dynawaltzContext",
                 "Dynawaltz models processing");
+    }
+
+    public static Reporter createDynaWaltzTimelineReporter(Reporter reporter) {
+        return reporter.createSubReporter("dynawaltzTimeline",
+                "Dynawaltz Timeline");
     }
 
     public static void reportDuplicateStaticId(Reporter reporter, String duplicateId, String modelName, String dynamicId) {
@@ -51,20 +56,24 @@ public final class DynawaltzReports {
                 .build());
     }
 
-    public static void reportEmptyTapChanger(Reporter reporter, String dynamicId) {
+    public static void reportEmptyAutomaton(Reporter reporter, String automatonName, String dynamicId, String expectedModels) {
         reporter.report(Report.builder()
-                .withKey("emptyTC")
-                .withDefaultMessage("TapChangerAutomaton ${dynamicId} load does not possess a transformer, the automaton will be skipped")
+                .withKey("emptyAutomaton")
+                .withDefaultMessage("${automatonName} ${dynamicId} equipment is not a ${expectedModels}, the automaton will be skipped")
+                .withValue("automatonName", automatonName)
                 .withValue("dynamicId", dynamicId)
+                .withValue("expectedModels", expectedModels)
                 .withSeverity(TypedValue.WARN_SEVERITY)
                 .build());
     }
 
-    public static void reportEmptyTapChangerBlockingAutomaton(Reporter reporter, String dynamicId) {
+    public static void reportEmptyListAutomaton(Reporter reporter, String automatonName, String dynamicId, String expectedModels) {
         reporter.report(Report.builder()
-                .withKey("emptyTCB")
-                .withDefaultMessage("None of TapChangerBlockingAutomaton {} equipments are TapChangerModel, the automaton will be skipped")
+                .withKey("emptyListAutomaton")
+                .withDefaultMessage("None of ${automatonName} ${dynamicId} equipments are ${expectedModels}, the automaton will be skipped")
+                .withValue("automatonName", automatonName)
                 .withValue("dynamicId", dynamicId)
+                .withValue("expectedModels", expectedModels)
                 .withSeverity(TypedValue.WARN_SEVERITY)
                 .build());
     }

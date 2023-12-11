@@ -7,28 +7,28 @@
  */
 package com.powsybl.dynawaltz.models.utils;
 
-import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.iidm.network.TwoSides;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public final class SideConverter {
+public final class SideUtils {
 
-    private SideConverter() {
+    private SideUtils() {
     }
 
-    public static Side convert(TwoSides side) {
+    public static String getSideSuffix(TwoSides side) {
         return switch (side) {
-            case ONE -> Side.ONE;
-            case TWO -> Side.TWO;
+            case ONE -> "Side1";
+            case TWO -> "Side2";
         };
     }
 
-    public static TwoSides convert(Side side) {
+    public static TwoSides getOppositeSide(TwoSides side) {
         return switch (side) {
-            case ONE -> TwoSides.ONE;
-            case TWO -> TwoSides.TWO;
+            case ONE -> TwoSides.TWO;
+            case TWO -> TwoSides.ONE;
         };
     }
+
 }

@@ -9,11 +9,11 @@ package com.powsybl.dynawaltz.xml;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
-import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.events.EventHvdcDisconnection;
 import com.powsybl.dynawaltz.models.hvdc.HvdcPDangling;
 import com.powsybl.dynawaltz.models.hvdc.HvdcVscDangling;
 import com.powsybl.iidm.network.HvdcLine;
+import com.powsybl.iidm.network.TwoSides;
 import com.powsybl.iidm.network.test.HvdcTestNetwork;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class DisconnectionExceptionXmlTest extends AbstractParametrizedDynamicModelXmlTest {
 
     @BeforeEach
-    void setup(String exception, Side side, BiFunction<HvdcLine, Side, BlackBoxModel> constructor) {
+    void setup(String exception, TwoSides side, BiFunction<HvdcLine, TwoSides, BlackBoxModel> constructor) {
         setupNetwork();
         addDynamicModels(side, constructor);
     }
@@ -43,16 +43,16 @@ class DisconnectionExceptionXmlTest extends AbstractParametrizedDynamicModelXmlT
         network = HvdcTestNetwork.createVsc();
     }
 
-    protected void addDynamicModels(Side side, BiFunction<HvdcLine, Side, BlackBoxModel> constructor) {
+    protected void addDynamicModels(TwoSides side, BiFunction<HvdcLine, TwoSides, BlackBoxModel> constructor) {
         HvdcLine hvdc = network.getHvdcLine("L");
         dynamicModels.add(constructor.apply(hvdc, side));
-        boolean disconnectOrigin = Side.ONE == side;
+        boolean disconnectOrigin = TwoSides.ONE == side;
         eventModels.add(new EventHvdcDisconnection(hvdc, 1, disconnectOrigin, !disconnectOrigin));
     }
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("provideModels")
-    void disconnectionOnDanglingSide(String exception, Side side, BiFunction<HvdcLine, Side, BlackBoxModel> constructor) {
+    void disconnectionOnDanglingSide(String exception, TwoSides side, BiFunction<HvdcLine, TwoSides, BlackBoxModel> constructor) {
         Exception e = assertThrows(PowsyblException.class, this::setupDynawaltzContext);
         assertEquals(exception, e.getMessage());
     }
@@ -60,11 +60,11 @@ class DisconnectionExceptionXmlTest extends AbstractParametrizedDynamicModelXmlT
     private static Stream<Arguments> provideModels() {
         return Stream.of(
                 Arguments.of("Equipment HvdcPVDangling side 1 is dangling and can't be disconnected with an event",
-                        Side.ONE,
-                        (BiFunction<HvdcLine, Side, BlackBoxModel>) (hvdc, side) -> new HvdcPDangling("BBM_L", hvdc, "hvdc", "HvdcPVDangling", side)),
+                        TwoSides.ONE,
+                        (BiFunction<HvdcLine, TwoSides, BlackBoxModel>) (hvdc, side) -> new HvdcPDangling("BBM_L", hvdc, "hvdc", "HvdcPVDangling", side)),
                 Arguments.of("Equipment HvdcVSCDanglingUdc side 2 is dangling and can't be disconnected with an event",
-                        Side.TWO,
-                        (BiFunction<HvdcLine, Side, BlackBoxModel>) (hvdc, side) -> new HvdcVscDangling("BBM_L", hvdc, "hvdc", "HvdcVSCDanglingUdc", side))
+                        TwoSides.TWO,
+                        (BiFunction<HvdcLine, TwoSides, BlackBoxModel>) (hvdc, side) -> new HvdcVscDangling("BBM_L", hvdc, "hvdc", "HvdcVSCDanglingUdc", side))
         );
     }
 }

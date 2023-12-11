@@ -8,7 +8,7 @@
 package com.powsybl.dynawaltz.models.hvdc;
 
 import com.powsybl.dynawaltz.models.defaultmodels.AbstractDefaultModel;
-import com.powsybl.dynawaltz.models.Side;
+import com.powsybl.iidm.network.TwoSides;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -25,7 +25,7 @@ public class DefaultHvdc extends AbstractDefaultModel implements HvdcModel {
     }
 
     @Override
-    public String getSwitchOffSignalEventVarName(Side side) {
-        return "@NAME@_state" + side.getSideNumber() + "_value";
+    public String getSwitchOffSignalEventVarName(TwoSides side) {
+        return "@NAME@_state" + side.getNum() + "_value";
     }
 }
