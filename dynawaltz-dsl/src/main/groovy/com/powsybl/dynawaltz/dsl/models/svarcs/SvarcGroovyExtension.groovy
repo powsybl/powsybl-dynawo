@@ -11,7 +11,8 @@ import com.google.auto.service.AutoService
 import com.powsybl.commons.reporter.Reporter
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.builders.AbstractEquipmentModelBuilder
-import com.powsybl.dynawaltz.models.svarcs.StaticVarCompensator as DynamicSvarc
+import com.powsybl.dynawaltz.models.svarcs.BaseStaticVarCompensator
+import com.powsybl.dynawaltz.models.svarcs.BaseStaticVarCompensator as DynamicSvarc
 import com.powsybl.dynawaltz.dsl.AbstractEquipmentGroovyExtension
 import com.powsybl.dynawaltz.dsl.EquipmentConfig
 import com.powsybl.iidm.network.IdentifiableType
@@ -48,7 +49,7 @@ class SvarcGroovyExtension extends AbstractEquipmentGroovyExtension {
 
         @Override
         DynamicSvarc build() {
-            isInstantiable() ? new DynamicSvarc(dynamicModelId, equipment, parameterSetId, equipmentConfig.lib)
+            isInstantiable() ? new BaseStaticVarCompensator(dynamicModelId, equipment, parameterSetId, equipmentConfig.lib)
                     : null
         }
     }

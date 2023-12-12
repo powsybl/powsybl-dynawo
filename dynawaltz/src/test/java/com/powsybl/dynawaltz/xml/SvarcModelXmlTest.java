@@ -7,7 +7,7 @@
  */
 package com.powsybl.dynawaltz.xml;
 
-import com.powsybl.dynawaltz.models.svarcs.StaticVarCompensator;
+import com.powsybl.dynawaltz.models.svarcs.BaseStaticVarCompensator;
 import com.powsybl.iidm.network.test.SvcTestCaseFactory;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
@@ -27,7 +27,7 @@ class SvarcModelXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void addDynamicModels() {
-        dynamicModels.add(new StaticVarCompensator("BBM_SVARC2", network.getStaticVarCompensator("SVC2"), "svc", "StaticVarCompensator"));
+        dynamicModels.add(new BaseStaticVarCompensator("BBM_SVARC2", network.getStaticVarCompensator("SVC2"), "svc", "StaticVarCompensator"));
     }
 
     @Test

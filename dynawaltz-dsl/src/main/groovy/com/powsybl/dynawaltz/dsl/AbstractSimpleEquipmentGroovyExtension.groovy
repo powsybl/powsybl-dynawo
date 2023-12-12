@@ -20,13 +20,9 @@ import java.util.function.Consumer
  */
 abstract class AbstractSimpleEquipmentGroovyExtension implements DynamicModelGroovyExtension {
 
-    protected EquipmentConfig equipmentConfig
+    abstract protected String getLib();
 
-    AbstractSimpleEquipmentGroovyExtension(String modelTag) {
-        equipmentConfig = new EquipmentConfig(modelTag)
-    }
-
-    abstract protected ModelBuilder<DynamicModel> createBuilder(Network network, EquipmentConfig equipmentConfig, Reporter reporter)
+    abstract protected ModelBuilder<DynamicModel> createBuilder(Network network, Reporter reporter)
 
     @Override
     String getName() {
@@ -35,16 +31,15 @@ abstract class AbstractSimpleEquipmentGroovyExtension implements DynamicModelGro
 
     @Override
     List<String> getModelNames() {
-        List.of(equipmentConfig.lib)
+        List.of(lib)
     }
 
     @Override
     void load(Binding binding, Consumer<DynamicModel> consumer, Reporter reporter) {
-        binding.setVariable(equipmentConfig.lib, { Closure<Void> closure ->
+        binding.setVariable(lib, { Closure<Void> closure ->
             def cloned = closure.clone()
             ModelBuilder<DynamicModel> builder = createBuilder(binding.getVariable("network") as Network,
-                    equipmentConfig,
-                    Reporters.createModelBuilderReporter(reporter, equipmentConfig.lib))
+                    Reporters.createModelBuilderReporter(reporter, lib))
             cloned.delegate = builder
             cloned()
             builder.build()?.tap {

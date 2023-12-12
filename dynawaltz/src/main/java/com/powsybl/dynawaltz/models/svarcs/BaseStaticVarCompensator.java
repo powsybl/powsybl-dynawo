@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class StaticVarCompensator extends AbstractEquipmentBlackBoxModel<com.powsybl.iidm.network.StaticVarCompensator> implements StaticVarCompensatorModel {
+public class BaseStaticVarCompensator extends AbstractEquipmentBlackBoxModel<com.powsybl.iidm.network.StaticVarCompensator> implements StaticVarCompensatorModel {
 
     private static final VarMapping P_MAPPING = new VarMapping("SVarC_injector_PInjPu", "p");
     private static final VarMapping Q_MAPPING = new VarMapping("SVarC_injector_QInjPu", "q");
@@ -29,7 +29,7 @@ public class StaticVarCompensator extends AbstractEquipmentBlackBoxModel<com.pow
     private static final List<VarMapping> VAR_MAPPING_NO_STANDBY_AUTOMATON = List.of(P_MAPPING, Q_MAPPING, STATE_MAPPING);
     private static final List<VarMapping> VAR_MAPPING_WITH_STANDBY_AUTOMATON = List.of(P_MAPPING, Q_MAPPING, STATE_MAPPING, MODE_MAPPING);
 
-    public StaticVarCompensator(String dynamicModelId, com.powsybl.iidm.network.StaticVarCompensator svarc, String parameterSetId, String lib) {
+    public BaseStaticVarCompensator(String dynamicModelId, com.powsybl.iidm.network.StaticVarCompensator svarc, String parameterSetId, String lib) {
         super(dynamicModelId, parameterSetId, svarc, lib);
     }
 

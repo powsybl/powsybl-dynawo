@@ -10,11 +10,9 @@ package com.powsybl.dynawaltz.dsl.models.buses
 import com.google.auto.service.AutoService
 import com.powsybl.commons.reporter.Reporter
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
+import com.powsybl.dynawaltz.builders.buses.StandardBusBuilder
 import com.powsybl.dynawaltz.dsl.AbstractSimpleEquipmentGroovyExtension
-import com.powsybl.dynawaltz.dsl.EquipmentConfig
-import com.powsybl.dynawaltz.models.buses.StandardBus
 import com.powsybl.iidm.network.Network
-
 /**
  * An implementation of {@link DynamicModelGroovyExtension} that adds the <pre>Bus</pre> keyword to the DSL
  *
@@ -23,25 +21,13 @@ import com.powsybl.iidm.network.Network
 @AutoService(DynamicModelGroovyExtension.class)
 class BusGroovyExtension extends AbstractSimpleEquipmentGroovyExtension {
 
-    BusGroovyExtension() {
-        super("Bus")
+    @Override
+    String getLib() {
+        StandardBusBuilder.LIB
     }
 
     @Override
-    protected BusBuilder createBuilder(Network network, EquipmentConfig equipmentConfig, Reporter reporter) {
-        new BusBuilder(network, equipmentConfig, reporter)
-    }
-
-    static class BusBuilder extends AbstractBusBuilder {
-
-        BusBuilder(Network network, EquipmentConfig equipmentConfig, Reporter reporter) {
-            super(network, equipmentConfig, reporter)
-        }
-
-        @Override
-        StandardBus build() {
-            isInstantiable() ? new StandardBus(dynamicModelId, dslEquipment.equipment, parameterSetId)
-                : null
-        }
+    protected StandardBusBuilder createBuilder(Network network, Reporter reporter) {
+        new StandardBusBuilder(network, reporter)
     }
 }
