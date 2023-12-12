@@ -21,8 +21,14 @@ import com.powsybl.iidm.network.Network
 @AutoService(DynamicModelGroovyExtension.class)
 class LoadTwoTransformersTapChangersGroovyExtension extends AbstractSimpleEquipmentGroovyExtension {
 
+    private static final BASE_LIB = "LoadTwoTransformersTapChangers"
+
     LoadTwoTransformersTapChangersGroovyExtension() {
-        super("LoadTwoTransformersTapChangers")
+        super(BASE_LIB)
+    }
+
+    protected LoadTwoTransformersTapChangersGroovyExtension(String lib) {
+        super(lib)
     }
 
     @Override
@@ -38,7 +44,7 @@ class LoadTwoTransformersTapChangersGroovyExtension extends AbstractSimpleEquipm
 
         @Override
         LoadTwoTransformersTapChangers build() {
-            isInstantiable() ? new LoadTwoTransformersTapChangers(dynamicModelId, equipment, parameterSetId) : null
+            isInstantiable() ? new LoadTwoTransformersTapChangers(dynamicModelId, equipment, parameterSetId, equipmentConfig.lib) : null
         }
     }
 }
