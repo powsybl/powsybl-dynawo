@@ -7,7 +7,8 @@
 package com.powsybl.dynawaltz.models.lines;
 
 import com.powsybl.dynawaltz.models.defaultmodels.AbstractDefaultModel;
-import com.powsybl.dynawaltz.models.Side;
+import com.powsybl.dynawaltz.models.utils.SideUtils;
+import com.powsybl.iidm.network.TwoSides;
 
 /**
  * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
@@ -24,8 +25,8 @@ public class DefaultLine extends AbstractDefaultModel implements LineModel {
     }
 
     @Override
-    public String getIVarName(Side side) {
-        return "@NAME@_i" + side.getSideSuffix();
+    public String getIVarName(TwoSides side) {
+        return "@NAME@_i" + SideUtils.getSideSuffix(side);
     }
 
     @Override

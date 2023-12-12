@@ -7,17 +7,12 @@
  */
 package com.powsybl.dynaflow;
 
-import com.powsybl.commons.reporter.Report;
 import com.powsybl.commons.reporter.Reporter;
-import com.powsybl.commons.reporter.TypedValue;
-import com.powsybl.dynawo.commons.timeline.TimelineEntry;
 
 /**
  * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
  */
 public final class Reports {
-    private static final String TIME_MS = "timeMsTypedValue";
-    private static final String ID = "idTypedValue";
 
     private Reports() {
     }
@@ -38,16 +33,5 @@ public final class Reports {
         return reporter.createSubReporter("dynaflowSaContingency",
                 "Contingency '${contingencyId}'",
                 "contingencyId", contingencyId);
-    }
-
-    public static void reportTimelineEvent(Reporter reporter, TimelineEntry timelineEntry) {
-        reporter.report(Report.builder()
-                .withKey("DynawoTimelineEvent")
-                .withDefaultMessage("[t=${time}] ${message} on equipment '${identifiableId}'")
-                .withTypedValue("time", timelineEntry.time(), TIME_MS)
-                .withTypedValue("identifiableId", timelineEntry.modelName(), ID)
-                .withValue("message", timelineEntry.message())
-                .withSeverity(TypedValue.TRACE_SEVERITY)
-                .build());
     }
 }

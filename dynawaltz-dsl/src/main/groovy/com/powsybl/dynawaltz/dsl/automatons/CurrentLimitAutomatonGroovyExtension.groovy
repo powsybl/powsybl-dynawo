@@ -15,11 +15,8 @@ import com.powsybl.dynawaltz.dsl.AbstractPureDynamicGroovyExtension
 import com.powsybl.dynawaltz.dsl.DslEquipment
 import com.powsybl.dynawaltz.dsl.Reporters
 import com.powsybl.dynawaltz.dsl.builders.AbstractPureDynamicModelBuilder
-import com.powsybl.dynawaltz.models.Side
 import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton
-import com.powsybl.dynawaltz.models.utils.SideConverter
 import com.powsybl.iidm.network.Branch
-import com.powsybl.iidm.network.IdentifiableType
 import com.powsybl.iidm.network.Network
 import com.powsybl.iidm.network.TwoSides
 
@@ -47,7 +44,7 @@ class CurrentLimitAutomatonGroovyExtension extends AbstractPureDynamicGroovyExte
     static class CurrentLimitAutomatonBuilder extends AbstractPureDynamicModelBuilder {
 
         protected final DslEquipment<Branch> iMeasurement
-        protected Side iMeasurementSide
+        protected TwoSides iMeasurementSide
         protected final DslEquipment<Branch> controlledEquipment
 
         CurrentLimitAutomatonBuilder(Network network, String lib, Reporter reporter) {
@@ -61,7 +58,7 @@ class CurrentLimitAutomatonGroovyExtension extends AbstractPureDynamicGroovyExte
         }
 
         void iMeasurementSide(TwoSides side) {
-            this.iMeasurementSide = SideConverter.convert(side)
+            this.iMeasurementSide = side
         }
 
         void controlledQuadripole(String staticId) {

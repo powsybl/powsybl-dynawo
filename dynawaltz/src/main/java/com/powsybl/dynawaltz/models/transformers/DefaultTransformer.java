@@ -8,8 +8,9 @@
 package com.powsybl.dynawaltz.models.transformers;
 
 import com.powsybl.dynawaltz.models.defaultmodels.AbstractDefaultModel;
-import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.VarConnection;
+import com.powsybl.dynawaltz.models.utils.SideUtils;
+import com.powsybl.iidm.network.TwoSides;
 
 import java.util.List;
 
@@ -60,8 +61,8 @@ public class DefaultTransformer extends AbstractDefaultModel implements Transfor
     }
 
     @Override
-    public String getIVarName(Side side) {
-        return "@NAME@_i" + side.getSideSuffix();
+    public String getIVarName(TwoSides side) {
+        return "@NAME@_i" + SideUtils.getSideSuffix(side);
     }
 
     @Override

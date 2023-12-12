@@ -8,10 +8,9 @@
 package com.powsybl.dynawaltz.models.hvdc;
 
 import com.powsybl.commons.PowsyblException;
-import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.macroconnections.MacroConnectionsAdder;
-import com.powsybl.dynawaltz.models.utils.SideConverter;
 import com.powsybl.iidm.network.HvdcLine;
+import com.powsybl.iidm.network.TwoSides;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -20,7 +19,7 @@ public class HvdcPDangling extends HvdcP {
 
     private final DanglingSide danglingSide;
 
-    public HvdcPDangling(String dynamicModelId, HvdcLine hvdc, String parameterSetId, String hvdcLib, Side danglingSide) {
+    public HvdcPDangling(String dynamicModelId, HvdcLine hvdc, String parameterSetId, String hvdcLib, TwoSides danglingSide) {
         super(dynamicModelId, hvdc, parameterSetId, hvdcLib);
         this.danglingSide = new DanglingSide(TERMINAL_PREFIX, danglingSide);
     }
@@ -29,12 +28,12 @@ public class HvdcPDangling extends HvdcP {
     public void createMacroConnections(MacroConnectionsAdder adder) {
         danglingSide.createMacroConnections(
             this::getVarConnectionsWith,
-            (varCoSupplier, side) -> adder.createTerminalMacroConnections(this, equipment.getConverterStation(SideConverter.convert(side)).getTerminal(), varCoSupplier, side)
+            (varCoSupplier, side) -> adder.createTerminalMacroConnections(this, equipment.getConverterStation(side).getTerminal(), varCoSupplier, side)
         );
     }
 
     @Override
-    public String getSwitchOffSignalEventVarName(Side side) {
+    public String getSwitchOffSignalEventVarName(TwoSides side) {
         if (danglingSide.isDangling(side)) {
             throw new PowsyblException(String.format("Equipment %s side %s is dangling and can't be disconnected with an event", getLib(), danglingSide.getSideNumber()));
         }

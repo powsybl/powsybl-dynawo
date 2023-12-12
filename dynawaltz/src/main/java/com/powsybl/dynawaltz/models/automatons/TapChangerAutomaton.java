@@ -64,7 +64,7 @@ public class TapChangerAutomaton extends AbstractPureDynamicBlackBoxModel implem
             boolean isSkipped = adder.createMacroConnectionsOrSkip(this, load, LoadWithTransformers.class, this::getVarConnectionsWith);
             if (isSkipped) {
                 connection = ConnectionState.NOT_CONNECTED;
-                DynawaltzReports.reportEmptyTapChanger(adder.getReporter(), getDynamicModelId());
+                DynawaltzReports.reportEmptyAutomaton(adder.getReporter(), this.getName(), getDynamicModelId(), LoadWithTransformers.class.getSimpleName());
             } else {
                 connection = ConnectionState.CONNECTED;
             }

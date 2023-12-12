@@ -10,16 +10,11 @@ package com.powsybl.dynawaltz.models.macroconnections;
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.Model;
-import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.automatons.TapChangerAutomaton;
 import com.powsybl.dynawaltz.models.buses.EquipmentConnectionPoint;
 import com.powsybl.dynawaltz.models.utils.BusUtils;
-import com.powsybl.dynawaltz.models.utils.SideConverter;
-import com.powsybl.iidm.network.HvdcConverterStation;
-import com.powsybl.iidm.network.HvdcLine;
-import com.powsybl.iidm.network.Identifiable;
-import com.powsybl.iidm.network.Terminal;
+import com.powsybl.iidm.network.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -124,7 +119,7 @@ public final class MacroConnectionsAdder {
      * Creates macro connection from equipment and model class
      * Suffixes MacroConnector id with side name
      */
-    public <T extends Model> void createMacroConnections(BlackBoxModel originModel, Identifiable<?> equipment, Class<T> modelClass, BiFunction<T, Side, List<VarConnection>> varConnectionsSupplier, Side side) {
+    public <T extends Model> void createMacroConnections(BlackBoxModel originModel, Identifiable<?> equipment, Class<T> modelClass, BiFunction<T, TwoSides, List<VarConnection>> varConnectionsSupplier, TwoSides side) {
         T connectedModel = dynamicModelGetter.getDynamicModel(equipment, modelClass, true);
         String macroConnectorId = MacroConnector.createMacroConnectorId(originModel.getName(), connectedModel.getName(), side);
         MacroConnect mc = new MacroConnect(macroConnectorId, originModel.getMacroConnectFromAttributes(), connectedModel.getMacroConnectToAttributes());
@@ -178,7 +173,7 @@ public final class MacroConnectionsAdder {
      * Creates macro connection with a bus from a terminal
      * Suffixes MacroConnector id with side name
      */
-    public void createTerminalMacroConnections(BlackBoxModel originModel, Terminal terminal, BiFunction<EquipmentConnectionPoint, Side, List<VarConnection>> varConnectionsSupplier, Side side) {
+    public void createTerminalMacroConnections(BlackBoxModel originModel, Terminal terminal, BiFunction<EquipmentConnectionPoint, TwoSides, List<VarConnection>> varConnectionsSupplier, TwoSides side) {
         createMacroConnections(originModel, BusUtils.getConnectableBus(terminal), EquipmentConnectionPoint.class, varConnectionsSupplier, side);
     }
 
@@ -186,8 +181,8 @@ public final class MacroConnectionsAdder {
      * Creates macro connection with a bus from an HVDC
      * Suffixes MacroConnector id with side name
      */
-    public void createTerminalMacroConnections(BlackBoxModel originModel, HvdcLine hvdc, BiFunction<EquipmentConnectionPoint, Side, List<VarConnection>> varConnectionsSupplier, Side side) {
-        HvdcConverterStation<?> station = hvdc.getConverterStation(SideConverter.convert(side));
+    public void createTerminalMacroConnections(BlackBoxModel originModel, HvdcLine hvdc, BiFunction<EquipmentConnectionPoint, TwoSides, List<VarConnection>> varConnectionsSupplier, TwoSides side) {
+        HvdcConverterStation<?> station = hvdc.getConverterStation(side);
         createTerminalMacroConnections(originModel, station.getTerminal(), varConnectionsSupplier, side);
     }
 

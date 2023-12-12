@@ -6,8 +6,9 @@
  */
 package com.powsybl.dynawaltz.models.macroconnections;
 
-import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.VarConnection;
+import com.powsybl.dynawaltz.models.utils.SideUtils;
+import com.powsybl.iidm.network.TwoSides;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -38,8 +39,8 @@ public final class MacroConnector {
         return MACRO_CONNECTOR_PREFIX + name1 + "-" + name2;
     }
 
-    public static String createMacroConnectorId(String name1, String name2, Side side) {
-        return MACRO_CONNECTOR_PREFIX + name1 + side.getSideSuffix() + "-" + name2;
+    public static String createMacroConnectorId(String name1, String name2, TwoSides side) {
+        return MACRO_CONNECTOR_PREFIX + name1 + SideUtils.getSideSuffix(side) + "-" + name2;
     }
 
     public static String createMacroConnectorId(String name1, String name2, String name1Suffix) {

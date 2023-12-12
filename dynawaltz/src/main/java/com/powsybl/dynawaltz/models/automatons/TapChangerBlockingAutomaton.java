@@ -103,7 +103,7 @@ public class TapChangerBlockingAutomaton extends AbstractPureDynamicBlackBoxMode
             }
         } else {
             isConnected = false;
-            DynawaltzReports.reportEmptyTapChangerBlockingAutomaton(adder.getReporter(), getDynamicModelId());
+            DynawaltzReports.reportEmptyListAutomaton(adder.getReporter(), this.getName(), getDynamicModelId(), TapChangerModel.class.getSimpleName());
         }
     }
 
@@ -112,6 +112,7 @@ public class TapChangerBlockingAutomaton extends AbstractPureDynamicBlackBoxMode
     }
 
     private List<VarConnection> getVarConnectionsWith(ActionConnectionPoint connected, String suffix) {
+
         return connected.getUImpinVarName()
                 .map(uImpinVarName -> List.of(new VarConnection("tapChangerBlocking_UMonitored" + suffix, uImpinVarName)))
                 .orElse(Collections.emptyList());
