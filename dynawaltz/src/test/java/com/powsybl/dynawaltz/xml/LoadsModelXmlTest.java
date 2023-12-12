@@ -60,7 +60,7 @@ class LoadsModelXmlTest extends AbstractParametrizedDynamicModelXmlTest {
                 Arguments.of("load_one_transformer_dyd", (Function<Network, BlackBoxModel>) n -> new LoadOneTransformer(DYN_LOAD_NAME, n.getLoad(LOAD_NAME), "LOT")),
                 Arguments.of("load_one_transformer_tap_changer_dyd", (Function<Network, BlackBoxModel>) n -> new LoadOneTransformerTapChanger(DYN_LOAD_NAME, n.getLoad(LOAD_NAME), "LOTTC")),
                 Arguments.of("load_two_transformers_dyd", (Function<Network, BlackBoxModel>) n -> new LoadTwoTransformers(DYN_LOAD_NAME, n.getLoad(LOAD_NAME), "LTT")),
-                Arguments.of("load_two_transformers_tap_changers_dyd", (Function<Network, BlackBoxModel>) n -> new LoadTwoTransformersTapChangers(DYN_LOAD_NAME, n.getLoad(LOAD_NAME), "LTTTC"))
+                Arguments.of("load_two_transformers_tap_changers_dyd", (Function<Network, BlackBoxModel>) n -> new LoadTwoTransformersTapChangers(DYN_LOAD_NAME, n.getLoad(LOAD_NAME), "LTTTC", "LoadTwoTransformersTapChangers"))
         );
     }
 }
