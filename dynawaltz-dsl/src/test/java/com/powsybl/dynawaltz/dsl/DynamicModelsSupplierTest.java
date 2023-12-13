@@ -34,6 +34,7 @@ import com.powsybl.dynawaltz.models.generators.SynchronizedWeccGen;
 import com.powsybl.dynawaltz.models.generators.WeccGen;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
+import com.powsybl.iidm.network.test.FourSubstationsNodeBreakerFactory;
 import com.powsybl.iidm.network.test.HvdcTestNetwork;
 import com.powsybl.iidm.network.test.SvcTestCaseFactory;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -138,7 +139,8 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                 Arguments.of("/dynamicModels/currentLimit.groovy", CurrentLimitAutomaton.class, EurostagTutorialExample1Factory.create(), "AM_NHV1_NHV2_1", "CLA", "CurrentLimitAutomaton"),
                 Arguments.of("/dynamicModels/currentLimitTwoLevels.groovy", CurrentLimitTwoLevelsAutomaton.class, EurostagTutorialExample1Factory.create(), "AM_NHV1_NHV2_1", "CLA", "CurrentLimitAutomatonTwoLevels"),
                 Arguments.of("/dynamicModels/tapChanger.groovy", TapChangerAutomaton.class, EurostagTutorialExample1Factory.create(), "TC", "tc", "TapChangerAutomaton"),
-                Arguments.of("/dynamicModels/tapChangerBlocking.groovy", TapChangerBlockingAutomaton.class, EurostagTutorialExample1Factory.create(), "ZAB", "ZAB", "TapChangerBlockingAutomaton1"),
+                Arguments.of("/dynamicModels/tapChangerBlockingBusBar.groovy", TapChangerBlockingAutomaton.class, FourSubstationsNodeBreakerFactory.create(), "ZAB", "ZAB", "TapChangerBlockingAutomaton2"),
+                Arguments.of("/dynamicModels/tapChangerBlocking.groovy", TapChangerBlockingAutomaton.class, EurostagTutorialExample1Factory.create(), "ZAB", "ZAB", "TapChangerBlockingAutomaton3"),
                 Arguments.of("/dynamicModels/phaseShifterI.groovy", PhaseShifterIAutomaton.class, EurostagTutorialExample1Factory.create(), "PS_NGEN_NHV1", "ps", "PhaseShifterI"),
                 Arguments.of("/dynamicModels/phaseShifterP.groovy", PhaseShifterPAutomaton.class, EurostagTutorialExample1Factory.create(), "PS_NGEN_NHV1", "ps", "PhaseShifterP"),
                 Arguments.of("/dynamicModels/underVoltage.groovy", UnderVoltageAutomaton.class, EurostagTutorialExample1Factory.create(), "UV_GEN", "uv", "UnderVoltageAutomaton")
@@ -251,8 +253,20 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                         + DSL tests
                           + Groovy Dynamic Models Supplier
                             + DSL model builder for TapChangerBlockingAutomaton
-                               'uMeasurements' field value 'LOAD' not found for equipment type(s) BUS
-                               'uMeasurements' list is empty
+                               'uMeasurements' field value 'LOAD' not found for equipment type(s) BUS/BUSBAR_SECTION
+                               'uMeasurements' field value 'Wrong_ID' not found for equipment type(s) BUS/BUSBAR_SECTION
+                               'uMeasurements' field is not set
+                               Model ZAB cannot be instantiated
+                        """),
+                Arguments.of("/warnings/tapChangerMissingBusList.groovy", EurostagTutorialExample1Factory.create(),
+                        """
+                        + DSL tests
+                          + Groovy Dynamic Models Supplier
+                            + DSL model builder for TapChangerBlockingAutomaton
+                               'uMeasurements' field value 'LOAD' not found for equipment type(s) BUS/BUSBAR_SECTION
+                               'uMeasurements' field value 'Wrong_ID' not found for equipment type(s) BUS/BUSBAR_SECTION
+                               'uMeasurements' field value 'NGEN_NHV1' not found for equipment type(s) BUS/BUSBAR_SECTION
+                               'uMeasurements' field is not set
                                Model ZAB cannot be instantiated
                         """),
                 Arguments.of("/warnings/tapChangerCompatible.groovy", EurostagTutorialExample1Factory.create(),

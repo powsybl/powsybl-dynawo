@@ -16,7 +16,7 @@ import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.buses.ActionConnectionPoint;
 import com.powsybl.dynawaltz.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawaltz.models.transformers.TapChangerModel;
-import com.powsybl.iidm.network.Bus;
+import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Load;
 import com.powsybl.iidm.network.TwoWindingsTransformer;
@@ -36,10 +36,10 @@ public class TapChangerBlockingAutomaton extends AbstractPureDynamicBlackBoxMode
     private final List<TwoWindingsTransformer> transformers;
     private final List<Load> loadsWithTransformer;
     private final List<String> tapChangerAutomatonIds;
-    private final List<Bus> uMeasurements;
+    private final List<Identifiable<?>> uMeasurements;
     private boolean isConnected = true;
 
-    public TapChangerBlockingAutomaton(String dynamicModelId, String parameterSetId, List<TwoWindingsTransformer> transformers, List<Load> loadsWithTransformer, List<String> tapChangerAutomatonIds, List<Bus> uMeasurements) {
+    public TapChangerBlockingAutomaton(String dynamicModelId, String parameterSetId, List<TwoWindingsTransformer> transformers, List<Load> loadsWithTransformer, List<String> tapChangerAutomatonIds, List<Identifiable<?>> uMeasurements) {
         super(dynamicModelId, parameterSetId);
         this.transformers = Objects.requireNonNull(transformers);
         this.loadsWithTransformer = Objects.requireNonNull(loadsWithTransformer);
@@ -56,11 +56,11 @@ public class TapChangerBlockingAutomaton extends AbstractPureDynamicBlackBoxMode
         }
     }
 
-    public TapChangerBlockingAutomaton(String dynamicModelId, String parameterSetId, List<TwoWindingsTransformer> transformers, List<Load> loadsWithTransformer, List<Bus> uMeasurements) {
+    public TapChangerBlockingAutomaton(String dynamicModelId, String parameterSetId, List<TwoWindingsTransformer> transformers, List<Load> loadsWithTransformer, List<Identifiable<?>> uMeasurements) {
         this(dynamicModelId, parameterSetId, transformers, loadsWithTransformer, Collections.emptyList(), uMeasurements);
     }
 
-    public TapChangerBlockingAutomaton(String dynamicModelId, String parameterSetId, List<TwoWindingsTransformer> transformers, List<Bus> uMeasurements) {
+    public TapChangerBlockingAutomaton(String dynamicModelId, String parameterSetId, List<TwoWindingsTransformer> transformers, List<Identifiable<?>> uMeasurements) {
         this(dynamicModelId, parameterSetId, transformers, Collections.emptyList(), Collections.emptyList(), uMeasurements);
     }
 
@@ -97,8 +97,8 @@ public class TapChangerBlockingAutomaton extends AbstractPureDynamicBlackBoxMode
         }
         if (!transformers.isEmpty() || skippedTapChangers < (loadsWithTransformer.size() + tapChangerAutomatonIds.size())) {
             int i = 1;
-            for (Bus bus : uMeasurements) {
-                adder.createMacroConnections(this, bus, ActionConnectionPoint.class, this::getVarConnectionsWith, MeasurementPointSuffix.of(i));
+            for (Identifiable<?> measurement : uMeasurements) {
+                adder.createMacroConnections(this, measurement, ActionConnectionPoint.class, this::getVarConnectionsWith, MeasurementPointSuffix.of(i));
                 i++;
             }
         } else {

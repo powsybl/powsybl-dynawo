@@ -30,6 +30,9 @@ import com.powsybl.iidm.network.IdentifiableType;
  */
 public enum DefaultModelConfiguration {
 
+    ACTION_CONNECTION_POINT_BBS(IdentifiableType.BUSBAR_SECTION,
+            ActionConnectionPoint.class,
+            new DefaultModelFactory<>(DefaultActionConnectionPoint::new)),
     ACTION_CONNECTION_POINT(IdentifiableType.BUS,
             ActionConnectionPoint.class,
             new DefaultModelFactory<>(DefaultActionConnectionPoint::new)),

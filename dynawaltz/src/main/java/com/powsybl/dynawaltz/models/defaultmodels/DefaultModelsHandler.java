@@ -13,7 +13,9 @@ import com.powsybl.iidm.network.IdentifiableType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Map;
 
 import static java.util.stream.Collectors.groupingBy;
 

@@ -14,13 +14,9 @@ import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.dsl.AbstractPureDynamicGroovyExtension
 import com.powsybl.dynawaltz.dsl.Reporters
 import com.powsybl.dynawaltz.dsl.builders.AbstractPureDynamicModelBuilder
+import com.powsybl.dynawaltz.dsl.builders.BuildersUtil
 import com.powsybl.dynawaltz.models.automatons.TapChangerBlockingAutomaton
-import com.powsybl.iidm.network.Bus
-import com.powsybl.iidm.network.Identifiable
-import com.powsybl.iidm.network.IdentifiableType
-import com.powsybl.iidm.network.Load
-import com.powsybl.iidm.network.Network
-import com.powsybl.iidm.network.TwoWindingsTransformer
+import com.powsybl.iidm.network.*
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -43,7 +39,7 @@ class TapChangerBlockingAutomatonGroovyExtension extends AbstractPureDynamicGroo
 
         List<Load> loads = []
         List<TwoWindingsTransformer> transformers = []
-        List<Bus> uMeasurements = []
+        List<Identifiable> uMeasurements = []
         List<String> tapChangerAutomatonIds = []
 
         TCBAutomatonBuilder(Network network, String lib, Reporter reporter) {
@@ -77,12 +73,27 @@ class TapChangerBlockingAutomatonGroovyExtension extends AbstractPureDynamicGroo
         }
 
         void uMeasurements(String[] staticIds) {
-            uMeasurements = staticIds.collect {
-                def bus = network.busBreakerView.getBus(it)
-                if (!bus) {
-                    Reporters.reportStaticIdUnknown(reporter, "uMeasurements", it, IdentifiableType.BUS.toString())
+            for (staticId in staticIds) {
+                def measurementPoint = network.getIdentifiable(staticId)
+                if (!measurementPoint || !BuildersUtil.isActionConnectionPoint(measurementPoint.type)) {
+                    Reporters.reportStaticIdUnknown(reporter, "uMeasurements", staticId, "BUS/BUSBAR_SECTION")
+                } else {
+                    uMeasurements << measurementPoint
                 }
-                bus
+            }
+        }
+
+        void uMeasurements(List<String>[] staticIdsArray) {
+            for (staticIds in staticIdsArray) {
+                for (staticId in staticIds) {
+                    def measurementPoint = network.getIdentifiable(staticId)
+                    if (!measurementPoint || !BuildersUtil.isActionConnectionPoint(measurementPoint.type)) {
+                        Reporters.reportStaticIdUnknown(reporter, "uMeasurements", staticId, "BUS/BUSBAR_SECTION")
+                    } else {
+                        uMeasurements << measurementPoint
+                        break
+                    }
+                }
             }
         }
 
@@ -91,12 +102,6 @@ class TapChangerBlockingAutomatonGroovyExtension extends AbstractPureDynamicGroo
             if (!uMeasurements) {
                 Reporters.reportFieldNotSet(reporter, "uMeasurements")
                 isInstantiable = false
-            } else {
-                uMeasurements -= null
-                if (!uMeasurements) {
-                    Reporters.reportEmptyList(reporter, "uMeasurements")
-                    isInstantiable = false
-                }
             }
             if(!loads && !transformers && !tapChangerAutomatonIds) {
                 Reporters.reportEmptyList(reporter, "transformers")

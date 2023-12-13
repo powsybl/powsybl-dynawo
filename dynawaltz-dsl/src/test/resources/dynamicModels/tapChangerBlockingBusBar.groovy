@@ -6,12 +6,12 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-package warnings
+package dynamicModels
 
 
 TapChangerBlockingAutomaton {
     dynamicModelId "ZAB"
     parameterSetId "ZAB"
-    uMeasurements "LOAD", "Wrong_ID"
-    transformers "NGEN_NHV1", "NHV2_NLOAD", "LOAD"
+    uMeasurements "S1VL2_BBS1", "OldId", "S3VL1_BBS"
+    transformers "TWT", "LD1"
 }

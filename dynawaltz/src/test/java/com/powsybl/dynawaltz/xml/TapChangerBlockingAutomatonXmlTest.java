@@ -13,6 +13,7 @@ import com.powsybl.dynawaltz.models.loads.LoadOneTransformerTapChanger;
 import com.powsybl.dynawaltz.models.loads.LoadTwoTransformersTapChangers;
 import com.powsybl.dynawaltz.models.transformers.TransformerFixedRatio;
 import com.powsybl.iidm.network.Bus;
+import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.TwoWindingsTransformer;
 import com.powsybl.iidm.network.VoltageLevel;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
@@ -61,9 +62,9 @@ class TapChangerBlockingAutomatonXmlTest extends AbstractDynamicModelXmlTest {
     @Test
     void testMonitoredEquipmentsLimit() {
 
-        List<Bus> buses = List.of(network.getBusBreakerView().getBus("NHV1"));
+        List<Identifiable<?>> buses = List.of(network.getBusBreakerView().getBus("NHV1"));
         List<TwoWindingsTransformer> transformers = List.of(network.getTwoWindingsTransformer("NGEN_NHV1"));
-        List<Bus> tooManyBuses = List.of(network.getBusBreakerView().getBus("NHV1"),
+        List<Identifiable<?>> tooManyBuses = List.of(network.getBusBreakerView().getBus("NHV1"),
                 network.getBusBreakerView().getBus("NHV1"),
                 network.getBusBreakerView().getBus("NHV1"),
                 network.getBusBreakerView().getBus("NHV1"),

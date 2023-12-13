@@ -12,6 +12,6 @@ package warnings
 TapChangerBlockingAutomaton {
     dynamicModelId "ZAB"
     parameterSetId "ZAB"
-    uMeasurements "LOAD", "Wrong_ID"
+    uMeasurements ["LOAD", "Wrong_ID"], ["NGEN_NHV1"]
     transformers "NGEN_NHV1", "NHV2_NLOAD", "LOAD"
 }
