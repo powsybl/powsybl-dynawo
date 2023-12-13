@@ -8,7 +8,7 @@
 package com.powsybl.dynawaltz.models.events;
 
 import com.powsybl.dynawaltz.DynaWaltzContext;
-import com.powsybl.dynawaltz.models.utils.LateInitField;
+import com.powsybl.dynawaltz.models.utils.ImmutableLateInit;
 import com.powsybl.dynawaltz.parameters.ParametersSet;
 import com.powsybl.iidm.network.Identifiable;
 
@@ -27,7 +27,7 @@ public abstract class AbstractDynamicLibEventDisconnection extends AbstractEvent
     protected static final String DISCONNECTION_VAR_CONNECT = "event_state1";
 
     private final boolean disconnect;
-    private final LateInitField<Boolean> equipmentHasDynamicModel = new LateInitField<>();
+    private final ImmutableLateInit<Boolean> equipmentHasDynamicModel = new ImmutableLateInit<>();
 
     protected AbstractDynamicLibEventDisconnection(Identifiable<?> equipment, double startTime, boolean disconnect) {
         super(equipment, startTime, EVENT_PREFIX);

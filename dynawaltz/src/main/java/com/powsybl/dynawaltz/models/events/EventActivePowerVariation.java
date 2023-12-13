@@ -10,7 +10,7 @@ package com.powsybl.dynawaltz.models.events;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.macroconnections.MacroConnectionsAdder;
-import com.powsybl.dynawaltz.models.utils.LateInitField;
+import com.powsybl.dynawaltz.models.utils.ImmutableLateInit;
 import com.powsybl.dynawaltz.parameters.ParametersSet;
 import com.powsybl.iidm.network.Generator;
 import com.powsybl.iidm.network.IdentifiableType;
@@ -34,7 +34,7 @@ public class EventActivePowerVariation extends AbstractEvent implements ContextD
     private static final String DEFAULT_MODEL_LIB = "EventSetPointReal";
 
     private final double deltaP;
-    private final LateInitField<Boolean> equipmentHasDynamicModel = new LateInitField<>();
+    private final ImmutableLateInit<Boolean> equipmentHasDynamicModel = new ImmutableLateInit<>();
 
     public EventActivePowerVariation(Load equipment, double startTime, double deltaP) {
         super(equipment, startTime, EVENT_PREFIX);

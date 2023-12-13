@@ -14,7 +14,7 @@ import java.util.Objects;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class LateInitField<T> {
+public class ImmutableLateInit<T> {
 
     private T value = null;
 
