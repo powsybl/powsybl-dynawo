@@ -14,6 +14,7 @@ import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawaltz.models.MeasurementPointSuffix;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.buses.ActionConnectionPoint;
+import com.powsybl.dynawaltz.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawaltz.models.transformers.TapChangerModel;
 import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.IdentifiableType;
@@ -78,31 +79,31 @@ public class TapChangerBlockingAutomaton extends AbstractPureDynamicBlackBoxMode
     }
 
     @Override
-    public void createMacroConnections(DynaWaltzContext context) {
+    public void createMacroConnections(MacroConnectionsAdder adder) {
         for (TwoWindingsTransformer transformer : transformers) {
-            createMacroConnections(transformer, TapChangerModel.class, this::getVarConnectionsWith, context);
+            adder.createMacroConnections(this, transformer, TapChangerModel.class, this::getVarConnectionsWith);
         }
         int skippedTapChangers = 0;
         for (Load load : loadsWithTransformer) {
-            boolean isSkipped = createMacroConnectionsOrSkip(load, TapChangerModel.class, this::getVarConnectionsWith, context);
+            boolean isSkipped = adder.createMacroConnectionsOrSkip(this, load, TapChangerModel.class, this::getVarConnectionsWith);
             if (isSkipped) {
                 skippedTapChangers++;
             }
         }
         for (String id : tapChangerAutomatonIds) {
-            if (createTcaMacroConnectionsOrSkip(id, context)) {
+            if (adder.createTcaMacroConnectionsOrSkip(this, id, this::getVarConnectionsWith)) {
                 skippedTapChangers++;
             }
         }
         if (!transformers.isEmpty() || skippedTapChangers < (loadsWithTransformer.size() + tapChangerAutomatonIds.size())) {
             int i = 1;
             for (Bus bus : uMeasurements) {
-                createMacroConnections(bus, ActionConnectionPoint.class, this::getVarConnectionsWith, context, MeasurementPointSuffix.of(i));
+                adder.createMacroConnections(this, bus, ActionConnectionPoint.class, this::getVarConnectionsWith, MeasurementPointSuffix.of(i));
                 i++;
             }
         } else {
             isConnected = false;
-            DynawaltzReports.reportEmptyTapChangerBlockingAutomaton(context.getReporter(), getDynamicModelId());
+            DynawaltzReports.reportEmptyListAutomaton(adder.getReporter(), this.getName(), getDynamicModelId(), TapChangerModel.class.getSimpleName());
         }
     }
 
@@ -111,19 +112,10 @@ public class TapChangerBlockingAutomaton extends AbstractPureDynamicBlackBoxMode
     }
 
     private List<VarConnection> getVarConnectionsWith(ActionConnectionPoint connected, String suffix) {
+
         return connected.getUImpinVarName()
                 .map(uImpinVarName -> List.of(new VarConnection("tapChangerBlocking_UMonitored" + suffix, uImpinVarName)))
                 .orElse(Collections.emptyList());
-    }
-
-    private boolean createTcaMacroConnectionsOrSkip(String dynamicId, DynaWaltzContext context) {
-        TapChangerAutomaton connectedModel = context.getPureDynamicModel(dynamicId, TapChangerAutomaton.class, false);
-        if (connectedModel != null && connectedModel.isConnected(context)) {
-            String macroConnectorId = context.addMacroConnector(getName(), connectedModel.getName(), getVarConnectionsWith(connectedModel));
-            context.addMacroConnect(macroConnectorId, getMacroConnectFromAttributes(), connectedModel.getMacroConnectToAttributes());
-            return false;
-        }
-        return true;
     }
 
     @Override

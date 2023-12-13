@@ -7,9 +7,9 @@
  */
 package com.powsybl.dynawaltz.xml;
 
-import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton;
 import com.powsybl.dynawaltz.models.transformers.TransformerFixedRatio;
+import com.powsybl.iidm.network.TwoSides;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
@@ -29,10 +29,10 @@ class CurrentLimitModelXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void addDynamicModels() {
-        dynamicModels.add(new CurrentLimitAutomaton("BBM_CLA_LINE", "cla", network.getLine("NHV1_NHV2_1"), Side.ONE, "CurrentLimitAutomaton"));
-        dynamicModels.add(new CurrentLimitAutomaton("BBM_CLA_TRANSFORMER", "cla", network.getTwoWindingsTransformer("NGEN_NHV1"), Side.TWO, "CurrentLimitAutomaton"));
+        dynamicModels.add(new CurrentLimitAutomaton("BBM_CLA_LINE", "cla", network.getLine("NHV1_NHV2_1"), TwoSides.ONE, "CurrentLimitAutomaton"));
+        dynamicModels.add(new CurrentLimitAutomaton("BBM_CLA_TRANSFORMER", "cla", network.getTwoWindingsTransformer("NGEN_NHV1"), TwoSides.TWO, "CurrentLimitAutomaton"));
         dynamicModels.add(new TransformerFixedRatio("BBM_TRANSFORMER", network.getTwoWindingsTransformer("NHV2_NLOAD"), "tf", "TransformerFixedRatio"));
-        dynamicModels.add(new CurrentLimitAutomaton("BBM_CLA_TRANSFORMER2", "cla", network.getTwoWindingsTransformer("NHV2_NLOAD"), Side.TWO, network.getLine("NHV1_NHV2_1"), "CurrentLimitAutomaton"));
+        dynamicModels.add(new CurrentLimitAutomaton("BBM_CLA_TRANSFORMER2", "cla", network.getTwoWindingsTransformer("NHV2_NLOAD"), TwoSides.TWO, network.getLine("NHV1_NHV2_1"), "CurrentLimitAutomaton"));
     }
 
     @Test

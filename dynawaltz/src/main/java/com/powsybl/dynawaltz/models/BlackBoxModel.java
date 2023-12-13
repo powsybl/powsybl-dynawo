@@ -7,6 +7,8 @@
 package com.powsybl.dynawaltz.models;
 
 import com.powsybl.dynawaltz.DynaWaltzContext;
+import com.powsybl.dynawaltz.models.macroconnections.MacroConnectAttribute;
+import com.powsybl.dynawaltz.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawaltz.parameters.ParametersSet;
 
 import javax.xml.stream.XMLStreamException;
@@ -27,7 +29,9 @@ public interface BlackBoxModel extends Model {
 
     List<VarMapping> getVarsMapping();
 
-    void createMacroConnections(DynaWaltzContext context);
+    void createMacroConnections(MacroConnectionsAdder adder);
+
+    List<MacroConnectAttribute> getMacroConnectFromAttributes();
 
     String getParFile(DynaWaltzContext context);
 

@@ -8,9 +8,10 @@
 package com.powsybl.dynawaltz.models.buses;
 
 import com.powsybl.commons.PowsyblException;
-import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractEquipmentBlackBoxModel;
+import com.powsybl.dynawaltz.models.EquipmentBlackBoxModel;
 import com.powsybl.dynawaltz.models.macroconnections.MacroConnectAttribute;
+import com.powsybl.dynawaltz.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.iidm.network.Bus;
 
 import java.util.ArrayList;
@@ -33,20 +34,13 @@ public abstract class AbstractBus extends AbstractEquipmentBlackBoxModel<Bus> im
         return attributesConnectTo;
     }
 
-    @Override
-    public void createMacroConnections(DynaWaltzContext context) {
-        checkLinkedDynamicModels(equipment, context);
-    }
-
-    private void checkLinkedDynamicModels(Bus bus, DynaWaltzContext context) {
-        bus.getConnectedTerminalStream()
-                .map(t -> t.getConnectable().getId())
-                .filter(context::isWithoutBlackBoxDynamicModel)
-                .findAny()
-                .ifPresent(id -> {
-                    throw new PowsyblException(String.format("The equipment %s linked to the %s %s does not possess a dynamic model",
-                            id, this.getClass().getSimpleName(), getStaticId()));
-                });
+    public void createMacroConnections(MacroConnectionsAdder adder) {
+        equipment.getConnectedTerminalStream().forEach(t -> {
+            if (!adder.checkMacroConnections(t.getConnectable(), EquipmentBlackBoxModel.class)) {
+                throw new PowsyblException(String.format("The equipment %s linked to the %s %s does not possess a dynamic model",
+                        t.getConnectable().getId(), this.getClass().getSimpleName(), getStaticId()));
+            }
+        });
     }
 
     @Override

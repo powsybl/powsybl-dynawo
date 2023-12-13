@@ -17,11 +17,11 @@ public final class BusUtils {
     private BusUtils() {
     }
 
-    public static String getConnectableBusStaticId(Terminal terminal) {
-        return terminal.getBusBreakerView().getConnectableBus().getId();
+    public static Bus getConnectableBus(Terminal terminal) {
+        return terminal.getBusBreakerView().getConnectableBus();
     }
 
-    public static String getConnectableBusStaticId(Injection<?> injection) {
-        return getConnectableBusStaticId(injection.getTerminal());
+    public static Bus getConnectableBus(Injection<?> injection) {
+        return getConnectableBus(injection.getTerminal());
     }
 }

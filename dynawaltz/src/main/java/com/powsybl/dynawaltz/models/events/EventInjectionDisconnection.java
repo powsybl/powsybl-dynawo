@@ -6,9 +6,9 @@
  */
 package com.powsybl.dynawaltz.models.events;
 
-import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.InjectionModel;
 import com.powsybl.dynawaltz.models.VarConnection;
+import com.powsybl.dynawaltz.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.iidm.network.Generator;
 import com.powsybl.iidm.network.Load;
 import com.powsybl.iidm.network.ShuntCompensator;
@@ -59,7 +59,7 @@ public class EventInjectionDisconnection extends AbstractDynamicLibEventDisconne
     }
 
     @Override
-    public void createMacroConnections(DynaWaltzContext context) {
-        createMacroConnections(getEquipment(), InjectionModel.class, this::getVarConnectionsWith, context);
+    public void createMacroConnections(MacroConnectionsAdder adder) {
+        adder.createMacroConnections(this, getEquipment(), InjectionModel.class, this::getVarConnectionsWith);
     }
 }

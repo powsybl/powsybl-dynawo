@@ -7,11 +7,11 @@
  */
 package com.powsybl.dynawaltz.models.events;
 
-import com.powsybl.dynawaltz.DynaWaltzContext;
-import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.hvdc.HvdcModel;
+import com.powsybl.dynawaltz.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.iidm.network.HvdcLine;
+import com.powsybl.iidm.network.TwoSides;
 
 import java.util.List;
 
@@ -34,22 +34,22 @@ public class EventHvdcDisconnection extends AbstractDynamicLibEventDisconnection
     }
 
     private List<VarConnection> getVarConnectionsWithHvdcModel(HvdcModel connected) {
-        return List.of(new VarConnection(DISCONNECTION_VAR_CONNECT, connected.getSwitchOffSignalEventVarName(Side.ONE)),
-                new VarConnection(DISCONNECTION_VAR_CONNECT, connected.getSwitchOffSignalEventVarName(Side.TWO)));
+        return List.of(new VarConnection(DISCONNECTION_VAR_CONNECT, connected.getSwitchOffSignalEventVarName(TwoSides.ONE)),
+                new VarConnection(DISCONNECTION_VAR_CONNECT, connected.getSwitchOffSignalEventVarName(TwoSides.TWO)));
     }
 
-    private List<VarConnection> getVarConnectionsWithHvdcModelSide(HvdcModel connected, Side side) {
+    private List<VarConnection> getVarConnectionsWithHvdcModelSide(HvdcModel connected, TwoSides side) {
         return List.of(new VarConnection(DISCONNECTION_VAR_CONNECT, connected.getSwitchOffSignalEventVarName(side)));
     }
 
     @Override
-    public void createMacroConnections(DynaWaltzContext context) {
+    public void createMacroConnections(MacroConnectionsAdder adder) {
         if (disconnectOrigin && disconnectExtremity) {
-            createMacroConnections(getEquipment(), HvdcModel.class, this::getVarConnectionsWithHvdcModel, context);
+            adder.createMacroConnections(this, getEquipment(), HvdcModel.class, this::getVarConnectionsWithHvdcModel);
         } else if (disconnectOrigin) {
-            createMacroConnections(getEquipment(), HvdcModel.class, this::getVarConnectionsWithHvdcModelSide, context, Side.ONE);
+            adder.createMacroConnections(this, getEquipment(), HvdcModel.class, this::getVarConnectionsWithHvdcModelSide, TwoSides.ONE);
         } else if (disconnectExtremity) {
-            createMacroConnections(getEquipment(), HvdcModel.class, this::getVarConnectionsWithHvdcModelSide, context, Side.TWO);
+            adder.createMacroConnections(this, getEquipment(), HvdcModel.class, this::getVarConnectionsWithHvdcModelSide, TwoSides.TWO);
         }
     }
 }

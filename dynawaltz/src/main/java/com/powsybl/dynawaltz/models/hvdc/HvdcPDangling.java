@@ -8,11 +8,10 @@
 package com.powsybl.dynawaltz.models.hvdc;
 
 import com.powsybl.commons.PowsyblException;
-import com.powsybl.dynawaltz.DynaWaltzContext;
-import com.powsybl.dynawaltz.models.Side;
-import com.powsybl.dynawaltz.models.utils.SideConverter;
+import com.powsybl.dynawaltz.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.iidm.network.HvdcConverterStation;
 import com.powsybl.iidm.network.HvdcLine;
+import com.powsybl.iidm.network.TwoSides;
 
 import java.util.List;
 
@@ -23,21 +22,21 @@ public class HvdcPDangling extends HvdcP {
 
     private final DanglingSide danglingSide;
 
-    public HvdcPDangling(String dynamicModelId, HvdcLine hvdc, String parameterSetId, String hvdcLib, Side danglingSide) {
+    public HvdcPDangling(String dynamicModelId, HvdcLine hvdc, String parameterSetId, String hvdcLib, TwoSides danglingSide) {
         super(dynamicModelId, hvdc, parameterSetId, hvdcLib);
         this.danglingSide = new DanglingSide(TERMINAL_PREFIX, danglingSide);
     }
 
     @Override
-    public void createMacroConnections(DynaWaltzContext context) {
+    public void createMacroConnections(MacroConnectionsAdder adder) {
         danglingSide.createMacroConnections(
             this::getVarConnectionsWith,
-            (varCoSupplier, side) -> createTerminalMacroConnections(equipment.getConverterStation(SideConverter.convert(side)).getTerminal(), varCoSupplier, context, side)
+            (varCoSupplier, side) -> adder.createTerminalMacroConnections(this, equipment.getConverterStation(side).getTerminal(), varCoSupplier, side)
         );
     }
 
     @Override
-    public String getSwitchOffSignalEventVarName(Side side) {
+    public String getSwitchOffSignalEventVarName(TwoSides side) {
         if (danglingSide.isDangling(side)) {
             throw new PowsyblException(String.format("Equipment %s side %s is dangling and can't be disconnected with an event", getLib(), danglingSide.getSideNumber()));
         }
@@ -46,6 +45,6 @@ public class HvdcPDangling extends HvdcP {
 
     @Override
     public List<HvdcConverterStation<?>> getConnectedStations() {
-        return List.of(danglingSide.isDangling(Side.ONE) ? equipment.getConverterStation2() : equipment.getConverterStation1());
+        return List.of(danglingSide.isDangling(TwoSides.ONE) ? equipment.getConverterStation2() : equipment.getConverterStation1());
     }
 }

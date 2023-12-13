@@ -7,13 +7,12 @@
  */
 package com.powsybl.dynawaltz.models.lines;
 
-import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractEquipmentBlackBoxModel;
-import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.buses.EquipmentConnectionPoint;
-import com.powsybl.dynawaltz.models.utils.SideConverter;
+import com.powsybl.dynawaltz.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.iidm.network.Line;
+import com.powsybl.iidm.network.TwoSides;
 
 import java.util.List;
 
@@ -26,17 +25,17 @@ public class StandardLine extends AbstractEquipmentBlackBoxModel<Line> implement
         super(dynamicModelId, parameterSetId, line, "Line");
     }
 
-    private List<VarConnection> getVarConnectionsWith(EquipmentConnectionPoint connected, Side side) {
+    private List<VarConnection> getVarConnectionsWith(EquipmentConnectionPoint connected, TwoSides side) {
         return List.of(new VarConnection(getTerminalVarName(side), connected.getTerminalVarName()));
     }
 
-    private String getTerminalVarName(Side side) {
-        return "line_terminal" + side.getSideNumber();
+    private String getTerminalVarName(TwoSides side) {
+        return "line_terminal" + side.getNum();
     }
 
     @Override
-    public void createMacroConnections(DynaWaltzContext context) {
-        equipment.getTerminals().forEach(t -> createTerminalMacroConnections(t, this::getVarConnectionsWith, context, SideConverter.convert(equipment.getSide(t))));
+    public void createMacroConnections(MacroConnectionsAdder adder) {
+        equipment.getTerminals().forEach(t -> adder.createTerminalMacroConnections(this, t, this::getVarConnectionsWith, equipment.getSide(t)));
     }
 
     @Override
@@ -55,7 +54,7 @@ public class StandardLine extends AbstractEquipmentBlackBoxModel<Line> implement
     }
 
     @Override
-    public String getIVarName(Side side) {
+    public String getIVarName(TwoSides side) {
         throw new UnsupportedOperationException("i variable not implemented in StandardLine dynawo's model");
     }
 

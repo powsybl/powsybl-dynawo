@@ -10,11 +10,9 @@ import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
-import com.powsybl.dynawaltz.models.InjectionModel;
 import com.powsybl.dynawaltz.models.generators.GeneratorFictitious;
 import com.powsybl.dynawaltz.models.lines.LineModel;
 import com.powsybl.dynawaltz.models.loads.BaseLoad;
-import com.powsybl.dynawaltz.models.transformers.TapChangerModel;
 import com.powsybl.iidm.network.Identifiable;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -85,35 +83,10 @@ class DynamicModelsXmlTest extends DynaWaltzTestUtil {
     }
 
     @Test
-    void testDynamicModelGetterException() {
+    void testIncorrectModelException() {
         DynaWaltzContext dc = new DynaWaltzContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, eventModels, curves, DynamicSimulationParameters.load(), DynaWaltzParameters.load());
-
-        // incorrect model
-        Exception e = assertThrows(PowsyblException.class, () -> dc.getDynamicModel("GEN5", LineModel.class));
-        assertEquals("The model identified by the static id GEN5 does not match the expected model (LineModel)", e.getMessage());
-
-        // default model not implemented
-        e = assertThrows(PowsyblException.class, () -> dc.getDynamicModel("unknownID", TapChangerModel.class));
-        assertEquals("Default model not implemented for TapChangerModel", e.getMessage());
-    }
-
-    @Test
-    void testDynamicModelGetterFromIdentifiableTypeException() {
-        DynaWaltzContext dc = new DynaWaltzContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, eventModels, curves, DynamicSimulationParameters.load(), DynaWaltzParameters.load());
-
-        // incorrect model
         Identifiable<?> gen = network.getIdentifiable("GEN5");
-        Exception e = assertThrows(PowsyblException.class, () -> dc.getDynamicModel(gen, LineModel.class));
+        Exception e = assertThrows(PowsyblException.class, () -> dc.getDynamicModel(gen, LineModel.class, true));
         assertEquals("The model identified by the static id GEN5 does not match the expected model (LineModel)", e.getMessage());
-
-        // dynamic model not found
-        Identifiable<?> substation = network.getIdentifiable("P1");
-        e = assertThrows(PowsyblException.class, () -> dc.getDynamicModel(substation, InjectionModel.class));
-        assertEquals("No dynamic model associated with SUBSTATION", e.getMessage());
-
-        // requested interface not implemented
-        Identifiable<?> transformer = network.getIdentifiable("NGEN_NHV1");
-        e = assertThrows(PowsyblException.class, () -> dc.getDynamicModel(transformer, InjectionModel.class));
-        assertEquals("Default model DefaultTransformer does not implement InjectionModel interface", e.getMessage());
     }
 }

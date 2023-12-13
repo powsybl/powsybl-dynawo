@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<parametersSet xmlns="http://www.rte-france.com/dynawo">
+    <set id="3">
+        <par type="DOUBLE" name="hMin" value="1.0E-6"/>
+        <par type="DOUBLE" name="hMax" value="2.0"/>
+        <par type="DOUBLE" name="kReduceStep" value="0.5"/>
+        <par type="INT" name="maxNewtonTry" value="10"/>
+        <par type="STRING" name="linearSolverName" value="KLU"/>
+    </set>
+</parametersSet>

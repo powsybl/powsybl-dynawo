@@ -6,9 +6,9 @@
  */
 package com.powsybl.dynawaltz.models.events;
 
-import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.automatons.QuadripoleModel;
+import com.powsybl.dynawaltz.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawaltz.parameters.ParametersSet;
 import com.powsybl.iidm.network.Branch;
 
@@ -47,12 +47,12 @@ public class EventQuadripoleDisconnection extends AbstractEvent {
     }
 
     @Override
-    public void createMacroConnections(DynaWaltzContext context) {
-        createMacroConnections(getEquipment(), QuadripoleModel.class, this::getVarConnectionsWith, context);
+    public void createMacroConnections(MacroConnectionsAdder adder) {
+        adder.createMacroConnections(this, getEquipment(), QuadripoleModel.class, this::getVarConnectionsWith);
     }
 
     @Override
-    protected void createEventSpecificParameters(ParametersSet paramSet, DynaWaltzContext context) {
+    protected void createEventSpecificParameters(ParametersSet paramSet) {
         paramSet.addParameter("event_tEvent", DOUBLE, Double.toString(getStartTime()));
         paramSet.addParameter("event_disconnectOrigin", BOOL, Boolean.toString(disconnectOrigin));
         paramSet.addParameter("event_disconnectExtremity", BOOL, Boolean.toString(disconnectExtremity));
