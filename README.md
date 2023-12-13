@@ -57,8 +57,9 @@ DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
 
 // Run the simulation and display the results
 DynamicSimulationResult result = DynamicSimulation.run(network, dynamicModelsSupplier, eventModelsSupplier, curvesSupplier, parameters);
-System.out.println(result.isOk());
-System.out.println(result.getLogs());
+System.out.println(result.getStatus());
+System.out.println("Timeline:");
+result.getTimeLine().forEach(tl -> System.out.printf("[%.8f] %s (on %s)%n", tl.time(), tl.message(), tl.modelName()));
 ```
 
 To learn more about the usage of DynaWaltz, read the [dedicated page](https://www.powsybl.org/pages/documentation/simulation/timedomain/dynawo) on our website.
