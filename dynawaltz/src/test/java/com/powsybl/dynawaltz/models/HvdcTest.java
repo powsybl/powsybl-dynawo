@@ -12,6 +12,7 @@ import com.powsybl.dynawaltz.models.hvdc.HvdcPDangling;
 import com.powsybl.dynawaltz.models.hvdc.HvdcVscDangling;
 import com.powsybl.iidm.network.HvdcLine;
 import com.powsybl.iidm.network.Network;
+import com.powsybl.iidm.network.TwoSides;
 import com.powsybl.iidm.network.test.HvdcTestNetwork;
 import org.junit.jupiter.api.Test;
 
@@ -34,11 +35,11 @@ class HvdcTest {
         Network network = HvdcTestNetwork.createVsc();
         HvdcLine line = network.getHvdcLine("L");
 
-        HvdcPDangling hvdc = new HvdcPDangling("hvdc", line, "HVDC", "HvdcPVDangling", Side.ONE);
+        HvdcPDangling hvdc = new HvdcPDangling("hvdc", line, "HVDC", "HvdcPVDangling", TwoSides.ONE);
         assertEquals(1, hvdc.getConnectedStations().size());
         assertEquals(line.getConverterStation2(), hvdc.getConnectedStations().get(0));
 
-        HvdcVscDangling hvdc2 = new HvdcVscDangling("hvdc", line, "HVDC", "HvdcVSCDanglingP", Side.TWO);
+        HvdcVscDangling hvdc2 = new HvdcVscDangling("hvdc", line, "HVDC", "HvdcVSCDanglingP", TwoSides.TWO);
         assertEquals(1, hvdc.getConnectedStations().size());
         assertEquals(line.getConverterStation1(), hvdc2.getConnectedStations().get(0));
     }
