@@ -8,10 +8,9 @@
 
 package dynamicModels
 
-
 TapChangerBlockingAutomaton {
     dynamicModelId "ZAB"
     parameterSetId "ZAB"
-    uMeasurements "NGEN"
+    uMeasurements ["OldId", "NGEN", "NHV1"], ["NHV1", "OldId"], ["NHV2"]
     transformers "NGEN_NHV1", "NHV2_NLOAD", "LOAD"
 }
