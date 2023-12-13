@@ -9,6 +9,7 @@ package com.powsybl.dynawaltz;
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
 import com.powsybl.commons.PowsyblException;
+import com.powsybl.dynawaltz.parameters.ParameterType;
 import com.powsybl.dynawaltz.parameters.ParametersSet;
 import com.powsybl.dynawaltz.xml.ParametersXml;
 import org.junit.jupiter.api.AfterEach;
@@ -84,5 +85,23 @@ class DynaWaltzParametersDatabaseTest {
         dParameters.addModelParameters(set);
         assertEquals(1, dParameters.getModelParameters().size());
         assertEquals(set, dParameters.getModelParameters("test"));
+    }
+
+    @Test
+    void replaceParameter() {
+        ParametersSet set = new ParametersSet("test");
+        String param = "modifiedParam";
+        set.addParameter(param, ParameterType.DOUBLE, "2.2");
+        set.replaceParameter(param, ParameterType.INT, "3");
+        assertEquals(3, set.getInt(param));
+        assertThrows(PowsyblException.class, () -> set.getDouble(param));
+    }
+
+    @Test
+    void copyParametersSet() {
+        ParametersSet set0 = new ParametersSet("test");
+        set0.addParameter("param", ParameterType.INT, "2");
+        ParametersSet set1 = new ParametersSet("copy", set0);
+        assertEquals(2, set1.getInt("param"));
     }
 }
