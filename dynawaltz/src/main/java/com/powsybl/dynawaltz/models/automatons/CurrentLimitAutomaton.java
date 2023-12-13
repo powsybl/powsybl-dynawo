@@ -54,7 +54,7 @@ public class CurrentLimitAutomaton extends AbstractPureDynamicBlackBoxModel {
         adder.createMacroConnections(this, controlledQuadripole, QuadripoleModel.class, this::getVarConnectionsWithControlledQuadripole, CONTROL_SUFFIX);
     }
 
-    protected List<VarConnection> getVarConnectionsWithMeasuredQuadripole(QuadripoleModel connected) {
+    private List<VarConnection> getVarConnectionsWithMeasuredQuadripole(QuadripoleModel connected) {
         return Arrays.asList(
                 new VarConnection("currentLimitAutomaton_IMonitored", connected.getIVarName(measuredSide)),
                 new VarConnection("currentLimitAutomaton_AutomatonExists", connected.getDeactivateCurrentLimitsVarName())

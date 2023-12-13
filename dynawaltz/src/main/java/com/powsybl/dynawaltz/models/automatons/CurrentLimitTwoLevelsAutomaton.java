@@ -36,12 +36,12 @@ public class CurrentLimitTwoLevelsAutomaton extends CurrentLimitAutomaton {
 
     @Override
     public void createMacroConnections(MacroConnectionsAdder adder) {
-        adder.createMacroConnections(this, measuredQuadripole, QuadripoleModel.class, this::getVarConnectionsWithMeasuredQuadripole, FIRST_MEASURE_SUFFIX + SideUtils.getSideSuffix(measuredSide));
+        adder.createMacroConnections(this, measuredQuadripole, QuadripoleModel.class, this::getVarConnectionsWithFirstMeasuredQuadripole, FIRST_MEASURE_SUFFIX + SideUtils.getSideSuffix(measuredSide));
         adder.createMacroConnections(this, secondMeasuredQuadripole, QuadripoleModel.class, this::getVarConnectionsWithSecondMeasuredQuadripole, SECOND_MEASURE_SUFFIX + SideUtils.getSideSuffix(secondMeasuredSide));
         adder.createMacroConnections(this, controlledQuadripole, QuadripoleModel.class, this::getVarConnectionsWithControlledQuadripole, CONTROL_SUFFIX);
     }
 
-    protected List<VarConnection> getVarConnectionsWithMeasuredQuadripole(QuadripoleModel connected) {
+    private List<VarConnection> getVarConnectionsWithFirstMeasuredQuadripole(QuadripoleModel connected) {
         return Arrays.asList(
                 new VarConnection("currentLimitAutomaton_IMonitored1", connected.getIVarName(measuredSide)),
                 new VarConnection("currentLimitAutomaton_AutomatonExists", connected.getDeactivateCurrentLimitsVarName())
