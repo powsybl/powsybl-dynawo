@@ -75,13 +75,11 @@ public class DynaWaltzContext {
         this.parameters = Objects.requireNonNull(parameters);
         this.dynaWaltzParameters = Objects.requireNonNull(dynaWaltzParameters);
 
-        Iterator<ModelsSimplifier> dataSimplifiers = dynaWaltzParameters.isUseModelSimplifiers() ? ServiceLoader.load(ModelsSimplifier.class).iterator() : Collections.emptyIterator();
-        this.dynamicModels = runSimplifiers(dataSimplifiers,
-                Objects.requireNonNull(dynamicModels)
-                .stream()
-                .filter(distinctByDynamicId(reporter).and(distinctByStaticId(reporter))),
-               reporter)
-                .toList();
+        Stream<BlackBoxModel> uniqueIdsDynamicModels = Objects.requireNonNull(dynamicModels).stream()
+                .filter(distinctByDynamicId(reporter).and(distinctByStaticId(reporter)));
+        this.dynamicModels = dynaWaltzParameters.isUseModelSimplifiers()
+                ? uniqueIdsDynamicModels.toList()
+                : simplifyModels(uniqueIdsDynamicModels, reporter).toList();
 
         this.eventModels = Objects.requireNonNull(eventModels).stream()
                 .filter(distinctByDynamicId(reporter))
@@ -107,15 +105,19 @@ public class DynaWaltzContext {
         }
     }
 
+    private Stream<BlackBoxModel> simplifyModels(Stream<BlackBoxModel> inputBbm, Reporter reporter) {
+        Stream<BlackBoxModel> outputBbm = inputBbm;
+        for (ModelsSimplifier modelsSimplifier : ServiceLoader.load(ModelsSimplifier.class)) {
+            outputBbm = modelsSimplifier.simplifyModels(outputBbm, dynaWaltzParameters, reporter);
+        }
+        return outputBbm;
+    }
+
     private FrequencySynchronizerModel setupFrequencySynchronizer(Function<List<FrequencySynchronizedModel>, FrequencySynchronizerModel> fsConstructor) {
         return fsConstructor.apply(dynamicModels.stream()
                 .filter(FrequencySynchronizedModel.class::isInstance)
                 .map(FrequencySynchronizedModel.class::cast)
                 .toList());
-    }
-
-    private Stream<BlackBoxModel> runSimplifiers(Iterator<ModelsSimplifier> dataSimplifiers, Stream<BlackBoxModel> inputData, Reporter reporter) {
-        return dataSimplifiers.hasNext() ? runSimplifiers(dataSimplifiers, dataSimplifiers.next().simplifyModels(inputData, dynaWaltzParameters, reporter), reporter) : inputData;
     }
 
     public Network getNetwork() {
