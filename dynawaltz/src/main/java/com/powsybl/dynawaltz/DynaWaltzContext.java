@@ -80,8 +80,8 @@ public class DynaWaltzContext {
         Stream<BlackBoxModel> uniqueIdsDynamicModels = Objects.requireNonNull(dynamicModels).stream()
                 .filter(distinctByDynamicId(contextReporter).and(distinctByStaticId(contextReporter)));
         this.dynamicModels = dynaWaltzParameters.isUseModelSimplifiers()
-                ? uniqueIdsDynamicModels.toList()
-                : simplifyModels(uniqueIdsDynamicModels, contextReporter).toList();
+                ? simplifyModels(uniqueIdsDynamicModels, contextReporter).toList()
+                : uniqueIdsDynamicModels.toList();
 
         this.eventModels = Objects.requireNonNull(eventModels).stream()
                 .filter(distinctByDynamicId(contextReporter))
