@@ -67,22 +67,22 @@ public class ParametersSet {
     }
 
     public boolean getBool(String parameterName) {
-        Parameter parameter = getParameterOrThrows(parameterName, ParameterType.BOOL);
+        Parameter parameter = getParameter(parameterName, ParameterType.BOOL);
         return Boolean.parseBoolean(parameter.value());
     }
 
     public double getDouble(String parameterName) {
-        Parameter parameter = getParameterOrThrows(parameterName, ParameterType.DOUBLE);
+        Parameter parameter = getParameter(parameterName, ParameterType.DOUBLE);
         return Double.parseDouble(parameter.value());
     }
 
     public int getInt(String parameterName) {
-        Parameter parameter = getParameterOrThrows(parameterName, ParameterType.INT);
+        Parameter parameter = getParameter(parameterName, ParameterType.INT);
         return Integer.parseInt(parameter.value());
     }
 
     public String getString(String parameterName) {
-        Parameter parameter = getParameterOrThrows(parameterName, ParameterType.STRING);
+        Parameter parameter = getParameter(parameterName, ParameterType.STRING);
         return parameter.value();
     }
 
@@ -90,7 +90,7 @@ public class ParametersSet {
         return parameters.containsKey(parameterName);
     }
 
-    private Parameter getParameterOrThrows(String parameterName, ParameterType type) {
+    private Parameter getParameter(String parameterName, ParameterType type) {
         Parameter parameter = parameters.get(parameterName);
         if (parameter == null) {
             throw new IllegalArgumentException("Parameter " + parameterName + " not found in set " + id);

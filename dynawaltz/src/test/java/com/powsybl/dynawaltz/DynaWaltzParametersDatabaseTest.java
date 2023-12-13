@@ -57,6 +57,8 @@ class DynaWaltzParametersDatabaseTest {
         assertEquals(1, set2.getInt("generator_ExcitationPu"));
 
         ParametersSet set3 = dParameters.getModelParameters("test");
+        assertFalse(set3.hasParameter("unknown"));
+        assertTrue(set3.hasParameter("boolean"));
         assertTrue(set3.getBool("boolean"));
         assertEquals("aString", set3.getString("string"));
     }
