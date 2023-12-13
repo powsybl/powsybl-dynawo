@@ -13,6 +13,7 @@ import com.powsybl.dynawaltz.models.VarMapping;
 import com.powsybl.dynawaltz.models.buses.EquipmentConnectionPoint;
 import com.powsybl.dynawaltz.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawaltz.models.utils.SideUtils;
+import com.powsybl.iidm.network.HvdcConverterStation;
 import com.powsybl.iidm.network.HvdcLine;
 import com.powsybl.iidm.network.TwoSides;
 
@@ -61,5 +62,9 @@ public abstract class AbstractHvdc extends AbstractEquipmentBlackBoxModel<HvdcLi
 
     protected final VarConnection getSimpleVarConnectionWithBus(EquipmentConnectionPoint connected, TwoSides side) {
         return new VarConnection(TERMINAL_PREFIX + side.getNum(), connected.getTerminalVarName(side));
+    }
+
+    public List<HvdcConverterStation<?>> getConnectedStations() {
+        return List.of(equipment.getConverterStation1(), equipment.getConverterStation2());
     }
 }

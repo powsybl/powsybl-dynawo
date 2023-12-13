@@ -38,6 +38,11 @@ public abstract class AbstractEquipmentBlackBoxModel<T extends Identifiable<?>> 
     }
 
     @Override
+    public T getEquipment() {
+        return equipment;
+    }
+
+    @Override
     public String getLib() {
         return lib;
     }

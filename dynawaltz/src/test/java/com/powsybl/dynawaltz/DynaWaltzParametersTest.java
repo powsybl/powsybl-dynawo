@@ -15,7 +15,6 @@ import com.powsybl.dynamicsimulation.json.JsonDynamicSimulationParameters;
 import com.powsybl.dynawaltz.DynaWaltzParameters.SolverType;
 import com.powsybl.dynawaltz.parameters.Parameter;
 import com.powsybl.dynawaltz.parameters.ParameterType;
-import com.powsybl.dynawaltz.parameters.ParametersSet;
 import com.powsybl.dynawaltz.xml.ParametersXml;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Map;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -57,36 +57,38 @@ class DynaWaltzParametersTest extends AbstractSerDeTest {
         SolverType solverType = SolverType.IDA;
         String solverParametersId = "solverParametersId";
         boolean mergeLoads = true;
-        initPlatformConfig(networkParametersId, solverType, solverParametersId, mergeLoads);
+        boolean useModelSimplifiers = true;
+        initPlatformConfig(networkParametersId, solverType, solverParametersId, mergeLoads, useModelSimplifiers);
 
         DynaWaltzParameters parameters = DynaWaltzParameters.load(platformConfig, fileSystem);
 
         checkModelParameters(parameters);
 
         assertEquals(networkParametersId, parameters.getNetworkParameters().getId());
-        ParametersSet networkParameters = parameters.getNetworkParameters();
-        Parameter loadTp = networkParameters.getParameter("load_Tp");
+        Map<String, Parameter> networkParameters = parameters.getNetworkParameters().getParameters();
+        Parameter loadTp = networkParameters.get("load_Tp");
         assertEquals("90", loadTp.value());
         assertEquals("load_Tp", loadTp.name());
         assertEquals(ParameterType.DOUBLE, loadTp.type());
-        Parameter loadControllable = networkParameters.getParameter("load_isControllable");
+        Parameter loadControllable = networkParameters.get("load_isControllable");
         assertEquals("false", loadControllable.value());
         assertEquals("load_isControllable", loadControllable.name());
         assertEquals(ParameterType.BOOL, loadControllable.type());
 
-        ParametersSet solverParameters = parameters.getSolverParameters();
-        assertEquals(solverParametersId, solverParameters.getId());
+        Map<String, Parameter> solverParameters = parameters.getSolverParameters().getParameters();
+        assertEquals(solverParametersId, parameters.getSolverParameters().getId());
         assertEquals(solverType, parameters.getSolverType());
-        Parameter order = solverParameters.getParameter("order");
+        Parameter order = solverParameters.get("order");
         assertEquals("1", order.value());
         assertEquals("order", order.name());
         assertEquals(ParameterType.INT, order.type());
-        Parameter absAccuracy = solverParameters.getParameter("absAccuracy");
+        Parameter absAccuracy = solverParameters.get("absAccuracy");
         assertEquals("1e-4", absAccuracy.value());
         assertEquals("absAccuracy", absAccuracy.name());
         assertEquals(ParameterType.DOUBLE, absAccuracy.type());
 
         assertEquals(mergeLoads, parameters.isMergeLoads());
+        assertEquals(useModelSimplifiers, parameters.isUseModelSimplifiers());
     }
 
     @Test
@@ -109,7 +111,7 @@ class DynaWaltzParametersTest extends AbstractSerDeTest {
         SolverType solverType = SolverType.IDA;
         String solverParametersId = "solverParametersId";
         boolean mergeLoads = false;
-        initPlatformConfig(networkParametersId, solverType, solverParametersId, mergeLoads);
+        initPlatformConfig(networkParametersId, solverType, solverParametersId, mergeLoads, false);
 
         DynamicSimulationParameters dynamicSimulationParameters = new DynamicSimulationParameters()
                 .setStartTime(0)
@@ -120,7 +122,7 @@ class DynaWaltzParametersTest extends AbstractSerDeTest {
                 JsonDynamicSimulationParameters::read, "/DynaWaltzParameters.json");
     }
 
-    private void initPlatformConfig(String networkParametersId, SolverType solverType, String solverParametersId, boolean mergeLoads) throws IOException {
+    private void initPlatformConfig(String networkParametersId, SolverType solverType, String solverParametersId, boolean mergeLoads, boolean useModelSimplifiers) throws IOException {
         String parametersFile = USER_HOME + "parametersFile";
         String networkParametersFile = USER_HOME + "networkParametersFile";
         String solverParametersFile = USER_HOME + "solverParametersFile";
@@ -133,6 +135,7 @@ class DynaWaltzParametersTest extends AbstractSerDeTest {
         moduleConfig.setStringProperty("network.parametersId", networkParametersId);
         moduleConfig.setStringProperty("solver.type", solverType.toString());
         moduleConfig.setStringProperty("solver.parametersId", solverParametersId);
+        moduleConfig.setStringProperty("useModelSimplifiers", String.valueOf(useModelSimplifiers));
 
         Files.createDirectories(fileSystem.getPath(USER_HOME));
         copyFile("/parametersSet/models.par", parametersFile);
@@ -179,6 +182,7 @@ class DynaWaltzParametersTest extends AbstractSerDeTest {
         assertEquals("1", parameters.getSolverParameters().getId());
 
         assertEquals(DynaWaltzParameters.DEFAULT_MERGE_LOADS, parameters.isMergeLoads());
+        assertEquals(DynaWaltzParameters.USE_MODEL_SIMPLIFIERS, parameters.isUseModelSimplifiers());
     }
 
     @Test
@@ -231,11 +235,11 @@ class DynaWaltzParametersTest extends AbstractSerDeTest {
     }
 
     private static void checkModelParameters(DynaWaltzParameters dynaWaltzParameters) {
-        Parameter booleanParameter = dynaWaltzParameters.getModelParameters("test").getParameter("boolean");
+        Parameter booleanParameter = dynaWaltzParameters.getModelParameters("test").getParameters().get("boolean");
         assertEquals("true", booleanParameter.value());
         assertEquals("boolean", booleanParameter.name());
         assertEquals(ParameterType.BOOL, booleanParameter.type());
-        Parameter stringParameter = dynaWaltzParameters.getModelParameters("test").getParameter("string");
+        Parameter stringParameter = dynaWaltzParameters.getModelParameters("test").getParameters().get("string");
         assertEquals("aString", stringParameter.value());
         assertEquals("string", stringParameter.name());
         assertEquals(ParameterType.STRING, stringParameter.type());

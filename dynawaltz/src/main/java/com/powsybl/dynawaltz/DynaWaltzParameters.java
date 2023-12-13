@@ -39,6 +39,7 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
     public static final String NETWORK_OUTPUT_PARAMETERS_FILE = "network.par";
     public static final String SOLVER_OUTPUT_PARAMETERS_FILE = "solvers.par";
     private static final boolean DEFAULT_WRITE_FINAL_STATE = true;
+    public static final boolean USE_MODEL_SIMPLIFIERS = false;
 
     public enum SolverType {
         SIM,
@@ -51,6 +52,7 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
     private SolverType solverType;
     private boolean mergeLoads;
     private boolean writeFinalState = DEFAULT_WRITE_FINAL_STATE;
+    private boolean useModelSimplifiers = USE_MODEL_SIMPLIFIERS;
     private DumpFileParameters dumpFileParameters;
 
     /**
@@ -102,6 +104,8 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
         // Writes final state IIDM
         boolean writeFinalState = config.flatMap(c -> c.getOptionalBooleanProperty("writeFinalState")).orElse(DEFAULT_WRITE_FINAL_STATE);
 
+        boolean useModelSimplifiers = config.flatMap(c -> c.getOptionalBooleanProperty("useModelSimplifiers")).orElse(USE_MODEL_SIMPLIFIERS);
+
         // Dump file config
         boolean exportDumpFile = config.flatMap(c -> c.getOptionalBooleanProperty("dump.export")).orElse(DumpFileParameters.DEFAULT_EXPORT_DUMP);
         String exportDumpFileFolder = config.flatMap(c -> c.getOptionalStringProperty("dump.exportFolder")).orElse(DumpFileParameters.DEFAULT_DUMP_FOLDER);
@@ -130,12 +134,17 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
                 .setSolverType(solverType)
                 .setMergeLoads(mergeLoads)
                 .setWriteFinalState(writeFinalState)
+                .setUseModelSimplifiers(useModelSimplifiers)
                 .setDumpFileParameters(dumpFileParameters);
     }
 
     @Override
     public String getName() {
         return "DynaWaltzParameters";
+    }
+
+    public void addModelParameters(ParametersSet parameterSet) {
+        modelsParameters.put(parameterSet.getId(), parameterSet);
     }
 
     public ParametersSet getModelParameters(String parameterSetId) {
@@ -201,6 +210,15 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
 
     public boolean isWriteFinalState() {
         return writeFinalState;
+    }
+
+    public boolean isUseModelSimplifiers() {
+        return useModelSimplifiers;
+    }
+
+    public DynaWaltzParameters setUseModelSimplifiers(boolean useModelSimplifiers) {
+        this.useModelSimplifiers = useModelSimplifiers;
+        return this;
     }
 
     public DumpFileParameters getDumpFileParameters() {

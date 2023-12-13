@@ -74,18 +74,22 @@ public class DynaWaltzContext {
         Reporter contextReporter = DynawaltzReports.createDynaWaltzContextReporter(reporter);
         this.network = Objects.requireNonNull(network);
         this.workingVariantId = Objects.requireNonNull(workingVariantId);
+        this.parameters = Objects.requireNonNull(parameters);
+        this.dynaWaltzParameters = Objects.requireNonNull(dynaWaltzParameters);
 
-        this.dynamicModels = Objects.requireNonNull(dynamicModels).stream()
-                .filter(distinctByDynamicId(contextReporter).and(distinctByStaticId(contextReporter)))
+        Stream<BlackBoxModel> uniqueIdsDynamicModels = Objects.requireNonNull(dynamicModels).stream()
+                .filter(distinctByDynamicId(contextReporter).and(distinctByStaticId(contextReporter)));
+        this.dynamicModels = dynaWaltzParameters.isUseModelSimplifiers()
+                ? simplifyModels(uniqueIdsDynamicModels, contextReporter).toList()
+                : uniqueIdsDynamicModels.toList();
+
+        this.eventModels = Objects.requireNonNull(eventModels).stream()
+                .filter(distinctByDynamicId(contextReporter))
                 .toList();
         this.staticIdBlackBoxModelMap = getInputBlackBoxDynamicModelStream()
                 .filter(EquipmentBlackBoxModel.class::isInstance)
                 .map(EquipmentBlackBoxModel.class::cast)
                 .collect(Collectors.toMap(EquipmentBlackBoxModel::getStaticId, Function.identity()));
-
-        this.eventModels = Objects.requireNonNull(eventModels).stream()
-                .filter(distinctByDynamicId(contextReporter))
-                .toList();
 
         // Late init on ContextDependentEvents
         this.eventModels.stream()
@@ -94,8 +98,6 @@ public class DynaWaltzContext {
                 .forEach(e -> e.setEquipmentHasDynamicModel(this));
 
         this.curves = Objects.requireNonNull(curves);
-        this.parameters = Objects.requireNonNull(parameters);
-        this.dynaWaltzParameters = Objects.requireNonNull(dynaWaltzParameters);
         this.frequencySynchronizer = setupFrequencySynchronizer(dynamicModels.stream().anyMatch(AbstractBus.class::isInstance) ? SetPoint::new : OmegaRef::new);
         this.macroConnectionsAdder = new MacroConnectionsAdder(this::getDynamicModel,
                 this::getPureDynamicModel,
@@ -115,6 +117,14 @@ public class DynaWaltzContext {
             bbem.createDynamicModelParameters(this, dynamicModelsParameters::add);
             bbem.createNetworkParameter(networkParameters);
         }
+    }
+
+    private Stream<BlackBoxModel> simplifyModels(Stream<BlackBoxModel> inputBbm, Reporter reporter) {
+        Stream<BlackBoxModel> outputBbm = inputBbm;
+        for (ModelsSimplifier modelsSimplifier : ServiceLoader.load(ModelsSimplifier.class)) {
+            outputBbm = modelsSimplifier.simplifyModels(outputBbm, dynaWaltzParameters, reporter);
+        }
+        return outputBbm;
     }
 
     private FrequencySynchronizerModel setupFrequencySynchronizer(Function<List<FrequencySynchronizedModel>, FrequencySynchronizerModel> fsConstructor) {
