@@ -2,7 +2,6 @@ package com.powsybl.dynawaltz.builders.loads;
 
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.builders.EquipmentConfig;
-import com.powsybl.dynawaltz.models.loads.LoadOneTransformer;
 import com.powsybl.dynawaltz.models.loads.LoadOneTransformerTapChanger;
 import com.powsybl.iidm.network.Network;
 

@@ -13,22 +13,25 @@ import java.util.function.BiFunction;
 
 public final class DynamicModelBuilderUtils {
 
-    private static final Map<IdentifiableType, BiFunction<Network, EquipmentConfig, EquipmentModelBuilder<DynamicModel, ? extends EquipmentModelBuilder<DynamicModel, ? extends  EquipmentModelBuilder>>>> builders = Map.of(IdentifiableType.LOAD, BaseLoadBuilder::new);
+    private static final Map<IdentifiableType, BiFunction<Network, EquipmentConfig, EquipmentModelBuilder<DynamicModel, ? extends EquipmentModelBuilder<DynamicModel, ? extends EquipmentModelBuilder>>>> BUILDERS = Map.of(IdentifiableType.LOAD, BaseLoadBuilder::new);
 
     //TODO charger a partir d'un slurper java utilisable par groovy
-    private static final Map<String, EquipmentConfig> svarcs = Map.of(
+    private static final Map<String, EquipmentConfig> SVARCS = Map.of(
             "StaticVarCompensator", new EquipmentConfig("StaticVarCompensator", "Controllable"),
             "StaticVarCompensatorPV", new EquipmentConfig("StaticVarCompensatorPV"));
-    private static final Map<String, EquipmentConfig> loads = Map.of(
+    private static final Map<String, EquipmentConfig> LOADS = Map.of(
             "LoadAlphaBeta", new EquipmentConfig("LoadAlphaBeta", "Controllable"),
             "LoadPQ", new EquipmentConfig("LoadPQ"));
 
-    private static final Map<String, Map<String, EquipmentConfig>> libs = Map.of("loads", loads,
-            "staticVarCompensators", svarcs);
+    private static final Map<String, Map<String, EquipmentConfig>> LIBS = Map.of("loads", LOADS,
+            "staticVarCompensators", SVARCS);
 
+    //TODO mettre les catégories dans les builders directement ?
     private enum Categories {
         BASE_LOADS("baseLoads"),
         BASE_SVARCS("staticVarCompensators"),
+        INFINITE_BUSES("infiniteBuses"),
+        SYNCHRONIZED_GENERATORS("synchronizedGenerators"),
         TRANSFORMERS("transformers");
 
         private final String categoryName;
@@ -46,15 +49,15 @@ public final class DynamicModelBuilderUtils {
     }
 
     public static EquipmentModelBuilder<DynamicModel, ? extends EquipmentModelBuilder> getBuilder(IdentifiableType type, Network network, String lib) {
-        if (builders.containsKey(type)) {
+        if (BUILDERS.containsKey(type)) {
             EquipmentConfig equipmentConfig = new EquipmentConfig(lib);
-            return builders.get(type).apply(network, equipmentConfig);
+            return BUILDERS.get(type).apply(network, equipmentConfig);
         }
         return null;
     }
 
     public static Collection<EquipmentConfig> getEquipmentConfigList(Categories category) {
-        return libs.get(category.getCategoryName()).values();
+        return LIBS.get(category.getCategoryName()).values();
     }
 
     public static Set<String> getBaseLoadLibs() {
@@ -92,7 +95,7 @@ public final class DynamicModelBuilderUtils {
     // mettre en place une fonction generique pour recup les lib a partir de la class builder ?
     // gerer cas des bibli privé plus tard
     public static Set<String> getLoadTwoTransformersTapChangersLibs() {
-        return loads.keySet();
+        return LOADS.keySet();
     }
 
     public static LoadTwoTransformersTapChangersBuilder getLoadTwoTransformersTapChangersBuilder(Network network) {
@@ -108,14 +111,14 @@ public final class DynamicModelBuilderUtils {
     }
 
     private static EquipmentConfig getEquipmentConfig(Categories category, String lib) {
-        EquipmentConfig equipmentConfig = libs.get(category.getCategoryName()).getOrDefault(lib, null);
+        EquipmentConfig equipmentConfig = LIBS.get(category.getCategoryName()).getOrDefault(lib, null);
         if (equipmentConfig == null) {
-            throw new PowsyblException("Dynamic model " + lib +  "not found in category " + category.getCategoryName());
+            throw new PowsyblException("Dynamic model " + lib + "not found in category " + category.getCategoryName());
         }
         return equipmentConfig;
     }
 
     private static Set<String> getLibs(Categories category) {
-        return libs.get(category.getCategoryName()).keySet();
+        return LIBS.get(category.getCategoryName()).keySet();
     }
 }

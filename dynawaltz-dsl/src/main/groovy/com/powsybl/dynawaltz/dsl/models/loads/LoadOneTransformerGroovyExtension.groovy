@@ -9,11 +9,9 @@ package com.powsybl.dynawaltz.dsl.models.loads
 import com.google.auto.service.AutoService
 import com.powsybl.commons.reporter.Reporter
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
+import com.powsybl.dynawaltz.builders.loads.LoadOneTransformerBuilder
 import com.powsybl.dynawaltz.dsl.AbstractSimpleEquipmentGroovyExtension
-import com.powsybl.dynawaltz.dsl.EquipmentConfig
-import com.powsybl.dynawaltz.models.loads.LoadOneTransformer
 import com.powsybl.iidm.network.Network
-
 /**
  * An implementation of {@link DynamicModelGroovyExtension} that adds the <pre>LoadOneTransformer</pre> keyword to the DSL
  *
@@ -22,24 +20,13 @@ import com.powsybl.iidm.network.Network
 @AutoService(DynamicModelGroovyExtension.class)
 class LoadOneTransformerGroovyExtension extends AbstractSimpleEquipmentGroovyExtension {
 
-    LoadOneTransformerGroovyExtension() {
-        super("LoadOneTransformer")
+    @Override
+    String getLib() {
+        LoadOneTransformerBuilder.LIB
     }
 
     @Override
-    protected LoadOneTransformerBuilder createBuilder(Network network, EquipmentConfig equipmentConfig, Reporter reporter) {
-        new LoadOneTransformerBuilder(network, equipmentConfig, reporter)
-    }
-
-    static class LoadOneTransformerBuilder extends AbstractLoadModelBuilder {
-
-        LoadOneTransformerBuilder(Network network, EquipmentConfig equipmentConfig, Reporter reporter) {
-            super(network, equipmentConfig, reporter)
-        }
-
-        @Override
-        LoadOneTransformer build() {
-            isInstantiable() ? new LoadOneTransformer(dynamicModelId, equipment, parameterSetId) : null
-        }
+    protected LoadOneTransformerBuilder createBuilder(Network network, Reporter reporter) {
+        new LoadOneTransformerBuilder(network, reporter)
     }
 }

@@ -43,7 +43,7 @@ public class DslEquipment<T extends Identifiable> {
     }
 
     public boolean checkEquipmentData(Reporter reporter) {
-        if (hasStaticId()) {
+        if (!hasStaticId()) {
             Reporters.reportFieldNotSet(reporter, fieldName);
             return false;
         } else if (equipment == null) {

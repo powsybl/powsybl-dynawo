@@ -4,11 +4,9 @@ import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.builders.AbstractEquipmentModelBuilder;
 import com.powsybl.dynawaltz.builders.EquipmentConfig;
 import com.powsybl.dynawaltz.models.lines.StandardLine;
-import com.powsybl.dynawaltz.models.svarcs.BaseStaticVarCompensator;
 import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Line;
 import com.powsybl.iidm.network.Network;
-import com.powsybl.iidm.network.StaticVarCompensator;
 
 /**
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}

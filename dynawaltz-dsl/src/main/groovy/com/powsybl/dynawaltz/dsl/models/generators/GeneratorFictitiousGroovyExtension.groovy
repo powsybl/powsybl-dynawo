@@ -9,35 +9,22 @@ package com.powsybl.dynawaltz.dsl.models.generators
 import com.google.auto.service.AutoService
 import com.powsybl.commons.reporter.Reporter
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
+import com.powsybl.dynawaltz.builders.generators.GeneratorFictitiousBuilder
 import com.powsybl.dynawaltz.dsl.AbstractSimpleEquipmentGroovyExtension
-import com.powsybl.dynawaltz.dsl.EquipmentConfig
-import com.powsybl.dynawaltz.models.generators.GeneratorFictitious
 import com.powsybl.iidm.network.Network
-
 /**
  * @author Dimitri Baudrier {@literal <dimitri.baudrier at rte-france.com>}
  */
 @AutoService(DynamicModelGroovyExtension.class)
 class GeneratorFictitiousGroovyExtension extends AbstractSimpleEquipmentGroovyExtension {
 
-    GeneratorFictitiousGroovyExtension() {
-        super("GeneratorFictitious")
+    @Override
+    String getLib() {
+        GeneratorFictitiousBuilder.LIB
     }
 
     @Override
-    protected GeneratorFictitiousBuilder createBuilder(Network network, EquipmentConfig equipmentConfig, Reporter reporter) {
-        new GeneratorFictitiousBuilder(network, equipmentConfig, reporter)
-    }
-
-    static class GeneratorFictitiousBuilder extends AbstractGeneratorBuilder {
-
-        GeneratorFictitiousBuilder(Network network, EquipmentConfig equipmentConfig, Reporter reporter) {
-            super(network, equipmentConfig, reporter)
-        }
-
-        @Override
-        GeneratorFictitious build() {
-            isInstantiable() ? new GeneratorFictitious(dynamicModelId, equipment, parameterSetId) : null
-        }
+    protected GeneratorFictitiousBuilder createBuilder(Network network, Reporter reporter) {
+        new GeneratorFictitiousBuilder(network, reporter)
     }
 }

@@ -3,11 +3,9 @@ package com.powsybl.dynawaltz.builders.transformers;
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.builders.AbstractEquipmentModelBuilder;
 import com.powsybl.dynawaltz.builders.EquipmentConfig;
-import com.powsybl.dynawaltz.models.svarcs.BaseStaticVarCompensator;
 import com.powsybl.dynawaltz.models.transformers.TransformerFixedRatio;
 import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Network;
-import com.powsybl.iidm.network.StaticVarCompensator;
 import com.powsybl.iidm.network.TwoWindingsTransformer;
 
 /**
