@@ -75,8 +75,8 @@ public class DynaWaltzContext {
         this.parameters = Objects.requireNonNull(parameters);
         this.dynaWaltzParameters = Objects.requireNonNull(dynaWaltzParameters);
 
-        Iterator<ModelsSimplifier> dataOptimizers = dynaWaltzParameters.isUseModelOptimizers() ? ServiceLoader.load(ModelsSimplifier.class).iterator() : Collections.emptyIterator();
-        this.dynamicModels = runSimplifiers(dataOptimizers,
+        Iterator<ModelsSimplifier> dataSimplifiers = dynaWaltzParameters.isUseModelSimplifiers() ? ServiceLoader.load(ModelsSimplifier.class).iterator() : Collections.emptyIterator();
+        this.dynamicModels = runSimplifiers(dataSimplifiers,
                 Objects.requireNonNull(dynamicModels)
                 .stream()
                 .filter(distinctByDynamicId(reporter).and(distinctByStaticId(reporter))),
@@ -114,8 +114,8 @@ public class DynaWaltzContext {
                 .toList());
     }
 
-    private Stream<BlackBoxModel> runSimplifiers(Iterator<ModelsSimplifier> dataOptimizers, Stream<BlackBoxModel> inputData, Reporter reporter) {
-        return dataOptimizers.hasNext() ? runSimplifiers(dataOptimizers, dataOptimizers.next().simplifyModels(inputData, dynaWaltzParameters, reporter), reporter) : inputData;
+    private Stream<BlackBoxModel> runSimplifiers(Iterator<ModelsSimplifier> dataSimplifiers, Stream<BlackBoxModel> inputData, Reporter reporter) {
+        return dataSimplifiers.hasNext() ? runSimplifiers(dataSimplifiers, dataSimplifiers.next().simplifyModels(inputData, dynaWaltzParameters, reporter), reporter) : inputData;
     }
 
     public Network getNetwork() {

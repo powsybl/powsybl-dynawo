@@ -39,7 +39,7 @@
       "solverType" : "IDA",
       "mergeLoads" : false,
       "writeFinalState" : true,
-      "useModelOptimizers" : false,
+      "useModelSimplifiers" : false,
       "dumpFileParameters" : {
         "exportDumpFile" : false,
         "useDumpFile" : false,

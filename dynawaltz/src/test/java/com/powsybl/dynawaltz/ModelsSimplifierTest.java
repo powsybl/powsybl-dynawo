@@ -42,7 +42,7 @@ class ModelsSimplifierTest {
     void simplifyModels() {
         Network network = EurostagTutorialExample1Factory.create();
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
-        DynaWaltzParameters dynawoParameters = DynaWaltzParameters.load().setUseModelOptimizers(true);
+        DynaWaltzParameters dynawoParameters = DynaWaltzParameters.load().setUseModelSimplifiers(true);
         List<BlackBoxModel> dynamicModels = List.of(
                 new GeneratorFictitious("BBM_GEN", network.getGenerator("GEN"), "GPV"),
                 new BaseLoad("BBM_LOAD", network.getLoad("LOAD"), "LOAD", "LoadAlphaBeta"),

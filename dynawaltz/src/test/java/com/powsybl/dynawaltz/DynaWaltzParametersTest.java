@@ -57,8 +57,8 @@ class DynaWaltzParametersTest extends AbstractSerDeTest {
         SolverType solverType = SolverType.IDA;
         String solverParametersId = "solverParametersId";
         boolean mergeLoads = true;
-        boolean useModelOptimizers = true;
-        initPlatformConfig(networkParametersId, solverType, solverParametersId, mergeLoads, useModelOptimizers);
+        boolean useModelSimplifiers = true;
+        initPlatformConfig(networkParametersId, solverType, solverParametersId, mergeLoads, useModelSimplifiers);
 
         DynaWaltzParameters parameters = DynaWaltzParameters.load(platformConfig, fileSystem);
 
@@ -88,7 +88,7 @@ class DynaWaltzParametersTest extends AbstractSerDeTest {
         assertEquals(ParameterType.DOUBLE, absAccuracy.type());
 
         assertEquals(mergeLoads, parameters.isMergeLoads());
-        assertEquals(useModelOptimizers, parameters.isUseModelOptimizers());
+        assertEquals(useModelSimplifiers, parameters.isUseModelSimplifiers());
     }
 
     @Test
@@ -122,7 +122,7 @@ class DynaWaltzParametersTest extends AbstractSerDeTest {
                 JsonDynamicSimulationParameters::read, "/DynaWaltzParameters.json");
     }
 
-    private void initPlatformConfig(String networkParametersId, SolverType solverType, String solverParametersId, boolean mergeLoads, boolean useModelOptimizers) throws IOException {
+    private void initPlatformConfig(String networkParametersId, SolverType solverType, String solverParametersId, boolean mergeLoads, boolean useModelSimplifiers) throws IOException {
         String parametersFile = USER_HOME + "parametersFile";
         String networkParametersFile = USER_HOME + "networkParametersFile";
         String solverParametersFile = USER_HOME + "solverParametersFile";
@@ -135,7 +135,7 @@ class DynaWaltzParametersTest extends AbstractSerDeTest {
         moduleConfig.setStringProperty("network.parametersId", networkParametersId);
         moduleConfig.setStringProperty("solver.type", solverType.toString());
         moduleConfig.setStringProperty("solver.parametersId", solverParametersId);
-        moduleConfig.setStringProperty("useModelOptimizers", String.valueOf(useModelOptimizers));
+        moduleConfig.setStringProperty("useModelSimplifiers", String.valueOf(useModelSimplifiers));
 
         Files.createDirectories(fileSystem.getPath(USER_HOME));
         copyFile("/parametersSet/models.par", parametersFile);
@@ -182,7 +182,7 @@ class DynaWaltzParametersTest extends AbstractSerDeTest {
         assertEquals("1", parameters.getSolverParameters().getId());
 
         assertEquals(DynaWaltzParameters.DEFAULT_MERGE_LOADS, parameters.isMergeLoads());
-        assertEquals(DynaWaltzParameters.DEFAULT_USE_MODEL_OPTIMIZERS, parameters.isUseModelOptimizers());
+        assertEquals(DynaWaltzParameters.USE_MODEL_SIMPLIFIERS, parameters.isUseModelSimplifiers());
     }
 
     @Test
