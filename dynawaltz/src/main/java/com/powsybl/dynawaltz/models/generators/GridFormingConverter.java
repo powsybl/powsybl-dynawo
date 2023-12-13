@@ -78,7 +78,7 @@ public class GridFormingConverter extends AbstractEquipmentBlackBoxModel<Generat
     }
 
     @Override
-    public Bus getConnectesBus() {
+    public Bus getConnectableBus() {
         return BusUtils.getConnectableBus(equipment);
     }
 }

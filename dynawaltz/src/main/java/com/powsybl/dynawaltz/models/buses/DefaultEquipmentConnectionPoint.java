@@ -27,7 +27,7 @@ public final class DefaultEquipmentConnectionPoint implements EquipmentConnectio
     private DefaultEquipmentConnectionPoint() {
     }
 
-    public static DefaultEquipmentConnectionPoint getDefaultModel(String staticId) {
+    public static DefaultEquipmentConnectionPoint getDefaultModel() {
         return INSTANCE;
     }
 

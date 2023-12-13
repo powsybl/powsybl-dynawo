@@ -26,6 +26,9 @@ public class LateInitField<T> {
     }
 
     public final void setValue(T value) {
+        if (this.value != null) {
+            throw new PowsyblException("Field has already been initialized");
+        }
         this.value = Objects.requireNonNull(value);
     }
 }

@@ -42,5 +42,5 @@ public interface FrequencySynchronizedModel extends Model {
 
     String getStaticId();
 
-    Bus getConnectesBus();
+    Bus getConnectableBus();
 }

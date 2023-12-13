@@ -85,8 +85,13 @@ public class DynaWaltzContext {
 
         this.eventModels = Objects.requireNonNull(eventModels).stream()
                 .filter(distinctByDynamicId(contextReporter))
-                .map(setLateInitEventField())
                 .toList();
+
+        // Late init on ContextDependentEvents
+        this.eventModels.stream()
+                .filter(ContextDependentEvent.class::isInstance)
+                .map(ContextDependentEvent.class::cast)
+                .forEach(e -> e.setEquipmentHasDynamicModel(this));
 
         this.curves = Objects.requireNonNull(curves);
         this.parameters = Objects.requireNonNull(parameters);
@@ -198,15 +203,6 @@ public class DynaWaltzContext {
                 return false;
             }
             return true;
-        };
-    }
-
-    protected Function<BlackBoxModel, BlackBoxModel> setLateInitEventField() {
-        return blackBoxModel -> {
-            if (blackBoxModel instanceof ContextDependentEvent event) {
-                event.setEquipmentHasDynamicModel(this);
-            }
-            return blackBoxModel;
         };
     }
 

@@ -32,7 +32,7 @@ public class SynchronizedWeccGen extends WeccGen implements FrequencySynchronize
     }
 
     @Override
-    public Bus getConnectesBus() {
+    public Bus getConnectableBus() {
         return BusUtils.getConnectableBus(equipment);
     }
 }

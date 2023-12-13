@@ -46,7 +46,7 @@ public class SynchronizedGenerator extends AbstractGenerator implements Frequenc
     }
 
     @Override
-    public Bus getConnectesBus() {
+    public Bus getConnectableBus() {
         return BusUtils.getConnectableBus(equipment);
     }
 }

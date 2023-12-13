@@ -35,7 +35,7 @@ public enum DefaultModelConfiguration {
             new DefaultModelFactory<>(DefaultActionConnectionPoint::new)),
     EQUIPMENT_CONNECTION_POINT(IdentifiableType.BUS,
             EquipmentConnectionPoint.class,
-            DefaultEquipmentConnectionPoint::getDefaultModel),
+            staticId -> DefaultEquipmentConnectionPoint.getDefaultModel()),
     GENERATOR(IdentifiableType.GENERATOR,
             GeneratorModel.class,
             new DefaultModelFactory<>(DefaultGenerator::new)),
