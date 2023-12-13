@@ -84,7 +84,7 @@
         <dyn:connect var1="omegaRef_grp_@INDEX@" var2="generator_omegaRefPu"/>
         <dyn:connect var1="running_grp_@INDEX@" var2="generator_running"/>
     </dyn:macroConnector>
-    <dyn:macroConnector id="MC_DYNModelOmegaRef-DefaultBusOfEquipment">
+    <dyn:macroConnector id="MC_DYNModelOmegaRef-DefaultBusOfFrequencySynchronized">
         <dyn:connect var1="numcc_node_@INDEX@" var2="@@NAME@@@NODE@_numcc"/>
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_DYNModelOmegaRef-GeneratorSynchronousFourWindingsProportionalRegulations">
@@ -161,17 +161,17 @@
     <dyn:macroConnect connector="MC_CurrentLimitAutomatonMeasureSide1-DefaultLine" id1="BBM_NHV1_NHV2_2" id2="NETWORK" name2="NHV1_NHV2_2"/>
     <dyn:macroConnect connector="MC_CurrentLimitAutomatonControl-DefaultLine" id1="BBM_NHV1_NHV2_2" id2="NETWORK" name2="NHV1_NHV2_2"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorSynchronousThreeWindingsProportionalRegulations" id1="FREQ_SYNC" index1="0" id2="BBM_GEN"/>
-    <dyn:macroConnect connector="MC_DYNModelOmegaRef-DefaultBusOfEquipment" id1="FREQ_SYNC" index1="0" id2="NETWORK" name2="GEN"/>
+    <dyn:macroConnect connector="MC_DYNModelOmegaRef-DefaultBusOfFrequencySynchronized" id1="FREQ_SYNC" index1="0" id2="NETWORK" name2="GEN"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorSynchronousFourWindingsProportionalRegulations" id1="FREQ_SYNC" index1="1" id2="BBM_GEN2"/>
-    <dyn:macroConnect connector="MC_DYNModelOmegaRef-DefaultBusOfEquipment" id1="FREQ_SYNC" index1="1" id2="NETWORK" name2="GEN2"/>
+    <dyn:macroConnect connector="MC_DYNModelOmegaRef-DefaultBusOfFrequencySynchronized" id1="FREQ_SYNC" index1="1" id2="NETWORK" name2="GEN2"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorSynchronousFourWindings" id1="FREQ_SYNC" index1="2" id2="BBM_GEN3"/>
-    <dyn:macroConnect connector="MC_DYNModelOmegaRef-DefaultBusOfEquipment" id1="FREQ_SYNC" index1="2" id2="NETWORK" name2="GEN3"/>
+    <dyn:macroConnect connector="MC_DYNModelOmegaRef-DefaultBusOfFrequencySynchronized" id1="FREQ_SYNC" index1="2" id2="NETWORK" name2="GEN3"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorSynchronousThreeWindings" id1="FREQ_SYNC" index1="3" id2="BBM_GEN4"/>
-    <dyn:macroConnect connector="MC_DYNModelOmegaRef-DefaultBusOfEquipment" id1="FREQ_SYNC" index1="3" id2="NETWORK" name2="GEN4"/>
+    <dyn:macroConnect connector="MC_DYNModelOmegaRef-DefaultBusOfFrequencySynchronized" id1="FREQ_SYNC" index1="3" id2="NETWORK" name2="GEN4"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorSynchronousThreeWindingsProportionalRegulations" id1="FREQ_SYNC" index1="4" id2="BBM_GEN5"/>
-    <dyn:macroConnect connector="MC_DYNModelOmegaRef-DefaultBusOfEquipment" id1="FREQ_SYNC" index1="4" id2="NETWORK" name2="GEN5"/>
+    <dyn:macroConnect connector="MC_DYNModelOmegaRef-DefaultBusOfFrequencySynchronized" id1="FREQ_SYNC" index1="4" id2="NETWORK" name2="GEN5"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorPQ" id1="FREQ_SYNC" index1="5" id2="BBM_GEN7"/>
-    <dyn:macroConnect connector="MC_DYNModelOmegaRef-DefaultBusOfEquipment" id1="FREQ_SYNC" index1="5" id2="NETWORK" name2="GEN7"/>
+    <dyn:macroConnect connector="MC_DYNModelOmegaRef-DefaultBusOfFrequencySynchronized" id1="FREQ_SYNC" index1="5" id2="NETWORK" name2="GEN7"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorSynchronousThreeWindingsProportionalRegulations" id1="FREQ_SYNC" index1="6" id2="BBM_NHV1_1"/>
-    <dyn:macroConnect connector="MC_DYNModelOmegaRef-DefaultBusOfEquipment" id1="FREQ_SYNC" index1="6" id2="NETWORK" name2="NHV1_1"/>
+    <dyn:macroConnect connector="MC_DYNModelOmegaRef-DefaultBusOfFrequencySynchronized" id1="FREQ_SYNC" index1="6" id2="NETWORK" name2="NHV1_1"/>
 </dyn:dynamicModelsArchitecture>

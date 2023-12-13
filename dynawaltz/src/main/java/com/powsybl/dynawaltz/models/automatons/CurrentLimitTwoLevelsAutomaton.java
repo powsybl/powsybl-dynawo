@@ -7,8 +7,8 @@
  */
 package com.powsybl.dynawaltz.models.automatons;
 
-import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.VarConnection;
+import com.powsybl.dynawaltz.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawaltz.models.utils.SideUtils;
 import com.powsybl.iidm.network.Branch;
 import com.powsybl.iidm.network.TwoSides;
@@ -35,14 +35,13 @@ public class CurrentLimitTwoLevelsAutomaton extends CurrentLimitAutomaton {
     }
 
     @Override
-    public void createMacroConnections(DynaWaltzContext context) {
-        createMacroConnections(measuredQuadripole, QuadripoleModel.class, this::getVarConnectionsWithMeasuredQuadripole, context, FIRST_MEASURE_SUFFIX + SideUtils.getSideSuffix(measuredSide));
-        createMacroConnections(secondMeasuredQuadripole, QuadripoleModel.class, this::getVarConnectionsWithSecondMeasuredQuadripole, context, SECOND_MEASURE_SUFFIX + SideUtils.getSideSuffix(secondMeasuredSide));
-        createMacroConnections(controlledQuadripole, QuadripoleModel.class, this::getVarConnectionsWithControlledQuadripole, context, CONTROL_SUFFIX);
+    public void createMacroConnections(MacroConnectionsAdder adder) {
+        adder.createMacroConnections(this, measuredQuadripole, QuadripoleModel.class, this::getVarConnectionsWithFirstMeasuredQuadripole, FIRST_MEASURE_SUFFIX + SideUtils.getSideSuffix(measuredSide));
+        adder.createMacroConnections(this, secondMeasuredQuadripole, QuadripoleModel.class, this::getVarConnectionsWithSecondMeasuredQuadripole, SECOND_MEASURE_SUFFIX + SideUtils.getSideSuffix(secondMeasuredSide));
+        adder.createMacroConnections(this, controlledQuadripole, QuadripoleModel.class, this::getVarConnectionsWithControlledQuadripole, CONTROL_SUFFIX);
     }
 
-    @Override
-    protected List<VarConnection> getVarConnectionsWithMeasuredQuadripole(QuadripoleModel connected) {
+    private List<VarConnection> getVarConnectionsWithFirstMeasuredQuadripole(QuadripoleModel connected) {
         return Arrays.asList(
                 new VarConnection("currentLimitAutomaton_IMonitored1", connected.getIVarName(measuredSide)),
                 new VarConnection("currentLimitAutomaton_AutomatonExists", connected.getDeactivateCurrentLimitsVarName())

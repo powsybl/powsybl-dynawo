@@ -13,6 +13,7 @@ import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawaltz.models.TransformerSide;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.loads.LoadWithTransformers;
+import com.powsybl.dynawaltz.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawaltz.models.transformers.TapChangerModel;
 import com.powsybl.iidm.network.Load;
 
@@ -58,12 +59,12 @@ public class TapChangerAutomaton extends AbstractPureDynamicBlackBoxModel implem
     }
 
     @Override
-    public void createMacroConnections(DynaWaltzContext context) {
+    public void createMacroConnections(MacroConnectionsAdder adder) {
         if (ConnectionState.NOT_SET == connection) {
-            boolean isSkipped = createMacroConnectionsOrSkip(load, LoadWithTransformers.class, this::getVarConnectionsWith, context);
+            boolean isSkipped = adder.createMacroConnectionsOrSkip(this, load, LoadWithTransformers.class, this::getVarConnectionsWith);
             if (isSkipped) {
                 connection = ConnectionState.NOT_CONNECTED;
-                DynawaltzReports.reportEmptyAutomaton(context.getReporter(), this.getName(), getDynamicModelId(), LoadWithTransformers.class.getSimpleName());
+                DynawaltzReports.reportEmptyAutomaton(adder.getReporter(), this.getName(), getDynamicModelId(), LoadWithTransformers.class.getSimpleName());
             } else {
                 connection = ConnectionState.CONNECTED;
             }
@@ -86,9 +87,9 @@ public class TapChangerAutomaton extends AbstractPureDynamicBlackBoxModel implem
         }
     }
 
-    public boolean isConnected(DynaWaltzContext context) {
+    public boolean isConnected(MacroConnectionsAdder adder) {
         if (ConnectionState.NOT_SET == connection) {
-            createMacroConnections(context);
+            createMacroConnections(adder);
         }
         return ConnectionState.CONNECTED == connection;
     }

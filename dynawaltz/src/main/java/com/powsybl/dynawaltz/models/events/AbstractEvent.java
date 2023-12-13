@@ -51,9 +51,9 @@ public abstract class AbstractEvent extends AbstractPureDynamicBlackBoxModel imp
     @Override
     public void createDynamicModelParameters(DynaWaltzContext context, Consumer<ParametersSet> parametersAdder) {
         ParametersSet paramSet = new ParametersSet(getParameterSetId());
-        createEventSpecificParameters(paramSet, context);
+        createEventSpecificParameters(paramSet);
         parametersAdder.accept(paramSet);
     }
 
-    protected abstract void createEventSpecificParameters(ParametersSet paramSet, DynaWaltzContext context);
+    protected abstract void createEventSpecificParameters(ParametersSet paramSet);
 }

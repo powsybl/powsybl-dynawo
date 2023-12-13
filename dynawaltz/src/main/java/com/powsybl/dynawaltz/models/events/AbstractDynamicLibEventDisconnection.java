@@ -7,21 +7,19 @@
  */
 package com.powsybl.dynawaltz.models.events;
 
-import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
+import com.powsybl.dynawaltz.models.utils.ImmutableLateInit;
 import com.powsybl.dynawaltz.parameters.ParametersSet;
 import com.powsybl.iidm.network.Identifiable;
 
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
-
 import static com.powsybl.dynawaltz.parameters.ParameterType.BOOL;
 import static com.powsybl.dynawaltz.parameters.ParameterType.DOUBLE;
+import static java.lang.Boolean.TRUE;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public abstract class AbstractDynamicLibEventDisconnection extends AbstractEvent {
+public abstract class AbstractDynamicLibEventDisconnection extends AbstractEvent implements ContextDependentEvent {
 
     private static final String EVENT_PREFIX = "Disconnect_";
     private static final String DYNAMIC_MODEL_LIB = "EventSetPointBoolean";
@@ -29,6 +27,7 @@ public abstract class AbstractDynamicLibEventDisconnection extends AbstractEvent
     protected static final String DISCONNECTION_VAR_CONNECT = "event_state1";
 
     private final boolean disconnect;
+    private final ImmutableLateInit<Boolean> equipmentHasDynamicModel = new ImmutableLateInit<>();
 
     protected AbstractDynamicLibEventDisconnection(Identifiable<?> equipment, double startTime, boolean disconnect) {
         super(equipment, startTime, EVENT_PREFIX);
@@ -37,7 +36,7 @@ public abstract class AbstractDynamicLibEventDisconnection extends AbstractEvent
 
     @Override
     public String getLib() {
-        throw new PowsyblException("The associated library depends on context");
+        return TRUE == equipmentHasDynamicModel.getValue() ? DYNAMIC_MODEL_LIB : DEFAULT_MODEL_LIB;
     }
 
     @Override
@@ -46,16 +45,13 @@ public abstract class AbstractDynamicLibEventDisconnection extends AbstractEvent
     }
 
     @Override
-    protected void writeDynamicAttributes(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
-        writer.writeAttribute("id", getDynamicModelId());
-        writer.writeAttribute("lib", context.isWithoutBlackBoxDynamicModel(getEquipment()) ? DEFAULT_MODEL_LIB : DYNAMIC_MODEL_LIB);
-        writer.writeAttribute("parFile", getParFile(context));
-        writer.writeAttribute("parId", getParameterSetId());
+    protected void createEventSpecificParameters(ParametersSet paramSet) {
+        paramSet.addParameter("event_tEvent", DOUBLE, Double.toString(getStartTime()));
+        paramSet.addParameter("event_stateEvent1", BOOL, Boolean.toString(disconnect));
     }
 
     @Override
-    protected void createEventSpecificParameters(ParametersSet paramSet, DynaWaltzContext context) {
-        paramSet.addParameter("event_tEvent", DOUBLE, Double.toString(getStartTime()));
-        paramSet.addParameter("event_stateEvent1", BOOL, Boolean.toString(disconnect));
+    public final void setEquipmentHasDynamicModel(DynaWaltzContext context) {
+        this.equipmentHasDynamicModel.setValue(hasDynamicModel(context));
     }
 }

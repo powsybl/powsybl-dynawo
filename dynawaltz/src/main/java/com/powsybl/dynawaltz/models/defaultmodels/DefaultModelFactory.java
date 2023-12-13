@@ -14,7 +14,7 @@ import java.util.function.Function;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class DefaultModelFactory<T> {
+public class DefaultModelFactory<T> implements DefaultModelFactoryInterface<T> {
 
     private final Map<String, T> defaultModelMap = new HashMap<>();
 

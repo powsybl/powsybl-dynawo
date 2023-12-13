@@ -10,6 +10,7 @@ package com.powsybl.dynawaltz.models.frequencysynchronizers;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.VarConnection;
+import com.powsybl.dynawaltz.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawaltz.parameters.ParametersSet;
 
 import java.util.List;
@@ -45,9 +46,9 @@ public class SetPoint extends AbstractFrequencySynchronizer {
     }
 
     @Override
-    public void createMacroConnections(DynaWaltzContext context) throws PowsyblException {
+    public void createMacroConnections(MacroConnectionsAdder adder) throws PowsyblException {
         for (FrequencySynchronizedModel eq : synchronizedEquipments) {
-            createMacroConnections(eq, getVarConnectionsWith(eq), context);
+            adder.createMacroConnections(this, eq, getVarConnectionsWith(eq));
         }
     }
 }

@@ -9,6 +9,8 @@ package com.powsybl.dynawaltz.models.generators;
 
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.frequencysynchronizers.FrequencySynchronizedModel;
+import com.powsybl.dynawaltz.models.utils.BusUtils;
+import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.Generator;
 
 import java.util.List;
@@ -41,5 +43,10 @@ public class SynchronizedGenerator extends AbstractGenerator implements Frequenc
     @Override
     public String getOmegaRefPuVarName() {
         return "generator_omegaRefPu";
+    }
+
+    @Override
+    public Bus getConnectableBus() {
+        return BusUtils.getConnectableBus(equipment);
     }
 }

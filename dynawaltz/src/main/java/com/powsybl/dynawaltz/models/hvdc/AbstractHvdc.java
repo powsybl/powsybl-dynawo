@@ -7,11 +7,11 @@
  */
 package com.powsybl.dynawaltz.models.hvdc;
 
-import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.models.AbstractEquipmentBlackBoxModel;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.VarMapping;
 import com.powsybl.dynawaltz.models.buses.EquipmentConnectionPoint;
+import com.powsybl.dynawaltz.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawaltz.models.utils.SideUtils;
 import com.powsybl.iidm.network.HvdcLine;
 import com.powsybl.iidm.network.TwoSides;
@@ -40,9 +40,9 @@ public abstract class AbstractHvdc extends AbstractEquipmentBlackBoxModel<HvdcLi
     }
 
     @Override
-    public void createMacroConnections(DynaWaltzContext context) {
-        createTerminalMacroConnections(equipment, this::getVarConnectionsWith, context, TwoSides.ONE);
-        createTerminalMacroConnections(equipment, this::getVarConnectionsWith, context, TwoSides.TWO);
+    public void createMacroConnections(MacroConnectionsAdder adder) {
+        adder.createTerminalMacroConnections(this, equipment, this::getVarConnectionsWith, TwoSides.ONE);
+        adder.createTerminalMacroConnections(this, equipment, this::getVarConnectionsWith, TwoSides.TWO);
     }
 
     @Override

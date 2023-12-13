@@ -62,7 +62,7 @@ class EventModelsSupplierTest extends AbstractModelSupplierTest {
             assertEquals(lib, em.getLib());
         } else {
             Exception e = assertThrows(PowsyblException.class, em::getLib);
-            assertEquals("The associated library depends on context", e.getMessage());
+            assertEquals("Field has not been initialized", e.getMessage());
         }
     }
 

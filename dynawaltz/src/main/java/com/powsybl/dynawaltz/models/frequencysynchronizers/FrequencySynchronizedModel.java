@@ -10,6 +10,7 @@ package com.powsybl.dynawaltz.models.frequencysynchronizers;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
 import com.powsybl.dynawaltz.models.Model;
 import com.powsybl.dynawaltz.models.VarConnection;
+import com.powsybl.iidm.network.Bus;
 
 import java.util.List;
 
@@ -40,4 +41,6 @@ public interface FrequencySynchronizedModel extends Model {
     String getRunningVarName();
 
     String getStaticId();
+
+    Bus getConnectableBus();
 }
