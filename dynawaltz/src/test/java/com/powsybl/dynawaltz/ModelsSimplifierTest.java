@@ -30,16 +30,16 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-class ModelOptimizerTest {
+class ModelsSimplifierTest {
 
     @Test
-    void loadOptimizer() {
-        List<ModelOptimizer> optimizers = Lists.newArrayList(ServiceLoader.load(ModelOptimizer.class));
-        assertEquals(2, optimizers.size());
+    void loadSimplifiers() {
+        List<ModelsSimplifier> simplifiers = Lists.newArrayList(ServiceLoader.load(ModelsSimplifier.class));
+        assertEquals(2, simplifiers.size());
     }
 
     @Test
-    void optimizeModels() {
+    void simplifyModels() {
         Network network = EurostagTutorialExample1Factory.create();
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynaWaltzParameters dynawoParameters = DynaWaltzParameters.load().setUseModelOptimizers(true);
@@ -53,18 +53,18 @@ class ModelOptimizerTest {
         assertTrue(context.getBlackBoxDynamicModelStream().anyMatch(bbm -> bbm.getDynamicModelId().equalsIgnoreCase("newModel")));
     }
 
-    @AutoService(ModelOptimizer.class)
-    public static class ModelOptimizerFilter implements ModelOptimizer {
+    @AutoService(ModelsSimplifier.class)
+    public static class ModelsSimplifierFilter implements ModelsSimplifier {
         @Override
-        public Stream<BlackBoxModel> optimizeModels(Stream<BlackBoxModel> models, DynaWaltzParameters dynaWaltzParameters, Reporter reporter) {
+        public Stream<BlackBoxModel> simplifyModels(Stream<BlackBoxModel> models, DynaWaltzParameters dynaWaltzParameters, Reporter reporter) {
             return models.filter(m -> !m.getDynamicModelId().equalsIgnoreCase("BBM_LOAD"));
         }
     }
 
-    @AutoService(ModelOptimizer.class)
-    public static class ModelOptimizerSubstitution implements ModelOptimizer {
+    @AutoService(ModelsSimplifier.class)
+    public static class ModelsSimplifierSubstitution implements ModelsSimplifier {
         @Override
-        public Stream<BlackBoxModel> optimizeModels(Stream<BlackBoxModel> models, DynaWaltzParameters dynaWaltzParameters, Reporter reporter) {
+        public Stream<BlackBoxModel> simplifyModels(Stream<BlackBoxModel> models, DynaWaltzParameters dynaWaltzParameters, Reporter reporter) {
             return models.map(m -> {
                 if ("BBM_GEN".equalsIgnoreCase(m.getDynamicModelId()) && m instanceof AbstractGenerator gen) {
                     return new GeneratorFictitious("newModel", gen.getEquipment(), "G");

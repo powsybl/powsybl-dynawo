@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public interface ModelOptimizer {
+public interface ModelsSimplifier {
 
-    Stream<BlackBoxModel> optimizeModels(Stream<BlackBoxModel> models, DynaWaltzParameters dynaWaltzParameters, Reporter reporter);
+    Stream<BlackBoxModel> simplifyModels(Stream<BlackBoxModel> models, DynaWaltzParameters dynaWaltzParameters, Reporter reporter);
 }
