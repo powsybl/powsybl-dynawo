@@ -9,6 +9,7 @@ package com.powsybl.dynawaltz.dsl.models.loads
 import com.google.auto.service.AutoService
 import com.powsybl.commons.reporter.Reporter
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
+import com.powsybl.dynawaltz.builders.DynamicModelBuilderUtils
 import com.powsybl.dynawaltz.builders.loads.LoadOneTransformerBuilder
 import com.powsybl.dynawaltz.dsl.AbstractSimpleEquipmentGroovyExtension
 import com.powsybl.iidm.network.Network
@@ -27,6 +28,7 @@ class LoadOneTransformerGroovyExtension extends AbstractSimpleEquipmentGroovyExt
 
     @Override
     protected LoadOneTransformerBuilder createBuilder(Network network, Reporter reporter) {
-        new LoadOneTransformerBuilder(network, reporter)
+        //TODO passer par utils à chaque fois ?
+        DynamicModelBuilderUtils.getLoadOneTransformerBuilder(network)
     }
 }

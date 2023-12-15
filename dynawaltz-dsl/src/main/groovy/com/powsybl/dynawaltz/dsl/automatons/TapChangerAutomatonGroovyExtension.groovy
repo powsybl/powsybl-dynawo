@@ -11,12 +11,9 @@ import com.google.auto.service.AutoService
 import com.powsybl.commons.reporter.Reporter
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
+import com.powsybl.dynawaltz.builders.automatons.TapChangerAutomatonBuilder
 import com.powsybl.dynawaltz.dsl.AbstractPureDynamicGroovyExtension
-import com.powsybl.dynawaltz.dsl.DslEquipment
-import com.powsybl.dynawaltz.dsl.builders.AbstractPureDynamicModelBuilder
-import com.powsybl.dynawaltz.models.TransformerSide
-import com.powsybl.dynawaltz.models.automatons.TapChangerAutomaton
-import com.powsybl.iidm.network.*
+import com.powsybl.iidm.network.Network
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -24,44 +21,12 @@ import com.powsybl.iidm.network.*
 @AutoService(DynamicModelGroovyExtension.class)
 class TapChangerAutomatonGroovyExtension extends AbstractPureDynamicGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
-    private static final String LIB = "TapChangerAutomaton"
-
     TapChangerAutomatonGroovyExtension() {
-        modelTags = [LIB]
+        modelTags = [TapChangerAutomatonBuilder.LIB]
     }
 
     @Override
     protected TapChangerAutomatonBuilder createBuilder(Network network, Reporter reporter) {
-        new TapChangerAutomatonBuilder(network, LIB, reporter)
-    }
-
-    static class TapChangerAutomatonBuilder extends AbstractPureDynamicModelBuilder {
-
-        protected final DslEquipment<Load> dslLoad
-        protected TransformerSide side = TransformerSide.NONE
-
-        TapChangerAutomatonBuilder(Network network, String lib, Reporter reporter) {
-            super(network, lib, reporter)
-            dslLoad = new DslEquipment<>(IdentifiableType.LOAD)
-        }
-
-        void staticId(String staticId) {
-            dslLoad.addEquipment(staticId, network::getLoad)
-        }
-
-        void side(TransformerSide side) {
-            this.side = side
-        }
-
-        @Override
-        protected void checkData() {
-            super.checkData()
-            isInstantiable &= dslLoad.checkEquipmentData(reporter)
-        }
-
-        @Override
-        TapChangerAutomaton build() {
-            isInstantiable() ? new TapChangerAutomaton(dynamicModelId, parameterSetId, dslLoad.equipment, side) : null
-        }
+        new TapChangerAutomatonBuilder(network, reporter)
     }
 }

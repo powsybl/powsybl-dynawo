@@ -10,6 +10,7 @@ package com.powsybl.dynawaltz.dsl.models.buses
 import com.google.auto.service.AutoService
 import com.powsybl.commons.reporter.Reporter
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
+import com.powsybl.dynawaltz.builders.DynamicModelBuilderUtils
 import com.powsybl.dynawaltz.builders.buses.StandardBusBuilder
 import com.powsybl.dynawaltz.dsl.AbstractSimpleEquipmentGroovyExtension
 import com.powsybl.iidm.network.Network

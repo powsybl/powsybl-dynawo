@@ -12,10 +12,10 @@ import java.util.function.Function;
  *
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class DslEquipment<T extends Identifiable> {
+public class DslEquipment<T extends Identifiable<?>> {
 //TODO renommer les dsl -> check la javadoc egalement :)
-    private String staticId;
-    private T equipment;
+    protected String staticId;
+    protected T equipment;
     private final String equipmentType;
     private final String fieldName;
 
@@ -63,5 +63,9 @@ public class DslEquipment<T extends Identifiable> {
 
     public T getEquipment() {
         return equipment;
+    }
+
+    public boolean hasEquipment() {
+        return equipment != null;
     }
 }

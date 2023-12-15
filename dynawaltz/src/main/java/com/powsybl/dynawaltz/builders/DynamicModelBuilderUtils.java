@@ -1,19 +1,28 @@
 package com.powsybl.dynawaltz.builders;
 
 import com.powsybl.commons.PowsyblException;
+import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynamicsimulation.DynamicModel;
+import com.powsybl.dynawaltz.builders.buses.InfiniteBusBuilder;
+import com.powsybl.dynawaltz.builders.generators.GridFormingConverterBuilder;
+import com.powsybl.dynawaltz.builders.generators.SynchronizedGeneratorBuilder;
+import com.powsybl.dynawaltz.builders.generators.SynchronousGeneratorBuilder;
+import com.powsybl.dynawaltz.builders.generators.WeccBuilder;
+import com.powsybl.dynawaltz.builders.hvdcs.HvdcPBuilder;
+import com.powsybl.dynawaltz.builders.hvdcs.HvdcVscBuilder;
 import com.powsybl.dynawaltz.builders.loads.*;
+import com.powsybl.dynawaltz.builders.svarcs.BaseStaticVarCompensatorBuilder;
+import com.powsybl.dynawaltz.builders.transformers.TransformerFixedRatioBuilder;
 import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Network;
+import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.BiFunction;
 
 public final class DynamicModelBuilderUtils {
 
-    private static final Map<IdentifiableType, BiFunction<Network, EquipmentConfig, EquipmentModelBuilder<DynamicModel, ? extends EquipmentModelBuilder<DynamicModel, ? extends EquipmentModelBuilder>>>> BUILDERS = Map.of(IdentifiableType.LOAD, BaseLoadBuilder::new);
+    private static final Map<IdentifiableType, BiFunction<Network, EquipmentConfig, EquipmentModelBuilder<? extends EquipmentModelBuilder<? extends EquipmentModelBuilder<?>>>>> BUILDERS = Map.of(IdentifiableType.LOAD, BaseLoadBuilder::new);
 
     //TODO charger a partir d'un slurper java utilisable par groovy
     private static final Map<String, EquipmentConfig> SVARCS = Map.of(
@@ -27,28 +36,50 @@ public final class DynamicModelBuilderUtils {
             "staticVarCompensators", SVARCS);
 
     //TODO mettre les catégories dans les builders directement ?
-    private enum Categories {
-        BASE_LOADS("baseLoads"),
-        BASE_SVARCS("staticVarCompensators"),
-        INFINITE_BUSES("infiniteBuses"),
-        SYNCHRONIZED_GENERATORS("synchronizedGenerators"),
-        TRANSFORMERS("transformers");
+    public enum Categories {
+        BASE_LOADS("baseLoads", BaseLoadBuilder::new),
+        BASE_SVARCS("staticVarCompensators", BaseStaticVarCompensatorBuilder::new),
+        HVDC_P("hvdcP", HvdcPBuilder::new),
+        HVDC_VSC("hvdcVsc", HvdcVscBuilder::new),
+        INFINITE_BUSES("infiniteBuses", InfiniteBusBuilder::new),
+        SYNCHRONIZED_GENERATORS("synchronizedGenerators", SynchronizedGeneratorBuilder::new),
+        SYNCHRONOUS_GENERATORS("synchronousGenerators", SynchronousGeneratorBuilder::new),
+        WECC_GEN("wecc", WeccBuilder::new),
+        GRID_FORMING_CONVERTER("gridFormingConverter", GridFormingConverterBuilder::new),
+        TRANSFORMERS("transformers", TransformerFixedRatioBuilder::new);
 
         private final String categoryName;
 
-        Categories(String categoryName) {
+        private final ModelBuilderConstructorFull constructor;
+
+        Categories(String categoryName, ModelBuilderConstructorFull constructor) {
             this.categoryName = categoryName;
+            this.constructor = constructor;
         }
 
         public String getCategoryName() {
             return categoryName;
         }
+
+        public ModelBuilderConstructorFull getConstructor() {
+            return constructor;
+        }
+    }
+
+    @FunctionalInterface
+    public interface ModelBuilderConstructor {
+        ModelBuilder<DynamicModel> getConstructor(Network network);
+    }
+
+    @FunctionalInterface
+    public interface ModelBuilderConstructorFull {
+        ModelBuilder<DynamicModel> createBuilder(Network network, EquipmentConfig equipmentConfig, Reporter reporter);
     }
 
     private DynamicModelBuilderUtils() {
     }
 
-    public static EquipmentModelBuilder<DynamicModel, ? extends EquipmentModelBuilder> getBuilder(IdentifiableType type, Network network, String lib) {
+    public static EquipmentModelBuilder<? extends EquipmentModelBuilder<?>> getBuilder(IdentifiableType type, Network network, String lib) {
         if (BUILDERS.containsKey(type)) {
             EquipmentConfig equipmentConfig = new EquipmentConfig(lib);
             return BUILDERS.get(type).apply(network, equipmentConfig);
@@ -106,8 +137,16 @@ public final class DynamicModelBuilderUtils {
         return new BaseLoadBuilder(network, getEquipmentConfig(Categories.BASE_SVARCS, lib));
     }
 
-    public static BaseLoadBuilder getTransformerBuilder(Network network, String lib) {
-        return new BaseLoadBuilder(network, getEquipmentConfig(Categories.TRANSFORMERS, lib));
+    public static TransformerFixedRatioBuilder getTransformerBuilder(Network network, String lib) {
+        return new TransformerFixedRatioBuilder(network, getEquipmentConfig(Categories.TRANSFORMERS, lib));
+    }
+
+    public static Pair<ModelBuilderConstructorFull, Collection<EquipmentConfig>> getBuildersConstructors(Categories category) {
+        return Pair.of(category.getConstructor(), getEquipmentConfigList(category));
+    }
+
+    public static List<Pair<ModelBuilderConstructorFull, Collection<EquipmentConfig>>> getAllBuildersConstructors() {
+        return Arrays.stream(Categories.values()).map(c -> Pair.of(c.getConstructor(), getEquipmentConfigList(c))).toList();
     }
 
     private static EquipmentConfig getEquipmentConfig(Categories category, String lib) {

@@ -11,8 +11,8 @@ import com.google.auto.service.AutoService
 import com.powsybl.commons.reporter.Reporter
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
+import com.powsybl.dynawaltz.builders.automatons.PhaseShifterPAutomatonBuilder
 import com.powsybl.dynawaltz.dsl.AbstractPureDynamicGroovyExtension
-import com.powsybl.dynawaltz.models.automatons.phaseshifters.PhaseShifterPAutomaton
 import com.powsybl.iidm.network.Network
 
 /**
@@ -21,26 +21,12 @@ import com.powsybl.iidm.network.Network
 @AutoService(DynamicModelGroovyExtension.class)
 class PhaseShifterPAutomatonGroovyExtension extends AbstractPureDynamicGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
-    private static final String LIB = "PhaseShifterP"
-
     PhaseShifterPAutomatonGroovyExtension() {
-        modelTags = [LIB]
+        modelTags = [PhaseShifterPAutomatonBuilder.LIB]
     }
 
     @Override
     protected PhaseShifterPAutomatonBuilder createBuilder(Network network, Reporter reporter) {
-        new PhaseShifterPAutomatonBuilder(network, LIB, reporter)
-    }
-
-    static class PhaseShifterPAutomatonBuilder extends AbstractPhaseShifterModelBuilder {
-
-        PhaseShifterPAutomatonBuilder(Network network, String lib, Reporter reporter) {
-            super(network, lib, reporter)
-        }
-
-        @Override
-        PhaseShifterPAutomaton build() {
-            isInstantiable() ? new PhaseShifterPAutomaton(dynamicModelId, dslTransformer.equipment, parameterSetId) : null
-        }
+        new PhaseShifterPAutomatonBuilder(network, reporter)
     }
 }

@@ -11,53 +11,21 @@ import com.google.auto.service.AutoService
 import com.powsybl.commons.reporter.Reporter
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
+import com.powsybl.dynawaltz.builders.automatons.UnderVoltageAutomatonBuilder
 import com.powsybl.dynawaltz.dsl.AbstractPureDynamicGroovyExtension
-import com.powsybl.dynawaltz.dsl.DslEquipment
-import com.powsybl.dynawaltz.dsl.builders.AbstractPureDynamicModelBuilder
-import com.powsybl.dynawaltz.models.automatons.UnderVoltageAutomaton
-import com.powsybl.iidm.network.Generator
-import com.powsybl.iidm.network.IdentifiableType
 import com.powsybl.iidm.network.Network
-
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 @AutoService(DynamicModelGroovyExtension.class)
 class UnderVoltageAutomatonGroovyExtension extends AbstractPureDynamicGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
-    private static final String LIB = "UnderVoltage"
-
     UnderVoltageAutomatonGroovyExtension() {
-        modelTags = [LIB]
+        modelTags = [UnderVoltageAutomatonBuilder.LIB]
     }
 
     @Override
     protected UnderVoltageAutomatonBuilder createBuilder(Network network, Reporter reporter) {
-        new UnderVoltageAutomatonBuilder(network, LIB, reporter)
-    }
-
-    static class UnderVoltageAutomatonBuilder extends AbstractPureDynamicModelBuilder {
-
-        protected final DslEquipment<Generator> dslGenerator
-
-        UnderVoltageAutomatonBuilder(Network network, String lib, Reporter reporter) {
-            super(network, lib, reporter)
-            dslGenerator = new DslEquipment<>(IdentifiableType.GENERATOR, "generator")
-        }
-
-        void generator(String staticId) {
-            dslGenerator.addEquipment(staticId, network::getGenerator)
-        }
-
-        @Override
-        protected void checkData() {
-            super.checkData()
-            isInstantiable &= dslGenerator.checkEquipmentData(reporter)
-        }
-
-        @Override
-        UnderVoltageAutomaton build() {
-            isInstantiable() ? new UnderVoltageAutomaton(dynamicModelId, parameterSetId, dslGenerator.equipment) : null
-        }
+        new UnderVoltageAutomatonBuilder(network, reporter)
     }
 }

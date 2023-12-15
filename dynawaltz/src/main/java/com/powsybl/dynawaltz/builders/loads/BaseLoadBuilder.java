@@ -1,14 +1,13 @@
 package com.powsybl.dynawaltz.builders.loads;
 
 import com.powsybl.commons.reporter.Reporter;
-import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynawaltz.builders.EquipmentConfig;
 import com.powsybl.dynawaltz.builders.EquipmentModelBuilder;
 import com.powsybl.dynawaltz.models.loads.BaseLoad;
 import com.powsybl.dynawaltz.models.loads.BaseLoadControllable;
 import com.powsybl.iidm.network.Network;
 
-public class BaseLoadBuilder extends AbstractLoadModelBuilder<BaseLoadBuilder> {
+public class BaseLoadBuilder extends AbstractLoadModelBuilder<BaseLoadBuilder> implements EquipmentModelBuilder<BaseLoadBuilder> {
 
     public BaseLoadBuilder(Network network, EquipmentConfig equipmentConfig, Reporter reporter) {
         super(network, equipmentConfig, reporter);

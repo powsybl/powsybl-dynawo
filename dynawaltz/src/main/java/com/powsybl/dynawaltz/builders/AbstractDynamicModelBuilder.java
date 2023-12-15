@@ -1,13 +1,12 @@
 package com.powsybl.dynawaltz.builders;
 
 import com.powsybl.commons.reporter.Reporter;
-import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.iidm.network.Network;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public abstract class AbstractDynamicModelBuilder implements ModelBuilder<DynamicModel> {
+public abstract class AbstractDynamicModelBuilder {
 
     protected final Network network;
     protected final Reporter reporter;

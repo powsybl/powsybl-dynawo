@@ -10,6 +10,7 @@ package com.powsybl.dynawaltz.dsl
 import com.powsybl.commons.reporter.Reporter
 import com.powsybl.dynamicsimulation.groovy.GroovyExtension
 import com.powsybl.dynawaltz.DynaWaltzProvider
+import com.powsybl.dynawaltz.builders.ModelBuilder
 import com.powsybl.iidm.network.Network
 
 import java.util.function.Consumer

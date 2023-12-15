@@ -2,8 +2,8 @@ package com.powsybl.dynawaltz.builders.generators;
 
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.builders.EquipmentConfig;
-import com.powsybl.dynawaltz.builders.buses.AbstractBusBuilder;
-import com.powsybl.dynawaltz.models.buses.InfiniteBus;
+import com.powsybl.dynawaltz.models.generators.SynchronizedGenerator;
+import com.powsybl.dynawaltz.models.generators.SynchronizedGeneratorControllable;
 import com.powsybl.iidm.network.Network;
 
 public class SynchronizedGeneratorBuilder extends AbstractGeneratorBuilder<SynchronizedGeneratorBuilder> {
@@ -17,8 +17,15 @@ public class SynchronizedGeneratorBuilder extends AbstractGeneratorBuilder<Synch
     }
 
     @Override
-    public InfiniteBus build() {
-        return isInstantiable() ? new InfiniteBus(dynamicModelId, getEquipment(), parameterSetId, equipmentConfig.getLib()) : null;
+    public SynchronizedGenerator build() {
+        if (isInstantiable()) {
+            if (equipmentConfig.isControllable()) {
+                new SynchronizedGeneratorControllable(dynamicModelId, getEquipment(), parameterSetId, equipmentConfig.getLib());
+            } else {
+                new SynchronizedGenerator(dynamicModelId, getEquipment(), parameterSetId, equipmentConfig.getLib());
+            }
+        }
+        return null;
     }
 
     @Override

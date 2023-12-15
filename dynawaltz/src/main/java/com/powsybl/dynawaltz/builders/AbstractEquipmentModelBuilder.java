@@ -9,7 +9,7 @@ import com.powsybl.iidm.network.Network;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public abstract class AbstractEquipmentModelBuilder<T extends Identifiable, R extends AbstractEquipmentModelBuilder<T, R>> extends AbstractDynamicModelBuilder {
+public abstract class AbstractEquipmentModelBuilder<T extends Identifiable<?>, R extends AbstractEquipmentModelBuilder<T, R>> extends AbstractDynamicModelBuilder implements ModelBuilder<DynamicModel> {
 
     protected String dynamicModelId;
     protected String parameterSetId;
@@ -65,9 +65,6 @@ public abstract class AbstractEquipmentModelBuilder<T extends Identifiable, R ex
     public String getModelId() {
         return dynamicModelId != null ? dynamicModelId : "unknownDynamicId";
     }
-
-    @Override
-    public abstract DynamicModel build();
 
     protected abstract R self();
 }

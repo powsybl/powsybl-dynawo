@@ -11,7 +11,7 @@ import com.powsybl.commons.reporter.Reporter
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.DynaWaltzProvider
-import com.powsybl.dynawaltz.builders.ModelBuilder;
+import com.powsybl.dynawaltz.builders.ModelBuilder
 import com.powsybl.iidm.network.Network
 
 import java.util.function.Consumer

@@ -11,14 +11,9 @@ import com.google.auto.service.AutoService
 import com.powsybl.commons.reporter.Reporter
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
+import com.powsybl.dynawaltz.builders.automatons.CurrentLimitAutomatonTwoLevelBuilder
 import com.powsybl.dynawaltz.dsl.AbstractPureDynamicGroovyExtension
-import com.powsybl.dynawaltz.dsl.DslEquipment
-import com.powsybl.dynawaltz.dsl.Reporters
-import com.powsybl.dynawaltz.models.automatons.CurrentLimitTwoLevelsAutomaton
-import com.powsybl.iidm.network.Branch
 import com.powsybl.iidm.network.Network
-import com.powsybl.iidm.network.TwoSides
-
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
@@ -26,7 +21,7 @@ import com.powsybl.iidm.network.TwoSides
 class CurrentLimitTwoLevelsAutomatonGroovyExtension extends AbstractPureDynamicGroovyExtension<DynamicModel> implements DynamicModelGroovyExtension {
 
     CurrentLimitTwoLevelsAutomatonGroovyExtension() {
-        modelTags = [getLib()]
+        modelTags = [CurrentLimitAutomatonTwoLevelBuilder.LIB]
     }
 
     protected String getLib() {
@@ -35,51 +30,6 @@ class CurrentLimitTwoLevelsAutomatonGroovyExtension extends AbstractPureDynamicG
 
     @Override
     protected CurrentLimitAutomatonTwoLevelBuilder createBuilder(Network network, Reporter reporter) {
-        new CurrentLimitAutomatonTwoLevelBuilder(network, getLib(), reporter)
-    }
-
-    static class CurrentLimitAutomatonTwoLevelBuilder extends CurrentLimitAutomatonGroovyExtension.CurrentLimitAutomatonBuilder {
-
-        protected final DslEquipment<Branch> iMeasurement2
-        protected TwoSides iMeasurement2Side
-
-        CurrentLimitAutomatonTwoLevelBuilder(Network network, String lib, Reporter reporter) {
-            super(network, lib, reporter)
-            iMeasurement2 = new DslEquipment<>("Quadripole", "iMeasurement2")
-        }
-
-        void iMeasurement1(String staticId) {
-            iMeasurement(staticId)
-        }
-
-        void iMeasurement1Side(TwoSides side) {
-            iMeasurementSide(side)
-        }
-
-        void iMeasurement2(String staticId) {
-            iMeasurement2.addEquipment(staticId, network::getBranch)
-        }
-
-        void iMeasurement2Side(TwoSides side) {
-            this.iMeasurement2Side = side
-        }
-
-        @Override
-        void checkData() {
-            super.checkData()
-            isInstantiable &= iMeasurement2.checkEquipmentData(reporter)
-            if (!iMeasurement2Side) {
-                Reporters.reportFieldNotSet(reporter, "iMeasurement2Side")
-                isInstantiable = false
-            }
-        }
-
-        @Override
-        CurrentLimitTwoLevelsAutomaton build() {
-            isInstantiable() ? new CurrentLimitTwoLevelsAutomaton(dynamicModelId, parameterSetId,
-                    iMeasurement.equipment, iMeasurementSide, iMeasurement2.equipment, iMeasurement2Side,
-                    controlledEquipment.equipment, lib)
-                    : null
-        }
+        new CurrentLimitAutomatonTwoLevelBuilder(network, reporter)
     }
 }
