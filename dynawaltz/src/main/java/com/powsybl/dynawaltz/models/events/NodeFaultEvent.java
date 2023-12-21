@@ -30,15 +30,10 @@ public class NodeFaultEvent extends AbstractEvent {
     private final double xPu;
 
     public NodeFaultEvent(Bus equipment, double startTime, double faultTime, double rPu, double xPu) {
-        super(equipment, startTime, EVENT_PREFIX);
+        super(equipment, startTime, EVENT_PREFIX, "NodeFault");
         this.faultTime = faultTime;
         this.rPu = rPu;
         this.xPu = xPu;
-    }
-
-    @Override
-    public String getLib() {
-        return "NodeFault";
     }
 
     @Override

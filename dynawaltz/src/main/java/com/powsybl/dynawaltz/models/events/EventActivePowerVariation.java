@@ -37,12 +37,12 @@ public class EventActivePowerVariation extends AbstractEvent implements ContextD
     private final ImmutableLateInit<Boolean> equipmentHasDynamicModel = new ImmutableLateInit<>();
 
     public EventActivePowerVariation(Load equipment, double startTime, double deltaP) {
-        super(equipment, startTime, EVENT_PREFIX);
+        super(equipment, startTime, EVENT_PREFIX, DYNAMIC_MODEL_LIB);
         this.deltaP = deltaP;
     }
 
     public EventActivePowerVariation(Generator equipment, double startTime, double deltaP) {
-        super(equipment, startTime, EVENT_PREFIX);
+        super(equipment, startTime, EVENT_PREFIX, DYNAMIC_MODEL_LIB);
         this.deltaP = deltaP;
     }
 

@@ -27,7 +27,7 @@ class UnderVoltageAutomatonXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void addDynamicModels() {
-        dynamicModels.add(new UnderVoltageAutomaton("BBM_under_voltage", "uv", network.getGenerator("GEN")));
+        dynamicModels.add(new UnderVoltageAutomaton("BBM_under_voltage", "uv", network.getGenerator("GEN"), "UnderVoltageAutomaton"));
     }
 
     @Test

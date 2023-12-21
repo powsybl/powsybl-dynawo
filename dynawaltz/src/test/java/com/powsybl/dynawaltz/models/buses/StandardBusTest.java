@@ -38,7 +38,7 @@ class StandardBusTest {
         List<BlackBoxModel> dynamicModels = new ArrayList<>();
         network.getBusBreakerView().getBuses().forEach(b -> {
             if (b.getId().equals("NHV1")) {
-                dynamicModels.add(new StandardBus("BBM_" + b.getId(), b, "SB"));
+                dynamicModels.add(new StandardBus("BBM_" + b.getId(), b, "SB", "Bus"));
             }
         });
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();

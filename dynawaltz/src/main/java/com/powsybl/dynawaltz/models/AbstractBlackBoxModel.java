@@ -24,12 +24,19 @@ import java.util.function.Consumer;
  */
 public abstract class AbstractBlackBoxModel implements BlackBoxModel {
 
+    private final String lib;
     private final String dynamicModelId;
     private String parameterSetId;
 
-    protected AbstractBlackBoxModel(String dynamicModelId, String parameterSetId) {
+    protected AbstractBlackBoxModel(String dynamicModelId, String parameterSetId, String lib) {
         this.dynamicModelId = Objects.requireNonNull(dynamicModelId);
         this.parameterSetId = Objects.requireNonNull(parameterSetId);
+        this.lib = Objects.requireNonNull(lib);
+    }
+
+    @Override
+    public String getLib() {
+        return lib;
     }
 
     @Override

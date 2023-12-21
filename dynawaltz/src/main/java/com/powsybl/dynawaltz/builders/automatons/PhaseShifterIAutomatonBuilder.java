@@ -8,6 +8,7 @@
 package com.powsybl.dynawaltz.builders.automatons;
 
 import com.powsybl.commons.reporter.Reporter;
+import com.powsybl.dynawaltz.builders.ModelConfig;
 import com.powsybl.dynawaltz.models.automatons.phaseshifters.PhaseShifterIAutomaton;
 import com.powsybl.iidm.network.Network;
 
@@ -16,15 +17,13 @@ import com.powsybl.iidm.network.Network;
  */
 public class PhaseShifterIAutomatonBuilder extends AbstractPhaseShifterModelBuilder<PhaseShifterIAutomatonBuilder> {
 
-    public static final String LIB = "PhaseShifterI";
-
-    public PhaseShifterIAutomatonBuilder(Network network, Reporter reporter) {
-        super(network, LIB, reporter);
+    public PhaseShifterIAutomatonBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
+        super(network, modelConfig, reporter);
     }
 
     @Override
     public PhaseShifterIAutomaton build() {
-        return isInstantiable() ? new PhaseShifterIAutomaton(dynamicModelId, dslTransformer.getEquipment(), parameterSetId) : null;
+        return isInstantiable() ? new PhaseShifterIAutomaton(dynamicModelId, dslTransformer.getEquipment(), parameterSetId, getLib()) : null;
     }
 
     @Override

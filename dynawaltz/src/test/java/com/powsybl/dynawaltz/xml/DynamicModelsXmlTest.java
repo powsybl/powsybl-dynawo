@@ -48,7 +48,7 @@ class DynamicModelsXmlTest extends DynaWaltzTestUtil {
         dynamicModels.clear();
         network.getGeneratorStream().forEach(gen -> {
             if (gen.getId().equals("GEN6")) {
-                dynamicModels.add(new GeneratorFictitious("BBM_" + gen.getId(), gen, "GF"));
+                dynamicModels.add(new GeneratorFictitious("BBM_" + gen.getId(), gen, "GF", "GeneratorFictitious"));
             }
         });
 

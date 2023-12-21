@@ -8,7 +8,7 @@
 package com.powsybl.dynawaltz.builders.generators;
 
 import com.powsybl.commons.reporter.Reporter;
-import com.powsybl.dynawaltz.builders.EquipmentConfig;
+import com.powsybl.dynawaltz.builders.ModelConfig;
 import com.powsybl.dynawaltz.models.generators.GeneratorFictitious;
 import com.powsybl.iidm.network.Network;
 
@@ -19,19 +19,14 @@ public class GeneratorFictitiousBuilder extends AbstractGeneratorBuilder<Generat
 
     //TODO voir ou mettre la lib en static (utilisé dans le groovy extension; le builder et la classe finale) -> a mettre dnas la classe ?
     // ou garder dans les builder avec la modif des constructeurs derrière et passer tous les constructeur en protected
-    public static final String LIB = "GeneratorFictitious";
 
-    public GeneratorFictitiousBuilder(Network network, Reporter reporter) {
-        super(network, new EquipmentConfig(LIB), reporter);
-    }
-
-    public GeneratorFictitiousBuilder(Network network) {
-        super(network, new EquipmentConfig(LIB));
+    public GeneratorFictitiousBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
+        super(network, modelConfig, reporter);
     }
 
     @Override
     public GeneratorFictitious build() {
-        return isInstantiable() ? new GeneratorFictitious(dynamicModelId, getEquipment(), parameterSetId) : null;
+        return isInstantiable() ? new GeneratorFictitious(dynamicModelId, getEquipment(), parameterSetId, modelConfig.getLib()) : null;
     }
 
     @Override

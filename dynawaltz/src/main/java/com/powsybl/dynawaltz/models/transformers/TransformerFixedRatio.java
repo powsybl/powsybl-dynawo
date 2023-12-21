@@ -24,7 +24,7 @@ import static com.powsybl.dynawaltz.models.TransformerSide.NONE;
  */
 public class TransformerFixedRatio extends AbstractEquipmentBlackBoxModel<TwoWindingsTransformer> implements TransformerModel, TapChangerModel {
 
-     public TransformerFixedRatio(String dynamicModelId, TwoWindingsTransformer transformer, String parameterSetId, String lib) {
+    public TransformerFixedRatio(String dynamicModelId, TwoWindingsTransformer transformer, String parameterSetId, String lib) {
         super(dynamicModelId, parameterSetId, transformer, lib);
     }
 

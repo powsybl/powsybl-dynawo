@@ -28,18 +28,13 @@ public class EventQuadripoleDisconnection extends AbstractEvent {
     private final boolean disconnectExtremity;
 
     public EventQuadripoleDisconnection(Branch<?> equipment, double startTime, boolean disconnectOrigin, boolean disconnectExtremity) {
-        super(equipment, startTime, EVENT_PREFIX);
+        super(equipment, startTime, EVENT_PREFIX, "EventQuadripoleDisconnection");
         this.disconnectOrigin = disconnectOrigin;
         this.disconnectExtremity = disconnectExtremity;
     }
 
     public EventQuadripoleDisconnection(Branch<?> equipment, double startTime) {
         this(equipment, startTime, true, true);
-    }
-
-    @Override
-    public String getLib() {
-        return "EventQuadripoleDisconnection";
     }
 
     private List<VarConnection> getVarConnectionsWith(QuadripoleModel connected) {

@@ -9,6 +9,7 @@ package com.powsybl.dynawaltz.builders.automatons;
 
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.builders.DslEquipment;
+import com.powsybl.dynawaltz.builders.ModelConfig;
 import com.powsybl.dynawaltz.builders.Reporters;
 import com.powsybl.dynawaltz.models.automatons.CurrentLimitTwoLevelsAutomaton;
 import com.powsybl.iidm.network.Branch;
@@ -20,13 +21,11 @@ import com.powsybl.iidm.network.TwoSides;
  */
 public class CurrentLimitAutomatonTwoLevelBuilder extends AbstractCurrentLimitAutomatonBuilder<CurrentLimitAutomatonTwoLevelBuilder> {
 
-    public static final String LIB = "CurrentLimitAutomatonTwoLevels";
-
     protected final DslEquipment<Branch<?>> iMeasurement2;
     protected TwoSides iMeasurement2Side;
 
-    public CurrentLimitAutomatonTwoLevelBuilder(Network network, Reporter reporter) {
-        super(network, LIB, reporter, new DslEquipment<>("Quadripole", "iMeasurement1"),
+    public CurrentLimitAutomatonTwoLevelBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
+        super(network, modelConfig, reporter, new DslEquipment<>("Quadripole", "iMeasurement1"),
                 new DslEquipment<>("Quadripole", "controlledQuadripole1"));
         iMeasurement2 = new DslEquipment<>("Quadripole", "iMeasurement2");
     }
@@ -65,7 +64,7 @@ public class CurrentLimitAutomatonTwoLevelBuilder extends AbstractCurrentLimitAu
     public CurrentLimitTwoLevelsAutomaton build() {
         return isInstantiable() ? new CurrentLimitTwoLevelsAutomaton(dynamicModelId, parameterSetId,
                 iMeasurement.getEquipment(), iMeasurementSide, iMeasurement2.getEquipment(), iMeasurement2Side,
-                controlledEquipment.getEquipment(), lib)
+                controlledEquipment.getEquipment(), getLib())
                 : null;
     }
 

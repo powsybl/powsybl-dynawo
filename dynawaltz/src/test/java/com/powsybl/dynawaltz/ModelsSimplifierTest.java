@@ -44,7 +44,7 @@ class ModelsSimplifierTest {
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynaWaltzParameters dynawoParameters = DynaWaltzParameters.load().setUseModelSimplifiers(true);
         List<BlackBoxModel> dynamicModels = List.of(
-                new GeneratorFictitious("BBM_GEN", network.getGenerator("GEN"), "GPV"),
+                new GeneratorFictitious("BBM_GEN", network.getGenerator("GEN"), "GPV", "GeneratorFictitious"),
                 new BaseLoad("BBM_LOAD", network.getLoad("LOAD"), "LOAD", "LoadAlphaBeta"),
                 new TransformerFixedRatio("BBM_TRA", network.getTwoWindingsTransformer("NGEN_NHV1"), "TR", "TransformerFixedRatio"));
         DynaWaltzContext context = new DynaWaltzContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, Collections.emptyList(), Collections.emptyList(), parameters, dynawoParameters);
@@ -67,7 +67,7 @@ class ModelsSimplifierTest {
         public Stream<BlackBoxModel> simplifyModels(Stream<BlackBoxModel> models, DynaWaltzParameters dynaWaltzParameters, Reporter reporter) {
             return models.map(m -> {
                 if ("BBM_GEN".equalsIgnoreCase(m.getDynamicModelId()) && m instanceof AbstractGenerator gen) {
-                    return new GeneratorFictitious("newModel", gen.getEquipment(), "G");
+                    return new GeneratorFictitious("newModel", gen.getEquipment(), "G", "GeneratorFictitious");
                 }
                 return m;
             });

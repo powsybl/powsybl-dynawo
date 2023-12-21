@@ -14,34 +14,42 @@ import java.util.List;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class EquipmentConfig {
-    //TODO a renommer on est plus sur une config dynamic model que d'equipment (peut être un automate)
+public class ModelConfig {
 
     private static final String CONTROLLABLE_PROPERTY = "CONTROLLABLE";
     private static final String DANGLING_PROPERTY = "DANGLING";
     private static final String SYNCHRONIZED_PROPERTY = "SYNCHRONIZED";
     private static final String TRANSFORMER_PROPERTY = "TRANSFORMER";
     private static final String AUXILIARY_PROPERTY = "AUXILIARY";
-    private final String lib;
-    private final String internalModelPrefix;
-    private final List<String> properties;
+    private String lib;
+    private String internalModelPrefix = "";
+    private List<String> properties = new ArrayList<>();
 
-    public EquipmentConfig(String lib, String internalModelPrefix, String... properties) {
+    public ModelConfig(String lib, String internalModelPrefix, List<String> properties) {
+        this.lib = lib;
+        this.internalModelPrefix = internalModelPrefix;
+        this.properties = properties.stream().map(String::toUpperCase).toList();
+    }
+
+    public ModelConfig(String lib, String internalModelPrefix, String... properties) {
         this.lib = lib;
         this.internalModelPrefix = internalModelPrefix;
         this.properties = Arrays.stream(properties).map(String::toUpperCase).toList();
     }
 
-    public EquipmentConfig(String lib, String internalModelPrefix) {
+    public ModelConfig(String lib, String internalModelPrefix) {
         this.lib = lib;
         this.internalModelPrefix = internalModelPrefix;
         this.properties = new ArrayList<>();
     }
 
-    public EquipmentConfig(String lib) {
+    public ModelConfig(String lib) {
         this.lib = lib;
         this.internalModelPrefix = "";
         this.properties = new ArrayList<>();
+    }
+
+    public ModelConfig() {
     }
 
     public boolean isControllable() {
@@ -74,5 +82,17 @@ public class EquipmentConfig {
 
     public String getInternalModelPrefix() {
         return internalModelPrefix;
+    }
+
+    public void setLib(String lib) {
+        this.lib = lib;
+    }
+
+    public void setInternalModelPrefix(String internalModelPrefix) {
+        this.internalModelPrefix = internalModelPrefix;
+    }
+
+    public void setProperties(List<String> properties) {
+        this.properties = properties.stream().map(String::toUpperCase).toList();
     }
 }

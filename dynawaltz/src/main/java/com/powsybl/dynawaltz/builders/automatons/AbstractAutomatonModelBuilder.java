@@ -11,6 +11,7 @@ import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynawaltz.builders.AbstractDynamicModelBuilder;
 import com.powsybl.dynawaltz.builders.ModelBuilder;
+import com.powsybl.dynawaltz.builders.ModelConfig;
 import com.powsybl.dynawaltz.builders.Reporters;
 import com.powsybl.iidm.network.Network;
 
@@ -21,11 +22,11 @@ abstract class AbstractAutomatonModelBuilder<T extends AbstractAutomatonModelBui
 
     protected String dynamicModelId;
     protected String parameterSetId;
-    protected final String lib;
+    protected final ModelConfig modelConfig;
 
-    public AbstractAutomatonModelBuilder(Network network, String lib, Reporter reporter) {
+    public AbstractAutomatonModelBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
         super(network, reporter);
-        this.lib = lib;
+        this.modelConfig = modelConfig;
     }
 
     public T dynamicModelId(String dynamicModelId) {
@@ -44,17 +45,19 @@ abstract class AbstractAutomatonModelBuilder<T extends AbstractAutomatonModelBui
             Reporters.reportFieldNotSet(reporter, "dynamicModelId");
             isInstantiable = false;
         }
-
         if (parameterSetId == null) {
             Reporters.reportFieldNotSet(reporter, "dynamicModelId");
             isInstantiable = false;
         }
-
     }
 
     @Override
     public String getModelId() {
         return dynamicModelId != null ? dynamicModelId : "unknownDynamicId";
+    }
+
+    protected String getLib() {
+        return modelConfig.getLib();
     }
 
     @Override

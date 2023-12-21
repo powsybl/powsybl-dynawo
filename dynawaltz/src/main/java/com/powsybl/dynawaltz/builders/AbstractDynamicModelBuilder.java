@@ -24,11 +24,6 @@ public abstract class AbstractDynamicModelBuilder {
         this.reporter = reporter;
     }
 
-    protected AbstractDynamicModelBuilder(Network network) {
-        this.network = network;
-        this.reporter = Reporter.NO_OP;
-    }
-
     protected abstract void checkData();
 
     protected final boolean isInstantiable() {

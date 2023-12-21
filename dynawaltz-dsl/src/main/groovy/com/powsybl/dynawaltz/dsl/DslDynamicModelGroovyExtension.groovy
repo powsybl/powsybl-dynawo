@@ -7,27 +7,30 @@
  */
 package com.powsybl.dynawaltz.dsl
 
+import com.google.auto.service.AutoService
 import com.powsybl.commons.reporter.Reporter
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.DynaWaltzProvider
 import com.powsybl.dynawaltz.builders.DynamicModelBuilderUtils
-import com.powsybl.dynawaltz.builders.EquipmentConfig
 import com.powsybl.dynawaltz.builders.ModelBuilder
+import com.powsybl.dynawaltz.builders.ModelCategory
 import com.powsybl.iidm.network.Network
-import org.apache.commons.lang3.tuple.Pair
 
 import java.util.function.Consumer
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-class EquipmentGroovyExtension implements DynamicModelGroovyExtension {
+@AutoService(DynamicModelGroovyExtension.class)
+class DslDynamicModelGroovyExtension implements DynamicModelGroovyExtension {
 
-    protected final List<Pair<DynamicModelBuilderUtils.ModelBuilderConstructorFull, Collection<EquipmentConfig>>> builderConstructors
+    private final List<ModelCategory> builderConstructors
 
-    EquipmentGroovyExtension() {
-        builderConstructors = DynamicModelBuilderUtils.getAllBuildersConstructors()
+    DslDynamicModelGroovyExtension() {
+        builderConstructors = DynamicModelBuilderUtils.modelCategories
     }
+
+    //TODO voir utilité des reporter cote groovy
 
     @Override
     String getName() {
@@ -36,17 +39,17 @@ class EquipmentGroovyExtension implements DynamicModelGroovyExtension {
 
     @Override
     List<String> getModelNames() {
-        builderConstructors.stream().flatMap { it -> it.right.lib}.toList() as List<String>
+        builderConstructors.stream().flatMap { it -> it.modelConfigs.lib}.toList() as List<String>
     }
 
     @Override
     void load(Binding binding, Consumer<DynamicModel> consumer, Reporter reporter) {
         builderConstructors.forEach {
-            it.right.forEach {eq ->
-                binding.setVariable(eq.lib, { Closure<Void> closure ->
+            it.modelConfigs.forEach {conf ->
+                binding.setVariable(conf.lib, { Closure<Void> closure ->
                     def cloned = closure.clone()
-                    ModelBuilder<DynamicModel> builder = it.left
-                            .createBuilder(binding.getVariable("network") as Network, eq, Reporters.createModelBuilderReporter(reporter, eq.lib))
+                    ModelBuilder<DynamicModel> builder = it.builderConstructor
+                            .createBuilder(binding.getVariable("network") as Network, conf, Reporters.createModelBuilderReporter(reporter, conf.lib))
                     cloned.delegate = builder
                     cloned()
                     builder.build()?.tap {

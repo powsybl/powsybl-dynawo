@@ -21,8 +21,8 @@ public abstract class AbstractFrequencySynchronizer extends AbstractPureDynamicB
     private static final String FREQUENCY_SYNCHRONIZER_PARAMETER_SET_ID = "FREQ_SYNC_PAR";
     protected final List<FrequencySynchronizedModel> synchronizedEquipments;
 
-    protected AbstractFrequencySynchronizer(List<FrequencySynchronizedModel> synchronizedEquipments) {
-        super(FREQUENCY_SYNCHRONIZER_ID, FREQUENCY_SYNCHRONIZER_PARAMETER_SET_ID);
+    protected AbstractFrequencySynchronizer(List<FrequencySynchronizedModel> synchronizedEquipments, String lib) {
+        super(FREQUENCY_SYNCHRONIZER_ID, FREQUENCY_SYNCHRONIZER_PARAMETER_SET_ID, lib);
         this.synchronizedEquipments = synchronizedEquipments;
     }
 

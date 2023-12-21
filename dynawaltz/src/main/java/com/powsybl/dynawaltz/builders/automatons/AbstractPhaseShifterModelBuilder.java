@@ -9,6 +9,7 @@ package com.powsybl.dynawaltz.builders.automatons;
 
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.builders.DslEquipment;
+import com.powsybl.dynawaltz.builders.ModelConfig;
 import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.TwoWindingsTransformer;
@@ -20,8 +21,8 @@ abstract class AbstractPhaseShifterModelBuilder<T extends AbstractAutomatonModel
 
     protected final DslEquipment<TwoWindingsTransformer> dslTransformer;
 
-    AbstractPhaseShifterModelBuilder(Network network, String lib, Reporter reporter) {
-        super(network, lib, reporter);
+    AbstractPhaseShifterModelBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
+        super(network, modelConfig, reporter);
         dslTransformer = new DslEquipment<>(IdentifiableType.TWO_WINDINGS_TRANSFORMER, "transformer");
     }
 

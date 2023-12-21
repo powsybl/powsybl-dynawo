@@ -10,13 +10,15 @@ package com.powsybl.dynawaltz.builders;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynamicsimulation.DynamicModel;
+import com.powsybl.dynamicsimulation.EventModel;
+import com.powsybl.dynawaltz.builders.automatons.*;
 import com.powsybl.dynawaltz.builders.buses.InfiniteBusBuilder;
-import com.powsybl.dynawaltz.builders.generators.GridFormingConverterBuilder;
-import com.powsybl.dynawaltz.builders.generators.SynchronizedGeneratorBuilder;
-import com.powsybl.dynawaltz.builders.generators.SynchronousGeneratorBuilder;
-import com.powsybl.dynawaltz.builders.generators.WeccBuilder;
+import com.powsybl.dynawaltz.builders.buses.StandardBusBuilder;
+import com.powsybl.dynawaltz.builders.events.*;
+import com.powsybl.dynawaltz.builders.generators.*;
 import com.powsybl.dynawaltz.builders.hvdcs.HvdcPBuilder;
 import com.powsybl.dynawaltz.builders.hvdcs.HvdcVscBuilder;
+import com.powsybl.dynawaltz.builders.lines.LineBuilder;
 import com.powsybl.dynawaltz.builders.loads.*;
 import com.powsybl.dynawaltz.builders.svarcs.BaseStaticVarCompensatorBuilder;
 import com.powsybl.dynawaltz.builders.transformers.TransformerFixedRatioBuilder;
@@ -32,31 +34,47 @@ import java.util.function.BiFunction;
  */
 public final class DynamicModelBuilderUtils {
 
-    private static final Map<IdentifiableType, BiFunction<Network, EquipmentConfig, EquipmentModelBuilder<? extends EquipmentModelBuilder<? extends EquipmentModelBuilder<?>>>>> BUILDERS = Map.of(IdentifiableType.LOAD, BaseLoadBuilder::new);
+    private static final Map<IdentifiableType, BiFunction<Network, ModelConfig, EquipmentModelBuilder<? extends EquipmentModelBuilder<? extends EquipmentModelBuilder<?>>>>> BUILDERS = Map.of(IdentifiableType.LOAD, BaseLoadBuilder::new);
 
     //TODO charger a partir d'un slurper java utilisable par groovy
-    private static final Map<String, EquipmentConfig> SVARCS = Map.of(
-            "StaticVarCompensator", new EquipmentConfig("StaticVarCompensator", "Controllable"),
-            "StaticVarCompensatorPV", new EquipmentConfig("StaticVarCompensatorPV"));
-    private static final Map<String, EquipmentConfig> LOADS = Map.of(
-            "LoadAlphaBeta", new EquipmentConfig("LoadAlphaBeta", "Controllable"),
-            "LoadPQ", new EquipmentConfig("LoadPQ"));
+    private static final Map<String, ModelConfig> SVARCS = Map.of(
+            "StaticVarCompensator", new ModelConfig("StaticVarCompensator", "Controllable"),
+            "StaticVarCompensatorPV", new ModelConfig("StaticVarCompensatorPV"));
+    private static final Map<String, ModelConfig> LOADS = Map.of(
+            "LoadAlphaBeta", new ModelConfig("LoadAlphaBeta", "Controllable"),
+            "LoadPQ", new ModelConfig("LoadPQ"));
 
-    private static final Map<String, Map<String, EquipmentConfig>> LIBS = Map.of("loads", LOADS,
+    private static final Map<String, Map<String, ModelConfig>> LIBS = Map.of("loads", LOADS,
             "staticVarCompensators", SVARCS);
 
     //TODO mettre les catégories dans les builders directement ?
     public enum Categories {
+        // EQUIPMENTS
         BASE_LOADS("baseLoads", BaseLoadBuilder::new),
+        LOADS_ONE_TRANSFORMER("loadsOneTransformer", LoadOneTransformerBuilder::new),
+        LOADS_ONE_TRANSFORMER_TAP_CHANGER("loadsOneTransformerTapChanger", LoadOneTransformerTapChangerBuilder::new),
+        LOADS_TWO_TRANSFORMERS("loadsTwoTransformers", LoadTwoTransformersBuilder::new),
+        LOADS_TWO_TRANSFORMERS_TAP_CHANGERS("loadsTwoTransformersTapChanger", LoadTwoTransformersTapChangersBuilder::new),
+        BASE_LINES("baseLines", LineBuilder::new),
         BASE_SVARCS("staticVarCompensators", BaseStaticVarCompensatorBuilder::new),
         HVDC_P("hvdcP", HvdcPBuilder::new),
         HVDC_VSC("hvdcVsc", HvdcVscBuilder::new),
+        BASE_BUSES("baseBuses", StandardBusBuilder::new),
         INFINITE_BUSES("infiniteBuses", InfiniteBusBuilder::new),
+        BASE_GENERATORS("baseGenerators", GeneratorFictitiousBuilder::new),
         SYNCHRONIZED_GENERATORS("synchronizedGenerators", SynchronizedGeneratorBuilder::new),
         SYNCHRONOUS_GENERATORS("synchronousGenerators", SynchronousGeneratorBuilder::new),
         WECC_GEN("wecc", WeccBuilder::new),
         GRID_FORMING_CONVERTER("gridFormingConverter", GridFormingConverterBuilder::new),
-        TRANSFORMERS("transformers", TransformerFixedRatioBuilder::new);
+        TRANSFORMERS("transformers", TransformerFixedRatioBuilder::new),
+        // AUTOMATONS
+        CLAS("clas", CurrentLimitAutomatonBuilder::new),
+        CLAS_TWO_LEVELS("clasTwoLevels", CurrentLimitAutomatonTwoLevelBuilder::new),
+        PHASE_SHIFTERS_I("phaseShiftersI", PhaseShifterIAutomatonBuilder::new),
+        PHASE_SHIFTERS_P("phaseShiftersP", PhaseShifterPAutomatonBuilder::new),
+        TAP_CHANGERS("tapChangers", TapChangerAutomatonBuilder::new),
+        TCBS("tcbs", TapChangerBlockingAutomatonBuilder::new),
+        UNDER_VOLTAGES("underVoltages", UnderVoltageAutomatonBuilder::new);
 
         private final String categoryName;
 
@@ -83,7 +101,12 @@ public final class DynamicModelBuilderUtils {
 
     @FunctionalInterface
     public interface ModelBuilderConstructorFull {
-        ModelBuilder<DynamicModel> createBuilder(Network network, EquipmentConfig equipmentConfig, Reporter reporter);
+        ModelBuilder<DynamicModel> createBuilder(Network network, ModelConfig modelConfig, Reporter reporter);
+    }
+
+    @FunctionalInterface
+    public interface EventModelBuilderConstructor {
+        ModelBuilder<EventModel> createBuilder(Network network, Reporter reporter);
     }
 
     private DynamicModelBuilderUtils() {
@@ -91,13 +114,13 @@ public final class DynamicModelBuilderUtils {
 
     public static EquipmentModelBuilder<? extends EquipmentModelBuilder<?>> getBuilder(IdentifiableType type, Network network, String lib) {
         if (BUILDERS.containsKey(type)) {
-            EquipmentConfig equipmentConfig = new EquipmentConfig(lib);
-            return BUILDERS.get(type).apply(network, equipmentConfig);
+            ModelConfig modelConfig = new ModelConfig(lib);
+            return BUILDERS.get(type).apply(network, modelConfig);
         }
         return null;
     }
 
-    public static Collection<EquipmentConfig> getEquipmentConfigList(Categories category) {
+    public static Collection<ModelConfig> getEquipmentConfigList(Categories category) {
         return LIBS.get(category.getCategoryName()).values();
     }
 
@@ -118,18 +141,6 @@ public final class DynamicModelBuilderUtils {
         return new BaseLoadBuilder(network, getEquipmentConfig(Categories.BASE_LOADS, lib));
     }
 
-    public static LoadOneTransformerBuilder getLoadOneTransformerBuilder(Network network) {
-        return new LoadOneTransformerBuilder(network);
-    }
-
-    public static LoadOneTransformerTapChangerBuilder getLoadOneTransformerTapChangerBuilder(Network network) {
-        return new LoadOneTransformerTapChangerBuilder(network);
-    }
-
-    public static LoadTwoTransformersBuilder getLoadTwoTransformersBuilder(Network network) {
-        return new LoadTwoTransformersBuilder(network);
-    }
-
     //TODO charger lib des models et en dur :D -> passer a full json pour plus simplicité -> sauvegarde des info à un seul endroit
     // -> sauvardger la lib dans le builder ? -> on garde un seul emlplamcent de donnée par contre il faut creer un builder pour recup la donnée
     // champ public static dans le builder et recup par les extension groovy -> disponible pour python si besoin
@@ -137,10 +148,6 @@ public final class DynamicModelBuilderUtils {
     // gerer cas des bibli privé plus tard
     public static Set<String> getLoadTwoTransformersTapChangersLibs() {
         return LOADS.keySet();
-    }
-
-    public static LoadTwoTransformersTapChangersBuilder getLoadTwoTransformersTapChangersBuilder(Network network) {
-        return new LoadTwoTransformersTapChangersBuilder(network);
     }
 
     public static BaseLoadBuilder getBaseSvarcBuilder(Network network, String lib) {
@@ -151,20 +158,30 @@ public final class DynamicModelBuilderUtils {
         return new TransformerFixedRatioBuilder(network, getEquipmentConfig(Categories.TRANSFORMERS, lib));
     }
 
-    public static Pair<ModelBuilderConstructorFull, Collection<EquipmentConfig>> getBuildersConstructors(Categories category) {
+    public static Pair<ModelBuilderConstructorFull, Collection<ModelConfig>> getBuildersConstructors(Categories category) {
         return Pair.of(category.getConstructor(), getEquipmentConfigList(category));
     }
 
-    public static List<Pair<ModelBuilderConstructorFull, Collection<EquipmentConfig>>> getAllBuildersConstructors() {
+    public static List<Pair<ModelBuilderConstructorFull, Collection<ModelConfig>>> getAllBuildersConstructors() {
         return Arrays.stream(Categories.values()).map(c -> Pair.of(c.getConstructor(), getEquipmentConfigList(c))).toList();
     }
 
-    private static EquipmentConfig getEquipmentConfig(Categories category, String lib) {
-        EquipmentConfig equipmentConfig = LIBS.get(category.getCategoryName()).getOrDefault(lib, null);
-        if (equipmentConfig == null) {
+    public static List<ModelCategory> getModelCategories() {
+        return ModelConfigLoader.createCategories();
+    }
+
+    public static List<EventModelCategory> getEventModelCategories() {
+        return List.of(new EventModelCategory(EventActivePowerVariationBuilder.TAG, EventActivePowerVariationBuilder::new),
+                new EventModelCategory(EventDisconnectionBuilder.TAG, EventDisconnectionBuilder::new),
+                new EventModelCategory(NodeFaultEventBuilder.TAG, NodeFaultEventBuilder::new));
+    }
+
+    private static ModelConfig getEquipmentConfig(Categories category, String lib) {
+        ModelConfig modelConfig = LIBS.get(category.getCategoryName()).getOrDefault(lib, null);
+        if (modelConfig == null) {
             throw new PowsyblException("Dynamic model " + lib + "not found in category " + category.getCategoryName());
         }
-        return equipmentConfig;
+        return modelConfig;
     }
 
     private static Set<String> getLibs(Categories category) {

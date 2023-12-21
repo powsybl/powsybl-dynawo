@@ -90,7 +90,6 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
         assertTrue(modelClass.isInstance(dynamicModels.get(0)));
         assertEquals(terminalVarName, modelClass.cast(dynamicModels.get(0)).getTerminalVarName());
         checkReporter(report);
-
     }
 
     void assertEquipmentBlackBoxModel(EquipmentBlackBoxModel bbm, String dynamicId, String staticId, String parameterId, String lib) {
@@ -196,7 +195,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                         """
                         + DSL tests
                           + Groovy Dynamic Models Supplier
-                            + DSL model builder for UnderVoltage
+                            + DSL model builder for UnderVoltageAutomaton
                                'generator' field value 'NGEN' not found for equipment type(s) GENERATOR
                                Model UV_GEN cannot be instantiated
                         """),
@@ -255,7 +254,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                             + DSL model builder for TapChangerBlockingAutomaton
                                'uMeasurements' field value 'LOAD' not found for equipment type(s) BUS/BUSBAR_SECTION
                                'uMeasurements' field value 'Wrong_ID' not found for equipment type(s) BUS/BUSBAR_SECTION
-                               'uMeasurements' field is not set
+                               'uMeasurements' list is empty
                                Model ZAB cannot be instantiated
                         """),
                 Arguments.of("/warnings/tapChangerMissingBusList.groovy", EurostagTutorialExample1Factory.create(),
@@ -266,7 +265,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                                'uMeasurements' field value 'LOAD' not found for equipment type(s) BUS/BUSBAR_SECTION
                                'uMeasurements' field value 'Wrong_ID' not found for equipment type(s) BUS/BUSBAR_SECTION
                                'uMeasurements' field value 'NGEN_NHV1' not found for equipment type(s) BUS/BUSBAR_SECTION
-                               'uMeasurements' field is not set
+                               'uMeasurements' list is empty
                                Model ZAB cannot be instantiated
                         """),
                 Arguments.of("/warnings/tapChangerCompatible.groovy", EurostagTutorialExample1Factory.create(),

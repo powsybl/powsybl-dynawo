@@ -8,7 +8,7 @@
 package com.powsybl.dynawaltz.builders.generators;
 
 import com.powsybl.commons.reporter.Reporter;
-import com.powsybl.dynawaltz.builders.EquipmentConfig;
+import com.powsybl.dynawaltz.builders.ModelConfig;
 import com.powsybl.dynawaltz.models.generators.SynchronizedWeccGen;
 import com.powsybl.dynawaltz.models.generators.WeccGen;
 import com.powsybl.iidm.network.Network;
@@ -18,21 +18,21 @@ import com.powsybl.iidm.network.Network;
  */
 public class WeccBuilder extends AbstractGeneratorBuilder<WeccBuilder> {
 
-    public WeccBuilder(Network network, EquipmentConfig equipmentConfig, Reporter reporter) {
-        super(network, equipmentConfig, reporter);
+    public WeccBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
+        super(network, modelConfig, reporter);
     }
 
-    public WeccBuilder(Network network, EquipmentConfig equipmentConfig) {
-        super(network, equipmentConfig);
+    public WeccBuilder(Network network, ModelConfig modelConfig) {
+        super(network, modelConfig);
     }
 
     @Override
     public WeccGen build() {
         if (isInstantiable()) {
-            if (equipmentConfig.isSynchronized()) {
-                new SynchronizedWeccGen(dynamicModelId, getEquipment(), parameterSetId, equipmentConfig.getLib(), equipmentConfig.getInternalModelPrefix());
+            if (modelConfig.isSynchronized()) {
+                return new SynchronizedWeccGen(dynamicModelId, getEquipment(), parameterSetId, modelConfig.getLib(), modelConfig.getInternalModelPrefix());
             } else {
-                new WeccGen(dynamicModelId, getEquipment(), parameterSetId, equipmentConfig.getLib(), equipmentConfig.getInternalModelPrefix());
+                return new WeccGen(dynamicModelId, getEquipment(), parameterSetId, modelConfig.getLib(), modelConfig.getInternalModelPrefix());
             }
         }
         return null;

@@ -8,7 +8,6 @@
 package com.powsybl.dynawaltz.builders;
 
 import com.powsybl.commons.reporter.Reporter;
-import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Network;
@@ -20,17 +19,17 @@ public abstract class AbstractEquipmentModelBuilder<T extends Identifiable<?>, R
 
     protected String dynamicModelId;
     protected String parameterSetId;
-    protected final EquipmentConfig equipmentConfig;
+    protected final ModelConfig modelConfig;
     protected final DslEquipment<T> dslEquipment;
 
-    protected AbstractEquipmentModelBuilder(Network network, EquipmentConfig equipmentConfig, IdentifiableType equipmentType, Reporter reporter) {
+    protected AbstractEquipmentModelBuilder(Network network, ModelConfig modelConfig, IdentifiableType equipmentType, Reporter reporter) {
         super(network, reporter);
-        this.equipmentConfig = equipmentConfig;
+        this.modelConfig = modelConfig;
         this.dslEquipment = new DslEquipment<>(equipmentType);
     }
 
-    protected AbstractEquipmentModelBuilder(Network network, EquipmentConfig equipmentConfig, IdentifiableType equipmentType) {
-        this(network, equipmentConfig, equipmentType, Reporter.NO_OP);
+    protected AbstractEquipmentModelBuilder(Network network, ModelConfig modelConfig, IdentifiableType equipmentType) {
+        this(network, modelConfig, equipmentType, Reporter.NO_OP);
     }
 
     public R staticId(String staticId) {

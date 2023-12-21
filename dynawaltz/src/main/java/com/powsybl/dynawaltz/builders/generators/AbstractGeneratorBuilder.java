@@ -9,7 +9,7 @@ package com.powsybl.dynawaltz.builders.generators;
 
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.builders.AbstractEquipmentModelBuilder;
-import com.powsybl.dynawaltz.builders.EquipmentConfig;
+import com.powsybl.dynawaltz.builders.ModelConfig;
 import com.powsybl.iidm.network.Generator;
 import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Network;
@@ -19,12 +19,12 @@ import com.powsybl.iidm.network.Network;
  */
 public abstract class AbstractGeneratorBuilder<R extends AbstractEquipmentModelBuilder<Generator, R>> extends AbstractEquipmentModelBuilder<Generator, R> {
 
-    protected AbstractGeneratorBuilder(Network network, EquipmentConfig equipmentConfig, Reporter reporter) {
-        super(network, equipmentConfig, IdentifiableType.GENERATOR, reporter);
+    protected AbstractGeneratorBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
+        super(network, modelConfig, IdentifiableType.GENERATOR, reporter);
     }
 
-    protected AbstractGeneratorBuilder(Network network, EquipmentConfig equipmentConfig) {
-        super(network, equipmentConfig, IdentifiableType.GENERATOR);
+    protected AbstractGeneratorBuilder(Network network, ModelConfig modelConfig) {
+        super(network, modelConfig, IdentifiableType.GENERATOR);
     }
 
     @Override

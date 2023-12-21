@@ -1,4 +1,9 @@
 {
+  "baseGenerators": [
+    {
+      "lib": "GeneratorFictitious"
+    }
+  ],
   "synchronousGenerators": [
     {
       "lib": "GeneratorSynchronousFourWindings"
@@ -166,6 +171,11 @@
       ]
     }
   ],
+  "baseBuses": [
+    {
+      "lib": "Bus"
+    }
+  ],
   "infiniteBuses": [
     {
       "lib": "InfiniteBus"
@@ -195,6 +205,31 @@
     },
     {
       "lib": "LoadPQ"
+    }
+  ],
+  "loadsOneTransformer": [
+    {
+      "lib": "LoadOneTransformer"
+    }
+  ],
+  "loadsOneTransformerTapChanger": [
+    {
+      "lib": "LoadOneTransformerTapChanger"
+    }
+  ],
+  "loadsTwoTransformers": [
+    {
+      "lib": "LoadTwoTransformers"
+    }
+  ],
+  "loadsTwoTransformersTapChanger": [
+    {
+      "lib": "LoadTwoTransformersTapChangers"
+    }
+  ],
+  "baseLines": [
+    {
+      "lib": "Line"
     }
   ],
   "staticVarCompensators": [
@@ -287,6 +322,41 @@
       "properties": [
         "Synchronized"
       ]
+    }
+  ],
+  "clas": [
+    {
+      "lib": "CurrentLimitAutomaton"
+    }
+  ],
+  "clasTwoLevels": [
+    {
+      "lib": "CurrentLimitAutomatonTwoLevels"
+    }
+  ],
+  "phaseShiftersI": [
+    {
+      "lib": "PhaseShifterI"
+    }
+  ],
+  "phaseShiftersP": [
+    {
+      "lib": "PhaseShifterP"
+    }
+  ],
+  "tapChangers": [
+    {
+      "lib": "TapChangerAutomaton"
+    }
+  ],
+  "tcbs": [
+    {
+      "lib": "TapChangerBlockingAutomaton"
+    }
+  ],
+  "underVoltages": [
+    {
+      "lib": "UnderVoltageAutomaton"
     }
   ]
 }

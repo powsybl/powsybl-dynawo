@@ -9,7 +9,7 @@ package com.powsybl.dynawaltz.builders.loads;
 
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.builders.AbstractEquipmentModelBuilder;
-import com.powsybl.dynawaltz.builders.EquipmentConfig;
+import com.powsybl.dynawaltz.builders.ModelConfig;
 import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Load;
 import com.powsybl.iidm.network.Network;
@@ -19,12 +19,12 @@ import com.powsybl.iidm.network.Network;
  */
 public abstract class AbstractLoadModelBuilder<R extends AbstractEquipmentModelBuilder<Load, R>> extends AbstractEquipmentModelBuilder<Load, R> {
 
-    protected AbstractLoadModelBuilder(Network network, EquipmentConfig equipmentConfig, Reporter reporter) {
-        super(network, equipmentConfig, IdentifiableType.LOAD, reporter);
+    protected AbstractLoadModelBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
+        super(network, modelConfig, IdentifiableType.LOAD, reporter);
     }
 
-    protected AbstractLoadModelBuilder(Network network, EquipmentConfig equipmentConfig) {
-        super(network, equipmentConfig, IdentifiableType.LOAD);
+    protected AbstractLoadModelBuilder(Network network, ModelConfig modelConfig) {
+        super(network, modelConfig, IdentifiableType.LOAD);
     }
 
     @Override

@@ -8,7 +8,7 @@
 package com.powsybl.dynawaltz.builders.loads;
 
 import com.powsybl.commons.reporter.Reporter;
-import com.powsybl.dynawaltz.builders.EquipmentConfig;
+import com.powsybl.dynawaltz.builders.ModelConfig;
 import com.powsybl.dynawaltz.builders.EquipmentModelBuilder;
 import com.powsybl.dynawaltz.models.loads.BaseLoad;
 import com.powsybl.dynawaltz.models.loads.BaseLoadControllable;
@@ -19,21 +19,21 @@ import com.powsybl.iidm.network.Network;
  */
 public class BaseLoadBuilder extends AbstractLoadModelBuilder<BaseLoadBuilder> implements EquipmentModelBuilder<BaseLoadBuilder> {
 
-    public BaseLoadBuilder(Network network, EquipmentConfig equipmentConfig, Reporter reporter) {
-        super(network, equipmentConfig, reporter);
+    public BaseLoadBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
+        super(network, modelConfig, reporter);
     }
 
-    public BaseLoadBuilder(Network network, EquipmentConfig equipmentConfig) {
-        super(network, equipmentConfig);
+    public BaseLoadBuilder(Network network, ModelConfig modelConfig) {
+        super(network, modelConfig);
     }
 
     @Override
     public BaseLoad build() {
         if (isInstantiable()) {
-            if (equipmentConfig.isControllable()) {
-                return new BaseLoadControllable(dynamicModelId, getEquipment(), parameterSetId, equipmentConfig.getLib());
+            if (modelConfig.isControllable()) {
+                return new BaseLoadControllable(dynamicModelId, getEquipment(), parameterSetId, modelConfig.getLib());
             } else {
-                return new BaseLoad(dynamicModelId, getEquipment(), parameterSetId, equipmentConfig.getLib());
+                return new BaseLoad(dynamicModelId, getEquipment(), parameterSetId, modelConfig.getLib());
             }
         } else {
             return null;

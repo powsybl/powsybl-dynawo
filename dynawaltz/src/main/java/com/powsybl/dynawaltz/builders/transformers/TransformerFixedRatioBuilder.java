@@ -9,7 +9,7 @@ package com.powsybl.dynawaltz.builders.transformers;
 
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.builders.AbstractEquipmentModelBuilder;
-import com.powsybl.dynawaltz.builders.EquipmentConfig;
+import com.powsybl.dynawaltz.builders.ModelConfig;
 import com.powsybl.dynawaltz.models.transformers.TransformerFixedRatio;
 import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Network;
@@ -22,12 +22,12 @@ public class TransformerFixedRatioBuilder extends AbstractEquipmentModelBuilder<
 
     public static final String LIB = "transformers";
 
-    public TransformerFixedRatioBuilder(Network network, EquipmentConfig equipmentConfig, Reporter reporter) {
-        super(network, equipmentConfig, IdentifiableType.TWO_WINDINGS_TRANSFORMER, reporter);
+    public TransformerFixedRatioBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
+        super(network, modelConfig, IdentifiableType.TWO_WINDINGS_TRANSFORMER, reporter);
     }
 
-    public TransformerFixedRatioBuilder(Network network, EquipmentConfig equipmentConfig) {
-        super(network, equipmentConfig, IdentifiableType.TWO_WINDINGS_TRANSFORMER);
+    public TransformerFixedRatioBuilder(Network network, ModelConfig modelConfig) {
+        super(network, modelConfig, IdentifiableType.TWO_WINDINGS_TRANSFORMER);
     }
 
     @Override
@@ -37,7 +37,7 @@ public class TransformerFixedRatioBuilder extends AbstractEquipmentModelBuilder<
 
     @Override
     public TransformerFixedRatio build() {
-        return isInstantiable() ? new TransformerFixedRatio(dynamicModelId, getEquipment(), parameterSetId, equipmentConfig.getLib()) : null;
+        return isInstantiable() ? new TransformerFixedRatio(dynamicModelId, getEquipment(), parameterSetId, modelConfig.getLib()) : null;
     }
 
     @Override

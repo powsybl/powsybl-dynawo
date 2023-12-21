@@ -9,7 +9,7 @@ package com.powsybl.dynawaltz.builders.svarcs;
 
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.builders.AbstractEquipmentModelBuilder;
-import com.powsybl.dynawaltz.builders.EquipmentConfig;
+import com.powsybl.dynawaltz.builders.ModelConfig;
 import com.powsybl.dynawaltz.models.svarcs.BaseStaticVarCompensator;
 import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Network;
@@ -23,12 +23,12 @@ public class BaseStaticVarCompensatorBuilder extends AbstractEquipmentModelBuild
     public static final String LIB = "staticVarCompensators";
 
     //TODO quid des constructeurs avec les EquipmentConfig ?
-    public BaseStaticVarCompensatorBuilder(Network network, EquipmentConfig equipmentConfig, Reporter reporter) {
-        super(network, equipmentConfig, IdentifiableType.STATIC_VAR_COMPENSATOR, reporter);
+    public BaseStaticVarCompensatorBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
+        super(network, modelConfig, IdentifiableType.STATIC_VAR_COMPENSATOR, reporter);
     }
 
-    public BaseStaticVarCompensatorBuilder(Network network, EquipmentConfig equipmentConfig) {
-        super(network, equipmentConfig, IdentifiableType.STATIC_VAR_COMPENSATOR);
+    public BaseStaticVarCompensatorBuilder(Network network, ModelConfig modelConfig) {
+        super(network, modelConfig, IdentifiableType.STATIC_VAR_COMPENSATOR);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class BaseStaticVarCompensatorBuilder extends AbstractEquipmentModelBuild
 
     @Override
     public BaseStaticVarCompensator build() {
-        return isInstantiable() ? new BaseStaticVarCompensator(dynamicModelId, getEquipment(), parameterSetId, equipmentConfig.getLib()) : null;
+        return isInstantiable() ? new BaseStaticVarCompensator(dynamicModelId, getEquipment(), parameterSetId, modelConfig.getLib()) : null;
     }
 
     @Override

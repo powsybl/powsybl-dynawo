@@ -24,8 +24,8 @@ public abstract class AbstractEvent extends AbstractPureDynamicBlackBoxModel imp
     private final Identifiable<? extends Identifiable<?>> equipment;
     private final double startTime;
 
-    protected AbstractEvent(Identifiable<?> equipment, double startTime, String eventPrefix) {
-        super(generateEventId(eventPrefix, equipment.getId()));
+    protected AbstractEvent(Identifiable<?> equipment, double startTime, String eventPrefix, String lib) {
+        super(generateEventId(eventPrefix, equipment.getId()), lib);
         this.equipment = equipment;
         this.startTime = startTime;
     }

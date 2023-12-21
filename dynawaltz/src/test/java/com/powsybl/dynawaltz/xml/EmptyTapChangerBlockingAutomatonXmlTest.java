@@ -36,13 +36,14 @@ class EmptyTapChangerBlockingAutomatonXmlTest extends AbstractDynamicModelXmlTes
 
     @Override
     protected void addDynamicModels() {
-        dynamicModels.add(new LoadOneTransformer("BBM_LOAD", network.getLoad("LOAD"), "lot"));
+        dynamicModels.add(new LoadOneTransformer("BBM_LOAD", network.getLoad("LOAD"), "lot", "LoadOneTransformer"));
         dynamicModels.add(new TapChangerBlockingAutomaton("BBM_TapChangerBlocking", "TapChangerPar",
                 Collections.emptyList(),
                 List.of(network.getLoad("LOAD")),
                 List.of("GEN", "LOAD", "BBM_TC"),
-                List.of(network.getBusBreakerView().getBus("NHV1"))));
-        dynamicModels.add(new TapChangerAutomaton("BBM_TC", "tc", network.getLoad("LOAD2")));
+                List.of(network.getBusBreakerView().getBus("NHV1")),
+                "TapChangerBlockingAutomaton"));
+        dynamicModels.add(new TapChangerAutomaton("BBM_TC", "tc", network.getLoad("LOAD2"), "TapChangerAutomaton"));
     }
 
     @Test

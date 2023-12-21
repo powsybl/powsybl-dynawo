@@ -9,6 +9,7 @@ package com.powsybl.dynawaltz.builders.automatons;
 
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.builders.DslEquipment;
+import com.powsybl.dynawaltz.builders.ModelConfig;
 import com.powsybl.dynawaltz.builders.Reporters;
 import com.powsybl.iidm.network.Branch;
 import com.powsybl.iidm.network.Network;
@@ -24,8 +25,8 @@ abstract class AbstractCurrentLimitAutomatonBuilder<T extends AbstractAutomatonM
     protected final DslEquipment<Branch<?>> controlledEquipment;
 
     //TODO check accessiblie des class et constructeur des classes abstraites
-    protected AbstractCurrentLimitAutomatonBuilder(Network network, String lib, Reporter reporter, DslEquipment<Branch<?>> iMeasurement, DslEquipment<Branch<?>> controlledEquipment) {
-        super(network, lib, reporter);
+    protected AbstractCurrentLimitAutomatonBuilder(Network network, ModelConfig modelConfig, Reporter reporter, DslEquipment<Branch<?>> iMeasurement, DslEquipment<Branch<?>> controlledEquipment) {
+        super(network, modelConfig, reporter);
         this.iMeasurement = iMeasurement;
         this.controlledEquipment = controlledEquipment;
     }

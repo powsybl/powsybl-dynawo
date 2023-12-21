@@ -9,7 +9,7 @@ package com.powsybl.dynawaltz.builders.generators;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.reporter.Reporter;
-import com.powsybl.dynawaltz.builders.EquipmentConfig;
+import com.powsybl.dynawaltz.builders.ModelConfig;
 import com.powsybl.dynawaltz.models.generators.*;
 import com.powsybl.iidm.network.Network;
 
@@ -18,17 +18,17 @@ import com.powsybl.iidm.network.Network;
  */
 public class SynchronousGeneratorBuilder extends AbstractGeneratorBuilder<SynchronousGeneratorBuilder> {
 
-    public SynchronousGeneratorBuilder(Network network, EquipmentConfig equipmentConfig, Reporter reporter) {
-        super(network, equipmentConfig, reporter);
+    public SynchronousGeneratorBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
+        super(network, modelConfig, reporter);
     }
 
-    public SynchronousGeneratorBuilder(Network network, EquipmentConfig equipmentConfig) {
-        super(network, equipmentConfig);
+    public SynchronousGeneratorBuilder(Network network, ModelConfig modelConfig) {
+        super(network, modelConfig);
     }
 
     protected EnumGeneratorComponent getGeneratorComponent() {
-        boolean aux = equipmentConfig.hasAuxiliary();
-        boolean transformer = equipmentConfig.hasTransformer();
+        boolean aux = modelConfig.hasAuxiliary();
+        boolean transformer = modelConfig.hasTransformer();
         if (aux && transformer) {
             return EnumGeneratorComponent.AUXILIARY_TRANSFORMER;
         } else if (transformer) {
@@ -42,10 +42,10 @@ public class SynchronousGeneratorBuilder extends AbstractGeneratorBuilder<Synchr
     @Override
     public SynchronousGenerator build() {
         if (isInstantiable()) {
-            if (equipmentConfig.isControllable()) {
-                new SynchronousGeneratorControllable(dynamicModelId, getEquipment(), parameterSetId, equipmentConfig.getLib(), getGeneratorComponent());
+            if (modelConfig.isControllable()) {
+                return new SynchronousGeneratorControllable(dynamicModelId, getEquipment(), parameterSetId, modelConfig.getLib(), getGeneratorComponent());
             } else {
-                new SynchronousGenerator(dynamicModelId, getEquipment(), parameterSetId, equipmentConfig.getLib(), getGeneratorComponent());
+                return new SynchronousGenerator(dynamicModelId, getEquipment(), parameterSetId, modelConfig.getLib(), getGeneratorComponent());
             }
         }
         return null;

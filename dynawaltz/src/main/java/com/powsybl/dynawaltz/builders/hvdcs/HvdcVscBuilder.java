@@ -8,7 +8,7 @@
 package com.powsybl.dynawaltz.builders.hvdcs;
 
 import com.powsybl.commons.reporter.Reporter;
-import com.powsybl.dynawaltz.builders.EquipmentConfig;
+import com.powsybl.dynawaltz.builders.ModelConfig;
 import com.powsybl.dynawaltz.models.hvdc.HvdcVsc;
 import com.powsybl.dynawaltz.models.hvdc.HvdcVscDangling;
 import com.powsybl.iidm.network.Network;
@@ -18,21 +18,21 @@ import com.powsybl.iidm.network.Network;
  */
 public class HvdcVscBuilder extends AbstractHvdcBuilder<HvdcVscBuilder> {
 
-    public HvdcVscBuilder(Network network, EquipmentConfig equipmentConfig, Reporter reporter) {
-        super(network, equipmentConfig, reporter);
+    public HvdcVscBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
+        super(network, modelConfig, reporter);
     }
 
-    public HvdcVscBuilder(Network network, EquipmentConfig equipmentConfig) {
-        super(network, equipmentConfig);
+    public HvdcVscBuilder(Network network, ModelConfig modelConfig) {
+        super(network, modelConfig);
     }
 
     @Override
     public HvdcVsc build() {
         if (isInstantiable()) {
-            if (equipmentConfig.isDangling()) {
-                new HvdcVscDangling(dynamicModelId, getEquipment(), parameterSetId, equipmentConfig.getLib(), danglingSide);
+            if (modelConfig.isDangling()) {
+                return new HvdcVscDangling(dynamicModelId, getEquipment(), parameterSetId, modelConfig.getLib(), danglingSide);
             } else {
-                new HvdcVsc(dynamicModelId, getEquipment(), parameterSetId, equipmentConfig.getLib());
+                return new HvdcVsc(dynamicModelId, getEquipment(), parameterSetId, modelConfig.getLib());
             }
         }
         return null;

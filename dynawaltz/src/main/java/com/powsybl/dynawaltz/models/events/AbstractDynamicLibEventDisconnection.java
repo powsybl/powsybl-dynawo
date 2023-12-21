@@ -30,7 +30,7 @@ public abstract class AbstractDynamicLibEventDisconnection extends AbstractEvent
     private final ImmutableLateInit<Boolean> equipmentHasDynamicModel = new ImmutableLateInit<>();
 
     protected AbstractDynamicLibEventDisconnection(Identifiable<?> equipment, double startTime, boolean disconnect) {
-        super(equipment, startTime, EVENT_PREFIX);
+        super(equipment, startTime, EVENT_PREFIX, DYNAMIC_MODEL_LIB);
         this.disconnect = disconnect;
     }
 

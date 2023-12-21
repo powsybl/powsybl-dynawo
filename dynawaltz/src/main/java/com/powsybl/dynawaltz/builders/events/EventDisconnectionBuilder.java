@@ -21,7 +21,7 @@ import java.util.EnumSet;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class EventQuadripoleDisconnectionBuilder extends AbstractEventModelBuilder<Identifiable<?>, EventQuadripoleDisconnectionBuilder> {
+public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identifiable<?>, EventDisconnectionBuilder> {
 
     public static final String TAG = "Disconnect";
     private static final EnumSet<IdentifiableType> CONNECTABLE_INJECTIONS = EnumSet.of(IdentifiableType.GENERATOR, IdentifiableType.LOAD);
@@ -39,7 +39,7 @@ public class EventQuadripoleDisconnectionBuilder extends AbstractEventModelBuild
     protected boolean disconnectOrigin = true;
     protected boolean disconnectExtremity = true;
 
-    public EventQuadripoleDisconnectionBuilder(Network network, Reporter reporter) {
+    public EventDisconnectionBuilder(Network network, Reporter reporter) {
         super(network, new DslEquipment<>("Disconnectable equipment"), TAG, reporter);
     }
 
@@ -104,7 +104,7 @@ public class EventQuadripoleDisconnectionBuilder extends AbstractEventModelBuild
     }
 
     @Override
-    protected EventQuadripoleDisconnectionBuilder self() {
+    protected EventDisconnectionBuilder self() {
         return null;
     }
 }

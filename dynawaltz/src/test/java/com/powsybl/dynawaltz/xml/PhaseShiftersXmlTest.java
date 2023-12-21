@@ -61,8 +61,8 @@ class PhaseShiftersXmlTest extends AbstractParametrizedDynamicModelXmlTest {
 
     private static Stream<Arguments> providePhaseShifter() {
         return Stream.of(
-                Arguments.of("phase_shifter_i_dyd", (Function<Network, BlackBoxModel>) n -> new PhaseShifterIAutomaton(DYN_NAME, n.getTwoWindingsTransformer("NGEN_NHV1"), "ps"), true),
-                Arguments.of("phase_shifter_p_dyd", (Function<Network, BlackBoxModel>) n -> new PhaseShifterPAutomaton(DYN_NAME, n.getTwoWindingsTransformer("NGEN_NHV1"), "ps"), false)
+                Arguments.of("phase_shifter_i_dyd", (Function<Network, BlackBoxModel>) n -> new PhaseShifterIAutomaton(DYN_NAME, n.getTwoWindingsTransformer("NGEN_NHV1"), "ps", "PhaseShifterI"), true),
+                Arguments.of("phase_shifter_p_dyd", (Function<Network, BlackBoxModel>) n -> new PhaseShifterPAutomaton(DYN_NAME, n.getTwoWindingsTransformer("NGEN_NHV1"), "ps", "PhaseShifterP"), false)
         );
     }
 }

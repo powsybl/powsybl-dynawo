@@ -71,7 +71,7 @@ public class DynaWaltzTestUtil extends AbstractSerDeTest {
         dynamicModels = new ArrayList<>();
         network.getLoadStream().forEach(l -> {
             if (l.getId().equals("LOAD2")) {
-                dynamicModels.add(new LoadOneTransformer("BBM_" + l.getId(), l, "LOT"));
+                dynamicModels.add(new LoadOneTransformer("BBM_" + l.getId(), l, "LOT", "LoadOneTransformer"));
             } else {
                 dynamicModels.add(new BaseLoad("BBM_" + l.getId(), l, "LAB", "LoadAlphaBeta"));
             }
@@ -84,7 +84,7 @@ public class DynaWaltzTestUtil extends AbstractSerDeTest {
             } else if (g.getId().equals("GEN4")) {
                 dynamicModels.add(new SynchronousGenerator("BBM_" + g.getId(), g, "GSTW", "GeneratorSynchronousThreeWindings"));
             } else if (g.getId().equals("GEN6")) {
-                dynamicModels.add(new GeneratorFictitious("BBM_" + g.getId(), g, "GF"));
+                dynamicModels.add(new GeneratorFictitious("BBM_" + g.getId(), g, "GF", "GeneratorFictitious"));
             } else if (g.getId().equals("GEN7")) {
                 dynamicModels.add(new SynchronizedGenerator("BBM_" + g.getId(), g, "GPQ", "GeneratorPQ"));
             } else {
@@ -93,7 +93,7 @@ public class DynaWaltzTestUtil extends AbstractSerDeTest {
         });
 
         Line standardLine = network.getLine("NHV1_NHV2_1");
-        dynamicModels.add(new StandardLine("Line_" + standardLine.getId(), standardLine, "SL"));
+        dynamicModels.add(new StandardLine("Line_" + standardLine.getId(), standardLine, "SL", "Line"));
 
         // Events
         eventModels = new ArrayList<>();

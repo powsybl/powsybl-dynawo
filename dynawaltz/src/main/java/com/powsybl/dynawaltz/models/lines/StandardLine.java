@@ -21,8 +21,8 @@ import java.util.List;
  */
 public class StandardLine extends AbstractEquipmentBlackBoxModel<Line> implements LineModel {
 
-    public StandardLine(String dynamicModelId, Line line, String parameterSetId) {
-        super(dynamicModelId, parameterSetId, line, "Line");
+    public StandardLine(String dynamicModelId, Line line, String parameterSetId, String lib) {
+        super(dynamicModelId, parameterSetId, line, lib);
     }
 
     private List<VarConnection> getVarConnectionsWith(EquipmentConnectionPoint connected, TwoSides side) {

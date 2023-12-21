@@ -29,7 +29,7 @@ class EmptyTapChangerAutomatonXmlTest extends AbstractDynamicModelXmlTest {
     @Override
     protected void addDynamicModels() {
         dynamicModels.add(new BaseLoad("BBM_LOAD", network.getLoad("LOAD"), "LAB", "LoadAlphaBeta"));
-        dynamicModels.add(new TapChangerAutomaton("BBM_TC", "tc", network.getLoad("LOAD")));
+        dynamicModels.add(new TapChangerAutomaton("BBM_TC", "tc", network.getLoad("LOAD"), "TapChangerAutomaton"));
     }
 
     @Test

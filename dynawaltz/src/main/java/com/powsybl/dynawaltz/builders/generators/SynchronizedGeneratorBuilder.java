@@ -8,7 +8,7 @@
 package com.powsybl.dynawaltz.builders.generators;
 
 import com.powsybl.commons.reporter.Reporter;
-import com.powsybl.dynawaltz.builders.EquipmentConfig;
+import com.powsybl.dynawaltz.builders.ModelConfig;
 import com.powsybl.dynawaltz.models.generators.SynchronizedGenerator;
 import com.powsybl.dynawaltz.models.generators.SynchronizedGeneratorControllable;
 import com.powsybl.iidm.network.Network;
@@ -18,21 +18,21 @@ import com.powsybl.iidm.network.Network;
  */
 public class SynchronizedGeneratorBuilder extends AbstractGeneratorBuilder<SynchronizedGeneratorBuilder> {
 
-    public SynchronizedGeneratorBuilder(Network network, EquipmentConfig equipmentConfig, Reporter reporter) {
-        super(network, equipmentConfig, reporter);
+    public SynchronizedGeneratorBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
+        super(network, modelConfig, reporter);
     }
 
-    public SynchronizedGeneratorBuilder(Network network, EquipmentConfig equipmentConfig) {
-        super(network, equipmentConfig);
+    public SynchronizedGeneratorBuilder(Network network, ModelConfig modelConfig) {
+        super(network, modelConfig);
     }
 
     @Override
     public SynchronizedGenerator build() {
         if (isInstantiable()) {
-            if (equipmentConfig.isControllable()) {
-                new SynchronizedGeneratorControllable(dynamicModelId, getEquipment(), parameterSetId, equipmentConfig.getLib());
+            if (modelConfig.isControllable()) {
+                return new SynchronizedGeneratorControllable(dynamicModelId, getEquipment(), parameterSetId, modelConfig.getLib());
             } else {
-                new SynchronizedGenerator(dynamicModelId, getEquipment(), parameterSetId, equipmentConfig.getLib());
+                return new SynchronizedGenerator(dynamicModelId, getEquipment(), parameterSetId, modelConfig.getLib());
             }
         }
         return null;

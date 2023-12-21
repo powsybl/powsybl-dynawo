@@ -8,6 +8,7 @@
 package com.powsybl.dynawaltz.builders.automatons;
 
 import com.powsybl.commons.reporter.Reporter;
+import com.powsybl.dynawaltz.builders.ModelConfig;
 import com.powsybl.dynawaltz.builders.Reporters;
 import com.powsybl.dynawaltz.models.automatons.TapChangerBlockingAutomaton;
 import com.powsybl.iidm.network.Identifiable;
@@ -24,15 +25,13 @@ import java.util.List;
  */
 public class TapChangerBlockingAutomatonBuilder extends AbstractAutomatonModelBuilder<TapChangerBlockingAutomatonBuilder> {
 
-    public static final String LIB = "TapChangerBlockingAutomaton";
-
     private final List<Load> loads = new ArrayList<>();
     private final List<TwoWindingsTransformer> transformers = new ArrayList<>();
     private final List<String> tapChangerAutomatonIds = new ArrayList<>();
     private List<Identifiable<?>> uMeasurements;
 
-    public TapChangerBlockingAutomatonBuilder(Network network, String lib, Reporter reporter) {
-        super(network, lib, reporter);
+    public TapChangerBlockingAutomatonBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
+        super(network, modelConfig, reporter);
     }
 
     public TapChangerBlockingAutomatonBuilder transformers(String[] staticIds) {
@@ -57,8 +56,9 @@ public class TapChangerBlockingAutomatonBuilder extends AbstractAutomatonModelBu
             Identifiable<?> measurementPoint = network.getIdentifiable(staticId);
             if (measurementPoint == null || !BuildersUtil.isActionConnectionPoint(measurementPoint.getType())) {
                 Reporters.reportStaticIdUnknown(reporter, "uMeasurements", staticId, "BUS/BUSBAR_SECTION");
+            } else {
+                uMeasurements.add(measurementPoint);
             }
-            uMeasurements.add(measurementPoint);
         }
         return self();
     }
@@ -96,7 +96,7 @@ public class TapChangerBlockingAutomatonBuilder extends AbstractAutomatonModelBu
 
     @Override
     public TapChangerBlockingAutomaton build() {
-        return isInstantiable() ? new TapChangerBlockingAutomaton(dynamicModelId, parameterSetId, transformers, loads, tapChangerAutomatonIds, uMeasurements) : null;
+        return isInstantiable() ? new TapChangerBlockingAutomaton(dynamicModelId, parameterSetId, transformers, loads, tapChangerAutomatonIds, uMeasurements, getLib()) : null;
     }
 
     @Override
