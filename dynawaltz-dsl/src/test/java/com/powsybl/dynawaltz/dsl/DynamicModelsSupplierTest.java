@@ -195,7 +195,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                         """
                         + DSL tests
                           + Groovy Dynamic Models Supplier
-                            + DSL model builder for UnderVoltageAutomaton
+                            + DSL model builder for UnderVoltage
                                'generator' field value 'NGEN' not found for equipment type(s) GENERATOR
                                Model UV_GEN cannot be instantiated
                         """),

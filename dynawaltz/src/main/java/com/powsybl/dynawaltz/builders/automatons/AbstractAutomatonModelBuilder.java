@@ -18,7 +18,7 @@ import com.powsybl.iidm.network.Network;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-abstract class AbstractAutomatonModelBuilder<T extends AbstractAutomatonModelBuilder<T>> extends AbstractDynamicModelBuilder implements ModelBuilder<DynamicModel> {
+public abstract class AbstractAutomatonModelBuilder<T extends AbstractAutomatonModelBuilder<T>> extends AbstractDynamicModelBuilder implements ModelBuilder<DynamicModel> {
 
     protected String dynamicModelId;
     protected String parameterSetId;

@@ -19,7 +19,6 @@ import com.powsybl.iidm.network.TwoSides;
  */
 public class CurrentLimitAutomatonBuilder extends AbstractCurrentLimitAutomatonBuilder<CurrentLimitAutomatonBuilder> {
 
-    //TODO implementer un constructeur alternatif en protected pour changer de lib pour tous les models à une lib ?
     public CurrentLimitAutomatonBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
         super(network, modelConfig, reporter, new DslEquipment<>("Quadripole", "iMeasurement"),
             new DslEquipment<>("Quadripole", "controlledQuadripole"));

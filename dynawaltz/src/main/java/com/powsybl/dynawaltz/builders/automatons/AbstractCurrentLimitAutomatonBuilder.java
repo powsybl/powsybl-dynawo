@@ -24,7 +24,7 @@ abstract class AbstractCurrentLimitAutomatonBuilder<T extends AbstractAutomatonM
     protected TwoSides iMeasurementSide;
     protected final DslEquipment<Branch<?>> controlledEquipment;
 
-    //TODO check accessiblie des class et constructeur des classes abstraites
+    //TODO check abstract class constr accessibility
     protected AbstractCurrentLimitAutomatonBuilder(Network network, ModelConfig modelConfig, Reporter reporter, DslEquipment<Branch<?>> iMeasurement, DslEquipment<Branch<?>> controlledEquipment) {
         super(network, modelConfig, reporter);
         this.iMeasurement = iMeasurement;

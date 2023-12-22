@@ -17,7 +17,7 @@ import com.powsybl.iidm.network.Network;
  */
 public class LoadOneTransformerBuilder extends AbstractLoadModelBuilder<LoadOneTransformerBuilder> {
 
-    //TODO avirer et utilisé uniquement en interne ?
+    //TODO builder constr accessibility ?
     public LoadOneTransformerBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
         super(network, modelConfig, reporter);
     }

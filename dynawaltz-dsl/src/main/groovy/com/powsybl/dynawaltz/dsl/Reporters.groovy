@@ -17,9 +17,9 @@ final class Reporters {
     private Reporters() {
     }
 
-    static Reporter createModelBuilderReporter(Reporter reporter, String lib) {
+    static Reporter createModelBuilderReporter(Reporter reporter, String name) {
          reporter.createSubReporter("DSLModelBuilder",
-                'DSL model builder for ${lib}',
-                "lib", lib)
+                'DSL model builder for ${name}',
+                "name", name)
     }
 }

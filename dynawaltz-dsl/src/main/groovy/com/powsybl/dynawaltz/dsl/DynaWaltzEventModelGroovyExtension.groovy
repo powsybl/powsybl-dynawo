@@ -22,11 +22,11 @@ import java.util.function.Consumer
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 @AutoService(EventModelGroovyExtension.class)
-class DslEventModelGroovyExtension implements EventModelGroovyExtension {
+class DynaWaltzEventModelGroovyExtension implements EventModelGroovyExtension {
 
     private final List<EventModelCategory>  modelConstructors
 
-    DslEventModelGroovyExtension() {
+    DynaWaltzEventModelGroovyExtension() {
         modelConstructors = DynamicModelBuilderUtils.eventModelCategories
     }
 

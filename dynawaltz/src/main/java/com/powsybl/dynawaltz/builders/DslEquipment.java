@@ -20,7 +20,7 @@ import java.util.function.Function;
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class DslEquipment<T extends Identifiable<?>> {
-//TODO renommer les dsl -> check la javadoc egalement :)
+//TODO rename dsl (check javadoc)
     protected String staticId;
     protected T equipment;
     private final String equipmentType;

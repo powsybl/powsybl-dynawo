@@ -7,8 +7,10 @@
  */
 package com.powsybl.dynawaltz.builders;
 
+import java.util.List;
+
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public record EventModelCategory(String tag, DynamicModelBuilderUtils.EventModelBuilderConstructor builderConstructor) {
+public record DynamicModelCategory(String category, DynamicModelBuilderUtils.ModelBuilderConstructor builderConstructor, List<ModelConfig> modelConfigs) {
 }

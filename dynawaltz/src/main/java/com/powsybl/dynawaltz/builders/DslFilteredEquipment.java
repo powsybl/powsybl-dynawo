@@ -20,10 +20,15 @@ import java.util.function.Predicate;
  */
 public class DslFilteredEquipment<T extends Identifiable<?>> extends DslEquipment<T> {
 
-    private final Predicate<IdentifiableType> typePredicate;
+    protected final Predicate<IdentifiableType> typePredicate;
 
     public DslFilteredEquipment(String equipmentType, Predicate<IdentifiableType> typePredicate) {
         super(equipmentType);
+        this.typePredicate = typePredicate;
+    }
+
+    public DslFilteredEquipment(String equipmentType, String fieldName, Predicate<IdentifiableType> typePredicate) {
+        super(equipmentType, fieldName);
         this.typePredicate = typePredicate;
     }
 

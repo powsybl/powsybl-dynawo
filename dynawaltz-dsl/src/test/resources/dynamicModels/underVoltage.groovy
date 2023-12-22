@@ -9,7 +9,7 @@
 package dynamicModels
 
 
-UnderVoltageAutomaton {
+UnderVoltage {
     dynamicModelId "UV_GEN"
     parameterSetId "uv"
     generator "GEN"

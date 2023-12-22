@@ -23,7 +23,7 @@ public class UnderVoltageAutomatonBuilder extends AbstractAutomatonModelBuilder<
 
     protected final DslEquipment<Generator> dslGenerator;
 
-    //TODO forcer l'usage d'un reporter dans les contr des builder , gere le no op dans utils
+    //TODO handle NO_OP in Utils ?
     public UnderVoltageAutomatonBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
         super(network, modelConfig, reporter);
         dslGenerator = new DslEquipment<>(IdentifiableType.GENERATOR, "generator");

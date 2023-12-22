@@ -20,9 +20,6 @@ import com.powsybl.iidm.network.StaticVarCompensator;
  */
 public class BaseStaticVarCompensatorBuilder extends AbstractEquipmentModelBuilder<StaticVarCompensator, BaseStaticVarCompensatorBuilder> {
 
-    public static final String LIB = "staticVarCompensators";
-
-    //TODO quid des constructeurs avec les EquipmentConfig ?
     public BaseStaticVarCompensatorBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
         super(network, modelConfig, IdentifiableType.STATIC_VAR_COMPENSATOR, reporter);
     }

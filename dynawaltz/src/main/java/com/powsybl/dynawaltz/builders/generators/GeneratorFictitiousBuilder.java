@@ -17,9 +17,6 @@ import com.powsybl.iidm.network.Network;
  */
 public class GeneratorFictitiousBuilder extends AbstractGeneratorBuilder<GeneratorFictitiousBuilder> {
 
-    //TODO voir ou mettre la lib en static (utilisé dans le groovy extension; le builder et la classe finale) -> a mettre dnas la classe ?
-    // ou garder dans les builder avec la modif des constructeurs derrière et passer tous les constructeur en protected
-
     public GeneratorFictitiousBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
         super(network, modelConfig, reporter);
     }

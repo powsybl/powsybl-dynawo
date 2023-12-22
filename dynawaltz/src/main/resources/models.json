@@ -356,7 +356,8 @@
   ],
   "underVoltages": [
     {
-      "lib": "UnderVoltageAutomaton"
+      "lib": "UnderVoltageAutomaton",
+      "alias": "UnderVoltage"
     }
   ]
 }

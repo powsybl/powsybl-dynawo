@@ -17,8 +17,6 @@ import com.powsybl.iidm.network.Network;
  */
 public class LoadOneTransformerTapChangerBuilder extends AbstractLoadModelBuilder<LoadOneTransformerTapChangerBuilder> {
 
-    //TODO virer les lib dans les builders ?
-
     public LoadOneTransformerTapChangerBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
         super(network, modelConfig, reporter);
     }

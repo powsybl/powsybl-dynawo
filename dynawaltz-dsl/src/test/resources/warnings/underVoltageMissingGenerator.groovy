@@ -9,7 +9,7 @@
 package warnings
 
 
-UnderVoltageAutomaton {
+UnderVoltage{
     dynamicModelId "UV_GEN"
     parameterSetId "uv"
     generator "NGEN"

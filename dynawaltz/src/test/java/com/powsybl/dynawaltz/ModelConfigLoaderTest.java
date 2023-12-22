@@ -2,9 +2,9 @@ package com.powsybl.dynawaltz;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.powsybl.dynawaltz.builders.ModelCategory;
+import com.powsybl.dynawaltz.builders.DynamicModelCategory;
 import com.powsybl.dynawaltz.builders.ModelConfig;
-import com.powsybl.dynawaltz.builders.ModelConfigLoader;
+import com.powsybl.dynawaltz.builders.ModelConfigsSingleton;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -17,13 +17,13 @@ public class ModelConfigLoaderTest {
 
     @Test
     void loadConfig() {
-        Map<String, List<ModelConfig>> res = ModelConfigLoader.readModelConfigs();
-        List<ModelCategory> modelCategories = ModelConfigLoader.createCategories();
+        Map<String, List<ModelConfig>> res = ModelConfigsSingleton.getInstance().getModelConfigs();
+        List<DynamicModelCategory> modelCategories = ModelConfigsSingleton.getInstance().getDynamicModelCategories();
         modelCategories.forEach(mc -> {
             if (mc == null) {
                 System.out.println("!!!");
             } else {
-                mc.modelConfigs.forEach(c -> {
+                mc.modelConfigs().forEach(c -> {
                     if (c == null) {
                         System.out.println(mc);
                     } else if (c.getLib() == null) {

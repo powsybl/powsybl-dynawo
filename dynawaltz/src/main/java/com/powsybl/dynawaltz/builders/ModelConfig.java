@@ -22,9 +22,11 @@ public class ModelConfig {
     private static final String TRANSFORMER_PROPERTY = "TRANSFORMER";
     private static final String AUXILIARY_PROPERTY = "AUXILIARY";
     private String lib;
+    private String alias = "";
     private String internalModelPrefix = "";
     private List<String> properties = new ArrayList<>();
 
+    //TODO delete alternative cstr ?
     public ModelConfig(String lib, String internalModelPrefix, List<String> properties) {
         this.lib = lib;
         this.internalModelPrefix = internalModelPrefix;
@@ -80,12 +82,24 @@ public class ModelConfig {
         return lib;
     }
 
+    public String getAlias() {
+        return alias;
+    }
+
+    public String getName() {
+        return alias.isEmpty() ? lib : alias;
+    }
+
     public String getInternalModelPrefix() {
         return internalModelPrefix;
     }
 
     public void setLib(String lib) {
         this.lib = lib;
+    }
+
+    public void setAlias(String alias) {
+        this.alias = alias;
     }
 
     public void setInternalModelPrefix(String internalModelPrefix) {

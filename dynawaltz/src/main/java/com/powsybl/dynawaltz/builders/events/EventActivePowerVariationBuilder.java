@@ -26,7 +26,7 @@ public class EventActivePowerVariationBuilder extends AbstractEventModelBuilder<
     protected Double deltaP;
 
     public EventActivePowerVariationBuilder(Network network, Reporter reporter) {
-        //TODO passer en DslEquipment classique ?
+        //TODO use basic DslEquipment ?
         super(network, new DslFilteredEquipment<>("GENERATOR/LOAD", EventActivePowerVariation::isConnectable), TAG, reporter);
     }
 
