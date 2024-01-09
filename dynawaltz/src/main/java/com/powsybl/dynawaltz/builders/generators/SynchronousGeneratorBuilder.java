@@ -22,10 +22,6 @@ public class SynchronousGeneratorBuilder extends AbstractGeneratorBuilder<Synchr
         super(network, modelConfig, reporter);
     }
 
-    public SynchronousGeneratorBuilder(Network network, ModelConfig modelConfig) {
-        super(network, modelConfig);
-    }
-
     protected EnumGeneratorComponent getGeneratorComponent() {
         boolean aux = modelConfig.hasAuxiliary();
         boolean transformer = modelConfig.hasTransformer();

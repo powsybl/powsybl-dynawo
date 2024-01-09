@@ -24,10 +24,6 @@ public abstract class AbstractHvdcBuilder<R extends AbstractEquipmentModelBuilde
         super(network, modelConfig, IdentifiableType.HVDC_LINE, reporter);
     }
 
-    public AbstractHvdcBuilder(Network network, ModelConfig modelConfig) {
-        super(network, modelConfig, IdentifiableType.HVDC_LINE);
-    }
-
     public R dangling(TwoSides danglingSide) {
         this.danglingSide = danglingSide;
         return self();

@@ -5,15 +5,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.builders.events;
+package com.powsybl.dynawaltz.models.events;
 
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.builders.DslEquipment;
 import com.powsybl.dynawaltz.builders.Reporters;
-import com.powsybl.dynawaltz.models.events.AbstractEvent;
-import com.powsybl.dynawaltz.models.events.EventHvdcDisconnection;
-import com.powsybl.dynawaltz.models.events.EventInjectionDisconnection;
-import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection;
 import com.powsybl.iidm.network.*;
 
 import java.util.EnumSet;
@@ -24,7 +20,7 @@ import java.util.EnumSet;
 public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identifiable<?>, EventDisconnectionBuilder> {
 
     public static final String TAG = "Disconnect";
-    private static final EnumSet<IdentifiableType> CONNECTABLE_INJECTIONS = EnumSet.of(IdentifiableType.GENERATOR, IdentifiableType.LOAD);
+    private static final EnumSet<IdentifiableType> CONNECTABLE_INJECTIONS = EnumSet.of(IdentifiableType.GENERATOR, IdentifiableType.LOAD, IdentifiableType.STATIC_VAR_COMPENSATOR, IdentifiableType.SHUNT_COMPENSATOR);
     private static final EnumSet<IdentifiableType> CONNECTABLE_QUADRIPOLES = EnumSet.of(IdentifiableType.LINE, IdentifiableType.TWO_WINDINGS_TRANSFORMER);
 
     private enum DisconnectionType {
@@ -43,7 +39,7 @@ public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identif
         super(network, new DslEquipment<>("Disconnectable equipment"), TAG, reporter);
     }
 
-    public void disconnectOnly(TwoSides side) {
+    public EventDisconnectionBuilder disconnectOnly(TwoSides side) {
         disconnectSide = true;
         switch (side) {
             case ONE -> {
@@ -55,6 +51,7 @@ public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identif
                 disconnectExtremity = true;
             }
         }
+        return self();
     }
 
     private void setDisconnectionType(IdentifiableType type) {
@@ -92,7 +89,7 @@ public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identif
     public AbstractEvent build() {
         if (isInstantiable()) {
             return switch (disconnectionType) {
-                case INJECTION -> new EventInjectionDisconnection((Generator) dslEquipment.getEquipment(), startTime);
+                case INJECTION -> new EventInjectionDisconnection((Injection<?>) dslEquipment.getEquipment(), startTime, true);
                 case QUADRIPOLE ->
                         new EventQuadripoleDisconnection((Branch<?>) dslEquipment.getEquipment(), startTime, disconnectOrigin, disconnectExtremity);
                 case HVDC ->
@@ -105,6 +102,6 @@ public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identif
 
     @Override
     protected EventDisconnectionBuilder self() {
-        return null;
+        return this;
     }
 }

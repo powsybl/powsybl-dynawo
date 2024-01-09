@@ -12,12 +12,13 @@ import com.powsybl.commons.reporter.Reporter
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.DynaWaltzProvider
-import com.powsybl.dynawaltz.builders.DynamicModelBuilderUtils
 import com.powsybl.dynawaltz.builders.DynamicModelCategory
 import com.powsybl.dynawaltz.builders.ModelBuilder
+import com.powsybl.dynawaltz.builders.ModelConfigsSingleton
 import com.powsybl.iidm.network.Network
 
 import java.util.function.Consumer
+
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
@@ -27,7 +28,7 @@ class DynaWaltzDynamicModelGroovyExtension implements DynamicModelGroovyExtensio
     private final List<DynamicModelCategory> builderConstructors
 
     DynaWaltzDynamicModelGroovyExtension() {
-        builderConstructors = DynamicModelBuilderUtils.modelCategories
+        builderConstructors = ModelConfigsSingleton.getInstance().getDynamicModelCategories()
     }
 
     //TODO groovy reporter useless ?

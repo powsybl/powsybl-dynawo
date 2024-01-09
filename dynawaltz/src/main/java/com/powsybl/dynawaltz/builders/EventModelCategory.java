@@ -10,5 +10,5 @@ package com.powsybl.dynawaltz.builders;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public record EventModelCategory(String tag, DynamicModelBuilderUtils.EventModelBuilderConstructor builderConstructor) {
+public record EventModelCategory(String tag, EventModelsBuilderUtils.EventModelBuilderConstructor builderConstructor) {
 }

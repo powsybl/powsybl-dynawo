@@ -22,10 +22,6 @@ public class HvdcVscBuilder extends AbstractHvdcBuilder<HvdcVscBuilder> {
         super(network, modelConfig, reporter);
     }
 
-    public HvdcVscBuilder(Network network, ModelConfig modelConfig) {
-        super(network, modelConfig);
-    }
-
     @Override
     public HvdcVsc build() {
         if (isInstantiable()) {

@@ -23,10 +23,6 @@ public abstract class AbstractGeneratorBuilder<R extends AbstractEquipmentModelB
         super(network, modelConfig, IdentifiableType.GENERATOR, reporter);
     }
 
-    protected AbstractGeneratorBuilder(Network network, ModelConfig modelConfig) {
-        super(network, modelConfig, IdentifiableType.GENERATOR);
-    }
-
     @Override
     protected Generator findEquipment(String staticId) {
         return network.getGenerator(staticId);

@@ -22,10 +22,6 @@ public class SynchronizedGeneratorBuilder extends AbstractGeneratorBuilder<Synch
         super(network, modelConfig, reporter);
     }
 
-    public SynchronizedGeneratorBuilder(Network network, ModelConfig modelConfig) {
-        super(network, modelConfig);
-    }
-
     @Override
     public SynchronizedGenerator build() {
         if (isInstantiable()) {

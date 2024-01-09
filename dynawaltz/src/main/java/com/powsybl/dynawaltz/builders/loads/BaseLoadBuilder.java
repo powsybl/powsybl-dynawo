@@ -23,10 +23,6 @@ public class BaseLoadBuilder extends AbstractLoadModelBuilder<BaseLoadBuilder> i
         super(network, modelConfig, reporter);
     }
 
-    public BaseLoadBuilder(Network network, ModelConfig modelConfig) {
-        super(network, modelConfig);
-    }
-
     @Override
     public BaseLoad build() {
         if (isInstantiable()) {

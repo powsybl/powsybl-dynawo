@@ -9,10 +9,9 @@ package com.powsybl.dynawaltz.xml;
 import com.powsybl.commons.test.AbstractSerDeTest;
 import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynawaltz.DynaWaltzCurve;
+import com.powsybl.dynawaltz.builders.EventModelsBuilderUtils;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton;
-import com.powsybl.dynawaltz.models.events.EventInjectionDisconnection;
-import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection;
 import com.powsybl.dynawaltz.models.generators.GeneratorFictitious;
 import com.powsybl.dynawaltz.models.generators.SynchronizedGenerator;
 import com.powsybl.dynawaltz.models.generators.SynchronousGenerator;
@@ -97,12 +96,15 @@ public class DynaWaltzTestUtil extends AbstractSerDeTest {
 
         // Events
         eventModels = new ArrayList<>();
-        network.getLineStream().forEach(l -> eventModels.add(new EventQuadripoleDisconnection(l, 5, false, true)));
-        network.getGeneratorStream().forEach(g -> {
-            if (g.getId().equals("GEN2")) {
-                eventModels.add(new EventInjectionDisconnection(g, 1));
-            }
-        });
+        network.getLineStream().forEach(l -> eventModels.add(EventModelsBuilderUtils.newEventDisconnectionBuilder(network)
+                .staticId(l.getId())
+                .startTime(5)
+                .disconnectOnly(TwoSides.TWO)
+                .build()));
+        eventModels.add(EventModelsBuilderUtils.newEventDisconnectionBuilder(network)
+                .staticId("GEN2")
+                .startTime(1)
+                .build());
 
         // Automatons
         network.getLineStream().filter(line -> line != standardLine)

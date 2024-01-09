@@ -13,4 +13,7 @@ import java.util.List;
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public record DynamicModelCategory(String category, DynamicModelBuilderUtils.ModelBuilderConstructor builderConstructor, List<ModelConfig> modelConfigs) {
+    //TODO keep everything private and return builder directly ?
+    //TODO pacakge rivate cstr
+    //TODO add enum category to model tag and the corresponding enum in builders check the correspondance in constr
 }

@@ -7,7 +7,7 @@
  */
 package com.powsybl.dynawaltz.xml;
 
-import com.powsybl.dynawaltz.models.events.EventInjectionDisconnection;
+import com.powsybl.dynawaltz.builders.EventModelsBuilderUtils;
 import com.powsybl.dynawaltz.models.generators.GeneratorFictitious;
 import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.Generator;
@@ -16,7 +16,6 @@ import com.powsybl.iidm.network.test.SvcTestCaseFactory;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
-import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 
 /**
@@ -45,14 +44,26 @@ class DisconnectEventXmlTest extends AbstractDynamicModelXmlTest {
     protected void addDynamicModels() {
         Generator g = network.getGenerator("G1");
         dynamicModels.add(new GeneratorFictitious("BBM_GEN", g, "GF", "GeneratorFictitious"));
-        eventModels.add(new EventInjectionDisconnection(g, 1));
-        eventModels.add(new EventInjectionDisconnection(network.getLoad("L2"), 1));
-        eventModels.add(new EventInjectionDisconnection(network.getStaticVarCompensator("SVC2"), 1));
-        eventModels.add(new EventInjectionDisconnection(network.getShuntCompensator("SH1"), 1));
+        eventModels.add(EventModelsBuilderUtils.newEventDisconnectionBuilder(network)
+                .staticId(g.getId())
+                .startTime(1)
+                .build());
+        eventModels.add(EventModelsBuilderUtils.newEventDisconnectionBuilder(network)
+                .staticId("L2")
+                .startTime(1)
+                .build());
+        eventModels.add(EventModelsBuilderUtils.newEventDisconnectionBuilder(network)
+                .staticId("SVC2")
+                .startTime(1)
+                .build());
+        eventModels.add(EventModelsBuilderUtils.newEventDisconnectionBuilder(network)
+                .staticId("SH1")
+                .startTime(1)
+                .build());
     }
 
     @Test
-    void writeDisconnectModel() throws SAXException, IOException, XMLStreamException {
+    void writeDisconnectModel() throws SAXException, IOException {
         DydXml.write(tmpDir, context);
         ParametersXml.write(tmpDir, context);
         validate("dyd.xsd", "disconnect_dyd.xml", tmpDir.resolve(DynaWaltzConstants.DYD_FILENAME));

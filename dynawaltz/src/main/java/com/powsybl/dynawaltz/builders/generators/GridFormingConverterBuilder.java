@@ -21,10 +21,6 @@ public class GridFormingConverterBuilder extends AbstractGeneratorBuilder<GridFo
         super(network, modelConfig, reporter);
     }
 
-    public GridFormingConverterBuilder(Network network, ModelConfig modelConfig) {
-        super(network, modelConfig);
-    }
-
     @Override
     public GridFormingConverter build() {
         return isInstantiable() ? new GridFormingConverter(dynamicModelId, getEquipment(), parameterSetId, modelConfig.getLib()) : null;

@@ -12,9 +12,8 @@ import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawaltz.models.utils.ImmutableLateInit;
 import com.powsybl.dynawaltz.parameters.ParametersSet;
-import com.powsybl.iidm.network.Generator;
 import com.powsybl.iidm.network.IdentifiableType;
-import com.powsybl.iidm.network.Load;
+import com.powsybl.iidm.network.Injection;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -36,12 +35,7 @@ public class EventActivePowerVariation extends AbstractEvent implements ContextD
     private final double deltaP;
     private final ImmutableLateInit<Boolean> equipmentHasDynamicModel = new ImmutableLateInit<>();
 
-    public EventActivePowerVariation(Load equipment, double startTime, double deltaP) {
-        super(equipment, startTime, EVENT_PREFIX, DYNAMIC_MODEL_LIB);
-        this.deltaP = deltaP;
-    }
-
-    public EventActivePowerVariation(Generator equipment, double startTime, double deltaP) {
+    EventActivePowerVariation(Injection<?> equipment, double startTime, double deltaP) {
         super(equipment, startTime, EVENT_PREFIX, DYNAMIC_MODEL_LIB);
         this.deltaP = deltaP;
     }

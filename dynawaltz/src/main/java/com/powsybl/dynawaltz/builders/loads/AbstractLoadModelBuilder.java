@@ -23,10 +23,6 @@ public abstract class AbstractLoadModelBuilder<R extends AbstractEquipmentModelB
         super(network, modelConfig, IdentifiableType.LOAD, reporter);
     }
 
-    protected AbstractLoadModelBuilder(Network network, ModelConfig modelConfig) {
-        super(network, modelConfig, IdentifiableType.LOAD);
-    }
-
     @Override
     protected Load findEquipment(String staticId) {
         return network.getLoad(staticId);

@@ -17,7 +17,6 @@ public class ModelConfigLoaderTest {
 
     @Test
     void loadConfig() {
-        Map<String, List<ModelConfig>> res = ModelConfigsSingleton.getInstance().getModelConfigs();
         List<DynamicModelCategory> modelCategories = ModelConfigsSingleton.getInstance().getDynamicModelCategories();
         modelCategories.forEach(mc -> {
             if (mc == null) {
@@ -32,7 +31,6 @@ public class ModelConfigLoaderTest {
                 });
             }
         });
-        assertNotNull(res);
     }
 
     @Test

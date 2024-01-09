@@ -7,15 +7,14 @@
  */
 package com.powsybl.dynawaltz.xml;
 
-import com.powsybl.dynawaltz.models.events.EventActivePowerVariation;
-import com.powsybl.dynawaltz.models.generators.SynchronousGeneratorControllable;
+import com.powsybl.dynawaltz.builders.EventModelsBuilderUtils;
 import com.powsybl.dynawaltz.models.generators.SynchronizedGeneratorControllable;
+import com.powsybl.dynawaltz.models.generators.SynchronousGeneratorControllable;
 import com.powsybl.dynawaltz.models.loads.BaseLoadControllable;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
-import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 
 /**
@@ -33,15 +32,35 @@ class ActivePowerVariationEventXmlTest extends AbstractDynamicModelXmlTest {
         dynamicModels.add(new SynchronizedGeneratorControllable("BBM_GENC", network.getGenerator("GEN2"), "GPV", "GeneratorPV"));
         dynamicModels.add(new SynchronousGeneratorControllable("BBM_GENC2", network.getGenerator("GEN3"), "GSTWPR", "GeneratorSynchronousFourWindingsGoverPropVRPropInt"));
         dynamicModels.add(new BaseLoadControllable("BBM_LOADC", network.getLoad("LOAD2"), "load", "LoadAlphaBeta"));
-        eventModels.add(new EventActivePowerVariation(network.getGenerator("GEN"), 1, 1.1));
-        eventModels.add(new EventActivePowerVariation(network.getGenerator("GEN2"), 1, 1.2));
-        eventModels.add(new EventActivePowerVariation(network.getGenerator("GEN3"), 1, 1.3));
-        eventModels.add(new EventActivePowerVariation(network.getLoad("LOAD"), 10, 1.2));
-        eventModels.add(new EventActivePowerVariation(network.getLoad("LOAD2"), 10, 1.3));
+        eventModels.add(EventModelsBuilderUtils.newEventActivePowerVariationBuilder(network)
+                .staticId("GEN")
+                .startTime(1)
+                .deltaP(1.1)
+                .build());
+        eventModels.add(EventModelsBuilderUtils.newEventActivePowerVariationBuilder(network)
+                .staticId("GEN2")
+                .startTime(1)
+                .deltaP(1.2)
+                .build());
+        eventModels.add(EventModelsBuilderUtils.newEventActivePowerVariationBuilder(network)
+                .staticId("GEN3")
+                .startTime(1)
+                .deltaP(1.3)
+                .build());
+        eventModels.add(EventModelsBuilderUtils.newEventActivePowerVariationBuilder(network)
+                .staticId("LOAD")
+                .startTime(10)
+                .deltaP(1.2)
+                .build());
+        eventModels.add(EventModelsBuilderUtils.newEventActivePowerVariationBuilder(network)
+                .staticId("LOAD2")
+                .startTime(10)
+                .deltaP(1.3)
+                .build());
     }
 
     @Test
-    void writeDisconnectModel() throws SAXException, IOException, XMLStreamException {
+    void writeDisconnectModel() throws SAXException, IOException {
         DydXml.write(tmpDir, context);
         ParametersXml.write(tmpDir, context);
         validate("dyd.xsd", "apv_dyd.xml", tmpDir.resolve(DynaWaltzConstants.DYD_FILENAME));

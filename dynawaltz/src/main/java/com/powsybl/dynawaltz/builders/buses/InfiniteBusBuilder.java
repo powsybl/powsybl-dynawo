@@ -21,10 +21,6 @@ public class InfiniteBusBuilder extends AbstractBusBuilder<InfiniteBusBuilder> {
         super(network, modelConfig, reporter);
     }
 
-    public InfiniteBusBuilder(Network network, ModelConfig modelConfig) {
-        super(network, modelConfig);
-    }
-
     @Override
     public InfiniteBus build() {
         return isInstantiable() ? new InfiniteBus(dynamicModelId, getEquipment(), parameterSetId, modelConfig.getLib()) : null;

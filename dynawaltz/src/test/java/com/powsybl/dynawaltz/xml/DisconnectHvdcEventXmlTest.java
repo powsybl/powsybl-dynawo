@@ -7,8 +7,8 @@
  */
 package com.powsybl.dynawaltz.xml;
 
+import com.powsybl.dynawaltz.builders.EventModelsBuilderUtils;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
-import com.powsybl.dynawaltz.models.events.EventHvdcDisconnection;
 import com.powsybl.dynawaltz.models.hvdc.HvdcP;
 import com.powsybl.dynawaltz.models.hvdc.HvdcPDangling;
 import com.powsybl.dynawaltz.models.hvdc.HvdcVsc;
@@ -69,19 +69,38 @@ class DisconnectHvdcEventXmlTest extends AbstractParametrizedDynamicModelXmlTest
         return Stream.of(
                 Arguments.of("disconnect_default_hvdc_dyd.xml",
                         null,
-                        (Function<Network, BlackBoxModel>) n -> new EventHvdcDisconnection(n.getHvdcLine(HVDC_NAME), 1)),
+                        (Function<Network, BlackBoxModel>) n -> EventModelsBuilderUtils.newEventDisconnectionBuilder(n)
+                                .staticId(HVDC_NAME)
+                                .startTime(1)
+                                .build()),
                 Arguments.of("disconnect_hvdc_pv_dyd.xml",
                         (Function<Network, BlackBoxModel>) n -> new HvdcP(DYN_HVDC_NAME, n.getHvdcLine(HVDC_NAME), "hvdc", "HvdcPV"),
-                        (Function<Network, BlackBoxModel>) n -> new EventHvdcDisconnection(n.getHvdcLine(HVDC_NAME), 1, true, false)),
+                        (Function<Network, BlackBoxModel>) n -> EventModelsBuilderUtils.newEventDisconnectionBuilder(n)
+                                .staticId(HVDC_NAME)
+                                .startTime(1)
+                                .disconnectOnly(TwoSides.ONE)
+                                .build()),
                 Arguments.of("disconnect_hvdc_vsc_dyd.xml",
                         (Function<Network, BlackBoxModel>) n -> new HvdcVsc(DYN_HVDC_NAME, n.getHvdcLine(HVDC_NAME), "hvdc", "HvdcVsc"),
-                        (Function<Network, BlackBoxModel>) n -> new EventHvdcDisconnection(n.getHvdcLine(HVDC_NAME), 1, false, true)),
+                        (Function<Network, BlackBoxModel>) n -> EventModelsBuilderUtils.newEventDisconnectionBuilder(n)
+                                .staticId(HVDC_NAME)
+                                .startTime(1)
+                                .disconnectOnly(TwoSides.TWO)
+                                .build()),
                 Arguments.of("disconnect_hvdc_pv_dangling_dyd.xml",
                         (Function<Network, BlackBoxModel>) n -> new HvdcPDangling(DYN_HVDC_NAME, n.getHvdcLine(HVDC_NAME), "hvdc", "HvdcPVDangling", TwoSides.TWO),
-                        (Function<Network, BlackBoxModel>) n -> new EventHvdcDisconnection(n.getHvdcLine(HVDC_NAME), 1, true, false)),
+                        (Function<Network, BlackBoxModel>) n -> EventModelsBuilderUtils.newEventDisconnectionBuilder(n)
+                                .staticId(HVDC_NAME)
+                                .startTime(1)
+                                .disconnectOnly(TwoSides.ONE)
+                                .build()),
                 Arguments.of("disconnect_hvdc_vsc_dangling_dyd.xml",
                         (Function<Network, BlackBoxModel>) n -> new HvdcVscDangling(DYN_HVDC_NAME, n.getHvdcLine(HVDC_NAME), "hvdc", "HvdcVSCDanglingUdc", TwoSides.ONE),
-                        (Function<Network, BlackBoxModel>) n -> new EventHvdcDisconnection(n.getHvdcLine(HVDC_NAME), 1, false, true))
+                        (Function<Network, BlackBoxModel>) n -> EventModelsBuilderUtils.newEventDisconnectionBuilder(n)
+                                .staticId(HVDC_NAME)
+                                .startTime(1)
+                                .disconnectOnly(TwoSides.TWO)
+                                .build())
         );
     }
 }

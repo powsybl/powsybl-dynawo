@@ -26,10 +26,6 @@ public class TransformerFixedRatioBuilder extends AbstractEquipmentModelBuilder<
         super(network, modelConfig, IdentifiableType.TWO_WINDINGS_TRANSFORMER, reporter);
     }
 
-    public TransformerFixedRatioBuilder(Network network, ModelConfig modelConfig) {
-        super(network, modelConfig, IdentifiableType.TWO_WINDINGS_TRANSFORMER);
-    }
-
     @Override
     protected TwoWindingsTransformer findEquipment(String staticId) {
         return network.getTwoWindingsTransformer(staticId);

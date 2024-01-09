@@ -5,12 +5,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.builders.events;
+package com.powsybl.dynawaltz.models.events;
 
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.builders.DslEquipment;
 import com.powsybl.dynawaltz.builders.Reporters;
-import com.powsybl.dynawaltz.models.events.NodeFaultEvent;
 import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Network;
@@ -27,7 +26,7 @@ public class NodeFaultEventBuilder extends AbstractEventModelBuilder<Bus, NodeFa
     protected double xPu;
 
     public NodeFaultEventBuilder(Network network, Reporter reporter) {
-        super(network, new DslEquipment<Bus>(IdentifiableType.BUS), TAG, reporter);
+        super(network, new DslEquipment<>(IdentifiableType.BUS), TAG, reporter);
     }
 
     public NodeFaultEventBuilder faultTime(double faultTime) {

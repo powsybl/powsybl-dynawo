@@ -5,12 +5,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.builders.events;
+package com.powsybl.dynawaltz.models.events;
 
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynamicsimulation.EventModel;
 import com.powsybl.dynawaltz.builders.*;
-import com.powsybl.dynawaltz.models.events.AbstractEvent;
 import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.Network;
 

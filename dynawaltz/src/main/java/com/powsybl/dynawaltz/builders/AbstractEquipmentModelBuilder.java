@@ -28,10 +28,6 @@ public abstract class AbstractEquipmentModelBuilder<T extends Identifiable<?>, R
         this.dslEquipment = new DslEquipment<>(equipmentType);
     }
 
-    protected AbstractEquipmentModelBuilder(Network network, ModelConfig modelConfig, IdentifiableType equipmentType) {
-        this(network, modelConfig, equipmentType, Reporter.NO_OP);
-    }
-
     public R staticId(String staticId) {
         dslEquipment.addEquipment(staticId, this::findEquipment);
         return self();

@@ -24,10 +24,6 @@ public class BaseStaticVarCompensatorBuilder extends AbstractEquipmentModelBuild
         super(network, modelConfig, IdentifiableType.STATIC_VAR_COMPENSATOR, reporter);
     }
 
-    public BaseStaticVarCompensatorBuilder(Network network, ModelConfig modelConfig) {
-        super(network, modelConfig, IdentifiableType.STATIC_VAR_COMPENSATOR);
-    }
-
     @Override
     protected StaticVarCompensator findEquipment(String staticId) {
         return network.getStaticVarCompensator(staticId);

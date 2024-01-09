@@ -22,10 +22,6 @@ public class WeccBuilder extends AbstractGeneratorBuilder<WeccBuilder> {
         super(network, modelConfig, reporter);
     }
 
-    public WeccBuilder(Network network, ModelConfig modelConfig) {
-        super(network, modelConfig);
-    }
-
     @Override
     public WeccGen build() {
         if (isInstantiable()) {

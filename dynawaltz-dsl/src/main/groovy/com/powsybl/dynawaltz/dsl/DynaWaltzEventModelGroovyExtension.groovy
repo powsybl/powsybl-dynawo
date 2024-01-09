@@ -12,7 +12,7 @@ import com.powsybl.commons.reporter.Reporter
 import com.powsybl.dynamicsimulation.EventModel
 import com.powsybl.dynamicsimulation.groovy.EventModelGroovyExtension
 import com.powsybl.dynawaltz.DynaWaltzProvider
-import com.powsybl.dynawaltz.builders.DynamicModelBuilderUtils
+import com.powsybl.dynawaltz.builders.EventModelsBuilderUtils
 import com.powsybl.dynawaltz.builders.EventModelCategory
 import com.powsybl.dynawaltz.builders.ModelBuilder
 import com.powsybl.iidm.network.Network
@@ -27,7 +27,7 @@ class DynaWaltzEventModelGroovyExtension implements EventModelGroovyExtension {
     private final List<EventModelCategory>  modelConstructors
 
     DynaWaltzEventModelGroovyExtension() {
-        modelConstructors = DynamicModelBuilderUtils.eventModelCategories
+        modelConstructors = EventModelsBuilderUtils.eventModelCategories
     }
 
     @Override

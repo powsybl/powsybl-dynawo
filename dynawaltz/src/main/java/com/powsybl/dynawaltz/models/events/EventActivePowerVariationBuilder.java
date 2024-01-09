@@ -5,15 +5,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.builders.events;
+package com.powsybl.dynawaltz.models.events;
 
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.builders.DslFilteredEquipment;
 import com.powsybl.dynawaltz.builders.Reporters;
-import com.powsybl.dynawaltz.models.events.EventActivePowerVariation;
-import com.powsybl.iidm.network.Generator;
 import com.powsybl.iidm.network.Injection;
-import com.powsybl.iidm.network.Load;
 import com.powsybl.iidm.network.Network;
 
 /**
@@ -52,14 +49,7 @@ public class EventActivePowerVariationBuilder extends AbstractEventModelBuilder<
 
     @Override
     public EventActivePowerVariation build() {
-        if (isInstantiable()) {
-            if (dslEquipment.getEquipment() instanceof Load load) {
-                return new EventActivePowerVariation(load, startTime, deltaP);
-            } else if (dslEquipment.getEquipment() instanceof Generator generator) {
-                return new EventActivePowerVariation(generator, startTime, deltaP);
-            }
-        }
-        return null;
+        return isInstantiable() ? new EventActivePowerVariation(dslEquipment.getEquipment(), startTime, deltaP) : null;
     }
 
     @Override

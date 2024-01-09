@@ -9,13 +9,9 @@ package com.powsybl.dynawaltz.builders;
 
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynamicsimulation.DynamicModel;
-import com.powsybl.dynamicsimulation.EventModel;
 import com.powsybl.dynawaltz.builders.automatons.*;
 import com.powsybl.dynawaltz.builders.buses.InfiniteBusBuilder;
 import com.powsybl.dynawaltz.builders.buses.StandardBusBuilder;
-import com.powsybl.dynawaltz.builders.events.EventActivePowerVariationBuilder;
-import com.powsybl.dynawaltz.builders.events.EventDisconnectionBuilder;
-import com.powsybl.dynawaltz.builders.events.NodeFaultEventBuilder;
 import com.powsybl.dynawaltz.builders.generators.*;
 import com.powsybl.dynawaltz.builders.hvdcs.HvdcPBuilder;
 import com.powsybl.dynawaltz.builders.hvdcs.HvdcVscBuilder;
@@ -25,14 +21,12 @@ import com.powsybl.dynawaltz.builders.svarcs.BaseStaticVarCompensatorBuilder;
 import com.powsybl.dynawaltz.builders.transformers.TransformerFixedRatioBuilder;
 import com.powsybl.iidm.network.Network;
 
-import java.util.List;
-
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public final class DynamicModelBuilderUtils {
 
-    //TODO put builder in json
+    //TODO put builder in json ?
     public enum Categories implements BuilderCategory {
         // EQUIPMENTS
         BASE_LOADS("baseLoads", BaseLoadBuilder::new),
@@ -85,21 +79,6 @@ public final class DynamicModelBuilderUtils {
         ModelBuilder<DynamicModel> createBuilder(Network network, ModelConfig modelConfig, Reporter reporter);
     }
 
-    @FunctionalInterface
-    public interface EventModelBuilderConstructor {
-        ModelBuilder<EventModel> createBuilder(Network network, Reporter reporter);
-    }
-
     private DynamicModelBuilderUtils() {
-    }
-
-    public static List<DynamicModelCategory> getModelCategories() {
-        return ModelConfigsSingleton.getInstance().getDynamicModelCategories();
-    }
-
-    public static List<EventModelCategory> getEventModelCategories() {
-        return List.of(new EventModelCategory(EventActivePowerVariationBuilder.TAG, EventActivePowerVariationBuilder::new),
-                new EventModelCategory(EventDisconnectionBuilder.TAG, EventDisconnectionBuilder::new),
-                new EventModelCategory(NodeFaultEventBuilder.TAG, NodeFaultEventBuilder::new));
     }
 }

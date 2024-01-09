@@ -27,6 +27,7 @@ public class ModelConfig {
     private List<String> properties = new ArrayList<>();
 
     //TODO delete alternative cstr ?
+    //TODO package private ?
     public ModelConfig(String lib, String internalModelPrefix, List<String> properties) {
         this.lib = lib;
         this.internalModelPrefix = internalModelPrefix;

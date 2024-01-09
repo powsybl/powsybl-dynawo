@@ -23,10 +23,6 @@ public abstract class AbstractBusBuilder<R extends AbstractEquipmentModelBuilder
         super(network, modelConfig, IdentifiableType.BUS, reporter);
     }
 
-    protected AbstractBusBuilder(Network network, ModelConfig modelConfig) {
-        super(network, modelConfig, IdentifiableType.BUS);
-    }
-
     @Override
     protected Bus findEquipment(String staticId) {
         return network.getBusBreakerView().getBus(staticId);

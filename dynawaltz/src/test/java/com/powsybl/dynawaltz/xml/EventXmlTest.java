@@ -9,14 +9,14 @@ package com.powsybl.dynawaltz.xml;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
-import com.powsybl.dynawaltz.models.events.EventInjectionDisconnection;
-import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection;
+import com.powsybl.dynawaltz.builders.EventModelsBuilderUtils;
+import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.generators.SynchronousGenerator;
+import com.powsybl.iidm.network.TwoSides;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
-import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 
 /**
@@ -25,7 +25,7 @@ import java.io.IOException;
 class EventXmlTest extends DynaWaltzTestUtil {
 
     @Test
-    void writeDynamicModel() throws SAXException, IOException, XMLStreamException {
+    void writeDynamicModel() throws SAXException, IOException {
         dynamicModels.clear();
         dynamicModels.add(new SynchronousGenerator("BBM_GEN2", network.getGenerator("GEN2"), "GSFWPR", "GeneratorSynchronousFourWindingsProportionalRegulations"));
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
@@ -40,12 +40,27 @@ class EventXmlTest extends DynaWaltzTestUtil {
     @Test
     void duplicateEventId() {
         eventModels.clear();
-        EventQuadripoleDisconnection event1 = new EventQuadripoleDisconnection(network.getLine("NHV1_NHV2_1"), 5);
-        EventInjectionDisconnection event2 = new EventInjectionDisconnection(network.getGenerator("GEN2"), 1, true);
+        BlackBoxModel event1 = EventModelsBuilderUtils.newEventDisconnectionBuilder(network)
+                .staticId("NHV1_NHV2_1")
+                .startTime(5)
+                .build();
+        BlackBoxModel event2 = EventModelsBuilderUtils.newEventDisconnectionBuilder(network)
+                .staticId("GEN2")
+                .startTime(1)
+                .build();
+        BlackBoxModel event1Duplicate = EventModelsBuilderUtils.newEventDisconnectionBuilder(network)
+                .staticId("NHV1_NHV2_1")
+                .startTime(5)
+                .disconnectOnly(TwoSides.ONE)
+                .build();
+        BlackBoxModel event2Duplicate = EventModelsBuilderUtils.newEventDisconnectionBuilder(network)
+                .staticId("GEN2")
+                .startTime(1)
+                .build();
         eventModels.add(event1);
-        eventModels.add(new EventQuadripoleDisconnection(network.getLine("NHV1_NHV2_1"), 5, true, false));
         eventModels.add(event2);
-        eventModels.add(new EventInjectionDisconnection(network.getGenerator("GEN2"), 1, false));
+        eventModels.add(event1Duplicate);
+        eventModels.add(event2Duplicate);
         String workingVariantId = network.getVariantManager().getWorkingVariantId();
         DynaWaltzContext context = new DynaWaltzContext(network, workingVariantId, dynamicModels, eventModels, curves, DynamicSimulationParameters.load(), DynaWaltzParameters.load());
         Assertions.assertThat(context.getBlackBoxEventModels()).containsExactly(event1, event2);
