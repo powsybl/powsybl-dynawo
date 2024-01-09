@@ -5,12 +5,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.builders.automatons;
+package com.powsybl.dynawaltz.models.automatons;
 
 import com.powsybl.commons.reporter.Reporter;
+import com.powsybl.dynawaltz.builders.BuildersUtil;
 import com.powsybl.dynawaltz.builders.ModelConfig;
 import com.powsybl.dynawaltz.builders.Reporters;
-import com.powsybl.dynawaltz.models.automatons.TapChangerBlockingAutomaton;
 import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.Load;
 import com.powsybl.iidm.network.Network;
@@ -34,7 +34,7 @@ public class TapChangerBlockingAutomatonBuilder extends AbstractAutomatonModelBu
         super(network, modelConfig, reporter);
     }
 
-    public TapChangerBlockingAutomatonBuilder transformers(String[] staticIds) {
+    public TapChangerBlockingAutomatonBuilder transformers(String... staticIds) {
         Arrays.stream(staticIds).forEach(id -> {
             Identifiable<?> equipment = network.getIdentifiable(id);
             if (equipment == null) {
@@ -50,7 +50,7 @@ public class TapChangerBlockingAutomatonBuilder extends AbstractAutomatonModelBu
         return self();
     }
 
-    public TapChangerBlockingAutomatonBuilder uMeasurements(String[] staticIds) {
+    public TapChangerBlockingAutomatonBuilder uMeasurements(String... staticIds) {
         uMeasurements = new ArrayList<>();
         for (String staticId : staticIds) {
             Identifiable<?> measurementPoint = network.getIdentifiable(staticId);

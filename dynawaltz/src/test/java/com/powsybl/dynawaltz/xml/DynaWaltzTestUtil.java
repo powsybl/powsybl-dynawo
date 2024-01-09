@@ -9,9 +9,9 @@ package com.powsybl.dynawaltz.xml;
 import com.powsybl.commons.test.AbstractSerDeTest;
 import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynawaltz.DynaWaltzCurve;
+import com.powsybl.dynawaltz.builders.DynamicModelBuilderUtils;
 import com.powsybl.dynawaltz.builders.EventModelsBuilderUtils;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
-import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton;
 import com.powsybl.dynawaltz.models.generators.GeneratorFictitious;
 import com.powsybl.dynawaltz.models.generators.SynchronizedGenerator;
 import com.powsybl.dynawaltz.models.generators.SynchronousGenerator;
@@ -108,7 +108,13 @@ public class DynaWaltzTestUtil extends AbstractSerDeTest {
 
         // Automatons
         network.getLineStream().filter(line -> line != standardLine)
-                .forEach(l -> dynamicModels.add(new CurrentLimitAutomaton("BBM_" + l.getId(), "CLA", l, TwoSides.ONE, "CurrentLimitAutomaton")));
+                .forEach(l -> dynamicModels.add(DynamicModelBuilderUtils.newCurrentLimitAutomatonBuilder(network, "CurrentLimitAutomaton")
+                        .dynamicModelId("BBM_" + l.getId())
+                        .parameterSetId("CLA")
+                        .controlledQuadripole(l.getId())
+                        .iMeasurement(l.getId())
+                        .iMeasurementSide(TwoSides.ONE)
+                        .build()));
     }
 
     public void validate(String schemaDefinition, String expectedResourceName, Path xmlFile) throws SAXException, IOException {

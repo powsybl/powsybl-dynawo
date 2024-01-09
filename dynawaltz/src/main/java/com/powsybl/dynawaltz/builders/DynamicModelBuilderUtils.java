@@ -9,7 +9,6 @@ package com.powsybl.dynawaltz.builders;
 
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynamicsimulation.DynamicModel;
-import com.powsybl.dynawaltz.builders.automatons.*;
 import com.powsybl.dynawaltz.builders.buses.InfiniteBusBuilder;
 import com.powsybl.dynawaltz.builders.buses.StandardBusBuilder;
 import com.powsybl.dynawaltz.builders.generators.*;
@@ -19,14 +18,23 @@ import com.powsybl.dynawaltz.builders.lines.LineBuilder;
 import com.powsybl.dynawaltz.builders.loads.*;
 import com.powsybl.dynawaltz.builders.svarcs.BaseStaticVarCompensatorBuilder;
 import com.powsybl.dynawaltz.builders.transformers.TransformerFixedRatioBuilder;
+import com.powsybl.dynawaltz.models.automatons.currentLimits.CurrentLimitAutomatonBuilder;
+import com.powsybl.dynawaltz.models.automatons.currentLimits.CurrentLimitTwoLevelsAutomatonBuilder;
+import com.powsybl.dynawaltz.models.automatons.phaseshifters.PhaseShifterIAutomatonBuilder;
+import com.powsybl.dynawaltz.models.automatons.phaseshifters.PhaseShifterPAutomatonBuilder;
+import com.powsybl.dynawaltz.models.automatons.TapChangerAutomatonBuilder;
+import com.powsybl.dynawaltz.models.automatons.TapChangerBlockingAutomatonBuilder;
+import com.powsybl.dynawaltz.models.automatons.UnderVoltageAutomatonBuilder;
 import com.powsybl.iidm.network.Network;
+
+import static com.powsybl.dynawaltz.builders.DynamicModelBuilderUtils.Categories.*;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public final class DynamicModelBuilderUtils {
 
-    //TODO put builder in json ?
+    //TODO replace inner class
     public enum Categories implements BuilderCategory {
         // EQUIPMENTS
         BASE_LOADS("baseLoads", BaseLoadBuilder::new),
@@ -48,7 +56,7 @@ public final class DynamicModelBuilderUtils {
         TRANSFORMERS("transformers", TransformerFixedRatioBuilder::new),
         // AUTOMATONS
         CLAS("clas", CurrentLimitAutomatonBuilder::new),
-        CLAS_TWO_LEVELS("clasTwoLevels", CurrentLimitAutomatonTwoLevelBuilder::new),
+        CLAS_TWO_LEVELS("clasTwoLevels", CurrentLimitTwoLevelsAutomatonBuilder::new),
         PHASE_SHIFTERS_I("phaseShiftersI", PhaseShifterIAutomatonBuilder::new),
         PHASE_SHIFTERS_P("phaseShiftersP", PhaseShifterPAutomatonBuilder::new),
         TAP_CHANGERS("tapChangers", TapChangerAutomatonBuilder::new),
@@ -81,4 +89,76 @@ public final class DynamicModelBuilderUtils {
 
     private DynamicModelBuilderUtils() {
     }
+
+    public static CurrentLimitAutomatonBuilder newCurrentLimitAutomatonBuilder(Network network, String lib, Reporter reporter) {
+        return new CurrentLimitAutomatonBuilder(network,
+                ModelConfigsSingleton.getInstance().getModelConfig(CLAS.getCategoryName(), lib),
+                reporter);
+    }
+
+    public static CurrentLimitAutomatonBuilder newCurrentLimitAutomatonBuilder(Network network, String lib) {
+        return newCurrentLimitAutomatonBuilder(network, lib, Reporter.NO_OP);
+    }
+
+    public static CurrentLimitTwoLevelsAutomatonBuilder newCurrentLimitTwoLevelsAutomatonBuilder(Network network, String lib, Reporter reporter) {
+        return new CurrentLimitTwoLevelsAutomatonBuilder(network,
+                ModelConfigsSingleton.getInstance().getModelConfig(CLAS_TWO_LEVELS.getCategoryName(), lib),
+                reporter);
+    }
+
+    public static CurrentLimitTwoLevelsAutomatonBuilder newCurrentLimitTwoLevelsAutomatonBuilder(Network network, String lib) {
+        return newCurrentLimitTwoLevelsAutomatonBuilder(network, lib, Reporter.NO_OP);
+    }
+
+    public static PhaseShifterIAutomatonBuilder newPhaseShifterIAutomatonBuilder(Network network, Reporter reporter) {
+        return new PhaseShifterIAutomatonBuilder(network,
+                ModelConfigsSingleton.getInstance().getFirstModelConfig(PHASE_SHIFTERS_I.getCategoryName()),
+                reporter);
+    }
+
+    public static PhaseShifterIAutomatonBuilder newPhaseShifterIAutomatonBuilder(Network network) {
+        return newPhaseShifterIAutomatonBuilder(network, Reporter.NO_OP);
+    }
+
+    public static PhaseShifterPAutomatonBuilder newPhaseShifterPAutomatonBuilder(Network network, Reporter reporter) {
+        return new PhaseShifterPAutomatonBuilder(network,
+                ModelConfigsSingleton.getInstance().getFirstModelConfig(PHASE_SHIFTERS_P.getCategoryName()),
+                reporter);
+    }
+
+    public static PhaseShifterPAutomatonBuilder newPhaseShifterPAutomatonBuilder(Network network) {
+        return newPhaseShifterPAutomatonBuilder(network, Reporter.NO_OP);
+    }
+
+    public static TapChangerAutomatonBuilder newTapChangerAutomatonBuilder(Network network, Reporter reporter) {
+        return new TapChangerAutomatonBuilder(network,
+                ModelConfigsSingleton.getInstance().getFirstModelConfig(TAP_CHANGERS.getCategoryName()),
+                reporter);
+    }
+
+    public static TapChangerAutomatonBuilder newTapChangerAutomatonBuilder(Network network) {
+        return newTapChangerAutomatonBuilder(network, Reporter.NO_OP);
+    }
+
+    public static TapChangerBlockingAutomatonBuilder newTapChangerBlockingAutomatonBuilder(Network network, Reporter reporter) {
+        return new TapChangerBlockingAutomatonBuilder(network,
+                ModelConfigsSingleton.getInstance().getFirstModelConfig(TCBS.getCategoryName()),
+                reporter);
+    }
+
+    public static TapChangerBlockingAutomatonBuilder newTapChangerBlockingAutomatonBuilder(Network network) {
+        return newTapChangerBlockingAutomatonBuilder(network, Reporter.NO_OP);
+    }
+
+    public static UnderVoltageAutomatonBuilder newUnderVoltageAutomatonBuilder(Network network, Reporter reporter) {
+        return new UnderVoltageAutomatonBuilder(network,
+                ModelConfigsSingleton.getInstance().getFirstModelConfig(UNDER_VOLTAGES.getCategoryName()),
+                reporter);
+    }
+
+    public static UnderVoltageAutomatonBuilder newUnderVoltageAutomatonBuilder(Network network) {
+        return newUnderVoltageAutomatonBuilder(network, Reporter.NO_OP);
+    }
+
+    //TODO add lib methods to every automatons ?
 }

@@ -5,13 +5,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.builders.automatons;
+package com.powsybl.dynawaltz.models.automatons;
 
 import com.powsybl.commons.reporter.Reporter;
-import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynawaltz.builders.DslEquipment;
 import com.powsybl.dynawaltz.builders.ModelConfig;
-import com.powsybl.dynawaltz.models.automatons.UnderVoltageAutomaton;
 import com.powsybl.iidm.network.Generator;
 import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Network;
@@ -23,7 +21,6 @@ public class UnderVoltageAutomatonBuilder extends AbstractAutomatonModelBuilder<
 
     protected final DslEquipment<Generator> dslGenerator;
 
-    //TODO handle NO_OP in Utils ?
     public UnderVoltageAutomatonBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
         super(network, modelConfig, reporter);
         dslGenerator = new DslEquipment<>(IdentifiableType.GENERATOR, "generator");
@@ -41,7 +38,7 @@ public class UnderVoltageAutomatonBuilder extends AbstractAutomatonModelBuilder<
     }
 
     @Override
-    public DynamicModel build() {
+    public UnderVoltageAutomaton build() {
         return isInstantiable() ? new UnderVoltageAutomaton(dynamicModelId, parameterSetId, dslGenerator.getEquipment(), getLib()) : null;
     }
 

@@ -7,9 +7,8 @@
  */
 package com.powsybl.dynawaltz.xml;
 
+import com.powsybl.dynawaltz.builders.DynamicModelBuilderUtils;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
-import com.powsybl.dynawaltz.models.automatons.phaseshifters.PhaseShifterIAutomaton;
-import com.powsybl.dynawaltz.models.automatons.phaseshifters.PhaseShifterPAutomaton;
 import com.powsybl.dynawaltz.models.transformers.TransformerFixedRatio;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
@@ -61,8 +60,17 @@ class PhaseShiftersXmlTest extends AbstractParametrizedDynamicModelXmlTest {
 
     private static Stream<Arguments> providePhaseShifter() {
         return Stream.of(
-                Arguments.of("phase_shifter_i_dyd", (Function<Network, BlackBoxModel>) n -> new PhaseShifterIAutomaton(DYN_NAME, n.getTwoWindingsTransformer("NGEN_NHV1"), "ps", "PhaseShifterI"), true),
-                Arguments.of("phase_shifter_p_dyd", (Function<Network, BlackBoxModel>) n -> new PhaseShifterPAutomaton(DYN_NAME, n.getTwoWindingsTransformer("NGEN_NHV1"), "ps", "PhaseShifterP"), false)
-        );
+                Arguments.of("phase_shifter_i_dyd", (Function<Network, BlackBoxModel>) n ->
+                        DynamicModelBuilderUtils.newPhaseShifterIAutomatonBuilder(n)
+                                .dynamicModelId(DYN_NAME)
+                                .parameterSetId("ps")
+                                .transformer("NGEN_NHV1")
+                                .build(), true),
+                Arguments.of("phase_shifter_p_dyd", (Function<Network, BlackBoxModel>) n ->
+                        DynamicModelBuilderUtils.newPhaseShifterPAutomatonBuilder(n)
+                                .dynamicModelId(DYN_NAME)
+                                .parameterSetId("ps")
+                                .transformer("NGEN_NHV1")
+                                .build(), false));
     }
 }

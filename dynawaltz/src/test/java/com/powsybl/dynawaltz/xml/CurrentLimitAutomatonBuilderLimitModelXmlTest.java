@@ -7,7 +7,7 @@
  */
 package com.powsybl.dynawaltz.xml;
 
-import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton;
+import com.powsybl.dynawaltz.builders.DynamicModelBuilderUtils;
 import com.powsybl.dynawaltz.models.transformers.TransformerFixedRatio;
 import com.powsybl.iidm.network.TwoSides;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
@@ -29,10 +29,28 @@ class CurrentLimitAutomatonBuilderLimitModelXmlTest extends AbstractDynamicModel
 
     @Override
     protected void addDynamicModels() {
-        dynamicModels.add(new CurrentLimitAutomaton("BBM_CLA_LINE", "cla", network.getLine("NHV1_NHV2_1"), TwoSides.ONE, "CurrentLimitAutomaton"));
-        dynamicModels.add(new CurrentLimitAutomaton("BBM_CLA_TRANSFORMER", "cla", network.getTwoWindingsTransformer("NGEN_NHV1"), TwoSides.TWO, "CurrentLimitAutomaton"));
+        dynamicModels.add(DynamicModelBuilderUtils.newCurrentLimitAutomatonBuilder(network, "CurrentLimitAutomaton")
+                .dynamicModelId("BBM_CLA_LINE")
+                .parameterSetId("cla")
+                .controlledQuadripole("NHV1_NHV2_1")
+                .iMeasurement("NHV1_NHV2_1")
+                .iMeasurementSide(TwoSides.ONE)
+                .build());
+        dynamicModels.add(DynamicModelBuilderUtils.newCurrentLimitAutomatonBuilder(network, "CurrentLimitAutomaton")
+                .dynamicModelId("BBM_CLA_TRANSFORMER")
+                .parameterSetId("cla")
+                .controlledQuadripole("NGEN_NHV1")
+                .iMeasurement("NGEN_NHV1")
+                .iMeasurementSide(TwoSides.TWO)
+                .build());
         dynamicModels.add(new TransformerFixedRatio("BBM_TRANSFORMER", network.getTwoWindingsTransformer("NHV2_NLOAD"), "tf", "TransformerFixedRatio"));
-        dynamicModels.add(new CurrentLimitAutomaton("BBM_CLA_TRANSFORMER2", "cla", network.getTwoWindingsTransformer("NHV2_NLOAD"), TwoSides.TWO, network.getLine("NHV1_NHV2_1"), "CurrentLimitAutomaton"));
+        dynamicModels.add(DynamicModelBuilderUtils.newCurrentLimitAutomatonBuilder(network, "CurrentLimitAutomaton")
+                .dynamicModelId("BBM_CLA_TRANSFORMER2")
+                .parameterSetId("cla")
+                .controlledQuadripole("NHV1_NHV2_1")
+                .iMeasurement("NHV2_NLOAD")
+                .iMeasurementSide(TwoSides.TWO)
+                .build());
     }
 
     @Test

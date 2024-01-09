@@ -5,14 +5,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.builders.automatons;
+package com.powsybl.dynawaltz.models.automatons;
 
 import com.powsybl.commons.reporter.Reporter;
-import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynawaltz.builders.DslEquipment;
 import com.powsybl.dynawaltz.builders.ModelConfig;
 import com.powsybl.dynawaltz.models.TransformerSide;
-import com.powsybl.dynawaltz.models.automatons.TapChangerAutomaton;
 import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Load;
 import com.powsybl.iidm.network.Network;
@@ -47,7 +45,7 @@ public class TapChangerAutomatonBuilder extends AbstractAutomatonModelBuilder<Ta
     }
 
     @Override
-    public DynamicModel build() {
+    public TapChangerAutomaton build() {
         return isInstantiable() ? new TapChangerAutomaton(dynamicModelId, parameterSetId, dslLoad.getEquipment(), side, getLib()) : null;
     }
 

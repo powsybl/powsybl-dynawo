@@ -5,9 +5,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.models.automatons;
+package com.powsybl.dynawaltz.models.automatons.currentLimits;
 
 import com.powsybl.dynawaltz.models.VarConnection;
+import com.powsybl.dynawaltz.models.automatons.QuadripoleModel;
 import com.powsybl.dynawaltz.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawaltz.models.utils.SideUtils;
 import com.powsybl.iidm.network.Branch;
@@ -28,7 +29,7 @@ public class CurrentLimitTwoLevelsAutomaton extends CurrentLimitAutomaton {
     private final Branch<?> secondMeasuredQuadripole;
     private final TwoSides secondMeasuredSide;
 
-    public CurrentLimitTwoLevelsAutomaton(String dynamicModelId, String parameterSetId, Branch<?> measuredQuadripole, TwoSides measuredSide, Branch<?> secondMeasuredQuadripole, TwoSides secondMeasuredSide, Branch<?> controlledQuadripole, String lib) {
+    CurrentLimitTwoLevelsAutomaton(String dynamicModelId, String parameterSetId, Branch<?> measuredQuadripole, TwoSides measuredSide, Branch<?> secondMeasuredQuadripole, TwoSides secondMeasuredSide, Branch<?> controlledQuadripole, String lib) {
         super(dynamicModelId, parameterSetId, measuredQuadripole, measuredSide, controlledQuadripole, lib);
         this.secondMeasuredQuadripole = Objects.requireNonNull(secondMeasuredQuadripole);
         this.secondMeasuredSide = Objects.requireNonNull(secondMeasuredSide);

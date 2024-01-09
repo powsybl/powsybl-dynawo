@@ -16,6 +16,8 @@ import com.powsybl.dynawaltz.DynaWaltzProvider;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.EquipmentBlackBoxModel;
 import com.powsybl.dynawaltz.models.automatons.*;
+import com.powsybl.dynawaltz.models.automatons.currentLimits.CurrentLimitAutomaton;
+import com.powsybl.dynawaltz.models.automatons.currentLimits.CurrentLimitTwoLevelsAutomaton;
 import com.powsybl.dynawaltz.models.automatons.phaseshifters.PhaseShifterIAutomaton;
 import com.powsybl.dynawaltz.models.automatons.phaseshifters.PhaseShifterPAutomaton;
 import com.powsybl.dynawaltz.models.buses.InfiniteBus;

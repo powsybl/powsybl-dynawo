@@ -8,13 +8,11 @@
 package com.powsybl.dynawaltz.xml;
 
 import com.powsybl.commons.PowsyblException;
-import com.powsybl.dynawaltz.models.automatons.TapChangerBlockingAutomaton;
+import com.powsybl.dynawaltz.builders.DynamicModelBuilderUtils;
 import com.powsybl.dynawaltz.models.loads.LoadOneTransformerTapChanger;
 import com.powsybl.dynawaltz.models.loads.LoadTwoTransformersTapChangers;
 import com.powsybl.dynawaltz.models.transformers.TransformerFixedRatio;
 import com.powsybl.iidm.network.Bus;
-import com.powsybl.iidm.network.Identifiable;
-import com.powsybl.iidm.network.TwoWindingsTransformer;
 import com.powsybl.iidm.network.VoltageLevel;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.Test;
@@ -22,8 +20,6 @@ import org.xml.sax.SAXException;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -46,11 +42,12 @@ class TapChangerBlockingAutomatonXmlTest extends AbstractDynamicModelXmlTest {
         dynamicModels.add(new TransformerFixedRatio("BBM_NGEN_NHV1", network.getTwoWindingsTransformer("NGEN_NHV1"), "transformer", "TransformerFixedRatio"));
         dynamicModels.add(new LoadOneTransformerTapChanger("BBM_LOAD", network.getLoad("LOAD"), "lot", "LoadOneTransformerTapChanger"));
         dynamicModels.add(new LoadTwoTransformersTapChangers("BBM_LOAD2", network.getLoad("LOAD2"), "ltt", "LoadTwoTransformersTapChangers"));
-        dynamicModels.add(new TapChangerBlockingAutomaton("BBM_TapChangerBlocking", "TapChangerPar",
-                network.getTwoWindingsTransformerStream().toList(),
-                List.of(network.getLoad("LOAD"), network.getLoad("LOAD2")),
-                List.of(network.getBusBreakerView().getBus("NHV1"), network.getBusBreakerView().getBus("NHV2")),
-                "TapChangerBlockingAutomaton"));
+        dynamicModels.add(DynamicModelBuilderUtils.newTapChangerBlockingAutomatonBuilder(network)
+                .dynamicModelId("BBM_TapChangerBlocking")
+                .parameterSetId("TapChangerPar")
+                .transformers("NGEN_NHV1", "NHV2_NLOAD", "LOAD", "LOAD2")
+                .uMeasurements("NHV1", "NHV2")
+                .build());
     }
 
     @Test
@@ -62,31 +59,13 @@ class TapChangerBlockingAutomatonXmlTest extends AbstractDynamicModelXmlTest {
 
     @Test
     void testMonitoredEquipmentsLimit() {
-
-        List<Identifiable<?>> buses = List.of(network.getBusBreakerView().getBus("NHV1"));
-        List<TwoWindingsTransformer> transformers = List.of(network.getTwoWindingsTransformer("NGEN_NHV1"));
-        List<Identifiable<?>> tooManyBuses = List.of(network.getBusBreakerView().getBus("NHV1"),
-                network.getBusBreakerView().getBus("NHV1"),
-                network.getBusBreakerView().getBus("NHV1"),
-                network.getBusBreakerView().getBus("NHV1"),
-                network.getBusBreakerView().getBus("NHV1"),
-                network.getBusBreakerView().getBus("NHV1"));
-        List<TwoWindingsTransformer> emptyTransformerList = Collections.emptyList();
-
         Exception e = assertThrows(PowsyblException.class, () ->
-                new TapChangerBlockingAutomaton("TapChanger1",
-                "TapChangerPar",
-                            emptyTransformerList,
-                            buses,
-                        "TapChangerBlockingAutomaton"));
-        assertEquals("No Tap changers to monitor", e.getMessage());
-
-        e = assertThrows(PowsyblException.class, () ->
-                new TapChangerBlockingAutomaton("TapChanger1",
-               "TapChangerPar",
-                            transformers,
-                            tooManyBuses,
-                            "TapChangerBlockingAutomaton"));
+                DynamicModelBuilderUtils.newTapChangerBlockingAutomatonBuilder(network)
+                        .dynamicModelId("TapChanger1")
+                        .parameterSetId("TapChangerPar")
+                        .transformers("NGEN_NHV1")
+                        .uMeasurements("NHV1", "NHV1", "NHV1", "NHV1", "NHV1", "NHV1")
+                        .build());
         assertEquals("Tap changer blocking automaton can only handle 5 measurement points at the same time", e.getMessage());
     }
 }

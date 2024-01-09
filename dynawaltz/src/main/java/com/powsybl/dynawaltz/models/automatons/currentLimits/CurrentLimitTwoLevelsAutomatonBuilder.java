@@ -5,13 +5,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.builders.automatons;
+package com.powsybl.dynawaltz.models.automatons.currentLimits;
 
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.builders.DslEquipment;
 import com.powsybl.dynawaltz.builders.ModelConfig;
 import com.powsybl.dynawaltz.builders.Reporters;
-import com.powsybl.dynawaltz.models.automatons.CurrentLimitTwoLevelsAutomaton;
 import com.powsybl.iidm.network.Branch;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.TwoSides;
@@ -19,33 +18,33 @@ import com.powsybl.iidm.network.TwoSides;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class CurrentLimitAutomatonTwoLevelBuilder extends AbstractCurrentLimitAutomatonBuilder<CurrentLimitAutomatonTwoLevelBuilder> {
+public class CurrentLimitTwoLevelsAutomatonBuilder extends AbstractCurrentLimitAutomatonBuilder<CurrentLimitTwoLevelsAutomatonBuilder> {
 
     protected final DslEquipment<Branch<?>> iMeasurement2;
     protected TwoSides iMeasurement2Side;
 
-    public CurrentLimitAutomatonTwoLevelBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
+    public CurrentLimitTwoLevelsAutomatonBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
         super(network, modelConfig, reporter, new DslEquipment<>("Quadripole", "iMeasurement1"),
                 new DslEquipment<>("Quadripole", "controlledQuadripole1"));
         iMeasurement2 = new DslEquipment<>("Quadripole", "iMeasurement2");
     }
 
-    public CurrentLimitAutomatonTwoLevelBuilder iMeasurement1(String staticId) {
+    public CurrentLimitTwoLevelsAutomatonBuilder iMeasurement1(String staticId) {
         iMeasurement.addEquipment(staticId, network::getBranch);
         return self();
     }
 
-    public CurrentLimitAutomatonTwoLevelBuilder iMeasurement1Side(TwoSides side) {
+    public CurrentLimitTwoLevelsAutomatonBuilder iMeasurement1Side(TwoSides side) {
         this.iMeasurementSide = side;
         return self();
     }
 
-    public CurrentLimitAutomatonTwoLevelBuilder iMeasurement2(String staticId) {
+    public CurrentLimitTwoLevelsAutomatonBuilder iMeasurement2(String staticId) {
         iMeasurement2.addEquipment(staticId, network::getBranch);
         return self();
     }
 
-    public CurrentLimitAutomatonTwoLevelBuilder iMeasurement2Side(TwoSides side) {
+    public CurrentLimitTwoLevelsAutomatonBuilder iMeasurement2Side(TwoSides side) {
         this.iMeasurement2Side = side;
         return self();
     }
@@ -69,7 +68,7 @@ public class CurrentLimitAutomatonTwoLevelBuilder extends AbstractCurrentLimitAu
     }
 
     @Override
-    protected CurrentLimitAutomatonTwoLevelBuilder self() {
+    protected CurrentLimitTwoLevelsAutomatonBuilder self() {
         return this;
     }
 }

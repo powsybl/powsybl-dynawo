@@ -7,7 +7,7 @@
  */
 package com.powsybl.dynawaltz.xml;
 
-import com.powsybl.dynawaltz.models.automatons.UnderVoltageAutomaton;
+import com.powsybl.dynawaltz.builders.DynamicModelBuilderUtils;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
@@ -27,7 +27,11 @@ class UnderVoltageAutomatonXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void addDynamicModels() {
-        dynamicModels.add(new UnderVoltageAutomaton("BBM_under_voltage", "uv", network.getGenerator("GEN"), "UnderVoltageAutomaton"));
+        dynamicModels.add(DynamicModelBuilderUtils.newUnderVoltageAutomatonBuilder(network)
+                .dynamicModelId("BBM_under_voltage")
+                .parameterSetId("uv")
+                .generator("GEN")
+                .build());
     }
 
     @Test

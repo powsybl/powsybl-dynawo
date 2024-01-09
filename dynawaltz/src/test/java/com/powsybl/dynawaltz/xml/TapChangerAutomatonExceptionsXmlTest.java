@@ -8,10 +8,13 @@
 package com.powsybl.dynawaltz.xml;
 
 import com.powsybl.commons.PowsyblException;
+import com.powsybl.dynawaltz.builders.DynamicModelBuilderUtils;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.TransformerSide;
-import com.powsybl.dynawaltz.models.automatons.TapChangerAutomaton;
-import com.powsybl.dynawaltz.models.loads.*;
+import com.powsybl.dynawaltz.models.loads.LoadOneTransformer;
+import com.powsybl.dynawaltz.models.loads.LoadOneTransformerTapChanger;
+import com.powsybl.dynawaltz.models.loads.LoadTwoTransformers;
+import com.powsybl.dynawaltz.models.loads.LoadTwoTransformersTapChangers;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,7 +50,12 @@ class TapChangerAutomatonExceptionsXmlTest extends AbstractParametrizedDynamicMo
 
     protected void addDynamicModels(TransformerSide side, Function< Network, BlackBoxModel> loadConstructor) {
         dynamicModels.add(loadConstructor.apply(network));
-        dynamicModels.add(new TapChangerAutomaton("BBM_TC", "tc", network.getLoad(LOAD_NAME), side, "TapChangerAutomaton"));
+        dynamicModels.add(DynamicModelBuilderUtils.newTapChangerAutomatonBuilder(network)
+                .dynamicModelId("BBM_TC")
+                .parameterSetId("tc")
+                .staticId(LOAD_NAME)
+                .side(side)
+                .build());
     }
 
     @ParameterizedTest

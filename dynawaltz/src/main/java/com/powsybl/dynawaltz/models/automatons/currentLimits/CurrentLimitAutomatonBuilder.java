@@ -5,12 +5,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.builders.automatons;
+package com.powsybl.dynawaltz.models.automatons.currentLimits;
 
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.builders.DslEquipment;
 import com.powsybl.dynawaltz.builders.ModelConfig;
-import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.TwoSides;
 

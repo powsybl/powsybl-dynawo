@@ -7,8 +7,8 @@
  */
 package com.powsybl.dynawaltz.xml;
 
+import com.powsybl.dynawaltz.builders.DynamicModelBuilderUtils;
 import com.powsybl.dynawaltz.models.TransformerSide;
-import com.powsybl.dynawaltz.models.automatons.TapChangerAutomaton;
 import com.powsybl.dynawaltz.models.loads.*;
 import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.VoltageLevel;
@@ -38,9 +38,23 @@ class TapChangerAutomatonXmlTest extends AbstractDynamicModelXmlTest {
         dynamicModels.add(new LoadOneTransformer("BBM_LOAD", network.getLoad("LOAD"), "LOT", "LoadOneTransformer"));
         dynamicModels.add(new LoadTwoTransformers("BBM_LOAD2", network.getLoad("LOAD2"), "LTT", "LoadTwoTransformers"));
         dynamicModels.add(new LoadTwoTransformers("BBM_LOAD3", network.getLoad("LOAD3"), "LTT", "LoadTwoTransformers"));
-        dynamicModels.add(new TapChangerAutomaton("BBM_TC", "tc", network.getLoad("LOAD"), "TapChangerAutomaton"));
-        dynamicModels.add(new TapChangerAutomaton("BBM_TC2", "tc", network.getLoad("LOAD2"), TransformerSide.LOW_VOLTAGE, "TapChangerAutomaton"));
-        dynamicModels.add(new TapChangerAutomaton("BBM_TC3", "tc", network.getLoad("LOAD3"), TransformerSide.HIGH_VOLTAGE, "TapChangerAutomaton"));
+        dynamicModels.add(DynamicModelBuilderUtils.newTapChangerAutomatonBuilder(network)
+                        .dynamicModelId("BBM_TC")
+                        .parameterSetId("tc")
+                        .staticId("LOAD")
+                        .build());
+        dynamicModels.add(DynamicModelBuilderUtils.newTapChangerAutomatonBuilder(network)
+                        .dynamicModelId("BBM_TC2")
+                        .parameterSetId("tc")
+                        .staticId("LOAD2")
+                        .side(TransformerSide.LOW_VOLTAGE)
+                        .build());
+        dynamicModels.add(DynamicModelBuilderUtils.newTapChangerAutomatonBuilder(network)
+                        .dynamicModelId("BBM_TC3")
+                        .parameterSetId("tc")
+                        .staticId("LOAD3")
+                        .side(TransformerSide.HIGH_VOLTAGE)
+                        .build());
     }
 
     @Test

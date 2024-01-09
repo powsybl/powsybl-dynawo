@@ -32,6 +32,7 @@ public class DslFilteredEquipment<T extends Identifiable<?>> extends DslEquipmen
         this.typePredicate = typePredicate;
     }
 
+    //TODO replace type predicate with adequate equipmentSupplier and use basic DslEquipment instead ?
     @Override
     public void addEquipment(String equipmentId, Function<String, T> equipmentSupplier) {
         staticId = equipmentId;

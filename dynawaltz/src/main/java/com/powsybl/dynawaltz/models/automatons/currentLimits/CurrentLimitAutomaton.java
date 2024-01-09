@@ -4,10 +4,11 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package com.powsybl.dynawaltz.models.automatons;
+package com.powsybl.dynawaltz.models.automatons.currentLimits;
 
 import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawaltz.models.VarConnection;
+import com.powsybl.dynawaltz.models.automatons.QuadripoleModel;
 import com.powsybl.dynawaltz.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawaltz.models.utils.SideUtils;
 import com.powsybl.iidm.network.Branch;
@@ -30,15 +31,11 @@ public class CurrentLimitAutomaton extends AbstractPureDynamicBlackBoxModel {
     protected final TwoSides measuredSide;
     protected final Branch<?> controlledQuadripole;
 
-    public CurrentLimitAutomaton(String dynamicModelId, String parameterSetId, Branch<?> measuredQuadripole, TwoSides measuredSide, Branch<?> controlledQuadripole, String lib) {
+    CurrentLimitAutomaton(String dynamicModelId, String parameterSetId, Branch<?> measuredQuadripole, TwoSides measuredSide, Branch<?> controlledQuadripole, String lib) {
         super(dynamicModelId, parameterSetId, lib);
         this.measuredQuadripole = Objects.requireNonNull(measuredQuadripole);
         this.measuredSide = Objects.requireNonNull(measuredSide);
         this.controlledQuadripole = Objects.requireNonNull(controlledQuadripole);
-    }
-
-    public CurrentLimitAutomaton(String dynamicModelId, String parameterSetId, Branch<?> measuredQuadripole, TwoSides measuredSide, String lib) {
-        this(dynamicModelId, parameterSetId, measuredQuadripole, measuredSide, measuredQuadripole, lib);
     }
 
     @Override

@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class PhaseShifterPAutomaton extends AbstractPhaseShifterAutomaton {
 
-    public PhaseShifterPAutomaton(String dynamicModelId, TwoWindingsTransformer transformer, String parameterSetId, String lib) {
+    PhaseShifterPAutomaton(String dynamicModelId, TwoWindingsTransformer transformer, String parameterSetId, String lib) {
         super(dynamicModelId, transformer, parameterSetId, lib);
     }
 

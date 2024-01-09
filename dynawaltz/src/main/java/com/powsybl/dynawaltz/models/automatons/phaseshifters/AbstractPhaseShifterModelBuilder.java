@@ -5,11 +5,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.builders.automatons;
+package com.powsybl.dynawaltz.models.automatons.phaseshifters;
 
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.builders.DslEquipment;
 import com.powsybl.dynawaltz.builders.ModelConfig;
+import com.powsybl.dynawaltz.models.automatons.AbstractAutomatonModelBuilder;
 import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.TwoWindingsTransformer;
@@ -26,7 +27,7 @@ abstract class AbstractPhaseShifterModelBuilder<T extends AbstractAutomatonModel
         dslTransformer = new DslEquipment<>(IdentifiableType.TWO_WINDINGS_TRANSFORMER, "transformer");
     }
 
-    T transformer(String staticId) {
+    public T transformer(String staticId) {
         dslTransformer.addEquipment(staticId, network::getTwoWindingsTransformer);
         return self();
     }

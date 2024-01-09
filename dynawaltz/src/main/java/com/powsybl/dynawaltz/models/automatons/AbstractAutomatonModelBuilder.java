@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.builders.automatons;
+package com.powsybl.dynawaltz.models.automatons;
 
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynamicsimulation.DynamicModel;
@@ -24,7 +24,7 @@ public abstract class AbstractAutomatonModelBuilder<T extends AbstractAutomatonM
     protected String parameterSetId;
     protected final ModelConfig modelConfig;
 
-    public AbstractAutomatonModelBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
+    protected AbstractAutomatonModelBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
         super(network, reporter);
         this.modelConfig = modelConfig;
     }
