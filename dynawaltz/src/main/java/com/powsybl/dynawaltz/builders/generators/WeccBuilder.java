@@ -9,16 +9,49 @@ package com.powsybl.dynawaltz.builders.generators;
 
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.builders.ModelConfig;
+import com.powsybl.dynawaltz.builders.ModelConfigsSingleton;
+import com.powsybl.dynawaltz.builders.Reporters;
 import com.powsybl.dynawaltz.models.generators.SynchronizedWeccGen;
 import com.powsybl.dynawaltz.models.generators.WeccGen;
 import com.powsybl.iidm.network.Network;
+
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class WeccBuilder extends AbstractGeneratorBuilder<WeccBuilder> {
 
-    public WeccBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
+    private static final String CATEGORY = "wecc";
+    private static final Map<String, ModelConfig> LIBS = ModelConfigsSingleton.getInstance().getModelConfigs(CATEGORY);
+
+    public static WeccBuilder of(Network network) {
+        return of(network, Reporter.NO_OP);
+    }
+
+    public static WeccBuilder of(Network network, Reporter reporter) {
+        return new WeccBuilder(network, LIBS.values().iterator().next(), reporter);
+    }
+
+    public static WeccBuilder of(Network network, String lib) {
+        return of(network, lib, Reporter.NO_OP);
+    }
+
+    public static WeccBuilder of(Network network, String lib, Reporter reporter) {
+        ModelConfig modelConfig = LIBS.get(lib);
+        if (modelConfig == null) {
+            Reporters.reportLibNotFound(reporter, WeccBuilder.class.getSimpleName(), lib);
+            return null;
+        }
+        return new WeccBuilder(network, LIBS.get(lib), reporter);
+    }
+
+    public static Set<String> getSupportedLibs() {
+        return LIBS.keySet();
+    }
+
+    protected WeccBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
         super(network, modelConfig, reporter);
     }
 

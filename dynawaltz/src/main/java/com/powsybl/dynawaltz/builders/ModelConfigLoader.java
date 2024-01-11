@@ -9,6 +9,7 @@ package com.powsybl.dynawaltz.builders;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -17,5 +18,5 @@ public interface ModelConfigLoader {
 
     Map<String, List<ModelConfig>> loadModelConfigs();
 
-    List<BuilderCategory> loadBuilderCategories();
+    Stream<BuilderConfig> loadBuilderConfigs();
 }

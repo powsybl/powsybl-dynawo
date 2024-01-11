@@ -10,20 +10,52 @@ package com.powsybl.dynawaltz.models.automatons.currentLimits;
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.builders.DslEquipment;
 import com.powsybl.dynawaltz.builders.ModelConfig;
+import com.powsybl.dynawaltz.builders.ModelConfigsSingleton;
 import com.powsybl.dynawaltz.builders.Reporters;
 import com.powsybl.iidm.network.Branch;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.TwoSides;
+
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class CurrentLimitTwoLevelsAutomatonBuilder extends AbstractCurrentLimitAutomatonBuilder<CurrentLimitTwoLevelsAutomatonBuilder> {
 
+    private static final String CATEGORY = "clasTwoLevels";
+    private static final Map<String, ModelConfig> LIBS = ModelConfigsSingleton.getInstance().getModelConfigs(CATEGORY);
+
     protected final DslEquipment<Branch<?>> iMeasurement2;
     protected TwoSides iMeasurement2Side;
 
-    public CurrentLimitTwoLevelsAutomatonBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
+    public static CurrentLimitTwoLevelsAutomatonBuilder of(Network network) {
+        return of(network, Reporter.NO_OP);
+    }
+
+    public static CurrentLimitTwoLevelsAutomatonBuilder of(Network network, Reporter reporter) {
+        return new CurrentLimitTwoLevelsAutomatonBuilder(network, LIBS.values().iterator().next(), reporter);
+    }
+
+    public static CurrentLimitTwoLevelsAutomatonBuilder of(Network network, String lib) {
+        return of(network, lib, Reporter.NO_OP);
+    }
+
+    public static CurrentLimitTwoLevelsAutomatonBuilder of(Network network, String lib, Reporter reporter) {
+        ModelConfig modelConfig = LIBS.get(lib);
+        if (modelConfig == null) {
+            Reporters.reportLibNotFound(reporter, CurrentLimitTwoLevelsAutomatonBuilder.class.getSimpleName(), lib);
+            return null;
+        }
+        return new CurrentLimitTwoLevelsAutomatonBuilder(network, LIBS.get(lib), reporter);
+    }
+
+    public static Set<String> getSupportedLibs() {
+        return LIBS.keySet();
+    }
+
+    protected CurrentLimitTwoLevelsAutomatonBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
         super(network, modelConfig, reporter, new DslEquipment<>("Quadripole", "iMeasurement1"),
                 new DslEquipment<>("Quadripole", "controlledQuadripole1"));
         iMeasurement2 = new DslEquipment<>("Quadripole", "iMeasurement2");

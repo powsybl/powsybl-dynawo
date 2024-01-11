@@ -10,19 +10,50 @@ package com.powsybl.dynawaltz.builders.transformers;
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.builders.AbstractEquipmentModelBuilder;
 import com.powsybl.dynawaltz.builders.ModelConfig;
+import com.powsybl.dynawaltz.builders.ModelConfigsSingleton;
+import com.powsybl.dynawaltz.builders.Reporters;
 import com.powsybl.dynawaltz.models.transformers.TransformerFixedRatio;
 import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.TwoWindingsTransformer;
+
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class TransformerFixedRatioBuilder extends AbstractEquipmentModelBuilder<TwoWindingsTransformer, TransformerFixedRatioBuilder> {
 
-    public static final String LIB = "transformers";
+    private static final String CATEGORY = "transformers";
+    private static final Map<String, ModelConfig> LIBS = ModelConfigsSingleton.getInstance().getModelConfigs(CATEGORY);
 
-    public TransformerFixedRatioBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
+    public static TransformerFixedRatioBuilder of(Network network) {
+        return of(network, Reporter.NO_OP);
+    }
+
+    public static TransformerFixedRatioBuilder of(Network network, Reporter reporter) {
+        return new TransformerFixedRatioBuilder(network, LIBS.values().iterator().next(), reporter);
+    }
+
+    public static TransformerFixedRatioBuilder of(Network network, String lib) {
+        return of(network, lib, Reporter.NO_OP);
+    }
+
+    public static TransformerFixedRatioBuilder of(Network network, String lib, Reporter reporter) {
+        ModelConfig modelConfig = LIBS.get(lib);
+        if (modelConfig == null) {
+            Reporters.reportLibNotFound(reporter, TransformerFixedRatioBuilder.class.getSimpleName(), lib);
+            return null;
+        }
+        return new TransformerFixedRatioBuilder(network, LIBS.get(lib), reporter);
+    }
+
+    public static Set<String> getSupportedLibs() {
+        return LIBS.keySet();
+    }
+
+    protected TransformerFixedRatioBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
         super(network, modelConfig, IdentifiableType.TWO_WINDINGS_TRANSFORMER, reporter);
     }
 

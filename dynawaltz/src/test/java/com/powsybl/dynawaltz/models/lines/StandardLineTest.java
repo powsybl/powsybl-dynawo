@@ -11,8 +11,8 @@ import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
-import com.powsybl.dynawaltz.builders.DynamicModelBuilderUtils;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
+import com.powsybl.dynawaltz.models.automatons.currentLimits.CurrentLimitAutomatonBuilder;
 import com.powsybl.iidm.network.*;
 import org.junit.jupiter.api.Test;
 
@@ -41,7 +41,7 @@ class StandardLineTest {
 
         List<BlackBoxModel> dynamicModels = new ArrayList<>();
         dynamicModels.add(new StandardLine("BBM_l", l, "SL", "Line"));
-        dynamicModels.add(DynamicModelBuilderUtils.newCurrentLimitAutomatonBuilder(network, "CurrentLimitAutomaton")
+        dynamicModels.add(CurrentLimitAutomatonBuilder.of(network, "CurrentLimitAutomaton")
                         .dynamicModelId("BBM_CLA")
                         .parameterSetId("CLA")
                         .controlledQuadripole(l.getId())

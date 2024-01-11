@@ -7,7 +7,11 @@
  */
 package com.powsybl.dynawaltz.builders;
 
+import com.google.common.collect.Lists;
+
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -16,41 +20,30 @@ public final class ModelConfigsSingleton {
 
     private static final ModelConfigsSingleton INSTANCE = new ModelConfigsSingleton();
 
+    private final List<ModelConfigLoader> modelConfigLoaders;
     private final Map<String, List<ModelConfig>> modelConfigs = new HashMap<>();
-    private final List<DynamicModelCategory> dynamicModelCategories = new ArrayList<>();
 
     private ModelConfigsSingleton() {
-        for (ModelConfigLoader configLoader : ServiceLoader.load(ModelConfigLoader.class)) {
-            configLoader.loadModelConfigs().forEach(
-                    (cat, models) -> modelConfigs.merge(cat, models, (v1, v2) -> {
-                        v1.addAll(v2);
-                        return v1;
-                    })
-            );
-            configLoader.loadBuilderCategories().forEach(bc ->
-                dynamicModelCategories.add(new DynamicModelCategory(bc.getCategoryName(),
-                        bc.getConstructor(), modelConfigs.get(bc.getCategoryName()))));
-        }
+        modelConfigLoaders = Lists.newArrayList(ServiceLoader.load(ModelConfigLoader.class));
+        modelConfigLoaders.forEach(l -> l.loadModelConfigs().forEach(
+                (cat, models) -> modelConfigs.merge(cat, models, (v1, v2) -> {
+                    v1.addAll(v2);
+                    return v1;
+                })
+        ));
     }
 
     public static ModelConfigsSingleton getInstance() {
         return INSTANCE;
     }
 
-    //TODO use map of map instead ?
-    //TODO handle category / lib not found
-    public ModelConfig getModelConfig(String categoryName, String lib) {
+    //TODO create map at initialisation
+    public Map<String, ModelConfig> getModelConfigs(String categoryName) {
         return modelConfigs.get(categoryName).stream()
-                .filter(mc -> lib.equalsIgnoreCase(mc.getLib()))
-                .findFirst()
-                .orElse(null);
+                .collect(Collectors.toMap(ModelConfig::getName, Function.identity(), (o1, o2) -> o1, LinkedHashMap::new));
     }
 
-    public ModelConfig getFirstModelConfig(String categoryName) {
-        return modelConfigs.get(categoryName).get(0);
-    }
-
-    public List<DynamicModelCategory> getDynamicModelCategories() {
-        return dynamicModelCategories;
+    public List<BuilderConfig> getBuilderConfigs() {
+        return modelConfigLoaders.stream().flatMap(ModelConfigLoader::loadBuilderConfigs).toList();
     }
 }

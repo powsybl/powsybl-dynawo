@@ -10,27 +10,54 @@ package com.powsybl.dynawaltz.models.automatons;
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.builders.BuildersUtil;
 import com.powsybl.dynawaltz.builders.ModelConfig;
+import com.powsybl.dynawaltz.builders.ModelConfigsSingleton;
 import com.powsybl.dynawaltz.builders.Reporters;
 import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.Load;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.TwoWindingsTransformer;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class TapChangerBlockingAutomatonBuilder extends AbstractAutomatonModelBuilder<TapChangerBlockingAutomatonBuilder> {
 
+    private static final String CATEGORY = "tcbs";
+    private static final Map<String, ModelConfig> LIBS = ModelConfigsSingleton.getInstance().getModelConfigs(CATEGORY);
+
     private final List<Load> loads = new ArrayList<>();
     private final List<TwoWindingsTransformer> transformers = new ArrayList<>();
     private final List<String> tapChangerAutomatonIds = new ArrayList<>();
     private List<Identifiable<?>> uMeasurements;
 
-    public TapChangerBlockingAutomatonBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
+    public static TapChangerBlockingAutomatonBuilder of(Network network) {
+        return of(network, Reporter.NO_OP);
+    }
+
+    public static TapChangerBlockingAutomatonBuilder of(Network network, Reporter reporter) {
+        return new TapChangerBlockingAutomatonBuilder(network, LIBS.values().iterator().next(), reporter);
+    }
+
+    public static TapChangerBlockingAutomatonBuilder of(Network network, String lib) {
+        return of(network, lib, Reporter.NO_OP);
+    }
+
+    public static TapChangerBlockingAutomatonBuilder of(Network network, String lib, Reporter reporter) {
+        ModelConfig modelConfig = LIBS.get(lib);
+        if (modelConfig == null) {
+            Reporters.reportLibNotFound(reporter, TapChangerBlockingAutomatonBuilder.class.getSimpleName(), lib);
+            return null;
+        }
+        return new TapChangerBlockingAutomatonBuilder(network, LIBS.get(lib), reporter);
+    }
+
+    public static Set<String> getSupportedLibs() {
+        return LIBS.keySet();
+    }
+
+    protected TapChangerBlockingAutomatonBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
         super(network, modelConfig, reporter);
     }
 

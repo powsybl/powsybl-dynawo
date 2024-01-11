@@ -8,9 +8,9 @@
 package com.powsybl.dynawaltz.xml;
 
 import com.powsybl.commons.PowsyblException;
-import com.powsybl.dynawaltz.builders.DynamicModelBuilderUtils;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.TransformerSide;
+import com.powsybl.dynawaltz.models.automatons.TapChangerAutomatonBuilder;
 import com.powsybl.dynawaltz.models.loads.LoadOneTransformer;
 import com.powsybl.dynawaltz.models.loads.LoadOneTransformerTapChanger;
 import com.powsybl.dynawaltz.models.loads.LoadTwoTransformers;
@@ -50,7 +50,7 @@ class TapChangerAutomatonExceptionsXmlTest extends AbstractParametrizedDynamicMo
 
     protected void addDynamicModels(TransformerSide side, Function< Network, BlackBoxModel> loadConstructor) {
         dynamicModels.add(loadConstructor.apply(network));
-        dynamicModels.add(DynamicModelBuilderUtils.newTapChangerAutomatonBuilder(network)
+        dynamicModels.add(TapChangerAutomatonBuilder.of(network)
                 .dynamicModelId("BBM_TC")
                 .parameterSetId("tc")
                 .staticId(LOAD_NAME)

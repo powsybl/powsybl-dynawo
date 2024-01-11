@@ -16,11 +16,18 @@ import com.powsybl.iidm.network.IdentifiableType;
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public final class Reporters {
+
     private Reporters() {
     }
 
-    public static Reporter createModelBuilderReporter(Reporter reporter, String lib) {
-        return reporter.createSubReporter("DSLModelBuilder", "DSL model builder for ${lib}", "lib", lib);
+    public static void reportLibNotFound(Reporter reporter, String builderName, String lib) {
+        reporter.report(Report.builder()
+                .withKey("libNotFound")
+                .withDefaultMessage("Library ${lib} not found for ${builderName}")
+                .withValue("builderName", builderName)
+                .withValue("lib", lib)
+                .withSeverity(TypedValue.INFO_SEVERITY)
+                .build());
     }
 
     public static void reportModelInstantiation(Reporter reporter, String dynamicId) {

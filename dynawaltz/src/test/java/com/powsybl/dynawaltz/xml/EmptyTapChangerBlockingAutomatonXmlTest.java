@@ -7,7 +7,8 @@
  */
 package com.powsybl.dynawaltz.xml;
 
-import com.powsybl.dynawaltz.builders.DynamicModelBuilderUtils;
+import com.powsybl.dynawaltz.models.automatons.TapChangerAutomatonBuilder;
+import com.powsybl.dynawaltz.models.automatons.TapChangerBlockingAutomatonBuilder;
 import com.powsybl.dynawaltz.models.loads.LoadOneTransformer;
 import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.VoltageLevel;
@@ -34,13 +35,13 @@ class EmptyTapChangerBlockingAutomatonXmlTest extends AbstractDynamicModelXmlTes
     @Override
     protected void addDynamicModels() {
         dynamicModels.add(new LoadOneTransformer("BBM_LOAD", network.getLoad("LOAD"), "lot", "LoadOneTransformer"));
-        dynamicModels.add(DynamicModelBuilderUtils.newTapChangerBlockingAutomatonBuilder(network)
+        dynamicModels.add(TapChangerBlockingAutomatonBuilder.of(network)
                 .dynamicModelId("BBM_TapChangerBlocking")
                 .parameterSetId("TapChangerPar")
                 .transformers("GEN", "LOAD", "BBM_TC")
                 .uMeasurements("NHV1")
                 .build());
-        dynamicModels.add(DynamicModelBuilderUtils.newTapChangerAutomatonBuilder(network)
+        dynamicModels.add(TapChangerAutomatonBuilder.of(network)
                 .dynamicModelId("BBM_TC")
                 .parameterSetId("tc")
                 .staticId("LOAD2")

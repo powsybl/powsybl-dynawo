@@ -8,7 +8,7 @@
 package com.powsybl.dynawaltz.xml;
 
 import com.powsybl.commons.PowsyblException;
-import com.powsybl.dynawaltz.builders.DynamicModelBuilderUtils;
+import com.powsybl.dynawaltz.models.automatons.TapChangerBlockingAutomatonBuilder;
 import com.powsybl.dynawaltz.models.loads.LoadOneTransformerTapChanger;
 import com.powsybl.dynawaltz.models.loads.LoadTwoTransformersTapChangers;
 import com.powsybl.dynawaltz.models.transformers.TransformerFixedRatio;
@@ -42,7 +42,7 @@ class TapChangerBlockingAutomatonXmlTest extends AbstractDynamicModelXmlTest {
         dynamicModels.add(new TransformerFixedRatio("BBM_NGEN_NHV1", network.getTwoWindingsTransformer("NGEN_NHV1"), "transformer", "TransformerFixedRatio"));
         dynamicModels.add(new LoadOneTransformerTapChanger("BBM_LOAD", network.getLoad("LOAD"), "lot", "LoadOneTransformerTapChanger"));
         dynamicModels.add(new LoadTwoTransformersTapChangers("BBM_LOAD2", network.getLoad("LOAD2"), "ltt", "LoadTwoTransformersTapChangers"));
-        dynamicModels.add(DynamicModelBuilderUtils.newTapChangerBlockingAutomatonBuilder(network)
+        dynamicModels.add(TapChangerBlockingAutomatonBuilder.of(network)
                 .dynamicModelId("BBM_TapChangerBlocking")
                 .parameterSetId("TapChangerPar")
                 .transformers("NGEN_NHV1", "NHV2_NLOAD", "LOAD", "LOAD2")
@@ -60,7 +60,7 @@ class TapChangerBlockingAutomatonXmlTest extends AbstractDynamicModelXmlTest {
     @Test
     void testMonitoredEquipmentsLimit() {
         Exception e = assertThrows(PowsyblException.class, () ->
-                DynamicModelBuilderUtils.newTapChangerBlockingAutomatonBuilder(network)
+                TapChangerBlockingAutomatonBuilder.of(network)
                         .dynamicModelId("TapChanger1")
                         .parameterSetId("TapChangerPar")
                         .transformers("NGEN_NHV1")

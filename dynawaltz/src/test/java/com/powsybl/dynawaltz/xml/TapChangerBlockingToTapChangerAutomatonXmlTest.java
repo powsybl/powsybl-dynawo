@@ -7,7 +7,7 @@
  */
 package com.powsybl.dynawaltz.xml;
 
-import com.powsybl.dynawaltz.builders.DynamicModelBuilderUtils;
+import com.powsybl.dynawaltz.models.automatons.TapChangerBlockingAutomatonBuilder;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
@@ -22,7 +22,7 @@ class TapChangerBlockingToTapChangerAutomatonXmlTest extends TapChangerAutomaton
     @Override
     protected void addDynamicModels() {
         super.addDynamicModels();
-        dynamicModels.add(DynamicModelBuilderUtils.newTapChangerBlockingAutomatonBuilder(network)
+        dynamicModels.add(TapChangerBlockingAutomatonBuilder.of(network)
                 .dynamicModelId("BBM_TapChangerBlocking")
                 .parameterSetId("TapChangerPar")
                 .transformers("BBM_TC", "BBM_TC2", "BBM_TC3")

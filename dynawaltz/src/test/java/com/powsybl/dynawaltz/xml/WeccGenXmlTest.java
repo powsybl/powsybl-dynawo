@@ -7,8 +7,8 @@
  */
 package com.powsybl.dynawaltz.xml;
 
+import com.powsybl.dynawaltz.builders.generators.GridFormingConverterBuilder;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
-import com.powsybl.dynawaltz.models.generators.GridFormingConverter;
 import com.powsybl.dynawaltz.models.generators.SynchronizedWeccGen;
 import com.powsybl.dynawaltz.models.generators.WeccGen;
 import com.powsybl.iidm.network.Network;
@@ -65,7 +65,12 @@ class WeccGenXmlTest extends AbstractParametrizedDynamicModelXmlTest {
                 Arguments.of("wecc_wt_dyd.xml", "", (Function<Network, BlackBoxModel>) n -> new WeccGen(DYN_WT_NAME, n.getGenerator(STATIC_ID), "Wind", "WT4AWeccCurrentSource", "WT4A")),
                 Arguments.of("wecc_wt_synchro_dyd.xml", "wecc_wt_par.xml", (Function<Network, BlackBoxModel>) n -> new SynchronizedWeccGen(DYN_WT_NAME, n.getGenerator(STATIC_ID), "Wind", "WTG4BWeccCurrentSource", "WTG4B")),
                 Arguments.of("wecc_pv_dyd.xml", "wecc_wt_par.xml", (Function<Network, BlackBoxModel>) n -> new SynchronizedWeccGen(DYN_WT_NAME, n.getGenerator(STATIC_ID), "Wind", "PhotovoltaicsWeccCurrentSource", "photovoltaics")),
-                Arguments.of("grid_forming_converter_dyd.xml", "grid_forming_converter_par.xml", (Function<Network, BlackBoxModel>) n -> new GridFormingConverter("BBM_GFC", n.getGenerator(STATIC_ID), "GF", "GridFormingConverterDroopControl"))
+                Arguments.of("grid_forming_converter_dyd.xml", "grid_forming_converter_par.xml", (Function<Network, BlackBoxModel>) n ->
+                        GridFormingConverterBuilder.of(n, "GridFormingConverterDroopControl")
+                            .dynamicModelId("BBM_GFC")
+                            .staticId(STATIC_ID)
+                            .parameterSetId("GF")
+                            .build())
         );
     }
 }
