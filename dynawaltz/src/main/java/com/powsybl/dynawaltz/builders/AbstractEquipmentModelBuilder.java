@@ -20,16 +20,16 @@ public abstract class AbstractEquipmentModelBuilder<T extends Identifiable<?>, R
     protected String dynamicModelId;
     protected String parameterSetId;
     protected final ModelConfig modelConfig;
-    protected final DslEquipment<T> dslEquipment;
+    protected final BuilderEquipment<T> builderEquipment;
 
     protected AbstractEquipmentModelBuilder(Network network, ModelConfig modelConfig, IdentifiableType equipmentType, Reporter reporter) {
         super(network, reporter);
         this.modelConfig = modelConfig;
-        this.dslEquipment = new DslEquipment<>(equipmentType);
+        this.builderEquipment = new BuilderEquipment<>(equipmentType);
     }
 
     public R staticId(String staticId) {
-        dslEquipment.addEquipment(staticId, this::findEquipment);
+        builderEquipment.addEquipment(staticId, this::findEquipment);
         return self();
     }
 
@@ -45,21 +45,21 @@ public abstract class AbstractEquipmentModelBuilder<T extends Identifiable<?>, R
 
     @Override
     protected void checkData() {
-        isInstantiable = dslEquipment.checkEquipmentData(reporter);
+        isInstantiable = builderEquipment.checkEquipmentData(reporter);
         if (parameterSetId == null) {
             Reporters.reportFieldNotSet(reporter, "parameterSetId");
             isInstantiable = false;
         }
         if (dynamicModelId == null) {
-            Reporters.reportFieldReplacement(reporter, "dynamicModelId", "staticId", dslEquipment.hasStaticId() ? dslEquipment.getStaticId() : "(unknown staticId)");
-            dynamicModelId = dslEquipment.getStaticId();
+            Reporters.reportFieldReplacement(reporter, "dynamicModelId", "staticId", builderEquipment.hasStaticId() ? builderEquipment.getStaticId() : "(unknown staticId)");
+            dynamicModelId = builderEquipment.getStaticId();
         }
     }
 
     protected abstract T findEquipment(String staticId);
 
     public T getEquipment() {
-        return dslEquipment.getEquipment();
+        return builderEquipment.getEquipment();
     }
 
     @Override

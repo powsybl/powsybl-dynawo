@@ -21,6 +21,7 @@ import java.util.List;
  */
 public final class EventModelsBuilderUtils {
 
+    //TODO delete
     private EventModelsBuilderUtils() {
     }
 

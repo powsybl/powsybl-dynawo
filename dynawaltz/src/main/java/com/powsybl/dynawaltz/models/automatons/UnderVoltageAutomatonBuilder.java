@@ -8,7 +8,7 @@
 package com.powsybl.dynawaltz.models.automatons;
 
 import com.powsybl.commons.reporter.Reporter;
-import com.powsybl.dynawaltz.builders.DslEquipment;
+import com.powsybl.dynawaltz.builders.BuilderEquipment;
 import com.powsybl.dynawaltz.builders.ModelConfig;
 import com.powsybl.dynawaltz.builders.ModelConfigsSingleton;
 import com.powsybl.dynawaltz.builders.Reporters;
@@ -27,7 +27,7 @@ public class UnderVoltageAutomatonBuilder extends AbstractAutomatonModelBuilder<
     private static final String CATEGORY = "underVoltages";
     private static final Map<String, ModelConfig> LIBS = ModelConfigsSingleton.getInstance().getModelConfigs(CATEGORY);
 
-    protected final DslEquipment<Generator> dslGenerator;
+    protected final BuilderEquipment<Generator> generator;
 
     public static UnderVoltageAutomatonBuilder of(Network network) {
         return of(network, Reporter.NO_OP);
@@ -56,23 +56,23 @@ public class UnderVoltageAutomatonBuilder extends AbstractAutomatonModelBuilder<
 
     protected UnderVoltageAutomatonBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
         super(network, modelConfig, reporter);
-        dslGenerator = new DslEquipment<>(IdentifiableType.GENERATOR, "generator");
+        generator = new BuilderEquipment<>(IdentifiableType.GENERATOR, "generator");
     }
 
     public UnderVoltageAutomatonBuilder generator(String staticId) {
-        dslGenerator.addEquipment(staticId, network::getGenerator);
+        generator.addEquipment(staticId, network::getGenerator);
         return self();
     }
 
     @Override
     protected void checkData() {
         super.checkData();
-        isInstantiable &= dslGenerator.checkEquipmentData(reporter);
+        isInstantiable &= generator.checkEquipmentData(reporter);
     }
 
     @Override
     public UnderVoltageAutomaton build() {
-        return isInstantiable() ? new UnderVoltageAutomaton(dynamicModelId, parameterSetId, dslGenerator.getEquipment(), getLib()) : null;
+        return isInstantiable() ? new UnderVoltageAutomaton(dynamicModelId, parameterSetId, generator.getEquipment(), getLib()) : null;
     }
 
     @Override

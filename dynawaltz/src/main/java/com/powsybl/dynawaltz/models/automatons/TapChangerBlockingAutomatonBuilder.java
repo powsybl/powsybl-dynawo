@@ -80,8 +80,8 @@ public class TapChangerBlockingAutomatonBuilder extends AbstractAutomatonModelBu
     public TapChangerBlockingAutomatonBuilder uMeasurements(String... staticIds) {
         uMeasurements = new ArrayList<>();
         for (String staticId : staticIds) {
-            Identifiable<?> measurementPoint = network.getIdentifiable(staticId);
-            if (measurementPoint == null || !BuildersUtil.isActionConnectionPoint(measurementPoint.getType())) {
+            Identifiable<?> measurementPoint = BuildersUtil.getActionConnectionPoint(network, staticId);
+            if (measurementPoint == null) {
                 Reporters.reportStaticIdUnknown(reporter, "uMeasurements", staticId, "BUS/BUSBAR_SECTION");
             } else {
                 uMeasurements.add(measurementPoint);
@@ -94,8 +94,8 @@ public class TapChangerBlockingAutomatonBuilder extends AbstractAutomatonModelBu
         uMeasurements = new ArrayList<>();
         for (List<String> staticIds : staticIdsArray) {
             for (String staticId : staticIds) {
-                Identifiable<?> measurementPoint = network.getIdentifiable(staticId);
-                if (measurementPoint == null || !BuildersUtil.isActionConnectionPoint(measurementPoint.getType())) {
+                Identifiable<?> measurementPoint = BuildersUtil.getActionConnectionPoint(network, staticId);
+                if (measurementPoint == null) {
                     Reporters.reportStaticIdUnknown(reporter, "uMeasurements", staticId, "BUS/BUSBAR_SECTION");
                 } else {
                     uMeasurements.add(measurementPoint);

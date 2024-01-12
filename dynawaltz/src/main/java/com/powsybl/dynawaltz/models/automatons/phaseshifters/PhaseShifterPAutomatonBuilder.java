@@ -55,7 +55,7 @@ public class PhaseShifterPAutomatonBuilder extends AbstractPhaseShifterModelBuil
 
     @Override
     public PhaseShifterPAutomaton build() {
-        return isInstantiable() ? new PhaseShifterPAutomaton(dynamicModelId, dslTransformer.getEquipment(), parameterSetId, getLib()) : null;
+        return isInstantiable() ? new PhaseShifterPAutomaton(dynamicModelId, transformer.getEquipment(), parameterSetId, getLib()) : null;
     }
 
     @Override

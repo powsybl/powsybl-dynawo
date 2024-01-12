@@ -8,7 +8,7 @@
 package com.powsybl.dynawaltz.models.automatons;
 
 import com.powsybl.commons.reporter.Reporter;
-import com.powsybl.dynawaltz.builders.DslEquipment;
+import com.powsybl.dynawaltz.builders.BuilderEquipment;
 import com.powsybl.dynawaltz.builders.ModelConfig;
 import com.powsybl.dynawaltz.builders.ModelConfigsSingleton;
 import com.powsybl.dynawaltz.builders.Reporters;
@@ -28,7 +28,7 @@ public class TapChangerAutomatonBuilder extends AbstractAutomatonModelBuilder<Ta
     private static final String CATEGORY = "tapChangers";
     private static final Map<String, ModelConfig> LIBS = ModelConfigsSingleton.getInstance().getModelConfigs(CATEGORY);
 
-    protected final DslEquipment<Load> dslLoad;
+    protected final BuilderEquipment<Load> load;
     protected TransformerSide side = TransformerSide.NONE;
 
     public static TapChangerAutomatonBuilder of(Network network) {
@@ -58,11 +58,11 @@ public class TapChangerAutomatonBuilder extends AbstractAutomatonModelBuilder<Ta
 
     protected TapChangerAutomatonBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
         super(network, modelConfig, reporter);
-        dslLoad = new DslEquipment<>(IdentifiableType.LOAD);
+        load = new BuilderEquipment<>(IdentifiableType.LOAD);
     }
 
     public TapChangerAutomatonBuilder staticId(String staticId) {
-        dslLoad.addEquipment(staticId, network::getLoad);
+        load.addEquipment(staticId, network::getLoad);
         return self();
     }
 
@@ -74,12 +74,12 @@ public class TapChangerAutomatonBuilder extends AbstractAutomatonModelBuilder<Ta
     @Override
     protected void checkData() {
         super.checkData();
-        isInstantiable &= dslLoad.checkEquipmentData(reporter);
+        isInstantiable &= load.checkEquipmentData(reporter);
     }
 
     @Override
     public TapChangerAutomaton build() {
-        return isInstantiable() ? new TapChangerAutomaton(dynamicModelId, parameterSetId, dslLoad.getEquipment(), side, getLib()) : null;
+        return isInstantiable() ? new TapChangerAutomaton(dynamicModelId, parameterSetId, load.getEquipment(), side, getLib()) : null;
     }
 
     @Override

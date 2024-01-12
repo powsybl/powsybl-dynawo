@@ -8,7 +8,7 @@
 package com.powsybl.dynawaltz.models.automatons.currentLimits;
 
 import com.powsybl.commons.reporter.Reporter;
-import com.powsybl.dynawaltz.builders.DslEquipment;
+import com.powsybl.dynawaltz.builders.BuilderEquipment;
 import com.powsybl.dynawaltz.builders.ModelConfig;
 import com.powsybl.dynawaltz.builders.Reporters;
 import com.powsybl.dynawaltz.models.automatons.AbstractAutomatonModelBuilder;
@@ -19,14 +19,13 @@ import com.powsybl.iidm.network.TwoSides;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-abstract class AbstractCurrentLimitAutomatonBuilder<T extends AbstractAutomatonModelBuilder<T>> extends AbstractAutomatonModelBuilder<T> {
+public abstract class AbstractCurrentLimitAutomatonBuilder<T extends AbstractAutomatonModelBuilder<T>> extends AbstractAutomatonModelBuilder<T> {
 
-    protected final DslEquipment<Branch<?>> iMeasurement;
+    protected final BuilderEquipment<Branch<?>> iMeasurement;
     protected TwoSides iMeasurementSide;
-    protected final DslEquipment<Branch<?>> controlledEquipment;
+    protected final BuilderEquipment<Branch<?>> controlledEquipment;
 
-    //TODO check abstract class constr accessibility
-    protected AbstractCurrentLimitAutomatonBuilder(Network network, ModelConfig modelConfig, Reporter reporter, DslEquipment<Branch<?>> iMeasurement, DslEquipment<Branch<?>> controlledEquipment) {
+    protected AbstractCurrentLimitAutomatonBuilder(Network network, ModelConfig modelConfig, Reporter reporter, BuilderEquipment<Branch<?>> iMeasurement, BuilderEquipment<Branch<?>> controlledEquipment) {
         super(network, modelConfig, reporter);
         this.iMeasurement = iMeasurement;
         this.controlledEquipment = controlledEquipment;

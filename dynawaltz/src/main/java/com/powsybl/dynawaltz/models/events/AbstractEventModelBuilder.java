@@ -18,19 +18,19 @@ import com.powsybl.iidm.network.Network;
  */
 abstract class AbstractEventModelBuilder<T extends Identifiable<?>, R extends AbstractEventModelBuilder<T, R>> extends AbstractDynamicModelBuilder implements ModelBuilder<EventModel> {
 
-    protected final DslEquipment<T> dslEquipment;
+    protected final BuilderEquipment<T> builderEquipment;
     protected final String tag;
     protected String staticId;
     protected Double startTime;
 
-    protected AbstractEventModelBuilder(Network network, DslEquipment<T> dslEquipment, String tag, Reporter reporter) {
+    protected AbstractEventModelBuilder(Network network, BuilderEquipment<T> builderEquipment, String tag, Reporter reporter) {
         super(network, reporter);
-        this.dslEquipment = dslEquipment;
+        this.builderEquipment = builderEquipment;
         this.tag = tag;
     }
 
     public R staticId(String staticId) {
-        dslEquipment.addEquipment(staticId, this::findEquipment);
+        builderEquipment.addEquipment(staticId, this::findEquipment);
         return self();
     }
 
@@ -41,7 +41,7 @@ abstract class AbstractEventModelBuilder<T extends Identifiable<?>, R extends Ab
 
     @Override
     protected void checkData() {
-        isInstantiable &= dslEquipment.checkEquipmentData(reporter);
+        isInstantiable &= builderEquipment.checkEquipmentData(reporter);
         if (startTime == null) {
             Reporters.reportFieldNotSet(reporter, "startTime");
             isInstantiable = false;
@@ -52,7 +52,7 @@ abstract class AbstractEventModelBuilder<T extends Identifiable<?>, R extends Ab
 
     @Override
     public String getModelId() {
-        return AbstractEvent.generateEventId(tag + "_", dslEquipment.getStaticId() != null ? dslEquipment.getStaticId() : "unknownStaticId");
+        return AbstractEvent.generateEventId(tag + "_", builderEquipment.getStaticId() != null ? builderEquipment.getStaticId() : "unknownStaticId");
     }
 
     protected abstract R self();

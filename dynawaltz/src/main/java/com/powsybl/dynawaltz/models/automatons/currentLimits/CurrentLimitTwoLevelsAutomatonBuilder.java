@@ -8,7 +8,7 @@
 package com.powsybl.dynawaltz.models.automatons.currentLimits;
 
 import com.powsybl.commons.reporter.Reporter;
-import com.powsybl.dynawaltz.builders.DslEquipment;
+import com.powsybl.dynawaltz.builders.BuilderEquipment;
 import com.powsybl.dynawaltz.builders.ModelConfig;
 import com.powsybl.dynawaltz.builders.ModelConfigsSingleton;
 import com.powsybl.dynawaltz.builders.Reporters;
@@ -27,7 +27,7 @@ public class CurrentLimitTwoLevelsAutomatonBuilder extends AbstractCurrentLimitA
     private static final String CATEGORY = "clasTwoLevels";
     private static final Map<String, ModelConfig> LIBS = ModelConfigsSingleton.getInstance().getModelConfigs(CATEGORY);
 
-    protected final DslEquipment<Branch<?>> iMeasurement2;
+    protected final BuilderEquipment<Branch<?>> iMeasurement2;
     protected TwoSides iMeasurement2Side;
 
     public static CurrentLimitTwoLevelsAutomatonBuilder of(Network network) {
@@ -56,9 +56,9 @@ public class CurrentLimitTwoLevelsAutomatonBuilder extends AbstractCurrentLimitA
     }
 
     protected CurrentLimitTwoLevelsAutomatonBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
-        super(network, modelConfig, reporter, new DslEquipment<>("Quadripole", "iMeasurement1"),
-                new DslEquipment<>("Quadripole", "controlledQuadripole1"));
-        iMeasurement2 = new DslEquipment<>("Quadripole", "iMeasurement2");
+        super(network, modelConfig, reporter, new BuilderEquipment<>("Quadripole", "iMeasurement1"),
+                new BuilderEquipment<>("Quadripole", "controlledQuadripole1"));
+        iMeasurement2 = new BuilderEquipment<>("Quadripole", "iMeasurement2");
     }
 
     public CurrentLimitTwoLevelsAutomatonBuilder iMeasurement1(String staticId) {

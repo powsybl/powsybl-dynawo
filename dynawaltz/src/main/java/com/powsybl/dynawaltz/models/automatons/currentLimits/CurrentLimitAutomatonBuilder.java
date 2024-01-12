@@ -8,7 +8,7 @@
 package com.powsybl.dynawaltz.models.automatons.currentLimits;
 
 import com.powsybl.commons.reporter.Reporter;
-import com.powsybl.dynawaltz.builders.DslEquipment;
+import com.powsybl.dynawaltz.builders.BuilderEquipment;
 import com.powsybl.dynawaltz.builders.ModelConfig;
 import com.powsybl.dynawaltz.builders.ModelConfigsSingleton;
 import com.powsybl.dynawaltz.builders.Reporters;
@@ -52,8 +52,8 @@ public class CurrentLimitAutomatonBuilder extends AbstractCurrentLimitAutomatonB
     }
 
     protected CurrentLimitAutomatonBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
-        super(network, modelConfig, reporter, new DslEquipment<>("Quadripole", "iMeasurement"),
-            new DslEquipment<>("Quadripole", "controlledQuadripole"));
+        super(network, modelConfig, reporter, new BuilderEquipment<>("Quadripole", "iMeasurement"),
+            new BuilderEquipment<>("Quadripole", "controlledQuadripole"));
     }
 
     public CurrentLimitAutomatonBuilder iMeasurement(String staticId) {

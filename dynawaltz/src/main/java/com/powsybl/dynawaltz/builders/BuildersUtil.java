@@ -7,23 +7,19 @@
  */
 package com.powsybl.dynawaltz.builders;
 
-import com.powsybl.iidm.network.IdentifiableType;
-
-import java.util.EnumSet;
+import com.powsybl.iidm.network.Identifiable;
+import com.powsybl.iidm.network.Network;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public final class BuildersUtil {
 
-    private static final EnumSet<IdentifiableType> ACTION_CONNECTION_POINTS = EnumSet.of(IdentifiableType.BUS, IdentifiableType.BUSBAR_SECTION);
-
     private BuildersUtil() {
     }
 
-    public static boolean isActionConnectionPoint(IdentifiableType type) {
-        return ACTION_CONNECTION_POINTS.contains(type);
+    public static Identifiable<?> getActionConnectionPoint(Network network, String staticId) {
+        Identifiable<?> point = network.getBusbarSection(staticId);
+        return point != null ? point : network.getBusBreakerView().getBus(staticId);
     }
-
-    //TODO mutualize get Bus or bus bar section instead of identifiable here
 }

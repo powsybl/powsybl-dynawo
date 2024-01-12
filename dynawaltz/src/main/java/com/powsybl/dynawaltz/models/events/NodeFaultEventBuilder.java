@@ -8,7 +8,7 @@
 package com.powsybl.dynawaltz.models.events;
 
 import com.powsybl.commons.reporter.Reporter;
-import com.powsybl.dynawaltz.builders.DslEquipment;
+import com.powsybl.dynawaltz.builders.BuilderEquipment;
 import com.powsybl.dynawaltz.builders.Reporters;
 import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.IdentifiableType;
@@ -26,7 +26,7 @@ public class NodeFaultEventBuilder extends AbstractEventModelBuilder<Bus, NodeFa
     protected double xPu;
 
     public NodeFaultEventBuilder(Network network, Reporter reporter) {
-        super(network, new DslEquipment<>(IdentifiableType.BUS), TAG, reporter);
+        super(network, new BuilderEquipment<>(IdentifiableType.BUS), TAG, reporter);
     }
 
     public NodeFaultEventBuilder faultTime(double faultTime) {
@@ -67,7 +67,7 @@ public class NodeFaultEventBuilder extends AbstractEventModelBuilder<Bus, NodeFa
 
     @Override
     public NodeFaultEvent build() {
-        return isInstantiable() ? new NodeFaultEvent(dslEquipment.getEquipment(), startTime, faultTime, rPu, xPu) : null;
+        return isInstantiable() ? new NodeFaultEvent(builderEquipment.getEquipment(), startTime, faultTime, rPu, xPu) : null;
     }
 
     protected NodeFaultEventBuilder self() {

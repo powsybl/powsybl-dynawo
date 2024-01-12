@@ -8,7 +8,7 @@
 package com.powsybl.dynawaltz.models.events;
 
 import com.powsybl.commons.reporter.Reporter;
-import com.powsybl.dynawaltz.builders.DslFilteredEquipment;
+import com.powsybl.dynawaltz.builders.BuilderEquipment;
 import com.powsybl.dynawaltz.builders.Reporters;
 import com.powsybl.iidm.network.Injection;
 import com.powsybl.iidm.network.Network;
@@ -23,8 +23,7 @@ public class EventActivePowerVariationBuilder extends AbstractEventModelBuilder<
     protected Double deltaP;
 
     public EventActivePowerVariationBuilder(Network network, Reporter reporter) {
-        //TODO use basic DslEquipment ?
-        super(network, new DslFilteredEquipment<>("GENERATOR/LOAD", EventActivePowerVariation::isConnectable), TAG, reporter);
+        super(network, new BuilderEquipment<>("GENERATOR/LOAD"), TAG, reporter);
     }
 
     public EventActivePowerVariationBuilder deltaP(double deltaP) {
@@ -49,7 +48,7 @@ public class EventActivePowerVariationBuilder extends AbstractEventModelBuilder<
 
     @Override
     public EventActivePowerVariation build() {
-        return isInstantiable() ? new EventActivePowerVariation(dslEquipment.getEquipment(), startTime, deltaP) : null;
+        return isInstantiable() ? new EventActivePowerVariation(builderEquipment.getEquipment(), startTime, deltaP) : null;
     }
 
     @Override

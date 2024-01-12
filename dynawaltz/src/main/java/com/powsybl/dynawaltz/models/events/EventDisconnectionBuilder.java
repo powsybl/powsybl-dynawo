@@ -8,7 +8,7 @@
 package com.powsybl.dynawaltz.models.events;
 
 import com.powsybl.commons.reporter.Reporter;
-import com.powsybl.dynawaltz.builders.DslEquipment;
+import com.powsybl.dynawaltz.builders.BuilderEquipment;
 import com.powsybl.dynawaltz.builders.Reporters;
 import com.powsybl.iidm.network.*;
 
@@ -36,7 +36,7 @@ public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identif
     protected boolean disconnectExtremity = true;
 
     public EventDisconnectionBuilder(Network network, Reporter reporter) {
-        super(network, new DslEquipment<>("Disconnectable equipment"), TAG, reporter);
+        super(network, new BuilderEquipment<>("Disconnectable equipment"), TAG, reporter);
     }
 
     public EventDisconnectionBuilder disconnectOnly(TwoSides side) {
@@ -72,14 +72,14 @@ public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identif
     @Override
     protected void checkData() {
         super.checkData();
-        if (dslEquipment.hasEquipment()) {
-            setDisconnectionType(dslEquipment.getEquipment().getType());
+        if (builderEquipment.hasEquipment()) {
+            setDisconnectionType(builderEquipment.getEquipment().getType());
             if (disconnectionType == DisconnectionType.NONE) {
-                Reporters.reportStaticIdUnknown(reporter, "staticId", dslEquipment.getStaticId(), "Disconnectable equipment");
+                Reporters.reportStaticIdUnknown(reporter, "staticId", builderEquipment.getStaticId(), "Disconnectable equipment");
                 isInstantiable = false;
             }
             if (DisconnectionType.INJECTION == disconnectionType && disconnectSide) {
-                Reporters.reportFieldSetWithWrongEquipment(reporter, "disconnectSide", dslEquipment.getEquipment().getType(), dslEquipment.getStaticId());
+                Reporters.reportFieldSetWithWrongEquipment(reporter, "disconnectSide", builderEquipment.getEquipment().getType(), builderEquipment.getStaticId());
                 isInstantiable = false;
             }
         }
@@ -89,11 +89,11 @@ public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identif
     public AbstractEvent build() {
         if (isInstantiable()) {
             return switch (disconnectionType) {
-                case INJECTION -> new EventInjectionDisconnection((Injection<?>) dslEquipment.getEquipment(), startTime, true);
+                case INJECTION -> new EventInjectionDisconnection((Injection<?>) builderEquipment.getEquipment(), startTime, true);
                 case QUADRIPOLE ->
-                        new EventQuadripoleDisconnection((Branch<?>) dslEquipment.getEquipment(), startTime, disconnectOrigin, disconnectExtremity);
+                        new EventQuadripoleDisconnection((Branch<?>) builderEquipment.getEquipment(), startTime, disconnectOrigin, disconnectExtremity);
                 case HVDC ->
-                        new EventHvdcDisconnection((HvdcLine) dslEquipment.getEquipment(), startTime, disconnectOrigin, disconnectExtremity);
+                        new EventHvdcDisconnection((HvdcLine) builderEquipment.getEquipment(), startTime, disconnectOrigin, disconnectExtremity);
                 default -> null;
             };
         }

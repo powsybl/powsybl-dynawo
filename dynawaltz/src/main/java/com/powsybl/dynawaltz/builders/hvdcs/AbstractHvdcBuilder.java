@@ -20,7 +20,7 @@ public abstract class AbstractHvdcBuilder<R extends AbstractEquipmentModelBuilde
 
     protected TwoSides danglingSide;
 
-    public AbstractHvdcBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
+    protected AbstractHvdcBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
         super(network, modelConfig, IdentifiableType.HVDC_LINE, reporter);
     }
 

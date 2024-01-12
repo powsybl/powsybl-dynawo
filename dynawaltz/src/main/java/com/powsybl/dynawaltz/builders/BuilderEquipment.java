@@ -14,33 +14,33 @@ import com.powsybl.iidm.network.IdentifiableType;
 import java.util.function.Function;
 
 /**
- * Represents an equipment field identified by a static ID in the groovy script
+ * Represents an equipment field identified by a static ID in a builder
  * Verifies if the corresponding equipment with the specified type exists, log the error otherwise
  *
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class DslEquipment<T extends Identifiable<?>> {
-//TODO rename dsl (check javadoc)
+public class BuilderEquipment<T extends Identifiable<?>> {
+
     protected String staticId;
     protected T equipment;
     private final String equipmentType;
     private final String fieldName;
 
-    public DslEquipment(String equipmentType, String fieldName) {
+    public BuilderEquipment(String equipmentType, String fieldName) {
         this.equipmentType = equipmentType;
         this.fieldName = fieldName;
     }
 
-    public DslEquipment(IdentifiableType identifiableType, String fieldName) {
+    public BuilderEquipment(IdentifiableType identifiableType, String fieldName) {
         this.equipmentType = identifiableType.toString();
         this.fieldName = fieldName;
     }
 
-    public DslEquipment(IdentifiableType identifiableType) {
+    public BuilderEquipment(IdentifiableType identifiableType) {
         this(identifiableType, "staticId");
     }
 
-    public DslEquipment(String equipmentType) {
+    public BuilderEquipment(String equipmentType) {
         this(equipmentType, "staticId");
     }
 
