@@ -9,6 +9,7 @@ package com.powsybl.dynawaltz;
 
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
+import com.powsybl.iidm.network.Network;
 
 import java.util.stream.Stream;
 
@@ -17,5 +18,6 @@ import java.util.stream.Stream;
  */
 public interface ModelsSimplifier {
 
-    Stream<BlackBoxModel> simplifyModels(Stream<BlackBoxModel> models, DynaWaltzParameters dynaWaltzParameters, Reporter reporter);
+    //TODO replace with SimplifierContext and restraint direct action on Dynawaltz data
+    Stream<BlackBoxModel> simplifyModels(Stream<BlackBoxModel> models, Network network, DynaWaltzParameters dynaWaltzParameters, Reporter reporter);
 }

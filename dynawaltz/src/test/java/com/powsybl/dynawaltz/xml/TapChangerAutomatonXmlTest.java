@@ -35,26 +35,38 @@ class TapChangerAutomatonXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void addDynamicModels() {
-        dynamicModels.add(new LoadOneTransformer("BBM_LOAD", network.getLoad("LOAD"), "LOT", "LoadOneTransformer"));
-        dynamicModels.add(new LoadTwoTransformers("BBM_LOAD2", network.getLoad("LOAD2"), "LTT", "LoadTwoTransformers"));
-        dynamicModels.add(new LoadTwoTransformers("BBM_LOAD3", network.getLoad("LOAD3"), "LTT", "LoadTwoTransformers"));
+        dynamicModels.add(LoadOneTransformerBuilder.of(network, "LoadOneTransformer")
+                .dynamicModelId("BBM_LOAD")
+                .staticId("LOAD")
+                .parameterSetId("LOT")
+                .build());
+        dynamicModels.add(LoadTwoTransformersBuilder.of(network, "LoadTwoTransformers")
+                .dynamicModelId("BBM_LOAD2")
+                .staticId("LOAD2")
+                .parameterSetId("LTT")
+                .build());
+        dynamicModels.add(LoadTwoTransformersBuilder.of(network, "LoadTwoTransformers")
+                .dynamicModelId("BBM_LOAD3")
+                .staticId("LOAD3")
+                .parameterSetId("LTT")
+                .build());
         dynamicModels.add(TapChangerAutomatonBuilder.of(network)
-                        .dynamicModelId("BBM_TC")
-                        .parameterSetId("tc")
-                        .staticId("LOAD")
-                        .build());
+                .dynamicModelId("BBM_TC")
+                .parameterSetId("tc")
+                .staticId("LOAD")
+                .build());
         dynamicModels.add(TapChangerAutomatonBuilder.of(network)
-                        .dynamicModelId("BBM_TC2")
-                        .parameterSetId("tc")
-                        .staticId("LOAD2")
-                        .side(TransformerSide.LOW_VOLTAGE)
-                        .build());
+                .dynamicModelId("BBM_TC2")
+                .parameterSetId("tc")
+                .staticId("LOAD2")
+                .side(TransformerSide.LOW_VOLTAGE)
+                .build());
         dynamicModels.add(TapChangerAutomatonBuilder.of(network)
-                        .dynamicModelId("BBM_TC3")
-                        .parameterSetId("tc")
-                        .staticId("LOAD3")
-                        .side(TransformerSide.HIGH_VOLTAGE)
-                        .build());
+                .dynamicModelId("BBM_TC3")
+                .parameterSetId("tc")
+                .staticId("LOAD3")
+                .side(TransformerSide.HIGH_VOLTAGE)
+                .build());
     }
 
     @Test

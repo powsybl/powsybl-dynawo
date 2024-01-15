@@ -5,13 +5,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.builders.loads;
+package com.powsybl.dynawaltz.models.buses;
 
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.builders.ModelConfig;
 import com.powsybl.dynawaltz.builders.ModelConfigsSingleton;
 import com.powsybl.dynawaltz.builders.Reporters;
-import com.powsybl.dynawaltz.models.loads.LoadTwoTransformers;
 import com.powsybl.iidm.network.Network;
 
 import java.util.Map;
@@ -20,47 +19,47 @@ import java.util.Set;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class LoadTwoTransformersBuilder extends AbstractLoadModelBuilder<LoadTwoTransformersBuilder> {
+public class InfiniteBusBuilder extends AbstractBusBuilder<InfiniteBusBuilder> {
 
-    private static final String CATEGORY = "loadsTwoTransformers";
+    private static final String CATEGORY = "infiniteBuses";
     private static final Map<String, ModelConfig> LIBS = ModelConfigsSingleton.getInstance().getModelConfigs(CATEGORY);
 
-    public static LoadTwoTransformersBuilder of(Network network) {
+    public static InfiniteBusBuilder of(Network network) {
         return of(network, Reporter.NO_OP);
     }
 
-    public static LoadTwoTransformersBuilder of(Network network, Reporter reporter) {
-        return new LoadTwoTransformersBuilder(network, LIBS.values().iterator().next(), reporter);
+    public static InfiniteBusBuilder of(Network network, Reporter reporter) {
+        return new InfiniteBusBuilder(network, LIBS.values().iterator().next(), reporter);
     }
 
-    public static LoadTwoTransformersBuilder of(Network network, String lib) {
+    public static InfiniteBusBuilder of(Network network, String lib) {
         return of(network, lib, Reporter.NO_OP);
     }
 
-    public static LoadTwoTransformersBuilder of(Network network, String lib, Reporter reporter) {
+    public static InfiniteBusBuilder of(Network network, String lib, Reporter reporter) {
         ModelConfig modelConfig = LIBS.get(lib);
         if (modelConfig == null) {
-            Reporters.reportLibNotFound(reporter, LoadTwoTransformersBuilder.class.getSimpleName(), lib);
+            Reporters.reportLibNotFound(reporter, InfiniteBusBuilder.class.getSimpleName(), lib);
             return null;
         }
-        return new LoadTwoTransformersBuilder(network, LIBS.get(lib), reporter);
+        return new InfiniteBusBuilder(network, LIBS.get(lib), reporter);
     }
 
     public static Set<String> getSupportedLibs() {
         return LIBS.keySet();
     }
 
-    protected LoadTwoTransformersBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
+    protected InfiniteBusBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
         super(network, modelConfig, reporter);
     }
 
     @Override
-    public LoadTwoTransformers build() {
-        return isInstantiable() ? new LoadTwoTransformers(dynamicModelId, getEquipment(), parameterSetId, modelConfig.getLib()) : null;
+    public InfiniteBus build() {
+        return isInstantiable() ? new InfiniteBus(dynamicModelId, getEquipment(), parameterSetId, modelConfig.getLib()) : null;
     }
 
     @Override
-    protected LoadTwoTransformersBuilder self() {
+    protected InfiniteBusBuilder self() {
         return this;
     }
 }

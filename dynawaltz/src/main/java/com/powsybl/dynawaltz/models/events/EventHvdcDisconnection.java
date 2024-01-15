@@ -23,7 +23,7 @@ public class EventHvdcDisconnection extends AbstractDynamicLibEventDisconnection
     private final boolean disconnectOrigin;
     private final boolean disconnectExtremity;
 
-    EventHvdcDisconnection(HvdcLine equipment, double startTime, boolean disconnectOrigin, boolean disconnectExtremity) {
+    protected EventHvdcDisconnection(HvdcLine equipment, double startTime, boolean disconnectOrigin, boolean disconnectExtremity) {
         super(equipment, startTime, disconnectOrigin || disconnectExtremity);
         this.disconnectOrigin = disconnectOrigin;
         this.disconnectExtremity = disconnectExtremity;

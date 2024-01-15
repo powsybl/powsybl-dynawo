@@ -31,7 +31,7 @@ public class CurrentLimitAutomaton extends AbstractPureDynamicBlackBoxModel {
     protected final TwoSides measuredSide;
     protected final Branch<?> controlledQuadripole;
 
-    CurrentLimitAutomaton(String dynamicModelId, String parameterSetId, Branch<?> measuredQuadripole, TwoSides measuredSide, Branch<?> controlledQuadripole, String lib) {
+    protected CurrentLimitAutomaton(String dynamicModelId, String parameterSetId, Branch<?> measuredQuadripole, TwoSides measuredSide, Branch<?> controlledQuadripole, String lib) {
         super(dynamicModelId, parameterSetId, lib);
         this.measuredQuadripole = Objects.requireNonNull(measuredQuadripole);
         this.measuredSide = Objects.requireNonNull(measuredSide);

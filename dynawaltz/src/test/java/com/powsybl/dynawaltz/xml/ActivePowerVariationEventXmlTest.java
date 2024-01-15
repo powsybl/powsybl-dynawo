@@ -8,9 +8,9 @@
 package com.powsybl.dynawaltz.xml;
 
 import com.powsybl.dynawaltz.builders.EventModelsBuilderUtils;
-import com.powsybl.dynawaltz.models.generators.SynchronizedGeneratorControllable;
-import com.powsybl.dynawaltz.models.generators.SynchronousGeneratorControllable;
-import com.powsybl.dynawaltz.models.loads.BaseLoadControllable;
+import com.powsybl.dynawaltz.models.loads.BaseLoadBuilder;
+import com.powsybl.dynawaltz.models.generators.SynchronizedGeneratorBuilder;
+import com.powsybl.dynawaltz.models.generators.SynchronousGeneratorBuilder;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
@@ -29,9 +29,21 @@ class ActivePowerVariationEventXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void addDynamicModels() {
-        dynamicModels.add(new SynchronizedGeneratorControllable("BBM_GENC", network.getGenerator("GEN2"), "GPV", "GeneratorPV"));
-        dynamicModels.add(new SynchronousGeneratorControllable("BBM_GENC2", network.getGenerator("GEN3"), "GSTWPR", "GeneratorSynchronousFourWindingsGoverPropVRPropInt"));
-        dynamicModels.add(new BaseLoadControllable("BBM_LOADC", network.getLoad("LOAD2"), "load", "LoadAlphaBeta"));
+        dynamicModels.add(SynchronizedGeneratorBuilder.of(network, "GeneratorPV")
+                .dynamicModelId("BBM_GENC")
+                .staticId("GEN2")
+                .parameterSetId("GPV")
+                .build());
+        dynamicModels.add(SynchronousGeneratorBuilder.of(network, "GeneratorSynchronousFourWindingsGoverPropVRPropInt")
+                .dynamicModelId("BBM_GENC2")
+                .staticId("GEN3")
+                .parameterSetId("GSTWPR")
+                .build());
+        dynamicModels.add(BaseLoadBuilder.of(network, "LoadAlphaBeta")
+                .dynamicModelId("BBM_LOADC")
+                .staticId("LOAD2")
+                .parameterSetId("load")
+                .build());
         eventModels.add(EventModelsBuilderUtils.newEventActivePowerVariationBuilder(network)
                 .staticId("GEN")
                 .startTime(1)

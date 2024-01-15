@@ -30,7 +30,7 @@ public class LoadOneTransformer extends AbstractLoad implements LoadWithTransfor
             new VarMapping("transformer_Q1Pu_value", "q"),
             new VarMapping("transformer_state", "state"));
 
-    public LoadOneTransformer(String dynamicModelId, Load load, String parameterSetId, String lib) {
+    protected LoadOneTransformer(String dynamicModelId, Load load, String parameterSetId, String lib) {
         super(dynamicModelId, load, parameterSetId, lib, "transformer_terminal1");
     }
 

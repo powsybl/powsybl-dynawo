@@ -291,7 +291,7 @@
     },
     {
       "lib": "PhotovoltaicsWeccCurrentSource",
-      "internalModelPrefix": "WTG4A",
+      "internalModelPrefix": "photovoltaics",
       "properties": [
         "Synchronized"
       ]

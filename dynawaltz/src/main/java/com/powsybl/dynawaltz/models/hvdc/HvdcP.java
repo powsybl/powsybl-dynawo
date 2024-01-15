@@ -16,7 +16,7 @@ import com.powsybl.iidm.network.TwoSides;
  */
 public class HvdcP extends AbstractHvdc {
 
-    public HvdcP(String dynamicModelId, HvdcLine hvdc, String parameterSetId, String hvdcLib) {
+    protected HvdcP(String dynamicModelId, HvdcLine hvdc, String parameterSetId, String hvdcLib) {
         super(dynamicModelId, hvdc, parameterSetId, hvdcLib);
     }
 

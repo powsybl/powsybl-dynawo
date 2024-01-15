@@ -5,27 +5,26 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.builders.loads;
+package com.powsybl.dynawaltz.models.generators;
 
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.builders.AbstractEquipmentModelBuilder;
 import com.powsybl.dynawaltz.builders.ModelConfig;
+import com.powsybl.iidm.network.Generator;
 import com.powsybl.iidm.network.IdentifiableType;
-import com.powsybl.iidm.network.Load;
 import com.powsybl.iidm.network.Network;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public abstract class AbstractLoadModelBuilder<R extends AbstractEquipmentModelBuilder<Load, R>> extends AbstractEquipmentModelBuilder<Load, R> {
+public abstract class AbstractGeneratorBuilder<R extends AbstractEquipmentModelBuilder<Generator, R>> extends AbstractEquipmentModelBuilder<Generator, R> {
 
-    protected AbstractLoadModelBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
-        super(network, modelConfig, IdentifiableType.LOAD, reporter);
+    protected AbstractGeneratorBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
+        super(network, modelConfig, IdentifiableType.GENERATOR, reporter);
     }
 
     @Override
-    protected Load findEquipment(String staticId) {
-        return network.getLoad(staticId);
+    protected Generator findEquipment(String staticId) {
+        return network.getGenerator(staticId);
     }
-
 }

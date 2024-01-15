@@ -8,9 +8,8 @@
 package com.powsybl.dynawaltz.xml;
 
 import com.powsybl.dynawaltz.builders.EventModelsBuilderUtils;
-import com.powsybl.dynawaltz.models.generators.GeneratorFictitious;
+import com.powsybl.dynawaltz.models.generators.GeneratorFictitiousBuilder;
 import com.powsybl.iidm.network.Bus;
-import com.powsybl.iidm.network.Generator;
 import com.powsybl.iidm.network.VoltageLevel;
 import com.powsybl.iidm.network.test.SvcTestCaseFactory;
 import org.junit.jupiter.api.Test;
@@ -42,10 +41,13 @@ class DisconnectEventXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void addDynamicModels() {
-        Generator g = network.getGenerator("G1");
-        dynamicModels.add(new GeneratorFictitious("BBM_GEN", g, "GF", "GeneratorFictitious"));
+        dynamicModels.add(GeneratorFictitiousBuilder.of(network)
+                .dynamicModelId("BBM_GEN")
+                .staticId("G1")
+                .parameterSetId("GF")
+                .build());
         eventModels.add(EventModelsBuilderUtils.newEventDisconnectionBuilder(network)
-                .staticId(g.getId())
+                .staticId("G1")
                 .startTime(1)
                 .build());
         eventModels.add(EventModelsBuilderUtils.newEventDisconnectionBuilder(network)

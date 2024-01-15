@@ -14,7 +14,7 @@ import com.powsybl.iidm.network.Generator;
  */
 public class GeneratorFictitious extends AbstractGenerator {
 
-    public GeneratorFictitious(String dynamicModelId, Generator generator, String parameterSetId, String lib) {
+    protected GeneratorFictitious(String dynamicModelId, Generator generator, String parameterSetId, String lib) {
         super(dynamicModelId, generator, parameterSetId, lib);
     }
 }

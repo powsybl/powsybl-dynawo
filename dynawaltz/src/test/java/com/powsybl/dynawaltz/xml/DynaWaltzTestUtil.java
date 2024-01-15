@@ -12,12 +12,13 @@ import com.powsybl.dynawaltz.DynaWaltzCurve;
 import com.powsybl.dynawaltz.builders.EventModelsBuilderUtils;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.automatons.currentLimits.CurrentLimitAutomatonBuilder;
-import com.powsybl.dynawaltz.models.generators.GeneratorFictitious;
-import com.powsybl.dynawaltz.models.generators.SynchronizedGenerator;
-import com.powsybl.dynawaltz.models.generators.SynchronousGenerator;
+import com.powsybl.dynawaltz.models.generators.GeneratorFictitiousBuilder;
+import com.powsybl.dynawaltz.models.generators.SynchronizedGeneratorBuilder;
+import com.powsybl.dynawaltz.models.generators.SynchronousGeneratorBuilder;
+import com.powsybl.dynawaltz.models.lines.LineBuilder;
 import com.powsybl.dynawaltz.models.lines.StandardLine;
-import com.powsybl.dynawaltz.models.loads.BaseLoad;
-import com.powsybl.dynawaltz.models.loads.LoadOneTransformer;
+import com.powsybl.dynawaltz.models.loads.BaseLoadBuilder;
+import com.powsybl.dynawaltz.models.loads.LoadOneTransformerBuilder;
 import com.powsybl.iidm.network.*;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.BeforeEach;
@@ -70,29 +71,65 @@ public class DynaWaltzTestUtil extends AbstractSerDeTest {
         dynamicModels = new ArrayList<>();
         network.getLoadStream().forEach(l -> {
             if (l.getId().equals("LOAD2")) {
-                dynamicModels.add(new LoadOneTransformer("BBM_" + l.getId(), l, "LOT", "LoadOneTransformer"));
+                dynamicModels.add(LoadOneTransformerBuilder.of(network, "LoadOneTransformer")
+                        .dynamicModelId("BBM_" + l.getId())
+                        .staticId(l.getId())
+                        .parameterSetId("LOT")
+                        .build());
             } else {
-                dynamicModels.add(new BaseLoad("BBM_" + l.getId(), l, "LAB", "LoadAlphaBeta"));
+                dynamicModels.add(BaseLoadBuilder.of(network, "LoadAlphaBeta")
+                        .dynamicModelId("BBM_" + l.getId())
+                        .staticId(l.getId())
+                        .parameterSetId("LAB")
+                        .build());
             }
         });
         network.getGeneratorStream().forEach(g -> {
             if (g.getId().equals("GEN2")) {
-                dynamicModels.add(new SynchronousGenerator("BBM_" + g.getId(), g, "GSFWPR", "GeneratorSynchronousFourWindingsProportionalRegulations"));
+                dynamicModels.add(SynchronousGeneratorBuilder.of(network, "GeneratorSynchronousFourWindingsProportionalRegulations")
+                        .dynamicModelId("BBM_" + g.getId())
+                        .staticId(g.getId())
+                        .parameterSetId("GSFWPR")
+                        .build());
             } else if (g.getId().equals("GEN3")) {
-                dynamicModels.add(new SynchronousGenerator("BBM_" + g.getId(), g, "GSFW", "GeneratorSynchronousFourWindings"));
+                dynamicModels.add(SynchronousGeneratorBuilder.of(network, "GeneratorSynchronousFourWindings")
+                        .dynamicModelId("BBM_" + g.getId())
+                        .staticId(g.getId())
+                        .parameterSetId("GSFW")
+                        .build());
             } else if (g.getId().equals("GEN4")) {
-                dynamicModels.add(new SynchronousGenerator("BBM_" + g.getId(), g, "GSTW", "GeneratorSynchronousThreeWindings"));
+                dynamicModels.add(SynchronousGeneratorBuilder.of(network, "GeneratorSynchronousThreeWindings")
+                        .dynamicModelId("BBM_" + g.getId())
+                        .staticId(g.getId())
+                        .parameterSetId("GSTW")
+                        .build());
             } else if (g.getId().equals("GEN6")) {
-                dynamicModels.add(new GeneratorFictitious("BBM_" + g.getId(), g, "GF", "GeneratorFictitious"));
+                dynamicModels.add(GeneratorFictitiousBuilder.of(network)
+                        .dynamicModelId("BBM_" + g.getId())
+                        .staticId(g.getId())
+                        .parameterSetId("GF")
+                        .build());
             } else if (g.getId().equals("GEN7")) {
-                dynamicModels.add(new SynchronizedGenerator("BBM_" + g.getId(), g, "GPQ", "GeneratorPQ"));
+                dynamicModels.add(SynchronizedGeneratorBuilder.of(network, "GeneratorPQ")
+                        .dynamicModelId("BBM_" + g.getId())
+                        .staticId(g.getId())
+                        .parameterSetId("GPQ")
+                        .build());
             } else {
-                dynamicModels.add(new SynchronousGenerator("BBM_" + g.getId(), g, "GSTWPR", "GeneratorSynchronousThreeWindingsProportionalRegulations"));
+                dynamicModels.add(SynchronousGeneratorBuilder.of(network, "GeneratorSynchronousThreeWindingsProportionalRegulations")
+                        .dynamicModelId("BBM_" + g.getId())
+                        .staticId(g.getId())
+                        .parameterSetId("GSTWPR")
+                        .build());
             }
         });
 
-        Line standardLine = network.getLine("NHV1_NHV2_1");
-        dynamicModels.add(new StandardLine("Line_" + standardLine.getId(), standardLine, "SL", "Line"));
+        StandardLine standardLine = LineBuilder.of(network)
+                .dynamicModelId("Line_NHV1_NHV2_1")
+                .staticId("NHV1_NHV2_1")
+                .parameterSetId("SL")
+                .build();
+        dynamicModels.add(standardLine);
 
         // Events
         eventModels = new ArrayList<>();
@@ -107,7 +144,7 @@ public class DynaWaltzTestUtil extends AbstractSerDeTest {
                 .build());
 
         // Automatons
-        network.getLineStream().filter(line -> line != standardLine)
+        network.getLineStream().filter(line -> !line.getId().equalsIgnoreCase(standardLine.getStaticId()))
                 .forEach(l -> dynamicModels.add(CurrentLimitAutomatonBuilder.of(network, "CurrentLimitAutomaton")
                         .dynamicModelId("BBM_" + l.getId())
                         .parameterSetId("CLA")

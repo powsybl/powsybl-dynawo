@@ -8,10 +8,10 @@
 package com.powsybl.dynawaltz.xml;
 
 import com.powsybl.commons.PowsyblException;
+import com.powsybl.dynawaltz.models.loads.LoadOneTransformerTapChangerBuilder;
+import com.powsybl.dynawaltz.models.loads.LoadTwoTransformersTapChangersBuilder;
+import com.powsybl.dynawaltz.models.transformers.TransformerFixedRatioBuilder;
 import com.powsybl.dynawaltz.models.automatons.TapChangerBlockingAutomatonBuilder;
-import com.powsybl.dynawaltz.models.loads.LoadOneTransformerTapChanger;
-import com.powsybl.dynawaltz.models.loads.LoadTwoTransformersTapChangers;
-import com.powsybl.dynawaltz.models.transformers.TransformerFixedRatio;
 import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.VoltageLevel;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
@@ -39,9 +39,21 @@ class TapChangerBlockingAutomatonXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void addDynamicModels() {
-        dynamicModels.add(new TransformerFixedRatio("BBM_NGEN_NHV1", network.getTwoWindingsTransformer("NGEN_NHV1"), "transformer", "TransformerFixedRatio"));
-        dynamicModels.add(new LoadOneTransformerTapChanger("BBM_LOAD", network.getLoad("LOAD"), "lot", "LoadOneTransformerTapChanger"));
-        dynamicModels.add(new LoadTwoTransformersTapChangers("BBM_LOAD2", network.getLoad("LOAD2"), "ltt", "LoadTwoTransformersTapChangers"));
+        dynamicModels.add(TransformerFixedRatioBuilder.of(network)
+                .dynamicModelId("BBM_NGEN_NHV1")
+                .staticId("NGEN_NHV1")
+                .parameterSetId("transformer")
+                .build());
+        dynamicModels.add(LoadOneTransformerTapChangerBuilder.of(network, "LoadOneTransformerTapChanger")
+                .dynamicModelId("BBM_LOAD")
+                .staticId("LOAD")
+                .parameterSetId("lot")
+                .build());
+        dynamicModels.add(LoadTwoTransformersTapChangersBuilder.of(network, "LoadTwoTransformersTapChangers")
+                .dynamicModelId("BBM_LOAD2")
+                .staticId("LOAD2")
+                .parameterSetId("ltt")
+                .build());
         dynamicModels.add(TapChangerBlockingAutomatonBuilder.of(network)
                 .dynamicModelId("BBM_TapChangerBlocking")
                 .parameterSetId("TapChangerPar")

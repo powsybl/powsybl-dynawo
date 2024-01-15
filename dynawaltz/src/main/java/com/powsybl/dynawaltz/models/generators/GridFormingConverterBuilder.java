@@ -5,13 +5,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.builders.generators;
+package com.powsybl.dynawaltz.models.generators;
 
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.builders.ModelConfig;
 import com.powsybl.dynawaltz.builders.ModelConfigsSingleton;
 import com.powsybl.dynawaltz.builders.Reporters;
-import com.powsybl.dynawaltz.models.generators.GeneratorFictitious;
 import com.powsybl.iidm.network.Network;
 
 import java.util.Map;
@@ -20,47 +19,47 @@ import java.util.Set;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class GeneratorFictitiousBuilder extends AbstractGeneratorBuilder<GeneratorFictitiousBuilder> {
+public class GridFormingConverterBuilder extends AbstractGeneratorBuilder<GridFormingConverterBuilder> {
 
-    private static final String CATEGORY = "baseGenerators";
+    private static final String CATEGORY = "gridFormingConverters";
     private static final Map<String, ModelConfig> LIBS = ModelConfigsSingleton.getInstance().getModelConfigs(CATEGORY);
 
-    public static GeneratorFictitiousBuilder of(Network network) {
+    public static GridFormingConverterBuilder of(Network network) {
         return of(network, Reporter.NO_OP);
     }
 
-    public static GeneratorFictitiousBuilder of(Network network, Reporter reporter) {
-        return new GeneratorFictitiousBuilder(network, LIBS.values().iterator().next(), reporter);
+    public static GridFormingConverterBuilder of(Network network, Reporter reporter) {
+        return new GridFormingConverterBuilder(network, LIBS.values().iterator().next(), reporter);
     }
 
-    public static GeneratorFictitiousBuilder of(Network network, String lib) {
+    public static GridFormingConverterBuilder of(Network network, String lib) {
         return of(network, lib, Reporter.NO_OP);
     }
 
-    public static GeneratorFictitiousBuilder of(Network network, String lib, Reporter reporter) {
+    public static GridFormingConverterBuilder of(Network network, String lib, Reporter reporter) {
         ModelConfig modelConfig = LIBS.get(lib);
         if (modelConfig == null) {
-            Reporters.reportLibNotFound(reporter, GeneratorFictitiousBuilder.class.getSimpleName(), lib);
+            Reporters.reportLibNotFound(reporter, GridFormingConverterBuilder.class.getSimpleName(), lib);
             return null;
         }
-        return new GeneratorFictitiousBuilder(network, LIBS.get(lib), reporter);
+        return new GridFormingConverterBuilder(network, LIBS.get(lib), reporter);
     }
 
     public static Set<String> getSupportedLibs() {
         return LIBS.keySet();
     }
 
-    protected GeneratorFictitiousBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
+    protected GridFormingConverterBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
         super(network, modelConfig, reporter);
     }
 
     @Override
-    public GeneratorFictitious build() {
-        return isInstantiable() ? new GeneratorFictitious(dynamicModelId, getEquipment(), parameterSetId, modelConfig.getLib()) : null;
+    public GridFormingConverter build() {
+        return isInstantiable() ? new GridFormingConverter(dynamicModelId, getEquipment(), parameterSetId, modelConfig.getLib()) : null;
     }
 
     @Override
-    protected GeneratorFictitiousBuilder self() {
+    protected GridFormingConverterBuilder self() {
         return this;
     }
 }

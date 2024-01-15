@@ -7,10 +7,10 @@
  */
 package com.powsybl.dynawaltz.xml;
 
+import com.powsybl.dynawaltz.models.transformers.TransformerFixedRatioBuilder;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.automatons.phaseshifters.PhaseShifterIAutomatonBuilder;
 import com.powsybl.dynawaltz.models.automatons.phaseshifters.PhaseShifterPAutomatonBuilder;
-import com.powsybl.dynawaltz.models.transformers.TransformerFixedRatio;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.BeforeEach;
@@ -48,7 +48,11 @@ class PhaseShiftersXmlTest extends AbstractParametrizedDynamicModelXmlTest {
     protected void addDynamicModels(Function<Network, BlackBoxModel> phaseShifterConstructor, boolean dynamicTransformer) {
         dynamicModels.add(phaseShifterConstructor.apply(network));
         if (dynamicTransformer) {
-            dynamicModels.add(new TransformerFixedRatio("BBM_NGEN_NHV1", network.getTwoWindingsTransformer("NGEN_NHV1"), "tt", "TransformerFixedRatio"));
+            dynamicModels.add(TransformerFixedRatioBuilder.of(network)
+                    .dynamicModelId("BBM_NGEN_NHV1")
+                    .staticId("NGEN_NHV1")
+                    .parameterSetId("tt")
+                    .build());
         }
     }
 

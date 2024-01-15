@@ -24,7 +24,7 @@ import static com.powsybl.dynawaltz.models.TransformerSide.LOW_VOLTAGE;
  */
 public class LoadTwoTransformersTapChangers extends LoadTwoTransformers implements TapChangerModel {
 
-    public LoadTwoTransformersTapChangers(String dynamicModelId, Load load, String parameterSetId, String lib) {
+    protected LoadTwoTransformersTapChangers(String dynamicModelId, Load load, String parameterSetId, String lib) {
         super(dynamicModelId, load, parameterSetId, lib);
     }
 

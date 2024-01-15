@@ -29,7 +29,7 @@ public class BaseStaticVarCompensator extends AbstractEquipmentBlackBoxModel<com
     private static final List<VarMapping> VAR_MAPPING_NO_STANDBY_AUTOMATON = List.of(P_MAPPING, Q_MAPPING, STATE_MAPPING);
     private static final List<VarMapping> VAR_MAPPING_WITH_STANDBY_AUTOMATON = List.of(P_MAPPING, Q_MAPPING, STATE_MAPPING, MODE_MAPPING);
 
-    public BaseStaticVarCompensator(String dynamicModelId, com.powsybl.iidm.network.StaticVarCompensator svarc, String parameterSetId, String lib) {
+    protected BaseStaticVarCompensator(String dynamicModelId, com.powsybl.iidm.network.StaticVarCompensator svarc, String parameterSetId, String lib) {
         super(dynamicModelId, parameterSetId, svarc, lib);
     }
 

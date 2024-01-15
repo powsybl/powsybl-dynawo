@@ -39,7 +39,7 @@ public class TapChangerBlockingAutomaton extends AbstractPureDynamicBlackBoxMode
     private final List<Identifiable<?>> uMeasurements;
     private boolean isConnected = true;
 
-    TapChangerBlockingAutomaton(String dynamicModelId, String parameterSetId, List<TwoWindingsTransformer> transformers, List<Load> loadsWithTransformer, List<String> tapChangerAutomatonIds, List<Identifiable<?>> uMeasurements, String lib) {
+    protected TapChangerBlockingAutomaton(String dynamicModelId, String parameterSetId, List<TwoWindingsTransformer> transformers, List<Load> loadsWithTransformer, List<String> tapChangerAutomatonIds, List<Identifiable<?>> uMeasurements, String lib) {
         super(dynamicModelId, parameterSetId, lib);
         this.transformers = Objects.requireNonNull(transformers);
         this.loadsWithTransformer = Objects.requireNonNull(loadsWithTransformer);

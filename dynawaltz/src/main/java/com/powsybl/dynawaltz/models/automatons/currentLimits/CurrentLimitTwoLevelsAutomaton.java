@@ -29,7 +29,7 @@ public class CurrentLimitTwoLevelsAutomaton extends CurrentLimitAutomaton {
     private final Branch<?> secondMeasuredQuadripole;
     private final TwoSides secondMeasuredSide;
 
-    CurrentLimitTwoLevelsAutomaton(String dynamicModelId, String parameterSetId, Branch<?> measuredQuadripole, TwoSides measuredSide, Branch<?> secondMeasuredQuadripole, TwoSides secondMeasuredSide, Branch<?> controlledQuadripole, String lib) {
+    protected CurrentLimitTwoLevelsAutomaton(String dynamicModelId, String parameterSetId, Branch<?> measuredQuadripole, TwoSides measuredSide, Branch<?> secondMeasuredQuadripole, TwoSides secondMeasuredSide, Branch<?> controlledQuadripole, String lib) {
         super(dynamicModelId, parameterSetId, measuredQuadripole, measuredSide, controlledQuadripole, lib);
         this.secondMeasuredQuadripole = Objects.requireNonNull(secondMeasuredQuadripole);
         this.secondMeasuredSide = Objects.requireNonNull(secondMeasuredSide);

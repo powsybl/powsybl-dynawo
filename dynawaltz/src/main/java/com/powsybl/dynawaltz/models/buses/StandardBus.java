@@ -19,7 +19,7 @@ import javax.xml.stream.XMLStreamWriter;
  */
 public class StandardBus extends AbstractBus {
 
-    public StandardBus(String dynamicModelId, Bus bus, String parameterSetId, String lib) {
+    protected StandardBus(String dynamicModelId, Bus bus, String parameterSetId, String lib) {
         super(dynamicModelId, bus, parameterSetId, lib);
     }
 

@@ -29,7 +29,7 @@ public class NodeFaultEvent extends AbstractEvent {
     private final double rPu;
     private final double xPu;
 
-    NodeFaultEvent(Bus equipment, double startTime, double faultTime, double rPu, double xPu) {
+    protected NodeFaultEvent(Bus equipment, double startTime, double faultTime, double rPu, double xPu) {
         super(equipment, startTime, EVENT_PREFIX, "NodeFault");
         this.faultTime = faultTime;
         this.rPu = rPu;

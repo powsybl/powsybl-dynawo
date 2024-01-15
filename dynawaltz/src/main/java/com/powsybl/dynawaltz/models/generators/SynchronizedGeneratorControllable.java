@@ -15,7 +15,7 @@ import com.powsybl.iidm.network.Generator;
  */
 public class SynchronizedGeneratorControllable extends SynchronizedGenerator implements ControllableEquipment {
 
-    public SynchronizedGeneratorControllable(String dynamicModelId, Generator generator, String parameterSetId, String generatorLib) {
+    protected SynchronizedGeneratorControllable(String dynamicModelId, Generator generator, String parameterSetId, String generatorLib) {
         super(dynamicModelId, generator, parameterSetId, generatorLib);
     }
 

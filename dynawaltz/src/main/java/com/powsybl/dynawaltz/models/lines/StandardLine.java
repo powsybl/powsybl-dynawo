@@ -21,7 +21,7 @@ import java.util.List;
  */
 public class StandardLine extends AbstractEquipmentBlackBoxModel<Line> implements LineModel {
 
-    public StandardLine(String dynamicModelId, Line line, String parameterSetId, String lib) {
+    protected StandardLine(String dynamicModelId, Line line, String parameterSetId, String lib) {
         super(dynamicModelId, parameterSetId, line, lib);
     }
 

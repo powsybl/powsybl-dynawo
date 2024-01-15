@@ -31,7 +31,7 @@ public class LoadTwoTransformers extends AbstractLoad implements LoadWithTransfo
             new VarMapping(getTransformerVar(HIGH_VOLTAGE, "Q1Pu_value"), "q"),
             new VarMapping(getTransformerVar(HIGH_VOLTAGE, "state"), "state"));
 
-    public LoadTwoTransformers(String dynamicModelId, Load load, String parameterSetId, String lib) {
+    protected LoadTwoTransformers(String dynamicModelId, Load load, String parameterSetId, String lib) {
         super(dynamicModelId, load, parameterSetId, lib, getTransformerVar(HIGH_VOLTAGE, "terminal1"));
     }
 

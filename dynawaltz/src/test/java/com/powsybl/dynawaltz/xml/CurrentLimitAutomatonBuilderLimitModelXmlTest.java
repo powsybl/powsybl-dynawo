@@ -7,8 +7,8 @@
  */
 package com.powsybl.dynawaltz.xml;
 
+import com.powsybl.dynawaltz.models.transformers.TransformerFixedRatioBuilder;
 import com.powsybl.dynawaltz.models.automatons.currentLimits.CurrentLimitAutomatonBuilder;
-import com.powsybl.dynawaltz.models.transformers.TransformerFixedRatio;
 import com.powsybl.iidm.network.TwoSides;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.Test;
@@ -43,7 +43,11 @@ class CurrentLimitAutomatonBuilderLimitModelXmlTest extends AbstractDynamicModel
                 .iMeasurement("NGEN_NHV1")
                 .iMeasurementSide(TwoSides.TWO)
                 .build());
-        dynamicModels.add(new TransformerFixedRatio("BBM_TRANSFORMER", network.getTwoWindingsTransformer("NHV2_NLOAD"), "tf", "TransformerFixedRatio"));
+        dynamicModels.add(TransformerFixedRatioBuilder.of(network)
+                .dynamicModelId("BBM_TRANSFORMER")
+                .staticId("NHV2_NLOAD")
+                .parameterSetId("tf")
+                .build());
         dynamicModels.add(CurrentLimitAutomatonBuilder.of(network, "CurrentLimitAutomaton")
                 .dynamicModelId("BBM_CLA_TRANSFORMER2")
                 .parameterSetId("cla")

@@ -31,7 +31,7 @@ public class GridFormingConverter extends AbstractEquipmentBlackBoxModel<Generat
             new VarMapping("converter_QGenPu", "q"),
             new VarMapping("converter_state", "state"));
 
-    public GridFormingConverter(String dynamicModelId, Generator generator, String parameterSetId, String lib) {
+    protected GridFormingConverter(String dynamicModelId, Generator generator, String parameterSetId, String lib) {
         super(dynamicModelId, parameterSetId, generator, lib);
     }
 

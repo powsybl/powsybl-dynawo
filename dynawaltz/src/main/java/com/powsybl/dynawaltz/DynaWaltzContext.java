@@ -122,7 +122,7 @@ public class DynaWaltzContext {
     private Stream<BlackBoxModel> simplifyModels(Stream<BlackBoxModel> inputBbm, Reporter reporter) {
         Stream<BlackBoxModel> outputBbm = inputBbm;
         for (ModelsSimplifier modelsSimplifier : ServiceLoader.load(ModelsSimplifier.class)) {
-            outputBbm = modelsSimplifier.simplifyModels(outputBbm, dynaWaltzParameters, reporter);
+            outputBbm = modelsSimplifier.simplifyModels(outputBbm, network, dynaWaltzParameters, reporter);
         }
         return outputBbm;
     }

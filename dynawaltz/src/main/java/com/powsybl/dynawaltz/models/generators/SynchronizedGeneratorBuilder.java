@@ -5,14 +5,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.builders.generators;
+package com.powsybl.dynawaltz.models.generators;
 
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.builders.ModelConfig;
 import com.powsybl.dynawaltz.builders.ModelConfigsSingleton;
 import com.powsybl.dynawaltz.builders.Reporters;
-import com.powsybl.dynawaltz.models.generators.SynchronizedGenerator;
-import com.powsybl.dynawaltz.models.generators.SynchronizedGeneratorControllable;
 import com.powsybl.iidm.network.Network;
 
 import java.util.Map;

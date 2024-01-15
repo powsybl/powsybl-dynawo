@@ -5,26 +5,27 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.builders.buses;
+package com.powsybl.dynawaltz.models.loads;
 
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.builders.AbstractEquipmentModelBuilder;
 import com.powsybl.dynawaltz.builders.ModelConfig;
-import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.IdentifiableType;
+import com.powsybl.iidm.network.Load;
 import com.powsybl.iidm.network.Network;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public abstract class AbstractBusBuilder<R extends AbstractEquipmentModelBuilder<Bus, R>> extends AbstractEquipmentModelBuilder<Bus, R> {
+public abstract class AbstractLoadModelBuilder<R extends AbstractEquipmentModelBuilder<Load, R>> extends AbstractEquipmentModelBuilder<Load, R> {
 
-    protected AbstractBusBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
-        super(network, modelConfig, IdentifiableType.BUS, reporter);
+    protected AbstractLoadModelBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
+        super(network, modelConfig, IdentifiableType.LOAD, reporter);
     }
 
     @Override
-    protected Bus findEquipment(String staticId) {
-        return network.getBusBreakerView().getBus(staticId);
+    protected Load findEquipment(String staticId) {
+        return network.getLoad(staticId);
     }
+
 }

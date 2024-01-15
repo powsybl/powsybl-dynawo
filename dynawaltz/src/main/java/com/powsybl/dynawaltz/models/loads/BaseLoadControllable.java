@@ -15,7 +15,7 @@ import com.powsybl.iidm.network.Load;
  */
 public class BaseLoadControllable extends BaseLoad implements ControllableEquipment {
 
-    public BaseLoadControllable(String dynamicModelId, Load load, String parameterSetId, String lib) {
+    protected BaseLoadControllable(String dynamicModelId, Load load, String parameterSetId, String lib) {
         super(dynamicModelId, load, parameterSetId, lib);
     }
 

@@ -5,14 +5,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.builders.buses;
+package com.powsybl.dynawaltz.models.hvdc;
 
 import com.powsybl.commons.reporter.Reporter;
-import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynawaltz.builders.ModelConfig;
 import com.powsybl.dynawaltz.builders.ModelConfigsSingleton;
 import com.powsybl.dynawaltz.builders.Reporters;
-import com.powsybl.dynawaltz.models.buses.StandardBus;
 import com.powsybl.iidm.network.Network;
 
 import java.util.Map;
@@ -21,47 +19,54 @@ import java.util.Set;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class StandardBusBuilder extends AbstractBusBuilder<StandardBusBuilder> {
+public class HvdcPBuilder extends AbstractHvdcBuilder<HvdcPBuilder> {
 
-    private static final String CATEGORY = "baseBuses";
+    private static final String CATEGORY = "hvdcP";
     private static final Map<String, ModelConfig> LIBS = ModelConfigsSingleton.getInstance().getModelConfigs(CATEGORY);
 
-    public static StandardBusBuilder of(Network network) {
+    public static HvdcPBuilder of(Network network) {
         return of(network, Reporter.NO_OP);
     }
 
-    public static StandardBusBuilder of(Network network, Reporter reporter) {
-        return new StandardBusBuilder(network, LIBS.values().iterator().next(), reporter);
+    public static HvdcPBuilder of(Network network, Reporter reporter) {
+        return new HvdcPBuilder(network, LIBS.values().iterator().next(), reporter);
     }
 
-    public static StandardBusBuilder of(Network network, String lib) {
+    public static HvdcPBuilder of(Network network, String lib) {
         return of(network, lib, Reporter.NO_OP);
     }
 
-    public static StandardBusBuilder of(Network network, String lib, Reporter reporter) {
+    public static HvdcPBuilder of(Network network, String lib, Reporter reporter) {
         ModelConfig modelConfig = LIBS.get(lib);
         if (modelConfig == null) {
-            Reporters.reportLibNotFound(reporter, StandardBusBuilder.class.getSimpleName(), lib);
+            Reporters.reportLibNotFound(reporter, HvdcPBuilder.class.getSimpleName(), lib);
             return null;
         }
-        return new StandardBusBuilder(network, LIBS.get(lib), reporter);
+        return new HvdcPBuilder(network, LIBS.get(lib), reporter);
     }
 
     public static Set<String> getSupportedLibs() {
         return LIBS.keySet();
     }
 
-    protected StandardBusBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
+    protected HvdcPBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
         super(network, modelConfig, reporter);
     }
 
     @Override
-    public DynamicModel build() {
-        return isInstantiable() ? new StandardBus(dynamicModelId, getEquipment(), parameterSetId, "Bus") : null;
+    public HvdcP build() {
+        if (isInstantiable()) {
+            if (modelConfig.isDangling()) {
+                return new HvdcPDangling(dynamicModelId, getEquipment(), parameterSetId, modelConfig.getLib(), danglingSide);
+            } else {
+                return new HvdcP(dynamicModelId, getEquipment(), parameterSetId, modelConfig.getLib());
+            }
+        }
+        return null;
     }
 
     @Override
-    protected StandardBusBuilder self() {
+    protected HvdcPBuilder self() {
         return this;
     }
 }

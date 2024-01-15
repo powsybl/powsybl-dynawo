@@ -22,7 +22,7 @@ public class HvdcVscDangling extends HvdcVsc {
 
     private final DanglingSide danglingSide;
 
-    public HvdcVscDangling(String dynamicModelId, HvdcLine hvdc, String parameterSetId, String hvdcLib, TwoSides danglingSide) {
+    protected HvdcVscDangling(String dynamicModelId, HvdcLine hvdc, String parameterSetId, String hvdcLib, TwoSides danglingSide) {
         super(dynamicModelId, hvdc, parameterSetId, hvdcLib);
         this.danglingSide = new DanglingSide(TERMINAL_PREFIX, danglingSide);
     }

@@ -11,7 +11,7 @@ import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
 import com.powsybl.dynawaltz.builders.EventModelsBuilderUtils;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
-import com.powsybl.dynawaltz.models.generators.SynchronousGenerator;
+import com.powsybl.dynawaltz.models.generators.SynchronousGeneratorBuilder;
 import com.powsybl.iidm.network.TwoSides;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -27,7 +27,11 @@ class EventXmlTest extends DynaWaltzTestUtil {
     @Test
     void writeDynamicModel() throws SAXException, IOException {
         dynamicModels.clear();
-        dynamicModels.add(new SynchronousGenerator("BBM_GEN2", network.getGenerator("GEN2"), "GSFWPR", "GeneratorSynchronousFourWindingsProportionalRegulations"));
+        dynamicModels.add(SynchronousGeneratorBuilder.of(network, "GeneratorSynchronousFourWindingsProportionalRegulations")
+                .dynamicModelId("BBM_GEN2")
+                .staticId("GEN2")
+                .parameterSetId("GSFWPR")
+                .build());
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynaWaltzParameters dynawoParameters = DynaWaltzParameters.load();
         DynaWaltzContext context = new DynaWaltzContext(network, network.getVariantManager().getWorkingVariantId(),

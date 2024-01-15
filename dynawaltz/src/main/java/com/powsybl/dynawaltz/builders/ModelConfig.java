@@ -8,7 +8,6 @@
 package com.powsybl.dynawaltz.builders;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -26,33 +25,7 @@ public class ModelConfig {
     private String internalModelPrefix = "";
     private List<String> properties = new ArrayList<>();
 
-    //TODO delete alternative cstr ?
-    //TODO package private ?
-    public ModelConfig(String lib, String internalModelPrefix, List<String> properties) {
-        this.lib = lib;
-        this.internalModelPrefix = internalModelPrefix;
-        this.properties = properties.stream().map(String::toUpperCase).toList();
-    }
-
-    public ModelConfig(String lib, String internalModelPrefix, String... properties) {
-        this.lib = lib;
-        this.internalModelPrefix = internalModelPrefix;
-        this.properties = Arrays.stream(properties).map(String::toUpperCase).toList();
-    }
-
-    public ModelConfig(String lib, String internalModelPrefix) {
-        this.lib = lib;
-        this.internalModelPrefix = internalModelPrefix;
-        this.properties = new ArrayList<>();
-    }
-
-    public ModelConfig(String lib) {
-        this.lib = lib;
-        this.internalModelPrefix = "";
-        this.properties = new ArrayList<>();
-    }
-
-    public ModelConfig() {
+    ModelConfig() {
     }
 
     public boolean isControllable() {

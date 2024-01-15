@@ -27,7 +27,7 @@ public class EventQuadripoleDisconnection extends AbstractEvent {
     private final boolean disconnectOrigin;
     private final boolean disconnectExtremity;
 
-    EventQuadripoleDisconnection(Branch<?> equipment, double startTime, boolean disconnectOrigin, boolean disconnectExtremity) {
+    protected EventQuadripoleDisconnection(Branch<?> equipment, double startTime, boolean disconnectOrigin, boolean disconnectExtremity) {
         super(equipment, startTime, EVENT_PREFIX, "EventQuadripoleDisconnection");
         this.disconnectOrigin = disconnectOrigin;
         this.disconnectExtremity = disconnectExtremity;

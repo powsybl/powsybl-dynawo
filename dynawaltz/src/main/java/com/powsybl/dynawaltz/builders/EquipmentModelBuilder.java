@@ -14,7 +14,6 @@ import com.powsybl.dynamicsimulation.DynamicModel;
  */
 public interface EquipmentModelBuilder<R extends EquipmentModelBuilder<R>> extends ModelBuilder<DynamicModel> {
 
-    //TODO usefull ?
     R staticId(String staticId);
 
     R dynamicModelId(String dynamicModelId);

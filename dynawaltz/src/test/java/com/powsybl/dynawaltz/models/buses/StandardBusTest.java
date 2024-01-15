@@ -36,11 +36,11 @@ class StandardBusTest {
     void connectionToModelWithoutDynamicModelException() {
         Network network = EurostagTutorialExample1Factory.create(NetworkFactory.findDefault());
         List<BlackBoxModel> dynamicModels = new ArrayList<>();
-        network.getBusBreakerView().getBuses().forEach(b -> {
-            if (b.getId().equals("NHV1")) {
-                dynamicModels.add(new StandardBus("BBM_" + b.getId(), b, "SB", "Bus"));
-            }
-        });
+        dynamicModels.add(StandardBusBuilder.of(network)
+                .dynamicModelId("BBM_NHV1")
+                .staticId("NHV1")
+                .parameterSetId("SB")
+                .build());
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynaWaltzParameters dynawoParameters = DynaWaltzParameters.load();
         String workingVariantId = network.getVariantManager().getWorkingVariantId();

@@ -5,14 +5,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.builders.hvdcs;
+package com.powsybl.dynawaltz.models.loads;
 
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.builders.ModelConfig;
 import com.powsybl.dynawaltz.builders.ModelConfigsSingleton;
 import com.powsybl.dynawaltz.builders.Reporters;
-import com.powsybl.dynawaltz.models.hvdc.HvdcP;
-import com.powsybl.dynawaltz.models.hvdc.HvdcPDangling;
 import com.powsybl.iidm.network.Network;
 
 import java.util.Map;
@@ -21,54 +19,55 @@ import java.util.Set;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class HvdcPBuilder extends AbstractHvdcBuilder<HvdcPBuilder> {
+public class BaseLoadBuilder extends AbstractLoadModelBuilder<BaseLoadBuilder> {
 
-    private static final String CATEGORY = "hvdcP";
+    private static final String CATEGORY = "baseLoads";
     private static final Map<String, ModelConfig> LIBS = ModelConfigsSingleton.getInstance().getModelConfigs(CATEGORY);
 
-    public static HvdcPBuilder of(Network network) {
+    public static BaseLoadBuilder of(Network network) {
         return of(network, Reporter.NO_OP);
     }
 
-    public static HvdcPBuilder of(Network network, Reporter reporter) {
-        return new HvdcPBuilder(network, LIBS.values().iterator().next(), reporter);
+    public static BaseLoadBuilder of(Network network, Reporter reporter) {
+        return new BaseLoadBuilder(network, LIBS.values().iterator().next(), reporter);
     }
 
-    public static HvdcPBuilder of(Network network, String lib) {
+    public static BaseLoadBuilder of(Network network, String lib) {
         return of(network, lib, Reporter.NO_OP);
     }
 
-    public static HvdcPBuilder of(Network network, String lib, Reporter reporter) {
+    public static BaseLoadBuilder of(Network network, String lib, Reporter reporter) {
         ModelConfig modelConfig = LIBS.get(lib);
         if (modelConfig == null) {
-            Reporters.reportLibNotFound(reporter, HvdcPBuilder.class.getSimpleName(), lib);
+            Reporters.reportLibNotFound(reporter, BaseLoadBuilder.class.getSimpleName(), lib);
             return null;
         }
-        return new HvdcPBuilder(network, LIBS.get(lib), reporter);
+        return new BaseLoadBuilder(network, LIBS.get(lib), reporter);
     }
 
     public static Set<String> getSupportedLibs() {
         return LIBS.keySet();
     }
 
-    protected HvdcPBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
+    protected BaseLoadBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
         super(network, modelConfig, reporter);
     }
 
     @Override
-    public HvdcP build() {
+    public BaseLoad build() {
         if (isInstantiable()) {
-            if (modelConfig.isDangling()) {
-                return new HvdcPDangling(dynamicModelId, getEquipment(), parameterSetId, modelConfig.getLib(), danglingSide);
+            if (modelConfig.isControllable()) {
+                return new BaseLoadControllable(dynamicModelId, getEquipment(), parameterSetId, modelConfig.getLib());
             } else {
-                return new HvdcP(dynamicModelId, getEquipment(), parameterSetId, modelConfig.getLib());
+                return new BaseLoad(dynamicModelId, getEquipment(), parameterSetId, modelConfig.getLib());
             }
+        } else {
+            return null;
         }
-        return null;
     }
 
     @Override
-    protected HvdcPBuilder self() {
+    protected BaseLoadBuilder self() {
         return this;
     }
 }
