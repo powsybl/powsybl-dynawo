@@ -55,7 +55,7 @@ public class InfiniteBusBuilder extends AbstractBusBuilder<InfiniteBusBuilder> {
 
     @Override
     public InfiniteBus build() {
-        return isInstantiable() ? new InfiniteBus(dynamicModelId, getEquipment(), parameterSetId, modelConfig.getLib()) : null;
+        return isInstantiable() ? new InfiniteBus(dynamicModelId, getEquipment(), parameterSetId, modelConfig.lib()) : null;
     }
 
     @Override

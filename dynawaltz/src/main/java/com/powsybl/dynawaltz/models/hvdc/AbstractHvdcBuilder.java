@@ -37,7 +37,7 @@ public abstract class AbstractHvdcBuilder<R extends AbstractEquipmentModelBuilde
             Reporters.reportFieldNotSet(reporter, "dangling");
             isInstantiable = false;
         } else if (!isDangling && danglingSide != null) {
-            Reporters.reportFieldSetWithWrongEquipment(reporter, "dangling", modelConfig.getLib());
+            Reporters.reportFieldSetWithWrongEquipment(reporter, "dangling", modelConfig.lib());
             isInstantiable = false;
         }
     }

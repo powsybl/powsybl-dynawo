@@ -7,8 +7,13 @@
  */
 package com.powsybl.dynawaltz.builders;
 
-import java.util.List;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+
+import java.io.IOException;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 /**
@@ -16,7 +21,22 @@ import java.util.stream.Stream;
  */
 public interface ModelConfigLoader {
 
-    Map<String, List<ModelConfig>> loadModelConfigs();
+    String getModelConfigFileName();
+
+    default Map<String, Map<String, ModelConfig>> loadModelConfigs() {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            SimpleModule module = new SimpleModule();
+            module.addDeserializer(Map.class, new ModelConfigsJsonDeserializer());
+            objectMapper.registerModule(module);
+            return objectMapper.readValue(Objects.requireNonNull(
+                            ModelConfigLoaderImpl.class.getClassLoader().getResource(getModelConfigFileName())).openStream(),
+                    new TypeReference<>() {
+                    });
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     Stream<BuilderConfig> loadBuilderConfigs();
 }

@@ -57,9 +57,9 @@ public class HvdcPBuilder extends AbstractHvdcBuilder<HvdcPBuilder> {
     public HvdcP build() {
         if (isInstantiable()) {
             if (modelConfig.isDangling()) {
-                return new HvdcPDangling(dynamicModelId, getEquipment(), parameterSetId, modelConfig.getLib(), danglingSide);
+                return new HvdcPDangling(dynamicModelId, getEquipment(), parameterSetId, modelConfig.lib(), danglingSide);
             } else {
-                return new HvdcP(dynamicModelId, getEquipment(), parameterSetId, modelConfig.getLib());
+                return new HvdcP(dynamicModelId, getEquipment(), parameterSetId, modelConfig.lib());
             }
         }
         return null;

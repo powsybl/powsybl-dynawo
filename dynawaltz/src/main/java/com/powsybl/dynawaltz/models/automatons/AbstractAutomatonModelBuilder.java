@@ -57,7 +57,7 @@ public abstract class AbstractAutomatonModelBuilder<T extends AbstractAutomatonM
     }
 
     protected String getLib() {
-        return modelConfig.getLib();
+        return modelConfig.lib();
     }
 
     @Override

@@ -13,15 +13,19 @@ import java.util.Objects;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public record ModelConfig(String lib, String alias, String internalModelPrefix, List<String> properties) {
+public class ModelConfigOld {
 
     private static final String CONTROLLABLE_PROPERTY = "CONTROLLABLE";
     private static final String DANGLING_PROPERTY = "DANGLING";
     private static final String SYNCHRONIZED_PROPERTY = "SYNCHRONIZED";
     private static final String TRANSFORMER_PROPERTY = "TRANSFORMER";
     private static final String AUXILIARY_PROPERTY = "AUXILIARY";
+    private final String lib;
+    private final String alias;
+    private final String internalModelPrefix;
+    private final List<String> properties;
 
-    public ModelConfig(String lib, String alias, String internalModelPrefix, List<String> properties) {
+    ModelConfigOld(String lib, String alias, String internalModelPrefix, List<String> properties) {
         this.lib = Objects.requireNonNull(lib);
         this.alias = alias;
         this.internalModelPrefix = internalModelPrefix;
@@ -52,7 +56,19 @@ public record ModelConfig(String lib, String alias, String internalModelPrefix, 
         return properties.contains(property);
     }
 
-    public String name() {
+    public String getLib() {
+        return lib;
+    }
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public String getName() {
         return alias == null ? lib : alias;
+    }
+
+    public String getInternalModelPrefix() {
+        return internalModelPrefix;
     }
 }

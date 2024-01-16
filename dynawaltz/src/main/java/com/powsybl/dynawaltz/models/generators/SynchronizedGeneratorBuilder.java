@@ -57,9 +57,9 @@ public class SynchronizedGeneratorBuilder extends AbstractGeneratorBuilder<Synch
     public SynchronizedGenerator build() {
         if (isInstantiable()) {
             if (modelConfig.isControllable()) {
-                return new SynchronizedGeneratorControllable(dynamicModelId, getEquipment(), parameterSetId, modelConfig.getLib());
+                return new SynchronizedGeneratorControllable(dynamicModelId, getEquipment(), parameterSetId, modelConfig.lib());
             } else {
-                return new SynchronizedGenerator(dynamicModelId, getEquipment(), parameterSetId, modelConfig.getLib());
+                return new SynchronizedGenerator(dynamicModelId, getEquipment(), parameterSetId, modelConfig.lib());
             }
         }
         return null;

@@ -63,7 +63,7 @@ public class LineBuilder extends AbstractEquipmentModelBuilder<Line, LineBuilder
 
     @Override
     public StandardLine build() {
-        return isInstantiable() ? new StandardLine(dynamicModelId, getEquipment(), parameterSetId, modelConfig.getLib()) : null;
+        return isInstantiable() ? new StandardLine(dynamicModelId, getEquipment(), parameterSetId, modelConfig.lib()) : null;
     }
 
     @Override

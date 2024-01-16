@@ -9,9 +9,10 @@ package com.powsybl.dynawaltz.builders;
 
 import com.google.common.collect.Lists;
 
-import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.ServiceLoader;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -21,14 +22,14 @@ public final class ModelConfigsSingleton {
     private static final ModelConfigsSingleton INSTANCE = new ModelConfigsSingleton();
 
     private final List<ModelConfigLoader> modelConfigLoaders;
-    private final Map<String, List<ModelConfig>> modelConfigs = new HashMap<>();
+    private final Map<String, Map<String, ModelConfig>> modelConfigs = new HashMap<>();
 
     private ModelConfigsSingleton() {
         modelConfigLoaders = Lists.newArrayList(ServiceLoader.load(ModelConfigLoader.class));
         modelConfigLoaders.forEach(l -> l.loadModelConfigs().forEach(
-                (cat, models) -> modelConfigs.merge(cat, models, (v1, v2) -> {
-                    v1.addAll(v2);
-                    return v1;
+                (cat, modelsMap) -> modelConfigs.merge(cat, modelsMap, (map1, map2) -> {
+                    map1.putAll(map2);
+                    return map1;
                 })
         ));
     }
@@ -37,10 +38,8 @@ public final class ModelConfigsSingleton {
         return INSTANCE;
     }
 
-    //TODO create map at initialisation
     public Map<String, ModelConfig> getModelConfigs(String categoryName) {
-        return modelConfigs.get(categoryName).stream()
-                .collect(Collectors.toMap(ModelConfig::getName, Function.identity(), (o1, o2) -> o1, LinkedHashMap::new));
+        return modelConfigs.get(categoryName);
     }
 
     public List<BuilderConfig> getBuilderConfigs() {

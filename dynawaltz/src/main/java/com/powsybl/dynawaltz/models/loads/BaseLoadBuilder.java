@@ -57,9 +57,9 @@ public class BaseLoadBuilder extends AbstractLoadModelBuilder<BaseLoadBuilder> {
     public BaseLoad build() {
         if (isInstantiable()) {
             if (modelConfig.isControllable()) {
-                return new BaseLoadControllable(dynamicModelId, getEquipment(), parameterSetId, modelConfig.getLib());
+                return new BaseLoadControllable(dynamicModelId, getEquipment(), parameterSetId, modelConfig.lib());
             } else {
-                return new BaseLoad(dynamicModelId, getEquipment(), parameterSetId, modelConfig.getLib());
+                return new BaseLoad(dynamicModelId, getEquipment(), parameterSetId, modelConfig.lib());
             }
         } else {
             return null;

@@ -55,7 +55,7 @@ public class GeneratorFictitiousBuilder extends AbstractGeneratorBuilder<Generat
 
     @Override
     public GeneratorFictitious build() {
-        return isInstantiable() ? new GeneratorFictitious(dynamicModelId, getEquipment(), parameterSetId, modelConfig.getLib()) : null;
+        return isInstantiable() ? new GeneratorFictitious(dynamicModelId, getEquipment(), parameterSetId, modelConfig.lib()) : null;
     }
 
     @Override

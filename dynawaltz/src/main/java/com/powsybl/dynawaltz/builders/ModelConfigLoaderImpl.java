@@ -7,9 +7,14 @@
  */
 package com.powsybl.dynawaltz.builders;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auto.service.AutoService;
+import com.powsybl.dynawaltz.models.automatons.TapChangerAutomatonBuilder;
+import com.powsybl.dynawaltz.models.automatons.TapChangerBlockingAutomatonBuilder;
+import com.powsybl.dynawaltz.models.automatons.UnderVoltageAutomatonBuilder;
+import com.powsybl.dynawaltz.models.automatons.currentLimits.CurrentLimitAutomatonBuilder;
+import com.powsybl.dynawaltz.models.automatons.currentLimits.CurrentLimitTwoLevelsAutomatonBuilder;
+import com.powsybl.dynawaltz.models.automatons.phaseshifters.PhaseShifterIAutomatonBuilder;
+import com.powsybl.dynawaltz.models.automatons.phaseshifters.PhaseShifterPAutomatonBuilder;
 import com.powsybl.dynawaltz.models.buses.InfiniteBusBuilder;
 import com.powsybl.dynawaltz.models.buses.StandardBusBuilder;
 import com.powsybl.dynawaltz.models.generators.GeneratorFictitiousBuilder;
@@ -22,17 +27,7 @@ import com.powsybl.dynawaltz.models.lines.LineBuilder;
 import com.powsybl.dynawaltz.models.loads.*;
 import com.powsybl.dynawaltz.models.svarcs.BaseStaticVarCompensatorBuilder;
 import com.powsybl.dynawaltz.models.transformers.TransformerFixedRatioBuilder;
-import com.powsybl.dynawaltz.models.automatons.TapChangerAutomatonBuilder;
-import com.powsybl.dynawaltz.models.automatons.TapChangerBlockingAutomatonBuilder;
-import com.powsybl.dynawaltz.models.automatons.UnderVoltageAutomatonBuilder;
-import com.powsybl.dynawaltz.models.automatons.currentLimits.CurrentLimitAutomatonBuilder;
-import com.powsybl.dynawaltz.models.automatons.currentLimits.CurrentLimitTwoLevelsAutomatonBuilder;
-import com.powsybl.dynawaltz.models.automatons.phaseshifters.PhaseShifterIAutomatonBuilder;
-import com.powsybl.dynawaltz.models.automatons.phaseshifters.PhaseShifterPAutomatonBuilder;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 import java.util.stream.Stream;
 
 /**
@@ -73,14 +68,8 @@ public final class ModelConfigLoaderImpl implements ModelConfigLoader {
     }
 
     @Override
-    public Map<String, List<ModelConfig>> loadModelConfigs() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            return objectMapper.readValue(ModelConfigLoaderImpl.class.getClassLoader().getResource(MODEL_CONFIG_FILENAME), new TypeReference<>() {
-            });
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public String getModelConfigFileName() {
+        return MODEL_CONFIG_FILENAME;
     }
 
     @Override
