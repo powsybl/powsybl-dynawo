@@ -8,6 +8,9 @@
 package com.powsybl.dynawaltz.builders;
 
 import com.google.common.collect.Lists;
+import com.powsybl.dynawaltz.models.events.EventActivePowerVariationBuilder;
+import com.powsybl.dynawaltz.models.events.EventDisconnectionBuilder;
+import com.powsybl.dynawaltz.models.events.NodeFaultEventBuilder;
 
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +27,10 @@ public final class ModelConfigsSingleton {
     private final List<ModelConfigLoader> modelConfigLoaders;
     private final Map<String, Map<String, ModelConfig>> modelConfigs = new HashMap<>();
     private final List<BuilderConfig> builderConfigs;
+    private final List<EventBuilderConfig> eventBuilderConfigs = List.of(
+            new EventBuilderConfig(EventActivePowerVariationBuilder::of, EventActivePowerVariationBuilder.TAG),
+            new EventBuilderConfig(EventDisconnectionBuilder::of, EventDisconnectionBuilder.TAG),
+            new EventBuilderConfig(NodeFaultEventBuilder::of, NodeFaultEventBuilder.TAG));
 
     private ModelConfigsSingleton() {
         modelConfigLoaders = Lists.newArrayList(ServiceLoader.load(ModelConfigLoader.class));
@@ -46,5 +53,9 @@ public final class ModelConfigsSingleton {
 
     public List<BuilderConfig> getBuilderConfigs() {
         return builderConfigs;
+    }
+
+    public List<EventBuilderConfig> getEventBuilderConfigs() {
+        return eventBuilderConfigs;
     }
 }

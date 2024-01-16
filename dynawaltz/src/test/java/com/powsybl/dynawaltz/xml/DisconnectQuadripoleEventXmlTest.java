@@ -7,7 +7,7 @@
  */
 package com.powsybl.dynawaltz.xml;
 
-import com.powsybl.dynawaltz.builders.EventModelsBuilderUtils;
+import com.powsybl.dynawaltz.models.events.EventDisconnectionBuilder;
 import com.powsybl.iidm.network.TwoSides;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.Test;
@@ -27,11 +27,11 @@ class DisconnectQuadripoleEventXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void addDynamicModels() {
-        eventModels.add(EventModelsBuilderUtils.newEventDisconnectionBuilder(network)
+        eventModels.add(EventDisconnectionBuilder.of(network)
                 .staticId("NHV1_NHV2_1")
                 .startTime(1)
                 .build());
-        eventModels.add(EventModelsBuilderUtils.newEventDisconnectionBuilder(network)
+        eventModels.add(EventDisconnectionBuilder.of(network)
                 .staticId("NGEN_NHV1")
                 .startTime(1)
                 .disconnectOnly(TwoSides.ONE)

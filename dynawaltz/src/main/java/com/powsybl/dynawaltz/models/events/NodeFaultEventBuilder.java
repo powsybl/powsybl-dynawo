@@ -25,7 +25,15 @@ public class NodeFaultEventBuilder extends AbstractEventModelBuilder<Bus, NodeFa
     protected double rPu;
     protected double xPu;
 
-    public NodeFaultEventBuilder(Network network, Reporter reporter) {
+    public static NodeFaultEventBuilder of(Network network) {
+        return of(network, Reporter.NO_OP);
+    }
+
+    public static NodeFaultEventBuilder of(Network network, Reporter reporter) {
+        return new NodeFaultEventBuilder(network, reporter);
+    }
+
+    NodeFaultEventBuilder(Network network, Reporter reporter) {
         super(network, new BuilderEquipment<>(IdentifiableType.BUS), TAG, reporter);
     }
 

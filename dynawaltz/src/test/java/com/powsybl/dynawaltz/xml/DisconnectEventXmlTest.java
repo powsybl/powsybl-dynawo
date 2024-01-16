@@ -7,7 +7,7 @@
  */
 package com.powsybl.dynawaltz.xml;
 
-import com.powsybl.dynawaltz.builders.EventModelsBuilderUtils;
+import com.powsybl.dynawaltz.models.events.EventDisconnectionBuilder;
 import com.powsybl.dynawaltz.models.generators.GeneratorFictitiousBuilder;
 import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.VoltageLevel;
@@ -46,19 +46,19 @@ class DisconnectEventXmlTest extends AbstractDynamicModelXmlTest {
                 .staticId("G1")
                 .parameterSetId("GF")
                 .build());
-        eventModels.add(EventModelsBuilderUtils.newEventDisconnectionBuilder(network)
+        eventModels.add(EventDisconnectionBuilder.of(network)
                 .staticId("G1")
                 .startTime(1)
                 .build());
-        eventModels.add(EventModelsBuilderUtils.newEventDisconnectionBuilder(network)
+        eventModels.add(EventDisconnectionBuilder.of(network)
                 .staticId("L2")
                 .startTime(1)
                 .build());
-        eventModels.add(EventModelsBuilderUtils.newEventDisconnectionBuilder(network)
+        eventModels.add(EventDisconnectionBuilder.of(network)
                 .staticId("SVC2")
                 .startTime(1)
                 .build());
-        eventModels.add(EventModelsBuilderUtils.newEventDisconnectionBuilder(network)
+        eventModels.add(EventDisconnectionBuilder.of(network)
                 .staticId("SH1")
                 .startTime(1)
                 .build());

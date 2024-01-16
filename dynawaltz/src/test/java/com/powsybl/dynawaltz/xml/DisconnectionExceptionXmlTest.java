@@ -8,8 +8,8 @@
 package com.powsybl.dynawaltz.xml;
 
 import com.powsybl.commons.PowsyblException;
-import com.powsybl.dynawaltz.builders.EventModelsBuilderUtils;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
+import com.powsybl.dynawaltz.models.events.EventDisconnectionBuilder;
 import com.powsybl.dynawaltz.models.hvdc.HvdcPBuilder;
 import com.powsybl.dynawaltz.models.hvdc.HvdcVscBuilder;
 import com.powsybl.iidm.network.Network;
@@ -45,7 +45,7 @@ class DisconnectionExceptionXmlTest extends AbstractParametrizedDynamicModelXmlT
 
     protected void addDynamicModels(TwoSides side, BiFunction<Network, TwoSides, BlackBoxModel> constructor) {
         dynamicModels.add(constructor.apply(network, side));
-        eventModels.add(EventModelsBuilderUtils.newEventDisconnectionBuilder(network)
+        eventModels.add(EventDisconnectionBuilder.of(network)
                 .staticId("L")
                 .startTime(1)
                 .disconnectOnly(side)

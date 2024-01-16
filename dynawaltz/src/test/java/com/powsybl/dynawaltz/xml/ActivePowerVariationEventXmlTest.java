@@ -7,7 +7,7 @@
  */
 package com.powsybl.dynawaltz.xml;
 
-import com.powsybl.dynawaltz.builders.EventModelsBuilderUtils;
+import com.powsybl.dynawaltz.models.events.EventActivePowerVariationBuilder;
 import com.powsybl.dynawaltz.models.loads.BaseLoadBuilder;
 import com.powsybl.dynawaltz.models.generators.SynchronizedGeneratorBuilder;
 import com.powsybl.dynawaltz.models.generators.SynchronousGeneratorBuilder;
@@ -44,27 +44,27 @@ class ActivePowerVariationEventXmlTest extends AbstractDynamicModelXmlTest {
                 .staticId("LOAD2")
                 .parameterSetId("load")
                 .build());
-        eventModels.add(EventModelsBuilderUtils.newEventActivePowerVariationBuilder(network)
+        eventModels.add(EventActivePowerVariationBuilder.of(network)
                 .staticId("GEN")
                 .startTime(1)
                 .deltaP(1.1)
                 .build());
-        eventModels.add(EventModelsBuilderUtils.newEventActivePowerVariationBuilder(network)
+        eventModels.add(EventActivePowerVariationBuilder.of(network)
                 .staticId("GEN2")
                 .startTime(1)
                 .deltaP(1.2)
                 .build());
-        eventModels.add(EventModelsBuilderUtils.newEventActivePowerVariationBuilder(network)
+        eventModels.add(EventActivePowerVariationBuilder.of(network)
                 .staticId("GEN3")
                 .startTime(1)
                 .deltaP(1.3)
                 .build());
-        eventModels.add(EventModelsBuilderUtils.newEventActivePowerVariationBuilder(network)
+        eventModels.add(EventActivePowerVariationBuilder.of(network)
                 .staticId("LOAD")
                 .startTime(10)
                 .deltaP(1.2)
                 .build());
-        eventModels.add(EventModelsBuilderUtils.newEventActivePowerVariationBuilder(network)
+        eventModels.add(EventActivePowerVariationBuilder.of(network)
                 .staticId("LOAD2")
                 .startTime(10)
                 .deltaP(1.3)

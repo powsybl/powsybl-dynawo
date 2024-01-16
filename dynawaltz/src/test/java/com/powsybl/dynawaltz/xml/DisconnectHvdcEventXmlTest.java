@@ -7,7 +7,7 @@
  */
 package com.powsybl.dynawaltz.xml;
 
-import com.powsybl.dynawaltz.builders.EventModelsBuilderUtils;
+import com.powsybl.dynawaltz.models.events.EventDisconnectionBuilder;
 import com.powsybl.dynawaltz.models.hvdc.HvdcPBuilder;
 import com.powsybl.dynawaltz.models.hvdc.HvdcVscBuilder;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
@@ -67,7 +67,7 @@ class DisconnectHvdcEventXmlTest extends AbstractParametrizedDynamicModelXmlTest
         return Stream.of(
                 Arguments.of("disconnect_default_hvdc_dyd.xml",
                         null,
-                        (Function<Network, BlackBoxModel>) n -> EventModelsBuilderUtils.newEventDisconnectionBuilder(n)
+                        (Function<Network, BlackBoxModel>) n -> EventDisconnectionBuilder.of(n)
                                 .staticId(HVDC_NAME)
                                 .startTime(1)
                                 .build()),
@@ -77,7 +77,7 @@ class DisconnectHvdcEventXmlTest extends AbstractParametrizedDynamicModelXmlTest
                                 .staticId(HVDC_NAME)
                                 .parameterSetId("hvdc")
                                 .build(),
-                        (Function<Network, BlackBoxModel>) n -> EventModelsBuilderUtils.newEventDisconnectionBuilder(n)
+                        (Function<Network, BlackBoxModel>) n -> EventDisconnectionBuilder.of(n)
                                 .staticId(HVDC_NAME)
                                 .startTime(1)
                                 .disconnectOnly(TwoSides.ONE)
@@ -88,7 +88,7 @@ class DisconnectHvdcEventXmlTest extends AbstractParametrizedDynamicModelXmlTest
                                 .staticId(HVDC_NAME)
                                 .parameterSetId("hvdc")
                                 .build(),
-                        (Function<Network, BlackBoxModel>) n -> EventModelsBuilderUtils.newEventDisconnectionBuilder(n)
+                        (Function<Network, BlackBoxModel>) n -> EventDisconnectionBuilder.of(n)
                                 .staticId(HVDC_NAME)
                                 .startTime(1)
                                 .disconnectOnly(TwoSides.TWO)
@@ -100,7 +100,7 @@ class DisconnectHvdcEventXmlTest extends AbstractParametrizedDynamicModelXmlTest
                                 .parameterSetId("hvdc")
                                 .dangling(TwoSides.TWO)
                                 .build(),
-                        (Function<Network, BlackBoxModel>) n -> EventModelsBuilderUtils.newEventDisconnectionBuilder(n)
+                        (Function<Network, BlackBoxModel>) n -> EventDisconnectionBuilder.of(n)
                                 .staticId(HVDC_NAME)
                                 .startTime(1)
                                 .disconnectOnly(TwoSides.ONE)
@@ -112,7 +112,7 @@ class DisconnectHvdcEventXmlTest extends AbstractParametrizedDynamicModelXmlTest
                                 .parameterSetId("hvdc")
                                 .dangling(TwoSides.ONE)
                                 .build(),
-                        (Function<Network, BlackBoxModel>) n -> EventModelsBuilderUtils.newEventDisconnectionBuilder(n)
+                        (Function<Network, BlackBoxModel>) n -> EventDisconnectionBuilder.of(n)
                                 .staticId(HVDC_NAME)
                                 .startTime(1)
                                 .disconnectOnly(TwoSides.TWO)

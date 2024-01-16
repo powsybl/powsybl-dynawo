@@ -12,9 +12,9 @@ import com.powsybl.commons.reporter.Reporter
 import com.powsybl.dynamicsimulation.EventModel
 import com.powsybl.dynamicsimulation.groovy.EventModelGroovyExtension
 import com.powsybl.dynawaltz.DynaWaltzProvider
-import com.powsybl.dynawaltz.builders.EventModelsBuilderUtils
-import com.powsybl.dynawaltz.builders.EventModelCategory
+import com.powsybl.dynawaltz.builders.EventBuilderConfig
 import com.powsybl.dynawaltz.builders.ModelBuilder
+import com.powsybl.dynawaltz.builders.ModelConfigsSingleton
 import com.powsybl.iidm.network.Network
 
 import java.util.function.Consumer
@@ -24,10 +24,10 @@ import java.util.function.Consumer
 @AutoService(EventModelGroovyExtension.class)
 class DynaWaltzEventModelGroovyExtension implements EventModelGroovyExtension {
 
-    private final List<EventModelCategory>  modelConstructors
+    private final List<EventBuilderConfig> builderConfigs
 
     DynaWaltzEventModelGroovyExtension() {
-        modelConstructors = EventModelsBuilderUtils.eventModelCategories
+        builderConfigs = ModelConfigsSingleton.getInstance().getEventBuilderConfigs()
     }
 
     @Override
@@ -36,12 +36,12 @@ class DynaWaltzEventModelGroovyExtension implements EventModelGroovyExtension {
     }
 
     List<String> getModelNames() {
-        modelConstructors.collect {it.tag}
+        builderConfigs.collect {it.tag}
     }
 
     @Override
     void load(Binding binding, Consumer<EventModel> consumer, Reporter reporter) {
-        modelConstructors.forEach {
+        builderConfigs.forEach {
             binding.setVariable(it.tag, { Closure<Void> closure ->
                 def cloned = closure.clone()
                 ModelBuilder<EventModel> builder = it.builderConstructor.createBuilder(

@@ -9,9 +9,9 @@ package com.powsybl.dynawaltz.xml;
 import com.powsybl.commons.test.AbstractSerDeTest;
 import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynawaltz.DynaWaltzCurve;
-import com.powsybl.dynawaltz.builders.EventModelsBuilderUtils;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.automatons.currentLimits.CurrentLimitAutomatonBuilder;
+import com.powsybl.dynawaltz.models.events.EventDisconnectionBuilder;
 import com.powsybl.dynawaltz.models.generators.GeneratorFictitiousBuilder;
 import com.powsybl.dynawaltz.models.generators.SynchronizedGeneratorBuilder;
 import com.powsybl.dynawaltz.models.generators.SynchronousGeneratorBuilder;
@@ -133,12 +133,12 @@ public class DynaWaltzTestUtil extends AbstractSerDeTest {
 
         // Events
         eventModels = new ArrayList<>();
-        network.getLineStream().forEach(l -> eventModels.add(EventModelsBuilderUtils.newEventDisconnectionBuilder(network)
+        network.getLineStream().forEach(l -> eventModels.add(EventDisconnectionBuilder.of(network)
                 .staticId(l.getId())
                 .startTime(5)
                 .disconnectOnly(TwoSides.TWO)
                 .build()));
-        eventModels.add(EventModelsBuilderUtils.newEventDisconnectionBuilder(network)
+        eventModels.add(EventDisconnectionBuilder.of(network)
                 .staticId("GEN2")
                 .startTime(1)
                 .build());

@@ -9,8 +9,8 @@ package com.powsybl.dynawaltz.xml;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
-import com.powsybl.dynawaltz.builders.EventModelsBuilderUtils;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
+import com.powsybl.dynawaltz.models.events.EventDisconnectionBuilder;
 import com.powsybl.dynawaltz.models.generators.SynchronousGeneratorBuilder;
 import com.powsybl.iidm.network.TwoSides;
 import org.assertj.core.api.Assertions;
@@ -44,20 +44,20 @@ class EventXmlTest extends DynaWaltzTestUtil {
     @Test
     void duplicateEventId() {
         eventModels.clear();
-        BlackBoxModel event1 = EventModelsBuilderUtils.newEventDisconnectionBuilder(network)
+        BlackBoxModel event1 = EventDisconnectionBuilder.of(network)
                 .staticId("NHV1_NHV2_1")
                 .startTime(5)
                 .build();
-        BlackBoxModel event2 = EventModelsBuilderUtils.newEventDisconnectionBuilder(network)
+        BlackBoxModel event2 = EventDisconnectionBuilder.of(network)
                 .staticId("GEN2")
                 .startTime(1)
                 .build();
-        BlackBoxModel event1Duplicate = EventModelsBuilderUtils.newEventDisconnectionBuilder(network)
+        BlackBoxModel event1Duplicate = EventDisconnectionBuilder.of(network)
                 .staticId("NHV1_NHV2_1")
                 .startTime(5)
                 .disconnectOnly(TwoSides.ONE)
                 .build();
-        BlackBoxModel event2Duplicate = EventModelsBuilderUtils.newEventDisconnectionBuilder(network)
+        BlackBoxModel event2Duplicate = EventDisconnectionBuilder.of(network)
                 .staticId("GEN2")
                 .startTime(1)
                 .build();

@@ -35,7 +35,15 @@ public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identif
     protected boolean disconnectOrigin = true;
     protected boolean disconnectExtremity = true;
 
-    public EventDisconnectionBuilder(Network network, Reporter reporter) {
+    public static EventDisconnectionBuilder of(Network network) {
+        return of(network, Reporter.NO_OP);
+    }
+
+    public static EventDisconnectionBuilder of(Network network, Reporter reporter) {
+        return new EventDisconnectionBuilder(network, reporter);
+    }
+
+    EventDisconnectionBuilder(Network network, Reporter reporter) {
         super(network, new BuilderEquipment<>("Disconnectable equipment"), TAG, reporter);
     }
 

@@ -22,7 +22,15 @@ public class EventActivePowerVariationBuilder extends AbstractEventModelBuilder<
 
     protected Double deltaP;
 
-    public EventActivePowerVariationBuilder(Network network, Reporter reporter) {
+    public static EventActivePowerVariationBuilder of(Network network) {
+        return of(network, Reporter.NO_OP);
+    }
+
+    public static EventActivePowerVariationBuilder of(Network network, Reporter reporter) {
+        return new EventActivePowerVariationBuilder(network, reporter);
+    }
+
+    EventActivePowerVariationBuilder(Network network, Reporter reporter) {
         super(network, new BuilderEquipment<>("GENERATOR/LOAD"), TAG, reporter);
     }
 
