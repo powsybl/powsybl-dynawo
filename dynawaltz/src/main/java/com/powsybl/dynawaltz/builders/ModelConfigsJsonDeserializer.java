@@ -62,7 +62,8 @@ public class ModelConfigsJsonDeserializer extends StdDeserializer<Map<String, Ma
                         throw new IllegalStateException("Unexpected field: " + parser.getCurrentName());
                 }
             }
-            configs.put(lib, new ModelConfig(lib, alias, internalModelPrefix, properties));
+            ModelConfig modelConfig = new ModelConfig(lib, alias, internalModelPrefix, properties);
+            configs.put(modelConfig.name(), modelConfig);
         }
         return configs;
     }

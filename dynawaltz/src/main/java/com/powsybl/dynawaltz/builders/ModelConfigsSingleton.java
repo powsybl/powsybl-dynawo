@@ -23,6 +23,7 @@ public final class ModelConfigsSingleton {
 
     private final List<ModelConfigLoader> modelConfigLoaders;
     private final Map<String, Map<String, ModelConfig>> modelConfigs = new HashMap<>();
+    private final List<BuilderConfig> builderConfigs;
 
     private ModelConfigsSingleton() {
         modelConfigLoaders = Lists.newArrayList(ServiceLoader.load(ModelConfigLoader.class));
@@ -32,6 +33,7 @@ public final class ModelConfigsSingleton {
                     return map1;
                 })
         ));
+        builderConfigs = modelConfigLoaders.stream().flatMap(ModelConfigLoader::loadBuilderConfigs).toList();
     }
 
     public static ModelConfigsSingleton getInstance() {
@@ -43,6 +45,6 @@ public final class ModelConfigsSingleton {
     }
 
     public List<BuilderConfig> getBuilderConfigs() {
-        return modelConfigLoaders.stream().flatMap(ModelConfigLoader::loadBuilderConfigs).toList();
+        return builderConfigs;
     }
 }

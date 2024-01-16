@@ -47,7 +47,7 @@ public class ModelConfigLoaderTest {
         });
         Assertions.assertThat(configs.keySet()).containsExactly("synchronousGenerators");
         Assertions.assertThat(configs.get("synchronousGenerators").keySet()).containsExactly(
-                "PhotovoltaicsWeccCurrentSource",
+                "WeccCs",
                 "WT4BWeccCurrentSource",
                 "WT4AWeccCurrentSource");
         Assertions.assertThat(configs.get("synchronousGenerators").values()).containsExactly(

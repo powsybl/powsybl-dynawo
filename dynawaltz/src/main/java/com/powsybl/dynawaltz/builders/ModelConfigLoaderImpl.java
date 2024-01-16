@@ -17,10 +17,7 @@ import com.powsybl.dynawaltz.models.automatons.phaseshifters.PhaseShifterIAutoma
 import com.powsybl.dynawaltz.models.automatons.phaseshifters.PhaseShifterPAutomatonBuilder;
 import com.powsybl.dynawaltz.models.buses.InfiniteBusBuilder;
 import com.powsybl.dynawaltz.models.buses.StandardBusBuilder;
-import com.powsybl.dynawaltz.models.generators.GeneratorFictitiousBuilder;
-import com.powsybl.dynawaltz.models.generators.SynchronizedGeneratorBuilder;
-import com.powsybl.dynawaltz.models.generators.SynchronousGeneratorBuilder;
-import com.powsybl.dynawaltz.models.generators.WeccBuilder;
+import com.powsybl.dynawaltz.models.generators.*;
 import com.powsybl.dynawaltz.models.hvdc.HvdcPBuilder;
 import com.powsybl.dynawaltz.models.hvdc.HvdcVscBuilder;
 import com.powsybl.dynawaltz.models.lines.LineBuilder;
@@ -62,6 +59,7 @@ public final class ModelConfigLoaderImpl implements ModelConfigLoader {
             new BuilderConfig(SynchronizedGeneratorBuilder::of, SynchronizedGeneratorBuilder::getSupportedLibs),
             new BuilderConfig(SynchronousGeneratorBuilder::of, SynchronousGeneratorBuilder::getSupportedLibs),
             new BuilderConfig(WeccBuilder::of, WeccBuilder::getSupportedLibs),
+            new BuilderConfig(GridFormingConverterBuilder::of, GridFormingConverterBuilder::getSupportedLibs),
             new BuilderConfig(GeneratorFictitiousBuilder::of, GeneratorFictitiousBuilder::getSupportedLibs));
 
     public ModelConfigLoaderImpl() {
