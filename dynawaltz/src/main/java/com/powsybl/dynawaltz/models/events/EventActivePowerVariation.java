@@ -28,15 +28,14 @@ import static java.lang.Boolean.TRUE;
 public class EventActivePowerVariation extends AbstractEvent implements ContextDependentEvent {
 
     private static final EnumSet<IdentifiableType> CONNECTABLE_EQUIPMENTS = EnumSet.of(IdentifiableType.GENERATOR, IdentifiableType.LOAD);
-    private static final String EVENT_PREFIX = "Step_";
     private static final String DYNAMIC_MODEL_LIB = "Step";
     private static final String DEFAULT_MODEL_LIB = "EventSetPointReal";
 
     private final double deltaP;
     private final ImmutableLateInit<Boolean> equipmentHasDynamicModel = new ImmutableLateInit<>();
 
-    protected EventActivePowerVariation(Injection<?> equipment, double startTime, double deltaP) {
-        super(equipment, startTime, EVENT_PREFIX, DYNAMIC_MODEL_LIB);
+    protected EventActivePowerVariation(String eventId, Injection<?> equipment, double startTime, double deltaP) {
+        super(eventId, equipment, startTime, DYNAMIC_MODEL_LIB);
         this.deltaP = deltaP;
     }
 

@@ -34,7 +34,7 @@ public class NodeFaultEventBuilder extends AbstractEventModelBuilder<Bus, NodeFa
     }
 
     NodeFaultEventBuilder(Network network, Reporter reporter) {
-        super(network, new BuilderEquipment<>(IdentifiableType.BUS), TAG, reporter);
+        super(network, new BuilderEquipment<>(IdentifiableType.BUS), reporter);
     }
 
     public NodeFaultEventBuilder faultTime(double faultTime) {
@@ -57,6 +57,11 @@ public class NodeFaultEventBuilder extends AbstractEventModelBuilder<Bus, NodeFa
     }
 
     @Override
+    protected String getTag() {
+        return TAG;
+    }
+
+    @Override
     protected void checkData() {
         super.checkData();
         if (faultTime <= 0) {
@@ -75,7 +80,7 @@ public class NodeFaultEventBuilder extends AbstractEventModelBuilder<Bus, NodeFa
 
     @Override
     public NodeFaultEvent build() {
-        return isInstantiable() ? new NodeFaultEvent(builderEquipment.getEquipment(), startTime, faultTime, rPu, xPu) : null;
+        return isInstantiable() ? new NodeFaultEvent(eventId, builderEquipment.getEquipment(), startTime, faultTime, rPu, xPu) : null;
     }
 
     protected NodeFaultEventBuilder self() {

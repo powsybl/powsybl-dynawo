@@ -60,8 +60,5 @@ public abstract class AbstractAutomatonModelBuilder<T extends AbstractAutomatonM
         return modelConfig.lib();
     }
 
-    @Override
-    public abstract DynamicModel build();
-
     protected abstract T self();
 }

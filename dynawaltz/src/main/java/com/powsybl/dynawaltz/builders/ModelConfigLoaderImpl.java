@@ -11,8 +11,8 @@ import com.google.auto.service.AutoService;
 import com.powsybl.dynawaltz.models.automatons.TapChangerAutomatonBuilder;
 import com.powsybl.dynawaltz.models.automatons.TapChangerBlockingAutomatonBuilder;
 import com.powsybl.dynawaltz.models.automatons.UnderVoltageAutomatonBuilder;
-import com.powsybl.dynawaltz.models.automatons.currentLimits.CurrentLimitAutomatonBuilder;
-import com.powsybl.dynawaltz.models.automatons.currentLimits.CurrentLimitTwoLevelsAutomatonBuilder;
+import com.powsybl.dynawaltz.models.automatons.currentlimits.CurrentLimitAutomatonBuilder;
+import com.powsybl.dynawaltz.models.automatons.currentlimits.CurrentLimitTwoLevelsAutomatonBuilder;
 import com.powsybl.dynawaltz.models.automatons.phaseshifters.PhaseShifterIAutomatonBuilder;
 import com.powsybl.dynawaltz.models.automatons.phaseshifters.PhaseShifterPAutomatonBuilder;
 import com.powsybl.dynawaltz.models.buses.InfiniteBusBuilder;
@@ -61,9 +61,6 @@ public final class ModelConfigLoaderImpl implements ModelConfigLoader {
             new BuilderConfig(WeccBuilder::of, WeccBuilder::getSupportedLibs),
             new BuilderConfig(GridFormingConverterBuilder::of, GridFormingConverterBuilder::getSupportedLibs),
             new BuilderConfig(GeneratorFictitiousBuilder::of, GeneratorFictitiousBuilder::getSupportedLibs));
-
-    public ModelConfigLoaderImpl() {
-    }
 
     @Override
     public String getModelConfigFileName() {

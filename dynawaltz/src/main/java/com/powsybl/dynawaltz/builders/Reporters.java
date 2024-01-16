@@ -17,6 +17,8 @@ import com.powsybl.iidm.network.IdentifiableType;
  */
 public final class Reporters {
 
+    private static final String FIELD_NAME = "fieldName";
+
     private Reporters() {
     }
 
@@ -52,7 +54,7 @@ public final class Reporters {
         reporter.report(Report.builder()
                 .withKey("fieldReplacement")
                 .withDefaultMessage("'${fieldName}' field is not set, ${replacementName} ${replacement} will be used instead")
-                .withValue("fieldName", fieldName)
+                .withValue(FIELD_NAME, fieldName)
                 .withValue("replacementName", replacementName)
                 .withValue("replacement", replacement)
                 .withSeverity(TypedValue.TRACE_SEVERITY)
@@ -63,7 +65,7 @@ public final class Reporters {
         reporter.report(Report.builder()
                 .withKey("fieldNotSet")
                 .withDefaultMessage("'${fieldName}' field is not set")
-                .withValue("fieldName", fieldName)
+                .withValue(FIELD_NAME, fieldName)
                 .withSeverity(TypedValue.WARN_SEVERITY)
                 .build());
     }
@@ -73,7 +75,7 @@ public final class Reporters {
                 .withKey("staticIdUnknown")
                 .withDefaultMessage("'${fieldName}' field value '${staticId}' not found for equipment type(s) ${equipmentType}")
                 .withValue("equipmentType", equipmentType)
-                .withValue("fieldName", fieldName).withValue("staticId", staticId)
+                .withValue(FIELD_NAME, fieldName).withValue("staticId", staticId)
                 .withSeverity(TypedValue.WARN_SEVERITY)
                 .build());
     }
@@ -82,7 +84,7 @@ public final class Reporters {
         reporter.report(Report.builder()
                 .withKey("crossThreshold")
                 .withDefaultMessage("${fieldName} should be ${threshold} (${fieldValue})")
-                .withValue("fieldName", fieldName)
+                .withValue(FIELD_NAME, fieldName)
                 .withValue("fieldValue", fieldValue)
                 .withValue("threshold", threshold)
                 .withSeverity(TypedValue.WARN_SEVERITY).build());
@@ -92,7 +94,7 @@ public final class Reporters {
         reporter.report(Report.builder()
                 .withKey("emptyList")
                 .withDefaultMessage("'${fieldName}' list is empty")
-                .withValue("fieldName", fieldName)
+                .withValue(FIELD_NAME, fieldName)
                 .withSeverity(TypedValue.WARN_SEVERITY)
                 .build());
     }
@@ -105,7 +107,7 @@ public final class Reporters {
         reporter.report(Report.builder()
                 .withKey("fieldSetWithWrongEquipment")
                 .withDefaultMessage("'${fieldName}' field is set but ${equipment} does not possess this option")
-                .withValue("fieldName", fieldName).withValue("equipment", equipment).withSeverity(TypedValue.WARN_SEVERITY)
+                .withValue(FIELD_NAME, fieldName).withValue("equipment", equipment).withSeverity(TypedValue.WARN_SEVERITY)
                 .build());
     }
 

@@ -19,18 +19,19 @@ import com.powsybl.iidm.network.Network;
 abstract class AbstractEventModelBuilder<T extends Identifiable<?>, R extends AbstractEventModelBuilder<T, R>> extends AbstractDynamicModelBuilder implements ModelBuilder<EventModel> {
 
     protected final BuilderEquipment<T> builderEquipment;
-    protected final String tag;
+    protected String eventId;
     protected String staticId;
     protected Double startTime;
 
-    protected AbstractEventModelBuilder(Network network, BuilderEquipment<T> builderEquipment, String tag, Reporter reporter) {
+    protected AbstractEventModelBuilder(Network network, BuilderEquipment<T> builderEquipment, Reporter reporter) {
         super(network, reporter);
         this.builderEquipment = builderEquipment;
-        this.tag = tag;
+        this.eventId = generateDefaultEventId();
     }
 
     public R staticId(String staticId) {
         builderEquipment.addEquipment(staticId, this::findEquipment);
+        eventId = generateEventId(staticId);
         return self();
     }
 
@@ -50,9 +51,19 @@ abstract class AbstractEventModelBuilder<T extends Identifiable<?>, R extends Ab
 
     protected abstract T findEquipment(String staticId);
 
+    private String generateEventId(String staticId) {
+        return getTag() + "_" + staticId;
+    }
+
+    protected String generateDefaultEventId() {
+        return generateEventId("unknownStaticId");
+    }
+
+    protected abstract String getTag();
+
     @Override
     public String getModelId() {
-        return AbstractEvent.generateEventId(tag + "_", builderEquipment.getStaticId() != null ? builderEquipment.getStaticId() : "unknownStaticId");
+        return eventId;
     }
 
     protected abstract R self();

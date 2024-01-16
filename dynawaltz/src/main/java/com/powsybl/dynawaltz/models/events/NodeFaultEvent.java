@@ -23,14 +23,12 @@ import static com.powsybl.dynawaltz.parameters.ParameterType.DOUBLE;
  */
 public class NodeFaultEvent extends AbstractEvent {
 
-    private static final String EVENT_PREFIX = "Node_Fault_";
-
     private final double faultTime;
     private final double rPu;
     private final double xPu;
 
-    protected NodeFaultEvent(Bus equipment, double startTime, double faultTime, double rPu, double xPu) {
-        super(equipment, startTime, EVENT_PREFIX, "NodeFault");
+    protected NodeFaultEvent(String eventId, Bus equipment, double startTime, double faultTime, double rPu, double xPu) {
+        super(eventId, equipment, startTime, "NodeFault");
         this.faultTime = faultTime;
         this.rPu = rPu;
         this.xPu = xPu;

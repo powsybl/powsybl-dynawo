@@ -71,13 +71,12 @@ class TapChangerBlockingAutomatonXmlTest extends AbstractDynamicModelXmlTest {
 
     @Test
     void testMonitoredEquipmentsLimit() {
-        Exception e = assertThrows(PowsyblException.class, () ->
-                TapChangerBlockingAutomatonBuilder.of(network)
-                        .dynamicModelId("TapChanger1")
-                        .parameterSetId("TapChangerPar")
-                        .transformers("NGEN_NHV1")
-                        .uMeasurements("NHV1", "NHV1", "NHV1", "NHV1", "NHV1", "NHV1")
-                        .build());
+        TapChangerBlockingAutomatonBuilder builder = TapChangerBlockingAutomatonBuilder.of(network)
+                .dynamicModelId("TapChanger1")
+                .parameterSetId("TapChangerPar")
+                .transformers("NGEN_NHV1")
+                .uMeasurements("NHV1", "NHV1", "NHV1", "NHV1", "NHV1", "NHV1");
+        Exception e = assertThrows(PowsyblException.class, builder::build);
         assertEquals("Tap changer blocking automaton can only handle 5 measurement points at the same time", e.getMessage());
     }
 }

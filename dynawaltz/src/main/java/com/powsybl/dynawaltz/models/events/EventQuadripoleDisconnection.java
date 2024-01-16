@@ -23,12 +23,11 @@ import static com.powsybl.dynawaltz.parameters.ParameterType.DOUBLE;
  */
 public class EventQuadripoleDisconnection extends AbstractEvent {
 
-    private static final String EVENT_PREFIX = "Disconnect_";
     private final boolean disconnectOrigin;
     private final boolean disconnectExtremity;
 
-    protected EventQuadripoleDisconnection(Branch<?> equipment, double startTime, boolean disconnectOrigin, boolean disconnectExtremity) {
-        super(equipment, startTime, EVENT_PREFIX, "EventQuadripoleDisconnection");
+    protected EventQuadripoleDisconnection(String eventId, Branch<?> equipment, double startTime, boolean disconnectOrigin, boolean disconnectExtremity) {
+        super(eventId, equipment, startTime, "EventQuadripoleDisconnection");
         this.disconnectOrigin = disconnectOrigin;
         this.disconnectExtremity = disconnectExtremity;
     }

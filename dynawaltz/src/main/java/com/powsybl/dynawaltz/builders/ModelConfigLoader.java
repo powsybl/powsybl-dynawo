@@ -10,6 +10,7 @@ package com.powsybl.dynawaltz.builders;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.powsybl.commons.PowsyblException;
 
 import java.io.IOException;
 import java.util.Map;
@@ -30,11 +31,11 @@ public interface ModelConfigLoader {
             module.addDeserializer(Map.class, new ModelConfigsJsonDeserializer());
             objectMapper.registerModule(module);
             return objectMapper.readValue(Objects.requireNonNull(
-                            ModelConfigLoaderImpl.class.getClassLoader().getResource(getModelConfigFileName())).openStream(),
+                            ModelConfigLoader.class.getClassLoader().getResource(getModelConfigFileName())).openStream(),
                     new TypeReference<>() {
                     });
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new PowsyblException("Dynamic models configuration file not found");
         }
     }
 

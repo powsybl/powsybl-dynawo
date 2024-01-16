@@ -19,8 +19,8 @@ import java.util.List;
  */
 public class EventInjectionDisconnection extends AbstractDynamicLibEventDisconnection {
 
-    protected EventInjectionDisconnection(Injection<?> equipment, double startTime, boolean disconnect) {
-        super(equipment, startTime, disconnect);
+    protected EventInjectionDisconnection(String eventId, Injection<?> equipment, double startTime, boolean disconnect) {
+        super(eventId, equipment, startTime, disconnect);
     }
 
     private List<VarConnection> getVarConnectionsWith(InjectionModel connected) {

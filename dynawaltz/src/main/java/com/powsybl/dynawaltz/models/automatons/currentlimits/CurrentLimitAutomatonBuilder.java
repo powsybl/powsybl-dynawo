@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.models.automatons.currentLimits;
+package com.powsybl.dynawaltz.models.automatons.currentlimits;
 
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.builders.BuilderEquipment;
@@ -52,8 +52,8 @@ public class CurrentLimitAutomatonBuilder extends AbstractCurrentLimitAutomatonB
     }
 
     protected CurrentLimitAutomatonBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
-        super(network, modelConfig, reporter, new BuilderEquipment<>("Quadripole", "iMeasurement"),
-            new BuilderEquipment<>("Quadripole", "controlledQuadripole"));
+        super(network, modelConfig, reporter, new BuilderEquipment<>(QUADRIPOLE_TYPE, "iMeasurement"),
+            new BuilderEquipment<>(QUADRIPOLE_TYPE, "controlledQuadripole"));
     }
 
     public CurrentLimitAutomatonBuilder iMeasurement(String staticId) {

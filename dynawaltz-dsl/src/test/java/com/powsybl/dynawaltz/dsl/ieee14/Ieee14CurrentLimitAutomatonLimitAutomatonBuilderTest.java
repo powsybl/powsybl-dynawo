@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 /**
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  */
-class Ieee14CurrentLimitAutomatonTestLimitAutomatonBuilder extends AbstractIeeeTest {
+class Ieee14CurrentLimitAutomatonLimitAutomatonBuilderTest extends AbstractIeeeTest {
 
     @BeforeEach
     void setup() throws IOException {

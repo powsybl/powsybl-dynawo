@@ -26,6 +26,7 @@ public class TapChangerBlockingAutomatonBuilder extends AbstractAutomatonModelBu
 
     private static final String CATEGORY = "tcbs";
     private static final Map<String, ModelConfig> LIBS = ModelConfigsSingleton.getInstance().getModelConfigs(CATEGORY);
+    private static final String U_MEASUREMENTS_FIELD = "uMeasurements";
 
     private final List<Load> loads = new ArrayList<>();
     private final List<TwoWindingsTransformer> transformers = new ArrayList<>();
@@ -70,7 +71,7 @@ public class TapChangerBlockingAutomatonBuilder extends AbstractAutomatonModelBu
                 switch (equipment.getType()) {
                     case LOAD -> loads.add((Load) equipment);
                     case TWO_WINDINGS_TRANSFORMER -> transformers.add((TwoWindingsTransformer) equipment);
-                    default -> Reporters.reportStaticIdUnknown(reporter, "uMeasurements", id, "LOAD/TWO_WINDINGS_TRANSFORMER");
+                    default -> Reporters.reportStaticIdUnknown(reporter, U_MEASUREMENTS_FIELD, id, "LOAD/TWO_WINDINGS_TRANSFORMER");
                 }
             }
         });
@@ -82,7 +83,7 @@ public class TapChangerBlockingAutomatonBuilder extends AbstractAutomatonModelBu
         for (String staticId : staticIds) {
             Identifiable<?> measurementPoint = BuildersUtil.getActionConnectionPoint(network, staticId);
             if (measurementPoint == null) {
-                Reporters.reportStaticIdUnknown(reporter, "uMeasurements", staticId, "BUS/BUSBAR_SECTION");
+                Reporters.reportStaticIdUnknown(reporter, U_MEASUREMENTS_FIELD, staticId, "BUS/BUSBAR_SECTION");
             } else {
                 uMeasurements.add(measurementPoint);
             }
@@ -96,7 +97,7 @@ public class TapChangerBlockingAutomatonBuilder extends AbstractAutomatonModelBu
             for (String staticId : staticIds) {
                 Identifiable<?> measurementPoint = BuildersUtil.getActionConnectionPoint(network, staticId);
                 if (measurementPoint == null) {
-                    Reporters.reportStaticIdUnknown(reporter, "uMeasurements", staticId, "BUS/BUSBAR_SECTION");
+                    Reporters.reportStaticIdUnknown(reporter, U_MEASUREMENTS_FIELD, staticId, "BUS/BUSBAR_SECTION");
                 } else {
                     uMeasurements.add(measurementPoint);
                     break;
@@ -109,10 +110,10 @@ public class TapChangerBlockingAutomatonBuilder extends AbstractAutomatonModelBu
     @Override
     protected void checkData() {
         if (uMeasurements == null) {
-            Reporters.reportFieldNotSet(reporter, "uMeasurements");
+            Reporters.reportFieldNotSet(reporter, U_MEASUREMENTS_FIELD);
             isInstantiable = false;
         } else if (uMeasurements.isEmpty()) {
-            Reporters.reportEmptyList(reporter, "uMeasurements");
+            Reporters.reportEmptyList(reporter, U_MEASUREMENTS_FIELD);
             isInstantiable = false;
         }
         if (loads.isEmpty() && transformers.isEmpty() && tapChangerAutomatonIds.isEmpty()) {

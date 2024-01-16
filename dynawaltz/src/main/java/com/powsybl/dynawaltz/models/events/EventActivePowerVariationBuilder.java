@@ -31,7 +31,7 @@ public class EventActivePowerVariationBuilder extends AbstractEventModelBuilder<
     }
 
     EventActivePowerVariationBuilder(Network network, Reporter reporter) {
-        super(network, new BuilderEquipment<>("GENERATOR/LOAD"), TAG, reporter);
+        super(network, new BuilderEquipment<>("GENERATOR/LOAD"), reporter);
     }
 
     public EventActivePowerVariationBuilder deltaP(double deltaP) {
@@ -55,8 +55,13 @@ public class EventActivePowerVariationBuilder extends AbstractEventModelBuilder<
     }
 
     @Override
+    protected String getTag() {
+        return TAG;
+    }
+
+    @Override
     public EventActivePowerVariation build() {
-        return isInstantiable() ? new EventActivePowerVariation(builderEquipment.getEquipment(), startTime, deltaP) : null;
+        return isInstantiable() ? new EventActivePowerVariation(eventId, builderEquipment.getEquipment(), startTime, deltaP) : null;
     }
 
     @Override

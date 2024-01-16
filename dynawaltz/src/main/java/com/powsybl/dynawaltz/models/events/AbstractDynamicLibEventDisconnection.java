@@ -21,7 +21,6 @@ import static java.lang.Boolean.TRUE;
  */
 public abstract class AbstractDynamicLibEventDisconnection extends AbstractEvent implements ContextDependentEvent {
 
-    private static final String EVENT_PREFIX = "Disconnect_";
     private static final String DYNAMIC_MODEL_LIB = "EventSetPointBoolean";
     private static final String DEFAULT_MODEL_LIB = "EventConnectedStatus";
     protected static final String DISCONNECTION_VAR_CONNECT = "event_state1";
@@ -29,8 +28,8 @@ public abstract class AbstractDynamicLibEventDisconnection extends AbstractEvent
     private final boolean disconnect;
     private final ImmutableLateInit<Boolean> equipmentHasDynamicModel = new ImmutableLateInit<>();
 
-    protected AbstractDynamicLibEventDisconnection(Identifiable<?> equipment, double startTime, boolean disconnect) {
-        super(equipment, startTime, EVENT_PREFIX, DYNAMIC_MODEL_LIB);
+    protected AbstractDynamicLibEventDisconnection(String eventId, Identifiable<?> equipment, double startTime, boolean disconnect) {
+        super(eventId, equipment, startTime, DYNAMIC_MODEL_LIB);
         this.disconnect = disconnect;
     }
 

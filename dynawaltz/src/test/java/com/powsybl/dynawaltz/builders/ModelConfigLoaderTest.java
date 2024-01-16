@@ -21,7 +21,7 @@ import java.util.Map;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class ModelConfigLoaderTest {
+class ModelConfigLoaderTest {
 
     @Test
     void loadConfigTest() throws IOException {

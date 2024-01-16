@@ -26,6 +26,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ForkJoinPool;
 
 import static com.powsybl.commons.reporter.Reporter.NO_OP;
@@ -61,12 +62,12 @@ public abstract class AbstractIeeeTest {
         workingDir = Files.createDirectory(fileSystem.getPath(getWorkingDirName()));
 
         // Load network
-        Files.copy(getClass().getResourceAsStream(networkFile), workingDir.resolve("network.iidm"));
+        Files.copy(Objects.requireNonNull(getClass().getResourceAsStream(networkFile)), workingDir.resolve("network.iidm"));
         network = Network.read(workingDir.resolve("network.iidm"));
 
         // Dynamic models
         if (dynamicModelsFile != null) {
-            Files.copy(getClass().getResourceAsStream(dynamicModelsFile), workingDir.resolve("dynamicModels.groovy"));
+            Files.copy(Objects.requireNonNull(getClass().getResourceAsStream(dynamicModelsFile)), workingDir.resolve("dynamicModels.groovy"));
             List<DynamicModelGroovyExtension> dynamicModelGroovyExtensions = GroovyExtension.find(DynamicModelGroovyExtension.class, DynaWaltzProvider.NAME);
             dynamicModelsSupplier = new GroovyDynamicModelsSupplier(workingDir.resolve("dynamicModels.groovy"), dynamicModelGroovyExtensions);
         } else {
@@ -75,7 +76,7 @@ public abstract class AbstractIeeeTest {
 
         // Event models
         if (eventModelsFile != null) {
-            Files.copy(getClass().getResourceAsStream(eventModelsFile), workingDir.resolve("eventModels.groovy"));
+            Files.copy(Objects.requireNonNull(getClass().getResourceAsStream(eventModelsFile)), workingDir.resolve("eventModels.groovy"));
             List<EventModelGroovyExtension> eventModelGroovyExtensions = GroovyExtension.find(EventModelGroovyExtension.class, DynaWaltzProvider.NAME);
             eventModelsSupplier = new GroovyEventModelsSupplier(workingDir.resolve("eventModels.groovy"), eventModelGroovyExtensions);
         } else {
@@ -84,7 +85,7 @@ public abstract class AbstractIeeeTest {
 
         // Curves
         if (curvesFile != null) {
-            Files.copy(getClass().getResourceAsStream(curvesFile), workingDir.resolve("curves.groovy"));
+            Files.copy(Objects.requireNonNull(getClass().getResourceAsStream(curvesFile)), workingDir.resolve("curves.groovy"));
             List<CurveGroovyExtension> curveGroovyExtensions = GroovyExtension.find(CurveGroovyExtension.class, DynaWaltzProvider.NAME);
             curvesSupplier = new GroovyCurvesSupplier(workingDir.resolve("curves.groovy"), curveGroovyExtensions);
         } else {

@@ -44,7 +44,7 @@ public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identif
     }
 
     EventDisconnectionBuilder(Network network, Reporter reporter) {
-        super(network, new BuilderEquipment<>("Disconnectable equipment"), TAG, reporter);
+        super(network, new BuilderEquipment<>("Disconnectable equipment"), reporter);
     }
 
     public EventDisconnectionBuilder disconnectOnly(TwoSides side) {
@@ -78,6 +78,11 @@ public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identif
     }
 
     @Override
+    protected String getTag() {
+        return TAG;
+    }
+
+    @Override
     protected void checkData() {
         super.checkData();
         if (builderEquipment.hasEquipment()) {
@@ -97,11 +102,11 @@ public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identif
     public AbstractEvent build() {
         if (isInstantiable()) {
             return switch (disconnectionType) {
-                case INJECTION -> new EventInjectionDisconnection((Injection<?>) builderEquipment.getEquipment(), startTime, true);
+                case INJECTION -> new EventInjectionDisconnection(eventId, (Injection<?>) builderEquipment.getEquipment(), startTime, true);
                 case QUADRIPOLE ->
-                        new EventQuadripoleDisconnection((Branch<?>) builderEquipment.getEquipment(), startTime, disconnectOrigin, disconnectExtremity);
+                        new EventQuadripoleDisconnection(eventId, (Branch<?>) builderEquipment.getEquipment(), startTime, disconnectOrigin, disconnectExtremity);
                 case HVDC ->
-                        new EventHvdcDisconnection((HvdcLine) builderEquipment.getEquipment(), startTime, disconnectOrigin, disconnectExtremity);
+                        new EventHvdcDisconnection(eventId, (HvdcLine) builderEquipment.getEquipment(), startTime, disconnectOrigin, disconnectExtremity);
                 default -> null;
             };
         }
