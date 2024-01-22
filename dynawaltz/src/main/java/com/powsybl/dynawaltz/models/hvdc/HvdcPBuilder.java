@@ -52,7 +52,7 @@ public class HvdcPBuilder extends AbstractHvdcBuilder<HvdcPBuilder> {
     }
 
     protected HvdcPBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
-        super(network, modelConfig, IdentifiableType.HVDC_LINE.toString(), reporter);
+        super(network, modelConfig, IdentifiableType.HVDC_LINE, reporter);
     }
 
     @Override

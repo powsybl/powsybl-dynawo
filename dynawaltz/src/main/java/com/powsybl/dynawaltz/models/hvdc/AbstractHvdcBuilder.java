@@ -20,8 +20,12 @@ public abstract class AbstractHvdcBuilder<R extends AbstractEquipmentModelBuilde
 
     protected TwoSides danglingSide;
 
-    protected AbstractHvdcBuilder(Network network, ModelConfig modelConfig, String identifiableType, Reporter reporter) {
+    protected AbstractHvdcBuilder(Network network, ModelConfig modelConfig, IdentifiableType identifiableType, Reporter reporter) {
         super(network, modelConfig, identifiableType, reporter);
+    }
+
+    protected AbstractHvdcBuilder(Network network, ModelConfig modelConfig, String equipmentType, Reporter reporter) {
+        super(network, modelConfig, equipmentType, reporter);
     }
 
     public R dangling(TwoSides danglingSide) {
