@@ -11,6 +11,9 @@ import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.builders.ModelConfig;
 import com.powsybl.dynawaltz.builders.ModelConfigs;
 import com.powsybl.dynawaltz.builders.Reporters;
+import com.powsybl.iidm.network.HvdcConverterStation;
+import com.powsybl.iidm.network.HvdcLine;
+import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Network;
 
 import java.util.Map;
@@ -50,7 +53,7 @@ public class HvdcVscBuilder extends AbstractHvdcBuilder<HvdcVscBuilder> {
     }
 
     protected HvdcVscBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
-        super(network, modelConfig, reporter);
+        super(network, modelConfig, "VSC " + IdentifiableType.HVDC_LINE, reporter);
     }
 
     @Override
@@ -63,6 +66,12 @@ public class HvdcVscBuilder extends AbstractHvdcBuilder<HvdcVscBuilder> {
             }
         }
         return null;
+    }
+
+    @Override
+    protected HvdcLine findEquipment(String staticId) {
+        HvdcLine line = network.getHvdcLine(staticId);
+        return HvdcConverterStation.HvdcType.VSC == line.getConverterStation1().getHvdcType() ? line : null;
     }
 
     @Override
