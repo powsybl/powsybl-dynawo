@@ -18,6 +18,5 @@ import java.util.stream.Stream;
  */
 public interface ModelsSimplifier {
 
-    //TODO replace with SimplifierContext and restraint direct action on Dynawaltz data
     Stream<BlackBoxModel> simplifyModels(Stream<BlackBoxModel> models, Network network, DynaWaltzParameters dynaWaltzParameters, Reporter reporter);
 }

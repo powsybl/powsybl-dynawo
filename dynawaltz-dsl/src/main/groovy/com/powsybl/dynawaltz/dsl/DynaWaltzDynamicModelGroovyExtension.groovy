@@ -14,7 +14,7 @@ import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.DynaWaltzProvider
 import com.powsybl.dynawaltz.builders.BuilderConfig
 import com.powsybl.dynawaltz.builders.ModelBuilder
-import com.powsybl.dynawaltz.builders.ModelConfigsSingleton
+import com.powsybl.dynawaltz.builders.ModelConfigs
 import com.powsybl.iidm.network.Network
 
 import java.util.function.Consumer
@@ -27,7 +27,7 @@ class DynaWaltzDynamicModelGroovyExtension implements DynamicModelGroovyExtensio
     private final List<BuilderConfig> builderConfigs
 
     DynaWaltzDynamicModelGroovyExtension() {
-        builderConfigs = ModelConfigsSingleton.getInstance().getBuilderConfigs()
+        builderConfigs = ModelConfigs.getInstance().getBuilderConfigs()
     }
 
     @Override

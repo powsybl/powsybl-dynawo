@@ -9,7 +9,7 @@ package com.powsybl.dynawaltz.models.buses;
 
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.builders.ModelConfig;
-import com.powsybl.dynawaltz.builders.ModelConfigsSingleton;
+import com.powsybl.dynawaltz.builders.ModelConfigs;
 import com.powsybl.dynawaltz.builders.Reporters;
 import com.powsybl.iidm.network.Network;
 
@@ -22,7 +22,7 @@ import java.util.Set;
 public class StandardBusBuilder extends AbstractBusBuilder<StandardBusBuilder> {
 
     private static final String CATEGORY = "baseBuses";
-    private static final Map<String, ModelConfig> LIBS = ModelConfigsSingleton.getInstance().getModelConfigs(CATEGORY);
+    private static final Map<String, ModelConfig> LIBS = ModelConfigs.getInstance().getModelConfigs(CATEGORY);
 
     public static StandardBusBuilder of(Network network) {
         return of(network, Reporter.NO_OP);

@@ -20,9 +20,9 @@ import java.util.ServiceLoader;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public final class ModelConfigsSingleton {
+public final class ModelConfigs {
 
-    private static final ModelConfigsSingleton INSTANCE = new ModelConfigsSingleton();
+    private static final ModelConfigs INSTANCE = new ModelConfigs();
 
     private final List<ModelConfigLoader> modelConfigLoaders;
     private final Map<String, Map<String, ModelConfig>> modelConfigs = new HashMap<>();
@@ -32,7 +32,7 @@ public final class ModelConfigsSingleton {
             new EventBuilderConfig(EventDisconnectionBuilder::of, EventDisconnectionBuilder.TAG),
             new EventBuilderConfig(NodeFaultEventBuilder::of, NodeFaultEventBuilder.TAG));
 
-    private ModelConfigsSingleton() {
+    private ModelConfigs() {
         modelConfigLoaders = Lists.newArrayList(ServiceLoader.load(ModelConfigLoader.class));
         modelConfigLoaders.forEach(l -> l.loadModelConfigs().forEach(
                 (cat, modelsMap) -> modelConfigs.merge(cat, modelsMap, (map1, map2) -> {
@@ -43,7 +43,7 @@ public final class ModelConfigsSingleton {
         builderConfigs = modelConfigLoaders.stream().flatMap(ModelConfigLoader::loadBuilderConfigs).toList();
     }
 
-    public static ModelConfigsSingleton getInstance() {
+    public static ModelConfigs getInstance() {
         return INSTANCE;
     }
 

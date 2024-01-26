@@ -10,7 +10,7 @@ package com.powsybl.dynawaltz.models.automatons;
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.builders.BuilderEquipment;
 import com.powsybl.dynawaltz.builders.ModelConfig;
-import com.powsybl.dynawaltz.builders.ModelConfigsSingleton;
+import com.powsybl.dynawaltz.builders.ModelConfigs;
 import com.powsybl.dynawaltz.builders.Reporters;
 import com.powsybl.dynawaltz.models.TransformerSide;
 import com.powsybl.iidm.network.IdentifiableType;
@@ -26,7 +26,7 @@ import java.util.Set;
 public class TapChangerAutomatonBuilder extends AbstractAutomatonModelBuilder<TapChangerAutomatonBuilder> {
 
     private static final String CATEGORY = "tapChangers";
-    private static final Map<String, ModelConfig> LIBS = ModelConfigsSingleton.getInstance().getModelConfigs(CATEGORY);
+    private static final Map<String, ModelConfig> LIBS = ModelConfigs.getInstance().getModelConfigs(CATEGORY);
 
     protected final BuilderEquipment<Load> load;
     protected TransformerSide side = TransformerSide.NONE;

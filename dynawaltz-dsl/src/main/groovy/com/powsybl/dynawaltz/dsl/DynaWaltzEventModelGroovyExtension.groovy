@@ -14,7 +14,7 @@ import com.powsybl.dynamicsimulation.groovy.EventModelGroovyExtension
 import com.powsybl.dynawaltz.DynaWaltzProvider
 import com.powsybl.dynawaltz.builders.EventBuilderConfig
 import com.powsybl.dynawaltz.builders.ModelBuilder
-import com.powsybl.dynawaltz.builders.ModelConfigsSingleton
+import com.powsybl.dynawaltz.builders.ModelConfigs
 import com.powsybl.iidm.network.Network
 
 import java.util.function.Consumer
@@ -27,7 +27,7 @@ class DynaWaltzEventModelGroovyExtension implements EventModelGroovyExtension {
     private final List<EventBuilderConfig> builderConfigs
 
     DynaWaltzEventModelGroovyExtension() {
-        builderConfigs = ModelConfigsSingleton.getInstance().getEventBuilderConfigs()
+        builderConfigs = ModelConfigs.getInstance().getEventBuilderConfigs()
     }
 
     @Override

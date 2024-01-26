@@ -10,7 +10,7 @@ package com.powsybl.dynawaltz.models.automatons;
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.builders.BuildersUtil;
 import com.powsybl.dynawaltz.builders.ModelConfig;
-import com.powsybl.dynawaltz.builders.ModelConfigsSingleton;
+import com.powsybl.dynawaltz.builders.ModelConfigs;
 import com.powsybl.dynawaltz.builders.Reporters;
 import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.Load;
@@ -25,7 +25,7 @@ import java.util.*;
 public class TapChangerBlockingAutomatonBuilder extends AbstractAutomatonModelBuilder<TapChangerBlockingAutomatonBuilder> {
 
     private static final String CATEGORY = "tcbs";
-    private static final Map<String, ModelConfig> LIBS = ModelConfigsSingleton.getInstance().getModelConfigs(CATEGORY);
+    private static final Map<String, ModelConfig> LIBS = ModelConfigs.getInstance().getModelConfigs(CATEGORY);
     private static final String U_MEASUREMENTS_FIELD = "uMeasurements";
 
     private final List<Load> loads = new ArrayList<>();

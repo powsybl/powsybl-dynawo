@@ -9,7 +9,7 @@ package com.powsybl.dynawaltz.models.loads;
 
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.builders.ModelConfig;
-import com.powsybl.dynawaltz.builders.ModelConfigsSingleton;
+import com.powsybl.dynawaltz.builders.ModelConfigs;
 import com.powsybl.dynawaltz.builders.Reporters;
 import com.powsybl.iidm.network.Network;
 
@@ -22,7 +22,7 @@ import java.util.Set;
 public class BaseLoadBuilder extends AbstractLoadModelBuilder<BaseLoadBuilder> {
 
     private static final String CATEGORY = "baseLoads";
-    private static final Map<String, ModelConfig> LIBS = ModelConfigsSingleton.getInstance().getModelConfigs(CATEGORY);
+    private static final Map<String, ModelConfig> LIBS = ModelConfigs.getInstance().getModelConfigs(CATEGORY);
 
     public static BaseLoadBuilder of(Network network) {
         return of(network, Reporter.NO_OP);

@@ -10,7 +10,7 @@ package com.powsybl.dynawaltz.models.lines;
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.builders.AbstractEquipmentModelBuilder;
 import com.powsybl.dynawaltz.builders.ModelConfig;
-import com.powsybl.dynawaltz.builders.ModelConfigsSingleton;
+import com.powsybl.dynawaltz.builders.ModelConfigs;
 import com.powsybl.dynawaltz.builders.Reporters;
 import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Line;
@@ -25,7 +25,7 @@ import java.util.Set;
 public class LineBuilder extends AbstractEquipmentModelBuilder<Line, LineBuilder> {
 
     private static final String CATEGORY = "baseLines";
-    private static final Map<String, ModelConfig> LIBS = ModelConfigsSingleton.getInstance().getModelConfigs(CATEGORY);
+    private static final Map<String, ModelConfig> LIBS = ModelConfigs.getInstance().getModelConfigs(CATEGORY);
 
     public static LineBuilder of(Network network) {
         return of(network, Reporter.NO_OP);

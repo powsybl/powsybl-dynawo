@@ -10,7 +10,7 @@ package com.powsybl.dynawaltz.models.automatons.currentlimits;
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.builders.BuilderEquipment;
 import com.powsybl.dynawaltz.builders.ModelConfig;
-import com.powsybl.dynawaltz.builders.ModelConfigsSingleton;
+import com.powsybl.dynawaltz.builders.ModelConfigs;
 import com.powsybl.dynawaltz.builders.Reporters;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.TwoSides;
@@ -24,7 +24,7 @@ import java.util.Set;
 public class CurrentLimitAutomatonBuilder extends AbstractCurrentLimitAutomatonBuilder<CurrentLimitAutomatonBuilder> {
 
     private static final String CATEGORY = "clas";
-    private static final Map<String, ModelConfig> LIBS = ModelConfigsSingleton.getInstance().getModelConfigs(CATEGORY);
+    private static final Map<String, ModelConfig> LIBS = ModelConfigs.getInstance().getModelConfigs(CATEGORY);
 
     public static CurrentLimitAutomatonBuilder of(Network network) {
         return of(network, Reporter.NO_OP);
