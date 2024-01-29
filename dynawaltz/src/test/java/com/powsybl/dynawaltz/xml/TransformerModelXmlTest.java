@@ -7,7 +7,7 @@
  */
 package com.powsybl.dynawaltz.xml;
 
-import com.powsybl.dynawaltz.models.transformers.TransformerFixedRatio;
+import com.powsybl.dynawaltz.models.transformers.TransformerFixedRatioBuilder;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
@@ -27,7 +27,11 @@ class TransformerModelXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void addDynamicModels() {
-        dynamicModels.add(new TransformerFixedRatio("BBM_NGEN_NHV1", network.getTwoWindingsTransformer("NGEN_NHV1"), "TFR", "TransformerFixedRatio"));
+        dynamicModels.add(TransformerFixedRatioBuilder.of(network)
+                .dynamicModelId("BBM_NGEN_NHV1")
+                .staticId("NGEN_NHV1")
+                .parameterSetId("TFR")
+                .build());
     }
 
     @Test

@@ -7,14 +7,12 @@
  */
 package com.powsybl.dynawaltz.xml;
 
-import com.powsybl.dynawaltz.models.automatons.TapChangerBlockingAutomaton;
+import com.powsybl.dynawaltz.models.automatons.TapChangerBlockingAutomatonBuilder;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -24,11 +22,12 @@ class TapChangerBlockingToTapChangerAutomatonXmlTest extends TapChangerAutomaton
     @Override
     protected void addDynamicModels() {
         super.addDynamicModels();
-        dynamicModels.add(new TapChangerBlockingAutomaton("BBM_TapChangerBlocking", "TapChangerPar",
-                Collections.emptyList(),
-                Collections.emptyList(),
-                List.of("BBM_TC", "BBM_TC2", "BBM_TC3"),
-                List.of(network.getBusBreakerView().getBus("NHV1"))));
+        dynamicModels.add(TapChangerBlockingAutomatonBuilder.of(network)
+                .dynamicModelId("BBM_TapChangerBlocking")
+                .parameterSetId("TapChangerPar")
+                .transformers("BBM_TC", "BBM_TC2", "BBM_TC3")
+                .uMeasurements("NHV1")
+                .build());
     }
 
     @Test

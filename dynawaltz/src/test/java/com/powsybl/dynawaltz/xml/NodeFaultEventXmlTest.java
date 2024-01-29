@@ -7,7 +7,7 @@
  */
 package com.powsybl.dynawaltz.xml;
 
-import com.powsybl.dynawaltz.models.events.NodeFaultEvent;
+import com.powsybl.dynawaltz.models.events.NodeFaultEventBuilder;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
@@ -27,7 +27,13 @@ class NodeFaultEventXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void addDynamicModels() {
-        eventModels.add(new NodeFaultEvent(network.getBusBreakerView().getBus("NGEN"), 10, 0.1, 0, 0.01));
+        eventModels.add(NodeFaultEventBuilder.of(network)
+                .staticId("NGEN")
+                .startTime(10)
+                .faultTime(0.1)
+                .rPu(0)
+                .xPu(0.01)
+                .build());
     }
 
     @Test

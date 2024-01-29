@@ -12,7 +12,7 @@ import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
-import com.powsybl.dynawaltz.models.automatons.CurrentLimitAutomaton;
+import com.powsybl.dynawaltz.models.automatons.currentlimits.CurrentLimitAutomatonBuilder;
 import com.powsybl.iidm.network.*;
 import org.junit.jupiter.api.Test;
 
@@ -40,8 +40,14 @@ class StandardLineTest {
                 .setR(1).setX(3).setG1(0).setG2(0).setB1(0).setB2(0).add();
 
         List<BlackBoxModel> dynamicModels = new ArrayList<>();
-        dynamicModels.add(new StandardLine("BBM_l", l, "SL"));
-        dynamicModels.add(new CurrentLimitAutomaton("BBM_CLA", "CLA", l, TwoSides.ONE, "CurrentLimitAutomaton"));
+        dynamicModels.add(new StandardLine("BBM_l", l, "SL", "Line"));
+        dynamicModels.add(CurrentLimitAutomatonBuilder.of(network, "CurrentLimitAutomaton")
+                        .dynamicModelId("BBM_CLA")
+                        .parameterSetId("CLA")
+                        .controlledQuadripole(l.getId())
+                        .iMeasurement(l.getId())
+                        .iMeasurementSide(TwoSides.ONE)
+                        .build());
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynaWaltzParameters dynawoParameters = DynaWaltzParameters.load();
         String workingVariantId = network.getVariantManager().getWorkingVariantId();

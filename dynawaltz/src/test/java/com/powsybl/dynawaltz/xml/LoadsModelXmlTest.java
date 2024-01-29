@@ -56,11 +56,31 @@ class LoadsModelXmlTest extends AbstractParametrizedDynamicModelXmlTest {
 
     private static Stream<Arguments> provideLoads() {
         return Stream.of(
-                Arguments.of("load_alpha_beta_dyd", (Function<Network, BlackBoxModel>) n -> new BaseLoad(DYN_LOAD_NAME, n.getLoad(LOAD_NAME), "LAB", "LoadAlphaBeta")),
-                Arguments.of("load_one_transformer_dyd", (Function<Network, BlackBoxModel>) n -> new LoadOneTransformer(DYN_LOAD_NAME, n.getLoad(LOAD_NAME), "LOT")),
-                Arguments.of("load_one_transformer_tap_changer_dyd", (Function<Network, BlackBoxModel>) n -> new LoadOneTransformerTapChanger(DYN_LOAD_NAME, n.getLoad(LOAD_NAME), "LOTTC")),
-                Arguments.of("load_two_transformers_dyd", (Function<Network, BlackBoxModel>) n -> new LoadTwoTransformers(DYN_LOAD_NAME, n.getLoad(LOAD_NAME), "LTT")),
-                Arguments.of("load_two_transformers_tap_changers_dyd", (Function<Network, BlackBoxModel>) n -> new LoadTwoTransformersTapChangers(DYN_LOAD_NAME, n.getLoad(LOAD_NAME), "LTTTC", "LoadTwoTransformersTapChangers"))
+                Arguments.of("load_alpha_beta_dyd", (Function<Network, BlackBoxModel>) n -> BaseLoadBuilder.of(n, "LoadAlphaBeta")
+                        .dynamicModelId(DYN_LOAD_NAME)
+                        .staticId(LOAD_NAME)
+                        .parameterSetId("LAB")
+                        .build()),
+                Arguments.of("load_one_transformer_dyd", (Function<Network, BlackBoxModel>) n -> LoadOneTransformerBuilder.of(n, "LoadOneTransformer")
+                        .dynamicModelId(DYN_LOAD_NAME)
+                        .staticId(LOAD_NAME)
+                        .parameterSetId("LOT")
+                        .build()),
+                Arguments.of("load_one_transformer_tap_changer_dyd", (Function<Network, BlackBoxModel>) n -> LoadOneTransformerTapChangerBuilder.of(n, "LoadOneTransformerTapChanger")
+                        .dynamicModelId(DYN_LOAD_NAME)
+                        .staticId(LOAD_NAME)
+                        .parameterSetId("LOTTC")
+                        .build()),
+                Arguments.of("load_two_transformers_dyd", (Function<Network, BlackBoxModel>) n -> LoadTwoTransformersBuilder.of(n, "LoadTwoTransformers")
+                        .dynamicModelId(DYN_LOAD_NAME)
+                        .staticId(LOAD_NAME)
+                        .parameterSetId("LTT")
+                        .build()),
+                Arguments.of("load_two_transformers_tap_changers_dyd", (Function<Network, BlackBoxModel>) n -> LoadTwoTransformersTapChangersBuilder.of(n, "LoadTwoTransformersTapChangers")
+                        .dynamicModelId(DYN_LOAD_NAME)
+                        .staticId(LOAD_NAME)
+                        .parameterSetId("LTTTC")
+                        .build())
         );
     }
 }

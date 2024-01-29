@@ -22,7 +22,7 @@ public class HvdcPDangling extends HvdcP {
 
     private final DanglingSide danglingSide;
 
-    public HvdcPDangling(String dynamicModelId, HvdcLine hvdc, String parameterSetId, String hvdcLib, TwoSides danglingSide) {
+    protected HvdcPDangling(String dynamicModelId, HvdcLine hvdc, String parameterSetId, String hvdcLib, TwoSides danglingSide) {
         super(dynamicModelId, hvdc, parameterSetId, hvdcLib);
         this.danglingSide = new DanglingSide(TERMINAL_PREFIX, danglingSide);
     }

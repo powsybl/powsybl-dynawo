@@ -38,14 +38,10 @@ public class TapChangerAutomaton extends AbstractPureDynamicBlackBoxModel implem
         NOT_SET
     }
 
-    public TapChangerAutomaton(String dynamicModelId, String parameterSetId, Load load, TransformerSide side) {
-        super(dynamicModelId, parameterSetId);
+    protected TapChangerAutomaton(String dynamicModelId, String parameterSetId, Load load, TransformerSide side, String lib) {
+        super(dynamicModelId, parameterSetId, lib);
         this.load = Objects.requireNonNull(load);
         this.side = Objects.requireNonNull(side);
-    }
-
-    public TapChangerAutomaton(String dynamicModelId, String parameterSetId, Load load) {
-        this(dynamicModelId, parameterSetId, load, TransformerSide.NONE);
     }
 
     @Override

@@ -39,8 +39,8 @@ public class TapChangerBlockingAutomaton extends AbstractPureDynamicBlackBoxMode
     private final List<Identifiable<?>> uMeasurements;
     private boolean isConnected = true;
 
-    public TapChangerBlockingAutomaton(String dynamicModelId, String parameterSetId, List<TwoWindingsTransformer> transformers, List<Load> loadsWithTransformer, List<String> tapChangerAutomatonIds, List<Identifiable<?>> uMeasurements) {
-        super(dynamicModelId, parameterSetId);
+    protected TapChangerBlockingAutomaton(String dynamicModelId, String parameterSetId, List<TwoWindingsTransformer> transformers, List<Load> loadsWithTransformer, List<String> tapChangerAutomatonIds, List<Identifiable<?>> uMeasurements, String lib) {
+        super(dynamicModelId, parameterSetId, lib);
         this.transformers = Objects.requireNonNull(transformers);
         this.loadsWithTransformer = Objects.requireNonNull(loadsWithTransformer);
         this.tapChangerAutomatonIds = Objects.requireNonNull(tapChangerAutomatonIds);
@@ -56,26 +56,18 @@ public class TapChangerBlockingAutomaton extends AbstractPureDynamicBlackBoxMode
         }
     }
 
-    public TapChangerBlockingAutomaton(String dynamicModelId, String parameterSetId, List<TwoWindingsTransformer> transformers, List<Load> loadsWithTransformer, List<Identifiable<?>> uMeasurements) {
-        this(dynamicModelId, parameterSetId, transformers, loadsWithTransformer, Collections.emptyList(), uMeasurements);
-    }
-
-    public TapChangerBlockingAutomaton(String dynamicModelId, String parameterSetId, List<TwoWindingsTransformer> transformers, List<Identifiable<?>> uMeasurements) {
-        this(dynamicModelId, parameterSetId, transformers, Collections.emptyList(), Collections.emptyList(), uMeasurements);
-    }
-
     public static boolean isCompatibleEquipment(IdentifiableType type) {
         return COMPATIBLE_EQUIPMENTS.contains(type);
     }
 
     @Override
     public String getName() {
-        return "TapChangerBlockingAutomaton";
+        return super.getLib();
     }
 
     @Override
     public String getLib() {
-        return getName() + uMeasurements.size();
+        return super.getLib() + uMeasurements.size();
     }
 
     @Override

@@ -14,7 +14,7 @@ import com.powsybl.iidm.network.Bus;
  */
 public class InfiniteBus extends AbstractBus {
 
-    public InfiniteBus(String dynamicModelId, Bus bus, String parameterSetId, String lib) {
+    protected InfiniteBus(String dynamicModelId, Bus bus, String parameterSetId, String lib) {
         super(dynamicModelId, bus, parameterSetId, lib);
     }
 

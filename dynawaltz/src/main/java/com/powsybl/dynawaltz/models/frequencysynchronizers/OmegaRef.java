@@ -35,12 +35,7 @@ import static com.powsybl.dynawaltz.parameters.ParameterType.INT;
 public class OmegaRef extends AbstractFrequencySynchronizer {
 
     public OmegaRef(List<FrequencySynchronizedModel> synchronizedEquipments) {
-        super(synchronizedEquipments);
-    }
-
-    @Override
-    public String getLib() {
-        return "DYNModelOmegaRef";
+        super(synchronizedEquipments, "DYNModelOmegaRef");
     }
 
     @Override

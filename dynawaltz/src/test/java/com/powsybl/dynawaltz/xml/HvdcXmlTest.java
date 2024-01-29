@@ -7,11 +7,9 @@
  */
 package com.powsybl.dynawaltz.xml;
 
+import com.powsybl.dynawaltz.models.hvdc.HvdcPBuilder;
+import com.powsybl.dynawaltz.models.hvdc.HvdcVscBuilder;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
-import com.powsybl.dynawaltz.models.hvdc.HvdcP;
-import com.powsybl.dynawaltz.models.hvdc.HvdcPDangling;
-import com.powsybl.dynawaltz.models.hvdc.HvdcVsc;
-import com.powsybl.dynawaltz.models.hvdc.HvdcVscDangling;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.TwoSides;
 import com.powsybl.iidm.network.test.HvdcTestNetwork;
@@ -60,10 +58,28 @@ class HvdcXmlTest extends AbstractParametrizedDynamicModelXmlTest {
 
     private static Stream<Arguments> provideHvdc() {
         return Stream.of(
-                Arguments.of("hvdc_p_dyd.xml", (Function<Network, BlackBoxModel>) n -> new HvdcP(DYN_NAME, n.getHvdcLine(HVDC_NAME), "hv", "HvdcPV")),
-                Arguments.of("hvdc_vsc_dyd.xml", (Function<Network, BlackBoxModel>) n -> new HvdcVsc(DYN_NAME, n.getHvdcLine(HVDC_NAME), "hv", "HvdcVSC")),
-                Arguments.of("hvdc_p_dangling_dyd.xml", (Function<Network, BlackBoxModel>) n -> new HvdcPDangling(DYN_NAME, n.getHvdcLine(HVDC_NAME), "hv", "HvdcPVDangling", TwoSides.ONE)),
-                Arguments.of("hvdc_vsc_dangling_dyd.xml", (Function<Network, BlackBoxModel>) n -> new HvdcVscDangling(DYN_NAME, n.getHvdcLine(HVDC_NAME), "hv", "HvdcVSCDanglingP", TwoSides.TWO))
+                Arguments.of("hvdc_p_dyd.xml", (Function<Network, BlackBoxModel>) n -> HvdcPBuilder.of(n, "HvdcPV")
+                        .dynamicModelId(DYN_NAME)
+                        .staticId(HVDC_NAME)
+                        .parameterSetId("hv")
+                        .build()),
+                Arguments.of("hvdc_vsc_dyd.xml", (Function<Network, BlackBoxModel>) n -> HvdcVscBuilder.of(n, "HvdcVSC")
+                        .dynamicModelId(DYN_NAME)
+                        .staticId(HVDC_NAME)
+                        .parameterSetId("hv")
+                        .build()),
+                Arguments.of("hvdc_p_dangling_dyd.xml", (Function<Network, BlackBoxModel>) n -> HvdcPBuilder.of(n, "HvdcPVDangling")
+                        .dynamicModelId(DYN_NAME)
+                        .staticId(HVDC_NAME)
+                        .parameterSetId("hv")
+                        .dangling(TwoSides.ONE)
+                        .build()),
+                Arguments.of("hvdc_vsc_dangling_dyd.xml", (Function<Network, BlackBoxModel>) n -> HvdcVscBuilder.of(n, "HvdcVSCDanglingP")
+                        .dynamicModelId(DYN_NAME)
+                        .staticId(HVDC_NAME)
+                        .parameterSetId("hv")
+                        .dangling(TwoSides.TWO)
+                        .build())
         );
     }
 }

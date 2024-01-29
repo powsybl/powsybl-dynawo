@@ -10,15 +10,15 @@ import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
-import com.powsybl.dynawaltz.models.generators.GeneratorFictitious;
+import com.powsybl.dynawaltz.models.generators.GeneratorFictitiousBuilder;
 import com.powsybl.dynawaltz.models.lines.LineModel;
 import com.powsybl.dynawaltz.models.loads.BaseLoad;
+import com.powsybl.dynawaltz.models.loads.BaseLoadBuilder;
 import com.powsybl.iidm.network.Identifiable;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
-import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class DynamicModelsXmlTest extends DynaWaltzTestUtil {
 
     @Test
-    void writeDynamicModel() throws SAXException, IOException, XMLStreamException {
+    void writeDynamicModel() throws SAXException, IOException {
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynaWaltzParameters dynawoParameters = DynaWaltzParameters.load();
         DynaWaltzContext context = new DynaWaltzContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, new ArrayList<>(), curves, parameters, dynawoParameters);
@@ -42,15 +42,15 @@ class DynamicModelsXmlTest extends DynaWaltzTestUtil {
     }
 
     @Test
-    void writeDynamicModelWithLoadsAndOnlyOneFictitiousGenerator() throws SAXException, IOException, XMLStreamException {
+    void writeDynamicModelWithLoadsAndOnlyOneFictitiousGenerator() throws SAXException, IOException {
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynaWaltzParameters dynawoParameters = DynaWaltzParameters.load();
         dynamicModels.clear();
-        network.getGeneratorStream().forEach(gen -> {
-            if (gen.getId().equals("GEN6")) {
-                dynamicModels.add(new GeneratorFictitious("BBM_" + gen.getId(), gen, "GF"));
-            }
-        });
+        dynamicModels.add(GeneratorFictitiousBuilder.of(network)
+                .dynamicModelId("BBM_GEN6")
+                .staticId("GEN6")
+                .parameterSetId("GF")
+                .build());
 
         DynaWaltzContext context = new DynaWaltzContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, new ArrayList<>(), curves, parameters, dynawoParameters);
 
@@ -61,8 +61,16 @@ class DynamicModelsXmlTest extends DynaWaltzTestUtil {
     @Test
     void duplicateStaticId() {
         dynamicModels.clear();
-        BaseLoad load1 = new BaseLoad("BBM_LOAD", network.getLoad("LOAD"), "lab", "LoadAlphaBeta");
-        BaseLoad load2 = new BaseLoad("BBM_LOAD2", network.getLoad("LOAD"), "lab", "LoadAlphaBeta");
+        BaseLoad load1 = BaseLoadBuilder.of(network, "LoadAlphaBeta")
+                .dynamicModelId("BBM_LOAD")
+                .staticId("LOAD")
+                .parameterSetId("lab")
+                .build();
+        BaseLoad load2 = BaseLoadBuilder.of(network, "LoadAlphaBeta")
+                .dynamicModelId("BBM_LOAD2")
+                .staticId("LOAD")
+                .parameterSetId("LAB")
+                .build();
         dynamicModels.add(load1);
         dynamicModels.add(load2);
         String workingVariantId = network.getVariantManager().getWorkingVariantId();
@@ -73,8 +81,16 @@ class DynamicModelsXmlTest extends DynaWaltzTestUtil {
     @Test
     void duplicateDynamicId() {
         dynamicModels.clear();
-        BaseLoad load1 = new BaseLoad("BBM_LOAD", network.getLoad("LOAD"), "lab", "LoadAlphaBeta");
-        BaseLoad load2 = new BaseLoad("BBM_LOAD", network.getLoad("LOAD2"), "lab", "LoadAlphaBeta");
+        BaseLoad load1 = BaseLoadBuilder.of(network, "LoadAlphaBeta")
+                .dynamicModelId("BBM_LOAD")
+                .staticId("LOAD")
+                .parameterSetId("lab")
+                .build();
+        BaseLoad load2 = BaseLoadBuilder.of(network, "LoadAlphaBeta")
+                .dynamicModelId("BBM_LOAD")
+                .staticId("LOAD2")
+                .parameterSetId("LAB")
+                .build();
         dynamicModels.add(load1);
         dynamicModels.add(load2);
         String workingVariantId = network.getVariantManager().getWorkingVariantId();

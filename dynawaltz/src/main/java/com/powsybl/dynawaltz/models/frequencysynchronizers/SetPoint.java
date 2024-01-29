@@ -26,12 +26,7 @@ import static com.powsybl.dynawaltz.parameters.ParameterType.DOUBLE;
 public class SetPoint extends AbstractFrequencySynchronizer {
 
     public SetPoint(List<FrequencySynchronizedModel> synchronizedEquipments) {
-        super(synchronizedEquipments);
-    }
-
-    @Override
-    public String getLib() {
-        return "SetPoint";
+        super(synchronizedEquipments, "SetPoint");
     }
 
     @Override

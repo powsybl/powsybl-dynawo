@@ -16,6 +16,8 @@ import com.powsybl.dynawaltz.DynaWaltzProvider;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.EquipmentBlackBoxModel;
 import com.powsybl.dynawaltz.models.automatons.*;
+import com.powsybl.dynawaltz.models.automatons.currentlimits.CurrentLimitAutomaton;
+import com.powsybl.dynawaltz.models.automatons.currentlimits.CurrentLimitTwoLevelsAutomaton;
 import com.powsybl.dynawaltz.models.automatons.phaseshifters.PhaseShifterIAutomaton;
 import com.powsybl.dynawaltz.models.automatons.phaseshifters.PhaseShifterPAutomaton;
 import com.powsybl.dynawaltz.models.buses.InfiniteBus;
@@ -27,7 +29,7 @@ import com.powsybl.dynawaltz.models.hvdc.HvdcVsc;
 import com.powsybl.dynawaltz.models.hvdc.HvdcVscDangling;
 import com.powsybl.dynawaltz.models.lines.StandardLine;
 import com.powsybl.dynawaltz.models.loads.*;
-import com.powsybl.dynawaltz.models.svarcs.StaticVarCompensator;
+import com.powsybl.dynawaltz.models.svarcs.BaseStaticVarCompensator;
 import com.powsybl.dynawaltz.models.transformers.TransformerFixedRatio;
 import com.powsybl.dynawaltz.models.generators.GridFormingConverter;
 import com.powsybl.dynawaltz.models.generators.SynchronizedWeccGen;
@@ -90,7 +92,6 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
         assertTrue(modelClass.isInstance(dynamicModels.get(0)));
         assertEquals(terminalVarName, modelClass.cast(dynamicModels.get(0)).getTerminalVarName());
         checkReporter(report);
-
     }
 
     void assertEquipmentBlackBoxModel(EquipmentBlackBoxModel bbm, String dynamicId, String staticId, String parameterId, String lib) {
@@ -127,7 +128,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                 Arguments.of("/dynamicModels/omegaGen.groovy", SynchronizedGenerator.class, EurostagTutorialExample1Factory.create(), "GEN", "BBM_GEN", "GPQ", "GeneratorPQ"),
                 Arguments.of("/dynamicModels/omegaGenControllable.groovy", SynchronizedGeneratorControllable.class, EurostagTutorialExample1Factory.create(), "GEN", "BBM_GEN", "GPQ", "GeneratorPV"),
                 Arguments.of("/dynamicModels/transformer.groovy", TransformerFixedRatio.class, EurostagTutorialExample1Factory.create(), "NGEN_NHV1", "BBM_NGEN_NHV1", "TFR", "TransformerFixedRatio"),
-                Arguments.of("/dynamicModels/svarc.groovy", StaticVarCompensator.class, SvcTestCaseFactory.create(), "SVC2", "BBM_SVARC", "svarc", "StaticVarCompensatorPV"),
+                Arguments.of("/dynamicModels/svarc.groovy", BaseStaticVarCompensator.class, SvcTestCaseFactory.create(), "SVC2", "BBM_SVARC", "svarc", "StaticVarCompensatorPV"),
                 Arguments.of("/dynamicModels/wecc.groovy", WeccGen.class, EurostagTutorialExample1Factory.create(), "GEN", "BBM_WT", "Wind", "WT4BWeccCurrentSource"),
                 Arguments.of("/dynamicModels/weccSynchro.groovy", SynchronizedWeccGen.class, EurostagTutorialExample1Factory.create(), "GEN", "BBM_WT", "Wind", "WTG4AWeccCurrentSource"),
                 Arguments.of("/dynamicModels/gridFormingConverter.groovy", GridFormingConverter.class, EurostagTutorialExample1Factory.create(), "GEN", "BBM_GFC", "GF", "GridFormingConverterMatchingControl")
@@ -255,7 +256,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                             + DSL model builder for TapChangerBlockingAutomaton
                                'uMeasurements' field value 'LOAD' not found for equipment type(s) BUS/BUSBAR_SECTION
                                'uMeasurements' field value 'Wrong_ID' not found for equipment type(s) BUS/BUSBAR_SECTION
-                               'uMeasurements' field is not set
+                               'uMeasurements' list is empty
                                Model ZAB cannot be instantiated
                         """),
                 Arguments.of("/warnings/tapChangerMissingBusList.groovy", EurostagTutorialExample1Factory.create(),
@@ -266,7 +267,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                                'uMeasurements' field value 'LOAD' not found for equipment type(s) BUS/BUSBAR_SECTION
                                'uMeasurements' field value 'Wrong_ID' not found for equipment type(s) BUS/BUSBAR_SECTION
                                'uMeasurements' field value 'NGEN_NHV1' not found for equipment type(s) BUS/BUSBAR_SECTION
-                               'uMeasurements' field is not set
+                               'uMeasurements' list is empty
                                Model ZAB cannot be instantiated
                         """),
                 Arguments.of("/warnings/tapChangerCompatible.groovy", EurostagTutorialExample1Factory.create(),

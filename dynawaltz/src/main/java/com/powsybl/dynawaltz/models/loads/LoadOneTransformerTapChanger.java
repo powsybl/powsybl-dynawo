@@ -23,8 +23,8 @@ import static com.powsybl.dynawaltz.models.TransformerSide.NONE;
  */
 public class LoadOneTransformerTapChanger extends LoadOneTransformer implements TapChangerModel {
 
-    public LoadOneTransformerTapChanger(String dynamicModelId, Load load, String parameterSetId) {
-        super(dynamicModelId, load, parameterSetId, "LoadOneTransformerTapChanger");
+    protected LoadOneTransformerTapChanger(String dynamicModelId, Load load, String parameterSetId, String lib) {
+        super(dynamicModelId, load, parameterSetId, lib);
     }
 
     @Override

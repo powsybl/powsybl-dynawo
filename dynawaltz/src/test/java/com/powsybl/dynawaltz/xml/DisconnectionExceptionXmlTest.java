@@ -9,10 +9,10 @@ package com.powsybl.dynawaltz.xml;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
-import com.powsybl.dynawaltz.models.events.EventHvdcDisconnection;
-import com.powsybl.dynawaltz.models.hvdc.HvdcPDangling;
-import com.powsybl.dynawaltz.models.hvdc.HvdcVscDangling;
-import com.powsybl.iidm.network.HvdcLine;
+import com.powsybl.dynawaltz.models.events.EventDisconnectionBuilder;
+import com.powsybl.dynawaltz.models.hvdc.HvdcPBuilder;
+import com.powsybl.dynawaltz.models.hvdc.HvdcVscBuilder;
+import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.TwoSides;
 import com.powsybl.iidm.network.test.HvdcTestNetwork;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class DisconnectionExceptionXmlTest extends AbstractParametrizedDynamicModelXmlTest {
 
     @BeforeEach
-    void setup(String exception, TwoSides side, BiFunction<HvdcLine, TwoSides, BlackBoxModel> constructor) {
+    void setup(String exception, TwoSides side, BiFunction<Network, TwoSides, BlackBoxModel> constructor) {
         setupNetwork();
         addDynamicModels(side, constructor);
     }
@@ -43,16 +43,18 @@ class DisconnectionExceptionXmlTest extends AbstractParametrizedDynamicModelXmlT
         network = HvdcTestNetwork.createVsc();
     }
 
-    protected void addDynamicModels(TwoSides side, BiFunction<HvdcLine, TwoSides, BlackBoxModel> constructor) {
-        HvdcLine hvdc = network.getHvdcLine("L");
-        dynamicModels.add(constructor.apply(hvdc, side));
-        boolean disconnectOrigin = TwoSides.ONE == side;
-        eventModels.add(new EventHvdcDisconnection(hvdc, 1, disconnectOrigin, !disconnectOrigin));
+    protected void addDynamicModels(TwoSides side, BiFunction<Network, TwoSides, BlackBoxModel> constructor) {
+        dynamicModels.add(constructor.apply(network, side));
+        eventModels.add(EventDisconnectionBuilder.of(network)
+                .staticId("L")
+                .startTime(1)
+                .disconnectOnly(side)
+                .build());
     }
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("provideModels")
-    void disconnectionOnDanglingSide(String exception, TwoSides side, BiFunction<HvdcLine, TwoSides, BlackBoxModel> constructor) {
+    void disconnectionOnDanglingSide(String exception, TwoSides side, BiFunction<Network, TwoSides, BlackBoxModel> constructor) {
         Exception e = assertThrows(PowsyblException.class, this::setupDynawaltzContext);
         assertEquals(exception, e.getMessage());
     }
@@ -61,10 +63,20 @@ class DisconnectionExceptionXmlTest extends AbstractParametrizedDynamicModelXmlT
         return Stream.of(
                 Arguments.of("Equipment HvdcPVDangling side 1 is dangling and can't be disconnected with an event",
                         TwoSides.ONE,
-                        (BiFunction<HvdcLine, TwoSides, BlackBoxModel>) (hvdc, side) -> new HvdcPDangling("BBM_L", hvdc, "hvdc", "HvdcPVDangling", side)),
+                        (BiFunction<Network, TwoSides, BlackBoxModel>) (network, side) -> HvdcPBuilder.of(network, "HvdcPVDangling")
+                                .dynamicModelId("BBM_L")
+                                .staticId("L")
+                                .parameterSetId("hvdc")
+                                .dangling(side)
+                                .build()),
                 Arguments.of("Equipment HvdcVSCDanglingUdc side 2 is dangling and can't be disconnected with an event",
                         TwoSides.TWO,
-                        (BiFunction<HvdcLine, TwoSides, BlackBoxModel>) (hvdc, side) -> new HvdcVscDangling("BBM_L", hvdc, "hvdc", "HvdcVSCDanglingUdc", side))
+                        (BiFunction<Network, TwoSides, BlackBoxModel>) (network, side) -> HvdcVscBuilder.of(network, "HvdcVSCDanglingUdc")
+                                .dynamicModelId("BBM_L")
+                                .staticId("L")
+                                .parameterSetId("hvdc")
+                                .dangling(side)
+                                .build())
         );
     }
 }

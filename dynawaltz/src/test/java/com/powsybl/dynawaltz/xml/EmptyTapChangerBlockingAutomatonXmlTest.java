@@ -7,9 +7,9 @@
  */
 package com.powsybl.dynawaltz.xml;
 
-import com.powsybl.dynawaltz.models.automatons.TapChangerAutomaton;
-import com.powsybl.dynawaltz.models.automatons.TapChangerBlockingAutomaton;
-import com.powsybl.dynawaltz.models.loads.LoadOneTransformer;
+import com.powsybl.dynawaltz.models.automatons.TapChangerAutomatonBuilder;
+import com.powsybl.dynawaltz.models.automatons.TapChangerBlockingAutomatonBuilder;
+import com.powsybl.dynawaltz.models.loads.LoadOneTransformerBuilder;
 import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.VoltageLevel;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
@@ -18,8 +18,6 @@ import org.xml.sax.SAXException;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -36,13 +34,22 @@ class EmptyTapChangerBlockingAutomatonXmlTest extends AbstractDynamicModelXmlTes
 
     @Override
     protected void addDynamicModels() {
-        dynamicModels.add(new LoadOneTransformer("BBM_LOAD", network.getLoad("LOAD"), "lot"));
-        dynamicModels.add(new TapChangerBlockingAutomaton("BBM_TapChangerBlocking", "TapChangerPar",
-                Collections.emptyList(),
-                List.of(network.getLoad("LOAD")),
-                List.of("GEN", "LOAD", "BBM_TC"),
-                List.of(network.getBusBreakerView().getBus("NHV1"))));
-        dynamicModels.add(new TapChangerAutomaton("BBM_TC", "tc", network.getLoad("LOAD2")));
+        dynamicModels.add(LoadOneTransformerBuilder.of(network, "LoadOneTransformer")
+                .dynamicModelId("BBM_LOAD")
+                .staticId("LOAD")
+                .parameterSetId("lot")
+                .build());
+        dynamicModels.add(TapChangerBlockingAutomatonBuilder.of(network)
+                .dynamicModelId("BBM_TapChangerBlocking")
+                .parameterSetId("TapChangerPar")
+                .transformers("GEN", "LOAD", "BBM_TC")
+                .uMeasurements("NHV1")
+                .build());
+        dynamicModels.add(TapChangerAutomatonBuilder.of(network)
+                .dynamicModelId("BBM_TC")
+                .parameterSetId("tc")
+                .staticId("LOAD2")
+                .build());
     }
 
     @Test

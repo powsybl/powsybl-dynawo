@@ -24,14 +24,9 @@ public class UnderVoltageAutomaton extends AbstractPureDynamicBlackBoxModel {
 
     protected final Generator generator;
 
-    public UnderVoltageAutomaton(String dynamicModelId, String parameterSetId, Generator generator) {
-        super(dynamicModelId, parameterSetId);
+    protected UnderVoltageAutomaton(String dynamicModelId, String parameterSetId, Generator generator, String lib) {
+        super(dynamicModelId, parameterSetId, lib);
         this.generator = Objects.requireNonNull(generator);
-    }
-
-    @Override
-    public String getLib() {
-        return "UnderVoltageAutomaton";
     }
 
     @Override

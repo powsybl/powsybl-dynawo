@@ -24,12 +24,10 @@ import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 public abstract class AbstractEquipmentBlackBoxModel<T extends Identifiable<?>> extends AbstractBlackBoxModel implements EquipmentBlackBoxModel {
 
     protected final T equipment;
-    private final String lib;
 
     protected AbstractEquipmentBlackBoxModel(String dynamicModelId, String parameterSetId, T equipment, String lib) {
-        super(dynamicModelId, parameterSetId);
+        super(dynamicModelId, parameterSetId, lib);
         this.equipment = Objects.requireNonNull(equipment);
-        this.lib = Objects.requireNonNull(lib);
     }
 
     @Override
@@ -40,11 +38,6 @@ public abstract class AbstractEquipmentBlackBoxModel<T extends Identifiable<?>> 
     @Override
     public T getEquipment() {
         return equipment;
-    }
-
-    @Override
-    public String getLib() {
-        return lib;
     }
 
     @Override

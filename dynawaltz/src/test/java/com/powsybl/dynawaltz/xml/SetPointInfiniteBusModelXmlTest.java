@@ -7,9 +7,9 @@
  */
 package com.powsybl.dynawaltz.xml;
 
-import com.powsybl.dynawaltz.models.buses.InfiniteBus;
-import com.powsybl.dynawaltz.models.generators.SynchronizedGenerator;
-import com.powsybl.dynawaltz.models.transformers.TransformerFixedRatio;
+import com.powsybl.dynawaltz.models.buses.InfiniteBusBuilder;
+import com.powsybl.dynawaltz.models.generators.SynchronizedGeneratorBuilder;
+import com.powsybl.dynawaltz.models.transformers.TransformerFixedRatioBuilder;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
@@ -29,9 +29,21 @@ class SetPointInfiniteBusModelXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void addDynamicModels() {
-        dynamicModels.add(new SynchronizedGenerator("BBM_GEN", network.getGenerator("GEN"), "pq", "GeneratorPQ"));
-        dynamicModels.add(new TransformerFixedRatio("BBM_TR", network.getTwoWindingsTransformer("NGEN_NHV1"), "t", "TransformerFixedRatio"));
-        dynamicModels.add(new InfiniteBus("BBM_BUS", network.getBusBreakerView().getBus("NGEN"), "ib", "InfiniteBus"));
+        dynamicModels.add(SynchronizedGeneratorBuilder.of(network, "GeneratorPQ")
+                .dynamicModelId("BBM_GEN")
+                .staticId("GEN")
+                .parameterSetId("pq")
+                .build());
+        dynamicModels.add(TransformerFixedRatioBuilder.of(network)
+                .dynamicModelId("BBM_TR")
+                .staticId("NGEN_NHV1")
+                .parameterSetId("t")
+                .build());
+        dynamicModels.add(InfiniteBusBuilder.of(network, "InfiniteBus")
+                .dynamicModelId("BBM_BUS")
+                .staticId("NGEN")
+                .parameterSetId("ib")
+                .build());
     }
 
     @Test

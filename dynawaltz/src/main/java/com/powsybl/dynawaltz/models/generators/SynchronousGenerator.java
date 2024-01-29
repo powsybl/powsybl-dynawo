@@ -21,14 +21,9 @@ public class SynchronousGenerator extends SynchronizedGenerator {
 
     private final EnumGeneratorComponent generatorComponent;
 
-    public SynchronousGenerator(String dynamicModelId, Generator generator, String parameterSetId, String generatorLib, EnumGeneratorComponent generatorComponent) {
+    protected SynchronousGenerator(String dynamicModelId, Generator generator, String parameterSetId, String generatorLib, EnumGeneratorComponent generatorComponent) {
         super(dynamicModelId, generator, parameterSetId, generatorLib);
         this.generatorComponent = Objects.requireNonNull(generatorComponent);
-    }
-
-    public SynchronousGenerator(String dynamicModelId, Generator generator, String parameterSetId, String generatorLib) {
-        super(dynamicModelId, generator, parameterSetId, generatorLib);
-        generatorComponent = EnumGeneratorComponent.NONE;
     }
 
     @Override

@@ -10,7 +10,7 @@ package com.powsybl.dynawaltz.xml;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.TransformerSide;
-import com.powsybl.dynawaltz.models.automatons.TapChangerAutomaton;
+import com.powsybl.dynawaltz.models.automatons.TapChangerAutomatonBuilder;
 import com.powsybl.dynawaltz.models.loads.*;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
@@ -47,7 +47,12 @@ class TapChangerAutomatonExceptionsXmlTest extends AbstractParametrizedDynamicMo
 
     protected void addDynamicModels(TransformerSide side, Function< Network, BlackBoxModel> loadConstructor) {
         dynamicModels.add(loadConstructor.apply(network));
-        dynamicModels.add(new TapChangerAutomaton("BBM_TC", "tc", network.getLoad(LOAD_NAME), side));
+        dynamicModels.add(TapChangerAutomatonBuilder.of(network)
+                .dynamicModelId("BBM_TC")
+                .parameterSetId("tc")
+                .staticId(LOAD_NAME)
+                .side(side)
+                .build());
     }
 
     @ParameterizedTest
@@ -59,10 +64,30 @@ class TapChangerAutomatonExceptionsXmlTest extends AbstractParametrizedDynamicMo
 
     private static Stream<Arguments> provideTapChangers() {
         return Stream.of(
-                Arguments.of(TransformerSide.HIGH_VOLTAGE, (Function<Network, BlackBoxModel>) n -> new LoadOneTransformer(DYN_LOAD_NAME, n.getLoad(LOAD_NAME), "LOT"), "LoadOneTransformer doesn't have a transformer side"),
-                Arguments.of(TransformerSide.NONE, (Function<Network, BlackBoxModel>) n -> new LoadOneTransformerTapChanger(DYN_LOAD_NAME, n.getLoad(LOAD_NAME), "LOTTC"), "LoadOneTransformerTapChanger already have a tap changer"),
-                Arguments.of(TransformerSide.NONE, (Function<Network, BlackBoxModel>) n -> new LoadTwoTransformers(DYN_LOAD_NAME, n.getLoad(LOAD_NAME), "LTT"), "LoadTwoTransformers must have a side connected to the Tap changer automaton"),
-                Arguments.of(TransformerSide.HIGH_VOLTAGE, (Function<Network, BlackBoxModel>) n -> new LoadTwoTransformersTapChangers(DYN_LOAD_NAME, n.getLoad(LOAD_NAME), "LTTTC", "LoadTwoTransformersTapChangers"), "LoadTwoTransformersTapChangers already have a tap changer")
+                Arguments.of(TransformerSide.HIGH_VOLTAGE, (Function<Network, BlackBoxModel>) n -> LoadOneTransformerBuilder.of(n, "LoadOneTransformer")
+                        .dynamicModelId(DYN_LOAD_NAME)
+                        .staticId(LOAD_NAME)
+                        .parameterSetId("LOT")
+                        .build(),
+                        "LoadOneTransformer doesn't have a transformer side"),
+                Arguments.of(TransformerSide.NONE, (Function<Network, BlackBoxModel>) n -> LoadOneTransformerTapChangerBuilder.of(n, "LoadOneTransformerTapChanger")
+                        .dynamicModelId(DYN_LOAD_NAME)
+                        .staticId(LOAD_NAME)
+                        .parameterSetId("LOTTC")
+                        .build(),
+                        "LoadOneTransformerTapChanger already have a tap changer"),
+                Arguments.of(TransformerSide.NONE, (Function<Network, BlackBoxModel>) n -> LoadTwoTransformersBuilder.of(n, "LoadTwoTransformers")
+                        .dynamicModelId(DYN_LOAD_NAME)
+                        .staticId(LOAD_NAME)
+                        .parameterSetId("LTT")
+                        .build(),
+                        "LoadTwoTransformers must have a side connected to the Tap changer automaton"),
+                Arguments.of(TransformerSide.HIGH_VOLTAGE, (Function<Network, BlackBoxModel>) n -> LoadTwoTransformersTapChangersBuilder.of(n, "LoadTwoTransformersTapChangers")
+                        .dynamicModelId(DYN_LOAD_NAME)
+                        .staticId(LOAD_NAME)
+                        .parameterSetId("LTTTC")
+                        .build(),
+                        "LoadTwoTransformersTapChangers already have a tap changer")
         );
     }
 }

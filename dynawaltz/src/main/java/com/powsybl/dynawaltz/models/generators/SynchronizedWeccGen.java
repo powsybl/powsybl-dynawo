@@ -17,7 +17,7 @@ import com.powsybl.iidm.network.Generator;
  */
 public class SynchronizedWeccGen extends WeccGen implements FrequencySynchronizedModel {
 
-    public SynchronizedWeccGen(String dynamicModelId, Generator generator, String parameterSetId, String weccLib, String weccPrefix) {
+    protected SynchronizedWeccGen(String dynamicModelId, Generator generator, String parameterSetId, String weccLib, String weccPrefix) {
         super(dynamicModelId, generator, parameterSetId, weccLib, weccPrefix);
     }
 

@@ -23,8 +23,8 @@ public abstract class AbstractPhaseShifterAutomaton extends AbstractPureDynamicB
 
     protected final TwoWindingsTransformer transformer;
 
-    protected AbstractPhaseShifterAutomaton(String dynamicModelId, TwoWindingsTransformer transformer, String parameterSetId) {
-        super(dynamicModelId, parameterSetId);
+    protected AbstractPhaseShifterAutomaton(String dynamicModelId, TwoWindingsTransformer transformer, String parameterSetId, String lib) {
+        super(dynamicModelId, parameterSetId, lib);
         this.transformer = Objects.requireNonNull(transformer);
     }
 

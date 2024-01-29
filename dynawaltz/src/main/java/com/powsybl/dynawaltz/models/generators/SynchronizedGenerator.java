@@ -21,7 +21,7 @@ import java.util.List;
  */
 public class SynchronizedGenerator extends AbstractGenerator implements FrequencySynchronizedModel {
 
-    public SynchronizedGenerator(String dynamicModelId, Generator generator, String parameterSetId, String generatorLib) {
+    protected SynchronizedGenerator(String dynamicModelId, Generator generator, String parameterSetId, String generatorLib) {
         super(dynamicModelId, generator, parameterSetId, generatorLib);
     }
 

@@ -7,9 +7,10 @@
  */
 package com.powsybl.dynawaltz.models;
 
+import com.powsybl.dynawaltz.models.hvdc.HvdcPBuilder;
+import com.powsybl.dynawaltz.models.hvdc.HvdcVscBuilder;
 import com.powsybl.dynawaltz.models.hvdc.HvdcP;
-import com.powsybl.dynawaltz.models.hvdc.HvdcPDangling;
-import com.powsybl.dynawaltz.models.hvdc.HvdcVscDangling;
+import com.powsybl.dynawaltz.models.hvdc.HvdcVsc;
 import com.powsybl.iidm.network.HvdcLine;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.TwoSides;
@@ -26,7 +27,11 @@ class HvdcTest {
     @Test
     void testConnectedStation() {
         Network network = HvdcTestNetwork.createVsc();
-        HvdcP hvdc = new HvdcP("hvdc", network.getHvdcLine("L"), "HVDC", "HvdcPV");
+        HvdcP hvdc = HvdcPBuilder.of(network, "HvdcPV")
+                .dynamicModelId("hvdc")
+                .staticId("L")
+                .parameterSetId("HVDC")
+                .build();
         assertEquals(2, hvdc.getConnectedStations().size());
     }
 
@@ -35,12 +40,22 @@ class HvdcTest {
         Network network = HvdcTestNetwork.createVsc();
         HvdcLine line = network.getHvdcLine("L");
 
-        HvdcPDangling hvdc = new HvdcPDangling("hvdc", line, "HVDC", "HvdcPVDangling", TwoSides.ONE);
-        assertEquals(1, hvdc.getConnectedStations().size());
-        assertEquals(line.getConverterStation2(), hvdc.getConnectedStations().get(0));
+        HvdcP hvdcPDangling = HvdcPBuilder.of(network, "HvdcPVDangling")
+                .dynamicModelId("hvdc")
+                .staticId("L")
+                .parameterSetId("HVDC")
+                .dangling(TwoSides.ONE)
+                .build();
+        assertEquals(1, hvdcPDangling.getConnectedStations().size());
+        assertEquals(line.getConverterStation2(), hvdcPDangling.getConnectedStations().get(0));
 
-        HvdcVscDangling hvdc2 = new HvdcVscDangling("hvdc", line, "HVDC", "HvdcVSCDanglingP", TwoSides.TWO);
-        assertEquals(1, hvdc.getConnectedStations().size());
-        assertEquals(line.getConverterStation1(), hvdc2.getConnectedStations().get(0));
+        HvdcVsc hvdcVscDangling = HvdcVscBuilder.of(network, "HvdcVSCDanglingP")
+                .dynamicModelId("hvdc")
+                .staticId("L")
+                .parameterSetId("HVDC")
+                .dangling(TwoSides.TWO)
+                .build();
+        assertEquals(1, hvdcVscDangling.getConnectedStations().size());
+        assertEquals(line.getConverterStation1(), hvdcVscDangling.getConnectedStations().get(0));
     }
 }
