@@ -58,6 +58,7 @@ public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identif
                 disconnectOrigin = false;
                 disconnectExtremity = true;
             }
+            default -> throw new IllegalStateException();
         }
         return self();
     }

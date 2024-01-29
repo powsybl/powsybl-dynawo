@@ -25,7 +25,7 @@ public final class ModelConfigs {
     private static final ModelConfigs INSTANCE = new ModelConfigs();
 
     private final List<ModelConfigLoader> modelConfigLoaders;
-    private final Map<String, Map<String, ModelConfig>> modelConfigs = new HashMap<>();
+    private final Map<String, Map<String, ModelConfig>> modelConfigsMap = new HashMap<>();
     private final List<BuilderConfig> builderConfigs;
     private final List<EventBuilderConfig> eventBuilderConfigs = List.of(
             new EventBuilderConfig(EventActivePowerVariationBuilder::of, EventActivePowerVariationBuilder.TAG),
@@ -35,7 +35,7 @@ public final class ModelConfigs {
     private ModelConfigs() {
         modelConfigLoaders = Lists.newArrayList(ServiceLoader.load(ModelConfigLoader.class));
         modelConfigLoaders.forEach(l -> l.loadModelConfigs().forEach(
-                (cat, modelsMap) -> modelConfigs.merge(cat, modelsMap, (map1, map2) -> {
+                (cat, modelsMap) -> modelConfigsMap.merge(cat, modelsMap, (map1, map2) -> {
                     map1.putAll(map2);
                     return map1;
                 })
@@ -48,7 +48,7 @@ public final class ModelConfigs {
     }
 
     public Map<String, ModelConfig> getModelConfigs(String categoryName) {
-        return modelConfigs.get(categoryName);
+        return modelConfigsMap.get(categoryName);
     }
 
     public List<BuilderConfig> getBuilderConfigs() {
