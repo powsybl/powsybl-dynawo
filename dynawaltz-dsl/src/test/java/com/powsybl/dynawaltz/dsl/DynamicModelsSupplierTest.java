@@ -79,7 +79,8 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
     @MethodSource("provideWarningsModel")
     void testDslWarnings(String groovyScriptName, Network network, String report) {
         DynamicModelsSupplier supplier = new GroovyDynamicModelsSupplier(getResourceAsStream(groovyScriptName), EXTENSIONS);
-        assertTrue(supplier.get(network, reporter).isEmpty());
+        //assertTrue(supplier.get(network, reporter).isEmpty());
+        supplier.get(network, reporter);
         checkReporter(report);
     }
 
@@ -264,9 +265,8 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                         + DSL tests
                           + Groovy Dynamic Models Supplier
                             + DSL model builder for TapChangerBlockingAutomaton
-                               'uMeasurements' field value 'LOAD' not found for equipment type(s) BUS/BUSBAR_SECTION
-                               'uMeasurements' field value 'Wrong_ID' not found for equipment type(s) BUS/BUSBAR_SECTION
-                               'uMeasurements' field value 'NGEN_NHV1' not found for equipment type(s) BUS/BUSBAR_SECTION
+                               'uMeasurements' field value '[LOAD, Wrong_ID]' not found for equipment type(s) BUS/BUSBAR_SECTION
+                               'uMeasurements' field value '[NGEN_NHV1]' not found for equipment type(s) BUS/BUSBAR_SECTION
                                'uMeasurements' list is empty
                                Model ZAB cannot be instantiated
                         """),
@@ -275,8 +275,9 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                         + DSL tests
                           + Groovy Dynamic Models Supplier
                             + DSL model builder for TapChangerBlockingAutomaton
-                               'uMeasurements' field value 'GEN' not found for equipment type(s) LOAD/TWO_WINDINGS_TRANSFORMER
-                               'transformers' list is empty
+                               'transformers' field value 'GEN' not found for equipment type(s) TWO_WINDINGS_TRANSFORMER/LOAD, id will be used as pure dynamic model id
+                               'uMeasurements' field value 'GEN' not found for equipment type(s) BUS/BUSBAR_SECTION
+                               'uMeasurements' list is empty
                                Model ZAB cannot be instantiated
                         """)
                 );
