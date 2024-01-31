@@ -7,55 +7,56 @@
  */
 package com.powsybl.dynawaltz.builders;
 
-import com.google.common.collect.Lists;
-import com.powsybl.dynawaltz.models.events.EventActivePowerVariationBuilder;
-import com.powsybl.dynawaltz.models.events.EventDisconnectionBuilder;
-import com.powsybl.dynawaltz.models.events.NodeFaultEventBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.ServiceLoader;
+import java.util.Set;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public final class ModelConfigs {
+public class ModelConfigs {
 
-    private static final ModelConfigs INSTANCE = new ModelConfigs();
+    private static final Logger LOGGER = LoggerFactory.getLogger(ModelConfigs.class);
 
-    private final List<ModelConfigLoader> modelConfigLoaders;
-    private final Map<String, Map<String, ModelConfig>> modelConfigsMap = new HashMap<>();
-    private final List<BuilderConfig> builderConfigs;
-    private final List<EventBuilderConfig> eventBuilderConfigs = List.of(
-            new EventBuilderConfig(EventActivePowerVariationBuilder::of, EventActivePowerVariationBuilder.TAG),
-            new EventBuilderConfig(EventDisconnectionBuilder::of, EventDisconnectionBuilder.TAG),
-            new EventBuilderConfig(NodeFaultEventBuilder::of, NodeFaultEventBuilder.TAG));
+    private final ModelConfig defaultModelConfig;
+    private final Map<String, ModelConfig> modelConfigMap;
 
-    private ModelConfigs() {
-        modelConfigLoaders = Lists.newArrayList(ServiceLoader.load(ModelConfigLoader.class));
-        modelConfigLoaders.forEach(l -> l.loadModelConfigs().forEach(
-                (cat, modelsMap) -> modelConfigsMap.merge(cat, modelsMap, (map1, map2) -> {
-                    map1.putAll(map2);
-                    return map1;
-                })
-        ));
-        builderConfigs = modelConfigLoaders.stream().flatMap(ModelConfigLoader::loadBuilderConfigs).toList();
+    ModelConfigs(Map<String, ModelConfig> modelConfigMap, ModelConfig defaultModelConfig) {
+        this.modelConfigMap = modelConfigMap;
+        this.defaultModelConfig = defaultModelConfig;
     }
 
-    public static ModelConfigs getInstance() {
-        return INSTANCE;
+    public boolean hasDefaultModelConfig() {
+        return defaultModelConfig != null;
     }
 
-    public Map<String, ModelConfig> getModelConfigs(String categoryName) {
-        return modelConfigsMap.get(categoryName);
+    public ModelConfig getDefaultModelConfig() {
+        return defaultModelConfig;
     }
 
-    public List<BuilderConfig> getBuilderConfigs() {
-        return builderConfigs;
+    Map<String, ModelConfig> getModelConfigMap() {
+        return modelConfigMap;
     }
 
-    public List<EventBuilderConfig> getEventBuilderConfigs() {
-        return eventBuilderConfigs;
+    public ModelConfig getModelConfig(String libName) {
+        return modelConfigMap.get(libName);
+    }
+
+    public Set<String> getSupportedLibs() {
+        return modelConfigMap.keySet();
+    }
+
+    void addModelConfigs(ModelConfigs modelConfigsToMerge) {
+        modelConfigMap.putAll(modelConfigsToMerge.modelConfigMap);
+        if (hasDefaultModelConfig() && modelConfigsToMerge.hasDefaultModelConfig()) {
+            ModelConfig extraDefaultModelConfig = modelConfigsToMerge.getDefaultModelConfig();
+            LOGGER.warn("Default model configs {} & {} found, the first one will be kept",
+                    getDefaultModelConfig().name(),
+                    extraDefaultModelConfig.name());
+            modelConfigsToMerge.modelConfigMap.replace(extraDefaultModelConfig.name(), ModelConfig.copyOf(extraDefaultModelConfig, false));
+        }
+        modelConfigMap.putAll(modelConfigsToMerge.modelConfigMap);
     }
 }

@@ -13,7 +13,7 @@ import java.util.Objects;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public record ModelConfig(String lib, String alias, String internalModelPrefix, List<String> properties) {
+public record ModelConfig(String lib, String alias, String internalModelPrefix, List<String> properties, boolean isDefaultLib) {
 
     private static final String CONTROLLABLE_PROPERTY = "CONTROLLABLE";
     private static final String DANGLING_PROPERTY = "DANGLING";
@@ -21,11 +21,16 @@ public record ModelConfig(String lib, String alias, String internalModelPrefix, 
     private static final String TRANSFORMER_PROPERTY = "TRANSFORMER";
     private static final String AUXILIARY_PROPERTY = "AUXILIARY";
 
-    public ModelConfig(String lib, String alias, String internalModelPrefix, List<String> properties) {
+    public static ModelConfig copyOf(ModelConfig baseModelConfig, boolean isDefaultLib) {
+        return new ModelConfig(baseModelConfig.lib, baseModelConfig.alias, baseModelConfig.internalModelPrefix, baseModelConfig.properties, isDefaultLib);
+    }
+
+    public ModelConfig(String lib, String alias, String internalModelPrefix, List<String> properties, boolean isDefaultLib) {
         this.lib = Objects.requireNonNull(lib);
         this.alias = alias;
         this.internalModelPrefix = internalModelPrefix;
         this.properties = Objects.requireNonNull(properties);
+        this.isDefaultLib = isDefaultLib;
     }
 
     public boolean isControllable() {

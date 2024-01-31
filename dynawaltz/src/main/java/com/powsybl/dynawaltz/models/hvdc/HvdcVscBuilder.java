@@ -9,11 +9,11 @@ package com.powsybl.dynawaltz.models.hvdc;
 
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.builders.ModelConfig;
+import com.powsybl.dynawaltz.builders.ModelConfigsHandler;
 import com.powsybl.dynawaltz.builders.ModelConfigs;
 import com.powsybl.dynawaltz.builders.Reporters;
 import com.powsybl.iidm.network.Network;
 
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -22,14 +22,19 @@ import java.util.Set;
 public class HvdcVscBuilder extends AbstractHvdcBuilder<HvdcVscBuilder> {
 
     private static final String CATEGORY = "hvdcVsc";
-    private static final Map<String, ModelConfig> LIBS = ModelConfigs.getInstance().getModelConfigs(CATEGORY);
+    private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigsNew(CATEGORY);
 
     public static HvdcVscBuilder of(Network network) {
         return of(network, Reporter.NO_OP);
     }
 
     public static HvdcVscBuilder of(Network network, Reporter reporter) {
-        return new HvdcVscBuilder(network, LIBS.values().iterator().next(), reporter);
+        ModelConfig modelConfig = MODEL_CONFIGS.getDefaultModelConfig();
+        if (modelConfig == null) {
+            Reporters.reportDefaultLibNotFound(reporter, HvdcVscBuilder.class.getSimpleName());
+            return null;
+        }
+        return new HvdcVscBuilder(network, modelConfig, reporter);
     }
 
     public static HvdcVscBuilder of(Network network, String lib) {
@@ -37,16 +42,16 @@ public class HvdcVscBuilder extends AbstractHvdcBuilder<HvdcVscBuilder> {
     }
 
     public static HvdcVscBuilder of(Network network, String lib, Reporter reporter) {
-        ModelConfig modelConfig = LIBS.get(lib);
+        ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(lib);
         if (modelConfig == null) {
             Reporters.reportLibNotFound(reporter, HvdcVscBuilder.class.getSimpleName(), lib);
             return null;
         }
-        return new HvdcVscBuilder(network, LIBS.get(lib), reporter);
+        return new HvdcVscBuilder(network, modelConfig, reporter);
     }
 
     public static Set<String> getSupportedLibs() {
-        return LIBS.keySet();
+        return MODEL_CONFIGS.getSupportedLibs();
     }
 
     protected HvdcVscBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {

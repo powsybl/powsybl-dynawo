@@ -10,11 +10,11 @@ package com.powsybl.dynawaltz.models.generators;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.builders.ModelConfig;
+import com.powsybl.dynawaltz.builders.ModelConfigsHandler;
 import com.powsybl.dynawaltz.builders.ModelConfigs;
 import com.powsybl.dynawaltz.builders.Reporters;
 import com.powsybl.iidm.network.Network;
 
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -23,14 +23,19 @@ import java.util.Set;
 public class SynchronousGeneratorBuilder extends AbstractGeneratorBuilder<SynchronousGeneratorBuilder> {
 
     private static final String CATEGORY = "synchronousGenerators";
-    private static final Map<String, ModelConfig> LIBS = ModelConfigs.getInstance().getModelConfigs(CATEGORY);
+    private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigsNew(CATEGORY);
 
     public static SynchronousGeneratorBuilder of(Network network) {
         return of(network, Reporter.NO_OP);
     }
 
     public static SynchronousGeneratorBuilder of(Network network, Reporter reporter) {
-        return new SynchronousGeneratorBuilder(network, LIBS.values().iterator().next(), reporter);
+        ModelConfig modelConfig = MODEL_CONFIGS.getDefaultModelConfig();
+        if (modelConfig == null) {
+            Reporters.reportDefaultLibNotFound(reporter, SynchronousGeneratorBuilder.class.getSimpleName());
+            return null;
+        }
+        return new SynchronousGeneratorBuilder(network, modelConfig, reporter);
     }
 
     public static SynchronousGeneratorBuilder of(Network network, String lib) {
@@ -38,16 +43,16 @@ public class SynchronousGeneratorBuilder extends AbstractGeneratorBuilder<Synchr
     }
 
     public static SynchronousGeneratorBuilder of(Network network, String lib, Reporter reporter) {
-        ModelConfig modelConfig = LIBS.get(lib);
+        ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(lib);
         if (modelConfig == null) {
             Reporters.reportLibNotFound(reporter, SynchronousGeneratorBuilder.class.getSimpleName(), lib);
             return null;
         }
-        return new SynchronousGeneratorBuilder(network, LIBS.get(lib), reporter);
+        return new SynchronousGeneratorBuilder(network, modelConfig, reporter);
     }
 
     public static Set<String> getSupportedLibs() {
-        return LIBS.keySet();
+        return MODEL_CONFIGS.getSupportedLibs();
     }
 
     protected SynchronousGeneratorBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {

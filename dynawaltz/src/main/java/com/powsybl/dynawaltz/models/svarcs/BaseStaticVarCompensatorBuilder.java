@@ -10,13 +10,13 @@ package com.powsybl.dynawaltz.models.svarcs;
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.builders.AbstractEquipmentModelBuilder;
 import com.powsybl.dynawaltz.builders.ModelConfig;
+import com.powsybl.dynawaltz.builders.ModelConfigsHandler;
 import com.powsybl.dynawaltz.builders.ModelConfigs;
 import com.powsybl.dynawaltz.builders.Reporters;
 import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.StaticVarCompensator;
 
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -25,14 +25,19 @@ import java.util.Set;
 public class BaseStaticVarCompensatorBuilder extends AbstractEquipmentModelBuilder<StaticVarCompensator, BaseStaticVarCompensatorBuilder> {
 
     private static final String CATEGORY = "staticVarCompensators";
-    private static final Map<String, ModelConfig> LIBS = ModelConfigs.getInstance().getModelConfigs(CATEGORY);
+    private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigsNew(CATEGORY);
 
     public static BaseStaticVarCompensatorBuilder of(Network network) {
         return of(network, Reporter.NO_OP);
     }
 
     public static BaseStaticVarCompensatorBuilder of(Network network, Reporter reporter) {
-        return new BaseStaticVarCompensatorBuilder(network, LIBS.values().iterator().next(), reporter);
+        ModelConfig modelConfig = MODEL_CONFIGS.getDefaultModelConfig();
+        if (modelConfig == null) {
+            Reporters.reportDefaultLibNotFound(reporter, BaseStaticVarCompensatorBuilder.class.getSimpleName());
+            return null;
+        }
+        return new BaseStaticVarCompensatorBuilder(network, modelConfig, reporter);
     }
 
     public static BaseStaticVarCompensatorBuilder of(Network network, String lib) {
@@ -40,16 +45,16 @@ public class BaseStaticVarCompensatorBuilder extends AbstractEquipmentModelBuild
     }
 
     public static BaseStaticVarCompensatorBuilder of(Network network, String lib, Reporter reporter) {
-        ModelConfig modelConfig = LIBS.get(lib);
+        ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(lib);
         if (modelConfig == null) {
             Reporters.reportLibNotFound(reporter, BaseStaticVarCompensatorBuilder.class.getSimpleName(), lib);
             return null;
         }
-        return new BaseStaticVarCompensatorBuilder(network, LIBS.get(lib), reporter);
+        return new BaseStaticVarCompensatorBuilder(network, modelConfig, reporter);
     }
 
     public static Set<String> getSupportedLibs() {
-        return LIBS.keySet();
+        return MODEL_CONFIGS.getSupportedLibs();
     }
 
     protected BaseStaticVarCompensatorBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {

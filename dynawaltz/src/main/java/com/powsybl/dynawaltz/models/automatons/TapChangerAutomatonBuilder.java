@@ -8,16 +8,12 @@
 package com.powsybl.dynawaltz.models.automatons;
 
 import com.powsybl.commons.reporter.Reporter;
-import com.powsybl.dynawaltz.builders.BuilderEquipment;
-import com.powsybl.dynawaltz.builders.ModelConfig;
-import com.powsybl.dynawaltz.builders.ModelConfigs;
-import com.powsybl.dynawaltz.builders.Reporters;
+import com.powsybl.dynawaltz.builders.*;
 import com.powsybl.dynawaltz.models.TransformerSide;
 import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Load;
 import com.powsybl.iidm.network.Network;
 
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -26,7 +22,7 @@ import java.util.Set;
 public class TapChangerAutomatonBuilder extends AbstractAutomatonModelBuilder<TapChangerAutomatonBuilder> {
 
     private static final String CATEGORY = "tapChangers";
-    private static final Map<String, ModelConfig> LIBS = ModelConfigs.getInstance().getModelConfigs(CATEGORY);
+    private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigsNew(CATEGORY);
 
     protected final BuilderEquipment<Load> load;
     protected TransformerSide side = TransformerSide.NONE;
@@ -36,7 +32,12 @@ public class TapChangerAutomatonBuilder extends AbstractAutomatonModelBuilder<Ta
     }
 
     public static TapChangerAutomatonBuilder of(Network network, Reporter reporter) {
-        return new TapChangerAutomatonBuilder(network, LIBS.values().iterator().next(), reporter);
+        ModelConfig modelConfig = MODEL_CONFIGS.getDefaultModelConfig();
+        if (modelConfig == null) {
+            Reporters.reportDefaultLibNotFound(reporter, TapChangerAutomatonBuilder.class.getSimpleName());
+            return null;
+        }
+        return new TapChangerAutomatonBuilder(network, modelConfig, reporter);
     }
 
     public static TapChangerAutomatonBuilder of(Network network, String lib) {
@@ -44,16 +45,16 @@ public class TapChangerAutomatonBuilder extends AbstractAutomatonModelBuilder<Ta
     }
 
     public static TapChangerAutomatonBuilder of(Network network, String lib, Reporter reporter) {
-        ModelConfig modelConfig = LIBS.get(lib);
+        ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(lib);
         if (modelConfig == null) {
             Reporters.reportLibNotFound(reporter, TapChangerAutomatonBuilder.class.getSimpleName(), lib);
             return null;
         }
-        return new TapChangerAutomatonBuilder(network, LIBS.get(lib), reporter);
+        return new TapChangerAutomatonBuilder(network, modelConfig, reporter);
     }
 
     public static Set<String> getSupportedLibs() {
-        return LIBS.keySet();
+        return MODEL_CONFIGS.getSupportedLibs();
     }
 
     protected TapChangerAutomatonBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {

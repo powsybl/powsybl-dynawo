@@ -9,11 +9,11 @@ package com.powsybl.dynawaltz.models.loads;
 
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.builders.ModelConfig;
+import com.powsybl.dynawaltz.builders.ModelConfigsHandler;
 import com.powsybl.dynawaltz.builders.ModelConfigs;
 import com.powsybl.dynawaltz.builders.Reporters;
 import com.powsybl.iidm.network.Network;
 
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -22,14 +22,19 @@ import java.util.Set;
 public class LoadTwoTransformersBuilder extends AbstractLoadModelBuilder<LoadTwoTransformersBuilder> {
 
     private static final String CATEGORY = "loadsTwoTransformers";
-    private static final Map<String, ModelConfig> LIBS = ModelConfigs.getInstance().getModelConfigs(CATEGORY);
+    private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigsNew(CATEGORY);
 
     public static LoadTwoTransformersBuilder of(Network network) {
         return of(network, Reporter.NO_OP);
     }
 
     public static LoadTwoTransformersBuilder of(Network network, Reporter reporter) {
-        return new LoadTwoTransformersBuilder(network, LIBS.values().iterator().next(), reporter);
+        ModelConfig modelConfig = MODEL_CONFIGS.getDefaultModelConfig();
+        if (modelConfig == null) {
+            Reporters.reportDefaultLibNotFound(reporter, LoadTwoTransformersBuilder.class.getSimpleName());
+            return null;
+        }
+        return new LoadTwoTransformersBuilder(network, modelConfig, reporter);
     }
 
     public static LoadTwoTransformersBuilder of(Network network, String lib) {
@@ -37,16 +42,16 @@ public class LoadTwoTransformersBuilder extends AbstractLoadModelBuilder<LoadTwo
     }
 
     public static LoadTwoTransformersBuilder of(Network network, String lib, Reporter reporter) {
-        ModelConfig modelConfig = LIBS.get(lib);
+        ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(lib);
         if (modelConfig == null) {
             Reporters.reportLibNotFound(reporter, LoadTwoTransformersBuilder.class.getSimpleName(), lib);
             return null;
         }
-        return new LoadTwoTransformersBuilder(network, LIBS.get(lib), reporter);
+        return new LoadTwoTransformersBuilder(network, modelConfig, reporter);
     }
 
     public static Set<String> getSupportedLibs() {
-        return LIBS.keySet();
+        return MODEL_CONFIGS.getSupportedLibs();
     }
 
     protected LoadTwoTransformersBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {

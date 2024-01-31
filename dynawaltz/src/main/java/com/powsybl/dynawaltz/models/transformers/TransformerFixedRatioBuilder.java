@@ -10,13 +10,13 @@ package com.powsybl.dynawaltz.models.transformers;
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.builders.AbstractEquipmentModelBuilder;
 import com.powsybl.dynawaltz.builders.ModelConfig;
+import com.powsybl.dynawaltz.builders.ModelConfigsHandler;
 import com.powsybl.dynawaltz.builders.ModelConfigs;
 import com.powsybl.dynawaltz.builders.Reporters;
 import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.TwoWindingsTransformer;
 
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -25,14 +25,19 @@ import java.util.Set;
 public class TransformerFixedRatioBuilder extends AbstractEquipmentModelBuilder<TwoWindingsTransformer, TransformerFixedRatioBuilder> {
 
     private static final String CATEGORY = "transformers";
-    private static final Map<String, ModelConfig> LIBS = ModelConfigs.getInstance().getModelConfigs(CATEGORY);
+    private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigsNew(CATEGORY);
 
     public static TransformerFixedRatioBuilder of(Network network) {
         return of(network, Reporter.NO_OP);
     }
 
     public static TransformerFixedRatioBuilder of(Network network, Reporter reporter) {
-        return new TransformerFixedRatioBuilder(network, LIBS.values().iterator().next(), reporter);
+        ModelConfig modelConfig = MODEL_CONFIGS.getDefaultModelConfig();
+        if (modelConfig == null) {
+            Reporters.reportDefaultLibNotFound(reporter, TransformerFixedRatioBuilder.class.getSimpleName());
+            return null;
+        }
+        return new TransformerFixedRatioBuilder(network, modelConfig, reporter);
     }
 
     public static TransformerFixedRatioBuilder of(Network network, String lib) {
@@ -40,16 +45,16 @@ public class TransformerFixedRatioBuilder extends AbstractEquipmentModelBuilder<
     }
 
     public static TransformerFixedRatioBuilder of(Network network, String lib, Reporter reporter) {
-        ModelConfig modelConfig = LIBS.get(lib);
+        ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(lib);
         if (modelConfig == null) {
             Reporters.reportLibNotFound(reporter, TransformerFixedRatioBuilder.class.getSimpleName(), lib);
             return null;
         }
-        return new TransformerFixedRatioBuilder(network, LIBS.get(lib), reporter);
+        return new TransformerFixedRatioBuilder(network, modelConfig, reporter);
     }
 
     public static Set<String> getSupportedLibs() {
-        return LIBS.keySet();
+        return MODEL_CONFIGS.getSupportedLibs();
     }
 
     protected TransformerFixedRatioBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
