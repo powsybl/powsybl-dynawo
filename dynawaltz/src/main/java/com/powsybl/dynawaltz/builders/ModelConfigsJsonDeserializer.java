@@ -42,7 +42,7 @@ public class ModelConfigsJsonDeserializer extends StdDeserializer<Map<String, Mo
     }
 
     private ModelConfigs deserializeModelConfigs(JsonParser parser) throws IOException {
-        Map<String, ModelConfig> configs = new LinkedHashMap<>();
+        Map<String, ModelConfig> configs = new HashMap<>();
         boolean defaultAlreadySet = false;
         ModelConfig defaultModelConfig = null;
         while (parser.nextToken() != JsonToken.END_ARRAY) {

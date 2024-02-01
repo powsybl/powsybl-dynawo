@@ -10,7 +10,6 @@ package com.powsybl.dynawaltz.builders;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.google.auto.service.AutoService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +18,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -62,14 +60,14 @@ class ModelConfigLoaderTest {
         objectMapper.registerModule(module);
         Map<String, ModelConfigs> configs = objectMapper.readValue(json, new TypeReference<>() {
         });
-        Assertions.assertThat(configs.keySet()).containsExactly("synchronousGenerators");
+        Assertions.assertThat(configs.keySet()).containsExactlyInAnyOrder("synchronousGenerators");
         ModelConfigs synchroGens = configs.get("synchronousGenerators");
-        Assertions.assertThat(synchroGens.getSupportedLibs()).containsExactly(
+        Assertions.assertThat(synchroGens.getSupportedLibs()).containsExactlyInAnyOrder(
                 "WeccCs",
                 "WT4BWeccCurrentSource",
                 "WT4AWeccCurrentSource");
         ModelConfig defaultModel = new ModelConfig("WT4BWeccCurrentSource", null, null, List.of("SYNCHRONIZED", "CONTROLLABLE"), true);
-        Assertions.assertThat(synchroGens.getModelConfigMap().values()).containsExactly(
+        Assertions.assertThat(listModelConfigs(synchroGens)).containsExactlyInAnyOrder(
                 new ModelConfig("PhotovoltaicsWeccCurrentSource", "WeccCs", "WTG4A", List.of("SYNCHRONIZED"), false),
                 defaultModel,
                 new ModelConfig("WT4AWeccCurrentSource", null, null, Collections.emptyList(), false));
@@ -77,38 +75,25 @@ class ModelConfigLoaderTest {
     }
 
     @Test
-    void loadServices() {
-        ModelConfigsHandler handler = ModelConfigsHandler.getInstance();
-        Assertions.assertThat(handler.getModelConfigsNew("category1").getModelConfigMap().values()).containsExactly(
-                new ModelConfig("AA", null, null, Collections.emptyList(), true));
-        Assertions.assertThat(handler.getModelConfigsNew("phaseShiftersI").getModelConfigMap().values()).containsExactlyInAnyOrder(
-                new ModelConfig("PhaseShifterI", null, null, Collections.emptyList(), false),
-                new ModelConfig("PhaseShifterI2", null, null, Collections.emptyList(), true),
-                new ModelConfig("PhaseShifterI3", null, null, Collections.emptyList(), false));
+    void mergeModelConfigs() {
+        ModelConfig defaultModel = new ModelConfig("AA", null, null, Collections.emptyList(), true);
+        ModelConfigs modelConfigs1 = new ModelConfigs(new HashMap<>(Map.of(defaultModel.name(), defaultModel)), defaultModel);
+
+        ModelConfig mc1 = new ModelConfig("BB", null, null, Collections.emptyList(), true);
+        ModelConfig mc2 = new ModelConfig("CC", null, null, Collections.emptyList(), false);
+        ModelConfigs modelConfigs2 = new ModelConfigs(new HashMap<>(Map.of(mc1.name(), mc1, mc2.name(), mc2)), mc1);
+
+        modelConfigs1.addModelConfigs(modelConfigs2);
+        Assertions.assertThat(listModelConfigs(modelConfigs1)).containsExactlyInAnyOrder(
+                defaultModel,
+                new ModelConfig("BB", null, null, Collections.emptyList(), false),
+                mc2);
+
     }
 
-    @AutoService(ModelConfigLoader.class)
-    public static class ModelConfigLoader1 implements ModelConfigLoader {
-
-        @Override
-        public String getModelConfigFileName() {
-            return null;
-        }
-
-        @Override
-        public Map<String, ModelConfigs> loadModelConfigs() {
-            ModelConfig defaultModel = new ModelConfig("AA", null, null, Collections.emptyList(), true);
-            ModelConfigs cat1ModelConfigs = new ModelConfigs(new HashMap<>(Map.of(defaultModel.name(), defaultModel)), defaultModel);
-            ModelConfig ps1 = new ModelConfig("PhaseShifterI2", null, null, Collections.emptyList(), true);
-            ModelConfig ps2 = new ModelConfig("PhaseShifterI3", null, null, Collections.emptyList(), false);
-            ModelConfigs psModelConfigs = new ModelConfigs(new HashMap<>(Map.of(ps1.name(), ps1, ps2.name(), ps2)), ps1);
-            return Map.of("category1", cat1ModelConfigs,
-                    "phaseShiftersI", psModelConfigs);
-        }
-
-        @Override
-        public Stream<BuilderConfig> loadBuilderConfigs() {
-            return null;
-        }
+    private List<ModelConfig> listModelConfigs(ModelConfigs modelConfigs) {
+        return modelConfigs.getSupportedLibs().stream()
+                .map(modelConfigs::getModelConfig)
+                .toList();
     }
 }
