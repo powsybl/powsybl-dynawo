@@ -76,9 +76,8 @@ public class ModelConfigsJsonDeserializer extends StdDeserializer<Map<String, Mo
                 if (defaultAlreadySet) {
                     LOGGER.warn("{} can't be set as default, the default lib is already set", lib);
                     isDefaultLib = false;
-                } else {
-                    defaultAlreadySet = true;
                 }
+                defaultAlreadySet = true;
             }
             ModelConfig modelConfig = new ModelConfig(lib, alias, internalModelPrefix, properties, isDefaultLib);
             configs.put(modelConfig.name(), modelConfig);

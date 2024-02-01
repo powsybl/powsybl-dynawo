@@ -49,8 +49,8 @@ public class ModelConfigs {
         if (hasDefaultModelConfig() && modelConfigsToMerge.hasDefaultModelConfig()) {
             ModelConfig extraDefaultModelConfig = modelConfigsToMerge.getDefaultModelConfig();
             LOGGER.warn("Default model configs {} & {} found, the first one will be kept",
-                    getDefaultModelConfig().name(),
-                    extraDefaultModelConfig.name());
+                    defaultModelConfig.lib(),
+                    extraDefaultModelConfig.lib());
             modelConfigsToMerge.modelConfigMap.replace(extraDefaultModelConfig.name(), ModelConfig.copyOf(extraDefaultModelConfig, false));
         }
         modelConfigMap.putAll(modelConfigsToMerge.modelConfigMap);
