@@ -33,6 +33,11 @@ public abstract class AbstractEquipmentModelBuilder<T extends Identifiable<?>, R
         return self();
     }
 
+    public R equipment(T equipment) {
+        builderEquipment.addEquipment(equipment, this::checkEquipment);
+        return self();
+    }
+
     public R dynamicModelId(String dynamicModelId) {
         this.dynamicModelId = dynamicModelId;
         return self();
@@ -57,6 +62,10 @@ public abstract class AbstractEquipmentModelBuilder<T extends Identifiable<?>, R
     }
 
     protected abstract T findEquipment(String staticId);
+
+    protected boolean checkEquipment(T equipment) {
+        return network == equipment.getNetwork();
+    }
 
     public T getEquipment() {
         return builderEquipment.getEquipment();
