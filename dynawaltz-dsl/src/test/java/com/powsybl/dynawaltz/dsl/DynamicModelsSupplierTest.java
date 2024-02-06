@@ -278,6 +278,14 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                                'uMeasurements' field value 'GEN' not found for equipment type(s) LOAD/TWO_WINDINGS_TRANSFORMER
                                'transformers' list is empty
                                Model ZAB cannot be instantiated
+                        """),
+                Arguments.of("/warnings/hvdcVscWrongStaticType.groovy", HvdcTestNetwork.createLcc(),
+                        """
+                        + DSL tests
+                          + Groovy Dynamic Models Supplier
+                            + DSL model builder for HvdcVSC
+                               'staticId' field value 'L' not found for equipment type(s) VSC HVDC_LINE
+                               Model BBM_HVDC cannot be instantiated
                         """)
                 );
     }
