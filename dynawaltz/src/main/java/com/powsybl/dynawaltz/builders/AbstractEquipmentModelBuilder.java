@@ -64,7 +64,7 @@ public abstract class AbstractEquipmentModelBuilder<T extends Identifiable<?>, R
     protected abstract T findEquipment(String staticId);
 
     protected boolean checkEquipment(T equipment) {
-        return network == equipment.getNetwork();
+        return Objects.equals(network, equipment.getNetwork);
     }
 
     public T getEquipment() {
