@@ -104,7 +104,7 @@ public class TapChangerBlockingAutomatonBuilder extends AbstractAutomatonModelBu
 
     @Override
     public TapChangerBlockingAutomaton build() {
-        return isInstantiable() ? new TapChangerBlockingAutomaton(dynamicModelId, parameterSetId, tapChangerEquipments.getEquipments(), tapChangerEquipments.getMissingEquipmentId(), uMeasurementPoints.getEquipments(), getLib()) : null;
+        return isInstantiable() ? new TapChangerBlockingAutomaton(dynamicModelId, parameterSetId, tapChangerEquipments.getEquipments(), tapChangerEquipments.getMissingEquipmentIds(), uMeasurementPoints.getEquipments(), getLib()) : null;
     }
 
     @Override

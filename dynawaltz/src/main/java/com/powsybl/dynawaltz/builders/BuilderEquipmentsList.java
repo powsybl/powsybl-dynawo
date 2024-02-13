@@ -23,8 +23,9 @@ public class BuilderEquipmentsList<T extends Identifiable<?>> {
 
     private final String equipmentType;
     private final String fieldName;
+    // when set to true equipment ids not found in the network are seen as dynamic ids for automatons and reported as such
     private final boolean missingIdsHasDynamicIds;
-    protected List<String> missingEquipmentId = new ArrayList<>();
+    protected List<String> missingEquipmentIds = new ArrayList<>();
     protected final List<T> equipments = new ArrayList<>();
 
     public BuilderEquipmentsList(IdentifiableType identifiableType, String fieldName) {
@@ -51,25 +52,25 @@ public class BuilderEquipmentsList<T extends Identifiable<?>> {
             if (equipment != null) {
                 equipments.add(equipment);
             } else {
-                missingEquipmentId.add(id);
+                missingEquipmentIds.add(id);
             }
         });
     }
 
     public boolean checkEquipmentData(Reporter reporter) {
         boolean emptyList = equipments.isEmpty();
-        if (missingEquipmentId.isEmpty() && emptyList) {
+        if (missingEquipmentIds.isEmpty() && emptyList) {
             Reporters.reportFieldNotSet(reporter, fieldName);
             return false;
         } else if (!missingIdsHasDynamicIds) {
-            missingEquipmentId.forEach(missingId ->
+            missingEquipmentIds.forEach(missingId ->
                     Reporters.reportStaticIdUnknown(reporter, fieldName, missingId, equipmentType));
             if (emptyList) {
                 Reporters.reportEmptyList(reporter, fieldName);
             }
             return !emptyList;
         } else {
-            missingEquipmentId.forEach(missingId ->
+            missingEquipmentIds.forEach(missingId ->
                     Reporters.reportUnknownStaticIdHandling(reporter, fieldName, missingId, equipmentType));
             return true;
         }
@@ -79,7 +80,7 @@ public class BuilderEquipmentsList<T extends Identifiable<?>> {
         return equipments;
     }
 
-    public List<String> getMissingEquipmentId() {
-        return missingEquipmentId;
+    public List<String> getMissingEquipmentIds() {
+        return missingEquipmentIds;
     }
 }

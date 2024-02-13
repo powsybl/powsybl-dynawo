@@ -40,6 +40,6 @@ public class BuilderIdListEquipmentList<T extends Identifiable<?>> extends Build
                 .filter(Objects::nonNull)
                 .findFirst()
                 .ifPresentOrElse(equipments::add,
-                    () -> missingEquipmentId.add(staticIds.toString()));
+                    () -> missingEquipmentIds.add(staticIds.toString()));
     }
 }
