@@ -12,6 +12,8 @@ import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Network;
 
+import java.util.Objects;
+
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
@@ -64,7 +66,7 @@ public abstract class AbstractEquipmentModelBuilder<T extends Identifiable<?>, R
     protected abstract T findEquipment(String staticId);
 
     protected boolean checkEquipment(T equipment) {
-        return Objects.equals(network, equipment.getNetwork);
+        return Objects.equals(network, equipment.getNetwork());
     }
 
     public T getEquipment() {
