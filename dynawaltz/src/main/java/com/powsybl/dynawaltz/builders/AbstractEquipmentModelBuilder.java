@@ -30,6 +30,12 @@ public abstract class AbstractEquipmentModelBuilder<T extends Identifiable<?>, R
         this.builderEquipment = new BuilderEquipment<>(equipmentType);
     }
 
+    protected AbstractEquipmentModelBuilder(Network network, ModelConfig modelConfig, String equipmentType, Reporter reporter) {
+        super(network, reporter);
+        this.modelConfig = modelConfig;
+        this.builderEquipment = new BuilderEquipment<>(equipmentType);
+    }
+
     public R staticId(String staticId) {
         builderEquipment.addEquipment(staticId, this::findEquipment);
         return self();
