@@ -40,6 +40,7 @@ class DynaWaltzDynamicModelGroovyExtension implements DynamicModelGroovyExtensio
         builderConfigs.stream().flatMap { it -> it.libs}.toList() as List<String>
     }
 
+
     @Override
     void load(Binding binding, Consumer<DynamicModel> consumer, Reporter reporter) {
         builderConfigs.forEach {conf ->

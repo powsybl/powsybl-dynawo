@@ -9,7 +9,7 @@ package com.powsybl.dynawaltz.builders;
 
 import com.powsybl.iidm.network.Identifiable;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Objects;
 import java.util.function.Function;
 
@@ -22,19 +22,13 @@ public class BuilderIdListEquipmentList<T extends Identifiable<?>> extends Build
         super(equipmentType, fieldName);
     }
 
-    public void addEquipments(List<String>[] staticIdsArray, Function<String, T> equipmentSupplier) {
-        for (List<String> staticIds : staticIdsArray) {
+    public void addEquipments(Collection<String>[] staticIdsArray, Function<String, T> equipmentSupplier) {
+        for (Collection<String> staticIds : staticIdsArray) {
             addEquipment(staticIds, equipmentSupplier);
         }
     }
 
-    public void addEquipments(List<List<String>> staticIdsList, Function<String, T> equipmentSupplier) {
-        for (List<String> staticIds : staticIdsList) {
-            addEquipment(staticIds, equipmentSupplier);
-        }
-    }
-
-    private void addEquipment(List<String> staticIds, Function<String, T> equipmentSupplier) {
+    private void addEquipment(Collection<String> staticIds, Function<String, T> equipmentSupplier) {
         staticIds.stream()
                 .map(equipmentSupplier)
                 .filter(Objects::nonNull)
