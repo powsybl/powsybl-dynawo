@@ -324,12 +324,12 @@
       ]
     }
   ],
-  "clas": [
+  "overloadManagements": [
     {
       "lib": "CurrentLimitAutomaton"
     }
   ],
-  "clasTwoLevels": [
+  "twoLevelsOverloadManagements": [
     {
       "lib": "CurrentLimitAutomatonTwoLevels"
     }

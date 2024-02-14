@@ -4,7 +4,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package com.powsybl.dynawaltz.models.automatons.currentlimits;
+package com.powsybl.dynawaltz.models.automatons.overloadmanagments;
 
 import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawaltz.models.VarConnection;
@@ -22,7 +22,7 @@ import java.util.Objects;
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class CurrentLimitAutomaton extends AbstractPureDynamicBlackBoxModel {
+public class DynamicOverloadManagementSystem extends AbstractPureDynamicBlackBoxModel {
 
     protected static final String MEASURE_SUFFIX = "Measure";
     protected static final String CONTROL_SUFFIX = "Control";
@@ -31,7 +31,7 @@ public class CurrentLimitAutomaton extends AbstractPureDynamicBlackBoxModel {
     protected final TwoSides measuredSide;
     protected final Branch<?> controlledBranch;
 
-    protected CurrentLimitAutomaton(String dynamicModelId, String parameterSetId, Branch<?> measuredBranch, TwoSides measuredSide, Branch<?> controlledBranch, String lib) {
+    protected DynamicOverloadManagementSystem(String dynamicModelId, String parameterSetId, Branch<?> measuredBranch, TwoSides measuredSide, Branch<?> controlledBranch, String lib) {
         super(dynamicModelId, parameterSetId, lib);
         this.measuredBranch = Objects.requireNonNull(measuredBranch);
         this.measuredSide = Objects.requireNonNull(measuredSide);

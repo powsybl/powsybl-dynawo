@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.models.automatons.currentlimits;
+package com.powsybl.dynawaltz.models.automatons.overloadmanagments;
 
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.automatons.BranchModel;
@@ -21,7 +21,7 @@ import java.util.Objects;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class CurrentLimitTwoLevelsAutomaton extends CurrentLimitAutomaton {
+public class DynamicTwoLevelsOverloadManagementSystem extends DynamicOverloadManagementSystem {
 
     protected static final String FIRST_MEASURE_SUFFIX = MEASURE_SUFFIX + "1";
     protected static final String SECOND_MEASURE_SUFFIX = MEASURE_SUFFIX + "2";
@@ -29,7 +29,7 @@ public class CurrentLimitTwoLevelsAutomaton extends CurrentLimitAutomaton {
     private final Branch<?> secondMeasuredBranch;
     private final TwoSides secondMeasuredSide;
 
-    protected CurrentLimitTwoLevelsAutomaton(String dynamicModelId, String parameterSetId, Branch<?> measuredBranch, TwoSides measuredSide, Branch<?> secondMeasuredBranch, TwoSides secondMeasuredSide, Branch<?> controlledBranch, String lib) {
+    protected DynamicTwoLevelsOverloadManagementSystem(String dynamicModelId, String parameterSetId, Branch<?> measuredBranch, TwoSides measuredSide, Branch<?> secondMeasuredBranch, TwoSides secondMeasuredSide, Branch<?> controlledBranch, String lib) {
         super(dynamicModelId, parameterSetId, measuredBranch, measuredSide, controlledBranch, lib);
         this.secondMeasuredBranch = Objects.requireNonNull(secondMeasuredBranch);
         this.secondMeasuredSide = Objects.requireNonNull(secondMeasuredSide);

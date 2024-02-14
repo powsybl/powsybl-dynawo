@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 /**
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  */
-class Ieee14CurrentLimitAutomatonTest extends AbstractIeeeTest {
+class Ieee14DynamicOverloadManagementSystemTest extends AbstractIeeeTest {
 
     @BeforeEach
     void setup() throws IOException {

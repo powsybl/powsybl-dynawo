@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.models.automatons.currentlimits;
+package com.powsybl.dynawaltz.models.automatons.overloadmanagments;
 
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.builders.BuilderEquipment;
@@ -22,61 +22,61 @@ import java.util.Set;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class CurrentLimitTwoLevelsAutomatonBuilder extends AbstractCurrentLimitAutomatonBuilder<CurrentLimitTwoLevelsAutomatonBuilder> {
+public class DynamicTwoLevelsOverloadManagementSystemBuilder extends AbstractOverloadManagementSystemBuilder<DynamicTwoLevelsOverloadManagementSystemBuilder> {
 
-    private static final String CATEGORY = "clasTwoLevels";
+    private static final String CATEGORY = "twoLevelsOverloadManagements";
     private static final Map<String, ModelConfig> LIBS = ModelConfigs.getInstance().getModelConfigs(CATEGORY);
 
     protected final BuilderEquipment<Branch<?>> iMeasurement2;
     protected TwoSides iMeasurement2Side;
 
-    public static CurrentLimitTwoLevelsAutomatonBuilder of(Network network) {
+    public static DynamicTwoLevelsOverloadManagementSystemBuilder of(Network network) {
         return of(network, Reporter.NO_OP);
     }
 
-    public static CurrentLimitTwoLevelsAutomatonBuilder of(Network network, Reporter reporter) {
-        return new CurrentLimitTwoLevelsAutomatonBuilder(network, LIBS.values().iterator().next(), reporter);
+    public static DynamicTwoLevelsOverloadManagementSystemBuilder of(Network network, Reporter reporter) {
+        return new DynamicTwoLevelsOverloadManagementSystemBuilder(network, LIBS.values().iterator().next(), reporter);
     }
 
-    public static CurrentLimitTwoLevelsAutomatonBuilder of(Network network, String lib) {
+    public static DynamicTwoLevelsOverloadManagementSystemBuilder of(Network network, String lib) {
         return of(network, lib, Reporter.NO_OP);
     }
 
-    public static CurrentLimitTwoLevelsAutomatonBuilder of(Network network, String lib, Reporter reporter) {
+    public static DynamicTwoLevelsOverloadManagementSystemBuilder of(Network network, String lib, Reporter reporter) {
         ModelConfig modelConfig = LIBS.get(lib);
         if (modelConfig == null) {
-            Reporters.reportLibNotFound(reporter, CurrentLimitTwoLevelsAutomatonBuilder.class.getSimpleName(), lib);
+            Reporters.reportLibNotFound(reporter, DynamicTwoLevelsOverloadManagementSystemBuilder.class.getSimpleName(), lib);
             return null;
         }
-        return new CurrentLimitTwoLevelsAutomatonBuilder(network, LIBS.get(lib), reporter);
+        return new DynamicTwoLevelsOverloadManagementSystemBuilder(network, LIBS.get(lib), reporter);
     }
 
     public static Set<String> getSupportedLibs() {
         return LIBS.keySet();
     }
 
-    protected CurrentLimitTwoLevelsAutomatonBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
+    protected DynamicTwoLevelsOverloadManagementSystemBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
         super(network, modelConfig, reporter, new BuilderEquipment<>(BRANCH_TYPE, "iMeasurement1"),
                 new BuilderEquipment<>(BRANCH_TYPE, "controlledBranch1"));
         iMeasurement2 = new BuilderEquipment<>(BRANCH_TYPE, "iMeasurement2");
     }
 
-    public CurrentLimitTwoLevelsAutomatonBuilder iMeasurement1(String staticId) {
+    public DynamicTwoLevelsOverloadManagementSystemBuilder iMeasurement1(String staticId) {
         iMeasurement.addEquipment(staticId, network::getBranch);
         return self();
     }
 
-    public CurrentLimitTwoLevelsAutomatonBuilder iMeasurement1Side(TwoSides side) {
+    public DynamicTwoLevelsOverloadManagementSystemBuilder iMeasurement1Side(TwoSides side) {
         this.iMeasurementSide = side;
         return self();
     }
 
-    public CurrentLimitTwoLevelsAutomatonBuilder iMeasurement2(String staticId) {
+    public DynamicTwoLevelsOverloadManagementSystemBuilder iMeasurement2(String staticId) {
         iMeasurement2.addEquipment(staticId, network::getBranch);
         return self();
     }
 
-    public CurrentLimitTwoLevelsAutomatonBuilder iMeasurement2Side(TwoSides side) {
+    public DynamicTwoLevelsOverloadManagementSystemBuilder iMeasurement2Side(TwoSides side) {
         this.iMeasurement2Side = side;
         return self();
     }
@@ -92,15 +92,15 @@ public class CurrentLimitTwoLevelsAutomatonBuilder extends AbstractCurrentLimitA
     }
 
     @Override
-    public CurrentLimitTwoLevelsAutomaton build() {
-        return isInstantiable() ? new CurrentLimitTwoLevelsAutomaton(dynamicModelId, parameterSetId,
+    public DynamicTwoLevelsOverloadManagementSystem build() {
+        return isInstantiable() ? new DynamicTwoLevelsOverloadManagementSystem(dynamicModelId, parameterSetId,
                 iMeasurement.getEquipment(), iMeasurementSide, iMeasurement2.getEquipment(), iMeasurement2Side,
                 controlledEquipment.getEquipment(), getLib())
                 : null;
     }
 
     @Override
-    protected CurrentLimitTwoLevelsAutomatonBuilder self() {
+    protected DynamicTwoLevelsOverloadManagementSystemBuilder self() {
         return this;
     }
 }

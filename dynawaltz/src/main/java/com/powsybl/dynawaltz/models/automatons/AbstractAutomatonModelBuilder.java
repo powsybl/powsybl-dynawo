@@ -46,7 +46,7 @@ public abstract class AbstractAutomatonModelBuilder<T extends AbstractAutomatonM
             isInstantiable = false;
         }
         if (parameterSetId == null) {
-            Reporters.reportFieldNotSet(reporter, "dynamicModelId");
+            Reporters.reportFieldNotSet(reporter, "parameterSetId");
             isInstantiable = false;
         }
     }

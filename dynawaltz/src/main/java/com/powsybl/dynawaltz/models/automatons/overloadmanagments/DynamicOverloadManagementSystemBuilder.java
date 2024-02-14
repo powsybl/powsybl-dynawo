@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.models.automatons.currentlimits;
+package com.powsybl.dynawaltz.models.automatons.overloadmanagments;
 
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.builders.BuilderEquipment;
@@ -21,60 +21,60 @@ import java.util.Set;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class CurrentLimitAutomatonBuilder extends AbstractCurrentLimitAutomatonBuilder<CurrentLimitAutomatonBuilder> {
+public class DynamicOverloadManagementSystemBuilder extends AbstractOverloadManagementSystemBuilder<DynamicOverloadManagementSystemBuilder> {
 
-    private static final String CATEGORY = "clas";
+    private static final String CATEGORY = "overloadManagements";
     private static final Map<String, ModelConfig> LIBS = ModelConfigs.getInstance().getModelConfigs(CATEGORY);
 
-    public static CurrentLimitAutomatonBuilder of(Network network) {
+    public static DynamicOverloadManagementSystemBuilder of(Network network) {
         return of(network, Reporter.NO_OP);
     }
 
-    public static CurrentLimitAutomatonBuilder of(Network network, Reporter reporter) {
-        return new CurrentLimitAutomatonBuilder(network, LIBS.values().iterator().next(), reporter);
+    public static DynamicOverloadManagementSystemBuilder of(Network network, Reporter reporter) {
+        return new DynamicOverloadManagementSystemBuilder(network, LIBS.values().iterator().next(), reporter);
     }
 
-    public static CurrentLimitAutomatonBuilder of(Network network, String lib) {
+    public static DynamicOverloadManagementSystemBuilder of(Network network, String lib) {
         return of(network, lib, Reporter.NO_OP);
     }
 
-    public static CurrentLimitAutomatonBuilder of(Network network, String lib, Reporter reporter) {
+    public static DynamicOverloadManagementSystemBuilder of(Network network, String lib, Reporter reporter) {
         ModelConfig modelConfig = LIBS.get(lib);
         if (modelConfig == null) {
-            Reporters.reportLibNotFound(reporter, CurrentLimitAutomatonBuilder.class.getSimpleName(), lib);
+            Reporters.reportLibNotFound(reporter, DynamicOverloadManagementSystemBuilder.class.getSimpleName(), lib);
             return null;
         }
-        return new CurrentLimitAutomatonBuilder(network, LIBS.get(lib), reporter);
+        return new DynamicOverloadManagementSystemBuilder(network, LIBS.get(lib), reporter);
     }
 
     public static Set<String> getSupportedLibs() {
         return LIBS.keySet();
     }
 
-    protected CurrentLimitAutomatonBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
+    protected DynamicOverloadManagementSystemBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
         super(network, modelConfig, reporter, new BuilderEquipment<>(BRANCH_TYPE, "iMeasurement"),
             new BuilderEquipment<>(BRANCH_TYPE, "controlledBranch"));
     }
 
-    public CurrentLimitAutomatonBuilder iMeasurement(String staticId) {
+    public DynamicOverloadManagementSystemBuilder iMeasurement(String staticId) {
         iMeasurement.addEquipment(staticId, network::getBranch);
         return self();
     }
 
-    public CurrentLimitAutomatonBuilder iMeasurementSide(TwoSides side) {
+    public DynamicOverloadManagementSystemBuilder iMeasurementSide(TwoSides side) {
         this.iMeasurementSide = side;
         return self();
     }
 
     @Override
-    public CurrentLimitAutomaton build() {
-        return isInstantiable() ? new CurrentLimitAutomaton(dynamicModelId, parameterSetId,
+    public DynamicOverloadManagementSystem build() {
+        return isInstantiable() ? new DynamicOverloadManagementSystem(dynamicModelId, parameterSetId,
                 iMeasurement.getEquipment(), iMeasurementSide, controlledEquipment.getEquipment(), getLib())
                 : null;
     }
 
     @Override
-    protected CurrentLimitAutomatonBuilder self() {
+    protected DynamicOverloadManagementSystemBuilder self() {
         return this;
     }
 }

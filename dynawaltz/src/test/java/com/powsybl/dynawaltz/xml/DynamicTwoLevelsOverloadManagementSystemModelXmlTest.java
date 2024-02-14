@@ -7,7 +7,7 @@
  */
 package com.powsybl.dynawaltz.xml;
 
-import com.powsybl.dynawaltz.models.automatons.currentlimits.CurrentLimitTwoLevelsAutomatonBuilder;
+import com.powsybl.dynawaltz.models.automatons.overloadmanagments.DynamicTwoLevelsOverloadManagementSystemBuilder;
 import com.powsybl.iidm.network.TwoSides;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.Test;
@@ -19,7 +19,7 @@ import java.io.IOException;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-class CurrentLimitAutomatonBuilderLimitTwoLevelsModelXmlTest extends AbstractDynamicModelXmlTest {
+class DynamicTwoLevelsOverloadManagementSystemModelXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void setupNetwork() {
@@ -28,7 +28,7 @@ class CurrentLimitAutomatonBuilderLimitTwoLevelsModelXmlTest extends AbstractDyn
 
     @Override
     protected void addDynamicModels() {
-        dynamicModels.add(CurrentLimitTwoLevelsAutomatonBuilder.of(network, "CurrentLimitAutomatonTwoLevels")
+        dynamicModels.add(DynamicTwoLevelsOverloadManagementSystemBuilder.of(network, "CurrentLimitAutomatonTwoLevels")
                 .dynamicModelId("BBM_CLA_TWO_LEVELS")
                 .parameterSetId("cla")
                 .controlledBranch("NGEN_NHV1")
