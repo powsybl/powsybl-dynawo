@@ -214,7 +214,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                         + DSL tests
                           + Groovy Dynamic Models Supplier
                             + DSL model builder for CurrentLimitAutomaton
-                               'iMeasurement' field value 'NGEN' not found for equipment type(s) Quadripole
+                               'iMeasurement' field value 'NGEN' not found for equipment type(s) BRANCH
                                Model CLA_NGEN cannot be instantiated
                         """),
                 Arguments.of("/warnings/claMissingMeasurementSide.groovy", EurostagTutorialExample1Factory.create(),
@@ -230,7 +230,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                         + DSL tests
                           + Groovy Dynamic Models Supplier
                             + DSL model builder for CurrentLimitAutomaton
-                               'controlledQuadripole' field value 'GEN' not found for equipment type(s) Quadripole
+                               'controlledBranch' field value 'GEN' not found for equipment type(s) BRANCH
                                Model CLA_NGEN cannot be instantiated
                         """),
                 Arguments.of("/warnings/cla2MissingMeasurement2.groovy", EurostagTutorialExample1Factory.create(),
@@ -238,7 +238,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                         + DSL tests
                           + Groovy Dynamic Models Supplier
                             + DSL model builder for CurrentLimitAutomatonTwoLevels
-                               'iMeasurement2' field value 'NGEN' not found for equipment type(s) Quadripole
+                               'iMeasurement2' field value 'NGEN' not found for equipment type(s) BRANCH
                                Model CLA_NGEN cannot be instantiated
                         """),
                 Arguments.of("/warnings/cla2MissingMeasurementSide2.groovy", EurostagTutorialExample1Factory.create(),

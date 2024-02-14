@@ -56,9 +56,9 @@ public class CurrentLimitTwoLevelsAutomatonBuilder extends AbstractCurrentLimitA
     }
 
     protected CurrentLimitTwoLevelsAutomatonBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
-        super(network, modelConfig, reporter, new BuilderEquipment<>(QUADRIPOLE_TYPE, "iMeasurement1"),
-                new BuilderEquipment<>(QUADRIPOLE_TYPE, "controlledQuadripole1"));
-        iMeasurement2 = new BuilderEquipment<>(QUADRIPOLE_TYPE, "iMeasurement2");
+        super(network, modelConfig, reporter, new BuilderEquipment<>(BRANCH_TYPE, "iMeasurement1"),
+                new BuilderEquipment<>(BRANCH_TYPE, "controlledBranch1"));
+        iMeasurement2 = new BuilderEquipment<>(BRANCH_TYPE, "iMeasurement2");
     }
 
     public CurrentLimitTwoLevelsAutomatonBuilder iMeasurement1(String staticId) {

@@ -18,7 +18,7 @@ import java.io.IOException;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-class DisconnectQuadripoleEventXmlTest extends AbstractDynamicModelXmlTest {
+class DisconnectBranchEventXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void setupNetwork() {
@@ -42,7 +42,7 @@ class DisconnectQuadripoleEventXmlTest extends AbstractDynamicModelXmlTest {
     void writeDisconnectModel() throws SAXException, IOException {
         DydXml.write(tmpDir, context);
         ParametersXml.write(tmpDir, context);
-        validate("dyd.xsd", "disconnect_quadripole_dyd.xml", tmpDir.resolve(DynaWaltzConstants.DYD_FILENAME));
-        validate("parameters.xsd", "disconnect_quadripole_par.xml", tmpDir.resolve(context.getSimulationParFile()));
+        validate("dyd.xsd", "disconnect_branch_dyd.xml", tmpDir.resolve(DynaWaltzConstants.DYD_FILENAME));
+        validate("parameters.xsd", "disconnect_branch_par.xml", tmpDir.resolve(context.getSimulationParFile()));
     }
 }

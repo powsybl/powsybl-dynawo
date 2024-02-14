@@ -8,7 +8,7 @@ package com.powsybl.dynawaltz.models.automatons.currentlimits;
 
 import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawaltz.models.VarConnection;
-import com.powsybl.dynawaltz.models.automatons.QuadripoleModel;
+import com.powsybl.dynawaltz.models.automatons.BranchModel;
 import com.powsybl.dynawaltz.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawaltz.models.utils.SideUtils;
 import com.powsybl.iidm.network.Branch;
@@ -27,31 +27,31 @@ public class CurrentLimitAutomaton extends AbstractPureDynamicBlackBoxModel {
     protected static final String MEASURE_SUFFIX = "Measure";
     protected static final String CONTROL_SUFFIX = "Control";
 
-    protected final Branch<?> measuredQuadripole;
+    protected final Branch<?> measuredBranch;
     protected final TwoSides measuredSide;
-    protected final Branch<?> controlledQuadripole;
+    protected final Branch<?> controlledBranch;
 
-    protected CurrentLimitAutomaton(String dynamicModelId, String parameterSetId, Branch<?> measuredQuadripole, TwoSides measuredSide, Branch<?> controlledQuadripole, String lib) {
+    protected CurrentLimitAutomaton(String dynamicModelId, String parameterSetId, Branch<?> measuredBranch, TwoSides measuredSide, Branch<?> controlledBranch, String lib) {
         super(dynamicModelId, parameterSetId, lib);
-        this.measuredQuadripole = Objects.requireNonNull(measuredQuadripole);
+        this.measuredBranch = Objects.requireNonNull(measuredBranch);
         this.measuredSide = Objects.requireNonNull(measuredSide);
-        this.controlledQuadripole = Objects.requireNonNull(controlledQuadripole);
+        this.controlledBranch = Objects.requireNonNull(controlledBranch);
     }
 
     @Override
     public void createMacroConnections(MacroConnectionsAdder adder) {
-        adder.createMacroConnections(this, measuredQuadripole, QuadripoleModel.class, this::getVarConnectionsWithMeasuredQuadripole, MEASURE_SUFFIX + SideUtils.getSideSuffix(measuredSide));
-        adder.createMacroConnections(this, controlledQuadripole, QuadripoleModel.class, this::getVarConnectionsWithControlledQuadripole, CONTROL_SUFFIX);
+        adder.createMacroConnections(this, measuredBranch, BranchModel.class, this::getVarConnectionsWithMeasuredBranch, MEASURE_SUFFIX + SideUtils.getSideSuffix(measuredSide));
+        adder.createMacroConnections(this, controlledBranch, BranchModel.class, this::getVarConnectionsWithControlledBranch, CONTROL_SUFFIX);
     }
 
-    private List<VarConnection> getVarConnectionsWithMeasuredQuadripole(QuadripoleModel connected) {
+    private List<VarConnection> getVarConnectionsWithMeasuredBranch(BranchModel connected) {
         return Arrays.asList(
                 new VarConnection("currentLimitAutomaton_IMonitored", connected.getIVarName(measuredSide)),
                 new VarConnection("currentLimitAutomaton_AutomatonExists", connected.getDeactivateCurrentLimitsVarName())
         );
     }
 
-    protected List<VarConnection> getVarConnectionsWithControlledQuadripole(QuadripoleModel connected) {
+    protected List<VarConnection> getVarConnectionsWithControlledBranch(BranchModel connected) {
         return List.of(new VarConnection("currentLimitAutomaton_order", connected.getStateVarName()));
     }
 }

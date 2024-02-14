@@ -6,12 +6,12 @@
  */
 package com.powsybl.dynawaltz.models.lines;
 
-import com.powsybl.dynawaltz.models.automatons.QuadripoleModel;
+import com.powsybl.dynawaltz.models.automatons.BranchModel;
 
 /**
  * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
  */
-public interface LineModel extends QuadripoleModel {
+public interface LineModel extends BranchModel {
 
     String getStateValueVarName();
 }

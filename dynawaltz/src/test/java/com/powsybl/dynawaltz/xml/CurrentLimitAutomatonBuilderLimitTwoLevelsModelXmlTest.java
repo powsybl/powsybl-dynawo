@@ -31,7 +31,7 @@ class CurrentLimitAutomatonBuilderLimitTwoLevelsModelXmlTest extends AbstractDyn
         dynamicModels.add(CurrentLimitTwoLevelsAutomatonBuilder.of(network, "CurrentLimitAutomatonTwoLevels")
                 .dynamicModelId("BBM_CLA_TWO_LEVELS")
                 .parameterSetId("cla")
-                .controlledQuadripole("NGEN_NHV1")
+                .controlledBranch("NGEN_NHV1")
                 .iMeasurement1("NHV1_NHV2_1")
                 .iMeasurement1Side(TwoSides.TWO)
                 .iMeasurement2("NHV1_NHV2_2")

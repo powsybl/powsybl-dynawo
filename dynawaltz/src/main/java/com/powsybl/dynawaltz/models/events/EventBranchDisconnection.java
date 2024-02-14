@@ -7,7 +7,7 @@
 package com.powsybl.dynawaltz.models.events;
 
 import com.powsybl.dynawaltz.models.VarConnection;
-import com.powsybl.dynawaltz.models.automatons.QuadripoleModel;
+import com.powsybl.dynawaltz.models.automatons.BranchModel;
 import com.powsybl.dynawaltz.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawaltz.parameters.ParametersSet;
 import com.powsybl.iidm.network.Branch;
@@ -22,22 +22,22 @@ import static com.powsybl.dynawaltz.parameters.ParameterType.DOUBLE;
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class EventQuadripoleDisconnection extends AbstractEvent {
+public class EventBranchDisconnection extends AbstractEvent {
 
     private final TwoSides disconnectSide;
 
-    protected EventQuadripoleDisconnection(String eventId, Branch<?> equipment, double startTime, TwoSides disconnectSide) {
+    protected EventBranchDisconnection(String eventId, Branch<?> equipment, double startTime, TwoSides disconnectSide) {
         super(eventId, equipment, startTime, "EventQuadripoleDisconnection");
         this.disconnectSide = disconnectSide;
     }
 
-    private List<VarConnection> getVarConnectionsWith(QuadripoleModel connected) {
+    private List<VarConnection> getVarConnectionsWith(BranchModel connected) {
         return List.of(new VarConnection("event_state1_value", connected.getStateValueVarName()));
     }
 
     @Override
     public void createMacroConnections(MacroConnectionsAdder adder) {
-        adder.createMacroConnections(this, getEquipment(), QuadripoleModel.class, this::getVarConnectionsWith);
+        adder.createMacroConnections(this, getEquipment(), BranchModel.class, this::getVarConnectionsWith);
     }
 
     @Override
@@ -45,5 +45,10 @@ public class EventQuadripoleDisconnection extends AbstractEvent {
         paramSet.addParameter("event_tEvent", DOUBLE, Double.toString(getStartTime()));
         paramSet.addParameter("event_disconnectOrigin", BOOL, Boolean.toString(disconnectSide == null || TwoSides.ONE == disconnectSide));
         paramSet.addParameter("event_disconnectExtremity", BOOL, Boolean.toString(disconnectSide == null || TwoSides.TWO == disconnectSide));
+    }
+
+    @Override
+    public String getName() {
+        return "EventBranchDisconnection";
     }
 }

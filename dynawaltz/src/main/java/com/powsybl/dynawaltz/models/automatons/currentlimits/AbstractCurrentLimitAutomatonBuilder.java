@@ -21,7 +21,7 @@ import com.powsybl.iidm.network.TwoSides;
  */
 public abstract class AbstractCurrentLimitAutomatonBuilder<T extends AbstractAutomatonModelBuilder<T>> extends AbstractAutomatonModelBuilder<T> {
 
-    protected static final String QUADRIPOLE_TYPE = "Quadripole";
+    protected static final String BRANCH_TYPE = "BRANCH";
 
     protected final BuilderEquipment<Branch<?>> iMeasurement;
     protected TwoSides iMeasurementSide;
@@ -33,7 +33,7 @@ public abstract class AbstractCurrentLimitAutomatonBuilder<T extends AbstractAut
         this.controlledEquipment = controlledEquipment;
     }
 
-    public T controlledQuadripole(String staticId) {
+    public T controlledBranch(String staticId) {
         controlledEquipment.addEquipment(staticId, network::getBranch);
         return self();
     }

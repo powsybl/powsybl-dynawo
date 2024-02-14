@@ -21,11 +21,11 @@ public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identif
 
     public static final String TAG = "Disconnect";
     private static final EnumSet<IdentifiableType> CONNECTABLE_INJECTIONS = EnumSet.of(IdentifiableType.GENERATOR, IdentifiableType.LOAD, IdentifiableType.STATIC_VAR_COMPENSATOR, IdentifiableType.SHUNT_COMPENSATOR);
-    private static final EnumSet<IdentifiableType> CONNECTABLE_QUADRIPOLES = EnumSet.of(IdentifiableType.LINE, IdentifiableType.TWO_WINDINGS_TRANSFORMER);
+    private static final EnumSet<IdentifiableType> CONNECTABLE_BRANCHES = EnumSet.of(IdentifiableType.LINE, IdentifiableType.TWO_WINDINGS_TRANSFORMER);
 
     private enum DisconnectionType {
         INJECTION,
-        QUADRIPOLE,
+        BRANCH,
         HVDC,
         NONE
     }
@@ -53,8 +53,8 @@ public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identif
     private void setDisconnectionType(IdentifiableType type) {
         if (CONNECTABLE_INJECTIONS.contains(type)) {
             disconnectionType = DisconnectionType.INJECTION;
-        } else if (CONNECTABLE_QUADRIPOLES.contains(type)) {
-            disconnectionType = DisconnectionType.QUADRIPOLE;
+        } else if (CONNECTABLE_BRANCHES.contains(type)) {
+            disconnectionType = DisconnectionType.BRANCH;
         } else if (IdentifiableType.HVDC_LINE == type) {
             disconnectionType = DisconnectionType.HVDC;
         }
@@ -91,8 +91,8 @@ public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identif
         if (isInstantiable()) {
             return switch (disconnectionType) {
                 case INJECTION -> new EventInjectionDisconnection(eventId, (Injection<?>) builderEquipment.getEquipment(), startTime, true);
-                case QUADRIPOLE ->
-                        new EventQuadripoleDisconnection(eventId, (Branch<?>) builderEquipment.getEquipment(), startTime, disconnectSide);
+                case BRANCH ->
+                        new EventBranchDisconnection(eventId, (Branch<?>) builderEquipment.getEquipment(), startTime, disconnectSide);
                 case HVDC ->
                         new EventHvdcDisconnection(eventId, (HvdcLine) builderEquipment.getEquipment(), startTime, disconnectSide);
                 default -> null;

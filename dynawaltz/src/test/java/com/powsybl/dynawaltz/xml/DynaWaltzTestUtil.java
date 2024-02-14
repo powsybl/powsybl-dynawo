@@ -148,7 +148,7 @@ public class DynaWaltzTestUtil extends AbstractSerDeTest {
                 .forEach(l -> dynamicModels.add(CurrentLimitAutomatonBuilder.of(network, "CurrentLimitAutomaton")
                         .dynamicModelId("BBM_" + l.getId())
                         .parameterSetId("CLA")
-                        .controlledQuadripole(l.getId())
+                        .controlledBranch(l.getId())
                         .iMeasurement(l.getId())
                         .iMeasurementSide(TwoSides.ONE)
                         .build()));

@@ -32,14 +32,14 @@ class CurrentLimitAutomatonBuilderLimitModelXmlTest extends AbstractDynamicModel
         dynamicModels.add(CurrentLimitAutomatonBuilder.of(network, "CurrentLimitAutomaton")
                 .dynamicModelId("BBM_CLA_LINE")
                 .parameterSetId("cla")
-                .controlledQuadripole("NHV1_NHV2_1")
+                .controlledBranch("NHV1_NHV2_1")
                 .iMeasurement("NHV1_NHV2_1")
                 .iMeasurementSide(TwoSides.ONE)
                 .build());
         dynamicModels.add(CurrentLimitAutomatonBuilder.of(network, "CurrentLimitAutomaton")
                 .dynamicModelId("BBM_CLA_TRANSFORMER")
                 .parameterSetId("cla")
-                .controlledQuadripole("NGEN_NHV1")
+                .controlledBranch("NGEN_NHV1")
                 .iMeasurement("NGEN_NHV1")
                 .iMeasurementSide(TwoSides.TWO)
                 .build());
@@ -51,7 +51,7 @@ class CurrentLimitAutomatonBuilderLimitModelXmlTest extends AbstractDynamicModel
         dynamicModels.add(CurrentLimitAutomatonBuilder.of(network, "CurrentLimitAutomaton")
                 .dynamicModelId("BBM_CLA_TRANSFORMER2")
                 .parameterSetId("cla")
-                .controlledQuadripole("NHV1_NHV2_1")
+                .controlledBranch("NHV1_NHV2_1")
                 .iMeasurement("NHV2_NLOAD")
                 .iMeasurementSide(TwoSides.TWO)
                 .build());

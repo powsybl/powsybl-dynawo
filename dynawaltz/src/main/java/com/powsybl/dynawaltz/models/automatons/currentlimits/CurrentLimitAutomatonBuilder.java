@@ -52,8 +52,8 @@ public class CurrentLimitAutomatonBuilder extends AbstractCurrentLimitAutomatonB
     }
 
     protected CurrentLimitAutomatonBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
-        super(network, modelConfig, reporter, new BuilderEquipment<>(QUADRIPOLE_TYPE, "iMeasurement"),
-            new BuilderEquipment<>(QUADRIPOLE_TYPE, "controlledQuadripole"));
+        super(network, modelConfig, reporter, new BuilderEquipment<>(BRANCH_TYPE, "iMeasurement"),
+            new BuilderEquipment<>(BRANCH_TYPE, "controlledBranch"));
     }
 
     public CurrentLimitAutomatonBuilder iMeasurement(String staticId) {

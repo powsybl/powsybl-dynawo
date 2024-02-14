@@ -7,12 +7,12 @@
  */
 package com.powsybl.dynawaltz.models.transformers;
 
-import com.powsybl.dynawaltz.models.automatons.QuadripoleModel;
+import com.powsybl.dynawaltz.models.automatons.BranchModel;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public interface TransformerModel extends QuadripoleModel {
+public interface TransformerModel extends BranchModel {
 
     String getStateValueVarName();
 

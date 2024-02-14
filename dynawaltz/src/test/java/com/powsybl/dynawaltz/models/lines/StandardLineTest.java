@@ -44,7 +44,7 @@ class StandardLineTest {
         dynamicModels.add(CurrentLimitAutomatonBuilder.of(network, "CurrentLimitAutomaton")
                         .dynamicModelId("BBM_CLA")
                         .parameterSetId("CLA")
-                        .controlledQuadripole(l.getId())
+                        .controlledBranch(l.getId())
                         .iMeasurement(l.getId())
                         .iMeasurementSide(TwoSides.ONE)
                         .build());
