@@ -30,10 +30,8 @@ public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identif
         NONE
     }
 
-    private boolean disconnectSide = false;
     private DisconnectionType disconnectionType = DisconnectionType.NONE;
-    protected boolean disconnectOrigin = true;
-    protected boolean disconnectExtremity = true;
+    protected TwoSides disconnectSide = null;
 
     public static EventDisconnectionBuilder of(Network network) {
         return of(network, Reporter.NO_OP);
@@ -48,18 +46,7 @@ public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identif
     }
 
     public EventDisconnectionBuilder disconnectOnly(TwoSides side) {
-        disconnectSide = true;
-        switch (side) {
-            case ONE -> {
-                disconnectOrigin = true;
-                disconnectExtremity = false;
-            }
-            case TWO -> {
-                disconnectOrigin = false;
-                disconnectExtremity = true;
-            }
-            default -> throw new IllegalStateException();
-        }
+        this.disconnectSide = side;
         return self();
     }
 
@@ -92,8 +79,8 @@ public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identif
                 Reporters.reportStaticIdUnknown(reporter, "staticId", builderEquipment.getStaticId(), "Disconnectable equipment");
                 isInstantiable = false;
             }
-            if (DisconnectionType.INJECTION == disconnectionType && disconnectSide) {
-                Reporters.reportFieldSetWithWrongEquipment(reporter, "disconnectSide", builderEquipment.getEquipment().getType(), builderEquipment.getStaticId());
+            if (DisconnectionType.INJECTION == disconnectionType && disconnectSide != null) {
+                Reporters.reportFieldSetWithWrongEquipment(reporter, "disconnectOnly", builderEquipment.getEquipment().getType(), builderEquipment.getStaticId());
                 isInstantiable = false;
             }
         }
@@ -105,9 +92,9 @@ public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identif
             return switch (disconnectionType) {
                 case INJECTION -> new EventInjectionDisconnection(eventId, (Injection<?>) builderEquipment.getEquipment(), startTime, true);
                 case QUADRIPOLE ->
-                        new EventQuadripoleDisconnection(eventId, (Branch<?>) builderEquipment.getEquipment(), startTime, disconnectOrigin, disconnectExtremity);
+                        new EventQuadripoleDisconnection(eventId, (Branch<?>) builderEquipment.getEquipment(), startTime, disconnectSide);
                 case HVDC ->
-                        new EventHvdcDisconnection(eventId, (HvdcLine) builderEquipment.getEquipment(), startTime, disconnectOrigin, disconnectExtremity);
+                        new EventHvdcDisconnection(eventId, (HvdcLine) builderEquipment.getEquipment(), startTime, disconnectSide);
                 default -> null;
             };
         }

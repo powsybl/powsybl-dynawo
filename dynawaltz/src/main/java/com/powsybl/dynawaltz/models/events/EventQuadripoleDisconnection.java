@@ -11,6 +11,7 @@ import com.powsybl.dynawaltz.models.automatons.QuadripoleModel;
 import com.powsybl.dynawaltz.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawaltz.parameters.ParametersSet;
 import com.powsybl.iidm.network.Branch;
+import com.powsybl.iidm.network.TwoSides;
 
 import java.util.List;
 
@@ -23,13 +24,11 @@ import static com.powsybl.dynawaltz.parameters.ParameterType.DOUBLE;
  */
 public class EventQuadripoleDisconnection extends AbstractEvent {
 
-    private final boolean disconnectOrigin;
-    private final boolean disconnectExtremity;
+    private final TwoSides disconnectSide;
 
-    protected EventQuadripoleDisconnection(String eventId, Branch<?> equipment, double startTime, boolean disconnectOrigin, boolean disconnectExtremity) {
+    protected EventQuadripoleDisconnection(String eventId, Branch<?> equipment, double startTime, TwoSides disconnectSide) {
         super(eventId, equipment, startTime, "EventQuadripoleDisconnection");
-        this.disconnectOrigin = disconnectOrigin;
-        this.disconnectExtremity = disconnectExtremity;
+        this.disconnectSide = disconnectSide;
     }
 
     private List<VarConnection> getVarConnectionsWith(QuadripoleModel connected) {
@@ -44,7 +43,7 @@ public class EventQuadripoleDisconnection extends AbstractEvent {
     @Override
     protected void createEventSpecificParameters(ParametersSet paramSet) {
         paramSet.addParameter("event_tEvent", DOUBLE, Double.toString(getStartTime()));
-        paramSet.addParameter("event_disconnectOrigin", BOOL, Boolean.toString(disconnectOrigin));
-        paramSet.addParameter("event_disconnectExtremity", BOOL, Boolean.toString(disconnectExtremity));
+        paramSet.addParameter("event_disconnectOrigin", BOOL, Boolean.toString(disconnectSide == null || TwoSides.ONE == disconnectSide));
+        paramSet.addParameter("event_disconnectExtremity", BOOL, Boolean.toString(disconnectSide == null || TwoSides.TWO == disconnectSide));
     }
 }

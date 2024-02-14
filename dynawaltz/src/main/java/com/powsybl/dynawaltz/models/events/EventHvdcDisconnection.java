@@ -20,13 +20,11 @@ import java.util.List;
  */
 public class EventHvdcDisconnection extends AbstractDynamicLibEventDisconnection {
 
-    private final boolean disconnectOrigin;
-    private final boolean disconnectExtremity;
+    private final TwoSides disconnectSide;
 
-    protected EventHvdcDisconnection(String eventId, HvdcLine equipment, double startTime, boolean disconnectOrigin, boolean disconnectExtremity) {
-        super(eventId, equipment, startTime, disconnectOrigin || disconnectExtremity);
-        this.disconnectOrigin = disconnectOrigin;
-        this.disconnectExtremity = disconnectExtremity;
+    protected EventHvdcDisconnection(String eventId, HvdcLine equipment, double startTime, TwoSides disconnectSide) {
+        super(eventId, equipment, startTime, true);
+        this.disconnectSide = disconnectSide;
     }
 
     private List<VarConnection> getVarConnectionsWithHvdcModel(HvdcModel connected) {
@@ -40,12 +38,10 @@ public class EventHvdcDisconnection extends AbstractDynamicLibEventDisconnection
 
     @Override
     public void createMacroConnections(MacroConnectionsAdder adder) {
-        if (disconnectOrigin && disconnectExtremity) {
+        if (disconnectSide == null) {
             adder.createMacroConnections(this, getEquipment(), HvdcModel.class, this::getVarConnectionsWithHvdcModel);
-        } else if (disconnectOrigin) {
-            adder.createMacroConnections(this, getEquipment(), HvdcModel.class, this::getVarConnectionsWithHvdcModelSide, TwoSides.ONE);
-        } else if (disconnectExtremity) {
-            adder.createMacroConnections(this, getEquipment(), HvdcModel.class, this::getVarConnectionsWithHvdcModelSide, TwoSides.TWO);
+        } else {
+            adder.createMacroConnections(this, getEquipment(), HvdcModel.class, this::getVarConnectionsWithHvdcModelSide, disconnectSide);
         }
     }
 }

@@ -124,7 +124,7 @@ class EventModelsSupplierTest extends AbstractModelSupplierTest {
                         + DSL tests
                           + Groovy Event Models Supplier
                             + DSL model builder for Disconnect
-                               'disconnectSide' field is set but GENERATOR GEN does not possess this option
+                               'disconnectOnly' field is set but GENERATOR GEN does not possess this option
                                Model Disconnect_GEN cannot be instantiated
                         """)
         );
