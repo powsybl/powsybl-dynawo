@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.models.automatons;
+package com.powsybl.dynawaltz.models.automationsystems;
 
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynawaltzReports;
@@ -25,7 +25,7 @@ import java.util.Objects;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class TapChangerAutomaton extends AbstractPureDynamicBlackBoxModel implements TapChangerModel {
+public class TapChangerAutomationSystem extends AbstractPureDynamicBlackBoxModel implements TapChangerModel {
 
     private final Load load;
     private final TransformerSide side;
@@ -38,7 +38,7 @@ public class TapChangerAutomaton extends AbstractPureDynamicBlackBoxModel implem
         NOT_SET
     }
 
-    protected TapChangerAutomaton(String dynamicModelId, String parameterSetId, Load load, TransformerSide side, String lib) {
+    protected TapChangerAutomationSystem(String dynamicModelId, String parameterSetId, Load load, TransformerSide side, String lib) {
         super(dynamicModelId, parameterSetId, lib);
         this.load = Objects.requireNonNull(load);
         this.side = Objects.requireNonNull(side);

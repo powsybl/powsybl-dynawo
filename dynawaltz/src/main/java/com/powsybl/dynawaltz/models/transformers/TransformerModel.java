@@ -7,7 +7,7 @@
  */
 package com.powsybl.dynawaltz.models.transformers;
 
-import com.powsybl.dynawaltz.models.automatons.BranchModel;
+import com.powsybl.dynawaltz.models.automationsystems.BranchModel;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}

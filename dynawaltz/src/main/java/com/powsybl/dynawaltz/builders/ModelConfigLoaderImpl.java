@@ -8,13 +8,13 @@
 package com.powsybl.dynawaltz.builders;
 
 import com.google.auto.service.AutoService;
-import com.powsybl.dynawaltz.models.automatons.TapChangerAutomatonBuilder;
-import com.powsybl.dynawaltz.models.automatons.TapChangerBlockingAutomatonBuilder;
-import com.powsybl.dynawaltz.models.automatons.UnderVoltageAutomatonBuilder;
-import com.powsybl.dynawaltz.models.automatons.overloadmanagments.DynamicOverloadManagementSystemBuilder;
-import com.powsybl.dynawaltz.models.automatons.overloadmanagments.DynamicTwoLevelsOverloadManagementSystemBuilder;
-import com.powsybl.dynawaltz.models.automatons.phaseshifters.PhaseShifterIAutomatonBuilder;
-import com.powsybl.dynawaltz.models.automatons.phaseshifters.PhaseShifterPAutomatonBuilder;
+import com.powsybl.dynawaltz.models.automationsystems.TapChangerAutomationSystemBuilder;
+import com.powsybl.dynawaltz.models.automationsystems.TapChangerBlockingAutomationSystemBuilder;
+import com.powsybl.dynawaltz.models.automationsystems.UnderVoltageAutomationSystemBuilder;
+import com.powsybl.dynawaltz.models.automationsystems.overloadmanagments.DynamicOverloadManagementSystemBuilder;
+import com.powsybl.dynawaltz.models.automationsystems.overloadmanagments.DynamicTwoLevelsOverloadManagementSystemBuilder;
+import com.powsybl.dynawaltz.models.automationsystems.phaseshifters.PhaseShifterIAutomationSystemBuilder;
+import com.powsybl.dynawaltz.models.automationsystems.phaseshifters.PhaseShifterPAutomationSystemBuilder;
 import com.powsybl.dynawaltz.models.buses.InfiniteBusBuilder;
 import com.powsybl.dynawaltz.models.buses.StandardBusBuilder;
 import com.powsybl.dynawaltz.models.generators.*;
@@ -38,11 +38,11 @@ public final class ModelConfigLoaderImpl implements ModelConfigLoader {
     private static final Stream<BuilderConfig> BUILDER_CONFIGS = Stream.of(
             new BuilderConfig(DynamicOverloadManagementSystemBuilder::of, DynamicOverloadManagementSystemBuilder::getSupportedLibs),
             new BuilderConfig(DynamicTwoLevelsOverloadManagementSystemBuilder::of, DynamicTwoLevelsOverloadManagementSystemBuilder::getSupportedLibs),
-            new BuilderConfig(TapChangerAutomatonBuilder::of, TapChangerAutomatonBuilder::getSupportedLibs),
-            new BuilderConfig(TapChangerBlockingAutomatonBuilder::of, TapChangerBlockingAutomatonBuilder::getSupportedLibs),
-            new BuilderConfig(UnderVoltageAutomatonBuilder::of, UnderVoltageAutomatonBuilder::getSupportedLibs),
-            new BuilderConfig(PhaseShifterPAutomatonBuilder::of, PhaseShifterPAutomatonBuilder::getSupportedLibs),
-            new BuilderConfig(PhaseShifterIAutomatonBuilder::of, PhaseShifterIAutomatonBuilder::getSupportedLibs),
+            new BuilderConfig(TapChangerAutomationSystemBuilder::of, TapChangerAutomationSystemBuilder::getSupportedLibs),
+            new BuilderConfig(TapChangerBlockingAutomationSystemBuilder::of, TapChangerBlockingAutomationSystemBuilder::getSupportedLibs),
+            new BuilderConfig(UnderVoltageAutomationSystemBuilder::of, UnderVoltageAutomationSystemBuilder::getSupportedLibs),
+            new BuilderConfig(PhaseShifterPAutomationSystemBuilder::of, PhaseShifterPAutomationSystemBuilder::getSupportedLibs),
+            new BuilderConfig(PhaseShifterIAutomationSystemBuilder::of, PhaseShifterIAutomationSystemBuilder::getSupportedLibs),
             new BuilderConfig(StandardBusBuilder::of, StandardBusBuilder::getSupportedLibs),
             new BuilderConfig(InfiniteBusBuilder::of, InfiniteBusBuilder::getSupportedLibs),
             new BuilderConfig(TransformerFixedRatioBuilder::of, TransformerFixedRatioBuilder::getSupportedLibs),

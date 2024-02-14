@@ -7,7 +7,8 @@
  */
 package com.powsybl.dynawaltz.xml;
 
-import com.powsybl.dynawaltz.models.automatons.TapChangerBlockingAutomatonBuilder;
+import com.powsybl.dynawaltz.models.automationsystems.UnderVoltageAutomationSystemBuilder;
+import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
@@ -17,16 +18,19 @@ import java.io.IOException;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-class TapChangerBlockingToTapChangerAutomatonXmlTest extends TapChangerAutomatonXmlTest {
+class UnderVoltageAutomationSystemXmlTest extends AbstractDynamicModelXmlTest {
+
+    @Override
+    protected void setupNetwork() {
+        network = EurostagTutorialExample1Factory.create();
+    }
 
     @Override
     protected void addDynamicModels() {
-        super.addDynamicModels();
-        dynamicModels.add(TapChangerBlockingAutomatonBuilder.of(network)
-                .dynamicModelId("BBM_TapChangerBlocking")
-                .parameterSetId("TapChangerPar")
-                .transformers("BBM_TC", "BBM_TC2", "BBM_TC3")
-                .uMeasurements("NHV1")
+        dynamicModels.add(UnderVoltageAutomationSystemBuilder.of(network)
+                .dynamicModelId("BBM_under_voltage")
+                .parameterSetId("uv")
+                .generator("GEN")
                 .build());
     }
 
@@ -34,6 +38,6 @@ class TapChangerBlockingToTapChangerAutomatonXmlTest extends TapChangerAutomaton
     void writeModel() throws SAXException, IOException, XMLStreamException {
         DydXml.write(tmpDir, context);
         ParametersXml.write(tmpDir, context);
-        validate("dyd.xsd", "tap_changer_blocking_tap_changer_dyd.xml", tmpDir.resolve(DynaWaltzConstants.DYD_FILENAME));
+        validate("dyd.xsd", "under_voltage_dyd.xml", tmpDir.resolve(DynaWaltzConstants.DYD_FILENAME));
     }
 }

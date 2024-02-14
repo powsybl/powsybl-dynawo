@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.models.automatons;
+package com.powsybl.dynawaltz.models.automationsystems;
 
 import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawaltz.models.VarConnection;
@@ -20,11 +20,11 @@ import java.util.Objects;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class UnderVoltageAutomaton extends AbstractPureDynamicBlackBoxModel {
+public class UnderVoltageAutomationSystem extends AbstractPureDynamicBlackBoxModel {
 
     protected final Generator generator;
 
-    protected UnderVoltageAutomaton(String dynamicModelId, String parameterSetId, Generator generator, String lib) {
+    protected UnderVoltageAutomationSystem(String dynamicModelId, String parameterSetId, Generator generator, String lib) {
         super(dynamicModelId, parameterSetId, lib);
         this.generator = Objects.requireNonNull(generator);
     }

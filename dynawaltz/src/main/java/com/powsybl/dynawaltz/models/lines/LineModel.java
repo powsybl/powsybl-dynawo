@@ -6,7 +6,7 @@
  */
 package com.powsybl.dynawaltz.models.lines;
 
-import com.powsybl.dynawaltz.models.automatons.BranchModel;
+import com.powsybl.dynawaltz.models.automationsystems.BranchModel;
 
 /**
  * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}

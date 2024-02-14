@@ -5,13 +5,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.models.automatons.overloadmanagments;
+package com.powsybl.dynawaltz.models.automationsystems.overloadmanagments;
 
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.builders.BuilderEquipment;
 import com.powsybl.dynawaltz.builders.ModelConfig;
 import com.powsybl.dynawaltz.builders.Reporters;
-import com.powsybl.dynawaltz.models.automatons.AbstractAutomatonModelBuilder;
+import com.powsybl.dynawaltz.models.automationsystems.AbstractAutomationSystemModelBuilder;
 import com.powsybl.iidm.network.Branch;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.TwoSides;
@@ -19,7 +19,7 @@ import com.powsybl.iidm.network.TwoSides;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public abstract class AbstractOverloadManagementSystemBuilder<T extends AbstractAutomatonModelBuilder<T>> extends AbstractAutomatonModelBuilder<T> {
+public abstract class AbstractOverloadManagementSystemBuilder<T extends AbstractAutomationSystemModelBuilder<T>> extends AbstractAutomationSystemModelBuilder<T> {
 
     protected static final String BRANCH_TYPE = "BRANCH";
 

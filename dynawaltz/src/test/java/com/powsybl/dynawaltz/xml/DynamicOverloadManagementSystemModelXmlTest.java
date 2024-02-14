@@ -8,7 +8,7 @@
 package com.powsybl.dynawaltz.xml;
 
 import com.powsybl.dynawaltz.models.transformers.TransformerFixedRatioBuilder;
-import com.powsybl.dynawaltz.models.automatons.overloadmanagments.DynamicOverloadManagementSystemBuilder;
+import com.powsybl.dynawaltz.models.automationsystems.overloadmanagments.DynamicOverloadManagementSystemBuilder;
 import com.powsybl.iidm.network.TwoSides;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.Test;

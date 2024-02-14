@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.models.automatons;
+package com.powsybl.dynawaltz.models.automationsystems;
 
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.builders.BuildersUtil;
@@ -22,7 +22,7 @@ import java.util.*;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class TapChangerBlockingAutomatonBuilder extends AbstractAutomatonModelBuilder<TapChangerBlockingAutomatonBuilder> {
+public class TapChangerBlockingAutomationSystemBuilder extends AbstractAutomationSystemModelBuilder<TapChangerBlockingAutomationSystemBuilder> {
 
     private static final String CATEGORY = "tcbs";
     private static final Map<String, ModelConfig> LIBS = ModelConfigs.getInstance().getModelConfigs(CATEGORY);
@@ -33,36 +33,36 @@ public class TapChangerBlockingAutomatonBuilder extends AbstractAutomatonModelBu
     private final List<String> tapChangerAutomatonIds = new ArrayList<>();
     private List<Identifiable<?>> uMeasurements;
 
-    public static TapChangerBlockingAutomatonBuilder of(Network network) {
+    public static TapChangerBlockingAutomationSystemBuilder of(Network network) {
         return of(network, Reporter.NO_OP);
     }
 
-    public static TapChangerBlockingAutomatonBuilder of(Network network, Reporter reporter) {
-        return new TapChangerBlockingAutomatonBuilder(network, LIBS.values().iterator().next(), reporter);
+    public static TapChangerBlockingAutomationSystemBuilder of(Network network, Reporter reporter) {
+        return new TapChangerBlockingAutomationSystemBuilder(network, LIBS.values().iterator().next(), reporter);
     }
 
-    public static TapChangerBlockingAutomatonBuilder of(Network network, String lib) {
+    public static TapChangerBlockingAutomationSystemBuilder of(Network network, String lib) {
         return of(network, lib, Reporter.NO_OP);
     }
 
-    public static TapChangerBlockingAutomatonBuilder of(Network network, String lib, Reporter reporter) {
+    public static TapChangerBlockingAutomationSystemBuilder of(Network network, String lib, Reporter reporter) {
         ModelConfig modelConfig = LIBS.get(lib);
         if (modelConfig == null) {
-            Reporters.reportLibNotFound(reporter, TapChangerBlockingAutomatonBuilder.class.getSimpleName(), lib);
+            Reporters.reportLibNotFound(reporter, TapChangerBlockingAutomationSystemBuilder.class.getSimpleName(), lib);
             return null;
         }
-        return new TapChangerBlockingAutomatonBuilder(network, LIBS.get(lib), reporter);
+        return new TapChangerBlockingAutomationSystemBuilder(network, LIBS.get(lib), reporter);
     }
 
     public static Set<String> getSupportedLibs() {
         return LIBS.keySet();
     }
 
-    protected TapChangerBlockingAutomatonBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
+    protected TapChangerBlockingAutomationSystemBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
         super(network, modelConfig, reporter);
     }
 
-    public TapChangerBlockingAutomatonBuilder transformers(String... staticIds) {
+    public TapChangerBlockingAutomationSystemBuilder transformers(String... staticIds) {
         Arrays.stream(staticIds).forEach(id -> {
             Identifiable<?> equipment = network.getIdentifiable(id);
             if (equipment == null) {
@@ -78,7 +78,7 @@ public class TapChangerBlockingAutomatonBuilder extends AbstractAutomatonModelBu
         return self();
     }
 
-    public TapChangerBlockingAutomatonBuilder uMeasurements(String... staticIds) {
+    public TapChangerBlockingAutomationSystemBuilder uMeasurements(String... staticIds) {
         uMeasurements = new ArrayList<>();
         for (String staticId : staticIds) {
             Identifiable<?> measurementPoint = BuildersUtil.getActionConnectionPoint(network, staticId);
@@ -91,7 +91,7 @@ public class TapChangerBlockingAutomatonBuilder extends AbstractAutomatonModelBu
         return self();
     }
 
-    public TapChangerBlockingAutomatonBuilder uMeasurements(List<String>[] staticIdsArray) {
+    public TapChangerBlockingAutomationSystemBuilder uMeasurements(List<String>[] staticIdsArray) {
         uMeasurements = new ArrayList<>();
         for (List<String> staticIds : staticIdsArray) {
             for (String staticId : staticIds) {
@@ -123,12 +123,12 @@ public class TapChangerBlockingAutomatonBuilder extends AbstractAutomatonModelBu
     }
 
     @Override
-    public TapChangerBlockingAutomaton build() {
-        return isInstantiable() ? new TapChangerBlockingAutomaton(dynamicModelId, parameterSetId, transformers, loads, tapChangerAutomatonIds, uMeasurements, getLib()) : null;
+    public TapChangerBlockingAutomationSystem build() {
+        return isInstantiable() ? new TapChangerBlockingAutomationSystem(dynamicModelId, parameterSetId, transformers, loads, tapChangerAutomatonIds, uMeasurements, getLib()) : null;
     }
 
     @Override
-    protected TapChangerBlockingAutomatonBuilder self() {
+    protected TapChangerBlockingAutomationSystemBuilder self() {
         return this;
     }
 }

@@ -7,9 +7,9 @@
  */
 package com.powsybl.dynawaltz.xml;
 
-import com.powsybl.dynawaltz.models.TransformerSide;
-import com.powsybl.dynawaltz.models.automatons.TapChangerAutomatonBuilder;
-import com.powsybl.dynawaltz.models.loads.*;
+import com.powsybl.dynawaltz.models.automationsystems.TapChangerAutomationSystemBuilder;
+import com.powsybl.dynawaltz.models.automationsystems.TapChangerBlockingAutomationSystemBuilder;
+import com.powsybl.dynawaltz.models.loads.LoadOneTransformerBuilder;
 import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.VoltageLevel;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
@@ -22,7 +22,7 @@ import java.io.IOException;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-class TapChangerAutomatonXmlTest extends AbstractDynamicModelXmlTest {
+class EmptyTapChangerBlockingAutomationSystemXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void setupNetwork() {
@@ -30,7 +30,6 @@ class TapChangerAutomatonXmlTest extends AbstractDynamicModelXmlTest {
         VoltageLevel vlload = network.getVoltageLevel("VLLOAD");
         Bus nload = network.getBusBreakerView().getBus("NLOAD");
         vlload.newLoad().setId("LOAD2").setBus(nload.getId()).setConnectableBus(nload.getId()).setP0(600.0).setQ0(200.0).add();
-        vlload.newLoad().setId("LOAD3").setBus(nload.getId()).setConnectableBus(nload.getId()).setP0(600.0).setQ0(200.0).add();
     }
 
     @Override
@@ -38,34 +37,18 @@ class TapChangerAutomatonXmlTest extends AbstractDynamicModelXmlTest {
         dynamicModels.add(LoadOneTransformerBuilder.of(network, "LoadOneTransformer")
                 .dynamicModelId("BBM_LOAD")
                 .staticId("LOAD")
-                .parameterSetId("LOT")
+                .parameterSetId("lot")
                 .build());
-        dynamicModels.add(LoadTwoTransformersBuilder.of(network, "LoadTwoTransformers")
-                .dynamicModelId("BBM_LOAD2")
-                .staticId("LOAD2")
-                .parameterSetId("LTT")
+        dynamicModels.add(TapChangerBlockingAutomationSystemBuilder.of(network)
+                .dynamicModelId("BBM_TapChangerBlocking")
+                .parameterSetId("TapChangerPar")
+                .transformers("GEN", "LOAD", "BBM_TC")
+                .uMeasurements("NHV1")
                 .build());
-        dynamicModels.add(LoadTwoTransformersBuilder.of(network, "LoadTwoTransformers")
-                .dynamicModelId("BBM_LOAD3")
-                .staticId("LOAD3")
-                .parameterSetId("LTT")
-                .build());
-        dynamicModels.add(TapChangerAutomatonBuilder.of(network)
+        dynamicModels.add(TapChangerAutomationSystemBuilder.of(network)
                 .dynamicModelId("BBM_TC")
                 .parameterSetId("tc")
-                .staticId("LOAD")
-                .build());
-        dynamicModels.add(TapChangerAutomatonBuilder.of(network)
-                .dynamicModelId("BBM_TC2")
-                .parameterSetId("tc")
                 .staticId("LOAD2")
-                .side(TransformerSide.LOW_VOLTAGE)
-                .build());
-        dynamicModels.add(TapChangerAutomatonBuilder.of(network)
-                .dynamicModelId("BBM_TC3")
-                .parameterSetId("tc")
-                .staticId("LOAD3")
-                .side(TransformerSide.HIGH_VOLTAGE)
                 .build());
     }
 
@@ -73,6 +56,12 @@ class TapChangerAutomatonXmlTest extends AbstractDynamicModelXmlTest {
     void writeModel() throws SAXException, IOException, XMLStreamException {
         DydXml.write(tmpDir, context);
         ParametersXml.write(tmpDir, context);
-        validate("dyd.xsd", "tap_changer_dyd.xml", tmpDir.resolve(DynaWaltzConstants.DYD_FILENAME));
+        validate("dyd.xsd", "tap_changer_blocking_empty_dyd.xml", tmpDir.resolve(DynaWaltzConstants.DYD_FILENAME));
+        checkReporter("""
+                + Test DYD
+                  + Dynawaltz models processing
+                     TapChangerAutomaton BBM_TC equipment is not a LoadWithTransformers, the automation system will be skipped
+                     None of TapChangerBlockingAutomaton BBM_TapChangerBlocking equipments are TapChangerModel, the automation system will be skipped
+                """);
     }
 }

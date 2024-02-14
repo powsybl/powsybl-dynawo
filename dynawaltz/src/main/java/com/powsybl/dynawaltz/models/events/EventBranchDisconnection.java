@@ -7,7 +7,7 @@
 package com.powsybl.dynawaltz.models.events;
 
 import com.powsybl.dynawaltz.models.VarConnection;
-import com.powsybl.dynawaltz.models.automatons.BranchModel;
+import com.powsybl.dynawaltz.models.automationsystems.BranchModel;
 import com.powsybl.dynawaltz.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawaltz.parameters.ParametersSet;
 import com.powsybl.iidm.network.Branch;

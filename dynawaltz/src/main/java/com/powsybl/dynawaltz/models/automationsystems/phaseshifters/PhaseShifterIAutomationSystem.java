@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.models.automatons.phaseshifters;
+package com.powsybl.dynawaltz.models.automationsystems.phaseshifters;
 
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.transformers.TransformerModel;
@@ -17,9 +17,9 @@ import java.util.List;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class PhaseShifterIAutomaton extends AbstractPhaseShifterAutomaton {
+public class PhaseShifterIAutomationSystem extends AbstractPhaseShifterAutomationSystem {
 
-    protected PhaseShifterIAutomaton(String dynamicModelId, TwoWindingsTransformer transformer, String parameterSetId, String lib) {
+    protected PhaseShifterIAutomationSystem(String dynamicModelId, TwoWindingsTransformer transformer, String parameterSetId, String lib) {
         super(dynamicModelId, transformer, parameterSetId, lib);
     }
 

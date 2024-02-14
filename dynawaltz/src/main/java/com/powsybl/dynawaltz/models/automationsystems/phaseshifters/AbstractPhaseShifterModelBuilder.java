@@ -5,12 +5,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.models.automatons.phaseshifters;
+package com.powsybl.dynawaltz.models.automationsystems.phaseshifters;
 
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.builders.BuilderEquipment;
 import com.powsybl.dynawaltz.builders.ModelConfig;
-import com.powsybl.dynawaltz.models.automatons.AbstractAutomatonModelBuilder;
+import com.powsybl.dynawaltz.models.automationsystems.AbstractAutomationSystemModelBuilder;
 import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.TwoWindingsTransformer;
@@ -18,7 +18,7 @@ import com.powsybl.iidm.network.TwoWindingsTransformer;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-abstract class AbstractPhaseShifterModelBuilder<T extends AbstractAutomatonModelBuilder<T>> extends AbstractAutomatonModelBuilder<T> {
+abstract class AbstractPhaseShifterModelBuilder<T extends AbstractAutomationSystemModelBuilder<T>> extends AbstractAutomationSystemModelBuilder<T> {
 
     protected final BuilderEquipment<TwoWindingsTransformer> transformer;
 

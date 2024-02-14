@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.models.automatons;
+package com.powsybl.dynawaltz.models.automationsystems;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.DynaWaltzContext;
@@ -28,7 +28,7 @@ import java.util.*;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class TapChangerBlockingAutomaton extends AbstractPureDynamicBlackBoxModel {
+public class TapChangerBlockingAutomationSystem extends AbstractPureDynamicBlackBoxModel {
 
     private static final Set<IdentifiableType> COMPATIBLE_EQUIPMENTS = EnumSet.of(IdentifiableType.LOAD, IdentifiableType.TWO_WINDINGS_TRANSFORMER);
     private static final int MAX_MEASUREMENTS = 5;
@@ -39,7 +39,7 @@ public class TapChangerBlockingAutomaton extends AbstractPureDynamicBlackBoxMode
     private final List<Identifiable<?>> uMeasurements;
     private boolean isConnected = true;
 
-    protected TapChangerBlockingAutomaton(String dynamicModelId, String parameterSetId, List<TwoWindingsTransformer> transformers, List<Load> loadsWithTransformer, List<String> tapChangerAutomatonIds, List<Identifiable<?>> uMeasurements, String lib) {
+    protected TapChangerBlockingAutomationSystem(String dynamicModelId, String parameterSetId, List<TwoWindingsTransformer> transformers, List<Load> loadsWithTransformer, List<String> tapChangerAutomatonIds, List<Identifiable<?>> uMeasurements, String lib) {
         super(dynamicModelId, parameterSetId, lib);
         this.transformers = Objects.requireNonNull(transformers);
         this.loadsWithTransformer = Objects.requireNonNull(loadsWithTransformer);
@@ -52,7 +52,7 @@ public class TapChangerBlockingAutomaton extends AbstractPureDynamicBlackBoxMode
             throw new PowsyblException("No measurement points");
         }
         if (uMeasurements.size() > MAX_MEASUREMENTS) {
-            throw new PowsyblException("Tap changer blocking automaton can only handle " + MAX_MEASUREMENTS + " measurement points at the same time");
+            throw new PowsyblException("Tap changer blocking automation system can only handle " + MAX_MEASUREMENTS + " measurement points at the same time");
         }
     }
 

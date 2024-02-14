@@ -7,7 +7,7 @@
  */
 package com.powsybl.dynawaltz.xml;
 
-import com.powsybl.dynawaltz.models.automatons.TapChangerAutomatonBuilder;
+import com.powsybl.dynawaltz.models.automationsystems.TapChangerAutomationSystemBuilder;
 import com.powsybl.dynawaltz.models.loads.BaseLoadBuilder;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.Test;
@@ -19,7 +19,7 @@ import java.io.IOException;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-class EmptyTapChangerAutomatonXmlTest extends AbstractDynamicModelXmlTest {
+class EmptyTapChangerAutomationSystemXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void setupNetwork() {
@@ -33,7 +33,7 @@ class EmptyTapChangerAutomatonXmlTest extends AbstractDynamicModelXmlTest {
                 .staticId("LOAD")
                 .parameterSetId("LAB")
                 .build());
-        dynamicModels.add(TapChangerAutomatonBuilder.of(network)
+        dynamicModels.add(TapChangerAutomationSystemBuilder.of(network)
                 .dynamicModelId("BBM_TC")
                 .parameterSetId("tc")
                 .staticId("LOAD")
@@ -48,7 +48,7 @@ class EmptyTapChangerAutomatonXmlTest extends AbstractDynamicModelXmlTest {
         checkReporter("""
                 + Test DYD
                   + Dynawaltz models processing
-                     TapChangerAutomaton BBM_TC equipment is not a LoadWithTransformers, the automaton will be skipped
+                     TapChangerAutomaton BBM_TC equipment is not a LoadWithTransformers, the automation system will be skipped
                 """);
     }
 }

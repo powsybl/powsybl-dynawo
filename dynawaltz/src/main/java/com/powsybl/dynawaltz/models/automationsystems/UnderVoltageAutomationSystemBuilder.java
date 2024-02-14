@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.models.automatons;
+package com.powsybl.dynawaltz.models.automationsystems;
 
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.builders.BuilderEquipment;
@@ -22,44 +22,44 @@ import java.util.Set;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class UnderVoltageAutomatonBuilder extends AbstractAutomatonModelBuilder<UnderVoltageAutomatonBuilder> {
+public class UnderVoltageAutomationSystemBuilder extends AbstractAutomationSystemModelBuilder<UnderVoltageAutomationSystemBuilder> {
 
     private static final String CATEGORY = "underVoltages";
     private static final Map<String, ModelConfig> LIBS = ModelConfigs.getInstance().getModelConfigs(CATEGORY);
 
     protected final BuilderEquipment<Generator> generator;
 
-    public static UnderVoltageAutomatonBuilder of(Network network) {
+    public static UnderVoltageAutomationSystemBuilder of(Network network) {
         return of(network, Reporter.NO_OP);
     }
 
-    public static UnderVoltageAutomatonBuilder of(Network network, Reporter reporter) {
-        return new UnderVoltageAutomatonBuilder(network, LIBS.values().iterator().next(), reporter);
+    public static UnderVoltageAutomationSystemBuilder of(Network network, Reporter reporter) {
+        return new UnderVoltageAutomationSystemBuilder(network, LIBS.values().iterator().next(), reporter);
     }
 
-    public static UnderVoltageAutomatonBuilder of(Network network, String lib) {
+    public static UnderVoltageAutomationSystemBuilder of(Network network, String lib) {
         return of(network, lib, Reporter.NO_OP);
     }
 
-    public static UnderVoltageAutomatonBuilder of(Network network, String lib, Reporter reporter) {
+    public static UnderVoltageAutomationSystemBuilder of(Network network, String lib, Reporter reporter) {
         ModelConfig modelConfig = LIBS.get(lib);
         if (modelConfig == null) {
-            Reporters.reportLibNotFound(reporter, UnderVoltageAutomatonBuilder.class.getSimpleName(), lib);
+            Reporters.reportLibNotFound(reporter, UnderVoltageAutomationSystemBuilder.class.getSimpleName(), lib);
             return null;
         }
-        return new UnderVoltageAutomatonBuilder(network, LIBS.get(lib), reporter);
+        return new UnderVoltageAutomationSystemBuilder(network, LIBS.get(lib), reporter);
     }
 
     public static Set<String> getSupportedLibs() {
         return LIBS.keySet();
     }
 
-    protected UnderVoltageAutomatonBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
+    protected UnderVoltageAutomationSystemBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
         super(network, modelConfig, reporter);
         generator = new BuilderEquipment<>(IdentifiableType.GENERATOR, "generator");
     }
 
-    public UnderVoltageAutomatonBuilder generator(String staticId) {
+    public UnderVoltageAutomationSystemBuilder generator(String staticId) {
         generator.addEquipment(staticId, network::getGenerator);
         return self();
     }
@@ -71,12 +71,12 @@ public class UnderVoltageAutomatonBuilder extends AbstractAutomatonModelBuilder<
     }
 
     @Override
-    public UnderVoltageAutomaton build() {
-        return isInstantiable() ? new UnderVoltageAutomaton(dynamicModelId, parameterSetId, generator.getEquipment(), getLib()) : null;
+    public UnderVoltageAutomationSystem build() {
+        return isInstantiable() ? new UnderVoltageAutomationSystem(dynamicModelId, parameterSetId, generator.getEquipment(), getLib()) : null;
     }
 
     @Override
-    protected UnderVoltageAutomatonBuilder self() {
+    protected UnderVoltageAutomationSystemBuilder self() {
         return this;
     }
 }
