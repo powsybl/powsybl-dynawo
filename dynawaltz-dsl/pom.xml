@@ -21,6 +21,7 @@
     <description>DSL for DynaWaltz</description>
 
     <properties>
+        <groovydoc.attach>true</groovydoc.attach>
         <groovydoc.classifier>javadoc</groovydoc.classifier>
     </properties>
 
