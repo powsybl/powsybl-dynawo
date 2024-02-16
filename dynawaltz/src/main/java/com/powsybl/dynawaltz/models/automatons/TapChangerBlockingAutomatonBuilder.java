@@ -85,13 +85,8 @@ public class TapChangerBlockingAutomatonBuilder extends AbstractAutomatonModelBu
         return self();
     }
 
-    public TapChangerBlockingAutomatonBuilder uMeasurements(List<String>[] staticIdsArray) {
+    public TapChangerBlockingAutomatonBuilder uMeasurements(Collection<String>[] staticIdsArray) {
         uMeasurementPoints.addEquipments(staticIdsArray, id -> BuildersUtil.getActionConnectionPoint(network, id));
-        return self();
-    }
-
-    public TapChangerBlockingAutomatonBuilder uMeasurements(List<List<String>> staticIdsList) {
-        uMeasurementPoints.addEquipments(staticIdsList, id -> BuildersUtil.getActionConnectionPoint(network, id));
         return self();
     }
 
