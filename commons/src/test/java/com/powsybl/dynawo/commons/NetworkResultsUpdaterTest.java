@@ -9,22 +9,22 @@ package com.powsybl.dynawo.commons;
 import com.powsybl.dynawo.commons.loadmerge.LoadsMerger;
 import com.powsybl.iidm.network.*;
 import com.powsybl.iidm.network.test.FourSubstationsNodeBreakerFactory;
-import com.powsybl.iidm.xml.ExportOptions;
-import com.powsybl.iidm.xml.NetworkXml;
+import com.powsybl.iidm.serde.ExportOptions;
+import com.powsybl.iidm.serde.NetworkSerDe;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.file.Path;
 
 /**
- * @author Guillem Jané Guasch <janeg at aia.es>
+ * @author Guillem Jané Guasch {@literal <janeg at aia.es>}
  */
 class NetworkResultsUpdaterTest extends AbstractDynawoCommonsTest {
 
     @Test
     void testUpdateWithoutMergeLoads() throws IOException {
         Network expected = TestNetworkFactory.createMultiBusesVoltageLevelNetwork();
-        Network actual = NetworkXml.copy(expected);
+        Network actual = NetworkSerDe.copy(expected);
         reset(actual);
         NetworkResultsUpdater.update(actual, expected, false);
         compare(expected, actual);
@@ -33,7 +33,7 @@ class NetworkResultsUpdaterTest extends AbstractDynawoCommonsTest {
     @Test
     void testUpdateWithMergeLoads() throws IOException {
         Network expected = TestNetworkFactory.createMultiBusesVoltageLevelNetwork();
-        Network actual = NetworkXml.copy(expected);
+        Network actual = NetworkSerDe.copy(expected);
         NetworkResultsUpdater.update(actual, LoadsMerger.mergeLoads(expected), true);
         compare(expected, actual);
     }
@@ -41,7 +41,7 @@ class NetworkResultsUpdaterTest extends AbstractDynawoCommonsTest {
     @Test
     void testUpdateNetworkPassingThroughBusBreaker() throws IOException {
         Network expected = TestNetworkFactory.createMultiBusesVoltageLevelNetwork();
-        Network actual = NetworkXml.copy(expected);
+        Network actual = NetworkSerDe.copy(expected);
         reset(actual);
 
         // We assume that the original network will be updated by some analysis tool
@@ -50,8 +50,8 @@ class NetworkResultsUpdaterTest extends AbstractDynawoCommonsTest {
         // is properly updated from the Bus/Breaker "solution" exchanged
         // with the external analysis tool
         Path pexpectedAsBusBreaker = tmpDir.resolve("expected-as-busbreaker.xiidm");
-        NetworkXml.write(expected, new ExportOptions().setTopologyLevel(TopologyLevel.BUS_BREAKER), pexpectedAsBusBreaker);
-        Network expectedBusBreaker = NetworkXml.read(pexpectedAsBusBreaker);
+        NetworkSerDe.write(expected, new ExportOptions().setTopologyLevel(TopologyLevel.BUS_BREAKER), pexpectedAsBusBreaker);
+        Network expectedBusBreaker = NetworkSerDe.read(pexpectedAsBusBreaker);
         NetworkResultsUpdater.update(actual, expectedBusBreaker, false);
 
         compare(expected, actual);
@@ -60,7 +60,7 @@ class NetworkResultsUpdaterTest extends AbstractDynawoCommonsTest {
     @Test
     void testUpdateWithDisconnects() throws IOException {
         Network expected = FourSubstationsNodeBreakerFactory.create();
-        Network actual = NetworkXml.copy(expected);
+        Network actual = NetworkSerDe.copy(expected);
         reset(actual);
 
         // Test with some elements disconnected in the network
@@ -89,8 +89,8 @@ class NetworkResultsUpdaterTest extends AbstractDynawoCommonsTest {
             reset(targetDangling.getTerminal());
         }
         for (HvdcLine targetHvdcLine : targetNetwork.getHvdcLines()) {
-            reset(targetHvdcLine.getConverterStation(HvdcLine.Side.ONE).getTerminal());
-            reset(targetHvdcLine.getConverterStation(HvdcLine.Side.TWO).getTerminal());
+            reset(targetHvdcLine.getConverterStation(TwoSides.ONE).getTerminal());
+            reset(targetHvdcLine.getConverterStation(TwoSides.TWO).getTerminal());
         }
         for (TwoWindingsTransformer targetTwoWindingsTransformer : targetNetwork.getTwoWindingsTransformers()) {
             reset(targetTwoWindingsTransformer.getTerminal1());

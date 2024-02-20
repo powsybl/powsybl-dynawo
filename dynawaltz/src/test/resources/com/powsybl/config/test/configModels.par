@@ -268,4 +268,7 @@
         <par type="DOUBLE" name="URef_ValueIn" value="0"/>
         <par type="DOUBLE" name="Pm_ValueIn" value="0"/>
     </set>
+    <set id="GF">
+        <par type="DOUBLE" name="converter_SNom" value="10.3"/>
+    </set>
 </parametersSet>

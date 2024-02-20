@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
+    <dyn:blackBoxModel id="BBM_under_voltage" lib="UnderVoltageAutomaton" parFile="models.par" parId="uv"/>
+    <dyn:macroConnector id="MC_UnderVoltageAutomaton-DefaultGenerator">
+        <dyn:connect var1="underVoltageAutomaton_UMonitoredPu" var2="@NAME@_UPu"/>
+        <dyn:connect var1="underVoltageAutomaton_switchOffSignal" var2="@NAME@_switchOffSignal3"/>
+    </dyn:macroConnector>
+    <dyn:macroConnect connector="MC_UnderVoltageAutomaton-DefaultGenerator" id1="BBM_under_voltage" id2="NETWORK" name2="GEN"/>
+</dyn:dynamicModelsArchitecture>

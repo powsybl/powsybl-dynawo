@@ -7,7 +7,6 @@
  */
 package com.powsybl.dynaflow.xml;
 
-import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
@@ -31,10 +30,11 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 /**
- * @author Marcos de Miguel <demiguelm at aia.es>
- * @author Florian Dupuy <florian.dupuy at rte-france.com>
+ * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
+ * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
  */
 public final class ConstraintsReader {
 
@@ -72,21 +72,30 @@ public final class ConstraintsReader {
                 state = reader.next();
             }
 
-            XmlUtil.readUntilEndElement(CONSTRAINTS_ELEMENT_NAME, reader, () -> {
-                if (!reader.getLocalName().equals(CONSTRAINT_ELEMENT_NAME)) {
-                    throw new AssertionError();
-                }
-                String name = reader.getAttributeValue(null, MODEL_NAME);
-                reader.getAttributeValue(null, DESCRIPTION); // description: unused
-                reader.getAttributeValue(null, TYPE); // type: unused
-                String kind = reader.getAttributeValue(null, KIND);
-                double limit = XmlUtil.readOptionalDoubleAttribute(reader, LIMIT);
-                double value = XmlUtil.readOptionalDoubleAttribute(reader, VALUE);
-                Integer side = XmlUtil.readOptionalIntegerAttribute(reader, SIDE);
-                Integer acceptableDuration = XmlUtil.readOptionalIntegerAttribute(reader, ACCEPTABLE_DURATION, Integer.MAX_VALUE);
+            if (!CONSTRAINTS_ELEMENT_NAME.equals(reader.getLocalName())) {
+                throw new PowsyblException("Unknown element name '" + reader.getLocalName() + "' in constraints file");
+            }
+            XmlUtil.readSubElements(reader, elementName -> {
+                try {
+                    if (!elementName.equals(CONSTRAINT_ELEMENT_NAME)) {
+                        throw new PowsyblException("Unknown element name '" + elementName + "' in constraints tag");
+                    }
+                    String name = reader.getAttributeValue(null, MODEL_NAME);
+                    reader.getAttributeValue(null, DESCRIPTION); // description: unused
+                    reader.getAttributeValue(null, TYPE); // type: unused
+                    String kind = reader.getAttributeValue(null, KIND);
+                    double limit = XmlUtil.readDoubleAttribute(reader, LIMIT, Double.NaN);
+                    double value = XmlUtil.readDoubleAttribute(reader, VALUE, Double.NaN);
+                    Integer side = XmlUtil.readIntegerAttribute(reader, SIDE);
+                    int acceptableDuration = XmlUtil.readIntAttribute(reader, ACCEPTABLE_DURATION, Integer.MAX_VALUE);
+                    XmlUtil.readEndElementOrThrow(reader);
 
-                getLimitViolation(network, name, kind, limit, 1f, value, side, acceptableDuration)
-                        .ifPresent(lvRead -> addOrDismiss(lvRead, limitViolations));
+                    getLimitViolation(network, name, kind, limit, 1f, value, side, acceptableDuration)
+                            .ifPresent(lvRead -> addOrDismiss(lvRead, limitViolations));
+
+                } catch (XMLStreamException e) {
+                    throw new UncheckedXmlStreamException(e);
+                }
             });
             return limitViolations;
         } catch (XMLStreamException e) {
@@ -117,7 +126,7 @@ public final class ConstraintsReader {
                 .map(identifiable -> new LimitViolation(
                         identifiable.getId(), identifiable.getOptionalName().orElse(null),
                         toLimitViolationType(kind), kind, acceptableDuration,
-                        limit, limitReduction, value, toBranchSide(side)));
+                        limit, limitReduction, value, toThreeSides(side)));
     }
 
     private static Optional<Identifiable<?>> getLimitViolationIdentifiable(Network network, String name) {
@@ -135,38 +144,27 @@ public final class ConstraintsReader {
             if (identifiable == null) {
                 LOGGER.warn("Unknown equipment/bus {} for limit violation in result constraints file", name);
             }
-            if (identifiable instanceof Bus) {
-                identifiable = ((Bus) identifiable).getVoltageLevel(); // Limit violation on buses are identified by their voltage level id
+            if (identifiable instanceof Bus bus) {
+                identifiable = bus.getVoltageLevel(); // Limit violation on buses are identified by their voltage level id
             }
             return Optional.ofNullable(identifiable);
         }
     }
 
-    private static Branch.Side toBranchSide(Integer side) {
+    private static ThreeSides toThreeSides(Integer side) {
         if (side == null) {
             return null;
-        } else if (side == 1) {
-            return Branch.Side.ONE;
-        } else if (side == 2) {
-            return Branch.Side.TWO;
-        } else {
-            return null;
         }
+        return ThreeSides.valueOf(side);
     }
 
     private static LimitViolationType toLimitViolationType(String kind) {
-        switch (kind) {
-            case "UInfUmin":
-                return LimitViolationType.LOW_VOLTAGE;
-            case "USupUmax":
-                return LimitViolationType.HIGH_VOLTAGE;
-            case "OverloadOpen":
-            case "OverloadUp":
-            case "PATL":
-                return LimitViolationType.CURRENT;
-            default:
-                throw new PowsyblException("Unexpect violation type " + kind);
-        }
+        return switch (kind) {
+            case "UInfUmin" -> LimitViolationType.LOW_VOLTAGE;
+            case "USupUmax" -> LimitViolationType.HIGH_VOLTAGE;
+            case "OverloadOpen", "OverloadUp", "PATL" -> LimitViolationType.CURRENT;
+            default -> throw new PowsyblException("Unexpect violation type " + kind);
+        };
     }
 
     private ConstraintsReader() {

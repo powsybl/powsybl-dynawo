@@ -5,13 +5,14 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+
 import com.powsybl.iidm.network.Line
-import com.powsybl.iidm.network.Branch
+import com.powsybl.iidm.network.TwoSides
 
 for (Line line : network.lines) {
     Disconnect {
         staticId line.id
         startTime 4
-        disconnectOnly Branch.Side.TWO
+        disconnectOnly TwoSides.TWO
     }
 }

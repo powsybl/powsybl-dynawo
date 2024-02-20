@@ -9,6 +9,7 @@ package com.powsybl.dynawaltz;
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
 import com.powsybl.commons.PowsyblException;
+import com.powsybl.dynawaltz.parameters.ParameterType;
 import com.powsybl.dynawaltz.parameters.ParametersSet;
 import com.powsybl.dynawaltz.xml.ParametersXml;
 import org.junit.jupiter.api.AfterEach;
@@ -25,7 +26,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * @author Marcos de Miguel <demiguelm at aia.es>
+ * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  */
 class DynaWaltzParametersDatabaseTest {
 
@@ -57,6 +58,8 @@ class DynaWaltzParametersDatabaseTest {
         assertEquals(1, set2.getInt("generator_ExcitationPu"));
 
         ParametersSet set3 = dParameters.getModelParameters("test");
+        assertFalse(set3.hasParameter("unknown"));
+        assertTrue(set3.hasParameter("boolean"));
         assertTrue(set3.getBool("boolean"));
         assertEquals("aString", set3.getString("string"));
     }
@@ -73,5 +76,32 @@ class DynaWaltzParametersDatabaseTest {
         Path path = fileSystem.getPath("/file.par");
         UncheckedIOException e = assertThrows(UncheckedIOException.class, () -> ParametersXml.load(path));
         assertEquals("java.nio.file.NoSuchFileException: /file.par", e.getMessage());
+    }
+
+    @Test
+    void addParametersSet() {
+        DynaWaltzParameters dParameters = new DynaWaltzParameters();
+        ParametersSet set = new ParametersSet("test");
+        dParameters.addModelParameters(set);
+        assertEquals(1, dParameters.getModelParameters().size());
+        assertEquals(set, dParameters.getModelParameters("test"));
+    }
+
+    @Test
+    void replaceParameter() {
+        ParametersSet set = new ParametersSet("test");
+        String param = "modifiedParam";
+        set.addParameter(param, ParameterType.DOUBLE, "2.2");
+        set.replaceParameter(param, ParameterType.INT, "3");
+        assertEquals(3, set.getInt(param));
+        assertThrows(PowsyblException.class, () -> set.getDouble(param));
+    }
+
+    @Test
+    void copyParametersSet() {
+        ParametersSet set0 = new ParametersSet("test");
+        set0.addParameter("param", ParameterType.INT, "2");
+        ParametersSet set1 = new ParametersSet("copy", set0);
+        assertEquals(2, set1.getInt("param"));
     }
 }

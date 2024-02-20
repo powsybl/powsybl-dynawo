@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
+    <dyn:blackBoxModel id="BBM_L" lib="HvdcVSC" parFile="models.par" parId="hv" staticId="L">
+        <dyn:macroStaticRef id="MSR_HvdcVSC"/>
+    </dyn:blackBoxModel>
+    <dyn:macroConnector id="MC_HvdcVSCSide1-DefaultEquipmentConnectionPoint">
+        <dyn:connect var1="hvdc_terminal1" var2="@STATIC_ID@@NODE1@_ACPIN"/>
+        <dyn:connect var1="hvdc_switchOffSignal1Side1" var2="@STATIC_ID@@NODE1@_switchOff"/>
+    </dyn:macroConnector>
+    <dyn:macroConnector id="MC_HvdcVSCSide2-DefaultEquipmentConnectionPoint">
+        <dyn:connect var1="hvdc_terminal2" var2="@STATIC_ID@@NODE2@_ACPIN"/>
+        <dyn:connect var1="hvdc_switchOffSignal1Side2" var2="@STATIC_ID@@NODE2@_switchOff"/>
+    </dyn:macroConnector>
+    <dyn:macroStaticReference id="MSR_HvdcVSC">
+        <dyn:staticRef var="hvdc_PInj1Pu" staticVar="p1"/>
+        <dyn:staticRef var="hvdc_QInj1Pu" staticVar="q1"/>
+        <dyn:staticRef var="hvdc_state" staticVar="state1"/>
+        <dyn:staticRef var="hvdc_PInj2Pu" staticVar="p2"/>
+        <dyn:staticRef var="hvdc_QInj2Pu" staticVar="q2"/>
+        <dyn:staticRef var="hvdc_state" staticVar="state2"/>
+    </dyn:macroStaticReference>
+    <dyn:macroConnect connector="MC_HvdcVSCSide1-DefaultEquipmentConnectionPoint" id1="BBM_L" id2="NETWORK"/>
+    <dyn:macroConnect connector="MC_HvdcVSCSide2-DefaultEquipmentConnectionPoint" id1="BBM_L" id2="NETWORK"/>
+</dyn:dynamicModelsArchitecture>

@@ -57,8 +57,9 @@ DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
 
 // Run the simulation and display the results
 DynamicSimulationResult result = DynamicSimulation.run(network, dynamicModelsSupplier, eventModelsSupplier, curvesSupplier, parameters);
-System.out.println(result.isOk());
-System.out.println(result.getLogs());
+System.out.println(result.getStatus());
+System.out.println("Timeline:");
+result.getTimeLine().forEach(tl -> System.out.printf("[%.8f] %s (on %s)%n", tl.time(), tl.message(), tl.modelName()));
 ```
 
 To learn more about the usage of DynaWaltz, read the [dedicated page](https://www.powsybl.org/pages/documentation/simulation/timedomain/dynawo) on our website.
@@ -82,17 +83,17 @@ for (Load load : network.loads) {
 for (Generator gen : network.generators) {
     GeneratorSynchronousThreeWindingsProportionalRegulations {
         staticId gen.id
-        dynamicModelId "BBM_" + gen.id
         parameterSetId "GSTWPR"
     }
 }
 
 for (Line line : network.lines) {
     CurrentLimitAutomaton {
-        staticId line.id
         dynamicModelId "BBM_" + line.id
         parameterSetId "CLA"
-        side Branch.Side.TWO
+        controlledQuadripole line.id
+        iMeasurement line.id
+        iMeasurementSide TwoSides.TWO
     }
 }
 ```

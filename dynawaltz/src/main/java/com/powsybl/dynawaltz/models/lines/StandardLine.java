@@ -7,46 +7,35 @@
  */
 package com.powsybl.dynawaltz.models.lines;
 
-import com.powsybl.dynawaltz.MacroConnectionsAdder;
 import com.powsybl.dynawaltz.models.AbstractEquipmentBlackBoxModel;
-import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.VarConnection;
-import com.powsybl.dynawaltz.models.buses.BusModel;
-import com.powsybl.dynawaltz.models.events.QuadripoleDisconnectableEquipment;
-import com.powsybl.dynawaltz.models.utils.BusUtils;
-import com.powsybl.dynawaltz.models.utils.SideConverter;
+import com.powsybl.dynawaltz.models.buses.EquipmentConnectionPoint;
+import com.powsybl.dynawaltz.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.iidm.network.Line;
+import com.powsybl.iidm.network.TwoSides;
 
 import java.util.List;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class StandardLine extends AbstractEquipmentBlackBoxModel<Line> implements LineModel, QuadripoleDisconnectableEquipment {
+public class StandardLine extends AbstractEquipmentBlackBoxModel<Line> implements LineModel {
 
-    public StandardLine(String dynamicModelId, Line line, String parameterSetId) {
-        super(dynamicModelId, parameterSetId, line);
+    protected StandardLine(String dynamicModelId, Line line, String parameterSetId, String lib) {
+        super(dynamicModelId, parameterSetId, line, lib);
     }
 
-    @Override
-    public String getLib() {
-        return "Line";
-    }
-
-    private List<VarConnection> getVarConnectionsWithBus(BusModel connected, Side side) {
+    private List<VarConnection> getVarConnectionsWith(EquipmentConnectionPoint connected, TwoSides side) {
         return List.of(new VarConnection(getTerminalVarName(side), connected.getTerminalVarName()));
     }
 
-    private String getTerminalVarName(Side side) {
-        return "line_terminal" + side.getSideNumber();
+    private String getTerminalVarName(TwoSides side) {
+        return "line_terminal" + side.getNum();
     }
 
     @Override
     public void createMacroConnections(MacroConnectionsAdder adder) {
-        equipment.getTerminals().forEach(t -> {
-            String busStaticId = BusUtils.getConnectableBusStaticId(t);
-            adder.createMacroConnections(this, busStaticId, BusModel.class, this::getVarConnectionsWithBus, SideConverter.convert(equipment.getSide(t)));
-        });
+        equipment.getTerminals().forEach(t -> adder.createTerminalMacroConnections(this, t, this::getVarConnectionsWith, equipment.getSide(t)));
     }
 
     @Override
@@ -65,17 +54,12 @@ public class StandardLine extends AbstractEquipmentBlackBoxModel<Line> implement
     }
 
     @Override
-    public String getIVarName(Side side) {
+    public String getIVarName(TwoSides side) {
         throw new UnsupportedOperationException("i variable not implemented in StandardLine dynawo's model");
     }
 
     @Override
-    public String getDesactivateCurrentLimitsVarName() {
+    public String getDeactivateCurrentLimitsVarName() {
         throw new UnsupportedOperationException("deactivateCurrentLimits variable not implemented in StandardLine dynawo's model");
-    }
-
-    @Override
-    public String getDisconnectableVarName() {
-        return getStateValueVarName();
     }
 }

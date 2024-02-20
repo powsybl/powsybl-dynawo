@@ -10,32 +10,48 @@ package com.powsybl.dynawaltz.parameters;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.powsybl.commons.PowsyblException;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
- * @author Marcos de Miguel <demiguelm at aia.es>
- * @author Florian Dupuy <florian.dupuy at rte-france.com>
+ * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
+ * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
  */
 public class ParametersSet {
 
-    private final Map<String, Parameter> parameters = new LinkedHashMap<>();
-
-    private final List<Reference> references = new ArrayList<>();
+    private final Map<String, Parameter> parameters;
+    private final List<Reference> references;
     private final String id;
 
     public ParametersSet(@JsonProperty("id") String id) {
         this.id = id;
+        this.parameters = new LinkedHashMap<>();
+        this.references = new ArrayList<>();
+    }
+
+    public ParametersSet(String id, ParametersSet parametersSet) {
+        this.id = id;
+        this.parameters = new LinkedHashMap<>(parametersSet.parameters);
+        this.references = new ArrayList<>(parametersSet.references);
     }
 
     public void addParameter(String name, ParameterType type, String value) {
         parameters.put(name, new Parameter(name, type, value));
     }
 
+    public void addParameter(Parameter parameter) {
+        parameters.put(parameter.name(), parameter);
+    }
+
+    public void replaceParameter(String parameterName, ParameterType type, String value) {
+        parameters.replace(parameterName, new Parameter(parameterName, type, value));
+    }
+
+    public void addReference(String name, ParameterType type, String origData, String origName, String componentId) {
+        references.add(new Reference(name, type, origData, origName, componentId));
+    }
+
     public void addReference(String name, ParameterType type, String origData, String origName) {
-        references.add(new Reference(name, type, origData, origName));
+        references.add(new Reference(name, type, origData, origName, null));
     }
 
     public String getId() {
@@ -52,36 +68,35 @@ public class ParametersSet {
 
     public boolean getBool(String parameterName) {
         Parameter parameter = getParameter(parameterName, ParameterType.BOOL);
-        return Boolean.parseBoolean(parameter.getValue());
+        return Boolean.parseBoolean(parameter.value());
     }
 
     public double getDouble(String parameterName) {
         Parameter parameter = getParameter(parameterName, ParameterType.DOUBLE);
-        return Double.parseDouble(parameter.getValue());
+        return Double.parseDouble(parameter.value());
     }
 
     public int getInt(String parameterName) {
         Parameter parameter = getParameter(parameterName, ParameterType.INT);
-        return Integer.parseInt(parameter.getValue());
+        return Integer.parseInt(parameter.value());
     }
 
     public String getString(String parameterName) {
         Parameter parameter = getParameter(parameterName, ParameterType.STRING);
-        return parameter.getValue();
+        return parameter.value();
     }
 
-    public Parameter getParameter(String parameterName) {
+    public boolean hasParameter(String parameterName) {
+        return parameters.containsKey(parameterName);
+    }
+
+    private Parameter getParameter(String parameterName, ParameterType type) {
         Parameter parameter = parameters.get(parameterName);
         if (parameter == null) {
             throw new IllegalArgumentException("Parameter " + parameterName + " not found in set " + id);
         }
-        return parameter;
-    }
-
-    private Parameter getParameter(String parameterName, ParameterType type) {
-        Parameter parameter = getParameter(parameterName);
-        if (parameter.getType() != type) {
-            throw new PowsyblException("Invalid parameter type: " + parameter.getType() + " (" + type + " expected)");
+        if (parameter.type() != type) {
+            throw new PowsyblException("Invalid parameter type: " + parameter.type() + " (" + type + " expected)");
         }
         return parameter;
     }

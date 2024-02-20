@@ -28,7 +28,7 @@ import java.util.stream.Stream;
 import static com.powsybl.dynaflow.DynaFlowProvider.MODULE_SPECIFIC_PARAMETERS;
 
 /**
- * @author Guillaume Pernin <guillaume.pernin at rte-france.com>
+ * @author Guillaume Pernin {@literal <guillaume.pernin at rte-france.com>}
  */
 public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
 
@@ -37,7 +37,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
      */
     public static class Sa {
         private static final String SECURITY_ANALYSIS = "sa"; //Security analysis
-        private static final String TIME_OF_EVENT = "timeOfEvent";
+        protected static final String TIME_OF_EVENT = "timeOfEvent";
 
         private Double timeOfEvent = null;
 
@@ -70,20 +70,20 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
     }
 
     private static final String CHOSEN_OUTPUT_STRING_DELIMITER = ",";
-    private static final String SVC_REGULATION_ON = "svcRegulationOn";
-    private static final String SHUNT_REGULATION_ON = "shuntRegulationOn";
-    private static final String AUTOMATIC_SLACK_BUS_ON = "automaticSlackBusOn";
-    private static final String DSO_VOLTAGE_LEVEL = "dsoVoltageLevel";
-    private static final String ACTIVE_POWER_COMPENSATION = "activePowerCompensation";
-    private static final String SETTING_PATH = "settingPath";
-    private static final String ASSEMBLING_PATH = "assemblingPath";
-    private static final String START_TIME = "startTime";
-    private static final String STOP_TIME = "stopTime";
-    private static final String PRECISION_NAME = "precision";
-    private static final String CHOSEN_OUTPUTS = "chosenOutputs";
-    private static final String TIME_STEP = "timeStep";
-    private static final String STARTING_POINT_MODE = "startingPointMode";
-    private static final String MERGE_LOADS = "mergeLoads";
+    protected static final String SVC_REGULATION_ON = "svcRegulationOn";
+    protected static final String SHUNT_REGULATION_ON = "shuntRegulationOn";
+    protected static final String AUTOMATIC_SLACK_BUS_ON = "automaticSlackBusOn";
+    protected static final String DSO_VOLTAGE_LEVEL = "dsoVoltageLevel";
+    protected static final String ACTIVE_POWER_COMPENSATION = "activePowerCompensation";
+    protected static final String SETTING_PATH = "settingPath";
+    protected static final String ASSEMBLING_PATH = "assemblingPath";
+    protected static final String START_TIME = "startTime";
+    protected static final String STOP_TIME = "stopTime";
+    protected static final String PRECISION_NAME = "precision";
+    protected static final String CHOSEN_OUTPUTS = "chosenOutputs";
+    protected static final String TIME_STEP = "timeStep";
+    protected static final String STARTING_POINT_MODE = "startingPointMode";
+    protected static final String MERGE_LOADS = "mergeLoads";
 
     private static <E extends Enum<E>> List<Object> getEnumPossibleValues(Class<E> enumClass) {
         return EnumSet.allOf(enumClass).stream().map(Enum::name).collect(Collectors.toList());
@@ -101,9 +101,10 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
             new Parameter(STOP_TIME, ParameterType.DOUBLE, "Stop time", 100d),
             new Parameter(PRECISION_NAME, ParameterType.DOUBLE, "Precision", Double.NaN),
             new Parameter(Sa.TIME_OF_EVENT, ParameterType.DOUBLE, "Time of event", 10d),
-            new Parameter(CHOSEN_OUTPUTS, ParameterType.STRING_LIST, "Chosen outputs", Collections.emptyList(), getEnumPossibleValues(OutputTypes.class), ParameterScope.TECHNICAL),
+            new Parameter(CHOSEN_OUTPUTS, ParameterType.STRING_LIST, "Chosen outputs", List.of(OutputTypes.TIMELINE.name()), getEnumPossibleValues(OutputTypes.class), ParameterScope.TECHNICAL),
             new Parameter(TIME_STEP, ParameterType.DOUBLE, "Time step", 10d),
-            new Parameter(STARTING_POINT_MODE, ParameterType.STRING, "Starting point mode", StartingPointMode.WARM.name(), getEnumPossibleValues(StartingPointMode.class)));
+            new Parameter(STARTING_POINT_MODE, ParameterType.STRING, "Starting point mode", StartingPointMode.WARM.name(), getEnumPossibleValues(StartingPointMode.class)),
+            new Parameter(MERGE_LOADS, ParameterType.BOOLEAN, "Merge loads connected to same bus", Boolean.TRUE));
 
     private Boolean svcRegulationOn = null;
     private Boolean shuntRegulationOn = null;
@@ -116,7 +117,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
     private Double stopTime = null;
     private Double precision = null;
     private Sa securityAnalysis = null;
-    private List<String> chosenOutputs = null;
+    private List<String> chosenOutputs = List.of(OutputTypes.TIMELINE.name());
     private Double timeStep = null;
     private StartingPointMode startingPointMode = null;
     private boolean mergeLoads = true;

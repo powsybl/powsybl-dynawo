@@ -7,13 +7,20 @@
  */
 package com.powsybl.dynawaltz.models.transformers;
 
-import com.powsybl.dynawaltz.models.Model;
+import com.powsybl.dynawaltz.models.automatons.QuadripoleModel;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public interface TransformerModel extends Model {
+public interface TransformerModel extends QuadripoleModel {
 
     String getStateValueVarName();
 
+    String getStepVarName();
+
+    String getIMonitoredVarName();
+
+    String getPMonitoredVarName();
+
+    String getDisableInternalTapChangerVarName();
 }

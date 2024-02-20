@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
+    <dyn:blackBoxModel id="BBM_LOAD" lib="LoadTwoTransformers" parFile="models.par" parId="LTT" staticId="LOAD">
+        <dyn:macroStaticRef id="MSR_LoadTwoTransformers"/>
+    </dyn:blackBoxModel>
+    <dyn:macroConnector id="MC_LoadTwoTransformers-DefaultEquipmentConnectionPoint">
+        <dyn:connect var1="transformerT_terminal1" var2="@STATIC_ID@@NODE@_ACPIN"/>
+        <dyn:connect var1="transformerT_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
+        <dyn:connect var1="transformerD_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
+        <dyn:connect var1="load_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
+    </dyn:macroConnector>
+    <dyn:macroStaticReference id="MSR_LoadTwoTransformers">
+        <dyn:staticRef var="transformerT_P1Pu_value" staticVar="p"/>
+        <dyn:staticRef var="transformerT_Q1Pu_value" staticVar="q"/>
+        <dyn:staticRef var="transformerT_state" staticVar="state"/>
+    </dyn:macroStaticReference>
+    <dyn:macroConnect connector="MC_LoadTwoTransformers-DefaultEquipmentConnectionPoint" id1="BBM_LOAD" id2="NETWORK"/>
+</dyn:dynamicModelsArchitecture>

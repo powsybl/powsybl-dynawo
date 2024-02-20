@@ -6,92 +6,29 @@
  */
 package com.powsybl.dynawaltz.models.events;
 
-import com.powsybl.dynawaltz.DynaWaltzContext;
-import com.powsybl.dynawaltz.MacroConnectionsAdder;
+import com.powsybl.dynawaltz.models.InjectionModel;
 import com.powsybl.dynawaltz.models.VarConnection;
-import com.powsybl.dynawaltz.parameters.ParameterType;
-import com.powsybl.dynawaltz.xml.ParametersXml;
-import com.powsybl.iidm.network.Generator;
-import com.powsybl.iidm.network.Load;
+import com.powsybl.dynawaltz.models.macroconnections.MacroConnectionsAdder;
+import com.powsybl.iidm.network.*;
 
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
 import java.util.List;
 
 /**
  * @author Mathieu BAGUE {@literal <mathieu.bague at rte-france.com>}
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class EventInjectionDisconnection extends AbstractEventModel {
+public class EventInjectionDisconnection extends AbstractDynamicLibEventDisconnection {
 
-    private static final String DYNAMIC_MODEL_LIB = "EventSetPointBoolean";
-    private static final String DEFAULT_MODEL_LIB = "EventConnectedStatus";
-
-    private final boolean disconnect;
-
-    public EventInjectionDisconnection(Generator equipment, double startTime, boolean disconnect, String parFileName) {
-        super(equipment, startTime, parFileName);
-        this.disconnect = disconnect;
+    protected EventInjectionDisconnection(String eventId, Injection<?> equipment, double startTime, boolean disconnect) {
+        super(eventId, equipment, startTime, disconnect);
     }
 
-    public EventInjectionDisconnection(Generator equipment, double startTime, boolean disconnect) {
-        this(equipment, startTime, disconnect, null);
-    }
-
-    public EventInjectionDisconnection(Generator equipment, double startTime, String parFileName) {
-        this(equipment, startTime, true, parFileName);
-    }
-
-    public EventInjectionDisconnection(Generator equipment, double startTime) {
-        this(equipment, startTime, true, null);
-    }
-
-    public EventInjectionDisconnection(Load equipment, double startTime, boolean disconnect, String parFileName) {
-        super(equipment, startTime, parFileName);
-        this.disconnect = disconnect;
-    }
-
-    public EventInjectionDisconnection(Load equipment, double startTime, boolean disconnect) {
-        this(equipment, startTime, disconnect, null);
-    }
-
-    public EventInjectionDisconnection(Load equipment, double startTime, String parFileNam) {
-        this(equipment, startTime, true, parFileNam);
-    }
-
-    public EventInjectionDisconnection(Load equipment, double startTime) {
-        this(equipment, startTime, true, null);
-    }
-
-    @Override
-    public String getLib() {
-        return null;
-    }
-
-    private List<VarConnection> getVarConnectionsWithDisconnectable(DisconnectableEquipment connected) {
-        return List.of(new VarConnection("event_state1", connected.getDisconnectableVarName()));
+    private List<VarConnection> getVarConnectionsWith(InjectionModel connected) {
+        return List.of(new VarConnection(DISCONNECTION_VAR_CONNECT, connected.getSwitchOffSignalEventVarName()));
     }
 
     @Override
     public void createMacroConnections(MacroConnectionsAdder adder) {
-        adder.createMacroConnections(this, getEquipment(), DisconnectableEquipment.class, this::getVarConnectionsWithDisconnectable);
-    }
-
-    @Override
-    protected void writeEventSpecificParameters(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
-        ParametersXml.writeParameter(writer, ParameterType.BOOL, "event_stateEvent1", Boolean.toString(disconnect));
-    }
-
-    @Override
-    public String getName() {
-        return EventInjectionDisconnection.class.getSimpleName();
-    }
-
-    @Override
-    protected void writeDynamicAttributes(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
-        writer.writeAttribute("id", getDynamicModelId());
-        writer.writeAttribute("lib", context.isWithoutBlackBoxDynamicModel(getEquipment().getId()) ? DEFAULT_MODEL_LIB : DYNAMIC_MODEL_LIB);
-        writer.writeAttribute("parFile", getParFile(context));
-        writer.writeAttribute("parId", getParameterSetId());
+        adder.createMacroConnections(this, getEquipment(), InjectionModel.class, this::getVarConnectionsWith);
     }
 }

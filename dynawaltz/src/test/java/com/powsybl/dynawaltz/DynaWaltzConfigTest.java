@@ -20,7 +20,7 @@ import java.nio.file.FileSystem;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * @author Marcos de Miguel <demiguelm at aia.es>
+ * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  */
 class DynaWaltzConfigTest {
 
@@ -47,7 +47,7 @@ class DynaWaltzConfigTest {
         moduleConfig.setStringProperty("homeDir", homeDir);
         moduleConfig.setStringProperty("debug", Boolean.toString(debug));
         DynaWaltzConfig config = DynaWaltzConfig.load(platformConfig);
-        assertEquals(homeDir, config.getHomeDir());
+        assertEquals(homeDir, config.getHomeDir().toString());
         assertEquals(debug, config.isDebug());
     }
 

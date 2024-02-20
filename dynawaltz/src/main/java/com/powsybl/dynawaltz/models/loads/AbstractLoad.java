@@ -6,26 +6,24 @@
  */
 package com.powsybl.dynawaltz.models.loads;
 
-import com.powsybl.dynawaltz.MacroConnectionsAdder;
 import com.powsybl.dynawaltz.models.AbstractEquipmentBlackBoxModel;
 import com.powsybl.dynawaltz.models.VarConnection;
-import com.powsybl.dynawaltz.models.buses.BusModel;
-import com.powsybl.dynawaltz.models.events.DisconnectableEquipment;
-import com.powsybl.dynawaltz.models.utils.BusUtils;
+import com.powsybl.dynawaltz.models.buses.EquipmentConnectionPoint;
+import com.powsybl.dynawaltz.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.iidm.network.Load;
 
 import java.util.List;
 
 /**
- * @author Marcos de Miguel <demiguelm at aia.es>
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public abstract class AbstractLoad extends AbstractEquipmentBlackBoxModel<Load> implements LoadModel, DisconnectableEquipment {
+public abstract class AbstractLoad extends AbstractEquipmentBlackBoxModel<Load> implements LoadModel {
 
     protected final String terminalVarName;
 
-    protected AbstractLoad(String dynamicModelId, Load load, String parameterSetId, String terminalVarName) {
-        super(dynamicModelId, parameterSetId, load);
+    protected AbstractLoad(String dynamicModelId, Load load, String parameterSetId, String lib, String terminalVarName) {
+        super(dynamicModelId, parameterSetId, load, lib);
         this.terminalVarName = terminalVarName;
     }
 
@@ -35,17 +33,13 @@ public abstract class AbstractLoad extends AbstractEquipmentBlackBoxModel<Load> 
 
     @Override
     public void createMacroConnections(MacroConnectionsAdder adder) {
-        adder.createMacroConnections(this, BusUtils.getConnectableBusStaticId(equipment), BusModel.class, this::getVarConnectionsWithBus);
+        adder.createTerminalMacroConnections(this, equipment.getTerminal(), this::getVarConnectionsWith);
     }
 
-    abstract List<VarConnection> getVarConnectionsWithBus(BusModel connected);
-
-    public String getSwitchOffSignalNodeVarName() {
-        return "load_switchOffSignal2";
-    }
+    abstract List<VarConnection> getVarConnectionsWith(EquipmentConnectionPoint connected);
 
     @Override
-    public String getDisconnectableVarName() {
-        return getSwitchOffSignalNodeVarName();
+    public String getSwitchOffSignalEventVarName() {
+        return "load_switchOffSignal2";
     }
 }

@@ -6,62 +6,45 @@
  */
 package com.powsybl.dynawaltz.models.events;
 
-import com.powsybl.dynawaltz.DynaWaltzContext;
-import com.powsybl.dynawaltz.MacroConnectionsAdder;
 import com.powsybl.dynawaltz.models.VarConnection;
-import com.powsybl.dynawaltz.xml.ParametersXml;
+import com.powsybl.dynawaltz.models.automatons.QuadripoleModel;
+import com.powsybl.dynawaltz.models.macroconnections.MacroConnectionsAdder;
+import com.powsybl.dynawaltz.parameters.ParametersSet;
 import com.powsybl.iidm.network.Branch;
 
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
 import java.util.List;
 
 import static com.powsybl.dynawaltz.parameters.ParameterType.BOOL;
+import static com.powsybl.dynawaltz.parameters.ParameterType.DOUBLE;
 
 /**
- * @author Marcos de Miguel <demiguelm at aia.es>
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class EventQuadripoleDisconnection extends AbstractEventModel {
+public class EventQuadripoleDisconnection extends AbstractEvent {
 
     private final boolean disconnectOrigin;
     private final boolean disconnectExtremity;
 
-    public EventQuadripoleDisconnection(Branch<?> equipment, double startTime, boolean disconnectOrigin, boolean disconnectExtremity, String parFileName) {
-        super(equipment, startTime, parFileName);
+    protected EventQuadripoleDisconnection(String eventId, Branch<?> equipment, double startTime, boolean disconnectOrigin, boolean disconnectExtremity) {
+        super(eventId, equipment, startTime, "EventQuadripoleDisconnection");
         this.disconnectOrigin = disconnectOrigin;
         this.disconnectExtremity = disconnectExtremity;
     }
 
-    public EventQuadripoleDisconnection(Branch<?> equipment, double startTime, boolean disconnectOrigin, boolean disconnectExtremity) {
-        this(equipment, startTime, disconnectOrigin, disconnectExtremity, null);
-    }
-
-    public EventQuadripoleDisconnection(Branch<?> equipment, double startTime, String parFileName) {
-        this(equipment, startTime, true, true, parFileName);
-    }
-
-    public EventQuadripoleDisconnection(Branch<?> equipment, double startTime) {
-        this(equipment, startTime, true, true, null);
-    }
-
-    @Override
-    public String getLib() {
-        return "EventQuadripoleDisconnection";
-    }
-
-    private List<VarConnection> getVarConnectionsWithQuadripoleEquipment(QuadripoleDisconnectableEquipment connected) {
-        return List.of(new VarConnection("event_state1_value", connected.getDisconnectableVarName()));
+    private List<VarConnection> getVarConnectionsWith(QuadripoleModel connected) {
+        return List.of(new VarConnection("event_state1_value", connected.getStateValueVarName()));
     }
 
     @Override
     public void createMacroConnections(MacroConnectionsAdder adder) {
-        adder.createMacroConnections(this, getEquipment(), QuadripoleDisconnectableEquipment.class, this::getVarConnectionsWithQuadripoleEquipment);
+        adder.createMacroConnections(this, getEquipment(), QuadripoleModel.class, this::getVarConnectionsWith);
     }
 
     @Override
-    protected void writeEventSpecificParameters(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
-        ParametersXml.writeParameter(writer, BOOL, "event_disconnectOrigin", Boolean.toString(disconnectOrigin));
-        ParametersXml.writeParameter(writer, BOOL, "event_disconnectExtremity", Boolean.toString(disconnectExtremity));
+    protected void createEventSpecificParameters(ParametersSet paramSet) {
+        paramSet.addParameter("event_tEvent", DOUBLE, Double.toString(getStartTime()));
+        paramSet.addParameter("event_disconnectOrigin", BOOL, Boolean.toString(disconnectOrigin));
+        paramSet.addParameter("event_disconnectExtremity", BOOL, Boolean.toString(disconnectExtremity));
     }
 }

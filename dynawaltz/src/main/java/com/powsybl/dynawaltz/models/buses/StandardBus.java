@@ -8,30 +8,19 @@
 package com.powsybl.dynawaltz.models.buses;
 
 import com.powsybl.dynawaltz.DynaWaltzContext;
-import com.powsybl.dynawaltz.MacroConnectionsAdder;
-import com.powsybl.dynawaltz.models.AbstractEquipmentBlackBoxModel;
-import com.powsybl.dynawaltz.models.MacroConnectAttribute;
 import com.powsybl.iidm.network.Bus;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 /**
- * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Dimitri Baudrier {@literal <dimitri.baudrier at rte-france.com>}
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class StandardBus extends AbstractEquipmentBlackBoxModel<Bus> implements BusModel {
+public class StandardBus extends AbstractBus {
 
-    public StandardBus(String dynamicModelId, Bus bus, String parameterSetId) {
-        super(dynamicModelId, parameterSetId, bus);
-    }
-
-    @Override
-    public String getLib() {
-        return "Bus";
+    protected StandardBus(String dynamicModelId, Bus bus, String parameterSetId, String lib) {
+        super(dynamicModelId, bus, parameterSetId, lib);
     }
 
     @Override
@@ -41,44 +30,7 @@ public class StandardBus extends AbstractEquipmentBlackBoxModel<Bus> implements 
     }
 
     @Override
-    public List<MacroConnectAttribute> getMacroConnectToAttributes() {
-        List<MacroConnectAttribute> attributesConnectTo = new ArrayList<>(super.getMacroConnectToAttributes());
-        attributesConnectTo.add(MacroConnectAttribute.of("name2", getStaticId()));
-        return attributesConnectTo;
-    }
-
-    @Override
-    public void createMacroConnections(MacroConnectionsAdder adder) {
-        adder.checkLinkedDynamicModels(equipment);
-    }
-
-    @Override
-    public String getName() {
-        return getLib();
-    }
-
-    @Override
     public String getTerminalVarName() {
         return "bus_terminal";
-    }
-
-    @Override
-    public Optional<String> getSwitchOffSignalVarName() {
-        return Optional.empty();
-    }
-
-    @Override
-    public Optional<String> getNumCCVarName() {
-        return Optional.empty();
-    }
-
-    @Override
-    public Optional<String> getUImpinVarName() {
-        return Optional.empty();
-    }
-
-    @Override
-    public Optional<String> getUpuImpinVarName() {
-        return Optional.empty();
     }
 }

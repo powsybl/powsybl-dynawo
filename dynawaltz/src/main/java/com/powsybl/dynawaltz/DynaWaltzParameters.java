@@ -8,6 +8,7 @@ package com.powsybl.dynawaltz;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.config.ModuleConfig;
 import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.extensions.AbstractExtension;
@@ -17,12 +18,13 @@ import com.powsybl.dynawaltz.xml.ParametersXml;
 
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
 /**
- * @author Marcos de Miguel <demiguelm at aia.es>
- * @author Florian Dupuy <florian.dupuy at rte-france.com>
+ * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
+ * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
  */
 public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationParameters> {
 
@@ -36,6 +38,8 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
     public static final String MODELS_OUTPUT_PARAMETERS_FILE = "models.par";
     public static final String NETWORK_OUTPUT_PARAMETERS_FILE = "network.par";
     public static final String SOLVER_OUTPUT_PARAMETERS_FILE = "solvers.par";
+    private static final boolean DEFAULT_WRITE_FINAL_STATE = true;
+    public static final boolean USE_MODEL_SIMPLIFIERS = false;
 
     public enum SolverType {
         SIM,
@@ -47,6 +51,9 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
     private ParametersSet solverParameters;
     private SolverType solverType;
     private boolean mergeLoads;
+    private boolean writeFinalState = DEFAULT_WRITE_FINAL_STATE;
+    private boolean useModelSimplifiers = USE_MODEL_SIMPLIFIERS;
+    private DumpFileParameters dumpFileParameters;
 
     /**
      * Loads parameters from the default platform configuration.
@@ -94,6 +101,27 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
         // If merging loads on each bus to simplify dynawo's analysis
         boolean mergeLoads = config.flatMap(c -> c.getOptionalBooleanProperty("mergeLoads")).orElse(DEFAULT_MERGE_LOADS);
 
+        // Writes final state IIDM
+        boolean writeFinalState = config.flatMap(c -> c.getOptionalBooleanProperty("writeFinalState")).orElse(DEFAULT_WRITE_FINAL_STATE);
+
+        boolean useModelSimplifiers = config.flatMap(c -> c.getOptionalBooleanProperty("useModelSimplifiers")).orElse(USE_MODEL_SIMPLIFIERS);
+
+        // Dump file config
+        boolean exportDumpFile = config.flatMap(c -> c.getOptionalBooleanProperty("dump.export")).orElse(DumpFileParameters.DEFAULT_EXPORT_DUMP);
+        String exportDumpFileFolder = config.flatMap(c -> c.getOptionalStringProperty("dump.exportFolder")).orElse(DumpFileParameters.DEFAULT_DUMP_FOLDER);
+        Path exportDumpFileFolderPath = exportDumpFileFolder != null ? fileSystem.getPath(exportDumpFileFolder) : null;
+        boolean exportFolderNotFound = exportDumpFileFolderPath == null || !Files.exists(exportDumpFileFolderPath);
+        if (exportDumpFile && exportFolderNotFound) {
+            throw new PowsyblException("Folder " + exportDumpFileFolder + " set in 'dumpFileFolder' property cannot be found");
+        }
+        boolean useDumpFile = config.flatMap(c -> c.getOptionalBooleanProperty("dump.useAsInput")).orElse(DumpFileParameters.DEFAULT_USE_DUMP);
+        String dumpFile = config.flatMap(c -> c.getOptionalStringProperty("dump.fileName")).orElse(DumpFileParameters.DEFAULT_DUMP_NAME);
+        if (useDumpFile && (exportFolderNotFound || dumpFile == null || !Files.exists(exportDumpFileFolderPath.resolve(dumpFile)))) {
+            throw new PowsyblException("File " + dumpFile + " set in 'dumpFile' property cannot be found");
+        }
+
+        DumpFileParameters dumpFileParameters = new DumpFileParameters(exportDumpFile, useDumpFile, exportDumpFileFolderPath, dumpFile);
+
         // Load xml files
         List<ParametersSet> modelsParameters = ParametersXml.load(parametersPath);
         ParametersSet networkParameters = ParametersXml.load(networkParametersPath, networkParametersId);
@@ -104,7 +132,10 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
                 .setNetworkParameters(networkParameters)
                 .setSolverParameters(solverParameters)
                 .setSolverType(solverType)
-                .setMergeLoads(mergeLoads);
+                .setMergeLoads(mergeLoads)
+                .setWriteFinalState(writeFinalState)
+                .setUseModelSimplifiers(useModelSimplifiers)
+                .setDumpFileParameters(dumpFileParameters);
     }
 
     public static DynaWaltzParameters load(DynamicSimulationParameters parameters) {
@@ -120,8 +151,16 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
         return "DynaWaltzParameters";
     }
 
+    public void addModelParameters(ParametersSet parameterSet) {
+        modelsParameters.put(parameterSet.getId(), parameterSet);
+    }
+
     public ParametersSet getModelParameters(String parameterSetId) {
-        return modelsParameters.get(parameterSetId);
+        ParametersSet parametersSet = modelsParameters.get(parameterSetId);
+        if (parametersSet == null) {
+            throw new PowsyblException("Model parameter set " + parameterSetId + " not found");
+        }
+        return parametersSet;
     }
 
     @JsonGetter("modelsParameters")
@@ -169,6 +208,38 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
 
     public DynaWaltzParameters setMergeLoads(boolean mergeLoads) {
         this.mergeLoads = mergeLoads;
+        return this;
+    }
+
+    public DynaWaltzParameters setWriteFinalState(boolean writeFinalState) {
+        this.writeFinalState = writeFinalState;
+        return this;
+    }
+
+    public boolean isWriteFinalState() {
+        return writeFinalState;
+    }
+
+    public boolean isUseModelSimplifiers() {
+        return useModelSimplifiers;
+    }
+
+    public DynaWaltzParameters setUseModelSimplifiers(boolean useModelSimplifiers) {
+        this.useModelSimplifiers = useModelSimplifiers;
+        return this;
+    }
+
+    public DumpFileParameters getDumpFileParameters() {
+        return dumpFileParameters;
+    }
+
+    public DynaWaltzParameters setDumpFileParameters(DumpFileParameters dumpFileParameters) {
+        this.dumpFileParameters = dumpFileParameters;
+        return this;
+    }
+
+    public DynaWaltzParameters setDefaultDumpFileParameters() {
+        this.dumpFileParameters = DumpFileParameters.createDefaultDumpFileParameters();
         return this;
     }
 }

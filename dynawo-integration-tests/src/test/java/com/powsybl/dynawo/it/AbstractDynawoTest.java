@@ -18,13 +18,11 @@ import java.nio.file.Path;
 import java.util.Objects;
 
 /**
- * @author Geoffroy Jamgotchian <geoffroy.jamgotchian at rte-france.com>
+ * @author Geoffroy Jamgotchian {@literal <geoffroy.jamgotchian at rte-france.com>}
  */
 public abstract class AbstractDynawoTest {
 
-    private static final String DYNAWO_VERSION = "1.4.0";
-
-    private static final String DOCKER_IMAGE_ID = "powsybl/java-dynawo:" + DYNAWO_VERSION;
+    private static final String DOCKER_IMAGE_ID = "powsybl/java-dynawo:2.1.0";
 
     @TempDir
     Path localDir;

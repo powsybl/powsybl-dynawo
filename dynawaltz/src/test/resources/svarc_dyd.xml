@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
+    <dyn:blackBoxModel id="BBM_SVARC2" lib="StaticVarCompensator" parFile="models.par" parId="svc" staticId="SVC2">
+        <dyn:macroStaticRef id="MSR_StaticVarCompensator"/>
+    </dyn:blackBoxModel>
+    <dyn:macroConnector id="MC_StaticVarCompensator-DefaultEquipmentConnectionPoint">
+        <dyn:connect var1="SVarC_terminal" var2="@STATIC_ID@@NODE@_ACPIN"/>
+    </dyn:macroConnector>
+    <dyn:macroStaticReference id="MSR_StaticVarCompensator">
+        <dyn:staticRef var="SVarC_injector_PInjPu" staticVar="p"/>
+        <dyn:staticRef var="SVarC_injector_QInjPu" staticVar="q"/>
+        <dyn:staticRef var="SVarC_injector_state" staticVar="state"/>
+    </dyn:macroStaticReference>
+    <dyn:macroConnect connector="MC_StaticVarCompensator-DefaultEquipmentConnectionPoint" id1="BBM_SVARC2" id2="NETWORK"/>
+</dyn:dynamicModelsArchitecture>

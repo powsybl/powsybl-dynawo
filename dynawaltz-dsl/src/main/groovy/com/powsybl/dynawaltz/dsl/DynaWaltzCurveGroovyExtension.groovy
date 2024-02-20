@@ -7,6 +7,7 @@
 package com.powsybl.dynawaltz.dsl
 
 import com.google.auto.service.AutoService
+import com.powsybl.commons.reporter.Reporter
 import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.Curve
 import com.powsybl.dynamicsimulation.groovy.CurveGroovyExtension
@@ -19,7 +20,7 @@ import java.util.function.Consumer
 /**
  * An implementation of {@link CurveGroovyExtension} that adds the <pre>curve</pre> keyword to the DSL
  *
- * @author Mathieu Bague <mathieu.bague@rte-france.com>
+ * @author Mathieu Bague {@literal <mathieu.bague@rte-france.com>}
  */
 @AutoService(CurveGroovyExtension.class)
 class DynaWaltzCurveGroovyExtension implements CurveGroovyExtension {
@@ -51,14 +52,15 @@ class DynaWaltzCurveGroovyExtension implements CurveGroovyExtension {
         }
     }
 
+    @Override
     String getName() {
-        return DynaWaltzProvider.NAME;
+        DynaWaltzProvider.NAME
     }
 
     DynaWaltzCurve dynawoCurve(CurvesSpec curveSpec, Consumer<Curve> consumer) {
         
         if (curveSpec.staticId && curveSpec.dynamicModelId) {
-            throw new DslException("Both staticId and dynamicModelId are defined");
+            throw new DslException("Both staticId and dynamicModelId are defined")
         }
         if (!curveSpec.variables) {
             throw new DslException("'variables' field is not set")
@@ -76,7 +78,8 @@ class DynaWaltzCurveGroovyExtension implements CurveGroovyExtension {
         }
     }
 
-    void load(Binding binding, Consumer<Curve> consumer) {
+    @Override
+    void load(Binding binding, Consumer<Curve> consumer, Reporter reporter) {
         binding.curve = { Closure<Void> closure ->
             def cloned = closure.clone()
             CurvesSpec curveSpec = new CurvesSpec()

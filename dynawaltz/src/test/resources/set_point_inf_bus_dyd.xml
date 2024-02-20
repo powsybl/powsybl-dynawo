@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
+    <dyn:blackBoxModel id="BBM_GEN" lib="GeneratorPQ" parFile="models.par" parId="pq" staticId="GEN">
+        <dyn:macroStaticRef id="MSR_GeneratorPQ"/>
+    </dyn:blackBoxModel>
+    <dyn:blackBoxModel id="BBM_TR" lib="TransformerFixedRatio" parFile="models.par" parId="t" staticId="NGEN_NHV1"/>
+    <dyn:blackBoxModel id="BBM_BUS" lib="InfiniteBus" parFile="models.par" parId="ib" staticId="NGEN"/>
+    <dyn:blackBoxModel id="FREQ_SYNC" lib="SetPoint" parFile="sim1.par" parId="FREQ_SYNC_PAR"/>
+    <dyn:macroConnector id="MC_GeneratorPQ-InfiniteBus">
+        <dyn:connect var1="generator_terminal" var2="infiniteBus_terminal"/>
+    </dyn:macroConnector>
+    <dyn:macroConnector id="MC_TransformerFixedRatioSide1-InfiniteBus">
+        <dyn:connect var1="transformer_terminal1" var2="infiniteBus_terminal"/>
+    </dyn:macroConnector>
+    <dyn:macroConnector id="MC_TransformerFixedRatioSide2-DefaultEquipmentConnectionPoint">
+        <dyn:connect var1="transformer_terminal2" var2="@STATIC_ID@@NODE@_ACPIN"/>
+    </dyn:macroConnector>
+    <dyn:macroConnector id="MC_SetPoint-GeneratorPQ">
+        <dyn:connect var1="setPoint_setPoint" var2="generator_omegaRefPu"/>
+    </dyn:macroConnector>
+    <dyn:macroStaticReference id="MSR_GeneratorPQ">
+        <dyn:staticRef var="generator_PGenPu" staticVar="p"/>
+        <dyn:staticRef var="generator_QGenPu" staticVar="q"/>
+        <dyn:staticRef var="generator_state" staticVar="state"/>
+    </dyn:macroStaticReference>
+    <dyn:macroConnect connector="MC_GeneratorPQ-InfiniteBus" id1="BBM_GEN" id2="BBM_BUS" name2="NGEN"/>
+    <dyn:macroConnect connector="MC_TransformerFixedRatioSide1-InfiniteBus" id1="BBM_TR" id2="BBM_BUS" name2="NGEN"/>
+    <dyn:macroConnect connector="MC_TransformerFixedRatioSide2-DefaultEquipmentConnectionPoint" id1="BBM_TR" id2="NETWORK"/>
+    <dyn:macroConnect connector="MC_SetPoint-GeneratorPQ" id1="FREQ_SYNC" id2="BBM_GEN"/>
+</dyn:dynamicModelsArchitecture>

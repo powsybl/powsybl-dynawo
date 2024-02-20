@@ -17,7 +17,7 @@ import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
- * @author Marcos de Miguel <demiguelm at aia.es>
+ * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  */
 class Ieee14MacroConnectsTest extends AbstractIeeeTest {
 

@@ -7,22 +7,8 @@
 package com.powsybl.dynawaltz.models;
 
 /**
- * @author Florian Dupuy <florian.dupuy at rte-france.com>
+ * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class VarMapping {
-    private final String dynamicVar;
-    private final String staticVar;
-
-    public VarMapping(String dynamicVar, String staticVar) {
-        this.dynamicVar = dynamicVar;
-        this.staticVar = staticVar;
-    }
-
-    public String getStaticVar() {
-        return staticVar;
-    }
-
-    public String getDynamicVar() {
-        return dynamicVar;
-    }
+public record VarMapping(String dynamicVar, String staticVar) {
 }

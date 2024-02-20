@@ -8,13 +8,8 @@ package com.powsybl.dynaflow;
 
 import com.google.auto.service.AutoService;
 import com.powsybl.commons.reporter.Reporter;
-import com.powsybl.computation.Command;
 import com.powsybl.computation.ComputationManager;
-import com.powsybl.computation.ExecutionEnvironment;
-import com.powsybl.computation.SimpleCommandBuilder;
 import com.powsybl.contingency.ContingenciesProvider;
-import com.powsybl.contingency.Contingency;
-import com.powsybl.dynawo.commons.DynawoUtil;
 import com.powsybl.dynawo.commons.PowsyblDynawoVersion;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.security.*;
@@ -25,18 +20,15 @@ import com.powsybl.security.strategy.OperatorStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
 import static com.powsybl.dynaflow.DynaFlowConstants.*;
-import static com.powsybl.dynaflow.SecurityAnalysisConstants.CONTINGENCIES_FILENAME;
 
 /**
- * @author Marcos de Miguel <demiguelm at aia.es>
+ * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  */
 @AutoService(SecurityAnalysisProvider.class)
 public class DynaFlowSecurityAnalysisProvider implements SecurityAnalysisProvider {
@@ -48,7 +40,7 @@ public class DynaFlowSecurityAnalysisProvider implements SecurityAnalysisProvide
     private final Supplier<DynaFlowConfig> configSupplier;
 
     public DynaFlowSecurityAnalysisProvider() {
-        this(DynaFlowConfig::fromPropertyFile);
+        this(DynaFlowConfig::load);
     }
 
     public DynaFlowSecurityAnalysisProvider(Supplier<DynaFlowConfig> configSupplier) {
@@ -74,9 +66,6 @@ public class DynaFlowSecurityAnalysisProvider implements SecurityAnalysisProvide
         if (monitors != null && !monitors.isEmpty()) {
             LOG.error("Monitoring is not possible with Dynaflow implementation. There will not be supplementary information about monitored equipment.");
         }
-        if (reporter != Reporter.NO_OP) {
-            LOG.warn("Reporters are not used in Dynaflow implementation");
-        }
         if (operatorStrategies != null && !operatorStrategies.isEmpty()) {
             LOG.error("Strategies are not implemented in Dynaflow");
         }
@@ -97,6 +86,11 @@ public class DynaFlowSecurityAnalysisProvider implements SecurityAnalysisProvide
         DynawoUtil.requireDynawoMinVersion(env, computationManager, getVersionCommand(config), true);
         List<Contingency> contingencies = contingenciesProvider.getContingencies(network);
 
+        DynaFlowSecurityAnalysis securityAnalysis = new DynaFlowSecurityAnalysis(network, filter, computationManager, configSupplier);
+        interceptors.forEach(securityAnalysis::addInterceptor);
+
+        Reporter dfsaReporter = Reports.createDynaFlowSecurityAnalysisReporter(reporter, network.getId());
+        return securityAnalysis.run(workingVariantId, parameters, contingenciesProvider, dfsaReporter);
         return computationManager.execute(env, new DynaFlowSecurityAnalysisHandler(network, workingVariantId, config, parameters, contingencies, filter, interceptors));
     }
 

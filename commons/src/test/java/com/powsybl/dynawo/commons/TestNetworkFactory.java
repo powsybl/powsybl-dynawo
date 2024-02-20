@@ -8,12 +8,12 @@
 package com.powsybl.dynawo.commons;
 
 import com.powsybl.iidm.network.*;
-import org.joda.time.DateTime;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 
 /**
- * @author Florian Dupuy <florian.dupuy at rte-france.com>
+ * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
  */
 public final class TestNetworkFactory {
 
@@ -22,7 +22,7 @@ public final class TestNetworkFactory {
 
     static Network createMultiBusesVoltageLevelNetwork() {
         Network network = Network.create("multiBusesVl", "test")
-                .setCaseDate(DateTime.parse("2023-02-17T05:41:11.194+01:00"));
+                .setCaseDate(ZonedDateTime.parse("2023-02-17T05:41:11.194+01:00"));
         Substation s = network.newSubstation().setId("substation").add();
 
         VoltageLevel vl1 = s.newVoltageLevel().setId("vl1").setNominalV(250).setTopologyKind(TopologyKind.NODE_BREAKER).add();
@@ -70,7 +70,7 @@ public final class TestNetworkFactory {
      */
     static Network createMultiLoadsBusesNetwork(List<LoadState> loadStates) {
         Network network = Network.create("multiLoads", "test")
-                .setCaseDate(DateTime.parse("2023-02-17T05:41:11.194+01:00"));
+                .setCaseDate(ZonedDateTime.parse("2023-02-17T05:41:11.194+01:00"));
         Substation s = network.newSubstation().setId("substation").add();
 
         // First node breaker voltage level
@@ -79,8 +79,8 @@ public final class TestNetworkFactory {
         for (int i = 0; i < loadStates.size(); i++) {
             LoadState loadState = loadStates.get(i);
             vl1.getNodeBreakerView().newDisconnector().setNode1(0).setNode2(i + 1).setId("d" + (i + 1)).add();
-            vl1.newLoad().setId("load" + (i + 1)).setNode(i + 1).setP0(loadState.getP0()).setQ0(loadState.getQ0()).add()
-                    .getTerminal().setP(loadState.getP()).setQ(loadState.getQ());
+            vl1.newLoad().setId("load" + (i + 1)).setNode(i + 1).setP0(loadState.p0()).setQ0(loadState.q0()).add()
+                    .getTerminal().setP(loadState.p()).setQ(loadState.q());
         }
         vl1.getNodeBreakerView().newDisconnector().setNode1(0).setNode2(loadStates.size() + 1).setId("d" + (loadStates.size() + 1)).add();
 
@@ -93,8 +93,8 @@ public final class TestNetworkFactory {
 
         for (int i = 0; i < loadStates.size(); i++) {
             LoadState loadState = loadStates.get(i);
-            vl2.newLoad().setId("load" + (loadStates.size() + i + 1)).setBus(b2.getId()).setP0(loadState.getP0()).setQ0(loadState.getQ0()).add()
-                    .getTerminal().setP(loadState.getP()).setQ(loadState.getQ());
+            vl2.newLoad().setId("load" + (loadStates.size() + i + 1)).setBus(b2.getId()).setP0(loadState.p0()).setQ0(loadState.q0()).add()
+                    .getTerminal().setP(loadState.p()).setQ(loadState.q());
         }
 
         // Line between the two voltage levels

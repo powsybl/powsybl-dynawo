@@ -1,6 +1,7 @@
 {
   "dfl-config" : {
     "InfiniteReactiveLimits" : true,
+    "ChosenOutputs" : [ "TIMELINE" ],
     "OutputDir" : "dynaflow/workingDir"
   }
 }

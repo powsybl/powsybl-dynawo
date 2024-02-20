@@ -38,6 +38,14 @@
       },
       "solverType" : "IDA",
       "mergeLoads" : false,
+      "writeFinalState" : true,
+      "useModelSimplifiers" : false,
+      "dumpFileParameters" : {
+        "exportDumpFile" : false,
+        "useDumpFile" : false,
+        "dumpFileFolder" : null,
+        "dumpFile" : null
+      },
       "modelsParameters" : [ {
         "id" : "test",
         "parameters" : {

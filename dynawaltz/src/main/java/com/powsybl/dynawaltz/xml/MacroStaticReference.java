@@ -17,7 +17,7 @@ import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.MACRO_STATIC_REFERENCE_PREFIX;
 
 /**
- * @author Marcos de Miguel <demiguelm at aia.es>
+ * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  */
 public final class MacroStaticReference {
 
@@ -36,7 +36,7 @@ public final class MacroStaticReference {
         writer.writeStartElement(DYN_URI, "macroStaticReference");
         writer.writeAttribute("id", MACRO_STATIC_REFERENCE_PREFIX + lib);
         for (VarMapping varMapping : varMappings) {
-            writeStaticRef(writer, varMapping.getDynamicVar(), varMapping.getStaticVar());
+            writeStaticRef(writer, varMapping.dynamicVar(), varMapping.staticVar());
         }
         writer.writeEndElement();
     }

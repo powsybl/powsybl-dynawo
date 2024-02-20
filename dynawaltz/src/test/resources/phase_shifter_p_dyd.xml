@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
+    <dyn:blackBoxModel id="BBM_phase_shifter" lib="PhaseShifterP" parFile="models.par" parId="ps"/>
+    <dyn:macroConnector id="MC_PhaseShifterP-DefaultTransformer">
+        <dyn:connect var1="phaseShifter_tap" var2="@NAME@_step"/>
+        <dyn:connect var1="phaseShifter_PMonitored" var2="@NAME@_P1"/>
+        <dyn:connect var1="phaseShifter_AutomatonExists" var2="@NAME@_disable_internal_tapChanger"/>
+    </dyn:macroConnector>
+    <dyn:macroConnect connector="MC_PhaseShifterP-DefaultTransformer" id1="BBM_phase_shifter" id2="NETWORK" name2="NGEN_NHV1"/>
+</dyn:dynamicModelsArchitecture>

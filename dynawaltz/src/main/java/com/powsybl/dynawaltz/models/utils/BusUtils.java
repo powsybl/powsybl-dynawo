@@ -7,32 +7,21 @@
  */
 package com.powsybl.dynawaltz.models.utils;
 
-import com.powsybl.iidm.network.Generator;
-import com.powsybl.iidm.network.Load;
-import com.powsybl.iidm.network.StaticVarCompensator;
-import com.powsybl.iidm.network.Terminal;
+import com.powsybl.iidm.network.*;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public final class BusUtils {
 
     private BusUtils() {
     }
 
-    public static String getConnectableBusStaticId(Terminal terminal) {
-        return terminal.getBusBreakerView().getConnectableBus().getId();
+    public static Bus getConnectableBus(Terminal terminal) {
+        return terminal.getBusBreakerView().getConnectableBus();
     }
 
-    public static String getConnectableBusStaticId(Generator generator) {
-        return getConnectableBusStaticId(generator.getTerminal());
-    }
-
-    public static String getConnectableBusStaticId(StaticVarCompensator svc) {
-        return getConnectableBusStaticId(svc.getTerminal());
-    }
-
-    public static String getConnectableBusStaticId(Load load) {
-        return getConnectableBusStaticId(load.getTerminal());
+    public static Bus getConnectableBus(Injection<?> injection) {
+        return getConnectableBus(injection.getTerminal());
     }
 }

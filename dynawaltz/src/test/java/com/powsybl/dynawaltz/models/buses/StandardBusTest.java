@@ -27,8 +27,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
- * @author Dimitri Baudrier <dimitri.baudrier at rte-france.com>
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Dimitri Baudrier {@literal <dimitri.baudrier at rte-france.com>}
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 class StandardBusTest {
 
@@ -36,17 +36,17 @@ class StandardBusTest {
     void connectionToModelWithoutDynamicModelException() {
         Network network = EurostagTutorialExample1Factory.create(NetworkFactory.findDefault());
         List<BlackBoxModel> dynamicModels = new ArrayList<>();
-        network.getBusBreakerView().getBuses().forEach(b -> {
-            if (b.getId().equals("NHV1")) {
-                dynamicModels.add(new StandardBus("BBM_" + b.getId(), b, "SB"));
-            }
-        });
+        dynamicModels.add(StandardBusBuilder.of(network)
+                .dynamicModelId("BBM_NHV1")
+                .staticId("NHV1")
+                .parameterSetId("SB")
+                .build());
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynaWaltzParameters dynawoParameters = DynaWaltzParameters.load();
         String workingVariantId = network.getVariantManager().getWorkingVariantId();
         List<BlackBoxModel> events = Collections.emptyList();
         List<Curve> curves = Collections.emptyList();
         PowsyblException e = assertThrows(PowsyblException.class, () -> new DynaWaltzContext(network, workingVariantId, dynamicModels, events, curves, parameters, dynawoParameters));
-        assertEquals("The equipment NHV1_NHV2_1 linked to the standard bus NHV1 does not possess a dynamic model", e.getMessage());
+        assertEquals("The equipment NHV1_NHV2_1 linked to the StandardBus NHV1 does not possess a dynamic model", e.getMessage());
     }
 }

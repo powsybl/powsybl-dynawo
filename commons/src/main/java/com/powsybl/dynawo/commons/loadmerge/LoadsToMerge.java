@@ -7,55 +7,55 @@
  */
 package com.powsybl.dynawo.commons.loadmerge;
 
-import com.powsybl.iidm.network.Load;
-import com.powsybl.iidm.network.LoadAdder;
-import com.powsybl.iidm.network.Terminal;
+import com.powsybl.iidm.network.*;
 
 import java.util.List;
 
 /**
- * @author Laurent Isertial <laurent.issertial at rte-france.com>
+ * @author Laurent Isertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class LoadsToMerge {
-    private final LoadPowers loadPowers;
+    private static final String MERGE_LOAD_PREFIX_ID = "merged_load_.";
     private final List<Load> loads;
     private final LoadAdder loadAdder;
     private final double mergedP;
     private final double mergedQ;
+    private final double mergedP0;
+    private final double mergedQ0;
 
-    public LoadsToMerge(LoadPowers loadPowers, List<Load> loads, LoadAdder loadAdder) {
-        this.loadPowers = loadPowers;
+    public LoadsToMerge(LoadPowersSigns loadPowersSigns, List<Load> loads, Bus bus) {
         this.loads = loads;
-        this.loadAdder = loadAdder;
+        this.loadAdder = createLoadAdder(loads, loadPowersSigns, bus);
         this.mergedP = loads.stream().map(Load::getTerminal).mapToDouble(Terminal::getP).sum();
         this.mergedQ = loads.stream().map(Load::getTerminal).mapToDouble(Terminal::getQ).sum();
+        this.mergedP0 = loads.stream().mapToDouble(Load::getP0).sum();
+        this.mergedQ0 = loads.stream().mapToDouble(Load::getQ0).sum();
     }
 
-    public LoadPowers getLoadPowers() {
-        return loadPowers;
-    }
+    private static LoadAdder createLoadAdder(List<Load> loads, LoadPowersSigns loadPowersSigns, Bus bus) {
+        LoadAdder loadAdder = bus.getVoltageLevel().newLoad();
+        loadAdder.setId(MERGE_LOAD_PREFIX_ID + bus.getId() + loadPowersSigns.getMergeLoadSuffixId());
+        loadAdder.setLoadType(LoadType.UNDEFINED);
 
-    public double getMergedP0() {
-        return loads.stream().mapToDouble(Load::getP0).sum();
-    }
+        TopologyKind topologyKind = bus.getVoltageLevel().getTopologyKind();
+        if (TopologyKind.BUS_BREAKER.equals(topologyKind)) {
+            loadAdder.setBus(bus.getId());
+            loadAdder.setConnectableBus(bus.getId());
+        } else if (TopologyKind.NODE_BREAKER.equals(topologyKind)) {
+            loadAdder.setNode(loads.get(0).getTerminal().getNodeBreakerView().getNode());
+        }
 
-    public double getMergedQ0() {
-        return loads.stream().mapToDouble(Load::getQ0).sum();
-    }
-
-    public double getMergedP() {
-        return mergedP;
-    }
-
-    public double getMergedQ() {
-        return mergedQ;
-    }
-
-    public List<Load> getLoads() {
-        return loads;
-    }
-
-    public LoadAdder getLoadAdder() {
         return loadAdder;
+    }
+
+    public void merge() {
+        loads.forEach(Connectable::remove);
+        loads.clear();
+        Load load = loadAdder
+                .setP0(mergedP0)
+                .setQ0(mergedQ0)
+                .add();
+        load.getTerminal().setP(mergedP);
+        load.getTerminal().setQ(mergedQ);
     }
 }

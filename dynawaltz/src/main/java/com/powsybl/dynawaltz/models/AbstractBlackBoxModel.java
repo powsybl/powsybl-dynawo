@@ -8,25 +8,35 @@ package com.powsybl.dynawaltz.models;
 
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
+import com.powsybl.dynawaltz.models.macroconnections.MacroConnectAttribute;
+import com.powsybl.dynawaltz.parameters.ParametersSet;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 /**
- * @author Luma Zamarreño <zamarrenolm at aia.es>
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Luma Zamarreño {@literal <zamarrenolm at aia.es>}
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public abstract class AbstractBlackBoxModel implements BlackBoxModel {
 
+    private final String lib;
     private final String dynamicModelId;
-    private final String parameterSetId;
+    private String parameterSetId;
 
-    protected AbstractBlackBoxModel(String dynamicModelId, String parameterSetId) {
+    protected AbstractBlackBoxModel(String dynamicModelId, String parameterSetId, String lib) {
         this.dynamicModelId = Objects.requireNonNull(dynamicModelId);
         this.parameterSetId = Objects.requireNonNull(parameterSetId);
+        this.lib = Objects.requireNonNull(lib);
+    }
+
+    @Override
+    public String getLib() {
+        return lib;
     }
 
     @Override
@@ -42,8 +52,17 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel {
         return parameterSetId;
     }
 
+    public void setParameterSetId(String parameterSetId) {
+        this.parameterSetId = parameterSetId;
+    }
+
     @Override
-    public void writeParameters(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
+    public void createDynamicModelParameters(DynaWaltzContext context, Consumer<ParametersSet> parametersAdder) {
+        // method empty by default to be redefined by specific models
+    }
+
+    @Override
+    public void createNetworkParameter(ParametersSet networkParameters) {
         // method empty by default to be redefined by specific models
     }
 

@@ -10,7 +10,7 @@ import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
 import com.powsybl.commons.config.InMemoryPlatformConfig;
 import com.powsybl.commons.config.MapModuleConfig;
-import com.powsybl.commons.test.AbstractConverterTest;
+import com.powsybl.commons.test.AbstractSerDeTest;
 import com.powsybl.dynaflow.DynaFlowConstants.ActivePowerCompensation;
 import com.powsybl.dynaflow.DynaFlowConstants.OutputTypes;
 import com.powsybl.dynaflow.DynaFlowConstants.StartingPointMode;
@@ -32,9 +32,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
- * @author Guillaume Pernin <guillaume.pernin at rte-france.com>
+ * @author Guillaume Pernin {@literal <guillaume.pernin at rte-france.com>}
  */
-class DynaFlowParametersTest extends AbstractConverterTest {
+class DynaFlowParametersTest extends AbstractSerDeTest {
 
     private InMemoryPlatformConfig platformConfig;
 
@@ -112,7 +112,7 @@ class DynaFlowParametersTest extends AbstractConverterTest {
         DynaFlowParameters parametersExt = parameters.getExtension(DynaFlowParameters.class);
         assertNotNull(parametersExt);
 
-        assertEquals("{mergeLoads=true}", parametersExt.toString());
+        assertEquals("{chosenOutputs=[TIMELINE], mergeLoads=true}", parametersExt.toString());
 
         assertNull(parametersExt.getSvcRegulationOn());
         assertNull(parametersExt.getShuntRegulationOn());
@@ -125,7 +125,7 @@ class DynaFlowParametersTest extends AbstractConverterTest {
         assertNull(parametersExt.getStopTime());
         assertNull(parametersExt.getPrecision());
         assertNull(parametersExt.getSa());
-        assertNull(parametersExt.getChosenOutputs());
+        assertEquals(List.of(OutputTypes.TIMELINE.name()), parametersExt.getChosenOutputs());
         assertNull(parametersExt.getTimeStep());
         assertNull(parametersExt.getStartingPointMode());
         assertTrue(parametersExt.isMergeLoads());

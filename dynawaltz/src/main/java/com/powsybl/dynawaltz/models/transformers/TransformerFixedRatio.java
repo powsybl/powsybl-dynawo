@@ -7,50 +7,38 @@
  */
 package com.powsybl.dynawaltz.models.transformers;
 
-import com.powsybl.dynawaltz.MacroConnectionsAdder;
 import com.powsybl.dynawaltz.models.AbstractEquipmentBlackBoxModel;
-import com.powsybl.dynawaltz.models.Side;
 import com.powsybl.dynawaltz.models.VarConnection;
-import com.powsybl.dynawaltz.models.buses.BusModel;
-import com.powsybl.dynawaltz.models.events.QuadripoleDisconnectableEquipment;
-import com.powsybl.dynawaltz.models.utils.BusUtils;
-import com.powsybl.dynawaltz.models.utils.SideConverter;
+import com.powsybl.dynawaltz.models.buses.EquipmentConnectionPoint;
+import com.powsybl.dynawaltz.models.macroconnections.MacroConnectionsAdder;
+import com.powsybl.dynawaltz.models.utils.SideUtils;
+import com.powsybl.iidm.network.TwoSides;
 import com.powsybl.iidm.network.TwoWindingsTransformer;
 
 import java.util.List;
-import java.util.Objects;
+
+import static com.powsybl.dynawaltz.models.TransformerSide.NONE;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class TransformerFixedRatio extends AbstractEquipmentBlackBoxModel<TwoWindingsTransformer> implements TransformerModel, QuadripoleDisconnectableEquipment {
+public class TransformerFixedRatio extends AbstractEquipmentBlackBoxModel<TwoWindingsTransformer> implements TransformerModel, TapChangerModel {
 
-    private final String transformerLib;
-
-    public TransformerFixedRatio(String dynamicModelId, TwoWindingsTransformer transformer, String parameterSetId, String lib) {
-        super(dynamicModelId, parameterSetId, transformer);
-        this.transformerLib = Objects.requireNonNull(lib);
+    protected TransformerFixedRatio(String dynamicModelId, TwoWindingsTransformer transformer, String parameterSetId, String lib) {
+        super(dynamicModelId, parameterSetId, transformer, lib);
     }
 
-    @Override
-    public String getLib() {
-        return transformerLib;
-    }
-
-    private List<VarConnection> getVarConnectionsWithBus(BusModel connected, Side side) {
+    private List<VarConnection> getVarConnectionsWith(EquipmentConnectionPoint connected, TwoSides side) {
         return List.of(new VarConnection(getTerminalVarName(side), connected.getTerminalVarName()));
     }
 
-    private String getTerminalVarName(Side side) {
-        return "transformer_terminal" + side.getSideNumber();
+    private String getTerminalVarName(TwoSides side) {
+        return "transformer_terminal" + side.getNum();
     }
 
     @Override
     public void createMacroConnections(MacroConnectionsAdder adder) {
-        equipment.getTerminals().forEach(t -> {
-            String busStaticId = BusUtils.getConnectableBusStaticId(t);
-            adder.createMacroConnections(this, busStaticId, BusModel.class, this::getVarConnectionsWithBus, SideConverter.convert(equipment.getSide(t)));
-        });
+        equipment.getTerminals().forEach(t -> adder.createTerminalMacroConnections(this, t, this::getVarConnectionsWith, equipment.getSide(t)));
     }
 
     @Override
@@ -59,7 +47,42 @@ public class TransformerFixedRatio extends AbstractEquipmentBlackBoxModel<TwoWin
     }
 
     @Override
-    public String getDisconnectableVarName() {
-        return getStateValueVarName();
+    public String getStepVarName() {
+        return "transformer_step";
+    }
+
+    @Override
+    public String getIMonitoredVarName() {
+        return "transformer_i1";
+    }
+
+    @Override
+    public String getPMonitoredVarName() {
+        return "transformer_P1";
+    }
+
+    @Override
+    public String getDisableInternalTapChangerVarName() {
+        return "transformer_disable_internal_tapChanger";
+    }
+
+    @Override
+    public List<VarConnection> getTapChangerBlockerVarConnections() {
+        return List.of(new VarConnection(getTapChangerBlockingVarName(NONE), "transformer_TAP_CHANGER_locked_value"));
+    }
+
+    @Override
+    public String getIVarName(TwoSides side) {
+        return "transformer_i" + SideUtils.getSideSuffix(side);
+    }
+
+    @Override
+    public String getStateVarName() {
+        return "transformer_state";
+    }
+
+    @Override
+    public String getDeactivateCurrentLimitsVarName() {
+        return "transformer_desactivate_currentLimits";
     }
 }

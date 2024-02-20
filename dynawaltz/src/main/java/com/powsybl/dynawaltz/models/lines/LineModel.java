@@ -6,18 +6,12 @@
  */
 package com.powsybl.dynawaltz.models.lines;
 
-import com.powsybl.dynawaltz.models.Model;
-import com.powsybl.dynawaltz.models.Side;
+import com.powsybl.dynawaltz.models.automatons.QuadripoleModel;
 
 /**
- * @author Florian Dupuy <florian.dupuy at rte-france.com>
+ * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
  */
-public interface LineModel extends Model {
-    String getIVarName(Side side);
-
-    String getStateVarName();
-
-    String getDesactivateCurrentLimitsVarName();
+public interface LineModel extends QuadripoleModel {
 
     String getStateValueVarName();
 }

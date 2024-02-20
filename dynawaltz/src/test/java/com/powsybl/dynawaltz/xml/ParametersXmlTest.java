@@ -13,16 +13,15 @@ import com.powsybl.dynawaltz.DynaWaltzParameters;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
-import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 
 /**
- * @author Marcos de Miguel <demiguelm at aia.es>
+ * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  */
 class ParametersXmlTest extends DynaWaltzTestUtil {
 
     @Test
-    void writeOmegaRef() throws SAXException, IOException, XMLStreamException {
+    void writeOmegaRef() throws SAXException, IOException {
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynaWaltzParameters dynawoParameters = DynaWaltzParameters.load(PlatformConfig.defaultConfig(), fileSystem);
         DynaWaltzContext context = new DynaWaltzContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, eventModels, curves, parameters, dynawoParameters);
