@@ -11,25 +11,23 @@ import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
 import com.powsybl.computation.AbstractExecutionHandler;
 import com.powsybl.computation.CommandExecution;
 import com.powsybl.computation.ExecutionReport;
-import com.powsybl.contingency.Contingency;
 import com.powsybl.dynaflow.ContingencyResultsUtils;
+import com.powsybl.dynawaltz.security.xml.ContingenciesDydXml;
+import com.powsybl.dynawaltz.security.xml.ContingenciesParXml;
+import com.powsybl.dynawaltz.security.xml.MultipleJobsXml;
 import com.powsybl.dynawaltz.xml.DydXml;
 import com.powsybl.dynawaltz.xml.DynaWaltzConstants;
 import com.powsybl.dynawaltz.xml.JobsXml;
 import com.powsybl.dynawaltz.xml.ParametersXml;
-import com.powsybl.dynawaltz.security.xml.ContingenciesDydXml;
-import com.powsybl.dynawaltz.security.xml.ContingenciesParXml;
-import com.powsybl.dynawaltz.security.xml.MultipleJobsXml;
 import com.powsybl.dynawo.commons.DynawoConstants;
 import com.powsybl.dynawo.commons.DynawoUtil;
 import com.powsybl.dynawo.commons.NetworkResultsUpdater;
 import com.powsybl.dynawo.commons.SimpleDynawoConfig;
 import com.powsybl.iidm.network.Network;
-import com.powsybl.iidm.xml.NetworkXml;
+import com.powsybl.iidm.serde.NetworkSerDe;
 import com.powsybl.security.LimitViolationFilter;
 import com.powsybl.security.SecurityAnalysisReport;
 import com.powsybl.security.SecurityAnalysisResult;
-import com.powsybl.security.dynamic.DynamicSecurityAnalysisParameters;
 import com.powsybl.security.interceptors.SecurityAnalysisInterceptor;
 
 import javax.xml.stream.XMLStreamException;
@@ -50,20 +48,14 @@ public final class DynaWaltzSecurityAnalysisHandler extends AbstractExecutionHan
     private final SecurityAnalysisContext context;
     private final SimpleDynawoConfig config;
     private final Network network;
-    private final DynamicSecurityAnalysisParameters securityAnalysisParameters;
-    private final List<Contingency> contingencies;
     private final LimitViolationFilter violationFilter;
     private final List<SecurityAnalysisInterceptor> interceptors;
 
     public DynaWaltzSecurityAnalysisHandler(SecurityAnalysisContext context, SimpleDynawoConfig config,
-                                            DynamicSecurityAnalysisParameters securityAnalysisParameters, List<Contingency> contingencies,
                                             LimitViolationFilter violationFilter, List<SecurityAnalysisInterceptor> interceptors) {
         this.context = context;
-        //TODO handle merge load ?
         this.network = context.getNetwork();
         this.config = config;
-        this.securityAnalysisParameters = securityAnalysisParameters;
-        this.contingencies = contingencies;
         this.violationFilter = violationFilter;
         this.interceptors = interceptors;
     }
@@ -87,13 +79,13 @@ public final class DynaWaltzSecurityAnalysisHandler extends AbstractExecutionHan
         Path outputNetworkFile = workingDir.resolve("outputs").resolve("finalState").resolve(DynawoConstants.OUTPUT_IIDM_FILENAME);
         if (Files.exists(outputNetworkFile)) {
             //TODO handle merge load
-            NetworkResultsUpdater.update(context.getNetwork(), NetworkXml.read(outputNetworkFile), false);
+            NetworkResultsUpdater.update(context.getNetwork(), NetworkSerDe.read(outputNetworkFile), false);
         }
 
         return new SecurityAnalysisReport(
                 new SecurityAnalysisResult(
                         ContingencyResultsUtils.getPreContingencyResult(network, violationFilter),
-                        ContingencyResultsUtils.getPostContingencyResults(network, violationFilter, workingDir.resolve(DYNAWO_CONSTRAINTS_FOLDER), contingencies),
+                        ContingencyResultsUtils.getPostContingencyResults(network, violationFilter, workingDir.resolve(DYNAWO_CONSTRAINTS_FOLDER), context.getContingencies()),
                         Collections.emptyList())
         );
     }

@@ -7,16 +7,20 @@
  */
 package com.powsybl.dynaflow;
 
+import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.computation.AbstractExecutionHandler;
 import com.powsybl.computation.Command;
 import com.powsybl.computation.CommandExecution;
 import com.powsybl.computation.ExecutionReport;
 import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
+import com.powsybl.dynawo.commons.CommonReports;
 import com.powsybl.dynawo.commons.DynawoUtil;
 import com.powsybl.dynawo.commons.NetworkResultsUpdater;
 import com.powsybl.dynawo.commons.loadmerge.LoadsMerger;
+import com.powsybl.dynawo.commons.timeline.TimelineEntry;
+import com.powsybl.dynawo.commons.timeline.XmlTimeLineParser;
 import com.powsybl.iidm.network.Network;
-import com.powsybl.iidm.xml.NetworkXml;
+import com.powsybl.iidm.serde.NetworkSerDe;
 import com.powsybl.loadflow.LoadFlowParameters;
 import com.powsybl.loadflow.LoadFlowResult;
 import com.powsybl.loadflow.LoadFlowResultImpl;
@@ -28,8 +32,7 @@ import java.nio.file.Path;
 import java.util.*;
 
 import static com.powsybl.dynaflow.DynaFlowConstants.*;
-import static com.powsybl.dynaflow.DynaFlowConstants.OUTPUT_RESULTS_FILENAME;
-import static com.powsybl.dynawo.commons.DynawoConstants.OUTPUT_IIDM_FILENAME;
+import static com.powsybl.dynawo.commons.DynawoConstants.DYNAWO_TIMELINE_FOLDER;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
@@ -41,14 +44,16 @@ public class DynaFlowHandler extends AbstractExecutionHandler<LoadFlowResult> {
     private final DynaFlowParameters dynaFlowParameters;
     private final LoadFlowParameters loadFlowParameters;
     private final DynaFlowConfig config;
+    private final Reporter reporter;
 
-    public DynaFlowHandler(Network network, String workingStateId, DynaFlowParameters dynaFlowParameters, LoadFlowParameters loadFlowParameters, DynaFlowConfig config) {
+    public DynaFlowHandler(Network network, String workingStateId, DynaFlowParameters dynaFlowParameters, LoadFlowParameters loadFlowParameters, DynaFlowConfig config, Reporter reporter) {
         this.network = network;
         this.workingStateId = workingStateId;
         this.dynaFlowParameters = dynaFlowParameters;
         this.loadFlowParameters = loadFlowParameters;
         this.config = config;
         this.dynawoInput = this.dynaFlowParameters.isMergeLoads() ? LoadsMerger.mergeLoads(this.network) : this.network;
+        this.reporter = reporter;
     }
 
     @Override
@@ -66,12 +71,14 @@ public class DynaFlowHandler extends AbstractExecutionHandler<LoadFlowResult> {
 
     @Override
     public LoadFlowResult after(Path workingDir, ExecutionReport report) {
+        reportTimeLine(workingDir);
+
         report.log();
         network.getVariantManager().setWorkingVariant(workingStateId);
         boolean status = true;
-        Path outputNetworkFile = workingDir.resolve("outputs").resolve("finalState").resolve(OUTPUT_IIDM_FILENAME);
+        Path outputNetworkFile = workingDir.resolve("outputs").resolve("finalState").resolve(DynaFlowConstants.OUTPUT_IIDM_FILENAME);
         if (Files.exists(outputNetworkFile)) {
-            NetworkResultsUpdater.update(network, NetworkXml.read(outputNetworkFile), dynaFlowParameters.isMergeLoads());
+            NetworkResultsUpdater.update(network, NetworkSerDe.read(outputNetworkFile), dynaFlowParameters.isMergeLoads());
         } else {
             status = false;
         }
@@ -89,5 +96,14 @@ public class DynaFlowHandler extends AbstractExecutionHandler<LoadFlowResult> {
             return new LoadFlowResultImpl(status, metrics, null, componentResults);
         }
         return LoadFlowResultDeserializer.read(resultsPath);
+    }
+
+    private void reportTimeLine(Path workingDir) {
+        Reporter dfReporter = Reports.createDynaFlowReporter(reporter, network.getId());
+        Path timelineFile = workingDir.resolve(DYNAFLOW_OUTPUTS_FOLDER)
+                .resolve(DYNAWO_TIMELINE_FOLDER)
+                .resolve(DYNAFLOW_TIMELINE_FILE);
+        List<TimelineEntry> tl = new XmlTimeLineParser().parse(timelineFile);
+        tl.forEach(e -> CommonReports.reportTimelineEvent(dfReporter, e));
     }
 }

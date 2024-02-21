@@ -14,6 +14,7 @@ import com.powsybl.dynawaltz.security.xml.ContingenciesDydXml;
 import com.powsybl.dynawaltz.security.xml.ContingenciesParXml;
 import com.powsybl.dynawaltz.xml.DynaWaltzTestUtil;
 import com.powsybl.security.dynamic.DynamicSecurityAnalysisParameters;
+import com.powsybl.security.dynamic.DynamicSimulationContingenciesParameters;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
@@ -29,6 +30,7 @@ class ContingenciesXmlTest extends DynaWaltzTestUtil {
     @Test
     void writeDyds() throws SAXException, IOException, XMLStreamException {
         DynamicSecurityAnalysisParameters parameters = DynamicSecurityAnalysisParameters.load();
+        parameters.setDynamicSimulationParameters(new DynamicSimulationContingenciesParameters(0, 20, 10));
         DynaWaltzParameters dynawaltzParameters = DynaWaltzParameters.load();
         List<Contingency> contingencies = List.of(
                 Contingency.load("LOAD"),

@@ -8,8 +8,10 @@ package com.powsybl.dynaflow;
 
 import com.google.auto.service.AutoService;
 import com.powsybl.commons.reporter.Reporter;
-import com.powsybl.computation.ComputationManager;
+import com.powsybl.computation.*;
 import com.powsybl.contingency.ContingenciesProvider;
+import com.powsybl.contingency.Contingency;
+import com.powsybl.dynawo.commons.DynawoUtil;
 import com.powsybl.dynawo.commons.PowsyblDynawoVersion;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.security.*;
@@ -20,12 +22,15 @@ import com.powsybl.security.strategy.OperatorStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
 import static com.powsybl.dynaflow.DynaFlowConstants.*;
+import static com.powsybl.dynaflow.SecurityAnalysisConstants.CONTINGENCIES_FILENAME;
 
 /**
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
@@ -35,8 +40,6 @@ public class DynaFlowSecurityAnalysisProvider implements SecurityAnalysisProvide
 
     private static final Logger LOG = LoggerFactory.getLogger(DynaFlowSecurityAnalysisProvider.class);
     private static final String WORKING_DIR_PREFIX = "dynaflow_sa_";
-    private static final String DYNAFLOW_LAUNCHER_PROGRAM_NAME = "dynaflow-launcher.sh";
-
     private final Supplier<DynaFlowConfig> configSupplier;
 
     public DynaFlowSecurityAnalysisProvider() {
@@ -83,15 +86,11 @@ public class DynaFlowSecurityAnalysisProvider implements SecurityAnalysisProvide
 
         DynaFlowConfig config = Objects.requireNonNull(configSupplier.get());
         ExecutionEnvironment env = new ExecutionEnvironment(config.createEnv(), WORKING_DIR_PREFIX, config.isDebug());
-        DynawoUtil.requireDynawoMinVersion(env, computationManager, getVersionCommand(config), true);
+        DynawoUtil.requireDynaMinVersion(env, computationManager, getVersionCommand(config), DYNAFLOW_LAUNCHER_PROGRAM_NAME, true);
         List<Contingency> contingencies = contingenciesProvider.getContingencies(network);
-
-        DynaFlowSecurityAnalysis securityAnalysis = new DynaFlowSecurityAnalysis(network, filter, computationManager, configSupplier);
-        interceptors.forEach(securityAnalysis::addInterceptor);
-
         Reporter dfsaReporter = Reports.createDynaFlowSecurityAnalysisReporter(reporter, network.getId());
-        return securityAnalysis.run(workingVariantId, parameters, contingenciesProvider, dfsaReporter);
-        return computationManager.execute(env, new DynaFlowSecurityAnalysisHandler(network, workingVariantId, config, parameters, contingencies, filter, interceptors));
+
+        return computationManager.execute(env, new DynaFlowSecurityAnalysisHandler(network, workingVariantId, config, parameters, contingencies, filter, interceptors, dfsaReporter));
     }
 
     @Override

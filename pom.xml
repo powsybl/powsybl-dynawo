@@ -51,12 +51,13 @@
         <module>dynaflow</module>
         <module>dynawaltz</module>
         <module>dynawaltz-dsl</module>
+        <module>dynawaltz-security-analysis</module>
         <module>distribution</module>
     </modules>
 
     <properties>
         <java.version>17</java.version>
-        <powsyblcore.version>6.2.0</powsyblcore.version>
+        <powsyblcore.version>6.3.0-SNAPSHOT</powsyblcore.version>
         <groovy.version>4.0.14</groovy.version> <!-- used for groovy-json but also for groovydoc (dynawaltz-dsl) -->
         <sonar.coverage.jacoco.xmlReportPaths>
             ../distribution/target/site/jacoco-aggregate/jacoco.xml,
@@ -137,6 +138,11 @@
             <dependency>
                 <groupId>com.powsybl</groupId>
                 <artifactId>powsybl-dynawaltz-dsl</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.powsybl</groupId>
+                <artifactId>powsybl-dynawaltz-security-analysis</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

@@ -7,19 +7,16 @@
  */
 package com.powsybl.dynawaltz.security.xml;
 
-import com.powsybl.contingency.Contingency;
-import com.powsybl.dynawaltz.DynaWaltzContext;
-import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.security.ContingencyEventModels;
 import com.powsybl.dynawaltz.security.SecurityAnalysisContext;
+import com.powsybl.dynawaltz.xml.ParametersXml;
 
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Objects;
 
-import static com.powsybl.dynawaltz.xml.ParametersXml.PARAMETERS_SET_ELEMENT_NAME;
+import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_PREFIX;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
@@ -32,18 +29,11 @@ public final class ContingenciesParXml {
     public static void write(Path workingDir, SecurityAnalysisContext context) throws IOException, XMLStreamException {
         Objects.requireNonNull(workingDir);
         for (ContingencyEventModels model : context.getContingencyEventModels()) {
-            Path file = workingDir.resolve(createParFileName(model.getContingency()));
-            XmlUtil.write(file, context, PARAMETERS_SET_ELEMENT_NAME, ContingenciesParXml::writeEvent, model);
+            ParametersXml.write(model.eventParameters(), createParFileName(model), workingDir, DYN_PREFIX);
         }
     }
 
-    private static void writeEvent(XMLStreamWriter writer, DynaWaltzContext context, ContingencyEventModels model) throws XMLStreamException {
-        for (BlackBoxModel ev : model.getEventModels()) {
-            ev.writeParameters(writer, context);
-        }
-    }
-
-    public static String createParFileName(Contingency contingency) {
+    public static String createParFileName(ContingencyEventModels contingency) {
         return contingency.getId() + ".par";
     }
 }

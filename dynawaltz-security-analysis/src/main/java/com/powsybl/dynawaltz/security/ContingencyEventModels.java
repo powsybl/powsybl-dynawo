@@ -9,8 +9,9 @@ package com.powsybl.dynawaltz.security;
 
 import com.powsybl.contingency.Contingency;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
-import com.powsybl.dynawaltz.models.MacroConnect;
-import com.powsybl.dynawaltz.models.MacroConnector;
+import com.powsybl.dynawaltz.models.macroconnections.MacroConnect;
+import com.powsybl.dynawaltz.models.macroconnections.MacroConnector;
+import com.powsybl.dynawaltz.parameters.ParametersSet;
 
 import java.util.List;
 import java.util.Map;
@@ -18,44 +19,11 @@ import java.util.Map;
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class ContingencyEventModels {
-
-    private final Contingency contingency;
-    private final List<BlackBoxModel> eventModels;
-    private final Map<String, MacroConnector> macroConnectorsMap;
-    private final List<MacroConnect> macroConnectList;
-
-    public ContingencyEventModels(Contingency contingency, List<BlackBoxModel> eventModels, Map<String, MacroConnector> macroConnectorsMap, List<MacroConnect> macroConnectList) {
-        this.contingency = contingency;
-        this.eventModels = eventModels;
-        this.macroConnectorsMap = macroConnectorsMap;
-        this.macroConnectList = macroConnectList;
-    }
-
-    public ContingencyEventModels(Contingency contingency, List<BlackBoxModel> eventModels) {
-        this.contingency = contingency;
-        this.eventModels = eventModels;
-        this.macroConnectorsMap = null;
-        this.macroConnectList = null;
-    }
+public record ContingencyEventModels(Contingency contingency, List<BlackBoxModel> eventModels,
+                                     Map<String, MacroConnector> macroConnectorsMap,
+                                     List<MacroConnect> macroConnectList, List<ParametersSet> eventParameters) {
 
     public String getId() {
         return contingency.getId();
-    }
-
-    public Contingency getContingency() {
-        return contingency;
-    }
-
-    public List<BlackBoxModel> getEventModels() {
-        return eventModels;
-    }
-
-    public Map<String, MacroConnector> getMacroConnectorsMap() {
-        return macroConnectorsMap;
-    }
-
-    public List<MacroConnect> getMacroConnectList() {
-        return macroConnectList;
     }
 }

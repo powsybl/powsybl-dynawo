@@ -42,13 +42,18 @@ public abstract class AbstractEquipmentBlackBoxModel<T extends Identifiable<?>> 
 
     @Override
     public void write(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
+        write(writer, getParFile(context));
+    }
+
+    @Override
+    public void write(XMLStreamWriter writer, String parFileName) throws XMLStreamException {
         boolean hasVarMapping = !getVarsMapping().isEmpty();
         if (hasVarMapping) {
             writer.writeStartElement(DYN_URI, "blackBoxModel");
         } else {
             writer.writeEmptyElement(DYN_URI, "blackBoxModel");
         }
-        writeDynamicAttributes(writer, context);
+        writeDynamicAttributes(writer, parFileName);
         writer.writeAttribute("staticId", getStaticId());
         if (hasVarMapping) {
             MacroStaticReference.writeMacroStaticRef(writer, getLib());

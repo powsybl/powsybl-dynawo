@@ -111,9 +111,9 @@ public class TapChangerBlockingAutomaton extends AbstractPureDynamicBlackBoxMode
     }
 
     @Override
-    public void write(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
+    public void write(XMLStreamWriter writer, String parFileName) throws XMLStreamException {
         if (isConnected) {
-            super.write(writer, context);
+            super.write(writer, parFileName);
         }
     }
 }

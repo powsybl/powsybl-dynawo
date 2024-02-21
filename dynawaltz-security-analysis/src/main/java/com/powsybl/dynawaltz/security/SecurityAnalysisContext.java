@@ -10,14 +10,15 @@ package com.powsybl.dynawaltz.security;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.contingency.Contingency;
 import com.powsybl.contingency.ContingencyElement;
+import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
-import com.powsybl.dynawaltz.models.MacroConnect;
-import com.powsybl.dynawaltz.models.MacroConnector;
-import com.powsybl.dynawaltz.models.events.EventInjectionDisconnection;
-import com.powsybl.dynawaltz.models.events.EventQuadripoleDisconnection;
-import com.powsybl.dynawaltz.security.xml.ContingenciesParXml;
+import com.powsybl.dynawaltz.models.events.ContextDependentEvent;
+import com.powsybl.dynawaltz.models.events.EventDisconnectionBuilder;
+import com.powsybl.dynawaltz.models.macroconnections.MacroConnect;
+import com.powsybl.dynawaltz.models.macroconnections.MacroConnector;
+import com.powsybl.dynawaltz.parameters.ParametersSet;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.security.dynamic.DynamicSecurityAnalysisParameters;
 
@@ -29,43 +30,54 @@ import java.util.stream.Collectors;
  */
 public class SecurityAnalysisContext extends DynaWaltzContext {
 
+    private final List<Contingency> contingencies;
     private final List<ContingencyEventModels> contingencyEventModels;
-    private final DynamicSecurityAnalysisParameters.DynamicContingenciesParameters dynamicContingenciesParameters;
 
     public SecurityAnalysisContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
                                    DynamicSecurityAnalysisParameters parameters, DynaWaltzParameters dynaWaltzParameters, List<Contingency> contingencies) {
 
-        super(network, workingVariantId, dynamicModels, eventModels, Collections.emptyList(), parameters.getDynamicSimulationParameters(), dynaWaltzParameters);
-        this.dynamicContingenciesParameters = parameters.getDynamicContingenciesParameters();
+        //TODO fix
+        super(network, workingVariantId, dynamicModels, eventModels, Collections.emptyList(), DynamicSimulationParameters.load(), dynaWaltzParameters);
+        int contingenciesStartTime = parameters.getDynamicSimulationParameters().getContingenciesStartTime();
+        this.contingencies = contingencies;
         this.contingencyEventModels = contingencies.stream()
                 .map(c -> {
                     List<BlackBoxModel> contEventModels = c.getElements().stream()
-                            .map(ce -> this.createContingencyEventModel(ce, ContingenciesParXml.createParFileName(c)))
+                            .map(ce -> {
+                                BlackBoxModel bbm = this.createContingencyEventModel(ce, contingenciesStartTime);
+                                if (bbm instanceof ContextDependentEvent cde) {
+                                    cde.setEquipmentHasDynamicModel(this);
+                                }
+                                return bbm;
+                            })
                             .collect(Collectors.toList());
                     Map<String, MacroConnector> macroConnectorsMap = new HashMap<>();
                     List<MacroConnect> macroConnects = new ArrayList<>();
-                    macroConnectionsAdder.setMacroConnectorsMap(macroConnectorsMap);
-                    macroConnectionsAdder.setMacroConnectList(macroConnects);
+                    List<ParametersSet> parametersSets = new ArrayList<>(contEventModels.size());
+                    macroConnectionsAdder.setMacroConnectorAdder(macroConnectorsMap::computeIfAbsent);
+                    macroConnectionsAdder.setMacroConnectAdder(macroConnects::add);
                     for (BlackBoxModel bbm : contEventModels) {
                         bbm.createMacroConnections(macroConnectionsAdder);
+                        bbm.createDynamicModelParameters(this, parametersSets::add);
                     }
-                    return new ContingencyEventModels(c, contEventModels, macroConnectorsMap, macroConnects);
+                    return new ContingencyEventModels(c, contEventModels, macroConnectorsMap, macroConnects, parametersSets);
                 })
                 .collect(Collectors.toList());
     }
 
-    private BlackBoxModel createContingencyEventModel(ContingencyElement element, String parFileName) {
-        switch (element.getType()) {
-            case GENERATOR:
-                return new EventInjectionDisconnection(network.getGenerator(element.getId()), dynamicContingenciesParameters.getContingenciesStartTime(), parFileName);
-            case LOAD:
-                return new EventInjectionDisconnection(network.getLoad(element.getId()), dynamicContingenciesParameters.getContingenciesStartTime(), parFileName);
-            case LINE:
-            case TWO_WINDINGS_TRANSFORMER:
-                return new EventQuadripoleDisconnection(network.getBranch(element.getId()), dynamicContingenciesParameters.getContingenciesStartTime(), parFileName);
-            default:
-                throw new PowsyblException("Contingency element " + element.getType() + " not supported");
+    private BlackBoxModel createContingencyEventModel(ContingencyElement element, int contingenciesStartTime) {
+        BlackBoxModel bbm = EventDisconnectionBuilder.of(network)
+                .staticId(element.getId())
+                .startTime(contingenciesStartTime)
+                .build();
+        if (bbm == null) {
+            throw new PowsyblException("Contingency element " + element.getType() + " not supported");
         }
+        return bbm;
+    }
+
+    public List<Contingency> getContingencies() {
+        return contingencies;
     }
 
     public List<ContingencyEventModels> getContingencyEventModels() {

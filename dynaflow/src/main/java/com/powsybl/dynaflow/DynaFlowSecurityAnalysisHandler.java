@@ -10,6 +10,7 @@ package com.powsybl.dynaflow;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.powsybl.commons.json.JsonUtil;
+import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.computation.AbstractExecutionHandler;
 import com.powsybl.computation.Command;
 import com.powsybl.computation.CommandExecution;
@@ -18,7 +19,10 @@ import com.powsybl.contingency.Contingency;
 import com.powsybl.contingency.contingency.list.ContingencyList;
 import com.powsybl.contingency.json.ContingencyJsonModule;
 import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
+import com.powsybl.dynawo.commons.CommonReports;
 import com.powsybl.dynawo.commons.DynawoUtil;
+import com.powsybl.dynawo.commons.timeline.TimelineEntry;
+import com.powsybl.dynawo.commons.timeline.XmlTimeLineParser;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.loadflow.LoadFlowParameters;
 import com.powsybl.security.LimitViolationFilter;
@@ -37,6 +41,7 @@ import java.util.List;
 import static com.powsybl.dynaflow.DynaFlowConstants.*;
 import static com.powsybl.dynaflow.SecurityAnalysisConstants.CONTINGENCIES_FILENAME;
 import static com.powsybl.dynaflow.SecurityAnalysisConstants.DYNAWO_CONSTRAINTS_FOLDER;
+import static com.powsybl.dynawo.commons.DynawoConstants.DYNAWO_TIMELINE_FOLDER;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
@@ -50,10 +55,12 @@ public final class DynaFlowSecurityAnalysisHandler extends AbstractExecutionHand
     private final List<Contingency> contingencies;
     private final LimitViolationFilter violationFilter;
     private final List<SecurityAnalysisInterceptor> interceptors;
+    private final Reporter reporter;
 
     public DynaFlowSecurityAnalysisHandler(Network network, String workingVariantId, DynaFlowConfig config,
                                            SecurityAnalysisParameters securityAnalysisParameters, List<Contingency> contingencies,
-                                           LimitViolationFilter violationFilter, List<SecurityAnalysisInterceptor> interceptors) {
+                                           LimitViolationFilter violationFilter, List<SecurityAnalysisInterceptor> interceptors,
+                                           Reporter reporter) {
         this.network = network;
         this.workingVariantId = workingVariantId;
         this.config = config;
@@ -61,6 +68,7 @@ public final class DynaFlowSecurityAnalysisHandler extends AbstractExecutionHand
         this.contingencies = contingencies;
         this.violationFilter = violationFilter;
         this.interceptors = interceptors;
+        this.reporter = reporter;
     }
 
     @Override
@@ -77,6 +85,12 @@ public final class DynaFlowSecurityAnalysisHandler extends AbstractExecutionHand
     public SecurityAnalysisReport after(Path workingDir, ExecutionReport report) throws IOException {
         super.after(workingDir, report);
         network.getVariantManager().setWorkingVariant(workingVariantId);
+        // Report the timeline events from the timeline files written by dynawo
+        Path timelineDir = workingDir.resolve(DYNAWO_TIMELINE_FOLDER);
+        contingencies.forEach(c -> {
+            Reporter contingencyReporter = Reports.createDynaFlowTimelineReporter(reporter, c.getId());
+            getTimeline(timelineDir, c).forEach(e -> CommonReports.reportTimelineEvent(contingencyReporter, e));
+        });
         return new SecurityAnalysisReport(
                 new SecurityAnalysisResult(
                         ContingencyResultsUtils.getPreContingencyResult(network, violationFilter),
@@ -113,5 +127,10 @@ public final class DynaFlowSecurityAnalysisHandler extends AbstractExecutionHand
             parametersExt = new DynaFlowParameters();
         }
         return parametersExt;
+    }
+
+    private List<TimelineEntry> getTimeline(Path timelineDir, Contingency c) {
+        Path timelineFile = timelineDir.resolve("timeline_" + c.getId() + ".xml");
+        return new XmlTimeLineParser().parse(timelineFile);
     }
 }

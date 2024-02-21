@@ -27,7 +27,9 @@ import com.powsybl.dynawo.commons.DynawoUtil;
 import com.powsybl.dynawo.commons.PowsyblDynawoVersion;
 import com.powsybl.dynawo.commons.SimpleDynawoConfig;
 import com.powsybl.iidm.network.Network;
-import com.powsybl.security.*;
+import com.powsybl.security.LimitViolationDetector;
+import com.powsybl.security.LimitViolationFilter;
+import com.powsybl.security.SecurityAnalysisReport;
 import com.powsybl.security.action.Action;
 import com.powsybl.security.dynamic.DynamicSecurityAnalysisParameters;
 import com.powsybl.security.dynamic.DynamicSecurityAnalysisProvider;
@@ -110,18 +112,20 @@ public class DynaWaltzSecurityAnalysisProvider implements DynamicSecurityAnalysi
         Objects.requireNonNull(contingenciesProvider);
         interceptors.forEach(Objects::requireNonNull);
 
+        Reporter dsaReporter = Reports.createDynamicSecurityAnalysisReporter(reporter, network.getId());
         network.getVariantManager().setWorkingVariant(workingVariantId);
         ExecutionEnvironment env = new ExecutionEnvironment(dynawoConfig.createEnv(), WORKING_DIR_PREFIX, dynawoConfig.isDebug());
-        DynawoUtil.requireDynawoMinVersion(env, computationManager, getVersionCommand(dynawoConfig), false);
+        DynawoUtil.requireDynaMinVersion(env, computationManager, getVersionCommand(dynawoConfig), MODULE_NAME, false);
         List<Contingency> contingencies = contingenciesProvider.getContingencies(network);
         SecurityAnalysisContext context = new SecurityAnalysisContext(network, workingVariantId,
-                BlackBoxSupplierUtils.getBlackBoxModelList(dynamicModelsSupplier, network),
-                BlackBoxSupplierUtils.getBlackBoxModelList(eventModelsSupplier, network),
+                BlackBoxSupplierUtils.getBlackBoxModelList(dynamicModelsSupplier, network, dsaReporter),
+                BlackBoxSupplierUtils.getBlackBoxModelList(eventModelsSupplier, network, dsaReporter),
                 parameters,
-                DynaWaltzParameters.load(parameters.getDynamicSimulationParameters()),
+                //TODO fix
+                DynaWaltzParameters.load(),
                 contingencies);
 
-        return computationManager.execute(env, new DynaWaltzSecurityAnalysisHandler(context, dynawoConfig, parameters, contingencies, filter, interceptors));
+        return computationManager.execute(env, new DynaWaltzSecurityAnalysisHandler(context, dynawoConfig, filter, interceptors));
     }
 
     // TODO choose another name ? (needed for models supplier)

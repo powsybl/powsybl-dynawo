@@ -77,9 +77,9 @@ public class TapChangerAutomaton extends AbstractPureDynamicBlackBoxModel implem
     }
 
     @Override
-    public void write(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
+    public void write(XMLStreamWriter writer, String parFileName) throws XMLStreamException {
         if (ConnectionState.CONNECTED == connection) {
-            super.write(writer, context);
+            super.write(writer, parFileName);
         }
     }
 
