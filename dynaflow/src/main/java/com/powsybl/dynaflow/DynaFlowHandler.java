@@ -33,6 +33,7 @@ import java.util.*;
 
 import static com.powsybl.dynaflow.DynaFlowConstants.*;
 import static com.powsybl.dynawo.commons.DynawoConstants.DYNAWO_TIMELINE_FOLDER;
+import static com.powsybl.dynawo.commons.DynawoUtil.getCommandExecutions;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
@@ -43,15 +44,15 @@ public class DynaFlowHandler extends AbstractExecutionHandler<LoadFlowResult> {
     private final String workingStateId;
     private final DynaFlowParameters dynaFlowParameters;
     private final LoadFlowParameters loadFlowParameters;
-    private final DynaFlowConfig config;
+    private final Command command;
     private final Reporter reporter;
 
-    public DynaFlowHandler(Network network, String workingStateId, DynaFlowParameters dynaFlowParameters, LoadFlowParameters loadFlowParameters, DynaFlowConfig config, Reporter reporter) {
+    public DynaFlowHandler(Network network, String workingStateId, DynaFlowParameters dynaFlowParameters, LoadFlowParameters loadFlowParameters, Command command, Reporter reporter) {
         this.network = network;
         this.workingStateId = workingStateId;
         this.dynaFlowParameters = dynaFlowParameters;
         this.loadFlowParameters = loadFlowParameters;
-        this.config = config;
+        this.command = command;
         this.dynawoInput = this.dynaFlowParameters.isMergeLoads() ? LoadsMerger.mergeLoads(this.network) : this.network;
         this.reporter = reporter;
     }
@@ -61,12 +62,7 @@ public class DynaFlowHandler extends AbstractExecutionHandler<LoadFlowResult> {
         network.getVariantManager().setWorkingVariant(workingStateId);
         DynawoUtil.writeIidm(dynawoInput, workingDir.resolve(IIDM_FILENAME));
         DynaFlowConfigSerializer.serialize(loadFlowParameters, dynaFlowParameters, Path.of("."), workingDir.resolve(CONFIG_FILENAME));
-        return Collections.singletonList(createCommandExecution(config));
-    }
-
-    private static CommandExecution createCommandExecution(DynaFlowConfig config) {
-        Command cmd = DynaFlowProvider.getCommand(config);
-        return new CommandExecution(cmd, 1, 0);
+        return getCommandExecutions(command);
     }
 
     @Override

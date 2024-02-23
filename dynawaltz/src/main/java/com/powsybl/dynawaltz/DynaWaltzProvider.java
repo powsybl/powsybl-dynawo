@@ -30,10 +30,9 @@ import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.JOBS_FILENAME;
 public class DynaWaltzProvider implements DynamicSimulationProvider {
 
     public static final String NAME = "DynaWaltz";
-    private static final String DYNAWO_CMD_NAME = "dynawo";
     private static final String WORKING_DIR_PREFIX = "powsybl_dynawaltz_";
 
-    private final DynaWaltzConfig dynaWaltzConfig;
+    private final DynaWaltzConfig config;
 
     public DynaWaltzProvider() {
         this(PlatformConfig.defaultConfig());
@@ -43,8 +42,8 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
         this(DynaWaltzConfig.load(platformConfig));
     }
 
-    public DynaWaltzProvider(DynaWaltzConfig dynawoConfig) {
-        this.dynaWaltzConfig = Objects.requireNonNull(dynawoConfig);
+    public DynaWaltzProvider(DynaWaltzConfig config) {
+        this.config = Objects.requireNonNull(config);
     }
 
     @Override
@@ -88,8 +87,8 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
 
         Reporter dsReporter = DynawaltzReports.createDynaWaltzReporter(reporter, network.getId());
         network.getVariantManager().setWorkingVariant(workingVariantId);
-        ExecutionEnvironment execEnv = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, dynaWaltzConfig.isDebug());
-        DynawoUtil.requireDynaMinVersion(execEnv, computationManager, getVersionCommand(dynaWaltzConfig), DYNAWO_CMD_NAME, false);
+        ExecutionEnvironment execEnv = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, config.isDebug());
+        DynawoUtil.requireDynaMinVersion(execEnv, computationManager, getVersionCommand(config), DynaWaltzConfig.DYNAWALTZ_LAUNCHER_PROGRAM_NAME, false);
         DynaWaltzContext context = new DynaWaltzContext(network, workingVariantId,
                 BlackBoxSupplierUtils.getBlackBoxModelList(dynamicModelsSupplier, network, dsReporter),
                 BlackBoxSupplierUtils.getBlackBoxModelList(eventModelsSupplier, network, dsReporter),
@@ -98,6 +97,6 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
                 DynaWaltzParameters.load(parameters),
                 reporter);
 
-        return computationManager.execute(execEnv, new DynaWaltzHandler(context, dynaWaltzConfig, reporter));
+        return computationManager.execute(execEnv, new DynaWaltzHandler(context, getCommand(config), reporter));
     }
 }

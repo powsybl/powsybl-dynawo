@@ -85,12 +85,12 @@ public class DynaFlowSecurityAnalysisProvider implements SecurityAnalysisProvide
         interceptors.forEach(Objects::requireNonNull);
 
         DynaFlowConfig config = Objects.requireNonNull(configSupplier.get());
-        ExecutionEnvironment env = new ExecutionEnvironment(config.createEnv(), WORKING_DIR_PREFIX, config.isDebug());
-        DynawoUtil.requireDynaMinVersion(env, computationManager, getVersionCommand(config), DYNAFLOW_LAUNCHER_PROGRAM_NAME, true);
+        ExecutionEnvironment execEnv = new ExecutionEnvironment(config.createEnv(), WORKING_DIR_PREFIX, config.isDebug());
+        DynawoUtil.requireDynaMinVersion(execEnv, computationManager, getVersionCommand(config), DynaFlowConfig.DYNAFLOW_LAUNCHER_PROGRAM_NAME, true);
         List<Contingency> contingencies = contingenciesProvider.getContingencies(network);
         Reporter dfsaReporter = Reports.createDynaFlowSecurityAnalysisReporter(reporter, network.getId());
 
-        return computationManager.execute(env, new DynaFlowSecurityAnalysisHandler(network, workingVariantId, config, parameters, contingencies, filter, interceptors, dfsaReporter));
+        return computationManager.execute(execEnv, new DynaFlowSecurityAnalysisHandler(network, workingVariantId, getCommand(config), parameters, contingencies, filter, interceptors, dfsaReporter));
     }
 
     @Override
@@ -109,7 +109,7 @@ public class DynaFlowSecurityAnalysisProvider implements SecurityAnalysisProvide
                 "--contingencies", CONTINGENCIES_FILENAME);
         return new SimpleCommandBuilder()
                 .id("dynaflow_sa")
-                .program(getProgram(config))
+                .program(config.getProgram())
                 .args(args)
                 .build();
     }
@@ -118,12 +118,8 @@ public class DynaFlowSecurityAnalysisProvider implements SecurityAnalysisProvide
         List<String> args = Collections.singletonList("--version");
         return new SimpleCommandBuilder()
                 .id("dynaflow_version")
-                .program(getProgram(config))
+                .program(config.getProgram())
                 .args(args)
                 .build();
-    }
-
-    private static String getProgram(DynaFlowConfig config) {
-        return config.getHomeDir().resolve(DYNAFLOW_LAUNCHER_PROGRAM_NAME).toString();
     }
 }

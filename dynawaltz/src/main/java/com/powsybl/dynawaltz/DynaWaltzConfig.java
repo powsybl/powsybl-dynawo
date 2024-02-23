@@ -17,6 +17,7 @@ import java.nio.file.Path;
  */
 public class DynaWaltzConfig extends DynawoConfig {
 
+    public static final String DYNAWALTZ_LAUNCHER_PROGRAM_NAME = "dynawo";
     private static final String DYNAWALTZ_MODULE_NAME = "dynawaltz";
 
     public static DynaWaltzConfig load() {
@@ -33,5 +34,9 @@ public class DynaWaltzConfig extends DynawoConfig {
 
     private DynaWaltzConfig(ModuleConfig config) {
         super(config);
+    }
+
+    public String getProgram() {
+        return getProgram(DYNAWALTZ_LAUNCHER_PROGRAM_NAME);
     }
 }

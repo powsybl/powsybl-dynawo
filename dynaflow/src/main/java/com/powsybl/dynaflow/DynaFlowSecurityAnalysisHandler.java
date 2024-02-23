@@ -42,13 +42,14 @@ import static com.powsybl.dynaflow.DynaFlowConstants.*;
 import static com.powsybl.dynaflow.SecurityAnalysisConstants.CONTINGENCIES_FILENAME;
 import static com.powsybl.dynaflow.SecurityAnalysisConstants.DYNAWO_CONSTRAINTS_FOLDER;
 import static com.powsybl.dynawo.commons.DynawoConstants.DYNAWO_TIMELINE_FOLDER;
+import static com.powsybl.dynawo.commons.DynawoUtil.getCommandExecutions;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 public final class DynaFlowSecurityAnalysisHandler extends AbstractExecutionHandler<SecurityAnalysisReport> {
 
-    private final DynaFlowConfig config;
+    private final Command command;
     private final Network network;
     private final String workingVariantId;
     private final SecurityAnalysisParameters securityAnalysisParameters;
@@ -57,13 +58,13 @@ public final class DynaFlowSecurityAnalysisHandler extends AbstractExecutionHand
     private final List<SecurityAnalysisInterceptor> interceptors;
     private final Reporter reporter;
 
-    public DynaFlowSecurityAnalysisHandler(Network network, String workingVariantId, DynaFlowConfig config,
+    public DynaFlowSecurityAnalysisHandler(Network network, String workingVariantId, Command command,
                                            SecurityAnalysisParameters securityAnalysisParameters, List<Contingency> contingencies,
                                            LimitViolationFilter violationFilter, List<SecurityAnalysisInterceptor> interceptors,
                                            Reporter reporter) {
         this.network = network;
         this.workingVariantId = workingVariantId;
-        this.config = config;
+        this.command = command;
         this.securityAnalysisParameters = securityAnalysisParameters;
         this.contingencies = contingencies;
         this.violationFilter = violationFilter;
@@ -78,7 +79,7 @@ public final class DynaFlowSecurityAnalysisHandler extends AbstractExecutionHand
         DynawoUtil.writeIidm(network, workingDir.resolve(IIDM_FILENAME));
         writeParameters(securityAnalysisParameters, workingDir);
         writeContingencies(contingencies, workingDir);
-        return Collections.singletonList(createCommandExecution(config));
+        return getCommandExecutions(command);
     }
 
     @Override
@@ -97,11 +98,6 @@ public final class DynaFlowSecurityAnalysisHandler extends AbstractExecutionHand
                         ContingencyResultsUtils.getPostContingencyResults(network, violationFilter, workingDir.resolve(DYNAWO_CONSTRAINTS_FOLDER), contingencies),
                         Collections.emptyList())
         );
-    }
-
-    private static CommandExecution createCommandExecution(DynaFlowConfig config) {
-        Command cmd = DynaFlowSecurityAnalysisProvider.getCommand(config);
-        return new CommandExecution(cmd, 1, 0);
     }
 
     private static void writeContingencies(List<Contingency> contingencies, Path workingDir) throws IOException {

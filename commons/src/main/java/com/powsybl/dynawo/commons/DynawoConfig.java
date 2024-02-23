@@ -53,10 +53,6 @@ public class DynawoConfig {
         return debug;
     }
 
-    public String getProgram() {
-        return getProgram(DynawoConstants.DYNAWO_CMD_NAME);
-    }
-
     public String getProgram(String programName) {
         String extension = SystemUtils.IS_OS_WINDOWS ? ".cmd" : ".sh";
         return homeDir.resolve(programName + extension).toString();

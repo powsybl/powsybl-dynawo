@@ -31,6 +31,10 @@ public final class DynawoUtil {
     private DynawoUtil() {
     }
 
+    public static List<CommandExecution> getCommandExecutions(Command command) {
+        return Collections.singletonList(new CommandExecution(command, 1, 0));
+    }
+
     public static void writeIidm(Network network, Path file) {
         Objects.requireNonNull(network);
         Objects.requireNonNull(file);

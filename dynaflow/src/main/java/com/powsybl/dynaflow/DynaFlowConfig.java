@@ -20,6 +20,7 @@ import java.util.Map;
  */
 public class DynaFlowConfig extends DynawoConfig {
 
+    public static final String DYNAFLOW_LAUNCHER_PROGRAM_NAME = "dynaflow-launcher";
     private static final String DYNAFLOW_MODULE_NAME = "dynaflow";
 
     public static DynaFlowConfig load() {
@@ -41,5 +42,9 @@ public class DynaFlowConfig extends DynawoConfig {
     public Map<String, String> createEnv() {
         return ImmutableMap.<String, String>builder()
                 .build();
+    }
+
+    public String getProgram() {
+        return getProgram(DYNAFLOW_LAUNCHER_PROGRAM_NAME);
     }
 }

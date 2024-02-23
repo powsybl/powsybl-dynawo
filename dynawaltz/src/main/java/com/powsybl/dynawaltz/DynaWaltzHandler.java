@@ -42,8 +42,11 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.powsybl.dynawaltz.DynaWaltzConstants.FINAL_STATE_FOLDER;
+import static com.powsybl.dynawaltz.DynaWaltzConstants.OUTPUTS_FOLDER;
 import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.*;
 import static com.powsybl.dynawo.commons.DynawoConstants.DYNAWO_TIMELINE_FOLDER;
+import static com.powsybl.dynawo.commons.DynawoUtil.getCommandExecutions;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
@@ -51,8 +54,6 @@ import static com.powsybl.dynawo.commons.DynawoConstants.DYNAWO_TIMELINE_FOLDER;
 public final class DynaWaltzHandler extends AbstractExecutionHandler<DynamicSimulationResult> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DynaWaltzProvider.class);
-    private static final String OUTPUTS_FOLDER = "outputs";
-    private static final String FINAL_STATE_FOLDER = "finalState";
     private static final String LOGS_FOLDER = "logs";
     private static final String OUTPUT_IIDM_FILENAME = "outputIIDM.xml";
     private static final String OUTPUT_DUMP_FILENAME = "outputState.dmp";
@@ -62,7 +63,7 @@ public final class DynaWaltzHandler extends AbstractExecutionHandler<DynamicSimu
     private static final String DYNAWO_ERROR_PATTERN = "DYN Error: ";
 
     private final DynaWaltzContext context;
-    private final DynaWaltzConfig dynaWaltzConfig;
+    private final Command command;
     private final Network dynawoInput;
     private final Reporter reporter;
 
@@ -71,12 +72,12 @@ public final class DynaWaltzHandler extends AbstractExecutionHandler<DynamicSimu
     private DynamicSimulationResult.Status status = DynamicSimulationResult.Status.SUCCESS;
     private String statusText = "";
 
-    public DynaWaltzHandler(DynaWaltzContext context, DynaWaltzConfig dynaWaltzConfig, Reporter reporter) {
+    public DynaWaltzHandler(DynaWaltzContext context, Command command, Reporter reporter) {
         this.context = context;
         this.dynawoInput = context.getDynaWaltzParameters().isMergeLoads()
                 ? LoadsMerger.mergeLoads(context.getNetwork())
                 : context.getNetwork();
-        this.dynaWaltzConfig = dynaWaltzConfig;
+        this.command = command;
         this.reporter = reporter;
     }
 
@@ -91,8 +92,7 @@ public final class DynaWaltzHandler extends AbstractExecutionHandler<DynamicSimu
             Files.delete(curvesPath);
         }
         writeInputFiles(workingDir);
-        Command cmd = DynaWaltzProvider.getCommand(dynaWaltzConfig);
-        return Collections.singletonList(new CommandExecution(cmd, 1));
+        return getCommandExecutions(command);
     }
 
     @Override

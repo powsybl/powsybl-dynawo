@@ -51,16 +51,12 @@ public class DynaFlowProvider implements LoadFlowProvider {
         this.configSupplier = Suppliers.memoize(Objects.requireNonNull(configSupplier, "Config supplier is null"));
     }
 
-    private static String getProgram(DynaFlowConfig config) {
-        return config.getProgram(DynaFlowConstants.DYNAFLOW_LAUNCHER_PROGRAM_NAME);
-    }
-
     public static Command getCommand(DynaFlowConfig config) {
         List<String> args = Arrays.asList("--network", IIDM_FILENAME, "--config", CONFIG_FILENAME);
 
         return new SimpleCommandBuilder()
                 .id("dynaflow_lf")
-                .program(getProgram(config))
+                .program(config.getProgram())
                 .args(args)
                 .inputFiles(new InputFile(IIDM_FILENAME),
                             new InputFile(CONFIG_FILENAME))
@@ -73,7 +69,7 @@ public class DynaFlowProvider implements LoadFlowProvider {
         List<String> args = Collections.singletonList("--version");
         return new SimpleCommandBuilder()
                 .id("dynaflow_version")
-                .program(getProgram(config))
+                .program(config.getProgram())
                 .args(args)
                 .build();
     }
@@ -106,10 +102,10 @@ public class DynaFlowProvider implements LoadFlowProvider {
 
         DynaFlowParameters dynaFlowParameters = getParametersExt(loadFlowParameters);
         DynaFlowConfig config = Objects.requireNonNull(configSupplier.get());
-        ExecutionEnvironment env = new ExecutionEnvironment(config.createEnv(), WORKING_DIR_PREFIX, config.isDebug());
+        ExecutionEnvironment execEnv = new ExecutionEnvironment(config.createEnv(), WORKING_DIR_PREFIX, config.isDebug());
         Command versionCmd = getVersionCommand(config);
-        DynawoUtil.requireDynaMinVersion(env, computationManager, versionCmd, DYNAFLOW_LAUNCHER_PROGRAM_NAME, true);
-        return computationManager.execute(env, new DynaFlowHandler(network, workingStateId, dynaFlowParameters, loadFlowParameters, config, reporter));
+        DynawoUtil.requireDynaMinVersion(execEnv, computationManager, versionCmd, DynaFlowConfig.DYNAFLOW_LAUNCHER_PROGRAM_NAME, true);
+        return computationManager.execute(execEnv, new DynaFlowHandler(network, workingStateId, dynaFlowParameters, loadFlowParameters, getCommand(config), reporter));
     }
 
     @Override

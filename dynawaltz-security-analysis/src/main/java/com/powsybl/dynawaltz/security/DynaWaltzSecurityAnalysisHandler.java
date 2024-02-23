@@ -9,6 +9,7 @@ package com.powsybl.dynawaltz.security;
 
 import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
 import com.powsybl.computation.AbstractExecutionHandler;
+import com.powsybl.computation.Command;
 import com.powsybl.computation.CommandExecution;
 import com.powsybl.computation.ExecutionReport;
 import com.powsybl.dynaflow.ContingencyResultsUtils;
@@ -22,7 +23,6 @@ import com.powsybl.dynawaltz.xml.ParametersXml;
 import com.powsybl.dynawo.commons.DynawoConstants;
 import com.powsybl.dynawo.commons.DynawoUtil;
 import com.powsybl.dynawo.commons.NetworkResultsUpdater;
-import com.powsybl.dynawo.commons.SimpleDynawoConfig;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.serde.NetworkSerDe;
 import com.powsybl.security.LimitViolationFilter;
@@ -39,6 +39,9 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.powsybl.dynaflow.SecurityAnalysisConstants.DYNAWO_CONSTRAINTS_FOLDER;
+import static com.powsybl.dynawaltz.DynaWaltzConstants.FINAL_STATE_FOLDER;
+import static com.powsybl.dynawaltz.DynaWaltzConstants.OUTPUTS_FOLDER;
+import static com.powsybl.dynawo.commons.DynawoUtil.getCommandExecutions;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
@@ -46,16 +49,16 @@ import static com.powsybl.dynaflow.SecurityAnalysisConstants.DYNAWO_CONSTRAINTS_
 public final class DynaWaltzSecurityAnalysisHandler extends AbstractExecutionHandler<SecurityAnalysisReport> {
 
     private final SecurityAnalysisContext context;
-    private final SimpleDynawoConfig config;
+    private final Command command;
     private final Network network;
     private final LimitViolationFilter violationFilter;
     private final List<SecurityAnalysisInterceptor> interceptors;
 
-    public DynaWaltzSecurityAnalysisHandler(SecurityAnalysisContext context, SimpleDynawoConfig config,
+    public DynaWaltzSecurityAnalysisHandler(SecurityAnalysisContext context, Command command,
                                             LimitViolationFilter violationFilter, List<SecurityAnalysisInterceptor> interceptors) {
         this.context = context;
         this.network = context.getNetwork();
-        this.config = config;
+        this.command = command;
         this.violationFilter = violationFilter;
         this.interceptors = interceptors;
     }
@@ -68,7 +71,7 @@ public final class DynaWaltzSecurityAnalysisHandler extends AbstractExecutionHan
             Files.delete(outputNetworkFile);
         }
         writeInputFiles(workingDir);
-        return Collections.singletonList(new CommandExecution(DynaWaltzSecurityAnalysisProvider.getCommand(config), 1, 0));
+        return getCommandExecutions(command);
     }
 
     @Override
@@ -76,7 +79,7 @@ public final class DynaWaltzSecurityAnalysisHandler extends AbstractExecutionHan
 
         super.after(workingDir, report);
         context.getNetwork().getVariantManager().setWorkingVariant(context.getWorkingVariantId());
-        Path outputNetworkFile = workingDir.resolve("outputs").resolve("finalState").resolve(DynawoConstants.OUTPUT_IIDM_FILENAME);
+        Path outputNetworkFile = workingDir.resolve(OUTPUTS_FOLDER).resolve(FINAL_STATE_FOLDER).resolve(DynawoConstants.OUTPUT_IIDM_FILENAME);
         if (Files.exists(outputNetworkFile)) {
             //TODO handle merge load
             NetworkResultsUpdater.update(context.getNetwork(), NetworkSerDe.read(outputNetworkFile), false);
@@ -95,7 +98,6 @@ public final class DynaWaltzSecurityAnalysisHandler extends AbstractExecutionHan
             DynawoUtil.writeIidm(network, workingDir.resolve(DynaWaltzConstants.NETWORK_FILENAME));
             JobsXml.write(workingDir, context);
             DydXml.write(workingDir, context);
-            // TODO handle Security Analysis parameters
             ParametersXml.write(workingDir, context);
             MultipleJobsXml.write(workingDir, context);
             ContingenciesDydXml.write(workingDir, context);

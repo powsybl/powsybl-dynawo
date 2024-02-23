@@ -22,10 +22,8 @@ import com.powsybl.dynawaltz.DynaWaltzParameters;
 import com.powsybl.dynawaltz.DynaWaltzProvider;
 import com.powsybl.dynawaltz.models.utils.BlackBoxSupplierUtils;
 import com.powsybl.dynawaltz.xml.DynaWaltzConstants;
-import com.powsybl.dynawo.commons.DynawoConfigFactory;
 import com.powsybl.dynawo.commons.DynawoUtil;
 import com.powsybl.dynawo.commons.PowsyblDynawoVersion;
-import com.powsybl.dynawo.commons.SimpleDynawoConfig;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.security.LimitViolationDetector;
 import com.powsybl.security.LimitViolationFilter;
@@ -36,7 +34,6 @@ import com.powsybl.security.dynamic.DynamicSecurityAnalysisProvider;
 import com.powsybl.security.interceptors.SecurityAnalysisInterceptor;
 import com.powsybl.security.monitor.StateMonitor;
 import com.powsybl.security.strategy.OperatorStrategy;
-import org.apache.commons.lang3.SystemUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,21 +51,18 @@ public class DynaWaltzSecurityAnalysisProvider implements DynamicSecurityAnalysi
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DynaWaltzSecurityAnalysisProvider.class);
     private static final String WORKING_DIR_PREFIX = "dynawaltz_sa_";
-    private static final String MODULE_NAME = "dynawo-algorithms";
-    private static final String LAUNCHER_PROGRAM_NAME = "dynawo-algorithms";
-
-    private final SimpleDynawoConfig dynawoConfig;
+    private final DynawoAlgorithmsConfig config;
 
     public DynaWaltzSecurityAnalysisProvider() {
         this(PlatformConfig.defaultConfig());
     }
 
     public DynaWaltzSecurityAnalysisProvider(PlatformConfig platformConfig) {
-        this(DynawoConfigFactory.load(platformConfig, MODULE_NAME));
+        this(DynawoAlgorithmsConfig.load(platformConfig));
     }
 
-    public DynaWaltzSecurityAnalysisProvider(SimpleDynawoConfig dynawoConfig) {
-        this.dynawoConfig = Objects.requireNonNull(dynawoConfig);
+    public DynaWaltzSecurityAnalysisProvider(DynawoAlgorithmsConfig config) {
+        this.config = Objects.requireNonNull(config);
     }
 
     @Override
@@ -114,18 +108,17 @@ public class DynaWaltzSecurityAnalysisProvider implements DynamicSecurityAnalysi
 
         Reporter dsaReporter = Reports.createDynamicSecurityAnalysisReporter(reporter, network.getId());
         network.getVariantManager().setWorkingVariant(workingVariantId);
-        ExecutionEnvironment env = new ExecutionEnvironment(dynawoConfig.createEnv(), WORKING_DIR_PREFIX, dynawoConfig.isDebug());
-        DynawoUtil.requireDynaMinVersion(env, computationManager, getVersionCommand(dynawoConfig), MODULE_NAME, false);
+        ExecutionEnvironment execEnv = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, config.isDebug());
+        DynawoUtil.requireDynaMinVersion(execEnv, computationManager, getVersionCommand(config), DynawoAlgorithmsConfig.DYNAWO_ALGORITHMS_MODULE_NAME, false);
         List<Contingency> contingencies = contingenciesProvider.getContingencies(network);
         SecurityAnalysisContext context = new SecurityAnalysisContext(network, workingVariantId,
                 BlackBoxSupplierUtils.getBlackBoxModelList(dynamicModelsSupplier, network, dsaReporter),
                 BlackBoxSupplierUtils.getBlackBoxModelList(eventModelsSupplier, network, dsaReporter),
                 parameters,
-                //TODO fix
-                DynaWaltzParameters.load(),
+                DynaWaltzParameters.load(parameters.getDynamicSimulationParameters()),
                 contingencies);
 
-        return computationManager.execute(env, new DynaWaltzSecurityAnalysisHandler(context, dynawoConfig, filter, interceptors));
+        return computationManager.execute(execEnv, new DynaWaltzSecurityAnalysisHandler(context, getCommand(config), filter, interceptors));
     }
 
     // TODO choose another name ? (needed for models supplier)
@@ -139,29 +132,24 @@ public class DynaWaltzSecurityAnalysisProvider implements DynamicSecurityAnalysi
         return new PowsyblDynawoVersion().getMavenProjectVersion();
     }
 
-    public static Command getCommand(SimpleDynawoConfig config) {
+    public static Command getCommand(DynawoAlgorithmsConfig config) {
         List<String> args = Arrays.asList(
                 "SA",
                 "--input", DynaWaltzConstants.MULTIPLE_JOBS_FILENAME,
                 "--output", DynaWaltzConstants.AGGREGATED_RESULTS);
         return new SimpleCommandBuilder()
                 .id("dynawaltz_sa")
-                .program(getProgram(config))
+                .program(config.getProgram())
                 .args(args)
                 .build();
     }
 
-    public static Command getVersionCommand(SimpleDynawoConfig config) {
+    public static Command getVersionCommand(DynawoAlgorithmsConfig config) {
         List<String> args = Collections.singletonList("--version");
         return new SimpleCommandBuilder()
                 .id("dynawo_algorithms_version")
-                .program(getProgram(config))
+                .program(config.getProgram())
                 .args(args)
                 .build();
-    }
-
-    private static String getProgram(SimpleDynawoConfig config) {
-        String extension = SystemUtils.IS_OS_WINDOWS ? ".cmd" : ".sh";
-        return config.getHomeDir().resolve(LAUNCHER_PROGRAM_NAME + extension).toString();
     }
 }

@@ -10,7 +10,6 @@ package com.powsybl.dynawaltz.security;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.contingency.Contingency;
 import com.powsybl.contingency.ContingencyElement;
-import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
@@ -35,10 +34,9 @@ public class SecurityAnalysisContext extends DynaWaltzContext {
 
     public SecurityAnalysisContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
                                    DynamicSecurityAnalysisParameters parameters, DynaWaltzParameters dynaWaltzParameters, List<Contingency> contingencies) {
-
-        //TODO fix
-        super(network, workingVariantId, dynamicModels, eventModels, Collections.emptyList(), DynamicSimulationParameters.load(), dynaWaltzParameters);
-        int contingenciesStartTime = parameters.getDynamicSimulationParameters().getContingenciesStartTime();
+        super(network, workingVariantId, dynamicModels, eventModels, Collections.emptyList(),
+                parameters.getDynamicSimulationParameters(), dynaWaltzParameters);
+        int contingenciesStartTime = parameters.getDynamicContingenciesParameters().getContingenciesStartTime();
         this.contingencies = contingencies;
         this.contingencyEventModels = contingencies.stream()
                 .map(c -> {
