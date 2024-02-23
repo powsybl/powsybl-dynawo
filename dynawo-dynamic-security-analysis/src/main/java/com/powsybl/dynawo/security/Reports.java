@@ -19,7 +19,7 @@ public final class Reports {
 
     public static Reporter createDynamicSecurityAnalysisReporter(Reporter reporter, String networkId) {
         return reporter.createSubReporter("dsa",
-                "Dynawo algorithms dynamic security analysis on network '${networkId}'",
+                "Dynawo dynamic security analysis on network '${networkId}'",
                 "networkId", networkId);
     }
 }

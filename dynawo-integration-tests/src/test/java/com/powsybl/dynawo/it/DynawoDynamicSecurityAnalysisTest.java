@@ -9,6 +9,7 @@ package com.powsybl.dynawo.it;
 import com.powsybl.commons.datasource.ResourceDataSource;
 import com.powsybl.commons.datasource.ResourceSet;
 import com.powsybl.commons.reporter.ReporterModel;
+import com.powsybl.commons.test.ComparisonUtils;
 import com.powsybl.contingency.Contingency;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynamicsimulation.EventModelsSupplier;
@@ -26,12 +27,17 @@ import com.powsybl.security.SecurityAnalysisResult;
 import com.powsybl.security.detectors.DefaultLimitViolationDetector;
 import com.powsybl.security.dynamic.DynamicSecurityAnalysisParameters;
 import com.powsybl.security.dynamic.DynamicSecurityAnalysisProvider;
+import com.powsybl.security.json.SecurityAnalysisResultSerializer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -59,7 +65,7 @@ class DynawoDynamicSecurityAnalysisTest extends AbstractDynawoTest {
     }
 
     @Test
-    void testIeee14() {
+    void testIeee14() throws IOException {
         Network network = Network.read(new ResourceDataSource("IEEE14", new ResourceSet("/ieee14", "IEEE14.iidm")));
 
         GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
@@ -88,5 +94,9 @@ class DynawoDynamicSecurityAnalysisTest extends AbstractDynawoTest {
                 .getResult();
 
         assertNotNull(result);
+        StringWriter serializedResult = new StringWriter();
+        SecurityAnalysisResultSerializer.write(result, serializedResult);
+        InputStream expected = Objects.requireNonNull(getClass().getResourceAsStream("/ieee14/dynamic-security-analysis/dsa_results.json"));
+        ComparisonUtils.compareTxt(expected, serializedResult.toString());
     }
 }
