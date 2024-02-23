@@ -8,15 +8,8 @@
 package com.powsybl.dynawaltz.models.automatons;
 
 import com.powsybl.commons.reporter.Reporter;
-import com.powsybl.dynawaltz.builders.BuildersUtil;
-import com.powsybl.dynawaltz.builders.ModelConfig;
-import com.powsybl.dynawaltz.builders.ModelConfigsHandler;
-import com.powsybl.dynawaltz.builders.ModelConfigs;
-import com.powsybl.dynawaltz.builders.Reporters;
-import com.powsybl.iidm.network.Identifiable;
-import com.powsybl.iidm.network.Load;
-import com.powsybl.iidm.network.Network;
-import com.powsybl.iidm.network.TwoWindingsTransformer;
+import com.powsybl.dynawaltz.builders.*;
+import com.powsybl.iidm.network.*;
 
 import java.util.*;
 
