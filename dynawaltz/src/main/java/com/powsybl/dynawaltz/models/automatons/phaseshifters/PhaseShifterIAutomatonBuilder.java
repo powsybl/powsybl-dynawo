@@ -29,12 +29,7 @@ public class PhaseShifterIAutomatonBuilder extends AbstractPhaseShifterModelBuil
     }
 
     public static PhaseShifterIAutomatonBuilder of(Network network, Reporter reporter) {
-        ModelConfig modelConfig = MODEL_CONFIGS.getDefaultModelConfig();
-        if (modelConfig == null) {
-            Reporters.reportDefaultLibNotFound(reporter, PhaseShifterIAutomatonBuilder.class.getSimpleName());
-            return null;
-        }
-        return new PhaseShifterIAutomatonBuilder(network, modelConfig, reporter);
+        return new PhaseShifterIAutomatonBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reporter);
     }
 
     public static PhaseShifterIAutomatonBuilder of(Network network, String lib) {

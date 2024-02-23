@@ -29,12 +29,7 @@ public class GridFormingConverterBuilder extends AbstractGeneratorBuilder<GridFo
     }
 
     public static GridFormingConverterBuilder of(Network network, Reporter reporter) {
-        ModelConfig modelConfig = MODEL_CONFIGS.getDefaultModelConfig();
-        if (modelConfig == null) {
-            Reporters.reportDefaultLibNotFound(reporter, GridFormingConverterBuilder.class.getSimpleName());
-            return null;
-        }
-        return new GridFormingConverterBuilder(network, modelConfig, reporter);
+        return new GridFormingConverterBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reporter);
     }
 
     public static GridFormingConverterBuilder of(Network network, String lib) {

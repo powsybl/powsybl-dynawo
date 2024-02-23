@@ -29,12 +29,7 @@ public class InfiniteBusBuilder extends AbstractBusBuilder<InfiniteBusBuilder> {
     }
 
     public static InfiniteBusBuilder of(Network network, Reporter reporter) {
-        ModelConfig modelConfig = MODEL_CONFIGS.getDefaultModelConfig();
-        if (modelConfig == null) {
-            Reporters.reportDefaultLibNotFound(reporter, InfiniteBusBuilder.class.getSimpleName());
-            return null;
-        }
-        return new InfiniteBusBuilder(network, modelConfig, reporter);
+        return new InfiniteBusBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reporter);
     }
 
     public static InfiniteBusBuilder of(Network network, String lib) {

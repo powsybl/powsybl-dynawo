@@ -29,12 +29,7 @@ public class LoadTwoTransformersTapChangersBuilder extends AbstractLoadModelBuil
     }
 
     public static LoadTwoTransformersTapChangersBuilder of(Network network, Reporter reporter) {
-        ModelConfig modelConfig = MODEL_CONFIGS.getDefaultModelConfig();
-        if (modelConfig == null) {
-            Reporters.reportDefaultLibNotFound(reporter, LoadTwoTransformersTapChangersBuilder.class.getSimpleName());
-            return null;
-        }
-        return new LoadTwoTransformersTapChangersBuilder(network, modelConfig, reporter);
+        return new LoadTwoTransformersTapChangersBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reporter);
     }
 
     public static LoadTwoTransformersTapChangersBuilder of(Network network, String lib) {

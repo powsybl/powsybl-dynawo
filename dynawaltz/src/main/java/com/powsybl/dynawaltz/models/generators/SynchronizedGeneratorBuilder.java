@@ -29,12 +29,7 @@ public class SynchronizedGeneratorBuilder extends AbstractGeneratorBuilder<Synch
     }
 
     public static SynchronizedGeneratorBuilder of(Network network, Reporter reporter) {
-        ModelConfig modelConfig = MODEL_CONFIGS.getDefaultModelConfig();
-        if (modelConfig == null) {
-            Reporters.reportDefaultLibNotFound(reporter, SynchronizedGeneratorBuilder.class.getSimpleName());
-            return null;
-        }
-        return new SynchronizedGeneratorBuilder(network, modelConfig, reporter);
+        return new SynchronizedGeneratorBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reporter);
     }
 
     public static SynchronizedGeneratorBuilder of(Network network, String lib) {

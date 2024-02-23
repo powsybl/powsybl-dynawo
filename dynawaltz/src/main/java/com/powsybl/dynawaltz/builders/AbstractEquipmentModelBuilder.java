@@ -12,6 +12,8 @@ import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Network;
 
+import java.util.Objects;
+
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
@@ -24,7 +26,7 @@ public abstract class AbstractEquipmentModelBuilder<T extends Identifiable<?>, R
 
     protected AbstractEquipmentModelBuilder(Network network, ModelConfig modelConfig, IdentifiableType equipmentType, Reporter reporter) {
         super(network, reporter);
-        this.modelConfig = modelConfig;
+        this.modelConfig = Objects.requireNonNull(modelConfig);
         this.builderEquipment = new BuilderEquipment<>(equipmentType);
     }
 

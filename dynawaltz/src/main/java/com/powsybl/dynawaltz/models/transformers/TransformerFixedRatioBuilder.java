@@ -32,12 +32,7 @@ public class TransformerFixedRatioBuilder extends AbstractEquipmentModelBuilder<
     }
 
     public static TransformerFixedRatioBuilder of(Network network, Reporter reporter) {
-        ModelConfig modelConfig = MODEL_CONFIGS.getDefaultModelConfig();
-        if (modelConfig == null) {
-            Reporters.reportDefaultLibNotFound(reporter, TransformerFixedRatioBuilder.class.getSimpleName());
-            return null;
-        }
-        return new TransformerFixedRatioBuilder(network, modelConfig, reporter);
+        return new TransformerFixedRatioBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reporter);
     }
 
     public static TransformerFixedRatioBuilder of(Network network, String lib) {

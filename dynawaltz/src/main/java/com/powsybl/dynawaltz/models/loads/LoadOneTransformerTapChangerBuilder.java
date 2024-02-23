@@ -29,12 +29,7 @@ public class LoadOneTransformerTapChangerBuilder extends AbstractLoadModelBuilde
     }
 
     public static LoadOneTransformerTapChangerBuilder of(Network network, Reporter reporter) {
-        ModelConfig modelConfig = MODEL_CONFIGS.getDefaultModelConfig();
-        if (modelConfig == null) {
-            Reporters.reportDefaultLibNotFound(reporter, LoadOneTransformerTapChangerBuilder.class.getSimpleName());
-            return null;
-        }
-        return new LoadOneTransformerTapChangerBuilder(network, modelConfig, reporter);
+        return new LoadOneTransformerTapChangerBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reporter);
     }
 
     public static LoadOneTransformerTapChangerBuilder of(Network network, String lib) {

@@ -32,15 +32,6 @@ public final class Reporters {
                 .build());
     }
 
-    public static void reportDefaultLibNotFound(Reporter reporter, String builderName) {
-        reporter.report(Report.builder()
-                .withKey("defaultLibNotFound")
-                .withDefaultMessage("Default library not found for ${builderName}")
-                .withValue("builderName", builderName)
-                .withSeverity(TypedValue.INFO_SEVERITY)
-                .build());
-    }
-
     public static void reportModelInstantiation(Reporter reporter, String dynamicId) {
         reporter.report(Report.builder()
                 .withKey("modelInstantiation")

@@ -32,12 +32,7 @@ public class BaseStaticVarCompensatorBuilder extends AbstractEquipmentModelBuild
     }
 
     public static BaseStaticVarCompensatorBuilder of(Network network, Reporter reporter) {
-        ModelConfig modelConfig = MODEL_CONFIGS.getDefaultModelConfig();
-        if (modelConfig == null) {
-            Reporters.reportDefaultLibNotFound(reporter, BaseStaticVarCompensatorBuilder.class.getSimpleName());
-            return null;
-        }
-        return new BaseStaticVarCompensatorBuilder(network, modelConfig, reporter);
+        return new BaseStaticVarCompensatorBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reporter);
     }
 
     public static BaseStaticVarCompensatorBuilder of(Network network, String lib) {

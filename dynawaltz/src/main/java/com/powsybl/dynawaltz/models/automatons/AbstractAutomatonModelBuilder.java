@@ -15,6 +15,8 @@ import com.powsybl.dynawaltz.builders.ModelConfig;
 import com.powsybl.dynawaltz.builders.Reporters;
 import com.powsybl.iidm.network.Network;
 
+import java.util.Objects;
+
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
@@ -26,7 +28,7 @@ public abstract class AbstractAutomatonModelBuilder<T extends AbstractAutomatonM
 
     protected AbstractAutomatonModelBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
         super(network, reporter);
-        this.modelConfig = modelConfig;
+        this.modelConfig = Objects.requireNonNull(modelConfig);
     }
 
     public T dynamicModelId(String dynamicModelId) {

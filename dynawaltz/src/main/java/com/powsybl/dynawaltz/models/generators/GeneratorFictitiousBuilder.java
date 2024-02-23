@@ -29,12 +29,7 @@ public class GeneratorFictitiousBuilder extends AbstractGeneratorBuilder<Generat
     }
 
     public static GeneratorFictitiousBuilder of(Network network, Reporter reporter) {
-        ModelConfig modelConfig = MODEL_CONFIGS.getDefaultModelConfig();
-        if (modelConfig == null) {
-            Reporters.reportDefaultLibNotFound(reporter, GeneratorFictitiousBuilder.class.getSimpleName());
-            return null;
-        }
-        return new GeneratorFictitiousBuilder(network, modelConfig, reporter);
+        return new GeneratorFictitiousBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reporter);
     }
 
     public static GeneratorFictitiousBuilder of(Network network, String lib) {

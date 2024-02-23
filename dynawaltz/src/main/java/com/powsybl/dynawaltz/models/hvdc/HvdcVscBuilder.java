@@ -29,12 +29,7 @@ public class HvdcVscBuilder extends AbstractHvdcBuilder<HvdcVscBuilder> {
     }
 
     public static HvdcVscBuilder of(Network network, Reporter reporter) {
-        ModelConfig modelConfig = MODEL_CONFIGS.getDefaultModelConfig();
-        if (modelConfig == null) {
-            Reporters.reportDefaultLibNotFound(reporter, HvdcVscBuilder.class.getSimpleName());
-            return null;
-        }
-        return new HvdcVscBuilder(network, modelConfig, reporter);
+        return new HvdcVscBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reporter);
     }
 
     public static HvdcVscBuilder of(Network network, String lib) {

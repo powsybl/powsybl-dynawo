@@ -29,12 +29,7 @@ public class StandardBusBuilder extends AbstractBusBuilder<StandardBusBuilder> {
     }
 
     public static StandardBusBuilder of(Network network, Reporter reporter) {
-        ModelConfig modelConfig = MODEL_CONFIGS.getDefaultModelConfig();
-        if (modelConfig == null) {
-            Reporters.reportDefaultLibNotFound(reporter, StandardBusBuilder.class.getSimpleName());
-            return null;
-        }
-        return new StandardBusBuilder(network, modelConfig, reporter);
+        return new StandardBusBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reporter);
     }
 
     public static StandardBusBuilder of(Network network, String lib) {

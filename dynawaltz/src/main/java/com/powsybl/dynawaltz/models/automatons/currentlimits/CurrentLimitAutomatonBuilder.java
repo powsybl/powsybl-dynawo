@@ -31,12 +31,7 @@ public class CurrentLimitAutomatonBuilder extends AbstractCurrentLimitAutomatonB
     }
 
     public static CurrentLimitAutomatonBuilder of(Network network, Reporter reporter) {
-        ModelConfig modelConfig = MODEL_CONFIGS.getDefaultModelConfig();
-        if (modelConfig == null) {
-            Reporters.reportDefaultLibNotFound(reporter, CurrentLimitAutomatonBuilder.class.getSimpleName());
-            return null;
-        }
-        return new CurrentLimitAutomatonBuilder(network, modelConfig, reporter);
+        return new CurrentLimitAutomatonBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reporter);
     }
 
     public static CurrentLimitAutomatonBuilder of(Network network, String lib) {

@@ -39,12 +39,7 @@ public class TapChangerBlockingAutomatonBuilder extends AbstractAutomatonModelBu
     }
 
     public static TapChangerBlockingAutomatonBuilder of(Network network, Reporter reporter) {
-        ModelConfig modelConfig = MODEL_CONFIGS.getDefaultModelConfig();
-        if (modelConfig == null) {
-            Reporters.reportDefaultLibNotFound(reporter, TapChangerBlockingAutomatonBuilder.class.getSimpleName());
-            return null;
-        }
-        return new TapChangerBlockingAutomatonBuilder(network, modelConfig, reporter);
+        return new TapChangerBlockingAutomatonBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reporter);
     }
 
     public static TapChangerBlockingAutomatonBuilder of(Network network, String lib) {

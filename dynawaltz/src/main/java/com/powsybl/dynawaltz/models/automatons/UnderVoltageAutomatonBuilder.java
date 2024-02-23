@@ -34,12 +34,7 @@ public class UnderVoltageAutomatonBuilder extends AbstractAutomatonModelBuilder<
     }
 
     public static UnderVoltageAutomatonBuilder of(Network network, Reporter reporter) {
-        ModelConfig modelConfig = MODEL_CONFIGS.getDefaultModelConfig();
-        if (modelConfig == null) {
-            Reporters.reportDefaultLibNotFound(reporter, UnderVoltageAutomatonBuilder.class.getSimpleName());
-            return null;
-        }
-        return new UnderVoltageAutomatonBuilder(network, modelConfig, reporter);
+        return new UnderVoltageAutomatonBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reporter);
     }
 
     public static UnderVoltageAutomatonBuilder of(Network network, String lib) {
@@ -52,7 +47,7 @@ public class UnderVoltageAutomatonBuilder extends AbstractAutomatonModelBuilder<
             Reporters.reportLibNotFound(reporter, UnderVoltageAutomatonBuilder.class.getSimpleName(), lib);
             return null;
         }
-        return new UnderVoltageAutomatonBuilder(network, modelConfig, reporter);
+        return new UnderVoltageAutomatonBuilder(network, MODEL_CONFIGS.getModelConfig(lib), reporter);
     }
 
     public static Set<String> getSupportedLibs() {

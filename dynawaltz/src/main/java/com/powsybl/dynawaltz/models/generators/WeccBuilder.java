@@ -29,12 +29,7 @@ public class WeccBuilder extends AbstractGeneratorBuilder<WeccBuilder> {
     }
 
     public static WeccBuilder of(Network network, Reporter reporter) {
-        ModelConfig modelConfig = MODEL_CONFIGS.getDefaultModelConfig();
-        if (modelConfig == null) {
-            Reporters.reportDefaultLibNotFound(reporter, WeccBuilder.class.getSimpleName());
-            return null;
-        }
-        return new WeccBuilder(network, modelConfig, reporter);
+        return new WeccBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reporter);
     }
 
     public static WeccBuilder of(Network network, String lib) {

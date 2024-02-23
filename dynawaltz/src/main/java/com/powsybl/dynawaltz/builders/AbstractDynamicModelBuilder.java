@@ -10,6 +10,8 @@ package com.powsybl.dynawaltz.builders;
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.iidm.network.Network;
 
+import java.util.Objects;
+
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
@@ -20,8 +22,8 @@ public abstract class AbstractDynamicModelBuilder {
     protected boolean isInstantiable = true;
 
     protected AbstractDynamicModelBuilder(Network network, Reporter reporter) {
-        this.network = network;
-        this.reporter = reporter;
+        this.network = Objects.requireNonNull(network);
+        this.reporter = Objects.requireNonNull(reporter);
     }
 
     protected abstract void checkData();

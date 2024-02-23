@@ -29,12 +29,7 @@ public class LoadTwoTransformersBuilder extends AbstractLoadModelBuilder<LoadTwo
     }
 
     public static LoadTwoTransformersBuilder of(Network network, Reporter reporter) {
-        ModelConfig modelConfig = MODEL_CONFIGS.getDefaultModelConfig();
-        if (modelConfig == null) {
-            Reporters.reportDefaultLibNotFound(reporter, LoadTwoTransformersBuilder.class.getSimpleName());
-            return null;
-        }
-        return new LoadTwoTransformersBuilder(network, modelConfig, reporter);
+        return new LoadTwoTransformersBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reporter);
     }
 
     public static LoadTwoTransformersBuilder of(Network network, String lib) {

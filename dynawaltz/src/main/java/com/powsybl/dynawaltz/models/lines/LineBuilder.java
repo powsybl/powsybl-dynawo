@@ -32,12 +32,7 @@ public class LineBuilder extends AbstractEquipmentModelBuilder<Line, LineBuilder
     }
 
     public static LineBuilder of(Network network, Reporter reporter) {
-        ModelConfig modelConfig = MODEL_CONFIGS.getDefaultModelConfig();
-        if (modelConfig == null) {
-            Reporters.reportDefaultLibNotFound(reporter, LineBuilder.class.getSimpleName());
-            return null;
-        }
-        return new LineBuilder(network, modelConfig, reporter);
+        return new LineBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reporter);
     }
 
     public static LineBuilder of(Network network, String lib) {
