@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class DefaultLibBuilderTest {
+class DefaultLibBuilderTest {
 
     private static final Network NETWORK = SvcTestCaseFactory.create();
 
