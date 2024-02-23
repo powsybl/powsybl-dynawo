@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.security;
+package com.powsybl.dynawo.security;
 
 import com.google.auto.service.AutoService;
 import com.powsybl.commons.config.PlatformConfig;
@@ -47,21 +47,21 @@ import java.util.concurrent.CompletableFuture;
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 @AutoService(DynamicSecurityAnalysisProvider.class)
-public class DynaWaltzSecurityAnalysisProvider implements DynamicSecurityAnalysisProvider {
+public class DynawoDynamicSecurityAnalysisProvider implements DynamicSecurityAnalysisProvider {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DynaWaltzSecurityAnalysisProvider.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DynawoDynamicSecurityAnalysisProvider.class);
     private static final String WORKING_DIR_PREFIX = "dynawaltz_sa_";
     private final DynawoAlgorithmsConfig config;
 
-    public DynaWaltzSecurityAnalysisProvider() {
+    public DynawoDynamicSecurityAnalysisProvider() {
         this(PlatformConfig.defaultConfig());
     }
 
-    public DynaWaltzSecurityAnalysisProvider(PlatformConfig platformConfig) {
+    public DynawoDynamicSecurityAnalysisProvider(PlatformConfig platformConfig) {
         this(DynawoAlgorithmsConfig.load(platformConfig));
     }
 
-    public DynaWaltzSecurityAnalysisProvider(DynawoAlgorithmsConfig config) {
+    public DynawoDynamicSecurityAnalysisProvider(DynawoAlgorithmsConfig config) {
         this.config = Objects.requireNonNull(config);
     }
 
@@ -118,7 +118,7 @@ public class DynaWaltzSecurityAnalysisProvider implements DynamicSecurityAnalysi
                 DynaWaltzParameters.load(parameters.getDynamicSimulationParameters()),
                 contingencies);
 
-        return computationManager.execute(execEnv, new DynaWaltzSecurityAnalysisHandler(context, getCommand(config), filter, interceptors));
+        return computationManager.execute(execEnv, new DynawoDynamicSecurityAnalysisHandler(context, getCommand(config), filter, interceptors));
     }
 
     // TODO choose another name ? (needed for models supplier)

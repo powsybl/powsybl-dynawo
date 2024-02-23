@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.security;
+package com.powsybl.dynawo.security;
 
 import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
 import com.powsybl.computation.AbstractExecutionHandler;
@@ -13,9 +13,9 @@ import com.powsybl.computation.Command;
 import com.powsybl.computation.CommandExecution;
 import com.powsybl.computation.ExecutionReport;
 import com.powsybl.dynaflow.ContingencyResultsUtils;
-import com.powsybl.dynawaltz.security.xml.ContingenciesDydXml;
-import com.powsybl.dynawaltz.security.xml.ContingenciesParXml;
-import com.powsybl.dynawaltz.security.xml.MultipleJobsXml;
+import com.powsybl.dynawo.security.xml.ContingenciesDydXml;
+import com.powsybl.dynawo.security.xml.ContingenciesParXml;
+import com.powsybl.dynawo.security.xml.MultipleJobsXml;
 import com.powsybl.dynawaltz.xml.DydXml;
 import com.powsybl.dynawaltz.xml.DynaWaltzConstants;
 import com.powsybl.dynawaltz.xml.JobsXml;
@@ -46,7 +46,7 @@ import static com.powsybl.dynawo.commons.DynawoUtil.getCommandExecutions;
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public final class DynaWaltzSecurityAnalysisHandler extends AbstractExecutionHandler<SecurityAnalysisReport> {
+public final class DynawoDynamicSecurityAnalysisHandler extends AbstractExecutionHandler<SecurityAnalysisReport> {
 
     private final SecurityAnalysisContext context;
     private final Command command;
@@ -54,8 +54,8 @@ public final class DynaWaltzSecurityAnalysisHandler extends AbstractExecutionHan
     private final LimitViolationFilter violationFilter;
     private final List<SecurityAnalysisInterceptor> interceptors;
 
-    public DynaWaltzSecurityAnalysisHandler(SecurityAnalysisContext context, Command command,
-                                            LimitViolationFilter violationFilter, List<SecurityAnalysisInterceptor> interceptors) {
+    public DynawoDynamicSecurityAnalysisHandler(SecurityAnalysisContext context, Command command,
+                                                LimitViolationFilter violationFilter, List<SecurityAnalysisInterceptor> interceptors) {
         this.context = context;
         this.network = context.getNetwork();
         this.command = command;

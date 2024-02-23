@@ -5,11 +5,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz.security.xml;
+package com.powsybl.dynawo.security.xml;
 
-import com.powsybl.dynawaltz.security.ContingencyEventModels;
-import com.powsybl.dynawaltz.security.SecurityAnalysisContext;
 import com.powsybl.dynawaltz.xml.XmlStreamWriterFactory;
+import com.powsybl.dynawo.security.ContingencyEventModels;
+import com.powsybl.dynawo.security.SecurityAnalysisContext;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;

@@ -8,10 +8,11 @@
 package xml;
 
 import com.powsybl.contingency.Contingency;
+import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
-import com.powsybl.dynawaltz.security.SecurityAnalysisContext;
-import com.powsybl.dynawaltz.security.xml.MultipleJobsXml;
-import com.powsybl.dynawaltz.xml.DynaWaltzConstants;
+import com.powsybl.dynawo.security.SecurityAnalysisContext;
+import com.powsybl.dynawo.security.xml.ContingenciesDydXml;
+import com.powsybl.dynawo.security.xml.ContingenciesParXml;
 import com.powsybl.dynawaltz.xml.DynaWaltzTestUtil;
 import com.powsybl.security.dynamic.DynamicSecurityAnalysisParameters;
 import org.junit.jupiter.api.Test;
@@ -24,11 +25,13 @@ import java.util.List;
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-class MultiplesJobsXmlTest extends DynaWaltzTestUtil {
+class ContingenciesXmlTest extends DynaWaltzTestUtil {
 
     @Test
-    void writeMultiplesJobs() throws SAXException, IOException, XMLStreamException {
+    void writeDyds() throws SAXException, IOException, XMLStreamException {
         DynamicSecurityAnalysisParameters parameters = DynamicSecurityAnalysisParameters.load();
+        parameters.setDynamicSimulationParameters(new DynamicSimulationParameters(0, 20));
+        parameters.setDynamicContingenciesParameters(new DynamicSecurityAnalysisParameters.ContingenciesParameters(10));
         DynaWaltzParameters dynawaltzParameters = DynaWaltzParameters.load();
         List<Contingency> contingencies = List.of(
                 Contingency.load("LOAD"),
@@ -38,8 +41,12 @@ class MultiplesJobsXmlTest extends DynaWaltzTestUtil {
                         .build());
         SecurityAnalysisContext context = new SecurityAnalysisContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, eventModels, parameters, dynawaltzParameters, contingencies);
 
-        MultipleJobsXml.write(tmpDir, context);
-        validate("multipleJobs.xsd", "multipleJobs.xml", tmpDir.resolve(DynaWaltzConstants.MULTIPLE_JOBS_FILENAME));
+        ContingenciesDydXml.write(tmpDir, context);
+        ContingenciesParXml.write(tmpDir, context);
+        validate("dyd.xsd", "LOAD.xml", tmpDir.resolve("LOAD.dyd"));
+        validate("dyd.xsd", "DisconnectLineGenerator.xml", tmpDir.resolve("DisconnectLineGenerator.dyd"));
+        validate("parameters.xsd", "LOAD_par.xml", tmpDir.resolve("LOAD.par"));
+        validate("parameters.xsd", "DisconnectLineGenerator_par.xml", tmpDir.resolve("DisconnectLineGenerator.par"));
     }
 
 }
