@@ -12,6 +12,8 @@ import com.powsybl.dynawaltz.builders.ModelConfig;
 import com.powsybl.dynawaltz.builders.ModelConfigsHandler;
 import com.powsybl.dynawaltz.builders.ModelConfigs;
 import com.powsybl.dynawaltz.builders.Reporters;
+import com.powsybl.iidm.network.HvdcLine;
+import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Network;
 
 import java.util.Set;
@@ -50,7 +52,7 @@ public class HvdcPBuilder extends AbstractHvdcBuilder<HvdcPBuilder> {
     }
 
     protected HvdcPBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
-        super(network, modelConfig, reporter);
+        super(network, modelConfig, IdentifiableType.HVDC_LINE, reporter);
     }
 
     @Override
@@ -63,6 +65,11 @@ public class HvdcPBuilder extends AbstractHvdcBuilder<HvdcPBuilder> {
             }
         }
         return null;
+    }
+
+    @Override
+    protected HvdcLine findEquipment(String staticId) {
+        return network.getHvdcLine(staticId);
     }
 
     @Override

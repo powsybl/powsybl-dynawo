@@ -8,10 +8,11 @@
 
 package dynamicModels
 
+def measurements = ["S1VL2_BBS1", "OldId", "S3VL1_BBS"]
 
 TapChangerBlockingAutomaton {
     dynamicModelId "ZAB"
     parameterSetId "ZAB"
-    uMeasurements "S1VL2_BBS1", "OldId", "S3VL1_BBS"
+    uMeasurements measurements
     transformers "TWT", "LD1"
 }

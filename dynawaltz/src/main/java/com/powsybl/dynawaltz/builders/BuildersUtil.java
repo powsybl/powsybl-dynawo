@@ -8,12 +8,15 @@
 package com.powsybl.dynawaltz.builders;
 
 import com.powsybl.iidm.network.Identifiable;
+import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Network;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public final class BuildersUtil {
+
+    public static final String MEASUREMENT_POINT_TYPE = IdentifiableType.BUS + "/" + IdentifiableType.BUSBAR_SECTION;
 
     private BuildersUtil() {
     }

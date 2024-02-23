@@ -264,9 +264,8 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                         + DSL tests
                           + Groovy Dynamic Models Supplier
                             + DSL model builder for TapChangerBlockingAutomaton
-                               'uMeasurements' field value 'LOAD' not found for equipment type(s) BUS/BUSBAR_SECTION
-                               'uMeasurements' field value 'Wrong_ID' not found for equipment type(s) BUS/BUSBAR_SECTION
-                               'uMeasurements' field value 'NGEN_NHV1' not found for equipment type(s) BUS/BUSBAR_SECTION
+                               'uMeasurements' field value '[LOAD, Wrong_ID]' not found for equipment type(s) BUS/BUSBAR_SECTION
+                               'uMeasurements' field value '[NGEN_NHV1]' not found for equipment type(s) BUS/BUSBAR_SECTION
                                'uMeasurements' list is empty
                                Model ZAB cannot be instantiated
                         """),
@@ -275,9 +274,18 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                         + DSL tests
                           + Groovy Dynamic Models Supplier
                             + DSL model builder for TapChangerBlockingAutomaton
-                               'uMeasurements' field value 'GEN' not found for equipment type(s) LOAD/TWO_WINDINGS_TRANSFORMER
-                               'transformers' list is empty
+                               'transformers' field value 'GEN' not found for equipment type(s) TWO_WINDINGS_TRANSFORMER/LOAD, id will be used as pure dynamic model id
+                               'uMeasurements' field value 'GEN' not found for equipment type(s) BUS/BUSBAR_SECTION
+                               'uMeasurements' list is empty
                                Model ZAB cannot be instantiated
+                        """),
+                Arguments.of("/warnings/hvdcVscWrongStaticType.groovy", HvdcTestNetwork.createLcc(),
+                        """
+                        + DSL tests
+                          + Groovy Dynamic Models Supplier
+                            + DSL model builder for HvdcVSC
+                               'staticId' field value 'L' not found for equipment type(s) VSC HVDC_LINE
+                               Model BBM_HVDC cannot be instantiated
                         """)
                 );
     }
