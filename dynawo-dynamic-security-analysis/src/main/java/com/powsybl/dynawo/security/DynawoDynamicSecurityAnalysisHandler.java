@@ -87,10 +87,6 @@ public final class DynawoDynamicSecurityAnalysisHandler extends AbstractExecutio
         if (Files.exists(outputNetworkFile)) {
             NetworkResultsUpdater.update(context.getNetwork(), NetworkSerDe.read(outputNetworkFile), context.getDynaWaltzParameters().isMergeLoads());
         }
-//        context.getContingencies().forEach(c -> {
-//            Reporter contingencyReporter = Reports.createDynaFlowTimelineReporter(reporter, c.getId());
-//            getTimeline(timelineDir, c).forEach(e -> CommonReports.reportTimelineEvent(contingencyReporter, e));
-//        });
         ContingencyResultsUtils.reportContingenciesTimelines(context.getContingencies(), workingDir.resolve(DYNAWO_TIMELINE_FOLDER), reporter);
 
         return new SecurityAnalysisReport(
