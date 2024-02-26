@@ -28,7 +28,7 @@ class DynamicTwoLevelsOverloadManagementSystemModelXmlTest extends AbstractDynam
 
     @Override
     protected void addDynamicModels() {
-        dynamicModels.add(DynamicTwoLevelsOverloadManagementSystemBuilder.of(network, "CurrentLimitAutomatonTwoLevels")
+        dynamicModels.add(DynamicTwoLevelsOverloadManagementSystemBuilder.of(network, "TwoLevelsOverloadManagementSystem")
                 .dynamicModelId("BBM_CLA_TWO_LEVELS")
                 .parameterSetId("cla")
                 .controlledBranch("NGEN_NHV1")

@@ -145,7 +145,7 @@ public class DynaWaltzTestUtil extends AbstractSerDeTest {
 
         // Automatons
         network.getLineStream().filter(line -> !line.getId().equalsIgnoreCase(standardLine.getStaticId()))
-                .forEach(l -> dynamicModels.add(DynamicOverloadManagementSystemBuilder.of(network, "CurrentLimitAutomaton")
+                .forEach(l -> dynamicModels.add(DynamicOverloadManagementSystemBuilder.of(network, "OverloadManagementSystem")
                         .dynamicModelId("BBM_" + l.getId())
                         .parameterSetId("CLA")
                         .controlledBranch(l.getId())

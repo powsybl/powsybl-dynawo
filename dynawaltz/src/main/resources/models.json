@@ -326,12 +326,14 @@
   ],
   "overloadManagements": [
     {
-      "lib": "CurrentLimitAutomaton"
+      "lib": "CurrentLimitAutomaton",
+      "alias": "OverloadManagementSystem"
     }
   ],
   "twoLevelsOverloadManagements": [
     {
-      "lib": "CurrentLimitAutomatonTwoLevels"
+      "lib": "CurrentLimitAutomatonTwoLevels",
+      "alias": "TwoLevelsOverloadManagementSystem"
     }
   ],
   "phaseShiftersI": [

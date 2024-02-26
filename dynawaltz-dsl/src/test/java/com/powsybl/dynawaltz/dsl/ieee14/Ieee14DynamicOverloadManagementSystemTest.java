@@ -24,13 +24,13 @@ class Ieee14DynamicOverloadManagementSystemTest extends AbstractIeeeTest {
     @BeforeEach
     void setup() throws IOException {
         super.setup(
-                "/ieee14-currentlimitautomaton/config/models.par",
-                "/ieee14-currentlimitautomaton/config/network.par", "8",
-                "/ieee14-currentlimitautomaton/config/solvers.par", "2",
-                "/ieee14-currentlimitautomaton/powsybl-inputs/IEEE14.iidm",
-                "/ieee14-currentlimitautomaton/powsybl-inputs/dynamicModels.groovy",
-                "/ieee14-currentlimitautomaton/powsybl-inputs/eventModels.groovy",
-                "/ieee14-currentlimitautomaton/powsybl-inputs/curves.groovy",
+                "/ieee14-overloadmanagementsystem/config/models.par",
+                "/ieee14-overloadmanagementsystem/config/network.par", "8",
+                "/ieee14-overloadmanagementsystem/config/solvers.par", "2",
+                "/ieee14-overloadmanagementsystem/powsybl-inputs/IEEE14.iidm",
+                "/ieee14-overloadmanagementsystem/powsybl-inputs/dynamicModels.groovy",
+                "/ieee14-overloadmanagementsystem/powsybl-inputs/eventModels.groovy",
+                "/ieee14-overloadmanagementsystem/powsybl-inputs/curves.groovy",
                 0, 50
         );
     }
@@ -44,6 +44,6 @@ class Ieee14DynamicOverloadManagementSystemTest extends AbstractIeeeTest {
 
     @Override
     public String getWorkingDirName() {
-        return "ieee14-currentlimitautomaton";
+        return "ieee14-overloadmanagementsystem";
     }
 }

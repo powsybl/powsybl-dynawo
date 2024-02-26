@@ -29,14 +29,14 @@ class DynamicOverloadManagementSystemModelXmlTest extends AbstractDynamicModelXm
 
     @Override
     protected void addDynamicModels() {
-        dynamicModels.add(DynamicOverloadManagementSystemBuilder.of(network, "CurrentLimitAutomaton")
+        dynamicModels.add(DynamicOverloadManagementSystemBuilder.of(network, "OverloadManagementSystem")
                 .dynamicModelId("BBM_CLA_LINE")
                 .parameterSetId("cla")
                 .controlledBranch("NHV1_NHV2_1")
                 .iMeasurement("NHV1_NHV2_1")
                 .iMeasurementSide(TwoSides.ONE)
                 .build());
-        dynamicModels.add(DynamicOverloadManagementSystemBuilder.of(network, "CurrentLimitAutomaton")
+        dynamicModels.add(DynamicOverloadManagementSystemBuilder.of(network, "OverloadManagementSystem")
                 .dynamicModelId("BBM_CLA_TRANSFORMER")
                 .parameterSetId("cla")
                 .controlledBranch("NGEN_NHV1")
@@ -48,7 +48,7 @@ class DynamicOverloadManagementSystemModelXmlTest extends AbstractDynamicModelXm
                 .staticId("NHV2_NLOAD")
                 .parameterSetId("tf")
                 .build());
-        dynamicModels.add(DynamicOverloadManagementSystemBuilder.of(network, "CurrentLimitAutomaton")
+        dynamicModels.add(DynamicOverloadManagementSystemBuilder.of(network, "OverloadManagementSystem")
                 .dynamicModelId("BBM_CLA_TRANSFORMER2")
                 .parameterSetId("cla")
                 .controlledBranch("NHV1_NHV2_1")

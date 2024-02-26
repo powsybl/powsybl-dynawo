@@ -88,7 +88,7 @@ for (Generator gen : network.generators) {
 }
 
 for (Line line : network.lines) {
-    CurrentLimitAutomaton {
+    OverloadManagementSystem {
         dynamicModelId "BBM_" + line.id
         parameterSetId "CLA"
         controlledBranch line.id

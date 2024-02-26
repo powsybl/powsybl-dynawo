@@ -137,8 +137,8 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
 
     private static Stream<Arguments> provideAutomationSystemModelData() {
         return Stream.of(
-                Arguments.of("/dynamicModels/currentLimit.groovy", DynamicOverloadManagementSystem.class, EurostagTutorialExample1Factory.create(), "AM_NHV1_NHV2_1", "CLA", "CurrentLimitAutomaton"),
-                Arguments.of("/dynamicModels/currentLimitTwoLevels.groovy", DynamicTwoLevelsOverloadManagementSystem.class, EurostagTutorialExample1Factory.create(), "AM_NHV1_NHV2_1", "CLA", "CurrentLimitAutomatonTwoLevels"),
+                Arguments.of("/dynamicModels/overloadManagement", DynamicOverloadManagementSystem.class, EurostagTutorialExample1Factory.create(), "AM_NHV1_NHV2_1", "CLA", "CurrentLimitAutomaton"),
+                Arguments.of("/dynamicModels/overloadManagementTwoLevels.groovy", DynamicTwoLevelsOverloadManagementSystem.class, EurostagTutorialExample1Factory.create(), "AM_NHV1_NHV2_1", "CLA", "CurrentLimitAutomatonTwoLevels"),
                 Arguments.of("/dynamicModels/tapChanger.groovy", TapChangerAutomationSystem.class, EurostagTutorialExample1Factory.create(), "TC", "tc", "TapChangerAutomaton"),
                 Arguments.of("/dynamicModels/tapChangerBlockingBusBar.groovy", TapChangerBlockingAutomationSystem.class, FourSubstationsNodeBreakerFactory.create(), "ZAB", "ZAB", "TapChangerBlockingAutomaton2"),
                 Arguments.of("/dynamicModels/tapChangerBlocking.groovy", TapChangerBlockingAutomationSystem.class, EurostagTutorialExample1Factory.create(), "ZAB", "ZAB", "TapChangerBlockingAutomaton3"),
@@ -213,7 +213,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                         """
                         + DSL tests
                           + Groovy Dynamic Models Supplier
-                            + DSL model builder for CurrentLimitAutomaton
+                            + DSL model builder for OverloadManagementSystem
                                'iMeasurement' field value 'NGEN' not found for equipment type(s) BRANCH
                                Model CLA_NGEN cannot be instantiated
                         """),
@@ -221,7 +221,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                         """
                         + DSL tests
                           + Groovy Dynamic Models Supplier
-                            + DSL model builder for CurrentLimitAutomaton
+                            + DSL model builder for OverloadManagementSystem
                                'iMeasurementSide' field is not set
                                Model CLA_NGEN cannot be instantiated
                         """),
@@ -229,7 +229,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                         """
                         + DSL tests
                           + Groovy Dynamic Models Supplier
-                            + DSL model builder for CurrentLimitAutomaton
+                            + DSL model builder for OverloadManagementSystem
                                'controlledBranch' field value 'GEN' not found for equipment type(s) BRANCH
                                Model CLA_NGEN cannot be instantiated
                         """),
@@ -237,7 +237,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                         """
                         + DSL tests
                           + Groovy Dynamic Models Supplier
-                            + DSL model builder for CurrentLimitAutomatonTwoLevels
+                            + DSL model builder for TwoLevelsOverloadManagementSystem
                                'iMeasurement2' field value 'NGEN' not found for equipment type(s) BRANCH
                                Model CLA_NGEN cannot be instantiated
                         """),
@@ -245,7 +245,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                         """
                         + DSL tests
                           + Groovy Dynamic Models Supplier
-                            + DSL model builder for CurrentLimitAutomatonTwoLevels
+                            + DSL model builder for TwoLevelsOverloadManagementSystem
                                'iMeasurement2Side' field is not set
                                Model CLA_NGEN cannot be instantiated
                         """),

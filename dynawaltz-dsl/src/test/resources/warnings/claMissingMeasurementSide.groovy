@@ -8,7 +8,7 @@
 
 package warnings
 
-CurrentLimitAutomaton {
+OverloadManagementSystem {
     dynamicModelId "CLA_NGEN"
     parameterSetId "CLA"
     controlledBranch "NHV1_NHV2_2"

@@ -32,7 +32,7 @@ for (Generator gen : network.generators) {
     }
 }
 
-CurrentLimitAutomaton {
+OverloadManagementSystem {
     dynamicModelId "CLA_2_4"
     parameterSetId "CLA_2_4"
     controlledBranch "_BUS____2-BUS____4-1_AC"
@@ -40,7 +40,7 @@ CurrentLimitAutomaton {
     iMeasurementSide TwoSides.TWO
 }
 
-CurrentLimitAutomaton {
+OverloadManagementSystem {
     dynamicModelId "CLA_2_5"
     parameterSetId "CLA_2_5"
     controlledBranch "_BUS____2-BUS____5-1_AC"

@@ -10,7 +10,7 @@ package warnings
 
 import com.powsybl.iidm.network.TwoSides
 
-CurrentLimitAutomaton {
+OverloadManagementSystem {
     dynamicModelId "CLA_NGEN"
     parameterSetId "CLA"
     controlledBranch "GEN"
