@@ -47,7 +47,7 @@ public final class ModelConfigsHandler {
         return INSTANCE;
     }
 
-    public ModelConfigs getModelConfigsNew(String categoryName) {
+    public ModelConfigs getModelConfigs(String categoryName) {
         return modelConfigsCat.get(categoryName);
     }
 

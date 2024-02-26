@@ -22,7 +22,7 @@ import java.util.Set;
 public class BaseLoadBuilder extends AbstractLoadModelBuilder<BaseLoadBuilder> {
 
     private static final String CATEGORY = "baseLoads";
-    private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigsNew(CATEGORY);
+    private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
 
     public static BaseLoadBuilder of(Network network) {
         return of(network, Reporter.NO_OP);

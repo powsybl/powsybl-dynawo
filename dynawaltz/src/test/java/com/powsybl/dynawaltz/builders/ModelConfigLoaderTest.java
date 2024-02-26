@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -89,6 +90,10 @@ class ModelConfigLoaderTest {
                 new ModelConfig("BB", null, null, Collections.emptyList(), false),
                 mc2);
 
+        ModelConfigs modelConfigs3 = new ModelConfigs(new HashMap<>(Map.of(mc2.name(), mc2)), null);
+        ModelConfigs modelConfigs4 = new ModelConfigs(new HashMap<>(Map.of(defaultModel.name(), defaultModel)), defaultModel);
+        modelConfigs3.addModelConfigs(modelConfigs4);
+        assertNotNull(modelConfigs3.getDefaultModelConfig());
     }
 
     private List<ModelConfig> listModelConfigs(ModelConfigs modelConfigs) {

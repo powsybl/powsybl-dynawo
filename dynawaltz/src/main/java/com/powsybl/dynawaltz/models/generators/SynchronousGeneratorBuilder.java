@@ -23,7 +23,7 @@ import java.util.Set;
 public class SynchronousGeneratorBuilder extends AbstractGeneratorBuilder<SynchronousGeneratorBuilder> {
 
     private static final String CATEGORY = "synchronousGenerators";
-    private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigsNew(CATEGORY);
+    private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
 
     public static SynchronousGeneratorBuilder of(Network network) {
         return of(network, Reporter.NO_OP);

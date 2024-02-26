@@ -22,7 +22,7 @@ import java.util.Set;
 public class TapChangerAutomatonBuilder extends AbstractAutomatonModelBuilder<TapChangerAutomatonBuilder> {
 
     private static final String CATEGORY = "tapChangers";
-    private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigsNew(CATEGORY);
+    private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
 
     protected final BuilderEquipment<Load> load;
     protected TransformerSide side = TransformerSide.NONE;

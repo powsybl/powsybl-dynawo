@@ -25,7 +25,7 @@ import java.util.Set;
 public class HvdcVscBuilder extends AbstractHvdcBuilder<HvdcVscBuilder> {
 
     private static final String CATEGORY = "hvdcVsc";
-    private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigsNew(CATEGORY);
+    private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
 
     public static HvdcVscBuilder of(Network network) {
         return of(network, Reporter.NO_OP);

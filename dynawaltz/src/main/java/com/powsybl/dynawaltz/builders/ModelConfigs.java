@@ -20,7 +20,7 @@ public class ModelConfigs {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ModelConfigs.class);
 
-    private final ModelConfig defaultModelConfig;
+    private ModelConfig defaultModelConfig;
     private final Map<String, ModelConfig> modelConfigMap;
 
     ModelConfigs(Map<String, ModelConfig> modelConfigMap, ModelConfig defaultModelConfig) {
@@ -52,6 +52,8 @@ public class ModelConfigs {
                     defaultModelConfig.lib(),
                     extraDefaultModelConfig.lib());
             modelConfigsToMerge.modelConfigMap.replace(extraDefaultModelConfig.name(), ModelConfig.copyOf(extraDefaultModelConfig, false));
+        } else if (!hasDefaultModelConfig()) {
+            defaultModelConfig = modelConfigsToMerge.defaultModelConfig;
         }
         modelConfigMap.putAll(modelConfigsToMerge.modelConfigMap);
     }

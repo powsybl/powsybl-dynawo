@@ -25,7 +25,7 @@ import java.util.Set;
 public class CurrentLimitTwoLevelsAutomatonBuilder extends AbstractCurrentLimitAutomatonBuilder<CurrentLimitTwoLevelsAutomatonBuilder> {
 
     private static final String CATEGORY = "clasTwoLevels";
-    private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigsNew(CATEGORY);
+    private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
 
     protected final BuilderEquipment<Branch<?>> iMeasurement2;
     protected TwoSides iMeasurement2Side;

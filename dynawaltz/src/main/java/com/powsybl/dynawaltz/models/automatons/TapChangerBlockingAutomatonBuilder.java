@@ -21,7 +21,7 @@ import static com.powsybl.dynawaltz.builders.BuildersUtil.MEASUREMENT_POINT_TYPE
 public class TapChangerBlockingAutomatonBuilder extends AbstractAutomatonModelBuilder<TapChangerBlockingAutomatonBuilder> {
 
     private static final String CATEGORY = "tcbs";
-    private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigsNew(CATEGORY);
+    private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
     private static final String TAP_CHANGER_TYPE = IdentifiableType.TWO_WINDINGS_TRANSFORMER + "/" + IdentifiableType.LOAD;
     private static final String U_MEASUREMENTS_FIELD = "uMeasurements";
     private static final String TRANSFORMER_FIELD = "transformers";
