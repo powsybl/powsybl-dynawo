@@ -6,14 +6,18 @@
  */
 package com.powsybl.dynawo.it;
 
+import com.google.common.io.ByteStreams;
 import com.powsybl.commons.datasource.ResourceDataSource;
 import com.powsybl.commons.datasource.ResourceSet;
 import com.powsybl.commons.reporter.ReporterModel;
 import com.powsybl.commons.test.ComparisonUtils;
+import com.powsybl.commons.test.TestUtil;
 import com.powsybl.contingency.Contingency;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynamicsimulation.EventModelsSupplier;
-import com.powsybl.dynamicsimulation.groovy.*;
+import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension;
+import com.powsybl.dynamicsimulation.groovy.GroovyDynamicModelsSupplier;
+import com.powsybl.dynamicsimulation.groovy.GroovyExtension;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
 import com.powsybl.dynawaltz.DynaWaltzProvider;
 import com.powsybl.dynawaltz.parameters.ParametersSet;
@@ -34,12 +38,13 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
@@ -93,10 +98,16 @@ class DynawoDynamicSecurityAnalysisTest extends AbstractDynawoTest {
                 .join()
                 .getResult();
 
-        assertNotNull(result);
+        StringWriter swReporterAs = new StringWriter();
+        reporter.export(swReporterAs);
+        InputStream refStreamReporterAs = Objects.requireNonNull(getClass().getResourceAsStream("/ieee14/dynamic-security-analysis/timeline_report.txt"));
+        String refLogExportAs = TestUtil.normalizeLineSeparator(new String(ByteStreams.toByteArray(refStreamReporterAs), StandardCharsets.UTF_8));
+        String logExportAs = TestUtil.normalizeLineSeparator(swReporterAs.toString());
+        assertEquals(refLogExportAs, logExportAs);
+
         StringWriter serializedResult = new StringWriter();
         SecurityAnalysisResultSerializer.write(result, serializedResult);
-        InputStream expected = Objects.requireNonNull(getClass().getResourceAsStream("/ieee14/dynamic-security-analysis/dsa_results.json"));
+        InputStream expected = Objects.requireNonNull(getClass().getResourceAsStream("/ieee14/dynamic-security-analysis/results.json"));
         ComparisonUtils.compareTxt(expected, serializedResult.toString());
     }
 }

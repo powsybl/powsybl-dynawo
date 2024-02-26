@@ -19,10 +19,7 @@ import com.powsybl.contingency.Contingency;
 import com.powsybl.contingency.contingency.list.ContingencyList;
 import com.powsybl.contingency.json.ContingencyJsonModule;
 import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
-import com.powsybl.dynawo.commons.CommonReports;
 import com.powsybl.dynawo.commons.DynawoUtil;
-import com.powsybl.dynawo.commons.timeline.TimelineEntry;
-import com.powsybl.dynawo.commons.timeline.XmlTimeLineParser;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.loadflow.LoadFlowParameters;
 import com.powsybl.security.LimitViolationFilter;
@@ -38,7 +35,8 @@ import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 
-import static com.powsybl.dynaflow.DynaFlowConstants.*;
+import static com.powsybl.dynaflow.DynaFlowConstants.CONFIG_FILENAME;
+import static com.powsybl.dynaflow.DynaFlowConstants.IIDM_FILENAME;
 import static com.powsybl.dynaflow.SecurityAnalysisConstants.CONTINGENCIES_FILENAME;
 import static com.powsybl.dynaflow.SecurityAnalysisConstants.DYNAWO_CONSTRAINTS_FOLDER;
 import static com.powsybl.dynawo.commons.DynawoConstants.DYNAWO_TIMELINE_FOLDER;
@@ -86,12 +84,7 @@ public final class DynaFlowSecurityAnalysisHandler extends AbstractExecutionHand
     public SecurityAnalysisReport after(Path workingDir, ExecutionReport report) throws IOException {
         super.after(workingDir, report);
         network.getVariantManager().setWorkingVariant(workingVariantId);
-        // Report the timeline events from the timeline files written by dynawo
-        Path timelineDir = workingDir.resolve(DYNAWO_TIMELINE_FOLDER);
-        contingencies.forEach(c -> {
-            Reporter contingencyReporter = Reports.createDynaFlowTimelineReporter(reporter, c.getId());
-            getTimeline(timelineDir, c).forEach(e -> CommonReports.reportTimelineEvent(contingencyReporter, e));
-        });
+        ContingencyResultsUtils.reportContingenciesTimelines(contingencies, workingDir.resolve(DYNAWO_TIMELINE_FOLDER), reporter);
         return new SecurityAnalysisReport(
                 new SecurityAnalysisResult(
                         ContingencyResultsUtils.getPreContingencyResult(network, violationFilter),
@@ -123,10 +116,5 @@ public final class DynaFlowSecurityAnalysisHandler extends AbstractExecutionHand
             parametersExt = new DynaFlowParameters();
         }
         return parametersExt;
-    }
-
-    private List<TimelineEntry> getTimeline(Path timelineDir, Contingency c) {
-        Path timelineFile = timelineDir.resolve("timeline_" + c.getId() + ".xml");
-        return new XmlTimeLineParser().parse(timelineFile);
     }
 }

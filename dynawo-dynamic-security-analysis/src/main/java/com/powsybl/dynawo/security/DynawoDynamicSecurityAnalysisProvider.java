@@ -109,7 +109,7 @@ public class DynawoDynamicSecurityAnalysisProvider implements DynamicSecurityAna
         Reporter dsaReporter = Reports.createDynamicSecurityAnalysisReporter(reporter, network.getId());
         network.getVariantManager().setWorkingVariant(workingVariantId);
         ExecutionEnvironment execEnv = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, config.isDebug());
-        DynawoUtil.requireDynaMinVersion(execEnv, computationManager, getVersionCommand(config), DynawoAlgorithmsConfig.DYNAWO_ALGORITHMS_MODULE_NAME, false);
+        DynawoUtil.requireDynaMinVersion(execEnv, computationManager, getVersionCommand(config), DynawoAlgorithmsConfig.DYNAWALTZ_LAUNCHER_PROGRAM_NAME, false);
         List<Contingency> contingencies = contingenciesProvider.getContingencies(network);
         SecurityAnalysisContext context = new SecurityAnalysisContext(network, workingVariantId,
                 BlackBoxSupplierUtils.getBlackBoxModelList(dynamicModelsSupplier, network, dsaReporter),
@@ -118,7 +118,7 @@ public class DynawoDynamicSecurityAnalysisProvider implements DynamicSecurityAna
                 DynaWaltzParameters.load(parameters.getDynamicSimulationParameters()),
                 contingencies);
 
-        return computationManager.execute(execEnv, new DynawoDynamicSecurityAnalysisHandler(context, getCommand(config), filter, interceptors));
+        return computationManager.execute(execEnv, new DynawoDynamicSecurityAnalysisHandler(context, getCommand(config), filter, interceptors, dsaReporter));
     }
 
     // TODO choose another name ? (needed for models supplier)
@@ -138,7 +138,7 @@ public class DynawoDynamicSecurityAnalysisProvider implements DynamicSecurityAna
                 "--input", DynaWaltzConstants.MULTIPLE_JOBS_FILENAME,
                 "--output", DynaWaltzConstants.AGGREGATED_RESULTS);
         return new SimpleCommandBuilder()
-                .id("dynawaltz_sa")
+                .id("dynawo_dynamic_sa")
                 .program(config.getProgram())
                 .args(args)
                 .build();
@@ -147,7 +147,7 @@ public class DynawoDynamicSecurityAnalysisProvider implements DynamicSecurityAna
     public static Command getVersionCommand(DynawoAlgorithmsConfig config) {
         List<String> args = Collections.singletonList("--version");
         return new SimpleCommandBuilder()
-                .id("dynawo_algorithms_version")
+                .id("dynawo_version")
                 .program(config.getProgram())
                 .args(args)
                 .build();

@@ -8,14 +8,12 @@
 package com.powsybl.dynawo.security;
 
 import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
+import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.computation.AbstractExecutionHandler;
 import com.powsybl.computation.Command;
 import com.powsybl.computation.CommandExecution;
 import com.powsybl.computation.ExecutionReport;
 import com.powsybl.dynaflow.ContingencyResultsUtils;
-import com.powsybl.dynawo.security.xml.ContingenciesDydXml;
-import com.powsybl.dynawo.security.xml.ContingenciesParXml;
-import com.powsybl.dynawo.security.xml.MultipleJobsXml;
 import com.powsybl.dynawaltz.xml.DydXml;
 import com.powsybl.dynawaltz.xml.DynaWaltzConstants;
 import com.powsybl.dynawaltz.xml.JobsXml;
@@ -23,6 +21,9 @@ import com.powsybl.dynawaltz.xml.ParametersXml;
 import com.powsybl.dynawo.commons.DynawoConstants;
 import com.powsybl.dynawo.commons.DynawoUtil;
 import com.powsybl.dynawo.commons.NetworkResultsUpdater;
+import com.powsybl.dynawo.security.xml.ContingenciesDydXml;
+import com.powsybl.dynawo.security.xml.ContingenciesParXml;
+import com.powsybl.dynawo.security.xml.MultipleJobsXml;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.serde.NetworkSerDe;
 import com.powsybl.security.LimitViolationFilter;
@@ -41,6 +42,7 @@ import java.util.List;
 import static com.powsybl.dynaflow.SecurityAnalysisConstants.DYNAWO_CONSTRAINTS_FOLDER;
 import static com.powsybl.dynawaltz.DynaWaltzConstants.FINAL_STATE_FOLDER;
 import static com.powsybl.dynawaltz.DynaWaltzConstants.OUTPUTS_FOLDER;
+import static com.powsybl.dynawo.commons.DynawoConstants.DYNAWO_TIMELINE_FOLDER;
 import static com.powsybl.dynawo.commons.DynawoUtil.getCommandExecutions;
 
 /**
@@ -53,20 +55,23 @@ public final class DynawoDynamicSecurityAnalysisHandler extends AbstractExecutio
     private final Network network;
     private final LimitViolationFilter violationFilter;
     private final List<SecurityAnalysisInterceptor> interceptors;
+    private final Reporter reporter;
 
     public DynawoDynamicSecurityAnalysisHandler(SecurityAnalysisContext context, Command command,
-                                                LimitViolationFilter violationFilter, List<SecurityAnalysisInterceptor> interceptors) {
+                                                LimitViolationFilter violationFilter, List<SecurityAnalysisInterceptor> interceptors,
+                                                Reporter reporter) {
         this.context = context;
         this.network = context.getNetwork();
         this.command = command;
         this.violationFilter = violationFilter;
         this.interceptors = interceptors;
+        this.reporter = reporter;
     }
 
     @Override
     public List<CommandExecution> before(Path workingDir) throws IOException {
         network.getVariantManager().setWorkingVariant(context.getWorkingVariantId());
-        Path outputNetworkFile = workingDir.resolve("outputs").resolve("finalState").resolve(DynawoConstants.OUTPUT_IIDM_FILENAME);
+        Path outputNetworkFile = workingDir.resolve(OUTPUTS_FOLDER).resolve(FINAL_STATE_FOLDER).resolve(DynawoConstants.OUTPUT_IIDM_FILENAME);
         if (Files.exists(outputNetworkFile)) {
             Files.delete(outputNetworkFile);
         }
@@ -76,14 +81,17 @@ public final class DynawoDynamicSecurityAnalysisHandler extends AbstractExecutio
 
     @Override
     public SecurityAnalysisReport after(Path workingDir, ExecutionReport report) throws IOException {
-
         super.after(workingDir, report);
         context.getNetwork().getVariantManager().setWorkingVariant(context.getWorkingVariantId());
         Path outputNetworkFile = workingDir.resolve(OUTPUTS_FOLDER).resolve(FINAL_STATE_FOLDER).resolve(DynawoConstants.OUTPUT_IIDM_FILENAME);
         if (Files.exists(outputNetworkFile)) {
-            //TODO handle merge load
-            NetworkResultsUpdater.update(context.getNetwork(), NetworkSerDe.read(outputNetworkFile), false);
+            NetworkResultsUpdater.update(context.getNetwork(), NetworkSerDe.read(outputNetworkFile), context.getDynaWaltzParameters().isMergeLoads());
         }
+//        context.getContingencies().forEach(c -> {
+//            Reporter contingencyReporter = Reports.createDynaFlowTimelineReporter(reporter, c.getId());
+//            getTimeline(timelineDir, c).forEach(e -> CommonReports.reportTimelineEvent(contingencyReporter, e));
+//        });
+        ContingencyResultsUtils.reportContingenciesTimelines(context.getContingencies(), workingDir.resolve(DYNAWO_TIMELINE_FOLDER), reporter);
 
         return new SecurityAnalysisReport(
                 new SecurityAnalysisResult(

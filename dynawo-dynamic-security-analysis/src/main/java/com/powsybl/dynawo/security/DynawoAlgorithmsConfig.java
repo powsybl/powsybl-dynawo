@@ -9,24 +9,23 @@ package com.powsybl.dynawo.security;
 
 import com.powsybl.commons.config.ModuleConfig;
 import com.powsybl.commons.config.PlatformConfig;
-import com.powsybl.dynawo.commons.DynawoConfig;
+import com.powsybl.dynawaltz.DynaWaltzConfig;
 
 import java.nio.file.Path;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class DynawoAlgorithmsConfig extends DynawoConfig {
+public class DynawoAlgorithmsConfig extends DynaWaltzConfig {
 
     public static final String DYNAWO_ALGORITHMS_LAUNCHER_PROGRAM_NAME = "dynawo-algorithms";
-    public static final String DYNAWO_ALGORITHMS_MODULE_NAME = "dynawo-algorithms";
 
     public static DynawoAlgorithmsConfig load() {
-        return load(DynawoAlgorithmsConfig::new, DYNAWO_ALGORITHMS_MODULE_NAME);
+        return load(DynawoAlgorithmsConfig::new, DYNAWALTZ_MODULE_NAME);
     }
 
     public static DynawoAlgorithmsConfig load(PlatformConfig platformConfig) {
-        return load(DynawoAlgorithmsConfig::new, DYNAWO_ALGORITHMS_MODULE_NAME, platformConfig);
+        return load(DynawoAlgorithmsConfig::new, DYNAWALTZ_MODULE_NAME, platformConfig);
     }
 
     public DynawoAlgorithmsConfig(Path homeDir, boolean debug) {
@@ -37,6 +36,7 @@ public class DynawoAlgorithmsConfig extends DynawoConfig {
         super(config);
     }
 
+    @Override
     public String getProgram() {
         return getProgram(DYNAWO_ALGORITHMS_LAUNCHER_PROGRAM_NAME);
     }

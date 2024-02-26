@@ -43,7 +43,7 @@ class DynawoAlgorithmsConfigTest {
         String homeDir = "homeDir";
         boolean debug = true;
 
-        MapModuleConfig moduleConfig = platformConfig.createModuleConfig("dynawo-algorithms");
+        MapModuleConfig moduleConfig = platformConfig.createModuleConfig("dynawaltz");
         moduleConfig.setStringProperty("homeDir", homeDir);
         moduleConfig.setStringProperty("debug", Boolean.toString(debug));
         DynawoAlgorithmsConfig config = DynawoAlgorithmsConfig.load(platformConfig);

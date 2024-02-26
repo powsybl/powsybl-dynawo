@@ -7,8 +7,12 @@
  */
 package com.powsybl.dynaflow;
 
+import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.contingency.Contingency;
 import com.powsybl.dynaflow.xml.ConstraintsReader;
+import com.powsybl.dynawo.commons.CommonReports;
+import com.powsybl.dynawo.commons.timeline.TimelineEntry;
+import com.powsybl.dynawo.commons.timeline.XmlTimeLineParser;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.loadflow.LoadFlowResult;
 import com.powsybl.security.*;
@@ -60,5 +64,18 @@ public final class ContingencyResultsUtils {
         } else {
             return new PostContingencyResult(contingency, PostContingencyComputationStatus.FAILED, Collections.emptyList());
         }
+    }
+
+    // Report the timeline events from the timeline files written by dynawo
+    public static void reportContingenciesTimelines(List<Contingency> contingencies, Path timelineDir, Reporter reporter) {
+        contingencies.forEach(c -> {
+            Reporter contingencyReporter = Reports.createContingenciesTimelineReporter(reporter, c.getId());
+            getTimeline(timelineDir, c).forEach(e -> CommonReports.reportTimelineEvent(contingencyReporter, e));
+        });
+    }
+
+    private static List<TimelineEntry> getTimeline(Path timelineDir, Contingency c) {
+        Path timelineFile = timelineDir.resolve("timeline_" + c.getId() + ".xml");
+        return new XmlTimeLineParser().parse(timelineFile);
     }
 }
