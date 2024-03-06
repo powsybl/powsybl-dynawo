@@ -8,9 +8,11 @@
 
 package dynamicModels
 
+List[] measurements = [["OldId", "NGEN", "NHV1"], ["NHV1", "OldId"], ["NHV2"]]
+
 TapChangerBlockingAutomaton {
     dynamicModelId "ZAB"
     parameterSetId "ZAB"
-    uMeasurements ["OldId", "NGEN", "NHV1"], ["NHV1", "OldId"], ["NHV2"]
+    uMeasurements measurements
     transformers "NGEN_NHV1", "NHV2_NLOAD", "LOAD"
 }

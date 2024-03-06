@@ -8,16 +8,12 @@
 package com.powsybl.dynawaltz.models.automationsystems;
 
 import com.powsybl.commons.reporter.Reporter;
-import com.powsybl.dynawaltz.builders.BuildersUtil;
-import com.powsybl.dynawaltz.builders.ModelConfig;
-import com.powsybl.dynawaltz.builders.ModelConfigs;
-import com.powsybl.dynawaltz.builders.Reporters;
-import com.powsybl.iidm.network.Identifiable;
-import com.powsybl.iidm.network.Load;
-import com.powsybl.iidm.network.Network;
-import com.powsybl.iidm.network.TwoWindingsTransformer;
+import com.powsybl.dynawaltz.builders.*;
+import com.powsybl.iidm.network.*;
 
 import java.util.*;
+
+import static com.powsybl.dynawaltz.builders.BuildersUtil.MEASUREMENT_POINT_TYPE;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -26,12 +22,12 @@ public class TapChangerBlockingAutomationSystemBuilder extends AbstractAutomatio
 
     private static final String CATEGORY = "tcbs";
     private static final Map<String, ModelConfig> LIBS = ModelConfigs.getInstance().getModelConfigs(CATEGORY);
+    private static final String TAP_CHANGER_TYPE = IdentifiableType.TWO_WINDINGS_TRANSFORMER + "/" + IdentifiableType.LOAD;
     private static final String U_MEASUREMENTS_FIELD = "uMeasurements";
+    private static final String TRANSFORMER_FIELD = "transformers";
 
-    private final List<Load> loads = new ArrayList<>();
-    private final List<TwoWindingsTransformer> transformers = new ArrayList<>();
-    private final List<String> tapChangerAutomatonIds = new ArrayList<>();
-    private List<Identifiable<?>> uMeasurements;
+    private final BuilderEquipmentsList<Identifiable<?>> tapChangerEquipments;
+    private final BuilderIdListEquipmentList<Identifiable<?>> uMeasurementPoints;
 
     public static TapChangerBlockingAutomationSystemBuilder of(Network network) {
         return of(network, Reporter.NO_OP);
@@ -60,71 +56,50 @@ public class TapChangerBlockingAutomationSystemBuilder extends AbstractAutomatio
 
     protected TapChangerBlockingAutomationSystemBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
         super(network, modelConfig, reporter);
+        tapChangerEquipments = new BuilderEquipmentsList<>(TAP_CHANGER_TYPE, TRANSFORMER_FIELD, true);
+        uMeasurementPoints = new BuilderIdListEquipmentList<>(MEASUREMENT_POINT_TYPE, U_MEASUREMENTS_FIELD);
     }
 
     public TapChangerBlockingAutomationSystemBuilder transformers(String... staticIds) {
-        Arrays.stream(staticIds).forEach(id -> {
-            Identifiable<?> equipment = network.getIdentifiable(id);
-            if (equipment == null) {
-                tapChangerAutomatonIds.add(id);
-            } else {
-                switch (equipment.getType()) {
-                    case LOAD -> loads.add((Load) equipment);
-                    case TWO_WINDINGS_TRANSFORMER -> transformers.add((TwoWindingsTransformer) equipment);
-                    default -> Reporters.reportStaticIdUnknown(reporter, U_MEASUREMENTS_FIELD, id, "LOAD/TWO_WINDINGS_TRANSFORMER");
-                }
-            }
-        });
+        tapChangerEquipments.addEquipments(staticIds, id -> this.getTapChangerEquipment(network, id));
         return self();
+    }
+
+    public TapChangerBlockingAutomationSystemBuilder transformers(Collection<String> staticIds) {
+        tapChangerEquipments.addEquipments(staticIds, id -> this.getTapChangerEquipment(network, id));
+        return self();
+    }
+
+    private Identifiable<?> getTapChangerEquipment(Network network, String staticId) {
+        Identifiable<?> tapChangerEquipment = network.getTwoWindingsTransformer(staticId);
+        return tapChangerEquipment != null ? tapChangerEquipment : network.getLoad(staticId);
     }
 
     public TapChangerBlockingAutomationSystemBuilder uMeasurements(String... staticIds) {
-        uMeasurements = new ArrayList<>();
-        for (String staticId : staticIds) {
-            Identifiable<?> measurementPoint = BuildersUtil.getActionConnectionPoint(network, staticId);
-            if (measurementPoint == null) {
-                Reporters.reportStaticIdUnknown(reporter, U_MEASUREMENTS_FIELD, staticId, "BUS/BUSBAR_SECTION");
-            } else {
-                uMeasurements.add(measurementPoint);
-            }
-        }
+        uMeasurementPoints.addEquipments(staticIds, id -> BuildersUtil.getActionConnectionPoint(network, id));
         return self();
     }
 
-    public TapChangerBlockingAutomationSystemBuilder uMeasurements(List<String>[] staticIdsArray) {
-        uMeasurements = new ArrayList<>();
-        for (List<String> staticIds : staticIdsArray) {
-            for (String staticId : staticIds) {
-                Identifiable<?> measurementPoint = BuildersUtil.getActionConnectionPoint(network, staticId);
-                if (measurementPoint == null) {
-                    Reporters.reportStaticIdUnknown(reporter, U_MEASUREMENTS_FIELD, staticId, "BUS/BUSBAR_SECTION");
-                } else {
-                    uMeasurements.add(measurementPoint);
-                    break;
-                }
-            }
-        }
+    public TapChangerBlockingAutomationSystemBuilder uMeasurements(Collection<String> staticIds) {
+        uMeasurementPoints.addEquipments(staticIds, id -> BuildersUtil.getActionConnectionPoint(network, id));
+        return self();
+    }
+
+    public TapChangerBlockingAutomationSystemBuilder uMeasurements(Collection<String>[] staticIdsArray) {
+        uMeasurementPoints.addEquipments(staticIdsArray, id -> BuildersUtil.getActionConnectionPoint(network, id));
         return self();
     }
 
     @Override
     protected void checkData() {
-        if (uMeasurements == null) {
-            Reporters.reportFieldNotSet(reporter, U_MEASUREMENTS_FIELD);
-            isInstantiable = false;
-        } else if (uMeasurements.isEmpty()) {
-            Reporters.reportEmptyList(reporter, U_MEASUREMENTS_FIELD);
-            isInstantiable = false;
-        }
-        if (loads.isEmpty() && transformers.isEmpty() && tapChangerAutomatonIds.isEmpty()) {
-            Reporters.reportEmptyList(reporter, "transformers");
-            isInstantiable = false;
-        }
+        super.checkData();
+        isInstantiable &= tapChangerEquipments.checkEquipmentData(reporter);
+        isInstantiable &= uMeasurementPoints.checkEquipmentData(reporter);
     }
 
     @Override
     public TapChangerBlockingAutomationSystem build() {
-        return isInstantiable() ? new TapChangerBlockingAutomationSystem(dynamicModelId, parameterSetId, transformers, loads, tapChangerAutomatonIds, uMeasurements, getLib()) : null;
+        return isInstantiable() ? new TapChangerBlockingAutomationSystem(dynamicModelId, parameterSetId, tapChangerEquipments.getEquipments(), tapChangerEquipments.getMissingEquipmentIds(), uMeasurementPoints.getEquipments(), getLib()) : null;
     }
 
     @Override

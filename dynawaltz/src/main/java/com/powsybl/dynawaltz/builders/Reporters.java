@@ -72,11 +72,33 @@ public final class Reporters {
 
     public static void reportStaticIdUnknown(Reporter reporter, String fieldName, String staticId, String equipmentType) {
         reporter.report(Report.builder()
-                .withKey("staticIdUnknown")
+                .withKey("unknownStaticIdToDynamic")
                 .withDefaultMessage("'${fieldName}' field value '${staticId}' not found for equipment type(s) ${equipmentType}")
                 .withValue("equipmentType", equipmentType)
-                .withValue(FIELD_NAME, fieldName).withValue("staticId", staticId)
+                .withValue(FIELD_NAME, fieldName)
+                .withValue("staticId", staticId)
                 .withSeverity(TypedValue.WARN_SEVERITY)
+                .build());
+    }
+
+    public static void reportDifferentNetwork(Reporter reporter, String fieldName, String staticId, String equipmentType) {
+        reporter.report(Report.builder()
+                .withKey("wrongNetwork")
+                .withDefaultMessage("'${fieldName}' field value ${equipmentType} ${staticId} does not belong to the builder network")
+                .withValue("equipmentType", equipmentType)
+                .withValue(FIELD_NAME, fieldName)
+                .withValue("staticId", staticId)
+                .withSeverity(TypedValue.WARN_SEVERITY)
+                .build());
+    }
+
+    public static void reportUnknownStaticIdHandling(Reporter reporter, String fieldName, String staticId, String equipmentType) {
+        reporter.report(Report.builder()
+                .withKey("staticIdUnknown")
+                .withDefaultMessage("'${fieldName}' field value '${staticId}' not found for equipment type(s) ${equipmentType}, id will be used as pure dynamic model id")
+                .withValue("equipmentType", equipmentType)
+                .withValue(FIELD_NAME, fieldName).withValue("staticId", staticId)
+                .withSeverity(TypedValue.INFO_SEVERITY)
                 .build());
     }
 
