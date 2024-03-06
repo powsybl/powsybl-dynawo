@@ -11,8 +11,6 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.*;
@@ -23,8 +21,6 @@ import static com.fasterxml.jackson.core.JsonToken.VALUE_STRING;
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class ModelConfigsJsonDeserializer extends StdDeserializer<Map<String, ModelConfigs>> {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(ModelConfigsJsonDeserializer.class);
 
     public ModelConfigsJsonDeserializer() {
         super(Map.class);
@@ -42,15 +38,31 @@ public class ModelConfigsJsonDeserializer extends StdDeserializer<Map<String, Mo
     }
 
     private ModelConfigs deserializeModelConfigs(JsonParser parser) throws IOException {
-        Map<String, ModelConfig> configs = new HashMap<>();
-        boolean defaultAlreadySet = false;
-        ModelConfig defaultModelConfig = null;
+        String defaultLib = null;
+        Map<String, ModelConfig> libs = null;
+        while (parser.nextToken() != JsonToken.END_OBJECT) {
+            switch (parser.getCurrentName()) {
+                case "defaultLib":
+                    defaultLib = parser.getValueAsString();
+                    break;
+                case "libs":
+                    libs = deserializeLibsMap(parser);
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected field: " + parser.getCurrentName());
+            }
+        }
+        return new ModelConfigs(libs, defaultLib);
+    }
+
+    private Map<String, ModelConfig> deserializeLibsMap(JsonParser parser) throws IOException {
+        Map<String, ModelConfig> libs = new HashMap<>();
         while (parser.nextToken() != JsonToken.END_ARRAY) {
+            parser.nextToken();
             String lib = null;
             String alias = null;
             String internalModelPrefix = null;
             List<String> properties = Collections.emptyList();
-            boolean isDefaultLib = false;
             while (parser.nextToken() != JsonToken.END_OBJECT) {
                 switch (parser.getCurrentName()) {
                     case "lib":
@@ -65,28 +77,14 @@ public class ModelConfigsJsonDeserializer extends StdDeserializer<Map<String, Mo
                     case "alias":
                         alias = parser.getValueAsString();
                         break;
-                    case "default":
-                        isDefaultLib = parser.getValueAsBoolean();
-                        break;
                     default:
                         throw new IllegalStateException("Unexpected field: " + parser.getCurrentName());
                 }
             }
-            if (isDefaultLib) {
-                if (!defaultAlreadySet) {
-                    defaultAlreadySet = true;
-                } else {
-                    LOGGER.warn("{} can't be set as default, the default lib is already set", lib);
-                    isDefaultLib = false;
-                }
-            }
-            ModelConfig modelConfig = new ModelConfig(lib, alias, internalModelPrefix, properties, isDefaultLib);
-            configs.put(modelConfig.name(), modelConfig);
-            if (isDefaultLib) {
-                defaultModelConfig = modelConfig;
-            }
+            ModelConfig modelConfig = new ModelConfig(lib, alias, internalModelPrefix, properties);
+            libs.put(modelConfig.name(), modelConfig);
         }
-        return new ModelConfigs(configs, defaultModelConfig);
+        return libs;
     }
 
     private List<String> deserializeProperties(JsonParser parser) throws IOException {

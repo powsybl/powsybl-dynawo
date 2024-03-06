@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -23,9 +24,11 @@ public class ModelConfigs {
     private ModelConfig defaultModelConfig;
     private final Map<String, ModelConfig> modelConfigMap;
 
-    ModelConfigs(Map<String, ModelConfig> modelConfigMap, ModelConfig defaultModelConfig) {
-        this.modelConfigMap = modelConfigMap;
-        this.defaultModelConfig = defaultModelConfig;
+    ModelConfigs(Map<String, ModelConfig> modelConfigMap, String defaultModelConfigName) {
+        this.modelConfigMap = Objects.requireNonNull(modelConfigMap);
+        if (defaultModelConfigName != null) {
+            this.defaultModelConfig = Objects.requireNonNull(modelConfigMap.get(defaultModelConfigName));
+        }
     }
 
     public boolean hasDefaultModelConfig() {
@@ -47,11 +50,9 @@ public class ModelConfigs {
     void addModelConfigs(ModelConfigs modelConfigsToMerge) {
         modelConfigMap.putAll(modelConfigsToMerge.modelConfigMap);
         if (hasDefaultModelConfig() && modelConfigsToMerge.hasDefaultModelConfig()) {
-            ModelConfig extraDefaultModelConfig = modelConfigsToMerge.getDefaultModelConfig();
             LOGGER.warn("Default model configs {} & {} found, the first one will be kept",
                     defaultModelConfig.lib(),
-                    extraDefaultModelConfig.lib());
-            modelConfigsToMerge.modelConfigMap.replace(extraDefaultModelConfig.name(), ModelConfig.copyOf(extraDefaultModelConfig, false));
+                    modelConfigsToMerge.getDefaultModelConfig().lib());
         } else if (!hasDefaultModelConfig()) {
             defaultModelConfig = modelConfigsToMerge.defaultModelConfig;
         }
