@@ -10,13 +10,13 @@ package com.powsybl.dynawaltz.models.lines;
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.builders.AbstractEquipmentModelBuilder;
 import com.powsybl.dynawaltz.builders.ModelConfig;
+import com.powsybl.dynawaltz.builders.ModelConfigsHandler;
 import com.powsybl.dynawaltz.builders.ModelConfigs;
 import com.powsybl.dynawaltz.builders.Reporters;
 import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Line;
 import com.powsybl.iidm.network.Network;
 
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -25,14 +25,14 @@ import java.util.Set;
 public class LineBuilder extends AbstractEquipmentModelBuilder<Line, LineBuilder> {
 
     private static final String CATEGORY = "baseLines";
-    private static final Map<String, ModelConfig> LIBS = ModelConfigs.getInstance().getModelConfigs(CATEGORY);
+    private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
 
     public static LineBuilder of(Network network) {
         return of(network, Reporter.NO_OP);
     }
 
     public static LineBuilder of(Network network, Reporter reporter) {
-        return new LineBuilder(network, LIBS.values().iterator().next(), reporter);
+        return new LineBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reporter);
     }
 
     public static LineBuilder of(Network network, String lib) {
@@ -40,16 +40,16 @@ public class LineBuilder extends AbstractEquipmentModelBuilder<Line, LineBuilder
     }
 
     public static LineBuilder of(Network network, String lib, Reporter reporter) {
-        ModelConfig modelConfig = LIBS.get(lib);
+        ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(lib);
         if (modelConfig == null) {
             Reporters.reportLibNotFound(reporter, LineBuilder.class.getSimpleName(), lib);
             return null;
         }
-        return new LineBuilder(network, LIBS.get(lib), reporter);
+        return new LineBuilder(network, modelConfig, reporter);
     }
 
     public static Set<String> getSupportedLibs() {
-        return LIBS.keySet();
+        return MODEL_CONFIGS.getSupportedLibs();
     }
 
     protected LineBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
