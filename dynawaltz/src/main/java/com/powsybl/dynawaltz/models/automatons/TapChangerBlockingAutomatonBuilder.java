@@ -21,7 +21,7 @@ import static com.powsybl.dynawaltz.builders.BuildersUtil.MEASUREMENT_POINT_TYPE
 public class TapChangerBlockingAutomatonBuilder extends AbstractAutomatonModelBuilder<TapChangerBlockingAutomatonBuilder> {
 
     private static final String CATEGORY = "tcbs";
-    private static final Map<String, ModelConfig> LIBS = ModelConfigs.getInstance().getModelConfigs(CATEGORY);
+    private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
     private static final String TAP_CHANGER_TYPE = IdentifiableType.TWO_WINDINGS_TRANSFORMER + "/" + IdentifiableType.LOAD;
     private static final String U_MEASUREMENTS_FIELD = "uMeasurements";
     private static final String TRANSFORMER_FIELD = "transformers";
@@ -34,7 +34,7 @@ public class TapChangerBlockingAutomatonBuilder extends AbstractAutomatonModelBu
     }
 
     public static TapChangerBlockingAutomatonBuilder of(Network network, Reporter reporter) {
-        return new TapChangerBlockingAutomatonBuilder(network, LIBS.values().iterator().next(), reporter);
+        return new TapChangerBlockingAutomatonBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reporter);
     }
 
     public static TapChangerBlockingAutomatonBuilder of(Network network, String lib) {
@@ -42,16 +42,16 @@ public class TapChangerBlockingAutomatonBuilder extends AbstractAutomatonModelBu
     }
 
     public static TapChangerBlockingAutomatonBuilder of(Network network, String lib, Reporter reporter) {
-        ModelConfig modelConfig = LIBS.get(lib);
+        ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(lib);
         if (modelConfig == null) {
             Reporters.reportLibNotFound(reporter, TapChangerBlockingAutomatonBuilder.class.getSimpleName(), lib);
             return null;
         }
-        return new TapChangerBlockingAutomatonBuilder(network, LIBS.get(lib), reporter);
+        return new TapChangerBlockingAutomatonBuilder(network, modelConfig, reporter);
     }
 
     public static Set<String> getSupportedLibs() {
-        return LIBS.keySet();
+        return MODEL_CONFIGS.getSupportedLibs();
     }
 
     protected TapChangerBlockingAutomatonBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {

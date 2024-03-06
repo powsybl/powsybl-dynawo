@@ -10,12 +10,12 @@ package com.powsybl.dynawaltz.models.automatons.currentlimits;
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.builders.BuilderEquipment;
 import com.powsybl.dynawaltz.builders.ModelConfig;
+import com.powsybl.dynawaltz.builders.ModelConfigsHandler;
 import com.powsybl.dynawaltz.builders.ModelConfigs;
 import com.powsybl.dynawaltz.builders.Reporters;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.TwoSides;
 
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -24,14 +24,14 @@ import java.util.Set;
 public class CurrentLimitAutomatonBuilder extends AbstractCurrentLimitAutomatonBuilder<CurrentLimitAutomatonBuilder> {
 
     private static final String CATEGORY = "clas";
-    private static final Map<String, ModelConfig> LIBS = ModelConfigs.getInstance().getModelConfigs(CATEGORY);
+    private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
 
     public static CurrentLimitAutomatonBuilder of(Network network) {
         return of(network, Reporter.NO_OP);
     }
 
     public static CurrentLimitAutomatonBuilder of(Network network, Reporter reporter) {
-        return new CurrentLimitAutomatonBuilder(network, LIBS.values().iterator().next(), reporter);
+        return new CurrentLimitAutomatonBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reporter);
     }
 
     public static CurrentLimitAutomatonBuilder of(Network network, String lib) {
@@ -39,16 +39,16 @@ public class CurrentLimitAutomatonBuilder extends AbstractCurrentLimitAutomatonB
     }
 
     public static CurrentLimitAutomatonBuilder of(Network network, String lib, Reporter reporter) {
-        ModelConfig modelConfig = LIBS.get(lib);
+        ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(lib);
         if (modelConfig == null) {
             Reporters.reportLibNotFound(reporter, CurrentLimitAutomatonBuilder.class.getSimpleName(), lib);
             return null;
         }
-        return new CurrentLimitAutomatonBuilder(network, LIBS.get(lib), reporter);
+        return new CurrentLimitAutomatonBuilder(network, modelConfig, reporter);
     }
 
     public static Set<String> getSupportedLibs() {
-        return LIBS.keySet();
+        return MODEL_CONFIGS.getSupportedLibs();
     }
 
     protected CurrentLimitAutomatonBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
