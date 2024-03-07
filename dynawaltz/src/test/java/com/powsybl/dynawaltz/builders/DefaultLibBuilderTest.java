@@ -7,16 +7,19 @@
  */
 package com.powsybl.dynawaltz.builders;
 
-import com.powsybl.dynawaltz.models.automatons.*;
-import com.powsybl.dynawaltz.models.automatons.currentlimits.CurrentLimitAutomatonBuilder;
-import com.powsybl.dynawaltz.models.automatons.currentlimits.CurrentLimitTwoLevelsAutomatonBuilder;
-import com.powsybl.dynawaltz.models.automatons.phaseshifters.PhaseShifterIAutomatonBuilder;
-import com.powsybl.dynawaltz.models.automatons.phaseshifters.PhaseShifterPAutomatonBuilder;
-import com.powsybl.dynawaltz.models.buses.*;
-import com.powsybl.dynawaltz.models.lines.*;
+import com.powsybl.dynawaltz.models.automationsystems.TapChangerAutomationSystemBuilder;
+import com.powsybl.dynawaltz.models.automationsystems.TapChangerBlockingAutomationSystemBuilder;
+import com.powsybl.dynawaltz.models.automationsystems.UnderVoltageAutomationSystemBuilder;
+import com.powsybl.dynawaltz.models.automationsystems.overloadmanagments.DynamicOverloadManagementSystemBuilder;
+import com.powsybl.dynawaltz.models.automationsystems.overloadmanagments.DynamicTwoLevelsOverloadManagementSystemBuilder;
+import com.powsybl.dynawaltz.models.automationsystems.phaseshifters.PhaseShifterIAutomationSystemBuilder;
+import com.powsybl.dynawaltz.models.automationsystems.phaseshifters.PhaseShifterPAutomationSystemBuilder;
+import com.powsybl.dynawaltz.models.buses.InfiniteBusBuilder;
+import com.powsybl.dynawaltz.models.buses.StandardBusBuilder;
 import com.powsybl.dynawaltz.models.generators.*;
 import com.powsybl.dynawaltz.models.hvdc.HvdcPBuilder;
 import com.powsybl.dynawaltz.models.hvdc.HvdcVscBuilder;
+import com.powsybl.dynawaltz.models.lines.LineBuilder;
 import com.powsybl.dynawaltz.models.loads.*;
 import com.powsybl.dynawaltz.models.svarcs.BaseStaticVarCompensatorBuilder;
 import com.powsybl.dynawaltz.models.transformers.TransformerFixedRatioBuilder;
@@ -35,13 +38,13 @@ class DefaultLibBuilderTest {
 
     @Test
     void testDefaultLibAutomatons() {
-        assertNotNull(UnderVoltageAutomatonBuilder.of(NETWORK));
-        assertNotNull(TapChangerAutomatonBuilder.of(NETWORK));
-        assertNotNull(TapChangerBlockingAutomatonBuilder.of(NETWORK));
-        assertNotNull(CurrentLimitAutomatonBuilder.of(NETWORK));
-        assertNotNull(CurrentLimitTwoLevelsAutomatonBuilder.of(NETWORK));
-        assertNotNull(PhaseShifterPAutomatonBuilder.of(NETWORK));
-        assertNotNull(PhaseShifterIAutomatonBuilder.of(NETWORK));
+        assertNotNull(UnderVoltageAutomationSystemBuilder.of(NETWORK));
+        assertNotNull(TapChangerBlockingAutomationSystemBuilder.of(NETWORK));
+        assertNotNull(TapChangerAutomationSystemBuilder.of(NETWORK));
+        assertNotNull(DynamicOverloadManagementSystemBuilder.of(NETWORK));
+        assertNotNull(DynamicTwoLevelsOverloadManagementSystemBuilder.of(NETWORK));
+        assertNotNull(PhaseShifterIAutomationSystemBuilder.of(NETWORK));
+        assertNotNull(PhaseShifterPAutomationSystemBuilder.of(NETWORK));
     }
 
     @Test
