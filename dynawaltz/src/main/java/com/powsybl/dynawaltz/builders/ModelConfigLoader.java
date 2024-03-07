@@ -24,7 +24,7 @@ public interface ModelConfigLoader {
 
     String getModelConfigFileName();
 
-    default Map<String, Map<String, ModelConfig>> loadModelConfigs() {
+    default Map<String, ModelConfigs> loadModelConfigs() {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             SimpleModule module = new SimpleModule();

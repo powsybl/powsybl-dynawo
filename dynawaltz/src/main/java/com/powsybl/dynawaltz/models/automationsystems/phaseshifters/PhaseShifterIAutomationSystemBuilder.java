@@ -9,11 +9,11 @@ package com.powsybl.dynawaltz.models.automationsystems.phaseshifters;
 
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.builders.ModelConfig;
+import com.powsybl.dynawaltz.builders.ModelConfigsHandler;
 import com.powsybl.dynawaltz.builders.ModelConfigs;
 import com.powsybl.dynawaltz.builders.Reporters;
 import com.powsybl.iidm.network.Network;
 
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -22,14 +22,14 @@ import java.util.Set;
 public class PhaseShifterIAutomationSystemBuilder extends AbstractPhaseShifterModelBuilder<PhaseShifterIAutomationSystemBuilder> {
 
     private static final String CATEGORY = "phaseShiftersI";
-    private static final Map<String, ModelConfig> LIBS = ModelConfigs.getInstance().getModelConfigs(CATEGORY);
+    private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
 
     public static PhaseShifterIAutomationSystemBuilder of(Network network) {
         return of(network, Reporter.NO_OP);
     }
 
     public static PhaseShifterIAutomationSystemBuilder of(Network network, Reporter reporter) {
-        return new PhaseShifterIAutomationSystemBuilder(network, LIBS.values().iterator().next(), reporter);
+        return new PhaseShifterIAutomationSystemBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reporter);
     }
 
     public static PhaseShifterIAutomationSystemBuilder of(Network network, String lib) {
@@ -37,16 +37,16 @@ public class PhaseShifterIAutomationSystemBuilder extends AbstractPhaseShifterMo
     }
 
     public static PhaseShifterIAutomationSystemBuilder of(Network network, String lib, Reporter reporter) {
-        ModelConfig modelConfig = LIBS.get(lib);
+        ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(lib);
         if (modelConfig == null) {
             Reporters.reportLibNotFound(reporter, PhaseShifterIAutomationSystemBuilder.class.getSimpleName(), lib);
             return null;
         }
-        return new PhaseShifterIAutomationSystemBuilder(network, LIBS.get(lib), reporter);
+        return new PhaseShifterIAutomationSystemBuilder(network, modelConfig, reporter);
     }
 
     public static Set<String> getSupportedLibs() {
-        return LIBS.keySet();
+        return MODEL_CONFIGS.getSupportedLibs();
     }
 
     protected PhaseShifterIAutomationSystemBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {

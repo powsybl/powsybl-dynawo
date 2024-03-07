@@ -26,7 +26,7 @@ public abstract class AbstractEquipmentModelBuilder<T extends Identifiable<?>, R
 
     protected AbstractEquipmentModelBuilder(Network network, ModelConfig modelConfig, IdentifiableType equipmentType, Reporter reporter) {
         super(network, reporter);
-        this.modelConfig = modelConfig;
+        this.modelConfig = Objects.requireNonNull(modelConfig);
         this.builderEquipment = new BuilderEquipment<>(equipmentType);
     }
 

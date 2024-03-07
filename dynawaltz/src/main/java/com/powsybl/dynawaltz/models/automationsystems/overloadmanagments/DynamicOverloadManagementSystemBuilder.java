@@ -10,12 +10,12 @@ package com.powsybl.dynawaltz.models.automationsystems.overloadmanagments;
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.builders.BuilderEquipment;
 import com.powsybl.dynawaltz.builders.ModelConfig;
+import com.powsybl.dynawaltz.builders.ModelConfigsHandler;
 import com.powsybl.dynawaltz.builders.ModelConfigs;
 import com.powsybl.dynawaltz.builders.Reporters;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.TwoSides;
 
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -24,14 +24,14 @@ import java.util.Set;
 public class DynamicOverloadManagementSystemBuilder extends AbstractOverloadManagementSystemBuilder<DynamicOverloadManagementSystemBuilder> {
 
     private static final String CATEGORY = "overloadManagements";
-    private static final Map<String, ModelConfig> LIBS = ModelConfigs.getInstance().getModelConfigs(CATEGORY);
+    private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
 
     public static DynamicOverloadManagementSystemBuilder of(Network network) {
         return of(network, Reporter.NO_OP);
     }
 
     public static DynamicOverloadManagementSystemBuilder of(Network network, Reporter reporter) {
-        return new DynamicOverloadManagementSystemBuilder(network, LIBS.values().iterator().next(), reporter);
+        return new DynamicOverloadManagementSystemBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reporter);
     }
 
     public static DynamicOverloadManagementSystemBuilder of(Network network, String lib) {
@@ -39,16 +39,16 @@ public class DynamicOverloadManagementSystemBuilder extends AbstractOverloadMana
     }
 
     public static DynamicOverloadManagementSystemBuilder of(Network network, String lib, Reporter reporter) {
-        ModelConfig modelConfig = LIBS.get(lib);
+        ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(lib);
         if (modelConfig == null) {
             Reporters.reportLibNotFound(reporter, DynamicOverloadManagementSystemBuilder.class.getSimpleName(), lib);
             return null;
         }
-        return new DynamicOverloadManagementSystemBuilder(network, LIBS.get(lib), reporter);
+        return new DynamicOverloadManagementSystemBuilder(network, modelConfig, reporter);
     }
 
     public static Set<String> getSupportedLibs() {
-        return LIBS.keySet();
+        return MODEL_CONFIGS.getSupportedLibs();
     }
 
     protected DynamicOverloadManagementSystemBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {

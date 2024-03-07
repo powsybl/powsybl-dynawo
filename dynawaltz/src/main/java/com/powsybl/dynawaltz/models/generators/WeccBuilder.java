@@ -9,11 +9,11 @@ package com.powsybl.dynawaltz.models.generators;
 
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.builders.ModelConfig;
+import com.powsybl.dynawaltz.builders.ModelConfigsHandler;
 import com.powsybl.dynawaltz.builders.ModelConfigs;
 import com.powsybl.dynawaltz.builders.Reporters;
 import com.powsybl.iidm.network.Network;
 
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -22,14 +22,14 @@ import java.util.Set;
 public class WeccBuilder extends AbstractGeneratorBuilder<WeccBuilder> {
 
     private static final String CATEGORY = "wecc";
-    private static final Map<String, ModelConfig> LIBS = ModelConfigs.getInstance().getModelConfigs(CATEGORY);
+    private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
 
     public static WeccBuilder of(Network network) {
         return of(network, Reporter.NO_OP);
     }
 
     public static WeccBuilder of(Network network, Reporter reporter) {
-        return new WeccBuilder(network, LIBS.values().iterator().next(), reporter);
+        return new WeccBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reporter);
     }
 
     public static WeccBuilder of(Network network, String lib) {
@@ -37,16 +37,16 @@ public class WeccBuilder extends AbstractGeneratorBuilder<WeccBuilder> {
     }
 
     public static WeccBuilder of(Network network, String lib, Reporter reporter) {
-        ModelConfig modelConfig = LIBS.get(lib);
+        ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(lib);
         if (modelConfig == null) {
             Reporters.reportLibNotFound(reporter, WeccBuilder.class.getSimpleName(), lib);
             return null;
         }
-        return new WeccBuilder(network, LIBS.get(lib), reporter);
+        return new WeccBuilder(network, modelConfig, reporter);
     }
 
     public static Set<String> getSupportedLibs() {
-        return LIBS.keySet();
+        return MODEL_CONFIGS.getSupportedLibs();
     }
 
     protected WeccBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {

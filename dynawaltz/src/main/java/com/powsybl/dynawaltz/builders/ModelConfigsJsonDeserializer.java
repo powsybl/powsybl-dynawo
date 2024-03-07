@@ -20,15 +20,15 @@ import static com.fasterxml.jackson.core.JsonToken.VALUE_STRING;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class ModelConfigsJsonDeserializer extends StdDeserializer<Map<String, Map<String, ModelConfig>>> {
+public class ModelConfigsJsonDeserializer extends StdDeserializer<Map<String, ModelConfigs>> {
 
     public ModelConfigsJsonDeserializer() {
         super(Map.class);
     }
 
     @Override
-    public Map<String, Map<String, ModelConfig>> deserialize(JsonParser parser, DeserializationContext context) throws IOException {
-        Map<String, Map<String, ModelConfig>> configMap = new HashMap<>();
+    public Map<String, ModelConfigs> deserialize(JsonParser parser, DeserializationContext context) throws IOException {
+        Map<String, ModelConfigs> configMap = new HashMap<>();
         while (parser.nextToken() != JsonToken.END_OBJECT) {
             String category = parser.getCurrentName();
             parser.nextToken();
@@ -37,9 +37,28 @@ public class ModelConfigsJsonDeserializer extends StdDeserializer<Map<String, Ma
         return configMap;
     }
 
-    private Map<String, ModelConfig> deserializeModelConfigs(JsonParser parser) throws IOException {
-        Map<String, ModelConfig> configs = new LinkedHashMap<>();
+    private ModelConfigs deserializeModelConfigs(JsonParser parser) throws IOException {
+        String defaultLib = null;
+        Map<String, ModelConfig> libs = null;
+        while (parser.nextToken() != JsonToken.END_OBJECT) {
+            switch (parser.getCurrentName()) {
+                case "defaultLib":
+                    defaultLib = parser.getValueAsString();
+                    break;
+                case "libs":
+                    libs = deserializeLibsMap(parser);
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected field: " + parser.getCurrentName());
+            }
+        }
+        return new ModelConfigs(libs, defaultLib);
+    }
+
+    private Map<String, ModelConfig> deserializeLibsMap(JsonParser parser) throws IOException {
+        Map<String, ModelConfig> libs = new HashMap<>();
         while (parser.nextToken() != JsonToken.END_ARRAY) {
+            parser.nextToken();
             String lib = null;
             String alias = null;
             String internalModelPrefix = null;
@@ -63,9 +82,9 @@ public class ModelConfigsJsonDeserializer extends StdDeserializer<Map<String, Ma
                 }
             }
             ModelConfig modelConfig = new ModelConfig(lib, alias, internalModelPrefix, properties);
-            configs.put(modelConfig.name(), modelConfig);
+            libs.put(modelConfig.name(), modelConfig);
         }
-        return configs;
+        return libs;
     }
 
     private List<String> deserializeProperties(JsonParser parser) throws IOException {
