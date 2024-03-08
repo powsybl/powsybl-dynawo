@@ -375,19 +375,21 @@
       }
     ]
   },
-  "clas": {
-    "defaultLib": "CurrentLimitAutomaton",
+  "overloadManagements": {
+    "defaultLib": "OverloadManagementSystem",
     "libs": [
       {
-        "lib": "CurrentLimitAutomaton"
+        "lib": "CurrentLimitAutomaton",
+        "alias": "OverloadManagementSystem"
       }
     ]
   },
-  "clasTwoLevels": {
-    "defaultLib": "CurrentLimitAutomatonTwoLevels",
+  "twoLevelsOverloadManagements": {
+    "defaultLib": "TwoLevelsOverloadManagementSystem",
     "libs": [
       {
-        "lib": "CurrentLimitAutomatonTwoLevels"
+        "lib": "CurrentLimitAutomatonTwoLevels",
+        "alias": "TwoLevelsOverloadManagementSystem"
       }
     ]
   },

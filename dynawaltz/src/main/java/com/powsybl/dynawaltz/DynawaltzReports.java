@@ -59,7 +59,7 @@ public final class DynawaltzReports {
     public static void reportEmptyAutomaton(Reporter reporter, String automatonName, String dynamicId, String expectedModels) {
         reporter.report(Report.builder()
                 .withKey("emptyAutomaton")
-                .withDefaultMessage("${automatonName} ${dynamicId} equipment is not a ${expectedModels}, the automaton will be skipped")
+                .withDefaultMessage("${automatonName} ${dynamicId} equipment is not a ${expectedModels}, the automation system will be skipped")
                 .withValue("automatonName", automatonName)
                 .withValue("dynamicId", dynamicId)
                 .withValue("expectedModels", expectedModels)
@@ -70,7 +70,7 @@ public final class DynawaltzReports {
     public static void reportEmptyListAutomaton(Reporter reporter, String automatonName, String dynamicId, String expectedModels) {
         reporter.report(Report.builder()
                 .withKey("emptyListAutomaton")
-                .withDefaultMessage("None of ${automatonName} ${dynamicId} equipments are ${expectedModels}, the automaton will be skipped")
+                .withDefaultMessage("None of ${automatonName} ${dynamicId} equipments are ${expectedModels}, the automation system will be skipped")
                 .withValue("automatonName", automatonName)
                 .withValue("dynamicId", dynamicId)
                 .withValue("expectedModels", expectedModels)

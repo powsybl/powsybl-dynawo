@@ -6,16 +6,14 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-package warnings
+package dynamicModels
 
 import com.powsybl.iidm.network.TwoSides
 
-TwoLevelsOverloadManagementSystem {
-    dynamicModelId "CLA_NGEN"
+OverloadManagementSystem {
+    dynamicModelId "AM_NHV1_NHV2_1"
     parameterSetId "CLA"
     controlledBranch "NHV1_NHV2_2"
-    iMeasurement1 "NHV1_NHV2_1"
-    iMeasurement1Side TwoSides.TWO
-    iMeasurement2 "NGEN"
-    iMeasurement2Side TwoSides.ONE
+    iMeasurement "NHV1_NHV2_1"
+    iMeasurementSide TwoSides.TWO
 }

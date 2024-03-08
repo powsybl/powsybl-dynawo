@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
+    <dyn:blackBoxModel id="Disconnect_NHV1_NHV2_1" lib="EventQuadripoleDisconnection" parFile="sim1.par" parId="Disconnect_NHV1_NHV2_1"/>
+    <dyn:blackBoxModel id="Disconnect_NGEN_NHV1" lib="EventQuadripoleDisconnection" parFile="sim1.par" parId="Disconnect_NGEN_NHV1"/>
+    <dyn:macroConnector id="MC_EventBranchDisconnection-DefaultLine">
+        <dyn:connect var1="event_state1_value" var2="@NAME@_state_value"/>
+    </dyn:macroConnector>
+    <dyn:macroConnector id="MC_EventBranchDisconnection-DefaultTransformer">
+        <dyn:connect var1="event_state1_value" var2="@NAME@_state_value"/>
+    </dyn:macroConnector>
+    <dyn:macroConnect connector="MC_EventBranchDisconnection-DefaultLine" id1="Disconnect_NHV1_NHV2_1" id2="NETWORK" name2="NHV1_NHV2_1"/>
+    <dyn:macroConnect connector="MC_EventBranchDisconnection-DefaultTransformer" id1="Disconnect_NGEN_NHV1" id2="NETWORK" name2="NGEN_NHV1"/>
+</dyn:dynamicModelsArchitecture>

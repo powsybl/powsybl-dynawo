@@ -19,7 +19,7 @@
     <dyn:macroConnector id="MC_DYNModelOmegaRef-DefaultBusOfFrequencySynchronized">
         <dyn:connect var1="numcc_node_@INDEX@" var2="@@NAME@@@NODE@_numcc"/>
     </dyn:macroConnector>
-    <dyn:macroConnector id="MC_EventQuadripoleDisconnection-DefaultLine">
+    <dyn:macroConnector id="MC_EventBranchDisconnection-DefaultLine">
         <dyn:connect var1="event_state1_value" var2="@NAME@_state_value"/>
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_EventInjectionDisconnection-GeneratorSynchronousFourWindingsProportionalRegulations">
@@ -33,7 +33,7 @@
     <dyn:macroConnect connector="MC_GeneratorSynchronousFourWindingsProportionalRegulations-DefaultEquipmentConnectionPoint" id1="BBM_GEN2" id2="NETWORK"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorSynchronousFourWindingsProportionalRegulations" id1="FREQ_SYNC" index1="0" id2="BBM_GEN2"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRef-DefaultBusOfFrequencySynchronized" id1="FREQ_SYNC" index1="0" id2="NETWORK" name2="GEN2"/>
-    <dyn:macroConnect connector="MC_EventQuadripoleDisconnection-DefaultLine" id1="Disconnect_NHV1_NHV2_1" id2="NETWORK" name2="NHV1_NHV2_1"/>
-    <dyn:macroConnect connector="MC_EventQuadripoleDisconnection-DefaultLine" id1="Disconnect_NHV1_NHV2_2" id2="NETWORK" name2="NHV1_NHV2_2"/>
+    <dyn:macroConnect connector="MC_EventBranchDisconnection-DefaultLine" id1="Disconnect_NHV1_NHV2_1" id2="NETWORK" name2="NHV1_NHV2_1"/>
+    <dyn:macroConnect connector="MC_EventBranchDisconnection-DefaultLine" id1="Disconnect_NHV1_NHV2_2" id2="NETWORK" name2="NHV1_NHV2_2"/>
     <dyn:macroConnect connector="MC_EventInjectionDisconnection-GeneratorSynchronousFourWindingsProportionalRegulations" id1="Disconnect_GEN2" id2="BBM_GEN2"/>
 </dyn:dynamicModelsArchitecture>

@@ -15,11 +15,11 @@ import com.powsybl.dynamicsimulation.groovy.GroovyExtension;
 import com.powsybl.dynawaltz.DynaWaltzProvider;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.EquipmentBlackBoxModel;
-import com.powsybl.dynawaltz.models.automatons.*;
-import com.powsybl.dynawaltz.models.automatons.currentlimits.CurrentLimitAutomaton;
-import com.powsybl.dynawaltz.models.automatons.currentlimits.CurrentLimitTwoLevelsAutomaton;
-import com.powsybl.dynawaltz.models.automatons.phaseshifters.PhaseShifterIAutomaton;
-import com.powsybl.dynawaltz.models.automatons.phaseshifters.PhaseShifterPAutomaton;
+import com.powsybl.dynawaltz.models.automationsystems.*;
+import com.powsybl.dynawaltz.models.automationsystems.overloadmanagments.DynamicOverloadManagementSystem;
+import com.powsybl.dynawaltz.models.automationsystems.overloadmanagments.DynamicTwoLevelsOverloadManagementSystem;
+import com.powsybl.dynawaltz.models.automationsystems.phaseshifters.PhaseShifterIAutomationSystem;
+import com.powsybl.dynawaltz.models.automationsystems.phaseshifters.PhaseShifterPAutomationSystem;
 import com.powsybl.dynawaltz.models.buses.InfiniteBus;
 import com.powsybl.dynawaltz.models.buses.StandardBus;
 import com.powsybl.dynawaltz.models.generators.*;
@@ -66,8 +66,8 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
     }
 
     @ParameterizedTest(name = "{0}")
-    @MethodSource("provideAutomatonModelData")
-    void testAutomatonDynamicModels(String groovyScriptName, Class<? extends BlackBoxModel> modelClass, Network network, String dynamicId, String parameterId, String lib) {
+    @MethodSource("provideAutomationSystemModelData")
+    void testAutomationSystemDynamicModels(String groovyScriptName, Class<? extends BlackBoxModel> modelClass, Network network, String dynamicId, String parameterId, String lib) {
         DynamicModelsSupplier supplier = new GroovyDynamicModelsSupplier(getResourceAsStream(groovyScriptName), EXTENSIONS);
         List<DynamicModel> dynamicModels = supplier.get(network);
         assertEquals(1, dynamicModels.size());
@@ -135,16 +135,16 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
         );
     }
 
-    private static Stream<Arguments> provideAutomatonModelData() {
+    private static Stream<Arguments> provideAutomationSystemModelData() {
         return Stream.of(
-                Arguments.of("/dynamicModels/currentLimit.groovy", CurrentLimitAutomaton.class, EurostagTutorialExample1Factory.create(), "AM_NHV1_NHV2_1", "CLA", "CurrentLimitAutomaton"),
-                Arguments.of("/dynamicModels/currentLimitTwoLevels.groovy", CurrentLimitTwoLevelsAutomaton.class, EurostagTutorialExample1Factory.create(), "AM_NHV1_NHV2_1", "CLA", "CurrentLimitAutomatonTwoLevels"),
-                Arguments.of("/dynamicModels/tapChanger.groovy", TapChangerAutomaton.class, EurostagTutorialExample1Factory.create(), "TC", "tc", "TapChangerAutomaton"),
-                Arguments.of("/dynamicModels/tapChangerBlockingBusBar.groovy", TapChangerBlockingAutomaton.class, FourSubstationsNodeBreakerFactory.create(), "ZAB", "ZAB", "TapChangerBlockingAutomaton2"),
-                Arguments.of("/dynamicModels/tapChangerBlocking.groovy", TapChangerBlockingAutomaton.class, EurostagTutorialExample1Factory.create(), "ZAB", "ZAB", "TapChangerBlockingAutomaton3"),
-                Arguments.of("/dynamicModels/phaseShifterI.groovy", PhaseShifterIAutomaton.class, EurostagTutorialExample1Factory.create(), "PS_NGEN_NHV1", "ps", "PhaseShifterI"),
-                Arguments.of("/dynamicModels/phaseShifterP.groovy", PhaseShifterPAutomaton.class, EurostagTutorialExample1Factory.create(), "PS_NGEN_NHV1", "ps", "PhaseShifterP"),
-                Arguments.of("/dynamicModels/underVoltage.groovy", UnderVoltageAutomaton.class, EurostagTutorialExample1Factory.create(), "UV_GEN", "uv", "UnderVoltageAutomaton")
+                Arguments.of("/dynamicModels/overloadManagement", DynamicOverloadManagementSystem.class, EurostagTutorialExample1Factory.create(), "AM_NHV1_NHV2_1", "CLA", "CurrentLimitAutomaton"),
+                Arguments.of("/dynamicModels/overloadManagementTwoLevels.groovy", DynamicTwoLevelsOverloadManagementSystem.class, EurostagTutorialExample1Factory.create(), "AM_NHV1_NHV2_1", "CLA", "CurrentLimitAutomatonTwoLevels"),
+                Arguments.of("/dynamicModels/tapChanger.groovy", TapChangerAutomationSystem.class, EurostagTutorialExample1Factory.create(), "TC", "tc", "TapChangerAutomaton"),
+                Arguments.of("/dynamicModels/tapChangerBlockingBusBar.groovy", TapChangerBlockingAutomationSystem.class, FourSubstationsNodeBreakerFactory.create(), "ZAB", "ZAB", "TapChangerBlockingAutomaton2"),
+                Arguments.of("/dynamicModels/tapChangerBlocking.groovy", TapChangerBlockingAutomationSystem.class, EurostagTutorialExample1Factory.create(), "ZAB", "ZAB", "TapChangerBlockingAutomaton3"),
+                Arguments.of("/dynamicModels/phaseShifterI.groovy", PhaseShifterIAutomationSystem.class, EurostagTutorialExample1Factory.create(), "PS_NGEN_NHV1", "ps", "PhaseShifterI"),
+                Arguments.of("/dynamicModels/phaseShifterP.groovy", PhaseShifterPAutomationSystem.class, EurostagTutorialExample1Factory.create(), "PS_NGEN_NHV1", "ps", "PhaseShifterP"),
+                Arguments.of("/dynamicModels/underVoltage.groovy", UnderVoltageAutomationSystem.class, EurostagTutorialExample1Factory.create(), "UV_GEN", "uv", "UnderVoltageAutomaton")
         );
     }
 
@@ -213,15 +213,15 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                         """
                         + DSL tests
                           + Groovy Dynamic Models Supplier
-                            + DSL model builder for CurrentLimitAutomaton
-                               'iMeasurement' field value 'NGEN' not found for equipment type(s) Quadripole
+                            + DSL model builder for OverloadManagementSystem
+                               'iMeasurement' field value 'NGEN' not found for equipment type(s) BRANCH
                                Model CLA_NGEN cannot be instantiated
                         """),
                 Arguments.of("/warnings/claMissingMeasurementSide.groovy", EurostagTutorialExample1Factory.create(),
                         """
                         + DSL tests
                           + Groovy Dynamic Models Supplier
-                            + DSL model builder for CurrentLimitAutomaton
+                            + DSL model builder for OverloadManagementSystem
                                'iMeasurementSide' field is not set
                                Model CLA_NGEN cannot be instantiated
                         """),
@@ -229,23 +229,23 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                         """
                         + DSL tests
                           + Groovy Dynamic Models Supplier
-                            + DSL model builder for CurrentLimitAutomaton
-                               'controlledQuadripole' field value 'GEN' not found for equipment type(s) Quadripole
+                            + DSL model builder for OverloadManagementSystem
+                               'controlledBranch' field value 'GEN' not found for equipment type(s) BRANCH
                                Model CLA_NGEN cannot be instantiated
                         """),
                 Arguments.of("/warnings/cla2MissingMeasurement2.groovy", EurostagTutorialExample1Factory.create(),
                         """
                         + DSL tests
                           + Groovy Dynamic Models Supplier
-                            + DSL model builder for CurrentLimitAutomatonTwoLevels
-                               'iMeasurement2' field value 'NGEN' not found for equipment type(s) Quadripole
+                            + DSL model builder for TwoLevelsOverloadManagementSystem
+                               'iMeasurement2' field value 'NGEN' not found for equipment type(s) BRANCH
                                Model CLA_NGEN cannot be instantiated
                         """),
                 Arguments.of("/warnings/cla2MissingMeasurementSide2.groovy", EurostagTutorialExample1Factory.create(),
                         """
                         + DSL tests
                           + Groovy Dynamic Models Supplier
-                            + DSL model builder for CurrentLimitAutomatonTwoLevels
+                            + DSL model builder for TwoLevelsOverloadManagementSystem
                                'iMeasurement2Side' field is not set
                                Model CLA_NGEN cannot be instantiated
                         """),

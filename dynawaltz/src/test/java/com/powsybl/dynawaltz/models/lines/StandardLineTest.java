@@ -12,7 +12,7 @@ import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
-import com.powsybl.dynawaltz.models.automatons.currentlimits.CurrentLimitAutomatonBuilder;
+import com.powsybl.dynawaltz.models.automationsystems.overloadmanagments.DynamicOverloadManagementSystemBuilder;
 import com.powsybl.iidm.network.*;
 import org.junit.jupiter.api.Test;
 
@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class StandardLineTest {
 
     @Test
-    void connectionToCurrentLimitAutomatonException() {
+    void connectionToDynamicOverloadManagementSystemException() {
         Network network = Network.create("test", "test");
         Substation s = network.newSubstation().setId("s").add();
         VoltageLevel vl1 = s.newVoltageLevel().setId("vl1").setNominalV(400).setTopologyKind(TopologyKind.BUS_BREAKER).add();
@@ -41,10 +41,10 @@ class StandardLineTest {
 
         List<BlackBoxModel> dynamicModels = new ArrayList<>();
         dynamicModels.add(new StandardLine("BBM_l", l, "SL", "Line"));
-        dynamicModels.add(CurrentLimitAutomatonBuilder.of(network, "CurrentLimitAutomaton")
+        dynamicModels.add(DynamicOverloadManagementSystemBuilder.of(network, "OverloadManagementSystem")
                         .dynamicModelId("BBM_CLA")
                         .parameterSetId("CLA")
-                        .controlledQuadripole(l.getId())
+                        .controlledBranch(l.getId())
                         .iMeasurement(l.getId())
                         .iMeasurementSide(TwoSides.ONE)
                         .build());
