@@ -75,7 +75,7 @@
         <dyn:connect var1="omegaRef_grp_@INDEX@" var2="generator_omegaRefPu"/>
         <dyn:connect var1="running_grp_@INDEX@" var2="generator_running"/>
     </dyn:macroConnector>
-    <dyn:macroConnector id="MC_EventQuadripoleDisconnection-DefaultLine">
+    <dyn:macroConnector id="MC_EventBranchDisconnection-DefaultLine">
         <dyn:connect var1="event_state1_value" var2="@NAME@_state_value"/>
     </dyn:macroConnector>
     <dyn:macroStaticReference id="MSR_LoadAlphaBeta">
@@ -119,5 +119,5 @@
     <dyn:macroConnect connector="MC_DYNModelOmegaRef-DefaultBusOfFrequencySynchronized" id1="FREQ_SYNC" index1="3" id2="NETWORK" name2="_GEN____6_SM"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorSynchronousThreeWindingsProportionalRegulations" id1="FREQ_SYNC" index1="4" id2="_GEN____8_SM"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRef-DefaultBusOfFrequencySynchronized" id1="FREQ_SYNC" index1="4" id2="NETWORK" name2="_GEN____8_SM"/>
-    <dyn:macroConnect connector="MC_EventQuadripoleDisconnection-DefaultLine" id1="Disconnect__BUS____1-BUS____5-1_AC" id2="NETWORK" name2="_BUS____1-BUS____5-1_AC"/>
+    <dyn:macroConnect connector="MC_EventBranchDisconnection-DefaultLine" id1="Disconnect__BUS____1-BUS____5-1_AC" id2="NETWORK" name2="_BUS____1-BUS____5-1_AC"/>
 </dyn:dynamicModelsArchitecture>

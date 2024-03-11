@@ -12,6 +12,7 @@ import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.IdentifiableType;
 
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * Represents an equipment field identified by a static ID in a builder
@@ -21,6 +22,11 @@ import java.util.function.Function;
  */
 public class BuilderEquipment<T extends Identifiable<?>> {
 
+    private static final String DEFAULT_FIELD_NAME = "staticId";
+
+    private static final String EQUIPMENT_FIELD_NAME = "equipment";
+
+    protected boolean fromStaticId;
     protected String staticId;
     protected T equipment;
     private final String equipmentType;
@@ -37,16 +43,25 @@ public class BuilderEquipment<T extends Identifiable<?>> {
     }
 
     public BuilderEquipment(IdentifiableType identifiableType) {
-        this(identifiableType, "staticId");
+        this(identifiableType, DEFAULT_FIELD_NAME);
     }
 
     public BuilderEquipment(String equipmentType) {
-        this(equipmentType, "staticId");
+        this(equipmentType, DEFAULT_FIELD_NAME);
     }
 
     public void addEquipment(String equipmentId, Function<String, T> equipmentSupplier) {
+        fromStaticId = true;
         staticId = equipmentId;
         equipment = equipmentSupplier.apply(staticId);
+    }
+
+    public void addEquipment(T equipment, Predicate<T> equipmentChecker) {
+        fromStaticId = false;
+        staticId = equipment.getId();
+        if (equipmentChecker.test(equipment)) {
+            this.equipment = equipment;
+        }
     }
 
     public boolean checkEquipmentData(Reporter reporter) {
@@ -54,7 +69,11 @@ public class BuilderEquipment<T extends Identifiable<?>> {
             Reporters.reportFieldNotSet(reporter, fieldName);
             return false;
         } else if (equipment == null) {
-            Reporters.reportStaticIdUnknown(reporter, fieldName, staticId, equipmentType);
+            if (fromStaticId) {
+                Reporters.reportStaticIdUnknown(reporter, fieldName, staticId, equipmentType);
+            } else {
+                Reporters.reportDifferentNetwork(reporter, EQUIPMENT_FIELD_NAME, staticId, equipmentType);
+            }
             return false;
         }
         return true;

@@ -5,13 +5,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-
 package warnings
 
+List[] measurementPoints = [["LOAD", "Wrong_ID"], ["NGEN_NHV1"]]
 
 TapChangerBlockingAutomaton {
     dynamicModelId "ZAB"
     parameterSetId "ZAB"
-    uMeasurements ["LOAD", "Wrong_ID"], ["NGEN_NHV1"]
+    uMeasurements measurementPoints
     transformers "NGEN_NHV1", "NHV2_NLOAD", "LOAD"
 }

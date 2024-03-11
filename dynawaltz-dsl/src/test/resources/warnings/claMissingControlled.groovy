@@ -10,10 +10,10 @@ package warnings
 
 import com.powsybl.iidm.network.TwoSides
 
-CurrentLimitAutomaton {
+OverloadManagementSystem {
     dynamicModelId "CLA_NGEN"
     parameterSetId "CLA"
-    controlledQuadripole "GEN"
+    controlledBranch "GEN"
     iMeasurement "NHV1_NHV2_1"
     iMeasurementSide TwoSides.TWO
 }

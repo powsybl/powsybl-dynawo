@@ -9,11 +9,11 @@ package com.powsybl.dynawaltz.models.buses;
 
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.builders.ModelConfig;
+import com.powsybl.dynawaltz.builders.ModelConfigsHandler;
 import com.powsybl.dynawaltz.builders.ModelConfigs;
 import com.powsybl.dynawaltz.builders.Reporters;
 import com.powsybl.iidm.network.Network;
 
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -22,14 +22,14 @@ import java.util.Set;
 public class StandardBusBuilder extends AbstractBusBuilder<StandardBusBuilder> {
 
     private static final String CATEGORY = "baseBuses";
-    private static final Map<String, ModelConfig> LIBS = ModelConfigs.getInstance().getModelConfigs(CATEGORY);
+    private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
 
     public static StandardBusBuilder of(Network network) {
         return of(network, Reporter.NO_OP);
     }
 
     public static StandardBusBuilder of(Network network, Reporter reporter) {
-        return new StandardBusBuilder(network, LIBS.values().iterator().next(), reporter);
+        return new StandardBusBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reporter);
     }
 
     public static StandardBusBuilder of(Network network, String lib) {
@@ -37,16 +37,16 @@ public class StandardBusBuilder extends AbstractBusBuilder<StandardBusBuilder> {
     }
 
     public static StandardBusBuilder of(Network network, String lib, Reporter reporter) {
-        ModelConfig modelConfig = LIBS.get(lib);
+        ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(lib);
         if (modelConfig == null) {
             Reporters.reportLibNotFound(reporter, StandardBusBuilder.class.getSimpleName(), lib);
             return null;
         }
-        return new StandardBusBuilder(network, LIBS.get(lib), reporter);
+        return new StandardBusBuilder(network, modelConfig, reporter);
     }
 
     public static Set<String> getSupportedLibs() {
-        return LIBS.keySet();
+        return MODEL_CONFIGS.getSupportedLibs();
     }
 
     protected StandardBusBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {

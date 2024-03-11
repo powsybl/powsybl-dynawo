@@ -8,9 +8,9 @@
 
 package warnings
 
-CurrentLimitAutomaton {
+OverloadManagementSystem {
     dynamicModelId "CLA_NGEN"
     parameterSetId "CLA"
-    controlledQuadripole "NHV1_NHV2_2"
+    controlledBranch "NHV1_NHV2_2"
     iMeasurement "NHV1_NHV2_1"
 }

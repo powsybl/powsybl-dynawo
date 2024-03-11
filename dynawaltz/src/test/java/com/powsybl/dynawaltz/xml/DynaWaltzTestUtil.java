@@ -10,7 +10,7 @@ import com.powsybl.commons.test.AbstractSerDeTest;
 import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynawaltz.DynaWaltzCurve;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
-import com.powsybl.dynawaltz.models.automatons.currentlimits.CurrentLimitAutomatonBuilder;
+import com.powsybl.dynawaltz.models.automationsystems.overloadmanagments.DynamicOverloadManagementSystemBuilder;
 import com.powsybl.dynawaltz.models.events.EventDisconnectionBuilder;
 import com.powsybl.dynawaltz.models.generators.GeneratorFictitiousBuilder;
 import com.powsybl.dynawaltz.models.generators.SynchronizedGeneratorBuilder;
@@ -145,10 +145,10 @@ public class DynaWaltzTestUtil extends AbstractSerDeTest {
 
         // Automatons
         network.getLineStream().filter(line -> !line.getId().equalsIgnoreCase(standardLine.getStaticId()))
-                .forEach(l -> dynamicModels.add(CurrentLimitAutomatonBuilder.of(network, "CurrentLimitAutomaton")
+                .forEach(l -> dynamicModels.add(DynamicOverloadManagementSystemBuilder.of(network, "OverloadManagementSystem")
                         .dynamicModelId("BBM_" + l.getId())
                         .parameterSetId("CLA")
-                        .controlledQuadripole(l.getId())
+                        .controlledBranch(l.getId())
                         .iMeasurement(l.getId())
                         .iMeasurementSide(TwoSides.ONE)
                         .build()));

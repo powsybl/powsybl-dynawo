@@ -9,11 +9,11 @@ package com.powsybl.dynawaltz.models.generators;
 
 import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.builders.ModelConfig;
+import com.powsybl.dynawaltz.builders.ModelConfigsHandler;
 import com.powsybl.dynawaltz.builders.ModelConfigs;
 import com.powsybl.dynawaltz.builders.Reporters;
 import com.powsybl.iidm.network.Network;
 
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -22,14 +22,14 @@ import java.util.Set;
 public class GeneratorFictitiousBuilder extends AbstractGeneratorBuilder<GeneratorFictitiousBuilder> {
 
     private static final String CATEGORY = "baseGenerators";
-    private static final Map<String, ModelConfig> LIBS = ModelConfigs.getInstance().getModelConfigs(CATEGORY);
+    private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
 
     public static GeneratorFictitiousBuilder of(Network network) {
         return of(network, Reporter.NO_OP);
     }
 
     public static GeneratorFictitiousBuilder of(Network network, Reporter reporter) {
-        return new GeneratorFictitiousBuilder(network, LIBS.values().iterator().next(), reporter);
+        return new GeneratorFictitiousBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reporter);
     }
 
     public static GeneratorFictitiousBuilder of(Network network, String lib) {
@@ -37,16 +37,16 @@ public class GeneratorFictitiousBuilder extends AbstractGeneratorBuilder<Generat
     }
 
     public static GeneratorFictitiousBuilder of(Network network, String lib, Reporter reporter) {
-        ModelConfig modelConfig = LIBS.get(lib);
+        ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(lib);
         if (modelConfig == null) {
             Reporters.reportLibNotFound(reporter, GeneratorFictitiousBuilder.class.getSimpleName(), lib);
             return null;
         }
-        return new GeneratorFictitiousBuilder(network, LIBS.get(lib), reporter);
+        return new GeneratorFictitiousBuilder(network, modelConfig, reporter);
     }
 
     public static Set<String> getSupportedLibs() {
-        return LIBS.keySet();
+        return MODEL_CONFIGS.getSupportedLibs();
     }
 
     protected GeneratorFictitiousBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {

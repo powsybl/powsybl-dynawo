@@ -11,7 +11,7 @@ import com.powsybl.commons.reporter.Reporter;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.Model;
 import com.powsybl.dynawaltz.models.VarConnection;
-import com.powsybl.dynawaltz.models.automatons.TapChangerAutomaton;
+import com.powsybl.dynawaltz.models.automationsystems.TapChangerAutomationSystem;
 import com.powsybl.dynawaltz.models.buses.EquipmentConnectionPoint;
 import com.powsybl.dynawaltz.models.utils.BusUtils;
 import com.powsybl.iidm.network.*;
@@ -189,8 +189,8 @@ public final class MacroConnectionsAdder {
     /**
      * Creates macro connection with TapChangerAutomaton from dynamic id
      */
-    public boolean createTcaMacroConnectionsOrSkip(BlackBoxModel originModel, String tapChangerId, Function<TapChangerAutomaton, List<VarConnection>> varConnectionsSupplier) {
-        TapChangerAutomaton connectedModel = pureDynamicModelGetter.getPureDynamicModel(tapChangerId, TapChangerAutomaton.class, false);
+    public boolean createTcaMacroConnectionsOrSkip(BlackBoxModel originModel, String tapChangerId, Function<TapChangerAutomationSystem, List<VarConnection>> varConnectionsSupplier) {
+        TapChangerAutomationSystem connectedModel = pureDynamicModelGetter.getPureDynamicModel(tapChangerId, TapChangerAutomationSystem.class, false);
         if (connectedModel != null && connectedModel.isConnected(this)) {
             String macroConnectorId = MacroConnector.createMacroConnectorId(originModel.getName(), connectedModel.getName());
             MacroConnect mc = new MacroConnect(macroConnectorId, originModel.getMacroConnectFromAttributes(), connectedModel.getMacroConnectToAttributes());
