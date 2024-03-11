@@ -1,0 +1,51 @@
+{
+  "version" : "1.5",
+  "preContingencyResult" : {
+    "status" : "CONVERGED",
+    "limitViolationsResult" : {
+      "limitViolations" : [ {
+        "subjectId" : "_BUS____1-BUS____2-1_AC",
+        "subjectName" : "BUS    1-BUS    2-1",
+        "limitType" : "CURRENT",
+        "limitName" : "permanent",
+        "limit" : 836.74,
+        "limitReduction" : 1.0,
+        "value" : 1248.0773003764798,
+        "side" : "ONE"
+      } ],
+      "actionsTaken" : [ ]
+    },
+    "networkResult" : {
+      "branchResults" : [ ],
+      "busResults" : [ ],
+      "threeWindingsTransformerResults" : [ ]
+    }
+  },
+  "postContingencyResults" : [ {
+    "contingency" : {
+      "id" : "_LOAD__11_EC",
+      "elements" : [ {
+        "id" : "_LOAD__11_EC",
+        "type" : "LOAD"
+      } ]
+    },
+    "status" : "FAILED",
+    "limitViolationsResult" : {
+      "limitViolations" : [ ],
+      "actionsTaken" : [ ]
+    },
+    "networkResult" : {
+      "branchResults" : [ ],
+      "busResults" : [ ],
+      "threeWindingsTransformerResults" : [ ]
+    },
+    "connectivityResult" : {
+      "createdSynchronousComponentCount" : 0,
+      "createdConnectedComponentCount" : 0,
+      "disconnectedLoadActivePower" : 0.0,
+      "disconnectedGenerationActivePower" : 0.0,
+      "disconnectedElements" : [ ]
+    }
+  } ],
+  "operatorStrategyResults" : [ ]
+}

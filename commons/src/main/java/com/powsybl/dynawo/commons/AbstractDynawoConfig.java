@@ -19,15 +19,15 @@ import java.util.function.Function;
 /**
  * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
  */
-public class DynawoConfig {
+public abstract class AbstractDynawoConfig {
 
     private static final boolean DEBUG_DEFAULT = false;
 
-    protected static <T extends DynawoConfig> T load(Function<ModuleConfig, T> configFactory, String moduleName) {
+    protected static <T extends AbstractDynawoConfig> T load(Function<ModuleConfig, T> configFactory, String moduleName) {
         return load(configFactory, moduleName, PlatformConfig.defaultConfig());
     }
 
-    protected static <T extends DynawoConfig> T load(Function<ModuleConfig, T> configFactory, String moduleName, PlatformConfig platformConfig) {
+    protected static <T extends AbstractDynawoConfig> T load(Function<ModuleConfig, T> configFactory, String moduleName, PlatformConfig platformConfig) {
         return platformConfig.getOptionalModuleConfig(moduleName)
                 .map(configFactory)
                 .orElseThrow(() -> new PowsyblException("PlatformConfig incomplete: Module " + moduleName + " not found"));
@@ -36,12 +36,12 @@ public class DynawoConfig {
     private final Path homeDir;
     private final boolean debug;
 
-    public DynawoConfig(Path homeDir, boolean debug) {
+    protected AbstractDynawoConfig(Path homeDir, boolean debug) {
         this.homeDir = Objects.requireNonNull(homeDir);
         this.debug = debug;
     }
 
-    public DynawoConfig(ModuleConfig config) {
+    protected AbstractDynawoConfig(ModuleConfig config) {
         this(config.getPathProperty("homeDir"), config.getBooleanProperty("debug", DEBUG_DEFAULT));
     }
 
@@ -53,9 +53,7 @@ public class DynawoConfig {
         return debug;
     }
 
-    public String getProgram() {
-        return getProgram(DynawoConstants.DYNAWO_CMD_NAME);
-    }
+    public abstract String getProgram();
 
     public String getProgram(String programName) {
         String extension = SystemUtils.IS_OS_WINDOWS ? ".cmd" : ".sh";

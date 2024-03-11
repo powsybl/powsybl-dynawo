@@ -29,8 +29,8 @@ public final class Reports {
                 "networkId", networkId);
     }
 
-    public static Reporter createDynaFlowTimelineReporter(Reporter reporter, String contingencyId) {
-        return reporter.createSubReporter("dynaflowSaContingency",
+    public static Reporter createContingenciesTimelineReporter(Reporter reporter, String contingencyId) {
+        return reporter.createSubReporter("saContingency",
                 "Contingency '${contingencyId}'",
                 "contingencyId", contingencyId);
     }

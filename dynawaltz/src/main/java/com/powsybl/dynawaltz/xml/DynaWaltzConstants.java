@@ -23,6 +23,10 @@ public final class DynaWaltzConstants {
 
     public static final String CURVES_FILENAME = "curves.csv";
 
+    public static final String MULTIPLE_JOBS_FILENAME = "multiple_jobs.xml";
+
+    public static final String AGGREGATED_RESULTS = "aggregatedResults.xml";
+
     private DynaWaltzConstants() {
     }
 }

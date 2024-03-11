@@ -8,8 +8,10 @@ package com.powsybl.dynaflow;
 
 import com.google.auto.service.AutoService;
 import com.powsybl.commons.reporter.Reporter;
-import com.powsybl.computation.ComputationManager;
+import com.powsybl.computation.*;
 import com.powsybl.contingency.ContingenciesProvider;
+import com.powsybl.contingency.Contingency;
+import com.powsybl.dynawo.commons.DynawoUtil;
 import com.powsybl.dynawo.commons.PowsyblDynawoVersion;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.security.*;
@@ -20,12 +22,15 @@ import com.powsybl.security.strategy.OperatorStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
 import static com.powsybl.dynaflow.DynaFlowConstants.*;
+import static com.powsybl.dynaflow.SecurityAnalysisConstants.CONTINGENCIES_FILENAME;
 
 /**
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
@@ -34,7 +39,7 @@ import static com.powsybl.dynaflow.DynaFlowConstants.*;
 public class DynaFlowSecurityAnalysisProvider implements SecurityAnalysisProvider {
 
     private static final Logger LOG = LoggerFactory.getLogger(DynaFlowSecurityAnalysisProvider.class);
-
+    private static final String WORKING_DIR_PREFIX = "dynaflow_sa_";
     private final Supplier<DynaFlowConfig> configSupplier;
 
     public DynaFlowSecurityAnalysisProvider() {
@@ -70,11 +75,22 @@ public class DynaFlowSecurityAnalysisProvider implements SecurityAnalysisProvide
         if (actions != null && !actions.isEmpty()) {
             LOG.error("Actions are not implemented in Dynaflow");
         }
-        DynaFlowSecurityAnalysis securityAnalysis = new DynaFlowSecurityAnalysis(network, filter, computationManager, configSupplier);
-        interceptors.forEach(securityAnalysis::addInterceptor);
 
+        Objects.requireNonNull(computationManager);
+        Objects.requireNonNull(network);
+        Objects.requireNonNull(workingVariantId);
+        Objects.requireNonNull(filter);
+        Objects.requireNonNull(parameters);
+        Objects.requireNonNull(contingenciesProvider);
+        interceptors.forEach(Objects::requireNonNull);
+
+        DynaFlowConfig config = Objects.requireNonNull(configSupplier.get());
+        ExecutionEnvironment execEnv = new ExecutionEnvironment(config.createEnv(), WORKING_DIR_PREFIX, config.isDebug());
+        DynawoUtil.requireDynaMinVersion(execEnv, computationManager, getVersionCommand(config), DynaFlowConfig.DYNAFLOW_LAUNCHER_PROGRAM_NAME, true);
+        List<Contingency> contingencies = contingenciesProvider.getContingencies(network);
         Reporter dfsaReporter = Reports.createDynaFlowSecurityAnalysisReporter(reporter, network.getId());
-        return securityAnalysis.run(workingVariantId, parameters, contingenciesProvider, dfsaReporter);
+
+        return computationManager.execute(execEnv, new DynaFlowSecurityAnalysisHandler(network, workingVariantId, getCommand(config), parameters, contingencies, filter, interceptors, dfsaReporter));
     }
 
     @Override
@@ -85,5 +101,25 @@ public class DynaFlowSecurityAnalysisProvider implements SecurityAnalysisProvide
     @Override
     public String getVersion() {
         return new PowsyblDynawoVersion().getMavenProjectVersion();
+    }
+
+    public static Command getCommand(DynaFlowConfig config) {
+        List<String> args = Arrays.asList("--network", IIDM_FILENAME,
+                "--config", CONFIG_FILENAME,
+                "--contingencies", CONTINGENCIES_FILENAME);
+        return new SimpleCommandBuilder()
+                .id("dynaflow_sa")
+                .program(config.getProgram())
+                .args(args)
+                .build();
+    }
+
+    public static Command getVersionCommand(DynaFlowConfig config) {
+        List<String> args = Collections.singletonList("--version");
+        return new SimpleCommandBuilder()
+                .id("dynaflow_version")
+                .program(config.getProgram())
+                .args(args)
+                .build();
     }
 }
