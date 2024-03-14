@@ -46,14 +46,14 @@ class DynaWaltzDynamicModelGroovyExtension implements DynamicModelGroovyExtensio
         builderConfigs.forEach {conf ->
             conf.libs.forEach {lib ->
                 binding.setVariable(lib , { Closure<Void> closure ->
-                    def cloned = closure.clone()
-                    ModelBuilder<DynamicModel> builder = conf.builderConstructor
-                            .createBuilder(binding.getVariable("network") as Network, lib, Reporters.createModelBuilderReporter(reporter, lib))
-                    cloned.delegate = builder
-                    cloned()
-                    builder.build()?.tap {
-                        consumer.accept(it)
-                    }
+                    //def cloned = closure.clone()
+//                    ModelBuilder<DynamicModel> builder = conf.builderConstructor
+//                            .createBuilder(binding.getVariable("network") as Network, lib, Reporters.createModelBuilderReporter(reporter, lib))
+//                    closure.delegate = builder
+//                    closure.run()
+//                    builder.build()?.tap {
+//                        consumer.accept(it)
+//                    }
                 })
             }
         }
