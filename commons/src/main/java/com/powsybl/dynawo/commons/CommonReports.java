@@ -25,13 +25,12 @@ public final class CommonReports {
     }
 
     public static Reporter createDynawoLogReporter(Reporter reporter) {
-        return reporter.createSubReporter("dynawoLog",
-                "Dynawo Log");
+        return reporter.createSubReporter("dynawoLog", "Dynawo Log");
     }
 
-    public static void reportTimelineEvent(Reporter reporter, TimelineEntry timelineEntry) {
+    public static void reportTimelineEntry(Reporter reporter, TimelineEntry timelineEntry) {
         reporter.report(Report.builder()
-                .withKey("DynawoTimelineEvent")
+                .withKey("dynawoTimelineEntry")
                 .withDefaultMessage("[t=${time}] ${message} on equipment '${identifiableId}'")
                 .withTypedValue("time", timelineEntry.time(), TIME_MS)
                 .withTypedValue("identifiableId", timelineEntry.modelName(), ID)
@@ -40,9 +39,9 @@ public final class CommonReports {
                 .build());
     }
 
-    public static void reportLogEvent(Reporter reporter, LogEntry logEntry) {
+    public static void reportLogEntry(Reporter reporter, LogEntry logEntry) {
         reporter.report(Report.builder()
-                .withKey("DynawoTimelineEvent")
+                .withKey("dynawoLogEntry")
                 .withDefaultMessage("${message}")
                 .withValue("message", logEntry.message())
                 .withSeverity(logEntry.severity())

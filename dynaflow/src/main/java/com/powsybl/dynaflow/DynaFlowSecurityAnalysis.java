@@ -175,7 +175,7 @@ public class DynaFlowSecurityAnalysis {
                 Path timelineDir = workingDir.resolve(DYNAWO_TIMELINE_FOLDER);
                 contingencies.forEach(c -> {
                     Reporter contingencyReporter = Reports.createDynaFlowTimelineReporter(reporter, c.getId());
-                    getTimeline(timelineDir, c).forEach(e -> CommonReports.reportTimelineEvent(contingencyReporter, e));
+                    getTimeline(timelineDir, c).forEach(e -> CommonReports.reportTimelineEntry(contingencyReporter, e));
                 });
 
                 return new SecurityAnalysisReport(

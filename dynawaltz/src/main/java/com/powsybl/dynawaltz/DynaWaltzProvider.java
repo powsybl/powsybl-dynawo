@@ -226,7 +226,7 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
             Path logFile = outputsFolder.resolve(LOGS_FOLDER).resolve(LOGS_FILENAME);
             if (Files.exists(logFile)) {
                 Reporter logReporter = CommonReports.createDynawoLogReporter(reporter);
-                new CsvLogParser().parse(logFile).forEach(e -> CommonReports.reportLogEvent(logReporter, e));
+                new CsvLogParser().parse(logFile).forEach(e -> CommonReports.reportLogEntry(logReporter, e));
             } else {
                 LOGGER.warn("Dynawo logs file not found");
             }
@@ -257,7 +257,7 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
             if (Files.exists(timelineFile)) {
                 Reporter timelineReporter = DynawaltzReports.createDynaWaltzTimelineReporter(reporter);
                 new CsvTimeLineParser().parse(timelineFile).forEach(e -> {
-                    CommonReports.reportTimelineEvent(timelineReporter, e);
+                    CommonReports.reportTimelineEntry(timelineReporter, e);
                     timeline.add(new TimelineEvent(e.time(), e.modelName(), e.message()));
                 });
             } else {
