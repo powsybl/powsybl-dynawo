@@ -7,7 +7,7 @@
  */
 package com.powsybl.dynawaltz.builders;
 
-import com.powsybl.commons.reporter.Reporter;
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.iidm.network.Network;
 
@@ -21,7 +21,7 @@ public class BuilderConfig {
 
     @FunctionalInterface
     public interface ModelBuilderConstructor {
-        ModelBuilder<DynamicModel> createBuilder(Network network, String lib, Reporter reporter);
+        ModelBuilder<DynamicModel> createBuilder(Network network, String lib, ReportNode reportNode);
     }
 
     private final ModelBuilderConstructor builderConstructor;

@@ -7,9 +7,8 @@
  */
 package com.powsybl.dynawo.commons;
 
-import com.powsybl.commons.reporter.Report;
-import com.powsybl.commons.reporter.Reporter;
-import com.powsybl.commons.reporter.TypedValue;
+import com.powsybl.commons.report.ReportNode;
+import com.powsybl.commons.report.TypedValue;
 import com.powsybl.dynawo.commons.dynawologs.LogEntry;
 import com.powsybl.dynawo.commons.timeline.TimelineEntry;
 
@@ -24,27 +23,27 @@ public final class CommonReports {
     private CommonReports() {
     }
 
-    public static Reporter createDynawoLogReporter(Reporter reporter) {
-        return reporter.createSubReporter("dynawoLog", "Dynawo Log");
+    public static ReportNode createDynawoLogReportNode(ReportNode reportNode) {
+        return reportNode.newReportNode()
+                .withMessageTemplate("dynawoLog", "Dynawo Log")
+                .add();
     }
 
-    public static void reportTimelineEntry(Reporter reporter, TimelineEntry timelineEntry) {
-        reporter.report(Report.builder()
-                .withKey("dynawoTimelineEntry")
-                .withDefaultMessage("[t=${time}] ${message} on equipment '${identifiableId}'")
+    public static void reportTimelineEntry(ReportNode reportNode, TimelineEntry timelineEntry) {
+        reportNode.newReportNode()
+                .withMessageTemplate("dynawoTimelineEntry", "[t=${time}] ${message} on equipment '${identifiableId}'")
                 .withTypedValue("time", timelineEntry.time(), TIME_MS)
                 .withTypedValue("identifiableId", timelineEntry.modelName(), ID)
-                .withValue("message", timelineEntry.message())
+                .withUntypedValue("message", timelineEntry.message())
                 .withSeverity(TypedValue.TRACE_SEVERITY)
-                .build());
+                .add();
     }
 
-    public static void reportLogEntry(Reporter reporter, LogEntry logEntry) {
-        reporter.report(Report.builder()
-                .withKey("dynawoLogEntry")
-                .withDefaultMessage("${message}")
-                .withValue("message", logEntry.message())
+    public static void reportLogEntry(ReportNode reportNode, LogEntry logEntry) {
+        reportNode.newReportNode()
+                .withMessageTemplate("dynawoLogEntry", "${message}")
+                .withUntypedValue("message", logEntry.message())
                 .withSeverity(logEntry.severity())
-                .build());
+                .add();
     }
 }

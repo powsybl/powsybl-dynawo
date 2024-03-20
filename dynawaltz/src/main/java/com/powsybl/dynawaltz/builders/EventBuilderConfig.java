@@ -7,7 +7,7 @@
  */
 package com.powsybl.dynawaltz.builders;
 
-import com.powsybl.commons.reporter.Reporter;
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynamicsimulation.EventModel;
 import com.powsybl.iidm.network.Network;
 
@@ -18,7 +18,7 @@ public class EventBuilderConfig {
 
     @FunctionalInterface
     public interface EventModelBuilderConstructor {
-        ModelBuilder<EventModel> createBuilder(Network network, Reporter reporter);
+        ModelBuilder<EventModel> createBuilder(Network network, ReportNode reportNode);
     }
 
     private final EventModelBuilderConstructor builderConstructor;

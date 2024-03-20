@@ -8,7 +8,7 @@ package com.powsybl.dynawaltz;
 
 import com.google.auto.service.AutoService;
 import com.powsybl.commons.config.PlatformConfig;
-import com.powsybl.commons.reporter.Reporter;
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.computation.*;
 import com.powsybl.dynamicsimulation.*;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
@@ -110,15 +110,15 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
 
     @Override
     public CompletableFuture<DynamicSimulationResult> run(Network network, DynamicModelsSupplier dynamicModelsSupplier, EventModelsSupplier eventModelsSupplier, CurvesSupplier curvesSupplier, String workingVariantId,
-                                                          ComputationManager computationManager, DynamicSimulationParameters parameters, Reporter reporter) {
+                                                          ComputationManager computationManager, DynamicSimulationParameters parameters, ReportNode reportNode) {
         Objects.requireNonNull(dynamicModelsSupplier);
         Objects.requireNonNull(eventModelsSupplier);
         Objects.requireNonNull(curvesSupplier);
         Objects.requireNonNull(workingVariantId);
         Objects.requireNonNull(parameters);
-        Objects.requireNonNull(reporter);
+        Objects.requireNonNull(reportNode);
         DynaWaltzParameters dynaWaltzParameters = getDynaWaltzSimulationParameters(parameters);
-        return run(network, dynamicModelsSupplier, eventModelsSupplier, curvesSupplier, workingVariantId, computationManager, parameters, dynaWaltzParameters, reporter);
+        return run(network, dynamicModelsSupplier, eventModelsSupplier, curvesSupplier, workingVariantId, computationManager, parameters, dynaWaltzParameters, reportNode);
     }
 
     private DynaWaltzParameters getDynaWaltzSimulationParameters(DynamicSimulationParameters parameters) {
@@ -130,43 +130,43 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
     }
 
     private CompletableFuture<DynamicSimulationResult> run(Network network, DynamicModelsSupplier dynamicModelsSupplier, EventModelsSupplier eventsModelsSupplier, CurvesSupplier curvesSupplier,
-                                                           String workingVariantId, ComputationManager computationManager, DynamicSimulationParameters parameters, DynaWaltzParameters dynaWaltzParameters, Reporter reporter) {
+                                                           String workingVariantId, ComputationManager computationManager, DynamicSimulationParameters parameters, DynaWaltzParameters dynaWaltzParameters, ReportNode reportNode) {
 
-        Reporter dsReporter = DynawaltzReports.createDynaWaltzReporter(reporter, network.getId());
+        ReportNode dsReportNode = DynawaltzReports.createDynaWaltzReportNode(reportNode, network.getId());
         network.getVariantManager().setWorkingVariant(workingVariantId);
         ExecutionEnvironment execEnv = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, dynaWaltzConfig.isDebug());
         Command versionCmd = getVersionCommand(dynaWaltzConfig);
         DynawoUtil.requireDynaMinVersion(execEnv, computationManager, versionCmd, DynawoConstants.DYNAWO_CMD_NAME, false);
 
-        List<BlackBoxModel> blackBoxModels = dynamicModelsSupplier.get(network, dsReporter).stream()
+        List<BlackBoxModel> blackBoxModels = dynamicModelsSupplier.get(network, dsReportNode).stream()
                 .filter(BlackBoxModel.class::isInstance)
                 .map(BlackBoxModel.class::cast)
                 .collect(Collectors.toList());
-        List<BlackBoxModel> blackBoxEventModels = eventsModelsSupplier.get(network, dsReporter).stream()
+        List<BlackBoxModel> blackBoxEventModels = eventsModelsSupplier.get(network, dsReportNode).stream()
                 .filter(BlackBoxModel.class::isInstance)
                 .map(BlackBoxModel.class::cast)
                 .collect(Collectors.toList());
-        DynaWaltzContext context = new DynaWaltzContext(network, workingVariantId, blackBoxModels, blackBoxEventModels, curvesSupplier.get(network, dsReporter), parameters, dynaWaltzParameters, reporter);
-        return computationManager.execute(execEnv, new DynaWaltzHandler(context, reporter));
+        DynaWaltzContext context = new DynaWaltzContext(network, workingVariantId, blackBoxModels, blackBoxEventModels, curvesSupplier.get(network, dsReportNode), parameters, dynaWaltzParameters, reportNode);
+        return computationManager.execute(execEnv, new DynaWaltzHandler(context, reportNode));
     }
 
     private final class DynaWaltzHandler extends AbstractExecutionHandler<DynamicSimulationResult> {
 
         private final DynaWaltzContext context;
         private final Network dynawoInput;
-        private final Reporter reporter;
+        private final ReportNode reportNode;
 
         private final List<TimelineEvent> timeline = new ArrayList<>();
         private final Map<String, DoubleTimeSeries> curves = new HashMap<>();
         private DynamicSimulationResult.Status status = DynamicSimulationResult.Status.SUCCESS;
         private String statusText = "";
 
-        public DynaWaltzHandler(DynaWaltzContext context, Reporter reporter) {
+        public DynaWaltzHandler(DynaWaltzContext context, ReportNode reportNode) {
             this.context = context;
             this.dynawoInput = context.getDynaWaltzParameters().isMergeLoads()
                     ? LoadsMerger.mergeLoads(context.getNetwork())
                     : context.getNetwork();
-            this.reporter = reporter;
+            this.reportNode = reportNode;
         }
 
         @Override
@@ -225,8 +225,8 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
         private void setDynawoLog(Path outputsFolder) {
             Path logFile = outputsFolder.resolve(LOGS_FOLDER).resolve(LOGS_FILENAME);
             if (Files.exists(logFile)) {
-                Reporter logReporter = CommonReports.createDynawoLogReporter(reporter);
-                new CsvLogParser().parse(logFile).forEach(e -> CommonReports.reportLogEntry(logReporter, e));
+                ReportNode logReportNode = CommonReports.createDynawoLogReportNode(reportNode);
+                new CsvLogParser().parse(logFile).forEach(e -> CommonReports.reportLogEntry(logReportNode, e));
             } else {
                 LOGGER.warn("Dynawo logs file not found");
             }
@@ -255,9 +255,9 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
         private void setTimeline(Path outputsFolder) {
             Path timelineFile = outputsFolder.resolve(DYNAWO_TIMELINE_FOLDER).resolve(TIMELINE_FILENAME);
             if (Files.exists(timelineFile)) {
-                Reporter timelineReporter = DynawaltzReports.createDynaWaltzTimelineReporter(reporter);
+                ReportNode timelineReportNode = DynawaltzReports.createDynaWaltzTimelineReportNode(reportNode);
                 new CsvTimeLineParser().parse(timelineFile).forEach(e -> {
-                    CommonReports.reportTimelineEntry(timelineReporter, e);
+                    CommonReports.reportTimelineEntry(timelineReportNode, e);
                     timeline.add(new TimelineEvent(e.time(), e.modelName(), e.message()));
                 });
             } else {

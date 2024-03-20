@@ -7,7 +7,7 @@
  */
 package com.powsybl.dynawaltz.models.macroconnections;
 
-import com.powsybl.commons.reporter.Reporter;
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.Model;
 import com.powsybl.dynawaltz.models.VarConnection;
@@ -40,19 +40,19 @@ public final class MacroConnectionsAdder {
         <T extends Model> T getPureDynamicModel(String dynamicId, Class<T> connectableClass, boolean throwException);
     }
 
-    private final Reporter reporter;
+    private final ReportNode reportNode;
     private final DynamicModelGetter dynamicModelGetter;
     private final PureDynamicModelGetter pureDynamicModelGetter;
     private Consumer<MacroConnect> macroConnectAdder;
     private BiConsumer<String, Function<String, MacroConnector>> macroConnectorAdder;
 
     public MacroConnectionsAdder(DynamicModelGetter dynamicModelGetter, PureDynamicModelGetter pureDynamicModelGetter, Consumer<MacroConnect> macroConnectAdder,
-                                 BiConsumer<String, Function<String, MacroConnector>> macroConnectorAdder, Reporter reporter) {
+                                 BiConsumer<String, Function<String, MacroConnector>> macroConnectorAdder, ReportNode reportNode) {
         this.dynamicModelGetter = dynamicModelGetter;
         this.pureDynamicModelGetter = pureDynamicModelGetter;
         this.macroConnectAdder = macroConnectAdder;
         this.macroConnectorAdder = macroConnectorAdder;
-        this.reporter = reporter;
+        this.reportNode = reportNode;
     }
 
     /**
@@ -226,7 +226,7 @@ public final class MacroConnectionsAdder {
         this.macroConnectorAdder = macroConnectorAdder;
     }
 
-    public Reporter getReporter() {
-        return reporter;
+    public ReportNode getReportNode() {
+        return reportNode;
     }
 }

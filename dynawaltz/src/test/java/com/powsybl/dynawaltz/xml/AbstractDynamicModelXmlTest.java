@@ -7,7 +7,7 @@
  */
 package com.powsybl.dynawaltz.xml;
 
-import com.powsybl.commons.reporter.ReporterModel;
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.commons.test.AbstractSerDeTest;
 import com.powsybl.commons.test.TestUtil;
 import com.powsybl.dynamicsimulation.Curve;
@@ -48,7 +48,7 @@ public abstract class AbstractDynamicModelXmlTest extends AbstractSerDeTest {
     protected List<BlackBoxModel> eventModels = new ArrayList<>();
     protected List<Curve> curves = new ArrayList<>();
     protected DynaWaltzContext context;
-    protected ReporterModel reporter = new ReporterModel("testDyd", "Test DYD");
+    protected ReportNode reportNode = ReportNode.newRootReportNode().withMessageTemplate("testDyd", "Test DYD").build();
 
     @BeforeEach
     void setup() {
@@ -79,16 +79,16 @@ public abstract class AbstractDynamicModelXmlTest extends AbstractSerDeTest {
     void setupDynawaltzContext() {
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynaWaltzParameters dynawoParameters = DynaWaltzParameters.load();
-        context = new DynaWaltzContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, eventModels, curves, parameters, dynawoParameters, reporter);
+        context = new DynaWaltzContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, eventModels, curves, parameters, dynawoParameters, reportNode);
     }
 
     protected abstract void setupNetwork();
 
     protected abstract void addDynamicModels();
 
-    protected void checkReporter(String report) {
+    protected void checkReport(String report) throws IOException {
         StringWriter sw = new StringWriter();
-        reporter.export(sw);
+        reportNode.print(sw);
         assertEquals(report, TestUtil.normalizeLineSeparator(sw.toString()));
     }
 }

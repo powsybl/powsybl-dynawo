@@ -7,11 +7,11 @@
  */
 package com.powsybl.dynawaltz.models.loads;
 
-import com.powsybl.commons.reporter.Reporter;
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawaltz.builders.ModelConfig;
 import com.powsybl.dynawaltz.builders.ModelConfigsHandler;
 import com.powsybl.dynawaltz.builders.ModelConfigs;
-import com.powsybl.dynawaltz.builders.Reporters;
+import com.powsybl.dynawaltz.builders.BuilderReports;
 import com.powsybl.iidm.network.Network;
 
 import java.util.Set;
@@ -25,32 +25,32 @@ public class LoadTwoTransformersTapChangersBuilder extends AbstractLoadModelBuil
     private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
 
     public static LoadTwoTransformersTapChangersBuilder of(Network network) {
-        return of(network, Reporter.NO_OP);
+        return of(network, ReportNode.NO_OP);
     }
 
-    public static LoadTwoTransformersTapChangersBuilder of(Network network, Reporter reporter) {
-        return new LoadTwoTransformersTapChangersBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reporter);
+    public static LoadTwoTransformersTapChangersBuilder of(Network network, ReportNode reportNode) {
+        return new LoadTwoTransformersTapChangersBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reportNode);
     }
 
     public static LoadTwoTransformersTapChangersBuilder of(Network network, String lib) {
-        return of(network, lib, Reporter.NO_OP);
+        return of(network, lib, ReportNode.NO_OP);
     }
 
-    public static LoadTwoTransformersTapChangersBuilder of(Network network, String lib, Reporter reporter) {
+    public static LoadTwoTransformersTapChangersBuilder of(Network network, String lib, ReportNode reportNode) {
         ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(lib);
         if (modelConfig == null) {
-            Reporters.reportLibNotFound(reporter, LoadTwoTransformersTapChangersBuilder.class.getSimpleName(), lib);
+            BuilderReports.reportLibNotFound(reportNode, LoadTwoTransformersTapChangersBuilder.class.getSimpleName(), lib);
             return null;
         }
-        return new LoadTwoTransformersTapChangersBuilder(network, modelConfig, reporter);
+        return new LoadTwoTransformersTapChangersBuilder(network, modelConfig, reportNode);
     }
 
     public static Set<String> getSupportedLibs() {
         return MODEL_CONFIGS.getSupportedLibs();
     }
 
-    protected LoadTwoTransformersTapChangersBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
-        super(network, modelConfig, reporter);
+    protected LoadTwoTransformersTapChangersBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
+        super(network, modelConfig, reportNode);
     }
 
     @Override

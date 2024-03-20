@@ -7,10 +7,10 @@
  */
 package com.powsybl.dynawaltz.models.hvdc;
 
-import com.powsybl.commons.reporter.Reporter;
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawaltz.builders.AbstractEquipmentModelBuilder;
 import com.powsybl.dynawaltz.builders.ModelConfig;
-import com.powsybl.dynawaltz.builders.Reporters;
+import com.powsybl.dynawaltz.builders.BuilderReports;
 import com.powsybl.iidm.network.*;
 
 /**
@@ -20,12 +20,12 @@ public abstract class AbstractHvdcBuilder<R extends AbstractEquipmentModelBuilde
 
     protected TwoSides danglingSide;
 
-    protected AbstractHvdcBuilder(Network network, ModelConfig modelConfig, IdentifiableType identifiableType, Reporter reporter) {
-        super(network, modelConfig, identifiableType, reporter);
+    protected AbstractHvdcBuilder(Network network, ModelConfig modelConfig, IdentifiableType identifiableType, ReportNode reportNode) {
+        super(network, modelConfig, identifiableType, reportNode);
     }
 
-    protected AbstractHvdcBuilder(Network network, ModelConfig modelConfig, String equipmentType, Reporter reporter) {
-        super(network, modelConfig, equipmentType, reporter);
+    protected AbstractHvdcBuilder(Network network, ModelConfig modelConfig, String equipmentType, ReportNode reportNode) {
+        super(network, modelConfig, equipmentType, reportNode);
     }
 
     public R dangling(TwoSides danglingSide) {
@@ -38,10 +38,10 @@ public abstract class AbstractHvdcBuilder<R extends AbstractEquipmentModelBuilde
         super.checkData();
         boolean isDangling = modelConfig.isDangling();
         if (isDangling && danglingSide == null) {
-            Reporters.reportFieldNotSet(reporter, "dangling");
+            BuilderReports.reportFieldNotSet(reportNode, "dangling");
             isInstantiable = false;
         } else if (!isDangling && danglingSide != null) {
-            Reporters.reportFieldSetWithWrongEquipment(reporter, "dangling", modelConfig.lib());
+            BuilderReports.reportFieldSetWithWrongEquipment(reportNode, "dangling", modelConfig.lib());
             isInstantiable = false;
         }
     }

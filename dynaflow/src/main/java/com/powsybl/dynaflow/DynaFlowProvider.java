@@ -13,7 +13,7 @@ import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.extensions.Extension;
 import com.powsybl.commons.extensions.ExtensionJsonSerializer;
 import com.powsybl.commons.parameters.Parameter;
-import com.powsybl.commons.reporter.Reporter;
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.computation.*;
 import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
 import com.powsybl.dynaflow.json.JsonDynaFlowParametersSerializer;
@@ -110,7 +110,7 @@ public class DynaFlowProvider implements LoadFlowProvider {
 
     @Override
     public CompletableFuture<LoadFlowResult> run(Network network, ComputationManager computationManager, String workingStateId,
-                                                 LoadFlowParameters loadFlowParameters, Reporter reporter) {
+                                                 LoadFlowParameters loadFlowParameters, ReportNode reportNode) {
         Objects.requireNonNull(network);
         Objects.requireNonNull(computationManager);
         Objects.requireNonNull(workingStateId);
@@ -120,7 +120,7 @@ public class DynaFlowProvider implements LoadFlowProvider {
         ExecutionEnvironment env = new ExecutionEnvironment(config.createEnv(), WORKING_DIR_PREFIX, config.isDebug());
         Command versionCmd = getVersionCommand(config);
         DynawoUtil.requireDynaMinVersion(env, computationManager, versionCmd, DYNAFLOW_LAUNCHER_PROGRAM_NAME, true);
-        return computationManager.execute(env, new DynaFlowHandler(network, workingStateId, dynaFlowParameters, loadFlowParameters, config, reporter));
+        return computationManager.execute(env, new DynaFlowHandler(network, workingStateId, dynaFlowParameters, loadFlowParameters, config, reportNode));
     }
 
     @Override
@@ -181,16 +181,16 @@ public class DynaFlowProvider implements LoadFlowProvider {
         private final DynaFlowParameters dynaFlowParameters;
         private final LoadFlowParameters loadFlowParameters;
         private final DynaFlowConfig config;
-        private final Reporter reporter;
+        private final ReportNode reportNode;
 
-        public DynaFlowHandler(Network network, String workingStateId, DynaFlowParameters dynaFlowParameters, LoadFlowParameters loadFlowParameters, DynaFlowConfig config, Reporter reporter) {
+        public DynaFlowHandler(Network network, String workingStateId, DynaFlowParameters dynaFlowParameters, LoadFlowParameters loadFlowParameters, DynaFlowConfig config, ReportNode reportNode) {
             this.network = network;
             this.workingStateId = workingStateId;
             this.dynaFlowParameters = dynaFlowParameters;
             this.loadFlowParameters = loadFlowParameters;
             this.config = config;
             this.dynawoInput = this.dynaFlowParameters.isMergeLoads() ? LoadsMerger.mergeLoads(this.network) : this.network;
-            this.reporter = reporter;
+            this.reportNode = reportNode;
         }
 
         @Override
@@ -236,12 +236,12 @@ public class DynaFlowProvider implements LoadFlowProvider {
         }
 
         private void reportTimeLine(Path workingDir) {
-            Reporter dfReporter = Reports.createDynaFlowReporter(reporter, network.getId());
+            ReportNode dfReportNode = DynaflowReports.createDynaFlowReportNode(reportNode, network.getId());
             Path timelineFile = workingDir.resolve(DYNAFLOW_OUTPUTS_FOLDER)
                     .resolve(DYNAWO_TIMELINE_FOLDER)
                     .resolve(DYNAFLOW_TIMELINE_FILE);
             List<TimelineEntry> tl = new XmlTimeLineParser().parse(timelineFile);
-            tl.forEach(e -> CommonReports.reportTimelineEntry(dfReporter, e));
+            tl.forEach(e -> CommonReports.reportTimelineEntry(dfReportNode, e));
         }
     }
 }

@@ -7,12 +7,12 @@
  */
 package com.powsybl.dynawaltz.models.automationsystems;
 
-import com.powsybl.commons.reporter.Reporter;
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynawaltz.builders.AbstractDynamicModelBuilder;
 import com.powsybl.dynawaltz.builders.ModelBuilder;
 import com.powsybl.dynawaltz.builders.ModelConfig;
-import com.powsybl.dynawaltz.builders.Reporters;
+import com.powsybl.dynawaltz.builders.BuilderReports;
 import com.powsybl.iidm.network.Network;
 
 import java.util.Objects;
@@ -26,8 +26,8 @@ public abstract class AbstractAutomationSystemModelBuilder<T extends AbstractAut
     protected String parameterSetId;
     protected final ModelConfig modelConfig;
 
-    protected AbstractAutomationSystemModelBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
-        super(network, reporter);
+    protected AbstractAutomationSystemModelBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
+        super(network, reportNode);
         this.modelConfig = Objects.requireNonNull(modelConfig);
     }
 
@@ -44,11 +44,11 @@ public abstract class AbstractAutomationSystemModelBuilder<T extends AbstractAut
     @Override
     protected void checkData() {
         if (dynamicModelId == null) {
-            Reporters.reportFieldNotSet(reporter, "dynamicModelId");
+            BuilderReports.reportFieldNotSet(reportNode, "dynamicModelId");
             isInstantiable = false;
         }
         if (parameterSetId == null) {
-            Reporters.reportFieldNotSet(reporter, "parameterSetId");
+            BuilderReports.reportFieldNotSet(reportNode, "parameterSetId");
             isInstantiable = false;
         }
     }

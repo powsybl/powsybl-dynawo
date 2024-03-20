@@ -7,12 +7,12 @@
  */
 package com.powsybl.dynawaltz.models.automationsystems;
 
-import com.powsybl.commons.reporter.Reporter;
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawaltz.builders.BuilderEquipment;
 import com.powsybl.dynawaltz.builders.ModelConfig;
 import com.powsybl.dynawaltz.builders.ModelConfigsHandler;
 import com.powsybl.dynawaltz.builders.ModelConfigs;
-import com.powsybl.dynawaltz.builders.Reporters;
+import com.powsybl.dynawaltz.builders.BuilderReports;
 import com.powsybl.iidm.network.Generator;
 import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Network;
@@ -30,32 +30,32 @@ public class UnderVoltageAutomationSystemBuilder extends AbstractAutomationSyste
     protected final BuilderEquipment<Generator> generator;
 
     public static UnderVoltageAutomationSystemBuilder of(Network network) {
-        return of(network, Reporter.NO_OP);
+        return of(network, ReportNode.NO_OP);
     }
 
-    public static UnderVoltageAutomationSystemBuilder of(Network network, Reporter reporter) {
-        return new UnderVoltageAutomationSystemBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reporter);
+    public static UnderVoltageAutomationSystemBuilder of(Network network, ReportNode reportNode) {
+        return new UnderVoltageAutomationSystemBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reportNode);
     }
 
     public static UnderVoltageAutomationSystemBuilder of(Network network, String lib) {
-        return of(network, lib, Reporter.NO_OP);
+        return of(network, lib, ReportNode.NO_OP);
     }
 
-    public static UnderVoltageAutomationSystemBuilder of(Network network, String lib, Reporter reporter) {
+    public static UnderVoltageAutomationSystemBuilder of(Network network, String lib, ReportNode reportNode) {
         ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(lib);
         if (modelConfig == null) {
-            Reporters.reportLibNotFound(reporter, UnderVoltageAutomationSystemBuilder.class.getSimpleName(), lib);
+            BuilderReports.reportLibNotFound(reportNode, UnderVoltageAutomationSystemBuilder.class.getSimpleName(), lib);
             return null;
         }
-        return new UnderVoltageAutomationSystemBuilder(network, MODEL_CONFIGS.getModelConfig(lib), reporter);
+        return new UnderVoltageAutomationSystemBuilder(network, MODEL_CONFIGS.getModelConfig(lib), reportNode);
     }
 
     public static Set<String> getSupportedLibs() {
         return MODEL_CONFIGS.getSupportedLibs();
     }
 
-    protected UnderVoltageAutomationSystemBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
-        super(network, modelConfig, reporter);
+    protected UnderVoltageAutomationSystemBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
+        super(network, modelConfig, reportNode);
         generator = new BuilderEquipment<>(IdentifiableType.GENERATOR, "generator");
     }
 
@@ -67,7 +67,7 @@ public class UnderVoltageAutomationSystemBuilder extends AbstractAutomationSyste
     @Override
     protected void checkData() {
         super.checkData();
-        isInstantiable &= generator.checkEquipmentData(reporter);
+        isInstantiable &= generator.checkEquipmentData(reportNode);
     }
 
     @Override

@@ -7,9 +7,9 @@
  */
 package com.powsybl.dynawaltz.models.events;
 
-import com.powsybl.commons.reporter.Reporter;
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawaltz.builders.BuilderEquipment;
-import com.powsybl.dynawaltz.builders.Reporters;
+import com.powsybl.dynawaltz.builders.BuilderReports;
 import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Network;
@@ -26,15 +26,15 @@ public class NodeFaultEventBuilder extends AbstractEventModelBuilder<Bus, NodeFa
     protected double xPu;
 
     public static NodeFaultEventBuilder of(Network network) {
-        return of(network, Reporter.NO_OP);
+        return of(network, ReportNode.NO_OP);
     }
 
-    public static NodeFaultEventBuilder of(Network network, Reporter reporter) {
-        return new NodeFaultEventBuilder(network, reporter);
+    public static NodeFaultEventBuilder of(Network network, ReportNode reportNode) {
+        return new NodeFaultEventBuilder(network, reportNode);
     }
 
-    NodeFaultEventBuilder(Network network, Reporter reporter) {
-        super(network, new BuilderEquipment<>(IdentifiableType.BUS), reporter);
+    NodeFaultEventBuilder(Network network, ReportNode reportNode) {
+        super(network, new BuilderEquipment<>(IdentifiableType.BUS), reportNode);
     }
 
     public NodeFaultEventBuilder faultTime(double faultTime) {
@@ -65,15 +65,15 @@ public class NodeFaultEventBuilder extends AbstractEventModelBuilder<Bus, NodeFa
     protected void checkData() {
         super.checkData();
         if (faultTime <= 0) {
-            Reporters.reportCrossThreshold(reporter, "faultTime", faultTime, "strictly positive");
+            BuilderReports.reportCrossThreshold(reportNode, "faultTime", faultTime, "strictly positive");
             isInstantiable = false;
         }
         if (rPu < 0) {
-            Reporters.reportCrossThreshold(reporter, "rPu", rPu, "positive");
+            BuilderReports.reportCrossThreshold(reportNode, "rPu", rPu, "positive");
             isInstantiable = false;
         }
         if (xPu < 0) {
-            Reporters.reportCrossThreshold(reporter, "xPu", xPu, "positive");
+            BuilderReports.reportCrossThreshold(reportNode, "xPu", xPu, "positive");
             isInstantiable = false;
         }
     }

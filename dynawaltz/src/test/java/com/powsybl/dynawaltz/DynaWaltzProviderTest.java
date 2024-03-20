@@ -7,7 +7,7 @@
 package com.powsybl.dynawaltz;
 
 import com.powsybl.commons.PowsyblException;
-import com.powsybl.commons.reporter.Reporter;
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.commons.test.AbstractSerDeTest;
 import com.powsybl.computation.ComputationManager;
 import com.powsybl.computation.local.LocalCommandExecutor;
@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ForkJoinPool;
 
-import static com.powsybl.commons.reporter.Reporter.NO_OP;
+import static com.powsybl.commons.report.ReportNode.NO_OP;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -52,7 +52,7 @@ class DynaWaltzProviderTest extends AbstractSerDeTest {
 
     public static class CurvesSupplierMock implements CurvesSupplier {
         @Override
-        public List<Curve> get(Network network, Reporter reporter) {
+        public List<Curve> get(Network network, ReportNode reportNode) {
             return Collections.singletonList(new DynaWaltzCurve("bus", "uPu"));
         }
     }

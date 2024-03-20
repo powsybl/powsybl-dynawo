@@ -7,7 +7,7 @@
  */
 package com.powsybl.dynawaltz.builders;
 
-import com.powsybl.commons.reporter.Reporter;
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Network;
@@ -24,14 +24,14 @@ public abstract class AbstractEquipmentModelBuilder<T extends Identifiable<?>, R
     protected final ModelConfig modelConfig;
     protected final BuilderEquipment<T> builderEquipment;
 
-    protected AbstractEquipmentModelBuilder(Network network, ModelConfig modelConfig, IdentifiableType equipmentType, Reporter reporter) {
-        super(network, reporter);
+    protected AbstractEquipmentModelBuilder(Network network, ModelConfig modelConfig, IdentifiableType equipmentType, ReportNode reportNode) {
+        super(network, reportNode);
         this.modelConfig = Objects.requireNonNull(modelConfig);
         this.builderEquipment = new BuilderEquipment<>(equipmentType);
     }
 
-    protected AbstractEquipmentModelBuilder(Network network, ModelConfig modelConfig, String equipmentType, Reporter reporter) {
-        super(network, reporter);
+    protected AbstractEquipmentModelBuilder(Network network, ModelConfig modelConfig, String equipmentType, ReportNode reportNode) {
+        super(network, reportNode);
         this.modelConfig = modelConfig;
         this.builderEquipment = new BuilderEquipment<>(equipmentType);
     }
@@ -58,13 +58,13 @@ public abstract class AbstractEquipmentModelBuilder<T extends Identifiable<?>, R
 
     @Override
     protected void checkData() {
-        isInstantiable = builderEquipment.checkEquipmentData(reporter);
+        isInstantiable = builderEquipment.checkEquipmentData(reportNode);
         if (parameterSetId == null) {
-            Reporters.reportFieldNotSet(reporter, "parameterSetId");
+            BuilderReports.reportFieldNotSet(reportNode, "parameterSetId");
             isInstantiable = false;
         }
         if (dynamicModelId == null) {
-            Reporters.reportFieldReplacement(reporter, "dynamicModelId", "staticId", builderEquipment.hasStaticId() ? builderEquipment.getStaticId() : "(unknown staticId)");
+            BuilderReports.reportFieldReplacement(reportNode, "dynamicModelId", "staticId", builderEquipment.hasStaticId() ? builderEquipment.getStaticId() : "(unknown staticId)");
             dynamicModelId = builderEquipment.getStaticId();
         }
     }

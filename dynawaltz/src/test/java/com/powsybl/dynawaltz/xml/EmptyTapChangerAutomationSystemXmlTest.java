@@ -45,10 +45,10 @@ class EmptyTapChangerAutomationSystemXmlTest extends AbstractDynamicModelXmlTest
         DydXml.write(tmpDir, context);
         ParametersXml.write(tmpDir, context);
         validate("dyd.xsd", "tap_changer_empty_dyd.xml", tmpDir.resolve(DynaWaltzConstants.DYD_FILENAME));
-        checkReporter("""
+        checkReport("""
                 + Test DYD
-                  + Dynawaltz models processing
-                     TapChangerAutomaton BBM_TC equipment is not a LoadWithTransformers, the automation system will be skipped
+                   + Dynawaltz models processing
+                      TapChangerAutomaton BBM_TC equipment is not a LoadWithTransformers, the automation system will be skipped
                 """);
     }
 }

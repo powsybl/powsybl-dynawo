@@ -9,7 +9,7 @@ package com.powsybl.dynaflow;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.powsybl.commons.json.JsonUtil;
-import com.powsybl.commons.reporter.Reporter;
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.computation.*;
 import com.powsybl.contingency.ContingenciesProvider;
 import com.powsybl.contingency.Contingency;
@@ -135,11 +135,11 @@ public class DynaFlowSecurityAnalysis {
     public CompletableFuture<SecurityAnalysisReport> run(String workingVariantId,
                                                          SecurityAnalysisParameters securityAnalysisParameters,
                                                          ContingenciesProvider contingenciesProvider,
-                                                         Reporter reporter) {
+                                                         ReportNode reportNode) {
         Objects.requireNonNull(workingVariantId);
         Objects.requireNonNull(securityAnalysisParameters);
         Objects.requireNonNull(contingenciesProvider);
-        Objects.requireNonNull(reporter);
+        Objects.requireNonNull(reportNode);
 
         DynaFlowConfig config = Objects.requireNonNull(configSupplier.get());
         ExecutionEnvironment env = new ExecutionEnvironment(config.createEnv(), WORKING_DIR_PREFIX, config.isDebug());
@@ -174,8 +174,8 @@ public class DynaFlowSecurityAnalysis {
                 // Report the timeline events from the timeline files written by dynawo
                 Path timelineDir = workingDir.resolve(DYNAWO_TIMELINE_FOLDER);
                 contingencies.forEach(c -> {
-                    Reporter contingencyReporter = Reports.createDynaFlowTimelineReporter(reporter, c.getId());
-                    getTimeline(timelineDir, c).forEach(e -> CommonReports.reportTimelineEntry(contingencyReporter, e));
+                    ReportNode contingencyReportNode = DynaflowReports.createDynaFlowTimelineReportNode(reportNode, c.getId());
+                    getTimeline(timelineDir, c).forEach(e -> CommonReports.reportTimelineEntry(contingencyReportNode, e));
                 });
 
                 return new SecurityAnalysisReport(

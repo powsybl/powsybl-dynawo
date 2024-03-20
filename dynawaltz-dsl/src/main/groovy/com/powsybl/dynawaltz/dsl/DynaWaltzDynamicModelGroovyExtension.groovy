@@ -8,7 +8,7 @@
 package com.powsybl.dynawaltz.dsl
 
 import com.google.auto.service.AutoService
-import com.powsybl.commons.reporter.Reporter
+import com.powsybl.commons.report.ReportNode
 import com.powsybl.dynamicsimulation.DynamicModel
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension
 import com.powsybl.dynawaltz.DynaWaltzProvider
@@ -18,6 +18,7 @@ import com.powsybl.dynawaltz.builders.ModelConfigsHandler
 import com.powsybl.iidm.network.Network
 
 import java.util.function.Consumer
+
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
@@ -42,13 +43,13 @@ class DynaWaltzDynamicModelGroovyExtension implements DynamicModelGroovyExtensio
 
 
     @Override
-    void load(Binding binding, Consumer<DynamicModel> consumer, Reporter reporter) {
+    void load(Binding binding, Consumer<DynamicModel> consumer, ReportNode reportNode) {
         builderConfigs.forEach {conf ->
             conf.libs.forEach {lib ->
                 binding.setVariable(lib , { Closure<Void> closure ->
                     def cloned = closure.clone()
                     ModelBuilder<DynamicModel> builder = conf.builderConstructor
-                            .createBuilder(binding.getVariable("network") as Network, lib, Reporters.createModelBuilderReporter(reporter, lib))
+                            .createBuilder(binding.getVariable("network") as Network, lib, DslReports.createModelBuilderReportNode(reportNode, lib))
                     cloned.delegate = builder
                     cloned()
                     builder.build()?.tap {

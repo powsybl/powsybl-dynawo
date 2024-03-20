@@ -7,9 +7,9 @@
  */
 package com.powsybl.dynawaltz.models.events;
 
-import com.powsybl.commons.reporter.Reporter;
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawaltz.builders.BuilderEquipment;
-import com.powsybl.dynawaltz.builders.Reporters;
+import com.powsybl.dynawaltz.builders.BuilderReports;
 import com.powsybl.iidm.network.*;
 
 import java.util.EnumSet;
@@ -34,15 +34,15 @@ public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identif
     protected TwoSides disconnectSide = null;
 
     public static EventDisconnectionBuilder of(Network network) {
-        return of(network, Reporter.NO_OP);
+        return of(network, ReportNode.NO_OP);
     }
 
-    public static EventDisconnectionBuilder of(Network network, Reporter reporter) {
-        return new EventDisconnectionBuilder(network, reporter);
+    public static EventDisconnectionBuilder of(Network network, ReportNode reportNode) {
+        return new EventDisconnectionBuilder(network, reportNode);
     }
 
-    EventDisconnectionBuilder(Network network, Reporter reporter) {
-        super(network, new BuilderEquipment<>("Disconnectable equipment"), reporter);
+    EventDisconnectionBuilder(Network network, ReportNode reportNode) {
+        super(network, new BuilderEquipment<>("Disconnectable equipment"), reportNode);
     }
 
     public EventDisconnectionBuilder disconnectOnly(TwoSides side) {
@@ -76,11 +76,11 @@ public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identif
         if (builderEquipment.hasEquipment()) {
             setDisconnectionType(builderEquipment.getEquipment().getType());
             if (disconnectionType == DisconnectionType.NONE) {
-                Reporters.reportStaticIdUnknown(reporter, "staticId", builderEquipment.getStaticId(), "Disconnectable equipment");
+                BuilderReports.reportStaticIdUnknown(reportNode, "staticId", builderEquipment.getStaticId(), "Disconnectable equipment");
                 isInstantiable = false;
             }
             if (DisconnectionType.INJECTION == disconnectionType && disconnectSide != null) {
-                Reporters.reportFieldSetWithWrongEquipment(reporter, "disconnectOnly", builderEquipment.getEquipment().getType(), builderEquipment.getStaticId());
+                BuilderReports.reportFieldSetWithWrongEquipment(reportNode, "disconnectOnly", builderEquipment.getEquipment().getType(), builderEquipment.getStaticId());
                 isInstantiable = false;
             }
         }
