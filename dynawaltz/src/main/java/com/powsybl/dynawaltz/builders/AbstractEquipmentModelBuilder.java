@@ -15,7 +15,7 @@ import com.powsybl.iidm.network.Network;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public abstract class AbstractEquipmentModelBuilder<T extends Identifiable<?>, R extends AbstractEquipmentModelBuilder<T, R>> extends AbstractDynamicModelBuilder implements EquipmentModelBuilder<R> {
+public abstract class AbstractEquipmentModelBuilder<T extends Identifiable<?>, R extends AbstractEquipmentModelBuilder<T, R>> extends AbstractDynamicModelBuilder implements EquipmentModelBuilder<T, R> {
 
     protected String dynamicModelId;
     protected String parameterSetId;
@@ -28,21 +28,25 @@ public abstract class AbstractEquipmentModelBuilder<T extends Identifiable<?>, R
         this.builderEquipment = new BuilderEquipment<>(equipmentType);
     }
 
+    @Override
     public R staticId(String staticId) {
         builderEquipment.addEquipment(staticId, this::findEquipment);
         return self();
     }
 
+    @Override
     public R equipment(T equipment) {
         builderEquipment.addEquipment(equipment, this::checkEquipment);
         return self();
     }
 
+    @Override
     public R dynamicModelId(String dynamicModelId) {
         this.dynamicModelId = dynamicModelId;
         return self();
     }
 
+    @Override
     public R parameterSetId(String parameterSetId) {
         this.parameterSetId = parameterSetId;
         return self();
