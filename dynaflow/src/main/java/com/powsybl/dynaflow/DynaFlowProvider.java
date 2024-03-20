@@ -241,7 +241,7 @@ public class DynaFlowProvider implements LoadFlowProvider {
                     .resolve(DYNAWO_TIMELINE_FOLDER)
                     .resolve(DYNAFLOW_TIMELINE_FILE);
             List<TimelineEntry> tl = new XmlTimeLineParser().parse(timelineFile);
-            tl.forEach(e -> CommonReports.reportTimelineEvent(dfReporter, e));
+            tl.forEach(e -> CommonReports.reportTimelineEntry(dfReporter, e));
         }
     }
 }
