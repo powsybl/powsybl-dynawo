@@ -7,14 +7,15 @@
 package com.powsybl.dynaflow;
 
 import com.google.auto.service.AutoService;
-import com.powsybl.commons.reporter.Reporter;
+import com.powsybl.action.Action;
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.computation.ComputationManager;
 import com.powsybl.contingency.ContingenciesProvider;
 import com.powsybl.dynawo.commons.PowsyblDynawoVersion;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.security.*;
-import com.powsybl.security.action.Action;
 import com.powsybl.security.interceptors.SecurityAnalysisInterceptor;
+import com.powsybl.security.limitreduction.LimitReduction;
 import com.powsybl.security.monitor.StateMonitor;
 import com.powsybl.security.strategy.OperatorStrategy;
 import org.slf4j.Logger;
@@ -57,7 +58,8 @@ public class DynaFlowSecurityAnalysisProvider implements SecurityAnalysisProvide
                                                          List<OperatorStrategy> operatorStrategies,
                                                          List<Action> actions,
                                                          List<StateMonitor> monitors,
-                                                         Reporter reporter) {
+                                                         List<LimitReduction> limitReductions,
+                                                         ReportNode reportNode) {
         if (detector != null) {
             LOG.error("LimitViolationDetector is not used in Dynaflow implementation.");
         }
@@ -70,11 +72,14 @@ public class DynaFlowSecurityAnalysisProvider implements SecurityAnalysisProvide
         if (actions != null && !actions.isEmpty()) {
             LOG.error("Actions are not implemented in Dynaflow");
         }
+        if (limitReductions != null && !limitReductions.isEmpty()) {
+            LOG.error("Limit reductions are not implemented in Dynaflow");
+        }
         DynaFlowSecurityAnalysis securityAnalysis = new DynaFlowSecurityAnalysis(network, filter, computationManager, configSupplier);
         interceptors.forEach(securityAnalysis::addInterceptor);
 
-        Reporter dfsaReporter = Reports.createDynaFlowSecurityAnalysisReporter(reporter, network.getId());
-        return securityAnalysis.run(workingVariantId, parameters, contingenciesProvider, dfsaReporter);
+        ReportNode dfsaReportNode = DynaflowReports.createDynaFlowSecurityAnalysisReportNode(reportNode, network.getId());
+        return securityAnalysis.run(workingVariantId, parameters, contingenciesProvider, dfsaReportNode);
     }
 
     @Override

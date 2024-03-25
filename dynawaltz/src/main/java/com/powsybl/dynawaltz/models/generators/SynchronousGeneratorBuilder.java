@@ -8,11 +8,11 @@
 package com.powsybl.dynawaltz.models.generators;
 
 import com.powsybl.commons.PowsyblException;
-import com.powsybl.commons.reporter.Reporter;
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawaltz.builders.ModelConfig;
 import com.powsybl.dynawaltz.builders.ModelConfigsHandler;
 import com.powsybl.dynawaltz.builders.ModelConfigs;
-import com.powsybl.dynawaltz.builders.Reporters;
+import com.powsybl.dynawaltz.builders.BuilderReports;
 import com.powsybl.iidm.network.Network;
 
 import java.util.Set;
@@ -26,32 +26,32 @@ public class SynchronousGeneratorBuilder extends AbstractGeneratorBuilder<Synchr
     private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
 
     public static SynchronousGeneratorBuilder of(Network network) {
-        return of(network, Reporter.NO_OP);
+        return of(network, ReportNode.NO_OP);
     }
 
-    public static SynchronousGeneratorBuilder of(Network network, Reporter reporter) {
-        return new SynchronousGeneratorBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reporter);
+    public static SynchronousGeneratorBuilder of(Network network, ReportNode reportNode) {
+        return new SynchronousGeneratorBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reportNode);
     }
 
     public static SynchronousGeneratorBuilder of(Network network, String lib) {
-        return of(network, lib, Reporter.NO_OP);
+        return of(network, lib, ReportNode.NO_OP);
     }
 
-    public static SynchronousGeneratorBuilder of(Network network, String lib, Reporter reporter) {
+    public static SynchronousGeneratorBuilder of(Network network, String lib, ReportNode reportNode) {
         ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(lib);
         if (modelConfig == null) {
-            Reporters.reportLibNotFound(reporter, SynchronousGeneratorBuilder.class.getSimpleName(), lib);
+            BuilderReports.reportLibNotFound(reportNode, SynchronousGeneratorBuilder.class.getSimpleName(), lib);
             return null;
         }
-        return new SynchronousGeneratorBuilder(network, modelConfig, reporter);
+        return new SynchronousGeneratorBuilder(network, modelConfig, reportNode);
     }
 
     public static Set<String> getSupportedLibs() {
         return MODEL_CONFIGS.getSupportedLibs();
     }
 
-    protected SynchronousGeneratorBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
-        super(network, modelConfig, reporter);
+    protected SynchronousGeneratorBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
+        super(network, modelConfig, reportNode);
     }
 
     protected EnumGeneratorComponent getGeneratorComponent() {

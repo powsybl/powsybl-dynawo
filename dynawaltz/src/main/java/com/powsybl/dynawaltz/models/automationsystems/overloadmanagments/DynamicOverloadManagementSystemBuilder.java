@@ -7,12 +7,12 @@
  */
 package com.powsybl.dynawaltz.models.automationsystems.overloadmanagments;
 
-import com.powsybl.commons.reporter.Reporter;
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawaltz.builders.BuilderEquipment;
 import com.powsybl.dynawaltz.builders.ModelConfig;
 import com.powsybl.dynawaltz.builders.ModelConfigsHandler;
 import com.powsybl.dynawaltz.builders.ModelConfigs;
-import com.powsybl.dynawaltz.builders.Reporters;
+import com.powsybl.dynawaltz.builders.BuilderReports;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.TwoSides;
 
@@ -27,32 +27,32 @@ public class DynamicOverloadManagementSystemBuilder extends AbstractOverloadMana
     private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
 
     public static DynamicOverloadManagementSystemBuilder of(Network network) {
-        return of(network, Reporter.NO_OP);
+        return of(network, ReportNode.NO_OP);
     }
 
-    public static DynamicOverloadManagementSystemBuilder of(Network network, Reporter reporter) {
-        return new DynamicOverloadManagementSystemBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reporter);
+    public static DynamicOverloadManagementSystemBuilder of(Network network, ReportNode reportNode) {
+        return new DynamicOverloadManagementSystemBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reportNode);
     }
 
     public static DynamicOverloadManagementSystemBuilder of(Network network, String lib) {
-        return of(network, lib, Reporter.NO_OP);
+        return of(network, lib, ReportNode.NO_OP);
     }
 
-    public static DynamicOverloadManagementSystemBuilder of(Network network, String lib, Reporter reporter) {
+    public static DynamicOverloadManagementSystemBuilder of(Network network, String lib, ReportNode reportNode) {
         ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(lib);
         if (modelConfig == null) {
-            Reporters.reportLibNotFound(reporter, DynamicOverloadManagementSystemBuilder.class.getSimpleName(), lib);
+            BuilderReports.reportLibNotFound(reportNode, DynamicOverloadManagementSystemBuilder.class.getSimpleName(), lib);
             return null;
         }
-        return new DynamicOverloadManagementSystemBuilder(network, modelConfig, reporter);
+        return new DynamicOverloadManagementSystemBuilder(network, modelConfig, reportNode);
     }
 
     public static Set<String> getSupportedLibs() {
         return MODEL_CONFIGS.getSupportedLibs();
     }
 
-    protected DynamicOverloadManagementSystemBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
-        super(network, modelConfig, reporter, new BuilderEquipment<>(BRANCH_TYPE, "iMeasurement"),
+    protected DynamicOverloadManagementSystemBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
+        super(network, modelConfig, reportNode, new BuilderEquipment<>(BRANCH_TYPE, "iMeasurement"),
             new BuilderEquipment<>(BRANCH_TYPE, "controlledBranch"));
     }
 

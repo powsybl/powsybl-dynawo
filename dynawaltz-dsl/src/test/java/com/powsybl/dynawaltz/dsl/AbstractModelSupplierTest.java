@@ -7,9 +7,10 @@
  */
 package com.powsybl.dynawaltz.dsl;
 
-import com.powsybl.commons.reporter.ReporterModel;
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.commons.test.TestUtil;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.Objects;
@@ -21,15 +22,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 abstract class AbstractModelSupplierTest {
 
-    protected final ReporterModel reporter = new ReporterModel("dslTests", "DSL tests");
+    protected final ReportNode reportNode = ReportNode.newRootReportNode().withMessageTemplate("dslTests", "DSL tests").build();
 
     protected InputStream getResourceAsStream(String name) {
         return Objects.requireNonNull(AbstractModelSupplierTest.class.getResourceAsStream(name));
     }
 
-    protected void checkReporter(String report) {
+    protected void checkReportNode(String report) throws IOException {
         StringWriter sw = new StringWriter();
-        reporter.export(sw);
+        reportNode.print(sw);
         assertEquals(report, TestUtil.normalizeLineSeparator(sw.toString()));
     }
 }

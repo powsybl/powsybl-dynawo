@@ -9,7 +9,7 @@ package com.powsybl.dynawaltz;
 
 import com.google.auto.service.AutoService;
 import com.google.common.collect.Lists;
-import com.powsybl.commons.reporter.Reporter;
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.models.generators.AbstractGenerator;
 import com.powsybl.dynawaltz.models.generators.GeneratorFictitiousBuilder;
@@ -68,7 +68,7 @@ class ModelsSimplifierTest {
     @AutoService(ModelsSimplifier.class)
     public static class ModelsSimplifierFilter implements ModelsSimplifier {
         @Override
-        public Stream<BlackBoxModel> simplifyModels(Stream<BlackBoxModel> models, Network network, DynaWaltzParameters dynaWaltzParameters, Reporter reporter) {
+        public Stream<BlackBoxModel> simplifyModels(Stream<BlackBoxModel> models, Network network, DynaWaltzParameters dynaWaltzParameters, ReportNode reportNode) {
             return models.filter(m -> !m.getDynamicModelId().equalsIgnoreCase("BBM_LOAD"));
         }
     }
@@ -76,7 +76,7 @@ class ModelsSimplifierTest {
     @AutoService(ModelsSimplifier.class)
     public static class ModelsSimplifierSubstitution implements ModelsSimplifier {
         @Override
-        public Stream<BlackBoxModel> simplifyModels(Stream<BlackBoxModel> models, Network network, DynaWaltzParameters dynaWaltzParameters, Reporter reporter) {
+        public Stream<BlackBoxModel> simplifyModels(Stream<BlackBoxModel> models, Network network, DynaWaltzParameters dynaWaltzParameters, ReportNode reportNode) {
             return models.map(m -> {
                 if ("BBM_GEN".equalsIgnoreCase(m.getDynamicModelId()) && m instanceof AbstractGenerator gen) {
                     return GeneratorFictitiousBuilder.of(network)

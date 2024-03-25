@@ -7,7 +7,7 @@
  */
 package com.powsybl.dynawaltz.builders;
 
-import com.powsybl.commons.reporter.Reporter;
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.IdentifiableType;
 
@@ -57,21 +57,21 @@ public class BuilderEquipmentsList<T extends Identifiable<?>> {
         });
     }
 
-    public boolean checkEquipmentData(Reporter reporter) {
+    public boolean checkEquipmentData(ReportNode reportNode) {
         boolean emptyList = equipments.isEmpty();
         if (missingEquipmentIds.isEmpty() && emptyList) {
-            Reporters.reportFieldNotSet(reporter, fieldName);
+            BuilderReports.reportFieldNotSet(reportNode, fieldName);
             return false;
         } else if (!missingIdsHasDynamicIds) {
             missingEquipmentIds.forEach(missingId ->
-                    Reporters.reportStaticIdUnknown(reporter, fieldName, missingId, equipmentType));
+                    BuilderReports.reportStaticIdUnknown(reportNode, fieldName, missingId, equipmentType));
             if (emptyList) {
-                Reporters.reportEmptyList(reporter, fieldName);
+                BuilderReports.reportEmptyList(reportNode, fieldName);
             }
             return !emptyList;
         } else {
             missingEquipmentIds.forEach(missingId ->
-                    Reporters.reportUnknownStaticIdHandling(reporter, fieldName, missingId, equipmentType));
+                    BuilderReports.reportUnknownStaticIdHandling(reportNode, fieldName, missingId, equipmentType));
             return true;
         }
     }

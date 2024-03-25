@@ -7,12 +7,12 @@
  */
 package com.powsybl.dynawaltz.models.automationsystems.overloadmanagments;
 
-import com.powsybl.commons.reporter.Reporter;
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawaltz.builders.BuilderEquipment;
 import com.powsybl.dynawaltz.builders.ModelConfig;
 import com.powsybl.dynawaltz.builders.ModelConfigsHandler;
 import com.powsybl.dynawaltz.builders.ModelConfigs;
-import com.powsybl.dynawaltz.builders.Reporters;
+import com.powsybl.dynawaltz.builders.BuilderReports;
 import com.powsybl.iidm.network.Branch;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.TwoSides;
@@ -31,32 +31,32 @@ public class DynamicTwoLevelsOverloadManagementSystemBuilder extends AbstractOve
     protected TwoSides iMeasurement2Side;
 
     public static DynamicTwoLevelsOverloadManagementSystemBuilder of(Network network) {
-        return of(network, Reporter.NO_OP);
+        return of(network, ReportNode.NO_OP);
     }
 
-    public static DynamicTwoLevelsOverloadManagementSystemBuilder of(Network network, Reporter reporter) {
-        return new DynamicTwoLevelsOverloadManagementSystemBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reporter);
+    public static DynamicTwoLevelsOverloadManagementSystemBuilder of(Network network, ReportNode reportNode) {
+        return new DynamicTwoLevelsOverloadManagementSystemBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reportNode);
     }
 
     public static DynamicTwoLevelsOverloadManagementSystemBuilder of(Network network, String lib) {
-        return of(network, lib, Reporter.NO_OP);
+        return of(network, lib, ReportNode.NO_OP);
     }
 
-    public static DynamicTwoLevelsOverloadManagementSystemBuilder of(Network network, String lib, Reporter reporter) {
+    public static DynamicTwoLevelsOverloadManagementSystemBuilder of(Network network, String lib, ReportNode reportNode) {
         ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(lib);
         if (modelConfig == null) {
-            Reporters.reportLibNotFound(reporter, DynamicTwoLevelsOverloadManagementSystemBuilder.class.getSimpleName(), lib);
+            BuilderReports.reportLibNotFound(reportNode, DynamicTwoLevelsOverloadManagementSystemBuilder.class.getSimpleName(), lib);
             return null;
         }
-        return new DynamicTwoLevelsOverloadManagementSystemBuilder(network, modelConfig, reporter);
+        return new DynamicTwoLevelsOverloadManagementSystemBuilder(network, modelConfig, reportNode);
     }
 
     public static Set<String> getSupportedLibs() {
         return MODEL_CONFIGS.getSupportedLibs();
     }
 
-    protected DynamicTwoLevelsOverloadManagementSystemBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
-        super(network, modelConfig, reporter, new BuilderEquipment<>(BRANCH_TYPE, "iMeasurement1"),
+    protected DynamicTwoLevelsOverloadManagementSystemBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
+        super(network, modelConfig, reportNode, new BuilderEquipment<>(BRANCH_TYPE, "iMeasurement1"),
                 new BuilderEquipment<>(BRANCH_TYPE, "controlledBranch1"));
         iMeasurement2 = new BuilderEquipment<>(BRANCH_TYPE, "iMeasurement2");
     }
@@ -84,9 +84,9 @@ public class DynamicTwoLevelsOverloadManagementSystemBuilder extends AbstractOve
     @Override
     protected void checkData() {
         super.checkData();
-        isInstantiable &= iMeasurement2.checkEquipmentData(reporter);
+        isInstantiable &= iMeasurement2.checkEquipmentData(reportNode);
         if (iMeasurement2Side == null) {
-            Reporters.reportFieldNotSet(reporter, "iMeasurement2Side");
+            BuilderReports.reportFieldNotSet(reportNode, "iMeasurement2Side");
             isInstantiable = false;
         }
     }

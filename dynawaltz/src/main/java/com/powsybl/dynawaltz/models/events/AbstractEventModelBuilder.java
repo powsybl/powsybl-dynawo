@@ -7,7 +7,7 @@
  */
 package com.powsybl.dynawaltz.models.events;
 
-import com.powsybl.commons.reporter.Reporter;
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynamicsimulation.EventModel;
 import com.powsybl.dynawaltz.builders.*;
 import com.powsybl.iidm.network.Identifiable;
@@ -23,8 +23,8 @@ abstract class AbstractEventModelBuilder<T extends Identifiable<?>, R extends Ab
     protected String staticId;
     protected Double startTime;
 
-    protected AbstractEventModelBuilder(Network network, BuilderEquipment<T> builderEquipment, Reporter reporter) {
-        super(network, reporter);
+    protected AbstractEventModelBuilder(Network network, BuilderEquipment<T> builderEquipment, ReportNode reportNode) {
+        super(network, reportNode);
         this.builderEquipment = builderEquipment;
         this.eventId = generateDefaultEventId();
     }
@@ -42,9 +42,9 @@ abstract class AbstractEventModelBuilder<T extends Identifiable<?>, R extends Ab
 
     @Override
     protected void checkData() {
-        isInstantiable &= builderEquipment.checkEquipmentData(reporter);
+        isInstantiable &= builderEquipment.checkEquipmentData(reportNode);
         if (startTime == null) {
-            Reporters.reportFieldNotSet(reporter, "startTime");
+            BuilderReports.reportFieldNotSet(reportNode, "startTime");
             isInstantiable = false;
         }
     }

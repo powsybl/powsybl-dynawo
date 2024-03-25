@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ForkJoinPool;
 
-import static com.powsybl.commons.reporter.Reporter.NO_OP;
+import static com.powsybl.commons.report.ReportNode.NO_OP;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**

@@ -7,7 +7,7 @@
  */
 package com.powsybl.dynawo.commons.dynawologs;
 
-import com.powsybl.commons.reporter.TypedValue;
+import com.powsybl.commons.report.TypedValue;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
