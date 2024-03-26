@@ -21,6 +21,14 @@ public final class BuilderReports {
     private BuilderReports() {
     }
 
+    public static void reportBuilderNotFound(ReportNode reportNode, String lib) {
+        reportNode.newReportNode()
+                .withMessageTemplate("builderNotFound", "No builder found for ${lib}")
+                .withUntypedValue("lib", lib)
+                .withSeverity(TypedValue.INFO_SEVERITY)
+                .add();
+    }
+
     public static void reportLibNotFound(ReportNode reportNode, String builderName, String lib) {
         reportNode.newReportNode()
                 .withMessageTemplate("libNotFound", "Library ${lib} not found for ${builderName}")
