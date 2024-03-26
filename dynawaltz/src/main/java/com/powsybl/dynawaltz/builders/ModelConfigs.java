@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
+import java.util.stream.Collectors;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -27,6 +28,8 @@ public final class ModelConfigs {
     private final List<ModelConfigLoader> modelConfigLoaders;
     private final Map<String, Map<String, ModelConfig>> modelConfigsMap = new HashMap<>();
     private final List<BuilderConfig> builderConfigs;
+    private final Map<String, BuilderConfig.ModelBuilderConstructor> builderConstructorByName;
+
     private final List<EventBuilderConfig> eventBuilderConfigs = List.of(
             new EventBuilderConfig(EventActivePowerVariationBuilder::of, EventActivePowerVariationBuilder.TAG),
             new EventBuilderConfig(EventDisconnectionBuilder::of, EventDisconnectionBuilder.TAG),
@@ -41,6 +44,7 @@ public final class ModelConfigs {
                 })
         ));
         builderConfigs = modelConfigLoaders.stream().flatMap(ModelConfigLoader::loadBuilderConfigs).toList();
+        builderConstructorByName = builderConfigs.stream().collect(Collectors.toMap(BuilderConfig::getCategory, BuilderConfig::getBuilderConstructor));
     }
 
     public static ModelConfigs getInstance() {
@@ -57,5 +61,9 @@ public final class ModelConfigs {
 
     public List<EventBuilderConfig> getEventBuilderConfigs() {
         return eventBuilderConfigs;
+    }
+
+    public BuilderConfig.ModelBuilderConstructor getModelBuilderConstructor(String modelType) {
+        return builderConstructorByName.get(modelType);
     }
 }
