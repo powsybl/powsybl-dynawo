@@ -21,7 +21,7 @@ import java.util.Set;
  */
 public class GridFormingConverterBuilder extends AbstractGeneratorBuilder<GridFormingConverterBuilder> {
 
-    private static final String CATEGORY = "gridFormingConverters";
+    public static final String CATEGORY = "GRID_FORMING_CONVERTER";
     private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
 
     public static GridFormingConverterBuilder of(Network network) {
