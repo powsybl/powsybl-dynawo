@@ -21,7 +21,7 @@ import java.util.Set;
  */
 public class StandardBusBuilder extends AbstractBusBuilder<StandardBusBuilder> {
 
-    public static final String CATEGORY = "INFINITE_BUS";
+    public static final String CATEGORY = "BASE_BUS";
     private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
 
     public static StandardBusBuilder of(Network network) {
