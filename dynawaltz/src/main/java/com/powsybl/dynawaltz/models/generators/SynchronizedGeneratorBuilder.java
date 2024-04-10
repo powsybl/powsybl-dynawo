@@ -21,7 +21,7 @@ import java.util.Set;
  */
 public class SynchronizedGeneratorBuilder extends AbstractGeneratorBuilder<SynchronizedGeneratorBuilder> {
 
-    private static final String CATEGORY = "synchronizedGenerators";
+    public static final String CATEGORY = "SYNCHRONIZED_GENERATOR";
     private static final Map<String, ModelConfig> LIBS = ModelConfigs.getInstance().getModelConfigs(CATEGORY);
 
     public static SynchronizedGeneratorBuilder of(Network network) {

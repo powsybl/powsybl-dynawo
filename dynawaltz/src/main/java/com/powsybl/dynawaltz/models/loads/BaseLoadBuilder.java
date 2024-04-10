@@ -21,7 +21,7 @@ import java.util.Set;
  */
 public class BaseLoadBuilder extends AbstractLoadModelBuilder<BaseLoadBuilder> {
 
-    private static final String CATEGORY = "baseLoads";
+    public static final String CATEGORY = "BASE_LOAD";
     private static final Map<String, ModelConfig> LIBS = ModelConfigs.getInstance().getModelConfigs(CATEGORY);
 
     public static BaseLoadBuilder of(Network network) {

@@ -21,7 +21,7 @@ import java.util.Set;
  */
 public class PhaseShifterIAutomatonBuilder extends AbstractPhaseShifterModelBuilder<PhaseShifterIAutomatonBuilder> {
 
-    private static final String CATEGORY = "phaseShiftersI";
+    public static final String CATEGORY = "PHASE_SHIFTER_I";
     private static final Map<String, ModelConfig> LIBS = ModelConfigs.getInstance().getModelConfigs(CATEGORY);
 
     public static PhaseShifterIAutomatonBuilder of(Network network) {

@@ -21,7 +21,7 @@ import java.util.Set;
  */
 public class LoadOneTransformerBuilder extends AbstractLoadModelBuilder<LoadOneTransformerBuilder> {
 
-    private static final String CATEGORY = "loadsOneTransformer";
+    public static final String CATEGORY = "LOAD_ONE_TRANSFORMER";
     private static final Map<String, ModelConfig> LIBS = ModelConfigs.getInstance().getModelConfigs(CATEGORY);
 
     public static LoadOneTransformerBuilder of(Network network) {

@@ -1,10 +1,10 @@
 {
-  "baseGenerators": [
+  "BASE_GENERATOR": [
     {
       "lib": "GeneratorFictitious"
     }
   ],
-  "synchronousGenerators": [
+  "SYNCHRONOUS_GENERATOR": [
     {
       "lib": "GeneratorSynchronousFourWindings"
     },
@@ -84,7 +84,7 @@
       ]
     }
   ],
-  "synchronizedGenerators": [
+  "SYNCHRONIZED_GENERATOR": [
     {
       "lib": "GeneratorPQ"
     },
@@ -101,7 +101,7 @@
       "lib": "GeneratorPVDiagramPQ"
     }
   ],
-  "hvdcP": [
+  "HVDC_P": [
     {
       "lib": "HvdcPV"
     },
@@ -151,7 +151,7 @@
       ]
     }
   ],
-  "hvdcVsc": [
+  "HVDC_VSC": [
     {
       "lib": "HvdcVSC"
     },
@@ -171,12 +171,12 @@
       ]
     }
   ],
-  "baseBuses": [
+  "BASE_BUS": [
     {
       "lib": "Bus"
     }
   ],
-  "infiniteBuses": [
+  "INFINITE_BUS": [
     {
       "lib": "InfiniteBus"
     },
@@ -187,7 +187,7 @@
       "lib": "InfiniteBusWithVariations"
     }
   ],
-  "baseLoads": [
+  "BASE_LOAD": [
     {
       "lib": "LoadAlphaBeta",
       "properties": [
@@ -207,32 +207,32 @@
       "lib": "LoadPQ"
     }
   ],
-  "loadsOneTransformer": [
+  "LOAD_ONE_TRANSFORMER": [
     {
       "lib": "LoadOneTransformer"
     }
   ],
-  "loadsOneTransformerTapChanger": [
+  "LOAD_ONE_TRANSFORMER_TAP_CHANGER": [
     {
       "lib": "LoadOneTransformerTapChanger"
     }
   ],
-  "loadsTwoTransformers": [
+  "LOAD_TWO_TRANSFORMERS": [
     {
       "lib": "LoadTwoTransformers"
     }
   ],
-  "loadsTwoTransformersTapChanger": [
+  "LOAD_TWO_TRANSFORMERS_TAP_CHANGER": [
     {
       "lib": "LoadTwoTransformersTapChangers"
     }
   ],
-  "baseLines": [
+  "BASE_LINE": [
     {
       "lib": "Line"
     }
   ],
-  "staticVarCompensators": [
+  "BASE_STATIC_VAR_COMPENSATOR": [
     {
       "lib": "StaticVarCompensator"
     },
@@ -261,12 +261,12 @@
       "lib": "StaticVarCompensatorPVPropRemoteModeHandling"
     }
   ],
-  "transformers": [
+  "TRANSFORMER": [
     {
       "lib": "TransformerFixedRatio"
     }
   ],
-  "wecc": [
+  "WECC": [
     {
       "lib": "WTG4AWeccCurrentSource",
       "internalModelPrefix": "WTG4A",
@@ -304,7 +304,7 @@
       ]
     }
   ],
-  "gridFormingConverters": [
+  "GRID_FORMING_CONVERTER": [
     {
       "lib": "GridFormingConverterDroopControl",
       "properties": [
@@ -324,37 +324,37 @@
       ]
     }
   ],
-  "clas": [
+  "CLA": [
     {
       "lib": "CurrentLimitAutomaton"
     }
   ],
-  "clasTwoLevels": [
+  "CLA_TWO_LEVElS": [
     {
       "lib": "CurrentLimitAutomatonTwoLevels"
     }
   ],
-  "phaseShiftersI": [
+  "PHASE_SHIFTER_I": [
     {
       "lib": "PhaseShifterI"
     }
   ],
-  "phaseShiftersP": [
+  "PHASE_SHIFTER_P": [
     {
       "lib": "PhaseShifterP"
     }
   ],
-  "tapChangers": [
+  "TAP_CHANGER": [
     {
       "lib": "TapChangerAutomaton"
     }
   ],
-  "tcbs": [
+  "TCB": [
     {
       "lib": "TapChangerBlockingAutomaton"
     }
   ],
-  "underVoltages": [
+  "UNDER_VOLTAGE": [
     {
       "lib": "UnderVoltageAutomaton",
       "alias": "UnderVoltage"

@@ -21,7 +21,7 @@ import java.util.Set;
  */
 public class HvdcPBuilder extends AbstractHvdcBuilder<HvdcPBuilder> {
 
-    private static final String CATEGORY = "hvdcP";
+    public static final String CATEGORY = "HVDC_P";
     private static final Map<String, ModelConfig> LIBS = ModelConfigs.getInstance().getModelConfigs(CATEGORY);
 
     public static HvdcPBuilder of(Network network) {

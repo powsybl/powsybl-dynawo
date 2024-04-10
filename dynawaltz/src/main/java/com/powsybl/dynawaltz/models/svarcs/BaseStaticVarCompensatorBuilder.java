@@ -24,7 +24,7 @@ import java.util.Set;
  */
 public class BaseStaticVarCompensatorBuilder extends AbstractEquipmentModelBuilder<StaticVarCompensator, BaseStaticVarCompensatorBuilder> {
 
-    private static final String CATEGORY = "staticVarCompensators";
+    public static final String CATEGORY = "BASE_STATIC_VAR_COMPENSATOR";
     private static final Map<String, ModelConfig> LIBS = ModelConfigs.getInstance().getModelConfigs(CATEGORY);
 
     public static BaseStaticVarCompensatorBuilder of(Network network) {

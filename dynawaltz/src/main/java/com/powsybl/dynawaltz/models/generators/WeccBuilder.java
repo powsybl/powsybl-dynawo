@@ -21,7 +21,7 @@ import java.util.Set;
  */
 public class WeccBuilder extends AbstractGeneratorBuilder<WeccBuilder> {
 
-    private static final String CATEGORY = "wecc";
+    public static final String CATEGORY = "WECC";
     private static final Map<String, ModelConfig> LIBS = ModelConfigs.getInstance().getModelConfigs(CATEGORY);
 
     public static WeccBuilder of(Network network) {

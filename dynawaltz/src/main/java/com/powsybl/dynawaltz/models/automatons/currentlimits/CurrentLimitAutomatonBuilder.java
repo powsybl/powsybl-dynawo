@@ -23,7 +23,7 @@ import java.util.Set;
  */
 public class CurrentLimitAutomatonBuilder extends AbstractCurrentLimitAutomatonBuilder<CurrentLimitAutomatonBuilder> {
 
-    private static final String CATEGORY = "clas";
+    public static final String CATEGORY = "CLA";
     private static final Map<String, ModelConfig> LIBS = ModelConfigs.getInstance().getModelConfigs(CATEGORY);
 
     public static CurrentLimitAutomatonBuilder of(Network network) {
