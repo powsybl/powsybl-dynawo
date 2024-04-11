@@ -31,12 +31,6 @@ public final class DynawaltzReports {
                 .add();
     }
 
-    public static ReportNode createDynaWaltzTimelineReportNode(ReportNode reportNode) {
-        return reportNode.newReportNode()
-                .withMessageTemplate("dynawaltzTimeline", "Dynawaltz Timeline")
-                .add();
-    }
-
     public static void reportDuplicateStaticId(ReportNode reportNode, String duplicateId, String modelName, String dynamicId) {
         reportNode.newReportNode()
                 .withMessageTemplate("duplicateStaticId", "Duplicate static id found: ${duplicateId} -> model ${modelName} ${dynamicId} will be skipped")
