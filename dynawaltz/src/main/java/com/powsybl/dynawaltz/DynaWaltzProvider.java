@@ -255,11 +255,8 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
         private void setTimeline(Path outputsFolder) {
             Path timelineFile = outputsFolder.resolve(DYNAWO_TIMELINE_FOLDER).resolve(TIMELINE_FILENAME);
             if (Files.exists(timelineFile)) {
-                ReportNode timelineReportNode = DynawaltzReports.createDynaWaltzTimelineReportNode(reportNode);
-                new CsvTimeLineParser().parse(timelineFile).forEach(e -> {
-                    CommonReports.reportTimelineEntry(timelineReportNode, e);
-                    timeline.add(new TimelineEvent(e.time(), e.modelName(), e.message()));
-                });
+                new CsvTimeLineParser().parse(timelineFile).forEach(e ->
+                        timeline.add(new TimelineEvent(e.time(), e.modelName(), e.message())));
             } else {
                 LOGGER.warn("Timeline file not found");
             }
