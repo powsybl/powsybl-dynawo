@@ -71,6 +71,11 @@ class ModelsSimplifierTest {
         public Stream<BlackBoxModel> simplifyModels(Stream<BlackBoxModel> models, Network network, DynaWaltzParameters dynaWaltzParameters, Reporter reporter) {
             return models.filter(m -> !m.getDynamicModelId().equalsIgnoreCase("BBM_LOAD"));
         }
+
+        @Override
+        public SimplifierType getSimplifierType() {
+            return SimplifierType.REMOVAL;
+        }
     }
 
     @AutoService(ModelsSimplifier.class)
@@ -87,6 +92,11 @@ class ModelsSimplifierTest {
                 }
                 return m;
             });
+        }
+
+        @Override
+        public SimplifierType getSimplifierType() {
+            return SimplifierType.SUBSTITUTION;
         }
     }
 }

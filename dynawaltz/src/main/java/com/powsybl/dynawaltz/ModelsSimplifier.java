@@ -16,7 +16,13 @@ import java.util.stream.Stream;
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public interface ModelsSimplifier {
+public interface ModelsSimplifier extends Comparable<ModelsSimplifier> {
 
     Stream<BlackBoxModel> simplifyModels(Stream<BlackBoxModel> models, Network network, DynaWaltzParameters dynaWaltzParameters, Reporter reporter);
+
+    SimplifierType getSimplifierType();
+
+    default int compareTo(ModelsSimplifier modelSimplifier) {
+        return getSimplifierType().compareTo(modelSimplifier.getSimplifierType());
+    }
 }

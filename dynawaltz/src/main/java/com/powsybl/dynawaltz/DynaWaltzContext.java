@@ -36,6 +36,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
@@ -121,7 +122,8 @@ public class DynaWaltzContext {
 
     private Stream<BlackBoxModel> simplifyModels(Stream<BlackBoxModel> inputBbm, Reporter reporter) {
         Stream<BlackBoxModel> outputBbm = inputBbm;
-        for (ModelsSimplifier modelsSimplifier : ServiceLoader.load(ModelsSimplifier.class)) {
+        List<ModelsSimplifier> modelsSimplifiers = StreamSupport.stream(ServiceLoader.load(ModelsSimplifier.class).spliterator(), false).sorted().toList();
+        for (ModelsSimplifier modelsSimplifier : modelsSimplifiers) {
             outputBbm = modelsSimplifier.simplifyModels(outputBbm, network, dynaWaltzParameters, reporter);
         }
         return outputBbm;
