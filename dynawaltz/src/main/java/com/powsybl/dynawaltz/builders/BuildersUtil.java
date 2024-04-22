@@ -7,9 +7,7 @@
  */
 package com.powsybl.dynawaltz.builders;
 
-import com.powsybl.iidm.network.Identifiable;
-import com.powsybl.iidm.network.IdentifiableType;
-import com.powsybl.iidm.network.Network;
+import com.powsybl.iidm.network.*;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -22,7 +20,13 @@ public final class BuildersUtil {
     }
 
     public static Identifiable<?> getActionConnectionPoint(Network network, String staticId) {
-        Identifiable<?> point = network.getBusbarSection(staticId);
-        return point != null ? point : network.getBusBreakerView().getBus(staticId);
+        BusbarSection busbarSection = network.getBusbarSection(staticId);
+        return busbarSection != null && !Double.isNaN(busbarSection.getV())
+                ? busbarSection
+                : getVoltageOnBus(network.getBusBreakerView().getBus(staticId));
+    }
+
+    private static Bus getVoltageOnBus(Bus bus) {
+        return bus != null && bus.isInMainConnectedComponent() && !Double.isNaN(bus.getV()) ? bus : null;
     }
 }
