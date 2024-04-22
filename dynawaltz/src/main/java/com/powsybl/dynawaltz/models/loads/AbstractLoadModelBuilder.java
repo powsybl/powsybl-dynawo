@@ -25,7 +25,8 @@ public abstract class AbstractLoadModelBuilder<R extends AbstractEquipmentModelB
 
     @Override
     protected Load findEquipment(String staticId) {
-        return network.getLoad(staticId);
+        Load load = network.getLoad(staticId);
+        return load != null && !load.isFictitious() ? load : null;
     }
 
 }
