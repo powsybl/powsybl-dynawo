@@ -10,6 +10,7 @@ package com.powsybl.dynawaltz.models;
 import com.powsybl.dynawaltz.builders.BuildersUtil;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
+import com.powsybl.iidm.network.test.HvdcTestNetwork;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -21,7 +22,12 @@ class ActionConnectionPointTest {
     @Test
     void voltageOffBus() {
         Network network = EurostagTutorialExample1Factory.create();
-        network.getGenerator("GEN").disconnect();
         assertNull(BuildersUtil.getActionConnectionPoint(network, "NGEN"));
+    }
+
+    @Test
+    void voltageOffBusBarSection() {
+        Network network = HvdcTestNetwork.createBase();
+        assertNull(BuildersUtil.getActionConnectionPoint(network, "BBS1"));
     }
 }
