@@ -18,6 +18,7 @@ import com.powsybl.iidm.network.test.HvdcTestNetwork;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -57,5 +58,15 @@ class HvdcTest {
                 .build();
         assertEquals(1, hvdcVscDangling.getConnectedStations().size());
         assertEquals(line.getConverterStation1(), hvdcVscDangling.getConnectedStations().get(0));
+    }
+
+    @Test
+    void vscDynamicModelOnLCC() {
+        Network network = HvdcTestNetwork.createLcc();
+        assertNull(HvdcVscBuilder.of(network)
+                .dynamicModelId("hvdc")
+                .staticId("L")
+                .parameterSetId("HVDC")
+                .build());
     }
 }
