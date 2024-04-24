@@ -23,7 +23,8 @@ import org.junit.jupiter.api.Test;
 import java.util.Collections;
 import java.util.List;
 import java.util.ServiceLoader;
-import java.util.stream.Stream;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -33,9 +34,15 @@ import static org.junit.jupiter.api.Assertions.*;
 class ModelsSimplifierTest {
 
     @Test
-    void loadSimplifiers() {
-        List<ModelsSimplifier> simplifiers = Lists.newArrayList(ServiceLoader.load(ModelsSimplifier.class));
-        assertEquals(2, simplifiers.size());
+    void loadRemovalSimplifiers() {
+        List<ModelsRemovalSimplifier> simplifiers = Lists.newArrayList(ServiceLoader.load(ModelsRemovalSimplifier.class));
+        assertEquals(1, simplifiers.size());
+    }
+
+    @Test
+    void loadSubstitutionSimplifiers() {
+        List<ModelsSubstitutionSimplifier> simplifiers = Lists.newArrayList(ServiceLoader.load(ModelsSubstitutionSimplifier.class));
+        assertEquals(1, simplifiers.size());
     }
 
     @Test
@@ -65,19 +72,19 @@ class ModelsSimplifierTest {
         assertTrue(context.getBlackBoxDynamicModelStream().anyMatch(bbm -> bbm.getDynamicModelId().equalsIgnoreCase("newModel")));
     }
 
-    @AutoService(ModelsSimplifier.class)
-    public static class ModelsSimplifierFilter implements ModelsSimplifier {
+    @AutoService(ModelsRemovalSimplifier.class)
+    public static class ModelsSimplifierFilter implements ModelsRemovalSimplifier {
         @Override
-        public Stream<BlackBoxModel> simplifyModels(Stream<BlackBoxModel> models, Network network, DynaWaltzParameters dynaWaltzParameters, ReportNode reportNode) {
-            return models.filter(m -> !m.getDynamicModelId().equalsIgnoreCase("BBM_LOAD"));
+        public Predicate<BlackBoxModel> getModelRemovalPredicate(ReportNode reportNode) {
+            return m -> !m.getDynamicModelId().equalsIgnoreCase("BBM_LOAD");
         }
     }
 
-    @AutoService(ModelsSimplifier.class)
-    public static class ModelsSimplifierSubstitution implements ModelsSimplifier {
+    @AutoService(ModelsSubstitutionSimplifier.class)
+    public static class ModelsSimplifierSubstitution implements ModelsSubstitutionSimplifier {
         @Override
-        public Stream<BlackBoxModel> simplifyModels(Stream<BlackBoxModel> models, Network network, DynaWaltzParameters dynaWaltzParameters, ReportNode reportNode) {
-            return models.map(m -> {
+        public Function<BlackBoxModel, BlackBoxModel> getModelSubstitutionFunction(Network network, DynaWaltzParameters dynaWaltzParameters, ReportNode reportNode) {
+            return m -> {
                 if ("BBM_GEN".equalsIgnoreCase(m.getDynamicModelId()) && m instanceof AbstractGenerator gen) {
                     return GeneratorFictitiousBuilder.of(network)
                             .dynamicModelId("newModel")
@@ -86,7 +93,7 @@ class ModelsSimplifierTest {
                             .build();
                 }
                 return m;
-            });
+            };
         }
     }
 }
