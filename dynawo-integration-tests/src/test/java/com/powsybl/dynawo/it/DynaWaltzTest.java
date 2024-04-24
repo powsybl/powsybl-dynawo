@@ -87,7 +87,7 @@ class DynaWaltzTest extends AbstractDynawoTest {
         assertEquals(DynamicSimulationResult.Status.SUCCESS, result.getStatus());
         assertTrue(result.getStatusText().isEmpty());
         assertEquals(41, result.getCurves().size());
-        DoubleTimeSeries ts1 = (DoubleTimeSeries) result.getCurve("_GEN____1_SM_generator_UStatorPu");
+        DoubleTimeSeries ts1 = result.getCurve("_GEN____1_SM_generator_UStatorPu");
         assertEquals("_GEN____1_SM_generator_UStatorPu", ts1.getMetadata().getName());
         assertEquals(587, ts1.toArray().length);
         List<TimelineEvent> timeLine = result.getTimeLine();
