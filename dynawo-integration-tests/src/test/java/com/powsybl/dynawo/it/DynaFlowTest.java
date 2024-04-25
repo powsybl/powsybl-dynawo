@@ -89,6 +89,7 @@ class DynaFlowTest extends AbstractDynawoTest {
         StringWriter sw = new StringWriter();
         reportNode.print(sw);
         System.out.println(sw);
+
         InputStream refStream = Objects.requireNonNull(getClass().getResourceAsStream("/loadflow_timeline_report.txt"));
         String refLogExport = TestUtil.normalizeLineSeparator(new String(ByteStreams.toByteArray(refStream), StandardCharsets.UTF_8));
         String logExport = TestUtil.normalizeLineSeparator(sw.toString());

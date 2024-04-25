@@ -35,17 +35,17 @@ class ModelConfigLoaderTest {
                         "libs": [
                             {
                               "lib": "PhotovoltaicsWeccCurrentSource",
-                              "alias": "WeccCs",
+                              "alias": "Wecc",
                               "internalModelPrefix": "WTG4A",
                               "properties": [
-                                "Synchronized"
+                                "SYNCHRONIZED"
                               ]
                             },
                             {
                               "lib": "WT4BWeccCurrentSource",
                               "properties": [
-                                "Synchronized",
-                                "Controllable"
+                                "SYNCHRONIZED",
+                                "CONTROLLABLE"
                               ]
                             },
                             {
@@ -64,12 +64,12 @@ class ModelConfigLoaderTest {
         assertThat(configs.keySet()).containsExactlyInAnyOrder("synchronousGenerators");
         ModelConfigs synchroGens = configs.get("synchronousGenerators");
         assertThat(synchroGens.getSupportedLibs()).containsExactlyInAnyOrder(
-                "WeccCs",
+                "Wecc",
                 "WT4BWeccCurrentSource",
                 "WT4AWeccCurrentSource");
         ModelConfig defaultModel = new ModelConfig("WT4BWeccCurrentSource", null, null, List.of("SYNCHRONIZED", "CONTROLLABLE"));
         assertThat(listModelConfigs(synchroGens)).containsExactlyInAnyOrder(
-                new ModelConfig("PhotovoltaicsWeccCurrentSource", "WeccCs", "WTG4A", List.of("SYNCHRONIZED")),
+                new ModelConfig("PhotovoltaicsWeccCurrentSource", "Wecc", "WTG4A", List.of("SYNCHRONIZED")),
                 defaultModel,
                 new ModelConfig("WT4AWeccCurrentSource", null, null, Collections.emptyList()));
         assertEquals(defaultModel, synchroGens.getDefaultModelConfig());
