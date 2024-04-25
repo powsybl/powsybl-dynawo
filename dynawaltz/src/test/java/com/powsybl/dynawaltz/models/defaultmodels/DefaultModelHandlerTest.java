@@ -54,7 +54,7 @@ class DefaultModelHandlerTest {
     void noInterfaceImplementationException() {
         Generator gen = network.getGenerator("GEN");
         PowsyblException pe = assertThrows(PowsyblException.class, () -> defaultModelHandler.getDefaultModel(gen, LoadModel.class, true));
-        assertEquals("Default model DefaultGenerator does not implement LoadModel interface", pe.getMessage());
+        assertEquals("Default model DefaultGenerator for GEN does not implement LoadModel interface", pe.getMessage());
     }
 
     @Test

@@ -15,7 +15,6 @@ import com.powsybl.commons.json.JsonUtil;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -38,48 +37,54 @@ public class ModelConfigsJsonDeserializer extends StdDeserializer<Map<String, Mo
     }
 
     private static ModelConfigs parseModelConfigs(JsonParser parser) {
-        AtomicReference<String> defaultLib = new AtomicReference<>();
-        final Map<String, ModelConfig> libs = new HashMap<>();
-        JsonUtil.parseObject(parser , name ->
+        var parsingContext = new Object() {
+            String defaultLib = null;
+            final Map<String, ModelConfig> libs = new HashMap<>();
+        };
+        JsonUtil.parseObject(parser, name ->
             switch (name) {
                 case "defaultLib" -> {
-                    defaultLib.set(parser.nextTextValue());
+                    parsingContext.defaultLib = parser.nextTextValue();
                     yield true;
                 }
                 case "libs" -> {
-                    JsonUtil.parseObjectArray(parser, mc -> libs.put(mc.name(), mc), ModelConfigsJsonDeserializer::parseModelConfig);
+                    JsonUtil.parseObjectArray(parser, mc -> parsingContext.libs.put(mc.name(), mc), ModelConfigsJsonDeserializer::parseModelConfig);
                     yield true;
                 }
                 default -> false;
-        });
-        return new ModelConfigs(libs, defaultLib.get());
+            }
+        );
+        return new ModelConfigs(parsingContext.libs, parsingContext.defaultLib);
     }
 
     private static ModelConfig parseModelConfig(JsonParser parser) {
-        AtomicReference<String> lib = new AtomicReference<>();
-        AtomicReference<String> alias = new AtomicReference<>();
-        AtomicReference<String> internalModelPrefix = new AtomicReference<>();
-        List<String> properties = new ArrayList<>(0);
-        JsonUtil.parseObject(parser , name ->
+        var parsingContext = new Object() {
+            String lib = null;
+            String alias = null;
+            String internalModelPrefix = null;
+            List<String> properties = Collections.emptyList();
+        };
+        JsonUtil.parseObject(parser, name ->
             switch (parser.getCurrentName()) {
                 case "lib" -> {
-                    lib.set(parser.nextTextValue());
+                    parsingContext.lib = parser.nextTextValue();
                     yield true;
                 }
                 case "properties" -> {
-                    properties.addAll(JsonUtil.parseStringArray(parser));
+                    parsingContext.properties = JsonUtil.parseStringArray(parser);
                     yield true;
                 }
                 case "internalModelPrefix" -> {
-                    internalModelPrefix.set(parser.nextTextValue());
+                    parsingContext.internalModelPrefix = parser.nextTextValue();
                     yield true;
                 }
                 case "alias" -> {
-                    alias.set(parser.nextTextValue());
+                    parsingContext.alias = parser.nextTextValue();
                     yield true;
                 }
                 default -> false;
-        });
-        return new ModelConfig(lib.get(), alias.get(), internalModelPrefix.get(), properties);
+            }
+        );
+        return new ModelConfig(parsingContext.lib, parsingContext.alias, parsingContext.internalModelPrefix, parsingContext.properties);
     }
 }
