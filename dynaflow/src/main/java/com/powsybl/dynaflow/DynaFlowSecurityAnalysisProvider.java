@@ -7,16 +7,20 @@
 package com.powsybl.dynaflow;
 
 import com.google.auto.service.AutoService;
-import com.powsybl.commons.reporter.Reporter;
-import com.powsybl.computation.*;
+import com.powsybl.action.Action;
+import com.powsybl.commons.report.ReportNode;
+import com.powsybl.computation.Command;
+import com.powsybl.computation.ComputationManager;
+import com.powsybl.computation.ExecutionEnvironment;
+import com.powsybl.computation.SimpleCommandBuilder;
 import com.powsybl.contingency.ContingenciesProvider;
 import com.powsybl.contingency.Contingency;
 import com.powsybl.dynawo.commons.DynawoUtil;
 import com.powsybl.dynawo.commons.PowsyblDynawoVersion;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.security.*;
-import com.powsybl.security.action.Action;
 import com.powsybl.security.interceptors.SecurityAnalysisInterceptor;
+import com.powsybl.security.limitreduction.LimitReduction;
 import com.powsybl.security.monitor.StateMonitor;
 import com.powsybl.security.strategy.OperatorStrategy;
 import org.slf4j.Logger;
@@ -62,7 +66,8 @@ public class DynaFlowSecurityAnalysisProvider implements SecurityAnalysisProvide
                                                          List<OperatorStrategy> operatorStrategies,
                                                          List<Action> actions,
                                                          List<StateMonitor> monitors,
-                                                         Reporter reporter) {
+                                                         List<LimitReduction> limitReductions,
+                                                         ReportNode reportNode) {
         if (detector != null) {
             LOG.error("LimitViolationDetector is not used in Dynaflow implementation.");
         }
@@ -74,6 +79,9 @@ public class DynaFlowSecurityAnalysisProvider implements SecurityAnalysisProvide
         }
         if (actions != null && !actions.isEmpty()) {
             LOG.error("Actions are not implemented in Dynaflow");
+        }
+        if (limitReductions != null && !limitReductions.isEmpty()) {
+            LOG.error("Limit reductions are not implemented in Dynaflow");
         }
 
         Objects.requireNonNull(computationManager);
@@ -88,9 +96,10 @@ public class DynaFlowSecurityAnalysisProvider implements SecurityAnalysisProvide
         ExecutionEnvironment execEnv = new ExecutionEnvironment(config.createEnv(), WORKING_DIR_PREFIX, config.isDebug());
         DynawoUtil.requireDynaMinVersion(execEnv, computationManager, getVersionCommand(config), DynaFlowConfig.DYNAFLOW_LAUNCHER_PROGRAM_NAME, true);
         List<Contingency> contingencies = contingenciesProvider.getContingencies(network);
-        Reporter dfsaReporter = Reports.createDynaFlowSecurityAnalysisReporter(reporter, network.getId());
+        ReportNode dfsaReportNode = Reports.createDynaFlowSecurityAnalysisReportNode(reportNode, network.getId());
 
-        return computationManager.execute(execEnv, new DynaFlowSecurityAnalysisHandler(network, workingVariantId, getCommand(config), parameters, contingencies, filter, interceptors, dfsaReporter));
+        DynaFlowSecurityAnalysisHandler executionHandler = new DynaFlowSecurityAnalysisHandler(network, workingVariantId, getCommand(config), parameters, contingencies, filter, interceptors, dfsaReportNode);
+        return computationManager.execute(execEnv, executionHandler);
     }
 
     @Override

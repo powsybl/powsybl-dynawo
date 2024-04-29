@@ -8,8 +8,9 @@
 package com.powsybl.dynawo.security;
 
 import com.google.auto.service.AutoService;
+import com.powsybl.action.Action;
 import com.powsybl.commons.config.PlatformConfig;
-import com.powsybl.commons.reporter.Reporter;
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.computation.Command;
 import com.powsybl.computation.ComputationManager;
 import com.powsybl.computation.ExecutionEnvironment;
@@ -28,7 +29,6 @@ import com.powsybl.iidm.network.Network;
 import com.powsybl.security.LimitViolationDetector;
 import com.powsybl.security.LimitViolationFilter;
 import com.powsybl.security.SecurityAnalysisReport;
-import com.powsybl.security.action.Action;
 import com.powsybl.security.dynamic.DynamicSecurityAnalysisParameters;
 import com.powsybl.security.dynamic.DynamicSecurityAnalysisProvider;
 import com.powsybl.security.interceptors.SecurityAnalysisInterceptor;
@@ -79,14 +79,14 @@ public class DynawoDynamicSecurityAnalysisProvider implements DynamicSecurityAna
                                                          List<OperatorStrategy> operatorStrategies,
                                                          List<Action> actions,
                                                          List<StateMonitor> monitors,
-                                                         Reporter reporter) {
+                                                         ReportNode reportNode) {
         if (detector != null) {
             LOGGER.error("LimitViolationDetector is not used in Dynaflow implementation.");
         }
         if (monitors != null && !monitors.isEmpty()) {
             LOGGER.error("Monitoring is not possible with Dynaflow implementation. There will not be supplementary information about monitored equipment.");
         }
-        if (reporter != Reporter.NO_OP) {
+        if (reportNode != ReportNode.NO_OP) {
             LOGGER.warn("Reporters are not used in Dynaflow implementation");
         }
         if (operatorStrategies != null && !operatorStrategies.isEmpty()) {
@@ -106,19 +106,19 @@ public class DynawoDynamicSecurityAnalysisProvider implements DynamicSecurityAna
         Objects.requireNonNull(contingenciesProvider);
         interceptors.forEach(Objects::requireNonNull);
 
-        Reporter dsaReporter = Reports.createDynamicSecurityAnalysisReporter(reporter, network.getId());
+        ReportNode dsaReportNode = Reports.createDynamicSecurityAnalysisReportNode(reportNode, network.getId());
         network.getVariantManager().setWorkingVariant(workingVariantId);
         ExecutionEnvironment execEnv = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, config.isDebug());
         DynawoUtil.requireDynaMinVersion(execEnv, computationManager, getVersionCommand(config), DynawoAlgorithmsConfig.DYNAWALTZ_LAUNCHER_PROGRAM_NAME, false);
         List<Contingency> contingencies = contingenciesProvider.getContingencies(network);
         SecurityAnalysisContext context = new SecurityAnalysisContext(network, workingVariantId,
-                BlackBoxSupplierUtils.getBlackBoxModelList(dynamicModelsSupplier, network, dsaReporter),
-                BlackBoxSupplierUtils.getBlackBoxModelList(eventModelsSupplier, network, dsaReporter),
+                BlackBoxSupplierUtils.getBlackBoxModelList(dynamicModelsSupplier, network, dsaReportNode),
+                BlackBoxSupplierUtils.getBlackBoxModelList(eventModelsSupplier, network, dsaReportNode),
                 parameters,
                 DynaWaltzParameters.load(parameters.getDynamicSimulationParameters()),
                 contingencies);
 
-        return computationManager.execute(execEnv, new DynawoDynamicSecurityAnalysisHandler(context, getCommand(config), filter, interceptors, dsaReporter));
+        return computationManager.execute(execEnv, new DynawoDynamicSecurityAnalysisHandler(context, getCommand(config), filter, interceptors, dsaReportNode));
     }
 
     // TODO choose another name ? (needed for models supplier)

@@ -9,8 +9,7 @@ package com.powsybl.dynawo.it;
 import com.google.common.io.ByteStreams;
 import com.powsybl.commons.datasource.ResourceDataSource;
 import com.powsybl.commons.datasource.ResourceSet;
-import com.powsybl.commons.reporter.Reporter;
-import com.powsybl.commons.reporter.ReporterModel;
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.commons.test.ComparisonUtils;
 import com.powsybl.commons.test.TestUtil;
 import com.powsybl.contingency.Contingency;
@@ -78,8 +77,8 @@ class DynaFlowTest extends AbstractDynawoTest {
                 .setPermanentLimit(200)
                 .add();
 
-        ReporterModel reporter = new ReporterModel("root", "testLf root reporter");
-        LoadFlowResult result = loadFlowProvider.run(network, computationManager, VariantManagerConstants.INITIAL_VARIANT_ID, loadFlowParameters, reporter)
+        ReportNode reportNode = ReportNode.newRootReportNode().withMessageTemplate("root", "testLf root report").build();
+        LoadFlowResult result = loadFlowProvider.run(network, computationManager, VariantManagerConstants.INITIAL_VARIANT_ID, loadFlowParameters, reportNode)
                 .join();
 
         assertTrue(result.isOk());
@@ -89,7 +88,7 @@ class DynaFlowTest extends AbstractDynawoTest {
         assertEquals("B4", componentResult.getSlackBusId());
 
         StringWriter sw = new StringWriter();
-        reporter.export(sw);
+        reportNode.print(sw);
         System.out.println(sw);
         InputStream refStream = Objects.requireNonNull(getClass().getResourceAsStream("/loadflow_timeline_report.txt"));
         String refLogExport = TestUtil.normalizeLineSeparator(new String(ByteStreams.toByteArray(refStream), StandardCharsets.UTF_8));
@@ -111,38 +110,38 @@ class DynaFlowTest extends AbstractDynawoTest {
         network.getVoltageLevelStream().forEach(vl -> vl.setLowVoltageLimit(vl.getNominalV() * 0.97));
 
         // Launching a load flow before the security analysis is required
-        ReporterModel reporterLf = new ReporterModel("root", "Root message");
-        loadFlowProvider.run(network, computationManager, VariantManagerConstants.INITIAL_VARIANT_ID, loadFlowParameters, reporterLf).join();
+        ReportNode reportNodeLf = ReportNode.newRootReportNode().withMessageTemplate("root", "Root message").build();
+        loadFlowProvider.run(network, computationManager, VariantManagerConstants.INITIAL_VARIANT_ID, loadFlowParameters, reportNodeLf).join();
 
-        StringWriter swReporterLf = new StringWriter();
-        reporterLf.export(swReporterLf);
+        StringWriter swReportNodeLf = new StringWriter();
+        reportNodeLf.print(swReportNodeLf);
         InputStream refStreamLf = Objects.requireNonNull(getClass().getResourceAsStream("/ieee14/security-analysis/timeline_report_lf.txt"));
         String refLogExportLf = TestUtil.normalizeLineSeparator(new String(ByteStreams.toByteArray(refStreamLf), StandardCharsets.UTF_8));
-        String logExportLf = TestUtil.normalizeLineSeparator(swReporterLf.toString());
+        String logExportLf = TestUtil.normalizeLineSeparator(swReportNodeLf.toString());
         assertEquals(refLogExportLf, logExportLf);
 
         List<Contingency> contingencies = network.getLineStream()
                 .map(l -> Contingency.line(l.getId()))
                 .toList();
 
-        ReporterModel reporter = new ReporterModel("root", "Root message");
+        ReportNode reportNode = ReportNode.newRootReportNode().withMessageTemplate("root", "Root message").build();
         SecurityAnalysisResult result = securityAnalysisProvider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID, new DefaultLimitViolationDetector(),
                         new LimitViolationFilter(), computationManager, securityAnalysisParameters, n -> contingencies, Collections.emptyList(),
-                        Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), reporter)
+                        Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), reportNode)
                 .join()
                 .getResult();
 
-        StringWriter swReporterAs = new StringWriter();
-        reporter.export(swReporterAs);
-        InputStream refStreamReporterAs = Objects.requireNonNull(getClass().getResourceAsStream("/ieee14/security-analysis/timeline_report_as.txt"));
-        String refLogExportAs = TestUtil.normalizeLineSeparator(new String(ByteStreams.toByteArray(refStreamReporterAs), StandardCharsets.UTF_8));
-        String logExportAs = TestUtil.normalizeLineSeparator(swReporterAs.toString());
+        StringWriter swReportAs = new StringWriter();
+        reportNode.print(swReportAs);
+        InputStream refStreamReportAs = Objects.requireNonNull(getClass().getResourceAsStream("/ieee14/security-analysis/timeline_report_as.txt"));
+        String refLogExportAs = TestUtil.normalizeLineSeparator(new String(ByteStreams.toByteArray(refStreamReportAs), StandardCharsets.UTF_8));
+        String logExportAs = TestUtil.normalizeLineSeparator(swReportAs.toString());
         assertEquals(refLogExportAs, logExportAs);
 
         StringWriter serializedResult = new StringWriter();
         SecurityAnalysisResultSerializer.write(result, serializedResult);
         InputStream expected = Objects.requireNonNull(getClass().getResourceAsStream("/ieee14/security-analysis/sa_bb_results.json"));
-        ComparisonUtils.compareTxt(expected, serializedResult.toString());
+        ComparisonUtils.assertTxtEquals(expected, serializedResult.toString());
     }
 
     @Test
@@ -154,13 +153,13 @@ class DynaFlowTest extends AbstractDynawoTest {
                 .toList();
         SecurityAnalysisResult result = securityAnalysisProvider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID, new DefaultLimitViolationDetector(),
                         new LimitViolationFilter(), computationManager, securityAnalysisParameters, n -> contingencies, Collections.emptyList(),
-                        Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), Reporter.NO_OP)
+                        Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), ReportNode.NO_OP)
                 .join()
                 .getResult();
 
         StringWriter serializedResult = new StringWriter();
         SecurityAnalysisResultSerializer.write(result, serializedResult);
         InputStream expected = Objects.requireNonNull(getClass().getResourceAsStream("/ieee14/security-analysis/sa_nb_results.json"));
-        ComparisonUtils.compareTxt(expected, serializedResult.toString());
+        ComparisonUtils.assertTxtEquals(expected, serializedResult.toString());
     }
 }

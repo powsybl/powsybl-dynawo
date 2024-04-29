@@ -8,7 +8,7 @@
 package com.powsybl.dynawo.security;
 
 import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
-import com.powsybl.commons.reporter.Reporter;
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.computation.AbstractExecutionHandler;
 import com.powsybl.computation.Command;
 import com.powsybl.computation.CommandExecution;
@@ -55,17 +55,17 @@ public final class DynawoDynamicSecurityAnalysisHandler extends AbstractExecutio
     private final Network network;
     private final LimitViolationFilter violationFilter;
     private final List<SecurityAnalysisInterceptor> interceptors;
-    private final Reporter reporter;
+    private final ReportNode reportNode;
 
     public DynawoDynamicSecurityAnalysisHandler(SecurityAnalysisContext context, Command command,
                                                 LimitViolationFilter violationFilter, List<SecurityAnalysisInterceptor> interceptors,
-                                                Reporter reporter) {
+                                                ReportNode reportNode) {
         this.context = context;
         this.network = context.getNetwork();
         this.command = command;
         this.violationFilter = violationFilter;
         this.interceptors = interceptors;
-        this.reporter = reporter;
+        this.reportNode = reportNode;
     }
 
     @Override
@@ -87,7 +87,7 @@ public final class DynawoDynamicSecurityAnalysisHandler extends AbstractExecutio
         if (Files.exists(outputNetworkFile)) {
             NetworkResultsUpdater.update(context.getNetwork(), NetworkSerDe.read(outputNetworkFile), context.getDynaWaltzParameters().isMergeLoads());
         }
-        ContingencyResultsUtils.reportContingenciesTimelines(context.getContingencies(), workingDir.resolve(DYNAWO_TIMELINE_FOLDER), reporter);
+        ContingencyResultsUtils.reportContingenciesTimelines(context.getContingencies(), workingDir.resolve(DYNAWO_TIMELINE_FOLDER), reportNode);
 
         return new SecurityAnalysisReport(
                 new SecurityAnalysisResult(

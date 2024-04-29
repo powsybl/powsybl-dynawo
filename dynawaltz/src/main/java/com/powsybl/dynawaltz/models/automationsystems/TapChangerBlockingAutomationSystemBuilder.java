@@ -7,7 +7,7 @@
  */
 package com.powsybl.dynawaltz.models.automationsystems;
 
-import com.powsybl.commons.reporter.Reporter;
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawaltz.builders.*;
 import com.powsybl.iidm.network.*;
 
@@ -30,32 +30,32 @@ public class TapChangerBlockingAutomationSystemBuilder extends AbstractAutomatio
     private final BuilderIdListEquipmentList<Identifiable<?>> uMeasurementPoints;
 
     public static TapChangerBlockingAutomationSystemBuilder of(Network network) {
-        return of(network, Reporter.NO_OP);
+        return of(network, ReportNode.NO_OP);
     }
 
-    public static TapChangerBlockingAutomationSystemBuilder of(Network network, Reporter reporter) {
-        return new TapChangerBlockingAutomationSystemBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reporter);
+    public static TapChangerBlockingAutomationSystemBuilder of(Network network, ReportNode reportNode) {
+        return new TapChangerBlockingAutomationSystemBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reportNode);
     }
 
     public static TapChangerBlockingAutomationSystemBuilder of(Network network, String lib) {
-        return of(network, lib, Reporter.NO_OP);
+        return of(network, lib, ReportNode.NO_OP);
     }
 
-    public static TapChangerBlockingAutomationSystemBuilder of(Network network, String lib, Reporter reporter) {
+    public static TapChangerBlockingAutomationSystemBuilder of(Network network, String lib, ReportNode reportNode) {
         ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(lib);
         if (modelConfig == null) {
-            Reporters.reportLibNotFound(reporter, TapChangerBlockingAutomationSystemBuilder.class.getSimpleName(), lib);
+            BuilderReports.reportLibNotFound(reportNode, TapChangerBlockingAutomationSystemBuilder.class.getSimpleName(), lib);
             return null;
         }
-        return new TapChangerBlockingAutomationSystemBuilder(network, modelConfig, reporter);
+        return new TapChangerBlockingAutomationSystemBuilder(network, modelConfig, reportNode);
     }
 
     public static Set<String> getSupportedLibs() {
         return MODEL_CONFIGS.getSupportedLibs();
     }
 
-    protected TapChangerBlockingAutomationSystemBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
-        super(network, modelConfig, reporter);
+    protected TapChangerBlockingAutomationSystemBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
+        super(network, modelConfig, reportNode);
         tapChangerEquipments = new BuilderEquipmentsList<>(TAP_CHANGER_TYPE, TRANSFORMER_FIELD, true);
         uMeasurementPoints = new BuilderIdListEquipmentList<>(MEASUREMENT_POINT_TYPE, U_MEASUREMENTS_FIELD);
     }
@@ -93,8 +93,8 @@ public class TapChangerBlockingAutomationSystemBuilder extends AbstractAutomatio
     @Override
     protected void checkData() {
         super.checkData();
-        isInstantiable &= tapChangerEquipments.checkEquipmentData(reporter);
-        isInstantiable &= uMeasurementPoints.checkEquipmentData(reporter);
+        isInstantiable &= tapChangerEquipments.checkEquipmentData(reportNode);
+        isInstantiable &= uMeasurementPoints.checkEquipmentData(reportNode);
     }
 
     @Override

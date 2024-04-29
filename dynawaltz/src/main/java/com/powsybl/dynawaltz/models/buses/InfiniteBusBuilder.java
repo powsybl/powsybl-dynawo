@@ -7,11 +7,11 @@
  */
 package com.powsybl.dynawaltz.models.buses;
 
-import com.powsybl.commons.reporter.Reporter;
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawaltz.builders.ModelConfig;
 import com.powsybl.dynawaltz.builders.ModelConfigsHandler;
 import com.powsybl.dynawaltz.builders.ModelConfigs;
-import com.powsybl.dynawaltz.builders.Reporters;
+import com.powsybl.dynawaltz.builders.BuilderReports;
 import com.powsybl.iidm.network.Network;
 
 import java.util.Set;
@@ -25,32 +25,32 @@ public class InfiniteBusBuilder extends AbstractBusBuilder<InfiniteBusBuilder> {
     private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
 
     public static InfiniteBusBuilder of(Network network) {
-        return of(network, Reporter.NO_OP);
+        return of(network, ReportNode.NO_OP);
     }
 
-    public static InfiniteBusBuilder of(Network network, Reporter reporter) {
-        return new InfiniteBusBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reporter);
+    public static InfiniteBusBuilder of(Network network, ReportNode reportNode) {
+        return new InfiniteBusBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reportNode);
     }
 
     public static InfiniteBusBuilder of(Network network, String lib) {
-        return of(network, lib, Reporter.NO_OP);
+        return of(network, lib, ReportNode.NO_OP);
     }
 
-    public static InfiniteBusBuilder of(Network network, String lib, Reporter reporter) {
+    public static InfiniteBusBuilder of(Network network, String lib, ReportNode reportNode) {
         ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(lib);
         if (modelConfig == null) {
-            Reporters.reportLibNotFound(reporter, InfiniteBusBuilder.class.getSimpleName(), lib);
+            BuilderReports.reportLibNotFound(reportNode, InfiniteBusBuilder.class.getSimpleName(), lib);
             return null;
         }
-        return new InfiniteBusBuilder(network, modelConfig, reporter);
+        return new InfiniteBusBuilder(network, modelConfig, reportNode);
     }
 
     public static Set<String> getSupportedLibs() {
         return MODEL_CONFIGS.getSupportedLibs();
     }
 
-    protected InfiniteBusBuilder(Network network, ModelConfig modelConfig, Reporter reporter) {
-        super(network, modelConfig, reporter);
+    protected InfiniteBusBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
+        super(network, modelConfig, reportNode);
     }
 
     @Override

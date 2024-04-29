@@ -12,9 +12,9 @@ import com.powsybl.commons.report.ReportNode;
 /**
  * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
  */
-public final class Reports {
+public final class DynaflowReports {
 
-    private Reports() {
+    private DynaflowReports() {
     }
 
     public static ReportNode createDynaFlowReportNode(ReportNode reportNode, String networkId) {
@@ -31,9 +31,9 @@ public final class Reports {
                 .add();
     }
 
-    public static ReportNode createContingenciesTimelineReporter(ReportNode reporter, String contingencyId) {
-        return reporter.newReportNode()
-                .withMessageTemplate("saContingency", "Contingency '${contingencyId}'")
+    public static ReportNode createDynaFlowTimelineReportNode(ReportNode reportNode, String contingencyId) {
+        return reportNode.newReportNode()
+                .withMessageTemplate("dynaflowSaContingency", "Contingency '${contingencyId}'")
                 .withUntypedValue("contingencyId", contingencyId)
                 .add();
     }

@@ -7,7 +7,7 @@
 package com.powsybl.dynawaltz;
 
 import com.powsybl.commons.PowsyblException;
-import com.powsybl.commons.reporter.Reporter;
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
@@ -65,26 +65,26 @@ public class DynaWaltzContext {
 
     public DynaWaltzContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
                             List<Curve> curves, DynamicSimulationParameters parameters, DynaWaltzParameters dynaWaltzParameters) {
-        this(network, workingVariantId, dynamicModels, eventModels, curves, parameters, dynaWaltzParameters, Reporter.NO_OP);
+        this(network, workingVariantId, dynamicModels, eventModels, curves, parameters, dynaWaltzParameters, ReportNode.NO_OP);
     }
 
     public DynaWaltzContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
-                            List<Curve> curves, DynamicSimulationParameters parameters, DynaWaltzParameters dynaWaltzParameters, Reporter reporter) {
+                            List<Curve> curves, DynamicSimulationParameters parameters, DynaWaltzParameters dynaWaltzParameters, ReportNode reportNode) {
 
-        Reporter contextReporter = DynawaltzReports.createDynaWaltzContextReporter(reporter);
+        ReportNode contextReportNode = DynawaltzReports.createDynaWaltzContextReportNode(reportNode);
         this.network = Objects.requireNonNull(network);
         this.workingVariantId = Objects.requireNonNull(workingVariantId);
         this.parameters = Objects.requireNonNull(parameters);
         this.dynaWaltzParameters = Objects.requireNonNull(dynaWaltzParameters);
 
         Stream<BlackBoxModel> uniqueIdsDynamicModels = Objects.requireNonNull(dynamicModels).stream()
-                .filter(distinctByDynamicId(contextReporter).and(distinctByStaticId(contextReporter)));
+                .filter(distinctByDynamicId(contextReportNode).and(distinctByStaticId(contextReportNode)));
         this.dynamicModels = dynaWaltzParameters.isUseModelSimplifiers()
-                ? simplifyModels(uniqueIdsDynamicModels, contextReporter).toList()
+                ? simplifyModels(uniqueIdsDynamicModels, contextReportNode).toList()
                 : uniqueIdsDynamicModels.toList();
 
         this.eventModels = Objects.requireNonNull(eventModels).stream()
-                .filter(distinctByDynamicId(contextReporter))
+                .filter(distinctByDynamicId(contextReportNode))
                 .toList();
         this.staticIdBlackBoxModelMap = getInputBlackBoxDynamicModelStream()
                 .filter(EquipmentBlackBoxModel.class::isInstance)
@@ -103,7 +103,7 @@ public class DynaWaltzContext {
                 this::getPureDynamicModel,
                 macroConnectList::add,
                 macroConnectorsMap::computeIfAbsent,
-                contextReporter);
+                contextReportNode);
 
         for (BlackBoxModel bbm : getBlackBoxDynamicModelStream().toList()) {
             macroStaticReferences.computeIfAbsent(bbm.getName(), k -> new MacroStaticReference(k, bbm.getVarsMapping()));
@@ -119,10 +119,10 @@ public class DynaWaltzContext {
         }
     }
 
-    private Stream<BlackBoxModel> simplifyModels(Stream<BlackBoxModel> inputBbm, Reporter reporter) {
+    private Stream<BlackBoxModel> simplifyModels(Stream<BlackBoxModel> inputBbm, ReportNode reportNode) {
         Stream<BlackBoxModel> outputBbm = inputBbm;
         for (ModelsSimplifier modelsSimplifier : ServiceLoader.load(ModelsSimplifier.class)) {
-            outputBbm = modelsSimplifier.simplifyModels(outputBbm, network, dynaWaltzParameters, reporter);
+            outputBbm = modelsSimplifier.simplifyModels(outputBbm, network, dynaWaltzParameters, reportNode);
         }
         return outputBbm;
     }
@@ -194,22 +194,22 @@ public class DynaWaltzContext {
         }
     }
 
-    protected static Predicate<BlackBoxModel> distinctByStaticId(Reporter reporter) {
+    protected static Predicate<BlackBoxModel> distinctByStaticId(ReportNode reportNode) {
         Set<String> seen = new HashSet<>();
         return bbm -> {
             if (bbm instanceof EquipmentBlackBoxModel eBbm && !seen.add(eBbm.getStaticId())) {
-                DynawaltzReports.reportDuplicateStaticId(reporter, eBbm.getStaticId(), eBbm.getLib(), eBbm.getDynamicModelId());
+                DynawaltzReports.reportDuplicateStaticId(reportNode, eBbm.getStaticId(), eBbm.getLib(), eBbm.getDynamicModelId());
                 return false;
             }
             return true;
         };
     }
 
-    protected static Predicate<BlackBoxModel> distinctByDynamicId(Reporter reporter) {
+    protected static Predicate<BlackBoxModel> distinctByDynamicId(ReportNode reportNode) {
         Set<String> seen = new HashSet<>();
         return bbm -> {
             if (!seen.add(bbm.getDynamicModelId())) {
-                DynawaltzReports.reportDuplicateDynamicId(reporter, bbm.getDynamicModelId(), bbm.getName());
+                DynawaltzReports.reportDuplicateDynamicId(reportNode, bbm.getDynamicModelId(), bbm.getName());
                 return false;
             }
             return true;

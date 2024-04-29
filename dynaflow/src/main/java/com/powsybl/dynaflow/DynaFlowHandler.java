@@ -7,7 +7,7 @@
  */
 package com.powsybl.dynaflow;
 
-import com.powsybl.commons.reporter.Reporter;
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.computation.AbstractExecutionHandler;
 import com.powsybl.computation.Command;
 import com.powsybl.computation.CommandExecution;
@@ -29,7 +29,10 @@ import com.powsybl.loadflow.json.LoadFlowResultDeserializer;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.powsybl.dynaflow.DynaFlowConstants.*;
 import static com.powsybl.dynawo.commons.DynawoConstants.DYNAWO_TIMELINE_FOLDER;
@@ -45,16 +48,16 @@ public class DynaFlowHandler extends AbstractExecutionHandler<LoadFlowResult> {
     private final DynaFlowParameters dynaFlowParameters;
     private final LoadFlowParameters loadFlowParameters;
     private final Command command;
-    private final Reporter reporter;
+    private final ReportNode reportNode;
 
-    public DynaFlowHandler(Network network, String workingStateId, DynaFlowParameters dynaFlowParameters, LoadFlowParameters loadFlowParameters, Command command, Reporter reporter) {
+    public DynaFlowHandler(Network network, String workingStateId, DynaFlowParameters dynaFlowParameters, LoadFlowParameters loadFlowParameters, Command command, ReportNode reportNode) {
         this.network = network;
         this.workingStateId = workingStateId;
         this.dynaFlowParameters = dynaFlowParameters;
         this.loadFlowParameters = loadFlowParameters;
         this.command = command;
         this.dynawoInput = this.dynaFlowParameters.isMergeLoads() ? LoadsMerger.mergeLoads(this.network) : this.network;
-        this.reporter = reporter;
+        this.reportNode = reportNode;
     }
 
     @Override
@@ -95,11 +98,11 @@ public class DynaFlowHandler extends AbstractExecutionHandler<LoadFlowResult> {
     }
 
     private void reportTimeLine(Path workingDir) {
-        Reporter dfReporter = Reports.createDynaFlowReporter(reporter, network.getId());
+        ReportNode dfReporter = Reports.createDynaFlowReportNode(reportNode, network.getId());
         Path timelineFile = workingDir.resolve(DYNAFLOW_OUTPUTS_FOLDER)
                 .resolve(DYNAWO_TIMELINE_FOLDER)
                 .resolve(DYNAFLOW_TIMELINE_FILE);
         List<TimelineEntry> tl = new XmlTimeLineParser().parse(timelineFile);
-        tl.forEach(e -> CommonReports.reportTimelineEvent(dfReporter, e));
+        tl.forEach(e -> CommonReports.reportTimelineEntry(dfReporter, e));
     }
 }

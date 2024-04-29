@@ -8,7 +8,7 @@ package com.powsybl.dynawaltz;
 
 import com.google.auto.service.AutoService;
 import com.powsybl.commons.config.PlatformConfig;
-import com.powsybl.commons.reporter.Reporter;
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.computation.*;
 import com.powsybl.dynamicsimulation.*;
 import com.powsybl.dynawaltz.models.utils.BlackBoxSupplierUtils;
@@ -77,26 +77,26 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
 
     @Override
     public CompletableFuture<DynamicSimulationResult> run(Network network, DynamicModelsSupplier dynamicModelsSupplier, EventModelsSupplier eventModelsSupplier, CurvesSupplier curvesSupplier, String workingVariantId,
-                                                          ComputationManager computationManager, DynamicSimulationParameters parameters, Reporter reporter) {
+                                                          ComputationManager computationManager, DynamicSimulationParameters parameters, ReportNode reportNode) {
         Objects.requireNonNull(dynamicModelsSupplier);
         Objects.requireNonNull(eventModelsSupplier);
         Objects.requireNonNull(curvesSupplier);
         Objects.requireNonNull(workingVariantId);
         Objects.requireNonNull(parameters);
-        Objects.requireNonNull(reporter);
+        Objects.requireNonNull(reportNode);
 
-        Reporter dsReporter = DynawaltzReports.createDynaWaltzReporter(reporter, network.getId());
+        ReportNode dsReportNode = DynawaltzReports.createDynaWaltzReportNode(reportNode, network.getId());
         network.getVariantManager().setWorkingVariant(workingVariantId);
         ExecutionEnvironment execEnv = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, config.isDebug());
         DynawoUtil.requireDynaMinVersion(execEnv, computationManager, getVersionCommand(config), DynaWaltzConfig.DYNAWALTZ_LAUNCHER_PROGRAM_NAME, false);
         DynaWaltzContext context = new DynaWaltzContext(network, workingVariantId,
-                BlackBoxSupplierUtils.getBlackBoxModelList(dynamicModelsSupplier, network, dsReporter),
-                BlackBoxSupplierUtils.getBlackBoxModelList(eventModelsSupplier, network, dsReporter),
+                BlackBoxSupplierUtils.getBlackBoxModelList(dynamicModelsSupplier, network, dsReportNode),
+                BlackBoxSupplierUtils.getBlackBoxModelList(eventModelsSupplier, network, dsReportNode),
                 curvesSupplier.get(network),
                 parameters,
                 DynaWaltzParameters.load(parameters),
-                reporter);
+                reportNode);
 
-        return computationManager.execute(execEnv, new DynaWaltzHandler(context, getCommand(config), reporter));
+        return computationManager.execute(execEnv, new DynaWaltzHandler(context, getCommand(config), reportNode));
     }
 }

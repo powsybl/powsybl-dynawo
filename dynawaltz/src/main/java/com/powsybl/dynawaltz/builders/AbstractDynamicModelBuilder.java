@@ -7,7 +7,7 @@
  */
 package com.powsybl.dynawaltz.builders;
 
-import com.powsybl.commons.reporter.Reporter;
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.iidm.network.Network;
 
 import java.util.Objects;
@@ -18,12 +18,12 @@ import java.util.Objects;
 public abstract class AbstractDynamicModelBuilder {
 
     protected final Network network;
-    protected final Reporter reporter;
+    protected final ReportNode reportNode;
     protected boolean isInstantiable = true;
 
-    protected AbstractDynamicModelBuilder(Network network, Reporter reporter) {
+    protected AbstractDynamicModelBuilder(Network network, ReportNode reportNode) {
         this.network = Objects.requireNonNull(network);
-        this.reporter = Objects.requireNonNull(reporter);
+        this.reportNode = Objects.requireNonNull(reportNode);
     }
 
     protected abstract void checkData();
@@ -31,9 +31,9 @@ public abstract class AbstractDynamicModelBuilder {
     protected final boolean isInstantiable() {
         checkData();
         if (isInstantiable) {
-            Reporters.reportModelInstantiation(reporter, getModelId());
+            BuilderReports.reportModelInstantiation(reportNode, getModelId());
         } else {
-            Reporters.reportModelInstantiationFailure(reporter, getModelId());
+            BuilderReports.reportModelInstantiationFailure(reportNode, getModelId());
         }
         return isInstantiable;
     }

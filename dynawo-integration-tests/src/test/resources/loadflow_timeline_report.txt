@@ -1,5 +1,5 @@
-+ testLf root reporter
-  + Dynaflow loadflow on network 'ieee14cdf-solved'
-     [t=90.0] Overload 60 : opening line on equipment 'L6-13-1'
-     [t=90.0] LINE : opening both sides on equipment 'L6-13-1'
-     [t=90.0] Overload 60 : opening line on equipment 'L6-13-1'
++ testLf root report
+   + Dynaflow loadflow on network 'ieee14cdf-solved'
+      [t=90.0] Overload 60 : opening line on equipment 'L6-13-1'
+      [t=90.0] LINE : opening both sides on equipment 'L6-13-1'
+      [t=90.0] Overload 60 : opening line on equipment 'L6-13-1'

@@ -86,7 +86,7 @@ public class TapChangerBlockingAutomationSystem extends AbstractPureDynamicBlack
             }
         } else {
             isConnected = false;
-            DynawaltzReports.reportEmptyListAutomaton(adder.getReporter(), this.getName(), getDynamicModelId(), TapChangerModel.class.getSimpleName());
+            DynawaltzReports.reportEmptyListAutomaton(adder.getReportNode(), this.getName(), getDynamicModelId(), TapChangerModel.class.getSimpleName());
         }
     }
 

@@ -7,7 +7,7 @@
  */
 package com.powsybl.dynawaltz;
 
-import com.powsybl.commons.reporter.Reporter;
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.computation.AbstractExecutionHandler;
 import com.powsybl.computation.Command;
 import com.powsybl.computation.CommandExecution;
@@ -38,7 +38,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -53,7 +56,7 @@ import static com.powsybl.dynawo.commons.DynawoUtil.getCommandExecutions;
  */
 public final class DynaWaltzHandler extends AbstractExecutionHandler<DynamicSimulationResult> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DynaWaltzProvider.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DynaWaltzHandler.class);
     private static final String LOGS_FOLDER = "logs";
     private static final String OUTPUT_IIDM_FILENAME = "outputIIDM.xml";
     private static final String OUTPUT_DUMP_FILENAME = "outputState.dmp";
@@ -65,20 +68,20 @@ public final class DynaWaltzHandler extends AbstractExecutionHandler<DynamicSimu
     private final DynaWaltzContext context;
     private final Command command;
     private final Network dynawoInput;
-    private final Reporter reporter;
+    private final ReportNode reportNode;
 
     private final List<TimelineEvent> timeline = new ArrayList<>();
     private final Map<String, DoubleTimeSeries> curves = new HashMap<>();
     private DynamicSimulationResult.Status status = DynamicSimulationResult.Status.SUCCESS;
     private String statusText = "";
 
-    public DynaWaltzHandler(DynaWaltzContext context, Command command, Reporter reporter) {
+    public DynaWaltzHandler(DynaWaltzContext context, Command command, ReportNode reportNode) {
         this.context = context;
         this.dynawoInput = context.getDynaWaltzParameters().isMergeLoads()
                 ? LoadsMerger.mergeLoads(context.getNetwork())
                 : context.getNetwork();
         this.command = command;
-        this.reporter = reporter;
+        this.reportNode = reportNode;
     }
 
     @Override
@@ -135,8 +138,8 @@ public final class DynaWaltzHandler extends AbstractExecutionHandler<DynamicSimu
     private void setDynawoLog(Path outputsFolder) {
         Path logFile = outputsFolder.resolve(LOGS_FOLDER).resolve(LOGS_FILENAME);
         if (Files.exists(logFile)) {
-            Reporter logReporter = CommonReports.createDynawoLogReporter(reporter);
-            new CsvLogParser().parse(logFile).forEach(e -> CommonReports.reportLogEvent(logReporter, e));
+            ReportNode logReportNode = CommonReports.createDynawoLogReportNode(reportNode);
+            new CsvLogParser().parse(logFile).forEach(e -> CommonReports.reportLogEntry(logReportNode, e));
         } else {
             LOGGER.warn("Dynawo logs file not found");
         }
@@ -165,11 +168,7 @@ public final class DynaWaltzHandler extends AbstractExecutionHandler<DynamicSimu
     private void setTimeline(Path outputsFolder) {
         Path timelineFile = outputsFolder.resolve(DYNAWO_TIMELINE_FOLDER).resolve(TIMELINE_FILENAME);
         if (Files.exists(timelineFile)) {
-            Reporter timelineReporter = DynawaltzReports.createDynaWaltzTimelineReporter(reporter);
-            new CsvTimeLineParser().parse(timelineFile).forEach(e -> {
-                CommonReports.reportTimelineEvent(timelineReporter, e);
-                timeline.add(new TimelineEvent(e.time(), e.modelName(), e.message()));
-            });
+            new CsvTimeLineParser().parse(timelineFile).forEach(e -> timeline.add(new TimelineEvent(e.time(), e.modelName(), e.message())));
         } else {
             LOGGER.warn("Timeline file not found");
         }

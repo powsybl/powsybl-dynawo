@@ -7,7 +7,7 @@
  */
 package com.powsybl.dynawaltz.builders;
 
-import com.powsybl.commons.reporter.Reporter;
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.IdentifiableType;
 
@@ -64,15 +64,15 @@ public class BuilderEquipment<T extends Identifiable<?>> {
         }
     }
 
-    public boolean checkEquipmentData(Reporter reporter) {
+    public boolean checkEquipmentData(ReportNode reportNode) {
         if (!hasStaticId()) {
-            Reporters.reportFieldNotSet(reporter, fieldName);
+            BuilderReports.reportFieldNotSet(reportNode, fieldName);
             return false;
         } else if (equipment == null) {
             if (fromStaticId) {
-                Reporters.reportStaticIdUnknown(reporter, fieldName, staticId, equipmentType);
+                BuilderReports.reportStaticIdUnknown(reportNode, fieldName, staticId, equipmentType);
             } else {
-                Reporters.reportDifferentNetwork(reporter, EQUIPMENT_FIELD_NAME, staticId, equipmentType);
+                BuilderReports.reportDifferentNetwork(reportNode, EQUIPMENT_FIELD_NAME, staticId, equipmentType);
             }
             return false;
         }

@@ -22,7 +22,7 @@ import java.io.Writer;
 import java.util.List;
 import java.util.Objects;
 
-import static com.powsybl.commons.test.ComparisonUtils.compareTxt;
+import static com.powsybl.commons.test.ComparisonUtils.assertTxtEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -40,6 +40,6 @@ class ConstraintsReaderTest {
         ObjectMapper mapper = JsonUtil.createObjectMapper().registerModule(new SecurityAnalysisJsonModule());
         mapper.writerWithDefaultPrettyPrinter().writeValue(stringWriter, violations);
 
-        compareTxt(Objects.requireNonNull(getClass().getResourceAsStream("/limitViolations.json")), stringWriter.toString());
+        assertTxtEquals(Objects.requireNonNull(getClass().getResourceAsStream("/limitViolations.json")), stringWriter.toString());
     }
 }

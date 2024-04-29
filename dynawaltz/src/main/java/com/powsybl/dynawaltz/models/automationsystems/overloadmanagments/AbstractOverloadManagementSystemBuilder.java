@@ -7,10 +7,10 @@
  */
 package com.powsybl.dynawaltz.models.automationsystems.overloadmanagments;
 
-import com.powsybl.commons.reporter.Reporter;
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawaltz.builders.BuilderEquipment;
 import com.powsybl.dynawaltz.builders.ModelConfig;
-import com.powsybl.dynawaltz.builders.Reporters;
+import com.powsybl.dynawaltz.builders.BuilderReports;
 import com.powsybl.dynawaltz.models.automationsystems.AbstractAutomationSystemModelBuilder;
 import com.powsybl.iidm.network.Branch;
 import com.powsybl.iidm.network.Network;
@@ -27,8 +27,8 @@ public abstract class AbstractOverloadManagementSystemBuilder<T extends Abstract
     protected TwoSides iMeasurementSide;
     protected final BuilderEquipment<Branch<?>> controlledEquipment;
 
-    protected AbstractOverloadManagementSystemBuilder(Network network, ModelConfig modelConfig, Reporter reporter, BuilderEquipment<Branch<?>> iMeasurement, BuilderEquipment<Branch<?>> controlledEquipment) {
-        super(network, modelConfig, reporter);
+    protected AbstractOverloadManagementSystemBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode, BuilderEquipment<Branch<?>> iMeasurement, BuilderEquipment<Branch<?>> controlledEquipment) {
+        super(network, modelConfig, reportNode);
         this.iMeasurement = iMeasurement;
         this.controlledEquipment = controlledEquipment;
     }
@@ -41,10 +41,10 @@ public abstract class AbstractOverloadManagementSystemBuilder<T extends Abstract
     @Override
     protected void checkData() {
         super.checkData();
-        isInstantiable &= controlledEquipment.checkEquipmentData(reporter);
-        isInstantiable &= iMeasurement.checkEquipmentData(reporter);
+        isInstantiable &= controlledEquipment.checkEquipmentData(reportNode);
+        isInstantiable &= iMeasurement.checkEquipmentData(reportNode);
         if (iMeasurementSide == null) {
-            Reporters.reportFieldNotSet(reporter, "iMeasurementSide");
+            BuilderReports.reportFieldNotSet(reportNode, "iMeasurementSide");
             isInstantiable = false;
         }
     }

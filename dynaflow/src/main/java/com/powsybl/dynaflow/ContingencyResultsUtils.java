@@ -7,7 +7,7 @@
  */
 package com.powsybl.dynaflow;
 
-import com.powsybl.commons.reporter.Reporter;
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.contingency.Contingency;
 import com.powsybl.dynaflow.xml.ConstraintsReader;
 import com.powsybl.dynawo.commons.CommonReports;
@@ -67,10 +67,10 @@ public final class ContingencyResultsUtils {
     }
 
     // Report the timeline events from the timeline files written by dynawo
-    public static void reportContingenciesTimelines(List<Contingency> contingencies, Path timelineDir, Reporter reporter) {
+    public static void reportContingenciesTimelines(List<Contingency> contingencies, Path timelineDir, ReportNode reportNode) {
         contingencies.forEach(c -> {
-            Reporter contingencyReporter = Reports.createContingenciesTimelineReporter(reporter, c.getId());
-            getTimeline(timelineDir, c).forEach(e -> CommonReports.reportTimelineEvent(contingencyReporter, e));
+            ReportNode contingencyReporter = Reports.createContingenciesTimelineReporter(reportNode, c.getId());
+            getTimeline(timelineDir, c).forEach(e -> CommonReports.reportTimelineEntry(contingencyReporter, e));
         });
     }
 

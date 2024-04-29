@@ -7,9 +7,9 @@
  */
 package com.powsybl.dynawaltz.models.events;
 
-import com.powsybl.commons.reporter.Reporter;
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawaltz.builders.BuilderEquipment;
-import com.powsybl.dynawaltz.builders.Reporters;
+import com.powsybl.dynawaltz.builders.BuilderReports;
 import com.powsybl.iidm.network.Injection;
 import com.powsybl.iidm.network.Network;
 
@@ -23,15 +23,15 @@ public class EventActivePowerVariationBuilder extends AbstractEventModelBuilder<
     protected Double deltaP;
 
     public static EventActivePowerVariationBuilder of(Network network) {
-        return of(network, Reporter.NO_OP);
+        return of(network, ReportNode.NO_OP);
     }
 
-    public static EventActivePowerVariationBuilder of(Network network, Reporter reporter) {
-        return new EventActivePowerVariationBuilder(network, reporter);
+    public static EventActivePowerVariationBuilder of(Network network, ReportNode reportNode) {
+        return new EventActivePowerVariationBuilder(network, reportNode);
     }
 
-    EventActivePowerVariationBuilder(Network network, Reporter reporter) {
-        super(network, new BuilderEquipment<>("GENERATOR/LOAD"), reporter);
+    EventActivePowerVariationBuilder(Network network, ReportNode reportNode) {
+        super(network, new BuilderEquipment<>("GENERATOR/LOAD"), reportNode);
     }
 
     public EventActivePowerVariationBuilder deltaP(double deltaP) {
@@ -43,7 +43,7 @@ public class EventActivePowerVariationBuilder extends AbstractEventModelBuilder<
     protected void checkData() {
         super.checkData();
         if (deltaP == null) {
-            Reporters.reportFieldNotSet(reporter, "deltaP");
+            BuilderReports.reportFieldNotSet(reportNode, "deltaP");
             isInstantiable = false;
         }
     }

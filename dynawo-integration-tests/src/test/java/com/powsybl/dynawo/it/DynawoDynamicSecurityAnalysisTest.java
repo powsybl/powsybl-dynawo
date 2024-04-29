@@ -9,7 +9,7 @@ package com.powsybl.dynawo.it;
 import com.google.common.io.ByteStreams;
 import com.powsybl.commons.datasource.ResourceDataSource;
 import com.powsybl.commons.datasource.ResourceSet;
-import com.powsybl.commons.reporter.ReporterModel;
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.commons.test.ComparisonUtils;
 import com.powsybl.commons.test.TestUtil;
 import com.powsybl.contingency.Contingency;
@@ -86,7 +86,9 @@ class DynawoDynamicSecurityAnalysisTest extends AbstractDynawoTest {
                 .setSolverType(DynaWaltzParameters.SolverType.IDA)
                 .setDefaultDumpFileParameters();
 
-        ReporterModel reporter = new ReporterModel("root", "Root message");
+        ReportNode reporter = ReportNode.newRootReportNode()
+                .withMessageTemplate("root", "Root message")
+                .build();
 
         List<Contingency> contingencies = List.of(Contingency.load("_LOAD__11_EC"));
 
@@ -99,7 +101,7 @@ class DynawoDynamicSecurityAnalysisTest extends AbstractDynawoTest {
                 .getResult();
 
         StringWriter swReporterAs = new StringWriter();
-        reporter.export(swReporterAs);
+        reporter.print(swReporterAs);
         InputStream refStreamReporterAs = Objects.requireNonNull(getClass().getResourceAsStream("/ieee14/dynamic-security-analysis/timeline_report.txt"));
         String refLogExportAs = TestUtil.normalizeLineSeparator(new String(ByteStreams.toByteArray(refStreamReporterAs), StandardCharsets.UTF_8));
         String logExportAs = TestUtil.normalizeLineSeparator(swReporterAs.toString());
@@ -108,6 +110,6 @@ class DynawoDynamicSecurityAnalysisTest extends AbstractDynawoTest {
         StringWriter serializedResult = new StringWriter();
         SecurityAnalysisResultSerializer.write(result, serializedResult);
         InputStream expected = Objects.requireNonNull(getClass().getResourceAsStream("/ieee14/dynamic-security-analysis/results.json"));
-        ComparisonUtils.compareTxt(expected, serializedResult.toString());
+        ComparisonUtils.assertTxtEquals(expected, serializedResult.toString());
     }
 }

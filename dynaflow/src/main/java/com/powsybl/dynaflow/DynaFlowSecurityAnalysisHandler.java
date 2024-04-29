@@ -10,7 +10,7 @@ package com.powsybl.dynaflow;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.powsybl.commons.json.JsonUtil;
-import com.powsybl.commons.reporter.Reporter;
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.computation.AbstractExecutionHandler;
 import com.powsybl.computation.Command;
 import com.powsybl.computation.CommandExecution;
@@ -54,12 +54,12 @@ public final class DynaFlowSecurityAnalysisHandler extends AbstractExecutionHand
     private final List<Contingency> contingencies;
     private final LimitViolationFilter violationFilter;
     private final List<SecurityAnalysisInterceptor> interceptors;
-    private final Reporter reporter;
+    private final ReportNode reportNode;
 
     public DynaFlowSecurityAnalysisHandler(Network network, String workingVariantId, Command command,
                                            SecurityAnalysisParameters securityAnalysisParameters, List<Contingency> contingencies,
                                            LimitViolationFilter violationFilter, List<SecurityAnalysisInterceptor> interceptors,
-                                           Reporter reporter) {
+                                           ReportNode reportNode) {
         this.network = network;
         this.workingVariantId = workingVariantId;
         this.command = command;
@@ -67,7 +67,7 @@ public final class DynaFlowSecurityAnalysisHandler extends AbstractExecutionHand
         this.contingencies = contingencies;
         this.violationFilter = violationFilter;
         this.interceptors = interceptors;
-        this.reporter = reporter;
+        this.reportNode = reportNode;
     }
 
     @Override
@@ -84,7 +84,7 @@ public final class DynaFlowSecurityAnalysisHandler extends AbstractExecutionHand
     public SecurityAnalysisReport after(Path workingDir, ExecutionReport report) throws IOException {
         super.after(workingDir, report);
         network.getVariantManager().setWorkingVariant(workingVariantId);
-        ContingencyResultsUtils.reportContingenciesTimelines(contingencies, workingDir.resolve(DYNAWO_TIMELINE_FOLDER), reporter);
+        ContingencyResultsUtils.reportContingenciesTimelines(contingencies, workingDir.resolve(DYNAWO_TIMELINE_FOLDER), reportNode);
         return new SecurityAnalysisReport(
                 new SecurityAnalysisResult(
                         ContingencyResultsUtils.getPreContingencyResult(network, violationFilter),

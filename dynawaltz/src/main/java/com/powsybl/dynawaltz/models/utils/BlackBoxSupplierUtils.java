@@ -7,7 +7,7 @@
  */
 package com.powsybl.dynawaltz.models.utils;
 
-import com.powsybl.commons.reporter.Reporter;
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynamicsimulation.DynamicModelsSupplier;
 import com.powsybl.dynamicsimulation.EventModelsSupplier;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
@@ -24,14 +24,14 @@ public final class BlackBoxSupplierUtils {
     private BlackBoxSupplierUtils() {
     }
 
-    public static List<BlackBoxModel> getBlackBoxModelList(DynamicModelsSupplier dynamicModelsSupplier, Network network, Reporter reporter) {
+    public static List<BlackBoxModel> getBlackBoxModelList(DynamicModelsSupplier dynamicModelsSupplier, Network network, ReportNode reporter) {
         return dynamicModelsSupplier.get(network, reporter).stream()
                 .filter(BlackBoxModel.class::isInstance)
                 .map(BlackBoxModel.class::cast)
                 .collect(Collectors.toList());
     }
 
-    public static List<BlackBoxModel> getBlackBoxModelList(EventModelsSupplier eventModelsSupplier, Network network, Reporter reporter) {
+    public static List<BlackBoxModel> getBlackBoxModelList(EventModelsSupplier eventModelsSupplier, Network network, ReportNode reporter) {
         return eventModelsSupplier.get(network, reporter).stream()
                 .filter(BlackBoxModel.class::isInstance)
                 .map(BlackBoxModel.class::cast)

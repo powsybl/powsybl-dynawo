@@ -7,7 +7,7 @@
  */
 package com.powsybl.dynawo.commons.dynawologs;
 
-import com.powsybl.commons.reporter.TypedValue;
+import com.powsybl.commons.report.TypedValue;
 import org.junit.jupiter.api.Test;
 
 import java.net.URISyntaxException;

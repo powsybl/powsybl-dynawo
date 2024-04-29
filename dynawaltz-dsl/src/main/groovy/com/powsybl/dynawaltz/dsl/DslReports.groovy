@@ -7,19 +7,20 @@
  */
 package com.powsybl.dynawaltz.dsl
 
+import com.powsybl.commons.report.ReportNode;
 
-import com.powsybl.commons.reporter.Reporter
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-final class Reporters {
+final class DslReports {
 
-    private Reporters() {
+    private DslReports() {
     }
 
-    static Reporter createModelBuilderReporter(Reporter reporter, String name) {
-         reporter.createSubReporter("DSLModelBuilder",
-                'DSL model builder for ${name}',
-                "name", name)
+    static ReportNode createModelBuilderReportNode(ReportNode reportNode, String name) {
+        reportNode.newReportNode()
+                .withMessageTemplate("DSLModelBuilder", 'DSL model builder for ${name}')
+                .withUntypedValue("name", name)
+                .add()
     }
 }
