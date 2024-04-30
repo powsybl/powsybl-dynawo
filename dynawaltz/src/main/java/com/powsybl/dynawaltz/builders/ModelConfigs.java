@@ -74,10 +74,20 @@ public final class ModelConfigs {
     }
 
     public ModelBuilder<DynamicModel> getModelBuilder(Network network, String modelName, Reporter reporter) {
-        return builderConstructorByName.get(modelName).createBuilder(network, modelName, reporter);
+        BuilderConfig.ModelBuilderConstructor constructor = builderConstructorByName.get(modelName);
+        if (constructor == null) {
+            Reporters.reportBuilderNotFound(reporter, modelName);
+            return null;
+        }
+        return constructor.createBuilder(network, modelName, reporter);
     }
 
     public ModelBuilder<EventModel> getEventModelBuilder(Network network, String modelName, Reporter reporter) {
-        return eventBuilderConstructorByName.get(modelName).createBuilder(network, reporter);
+        EventBuilderConfig.EventModelBuilderConstructor constructor = eventBuilderConstructorByName.get(modelName);
+        if (constructor == null) {
+            Reporters.reportBuilderNotFound(reporter, modelName);
+            return null;
+        }
+        return constructor.createBuilder(network, reporter);
     }
 }

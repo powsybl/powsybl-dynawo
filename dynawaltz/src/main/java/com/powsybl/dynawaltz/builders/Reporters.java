@@ -22,6 +22,15 @@ public final class Reporters {
     private Reporters() {
     }
 
+    public static void reportBuilderNotFound(Reporter reporter, String lib) {
+        reporter.report(Report.builder()
+                .withKey("builderNotFound")
+                .withDefaultMessage("No builder found for ${lib}")
+                .withValue("lib", lib)
+                .withSeverity(TypedValue.INFO_SEVERITY)
+                .build());
+    }
+
     public static void reportLibNotFound(Reporter reporter, String builderName, String lib) {
         reporter.report(Report.builder()
                 .withKey("libNotFound")
