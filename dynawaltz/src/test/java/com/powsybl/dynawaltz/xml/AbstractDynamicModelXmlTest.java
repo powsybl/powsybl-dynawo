@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static com.powsybl.commons.test.ComparisonUtils.compareTxt;
+import static com.powsybl.commons.test.ComparisonUtils.assertTxtEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -73,7 +73,7 @@ public abstract class AbstractDynamicModelXmlTest extends AbstractSerDeTest {
         Schema schema = factory.newSchema(xsd);
         Validator validator = schema.newValidator();
         validator.validate(xml);
-        compareTxt(expected, actual);
+        assertTxtEquals(expected, actual);
     }
 
     void setupDynawaltzContext() {
