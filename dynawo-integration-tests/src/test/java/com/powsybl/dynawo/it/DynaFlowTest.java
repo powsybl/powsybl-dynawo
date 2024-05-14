@@ -10,7 +10,6 @@ import com.google.common.io.ByteStreams;
 import com.powsybl.commons.datasource.ResourceDataSource;
 import com.powsybl.commons.datasource.ResourceSet;
 import com.powsybl.commons.report.ReportNode;
-import com.powsybl.commons.test.ComparisonUtils;
 import com.powsybl.commons.test.TestUtil;
 import com.powsybl.contingency.Contingency;
 import com.powsybl.dynaflow.DynaFlowConfig;
@@ -40,6 +39,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import static com.powsybl.commons.test.ComparisonUtils.assertTxtEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -141,7 +141,7 @@ class DynaFlowTest extends AbstractDynawoTest {
         StringWriter serializedResult = new StringWriter();
         SecurityAnalysisResultSerializer.write(result, serializedResult);
         InputStream expected = Objects.requireNonNull(getClass().getResourceAsStream("/ieee14/security-analysis/sa_bb_results.json"));
-        ComparisonUtils.compareTxt(expected, serializedResult.toString());
+        assertTxtEquals(expected, serializedResult.toString());
     }
 
     @Test
@@ -160,6 +160,6 @@ class DynaFlowTest extends AbstractDynawoTest {
         StringWriter serializedResult = new StringWriter();
         SecurityAnalysisResultSerializer.write(result, serializedResult);
         InputStream expected = Objects.requireNonNull(getClass().getResourceAsStream("/ieee14/security-analysis/sa_nb_results.json"));
-        ComparisonUtils.compareTxt(expected, serializedResult.toString());
+        assertTxtEquals(expected, serializedResult.toString());
     }
 }

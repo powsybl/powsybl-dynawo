@@ -36,8 +36,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ForkJoinPool;
 
-import static com.powsybl.commons.test.ComparisonUtils.compareTxt;
-import static com.powsybl.commons.test.ComparisonUtils.compareXml;
+import static com.powsybl.commons.test.ComparisonUtils.assertTxtEquals;
+import static com.powsybl.commons.test.ComparisonUtils.assertXmlEquals;
 import static com.powsybl.dynaflow.DynaFlowConstants.DYNAFLOW_NAME;
 import static com.powsybl.dynaflow.DynaFlowConstants.IIDM_FILENAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -86,11 +86,11 @@ class DynaFlowSecurityAnalysisTest extends AbstractSerDeTest {
 
         private void validateInputs(Path workingDir) throws IOException {
             if (inputFile != null) {
-                compareXml(getClass().getResourceAsStream(inputFile), Files.newInputStream(workingDir.resolve(IIDM_FILENAME)));
+                assertXmlEquals(getClass().getResourceAsStream(inputFile), Files.newInputStream(workingDir.resolve(IIDM_FILENAME)));
             }
             if (contingencyFile != null) {
                 InputStream contingencyIs = Objects.requireNonNull(getClass().getResourceAsStream(contingencyFile));
-                compareTxt(contingencyIs, Files.newInputStream(workingDir.resolve("contingencies.json")));
+                assertTxtEquals(contingencyIs, Files.newInputStream(workingDir.resolve("contingencies.json")));
             }
         }
 
@@ -128,7 +128,7 @@ class DynaFlowSecurityAnalysisTest extends AbstractSerDeTest {
 
         StringWriter writer = new StringWriter();
         SecurityAnalysisResultSerializer.write(result, writer);
-        compareTxt(Objects.requireNonNull(getClass().getResourceAsStream("/SecurityAnalysis/result.json")), writer.toString());
+        assertTxtEquals(Objects.requireNonNull(getClass().getResourceAsStream("/SecurityAnalysis/result.json")), writer.toString());
     }
 
     @Test

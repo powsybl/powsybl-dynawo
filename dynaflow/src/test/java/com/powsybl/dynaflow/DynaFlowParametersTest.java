@@ -26,7 +26,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
-import static com.powsybl.commons.test.ComparisonUtils.compareTxt;
+import static com.powsybl.commons.test.ComparisonUtils.assertTxtEquals;
 import static com.powsybl.dynaflow.DynaFlowProvider.MODULE_SPECIFIC_PARAMETERS;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -205,7 +205,7 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
 
         try (InputStream actual = Files.newInputStream(parameterFile);
              InputStream expected = getClass().getResourceAsStream("/params_default.json")) {
-            compareTxt(expected, actual);
+            assertTxtEquals(expected, actual);
         }
     }
 
@@ -239,7 +239,7 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
 
         try (InputStream actual = Files.newInputStream(parameterFile);
              InputStream expected = getClass().getResourceAsStream("/params.json")) {
-            compareTxt(expected, actual);
+            assertTxtEquals(expected, actual);
         }
     }
 
