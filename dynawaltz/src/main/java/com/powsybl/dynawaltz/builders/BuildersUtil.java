@@ -20,25 +20,27 @@ public final class BuildersUtil {
     }
 
     /**
-     * Returns the ActionConnectionPoint (bus or bus bar section) identified by the staticId parameter
-     * Verifies the point is properly energized, if not returns null
+     * Returns the ActionConnectionPoint (bus or busbar section) identified by the staticId parameter
+     * Verifies the point is energized and in main connected component, if not returns null
      * @param network the network containing the ActionConnectionPoint
      * @param staticId the identifiable id
      * @return the energized action connection point if found, <code>null</code> instead
      */
     public static Identifiable<?> getActionConnectionPoint(Network network, String staticId) {
         BusbarSection busbarSection = network.getBusbarSection(staticId);
-        return busbarSection != null && !Double.isNaN(busbarSection.getV())
-                ? busbarSection
-                : getEnergizedBus(network.getBusBreakerView().getBus(staticId));
+        if(busbarSection != null && isEnergizedBus(busbarSection.getTerminal().getBusBreakerView().getBus())) {
+            return busbarSection;
+        }
+        Bus bus = network.getBusBreakerView().getBus(staticId);
+        return isEnergizedBus(bus) ? bus : null;
     }
 
     /**
-     * Verifies and returns the bus if it is properly energized, if not returns null
+     * Verifies a bus is energized and in main connected component
      * @param bus the reviewed bus
-     * @return the energized bus if found, <code>null</code> instead
+     * @return <code>true</code> if energized, <code>false</code> if not
      */
-    private static Bus getEnergizedBus(Bus bus) {
-        return bus != null && bus.isInMainConnectedComponent() && !Double.isNaN(bus.getV()) ? bus : null;
+    private static boolean isEnergizedBus(Bus bus) {
+        return bus != null && !Double.isNaN(bus.getV()) && bus.isInMainConnectedComponent();
     }
 }
