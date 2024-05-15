@@ -12,7 +12,7 @@ import com.powsybl.dynawaltz.models.Model;
 import java.util.Optional;
 
 /**
- * Interface for buses used by automatons for measure or event for various actions
+ * Interface for buses and bsu bar sections used by automatons for measure or event for various actions
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public interface ActionConnectionPoint extends Model {
