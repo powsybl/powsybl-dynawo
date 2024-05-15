@@ -28,7 +28,7 @@ public final class BuildersUtil {
      */
     public static Identifiable<?> getActionConnectionPoint(Network network, String staticId) {
         BusbarSection busbarSection = network.getBusbarSection(staticId);
-        if(busbarSection != null && isEnergizedBus(busbarSection.getTerminal().getBusBreakerView().getBus())) {
+        if (busbarSection != null && isEnergizedBus(busbarSection.getTerminal().getBusBreakerView().getBus())) {
             return busbarSection;
         }
         Bus bus = network.getBusBreakerView().getBus(staticId);
