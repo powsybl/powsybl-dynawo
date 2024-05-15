@@ -90,7 +90,7 @@ class DynaWaltzGroovyCurvesSupplierTest {
     private List<CurveGroovyExtension> validateGroovyExtension() {
         List<CurveGroovyExtension> extensions = GroovyExtension.find(CurveGroovyExtension.class, DynaWaltzProvider.NAME);
         assertEquals(1, extensions.size());
-        assertTrue(extensions.get(0) instanceof DynaWaltzCurveGroovyExtension);
+        assertInstanceOf(DynaWaltzCurveGroovyExtension.class, extensions.get(0));
         return extensions;
     }
 
