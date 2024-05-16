@@ -81,12 +81,13 @@ class DynawoDynamicModelsSuppliersTest {
 
     @Test
     void groupTypeException() {
-        PowsyblException e = assertThrows(PowsyblException.class, () -> new DynamicModelConfig("LoadAlphaBeta", "_DM", SetGroupType.SUFFIX, List.of(
+        List<Property> properties = List.of(
                 new PropertyBuilder()
                         .name("propertyName")
                         .value("LOAD")
                         .type(PropertyType.STRING)
-                        .build())));
+                        .build());
+        PowsyblException e = assertThrows(PowsyblException.class, () -> new DynamicModelConfig("LoadAlphaBeta", "_DM", SetGroupType.SUFFIX, properties));
         assertEquals("No ID found for parameter set id", e.getMessage());
     }
 
