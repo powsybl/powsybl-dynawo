@@ -13,6 +13,7 @@ import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Network;
 
 import java.util.Objects;
+import java.util.function.Predicate;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -23,6 +24,7 @@ public abstract class AbstractEquipmentModelBuilder<T extends Identifiable<?>, R
     protected String parameterSetId;
     protected final ModelConfig modelConfig;
     protected final BuilderEquipment<T> builderEquipment;
+    private Predicate<T> equipmentPredicates = eq -> Objects.equals(network, eq.getNetwork());
 
     protected AbstractEquipmentModelBuilder(Network network, ModelConfig modelConfig, IdentifiableType equipmentType, ReportNode reportNode) {
         super(network, reportNode);
@@ -72,7 +74,11 @@ public abstract class AbstractEquipmentModelBuilder<T extends Identifiable<?>, R
     protected abstract T findEquipment(String staticId);
 
     protected boolean checkEquipment(T equipment) {
-        return Objects.equals(network, equipment.getNetwork());
+        return equipmentPredicates.test(equipment);
+    }
+
+    protected void addEquipmentPredicate(Predicate<T> predicate) {
+        equipmentPredicates = equipmentPredicates.and(predicate);
     }
 
     public T getEquipment() {
