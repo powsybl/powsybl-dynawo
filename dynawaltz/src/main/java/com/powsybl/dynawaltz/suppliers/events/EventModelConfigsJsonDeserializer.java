@@ -46,7 +46,7 @@ public class EventModelConfigsJsonDeserializer extends StdDeserializer<List<Even
                 yield true;
             }
             case "properties" -> {
-                JsonUtil.parseObjectArray(parser, modelConfig.getProperties()::add, PropertyParserUtils::parseProperty);
+                JsonUtil.parseObjectArray(parser, modelConfig::addProperty, PropertyParserUtils::parseProperty);
                 yield true;
             }
             default -> false;

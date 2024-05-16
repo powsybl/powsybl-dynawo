@@ -10,6 +10,7 @@ package com.powsybl.dynawaltz.suppliers;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynamicsimulation.EventModel;
 import com.powsybl.dynawaltz.models.events.EventActivePowerVariationBuilder;
@@ -26,8 +27,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -75,6 +75,21 @@ class DynawoEventModelsSuppliersTest {
             assertEquals(1, configs.size());
             assertThat(configs.get(0)).usingRecursiveComparison().isEqualTo(getActivePowerVariationConfig());
         }
+    }
+
+    @Test
+    void wrongPropertyException() {
+        Network network = EurostagTutorialExample1Factory.create();
+        EventModelConfig eventModelConfig = new EventModelConfig("Disconnect", List.of(
+                new PropertyBuilder()
+                        .name("wrongName")
+                        .value("NHV1_NHV2_2")
+                        .type(PropertyType.STRING)
+                        .build()
+        ));
+        DynawoEventModelsSupplier supplier = new DynawoEventModelsSupplier(List.of(eventModelConfig));
+        Exception e = assertThrows(PowsyblException.class, () -> supplier.get(network, ReportNode.NO_OP));
+        assertEquals("Method wrongName not found for parameter NHV1_NHV2_2 on builder EventDisconnectionBuilder", e.getMessage());
     }
 
     private static List<EventModelConfig> getEventConfigs() {

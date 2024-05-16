@@ -40,7 +40,7 @@ public class EventModelConfig {
         return properties;
     }
 
-    public void setProperties(List<Property> properties) {
-        this.properties = properties;
+    public void addProperty(Property property) {
+        properties.add(property);
     }
 }

@@ -68,13 +68,14 @@ class DynawoDynamicModelsSuppliersTest {
     }
 
     @Test
-    void testEventModelConfigDeserializer() throws IOException {
+    void testModelConfigDeserializer() throws IOException {
         ObjectMapper objectMapper = setupObjectMapper();
         try (InputStream is = getClass().getResourceAsStream("/suppliers/mappingDynamicModel.json")) {
             List<DynamicModelConfig> configs = objectMapper.readValue(is, new TypeReference<>() {
             });
-            assertEquals(1, configs.size());
+            assertEquals(2, configs.size());
             assertThat(configs.get(0)).usingRecursiveComparison().isEqualTo(getLoadConfig());
+            assertThat(configs.get(1)).usingRecursiveComparison().isEqualTo(getTcbConfig());
         }
     }
 
@@ -89,6 +90,21 @@ class DynawoDynamicModelsSuppliersTest {
         assertEquals("No ID found for parameter set id", e.getMessage());
     }
 
+    @Test
+    void wrongPropertyException() {
+        Network network = EurostagTutorialExample1Factory.create();
+        DynamicModelConfig modelConfig = new DynamicModelConfig("LoadAlphaBeta", "LAB", List.of(
+                new PropertyBuilder()
+                        .name("wrongName")
+                        .value("LOAD")
+                        .type(PropertyType.STRING)
+                        .build()
+        ));
+        DynawoDynamicModelSupplier supplier = new DynawoDynamicModelSupplier(List.of(modelConfig));
+        Exception e = assertThrows(PowsyblException.class, () -> supplier.get(network, ReportNode.NO_OP));
+        assertEquals("Method wrongName not found for parameter LOAD on builder BaseLoadBuilder", e.getMessage());
+    }
+
     private static List<DynamicModelConfig> getModelConfigs() {
         return List.of(
                 new DynamicModelConfig("GeneratorPQ", "DM_", SetGroupType.PREFIX, List.of(
@@ -97,23 +113,7 @@ class DynawoDynamicModelsSuppliersTest {
                                 .value("GEN")
                                 .type(PropertyType.STRING)
                                 .build())),
-                new DynamicModelConfig("TapChangerBlockingAutomaton", "tcb_par", List.of(
-                        new PropertyBuilder()
-                                .name("dynamicModelId")
-                                .value("TCB1")
-                                .type(PropertyType.STRING)
-                                .build(),
-                        new PropertyBuilder()
-                                .name("transformers")
-                                .values(List.of("NGEN_NHV1", "NHV2_NLOAD"))
-                                .type(PropertyType.STRINGS)
-                                .build(),
-                        new PropertyBuilder()
-                                .name("uMeasurements")
-                                .arrays(List.of(List.of("OldNGen", "NGEN"), List.of("NHV1", "NHV2")))
-                                .type(PropertyType.STRINGS_ARRAYS)
-                                .build()
-                ))
+                getTcbConfig()
         );
     }
 
@@ -124,6 +124,26 @@ class DynawoDynamicModelsSuppliersTest {
                         .value("LOAD")
                         .type(PropertyType.STRING)
                         .build()));
+    }
+
+    private static DynamicModelConfig getTcbConfig() {
+        return new DynamicModelConfig("TapChangerBlockingAutomaton", "tcb_par", SetGroupType.FIXED, List.of(
+                new PropertyBuilder()
+                        .name("dynamicModelId")
+                        .value("TCB1")
+                        .type(PropertyType.STRING)
+                        .build(),
+                new PropertyBuilder()
+                        .name("transformers")
+                        .values(List.of("NGEN_NHV1", "NHV2_NLOAD"))
+                        .type(PropertyType.STRINGS)
+                        .build(),
+                new PropertyBuilder()
+                        .name("uMeasurements")
+                        .arrays(List.of(List.of("OldNGen", "NGEN"), List.of("NHV1", "NHV2")))
+                        .type(PropertyType.STRINGS_ARRAYS)
+                        .build()
+        ));
     }
 
     private static ObjectMapper setupObjectMapper() {

@@ -11,6 +11,27 @@
           "type":"STRING"
         }
       ]
+    },
+    {
+      "model": "TapChangerBlockingAutomaton",
+      "group": "tcb_par",
+      "properties":[
+        {
+          "name": "dynamicModelId",
+          "value": "TCB1",
+          "type": "STRING"
+        },
+        {
+          "name": "transformers",
+          "values": ["NGEN_NHV1", "NHV2_NLOAD"],
+          "type": "STRINGS"
+        },
+        {
+          "name": "uMeasurements",
+          "arrays": [["OldNGen", "NGEN"], ["NHV1", "NHV2"]],
+          "type": "STRINGS_ARRAYS"
+        }
+      ]
     }
   ]
 }

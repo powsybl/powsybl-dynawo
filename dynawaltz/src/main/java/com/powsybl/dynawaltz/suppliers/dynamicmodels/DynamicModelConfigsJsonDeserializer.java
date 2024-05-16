@@ -44,7 +44,7 @@ public class DynamicModelConfigsJsonDeserializer extends StdDeserializer<List<Dy
         var parsingContext = new Object() {
             String model = null;
             String group = null;
-            SetGroupType groupType = null;
+            SetGroupType groupType = SetGroupType.FIXED;
             final List<Property> properties = new ArrayList<>();
         };
         JsonUtil.parseObject(parser, name -> switch (name) {
