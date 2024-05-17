@@ -22,17 +22,17 @@ jobs:
         with:
           path: main
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v1
-        with:
-          java-version: 17
-
       - name: Checkout powsybl-core branch
         uses: actions/checkout@v4
         with:
           repository: powsybl/powsybl-core
           ref: refs/heads/dynamic_security_analysis
           path: powsybl-core
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v1
+        with:
+          java-version: 17
 
       - name: Build and install powsybl-core with Maven
         run: mvn --batch-mode -DskipTests=true --file ./powsybl-core/pom.xml install
