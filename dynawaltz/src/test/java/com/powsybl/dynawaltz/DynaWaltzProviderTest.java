@@ -33,6 +33,7 @@ import java.util.Map;
 import java.util.concurrent.ForkJoinPool;
 
 import static com.powsybl.commons.report.ReportNode.NO_OP;
+import static com.powsybl.dynamicsimulation.DynamicSimulationResult.Status.FAILURE;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -146,7 +147,7 @@ class DynaWaltzProviderTest extends AbstractSerDeTest {
                 CurvesSupplier.empty(), network.getVariantManager().getWorkingVariantId(),
                 computationManager, DynamicSimulationParameters.load(), NO_OP);
         assertNotNull(result);
-        assertFalse(result.isOk());
+        assertEquals(FAILURE, result.getStatus());
     }
 
     @Test
@@ -160,7 +161,7 @@ class DynaWaltzProviderTest extends AbstractSerDeTest {
                 new CurvesSupplierMock(), network.getVariantManager().getWorkingVariantId(),
                 computationManager, DynamicSimulationParameters.load(), NO_OP);
         assertNotNull(result);
-        assertFalse(result.isOk());
+        assertEquals(FAILURE, result.getStatus());
     }
 
     @Test

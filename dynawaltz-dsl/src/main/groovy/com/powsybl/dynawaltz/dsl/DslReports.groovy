@@ -7,7 +7,7 @@
  */
 package com.powsybl.dynawaltz.dsl
 
-import com.powsybl.commons.report.ReportNode;
+import com.powsybl.commons.report.ReportNode
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}

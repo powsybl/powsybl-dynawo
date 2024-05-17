@@ -193,7 +193,7 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
     @Test
     void defaultParametersSerialization() throws IOException {
         LoadFlowParameters lfParameters = LoadFlowParameters.load(platformConfig);
-        lfParameters.setNoGeneratorReactiveLimits(true);
+        lfParameters.setUseReactiveLimits(false);
         lfParameters.setPhaseShifterRegulationOn(false);
 
         DynaFlowParameters dynaFlowParameters = new DynaFlowParameters();
@@ -212,25 +212,25 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
     @Test
     void parametersSerialization() throws IOException {
         LoadFlowParameters lfParameters = LoadFlowParameters.load(platformConfig);
-        lfParameters.setNoGeneratorReactiveLimits(true);
+        lfParameters.setUseReactiveLimits(false);
         lfParameters.setPhaseShifterRegulationOn(false);
 
-        DynaFlowParameters dynaFlowParameters = new DynaFlowParameters();
-        dynaFlowParameters.setSvcRegulationOn(true);
-        dynaFlowParameters.setShuntRegulationOn(false);
-        dynaFlowParameters.setAutomaticSlackBusOn(true);
-        dynaFlowParameters.setDsoVoltageLevel(32.4);
-        dynaFlowParameters.setActivePowerCompensation(ActivePowerCompensation.P);
-        dynaFlowParameters.setSettingPath("path/to/settingFile");
-        dynaFlowParameters.setAssemblingPath("path/to/assemblingFile");
-        dynaFlowParameters.setStartTime(0.);
-        dynaFlowParameters.setStopTime(100.);
-        dynaFlowParameters.setPrecision(0.);
-        dynaFlowParameters.setTimeOfEvent(10.);
-        dynaFlowParameters.setChosenOutputs(Collections.singletonList(OutputTypes.STEADYSTATE.name()));
-        dynaFlowParameters.setTimeStep(2.6);
-        dynaFlowParameters.setStartingPointMode(StartingPointMode.WARM);
-        dynaFlowParameters.setMergeLoads(false);
+        DynaFlowParameters dynaFlowParameters = new DynaFlowParameters()
+            .setSvcRegulationOn(true)
+            .setShuntRegulationOn(false)
+            .setAutomaticSlackBusOn(true)
+            .setDsoVoltageLevel(32.4)
+            .setActivePowerCompensation(ActivePowerCompensation.P)
+            .setSettingPath("path/to/settingFile")
+            .setAssemblingPath("path/to/assemblingFile")
+            .setStartTime(0.)
+            .setStopTime(100.)
+            .setPrecision(0.)
+            .setTimeOfEvent(10.)
+            .setChosenOutputs(Collections.singletonList(OutputTypes.STEADYSTATE.name()))
+            .setTimeStep(2.6)
+            .setStartingPointMode(StartingPointMode.WARM)
+            .setMergeLoads(false);
         lfParameters.addExtension(DynaFlowParameters.class, dynaFlowParameters);
 
         Path workingDir = fileSystem.getPath("dynaflow/workingDir");

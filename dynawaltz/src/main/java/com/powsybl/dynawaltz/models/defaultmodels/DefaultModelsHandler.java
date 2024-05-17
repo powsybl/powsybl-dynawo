@@ -38,9 +38,9 @@ public final class DefaultModelsHandler {
             return connectableClass.cast(defaultModel);
         }
         if (throwException) {
-            throw new PowsyblException("Default model " + defaultModel.getClass().getSimpleName() + " does not implement " + connectableClass.getSimpleName() + " interface");
+            throw new PowsyblException("Default model " + defaultModel.getClass().getSimpleName() + " for " + equipment.getId() + " does not implement " + connectableClass.getSimpleName() + " interface");
         } else {
-            LOGGER.warn("Default model {} does not implement {} interface", defaultModel.getClass().getSimpleName(), connectableClass.getSimpleName());
+            LOGGER.warn("Default model {} for {} does not implement {} interface", defaultModel.getClass().getSimpleName(), equipment.getId(), connectableClass.getSimpleName());
             return null;
         }
     }

@@ -14,18 +14,23 @@ import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Load;
 import com.powsybl.iidm.network.Network;
 
+import java.util.function.Predicate;
+
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public abstract class AbstractLoadModelBuilder<R extends AbstractEquipmentModelBuilder<Load, R>> extends AbstractEquipmentModelBuilder<Load, R> {
 
+    private static final Predicate<Load> IS_NOT_FICTITIOUS = eq -> !eq.isFictitious();
+
     protected AbstractLoadModelBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
         super(network, modelConfig, IdentifiableType.LOAD, reportNode);
+        addEquipmentPredicate(IS_NOT_FICTITIOUS);
     }
 
     @Override
     protected Load findEquipment(String staticId) {
-        return network.getLoad(staticId);
+        Load load = network.getLoad(staticId);
+        return load != null && IS_NOT_FICTITIOUS.test(load) ? load : null;
     }
-
 }

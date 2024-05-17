@@ -26,7 +26,7 @@ class TapChangerAutomationSystemXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void setupNetwork() {
-        network = EurostagTutorialExample1Factory.create();
+        network = EurostagTutorialExample1Factory.createWithLFResults();
         VoltageLevel vlload = network.getVoltageLevel("VLLOAD");
         Bus nload = network.getBusBreakerView().getBus("NLOAD");
         vlload.newLoad().setId("LOAD2").setBus(nload.getId()).setConnectableBus(nload.getId()).setP0(600.0).setQ0(200.0).add();

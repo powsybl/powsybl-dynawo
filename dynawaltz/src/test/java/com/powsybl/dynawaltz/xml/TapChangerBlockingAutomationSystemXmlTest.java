@@ -12,8 +12,6 @@ import com.powsybl.dynawaltz.models.loads.LoadOneTransformerTapChangerBuilder;
 import com.powsybl.dynawaltz.models.loads.LoadTwoTransformersTapChangersBuilder;
 import com.powsybl.dynawaltz.models.transformers.TransformerFixedRatioBuilder;
 import com.powsybl.dynawaltz.models.automationsystems.TapChangerBlockingAutomationSystemBuilder;
-import com.powsybl.iidm.network.Bus;
-import com.powsybl.iidm.network.VoltageLevel;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
@@ -31,10 +29,14 @@ class TapChangerBlockingAutomationSystemXmlTest extends AbstractDynamicModelXmlT
 
     @Override
     protected void setupNetwork() {
-        network = EurostagTutorialExample1Factory.create();
-        VoltageLevel vlload = network.getVoltageLevel("VLLOAD");
-        Bus nload = network.getBusBreakerView().getBus("NLOAD");
-        vlload.newLoad().setId("LOAD2").setBus(nload.getId()).setConnectableBus(nload.getId()).setP0(600.0).setQ0(200.0).add();
+        network = EurostagTutorialExample1Factory.createWithLFResults();
+        network.getVoltageLevel("VLLOAD").newLoad()
+                .setId("LOAD2")
+                .setBus("NLOAD")
+                .setConnectableBus("NLOAD")
+                .setP0(600.0)
+                .setQ0(200.0)
+                .add();
     }
 
     @Override

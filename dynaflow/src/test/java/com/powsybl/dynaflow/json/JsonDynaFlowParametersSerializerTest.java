@@ -69,24 +69,24 @@ class JsonDynaFlowParametersSerializerTest extends AbstractSerDeTest {
         InMemoryPlatformConfig platformConfig = new InMemoryPlatformConfig(fileSystem);
 
         LoadFlowParameters parameters = LoadFlowParameters.load(platformConfig);
-        parameters.setNoGeneratorReactiveLimits(true);
+        parameters.setUseReactiveLimits(false);
         parameters.setPhaseShifterRegulationOn(false);
 
-        DynaFlowParameters params = new DynaFlowParameters();
-        params.setSvcRegulationOn(true);
-        params.setShuntRegulationOn(false);
-        params.setAutomaticSlackBusOn(true);
-        params.setDsoVoltageLevel(54.23);
-        params.setActivePowerCompensation(DynaFlowConstants.ActivePowerCompensation.P);
-        params.setSettingPath("path/to/settingFile");
-        params.setAssemblingPath("path/to/assemblingFile");
-        params.setStartTime(0.);
-        params.setStopTime(100.);
-        params.setPrecision(0.);
-        params.setTimeOfEvent(10.);
-        params.setChosenOutputs(Collections.singletonList(DynaFlowConstants.OutputTypes.STEADYSTATE.name()));
-        params.setTimeStep(2.6);
-        params.setStartingPointMode(DynaFlowConstants.StartingPointMode.WARM);
+        DynaFlowParameters params = new DynaFlowParameters()
+            .setSvcRegulationOn(true)
+            .setShuntRegulationOn(false)
+            .setAutomaticSlackBusOn(true)
+            .setDsoVoltageLevel(54.23)
+            .setActivePowerCompensation(DynaFlowConstants.ActivePowerCompensation.P)
+            .setSettingPath("path/to/settingFile")
+            .setAssemblingPath("path/to/assemblingFile")
+            .setStartTime(0.)
+            .setStopTime(100.)
+            .setPrecision(0.)
+            .setTimeOfEvent(10.)
+            .setChosenOutputs(Collections.singletonList(DynaFlowConstants.OutputTypes.STEADYSTATE.name()))
+            .setTimeStep(2.6)
+            .setStartingPointMode(DynaFlowConstants.StartingPointMode.WARM);
 
         parameters.addExtension(DynaFlowParameters.class, params);
 
