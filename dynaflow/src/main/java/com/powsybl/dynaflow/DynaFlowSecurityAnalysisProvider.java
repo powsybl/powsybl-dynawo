@@ -43,27 +43,26 @@ public class DynaFlowSecurityAnalysisProvider implements SecurityAnalysisProvide
     public CompletableFuture<SecurityAnalysisReport> run(Network network,
                                                          String workingVariantId,
                                                          ContingenciesProvider contingenciesProvider,
-                                                         SecurityAnalysisRunParameters runParameters,
-                                                         ReportNode reportNode) {
+                                                         SecurityAnalysisRunParameters runParameters) {
         if (runParameters.getDetector() != null) {
             LOG.error("LimitViolationDetector is not used in Dynaflow implementation.");
         }
-        if (runParameters.getMonitors() != null && !runParameters.getMonitors().isEmpty()) {
+        if (!runParameters.getMonitors().isEmpty()) {
             LOG.error("Monitoring is not possible with Dynaflow implementation. There will not be supplementary information about monitored equipment.");
         }
-        if (runParameters.getOperatorStrategies() != null && !runParameters.getOperatorStrategies().isEmpty()) {
+        if (!runParameters.getOperatorStrategies().isEmpty()) {
             LOG.error("Strategies are not implemented in Dynaflow");
         }
-        if (runParameters.getActions() != null && !runParameters.getActions().isEmpty()) {
+        if (!runParameters.getActions().isEmpty()) {
             LOG.error("Actions are not implemented in Dynaflow");
         }
-        if (runParameters.getLimitReductions() != null && !runParameters.getLimitReductions().isEmpty()) {
+        if (!runParameters.getLimitReductions().isEmpty()) {
             LOG.error("Limit reductions are not implemented in Dynaflow");
         }
         DynaFlowSecurityAnalysis securityAnalysis = new DynaFlowSecurityAnalysis(network, runParameters.getFilter(), runParameters.getComputationManager(), configSupplier);
         runParameters.getInterceptors().forEach(securityAnalysis::addInterceptor);
 
-        ReportNode dfsaReportNode = DynaflowReports.createDynaFlowSecurityAnalysisReportNode(reportNode, network.getId());
+        ReportNode dfsaReportNode = DynaflowReports.createDynaFlowSecurityAnalysisReportNode(runParameters.getReportNode(), network.getId());
         return securityAnalysis.run(workingVariantId, runParameters.getSecurityAnalysisParameters(), contingenciesProvider, dfsaReportNode);
     }
 

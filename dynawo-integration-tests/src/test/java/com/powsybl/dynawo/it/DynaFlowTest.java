@@ -125,8 +125,9 @@ class DynaFlowTest extends AbstractDynawoTest {
         ReportNode reportNode = ReportNode.newRootReportNode().withMessageTemplate("root", "Root message").build();
         SecurityAnalysisRunParameters runParameters = new SecurityAnalysisRunParameters()
                 .setComputationManager(computationManager)
-                .setSecurityAnalysisParameters(securityAnalysisParameters);
-        SecurityAnalysisResult result = securityAnalysisProvider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID, n -> contingencies, runParameters, reportNode)
+                .setSecurityAnalysisParameters(securityAnalysisParameters)
+                .setReportNode(reportNode);
+        SecurityAnalysisResult result = securityAnalysisProvider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID, n -> contingencies, runParameters)
                 .join()
                 .getResult();
 
@@ -153,7 +154,7 @@ class DynaFlowTest extends AbstractDynawoTest {
         SecurityAnalysisRunParameters runParameters = new SecurityAnalysisRunParameters()
                 .setComputationManager(computationManager)
                 .setSecurityAnalysisParameters(securityAnalysisParameters);
-        SecurityAnalysisResult result = securityAnalysisProvider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID, n -> contingencies, runParameters, ReportNode.NO_OP)
+        SecurityAnalysisResult result = securityAnalysisProvider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID, n -> contingencies, runParameters)
                 .join()
                 .getResult();
 
