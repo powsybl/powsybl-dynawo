@@ -142,7 +142,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                 Arguments.of("/dynamicModels/overloadManagementTwoLevels.groovy", DynamicTwoLevelsOverloadManagementSystem.class, EurostagTutorialExample1Factory.create(), "AM_NHV1_NHV2_1", "CLA", "CurrentLimitAutomatonTwoLevels"),
                 Arguments.of("/dynamicModels/tapChanger.groovy", TapChangerAutomationSystem.class, EurostagTutorialExample1Factory.create(), "TC", "tc", "TapChangerAutomaton"),
                 Arguments.of("/dynamicModels/tapChangerBlockingBusBar.groovy", TapChangerBlockingAutomationSystem.class, FourSubstationsNodeBreakerFactory.create(), "ZAB", "ZAB", "TapChangerBlockingAutomaton2"),
-                Arguments.of("/dynamicModels/tapChangerBlocking.groovy", TapChangerBlockingAutomationSystem.class, EurostagTutorialExample1Factory.create(), "ZAB", "ZAB", "TapChangerBlockingAutomaton3"),
+                Arguments.of("/dynamicModels/tapChangerBlocking.groovy", TapChangerBlockingAutomationSystem.class, EurostagTutorialExample1Factory.createWithLFResults(), "ZAB", "ZAB", "TapChangerBlockingAutomaton3"),
                 Arguments.of("/dynamicModels/phaseShifterI.groovy", PhaseShifterIAutomationSystem.class, EurostagTutorialExample1Factory.create(), "PS_NGEN_NHV1", "ps", "PhaseShifterI"),
                 Arguments.of("/dynamicModels/phaseShifterP.groovy", PhaseShifterPAutomationSystem.class, EurostagTutorialExample1Factory.create(), "PS_NGEN_NHV1", "ps", "PhaseShifterP"),
                 Arguments.of("/dynamicModels/underVoltage.groovy", UnderVoltageAutomationSystem.class, EurostagTutorialExample1Factory.create(), "UV_GEN", "uv", "UnderVoltageAutomaton")

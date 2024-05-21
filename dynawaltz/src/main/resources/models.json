@@ -16,7 +16,7 @@
       {
         "lib": "GeneratorSynchronousFourWindingsGoverPropVRPropInt",
         "properties": [
-          "Controllable"
+          "CONTROLLABLE"
         ]
       },
       {
@@ -31,13 +31,13 @@
       {
         "lib": "GeneratorSynchronousFourWindingsPmConstVRNordicTfo",
         "properties": [
-          "Transformer"
+          "TRANSFORMER"
         ]
       },
       {
         "lib": "GeneratorSynchronousFourWindingsProportionalRegulations",
         "properties": [
-          "Controllable"
+          "CONTROLLABLE"
         ]
       },
       {
@@ -64,13 +64,13 @@
       {
         "lib": "GeneratorSynchronousThreeWindingsGoverNordicVRNordicTfo",
         "properties": [
-          "Transformer"
+          "TRANSFORMER"
         ]
       },
       {
         "lib": "GeneratorSynchronousThreeWindingsGoverPropVRPropInt",
         "properties": [
-          "Controllable"
+          "CONTROLLABLE"
         ]
       },
       {
@@ -79,13 +79,13 @@
       {
         "lib": "GeneratorSynchronousThreeWindingsPmConstVRNordicTfo",
         "properties": [
-          "Transformer"
+          "TRANSFORMER"
         ]
       },
       {
         "lib": "GeneratorSynchronousThreeWindingsProportionalRegulations",
         "properties": [
-          "Controllable"
+          "CONTROLLABLE"
         ]
       }
     ]
@@ -99,7 +99,7 @@
       {
         "lib": "GeneratorPV",
         "properties": [
-          "Controllable"
+          "CONTROLLABLE"
         ]
       },
       {
@@ -140,25 +140,25 @@
       {
         "lib": "HvdcPVDangling",
         "properties": [
-          "Dangling"
+          "DANGLING"
         ]
       },
       {
         "lib": "HvdcPVDanglingDiagramPQ",
         "properties": [
-          "Dangling"
+          "DANGLING"
         ]
       },
       {
         "lib": "HvdcPTanPhiDangling",
         "properties": [
-          "Dangling"
+          "DANGLING"
         ]
       },
       {
         "lib": "HvdcPTanPhiDanglingDiagramPQ",
         "properties": [
-          "Dangling"
+          "DANGLING"
         ]
       }
     ]
@@ -175,13 +175,13 @@
       {
         "lib": "HvdcVSCDanglingP",
         "properties": [
-          "Dangling"
+          "DANGLING"
         ]
       },
       {
         "lib": "HvdcVSCDanglingUdc",
         "properties": [
-          "Dangling"
+          "DANGLING"
         ]
       }
     ]
@@ -214,7 +214,7 @@
       {
         "lib": "LoadAlphaBeta",
         "properties": [
-          "Controllable"
+          "CONTROLLABLE"
         ]
       },
       {
@@ -318,14 +318,14 @@
         "lib": "WTG4AWeccCurrentSource",
         "internalModelPrefix": "WTG4A",
         "properties": [
-          "Synchronized"
+          "SYNCHRONIZED"
         ]
       },
       {
         "lib": "WTG4BWeccCurrentSource",
         "internalModelPrefix": "WTG4B",
         "properties": [
-          "Synchronized"
+          "SYNCHRONIZED"
         ]
       },
       {
@@ -340,14 +340,14 @@
         "lib": "PhotovoltaicsWeccCurrentSource",
         "internalModelPrefix": "photovoltaics",
         "properties": [
-          "Synchronized"
+          "SYNCHRONIZED"
         ]
       },
       {
         "lib": "PhotovoltaicsWeccVoltageSource",
         "internalModelPrefix": "photovoltaics",
         "properties": [
-          "Synchronized"
+          "SYNCHRONIZED"
         ]
       }
     ]
@@ -358,19 +358,19 @@
       {
         "lib": "GridFormingConverterDroopControl",
         "properties": [
-          "Synchronized"
+          "SYNCHRONIZED"
         ]
       },
       {
         "lib": "GridFormingConverterMatchingControl",
         "properties": [
-          "Synchronized"
+          "SYNCHRONIZED"
         ]
       },
       {
         "lib": "GridFormingConverterDispatchableVirtualOscillatorControl",
         "properties": [
-          "Synchronized"
+          "SYNCHRONIZED"
         ]
       }
     ]

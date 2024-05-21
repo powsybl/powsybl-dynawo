@@ -12,12 +12,10 @@ import com.powsybl.dynawaltz.builders.ModelConfig;
 import com.powsybl.dynawaltz.builders.ModelConfigsHandler;
 import com.powsybl.dynawaltz.builders.ModelConfigs;
 import com.powsybl.dynawaltz.builders.BuilderReports;
-import com.powsybl.iidm.network.HvdcConverterStation;
-import com.powsybl.iidm.network.HvdcLine;
-import com.powsybl.iidm.network.IdentifiableType;
-import com.powsybl.iidm.network.Network;
+import com.powsybl.iidm.network.*;
 
 import java.util.Set;
+import java.util.function.Predicate;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -26,6 +24,7 @@ public class HvdcVscBuilder extends AbstractHvdcBuilder<HvdcVscBuilder> {
 
     public static final String CATEGORY = "HVDC_VSC";
     private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
+    private static final Predicate<HvdcLine> IS_VSC = eq -> HvdcConverterStation.HvdcType.VSC == eq.getConverterStation1().getHvdcType();
 
     public static HvdcVscBuilder of(Network network) {
         return of(network, ReportNode.NO_OP);
@@ -54,6 +53,7 @@ public class HvdcVscBuilder extends AbstractHvdcBuilder<HvdcVscBuilder> {
 
     protected HvdcVscBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
         super(network, modelConfig, "VSC " + IdentifiableType.HVDC_LINE, reportNode);
+        addEquipmentPredicate(IS_VSC);
     }
 
     @Override
@@ -71,7 +71,7 @@ public class HvdcVscBuilder extends AbstractHvdcBuilder<HvdcVscBuilder> {
     @Override
     protected HvdcLine findEquipment(String staticId) {
         HvdcLine line = network.getHvdcLine(staticId);
-        return HvdcConverterStation.HvdcType.VSC == line.getConverterStation1().getHvdcType() ? line : null;
+        return line != null && IS_VSC.test(line) ? line : null;
     }
 
     @Override

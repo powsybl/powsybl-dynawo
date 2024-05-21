@@ -40,8 +40,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import static com.powsybl.loadflow.LoadFlowResult.ComponentResult.Status.CONVERGED;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Geoffroy Jamgotchian {@literal <geoffroy.jamgotchian at rte-france.com>}
@@ -81,15 +81,15 @@ class DynaFlowTest extends AbstractDynawoTest {
         LoadFlowResult result = loadFlowProvider.run(network, computationManager, VariantManagerConstants.INITIAL_VARIANT_ID, loadFlowParameters, reportNode)
                 .join();
 
-        assertTrue(result.isOk());
         assertEquals(1, result.getComponentResults().size());
         LoadFlowResult.ComponentResult componentResult = result.getComponentResults().get(0);
-        assertEquals(LoadFlowResult.ComponentResult.Status.CONVERGED, componentResult.getStatus());
-        assertEquals("B4", componentResult.getSlackBusId());
+        assertEquals(CONVERGED, componentResult.getStatus());
+        assertEquals("B4", componentResult.getSlackBusResults().get(0).getId());
 
         StringWriter sw = new StringWriter();
         reportNode.print(sw);
         System.out.println(sw);
+
         InputStream refStream = Objects.requireNonNull(getClass().getResourceAsStream("/loadflow_timeline_report.txt"));
         String refLogExport = TestUtil.normalizeLineSeparator(new String(ByteStreams.toByteArray(refStream), StandardCharsets.UTF_8));
         String logExport = TestUtil.normalizeLineSeparator(sw.toString());
