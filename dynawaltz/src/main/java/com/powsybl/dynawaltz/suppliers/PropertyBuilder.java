@@ -10,6 +10,9 @@ package com.powsybl.dynawaltz.suppliers;
 import java.util.List;
 
 /**
+ * Builds {@link Property} in configuration Json deserializers
+ * @see com.powsybl.dynawaltz.suppliers.dynamicmodels.DynamicModelConfigsJsonDeserializer
+ * @see com.powsybl.dynawaltz.suppliers.events.EventModelConfigsJsonDeserializer
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class PropertyBuilder {

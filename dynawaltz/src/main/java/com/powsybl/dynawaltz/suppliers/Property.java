@@ -7,7 +7,12 @@
  */
 package com.powsybl.dynawaltz.suppliers;
 
+
 /**
+ * {@link com.powsybl.dynawaltz.suppliers.dynamicmodels.DynamicModelConfig} and {@link com.powsybl.dynawaltz.suppliers.events.EventModelConfig} property
+ * @param name property name corresponding to {@link com.powsybl.dynawaltz.builders.ModelBuilder} method name
+ * @param value property value
+ * @param propertyClass {@link #value} class
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public record Property(String name, Object value, Class<?> propertyClass) {
