@@ -7,63 +7,24 @@
  */
 package com.powsybl.dynawaltz.suppliers.dynamicmodels;
 
-import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawaltz.suppliers.Property;
 import com.powsybl.dynawaltz.suppliers.SetGroupType;
 
 import java.util.List;
 
 /**
+ * Dynamic model configuration deserialized by {@link DynamicModelConfigsJsonDeserializer}
+ * used to configure dynamic model builder in {@link DynawoDynamicModelsSupplier}
+ * @param model alias of the library used for this model
+ * @param group represents model parameter set id or part of it depending on {@link #groupType}
+ * @param groupType configures {@link #group} processing
+ * @param properties list of properties used by the builder
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class DynamicModelConfig {
-
-    private final String model;
-    private final String group;
-    private final List<Property> properties;
-
-    public DynamicModelConfig(String model, String group, SetGroupType groupType, List<Property> properties) {
-        this.model = model;
-        this.group = switch (groupType) {
-            case FIXED -> group;
-            case PREFIX -> group + getDynamicModelIdProperty(properties);
-            case SUFFIX -> getDynamicModelIdProperty(properties) + group;
-        };
-        this.properties = properties;
-    }
+public record DynamicModelConfig(String model, String group, SetGroupType groupType, List<Property> properties) {
 
     public DynamicModelConfig(String model, String group, List<Property> properties) {
-        this.model = model;
-        this.group = group;
-        this.properties = properties;
-    }
-
-    public String getModel() {
-        return model;
-    }
-
-    public String getGroup() {
-        return group;
-    }
-
-    public List<Property> getProperties() {
-        return properties;
-    }
-
-    private static String getDynamicModelIdProperty(List<Property> properties) {
-        return properties.stream()
-                .filter(p -> p.name().equalsIgnoreCase("dynamicModelId"))
-                .map(p -> (String) p.value())
-                .findFirst()
-                .orElseGet(() -> DynamicModelConfig.getStaticIdProperty(properties));
-    }
-
-    private static String getStaticIdProperty(List<Property> properties) {
-        return properties.stream()
-                .filter(p -> p.name().equalsIgnoreCase("staticId"))
-                .map(p -> (String) p.value())
-                .findFirst()
-                .orElseThrow(() -> new PowsyblException("No ID found for parameter set id"));
+        this(model, group, SetGroupType.FIXED, properties);
     }
 }
 

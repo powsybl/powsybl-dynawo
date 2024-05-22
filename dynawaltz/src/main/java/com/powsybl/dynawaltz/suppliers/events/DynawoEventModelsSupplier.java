@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
+ * Instantiates an {@link EventModel} list from {@link EventModelConfig}
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class DynawoEventModelsSupplier implements EventModelsSupplier {
@@ -40,10 +41,10 @@ public class DynawoEventModelsSupplier implements EventModelsSupplier {
     }
 
     private static EventModel buildEventModel(EventModelConfig eventModelConfig, Network network, ReportNode reportNode) {
-        ModelBuilder<EventModel> builder = ModelConfigsHandler.getInstance().getEventModelBuilder(network, eventModelConfig.getModel(), reportNode);
+        ModelBuilder<EventModel> builder = ModelConfigsHandler.getInstance().getEventModelBuilder(network, eventModelConfig.model(), reportNode);
         if (builder != null) {
             Class<? extends ModelBuilder> builderClass = builder.getClass();
-            eventModelConfig.getProperties().forEach(p -> invokeMethod(builderClass, builder, p));
+            eventModelConfig.properties().forEach(p -> invokeMethod(builderClass, builder, p));
             return builder.build();
         }
         return null;

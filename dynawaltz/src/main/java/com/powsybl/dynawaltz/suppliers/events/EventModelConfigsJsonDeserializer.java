@@ -11,12 +11,14 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.powsybl.commons.json.JsonUtil;
+import com.powsybl.dynawaltz.suppliers.Property;
 import com.powsybl.dynawaltz.suppliers.PropertyParserUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
+ *
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class EventModelConfigsJsonDeserializer extends StdDeserializer<List<EventModelConfig>> {
@@ -39,18 +41,21 @@ public class EventModelConfigsJsonDeserializer extends StdDeserializer<List<Even
     }
 
     private static EventModelConfig parseModelConfig(JsonParser parser) {
-        EventModelConfig modelConfig = new EventModelConfig();
+        var parsingContext = new Object() {
+            String model = null;
+            final List<Property> properties = new ArrayList<>();
+        };
         JsonUtil.parseObject(parser, name -> switch (name) {
             case "model" -> {
-                modelConfig.setModel(parser.nextTextValue());
+                parsingContext.model = parser.nextTextValue();
                 yield true;
             }
             case "properties" -> {
-                JsonUtil.parseObjectArray(parser, modelConfig::addProperty, PropertyParserUtils::parseProperty);
+                JsonUtil.parseObjectArray(parser, parsingContext.properties::add, PropertyParserUtils::parseProperty);
                 yield true;
             }
             default -> false;
         });
-        return modelConfig;
+        return new EventModelConfig(parsingContext.model, parsingContext.properties);
     }
 }

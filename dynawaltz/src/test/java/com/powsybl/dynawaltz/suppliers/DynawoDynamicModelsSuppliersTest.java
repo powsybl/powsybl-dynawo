@@ -39,7 +39,7 @@ class DynawoDynamicModelsSuppliersTest {
     void testDynamicModelSupplier() {
         Network network = EurostagTutorialExample1Factory.createWithLFResults();
         List<DynamicModelConfig> modelConfigList = getModelConfigs();
-        List<DynamicModel> models = new DynawoDynamicModelSupplier(modelConfigList).get(network, ReportNode.NO_OP);
+        List<DynamicModel> models = new DynawoDynamicModelsSupplier(modelConfigList).get(network, ReportNode.NO_OP);
 
         DynamicModel gen = SynchronizedGeneratorBuilder.of(network, "GeneratorPQ")
                 .staticId("GEN")
@@ -63,7 +63,7 @@ class DynawoDynamicModelsSuppliersTest {
         List<DynamicModelConfig> modelConfigList = List.of(
                 new DynamicModelConfig("WrongName", "param", Collections.emptyList())
         );
-        List<DynamicModel> models = new DynawoDynamicModelSupplier(modelConfigList).get(network, ReportNode.NO_OP);
+        List<DynamicModel> models = new DynawoDynamicModelsSupplier(modelConfigList).get(network, ReportNode.NO_OP);
         assertTrue(models.isEmpty());
     }
 
@@ -81,13 +81,16 @@ class DynawoDynamicModelsSuppliersTest {
 
     @Test
     void groupTypeException() {
+        Network network = EurostagTutorialExample1Factory.create();
         List<Property> properties = List.of(
                 new PropertyBuilder()
                         .name("propertyName")
                         .value("LOAD")
                         .type(PropertyType.STRING)
                         .build());
-        PowsyblException e = assertThrows(PowsyblException.class, () -> new DynamicModelConfig("LoadAlphaBeta", "_DM", SetGroupType.SUFFIX, properties));
+        DynamicModelConfig modelConfig = new DynamicModelConfig("LoadAlphaBeta", "_DM", SetGroupType.SUFFIX, properties);
+        DynawoDynamicModelsSupplier supplier = new DynawoDynamicModelsSupplier(List.of(modelConfig));
+        PowsyblException e = assertThrows(PowsyblException.class, () -> supplier.get(network));
         assertEquals("No ID found for parameter set id", e.getMessage());
     }
 
@@ -101,7 +104,7 @@ class DynawoDynamicModelsSuppliersTest {
                         .type(PropertyType.STRING)
                         .build()
         ));
-        DynawoDynamicModelSupplier supplier = new DynawoDynamicModelSupplier(List.of(modelConfig));
+        DynawoDynamicModelsSupplier supplier = new DynawoDynamicModelsSupplier(List.of(modelConfig));
         Exception e = assertThrows(PowsyblException.class, () -> supplier.get(network, ReportNode.NO_OP));
         assertEquals("Method wrongName not found for parameter LOAD on builder BaseLoadBuilder", e.getMessage());
     }

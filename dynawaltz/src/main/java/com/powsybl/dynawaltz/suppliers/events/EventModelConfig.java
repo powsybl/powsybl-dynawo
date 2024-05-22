@@ -9,38 +9,14 @@ package com.powsybl.dynawaltz.suppliers.events;
 
 import com.powsybl.dynawaltz.suppliers.Property;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Event model configuration deserialized by {@link EventModelConfigsJsonDeserializer}
+ * used to configure event model builder in {@link DynawoEventModelsSupplier}
+ * @param model alias of the library used for this model
+ * @param properties list of properties used by the builder
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class EventModelConfig {
-
-    private String model;
-    private List<Property> properties = new ArrayList<>();
-
-    public EventModelConfig(String model, List<Property> properties) {
-        this.model = model;
-        this.properties = properties;
-    }
-
-    public EventModelConfig() {
-    }
-
-    public String getModel() {
-        return model;
-    }
-
-    public void setModel(String model) {
-        this.model = model;
-    }
-
-    public List<Property> getProperties() {
-        return properties;
-    }
-
-    public void addProperty(Property property) {
-        properties.add(property);
-    }
+public record EventModelConfig(String model, List<Property> properties) {
 }
