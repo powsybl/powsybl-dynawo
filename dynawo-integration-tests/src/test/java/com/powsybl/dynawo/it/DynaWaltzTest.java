@@ -79,7 +79,7 @@ class DynaWaltzTest extends AbstractDynawoTest {
                 .setSolverParameters(solverParameters)
                 .setSolverType(DynaWaltzParameters.SolverType.IDA)
                 .setDefaultDumpFileParameters()
-                .setTimelineExportMode(DynaWaltzParameters.ExportMode.CSV);
+                .setTimelineExportMode(DynaWaltzParameters.ExportMode.XML);
 
         DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, curvesSupplier,
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, NO_OP)
