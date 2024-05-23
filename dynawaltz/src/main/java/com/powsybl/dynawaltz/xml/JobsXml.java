@@ -87,6 +87,7 @@ public final class JobsXml extends AbstractXmlDynawaltzWriter {
     }
 
     private static void writeOutput(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
+        DynaWaltzParameters parameters = context.getDynaWaltzParameters();
         writer.writeStartElement(DYN_URI, "outputs");
         writer.writeAttribute("directory", "outputs");
 
@@ -98,8 +99,8 @@ public final class JobsXml extends AbstractXmlDynawaltzWriter {
         writer.writeAttribute("exportMode", context.getDynaWaltzParameters().getTimelineExportMode().name());
 
         writer.writeEmptyElement(DYN_URI, "finalState");
-        writer.writeAttribute("exportIIDMFile", Boolean.toString(context.getDynaWaltzParameters().isWriteFinalState()));
-        writer.writeAttribute("exportDumpFile", Boolean.toString(context.getDynaWaltzParameters().getDumpFileParameters().exportDumpFile()));
+        writer.writeAttribute("exportIIDMFile", Boolean.toString(parameters.isWriteFinalState()));
+        writer.writeAttribute("exportDumpFile", Boolean.toString(parameters.getDumpFileParameters().exportDumpFile()));
 
         if (context.withCurves()) {
             writer.writeEmptyElement(DYN_URI, "curves");
@@ -108,16 +109,16 @@ public final class JobsXml extends AbstractXmlDynawaltzWriter {
         }
 
         writer.writeStartElement(DYN_URI, "logs");
-        writeAppender(writer);
+        writeAppender(writer, parameters);
         writer.writeEndElement();
 
         writer.writeEndElement();
     }
 
-    private static void writeAppender(XMLStreamWriter writer) throws XMLStreamException {
+    private static void writeAppender(XMLStreamWriter writer, DynaWaltzParameters parameters) throws XMLStreamException {
         writer.writeEmptyElement(DYN_URI, "appender");
         writer.writeAttribute("tag", "");
         writer.writeAttribute("file", "dynawaltz.log");
-        writer.writeAttribute("lvlFilter", "DEBUG");
+        writer.writeAttribute("lvlFilter", parameters.getLogLevelFilter().toString());
     }
 }

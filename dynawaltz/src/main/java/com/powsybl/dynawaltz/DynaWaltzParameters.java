@@ -41,6 +41,7 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
     public static final boolean DEFAULT_USE_MODEL_SIMPLIFIERS = false;
     public static final double DEFAULT_PRECISION = 1e-6;
     public static final ExportMode DEFAULT_TIMELINE_EXPORT_MODE = ExportMode.TXT;
+    public static final LogLevel DEFAULT_LOG_LEVEL_FILTER = LogLevel.INFO;
 
     /**
      * Information about the solver to use in the simulation
@@ -72,6 +73,13 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
         }
     }
 
+    public enum LogLevel {
+        DEBUG,
+        INFO,
+        WARN,
+        ERROR
+    }
+
     private Map<String, ParametersSet> modelsParameters = new LinkedHashMap<>();
     private ParametersSet networkParameters;
     private ParametersSet solverParameters;
@@ -82,6 +90,7 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
     private DumpFileParameters dumpFileParameters = DumpFileParameters.DEFAULT_DUMP_FILE_PARAMETERS;
     private double precision = DEFAULT_PRECISION;
     private ExportMode timelineExportMode = DEFAULT_TIMELINE_EXPORT_MODE;
+    private LogLevel logLevelFilter = DEFAULT_LOG_LEVEL_FILTER;
 
     /**
      * Loads parameters from the default platform configuration.
@@ -122,6 +131,7 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
             c.getOptionalBooleanProperty("useModelSimplifiers").ifPresent(parameters::setUseModelSimplifiers);
             c.getOptionalDoubleProperty("precision").ifPresent(parameters::setPrecision);
             c.getOptionalEnumProperty("timeline.exportMode", ExportMode.class).ifPresent(parameters::setTimelineExportMode);
+            c.getOptionalEnumProperty("log.levelFilter", LogLevel.class).ifPresent(parameters::setLogLevelFilter);
         });
         return parameters;
     }
@@ -242,6 +252,15 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
 
     public DynaWaltzParameters setTimelineExportMode(ExportMode timelineExportMode) {
         this.timelineExportMode = timelineExportMode;
+        return this;
+    }
+
+    public LogLevel getLogLevelFilter() {
+        return logLevelFilter;
+    }
+
+    public DynaWaltzParameters setLogLevelFilter(LogLevel logLevelFilter) {
+        this.logLevelFilter = logLevelFilter;
         return this;
     }
 }
