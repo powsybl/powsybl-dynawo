@@ -40,10 +40,27 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
     public static final String SOLVER_OUTPUT_PARAMETERS_FILE = "solvers.par";
     private static final boolean DEFAULT_WRITE_FINAL_STATE = true;
     public static final boolean USE_MODEL_SIMPLIFIERS = false;
+    public static final ExportMode DEFAULT_TIMELINE_EXPORT_MODE = ExportMode.TXT;
 
     public enum SolverType {
         SIM,
         IDA
+    }
+
+    public enum ExportMode {
+        CSV(".csv"),
+        TXT(".log"),
+        XML(".xml");
+
+        private final String fileExtension;
+
+        ExportMode(String fileExtension) {
+            this.fileExtension = fileExtension;
+        }
+
+        public String getFileExtension() {
+            return fileExtension;
+        }
     }
 
     private Map<String, ParametersSet> modelsParameters = new LinkedHashMap<>();
@@ -54,6 +71,7 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
     private boolean writeFinalState = DEFAULT_WRITE_FINAL_STATE;
     private boolean useModelSimplifiers = USE_MODEL_SIMPLIFIERS;
     private DumpFileParameters dumpFileParameters;
+    private ExportMode timelineExportMode = DEFAULT_TIMELINE_EXPORT_MODE;
 
     /**
      * Loads parameters from the default platform configuration.
@@ -122,6 +140,9 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
 
         DumpFileParameters dumpFileParameters = new DumpFileParameters(exportDumpFile, useDumpFile, exportDumpFileFolderPath, dumpFile);
 
+        // Timeline export mode
+        ExportMode timelineExport = config.flatMap(c -> c.getOptionalEnumProperty("timeline.exportMode", ExportMode.class)).orElse(DEFAULT_TIMELINE_EXPORT_MODE);
+
         // Load xml files
         List<ParametersSet> modelsParameters = ParametersXml.load(parametersPath);
         ParametersSet networkParameters = ParametersXml.load(networkParametersPath, networkParametersId);
@@ -135,7 +156,8 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
                 .setMergeLoads(mergeLoads)
                 .setWriteFinalState(writeFinalState)
                 .setUseModelSimplifiers(useModelSimplifiers)
-                .setDumpFileParameters(dumpFileParameters);
+                .setDumpFileParameters(dumpFileParameters)
+                .setTimelineExportMode(timelineExport);
     }
 
     @Override
@@ -232,6 +254,15 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
 
     public DynaWaltzParameters setDefaultDumpFileParameters() {
         this.dumpFileParameters = DumpFileParameters.createDefaultDumpFileParameters();
+        return this;
+    }
+
+    public ExportMode getTimelineExportMode() {
+        return timelineExportMode;
+    }
+
+    public DynaWaltzParameters setTimelineExportMode(ExportMode timelineExportMode) {
+        this.timelineExportMode = timelineExportMode;
         return this;
     }
 }
