@@ -12,7 +12,7 @@ import com.powsybl.dynawaltz.models.defaultmodels.AbstractInjectionDefaultModel;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class DefaultStaticVarCompensator extends AbstractInjectionDefaultModel implements StaticVarCompensatorModel {
+public class DefaultStaticVarCompensator extends AbstractInjectionDefaultModel {
 
     public DefaultStaticVarCompensator(String staticId) {
         super(staticId);

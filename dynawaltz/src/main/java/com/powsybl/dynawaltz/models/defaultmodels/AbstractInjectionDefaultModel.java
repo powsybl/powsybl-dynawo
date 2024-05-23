@@ -7,10 +7,12 @@
  */
 package com.powsybl.dynawaltz.models.defaultmodels;
 
+import com.powsybl.dynawaltz.models.InjectionModel;
+
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public abstract class AbstractInjectionDefaultModel extends AbstractDefaultModel {
+public abstract class AbstractInjectionDefaultModel extends AbstractDefaultModel implements InjectionModel {
 
     protected AbstractInjectionDefaultModel(String staticId) {
         super(staticId);
@@ -20,6 +22,7 @@ public abstract class AbstractInjectionDefaultModel extends AbstractDefaultModel
         return "@NAME@_state_value";
     }
 
+    @Override
     public String getSwitchOffSignalEventVarName() {
         return getStateValueVarName();
     }
