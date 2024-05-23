@@ -83,6 +83,7 @@ public final class JobsXml extends AbstractXmlDynawaltzWriter {
         writer.writeEmptyElement(DYN_URI, "simulation");
         writer.writeAttribute("startTime", Integer.toString(context.getParameters().getStartTime()));
         writer.writeAttribute("stopTime", Integer.toString(context.getParameters().getStopTime()));
+        writer.writeAttribute("precision", Double.toString(context.getDynaWaltzParameters().getPrecision()));
     }
 
     private static void writeOutput(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {

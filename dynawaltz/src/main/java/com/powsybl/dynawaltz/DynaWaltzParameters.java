@@ -40,6 +40,7 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
     public static final String SOLVER_OUTPUT_PARAMETERS_FILE = "solvers.par";
     private static final boolean DEFAULT_WRITE_FINAL_STATE = true;
     public static final boolean USE_MODEL_SIMPLIFIERS = false;
+    public static final double DEFAULT_PRECISION = 1e-6;
 
     public enum SolverType {
         SIM,
@@ -54,6 +55,7 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
     private boolean writeFinalState = DEFAULT_WRITE_FINAL_STATE;
     private boolean useModelSimplifiers = USE_MODEL_SIMPLIFIERS;
     private DumpFileParameters dumpFileParameters;
+    private double precision = DEFAULT_PRECISION;
 
     /**
      * Loads parameters from the default platform configuration.
@@ -119,8 +121,10 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
         if (useDumpFile && (exportFolderNotFound || dumpFile == null || !Files.exists(exportDumpFileFolderPath.resolve(dumpFile)))) {
             throw new PowsyblException("File " + dumpFile + " set in 'dumpFile' property cannot be found");
         }
-
         DumpFileParameters dumpFileParameters = new DumpFileParameters(exportDumpFile, useDumpFile, exportDumpFileFolderPath, dumpFile);
+
+        // Simulation precision
+        Double precision = config.map(c -> c.getDoubleProperty("precision", DEFAULT_PRECISION)).orElse(DEFAULT_PRECISION);
 
         // Load xml files
         List<ParametersSet> modelsParameters = ParametersXml.load(parametersPath);
@@ -135,7 +139,8 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
                 .setMergeLoads(mergeLoads)
                 .setWriteFinalState(writeFinalState)
                 .setUseModelSimplifiers(useModelSimplifiers)
-                .setDumpFileParameters(dumpFileParameters);
+                .setDumpFileParameters(dumpFileParameters)
+                .setPrecision(precision);
     }
 
     @Override
@@ -232,6 +237,15 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
 
     public DynaWaltzParameters setDefaultDumpFileParameters() {
         this.dumpFileParameters = DumpFileParameters.createDefaultDumpFileParameters();
+        return this;
+    }
+
+    public double getPrecision() {
+        return precision;
+    }
+
+    public DynaWaltzParameters setPrecision(double precision) {
+        this.precision = precision;
         return this;
     }
 }
