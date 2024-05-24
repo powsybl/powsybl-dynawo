@@ -41,10 +41,27 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
     private static final boolean DEFAULT_WRITE_FINAL_STATE = true;
     public static final boolean USE_MODEL_SIMPLIFIERS = false;
     public static final double DEFAULT_PRECISION = 1e-6;
+    public static final ExportMode DEFAULT_TIMELINE_EXPORT_MODE = ExportMode.TXT;
 
     public enum SolverType {
         SIM,
         IDA
+    }
+
+    public enum ExportMode {
+        CSV(".csv"),
+        TXT(".log"),
+        XML(".xml");
+
+        private final String fileExtension;
+
+        ExportMode(String fileExtension) {
+            this.fileExtension = fileExtension;
+        }
+
+        public String getFileExtension() {
+            return fileExtension;
+        }
     }
 
     private Map<String, ParametersSet> modelsParameters = new LinkedHashMap<>();
@@ -56,6 +73,7 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
     private boolean useModelSimplifiers = USE_MODEL_SIMPLIFIERS;
     private DumpFileParameters dumpFileParameters;
     private double precision = DEFAULT_PRECISION;
+    private ExportMode timelineExportMode = DEFAULT_TIMELINE_EXPORT_MODE;
 
     /**
      * Loads parameters from the default platform configuration.
@@ -125,6 +143,9 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
 
         // Simulation precision
         Double precision = config.map(c -> c.getDoubleProperty("precision", DEFAULT_PRECISION)).orElse(DEFAULT_PRECISION);
+      
+        // Timeline export mode
+        ExportMode timelineExport = config.flatMap(c -> c.getOptionalEnumProperty("timeline.exportMode", ExportMode.class)).orElse(DEFAULT_TIMELINE_EXPORT_MODE);
 
         // Load xml files
         List<ParametersSet> modelsParameters = ParametersXml.load(parametersPath);
@@ -141,6 +162,7 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
                 .setUseModelSimplifiers(useModelSimplifiers)
                 .setDumpFileParameters(dumpFileParameters)
                 .setPrecision(precision);
+                .setTimelineExportMode(timelineExport);
     }
 
     @Override
@@ -246,6 +268,15 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
 
     public DynaWaltzParameters setPrecision(double precision) {
         this.precision = precision;
+        return this;
+    }
+      
+    public ExportMode getTimelineExportMode() {
+        return timelineExportMode;
+    }
+
+    public DynaWaltzParameters setTimelineExportMode(ExportMode timelineExportMode) {
+        this.timelineExportMode = timelineExportMode;
         return this;
     }
 }

@@ -13,7 +13,7 @@ import com.powsybl.dynawaltz.models.events.ControllableEquipment;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class DefaultLoad extends AbstractInjectionDefaultModel implements LoadModel, ControllableEquipment {
+public class DefaultLoad extends AbstractInjectionDefaultModel implements ControllableEquipment {
 
     public DefaultLoad(String staticId) {
         super(staticId);
