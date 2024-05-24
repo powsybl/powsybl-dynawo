@@ -9,6 +9,7 @@ package com.powsybl.dynawaltz;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.powsybl.commons.PowsyblException;
+import com.powsybl.commons.config.ModuleConfig;
 import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.extensions.AbstractExtension;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
@@ -97,21 +98,23 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
     }
 
     public static DynaWaltzParameters load(PlatformConfig platformConfig, FileSystem fileSystem) {
-
         DynaWaltzParameters parameters = new DynaWaltzParameters();
-        platformConfig.getOptionalModuleConfig("dynawaltz-default-parameters").ifPresent(c -> {
-            // File with all the dynamic models' parameters for the simulation
-            parameters.setModelsParameters(ParametersXml.load(resolveParameterPath(c.getOptionalStringProperty("parametersFile").orElse(DEFAULT_INPUT_PARAMETERS_FILE), platformConfig, fileSystem)))
-            // File with all the network's parameters for the simulation
-                .setNetworkParameters(
-                    ParametersXml.load(resolveParameterPath(c.getOptionalStringProperty("network.parametersFile").orElse(DEFAULT_INPUT_NETWORK_PARAMETERS_FILE), platformConfig, fileSystem),
-                        c.getOptionalStringProperty("network.parametersId").orElse(DEFAULT_NETWORK_PAR_ID)))
-            // File with all the solvers' parameters for the simulation
-                .setNetworkParameters(
-                    ParametersXml.load(resolveParameterPath(c.getOptionalStringProperty("solver.parametersFile").orElse(DEFAULT_INPUT_SOLVER_PARAMETERS_FILE), platformConfig, fileSystem),
-                            c.getOptionalStringProperty("network.parametersId").orElse(DEFAULT_SOLVER_PAR_ID)))
-                .setDumpFileParameters(DumpFileParameters.createDumpFileParametersFromConfig(c, fileSystem));
+        Optional<ModuleConfig> config = platformConfig.getOptionalModuleConfig("dynawaltz-default-parameters");
 
+        String parametersFile = config.flatMap(c -> c.getOptionalStringProperty("parametersFile")).orElse(DEFAULT_INPUT_PARAMETERS_FILE);
+        String networkParametersFile = config.flatMap(c -> c.getOptionalStringProperty("network.parametersFile")).orElse(DEFAULT_INPUT_NETWORK_PARAMETERS_FILE);
+        String networkParametersId = config.flatMap(c -> c.getOptionalStringProperty("network.parametersId")).orElse(DEFAULT_NETWORK_PAR_ID);
+        String solverParametersFile = config.flatMap(c -> c.getOptionalStringProperty("solver.parametersFile")).orElse(DEFAULT_INPUT_SOLVER_PARAMETERS_FILE);
+        String solverParametersId = config.flatMap(c -> c.getOptionalStringProperty("solver.parametersId")).orElse(DEFAULT_SOLVER_PAR_ID);
+        // File with all the dynamic models' parameters for the simulation
+        parameters.setModelsParameters(ParametersXml.load(resolveParameterPath(parametersFile, platformConfig, fileSystem)))
+                // File with all the network's parameters for the simulation
+                .setNetworkParameters(ParametersXml.load(resolveParameterPath(networkParametersFile, platformConfig, fileSystem), networkParametersId))
+                // File with all the solvers' parameters for the simulation
+                .setSolverParameters(ParametersXml.load(resolveParameterPath(solverParametersFile, platformConfig, fileSystem), solverParametersId));
+
+        config.ifPresent(c -> {
+            parameters.setDumpFileParameters(DumpFileParameters.createDumpFileParametersFromConfig(c, fileSystem));
             c.getOptionalEnumProperty("solver.type", SolverType.class).ifPresent(parameters::setSolverType);
             // If merging loads on each bus to simplify dynawo's analysis
             c.getOptionalBooleanProperty("mergeLoads").ifPresent(parameters::setMergeLoads);
