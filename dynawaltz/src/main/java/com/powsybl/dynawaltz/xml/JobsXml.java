@@ -96,7 +96,7 @@ public final class JobsXml extends AbstractXmlDynawaltzWriter {
         writer.writeAttribute("global", Boolean.toString(false));
 
         writer.writeEmptyElement(DYN_URI, "timeline");
-        writer.writeAttribute("exportMode", context.getDynaWaltzParameters().getTimelineExportMode().name());
+        writer.writeAttribute("exportMode", parameters.getTimelineExportMode().toString());
 
         writer.writeEmptyElement(DYN_URI, "finalState");
         writer.writeAttribute("exportIIDMFile", Boolean.toString(parameters.isWriteFinalState()));
@@ -105,7 +105,7 @@ public final class JobsXml extends AbstractXmlDynawaltzWriter {
         if (context.withCurves()) {
             writer.writeEmptyElement(DYN_URI, "curves");
             writer.writeAttribute("inputFile", DynaWaltzConstants.CRV_FILENAME);
-            writer.writeAttribute("exportMode", DynaWaltzParameters.ExportMode.CSV.name());
+            writer.writeAttribute("exportMode", DynaWaltzParameters.ExportMode.CSV.toString());
         }
 
         writer.writeStartElement(DYN_URI, "logs");
@@ -120,5 +120,15 @@ public final class JobsXml extends AbstractXmlDynawaltzWriter {
         writer.writeAttribute("tag", "");
         writer.writeAttribute("file", "dynawaltz.log");
         writer.writeAttribute("lvlFilter", parameters.getLogLevelFilter().toString());
+        for (DynaWaltzParameters.SpecificLog log : parameters.getSpecificLogs()) {
+            writeSpecificAppender(writer, log);
+        }
+    }
+
+    private static void writeSpecificAppender(XMLStreamWriter writer, DynaWaltzParameters.SpecificLog log) throws XMLStreamException {
+        writer.writeEmptyElement(DYN_URI, "appender");
+        writer.writeAttribute("tag", log.toString());
+        writer.writeAttribute("file", log.getFileName() + ".log");
+        writer.writeAttribute("lvlFilter", DynaWaltzParameters.LogLevel.DEBUG.toString());
     }
 }

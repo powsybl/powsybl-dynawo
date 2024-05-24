@@ -80,6 +80,24 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
         ERROR
     }
 
+    public enum SpecificLog {
+        NETWORK("network"),
+        MODELER("modeler"),
+        PARAMETERS("param"),
+        VARIABLES("variables"),
+        EQUATIONS("equations");
+
+        private final String fileName;
+
+        SpecificLog(String fileName) {
+            this.fileName = fileName;
+        }
+
+        public String getFileName() {
+            return fileName;
+        }
+    }
+
     private Map<String, ParametersSet> modelsParameters = new LinkedHashMap<>();
     private ParametersSet networkParameters;
     private ParametersSet solverParameters;
@@ -91,6 +109,7 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
     private double precision = DEFAULT_PRECISION;
     private ExportMode timelineExportMode = DEFAULT_TIMELINE_EXPORT_MODE;
     private LogLevel logLevelFilter = DEFAULT_LOG_LEVEL_FILTER;
+    private EnumSet<SpecificLog> specificLogs = EnumSet.noneOf(SpecificLog.class);
 
     /**
      * Loads parameters from the default platform configuration.
@@ -132,6 +151,7 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
             c.getOptionalDoubleProperty("precision").ifPresent(parameters::setPrecision);
             c.getOptionalEnumProperty("timeline.exportMode", ExportMode.class).ifPresent(parameters::setTimelineExportMode);
             c.getOptionalEnumProperty("log.levelFilter", LogLevel.class).ifPresent(parameters::setLogLevelFilter);
+            c.getOptionalEnumSetProperty("log.specificLogs", SpecificLog.class).ifPresent(parameters::setSpecificLogs);
         });
         return parameters;
     }
@@ -261,6 +281,20 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
 
     public DynaWaltzParameters setLogLevelFilter(LogLevel logLevelFilter) {
         this.logLevelFilter = logLevelFilter;
+        return this;
+    }
+
+    public Set<SpecificLog> getSpecificLogs() {
+        return specificLogs;
+    }
+
+    public DynaWaltzParameters setSpecificLogs(Set<SpecificLog> specificLogs) {
+        this.specificLogs = EnumSet.copyOf(specificLogs);
+        return this;
+    }
+
+    public DynaWaltzParameters addSpecificLog(SpecificLog specificLog) {
+        specificLogs.add(specificLog);
         return this;
     }
 }

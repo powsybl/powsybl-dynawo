@@ -49,6 +49,7 @@
       "precision" : 1.0E-7,
       "timelineExportMode" : "TXT",
       "logLevelFilter" : "INFO",
+      "specificLogs" : [ "PARAMETERS", "VARIABLES" ],
       "modelsParameters" : [ {
         "id" : "test",
         "parameters" : {
