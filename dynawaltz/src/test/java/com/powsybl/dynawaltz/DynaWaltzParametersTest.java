@@ -59,8 +59,9 @@ class DynaWaltzParametersTest extends AbstractSerDeTest {
         String solverParametersId = "solverParametersId";
         boolean mergeLoads = true;
         boolean useModelSimplifiers = true;
+        double precision = 1e-8;
         ExportMode timelinExportMode = ExportMode.XML;
-        initPlatformConfig(networkParametersId, solverType, solverParametersId, mergeLoads, useModelSimplifiers, timelinExportMode);
+        initPlatformConfig(networkParametersId, solverType, solverParametersId, mergeLoads, useModelSimplifiers, precision, timelinExportMode);
 
         DynaWaltzParameters parameters = DynaWaltzParameters.load(platformConfig, fileSystem);
 
@@ -91,6 +92,7 @@ class DynaWaltzParametersTest extends AbstractSerDeTest {
 
         assertEquals(mergeLoads, parameters.isMergeLoads());
         assertEquals(useModelSimplifiers, parameters.isUseModelSimplifiers());
+        assertEquals(precision, parameters.getPrecision());
         assertEquals(timelinExportMode, parameters.getTimelineExportMode());
     }
 
@@ -114,7 +116,7 @@ class DynaWaltzParametersTest extends AbstractSerDeTest {
         SolverType solverType = SolverType.IDA;
         String solverParametersId = "solverParametersId";
         boolean mergeLoads = false;
-        initPlatformConfig(networkParametersId, solverType, solverParametersId, mergeLoads, false, ExportMode.TXT);
+        initPlatformConfig(networkParametersId, solverType, solverParametersId, mergeLoads, false, 1e-7, ExportMode.TXT);
 
         DynamicSimulationParameters dynamicSimulationParameters = new DynamicSimulationParameters()
                 .setStartTime(0)
@@ -125,7 +127,7 @@ class DynaWaltzParametersTest extends AbstractSerDeTest {
                 JsonDynamicSimulationParameters::read, "/DynaWaltzParameters.json");
     }
 
-    private void initPlatformConfig(String networkParametersId, SolverType solverType, String solverParametersId, boolean mergeLoads, boolean useModelSimplifiers, ExportMode timelineExportMode) throws IOException {
+    private void initPlatformConfig(String networkParametersId, SolverType solverType, String solverParametersId, boolean mergeLoads, boolean useModelSimplifiers, double precision, ExportMode timelineExportMode) throws IOException {
         String parametersFile = USER_HOME + "parametersFile";
         String networkParametersFile = USER_HOME + "networkParametersFile";
         String solverParametersFile = USER_HOME + "solverParametersFile";
@@ -139,6 +141,7 @@ class DynaWaltzParametersTest extends AbstractSerDeTest {
         moduleConfig.setStringProperty("solver.type", solverType.toString());
         moduleConfig.setStringProperty("solver.parametersId", solverParametersId);
         moduleConfig.setStringProperty("useModelSimplifiers", String.valueOf(useModelSimplifiers));
+        moduleConfig.setStringProperty("precision", Double.toString(precision));
         moduleConfig.setStringProperty("timeline.exportMode", String.valueOf(timelineExportMode));
 
         Files.createDirectories(fileSystem.getPath(USER_HOME));
@@ -186,7 +189,7 @@ class DynaWaltzParametersTest extends AbstractSerDeTest {
         assertEquals("1", parameters.getSolverParameters().getId());
 
         assertEquals(DynaWaltzParameters.DEFAULT_MERGE_LOADS, parameters.isMergeLoads());
-        assertEquals(DynaWaltzParameters.USE_MODEL_SIMPLIFIERS, parameters.isUseModelSimplifiers());
+        assertEquals(DynaWaltzParameters.DEFAULT_USE_MODEL_SIMPLIFIERS, parameters.isUseModelSimplifiers());
         assertEquals(DynaWaltzParameters.DEFAULT_TIMELINE_EXPORT_MODE, parameters.getTimelineExportMode());
     }
 
