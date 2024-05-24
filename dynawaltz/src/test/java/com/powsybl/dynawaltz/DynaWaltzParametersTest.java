@@ -189,7 +189,7 @@ class DynaWaltzParametersTest extends AbstractSerDeTest {
         assertEquals("1", parameters.getSolverParameters().getId());
 
         assertEquals(DynaWaltzParameters.DEFAULT_MERGE_LOADS, parameters.isMergeLoads());
-        assertEquals(DynaWaltzParameters.USE_MODEL_SIMPLIFIERS, parameters.isUseModelSimplifiers());
+        assertEquals(DynaWaltzParameters.DEFAULT_USE_MODEL_SIMPLIFIERS, parameters.isUseModelSimplifiers());
         assertEquals(DynaWaltzParameters.DEFAULT_TIMELINE_EXPORT_MODE, parameters.getTimelineExportMode());
     }
 
