@@ -153,7 +153,6 @@ class DynaWaltzParametersTest extends AbstractSerDeTest {
         moduleConfig.setStringProperty("log.levelFilter", logLevel.toString());
         moduleConfig.setStringListProperty("log.specificLogs", specificLogs.stream().map(SpecificLog::toString).toList());
 
-
         Files.createDirectories(fileSystem.getPath(USER_HOME));
         copyFile("/parametersSet/models.par", parametersFile);
         copyFile("/parametersSet/network.par", networkParametersFile);

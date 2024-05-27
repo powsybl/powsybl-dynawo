@@ -128,7 +128,7 @@ public final class JobsXml extends AbstractXmlDynawaltzWriter {
     private static void writeSpecificAppender(XMLStreamWriter writer, DynaWaltzParameters.SpecificLog log) throws XMLStreamException {
         writer.writeEmptyElement(DYN_URI, "appender");
         writer.writeAttribute("tag", log.toString());
-        writer.writeAttribute("file", log.getFileName() + ".log");
+        writer.writeAttribute("file", log.getFileName());
         writer.writeAttribute("lvlFilter", DynaWaltzParameters.LogLevel.DEBUG.toString());
     }
 }

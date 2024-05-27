@@ -81,11 +81,14 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
     }
 
     public enum SpecificLog {
+
         NETWORK("network"),
         MODELER("modeler"),
         PARAMETERS("param"),
         VARIABLES("variables"),
         EQUATIONS("equations");
+
+        private static final String DEFAULT_FILE_EXTENSION = ExportMode.TXT.getFileExtension();
 
         private final String fileName;
 
@@ -94,7 +97,7 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
         }
 
         public String getFileName() {
-            return fileName;
+            return fileName + DEFAULT_FILE_EXTENSION;
         }
     }
 
