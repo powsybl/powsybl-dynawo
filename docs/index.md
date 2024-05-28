@@ -5,8 +5,7 @@ maxdepth: 2
 hidden: true
 ---
 
-grid_exchange_formats/index.md
-simulation/index.md
+dynamic_simulation/index.md
 ```
 
 # TODO
