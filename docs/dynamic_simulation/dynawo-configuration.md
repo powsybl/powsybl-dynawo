@@ -8,7 +8,7 @@ The `dynawo` module defines the required parameters to run with Dynawo.
 ## Properties
 
 **homeDir**  
-Use the `homeDir` property to defines the install directory of the dynawo simulator.
+Use the `homeDir` property to defines the installation directory of the dynawo simulator.
 
 **debug**  
 Use the `debug` property to specify if the temporary folder where the inputs are generated should be kept after the simulation.

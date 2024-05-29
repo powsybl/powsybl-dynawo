@@ -33,6 +33,7 @@ dynawo-default-parameters:
     solver.parametersFile: <PATH_TO_SOLVER_PARAMETERS_FILE>
     solver.parametersId: id
 ```
+Main parameters are:
 
 **parametersFile**  
 This parameter defines the path of the main parameters file. This file is an XML file that provides, for each dynamic model the characteristics required that are not available in the static network.
@@ -55,23 +56,15 @@ As the `solver.parametersFile` can contain several sets of parameters, the `solv
 To go further, you should read the [Dynawo parameters](dynawo-default-parameters.md) reference page.
 
 ## Dynamic models DSL
-The dynamic models domain specific language helps user to associate a dynamic model to each static components of the network. The following models are supported:
-- LoadAlphaBeta
-- GeneratorSynchronousThreeWindings
-- GeneratorSynchronousThreeWindingsProportionalRegulations
-- GeneratorSynchronousFourWindings
-- GeneratorSynchronousFourWindingsProportionalRegulations
-- OmegaRef
-
-The following automatons models are supported:
-- CurrentLimitAutomaton
+The Dynamic Models DSL is a domain specific language written in groovy for the creation dynamic models used by Dynawo, most of them associated with a static equipment present in the network.
 
 To go further, you should read the [Dynamic Models DSL](dynamic-models-dsl.md) reference page.
 
 ## Event models DSL
 The event models domain specific language helps user to simulate events during the simulation, such as equipment disconnection... The following models are supported:
-- EventQuadripoleDisconnection
-- EventSetPointBoolean
+- Disconnect
+- Step
+- NodeFault
 
 To go further, you should read the [Event Models DSL](event-models-dsl.md) reference page.
 
@@ -119,7 +112,6 @@ curves {
 
 ```{toctree}
 ---
-caption: AA
 maxdepth: 2
 hidden: true
 ---
