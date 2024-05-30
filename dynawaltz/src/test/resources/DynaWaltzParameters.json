@@ -46,6 +46,8 @@
         "dumpFileFolder" : null,
         "dumpFile" : null
       },
+      "precision" : 1.0E-7,
+      "timelineExportMode" : "TXT",
       "modelsParameters" : [ {
         "id" : "test",
         "parameters" : {
