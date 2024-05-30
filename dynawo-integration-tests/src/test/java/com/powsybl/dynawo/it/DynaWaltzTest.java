@@ -8,6 +8,7 @@ package com.powsybl.dynawo.it;
 
 import com.powsybl.commons.datasource.ResourceDataSource;
 import com.powsybl.commons.datasource.ResourceSet;
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynamicsimulation.*;
 import com.powsybl.dynamicsimulation.groovy.*;
 import com.powsybl.dynawaltz.DumpFileParameters;
@@ -26,10 +27,12 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.Stream;
 
 import static com.powsybl.commons.report.ReportNode.NO_OP;
+import static com.powsybl.commons.report.ReportNode.newRootReportNode;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -189,14 +192,16 @@ class DynaWaltzTest extends AbstractDynawoTest {
         List<ParametersSet> modelsParameters = ParametersXml.load(getResourceAsStream("/hvdc/models.par"));
         ParametersSet networkParameters = ParametersXml.load(getResourceAsStream("/hvdc/network.par"), "8");
         ParametersSet solverParameters = ParametersXml.load(getResourceAsStream("/hvdc/solvers.par"), "2");
+        ReportNode reportNode = newRootReportNode().withMessageTemplate("testHvdc", "Test HVDC").build();
         dynaWaltzParameters.setModelsParameters(modelsParameters)
                 .setNetworkParameters(networkParameters)
                 .setSolverParameters(solverParameters)
                 .setSolverType(DynaWaltzParameters.SolverType.IDA)
-                .setDefaultDumpFileParameters();
+                .setDefaultDumpFileParameters()
+                .setSpecificLogs(EnumSet.allOf(DynaWaltzParameters.SpecificLog.class));
 
         DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, EventModelsSupplier.empty(), CurvesSupplier.empty(),
-                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, NO_OP)
+                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, reportNode)
                 .join();
 
         assertEquals(DynamicSimulationResult.Status.SUCCESS, result.getStatus());
