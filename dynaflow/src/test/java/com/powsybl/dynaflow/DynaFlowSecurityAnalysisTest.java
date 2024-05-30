@@ -8,19 +8,14 @@ package com.powsybl.dynaflow;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.test.AbstractSerDeTest;
-import com.powsybl.computation.ComputationManager;
 import com.powsybl.computation.local.LocalCommandExecutor;
 import com.powsybl.computation.local.LocalComputationConfig;
 import com.powsybl.computation.local.LocalComputationManager;
-import com.powsybl.contingency.ContingenciesProvider;
 import com.powsybl.contingency.Contingency;
 import com.powsybl.iidm.network.*;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import com.powsybl.loadflow.LoadFlowResult;
-import com.powsybl.security.SecurityAnalysis;
-import com.powsybl.security.SecurityAnalysisParameters;
-import com.powsybl.security.SecurityAnalysisReport;
-import com.powsybl.security.SecurityAnalysisResult;
+import com.powsybl.security.*;
 import com.powsybl.security.json.SecurityAnalysisResultSerializer;
 import org.junit.jupiter.api.Test;
 
@@ -120,9 +115,9 @@ class DynaFlowSecurityAnalysisTest extends AbstractSerDeTest {
         LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynawo_version.out",
                 "/SecurityAnalysis/input.xiidm", "/SecurityAnalysis/contingencies.json",
                 contingencyIds, List.of("/SecurityAnalysis/constraints1.xml", "/SecurityAnalysis/constraints2.xml"));
-        ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
-
-        SecurityAnalysisReport report = SecurityAnalysis.run(network, n -> contingencies, SecurityAnalysisParameters.load(), computationManager);
+        SecurityAnalysisRunParameters runParameters = new SecurityAnalysisRunParameters()
+                .setComputationManager(new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool()));
+        SecurityAnalysisReport report = SecurityAnalysis.run(network, contingencies, runParameters);
         SecurityAnalysisResult result = report.getResult();
         assertEquals(LoadFlowResult.ComponentResult.Status.CONVERGED, result.getPreContingencyResult().getStatus());
 
@@ -134,11 +129,10 @@ class DynaFlowSecurityAnalysisTest extends AbstractSerDeTest {
     @Test
     void testCallingBadVersionDynawo() throws IOException {
         Network network = Network.create("test", "test");
-        ContingenciesProvider contingenciesProvider = n -> List.of();
         LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynawo_bad_version.out", null);
-        ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
-        SecurityAnalysisParameters sap = SecurityAnalysisParameters.load();
-        assertThrows(PowsyblException.class, () -> SecurityAnalysis.run(network, contingenciesProvider, sap, computationManager));
+        SecurityAnalysisRunParameters runParameters = new SecurityAnalysisRunParameters()
+                .setComputationManager(new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool()));
+        assertThrows(PowsyblException.class, () -> SecurityAnalysis.run(network, List.of(), runParameters));
     }
 
     private static Network buildNetwork() {
