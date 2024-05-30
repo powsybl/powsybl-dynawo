@@ -7,9 +7,6 @@ layout: default
 The Dynamic Models DSL is a domain specific language written in groovy for the creation dynamic models used by Dynawo, most of them associated with a static equipment present in the network.
 If some equipments are not configured, Dynawo would use a default model and set of parameters.
 
-* TOC
-{:toc}
-
 ## BlackBoxModel
 All the models supported are `BlackBoxModel`. This kind of dynamic model have three attributes:
 - `lib` refers to the dynamic model library used in Dynawo.
@@ -53,7 +50,8 @@ OverloadManagementSystem {
     iMeasurementSide TwoSides.TWO
 }
 ```
-TODO: add all automation systems
+
+#### TODO add all automation systems
 
 ## Supported models
 Models are listed in [models.json](../../blob/main/dynawaltz/src/main/resources/models.json).  

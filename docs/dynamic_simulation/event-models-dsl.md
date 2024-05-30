@@ -6,9 +6,6 @@ layout: default
 
 The Event Models DSL is a domain specific language written in groovy for the simulation of events that occurs during the simulation.
 
-* TOC
-{:toc}
-
 ## Event Model
 - All the models supported are `BlackBoxModel`. This kind of event model have three attributes:
 - `lib` refers to the event model library used in Dynawo.
@@ -26,5 +23,4 @@ Disconnect {
 }
 ```
 
-TODO add events
-```
+#### TODO add remaining events
