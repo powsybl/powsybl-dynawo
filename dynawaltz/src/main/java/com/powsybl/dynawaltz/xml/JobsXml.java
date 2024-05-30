@@ -83,6 +83,7 @@ public final class JobsXml extends AbstractXmlDynawaltzWriter {
         writer.writeEmptyElement(DYN_URI, "simulation");
         writer.writeAttribute("startTime", Integer.toString(context.getParameters().getStartTime()));
         writer.writeAttribute("stopTime", Integer.toString(context.getParameters().getStopTime()));
+        writer.writeAttribute("precision", Double.toString(context.getDynaWaltzParameters().getPrecision()));
     }
 
     private static void writeOutput(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
@@ -94,7 +95,7 @@ public final class JobsXml extends AbstractXmlDynawaltzWriter {
         writer.writeAttribute("global", Boolean.toString(false));
 
         writer.writeEmptyElement(DYN_URI, "timeline");
-        writer.writeAttribute("exportMode", "TXT");
+        writer.writeAttribute("exportMode", context.getDynaWaltzParameters().getTimelineExportMode().name());
 
         writer.writeEmptyElement(DYN_URI, "finalState");
         writer.writeAttribute("exportIIDMFile", Boolean.toString(context.getDynaWaltzParameters().isWriteFinalState()));
@@ -103,7 +104,7 @@ public final class JobsXml extends AbstractXmlDynawaltzWriter {
         if (context.withCurves()) {
             writer.writeEmptyElement(DYN_URI, "curves");
             writer.writeAttribute("inputFile", DynaWaltzConstants.CRV_FILENAME);
-            writer.writeAttribute("exportMode", "CSV");
+            writer.writeAttribute("exportMode", DynaWaltzParameters.ExportMode.CSV.name());
         }
 
         writer.writeStartElement(DYN_URI, "logs");

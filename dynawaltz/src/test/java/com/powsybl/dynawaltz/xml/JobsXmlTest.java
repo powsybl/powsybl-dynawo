@@ -13,7 +13,6 @@ import com.powsybl.dynawaltz.DynaWaltzParameters;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
-import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.nio.file.Path;
 
@@ -23,7 +22,7 @@ import java.nio.file.Path;
 class JobsXmlTest extends DynaWaltzTestUtil {
 
     @Test
-    void writeJob() throws SAXException, IOException, XMLStreamException {
+    void writeJob() throws SAXException, IOException {
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynaWaltzParameters dynawoParameters = DynaWaltzParameters.load();
         DynaWaltzContext context = new DynaWaltzContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, eventModels, curves, parameters, dynawoParameters);
@@ -33,7 +32,7 @@ class JobsXmlTest extends DynaWaltzTestUtil {
     }
 
     @Test
-    void writeJobWithDumpFile() throws SAXException, IOException, XMLStreamException {
+    void writeJobWithDumpFile() throws SAXException, IOException {
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynaWaltzParameters dynawoParameters = DynaWaltzParameters.load()
                 .setDumpFileParameters(DumpFileParameters.createImportExportDumpFileParameters(Path.of("/dumpFiles"), "dump.dmp"));

@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawaltz.models.defaultmodels;
 
+import com.powsybl.dynawaltz.models.InjectionModel;
 import com.powsybl.dynawaltz.models.Model;
 import com.powsybl.dynawaltz.models.buses.*;
 import com.powsybl.dynawaltz.models.generators.DefaultGenerator;
@@ -16,11 +17,9 @@ import com.powsybl.dynawaltz.models.hvdc.HvdcModel;
 import com.powsybl.dynawaltz.models.lines.DefaultLine;
 import com.powsybl.dynawaltz.models.lines.LineModel;
 import com.powsybl.dynawaltz.models.loads.DefaultLoad;
-import com.powsybl.dynawaltz.models.loads.LoadModel;
 import com.powsybl.dynawaltz.models.shunts.DefaultShunt;
 import com.powsybl.dynawaltz.models.shunts.ShuntModel;
 import com.powsybl.dynawaltz.models.svarcs.DefaultStaticVarCompensator;
-import com.powsybl.dynawaltz.models.svarcs.StaticVarCompensatorModel;
 import com.powsybl.dynawaltz.models.transformers.DefaultTransformer;
 import com.powsybl.dynawaltz.models.transformers.TransformerModel;
 import com.powsybl.iidm.network.IdentifiableType;
@@ -49,13 +48,13 @@ public enum DefaultModelConfiguration {
             LineModel.class,
             new DefaultModelFactory<>(DefaultLine::new)),
     LOAD(IdentifiableType.LOAD,
-            LoadModel.class,
+            InjectionModel.class,
             new DefaultModelFactory<>(DefaultLoad::new)),
     SHUNT_COMPENSATOR(IdentifiableType.SHUNT_COMPENSATOR,
             ShuntModel.class,
             new DefaultModelFactory<>(DefaultShunt::new)),
     STATIC_VAR_COMPENSATOR(IdentifiableType.STATIC_VAR_COMPENSATOR,
-            StaticVarCompensatorModel.class,
+            InjectionModel.class,
             new DefaultModelFactory<>(DefaultStaticVarCompensator::new)),
     TWO_WINDINGS_TRANSFORMER(IdentifiableType.TWO_WINDINGS_TRANSFORMER,
             TransformerModel.class,

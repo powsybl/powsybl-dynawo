@@ -9,7 +9,7 @@
             <dyn:precompiledModels useStandardModels="true"/>
             <dyn:modelicaModels useStandardModels="false"/>
         </dyn:modeler>
-        <dyn:simulation startTime="1" stopTime="100"/>
+        <dyn:simulation startTime="1" stopTime="100" precision="1.0E-6"/>
         <dyn:outputs directory="outputs">
             <dyn:dumpInitValues local="false" global="false"/>
             <dyn:timeline exportMode="TXT"/>
