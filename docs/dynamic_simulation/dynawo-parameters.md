@@ -5,58 +5,74 @@ layout: default
 # Dynawo parameters
 The `dynawo-default-parameters` module defines the default values for all specific parameters of a dynamic simulation run with Dynawo. 
 
-## Required properties
+## Required parameters
 
 **parametersFile**  
-`parametersFile` defines the path of the main parameters file. The default value is `models.par`.
+`parametersFile` defines the path of the main parameters file.  
+The default value is `models.par`.
 
 **network.parametersFile**  
-`network.parametersFile` defines the path of the network parameters file. The default value is `network.par`.
+`network.parametersFile` defines the path of the network parameters file.  
+The default value is `network.par`.
 
 **solver.parametersFile**  
-`solver.parametersFile` defines the path of the solver parameters file. The default value is `solvers.par`.
+`solver.parametersFile` defines the path of the solver parameters file.  
+The default value is `solvers.par`.
 
-## Optional properties
+## Optional parameters
 
 **network.parametersId**  
-`network.parametersId` defines the network parameters set id stored in `network.parametersFile`. The default value for this property is `1`.
+`network.parametersId` defines the network parameters set id stored in `network.parametersFile`.  
+The default value is `1`.
 
 **solver.parametersId**  
-`solver.parametersId` defines the solver parameters set id stored in `solver.parametersFile`. The default value is `1`.
+`solver.parametersId` defines the solver parameters set id stored in `solver.parametersFile`.  
+The default value is `1`.
 
 **solver.type**  
-`solver.type` defines the solver used in the simulation. The default value is `SIM`.
+`solver.type` defines the solver used in the simulation.  
 The available `com.powsybl.dynawaltz.DynaWaltzParameters.SolverType` values are:
 - `SIM`: the simplified solver (fixed time step solver)
 - `IDA`: the IDA solver (variable time step solver)
 
-**dump.export**
-`dump.export` defines if the dynamic simulation result should be exported as a dump. The default value is `FALSE`.
+The default value is `SIM`.
 
-**dump.useAsInput**
-`dump.useAsInput` defines if a previous simulation result dump should be used as input for the current simulation. The default value is `FALSE`.
+**dump.export**  
+`dump.export` defines if the dynamic simulation result should be exported as a dump.  
+The default value is `FALSE`.
 
-**dump.exportFolder**
-`dump.exportFolder` defines the folder name where the dump is exported. The default value is `null`.
+**dump.useAsInput**  
+`dump.useAsInput` defines if a previous simulation result dump should be used as input for the current simulation.  
+The default value is `FALSE`.
 
-**dump.fileName**
-`dump.fileName` defines the dump file name. The default value is `null`.
+**dump.exportFolder**  
+`dump.exportFolder` defines the folder name where the dump is exported.  
+The default value is `null`.
 
-**useModelSimplifiers**
-`useModelSimplifiers` defines if simplifiers are used before macro connection computation //TODO add link. The default value is `FALSE`.
+**dump.fileName**  
+`dump.fileName` defines the dump file name.  
+The default value is `null`.
 
-**mergeLoads**
-`mergeLoads` defines if loads connected to the same bus are merged or not. The default value is `FALSE`.
+**useModelSimplifiers**  
+`useModelSimplifiers` defines if simplifiers are used before macro connection computation **(TODO: link)**.  
+The default value is `FALSE`.
 
-**timeline.exportMode**
-`timeline.exportMode` defines the file extension of the timeline export. The default value is `TXT`.
+**mergeLoads**  
+`mergeLoads` defines if loads connected to the same bus are merged or not.  
+The default value is `FALSE`.
+
+**timeline.exportMode**  
+`timeline.exportMode` defines the file extension of the timeline export.  
 The available `com.powsybl.dynawaltz.DynaWaltzParameters.ExportMode` values are:
 - `CSV`
 - `TXT`: same format as `CSV` but with `|` separator
-- `XML`
+- `XML`  
 
-**precision**
-`precision` defines the simulation step precision The default value is `1e-6`.
+The default value is `TXT`.
+
+**precision**  
+`precision` defines the simulation step precision.  
+The default value is `1e-6`.
 
 ## Examples
 
