@@ -409,6 +409,14 @@
       }
     ]
   },
+  "PHASE_SHIFTER_BLOCKING_I": {
+    "defaultLib": "PhaseShifterBlockingI",
+    "libs": [
+      {
+        "lib": "PhaseShifterBlockingI"
+      }
+    ]
+  },
   "tapChangers": {
     "defaultLib": "TapChangerAutomaton",
     "libs": [

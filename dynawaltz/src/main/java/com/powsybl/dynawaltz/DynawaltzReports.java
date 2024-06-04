@@ -51,12 +51,13 @@ public final class DynawaltzReports {
                 .add();
     }
 
-    public static void reportEmptyAutomaton(ReportNode reportNode, String automatonName, String dynamicId, String expectedModels) {
+    public static void reportEmptyAutomaton(ReportNode reportNode, String automatonName, String dynamicId, String equipmentId, String expectedModels) {
         reportNode.newReportNode()
                 .withMessageTemplate("emptyAutomaton",
-                        "${automatonName} ${dynamicId} equipment is not a ${expectedModels}, the automation system will be skipped")
+                        "${automatonName} ${dynamicId} equipment ${equipmentId} is not a ${expectedModels}, the automation system will be skipped")
                 .withUntypedValue("automatonName", automatonName)
                 .withUntypedValue("dynamicId", dynamicId)
+                .withUntypedValue("equipmentId", equipmentId)
                 .withUntypedValue("expectedModels", expectedModels)
                 .withSeverity(TypedValue.WARN_SEVERITY)
                 .add();

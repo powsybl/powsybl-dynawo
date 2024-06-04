@@ -25,18 +25,11 @@ import java.util.Objects;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class TapChangerAutomationSystem extends AbstractPureDynamicBlackBoxModel implements TapChangerModel {
+public class TapChangerAutomationSystem extends AbstractPureDynamicBlackBoxModel implements TapChangerModel, ConnectionStatefulModel {
 
     private final Load load;
     private final TransformerSide side;
-
     private ConnectionState connection = ConnectionState.NOT_SET;
-
-    private enum ConnectionState {
-        CONNECTED,
-        NOT_CONNECTED,
-        NOT_SET
-    }
 
     protected TapChangerAutomationSystem(String dynamicModelId, String parameterSetId, Load load, TransformerSide side, String lib) {
         super(dynamicModelId, parameterSetId, lib);
@@ -60,7 +53,7 @@ public class TapChangerAutomationSystem extends AbstractPureDynamicBlackBoxModel
             boolean isSkipped = adder.createMacroConnectionsOrSkip(this, load, LoadWithTransformers.class, this::getVarConnectionsWith);
             if (isSkipped) {
                 connection = ConnectionState.NOT_CONNECTED;
-                DynawaltzReports.reportEmptyAutomaton(adder.getReportNode(), this.getName(), getDynamicModelId(), LoadWithTransformers.class.getSimpleName());
+                DynawaltzReports.reportEmptyAutomaton(adder.getReportNode(), getName(), getDynamicModelId(), load.getId(), LoadWithTransformers.class.getSimpleName());
             } else {
                 connection = ConnectionState.CONNECTED;
             }
@@ -83,10 +76,9 @@ public class TapChangerAutomationSystem extends AbstractPureDynamicBlackBoxModel
         }
     }
 
-    public boolean isConnected(MacroConnectionsAdder adder) {
-        if (ConnectionState.NOT_SET == connection) {
-            createMacroConnections(adder);
-        }
+    @Override
+    public boolean isConnectedOrConnect(MacroConnectionsAdder adder) {
+        createMacroConnections(adder);
         return ConnectionState.CONNECTED == connection;
     }
 }
