@@ -11,7 +11,9 @@ import com.powsybl.commons.report.ReportNode;
 import com.powsybl.contingency.ContingenciesProvider;
 import com.powsybl.dynawo.commons.PowsyblDynawoVersion;
 import com.powsybl.iidm.network.Network;
-import com.powsybl.security.*;
+import com.powsybl.security.SecurityAnalysisProvider;
+import com.powsybl.security.SecurityAnalysisReport;
+import com.powsybl.security.SecurityAnalysisRunParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +21,7 @@ import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
-import static com.powsybl.dynaflow.DynaFlowConstants.*;
+import static com.powsybl.dynaflow.DynaFlowConstants.DYNAFLOW_NAME;
 
 /**
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
@@ -44,9 +46,6 @@ public class DynaFlowSecurityAnalysisProvider implements SecurityAnalysisProvide
                                                          String workingVariantId,
                                                          ContingenciesProvider contingenciesProvider,
                                                          SecurityAnalysisRunParameters runParameters) {
-        if (runParameters.getDetector() != null) {
-            LOG.error("LimitViolationDetector is not used in Dynaflow implementation.");
-        }
         if (!runParameters.getMonitors().isEmpty()) {
             LOG.error("Monitoring is not possible with Dynaflow implementation. There will not be supplementary information about monitored equipment.");
         }
