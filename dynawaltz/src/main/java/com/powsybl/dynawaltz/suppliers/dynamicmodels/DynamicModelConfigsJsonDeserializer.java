@@ -47,24 +47,16 @@ public class DynamicModelConfigsJsonDeserializer extends StdDeserializer<List<Dy
             SetGroupType groupType = SetGroupType.FIXED;
             final List<Property> properties = new ArrayList<>();
         };
-        JsonUtil.parseObject(parser, name -> switch (name) {
-            case "model" -> {
-                parsingContext.model = parser.nextTextValue();
-                yield true;
+        JsonUtil.parseObject(parser, name -> {
+            boolean handled = true;
+            switch (name) {
+                case "model" -> parsingContext.model = parser.nextTextValue();
+                case "group" -> parsingContext.group = parser.nextTextValue();
+                case "groupType" -> parsingContext.groupType = SetGroupType.valueOf(parser.nextTextValue());
+                case "properties" -> JsonUtil.parseObjectArray(parser, parsingContext.properties::add, PropertyParserUtils::parseProperty);
+                default -> handled = false;
             }
-            case "group" -> {
-                parsingContext.group = parser.nextTextValue();
-                yield true;
-            }
-            case "groupType" -> {
-                parsingContext.groupType = SetGroupType.valueOf(parser.nextTextValue());
-                yield true;
-            }
-            case "properties" -> {
-                JsonUtil.parseObjectArray(parser, parsingContext.properties::add, PropertyParserUtils::parseProperty);
-                yield true;
-            }
-            default -> false;
+            return handled;
         });
         return new DynamicModelConfig(parsingContext.model, parsingContext.group, parsingContext.groupType, parsingContext.properties);
     }

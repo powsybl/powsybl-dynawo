@@ -24,13 +24,13 @@ import java.util.Objects;
  * Instantiates an {@link DynamicModelConfig} list from {@link DynamicModelConfig}
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class DynawoDynamicModelsSupplier implements DynamicModelsSupplier {
+public class DynawoModelsSupplier implements DynamicModelsSupplier {
 
     private static final String PARAMETER_ID_FIELD = "parameterSetId";
 
     private final List<DynamicModelConfig> dynamicModelConfigs;
 
-    public DynawoDynamicModelsSupplier(List<DynamicModelConfig> dynamicModelConfigs) {
+    public DynawoModelsSupplier(List<DynamicModelConfig> dynamicModelConfigs) {
         this.dynamicModelConfigs = dynamicModelConfigs;
     }
 
@@ -63,9 +63,9 @@ public class DynawoDynamicModelsSupplier implements DynamicModelsSupplier {
 
     private static void invokeParameterIdMethod(Class<? extends ModelBuilder> builderClass, ModelBuilder<DynamicModel> builder, String parameterSetId) {
         try {
-            builderClass.getMethod(DynawoDynamicModelsSupplier.PARAMETER_ID_FIELD, String.class).invoke(builder, parameterSetId);
+            builderClass.getMethod(DynawoModelsSupplier.PARAMETER_ID_FIELD, String.class).invoke(builder, parameterSetId);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-            throw new PowsyblException(String.format("Method %s not found for parameter %s on builder %s", DynawoDynamicModelsSupplier.PARAMETER_ID_FIELD, parameterSetId, builderClass.getSimpleName()), e);
+            throw new PowsyblException(String.format("Method %s not found for parameter %s on builder %s", DynawoModelsSupplier.PARAMETER_ID_FIELD, parameterSetId, builderClass.getSimpleName()), e);
         }
     }
 

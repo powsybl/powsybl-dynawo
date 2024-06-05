@@ -14,7 +14,7 @@ import java.util.List;
 
 /**
  * Dynamic model configuration deserialized by {@link DynamicModelConfigsJsonDeserializer}
- * used to configure dynamic model builder in {@link DynawoDynamicModelsSupplier}
+ * used to configure dynamic model builder in {@link DynawoModelsSupplier}
  * @param model alias of the library used for this model
  * @param group represents model parameter set id or part of it depending on {@link #groupType}
  * @param groupType configures {@link #group} processing

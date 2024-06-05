@@ -7,8 +7,10 @@
  */
 package com.powsybl.dynawaltz.suppliers;
 
+import com.powsybl.dynawaltz.suppliers.dynamicmodels.DynawoModelsSupplier;
+
 /**
- * Configures {@link com.powsybl.dynawaltz.suppliers.dynamicmodels.DynamicModelConfig#group()} processing in {@link com.powsybl.dynawaltz.suppliers.dynamicmodels.DynawoDynamicModelsSupplier}
+ * Configures {@link com.powsybl.dynawaltz.suppliers.dynamicmodels.DynamicModelConfig#group()} processing in {@link DynawoModelsSupplier}
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public enum SetGroupType {

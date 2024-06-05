@@ -52,7 +52,6 @@ public class PropertyBuilder {
         return this;
     }
 
-    //TODO add values... ?
     public PropertyBuilder values(List<String> values) {
         collectionType = CollectionType.LIST;
         this.values = values;

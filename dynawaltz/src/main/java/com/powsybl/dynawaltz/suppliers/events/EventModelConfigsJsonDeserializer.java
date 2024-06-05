@@ -45,16 +45,14 @@ public class EventModelConfigsJsonDeserializer extends StdDeserializer<List<Even
             String model = null;
             final List<Property> properties = new ArrayList<>();
         };
-        JsonUtil.parseObject(parser, name -> switch (name) {
-            case "model" -> {
-                parsingContext.model = parser.nextTextValue();
-                yield true;
+        JsonUtil.parseObject(parser, name -> {
+            boolean handled = true;
+            switch (name) {
+                case "model" -> parsingContext.model = parser.nextTextValue();
+                case "properties" -> JsonUtil.parseObjectArray(parser, parsingContext.properties::add, PropertyParserUtils::parseProperty);
+                default -> handled = false;
             }
-            case "properties" -> {
-                JsonUtil.parseObjectArray(parser, parsingContext.properties::add, PropertyParserUtils::parseProperty);
-                yield true;
-            }
-            default -> false;
+            return handled;
         });
         return new EventModelConfig(parsingContext.model, parsingContext.properties);
     }
