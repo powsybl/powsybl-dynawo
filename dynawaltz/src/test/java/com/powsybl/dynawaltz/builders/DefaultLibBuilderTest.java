@@ -21,6 +21,7 @@ import com.powsybl.dynawaltz.models.hvdc.HvdcPBuilder;
 import com.powsybl.dynawaltz.models.hvdc.HvdcVscBuilder;
 import com.powsybl.dynawaltz.models.lines.LineBuilder;
 import com.powsybl.dynawaltz.models.loads.*;
+import com.powsybl.dynawaltz.models.shunts.ShuntBuilder;
 import com.powsybl.dynawaltz.models.svarcs.BaseStaticVarCompensatorBuilder;
 import com.powsybl.dynawaltz.models.transformers.TransformerFixedRatioBuilder;
 import com.powsybl.iidm.network.Network;
@@ -71,6 +72,8 @@ class DefaultLibBuilderTest {
         // HVDC
         assertNotNull(HvdcPBuilder.of(NETWORK));
         assertNotNull(HvdcVscBuilder.of(NETWORK));
+        // Shunt
+        assertNotNull(ShuntBuilder.of(NETWORK));
         // Static var comp
         assertNotNull(BaseStaticVarCompensatorBuilder.of(NETWORK));
     }
