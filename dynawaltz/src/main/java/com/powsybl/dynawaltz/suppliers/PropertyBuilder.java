@@ -7,22 +7,39 @@
  */
 package com.powsybl.dynawaltz.suppliers;
 
+import com.powsybl.dynawaltz.suppliers.dynamicmodels.DynamicModelConfigsJsonDeserializer;
+import com.powsybl.dynawaltz.suppliers.events.EventModelConfigsJsonDeserializer;
+
+import java.util.Collection;
 import java.util.List;
 
 /**
  * Builds {@link Property} in configuration Json deserializers
- * @see com.powsybl.dynawaltz.suppliers.dynamicmodels.DynamicModelConfigsJsonDeserializer
- * @see com.powsybl.dynawaltz.suppliers.events.EventModelConfigsJsonDeserializer
+ * @see DynamicModelConfigsJsonDeserializer
+ * @see EventModelConfigsJsonDeserializer
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class PropertyBuilder {
 
     private String name;
-    private Object value;
+    private String value;
+    private List<String> values;
+    private List<List<String>> arrays;
     private PropertyType type;
+    private CollectionType collectionType = CollectionType.SINGLE;
+
+    private enum CollectionType {
+        SINGLE,
+        LIST,
+        LIST_ARRAY
+    }
 
     public Property build() {
-        return new Property(name, type.isConversionFree() ? value : type.convertValue((String) value), type.getPropertyClass());
+        return switch (collectionType) {
+            case SINGLE -> new Property(name, type.isConversionFree() ? value : type.convertValue(value), type.getPropertyClass());
+            case LIST -> new Property(name, type.isConversionFree() ? values : values.stream().map(v -> type.convertValue(v)).toList(), Collection.class);
+            case LIST_ARRAY -> new Property(name, arrays.toArray(new List[0]), Collection[].class);
+        };
     }
 
     public PropertyBuilder name(String name) {
@@ -35,13 +52,16 @@ public class PropertyBuilder {
         return this;
     }
 
+    //TODO add values... ?
     public PropertyBuilder values(List<String> values) {
-        this.value = values;
+        collectionType = CollectionType.LIST;
+        this.values = values;
         return this;
     }
 
     public PropertyBuilder arrays(List<List<String>> arrays) {
-        this.value = arrays.toArray(new List[0]);
+        collectionType = CollectionType.LIST_ARRAY;
+        this.arrays = arrays;
         return this;
     }
 

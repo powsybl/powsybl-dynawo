@@ -24,12 +24,12 @@
         {
           "name": "transformers",
           "values": ["NGEN_NHV1", "NHV2_NLOAD"],
-          "type": "STRINGS"
+          "type": "STRING"
         },
         {
           "name": "uMeasurements",
           "arrays": [["OldNGen", "NGEN"], ["NHV1", "NHV2"]],
-          "type": "STRINGS_ARRAYS"
+          "type": "STRING"
         }
       ]
     }

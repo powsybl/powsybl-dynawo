@@ -148,12 +148,12 @@ class DynawoDynamicModelsSuppliersTest {
                 new PropertyBuilder()
                         .name("transformers")
                         .values(List.of("NGEN_NHV1", "NHV2_NLOAD"))
-                        .type(PropertyType.STRINGS)
+                        .type(PropertyType.STRING)
                         .build(),
                 new PropertyBuilder()
                         .name("uMeasurements")
                         .arrays(List.of(List.of("OldNGen", "NGEN"), List.of("NHV1", "NHV2")))
-                        .type(PropertyType.STRINGS_ARRAYS)
+                        .type(PropertyType.STRING)
                         .build()
         ));
     }
