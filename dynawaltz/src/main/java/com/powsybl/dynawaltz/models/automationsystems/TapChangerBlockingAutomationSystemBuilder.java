@@ -60,6 +60,11 @@ public class TapChangerBlockingAutomationSystemBuilder extends AbstractAutomatio
         uMeasurementPoints = new BuilderIdListEquipmentList<>(MEASUREMENT_POINT_TYPE, U_MEASUREMENTS_FIELD);
     }
 
+    public TapChangerBlockingAutomationSystemBuilder transformers(String staticId) {
+        tapChangerEquipments.addEquipment(staticId, id -> this.getTapChangerEquipment(network, id));
+        return self();
+    }
+
     public TapChangerBlockingAutomationSystemBuilder transformers(String... staticIds) {
         tapChangerEquipments.addEquipments(staticIds, id -> this.getTapChangerEquipment(network, id));
         return self();
@@ -73,6 +78,11 @@ public class TapChangerBlockingAutomationSystemBuilder extends AbstractAutomatio
     private Identifiable<?> getTapChangerEquipment(Network network, String staticId) {
         Identifiable<?> tapChangerEquipment = network.getTwoWindingsTransformer(staticId);
         return tapChangerEquipment != null ? tapChangerEquipment : network.getLoad(staticId);
+    }
+
+    public TapChangerBlockingAutomationSystemBuilder uMeasurements(String staticId) {
+        uMeasurementPoints.addEquipment(staticId, id -> BuildersUtil.getActionConnectionPoint(network, id));
+        return self();
     }
 
     public TapChangerBlockingAutomationSystemBuilder uMeasurements(String... staticIds) {

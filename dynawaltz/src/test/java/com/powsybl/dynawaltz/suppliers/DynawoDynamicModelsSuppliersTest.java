@@ -51,10 +51,17 @@ class DynawoDynamicModelsSuppliersTest {
                 .transformers("NGEN_NHV1", "NHV2_NLOAD")
                 .uMeasurements(new Collection[]{List.of("OldNGen", "NGEN"), List.of("NHV1", "NHV2")})
                 .build();
+        DynamicModel tcb2 = TapChangerBlockingAutomationSystemBuilder.of(network)
+                .dynamicModelId("TCB2")
+                .parameterSetId("tcb_par")
+                .transformers("NGEN_NHV2")
+                .uMeasurements("NHV2")
+                .build();
 
-        assertEquals(2, models.size());
+        assertEquals(3, models.size());
         assertThat(models.get(0)).usingRecursiveComparison().isEqualTo(gen);
         assertThat(models.get(1)).usingRecursiveComparison().isEqualTo(tcb);
+        assertThat(models.get(2)).usingRecursiveComparison().isEqualTo(tcb2);
     }
 
     @Test
@@ -117,7 +124,8 @@ class DynawoDynamicModelsSuppliersTest {
                                 .value("GEN")
                                 .type(PropertyType.STRING)
                                 .build())),
-                getTcbConfig()
+                getTcbConfig(),
+                getSimpleTcbConfig()
         );
     }
 
@@ -146,6 +154,26 @@ class DynawoDynamicModelsSuppliersTest {
                         .name("uMeasurements")
                         .arrays(List.of(List.of("OldNGen", "NGEN"), List.of("NHV1", "NHV2")))
                         .type(PropertyType.STRINGS_ARRAYS)
+                        .build()
+        ));
+    }
+
+    private static DynamicModelConfig getSimpleTcbConfig() {
+        return new DynamicModelConfig("TapChangerBlockingAutomaton", "tcb_par", SetGroupType.FIXED, List.of(
+                new PropertyBuilder()
+                        .name("dynamicModelId")
+                        .value("TCB2")
+                        .type(PropertyType.STRING)
+                        .build(),
+                new PropertyBuilder()
+                        .name("transformers")
+                        .value("NGEN_NHV2")
+                        .type(PropertyType.STRING)
+                        .build(),
+                new PropertyBuilder()
+                        .name("uMeasurements")
+                        .value("NHV2")
+                        .type(PropertyType.STRING)
                         .build()
         ));
     }
