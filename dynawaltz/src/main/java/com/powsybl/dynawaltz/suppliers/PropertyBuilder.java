@@ -38,7 +38,10 @@ public class PropertyBuilder {
         return switch (collectionType) {
             case SINGLE -> new Property(name, type.isConversionFree() ? value : type.convertValue(value), type.getPropertyClass());
             case LIST -> new Property(name, type.isConversionFree() ? values : values.stream().map(v -> type.convertValue(v)).toList(), Collection.class);
-            case LIST_ARRAY -> new Property(name, arrays.toArray(new List[0]), Collection[].class);
+            case LIST_ARRAY -> new Property(name, type.isConversionFree() ?
+                    arrays.toArray(List[]::new) :
+                    arrays.stream().map(vl -> vl.stream().map(v -> type.convertValue(v)).toList()).toArray(List[]::new),
+                    Collection[].class);
         };
     }
 
@@ -48,6 +51,7 @@ public class PropertyBuilder {
     }
 
     public PropertyBuilder value(String value) {
+        collectionType = CollectionType.SINGLE;
         this.value = value;
         return this;
     }
