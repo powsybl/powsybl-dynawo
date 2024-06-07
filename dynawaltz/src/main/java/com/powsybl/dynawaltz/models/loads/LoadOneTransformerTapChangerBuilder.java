@@ -21,7 +21,7 @@ import java.util.Set;
  */
 public class LoadOneTransformerTapChangerBuilder extends AbstractLoadModelBuilder<LoadOneTransformerTapChangerBuilder> {
 
-    private static final String CATEGORY = "loadsOneTransformerTapChanger";
+    public static final String CATEGORY = "LOAD_ONE_TRANSFORMER_TAP_CHANGER";
     private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
 
     public static LoadOneTransformerTapChangerBuilder of(Network network) {

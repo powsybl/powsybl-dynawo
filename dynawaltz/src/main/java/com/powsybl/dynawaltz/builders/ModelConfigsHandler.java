@@ -8,9 +8,13 @@
 package com.powsybl.dynawaltz.builders;
 
 import com.google.common.collect.Lists;
+import com.powsybl.commons.report.ReportNode;
+import com.powsybl.dynamicsimulation.DynamicModel;
+import com.powsybl.dynamicsimulation.EventModel;
 import com.powsybl.dynawaltz.models.events.EventActivePowerVariationBuilder;
 import com.powsybl.dynawaltz.models.events.EventDisconnectionBuilder;
 import com.powsybl.dynawaltz.models.events.NodeFaultEventBuilder;
+import com.powsybl.iidm.network.Network;
 
 import java.util.HashMap;
 import java.util.List;
@@ -25,12 +29,19 @@ public final class ModelConfigsHandler {
     private static final ModelConfigsHandler INSTANCE = new ModelConfigsHandler();
 
     private final Map<String, ModelConfigs> modelConfigsCat = new HashMap<>();
-
     private final List<BuilderConfig> builderConfigs;
+    private final Map<String, BuilderConfig.ModelBuilderConstructor> builderConstructorByName = new HashMap<>();
+
     private final List<EventBuilderConfig> eventBuilderConfigs = List.of(
             new EventBuilderConfig(EventActivePowerVariationBuilder::of, EventActivePowerVariationBuilder.TAG),
             new EventBuilderConfig(EventDisconnectionBuilder::of, EventDisconnectionBuilder.TAG),
             new EventBuilderConfig(NodeFaultEventBuilder::of, NodeFaultEventBuilder.TAG));
+
+    private final Map<String, EventBuilderConfig.EventModelBuilderConstructor> eventBuilderConstructorByName = Map.of(
+            EventDisconnectionBuilder.TAG, EventDisconnectionBuilder::of,
+            NodeFaultEventBuilder.TAG, EventDisconnectionBuilder::of,
+            EventActivePowerVariationBuilder.TAG, EventActivePowerVariationBuilder::of
+    );
 
     private ModelConfigsHandler() {
         List<ModelConfigLoader> modelConfigLoaders = Lists.newArrayList(ServiceLoader.load(ModelConfigLoader.class));
@@ -41,6 +52,8 @@ public final class ModelConfigsHandler {
                 })
         ));
         builderConfigs = modelConfigLoaders.stream().flatMap(ModelConfigLoader::loadBuilderConfigs).toList();
+        builderConfigs.forEach(bc -> modelConfigsCat.get(bc.getCategory()).getSupportedLibs()
+                .forEach(lib -> builderConstructorByName.put(lib, bc.getBuilderConstructor())));
     }
 
     public static ModelConfigsHandler getInstance() {
@@ -57,5 +70,23 @@ public final class ModelConfigsHandler {
 
     public List<EventBuilderConfig> getEventBuilderConfigs() {
         return eventBuilderConfigs;
+    }
+
+    public ModelBuilder<DynamicModel> getModelBuilder(Network network, String modelName, ReportNode reportNode) {
+        BuilderConfig.ModelBuilderConstructor constructor = builderConstructorByName.get(modelName);
+        if (constructor == null) {
+            BuilderReports.reportBuilderNotFound(reportNode, modelName);
+            return null;
+        }
+        return constructor.createBuilder(network, modelName, reportNode);
+    }
+
+    public ModelBuilder<EventModel> getEventModelBuilder(Network network, String modelName, ReportNode reportNode) {
+        EventBuilderConfig.EventModelBuilderConstructor constructor = eventBuilderConstructorByName.get(modelName);
+        if (constructor == null) {
+            BuilderReports.reportBuilderNotFound(reportNode, modelName);
+            return null;
+        }
+        return constructor.createBuilder(network, reportNode);
     }
 }

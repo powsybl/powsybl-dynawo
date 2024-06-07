@@ -21,7 +21,7 @@ import java.util.Set;
  */
 public class GeneratorFictitiousBuilder extends AbstractGeneratorBuilder<GeneratorFictitiousBuilder> {
 
-    private static final String CATEGORY = "baseGenerators";
+    public static final String CATEGORY = "BASE_GENERATOR";
     private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
 
     public static GeneratorFictitiousBuilder of(Network network) {
