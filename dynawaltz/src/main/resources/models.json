@@ -87,6 +87,99 @@
         "properties": [
           "CONTROLLABLE"
         ]
+      },
+      {
+        "lib": "GeneratorSynchronousFourWindingsIEEEG1Ac1a"
+      },
+      {
+        "lib": "GeneratorSynchronousFourWindingsIEEEG1Dc1a"
+      },
+      {
+        "lib": "GeneratorSynchronousFourWindingsIEEEG1IEEX2A"
+      },
+      {
+        "lib": "GeneratorSynchronousFourWindingsPmConstAc6aPss3b"
+      },
+      {
+        "lib": "GeneratorSynchronousFourWindingsPmConstAc7bPss3b"
+      },
+      {
+        "lib": "GeneratorSynchronousFourWindingsPmConstAc7cPss2c"
+      },
+      {
+        "lib": "GeneratorSynchronousFourWindingsPmConstAc8b"
+      },
+      {
+        "lib": "GeneratorSynchronousFourWindingsPmConstAc8bPss3b"
+      },
+      {
+        "lib": "GeneratorSynchronousFourWindingsPmConstDc1a"
+      },
+      {
+        "lib": "GeneratorSynchronousFourWindingsPmConstIEEX2A"
+      },
+      {
+        "lib": "GeneratorSynchronousFourWindingsPmConstSt5bPss2b"
+      },
+      {
+        "lib": "GeneratorSynchronousFourWindingsPmConstSt6bPss3b"
+      },
+      {
+        "lib": "GeneratorSynchronousFourWindingsPmConstSt6cPss6c"
+      },
+      {
+        "lib": "GeneratorSynchronousFourWindingsPmConstSt7bPss2a"
+      },
+      {
+        "lib": "GeneratorSynchronousFourWindingsPmConstSt9cPss2c"
+      },
+      {
+        "lib": "GeneratorSynchronousFourWindingsTGov1Dc1a"
+      },
+      {
+        "lib": "GeneratorSynchronousFourWindingsTGov1Scrx"
+      },
+      {
+        "lib": "GeneratorSynchronousFourWindingsTGov3IEEX2A"
+      },
+      {
+        "lib": "GeneratorSynchronousThreeWindingsHyGovBbSex1"
+      },
+      {
+        "lib": "GeneratorSynchronousThreeWindingsHyGovScrx"
+      },
+      {
+        "lib": "GeneratorSynchronousThreeWindingsHyGovScrxRvs"
+      },
+      {
+        "lib": "GeneratorSynchronousThreeWindingsHyGovScrxRvsTfo"
+      },
+      {
+        "lib": "GeneratorSynchronousThreeWindingsIeeeG1IeeeT1"
+      },
+      {
+        "lib": "GeneratorSynchronousThreeWindingsIeeeG1IeeeT1Tfo"
+      },
+      {
+        "lib": "GeneratorSynchronousThreeWindingsIeeeG1Scrx"
+      },
+      {
+        "lib": "GeneratorSynchronousThreeWindingsIeeeG1ScrxTfo"
+      },
+      {
+        "lib": "GeneratorSynchronousThreeWindingsIEEEG2BbSex1"
+      },
+      {
+        "lib": "GeneratorSynchronousThreeWindingsPmConstExcIeeeAc1a"
+      },
+      {
+        "lib": "GeneratorSynchronousThreeWindingsPmConstExcIeeeAc1aTfo"
+      },
+      {
+        "lib": "GeneratorSynchronousThreeWindingsPmConstScrx"
+      },
+      {
+        "lib": "GeneratorSynchronousThreeWindingsPmConstScrxTfo"
       }
     ]
   },
@@ -160,6 +253,42 @@
         "properties": [
           "DANGLING"
         ]
+      },
+      {
+        "lib": "HvdcPQProp"
+      },
+      {
+        "lib": "HvdcPQPropDangling",
+        "properties": [
+          "DANGLING"
+        ]
+      },
+      {
+        "lib": "HvdcPQPropDanglingDiagramPQ",
+        "properties": [
+          "DANGLING"
+        ]
+      },
+      {
+        "lib": "HvdcPQPropDiagramPQ"
+      },
+      {
+        "lib": "HvdcPQPropDiagramPQEmulation"
+      },
+      {
+        "lib": "HvdcPQPropDiagramPQEmulationSet"
+      },
+      {
+        "lib": "HvdcPQPropDiagramPQEmulationVariableK"
+      },
+      {
+        "lib": "HvdcPQPropEmulation"
+      },
+      {
+        "lib": "HvdcPQPropEmulationSet"
+      },
+      {
+        "lib": "HvdcPQPropEmulationVariableK"
       }
     ]
   },
@@ -228,6 +357,30 @@
       },
       {
         "lib": "LoadPQ"
+      },
+      {
+        "lib": "LoadAlphaBetaRestorativeNetwork"
+      },
+      {
+        "lib": "ElectronicLoad"
+      },
+      {
+        "lib": "LoadAlphaBetaMotorFifthOrder"
+      },
+      {
+        "lib": "LoadAlphaBetaMotorSimplified"
+      },
+      {
+        "lib": "LoadAlphaBetaThreeMotorFifthOrder"
+      },
+      {
+        "lib": "LoadAlphaBetaTwoMotorFifthOrder"
+      },
+      {
+        "lib": "LoadAlphaBetaTwoMotorSimplified"
+      },
+      {
+        "lib": "LoadZIP"
       }
     ]
   },
@@ -308,6 +461,9 @@
     "libs": [
       {
         "lib": "TransformerFixedRatio"
+      },
+      {
+        "lib": "NetworkTransformer"
       }
     ]
   },
