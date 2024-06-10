@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class BuilderConfigTest {
+class BuilderConfigTest {
 
     private static Network NETWORK;
     private static ModelConfigsHandler MODEL_CONFIGS_HANDLER;
