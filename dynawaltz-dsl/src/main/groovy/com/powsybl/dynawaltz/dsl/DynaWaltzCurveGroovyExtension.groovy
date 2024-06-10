@@ -12,8 +12,9 @@ import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.Curve
 import com.powsybl.dynamicsimulation.groovy.CurveGroovyExtension
 
-import com.powsybl.dynawaltz.DynaWaltzCurve
+import com.powsybl.dynawaltz.DynawoCurve
 import com.powsybl.dynawaltz.DynaWaltzProvider
+import com.powsybl.dynawaltz.DynawoCurvesBuilder
 
 import java.util.function.Consumer
 
@@ -25,6 +26,7 @@ import java.util.function.Consumer
 @AutoService(CurveGroovyExtension.class)
 class DynaWaltzCurveGroovyExtension implements CurveGroovyExtension {
 
+    //TODO use doc in builder
     /**
      * A curve for <pre>DynaWaltz</pre> can be defined in DSL using {@code staticId} and {@code variable} or {@code dynamicModelId} and {@code variable}.
      * Definition with {@code staticId} and {@code variable} are used when no explicit dynamic component exists (buses).
@@ -57,7 +59,7 @@ class DynaWaltzCurveGroovyExtension implements CurveGroovyExtension {
         DynaWaltzProvider.NAME
     }
 
-    DynaWaltzCurve dynawoCurve(CurvesSpec curveSpec, Consumer<Curve> consumer) {
+    static void dynawoCurve(CurvesSpec curveSpec, Consumer<Curve> consumer) {
         
         if (curveSpec.staticId && curveSpec.dynamicModelId) {
             throw new DslException("Both staticId and dynamicModelId are defined")
@@ -71,34 +73,24 @@ class DynaWaltzCurveGroovyExtension implements CurveGroovyExtension {
 
         for (String variable : curveSpec.variables) {
             if (curveSpec.staticId) {
-                consumer.accept(new DynaWaltzCurve("NETWORK", curveSpec.staticId + "_" + variable))
+                consumer.accept(new DynawoCurve("NETWORK", curveSpec.staticId + "_" + variable))
             } else {
-                consumer.accept(new DynaWaltzCurve(curveSpec.dynamicModelId, variable))
+                consumer.accept(new DynawoCurve(curveSpec.dynamicModelId, variable))
             }
         }
     }
 
     @Override
     void load(Binding binding, Consumer<Curve> consumer, ReportNode reportNode) {
-        binding.curve = { Closure<Void> closure ->
+        Closure<Void> closure = { Closure<Void> closure ->
             def cloned = closure.clone()
-            CurvesSpec curveSpec = new CurvesSpec()
-
-            cloned.delegate = curveSpec
+            DynawoCurvesBuilder curvesBuilder = new DynawoCurvesBuilder(reportNode)
+            cloned.delegate = curvesBuilder
             cloned()
-
-            dynawoCurve(curveSpec, consumer)
+            curvesBuilder.add(consumer)
         }
-
-        binding.curves = { Closure<Void> closure ->
-            def cloned = closure.clone()
-            CurvesSpec curvesSpec = new CurvesSpec()
-
-            cloned.delegate = curvesSpec
-            cloned()
-
-            dynawoCurve(curvesSpec, consumer)
-        }
+        binding.curve = closure
+        binding.curves = closure
     }
 
 }

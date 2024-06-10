@@ -13,11 +13,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  */
-class DynaWaltzCurveTest {
+class DynawoCurveTest {
 
     @Test
     void test() {
-        DynaWaltzCurve curve = new DynaWaltzCurve("busId", "variable");
+        DynawoCurve curve = new DynawoCurve("busId", "variable");
 
         assertEquals("busId", curve.getModelId());
         assertEquals("variable", curve.getVariable());

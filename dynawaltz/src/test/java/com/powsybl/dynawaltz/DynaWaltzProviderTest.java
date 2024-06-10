@@ -54,7 +54,7 @@ class DynaWaltzProviderTest extends AbstractSerDeTest {
     public static class CurvesSupplierMock implements CurvesSupplier {
         @Override
         public List<Curve> get(Network network, ReportNode reportNode) {
-            return Collections.singletonList(new DynaWaltzCurve("bus", "uPu"));
+            return Collections.singletonList(new DynawoCurve("bus", "uPu"));
         }
     }
 

@@ -8,13 +8,12 @@ package com.powsybl.dynawaltz.dsl;
 
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
-import com.powsybl.dsl.DslException;
 import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynamicsimulation.CurvesSupplier;
 import com.powsybl.dynamicsimulation.groovy.CurveGroovyExtension;
 import com.powsybl.dynamicsimulation.groovy.GroovyCurvesSupplier;
 import com.powsybl.dynamicsimulation.groovy.GroovyExtension;
-import com.powsybl.dynawaltz.DynaWaltzCurve;
+import com.powsybl.dynawaltz.DynawoCurve;
 import com.powsybl.dynawaltz.DynaWaltzProvider;
 import com.powsybl.iidm.network.Generator;
 import com.powsybl.iidm.network.Load;
@@ -40,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  */
-class DynaWaltzGroovyCurvesSupplierTest {
+class DynaWaltzGroovyCurvesSupplierTest extends AbstractModelSupplierTest {
 
     private FileSystem fileSystem;
     private Network network;
@@ -72,11 +71,11 @@ class DynaWaltzGroovyCurvesSupplierTest {
 
     @ParameterizedTest(name = "{1}")
     @MethodSource("provideFileError")
-    void testScriptError(String fileName, String error) {
+    void testScriptError(String fileName, String report) throws IOException {
         List<CurveGroovyExtension> extensions = validateGroovyExtension();
         CurvesSupplier supplier = new GroovyCurvesSupplier(fileSystem.getPath(fileName), extensions);
-        DslException exception = assertThrows(DslException.class, () -> supplier.get(network));
-        assertEquals(error, exception.getMessage());
+        assertTrue(supplier.get(network, reportNode).isEmpty());
+        checkReportNode(report);
     }
 
     private static Stream<Arguments> provideFileError() {
@@ -95,8 +94,8 @@ class DynaWaltzGroovyCurvesSupplierTest {
     }
 
     private void validateCurve(Curve curve) {
-        assertEquals(DynaWaltzCurve.class, curve.getClass());
-        DynaWaltzCurve curveImpl = (DynaWaltzCurve) curve;
+        assertEquals(DynawoCurve.class, curve.getClass());
+        DynawoCurve curveImpl = (DynawoCurve) curve;
         if (curveImpl.getModelId().equals("NETWORK")) {
             assertTrue(Arrays.asList("NGEN_Upu_value", "NHV1_Upu_value", "NHV2_Upu_value", "NLOAD_Upu_value").contains(curveImpl.getVariable()));
         } else if (network.getIdentifiable(curveImpl.getModelId()) instanceof Generator) {

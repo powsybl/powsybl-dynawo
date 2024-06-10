@@ -6,9 +6,8 @@
  */
 package com.powsybl.dynawaltz.xml;
 
-import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynawaltz.DynaWaltzContext;
-import com.powsybl.dynawaltz.DynaWaltzCurve;
+import com.powsybl.dynawaltz.DynawoCurve;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -33,8 +32,7 @@ public final class CurvesXml extends AbstractXmlDynawaltzWriter {
 
     @Override
     public void write(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
-        for (Curve curve : context.getCurves()) {
-            DynaWaltzCurve dynCurve = (DynaWaltzCurve) curve;
+        for (DynawoCurve dynCurve : context.getCurves()) {
             writer.writeEmptyElement(DYN_URI, "curve");
             writer.writeAttribute("model", dynCurve.getModelId());
             writer.writeAttribute("variable", dynCurve.getVariable());

@@ -5,10 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import com.powsybl.iidm.network.Generator
-
-for (Generator gen : network.generators) {
-    curves {
-        dynamicModelId gen.id
-    }
+curves {
+    dynamicModelId "GEN"
 }
+
