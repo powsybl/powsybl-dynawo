@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
+import java.util.stream.Collectors;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -37,11 +38,8 @@ public final class ModelConfigsHandler {
             new EventBuilderConfig(EventDisconnectionBuilder::of, EventDisconnectionBuilder.TAG),
             new EventBuilderConfig(NodeFaultEventBuilder::of, NodeFaultEventBuilder.TAG));
 
-    private final Map<String, EventBuilderConfig.EventModelBuilderConstructor> eventBuilderConstructorByName = Map.of(
-            EventDisconnectionBuilder.TAG, EventDisconnectionBuilder::of,
-            NodeFaultEventBuilder.TAG, EventDisconnectionBuilder::of,
-            EventActivePowerVariationBuilder.TAG, EventActivePowerVariationBuilder::of
-    );
+    private final Map<String, EventBuilderConfig.EventModelBuilderConstructor> eventBuilderConstructorByName =
+            eventBuilderConfigs.stream().collect(Collectors.toMap(EventBuilderConfig::getTag, EventBuilderConfig::getBuilderConstructor));
 
     private ModelConfigsHandler() {
         List<ModelConfigLoader> modelConfigLoaders = Lists.newArrayList(ServiceLoader.load(ModelConfigLoader.class));
