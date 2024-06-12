@@ -8,7 +8,7 @@ package com.powsybl.dynawaltz.xml;
 
 import com.powsybl.commons.test.AbstractSerDeTest;
 import com.powsybl.dynamicsimulation.Curve;
-import com.powsybl.dynawaltz.DynawoCurve;
+import com.powsybl.dynawaltz.curves.DynawoCurvesBuilder;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.automationsystems.overloadmanagments.DynamicOverloadManagementSystemBuilder;
 import com.powsybl.dynawaltz.models.events.EventDisconnectionBuilder;
@@ -55,17 +55,17 @@ public class DynaWaltzTestUtil extends AbstractSerDeTest {
         network = createEurostagTutorialExample1WithMoreLoads();
 
         curves = new ArrayList<>();
-        network.getBusBreakerView().getBusStream().forEach(b -> curves.add(new DynawoCurve("NETWORK", b.getId() + "_Upu_value")));
+        network.getBusBreakerView().getBusStream().forEach(b -> new DynawoCurvesBuilder()
+                .staticId(b.getId())
+                .variables("Upu_value")
+                .add(curves::add));
 
         // A curve is made up of the id of the dynamic model and the variable to plot.
         // The static id of the generator is used as the id of the dynamic model (dynamicModelId).
-        network.getGeneratorStream().forEach(g -> {
-            curves.add(new DynawoCurve(g.getId(), "generator_omegaPu"));
-            curves.add(new DynawoCurve(g.getId(), "generator_PGen"));
-            curves.add(new DynawoCurve(g.getId(), "generator_UStatorPu"));
-            curves.add(new DynawoCurve(g.getId(), "voltageRegulator_UcEfdP"));
-            curves.add(new DynawoCurve(g.getId(), "voltageRegulator_EfdPu"));
-        });
+        network.getGeneratorStream().forEach(g -> new DynawoCurvesBuilder()
+                .dynamicModelId(g.getId())
+                .variables("generator_omegaPu", "generator_PGen", "generator_UStatorPu", "voltageRegulator_UcEfdP", "voltageRegulator_EfdPu")
+                .add(curves::add));
 
         // Dynamic Models
         dynamicModels = new ArrayList<>();

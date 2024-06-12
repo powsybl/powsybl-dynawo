@@ -10,6 +10,7 @@ import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
+import com.powsybl.dynawaltz.curves.DynawoCurve;
 import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.EquipmentBlackBoxModel;
@@ -97,7 +98,6 @@ public class DynaWaltzContext {
                 .map(ContextDependentEvent.class::cast)
                 .forEach(e -> e.setEquipmentHasDynamicModel(this));
 
-        //TODO cast before context ?
         this.curves = Objects.requireNonNull(curves).stream()
                 .map(DynawoCurve.class::cast)
                 .toList();

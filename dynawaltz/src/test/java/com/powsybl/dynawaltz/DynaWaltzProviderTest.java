@@ -14,6 +14,7 @@ import com.powsybl.computation.local.LocalCommandExecutor;
 import com.powsybl.computation.local.LocalComputationConfig;
 import com.powsybl.computation.local.LocalComputationManager;
 import com.powsybl.dynamicsimulation.*;
+import com.powsybl.dynawaltz.curves.DynawoCurvesBuilder;
 import com.powsybl.dynawo.commons.DynawoConstants;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.Substation;
@@ -54,7 +55,7 @@ class DynaWaltzProviderTest extends AbstractSerDeTest {
     public static class CurvesSupplierMock implements CurvesSupplier {
         @Override
         public List<Curve> get(Network network, ReportNode reportNode) {
-            return Collections.singletonList(new DynawoCurve("bus", "uPu"));
+            return new DynawoCurvesBuilder().dynamicModelId("bus").variable("uPu").build();
         }
     }
 

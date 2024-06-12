@@ -4,7 +4,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package com.powsybl.dynawaltz;
+package com.powsybl.dynawaltz.curves;
 
 import com.powsybl.dynamicsimulation.Curve;
 
@@ -13,13 +13,12 @@ import java.util.Objects;
 /**
  * @author Mathieu Bague {@literal <mathieu.bague@rte-france.com>}
  */
-//TODO switch to record
 public class DynawoCurve implements Curve {
 
     private final String dynamicModelId;
     private final String variable;
 
-    public DynawoCurve(String dynamicModelId, String variable) {
+    DynawoCurve(String dynamicModelId, String variable) {
         this.dynamicModelId = Objects.requireNonNull(dynamicModelId);
         this.variable = Objects.requireNonNull(variable);
     }

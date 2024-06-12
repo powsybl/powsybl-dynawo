@@ -7,7 +7,7 @@
 package com.powsybl.dynawaltz.xml;
 
 import com.powsybl.dynawaltz.DynaWaltzContext;
-import com.powsybl.dynawaltz.DynawoCurve;
+import com.powsybl.dynawaltz.curves.DynawoCurve;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;

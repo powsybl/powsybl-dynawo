@@ -5,19 +5,19 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawaltz;
+package com.powsybl.dynawaltz.curves;
 
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynawaltz.builders.BuilderReports;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.function.Consumer;
 
 /**
+ * A curve for <pre>Dynawo</pre> can be defined using {@code staticId} and {@code variable} or {@code dynamicModelId} and {@code variable}.
+ * Definition with {@code staticId} and {@code variable} are used when no explicit dynamic component exists.
+ * <pre>Dynawo</pre> expects {@code dynamicModelId} = “NETWORK” for these variables.
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class DynawoCurvesBuilder {
@@ -28,10 +28,14 @@ public class DynawoCurvesBuilder {
     private boolean isInstantiable = true;
     private String dynamicModelId;
     private String staticId;
-    private String[] variables;
+    private List<String> variables;
 
     public DynawoCurvesBuilder(ReportNode reportNode) {
         this.reportNode = reportNode;
+    }
+
+    public DynawoCurvesBuilder() {
+        this(ReportNode.NO_OP);
     }
 
     public DynawoCurvesBuilder dynamicModelId(String dynamicModelId) {
@@ -45,13 +49,17 @@ public class DynawoCurvesBuilder {
     }
 
     public DynawoCurvesBuilder variables(String... variables) {
+        this.variables = List.of(variables);
+        return this;
+    }
+
+    public DynawoCurvesBuilder variables(List<String> variables) {
         this.variables = variables;
         return this;
     }
 
-    //TODO switch to deprecated ?
     public DynawoCurvesBuilder variable(String variable) {
-        this.variables = new String[]{variable};
+        this.variables = List.of(variable);
         return this;
     }
 
@@ -66,7 +74,7 @@ public class DynawoCurvesBuilder {
         if (variables == null) {
             BuilderReports.reportFieldNotSet(reportNode, "variables");
             isInstantiable = false;
-        } else if (variables.length == 0) {
+        } else if (variables.isEmpty()) {
             BuilderReports.reportEmptyList(reportNode, "variables");
             isInstantiable = false;
         }
@@ -84,26 +92,13 @@ public class DynawoCurvesBuilder {
         if (isInstantiable()) {
             boolean hasDynamicModelId = dynamicModelId != null;
             String id = hasDynamicModelId ? dynamicModelId : DEFAULT_DYNAMIC_MODEL_ID;
-            for (String variable : variables) {
-                curveConsumer.accept(new DynawoCurve(id, hasDynamicModelId ? variable : staticId + "_" + variable));
-            }
+            variables.forEach(v -> curveConsumer.accept(new DynawoCurve(id, hasDynamicModelId ? v : staticId + "_" + v)));
         }
     }
 
-    public List<Curve> buildAlt() {
+    public List<Curve> build() {
         List<Curve> curves = new ArrayList<>();
         add(curves::add);
         return curves;
-    }
-
-    public List<DynawoCurve> build() {
-        if (isInstantiable()) {
-            boolean hasDynamicModelId = dynamicModelId != null;
-            String id = hasDynamicModelId ? dynamicModelId : DEFAULT_DYNAMIC_MODEL_ID;
-            return Arrays.stream(variables)
-                    .map(v -> new DynawoCurve(id, hasDynamicModelId ? v : staticId + "_" + v))
-                    .toList();
-        }
-        return Collections.emptyList();
     }
 }

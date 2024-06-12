@@ -8,16 +8,12 @@ package com.powsybl.dynawaltz.dsl
 
 import com.google.auto.service.AutoService
 import com.powsybl.commons.report.ReportNode
-import com.powsybl.dsl.DslException
 import com.powsybl.dynamicsimulation.Curve
 import com.powsybl.dynamicsimulation.groovy.CurveGroovyExtension
-
-import com.powsybl.dynawaltz.DynawoCurve
 import com.powsybl.dynawaltz.DynaWaltzProvider
-import com.powsybl.dynawaltz.DynawoCurvesBuilder
+import com.powsybl.dynawaltz.curves.DynawoCurvesBuilder
 
 import java.util.function.Consumer
-
 /**
  * An implementation of {@link CurveGroovyExtension} that adds the <pre>curve</pre> keyword to the DSL
  *
@@ -26,58 +22,9 @@ import java.util.function.Consumer
 @AutoService(CurveGroovyExtension.class)
 class DynaWaltzCurveGroovyExtension implements CurveGroovyExtension {
 
-    //TODO use doc in builder
-    /**
-     * A curve for <pre>DynaWaltz</pre> can be defined in DSL using {@code staticId} and {@code variable} or {@code dynamicModelId} and {@code variable}.
-     * Definition with {@code staticId} and {@code variable} are used when no explicit dynamic component exists (buses).
-     * <pre>DynaWaltz</pre> expects {@code dynamicModelId} = “NETWORK” for these variables.
-     */
-    static class CurvesSpec {
-        String dynamicModelId
-        String staticId
-        String[] variables
-
-        void dynamicModelId(String dynamicModelId) {
-            this.dynamicModelId = dynamicModelId
-        }
-
-        void staticId(String staticId) {
-            this.staticId = staticId
-        }
-
-        void variables(String[] variables) {
-            this.variables = variables
-        }
-
-        void variable(String variable) {
-            this.variables = [variable]
-        }
-    }
-
     @Override
     String getName() {
         DynaWaltzProvider.NAME
-    }
-
-    static void dynawoCurve(CurvesSpec curveSpec, Consumer<Curve> consumer) {
-        
-        if (curveSpec.staticId && curveSpec.dynamicModelId) {
-            throw new DslException("Both staticId and dynamicModelId are defined")
-        }
-        if (!curveSpec.variables) {
-            throw new DslException("'variables' field is not set")
-        }
-        if (curveSpec.variables.length == 0) {
-            throw new DslException("'variables' field is empty")
-        }
-
-        for (String variable : curveSpec.variables) {
-            if (curveSpec.staticId) {
-                consumer.accept(new DynawoCurve("NETWORK", curveSpec.staticId + "_" + variable))
-            } else {
-                consumer.accept(new DynawoCurve(curveSpec.dynamicModelId, variable))
-            }
-        }
     }
 
     @Override
@@ -92,5 +39,4 @@ class DynaWaltzCurveGroovyExtension implements CurveGroovyExtension {
         binding.curve = closure
         binding.curves = closure
     }
-
 }
