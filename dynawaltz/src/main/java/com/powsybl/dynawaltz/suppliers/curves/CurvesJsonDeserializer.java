@@ -22,7 +22,7 @@ import java.util.function.Supplier;
  */
 public class CurvesJsonDeserializer extends StdDeserializer<List<DynawoCurvesBuilder>> {
 
-    private final Supplier<DynawoCurvesBuilder> builderConstructor;
+    private transient final Supplier<DynawoCurvesBuilder> builderConstructor;
 
     public CurvesJsonDeserializer(Supplier<DynawoCurvesBuilder> builderConstructor) {
         super(List.class);

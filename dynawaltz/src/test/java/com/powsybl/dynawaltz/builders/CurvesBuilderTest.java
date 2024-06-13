@@ -19,7 +19,7 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class CurvesBuilderTest {
+class CurvesBuilderTest {
 
     private ReportNode reporter;
 
