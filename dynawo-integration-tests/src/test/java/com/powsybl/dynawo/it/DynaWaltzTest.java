@@ -304,7 +304,6 @@ class DynaWaltzTest extends AbstractDynawoTest {
         checkFirstTimeLineEvent(timeLine.get(0), 0, "_GEN____8_SM", "PMIN : activation");
     }
 
-
     private void checkFirstTimeLineEvent(TimelineEvent event, double time, String modelName, String message) {
         assertEquals(time, event.time());
         assertEquals(modelName, event.modelName());
