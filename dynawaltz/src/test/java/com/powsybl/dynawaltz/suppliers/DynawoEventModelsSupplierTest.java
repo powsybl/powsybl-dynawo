@@ -7,9 +7,6 @@
  */
 package com.powsybl.dynawaltz.suppliers;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynamicsimulation.EventModel;
@@ -23,8 +20,11 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -67,11 +67,18 @@ class DynawoEventModelsSupplierTest {
     }
 
     @Test
+    void testSupplierFromPath() throws URISyntaxException {
+        Network network = EurostagTutorialExample1Factory.create();
+        Path path = Path.of(Objects.requireNonNull(getClass().getResource("/suppliers/mappingEvent.json")).toURI());
+        List<EventModel> models = new DynawoEventModelsSupplier(path).get(network);
+        assertEquals(1, models.size());
+    }
+
+    @Test
     void testEventModelConfigDeserializer() throws IOException {
-        ObjectMapper objectMapper = setupObjectMapper();
+        SupplierJsonDeserializer<EventModelConfig> deserializer = new SupplierJsonDeserializer<>(new EventModelConfigsJsonDeserializer());
         try (InputStream is = getClass().getResourceAsStream("/suppliers/mappingEvent.json")) {
-            List<EventModelConfig> configs = objectMapper.readValue(is, new TypeReference<>() {
-            });
+            List<EventModelConfig> configs = deserializer.deserialize(is);
             assertEquals(1, configs.size());
             assertThat(configs.get(0)).usingRecursiveComparison().isEqualTo(getActivePowerVariationConfig());
         }
@@ -132,13 +139,5 @@ class DynawoEventModelsSupplierTest {
                         .value("20")
                         .type(PropertyType.DOUBLE)
                         .build()));
-    }
-
-    private static ObjectMapper setupObjectMapper() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        SimpleModule module = new SimpleModule();
-        module.addDeserializer(List.class, new EventModelConfigsJsonDeserializer());
-        objectMapper.registerModule(module);
-        return objectMapper;
     }
 }

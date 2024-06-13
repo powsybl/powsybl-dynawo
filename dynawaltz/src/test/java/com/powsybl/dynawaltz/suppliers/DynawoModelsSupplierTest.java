@@ -7,9 +7,6 @@
  */
 package com.powsybl.dynawaltz.suppliers;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynamicsimulation.DynamicModel;
@@ -23,9 +20,12 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -75,11 +75,18 @@ class DynawoModelsSupplierTest {
     }
 
     @Test
+    void testSupplierFromPath() throws URISyntaxException {
+        Network network = EurostagTutorialExample1Factory.createWithLFResults();
+        Path path = Path.of(Objects.requireNonNull(getClass().getResource("/suppliers/mappingDynamicModel.json")).toURI());
+        List<DynamicModel> models = new DynawoModelsSupplier(path).get(network);
+        assertEquals(2, models.size());
+    }
+
+    @Test
     void testModelConfigDeserializer() throws IOException {
-        ObjectMapper objectMapper = setupObjectMapper();
+        SupplierJsonDeserializer<DynamicModelConfig> deserializer = new SupplierJsonDeserializer<>(new DynamicModelConfigsJsonDeserializer());
         try (InputStream is = getClass().getResourceAsStream("/suppliers/mappingDynamicModel.json")) {
-            List<DynamicModelConfig> configs = objectMapper.readValue(is, new TypeReference<>() {
-            });
+            List<DynamicModelConfig> configs = deserializer.deserialize(is);
             assertEquals(2, configs.size());
             assertThat(configs.get(0)).usingRecursiveComparison().isEqualTo(getLoadConfig());
             assertThat(configs.get(1)).usingRecursiveComparison().isEqualTo(getTcbConfig());
@@ -176,13 +183,5 @@ class DynawoModelsSupplierTest {
                         .type(PropertyType.STRING)
                         .build()
         ));
-    }
-
-    private static ObjectMapper setupObjectMapper() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        SimpleModule module = new SimpleModule();
-        module.addDeserializer(List.class, new DynamicModelConfigsJsonDeserializer());
-        objectMapper.registerModule(module);
-        return objectMapper;
     }
 }
