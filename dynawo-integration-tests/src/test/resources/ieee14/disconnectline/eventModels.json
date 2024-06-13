@@ -1,0 +1,24 @@
+{
+  "events":[
+    {
+      "model":"Disconnect",
+      "properties":[
+        {
+          "name":"staticId",
+          "value":"_BUS____1-BUS____5-1_AC",
+          "type":"STRING"
+        },
+        {
+          "name":"startTime",
+          "value":"1",
+          "type":"DOUBLE"
+        },
+        {
+          "name":"disconnectOnly",
+          "value":"TWO",
+          "type":"TWO_SIDES"
+        }
+      ]
+    }
+  ]
+}

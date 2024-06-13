@@ -15,6 +15,8 @@ import com.powsybl.dynawaltz.DynaWaltzConfig;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
 import com.powsybl.dynawaltz.DynaWaltzProvider;
 import com.powsybl.dynawaltz.parameters.ParametersSet;
+import com.powsybl.dynawaltz.suppliers.dynamicmodels.DynawoModelsSupplier;
+import com.powsybl.dynawaltz.suppliers.events.DynawoEventModelsSupplier;
 import com.powsybl.dynawaltz.xml.ParametersXml;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.VariantManagerConstants;
@@ -272,6 +274,36 @@ class DynaWaltzTest extends AbstractDynawoTest {
         assertTrue(result.getTimeLine().isEmpty());
         assertTrue(result.getCurves().isEmpty());
     }
+
+    @Test
+    void testIeee14DynawoSuppliers() {
+        Network network = Network.read(new ResourceDataSource("IEEE14", new ResourceSet("/ieee14", "IEEE14.iidm")));
+
+        DynamicModelsSupplier dynamicModelsSupplier = new DynawoModelsSupplier(getResourceAsStream("/ieee14/disconnectline/dynamicModels.json"));
+        EventModelsSupplier eventModelsSupplier = new DynawoEventModelsSupplier(getResourceAsStream("/ieee14/disconnectline/eventModels.json"));
+
+        List<ParametersSet> modelsParameters = ParametersXml.load(getResourceAsStream("/ieee14/disconnectline/models.par"));
+        ParametersSet networkParameters = ParametersXml.load(getResourceAsStream("/ieee14/disconnectline/network.par"), "8");
+        ParametersSet solverParameters = ParametersXml.load(getResourceAsStream("/ieee14/disconnectline/solvers.par"), "2");
+        dynaWaltzParameters.setModelsParameters(modelsParameters)
+                .setNetworkParameters(networkParameters)
+                .setSolverParameters(solverParameters)
+                .setSolverType(DynaWaltzParameters.SolverType.IDA)
+                .setDefaultDumpFileParameters()
+                .setTimelineExportMode(DynaWaltzParameters.ExportMode.XML);
+
+        DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, CurvesSupplier.empty(),
+                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, NO_OP)
+                .join();
+
+        assertEquals(DynamicSimulationResult.Status.SUCCESS, result.getStatus());
+        assertTrue(result.getStatusText().isEmpty());
+        assertEquals(0, result.getCurves().size());
+        List<TimelineEvent> timeLine = result.getTimeLine();
+        assertEquals(11, timeLine.size());
+        checkFirstTimeLineEvent(timeLine.get(0), 0, "_GEN____8_SM", "PMIN : activation");
+    }
+
 
     private void checkFirstTimeLineEvent(TimelineEvent event, double time, String modelName, String message) {
         assertEquals(time, event.time());
