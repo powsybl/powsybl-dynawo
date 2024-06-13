@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-class DynawoEventModelsSuppliersTest {
+class DynawoEventModelsSupplierTest {
 
     @Test
     void testEventSupplier() {
