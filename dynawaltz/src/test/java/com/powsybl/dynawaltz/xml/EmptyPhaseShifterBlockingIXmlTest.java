@@ -27,15 +27,20 @@ class EmptyPhaseShifterBlockingIXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void addDynamicModels() {
-        dynamicModels.add(PhaseShifterIAutomationSystemBuilder.of(network)
+        addModelIfNotNull(
+            PhaseShifterIAutomationSystemBuilder.of(network, reportNode)
                 .dynamicModelId("BBM_PS")
                 .parameterSetId("ps")
                 .transformer("NGEN_NHV1")
-                .build());
-        dynamicModels.add(PhaseShifterBlockingIAutomationSystemBuilder.of(network)
+                .build(),
+            PhaseShifterBlockingIAutomationSystemBuilder.of(network, reportNode)
                 .dynamicModelId("BBM_PSB")
                 .parameterSetId("psb")
                 .phaseShifterId("WRONG_ID")
+                .build(),
+            PhaseShifterBlockingIAutomationSystemBuilder.of(network, reportNode)
+                .dynamicModelId("BBM_PSB2")
+                .parameterSetId("psb")
                 .build());
     }
 
@@ -46,6 +51,10 @@ class EmptyPhaseShifterBlockingIXmlTest extends AbstractDynamicModelXmlTest {
         validate("dyd.xsd", "empty_phase_shifter_blocking_i_dyd.xml", tmpDir.resolve(DynaWaltzConstants.DYD_FILENAME));
         checkReport("""
                 + Test DYD
+                   Model BBM_PS instantiation successful
+                   Model BBM_PSB instantiation successful
+                   'phaseShifterId' field is not set
+                   Model BBM_PSB2 cannot be instantiated
                    + Dynawaltz models processing
                       PhaseShifterBlockingI BBM_PSB equipment WRONG_ID is not a PhaseShifterIModel, the automation system will be skipped
                 """);
