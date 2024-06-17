@@ -47,14 +47,16 @@ public class BuilderEquipmentsList<T extends Identifiable<?>> {
     }
 
     public void addEquipments(Iterable<String> staticIds, Function<String, T> equipmentsSupplier) {
-        staticIds.forEach(id -> {
-            T equipment = equipmentsSupplier.apply(id);
-            if (equipment != null) {
-                equipments.add(equipment);
-            } else {
-                missingEquipmentIds.add(id);
-            }
-        });
+        staticIds.forEach(id -> addEquipment(id, equipmentsSupplier));
+    }
+
+    public void addEquipment(String staticId, Function<String, T> equipmentsSupplier) {
+        T equipment = equipmentsSupplier.apply(staticId);
+        if (equipment != null) {
+            equipments.add(equipment);
+        } else {
+            missingEquipmentIds.add(staticId);
+        }
     }
 
     public boolean checkEquipmentData(ReportNode reportNode) {

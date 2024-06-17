@@ -21,7 +21,7 @@ import java.util.Set;
  */
 public class TapChangerAutomationSystemBuilder extends AbstractAutomationSystemModelBuilder<TapChangerAutomationSystemBuilder> {
 
-    private static final String CATEGORY = "tapChangers";
+    public static final String CATEGORY = "TAP_CHANGER";
     private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
 
     protected final BuilderEquipment<Load> load;
