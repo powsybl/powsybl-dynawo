@@ -24,12 +24,18 @@ public class BuilderConfig {
         ModelBuilder<DynamicModel> createBuilder(Network network, String lib, ReportNode reportNode);
     }
 
+    private final String category;
     private final ModelBuilderConstructor builderConstructor;
     private final Supplier<Collection<String>> libsSupplier;
 
-    public BuilderConfig(ModelBuilderConstructor builderConstructor, Supplier<Collection<String>> libsSupplier) {
+    public BuilderConfig(String category, ModelBuilderConstructor builderConstructor, Supplier<Collection<String>> libsSupplier) {
+        this.category = category;
         this.builderConstructor = builderConstructor;
         this.libsSupplier = libsSupplier;
+    }
+
+    public String getCategory() {
+        return category;
     }
 
     public ModelBuilderConstructor getBuilderConstructor() {

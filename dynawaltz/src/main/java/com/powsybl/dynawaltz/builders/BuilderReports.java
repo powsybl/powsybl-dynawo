@@ -21,6 +21,14 @@ public final class BuilderReports {
     private BuilderReports() {
     }
 
+    public static void reportBuilderNotFound(ReportNode reportNode, String lib) {
+        reportNode.newReportNode()
+                .withMessageTemplate("builderNotFound", "No builder found for ${lib}")
+                .withUntypedValue("lib", lib)
+                .withSeverity(TypedValue.INFO_SEVERITY)
+                .add();
+    }
+
     public static void reportLibNotFound(ReportNode reportNode, String builderName, String lib) {
         reportNode.newReportNode()
                 .withMessageTemplate("libNotFound", "Library ${lib} not found for ${builderName}")
@@ -40,7 +48,7 @@ public final class BuilderReports {
 
     public static void reportModelInstantiationFailure(ReportNode reportNode, String dynamicId) {
         reportNode.newReportNode()
-                .withMessageTemplate("modelInstantiation", "Model ${dynamicId} cannot be instantiated")
+                .withMessageTemplate("modelInstantiationError", "Model ${dynamicId} cannot be instantiated")
                 .withUntypedValue("dynamicId", dynamicId)
                 .withSeverity(TypedValue.WARN_SEVERITY)
                 .add();

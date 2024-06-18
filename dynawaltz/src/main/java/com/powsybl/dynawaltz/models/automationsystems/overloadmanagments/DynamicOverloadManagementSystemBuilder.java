@@ -23,7 +23,7 @@ import java.util.Set;
  */
 public class DynamicOverloadManagementSystemBuilder extends AbstractOverloadManagementSystemBuilder<DynamicOverloadManagementSystemBuilder> {
 
-    private static final String CATEGORY = "overloadManagements";
+    public static final String CATEGORY = "OVERLOAD_MANAGEMENT";
     private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
 
     public static DynamicOverloadManagementSystemBuilder of(Network network) {

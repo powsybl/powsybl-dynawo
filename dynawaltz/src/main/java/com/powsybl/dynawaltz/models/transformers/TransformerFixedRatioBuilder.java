@@ -24,7 +24,7 @@ import java.util.Set;
  */
 public class TransformerFixedRatioBuilder extends AbstractEquipmentModelBuilder<TwoWindingsTransformer, TransformerFixedRatioBuilder> {
 
-    private static final String CATEGORY = "transformers";
+    public static final String CATEGORY = "TRANSFORMER";
     private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
 
     public static TransformerFixedRatioBuilder of(Network network) {
