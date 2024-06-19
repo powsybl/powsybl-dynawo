@@ -38,14 +38,14 @@ class DynaWaltzDynamicModelGroovyExtension implements DynamicModelGroovyExtensio
 
     @Override
     List<String> getModelNames() {
-        builderConfigs.stream().flatMap { it -> it.libs}.toList() as List<String>
+        builderConfigs.stream().flatMap { it -> it.libs.libsInfo}.toList() as List<String>
     }
 
 
     @Override
     void load(Binding binding, Consumer<DynamicModel> consumer, ReportNode reportNode) {
         builderConfigs.forEach {conf ->
-            conf.libs.forEach {lib ->
+            conf.libs.libsName.forEach {lib ->
                 binding.setVariable(lib , { Closure<Void> closure ->
                     def cloned = closure.clone()
                     ModelBuilder<DynamicModel> builder = conf.builderConstructor

@@ -8,16 +8,10 @@
 package com.powsybl.dynawaltz.models.svarcs;
 
 import com.powsybl.commons.report.ReportNode;
-import com.powsybl.dynawaltz.builders.AbstractEquipmentModelBuilder;
-import com.powsybl.dynawaltz.builders.ModelConfig;
-import com.powsybl.dynawaltz.builders.ModelConfigsHandler;
-import com.powsybl.dynawaltz.builders.ModelConfigs;
-import com.powsybl.dynawaltz.builders.BuilderReports;
+import com.powsybl.dynawaltz.builders.*;
 import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.StaticVarCompensator;
-
-import java.util.Set;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -48,8 +42,8 @@ public class BaseStaticVarCompensatorBuilder extends AbstractEquipmentModelBuild
         return new BaseStaticVarCompensatorBuilder(network, modelConfig, reportNode);
     }
 
-    public static Set<String> getSupportedLibs() {
-        return MODEL_CONFIGS.getSupportedLibs();
+    public static ModelConfigsLibsInfo getSupportedLibs() {
+        return MODEL_CONFIGS;
     }
 
     protected BaseStaticVarCompensatorBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {

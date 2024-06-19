@@ -50,7 +50,7 @@ public final class ModelConfigsHandler {
                 })
         ));
         builderConfigs = modelConfigLoaders.stream().flatMap(ModelConfigLoader::loadBuilderConfigs).toList();
-        builderConfigs.forEach(bc -> modelConfigsCat.get(bc.getCategory()).getSupportedLibs()
+        builderConfigs.forEach(bc -> modelConfigsCat.get(bc.getCategory()).getLibsName()
                 .forEach(lib -> builderConstructorByName.put(lib, bc.getBuilderConstructor())));
     }
 

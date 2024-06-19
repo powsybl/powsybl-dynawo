@@ -8,13 +8,8 @@
 package com.powsybl.dynawaltz.models.buses;
 
 import com.powsybl.commons.report.ReportNode;
-import com.powsybl.dynawaltz.builders.ModelConfig;
-import com.powsybl.dynawaltz.builders.ModelConfigsHandler;
-import com.powsybl.dynawaltz.builders.ModelConfigs;
-import com.powsybl.dynawaltz.builders.BuilderReports;
+import com.powsybl.dynawaltz.builders.*;
 import com.powsybl.iidm.network.Network;
-
-import java.util.Set;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -45,8 +40,8 @@ public class StandardBusBuilder extends AbstractBusBuilder<StandardBusBuilder> {
         return new StandardBusBuilder(network, modelConfig, reportNode);
     }
 
-    public static Set<String> getSupportedLibs() {
-        return MODEL_CONFIGS.getSupportedLibs();
+    public static ModelConfigsLibsInfo getSupportedLibs() {
+        return MODEL_CONFIGS;
     }
 
     protected StandardBusBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {

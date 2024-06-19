@@ -34,7 +34,7 @@ class BuilderConfigTest {
     @Test
     void testModelBuilders() {
         for (BuilderConfig builderConfig : MODEL_CONFIGS_HANDLER.getBuilderConfigs()) {
-            String lib = builderConfig.getLibs().iterator().next();
+            String lib = builderConfig.getLibs().getLibsName().iterator().next();
             ModelBuilder<DynamicModel> tagBuilder = MODEL_CONFIGS_HANDLER.getModelBuilder(NETWORK, lib, ReportNode.NO_OP);
             ModelBuilder<DynamicModel> configBuilder = builderConfig.getBuilderConstructor().createBuilder(NETWORK, lib, ReportNode.NO_OP);
             assertNotNull(tagBuilder);

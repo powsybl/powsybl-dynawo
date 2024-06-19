@@ -3,7 +3,8 @@
     "defaultLib": "GeneratorFictitious",
     "libs": [
       {
-        "lib": "GeneratorFictitious"
+        "lib": "GeneratorFictitious",
+        "doc": "Fictitious generator (behaves in a similar way as an alpha-beta load)"
       }
     ]
   },
@@ -11,7 +12,8 @@
     "defaultLib": "GeneratorSynchronousFourWindings",
     "libs": [
       {
-        "lib": "GeneratorSynchronousFourWindings"
+        "lib": "GeneratorSynchronousFourWindings",
+        "doc": "Four windings synchronous generator"
       },
       {
         "lib": "GeneratorSynchronousFourWindingsGoverPropVRPropInt",
@@ -56,7 +58,8 @@
         "lib": "GeneratorSynchronousProportionalRegulationsInternalParameters"
       },
       {
-        "lib": "GeneratorSynchronousThreeWindings"
+        "lib": "GeneratorSynchronousThreeWindings",
+        "doc": "Three windings synchronous generator"
       },
       {
         "lib": "GeneratorSynchronousThreeWindingsGoverNordicVRNordic"
@@ -187,13 +190,15 @@
     "defaultLib": "GeneratorPQ",
     "libs": [
       {
-        "lib": "GeneratorPQ"
+        "lib": "GeneratorPQ",
+        "doc": "Generator with fixed active and reactive power targets. The actual outputs may however vary in order to mimic frequency and voltage regulation."
       },
       {
         "lib": "GeneratorPV",
         "properties": [
           "CONTROLLABLE"
-        ]
+        ],
+        "doc": "Generator with fixed active power and voltage targets. The reactive power output changes over time in order to follow the voltage target (when it is not possible to do so, the reactive power is set to the minimum or maximum value). The active power outputs may vary in order to mimic frequency regulation"
       },
       {
         "lib": "GeneratorPVFixed"
@@ -296,22 +301,26 @@
     "defaultLib": "HvdcVSC",
     "libs": [
       {
-        "lib": "HvdcVSC"
+        "lib": "HvdcVSC",
+        "doc": "Standard dynamic model for Hvdc-VSC link"
       },
       {
-        "lib": "HvdcVSCEmulation"
+        "lib": "HvdcVSCEmulation",
+        "doc": "Standard dynamic model for Hvdc-VSC link with AC emulation"
       },
       {
         "lib": "HvdcVSCDanglingP",
         "properties": [
           "DANGLING"
-        ]
+        ],
+        "doc": "Standard dynamic model for Hvdc-VSC link between two different synchronous areas (P control on the main one)"
       },
       {
         "lib": "HvdcVSCDanglingUdc",
         "properties": [
           "DANGLING"
-        ]
+        ],
+        "doc": "Standard dynamic model for Hvdc-VSC link between two different synchronous areas (P control on the main one)"
       }
     ]
   },
@@ -319,7 +328,8 @@
     "defaultLib": "Bus",
     "libs": [
       {
-        "lib": "Bus"
+        "lib": "Bus",
+        "doc": "Standard bus"
       }
     ]
   },
@@ -344,10 +354,12 @@
         "lib": "LoadAlphaBeta",
         "properties": [
           "CONTROLLABLE"
-        ]
+        ],
+        "doc": "Voltage-dependent load"
       },
       {
-        "lib": "LoadAlphaBetaRestorative"
+        "lib": "LoadAlphaBetaRestorative",
+        "doc": "Restorative load model with a voltage-dependent behavior when the voltage hits the limits"
       },
       {
         "lib": "LoadAlphaBetaRestorativeLimitsRecalc"
@@ -356,7 +368,8 @@
         "lib": "LoadAlphaBetaMotor"
       },
       {
-        "lib": "LoadPQ"
+        "lib": "LoadPQ",
+        "doc": "PQ load"
       },
       {
         "lib": "LoadAlphaBetaRestorativeNetwork"
@@ -388,7 +401,8 @@
     "defaultLib": "LoadOneTransformer",
     "libs": [
       {
-        "lib": "LoadOneTransformer"
+        "lib": "LoadOneTransformer",
+        "doc": "Load behind one transformer"
       }
     ]
   },
@@ -396,7 +410,8 @@
     "defaultLib": "LoadOneTransformerTapChanger",
     "libs": [
       {
-        "lib": "LoadOneTransformerTapChanger"
+        "lib": "LoadOneTransformerTapChanger",
+        "doc": "Load behind one transformer with a tap changer"
       }
     ]
   },
@@ -404,7 +419,8 @@
     "defaultLib": "LoadTwoTransformers",
     "libs": [
       {
-        "lib": "LoadTwoTransformers"
+        "lib": "LoadTwoTransformers",
+        "doc": "Load behind two transformers"
       }
     ]
   },
@@ -412,7 +428,8 @@
     "defaultLib": "LoadTwoTransformersTapChangers",
     "libs": [
       {
-        "lib": "LoadTwoTransformersTapChangers"
+        "lib": "LoadTwoTransformersTapChangers",
+        "doc": "Load behind two transformers with tap changers"
       }
     ]
   },
@@ -420,7 +437,8 @@
     "defaultLib": "Line",
     "libs": [
       {
-        "lib": "Line"
+        "lib": "Line",
+        "doc": "Standard line"
       }
     ]
   },
@@ -428,7 +446,8 @@
     "defaultLib": "StaticVarCompensator",
     "libs": [
       {
-        "lib": "StaticVarCompensator"
+        "lib": "StaticVarCompensator",
+        "doc": "Standard static var compensator"
       },
       {
         "lib": "StaticVarCompensatorPV"
@@ -536,7 +555,8 @@
     "libs": [
       {
         "lib": "CurrentLimitAutomaton",
-        "alias": "OverloadManagementSystem"
+        "alias": "OverloadManagementSystem",
+        "doc": "Automation system which emits a specific order when the current on the monitored line goes above a given threshold during some time"
       }
     ]
   },
@@ -545,7 +565,8 @@
     "libs": [
       {
         "lib": "CurrentLimitAutomatonTwoLevels",
-        "alias": "TwoLevelsOverloadManagementSystem"
+        "alias": "TwoLevelsOverloadManagementSystem",
+        "doc": "Automation system which emits a specific order when the current on two monitored lines goes above a given threshold during some time"
       }
     ]
   },
@@ -553,7 +574,8 @@
     "defaultLib": "PhaseShifterI",
     "libs": [
       {
-        "lib": "PhaseShifterI"
+        "lib": "PhaseShifterI",
+        "doc": "Phase-shifter which monitors a given current. When the current goes above a given threshold max, taps will be changed in order to decrease it. When the active power goes below another threshold stop, the phase-shifter is automatically deactivated"
       }
     ]
   },
@@ -561,7 +583,8 @@
     "defaultLib": "PhaseShifterP",
     "libs": [
       {
-        "lib": "PhaseShifterP"
+        "lib": "PhaseShifterP",
+        "doc": "Phase-shifter which monitors a given active power. When the active power goes above a given threshold max, taps will be changed in order to decrease it. When the active power goes below another threshold stop, the phase-shifter is automatically deactivated"
       }
     ]
   },
@@ -569,7 +592,8 @@
     "defaultLib": "TapChangerAutomaton",
     "libs": [
       {
-        "lib": "TapChangerAutomaton"
+        "lib": "TapChangerAutomaton",
+        "doc": "Tap changer"
       }
     ]
   },
@@ -577,7 +601,8 @@
     "defaultLib": "TapChangerBlockingAutomaton",
     "libs": [
       {
-        "lib": "TapChangerBlockingAutomaton"
+        "lib": "TapChangerBlockingAutomaton",
+        "doc": "Block tap-changers when one of the monitored voltages goes below a threshold"
       }
     ]
   },
@@ -586,7 +611,8 @@
     "libs": [
       {
         "lib": "UnderVoltageAutomaton",
-        "alias": "UnderVoltage"
+        "alias": "UnderVoltage",
+        "doc": "Send switch-off signal to the monitored generator when the voltage goes below a threshold"
       }
     ]
   }
