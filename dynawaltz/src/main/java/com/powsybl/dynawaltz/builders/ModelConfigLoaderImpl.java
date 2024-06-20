@@ -17,6 +17,9 @@ import com.powsybl.dynawaltz.models.automationsystems.phaseshifters.PhaseShifter
 import com.powsybl.dynawaltz.models.automationsystems.phaseshifters.PhaseShifterPAutomationSystemBuilder;
 import com.powsybl.dynawaltz.models.buses.InfiniteBusBuilder;
 import com.powsybl.dynawaltz.models.buses.StandardBusBuilder;
+import com.powsybl.dynawaltz.models.events.EventActivePowerVariationBuilder;
+import com.powsybl.dynawaltz.models.events.EventDisconnectionBuilder;
+import com.powsybl.dynawaltz.models.events.NodeFaultEventBuilder;
 import com.powsybl.dynawaltz.models.generators.*;
 import com.powsybl.dynawaltz.models.hvdc.HvdcPBuilder;
 import com.powsybl.dynawaltz.models.hvdc.HvdcVscBuilder;
@@ -61,6 +64,11 @@ public final class ModelConfigLoaderImpl implements ModelConfigLoader {
             new BuilderConfig(WeccBuilder.CATEGORY, WeccBuilder::of, WeccBuilder::getSupportedLibs),
             new BuilderConfig(GridFormingConverterBuilder.CATEGORY, GridFormingConverterBuilder::of, GridFormingConverterBuilder::getSupportedLibs));
 
+    private static final Stream<EventBuilderConfig> EVENT_BUILDER_CONFIGS = Stream.of(
+            new EventBuilderConfig(EventActivePowerVariationBuilder::of, EventActivePowerVariationBuilder.TAG, EventActivePowerVariationBuilder.getInfo()),
+            new EventBuilderConfig(EventDisconnectionBuilder::of, EventDisconnectionBuilder.TAG, EventDisconnectionBuilder.getInfo()),
+            new EventBuilderConfig(NodeFaultEventBuilder::of, NodeFaultEventBuilder.TAG, NodeFaultEventBuilder.getInfo()));
+
     @Override
     public String getModelConfigFileName() {
         return MODEL_CONFIG_FILENAME;
@@ -69,5 +77,10 @@ public final class ModelConfigLoaderImpl implements ModelConfigLoader {
     @Override
     public Stream<BuilderConfig> loadBuilderConfigs() {
         return BUILDER_CONFIGS;
+    }
+
+    @Override
+    public Stream<EventBuilderConfig> loadEventBuilderConfigs() {
+        return EVENT_BUILDER_CONFIGS;
     }
 }
