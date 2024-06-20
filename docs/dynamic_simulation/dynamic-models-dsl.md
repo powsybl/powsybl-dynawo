@@ -54,13 +54,14 @@ OverloadManagementSystem {
 #### TODO add all automation systems
 
 ## Supported models
-Models are listed in [models.json](../../blob/main/dynawaltz/src/main/resources/models.json).  
+Models are listed in [models.json](../../dynawaltz/src/main/resources/models.json).  
 The list is divided in categories each linked to a dedicated builder.
 ### Categories properties
 * `defaultLib` : name of the default library
 * `libs` : list of dynawo libraries supported for this category
 
-The list is statically loaded via [ModelConfigLoader](../../blob/main/dynawaltz/src/main/java/com/powsybl/dynawaltz/builders/ModelConfigLoader.java) services and thus can be extended.
+The list is statically loaded via [ModelConfigLoader](https://javadoc.io/doc/com.powsybl/powsybl-dynawo/latest/com/powsybl/dynawaltz/builders/ModelConfigLoader.html) services and thus can be extended.
+
 ### Library properties
 * `lib`: library name used in dynawo
 * `alias`: name used in powsybl-dynawo instead of lib
@@ -68,7 +69,7 @@ The list is statically loaded via [ModelConfigLoader](../../blob/main/dynawaltz/
 * `internalModelPrefix`: used for dyd file creation
 
 ## Dynamic model Builder List
-Ultimately, alls groovy scripts call dedicated builders that can be used directly by developers.
+Ultimately, all groovy scripts call dedicated builders that can be used directly by developers.
 ### Equipments
 * BaseStaticVarCompensatorBuilder
 * HvdcPBuilder
