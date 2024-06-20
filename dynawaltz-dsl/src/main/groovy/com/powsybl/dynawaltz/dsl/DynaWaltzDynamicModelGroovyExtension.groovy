@@ -38,7 +38,7 @@ class DynaWaltzDynamicModelGroovyExtension implements DynamicModelGroovyExtensio
 
     @Override
     List<String> getModelNames() {
-        builderConfigs.stream().flatMap { it -> it.libs.libsInfo}.toList() as List<String>
+        builderConfigs.stream().flatMap { it -> it.libs.libsInfo.stream()}.toList() as List<String>
     }
 
 

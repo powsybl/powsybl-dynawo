@@ -34,9 +34,9 @@ public final class ModelConfigsHandler {
     private final Map<String, BuilderConfig.ModelBuilderConstructor> builderConstructorByName = new HashMap<>();
 
     private final List<EventBuilderConfig> eventBuilderConfigs = List.of(
-            new EventBuilderConfig(EventActivePowerVariationBuilder::of, EventActivePowerVariationBuilder.TAG),
-            new EventBuilderConfig(EventDisconnectionBuilder::of, EventDisconnectionBuilder.TAG),
-            new EventBuilderConfig(NodeFaultEventBuilder::of, NodeFaultEventBuilder.TAG));
+            new EventBuilderConfig(EventActivePowerVariationBuilder::of, EventActivePowerVariationBuilder.TAG, EventActivePowerVariationBuilder.getInfo()),
+            new EventBuilderConfig(EventDisconnectionBuilder::of, EventDisconnectionBuilder.TAG, EventDisconnectionBuilder.getInfo()),
+            new EventBuilderConfig(NodeFaultEventBuilder::of, NodeFaultEventBuilder.TAG, NodeFaultEventBuilder.getInfo()));
 
     private final Map<String, EventBuilderConfig.EventModelBuilderConstructor> eventBuilderConstructorByName =
             eventBuilderConfigs.stream().collect(Collectors.toMap(EventBuilderConfig::getTag, EventBuilderConfig::getBuilderConstructor));

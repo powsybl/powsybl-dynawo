@@ -20,6 +20,7 @@ import java.util.EnumSet;
 public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identifiable<?>, EventDisconnectionBuilder> {
 
     public static final String TAG = "Disconnect";
+    private static final String INFO = TAG + ": Disconnect network equipment (injection, branch or hvdc)";
     private static final EnumSet<IdentifiableType> CONNECTABLE_INJECTIONS = EnumSet.of(IdentifiableType.GENERATOR, IdentifiableType.LOAD, IdentifiableType.STATIC_VAR_COMPENSATOR, IdentifiableType.SHUNT_COMPENSATOR);
     private static final EnumSet<IdentifiableType> CONNECTABLE_BRANCHES = EnumSet.of(IdentifiableType.LINE, IdentifiableType.TWO_WINDINGS_TRANSFORMER);
 
@@ -39,6 +40,10 @@ public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identif
 
     public static EventDisconnectionBuilder of(Network network, ReportNode reportNode) {
         return new EventDisconnectionBuilder(network, reportNode);
+    }
+
+    public static String getInfo() {
+        return INFO;
     }
 
     EventDisconnectionBuilder(Network network, ReportNode reportNode) {

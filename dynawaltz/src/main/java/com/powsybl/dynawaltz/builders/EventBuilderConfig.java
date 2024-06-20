@@ -23,10 +23,12 @@ public class EventBuilderConfig {
 
     private final EventModelBuilderConstructor builderConstructor;
     private final String tag;
+    private final String info;
 
-    public EventBuilderConfig(EventModelBuilderConstructor builderConstructor, String tag) {
+    public EventBuilderConfig(EventModelBuilderConstructor builderConstructor, String tag, String info) {
         this.builderConstructor = builderConstructor;
         this.tag = tag;
+        this.info = info;
     }
 
     public EventModelBuilderConstructor getBuilderConstructor() {
@@ -35,5 +37,9 @@ public class EventBuilderConfig {
 
     public String getTag() {
         return tag;
+    }
+
+    public String getInfo() {
+        return info;
     }
 }

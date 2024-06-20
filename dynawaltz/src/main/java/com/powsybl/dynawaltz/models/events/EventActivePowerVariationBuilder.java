@@ -19,6 +19,7 @@ import com.powsybl.iidm.network.Network;
 public class EventActivePowerVariationBuilder extends AbstractEventModelBuilder<Injection<?>, EventActivePowerVariationBuilder> {
 
     public static final String TAG = "Step";
+    private static final String INFO = TAG + ": Power variation on generator or load";
 
     protected Double deltaP;
 
@@ -28,6 +29,10 @@ public class EventActivePowerVariationBuilder extends AbstractEventModelBuilder<
 
     public static EventActivePowerVariationBuilder of(Network network, ReportNode reportNode) {
         return new EventActivePowerVariationBuilder(network, reportNode);
+    }
+
+    public static String getInfo() {
+        return INFO;
     }
 
     EventActivePowerVariationBuilder(Network network, ReportNode reportNode) {
