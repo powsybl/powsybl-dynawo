@@ -132,7 +132,8 @@ class DynaFlowSecurityAnalysisTest extends AbstractSerDeTest {
         LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynawo_bad_version.out", null);
         SecurityAnalysisRunParameters runParameters = new SecurityAnalysisRunParameters()
                 .setComputationManager(new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool()));
-        assertThrows(PowsyblException.class, () -> SecurityAnalysis.run(network, List.of(), runParameters));
+        List<Contingency> contingencies = List.of();
+        assertThrows(PowsyblException.class, () -> SecurityAnalysis.run(network, contingencies, runParameters));
     }
 
     private static Network buildNetwork() {
