@@ -61,14 +61,11 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
         double startTime = 0.;
         double stopTime = 100.;
         double precision = 15.45;
-        double timeOfEvent = 10.;
+        double timeOfEvent = 14.;
         List<String> chosenOutputs = Arrays.asList(OutputTypes.STEADYSTATE.name(), OutputTypes.TIMELINE.name());
         double timeStep = 0;
         StartingPointMode startingPointMode = StartingPointMode.FLAT;
-        boolean mergeLoads = false;
-
-        DynaFlowParameters.Sa securityAnalysis = new DynaFlowParameters.Sa();
-        securityAnalysis.setTimeOfEvent(2.);
+        boolean mergeLoads = true;
 
         MapModuleConfig moduleConfig = platformConfig.createModuleConfig(MODULE_SPECIFIC_PARAMETERS);
         moduleConfig.setStringProperty("svcRegulationOn", Boolean.toString(svcRegulationOn));
@@ -205,6 +202,7 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
 
         try (InputStream actual = Files.newInputStream(parameterFile);
              InputStream expected = getClass().getResourceAsStream("/params_default.json")) {
+            assertNotNull(expected);
             compareTxt(expected, actual);
         }
     }
@@ -230,7 +228,7 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
             .setChosenOutputs(Collections.singletonList(OutputTypes.STEADYSTATE.name()))
             .setTimeStep(2.6)
             .setStartingPointMode(StartingPointMode.WARM)
-            .setMergeLoads(false);
+            .setMergeLoads(true);
         lfParameters.addExtension(DynaFlowParameters.class, dynaFlowParameters);
 
         Path workingDir = fileSystem.getPath("dynaflow/workingDir");
@@ -239,6 +237,7 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
 
         try (InputStream actual = Files.newInputStream(parameterFile);
              InputStream expected = getClass().getResourceAsStream("/params.json")) {
+            assertNotNull(expected);
             compareTxt(expected, actual);
         }
     }

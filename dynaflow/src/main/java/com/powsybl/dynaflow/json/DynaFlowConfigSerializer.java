@@ -20,7 +20,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
- *
+ * Serializes parameters from {@link DynaFlowParameters} used by Dynawo.
+ * Some parameters are directly used by powsybl-dynawo and thus not serialized.
  * @author Guillaume Pernin {@literal <guillaume.pernin at rte-france.com>}
  */
 public final class DynaFlowConfigSerializer {

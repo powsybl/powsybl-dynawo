@@ -39,7 +39,6 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 import static com.powsybl.dynaflow.DynaFlowConstants.*;
-import static com.powsybl.dynaflow.DynaFlowParameters.*;
 import static com.powsybl.dynawo.commons.DynawoConstants.DYNAWO_TIMELINE_FOLDER;
 
 /**
@@ -141,22 +140,10 @@ public class DynaFlowProvider implements LoadFlowProvider {
 
     @Override
     public Map<String, String> createMapFromSpecificParameters(Extension<LoadFlowParameters> extension) {
-        return Map.ofEntries(
-                Map.entry(SVC_REGULATION_ON, Boolean.toString(((DynaFlowParameters) extension).getSvcRegulationOn())),
-                Map.entry(SHUNT_REGULATION_ON, Boolean.toString(((DynaFlowParameters) extension).getShuntRegulationOn())),
-                Map.entry(AUTOMATIC_SLACK_BUS_ON, Boolean.toString(((DynaFlowParameters) extension).getAutomaticSlackBusOn())),
-                Map.entry(DSO_VOLTAGE_LEVEL, Double.toString(((DynaFlowParameters) extension).getDsoVoltageLevel())),
-                Map.entry(ACTIVE_POWER_COMPENSATION, ((DynaFlowParameters) extension).getActivePowerCompensation().name()),
-                Map.entry(SETTING_PATH, ((DynaFlowParameters) extension).getSettingPath()),
-                Map.entry(ASSEMBLING_PATH, ((DynaFlowParameters) extension).getAssemblingPath()),
-                Map.entry(START_TIME, Double.toString(((DynaFlowParameters) extension).getStartTime())),
-                Map.entry(STOP_TIME, Double.toString(((DynaFlowParameters) extension).getStopTime())),
-                Map.entry(PRECISION_NAME, Double.toString(((DynaFlowParameters) extension).getPrecision())),
-                Map.entry(Sa.TIME_OF_EVENT, Double.toString(((DynaFlowParameters) extension).getSa().getTimeOfEvent())),
-                Map.entry(CHOSEN_OUTPUTS, String.join(", ", ((DynaFlowParameters) extension).getChosenOutputs())),
-                Map.entry(TIME_STEP, Double.toString(((DynaFlowParameters) extension).getTimeStep())),
-                Map.entry(STARTING_POINT_MODE, ((DynaFlowParameters) extension).getStartingPointMode().name()),
-                Map.entry(MERGE_LOADS, Boolean.toString(((DynaFlowParameters) extension).isMergeLoads())));
+        if (extension instanceof DynaFlowParameters dfp) {
+            dfp.createMapFromParameters();
+        }
+        return Collections.emptyMap();
     }
 
     @Override

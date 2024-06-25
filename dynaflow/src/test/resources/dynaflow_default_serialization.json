@@ -18,7 +18,8 @@
   "dcPowerFactor" : 1.0,
   "extensions" : {
     "DynaFlowParameters" : {
-      "chosenOutputs" : [ "TIMELINE" ]
+      "chosenOutputs" : [ "TIMELINE" ],
+      "mergeLoads" : true
     }
   }
 }

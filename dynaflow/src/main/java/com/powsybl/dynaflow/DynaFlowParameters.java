@@ -70,20 +70,20 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
     }
 
     private static final String CHOSEN_OUTPUT_STRING_DELIMITER = ",";
-    protected static final String SVC_REGULATION_ON = "svcRegulationOn";
-    protected static final String SHUNT_REGULATION_ON = "shuntRegulationOn";
-    protected static final String AUTOMATIC_SLACK_BUS_ON = "automaticSlackBusOn";
-    protected static final String DSO_VOLTAGE_LEVEL = "dsoVoltageLevel";
-    protected static final String ACTIVE_POWER_COMPENSATION = "activePowerCompensation";
-    protected static final String SETTING_PATH = "settingPath";
-    protected static final String ASSEMBLING_PATH = "assemblingPath";
-    protected static final String START_TIME = "startTime";
-    protected static final String STOP_TIME = "stopTime";
-    protected static final String PRECISION_NAME = "precision";
-    protected static final String CHOSEN_OUTPUTS = "chosenOutputs";
-    protected static final String TIME_STEP = "timeStep";
-    protected static final String STARTING_POINT_MODE = "startingPointMode";
-    protected static final String MERGE_LOADS = "mergeLoads";
+    private static final String SVC_REGULATION_ON = "svcRegulationOn";
+    private static final String SHUNT_REGULATION_ON = "shuntRegulationOn";
+    private static final String AUTOMATIC_SLACK_BUS_ON = "automaticSlackBusOn";
+    private static final String DSO_VOLTAGE_LEVEL = "dsoVoltageLevel";
+    private static final String ACTIVE_POWER_COMPENSATION = "activePowerCompensation";
+    private static final String SETTING_PATH = "settingPath";
+    private static final String ASSEMBLING_PATH = "assemblingPath";
+    private static final String START_TIME = "startTime";
+    private static final String STOP_TIME = "stopTime";
+    private static final String PRECISION_NAME = "precision";
+    private static final String CHOSEN_OUTPUTS = "chosenOutputs";
+    private static final String TIME_STEP = "timeStep";
+    private static final String STARTING_POINT_MODE = "startingPointMode";
+    private static final String MERGE_LOADS = "mergeLoads";
 
     private static <E extends Enum<E>> List<Object> getEnumPossibleValues(Class<E> enumClass) {
         return EnumSet.allOf(enumClass).stream().map(Enum::name).collect(Collectors.toList());
@@ -261,7 +261,6 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         return this;
     }
 
-    @JsonIgnore
     public boolean isMergeLoads() {
         return mergeLoads;
     }
@@ -356,6 +355,25 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         Optional.ofNullable(properties.get(TIME_STEP)).ifPresent(prop -> setTimeStep(Double.parseDouble(prop)));
         Optional.ofNullable(properties.get(STARTING_POINT_MODE)).ifPresent(prop -> setStartingPointMode(StartingPointMode.fromString(prop)));
         Optional.ofNullable(properties.get(MERGE_LOADS)).ifPresent(prop -> setMergeLoads(Boolean.parseBoolean(prop)));
+    }
+
+    public Map<String, String> createMapFromParameters() {
+        return Map.ofEntries(
+                Map.entry(SVC_REGULATION_ON, Boolean.toString(getSvcRegulationOn())),
+                Map.entry(SHUNT_REGULATION_ON, Boolean.toString(getShuntRegulationOn())),
+                Map.entry(AUTOMATIC_SLACK_BUS_ON, Boolean.toString(getAutomaticSlackBusOn())),
+                Map.entry(DSO_VOLTAGE_LEVEL, Double.toString(getDsoVoltageLevel())),
+                Map.entry(ACTIVE_POWER_COMPENSATION, getActivePowerCompensation().name()),
+                Map.entry(SETTING_PATH, getSettingPath()),
+                Map.entry(ASSEMBLING_PATH, getAssemblingPath()),
+                Map.entry(START_TIME, Double.toString(getStartTime())),
+                Map.entry(STOP_TIME, Double.toString(getStopTime())),
+                Map.entry(PRECISION_NAME, Double.toString(getPrecision())),
+                Map.entry(Sa.TIME_OF_EVENT, Double.toString(getTimeOfEvent())),
+                Map.entry(CHOSEN_OUTPUTS, String.join(", ", getChosenOutputs())),
+                Map.entry(TIME_STEP, Double.toString(getTimeStep())),
+                Map.entry(STARTING_POINT_MODE, getStartingPointMode().name()),
+                Map.entry(MERGE_LOADS, Boolean.toString(isMergeLoads())));
     }
 
     public static DynaFlowParameters load(Map<String, String> properties) {

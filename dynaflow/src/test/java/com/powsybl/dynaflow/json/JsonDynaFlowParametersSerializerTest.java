@@ -59,6 +59,7 @@ class JsonDynaFlowParametersSerializerTest extends AbstractSerDeTest {
         assertArrayEquals(expectedChosenOutputs.toArray(), dynaFlowParameters.getChosenOutputs().toArray());
         assertEquals(expectedTimeStep, dynaFlowParameters.getTimeStep(), 0.1d);
         assertEquals(DynaFlowConstants.StartingPointMode.WARM, dynaFlowParameters.getStartingPointMode());
+        assertFalse(dynaFlowParameters.isMergeLoads());
 
         assertTrue(lfParameters.isTransformerVoltageControlOn());
         assertFalse(lfParameters.isPhaseShifterRegulationOn());
@@ -86,7 +87,8 @@ class JsonDynaFlowParametersSerializerTest extends AbstractSerDeTest {
             .setTimeOfEvent(10.)
             .setChosenOutputs(Collections.singletonList(DynaFlowConstants.OutputTypes.STEADYSTATE.name()))
             .setTimeStep(2.6)
-            .setStartingPointMode(DynaFlowConstants.StartingPointMode.WARM);
+            .setStartingPointMode(DynaFlowConstants.StartingPointMode.WARM)
+            .setMergeLoads(false);
 
         parameters.addExtension(DynaFlowParameters.class, params);
 

@@ -23,7 +23,7 @@ import com.powsybl.loadflow.LoadFlowParameters;
 import java.io.IOException;
 
 /**
- *
+ * Represents {@link DynaFlowParameters} as a Json extension of {@link LoadFlowParameters}
  * @author Guillaume Pernin {@literal <guillaume.pernin at rte-france.com>}
  */
 @AutoService(ExtensionJsonSerializer.class)
