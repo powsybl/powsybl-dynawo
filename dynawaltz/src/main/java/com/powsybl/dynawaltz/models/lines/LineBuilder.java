@@ -24,7 +24,7 @@ import java.util.Set;
  */
 public class LineBuilder extends AbstractEquipmentModelBuilder<Line, LineBuilder> {
 
-    private static final String CATEGORY = "baseLines";
+    public static final String CATEGORY = "BASE_LINE";
     private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
 
     public static LineBuilder of(Network network) {
