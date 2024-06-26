@@ -23,8 +23,8 @@ print(f'appended {source_path}')
 
 # -- Project information -----------------------------------------------------
 
-# Only those 4 parameters have to be modified for each specific repository
-project = 'powsybl dynawo'
+# Only those 3 parameters have to be modified for each specific repository
+project = 'powsybl-dynawo'
 module_name = "powsybl-dynawo"
 github_repository = "https://github.com/powsybl/powsybl-dynawo/"
 
