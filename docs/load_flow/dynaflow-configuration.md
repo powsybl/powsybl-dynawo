@@ -1,8 +1,6 @@
----
-layout: default
----
+# Configuration
 
-# DynaFlow configuration
+## DynaFlow configuration
 
 You need to tell powsybl where to find DynaFlow, by adding this into you configuration file:
 ```yaml
@@ -18,7 +16,7 @@ load-flow:
     default-impl-name: DynaFlow
 ```
 
-# DynaFlow parameters
+## Default parameters
 The `dynaflow-default-parameters` module defines the default values for all specific parameters of a load flow run with DynaFlow.
 
 ## Optional parameters

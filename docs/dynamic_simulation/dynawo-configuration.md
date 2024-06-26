@@ -1,11 +1,7 @@
----
-layout: default
----
+# Configuration
 
-# Dynawo configuration
+## Dynawo properties
 The `dynawo` module defines the required parameters to run with Dynawo.
-
-## Properties
 
 **homeDir**  
 Use the `homeDir` property to defines the installation directory of the dynawo simulator.
@@ -13,7 +9,7 @@ Use the `homeDir` property to defines the installation directory of the dynawo s
 **debug**  
 Use the `debug` property to specify if the temporary folder where the inputs are generated should be kept after the simulation.
 
-## Examples
+### Examples
 
 **YAML configuration:**
 ```yaml
@@ -30,10 +26,10 @@ dynawo:
 </dynawo>
 ```
 
-# Dynawo parameters
+## Default parameters
 The `dynawo-default-parameters` module defines the default values for all specific parameters of a dynamic simulation run with Dynawo.
 
-## Required parameters
+### Required parameters
 
 **parametersFile**  
 `parametersFile` defines the path of the main parameters file.  
@@ -47,7 +43,7 @@ The default value is `network.par`.
 `solver.parametersFile` defines the path of the solver parameters file.  
 The default value is `solvers.par`.
 
-## Optional parameters
+### Optional parameters
 
 **network.parametersId**  
 `network.parametersId` defines the network parameters set id stored in `network.parametersFile`.  
@@ -102,7 +98,7 @@ The default value is `TXT`.
 `precision` defines the simulation step precision.  
 The default value is `1e-6`.
 
-## Examples
+### Examples
 
 **YAML configuration:**
 ```yaml

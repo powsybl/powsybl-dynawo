@@ -1,7 +1,3 @@
----
-layout: default
----
-
 # Curves DSL
 The curves domain specific language allow a user to configure the curves Dynawo will export at the end of the simulation. This DSL defines the `curve` and the `curves` keywords.
 

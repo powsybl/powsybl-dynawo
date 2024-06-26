@@ -1,7 +1,3 @@
----
-layout: default
----
-
 # Dynamic Models DSL
 
 The Dynamic Models DSL is a domain specific language written in groovy for the creation dynamic models used by Dynawo, most of them associated with a static equipment present in the network.

@@ -1,7 +1,3 @@
----
-layout: default
----
-
 # Event Models DSL
 
 The Event Models DSL is a domain specific language written in groovy for the simulation of events that occurs during the simulation.
