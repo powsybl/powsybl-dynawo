@@ -118,7 +118,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
     private Double stopTime = null;
     private Double precision = null;
     private Sa securityAnalysis = null;
-    private List<String> chosenOutputs = List.of(OutputTypes.TIMELINE.name());
+    private EnumSet<OutputTypes> chosenOutputs = EnumSet.of(OutputTypes.TIMELINE);
     private Double timeStep = null;
     private StartingPointMode startingPointMode = null;
     private boolean mergeLoads = true;
@@ -226,12 +226,17 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         return this;
     }
 
-    public List<String> getChosenOutputs() {
+    public Set<OutputTypes> getChosenOutputs() {
         return chosenOutputs;
     }
 
-    public DynaFlowParameters setChosenOutputs(List<String> chosenOutputs) {
-        this.chosenOutputs = chosenOutputs;
+    public DynaFlowParameters setChosenOutputs(Set<OutputTypes> chosenOutputs) {
+        this.chosenOutputs = EnumSet.copyOf(chosenOutputs);
+        return this;
+    }
+
+    public DynaFlowParameters addChosenOutput(OutputTypes chosenOutput) {
+        this.chosenOutputs.add(chosenOutput);
         return this;
     }
 
@@ -327,7 +332,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         config.getOptionalDoubleProperty(STOP_TIME).ifPresent(parameters::setStopTime);
         config.getOptionalDoubleProperty(PRECISION).ifPresent(parameters::setPrecision);
         config.getOptionalDoubleProperty(Sa.TIME_OF_EVENT).ifPresent(parameters::setTimeOfEvent);
-        config.getOptionalStringListProperty(CHOSEN_OUTPUTS).ifPresent(parameters::setChosenOutputs);
+        config.getOptionalEnumSetProperty(CHOSEN_OUTPUTS, OutputTypes.class).ifPresent(parameters::setChosenOutputs);
         config.getOptionalDoubleProperty(TIME_STEP).ifPresent(parameters::setTimeStep);
         config.getOptionalStringProperty(STARTING_POINT_MODE).map(StartingPointMode::fromString).ifPresent(parameters::setStartingPointMode);
         config.getOptionalBooleanProperty(MERGE_LOADS).ifPresent(parameters::setMergeLoads);
@@ -352,7 +357,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
             securityAnalysis.setTimeOfEvent(Double.parseDouble(prop));
         });
         Optional.ofNullable(properties.get(CHOSEN_OUTPUTS)).ifPresent(prop ->
-                setChosenOutputs(Stream.of(prop.split(CHOSEN_OUTPUT_STRING_DELIMITER)).map(String::trim).collect(Collectors.toList())));
+                setChosenOutputs(Stream.of(prop.split(CHOSEN_OUTPUT_STRING_DELIMITER)).map(o -> OutputTypes.valueOf(o.trim())).collect(Collectors.toSet())));
         Optional.ofNullable(properties.get(TIME_STEP)).ifPresent(prop -> setTimeStep(Double.parseDouble(prop)));
         Optional.ofNullable(properties.get(STARTING_POINT_MODE)).ifPresent(prop -> setStartingPointMode(StartingPointMode.fromString(prop)));
         Optional.ofNullable(properties.get(MERGE_LOADS)).ifPresent(prop -> setMergeLoads(Boolean.parseBoolean(prop)));
@@ -373,7 +378,9 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         addNotNullEntry(STOP_TIME, stopTime, parameters::put);
         addNotNullEntry(PRECISION, precision, parameters::put);
         addNotNullEntry(Sa.TIME_OF_EVENT, getTimeOfEvent(), parameters::put);
-        addNotNullEntry(CHOSEN_OUTPUTS, String.join(", ", chosenOutputs), parameters::put);
+        if (!chosenOutputs.isEmpty()) {
+            parameters.put(CHOSEN_OUTPUTS, String.join(CHOSEN_OUTPUT_STRING_DELIMITER, chosenOutputs.stream().map(OutputTypes::name).toList()));
+        }
         addNotNullEntry(TIME_STEP, timeStep, parameters::put);
         if (startingPointMode != null) {
             parameters.put(STARTING_POINT_MODE, startingPointMode.name());

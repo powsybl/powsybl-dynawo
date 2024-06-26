@@ -8,6 +8,7 @@ package com.powsybl.dynaflow.json;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.powsybl.commons.json.JsonUtil;
+import com.powsybl.dynaflow.DynaFlowConstants;
 import com.powsybl.dynaflow.DynaFlowParameters;
 import com.powsybl.loadflow.LoadFlowParameters;
 
@@ -66,8 +67,8 @@ public final class DynaFlowConfigSerializer {
             if (dynaFlowParameters.getChosenOutputs() != null) {
                 jsonGenerator.writeFieldName("ChosenOutputs");
                 jsonGenerator.writeStartArray();
-                for (String outputType : dynaFlowParameters.getChosenOutputs()) {
-                    jsonGenerator.writeString(outputType);
+                for (DynaFlowConstants.OutputTypes outputType : dynaFlowParameters.getChosenOutputs()) {
+                    jsonGenerator.writeString(outputType.name());
                 }
                 jsonGenerator.writeEndArray();
             }

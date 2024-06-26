@@ -28,6 +28,7 @@ import java.util.*;
 
 import static com.powsybl.commons.test.ComparisonUtils.compareTxt;
 import static com.powsybl.dynaflow.DynaFlowProvider.MODULE_SPECIFIC_PARAMETERS;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -62,7 +63,7 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
         double stopTime = 100.;
         double precision = 15.45;
         double timeOfEvent = 14.;
-        List<String> chosenOutputs = Arrays.asList(OutputTypes.STEADYSTATE.name(), OutputTypes.TIMELINE.name());
+        List<String> chosenOutputs = List.of(OutputTypes.STEADYSTATE.name(), OutputTypes.TIMELINE.name());
         double timeStep = 0;
         StartingPointMode startingPointMode = StartingPointMode.FLAT;
         boolean mergeLoads = true;
@@ -97,7 +98,7 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
         assertEquals(stopTime, parameters.getStopTime(), 0.1d);
         assertEquals(precision, parameters.getPrecision(), 0.1d);
         assertEquals(timeOfEvent, parameters.getTimeOfEvent(), 0.1d);
-        assertArrayEquals(chosenOutputs.toArray(), parameters.getChosenOutputs().toArray());
+        assertThat(parameters.getChosenOutputs()).map(OutputTypes::name).containsExactlyInAnyOrderElementsOf(chosenOutputs);
         assertEquals(timeStep, parameters.getTimeStep(), 0.1d);
         assertEquals(startingPointMode, parameters.getStartingPointMode());
         assertEquals(mergeLoads, parameters.isMergeLoads());
@@ -122,7 +123,7 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
         assertNull(parametersExt.getStopTime());
         assertNull(parametersExt.getPrecision());
         assertNull(parametersExt.getSa());
-        assertEquals(List.of(OutputTypes.TIMELINE.name()), parametersExt.getChosenOutputs());
+        assertThat(parametersExt.getChosenOutputs()).containsExactly(OutputTypes.TIMELINE);
         assertNull(parametersExt.getTimeStep());
         assertNull(parametersExt.getStartingPointMode());
         assertTrue(parametersExt.isMergeLoads());
@@ -225,7 +226,7 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
             .setStopTime(100.)
             .setPrecision(0.)
             .setTimeOfEvent(10.)
-            .setChosenOutputs(Collections.singletonList(OutputTypes.STEADYSTATE.name()))
+            .setChosenOutputs(Set.of(OutputTypes.STEADYSTATE))
             .setTimeStep(2.6)
             .setStartingPointMode(StartingPointMode.WARM)
             .setMergeLoads(true);
@@ -256,7 +257,7 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
         double stopTime = 100.;
         double precision = 15.45;
         double timeOfEvent = 10.;
-        List<String> chosenOutputs = Arrays.asList(OutputTypes.STEADYSTATE.name(), OutputTypes.TIMELINE.name());
+        Set<OutputTypes> chosenOutputs = Set.of(OutputTypes.STEADYSTATE, OutputTypes.TIMELINE);
         double timeStep = 0;
         StartingPointMode startingPointMode = StartingPointMode.WARM;
         boolean mergeLoads = false;
@@ -273,7 +274,7 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
         properties.put("stopTime", Double.toString(stopTime));
         properties.put("precision", Double.toString(precision));
         properties.put("timeOfEvent", Double.toString(timeOfEvent));
-        properties.put("chosenOutputs", OutputTypes.STEADYSTATE.name() + ", " + OutputTypes.TIMELINE.name());
+        properties.put("chosenOutputs", "STEADYSTATE, TIMELINE");
         properties.put("timeStep", Double.toString(timeStep));
         properties.put("startingPointMode", startingPointMode.getName());
         properties.put("mergeLoads", Boolean.toString(mergeLoads));
@@ -291,7 +292,7 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
         assertEquals(stopTime, dynaFlowParameters.getStopTime(), 0.1d);
         assertEquals(precision, dynaFlowParameters.getPrecision(), 0.1d);
         assertEquals(timeOfEvent, dynaFlowParameters.getTimeOfEvent(), 0.1d);
-        assertArrayEquals(chosenOutputs.toArray(), dynaFlowParameters.getChosenOutputs().toArray());
+        assertThat(dynaFlowParameters.getChosenOutputs()).containsExactlyInAnyOrderElementsOf(chosenOutputs);
         assertEquals(timeStep, dynaFlowParameters.getTimeStep(), 0.1d);
         assertEquals(startingPointMode, dynaFlowParameters.getStartingPointMode());
         assertEquals(mergeLoads, dynaFlowParameters.isMergeLoads());

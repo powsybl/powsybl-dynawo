@@ -27,7 +27,6 @@ import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -211,8 +210,21 @@ class DynaFlowProviderTest extends AbstractSerDeTest {
         assertTrue(dynaParams.getShuntRegulationOn());
         assertFalse(dynaParams.getAutomaticSlackBusOn());
         assertEquals(2, dynaParams.getDsoVoltageLevel(), 0.1d);
-        assertArrayEquals(Arrays.asList(OutputTypes.STEADYSTATE.name(), OutputTypes.CONSTRAINTS.name()).toArray(), dynaParams.getChosenOutputs().toArray());
+        assertThat(dynaParams.getChosenOutputs()).containsExactlyInAnyOrder(OutputTypes.STEADYSTATE, OutputTypes.CONSTRAINTS);
         assertEquals(0, dynaParams.getTimeStep(), 0.1d);
+    }
+
+    @Test
+    void testGetDefaultSpecificParameters() {
+        Map<String, String> expectedProperties = Map.of(
+                "svcRegulationOn", "true",
+                "chosenOutputs", "TIMELINE",
+                "mergeLoads", "true");
+
+        LoadFlowParameters params = LoadFlowParameters.load();
+        DynaFlowParameters dynaParams = params.getExtension(DynaFlowParameters.class);
+        Map<String, String> properties = provider.createMapFromSpecificParameters(dynaParams);
+        assertThat(properties).containsExactlyInAnyOrderEntriesOf(expectedProperties);
     }
 
     @Test
