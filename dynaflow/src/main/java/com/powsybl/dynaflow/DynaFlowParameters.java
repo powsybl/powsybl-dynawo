@@ -22,6 +22,7 @@ import com.powsybl.dynaflow.DynaFlowConstants.StartingPointMode;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -79,7 +80,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
     private static final String ASSEMBLING_PATH = "assemblingPath";
     private static final String START_TIME = "startTime";
     private static final String STOP_TIME = "stopTime";
-    private static final String PRECISION_NAME = "precision";
+    private static final String PRECISION = "precision";
     private static final String CHOSEN_OUTPUTS = "chosenOutputs";
     private static final String TIME_STEP = "timeStep";
     private static final String STARTING_POINT_MODE = "startingPointMode";
@@ -99,7 +100,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
             new Parameter(ASSEMBLING_PATH, ParameterType.STRING, "Assembling file path", null, null, ParameterScope.TECHNICAL),
             new Parameter(START_TIME, ParameterType.DOUBLE, "Start time", 0d),
             new Parameter(STOP_TIME, ParameterType.DOUBLE, "Stop time", 100d),
-            new Parameter(PRECISION_NAME, ParameterType.DOUBLE, "Precision", Double.NaN),
+            new Parameter(PRECISION, ParameterType.DOUBLE, "Precision", Double.NaN),
             new Parameter(Sa.TIME_OF_EVENT, ParameterType.DOUBLE, "Time of event", 10d),
             new Parameter(CHOSEN_OUTPUTS, ParameterType.STRING_LIST, "Chosen outputs", List.of(OutputTypes.TIMELINE.name()), getEnumPossibleValues(OutputTypes.class), ParameterScope.TECHNICAL),
             new Parameter(TIME_STEP, ParameterType.DOUBLE, "Time step", 10d),
@@ -287,7 +288,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
                 .add(ASSEMBLING_PATH, assemblingPath)
                 .add(START_TIME, startTime)
                 .add(STOP_TIME, stopTime)
-                .add(PRECISION_NAME, precision)
+                .add(PRECISION, precision)
                 .add(Sa.SECURITY_ANALYSIS, securityAnalysis)
                 .add(CHOSEN_OUTPUTS, chosenOutputs)
                 .add(TIME_STEP, timeStep)
@@ -324,7 +325,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         config.getOptionalStringProperty(ASSEMBLING_PATH).ifPresent(parameters::setAssemblingPath);
         config.getOptionalDoubleProperty(START_TIME).ifPresent(parameters::setStartTime);
         config.getOptionalDoubleProperty(STOP_TIME).ifPresent(parameters::setStopTime);
-        config.getOptionalDoubleProperty(PRECISION_NAME).ifPresent(parameters::setPrecision);
+        config.getOptionalDoubleProperty(PRECISION).ifPresent(parameters::setPrecision);
         config.getOptionalDoubleProperty(Sa.TIME_OF_EVENT).ifPresent(parameters::setTimeOfEvent);
         config.getOptionalStringListProperty(CHOSEN_OUTPUTS).ifPresent(parameters::setChosenOutputs);
         config.getOptionalDoubleProperty(TIME_STEP).ifPresent(parameters::setTimeStep);
@@ -343,7 +344,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         Optional.ofNullable(properties.get(ASSEMBLING_PATH)).ifPresent(this::setAssemblingPath);
         Optional.ofNullable(properties.get(START_TIME)).ifPresent(prop -> setStartTime(Double.parseDouble(prop)));
         Optional.ofNullable(properties.get(STOP_TIME)).ifPresent(prop -> setStopTime(Double.parseDouble(prop)));
-        Optional.ofNullable(properties.get(PRECISION_NAME)).ifPresent(prop -> setPrecision(Double.parseDouble(prop)));
+        Optional.ofNullable(properties.get(PRECISION)).ifPresent(prop -> setPrecision(Double.parseDouble(prop)));
         Optional.ofNullable(properties.get(Sa.TIME_OF_EVENT)).ifPresent(prop -> {
             if (securityAnalysis == null) {
                 securityAnalysis = new Sa();
@@ -358,22 +359,45 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
     }
 
     public Map<String, String> createMapFromParameters() {
-        return Map.ofEntries(
-                Map.entry(SVC_REGULATION_ON, Boolean.toString(getSvcRegulationOn())),
-                Map.entry(SHUNT_REGULATION_ON, Boolean.toString(getShuntRegulationOn())),
-                Map.entry(AUTOMATIC_SLACK_BUS_ON, Boolean.toString(getAutomaticSlackBusOn())),
-                Map.entry(DSO_VOLTAGE_LEVEL, Double.toString(getDsoVoltageLevel())),
-                Map.entry(ACTIVE_POWER_COMPENSATION, getActivePowerCompensation().name()),
-                Map.entry(SETTING_PATH, getSettingPath()),
-                Map.entry(ASSEMBLING_PATH, getAssemblingPath()),
-                Map.entry(START_TIME, Double.toString(getStartTime())),
-                Map.entry(STOP_TIME, Double.toString(getStopTime())),
-                Map.entry(PRECISION_NAME, Double.toString(getPrecision())),
-                Map.entry(Sa.TIME_OF_EVENT, Double.toString(getTimeOfEvent())),
-                Map.entry(CHOSEN_OUTPUTS, String.join(", ", getChosenOutputs())),
-                Map.entry(TIME_STEP, Double.toString(getTimeStep())),
-                Map.entry(STARTING_POINT_MODE, getStartingPointMode().name()),
-                Map.entry(MERGE_LOADS, Boolean.toString(isMergeLoads())));
+        Map<String, String> parameters = new HashMap<>();
+        addNotNullEntry(SVC_REGULATION_ON, svcRegulationOn, parameters::put);
+        addNotNullEntry(SHUNT_REGULATION_ON, shuntRegulationOn, parameters::put);
+        addNotNullEntry(AUTOMATIC_SLACK_BUS_ON, automaticSlackBusOn, parameters::put);
+        addNotNullEntry(DSO_VOLTAGE_LEVEL, dsoVoltageLevel, parameters::put);
+        if (activePowerCompensation != null) {
+            parameters.put(ACTIVE_POWER_COMPENSATION, activePowerCompensation.name());
+        }
+        addNotNullEntry(SETTING_PATH, settingPath, parameters::put);
+        addNotNullEntry(ASSEMBLING_PATH, assemblingPath, parameters::put);
+        addNotNullEntry(START_TIME, startTime, parameters::put);
+        addNotNullEntry(STOP_TIME, stopTime, parameters::put);
+        addNotNullEntry(PRECISION, precision, parameters::put);
+        addNotNullEntry(Sa.TIME_OF_EVENT, getTimeOfEvent(), parameters::put);
+        addNotNullEntry(CHOSEN_OUTPUTS, String.join(", ", chosenOutputs), parameters::put);
+        addNotNullEntry(TIME_STEP, timeStep, parameters::put);
+        if (startingPointMode != null) {
+            parameters.put(STARTING_POINT_MODE, startingPointMode.name());
+        }
+        addNotNullEntry(MERGE_LOADS, mergeLoads, parameters::put);
+        return parameters;
+    }
+
+    private void addNotNullEntry(String key, String value, BiConsumer<String, String> adder) {
+        if (value != null) {
+            adder.accept(key, value);
+        }
+    }
+
+    private void addNotNullEntry(String key, Double value, BiConsumer<String, String> adder) {
+        if (value != null) {
+            adder.accept(key, Double.toString(value));
+        }
+    }
+
+    private void addNotNullEntry(String key, Boolean value, BiConsumer<String, String> adder) {
+        if (value != null) {
+            adder.accept(key, Boolean.toString(value));
+        }
     }
 
     public static DynaFlowParameters load(Map<String, String> properties) {

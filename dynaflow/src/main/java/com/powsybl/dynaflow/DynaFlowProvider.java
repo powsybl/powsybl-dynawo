@@ -141,7 +141,7 @@ public class DynaFlowProvider implements LoadFlowProvider {
     @Override
     public Map<String, String> createMapFromSpecificParameters(Extension<LoadFlowParameters> extension) {
         if (extension instanceof DynaFlowParameters dfp) {
-            dfp.createMapFromParameters();
+            return dfp.createMapFromParameters();
         }
         return Collections.emptyMap();
     }
