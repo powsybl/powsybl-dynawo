@@ -56,7 +56,7 @@
 
     <properties>
         <java.version>17</java.version>
-        <powsyblcore.version>6.4.0-RC2</powsyblcore.version>
+        <powsybl-core.version>6.4.0-RC2</powsybl-core.version>
         <groovy.version>4.0.14</groovy.version> <!-- used for groovy-json but also for groovydoc (dynawaltz-dsl) -->
         <sonar.coverage.jacoco.xmlReportPaths>
             ../distribution/target/site/jacoco-aggregate/jacoco.xml,
@@ -107,7 +107,7 @@
             <dependency>
                 <groupId>com.powsybl</groupId>
                 <artifactId>powsybl-core</artifactId>
-                <version>${powsyblcore.version}</version>
+                <version>${powsybl-core.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
