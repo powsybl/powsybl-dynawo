@@ -19,6 +19,10 @@ import com.powsybl.dynaflow.DynaFlowConstants.OutputTypes;
 import com.powsybl.loadflow.LoadFlowParameters;
 import com.powsybl.dynaflow.DynaFlowConstants.ActivePowerCompensation;
 import com.powsybl.dynaflow.DynaFlowConstants.StartingPointMode;
+import de.vandermeer.asciitable.AsciiTable;
+import de.vandermeer.asciitable.CWC_LongestWord;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.*;
@@ -32,6 +36,8 @@ import static com.powsybl.dynaflow.DynaFlowProvider.MODULE_SPECIFIC_PARAMETERS;
  * @author Guillaume Pernin {@literal <guillaume.pernin at rte-france.com>}
  */
 public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(DynaFlowParameters.class);
 
     /**
      * Inner class dedicated to Security Analysis (SA) namespace
@@ -90,22 +96,38 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         return EnumSet.allOf(enumClass).stream().map(Enum::name).collect(Collectors.toList());
     }
 
+    public static final Boolean SVC_REGULATION_ON_DEFAULT_VALUE = Boolean.TRUE;
+    public static final Boolean SHUNT_REGULATION_ON_DEFAULT_VALUE = Boolean.TRUE;
+    public static final Boolean AUTOMATIC_SLACK_BUS_ON_DEFAULT_VALUE = Boolean.TRUE;
+    public static final double DSO_VOLTAGE_LEVEL_DEFAULT_VALUE = 45d;
+    public static final ActivePowerCompensation ACTIVE_POWER_COMPENSATION_DEFAULT_VALUE = ActivePowerCompensation.PMAX;
+    public static final String SETTING_PATH_DEFAULT_VALUE = null;
+    public static final String ASSEMBLING_PATH_DEFAULT_VALUE = null;
+    public static final double START_TIME_DEFAULT_VALUE = 0d;
+    public static final double STOP_TIME_DEFAULT_VALUE = 100d;
+    public static final double PRECISION_DEFAULT_VALUE = Double.NaN;
+    public static final double TIME_OF_EVENT_DEFAULT_VALUE = 10d;
+    public static final List<String> CHOSEN_OUTPUTS_DEFAULT_VALUE = List.of(OutputTypes.TIMELINE.name());
+    public static final double TIME_STEP_DEFAULT_VALUE = 10d;
+    public static final String STARTING_POINT_MODE_DEFAULT_VALUE = StartingPointMode.WARM.name();
+    public static final Boolean MERGE_LOADS_DEFAULT_VALUE = Boolean.TRUE;
+
     public static final List<Parameter> SPECIFIC_PARAMETERS = List.of(
-            new Parameter(SVC_REGULATION_ON, ParameterType.BOOLEAN, "Static Var Compensator regulation on", Boolean.TRUE),
-            new Parameter(SHUNT_REGULATION_ON, ParameterType.BOOLEAN, "Shunt compensator regulation on", Boolean.TRUE),
-            new Parameter(AUTOMATIC_SLACK_BUS_ON, ParameterType.BOOLEAN, "Automatic slack bus selection on", Boolean.TRUE),
-            new Parameter(DSO_VOLTAGE_LEVEL, ParameterType.DOUBLE, "DSO voltage level threshold", 45d),
-            new Parameter(ACTIVE_POWER_COMPENSATION, ParameterType.STRING, "Active power compensation mode", ActivePowerCompensation.PMAX.name(), getEnumPossibleValues(ActivePowerCompensation.class)),
-            new Parameter(SETTING_PATH, ParameterType.STRING, "Setting file path", null, null, ParameterScope.TECHNICAL),
-            new Parameter(ASSEMBLING_PATH, ParameterType.STRING, "Assembling file path", null, null, ParameterScope.TECHNICAL),
-            new Parameter(START_TIME, ParameterType.DOUBLE, "Start time", 0d),
-            new Parameter(STOP_TIME, ParameterType.DOUBLE, "Stop time", 100d),
-            new Parameter(PRECISION, ParameterType.DOUBLE, "Precision", Double.NaN),
-            new Parameter(Sa.TIME_OF_EVENT, ParameterType.DOUBLE, "Time of event", 10d),
-            new Parameter(CHOSEN_OUTPUTS, ParameterType.STRING_LIST, "Chosen outputs", List.of(OutputTypes.TIMELINE.name()), getEnumPossibleValues(OutputTypes.class), ParameterScope.TECHNICAL),
-            new Parameter(TIME_STEP, ParameterType.DOUBLE, "Time step", 10d),
-            new Parameter(STARTING_POINT_MODE, ParameterType.STRING, "Starting point mode", StartingPointMode.WARM.name(), getEnumPossibleValues(StartingPointMode.class)),
-            new Parameter(MERGE_LOADS, ParameterType.BOOLEAN, "Merge loads connected to same bus", Boolean.TRUE));
+            new Parameter(SVC_REGULATION_ON, ParameterType.BOOLEAN, "Static Var Compensator regulation on", SVC_REGULATION_ON_DEFAULT_VALUE),
+            new Parameter(SHUNT_REGULATION_ON, ParameterType.BOOLEAN, "Shunt compensator regulation on", SHUNT_REGULATION_ON_DEFAULT_VALUE),
+            new Parameter(AUTOMATIC_SLACK_BUS_ON, ParameterType.BOOLEAN, "Automatic slack bus selection on", AUTOMATIC_SLACK_BUS_ON_DEFAULT_VALUE),
+            new Parameter(DSO_VOLTAGE_LEVEL, ParameterType.DOUBLE, "DSO voltage level threshold", DSO_VOLTAGE_LEVEL_DEFAULT_VALUE),
+            new Parameter(ACTIVE_POWER_COMPENSATION, ParameterType.STRING, "Active power compensation mode", ACTIVE_POWER_COMPENSATION_DEFAULT_VALUE.name(), getEnumPossibleValues(ActivePowerCompensation.class)),
+            new Parameter(SETTING_PATH, ParameterType.STRING, "Setting file path", SETTING_PATH_DEFAULT_VALUE, null, ParameterScope.TECHNICAL),
+            new Parameter(ASSEMBLING_PATH, ParameterType.STRING, "Assembling file path", ASSEMBLING_PATH_DEFAULT_VALUE, null, ParameterScope.TECHNICAL),
+            new Parameter(START_TIME, ParameterType.DOUBLE, "Start time", START_TIME_DEFAULT_VALUE),
+            new Parameter(STOP_TIME, ParameterType.DOUBLE, "Stop time", STOP_TIME_DEFAULT_VALUE),
+            new Parameter(PRECISION, ParameterType.DOUBLE, "Precision", PRECISION_DEFAULT_VALUE),
+            new Parameter(Sa.TIME_OF_EVENT, ParameterType.DOUBLE, "Time of event", TIME_OF_EVENT_DEFAULT_VALUE),
+            new Parameter(CHOSEN_OUTPUTS, ParameterType.STRING_LIST, "Chosen outputs", CHOSEN_OUTPUTS_DEFAULT_VALUE, getEnumPossibleValues(OutputTypes.class), ParameterScope.TECHNICAL),
+            new Parameter(TIME_STEP, ParameterType.DOUBLE, "Time step", TIME_STEP_DEFAULT_VALUE),
+            new Parameter(STARTING_POINT_MODE, ParameterType.STRING, "Starting point mode", STARTING_POINT_MODE_DEFAULT_VALUE, getEnumPossibleValues(StartingPointMode.class)),
+            new Parameter(MERGE_LOADS, ParameterType.BOOLEAN, "Merge loads connected to same bus", MERGE_LOADS_DEFAULT_VALUE));
 
     private Boolean svcRegulationOn = null;
     private Boolean shuntRegulationOn = null;
@@ -316,21 +338,40 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
     }
 
     private static void load(DynaFlowParameters parameters, ModuleConfig config) {
-        config.getOptionalBooleanProperty(SVC_REGULATION_ON).ifPresent(parameters::setSvcRegulationOn);
-        config.getOptionalBooleanProperty(SHUNT_REGULATION_ON).ifPresent(parameters::setShuntRegulationOn);
-        config.getOptionalBooleanProperty(AUTOMATIC_SLACK_BUS_ON).ifPresent(parameters::setAutomaticSlackBusOn);
-        config.getOptionalDoubleProperty(DSO_VOLTAGE_LEVEL).ifPresent(parameters::setDsoVoltageLevel);
-        config.getOptionalEnumProperty(ACTIVE_POWER_COMPENSATION, ActivePowerCompensation.class).ifPresent(parameters::setActivePowerCompensation);
-        config.getOptionalStringProperty(SETTING_PATH).ifPresent(parameters::setSettingPath);
-        config.getOptionalStringProperty(ASSEMBLING_PATH).ifPresent(parameters::setAssemblingPath);
-        config.getOptionalDoubleProperty(START_TIME).ifPresent(parameters::setStartTime);
-        config.getOptionalDoubleProperty(STOP_TIME).ifPresent(parameters::setStopTime);
-        config.getOptionalDoubleProperty(PRECISION).ifPresent(parameters::setPrecision);
-        config.getOptionalDoubleProperty(Sa.TIME_OF_EVENT).ifPresent(parameters::setTimeOfEvent);
-        config.getOptionalStringListProperty(CHOSEN_OUTPUTS).ifPresent(parameters::setChosenOutputs);
-        config.getOptionalDoubleProperty(TIME_STEP).ifPresent(parameters::setTimeStep);
-        config.getOptionalStringProperty(STARTING_POINT_MODE).map(StartingPointMode::fromString).ifPresent(parameters::setStartingPointMode);
-        config.getOptionalBooleanProperty(MERGE_LOADS).ifPresent(parameters::setMergeLoads);
+        parameters.setSvcRegulationOn(config.getOptionalBooleanProperty(SVC_REGULATION_ON).orElse(SVC_REGULATION_ON_DEFAULT_VALUE));
+        parameters.setShuntRegulationOn(config.getOptionalBooleanProperty(SHUNT_REGULATION_ON).orElse(SHUNT_REGULATION_ON_DEFAULT_VALUE));
+        parameters.setAutomaticSlackBusOn(config.getOptionalBooleanProperty(AUTOMATIC_SLACK_BUS_ON).orElse(AUTOMATIC_SLACK_BUS_ON_DEFAULT_VALUE));
+        parameters.setDsoVoltageLevel(config.getOptionalDoubleProperty(DSO_VOLTAGE_LEVEL).orElse(DSO_VOLTAGE_LEVEL_DEFAULT_VALUE));
+        parameters.setActivePowerCompensation(config.getOptionalEnumProperty(ACTIVE_POWER_COMPENSATION, ActivePowerCompensation.class).orElse(ACTIVE_POWER_COMPENSATION_DEFAULT_VALUE));
+        parameters.setSettingPath(config.getOptionalStringProperty(SETTING_PATH).orElse(SETTING_PATH_DEFAULT_VALUE));
+        parameters.setAssemblingPath(config.getOptionalStringProperty(ASSEMBLING_PATH).orElse(ASSEMBLING_PATH_DEFAULT_VALUE));
+        parameters.setStartTime(config.getOptionalDoubleProperty(START_TIME).orElse(START_TIME_DEFAULT_VALUE));
+        parameters.setStopTime(config.getOptionalDoubleProperty(STOP_TIME).orElse(STOP_TIME_DEFAULT_VALUE));
+        parameters.setPrecision(config.getOptionalDoubleProperty(PRECISION).orElse(PRECISION_DEFAULT_VALUE));
+        parameters.setTimeOfEvent(config.getOptionalDoubleProperty(Sa.TIME_OF_EVENT).orElse(TIME_OF_EVENT_DEFAULT_VALUE));
+        parameters.setChosenOutputs(config.getOptionalStringListProperty(CHOSEN_OUTPUTS).orElse(CHOSEN_OUTPUTS_DEFAULT_VALUE));
+        parameters.setTimeStep(config.getOptionalDoubleProperty(TIME_STEP).orElse(TIME_STEP_DEFAULT_VALUE));
+        parameters.setStartingPointMode(config.getOptionalStringProperty(STARTING_POINT_MODE).map(StartingPointMode::fromString).orElse(StartingPointMode.fromString(STARTING_POINT_MODE_DEFAULT_VALUE)));
+        parameters.setMergeLoads(config.getOptionalBooleanProperty(MERGE_LOADS).orElse(MERGE_LOADS_DEFAULT_VALUE));
+    }
+
+    public static void log(LoadFlowParameters parameters, DynaFlowParameters parametersExt) {
+        if (LOGGER.isInfoEnabled()) {
+            AsciiTable at = new AsciiTable();
+            at.addRule();
+            at.addRow("Name", "Value");
+            at.addRule();
+            for (var e : parameters.toMap().entrySet()) {
+                at.addRow(e.getKey(), e.getValue());
+            }
+            for (var e : parametersExt.createMapFromParameters().entrySet()) {
+                at.addRow(e.getKey(), Objects.toString(e.getValue(), ""));
+            }
+            at.addRule();
+            at.getRenderer().setCWC(new CWC_LongestWord());
+            at.setPaddingLeftRight(1, 1);
+            LOGGER.info("Parameters:\n{}", at.render());
+        }
     }
 
     public void update(Map<String, String> properties) {
