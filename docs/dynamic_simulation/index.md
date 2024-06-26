@@ -8,7 +8,7 @@ event-models-dsl.md
 curves-dsl.md
 ```
 
-PowSyBl provides an implementation to run [dynamic simulation](inv:powsyblcore:*:*#simulation/dynamic/index) with [DynaWaltz](https://dynawo.github.io/about/dynawaltz), a tool for long-term stability simulation from the [Dynaωo](https://dynawo.github.io) suite.
+PowSyBl provides an implementation of the [DynamicSimulation API from powsybl-core](inv:powsyblcore:*:*#simulation/dynamic/index) with [DynaWaltz](https://dynawo.github.io/about/dynawaltz), a tool for long-term stability simulation from the [Dynaωo](https://dynawo.github.io) suite.
 
 ## Installation
 
