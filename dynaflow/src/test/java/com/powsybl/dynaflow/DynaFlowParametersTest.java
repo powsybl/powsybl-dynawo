@@ -110,22 +110,23 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
         DynaFlowParameters parametersExt = parameters.getExtension(DynaFlowParameters.class);
         assertNotNull(parametersExt);
 
-        assertEquals("{chosenOutputs=[TIMELINE], mergeLoads=true}", parametersExt.toString());
+        assertEquals("{svcRegulationOn=true, shuntRegulationOn=true, automaticSlackBusOn=true, dsoVoltageLevel=45.0, activePowerCompensation=PMAX, startTime=0.0, stopTime=100.0, chosenOutputs=[TIMELINE], timeStep=10.0, startingPointMode=WARM, mergeLoads=true}",
+                parametersExt.toString());
 
-        assertNull(parametersExt.getSvcRegulationOn());
-        assertNull(parametersExt.getShuntRegulationOn());
-        assertNull(parametersExt.getAutomaticSlackBusOn());
-        assertNull(parametersExt.getDsoVoltageLevel());
-        assertNull(parametersExt.getActivePowerCompensation());
+        assertTrue(parametersExt.getSvcRegulationOn());
+        assertTrue(parametersExt.getShuntRegulationOn());
+        assertTrue(parametersExt.getAutomaticSlackBusOn());
+        assertEquals(45d, parametersExt.getDsoVoltageLevel());
+        assertEquals(ActivePowerCompensation.PMAX, parametersExt.getActivePowerCompensation());
         assertNull(parametersExt.getSettingPath());
         assertNull(parametersExt.getAssemblingPath());
-        assertNull(parametersExt.getStartTime());
-        assertNull(parametersExt.getStopTime());
+        assertEquals(0d, parametersExt.getStartTime());
+        assertEquals(100d, parametersExt.getStopTime());
         assertNull(parametersExt.getPrecision());
         assertNull(parametersExt.getSa());
         assertThat(parametersExt.getChosenOutputs()).containsExactly(OutputTypes.TIMELINE);
-        assertNull(parametersExt.getTimeStep());
-        assertNull(parametersExt.getStartingPointMode());
+        assertEquals(10d, parametersExt.getTimeStep());
+        assertEquals(StartingPointMode.WARM, parametersExt.getStartingPointMode());
         assertTrue(parametersExt.isMergeLoads());
     }
 

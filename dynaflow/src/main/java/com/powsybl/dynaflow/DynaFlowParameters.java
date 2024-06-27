@@ -38,9 +38,10 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
      */
     public static class Sa {
         private static final String SECURITY_ANALYSIS = "sa"; //Security analysis
+        private static final double DEFAULT_TIME_OF_EVENT = 10d;
         protected static final String TIME_OF_EVENT = "timeOfEvent";
 
-        private Double timeOfEvent = null;
+        private Double timeOfEvent = DEFAULT_TIME_OF_EVENT;
 
         public Double getTimeOfEvent() {
             return timeOfEvent;
@@ -86,42 +87,56 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
     private static final String STARTING_POINT_MODE = "startingPointMode";
     private static final String MERGE_LOADS = "mergeLoads";
 
+    // Default values
+    private static final boolean DEFAULT_SVC_REGULATION_ON = true;
+    private static final boolean DEFAULT_SHUNT_REGULATION_ON = true;
+    private static final boolean DEFAULT_AUTOMATIC_SLACK_BUS_ON = true;
+    private static final double DEFAULT_DSO_VOLTAGE_LEVEL = 45d;
+    private static final ActivePowerCompensation DEFAULT_ACTIVE_POWER_COMPENSATION = ActivePowerCompensation.PMAX;
+    private static final double DEFAULT_START_TIME = 0d;
+    private static final double DEFAULT_STOP_TIME = 100d;
+    private static final double DEFAULT_PRECISION = Double.NaN;
+    private static final EnumSet<OutputTypes> DEFAULT_CHOSEN_OUTPUTS = EnumSet.of(OutputTypes.TIMELINE);
+    private static final double DEFAULT_TIME_STEP = 10d;
+    private static final StartingPointMode DEFAULT_STARTING_POINT_MODE = StartingPointMode.WARM;
+    private static final boolean DEFAULT_MERGE_LOADS = true;
+
     private static <E extends Enum<E>> List<Object> getEnumPossibleValues(Class<E> enumClass) {
         return EnumSet.allOf(enumClass).stream().map(Enum::name).collect(Collectors.toList());
     }
 
     public static final List<Parameter> SPECIFIC_PARAMETERS = List.of(
-            new Parameter(SVC_REGULATION_ON, ParameterType.BOOLEAN, "Static Var Compensator regulation on", Boolean.TRUE),
-            new Parameter(SHUNT_REGULATION_ON, ParameterType.BOOLEAN, "Shunt compensator regulation on", Boolean.TRUE),
-            new Parameter(AUTOMATIC_SLACK_BUS_ON, ParameterType.BOOLEAN, "Automatic slack bus selection on", Boolean.TRUE),
-            new Parameter(DSO_VOLTAGE_LEVEL, ParameterType.DOUBLE, "DSO voltage level threshold", 45d),
-            new Parameter(ACTIVE_POWER_COMPENSATION, ParameterType.STRING, "Active power compensation mode", ActivePowerCompensation.PMAX.name(), getEnumPossibleValues(ActivePowerCompensation.class)),
+            new Parameter(SVC_REGULATION_ON, ParameterType.BOOLEAN, "Static Var Compensator regulation on", DEFAULT_SVC_REGULATION_ON),
+            new Parameter(SHUNT_REGULATION_ON, ParameterType.BOOLEAN, "Shunt compensator regulation on", DEFAULT_SHUNT_REGULATION_ON),
+            new Parameter(AUTOMATIC_SLACK_BUS_ON, ParameterType.BOOLEAN, "Automatic slack bus selection on", DEFAULT_AUTOMATIC_SLACK_BUS_ON),
+            new Parameter(DSO_VOLTAGE_LEVEL, ParameterType.DOUBLE, "DSO voltage level threshold", DEFAULT_DSO_VOLTAGE_LEVEL),
+            new Parameter(ACTIVE_POWER_COMPENSATION, ParameterType.STRING, "Active power compensation mode", DEFAULT_ACTIVE_POWER_COMPENSATION.name(), getEnumPossibleValues(ActivePowerCompensation.class)),
             new Parameter(SETTING_PATH, ParameterType.STRING, "Setting file path", null, null, ParameterScope.TECHNICAL),
             new Parameter(ASSEMBLING_PATH, ParameterType.STRING, "Assembling file path", null, null, ParameterScope.TECHNICAL),
-            new Parameter(START_TIME, ParameterType.DOUBLE, "Start time", 0d),
-            new Parameter(STOP_TIME, ParameterType.DOUBLE, "Stop time", 100d),
-            new Parameter(PRECISION, ParameterType.DOUBLE, "Precision", Double.NaN),
-            new Parameter(Sa.TIME_OF_EVENT, ParameterType.DOUBLE, "Time of event", 10d),
-            new Parameter(CHOSEN_OUTPUTS, ParameterType.STRING_LIST, "Chosen outputs", List.of(OutputTypes.TIMELINE.name()), getEnumPossibleValues(OutputTypes.class), ParameterScope.TECHNICAL),
-            new Parameter(TIME_STEP, ParameterType.DOUBLE, "Time step", 10d),
-            new Parameter(STARTING_POINT_MODE, ParameterType.STRING, "Starting point mode", StartingPointMode.WARM.name(), getEnumPossibleValues(StartingPointMode.class)),
-            new Parameter(MERGE_LOADS, ParameterType.BOOLEAN, "Merge loads connected to same bus", Boolean.TRUE));
+            new Parameter(START_TIME, ParameterType.DOUBLE, "Start time", DEFAULT_START_TIME),
+            new Parameter(STOP_TIME, ParameterType.DOUBLE, "Stop time", DEFAULT_STOP_TIME),
+            new Parameter(PRECISION, ParameterType.DOUBLE, "Precision", DEFAULT_PRECISION),
+            new Parameter(Sa.TIME_OF_EVENT, ParameterType.DOUBLE, "Time of event", Sa.DEFAULT_TIME_OF_EVENT),
+            new Parameter(CHOSEN_OUTPUTS, ParameterType.STRING_LIST, "Chosen outputs", DEFAULT_CHOSEN_OUTPUTS.stream().map(OutputTypes::name).toList(), getEnumPossibleValues(OutputTypes.class), ParameterScope.TECHNICAL),
+            new Parameter(TIME_STEP, ParameterType.DOUBLE, "Time step", DEFAULT_TIME_STEP),
+            new Parameter(STARTING_POINT_MODE, ParameterType.STRING, "Starting point mode", DEFAULT_STARTING_POINT_MODE.name(), getEnumPossibleValues(StartingPointMode.class)),
+            new Parameter(MERGE_LOADS, ParameterType.BOOLEAN, "Merge loads connected to same bus", DEFAULT_MERGE_LOADS));
 
-    private Boolean svcRegulationOn = null;
-    private Boolean shuntRegulationOn = null;
-    private Boolean automaticSlackBusOn = null;
-    private Double dsoVoltageLevel = null;
-    private ActivePowerCompensation activePowerCompensation = null;
+    private boolean svcRegulationOn = DEFAULT_SVC_REGULATION_ON;
+    private boolean shuntRegulationOn = DEFAULT_SHUNT_REGULATION_ON;
+    private boolean automaticSlackBusOn = DEFAULT_AUTOMATIC_SLACK_BUS_ON;
+    private double dsoVoltageLevel = DEFAULT_DSO_VOLTAGE_LEVEL;
+    private ActivePowerCompensation activePowerCompensation = DEFAULT_ACTIVE_POWER_COMPENSATION;
     private String settingPath = null;
     private String assemblingPath = null;
-    private Double startTime = null;
-    private Double stopTime = null;
+    private double startTime = DEFAULT_START_TIME;
+    private double stopTime = DEFAULT_STOP_TIME;
     private Double precision = null;
     private Sa securityAnalysis = null;
-    private EnumSet<OutputTypes> chosenOutputs = EnumSet.of(OutputTypes.TIMELINE);
-    private Double timeStep = null;
-    private StartingPointMode startingPointMode = null;
-    private boolean mergeLoads = true;
+    private EnumSet<OutputTypes> chosenOutputs = DEFAULT_CHOSEN_OUTPUTS;
+    private double timeStep = DEFAULT_TIME_STEP;
+    private StartingPointMode startingPointMode = DEFAULT_STARTING_POINT_MODE;
+    private boolean mergeLoads = DEFAULT_MERGE_LOADS;
 
     public Boolean getSvcRegulationOn() {
         return svcRegulationOn;
@@ -382,28 +397,14 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
             parameters.put(CHOSEN_OUTPUTS, String.join(CHOSEN_OUTPUT_STRING_DELIMITER, chosenOutputs.stream().map(OutputTypes::name).toList()));
         }
         addNotNullEntry(TIME_STEP, timeStep, parameters::put);
-        if (startingPointMode != null) {
-            parameters.put(STARTING_POINT_MODE, startingPointMode.name());
-        }
+        addNotNullEntry(STARTING_POINT_MODE, startingPointMode, parameters::put);
         addNotNullEntry(MERGE_LOADS, mergeLoads, parameters::put);
         return parameters;
     }
 
-    private void addNotNullEntry(String key, String value, BiConsumer<String, String> adder) {
+    private void addNotNullEntry(String key, Object value, BiConsumer<String, String> adder) {
         if (value != null) {
-            adder.accept(key, value);
-        }
-    }
-
-    private void addNotNullEntry(String key, Double value, BiConsumer<String, String> adder) {
-        if (value != null) {
-            adder.accept(key, Double.toString(value));
-        }
-    }
-
-    private void addNotNullEntry(String key, Boolean value, BiConsumer<String, String> adder) {
-        if (value != null) {
-            adder.accept(key, Boolean.toString(value));
+            adder.accept(key, Objects.toString(value));
         }
     }
 

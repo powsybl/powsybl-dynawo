@@ -59,7 +59,7 @@ public class JsonDynaFlowParametersSerializer implements ExtensionJsonSerializer
     private static ObjectMapper createMapper() {
         return JsonUtil.createObjectMapper()
                 .addMixIn(DynaFlowParameters.class, SerializationSpec.class)
-                .setSerializationInclusion(JsonInclude.Include.NON_NULL);
+                .setSerializationInclusion(JsonInclude.Include.NON_ABSENT);
     }
 
     @Override

@@ -57,10 +57,8 @@ public final class DynaFlowConfigSerializer {
             writeNonNullField(jsonGenerator, "AssemblingPath", dynaFlowParameters.getAssemblingPath());
             writeNonNullField(jsonGenerator, "StartTime", dynaFlowParameters.getStartTime());
             writeNonNullField(jsonGenerator, "StopTime", dynaFlowParameters.getStopTime());
+            writeNonNullField(jsonGenerator, "Precision", dynaFlowParameters.getPrecision());
 
-            if (dynaFlowParameters.getPrecision() != null && !Double.isNaN(dynaFlowParameters.getPrecision())) {
-                jsonGenerator.writeNumberField("Precision", dynaFlowParameters.getPrecision());
-            }
             if (dynaFlowParameters.getSa() != null) {
                 DynaFlowParameters.Sa.writeJson(jsonGenerator, dynaFlowParameters);
             }
@@ -92,7 +90,7 @@ public final class DynaFlowConfigSerializer {
     }
 
     private static void writeNonNullField(JsonGenerator jsonGenerator, String fieldName, Double value) throws IOException {
-        if (value != null) {
+        if (value != null && !Double.isNaN(value)) {
             jsonGenerator.writeNumberField(fieldName, value);
         }
     }

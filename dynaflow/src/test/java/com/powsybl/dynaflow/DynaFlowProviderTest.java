@@ -215,24 +215,19 @@ class DynaFlowProviderTest extends AbstractSerDeTest {
     }
 
     @Test
-    void testGetDefaultSpecificParameters() {
-        Map<String, String> expectedProperties = Map.of(
-                "svcRegulationOn", "true",
-                "chosenOutputs", "TIMELINE",
-                "mergeLoads", "true");
-
-        LoadFlowParameters params = LoadFlowParameters.load();
-        DynaFlowParameters dynaParams = params.getExtension(DynaFlowParameters.class);
-        Map<String, String> properties = provider.createMapFromSpecificParameters(dynaParams);
-        assertThat(properties).containsExactlyInAnyOrderEntriesOf(expectedProperties);
-    }
-
-    @Test
     void testGetSpecificParameters() {
-        Map<String, String> expectedProperties = Map.of(
-                "svcRegulationOn", "true",
-                "chosenOutputs", "TIMELINE",
-                "mergeLoads", "true");
+        Map<String, String> expectedProperties = Map.ofEntries(
+                Map.entry("svcRegulationOn", "true"),
+                Map.entry("dsoVoltageLevel", "45.0"),
+                Map.entry("shuntRegulationOn", "true"),
+                Map.entry("automaticSlackBusOn", "true"),
+                Map.entry("timeStep", "10.0"),
+                Map.entry("startingPointMode", "WARM"),
+                Map.entry("startTime", "0.0"),
+                Map.entry("stopTime", "100.0"),
+                Map.entry("activePowerCompensation", "PMAX"),
+                Map.entry("chosenOutputs", "TIMELINE"),
+                Map.entry("mergeLoads", "true"));
 
         LoadFlowParameters params = LoadFlowParameters.load();
         DynaFlowParameters dynaParams = params.getExtension(DynaFlowParameters.class);

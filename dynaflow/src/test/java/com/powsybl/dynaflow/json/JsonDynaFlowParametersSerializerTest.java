@@ -84,7 +84,6 @@ class JsonDynaFlowParametersSerializerTest extends AbstractSerDeTest {
             .setStopTime(100.)
             .setPrecision(0.)
             .setTimeOfEvent(10.)
-                //TOOD replace with add
             .setChosenOutputs(Set.of(DynaFlowConstants.OutputTypes.STEADYSTATE))
             .setTimeStep(2.6)
             .setStartingPointMode(DynaFlowConstants.StartingPointMode.WARM)
