@@ -20,7 +20,7 @@ import java.util.Set;
  */
 public class BaseShuntBuilder extends AbstractEquipmentModelBuilder<ShuntCompensator, BaseShuntBuilder> {
 
-    private static final String CATEGORY = "BASE_SHUNT";
+    public static final String CATEGORY = "BASE_SHUNT";
     private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
 
     public static BaseShuntBuilder of(Network network) {
@@ -49,7 +49,7 @@ public class BaseShuntBuilder extends AbstractEquipmentModelBuilder<ShuntCompens
     }
 
     protected BaseShuntBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
-        super(network, modelConfig, IdentifiableType.STATIC_VAR_COMPENSATOR, reportNode);
+        super(network, modelConfig, IdentifiableType.SHUNT_COMPENSATOR, reportNode);
     }
 
     @Override
