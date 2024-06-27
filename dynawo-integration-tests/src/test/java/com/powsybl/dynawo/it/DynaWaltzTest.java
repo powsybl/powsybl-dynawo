@@ -149,16 +149,16 @@ class DynaWaltzTest extends AbstractDynawoTest {
     }
 
     @Test
-    void testSvc() {
+    void testSvarc() {
         Network network = SvcTestCaseFactory.create();
 
         GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
-                getResourceAsStream("/svc/dynamicModels.groovy"),
+                getResourceAsStream("/svarc/dynamicModels.groovy"),
                 GroovyExtension.find(DynamicModelGroovyExtension.class, DynaWaltzProvider.NAME));
 
-        List<ParametersSet> modelsParameters = ParametersXml.load(getResourceAsStream("/svc/models.par"));
-        ParametersSet networkParameters = ParametersXml.load(getResourceAsStream("/svc/network.par"), "8");
-        ParametersSet solverParameters = ParametersXml.load(getResourceAsStream("/svc/solvers.par"), "2");
+        List<ParametersSet> modelsParameters = ParametersXml.load(getResourceAsStream("/svarc/models.par"));
+        ParametersSet networkParameters = ParametersXml.load(getResourceAsStream("/svarc/network.par"), "8");
+        ParametersSet solverParameters = ParametersXml.load(getResourceAsStream("/svarc/solvers.par"), "2");
         dynaWaltzParameters.setModelsParameters(modelsParameters)
                 .setNetworkParameters(networkParameters)
                 .setSolverParameters(solverParameters)
