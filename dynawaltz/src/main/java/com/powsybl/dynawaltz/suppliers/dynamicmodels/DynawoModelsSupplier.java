@@ -34,16 +34,16 @@ public class DynawoModelsSupplier implements DynamicModelsSupplier {
 
     private final List<DynamicModelConfig> dynamicModelConfigs;
 
+    public static DynawoModelsSupplier load(InputStream is) {
+        return new DynawoModelsSupplier(new SupplierJsonDeserializer<>(new DynamicModelConfigsJsonDeserializer()).deserialize(is));
+    }
+
+    public static DynawoModelsSupplier load(Path path) {
+        return new DynawoModelsSupplier(new SupplierJsonDeserializer<>(new DynamicModelConfigsJsonDeserializer()).deserialize(path));
+    }
+
     public DynawoModelsSupplier(List<DynamicModelConfig> dynamicModelConfigs) {
         this.dynamicModelConfigs = dynamicModelConfigs;
-    }
-
-    public DynawoModelsSupplier(InputStream is) {
-        this.dynamicModelConfigs = new SupplierJsonDeserializer<>(new DynamicModelConfigsJsonDeserializer()).deserialize(is);
-    }
-
-    public DynawoModelsSupplier(Path path) {
-        this.dynamicModelConfigs = new SupplierJsonDeserializer<>(new DynamicModelConfigsJsonDeserializer()).deserialize(path);
     }
 
     @Override

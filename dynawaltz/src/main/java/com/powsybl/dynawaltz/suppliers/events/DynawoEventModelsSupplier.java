@@ -32,16 +32,16 @@ public class DynawoEventModelsSupplier implements EventModelsSupplier {
 
     private final List<EventModelConfig> eventModelConfigs;
 
+    public static DynawoEventModelsSupplier load(InputStream is) {
+        return new DynawoEventModelsSupplier(new SupplierJsonDeserializer<>(new EventModelConfigsJsonDeserializer()).deserialize(is));
+    }
+
+    public static DynawoEventModelsSupplier load(Path path) {
+        return new DynawoEventModelsSupplier(new SupplierJsonDeserializer<>(new EventModelConfigsJsonDeserializer()).deserialize(path));
+    }
+
     public DynawoEventModelsSupplier(List<EventModelConfig> eventModelConfigs) {
         this.eventModelConfigs = eventModelConfigs;
-    }
-
-    public DynawoEventModelsSupplier(InputStream is) {
-        this.eventModelConfigs = new SupplierJsonDeserializer<>(new EventModelConfigsJsonDeserializer()).deserialize(is);
-    }
-
-    public DynawoEventModelsSupplier(Path path) {
-        this.eventModelConfigs = new SupplierJsonDeserializer<>(new EventModelConfigsJsonDeserializer()).deserialize(path);
     }
 
     @Override

@@ -70,7 +70,7 @@ class DynawoEventModelsSupplierTest {
     void testSupplierFromPath() throws URISyntaxException {
         Network network = EurostagTutorialExample1Factory.create();
         Path path = Path.of(Objects.requireNonNull(getClass().getResource("/suppliers/mappingEvent.json")).toURI());
-        List<EventModel> models = new DynawoEventModelsSupplier(path).get(network);
+        List<EventModel> models = DynawoEventModelsSupplier.load(path).get(network);
         assertEquals(1, models.size());
     }
 

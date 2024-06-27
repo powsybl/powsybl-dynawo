@@ -279,8 +279,8 @@ class DynaWaltzTest extends AbstractDynawoTest {
     void testIeee14DynawoSuppliers() {
         Network network = Network.read(new ResourceDataSource("IEEE14", new ResourceSet("/ieee14", "IEEE14.iidm")));
 
-        DynamicModelsSupplier dynamicModelsSupplier = new DynawoModelsSupplier(getResourceAsStream("/ieee14/disconnectline/dynamicModels.json"));
-        EventModelsSupplier eventModelsSupplier = new DynawoEventModelsSupplier(getResourceAsStream("/ieee14/disconnectline/eventModels.json"));
+        DynamicModelsSupplier dynamicModelsSupplier = DynawoModelsSupplier.load(getResourceAsStream("/ieee14/disconnectline/dynamicModels.json"));
+        EventModelsSupplier eventModelsSupplier = DynawoEventModelsSupplier.load(getResourceAsStream("/ieee14/disconnectline/eventModels.json"));
 
         List<ParametersSet> modelsParameters = ParametersXml.load(getResourceAsStream("/ieee14/disconnectline/models.par"));
         ParametersSet networkParameters = ParametersXml.load(getResourceAsStream("/ieee14/disconnectline/network.par"), "8");
