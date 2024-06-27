@@ -81,7 +81,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
     private static final String ASSEMBLING_PATH = "assemblingPath";
     private static final String START_TIME = "startTime";
     private static final String STOP_TIME = "stopTime";
-    private static final String PRECISION = "precision";
+    private static final String PRECISION_NAME = "precision";
     private static final String CHOSEN_OUTPUTS = "chosenOutputs";
     private static final String TIME_STEP = "timeStep";
     private static final String STARTING_POINT_MODE = "startingPointMode";
@@ -115,7 +115,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
             new Parameter(ASSEMBLING_PATH, ParameterType.STRING, "Assembling file path", null, null, ParameterScope.TECHNICAL),
             new Parameter(START_TIME, ParameterType.DOUBLE, "Start time", DEFAULT_START_TIME),
             new Parameter(STOP_TIME, ParameterType.DOUBLE, "Stop time", DEFAULT_STOP_TIME),
-            new Parameter(PRECISION, ParameterType.DOUBLE, "Precision", DEFAULT_PRECISION),
+            new Parameter(PRECISION_NAME, ParameterType.DOUBLE, "Precision", DEFAULT_PRECISION),
             new Parameter(Sa.TIME_OF_EVENT, ParameterType.DOUBLE, "Time of event", Sa.DEFAULT_TIME_OF_EVENT),
             new Parameter(CHOSEN_OUTPUTS, ParameterType.STRING_LIST, "Chosen outputs", DEFAULT_CHOSEN_OUTPUTS.stream().map(OutputTypes::name).toList(), getEnumPossibleValues(OutputTypes.class), ParameterScope.TECHNICAL),
             new Parameter(TIME_STEP, ParameterType.DOUBLE, "Time step", DEFAULT_TIME_STEP),
@@ -308,7 +308,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
                 .add(ASSEMBLING_PATH, assemblingPath)
                 .add(START_TIME, startTime)
                 .add(STOP_TIME, stopTime)
-                .add(PRECISION, precision)
+                .add(PRECISION_NAME, precision)
                 .add(Sa.SECURITY_ANALYSIS, securityAnalysis)
                 .add(CHOSEN_OUTPUTS, chosenOutputs)
                 .add(TIME_STEP, timeStep)
@@ -345,7 +345,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         config.getOptionalStringProperty(ASSEMBLING_PATH).ifPresent(parameters::setAssemblingPath);
         config.getOptionalDoubleProperty(START_TIME).ifPresent(parameters::setStartTime);
         config.getOptionalDoubleProperty(STOP_TIME).ifPresent(parameters::setStopTime);
-        config.getOptionalDoubleProperty(PRECISION).ifPresent(parameters::setPrecision);
+        config.getOptionalDoubleProperty(PRECISION_NAME).ifPresent(parameters::setPrecision);
         config.getOptionalDoubleProperty(Sa.TIME_OF_EVENT).ifPresent(parameters::setTimeOfEvent);
         config.getOptionalEnumSetProperty(CHOSEN_OUTPUTS, OutputTypes.class).ifPresent(parameters::setChosenOutputs);
         config.getOptionalDoubleProperty(TIME_STEP).ifPresent(parameters::setTimeStep);
@@ -364,7 +364,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         Optional.ofNullable(properties.get(ASSEMBLING_PATH)).ifPresent(this::setAssemblingPath);
         Optional.ofNullable(properties.get(START_TIME)).ifPresent(prop -> setStartTime(Double.parseDouble(prop)));
         Optional.ofNullable(properties.get(STOP_TIME)).ifPresent(prop -> setStopTime(Double.parseDouble(prop)));
-        Optional.ofNullable(properties.get(PRECISION)).ifPresent(prop -> setPrecision(Double.parseDouble(prop)));
+        Optional.ofNullable(properties.get(PRECISION_NAME)).ifPresent(prop -> setPrecision(Double.parseDouble(prop)));
         Optional.ofNullable(properties.get(Sa.TIME_OF_EVENT)).ifPresent(prop -> {
             if (securityAnalysis == null) {
                 securityAnalysis = new Sa();
@@ -391,7 +391,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         addNotNullEntry(ASSEMBLING_PATH, assemblingPath, parameters::put);
         addNotNullEntry(START_TIME, startTime, parameters::put);
         addNotNullEntry(STOP_TIME, stopTime, parameters::put);
-        addNotNullEntry(PRECISION, precision, parameters::put);
+        addNotNullEntry(PRECISION_NAME, precision, parameters::put);
         addNotNullEntry(Sa.TIME_OF_EVENT, getTimeOfEvent(), parameters::put);
         if (!chosenOutputs.isEmpty()) {
             parameters.put(CHOSEN_OUTPUTS, String.join(CHOSEN_OUTPUT_STRING_DELIMITER, chosenOutputs.stream().map(OutputTypes::name).toList()));
