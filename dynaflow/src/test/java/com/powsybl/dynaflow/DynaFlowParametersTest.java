@@ -17,7 +17,7 @@ import com.powsybl.dynaflow.DynaFlowConstants.StartingPointMode;
 import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
 import com.powsybl.loadflow.LoadFlowParameters;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeEach;serialization
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -26,7 +26,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
-import static com.powsybl.commons.test.ComparisonUtils.compareTxt;
+import static com.powsybl.commons.test.ComparisonUtils.assertTxtEquals;
 import static com.powsybl.dynaflow.DynaFlowProvider.MODULE_SPECIFIC_PARAMETERS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -205,7 +205,7 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
         try (InputStream actual = Files.newInputStream(parameterFile);
              InputStream expected = getClass().getResourceAsStream("/params_default.json")) {
             assertNotNull(expected);
-            compareTxt(expected, actual);
+            assertTxtEquals(expected, actual);
         }
     }
 
@@ -240,7 +240,7 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
         try (InputStream actual = Files.newInputStream(parameterFile);
              InputStream expected = getClass().getResourceAsStream("/params.json")) {
             assertNotNull(expected);
-            compareTxt(expected, actual);
+            assertTxtEquals(expected, actual);
         }
     }
 

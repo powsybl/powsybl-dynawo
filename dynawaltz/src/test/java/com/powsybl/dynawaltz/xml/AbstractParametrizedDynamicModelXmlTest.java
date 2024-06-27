@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static com.powsybl.commons.test.ComparisonUtils.compareTxt;
+import static com.powsybl.commons.test.ComparisonUtils.assertTxtEquals;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -52,7 +52,7 @@ abstract class AbstractParametrizedDynamicModelXmlTest extends AbstractSerDeTest
         Schema schema = factory.newSchema(xsd);
         Validator validator = schema.newValidator();
         validator.validate(xml);
-        compareTxt(expected, actual);
+        assertTxtEquals(expected, actual);
     }
 
     void setupDynawaltzContext() {

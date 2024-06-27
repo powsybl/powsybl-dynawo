@@ -32,7 +32,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ForkJoinPool;
 
-import static com.powsybl.commons.test.ComparisonUtils.compareXml;
+import static com.powsybl.commons.test.ComparisonUtils.assertXmlEquals;
 import static com.powsybl.dynaflow.DynaFlowConstants.*;
 import static com.powsybl.loadflow.LoadFlowResult.Status.FAILED;
 import static com.powsybl.loadflow.LoadFlowResult.Status.FULLY_CONVERGED;
@@ -243,7 +243,7 @@ class DynaFlowProviderTest extends AbstractSerDeTest {
         NetworkSerDe.write(expected, pexpected);
         actual.setCaseDate(expected.getCaseDate());
         NetworkSerDe.write(actual, pactual);
-        compareXml(Files.newInputStream(pexpected), Files.newInputStream(pactual));
+        assertXmlEquals(Files.newInputStream(pexpected), Files.newInputStream(pactual));
     }
 
     private static Network createTestNetwork() {
