@@ -108,7 +108,7 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
     private boolean mergeLoads = DEFAULT_MERGE_LOADS;
     private boolean writeFinalState = DEFAULT_WRITE_FINAL_STATE;
     private boolean useModelSimplifiers = DEFAULT_USE_MODEL_SIMPLIFIERS;
-    private DumpFileParameters dumpFileParameters = DumpFileParameters.DEFAULT_DUMP_FILE_PARAMETERS;
+    private DumpFileParameters dumpFileParameters = DumpFileParameters.createDefaultDumpFileParameters();
     private double precision = DEFAULT_PRECISION;
     private ExportMode timelineExportMode = DEFAULT_TIMELINE_EXPORT_MODE;
     private LogLevel logLevelFilter = DEFAULT_LOG_LEVEL_FILTER;
@@ -252,11 +252,6 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
 
     public DynaWaltzParameters setDumpFileParameters(DumpFileParameters dumpFileParameters) {
         this.dumpFileParameters = dumpFileParameters;
-        return this;
-    }
-
-    public DynaWaltzParameters setDefaultDumpFileParameters() {
-        this.dumpFileParameters = DumpFileParameters.createDefaultDumpFileParameters();
         return this;
     }
 
