@@ -21,7 +21,7 @@ import com.powsybl.dynawaltz.models.hvdc.HvdcPBuilder;
 import com.powsybl.dynawaltz.models.hvdc.HvdcVscBuilder;
 import com.powsybl.dynawaltz.models.lines.LineBuilder;
 import com.powsybl.dynawaltz.models.loads.*;
-import com.powsybl.dynawaltz.models.shunts.ShuntBuilder;
+import com.powsybl.dynawaltz.models.shunts.BaseShuntBuilder;
 import com.powsybl.dynawaltz.models.svarcs.BaseStaticVarCompensatorBuilder;
 import com.powsybl.dynawaltz.models.transformers.TransformerFixedRatioBuilder;
 import com.powsybl.iidm.network.Network;
@@ -29,6 +29,7 @@ import com.powsybl.iidm.network.test.SvcTestCaseFactory;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -36,6 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class DefaultLibBuilderTest {
 
     private static final Network NETWORK = SvcTestCaseFactory.create();
+    private static final String WRONG_LIB = "wrongLib";
 
     @Test
     void testDefaultLibAutomatons() {
@@ -73,9 +75,49 @@ class DefaultLibBuilderTest {
         assertNotNull(HvdcPBuilder.of(NETWORK));
         assertNotNull(HvdcVscBuilder.of(NETWORK));
         // Shunt
-        assertNotNull(ShuntBuilder.of(NETWORK));
+        assertNotNull(BaseShuntBuilder.of(NETWORK));
         // Static var comp
         assertNotNull(BaseStaticVarCompensatorBuilder.of(NETWORK));
     }
 
+    @Test
+    void testWrongLibAutomatons() {
+        assertNull(UnderVoltageAutomationSystemBuilder.of(NETWORK, WRONG_LIB));
+        assertNull(TapChangerBlockingAutomationSystemBuilder.of(NETWORK, WRONG_LIB));
+        assertNull(TapChangerAutomationSystemBuilder.of(NETWORK, WRONG_LIB));
+        assertNull(DynamicOverloadManagementSystemBuilder.of(NETWORK, WRONG_LIB));
+        assertNull(DynamicTwoLevelsOverloadManagementSystemBuilder.of(NETWORK, WRONG_LIB));
+        assertNull(PhaseShifterIAutomationSystemBuilder.of(NETWORK, WRONG_LIB));
+        assertNull(PhaseShifterPAutomationSystemBuilder.of(NETWORK, WRONG_LIB));
+    }
+
+    @Test
+    void testWrongLibEquipments() {
+        // Load
+        assertNull(BaseLoadBuilder.of(NETWORK, WRONG_LIB));
+        assertNull(LoadOneTransformerBuilder.of(NETWORK, WRONG_LIB));
+        assertNull(LoadOneTransformerTapChangerBuilder.of(NETWORK, WRONG_LIB));
+        assertNull(LoadTwoTransformersBuilder.of(NETWORK, WRONG_LIB));
+        assertNull(LoadTwoTransformersTapChangersBuilder.of(NETWORK, WRONG_LIB));
+        // Bus
+        assertNull(StandardBusBuilder.of(NETWORK, WRONG_LIB));
+        assertNull(InfiniteBusBuilder.of(NETWORK, WRONG_LIB));
+        // Transformer
+        assertNull(TransformerFixedRatioBuilder.of(NETWORK, WRONG_LIB));
+        // Line
+        assertNull(LineBuilder.of(NETWORK, WRONG_LIB));
+        // Generator
+        assertNull(GeneratorFictitiousBuilder.of(NETWORK, WRONG_LIB));
+        assertNull(SynchronizedGeneratorBuilder.of(NETWORK, WRONG_LIB));
+        assertNull(SynchronousGeneratorBuilder.of(NETWORK, WRONG_LIB));
+        assertNull(WeccBuilder.of(NETWORK, WRONG_LIB));
+        assertNull(GridFormingConverterBuilder.of(NETWORK, WRONG_LIB));
+        // HVDC
+        assertNull(HvdcPBuilder.of(NETWORK, WRONG_LIB));
+        assertNull(HvdcVscBuilder.of(NETWORK, WRONG_LIB));
+        // Shunt
+        assertNull(BaseShuntBuilder.of(NETWORK, WRONG_LIB));
+        // Static var comp
+        assertNull(BaseStaticVarCompensatorBuilder.of(NETWORK, WRONG_LIB));
+    }
 }

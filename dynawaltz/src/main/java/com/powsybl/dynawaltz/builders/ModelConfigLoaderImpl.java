@@ -22,7 +22,7 @@ import com.powsybl.dynawaltz.models.hvdc.HvdcPBuilder;
 import com.powsybl.dynawaltz.models.hvdc.HvdcVscBuilder;
 import com.powsybl.dynawaltz.models.lines.LineBuilder;
 import com.powsybl.dynawaltz.models.loads.*;
-import com.powsybl.dynawaltz.models.shunts.ShuntBuilder;
+import com.powsybl.dynawaltz.models.shunts.BaseShuntBuilder;
 import com.powsybl.dynawaltz.models.svarcs.BaseStaticVarCompensatorBuilder;
 import com.powsybl.dynawaltz.models.transformers.TransformerFixedRatioBuilder;
 
@@ -55,7 +55,7 @@ public final class ModelConfigLoaderImpl implements ModelConfigLoader {
             new BuilderConfig(LoadOneTransformerTapChangerBuilder::of, LoadOneTransformerTapChangerBuilder::getSupportedLibs),
             new BuilderConfig(LoadTwoTransformersBuilder::of, LoadTwoTransformersBuilder::getSupportedLibs),
             new BuilderConfig(LoadTwoTransformersTapChangersBuilder::of, LoadTwoTransformersTapChangersBuilder::getSupportedLibs),
-            new BuilderConfig(ShuntBuilder::of, ShuntBuilder::getSupportedLibs),
+            new BuilderConfig(BaseShuntBuilder::of, BaseShuntBuilder::getSupportedLibs),
             new BuilderConfig(BaseStaticVarCompensatorBuilder::of, BaseStaticVarCompensatorBuilder::getSupportedLibs),
             new BuilderConfig(GeneratorFictitiousBuilder::of, GeneratorFictitiousBuilder::getSupportedLibs),
             new BuilderConfig(SynchronizedGeneratorBuilder::of, SynchronizedGeneratorBuilder::getSupportedLibs),
