@@ -22,7 +22,7 @@ import java.util.function.Predicate;
  */
 public class HvdcVscBuilder extends AbstractHvdcBuilder<HvdcVscBuilder> {
 
-    private static final String CATEGORY = "hvdcVsc";
+    public static final String CATEGORY = "HVDC_VSC";
     private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
     private static final Predicate<HvdcLine> IS_VSC = eq -> HvdcConverterStation.HvdcType.VSC == eq.getConverterStation1().getHvdcType();
 

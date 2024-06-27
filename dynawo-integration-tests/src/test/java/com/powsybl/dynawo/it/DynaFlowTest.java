@@ -10,7 +10,6 @@ import com.google.common.io.ByteStreams;
 import com.powsybl.commons.datasource.ResourceDataSource;
 import com.powsybl.commons.datasource.ResourceSet;
 import com.powsybl.commons.report.ReportNode;
-import com.powsybl.commons.test.ComparisonUtils;
 import com.powsybl.commons.test.TestUtil;
 import com.powsybl.contingency.Contingency;
 import com.powsybl.dynaflow.DynaFlowConfig;
@@ -23,10 +22,9 @@ import com.powsybl.iidm.network.VariantManagerConstants;
 import com.powsybl.iidm.network.test.FourSubstationsNodeBreakerFactory;
 import com.powsybl.loadflow.LoadFlowParameters;
 import com.powsybl.loadflow.LoadFlowResult;
-import com.powsybl.security.LimitViolationFilter;
 import com.powsybl.security.SecurityAnalysisParameters;
 import com.powsybl.security.SecurityAnalysisResult;
-import com.powsybl.security.detectors.DefaultLimitViolationDetector;
+import com.powsybl.security.SecurityAnalysisRunParameters;
 import com.powsybl.security.json.SecurityAnalysisResultSerializer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,10 +34,10 @@ import java.io.InputStream;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import static com.powsybl.commons.test.ComparisonUtils.assertTxtEquals;
 import static com.powsybl.loadflow.LoadFlowResult.ComponentResult.Status.CONVERGED;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -125,9 +123,11 @@ class DynaFlowTest extends AbstractDynawoTest {
                 .toList();
 
         ReportNode reportNode = ReportNode.newRootReportNode().withMessageTemplate("root", "Root message").build();
-        SecurityAnalysisResult result = securityAnalysisProvider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID, new DefaultLimitViolationDetector(),
-                        new LimitViolationFilter(), computationManager, securityAnalysisParameters, n -> contingencies, Collections.emptyList(),
-                        Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), reportNode)
+        SecurityAnalysisRunParameters runParameters = new SecurityAnalysisRunParameters()
+                .setComputationManager(computationManager)
+                .setSecurityAnalysisParameters(securityAnalysisParameters)
+                .setReportNode(reportNode);
+        SecurityAnalysisResult result = securityAnalysisProvider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID, n -> contingencies, runParameters)
                 .join()
                 .getResult();
 
@@ -141,7 +141,7 @@ class DynaFlowTest extends AbstractDynawoTest {
         StringWriter serializedResult = new StringWriter();
         SecurityAnalysisResultSerializer.write(result, serializedResult);
         InputStream expected = Objects.requireNonNull(getClass().getResourceAsStream("/ieee14/security-analysis/sa_bb_results.json"));
-        ComparisonUtils.compareTxt(expected, serializedResult.toString());
+        assertTxtEquals(expected, serializedResult.toString());
     }
 
     @Test
@@ -151,15 +151,16 @@ class DynaFlowTest extends AbstractDynawoTest {
         List<Contingency> contingencies = network.getGeneratorStream()
                 .map(g -> Contingency.generator(g.getId()))
                 .toList();
-        SecurityAnalysisResult result = securityAnalysisProvider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID, new DefaultLimitViolationDetector(),
-                        new LimitViolationFilter(), computationManager, securityAnalysisParameters, n -> contingencies, Collections.emptyList(),
-                        Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), ReportNode.NO_OP)
+        SecurityAnalysisRunParameters runParameters = new SecurityAnalysisRunParameters()
+                .setComputationManager(computationManager)
+                .setSecurityAnalysisParameters(securityAnalysisParameters);
+        SecurityAnalysisResult result = securityAnalysisProvider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID, n -> contingencies, runParameters)
                 .join()
                 .getResult();
 
         StringWriter serializedResult = new StringWriter();
         SecurityAnalysisResultSerializer.write(result, serializedResult);
         InputStream expected = Objects.requireNonNull(getClass().getResourceAsStream("/ieee14/security-analysis/sa_nb_results.json"));
-        ComparisonUtils.compareTxt(expected, serializedResult.toString());
+        assertTxtEquals(expected, serializedResult.toString());
     }
 }

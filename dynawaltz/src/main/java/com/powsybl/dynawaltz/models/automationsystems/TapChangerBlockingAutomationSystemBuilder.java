@@ -20,7 +20,7 @@ import static com.powsybl.dynawaltz.builders.BuildersUtil.MEASUREMENT_POINT_TYPE
  */
 public class TapChangerBlockingAutomationSystemBuilder extends AbstractAutomationSystemModelBuilder<TapChangerBlockingAutomationSystemBuilder> {
 
-    private static final String CATEGORY = "tcbs";
+    public static final String CATEGORY = "TAP_CHANGER_BLOCKING";
     private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
     private static final String TAP_CHANGER_TYPE = IdentifiableType.TWO_WINDINGS_TRANSFORMER + "/" + IdentifiableType.LOAD;
     private static final String U_MEASUREMENTS_FIELD = "uMeasurements";
@@ -60,6 +60,11 @@ public class TapChangerBlockingAutomationSystemBuilder extends AbstractAutomatio
         uMeasurementPoints = new BuilderIdListEquipmentList<>(MEASUREMENT_POINT_TYPE, U_MEASUREMENTS_FIELD);
     }
 
+    public TapChangerBlockingAutomationSystemBuilder transformers(String staticId) {
+        tapChangerEquipments.addEquipment(staticId, id -> this.getTapChangerEquipment(network, id));
+        return self();
+    }
+
     public TapChangerBlockingAutomationSystemBuilder transformers(String... staticIds) {
         tapChangerEquipments.addEquipments(staticIds, id -> this.getTapChangerEquipment(network, id));
         return self();
@@ -73,6 +78,11 @@ public class TapChangerBlockingAutomationSystemBuilder extends AbstractAutomatio
     private Identifiable<?> getTapChangerEquipment(Network network, String staticId) {
         Identifiable<?> tapChangerEquipment = network.getTwoWindingsTransformer(staticId);
         return tapChangerEquipment != null ? tapChangerEquipment : network.getLoad(staticId);
+    }
+
+    public TapChangerBlockingAutomationSystemBuilder uMeasurements(String staticId) {
+        uMeasurementPoints.addEquipment(staticId, id -> BuildersUtil.getActionConnectionPoint(network, id));
+        return self();
     }
 
     public TapChangerBlockingAutomationSystemBuilder uMeasurements(String... staticIds) {

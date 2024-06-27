@@ -17,7 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
 
-import static com.powsybl.commons.test.ComparisonUtils.compareXml;
+import static com.powsybl.commons.test.ComparisonUtils.assertXmlEquals;
 
 /**
  * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
@@ -26,11 +26,11 @@ abstract class AbstractDynawoCommonsTest extends AbstractSerDeTest {
 
     protected void compare(String expectedIidmResource, Network actual) throws IOException {
         InputStream expected = Objects.requireNonNull(getClass().getResourceAsStream(expectedIidmResource));
-        compareXml(expected, getInputStream(actual, tmpDir.resolve("actual.xiidm")));
+        assertXmlEquals(expected, getInputStream(actual, tmpDir.resolve("actual.xiidm")));
     }
 
     protected void compare(Network expected, Network actual) throws IOException {
-        compareXml(getInputStream(expected, tmpDir.resolve("expected.xiidm")),
+        assertXmlEquals(getInputStream(expected, tmpDir.resolve("expected.xiidm")),
                 getInputStream(actual, tmpDir.resolve("actual.xiidm")));
     }
 

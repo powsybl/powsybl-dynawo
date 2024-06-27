@@ -24,7 +24,7 @@ import java.util.Set;
  */
 public class DynamicTwoLevelsOverloadManagementSystemBuilder extends AbstractOverloadManagementSystemBuilder<DynamicTwoLevelsOverloadManagementSystemBuilder> {
 
-    private static final String CATEGORY = "twoLevelsOverloadManagements";
+    public static final String CATEGORY = "TWO_LEVEL_OVERLOAD_MANAGEMENT";
     private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
 
     protected final BuilderEquipment<Branch<?>> iMeasurement2;

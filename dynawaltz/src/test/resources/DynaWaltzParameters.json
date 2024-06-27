@@ -1,7 +1,7 @@
 {
   "version" : "1.0",
-  "startTime" : 0,
-  "stopTime" : 3600,
+  "startTime" : 0.0,
+  "stopTime" : 3600.0,
   "extensions" : {
     "DynaWaltzParameters" : {
       "networkParameters" : {
