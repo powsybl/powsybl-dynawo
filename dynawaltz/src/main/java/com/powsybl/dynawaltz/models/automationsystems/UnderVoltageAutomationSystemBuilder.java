@@ -24,7 +24,7 @@ import java.util.Set;
  */
 public class UnderVoltageAutomationSystemBuilder extends AbstractAutomationSystemModelBuilder<UnderVoltageAutomationSystemBuilder> {
 
-    private static final String CATEGORY = "underVoltages";
+    public static final String CATEGORY = "UNDER_VOLTAGE";
     private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
 
     protected final BuilderEquipment<Generator> generator;
