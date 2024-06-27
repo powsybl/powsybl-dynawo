@@ -27,7 +27,7 @@ public final class LogUtils {
 
     public static Optional<LogEntry> createLog(String severity, String message) {
         if (severity == null) {
-            LOGGER.warn("Inconsistent log entry (modelName: '{}', message: '{}')", severity, message);
+            LOGGER.warn("Inconsistent log entry (message: '{}')", message);
         } else {
             if (emptyMessage(message)) {
                 LOGGER.debug("Empty message, the entry will be skipped : {}", message);

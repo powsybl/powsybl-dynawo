@@ -7,6 +7,7 @@
 package com.powsybl.dynawaltz.models.loads;
 
 import com.powsybl.dynawaltz.models.AbstractEquipmentBlackBoxModel;
+import com.powsybl.dynawaltz.models.InjectionModel;
 import com.powsybl.dynawaltz.models.VarConnection;
 import com.powsybl.dynawaltz.models.buses.EquipmentConnectionPoint;
 import com.powsybl.dynawaltz.models.macroconnections.MacroConnectionsAdder;
@@ -18,7 +19,7 @@ import java.util.List;
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public abstract class AbstractLoad extends AbstractEquipmentBlackBoxModel<Load> implements LoadModel {
+public abstract class AbstractLoad extends AbstractEquipmentBlackBoxModel<Load> implements InjectionModel {
 
     protected final String terminalVarName;
 

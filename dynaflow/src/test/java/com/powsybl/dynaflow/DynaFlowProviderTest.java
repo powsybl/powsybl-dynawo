@@ -36,6 +36,8 @@ import java.util.concurrent.ForkJoinPool;
 import static com.powsybl.commons.test.ComparisonUtils.assertXmlEquals;
 import static com.powsybl.dynaflow.DynaFlowConstants.*;
 import static com.powsybl.dynawo.commons.DynawoConstants.OUTPUT_IIDM_FILENAME;
+import static com.powsybl.loadflow.LoadFlowResult.Status.FAILED;
+import static com.powsybl.loadflow.LoadFlowResult.Status.FULLY_CONVERGED;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -135,7 +137,7 @@ class DynaFlowProviderTest extends AbstractSerDeTest {
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
         LoadFlowResult result = dynaFlowSimulation.run(network, computationManager, params);
         assertNotNull(result);
-        assertTrue(result.isOk());
+        assertEquals(FULLY_CONVERGED, result.getStatus());
 
         InputStream pReferenceOutput = getClass().getResourceAsStream("/output.xiidm");
         Network expectedNetwork = NetworkSerDe.read(pReferenceOutput);
@@ -156,7 +158,7 @@ class DynaFlowProviderTest extends AbstractSerDeTest {
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
         LoadFlowResult result = dynaFlowSimulation.run(network, computationManager, params);
         assertNotNull(result);
-        assertTrue(result.isOk());
+        assertEquals(FULLY_CONVERGED, result.getStatus());
 
         InputStream pReferenceOutput = getClass().getResourceAsStream("/output.xiidm");
         Network expectedNetwork = NetworkSerDe.read(pReferenceOutput);
@@ -176,7 +178,7 @@ class DynaFlowProviderTest extends AbstractSerDeTest {
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
         LoadFlowResult result = dynaFlowSimulation.run(network, computationManager, params);
         assertNotNull(result);
-        assertFalse(result.isOk());
+        assertEquals(FAILED, result.getStatus());
     }
 
     @Test

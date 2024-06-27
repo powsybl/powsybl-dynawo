@@ -1,7 +1,7 @@
 {
   "version" : "1.0",
-  "startTime" : 0,
-  "stopTime" : 3600,
+  "startTime" : 0.0,
+  "stopTime" : 3600.0,
   "extensions" : {
     "DynaWaltzParameters" : {
       "networkParameters" : {
@@ -46,6 +46,8 @@
         "dumpFileFolder" : null,
         "dumpFile" : null
       },
+      "precision" : 1.0E-7,
+      "timelineExportMode" : "TXT",
       "modelsParameters" : [ {
         "id" : "test",
         "parameters" : {

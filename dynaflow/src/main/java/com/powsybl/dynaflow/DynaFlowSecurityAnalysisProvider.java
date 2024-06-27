@@ -7,7 +7,6 @@
 package com.powsybl.dynaflow;
 
 import com.google.auto.service.AutoService;
-import com.powsybl.action.Action;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.computation.Command;
 import com.powsybl.computation.ComputationManager;
@@ -18,11 +17,9 @@ import com.powsybl.contingency.Contingency;
 import com.powsybl.dynawo.commons.DynawoUtil;
 import com.powsybl.dynawo.commons.PowsyblDynawoVersion;
 import com.powsybl.iidm.network.Network;
-import com.powsybl.security.*;
-import com.powsybl.security.interceptors.SecurityAnalysisInterceptor;
-import com.powsybl.security.limitreduction.LimitReduction;
-import com.powsybl.security.monitor.StateMonitor;
-import com.powsybl.security.strategy.OperatorStrategy;
+import com.powsybl.security.SecurityAnalysisProvider;
+import com.powsybl.security.SecurityAnalysisReport;
+import com.powsybl.security.SecurityAnalysisRunParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +32,7 @@ import java.util.function.Supplier;
 
 import static com.powsybl.dynaflow.DynaFlowConstants.*;
 import static com.powsybl.dynaflow.SecurityAnalysisConstants.CONTINGENCIES_FILENAME;
+import static com.powsybl.dynaflow.DynaFlowConstants.DYNAFLOW_NAME;
 
 /**
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
@@ -57,46 +55,26 @@ public class DynaFlowSecurityAnalysisProvider implements SecurityAnalysisProvide
     @Override
     public CompletableFuture<SecurityAnalysisReport> run(Network network,
                                                          String workingVariantId,
-                                                         LimitViolationDetector detector,
-                                                         LimitViolationFilter filter,
-                                                         ComputationManager computationManager,
-                                                         SecurityAnalysisParameters parameters,
                                                          ContingenciesProvider contingenciesProvider,
-                                                         List<SecurityAnalysisInterceptor> interceptors,
-                                                         List<OperatorStrategy> operatorStrategies,
-                                                         List<Action> actions,
-                                                         List<StateMonitor> monitors,
-                                                         List<LimitReduction> limitReductions,
-                                                         ReportNode reportNode) {
-        if (detector != null) {
-            LOG.error("LimitViolationDetector is not used in Dynaflow implementation.");
-        }
-        if (monitors != null && !monitors.isEmpty()) {
+                                                         SecurityAnalysisRunParameters runParameters) {
+        if (!runParameters.getMonitors().isEmpty()) {
             LOG.error("Monitoring is not possible with Dynaflow implementation. There will not be supplementary information about monitored equipment.");
         }
-        if (operatorStrategies != null && !operatorStrategies.isEmpty()) {
+        if (!runParameters.getOperatorStrategies().isEmpty()) {
             LOG.error("Strategies are not implemented in Dynaflow");
         }
-        if (actions != null && !actions.isEmpty()) {
+        if (!runParameters.getActions().isEmpty()) {
             LOG.error("Actions are not implemented in Dynaflow");
         }
-        if (limitReductions != null && !limitReductions.isEmpty()) {
+        if (!runParameters.getLimitReductions().isEmpty()) {
             LOG.error("Limit reductions are not implemented in Dynaflow");
         }
-
-        Objects.requireNonNull(computationManager);
-        Objects.requireNonNull(network);
-        Objects.requireNonNull(workingVariantId);
-        Objects.requireNonNull(filter);
-        Objects.requireNonNull(parameters);
-        Objects.requireNonNull(contingenciesProvider);
-        interceptors.forEach(Objects::requireNonNull);
 
         DynaFlowConfig config = Objects.requireNonNull(configSupplier.get());
         ExecutionEnvironment execEnv = new ExecutionEnvironment(config.createEnv(), WORKING_DIR_PREFIX, config.isDebug());
         DynawoUtil.requireDynaMinVersion(execEnv, computationManager, getVersionCommand(config), DynaFlowConfig.DYNAFLOW_LAUNCHER_PROGRAM_NAME, true);
         List<Contingency> contingencies = contingenciesProvider.getContingencies(network);
-        ReportNode dfsaReportNode = Reports.createDynaFlowSecurityAnalysisReportNode(reportNode, network.getId());
+        ReportNode dfsaReportNode = DynaflowReports.createDynaFlowSecurityAnalysisReportNode(reportNode, network.getId());
 
         DynaFlowSecurityAnalysisHandler executionHandler = new DynaFlowSecurityAnalysisHandler(network, workingVariantId, getCommand(config), parameters, contingencies, filter, interceptors, dfsaReportNode);
         return computationManager.execute(execEnv, executionHandler);

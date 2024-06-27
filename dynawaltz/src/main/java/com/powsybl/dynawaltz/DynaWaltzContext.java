@@ -121,8 +121,12 @@ public class DynaWaltzContext {
 
     private Stream<BlackBoxModel> simplifyModels(Stream<BlackBoxModel> inputBbm, ReportNode reportNode) {
         Stream<BlackBoxModel> outputBbm = inputBbm;
-        for (ModelsSimplifier modelsSimplifier : ServiceLoader.load(ModelsSimplifier.class)) {
-            outputBbm = modelsSimplifier.simplifyModels(outputBbm, network, dynaWaltzParameters, reportNode);
+        for (ModelsRemovalSimplifier modelsSimplifier : ServiceLoader.load(ModelsRemovalSimplifier.class)) {
+            outputBbm = outputBbm.filter(modelsSimplifier.getModelRemovalPredicate(reportNode));
+        }
+        for (ModelsSubstitutionSimplifier modelsSimplifier : ServiceLoader.load(ModelsSubstitutionSimplifier.class)) {
+            outputBbm = outputBbm.map(modelsSimplifier.getModelSubstitutionFunction(network, dynaWaltzParameters, reportNode))
+                    .filter(Objects::nonNull);
         }
         return outputBbm;
     }

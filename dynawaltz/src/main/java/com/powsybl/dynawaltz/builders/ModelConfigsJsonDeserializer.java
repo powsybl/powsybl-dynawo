@@ -11,11 +11,10 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+import com.powsybl.commons.json.JsonUtil;
 
 import java.io.IOException;
 import java.util.*;
-
-import static com.fasterxml.jackson.core.JsonToken.VALUE_STRING;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -30,71 +29,62 @@ public class ModelConfigsJsonDeserializer extends StdDeserializer<Map<String, Mo
     public Map<String, ModelConfigs> deserialize(JsonParser parser, DeserializationContext context) throws IOException {
         Map<String, ModelConfigs> configMap = new HashMap<>();
         while (parser.nextToken() != JsonToken.END_OBJECT) {
-            String category = parser.getCurrentName();
+            String category = parser.currentName();
             parser.nextToken();
-            configMap.put(category, deserializeModelConfigs(parser));
+            configMap.put(category, parseModelConfigs(parser));
         }
         return configMap;
     }
 
-    private ModelConfigs deserializeModelConfigs(JsonParser parser) throws IOException {
-        String defaultLib = null;
-        Map<String, ModelConfig> libs = null;
-        while (parser.nextToken() != JsonToken.END_OBJECT) {
-            switch (parser.getCurrentName()) {
-                case "defaultLib":
-                    defaultLib = parser.getValueAsString();
-                    break;
-                case "libs":
-                    libs = deserializeLibsMap(parser);
-                    break;
-                default:
-                    throw new IllegalStateException("Unexpected field: " + parser.getCurrentName());
+    private static ModelConfigs parseModelConfigs(JsonParser parser) {
+        var parsingContext = new Object() {
+            String defaultLib = null;
+            final Map<String, ModelConfig> libs = new HashMap<>();
+        };
+        JsonUtil.parseObject(parser, name ->
+            switch (name) {
+                case "defaultLib" -> {
+                    parsingContext.defaultLib = parser.nextTextValue();
+                    yield true;
+                }
+                case "libs" -> {
+                    JsonUtil.parseObjectArray(parser, mc -> parsingContext.libs.put(mc.name(), mc), ModelConfigsJsonDeserializer::parseModelConfig);
+                    yield true;
+                }
+                default -> false;
             }
-        }
-        return new ModelConfigs(libs, defaultLib);
+        );
+        return new ModelConfigs(parsingContext.libs, parsingContext.defaultLib);
     }
 
-    private Map<String, ModelConfig> deserializeLibsMap(JsonParser parser) throws IOException {
-        Map<String, ModelConfig> libs = new HashMap<>();
-        while (parser.nextToken() != JsonToken.END_ARRAY) {
-            parser.nextToken();
+    private static ModelConfig parseModelConfig(JsonParser parser) {
+        var parsingContext = new Object() {
             String lib = null;
             String alias = null;
             String internalModelPrefix = null;
             List<String> properties = Collections.emptyList();
-            while (parser.nextToken() != JsonToken.END_OBJECT) {
-                switch (parser.getCurrentName()) {
-                    case "lib":
-                        lib = parser.getValueAsString();
-                        break;
-                    case "properties":
-                        properties = deserializeProperties(parser);
-                        break;
-                    case "internalModelPrefix":
-                        internalModelPrefix = parser.getValueAsString();
-                        break;
-                    case "alias":
-                        alias = parser.getValueAsString();
-                        break;
-                    default:
-                        throw new IllegalStateException("Unexpected field: " + parser.getCurrentName());
+        };
+        JsonUtil.parseObject(parser, name ->
+            switch (parser.currentName()) {
+                case "lib" -> {
+                    parsingContext.lib = parser.nextTextValue();
+                    yield true;
                 }
+                case "properties" -> {
+                    parsingContext.properties = JsonUtil.parseStringArray(parser);
+                    yield true;
+                }
+                case "internalModelPrefix" -> {
+                    parsingContext.internalModelPrefix = parser.nextTextValue();
+                    yield true;
+                }
+                case "alias" -> {
+                    parsingContext.alias = parser.nextTextValue();
+                    yield true;
+                }
+                default -> false;
             }
-            ModelConfig modelConfig = new ModelConfig(lib, alias, internalModelPrefix, properties);
-            libs.put(modelConfig.name(), modelConfig);
-        }
-        return libs;
-    }
-
-    private List<String> deserializeProperties(JsonParser parser) throws IOException {
-        List<String> properties = new ArrayList<>();
-        JsonToken token;
-        while ((token = parser.nextToken()) != JsonToken.END_ARRAY) {
-            if (token == VALUE_STRING) {
-                properties.add(parser.getValueAsString().toUpperCase());
-            }
-        }
-        return properties;
+        );
+        return new ModelConfig(parsingContext.lib, parsingContext.alias, parsingContext.internalModelPrefix, parsingContext.properties);
     }
 }

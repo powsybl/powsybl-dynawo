@@ -111,7 +111,7 @@ class EventModelsSupplierTest extends AbstractModelSupplierTest {
                                  'staticId' field value 'SVC2' not found for equipment type(s) GENERATOR/LOAD
                                  'deltaP' field is not set
                                  Model Step_SVC2 cannot be instantiated
-                         """),
+                        """),
                 Arguments.of("/eventWarnings/missingDisconnectionEquipment.groovy", EurostagTutorialExample1Factory.create(),
                         """
                         + DSL tests

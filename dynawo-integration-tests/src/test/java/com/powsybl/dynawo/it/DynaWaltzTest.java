@@ -78,7 +78,8 @@ class DynaWaltzTest extends AbstractDynawoTest {
                 .setNetworkParameters(networkParameters)
                 .setSolverParameters(solverParameters)
                 .setSolverType(DynaWaltzParameters.SolverType.IDA)
-                .setDefaultDumpFileParameters();
+                .setDefaultDumpFileParameters()
+                .setTimelineExportMode(DynaWaltzParameters.ExportMode.XML);
 
         DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, curvesSupplier,
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, NO_OP)
@@ -87,7 +88,7 @@ class DynaWaltzTest extends AbstractDynawoTest {
         assertEquals(DynamicSimulationResult.Status.SUCCESS, result.getStatus());
         assertTrue(result.getStatusText().isEmpty());
         assertEquals(41, result.getCurves().size());
-        DoubleTimeSeries ts1 = (DoubleTimeSeries) result.getCurve("_GEN____1_SM_generator_UStatorPu");
+        DoubleTimeSeries ts1 = result.getCurve("_GEN____1_SM_generator_UStatorPu");
         assertEquals("_GEN____1_SM_generator_UStatorPu", ts1.getMetadata().getName());
         assertEquals(587, ts1.toArray().length);
         List<TimelineEvent> timeLine = result.getTimeLine();
@@ -162,7 +163,8 @@ class DynaWaltzTest extends AbstractDynawoTest {
                 .setNetworkParameters(networkParameters)
                 .setSolverParameters(solverParameters)
                 .setSolverType(DynaWaltzParameters.SolverType.IDA)
-                .setDefaultDumpFileParameters();
+                .setDefaultDumpFileParameters()
+                .setPrecision(10e-8);
 
         DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, EventModelsSupplier.empty(), CurvesSupplier.empty(),
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, NO_OP)

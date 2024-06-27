@@ -7,9 +7,7 @@
  */
 package com.powsybl.dynawaltz.builders;
 
-import com.powsybl.iidm.network.Identifiable;
-import com.powsybl.iidm.network.IdentifiableType;
-import com.powsybl.iidm.network.Network;
+import com.powsybl.iidm.network.*;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -21,8 +19,28 @@ public final class BuildersUtil {
     private BuildersUtil() {
     }
 
+    /**
+     * Returns the ActionConnectionPoint (bus or busbar section) identified by the staticId parameter
+     * Verifies the point is energized and in main connected component, if not returns null
+     * @param network the network containing the ActionConnectionPoint
+     * @param staticId the identifiable id
+     * @return the energized action connection point if found, <code>null</code> instead
+     */
     public static Identifiable<?> getActionConnectionPoint(Network network, String staticId) {
-        Identifiable<?> point = network.getBusbarSection(staticId);
-        return point != null ? point : network.getBusBreakerView().getBus(staticId);
+        BusbarSection busbarSection = network.getBusbarSection(staticId);
+        if (busbarSection != null) {
+            return isEnergizedBus(busbarSection.getTerminal().getBusBreakerView().getBus()) ? busbarSection : null;
+        }
+        Bus bus = network.getBusBreakerView().getBus(staticId);
+        return isEnergizedBus(bus) ? bus : null;
+    }
+
+    /**
+     * Verifies a bus is energized and in main connected component
+     * @param bus the reviewed bus
+     * @return <code>true</code> if energized, <code>false</code> if not
+     */
+    private static boolean isEnergizedBus(Bus bus) {
+        return bus != null && !Double.isNaN(bus.getV()) && bus.isInMainConnectedComponent();
     }
 }
