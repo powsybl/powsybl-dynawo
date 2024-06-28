@@ -9,7 +9,6 @@ package com.powsybl.dynaflow;
 import com.google.auto.service.AutoService;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.computation.Command;
-import com.powsybl.computation.ComputationManager;
 import com.powsybl.computation.ExecutionEnvironment;
 import com.powsybl.computation.SimpleCommandBuilder;
 import com.powsybl.contingency.ContingenciesProvider;
@@ -24,7 +23,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
@@ -72,12 +70,12 @@ public class DynaFlowSecurityAnalysisProvider implements SecurityAnalysisProvide
 
         DynaFlowConfig config = Objects.requireNonNull(configSupplier.get());
         ExecutionEnvironment execEnv = new ExecutionEnvironment(config.createEnv(), WORKING_DIR_PREFIX, config.isDebug());
-        DynawoUtil.requireDynaMinVersion(execEnv, computationManager, getVersionCommand(config), DynaFlowConfig.DYNAFLOW_LAUNCHER_PROGRAM_NAME, true);
+        DynawoUtil.requireDynaMinVersion(execEnv, runParameters.getComputationManager(), DynaFlowProvider.getVersionCommand(config), DynaFlowConfig.DYNAFLOW_LAUNCHER_PROGRAM_NAME, true);
         List<Contingency> contingencies = contingenciesProvider.getContingencies(network);
-        ReportNode dfsaReportNode = DynaflowReports.createDynaFlowSecurityAnalysisReportNode(reportNode, network.getId());
+        ReportNode dfsaReportNode = DynaflowReports.createDynaFlowSecurityAnalysisReportNode(runParameters.getReportNode(), network.getId());
 
-        DynaFlowSecurityAnalysisHandler executionHandler = new DynaFlowSecurityAnalysisHandler(network, workingVariantId, getCommand(config), parameters, contingencies, filter, interceptors, dfsaReportNode);
-        return computationManager.execute(execEnv, executionHandler);
+        DynaFlowSecurityAnalysisHandler executionHandler = new DynaFlowSecurityAnalysisHandler(network, workingVariantId, getCommand(config), runParameters.getSecurityAnalysisParameters(), contingencies, runParameters.getFilter(), runParameters.getInterceptors(), dfsaReportNode);
+        return runParameters.getComputationManager().execute(execEnv, executionHandler);
     }
 
     @Override
@@ -96,15 +94,6 @@ public class DynaFlowSecurityAnalysisProvider implements SecurityAnalysisProvide
                 "--contingencies", CONTINGENCIES_FILENAME);
         return new SimpleCommandBuilder()
                 .id("dynaflow_sa")
-                .program(config.getProgram())
-                .args(args)
-                .build();
-    }
-
-    public static Command getVersionCommand(DynaFlowConfig config) {
-        List<String> args = Collections.singletonList("--version");
-        return new SimpleCommandBuilder()
-                .id("dynaflow_version")
                 .program(config.getProgram())
                 .args(args)
                 .build();

@@ -69,7 +69,7 @@ public final class ContingencyResultsUtils {
     // Report the timeline events from the timeline files written by dynawo
     public static void reportContingenciesTimelines(List<Contingency> contingencies, Path timelineDir, ReportNode reportNode) {
         contingencies.forEach(c -> {
-            ReportNode contingencyReporter = Reports.createContingenciesTimelineReporter(reportNode, c.getId());
+            ReportNode contingencyReporter = DynaflowReports.createContingenciesTimelineReportNode(reportNode, c.getId());
             getTimeline(timelineDir, c).forEach(e -> CommonReports.reportTimelineEntry(contingencyReporter, e));
         });
     }

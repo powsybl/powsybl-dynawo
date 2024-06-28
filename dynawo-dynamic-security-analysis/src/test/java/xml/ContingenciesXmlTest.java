@@ -39,7 +39,7 @@ class ContingenciesXmlTest extends DynaWaltzTestUtil {
                         .addLine("NHV1_NHV2_1")
                         .addGenerator("GEN2")
                         .build());
-        SecurityAnalysisContext context = new SecurityAnalysisContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, eventModels, parameters, dynawaltzParameters, contingencies);
+        SecurityAnalysisContext context = new SecurityAnalysisContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, parameters, dynawaltzParameters, contingencies);
 
         ContingenciesDydXml.write(tmpDir, context);
         ContingenciesParXml.write(tmpDir, context);

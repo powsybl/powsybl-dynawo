@@ -98,7 +98,7 @@ public class DynaFlowHandler extends AbstractExecutionHandler<LoadFlowResult> {
     }
 
     private void reportTimeLine(Path workingDir) {
-        ReportNode dfReporter = Reports.createDynaFlowReportNode(reportNode, network.getId());
+        ReportNode dfReporter = DynaflowReports.createDynaFlowReportNode(reportNode, network.getId());
         Path timelineFile = workingDir.resolve(DYNAFLOW_OUTPUTS_FOLDER)
                 .resolve(DYNAWO_TIMELINE_FOLDER)
                 .resolve(DYNAFLOW_TIMELINE_FILE);

@@ -14,11 +14,6 @@ import com.powsybl.dynamicsimulation.*;
 import com.powsybl.dynawaltz.models.utils.BlackBoxSupplierUtils;
 import com.powsybl.dynawo.commons.DynawoUtil;
 import com.powsybl.dynawo.commons.PowsyblDynawoVersion;
-import com.powsybl.dynawo.commons.dynawologs.CsvLogParser;
-import com.powsybl.dynawo.commons.loadmerge.LoadsMerger;
-import com.powsybl.dynawo.commons.timeline.CsvTimeLineParser;
-import com.powsybl.dynawo.commons.timeline.TimeLineParser;
-import com.powsybl.dynawo.commons.timeline.XmlTimeLineParser;
 import com.powsybl.iidm.network.Network;
 
 import java.util.Collections;

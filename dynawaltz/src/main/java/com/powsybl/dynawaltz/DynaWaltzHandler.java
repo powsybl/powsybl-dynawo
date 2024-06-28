@@ -25,6 +25,8 @@ import com.powsybl.dynawo.commons.NetworkResultsUpdater;
 import com.powsybl.dynawo.commons.dynawologs.CsvLogParser;
 import com.powsybl.dynawo.commons.loadmerge.LoadsMerger;
 import com.powsybl.dynawo.commons.timeline.CsvTimeLineParser;
+import com.powsybl.dynawo.commons.timeline.TimeLineParser;
+import com.powsybl.dynawo.commons.timeline.XmlTimeLineParser;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.serde.NetworkSerDe;
 import com.powsybl.timeseries.DoubleTimeSeries;
@@ -60,7 +62,7 @@ public final class DynaWaltzHandler extends AbstractExecutionHandler<DynamicSimu
     private static final String LOGS_FOLDER = "logs";
     private static final String OUTPUT_IIDM_FILENAME = "outputIIDM.xml";
     private static final String OUTPUT_DUMP_FILENAME = "outputState.dmp";
-    private static final String TIMELINE_FILENAME = "timeline.log";
+    private static final String TIMELINE_FILENAME = "timeline";
     private static final String LOGS_FILENAME = "dynawaltz.log";
     private static final String ERROR_FILENAME = "dyn_fs_0.err";
     private static final String DYNAWO_ERROR_PATTERN = "DYN Error: ";
@@ -166,9 +168,15 @@ public final class DynaWaltzHandler extends AbstractExecutionHandler<DynamicSimu
     }
 
     private void setTimeline(Path outputsFolder) {
-        Path timelineFile = outputsFolder.resolve(DYNAWO_TIMELINE_FOLDER).resolve(TIMELINE_FILENAME);
+        DynaWaltzParameters.ExportMode exportMode = context.getDynaWaltzParameters().getTimelineExportMode();
+        Path timelineFile = outputsFolder.resolve(DYNAWO_TIMELINE_FOLDER).resolve(TIMELINE_FILENAME + exportMode.getFileExtension());
         if (Files.exists(timelineFile)) {
-            new CsvTimeLineParser().parse(timelineFile).forEach(e -> timeline.add(new TimelineEvent(e.time(), e.modelName(), e.message())));
+            TimeLineParser parser = switch (exportMode) {
+                case CSV -> new CsvTimeLineParser(';');
+                case TXT -> new CsvTimeLineParser();
+                case XML -> new XmlTimeLineParser();
+            };
+            parser.parse(timelineFile).forEach(e -> timeline.add(new TimelineEvent(e.time(), e.modelName(), e.message())));
         } else {
             LOGGER.warn("Timeline file not found");
         }

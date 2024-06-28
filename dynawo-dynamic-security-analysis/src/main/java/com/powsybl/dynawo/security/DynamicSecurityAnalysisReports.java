@@ -12,9 +12,9 @@ import com.powsybl.commons.report.ReportNode;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public final class Reports {
+public final class DynamicSecurityAnalysisReports {
 
-    private Reports() {
+    private DynamicSecurityAnalysisReports() {
     }
 
     public static ReportNode createDynamicSecurityAnalysisReportNode(ReportNode reportNode, String networkId) {

@@ -36,7 +36,7 @@ class MultiplesJobsXmlTest extends DynaWaltzTestUtil {
                         .addLine("NHV1_NHV2_1")
                         .addGenerator("GEN2")
                         .build());
-        SecurityAnalysisContext context = new SecurityAnalysisContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, eventModels, parameters, dynawaltzParameters, contingencies);
+        SecurityAnalysisContext context = new SecurityAnalysisContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, parameters, dynawaltzParameters, contingencies);
 
         MultipleJobsXml.write(tmpDir, context);
         validate("multipleJobs.xsd", "multipleJobs.xml", tmpDir.resolve(DynaWaltzConstants.MULTIPLE_JOBS_FILENAME));

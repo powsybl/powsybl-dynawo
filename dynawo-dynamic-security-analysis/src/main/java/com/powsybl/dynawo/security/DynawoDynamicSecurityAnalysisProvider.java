@@ -8,17 +8,14 @@
 package com.powsybl.dynawo.security;
 
 import com.google.auto.service.AutoService;
-import com.powsybl.action.Action;
 import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.computation.Command;
-import com.powsybl.computation.ComputationManager;
 import com.powsybl.computation.ExecutionEnvironment;
 import com.powsybl.computation.SimpleCommandBuilder;
 import com.powsybl.contingency.ContingenciesProvider;
 import com.powsybl.contingency.Contingency;
 import com.powsybl.dynamicsimulation.DynamicModelsSupplier;
-import com.powsybl.dynamicsimulation.EventModelsSupplier;
 import com.powsybl.dynawaltz.DynaWaltzParameters;
 import com.powsybl.dynawaltz.DynaWaltzProvider;
 import com.powsybl.dynawaltz.models.utils.BlackBoxSupplierUtils;
@@ -26,14 +23,10 @@ import com.powsybl.dynawaltz.xml.DynaWaltzConstants;
 import com.powsybl.dynawo.commons.DynawoUtil;
 import com.powsybl.dynawo.commons.PowsyblDynawoVersion;
 import com.powsybl.iidm.network.Network;
-import com.powsybl.security.LimitViolationDetector;
-import com.powsybl.security.LimitViolationFilter;
 import com.powsybl.security.SecurityAnalysisReport;
 import com.powsybl.security.dynamic.DynamicSecurityAnalysisParameters;
 import com.powsybl.security.dynamic.DynamicSecurityAnalysisProvider;
-import com.powsybl.security.interceptors.SecurityAnalysisInterceptor;
-import com.powsybl.security.monitor.StateMonitor;
-import com.powsybl.security.strategy.OperatorStrategy;
+import com.powsybl.security.dynamic.DynamicSecurityAnalysisRunParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,62 +59,36 @@ public class DynawoDynamicSecurityAnalysisProvider implements DynamicSecurityAna
     }
 
     @Override
-    public CompletableFuture<SecurityAnalysisReport> run(Network network,
+    public CompletableFuture<SecurityAnalysisReport> run(Network network, String workingVariantId,
                                                          DynamicModelsSupplier dynamicModelsSupplier,
-                                                         EventModelsSupplier eventModelsSupplier,
-                                                         String workingVariantId,
-                                                         LimitViolationDetector detector,
-                                                         LimitViolationFilter filter,
-                                                         ComputationManager computationManager,
-                                                         DynamicSecurityAnalysisParameters parameters,
                                                          ContingenciesProvider contingenciesProvider,
-                                                         List<SecurityAnalysisInterceptor> interceptors,
-                                                         List<OperatorStrategy> operatorStrategies,
-                                                         List<Action> actions,
-                                                         List<StateMonitor> monitors,
-                                                         ReportNode reportNode) {
-        if (detector != null) {
-            LOGGER.error("LimitViolationDetector is not used in Dynaflow implementation.");
+                                                         DynamicSecurityAnalysisRunParameters runParameters) {
+
+        if (!runParameters.getMonitors().isEmpty()) {
+            LOGGER.error("Monitoring is not possible with Dynawo implementation. There will not be supplementary information about monitored equipment.");
         }
-        if (monitors != null && !monitors.isEmpty()) {
-            LOGGER.error("Monitoring is not possible with Dynaflow implementation. There will not be supplementary information about monitored equipment.");
+        if (!runParameters.getOperatorStrategies().isEmpty()) {
+            LOGGER.error("Strategies are not implemented in Dynawo");
         }
-        if (reportNode != ReportNode.NO_OP) {
-            LOGGER.warn("Reporters are not used in Dynaflow implementation");
-        }
-        if (operatorStrategies != null && !operatorStrategies.isEmpty()) {
-            LOGGER.error("Strategies are not implemented in Dynaflow");
-        }
-        if (actions != null && !actions.isEmpty()) {
-            LOGGER.error("Actions are not implemented in Dynaflow");
+        if (!runParameters.getActions().isEmpty()) {
+            LOGGER.error("Actions are not implemented in Dynawo");
         }
 
-        Objects.requireNonNull(computationManager);
-        Objects.requireNonNull(network);
-        Objects.requireNonNull(workingVariantId);
-        Objects.requireNonNull(dynamicModelsSupplier);
-        Objects.requireNonNull(eventModelsSupplier);
-        Objects.requireNonNull(filter);
-        Objects.requireNonNull(parameters);
-        Objects.requireNonNull(contingenciesProvider);
-        interceptors.forEach(Objects::requireNonNull);
-
-        ReportNode dsaReportNode = Reports.createDynamicSecurityAnalysisReportNode(reportNode, network.getId());
+        ReportNode dsaReportNode = DynamicSecurityAnalysisReports.createDynamicSecurityAnalysisReportNode(runParameters.getReportNode(), network.getId());
         network.getVariantManager().setWorkingVariant(workingVariantId);
         ExecutionEnvironment execEnv = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, config.isDebug());
-        DynawoUtil.requireDynaMinVersion(execEnv, computationManager, getVersionCommand(config), DynawoAlgorithmsConfig.DYNAWALTZ_LAUNCHER_PROGRAM_NAME, false);
+        DynawoUtil.requireDynaMinVersion(execEnv, runParameters.getComputationManager(), getVersionCommand(config), DynawoAlgorithmsConfig.DYNAWALTZ_LAUNCHER_PROGRAM_NAME, false);
         List<Contingency> contingencies = contingenciesProvider.getContingencies(network);
+        DynamicSecurityAnalysisParameters parameters = runParameters.getDynamicSecurityAnalysisParameters();
         SecurityAnalysisContext context = new SecurityAnalysisContext(network, workingVariantId,
                 BlackBoxSupplierUtils.getBlackBoxModelList(dynamicModelsSupplier, network, dsaReportNode),
-                BlackBoxSupplierUtils.getBlackBoxModelList(eventModelsSupplier, network, dsaReportNode),
                 parameters,
                 DynaWaltzParameters.load(parameters.getDynamicSimulationParameters()),
                 contingencies);
 
-        return computationManager.execute(execEnv, new DynawoDynamicSecurityAnalysisHandler(context, getCommand(config), filter, interceptors, dsaReportNode));
+        return runParameters.getComputationManager().execute(execEnv, new DynawoDynamicSecurityAnalysisHandler(context, getCommand(config), runParameters.getFilter(), runParameters.getInterceptors(), dsaReportNode));
     }
 
-    // TODO choose another name ? (needed for models supplier)
     @Override
     public String getName() {
         return DynaWaltzProvider.NAME;

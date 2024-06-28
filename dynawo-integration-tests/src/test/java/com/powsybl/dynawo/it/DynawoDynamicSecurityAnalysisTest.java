@@ -14,7 +14,6 @@ import com.powsybl.commons.test.ComparisonUtils;
 import com.powsybl.commons.test.TestUtil;
 import com.powsybl.contingency.Contingency;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
-import com.powsybl.dynamicsimulation.EventModelsSupplier;
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension;
 import com.powsybl.dynamicsimulation.groovy.GroovyDynamicModelsSupplier;
 import com.powsybl.dynamicsimulation.groovy.GroovyExtension;
@@ -26,11 +25,10 @@ import com.powsybl.dynawo.security.DynawoAlgorithmsConfig;
 import com.powsybl.dynawo.security.DynawoDynamicSecurityAnalysisProvider;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.VariantManagerConstants;
-import com.powsybl.security.LimitViolationFilter;
 import com.powsybl.security.SecurityAnalysisResult;
-import com.powsybl.security.detectors.DefaultLimitViolationDetector;
 import com.powsybl.security.dynamic.DynamicSecurityAnalysisParameters;
 import com.powsybl.security.dynamic.DynamicSecurityAnalysisProvider;
+import com.powsybl.security.dynamic.DynamicSecurityAnalysisRunParameters;
 import com.powsybl.security.json.SecurityAnalysisResultSerializer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,7 +38,6 @@ import java.io.InputStream;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -86,22 +83,23 @@ class DynawoDynamicSecurityAnalysisTest extends AbstractDynawoTest {
                 .setSolverType(DynaWaltzParameters.SolverType.IDA)
                 .setDefaultDumpFileParameters();
 
-        ReportNode reporter = ReportNode.newRootReportNode()
+        ReportNode reportNode = ReportNode.newRootReportNode()
                 .withMessageTemplate("root", "Root message")
                 .build();
-
         List<Contingency> contingencies = List.of(Contingency.load("_LOAD__11_EC"));
 
-        SecurityAnalysisResult result = provider.run(network, dynamicModelsSupplier, EventModelsSupplier.empty(),
-                        VariantManagerConstants.INITIAL_VARIANT_ID, new DefaultLimitViolationDetector(),
-                        new LimitViolationFilter(), computationManager, parameters, n -> contingencies,
-                        Collections.emptyList(), Collections.emptyList(), Collections.emptyList(),
-                        Collections.emptyList(), reporter)
+        DynamicSecurityAnalysisRunParameters runParameters = new DynamicSecurityAnalysisRunParameters()
+                .setComputationManager(computationManager)
+                .setDynamicSecurityAnalysisParameters(parameters)
+                .setReportNode(reportNode);
+
+        SecurityAnalysisResult result = provider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID,
+                        dynamicModelsSupplier, n -> contingencies, runParameters)
                 .join()
                 .getResult();
 
         StringWriter swReporterAs = new StringWriter();
-        reporter.print(swReporterAs);
+        reportNode.print(swReporterAs);
         InputStream refStreamReporterAs = Objects.requireNonNull(getClass().getResourceAsStream("/ieee14/dynamic-security-analysis/timeline_report.txt"));
         String refLogExportAs = TestUtil.normalizeLineSeparator(new String(ByteStreams.toByteArray(refStreamReporterAs), StandardCharsets.UTF_8));
         String logExportAs = TestUtil.normalizeLineSeparator(swReporterAs.toString());

@@ -32,11 +32,14 @@ public class SecurityAnalysisContext extends DynaWaltzContext {
     private final List<Contingency> contingencies;
     private final List<ContingencyEventModels> contingencyEventModels;
 
-    public SecurityAnalysisContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
-                                   DynamicSecurityAnalysisParameters parameters, DynaWaltzParameters dynaWaltzParameters, List<Contingency> contingencies) {
-        super(network, workingVariantId, dynamicModels, eventModels, Collections.emptyList(),
+    public SecurityAnalysisContext(Network network, String workingVariantId,
+                                   List<BlackBoxModel> dynamicModels,
+                                   DynamicSecurityAnalysisParameters parameters,
+                                   DynaWaltzParameters dynaWaltzParameters,
+                                   List<Contingency> contingencies) {
+        super(network, workingVariantId, dynamicModels, List.of(), Collections.emptyList(),
                 parameters.getDynamicSimulationParameters(), dynaWaltzParameters);
-        int contingenciesStartTime = parameters.getDynamicContingenciesParameters().getContingenciesStartTime();
+        double contingenciesStartTime = parameters.getDynamicContingenciesParameters().getContingenciesStartTime();
         this.contingencies = contingencies;
         this.contingencyEventModels = contingencies.stream()
                 .map(c -> {
@@ -63,7 +66,7 @@ public class SecurityAnalysisContext extends DynaWaltzContext {
                 .collect(Collectors.toList());
     }
 
-    private BlackBoxModel createContingencyEventModel(ContingencyElement element, int contingenciesStartTime) {
+    private BlackBoxModel createContingencyEventModel(ContingencyElement element, double contingenciesStartTime) {
         BlackBoxModel bbm = EventDisconnectionBuilder.of(network)
                 .staticId(element.getId())
                 .startTime(contingenciesStartTime)
