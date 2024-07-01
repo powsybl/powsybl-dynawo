@@ -86,10 +86,10 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel {
         return Collections.emptyList();
     }
 
-    protected void writeDynamicAttributes(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
+    protected void writeDynamicAttributes(XMLStreamWriter writer, String parFileName) throws XMLStreamException {
         writer.writeAttribute("id", getDynamicModelId());
         writer.writeAttribute("lib", getLib());
-        writer.writeAttribute("parFile", getParFile(context));
+        writer.writeAttribute("parFile", parFileName);
         writer.writeAttribute("parId", getParameterSetId());
     }
 }

@@ -8,16 +8,17 @@ package com.powsybl.dynawaltz;
 
 import com.powsybl.commons.config.ModuleConfig;
 import com.powsybl.commons.config.PlatformConfig;
-import com.powsybl.dynawo.commons.DynawoConfig;
+import com.powsybl.dynawo.commons.AbstractDynawoConfig;
 
 import java.nio.file.Path;
 
 /**
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  */
-public class DynaWaltzConfig extends DynawoConfig {
+public class DynaWaltzConfig extends AbstractDynawoConfig {
 
-    private static final String DYNAWALTZ_MODULE_NAME = "dynawaltz";
+    public static final String DYNAWALTZ_LAUNCHER_PROGRAM_NAME = "dynawo";
+    protected static final String DYNAWALTZ_MODULE_NAME = "dynawaltz";
 
     public static DynaWaltzConfig load() {
         return load(DynaWaltzConfig::new, DYNAWALTZ_MODULE_NAME);
@@ -31,7 +32,12 @@ public class DynaWaltzConfig extends DynawoConfig {
         super(homeDir, debug);
     }
 
-    private DynaWaltzConfig(ModuleConfig config) {
+    protected DynaWaltzConfig(ModuleConfig config) {
         super(config);
+    }
+
+    @Override
+    public String getProgram() {
+        return getProgram(DYNAWALTZ_LAUNCHER_PROGRAM_NAME);
     }
 }

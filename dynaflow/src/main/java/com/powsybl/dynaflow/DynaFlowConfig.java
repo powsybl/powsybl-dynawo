@@ -9,7 +9,7 @@ package com.powsybl.dynaflow;
 import com.google.common.collect.ImmutableMap;
 import com.powsybl.commons.config.ModuleConfig;
 import com.powsybl.commons.config.PlatformConfig;
-import com.powsybl.dynawo.commons.DynawoConfig;
+import com.powsybl.dynawo.commons.AbstractDynawoConfig;
 
 import java.nio.file.Path;
 import java.util.Map;
@@ -18,8 +18,9 @@ import java.util.Map;
  *
  * @author Guillaume Pernin {@literal <guillaume.pernin at rte-france.com>}
  */
-public class DynaFlowConfig extends DynawoConfig {
+public class DynaFlowConfig extends AbstractDynawoConfig {
 
+    public static final String DYNAFLOW_LAUNCHER_PROGRAM_NAME = "dynaflow-launcher";
     private static final String DYNAFLOW_MODULE_NAME = "dynaflow";
 
     public static DynaFlowConfig load() {
@@ -41,5 +42,10 @@ public class DynaFlowConfig extends DynawoConfig {
     public Map<String, String> createEnv() {
         return ImmutableMap.<String, String>builder()
                 .build();
+    }
+
+    @Override
+    public String getProgram() {
+        return getProgram(DYNAFLOW_LAUNCHER_PROGRAM_NAME);
     }
 }

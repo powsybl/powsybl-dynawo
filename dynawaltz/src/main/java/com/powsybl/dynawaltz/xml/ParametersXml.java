@@ -188,7 +188,7 @@ public final class ParametersXml {
         write(List.of(parameters.getSolverParameters()), DynaWaltzParameters.SOLVER_OUTPUT_PARAMETERS_FILE, workingDir, "");
     }
 
-    private static void write(Collection<ParametersSet> parametersSets, String filename, Path workingDir, String dynPrefix) {
+    public static void write(Collection<ParametersSet> parametersSets, String filename, Path workingDir, String dynPrefix) {
         Path parametersPath = workingDir.resolve(filename);
         try (Writer writer = Files.newBufferedWriter(parametersPath, StandardCharsets.UTF_8)) {
             XMLStreamWriter xmlWriter = XmlStreamWriterFactory.newInstance(writer);

@@ -31,9 +31,9 @@ public final class DynaflowReports {
                 .add();
     }
 
-    public static ReportNode createDynaFlowTimelineReportNode(ReportNode reportNode, String contingencyId) {
+    public static ReportNode createContingenciesTimelineReportNode(ReportNode reportNode, String contingencyId) {
         return reportNode.newReportNode()
-                .withMessageTemplate("dynaflowSaContingency", "Contingency '${contingencyId}'")
+                .withMessageTemplate("saContingency", "Contingency '${contingencyId}'")
                 .withUntypedValue("contingencyId", contingencyId)
                 .add();
     }

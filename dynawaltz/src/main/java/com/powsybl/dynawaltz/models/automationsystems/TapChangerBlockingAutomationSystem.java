@@ -8,7 +8,6 @@
 package com.powsybl.dynawaltz.models.automationsystems;
 
 import com.powsybl.commons.PowsyblException;
-import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynawaltzReports;
 import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawaltz.models.MeasurementPointSuffix;
@@ -102,9 +101,9 @@ public class TapChangerBlockingAutomationSystem extends AbstractPureDynamicBlack
     }
 
     @Override
-    public void write(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
+    public void write(XMLStreamWriter writer, String parFileName) throws XMLStreamException {
         if (isConnected) {
-            super.write(writer, context);
+            super.write(writer, parFileName);
         }
     }
 }

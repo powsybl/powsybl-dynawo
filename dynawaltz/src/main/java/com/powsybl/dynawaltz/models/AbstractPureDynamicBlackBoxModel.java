@@ -38,7 +38,12 @@ public abstract class AbstractPureDynamicBlackBoxModel extends AbstractBlackBoxM
 
     @Override
     public void write(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
+        write(writer, getParFile(context));
+    }
+
+    @Override
+    public void write(XMLStreamWriter writer, String parFileName) throws XMLStreamException {
         writer.writeEmptyElement(DYN_URI, "blackBoxModel");
-        writeDynamicAttributes(writer, context);
+        writeDynamicAttributes(writer, parFileName);
     }
 }

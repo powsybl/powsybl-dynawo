@@ -130,6 +130,14 @@ public class DynaWaltzParameters extends AbstractExtension<DynamicSimulationPara
         return platformConfig.getConfigDir().map(configDir -> configDir.resolve(fileName)).orElse(fileSystem.getPath(fileName));
     }
 
+    public static DynaWaltzParameters load(DynamicSimulationParameters parameters) {
+        DynaWaltzParameters dynaWaltzParameters = parameters.getExtension(DynaWaltzParameters.class);
+        if (dynaWaltzParameters == null) {
+            dynaWaltzParameters = DynaWaltzParameters.load();
+        }
+        return dynaWaltzParameters;
+    }
+
     @Override
     public String getName() {
         return "DynaWaltzParameters";

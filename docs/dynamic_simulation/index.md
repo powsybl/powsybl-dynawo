@@ -2,7 +2,7 @@
 
 ```{toctree}
 :hidden:
-dynawo-configuration.md
+configuration.md
 dynamic-models-dsl.md
 event-models-dsl.md
 curves-dsl.md
