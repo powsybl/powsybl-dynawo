@@ -8,19 +8,14 @@ package com.powsybl.dynaflow;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.test.AbstractSerDeTest;
-import com.powsybl.computation.ComputationManager;
 import com.powsybl.computation.local.LocalCommandExecutor;
 import com.powsybl.computation.local.LocalComputationConfig;
 import com.powsybl.computation.local.LocalComputationManager;
-import com.powsybl.contingency.ContingenciesProvider;
 import com.powsybl.contingency.Contingency;
 import com.powsybl.iidm.network.*;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import com.powsybl.loadflow.LoadFlowResult;
-import com.powsybl.security.SecurityAnalysis;
-import com.powsybl.security.SecurityAnalysisParameters;
-import com.powsybl.security.SecurityAnalysisReport;
-import com.powsybl.security.SecurityAnalysisResult;
+import com.powsybl.security.*;
 import com.powsybl.security.json.SecurityAnalysisResultSerializer;
 import org.junit.jupiter.api.Test;
 
@@ -36,8 +31,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ForkJoinPool;
 
-import static com.powsybl.commons.test.ComparisonUtils.compareTxt;
-import static com.powsybl.commons.test.ComparisonUtils.compareXml;
+import static com.powsybl.commons.test.ComparisonUtils.assertTxtEquals;
+import static com.powsybl.commons.test.ComparisonUtils.assertXmlEquals;
 import static com.powsybl.dynaflow.DynaFlowConstants.DYNAFLOW_NAME;
 import static com.powsybl.dynaflow.DynaFlowConstants.IIDM_FILENAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -86,11 +81,11 @@ class DynaFlowSecurityAnalysisTest extends AbstractSerDeTest {
 
         private void validateInputs(Path workingDir) throws IOException {
             if (inputFile != null) {
-                compareXml(getClass().getResourceAsStream(inputFile), Files.newInputStream(workingDir.resolve(IIDM_FILENAME)));
+                assertXmlEquals(getClass().getResourceAsStream(inputFile), Files.newInputStream(workingDir.resolve(IIDM_FILENAME)));
             }
             if (contingencyFile != null) {
                 InputStream contingencyIs = Objects.requireNonNull(getClass().getResourceAsStream(contingencyFile));
-                compareTxt(contingencyIs, Files.newInputStream(workingDir.resolve("contingencies.json")));
+                assertTxtEquals(contingencyIs, Files.newInputStream(workingDir.resolve("contingencies.json")));
             }
         }
 
@@ -120,25 +115,25 @@ class DynaFlowSecurityAnalysisTest extends AbstractSerDeTest {
         LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynawo_version.out",
                 "/SecurityAnalysis/input.xiidm", "/SecurityAnalysis/contingencies.json",
                 contingencyIds, List.of("/SecurityAnalysis/constraints1.xml", "/SecurityAnalysis/constraints2.xml"));
-        ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
-
-        SecurityAnalysisReport report = SecurityAnalysis.run(network, n -> contingencies, SecurityAnalysisParameters.load(), computationManager);
+        SecurityAnalysisRunParameters runParameters = new SecurityAnalysisRunParameters()
+                .setComputationManager(new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool()));
+        SecurityAnalysisReport report = SecurityAnalysis.run(network, contingencies, runParameters);
         SecurityAnalysisResult result = report.getResult();
         assertEquals(LoadFlowResult.ComponentResult.Status.CONVERGED, result.getPreContingencyResult().getStatus());
 
         StringWriter writer = new StringWriter();
         SecurityAnalysisResultSerializer.write(result, writer);
-        compareTxt(Objects.requireNonNull(getClass().getResourceAsStream("/SecurityAnalysis/result.json")), writer.toString());
+        assertTxtEquals(Objects.requireNonNull(getClass().getResourceAsStream("/SecurityAnalysis/result.json")), writer.toString());
     }
 
     @Test
     void testCallingBadVersionDynawo() throws IOException {
         Network network = Network.create("test", "test");
-        ContingenciesProvider contingenciesProvider = n -> List.of();
         LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynawo_bad_version.out", null);
-        ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
-        SecurityAnalysisParameters sap = SecurityAnalysisParameters.load();
-        assertThrows(PowsyblException.class, () -> SecurityAnalysis.run(network, contingenciesProvider, sap, computationManager));
+        SecurityAnalysisRunParameters runParameters = new SecurityAnalysisRunParameters()
+                .setComputationManager(new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool()));
+        List<Contingency> contingencies = List.of();
+        assertThrows(PowsyblException.class, () -> SecurityAnalysis.run(network, contingencies, runParameters));
     }
 
     private static Network buildNetwork() {

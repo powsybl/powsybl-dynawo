@@ -29,7 +29,7 @@ public class ModelConfigsJsonDeserializer extends StdDeserializer<Map<String, Mo
     public Map<String, ModelConfigs> deserialize(JsonParser parser, DeserializationContext context) throws IOException {
         Map<String, ModelConfigs> configMap = new HashMap<>();
         while (parser.nextToken() != JsonToken.END_OBJECT) {
-            String category = parser.getCurrentName();
+            String category = parser.currentName();
             parser.nextToken();
             configMap.put(category, parseModelConfigs(parser));
         }
@@ -66,7 +66,7 @@ public class ModelConfigsJsonDeserializer extends StdDeserializer<Map<String, Mo
             List<String> properties = Collections.emptyList();
         };
         JsonUtil.parseObject(parser, name ->
-            switch (parser.getCurrentName()) {
+            switch (parser.currentName()) {
                 case "lib" -> {
                     parsingContext.lib = parser.nextTextValue();
                     yield true;
