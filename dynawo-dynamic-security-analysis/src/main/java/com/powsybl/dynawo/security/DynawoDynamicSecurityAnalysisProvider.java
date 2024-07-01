@@ -36,6 +36,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
+import static com.powsybl.dynawaltz.DynaWaltzConfig.DYNAWALTZ_LAUNCHER_PROGRAM_NAME;
+
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
@@ -77,7 +79,7 @@ public class DynawoDynamicSecurityAnalysisProvider implements DynamicSecurityAna
         ReportNode dsaReportNode = DynamicSecurityAnalysisReports.createDynamicSecurityAnalysisReportNode(runParameters.getReportNode(), network.getId());
         network.getVariantManager().setWorkingVariant(workingVariantId);
         ExecutionEnvironment execEnv = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, config.isDebug());
-        DynawoUtil.requireDynaMinVersion(execEnv, runParameters.getComputationManager(), getVersionCommand(config), DynawoAlgorithmsConfig.DYNAWALTZ_LAUNCHER_PROGRAM_NAME, false);
+        DynawoUtil.requireDynaMinVersion(execEnv, runParameters.getComputationManager(), getVersionCommand(config), DYNAWALTZ_LAUNCHER_PROGRAM_NAME, false);
         List<Contingency> contingencies = contingenciesProvider.getContingencies(network);
         DynamicSecurityAnalysisParameters parameters = runParameters.getDynamicSecurityAnalysisParameters();
         SecurityAnalysisContext context = new SecurityAnalysisContext(network, workingVariantId,

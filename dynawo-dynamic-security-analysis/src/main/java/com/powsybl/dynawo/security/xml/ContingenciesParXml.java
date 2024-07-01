@@ -11,8 +11,6 @@ import com.powsybl.dynawaltz.xml.ParametersXml;
 import com.powsybl.dynawo.security.ContingencyEventModels;
 import com.powsybl.dynawo.security.SecurityAnalysisContext;
 
-import javax.xml.stream.XMLStreamException;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Objects;
 
@@ -26,7 +24,7 @@ public final class ContingenciesParXml {
     private ContingenciesParXml() {
     }
 
-    public static void write(Path workingDir, SecurityAnalysisContext context) throws IOException, XMLStreamException {
+    public static void write(Path workingDir, SecurityAnalysisContext context) {
         Objects.requireNonNull(workingDir);
         for (ContingencyEventModels model : context.getContingencyEventModels()) {
             ParametersXml.write(model.eventParameters(), createParFileName(model), workingDir, DYN_PREFIX);

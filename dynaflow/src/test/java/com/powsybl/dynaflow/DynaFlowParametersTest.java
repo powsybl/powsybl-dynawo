@@ -39,12 +39,14 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
     private InMemoryPlatformConfig platformConfig;
 
     @BeforeEach
+    @Override
     public void setUp() {
         fileSystem = Jimfs.newFileSystem(Configuration.unix());
         platformConfig = new InMemoryPlatformConfig(fileSystem);
     }
 
     @AfterEach
+    @Override
     public void tearDown() throws IOException {
         fileSystem.close();
     }
@@ -66,9 +68,6 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
         double timeStep = 0;
         StartingPointMode startingPointMode = StartingPointMode.FLAT;
         boolean mergeLoads = false;
-
-        DynaFlowParameters.Sa securityAnalysis = new DynaFlowParameters.Sa();
-        securityAnalysis.setTimeOfEvent(2.);
 
         MapModuleConfig moduleConfig = platformConfig.createModuleConfig(MODULE_SPECIFIC_PARAMETERS);
         moduleConfig.setStringProperty("svcRegulationOn", Boolean.toString(svcRegulationOn));

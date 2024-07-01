@@ -50,6 +50,7 @@ class DynaFlowProviderTest extends AbstractSerDeTest {
     private DynaFlowProvider provider;
 
     @BeforeEach
+    @Override
     public void setUp() throws IOException {
         super.setUp();
         homeDir = fileSystem.getPath("/home/dynaflow");
