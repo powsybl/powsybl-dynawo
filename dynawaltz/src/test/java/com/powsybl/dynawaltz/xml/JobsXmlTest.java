@@ -15,6 +15,7 @@ import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.EnumSet;
 
 /**
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
@@ -40,6 +41,17 @@ class JobsXmlTest extends DynaWaltzTestUtil {
 
         JobsXml.write(tmpDir, context);
         validate("jobs.xsd", "jobsWithDump.xml", tmpDir.resolve(DynaWaltzConstants.JOBS_FILENAME));
+    }
+
+    @Test
+    void writeJobWithSpecificLogs() throws SAXException, IOException {
+        DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
+        DynaWaltzParameters dynawoParameters = DynaWaltzParameters.load()
+                .setSpecificLogs(EnumSet.allOf(DynaWaltzParameters.SpecificLog.class));
+        DynaWaltzContext context = new DynaWaltzContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, eventModels, curves, parameters, dynawoParameters);
+
+        JobsXml.write(tmpDir, context);
+        validate("jobs.xsd", "jobsWithSpecificLogs.xml", tmpDir.resolve(DynaWaltzConstants.JOBS_FILENAME));
     }
 
 }

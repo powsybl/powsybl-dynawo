@@ -26,7 +26,7 @@ public record DumpFileParameters(boolean exportDumpFile, boolean useDumpFile, Pa
     public static final boolean DEFAULT_USE_DUMP = false;
     public static final String DEFAULT_DUMP_FOLDER = null;
     public static final String DEFAULT_DUMP_NAME = null;
-    public static final DumpFileParameters DEFAULT_DUMP_FILE_PARAMETERS = new DumpFileParameters(DEFAULT_EXPORT_DUMP, DEFAULT_USE_DUMP, null, DEFAULT_DUMP_NAME);
+    private static final DumpFileParameters DEFAULT_DUMP_FILE_PARAMETERS = new DumpFileParameters(DEFAULT_EXPORT_DUMP, DEFAULT_USE_DUMP, null, DEFAULT_DUMP_NAME);
 
     public DumpFileParameters {
         if (useDumpFile) {
