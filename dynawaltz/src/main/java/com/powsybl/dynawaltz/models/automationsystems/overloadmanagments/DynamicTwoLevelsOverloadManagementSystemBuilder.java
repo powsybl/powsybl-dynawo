@@ -8,16 +8,10 @@
 package com.powsybl.dynawaltz.models.automationsystems.overloadmanagments;
 
 import com.powsybl.commons.report.ReportNode;
-import com.powsybl.dynawaltz.builders.BuilderEquipment;
-import com.powsybl.dynawaltz.builders.ModelConfig;
-import com.powsybl.dynawaltz.builders.ModelConfigsHandler;
-import com.powsybl.dynawaltz.builders.ModelConfigs;
-import com.powsybl.dynawaltz.builders.BuilderReports;
+import com.powsybl.dynawaltz.builders.*;
 import com.powsybl.iidm.network.Branch;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.TwoSides;
-
-import java.util.Set;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -51,8 +45,8 @@ public class DynamicTwoLevelsOverloadManagementSystemBuilder extends AbstractOve
         return new DynamicTwoLevelsOverloadManagementSystemBuilder(network, modelConfig, reportNode);
     }
 
-    public static Set<String> getSupportedLibs() {
-        return MODEL_CONFIGS.getSupportedLibs();
+    public static ModelConfigsLibsInfo getSupportedLibs() {
+        return MODEL_CONFIGS;
     }
 
     protected DynamicTwoLevelsOverloadManagementSystemBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {

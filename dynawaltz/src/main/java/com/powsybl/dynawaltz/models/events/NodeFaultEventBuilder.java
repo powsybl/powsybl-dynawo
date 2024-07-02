@@ -20,6 +20,7 @@ import com.powsybl.iidm.network.Network;
 public class NodeFaultEventBuilder extends AbstractEventModelBuilder<Bus, NodeFaultEventBuilder> {
 
     public static final String TAG = "NodeFault";
+    private static final String INFO = TAG + ": Node fault with configurable resistance, reactance and duration";
 
     protected double faultTime;
     protected double rPu;
@@ -31,6 +32,10 @@ public class NodeFaultEventBuilder extends AbstractEventModelBuilder<Bus, NodeFa
 
     public static NodeFaultEventBuilder of(Network network, ReportNode reportNode) {
         return new NodeFaultEventBuilder(network, reportNode);
+    }
+
+    public static String getInfo() {
+        return INFO;
     }
 
     NodeFaultEventBuilder(Network network, ReportNode reportNode) {

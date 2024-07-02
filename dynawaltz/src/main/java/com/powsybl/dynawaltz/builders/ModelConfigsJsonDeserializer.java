@@ -62,6 +62,7 @@ public class ModelConfigsJsonDeserializer extends StdDeserializer<Map<String, Mo
             String lib = null;
             String alias = null;
             String internalModelPrefix = null;
+            String doc = null;
             List<String> properties = Collections.emptyList();
         };
         JsonUtil.parseObject(parser, name ->
@@ -82,9 +83,13 @@ public class ModelConfigsJsonDeserializer extends StdDeserializer<Map<String, Mo
                     parsingContext.alias = parser.nextTextValue();
                     yield true;
                 }
+                case "doc" -> {
+                    parsingContext.doc = parser.nextTextValue();
+                    yield true;
+                }
                 default -> false;
             }
         );
-        return new ModelConfig(parsingContext.lib, parsingContext.alias, parsingContext.internalModelPrefix, parsingContext.properties);
+        return new ModelConfig(parsingContext.lib, parsingContext.alias, parsingContext.internalModelPrefix, parsingContext.properties, parsingContext.doc);
     }
 }

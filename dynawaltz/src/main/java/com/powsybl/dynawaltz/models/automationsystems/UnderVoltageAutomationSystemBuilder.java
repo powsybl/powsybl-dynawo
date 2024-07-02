@@ -8,16 +8,10 @@
 package com.powsybl.dynawaltz.models.automationsystems;
 
 import com.powsybl.commons.report.ReportNode;
-import com.powsybl.dynawaltz.builders.BuilderEquipment;
-import com.powsybl.dynawaltz.builders.ModelConfig;
-import com.powsybl.dynawaltz.builders.ModelConfigsHandler;
-import com.powsybl.dynawaltz.builders.ModelConfigs;
-import com.powsybl.dynawaltz.builders.BuilderReports;
+import com.powsybl.dynawaltz.builders.*;
 import com.powsybl.iidm.network.Generator;
 import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Network;
-
-import java.util.Set;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -50,8 +44,8 @@ public class UnderVoltageAutomationSystemBuilder extends AbstractAutomationSyste
         return new UnderVoltageAutomationSystemBuilder(network, MODEL_CONFIGS.getModelConfig(lib), reportNode);
     }
 
-    public static Set<String> getSupportedLibs() {
-        return MODEL_CONFIGS.getSupportedLibs();
+    public static ModelConfigsLibsInfo getSupportedLibs() {
+        return MODEL_CONFIGS;
     }
 
     protected UnderVoltageAutomationSystemBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {

@@ -37,7 +37,7 @@ class DynaWaltzEventModelGroovyExtension implements EventModelGroovyExtension {
     }
 
     List<String> getModelNames() {
-        builderConfigs.collect {it.tag}
+        builderConfigs.collect {it.info}
     }
 
     @Override
