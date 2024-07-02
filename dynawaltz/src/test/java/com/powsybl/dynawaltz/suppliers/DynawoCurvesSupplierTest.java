@@ -32,7 +32,7 @@ class DynawoCurvesSupplierTest {
 
         Network network = EurostagTutorialExample1Factory.create();
         try (InputStream is = getClass().getResourceAsStream("/suppliers/curves.json")) {
-            DynawoCurveSupplier dynawoCurveSupplier = new DynawoCurveSupplier(is);
+            DynawoCurveSupplier dynawoCurveSupplier = DynawoCurveSupplier.load(is);
             List<Curve> curves = dynawoCurveSupplier.get(network, ReportNode.NO_OP);
             assertThat(curves).usingRecursiveFieldByFieldElementComparatorOnFields()
                     .containsExactlyInAnyOrderElementsOf(getExpectedCurves());
