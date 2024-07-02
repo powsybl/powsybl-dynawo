@@ -54,6 +54,14 @@ public final class BuilderReports {
                 .add();
     }
 
+    public static void reportCurveInstantiationFailure(ReportNode reportNode, String id) {
+        reportNode.newReportNode()
+                .withMessageTemplate("curveInstantiationError", "Curve ${id} cannot be instantiated")
+                .withUntypedValue("id", id)
+                .withSeverity(TypedValue.WARN_SEVERITY)
+                .add();
+    }
+
     public static void reportFieldReplacement(ReportNode reportNode, String fieldName, String replacementName, String replacement) {
         reportNode.newReportNode()
                 .withMessageTemplate("fieldReplacement", "'${fieldName}' field is not set, ${replacementName} ${replacement} will be used instead")
@@ -129,4 +137,12 @@ public final class BuilderReports {
                 .add();
     }
 
+    public static void reportFieldConflict(ReportNode reportNode, String firstFieldName, String secondFieldName) {
+        reportNode.newReportNode()
+                .withMessageTemplate("fieldConflict", "Both '${firstFieldName}' and '${secondFieldName}' are defined, '${firstFieldName}' will be used")
+                .withUntypedValue("firstFieldName", firstFieldName)
+                .withUntypedValue("secondFieldName", secondFieldName)
+                .withSeverity(TypedValue.TRACE_SEVERITY)
+                .add();
+    }
 }
