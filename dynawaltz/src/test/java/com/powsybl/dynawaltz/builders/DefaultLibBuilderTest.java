@@ -12,6 +12,7 @@ import com.powsybl.dynawaltz.models.automationsystems.TapChangerBlockingAutomati
 import com.powsybl.dynawaltz.models.automationsystems.UnderVoltageAutomationSystemBuilder;
 import com.powsybl.dynawaltz.models.automationsystems.overloadmanagments.DynamicOverloadManagementSystemBuilder;
 import com.powsybl.dynawaltz.models.automationsystems.overloadmanagments.DynamicTwoLevelsOverloadManagementSystemBuilder;
+import com.powsybl.dynawaltz.models.automationsystems.phaseshifters.PhaseShifterBlockingIAutomationSystemBuilder;
 import com.powsybl.dynawaltz.models.automationsystems.phaseshifters.PhaseShifterIAutomationSystemBuilder;
 import com.powsybl.dynawaltz.models.automationsystems.phaseshifters.PhaseShifterPAutomationSystemBuilder;
 import com.powsybl.dynawaltz.models.buses.InfiniteBusBuilder;
@@ -47,6 +48,7 @@ class DefaultLibBuilderTest {
         assertNotNull(DynamicOverloadManagementSystemBuilder.of(NETWORK));
         assertNotNull(DynamicTwoLevelsOverloadManagementSystemBuilder.of(NETWORK));
         assertNotNull(PhaseShifterIAutomationSystemBuilder.of(NETWORK));
+        assertNotNull(PhaseShifterBlockingIAutomationSystemBuilder.of(NETWORK));
         assertNotNull(PhaseShifterPAutomationSystemBuilder.of(NETWORK));
     }
 

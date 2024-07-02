@@ -93,3 +93,4 @@ Ultimately, all groovy scripts call dedicated builders that can be used directly
 * DynamicTwoLevelsOverloadManagementSystemBuilder
 * PhaseShifterPAutomationSystemBuilder
 * PhaseShifterIAutomationSystemBuilder
+* PhaseShifterBlockingIAutomationSystemBuilder

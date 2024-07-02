@@ -86,6 +86,14 @@ public abstract class AbstractDynamicModelXmlTest extends AbstractSerDeTest {
 
     protected abstract void addDynamicModels();
 
+    protected void addModelIfNotNull(BlackBoxModel... models) {
+        for (BlackBoxModel model : models) {
+            if (model != null) {
+                dynamicModels.add(model);
+            }
+        }
+    }
+
     protected void checkReport(String report) throws IOException {
         StringWriter sw = new StringWriter();
         reportNode.print(sw);
