@@ -98,6 +98,25 @@ The default value is `TXT`.
 `precision` defines the simulation step precision.  
 The default value is `1e-6`.
 
+**log.levelFilter**  
+`log.levelFilter` defines the log level for Dynawo log.  
+The default value is `INFO`.
+The available `com.powsybl.dynawaltz.DynaWaltzParameters.LogLevel` values are:
+- `DEBUG`
+- `INFO`
+- `WARN`
+- `ERROR`
+
+**log.specificLogs**  
+`log.specificLogs` defines as a list the specifics logs to return besides the regular Dynawo log.  
+The default value is an empty list.
+The available `com.powsybl.dynawaltz.DynaWaltzParameters.SpecificLog` values are:
+- `NETWORK`
+- `MODELER`
+- `PARAMETERS`
+- `VARIABLES`
+- `EQUATIONS`
+
 ### Examples
 
 **YAML configuration:**
@@ -117,6 +136,10 @@ dynawo-default-parameters:
   mergeLoads: false
   timeline.exportMode: XML
   precision: 10e-6
+  log.levelFilter: INFO
+  log.specificLogs:
+    - NETWORK
+    - PARAMETERS
 ```
 
 **XML configuration:**
@@ -136,5 +159,7 @@ dynawo-default-parameters:
   <mergeLoads>false</mergeLoads>
   <timeline.exportMode>XML</timeline.exportMode>
   <precision>10e-6</precision>
+  <log.levelFilter>INFO</log.levelFilter>
+  <log.specificLogs>NETWORK, PARAMETERS</log.specificLogs>
 </dynawo-default-parameters>
 ```

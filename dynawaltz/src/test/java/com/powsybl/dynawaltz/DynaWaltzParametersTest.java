@@ -13,7 +13,9 @@ import com.powsybl.commons.test.AbstractSerDeTest;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynamicsimulation.json.JsonDynamicSimulationParameters;
 import com.powsybl.dynawaltz.DynaWaltzParameters.ExportMode;
+import com.powsybl.dynawaltz.DynaWaltzParameters.LogLevel;
 import com.powsybl.dynawaltz.DynaWaltzParameters.SolverType;
+import com.powsybl.dynawaltz.DynaWaltzParameters.SpecificLog;
 import com.powsybl.dynawaltz.parameters.Parameter;
 import com.powsybl.dynawaltz.parameters.ParameterType;
 import com.powsybl.dynawaltz.xml.ParametersXml;
@@ -24,8 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -61,7 +62,9 @@ class DynaWaltzParametersTest extends AbstractSerDeTest {
         boolean useModelSimplifiers = true;
         double precision = 1e-8;
         ExportMode timelinExportMode = ExportMode.XML;
-        initPlatformConfig(networkParametersId, solverType, solverParametersId, mergeLoads, useModelSimplifiers, precision, timelinExportMode);
+        LogLevel logLevel = LogLevel.WARN;
+        Set<SpecificLog> specificLogs = EnumSet.of(SpecificLog.MODELER, SpecificLog.EQUATIONS);
+        initPlatformConfig(networkParametersId, solverType, solverParametersId, mergeLoads, useModelSimplifiers, precision, timelinExportMode, logLevel, specificLogs);
 
         DynaWaltzParameters parameters = DynaWaltzParameters.load(platformConfig, fileSystem);
 
@@ -94,6 +97,8 @@ class DynaWaltzParametersTest extends AbstractSerDeTest {
         assertEquals(useModelSimplifiers, parameters.isUseModelSimplifiers());
         assertEquals(precision, parameters.getPrecision());
         assertEquals(timelinExportMode, parameters.getTimelineExportMode());
+        assertEquals(logLevel, parameters.getLogLevelFilter());
+        assertEquals(specificLogs, parameters.getSpecificLogs());
     }
 
     @Test
@@ -116,7 +121,7 @@ class DynaWaltzParametersTest extends AbstractSerDeTest {
         SolverType solverType = SolverType.IDA;
         String solverParametersId = "solverParametersId";
         boolean mergeLoads = false;
-        initPlatformConfig(networkParametersId, solverType, solverParametersId, mergeLoads, false, 1e-7, ExportMode.TXT);
+        initPlatformConfig(networkParametersId, solverType, solverParametersId, mergeLoads, false, 1e-7, ExportMode.TXT, LogLevel.INFO, Set.of(SpecificLog.PARAMETERS, SpecificLog.VARIABLES));
 
         DynamicSimulationParameters dynamicSimulationParameters = new DynamicSimulationParameters()
                 .setStartTime(0)
@@ -127,7 +132,9 @@ class DynaWaltzParametersTest extends AbstractSerDeTest {
                 JsonDynamicSimulationParameters::read, "/DynaWaltzParameters.json");
     }
 
-    private void initPlatformConfig(String networkParametersId, SolverType solverType, String solverParametersId, boolean mergeLoads, boolean useModelSimplifiers, double precision, ExportMode timelineExportMode) throws IOException {
+    private void initPlatformConfig(String networkParametersId, SolverType solverType, String solverParametersId,
+                                    boolean mergeLoads, boolean useModelSimplifiers, double precision, ExportMode timelineExportMode,
+                                    LogLevel logLevel, Set<SpecificLog> specificLogs) throws IOException {
         String parametersFile = USER_HOME + "parametersFile";
         String networkParametersFile = USER_HOME + "networkParametersFile";
         String solverParametersFile = USER_HOME + "solverParametersFile";
@@ -143,6 +150,8 @@ class DynaWaltzParametersTest extends AbstractSerDeTest {
         moduleConfig.setStringProperty("useModelSimplifiers", String.valueOf(useModelSimplifiers));
         moduleConfig.setStringProperty("precision", Double.toString(precision));
         moduleConfig.setStringProperty("timeline.exportMode", String.valueOf(timelineExportMode));
+        moduleConfig.setStringProperty("log.levelFilter", logLevel.toString());
+        moduleConfig.setStringListProperty("log.specificLogs", specificLogs.stream().map(SpecificLog::toString).toList());
 
         Files.createDirectories(fileSystem.getPath(USER_HOME));
         copyFile("/parametersSet/models.par", parametersFile);

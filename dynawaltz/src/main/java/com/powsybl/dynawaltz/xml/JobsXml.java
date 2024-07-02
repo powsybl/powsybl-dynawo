@@ -87,6 +87,7 @@ public final class JobsXml extends AbstractXmlDynawaltzWriter {
     }
 
     private static void writeOutput(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
+        DynaWaltzParameters parameters = context.getDynaWaltzParameters();
         writer.writeStartElement(DYN_URI, "outputs");
         writer.writeAttribute("directory", "outputs");
 
@@ -95,29 +96,39 @@ public final class JobsXml extends AbstractXmlDynawaltzWriter {
         writer.writeAttribute("global", Boolean.toString(false));
 
         writer.writeEmptyElement(DYN_URI, "timeline");
-        writer.writeAttribute("exportMode", context.getDynaWaltzParameters().getTimelineExportMode().name());
+        writer.writeAttribute("exportMode", parameters.getTimelineExportMode().toString());
 
         writer.writeEmptyElement(DYN_URI, "finalState");
-        writer.writeAttribute("exportIIDMFile", Boolean.toString(context.getDynaWaltzParameters().isWriteFinalState()));
-        writer.writeAttribute("exportDumpFile", Boolean.toString(context.getDynaWaltzParameters().getDumpFileParameters().exportDumpFile()));
+        writer.writeAttribute("exportIIDMFile", Boolean.toString(parameters.isWriteFinalState()));
+        writer.writeAttribute("exportDumpFile", Boolean.toString(parameters.getDumpFileParameters().exportDumpFile()));
 
         if (context.withCurves()) {
             writer.writeEmptyElement(DYN_URI, "curves");
             writer.writeAttribute("inputFile", DynaWaltzConstants.CRV_FILENAME);
-            writer.writeAttribute("exportMode", DynaWaltzParameters.ExportMode.CSV.name());
+            writer.writeAttribute("exportMode", DynaWaltzParameters.ExportMode.CSV.toString());
         }
 
         writer.writeStartElement(DYN_URI, "logs");
-        writeAppender(writer);
+        writeAppender(writer, parameters);
         writer.writeEndElement();
 
         writer.writeEndElement();
     }
 
-    private static void writeAppender(XMLStreamWriter writer) throws XMLStreamException {
+    private static void writeAppender(XMLStreamWriter writer, DynaWaltzParameters parameters) throws XMLStreamException {
         writer.writeEmptyElement(DYN_URI, "appender");
         writer.writeAttribute("tag", "");
         writer.writeAttribute("file", "dynawaltz.log");
-        writer.writeAttribute("lvlFilter", "DEBUG");
+        writer.writeAttribute("lvlFilter", parameters.getLogLevelFilter().toString());
+        for (DynaWaltzParameters.SpecificLog log : parameters.getSpecificLogs()) {
+            writeSpecificAppender(writer, log);
+        }
+    }
+
+    private static void writeSpecificAppender(XMLStreamWriter writer, DynaWaltzParameters.SpecificLog log) throws XMLStreamException {
+        writer.writeEmptyElement(DYN_URI, "appender");
+        writer.writeAttribute("tag", log.toString());
+        writer.writeAttribute("file", log.getFileName());
+        writer.writeAttribute("lvlFilter", DynaWaltzParameters.LogLevel.DEBUG.toString());
     }
 }
