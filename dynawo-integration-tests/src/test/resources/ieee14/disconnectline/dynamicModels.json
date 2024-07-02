@@ -1,0 +1,62 @@
+{
+  "models":[
+    {
+      "model":"LoadAlphaBeta",
+      "group": "LAB",
+      "properties":[
+        {
+          "name":"staticId",
+          "value":"_LOAD___5_EC",
+          "type":"STRING"
+        }
+      ]
+    },
+    {
+      "model":"LoadAlphaBeta",
+      "group": "LAB",
+      "properties":[
+        {
+          "name":"staticId",
+          "value":"_LOAD___6_EC",
+          "type":"STRING"
+        }
+      ]
+    },
+    {
+      "model":"GeneratorSynchronousThreeWindingsProportionalRegulations",
+      "group": "GSTWPR",
+      "groupType": "PREFIX",
+      "properties":[
+        {
+          "name":"staticId",
+          "value":"_GEN____6_SM",
+          "type":"STRING"
+        }
+      ]
+    },
+    {
+      "model":"GeneratorSynchronousThreeWindingsProportionalRegulations",
+      "group": "GSTWPR",
+      "groupType": "PREFIX",
+      "properties":[
+        {
+          "name":"staticId",
+          "value":"_GEN____8_SM",
+          "type":"STRING"
+        }
+      ]
+    },
+    {
+      "model":"GeneratorSynchronousFourWindingsProportionalRegulations",
+      "group": "GSFWPR",
+      "groupType": "PREFIX",
+      "properties":[
+        {
+          "name":"staticId",
+          "value":"_GEN____2_SM",
+          "type":"STRING"
+        }
+      ]
+    }
+  ]
+}
