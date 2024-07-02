@@ -15,10 +15,9 @@ import com.powsybl.loadflow.json.JsonLoadFlowParameters;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -37,7 +36,7 @@ class JsonDynaFlowParametersSerializerTest extends AbstractSerDeTest {
         double expectedStopTime = 100.;
         double expectedPrecision = 0.;
         double expectedTimeOfEvent = 10.;
-        List<String> expectedChosenOutputs = Arrays.asList(DynaFlowConstants.OutputTypes.STEADYSTATE.name(), DynaFlowConstants.OutputTypes.TIMELINE.name());
+        Set<DynaFlowConstants.OutputTypes> expectedChosenOutputs = Set.of(DynaFlowConstants.OutputTypes.STEADYSTATE, DynaFlowConstants.OutputTypes.TIMELINE);
         double expectedTimeStep = 2.6;
 
         LoadFlowParameters lfParameters = LoadFlowParameters.load();
@@ -56,9 +55,10 @@ class JsonDynaFlowParametersSerializerTest extends AbstractSerDeTest {
         assertEquals(expectedStopTime, dynaFlowParameters.getStopTime(), 0.1d);
         assertEquals(expectedPrecision, dynaFlowParameters.getPrecision(), 0.1d);
         assertEquals(expectedTimeOfEvent, dynaFlowParameters.getTimeOfEvent(), 0.1d);
-        assertArrayEquals(expectedChosenOutputs.toArray(), dynaFlowParameters.getChosenOutputs().toArray());
+        assertThat(dynaFlowParameters.getChosenOutputs()).containsExactlyInAnyOrderElementsOf(expectedChosenOutputs);
         assertEquals(expectedTimeStep, dynaFlowParameters.getTimeStep(), 0.1d);
         assertEquals(DynaFlowConstants.StartingPointMode.WARM, dynaFlowParameters.getStartingPointMode());
+        assertFalse(dynaFlowParameters.isMergeLoads());
 
         assertTrue(lfParameters.isTransformerVoltageControlOn());
         assertFalse(lfParameters.isPhaseShifterRegulationOn());
@@ -84,9 +84,10 @@ class JsonDynaFlowParametersSerializerTest extends AbstractSerDeTest {
             .setStopTime(100.)
             .setPrecision(0.)
             .setTimeOfEvent(10.)
-            .setChosenOutputs(Collections.singletonList(DynaFlowConstants.OutputTypes.STEADYSTATE.name()))
+            .setChosenOutputs(Set.of(DynaFlowConstants.OutputTypes.STEADYSTATE))
             .setTimeStep(2.6)
-            .setStartingPointMode(DynaFlowConstants.StartingPointMode.WARM);
+            .setStartingPointMode(DynaFlowConstants.StartingPointMode.WARM)
+            .setMergeLoads(false);
 
         parameters.addExtension(DynaFlowParameters.class, params);
 
