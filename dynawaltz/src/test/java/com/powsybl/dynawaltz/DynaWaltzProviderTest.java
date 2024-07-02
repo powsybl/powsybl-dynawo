@@ -47,6 +47,7 @@ class DynaWaltzProviderTest extends AbstractSerDeTest {
     private DynaWaltzConfig config;
 
     @BeforeEach
+    @Override
     public void setUp() throws IOException {
         super.setUp();
         config = DynaWaltzConfig.load();
