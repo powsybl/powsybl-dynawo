@@ -9,6 +9,7 @@ package com.powsybl.dynawaltz;
 
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.commons.report.TypedValue;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -70,6 +71,21 @@ public final class DynawaltzReports {
                 .withUntypedValue("dynamicId", dynamicId)
                 .withUntypedValue("expectedModels", expectedModels)
                 .withSeverity(TypedValue.WARN_SEVERITY)
+                .add();
+    }
+
+    public static ReportNode createDynawoSpecificLogReportNode(ReportNode reportNode, DynaWaltzParameters.SpecificLog logType) {
+        String logTypeName = StringUtils.capitalize(logType.toString().toLowerCase());
+        return reportNode.newReportNode()
+                .withMessageTemplate("dynawo" + logTypeName + "Log", logTypeName + " log")
+                .add();
+
+    }
+
+    public static void reportSpecificLogEntry(ReportNode reportNode, String logEntry) {
+        reportNode.newReportNode()
+                .withMessageTemplate("dynawoSpecificLogEntry", "${message}")
+                .withUntypedValue("message", logEntry)
                 .add();
     }
 }

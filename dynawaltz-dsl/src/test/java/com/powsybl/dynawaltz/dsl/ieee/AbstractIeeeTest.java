@@ -100,8 +100,7 @@ public abstract class AbstractIeeeTest {
         dynaWaltzParameters.setModelsParameters(ParametersXml.load(getClass().getResourceAsStream(parametersFile)))
                 .setNetworkParameters(ParametersXml.load(getClass().getResourceAsStream(networkParametersFile), networkParametersId))
                 .setSolverParameters(ParametersXml.load(getClass().getResourceAsStream(solverParametersFile), solverParametersId))
-                .setSolverType(DynaWaltzParameters.SolverType.IDA)
-                .setDefaultDumpFileParameters();
+                .setSolverType(DynaWaltzParameters.SolverType.IDA);
     }
 
     protected DynaWaltzParameters getDynaWaltzSimulationParameters(DynamicSimulationParameters parameters) {
