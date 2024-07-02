@@ -5,7 +5,6 @@
         <dyn:modeler compileDir="outputs/compilation">
             <dyn:network iidmFile="powsybl_dynawaltz.xiidm" parFile="network.par" parId="1"/>
             <dyn:dynModels dydFile="powsybl_dynawaltz.dyd"/>
-            <dyn:initialState file="dump.dmp"/>
             <dyn:precompiledModels useStandardModels="true"/>
             <dyn:modelicaModels useStandardModels="false"/>
         </dyn:modeler>
@@ -13,10 +12,15 @@
         <dyn:outputs directory="outputs">
             <dyn:dumpInitValues local="false" global="false"/>
             <dyn:timeline exportMode="TXT"/>
-            <dyn:finalState exportIIDMFile="true" exportDumpFile="true"/>
+            <dyn:finalState exportIIDMFile="true" exportDumpFile="false"/>
             <dyn:curves inputFile="powsybl_dynawaltz.crv" exportMode="CSV"/>
             <dyn:logs>
                 <dyn:appender tag="" file="dynawaltz.log" lvlFilter="INFO"/>
+                <dyn:appender tag="NETWORK" file="network.log" lvlFilter="DEBUG"/>
+                <dyn:appender tag="MODELER" file="modeler.log" lvlFilter="DEBUG"/>
+                <dyn:appender tag="PARAMETERS" file="param.log" lvlFilter="DEBUG"/>
+                <dyn:appender tag="VARIABLES" file="variables.log" lvlFilter="DEBUG"/>
+                <dyn:appender tag="EQUATIONS" file="equations.log" lvlFilter="DEBUG"/>
             </dyn:logs>
         </dyn:outputs>
     </dyn:job>
