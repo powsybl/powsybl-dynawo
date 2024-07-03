@@ -99,6 +99,7 @@ public class DynaWaltzContext {
                 .forEach(e -> e.setEquipmentHasDynamicModel(this));
 
         this.curves = Objects.requireNonNull(curves).stream()
+                .filter(DynawoCurve.class::isInstance)
                 .map(DynawoCurve.class::cast)
                 .toList();
         this.frequencySynchronizer = setupFrequencySynchronizer(dynamicModels.stream().anyMatch(AbstractBus.class::isInstance) ? SetPoint::new : OmegaRef::new);
