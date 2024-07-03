@@ -21,7 +21,7 @@ import java.util.List;
  */
 public class PhaseShifterIAutomationSystem extends AbstractPhaseShifterAutomationSystem implements PhaseShifterIModel, ConnectionStatefulModel {
 
-    private ConnectionState connection = ConnectionState.NOT_SET;
+    private ConnectionState connection = null;
 
     protected PhaseShifterIAutomationSystem(String dynamicModelId, TwoWindingsTransformer transformer, String parameterSetId, String lib) {
         super(dynamicModelId, transformer, parameterSetId, lib);
@@ -29,7 +29,7 @@ public class PhaseShifterIAutomationSystem extends AbstractPhaseShifterAutomatio
 
     @Override
     public void createMacroConnections(MacroConnectionsAdder adder) {
-        if (ConnectionState.NOT_SET == connection) {
+        if (connection == null) {
             super.createMacroConnections(adder);
             connection = ConnectionState.CONNECTED;
         }
@@ -45,9 +45,14 @@ public class PhaseShifterIAutomationSystem extends AbstractPhaseShifterAutomatio
     }
 
     @Override
-    public boolean isConnectedOrConnect(MacroConnectionsAdder adder) {
+    public ConnectionState getConnectionState() {
+        return connection;
+    }
+
+    @Override
+    public boolean connect(MacroConnectionsAdder adder) {
         createMacroConnections(adder);
-        return ConnectionState.CONNECTED == connection;
+        return ConnectionState.CONNECTED == getConnectionState();
     }
 
     @Override

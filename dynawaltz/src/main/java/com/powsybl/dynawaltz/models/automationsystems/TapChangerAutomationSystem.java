@@ -29,7 +29,7 @@ public class TapChangerAutomationSystem extends AbstractPureDynamicBlackBoxModel
 
     private final Load load;
     private final TransformerSide side;
-    private ConnectionState connection = ConnectionState.NOT_SET;
+    private ConnectionState connection = null;
 
     protected TapChangerAutomationSystem(String dynamicModelId, String parameterSetId, Load load, TransformerSide side, String lib) {
         super(dynamicModelId, parameterSetId, lib);
@@ -49,10 +49,10 @@ public class TapChangerAutomationSystem extends AbstractPureDynamicBlackBoxModel
 
     @Override
     public void createMacroConnections(MacroConnectionsAdder adder) {
-        if (ConnectionState.NOT_SET == connection) {
+        if (connection == null) {
             boolean isSkipped = adder.createMacroConnectionsOrSkip(this, load, LoadWithTransformers.class, this::getVarConnectionsWith);
             if (isSkipped) {
-                connection = ConnectionState.NOT_CONNECTED;
+                connection = ConnectionState.CANNOT_CONNECT;
                 DynawaltzReports.reportEmptyAutomaton(adder.getReportNode(), getName(), getDynamicModelId(), load.getId(), LoadWithTransformers.class.getSimpleName());
             } else {
                 connection = ConnectionState.CONNECTED;
@@ -77,8 +77,13 @@ public class TapChangerAutomationSystem extends AbstractPureDynamicBlackBoxModel
     }
 
     @Override
-    public boolean isConnectedOrConnect(MacroConnectionsAdder adder) {
+    public ConnectionState getConnectionState() {
+        return connection;
+    }
+
+    @Override
+    public boolean connect(MacroConnectionsAdder adder) {
         createMacroConnections(adder);
-        return ConnectionState.CONNECTED == connection;
+        return ConnectionState.CONNECTED == getConnectionState();
     }
 }

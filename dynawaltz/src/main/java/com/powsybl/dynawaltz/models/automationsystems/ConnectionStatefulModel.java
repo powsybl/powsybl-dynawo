@@ -27,15 +27,13 @@ public interface ConnectionStatefulModel {
         /**
          * Can not be connected
          */
-        NOT_CONNECTED,
-        /**
-         * Not connected yet
-         */
-        NOT_SET
+        CANNOT_CONNECT
     }
 
+    ConnectionState getConnectionState();
+
     /**
-     * Verifies if the model is connected, if NOT_SET try to createMacroConnections
+     * Verifies if the model is connected, if null try to createMacroConnections
      */
-    boolean isConnectedOrConnect(MacroConnectionsAdder adder);
+    boolean connect(MacroConnectionsAdder adder);
 }

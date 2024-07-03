@@ -191,7 +191,7 @@ public final class MacroConnectionsAdder {
      */
     public <T extends Model & ConnectionStatefulModel> boolean createMacroConnectionsOrSkip(BlackBoxModel originModel, String dynamicModelId, Class<T> modelClass, Function<T, List<VarConnection>> varConnectionsSupplier) {
         T connectedModel = pureDynamicModelGetter.getPureDynamicModel(dynamicModelId, modelClass, false);
-        if (connectedModel != null && connectedModel.isConnectedOrConnect(this)) {
+        if (connectedModel != null && connectedModel.connect(this)) {
             String macroConnectorId = MacroConnector.createMacroConnectorId(originModel.getName(), connectedModel.getName());
             MacroConnect mc = new MacroConnect(macroConnectorId, originModel.getMacroConnectFromAttributes(), connectedModel.getMacroConnectToAttributes());
             macroConnectAdder.accept(mc);
