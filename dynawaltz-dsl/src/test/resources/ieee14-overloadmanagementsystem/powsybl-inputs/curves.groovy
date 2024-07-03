@@ -17,38 +17,38 @@ for (Bus bus : network.busBreakerView.buses) {
 }
 
 for (Generator gen : network.generators) {
-    curves {
+    curve {
         dynamicModelId gen.id
         variables "generator_omegaPu", "generator_PGen", "generator_QGen", "generator_UStatorPu", "voltageRegulator_EfdPu"
     }
 }
 
-curves {
+curve {
     dynamicModelId "_LOAD___2_EC"
     variables "load_PPu", "load_QPu"
 }
 
-curves {
+curve {
     staticId "_BUS____2-BUS____4-1_AC"
     variables "iSide2", "state"
 }
 
-curves {
+curve {
     dynamicModelId "CLA_2_4"
     variables "currentLimitAutomaton_order", "currentLimitAutomaton_IMax"
 }
 
-curves {
+curve {
     staticId "_BUS____1-BUS____5-1_AC"
     variables "iSide2", "state"
 }
 
-curves {
+curve {
     staticId "_BUS____2-BUS____5-1_AC"
     variables "iSide2", "state"
 }
 
-curves {
+curve {
     dynamicModelId "CLA_2_5"
     variables "currentLimitAutomaton_order", "currentLimitAutomaton_IMax"
 }
