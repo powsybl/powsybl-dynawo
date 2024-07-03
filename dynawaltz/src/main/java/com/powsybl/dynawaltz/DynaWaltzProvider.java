@@ -194,7 +194,7 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
             DynaWaltzParameters parameters = context.getDynaWaltzParameters();
             DumpFileParameters dumpFileParameters = parameters.getDumpFileParameters();
 
-            setDynawoLog(outputsFolder);
+            setDynawoLog(outputsFolder, parameters.getSpecificLogs());
             // Error file
             Path errorFile = workingDir.resolve(ERROR_FILENAME);
             if (Files.exists(errorFile)) {
@@ -224,11 +224,21 @@ public class DynaWaltzProvider implements DynamicSimulationProvider {
             return new DynamicSimulationResultImpl(status, statusText, curves, timeline);
         }
 
-        private void setDynawoLog(Path outputsFolder) {
-            Path logFile = outputsFolder.resolve(LOGS_FOLDER).resolve(LOGS_FILENAME);
-            if (Files.exists(logFile)) {
-                ReportNode logReportNode = CommonReports.createDynawoLogReportNode(reportNode);
-                new CsvLogParser().parse(logFile).forEach(e -> CommonReports.reportLogEntry(logReportNode, e));
+        private void setDynawoLog(Path outputsFolder, Set<DynaWaltzParameters.SpecificLog> specificLogs) throws IOException {
+            Path logFolder = outputsFolder.resolve(LOGS_FOLDER);
+            if (Files.exists(logFolder)) {
+                Path logFile = logFolder.resolve(LOGS_FILENAME);
+                if (Files.exists(logFile)) {
+                    ReportNode logReportNode = CommonReports.createDynawoLogReportNode(reportNode);
+                    new CsvLogParser().parse(logFile).forEach(e -> CommonReports.reportLogEntry(logReportNode, e));
+                }
+                for (DynaWaltzParameters.SpecificLog specificLog : specificLogs) {
+                    Path specificLogFile = logFolder.resolve(specificLog.getFileName());
+                    if (Files.exists(specificLogFile)) {
+                        ReportNode logReport = DynawaltzReports.createDynawoSpecificLogReportNode(reportNode, specificLog);
+                        DynawaltzReports.reportSpecificLogEntry(logReport, Files.readString(specificLogFile));
+                    }
+                }
             } else {
                 LOGGER.warn("Dynawo logs file not found");
             }

@@ -68,6 +68,7 @@ The list is statically loaded via [ModelConfigLoader](https://javadoc.io/doc/com
 Ultimately, all groovy scripts call dedicated builders that can be used directly by developers.
 ### Equipments
 * BaseStaticVarCompensatorBuilder
+* BaseShuntBuilder
 * HvdcPBuilder
 * HvdcVscBuilder
 * GeneratorFictitiousBuilder
