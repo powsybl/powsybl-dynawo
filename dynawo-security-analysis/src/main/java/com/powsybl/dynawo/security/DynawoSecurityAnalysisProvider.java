@@ -42,21 +42,21 @@ import static com.powsybl.dynawaltz.DynaWaltzConfig.DYNAWALTZ_LAUNCHER_PROGRAM_N
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 @AutoService(DynamicSecurityAnalysisProvider.class)
-public class DynawoDynamicSecurityAnalysisProvider implements DynamicSecurityAnalysisProvider {
+public class DynawoSecurityAnalysisProvider implements DynamicSecurityAnalysisProvider {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DynawoDynamicSecurityAnalysisProvider.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DynawoSecurityAnalysisProvider.class);
     private static final String WORKING_DIR_PREFIX = "dynawaltz_sa_";
     private final DynawoAlgorithmsConfig config;
 
-    public DynawoDynamicSecurityAnalysisProvider() {
+    public DynawoSecurityAnalysisProvider() {
         this(PlatformConfig.defaultConfig());
     }
 
-    public DynawoDynamicSecurityAnalysisProvider(PlatformConfig platformConfig) {
+    public DynawoSecurityAnalysisProvider(PlatformConfig platformConfig) {
         this(DynawoAlgorithmsConfig.load(platformConfig));
     }
 
-    public DynawoDynamicSecurityAnalysisProvider(DynawoAlgorithmsConfig config) {
+    public DynawoSecurityAnalysisProvider(DynawoAlgorithmsConfig config) {
         this.config = Objects.requireNonNull(config);
     }
 
@@ -88,7 +88,7 @@ public class DynawoDynamicSecurityAnalysisProvider implements DynamicSecurityAna
                 DynaWaltzParameters.load(parameters.getDynamicSimulationParameters()),
                 contingencies);
 
-        return runParameters.getComputationManager().execute(execEnv, new DynawoDynamicSecurityAnalysisHandler(context, getCommand(config), runParameters.getFilter(), runParameters.getInterceptors(), dsaReportNode));
+        return runParameters.getComputationManager().execute(execEnv, new DynawoSecurityAnalysisHandler(context, getCommand(config), runParameters.getFilter(), runParameters.getInterceptors(), dsaReportNode));
     }
 
     @Override

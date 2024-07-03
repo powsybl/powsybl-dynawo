@@ -43,7 +43,7 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>powsybl-dynawo-dynamic-security-analysis</artifactId>
+            <artifactId>powsybl-dynawo-security-analysis</artifactId>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>

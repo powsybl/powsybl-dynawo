@@ -21,8 +21,9 @@ import com.powsybl.dynawaltz.DynaWaltzParameters;
 import com.powsybl.dynawaltz.DynaWaltzProvider;
 import com.powsybl.dynawaltz.parameters.ParametersSet;
 import com.powsybl.dynawaltz.xml.ParametersXml;
+
 import com.powsybl.dynawo.security.DynawoAlgorithmsConfig;
-import com.powsybl.dynawo.security.DynawoDynamicSecurityAnalysisProvider;
+import com.powsybl.dynawo.security.DynawoSecurityAnalysisProvider;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.VariantManagerConstants;
 import com.powsybl.security.SecurityAnalysisResult;
@@ -46,7 +47,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-class DynawoDynamicSecurityAnalysisTest extends AbstractDynawoTest {
+class DynawoSecurityAnalysisTest extends AbstractDynawoTest {
 
     private DynamicSecurityAnalysisProvider provider;
 
@@ -58,7 +59,7 @@ class DynawoDynamicSecurityAnalysisTest extends AbstractDynawoTest {
     @BeforeEach
     void setUp() throws Exception {
         super.setUp();
-        provider = new DynawoDynamicSecurityAnalysisProvider(new DynawoAlgorithmsConfig(Path.of("/dynaflow-launcher"), false));
+        provider = new DynawoSecurityAnalysisProvider(new DynawoAlgorithmsConfig(Path.of("/dynaflow-launcher"), false));
         parameters = new DynamicSecurityAnalysisParameters()
                 .setDynamicSimulationParameters(new DynamicSimulationParameters(0, 100))
                 .setDynamicContingenciesParameters(new DynamicSecurityAnalysisParameters.ContingenciesParameters(50));

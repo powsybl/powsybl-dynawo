@@ -48,7 +48,7 @@ import static com.powsybl.dynawo.commons.DynawoUtil.getCommandExecutions;
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public final class DynawoDynamicSecurityAnalysisHandler extends AbstractExecutionHandler<SecurityAnalysisReport> {
+public final class DynawoSecurityAnalysisHandler extends AbstractExecutionHandler<SecurityAnalysisReport> {
 
     private final SecurityAnalysisContext context;
     private final Command command;
@@ -57,9 +57,9 @@ public final class DynawoDynamicSecurityAnalysisHandler extends AbstractExecutio
     private final List<SecurityAnalysisInterceptor> interceptors;
     private final ReportNode reportNode;
 
-    public DynawoDynamicSecurityAnalysisHandler(SecurityAnalysisContext context, Command command,
-                                                LimitViolationFilter violationFilter, List<SecurityAnalysisInterceptor> interceptors,
-                                                ReportNode reportNode) {
+    public DynawoSecurityAnalysisHandler(SecurityAnalysisContext context, Command command,
+                                         LimitViolationFilter violationFilter, List<SecurityAnalysisInterceptor> interceptors,
+                                         ReportNode reportNode) {
         this.context = context;
         this.network = context.getNetwork();
         this.command = command;
