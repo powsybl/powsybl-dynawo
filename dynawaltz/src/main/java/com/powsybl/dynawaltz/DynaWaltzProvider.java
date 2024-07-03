@@ -24,7 +24,7 @@ import java.util.concurrent.CompletableFuture;
 import static com.powsybl.dynawaltz.xml.DynaWaltzConstants.JOBS_FILENAME;
 
 /**
- * @author Marcos de Miguel <demiguelm at aia.es>
+ * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  */
 @AutoService(DynamicSimulationProvider.class)
 public class DynaWaltzProvider implements DynamicSimulationProvider {

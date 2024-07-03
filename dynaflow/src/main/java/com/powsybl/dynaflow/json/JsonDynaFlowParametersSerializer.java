@@ -23,7 +23,7 @@ import com.powsybl.loadflow.LoadFlowParameters;
 import java.io.IOException;
 
 /**
- *
+ * Represents {@link DynaFlowParameters} as a Json extension of {@link LoadFlowParameters}
  * @author Guillaume Pernin {@literal <guillaume.pernin at rte-france.com>}
  */
 @AutoService(ExtensionJsonSerializer.class)
@@ -59,7 +59,7 @@ public class JsonDynaFlowParametersSerializer implements ExtensionJsonSerializer
     private static ObjectMapper createMapper() {
         return JsonUtil.createObjectMapper()
                 .addMixIn(DynaFlowParameters.class, SerializationSpec.class)
-                .setSerializationInclusion(JsonInclude.Include.NON_NULL);
+                .setSerializationInclusion(JsonInclude.Include.NON_ABSENT);
     }
 
     @Override

@@ -11,17 +11,21 @@ import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynamicsimulation.DynamicModelsSupplier;
+import com.powsybl.dynawaltz.DynaWaltzProvider;
 import com.powsybl.dynawaltz.builders.ModelBuilder;
 import com.powsybl.dynawaltz.builders.ModelConfigsHandler;
 import com.powsybl.dynawaltz.suppliers.Property;
+import com.powsybl.dynawaltz.suppliers.SupplierJsonDeserializer;
 import com.powsybl.iidm.network.Network;
 
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
 
 /**
- * Instantiates an {@link DynamicModelConfig} list from {@link DynamicModelConfig}
+ * Instantiates an {@link DynamicModelConfig} list from {@link DynamicModelConfig} or JSON input
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class DynawoModelsSupplier implements DynamicModelsSupplier {
@@ -30,8 +34,21 @@ public class DynawoModelsSupplier implements DynamicModelsSupplier {
 
     private final List<DynamicModelConfig> dynamicModelConfigs;
 
+    public static DynawoModelsSupplier load(InputStream is) {
+        return new DynawoModelsSupplier(new SupplierJsonDeserializer<>(new DynamicModelConfigsJsonDeserializer()).deserialize(is));
+    }
+
+    public static DynawoModelsSupplier load(Path path) {
+        return new DynawoModelsSupplier(new SupplierJsonDeserializer<>(new DynamicModelConfigsJsonDeserializer()).deserialize(path));
+    }
+
     public DynawoModelsSupplier(List<DynamicModelConfig> dynamicModelConfigs) {
         this.dynamicModelConfigs = dynamicModelConfigs;
+    }
+
+    @Override
+    public String getName() {
+        return DynaWaltzProvider.NAME;
     }
 
     @Override
