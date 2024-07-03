@@ -424,6 +424,17 @@
       }
     ]
   },
+  "BASE_SHUNT": {
+    "defaultLib": "ShuntB",
+    "libs": [
+      {
+        "lib": "ShuntB"
+      },
+      {
+        "lib": "ShuntBWithSections"
+      }
+    ]
+  },
   "BASE_STATIC_VAR_COMPENSATOR": {
     "defaultLib": "StaticVarCompensator",
     "libs": [

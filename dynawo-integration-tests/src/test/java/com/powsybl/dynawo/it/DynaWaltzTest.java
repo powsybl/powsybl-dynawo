@@ -8,6 +8,7 @@ package com.powsybl.dynawo.it;
 
 import com.powsybl.commons.datasource.ResourceDataSource;
 import com.powsybl.commons.datasource.ResourceSet;
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynamicsimulation.*;
 import com.powsybl.dynamicsimulation.groovy.*;
 import com.powsybl.dynawaltz.DumpFileParameters;
@@ -28,10 +29,12 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.Stream;
 
 import static com.powsybl.commons.report.ReportNode.NO_OP;
+import static com.powsybl.commons.report.ReportNode.newRootReportNode;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -80,7 +83,6 @@ class DynaWaltzTest extends AbstractDynawoTest {
                 .setNetworkParameters(networkParameters)
                 .setSolverParameters(solverParameters)
                 .setSolverType(DynaWaltzParameters.SolverType.IDA)
-                .setDefaultDumpFileParameters()
                 .setTimelineExportMode(DynaWaltzParameters.ExportMode.XML);
 
         DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, curvesSupplier,
@@ -151,21 +153,20 @@ class DynaWaltzTest extends AbstractDynawoTest {
     }
 
     @Test
-    void testSvc() {
+    void testSvarc() {
         Network network = SvcTestCaseFactory.create();
 
         GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
-                getResourceAsStream("/svc/dynamicModels.groovy"),
+                getResourceAsStream("/svarc/dynamicModels.groovy"),
                 GroovyExtension.find(DynamicModelGroovyExtension.class, DynaWaltzProvider.NAME));
 
-        List<ParametersSet> modelsParameters = ParametersXml.load(getResourceAsStream("/svc/models.par"));
-        ParametersSet networkParameters = ParametersXml.load(getResourceAsStream("/svc/network.par"), "8");
-        ParametersSet solverParameters = ParametersXml.load(getResourceAsStream("/svc/solvers.par"), "2");
+        List<ParametersSet> modelsParameters = ParametersXml.load(getResourceAsStream("/svarc/models.par"));
+        ParametersSet networkParameters = ParametersXml.load(getResourceAsStream("/svarc/network.par"), "8");
+        ParametersSet solverParameters = ParametersXml.load(getResourceAsStream("/svarc/solvers.par"), "2");
         dynaWaltzParameters.setModelsParameters(modelsParameters)
                 .setNetworkParameters(networkParameters)
                 .setSolverParameters(solverParameters)
                 .setSolverType(DynaWaltzParameters.SolverType.IDA)
-                .setDefaultDumpFileParameters()
                 .setPrecision(10e-8);
 
         DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, EventModelsSupplier.empty(), CurvesSupplier.empty(),
@@ -191,14 +192,15 @@ class DynaWaltzTest extends AbstractDynawoTest {
         List<ParametersSet> modelsParameters = ParametersXml.load(getResourceAsStream("/hvdc/models.par"));
         ParametersSet networkParameters = ParametersXml.load(getResourceAsStream("/hvdc/network.par"), "8");
         ParametersSet solverParameters = ParametersXml.load(getResourceAsStream("/hvdc/solvers.par"), "2");
+        ReportNode reportNode = newRootReportNode().withMessageTemplate("testHvdc", "Test HVDC").build();
         dynaWaltzParameters.setModelsParameters(modelsParameters)
                 .setNetworkParameters(networkParameters)
                 .setSolverParameters(solverParameters)
                 .setSolverType(DynaWaltzParameters.SolverType.IDA)
-                .setDefaultDumpFileParameters();
+                .setSpecificLogs(EnumSet.allOf(DynaWaltzParameters.SpecificLog.class));
 
         DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, EventModelsSupplier.empty(), CurvesSupplier.empty(),
-                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, NO_OP)
+                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, reportNode)
                 .join();
 
         assertEquals(DynamicSimulationResult.Status.SUCCESS, result.getStatus());
@@ -232,8 +234,7 @@ class DynaWaltzTest extends AbstractDynawoTest {
                 .setNetworkParameters(networkParameters)
                 .setSolverParameters(solverParameters)
                 .setSolverType(DynaWaltzParameters.SolverType.IDA)
-                .setWriteFinalState(false)
-                .setDefaultDumpFileParameters();
+                .setWriteFinalState(false);
 
         DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, curvesSupplier,
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, NO_OP)
@@ -262,8 +263,7 @@ class DynaWaltzTest extends AbstractDynawoTest {
         dynaWaltzParameters.setModelsParameters(ParametersXml.load(getResourceAsStream("/error/models.par")))
                 .setNetworkParameters(ParametersXml.load(getResourceAsStream("/error/network.par"), "NETWORK"))
                 .setSolverParameters(ParametersXml.load(getResourceAsStream("/error/solvers.par"), "3"))
-                .setSolverType(DynaWaltzParameters.SolverType.SIM)
-                .setDefaultDumpFileParameters();
+                .setSolverType(DynaWaltzParameters.SolverType.SIM);
 
         DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, CurvesSupplier.empty(),
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, NO_OP)
@@ -289,7 +289,6 @@ class DynaWaltzTest extends AbstractDynawoTest {
                 .setNetworkParameters(networkParameters)
                 .setSolverParameters(solverParameters)
                 .setSolverType(DynaWaltzParameters.SolverType.IDA)
-                .setDefaultDumpFileParameters()
                 .setTimelineExportMode(DynaWaltzParameters.ExportMode.XML);
 
         DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, CurvesSupplier.empty(),
