@@ -11,25 +11,42 @@ import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynamicsimulation.EventModel;
 import com.powsybl.dynamicsimulation.EventModelsSupplier;
+import com.powsybl.dynawaltz.DynaWaltzProvider;
 import com.powsybl.dynawaltz.builders.ModelBuilder;
 import com.powsybl.dynawaltz.builders.ModelConfigsHandler;
 import com.powsybl.dynawaltz.suppliers.Property;
+import com.powsybl.dynawaltz.suppliers.SupplierJsonDeserializer;
 import com.powsybl.iidm.network.Network;
 
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
 
 /**
- * Instantiates an {@link EventModel} list from {@link EventModelConfig}
+ * Instantiates an {@link EventModel} list from {@link EventModelConfig} or JSON input
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class DynawoEventModelsSupplier implements EventModelsSupplier {
 
     private final List<EventModelConfig> eventModelConfigs;
 
+    public static DynawoEventModelsSupplier load(InputStream is) {
+        return new DynawoEventModelsSupplier(new SupplierJsonDeserializer<>(new EventModelConfigsJsonDeserializer()).deserialize(is));
+    }
+
+    public static DynawoEventModelsSupplier load(Path path) {
+        return new DynawoEventModelsSupplier(new SupplierJsonDeserializer<>(new EventModelConfigsJsonDeserializer()).deserialize(path));
+    }
+
     public DynawoEventModelsSupplier(List<EventModelConfig> eventModelConfigs) {
         this.eventModelConfigs = eventModelConfigs;
+    }
+
+    @Override
+    public String getName() {
+        return DynaWaltzProvider.NAME;
     }
 
     @Override

@@ -9,6 +9,7 @@ package com.powsybl.dynawaltz.xml;
 
 import com.powsybl.dynawaltz.models.events.EventDisconnectionBuilder;
 import com.powsybl.dynawaltz.models.generators.GeneratorFictitiousBuilder;
+import com.powsybl.dynawaltz.models.shunts.BaseShuntBuilder;
 import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.VoltageLevel;
 import com.powsybl.iidm.network.test.SvcTestCaseFactory;
@@ -45,6 +46,11 @@ class DisconnectEventXmlTest extends AbstractDynamicModelXmlTest {
                 .dynamicModelId("BBM_GEN")
                 .staticId("G1")
                 .parameterSetId("GF")
+                .build());
+        dynamicModels.add(BaseShuntBuilder.of(network)
+                .dynamicModelId("BBM_SHUNT")
+                .staticId("SH1")
+                .parameterSetId("BS")
                 .build());
         eventModels.add(EventDisconnectionBuilder.of(network)
                 .staticId("G1")

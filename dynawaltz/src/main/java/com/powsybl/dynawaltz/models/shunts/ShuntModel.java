@@ -13,6 +13,7 @@ import com.powsybl.dynawaltz.models.InjectionModel;
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public interface ShuntModel extends InjectionModel {
+
     String getStateVarName();
 
     String getIsCapacitorVarName();
