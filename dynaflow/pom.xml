@@ -20,10 +20,6 @@
     <name>DynaFlow</name>
     <description>DynaFlow integration module for powsybl</description>
 
-    <properties>
-        <asciitable.version>0.3.2</asciitable.version>
-    </properties>
-
     <dependencies>
         <!-- Compile dependencies -->
         <dependency>
@@ -49,7 +45,6 @@
         <dependency>
             <groupId>de.vandermeer</groupId>
             <artifactId>asciitable</artifactId>
-            <version>${asciitable.version}</version>
         </dependency>
 
         <!-- Test dependencies -->
