@@ -81,8 +81,7 @@ class DynawoSecurityAnalysisTest extends AbstractDynawoTest {
         dynaWaltzParameters.setModelsParameters(modelsParameters)
                 .setNetworkParameters(networkParameters)
                 .setSolverParameters(solverParameters)
-                .setSolverType(DynaWaltzParameters.SolverType.IDA)
-                .setDefaultDumpFileParameters();
+                .setSolverType(DynaWaltzParameters.SolverType.IDA);
 
         ReportNode reportNode = ReportNode.newRootReportNode()
                 .withMessageTemplate("root", "Root message")
