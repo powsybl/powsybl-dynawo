@@ -2,7 +2,7 @@
 
 ```{toctree}
 :hidden:
-dynaflow-configuration.md
+configuration.md
 ```
 
 PowSyBl provides an implementation of the [LoadFlow API from powsybl-core](inv:powsyblcore:*:*#simulation/loadflow/index) with [DynaFlow](https://dynawo.github.io/about/dynaflow).

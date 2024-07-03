@@ -34,6 +34,7 @@ import java.util.concurrent.ForkJoinPool;
 
 import static com.powsybl.commons.test.ComparisonUtils.assertXmlEquals;
 import static com.powsybl.dynaflow.DynaFlowConstants.*;
+import static com.powsybl.dynawo.commons.DynawoConstants.OUTPUT_IIDM_FILENAME;
 import static com.powsybl.loadflow.LoadFlowResult.Status.FAILED;
 import static com.powsybl.loadflow.LoadFlowResult.Status.FULLY_CONVERGED;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -49,6 +50,7 @@ class DynaFlowProviderTest extends AbstractSerDeTest {
     private DynaFlowProvider provider;
 
     @BeforeEach
+    @Override
     public void setUp() throws IOException {
         super.setUp();
         homeDir = fileSystem.getPath("/home/dynaflow");

@@ -7,7 +7,6 @@
  */
 package com.powsybl.dynawaltz.models.buses;
 
-import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.iidm.network.Bus;
 
 import javax.xml.stream.XMLStreamException;
@@ -24,7 +23,7 @@ public class StandardBus extends AbstractBus {
     }
 
     @Override
-    protected void writeDynamicAttributes(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
+    protected void writeDynamicAttributes(XMLStreamWriter writer, String parFileName) throws XMLStreamException {
         writer.writeAttribute("id", getDynamicModelId());
         writer.writeAttribute("lib", getLib());
     }

@@ -40,12 +40,14 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
     private InMemoryPlatformConfig platformConfig;
 
     @BeforeEach
+    @Override
     public void setUp() {
         fileSystem = Jimfs.newFileSystem(Configuration.unix());
         platformConfig = new InMemoryPlatformConfig(fileSystem);
     }
 
     @AfterEach
+    @Override
     public void tearDown() throws IOException {
         fileSystem.close();
     }

@@ -51,6 +51,7 @@
         <module>dynaflow</module>
         <module>dynawaltz</module>
         <module>dynawaltz-dsl</module>
+        <module>dynawo-security-analysis</module>
         <module>distribution</module>
     </modules>
 
@@ -138,6 +139,11 @@
             <dependency>
                 <groupId>com.powsybl</groupId>
                 <artifactId>powsybl-dynawaltz-dsl</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.powsybl</groupId>
+                <artifactId>powsybl-dynawo-security-analysis</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
