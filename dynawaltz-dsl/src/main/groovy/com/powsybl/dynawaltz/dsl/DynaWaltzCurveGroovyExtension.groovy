@@ -36,6 +36,6 @@ class DynaWaltzCurveGroovyExtension implements CurveGroovyExtension {
             cloned()
             curvesBuilder.add(consumer)
         }
-        binding.curves = closure
+        binding.curve = closure
     }
 }
