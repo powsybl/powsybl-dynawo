@@ -10,6 +10,7 @@ import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
+import com.powsybl.dynawaltz.curves.DynawoCurve;
 import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawaltz.models.BlackBoxModel;
 import com.powsybl.dynawaltz.models.EquipmentBlackBoxModel;
@@ -47,21 +48,21 @@ public class DynaWaltzContext {
     private static final String MODEL_ID_EXCEPTION = "The model identified by the static id %s does not match the expected model (%s)";
     private static final String MODEL_ID_LOG = "The model identified by the static id {} does not match the expected model ({})";
 
-    private final Network network;
+    protected final Network network;
     private final String workingVariantId;
     private final DynamicSimulationParameters parameters;
     private final DynaWaltzParameters dynaWaltzParameters;
     private final List<BlackBoxModel> dynamicModels;
     private final List<BlackBoxModel> eventModels;
     private final Map<String, EquipmentBlackBoxModel> staticIdBlackBoxModelMap;
-    private final List<Curve> curves;
+    private final List<DynawoCurve> curves;
     private final Map<String, MacroStaticReference> macroStaticReferences = new LinkedHashMap<>();
     private final List<MacroConnect> macroConnectList = new ArrayList<>();
     private final Map<String, MacroConnector> macroConnectorsMap = new LinkedHashMap<>();
     private final DefaultModelsHandler defaultModelsHandler = new DefaultModelsHandler();
     private final FrequencySynchronizerModel frequencySynchronizer;
     private final List<ParametersSet> dynamicModelsParameters = new ArrayList<>();
-    private final MacroConnectionsAdder macroConnectionsAdder;
+    protected final MacroConnectionsAdder macroConnectionsAdder;
 
     public DynaWaltzContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
                             List<Curve> curves, DynamicSimulationParameters parameters, DynaWaltzParameters dynaWaltzParameters) {
@@ -97,7 +98,10 @@ public class DynaWaltzContext {
                 .map(ContextDependentEvent.class::cast)
                 .forEach(e -> e.setEquipmentHasDynamicModel(this));
 
-        this.curves = Objects.requireNonNull(curves);
+        this.curves = Objects.requireNonNull(curves).stream()
+                .filter(DynawoCurve.class::isInstance)
+                .map(DynawoCurve.class::cast)
+                .toList();
         this.frequencySynchronizer = setupFrequencySynchronizer(dynamicModels.stream().anyMatch(AbstractBus.class::isInstance) ? SetPoint::new : OmegaRef::new);
         this.macroConnectionsAdder = new MacroConnectionsAdder(this::getDynamicModel,
                 this::getPureDynamicModel,
@@ -256,8 +260,8 @@ public class DynaWaltzContext {
         return eventModels;
     }
 
-    public List<Curve> getCurves() {
-        return Collections.unmodifiableList(curves);
+    public List<DynawoCurve> getCurves() {
+        return curves;
     }
 
     public boolean withCurves() {

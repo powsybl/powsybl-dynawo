@@ -42,6 +42,10 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>powsybl-dynawo-commons</artifactId>
         </dependency>
+        <dependency>
+            <groupId>de.vandermeer</groupId>
+            <artifactId>asciitable</artifactId>
+        </dependency>
 
         <!-- Test dependencies -->
         <dependency>

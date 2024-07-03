@@ -37,6 +37,8 @@ public interface BlackBoxModel extends Model {
 
     void write(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException;
 
+    void write(XMLStreamWriter writer, String parFileName) throws XMLStreamException;
+
     void createDynamicModelParameters(DynaWaltzContext context, Consumer<ParametersSet> parametersAdder);
 
     void createNetworkParameter(ParametersSet networkParameters);

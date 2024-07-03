@@ -8,6 +8,7 @@ package com.powsybl.dynaflow.json;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.powsybl.commons.json.JsonUtil;
+import com.powsybl.dynaflow.DynaFlowConstants;
 import com.powsybl.dynaflow.DynaFlowParameters;
 import com.powsybl.loadflow.LoadFlowParameters;
 
@@ -20,7 +21,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
- *
+ * Serializes parameters from {@link DynaFlowParameters} used by Dynawo.
+ * Some parameters are directly used by powsybl-dynawo and thus not serialized.
  * @author Guillaume Pernin {@literal <guillaume.pernin at rte-france.com>}
  */
 public final class DynaFlowConfigSerializer {
@@ -55,18 +57,16 @@ public final class DynaFlowConfigSerializer {
             writeNonNullField(jsonGenerator, "AssemblingPath", dynaFlowParameters.getAssemblingPath());
             writeNonNullField(jsonGenerator, "StartTime", dynaFlowParameters.getStartTime());
             writeNonNullField(jsonGenerator, "StopTime", dynaFlowParameters.getStopTime());
+            writeNonNullField(jsonGenerator, "Precision", dynaFlowParameters.getPrecision());
 
-            if (dynaFlowParameters.getPrecision() != null && !Double.isNaN(dynaFlowParameters.getPrecision())) {
-                jsonGenerator.writeNumberField("Precision", dynaFlowParameters.getPrecision());
-            }
             if (dynaFlowParameters.getSa() != null) {
                 DynaFlowParameters.Sa.writeJson(jsonGenerator, dynaFlowParameters);
             }
             if (dynaFlowParameters.getChosenOutputs() != null) {
                 jsonGenerator.writeFieldName("ChosenOutputs");
                 jsonGenerator.writeStartArray();
-                for (String outputType : dynaFlowParameters.getChosenOutputs()) {
-                    jsonGenerator.writeString(outputType);
+                for (DynaFlowConstants.OutputTypes outputType : dynaFlowParameters.getChosenOutputs()) {
+                    jsonGenerator.writeString(outputType.name());
                 }
                 jsonGenerator.writeEndArray();
             }
@@ -90,7 +90,7 @@ public final class DynaFlowConfigSerializer {
     }
 
     private static void writeNonNullField(JsonGenerator jsonGenerator, String fieldName, Double value) throws IOException {
-        if (value != null) {
+        if (value != null && !Double.isNaN(value)) {
             jsonGenerator.writeNumberField(fieldName, value);
         }
     }
