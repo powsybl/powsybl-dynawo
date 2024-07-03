@@ -19,6 +19,10 @@ import com.powsybl.dynaflow.DynaFlowConstants.OutputTypes;
 import com.powsybl.loadflow.LoadFlowParameters;
 import com.powsybl.dynaflow.DynaFlowConstants.ActivePowerCompensation;
 import com.powsybl.dynaflow.DynaFlowConstants.StartingPointMode;
+import de.vandermeer.asciitable.AsciiTable;
+import de.vandermeer.asciitable.CWC_LongestWord;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.*;
@@ -32,6 +36,8 @@ import static com.powsybl.dynaflow.DynaFlowProvider.MODULE_SPECIFIC_PARAMETERS;
  * @author Guillaume Pernin {@literal <guillaume.pernin at rte-france.com>}
  */
 public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(DynaFlowParameters.class);
 
     /**
      * Inner class dedicated to Security Analysis (SA) namespace
@@ -351,6 +357,25 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         config.getOptionalDoubleProperty(TIME_STEP).ifPresent(parameters::setTimeStep);
         config.getOptionalStringProperty(STARTING_POINT_MODE).map(StartingPointMode::fromString).ifPresent(parameters::setStartingPointMode);
         config.getOptionalBooleanProperty(MERGE_LOADS).ifPresent(parameters::setMergeLoads);
+    }
+
+    public static void log(LoadFlowParameters parameters, DynaFlowParameters parametersExt) {
+        if (LOGGER.isInfoEnabled()) {
+            AsciiTable at = new AsciiTable();
+            at.addRule();
+            at.addRow("Name", "Value");
+            at.addRule();
+            for (var e : parameters.toMap().entrySet()) {
+                at.addRow(e.getKey(), e.getValue());
+            }
+            for (var e : parametersExt.createMapFromParameters().entrySet()) {
+                at.addRow(e.getKey(), Objects.toString(e.getValue(), ""));
+            }
+            at.addRule();
+            at.getRenderer().setCWC(new CWC_LongestWord());
+            at.setPaddingLeftRight(1, 1);
+            LOGGER.info("Parameters:\n{}", at.render());
+        }
     }
 
     public void update(Map<String, String> properties) {

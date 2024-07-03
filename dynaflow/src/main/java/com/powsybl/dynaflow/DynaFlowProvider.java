@@ -100,6 +100,7 @@ public class DynaFlowProvider implements LoadFlowProvider {
         Objects.requireNonNull(loadFlowParameters);
 
         DynaFlowParameters dynaFlowParameters = getParametersExt(loadFlowParameters);
+        DynaFlowParameters.log(loadFlowParameters, dynaFlowParameters);
         DynaFlowConfig config = Objects.requireNonNull(configSupplier.get());
         ExecutionEnvironment execEnv = new ExecutionEnvironment(config.createEnv(), WORKING_DIR_PREFIX, config.isDebug());
         Command versionCmd = getVersionCommand(config);
