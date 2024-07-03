@@ -58,6 +58,7 @@
         <java.version>17</java.version>
         <powsybl-core.version>6.4.0-RC2</powsybl-core.version>
         <groovy.version>4.0.14</groovy.version> <!-- used for groovy-json but also for groovydoc (dynawaltz-dsl) -->
+        <asciitable.version>0.3.2</asciitable.version>
         <sonar.coverage.jacoco.xmlReportPaths>
             ../distribution/target/site/jacoco-aggregate/jacoco.xml,
         </sonar.coverage.jacoco.xmlReportPaths>
@@ -149,6 +150,11 @@
                 <groupId>org.apache.groovy</groupId>
                 <artifactId>groovy-json</artifactId>
                 <version>${groovy.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.vandermeer</groupId>
+                <artifactId>asciitable</artifactId>
+                <version>${asciitable.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
