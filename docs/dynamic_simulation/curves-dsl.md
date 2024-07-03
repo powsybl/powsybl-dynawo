@@ -1,9 +1,9 @@
 # Curves DSL
-The curves domain specific language allow a user to configure the curves Dynawo will export at the end of the simulation. This DSL defines the `curve` and the `curves` keywords.
+The curves domain specific language allow a user to configure the curves Dynawo will export at the end of the simulation. This DSL defines the `curves` keywords.
 
-The `curve` keyword create a single curve for a dynamic model. One identifies a dynamic model by its ID, the same as the one used in the [Dynamic Models DSL](dynamic-models-dsl). The variable to plot is identified by its name.
+The `curves` keyword combined with the `variable` field create a single curve for a dynamic model. One identifies a dynamic model by its ID, the same as the one used in the [Dynamic Models DSL](dynamic-models-dsl). The variable to plot is identified by its name.
 ```groovy
-curve {
+curves {
     dynamicModelId load.id
     variable "load_PPu"
 }
@@ -11,20 +11,20 @@ curve {
 
 If you want to plot a static variable, the `dynamicModelId` parameter has to be replaced by the `staticId` keyword and refers to an ID present in the static network.
 ```groovy
-curve {
+curves {
     staticId bus.id
     variable "Upu_value"
 }
 ```
 
-If you want to plot several variables of the same dynamic model, you can use the `curves` keyword that permit limiting boilerplate code in the script.
+If you want to plot several variables of the same dynamic model, you can use the `variables` field that permit limiting boilerplate code in the script.
 ```
 // This:
-curve {
+curves {
     dynamicModelId load.id
     variable "load_PPu"
 }
-curve {
+curves {
     dynamicModelId load.id
     variable "load_QPu"
 }

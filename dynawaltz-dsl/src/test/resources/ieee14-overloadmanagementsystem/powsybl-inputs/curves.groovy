@@ -10,7 +10,7 @@ import com.powsybl.iidm.network.Bus
 import com.powsybl.iidm.network.Generator
 
 for (Bus bus : network.busBreakerView.buses) {
-    curve {
+    curves {
         staticId bus.id
         variable "Upu_value"
     }

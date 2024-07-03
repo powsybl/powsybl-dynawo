@@ -11,7 +11,7 @@ import com.powsybl.iidm.network.Generator
 for (Bus bus : network.busBreakerView.buses) {
     if (bus.id == "_KANA___1_TN" || bus.id == "_TURN___2_TN" || bus.id == "_LOGA___3_TN" || bus.id == "_BEAV___6_TN" 
         || bus.id == "_CLIN___8_TN" || bus.id == "_SALT___9_TN" || bus.id == "_GLEN__12_TN") {
-        curve {
+        curves {
             staticId bus.id
             variable "Upu_value"
         }

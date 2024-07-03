@@ -10,7 +10,7 @@ import com.powsybl.iidm.network.Generator
 import com.powsybl.iidm.network.Load
 
 for (Bus bus : network.busBreakerView.buses) {
-    curve {
+    curves {
         staticId bus.id
         variable "Upu_value"
     }
@@ -24,11 +24,11 @@ for (Generator gen : network.generators) {
 }
 
 for (Load load : network.loads) {
-    curve {
+    curves {
         dynamicModelId load.id
         variable "load_PPu"
     }
-    curve {
+    curves {
         dynamicModelId load.id
         variable "load_QPu"
     }

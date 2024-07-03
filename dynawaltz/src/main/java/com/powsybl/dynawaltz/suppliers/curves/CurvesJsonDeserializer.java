@@ -11,16 +11,18 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.powsybl.commons.json.JsonUtil;
+import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynawaltz.curves.DynawoCurvesBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class CurvesJsonDeserializer extends StdDeserializer<List<DynawoCurvesBuilder>> {
+public class CurvesJsonDeserializer extends StdDeserializer<List<Curve>> {
 
     private final transient Supplier<DynawoCurvesBuilder> builderConstructor;
 
@@ -34,7 +36,7 @@ public class CurvesJsonDeserializer extends StdDeserializer<List<DynawoCurvesBui
     }
 
     @Override
-    public List<DynawoCurvesBuilder> deserialize(JsonParser parser, DeserializationContext context) {
+    public List<Curve> deserialize(JsonParser parser, DeserializationContext context) {
         List<DynawoCurvesBuilder> modelConfigList = new ArrayList<>();
         JsonUtil.parseObject(parser, name -> {
             if (name.equals("curves")) {
@@ -43,7 +45,10 @@ public class CurvesJsonDeserializer extends StdDeserializer<List<DynawoCurvesBui
             }
             return false;
         });
-        return modelConfigList;
+        return modelConfigList.stream()
+                .flatMap(b -> b.build().stream())
+                .filter(Objects::nonNull)
+                .toList();
     }
 
     private DynawoCurvesBuilder parseCurvesBuilder(JsonParser parser) {
