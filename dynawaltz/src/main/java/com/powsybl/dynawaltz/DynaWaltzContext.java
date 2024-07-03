@@ -47,7 +47,7 @@ public class DynaWaltzContext {
     private static final String MODEL_ID_EXCEPTION = "The model identified by the static id %s does not match the expected model (%s)";
     private static final String MODEL_ID_LOG = "The model identified by the static id {} does not match the expected model ({})";
 
-    private final Network network;
+    protected final Network network;
     private final String workingVariantId;
     private final DynamicSimulationParameters parameters;
     private final DynaWaltzParameters dynaWaltzParameters;
@@ -61,7 +61,7 @@ public class DynaWaltzContext {
     private final DefaultModelsHandler defaultModelsHandler = new DefaultModelsHandler();
     private final FrequencySynchronizerModel frequencySynchronizer;
     private final List<ParametersSet> dynamicModelsParameters = new ArrayList<>();
-    private final MacroConnectionsAdder macroConnectionsAdder;
+    protected final MacroConnectionsAdder macroConnectionsAdder;
 
     public DynaWaltzContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
                             List<Curve> curves, DynamicSimulationParameters parameters, DynaWaltzParameters dynaWaltzParameters) {

@@ -6,6 +6,13 @@ dynawaltz:
   homeDir: /home/dynawaltz
   debug: false
 
+dynawo-algorithms:
+  homeDir: /home/dynawo-algorithms
+  debug: false
+
+dynamic-security-analysis-default-parameters:
+    contingencies-start-time: 10
+
 dynawaltz-default-parameters:
     parametersFile: /work/unittests/configModels.par
     network.parametersFile: /work/unittests/configNetwork.par

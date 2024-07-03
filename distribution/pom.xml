@@ -43,6 +43,10 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>powsybl-dynawo-security-analysis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>powsybl-dynawo-integration-tests</artifactId>
         </dependency>
     </dependencies>
