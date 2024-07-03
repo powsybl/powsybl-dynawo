@@ -74,7 +74,7 @@ public class TapChangerBlockingAutomationSystem extends AbstractPureDynamicBlack
             }
         }
         for (String id : tapChangerAutomatonIds) {
-            if (adder.createTcaMacroConnectionsOrSkip(this, id, this::getVarConnectionsWith)) {
+            if (adder.createMacroConnectionsOrSkip(this, id, TapChangerAutomationSystem.class, this::getVarConnectionsWith)) {
                 skippedTapChangers++;
             }
         }
