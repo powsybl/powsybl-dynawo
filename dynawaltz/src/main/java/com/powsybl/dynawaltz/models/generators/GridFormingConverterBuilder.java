@@ -36,7 +36,7 @@ public class GridFormingConverterBuilder extends AbstractGeneratorBuilder<GridFo
     public static GridFormingConverterBuilder of(Network network, String modelName, ReportNode reportNode) {
         ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(modelName);
         if (modelConfig == null) {
-            BuilderReports.reportLibNotFound(reportNode, GridFormingConverterBuilder.class.getSimpleName(), modelName);
+            BuilderReports.reportModelNotFound(reportNode, GridFormingConverterBuilder.class.getSimpleName(), modelName);
             return null;
         }
         return new GridFormingConverterBuilder(network, modelConfig, reportNode);

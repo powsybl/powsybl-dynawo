@@ -39,8 +39,8 @@ public class ModelConfigs {
         return defaultModelConfig;
     }
 
-    public ModelConfig getModelConfig(String libName) {
-        return modelConfigMap.get(libName);
+    public ModelConfig getModelConfig(String modelName) {
+        return modelConfigMap.get(modelName);
     }
 
     public Set<ModelInfo> getModelInfos() {

@@ -44,7 +44,7 @@ public class TapChangerBlockingAutomationSystemBuilder extends AbstractAutomatio
     public static TapChangerBlockingAutomationSystemBuilder of(Network network, String modelName, ReportNode reportNode) {
         ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(modelName);
         if (modelConfig == null) {
-            BuilderReports.reportLibNotFound(reportNode, TapChangerBlockingAutomationSystemBuilder.class.getSimpleName(), modelName);
+            BuilderReports.reportModelNotFound(reportNode, TapChangerBlockingAutomationSystemBuilder.class.getSimpleName(), modelName);
             return null;
         }
         return new TapChangerBlockingAutomationSystemBuilder(network, modelConfig, reportNode);

@@ -37,7 +37,7 @@ public class SynchronousGeneratorBuilder extends AbstractGeneratorBuilder<Synchr
     public static SynchronousGeneratorBuilder of(Network network, String modelName, ReportNode reportNode) {
         ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(modelName);
         if (modelConfig == null) {
-            BuilderReports.reportLibNotFound(reportNode, SynchronousGeneratorBuilder.class.getSimpleName(), modelName);
+            BuilderReports.reportModelNotFound(reportNode, SynchronousGeneratorBuilder.class.getSimpleName(), modelName);
             return null;
         }
         return new SynchronousGeneratorBuilder(network, modelConfig, reportNode);

@@ -37,7 +37,7 @@ public class DynamicOverloadManagementSystemBuilder extends AbstractOverloadMana
     public static DynamicOverloadManagementSystemBuilder of(Network network, String modelName, ReportNode reportNode) {
         ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(modelName);
         if (modelConfig == null) {
-            BuilderReports.reportLibNotFound(reportNode, DynamicOverloadManagementSystemBuilder.class.getSimpleName(), modelName);
+            BuilderReports.reportModelNotFound(reportNode, DynamicOverloadManagementSystemBuilder.class.getSimpleName(), modelName);
             return null;
         }
         return new DynamicOverloadManagementSystemBuilder(network, modelConfig, reportNode);
