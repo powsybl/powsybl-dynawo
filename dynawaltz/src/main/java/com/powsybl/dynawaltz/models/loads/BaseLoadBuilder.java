@@ -27,20 +27,20 @@ public class BaseLoadBuilder extends AbstractLoadModelBuilder<BaseLoadBuilder> {
         return new BaseLoadBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reportNode);
     }
 
-    public static BaseLoadBuilder of(Network network, String lib) {
-        return of(network, lib, ReportNode.NO_OP);
+    public static BaseLoadBuilder of(Network network, String modelName) {
+        return of(network, modelName, ReportNode.NO_OP);
     }
 
-    public static BaseLoadBuilder of(Network network, String lib, ReportNode reportNode) {
-        ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(lib);
+    public static BaseLoadBuilder of(Network network, String modelName, ReportNode reportNode) {
+        ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(modelName);
         if (modelConfig == null) {
-            BuilderReports.reportLibNotFound(reportNode, BaseLoadBuilder.class.getSimpleName(), lib);
+            BuilderReports.reportLibNotFound(reportNode, BaseLoadBuilder.class.getSimpleName(), modelName);
             return null;
         }
         return new BaseLoadBuilder(network, modelConfig, reportNode);
     }
 
-    public static ModelConfigsLibsInfo getSupportedLibs() {
+    public static ModelInfos getSupportedModelInfos() {
         return MODEL_CONFIGS;
     }
 

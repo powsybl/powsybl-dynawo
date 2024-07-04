@@ -12,9 +12,8 @@ import java.util.Set;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public interface ModelConfigsLibsInfo {
+//TODO remove ?
+public interface ModelInfos {
 
-    Set<String> getLibsName();
-
-    Set<String> getLibsInfo();
+    Set<ModelInfo> getModelInfos();
 }

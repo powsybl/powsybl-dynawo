@@ -20,17 +20,17 @@ public class BuilderConfig {
 
     @FunctionalInterface
     public interface ModelBuilderConstructor {
-        ModelBuilder<DynamicModel> createBuilder(Network network, String lib, ReportNode reportNode);
+        ModelBuilder<DynamicModel> createBuilder(Network network, String modelName, ReportNode reportNode);
     }
 
     private final String category;
     private final ModelBuilderConstructor builderConstructor;
-    private final Supplier<ModelConfigsLibsInfo> libsSupplier;
+    private final Supplier<ModelInfos> modelInfosSupplier;
 
-    public BuilderConfig(String category, ModelBuilderConstructor builderConstructor, Supplier<ModelConfigsLibsInfo> libsSupplier) {
+    public BuilderConfig(String category, ModelBuilderConstructor builderConstructor, Supplier<ModelInfos> modelInfosSupplier) {
         this.category = category;
         this.builderConstructor = builderConstructor;
-        this.libsSupplier = libsSupplier;
+        this.modelInfosSupplier = modelInfosSupplier;
     }
 
     public String getCategory() {
@@ -41,7 +41,7 @@ public class BuilderConfig {
         return builderConstructor;
     }
 
-    public ModelConfigsLibsInfo getLibs() {
-        return libsSupplier.get();
+    public ModelInfos getModelInfos() {
+        return modelInfosSupplier.get();
     }
 }

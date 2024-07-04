@@ -27,20 +27,20 @@ public class PhaseShifterIAutomationSystemBuilder extends AbstractPhaseShifterMo
         return new PhaseShifterIAutomationSystemBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reportNode);
     }
 
-    public static PhaseShifterIAutomationSystemBuilder of(Network network, String lib) {
-        return of(network, lib, ReportNode.NO_OP);
+    public static PhaseShifterIAutomationSystemBuilder of(Network network, String modelName) {
+        return of(network, modelName, ReportNode.NO_OP);
     }
 
-    public static PhaseShifterIAutomationSystemBuilder of(Network network, String lib, ReportNode reportNode) {
-        ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(lib);
+    public static PhaseShifterIAutomationSystemBuilder of(Network network, String modelName, ReportNode reportNode) {
+        ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(modelName);
         if (modelConfig == null) {
-            BuilderReports.reportLibNotFound(reportNode, PhaseShifterIAutomationSystemBuilder.class.getSimpleName(), lib);
+            BuilderReports.reportLibNotFound(reportNode, PhaseShifterIAutomationSystemBuilder.class.getSimpleName(), modelName);
             return null;
         }
         return new PhaseShifterIAutomationSystemBuilder(network, modelConfig, reportNode);
     }
 
-    public static ModelConfigsLibsInfo getSupportedLibs() {
+    public static ModelInfos getSupportedModelInfos() {
         return MODEL_CONFIGS;
     }
 

@@ -13,12 +13,11 @@ import org.slf4j.LoggerFactory;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class ModelConfigs implements ModelConfigsLibsInfo {
+public class ModelConfigs implements ModelInfos {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ModelConfigs.class);
 
@@ -45,13 +44,12 @@ public class ModelConfigs implements ModelConfigsLibsInfo {
     }
 
     @Override
-    public Set<String> getLibsName() {
-        return modelConfigMap.keySet();
+    public Set<ModelInfo> getModelInfos() {
+        return Set.copyOf(modelConfigMap.values());
     }
 
-    @Override
-    public Set<String> getLibsInfo() {
-        return modelConfigMap.values().stream().map(ModelConfig::getLibInfo).collect(Collectors.toSet());
+    Set<String> getModelsName() {
+        return modelConfigMap.keySet();
     }
 
     void addModelConfigs(ModelConfigs modelConfigsToMerge) {

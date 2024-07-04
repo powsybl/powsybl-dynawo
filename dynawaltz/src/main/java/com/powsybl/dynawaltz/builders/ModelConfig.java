@@ -13,7 +13,7 @@ import java.util.Objects;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public record ModelConfig(String lib, String alias, String internalModelPrefix, List<String> properties, String doc) {
+public record ModelConfig(String lib, String alias, String internalModelPrefix, List<String> properties, String doc) implements ModelInfo {
 
     private static final String CONTROLLABLE_PROPERTY = "CONTROLLABLE";
     private static final String DANGLING_PROPERTY = "DANGLING";
@@ -57,11 +57,13 @@ public record ModelConfig(String lib, String alias, String internalModelPrefix, 
         return properties.contains(property);
     }
 
+    @Override
     public String name() {
         return alias == null ? lib : alias;
     }
 
-    public String getLibInfo() {
+    @Override
+    public String formattedInfo() {
         return name() + (alias != null ? " (" + lib + ")" : "") + (doc != null ? ": " + doc : "");
     }
 }

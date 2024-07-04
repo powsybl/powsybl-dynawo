@@ -27,20 +27,20 @@ public class LoadOneTransformerBuilder extends AbstractLoadModelBuilder<LoadOneT
         return new LoadOneTransformerBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reportNode);
     }
 
-    public static LoadOneTransformerBuilder of(Network network, String lib) {
-        return of(network, lib, ReportNode.NO_OP);
+    public static LoadOneTransformerBuilder of(Network network, String modelName) {
+        return of(network, modelName, ReportNode.NO_OP);
     }
 
-    public static LoadOneTransformerBuilder of(Network network, String lib, ReportNode reportNode) {
-        ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(lib);
+    public static LoadOneTransformerBuilder of(Network network, String modelName, ReportNode reportNode) {
+        ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(modelName);
         if (modelConfig == null) {
-            BuilderReports.reportLibNotFound(reportNode, LoadOneTransformerBuilder.class.getSimpleName(), lib);
+            BuilderReports.reportLibNotFound(reportNode, LoadOneTransformerBuilder.class.getSimpleName(), modelName);
             return null;
         }
         return new LoadOneTransformerBuilder(network, modelConfig, reportNode);
     }
 
-    public static ModelConfigsLibsInfo getSupportedLibs() {
+    public static ModelInfos getSupportedModelInfos() {
         return MODEL_CONFIGS;
     }
 

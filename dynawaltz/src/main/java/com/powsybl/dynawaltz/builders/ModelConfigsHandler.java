@@ -41,7 +41,7 @@ public final class ModelConfigsHandler {
                 })
         ));
         builderConfigs = modelConfigLoaders.stream().flatMap(ModelConfigLoader::loadBuilderConfigs).toList();
-        builderConfigs.forEach(bc -> modelConfigsCat.get(bc.getCategory()).getLibsName()
+        builderConfigs.forEach(bc -> modelConfigsCat.get(bc.getCategory()).getModelsName()
                 .forEach(lib -> builderConstructorByName.put(lib, bc.getBuilderConstructor())));
         eventBuilderConfigs = modelConfigLoaders.stream().flatMap(ModelConfigLoader::loadEventBuilderConfigs).toList();
         eventBuilderConstructorByName = eventBuilderConfigs.stream().collect(Collectors.toMap(EventBuilderConfig::getTag, EventBuilderConfig::getBuilderConstructor));
