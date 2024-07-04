@@ -442,6 +442,17 @@
       }
     ]
   },
+  "BASE_SHUNT": {
+    "defaultLib": "ShuntB",
+    "libs": [
+      {
+        "lib": "ShuntB"
+      },
+      {
+        "lib": "ShuntBWithSections"
+      }
+    ]
+  },
   "BASE_STATIC_VAR_COMPENSATOR": {
     "defaultLib": "StaticVarCompensator",
     "libs": [
@@ -585,6 +596,14 @@
       {
         "lib": "PhaseShifterP",
         "doc": "Phase-shifter which monitors a given active power. When the active power goes above a given threshold max, taps will be changed in order to decrease it. When the active power goes below another threshold stop, the phase-shifter is automatically deactivated"
+      }
+    ]
+  },
+  "PHASE_SHIFTER_BLOCKING_I": {
+    "defaultLib": "PhaseShifterBlockingI",
+    "libs": [
+      {
+        "lib": "PhaseShifterBlockingI"
       }
     ]
   },

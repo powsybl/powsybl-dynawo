@@ -8,7 +8,12 @@ package com.powsybl.dynaflow;
 
 import com.google.auto.service.AutoService;
 import com.powsybl.commons.report.ReportNode;
+import com.powsybl.computation.Command;
+import com.powsybl.computation.ExecutionEnvironment;
+import com.powsybl.computation.SimpleCommandBuilder;
 import com.powsybl.contingency.ContingenciesProvider;
+import com.powsybl.contingency.Contingency;
+import com.powsybl.dynawo.commons.DynawoUtil;
 import com.powsybl.dynawo.commons.PowsyblDynawoVersion;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.security.SecurityAnalysisProvider;
@@ -17,10 +22,14 @@ import com.powsybl.security.SecurityAnalysisRunParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
+import static com.powsybl.dynaflow.DynaFlowConstants.*;
+import static com.powsybl.dynaflow.SecurityAnalysisConstants.CONTINGENCIES_FILENAME;
 import static com.powsybl.dynaflow.DynaFlowConstants.DYNAFLOW_NAME;
 
 /**
@@ -30,7 +39,7 @@ import static com.powsybl.dynaflow.DynaFlowConstants.DYNAFLOW_NAME;
 public class DynaFlowSecurityAnalysisProvider implements SecurityAnalysisProvider {
 
     private static final Logger LOG = LoggerFactory.getLogger(DynaFlowSecurityAnalysisProvider.class);
-
+    private static final String WORKING_DIR_PREFIX = "dynaflow_sa_";
     private final Supplier<DynaFlowConfig> configSupplier;
 
     public DynaFlowSecurityAnalysisProvider() {
@@ -58,11 +67,15 @@ public class DynaFlowSecurityAnalysisProvider implements SecurityAnalysisProvide
         if (!runParameters.getLimitReductions().isEmpty()) {
             LOG.error("Limit reductions are not implemented in Dynaflow");
         }
-        DynaFlowSecurityAnalysis securityAnalysis = new DynaFlowSecurityAnalysis(network, runParameters.getFilter(), runParameters.getComputationManager(), configSupplier);
-        runParameters.getInterceptors().forEach(securityAnalysis::addInterceptor);
 
+        DynaFlowConfig config = Objects.requireNonNull(configSupplier.get());
+        ExecutionEnvironment execEnv = new ExecutionEnvironment(config.createEnv(), WORKING_DIR_PREFIX, config.isDebug());
+        DynawoUtil.requireDynaMinVersion(execEnv, runParameters.getComputationManager(), DynaFlowProvider.getVersionCommand(config), DynaFlowConfig.DYNAFLOW_LAUNCHER_PROGRAM_NAME, true);
+        List<Contingency> contingencies = contingenciesProvider.getContingencies(network);
         ReportNode dfsaReportNode = DynaflowReports.createDynaFlowSecurityAnalysisReportNode(runParameters.getReportNode(), network.getId());
-        return securityAnalysis.run(workingVariantId, runParameters.getSecurityAnalysisParameters(), contingenciesProvider, dfsaReportNode);
+
+        DynaFlowSecurityAnalysisHandler executionHandler = new DynaFlowSecurityAnalysisHandler(network, workingVariantId, getCommand(config), runParameters.getSecurityAnalysisParameters(), contingencies, runParameters.getFilter(), runParameters.getInterceptors(), dfsaReportNode);
+        return runParameters.getComputationManager().execute(execEnv, executionHandler);
     }
 
     @Override
@@ -73,5 +86,16 @@ public class DynaFlowSecurityAnalysisProvider implements SecurityAnalysisProvide
     @Override
     public String getVersion() {
         return new PowsyblDynawoVersion().getMavenProjectVersion();
+    }
+
+    public static Command getCommand(DynaFlowConfig config) {
+        List<String> args = Arrays.asList("--network", IIDM_FILENAME,
+                "--config", CONFIG_FILENAME,
+                "--contingencies", CONTINGENCIES_FILENAME);
+        return new SimpleCommandBuilder()
+                .id("dynaflow_sa")
+                .program(config.getProgram())
+                .args(args)
+                .build();
     }
 }

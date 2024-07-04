@@ -7,7 +7,6 @@
  */
 package com.powsybl.dynawaltz.models.automationsystems;
 
-import com.powsybl.dynawaltz.DynaWaltzContext;
 import com.powsybl.dynawaltz.DynawaltzReports;
 import com.powsybl.dynawaltz.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawaltz.models.TransformerSide;
@@ -25,18 +24,11 @@ import java.util.Objects;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class TapChangerAutomationSystem extends AbstractPureDynamicBlackBoxModel implements TapChangerModel {
+public class TapChangerAutomationSystem extends AbstractPureDynamicBlackBoxModel implements TapChangerModel, ConnectionStatefulModel {
 
     private final Load load;
     private final TransformerSide side;
-
-    private ConnectionState connection = ConnectionState.NOT_SET;
-
-    private enum ConnectionState {
-        CONNECTED,
-        NOT_CONNECTED,
-        NOT_SET
-    }
+    private ConnectionState connection = null;
 
     protected TapChangerAutomationSystem(String dynamicModelId, String parameterSetId, Load load, TransformerSide side, String lib) {
         super(dynamicModelId, parameterSetId, lib);
@@ -56,11 +48,11 @@ public class TapChangerAutomationSystem extends AbstractPureDynamicBlackBoxModel
 
     @Override
     public void createMacroConnections(MacroConnectionsAdder adder) {
-        if (ConnectionState.NOT_SET == connection) {
+        if (connection == null) {
             boolean isSkipped = adder.createMacroConnectionsOrSkip(this, load, LoadWithTransformers.class, this::getVarConnectionsWith);
             if (isSkipped) {
-                connection = ConnectionState.NOT_CONNECTED;
-                DynawaltzReports.reportEmptyAutomaton(adder.getReportNode(), this.getName(), getDynamicModelId(), LoadWithTransformers.class.getSimpleName());
+                connection = ConnectionState.CANNOT_CONNECT;
+                DynawaltzReports.reportEmptyAutomaton(adder.getReportNode(), getName(), getDynamicModelId(), load.getId(), LoadWithTransformers.class.getSimpleName());
             } else {
                 connection = ConnectionState.CONNECTED;
             }
@@ -77,16 +69,20 @@ public class TapChangerAutomationSystem extends AbstractPureDynamicBlackBoxModel
     }
 
     @Override
-    public void write(XMLStreamWriter writer, DynaWaltzContext context) throws XMLStreamException {
+    public void write(XMLStreamWriter writer, String parFileName) throws XMLStreamException {
         if (ConnectionState.CONNECTED == connection) {
-            super.write(writer, context);
+            super.write(writer, parFileName);
         }
     }
 
-    public boolean isConnected(MacroConnectionsAdder adder) {
-        if (ConnectionState.NOT_SET == connection) {
-            createMacroConnections(adder);
-        }
-        return ConnectionState.CONNECTED == connection;
+    @Override
+    public ConnectionState getConnectionState() {
+        return connection;
+    }
+
+    @Override
+    public boolean connect(MacroConnectionsAdder adder) {
+        createMacroConnections(adder);
+        return ConnectionState.CONNECTED == getConnectionState();
     }
 }

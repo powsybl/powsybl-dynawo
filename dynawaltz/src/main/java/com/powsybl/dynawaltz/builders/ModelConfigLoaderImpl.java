@@ -13,6 +13,7 @@ import com.powsybl.dynawaltz.models.automationsystems.TapChangerBlockingAutomati
 import com.powsybl.dynawaltz.models.automationsystems.UnderVoltageAutomationSystemBuilder;
 import com.powsybl.dynawaltz.models.automationsystems.overloadmanagments.DynamicOverloadManagementSystemBuilder;
 import com.powsybl.dynawaltz.models.automationsystems.overloadmanagments.DynamicTwoLevelsOverloadManagementSystemBuilder;
+import com.powsybl.dynawaltz.models.automationsystems.phaseshifters.PhaseShifterBlockingIAutomationSystemBuilder;
 import com.powsybl.dynawaltz.models.automationsystems.phaseshifters.PhaseShifterIAutomationSystemBuilder;
 import com.powsybl.dynawaltz.models.automationsystems.phaseshifters.PhaseShifterPAutomationSystemBuilder;
 import com.powsybl.dynawaltz.models.buses.InfiniteBusBuilder;
@@ -25,6 +26,7 @@ import com.powsybl.dynawaltz.models.hvdc.HvdcPBuilder;
 import com.powsybl.dynawaltz.models.hvdc.HvdcVscBuilder;
 import com.powsybl.dynawaltz.models.lines.LineBuilder;
 import com.powsybl.dynawaltz.models.loads.*;
+import com.powsybl.dynawaltz.models.shunts.BaseShuntBuilder;
 import com.powsybl.dynawaltz.models.svarcs.BaseStaticVarCompensatorBuilder;
 import com.powsybl.dynawaltz.models.transformers.TransformerFixedRatioBuilder;
 
@@ -46,6 +48,7 @@ public final class ModelConfigLoaderImpl implements ModelConfigLoader {
             new BuilderConfig(UnderVoltageAutomationSystemBuilder.CATEGORY, UnderVoltageAutomationSystemBuilder::of, UnderVoltageAutomationSystemBuilder::getSupportedModelInfos),
             new BuilderConfig(PhaseShifterPAutomationSystemBuilder.CATEGORY, PhaseShifterPAutomationSystemBuilder::of, PhaseShifterPAutomationSystemBuilder::getSupportedModelInfos),
             new BuilderConfig(PhaseShifterIAutomationSystemBuilder.CATEGORY, PhaseShifterIAutomationSystemBuilder::of, PhaseShifterIAutomationSystemBuilder::getSupportedModelInfos),
+            new BuilderConfig(PhaseShifterBlockingIAutomationSystemBuilder.CATEGORY, PhaseShifterBlockingIAutomationSystemBuilder::of, PhaseShifterBlockingIAutomationSystemBuilder::getSupportedModelInfos),
             new BuilderConfig(StandardBusBuilder.CATEGORY, StandardBusBuilder::of, StandardBusBuilder::getSupportedModelInfos),
             new BuilderConfig(InfiniteBusBuilder.CATEGORY, InfiniteBusBuilder::of, InfiniteBusBuilder::getSupportedModelInfos),
             new BuilderConfig(TransformerFixedRatioBuilder.CATEGORY, TransformerFixedRatioBuilder::of, TransformerFixedRatioBuilder::getSupportedModelInfos),
@@ -57,6 +60,7 @@ public final class ModelConfigLoaderImpl implements ModelConfigLoader {
             new BuilderConfig(LoadOneTransformerTapChangerBuilder.CATEGORY, LoadOneTransformerTapChangerBuilder::of, LoadOneTransformerTapChangerBuilder::getSupportedModelInfos),
             new BuilderConfig(LoadTwoTransformersBuilder.CATEGORY, LoadTwoTransformersBuilder::of, LoadTwoTransformersBuilder::getSupportedModelInfos),
             new BuilderConfig(LoadTwoTransformersTapChangersBuilder.CATEGORY, LoadTwoTransformersTapChangersBuilder::of, LoadTwoTransformersTapChangersBuilder::getSupportedModelInfos),
+            new BuilderConfig(BaseShuntBuilder.CATEGORY, BaseShuntBuilder::of, BaseShuntBuilder::getSupportedModelInfos),
             new BuilderConfig(BaseStaticVarCompensatorBuilder.CATEGORY, BaseStaticVarCompensatorBuilder::of, BaseStaticVarCompensatorBuilder::getSupportedModelInfos),
             new BuilderConfig(GeneratorFictitiousBuilder.CATEGORY, GeneratorFictitiousBuilder::of, GeneratorFictitiousBuilder::getSupportedModelInfos),
             new BuilderConfig(SynchronizedGeneratorBuilder.CATEGORY, SynchronizedGeneratorBuilder::of, SynchronizedGeneratorBuilder::getSupportedModelInfos),

@@ -17,7 +17,7 @@ import java.nio.file.StandardCopyOption;
 /**
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  */
-abstract class AbstractLocalCommandExecutor implements LocalCommandExecutor {
+public abstract class AbstractLocalCommandExecutor implements LocalCommandExecutor {
 
     @Override
     public void stop(Path workingDir) {

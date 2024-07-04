@@ -27,7 +27,6 @@ import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -35,8 +34,10 @@ import java.util.concurrent.ForkJoinPool;
 
 import static com.powsybl.commons.test.ComparisonUtils.assertXmlEquals;
 import static com.powsybl.dynaflow.DynaFlowConstants.*;
+import static com.powsybl.dynawo.commons.DynawoConstants.OUTPUT_IIDM_FILENAME;
 import static com.powsybl.loadflow.LoadFlowResult.Status.FAILED;
 import static com.powsybl.loadflow.LoadFlowResult.Status.FULLY_CONVERGED;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -49,6 +50,7 @@ class DynaFlowProviderTest extends AbstractSerDeTest {
     private DynaFlowProvider provider;
 
     @BeforeEach
+    @Override
     public void setUp() throws IOException {
         super.setUp();
         homeDir = fileSystem.getPath("/home/dynaflow");
@@ -210,8 +212,29 @@ class DynaFlowProviderTest extends AbstractSerDeTest {
         assertTrue(dynaParams.getShuntRegulationOn());
         assertFalse(dynaParams.getAutomaticSlackBusOn());
         assertEquals(2, dynaParams.getDsoVoltageLevel(), 0.1d);
-        assertArrayEquals(Arrays.asList(OutputTypes.STEADYSTATE.name(), OutputTypes.CONSTRAINTS.name()).toArray(), dynaParams.getChosenOutputs().toArray());
+        assertThat(dynaParams.getChosenOutputs()).containsExactlyInAnyOrder(OutputTypes.STEADYSTATE, OutputTypes.CONSTRAINTS);
         assertEquals(0, dynaParams.getTimeStep(), 0.1d);
+    }
+
+    @Test
+    void testGetSpecificParameters() {
+        Map<String, String> expectedProperties = Map.ofEntries(
+                Map.entry("svcRegulationOn", "true"),
+                Map.entry("dsoVoltageLevel", "45.0"),
+                Map.entry("shuntRegulationOn", "true"),
+                Map.entry("automaticSlackBusOn", "true"),
+                Map.entry("timeStep", "10.0"),
+                Map.entry("startingPointMode", "WARM"),
+                Map.entry("startTime", "0.0"),
+                Map.entry("stopTime", "100.0"),
+                Map.entry("activePowerCompensation", "PMAX"),
+                Map.entry("chosenOutputs", "TIMELINE"),
+                Map.entry("mergeLoads", "true"));
+
+        LoadFlowParameters params = LoadFlowParameters.load();
+        DynaFlowParameters dynaParams = params.getExtension(DynaFlowParameters.class);
+        Map<String, String> properties = provider.createMapFromSpecificParameters(dynaParams);
+        assertThat(properties).containsExactlyInAnyOrderEntriesOf(expectedProperties);
     }
 
     private void compare(Network expected, Network actual) throws IOException {
