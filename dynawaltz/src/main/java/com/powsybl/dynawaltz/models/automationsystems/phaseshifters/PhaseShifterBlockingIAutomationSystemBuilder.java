@@ -8,10 +8,7 @@
 package com.powsybl.dynawaltz.models.automationsystems.phaseshifters;
 
 import com.powsybl.commons.report.ReportNode;
-import com.powsybl.dynawaltz.builders.BuilderReports;
-import com.powsybl.dynawaltz.builders.ModelConfig;
-import com.powsybl.dynawaltz.builders.ModelConfigs;
-import com.powsybl.dynawaltz.builders.ModelConfigsHandler;
+import com.powsybl.dynawaltz.builders.*;
 import com.powsybl.dynawaltz.models.automationsystems.AbstractAutomationSystemModelBuilder;
 import com.powsybl.iidm.network.Network;
 
@@ -33,21 +30,21 @@ public class PhaseShifterBlockingIAutomationSystemBuilder extends AbstractAutoma
         return new PhaseShifterBlockingIAutomationSystemBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reportNode);
     }
 
-    public static PhaseShifterBlockingIAutomationSystemBuilder of(Network network, String lib) {
-        return of(network, lib, ReportNode.NO_OP);
+    public static PhaseShifterBlockingIAutomationSystemBuilder of(Network network, String modelName) {
+        return of(network, modelName, ReportNode.NO_OP);
     }
 
-    public static PhaseShifterBlockingIAutomationSystemBuilder of(Network network, String lib, ReportNode reportNode) {
-        ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(lib);
+    public static PhaseShifterBlockingIAutomationSystemBuilder of(Network network, String modelName, ReportNode reportNode) {
+        ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(modelName);
         if (modelConfig == null) {
-            BuilderReports.reportLibNotFound(reportNode, PhaseShifterBlockingIAutomationSystemBuilder.class.getSimpleName(), lib);
+            BuilderReports.reportLibNotFound(reportNode, PhaseShifterBlockingIAutomationSystemBuilder.class.getSimpleName(), modelName);
             return null;
         }
         return new PhaseShifterBlockingIAutomationSystemBuilder(network, modelConfig, reportNode);
     }
 
-    public static Set<String> getSupportedLibs() {
-        return MODEL_CONFIGS.getSupportedLibs();
+    public static Set<ModelInfo> getSupportedModelInfos() {
+        return MODEL_CONFIGS.getModelInfos();
     }
 
     private String phaseShifterIDynamicId;

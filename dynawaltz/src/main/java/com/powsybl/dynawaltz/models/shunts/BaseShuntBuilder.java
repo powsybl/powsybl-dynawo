@@ -31,21 +31,21 @@ public class BaseShuntBuilder extends AbstractEquipmentModelBuilder<ShuntCompens
         return new BaseShuntBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reportNode);
     }
 
-    public static BaseShuntBuilder of(Network network, String lib) {
-        return of(network, lib, ReportNode.NO_OP);
+    public static BaseShuntBuilder of(Network network, String modelName) {
+        return of(network, modelName, ReportNode.NO_OP);
     }
 
-    public static BaseShuntBuilder of(Network network, String lib, ReportNode reportNode) {
-        ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(lib);
+    public static BaseShuntBuilder of(Network network, String modelName, ReportNode reportNode) {
+        ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(modelName);
         if (modelConfig == null) {
-            BuilderReports.reportLibNotFound(reportNode, BaseShuntBuilder.class.getSimpleName(), lib);
+            BuilderReports.reportLibNotFound(reportNode, BaseShuntBuilder.class.getSimpleName(), modelName);
             return null;
         }
         return new BaseShuntBuilder(network, modelConfig, reportNode);
     }
 
-    public static Set<String> getSupportedLibs() {
-        return MODEL_CONFIGS.getSupportedLibs();
+    public static Set<ModelInfo> getSupportedModelInfos() {
+        return MODEL_CONFIGS.getModelInfos();
     }
 
     protected BaseShuntBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
