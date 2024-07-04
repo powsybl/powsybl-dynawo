@@ -50,8 +50,8 @@ public class TapChangerBlockingAutomationSystemBuilder extends AbstractAutomatio
         return new TapChangerBlockingAutomationSystemBuilder(network, modelConfig, reportNode);
     }
 
-    public static ModelInfos getSupportedModelInfos() {
-        return MODEL_CONFIGS;
+    public static Set<ModelInfo> getSupportedModelInfos() {
+        return MODEL_CONFIGS.getModelInfos();
     }
 
     protected TapChangerBlockingAutomationSystemBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {

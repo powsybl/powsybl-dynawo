@@ -11,6 +11,7 @@ import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawaltz.builders.*;
 import com.powsybl.iidm.network.*;
 
+import java.util.Set;
 import java.util.function.Predicate;
 
 /**
@@ -43,8 +44,8 @@ public class HvdcVscBuilder extends AbstractHvdcBuilder<HvdcVscBuilder> {
         return new HvdcVscBuilder(network, modelConfig, reportNode);
     }
 
-    public static ModelInfos getSupportedModelInfos() {
-        return MODEL_CONFIGS;
+    public static Set<ModelInfo> getSupportedModelInfos() {
+        return MODEL_CONFIGS.getModelInfos();
     }
 
     protected HvdcVscBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {

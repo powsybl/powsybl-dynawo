@@ -13,6 +13,8 @@ import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.StaticVarCompensator;
 
+import java.util.Set;
+
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
@@ -42,8 +44,8 @@ public class BaseStaticVarCompensatorBuilder extends AbstractEquipmentModelBuild
         return new BaseStaticVarCompensatorBuilder(network, modelConfig, reportNode);
     }
 
-    public static ModelInfos getSupportedModelInfos() {
-        return MODEL_CONFIGS;
+    public static Set<ModelInfo> getSupportedModelInfos() {
+        return MODEL_CONFIGS.getModelInfos();
     }
 
     protected BaseStaticVarCompensatorBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {

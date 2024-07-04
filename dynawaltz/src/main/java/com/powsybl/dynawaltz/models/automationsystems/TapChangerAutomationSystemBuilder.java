@@ -14,6 +14,8 @@ import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Load;
 import com.powsybl.iidm.network.Network;
 
+import java.util.Set;
+
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
@@ -46,8 +48,8 @@ public class TapChangerAutomationSystemBuilder extends AbstractAutomationSystemM
         return new TapChangerAutomationSystemBuilder(network, modelConfig, reportNode);
     }
 
-    public static ModelInfos getSupportedModelInfos() {
-        return MODEL_CONFIGS;
+    public static Set<ModelInfo> getSupportedModelInfos() {
+        return MODEL_CONFIGS.getModelInfos();
     }
 
     protected TapChangerAutomationSystemBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {

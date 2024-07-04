@@ -17,7 +17,7 @@ import java.util.Set;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class ModelConfigs implements ModelInfos {
+public class ModelConfigs {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ModelConfigs.class);
 
@@ -43,7 +43,6 @@ public class ModelConfigs implements ModelInfos {
         return modelConfigMap.get(libName);
     }
 
-    @Override
     public Set<ModelInfo> getModelInfos() {
         return Set.copyOf(modelConfigMap.values());
     }

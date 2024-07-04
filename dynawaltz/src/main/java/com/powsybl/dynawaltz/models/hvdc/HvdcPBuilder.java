@@ -13,6 +13,8 @@ import com.powsybl.iidm.network.HvdcLine;
 import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Network;
 
+import java.util.Set;
+
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
@@ -42,8 +44,8 @@ public class HvdcPBuilder extends AbstractHvdcBuilder<HvdcPBuilder> {
         return new HvdcPBuilder(network, modelConfig, reportNode);
     }
 
-    public static ModelInfos getSupportedModelInfos() {
-        return MODEL_CONFIGS;
+    public static Set<ModelInfo> getSupportedModelInfos() {
+        return MODEL_CONFIGS.getModelInfos();
     }
 
     protected HvdcPBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
