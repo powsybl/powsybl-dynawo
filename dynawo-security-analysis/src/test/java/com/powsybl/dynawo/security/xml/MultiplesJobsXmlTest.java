@@ -8,10 +8,10 @@
 package com.powsybl.dynawo.security.xml;
 
 import com.powsybl.contingency.Contingency;
-import com.powsybl.dynawaltz.DynaWaltzParameters;
+import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.security.SecurityAnalysisContext;
-import com.powsybl.dynawaltz.xml.DynaWaltzConstants;
-import com.powsybl.dynawaltz.xml.DynaWaltzTestUtil;
+import com.powsybl.dynawo.xml.DynawoSimulationConstants;
+import com.powsybl.dynawo.xml.DynawoTestUtil;
 import com.powsybl.security.dynamic.DynamicSecurityAnalysisParameters;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
@@ -23,22 +23,22 @@ import java.util.List;
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-class MultiplesJobsXmlTest extends DynaWaltzTestUtil {
+class MultiplesJobsXmlTest extends DynawoTestUtil {
 
     @Test
     void writeMultiplesJobs() throws SAXException, IOException, XMLStreamException {
         DynamicSecurityAnalysisParameters parameters = DynamicSecurityAnalysisParameters.load();
-        DynaWaltzParameters dynawaltzParameters = DynaWaltzParameters.load();
+        DynawoSimulationParameters dynawoSimulationParameters = DynawoSimulationParameters.load();
         List<Contingency> contingencies = List.of(
                 Contingency.load("LOAD"),
                 Contingency.builder("DisconnectLineGenerator")
                         .addLine("NHV1_NHV2_1")
                         .addGenerator("GEN2")
                         .build());
-        SecurityAnalysisContext context = new SecurityAnalysisContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, parameters, dynawaltzParameters, contingencies);
+        SecurityAnalysisContext context = new SecurityAnalysisContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, parameters, dynawoSimulationParameters, contingencies);
 
         MultipleJobsXml.write(tmpDir, context);
-        validate("multipleJobs.xsd", "multipleJobs.xml", tmpDir.resolve(DynaWaltzConstants.MULTIPLE_JOBS_FILENAME));
+        validate("multipleJobs.xsd", "multipleJobs.xml", tmpDir.resolve(DynawoSimulationConstants.MULTIPLE_JOBS_FILENAME));
     }
 
 }

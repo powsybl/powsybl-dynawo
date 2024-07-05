@@ -7,7 +7,7 @@
  */
 package com.powsybl.dynawo.security.xml;
 
-import com.powsybl.dynawaltz.xml.XmlStreamWriterFactory;
+import com.powsybl.dynawo.xml.XmlStreamWriterFactory;
 import com.powsybl.dynawo.security.ContingencyEventModels;
 import com.powsybl.dynawo.security.SecurityAnalysisContext;
 
@@ -20,8 +20,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
 
-import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_PREFIX;
-import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
+import static com.powsybl.dynawo.xml.DynawoSimulationXmlConstants.DYN_PREFIX;
+import static com.powsybl.dynawo.xml.DynawoSimulationXmlConstants.DYN_URI;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
@@ -29,23 +29,23 @@ import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_URI;
 public final class XmlUtil {
 
     @FunctionalInterface
-    public interface XmlDynawaltzContingenciesWriter {
-        void writeContingencies(XMLStreamWriter writer, SecurityAnalysisContext dynaWaltzContext) throws XMLStreamException;
+    public interface XmlDynawoContingenciesWriter {
+        void writeContingencies(XMLStreamWriter writer, SecurityAnalysisContext context) throws XMLStreamException;
     }
 
     @FunctionalInterface
-    public interface XmlDynawaltzEventWriter {
-        void writeEvent(XMLStreamWriter writer, SecurityAnalysisContext dynaWaltzContext, ContingencyEventModels model) throws XMLStreamException;
+    public interface XmlDynawoEventWriter {
+        void writeEvent(XMLStreamWriter writer, SecurityAnalysisContext context, ContingencyEventModels model) throws XMLStreamException;
     }
 
     private XmlUtil() {
     }
 
-    public static void write(Path file, SecurityAnalysisContext context, String elementName, XmlDynawaltzEventWriter xmlDynawaltzEventWriter, ContingencyEventModels model) throws IOException, XMLStreamException {
+    public static void write(Path file, SecurityAnalysisContext context, String elementName, XmlDynawoEventWriter xmlDynawoEventWriter, ContingencyEventModels model) throws IOException, XMLStreamException {
         Objects.requireNonNull(file);
         Objects.requireNonNull(context);
         Objects.requireNonNull(elementName);
-        Objects.requireNonNull(xmlDynawaltzEventWriter);
+        Objects.requireNonNull(xmlDynawoEventWriter);
 
         try (Writer writer = Files.newBufferedWriter(file, StandardCharsets.UTF_8)) {
             XMLStreamWriter xmlWriter = XmlStreamWriterFactory.newInstance(writer);
@@ -55,7 +55,7 @@ public final class XmlUtil {
                 xmlWriter.writeStartElement(DYN_URI, elementName);
                 xmlWriter.writeNamespace(DYN_PREFIX, DYN_URI);
 
-                xmlDynawaltzEventWriter.writeEvent(xmlWriter, context, model);
+                xmlDynawoEventWriter.writeEvent(xmlWriter, context, model);
 
                 xmlWriter.writeEndElement();
                 xmlWriter.writeEndDocument();
@@ -65,11 +65,11 @@ public final class XmlUtil {
         }
     }
 
-    public static void write(Path file, SecurityAnalysisContext context, String elementName, XmlDynawaltzContingenciesWriter xmlDynawaltzWriter) throws IOException, XMLStreamException {
+    public static void write(Path file, SecurityAnalysisContext context, String elementName, XmlDynawoContingenciesWriter xmlDynawoWriter) throws IOException, XMLStreamException {
         Objects.requireNonNull(file);
         Objects.requireNonNull(context);
         Objects.requireNonNull(elementName);
-        Objects.requireNonNull(xmlDynawaltzWriter);
+        Objects.requireNonNull(xmlDynawoWriter);
 
         try (Writer writer = Files.newBufferedWriter(file, StandardCharsets.UTF_8)) {
             XMLStreamWriter xmlWriter = XmlStreamWriterFactory.newInstance(writer);
@@ -78,7 +78,7 @@ public final class XmlUtil {
                 xmlWriter.writeStartElement(elementName);
                 xmlWriter.writeNamespace("", DYN_URI);
 
-                xmlDynawaltzWriter.writeContingencies(xmlWriter, context);
+                xmlDynawoWriter.writeContingencies(xmlWriter, context);
 
                 xmlWriter.writeEndElement();
                 xmlWriter.writeEndDocument();

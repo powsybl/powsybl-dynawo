@@ -35,11 +35,11 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>powsybl-dynawaltz</artifactId>
+            <artifactId>powsybl-dynawo-simulation</artifactId>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>powsybl-dynawaltz-dsl</artifactId>
+            <artifactId>powsybl-dynawo-dsl</artifactId>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
