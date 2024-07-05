@@ -37,17 +37,17 @@ class DynaWaltzEventModelGroovyExtension implements EventModelGroovyExtension {
     }
 
     List<String> getModelNames() {
-        builderConfigs.collect {it.info}
+        builderConfigs.collect {it.eventModelInfo.formattedInfo()}
     }
 
     @Override
     void load(Binding binding, Consumer<EventModel> consumer, ReportNode reportNode) {
         builderConfigs.forEach {
-            binding.setVariable(it.tag, { Closure<Void> closure ->
+            binding.setVariable(it.eventModelInfo.name(), { Closure<Void> closure ->
                 def cloned = closure.clone()
                 ModelBuilder<EventModel> builder = it.builderConstructor.createBuilder(
                         binding.getVariable("network") as Network,
-                        DslReports.createModelBuilderReportNode(reportNode, it.tag))
+                        DslReports.createModelBuilderReportNode(reportNode, it.eventModelInfo.name()))
                 cloned.delegate = builder
                 cloned()
                 builder.build()?.tap {

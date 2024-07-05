@@ -69,9 +69,9 @@ public final class ModelConfigLoaderImpl implements ModelConfigLoader {
             new BuilderConfig(GridFormingConverterBuilder.CATEGORY, GridFormingConverterBuilder::of, GridFormingConverterBuilder::getSupportedModelInfos));
 
     private static final Stream<EventBuilderConfig> EVENT_BUILDER_CONFIGS = Stream.of(
-            new EventBuilderConfig(EventActivePowerVariationBuilder::of, EventActivePowerVariationBuilder.TAG, EventActivePowerVariationBuilder.getInfo()),
-            new EventBuilderConfig(EventDisconnectionBuilder::of, EventDisconnectionBuilder.TAG, EventDisconnectionBuilder.getInfo()),
-            new EventBuilderConfig(NodeFaultEventBuilder::of, NodeFaultEventBuilder.TAG, NodeFaultEventBuilder.getInfo()));
+            new EventBuilderConfig(EventActivePowerVariationBuilder::of, EventActivePowerVariationBuilder.getEventModelInfo()),
+            new EventBuilderConfig(EventDisconnectionBuilder::of, EventDisconnectionBuilder.getEventModelInfo()),
+            new EventBuilderConfig(NodeFaultEventBuilder::of, NodeFaultEventBuilder.getEventModelInfo()));
 
     @Override
     public String getModelConfigFileName() {

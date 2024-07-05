@@ -10,6 +10,7 @@ package com.powsybl.dynawaltz.models.events;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawaltz.builders.BuilderEquipment;
 import com.powsybl.dynawaltz.builders.BuilderReports;
+import com.powsybl.dynawaltz.builders.EventModelInfo;
 import com.powsybl.iidm.network.Injection;
 import com.powsybl.iidm.network.Network;
 
@@ -18,8 +19,7 @@ import com.powsybl.iidm.network.Network;
  */
 public class EventActivePowerVariationBuilder extends AbstractEventModelBuilder<Injection<?>, EventActivePowerVariationBuilder> {
 
-    public static final String TAG = "Step";
-    private static final String INFO = TAG + ": Power variation on generator or load";
+    private static final EventModelInfo MODEL_INFO = new EventModelInfo("Step", "Power variation on generator or load");
 
     protected Double deltaP;
 
@@ -31,8 +31,8 @@ public class EventActivePowerVariationBuilder extends AbstractEventModelBuilder<
         return new EventActivePowerVariationBuilder(network, reportNode);
     }
 
-    public static String getInfo() {
-        return INFO;
+    public static EventModelInfo getEventModelInfo() {
+        return MODEL_INFO;
     }
 
     EventActivePowerVariationBuilder(Network network, ReportNode reportNode) {
@@ -60,8 +60,8 @@ public class EventActivePowerVariationBuilder extends AbstractEventModelBuilder<
     }
 
     @Override
-    protected String getTag() {
-        return TAG;
+    protected String getModelName() {
+        return MODEL_INFO.name();
     }
 
     @Override

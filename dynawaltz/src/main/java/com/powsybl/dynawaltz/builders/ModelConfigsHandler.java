@@ -44,7 +44,7 @@ public final class ModelConfigsHandler {
         builderConfigs.forEach(bc -> modelConfigsCat.get(bc.getCategory()).getModelsName()
                 .forEach(lib -> builderConstructorByName.put(lib, bc.getBuilderConstructor())));
         eventBuilderConfigs = modelConfigLoaders.stream().flatMap(ModelConfigLoader::loadEventBuilderConfigs).toList();
-        eventBuilderConstructorByName = eventBuilderConfigs.stream().collect(Collectors.toMap(EventBuilderConfig::getTag, EventBuilderConfig::getBuilderConstructor));
+        eventBuilderConstructorByName = eventBuilderConfigs.stream().collect(Collectors.toMap(e -> e.getEventModelInfo().name(), EventBuilderConfig::getBuilderConstructor));
     }
 
     public static ModelConfigsHandler getInstance() {
