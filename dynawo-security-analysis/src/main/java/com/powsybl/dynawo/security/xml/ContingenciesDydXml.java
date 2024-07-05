@@ -7,10 +7,10 @@
  */
 package com.powsybl.dynawo.security.xml;
 
-import com.powsybl.dynawaltz.DynaWaltzContext;
-import com.powsybl.dynawaltz.models.BlackBoxModel;
-import com.powsybl.dynawaltz.models.macroconnections.MacroConnect;
-import com.powsybl.dynawaltz.models.macroconnections.MacroConnector;
+import com.powsybl.dynawo.DynawoSimulationContext;
+import com.powsybl.dynawo.models.BlackBoxModel;
+import com.powsybl.dynawo.models.macroconnections.MacroConnect;
+import com.powsybl.dynawo.models.macroconnections.MacroConnector;
 import com.powsybl.dynawo.security.ContingencyEventModels;
 import com.powsybl.dynawo.security.SecurityAnalysisContext;
 
@@ -36,7 +36,7 @@ public final class ContingenciesDydXml {
         }
     }
 
-    private static void writeEvent(XMLStreamWriter writer, DynaWaltzContext context, ContingencyEventModels model) throws XMLStreamException {
+    private static void writeEvent(XMLStreamWriter writer, DynawoSimulationContext context, ContingencyEventModels model) throws XMLStreamException {
         for (BlackBoxModel ev : model.eventModels()) {
             ev.write(writer, ContingenciesParXml.createParFileName(model));
         }
