@@ -45,7 +45,7 @@ import static com.powsybl.dynawo.DynawoSimulationConfig.DYNAWO_LAUNCHER_PROGRAM_
 public class DynawoSecurityAnalysisProvider implements DynamicSecurityAnalysisProvider {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DynawoSecurityAnalysisProvider.class);
-    private static final String WORKING_DIR_PREFIX = "dynawaltz_sa_";
+    private static final String WORKING_DIR_PREFIX = "dynawo_sa_";
     private final DynawoAlgorithmsConfig config;
 
     public DynawoSecurityAnalysisProvider() {

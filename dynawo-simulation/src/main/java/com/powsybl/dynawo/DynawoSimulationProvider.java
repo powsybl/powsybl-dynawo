@@ -30,7 +30,7 @@ import static com.powsybl.dynawo.xml.DynawoSimulationConstants.JOBS_FILENAME;
 public class DynawoSimulationProvider implements DynamicSimulationProvider {
 
     public static final String NAME = "Dynawo";
-    private static final String WORKING_DIR_PREFIX = "powsybl_dynawo_";
+    private static final String WORKING_DIR_PREFIX = "dynawo_";
 
     private final DynawoSimulationConfig config;
 
