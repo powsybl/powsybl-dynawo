@@ -19,7 +19,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.xml.sax.SAXException;
 
-import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -50,7 +49,7 @@ class WeccGenXmlTest extends AbstractParametrizedDynamicModelXmlTest {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("provideWecc")
-    void writeModel(String dydName, String parName, Function< Network, BlackBoxModel> constructor) throws SAXException, IOException, XMLStreamException {
+    void writeModel(String dydName, String parName, Function< Network, BlackBoxModel> constructor) throws SAXException, IOException {
         DydXml.write(tmpDir, context);
         ParametersXml.write(tmpDir, context);
         validate("dyd.xsd", dydName, tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));

@@ -18,7 +18,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.xml.sax.SAXException;
 
-import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -49,7 +48,7 @@ class LoadsModelXmlTest extends AbstractParametrizedDynamicModelXmlTest {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("provideLoads")
-    void writeLoadModel(String dydName, Function< Network, BlackBoxModel> loadConstructor) throws SAXException, IOException, XMLStreamException {
+    void writeLoadModel(String dydName, Function< Network, BlackBoxModel> loadConstructor) throws SAXException, IOException {
         DydXml.write(tmpDir, context);
         validate("dyd.xsd", dydName + ".xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
     }

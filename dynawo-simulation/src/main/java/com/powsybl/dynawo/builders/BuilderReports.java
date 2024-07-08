@@ -17,6 +17,7 @@ import com.powsybl.iidm.network.IdentifiableType;
 public final class BuilderReports {
 
     private static final String FIELD_NAME = "fieldName";
+    private static final String EQUIPMENT_TYPE_FIELD = "equipmentType";
 
     private BuilderReports() {
     }
@@ -83,7 +84,7 @@ public final class BuilderReports {
     public static void reportStaticIdUnknown(ReportNode reportNode, String fieldName, String staticId, String equipmentType) {
         reportNode.newReportNode()
                 .withMessageTemplate("unknownStaticIdToDynamic", "'${fieldName}' field value '${staticId}' not found for equipment type(s) ${equipmentType}")
-                .withUntypedValue("equipmentType", equipmentType)
+                .withUntypedValue(EQUIPMENT_TYPE_FIELD, equipmentType)
                 .withUntypedValue(FIELD_NAME, fieldName)
                 .withUntypedValue("staticId", staticId)
                 .withSeverity(TypedValue.WARN_SEVERITY)
@@ -93,7 +94,7 @@ public final class BuilderReports {
     public static void reportDifferentNetwork(ReportNode reportNode, String fieldName, String staticId, String equipmentType) {
         reportNode.newReportNode()
                 .withMessageTemplate("wrongNetwork", "'${fieldName}' field value ${equipmentType} ${staticId} does not belong to the builder network")
-                .withUntypedValue("equipmentType", equipmentType)
+                .withUntypedValue(EQUIPMENT_TYPE_FIELD, equipmentType)
                 .withUntypedValue(FIELD_NAME, fieldName)
                 .withUntypedValue("staticId", staticId)
                 .withSeverity(TypedValue.WARN_SEVERITY)
@@ -103,7 +104,7 @@ public final class BuilderReports {
     public static void reportUnknownStaticIdHandling(ReportNode reportNode, String fieldName, String staticId, String equipmentType) {
         reportNode.newReportNode()
                 .withMessageTemplate("staticIdUnknown", "'${fieldName}' field value '${staticId}' not found for equipment type(s) ${equipmentType}, id will be used as pure dynamic model id")
-                .withUntypedValue("equipmentType", equipmentType)
+                .withUntypedValue(EQUIPMENT_TYPE_FIELD, equipmentType)
                 .withUntypedValue(FIELD_NAME, fieldName).withUntypedValue("staticId", staticId)
                 .withSeverity(TypedValue.INFO_SEVERITY)
                 .add();

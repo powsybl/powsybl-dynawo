@@ -71,7 +71,7 @@ public abstract class AbstractIeeeTest {
             List<DynamicModelGroovyExtension> dynamicModelGroovyExtensions = GroovyExtension.find(DynamicModelGroovyExtension.class, DynawoSimulationProvider.NAME);
             dynamicModelsSupplier = new GroovyDynamicModelsSupplier(workingDir.resolve("dynamicModels.groovy"), dynamicModelGroovyExtensions);
         } else {
-            dynamicModelsSupplier = (n, NO_OP) -> Collections.emptyList();
+            dynamicModelsSupplier = (n, r) -> Collections.emptyList();
         }
 
         // Event models

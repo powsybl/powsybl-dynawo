@@ -21,7 +21,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.xml.sax.SAXException;
 
-import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -55,7 +54,7 @@ class DisconnectHvdcEventXmlTest extends AbstractParametrizedDynamicModelXmlTest
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("provideModels")
-    void writeModel(String dydName, Function< Network, BlackBoxModel> hvdcConstructor, Function< Network, BlackBoxModel> disconnectConstructor) throws SAXException, IOException, XMLStreamException {
+    void writeModel(String dydName, Function< Network, BlackBoxModel> hvdcConstructor, Function< Network, BlackBoxModel> disconnectConstructor) throws SAXException, IOException {
         DydXml.write(tmpDir, context);
         ParametersXml.write(tmpDir, context);
         validate("dyd.xsd", dydName, tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
