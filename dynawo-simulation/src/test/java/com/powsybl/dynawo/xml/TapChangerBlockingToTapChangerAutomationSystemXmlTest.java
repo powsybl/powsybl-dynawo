@@ -11,7 +11,6 @@ import com.powsybl.dynawo.models.automationsystems.TapChangerBlockingAutomationS
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
-import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 
 /**
@@ -31,7 +30,7 @@ class TapChangerBlockingToTapChangerAutomationSystemXmlTest extends TapChangerAu
     }
 
     @Test
-    void writeModel() throws SAXException, IOException, XMLStreamException {
+    void writeModel() throws SAXException, IOException {
         DydXml.write(tmpDir, context);
         ParametersXml.write(tmpDir, context);
         validate("dyd.xsd", "tap_changer_blocking_tap_changer_dyd.xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));

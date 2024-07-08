@@ -20,7 +20,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.xml.sax.SAXException;
 
-import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -58,7 +57,7 @@ class PhaseShiftersXmlTest extends AbstractParametrizedDynamicModelXmlTest {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("providePhaseShifter")
-    void writeLoadModel(String dydName, Function<Network, BlackBoxModel> phaseShifterConstructor, boolean dynamicTransformer) throws SAXException, IOException, XMLStreamException {
+    void writeLoadModel(String dydName, Function<Network, BlackBoxModel> phaseShifterConstructor, boolean dynamicTransformer) throws SAXException, IOException {
         DydXml.write(tmpDir, context);
         validate("dyd.xsd", dydName + ".xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
     }

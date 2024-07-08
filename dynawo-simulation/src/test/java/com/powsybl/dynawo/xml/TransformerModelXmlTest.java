@@ -12,7 +12,6 @@ import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
-import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 
 /**
@@ -35,7 +34,7 @@ class TransformerModelXmlTest extends AbstractDynamicModelXmlTest {
     }
 
     @Test
-    void writeModel() throws SAXException, IOException, XMLStreamException {
+    void writeModel() throws SAXException, IOException {
         DydXml.write(tmpDir, context);
         validate("dyd.xsd", "tfr_dyd.xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
     }

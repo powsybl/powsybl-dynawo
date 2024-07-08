@@ -40,6 +40,7 @@ class DynawoParametersTest extends AbstractSerDeTest {
     private InMemoryPlatformConfig platformConfig;
 
     @BeforeEach
+    @Override
     public void setUp() throws IOException {
         super.setUp();
         platformConfig = new InMemoryPlatformConfig(fileSystem);

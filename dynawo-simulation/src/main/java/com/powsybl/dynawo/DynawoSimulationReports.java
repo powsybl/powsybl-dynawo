@@ -16,6 +16,8 @@ import org.apache.commons.lang3.StringUtils;
  */
 public final class DynawoSimulationReports {
 
+    private static final String DYNAMIC_ID_FIELD = "dynamicId";
+
     private DynawoSimulationReports() {
     }
 
@@ -37,7 +39,7 @@ public final class DynawoSimulationReports {
                 .withMessageTemplate("duplicateStaticId", "Duplicate static id found: ${duplicateId} -> model ${modelName} ${dynamicId} will be skipped")
                 .withUntypedValue("duplicateId", duplicateId)
                 .withUntypedValue("modelName", modelName)
-                .withUntypedValue("dynamicId", dynamicId)
+                .withUntypedValue(DYNAMIC_ID_FIELD, dynamicId)
                 .withSeverity(TypedValue.WARN_SEVERITY)
                 .add();
     }
@@ -57,7 +59,7 @@ public final class DynawoSimulationReports {
                 .withMessageTemplate("emptyAutomaton",
                         "${automatonName} ${dynamicId} equipment ${equipmentId} is not a ${expectedModels}, the automation system will be skipped")
                 .withUntypedValue("automatonName", automatonName)
-                .withUntypedValue("dynamicId", dynamicId)
+                .withUntypedValue(DYNAMIC_ID_FIELD, dynamicId)
                 .withUntypedValue("equipmentId", equipmentId)
                 .withUntypedValue("expectedModels", expectedModels)
                 .withSeverity(TypedValue.WARN_SEVERITY)
@@ -69,7 +71,7 @@ public final class DynawoSimulationReports {
                 .withMessageTemplate("emptyListAutomaton",
                         "None of ${automatonName} ${dynamicId} equipments are ${expectedModels}, the automation system will be skipped")
                 .withUntypedValue("automatonName", automatonName)
-                .withUntypedValue("dynamicId", dynamicId)
+                .withUntypedValue(DYNAMIC_ID_FIELD, dynamicId)
                 .withUntypedValue("expectedModels", expectedModels)
                 .withSeverity(TypedValue.WARN_SEVERITY)
                 .add();

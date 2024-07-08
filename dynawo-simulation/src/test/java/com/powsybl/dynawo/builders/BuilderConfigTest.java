@@ -22,21 +22,21 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class BuilderConfigTest {
 
-    private static Network NETWORK;
-    private static ModelConfigsHandler MODEL_CONFIGS_HANDLER;
+    private static Network network;
+    private static ModelConfigsHandler modelConfigsHandler;
 
     @BeforeAll
     static void setup() {
-        NETWORK = EurostagTutorialExample1Factory.create();
-        MODEL_CONFIGS_HANDLER = ModelConfigsHandler.getInstance();
+        network = EurostagTutorialExample1Factory.create();
+        modelConfigsHandler = ModelConfigsHandler.getInstance();
     }
 
     @Test
     void testModelBuilders() {
-        for (BuilderConfig builderConfig : MODEL_CONFIGS_HANDLER.getBuilderConfigs()) {
+        for (BuilderConfig builderConfig : modelConfigsHandler.getBuilderConfigs()) {
             String modelName = builderConfig.getModelInfos().iterator().next().name();
-            ModelBuilder<DynamicModel> handlerBuilder = MODEL_CONFIGS_HANDLER.getModelBuilder(NETWORK, modelName, ReportNode.NO_OP);
-            ModelBuilder<DynamicModel> configBuilder = builderConfig.getBuilderConstructor().createBuilder(NETWORK, modelName, ReportNode.NO_OP);
+            ModelBuilder<DynamicModel> handlerBuilder = modelConfigsHandler.getModelBuilder(network, modelName, ReportNode.NO_OP);
+            ModelBuilder<DynamicModel> configBuilder = builderConfig.getBuilderConstructor().createBuilder(network, modelName, ReportNode.NO_OP);
             assertNotNull(handlerBuilder);
             assertEquals(handlerBuilder.getClass(), configBuilder.getClass());
         }
@@ -44,9 +44,9 @@ class BuilderConfigTest {
 
     @Test
     void testEventBuilders() {
-        for (EventBuilderConfig eventBuilderConfig : MODEL_CONFIGS_HANDLER.getEventBuilderConfigs()) {
-            ModelBuilder<EventModel> handlerBuilder = MODEL_CONFIGS_HANDLER.getEventModelBuilder(NETWORK, eventBuilderConfig.getEventModelInfo().name(), ReportNode.NO_OP);
-            ModelBuilder<EventModel> configBuilder = eventBuilderConfig.getBuilderConstructor().createBuilder(NETWORK, ReportNode.NO_OP);
+        for (EventBuilderConfig eventBuilderConfig : modelConfigsHandler.getEventBuilderConfigs()) {
+            ModelBuilder<EventModel> handlerBuilder = modelConfigsHandler.getEventModelBuilder(network, eventBuilderConfig.getEventModelInfo().name(), ReportNode.NO_OP);
+            ModelBuilder<EventModel> configBuilder = eventBuilderConfig.getBuilderConstructor().createBuilder(network, ReportNode.NO_OP);
             assertNotNull(handlerBuilder);
             assertEquals(handlerBuilder.getClass(), configBuilder.getClass());
         }
