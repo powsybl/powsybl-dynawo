@@ -27,4 +27,4 @@ dynawo-algorithms:
 ```
 
 ## Default parameters
-The dynamic security analysis reuse the `dynawo-default-parameters` [module](../dynamic_simulation/configuration.md#default-parameters).
+The dynamic security analysis reuse the `dynawo-simulation-default-parameters` [module](../dynamic_simulation/configuration.md#default-parameters).

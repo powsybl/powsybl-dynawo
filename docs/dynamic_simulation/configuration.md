@@ -27,7 +27,7 @@ dynawo:
 ```
 
 ## Default parameters
-The `dynawo-default-parameters` module defines the default values for all specific parameters of a dynamic simulation run with Dynawo.
+The `dynawo-simulation-default-parameters` module defines the default values for all specific parameters of a dynamic simulation run with Dynawo.
 
 ### Required parameters
 
@@ -121,7 +121,7 @@ The available `com.powsybl.dynawo.DynawoSimulationParameters.SpecificLog` values
 
 **YAML configuration:**
 ```yaml
-dynawo-default-parameters:
+dynawo-simulation-default-parameters:
   parametersFile: /home/user/parametersFile
   network.parametersFile: /home/user/networkParametersFile
   network.parametersId: 1
@@ -144,7 +144,7 @@ dynawo-default-parameters:
 
 **XML configuration:**
 ```xml
-<dynawo-default-parameters>
+<dynawo-simulation-default-parameters>
   <parametersFile>/home/user/parametersFile</parametersFile>
   <network.parametersFile>/home/user/networkParametersFile</network.parametersFile>
   <network.parametersId>NETWORK</network.parametersId>
@@ -161,5 +161,5 @@ dynawo-default-parameters:
   <precision>10e-6</precision>
   <log.levelFilter>INFO</log.levelFilter>
   <log.specificLogs>NETWORK, PARAMETERS</log.specificLogs>
-</dynawo-default-parameters>
+</dynawo-simulation-default-parameters>
 ```
