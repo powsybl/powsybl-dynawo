@@ -8,7 +8,33 @@
 package ieee14.signal_n
 
 GeneratorPVSignalN {
-    dynamicModelId "_GEN____6_SM"
+    staticId "_GEN____1_SM"
+    parameterSetId "Generator1"
+}
+
+GeneratorPVSignalN {
+    staticId "_GEN____2_SM"
+    parameterSetId "Generator2"
+}
+
+GeneratorPVSignalN {
+    staticId "_GEN____3_SM"
+    parameterSetId "Generator3"
+}
+
+GeneratorPVSignalN {
     staticId "_GEN____6_SM"
     parameterSetId "Generator6"
+}
+
+GeneratorPVSignalN {
+    staticId "_GEN____8_SM"
+    parameterSetId "Generator8"
+}
+
+for (load in network.loads) {
+    LoadAlphaBetaRestorative {
+        staticId load.id
+        parameterSetId "GenericRestorativeLoad"
+    }
 }
