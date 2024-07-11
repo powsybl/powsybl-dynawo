@@ -77,7 +77,12 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel {
     }
 
     @Override
-    public String getParFile(DynawoSimulationContext context) {
+    public void write(XMLStreamWriter writer) throws XMLStreamException {
+        write(writer, getDefaultParFile());
+    }
+
+    @Override
+    public String getDefaultParFile() {
         return DynawoSimulationParameters.MODELS_OUTPUT_PARAMETERS_FILE;
     }
 

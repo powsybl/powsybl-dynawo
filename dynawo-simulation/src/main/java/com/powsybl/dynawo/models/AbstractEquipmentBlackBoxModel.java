@@ -41,11 +41,6 @@ public abstract class AbstractEquipmentBlackBoxModel<T extends Identifiable<?>> 
     }
 
     @Override
-    public void write(XMLStreamWriter writer, DynawoSimulationContext context) throws XMLStreamException {
-        write(writer, getParFile(context));
-    }
-
-    @Override
     public void write(XMLStreamWriter writer, String parFileName) throws XMLStreamException {
         boolean hasVarMapping = !getVarsMapping().isEmpty();
         if (hasVarMapping) {

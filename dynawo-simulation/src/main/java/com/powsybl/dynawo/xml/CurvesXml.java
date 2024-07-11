@@ -20,14 +20,14 @@ import static com.powsybl.dynawo.xml.DynawoSimulationXmlConstants.DYN_URI;
 /**
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  */
-public final class CurvesXml extends AbstractXmlDynawoSimulationWriter {
+public final class CurvesXml extends AbstractXmlDynawoSimulationWriter<DynawoSimulationContext> {
 
     private CurvesXml() {
         super(CRV_FILENAME, "curvesInput");
     }
 
     public static void write(Path workingDir, DynawoSimulationContext context) throws IOException {
-        new CurvesXml().createXmlFileFromContext(workingDir, context);
+        new CurvesXml().createXmlFileFromDataSupplier(workingDir, context);
     }
 
     @Override

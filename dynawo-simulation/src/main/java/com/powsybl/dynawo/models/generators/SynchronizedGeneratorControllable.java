@@ -7,13 +7,13 @@
  */
 package com.powsybl.dynawo.models.generators;
 
-import com.powsybl.dynawo.models.events.ControllableEquipment;
+import com.powsybl.dynawo.models.events.ControllableEquipmentModel;
 import com.powsybl.iidm.network.Generator;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class SynchronizedGeneratorControllable extends SynchronizedGenerator implements ControllableEquipment {
+public class SynchronizedGeneratorControllable extends SynchronizedGenerator implements ControllableEquipmentModel {
 
     protected SynchronizedGeneratorControllable(String dynamicModelId, Generator generator, String parameterSetId, String generatorLib) {
         super(dynamicModelId, generator, parameterSetId, generatorLib);

@@ -26,6 +26,7 @@ import com.powsybl.dynawo.models.macroconnections.MacroConnect;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.macroconnections.MacroConnector;
 import com.powsybl.dynawo.parameters.ParametersSet;
+import com.powsybl.dynawo.xml.DydDataSupplier;
 import com.powsybl.dynawo.xml.MacroStaticReference;
 import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.Network;
@@ -42,7 +43,7 @@ import java.util.stream.Stream;
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class DynawoSimulationContext {
+public class DynawoSimulationContext implements DydDataSupplier {
 
     protected static final Logger LOGGER = LoggerFactory.getLogger(DynawoSimulationContext.class);
     private static final String MODEL_ID_EXCEPTION = "The model identified by the static id %s does not match the expected model (%s)";
@@ -62,7 +63,8 @@ public class DynawoSimulationContext {
     private final DefaultModelsHandler defaultModelsHandler = new DefaultModelsHandler();
     private final FrequencySynchronizerModel frequencySynchronizer;
     private final List<ParametersSet> dynamicModelsParameters = new ArrayList<>();
-    protected final MacroConnectionsAdder macroConnectionsAdder;
+    public final MacroConnectionsAdder macroConnectionsAdder;
+    private TFinModels tFinModels;
 
     public DynawoSimulationContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
                                    List<Curve> curves, DynamicSimulationParameters parameters, DynawoSimulationParameters dynawoSimulationParameters) {
@@ -71,6 +73,13 @@ public class DynawoSimulationContext {
 
     public DynawoSimulationContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
                                    List<Curve> curves, DynamicSimulationParameters parameters, DynawoSimulationParameters dynawoSimulationParameters, ReportNode reportNode) {
+        this(network, workingVariantId, dynamicModels, eventModels, curves, parameters, dynawoSimulationParameters, null, reportNode);
+
+    }
+
+    public DynawoSimulationContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
+                                   List<Curve> curves, DynamicSimulationParameters parameters, DynawoSimulationParameters dynawoSimulationParameters,
+                                   Predicate<BlackBoxModel> tFinModelsPredicate, ReportNode reportNode) {
 
         ReportNode contextReportNode = DynawoSimulationReports.createDynawoSimulationContextReportNode(reportNode);
         this.network = Objects.requireNonNull(network);
@@ -80,9 +89,16 @@ public class DynawoSimulationContext {
 
         Stream<BlackBoxModel> uniqueIdsDynamicModels = Objects.requireNonNull(dynamicModels).stream()
                 .filter(distinctByDynamicId(contextReportNode).and(distinctByStaticId(contextReportNode)));
-        this.dynamicModels = dynawoSimulationParameters.isUseModelSimplifiers()
-                ? simplifyModels(uniqueIdsDynamicModels, contextReportNode).toList()
-                : uniqueIdsDynamicModels.toList();
+        if (dynawoSimulationParameters.isUseModelSimplifiers()) {
+            uniqueIdsDynamicModels = simplifyModels(uniqueIdsDynamicModels, contextReportNode);
+        }
+        if (tFinModelsPredicate != null) {
+            Map<Boolean, List<BlackBoxModel>> splitModels = uniqueIdsDynamicModels.collect(Collectors.partitioningBy(tFinModelsPredicate));
+            this.dynamicModels = splitModels.get(false);
+            this.tFinModels = new TFinModels(splitModels.get(true));
+        } else {
+            this.dynamicModels = uniqueIdsDynamicModels.toList();
+        }
 
         this.eventModels = Objects.requireNonNull(eventModels).stream()
                 .filter(distinctByDynamicId(contextReportNode))
@@ -158,6 +174,7 @@ public class DynawoSimulationContext {
         return dynawoSimulationParameters;
     }
 
+    @Override
     public Collection<MacroStaticReference> getMacroStaticReferences() {
         return macroStaticReferences.values();
     }
@@ -228,10 +245,12 @@ public class DynawoSimulationContext {
         return staticIdBlackBoxModelMap.containsKey(equipment.getId());
     }
 
+    @Override
     public List<MacroConnect> getMacroConnectList() {
         return macroConnectList;
     }
 
+    @Override
     public Collection<MacroConnector> getMacroConnectors() {
         return macroConnectorsMap.values();
     }
@@ -248,6 +267,7 @@ public class DynawoSimulationContext {
         return Stream.concat(getInputBlackBoxDynamicModelStream(), Stream.of(frequencySynchronizer));
     }
 
+    @Override
     public List<BlackBoxModel> getBlackBoxDynamicModels() {
         return getBlackBoxDynamicModelStream().toList();
     }
@@ -256,6 +276,7 @@ public class DynawoSimulationContext {
         return eventModels.stream();
     }
 
+    @Override
     public List<BlackBoxModel> getBlackBoxEventModels() {
         return eventModels;
     }

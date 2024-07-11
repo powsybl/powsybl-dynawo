@@ -7,13 +7,13 @@
  */
 package com.powsybl.dynawo.models.loads;
 
-import com.powsybl.dynawo.models.events.ControllableEquipment;
+import com.powsybl.dynawo.models.events.ControllableEquipmentModel;
 import com.powsybl.iidm.network.Load;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class BaseLoadControllable extends BaseLoad implements ControllableEquipment {
+public class BaseLoadControllable extends BaseLoad implements ControllableLoadModel {
 
     protected BaseLoadControllable(String dynamicModelId, Load load, String parameterSetId, String lib) {
         super(dynamicModelId, load, parameterSetId, lib);
@@ -22,5 +22,10 @@ public class BaseLoadControllable extends BaseLoad implements ControllableEquipm
     @Override
     public String getDeltaPVarName() {
         return "load_deltaP";
+    }
+
+    @Override
+    public String getDeltaQVarName() {
+        return "load_deltaQ";
     }
 }

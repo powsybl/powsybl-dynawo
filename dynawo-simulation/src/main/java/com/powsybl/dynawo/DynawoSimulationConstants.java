@@ -7,6 +7,8 @@
  */
 package com.powsybl.dynawo;
 
+import com.powsybl.iidm.network.Network;
+
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
@@ -17,4 +19,8 @@ public final class DynawoSimulationConstants {
 
     public static final String OUTPUTS_FOLDER = "outputs";
     public static final String FINAL_STATE_FOLDER = "finalState";
+
+    public static String getSimulationParFile(Network network) {
+        return network.getId() + ".par";
+    }
 }

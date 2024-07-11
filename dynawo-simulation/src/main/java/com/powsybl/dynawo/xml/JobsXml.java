@@ -22,14 +22,14 @@ import static com.powsybl.dynawo.xml.DynawoSimulationXmlConstants.DYN_URI;
 /**
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  */
-public final class JobsXml extends AbstractXmlDynawoSimulationWriter {
+public final class JobsXml extends AbstractXmlDynawoSimulationWriter<DynawoSimulationContext> {
 
     private JobsXml() {
         super(JOBS_FILENAME, "jobs");
     }
 
     public static void write(Path workingDir, DynawoSimulationContext context) throws IOException {
-        new JobsXml().createXmlFileFromContext(workingDir, context);
+        new JobsXml().createXmlFileFromDataSupplier(workingDir, context);
     }
 
     @Override

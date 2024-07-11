@@ -53,7 +53,7 @@ public class EventActivePowerVariation extends AbstractEvent implements ContextD
         return EventActivePowerVariation.class.getSimpleName();
     }
 
-    private List<VarConnection> getVarConnectionsWith(ControllableEquipment connected) {
+    private List<VarConnection> getVarConnectionsWith(ControllableEquipmentModel connected) {
         return List.of(TRUE == equipmentHasDynamicModel.getValue() ? new VarConnection("step_step_value", connected.getDeltaPVarName())
                 : new VarConnection("event_state1", connected.getDeltaPVarName()));
     }
@@ -62,7 +62,7 @@ public class EventActivePowerVariation extends AbstractEvent implements ContextD
     public void createMacroConnections(MacroConnectionsAdder adder) {
         adder.createMacroConnections(this,
                 getEquipment(),
-                ControllableEquipment.class,
+                ControllableEquipmentModel.class,
                 this::getVarConnectionsWith);
     }
 

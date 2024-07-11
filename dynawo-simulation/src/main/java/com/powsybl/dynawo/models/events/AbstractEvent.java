@@ -8,6 +8,7 @@
 package com.powsybl.dynawo.models.events;
 
 import com.powsybl.dynamicsimulation.EventModel;
+import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawo.parameters.ParametersSet;
@@ -40,8 +41,8 @@ public abstract class AbstractEvent extends AbstractPureDynamicBlackBoxModel imp
     }
 
     @Override
-    public String getParFile(DynawoSimulationContext context) {
-        return context.getSimulationParFile();
+    public String getDefaultParFile() {
+        return DynawoSimulationConstants.getSimulationParFile(getEquipment().getNetwork());
     }
 
     @Override

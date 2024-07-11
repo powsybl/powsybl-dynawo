@@ -8,7 +8,6 @@
 package com.powsybl.dynawo.xml;
 
 import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
-import com.powsybl.dynawo.DynawoSimulationContext;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -25,7 +24,7 @@ import static com.powsybl.dynawo.xml.DynawoSimulationXmlConstants.DYN_URI;
 /**
  * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
  */
-public abstract class AbstractXmlDynawoSimulationWriter implements XmlDynawoSimulationWriter {
+abstract class AbstractXmlDynawoSimulationWriter<T> {
 
     private final String xmlFileName;
     private final String xmlRootName;
@@ -35,10 +34,9 @@ public abstract class AbstractXmlDynawoSimulationWriter implements XmlDynawoSimu
         this.xmlRootName = Objects.requireNonNull(xmlRootName);
     }
 
-    @Override
-    public void createXmlFileFromContext(Path workingDir, DynawoSimulationContext context) throws IOException {
+    public void createXmlFileFromDataSupplier(Path workingDir, T dataSupplier) throws IOException {
         Objects.requireNonNull(workingDir);
-        Objects.requireNonNull(context);
+        Objects.requireNonNull(dataSupplier);
         Path file = workingDir.resolve(xmlFileName);
 
         try (Writer writer = Files.newBufferedWriter(file, StandardCharsets.UTF_8)) {
@@ -49,7 +47,7 @@ public abstract class AbstractXmlDynawoSimulationWriter implements XmlDynawoSimu
                 xmlWriter.writeStartElement(DYN_URI, xmlRootName);
                 xmlWriter.writeNamespace(DYN_PREFIX, DYN_URI);
 
-                write(xmlWriter, context);
+                write(xmlWriter, dataSupplier);
 
                 xmlWriter.writeEndElement();
                 xmlWriter.writeEndDocument();
@@ -61,5 +59,5 @@ public abstract class AbstractXmlDynawoSimulationWriter implements XmlDynawoSimu
         }
     }
 
-    abstract void write(XMLStreamWriter writer, DynawoSimulationContext dynawoSimulationContext) throws XMLStreamException;
+    abstract void write(XMLStreamWriter writer, T dataSupplier) throws XMLStreamException;
 }

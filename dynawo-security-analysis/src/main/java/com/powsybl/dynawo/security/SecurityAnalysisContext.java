@@ -15,9 +15,6 @@ import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.events.ContextDependentEvent;
 import com.powsybl.dynawo.models.events.EventDisconnectionBuilder;
-import com.powsybl.dynawo.models.macroconnections.MacroConnect;
-import com.powsybl.dynawo.models.macroconnections.MacroConnector;
-import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.security.dynamic.DynamicSecurityAnalysisParameters;
 
@@ -43,25 +40,17 @@ public class SecurityAnalysisContext extends DynawoSimulationContext {
         this.contingencies = contingencies;
         this.contingencyEventModels = contingencies.stream()
                 .map(c -> {
-                    List<BlackBoxModel> contEventModels = c.getElements().stream()
-                            .map(ce -> {
-                                BlackBoxModel bbm = this.createContingencyEventModel(ce, contingenciesStartTime);
-                                if (bbm instanceof ContextDependentEvent cde) {
-                                    cde.setEquipmentHasDynamicModel(this);
-                                }
-                                return bbm;
-                            })
-                            .collect(Collectors.toList());
-                    Map<String, MacroConnector> macroConnectorsMap = new HashMap<>();
-                    List<MacroConnect> macroConnects = new ArrayList<>();
-                    List<ParametersSet> parametersSets = new ArrayList<>(contEventModels.size());
-                    macroConnectionsAdder.setMacroConnectorAdder(macroConnectorsMap::computeIfAbsent);
-                    macroConnectionsAdder.setMacroConnectAdder(macroConnects::add);
-                    for (BlackBoxModel bbm : contEventModels) {
-                        bbm.createMacroConnections(macroConnectionsAdder);
-                        bbm.createDynamicModelParameters(this, parametersSets::add);
-                    }
-                    return new ContingencyEventModels(c, contEventModels, macroConnectorsMap, macroConnects, parametersSets);
+                    ContingencyEventModels cem = new ContingencyEventModels(c, c.getElements().stream()
+                                    .map(ce -> createContingencyEventModel(ce, contingenciesStartTime))
+                                    .toList());
+                    // Set Contingencies connections and parameters
+                    macroConnectionsAdder.setMacroConnectorAdder(cem.macroConnectorsMap()::computeIfAbsent);
+                    macroConnectionsAdder.setMacroConnectAdder(cem.macroConnectList()::add);
+                    cem.eventModels().forEach(em -> {
+                        em.createMacroConnections(macroConnectionsAdder);
+                        em.createDynamicModelParameters(this, cem.eventParameters()::add);
+                    });
+                    return cem;
                 })
                 .collect(Collectors.toList());
     }
@@ -73,6 +62,9 @@ public class SecurityAnalysisContext extends DynawoSimulationContext {
                 .build();
         if (bbm == null) {
             throw new PowsyblException("Contingency element " + element.getType() + " not supported");
+        }
+        if (bbm instanceof ContextDependentEvent cde) {
+            cde.setEquipmentHasDynamicModel(this);
         }
         return bbm;
     }

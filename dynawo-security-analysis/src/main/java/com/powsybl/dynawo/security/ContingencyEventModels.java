@@ -13,6 +13,8 @@ import com.powsybl.dynawo.models.macroconnections.MacroConnect;
 import com.powsybl.dynawo.models.macroconnections.MacroConnector;
 import com.powsybl.dynawo.parameters.ParametersSet;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +24,10 @@ import java.util.Map;
 public record ContingencyEventModels(Contingency contingency, List<BlackBoxModel> eventModels,
                                      Map<String, MacroConnector> macroConnectorsMap,
                                      List<MacroConnect> macroConnectList, List<ParametersSet> eventParameters) {
+
+    public ContingencyEventModels(Contingency contingency, List<BlackBoxModel> eventModels) {
+        this(contingency, eventModels, new HashMap<>(), new ArrayList<>(), new ArrayList<>(eventModels.size()));
+    }
 
     public String getId() {
         return contingency.getId();
