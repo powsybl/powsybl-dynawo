@@ -8,7 +8,7 @@
 package com.powsybl.dynawo.margincalculation;
 
 import com.powsybl.contingency.Contingency;
-import com.powsybl.dynawo.DynawoSimulationConstants;
+import com.powsybl.dynawo.xml.DynawoSimulationConstants;
 import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.models.BlackBoxModel;

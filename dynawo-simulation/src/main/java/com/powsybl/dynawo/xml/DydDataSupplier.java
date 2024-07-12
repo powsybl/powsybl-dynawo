@@ -31,7 +31,7 @@ public interface DydDataSupplier {
     Collection<MacroConnector> getMacroConnectors();
 
     default Collection<MacroStaticReference> getMacroStaticReferences() {
-         return Collections.emptySet();
+        return Collections.emptySet();
     }
 
     List<MacroConnect> getMacroConnectList();

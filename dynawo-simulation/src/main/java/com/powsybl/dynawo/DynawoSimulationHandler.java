@@ -44,8 +44,8 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.powsybl.dynawo.DynawoSimulationConstants.FINAL_STATE_FOLDER;
-import static com.powsybl.dynawo.DynawoSimulationConstants.OUTPUTS_FOLDER;
+import static com.powsybl.dynawo.xml.DynawoSimulationConstants.FINAL_STATE_FOLDER;
+import static com.powsybl.dynawo.xml.DynawoSimulationConstants.OUTPUTS_FOLDER;
 import static com.powsybl.dynawo.xml.DynawoSimulationConstants.*;
 import static com.powsybl.dynawo.commons.DynawoConstants.DYNAWO_TIMELINE_FOLDER;
 import static com.powsybl.dynawo.commons.DynawoUtil.getCommandExecutions;

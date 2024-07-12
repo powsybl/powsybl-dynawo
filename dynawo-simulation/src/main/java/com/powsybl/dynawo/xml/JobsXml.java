@@ -24,12 +24,23 @@ import static com.powsybl.dynawo.xml.DynawoSimulationXmlConstants.DYN_URI;
  */
 public final class JobsXml extends AbstractXmlDynawoSimulationWriter<DynawoSimulationContext> {
 
+    private final boolean isPhase2;
+
     private JobsXml() {
+        this(false);
+    }
+
+    private JobsXml(boolean isPhase2) {
         super(JOBS_FILENAME, "jobs");
+        this.isPhase2 = isPhase2;
     }
 
     public static void write(Path workingDir, DynawoSimulationContext context) throws IOException {
         new JobsXml().createXmlFileFromDataSupplier(workingDir, context);
+    }
+
+    public static void writePhase2(Path workingDir, DynawoSimulationContext context) throws IOException {
+        new JobsXml(true).createXmlFileFromDataSupplier(workingDir, context);
     }
 
     @Override
@@ -37,7 +48,7 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter<DynawoSimul
         writer.writeStartElement(DYN_URI, "job");
         writer.writeAttribute("name", "Job");
         writeSolver(writer, context);
-        writeModeler(writer, context);
+        writeModeler(writer, context, isPhase2);
         writeSimulation(writer, context);
         writeOutput(writer, context);
         writer.writeEndElement();
@@ -51,7 +62,7 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter<DynawoSimul
         writer.writeAttribute("parId", parameters.getSolverParameters().getId());
     }
 
-    private static void writeModeler(XMLStreamWriter writer, DynawoSimulationContext context) throws XMLStreamException {
+    private static void writeModeler(XMLStreamWriter writer, DynawoSimulationContext context, boolean isPhase2) throws XMLStreamException {
         DynawoSimulationParameters parameters = context.getDynawoSimulationParameters();
         writer.writeStartElement(DYN_URI, "modeler");
         writer.writeAttribute("compileDir", "outputs/compilation");
@@ -63,6 +74,10 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter<DynawoSimul
 
         writer.writeEmptyElement(DYN_URI, "dynModels");
         writer.writeAttribute("dydFile", DYD_FILENAME);
+        if (isPhase2 && context.getPhase2DydData().isPresent()) {
+            writer.writeEmptyElement(DYN_URI, "dynModels");
+            writer.writeAttribute("dydFile", PHASE_2_DYD_FILENAME);
+        }
 
         DumpFileParameters dumpFileParameters = parameters.getDumpFileParameters();
         if (dumpFileParameters.useDumpFile()) {

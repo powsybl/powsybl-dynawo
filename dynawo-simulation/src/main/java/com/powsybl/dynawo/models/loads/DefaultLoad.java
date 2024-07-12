@@ -8,7 +8,6 @@
 package com.powsybl.dynawo.models.loads;
 
 import com.powsybl.dynawo.models.defaultmodels.AbstractInjectionDefaultModel;
-import com.powsybl.dynawo.models.events.ControllableEquipmentModel;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}

@@ -40,8 +40,8 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.powsybl.dynaflow.SecurityAnalysisConstants.DYNAWO_CONSTRAINTS_FOLDER;
-import static com.powsybl.dynawo.DynawoSimulationConstants.FINAL_STATE_FOLDER;
-import static com.powsybl.dynawo.DynawoSimulationConstants.OUTPUTS_FOLDER;
+import static com.powsybl.dynawo.xml.DynawoSimulationConstants.FINAL_STATE_FOLDER;
+import static com.powsybl.dynawo.xml.DynawoSimulationConstants.OUTPUTS_FOLDER;
 import static com.powsybl.dynawo.commons.DynawoConstants.DYNAWO_TIMELINE_FOLDER;
 import static com.powsybl.dynawo.commons.DynawoUtil.getCommandExecutions;
 

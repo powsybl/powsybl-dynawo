@@ -7,7 +7,6 @@
  */
 package com.powsybl.dynawo.models.loads;
 
-import com.powsybl.dynawo.models.events.ControllableEquipmentModel;
 import com.powsybl.iidm.network.Load;
 
 /**

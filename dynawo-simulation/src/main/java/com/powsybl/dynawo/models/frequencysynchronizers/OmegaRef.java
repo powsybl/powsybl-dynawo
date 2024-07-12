@@ -34,8 +34,8 @@ import static com.powsybl.dynawo.parameters.ParameterType.INT;
  */
 public class OmegaRef extends AbstractFrequencySynchronizer {
 
-    public OmegaRef(List<FrequencySynchronizedModel> synchronizedEquipments) {
-        super(synchronizedEquipments, "DYNModelOmegaRef");
+    public OmegaRef(List<FrequencySynchronizedModel> synchronizedEquipments, String defaultParFile) {
+        super(synchronizedEquipments, "DYNModelOmegaRef", defaultParFile);
     }
 
     @Override

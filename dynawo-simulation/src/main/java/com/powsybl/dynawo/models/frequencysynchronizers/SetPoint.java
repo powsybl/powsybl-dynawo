@@ -25,8 +25,8 @@ import static com.powsybl.dynawo.parameters.ParameterType.DOUBLE;
  */
 public class SetPoint extends AbstractFrequencySynchronizer {
 
-    public SetPoint(List<FrequencySynchronizedModel> synchronizedEquipments) {
-        super(synchronizedEquipments, "SetPoint");
+    public SetPoint(List<FrequencySynchronizedModel> synchronizedEquipments, String defaultParFile) {
+        super(synchronizedEquipments, "SetPoint", defaultParFile);
     }
 
     @Override

@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class ContingencyEventModelsHandler {
+public final class ContingencyEventModelsHandler {
 
     private final List<ContingencyEventModels> contingencyEventModels;
 

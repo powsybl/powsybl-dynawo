@@ -6,8 +6,6 @@
  */
 package com.powsybl.dynawo.models;
 
-import com.powsybl.dynawo.DynawoSimulationContext;
-
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.util.Collections;

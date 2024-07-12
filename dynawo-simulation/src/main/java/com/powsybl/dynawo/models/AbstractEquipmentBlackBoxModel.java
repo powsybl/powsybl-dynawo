@@ -7,7 +7,6 @@
  */
 package com.powsybl.dynawo.models;
 
-import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.xml.MacroStaticReference;
 import com.powsybl.iidm.network.Identifiable;
 

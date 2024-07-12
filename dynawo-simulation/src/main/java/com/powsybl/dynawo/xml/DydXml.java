@@ -42,7 +42,7 @@ public final class DydXml extends AbstractXmlDynawoSimulationWriter<DydDataSuppl
     @Override
     public void write(XMLStreamWriter writer, DydDataSupplier dataSupplier) throws XMLStreamException {
         // loop over the values of the map indexed by dynamicIds to write only once objects with the same dynamicId
-        String parFileName =  dataSupplier.getParFileName();
+        String parFileName = dataSupplier.getParFileName();
         //TODO merge all models in one parameter file ?
         if (parFileName == null || parFileName.isEmpty()) {
             for (BlackBoxModel model : dataSupplier.getBlackBoxDynamicModels()) {

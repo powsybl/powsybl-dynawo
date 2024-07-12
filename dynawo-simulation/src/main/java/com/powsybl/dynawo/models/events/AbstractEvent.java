@@ -8,10 +8,10 @@
 package com.powsybl.dynawo.models.events;
 
 import com.powsybl.dynamicsimulation.EventModel;
-import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawo.parameters.ParametersSet;
+import com.powsybl.dynawo.xml.DynawoSimulationConstants;
 import com.powsybl.iidm.network.Identifiable;
 
 import java.util.function.Consumer;

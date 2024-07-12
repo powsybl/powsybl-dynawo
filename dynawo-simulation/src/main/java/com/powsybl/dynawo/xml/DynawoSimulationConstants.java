@@ -6,6 +6,8 @@
  */
 package com.powsybl.dynawo.xml;
 
+import com.powsybl.iidm.network.Network;
+
 /**
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  */
@@ -17,6 +19,8 @@ public final class DynawoSimulationConstants {
 
     public static final String DYD_FILENAME = "powsybl_dynawo.dyd";
 
+    public static final String PHASE_2_DYD_FILENAME = "phase_2_powsybl_dynawo.dyd";
+
     public static final String CRV_FILENAME = "powsybl_dynawo.crv";
 
     public static final String CURVES_OUTPUT_PATH = "outputs/curves";
@@ -27,6 +31,14 @@ public final class DynawoSimulationConstants {
 
     public static final String AGGREGATED_RESULTS = "aggregatedResults.xml";
 
+    public static final String OUTPUTS_FOLDER = "outputs";
+
+    public static final String FINAL_STATE_FOLDER = "finalState";
+
     private DynawoSimulationConstants() {
+    }
+
+    public static String getSimulationParFile(Network network) {
+        return network.getId() + ".par";
     }
 }

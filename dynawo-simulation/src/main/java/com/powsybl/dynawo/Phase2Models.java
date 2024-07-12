@@ -9,26 +9,39 @@ package com.powsybl.dynawo;
 
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.macroconnections.MacroConnect;
+import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.macroconnections.MacroConnector;
 import com.powsybl.dynawo.xml.DydDataSupplier;
 import com.powsybl.dynawo.xml.MacroStaticReference;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class TFinModels implements DydDataSupplier {
+public class Phase2Models implements DydDataSupplier {
 
     private final List<BlackBoxModel> dynamicModels;
-    //TODO check duplicate
     private final Map<String, MacroStaticReference> macroStaticReferences = new LinkedHashMap<>();
     private final List<MacroConnect> macroConnectList = new ArrayList<>();
     private final Map<String, MacroConnector> macroConnectorsMap = new LinkedHashMap<>();
 
-
-    public TFinModels(List<BlackBoxModel> dynamicModels) {
+    public Phase2Models(List<BlackBoxModel> dynamicModels, MacroConnectionsAdder macroConnectionsAdder,
+                        Predicate<BlackBoxModel> macroStaticDuplicatePredicate, Predicate<String> macroConnectorDuplicatePredicate) {
         this.dynamicModels = dynamicModels;
+        macroConnectionsAdder.setMacroConnectorAdder((n, f) -> {
+            if (macroConnectorDuplicatePredicate.test(n)) {
+                macroConnectorsMap.computeIfAbsent(n, f);
+            }
+        });
+        macroConnectionsAdder.setMacroConnectAdder(macroConnectList::add);
+        for (BlackBoxModel bbm : dynamicModels) {
+            if (macroStaticDuplicatePredicate.test(bbm)) {
+                macroStaticReferences.computeIfAbsent(bbm.getName(), k -> new MacroStaticReference(k, bbm.getVarsMapping()));
+            }
+            bbm.createMacroConnections(macroConnectionsAdder);
+        }
     }
 
     @Override

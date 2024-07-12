@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawo.xml;
 
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.commons.test.AbstractSerDeTest;
 import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
@@ -29,6 +30,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Predicate;
 
 import static com.powsybl.commons.test.ComparisonUtils.assertTxtEquals;
 
@@ -56,8 +58,13 @@ abstract class AbstractParametrizedDynamicModelXmlTest extends AbstractSerDeTest
     }
 
     void setupDynawoContext() {
+        setupDynawoContext(null);
+    }
+
+    void setupDynawoContext(Predicate<BlackBoxModel> phase2ModelsPredicate) {
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load();
-        context = new DynawoSimulationContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, eventModels, curves, parameters, dynawoParameters);
+        context = new DynawoSimulationContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels,
+                eventModels, curves, parameters, dynawoParameters, phase2ModelsPredicate, ReportNode.NO_OP);
     }
 }

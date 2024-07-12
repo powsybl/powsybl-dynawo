@@ -7,7 +7,6 @@
  */
 package com.powsybl.dynawo.margincalculation;
 
-import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawo.models.VarConnection;
@@ -36,7 +35,6 @@ public class LoadVariationAreaAutomationSystem extends AbstractPureDynamicBlackB
     private final List<Load> loads;
     private final double loadIncreaseStartTime;
     private final double loadIncreaseStopTime;
-
 
     public LoadVariationAreaAutomationSystem(List<Load> loads, double loadIncreaseStartTime, double loadIncreaseStopTime) {
         super(ID, PAR_ID, LIB);
