@@ -32,13 +32,13 @@ public class LoadVariationAreaAutomationSystem extends AbstractPureDynamicBlackB
     private static final String PAR_ID = "loadVarArea";
     private static final String LIB = "DYNModelVariationArea";
 
-    private final List<Load> loads;
+    private final List<LoadsVariation> loadsVariations;
     private final double loadIncreaseStartTime;
     private final double loadIncreaseStopTime;
 
-    public LoadVariationAreaAutomationSystem(List<Load> loads, double loadIncreaseStartTime, double loadIncreaseStopTime) {
+    public LoadVariationAreaAutomationSystem(List<LoadsVariation> loadsVariations, double loadIncreaseStartTime, double loadIncreaseStopTime) {
         super(ID, PAR_ID, LIB);
-        this.loads = Objects.requireNonNull(loads);
+        this.loadsVariations = Objects.requireNonNull(loadsVariations);
         this.loadIncreaseStartTime = loadIncreaseStartTime;
         this.loadIncreaseStopTime = loadIncreaseStopTime;
     }
@@ -46,9 +46,11 @@ public class LoadVariationAreaAutomationSystem extends AbstractPureDynamicBlackB
     @Override
     public void createMacroConnections(MacroConnectionsAdder adder) {
         int index = 0;
-        for (Load load : loads) {
-            adder.createMacroConnections(this, load, ControllableLoadModel.class, this::getVarConnectionsWith, MacroConnectAttribute.ofIndex1(index));
-            index++;
+        for (LoadsVariation lv : loadsVariations) {
+            for (Load load : lv.loads()) {
+                adder.createMacroConnections(this, load, ControllableLoadModel.class, this::getVarConnectionsWith, MacroConnectAttribute.ofIndex1(index));
+                index++;
+            }
         }
     }
 
@@ -60,16 +62,18 @@ public class LoadVariationAreaAutomationSystem extends AbstractPureDynamicBlackB
     @Override
     public void createDynamicModelParameters(DynawoSimulationContext context, Consumer<ParametersSet> parametersAdder) {
         ParametersSet paramSet = new ParametersSet(getParameterSetId());
-        paramSet.addParameter("nbLoads", INT, String.valueOf(loads.size()));
-        paramSet.addParameter("startTime", DOUBLE, String.valueOf(loadIncreaseStartTime));
-        paramSet.addParameter("stopTime", DOUBLE, String.valueOf(loadIncreaseStopTime));
         //TODO calc delta
         int index = 0;
-        for (Load load : loads) {
-            paramSet.addParameter("deltaP_load_" + index, DOUBLE, String.valueOf(1));
-            paramSet.addParameter("deltaQ_load_" + index, DOUBLE, String.valueOf(1));
-            index++;
+        for (LoadsVariation lv : loadsVariations) {
+            for (Load load : lv.loads()) {
+                paramSet.addParameter("deltaP_load_" + index, DOUBLE, String.valueOf(1));
+                paramSet.addParameter("deltaQ_load_" + index, DOUBLE, String.valueOf(1));
+                index++;
+            }
         }
+        paramSet.addParameter("nbLoads", INT, String.valueOf(index));
+        paramSet.addParameter("startTime", DOUBLE, String.valueOf(loadIncreaseStartTime));
+        paramSet.addParameter("stopTime", DOUBLE, String.valueOf(loadIncreaseStopTime));
         parametersAdder.accept(paramSet);
     }
 }
