@@ -13,7 +13,7 @@ import com.powsybl.iidm.network.Branch;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.TwoSides;
 
-import java.util.Set;
+import java.util.Collection;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -47,7 +47,7 @@ public class DynamicTwoLevelsOverloadManagementSystemBuilder extends AbstractOve
         return new DynamicTwoLevelsOverloadManagementSystemBuilder(network, modelConfig, reportNode);
     }
 
-    public static Set<ModelInfo> getSupportedModelInfos() {
+    public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();
     }
 

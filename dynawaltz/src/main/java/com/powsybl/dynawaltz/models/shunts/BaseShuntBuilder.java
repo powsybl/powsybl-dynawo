@@ -13,7 +13,7 @@ import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.ShuntCompensator;
 
-import java.util.Set;
+import java.util.Collection;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -44,7 +44,7 @@ public class BaseShuntBuilder extends AbstractEquipmentModelBuilder<ShuntCompens
         return new BaseShuntBuilder(network, modelConfig, reportNode);
     }
 
-    public static Set<ModelInfo> getSupportedModelInfos() {
+    public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();
     }
 

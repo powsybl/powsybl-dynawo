@@ -12,7 +12,7 @@ import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawaltz.builders.*;
 import com.powsybl.iidm.network.Network;
 
-import java.util.Set;
+import java.util.Collection;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -43,7 +43,7 @@ public class SynchronousGeneratorBuilder extends AbstractGeneratorBuilder<Synchr
         return new SynchronousGeneratorBuilder(network, modelConfig, reportNode);
     }
 
-    public static Set<ModelInfo> getSupportedModelInfos() {
+    public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();
     }
 
