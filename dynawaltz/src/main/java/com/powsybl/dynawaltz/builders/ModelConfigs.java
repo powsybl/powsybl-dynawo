@@ -48,7 +48,7 @@ public class ModelConfigs {
     }
 
     Set<String> getModelsName() {
-        return modelConfigMap.keySet();
+        return Set.copyOf(modelConfigMap.keySet());
     }
 
     void addModelConfigs(ModelConfigs modelConfigsToMerge) {
