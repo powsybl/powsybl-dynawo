@@ -7,7 +7,9 @@
  */
 package com.powsybl.dynawaltz.xml;
 
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.commons.test.AbstractSerDeTest;
+import com.powsybl.commons.test.TestUtil;
 import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawaltz.DynaWaltzContext;
@@ -24,6 +26,7 @@ import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -31,17 +34,19 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.powsybl.commons.test.ComparisonUtils.assertTxtEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-abstract class AbstractParametrizedDynamicModelXmlTest extends AbstractSerDeTest {
+public abstract class AbstractParametrizedDynamicModelXmlTest extends AbstractSerDeTest {
 
     protected Network network;
     protected List<BlackBoxModel> dynamicModels = new ArrayList<>();
     protected List<BlackBoxModel> eventModels = new ArrayList<>();
     protected List<Curve> curves = new ArrayList<>();
     protected DynaWaltzContext context;
+    protected ReportNode reportNode = ReportNode.newRootReportNode().withMessageTemplate("testDyd", "Test DYD").build();
 
     public void validate(String schemaDefinition, String expectedResourceName, Path xmlFile) throws SAXException, IOException {
         InputStream expected = Objects.requireNonNull(getClass().getResourceAsStream("/" + expectedResourceName));
@@ -55,9 +60,15 @@ abstract class AbstractParametrizedDynamicModelXmlTest extends AbstractSerDeTest
         assertTxtEquals(expected, actual);
     }
 
-    void setupDynawaltzContext() {
+    protected void setupDynawaltzContext() {
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynaWaltzParameters dynawoParameters = DynaWaltzParameters.load();
-        context = new DynaWaltzContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, eventModels, curves, parameters, dynawoParameters);
+        context = new DynaWaltzContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, eventModels, curves, parameters, dynawoParameters, reportNode);
+    }
+
+    protected void checkReport(String report) throws IOException {
+        StringWriter sw = new StringWriter();
+        reportNode.print(sw);
+        assertEquals(report, TestUtil.normalizeLineSeparator(sw.toString()));
     }
 }
