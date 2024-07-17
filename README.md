@@ -7,7 +7,7 @@
 [![Javadocs](https://www.javadoc.io/badge/com.powsybl/powsybl-dynawo.svg?color=blue)](https://www.javadoc.io/doc/com.powsybl/powsybl-dynawo)
 [![Slack](https://img.shields.io/badge/slack-powsybl-blueviolet.svg?logo=slack)](https://join.slack.com/t/powsybl/shared_invite/zt-rzvbuzjk-nxi0boim1RKPS5PjieI0rA)
 
-[Dynawo](https://dynawo.github.io) is an hybrid C++/Modelica open source suite of simulation tools for power systems. This integration module allows to use [DynaFlow](https://dynawo.github.io/about/dynaflow) for [power flow simulations](https://www.powsybl.org/pages/documentation/simulation/powerflow) and [DynaWaltz](https://dynawo.github.io/about/dynawaltz) for [time domain simulations](https://www.powsybl.org/pages/documentation/simulation/timedomain).
+[Dynawo](https://dynawo.github.io) is an hybrid C++/Modelica open source suite of simulation tools for power systems. This integration module allows to use [DynaFlow](https://dynawo.github.io/about/dynaflow) for [power flow simulations](https://www.powsybl.org/pages/documentation/simulation/powerflow) and [Dynawo](https://dynawo.github.io) for [time domain simulations](https://www.powsybl.org/pages/documentation/simulation/timedomain).
 
 ## DynaFlow
 

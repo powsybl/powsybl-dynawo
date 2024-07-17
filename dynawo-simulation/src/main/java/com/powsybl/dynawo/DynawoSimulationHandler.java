@@ -60,7 +60,7 @@ public final class DynawoSimulationHandler extends AbstractExecutionHandler<Dyna
     private static final String OUTPUT_IIDM_FILENAME = "outputIIDM.xml";
     private static final String OUTPUT_DUMP_FILENAME = "outputState.dmp";
     private static final String TIMELINE_FILENAME = "timeline";
-    private static final String LOGS_FILENAME = "dynawaltz.log";
+    private static final String LOGS_FILENAME = "dynawo.log";
     private static final String ERROR_FILENAME = "dyn_fs_0.err";
     private static final String DYNAWO_ERROR_PATTERN = "DYN Error: ";
 

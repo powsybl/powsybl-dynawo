@@ -15,7 +15,7 @@
             <dyn:finalState exportIIDMFile="true" exportDumpFile="false"/>
             <dyn:curves inputFile="powsybl_dynawo.crv" exportMode="CSV"/>
             <dyn:logs>
-                <dyn:appender tag="" file="dynawaltz.log" lvlFilter="INFO"/>
+                <dyn:appender tag="" file="dynawo.log" lvlFilter="INFO"/>
             </dyn:logs>
         </dyn:outputs>
     </dyn:job>

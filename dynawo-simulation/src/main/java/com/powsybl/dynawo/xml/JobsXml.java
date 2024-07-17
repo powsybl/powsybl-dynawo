@@ -118,7 +118,7 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter {
     private static void writeAppender(XMLStreamWriter writer, DynawoSimulationParameters parameters) throws XMLStreamException {
         writer.writeEmptyElement(DYN_URI, "appender");
         writer.writeAttribute("tag", "");
-        writer.writeAttribute("file", "dynawaltz.log");
+        writer.writeAttribute("file", "dynawo.log");
         writer.writeAttribute("lvlFilter", parameters.getLogLevelFilter().toString());
         for (DynawoSimulationParameters.SpecificLog log : parameters.getSpecificLogs()) {
             writeSpecificAppender(writer, log);
