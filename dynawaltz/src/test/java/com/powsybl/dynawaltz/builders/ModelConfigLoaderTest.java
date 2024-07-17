@@ -39,7 +39,8 @@ class ModelConfigLoaderTest {
                               "internalModelPrefix": "WTG4A",
                               "properties": [
                                 "SYNCHRONIZED"
-                              ]
+                              ],
+                              "doc": "Photovoltaics Wecc generator"
                             },
                             {
                               "lib": "WT4BWeccCurrentSource",
@@ -49,7 +50,8 @@ class ModelConfigLoaderTest {
                               ]
                             },
                             {
-                              "lib": "WT4AWeccCurrentSource"
+                              "lib": "WT4AWeccCurrentSource",
+                              "doc": "WT4A Wecc generator"
                             }
                         ]
                     }
@@ -63,16 +65,17 @@ class ModelConfigLoaderTest {
         });
         assertThat(configs.keySet()).containsExactlyInAnyOrder("synchronousGenerators");
         ModelConfigs synchroGens = configs.get("synchronousGenerators");
-        assertThat(synchroGens.getSupportedLibs()).containsExactlyInAnyOrder(
+        assertThat(synchroGens.getModelsName()).containsExactlyInAnyOrder(
                 "Wecc",
                 "WT4BWeccCurrentSource",
                 "WT4AWeccCurrentSource");
         ModelConfig defaultModel = new ModelConfig("WT4BWeccCurrentSource", null, null, List.of("SYNCHRONIZED", "CONTROLLABLE"));
         assertThat(listModelConfigs(synchroGens)).containsExactlyInAnyOrder(
-                new ModelConfig("PhotovoltaicsWeccCurrentSource", "Wecc", "WTG4A", List.of("SYNCHRONIZED")),
+                new ModelConfig("PhotovoltaicsWeccCurrentSource", "Wecc", "WTG4A", List.of("SYNCHRONIZED"), "Photovoltaics Wecc generator"),
                 defaultModel,
-                new ModelConfig("WT4AWeccCurrentSource", null, null, Collections.emptyList()));
+                new ModelConfig("WT4AWeccCurrentSource", null, null, Collections.emptyList(), "WT4A Wecc generator"));
         assertEquals(defaultModel, synchroGens.getDefaultModelConfig());
+        assertThat(synchroGens.getModelInfos()).map(ModelInfo::formattedInfo).containsExactlyInAnyOrder("Wecc (PhotovoltaicsWeccCurrentSource): Photovoltaics Wecc generator", "WT4BWeccCurrentSource", "WT4AWeccCurrentSource: WT4A Wecc generator");
     }
 
     @Test
@@ -98,7 +101,7 @@ class ModelConfigLoaderTest {
     }
 
     private List<ModelConfig> listModelConfigs(ModelConfigs modelConfigs) {
-        return modelConfigs.getSupportedLibs().stream()
+        return modelConfigs.getModelsName().stream()
                 .map(modelConfigs::getModelConfig)
                 .toList();
     }

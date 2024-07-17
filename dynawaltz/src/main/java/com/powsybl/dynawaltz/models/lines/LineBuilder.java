@@ -8,16 +8,12 @@
 package com.powsybl.dynawaltz.models.lines;
 
 import com.powsybl.commons.report.ReportNode;
-import com.powsybl.dynawaltz.builders.AbstractEquipmentModelBuilder;
-import com.powsybl.dynawaltz.builders.ModelConfig;
-import com.powsybl.dynawaltz.builders.ModelConfigsHandler;
-import com.powsybl.dynawaltz.builders.ModelConfigs;
-import com.powsybl.dynawaltz.builders.BuilderReports;
+import com.powsybl.dynawaltz.builders.*;
 import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Line;
 import com.powsybl.iidm.network.Network;
 
-import java.util.Set;
+import java.util.Collection;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -35,21 +31,21 @@ public class LineBuilder extends AbstractEquipmentModelBuilder<Line, LineBuilder
         return new LineBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reportNode);
     }
 
-    public static LineBuilder of(Network network, String lib) {
-        return of(network, lib, ReportNode.NO_OP);
+    public static LineBuilder of(Network network, String modelName) {
+        return of(network, modelName, ReportNode.NO_OP);
     }
 
-    public static LineBuilder of(Network network, String lib, ReportNode reportNode) {
-        ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(lib);
+    public static LineBuilder of(Network network, String modelName, ReportNode reportNode) {
+        ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(modelName);
         if (modelConfig == null) {
-            BuilderReports.reportLibNotFound(reportNode, LineBuilder.class.getSimpleName(), lib);
+            BuilderReports.reportModelNotFound(reportNode, LineBuilder.class.getSimpleName(), modelName);
             return null;
         }
         return new LineBuilder(network, modelConfig, reportNode);
     }
 
-    public static Set<String> getSupportedLibs() {
-        return MODEL_CONFIGS.getSupportedLibs();
+    public static Collection<ModelInfo> getSupportedModelInfos() {
+        return MODEL_CONFIGS.getModelInfos();
     }
 
     protected LineBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {

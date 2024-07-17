@@ -29,11 +29,11 @@ public final class BuilderReports {
                 .add();
     }
 
-    public static void reportLibNotFound(ReportNode reportNode, String builderName, String lib) {
+    public static void reportModelNotFound(ReportNode reportNode, String builderName, String modelName) {
         reportNode.newReportNode()
-                .withMessageTemplate("libNotFound", "Library ${lib} not found for ${builderName}")
+                .withMessageTemplate("modelNotFound", "Model ${lib} not found for ${builderName}")
                 .withUntypedValue("builderName", builderName)
-                .withUntypedValue("lib", lib)
+                .withUntypedValue("modelName", modelName)
                 .withSeverity(TypedValue.INFO_SEVERITY)
                 .add();
     }

@@ -22,18 +22,18 @@ public class EventBuilderConfig {
     }
 
     private final EventModelBuilderConstructor builderConstructor;
-    private final String tag;
+    private final EventModelInfo eventModelInfo;
 
-    public EventBuilderConfig(EventModelBuilderConstructor builderConstructor, String tag) {
+    public EventBuilderConfig(EventModelBuilderConstructor builderConstructor, EventModelInfo eventModelInfo) {
         this.builderConstructor = builderConstructor;
-        this.tag = tag;
+        this.eventModelInfo = eventModelInfo;
     }
 
     public EventModelBuilderConstructor getBuilderConstructor() {
         return builderConstructor;
     }
 
-    public String getTag() {
-        return tag;
+    public EventModelInfo getEventModelInfo() {
+        return eventModelInfo;
     }
 }

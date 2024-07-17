@@ -8,13 +8,10 @@
 package com.powsybl.dynawaltz.models.hvdc;
 
 import com.powsybl.commons.report.ReportNode;
-import com.powsybl.dynawaltz.builders.ModelConfig;
-import com.powsybl.dynawaltz.builders.ModelConfigsHandler;
-import com.powsybl.dynawaltz.builders.ModelConfigs;
-import com.powsybl.dynawaltz.builders.BuilderReports;
+import com.powsybl.dynawaltz.builders.*;
 import com.powsybl.iidm.network.*;
 
-import java.util.Set;
+import java.util.Collection;
 import java.util.function.Predicate;
 
 /**
@@ -34,21 +31,21 @@ public class HvdcVscBuilder extends AbstractHvdcBuilder<HvdcVscBuilder> {
         return new HvdcVscBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reportNode);
     }
 
-    public static HvdcVscBuilder of(Network network, String lib) {
-        return of(network, lib, ReportNode.NO_OP);
+    public static HvdcVscBuilder of(Network network, String modelName) {
+        return of(network, modelName, ReportNode.NO_OP);
     }
 
-    public static HvdcVscBuilder of(Network network, String lib, ReportNode reportNode) {
-        ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(lib);
+    public static HvdcVscBuilder of(Network network, String modelName, ReportNode reportNode) {
+        ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(modelName);
         if (modelConfig == null) {
-            BuilderReports.reportLibNotFound(reportNode, HvdcVscBuilder.class.getSimpleName(), lib);
+            BuilderReports.reportModelNotFound(reportNode, HvdcVscBuilder.class.getSimpleName(), modelName);
             return null;
         }
         return new HvdcVscBuilder(network, modelConfig, reportNode);
     }
 
-    public static Set<String> getSupportedLibs() {
-        return MODEL_CONFIGS.getSupportedLibs();
+    public static Collection<ModelInfo> getSupportedModelInfos() {
+        return MODEL_CONFIGS.getModelInfos();
     }
 
     protected HvdcVscBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {

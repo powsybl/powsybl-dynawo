@@ -37,21 +37,21 @@ public class TapChangerBlockingAutomationSystemBuilder extends AbstractAutomatio
         return new TapChangerBlockingAutomationSystemBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reportNode);
     }
 
-    public static TapChangerBlockingAutomationSystemBuilder of(Network network, String lib) {
-        return of(network, lib, ReportNode.NO_OP);
+    public static TapChangerBlockingAutomationSystemBuilder of(Network network, String modelName) {
+        return of(network, modelName, ReportNode.NO_OP);
     }
 
-    public static TapChangerBlockingAutomationSystemBuilder of(Network network, String lib, ReportNode reportNode) {
-        ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(lib);
+    public static TapChangerBlockingAutomationSystemBuilder of(Network network, String modelName, ReportNode reportNode) {
+        ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(modelName);
         if (modelConfig == null) {
-            BuilderReports.reportLibNotFound(reportNode, TapChangerBlockingAutomationSystemBuilder.class.getSimpleName(), lib);
+            BuilderReports.reportModelNotFound(reportNode, TapChangerBlockingAutomationSystemBuilder.class.getSimpleName(), modelName);
             return null;
         }
         return new TapChangerBlockingAutomationSystemBuilder(network, modelConfig, reportNode);
     }
 
-    public static Set<String> getSupportedLibs() {
-        return MODEL_CONFIGS.getSupportedLibs();
+    public static Collection<ModelInfo> getSupportedModelInfos() {
+        return MODEL_CONFIGS.getModelInfos();
     }
 
     protected TapChangerBlockingAutomationSystemBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {

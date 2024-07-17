@@ -11,9 +11,6 @@ import com.google.common.collect.Lists;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynamicsimulation.EventModel;
-import com.powsybl.dynawaltz.models.events.EventActivePowerVariationBuilder;
-import com.powsybl.dynawaltz.models.events.EventDisconnectionBuilder;
-import com.powsybl.dynawaltz.models.events.NodeFaultEventBuilder;
 import com.powsybl.iidm.network.Network;
 
 import java.util.HashMap;
@@ -32,14 +29,8 @@ public final class ModelConfigsHandler {
     private final Map<String, ModelConfigs> modelConfigsCat = new HashMap<>();
     private final List<BuilderConfig> builderConfigs;
     private final Map<String, BuilderConfig.ModelBuilderConstructor> builderConstructorByName = new HashMap<>();
-
-    private final List<EventBuilderConfig> eventBuilderConfigs = List.of(
-            new EventBuilderConfig(EventActivePowerVariationBuilder::of, EventActivePowerVariationBuilder.TAG),
-            new EventBuilderConfig(EventDisconnectionBuilder::of, EventDisconnectionBuilder.TAG),
-            new EventBuilderConfig(NodeFaultEventBuilder::of, NodeFaultEventBuilder.TAG));
-
-    private final Map<String, EventBuilderConfig.EventModelBuilderConstructor> eventBuilderConstructorByName =
-            eventBuilderConfigs.stream().collect(Collectors.toMap(EventBuilderConfig::getTag, EventBuilderConfig::getBuilderConstructor));
+    private final List<EventBuilderConfig> eventBuilderConfigs;
+    private final Map<String, EventBuilderConfig.EventModelBuilderConstructor> eventBuilderConstructorByName;
 
     private ModelConfigsHandler() {
         List<ModelConfigLoader> modelConfigLoaders = Lists.newArrayList(ServiceLoader.load(ModelConfigLoader.class));
@@ -50,8 +41,10 @@ public final class ModelConfigsHandler {
                 })
         ));
         builderConfigs = modelConfigLoaders.stream().flatMap(ModelConfigLoader::loadBuilderConfigs).toList();
-        builderConfigs.forEach(bc -> modelConfigsCat.get(bc.getCategory()).getSupportedLibs()
+        builderConfigs.forEach(bc -> modelConfigsCat.get(bc.getCategory()).getModelsName()
                 .forEach(lib -> builderConstructorByName.put(lib, bc.getBuilderConstructor())));
+        eventBuilderConfigs = modelConfigLoaders.stream().flatMap(ModelConfigLoader::loadEventBuilderConfigs).toList();
+        eventBuilderConstructorByName = eventBuilderConfigs.stream().collect(Collectors.toMap(e -> e.getEventModelInfo().name(), EventBuilderConfig::getBuilderConstructor));
     }
 
     public static ModelConfigsHandler getInstance() {

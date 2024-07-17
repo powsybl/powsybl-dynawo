@@ -10,6 +10,7 @@ package com.powsybl.dynawaltz.models.events;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawaltz.builders.BuilderEquipment;
 import com.powsybl.dynawaltz.builders.BuilderReports;
+import com.powsybl.dynawaltz.builders.EventModelInfo;
 import com.powsybl.iidm.network.*;
 
 import java.util.EnumSet;
@@ -19,7 +20,7 @@ import java.util.EnumSet;
  */
 public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identifiable<?>, EventDisconnectionBuilder> {
 
-    public static final String TAG = "Disconnect";
+    private static final EventModelInfo MODEL_INFO = new EventModelInfo("Disconnect", "Disconnect network equipment (injection, branch or hvdc)");
     private static final EnumSet<IdentifiableType> CONNECTABLE_INJECTIONS = EnumSet.of(IdentifiableType.GENERATOR, IdentifiableType.LOAD, IdentifiableType.STATIC_VAR_COMPENSATOR, IdentifiableType.SHUNT_COMPENSATOR);
     private static final EnumSet<IdentifiableType> CONNECTABLE_BRANCHES = EnumSet.of(IdentifiableType.LINE, IdentifiableType.TWO_WINDINGS_TRANSFORMER);
 
@@ -39,6 +40,10 @@ public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identif
 
     public static EventDisconnectionBuilder of(Network network, ReportNode reportNode) {
         return new EventDisconnectionBuilder(network, reportNode);
+    }
+
+    public static EventModelInfo getEventModelInfo() {
+        return MODEL_INFO;
     }
 
     EventDisconnectionBuilder(Network network, ReportNode reportNode) {
@@ -66,8 +71,8 @@ public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identif
     }
 
     @Override
-    protected String getTag() {
-        return TAG;
+    protected String getModelName() {
+        return MODEL_INFO.name();
     }
 
     @Override

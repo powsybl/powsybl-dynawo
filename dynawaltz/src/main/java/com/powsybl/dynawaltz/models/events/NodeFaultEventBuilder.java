@@ -10,6 +10,7 @@ package com.powsybl.dynawaltz.models.events;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawaltz.builders.BuilderEquipment;
 import com.powsybl.dynawaltz.builders.BuilderReports;
+import com.powsybl.dynawaltz.builders.EventModelInfo;
 import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Network;
@@ -19,7 +20,7 @@ import com.powsybl.iidm.network.Network;
  */
 public class NodeFaultEventBuilder extends AbstractEventModelBuilder<Bus, NodeFaultEventBuilder> {
 
-    public static final String TAG = "NodeFault";
+    private static final EventModelInfo MODEL_INFO = new EventModelInfo("NodeFault", "Node fault with configurable resistance, reactance and duration");
 
     protected double faultTime;
     protected double rPu;
@@ -31,6 +32,10 @@ public class NodeFaultEventBuilder extends AbstractEventModelBuilder<Bus, NodeFa
 
     public static NodeFaultEventBuilder of(Network network, ReportNode reportNode) {
         return new NodeFaultEventBuilder(network, reportNode);
+    }
+
+    public static EventModelInfo getEventModelInfo() {
+        return MODEL_INFO;
     }
 
     NodeFaultEventBuilder(Network network, ReportNode reportNode) {
@@ -57,8 +62,8 @@ public class NodeFaultEventBuilder extends AbstractEventModelBuilder<Bus, NodeFa
     }
 
     @Override
-    protected String getTag() {
-        return TAG;
+    protected String getModelName() {
+        return MODEL_INFO.name();
     }
 
     @Override

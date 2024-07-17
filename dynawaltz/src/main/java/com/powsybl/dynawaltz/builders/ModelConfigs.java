@@ -10,9 +10,7 @@ package com.powsybl.dynawaltz.builders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -39,12 +37,16 @@ public class ModelConfigs {
         return defaultModelConfig;
     }
 
-    public ModelConfig getModelConfig(String libName) {
-        return modelConfigMap.get(libName);
+    public ModelConfig getModelConfig(String modelName) {
+        return modelConfigMap.get(modelName);
     }
 
-    public Set<String> getSupportedLibs() {
-        return modelConfigMap.keySet();
+    public Collection<ModelInfo> getModelInfos() {
+        return Collections.unmodifiableCollection(modelConfigMap.values());
+    }
+
+    Set<String> getModelsName() {
+        return Collections.unmodifiableSet(modelConfigMap.keySet());
     }
 
     void addModelConfigs(ModelConfigs modelConfigsToMerge) {

@@ -39,6 +39,7 @@ import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import com.powsybl.iidm.network.test.FourSubstationsNodeBreakerFactory;
 import com.powsybl.iidm.network.test.HvdcTestNetwork;
 import com.powsybl.iidm.network.test.SvcTestCaseFactory;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -55,6 +56,13 @@ import static org.junit.jupiter.api.Assertions.*;
 class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
 
     private static final List<DynamicModelGroovyExtension> EXTENSIONS = GroovyExtension.find(DynamicModelGroovyExtension.class, DynaWaltzProvider.NAME);
+
+    @Test
+    void testLibsInfo() {
+        for (DynamicModelGroovyExtension extension : EXTENSIONS) {
+            assertNotNull(extension.getModelNames());
+        }
+    }
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("provideEquipmentModelData")

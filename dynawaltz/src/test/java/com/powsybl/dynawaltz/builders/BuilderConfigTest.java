@@ -34,21 +34,21 @@ class BuilderConfigTest {
     @Test
     void testModelBuilders() {
         for (BuilderConfig builderConfig : MODEL_CONFIGS_HANDLER.getBuilderConfigs()) {
-            String lib = builderConfig.getLibs().iterator().next();
-            ModelBuilder<DynamicModel> tagBuilder = MODEL_CONFIGS_HANDLER.getModelBuilder(NETWORK, lib, ReportNode.NO_OP);
-            ModelBuilder<DynamicModel> configBuilder = builderConfig.getBuilderConstructor().createBuilder(NETWORK, lib, ReportNode.NO_OP);
-            assertNotNull(tagBuilder);
-            assertEquals(tagBuilder.getClass(), configBuilder.getClass());
+            String modelName = builderConfig.getModelInfos().iterator().next().name();
+            ModelBuilder<DynamicModel> handlerBuilder = MODEL_CONFIGS_HANDLER.getModelBuilder(NETWORK, modelName, ReportNode.NO_OP);
+            ModelBuilder<DynamicModel> configBuilder = builderConfig.getBuilderConstructor().createBuilder(NETWORK, modelName, ReportNode.NO_OP);
+            assertNotNull(handlerBuilder);
+            assertEquals(handlerBuilder.getClass(), configBuilder.getClass());
         }
     }
 
     @Test
     void testEventBuilders() {
         for (EventBuilderConfig eventBuilderConfig : MODEL_CONFIGS_HANDLER.getEventBuilderConfigs()) {
-            ModelBuilder<EventModel> tagBuilder = MODEL_CONFIGS_HANDLER.getEventModelBuilder(NETWORK, eventBuilderConfig.getTag(), ReportNode.NO_OP);
+            ModelBuilder<EventModel> handlerBuilder = MODEL_CONFIGS_HANDLER.getEventModelBuilder(NETWORK, eventBuilderConfig.getEventModelInfo().name(), ReportNode.NO_OP);
             ModelBuilder<EventModel> configBuilder = eventBuilderConfig.getBuilderConstructor().createBuilder(NETWORK, ReportNode.NO_OP);
-            assertNotNull(tagBuilder);
-            assertEquals(tagBuilder.getClass(), configBuilder.getClass());
+            assertNotNull(handlerBuilder);
+            assertEquals(handlerBuilder.getClass(), configBuilder.getClass());
         }
     }
 }

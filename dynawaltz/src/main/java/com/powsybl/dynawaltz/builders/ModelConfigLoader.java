@@ -40,4 +40,8 @@ public interface ModelConfigLoader {
     }
 
     Stream<BuilderConfig> loadBuilderConfigs();
+
+    default Stream<EventBuilderConfig> loadEventBuilderConfigs() {
+        return Stream.empty();
+    }
 }
