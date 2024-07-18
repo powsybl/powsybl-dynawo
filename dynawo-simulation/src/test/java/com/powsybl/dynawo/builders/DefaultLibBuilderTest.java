@@ -73,6 +73,7 @@ class DefaultLibBuilderTest {
         assertNotNull(SynchronousGeneratorBuilder.of(NETWORK));
         assertNotNull(WeccBuilder.of(NETWORK));
         assertNotNull(GridFormingConverterBuilder.of(NETWORK));
+        assertNotNull(SignalNGeneratorBuilder.of(NETWORK));
         // HVDC
         assertNotNull(HvdcPBuilder.of(NETWORK));
         assertNotNull(HvdcVscBuilder.of(NETWORK));
@@ -114,6 +115,7 @@ class DefaultLibBuilderTest {
         assertNull(SynchronousGeneratorBuilder.of(NETWORK, WRONG_LIB));
         assertNull(WeccBuilder.of(NETWORK, WRONG_LIB));
         assertNull(GridFormingConverterBuilder.of(NETWORK, WRONG_LIB));
+        assertNull(SignalNGeneratorBuilder.of(NETWORK, WRONG_LIB));
         // HVDC
         assertNull(HvdcPBuilder.of(NETWORK, WRONG_LIB));
         assertNull(HvdcVscBuilder.of(NETWORK, WRONG_LIB));

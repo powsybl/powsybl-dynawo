@@ -308,4 +308,34 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         assertEquals(modelName, event.modelName());
         assertEquals(message, event.message());
     }
+
+    @Test
+    void testIEEE14SignalN() {
+        Network network = Network.read(new ResourceDataSource("IEEE14", new ResourceSet("/ieee14", "IEEE14.iidm")));
+
+        GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
+                getResourceAsStream("/ieee14/signal_n/dynamicModels.groovy"),
+                GroovyExtension.find(DynamicModelGroovyExtension.class, DynawoSimulationProvider.NAME));
+        GroovyEventModelsSupplier eventModelsSupplier = new GroovyEventModelsSupplier(
+                getResourceAsStream("/ieee14/disconnectline/eventModels.groovy"),
+                GroovyExtension.find(EventModelGroovyExtension.class, DynawoSimulationProvider.NAME));
+
+        dynawoSimulationParameters.setModelsParameters(ParametersXml.load(getResourceAsStream("/ieee14/signal_n/IEEE14.par")))
+                .setNetworkParameters(ParametersXml.load(getResourceAsStream("/ieee14/signal_n/IEEE14.par"), "Network"))
+                .setSolverParameters(ParametersXml.load(getResourceAsStream("/ieee14/signal_n/IEEE14.par"), "SimplifiedSolver"))
+                .setLogLevelFilter(DynawoSimulationParameters.LogLevel.DEBUG)
+                .setSolverType(DynawoSimulationParameters.SolverType.SIM)
+                .setTimelineExportMode(DynawoSimulationParameters.ExportMode.XML);
+
+        DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, CurvesSupplier.empty(),
+                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, NO_OP)
+                .join();
+
+        assertEquals(DynamicSimulationResult.Status.SUCCESS, result.getStatus());
+        assertTrue(result.getStatusText().isEmpty());
+        assertEquals(0, result.getCurves().size());
+        List<TimelineEvent> timeLine = result.getTimeLine();
+        assertEquals(1, timeLine.size());
+        checkFirstTimeLineEvent(timeLine.get(0), 10, "_BUS____1-BUS____5-1_AC", "LINE : opening on side 2");
+    }
 }

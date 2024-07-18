@@ -18,10 +18,7 @@ import com.powsybl.dynawo.models.Model;
 import com.powsybl.dynawo.models.buses.AbstractBus;
 import com.powsybl.dynawo.models.defaultmodels.DefaultModelsHandler;
 import com.powsybl.dynawo.models.events.ContextDependentEvent;
-import com.powsybl.dynawo.models.frequencysynchronizers.FrequencySynchronizedModel;
-import com.powsybl.dynawo.models.frequencysynchronizers.FrequencySynchronizerModel;
-import com.powsybl.dynawo.models.frequencysynchronizers.OmegaRef;
-import com.powsybl.dynawo.models.frequencysynchronizers.SetPoint;
+import com.powsybl.dynawo.models.frequencysynchronizers.*;
 import com.powsybl.dynawo.models.macroconnections.MacroConnect;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.macroconnections.MacroConnector;
@@ -102,7 +99,7 @@ public class DynawoSimulationContext {
                 .filter(DynawoCurve.class::isInstance)
                 .map(DynawoCurve.class::cast)
                 .toList();
-        this.frequencySynchronizer = setupFrequencySynchronizer(dynamicModels.stream().anyMatch(AbstractBus.class::isInstance) ? SetPoint::new : OmegaRef::new);
+        this.frequencySynchronizer = setupFrequencySynchronizer();
         this.macroConnectionsAdder = new MacroConnectionsAdder(this::getDynamicModel,
                 this::getPureDynamicModel,
                 macroConnectList::add,
@@ -135,11 +132,25 @@ public class DynawoSimulationContext {
         return outputBbm;
     }
 
-    private FrequencySynchronizerModel setupFrequencySynchronizer(Function<List<FrequencySynchronizedModel>, FrequencySynchronizerModel> fsConstructor) {
-        return fsConstructor.apply(dynamicModels.stream()
-                .filter(FrequencySynchronizedModel.class::isInstance)
-                .map(FrequencySynchronizedModel.class::cast)
-                .toList());
+    private FrequencySynchronizerModel setupFrequencySynchronizer() {
+        List<SignalNModel> signalNModels = filterDynamicModels(SignalNModel.class);
+        List<FrequencySynchronizedModel> frequencySynchronizedModels = filterDynamicModels(FrequencySynchronizedModel.class);
+        boolean hasSpecificBuses = dynamicModels.stream().anyMatch(AbstractBus.class::isInstance);
+        boolean hasSignalNModel = !signalNModels.isEmpty();
+        if (!frequencySynchronizedModels.isEmpty() && hasSignalNModel) {
+            throw new PowsyblException("Signal N and frequency synchronized generators cannot be used with one another");
+        }
+        if (hasSignalNModel) {
+            return new SignalN(signalNModels);
+        }
+        return hasSpecificBuses ? new SetPoint(frequencySynchronizedModels) : new OmegaRef(frequencySynchronizedModels);
+    }
+
+    private <T extends Model> List<T> filterDynamicModels(Class<T> modelClass) {
+        return dynamicModels.stream()
+                .filter(modelClass::isInstance)
+                .map(modelClass::cast)
+                .toList();
     }
 
     public Network getNetwork() {

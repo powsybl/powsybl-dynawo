@@ -208,6 +208,38 @@
       }
     ]
   },
+  "SIGNAL_N_GENERATOR": {
+    "defaultLib": "GeneratorPVSignalN",
+    "libs": [
+      {
+        "lib": "GeneratorPVSignalN"
+      },
+      {
+        "lib": "GeneratorPQPropSignalN"
+      },
+      {
+        "lib": "GeneratorPQPropDiagramPQSignalN"
+      },
+      {
+        "lib": "GeneratorPVPropSignalN"
+      },
+      {
+        "lib": "GeneratorPVDiagramPQSignalN"
+      },
+      {
+        "lib": "GeneratorPVRemoteDiagramPQSignalN"
+      },
+      {
+        "lib": "GeneratorPVTfoDiagramPQSignalN"
+      },
+      {
+        "lib": "GeneratorPVTfoSignalN"
+      },
+      {
+        "lib": "GeneratorPVRemoteSignalN"
+      }
+    ]
+  },
   "HVDC_P": {
     "defaultLib": "HvdcPV",
     "libs": [
