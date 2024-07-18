@@ -8,10 +8,10 @@
 package com.powsybl.dynawo.security;
 
 import com.powsybl.contingency.Contingency;
-import com.powsybl.dynawaltz.models.BlackBoxModel;
-import com.powsybl.dynawaltz.models.macroconnections.MacroConnect;
-import com.powsybl.dynawaltz.models.macroconnections.MacroConnector;
-import com.powsybl.dynawaltz.parameters.ParametersSet;
+import com.powsybl.dynawo.models.BlackBoxModel;
+import com.powsybl.dynawo.models.macroconnections.MacroConnect;
+import com.powsybl.dynawo.models.macroconnections.MacroConnector;
+import com.powsybl.dynawo.parameters.ParametersSet;
 
 import java.util.List;
 import java.util.Map;

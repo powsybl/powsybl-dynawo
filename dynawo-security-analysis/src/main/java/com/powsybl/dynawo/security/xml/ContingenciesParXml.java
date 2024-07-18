@@ -7,14 +7,14 @@
  */
 package com.powsybl.dynawo.security.xml;
 
-import com.powsybl.dynawaltz.xml.ParametersXml;
+import com.powsybl.dynawo.xml.ParametersXml;
 import com.powsybl.dynawo.security.ContingencyEventModels;
 import com.powsybl.dynawo.security.SecurityAnalysisContext;
 
 import java.nio.file.Path;
 import java.util.Objects;
 
-import static com.powsybl.dynawaltz.xml.DynaWaltzXmlConstants.DYN_PREFIX;
+import static com.powsybl.dynawo.xml.DynawoSimulationXmlConstants.DYN_PREFIX;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>

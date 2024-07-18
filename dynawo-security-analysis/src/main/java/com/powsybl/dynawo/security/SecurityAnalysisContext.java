@@ -10,14 +10,14 @@ package com.powsybl.dynawo.security;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.contingency.Contingency;
 import com.powsybl.contingency.ContingencyElement;
-import com.powsybl.dynawaltz.DynaWaltzContext;
-import com.powsybl.dynawaltz.DynaWaltzParameters;
-import com.powsybl.dynawaltz.models.BlackBoxModel;
-import com.powsybl.dynawaltz.models.events.ContextDependentEvent;
-import com.powsybl.dynawaltz.models.events.EventDisconnectionBuilder;
-import com.powsybl.dynawaltz.models.macroconnections.MacroConnect;
-import com.powsybl.dynawaltz.models.macroconnections.MacroConnector;
-import com.powsybl.dynawaltz.parameters.ParametersSet;
+import com.powsybl.dynawo.DynawoSimulationContext;
+import com.powsybl.dynawo.DynawoSimulationParameters;
+import com.powsybl.dynawo.models.BlackBoxModel;
+import com.powsybl.dynawo.models.events.ContextDependentEvent;
+import com.powsybl.dynawo.models.events.EventDisconnectionBuilder;
+import com.powsybl.dynawo.models.macroconnections.MacroConnect;
+import com.powsybl.dynawo.models.macroconnections.MacroConnector;
+import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.security.dynamic.DynamicSecurityAnalysisParameters;
 
@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class SecurityAnalysisContext extends DynaWaltzContext {
+public class SecurityAnalysisContext extends DynawoSimulationContext {
 
     private final List<Contingency> contingencies;
     private final List<ContingencyEventModels> contingencyEventModels;
@@ -35,10 +35,10 @@ public class SecurityAnalysisContext extends DynaWaltzContext {
     public SecurityAnalysisContext(Network network, String workingVariantId,
                                    List<BlackBoxModel> dynamicModels,
                                    DynamicSecurityAnalysisParameters parameters,
-                                   DynaWaltzParameters dynaWaltzParameters,
+                                   DynawoSimulationParameters dynawoSimulationParameters,
                                    List<Contingency> contingencies) {
         super(network, workingVariantId, dynamicModels, List.of(), Collections.emptyList(),
-                parameters.getDynamicSimulationParameters(), dynaWaltzParameters);
+                parameters.getDynamicSimulationParameters(), dynawoSimulationParameters);
         double contingenciesStartTime = parameters.getDynamicContingenciesParameters().getContingenciesStartTime();
         this.contingencies = contingencies;
         this.contingencyEventModels = contingencies.stream()

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <multipleJobs xmlns="http://www.rte-france.com/dynawo">
-    <scenarios jobsFile="powsybl_dynawaltz.jobs">
+    <scenarios jobsFile="powsybl_dynawo.jobs">
         <scenario id="LOAD" dydFile="LOAD.dyd"/>
         <scenario id="DisconnectLineGenerator" dydFile="DisconnectLineGenerator.dyd"/>
         <scenario id="Base"/>

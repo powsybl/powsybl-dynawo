@@ -17,10 +17,10 @@ import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension;
 import com.powsybl.dynamicsimulation.groovy.GroovyDynamicModelsSupplier;
 import com.powsybl.dynamicsimulation.groovy.GroovyExtension;
-import com.powsybl.dynawaltz.DynaWaltzParameters;
-import com.powsybl.dynawaltz.DynaWaltzProvider;
-import com.powsybl.dynawaltz.parameters.ParametersSet;
-import com.powsybl.dynawaltz.xml.ParametersXml;
+import com.powsybl.dynawo.DynawoSimulationParameters;
+import com.powsybl.dynawo.DynawoSimulationProvider;
+import com.powsybl.dynawo.parameters.ParametersSet;
+import com.powsybl.dynawo.xml.ParametersXml;
 
 import com.powsybl.dynawo.security.DynawoAlgorithmsConfig;
 import com.powsybl.dynawo.security.DynawoSecurityAnalysisProvider;
@@ -53,7 +53,7 @@ class DynawoSecurityAnalysisTest extends AbstractDynawoTest {
 
     private DynamicSecurityAnalysisParameters parameters;
 
-    private DynaWaltzParameters dynaWaltzParameters;
+    private DynawoSimulationParameters dynawoSimulationParameters;
 
     @Override
     @BeforeEach
@@ -63,8 +63,8 @@ class DynawoSecurityAnalysisTest extends AbstractDynawoTest {
         parameters = new DynamicSecurityAnalysisParameters()
                 .setDynamicSimulationParameters(new DynamicSimulationParameters(0, 100))
                 .setDynamicContingenciesParameters(new DynamicSecurityAnalysisParameters.ContingenciesParameters(50));
-        dynaWaltzParameters = new DynaWaltzParameters();
-        parameters.getDynamicSimulationParameters().addExtension(DynaWaltzParameters.class, dynaWaltzParameters);
+        dynawoSimulationParameters = new DynawoSimulationParameters();
+        parameters.getDynamicSimulationParameters().addExtension(DynawoSimulationParameters.class, dynawoSimulationParameters);
     }
 
     @Test
@@ -73,15 +73,15 @@ class DynawoSecurityAnalysisTest extends AbstractDynawoTest {
 
         GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
                 getResourceAsStream("/ieee14/disconnectline/dynamicModels.groovy"),
-                GroovyExtension.find(DynamicModelGroovyExtension.class, DynaWaltzProvider.NAME));
+                GroovyExtension.find(DynamicModelGroovyExtension.class, DynawoSimulationProvider.NAME));
 
         List<ParametersSet> modelsParameters = ParametersXml.load(getResourceAsStream("/ieee14/disconnectline/models.par"));
         ParametersSet networkParameters = ParametersXml.load(getResourceAsStream("/ieee14/disconnectline/network.par"), "8");
         ParametersSet solverParameters = ParametersXml.load(getResourceAsStream("/ieee14/disconnectline/solvers.par"), "2");
-        dynaWaltzParameters.setModelsParameters(modelsParameters)
+        dynawoSimulationParameters.setModelsParameters(modelsParameters)
                 .setNetworkParameters(networkParameters)
                 .setSolverParameters(solverParameters)
-                .setSolverType(DynaWaltzParameters.SolverType.IDA);
+                .setSolverType(DynawoSimulationParameters.SolverType.IDA);
 
         ReportNode reportNode = ReportNode.newRootReportNode()
                 .withMessageTemplate("root", "Root message")

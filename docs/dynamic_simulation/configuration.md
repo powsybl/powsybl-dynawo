@@ -27,7 +27,7 @@ dynawo:
 ```
 
 ## Default parameters
-The `dynawo-default-parameters` module defines the default values for all specific parameters of a dynamic simulation run with Dynawo.
+The `dynawo-simulation-default-parameters` module defines the default values for all specific parameters of a dynamic simulation run with Dynawo.
 
 ### Required parameters
 
@@ -55,7 +55,7 @@ The default value is `1`.
 
 **solver.type**  
 `solver.type` defines the solver used in the simulation.  
-The available `com.powsybl.dynawaltz.DynaWaltzParameters.SolverType` values are:
+The available `com.powsybl.dynawo.DynawoSimulationParameters.SolverType` values are:
 - `SIM`: the simplified solver (fixed time step solver)
 - `IDA`: the IDA solver (variable time step solver)
 
@@ -87,7 +87,7 @@ The default value is `FALSE`.
 
 **timeline.exportMode**  
 `timeline.exportMode` defines the file extension of the timeline export.  
-The available `com.powsybl.dynawaltz.DynaWaltzParameters.ExportMode` values are:
+The available `com.powsybl.dynawo.DynawoSimulationParameters.ExportMode` values are:
 - `CSV`
 - `TXT`: same format as `CSV` but with `|` separator
 - `XML`
@@ -101,7 +101,7 @@ The default value is `1e-6`.
 **log.levelFilter**  
 `log.levelFilter` defines the log level for Dynawo log.  
 The default value is `INFO`.
-The available `com.powsybl.dynawaltz.DynaWaltzParameters.LogLevel` values are:
+The available `com.powsybl.dynawo.DynawoSimulationParameters.LogLevel` values are:
 - `DEBUG`
 - `INFO`
 - `WARN`
@@ -110,7 +110,7 @@ The available `com.powsybl.dynawaltz.DynaWaltzParameters.LogLevel` values are:
 **log.specificLogs**  
 `log.specificLogs` defines as a list the specifics logs to return besides the regular Dynawo log.  
 The default value is an empty list.
-The available `com.powsybl.dynawaltz.DynaWaltzParameters.SpecificLog` values are:
+The available `com.powsybl.dynawo.DynawoSimulationParameters.SpecificLog` values are:
 - `NETWORK`
 - `MODELER`
 - `PARAMETERS`
@@ -121,7 +121,7 @@ The available `com.powsybl.dynawaltz.DynaWaltzParameters.SpecificLog` values are
 
 **YAML configuration:**
 ```yaml
-dynawo-default-parameters:
+dynawo-simulation-default-parameters:
   parametersFile: /home/user/parametersFile
   network.parametersFile: /home/user/networkParametersFile
   network.parametersId: 1
@@ -144,7 +144,7 @@ dynawo-default-parameters:
 
 **XML configuration:**
 ```xml
-<dynawo-default-parameters>
+<dynawo-simulation-default-parameters>
   <parametersFile>/home/user/parametersFile</parametersFile>
   <network.parametersFile>/home/user/networkParametersFile</network.parametersFile>
   <network.parametersId>NETWORK</network.parametersId>
@@ -161,5 +161,5 @@ dynawo-default-parameters:
   <precision>10e-6</precision>
   <log.levelFilter>INFO</log.levelFilter>
   <log.specificLogs>NETWORK, PARAMETERS</log.specificLogs>
-</dynawo-default-parameters>
+</dynawo-simulation-default-parameters>
 ```

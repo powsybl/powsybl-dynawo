@@ -7,7 +7,7 @@
 [![Javadocs](https://www.javadoc.io/badge/com.powsybl/powsybl-dynawo.svg?color=blue)](https://www.javadoc.io/doc/com.powsybl/powsybl-dynawo)
 [![Slack](https://img.shields.io/badge/slack-powsybl-blueviolet.svg?logo=slack)](https://join.slack.com/t/powsybl/shared_invite/zt-rzvbuzjk-nxi0boim1RKPS5PjieI0rA)
 
-[Dynawo](https://dynawo.github.io) is an hybrid C++/Modelica open source suite of simulation tools for power systems. This integration module allows to use [DynaFlow](https://dynawo.github.io/about/dynaflow) for [power flow simulations](https://www.powsybl.org/pages/documentation/simulation/powerflow) and [DynaWaltz](https://dynawo.github.io/about/dynawaltz) for [time domain simulations](https://www.powsybl.org/pages/documentation/simulation/timedomain).
+[Dynawo](https://dynawo.github.io) is an hybrid C++/Modelica open source suite of simulation tools for power systems. This integration module allows to use [DynaFlow](https://dynawo.github.io/about/dynaflow) for [power flow simulations](https://www.powsybl.org/pages/documentation/simulation/powerflow) and [Dynawo](https://dynawo.github.io) for [time domain simulations](https://www.powsybl.org/pages/documentation/simulation/timedomain).
 
 ## DynaFlow
 
@@ -21,9 +21,9 @@ LoadFlow.find("DynaFlow").run(network, parameters);
 
 To learn more about the usage of DynaFlow, read the [dedicated page](https://www.powsybl.org/pages/documentation/simulation/powerflow/dynaflow.html) on our website.
 
-## DynaWaltz
+## Dynawo
 
-To use DynaWaltz as your time domain engine, add the `com.powsybl:powsybl-dynawaltz` and  `com.powsybl:powsybl-dynawaltz-dsl` modules to your dependencies.
+To use Dynawo as your time domain engine, add the `com.powsybl:powsybl-dynawo` and  `com.powsybl:powsybl-dynawo-dsl` modules to your dependencies.
 To run a dynamic simulation, you need:
 - a case file
 - a `DynamicModelsSupplier` to associate dynamic models to the equipment of the network
@@ -31,7 +31,7 @@ To run a dynamic simulation, you need:
 - a `CurvesSupplier` to follow the evolution of dynamic variables during the simulation (optional)
 - a set of parameters to configure the simulation (optional)
 
-Thanks to `powsybl-dynawaltz-dsl`, the inputs can be easily configured using Groovy scripts.
+Thanks to `powsybl-dynawo-dsl`, the inputs can be easily configured using Groovy scripts.
 The simulation parameters can be configured either in the `config.yml` file or using a Json file.
 
 ```java
@@ -40,17 +40,17 @@ Network network = Network.read("/path/to/the/casefile.xiidm");
 // Load the dynamic models mapping
 GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
     Paths.get("/path/to/dynamicModelsMapping.groovy"),
-    GroovyExtension.find(DynamicModelGroovyExtension.class, DynaWaltzProvider.NAME));
+    GroovyExtension.find(DynamicModelGroovyExtension.class, DynawoSimulationProvider.NAME));
 
 // Load the events
 GroovyEventModelsSupplier eventModelsSupplier = new GroovyEventModelsSupplier(
     Paths.get("/path/to/event.groovy"),
-    GroovyExtension.find(EventModelGroovyExtension.class, DynaWaltzProvider.NAME));
+    GroovyExtension.find(EventModelGroovyExtension.class, DynawoSimulationProvider.NAME));
 
 // Configure the curves
 GroovyCurvesSupplier curvesSupplier = new GroovyCurvesSupplier(
     Paths.get("/path/to/curves.groovy"),
-    GroovyExtension.find(CurveGroovyExtension.class, DynaWaltzProvider.NAME));
+    GroovyExtension.find(CurveGroovyExtension.class, DynawoSimulationProvider.NAME));
 
 // Load the parameters
 DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
@@ -62,7 +62,7 @@ System.out.println("Timeline:");
 result.getTimeLine().forEach(tl -> System.out.printf("[%.8f] %s (on %s)%n", tl.time(), tl.message(), tl.modelName()));
 ```
 
-To learn more about the usage of DynaWaltz, read the [dedicated page](https://www.powsybl.org/pages/documentation/simulation/timedomain/dynawo) on our website.
+To learn more about the usage of Dynawo, read the [dedicated page](https://www.powsybl.org/pages/documentation/simulation/timedomain/dynawo) on our website.
 
 ### Examples
 
@@ -171,7 +171,7 @@ For the above example, the corresponding parameter file could be:
 ```
  
 
-Other examples can be found in the [resources](https://github.com/powsybl/powsybl-dynawo/tree/main/dynawaltz-dsl/src/test/resources) of this project.
+Other examples can be found in the [resources](https://github.com/powsybl/powsybl-dynawo/tree/main/dynawo-dsl/src/test/resources) of this project.
 
 
 ## Contribute to documentation
