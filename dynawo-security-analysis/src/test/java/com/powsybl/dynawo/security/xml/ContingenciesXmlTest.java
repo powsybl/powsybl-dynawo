@@ -9,6 +9,8 @@ package com.powsybl.dynawo.security.xml;
 
 import com.powsybl.contingency.Contingency;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
+import com.powsybl.dynawo.algorithms.xml.ContingenciesDydXml;
+import com.powsybl.dynawo.algorithms.xml.ContingenciesParXml;
 import com.powsybl.dynawo.xml.DynawoTestUtil;
 import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.security.SecurityAnalysisContext;
@@ -27,6 +29,7 @@ class ContingenciesXmlTest extends DynawoTestUtil {
 
     @Test
     void writeDyds() throws SAXException, IOException, XMLStreamException {
+        //TODO use ContingenciesEvent supplier and move test
         DynamicSecurityAnalysisParameters parameters = DynamicSecurityAnalysisParameters.load();
         parameters.setDynamicSimulationParameters(new DynamicSimulationParameters(0, 20));
         parameters.setDynamicContingenciesParameters(new DynamicSecurityAnalysisParameters.ContingenciesParameters(10));
@@ -39,8 +42,8 @@ class ContingenciesXmlTest extends DynawoTestUtil {
                         .build());
         SecurityAnalysisContext context = new SecurityAnalysisContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, parameters, dynawoSimulationParameters, contingencies);
 
-        ContingenciesDydXml.write(tmpDir, context);
-        ContingenciesParXml.write(tmpDir, context);
+        ContingenciesDydXml.write(tmpDir, context.getContingencyEventModels());
+        ContingenciesParXml.write(tmpDir, context.getContingencyEventModels());
         validate("dyd.xsd", "LOAD.xml", tmpDir.resolve("LOAD.dyd"));
         validate("dyd.xsd", "DisconnectLineGenerator.xml", tmpDir.resolve("DisconnectLineGenerator.dyd"));
         validate("parameters.xsd", "LOAD_par.xml", tmpDir.resolve("LOAD.par"));

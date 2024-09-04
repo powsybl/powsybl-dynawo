@@ -9,6 +9,7 @@ package com.powsybl.dynawo.margincalculation;
 
 import com.powsybl.contingency.Contingency;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
+import com.powsybl.dynawo.algorithms.DynawoAlgorithmsContext;
 import com.powsybl.dynawo.xml.DynawoSimulationConstants;
 import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.DynawoSimulationParameters;
@@ -25,8 +26,9 @@ import java.util.*;
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class MarginCalculationContext extends DynawoSimulationContext {
+public class MarginCalculationContext extends DynawoSimulationContext implements DynawoAlgorithmsContext {
 
+    private final MarginCalculationParameters marginCalculationParameters;
     private final List<Contingency> contingencies;
     private final List<ContingencyEventModels> contingencyEventModels;
     private final LoadVariationAreaAutomationSystem loadVariationArea;
@@ -42,6 +44,7 @@ public class MarginCalculationContext extends DynawoSimulationContext {
         super(network, workingVariantId, dynamicModels, List.of(), Collections.emptyList(),
                 //TODO fix
                 new DynamicSimulationParameters(parameters.getStartTime(), parameters.getStopTime()), dynawoSimulationParameters);
+        this.marginCalculationParameters = parameters;
         double contingenciesStartTime = parameters.getContingenciesStartTime();
 
         this.contingencies = contingencies;
@@ -58,10 +61,15 @@ public class MarginCalculationContext extends DynawoSimulationContext {
 
     }
 
+    public MarginCalculationParameters getMarginCalculationParameters() {
+        return marginCalculationParameters;
+    }
+
     public List<Contingency> getContingencies() {
         return contingencies;
     }
 
+    @Override
     public List<ContingencyEventModels> getContingencyEventModels() {
         return contingencyEventModels;
     }

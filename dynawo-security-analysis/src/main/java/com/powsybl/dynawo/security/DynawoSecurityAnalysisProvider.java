@@ -10,16 +10,14 @@ package com.powsybl.dynawo.security;
 import com.google.auto.service.AutoService;
 import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.report.ReportNode;
-import com.powsybl.computation.Command;
 import com.powsybl.computation.ExecutionEnvironment;
-import com.powsybl.computation.SimpleCommandBuilder;
 import com.powsybl.contingency.ContingenciesProvider;
 import com.powsybl.contingency.Contingency;
 import com.powsybl.dynamicsimulation.DynamicModelsSupplier;
 import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.DynawoSimulationProvider;
+import com.powsybl.dynawo.algorithms.DynawoAlgorithmsConfig;
 import com.powsybl.dynawo.models.utils.BlackBoxSupplierUtils;
-import com.powsybl.dynawo.xml.DynawoSimulationConstants;
 import com.powsybl.dynawo.commons.DynawoUtil;
 import com.powsybl.dynawo.commons.PowsyblDynawoVersion;
 import com.powsybl.iidm.network.Network;
@@ -30,13 +28,14 @@ import com.powsybl.security.dynamic.DynamicSecurityAnalysisRunParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 import static com.powsybl.dynawo.DynawoSimulationConfig.DYNAWO_LAUNCHER_PROGRAM_NAME;
+import static com.powsybl.dynawo.algorithms.DynawoAlgorithmsCommandUtil.getCommand;
+import static com.powsybl.dynawo.algorithms.DynawoAlgorithmsCommandUtil.getVersionCommand;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
@@ -88,7 +87,8 @@ public class DynawoSecurityAnalysisProvider implements DynamicSecurityAnalysisPr
                 DynawoSimulationParameters.load(parameters.getDynamicSimulationParameters()),
                 contingencies);
 
-        return runParameters.getComputationManager().execute(execEnv, new DynawoSecurityAnalysisHandler(context, getCommand(config), runParameters.getFilter(), runParameters.getInterceptors(), dsaReportNode));
+        return runParameters.getComputationManager().execute(execEnv, new DynawoSecurityAnalysisHandler(context, getCommand(config, "SA", "dynawo_dynamic_sa"),
+                runParameters.getFilter(), runParameters.getInterceptors(), dsaReportNode));
     }
 
     @Override
@@ -99,26 +99,5 @@ public class DynawoSecurityAnalysisProvider implements DynamicSecurityAnalysisPr
     @Override
     public String getVersion() {
         return new PowsyblDynawoVersion().getMavenProjectVersion();
-    }
-
-    public static Command getCommand(DynawoAlgorithmsConfig config) {
-        List<String> args = Arrays.asList(
-                "SA",
-                "--input", DynawoSimulationConstants.MULTIPLE_JOBS_FILENAME,
-                "--output", DynawoSimulationConstants.AGGREGATED_RESULTS);
-        return new SimpleCommandBuilder()
-                .id("dynawo_dynamic_sa")
-                .program(config.getProgram())
-                .args(args)
-                .build();
-    }
-
-    public static Command getVersionCommand(DynawoAlgorithmsConfig config) {
-        List<String> args = Collections.singletonList("--version");
-        return new SimpleCommandBuilder()
-                .id("dynawo_version")
-                .program(config.getProgram())
-                .args(args)
-                .build();
     }
 }

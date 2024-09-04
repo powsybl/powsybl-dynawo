@@ -5,13 +5,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawo.security.xml;
+package com.powsybl.dynawo.algorithms.xml;
 
 import com.powsybl.dynawo.xml.ParametersXml;
 import com.powsybl.dynawo.security.ContingencyEventModels;
-import com.powsybl.dynawo.security.SecurityAnalysisContext;
 
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Objects;
 
 import static com.powsybl.dynawo.xml.DynawoSimulationXmlConstants.DYN_PREFIX;
@@ -24,9 +24,9 @@ public final class ContingenciesParXml {
     private ContingenciesParXml() {
     }
 
-    public static void write(Path workingDir, SecurityAnalysisContext context) {
+    public static void write(Path workingDir, List<ContingencyEventModels> eventModels) {
         Objects.requireNonNull(workingDir);
-        for (ContingencyEventModels model : context.getContingencyEventModels()) {
+        for (ContingencyEventModels model : eventModels) {
             ParametersXml.write(model.eventParameters(), createParFileName(model), workingDir, DYN_PREFIX);
         }
     }

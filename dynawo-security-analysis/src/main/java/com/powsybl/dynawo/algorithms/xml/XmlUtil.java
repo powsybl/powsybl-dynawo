@@ -5,11 +5,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawo.security.xml;
+package com.powsybl.dynawo.algorithms.xml;
 
 import com.powsybl.dynawo.xml.XmlStreamWriterFactory;
 import com.powsybl.dynawo.security.ContingencyEventModels;
-import com.powsybl.dynawo.security.SecurityAnalysisContext;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -19,6 +18,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 import static com.powsybl.dynawo.xml.DynawoSimulationXmlConstants.DYN_PREFIX;
 import static com.powsybl.dynawo.xml.DynawoSimulationXmlConstants.DYN_URI;
@@ -29,21 +29,15 @@ import static com.powsybl.dynawo.xml.DynawoSimulationXmlConstants.DYN_URI;
 public final class XmlUtil {
 
     @FunctionalInterface
-    public interface XmlDynawoContingenciesWriter {
-        void writeContingencies(XMLStreamWriter writer, SecurityAnalysisContext context) throws XMLStreamException;
-    }
-
-    @FunctionalInterface
     public interface XmlDynawoEventWriter {
-        void writeEvent(XMLStreamWriter writer, SecurityAnalysisContext context, ContingencyEventModels model) throws XMLStreamException;
+        void writeEvent(XMLStreamWriter writer, ContingencyEventModels model) throws XMLStreamException;
     }
 
     private XmlUtil() {
     }
 
-    public static void write(Path file, SecurityAnalysisContext context, String elementName, XmlDynawoEventWriter xmlDynawoEventWriter, ContingencyEventModels model) throws IOException, XMLStreamException {
+    public static void write(Path file, String elementName, XmlDynawoEventWriter xmlDynawoEventWriter, ContingencyEventModels model) throws IOException, XMLStreamException {
         Objects.requireNonNull(file);
-        Objects.requireNonNull(context);
         Objects.requireNonNull(elementName);
         Objects.requireNonNull(xmlDynawoEventWriter);
 
@@ -55,7 +49,7 @@ public final class XmlUtil {
                 xmlWriter.writeStartElement(DYN_URI, elementName);
                 xmlWriter.writeNamespace(DYN_PREFIX, DYN_URI);
 
-                xmlDynawoEventWriter.writeEvent(xmlWriter, context, model);
+                xmlDynawoEventWriter.writeEvent(xmlWriter, model);
 
                 xmlWriter.writeEndElement();
                 xmlWriter.writeEndDocument();
@@ -65,11 +59,10 @@ public final class XmlUtil {
         }
     }
 
-    public static void write(Path file, SecurityAnalysisContext context, String elementName, XmlDynawoContingenciesWriter xmlDynawoWriter) throws IOException, XMLStreamException {
+    public static void write(Path file, String elementName, Consumer<XMLStreamWriter> xmlStreamWriterConsumer) throws IOException, XMLStreamException {
         Objects.requireNonNull(file);
-        Objects.requireNonNull(context);
         Objects.requireNonNull(elementName);
-        Objects.requireNonNull(xmlDynawoWriter);
+        Objects.requireNonNull(xmlStreamWriterConsumer);
 
         try (Writer writer = Files.newBufferedWriter(file, StandardCharsets.UTF_8)) {
             XMLStreamWriter xmlWriter = XmlStreamWriterFactory.newInstance(writer);
@@ -78,7 +71,7 @@ public final class XmlUtil {
                 xmlWriter.writeStartElement(elementName);
                 xmlWriter.writeNamespace("", DYN_URI);
 
-                xmlDynawoWriter.writeContingencies(xmlWriter, context);
+                xmlStreamWriterConsumer.accept(xmlWriter);
 
                 xmlWriter.writeEndElement();
                 xmlWriter.writeEndDocument();

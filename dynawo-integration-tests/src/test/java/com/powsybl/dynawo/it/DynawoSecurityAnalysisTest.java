@@ -22,7 +22,7 @@ import com.powsybl.dynawo.DynawoSimulationProvider;
 import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.dynawo.xml.ParametersXml;
 
-import com.powsybl.dynawo.security.DynawoAlgorithmsConfig;
+import com.powsybl.dynawo.algorithms.DynawoAlgorithmsConfig;
 import com.powsybl.dynawo.security.DynawoSecurityAnalysisProvider;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.VariantManagerConstants;

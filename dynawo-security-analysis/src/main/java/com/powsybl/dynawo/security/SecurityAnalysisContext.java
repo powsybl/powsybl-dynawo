@@ -12,6 +12,7 @@ import com.powsybl.contingency.Contingency;
 import com.powsybl.contingency.ContingencyElement;
 import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.DynawoSimulationParameters;
+import com.powsybl.dynawo.algorithms.DynawoAlgorithmsContext;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.events.ContextDependentEvent;
 import com.powsybl.dynawo.models.events.EventDisconnectionBuilder;
@@ -24,7 +25,7 @@ import java.util.stream.Collectors;
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class SecurityAnalysisContext extends DynawoSimulationContext {
+public class SecurityAnalysisContext extends DynawoSimulationContext implements DynawoAlgorithmsContext {
 
     private final List<Contingency> contingencies;
     private final List<ContingencyEventModels> contingencyEventModels;
@@ -38,6 +39,7 @@ public class SecurityAnalysisContext extends DynawoSimulationContext {
                 parameters.getDynamicSimulationParameters(), dynawoSimulationParameters);
         double contingenciesStartTime = parameters.getDynamicContingenciesParameters().getContingenciesStartTime();
         this.contingencies = contingencies;
+        //TODO use ContingencyEventModelsHandler instead
         this.contingencyEventModels = contingencies.stream()
                 .map(c -> {
                     ContingencyEventModels cem = new ContingencyEventModels(c, c.getElements().stream()
@@ -73,6 +75,7 @@ public class SecurityAnalysisContext extends DynawoSimulationContext {
         return contingencies;
     }
 
+    @Override
     public List<ContingencyEventModels> getContingencyEventModels() {
         return contingencyEventModels;
     }

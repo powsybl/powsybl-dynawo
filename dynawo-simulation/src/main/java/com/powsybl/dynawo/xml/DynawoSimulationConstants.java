@@ -15,6 +15,9 @@ public final class DynawoSimulationConstants {
 
     public static final String JOBS_FILENAME = "powsybl_dynawo.jobs";
 
+    // TODO create and add to a DynawoAlgorithmsConstants ?
+    public static final String PHASE_2_JOBS_FILENAME = "phase_2.jobs";
+
     public static final String NETWORK_FILENAME = "powsybl_dynawo.xiidm";
 
     public static final String DYD_FILENAME = "powsybl_dynawo.dyd";
@@ -34,6 +37,8 @@ public final class DynawoSimulationConstants {
     public static final String OUTPUTS_FOLDER = "outputs";
 
     public static final String FINAL_STATE_FOLDER = "finalState";
+
+    public static final String BASE_SCENARIO_FOLDER = "base";
 
     private DynawoSimulationConstants() {
     }
