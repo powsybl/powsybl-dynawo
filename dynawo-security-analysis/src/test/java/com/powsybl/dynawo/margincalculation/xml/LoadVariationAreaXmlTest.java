@@ -44,15 +44,15 @@ class LoadVariationAreaXmlTest extends AbstractDynamicModelXmlTest {
         MarginCalculationParameters parameters = MarginCalculationParameters.builder().build();
         DynawoSimulationParameters dynawoSimulationParameters = DynawoSimulationParameters.load();
         List<LoadsVariation> loadsVariationList = List.of(
-                new LoadsVariation(List.of(network.getLoad("LOAD")),2, LoadsVariation.VariationMode.PROPORTIONAL),
-                new LoadsVariation(List.of(network.getLoad("LOAD2"), network.getLoad("LOAD3")),5, LoadsVariation.VariationMode.PROPORTIONAL));
+                new LoadsVariation(List.of(network.getLoad("LOAD")), 2, LoadsVariation.VariationMode.PROPORTIONAL),
+                new LoadsVariation(List.of(network.getLoad("LOAD2"), network.getLoad("LOAD3")), 5, LoadsVariation.VariationMode.PROPORTIONAL));
         context = new MarginCalculationContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels,
                 parameters, dynawoSimulationParameters, Collections.emptyList(), loadsVariationList);
     }
 
     @Test
     void writeDyd() throws SAXException, IOException {
-        DydXml.write(tmpDir, LOAD_VARIATION_AREA_FILENAME, ((MarginCalculationContext)context).getLoadVariationAreaDydData());
+        DydXml.write(tmpDir, LOAD_VARIATION_AREA_FILENAME, ((MarginCalculationContext) context).getLoadVariationAreaDydData());
         ParametersXml.write(tmpDir, context);
         validate("dyd.xsd", "load_variation_area_dyd.xml", tmpDir.resolve(LOAD_VARIATION_AREA_FILENAME));
         validate("parameters.xsd", "load_variation_area_par.xml", tmpDir.resolve(context.getSimulationParFile()));

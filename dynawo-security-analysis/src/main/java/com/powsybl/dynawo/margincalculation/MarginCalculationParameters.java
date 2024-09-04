@@ -18,7 +18,7 @@ import java.util.Optional;
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
 //TODO reuse core parameters ?
-public class MarginCalculationParameters {
+public final class MarginCalculationParameters {
 
     public static final double DEFAULT_START_TIME = 0;
     public static final double DEFAULT_STOP_TIME = 200;
@@ -54,7 +54,7 @@ public class MarginCalculationParameters {
         private double startTime = DEFAULT_START_TIME;
         private double stopTime = DEFAULT_STOP_TIME;
         private double marginCalculationStartTime = DEFAULT_MARGIN_CALCULATION_START_TIME;
-        private double loadIncreaseStartTime= DEFAULT_LOAD_INCREASE_START_TIME;
+        private double loadIncreaseStartTime = DEFAULT_LOAD_INCREASE_START_TIME;
         private double loadIncreaseStopTime = DEFAULT_LOAD_INCREASE_STOP_TIME;
         private double contingenciesStartTime = DEFAULT_CONTINGENCIES_START_TIME;
         private CalculationType calculationType = DEFAULT_CALCULATION_TYPE;
@@ -143,7 +143,7 @@ public class MarginCalculationParameters {
             if (loadIncreaseStopTime <= loadIncreaseStartTime || loadIncreaseStopTime >= marginCalculationStartTime) {
                 throw new IllegalStateException("Load increase stop time should be between load increase start time and margin calculation start time");
             }
-            return new MarginCalculationParameters(startTime, stopTime, marginCalculationStartTime,loadIncreaseStartTime,
+            return new MarginCalculationParameters(startTime, stopTime, marginCalculationStartTime, loadIncreaseStartTime,
                     loadIncreaseStopTime, contingenciesStartTime, calculationType, accuracy, loadModelsRule);
         }
     }
@@ -187,7 +187,7 @@ public class MarginCalculationParameters {
     }
 
     private final double startTime;
-    private final double stopTime ;
+    private final double stopTime;
     private final double marginCalculationStartTime;
     private final double loadIncreaseStartTime;
     private final double loadIncreaseStopTime;
