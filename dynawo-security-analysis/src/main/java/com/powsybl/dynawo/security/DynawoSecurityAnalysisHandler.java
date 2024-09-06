@@ -12,6 +12,8 @@ import com.powsybl.computation.Command;
 import com.powsybl.computation.ExecutionReport;
 import com.powsybl.dynaflow.ContingencyResultsUtils;
 import com.powsybl.dynawo.algorithms.AbstractDynawoAlgorithmsHandler;
+import com.powsybl.dynawo.algorithms.xml.ContingenciesDydXml;
+import com.powsybl.dynawo.algorithms.xml.ContingenciesParXml;
 import com.powsybl.dynawo.commons.DynawoConstants;
 import com.powsybl.dynawo.commons.NetworkResultsUpdater;
 import com.powsybl.dynawo.security.xml.MultipleJobsXml;
@@ -29,6 +31,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.powsybl.dynaflow.SecurityAnalysisConstants.DYNAWO_CONSTRAINTS_FOLDER;
+import static com.powsybl.dynawo.algorithms.xml.AlgorithmsConstants.BASE_SCENARIO_FOLDER;
 import static com.powsybl.dynawo.commons.DynawoConstants.DYNAWO_TIMELINE_FOLDER;
 import static com.powsybl.dynawo.xml.DynawoSimulationConstants.*;
 
@@ -69,5 +72,7 @@ public final class DynawoSecurityAnalysisHandler extends AbstractDynawoAlgorithm
     @Override
     protected void writeMultipleJobs(Path workingDir) throws XMLStreamException, IOException {
         MultipleJobsXml.write(workingDir, context);
+        ContingenciesDydXml.write(workingDir, context.getContingencyEventModels());
+        ContingenciesParXml.write(workingDir, context.getContingencyEventModels());
     }
 }

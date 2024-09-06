@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawo.security;
+package com.powsybl.dynawo.algorithms;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.contingency.Contingency;
@@ -14,6 +14,7 @@ import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.events.ContextDependentEvent;
 import com.powsybl.dynawo.models.events.EventDisconnectionBuilder;
+import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,32 +22,25 @@ import java.util.stream.Collectors;
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public final class ContingencyEventModelsHandler {
+public final class ContingencyEventModelsFactory {
 
-    private final List<ContingencyEventModels> contingencyEventModels;
-
-    public static ContingencyEventModelsHandler createFrom(List<Contingency> contingencies, DynawoSimulationContext context, double contingenciesStartTime) {
-        List<ContingencyEventModels> contingencyEventModels = contingencies.stream()
+    public static List<ContingencyEventModels> createFrom(List<Contingency> contingencies, DynawoSimulationContext context,
+                                                           MacroConnectionsAdder macroConnectionsAdder, double contingenciesStartTime) {
+        return contingencies.stream()
                 .map(c -> {
                     ContingencyEventModels cem = new ContingencyEventModels(c, c.getElements().stream()
                             .map(ce -> createContingencyEventModel(ce, context, contingenciesStartTime))
                             .toList());
                     // Set Contingencies connections and parameters
-                    //TODO add getter
-                    context.macroConnectionsAdder.setMacroConnectorAdder(cem.macroConnectorsMap()::computeIfAbsent);
-                    context.macroConnectionsAdder.setMacroConnectAdder(cem.macroConnectList()::add);
+                    macroConnectionsAdder.setMacroConnectorAdder(cem.macroConnectorsMap()::computeIfAbsent);
+                    macroConnectionsAdder.setMacroConnectAdder(cem.macroConnectList()::add);
                     cem.eventModels().forEach(em -> {
-                        em.createMacroConnections(context.macroConnectionsAdder);
+                        em.createMacroConnections(macroConnectionsAdder);
                         em.createDynamicModelParameters(context, cem.eventParameters()::add);
                     });
                     return cem;
                 })
                 .collect(Collectors.toList());
-        return new ContingencyEventModelsHandler(contingencyEventModels);
-    }
-
-    private ContingencyEventModelsHandler(List<ContingencyEventModels> contingencyEventModels) {
-        this.contingencyEventModels = contingencyEventModels;
     }
 
     private static BlackBoxModel createContingencyEventModel(ContingencyElement element, DynawoSimulationContext context, double contingenciesStartTime) {
@@ -63,7 +57,6 @@ public final class ContingencyEventModelsHandler {
         return bbm;
     }
 
-    public List<ContingencyEventModels> getContingencyEventModels() {
-        return contingencyEventModels;
+    private ContingencyEventModelsFactory() {
     }
 }

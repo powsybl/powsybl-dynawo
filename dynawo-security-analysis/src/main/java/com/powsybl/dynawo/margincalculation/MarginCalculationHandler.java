@@ -11,6 +11,9 @@ import com.powsybl.commons.report.ReportNode;
 import com.powsybl.computation.Command;
 import com.powsybl.computation.ExecutionReport;
 import com.powsybl.dynawo.algorithms.AbstractDynawoAlgorithmsHandler;
+import com.powsybl.dynawo.algorithms.xml.ContingenciesDydXml;
+import com.powsybl.dynawo.algorithms.xml.ContingenciesParXml;
+import com.powsybl.dynawo.margincalculation.results.MarginCalculationReport;
 import com.powsybl.dynawo.margincalculation.results.XmlMarginCalculationResultParser;
 import com.powsybl.dynawo.margincalculation.xml.MultipleJobsXml;
 
@@ -18,7 +21,7 @@ import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.nio.file.Path;
 
-import static com.powsybl.dynawo.xml.DynawoSimulationConstants.*;
+import static com.powsybl.dynawo.algorithms.xml.AlgorithmsConstants.AGGREGATED_RESULTS;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -41,5 +44,7 @@ public class MarginCalculationHandler extends AbstractDynawoAlgorithmsHandler<Ma
     @Override
     protected void writeMultipleJobs(Path workingDir) throws XMLStreamException, IOException {
         MultipleJobsXml.write(workingDir, context);
+        ContingenciesDydXml.write(workingDir, context.getContingencyEventModels());
+        ContingenciesParXml.write(workingDir, context.getContingencyEventModels());
     }
 }

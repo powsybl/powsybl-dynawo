@@ -8,7 +8,7 @@
 package com.powsybl.dynawo.algorithms.xml;
 
 import com.powsybl.dynawo.xml.ParametersXml;
-import com.powsybl.dynawo.security.ContingencyEventModels;
+import com.powsybl.dynawo.algorithms.ContingencyEventModels;
 
 import java.nio.file.Path;
 import java.util.List;

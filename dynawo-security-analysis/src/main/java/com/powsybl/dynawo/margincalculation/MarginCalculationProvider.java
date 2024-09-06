@@ -17,6 +17,8 @@ import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.DynawoSimulationProvider;
 import com.powsybl.dynawo.commons.DynawoUtil;
 import com.powsybl.dynawo.commons.PowsyblDynawoVersion;
+import com.powsybl.dynawo.margincalculation.loadsvariation.supplier.LoadsVariationSupplier;
+import com.powsybl.dynawo.margincalculation.results.MarginCalculationReport;
 import com.powsybl.dynawo.models.utils.BlackBoxSupplierUtils;
 import com.powsybl.dynawo.algorithms.DynawoAlgorithmsConfig;
 import com.powsybl.iidm.network.Network;

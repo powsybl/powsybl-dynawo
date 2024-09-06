@@ -8,7 +8,7 @@
 package com.powsybl.dynawo.margincalculation.xml;
 
 import com.powsybl.dynawo.DynawoSimulationParameters;
-import com.powsybl.dynawo.margincalculation.LoadsVariation;
+import com.powsybl.dynawo.margincalculation.loadsvariation.LoadsVariation;
 import com.powsybl.dynawo.margincalculation.MarginCalculationContext;
 import com.powsybl.dynawo.margincalculation.MarginCalculationParameters;
 import com.powsybl.dynawo.xml.DydXml;

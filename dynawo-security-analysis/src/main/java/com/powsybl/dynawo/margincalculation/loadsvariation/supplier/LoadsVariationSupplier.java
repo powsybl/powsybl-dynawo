@@ -5,8 +5,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawo.margincalculation;
+package com.powsybl.dynawo.margincalculation.loadsvariation.supplier;
 
+import com.powsybl.commons.report.ReportNode;
+import com.powsybl.dynawo.margincalculation.loadsvariation.LoadsVariation;
 import com.powsybl.iidm.network.Network;
 
 import java.util.List;
@@ -16,5 +18,10 @@ import java.util.List;
  */
 public interface LoadsVariationSupplier {
 
-    List<LoadsVariation> getLoadsVariations(Network network);
+    List<LoadsVariation> getLoadsVariations(Network network, ReportNode reportNode);
+
+    default List<LoadsVariation> getLoadsVariations(Network network) {
+        return getLoadsVariations(network, ReportNode.NO_OP);
+    }
+
 }

@@ -1,0 +1,25 @@
+{
+  "variations": [
+    {
+      "loadsIds": [
+        {
+          "id": "LOAD"
+        }
+      ],
+      "variationValue": 12,
+      "variationMode": "PROPORTIONAL"
+    },
+    {
+      "loadsIds": [
+        {
+          "id": "LOAD2"
+        },
+        {
+          "id": "LOAD3"
+        }
+      ],
+      "variationValue": 5,
+      "variationMode": "PROPORTIONAL"
+    }
+  ]
+}

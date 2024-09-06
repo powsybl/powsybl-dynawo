@@ -13,8 +13,6 @@ import com.powsybl.computation.AbstractExecutionHandler;
 import com.powsybl.computation.Command;
 import com.powsybl.computation.CommandExecution;
 import com.powsybl.dynawo.DynawoSimulationContext;
-import com.powsybl.dynawo.algorithms.xml.ContingenciesDydXml;
-import com.powsybl.dynawo.algorithms.xml.ContingenciesParXml;
 import com.powsybl.dynawo.commons.DynawoConstants;
 import com.powsybl.dynawo.commons.DynawoUtil;
 import com.powsybl.dynawo.xml.DydXml;
@@ -37,7 +35,7 @@ import static com.powsybl.dynawo.xml.DynawoSimulationConstants.OUTPUTS_FOLDER;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public abstract class AbstractDynawoAlgorithmsHandler<R, S extends DynawoSimulationContext & DynawoAlgorithmsContext> extends AbstractExecutionHandler<R> {
+public abstract class AbstractDynawoAlgorithmsHandler<R, S extends DynawoSimulationContext> extends AbstractExecutionHandler<R> {
 
     protected final S context;
     protected final Command command;
@@ -69,8 +67,6 @@ public abstract class AbstractDynawoAlgorithmsHandler<R, S extends DynawoSimulat
             DydXml.write(workingDir, context);
             ParametersXml.write(workingDir, context);
             writeMultipleJobs(workingDir);
-            ContingenciesDydXml.write(workingDir, context.getContingencyEventModels());
-            ContingenciesParXml.write(workingDir, context.getContingencyEventModels());
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         } catch (XMLStreamException e) {

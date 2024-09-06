@@ -8,6 +8,7 @@
 package com.powsybl.dynawo.margincalculation;
 
 import com.powsybl.commons.report.ReportNode;
+import com.powsybl.commons.report.TypedValue;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -21,6 +22,13 @@ public final class MarginCalculationReports {
         return reportNode.newReportNode()
                 .withMessageTemplate("mc", "Dynawo margin calculation on network '${networkId}'")
                 .withUntypedValue("networkId", networkId)
+                .add();
+    }
+
+    public static void reportLoadVariationInstantiationFailure(ReportNode reportNode) {
+        reportNode.newReportNode()
+                .withMessageTemplate("loadsVariationInstantiationError", "LoadVariation cannot be instantiated")
+                .withSeverity(TypedValue.WARN_SEVERITY)
                 .add();
     }
 }

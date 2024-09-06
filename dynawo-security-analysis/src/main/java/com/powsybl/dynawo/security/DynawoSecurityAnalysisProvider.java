@@ -85,7 +85,8 @@ public class DynawoSecurityAnalysisProvider implements DynamicSecurityAnalysisPr
                 BlackBoxSupplierUtils.getBlackBoxModelList(dynamicModelsSupplier, network, dsaReportNode),
                 parameters,
                 DynawoSimulationParameters.load(parameters.getDynamicSimulationParameters()),
-                contingencies);
+                contingencies,
+                dsaReportNode);
 
         return runParameters.getComputationManager().execute(execEnv, new DynawoSecurityAnalysisHandler(context, getCommand(config, "SA", "dynawo_dynamic_sa"),
                 runParameters.getFilter(), runParameters.getInterceptors(), dsaReportNode));

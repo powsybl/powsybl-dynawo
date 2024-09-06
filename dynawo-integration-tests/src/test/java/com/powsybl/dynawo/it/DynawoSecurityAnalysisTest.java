@@ -59,7 +59,7 @@ class DynawoSecurityAnalysisTest extends AbstractDynawoTest {
     @BeforeEach
     void setUp() throws Exception {
         super.setUp();
-        provider = new DynawoSecurityAnalysisProvider(new DynawoAlgorithmsConfig(Path.of("/dynaflow-launcher"), true));
+        provider = new DynawoSecurityAnalysisProvider(new DynawoAlgorithmsConfig(Path.of("/dynaflow-launcher"), false));
         parameters = new DynamicSecurityAnalysisParameters()
                 .setDynamicSimulationParameters(new DynamicSimulationParameters(0, 100))
                 .setDynamicContingenciesParameters(new DynamicSecurityAnalysisParameters.ContingenciesParameters(50));

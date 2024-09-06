@@ -5,9 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawo.margincalculation;
-
-import com.powsybl.dynawo.margincalculation.results.LoadIncreaseResult;
+package com.powsybl.dynawo.margincalculation.results;
 
 import java.util.Collections;
 import java.util.List;

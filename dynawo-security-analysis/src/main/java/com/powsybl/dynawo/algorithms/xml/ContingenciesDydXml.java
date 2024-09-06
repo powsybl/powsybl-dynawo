@@ -10,7 +10,7 @@ package com.powsybl.dynawo.algorithms.xml;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.macroconnections.MacroConnect;
 import com.powsybl.dynawo.models.macroconnections.MacroConnector;
-import com.powsybl.dynawo.security.ContingencyEventModels;
+import com.powsybl.dynawo.algorithms.ContingencyEventModels;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;

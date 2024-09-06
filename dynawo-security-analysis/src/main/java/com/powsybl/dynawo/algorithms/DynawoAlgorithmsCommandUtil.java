@@ -9,11 +9,13 @@ package com.powsybl.dynawo.algorithms;
 
 import com.powsybl.computation.Command;
 import com.powsybl.computation.SimpleCommandBuilder;
-import com.powsybl.dynawo.xml.DynawoSimulationConstants;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import static com.powsybl.dynawo.algorithms.xml.AlgorithmsConstants.AGGREGATED_RESULTS;
+import static com.powsybl.dynawo.algorithms.xml.AlgorithmsConstants.MULTIPLE_JOBS_FILENAME;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -26,8 +28,8 @@ public final class DynawoAlgorithmsCommandUtil {
     public static Command getCommand(DynawoAlgorithmsConfig config, String mode, String id) {
         List<String> args = Arrays.asList(
                 mode,
-                "--input", DynawoSimulationConstants.MULTIPLE_JOBS_FILENAME,
-                "--output", DynawoSimulationConstants.AGGREGATED_RESULTS);
+                "--input", MULTIPLE_JOBS_FILENAME,
+                "--output", AGGREGATED_RESULTS);
         return new SimpleCommandBuilder()
                 .id(id)
                 .program(config.getProgram())

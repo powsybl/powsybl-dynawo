@@ -8,7 +8,7 @@
 package com.powsybl.dynawo.security.xml;
 
 import com.powsybl.dynawo.algorithms.xml.XmlUtil;
-import com.powsybl.dynawo.security.ContingencyEventModels;
+import com.powsybl.dynawo.algorithms.ContingencyEventModels;
 import com.powsybl.dynawo.security.SecurityAnalysisContext;
 
 import javax.xml.stream.XMLStreamException;
@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Objects;
 
+import static com.powsybl.dynawo.algorithms.xml.AlgorithmsConstants.MULTIPLE_JOBS_FILENAME;
 import static com.powsybl.dynawo.xml.DynawoSimulationConstants.*;
 
 /**

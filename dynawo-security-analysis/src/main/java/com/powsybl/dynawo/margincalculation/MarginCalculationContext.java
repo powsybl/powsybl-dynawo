@@ -7,17 +7,19 @@
  */
 package com.powsybl.dynawo.margincalculation;
 
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.contingency.Contingency;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
-import com.powsybl.dynawo.algorithms.DynawoAlgorithmsContext;
+import com.powsybl.dynawo.margincalculation.loadsvariation.LoadVariationAreaAutomationSystem;
+import com.powsybl.dynawo.margincalculation.loadsvariation.LoadsVariation;
 import com.powsybl.dynawo.xml.DynawoSimulationConstants;
 import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.macroconnections.MacroConnect;
 import com.powsybl.dynawo.models.macroconnections.MacroConnector;
-import com.powsybl.dynawo.security.ContingencyEventModels;
-import com.powsybl.dynawo.security.ContingencyEventModelsHandler;
+import com.powsybl.dynawo.algorithms.ContingencyEventModels;
+import com.powsybl.dynawo.algorithms.ContingencyEventModelsFactory;
 import com.powsybl.dynawo.xml.DydDataSupplier;
 import com.powsybl.iidm.network.Network;
 
@@ -26,10 +28,9 @@ import java.util.*;
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class MarginCalculationContext extends DynawoSimulationContext implements DynawoAlgorithmsContext {
+public class MarginCalculationContext extends DynawoSimulationContext {
 
     private final MarginCalculationParameters marginCalculationParameters;
-    private final List<Contingency> contingencies;
     private final List<ContingencyEventModels> contingencyEventModels;
     private final LoadVariationAreaAutomationSystem loadVariationArea;
     private final List<MacroConnect> loadVariationMacroConnectList = new ArrayList<>();
@@ -41,14 +42,23 @@ public class MarginCalculationContext extends DynawoSimulationContext implements
                                     DynawoSimulationParameters dynawoSimulationParameters,
                                     List<Contingency> contingencies,
                                     List<LoadsVariation> loadsVariations) {
+        this(network, workingVariantId, dynamicModels, parameters, dynawoSimulationParameters, contingencies, loadsVariations, ReportNode.NO_OP);
+    }
+
+    public MarginCalculationContext(Network network, String workingVariantId,
+                                    List<BlackBoxModel> dynamicModels,
+                                    MarginCalculationParameters parameters,
+                                    DynawoSimulationParameters dynawoSimulationParameters,
+                                    List<Contingency> contingencies,
+                                    List<LoadsVariation> loadsVariations,
+                                    ReportNode reportNode) {
         super(network, workingVariantId, dynamicModels, List.of(), Collections.emptyList(),
                 //TODO fix
-                new DynamicSimulationParameters(parameters.getStartTime(), parameters.getStopTime()), dynawoSimulationParameters);
+                //TODO calculate phase 2 predicate
+                new DynamicSimulationParameters(parameters.getStartTime(), parameters.getStopTime()), dynawoSimulationParameters, reportNode);
         this.marginCalculationParameters = parameters;
         double contingenciesStartTime = parameters.getContingenciesStartTime();
-
-        this.contingencies = contingencies;
-        this.contingencyEventModels = ContingencyEventModelsHandler.createFrom(contingencies, this, contingenciesStartTime).getContingencyEventModels();
+        this.contingencyEventModels = ContingencyEventModelsFactory.createFrom(contingencies, this, macroConnectionsAdder, contingenciesStartTime);
         this.loadVariationArea = new LoadVariationAreaAutomationSystem(loadsVariations, parameters.getLoadIncreaseStartTime(), parameters.getLoadIncreaseStopTime());
 
         macroConnectionsAdder.setMacroConnectorAdder(loadVariationMacroConnectorsMap::computeIfAbsent);
@@ -58,18 +68,13 @@ public class MarginCalculationContext extends DynawoSimulationContext implements
     }
 
     private static void splitDynamicModels(List<BlackBoxModel> dynamicModels) {
-
+        //TODO
     }
 
     public MarginCalculationParameters getMarginCalculationParameters() {
         return marginCalculationParameters;
     }
 
-    public List<Contingency> getContingencies() {
-        return contingencies;
-    }
-
-    @Override
     public List<ContingencyEventModels> getContingencyEventModels() {
         return contingencyEventModels;
     }

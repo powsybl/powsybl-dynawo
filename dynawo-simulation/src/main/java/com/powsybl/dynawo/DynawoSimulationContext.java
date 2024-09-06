@@ -64,7 +64,7 @@ public class DynawoSimulationContext implements DydDataSupplier {
     private final DefaultModelsHandler defaultModelsHandler = new DefaultModelsHandler();
     private final FrequencySynchronizerModel frequencySynchronizer;
     private final List<ParametersSet> dynamicModelsParameters = new ArrayList<>();
-    public final MacroConnectionsAdder macroConnectionsAdder;
+    protected final MacroConnectionsAdder macroConnectionsAdder;
     private Phase2Models phase2Models;
 
     public DynawoSimulationContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
