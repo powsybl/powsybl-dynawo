@@ -22,6 +22,8 @@ import java.util.Objects;
  */
 public class SynchronousGenerator extends BaseGenerator implements FrequencySynchronizedModel {
 
+    private static final String OMEGA_PU_VAR_NAME = "generator_omegaPu";
+
     private final EnumGeneratorComponent generatorComponent;
 
     protected SynchronousGenerator(String dynamicModelId, Generator generator, String parameterSetId, String generatorLib, EnumGeneratorComponent generatorComponent) {
@@ -34,14 +36,10 @@ public class SynchronousGenerator extends BaseGenerator implements FrequencySync
         return generatorComponent.getTerminalVarName();
     }
 
-    private String getOmegaPuVarName() {
-        return "generator_omegaPu";
-    }
-
     @Override
     public List<VarConnection> getOmegaRefVarConnections() {
         return Arrays.asList(
-                new VarConnection("omega_grp_@INDEX@", getOmegaPuVarName()),
+                new VarConnection("omega_grp_@INDEX@", OMEGA_PU_VAR_NAME),
                 new VarConnection("omegaRef_grp_@INDEX@", getOmegaRefPuVarName()),
                 new VarConnection("running_grp_@INDEX@", getRunningVarName())
         );
