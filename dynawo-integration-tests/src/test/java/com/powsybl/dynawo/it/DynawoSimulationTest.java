@@ -31,6 +31,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Objects;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import static com.powsybl.commons.report.ReportNode.NO_OP;
@@ -62,32 +64,8 @@ class DynawoSimulationTest extends AbstractDynawoTest {
 
     @Test
     void testIeee14() {
-        Network network = Network.read(new ResourceDataSource("IEEE14", new ResourceSet("/ieee14", "IEEE14.iidm")));
 
-        GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
-                getResourceAsStream("/ieee14/disconnectline/dynamicModels.groovy"),
-                GroovyExtension.find(DynamicModelGroovyExtension.class, DynawoSimulationProvider.NAME));
-
-        GroovyEventModelsSupplier eventModelsSupplier = new GroovyEventModelsSupplier(
-                getResourceAsStream("/ieee14/disconnectline/eventModels.groovy"),
-                GroovyExtension.find(EventModelGroovyExtension.class, DynawoSimulationProvider.NAME));
-
-        GroovyCurvesSupplier curvesSupplier = new GroovyCurvesSupplier(
-                getResourceAsStream("/ieee14/disconnectline/curves.groovy"),
-                GroovyExtension.find(CurveGroovyExtension.class, DynawoSimulationProvider.NAME));
-
-        List<ParametersSet> modelsParameters = ParametersXml.load(getResourceAsStream("/ieee14/disconnectline/models.par"));
-        ParametersSet networkParameters = ParametersXml.load(getResourceAsStream("/ieee14/disconnectline/network.par"), "8");
-        ParametersSet solverParameters = ParametersXml.load(getResourceAsStream("/ieee14/disconnectline/solvers.par"), "2");
-        dynawoSimulationParameters.setModelsParameters(modelsParameters)
-                .setNetworkParameters(networkParameters)
-                .setSolverParameters(solverParameters)
-                .setSolverType(DynawoSimulationParameters.SolverType.IDA)
-                .setTimelineExportMode(DynawoSimulationParameters.ExportMode.XML);
-
-        DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, curvesSupplier,
-                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, NO_OP)
-                .join();
+        DynamicSimulationResult result = setupIEEE14Simulation().get();
 
         assertEquals(DynamicSimulationResult.Status.SUCCESS, result.getStatus());
         assertTrue(result.getStatusText().isEmpty());
@@ -102,37 +80,13 @@ class DynawoSimulationTest extends AbstractDynawoTest {
 
     @Test
     void testIeee14WithDump() throws IOException {
-        Network network = Network.read(new ResourceDataSource("IEEE14", new ResourceSet("/ieee14", "IEEE14.iidm")));
-
-        GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
-                getResourceAsStream("/ieee14/disconnectline/dynamicModels.groovy"),
-                GroovyExtension.find(DynamicModelGroovyExtension.class, DynawoSimulationProvider.NAME));
-
-        GroovyEventModelsSupplier eventModelsSupplier = new GroovyEventModelsSupplier(
-                getResourceAsStream("/ieee14/disconnectline/eventModels.groovy"),
-                GroovyExtension.find(EventModelGroovyExtension.class, DynawoSimulationProvider.NAME));
-
-        GroovyCurvesSupplier curvesSupplier = new GroovyCurvesSupplier(
-                getResourceAsStream("/ieee14/disconnectline/curves.groovy"),
-                GroovyExtension.find(CurveGroovyExtension.class, DynawoSimulationProvider.NAME));
-
-        Path dumpDir = Files.createDirectory(localDir.resolve("dumpFiles"));
-
         // Export dump
+        Supplier<DynamicSimulationResult> resultSupplier = setupIEEE14Simulation();
         parameters.setStopTime(30);
-        List<ParametersSet> modelsParameters = ParametersXml.load(getResourceAsStream("/ieee14/disconnectline/models.par"));
-        ParametersSet networkParameters = ParametersXml.load(getResourceAsStream("/ieee14/disconnectline/network.par"), "8");
-        ParametersSet solverParameters = ParametersXml.load(getResourceAsStream("/ieee14/disconnectline/solvers.par"), "2");
+        Path dumpDir = Files.createDirectory(localDir.resolve("dumpFiles"));
         DumpFileParameters dumpFileParameters = DumpFileParameters.createExportDumpFileParameters(dumpDir);
-        dynawoSimulationParameters.setModelsParameters(modelsParameters)
-                .setNetworkParameters(networkParameters)
-                .setSolverParameters(solverParameters)
-                .setSolverType(DynawoSimulationParameters.SolverType.IDA)
-                .setDumpFileParameters(dumpFileParameters);
-
-        DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, curvesSupplier,
-                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, NO_OP)
-                .join();
+        dynawoSimulationParameters.setDumpFileParameters(dumpFileParameters);
+        DynamicSimulationResult result = resultSupplier.get();
         assertEquals(DynamicSimulationResult.Status.SUCCESS, result.getStatus());
 
         //Use exported dump as input
@@ -145,11 +99,27 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         }
         dynawoSimulationParameters.setDumpFileParameters(DumpFileParameters.createImportDumpFileParameters(dumpDir, dumpFile));
 
-        result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, curvesSupplier,
-                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, NO_OP)
-                .join();
+        result = resultSupplier.get();
 
         assertEquals(DynamicSimulationResult.Status.SUCCESS, result.getStatus());
+    }
+
+    @Test
+    void testIeee14WithSimulationCriteria() {
+
+        Supplier<DynamicSimulationResult> resultSupplier = setupIEEE14Simulation();
+        dynawoSimulationParameters.setCriteriaFilePath(Path.of(Objects.requireNonNull(getClass().getResource("/ieee14/criteria.crt")).getPath()));
+        DynamicSimulationResult result = resultSupplier.get();
+
+        assertEquals(DynamicSimulationResult.Status.SUCCESS, result.getStatus());
+        assertTrue(result.getStatusText().isEmpty());
+        assertEquals(41, result.getCurves().size());
+        DoubleTimeSeries ts1 = result.getCurve("_GEN____1_SM_generator_UStatorPu");
+        assertEquals("_GEN____1_SM_generator_UStatorPu", ts1.getMetadata().getName());
+        assertEquals(587, ts1.toArray().length);
+        List<TimelineEvent> timeLine = result.getTimeLine();
+        assertEquals(23, timeLine.size());
+        checkFirstTimeLineEvent(timeLine.get(0), 0, "_GEN____8_SM", "PMIN : activation");
     }
 
     @Test
@@ -337,5 +307,34 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         List<TimelineEvent> timeLine = result.getTimeLine();
         assertEquals(1, timeLine.size());
         checkFirstTimeLineEvent(timeLine.get(0), 10, "_BUS____1-BUS____5-1_AC", "LINE : opening on side 2");
+    }
+
+    private Supplier<DynamicSimulationResult> setupIEEE14Simulation() {
+        Network network = Network.read(new ResourceDataSource("IEEE14", new ResourceSet("/ieee14", "IEEE14.iidm")));
+
+        GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
+                getResourceAsStream("/ieee14/disconnectline/dynamicModels.groovy"),
+                GroovyExtension.find(DynamicModelGroovyExtension.class, DynawoSimulationProvider.NAME));
+
+        GroovyEventModelsSupplier eventModelsSupplier = new GroovyEventModelsSupplier(
+                getResourceAsStream("/ieee14/disconnectline/eventModels.groovy"),
+                GroovyExtension.find(EventModelGroovyExtension.class, DynawoSimulationProvider.NAME));
+
+        GroovyCurvesSupplier curvesSupplier = new GroovyCurvesSupplier(
+                getResourceAsStream("/ieee14/disconnectline/curves.groovy"),
+                GroovyExtension.find(CurveGroovyExtension.class, DynawoSimulationProvider.NAME));
+
+        List<ParametersSet> modelsParameters = ParametersXml.load(getResourceAsStream("/ieee14/disconnectline/models.par"));
+        ParametersSet networkParameters = ParametersXml.load(getResourceAsStream("/ieee14/disconnectline/network.par"), "8");
+        ParametersSet solverParameters = ParametersXml.load(getResourceAsStream("/ieee14/disconnectline/solvers.par"), "2");
+        dynawoSimulationParameters.setModelsParameters(modelsParameters)
+                .setNetworkParameters(networkParameters)
+                .setSolverParameters(solverParameters)
+                .setSolverType(DynawoSimulationParameters.SolverType.IDA)
+                .setTimelineExportMode(DynawoSimulationParameters.ExportMode.XML);
+
+        return () -> provider.run(network, dynamicModelsSupplier, eventModelsSupplier, curvesSupplier,
+                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, NO_OP)
+                .join();
     }
 }

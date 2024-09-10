@@ -202,6 +202,7 @@ public final class DynawoSimulationHandler extends AbstractExecutionHandler<Dyna
     }
 
     private void writeInputFiles(Path workingDir) throws IOException {
+        DynawoSimulationParameters parameters = context.getDynawoSimulationParameters();
         DynawoUtil.writeIidm(dynawoInput, workingDir.resolve(NETWORK_FILENAME));
         JobsXml.write(workingDir, context);
         DydXml.write(workingDir, context);
@@ -209,12 +210,15 @@ public final class DynawoSimulationHandler extends AbstractExecutionHandler<Dyna
         if (context.withCurves()) {
             CurvesXml.write(workingDir, context);
         }
-        DumpFileParameters dumpFileParameters = context.getDynawoSimulationParameters().getDumpFileParameters();
+        DumpFileParameters dumpFileParameters = parameters.getDumpFileParameters();
         if (dumpFileParameters.useDumpFile()) {
             Path dumpFilePath = dumpFileParameters.getDumpFilePath();
             if (dumpFilePath != null) {
                 Files.copy(dumpFilePath, workingDir.resolve(dumpFileParameters.dumpFile()), StandardCopyOption.REPLACE_EXISTING);
             }
+        }
+        if (parameters.hasCriteriaFile()) {
+            Files.copy(parameters.getCriteriaFilePath(), workingDir.resolve(parameters.getCriteriaFileName()), StandardCopyOption.REPLACE_EXISTING);
         }
     }
 }
