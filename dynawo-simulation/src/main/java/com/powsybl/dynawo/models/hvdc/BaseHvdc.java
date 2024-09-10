@@ -20,11 +20,12 @@ import com.powsybl.iidm.network.TwoSides;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public abstract class AbstractHvdc extends AbstractEquipmentBlackBoxModel<HvdcLine> implements HvdcModel {
+public class BaseHvdc extends AbstractEquipmentBlackBoxModel<HvdcLine> implements HvdcModel {
 
     private static final List<VarMapping> VAR_MAPPING = Arrays.asList(
             new VarMapping("hvdc_PInj1Pu", "p1"),
@@ -36,8 +37,11 @@ public abstract class AbstractHvdc extends AbstractEquipmentBlackBoxModel<HvdcLi
 
     protected static final String TERMINAL_PREFIX = "hvdc_terminal";
 
-    protected AbstractHvdc(String dynamicModelId, HvdcLine hvdc, String parameterSetId, String lib) {
+    private final Function<TwoSides, String> eventVarNameSupplier;
+
+    protected BaseHvdc(String dynamicModelId, HvdcLine hvdc, String parameterSetId, String lib, Function<TwoSides, String> eventVarNameSupplier) {
         super(dynamicModelId, parameterSetId, hvdc, lib);
+        this.eventVarNameSupplier = eventVarNameSupplier;
     }
 
     @Override
@@ -66,5 +70,10 @@ public abstract class AbstractHvdc extends AbstractEquipmentBlackBoxModel<HvdcLi
 
     public List<HvdcConverterStation<?>> getConnectedStations() {
         return List.of(equipment.getConverterStation1(), equipment.getConverterStation2());
+    }
+
+    @Override
+    public String getSwitchOffSignalEventVarName(TwoSides side) {
+        return eventVarNameSupplier.apply(side);
     }
 }
