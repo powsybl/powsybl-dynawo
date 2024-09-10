@@ -15,7 +15,7 @@ import com.powsybl.iidm.network.Generator;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class SignalNGenerator extends AbstractGenerator implements SignalNModel {
+public class SignalNGenerator extends BaseGenerator implements SignalNModel {
 
     protected SignalNGenerator(String dynamicModelId, Generator generator, String parameterSetId, String lib) {
         super(dynamicModelId, generator, parameterSetId, lib);
