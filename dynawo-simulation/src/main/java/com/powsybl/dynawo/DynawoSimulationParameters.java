@@ -323,12 +323,12 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
         return this;
     }
 
-    private DynawoSimulationParameters setCriteriaFilePath(String criteriaPathName, FileSystem fileSystem) {
-        Path criteriaFilePath = criteriaPathName != null ? fileSystem.getPath(criteriaPathName) : null;
-        if (criteriaFilePath == null || !Files.exists(criteriaFilePath)) {
-            throw new PowsyblException("File " + criteriaFilePath + " set in 'criteria.file' property cannot be found");
+    private void setCriteriaFilePath(String criteriaPathName, FileSystem fileSystem) {
+        Path criteriaPath = criteriaPathName != null ? fileSystem.getPath(criteriaPathName) : null;
+        if (criteriaPath == null || !Files.exists(criteriaPath)) {
+            throw new PowsyblException("File " + criteriaPath + " set in 'criteria.file' property cannot be found");
         }
-        return setCriteriaFilePath(criteriaFilePath);
+        setCriteriaFilePath(criteriaPath);
     }
 
     public boolean hasCriteriaFile() {
