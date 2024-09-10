@@ -51,20 +51,8 @@ public class HvdcVscBuilder extends AbstractHvdcBuilder<HvdcVscBuilder> {
     }
 
     protected HvdcVscBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
-        super(network, modelConfig, "VSC " + IdentifiableType.HVDC_LINE, reportNode);
+        super(network, modelConfig, "VSC " + IdentifiableType.HVDC_LINE, reportNode, EVENT_VAR_NAME_SUPPLIER);
         addEquipmentPredicate(IS_VSC);
-    }
-
-    @Override
-    public BaseHvdc build() {
-        if (isInstantiable()) {
-            if (modelConfig.isDangling()) {
-                return new HvdcDangling(dynamicModelId, getEquipment(), parameterSetId, modelConfig.lib(), EVENT_VAR_NAME_SUPPLIER, danglingSide);
-            } else {
-                return new BaseHvdc(dynamicModelId, getEquipment(), parameterSetId, modelConfig.lib(), EVENT_VAR_NAME_SUPPLIER);
-            }
-        }
-        return null;
     }
 
     @Override

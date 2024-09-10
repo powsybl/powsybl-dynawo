@@ -53,19 +53,7 @@ public class HvdcPBuilder extends AbstractHvdcBuilder<HvdcPBuilder> {
     }
 
     protected HvdcPBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
-        super(network, modelConfig, IdentifiableType.HVDC_LINE, reportNode);
-    }
-
-    @Override
-    public BaseHvdc build() {
-        if (isInstantiable()) {
-            if (modelConfig.isDangling()) {
-                return new HvdcDangling(dynamicModelId, getEquipment(), parameterSetId, modelConfig.lib(), EVENT_VAR_NAME_SUPPLIER, danglingSide);
-            } else {
-                return new BaseHvdc(dynamicModelId, getEquipment(), parameterSetId, modelConfig.lib(), EVENT_VAR_NAME_SUPPLIER);
-            }
-        }
-        return null;
+        super(network, modelConfig, IdentifiableType.HVDC_LINE, reportNode, EVENT_VAR_NAME_SUPPLIER);
     }
 
     @Override
