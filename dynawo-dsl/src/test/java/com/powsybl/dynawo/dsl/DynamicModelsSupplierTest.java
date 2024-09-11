@@ -128,7 +128,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                 Arguments.of("/dynamicModels/loadTwoTransformersTapChangers.groovy", LoadTwoTransformersTapChangers.class, EurostagTutorialExample1Factory.create(), "LOAD", "LOAD", "LTT", "LoadTwoTransformersTapChangers"),
                 Arguments.of("/dynamicModels/infiniteBus.groovy", InfiniteBus.class, HvdcTestNetwork.createVsc(), "B1", "BBM_BUS", "b", "InfiniteBusWithVariations"),
                 Arguments.of("/dynamicModels/line.groovy", StandardLine.class, EurostagTutorialExample1Factory.create(), "NHV1_NHV2_1", "BBM_NHV1_NHV2_1", "LINE", "Line"),
-                Arguments.of("/dynamicModels/genFictitious.groovy", GeneratorFictitious.class, EurostagTutorialExample1Factory.create(), "GEN", "BBM_GEN", "GF", "GeneratorFictitious"),
+                Arguments.of("/dynamicModels/genFictitious.groovy", BaseGenerator.class, EurostagTutorialExample1Factory.create(), "GEN", "BBM_GEN", "GF", "GeneratorFictitious"),
                 Arguments.of("/dynamicModels/gen.groovy", SynchronousGenerator.class, EurostagTutorialExample1Factory.create(), "GEN", "BBM_GEN", "GSFWPR", "GeneratorSynchronousThreeWindings"),
                 Arguments.of("/dynamicModels/genControllable.groovy", SynchronousGeneratorControllable.class, EurostagTutorialExample1Factory.create(), "GEN", "BBM_GEN", "GSFWPR", "GeneratorSynchronousFourWindingsProportionalRegulations"),
                 Arguments.of("/dynamicModels/omegaGen.groovy", SynchronizedGenerator.class, EurostagTutorialExample1Factory.create(), "GEN", "BBM_GEN", "GPQ", "GeneratorPQ"),
