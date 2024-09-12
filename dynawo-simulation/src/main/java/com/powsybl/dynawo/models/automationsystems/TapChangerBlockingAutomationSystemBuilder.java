@@ -14,6 +14,7 @@ import com.powsybl.iidm.network.*;
 
 import java.util.*;
 
+import static com.powsybl.dynawo.builders.BuildersUtil.IS_ENERGIZED;
 import static com.powsybl.dynawo.builders.BuildersUtil.MEASUREMENT_POINT_TYPE;
 
 /**
@@ -69,7 +70,7 @@ public class TapChangerBlockingAutomationSystemBuilder extends AbstractAutomatio
     protected TapChangerBlockingAutomationSystemBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
         super(network, modelConfig, reportNode);
         tapChangerEquipments = new BuilderEquipmentsList<>(TAP_CHANGER_TYPE, TRANSFORMER_FIELD, true);
-        uMeasurementPoints = new BuilderIdListEquipmentList<>(MEASUREMENT_POINT_TYPE, U_MEASUREMENTS_FIELD);
+        uMeasurementPoints = new BuilderIdListEquipmentList<>(MEASUREMENT_POINT_TYPE, U_MEASUREMENTS_FIELD, IS_ENERGIZED);
     }
 
     public TapChangerBlockingAutomationSystemBuilder transformers(String staticId) {
