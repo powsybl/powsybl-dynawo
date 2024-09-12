@@ -9,6 +9,7 @@ package com.powsybl.dynawo.models.hvdc;
 
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.builders.AbstractEquipmentModelBuilder;
+import com.powsybl.dynawo.builders.BuilderEquipment;
 import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.builders.BuilderReports;
 import com.powsybl.iidm.network.*;
@@ -20,8 +21,9 @@ public abstract class AbstractHvdcBuilder<R extends AbstractEquipmentModelBuilde
 
     protected TwoSides danglingSide;
 
-    protected AbstractHvdcBuilder(Network network, ModelConfig modelConfig, IdentifiableType identifiableType, ReportNode reportNode) {
-        super(network, modelConfig, identifiableType, reportNode);
+    protected AbstractHvdcBuilder(Network network, ModelConfig modelConfig, String equipmentType,
+                                  BuilderEquipment.EquipmentPredicate<HvdcLine> equipmentPredicate, ReportNode reportNode) {
+        super(network, modelConfig, equipmentType, equipmentPredicate, reportNode);
     }
 
     protected AbstractHvdcBuilder(Network network, ModelConfig modelConfig, String equipmentType, ReportNode reportNode) {
@@ -31,6 +33,11 @@ public abstract class AbstractHvdcBuilder<R extends AbstractEquipmentModelBuilde
     public R dangling(TwoSides danglingSide) {
         this.danglingSide = danglingSide;
         return self();
+    }
+
+    @Override
+    protected HvdcLine findEquipment(String staticId) {
+        return network.getHvdcLine(staticId);
     }
 
     @Override

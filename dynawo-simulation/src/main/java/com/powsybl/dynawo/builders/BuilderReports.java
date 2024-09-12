@@ -9,6 +9,7 @@ package com.powsybl.dynawo.builders;
 
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.commons.report.TypedValue;
+import com.powsybl.iidm.network.HvdcConverterStation;
 import com.powsybl.iidm.network.IdentifiableType;
 
 /**
@@ -17,6 +18,7 @@ import com.powsybl.iidm.network.IdentifiableType;
 public final class BuilderReports {
 
     private static final String FIELD_NAME = "fieldName";
+    private static final String STATIC_ID = "staticId";
     private static final String EQUIPMENT_TYPE_FIELD = "equipmentType";
 
     private BuilderReports() {
@@ -86,7 +88,7 @@ public final class BuilderReports {
                 .withMessageTemplate("unknownStaticIdToDynamic", "'${fieldName}' field value '${staticId}' not found for equipment type(s) ${equipmentType}")
                 .withUntypedValue(EQUIPMENT_TYPE_FIELD, equipmentType)
                 .withUntypedValue(FIELD_NAME, fieldName)
-                .withUntypedValue("staticId", staticId)
+                .withUntypedValue(STATIC_ID, staticId)
                 .withSeverity(TypedValue.WARN_SEVERITY)
                 .add();
     }
@@ -96,7 +98,7 @@ public final class BuilderReports {
                 .withMessageTemplate("wrongNetwork", "'${fieldName}' field value ${equipmentType} ${staticId} does not belong to the builder network")
                 .withUntypedValue(EQUIPMENT_TYPE_FIELD, equipmentType)
                 .withUntypedValue(FIELD_NAME, fieldName)
-                .withUntypedValue("staticId", staticId)
+                .withUntypedValue(STATIC_ID, staticId)
                 .withSeverity(TypedValue.WARN_SEVERITY)
                 .add();
     }
@@ -105,7 +107,7 @@ public final class BuilderReports {
         reportNode.newReportNode()
                 .withMessageTemplate("staticIdUnknown", "'${fieldName}' field value '${staticId}' not found for equipment type(s) ${equipmentType}, id will be used as pure dynamic model id")
                 .withUntypedValue(EQUIPMENT_TYPE_FIELD, equipmentType)
-                .withUntypedValue(FIELD_NAME, fieldName).withUntypedValue("staticId", staticId)
+                .withUntypedValue(FIELD_NAME, fieldName).withUntypedValue(STATIC_ID, staticId)
                 .withSeverity(TypedValue.INFO_SEVERITY)
                 .add();
     }
@@ -144,6 +146,34 @@ public final class BuilderReports {
                 .withUntypedValue("firstFieldName", firstFieldName)
                 .withUntypedValue("secondFieldName", secondFieldName)
                 .withSeverity(TypedValue.TRACE_SEVERITY)
+                .add();
+    }
+
+    public static void reportWrongHvdcType(ReportNode reportNode, String fieldName, String staticId, HvdcConverterStation.HvdcType hvdcType) {
+        reportNode.newReportNode()
+                .withMessageTemplate("wrongHvdcType", "'${fieldName}' field value '${staticId}' should be an HVDC ${type}")
+                .withUntypedValue("type", hvdcType.toString())
+                .withUntypedValue(FIELD_NAME, fieldName)
+                .withUntypedValue(STATIC_ID, staticId)
+                .withSeverity(TypedValue.WARN_SEVERITY)
+                .add();
+    }
+
+    public static void reportFictitiousEquipment(ReportNode reportNode, String fieldName, String staticId) {
+        reportNode.newReportNode()
+                .withMessageTemplate("fictitiousEquipment", "'${fieldName}' field value '${staticId}' should not be fictitious")
+                .withUntypedValue(FIELD_NAME, fieldName)
+                .withUntypedValue(STATIC_ID, staticId)
+                .withSeverity(TypedValue.WARN_SEVERITY)
+                .add();
+    }
+
+    public static void reportNotEnergized(ReportNode reportNode, String fieldName, String staticId) {
+        reportNode.newReportNode()
+                .withMessageTemplate("notEnergized", "'${fieldName}' field value '${staticId}' should be energized")
+                .withUntypedValue(FIELD_NAME, fieldName)
+                .withUntypedValue(STATIC_ID, staticId)
+                .withSeverity(TypedValue.WARN_SEVERITY)
                 .add();
     }
 }
