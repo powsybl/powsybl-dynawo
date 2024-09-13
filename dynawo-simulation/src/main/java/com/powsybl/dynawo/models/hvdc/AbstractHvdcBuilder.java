@@ -24,10 +24,10 @@ public abstract class AbstractHvdcBuilder<R extends AbstractEquipmentModelBuilde
     protected TwoSides danglingSide;
     private final Function<TwoSides, String> eventVarNameSupplier;
 
-    protected AbstractHvdcBuilder(Network network, ModelConfig modelConfig, IdentifiableType identifiableType,
+    protected AbstractHvdcBuilder(Network network, ModelConfig modelConfig, String equipmentType,
                                   BuilderEquipment.EquipmentPredicate<HvdcLine> equipmentPredicate,
                                   ReportNode reportNode, Function<TwoSides, String> eventVarNameSupplier) {
-        super(network, modelConfig, identifiableType, equipmentPredicate, reportNode);
+        super(network, modelConfig, equipmentType, equipmentPredicate, reportNode);
         this.eventVarNameSupplier = eventVarNameSupplier;
     }
 

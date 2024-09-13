@@ -13,7 +13,8 @@ import com.powsybl.iidm.network.*;
 
 import java.util.Collection;
 import java.util.function.Function;
-import java.util.function.Predicate;
+
+import static com.powsybl.iidm.network.IdentifiableType.HVDC_LINE;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -57,7 +58,7 @@ public class HvdcVscBuilder extends AbstractHvdcBuilder<HvdcVscBuilder> {
     }
 
     protected HvdcVscBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
-        super(network, modelConfig, IdentifiableType.HVDC_LINE + " VSC", IS_VSC, reportNode, EVENT_VAR_NAME_SUPPLIER);
+        super(network, modelConfig, HVDC_LINE + " VSC", IS_VSC, reportNode, EVENT_VAR_NAME_SUPPLIER);
     }
 
     @Override
