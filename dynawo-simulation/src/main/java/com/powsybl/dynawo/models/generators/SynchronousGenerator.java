@@ -8,6 +8,9 @@ package com.powsybl.dynawo.models.generators;
 
 import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.models.VarConnection;
+import com.powsybl.dynawo.models.frequencysynchronizers.FrequencySynchronizedModel;
+import com.powsybl.dynawo.models.utils.BusUtils;
+import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.Generator;
 
 import java.util.Arrays;
@@ -17,7 +20,9 @@ import java.util.Objects;
 /**
  * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
  */
-public class SynchronousGenerator extends SynchronizedGenerator {
+public class SynchronousGenerator extends BaseGenerator implements FrequencySynchronizedModel {
+
+    private static final String OMEGA_PU_VAR_NAME = "generator_omegaPu";
 
     private final EnumGeneratorComponent generatorComponent;
 
@@ -31,14 +36,10 @@ public class SynchronousGenerator extends SynchronizedGenerator {
         return generatorComponent.getTerminalVarName();
     }
 
-    public String getOmegaPuVarName() {
-        return "generator_omegaPu";
-    }
-
     @Override
     public List<VarConnection> getOmegaRefVarConnections() {
         return Arrays.asList(
-                new VarConnection("omega_grp_@INDEX@", getOmegaPuVarName()),
+                new VarConnection("omega_grp_@INDEX@", OMEGA_PU_VAR_NAME),
                 new VarConnection("omegaRef_grp_@INDEX@", getOmegaRefPuVarName()),
                 new VarConnection("running_grp_@INDEX@", getRunningVarName())
         );
@@ -49,5 +50,10 @@ public class SynchronousGenerator extends SynchronizedGenerator {
         double h = dynawoSimulationParameters.getModelParameters(getParameterSetId()).getDouble("generator_H");
         double sNom = dynawoSimulationParameters.getModelParameters(getParameterSetId()).getDouble("generator_SNom");
         return h * sNom;
+    }
+
+    @Override
+    public Bus getConnectableBus() {
+        return BusUtils.getConnectableBus(equipment);
     }
 }

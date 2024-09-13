@@ -14,20 +14,27 @@ import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.builders.BuilderReports;
 import com.powsybl.iidm.network.*;
 
+import java.util.function.Function;
+
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public abstract class AbstractHvdcBuilder<R extends AbstractEquipmentModelBuilder<HvdcLine, R>> extends AbstractEquipmentModelBuilder<HvdcLine, R> {
 
     protected TwoSides danglingSide;
+    private final Function<TwoSides, String> eventVarNameSupplier;
 
-    protected AbstractHvdcBuilder(Network network, ModelConfig modelConfig, String equipmentType,
-                                  BuilderEquipment.EquipmentPredicate<HvdcLine> equipmentPredicate, ReportNode reportNode) {
-        super(network, modelConfig, equipmentType, equipmentPredicate, reportNode);
+    protected AbstractHvdcBuilder(Network network, ModelConfig modelConfig, IdentifiableType identifiableType,
+                                  BuilderEquipment.EquipmentPredicate<HvdcLine> equipmentPredicate,
+                                  ReportNode reportNode, Function<TwoSides, String> eventVarNameSupplier) {
+        super(network, modelConfig, identifiableType, equipmentPredicate, reportNode);
+        this.eventVarNameSupplier = eventVarNameSupplier;
     }
 
-    protected AbstractHvdcBuilder(Network network, ModelConfig modelConfig, String equipmentType, ReportNode reportNode) {
+    protected AbstractHvdcBuilder(Network network, ModelConfig modelConfig, String equipmentType,
+                                  ReportNode reportNode, Function<TwoSides, String> eventVarNameSupplier) {
         super(network, modelConfig, equipmentType, reportNode);
+        this.eventVarNameSupplier = eventVarNameSupplier;
     }
 
     public R dangling(TwoSides danglingSide) {
@@ -51,5 +58,17 @@ public abstract class AbstractHvdcBuilder<R extends AbstractEquipmentModelBuilde
             BuilderReports.reportFieldSetWithWrongEquipment(reportNode, "dangling", modelConfig.lib());
             isInstantiable = false;
         }
+    }
+
+    @Override
+    public BaseHvdc build() {
+        if (isInstantiable()) {
+            if (modelConfig.isDangling()) {
+                return new HvdcDangling(dynamicModelId, getEquipment(), parameterSetId, modelConfig.lib(), eventVarNameSupplier, danglingSide);
+            } else {
+                return new BaseHvdc(dynamicModelId, getEquipment(), parameterSetId, modelConfig.lib(), eventVarNameSupplier);
+            }
+        }
+        return null;
     }
 }

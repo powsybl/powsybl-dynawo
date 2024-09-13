@@ -9,8 +9,7 @@ package com.powsybl.dynawo.models;
 
 import com.powsybl.dynawo.models.hvdc.HvdcPBuilder;
 import com.powsybl.dynawo.models.hvdc.HvdcVscBuilder;
-import com.powsybl.dynawo.models.hvdc.HvdcP;
-import com.powsybl.dynawo.models.hvdc.HvdcVsc;
+import com.powsybl.dynawo.models.hvdc.BaseHvdc;
 import com.powsybl.iidm.network.HvdcLine;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.TwoSides;
@@ -28,7 +27,7 @@ class HvdcTest {
     @Test
     void testConnectedStation() {
         Network network = HvdcTestNetwork.createVsc();
-        HvdcP hvdc = HvdcPBuilder.of(network, "HvdcPV")
+        BaseHvdc hvdc = HvdcPBuilder.of(network, "HvdcPV")
                 .dynamicModelId("hvdc")
                 .staticId("L")
                 .parameterSetId("HVDC")
@@ -41,7 +40,7 @@ class HvdcTest {
         Network network = HvdcTestNetwork.createVsc();
         HvdcLine line = network.getHvdcLine("L");
 
-        HvdcP hvdcPDangling = HvdcPBuilder.of(network, "HvdcPVDangling")
+        BaseHvdc hvdcPDangling = HvdcPBuilder.of(network, "HvdcPVDangling")
                 .dynamicModelId("hvdc")
                 .staticId("L")
                 .parameterSetId("HVDC")
@@ -50,7 +49,7 @@ class HvdcTest {
         assertEquals(1, hvdcPDangling.getConnectedStations().size());
         assertEquals(line.getConverterStation2(), hvdcPDangling.getConnectedStations().get(0));
 
-        HvdcVsc hvdcVscDangling = HvdcVscBuilder.of(network, "HvdcVSCDanglingP")
+        BaseHvdc hvdcVscDangling = HvdcVscBuilder.of(network, "HvdcVSCDanglingP")
                 .dynamicModelId("hvdc")
                 .staticId("L")
                 .parameterSetId("HVDC")
