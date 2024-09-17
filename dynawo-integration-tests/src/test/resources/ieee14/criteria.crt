@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <criteria xmlns="http://www.rte-france.com/dynawo">
   <busCriteria>
-    <parameters id ="minimum bus voltage" scope="DYNAMIC" type="LOCAL_VALUE" uMinPu="0.6"/>
+    <parameters id ="minimum bus voltage" scope="DYNAMIC" type="LOCAL_VALUE" uMinPu="10.5"/>
     <component id="_BUS___10_TN"/>
   </busCriteria>
   <busCriteria>

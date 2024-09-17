@@ -106,20 +106,15 @@ class DynawoSimulationTest extends AbstractDynawoTest {
 
     @Test
     void testIeee14WithSimulationCriteria() {
-
-        Supplier<DynamicSimulationResult> resultSupplier = setupIEEE14Simulation();
+        ReportNode reportNode =  ReportNode.newRootReportNode().withMessageTemplate("integrationTest", "Integration test").build();
+        Supplier<DynamicSimulationResult> resultSupplier = setupIEEE14Simulation(reportNode);
         dynawoSimulationParameters.setCriteriaFilePath(Path.of(Objects.requireNonNull(getClass().getResource("/ieee14/criteria.crt")).getPath()));
         DynamicSimulationResult result = resultSupplier.get();
 
-        assertEquals(DynamicSimulationResult.Status.SUCCESS, result.getStatus());
-        assertTrue(result.getStatusText().isEmpty());
-        assertEquals(41, result.getCurves().size());
-        DoubleTimeSeries ts1 = result.getCurve("_GEN____1_SM_generator_UStatorPu");
-        assertEquals("_GEN____1_SM_generator_UStatorPu", ts1.getMetadata().getName());
-        assertEquals(587, ts1.toArray().length);
-        List<TimelineEvent> timeLine = result.getTimeLine();
-        assertEquals(23, timeLine.size());
-        checkFirstTimeLineEvent(timeLine.get(0), 0, "_GEN____8_SM", "PMIN : activation");
+        assertEquals(DynamicSimulationResult.Status.FAILURE, result.getStatus());
+        ReportNode dynawoLog = reportNode.getChildren().get(2);
+        assertEquals("dynawoLog", dynawoLog.getMessageKey());
+        assertTrue(dynawoLog.getChildren().stream().anyMatch(r -> r.getMessage().contains("one simulation's criteria is not respected")));
     }
 
     @Test
@@ -310,6 +305,10 @@ class DynawoSimulationTest extends AbstractDynawoTest {
     }
 
     private Supplier<DynamicSimulationResult> setupIEEE14Simulation() {
+        return setupIEEE14Simulation(NO_OP);
+    }
+
+    private Supplier<DynamicSimulationResult> setupIEEE14Simulation(ReportNode reportNode) {
         Network network = Network.read(new ResourceDataSource("IEEE14", new ResourceSet("/ieee14", "IEEE14.iidm")));
 
         GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
@@ -334,7 +333,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                 .setTimelineExportMode(DynawoSimulationParameters.ExportMode.XML);
 
         return () -> provider.run(network, dynamicModelsSupplier, eventModelsSupplier, curvesSupplier,
-                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, NO_OP)
+                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, reportNode)
                 .join();
     }
 }
