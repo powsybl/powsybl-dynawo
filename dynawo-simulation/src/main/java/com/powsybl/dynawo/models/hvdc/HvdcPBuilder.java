@@ -10,13 +10,13 @@ package com.powsybl.dynawo.models.hvdc;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.builders.*;
 import com.powsybl.dynawo.models.utils.SideUtils;
-import com.powsybl.iidm.network.HvdcLine;
-import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.TwoSides;
 
 import java.util.Collection;
 import java.util.function.Function;
+
+import static com.powsybl.iidm.network.IdentifiableType.HVDC_LINE;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -53,12 +53,7 @@ public class HvdcPBuilder extends AbstractHvdcBuilder<HvdcPBuilder> {
     }
 
     protected HvdcPBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
-        super(network, modelConfig, IdentifiableType.HVDC_LINE, reportNode, EVENT_VAR_NAME_SUPPLIER);
-    }
-
-    @Override
-    protected HvdcLine findEquipment(String staticId) {
-        return network.getHvdcLine(staticId);
+        super(network, modelConfig, HVDC_LINE.toString(), reportNode, EVENT_VAR_NAME_SUPPLIER);
     }
 
     @Override

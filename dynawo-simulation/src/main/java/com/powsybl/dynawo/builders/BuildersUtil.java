@@ -9,31 +9,45 @@ package com.powsybl.dynawo.builders;
 
 import com.powsybl.iidm.network.*;
 
+import static com.powsybl.iidm.network.IdentifiableType.BUS;
+import static com.powsybl.iidm.network.IdentifiableType.BUSBAR_SECTION;
+
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public final class BuildersUtil {
 
-    public static final String MEASUREMENT_POINT_TYPE = IdentifiableType.BUS + "/" + IdentifiableType.BUSBAR_SECTION;
+    public static final String MEASUREMENT_POINT_TYPE = BUS + "/" + BUSBAR_SECTION;
 
     private BuildersUtil() {
     }
 
     /**
      * Returns the ActionConnectionPoint (bus or busbar section) identified by the staticId parameter
-     * Verifies the point is energized and in main connected component, if not returns null
      * @param network the network containing the ActionConnectionPoint
      * @param staticId the identifiable id
      * @return the energized action connection point if found, <code>null</code> instead
      */
     public static Identifiable<?> getActionConnectionPoint(Network network, String staticId) {
         BusbarSection busbarSection = network.getBusbarSection(staticId);
-        if (busbarSection != null) {
-            return isEnergizedBus(busbarSection.getTerminal().getBusBreakerView().getBus()) ? busbarSection : null;
-        }
-        Bus bus = network.getBusBreakerView().getBus(staticId);
-        return isEnergizedBus(bus) ? bus : null;
+        return busbarSection != null ? busbarSection : network.getBusBreakerView().getBus(staticId);
     }
+
+    /**
+     * Verifies the point is energized and in main connected component
+     */
+    public static final BuilderEquipment.EquipmentPredicate<Identifiable<?>> IS_ENERGIZED = (eq, f, r) -> {
+        boolean isEnergized = switch (eq.getType()) {
+            case BUS -> isEnergizedBus((Bus) eq);
+            case BUSBAR_SECTION -> isEnergizedBus(((Injection<?>) eq).getTerminal().getBusBreakerView().getBus());
+            //TODO
+            default -> throw new UnsupportedOperationException("Only bus and bus bar section are supported");
+        };
+        if (!isEnergized) {
+            BuilderReports.reportNotEnergized(r, f, eq.getId());
+        }
+        return isEnergized;
+    };
 
     /**
      * Verifies a bus is energized and in main connected component

@@ -9,6 +9,7 @@ package com.powsybl.dynawo.models.hvdc;
 
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.builders.AbstractEquipmentModelBuilder;
+import com.powsybl.dynawo.builders.BuilderEquipment;
 import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.builders.BuilderReports;
 import com.powsybl.iidm.network.*;
@@ -23,14 +24,15 @@ public abstract class AbstractHvdcBuilder<R extends AbstractEquipmentModelBuilde
     protected TwoSides danglingSide;
     private final Function<TwoSides, String> eventVarNameSupplier;
 
-    protected AbstractHvdcBuilder(Network network, ModelConfig modelConfig, IdentifiableType identifiableType,
+    protected AbstractHvdcBuilder(Network network, ModelConfig modelConfig, String equipmentType,
+                                  BuilderEquipment.EquipmentPredicate<HvdcLine> equipmentPredicate,
                                   ReportNode reportNode, Function<TwoSides, String> eventVarNameSupplier) {
-        super(network, modelConfig, identifiableType, reportNode);
+        super(network, modelConfig, equipmentType, equipmentPredicate, reportNode);
         this.eventVarNameSupplier = eventVarNameSupplier;
     }
 
-    protected AbstractHvdcBuilder(Network network, ModelConfig modelConfig, String equipmentType, ReportNode reportNode,
-                                  Function<TwoSides, String> eventVarNameSupplier) {
+    protected AbstractHvdcBuilder(Network network, ModelConfig modelConfig, String equipmentType,
+                                  ReportNode reportNode, Function<TwoSides, String> eventVarNameSupplier) {
         super(network, modelConfig, equipmentType, reportNode);
         this.eventVarNameSupplier = eventVarNameSupplier;
     }
@@ -38,6 +40,11 @@ public abstract class AbstractHvdcBuilder<R extends AbstractEquipmentModelBuilde
     public R dangling(TwoSides danglingSide) {
         this.danglingSide = danglingSide;
         return self();
+    }
+
+    @Override
+    protected HvdcLine findEquipment(String staticId) {
+        return network.getHvdcLine(staticId);
     }
 
     @Override

@@ -290,7 +290,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                         + DSL tests
                            + Groovy Dynamic Models Supplier
                               + DSL model builder for HvdcVSC
-                                 'staticId' field value 'L' not found for equipment type(s) VSC HVDC_LINE
+                                 'staticId' field value 'L' should be an HVDC VSC
                                  Model BBM_HVDC cannot be instantiated
                         """)
                 );

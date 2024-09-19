@@ -26,7 +26,8 @@ public class BuilderEquipmentsList<T extends Identifiable<?>> {
     // when set to true equipment ids not found in the network are seen as dynamic ids for automatons and reported as such
     private final boolean missingIdsHasDynamicIds;
     protected List<String> missingEquipmentIds = new ArrayList<>();
-    protected final List<T> equipments = new ArrayList<>();
+    protected List<T> equipments = new ArrayList<>();
+    private final BuilderEquipment.EquipmentPredicate<T> equipmentPredicate;
 
     public BuilderEquipmentsList(IdentifiableType identifiableType, String fieldName) {
         this(identifiableType.toString(), fieldName, false);
@@ -37,9 +38,15 @@ public class BuilderEquipmentsList<T extends Identifiable<?>> {
     }
 
     public BuilderEquipmentsList(String equipmentType, String fieldName, boolean missingIdsHasDynamicIds) {
+        this(equipmentType, fieldName, missingIdsHasDynamicIds, null);
+    }
+
+    public BuilderEquipmentsList(String equipmentType, String fieldName, boolean missingIdsHasDynamicIds,
+                                 BuilderEquipment.EquipmentPredicate<T> equipmentPredicate) {
         this.equipmentType = equipmentType;
         this.fieldName = fieldName;
         this.missingIdsHasDynamicIds = missingIdsHasDynamicIds;
+        this.equipmentPredicate = equipmentPredicate;
     }
 
     public void addEquipments(String[] staticIds, Function<String, T> equipmentsSupplier) {
@@ -69,8 +76,10 @@ public class BuilderEquipmentsList<T extends Identifiable<?>> {
                     BuilderReports.reportStaticIdUnknown(reportNode, fieldName, missingId, equipmentType));
             if (emptyList) {
                 BuilderReports.reportEmptyList(reportNode, fieldName);
+            } else if (equipmentPredicate != null) {
+                equipments = equipments.stream().filter(eq -> equipmentPredicate.test(eq, fieldName, reportNode)).toList();
             }
-            return !emptyList;
+            return !equipments.isEmpty();
         } else {
             missingEquipmentIds.forEach(missingId ->
                     BuilderReports.reportUnknownStaticIdHandling(reportNode, fieldName, missingId, equipmentType));
