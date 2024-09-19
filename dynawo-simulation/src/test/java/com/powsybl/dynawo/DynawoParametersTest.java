@@ -28,6 +28,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -102,8 +103,8 @@ class DynawoParametersTest extends AbstractSerDeTest {
         assertEquals(timelinExportMode, parameters.getTimelineExportMode());
         assertEquals(logLevel, parameters.getLogLevelFilter());
         assertEquals(specificLogs, parameters.getSpecificLogs());
-        assertEquals(criteriaFileName, parameters.getCriteriaFileName());
-        assertEquals(fileSystem.getPath(USER_HOME + criteriaFileName), parameters.getCriteriaFilePath());
+        assertThat(parameters.getCriteriaFileName()).hasValue(criteriaFileName);
+        assertThat(parameters.getCriteriaFilePath()).hasValue(fileSystem.getPath(USER_HOME + criteriaFileName));
     }
 
     @Test
@@ -210,7 +211,7 @@ class DynawoParametersTest extends AbstractSerDeTest {
         assertEquals(DynawoSimulationParameters.DEFAULT_MERGE_LOADS, parameters.isMergeLoads());
         assertEquals(DynawoSimulationParameters.DEFAULT_USE_MODEL_SIMPLIFIERS, parameters.isUseModelSimplifiers());
         assertEquals(DynawoSimulationParameters.DEFAULT_TIMELINE_EXPORT_MODE, parameters.getTimelineExportMode());
-        assertFalse(parameters.hasCriteriaFile());
+        assertTrue(parameters.getCriteriaFilePath().isEmpty());
     }
 
     @Test

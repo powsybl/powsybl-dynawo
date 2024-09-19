@@ -16,6 +16,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Optional;
 
 import static com.powsybl.dynawo.xml.DynawoSimulationConstants.*;
 import static com.powsybl.dynawo.xml.DynawoSimulationXmlConstants.DYN_URI;
@@ -80,8 +81,8 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter {
     }
 
     private static void writeSimulation(XMLStreamWriter writer, DynawoSimulationParameters parameters, DynamicSimulationParameters dynamicSimulationParameters) throws XMLStreamException {
-        boolean hasCriteriaFile = parameters.hasCriteriaFile();
-        if (hasCriteriaFile) {
+        Optional<String> criteriaFileName = parameters.getCriteriaFileName();
+        if (criteriaFileName.isPresent()) {
             writer.writeStartElement(DYN_URI, "simulation");
         } else {
             writer.writeEmptyElement(DYN_URI, "simulation");
@@ -89,9 +90,9 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter {
         writer.writeAttribute("startTime", Double.toString(dynamicSimulationParameters.getStartTime()));
         writer.writeAttribute("stopTime", Double.toString(dynamicSimulationParameters.getStopTime()));
         writer.writeAttribute("precision", Double.toString(parameters.getPrecision()));
-        if (hasCriteriaFile) {
+        if (criteriaFileName.isPresent()) {
             writer.writeEmptyElement(DYN_URI, "criteria");
-            writer.writeAttribute("criteriaFile", parameters.getCriteriaFileName());
+            writer.writeAttribute("criteriaFile", criteriaFileName.get());
             writer.writeEndElement();
         }
     }

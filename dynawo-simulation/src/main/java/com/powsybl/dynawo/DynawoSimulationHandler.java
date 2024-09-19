@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawo;
 
+import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.computation.AbstractExecutionHandler;
 import com.powsybl.computation.Command;
@@ -217,8 +218,12 @@ public final class DynawoSimulationHandler extends AbstractExecutionHandler<Dyna
                 Files.copy(dumpFilePath, workingDir.resolve(dumpFileParameters.dumpFile()), StandardCopyOption.REPLACE_EXISTING);
             }
         }
-        if (parameters.hasCriteriaFile()) {
-            Files.copy(parameters.getCriteriaFilePath(), workingDir.resolve(parameters.getCriteriaFileName()), StandardCopyOption.REPLACE_EXISTING);
-        }
+        parameters.getCriteriaFilePath().ifPresent(filePath -> {
+            try {
+                Files.copy(filePath, workingDir.resolve(filePath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
+            } catch (IOException e) {
+                throw new PowsyblException("Simulation criteria file error", e);
+            }
+        });
     }
 }
