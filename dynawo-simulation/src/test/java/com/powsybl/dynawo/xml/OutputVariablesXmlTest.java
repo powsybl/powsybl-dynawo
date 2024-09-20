@@ -17,16 +17,17 @@ import java.io.IOException;
 /**
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  */
-class CurvesXmlTest extends DynawoTestUtil {
+class OutputVariablesXmlTest extends DynawoTestUtil {
 
     @Test
-    void writeCurve() throws SAXException, IOException {
+    void writeOutputVariables() throws SAXException, IOException {
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load();
-        DynawoSimulationContext context = new DynawoSimulationContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, eventModels, curves, parameters, dynawoParameters);
+        DynawoSimulationContext context = new DynawoSimulationContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, eventModels, outputVariables, parameters, dynawoParameters);
 
-        CurvesXml.write(tmpDir, context);
+        OutputVariablesXml.writeCurve(tmpDir, context);
         validate("curvesInput.xsd", "curvesInput.xml", tmpDir.resolve(DynawoSimulationConstants.CRV_FILENAME));
+        OutputVariablesXml.writeFsv(tmpDir, context);
+        validate("fsvInput.xsd", "fsvInput.xml", tmpDir.resolve(DynawoSimulationConstants.FSV_FILENAME));
     }
-
 }

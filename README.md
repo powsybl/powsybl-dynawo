@@ -38,25 +38,25 @@ The simulation parameters can be configured either in the `config.yml` file or u
 Network network = Network.read("/path/to/the/casefile.xiidm");
 
 // Load the dynamic models mapping
-GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
+DynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
     Paths.get("/path/to/dynamicModelsMapping.groovy"),
     GroovyExtension.find(DynamicModelGroovyExtension.class, DynawoSimulationProvider.NAME));
 
 // Load the events
-GroovyEventModelsSupplier eventModelsSupplier = new GroovyEventModelsSupplier(
+EventModelsSupplier eventModelsSupplier = new GroovyEventModelsSupplier(
     Paths.get("/path/to/event.groovy"),
     GroovyExtension.find(EventModelGroovyExtension.class, DynawoSimulationProvider.NAME));
 
-// Configure the curves
-GroovyCurvesSupplier curvesSupplier = new GroovyCurvesSupplier(
-    Paths.get("/path/to/curves.groovy"),
-    GroovyExtension.find(CurveGroovyExtension.class, DynawoSimulationProvider.NAME));
+// Configure the output variables
+OutputVariablesSupplier outputVariablesSupplier = new GroovyOutputVariablesSupplier(
+    Paths.get("/path/to/outputVariables.groovy"),
+    GroovyExtension.find(OutputVariableGroovyExtension.class, DynawoSimulationProvider.NAME));
 
 // Load the parameters
 DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
 
 // Run the simulation and display the results
-DynamicSimulationResult result = DynamicSimulation.run(network, dynamicModelsSupplier, eventModelsSupplier, curvesSupplier, parameters);
+DynamicSimulationResult result = DynamicSimulation.run(network, dynamicModelsSupplier, eventModelsSupplier, outputVariablesSupplier, parameters);
 System.out.println(result.getStatus());
 System.out.println("Timeline:");
 result.getTimeLine().forEach(tl -> System.out.printf("[%.8f] %s (on %s)%n", tl.time(), tl.message(), tl.modelName()));

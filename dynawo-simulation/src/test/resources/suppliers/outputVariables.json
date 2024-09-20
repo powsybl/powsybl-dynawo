@@ -16,5 +16,15 @@
       "staticId": "LOAD",
       "variables": ["load_PPu", "load_QPu"]
     }
+  ],
+  "fsv":[
+    {
+      "dynamicModelId": "BBM_GEN",
+      "variable": "generator_PGen"
+    },
+    {
+      "staticId": "LOAD",
+      "variable": "load_QPu"
+    }
   ]
 }

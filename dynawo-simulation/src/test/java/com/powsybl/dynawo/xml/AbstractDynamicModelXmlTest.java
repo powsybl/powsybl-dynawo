@@ -10,8 +10,8 @@ package com.powsybl.dynawo.xml;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.commons.test.AbstractSerDeTest;
 import com.powsybl.commons.test.TestUtil;
-import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
+import com.powsybl.dynamicsimulation.OutputVariable;
 import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.models.BlackBoxModel;
@@ -46,7 +46,7 @@ public abstract class AbstractDynamicModelXmlTest extends AbstractSerDeTest {
     protected Network network;
     protected List<BlackBoxModel> dynamicModels = new ArrayList<>();
     protected List<BlackBoxModel> eventModels = new ArrayList<>();
-    protected List<Curve> curves = new ArrayList<>();
+    protected List<OutputVariable> curves = new ArrayList<>();
     protected DynawoSimulationContext context;
     protected ReportNode reportNode = ReportNode.newRootReportNode().withMessageTemplate("testDyd", "Test DYD").build();
 
