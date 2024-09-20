@@ -26,7 +26,7 @@ class JobsXmlTest extends DynawoTestUtil {
     void writeJob() throws SAXException, IOException {
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load();
-        DynawoSimulationContext context = new DynawoSimulationContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, eventModels, curves, parameters, dynawoParameters);
+        DynawoSimulationContext context = new DynawoSimulationContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, eventModels, outputVariables, parameters, dynawoParameters);
 
         JobsXml.write(tmpDir, context);
         validate("jobs.xsd", "jobs.xml", tmpDir.resolve(DynawoSimulationConstants.JOBS_FILENAME));
@@ -37,7 +37,7 @@ class JobsXmlTest extends DynawoTestUtil {
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load()
                 .setDumpFileParameters(DumpFileParameters.createImportExportDumpFileParameters(Path.of("/dumpFiles"), "dump.dmp"));
-        DynawoSimulationContext context = new DynawoSimulationContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, eventModels, curves, parameters, dynawoParameters);
+        DynawoSimulationContext context = new DynawoSimulationContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, eventModels, outputVariables, parameters, dynawoParameters);
 
         JobsXml.write(tmpDir, context);
         validate("jobs.xsd", "jobsWithDump.xml", tmpDir.resolve(DynawoSimulationConstants.JOBS_FILENAME));
@@ -48,7 +48,7 @@ class JobsXmlTest extends DynawoTestUtil {
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load()
                 .setSpecificLogs(EnumSet.allOf(DynawoSimulationParameters.SpecificLog.class));
-        DynawoSimulationContext context = new DynawoSimulationContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, eventModels, curves, parameters, dynawoParameters);
+        DynawoSimulationContext context = new DynawoSimulationContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, eventModels, outputVariables, parameters, dynawoParameters);
 
         JobsXml.write(tmpDir, context);
         validate("jobs.xsd", "jobsWithSpecificLogs.xml", tmpDir.resolve(DynawoSimulationConstants.JOBS_FILENAME));

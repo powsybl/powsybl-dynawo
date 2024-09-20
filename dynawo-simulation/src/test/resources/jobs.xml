@@ -14,6 +14,7 @@
             <dyn:timeline exportMode="TXT"/>
             <dyn:finalState exportIIDMFile="true" exportDumpFile="false"/>
             <dyn:curves inputFile="powsybl_dynawo.crv" exportMode="CSV"/>
+            <dyn:finalStateValues inputFile="powsybl_dynawo.fsv"/>
             <dyn:logs>
                 <dyn:appender tag="" file="dynawo.log" lvlFilter="INFO"/>
             </dyn:logs>

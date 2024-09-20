@@ -2,9 +2,8 @@ package com.powsybl.dynawo.builders;
 
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.commons.test.TestUtil;
-import com.powsybl.dynamicsimulation.Curve;
-import com.powsybl.dynawo.curves.DynawoCurve;
-import com.powsybl.dynawo.curves.DynawoCurvesBuilder;
+import com.powsybl.dynamicsimulation.OutputVariable;
+import com.powsybl.dynawo.outputvariables.DynawoOutputVariablesBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -30,31 +29,31 @@ class CurvesBuilderTest {
 
     @Test
     void buildFromDynamicId() {
-        List<Curve> curveList = new DynawoCurvesBuilder()
+        List<OutputVariable> curveList = new DynawoOutputVariablesBuilder()
                 .dynamicModelId("BBM_GEN")
                 .variable("generator_omegaPu")
                 .build();
         assertEquals(1, curveList.size());
-        DynawoCurve curve = (DynawoCurve) curveList.get(0);
+        OutputVariable curve = curveList.get(0);
         assertEquals("BBM_GEN", curve.getModelId());
-        assertEquals("generator_omegaPu", curve.getVariable());
+        assertEquals("generator_omegaPu", curve.getVariableName());
     }
 
     @Test
     void buildFromStaticId() {
-        List<Curve> curveList = new DynawoCurvesBuilder()
+        List<OutputVariable> curveList = new DynawoOutputVariablesBuilder()
                 .staticId("GEN")
                 .variables("generator_omegaPu", "generator_PGen")
                 .build();
         assertEquals(2, curveList.size());
-        DynawoCurve curve = (DynawoCurve) curveList.get(0);
+        OutputVariable curve = curveList.get(0);
         assertEquals("NETWORK", curve.getModelId());
-        assertEquals("GEN_generator_omegaPu", curve.getVariable());
+        assertEquals("GEN_generator_omegaPu", curve.getVariableName());
     }
 
     @ParameterizedTest(name = "{1}")
     @MethodSource("provideBuilderError")
-    void testScriptError(Function<ReportNode, DynawoCurvesBuilder> builderFunction, boolean isInstantiable, String report) throws IOException {
+    void testScriptError(Function<ReportNode, DynawoOutputVariablesBuilder> builderFunction, boolean isInstantiable, String report) throws IOException {
         boolean hasInstance = !builderFunction.apply(reporter).build().isEmpty();
         assertEquals(isInstantiable, hasInstance);
         checkReportNode(report);
@@ -62,8 +61,8 @@ class CurvesBuilderTest {
 
     private static Stream<Arguments> provideBuilderError() {
         return Stream.of(
-                Arguments.of((Function<ReportNode, DynawoCurvesBuilder>) r ->
-                        new DynawoCurvesBuilder(r)
+                Arguments.of((Function<ReportNode, DynawoOutputVariablesBuilder>) r ->
+                        new DynawoOutputVariablesBuilder(r)
                             .staticId("GEN")
                             .dynamicModelId("BBM_GEN")
                             .variable("uPu"),
@@ -72,8 +71,8 @@ class CurvesBuilderTest {
                         + Builder tests
                            Both 'dynamicModelId' and 'staticId' are defined, 'dynamicModelId' will be used
                         """),
-                Arguments.of((Function<ReportNode, DynawoCurvesBuilder>) r ->
-                        new DynawoCurvesBuilder(r)
+                Arguments.of((Function<ReportNode, DynawoOutputVariablesBuilder>) r ->
+                        new DynawoOutputVariablesBuilder(r)
                             .staticId("GEN"),
                         false,
                         """
@@ -81,8 +80,8 @@ class CurvesBuilderTest {
                            'variables' field is not set
                            Curve GEN cannot be instantiated
                         """),
-                Arguments.of((Function<ReportNode, DynawoCurvesBuilder>) r ->
-                        new DynawoCurvesBuilder(r)
+                Arguments.of((Function<ReportNode, DynawoOutputVariablesBuilder>) r ->
+                        new DynawoOutputVariablesBuilder(r)
                             .staticId("GEN")
                             .variables(),
                         false,

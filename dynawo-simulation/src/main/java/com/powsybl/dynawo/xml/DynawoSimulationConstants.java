@@ -19,9 +19,15 @@ public final class DynawoSimulationConstants {
 
     public static final String CRV_FILENAME = "powsybl_dynawo.crv";
 
-    public static final String CURVES_OUTPUT_PATH = "outputs/curves";
+    public static final String FSV_FILENAME = "powsybl_dynawo.fsv";
+
+    public static final String CURVES_OUTPUT_PATH = "curves";
 
     public static final String CURVES_FILENAME = "curves.csv";
+
+    public static final String FSV_OUTPUT_PATH = "finalStateValues";
+
+    public static final String FSV_OUTPUT_FILENAME = "finalStateValues.csv";
 
     public static final String MULTIPLE_JOBS_FILENAME = "multiple_jobs.xml";
 

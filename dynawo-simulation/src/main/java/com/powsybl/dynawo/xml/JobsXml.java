@@ -102,10 +102,15 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter {
         writer.writeAttribute("exportIIDMFile", Boolean.toString(parameters.isWriteFinalState()));
         writer.writeAttribute("exportDumpFile", Boolean.toString(parameters.getDumpFileParameters().exportDumpFile()));
 
-        if (context.withCurves()) {
+        if (context.withCurveVariables()) {
             writer.writeEmptyElement(DYN_URI, "curves");
-            writer.writeAttribute("inputFile", DynawoSimulationConstants.CRV_FILENAME);
+            writer.writeAttribute("inputFile", CRV_FILENAME);
             writer.writeAttribute("exportMode", DynawoSimulationParameters.ExportMode.CSV.toString());
+        }
+
+        if (context.withFsvVariables()) {
+            writer.writeEmptyElement(DYN_URI, "finalStateValues");
+            writer.writeAttribute("inputFile", FSV_FILENAME);
         }
 
         writer.writeStartElement(DYN_URI, "logs");

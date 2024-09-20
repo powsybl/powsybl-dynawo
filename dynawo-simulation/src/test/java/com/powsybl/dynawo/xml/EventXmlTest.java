@@ -35,7 +35,7 @@ class EventXmlTest extends DynawoTestUtil {
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load();
         DynawoSimulationContext context = new DynawoSimulationContext(network, network.getVariantManager().getWorkingVariantId(),
-                dynamicModels, eventModels, curves, parameters, dynawoParameters);
+                dynamicModels, eventModels, outputVariables, parameters, dynawoParameters);
 
         DydXml.write(tmpDir, context);
         validate("dyd.xsd", "events.xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
@@ -66,7 +66,7 @@ class EventXmlTest extends DynawoTestUtil {
         eventModels.add(event1Duplicate);
         eventModels.add(event2Duplicate);
         String workingVariantId = network.getVariantManager().getWorkingVariantId();
-        DynawoSimulationContext context = new DynawoSimulationContext(network, workingVariantId, dynamicModels, eventModels, curves, DynamicSimulationParameters.load(), DynawoSimulationParameters.load());
+        DynawoSimulationContext context = new DynawoSimulationContext(network, workingVariantId, dynamicModels, eventModels, outputVariables, DynamicSimulationParameters.load(), DynawoSimulationParameters.load());
         Assertions.assertThat(context.getBlackBoxEventModels()).containsExactly(event1, event2);
     }
 }

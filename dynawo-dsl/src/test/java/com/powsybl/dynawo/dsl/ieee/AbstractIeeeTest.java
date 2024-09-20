@@ -44,7 +44,7 @@ public abstract class AbstractIeeeTest {
 
     private DynamicModelsSupplier dynamicModelsSupplier;
     private EventModelsSupplier eventModelsSupplier;
-    private CurvesSupplier curvesSupplier;
+    private OutputVariablesSupplier outputVariablesSupplier;
 
     @AfterEach
     void tearDown() throws IOException {
@@ -85,11 +85,11 @@ public abstract class AbstractIeeeTest {
 
         // Curves
         if (curvesFile != null) {
-            Files.copy(Objects.requireNonNull(getClass().getResourceAsStream(curvesFile)), workingDir.resolve("curves.groovy"));
-            List<CurveGroovyExtension> curveGroovyExtensions = GroovyExtension.find(CurveGroovyExtension.class, DynawoSimulationProvider.NAME);
-            curvesSupplier = new GroovyCurvesSupplier(workingDir.resolve("curves.groovy"), curveGroovyExtensions);
+            Files.copy(Objects.requireNonNull(getClass().getResourceAsStream(curvesFile)), workingDir.resolve("outputVariables.groovy"));
+            List<OutputVariableGroovyExtension> curveGroovyExtensions = GroovyExtension.find(OutputVariableGroovyExtension.class, DynawoSimulationProvider.NAME);
+            outputVariablesSupplier = new GroovyOutputVariablesSupplier(workingDir.resolve("outputVariables.groovy"), curveGroovyExtensions);
         } else {
-            curvesSupplier = CurvesSupplier.empty();
+            outputVariablesSupplier = OutputVariablesSupplier.empty();
         }
 
         parameters = new DynamicSimulationParameters()
@@ -116,7 +116,7 @@ public abstract class AbstractIeeeTest {
         DynamicSimulation.Runner dynawoSimulation = DynamicSimulation.find();
         assertEquals(DynawoSimulationProvider.NAME, dynawoSimulation.getName());
         return dynawoSimulation.run(network, dynamicModelsSupplier, eventModelsSupplier,
-            curvesSupplier, network.getVariantManager().getWorkingVariantId(),
+            outputVariablesSupplier, network.getVariantManager().getWorkingVariantId(),
             computationManager, parameters, NO_OP);
     }
 
