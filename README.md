@@ -28,7 +28,7 @@ To run a dynamic simulation, you need:
 - a case file
 - a `DynamicModelsSupplier` to associate dynamic models to the equipment of the network
 - an `EventModelsSuppler` to configure events simulated during the simulation (optional)
-- a `CurvesSupplier` to follow the evolution of dynamic variables during the simulation (optional)
+- an `OutputVariablesSupplier` to follow the evolution of dynamic variables during the simulation (optional)
 - a set of parameters to configure the simulation (optional)
 
 Thanks to `powsybl-dynawo-dsl`, the inputs can be easily configured using Groovy scripts.

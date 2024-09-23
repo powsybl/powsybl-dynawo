@@ -25,22 +25,22 @@ import static org.assertj.core.api.Assertions.assertThat;
 class DynawoOutputVariablesJsonDeserializerTest {
 
     @Test
-    void testCurvesSupplier() throws IOException {
+    void testOutputVariablesSupplier() throws IOException {
         try (InputStream is = getClass().getResourceAsStream("/suppliers/outputVariables.json")) {
-            List<OutputVariable> curves = new SupplierJsonDeserializer<>(new OutputVariablesJsonDeserializer()).deserialize(is);
-            assertThat(curves).usingRecursiveFieldByFieldElementComparatorOnFields()
-                    .containsExactlyInAnyOrderElementsOf(getExpectedCurves());
+            List<OutputVariable> outputVariables = new SupplierJsonDeserializer<>(new OutputVariablesJsonDeserializer()).deserialize(is);
+            assertThat(outputVariables).usingRecursiveFieldByFieldElementComparatorOnFields()
+                    .containsExactlyInAnyOrderElementsOf(getExpectedOutputVariables());
         }
     }
 
-    private static List<OutputVariable> getExpectedCurves() {
-        List<OutputVariable> curves = new ArrayList<>();
-        new DynawoOutputVariablesBuilder().dynamicModelId("BBM_GEN").variables("voltageRegulator_EfdPu").add(curves::add);
-        new DynawoOutputVariablesBuilder().staticId("BUS").variables("Upu_value").add(curves::add);
-        new DynawoOutputVariablesBuilder().dynamicModelId("BBM_GEN2").variables("generator_omegaPu", "generator_PGen", "generator_UStatorPU").add(curves::add);
-        new DynawoOutputVariablesBuilder().staticId("LOAD").variables("load_PPu", "load_QPu").outputType(OutputVariable.OutputType.CURVE).add(curves::add);
-        new DynawoOutputVariablesBuilder().dynamicModelId("BBM_GEN").variables("generator_PGen").outputType(OutputVariable.OutputType.FSV).add(curves::add);
-        new DynawoOutputVariablesBuilder().staticId("LOAD").variables("load_QPu").outputType(OutputVariable.OutputType.FSV).add(curves::add);
-        return curves;
+    private static List<OutputVariable> getExpectedOutputVariables() {
+        List<OutputVariable> variables = new ArrayList<>();
+        new DynawoOutputVariablesBuilder().dynamicModelId("BBM_GEN").variables("voltageRegulator_EfdPu").add(variables::add);
+        new DynawoOutputVariablesBuilder().staticId("BUS").variables("Upu_value").add(variables::add);
+        new DynawoOutputVariablesBuilder().dynamicModelId("BBM_GEN2").variables("generator_omegaPu", "generator_PGen", "generator_UStatorPU").add(variables::add);
+        new DynawoOutputVariablesBuilder().staticId("LOAD").variables("load_PPu", "load_QPu").outputType(OutputVariable.OutputType.CURVE).add(variables::add);
+        new DynawoOutputVariablesBuilder().dynamicModelId("BBM_GEN").variables("generator_PGen").outputType(OutputVariable.OutputType.FSV).add(variables::add);
+        new DynawoOutputVariablesBuilder().staticId("LOAD").variables("load_QPu").outputType(OutputVariable.OutputType.FSV).add(variables::add);
+        return variables;
     }
 }

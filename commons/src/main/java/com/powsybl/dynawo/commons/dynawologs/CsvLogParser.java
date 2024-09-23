@@ -23,7 +23,7 @@ public final class CsvLogParser extends AbstractCsvParser<LogEntry> {
     }
 
     public CsvLogParser(char separator) {
-        super(separator);
+        super(separator, false);
     }
 
     @Override

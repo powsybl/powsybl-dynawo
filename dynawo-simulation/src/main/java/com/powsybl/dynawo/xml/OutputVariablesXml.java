@@ -38,16 +38,16 @@ public final class OutputVariablesXml extends AbstractXmlDynawoSimulationWriter 
     }
 
     public static void writeFsv(Path workingDir, DynawoSimulationContext context) throws IOException {
-        new OutputVariablesXml(FSV_FILENAME,"finalStateValuesInput", "finalStateValue", OutputVariable.OutputType.FSV)
+        new OutputVariablesXml(FSV_FILENAME, "finalStateValuesInput", "finalStateValue", OutputVariable.OutputType.FSV)
                 .createXmlFileFromContext(workingDir, context);
     }
 
     @Override
     public void write(XMLStreamWriter writer, DynawoSimulationContext context) throws XMLStreamException {
-        for (OutputVariable dynCurve : context.getOutputVariables(outputType)) {
+        for (OutputVariable variable : context.getOutputVariables(outputType)) {
             writer.writeEmptyElement(DYN_URI, xmlElementName);
-            writer.writeAttribute("model", dynCurve.getModelId());
-            writer.writeAttribute("variable", dynCurve.getVariableName());
+            writer.writeAttribute("model", variable.getModelId());
+            writer.writeAttribute("variable", variable.getVariableName());
         }
     }
 }

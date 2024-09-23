@@ -40,10 +40,10 @@ public class OutputVariablesJsonDeserializer extends StdDeserializer<List<Output
         List<DynawoOutputVariablesBuilder> modelConfigList = new ArrayList<>();
         JsonUtil.parseObject(parser, name -> {
             if (name.equals("curves")) {
-                JsonUtil.parseObjectArray(parser, modelConfigList::add, p -> parseCurvesBuilder(p, OutputVariable.OutputType.CURVE));
+                JsonUtil.parseObjectArray(parser, modelConfigList::add, p -> parseOutputVariablesBuilder(p, OutputVariable.OutputType.CURVE));
                 return true;
             } else if (name.equals("fsv")) {
-                JsonUtil.parseObjectArray(parser, modelConfigList::add, p -> parseCurvesBuilder(p, OutputVariable.OutputType.FSV));
+                JsonUtil.parseObjectArray(parser, modelConfigList::add, p -> parseOutputVariablesBuilder(p, OutputVariable.OutputType.FSV));
                 return true;
             }
             return false;
@@ -54,7 +54,7 @@ public class OutputVariablesJsonDeserializer extends StdDeserializer<List<Output
                 .toList();
     }
 
-    private DynawoOutputVariablesBuilder parseCurvesBuilder(JsonParser parser, OutputVariable.OutputType outputType) {
+    private DynawoOutputVariablesBuilder parseOutputVariablesBuilder(JsonParser parser, OutputVariable.OutputType outputType) {
         DynawoOutputVariablesBuilder variablesBuilder = builderConstructor.get();
         variablesBuilder.outputType(outputType);
         JsonUtil.parseObject(parser, name -> {

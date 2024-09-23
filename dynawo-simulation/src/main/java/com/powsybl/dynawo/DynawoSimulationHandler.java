@@ -15,6 +15,7 @@ import com.powsybl.computation.ExecutionReport;
 import com.powsybl.dynamicsimulation.DynamicSimulationResult;
 import com.powsybl.dynamicsimulation.DynamicSimulationResultImpl;
 import com.powsybl.dynamicsimulation.TimelineEvent;
+import com.powsybl.dynawo.outputvariables.CsvFsvParser;
 import com.powsybl.dynawo.xml.OutputVariablesXml;
 import com.powsybl.dynawo.xml.DydXml;
 import com.powsybl.dynawo.xml.JobsXml;
@@ -190,7 +191,7 @@ public final class DynawoSimulationHandler extends AbstractExecutionHandler<Dyna
     }
 
     private void setCurves(Path workingDir) {
-        Path curvesPath = workingDir.resolve(CURVES_OUTPUT_PATH).toAbsolutePath().resolve(CURVES_FILENAME);
+        Path curvesPath = workingDir.resolve(CURVES_OUTPUT_PATH).resolve(CURVES_FILENAME);
         if (Files.exists(curvesPath)) {
             TimeSeries.parseCsv(curvesPath, new TimeSeriesCsvConfig(TimeSeriesConstants.DEFAULT_SEPARATOR, false, TimeSeries.TimeFormat.FRACTIONS_OF_SECOND))
                     .values().forEach(l -> l.forEach(curve -> curves.put(curve.getMetadata().getName(), (DoubleTimeSeries) curve)));
@@ -201,12 +202,10 @@ public final class DynawoSimulationHandler extends AbstractExecutionHandler<Dyna
         }
     }
 
-    //TODO parse FSV
     private void setFinalStateValues(Path workingDir) {
-        Path fsvPath = workingDir.resolve(FSV_OUTPUT_PATH).toAbsolutePath().resolve(FSV_OUTPUT_FILENAME);
+        Path fsvPath = workingDir.resolve(FSV_OUTPUT_PATH).resolve(FSV_OUTPUT_FILENAME);
         if (Files.exists(fsvPath)) {
-            TimeSeries.parseCsv(fsvPath, new TimeSeriesCsvConfig(TimeSeriesConstants.DEFAULT_SEPARATOR, false, TimeSeries.TimeFormat.FRACTIONS_OF_SECOND))
-                    .values().forEach(l -> l.forEach(curve -> curves.put(curve.getMetadata().getName(), (DoubleTimeSeries) curve)));
+            new CsvFsvParser(';').parse(fsvPath).forEach(e -> fsv.put(e.model() + "_" + e.variable(), e.value()));
         } else {
             LOGGER.warn("Final state values folder not found");
             status = DynamicSimulationResult.Status.FAILURE;
@@ -235,9 +234,13 @@ public final class DynawoSimulationHandler extends AbstractExecutionHandler<Dyna
     }
 
     private static void deleteExistingFile(Path basePath, String... elements) throws IOException {
-        Path finalPath = Arrays.stream(elements).map(Path::of).reduce(basePath, Path::resolve);
-        if (Files.exists(finalPath)) {
-            Files.delete(finalPath);
+        Path finalPath = basePath;
+        for (String element : elements) {
+            finalPath = finalPath.resolve(element);
+            if (!Files.exists(finalPath)) {
+                return;
+            }
         }
+        Files.delete(finalPath);
     }
 }
