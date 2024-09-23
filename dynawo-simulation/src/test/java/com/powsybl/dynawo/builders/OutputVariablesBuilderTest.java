@@ -18,7 +18,7 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class CurvesBuilderTest {
+class OutputVariablesBuilderTest {
 
     private ReportNode reporter;
 
@@ -29,26 +29,26 @@ class CurvesBuilderTest {
 
     @Test
     void buildFromDynamicId() {
-        List<OutputVariable> curveList = new DynawoOutputVariablesBuilder()
+        List<OutputVariable> outputVariables = new DynawoOutputVariablesBuilder()
                 .dynamicModelId("BBM_GEN")
                 .variable("generator_omegaPu")
                 .build();
-        assertEquals(1, curveList.size());
-        OutputVariable curve = curveList.get(0);
-        assertEquals("BBM_GEN", curve.getModelId());
-        assertEquals("generator_omegaPu", curve.getVariableName());
+        assertEquals(1, outputVariables.size());
+        OutputVariable variable = outputVariables.get(0);
+        assertEquals("BBM_GEN", variable.getModelId());
+        assertEquals("generator_omegaPu", variable.getVariableName());
     }
 
     @Test
     void buildFromStaticId() {
-        List<OutputVariable> curveList = new DynawoOutputVariablesBuilder()
+        List<OutputVariable> outputVariables = new DynawoOutputVariablesBuilder()
                 .staticId("GEN")
                 .variables("generator_omegaPu", "generator_PGen")
                 .build();
-        assertEquals(2, curveList.size());
-        OutputVariable curve = curveList.get(0);
-        assertEquals("NETWORK", curve.getModelId());
-        assertEquals("GEN_generator_omegaPu", curve.getVariableName());
+        assertEquals(2, outputVariables.size());
+        OutputVariable variable = outputVariables.get(0);
+        assertEquals("NETWORK", variable.getModelId());
+        assertEquals("GEN_generator_omegaPu", variable.getVariableName());
     }
 
     @ParameterizedTest(name = "{1}")
@@ -78,7 +78,7 @@ class CurvesBuilderTest {
                         """
                         + Builder tests
                            'variables' field is not set
-                           Curve GEN cannot be instantiated
+                           Output variable GEN cannot be instantiated
                         """),
                 Arguments.of((Function<ReportNode, DynawoOutputVariablesBuilder>) r ->
                         new DynawoOutputVariablesBuilder(r)
@@ -88,7 +88,7 @@ class CurvesBuilderTest {
                         """
                         + Builder tests
                            'variables' list is empty
-                           Curve GEN cannot be instantiated
+                           Output variable GEN cannot be instantiated
                         """)
         );
     }

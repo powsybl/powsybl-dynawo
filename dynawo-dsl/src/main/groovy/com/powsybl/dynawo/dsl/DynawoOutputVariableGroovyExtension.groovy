@@ -31,11 +31,10 @@ class DynawoOutputVariableGroovyExtension implements OutputVariableGroovyExtensi
     void load(Binding binding, Consumer<OutputVariable> consumer, ReportNode reportNode) {
         Closure<Void> closure = { Closure<Void> closure, OutputVariable.OutputType type ->
             def cloned = closure.clone()
-            DynawoOutputVariablesBuilder curvesBuilder = new DynawoOutputVariablesBuilder(reportNode)
-            curvesBuilder.outputType(type)
-            cloned.delegate = curvesBuilder
+            DynawoOutputVariablesBuilder variablesBuilder = new DynawoOutputVariablesBuilder(reportNode).outputType(type)
+            cloned.delegate = variablesBuilder
             cloned()
-            curvesBuilder.add(consumer)
+            variablesBuilder.add(consumer)
         }
         binding.curve = c -> closure(c, OutputVariable.OutputType.CURVE)
         binding.fsv = c -> closure(c, OutputVariable.OutputType.FSV)

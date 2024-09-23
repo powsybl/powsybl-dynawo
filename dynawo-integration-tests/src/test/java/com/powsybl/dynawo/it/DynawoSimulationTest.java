@@ -73,7 +73,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                 GroovyExtension.find(EventModelGroovyExtension.class, DynawoSimulationProvider.NAME));
 
         GroovyOutputVariablesSupplier outputVariablesSupplier = new GroovyOutputVariablesSupplier(
-                getResourceAsStream("/ieee14/disconnectline/curves.groovy"),
+                getResourceAsStream("/ieee14/disconnectline/outputVariables.groovy"),
                 GroovyExtension.find(OutputVariableGroovyExtension.class, DynawoSimulationProvider.NAME));
 
         List<ParametersSet> modelsParameters = ParametersXml.load(getResourceAsStream("/ieee14/disconnectline/models.par"));
@@ -91,10 +91,12 @@ class DynawoSimulationTest extends AbstractDynawoTest {
 
         assertEquals(DynamicSimulationResult.Status.SUCCESS, result.getStatus());
         assertTrue(result.getStatusText().isEmpty());
-        assertEquals(41, result.getCurves().size());
+        assertEquals(27, result.getCurves().size());
         DoubleTimeSeries ts1 = result.getCurve("_GEN____1_SM_generator_UStatorPu");
         assertEquals("_GEN____1_SM_generator_UStatorPu", ts1.getMetadata().getName());
         assertEquals(587, ts1.toArray().length);
+        assertEquals(14, result.getFinalStateValues().size());
+        assertEquals(1.046227, result.getFinalStateValues().get("NETWORK__BUS___10_TN_Upu_value"));
         List<TimelineEvent> timeLine = result.getTimeLine();
         assertEquals(23, timeLine.size());
         checkFirstTimeLineEvent(timeLine.get(0), 0, "_GEN____8_SM", "PMIN : activation");
@@ -113,7 +115,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                 GroovyExtension.find(EventModelGroovyExtension.class, DynawoSimulationProvider.NAME));
 
         GroovyOutputVariablesSupplier outputVariablesSupplier = new GroovyOutputVariablesSupplier(
-                getResourceAsStream("/ieee14/disconnectline/curves.groovy"),
+                getResourceAsStream("/ieee14/disconnectline/outputVariables.groovy"),
                 GroovyExtension.find(OutputVariableGroovyExtension.class, DynawoSimulationProvider.NAME));
 
         Path dumpDir = Files.createDirectory(localDir.resolve("dumpFiles"));

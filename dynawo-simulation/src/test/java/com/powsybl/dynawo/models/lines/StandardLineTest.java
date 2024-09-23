@@ -52,9 +52,9 @@ class StandardLineTest {
         DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load();
         String workingVariantId = network.getVariantManager().getWorkingVariantId();
         List<BlackBoxModel> events = Collections.emptyList();
-        List<OutputVariable> curves = Collections.emptyList();
+        List<OutputVariable> outputVariables = Collections.emptyList();
         UnsupportedOperationException e = assertThrows(UnsupportedOperationException.class,
-            () -> new DynawoSimulationContext(network, workingVariantId, dynamicModels, events, curves, parameters, dynawoParameters));
+            () -> new DynawoSimulationContext(network, workingVariantId, dynamicModels, events, outputVariables, parameters, dynawoParameters));
         assertEquals("i variable not implemented in StandardLine dynawo's model", e.getMessage());
     }
 }

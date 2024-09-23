@@ -89,23 +89,23 @@ public class DynawoOutputVariablesBuilder {
     private boolean isInstantiable() {
         checkData();
         if (!isInstantiable) {
-            BuilderReports.reportCurveInstantiationFailure(reportNode, getId());
+            BuilderReports.reportOutputVariableInstantiationFailure(reportNode, getId());
         }
         return isInstantiable;
     }
 
-    public void add(Consumer<OutputVariable> curveConsumer) {
+    public void add(Consumer<OutputVariable> outputVariableConsumer) {
         if (isInstantiable()) {
             boolean hasDynamicModelId = dynamicModelId != null;
             String id = hasDynamicModelId ? dynamicModelId : DEFAULT_DYNAMIC_MODEL_ID;
             variables.forEach(v ->
-                    curveConsumer.accept(new DynawoOutputVariable(id, hasDynamicModelId ? v : staticId + "_" + v, type)));
+                    outputVariableConsumer.accept(new DynawoOutputVariable(id, hasDynamicModelId ? v : staticId + "_" + v, type)));
         }
     }
 
     public List<OutputVariable> build() {
-        List<OutputVariable> curves = new ArrayList<>();
-        add(curves::add);
-        return curves;
+        List<OutputVariable> outputVariables = new ArrayList<>();
+        add(outputVariables::add);
+        return outputVariables;
     }
 }

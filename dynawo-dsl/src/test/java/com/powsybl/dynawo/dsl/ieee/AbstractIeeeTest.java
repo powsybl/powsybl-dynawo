@@ -54,7 +54,7 @@ public abstract class AbstractIeeeTest {
     public abstract String getWorkingDirName();
 
     protected void setup(String parametersFile, String networkParametersFile, String networkParametersId, String solverParametersFile, String solverParametersId, String networkFile,
-                         String dynamicModelsFile, String eventModelsFile, String curvesFile, int startTime, int stopTime) throws IOException {
+                         String dynamicModelsFile, String eventModelsFile, String outputVariablesFile, int startTime, int stopTime) throws IOException {
 
         // The parameter files are copied into the PlatformConfig filesystem,
         // that filesystem is the one that DynawoSimulationContext and ParametersXml will use to read the parameters
@@ -83,11 +83,11 @@ public abstract class AbstractIeeeTest {
             eventModelsSupplier = EventModelsSupplier.empty();
         }
 
-        // Curves
-        if (curvesFile != null) {
-            Files.copy(Objects.requireNonNull(getClass().getResourceAsStream(curvesFile)), workingDir.resolve("outputVariables.groovy"));
-            List<OutputVariableGroovyExtension> curveGroovyExtensions = GroovyExtension.find(OutputVariableGroovyExtension.class, DynawoSimulationProvider.NAME);
-            outputVariablesSupplier = new GroovyOutputVariablesSupplier(workingDir.resolve("outputVariables.groovy"), curveGroovyExtensions);
+        // Output Variables
+        if (outputVariablesFile != null) {
+            Files.copy(Objects.requireNonNull(getClass().getResourceAsStream(outputVariablesFile)), workingDir.resolve("outputVariables.groovy"));
+            List<OutputVariableGroovyExtension> variableGroovyExtensions = GroovyExtension.find(OutputVariableGroovyExtension.class, DynawoSimulationProvider.NAME);
+            outputVariablesSupplier = new GroovyOutputVariablesSupplier(workingDir.resolve("outputVariables.groovy"), variableGroovyExtensions);
         } else {
             outputVariablesSupplier = OutputVariablesSupplier.empty();
         }

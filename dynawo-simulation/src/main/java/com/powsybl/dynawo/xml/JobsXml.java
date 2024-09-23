@@ -111,6 +111,7 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter {
         if (context.withFsvVariables()) {
             writer.writeEmptyElement(DYN_URI, "finalStateValues");
             writer.writeAttribute("inputFile", FSV_FILENAME);
+            writer.writeAttribute("exportMode", DynawoSimulationParameters.ExportMode.CSV.toString());
         }
 
         writer.writeStartElement(DYN_URI, "logs");

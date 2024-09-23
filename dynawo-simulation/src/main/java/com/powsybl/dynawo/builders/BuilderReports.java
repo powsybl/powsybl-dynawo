@@ -55,9 +55,9 @@ public final class BuilderReports {
                 .add();
     }
 
-    public static void reportCurveInstantiationFailure(ReportNode reportNode, String id) {
+    public static void reportOutputVariableInstantiationFailure(ReportNode reportNode, String id) {
         reportNode.newReportNode()
-                .withMessageTemplate("curveInstantiationError", "Curve ${id} cannot be instantiated")
+                .withMessageTemplate("outputVariableInstantiationError", "Output variable ${id} cannot be instantiated")
                 .withUntypedValue("id", id)
                 .withSeverity(TypedValue.WARN_SEVERITY)
                 .add();
