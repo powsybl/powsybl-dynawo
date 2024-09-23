@@ -117,7 +117,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
     private ExportMode timelineExportMode = DEFAULT_TIMELINE_EXPORT_MODE;
     private LogLevel logLevelFilter = DEFAULT_LOG_LEVEL_FILTER;
     private EnumSet<SpecificLog> specificLogs = EnumSet.noneOf(SpecificLog.class);
-    private Optional<Path> criteriaFilePath = Optional.empty();
+    private Path criteriaFilePath = null;
 
     /**
      * Loads parameters from the default platform configuration.
@@ -311,7 +311,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
     }
 
     public Optional<Path> getCriteriaFilePath() {
-        return criteriaFilePath;
+        return Optional.ofNullable(criteriaFilePath);
     }
 
     public Optional<String> getCriteriaFileName() {
@@ -319,7 +319,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
     }
 
     public DynawoSimulationParameters setCriteriaFilePath(Path criteriaFilePath) {
-        this.criteriaFilePath = Optional.ofNullable(criteriaFilePath);
+        this.criteriaFilePath = criteriaFilePath;
         return this;
     }
 
