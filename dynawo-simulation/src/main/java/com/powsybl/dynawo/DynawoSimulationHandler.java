@@ -100,28 +100,12 @@ public final class DynawoSimulationHandler extends AbstractExecutionHandler<Dyna
 
         Path outputsFolder = workingDir.resolve(OUTPUTS_FOLDER);
         context.getNetwork().getVariantManager().setWorkingVariant(context.getWorkingVariantId());
-        DynawoSimulationParameters parameters = context.getDynawoSimulationParameters();
-        DumpFileParameters dumpFileParameters = parameters.getDumpFileParameters();
-
-        setDynawoLog(outputsFolder, parameters.getSpecificLogs());
-        // Error file
+        setDynawoLog(outputsFolder, context.getDynawoSimulationParameters().getSpecificLogs());
         Path errorFile = workingDir.resolve(ERROR_FILENAME);
         if (Files.exists(errorFile)) {
             Matcher errorMatcher = Pattern.compile(DYNAWO_ERROR_PATTERN + "(.*)").matcher(Files.readString(errorFile));
             if (!errorMatcher.find()) {
-                if (parameters.isWriteFinalState()) {
-                    updateNetwork(outputsFolder);
-                }
-                if (dumpFileParameters.exportDumpFile()) {
-                    setDumpFile(outputsFolder, dumpFileParameters.dumpFileFolder(), workingDir.getFileName());
-                }
-                setTimeline(outputsFolder);
-                if (context.withCurveVariables()) {
-                    setCurves(outputsFolder);
-                }
-                if (context.withFsvVariables()) {
-                    setFinalStateValues(outputsFolder);
-                }
+                setSuccessOutputs(workingDir, outputsFolder);
             } else {
                 status = DynamicSimulationResult.Status.FAILURE;
                 statusText = errorMatcher.group().substring(DYNAWO_ERROR_PATTERN.length());
@@ -133,6 +117,24 @@ public final class DynawoSimulationHandler extends AbstractExecutionHandler<Dyna
         }
 
         return new DynamicSimulationResultImpl(status, statusText, curves, fsv, timeline);
+    }
+
+    private void setSuccessOutputs(Path workingDir, Path outputsFolder) throws IOException {
+        DynawoSimulationParameters parameters = context.getDynawoSimulationParameters();
+        if (parameters.isWriteFinalState()) {
+            updateNetwork(outputsFolder);
+        }
+        DumpFileParameters dumpFileParameters = parameters.getDumpFileParameters();
+        if (dumpFileParameters.exportDumpFile()) {
+            setDumpFile(outputsFolder, dumpFileParameters.dumpFileFolder(), workingDir.getFileName());
+        }
+        setTimeline(outputsFolder);
+        if (context.withCurveVariables()) {
+            setCurves(outputsFolder);
+        }
+        if (context.withFsvVariables()) {
+            setFinalStateValues(outputsFolder);
+        }
     }
 
     private void setDynawoLog(Path outputsFolder, Set<DynawoSimulationParameters.SpecificLog> specificLogs) throws IOException {
