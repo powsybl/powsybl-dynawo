@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawo.models.buses;
 
+import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.iidm.network.Bus;
 
 /**
@@ -14,8 +15,8 @@ import com.powsybl.iidm.network.Bus;
  */
 public class InfiniteBus extends AbstractBus {
 
-    protected InfiniteBus(String dynamicModelId, Bus bus, String parameterSetId, String lib) {
-        super(dynamicModelId, bus, parameterSetId, lib);
+    protected InfiniteBus(String dynamicModelId, Bus bus, String parameterSetId, ModelConfig modelConfig) {
+        super(dynamicModelId, bus, parameterSetId, modelConfig);
     }
 
     @Override

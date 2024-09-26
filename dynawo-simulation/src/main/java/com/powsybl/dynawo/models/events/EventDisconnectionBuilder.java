@@ -11,6 +11,7 @@ import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.builders.BuilderEquipment;
 import com.powsybl.dynawo.builders.BuilderReports;
 import com.powsybl.dynawo.builders.EventModelInfo;
+import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.iidm.network.*;
 
 import java.util.EnumSet;
@@ -44,6 +45,13 @@ public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identif
 
     public static EventModelInfo getEventModelInfo() {
         return MODEL_INFO;
+    }
+
+    /**
+     * Returns the model info if usable with the given {@link DynawoVersion}
+     */
+    public static EventModelInfo getEventModelInfo(DynawoVersion dynawoVersion) {
+        return MODEL_INFO.version().isBetween(dynawoVersion) ? MODEL_INFO : null;
     }
 
     EventDisconnectionBuilder(Network network, ReportNode reportNode) {
@@ -95,11 +103,11 @@ public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identif
     public AbstractEvent build() {
         if (isInstantiable()) {
             return switch (disconnectionType) {
-                case INJECTION -> new EventInjectionDisconnection(eventId, (Injection<?>) builderEquipment.getEquipment(), startTime, true);
+                case INJECTION -> new EventInjectionDisconnection(eventId, (Injection<?>) builderEquipment.getEquipment(), MODEL_INFO, startTime, true);
                 case BRANCH ->
-                        new EventBranchDisconnection(eventId, (Branch<?>) builderEquipment.getEquipment(), startTime, disconnectSide);
+                        new EventBranchDisconnection(eventId, (Branch<?>) builderEquipment.getEquipment(), MODEL_INFO, startTime, disconnectSide);
                 case HVDC ->
-                        new EventHvdcDisconnection(eventId, (HvdcLine) builderEquipment.getEquipment(), startTime, disconnectSide);
+                        new EventHvdcDisconnection(eventId, (HvdcLine) builderEquipment.getEquipment(), MODEL_INFO, startTime, disconnectSide);
                 default -> null;
             };
         }

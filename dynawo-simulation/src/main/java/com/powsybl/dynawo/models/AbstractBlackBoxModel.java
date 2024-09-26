@@ -24,19 +24,17 @@ import java.util.function.Consumer;
  */
 public abstract class AbstractBlackBoxModel implements BlackBoxModel {
 
-    private final String lib;
     private final String dynamicModelId;
     private String parameterSetId;
 
-    protected AbstractBlackBoxModel(String dynamicModelId, String parameterSetId, String lib) {
+    protected AbstractBlackBoxModel(String dynamicModelId, String parameterSetId) {
         this.dynamicModelId = Objects.requireNonNull(dynamicModelId);
         this.parameterSetId = Objects.requireNonNull(parameterSetId);
-        this.lib = Objects.requireNonNull(lib);
     }
 
-    @Override
-    public String getLib() {
-        return lib;
+    protected AbstractBlackBoxModel(String dynamicModelId) {
+        this.dynamicModelId = Objects.requireNonNull(dynamicModelId);
+        this.parameterSetId = dynamicModelId;
     }
 
     @Override
@@ -84,6 +82,11 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel {
     @Override
     public List<VarMapping> getVarsMapping() {
         return Collections.emptyList();
+    }
+
+    @Override
+    public void write(XMLStreamWriter writer, DynawoSimulationContext context) throws XMLStreamException {
+        write(writer, getParFile(context));
     }
 
     protected void writeDynamicAttributes(XMLStreamWriter writer, String parFileName) throws XMLStreamException {

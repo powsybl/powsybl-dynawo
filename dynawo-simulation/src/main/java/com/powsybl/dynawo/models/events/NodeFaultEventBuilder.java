@@ -11,6 +11,7 @@ import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.builders.BuilderEquipment;
 import com.powsybl.dynawo.builders.BuilderReports;
 import com.powsybl.dynawo.builders.EventModelInfo;
+import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Network;
@@ -36,6 +37,13 @@ public class NodeFaultEventBuilder extends AbstractEventModelBuilder<Bus, NodeFa
 
     public static EventModelInfo getEventModelInfo() {
         return MODEL_INFO;
+    }
+
+    /**
+     * Returns the model info if usable with the given {@link DynawoVersion}
+     */
+    public static EventModelInfo getEventModelInfo(DynawoVersion dynawoVersion) {
+        return MODEL_INFO.version().isBetween(dynawoVersion) ? MODEL_INFO : null;
     }
 
     NodeFaultEventBuilder(Network network, ReportNode reportNode) {
@@ -85,7 +93,7 @@ public class NodeFaultEventBuilder extends AbstractEventModelBuilder<Bus, NodeFa
 
     @Override
     public NodeFaultEvent build() {
-        return isInstantiable() ? new NodeFaultEvent(eventId, builderEquipment.getEquipment(), startTime, faultTime, rPu, xPu) : null;
+        return isInstantiable() ? new NodeFaultEvent(eventId, builderEquipment.getEquipment(), MODEL_INFO, startTime, faultTime, rPu, xPu) : null;
     }
 
     protected NodeFaultEventBuilder self() {

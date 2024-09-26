@@ -9,6 +9,7 @@ package com.powsybl.dynawo.models.automationsystems.phaseshifters;
 
 import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.DynawoSimulationReports;
+import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
@@ -29,8 +30,8 @@ public class PhaseShifterBlockingIAutomationSystem extends AbstractPureDynamicBl
     private final ImmutableLateInit<TwoWindingsTransformer> transformer = new ImmutableLateInit<>();
     private boolean isConnected = true;
 
-    protected PhaseShifterBlockingIAutomationSystem(String dynamicModelId, String phaseShifterIDynamicId, String parameterSetId, String lib) {
-        super(dynamicModelId, parameterSetId, lib);
+    protected PhaseShifterBlockingIAutomationSystem(String dynamicModelId, String phaseShifterIDynamicId, String parameterSetId, ModelConfig modelConfig) {
+        super(dynamicModelId, parameterSetId, modelConfig);
         this.phaseShifterIDynamicId = phaseShifterIDynamicId;
     }
 

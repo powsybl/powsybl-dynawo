@@ -10,14 +10,19 @@ package com.powsybl.dynawo.builders;
 /**
  * @param name Model name
  * @param info Definition of the event model
+ * @param version Dynawo version range where the model can be used
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public record EventModelInfo(String name, String info) {
+public record EventModelInfo(String name, String info, VersionBound version) {
+
+    public EventModelInfo(String name, String info) {
+        this(name, info, VersionBound.createDefaultVersion());
+    }
 
     /**
-     * Concatenation of name and doc
+     * Concatenation of name, doc and version bound
      */
     public String formattedInfo() {
-        return String.format("%s: %s", name, info);
+        return String.format("%s: %s (%s)", name, info, version);
     }
 }

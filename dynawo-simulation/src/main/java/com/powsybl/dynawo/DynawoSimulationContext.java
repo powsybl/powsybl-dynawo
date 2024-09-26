@@ -10,6 +10,9 @@ import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
+import com.powsybl.dynawo.builders.VersionBound;
+import com.powsybl.dynawo.commons.DynawoConstants;
+import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.curves.DynawoCurve;
 import com.powsybl.dynawo.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawo.models.BlackBoxModel;
@@ -63,11 +66,11 @@ public class DynawoSimulationContext {
 
     public DynawoSimulationContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
                                    List<Curve> curves, DynamicSimulationParameters parameters, DynawoSimulationParameters dynawoSimulationParameters) {
-        this(network, workingVariantId, dynamicModels, eventModels, curves, parameters, dynawoSimulationParameters, ReportNode.NO_OP);
+        this(network, workingVariantId, dynamicModels, eventModels, curves, parameters, dynawoSimulationParameters, DynawoConstants.VERSION_MIN, ReportNode.NO_OP);
     }
 
     public DynawoSimulationContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
-                                   List<Curve> curves, DynamicSimulationParameters parameters, DynawoSimulationParameters dynawoSimulationParameters, ReportNode reportNode) {
+                                   List<Curve> curves, DynamicSimulationParameters parameters, DynawoSimulationParameters dynawoSimulationParameters, DynawoVersion currentVersion, ReportNode reportNode) {
 
         ReportNode contextReportNode = DynawoSimulationReports.createDynawoSimulationContextReportNode(reportNode);
         this.network = Objects.requireNonNull(network);
@@ -76,7 +79,9 @@ public class DynawoSimulationContext {
         this.dynawoSimulationParameters = Objects.requireNonNull(dynawoSimulationParameters);
 
         Stream<BlackBoxModel> uniqueIdsDynamicModels = Objects.requireNonNull(dynamicModels).stream()
-                .filter(distinctByDynamicId(contextReportNode).and(distinctByStaticId(contextReportNode)));
+                .filter(distinctByDynamicId(contextReportNode)
+                        .and(distinctByStaticId(contextReportNode)
+                        .and(supportedVersion(Objects.requireNonNull(currentVersion), contextReportNode))));
         this.dynamicModels = dynawoSimulationParameters.isUseModelSimplifiers()
                 ? simplifyModels(uniqueIdsDynamicModels, contextReportNode).toList()
                 : uniqueIdsDynamicModels.toList();
@@ -229,6 +234,21 @@ public class DynawoSimulationContext {
         return bbm -> {
             if (!seen.add(bbm.getDynamicModelId())) {
                 DynawoSimulationReports.reportDuplicateDynamicId(reportNode, bbm.getDynamicModelId(), bbm.getName());
+                return false;
+            }
+            return true;
+        };
+    }
+
+    protected static Predicate<BlackBoxModel> supportedVersion(DynawoVersion currentVersion, ReportNode reportNode) {
+        return bbm -> {
+            VersionBound versionBound = bbm.getVersionBound();
+            if (!versionBound.hasMinBound(currentVersion)) {
+                DynawoSimulationReports.reportDynawoVersionTooHigh(reportNode, bbm.getName(), bbm.getDynamicModelId(), versionBound.min(), currentVersion);
+                return false;
+            }
+            if (!versionBound.hasMaxBound(currentVersion)) {
+                DynawoSimulationReports.reportDynawoVersionTooLow(reportNode, bbm.getName(), bbm.getDynamicModelId(), versionBound.max(), currentVersion, versionBound.terminationCause());
                 return false;
             }
             return true;

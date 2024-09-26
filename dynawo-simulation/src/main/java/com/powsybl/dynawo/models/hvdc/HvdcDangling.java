@@ -8,6 +8,7 @@
 package com.powsybl.dynawo.models.hvdc;
 
 import com.powsybl.commons.PowsyblException;
+import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.buses.EquipmentConnectionPoint;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
@@ -26,9 +27,9 @@ public class HvdcDangling extends BaseHvdc {
 
     private final TwoSides danglingSide;
 
-    protected HvdcDangling(String dynamicModelId, HvdcLine hvdc, String parameterSetId, String hvdcLib,
+    protected HvdcDangling(String dynamicModelId, HvdcLine hvdc, String parameterSetId, ModelConfig modelConfig,
                            Function<TwoSides, String> eventVarNameSupplier, TwoSides danglingSide) {
-        super(dynamicModelId, hvdc, parameterSetId, hvdcLib, eventVarNameSupplier);
+        super(dynamicModelId, hvdc, parameterSetId, modelConfig, eventVarNameSupplier);
         this.danglingSide = danglingSide;
     }
 

@@ -9,6 +9,7 @@ package com.powsybl.dynawo;
 
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.commons.report.TypedValue;
+import com.powsybl.dynawo.commons.DynawoVersion;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -17,6 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 public final class DynawoSimulationReports {
 
     private static final String DYNAMIC_ID_FIELD = "dynamicId";
+    private static final String MODEL_NAME_FIELD = "modelName";
 
     private DynawoSimulationReports() {
     }
@@ -38,7 +40,7 @@ public final class DynawoSimulationReports {
         reportNode.newReportNode()
                 .withMessageTemplate("duplicateStaticId", "Duplicate static id found: ${duplicateId} -> model ${modelName} ${dynamicId} will be skipped")
                 .withUntypedValue("duplicateId", duplicateId)
-                .withUntypedValue("modelName", modelName)
+                .withUntypedValue(MODEL_NAME_FIELD, modelName)
                 .withUntypedValue(DYNAMIC_ID_FIELD, dynamicId)
                 .withSeverity(TypedValue.WARN_SEVERITY)
                 .add();
@@ -49,7 +51,30 @@ public final class DynawoSimulationReports {
                 .withMessageTemplate("duplicateDynamicId",
                         "Duplicate dynamic id found: ${duplicateId} -> model ${modelName} will be skipped")
                 .withUntypedValue("duplicateId", duplicateId)
-                .withUntypedValue("modelName", modelName)
+                .withUntypedValue(MODEL_NAME_FIELD, modelName)
+                .withSeverity(TypedValue.WARN_SEVERITY)
+                .add();
+    }
+
+    public static void reportDynawoVersionTooHigh(ReportNode reportNode, String modelName, String dynamicId, DynawoVersion modelVersion, DynawoVersion currentVersion) {
+        reportNode.newReportNode()
+                .withMessageTemplate("highDynawoVersion", "Model version ${modelVersion} is too high for the current dynawo version ${currentVersion} -> model ${modelName} ${dynamicId} will be skipped")
+                .withUntypedValue("modelVersion", modelVersion.toString())
+                .withUntypedValue("currentVersion", currentVersion.toString())
+                .withUntypedValue(MODEL_NAME_FIELD, modelName)
+                .withUntypedValue(DYNAMIC_ID_FIELD, dynamicId)
+                .withSeverity(TypedValue.WARN_SEVERITY)
+                .add();
+    }
+
+    public static void reportDynawoVersionTooLow(ReportNode reportNode, String modelName, String dynamicId, DynawoVersion modelVersion, DynawoVersion currentVersion, String terminationCause) {
+        reportNode.newReportNode()
+                .withMessageTemplate("lowDynawoVersion", "Model version ${modelVersion} is too low for the current dynawo version ${currentVersion} ({$terminationCauses}) -> model ${modelName} ${dynamicId} will be skipped")
+                .withUntypedValue("modelVersion", modelVersion.toString())
+                .withUntypedValue("currentVersion", currentVersion.toString())
+                .withUntypedValue("terminationCause", terminationCause)
+                .withUntypedValue(MODEL_NAME_FIELD, modelName)
+                .withUntypedValue(DYNAMIC_ID_FIELD, dynamicId)
                 .withSeverity(TypedValue.WARN_SEVERITY)
                 .add();
     }

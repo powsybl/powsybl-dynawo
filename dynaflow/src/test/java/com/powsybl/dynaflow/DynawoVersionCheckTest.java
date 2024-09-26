@@ -8,6 +8,7 @@ package com.powsybl.dynaflow;
 
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
+import com.powsybl.commons.PowsyblException;
 import com.powsybl.computation.Command;
 import com.powsybl.computation.ComputationManager;
 import com.powsybl.computation.ExecutionEnvironment;
@@ -16,6 +17,7 @@ import com.powsybl.computation.local.LocalCommandExecutor;
 import com.powsybl.computation.local.LocalComputationConfig;
 import com.powsybl.computation.local.LocalComputationManager;
 import com.powsybl.dynawo.commons.DynawoUtil;
+import com.powsybl.dynawo.commons.DynawoVersion;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -79,14 +81,15 @@ class DynawoVersionCheckTest {
     void versionTest() throws IOException {
         LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynawo_version.out");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
-        assertTrue(DynawoUtil.checkDynawoVersion(env, computationManager, versionCmd, true));
+        assertEquals(new DynawoVersion(1, 5, 0), DynawoUtil.requireDynaMinVersion(env, computationManager, versionCmd, "DynaFlow", true));
     }
 
     @Test
     void badVersionTest() throws IOException {
         LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynawo_bad_version.out");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
-        assertFalse(DynawoUtil.checkDynawoVersion(env, computationManager, versionCmd, true));
+        PowsyblException e = assertThrows(PowsyblException.class, () -> DynawoUtil.requireDynaMinVersion(env, computationManager, versionCmd, "DynaFlow", true));
+        assertEquals("DynaFlow version not supported. Must be >= 1.5.0", e.getMessage());
     }
 
     @Test
@@ -97,7 +100,7 @@ class DynawoVersionCheckTest {
                 .build();
         LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynaflow_version.out");
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool());
-        CompletionException e = assertThrows(CompletionException.class, () -> DynawoUtil.checkDynawoVersion(env, computationManager, badVersionCmd, true));
+        CompletionException e = assertThrows(CompletionException.class, () -> DynawoUtil.requireDynaMinVersion(env, computationManager, badVersionCmd, "DynaFlow", true));
         assertEquals("com.powsybl.commons.PowsyblException: No output for DynaFlow version command", e.getMessage());
     }
 }

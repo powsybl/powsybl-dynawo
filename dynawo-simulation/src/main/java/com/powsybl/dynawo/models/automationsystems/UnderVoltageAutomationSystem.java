@@ -7,10 +7,11 @@
  */
 package com.powsybl.dynawo.models.automationsystems;
 
+import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.AbstractPureDynamicBlackBoxModel;
+import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.generators.GeneratorModel;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
-import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.iidm.network.Generator;
 
 import java.util.Arrays;
@@ -24,8 +25,8 @@ public class UnderVoltageAutomationSystem extends AbstractPureDynamicBlackBoxMod
 
     protected final Generator generator;
 
-    protected UnderVoltageAutomationSystem(String dynamicModelId, String parameterSetId, Generator generator, String lib) {
-        super(dynamicModelId, parameterSetId, lib);
+    protected UnderVoltageAutomationSystem(String dynamicModelId, String parameterSetId, Generator generator, ModelConfig modelConfig) {
+        super(dynamicModelId, parameterSetId, modelConfig);
         this.generator = Objects.requireNonNull(generator);
     }
 

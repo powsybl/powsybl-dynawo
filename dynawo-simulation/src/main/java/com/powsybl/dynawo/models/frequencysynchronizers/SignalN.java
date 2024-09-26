@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawo.models.frequencysynchronizers;
 
+import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.buses.BusOfSignalNModel;
@@ -23,11 +24,11 @@ import java.util.List;
 public class SignalN extends AbstractPureDynamicBlackBoxModel implements FrequencySynchronizerModel {
 
     private static final String SIGNAL_N_ID = "Signal_N";
-    private static final String LIB = "SignalN";
+    private static final ModelConfig MODEL_CONFIG = new ModelConfig("SignalN");
     private final List<SignalNModel> signalNEquipments;
 
     public SignalN(List<SignalNModel> signalNEquipments) {
-        super(SIGNAL_N_ID, "", LIB);
+        super(SIGNAL_N_ID, "", MODEL_CONFIG);
         this.signalNEquipments = signalNEquipments;
     }
 

@@ -8,6 +8,7 @@
 package com.powsybl.dynawo.models.automationsystems;
 
 import com.powsybl.dynawo.DynawoSimulationReports;
+import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawo.models.TransformerSide;
 import com.powsybl.dynawo.models.VarConnection;
@@ -30,8 +31,8 @@ public class TapChangerAutomationSystem extends AbstractPureDynamicBlackBoxModel
     private final TransformerSide side;
     private ConnectionState connection = null;
 
-    protected TapChangerAutomationSystem(String dynamicModelId, String parameterSetId, Load load, TransformerSide side, String lib) {
-        super(dynamicModelId, parameterSetId, lib);
+    protected TapChangerAutomationSystem(String dynamicModelId, String parameterSetId, Load load, TransformerSide side, ModelConfig modelConfig) {
+        super(dynamicModelId, parameterSetId, modelConfig);
         this.load = Objects.requireNonNull(load);
         this.side = Objects.requireNonNull(side);
     }

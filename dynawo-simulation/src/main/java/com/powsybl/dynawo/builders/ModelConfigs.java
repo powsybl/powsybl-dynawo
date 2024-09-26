@@ -7,10 +7,12 @@
  */
 package com.powsybl.dynawo.builders;
 
+import com.powsybl.dynawo.commons.DynawoVersion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -43,6 +45,12 @@ public class ModelConfigs {
 
     public Collection<ModelInfo> getModelInfos() {
         return Collections.unmodifiableCollection(modelConfigMap.values());
+    }
+
+    public Collection<ModelInfo> getModelInfos(DynawoVersion dynawoVersion) {
+        return modelConfigMap.values().stream()
+                .filter(m -> m.version().isBetween(dynawoVersion))
+                .collect(Collectors.toUnmodifiableList());
     }
 
     Set<String> getModelsName() {

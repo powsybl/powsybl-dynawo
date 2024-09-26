@@ -10,6 +10,7 @@ package com.powsybl.dynawo.builders;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.powsybl.dynawo.commons.DynawoVersion;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -40,6 +41,9 @@ class ModelConfigLoaderTest {
                               "properties": [
                                 "SYNCHRONIZED"
                               ],
+                              "minVersion": "1.3.0",
+                              "maxVersion": "1.4.0",
+                              "terminationCause": "Deleted",
                               "doc": "Photovoltaics Wecc generator"
                             },
                             {
@@ -51,7 +55,8 @@ class ModelConfigLoaderTest {
                             },
                             {
                               "lib": "WT4AWeccCurrentSource",
-                              "doc": "WT4A Wecc generator"
+                              "doc": "WT4A Wecc generator",
+                              "minVersion": "1.6.0"
                             }
                         ]
                     }
@@ -69,28 +74,32 @@ class ModelConfigLoaderTest {
                 "Wecc",
                 "WT4BWeccCurrentSource",
                 "WT4AWeccCurrentSource");
-        ModelConfig defaultModel = new ModelConfig("WT4BWeccCurrentSource", null, null, List.of("SYNCHRONIZED", "CONTROLLABLE"));
+        ModelConfig defaultModel = new ModelConfig("WT4BWeccCurrentSource", List.of("SYNCHRONIZED", "CONTROLLABLE"));
         assertThat(listModelConfigs(synchroGens)).containsExactlyInAnyOrder(
-                new ModelConfig("PhotovoltaicsWeccCurrentSource", "Wecc", "WTG4A", List.of("SYNCHRONIZED"), "Photovoltaics Wecc generator"),
+                new ModelConfig("PhotovoltaicsWeccCurrentSource", "Wecc", "WTG4A", List.of("SYNCHRONIZED"), "Photovoltaics Wecc generator", new VersionBound(new DynawoVersion(1, 3, 0), new DynawoVersion(1, 4, 0), "Deleted")),
                 defaultModel,
-                new ModelConfig("WT4AWeccCurrentSource", null, null, Collections.emptyList(), "WT4A Wecc generator"));
+                new ModelConfig("WT4AWeccCurrentSource", null, null, Collections.emptyList(), "WT4A Wecc generator", new VersionBound(new DynawoVersion(1, 6, 0))));
         assertEquals(defaultModel, synchroGens.getDefaultModelConfig());
-        assertThat(synchroGens.getModelInfos()).map(ModelInfo::formattedInfo).containsExactlyInAnyOrder("Wecc (PhotovoltaicsWeccCurrentSource): Photovoltaics Wecc generator", "WT4BWeccCurrentSource", "WT4AWeccCurrentSource: WT4A Wecc generator");
+        assertThat(synchroGens.getModelInfos()).map(ModelInfo::formattedInfo).containsExactlyInAnyOrder(
+                "Wecc (PhotovoltaicsWeccCurrentSource): Photovoltaics Wecc generator (Dynawo Version 1.3.0 - 1.4.0 (Deleted))",
+                "WT4BWeccCurrentSource (Dynawo Version 1.5.0)",
+                "WT4AWeccCurrentSource: WT4A Wecc generator (Dynawo Version 1.6.0)");
+        assertThat(synchroGens.getModelInfos(DynawoVersion.createFromString("1.5.0"))).map(ModelInfo::name).containsExactlyInAnyOrder("WT4BWeccCurrentSource");
     }
 
     @Test
     void mergeModelConfigs() {
-        ModelConfig defaultModel = new ModelConfig("AA", null, null, Collections.emptyList());
+        ModelConfig defaultModel = new ModelConfig("AA");
         ModelConfigs modelConfigs1 = new ModelConfigs(new HashMap<>(Map.of(defaultModel.name(), defaultModel)), defaultModel.name());
 
-        ModelConfig mc1 = new ModelConfig("BB", null, null, Collections.emptyList());
-        ModelConfig mc2 = new ModelConfig("CC", null, null, Collections.emptyList());
+        ModelConfig mc1 = new ModelConfig("BB");
+        ModelConfig mc2 = new ModelConfig("CC");
         ModelConfigs modelConfigs2 = new ModelConfigs(new HashMap<>(Map.of(mc1.name(), mc1, mc2.name(), mc2)), mc1.name());
 
         modelConfigs1.addModelConfigs(modelConfigs2);
         assertThat(listModelConfigs(modelConfigs1)).containsExactlyInAnyOrder(
                 defaultModel,
-                new ModelConfig("BB", null, null, Collections.emptyList()),
+                new ModelConfig("BB"),
                 mc2);
         assertEquals(defaultModel, modelConfigs1.getDefaultModelConfig());
 

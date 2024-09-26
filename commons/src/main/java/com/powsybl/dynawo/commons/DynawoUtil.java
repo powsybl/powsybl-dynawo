@@ -44,22 +44,25 @@ public final class DynawoUtil {
         network.write("XIIDM", params, file);
     }
 
-    public static void requireDynaMinVersion(ExecutionEnvironment env, ComputationManager computationManager, Command versionCmd,
-                                             String dynaName, boolean fromErr) {
-        if (!checkDynawoVersion(env, computationManager, versionCmd, fromErr)) {
+    public static DynawoVersion requireDynaMinVersion(ExecutionEnvironment env, ComputationManager computationManager,
+                                                      Command versionCmd, String dynaName, boolean fromErr) {
+        DynawoVersion version = getDynawoVersion(env, computationManager, versionCmd, fromErr);
+        if (DynawoConstants.VERSION_MIN.compareTo(version) > 0) {
             throw new PowsyblException(dynaName + " version not supported. Must be >= " + DynawoConstants.VERSION_MIN);
         }
+        return version;
     }
 
-    public static boolean checkDynawoVersion(ExecutionEnvironment env, ComputationManager computationManager, Command versionCmd, boolean fromErr) {
-        return computationManager.execute(env, new AbstractExecutionHandler<Boolean>() {
+    private static DynawoVersion getDynawoVersion(ExecutionEnvironment env, ComputationManager computationManager,
+                                                 Command versionCmd, boolean fromErr) {
+        return computationManager.execute(env, new AbstractExecutionHandler<DynawoVersion>() {
             @Override
             public List<CommandExecution> before(Path path) {
                 return Collections.singletonList(new CommandExecution(versionCmd, 1));
             }
 
             @Override
-            public Boolean after(Path workingDir, ExecutionReport report) throws IOException {
+            public DynawoVersion after(Path workingDir, ExecutionReport report) throws IOException {
                 super.after(workingDir, report);
                 Optional<InputStream> std = fromErr ? report.getStdErr(versionCmd, 0) : report.getStdOut(versionCmd, 0);
                 if (std.isEmpty()) {
@@ -67,8 +70,7 @@ public final class DynawoUtil {
                 }
                 try (Reader reader = new InputStreamReader(std.get())) {
                     String stdErrContent = CharStreams.toString(reader);
-                    DynawoVersion version = DynawoVersion.createFromString(versionSanitizer(stdErrContent));
-                    return DynawoConstants.VERSION_MIN.compareTo(version) < 1;
+                    return DynawoVersion.createFromString(versionSanitizer(stdErrContent));
                 }
             }
         }).join();

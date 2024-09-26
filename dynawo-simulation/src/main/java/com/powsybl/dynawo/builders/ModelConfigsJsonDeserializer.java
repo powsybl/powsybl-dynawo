@@ -12,6 +12,7 @@ import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.powsybl.commons.json.JsonUtil;
+import com.powsybl.dynawo.commons.DynawoVersion;
 
 import java.io.IOException;
 import java.util.*;
@@ -64,6 +65,9 @@ public class ModelConfigsJsonDeserializer extends StdDeserializer<Map<String, Mo
             String internalModelPrefix = null;
             String doc = null;
             List<String> properties = Collections.emptyList();
+            DynawoVersion minVersion = VersionBound.MODEL_DEFAULT_MIN_VERSION;
+            DynawoVersion maxVersion = null;
+            String terminationCause = null;
         };
         JsonUtil.parseObject(parser, name ->
             switch (parser.currentName()) {
@@ -87,9 +91,23 @@ public class ModelConfigsJsonDeserializer extends StdDeserializer<Map<String, Mo
                     parsingContext.doc = parser.nextTextValue();
                     yield true;
                 }
+                case "minVersion" -> {
+                    parsingContext.minVersion = DynawoVersion.createFromString(parser.nextTextValue());
+                    yield true;
+                }
+                case "maxVersion" -> {
+                    parsingContext.maxVersion = DynawoVersion.createFromString(parser.nextTextValue());
+                    yield true;
+                }
+                case "terminationCause" -> {
+                    parsingContext.terminationCause = parser.nextTextValue();
+                    yield true;
+                }
                 default -> false;
             }
         );
-        return new ModelConfig(parsingContext.lib, parsingContext.alias, parsingContext.internalModelPrefix, parsingContext.properties, parsingContext.doc);
+        return new ModelConfig(parsingContext.lib, parsingContext.alias, parsingContext.internalModelPrefix,
+                parsingContext.properties, parsingContext.doc,
+                new VersionBound(parsingContext.minVersion, parsingContext.maxVersion, parsingContext.terminationCause));
     }
 }

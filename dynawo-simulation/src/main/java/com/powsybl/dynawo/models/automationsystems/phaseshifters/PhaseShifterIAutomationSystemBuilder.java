@@ -9,6 +9,7 @@ package com.powsybl.dynawo.models.automationsystems.phaseshifters;
 
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.builders.*;
+import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.iidm.network.Network;
 
 import java.util.Collection;
@@ -46,13 +47,20 @@ public class PhaseShifterIAutomationSystemBuilder extends AbstractPhaseShifterMo
         return MODEL_CONFIGS.getModelInfos();
     }
 
+    /**
+     * Returns models usable with the given {@link DynawoVersion}
+     */
+    public static Collection<ModelInfo> getSupportedModelInfos(DynawoVersion dynawoVersion) {
+        return MODEL_CONFIGS.getModelInfos(dynawoVersion);
+    }
+
     protected PhaseShifterIAutomationSystemBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
         super(network, modelConfig, reportNode);
     }
 
     @Override
     public PhaseShifterIAutomationSystem build() {
-        return isInstantiable() ? new PhaseShifterIAutomationSystem(dynamicModelId, transformer.getEquipment(), parameterSetId, getLib()) : null;
+        return isInstantiable() ? new PhaseShifterIAutomationSystem(dynamicModelId, transformer.getEquipment(), parameterSetId, modelConfig) : null;
     }
 
     @Override

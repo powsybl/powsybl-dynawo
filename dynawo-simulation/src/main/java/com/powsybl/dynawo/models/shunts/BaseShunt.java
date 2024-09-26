@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawo.models.shunts;
 
+import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.AbstractEquipmentBlackBoxModel;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.buses.EquipmentConnectionPoint;
@@ -20,8 +21,8 @@ import java.util.List;
  */
 public class BaseShunt extends AbstractEquipmentBlackBoxModel<ShuntCompensator> implements ShuntModel {
 
-    protected BaseShunt(String dynamicModelId, ShuntCompensator svarc, String parameterSetId, String lib) {
-        super(dynamicModelId, parameterSetId, svarc, lib);
+    protected BaseShunt(String dynamicModelId, ShuntCompensator svarc, String parameterSetId, ModelConfig modelConfig) {
+        super(dynamicModelId, parameterSetId, svarc, modelConfig);
     }
 
     @Override

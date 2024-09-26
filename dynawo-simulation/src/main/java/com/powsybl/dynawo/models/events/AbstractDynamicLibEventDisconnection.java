@@ -8,6 +8,7 @@
 package com.powsybl.dynawo.models.events;
 
 import com.powsybl.dynawo.DynawoSimulationContext;
+import com.powsybl.dynawo.builders.EventModelInfo;
 import com.powsybl.dynawo.models.utils.ImmutableLateInit;
 import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.iidm.network.Identifiable;
@@ -28,8 +29,8 @@ public abstract class AbstractDynamicLibEventDisconnection extends AbstractEvent
     private final boolean disconnect;
     private final ImmutableLateInit<Boolean> equipmentHasDynamicModel = new ImmutableLateInit<>();
 
-    protected AbstractDynamicLibEventDisconnection(String eventId, Identifiable<?> equipment, double startTime, boolean disconnect) {
-        super(eventId, equipment, startTime, DYNAMIC_MODEL_LIB);
+    protected AbstractDynamicLibEventDisconnection(String eventId, Identifiable<?> equipment, EventModelInfo eventModelInfo, double startTime, boolean disconnect) {
+        super(eventId, equipment, eventModelInfo, startTime);
         this.disconnect = disconnect;
     }
 
