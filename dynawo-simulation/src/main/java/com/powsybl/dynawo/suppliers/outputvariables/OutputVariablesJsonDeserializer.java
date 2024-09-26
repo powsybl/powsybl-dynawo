@@ -43,7 +43,7 @@ public class OutputVariablesJsonDeserializer extends StdDeserializer<List<Output
                 JsonUtil.parseObjectArray(parser, modelConfigList::add, p -> parseOutputVariablesBuilder(p, OutputVariable.OutputType.CURVE));
                 return true;
             } else if (name.equals("fsv")) {
-                JsonUtil.parseObjectArray(parser, modelConfigList::add, p -> parseOutputVariablesBuilder(p, OutputVariable.OutputType.FSV));
+                JsonUtil.parseObjectArray(parser, modelConfigList::add, p -> parseOutputVariablesBuilder(p, OutputVariable.OutputType.FINAL_STATE));
                 return true;
             }
             return false;

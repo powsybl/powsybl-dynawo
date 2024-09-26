@@ -59,7 +59,7 @@ public class DynawoTestUtil extends AbstractSerDeTest {
         network.getLoadStream().forEach(b -> new DynawoOutputVariablesBuilder()
                 .staticId(b.getId())
                 .variables("load_PPu", "load_QPu")
-                .outputType(OutputVariable.OutputType.FSV)
+                .outputType(OutputVariable.OutputType.FINAL_STATE)
                 .add(outputVariables::add));
 
         network.getBusBreakerView().getBusStream().forEach(b -> new DynawoOutputVariablesBuilder()

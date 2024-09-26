@@ -277,7 +277,7 @@ public class DynawoSimulationContext {
     }
 
     public boolean withFsvVariables() {
-        return outputVariables.containsKey(OutputVariable.OutputType.FSV);
+        return outputVariables.containsKey(OutputVariable.OutputType.FINAL_STATE);
     }
 
     public List<ParametersSet> getDynamicModelsParameters() {

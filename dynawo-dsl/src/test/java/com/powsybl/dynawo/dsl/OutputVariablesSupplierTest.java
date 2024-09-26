@@ -75,7 +75,7 @@ class OutputVariablesSupplierTest extends AbstractModelSupplierTest {
             assertEquals(OutputVariable.OutputType.CURVE, outputVariable.getOutputType());
             assertTrue(Arrays.asList("NGEN_Upu_value", "NHV1_Upu_value", "NHV2_Upu_value", "NLOAD_Upu_value").contains(outputVariable.getVariableName()));
         } else if (network.getIdentifiable(outputVariable.getModelId()) instanceof Generator) {
-            assertEquals(OutputVariable.OutputType.FSV, outputVariable.getOutputType());
+            assertEquals(OutputVariable.OutputType.FINAL_STATE, outputVariable.getOutputType());
             assertTrue(Arrays.asList("generator_omegaPu", "generator_PGen", "generator_UStatorPU", "voltageRegulator_UcEfdP", "voltageRegulator_EfdPu").contains(outputVariable.getVariableName()));
         } else if (network.getIdentifiable(outputVariable.getModelId()) instanceof Load) {
             assertEquals(OutputVariable.OutputType.CURVE, outputVariable.getOutputType());
