@@ -38,7 +38,7 @@ public final class OutputVariablesXml extends AbstractXmlDynawoSimulationWriter 
     }
 
     public static void writeFsv(Path workingDir, DynawoSimulationContext context) throws IOException {
-        new OutputVariablesXml(FSV_FILENAME, "finalStateValuesInput", "finalStateValue", OutputVariable.OutputType.FSV)
+        new OutputVariablesXml(FSV_FILENAME, "finalStateValuesInput", "finalStateValue", OutputVariable.OutputType.FINAL_STATE)
                 .createXmlFileFromContext(workingDir, context);
     }
 

@@ -39,8 +39,8 @@ class DynawoOutputVariablesJsonDeserializerTest {
         new DynawoOutputVariablesBuilder().staticId("BUS").variables("Upu_value").add(variables::add);
         new DynawoOutputVariablesBuilder().dynamicModelId("BBM_GEN2").variables("generator_omegaPu", "generator_PGen", "generator_UStatorPU").add(variables::add);
         new DynawoOutputVariablesBuilder().staticId("LOAD").variables("load_PPu", "load_QPu").outputType(OutputVariable.OutputType.CURVE).add(variables::add);
-        new DynawoOutputVariablesBuilder().dynamicModelId("BBM_GEN").variables("generator_PGen").outputType(OutputVariable.OutputType.FSV).add(variables::add);
-        new DynawoOutputVariablesBuilder().staticId("LOAD").variables("load_QPu").outputType(OutputVariable.OutputType.FSV).add(variables::add);
+        new DynawoOutputVariablesBuilder().dynamicModelId("BBM_GEN").variables("generator_PGen").outputType(OutputVariable.OutputType.FINAL_STATE).add(variables::add);
+        new DynawoOutputVariablesBuilder().staticId("LOAD").variables("load_QPu").outputType(OutputVariable.OutputType.FINAL_STATE).add(variables::add);
         return variables;
     }
 }

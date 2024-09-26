@@ -37,6 +37,6 @@ class DynawoOutputVariableGroovyExtension implements OutputVariableGroovyExtensi
             variablesBuilder.add(consumer)
         }
         binding.curve = c -> closure(c, OutputVariable.OutputType.CURVE)
-        binding.fsv = c -> closure(c, OutputVariable.OutputType.FSV)
+        binding.fsv = c -> closure(c, OutputVariable.OutputType.FINAL_STATE)
     }
 }
