@@ -63,6 +63,10 @@ The list is statically loaded via [ModelConfigLoader](https://javadoc.io/doc/com
 * `alias`: name used in powsybl-dynawo instead of lib
 * `properties`: dynamic model properties (synchronized, dangling, etc.)
 * `internalModelPrefix`: used for dyd file creation
+* `doc`: library documentation
+* `minVersion`: Dynawo minimum version required
+* `maxVersion`: Dynawo maximum version required
+* `terminationCause`: model termination at `maxVersion` cause 
 
 ## Dynamic model Builder List
 Ultimately, all groovy scripts call dedicated builders that can be used directly by developers.

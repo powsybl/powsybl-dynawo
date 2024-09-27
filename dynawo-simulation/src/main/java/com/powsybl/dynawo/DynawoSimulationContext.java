@@ -70,9 +70,11 @@ public class DynawoSimulationContext {
     }
 
     public DynawoSimulationContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
-                                   List<Curve> curves, DynamicSimulationParameters parameters, DynawoSimulationParameters dynawoSimulationParameters, DynawoVersion currentVersion, ReportNode reportNode) {
+                                   List<Curve> curves, DynamicSimulationParameters parameters, DynawoSimulationParameters dynawoSimulationParameters,
+                                   DynawoVersion currentVersion, ReportNode reportNode) {
 
         ReportNode contextReportNode = DynawoSimulationReports.createDynawoSimulationContextReportNode(reportNode);
+        DynawoVersion dynawoVersion = Objects.requireNonNull(currentVersion);
         this.network = Objects.requireNonNull(network);
         this.workingVariantId = Objects.requireNonNull(workingVariantId);
         this.parameters = Objects.requireNonNull(parameters);
@@ -81,13 +83,14 @@ public class DynawoSimulationContext {
         Stream<BlackBoxModel> uniqueIdsDynamicModels = Objects.requireNonNull(dynamicModels).stream()
                 .filter(distinctByDynamicId(contextReportNode)
                         .and(distinctByStaticId(contextReportNode)
-                        .and(supportedVersion(Objects.requireNonNull(currentVersion), contextReportNode))));
+                        .and(supportedVersion(dynawoVersion, contextReportNode))));
         this.dynamicModels = dynawoSimulationParameters.isUseModelSimplifiers()
                 ? simplifyModels(uniqueIdsDynamicModels, contextReportNode).toList()
                 : uniqueIdsDynamicModels.toList();
 
         this.eventModels = Objects.requireNonNull(eventModels).stream()
-                .filter(distinctByDynamicId(contextReportNode))
+                .filter(distinctByDynamicId(contextReportNode)
+                        .and(supportedVersion(dynawoVersion, contextReportNode)))
                 .toList();
         this.staticIdBlackBoxModelMap = getInputBlackBoxDynamicModelStream()
                 .filter(EquipmentBlackBoxModel.class::isInstance)
