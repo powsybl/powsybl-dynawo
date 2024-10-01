@@ -8,9 +8,8 @@ package com.powsybl.dynawo;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.report.ReportNode;
-import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
-import com.powsybl.dynawo.curves.DynawoCurve;
+import com.powsybl.dynamicsimulation.OutputVariable;
 import com.powsybl.dynawo.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.EquipmentBlackBoxModel;
@@ -52,7 +51,7 @@ public class DynawoSimulationContext {
     private final List<BlackBoxModel> dynamicModels;
     private final List<BlackBoxModel> eventModels;
     private final Map<String, EquipmentBlackBoxModel> staticIdBlackBoxModelMap;
-    private final List<DynawoCurve> curves;
+    private final Map<OutputVariable.OutputType, List<OutputVariable>> outputVariables;
     private final Map<String, MacroStaticReference> macroStaticReferences = new LinkedHashMap<>();
     private final List<MacroConnect> macroConnectList = new ArrayList<>();
     private final Map<String, MacroConnector> macroConnectorsMap = new LinkedHashMap<>();
@@ -62,12 +61,12 @@ public class DynawoSimulationContext {
     protected final MacroConnectionsAdder macroConnectionsAdder;
 
     public DynawoSimulationContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
-                                   List<Curve> curves, DynamicSimulationParameters parameters, DynawoSimulationParameters dynawoSimulationParameters) {
-        this(network, workingVariantId, dynamicModels, eventModels, curves, parameters, dynawoSimulationParameters, ReportNode.NO_OP);
+                                   List<OutputVariable> outputVariables, DynamicSimulationParameters parameters, DynawoSimulationParameters dynawoSimulationParameters) {
+        this(network, workingVariantId, dynamicModels, eventModels, outputVariables, parameters, dynawoSimulationParameters, ReportNode.NO_OP);
     }
 
     public DynawoSimulationContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
-                                   List<Curve> curves, DynamicSimulationParameters parameters, DynawoSimulationParameters dynawoSimulationParameters, ReportNode reportNode) {
+                                   List<OutputVariable> outputVariables, DynamicSimulationParameters parameters, DynawoSimulationParameters dynawoSimulationParameters, ReportNode reportNode) {
 
         ReportNode contextReportNode = DynawoSimulationReports.createDynawoSimulationContextReportNode(reportNode);
         this.network = Objects.requireNonNull(network);
@@ -95,10 +94,8 @@ public class DynawoSimulationContext {
                 .map(ContextDependentEvent.class::cast)
                 .forEach(e -> e.setEquipmentHasDynamicModel(this));
 
-        this.curves = Objects.requireNonNull(curves).stream()
-                .filter(DynawoCurve.class::isInstance)
-                .map(DynawoCurve.class::cast)
-                .toList();
+        this.outputVariables = Objects.requireNonNull(outputVariables).stream()
+                .collect(Collectors.groupingBy(OutputVariable::getOutputType));
         this.frequencySynchronizer = setupFrequencySynchronizer();
         this.macroConnectionsAdder = new MacroConnectionsAdder(this::getDynamicModel,
                 this::getPureDynamicModel,
@@ -271,12 +268,16 @@ public class DynawoSimulationContext {
         return eventModels;
     }
 
-    public List<DynawoCurve> getCurves() {
-        return curves;
+    public List<OutputVariable> getOutputVariables(OutputVariable.OutputType type) {
+        return outputVariables.get(type);
     }
 
-    public boolean withCurves() {
-        return !curves.isEmpty();
+    public boolean withCurveVariables() {
+        return outputVariables.containsKey(OutputVariable.OutputType.CURVE);
+    }
+
+    public boolean withFsvVariables() {
+        return outputVariables.containsKey(OutputVariable.OutputType.FINAL_STATE);
     }
 
     public List<ParametersSet> getDynamicModelsParameters() {

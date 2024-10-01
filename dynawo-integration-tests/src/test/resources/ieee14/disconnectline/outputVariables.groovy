@@ -5,12 +5,14 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+package ieee14.disconnectline
+
 import com.powsybl.iidm.network.Bus
 import com.powsybl.iidm.network.Generator
 import com.powsybl.iidm.network.Load
 
 for (Bus bus : network.busBreakerView.buses) {
-    curve {
+    fsv {
         staticId bus.id
         variable "Upu_value"
     }

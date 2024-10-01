@@ -2,9 +2,8 @@ package com.powsybl.dynawo.builders;
 
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.commons.test.TestUtil;
-import com.powsybl.dynamicsimulation.Curve;
-import com.powsybl.dynawo.curves.DynawoCurve;
-import com.powsybl.dynawo.curves.DynawoCurvesBuilder;
+import com.powsybl.dynamicsimulation.OutputVariable;
+import com.powsybl.dynawo.outputvariables.DynawoOutputVariablesBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -19,7 +18,7 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class CurvesBuilderTest {
+class OutputVariablesBuilderTest {
 
     private ReportNode reporter;
 
@@ -30,31 +29,31 @@ class CurvesBuilderTest {
 
     @Test
     void buildFromDynamicId() {
-        List<Curve> curveList = new DynawoCurvesBuilder()
+        List<OutputVariable> outputVariables = new DynawoOutputVariablesBuilder()
                 .dynamicModelId("BBM_GEN")
                 .variable("generator_omegaPu")
                 .build();
-        assertEquals(1, curveList.size());
-        DynawoCurve curve = (DynawoCurve) curveList.get(0);
-        assertEquals("BBM_GEN", curve.getModelId());
-        assertEquals("generator_omegaPu", curve.getVariable());
+        assertEquals(1, outputVariables.size());
+        OutputVariable variable = outputVariables.get(0);
+        assertEquals("BBM_GEN", variable.getModelId());
+        assertEquals("generator_omegaPu", variable.getVariableName());
     }
 
     @Test
     void buildFromStaticId() {
-        List<Curve> curveList = new DynawoCurvesBuilder()
+        List<OutputVariable> outputVariables = new DynawoOutputVariablesBuilder()
                 .staticId("GEN")
                 .variables("generator_omegaPu", "generator_PGen")
                 .build();
-        assertEquals(2, curveList.size());
-        DynawoCurve curve = (DynawoCurve) curveList.get(0);
-        assertEquals("NETWORK", curve.getModelId());
-        assertEquals("GEN_generator_omegaPu", curve.getVariable());
+        assertEquals(2, outputVariables.size());
+        OutputVariable variable = outputVariables.get(0);
+        assertEquals("NETWORK", variable.getModelId());
+        assertEquals("GEN_generator_omegaPu", variable.getVariableName());
     }
 
     @ParameterizedTest(name = "{1}")
     @MethodSource("provideBuilderError")
-    void testScriptError(Function<ReportNode, DynawoCurvesBuilder> builderFunction, boolean isInstantiable, String report) throws IOException {
+    void testScriptError(Function<ReportNode, DynawoOutputVariablesBuilder> builderFunction, boolean isInstantiable, String report) throws IOException {
         boolean hasInstance = !builderFunction.apply(reporter).build().isEmpty();
         assertEquals(isInstantiable, hasInstance);
         checkReportNode(report);
@@ -62,8 +61,8 @@ class CurvesBuilderTest {
 
     private static Stream<Arguments> provideBuilderError() {
         return Stream.of(
-                Arguments.of((Function<ReportNode, DynawoCurvesBuilder>) r ->
-                        new DynawoCurvesBuilder(r)
+                Arguments.of((Function<ReportNode, DynawoOutputVariablesBuilder>) r ->
+                        new DynawoOutputVariablesBuilder(r)
                             .staticId("GEN")
                             .dynamicModelId("BBM_GEN")
                             .variable("uPu"),
@@ -72,24 +71,24 @@ class CurvesBuilderTest {
                         + Builder tests
                            Both 'dynamicModelId' and 'staticId' are defined, 'dynamicModelId' will be used
                         """),
-                Arguments.of((Function<ReportNode, DynawoCurvesBuilder>) r ->
-                        new DynawoCurvesBuilder(r)
+                Arguments.of((Function<ReportNode, DynawoOutputVariablesBuilder>) r ->
+                        new DynawoOutputVariablesBuilder(r)
                             .staticId("GEN"),
                         false,
                         """
                         + Builder tests
                            'variables' field is not set
-                           Curve GEN cannot be instantiated
+                           Output variable GEN cannot be instantiated
                         """),
-                Arguments.of((Function<ReportNode, DynawoCurvesBuilder>) r ->
-                        new DynawoCurvesBuilder(r)
+                Arguments.of((Function<ReportNode, DynawoOutputVariablesBuilder>) r ->
+                        new DynawoOutputVariablesBuilder(r)
                             .staticId("GEN")
                             .variables(),
                         false,
                         """
                         + Builder tests
                            'variables' list is empty
-                           Curve GEN cannot be instantiated
+                           Output variable GEN cannot be instantiated
                         """)
         );
     }

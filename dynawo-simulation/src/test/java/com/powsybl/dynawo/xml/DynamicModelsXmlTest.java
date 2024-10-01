@@ -35,7 +35,7 @@ class DynamicModelsXmlTest extends DynawoTestUtil {
     void writeDynamicModel() throws SAXException, IOException {
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load();
-        DynawoSimulationContext context = new DynawoSimulationContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, new ArrayList<>(), curves, parameters, dynawoParameters);
+        DynawoSimulationContext context = new DynawoSimulationContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, new ArrayList<>(), outputVariables, parameters, dynawoParameters);
 
         DydXml.write(tmpDir, context);
         validate("dyd.xsd", "dyd.xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
@@ -52,7 +52,7 @@ class DynamicModelsXmlTest extends DynawoTestUtil {
                 .parameterSetId("GF")
                 .build());
 
-        DynawoSimulationContext context = new DynawoSimulationContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, new ArrayList<>(), curves, parameters, dynawoParameters);
+        DynawoSimulationContext context = new DynawoSimulationContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, new ArrayList<>(), outputVariables, parameters, dynawoParameters);
 
         DydXml.write(tmpDir, context);
         validate("dyd.xsd", "dyd_fictitious.xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
@@ -74,7 +74,7 @@ class DynamicModelsXmlTest extends DynawoTestUtil {
         dynamicModels.add(load1);
         dynamicModels.add(load2);
         String workingVariantId = network.getVariantManager().getWorkingVariantId();
-        DynawoSimulationContext context = new DynawoSimulationContext(network, workingVariantId, dynamicModels, eventModels, curves, DynamicSimulationParameters.load(), DynawoSimulationParameters.load());
+        DynawoSimulationContext context = new DynawoSimulationContext(network, workingVariantId, dynamicModels, eventModels, outputVariables, DynamicSimulationParameters.load(), DynawoSimulationParameters.load());
         Assertions.assertThat(context.getBlackBoxDynamicModels()).containsExactly(load1);
     }
 
@@ -94,13 +94,13 @@ class DynamicModelsXmlTest extends DynawoTestUtil {
         dynamicModels.add(load1);
         dynamicModels.add(load2);
         String workingVariantId = network.getVariantManager().getWorkingVariantId();
-        DynawoSimulationContext context = new DynawoSimulationContext(network, workingVariantId, dynamicModels, eventModels, curves, DynamicSimulationParameters.load(), DynawoSimulationParameters.load());
+        DynawoSimulationContext context = new DynawoSimulationContext(network, workingVariantId, dynamicModels, eventModels, outputVariables, DynamicSimulationParameters.load(), DynawoSimulationParameters.load());
         Assertions.assertThat(context.getBlackBoxDynamicModels()).containsExactly(load1);
     }
 
     @Test
     void testIncorrectModelException() {
-        DynawoSimulationContext dc = new DynawoSimulationContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, eventModels, curves, DynamicSimulationParameters.load(), DynawoSimulationParameters.load());
+        DynawoSimulationContext dc = new DynawoSimulationContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, eventModels, outputVariables, DynamicSimulationParameters.load(), DynawoSimulationParameters.load());
         Identifiable<?> gen = network.getIdentifiable("GEN5");
         Exception e = assertThrows(PowsyblException.class, () -> dc.getDynamicModel(gen, LineModel.class, true));
         assertEquals("The model identified by the static id GEN5 does not match the expected model (LineModel)", e.getMessage());

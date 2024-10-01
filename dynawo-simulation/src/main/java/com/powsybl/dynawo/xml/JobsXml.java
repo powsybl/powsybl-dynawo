@@ -24,6 +24,8 @@ import static com.powsybl.dynawo.xml.DynawoSimulationXmlConstants.DYN_URI;
  */
 public final class JobsXml extends AbstractXmlDynawoSimulationWriter {
 
+    private static final String EXPORT_MODE = "exportMode";
+
     private JobsXml() {
         super(JOBS_FILENAME, "jobs");
     }
@@ -96,16 +98,22 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter {
         writer.writeAttribute("global", Boolean.toString(false));
 
         writer.writeEmptyElement(DYN_URI, "timeline");
-        writer.writeAttribute("exportMode", parameters.getTimelineExportMode().toString());
+        writer.writeAttribute(EXPORT_MODE, parameters.getTimelineExportMode().toString());
 
         writer.writeEmptyElement(DYN_URI, "finalState");
         writer.writeAttribute("exportIIDMFile", Boolean.toString(parameters.isWriteFinalState()));
         writer.writeAttribute("exportDumpFile", Boolean.toString(parameters.getDumpFileParameters().exportDumpFile()));
 
-        if (context.withCurves()) {
+        if (context.withCurveVariables()) {
             writer.writeEmptyElement(DYN_URI, "curves");
-            writer.writeAttribute("inputFile", DynawoSimulationConstants.CRV_FILENAME);
-            writer.writeAttribute("exportMode", DynawoSimulationParameters.ExportMode.CSV.toString());
+            writer.writeAttribute("inputFile", CRV_FILENAME);
+            writer.writeAttribute(EXPORT_MODE, DynawoSimulationParameters.ExportMode.CSV.toString());
+        }
+
+        if (context.withFsvVariables()) {
+            writer.writeEmptyElement(DYN_URI, "finalStateValues");
+            writer.writeAttribute("inputFile", FSV_FILENAME);
+            writer.writeAttribute(EXPORT_MODE, DynawoSimulationParameters.ExportMode.CSV.toString());
         }
 
         writer.writeStartElement(DYN_URI, "logs");

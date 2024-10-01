@@ -61,8 +61,8 @@ public class DynawoLocalCommandExecutor implements LocalCommandExecutor {
     }
 
     protected void copyOutputs(Path workingDir) throws IOException {
-        Path output = Files.createDirectories(workingDir.resolve("outputs/curves").toAbsolutePath());
-        Files.copy(Objects.requireNonNull(getClass().getResourceAsStream("/" + baseDirName + "/dynawo-outputs/curves.csv")), output.resolve("curves.csv"));
+        Path output = Files.createDirectories(workingDir.resolve("outputs/outputVariables").toAbsolutePath());
+        Files.copy(Objects.requireNonNull(getClass().getResourceAsStream("/" + baseDirName + "/dynawo-outputs/outputVariables.csv")), output.resolve("curves.csv"));
     }
 
     @Override
