@@ -52,7 +52,8 @@
         "lib": "GeneratorSynchronousFourWindingsVRKundur"
       },
       {
-        "lib": "GeneratorSynchronousFourWindingsVRKundurPssKundur"
+        "lib": "GeneratorSynchronousFourWindingsVRKundurPssKundur",
+        "minVersion": "1.7.0"
       },
       {
         "lib": "GeneratorSynchronousProportionalRegulationsInternalParameters"
@@ -92,14 +93,16 @@
         ]
       },
       {
-        "lib": "GeneratorSynchronousFourWindingsIEEEG1Ac1a"
+        "lib": "GeneratorSynchronousFourWindingsIEEEG1Ac1a",
+        "minVersion": "1.7.0"
       },
       {
         "lib": "GeneratorSynchronousFourWindingsIEEEG1Dc1a",
         "minVersion": "1.6.0"
       },
       {
-        "lib": "GeneratorSynchronousFourWindingsIEEEG1IEEX2A"
+        "lib": "GeneratorSynchronousFourWindingsIEEEG1IEEX2A",
+        "minVersion": "1.7.0"
       },
       {
         "lib": "GeneratorSynchronousFourWindingsPmConstAc6aPss3b",
@@ -126,7 +129,8 @@
         "minVersion": "1.6.0"
       },
       {
-        "lib": "GeneratorSynchronousFourWindingsPmConstIEEX2A"
+        "lib": "GeneratorSynchronousFourWindingsPmConstIEEX2A",
+        "minVersion": "1.7.0"
       },
       {
         "lib": "GeneratorSynchronousFourWindingsPmConstSt5bPss2b",
@@ -173,7 +177,8 @@
         "minVersion": "1.6.0"
       },
       {
-        "lib": "GeneratorSynchronousThreeWindingsHyGovScrxRvsTfo"
+        "lib": "GeneratorSynchronousThreeWindingsHyGovScrxRvsTfo",
+        "minVersion": "1.7.0"
       },
       {
         "lib": "GeneratorSynchronousThreeWindingsIeeeG1IeeeT1",
