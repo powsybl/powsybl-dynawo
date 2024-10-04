@@ -17,19 +17,12 @@
     <reference type="DOUBLE" name="infiniteBus_UPu" origData="IIDM" origName="Upu"/>
     <reference type="DOUBLE" name="infiniteBus_UPhase" origData="IIDM" origName="Theta_pu"/>
   </set>
-  <!-- line 1 -->
+  <!-- line-->
   <set id="Line">
     <par type="DOUBLE" name="line_RPu" value="0"/>
     <par type="DOUBLE" name="line_XPu" value="0.022522"/>
     <par type="DOUBLE" name="line_BPu" value="0.0"/>
     <par type="DOUBLE" name="line_GPu" value="0.0"/>
-  </set>
-  <!-- line 2 -->
-  <set id="3">
-    <par type="DOUBLE" name="line_RPu" value="0"/>
-    <par type="DOUBLE" name="line_XPu" value="0.04189"/>
-    <par type="DOUBLE" name="line_BPu" value="0"/>
-    <par type="DOUBLE" name="line_GPu" value="0"/>
   </set>
   <!-- tfo -->
   <set id="Transformer">
@@ -40,6 +33,14 @@
     <par type="DOUBLE" name="transformer_rTfoPu" value="1"/>
   </set>
   <!-- Generator -->
+  <set id="BaseGenerator">
+    <par type="DOUBLE" name="generator_P0Pu" value="-1.5"/>
+    <par type="DOUBLE" name="generator_Q0Pu" value="-2"/>
+    <par type="DOUBLE" name="generator_U0Pu" value="1.0"/>
+    <par type="DOUBLE" name="generator_UPhase0" value="0"/>
+    <par type="DOUBLE" name="generator_Alpha" value="2"/>
+    <par type="DOUBLE" name="generator_Beta" value="4"/>
+  </set>
   <set id="SynchronousGenerator">
     <par type="BOOL" name="generator_UseApproximation" value="false"/>
     <par type="DOUBLE" name="generator_md" value="0.1"/>
@@ -89,41 +90,20 @@
     <par type="DOUBLE" name="voltageRegulator_LagEfdMin" value="0"/>
     <par type="DOUBLE" name="voltageRegulator_LagEfdMax" value="0"/>
   </set>
-  <set id="SynchronizedGeneratorOLD">
-      <par type="DOUBLE" name="generator_PMin" value="0"/>
-      <par type="DOUBLE" name="generator_PMax" value="1090"/>
-      <par type="DOUBLE" name="generator_PNom" value="1090"/>
-      <par type="DOUBLE" name="generator_QMin" value="-10000"/>
-      <par type="DOUBLE" name="generator_QMax" value="10000"/>
-      <par type="DOUBLE" name="generator_KGover" value="1"/>
-      <reference name="generator_P0Pu" origData="IIDM" origName="p_pu" type="DOUBLE"/>
-      <reference name="generator_Q0Pu" origData="IIDM" origName="q_pu" type="DOUBLE"/>
-      <reference name="generator_U0Pu" origData="IIDM" origName="v_pu" type="DOUBLE"/>
-      <reference name="generator_UPhase0" origData="IIDM" origName="angle_pu" type="DOUBLE"/>
-      <reference name="generator_PRef0Pu" origData="IIDM" origName="p_pu" type="DOUBLE"/>
-      <reference name="generator_URef0Pu" origData="IIDM" origName="v_pu" type="DOUBLE"/>
-    </set>
   <set id="SynchronizedGenerator">
-    <par name="generator_AlphaPuPNom" type="DOUBLE" value="20.0"/>
+    <par type="DOUBLE" name="generator_AlphaPuPNom" value="20"/>
+    <par type="DOUBLE" name="generator_LambdaPuSNom" value="0.006084"/>
+    <par type="DOUBLE" name="generator_QMax" value="3.6000000000000001"/>
+    <par type="DOUBLE" name="generator_QMin" value="-4.2000000000000002"/>
+    <par type="DOUBLE" name="generator_T" value="1"/>
     <reference name="generator_P0Pu" origData="IIDM" origName="p_pu" type="DOUBLE"/>
+    <reference name="generator_PMax" origData="IIDM" origName="pMax" type="DOUBLE"/>
+    <reference name="generator_PMin" origData="IIDM" origName="pMin" type="DOUBLE"/>
     <reference name="generator_PNom" origData="IIDM" origName="pMax" type="DOUBLE"/>
     <reference name="generator_Q0Pu" origData="IIDM" origName="q_pu" type="DOUBLE"/>
+    <reference name="generator_SNom" origData="IIDM" origName="pMax" type="DOUBLE"/>
     <reference name="generator_U0Pu" origData="IIDM" origName="v_pu" type="DOUBLE"/>
     <reference name="generator_UPhase0" origData="IIDM" origName="angle_pu" type="DOUBLE"/>
-  </set>
-  <set id="DefaultGeneratorPVSignalN">
-    <reference name="generator_P0Pu" origData="IIDM" origName="p_pu" type="DOUBLE"/>
-    <reference name="generator_Q0Pu" origData="IIDM" origName="q_pu" type="DOUBLE"/>
-    <reference name="generator_U0Pu" origData="IIDM" origName="v_pu" type="DOUBLE"/>
-    <reference name="generator_UPhase0" origData="IIDM" origName="angle_pu" type="DOUBLE"/>
-    <reference name="generator_PRef0Pu" origData="IIDM" origName="p_pu" type="DOUBLE"/>
-    <reference name="generator_URef0Pu" origData="IIDM" origName="v_pu" type="DOUBLE"/>
-    <par type="DOUBLE" name="generator_PMin" value="-1000000"/>
-    <par type="DOUBLE" name="generator_PMax" value="1000000"/>
-    <par type="DOUBLE" name="generator_QMin" value="-1000000"/>
-    <par type="DOUBLE" name="generator_QMax" value="100000"/>
-    <par type="DOUBLE" name="generator_KGover" value="1"/>
-    <par type="DOUBLE" name="generator_PNom" value="1"/>
   </set>
   <set id="GeneratorPVSignalN">
     <reference name="generator_P0Pu" origData="IIDM" origName="p_pu" type="DOUBLE"/>
@@ -138,24 +118,6 @@
     <par type="DOUBLE" name="generator_QMax" value="100000"/>
     <par type="DOUBLE" name="generator_KGover" value="1"/>
     <par type="DOUBLE" name="generator_PNom" value="1"/>
-  </set>
-  <set id="GeneratorPVDiagramPQSignalN">
-    <par name="generator_KGover" type="DOUBLE" value="1"/>
-    <par name="generator_QMax0" type="DOUBLE" value="1000"/>
-    <par name="generator_QMaxTableFile" type="STRING" value="nrt/data/IEEE14/IEEE14_SyntaxExamples/IEEE14_MacroParameterSet/_GEN____1_SM_Diagram.txt"/>
-    <par name="generator_QMaxTableName" type="STRING" value="12497041103945231709_tableqmax"/>
-    <par name="generator_QMin0" type="DOUBLE" value="-1000"/>
-    <par name="generator_QMinTableFile" type="STRING" value="nrt/data/IEEE14/IEEE14_SyntaxExamples/IEEE14_MacroParameterSet/_GEN____1_SM_Diagram.txt"/>
-    <par name="generator_QMinTableName" type="STRING" value="12497041103945231709_tableqmin"/>
-    <reference type="DOUBLE" name="generator_P0Pu" origData="IIDM" origName="p_pu"/>
-    <reference type="DOUBLE" name="generator_PMax" origData="IIDM" origName="pMax"/>
-    <reference type="DOUBLE" name="generator_PMin" origData="IIDM" origName="pMin"/>
-    <reference type="DOUBLE" name="generator_PNom" origData="IIDM" origName="pMax_pu"/>
-    <reference type="DOUBLE" name="generator_PRef0Pu" origData="IIDM" origName="targetP_pu"/>
-    <reference type="DOUBLE" name="generator_Q0Pu" origData="IIDM" origName="q_pu"/>
-    <reference type="DOUBLE" name="generator_U0Pu" origData="IIDM" origName="v_pu"/>
-    <reference type="DOUBLE" name="generator_UPhase0" origData="IIDM" origName="angle_pu"/>
-    <reference type="DOUBLE" name="generator_URef0Pu" origData="IIDM" origName="targetV_pu"/>
   </set>
   <set id="GridForming">
     <par type="DOUBLE" name="converter_SNom" value="10.3"/>
