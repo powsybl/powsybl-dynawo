@@ -5,6 +5,9 @@
       {
         "lib": "GeneratorFictitious",
         "doc": "Fictitious generator (behaves in a similar way as an alpha-beta load)"
+      },
+      {
+        "lib": "GeneratorPVFixed"
       }
     ]
   },
@@ -231,9 +234,6 @@
           "CONTROLLABLE"
         ],
         "doc": "Generator with fixed active power and voltage targets. The reactive power output changes over time in order to follow the voltage target (when it is not possible to do so, the reactive power is set to the minimum or maximum value). The active power outputs may vary in order to mimic frequency regulation"
-      },
-      {
-        "lib": "GeneratorPVFixed"
       },
       {
         "lib": "GeneratorPVDiagramPQ"

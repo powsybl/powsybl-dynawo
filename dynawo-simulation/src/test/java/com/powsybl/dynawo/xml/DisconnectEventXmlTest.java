@@ -8,7 +8,7 @@
 package com.powsybl.dynawo.xml;
 
 import com.powsybl.dynawo.models.events.EventDisconnectionBuilder;
-import com.powsybl.dynawo.models.generators.GeneratorFictitiousBuilder;
+import com.powsybl.dynawo.models.generators.BaseGeneratorBuilder;
 import com.powsybl.dynawo.models.shunts.BaseShuntBuilder;
 import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.VoltageLevel;
@@ -42,7 +42,7 @@ class DisconnectEventXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void addDynamicModels() {
-        dynamicModels.add(GeneratorFictitiousBuilder.of(network)
+        dynamicModels.add(BaseGeneratorBuilder.of(network)
                 .dynamicModelId("BBM_GEN")
                 .staticId("G1")
                 .parameterSetId("GF")

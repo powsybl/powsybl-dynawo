@@ -68,7 +68,7 @@ class BuildersTest {
         // Line
         assertNotNull(LineBuilder.of(NETWORK));
         // Generator
-        assertNotNull(GeneratorFictitiousBuilder.of(NETWORK));
+        assertNotNull(BaseGeneratorBuilder.of(NETWORK));
         assertNotNull(SynchronizedGeneratorBuilder.of(NETWORK));
         assertNotNull(SynchronousGeneratorBuilder.of(NETWORK));
         assertNotNull(WeccBuilder.of(NETWORK));
@@ -110,7 +110,7 @@ class BuildersTest {
         // Line
         assertNull(LineBuilder.of(NETWORK, WRONG_LIB));
         // Generator
-        assertNull(GeneratorFictitiousBuilder.of(NETWORK, WRONG_LIB));
+        assertNull(BaseGeneratorBuilder.of(NETWORK, WRONG_LIB));
         assertNull(SynchronizedGeneratorBuilder.of(NETWORK, WRONG_LIB));
         assertNull(SynchronousGeneratorBuilder.of(NETWORK, WRONG_LIB));
         assertNull(WeccBuilder.of(NETWORK, WRONG_LIB));

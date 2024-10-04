@@ -12,7 +12,7 @@ import com.powsybl.dynawo.outputvariables.DynawoOutputVariablesBuilder;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.automationsystems.overloadmanagments.DynamicOverloadManagementSystemBuilder;
 import com.powsybl.dynawo.models.events.EventDisconnectionBuilder;
-import com.powsybl.dynawo.models.generators.GeneratorFictitiousBuilder;
+import com.powsybl.dynawo.models.generators.BaseGeneratorBuilder;
 import com.powsybl.dynawo.models.generators.SynchronizedGeneratorBuilder;
 import com.powsybl.dynawo.models.generators.SynchronousGeneratorBuilder;
 import com.powsybl.dynawo.models.lines.LineBuilder;
@@ -113,7 +113,7 @@ public class DynawoTestUtil extends AbstractSerDeTest {
                         .parameterSetId("GSTW")
                         .build());
             } else if (g.getId().equals("GEN6")) {
-                dynamicModels.add(GeneratorFictitiousBuilder.of(network)
+                dynamicModels.add(BaseGeneratorBuilder.of(network)
                         .dynamicModelId("BBM_" + g.getId())
                         .staticId(g.getId())
                         .parameterSetId("GF")
