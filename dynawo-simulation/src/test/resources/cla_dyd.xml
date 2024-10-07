@@ -19,10 +19,10 @@
         <dyn:connect var1="currentLimitAutomaton_order" var2="@NAME@_state"/>
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_TransformerFixedRatioSide1-DefaultEquipmentConnectionPoint">
-        <dyn:connect var1="transformer_terminal1" var2="@STATIC_ID@@NODE@_ACPIN"/>
+        <dyn:connect var1="transformer_terminal1" var2="@STATIC_ID@@NODE1@_ACPIN"/>
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_TransformerFixedRatioSide2-DefaultEquipmentConnectionPoint">
-        <dyn:connect var1="transformer_terminal2" var2="@STATIC_ID@@NODE@_ACPIN"/>
+        <dyn:connect var1="transformer_terminal2" var2="@STATIC_ID@@NODE2@_ACPIN"/>
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_CurrentLimitAutomatonMeasureSide2-TransformerFixedRatio">
         <dyn:connect var1="currentLimitAutomaton_IMonitored" var2="transformer_iSide2"/>
