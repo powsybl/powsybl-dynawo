@@ -7,7 +7,7 @@
 package com.powsybl.dynawo.models;
 
 import com.powsybl.dynawo.DynawoSimulationContext;
-import com.powsybl.dynawo.builders.VersionBound;
+import com.powsybl.dynawo.builders.VersionInterval;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectAttribute;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.parameters.ParametersSet;
@@ -28,7 +28,7 @@ public interface BlackBoxModel extends Model {
 
     String getLib();
 
-    VersionBound getVersionBound();
+    VersionInterval getVersionInterval();
 
     List<VarMapping> getVarsMapping();
 

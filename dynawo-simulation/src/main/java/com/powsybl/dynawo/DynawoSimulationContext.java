@@ -10,7 +10,7 @@ import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
-import com.powsybl.dynawo.builders.VersionBound;
+import com.powsybl.dynawo.builders.VersionInterval;
 import com.powsybl.dynawo.commons.DynawoConstants;
 import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.curves.DynawoCurve;
@@ -245,13 +245,13 @@ public class DynawoSimulationContext {
 
     protected static Predicate<BlackBoxModel> supportedVersion(DynawoVersion currentVersion, ReportNode reportNode) {
         return bbm -> {
-            VersionBound versionBound = bbm.getVersionBound();
-            if (!versionBound.hasMinBound(currentVersion)) {
-                DynawoSimulationReports.reportDynawoVersionTooHigh(reportNode, bbm.getName(), bbm.getDynamicModelId(), versionBound.min(), currentVersion);
+            VersionInterval versionInterval = bbm.getVersionInterval();
+            if (currentVersion.compareTo(versionInterval.min()) < 0) {
+                DynawoSimulationReports.reportDynawoVersionTooHigh(reportNode, bbm.getName(), bbm.getDynamicModelId(), versionInterval.min(), currentVersion);
                 return false;
             }
-            if (!versionBound.hasMaxBound(currentVersion)) {
-                DynawoSimulationReports.reportDynawoVersionTooLow(reportNode, bbm.getName(), bbm.getDynamicModelId(), versionBound.max(), currentVersion, versionBound.terminationCause());
+            if (versionInterval.max() != null && currentVersion.compareTo(versionInterval.max()) >= 0) {
+                DynawoSimulationReports.reportDynawoVersionTooLow(reportNode, bbm.getName(), bbm.getDynamicModelId(), versionInterval.max(), currentVersion, versionInterval.endCause());
                 return false;
             }
             return true;

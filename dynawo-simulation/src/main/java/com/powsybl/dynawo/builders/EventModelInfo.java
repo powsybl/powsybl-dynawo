@@ -13,10 +13,10 @@ package com.powsybl.dynawo.builders;
  * @param version Dynawo version range where the model can be used
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public record EventModelInfo(String name, String info, VersionBound version) {
+public record EventModelInfo(String name, String info, VersionInterval version) {
 
     public EventModelInfo(String name, String info) {
-        this(name, info, VersionBound.createDefaultVersion());
+        this(name, info, VersionInterval.createDefaultVersion());
     }
 
     /**

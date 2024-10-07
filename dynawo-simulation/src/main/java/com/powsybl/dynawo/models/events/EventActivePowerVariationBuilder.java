@@ -40,7 +40,7 @@ public class EventActivePowerVariationBuilder extends AbstractEventModelBuilder<
      * Returns the model info if usable with the given {@link DynawoVersion}
      */
     public static EventModelInfo getEventModelInfo(DynawoVersion dynawoVersion) {
-        return MODEL_INFO.version().isBetween(dynawoVersion) ? MODEL_INFO : null;
+        return MODEL_INFO.version().includes(dynawoVersion) ? MODEL_INFO : null;
     }
 
     EventActivePowerVariationBuilder(Network network, ReportNode reportNode) {

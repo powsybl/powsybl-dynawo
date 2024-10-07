@@ -12,34 +12,26 @@ import com.powsybl.dynawo.commons.DynawoVersion;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public record VersionBound(DynawoVersion min, DynawoVersion max, String terminationCause) {
+public record VersionInterval(DynawoVersion min, DynawoVersion max, String endCause) {
 
     public static final DynawoVersion MODEL_DEFAULT_MIN_VERSION = new DynawoVersion(1, 5, 0);
 
-    public static VersionBound createDefaultVersion() {
-        return new VersionBound(MODEL_DEFAULT_MIN_VERSION);
+    public static VersionInterval createDefaultVersion() {
+        return new VersionInterval(MODEL_DEFAULT_MIN_VERSION);
     }
 
-    public VersionBound(DynawoVersion min) {
+    public VersionInterval(DynawoVersion min) {
         this(min, null, null);
     }
 
-    public boolean isBetween(DynawoVersion version) {
-        return hasMinBound(version) && hasMaxBound(version);
-    }
-
-    public boolean hasMinBound(DynawoVersion version) {
-        return version.compareTo(min) >= 0;
-    }
-
-    public boolean hasMaxBound(DynawoVersion version) {
-        return max == null || version.compareTo(max) <= 0;
+    public boolean includes(DynawoVersion version) {
+        return version.compareTo(min) >= 0 && max == null || version.compareTo(max) <= 0;
     }
 
     public String formattedInfo() {
         if (max == null) {
             return "Dynawo Version " + min;
         }
-        return String.format("Dynawo Version %s - %s (%s)", min, max, terminationCause);
+        return String.format("Dynawo Version %s - %s (%s)", min, max, endCause);
     }
 }

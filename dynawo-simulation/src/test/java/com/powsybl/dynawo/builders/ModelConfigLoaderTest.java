@@ -43,7 +43,7 @@ class ModelConfigLoaderTest {
                               ],
                               "minVersion": "1.3.0",
                               "maxVersion": "1.4.0",
-                              "terminationCause": "Deleted",
+                              "endCause": "Deleted",
                               "doc": "Photovoltaics Wecc generator"
                             },
                             {
@@ -76,9 +76,9 @@ class ModelConfigLoaderTest {
                 "WT4AWeccCurrentSource");
         ModelConfig defaultModel = new ModelConfig("WT4BWeccCurrentSource", List.of("SYNCHRONIZED", "CONTROLLABLE"));
         assertThat(listModelConfigs(synchroGens)).containsExactlyInAnyOrder(
-                new ModelConfig("PhotovoltaicsWeccCurrentSource", "Wecc", "WTG4A", List.of("SYNCHRONIZED"), "Photovoltaics Wecc generator", new VersionBound(new DynawoVersion(1, 3, 0), new DynawoVersion(1, 4, 0), "Deleted")),
+                new ModelConfig("PhotovoltaicsWeccCurrentSource", "Wecc", "WTG4A", List.of("SYNCHRONIZED"), "Photovoltaics Wecc generator", new VersionInterval(new DynawoVersion(1, 3, 0), new DynawoVersion(1, 4, 0), "Deleted")),
                 defaultModel,
-                new ModelConfig("WT4AWeccCurrentSource", null, null, Collections.emptyList(), "WT4A Wecc generator", new VersionBound(new DynawoVersion(1, 6, 0))));
+                new ModelConfig("WT4AWeccCurrentSource", null, null, Collections.emptyList(), "WT4A Wecc generator", new VersionInterval(new DynawoVersion(1, 6, 0))));
         assertEquals(defaultModel, synchroGens.getDefaultModelConfig());
         assertThat(synchroGens.getModelInfos()).map(ModelInfo::formattedInfo).containsExactlyInAnyOrder(
                 "Wecc (PhotovoltaicsWeccCurrentSource): Photovoltaics Wecc generator (Dynawo Version 1.3.0 - 1.4.0 (Deleted))",

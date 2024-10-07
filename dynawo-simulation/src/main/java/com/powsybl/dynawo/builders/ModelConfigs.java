@@ -49,7 +49,7 @@ public class ModelConfigs {
 
     public Collection<ModelInfo> getModelInfos(DynawoVersion dynawoVersion) {
         return modelConfigMap.values().stream()
-                .filter(m -> m.version().isBetween(dynawoVersion))
+                .filter(m -> m.version().includes(dynawoVersion))
                 .collect(Collectors.toUnmodifiableList());
     }
 

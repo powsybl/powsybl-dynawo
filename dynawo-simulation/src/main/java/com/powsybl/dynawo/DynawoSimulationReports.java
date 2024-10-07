@@ -67,12 +67,12 @@ public final class DynawoSimulationReports {
                 .add();
     }
 
-    public static void reportDynawoVersionTooLow(ReportNode reportNode, String modelName, String dynamicId, DynawoVersion modelVersion, DynawoVersion currentVersion, String terminationCause) {
+    public static void reportDynawoVersionTooLow(ReportNode reportNode, String modelName, String dynamicId, DynawoVersion modelVersion, DynawoVersion currentVersion, String endCause) {
         reportNode.newReportNode()
-                .withMessageTemplate("lowDynawoVersion", "Model version ${modelVersion} is too low for the current dynawo version ${currentVersion} ({$terminationCauses}) -> model ${modelName} ${dynamicId} will be skipped")
+                .withMessageTemplate("lowDynawoVersion", "Model version ${modelVersion} is too low for the current dynawo version ${currentVersion} ({$endCauses}) -> model ${modelName} ${dynamicId} will be skipped")
                 .withUntypedValue("modelVersion", modelVersion.toString())
                 .withUntypedValue("currentVersion", currentVersion.toString())
-                .withUntypedValue("terminationCause", terminationCause)
+                .withUntypedValue("endCause", endCause)
                 .withUntypedValue(MODEL_NAME_FIELD, modelName)
                 .withUntypedValue(DYNAMIC_ID_FIELD, dynamicId)
                 .withSeverity(TypedValue.WARN_SEVERITY)

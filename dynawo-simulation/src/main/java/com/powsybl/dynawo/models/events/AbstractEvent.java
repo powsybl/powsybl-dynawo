@@ -10,7 +10,7 @@ package com.powsybl.dynawo.models.events;
 import com.powsybl.dynamicsimulation.EventModel;
 import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.builders.EventModelInfo;
-import com.powsybl.dynawo.builders.VersionBound;
+import com.powsybl.dynawo.builders.VersionInterval;
 import com.powsybl.dynawo.models.AbstractBlackBoxModel;
 import com.powsybl.dynawo.models.VarMapping;
 import com.powsybl.dynawo.parameters.ParametersSet;
@@ -51,7 +51,7 @@ public abstract class AbstractEvent extends AbstractBlackBoxModel implements Eve
     }
 
     @Override
-    public VersionBound getVersionBound() {
+    public VersionInterval getVersionInterval() {
         return eventModelInfo.version();
     }
 

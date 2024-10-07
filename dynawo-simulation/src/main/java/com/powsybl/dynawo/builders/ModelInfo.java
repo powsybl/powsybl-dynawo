@@ -40,5 +40,5 @@ public interface ModelInfo {
     /**
      * Dynawo version range where the model can be used
      */
-    VersionBound version();
+    VersionInterval version();
 }

@@ -51,7 +51,7 @@ public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identif
      * Returns the model info if usable with the given {@link DynawoVersion}
      */
     public static EventModelInfo getEventModelInfo(DynawoVersion dynawoVersion) {
-        return MODEL_INFO.version().isBetween(dynawoVersion) ? MODEL_INFO : null;
+        return MODEL_INFO.version().includes(dynawoVersion) ? MODEL_INFO : null;
     }
 
     EventDisconnectionBuilder(Network network, ReportNode reportNode) {

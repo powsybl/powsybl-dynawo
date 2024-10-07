@@ -8,7 +8,7 @@
 package com.powsybl.dynawo.models;
 
 import com.powsybl.dynawo.builders.ModelConfig;
-import com.powsybl.dynawo.builders.VersionBound;
+import com.powsybl.dynawo.builders.VersionInterval;
 import com.powsybl.dynawo.xml.MacroStaticReference;
 import com.powsybl.iidm.network.Identifiable;
 
@@ -39,7 +39,7 @@ public abstract class AbstractEquipmentBlackBoxModel<T extends Identifiable<?>> 
     }
 
     @Override
-    public VersionBound getVersionBound() {
+    public VersionInterval getVersionInterval() {
         return modelConfig.version();
     }
 
