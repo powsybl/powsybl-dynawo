@@ -11,7 +11,6 @@ import com.powsybl.dynawo.models.hvdc.HvdcPBuilder;
 import com.powsybl.dynawo.models.hvdc.HvdcVscBuilder;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.iidm.network.Network;
-import com.powsybl.iidm.network.TwoSides;
 import com.powsybl.iidm.network.test.HvdcTestNetwork;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -71,13 +70,11 @@ class HvdcXmlTest extends AbstractParametrizedDynamicModelXmlTest {
                         .dynamicModelId(DYN_NAME)
                         .staticId(HVDC_NAME)
                         .parameterSetId("hv")
-                        .dangling(TwoSides.ONE)
                         .build()),
                 Arguments.of("hvdc_vsc_dangling_dyd.xml", (Function<Network, BlackBoxModel>) n -> HvdcVscBuilder.of(n, "HvdcVscDanglingP")
                         .dynamicModelId(DYN_NAME)
                         .staticId(HVDC_NAME)
                         .parameterSetId("hv")
-                        .dangling(TwoSides.TWO)
                         .build())
         );
     }

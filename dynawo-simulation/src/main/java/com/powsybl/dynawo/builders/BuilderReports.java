@@ -138,6 +138,15 @@ public final class BuilderReports {
                 .add();
     }
 
+    public static void reportFieldOptionNotImplemented(ReportNode reportNode, String fieldName, String defaultValue) {
+        reportNode.newReportNode()
+                .withMessageTemplate("fieldOptionNotImplemented", "'${fieldName}' field is set but this option is not implemented yet, default value ${defaultValue} will be used")
+                .withUntypedValue(FIELD_NAME, fieldName)
+                .withUntypedValue("defaultValue", defaultValue)
+                .withSeverity(TypedValue.WARN_SEVERITY)
+                .add();
+    }
+
     public static void reportFieldConflict(ReportNode reportNode, String firstFieldName, String secondFieldName) {
         reportNode.newReportNode()
                 .withMessageTemplate("fieldConflict", "Both '${firstFieldName}' and '${secondFieldName}' are defined, '${firstFieldName}' will be used")
