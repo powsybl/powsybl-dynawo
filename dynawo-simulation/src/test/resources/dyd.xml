@@ -67,10 +67,10 @@
         <dyn:connect var1="generator_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_Line_NHV1_NHV2_1Side1-DefaultEquipmentConnectionPoint">
-        <dyn:connect var1="line_terminal1" var2="@STATIC_ID@@NODE@_ACPIN"/>
+        <dyn:connect var1="line_terminal1" var2="@STATIC_ID@@NODE1@_ACPIN"/>
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_Line_NHV1_NHV2_1Side2-DefaultEquipmentConnectionPoint">
-        <dyn:connect var1="line_terminal2" var2="@STATIC_ID@@NODE@_ACPIN"/>
+        <dyn:connect var1="line_terminal2" var2="@STATIC_ID@@NODE2@_ACPIN"/>
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_CurrentLimitAutomatonMeasureSide1-DefaultLine">
         <dyn:connect var1="currentLimitAutomaton_IMonitored" var2="@NAME@_iSide1"/>

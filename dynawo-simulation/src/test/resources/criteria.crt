@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<criteria xmlns="http://www.rte-france.com/dynawo">
+  <busCriteria>
+    <parameters id ="minimum bus voltage" scope="DYNAMIC" type="LOCAL_VALUE" uMinPu="0.6"/>
+    <component id="_BUS___10_TN"/>
+  </busCriteria>
+  <busCriteria>
+    <parameters id ="maximum bus voltage with UNom above 180kV " scope="DYNAMIC" type="LOCAL_VALUE" uNomMin="180" uMaxPu="1.2"/>
+    <country id="FR"/>
+  </busCriteria>
+  <loadCriteria>
+    <parameters id ="maximum sum of load active power" scope="DYNAMIC" type="SUM" pMax="100">
+      <voltageLevel uMaxPu="0.6"/>
+    </parameters>
+  </loadCriteria>
+  <generatorCriteria>
+    <parameters id ="maximum sum of generator active power" scope="DYNAMIC" type="SUM" pMax="100">
+      <voltageLevel  uMinPu="0.8" uNomMin="180"/>
+      <voltageLevel  uMinPu="0.9" uNomMin="220"/>
+    </parameters>
+  </generatorCriteria>
+</criteria>

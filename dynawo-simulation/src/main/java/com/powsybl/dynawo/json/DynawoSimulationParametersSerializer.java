@@ -14,6 +14,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.google.auto.service.AutoService;
 import com.powsybl.commons.json.JsonUtil;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
@@ -56,7 +57,8 @@ public class DynawoSimulationParametersSerializer implements JsonDynamicSimulati
 
     private static ObjectMapper createMapper() {
         return JsonUtil.createObjectMapper()
-                .addMixIn(DynawoSimulationParameters.class, SerializationSpec.class);
+                .addMixIn(DynawoSimulationParameters.class, SerializationSpec.class)
+                .registerModule(new Jdk8Module());
     }
 
     @Override

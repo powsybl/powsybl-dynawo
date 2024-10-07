@@ -28,6 +28,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -65,7 +66,9 @@ class DynawoParametersTest extends AbstractSerDeTest {
         ExportMode timelinExportMode = ExportMode.XML;
         LogLevel logLevel = LogLevel.WARN;
         Set<SpecificLog> specificLogs = EnumSet.of(SpecificLog.MODELER, SpecificLog.EQUATIONS);
-        initPlatformConfig(networkParametersId, solverType, solverParametersId, mergeLoads, useModelSimplifiers, precision, timelinExportMode, logLevel, specificLogs);
+        String criteriaFileName = "criteria.crt";
+
+        initPlatformConfig(networkParametersId, solverType, solverParametersId, mergeLoads, useModelSimplifiers, precision, timelinExportMode, logLevel, specificLogs, criteriaFileName);
 
         DynawoSimulationParameters parameters = DynawoSimulationParameters.load(platformConfig, fileSystem);
 
@@ -100,6 +103,8 @@ class DynawoParametersTest extends AbstractSerDeTest {
         assertEquals(timelinExportMode, parameters.getTimelineExportMode());
         assertEquals(logLevel, parameters.getLogLevelFilter());
         assertEquals(specificLogs, parameters.getSpecificLogs());
+        assertThat(parameters.getCriteriaFileName()).hasValue(criteriaFileName);
+        assertThat(parameters.getCriteriaFilePath()).hasValue(fileSystem.getPath(USER_HOME + criteriaFileName));
     }
 
     @Test
@@ -122,7 +127,7 @@ class DynawoParametersTest extends AbstractSerDeTest {
         SolverType solverType = SolverType.IDA;
         String solverParametersId = "solverParametersId";
         boolean mergeLoads = false;
-        initPlatformConfig(networkParametersId, solverType, solverParametersId, mergeLoads, false, 1e-7, ExportMode.TXT, LogLevel.INFO, Set.of(SpecificLog.PARAMETERS, SpecificLog.VARIABLES));
+        initPlatformConfig(networkParametersId, solverType, solverParametersId, mergeLoads, false, 1e-7, ExportMode.TXT, LogLevel.INFO, Set.of(SpecificLog.PARAMETERS, SpecificLog.VARIABLES), null);
 
         DynamicSimulationParameters dynamicSimulationParameters = new DynamicSimulationParameters()
                 .setStartTime(0)
@@ -135,10 +140,11 @@ class DynawoParametersTest extends AbstractSerDeTest {
 
     private void initPlatformConfig(String networkParametersId, SolverType solverType, String solverParametersId,
                                     boolean mergeLoads, boolean useModelSimplifiers, double precision, ExportMode timelineExportMode,
-                                    LogLevel logLevel, Set<SpecificLog> specificLogs) throws IOException {
+                                    LogLevel logLevel, Set<SpecificLog> specificLogs, String criteriaFileName) throws IOException {
         String parametersFile = USER_HOME + "parametersFile";
         String networkParametersFile = USER_HOME + "networkParametersFile";
         String solverParametersFile = USER_HOME + "solverParametersFile";
+        String criteriaFile = criteriaFileName != null ? USER_HOME + criteriaFileName : null;
 
         MapModuleConfig moduleConfig = platformConfig.createModuleConfig("dynawo-simulation-default-parameters");
         moduleConfig.setStringProperty("parametersFile", parametersFile);
@@ -153,11 +159,15 @@ class DynawoParametersTest extends AbstractSerDeTest {
         moduleConfig.setStringProperty("timeline.exportMode", String.valueOf(timelineExportMode));
         moduleConfig.setStringProperty("log.levelFilter", logLevel.toString());
         moduleConfig.setStringListProperty("log.specificLogs", specificLogs.stream().map(SpecificLog::toString).toList());
+        moduleConfig.setStringProperty("criteria.file", criteriaFile);
 
         Files.createDirectories(fileSystem.getPath(USER_HOME));
         copyFile("/parametersSet/models.par", parametersFile);
         copyFile("/parametersSet/network.par", networkParametersFile);
         copyFile("/parametersSet/solvers.par", solverParametersFile);
+        if (criteriaFile != null) {
+            copyFile("/criteria.crt", criteriaFile);
+        }
     }
 
     private void initDumpFilePlatformConfig(String folderProperty, String fileProperty) throws IOException {
@@ -201,6 +211,7 @@ class DynawoParametersTest extends AbstractSerDeTest {
         assertEquals(DynawoSimulationParameters.DEFAULT_MERGE_LOADS, parameters.isMergeLoads());
         assertEquals(DynawoSimulationParameters.DEFAULT_USE_MODEL_SIMPLIFIERS, parameters.isUseModelSimplifiers());
         assertEquals(DynawoSimulationParameters.DEFAULT_TIMELINE_EXPORT_MODE, parameters.getTimelineExportMode());
+        assertTrue(parameters.getCriteriaFilePath().isEmpty());
     }
 
     @Test
