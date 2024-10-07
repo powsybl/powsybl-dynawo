@@ -117,6 +117,11 @@ The available `com.powsybl.dynawo.DynawoSimulationParameters.SpecificLog` values
 - `VARIABLES`
 - `EQUATIONS`
 
+
+**criteria.file**  
+`criteria.file` defines the simulation criteria file.  
+The default value is `null`.
+
 ### Examples
 
 **YAML configuration:**
@@ -140,6 +145,7 @@ dynawo-simulation-default-parameters:
   log.specificLogs:
     - NETWORK
     - PARAMETERS
+  criteria.file: /home/user/criteria.crt
 ```
 
 **XML configuration:**
@@ -161,5 +167,6 @@ dynawo-simulation-default-parameters:
   <precision>10e-6</precision>
   <log.levelFilter>INFO</log.levelFilter>
   <log.specificLogs>NETWORK, PARAMETERS</log.specificLogs>
+  <criteria.file>/home/user/criteria.crt</criteria.file>
 </dynawo-simulation-default-parameters>
 ```

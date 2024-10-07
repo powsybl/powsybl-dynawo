@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawo;
 
+import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.computation.AbstractExecutionHandler;
 import com.powsybl.computation.Command;
@@ -202,6 +203,7 @@ public final class DynawoSimulationHandler extends AbstractExecutionHandler<Dyna
     }
 
     private void writeInputFiles(Path workingDir) throws IOException {
+        DynawoSimulationParameters parameters = context.getDynawoSimulationParameters();
         DynawoUtil.writeIidm(dynawoInput, workingDir.resolve(NETWORK_FILENAME));
         JobsXml.write(workingDir, context);
         DydXml.write(workingDir, context);
@@ -209,12 +211,19 @@ public final class DynawoSimulationHandler extends AbstractExecutionHandler<Dyna
         if (context.withCurves()) {
             CurvesXml.write(workingDir, context);
         }
-        DumpFileParameters dumpFileParameters = context.getDynawoSimulationParameters().getDumpFileParameters();
+        DumpFileParameters dumpFileParameters = parameters.getDumpFileParameters();
         if (dumpFileParameters.useDumpFile()) {
             Path dumpFilePath = dumpFileParameters.getDumpFilePath();
             if (dumpFilePath != null) {
                 Files.copy(dumpFilePath, workingDir.resolve(dumpFileParameters.dumpFile()), StandardCopyOption.REPLACE_EXISTING);
             }
         }
+        parameters.getCriteriaFilePath().ifPresent(filePath -> {
+            try {
+                Files.copy(filePath, workingDir.resolve(filePath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
+            } catch (IOException e) {
+                throw new PowsyblException("Simulation criteria file error", e);
+            }
+        });
     }
 }

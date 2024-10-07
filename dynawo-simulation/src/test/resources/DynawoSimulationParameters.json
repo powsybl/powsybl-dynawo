@@ -50,6 +50,7 @@
       "timelineExportMode" : "TXT",
       "logLevelFilter" : "INFO",
       "specificLogs" : [ "PARAMETERS", "VARIABLES" ],
+      "criteriaFilePath" : null,
       "modelsParameters" : [ {
         "id" : "test",
         "parameters" : {
