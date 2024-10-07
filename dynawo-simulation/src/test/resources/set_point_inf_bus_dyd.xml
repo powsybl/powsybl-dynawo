@@ -13,7 +13,7 @@
         <dyn:connect var1="transformer_terminal1" var2="infiniteBus_terminal"/>
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_TransformerFixedRatioSide2-DefaultEquipmentConnectionPoint">
-        <dyn:connect var1="transformer_terminal2" var2="@STATIC_ID@@NODE@_ACPIN"/>
+        <dyn:connect var1="transformer_terminal2" var2="@STATIC_ID@@NODE2@_ACPIN"/>
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_SetPoint-GeneratorPQ">
         <dyn:connect var1="setPoint_setPoint" var2="generator_omegaRefPu"/>
