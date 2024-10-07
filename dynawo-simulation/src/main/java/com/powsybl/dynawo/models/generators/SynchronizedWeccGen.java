@@ -8,10 +8,13 @@
 package com.powsybl.dynawo.models.generators;
 
 import com.powsybl.dynawo.builders.ModelConfig;
+import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.frequencysynchronizers.FrequencySynchronizedModel;
 import com.powsybl.dynawo.models.utils.BusUtils;
 import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.Generator;
+
+import java.util.List;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -20,6 +23,14 @@ public class SynchronizedWeccGen extends WeccGen implements FrequencySynchronize
 
     protected SynchronizedWeccGen(String dynamicModelId, Generator generator, String parameterSetId, ModelConfig modelConfig, String weccPrefix) {
         super(dynamicModelId, generator, parameterSetId, modelConfig, weccPrefix);
+    }
+
+    @Override
+    public List<VarConnection> getOmegaRefVarConnections() {
+        return List.of(
+                new VarConnection("omegaRef_grp_@INDEX@_value", getOmegaRefPuVarName()),
+                new VarConnection("running_grp_@INDEX@", getRunningVarName())
+        );
     }
 
     @Override
