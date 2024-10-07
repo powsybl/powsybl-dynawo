@@ -9,7 +9,7 @@
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_HvdcVscDanglingUdcSide2-DefaultEquipmentConnectionPoint">
         <dyn:connect var1="hvdc_terminal2" var2="@STATIC_ID@@NODE2@_ACPIN"/>
-        <dyn:connect var1="hvdc_switchOffSignal1Side2" var2="@STATIC_ID@@NODE2@_switchOff"/>
+        <dyn:connect var1="hvdc_Conv2_switchOffSignal1" var2="@STATIC_ID@@NODE2@_switchOff"/>
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_EventHvdcDisconnectionSide2-HvdcVscDanglingUdc">
         <dyn:connect var1="event_state1" var2="hvdc_Conv2_switchOffSignal2"/>

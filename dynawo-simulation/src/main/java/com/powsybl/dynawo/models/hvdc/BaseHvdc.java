@@ -13,7 +13,6 @@ import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.AbstractEquipmentBlackBoxModel;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.VarMapping;
-import com.powsybl.dynawo.models.utils.SideUtils;
 import com.powsybl.iidm.network.HvdcConverterStation;
 import com.powsybl.iidm.network.HvdcLine;
 import com.powsybl.iidm.network.TwoSides;
@@ -21,7 +20,6 @@ import com.powsybl.iidm.network.TwoSides;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Function;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -38,11 +36,11 @@ public class BaseHvdc extends AbstractEquipmentBlackBoxModel<HvdcLine> implement
 
     protected static final String TERMINAL_PREFIX = "hvdc_terminal";
 
-    private final Function<TwoSides, String> eventVarNameSupplier;
+    private final HvdcVarNameHandler varNameHandler;
 
-    protected BaseHvdc(String dynamicModelId, HvdcLine hvdc, String parameterSetId, ModelConfig modelConfig, Function<TwoSides, String> eventVarNameSupplier) {
+    protected BaseHvdc(String dynamicModelId, HvdcLine hvdc, String parameterSetId, ModelConfig modelConfig, HvdcVarNameHandler varNameHandler) {
         super(dynamicModelId, parameterSetId, hvdc, modelConfig);
-        this.eventVarNameSupplier = eventVarNameSupplier;
+        this.varNameHandler = varNameHandler;
     }
 
     @Override
@@ -60,7 +58,7 @@ public class BaseHvdc extends AbstractEquipmentBlackBoxModel<HvdcLine> implement
         List<VarConnection> varConnections = new ArrayList<>(2);
         varConnections.add(getSimpleVarConnectionWithBus(connected, side));
         connected.getSwitchOffSignalVarName(side)
-                .map(switchOff -> new VarConnection("hvdc_switchOffSignal1" + SideUtils.getSideSuffix(side), switchOff))
+                .map(switchOff -> new VarConnection(varNameHandler.getConnectionPointVarName(side), switchOff))
                 .ifPresent(varConnections::add);
         return varConnections;
     }
@@ -75,6 +73,6 @@ public class BaseHvdc extends AbstractEquipmentBlackBoxModel<HvdcLine> implement
 
     @Override
     public String getSwitchOffSignalEventVarName(TwoSides side) {
-        return eventVarNameSupplier.apply(side);
+        return varNameHandler.getEventVarName(side);
     }
 }
