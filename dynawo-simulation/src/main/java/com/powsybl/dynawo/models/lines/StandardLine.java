@@ -27,7 +27,7 @@ public class StandardLine extends AbstractEquipmentBlackBoxModel<Line> implement
     }
 
     private List<VarConnection> getVarConnectionsWith(EquipmentConnectionPoint connected, TwoSides side) {
-        return List.of(new VarConnection(getTerminalVarName(side), connected.getTerminalVarName()));
+        return List.of(new VarConnection(getTerminalVarName(side), connected.getTerminalVarName(side)));
     }
 
     private String getTerminalVarName(TwoSides side) {

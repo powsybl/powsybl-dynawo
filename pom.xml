@@ -60,6 +60,7 @@
         <powsybl-core.version>6.4.1</powsybl-core.version>
         <groovy.version>4.0.14</groovy.version> <!-- used for groovy-json but also for groovydoc (dynawo-dsl) -->
         <asciitable.version>0.3.2</asciitable.version>
+        <jackson.version>2.17.1</jackson.version>
         <sonar.coverage.jacoco.xmlReportPaths>
             ../distribution/target/site/jacoco-aggregate/jacoco.xml,
         </sonar.coverage.jacoco.xmlReportPaths>
@@ -161,6 +162,11 @@
                 <groupId>de.vandermeer</groupId>
                 <artifactId>asciitable</artifactId>
                 <version>${asciitable.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.datatype</groupId>
+                <artifactId>jackson-datatype-jdk8</artifactId>
+                <version>${jackson.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
