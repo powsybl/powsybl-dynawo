@@ -29,7 +29,7 @@ class JobsXmlTest extends DynawoTestUtil {
     @ParameterizedTest(name = "{0}")
     @MethodSource("provideParameters")
     void testJobXml(String xmlResult, DynawoSimulationParameters parameters) throws IOException, SAXException {
-        DynawoSimulationContext context = new DynawoSimulationContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, eventModels, curves, DynamicSimulationParameters.load(), parameters);
+        DynawoSimulationContext context = new DynawoSimulationContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, eventModels, outputVariables, DynamicSimulationParameters.load(), parameters);
         JobsXml.write(tmpDir, context);
         validate("jobs.xsd", xmlResult, tmpDir.resolve(DynawoSimulationConstants.JOBS_FILENAME));
     }

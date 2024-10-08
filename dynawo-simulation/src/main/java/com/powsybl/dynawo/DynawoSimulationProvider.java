@@ -77,11 +77,11 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
     }
 
     @Override
-    public CompletableFuture<DynamicSimulationResult> run(Network network, DynamicModelsSupplier dynamicModelsSupplier, EventModelsSupplier eventModelsSupplier, CurvesSupplier curvesSupplier, String workingVariantId,
+    public CompletableFuture<DynamicSimulationResult> run(Network network, DynamicModelsSupplier dynamicModelsSupplier, EventModelsSupplier eventModelsSupplier, OutputVariablesSupplier outputVariablesSupplier, String workingVariantId,
                                                           ComputationManager computationManager, DynamicSimulationParameters parameters, ReportNode reportNode) {
         Objects.requireNonNull(dynamicModelsSupplier);
         Objects.requireNonNull(eventModelsSupplier);
-        Objects.requireNonNull(curvesSupplier);
+        Objects.requireNonNull(outputVariablesSupplier);
         Objects.requireNonNull(workingVariantId);
         Objects.requireNonNull(parameters);
         Objects.requireNonNull(reportNode);
@@ -93,7 +93,7 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
         DynawoSimulationContext context = new DynawoSimulationContext(network, workingVariantId,
                 BlackBoxSupplierUtils.getBlackBoxModelList(dynamicModelsSupplier, network, dsReportNode),
                 BlackBoxSupplierUtils.getBlackBoxModelList(eventModelsSupplier, network, dsReportNode),
-                curvesSupplier.get(network),
+                outputVariablesSupplier.get(network),
                 parameters,
                 DynawoSimulationParameters.load(parameters),
                 currentVersion,

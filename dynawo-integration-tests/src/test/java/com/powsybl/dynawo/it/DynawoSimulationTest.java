@@ -69,10 +69,12 @@ class DynawoSimulationTest extends AbstractDynawoTest {
 
         assertEquals(DynamicSimulationResult.Status.SUCCESS, result.getStatus());
         assertTrue(result.getStatusText().isEmpty());
-        assertEquals(41, result.getCurves().size());
+        assertEquals(27, result.getCurves().size());
         DoubleTimeSeries ts1 = result.getCurve("_GEN____1_SM_generator_UStatorPu");
         assertEquals("_GEN____1_SM_generator_UStatorPu", ts1.getMetadata().getName());
         assertEquals(587, ts1.toArray().length);
+        assertEquals(14, result.getFinalStateValues().size());
+        assertEquals(1.046227, result.getFinalStateValues().get("NETWORK__BUS___10_TN_Upu_value"));
         List<TimelineEvent> timeLine = result.getTimeLine();
         assertEquals(23, timeLine.size());
         checkFirstTimeLineEvent(timeLine.get(0), 0, "_GEN____8_SM", "PMIN : activation");
@@ -134,7 +136,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                 .setSolverType(DynawoSimulationParameters.SolverType.IDA)
                 .setPrecision(10e-8);
 
-        DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, EventModelsSupplier.empty(), CurvesSupplier.empty(),
+        DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, EventModelsSupplier.empty(), OutputVariablesSupplier.empty(),
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, NO_OP)
                 .join();
 
@@ -164,7 +166,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                 .setSolverType(DynawoSimulationParameters.SolverType.IDA)
                 .setSpecificLogs(EnumSet.allOf(DynawoSimulationParameters.SpecificLog.class));
 
-        DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, EventModelsSupplier.empty(), CurvesSupplier.empty(),
+        DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, EventModelsSupplier.empty(), OutputVariablesSupplier.empty(),
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, reportNode)
                 .join();
 
@@ -188,9 +190,9 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                 getResourceAsStream("/smib/eventModels.groovy"),
                 GroovyExtension.find(EventModelGroovyExtension.class, DynawoSimulationProvider.NAME));
 
-        GroovyCurvesSupplier curvesSupplier = new GroovyCurvesSupplier(
+        GroovyOutputVariablesSupplier outputVariablesSupplier = new GroovyOutputVariablesSupplier(
                 getResourceAsStream("/smib/curves.groovy"),
-                GroovyExtension.find(CurveGroovyExtension.class, DynawoSimulationProvider.NAME));
+                GroovyExtension.find(OutputVariableGroovyExtension.class, DynawoSimulationProvider.NAME));
 
         List<ParametersSet> modelsParameters = ParametersXml.load(getResourceAsStream("/smib/SMIB.par"));
         ParametersSet networkParameters = ParametersXml.load(getResourceAsStream("/smib/network.par"), "8");
@@ -201,7 +203,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                 .setSolverType(DynawoSimulationParameters.SolverType.IDA)
                 .setWriteFinalState(false);
 
-        DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, curvesSupplier,
+        DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, outputVariablesSupplier,
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, NO_OP)
                 .join();
 
@@ -230,7 +232,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                 .setSolverParameters(ParametersXml.load(getResourceAsStream("/error/solvers.par"), "3"))
                 .setSolverType(DynawoSimulationParameters.SolverType.SIM);
 
-        DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, CurvesSupplier.empty(),
+        DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, OutputVariablesSupplier.empty(),
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, NO_OP)
                 .join();
 
@@ -256,7 +258,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                 .setSolverType(DynawoSimulationParameters.SolverType.IDA)
                 .setTimelineExportMode(DynawoSimulationParameters.ExportMode.XML);
 
-        DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, CurvesSupplier.empty(),
+        DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, OutputVariablesSupplier.empty(),
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, NO_OP)
                 .join();
 
@@ -292,7 +294,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                 .setSolverType(DynawoSimulationParameters.SolverType.SIM)
                 .setTimelineExportMode(DynawoSimulationParameters.ExportMode.XML);
 
-        DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, CurvesSupplier.empty(),
+        DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, OutputVariablesSupplier.empty(),
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, NO_OP)
                 .join();
 
@@ -319,9 +321,9 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                 getResourceAsStream("/ieee14/disconnectline/eventModels.groovy"),
                 GroovyExtension.find(EventModelGroovyExtension.class, DynawoSimulationProvider.NAME));
 
-        GroovyCurvesSupplier curvesSupplier = new GroovyCurvesSupplier(
-                getResourceAsStream("/ieee14/disconnectline/curves.groovy"),
-                GroovyExtension.find(CurveGroovyExtension.class, DynawoSimulationProvider.NAME));
+        GroovyOutputVariablesSupplier outputVariablesSupplier = new GroovyOutputVariablesSupplier(
+                getResourceAsStream("/ieee14/disconnectline/outputVariables.groovy"),
+                GroovyExtension.find(OutputVariableGroovyExtension.class, DynawoSimulationProvider.NAME));
 
         List<ParametersSet> modelsParameters = ParametersXml.load(getResourceAsStream("/ieee14/disconnectline/models.par"));
         ParametersSet networkParameters = ParametersXml.load(getResourceAsStream("/ieee14/disconnectline/network.par"), "8");
@@ -332,7 +334,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                 .setSolverType(DynawoSimulationParameters.SolverType.IDA)
                 .setTimelineExportMode(DynawoSimulationParameters.ExportMode.XML);
 
-        return () -> provider.run(network, dynamicModelsSupplier, eventModelsSupplier, curvesSupplier,
+        return () -> provider.run(network, dynamicModelsSupplier, eventModelsSupplier, outputVariablesSupplier,
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, reportNode)
                 .join();
     }

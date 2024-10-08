@@ -9,8 +9,8 @@
 package com.powsybl.dynawo.models.buses;
 
 import com.powsybl.commons.PowsyblException;
-import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
+import com.powsybl.dynamicsimulation.OutputVariable;
 import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.models.BlackBoxModel;
@@ -45,8 +45,8 @@ class StandardBusTest {
         DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load();
         String workingVariantId = network.getVariantManager().getWorkingVariantId();
         List<BlackBoxModel> events = Collections.emptyList();
-        List<Curve> curves = Collections.emptyList();
-        PowsyblException e = assertThrows(PowsyblException.class, () -> new DynawoSimulationContext(network, workingVariantId, dynamicModels, events, curves, parameters, dynawoParameters));
+        List<OutputVariable> outputVariables = Collections.emptyList();
+        PowsyblException e = assertThrows(PowsyblException.class, () -> new DynawoSimulationContext(network, workingVariantId, dynamicModels, events, outputVariables, parameters, dynawoParameters));
         assertEquals("The equipment NHV1_NHV2_1 linked to the StandardBus NHV1 does not possess a dynamic model", e.getMessage());
     }
 }

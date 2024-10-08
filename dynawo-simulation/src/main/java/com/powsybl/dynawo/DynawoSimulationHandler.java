@@ -16,7 +16,8 @@ import com.powsybl.computation.ExecutionReport;
 import com.powsybl.dynamicsimulation.DynamicSimulationResult;
 import com.powsybl.dynamicsimulation.DynamicSimulationResultImpl;
 import com.powsybl.dynamicsimulation.TimelineEvent;
-import com.powsybl.dynawo.xml.CurvesXml;
+import com.powsybl.dynawo.outputvariables.CsvFsvParser;
+import com.powsybl.dynawo.xml.OutputVariablesXml;
 import com.powsybl.dynawo.xml.DydXml;
 import com.powsybl.dynawo.xml.JobsXml;
 import com.powsybl.dynawo.xml.ParametersXml;
@@ -72,6 +73,7 @@ public final class DynawoSimulationHandler extends AbstractExecutionHandler<Dyna
 
     private final List<TimelineEvent> timeline = new ArrayList<>();
     private final Map<String, DoubleTimeSeries> curves = new HashMap<>();
+    private final Map<String, Double> fsv = new HashMap<>();
     private DynamicSimulationResult.Status status = DynamicSimulationResult.Status.SUCCESS;
     private String statusText = "";
 
@@ -86,14 +88,10 @@ public final class DynawoSimulationHandler extends AbstractExecutionHandler<Dyna
 
     @Override
     public List<CommandExecution> before(Path workingDir) throws IOException {
-        Path outputNetworkFile = workingDir.resolve(OUTPUTS_FOLDER).resolve(FINAL_STATE_FOLDER).resolve(OUTPUT_IIDM_FILENAME);
-        if (Files.exists(outputNetworkFile)) {
-            Files.delete(outputNetworkFile);
-        }
-        Path curvesPath = workingDir.resolve(CURVES_OUTPUT_PATH).toAbsolutePath().resolve(CURVES_FILENAME);
-        if (Files.exists(curvesPath)) {
-            Files.delete(curvesPath);
-        }
+        Path basePath = workingDir.resolve(OUTPUTS_FOLDER);
+        deleteExistingFile(basePath, FINAL_STATE_FOLDER, OUTPUT_IIDM_FILENAME);
+        deleteExistingFile(basePath, CURVES_OUTPUT_PATH, CURVES_FILENAME);
+        deleteExistingFile(basePath, FSV_OUTPUT_PATH, FSV_OUTPUT_FILENAME);
         writeInputFiles(workingDir);
         return getCommandExecutions(command);
     }
@@ -103,25 +101,12 @@ public final class DynawoSimulationHandler extends AbstractExecutionHandler<Dyna
 
         Path outputsFolder = workingDir.resolve(OUTPUTS_FOLDER);
         context.getNetwork().getVariantManager().setWorkingVariant(context.getWorkingVariantId());
-        DynawoSimulationParameters parameters = context.getDynawoSimulationParameters();
-        DumpFileParameters dumpFileParameters = parameters.getDumpFileParameters();
-
-        setDynawoLog(outputsFolder, parameters.getSpecificLogs());
-        // Error file
+        setDynawoLog(outputsFolder, context.getDynawoSimulationParameters().getSpecificLogs());
         Path errorFile = workingDir.resolve(ERROR_FILENAME);
         if (Files.exists(errorFile)) {
             Matcher errorMatcher = Pattern.compile(DYNAWO_ERROR_PATTERN + "(.*)").matcher(Files.readString(errorFile));
             if (!errorMatcher.find()) {
-                if (parameters.isWriteFinalState()) {
-                    updateNetwork(outputsFolder);
-                }
-                if (dumpFileParameters.exportDumpFile()) {
-                    setDumpFile(outputsFolder, dumpFileParameters.dumpFileFolder(), workingDir.getFileName());
-                }
-                setTimeline(outputsFolder);
-                if (context.withCurves()) {
-                    setCurves(workingDir);
-                }
+                setSuccessOutputs(workingDir, outputsFolder);
             } else {
                 status = DynamicSimulationResult.Status.FAILURE;
                 statusText = errorMatcher.group().substring(DYNAWO_ERROR_PATTERN.length());
@@ -132,7 +117,25 @@ public final class DynawoSimulationHandler extends AbstractExecutionHandler<Dyna
             statusText = "Dynawo error log file not found";
         }
 
-        return new DynamicSimulationResultImpl(status, statusText, curves, timeline);
+        return new DynamicSimulationResultImpl(status, statusText, curves, fsv, timeline);
+    }
+
+    private void setSuccessOutputs(Path workingDir, Path outputsFolder) throws IOException {
+        DynawoSimulationParameters parameters = context.getDynawoSimulationParameters();
+        if (parameters.isWriteFinalState()) {
+            updateNetwork(outputsFolder);
+        }
+        DumpFileParameters dumpFileParameters = parameters.getDumpFileParameters();
+        if (dumpFileParameters.exportDumpFile()) {
+            setDumpFile(outputsFolder, dumpFileParameters.dumpFileFolder(), workingDir.getFileName());
+        }
+        setTimeline(outputsFolder);
+        if (context.withCurveVariables()) {
+            setCurves(outputsFolder);
+        }
+        if (context.withFsvVariables()) {
+            setFinalStateValues(outputsFolder);
+        }
     }
 
     private void setDynawoLog(Path outputsFolder, Set<DynawoSimulationParameters.SpecificLog> specificLogs) throws IOException {
@@ -191,7 +194,7 @@ public final class DynawoSimulationHandler extends AbstractExecutionHandler<Dyna
     }
 
     private void setCurves(Path workingDir) {
-        Path curvesPath = workingDir.resolve(CURVES_OUTPUT_PATH).toAbsolutePath().resolve(CURVES_FILENAME);
+        Path curvesPath = workingDir.resolve(CURVES_OUTPUT_PATH).resolve(CURVES_FILENAME);
         if (Files.exists(curvesPath)) {
             TimeSeries.parseCsv(curvesPath, new TimeSeriesCsvConfig(TimeSeriesConstants.DEFAULT_SEPARATOR, false, TimeSeries.TimeFormat.FRACTIONS_OF_SECOND))
                     .values().forEach(l -> l.forEach(curve -> curves.put(curve.getMetadata().getName(), (DoubleTimeSeries) curve)));
@@ -202,14 +205,28 @@ public final class DynawoSimulationHandler extends AbstractExecutionHandler<Dyna
         }
     }
 
+    private void setFinalStateValues(Path workingDir) {
+        Path fsvPath = workingDir.resolve(FSV_OUTPUT_PATH).resolve(FSV_OUTPUT_FILENAME);
+        if (Files.exists(fsvPath)) {
+            new CsvFsvParser(';').parse(fsvPath).forEach(e -> fsv.put(e.model() + "_" + e.variable(), e.value()));
+        } else {
+            LOGGER.warn("Final state values folder not found");
+            status = DynamicSimulationResult.Status.FAILURE;
+            statusText = "Dynawo final state values folder not found";
+        }
+    }
+
     private void writeInputFiles(Path workingDir) throws IOException {
         DynawoSimulationParameters parameters = context.getDynawoSimulationParameters();
         DynawoUtil.writeIidm(dynawoInput, workingDir.resolve(NETWORK_FILENAME));
         JobsXml.write(workingDir, context);
         DydXml.write(workingDir, context);
         ParametersXml.write(workingDir, context);
-        if (context.withCurves()) {
-            CurvesXml.write(workingDir, context);
+        if (context.withCurveVariables()) {
+            OutputVariablesXml.writeCurve(workingDir, context);
+        }
+        if (context.withFsvVariables()) {
+            OutputVariablesXml.writeFsv(workingDir, context);
         }
         DumpFileParameters dumpFileParameters = parameters.getDumpFileParameters();
         if (dumpFileParameters.useDumpFile()) {
@@ -225,5 +242,16 @@ public final class DynawoSimulationHandler extends AbstractExecutionHandler<Dyna
                 throw new PowsyblException("Simulation criteria file error", e);
             }
         });
+    }
+
+    private static void deleteExistingFile(Path basePath, String... elements) throws IOException {
+        Path finalPath = basePath;
+        for (String element : elements) {
+            finalPath = finalPath.resolve(element);
+            if (!Files.exists(finalPath)) {
+                return;
+            }
+        }
+        Files.delete(finalPath);
     }
 }

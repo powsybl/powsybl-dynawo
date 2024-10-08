@@ -28,34 +28,28 @@ public abstract class AbstractCsvParser<T> {
 
     protected static final char DEFAULT_SEPARATOR = '|';
 
-    private final char separator;
+    private final CsvParser csvParser;
 
-    protected AbstractCsvParser(char separator) {
-        this.separator = separator;
+    protected AbstractCsvParser(char separator, boolean skipHeader) {
+        CsvParserSettings settings = new CsvParserSettings();
+        settings.getFormat().setDelimiter(separator);
+        settings.getFormat().setQuoteEscape('"');
+        settings.getFormat().setLineSeparator(System.lineSeparator());
+        settings.setMaxColumns(getNbColumns());
+        settings.setHeaderExtractionEnabled(skipHeader);
+        csvParser = new CsvParser(settings);
     }
 
     public List<T> parse(Path file) {
         if (!Files.exists(file)) {
             return Collections.emptyList();
         }
-
         try (BufferedReader reader = Files.newBufferedReader(file, StandardCharsets.UTF_8)) {
-            return parse(reader);
+            Objects.requireNonNull(reader);
+            return read(csvParser.iterate(reader).iterator());
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
-    }
-
-    private List<T> parse(BufferedReader reader) {
-        Objects.requireNonNull(reader);
-        CsvParserSettings settings = new CsvParserSettings();
-        settings.getFormat().setDelimiter(separator);
-        settings.getFormat().setQuoteEscape('"');
-        settings.getFormat().setLineSeparator(System.lineSeparator());
-        settings.setMaxColumns(getNbColumns());
-        CsvParser csvParser = new CsvParser(settings);
-        ResultIterator<String[], ParsingContext> iterator = csvParser.iterate(reader).iterator();
-        return read(iterator);
     }
 
     protected List<T> read(ResultIterator<String[], ParsingContext> iterator) {
