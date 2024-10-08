@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawo.models.generators;
 
+import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.AbstractEquipmentBlackBoxModel;
 import com.powsybl.dynawo.models.VarConnection;
@@ -25,8 +26,8 @@ public class WeccGen extends AbstractEquipmentBlackBoxModel<Generator> {
     private final List<VarMapping> varsMapping;
     protected final String weccPrefix;
 
-    protected WeccGen(String dynamicModelId, Generator generator, String parameterSetId, String lib, String weccPrefix) {
-        super(dynamicModelId, parameterSetId, generator, lib);
+    protected WeccGen(String dynamicModelId, Generator generator, String parameterSetId, ModelConfig modelConfig, String weccPrefix) {
+        super(dynamicModelId, parameterSetId, generator, modelConfig);
         this.weccPrefix = Objects.requireNonNull(weccPrefix);
         varsMapping = List.of(
                 new VarMapping(weccPrefix + "_measurements_PPuSnRef", "p"),

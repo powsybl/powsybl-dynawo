@@ -6,6 +6,7 @@
  */
 package com.powsybl.dynawo.models.loads;
 
+import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.VarMapping;
 import com.powsybl.dynawo.models.buses.EquipmentConnectionPoint;
@@ -25,8 +26,8 @@ public class BaseLoad extends AbstractLoad {
             new VarMapping("load_QPu", "q"),
             new VarMapping("load_state", "state"));
 
-    protected BaseLoad(String dynamicModelId, Load load, String parameterSetId, String lib) {
-        super(dynamicModelId, load, parameterSetId, lib, "load_terminal");
+    protected BaseLoad(String dynamicModelId, Load load, String parameterSetId, ModelConfig modelConfig) {
+        super(dynamicModelId, load, parameterSetId, modelConfig, "load_terminal");
     }
 
     @Override

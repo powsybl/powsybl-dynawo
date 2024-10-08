@@ -7,13 +7,14 @@
  */
 package com.powsybl.dynawo.builders;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public record ModelConfig(String lib, String alias, String internalModelPrefix, List<String> properties, String doc) implements ModelInfo {
+public record ModelConfig(String lib, String alias, String internalModelPrefix, List<String> properties, String doc, VersionInterval version) implements ModelInfo {
 
     private static final String CONTROLLABLE_PROPERTY = "CONTROLLABLE";
     private static final String DANGLING_PROPERTY = "DANGLING";
@@ -21,16 +22,21 @@ public record ModelConfig(String lib, String alias, String internalModelPrefix, 
     private static final String TRANSFORMER_PROPERTY = "TRANSFORMER";
     private static final String AUXILIARY_PROPERTY = "AUXILIARY";
 
-    public ModelConfig(String lib, String alias, String internalModelPrefix, List<String> properties, String doc) {
+    public ModelConfig(String lib, String alias, String internalModelPrefix, List<String> properties, String doc, VersionInterval version) {
         this.lib = Objects.requireNonNull(lib);
         this.alias = alias;
         this.internalModelPrefix = internalModelPrefix;
         this.properties = Objects.requireNonNull(properties);
         this.doc = doc;
+        this.version = Objects.requireNonNull(version);
     }
 
-    public ModelConfig(String lib, String alias, String internalModelPrefix, List<String> properties) {
-        this(lib, alias, internalModelPrefix, properties, null);
+    public ModelConfig(String lib, List<String> properties) {
+        this(lib, null, null, properties, null, VersionInterval.createDefaultVersion());
+    }
+
+    public ModelConfig(String lib) {
+        this(lib, null, null, Collections.emptyList(), null, VersionInterval.createDefaultVersion());
     }
 
     public boolean isControllable() {
@@ -64,6 +70,8 @@ public record ModelConfig(String lib, String alias, String internalModelPrefix, 
 
     @Override
     public String formattedInfo() {
-        return name() + (alias != null ? " (" + lib + ")" : "") + (doc != null ? ": " + doc : "");
+        return name() + (alias != null ? " (" + lib + ")" : "")
+                + (doc != null ? ": " + doc : "")
+                + " (" + version.formattedInfo() + ")";
     }
 }

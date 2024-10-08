@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawo.models.generators;
 
+import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.frequencysynchronizers.FrequencySynchronizedModel;
 import com.powsybl.dynawo.models.utils.BusUtils;
 import com.powsybl.iidm.network.Bus;
@@ -17,8 +18,8 @@ import com.powsybl.iidm.network.Generator;
  */
 public class SynchronizedWeccGen extends WeccGen implements FrequencySynchronizedModel {
 
-    protected SynchronizedWeccGen(String dynamicModelId, Generator generator, String parameterSetId, String weccLib, String weccPrefix) {
-        super(dynamicModelId, generator, parameterSetId, weccLib, weccPrefix);
+    protected SynchronizedWeccGen(String dynamicModelId, Generator generator, String parameterSetId, ModelConfig modelConfig, String weccPrefix) {
+        super(dynamicModelId, generator, parameterSetId, modelConfig, weccPrefix);
     }
 
     @Override

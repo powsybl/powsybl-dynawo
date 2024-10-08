@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawo.models.hvdc;
 
+import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.buses.EquipmentConnectionPoint;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.AbstractEquipmentBlackBoxModel;
@@ -39,8 +40,8 @@ public class BaseHvdc extends AbstractEquipmentBlackBoxModel<HvdcLine> implement
 
     private final Function<TwoSides, String> eventVarNameSupplier;
 
-    protected BaseHvdc(String dynamicModelId, HvdcLine hvdc, String parameterSetId, String lib, Function<TwoSides, String> eventVarNameSupplier) {
-        super(dynamicModelId, parameterSetId, hvdc, lib);
+    protected BaseHvdc(String dynamicModelId, HvdcLine hvdc, String parameterSetId, ModelConfig modelConfig, Function<TwoSides, String> eventVarNameSupplier) {
+        super(dynamicModelId, parameterSetId, hvdc, modelConfig);
         this.eventVarNameSupplier = eventVarNameSupplier;
     }
 

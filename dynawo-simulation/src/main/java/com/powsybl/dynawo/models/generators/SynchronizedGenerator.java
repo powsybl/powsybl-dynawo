@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawo.models.generators;
 
+import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.frequencysynchronizers.FrequencySynchronizedModel;
 import com.powsybl.dynawo.models.utils.BusUtils;
@@ -21,8 +22,8 @@ import java.util.List;
  */
 public class SynchronizedGenerator extends BaseGenerator implements FrequencySynchronizedModel {
 
-    protected SynchronizedGenerator(String dynamicModelId, Generator generator, String parameterSetId, String generatorLib) {
-        super(dynamicModelId, generator, parameterSetId, generatorLib);
+    protected SynchronizedGenerator(String dynamicModelId, Generator generator, String parameterSetId, ModelConfig modelConfig) {
+        super(dynamicModelId, generator, parameterSetId, modelConfig);
     }
 
     @Override

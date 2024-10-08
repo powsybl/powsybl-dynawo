@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawo.models.automationsystems.overloadmanagments;
 
+import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.automationsystems.BranchModel;
@@ -29,8 +30,8 @@ public class DynamicTwoLevelsOverloadManagementSystem extends DynamicOverloadMan
     private final Branch<?> secondMeasuredBranch;
     private final TwoSides secondMeasuredSide;
 
-    protected DynamicTwoLevelsOverloadManagementSystem(String dynamicModelId, String parameterSetId, Branch<?> measuredBranch, TwoSides measuredSide, Branch<?> secondMeasuredBranch, TwoSides secondMeasuredSide, Branch<?> controlledBranch, String lib) {
-        super(dynamicModelId, parameterSetId, measuredBranch, measuredSide, controlledBranch, lib);
+    protected DynamicTwoLevelsOverloadManagementSystem(String dynamicModelId, String parameterSetId, Branch<?> measuredBranch, TwoSides measuredSide, Branch<?> secondMeasuredBranch, TwoSides secondMeasuredSide, Branch<?> controlledBranch, ModelConfig modelConfig) {
+        super(dynamicModelId, parameterSetId, measuredBranch, measuredSide, controlledBranch, modelConfig);
         this.secondMeasuredBranch = Objects.requireNonNull(secondMeasuredBranch);
         this.secondMeasuredSide = Objects.requireNonNull(secondMeasuredSide);
     }

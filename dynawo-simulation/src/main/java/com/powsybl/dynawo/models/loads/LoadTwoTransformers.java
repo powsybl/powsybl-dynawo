@@ -8,6 +8,7 @@
 package com.powsybl.dynawo.models.loads;
 
 import com.powsybl.commons.PowsyblException;
+import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.TransformerSide;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.VarMapping;
@@ -31,8 +32,8 @@ public class LoadTwoTransformers extends AbstractLoad implements LoadWithTransfo
             new VarMapping(getTransformerVar(HIGH_VOLTAGE, "Q1Pu_value"), "q"),
             new VarMapping(getTransformerVar(HIGH_VOLTAGE, "state"), "state"));
 
-    protected LoadTwoTransformers(String dynamicModelId, Load load, String parameterSetId, String lib) {
-        super(dynamicModelId, load, parameterSetId, lib, getTransformerVar(HIGH_VOLTAGE, "terminal1"));
+    protected LoadTwoTransformers(String dynamicModelId, Load load, String parameterSetId, ModelConfig modelConfig) {
+        super(dynamicModelId, load, parameterSetId, modelConfig, getTransformerVar(HIGH_VOLTAGE, "terminal1"));
     }
 
     @Override

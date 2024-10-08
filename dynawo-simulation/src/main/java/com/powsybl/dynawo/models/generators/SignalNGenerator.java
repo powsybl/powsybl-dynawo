@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawo.models.generators;
 
+import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.frequencysynchronizers.SignalNModel;
 import com.powsybl.dynawo.models.utils.BusUtils;
 import com.powsybl.iidm.network.Bus;
@@ -17,8 +18,8 @@ import com.powsybl.iidm.network.Generator;
  */
 public class SignalNGenerator extends BaseGenerator implements SignalNModel {
 
-    protected SignalNGenerator(String dynamicModelId, Generator generator, String parameterSetId, String lib) {
-        super(dynamicModelId, generator, parameterSetId, lib);
+    protected SignalNGenerator(String dynamicModelId, Generator generator, String parameterSetId, ModelConfig modelConfig) {
+        super(dynamicModelId, generator, parameterSetId, modelConfig);
     }
 
     @Override
