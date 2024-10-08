@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawo.models.events;
 
+import com.powsybl.dynawo.builders.EventModelInfo;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.buses.ActionConnectionPoint;
@@ -27,8 +28,8 @@ public class NodeFaultEvent extends AbstractEvent {
     private final double rPu;
     private final double xPu;
 
-    protected NodeFaultEvent(String eventId, Bus equipment, double startTime, double faultTime, double rPu, double xPu) {
-        super(eventId, equipment, startTime, "NodeFault");
+    protected NodeFaultEvent(String eventId, Bus equipment, EventModelInfo eventModelInfo, double startTime, double faultTime, double rPu, double xPu) {
+        super(eventId, equipment, eventModelInfo, startTime);
         this.faultTime = faultTime;
         this.rPu = rPu;
         this.xPu = xPu;

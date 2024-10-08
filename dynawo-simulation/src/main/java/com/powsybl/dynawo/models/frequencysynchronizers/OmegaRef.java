@@ -9,6 +9,7 @@ package com.powsybl.dynawo.models.frequencysynchronizers;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.DynawoSimulationParameters;
+import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.buses.BusOfFrequencySynchronizedModel;
 import com.powsybl.dynawo.models.buses.DefaultBusOfFrequencySynchronized;
@@ -35,7 +36,7 @@ import static com.powsybl.dynawo.parameters.ParameterType.INT;
 public class OmegaRef extends AbstractFrequencySynchronizer {
 
     public OmegaRef(List<FrequencySynchronizedModel> synchronizedEquipments) {
-        super(synchronizedEquipments, "DYNModelOmegaRef");
+        super(synchronizedEquipments, new ModelConfig("DYNModelOmegaRef"));
     }
 
     @Override

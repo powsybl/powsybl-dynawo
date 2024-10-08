@@ -9,29 +9,62 @@ package com.powsybl.dynawo.models.events;
 
 import com.powsybl.dynamicsimulation.EventModel;
 import com.powsybl.dynawo.DynawoSimulationContext;
-import com.powsybl.dynawo.models.AbstractPureDynamicBlackBoxModel;
+import com.powsybl.dynawo.builders.EventModelInfo;
+import com.powsybl.dynawo.builders.VersionInterval;
+import com.powsybl.dynawo.models.AbstractBlackBoxModel;
+import com.powsybl.dynawo.models.VarMapping;
 import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.iidm.network.Identifiable;
 
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+import java.util.Collections;
+import java.util.List;
 import java.util.function.Consumer;
+
+import static com.powsybl.dynawo.xml.DynawoSimulationXmlConstants.DYN_URI;
 
 /**
  * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public abstract class AbstractEvent extends AbstractPureDynamicBlackBoxModel implements EventModel {
+public abstract class AbstractEvent extends AbstractBlackBoxModel implements EventModel {
 
+    private final EventModelInfo eventModelInfo;
     private final Identifiable<? extends Identifiable<?>> equipment;
     private final double startTime;
 
-    protected AbstractEvent(String eventId, Identifiable<?> equipment, double startTime, String lib) {
-        super(eventId, lib);
+    protected AbstractEvent(String eventId, Identifiable<?> equipment, EventModelInfo eventModelInfo, double startTime) {
+        super(eventId);
         this.equipment = equipment;
         this.startTime = startTime;
+        this.eventModelInfo = eventModelInfo;
     }
 
     public Identifiable<?> getEquipment() {
         return equipment;
+    }
+
+    @Override
+    public String getLib() {
+        return eventModelInfo.name();
+    }
+
+    @Override
+    public VersionInterval getVersionInterval() {
+        return eventModelInfo.version();
+    }
+
+    @Override
+    public final List<VarMapping> getVarsMapping() {
+        // No static-dynamic mapping as purely dynamic
+        return Collections.emptyList();
+    }
+
+    @Override
+    public void write(XMLStreamWriter writer, String parFileName) throws XMLStreamException {
+        writer.writeEmptyElement(DYN_URI, "blackBoxModel");
+        writeDynamicAttributes(writer, parFileName);
     }
 
     @Override

@@ -9,6 +9,7 @@ package com.powsybl.dynawo.models.buses;
 
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.builders.*;
+import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.iidm.network.Network;
 
 import java.util.Collection;
@@ -46,13 +47,20 @@ public class StandardBusBuilder extends AbstractBusBuilder<StandardBusBuilder> {
         return MODEL_CONFIGS.getModelInfos();
     }
 
+    /**
+     * Returns models usable with the given {@link DynawoVersion}
+     */
+    public static Collection<ModelInfo> getSupportedModelInfos(DynawoVersion dynawoVersion) {
+        return MODEL_CONFIGS.getModelInfos(dynawoVersion);
+    }
+
     protected StandardBusBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
         super(network, modelConfig, reportNode);
     }
 
     @Override
     public StandardBus build() {
-        return isInstantiable() ? new StandardBus(dynamicModelId, getEquipment(), parameterSetId, "Bus") : null;
+        return isInstantiable() ? new StandardBus(dynamicModelId, getEquipment(), parameterSetId, modelConfig) : null;
     }
 
     @Override

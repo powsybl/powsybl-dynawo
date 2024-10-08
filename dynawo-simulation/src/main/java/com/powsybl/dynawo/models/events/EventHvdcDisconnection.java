@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawo.models.events;
 
+import com.powsybl.dynawo.builders.EventModelInfo;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.hvdc.HvdcModel;
@@ -22,8 +23,8 @@ public class EventHvdcDisconnection extends AbstractDynamicLibEventDisconnection
 
     private final TwoSides disconnectSide;
 
-    protected EventHvdcDisconnection(String eventId, HvdcLine equipment, double startTime, TwoSides disconnectSide) {
-        super(eventId, equipment, startTime, true);
+    protected EventHvdcDisconnection(String eventId, HvdcLine equipment, EventModelInfo eventModelInfo, double startTime, TwoSides disconnectSide) {
+        super(eventId, equipment, eventModelInfo, startTime, true);
         this.disconnectSide = disconnectSide;
     }
 

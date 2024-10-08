@@ -9,6 +9,7 @@ package com.powsybl.dynawo.models.loads;
 
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.builders.*;
+import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.iidm.network.Network;
 
 import java.util.Collection;
@@ -46,13 +47,20 @@ public class LoadTwoTransformersBuilder extends AbstractLoadModelBuilder<LoadTwo
         return MODEL_CONFIGS.getModelInfos();
     }
 
+    /**
+     * Returns models usable with the given {@link DynawoVersion}
+     */
+    public static Collection<ModelInfo> getSupportedModelInfos(DynawoVersion dynawoVersion) {
+        return MODEL_CONFIGS.getModelInfos(dynawoVersion);
+    }
+
     protected LoadTwoTransformersBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
         super(network, modelConfig, reportNode);
     }
 
     @Override
     public LoadTwoTransformers build() {
-        return isInstantiable() ? new LoadTwoTransformers(dynamicModelId, getEquipment(), parameterSetId, modelConfig.lib()) : null;
+        return isInstantiable() ? new LoadTwoTransformers(dynamicModelId, getEquipment(), parameterSetId, modelConfig) : null;
     }
 
     @Override

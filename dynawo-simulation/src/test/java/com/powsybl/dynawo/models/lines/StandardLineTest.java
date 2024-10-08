@@ -40,7 +40,7 @@ class StandardLineTest {
                 .setR(1).setX(3).setG1(0).setG2(0).setB1(0).setB2(0).add();
 
         List<BlackBoxModel> dynamicModels = new ArrayList<>();
-        dynamicModels.add(new StandardLine("BBM_l", l, "SL", "Line"));
+        dynamicModels.add(LineBuilder.of(network).dynamicModelId("BBM_l").staticId("l").parameterSetId("SL").build());
         dynamicModels.add(DynamicOverloadManagementSystemBuilder.of(network, "OverloadManagementSystem")
                         .dynamicModelId("BBM_CLA")
                         .parameterSetId("CLA")

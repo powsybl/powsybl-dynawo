@@ -9,6 +9,7 @@ package com.powsybl.dynawo.models.automationsystems;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawo.DynawoSimulationReports;
+import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawo.models.MeasurementPointSuffix;
 import com.powsybl.dynawo.models.buses.ActionConnectionPoint;
@@ -35,8 +36,8 @@ public class TapChangerBlockingAutomationSystem extends AbstractPureDynamicBlack
     private final List<Identifiable<?>> uMeasurements;
     private boolean isConnected = true;
 
-    protected TapChangerBlockingAutomationSystem(String dynamicModelId, String parameterSetId, List<Identifiable<?>> tapChangerEquipments, List<String> tapChangerAutomatonIds, List<Identifiable<?>> uMeasurements, String lib) {
-        super(dynamicModelId, parameterSetId, lib);
+    protected TapChangerBlockingAutomationSystem(String dynamicModelId, String parameterSetId, List<Identifiable<?>> tapChangerEquipments, List<String> tapChangerAutomatonIds, List<Identifiable<?>> uMeasurements, ModelConfig modelConfig) {
+        super(dynamicModelId, parameterSetId, modelConfig);
         this.tapChangerEquipments = Objects.requireNonNull(tapChangerEquipments);
         this.tapChangerAutomatonIds = Objects.requireNonNull(tapChangerAutomatonIds);
         this.uMeasurements = Objects.requireNonNull(uMeasurements);

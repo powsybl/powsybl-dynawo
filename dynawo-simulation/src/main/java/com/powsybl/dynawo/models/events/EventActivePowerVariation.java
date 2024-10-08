@@ -8,6 +8,7 @@
 package com.powsybl.dynawo.models.events;
 
 import com.powsybl.dynawo.DynawoSimulationContext;
+import com.powsybl.dynawo.builders.EventModelInfo;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.utils.ImmutableLateInit;
@@ -28,14 +29,13 @@ import static java.lang.Boolean.TRUE;
 public class EventActivePowerVariation extends AbstractEvent implements ContextDependentEvent {
 
     private static final EnumSet<IdentifiableType> CONNECTABLE_EQUIPMENTS = EnumSet.of(IdentifiableType.GENERATOR, IdentifiableType.LOAD);
-    private static final String DYNAMIC_MODEL_LIB = "Step";
     private static final String DEFAULT_MODEL_LIB = "EventSetPointReal";
 
     private final double deltaP;
     private final ImmutableLateInit<Boolean> equipmentHasDynamicModel = new ImmutableLateInit<>();
 
-    protected EventActivePowerVariation(String eventId, Injection<?> equipment, double startTime, double deltaP) {
-        super(eventId, equipment, startTime, DYNAMIC_MODEL_LIB);
+    protected EventActivePowerVariation(String eventId, Injection<?> equipment, EventModelInfo eventModelInfo, double startTime, double deltaP) {
+        super(eventId, equipment, eventModelInfo, startTime);
         this.deltaP = deltaP;
     }
 
@@ -45,7 +45,7 @@ public class EventActivePowerVariation extends AbstractEvent implements ContextD
 
     @Override
     public String getLib() {
-        return TRUE == equipmentHasDynamicModel.getValue() ? DYNAMIC_MODEL_LIB : DEFAULT_MODEL_LIB;
+        return TRUE == equipmentHasDynamicModel.getValue() ? super.getLib() : DEFAULT_MODEL_LIB;
     }
 
     @Override

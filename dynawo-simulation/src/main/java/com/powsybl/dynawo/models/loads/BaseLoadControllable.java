@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawo.models.loads;
 
+import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.events.ControllableEquipment;
 import com.powsybl.iidm.network.Load;
 
@@ -15,8 +16,8 @@ import com.powsybl.iidm.network.Load;
  */
 public class BaseLoadControllable extends BaseLoad implements ControllableEquipment {
 
-    protected BaseLoadControllable(String dynamicModelId, Load load, String parameterSetId, String lib) {
-        super(dynamicModelId, load, parameterSetId, lib);
+    protected BaseLoadControllable(String dynamicModelId, Load load, String parameterSetId, ModelConfig modelConfig) {
+        super(dynamicModelId, load, parameterSetId, modelConfig);
     }
 
     @Override

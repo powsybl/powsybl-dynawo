@@ -8,6 +8,7 @@
 package com.powsybl.dynawo.models.loads;
 
 import com.powsybl.commons.PowsyblException;
+import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.TransformerSide;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.buses.EquipmentConnectionPoint;
@@ -24,8 +25,8 @@ import static com.powsybl.dynawo.models.TransformerSide.LOW_VOLTAGE;
  */
 public class LoadTwoTransformersTapChangers extends LoadTwoTransformers implements TapChangerModel {
 
-    protected LoadTwoTransformersTapChangers(String dynamicModelId, Load load, String parameterSetId, String lib) {
-        super(dynamicModelId, load, parameterSetId, lib);
+    protected LoadTwoTransformersTapChangers(String dynamicModelId, Load load, String parameterSetId, ModelConfig modelConfig) {
+        super(dynamicModelId, load, parameterSetId, modelConfig);
     }
 
     @Override

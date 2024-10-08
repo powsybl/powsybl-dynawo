@@ -7,6 +7,7 @@
 package com.powsybl.dynawo.models.loads;
 
 import com.powsybl.commons.PowsyblException;
+import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.TransformerSide;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.VarMapping;
@@ -30,8 +31,8 @@ public class LoadOneTransformer extends AbstractLoad implements LoadWithTransfor
             new VarMapping("transformer_Q1Pu_value", "q"),
             new VarMapping("transformer_state", "state"));
 
-    protected LoadOneTransformer(String dynamicModelId, Load load, String parameterSetId, String lib) {
-        super(dynamicModelId, load, parameterSetId, lib, "transformer_terminal1");
+    protected LoadOneTransformer(String dynamicModelId, Load load, String parameterSetId, ModelConfig modelConfig) {
+        super(dynamicModelId, load, parameterSetId, modelConfig, "transformer_terminal1");
     }
 
     @Override

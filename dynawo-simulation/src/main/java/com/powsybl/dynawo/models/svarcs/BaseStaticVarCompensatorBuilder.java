@@ -9,6 +9,7 @@ package com.powsybl.dynawo.models.svarcs;
 
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.builders.*;
+import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.StaticVarCompensator;
@@ -48,6 +49,13 @@ public class BaseStaticVarCompensatorBuilder extends AbstractEquipmentModelBuild
         return MODEL_CONFIGS.getModelInfos();
     }
 
+    /**
+     * Returns models usable with the given {@link DynawoVersion}
+     */
+    public static Collection<ModelInfo> getSupportedModelInfos(DynawoVersion dynawoVersion) {
+        return MODEL_CONFIGS.getModelInfos(dynawoVersion);
+    }
+
     protected BaseStaticVarCompensatorBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
         super(network, modelConfig, IdentifiableType.STATIC_VAR_COMPENSATOR, reportNode);
     }
@@ -59,7 +67,7 @@ public class BaseStaticVarCompensatorBuilder extends AbstractEquipmentModelBuild
 
     @Override
     public BaseStaticVarCompensator build() {
-        return isInstantiable() ? new BaseStaticVarCompensator(dynamicModelId, getEquipment(), parameterSetId, modelConfig.lib()) : null;
+        return isInstantiable() ? new BaseStaticVarCompensator(dynamicModelId, getEquipment(), parameterSetId, modelConfig) : null;
     }
 
     @Override

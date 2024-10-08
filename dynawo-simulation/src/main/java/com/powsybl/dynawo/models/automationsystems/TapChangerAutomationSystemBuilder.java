@@ -9,6 +9,7 @@ package com.powsybl.dynawo.models.automationsystems;
 
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.builders.*;
+import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.models.TransformerSide;
 import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Load;
@@ -52,6 +53,13 @@ public class TapChangerAutomationSystemBuilder extends AbstractAutomationSystemM
         return MODEL_CONFIGS.getModelInfos();
     }
 
+    /**
+     * Returns models usable with the given {@link DynawoVersion}
+     */
+    public static Collection<ModelInfo> getSupportedModelInfos(DynawoVersion dynawoVersion) {
+        return MODEL_CONFIGS.getModelInfos(dynawoVersion);
+    }
+
     protected TapChangerAutomationSystemBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
         super(network, modelConfig, reportNode);
         load = new BuilderEquipment<>(IdentifiableType.LOAD);
@@ -75,7 +83,7 @@ public class TapChangerAutomationSystemBuilder extends AbstractAutomationSystemM
 
     @Override
     public TapChangerAutomationSystem build() {
-        return isInstantiable() ? new TapChangerAutomationSystem(dynamicModelId, parameterSetId, load.getEquipment(), side, getLib()) : null;
+        return isInstantiable() ? new TapChangerAutomationSystem(dynamicModelId, parameterSetId, load.getEquipment(), side, modelConfig) : null;
     }
 
     @Override
