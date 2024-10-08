@@ -6,6 +6,7 @@
  */
 package com.powsybl.dynawo.xml;
 
+import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawo.DumpFileParameters;
 import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.DynawoSimulationParameters;
@@ -15,6 +16,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Optional;
 
 import static com.powsybl.dynawo.xml.DynawoSimulationConstants.*;
 import static com.powsybl.dynawo.xml.DynawoSimulationXmlConstants.DYN_URI;
@@ -23,6 +25,8 @@ import static com.powsybl.dynawo.xml.DynawoSimulationXmlConstants.DYN_URI;
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  */
 public final class JobsXml extends AbstractXmlDynawoSimulationWriter {
+
+    private static final String EXPORT_MODE = "exportMode";
 
     private JobsXml() {
         super(JOBS_FILENAME, "jobs");
@@ -34,25 +38,24 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter {
 
     @Override
     public void write(XMLStreamWriter writer, DynawoSimulationContext context) throws XMLStreamException {
+        DynawoSimulationParameters parameters = context.getDynawoSimulationParameters();
         writer.writeStartElement(DYN_URI, "job");
         writer.writeAttribute("name", "Job");
-        writeSolver(writer, context);
-        writeModeler(writer, context);
-        writeSimulation(writer, context);
+        writeSolver(writer, parameters);
+        writeModeler(writer, parameters);
+        writeSimulation(writer, parameters, context.getParameters());
         writeOutput(writer, context);
         writer.writeEndElement();
     }
 
-    private static void writeSolver(XMLStreamWriter writer, DynawoSimulationContext context) throws XMLStreamException {
-        DynawoSimulationParameters parameters = context.getDynawoSimulationParameters();
+    private static void writeSolver(XMLStreamWriter writer, DynawoSimulationParameters parameters) throws XMLStreamException {
         writer.writeEmptyElement(DYN_URI, "solver");
         writer.writeAttribute("lib", parameters.getSolverType().equals(SolverType.IDA) ? "dynawo_SolverIDA" : "dynawo_SolverSIM");
         writer.writeAttribute("parFile", DynawoSimulationParameters.SOLVER_OUTPUT_PARAMETERS_FILE);
         writer.writeAttribute("parId", parameters.getSolverParameters().getId());
     }
 
-    private static void writeModeler(XMLStreamWriter writer, DynawoSimulationContext context) throws XMLStreamException {
-        DynawoSimulationParameters parameters = context.getDynawoSimulationParameters();
+    private static void writeModeler(XMLStreamWriter writer, DynawoSimulationParameters parameters) throws XMLStreamException {
         writer.writeStartElement(DYN_URI, "modeler");
         writer.writeAttribute("compileDir", "outputs/compilation");
 
@@ -79,11 +82,21 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter {
         writer.writeEndElement();
     }
 
-    private static void writeSimulation(XMLStreamWriter writer, DynawoSimulationContext context) throws XMLStreamException {
-        writer.writeEmptyElement(DYN_URI, "simulation");
-        writer.writeAttribute("startTime", Double.toString(context.getParameters().getStartTime()));
-        writer.writeAttribute("stopTime", Double.toString(context.getParameters().getStopTime()));
-        writer.writeAttribute("precision", Double.toString(context.getDynawoSimulationParameters().getPrecision()));
+    private static void writeSimulation(XMLStreamWriter writer, DynawoSimulationParameters parameters, DynamicSimulationParameters dynamicSimulationParameters) throws XMLStreamException {
+        Optional<String> criteriaFileName = parameters.getCriteriaFileName();
+        if (criteriaFileName.isPresent()) {
+            writer.writeStartElement(DYN_URI, "simulation");
+        } else {
+            writer.writeEmptyElement(DYN_URI, "simulation");
+        }
+        writer.writeAttribute("startTime", Double.toString(dynamicSimulationParameters.getStartTime()));
+        writer.writeAttribute("stopTime", Double.toString(dynamicSimulationParameters.getStopTime()));
+        writer.writeAttribute("precision", Double.toString(parameters.getPrecision()));
+        if (criteriaFileName.isPresent()) {
+            writer.writeEmptyElement(DYN_URI, "criteria");
+            writer.writeAttribute("criteriaFile", criteriaFileName.get());
+            writer.writeEndElement();
+        }
     }
 
     private static void writeOutput(XMLStreamWriter writer, DynawoSimulationContext context) throws XMLStreamException {
@@ -96,16 +109,22 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter {
         writer.writeAttribute("global", Boolean.toString(false));
 
         writer.writeEmptyElement(DYN_URI, "timeline");
-        writer.writeAttribute("exportMode", parameters.getTimelineExportMode().toString());
+        writer.writeAttribute(EXPORT_MODE, parameters.getTimelineExportMode().toString());
 
         writer.writeEmptyElement(DYN_URI, "finalState");
         writer.writeAttribute("exportIIDMFile", Boolean.toString(parameters.isWriteFinalState()));
         writer.writeAttribute("exportDumpFile", Boolean.toString(parameters.getDumpFileParameters().exportDumpFile()));
 
-        if (context.withCurves()) {
+        if (context.withCurveVariables()) {
             writer.writeEmptyElement(DYN_URI, "curves");
-            writer.writeAttribute("inputFile", DynawoSimulationConstants.CRV_FILENAME);
-            writer.writeAttribute("exportMode", DynawoSimulationParameters.ExportMode.CSV.toString());
+            writer.writeAttribute("inputFile", CRV_FILENAME);
+            writer.writeAttribute(EXPORT_MODE, DynawoSimulationParameters.ExportMode.CSV.toString());
+        }
+
+        if (context.withFsvVariables()) {
+            writer.writeEmptyElement(DYN_URI, "finalStateValues");
+            writer.writeAttribute("inputFile", FSV_FILENAME);
+            writer.writeAttribute(EXPORT_MODE, DynawoSimulationParameters.ExportMode.CSV.toString());
         }
 
         writer.writeStartElement(DYN_URI, "logs");

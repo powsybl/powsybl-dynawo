@@ -6,6 +6,7 @@
  */
 package com.powsybl.dynawo.models.generators;
 
+import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.AbstractEquipmentBlackBoxModel;
 import com.powsybl.dynawo.models.VarConnection;
@@ -28,8 +29,8 @@ public class BaseGenerator extends AbstractEquipmentBlackBoxModel<Generator> imp
             new VarMapping("generator_QGenPu", "q"),
             new VarMapping("generator_state", "state"));
 
-    protected BaseGenerator(String dynamicModelId, Generator generator, String parameterSetId, String lib) {
-        super(dynamicModelId, parameterSetId, generator, lib);
+    protected BaseGenerator(String dynamicModelId, Generator generator, String parameterSetId, ModelConfig modelConfig) {
+        super(dynamicModelId, parameterSetId, generator, modelConfig);
     }
 
     @Override

@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawo.models.lines;
 
+import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.AbstractEquipmentBlackBoxModel;
 import com.powsybl.dynawo.models.VarConnection;
@@ -21,12 +22,12 @@ import java.util.List;
  */
 public class StandardLine extends AbstractEquipmentBlackBoxModel<Line> implements LineModel {
 
-    protected StandardLine(String dynamicModelId, Line line, String parameterSetId, String lib) {
-        super(dynamicModelId, parameterSetId, line, lib);
+    protected StandardLine(String dynamicModelId, Line line, String parameterSetId, ModelConfig modelConfig) {
+        super(dynamicModelId, parameterSetId, line, modelConfig);
     }
 
     private List<VarConnection> getVarConnectionsWith(EquipmentConnectionPoint connected, TwoSides side) {
-        return List.of(new VarConnection(getTerminalVarName(side), connected.getTerminalVarName()));
+        return List.of(new VarConnection(getTerminalVarName(side), connected.getTerminalVarName(side)));
     }
 
     private String getTerminalVarName(TwoSides side) {

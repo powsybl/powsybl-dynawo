@@ -9,6 +9,7 @@ package com.powsybl.dynawo.models.frequencysynchronizers;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawo.DynawoSimulationContext;
+import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.parameters.ParametersSet;
@@ -26,7 +27,7 @@ import static com.powsybl.dynawo.parameters.ParameterType.DOUBLE;
 public class SetPoint extends AbstractFrequencySynchronizer {
 
     public SetPoint(List<FrequencySynchronizedModel> synchronizedEquipments) {
-        super(synchronizedEquipments, "SetPoint");
+        super(synchronizedEquipments, new ModelConfig("SetPoint"));
     }
 
     @Override

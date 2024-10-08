@@ -23,7 +23,7 @@ public final class CsvTimeLineParser extends AbstractCsvParser<TimelineEntry> im
     }
 
     public CsvTimeLineParser(char separator) {
-        super(separator);
+        super(separator, false);
     }
 
     @Override

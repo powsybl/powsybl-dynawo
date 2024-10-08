@@ -8,10 +8,13 @@
 package com.powsybl.dynawo.security;
 
 import com.powsybl.commons.PowsyblException;
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.contingency.Contingency;
 import com.powsybl.contingency.ContingencyElement;
 import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.DynawoSimulationParameters;
+import com.powsybl.dynawo.commons.DynawoConstants;
+import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.events.ContextDependentEvent;
 import com.powsybl.dynawo.models.events.EventDisconnectionBuilder;
@@ -37,8 +40,17 @@ public class SecurityAnalysisContext extends DynawoSimulationContext {
                                    DynamicSecurityAnalysisParameters parameters,
                                    DynawoSimulationParameters dynawoSimulationParameters,
                                    List<Contingency> contingencies) {
+        this(network, workingVariantId, dynamicModels, parameters, dynawoSimulationParameters, contingencies, DynawoConstants.VERSION_MIN);
+    }
+
+    public SecurityAnalysisContext(Network network, String workingVariantId,
+                                   List<BlackBoxModel> dynamicModels,
+                                   DynamicSecurityAnalysisParameters parameters,
+                                   DynawoSimulationParameters dynawoSimulationParameters,
+                                   List<Contingency> contingencies,
+                                   DynawoVersion currentVersion) {
         super(network, workingVariantId, dynamicModels, List.of(), Collections.emptyList(),
-                parameters.getDynamicSimulationParameters(), dynawoSimulationParameters);
+                parameters.getDynamicSimulationParameters(), dynawoSimulationParameters, currentVersion, ReportNode.NO_OP);
         double contingenciesStartTime = parameters.getDynamicContingenciesParameters().getContingenciesStartTime();
         this.contingencies = contingencies;
         this.contingencyEventModels = contingencies.stream()

@@ -35,13 +35,13 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-class DefaultLibBuilderTest {
+class BuildersTest {
 
     private static final Network NETWORK = SvcTestCaseFactory.create();
     private static final String WRONG_LIB = "wrongLib";
 
     @Test
-    void testDefaultLibAutomatons() {
+    void testDefaultLibAutomationSystems() {
         assertNotNull(UnderVoltageAutomationSystemBuilder.of(NETWORK));
         assertNotNull(TapChangerBlockingAutomationSystemBuilder.of(NETWORK));
         assertNotNull(TapChangerAutomationSystemBuilder.of(NETWORK));
@@ -84,14 +84,14 @@ class DefaultLibBuilderTest {
     }
 
     @Test
-    void testWrongLibAutomatons() {
-        assertNull(UnderVoltageAutomationSystemBuilder.of(NETWORK, WRONG_LIB));
-        assertNull(TapChangerBlockingAutomationSystemBuilder.of(NETWORK, WRONG_LIB));
-        assertNull(TapChangerAutomationSystemBuilder.of(NETWORK, WRONG_LIB));
-        assertNull(DynamicOverloadManagementSystemBuilder.of(NETWORK, WRONG_LIB));
-        assertNull(DynamicTwoLevelsOverloadManagementSystemBuilder.of(NETWORK, WRONG_LIB));
-        assertNull(PhaseShifterIAutomationSystemBuilder.of(NETWORK, WRONG_LIB));
-        assertNull(PhaseShifterPAutomationSystemBuilder.of(NETWORK, WRONG_LIB));
+    void testWrongLibAutomationSystem() {
+        assertNull(UnderVoltageAutomationSystemBuilder.of(NETWORK).build());
+        assertNull(TapChangerBlockingAutomationSystemBuilder.of(NETWORK).build());
+        assertNull(TapChangerAutomationSystemBuilder.of(NETWORK).build());
+        assertNull(DynamicOverloadManagementSystemBuilder.of(NETWORK).build());
+        assertNull(DynamicTwoLevelsOverloadManagementSystemBuilder.of(NETWORK).build());
+        assertNull(PhaseShifterIAutomationSystemBuilder.of(NETWORK).build());
+        assertNull(PhaseShifterPAutomationSystemBuilder.of(NETWORK).build());
     }
 
     @Test
@@ -123,5 +123,47 @@ class DefaultLibBuilderTest {
         assertNull(BaseShuntBuilder.of(NETWORK, WRONG_LIB));
         // Static var comp
         assertNull(BaseStaticVarCompensatorBuilder.of(NETWORK, WRONG_LIB));
+    }
+
+    @Test
+    void testNotInstantiableAutomationSystem() {
+        assertNull(UnderVoltageAutomationSystemBuilder.of(NETWORK, WRONG_LIB));
+        assertNull(TapChangerBlockingAutomationSystemBuilder.of(NETWORK, WRONG_LIB));
+        assertNull(TapChangerAutomationSystemBuilder.of(NETWORK, WRONG_LIB));
+        assertNull(DynamicOverloadManagementSystemBuilder.of(NETWORK, WRONG_LIB));
+        assertNull(DynamicTwoLevelsOverloadManagementSystemBuilder.of(NETWORK, WRONG_LIB));
+        assertNull(PhaseShifterIAutomationSystemBuilder.of(NETWORK, WRONG_LIB));
+        assertNull(PhaseShifterPAutomationSystemBuilder.of(NETWORK, WRONG_LIB));
+    }
+
+    @Test
+    void testNotInstantiableEquipment() {
+        // Load
+        assertNull(BaseLoadBuilder.of(NETWORK).build());
+        assertNull(LoadOneTransformerBuilder.of(NETWORK).build());
+        assertNull(LoadOneTransformerTapChangerBuilder.of(NETWORK).build());
+        assertNull(LoadTwoTransformersBuilder.of(NETWORK).build());
+        assertNull(LoadTwoTransformersTapChangersBuilder.of(NETWORK).build());
+        // Bus
+        assertNull(StandardBusBuilder.of(NETWORK).build());
+        assertNull(InfiniteBusBuilder.of(NETWORK).build());
+        // Transformer
+        assertNull(TransformerFixedRatioBuilder.of(NETWORK).build());
+        // Line
+        assertNull(LineBuilder.of(NETWORK).build());
+        // Generator
+        assertNull(GeneratorFictitiousBuilder.of(NETWORK).build());
+        assertNull(SynchronizedGeneratorBuilder.of(NETWORK).build());
+        assertNull(SynchronousGeneratorBuilder.of(NETWORK).build());
+        assertNull(WeccBuilder.of(NETWORK).build());
+        assertNull(GridFormingConverterBuilder.of(NETWORK).build());
+        assertNull(SignalNGeneratorBuilder.of(NETWORK).build());
+        // HVDC
+        assertNull(HvdcPBuilder.of(NETWORK).build());
+        assertNull(HvdcVscBuilder.of(NETWORK).build());
+        // Shunt
+        assertNull(BaseShuntBuilder.of(NETWORK).build());
+        // Static var comp
+        assertNull(BaseStaticVarCompensatorBuilder.of(NETWORK).build());
     }
 }

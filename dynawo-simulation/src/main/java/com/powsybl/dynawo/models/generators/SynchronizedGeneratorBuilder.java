@@ -9,6 +9,7 @@ package com.powsybl.dynawo.models.generators;
 
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.builders.*;
+import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.iidm.network.Network;
 
 import java.util.Collection;
@@ -46,6 +47,13 @@ public class SynchronizedGeneratorBuilder extends AbstractGeneratorBuilder<Synch
         return MODEL_CONFIGS.getModelInfos();
     }
 
+    /**
+     * Returns models usable with the given {@link DynawoVersion}
+     */
+    public static Collection<ModelInfo> getSupportedModelInfos(DynawoVersion dynawoVersion) {
+        return MODEL_CONFIGS.getModelInfos(dynawoVersion);
+    }
+
     protected SynchronizedGeneratorBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
         super(network, modelConfig, reportNode);
     }
@@ -54,9 +62,9 @@ public class SynchronizedGeneratorBuilder extends AbstractGeneratorBuilder<Synch
     public SynchronizedGenerator build() {
         if (isInstantiable()) {
             if (modelConfig.isControllable()) {
-                return new SynchronizedGeneratorControllable(dynamicModelId, getEquipment(), parameterSetId, modelConfig.lib());
+                return new SynchronizedGeneratorControllable(dynamicModelId, getEquipment(), parameterSetId, modelConfig);
             } else {
-                return new SynchronizedGenerator(dynamicModelId, getEquipment(), parameterSetId, modelConfig.lib());
+                return new SynchronizedGenerator(dynamicModelId, getEquipment(), parameterSetId, modelConfig);
             }
         }
         return null;

@@ -7,6 +7,7 @@
 package com.powsybl.dynawo;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.config.ModuleConfig;
@@ -18,13 +19,16 @@ import com.powsybl.dynawo.xml.ParametersXml;
 
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
 /**
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
  */
+@JsonIgnoreProperties(value = { "criteriaFileName" })
 public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulationParameters> {
 
     public static final SolverType DEFAULT_SOLVER_TYPE = SolverType.SIM;
@@ -113,6 +117,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
     private ExportMode timelineExportMode = DEFAULT_TIMELINE_EXPORT_MODE;
     private LogLevel logLevelFilter = DEFAULT_LOG_LEVEL_FILTER;
     private EnumSet<SpecificLog> specificLogs = EnumSet.noneOf(SpecificLog.class);
+    private Path criteriaFilePath = null;
 
     /**
      * Loads parameters from the default platform configuration.
@@ -155,6 +160,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
             c.getOptionalEnumProperty("timeline.exportMode", ExportMode.class).ifPresent(parameters::setTimelineExportMode);
             c.getOptionalEnumProperty("log.levelFilter", LogLevel.class).ifPresent(parameters::setLogLevelFilter);
             c.getOptionalEnumSetProperty("log.specificLogs", SpecificLog.class).ifPresent(parameters::setSpecificLogs);
+            c.getOptionalStringProperty("criteria.file").ifPresent(cf -> parameters.setCriteriaFilePath(cf, fileSystem));
         });
         return parameters;
     }
@@ -302,5 +308,26 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
     public DynawoSimulationParameters addSpecificLog(SpecificLog specificLog) {
         specificLogs.add(specificLog);
         return this;
+    }
+
+    public Optional<Path> getCriteriaFilePath() {
+        return Optional.ofNullable(criteriaFilePath);
+    }
+
+    public Optional<String> getCriteriaFileName() {
+        return getCriteriaFilePath().map(c -> c.getFileName().toString());
+    }
+
+    public DynawoSimulationParameters setCriteriaFilePath(Path criteriaFilePath) {
+        this.criteriaFilePath = criteriaFilePath;
+        return this;
+    }
+
+    private void setCriteriaFilePath(String criteriaPathName, FileSystem fileSystem) {
+        Path criteriaPath = criteriaPathName != null ? fileSystem.getPath(criteriaPathName) : null;
+        if (criteriaPath == null || !Files.exists(criteriaPath)) {
+            throw new PowsyblException("File " + criteriaPath + " set in 'criteria.file' property cannot be found");
+        }
+        setCriteriaFilePath(criteriaPath);
     }
 }

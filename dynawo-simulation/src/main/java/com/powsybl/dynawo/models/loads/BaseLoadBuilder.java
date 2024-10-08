@@ -9,6 +9,7 @@ package com.powsybl.dynawo.models.loads;
 
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.builders.*;
+import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.iidm.network.Network;
 
 import java.util.Collection;
@@ -46,6 +47,13 @@ public class BaseLoadBuilder extends AbstractLoadModelBuilder<BaseLoadBuilder> {
         return MODEL_CONFIGS.getModelInfos();
     }
 
+    /**
+     * Returns models usable with the given {@link DynawoVersion}
+     */
+    public static Collection<ModelInfo> getSupportedModelInfos(DynawoVersion dynawoVersion) {
+        return MODEL_CONFIGS.getModelInfos(dynawoVersion);
+    }
+
     protected BaseLoadBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
         super(network, modelConfig, reportNode);
     }
@@ -54,9 +62,9 @@ public class BaseLoadBuilder extends AbstractLoadModelBuilder<BaseLoadBuilder> {
     public BaseLoad build() {
         if (isInstantiable()) {
             if (modelConfig.isControllable()) {
-                return new BaseLoadControllable(dynamicModelId, getEquipment(), parameterSetId, modelConfig.lib());
+                return new BaseLoadControllable(dynamicModelId, getEquipment(), parameterSetId, modelConfig);
             } else {
-                return new BaseLoad(dynamicModelId, getEquipment(), parameterSetId, modelConfig.lib());
+                return new BaseLoad(dynamicModelId, getEquipment(), parameterSetId, modelConfig);
             }
         } else {
             return null;
