@@ -459,7 +459,10 @@
         "lib": "LoadAlphaBetaRestorativeLimitsRecalc"
       },
       {
-        "lib": "LoadAlphaBetaMotor"
+        "lib": "LoadAlphaBetaMotor",
+        "properties": [
+          "SYNCHRONIZED"
+        ]
       },
       {
         "lib": "LoadPQ",
@@ -475,22 +478,37 @@
       },
       {
         "lib": "LoadAlphaBetaMotorFifthOrder",
+        "properties": [
+          "SYNCHRONIZED"
+        ],
         "minVersion": "1.7.0"
       },
       {
         "lib": "LoadAlphaBetaMotorSimplified",
+        "properties": [
+          "SYNCHRONIZED"
+        ],
         "minVersion": "1.7.0"
       },
       {
         "lib": "LoadAlphaBetaThreeMotorFifthOrder",
+        "properties": [
+          "SYNCHRONIZED"
+        ],
         "minVersion": "1.7.0"
       },
       {
         "lib": "LoadAlphaBetaTwoMotorFifthOrder",
+        "properties": [
+          "SYNCHRONIZED"
+        ],
         "minVersion": "1.7.0"
       },
       {
         "lib": "LoadAlphaBetaTwoMotorSimplified",
+        "properties": [
+          "SYNCHRONIZED"
+        ],
         "minVersion": "1.7.0"
       },
       {
