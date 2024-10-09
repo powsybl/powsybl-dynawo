@@ -18,6 +18,8 @@ import com.powsybl.iidm.network.*;
  */
 public abstract class AbstractHvdcBuilder<R extends AbstractEquipmentModelBuilder<HvdcLine, R>> extends AbstractEquipmentModelBuilder<HvdcLine, R> {
 
+    private static final TwoSides DEFAULT_DANGLING_SIDE = TwoSides.TWO;
+
     protected TwoSides danglingSide;
     private final HvdcVarNameHandler varNameHandler;
 
@@ -42,9 +44,8 @@ public abstract class AbstractHvdcBuilder<R extends AbstractEquipmentModelBuilde
     protected void checkData() {
         super.checkData();
         boolean isDangling = modelConfig.isDangling();
-        if (isDangling && danglingSide == null) {
-            BuilderReports.reportFieldNotSet(reportNode, "dangling");
-            isInstantiable = false;
+        if (isDangling && danglingSide != null) {
+            BuilderReports.reportFieldOptionNotImplemented(reportNode, "dangling", DEFAULT_DANGLING_SIDE.toString());
         } else if (!isDangling && danglingSide != null) {
             BuilderReports.reportFieldSetWithWrongEquipment(reportNode, "dangling", modelConfig.lib());
             isInstantiable = false;
@@ -55,7 +56,7 @@ public abstract class AbstractHvdcBuilder<R extends AbstractEquipmentModelBuilde
     public BaseHvdc build() {
         if (isInstantiable()) {
             if (modelConfig.isDangling()) {
-                return new HvdcDangling(dynamicModelId, getEquipment(), parameterSetId, modelConfig, varNameHandler, danglingSide);
+                return new HvdcDangling(dynamicModelId, getEquipment(), parameterSetId, modelConfig, varNameHandler, DEFAULT_DANGLING_SIDE);
             } else {
                 return new BaseHvdc(dynamicModelId, getEquipment(), parameterSetId, modelConfig, varNameHandler);
             }
