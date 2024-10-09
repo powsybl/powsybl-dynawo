@@ -117,9 +117,9 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
         return Stream.of(
                 Arguments.of("/dynamicModels/bus.groovy", StandardBus.class, EurostagTutorialExample1Factory.create(), "NGEN", "BBM_NGEN", "SB", "Bus"),
                 Arguments.of("/dynamicModels/hvdcP.groovy", BaseHvdc.class, HvdcTestNetwork.createVsc(), "L", "BBM_HVDC_L", "HVDC", "HvdcPV"),
-                Arguments.of("/dynamicModels/hvdcVsc.groovy", BaseHvdc.class, HvdcTestNetwork.createVsc(), "L", "BBM_HVDC_L", "HVDC", "HvdcVSC"),
+                Arguments.of("/dynamicModels/hvdcVsc.groovy", BaseHvdc.class, HvdcTestNetwork.createVsc(), "L", "BBM_HVDC_L", "HVDC", "HvdcVsc"),
                 Arguments.of("/dynamicModels/hvdcPDangling.groovy", HvdcDangling.class, HvdcTestNetwork.createVsc(), "L", "BBM_HVDC_L", "HVDC", "HvdcPVDanglingDiagramPQ"),
-                Arguments.of("/dynamicModels/hvdcVscDangling.groovy", HvdcDangling.class, HvdcTestNetwork.createVsc(), "L", "BBM_HVDC_L", "HVDC", "HvdcVSCDanglingUdc"),
+                Arguments.of("/dynamicModels/hvdcVscDangling.groovy", HvdcDangling.class, HvdcTestNetwork.createVsc(), "L", "BBM_HVDC_L", "HVDC", "HvdcVscDanglingUdc"),
                 Arguments.of("/dynamicModels/loadAB.groovy", BaseLoad.class, EurostagTutorialExample1Factory.create(), "LOAD", "LOAD", "LAB", "LoadAlphaBetaRestorative"),
                 Arguments.of("/dynamicModels/loadABControllable.groovy", BaseLoadControllable.class, EurostagTutorialExample1Factory.create(), "LOAD", "LOAD", "LAB", "LoadAlphaBeta"),
                 Arguments.of("/dynamicModels/loadTransformer.groovy", LoadOneTransformer.class, EurostagTutorialExample1Factory.create(), "LOAD", "LOAD", "LOT", "LoadOneTransformer"),
@@ -289,7 +289,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                         """
                         + DSL tests
                            + Groovy Dynamic Models Supplier
-                              + DSL model builder for HvdcVSC
+                              + DSL model builder for HvdcVsc
                                  'staticId' field value 'L' not found for equipment type(s) VSC HVDC_LINE
                                  Model BBM_HVDC cannot be instantiated
                         """)

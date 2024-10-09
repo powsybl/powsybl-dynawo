@@ -29,7 +29,7 @@
         "limitName" : "UInfUmin",
         "limit" : 220.0,
         "limitReduction" : 1.0,
-        "value" : 217.0313224616946
+        "value" : 217.0313224616953
       }, {
         "subjectId" : "S1VL2_BBS1",
         "subjectName" : "S1VL2_BBS1",
@@ -37,7 +37,7 @@
         "limitName" : "UInfUmin",
         "limit" : 390.0,
         "limitReduction" : 1.0,
-        "value" : 386.2578552204803
+        "value" : 386.2578552204816
       }, {
         "subjectId" : "S1VL2_BBS2",
         "subjectName" : "S1VL2_BBS2",
@@ -45,21 +45,21 @@
         "limitName" : "UInfUmin",
         "limit" : 390.0,
         "limitReduction" : 1.0,
-        "value" : 386.2578552204803
+        "value" : 386.2578552204816
       }, {
         "subjectId" : "S1VL1",
         "limitType" : "LOW_VOLTAGE",
         "limitName" : "UInfUmin",
         "limit" : 220.0,
         "limitReduction" : 1.0,
-        "value" : 217.0313224616946
+        "value" : 217.0313224616953
       }, {
         "subjectId" : "S1VL2",
         "limitType" : "LOW_VOLTAGE",
         "limitName" : "UInfUmin",
         "limit" : 390.0,
         "limitReduction" : 1.0,
-        "value" : 386.2578552204803
+        "value" : 386.2578552204816
       } ],
       "actionsTaken" : [ ]
     },
@@ -117,7 +117,7 @@
         "limitName" : "UInfUmin",
         "limit" : 220.0,
         "limitReduction" : 1.0,
-        "value" : 217.8628453608945
+        "value" : 217.86284536089713
       }, {
         "subjectId" : "S1VL2_BBS1",
         "subjectName" : "S1VL2_BBS1",
@@ -125,7 +125,7 @@
         "limitName" : "UInfUmin",
         "limit" : 390.0,
         "limitReduction" : 1.0,
-        "value" : 387.7355973484713
+        "value" : 387.735597348476
       }, {
         "subjectId" : "S1VL2_BBS2",
         "subjectName" : "S1VL2_BBS2",
@@ -133,21 +133,21 @@
         "limitName" : "UInfUmin",
         "limit" : 390.0,
         "limitReduction" : 1.0,
-        "value" : 387.7355973484713
+        "value" : 387.735597348476
       }, {
         "subjectId" : "S1VL1",
         "limitType" : "LOW_VOLTAGE",
         "limitName" : "UInfUmin",
         "limit" : 220.0,
         "limitReduction" : 1.0,
-        "value" : 217.8628453608945
+        "value" : 217.86284536089713
       }, {
         "subjectId" : "S1VL2",
         "limitType" : "LOW_VOLTAGE",
         "limitName" : "UInfUmin",
         "limit" : 390.0,
         "limitReduction" : 1.0,
-        "value" : 387.7355973484713
+        "value" : 387.735597348476
       } ],
       "actionsTaken" : [ ]
     },

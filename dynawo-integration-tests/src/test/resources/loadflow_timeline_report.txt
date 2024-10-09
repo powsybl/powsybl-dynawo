@@ -1,5 +1,7 @@
 + testLf root report
    + Dynaflow loadflow on network 'ieee14cdf-solved'
+      [t=0.0] Generator : minimum reactive power limit reached on equipment 'B6-G'
+      [t=10.0] Generator : minimum reactive power limit reached on equipment 'B8-G'
       [t=90.0] Overload 60 : opening line on equipment 'L6-13-1'
       [t=90.0] LINE : opening both sides on equipment 'L6-13-1'
       [t=90.0] Overload 60 : opening line on equipment 'L6-13-1'

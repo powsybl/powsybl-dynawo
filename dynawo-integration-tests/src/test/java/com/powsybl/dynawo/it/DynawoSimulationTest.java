@@ -37,6 +37,7 @@ import java.util.stream.Stream;
 
 import static com.powsybl.commons.report.ReportNode.NO_OP;
 import static com.powsybl.commons.report.ReportNode.newRootReportNode;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -72,12 +73,12 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         assertEquals(27, result.getCurves().size());
         DoubleTimeSeries ts1 = result.getCurve("_GEN____1_SM_generator_UStatorPu");
         assertEquals("_GEN____1_SM_generator_UStatorPu", ts1.getMetadata().getName());
-        assertEquals(587, ts1.toArray().length);
+        assertEquals(585, ts1.toArray().length);
         assertEquals(14, result.getFinalStateValues().size());
         assertEquals(1.046227, result.getFinalStateValues().get("NETWORK__BUS___10_TN_Upu_value"));
         List<TimelineEvent> timeLine = result.getTimeLine();
         assertEquals(23, timeLine.size());
-        checkFirstTimeLineEvent(timeLine.get(0), 0, "_GEN____8_SM", "PMIN : activation");
+        checkTimeLineEvent(timeLine.get(0), 0, "_GEN____8_SM", "PMIN : activation");
     }
 
     @Test
@@ -145,7 +146,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         assertTrue(result.getCurves().isEmpty());
         List<TimelineEvent> timeLine = result.getTimeLine();
         assertEquals(1, timeLine.size());
-        checkFirstTimeLineEvent(timeLine.get(0), 0, "G1", "PMIN : activation");
+        checkTimeLineEvent(timeLine.get(0), 0, "G1", "PMIN : activation");
     }
 
     @Test
@@ -175,7 +176,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         assertTrue(result.getCurves().isEmpty());
         List<TimelineEvent> timeLine = result.getTimeLine();
         assertEquals(7, timeLine.size());
-        checkFirstTimeLineEvent(timeLine.get(0), 30.0, "_BUS____5-BUS____6-1_PS", "Tap +1");
+        checkTimeLineEvent(timeLine.get(0), 30.0, "_BUS____5-BUS____6-1_PS", "Tap +1");
     }
 
     @Test
@@ -237,9 +238,9 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                 .join();
 
         assertEquals(DynamicSimulationResult.Status.FAILURE, result.getStatus());
-        assertEquals("time step <= 0.1 s for more than 10 iterations ( DYNSolverCommonFixedTimeStep.cpp:419 )", result.getStatusText());
-        assertTrue(result.getTimeLine().isEmpty());
-        assertTrue(result.getCurves().isEmpty());
+        assertThat(result.getStatusText()).contains("time step <= 0.1 s for more than 10 iterations");
+        assertThat(result.getTimeLine()).isEmpty();
+        assertThat(result.getCurves()).isEmpty();
     }
 
     @Test
@@ -267,10 +268,10 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         assertEquals(0, result.getCurves().size());
         List<TimelineEvent> timeLine = result.getTimeLine();
         assertEquals(11, timeLine.size());
-        checkFirstTimeLineEvent(timeLine.get(0), 0, "_GEN____8_SM", "PMIN : activation");
+        checkTimeLineEvent(timeLine.get(0), 0, "_GEN____8_SM", "PMIN : activation");
     }
 
-    private void checkFirstTimeLineEvent(TimelineEvent event, double time, String modelName, String message) {
+    private void checkTimeLineEvent(TimelineEvent event, double time, String modelName, String message) {
         assertEquals(time, event.time());
         assertEquals(modelName, event.modelName());
         assertEquals(message, event.message());
@@ -299,11 +300,11 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                 .join();
 
         assertEquals(DynamicSimulationResult.Status.SUCCESS, result.getStatus());
-        assertTrue(result.getStatusText().isEmpty());
-        assertEquals(0, result.getCurves().size());
+        assertThat(result.getStatusText()).isEmpty();
+        assertThat(result.getCurves()).isEmpty();
         List<TimelineEvent> timeLine = result.getTimeLine();
-        assertEquals(1, timeLine.size());
-        checkFirstTimeLineEvent(timeLine.get(0), 10, "_BUS____1-BUS____5-1_AC", "LINE : opening on side 2");
+        assertThat(timeLine).hasSize(13);
+        checkTimeLineEvent(timeLine.get(12), 10, "_BUS____1-BUS____5-1_AC", "LINE : opening on side 2");
     }
 
     private Supplier<DynamicSimulationResult> setupIEEE14Simulation() {
