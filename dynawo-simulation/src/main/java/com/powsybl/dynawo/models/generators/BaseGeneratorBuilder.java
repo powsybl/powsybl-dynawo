@@ -17,30 +17,30 @@ import java.util.Collection;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class GeneratorFictitiousBuilder extends AbstractGeneratorBuilder<GeneratorFictitiousBuilder> {
+public class BaseGeneratorBuilder extends AbstractGeneratorBuilder<BaseGeneratorBuilder> {
 
     public static final String CATEGORY = "BASE_GENERATOR";
     private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
 
-    public static GeneratorFictitiousBuilder of(Network network) {
+    public static BaseGeneratorBuilder of(Network network) {
         return of(network, ReportNode.NO_OP);
     }
 
-    public static GeneratorFictitiousBuilder of(Network network, ReportNode reportNode) {
-        return new GeneratorFictitiousBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reportNode);
+    public static BaseGeneratorBuilder of(Network network, ReportNode reportNode) {
+        return new BaseGeneratorBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reportNode);
     }
 
-    public static GeneratorFictitiousBuilder of(Network network, String modelName) {
+    public static BaseGeneratorBuilder of(Network network, String modelName) {
         return of(network, modelName, ReportNode.NO_OP);
     }
 
-    public static GeneratorFictitiousBuilder of(Network network, String modelName, ReportNode reportNode) {
+    public static BaseGeneratorBuilder of(Network network, String modelName, ReportNode reportNode) {
         ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(modelName);
         if (modelConfig == null) {
-            BuilderReports.reportModelNotFound(reportNode, GeneratorFictitiousBuilder.class.getSimpleName(), modelName);
+            BuilderReports.reportModelNotFound(reportNode, BaseGeneratorBuilder.class.getSimpleName(), modelName);
             return null;
         }
-        return new GeneratorFictitiousBuilder(network, modelConfig, reportNode);
+        return new BaseGeneratorBuilder(network, modelConfig, reportNode);
     }
 
     public static Collection<ModelInfo> getSupportedModelInfos() {
@@ -54,7 +54,7 @@ public class GeneratorFictitiousBuilder extends AbstractGeneratorBuilder<Generat
         return MODEL_CONFIGS.getModelInfos(dynawoVersion);
     }
 
-    protected GeneratorFictitiousBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
+    protected BaseGeneratorBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
         super(network, modelConfig, reportNode);
     }
 
@@ -64,7 +64,7 @@ public class GeneratorFictitiousBuilder extends AbstractGeneratorBuilder<Generat
     }
 
     @Override
-    protected GeneratorFictitiousBuilder self() {
+    protected BaseGeneratorBuilder self() {
         return this;
     }
 }

@@ -75,7 +75,7 @@ Ultimately, all groovy scripts call dedicated builders that can be used directly
 * BaseShuntBuilder
 * HvdcPBuilder
 * HvdcVscBuilder
-* GeneratorFictitiousBuilder
+* BaseGeneratorBuilder
 * SignalNGeneratorBuilder
 * SynchronizedGeneratorBuilder
 * SynchronousGeneratorBuilder
