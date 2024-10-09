@@ -18,10 +18,10 @@ import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterPAu
 import com.powsybl.dynawo.models.buses.InfiniteBusBuilder;
 import com.powsybl.dynawo.models.buses.StandardBusBuilder;
 import com.powsybl.dynawo.models.generators.*;
-import com.powsybl.dynawo.models.loads.*;
 import com.powsybl.dynawo.models.hvdc.HvdcPBuilder;
 import com.powsybl.dynawo.models.hvdc.HvdcVscBuilder;
 import com.powsybl.dynawo.models.lines.LineBuilder;
+import com.powsybl.dynawo.models.loads.*;
 import com.powsybl.dynawo.models.shunts.BaseShuntBuilder;
 import com.powsybl.dynawo.models.svarcs.BaseStaticVarCompensatorBuilder;
 import com.powsybl.dynawo.models.transformers.TransformerFixedRatioBuilder;
@@ -152,7 +152,7 @@ class BuildersTest {
         // Line
         assertNull(LineBuilder.of(NETWORK).build());
         // Generator
-        assertNull(GeneratorFictitiousBuilder.of(NETWORK).build());
+        assertNull(BaseGeneratorBuilder.of(NETWORK).build());
         assertNull(SynchronizedGeneratorBuilder.of(NETWORK).build());
         assertNull(SynchronousGeneratorBuilder.of(NETWORK).build());
         assertNull(WeccBuilder.of(NETWORK).build());
