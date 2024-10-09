@@ -13,7 +13,7 @@ import com.powsybl.iidm.network.TwoSides;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public final class PVarNameHandler implements HvdcVarNameHandler {
+public final class HvdcPVarNameHandler implements HvdcVarNameHandler {
 
     @Override
     public String getConnectionPointVarName(TwoSides side) {

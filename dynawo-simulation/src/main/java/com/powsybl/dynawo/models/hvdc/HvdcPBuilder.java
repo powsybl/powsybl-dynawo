@@ -23,7 +23,7 @@ public class HvdcPBuilder extends AbstractHvdcBuilder<HvdcPBuilder> {
 
     public static final String CATEGORY = "HVDC_P";
     private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
-    private static final HvdcVarNameHandler P_NAME_HANDLER = new PVarNameHandler();
+    private static final HvdcVarNameHandler P_NAME_HANDLER = new HvdcPVarNameHandler();
 
     public static HvdcPBuilder of(Network network) {
         return of(network, ReportNode.NO_OP);
