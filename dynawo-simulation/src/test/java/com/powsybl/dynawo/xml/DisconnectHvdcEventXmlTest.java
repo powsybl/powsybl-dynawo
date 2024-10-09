@@ -82,7 +82,7 @@ class DisconnectHvdcEventXmlTest extends AbstractParametrizedDynamicModelXmlTest
                                 .disconnectOnly(TwoSides.ONE)
                                 .build()),
                 Arguments.of("disconnect_hvdc_vsc_dyd.xml",
-                        (Function<Network, BlackBoxModel>) n -> HvdcVscBuilder.of(n, "HvdcVSC")
+                        (Function<Network, BlackBoxModel>) n -> HvdcVscBuilder.of(n, "HvdcVsc")
                                 .dynamicModelId(DYN_HVDC_NAME)
                                 .staticId(HVDC_NAME)
                                 .parameterSetId("hvdc")
@@ -105,7 +105,7 @@ class DisconnectHvdcEventXmlTest extends AbstractParametrizedDynamicModelXmlTest
                                 .disconnectOnly(TwoSides.ONE)
                                 .build()),
                 Arguments.of("disconnect_hvdc_vsc_dangling_dyd.xml",
-                        (Function<Network, BlackBoxModel>) n -> HvdcVscBuilder.of(n, "HvdcVSCDanglingUdc")
+                        (Function<Network, BlackBoxModel>) n -> HvdcVscBuilder.of(n, "HvdcVscDanglingUdc")
                                 .dynamicModelId(DYN_HVDC_NAME)
                                 .staticId(HVDC_NAME)
                                 .parameterSetId("hvdc")

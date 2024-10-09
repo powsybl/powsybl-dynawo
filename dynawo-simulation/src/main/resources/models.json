@@ -362,29 +362,59 @@
     ]
   },
   "HVDC_VSC": {
-    "defaultLib": "HvdcVSC",
+    "defaultLib": "HvdcVsc",
     "libs": [
       {
+        "lib": "HvdcVsc",
+        "doc": "Standard dynamic model for Hvdc-Vsc link"
+      },
+      {
+        "lib": "HvdcVscEmulation",
+        "doc": "Standard dynamic model for Hvdc-Vsc link with AC emulation"
+      },
+      {
+        "lib": "HvdcVscDanglingP",
+        "properties": [
+          "DANGLING"
+        ],
+        "doc": "Standard dynamic model for Hvdc-Vsc link between two different synchronous areas (P control on the main one)"
+      },
+      {
+        "lib": "HvdcVscDanglingUdc",
+        "properties": [
+          "DANGLING"
+        ],
+        "doc": "Standard dynamic model for Hvdc-Vsc link between two different synchronous areas (P control on the main one)"
+      },
+      {
         "lib": "HvdcVSC",
-        "doc": "Standard dynamic model for Hvdc-VSC link"
+        "doc": "Standard dynamic model for Hvdc-VSC link",
+        "maxVersion": "1.5.0",
+        "endCause": "Renamed HvdcVsc"
       },
       {
         "lib": "HvdcVSCEmulation",
-        "doc": "Standard dynamic model for Hvdc-VSC link with AC emulation"
+        "doc": "Standard dynamic model for Hvdc-VSC link with AC emulation",
+        "maxVersion": "1.5.0",
+        "endCause": "Renamed HvdcVscEmulation"
       },
       {
         "lib": "HvdcVSCDanglingP",
         "properties": [
           "DANGLING"
         ],
-        "doc": "Standard dynamic model for Hvdc-VSC link between two different synchronous areas (P control on the main one)"
+        "doc": "Standard dynamic model for Hvdc-VSC link between two different synchronous areas (P control on the main one)",
+        "maxVersion": "1.5.0",
+        "endCause": "Renamed HvdcVscDanglingP"
       },
       {
         "lib": "HvdcVSCDanglingUdc",
         "properties": [
           "DANGLING"
         ],
-        "doc": "Standard dynamic model for Hvdc-VSC link between two different synchronous areas (P control on the main one)"
+        "doc": "Standard dynamic model for Hvdc-VSC link between two different synchronous areas (P control on the main one)",
+        "maxVersion": "1.5.0",
+        "endCause": "Renamed HvdcVSCDanglingUdc"
       }
     ]
   },

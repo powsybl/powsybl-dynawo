@@ -8,7 +8,7 @@
 
 package dynamicModels
 
-HvdcVSC {
+HvdcVsc {
     staticId "L"
     dynamicModelId "BBM_HVDC_L"
     parameterSetId "HVDC"

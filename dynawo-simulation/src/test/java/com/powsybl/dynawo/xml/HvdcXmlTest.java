@@ -62,7 +62,7 @@ class HvdcXmlTest extends AbstractParametrizedDynamicModelXmlTest {
                         .staticId(HVDC_NAME)
                         .parameterSetId("hv")
                         .build()),
-                Arguments.of("hvdc_vsc_dyd.xml", (Function<Network, BlackBoxModel>) n -> HvdcVscBuilder.of(n, "HvdcVSC")
+                Arguments.of("hvdc_vsc_dyd.xml", (Function<Network, BlackBoxModel>) n -> HvdcVscBuilder.of(n, "HvdcVsc")
                         .dynamicModelId(DYN_NAME)
                         .staticId(HVDC_NAME)
                         .parameterSetId("hv")
@@ -73,7 +73,7 @@ class HvdcXmlTest extends AbstractParametrizedDynamicModelXmlTest {
                         .parameterSetId("hv")
                         .dangling(TwoSides.ONE)
                         .build()),
-                Arguments.of("hvdc_vsc_dangling_dyd.xml", (Function<Network, BlackBoxModel>) n -> HvdcVscBuilder.of(n, "HvdcVSCDanglingP")
+                Arguments.of("hvdc_vsc_dangling_dyd.xml", (Function<Network, BlackBoxModel>) n -> HvdcVscBuilder.of(n, "HvdcVscDanglingP")
                         .dynamicModelId(DYN_NAME)
                         .staticId(HVDC_NAME)
                         .parameterSetId("hv")

@@ -9,7 +9,7 @@
 package warnings
 
 
-HvdcVSC {
+HvdcVsc {
     dynamicModelId "BBM_HVDC"
     parameterSetId "hvdc"
     staticId "L"
