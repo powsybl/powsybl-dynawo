@@ -201,8 +201,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         dynawoSimulationParameters.setModelsParameters(modelsParameters)
                 .setNetworkParameters(networkParameters)
                 .setSolverParameters(solverParameters)
-                .setSolverType(DynawoSimulationParameters.SolverType.IDA)
-                .setWriteFinalState(false);
+                .setSolverType(DynawoSimulationParameters.SolverType.IDA);
 
         DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, outputVariablesSupplier,
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, NO_OP)

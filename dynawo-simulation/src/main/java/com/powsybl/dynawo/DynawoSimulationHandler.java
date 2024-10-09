@@ -122,9 +122,7 @@ public final class DynawoSimulationHandler extends AbstractExecutionHandler<Dyna
 
     private void setSuccessOutputs(Path workingDir, Path outputsFolder) throws IOException {
         DynawoSimulationParameters parameters = context.getDynawoSimulationParameters();
-        if (parameters.isWriteFinalState()) {
-            updateNetwork(outputsFolder);
-        }
+        updateNetwork(outputsFolder);
         DumpFileParameters dumpFileParameters = parameters.getDumpFileParameters();
         if (dumpFileParameters.exportDumpFile()) {
             setDumpFile(outputsFolder, dumpFileParameters.dumpFileFolder(), workingDir.getFileName());
