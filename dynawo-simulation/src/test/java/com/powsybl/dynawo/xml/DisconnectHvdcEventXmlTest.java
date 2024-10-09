@@ -109,12 +109,12 @@ class DisconnectHvdcEventXmlTest extends AbstractParametrizedDynamicModelXmlTest
                                 .dynamicModelId(DYN_HVDC_NAME)
                                 .staticId(HVDC_NAME)
                                 .parameterSetId("hvdc")
-                                .dangling(TwoSides.ONE)
+                                .dangling(TwoSides.TWO)
                                 .build(),
                         (Function<Network, BlackBoxModel>) n -> EventDisconnectionBuilder.of(n)
                                 .staticId(HVDC_NAME)
                                 .startTime(1)
-                                .disconnectOnly(TwoSides.TWO)
+                                .disconnectOnly(TwoSides.ONE)
                                 .build())
         );
     }

@@ -183,14 +183,6 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                                  'dynamicModelId' field is not set, staticId GEN will be used instead
                                  Model GEN cannot be instantiated
                         """),
-                Arguments.of("/warnings/missingDangling.groovy", HvdcTestNetwork.createVsc(),
-                        """
-                        + DSL tests
-                           + Groovy Dynamic Models Supplier
-                              + DSL model builder for HvdcPVDangling
-                                 'dangling' field is not set
-                                 Model BBM_HVDC_L cannot be instantiated
-                        """),
                 Arguments.of("/warnings/missingDanglingProperty.groovy", HvdcTestNetwork.createVsc(),
                         """
                         + DSL tests
