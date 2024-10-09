@@ -19,12 +19,7 @@ import java.util.List;
  */
 public interface FrequencySynchronizedModel extends Model {
 
-    default List<VarConnection> getOmegaRefVarConnections() {
-        return List.of(
-                new VarConnection("omegaRef_grp_@INDEX@", getOmegaRefPuVarName()),
-                new VarConnection("running_grp_@INDEX@", getRunningVarName())
-        );
-    }
+    List<VarConnection> getOmegaRefVarConnections();
 
     default List<VarConnection> getSetPointVarConnections() {
         return List.of(
