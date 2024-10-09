@@ -8,7 +8,7 @@
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_HvdcVscDanglingPSide1-DefaultEquipmentConnectionPoint">
         <dyn:connect var1="hvdc_terminal1" var2="@STATIC_ID@@NODE1@_ACPIN"/>
-        <dyn:connect var1="hvdc_switchOffSignal1Side1" var2="@STATIC_ID@@NODE1@_switchOff"/>
+        <dyn:connect var1="hvdc_Conv1_switchOffSignal1" var2="@STATIC_ID@@NODE1@_switchOff"/>
     </dyn:macroConnector>
     <dyn:macroStaticReference id="MSR_HvdcVscDanglingP">
         <dyn:staticRef var="hvdc_PInj1Pu" staticVar="p1"/>

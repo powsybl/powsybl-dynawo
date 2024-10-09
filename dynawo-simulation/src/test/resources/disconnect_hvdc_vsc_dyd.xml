@@ -6,11 +6,11 @@
     <dyn:blackBoxModel id="Disconnect_L" lib="EventSetPointBoolean" parFile="hvdctest.par" parId="Disconnect_L"/>
     <dyn:macroConnector id="MC_HvdcVscSide1-DefaultEquipmentConnectionPoint">
         <dyn:connect var1="hvdc_terminal1" var2="@STATIC_ID@@NODE1@_ACPIN"/>
-        <dyn:connect var1="hvdc_switchOffSignal1Side1" var2="@STATIC_ID@@NODE1@_switchOff"/>
+        <dyn:connect var1="hvdc_Conv1_switchOffSignal1" var2="@STATIC_ID@@NODE1@_switchOff"/>
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_HvdcVscSide2-DefaultEquipmentConnectionPoint">
         <dyn:connect var1="hvdc_terminal2" var2="@STATIC_ID@@NODE2@_ACPIN"/>
-        <dyn:connect var1="hvdc_switchOffSignal1Side2" var2="@STATIC_ID@@NODE2@_switchOff"/>
+        <dyn:connect var1="hvdc_Conv2_switchOffSignal1" var2="@STATIC_ID@@NODE2@_switchOff"/>
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_EventHvdcDisconnectionSide2-HvdcVsc">
         <dyn:connect var1="event_state1" var2="hvdc_Conv2_switchOffSignal2"/>
