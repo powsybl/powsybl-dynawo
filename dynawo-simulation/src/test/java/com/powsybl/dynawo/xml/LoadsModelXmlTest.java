@@ -50,35 +50,40 @@ class LoadsModelXmlTest extends AbstractParametrizedDynamicModelXmlTest {
     @MethodSource("provideLoads")
     void writeLoadModel(String dydName, Function< Network, BlackBoxModel> loadConstructor) throws SAXException, IOException {
         DydXml.write(tmpDir, context);
-        validate("dyd.xsd", dydName + ".xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
+        validate("dyd.xsd", dydName, tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
     }
 
     private static Stream<Arguments> provideLoads() {
         return Stream.of(
-                Arguments.of("load_alpha_beta_dyd", (Function<Network, BlackBoxModel>) n -> BaseLoadBuilder.of(n, "LoadAlphaBeta")
+                Arguments.of("load_alpha_beta_dyd.xml", (Function<Network, BlackBoxModel>) n -> BaseLoadBuilder.of(n, "LoadAlphaBeta")
                         .dynamicModelId(DYN_LOAD_NAME)
                         .staticId(LOAD_NAME)
                         .parameterSetId("LAB")
                         .build()),
-                Arguments.of("load_one_transformer_dyd", (Function<Network, BlackBoxModel>) n -> LoadOneTransformerBuilder.of(n, "LoadOneTransformer")
+                Arguments.of("load_one_transformer_dyd.xml", (Function<Network, BlackBoxModel>) n -> LoadOneTransformerBuilder.of(n, "LoadOneTransformer")
                         .dynamicModelId(DYN_LOAD_NAME)
                         .staticId(LOAD_NAME)
                         .parameterSetId("LOT")
                         .build()),
-                Arguments.of("load_one_transformer_tap_changer_dyd", (Function<Network, BlackBoxModel>) n -> LoadOneTransformerTapChangerBuilder.of(n, "LoadOneTransformerTapChanger")
+                Arguments.of("load_one_transformer_tap_changer_dyd.xml", (Function<Network, BlackBoxModel>) n -> LoadOneTransformerTapChangerBuilder.of(n, "LoadOneTransformerTapChanger")
                         .dynamicModelId(DYN_LOAD_NAME)
                         .staticId(LOAD_NAME)
                         .parameterSetId("LOTTC")
                         .build()),
-                Arguments.of("load_two_transformers_dyd", (Function<Network, BlackBoxModel>) n -> LoadTwoTransformersBuilder.of(n, "LoadTwoTransformers")
+                Arguments.of("load_two_transformers_dyd.xml", (Function<Network, BlackBoxModel>) n -> LoadTwoTransformersBuilder.of(n, "LoadTwoTransformers")
                         .dynamicModelId(DYN_LOAD_NAME)
                         .staticId(LOAD_NAME)
                         .parameterSetId("LTT")
                         .build()),
-                Arguments.of("load_two_transformers_tap_changers_dyd", (Function<Network, BlackBoxModel>) n -> LoadTwoTransformersTapChangersBuilder.of(n, "LoadTwoTransformersTapChangers")
+                Arguments.of("load_two_transformers_tap_changers_dyd.xml", (Function<Network, BlackBoxModel>) n -> LoadTwoTransformersTapChangersBuilder.of(n, "LoadTwoTransformersTapChangers")
                         .dynamicModelId(DYN_LOAD_NAME)
                         .staticId(LOAD_NAME)
                         .parameterSetId("LTTTC")
+                        .build()),
+                Arguments.of("load_synchronized.xml", (Function<Network, BlackBoxModel>) n -> BaseLoadBuilder.of(n, "LoadAlphaBetaMotor")
+                        .dynamicModelId(DYN_LOAD_NAME)
+                        .staticId(LOAD_NAME)
+                        .parameterSetId("LAB")
                         .build())
         );
     }

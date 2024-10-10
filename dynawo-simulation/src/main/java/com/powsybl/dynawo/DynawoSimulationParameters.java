@@ -41,7 +41,6 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
     public static final String MODELS_OUTPUT_PARAMETERS_FILE = "models.par";
     public static final String NETWORK_OUTPUT_PARAMETERS_FILE = "network.par";
     public static final String SOLVER_OUTPUT_PARAMETERS_FILE = "solvers.par";
-    private static final boolean DEFAULT_WRITE_FINAL_STATE = true;
     public static final boolean DEFAULT_USE_MODEL_SIMPLIFIERS = false;
     public static final double DEFAULT_PRECISION = 1e-6;
     public static final ExportMode DEFAULT_TIMELINE_EXPORT_MODE = ExportMode.TXT;
@@ -110,7 +109,6 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
     private ParametersSet solverParameters;
     private SolverType solverType = DEFAULT_SOLVER_TYPE;
     private boolean mergeLoads = DEFAULT_MERGE_LOADS;
-    private boolean writeFinalState = DEFAULT_WRITE_FINAL_STATE;
     private boolean useModelSimplifiers = DEFAULT_USE_MODEL_SIMPLIFIERS;
     private DumpFileParameters dumpFileParameters = DumpFileParameters.createDefaultDumpFileParameters();
     private double precision = DEFAULT_PRECISION;
@@ -154,7 +152,6 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
             c.getOptionalEnumProperty("solver.type", SolverType.class).ifPresent(parameters::setSolverType);
             // If merging loads on each bus to simplify dynawo's analysis
             c.getOptionalBooleanProperty("mergeLoads").ifPresent(parameters::setMergeLoads);
-            c.getOptionalBooleanProperty("writeFinalState").ifPresent(parameters::setWriteFinalState);
             c.getOptionalBooleanProperty("useModelSimplifiers").ifPresent(parameters::setUseModelSimplifiers);
             c.getOptionalDoubleProperty("precision").ifPresent(parameters::setPrecision);
             c.getOptionalEnumProperty("timeline.exportMode", ExportMode.class).ifPresent(parameters::setTimelineExportMode);
@@ -240,15 +237,6 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
     public DynawoSimulationParameters setMergeLoads(boolean mergeLoads) {
         this.mergeLoads = mergeLoads;
         return this;
-    }
-
-    public DynawoSimulationParameters setWriteFinalState(boolean writeFinalState) {
-        this.writeFinalState = writeFinalState;
-        return this;
-    }
-
-    public boolean isWriteFinalState() {
-        return writeFinalState;
     }
 
     public boolean isUseModelSimplifiers() {

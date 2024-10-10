@@ -5,6 +5,9 @@
       {
         "lib": "GeneratorFictitious",
         "doc": "Fictitious generator (behaves in a similar way as an alpha-beta load)"
+      },
+      {
+        "lib": "GeneratorPVFixed"
       }
     ]
   },
@@ -233,9 +236,6 @@
         "doc": "Generator with fixed active power and voltage targets. The reactive power output changes over time in order to follow the voltage target (when it is not possible to do so, the reactive power is set to the minimum or maximum value). The active power outputs may vary in order to mimic frequency regulation"
       },
       {
-        "lib": "GeneratorPVFixed"
-      },
-      {
         "lib": "GeneratorPVDiagramPQ"
       }
     ]
@@ -362,29 +362,59 @@
     ]
   },
   "HVDC_VSC": {
-    "defaultLib": "HvdcVSC",
+    "defaultLib": "HvdcVsc",
     "libs": [
       {
+        "lib": "HvdcVsc",
+        "doc": "Standard dynamic model for Hvdc-Vsc link"
+      },
+      {
+        "lib": "HvdcVscEmulation",
+        "doc": "Standard dynamic model for Hvdc-Vsc link with AC emulation"
+      },
+      {
+        "lib": "HvdcVscDanglingP",
+        "properties": [
+          "DANGLING"
+        ],
+        "doc": "Standard dynamic model for Hvdc-Vsc link between two different synchronous areas (P control on the main one)"
+      },
+      {
+        "lib": "HvdcVscDanglingUdc",
+        "properties": [
+          "DANGLING"
+        ],
+        "doc": "Standard dynamic model for Hvdc-Vsc link between two different synchronous areas (P control on the main one)"
+      },
+      {
         "lib": "HvdcVSC",
-        "doc": "Standard dynamic model for Hvdc-VSC link"
+        "doc": "Standard dynamic model for Hvdc-VSC link",
+        "maxVersion": "1.5.0",
+        "endCause": "Renamed HvdcVsc"
       },
       {
         "lib": "HvdcVSCEmulation",
-        "doc": "Standard dynamic model for Hvdc-VSC link with AC emulation"
+        "doc": "Standard dynamic model for Hvdc-VSC link with AC emulation",
+        "maxVersion": "1.5.0",
+        "endCause": "Renamed HvdcVscEmulation"
       },
       {
         "lib": "HvdcVSCDanglingP",
         "properties": [
           "DANGLING"
         ],
-        "doc": "Standard dynamic model for Hvdc-VSC link between two different synchronous areas (P control on the main one)"
+        "doc": "Standard dynamic model for Hvdc-VSC link between two different synchronous areas (P control on the main one)",
+        "maxVersion": "1.5.0",
+        "endCause": "Renamed HvdcVscDanglingP"
       },
       {
         "lib": "HvdcVSCDanglingUdc",
         "properties": [
           "DANGLING"
         ],
-        "doc": "Standard dynamic model for Hvdc-VSC link between two different synchronous areas (P control on the main one)"
+        "doc": "Standard dynamic model for Hvdc-VSC link between two different synchronous areas (P control on the main one)",
+        "maxVersion": "1.5.0",
+        "endCause": "Renamed HvdcVSCDanglingUdc"
       }
     ]
   },
@@ -429,7 +459,10 @@
         "lib": "LoadAlphaBetaRestorativeLimitsRecalc"
       },
       {
-        "lib": "LoadAlphaBetaMotor"
+        "lib": "LoadAlphaBetaMotor",
+        "properties": [
+          "SYNCHRONIZED"
+        ]
       },
       {
         "lib": "LoadPQ",
@@ -445,22 +478,37 @@
       },
       {
         "lib": "LoadAlphaBetaMotorFifthOrder",
+        "properties": [
+          "SYNCHRONIZED"
+        ],
         "minVersion": "1.7.0"
       },
       {
         "lib": "LoadAlphaBetaMotorSimplified",
+        "properties": [
+          "SYNCHRONIZED"
+        ],
         "minVersion": "1.7.0"
       },
       {
         "lib": "LoadAlphaBetaThreeMotorFifthOrder",
+        "properties": [
+          "SYNCHRONIZED"
+        ],
         "minVersion": "1.7.0"
       },
       {
         "lib": "LoadAlphaBetaTwoMotorFifthOrder",
+        "properties": [
+          "SYNCHRONIZED"
+        ],
         "minVersion": "1.7.0"
       },
       {
         "lib": "LoadAlphaBetaTwoMotorSimplified",
+        "properties": [
+          "SYNCHRONIZED"
+        ],
         "minVersion": "1.7.0"
       },
       {

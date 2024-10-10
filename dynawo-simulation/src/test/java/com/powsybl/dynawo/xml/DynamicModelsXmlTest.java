@@ -12,7 +12,7 @@ import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.commons.DynawoVersion;
-import com.powsybl.dynawo.models.generators.GeneratorFictitiousBuilder;
+import com.powsybl.dynawo.models.generators.BaseGeneratorBuilder;
 import com.powsybl.dynawo.models.lines.LineModel;
 import com.powsybl.dynawo.models.loads.BaseLoad;
 import com.powsybl.dynawo.models.loads.BaseLoadBuilder;
@@ -48,7 +48,7 @@ class DynamicModelsXmlTest extends DynawoTestUtil {
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load();
         dynamicModels.clear();
-        dynamicModels.add(GeneratorFictitiousBuilder.of(network)
+        dynamicModels.add(BaseGeneratorBuilder.of(network)
                 .dynamicModelId("BBM_GEN6")
                 .staticId("GEN6")
                 .parameterSetId("GF")

@@ -174,7 +174,7 @@
         "limitName" : "UInfUmin",
         "limit" : 66.92999999999999,
         "limitReduction" : 1.0,
-        "value" : 66.04302591364225
+        "value" : 66.04302591577434
       }, {
         "subjectId" : "_BUS____4_VL",
         "subjectName" : "BUS    4_VL",
@@ -182,7 +182,7 @@
         "limitName" : "UInfUmin",
         "limit" : 66.92999999999999,
         "limitReduction" : 1.0,
-        "value" : 65.72762039108571
+        "value" : 65.72762039320641
       }, {
         "subjectId" : "_BUS____5_VL",
         "subjectName" : "BUS    5_VL",
@@ -190,7 +190,7 @@
         "limitName" : "UInfUmin",
         "limit" : 66.92999999999999,
         "limitReduction" : 1.0,
-        "value" : 65.52250008634476
+        "value" : 65.52250008834531
       }, {
         "subjectId" : "_BUS___14_VL",
         "subjectName" : "BUS   14_VL",
@@ -198,7 +198,7 @@
         "limitName" : "UInfUmin",
         "limit" : 13.386000000000001,
         "limitReduction" : 1.0,
-        "value" : 13.348620218077935
+        "value" : 13.348620218406515
       }, {
         "subjectId" : "_BUS____2_VL",
         "subjectName" : "BUS    2_VL",
@@ -206,7 +206,7 @@
         "limitName" : "UInfUmin",
         "limit" : 66.92999999999999,
         "limitReduction" : 1.0,
-        "value" : 66.79275331121715
+        "value" : 66.79275331228723
       }, {
         "subjectId" : "_BUS___10_VL",
         "subjectName" : "BUS   10_VL",
@@ -214,7 +214,7 @@
         "limitName" : "UInfUmin",
         "limit" : 13.386000000000001,
         "limitReduction" : 1.0,
-        "value" : 13.3776580871495
+        "value" : 13.377658087264606
       }, {
         "subjectId" : "_BUS____9_VL",
         "subjectName" : "BUS    9_VL",
@@ -222,7 +222,7 @@
         "limitName" : "UInfUmin",
         "limit" : 13.386000000000001,
         "limitReduction" : 1.0,
-        "value" : 13.38439596457008
+        "value" : 13.384395964628164
       } ],
       "actionsTaken" : [ ]
     },
@@ -299,7 +299,7 @@
         "limitName" : "UInfUmin",
         "limit" : 66.92999999999999,
         "limitReduction" : 1.0,
-        "value" : 66.39712313695317
+        "value" : 66.39712316522031
       }, {
         "subjectId" : "_BUS____4-BUS____5-1_AC",
         "subjectName" : "BUS    4-BUS    5-1",
@@ -307,7 +307,7 @@
         "limitName" : "PATL",
         "limit" : 836.74,
         "limitReduction" : 1.0,
-        "value" : 843.5741007221512,
+        "value" : 843.5741006594511,
         "side" : "ONE"
       }, {
         "subjectId" : "_BUS____3-BUS____4-1_AC",
@@ -316,7 +316,7 @@
         "limitName" : "PATL",
         "limit" : 836.74,
         "limitReduction" : 1.0,
-        "value" : 839.9381833149292,
+        "value" : 839.9381832777893,
         "side" : "ONE"
       } ],
       "actionsTaken" : [ ]
