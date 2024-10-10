@@ -9,6 +9,7 @@ package com.powsybl.dynaflow;
 import com.google.auto.service.AutoService;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
+import com.powsybl.commons.config.ModuleConfig;
 import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.extensions.Extension;
 import com.powsybl.commons.extensions.ExtensionJsonSerializer;
@@ -135,6 +136,11 @@ public class DynaFlowProvider implements LoadFlowProvider {
     @Override
     public List<Parameter> getSpecificParameters() {
         return DynaFlowParameters.SPECIFIC_PARAMETERS;
+    }
+
+    @Override
+    public Optional<ModuleConfig> getModuleConfig(PlatformConfig platformConfig) {
+        return platformConfig.getOptionalModuleConfig(MODULE_SPECIFIC_PARAMETERS);
     }
 
     @Override
