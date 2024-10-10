@@ -8,12 +8,12 @@ package com.powsybl.dynawo.models;
 
 import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.builders.VersionInterval;
+import com.powsybl.dynawo.xml.MacroStaticReference;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-import java.util.Collections;
-import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import static com.powsybl.dynawo.xml.DynawoSimulationXmlConstants.DYN_URI;
 
@@ -42,9 +42,9 @@ public abstract class AbstractPureDynamicBlackBoxModel extends AbstractBlackBoxM
     }
 
     @Override
-    public final List<VarMapping> getVarsMapping() {
+    public final Optional<MacroStaticReference> getMacroStaticReference() {
         // No static-dynamic mapping as purely dynamic
-        return Collections.emptyList();
+        return Optional.empty();
     }
 
     @Override

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
     <dyn:blackBoxModel id="BBM_GEN" lib="GeneratorPQ" parFile="models.par" parId="pq" staticId="GEN">
-        <dyn:macroStaticRef id="MSR_GeneratorPQ"/>
+        <dyn:macroStaticRef id="MSR_gen"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="BBM_TR" lib="TransformerFixedRatio" parFile="models.par" parId="t" staticId="NGEN_NHV1">
-        <dyn:macroStaticRef id="MSR_TransformerFixedRatio"/>
+        <dyn:macroStaticRef id="MSR_tfo"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="BBM_BUS" lib="InfiniteBus" parFile="models.par" parId="ib" staticId="NGEN">
-        <dyn:macroStaticRef id="MSR_InfiniteBus"/>
+        <dyn:macroStaticRef id="MSR_infinite_bus"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="FREQ_SYNC" lib="SetPoint" parFile="sim1.par" parId="FREQ_SYNC_PAR"/>
     <dyn:macroConnector id="MC_GeneratorPQ-InfiniteBus">
@@ -22,19 +22,19 @@
     <dyn:macroConnector id="MC_SetPoint-GeneratorPQ">
         <dyn:connect var1="setPoint_setPoint" var2="generator_omegaRefPu"/>
     </dyn:macroConnector>
-    <dyn:macroStaticReference id="MSR_GeneratorPQ">
+    <dyn:macroStaticReference id="MSR_gen">
         <dyn:staticRef var="generator_PGenPu" staticVar="p"/>
         <dyn:staticRef var="generator_QGenPu" staticVar="q"/>
         <dyn:staticRef var="generator_state" staticVar="state"/>
     </dyn:macroStaticReference>
-    <dyn:macroStaticReference id="MSR_TransformerFixedRatio">
+    <dyn:macroStaticReference id="MSR_tfo">
         <dyn:staticRef var="transformer_P1Pu" staticVar="p1"/>
         <dyn:staticRef var="transformer_Q1Pu" staticVar="q1"/>
         <dyn:staticRef var="transformer_P2Pu" staticVar="p2"/>
         <dyn:staticRef var="transformer_Q2Pu" staticVar="q2"/>
         <dyn:staticRef var="transformer_state" staticVar="state"/>
     </dyn:macroStaticReference>
-    <dyn:macroStaticReference id="MSR_InfiniteBus">
+    <dyn:macroStaticReference id="MSR_infinite_bus">
         <dyn:staticRef var="infiniteBus_UPuVar" staticVar="v"/>
         <dyn:staticRef var="infiniteBus_UPhaseVar" staticVar="angle"/>
     </dyn:macroStaticReference>

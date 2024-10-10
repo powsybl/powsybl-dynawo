@@ -9,12 +9,12 @@ package com.powsybl.dynawo.models.buses;
 
 import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.VarMapping;
+import com.powsybl.dynawo.xml.MacroStaticReference;
 import com.powsybl.iidm.network.Bus;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-import java.util.Arrays;
-import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Dimitri Baudrier {@literal <dimitri.baudrier at rte-france.com>}
@@ -22,7 +22,7 @@ import java.util.List;
  */
 public class StandardBus extends AbstractBus {
 
-    private static final List<VarMapping> VAR_MAPPING = Arrays.asList(
+    private static final MacroStaticReference MACRO_STATIC_REFERENCE = MacroStaticReference.of("bus",
             new VarMapping("bus_UPu", "v"),
             new VarMapping("bus_UPhase", "angle"));
 
@@ -31,8 +31,8 @@ public class StandardBus extends AbstractBus {
     }
 
     @Override
-    public List<VarMapping> getVarsMapping() {
-        return VAR_MAPPING;
+    public Optional<MacroStaticReference> getMacroStaticReference() {
+        return Optional.of(MACRO_STATIC_REFERENCE);
     }
 
     @Override

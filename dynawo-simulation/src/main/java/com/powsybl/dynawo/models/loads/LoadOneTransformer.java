@@ -12,11 +12,12 @@ import com.powsybl.dynawo.models.TransformerSide;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.VarMapping;
 import com.powsybl.dynawo.models.buses.EquipmentConnectionPoint;
+import com.powsybl.dynawo.xml.MacroStaticReference;
 import com.powsybl.iidm.network.Load;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static com.powsybl.dynawo.models.TransformerSide.NONE;
 
@@ -26,7 +27,7 @@ import static com.powsybl.dynawo.models.TransformerSide.NONE;
  */
 public class LoadOneTransformer extends AbstractLoad implements LoadWithTransformers {
 
-    protected static final List<VarMapping> VAR_MAPPING = Arrays.asList(
+    private static final MacroStaticReference MACRO_STATIC_REFERENCE = MacroStaticReference.of("load_one_tfo",
             new VarMapping("transformer_P1Pu_value", "p"),
             new VarMapping("transformer_Q1Pu_value", "q"),
             new VarMapping("transformer_state", "state"));
@@ -36,8 +37,8 @@ public class LoadOneTransformer extends AbstractLoad implements LoadWithTransfor
     }
 
     @Override
-    public List<VarMapping> getVarsMapping() {
-        return VAR_MAPPING;
+    public Optional<MacroStaticReference> getMacroStaticReference() {
+        return Optional.of(MACRO_STATIC_REFERENCE);
     }
 
     @Override

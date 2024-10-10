@@ -13,11 +13,12 @@ import com.powsybl.dynawo.models.TransformerSide;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.VarMapping;
 import com.powsybl.dynawo.models.buses.EquipmentConnectionPoint;
+import com.powsybl.dynawo.xml.MacroStaticReference;
 import com.powsybl.iidm.network.Load;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static com.powsybl.dynawo.models.TransformerSide.*;
 
@@ -27,7 +28,7 @@ import static com.powsybl.dynawo.models.TransformerSide.*;
 public class LoadTwoTransformers extends AbstractLoad implements LoadWithTransformers {
 
     public static final String SWITCH_OFF_SIGNAL_NAME = "switchOffSignal1";
-    protected static final List<VarMapping> VAR_MAPPING = Arrays.asList(
+    private static final MacroStaticReference MACRO_STATIC_REFERENCE = MacroStaticReference.of("load_two_tfo",
             new VarMapping(getTransformerVar(HIGH_VOLTAGE, "P1Pu_value"), "p"),
             new VarMapping(getTransformerVar(HIGH_VOLTAGE, "Q1Pu_value"), "q"),
             new VarMapping(getTransformerVar(HIGH_VOLTAGE, "state"), "state"));
@@ -60,8 +61,8 @@ public class LoadTwoTransformers extends AbstractLoad implements LoadWithTransfo
     }
 
     @Override
-    public List<VarMapping> getVarsMapping() {
-        return VAR_MAPPING;
+    public Optional<MacroStaticReference> getMacroStaticReference() {
+        return Optional.of(MACRO_STATIC_REFERENCE);
     }
 
     private static String getTransformerVar(TransformerSide side, String suffix) {

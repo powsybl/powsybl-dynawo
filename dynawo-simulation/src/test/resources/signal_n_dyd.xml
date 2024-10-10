@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
     <dyn:blackBoxModel id="BBM_GEN" lib="GeneratorPVRemoteDiagramPQSignalN" parFile="models.par" parId="n" staticId="GEN">
-        <dyn:macroStaticRef id="MSR_GeneratorPVRemoteDiagramPQSignalN"/>
+        <dyn:macroStaticRef id="MSR_gen"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="BBM_GEN2" lib="GeneratorPVRemoteDiagramPQSignalN" parFile="models.par" parId="n" staticId="GEN2">
-        <dyn:macroStaticRef id="MSR_GeneratorPVRemoteDiagramPQSignalN"/>
+        <dyn:macroStaticRef id="MSR_gen"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="Signal_N" lib="SignalN"/>
     <dyn:macroConnector id="MC_GeneratorPVRemoteDiagramPQSignalN-DefaultEquipmentConnectionPoint">
@@ -17,7 +17,7 @@
     <dyn:macroConnector id="MC_SignalN-DefaultBusOfSignalN">
         <dyn:connect var1="signalN_thetaRef" var2="@@NAME@@@NODE@_phi_value"/>
     </dyn:macroConnector>
-    <dyn:macroStaticReference id="MSR_GeneratorPVRemoteDiagramPQSignalN">
+    <dyn:macroStaticReference id="MSR_gen">
         <dyn:staticRef var="generator_PGenPu" staticVar="p"/>
         <dyn:staticRef var="generator_QGenPu" staticVar="q"/>
         <dyn:staticRef var="generator_state" staticVar="state"/>

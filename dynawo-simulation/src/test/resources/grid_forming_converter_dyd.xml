@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
     <dyn:blackBoxModel id="BBM_GFC" lib="GridFormingConverterDroopControl" parFile="models.par" parId="GF" staticId="GEN">
-        <dyn:macroStaticRef id="MSR_GridFormingConverterDroopControl"/>
+        <dyn:macroStaticRef id="MSR_grid_forming"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="FREQ_SYNC" lib="DYNModelOmegaRef" parFile="sim1.par" parId="FREQ_SYNC_PAR"/>
     <dyn:macroConnector id="MC_GridFormingConverterDroopControl-DefaultEquipmentConnectionPoint">
@@ -15,7 +15,7 @@
     <dyn:macroConnector id="MC_DYNModelOmegaRef-DefaultBusOfFrequencySynchronized">
         <dyn:connect var1="numcc_node_@INDEX@" var2="@@NAME@@@NODE@_numcc"/>
     </dyn:macroConnector>
-    <dyn:macroStaticReference id="MSR_GridFormingConverterDroopControl">
+    <dyn:macroStaticReference id="MSR_grid_forming">
         <dyn:staticRef var="converter_PGenPu" staticVar="p"/>
         <dyn:staticRef var="converter_QGenPu" staticVar="q"/>
         <dyn:staticRef var="converter_state" staticVar="state"/>

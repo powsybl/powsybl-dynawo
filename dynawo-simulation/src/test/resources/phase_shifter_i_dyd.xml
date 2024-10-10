@@ -2,7 +2,7 @@
 <dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
     <dyn:blackBoxModel id="BBM_phase_shifter" lib="PhaseShifterI" parFile="models.par" parId="ps"/>
     <dyn:blackBoxModel id="BBM_NGEN_NHV1" lib="TransformerFixedRatio" parFile="models.par" parId="tt" staticId="NGEN_NHV1">
-        <dyn:macroStaticRef id="MSR_TransformerFixedRatio"/>
+        <dyn:macroStaticRef id="MSR_tfo"/>
     </dyn:blackBoxModel>
     <dyn:macroConnector id="MC_PhaseShifterI-TransformerFixedRatio">
         <dyn:connect var1="phaseShifter_tap" var2="transformer_step"/>
@@ -16,7 +16,7 @@
     <dyn:macroConnector id="MC_TransformerFixedRatioSide2-DefaultEquipmentConnectionPoint">
         <dyn:connect var1="transformer_terminal2" var2="@STATIC_ID@@NODE2@_ACPIN"/>
     </dyn:macroConnector>
-    <dyn:macroStaticReference id="MSR_TransformerFixedRatio">
+    <dyn:macroStaticReference id="MSR_tfo">
         <dyn:staticRef var="transformer_P1Pu" staticVar="p1"/>
         <dyn:staticRef var="transformer_Q1Pu" staticVar="q1"/>
         <dyn:staticRef var="transformer_P2Pu" staticVar="p2"/>

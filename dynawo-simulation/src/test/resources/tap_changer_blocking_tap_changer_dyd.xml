@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
     <dyn:blackBoxModel id="BBM_LOAD" lib="LoadOneTransformer" parFile="models.par" parId="LOT" staticId="LOAD">
-        <dyn:macroStaticRef id="MSR_LoadOneTransformer"/>
+        <dyn:macroStaticRef id="MSR_load_one_tfo"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="BBM_LOAD2" lib="LoadTwoTransformers" parFile="models.par" parId="LTT" staticId="LOAD2">
-        <dyn:macroStaticRef id="MSR_LoadTwoTransformers"/>
+        <dyn:macroStaticRef id="MSR_load_two_tfo"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="BBM_LOAD3" lib="LoadTwoTransformers" parFile="models.par" parId="LTT" staticId="LOAD3">
-        <dyn:macroStaticRef id="MSR_LoadTwoTransformers"/>
+        <dyn:macroStaticRef id="MSR_load_two_tfo"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="BBM_TC" lib="TapChangerAutomaton" parFile="models.par" parId="tc"/>
     <dyn:blackBoxModel id="BBM_TC2" lib="TapChangerAutomaton" parFile="models.par" parId="tc"/>
@@ -51,12 +51,12 @@
     <dyn:macroConnector id="MC_TapChangerBlockingAutomatonMeasure1-DefaultActionConnectionPoint">
         <dyn:connect var1="tapChangerBlocking_UMonitored" var2="@NAME@_U"/>
     </dyn:macroConnector>
-    <dyn:macroStaticReference id="MSR_LoadOneTransformer">
+    <dyn:macroStaticReference id="MSR_load_one_tfo">
         <dyn:staticRef var="transformer_P1Pu_value" staticVar="p"/>
         <dyn:staticRef var="transformer_Q1Pu_value" staticVar="q"/>
         <dyn:staticRef var="transformer_state" staticVar="state"/>
     </dyn:macroStaticReference>
-    <dyn:macroStaticReference id="MSR_LoadTwoTransformers">
+    <dyn:macroStaticReference id="MSR_load_two_tfo">
         <dyn:staticRef var="transformerT_P1Pu_value" staticVar="p"/>
         <dyn:staticRef var="transformerT_Q1Pu_value" staticVar="q"/>
         <dyn:staticRef var="transformerT_state" staticVar="state"/>

@@ -12,14 +12,13 @@ import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.builders.EventModelInfo;
 import com.powsybl.dynawo.builders.VersionInterval;
 import com.powsybl.dynawo.models.AbstractBlackBoxModel;
-import com.powsybl.dynawo.models.VarMapping;
 import com.powsybl.dynawo.parameters.ParametersSet;
+import com.powsybl.dynawo.xml.MacroStaticReference;
 import com.powsybl.iidm.network.Identifiable;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-import java.util.Collections;
-import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import static com.powsybl.dynawo.xml.DynawoSimulationXmlConstants.DYN_URI;
@@ -56,9 +55,9 @@ public abstract class AbstractEvent extends AbstractBlackBoxModel implements Eve
     }
 
     @Override
-    public final List<VarMapping> getVarsMapping() {
+    public final Optional<MacroStaticReference> getMacroStaticReference() {
         // No static-dynamic mapping as purely dynamic
-        return Collections.emptyList();
+        return Optional.empty();
     }
 
     @Override

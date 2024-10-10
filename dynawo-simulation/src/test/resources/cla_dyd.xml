@@ -3,7 +3,7 @@
     <dyn:blackBoxModel id="BBM_CLA_LINE" lib="CurrentLimitAutomaton" parFile="models.par" parId="cla"/>
     <dyn:blackBoxModel id="BBM_CLA_TRANSFORMER" lib="CurrentLimitAutomaton" parFile="models.par" parId="cla"/>
     <dyn:blackBoxModel id="BBM_TRANSFORMER" lib="TransformerFixedRatio" parFile="models.par" parId="tf" staticId="NHV2_NLOAD">
-        <dyn:macroStaticRef id="MSR_TransformerFixedRatio"/>
+        <dyn:macroStaticRef id="MSR_tfo"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="BBM_CLA_TRANSFORMER2" lib="CurrentLimitAutomaton" parFile="models.par" parId="cla"/>
     <dyn:macroConnector id="MC_CurrentLimitAutomatonMeasureSide1-DefaultLine">
@@ -30,7 +30,7 @@
         <dyn:connect var1="currentLimitAutomaton_IMonitored" var2="transformer_iSide2"/>
         <dyn:connect var1="currentLimitAutomaton_AutomatonExists" var2="transformer_desactivate_currentLimits"/>
     </dyn:macroConnector>
-    <dyn:macroStaticReference id="MSR_TransformerFixedRatio">
+    <dyn:macroStaticReference id="MSR_tfo">
         <dyn:staticRef var="transformer_P1Pu" staticVar="p1"/>
         <dyn:staticRef var="transformer_Q1Pu" staticVar="q1"/>
         <dyn:staticRef var="transformer_P2Pu" staticVar="p2"/>

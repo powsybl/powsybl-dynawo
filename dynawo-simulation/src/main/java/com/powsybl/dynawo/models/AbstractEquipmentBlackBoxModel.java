@@ -15,6 +15,7 @@ import com.powsybl.iidm.network.Identifiable;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.util.Objects;
+import java.util.Optional;
 
 import static com.powsybl.dynawo.xml.DynawoSimulationXmlConstants.DYN_URI;
 
@@ -44,6 +45,11 @@ public abstract class AbstractEquipmentBlackBoxModel<T extends Identifiable<?>> 
     }
 
     @Override
+    public Optional<MacroStaticReference> getMacroStaticReference() {
+        return Optional.empty();
+    }
+
+    @Override
     public String getStaticId() {
         return equipment.getId();
     }
@@ -55,17 +61,18 @@ public abstract class AbstractEquipmentBlackBoxModel<T extends Identifiable<?>> 
 
     @Override
     public void write(XMLStreamWriter writer, String parFileName) throws XMLStreamException {
-        boolean hasVarMapping = !getVarsMapping().isEmpty();
-        if (hasVarMapping) {
+        Optional<MacroStaticReference> msr = getMacroStaticReference();
+        if (msr.isPresent()) {
             writer.writeStartElement(DYN_URI, "blackBoxModel");
+            writeDynamicAttributes(writer, parFileName);
+            writer.writeAttribute("staticId", getStaticId());
+            writer.writeEmptyElement(DYN_URI, "macroStaticRef");
+            writer.writeAttribute("id", msr.get().getId());
+            writer.writeEndElement();
         } else {
             writer.writeEmptyElement(DYN_URI, "blackBoxModel");
-        }
-        writeDynamicAttributes(writer, parFileName);
-        writer.writeAttribute("staticId", getStaticId());
-        if (hasVarMapping) {
-            MacroStaticReference.writeMacroStaticRef(writer, getLib());
-            writer.writeEndElement();
+            writeDynamicAttributes(writer, parFileName);
+            writer.writeAttribute("staticId", getStaticId());
         }
     }
 }

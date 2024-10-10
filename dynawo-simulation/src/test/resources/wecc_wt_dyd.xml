@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
     <dyn:blackBoxModel id="BBM_WT" lib="WT4AWeccCurrentSource" parFile="models.par" parId="Wind" staticId="GEN">
-        <dyn:macroStaticRef id="MSR_WT4AWeccCurrentSource"/>
+        <dyn:macroStaticRef id="MSR_WT4A"/>
     </dyn:blackBoxModel>
     <dyn:macroConnector id="MC_WT4AWeccCurrentSource-DefaultEquipmentConnectionPoint">
         <dyn:connect var1="WT4A_terminal" var2="@STATIC_ID@@NODE@_ACPIN"/>
     </dyn:macroConnector>
-    <dyn:macroStaticReference id="MSR_WT4AWeccCurrentSource">
+    <dyn:macroStaticReference id="MSR_WT4A">
         <dyn:staticRef var="WT4A_measurements_PPuSnRef" staticVar="p"/>
         <dyn:staticRef var="WT4A_measurements_QPuSnRef" staticVar="q"/>
         <dyn:staticRef var="WT4A_injector_state" staticVar="state"/>

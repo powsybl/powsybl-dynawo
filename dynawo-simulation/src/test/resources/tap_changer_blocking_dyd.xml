@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
     <dyn:blackBoxModel id="BBM_NGEN_NHV1" lib="TransformerFixedRatio" parFile="models.par" parId="transformer" staticId="NGEN_NHV1">
-        <dyn:macroStaticRef id="MSR_TransformerFixedRatio"/>
+        <dyn:macroStaticRef id="MSR_tfo"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="BBM_LOAD" lib="LoadOneTransformerTapChanger" parFile="models.par" parId="lot" staticId="LOAD">
-        <dyn:macroStaticRef id="MSR_LoadOneTransformerTapChanger"/>
+        <dyn:macroStaticRef id="MSR_load_one_tfo"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="BBM_LOAD2" lib="LoadTwoTransformersTapChangers" parFile="models.par" parId="ltt" staticId="LOAD2">
-        <dyn:macroStaticRef id="MSR_LoadTwoTransformersTapChangers"/>
+        <dyn:macroStaticRef id="MSR_load_two_tfo"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="BBM_TapChangerBlocking" lib="TapChangerBlockingAutomaton2" parFile="models.par" parId="TapChangerPar"/>
     <dyn:macroConnector id="MC_TransformerFixedRatioSide1-DefaultEquipmentConnectionPoint">
@@ -49,19 +49,19 @@
     <dyn:macroConnector id="MC_TapChangerBlockingAutomatonMeasure2-DefaultActionConnectionPoint">
         <dyn:connect var1="tapChangerBlocking_UMonitored2" var2="@NAME@_U"/>
     </dyn:macroConnector>
-    <dyn:macroStaticReference id="MSR_TransformerFixedRatio">
+    <dyn:macroStaticReference id="MSR_tfo">
         <dyn:staticRef var="transformer_P1Pu" staticVar="p1"/>
         <dyn:staticRef var="transformer_Q1Pu" staticVar="q1"/>
         <dyn:staticRef var="transformer_P2Pu" staticVar="p2"/>
         <dyn:staticRef var="transformer_Q2Pu" staticVar="q2"/>
         <dyn:staticRef var="transformer_state" staticVar="state"/>
     </dyn:macroStaticReference>
-    <dyn:macroStaticReference id="MSR_LoadOneTransformerTapChanger">
+    <dyn:macroStaticReference id="MSR_load_one_tfo">
         <dyn:staticRef var="transformer_P1Pu_value" staticVar="p"/>
         <dyn:staticRef var="transformer_Q1Pu_value" staticVar="q"/>
         <dyn:staticRef var="transformer_state" staticVar="state"/>
     </dyn:macroStaticReference>
-    <dyn:macroStaticReference id="MSR_LoadTwoTransformersTapChangers">
+    <dyn:macroStaticReference id="MSR_load_two_tfo">
         <dyn:staticRef var="transformerT_P1Pu_value" staticVar="p"/>
         <dyn:staticRef var="transformerT_Q1Pu_value" staticVar="q"/>
         <dyn:staticRef var="transformerT_state" staticVar="state"/>

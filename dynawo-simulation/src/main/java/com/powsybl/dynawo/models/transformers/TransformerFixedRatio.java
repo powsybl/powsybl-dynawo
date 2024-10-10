@@ -14,11 +14,12 @@ import com.powsybl.dynawo.models.AbstractEquipmentBlackBoxModel;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.buses.EquipmentConnectionPoint;
 import com.powsybl.dynawo.models.utils.SideUtils;
+import com.powsybl.dynawo.xml.MacroStaticReference;
 import com.powsybl.iidm.network.TwoSides;
 import com.powsybl.iidm.network.TwoWindingsTransformer;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static com.powsybl.dynawo.models.TransformerSide.NONE;
 
@@ -27,7 +28,7 @@ import static com.powsybl.dynawo.models.TransformerSide.NONE;
  */
 public class TransformerFixedRatio extends AbstractEquipmentBlackBoxModel<TwoWindingsTransformer> implements TransformerModel, TapChangerModel {
 
-    private static final List<VarMapping> VAR_MAPPING = Arrays.asList(
+    private static final MacroStaticReference MACRO_STATIC_REFERENCE = MacroStaticReference.of("tfo",
             new VarMapping("transformer_P1Pu", "p1"),
             new VarMapping("transformer_Q1Pu", "q1"),
             new VarMapping("transformer_P2Pu", "p2"),
@@ -47,8 +48,8 @@ public class TransformerFixedRatio extends AbstractEquipmentBlackBoxModel<TwoWin
     }
 
     @Override
-    public List<VarMapping> getVarsMapping() {
-        return VAR_MAPPING;
+    public Optional<MacroStaticReference> getMacroStaticReference() {
+        return Optional.of(MACRO_STATIC_REFERENCE);
     }
 
     @Override

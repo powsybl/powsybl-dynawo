@@ -12,11 +12,12 @@ import com.powsybl.dynawo.models.AbstractEquipmentBlackBoxModel;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.VarMapping;
 import com.powsybl.dynawo.models.buses.EquipmentConnectionPoint;
+import com.powsybl.dynawo.xml.MacroStaticReference;
 import com.powsybl.iidm.network.Generator;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
@@ -24,7 +25,7 @@ import java.util.List;
  */
 public class BaseGenerator extends AbstractEquipmentBlackBoxModel<Generator> implements GeneratorModel {
 
-    protected static final List<VarMapping> VAR_MAPPING = Arrays.asList(
+    private static final MacroStaticReference MACRO_STATIC_REFERENCE = MacroStaticReference.of("gen",
             new VarMapping("generator_PGenPu", "p"),
             new VarMapping("generator_QGenPu", "q"),
             new VarMapping("generator_state", "state"));
@@ -34,8 +35,8 @@ public class BaseGenerator extends AbstractEquipmentBlackBoxModel<Generator> imp
     }
 
     @Override
-    public List<VarMapping> getVarsMapping() {
-        return VAR_MAPPING;
+    public Optional<MacroStaticReference> getMacroStaticReference() {
+        return Optional.of(MACRO_STATIC_REFERENCE);
     }
 
     @Override

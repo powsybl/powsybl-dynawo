@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
     <dyn:blackBoxModel id="BBM_LOAD" lib="LoadAlphaBeta" parFile="models.par" parId="LAB" staticId="LOAD">
-        <dyn:macroStaticRef id="MSR_LoadAlphaBeta"/>
+        <dyn:macroStaticRef id="MSR_load"/>
     </dyn:blackBoxModel>
     <dyn:macroConnector id="MC_LoadAlphaBeta-DefaultEquipmentConnectionPoint">
         <dyn:connect var1="load_terminal" var2="@STATIC_ID@@NODE@_ACPIN"/>
         <dyn:connect var1="load_switchOffSignal1" var2="@STATIC_ID@@NODE@_switchOff"/>
     </dyn:macroConnector>
-    <dyn:macroStaticReference id="MSR_LoadAlphaBeta">
+    <dyn:macroStaticReference id="MSR_load">
         <dyn:staticRef var="load_PPu" staticVar="p"/>
         <dyn:staticRef var="load_QPu" staticVar="q"/>
         <dyn:staticRef var="load_state" staticVar="state"/>

@@ -21,12 +21,21 @@ import static com.powsybl.dynawo.xml.DynawoSimulationXmlConstants.MACRO_STATIC_R
  */
 public final class MacroStaticReference {
 
-    private final String lib;
+    private final String id;
     private final List<VarMapping> varMappings;
 
-    public MacroStaticReference(String lib, List<VarMapping> varMappings) {
-        this.lib = Objects.requireNonNull(lib);
-        this.varMappings = Objects.requireNonNull(varMappings);
+    public static MacroStaticReference of(String idSuffix, VarMapping... varMappings) {
+        return new MacroStaticReference(MACRO_STATIC_REFERENCE_PREFIX + Objects.requireNonNull(idSuffix),
+                List.of(varMappings));
+    }
+
+    private MacroStaticReference(String id, List<VarMapping> varMappings) {
+        this.id = id;
+        this.varMappings = varMappings;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public void write(XMLStreamWriter writer) throws XMLStreamException {
@@ -34,22 +43,17 @@ public final class MacroStaticReference {
             return;
         }
         writer.writeStartElement(DYN_URI, "macroStaticReference");
-        writer.writeAttribute("id", MACRO_STATIC_REFERENCE_PREFIX + lib);
+        writer.writeAttribute("id", id);
         for (VarMapping varMapping : varMappings) {
-            writeStaticRef(writer, varMapping.dynamicVar(), varMapping.staticVar());
+            writeVarMapping(writer, varMapping.dynamicVar(), varMapping.staticVar());
         }
         writer.writeEndElement();
     }
 
-    public static void writeStaticRef(XMLStreamWriter writer, String dynamicVar, String staticVar) throws XMLStreamException {
+    private static void writeVarMapping(XMLStreamWriter writer, String dynamicVar, String staticVar) throws XMLStreamException {
         writer.writeEmptyElement(DYN_URI, "staticRef");
         writer.writeAttribute("var", dynamicVar);
         writer.writeAttribute("staticVar", staticVar);
-    }
-
-    public static void writeMacroStaticRef(XMLStreamWriter writer, String lib) throws XMLStreamException {
-        writer.writeEmptyElement(DYN_URI, "macroStaticRef");
-        writer.writeAttribute("id", MACRO_STATIC_REFERENCE_PREFIX + lib);
     }
 
     @Override
@@ -60,12 +64,12 @@ public final class MacroStaticReference {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        return lib.equals(((MacroStaticReference) o).lib);
+        return id.equals(((MacroStaticReference) o).id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(lib);
+        return Objects.hash(id);
     }
 
 }

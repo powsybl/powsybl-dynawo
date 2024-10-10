@@ -1,52 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
     <dyn:blackBoxModel id="_LOAD__10_EC" lib="LoadAlphaBeta" parFile="models.par" parId="LAB" staticId="_LOAD__10_EC">
-        <dyn:macroStaticRef id="MSR_LoadAlphaBeta"/>
+        <dyn:macroStaticRef id="MSR_load"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="_LOAD__11_EC" lib="LoadAlphaBeta" parFile="models.par" parId="LAB" staticId="_LOAD__11_EC">
-        <dyn:macroStaticRef id="MSR_LoadAlphaBeta"/>
+        <dyn:macroStaticRef id="MSR_load"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="_LOAD__12_EC" lib="LoadAlphaBeta" parFile="models.par" parId="LAB" staticId="_LOAD__12_EC">
-        <dyn:macroStaticRef id="MSR_LoadAlphaBeta"/>
+        <dyn:macroStaticRef id="MSR_load"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="_LOAD__13_EC" lib="LoadAlphaBeta" parFile="models.par" parId="LAB" staticId="_LOAD__13_EC">
-        <dyn:macroStaticRef id="MSR_LoadAlphaBeta"/>
+        <dyn:macroStaticRef id="MSR_load"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="_LOAD__14_EC" lib="LoadAlphaBeta" parFile="models.par" parId="LAB" staticId="_LOAD__14_EC">
-        <dyn:macroStaticRef id="MSR_LoadAlphaBeta"/>
+        <dyn:macroStaticRef id="MSR_load"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="_LOAD___2_EC" lib="LoadAlphaBeta" parFile="models.par" parId="LAB" staticId="_LOAD___2_EC">
-        <dyn:macroStaticRef id="MSR_LoadAlphaBeta"/>
+        <dyn:macroStaticRef id="MSR_load"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="_LOAD___3_EC" lib="LoadAlphaBeta" parFile="models.par" parId="LAB" staticId="_LOAD___3_EC">
-        <dyn:macroStaticRef id="MSR_LoadAlphaBeta"/>
+        <dyn:macroStaticRef id="MSR_load"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="_LOAD___9_EC" lib="LoadAlphaBeta" parFile="models.par" parId="LAB" staticId="_LOAD___9_EC">
-        <dyn:macroStaticRef id="MSR_LoadAlphaBeta"/>
+        <dyn:macroStaticRef id="MSR_load"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="_LOAD___4_EC" lib="LoadAlphaBeta" parFile="models.par" parId="LAB" staticId="_LOAD___4_EC">
-        <dyn:macroStaticRef id="MSR_LoadAlphaBeta"/>
+        <dyn:macroStaticRef id="MSR_load"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="_LOAD___6_EC" lib="LoadAlphaBeta" parFile="models.par" parId="LAB" staticId="_LOAD___6_EC">
-        <dyn:macroStaticRef id="MSR_LoadAlphaBeta"/>
+        <dyn:macroStaticRef id="MSR_load"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="_LOAD___5_EC" lib="LoadAlphaBeta" parFile="models.par" parId="LAB" staticId="_LOAD___5_EC">
-        <dyn:macroStaticRef id="MSR_LoadAlphaBeta"/>
+        <dyn:macroStaticRef id="MSR_load"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="_GEN____1_SM" lib="GeneratorSynchronousFourWindingsProportionalRegulations" parFile="models.par" parId="GSFWPR_GEN____1_SM" staticId="_GEN____1_SM">
-        <dyn:macroStaticRef id="MSR_GeneratorSynchronousFourWindingsProportionalRegulations"/>
+        <dyn:macroStaticRef id="MSR_gen"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="_GEN____2_SM" lib="GeneratorSynchronousFourWindingsProportionalRegulations" parFile="models.par" parId="GSFWPR_GEN____2_SM" staticId="_GEN____2_SM">
-        <dyn:macroStaticRef id="MSR_GeneratorSynchronousFourWindingsProportionalRegulations"/>
+        <dyn:macroStaticRef id="MSR_gen"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="_GEN____3_SM" lib="GeneratorSynchronousFourWindingsProportionalRegulations" parFile="models.par" parId="GSFWPR_GEN____3_SM" staticId="_GEN____3_SM">
-        <dyn:macroStaticRef id="MSR_GeneratorSynchronousFourWindingsProportionalRegulations"/>
+        <dyn:macroStaticRef id="MSR_gen"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="_GEN____6_SM" lib="GeneratorSynchronousThreeWindingsProportionalRegulations" parFile="models.par" parId="GSTWPR_GEN____6_SM" staticId="_GEN____6_SM">
-        <dyn:macroStaticRef id="MSR_GeneratorSynchronousThreeWindingsProportionalRegulations"/>
+        <dyn:macroStaticRef id="MSR_gen"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="_GEN____8_SM" lib="GeneratorSynchronousThreeWindingsProportionalRegulations" parFile="models.par" parId="GSTWPR_GEN____8_SM" staticId="_GEN____8_SM">
-        <dyn:macroStaticRef id="MSR_GeneratorSynchronousThreeWindingsProportionalRegulations"/>
+        <dyn:macroStaticRef id="MSR_gen"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="CLA_2_4" lib="CurrentLimitAutomaton" parFile="models.par" parId="CLA_2_4"/>
     <dyn:blackBoxModel id="CLA_2_5" lib="CurrentLimitAutomaton" parFile="models.par" parId="CLA_2_5"/>
@@ -87,17 +87,17 @@
     <dyn:macroConnector id="MC_EventBranchDisconnection-DefaultLine">
         <dyn:connect var1="event_state1_value" var2="@NAME@_state_value"/>
     </dyn:macroConnector>
-    <dyn:macroStaticReference id="MSR_LoadAlphaBeta">
+    <dyn:macroStaticReference id="MSR_load">
         <dyn:staticRef var="load_PPu" staticVar="p"/>
         <dyn:staticRef var="load_QPu" staticVar="q"/>
         <dyn:staticRef var="load_state" staticVar="state"/>
     </dyn:macroStaticReference>
-    <dyn:macroStaticReference id="MSR_GeneratorSynchronousFourWindingsProportionalRegulations">
+    <dyn:macroStaticReference id="MSR_gen">
         <dyn:staticRef var="generator_PGenPu" staticVar="p"/>
         <dyn:staticRef var="generator_QGenPu" staticVar="q"/>
         <dyn:staticRef var="generator_state" staticVar="state"/>
     </dyn:macroStaticReference>
-    <dyn:macroStaticReference id="MSR_GeneratorSynchronousThreeWindingsProportionalRegulations">
+    <dyn:macroStaticReference id="MSR_gen">
         <dyn:staticRef var="generator_PGenPu" staticVar="p"/>
         <dyn:staticRef var="generator_QGenPu" staticVar="q"/>
         <dyn:staticRef var="generator_state" staticVar="state"/>

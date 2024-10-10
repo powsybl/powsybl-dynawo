@@ -13,7 +13,6 @@ import com.powsybl.dynawo.parameters.ParametersSet;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -77,11 +76,6 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel {
     @Override
     public String getParFile(DynawoSimulationContext context) {
         return DynawoSimulationParameters.MODELS_OUTPUT_PARAMETERS_FILE;
-    }
-
-    @Override
-    public List<VarMapping> getVarsMapping() {
-        return Collections.emptyList();
     }
 
     @Override

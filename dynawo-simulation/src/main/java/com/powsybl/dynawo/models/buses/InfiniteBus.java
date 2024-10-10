@@ -9,17 +9,17 @@ package com.powsybl.dynawo.models.buses;
 
 import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.VarMapping;
+import com.powsybl.dynawo.xml.MacroStaticReference;
 import com.powsybl.iidm.network.Bus;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class InfiniteBus extends AbstractBus {
 
-    private static final List<VarMapping> VAR_MAPPING = Arrays.asList(
+    private static final MacroStaticReference MACRO_STATIC_REFERENCE = MacroStaticReference.of("infinite_bus",
             new VarMapping("infiniteBus_UPuVar", "v"),
             new VarMapping("infiniteBus_UPhaseVar", "angle"));
 
@@ -28,8 +28,8 @@ public class InfiniteBus extends AbstractBus {
     }
 
     @Override
-    public List<VarMapping> getVarsMapping() {
-        return VAR_MAPPING;
+    public Optional<MacroStaticReference> getMacroStaticReference() {
+        return Optional.of(MACRO_STATIC_REFERENCE);
     }
 
     @Override

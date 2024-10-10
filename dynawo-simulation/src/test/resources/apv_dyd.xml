@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
     <dyn:blackBoxModel id="BBM_GENC" lib="GeneratorPV" parFile="models.par" parId="GPV" staticId="GEN2">
-        <dyn:macroStaticRef id="MSR_GeneratorPV"/>
+        <dyn:macroStaticRef id="MSR_gen"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="BBM_GENC2" lib="GeneratorSynchronousFourWindingsGoverPropVRPropInt" parFile="models.par" parId="GSTWPR" staticId="GEN3">
-        <dyn:macroStaticRef id="MSR_GeneratorSynchronousFourWindingsGoverPropVRPropInt"/>
+        <dyn:macroStaticRef id="MSR_gen"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="BBM_LOADC" lib="LoadAlphaBeta" parFile="models.par" parId="load" staticId="LOAD2">
-        <dyn:macroStaticRef id="MSR_LoadAlphaBeta"/>
+        <dyn:macroStaticRef id="MSR_load"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="FREQ_SYNC" lib="DYNModelOmegaRef" parFile="sim1.par" parId="FREQ_SYNC_PAR"/>
     <dyn:blackBoxModel id="Step_GEN" lib="EventSetPointReal" parFile="sim1.par" parId="Step_GEN"/>
@@ -54,17 +54,12 @@
     <dyn:macroConnector id="MC_EventActivePowerVariation-LoadAlphaBeta">
         <dyn:connect var1="step_step_value" var2="load_deltaP"/>
     </dyn:macroConnector>
-    <dyn:macroStaticReference id="MSR_GeneratorPV">
+    <dyn:macroStaticReference id="MSR_gen">
         <dyn:staticRef var="generator_PGenPu" staticVar="p"/>
         <dyn:staticRef var="generator_QGenPu" staticVar="q"/>
         <dyn:staticRef var="generator_state" staticVar="state"/>
     </dyn:macroStaticReference>
-    <dyn:macroStaticReference id="MSR_GeneratorSynchronousFourWindingsGoverPropVRPropInt">
-        <dyn:staticRef var="generator_PGenPu" staticVar="p"/>
-        <dyn:staticRef var="generator_QGenPu" staticVar="q"/>
-        <dyn:staticRef var="generator_state" staticVar="state"/>
-    </dyn:macroStaticReference>
-    <dyn:macroStaticReference id="MSR_LoadAlphaBeta">
+    <dyn:macroStaticReference id="MSR_load">
         <dyn:staticRef var="load_PPu" staticVar="p"/>
         <dyn:staticRef var="load_QPu" staticVar="q"/>
         <dyn:staticRef var="load_state" staticVar="state"/>

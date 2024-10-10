@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
     <dyn:blackBoxModel id="BBM_GEN" lib="GeneratorFictitious" parFile="models.par" parId="GF" staticId="G1">
-        <dyn:macroStaticRef id="MSR_GeneratorFictitious"/>
+        <dyn:macroStaticRef id="MSR_gen"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="BBM_SHUNT" lib="ShuntB" parFile="models.par" parId="BS" staticId="SH1"/>
     <dyn:blackBoxModel id="Disconnect_G1" lib="EventSetPointBoolean" parFile="svcTestCase.par" parId="Disconnect_G1"/>
@@ -27,7 +27,7 @@
     <dyn:macroConnector id="MC_EventInjectionDisconnection-ShuntB">
         <dyn:connect var1="event_state1" var2="shunt_switchOffSignal2"/>
     </dyn:macroConnector>
-    <dyn:macroStaticReference id="MSR_GeneratorFictitious">
+    <dyn:macroStaticReference id="MSR_gen">
         <dyn:staticRef var="generator_PGenPu" staticVar="p"/>
         <dyn:staticRef var="generator_QGenPu" staticVar="q"/>
         <dyn:staticRef var="generator_state" staticVar="state"/>

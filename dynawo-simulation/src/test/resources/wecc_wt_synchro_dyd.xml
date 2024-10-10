@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
     <dyn:blackBoxModel id="BBM_WT" lib="WTG4BWeccCurrentSource" parFile="models.par" parId="Wind" staticId="GEN">
-        <dyn:macroStaticRef id="MSR_WTG4BWeccCurrentSource"/>
+        <dyn:macroStaticRef id="MSR_WTG4B"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="FREQ_SYNC" lib="DYNModelOmegaRef" parFile="sim1.par" parId="FREQ_SYNC_PAR"/>
     <dyn:macroConnector id="MC_WTG4BWeccCurrentSource-DefaultEquipmentConnectionPoint">
@@ -14,7 +14,7 @@
     <dyn:macroConnector id="MC_DYNModelOmegaRef-DefaultBusOfFrequencySynchronized">
         <dyn:connect var1="numcc_node_@INDEX@" var2="@@NAME@@@NODE@_numcc"/>
     </dyn:macroConnector>
-    <dyn:macroStaticReference id="MSR_WTG4BWeccCurrentSource">
+    <dyn:macroStaticReference id="MSR_WTG4B">
         <dyn:staticRef var="WTG4B_measurements_PPuSnRef" staticVar="p"/>
         <dyn:staticRef var="WTG4B_measurements_QPuSnRef" staticVar="q"/>
         <dyn:staticRef var="WTG4B_injector_state" staticVar="state"/>

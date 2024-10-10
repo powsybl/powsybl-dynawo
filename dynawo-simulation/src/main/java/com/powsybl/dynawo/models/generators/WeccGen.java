@@ -13,23 +13,25 @@ import com.powsybl.dynawo.models.AbstractEquipmentBlackBoxModel;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.VarMapping;
 import com.powsybl.dynawo.models.buses.EquipmentConnectionPoint;
+import com.powsybl.dynawo.xml.MacroStaticReference;
 import com.powsybl.iidm.network.Generator;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class WeccGen extends AbstractEquipmentBlackBoxModel<Generator> {
 
-    private final List<VarMapping> varsMapping;
+    private final MacroStaticReference macroStaticReference;
     protected final String weccPrefix;
 
     protected WeccGen(String dynamicModelId, Generator generator, String parameterSetId, ModelConfig modelConfig, String weccPrefix) {
         super(dynamicModelId, parameterSetId, generator, modelConfig);
         this.weccPrefix = Objects.requireNonNull(weccPrefix);
-        varsMapping = List.of(
+        macroStaticReference = MacroStaticReference.of(weccPrefix,
                 new VarMapping(weccPrefix + "_measurements_PPuSnRef", "p"),
                 new VarMapping(weccPrefix + "_measurements_QPuSnRef", "q"),
                 new VarMapping(weccPrefix + "_injector_state", "state"));
@@ -45,7 +47,7 @@ public class WeccGen extends AbstractEquipmentBlackBoxModel<Generator> {
     }
 
     @Override
-    public List<VarMapping> getVarsMapping() {
-        return varsMapping;
+    public Optional<MacroStaticReference> getMacroStaticReference() {
+        return Optional.of(macroStaticReference);
     }
 }

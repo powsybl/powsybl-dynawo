@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
     <dyn:blackBoxModel id="BBM_GEN2" lib="GeneratorSynchronousFourWindingsProportionalRegulations" parFile="models.par" parId="GSFWPR" staticId="GEN2">
-        <dyn:macroStaticRef id="MSR_GeneratorSynchronousFourWindingsProportionalRegulations"/>
+        <dyn:macroStaticRef id="MSR_gen"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="FREQ_SYNC" lib="DYNModelOmegaRef" parFile="sim1.par" parId="FREQ_SYNC_PAR"/>
     <dyn:blackBoxModel id="Disconnect_NHV1_NHV2_1" lib="EventQuadripoleDisconnection" parFile="sim1.par" parId="Disconnect_NHV1_NHV2_1"/>
@@ -25,7 +25,7 @@
     <dyn:macroConnector id="MC_EventInjectionDisconnection-GeneratorSynchronousFourWindingsProportionalRegulations">
         <dyn:connect var1="event_state1" var2="generator_switchOffSignal2"/>
     </dyn:macroConnector>
-    <dyn:macroStaticReference id="MSR_GeneratorSynchronousFourWindingsProportionalRegulations">
+    <dyn:macroStaticReference id="MSR_gen">
         <dyn:staticRef var="generator_PGenPu" staticVar="p"/>
         <dyn:staticRef var="generator_QGenPu" staticVar="q"/>
         <dyn:staticRef var="generator_state" staticVar="state"/>

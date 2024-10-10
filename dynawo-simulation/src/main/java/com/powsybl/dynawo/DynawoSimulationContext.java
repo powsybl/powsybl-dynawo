@@ -111,18 +111,18 @@ public class DynawoSimulationContext {
                 macroConnectorsMap::computeIfAbsent,
                 contextReportNode);
 
-        for (BlackBoxModel bbm : getBlackBoxDynamicModelStream().toList()) {
-            macroStaticReferences.computeIfAbsent(bbm.getName(), k -> new MacroStaticReference(k, bbm.getVarsMapping()));
+        getBlackBoxDynamicModelStream().forEach(bbm -> {
+            bbm.getMacroStaticReference().ifPresent(msr -> macroStaticReferences.computeIfAbsent(msr.getId(), k -> msr));
             bbm.createMacroConnections(macroConnectionsAdder);
             bbm.createDynamicModelParameters(this, dynamicModelsParameters::add);
-        }
+        });
 
         ParametersSet networkParameters = getDynawoSimulationParameters().getNetworkParameters();
-        for (BlackBoxModel bbem : eventModels) {
-            bbem.createMacroConnections(macroConnectionsAdder);
-            bbem.createDynamicModelParameters(this, dynamicModelsParameters::add);
-            bbem.createNetworkParameter(networkParameters);
-        }
+        eventModels.forEach(bbm -> {
+            bbm.createMacroConnections(macroConnectionsAdder);
+            bbm.createDynamicModelParameters(this, dynamicModelsParameters::add);
+            bbm.createNetworkParameter(networkParameters);
+        });
     }
 
     private Stream<BlackBoxModel> simplifyModels(Stream<BlackBoxModel> inputBbm, ReportNode reportNode) {
