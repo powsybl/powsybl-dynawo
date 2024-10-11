@@ -34,7 +34,7 @@ import java.util.concurrent.ForkJoinPool;
 
 import static com.powsybl.commons.test.ComparisonUtils.assertXmlEquals;
 import static com.powsybl.dynaflow.DynaFlowConstants.*;
-import static com.powsybl.dynawo.commons.DynawoConstants.OUTPUT_IIDM_FILENAME;
+import static com.powsybl.dynawo.commons.DynawoConstants.*;
 import static com.powsybl.loadflow.LoadFlowResult.Status.FAILED;
 import static com.powsybl.loadflow.LoadFlowResult.Status.FULLY_CONVERGED;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -68,7 +68,7 @@ class DynaFlowProviderTest extends AbstractSerDeTest {
     @Test
     void checkExecutionCommand() {
         String executionCommand = DynaFlowProvider.getCommand(config).toString(0);
-        String expectedExecutionCommand = "[" + getProgram(homeDir) + ", --network, " + IIDM_FILENAME + ", --config, " + CONFIG_FILENAME + "]";
+        String expectedExecutionCommand = "[" + getProgram(homeDir) + ", --network, " + NETWORK_FILENAME + ", --config, " + CONFIG_FILENAME + "]";
         assertEquals(expectedExecutionCommand, executionCommand);
     }
 
@@ -93,8 +93,8 @@ class DynaFlowProviderTest extends AbstractSerDeTest {
             try {
                 copyFile(stdOutFileRef, errFile);
                 copyFile(outputResults, workingDir.resolve(OUTPUT_RESULTS_FILENAME));
-                Files.createDirectories(workingDir.resolve("outputs").resolve("finalState"));
-                copyFile(outputIidm, workingDir.resolve("outputs").resolve("finalState").resolve(OUTPUT_IIDM_FILENAME));
+                Path finalState = Files.createDirectories(workingDir.resolve(OUTPUTS_FOLDER).resolve(FINAL_STATE_FOLDER));
+                copyFile(outputIidm, finalState.resolve(OUTPUT_IIDM_FILENAME));
 
                 return 0;
             } catch (IOException e) {
@@ -115,7 +115,7 @@ class DynaFlowProviderTest extends AbstractSerDeTest {
         public int execute(String program, List<String> args, Path outFile, Path errFile, Path workingDir, Map<String, String> env) {
             try {
                 copyFile(stdOutFileRef, errFile);
-                Files.createDirectories(workingDir.resolve("outputs").resolve("finalState"));
+                Files.createDirectories(workingDir.resolve(OUTPUTS_FOLDER).resolve(FINAL_STATE_FOLDER));
                 return 0;
             } catch (IOException e) {
                 throw new UncheckedIOException(e);

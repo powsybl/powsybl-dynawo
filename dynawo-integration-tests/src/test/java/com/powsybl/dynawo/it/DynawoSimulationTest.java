@@ -11,10 +11,8 @@ import com.powsybl.commons.datasource.ResourceSet;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynamicsimulation.*;
 import com.powsybl.dynamicsimulation.groovy.*;
-import com.powsybl.dynawo.DumpFileParameters;
-import com.powsybl.dynawo.DynawoSimulationConfig;
-import com.powsybl.dynawo.DynawoSimulationParameters;
-import com.powsybl.dynawo.DynawoSimulationProvider;
+import com.powsybl.dynawo.*;
+import com.powsybl.dynawo.commons.ExportMode;
 import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.dynawo.suppliers.dynamicmodels.DynawoModelsSupplier;
 import com.powsybl.dynawo.suppliers.events.DynawoEventModelsSupplier;
@@ -37,6 +35,7 @@ import java.util.stream.Stream;
 
 import static com.powsybl.commons.report.ReportNode.NO_OP;
 import static com.powsybl.commons.report.ReportNode.newRootReportNode;
+import static com.powsybl.dynawo.commons.DynawoConstants.NETWORK_FILENAME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -216,7 +215,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
 
     @Test
     void testSimulationError() {
-        Network network = Network.read(new ResourceDataSource("powsybl_dynawo", new ResourceSet("/error", "powsybl_dynawo.xiidm")));
+        Network network = Network.read(new ResourceDataSource("powsybl_dynawo", new ResourceSet("/error", NETWORK_FILENAME)));
 
         GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
                 getResourceAsStream("/error/models.groovy"),
@@ -256,7 +255,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                 .setNetworkParameters(networkParameters)
                 .setSolverParameters(solverParameters)
                 .setSolverType(DynawoSimulationParameters.SolverType.IDA)
-                .setTimelineExportMode(DynawoSimulationParameters.ExportMode.XML);
+                .setTimelineExportMode(ExportMode.XML);
 
         DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, OutputVariablesSupplier.empty(),
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, NO_OP)
@@ -292,7 +291,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                 .setSolverParameters(ParametersXml.load(getResourceAsStream("/ieee14/signal_n/IEEE14.par"), "SimplifiedSolver"))
                 .setLogLevelFilter(DynawoSimulationParameters.LogLevel.DEBUG)
                 .setSolverType(DynawoSimulationParameters.SolverType.SIM)
-                .setTimelineExportMode(DynawoSimulationParameters.ExportMode.XML);
+                .setTimelineExportMode(ExportMode.XML);
 
         DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, OutputVariablesSupplier.empty(),
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, NO_OP)
@@ -332,7 +331,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                 .setNetworkParameters(networkParameters)
                 .setSolverParameters(solverParameters)
                 .setSolverType(DynawoSimulationParameters.SolverType.IDA)
-                .setTimelineExportMode(DynawoSimulationParameters.ExportMode.XML);
+                .setTimelineExportMode(ExportMode.XML);
 
         return () -> provider.run(network, dynamicModelsSupplier, eventModelsSupplier, outputVariablesSupplier,
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, reportNode)
