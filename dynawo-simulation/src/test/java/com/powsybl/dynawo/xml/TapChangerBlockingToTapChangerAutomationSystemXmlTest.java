@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawo.xml;
 
+import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.models.automationsystems.TapChangerBlockingAutomationSystemBuilder;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;

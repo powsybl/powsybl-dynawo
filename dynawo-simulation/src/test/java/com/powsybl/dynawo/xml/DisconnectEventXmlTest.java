@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawo.xml;
 
+import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.models.events.EventDisconnectionBuilder;
 import com.powsybl.dynawo.models.generators.BaseGeneratorBuilder;
 import com.powsybl.dynawo.models.shunts.BaseShuntBuilder;

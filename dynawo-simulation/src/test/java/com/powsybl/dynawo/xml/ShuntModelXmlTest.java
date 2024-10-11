@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawo.xml;
 
+import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.models.shunts.BaseShuntBuilder;
 import com.powsybl.iidm.network.test.ShuntTestCaseFactory;
 import org.junit.jupiter.api.Test;

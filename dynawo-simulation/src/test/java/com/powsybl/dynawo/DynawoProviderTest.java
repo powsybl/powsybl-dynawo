@@ -35,6 +35,7 @@ import java.util.concurrent.ForkJoinPool;
 
 import static com.powsybl.commons.report.ReportNode.NO_OP;
 import static com.powsybl.dynamicsimulation.DynamicSimulationResult.Status.FAILURE;
+import static com.powsybl.dynawo.commons.DynawoConstants.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -43,7 +44,6 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class DynawoProviderTest extends AbstractSerDeTest {
 
-    private static final String OUTPUT_IIDM_FILENAME = "outputIIDM.xml";
     private DynawoSimulationConfig config;
 
     @BeforeEach
@@ -74,8 +74,8 @@ class DynawoProviderTest extends AbstractSerDeTest {
         public int execute(String program, List<String> args, Path outFile, Path errFile, Path workingDir, Map<String, String> env) {
             try {
                 copyFile(stdOutFileRef, outFile);
-                Files.createDirectories(workingDir.resolve("outputs").resolve("finalState"));
-                copyFile(outputIidm, workingDir.resolve("outputs").resolve("finalState").resolve(OUTPUT_IIDM_FILENAME));
+                Path finalState = Files.createDirectories(workingDir.resolve(OUTPUTS_FOLDER).resolve(FINAL_STATE_FOLDER));
+                copyFile(outputIidm, finalState.resolve(OUTPUT_IIDM_FILENAME));
                 return 0;
             } catch (IOException e) {
                 throw new UncheckedIOException(e);

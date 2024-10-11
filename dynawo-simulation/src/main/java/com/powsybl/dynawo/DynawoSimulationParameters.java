@@ -14,6 +14,7 @@ import com.powsybl.commons.config.ModuleConfig;
 import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.extensions.AbstractExtension;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
+import com.powsybl.dynawo.commons.ExportMode;
 import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.dynawo.xml.ParametersXml;
 
@@ -58,22 +59,6 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
          * the IDA solver
          */
         IDA
-    }
-
-    public enum ExportMode {
-        CSV(".csv"),
-        TXT(".log"),
-        XML(".xml");
-
-        private final String fileExtension;
-
-        ExportMode(String fileExtension) {
-            this.fileExtension = fileExtension;
-        }
-
-        public String getFileExtension() {
-            return fileExtension;
-        }
     }
 
     public enum LogLevel {

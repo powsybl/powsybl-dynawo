@@ -20,7 +20,7 @@ import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.DynawoSimulationProvider;
 import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.models.utils.BlackBoxSupplierUtils;
-import com.powsybl.dynawo.xml.DynawoSimulationConstants;
+import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.commons.DynawoUtil;
 import com.powsybl.dynawo.commons.PowsyblDynawoVersion;
 import com.powsybl.iidm.network.Network;

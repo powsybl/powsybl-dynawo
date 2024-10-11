@@ -31,6 +31,7 @@ import java.util.function.Supplier;
 import static com.powsybl.dynaflow.DynaFlowConstants.*;
 import static com.powsybl.dynaflow.SecurityAnalysisConstants.CONTINGENCIES_FILENAME;
 import static com.powsybl.dynaflow.DynaFlowConstants.DYNAFLOW_NAME;
+import static com.powsybl.dynawo.commons.DynawoConstants.NETWORK_FILENAME;
 
 /**
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
@@ -89,7 +90,7 @@ public class DynaFlowSecurityAnalysisProvider implements SecurityAnalysisProvide
     }
 
     public static Command getCommand(DynaFlowConfig config) {
-        List<String> args = Arrays.asList("--network", IIDM_FILENAME,
+        List<String> args = Arrays.asList("--network", NETWORK_FILENAME,
                 "--config", CONFIG_FILENAME,
                 "--contingencies", CONTINGENCIES_FILENAME);
         return new SimpleCommandBuilder()

@@ -87,7 +87,7 @@ The default value is `FALSE`.
 
 **timeline.exportMode**  
 `timeline.exportMode` defines the file extension of the timeline export.  
-The available `com.powsybl.dynawo.DynawoSimulationParameters.ExportMode` values are:
+The available `com.powsybl.dynawo.commons.ExportMode` values are:
 - `CSV`
 - `TXT`: same format as `CSV` but with `|` separator
 - `XML`

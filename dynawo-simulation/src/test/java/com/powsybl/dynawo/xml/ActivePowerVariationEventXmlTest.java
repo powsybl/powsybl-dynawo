@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawo.xml;
 
+import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.models.events.EventActivePowerVariationBuilder;
 import com.powsybl.dynawo.models.loads.BaseLoadBuilder;
 import com.powsybl.dynawo.models.generators.SynchronizedGeneratorBuilder;
