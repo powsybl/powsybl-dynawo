@@ -1,6 +1,6 @@
 {
   "dfl-config" : {
-    "InfiniteReactiveLimits" : true,
+    "InfiniteReactiveLimits" : false,
     "SVCRegulationOn" : true,
     "ShuntRegulationOn" : true,
     "AutomaticSlackBusOn" : true,
@@ -11,6 +11,9 @@
     "ChosenOutputs" : [ "TIMELINE" ],
     "TimeStep" : 10.0,
     "StartingPointMode" : "warm",
-    "OutputDir" : "dynaflow/workingDir"
+    "sa" : {
+      "TimeOfEvent" : 10.0
+    },
+    "OutputDir" : "dynaflow_sa/workingDir"
   }
 }

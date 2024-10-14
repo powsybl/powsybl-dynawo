@@ -73,10 +73,10 @@ public class DynaFlowProvider implements LoadFlowProvider {
                 .build();
     }
 
-    private static DynaFlowParameters getParametersExt(LoadFlowParameters parameters) {
+    static DynaFlowParameters getParametersExt(LoadFlowParameters parameters) {
         DynaFlowParameters parametersExt = parameters.getExtension(DynaFlowParameters.class);
         if (parametersExt == null) {
-            parametersExt = new DynaFlowParameters();
+            return new DynaFlowParameters();
         }
         return parametersExt;
     }

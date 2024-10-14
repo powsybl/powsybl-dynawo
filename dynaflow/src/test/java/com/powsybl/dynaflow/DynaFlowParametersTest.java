@@ -87,7 +87,7 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
         moduleConfig.setStringProperty("startingPointMode", startingPointMode.getName());
         moduleConfig.setStringProperty("mergeLoads", Boolean.toString(mergeLoads));
 
-        DynaFlowParameters parameters = DynaFlowParameters.load(platformConfig);
+        DynaFlowParameters parameters = DynaFlowParameters.load(moduleConfig);
 
         assertEquals(svcRegulationOn, parameters.getSvcRegulationOn());
         assertEquals(shuntRegulationOn, parameters.getShuntRegulationOn());
@@ -99,7 +99,6 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
         assertEquals(startTime, parameters.getStartTime(), 0.1d);
         assertEquals(stopTime, parameters.getStopTime(), 0.1d);
         assertEquals(precision, parameters.getPrecision(), 0.1d);
-        assertEquals(timeOfEvent, parameters.getTimeOfEvent(), 0.1d);
         assertThat(parameters.getChosenOutputs()).map(OutputTypes::name).containsExactlyInAnyOrderElementsOf(chosenOutputs);
         assertEquals(timeStep, parameters.getTimeStep(), 0.1d);
         assertEquals(startingPointMode, parameters.getStartingPointMode());
@@ -125,7 +124,6 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
         assertEquals(0d, parametersExt.getStartTime());
         assertEquals(100d, parametersExt.getStopTime());
         assertNull(parametersExt.getPrecision());
-        assertNull(parametersExt.getSa());
         assertThat(parametersExt.getChosenOutputs()).containsExactly(OutputTypes.TIMELINE);
         assertEquals(10d, parametersExt.getTimeStep());
         assertEquals(StartingPointMode.WARM, parametersExt.getStartingPointMode());
@@ -181,8 +179,6 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
                 ", startTime=" + startTime +
                 ", stopTime=" + stopTime +
                 ", precision=" + precision +
-                ", sa=" +
-                "{timeOfEvent=" + timeOfEvent + "}" +
                 ", chosenOutputs=" + chosenOutputs +
                 ", timeStep=" + timeStep +
                 ", startingPointMode=" + startingPointMode +
@@ -228,7 +224,6 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
             .setStartTime(0.)
             .setStopTime(100.)
             .setPrecision(0.)
-            .setTimeOfEvent(10.)
             .setChosenOutputs(Set.of(OutputTypes.STEADYSTATE))
             .setTimeStep(2.6)
             .setStartingPointMode(StartingPointMode.WARM)
@@ -294,7 +289,6 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
         assertEquals(startTime, dynaFlowParameters.getStartTime(), 0.1d);
         assertEquals(stopTime, dynaFlowParameters.getStopTime(), 0.1d);
         assertEquals(precision, dynaFlowParameters.getPrecision(), 0.1d);
-        assertEquals(timeOfEvent, dynaFlowParameters.getTimeOfEvent(), 0.1d);
         assertThat(dynaFlowParameters.getChosenOutputs()).containsExactlyInAnyOrderElementsOf(chosenOutputs);
         assertEquals(timeStep, dynaFlowParameters.getTimeStep(), 0.1d);
         assertEquals(startingPointMode, dynaFlowParameters.getStartingPointMode());

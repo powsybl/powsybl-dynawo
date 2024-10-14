@@ -215,14 +215,6 @@
         "limit" : 13.386000000000001,
         "limitReduction" : 1.0,
         "value" : 13.377658087264606
-      }, {
-        "subjectId" : "_BUS____9_VL",
-        "subjectName" : "BUS    9_VL",
-        "limitType" : "LOW_VOLTAGE",
-        "limitName" : "UInfUmin",
-        "limit" : 13.386000000000001,
-        "limitReduction" : 1.0,
-        "value" : 13.384395964628164
       } ],
       "actionsTaken" : [ ]
     },

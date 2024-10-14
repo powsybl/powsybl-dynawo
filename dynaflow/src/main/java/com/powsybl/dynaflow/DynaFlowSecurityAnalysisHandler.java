@@ -106,15 +106,9 @@ public final class DynaFlowSecurityAnalysisHandler extends AbstractExecutionHand
     private static void writeParameters(SecurityAnalysisParameters securityAnalysisParameters, Path workingDir) throws IOException {
         // TODO(Luma) Take into account also Security Analysis parameters
         LoadFlowParameters loadFlowParameters = securityAnalysisParameters.getLoadFlowParameters();
-        DynaFlowParameters dynaFlowParameters = getParametersExt(loadFlowParameters);
-        DynaFlowConfigSerializer.serialize(loadFlowParameters, dynaFlowParameters, Path.of("."), workingDir.resolve(CONFIG_FILENAME));
-    }
-
-    private static DynaFlowParameters getParametersExt(LoadFlowParameters parameters) {
-        DynaFlowParameters parametersExt = parameters.getExtension(DynaFlowParameters.class);
-        if (parametersExt == null) {
-            parametersExt = new DynaFlowParameters();
-        }
-        return parametersExt;
+        DynaFlowParameters dynaFlowParameters = DynaFlowProvider.getParametersExt(loadFlowParameters);
+        DynaFlowSecurityAnalysisParameters dynaFlowSecurityAnalysisParameters = DynaFlowSecurityAnalysisProvider.getParametersExt(securityAnalysisParameters);
+        DynaFlowConfigSerializer.serialize(loadFlowParameters, dynaFlowParameters, dynaFlowSecurityAnalysisParameters,
+                Path.of("."), workingDir.resolve(CONFIG_FILENAME));
     }
 }
