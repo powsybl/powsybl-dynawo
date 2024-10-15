@@ -22,9 +22,9 @@ public class ModelConfigs {
     private static final Logger LOGGER = LoggerFactory.getLogger(ModelConfigs.class);
 
     private ModelConfig defaultModelConfig;
-    private final Map<String, ModelConfig> modelConfigMap;
+    private final SortedMap<String, ModelConfig> modelConfigMap;
 
-    ModelConfigs(Map<String, ModelConfig> modelConfigMap, String defaultModelConfigName) {
+    ModelConfigs(SortedMap<String, ModelConfig> modelConfigMap, String defaultModelConfigName) {
         this.modelConfigMap = Objects.requireNonNull(modelConfigMap);
         if (defaultModelConfigName != null) {
             this.defaultModelConfig = Objects.requireNonNull(modelConfigMap.get(defaultModelConfigName));
@@ -58,7 +58,6 @@ public class ModelConfigs {
     }
 
     void addModelConfigs(ModelConfigs modelConfigsToMerge) {
-        modelConfigMap.putAll(modelConfigsToMerge.modelConfigMap);
         if (hasDefaultModelConfig() && modelConfigsToMerge.hasDefaultModelConfig()) {
             LOGGER.warn("Default model configs {} & {} found, the first one will be kept",
                     defaultModelConfig.lib(),

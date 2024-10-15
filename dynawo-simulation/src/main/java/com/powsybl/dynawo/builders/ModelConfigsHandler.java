@@ -13,10 +13,7 @@ import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynamicsimulation.EventModel;
 import com.powsybl.iidm.network.Network;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.ServiceLoader;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -40,11 +37,18 @@ public final class ModelConfigsHandler {
                     return configs1;
                 })
         ));
-        builderConfigs = modelConfigLoaders.stream().flatMap(ModelConfigLoader::loadBuilderConfigs).toList();
+        builderConfigs = modelConfigLoaders.stream()
+                .flatMap(ModelConfigLoader::loadBuilderConfigs)
+                .sorted(Comparator.comparing(BuilderConfig::getCategory))
+                .toList();
         builderConfigs.forEach(bc -> modelConfigsCat.get(bc.getCategory()).getModelsName()
                 .forEach(lib -> builderConstructorByName.put(lib, bc.getBuilderConstructor())));
-        eventBuilderConfigs = modelConfigLoaders.stream().flatMap(ModelConfigLoader::loadEventBuilderConfigs).toList();
-        eventBuilderConstructorByName = eventBuilderConfigs.stream().collect(Collectors.toMap(e -> e.getEventModelInfo().name(), EventBuilderConfig::getBuilderConstructor));
+        eventBuilderConfigs = modelConfigLoaders.stream()
+                .flatMap(ModelConfigLoader::loadEventBuilderConfigs)
+                .sorted(Comparator.comparing(e -> e.getEventModelInfo().name()))
+                .toList();
+        eventBuilderConstructorByName = eventBuilderConfigs.stream()
+                .collect(Collectors.toMap(e -> e.getEventModelInfo().name(), EventBuilderConfig::getBuilderConstructor));
     }
 
     public static ModelConfigsHandler getInstance() {
