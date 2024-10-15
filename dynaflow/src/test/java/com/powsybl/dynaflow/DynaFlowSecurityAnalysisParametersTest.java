@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class DynaFlowSecurityAnalysisParametersTest extends AbstractSerDeTest {
+class DynaFlowSecurityAnalysisParametersTest extends AbstractSerDeTest {
 
     private InMemoryPlatformConfig platformConfig;
 

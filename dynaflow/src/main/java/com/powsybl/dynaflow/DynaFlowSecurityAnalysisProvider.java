@@ -98,6 +98,7 @@ public class DynaFlowSecurityAnalysisProvider implements SecurityAnalysisProvide
         return DYNAFLOW_NAME;
     }
 
+    @Override
     public Optional<String> getLoadFlowProviderName() {
         return Optional.of(DYNAFLOW_NAME);
     }
