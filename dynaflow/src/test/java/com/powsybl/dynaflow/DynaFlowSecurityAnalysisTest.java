@@ -35,6 +35,7 @@ import static com.powsybl.commons.test.ComparisonUtils.assertTxtEquals;
 import static com.powsybl.commons.test.ComparisonUtils.assertXmlEquals;
 import static com.powsybl.dynaflow.DynaFlowConstants.DYNAFLOW_NAME;
 import static com.powsybl.dynaflow.DynaFlowConstants.IIDM_FILENAME;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -134,6 +135,18 @@ class DynaFlowSecurityAnalysisTest extends AbstractSerDeTest {
                 .setComputationManager(new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool()));
         List<Contingency> contingencies = List.of();
         assertThrows(PowsyblException.class, () -> SecurityAnalysis.run(network, contingencies, runParameters));
+    }
+
+    @Test
+    void loadDynaflowParameters() {
+        DynaFlowSecurityAnalysisProvider provider = new DynaFlowSecurityAnalysisProvider();
+        Map<String, String> properties = Map.of("timeOfEvent", Double.toString(23d));
+        assertThat(provider.loadSpecificParameters(properties))
+                .isNotEmpty()
+                .get()
+                .isInstanceOf(DynaFlowSecurityAnalysisParameters.class)
+                .hasFieldOrPropertyWithValue("timeOfEvent", 23.);
+
     }
 
     private static Network buildNetwork() {

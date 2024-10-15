@@ -16,6 +16,9 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
@@ -39,5 +42,14 @@ class JsonDynaFlowSaParametersSerializerTest extends AbstractSerDeTest {
         SecurityAnalysisParameters parameters = SecurityAnalysisParameters.load(platformConfig);
         roundTripTest(parameters, JsonSecurityAnalysisParameters::write,
                 JsonSecurityAnalysisParameters::read, "/dynaflow_sa_default_serialization.json");
+    }
+
+    @Test
+    void update() {
+        SecurityAnalysisParameters parameters = SecurityAnalysisParameters.load();
+        JsonSecurityAnalysisParameters.update(parameters, getClass().getResourceAsStream("/dynaflow_sa_update.json"));
+        DynaFlowSecurityAnalysisParameters dynaFlowSaParameters = parameters.getExtension(DynaFlowSecurityAnalysisParameters.class);
+        assertNotNull(dynaFlowSaParameters);
+        assertEquals(14., dynaFlowSaParameters.getTimeOfEvent());
     }
 }
