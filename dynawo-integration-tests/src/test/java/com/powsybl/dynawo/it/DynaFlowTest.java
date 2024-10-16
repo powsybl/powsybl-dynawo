@@ -12,10 +12,7 @@ import com.powsybl.commons.datasource.ResourceSet;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.commons.test.TestUtil;
 import com.powsybl.contingency.Contingency;
-import com.powsybl.dynaflow.DynaFlowConfig;
-import com.powsybl.dynaflow.DynaFlowParameters;
-import com.powsybl.dynaflow.DynaFlowProvider;
-import com.powsybl.dynaflow.DynaFlowSecurityAnalysisProvider;
+import com.powsybl.dynaflow.*;
 import com.powsybl.ieeecdf.converter.IeeeCdfNetworkFactory;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.VariantManagerConstants;
@@ -58,12 +55,14 @@ class DynaFlowTest extends AbstractDynawoTest {
     @BeforeEach
     void setUp() throws Exception {
         super.setUp();
-        DynaFlowConfig config = new DynaFlowConfig(Path.of("/dynaflow-launcher"), false);
+        DynaFlowConfig config = new DynaFlowConfig(Path.of("/dynaflow-launcher"), true);
         loadFlowProvider = new DynaFlowProvider(() -> config);
         loadFlowParameters = new LoadFlowParameters();
         securityAnalysisProvider = new DynaFlowSecurityAnalysisProvider(() -> config);
         securityAnalysisParameters = new SecurityAnalysisParameters();
         loadFlowParameters.addExtension(DynaFlowParameters.class, new DynaFlowParameters());
+        securityAnalysisParameters.addExtension(DynaFlowSecurityAnalysisParameters.class,
+                new DynaFlowSecurityAnalysisParameters().setTimeOfEvent(15.));
     }
 
     @Test
