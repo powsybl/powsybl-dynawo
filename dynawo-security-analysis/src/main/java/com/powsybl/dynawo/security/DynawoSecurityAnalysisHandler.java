@@ -15,10 +15,8 @@ import com.powsybl.computation.CommandExecution;
 import com.powsybl.computation.ExecutionReport;
 import com.powsybl.dynaflow.ContingencyResultsUtils;
 import com.powsybl.dynawo.xml.DydXml;
-import com.powsybl.dynawo.xml.DynawoSimulationConstants;
 import com.powsybl.dynawo.xml.JobsXml;
 import com.powsybl.dynawo.xml.ParametersXml;
-import com.powsybl.dynawo.commons.DynawoConstants;
 import com.powsybl.dynawo.commons.DynawoUtil;
 import com.powsybl.dynawo.commons.NetworkResultsUpdater;
 import com.powsybl.dynawo.security.xml.ContingenciesDydXml;
@@ -39,10 +37,8 @@ import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 
-import static com.powsybl.dynaflow.SecurityAnalysisConstants.DYNAWO_CONSTRAINTS_FOLDER;
-import static com.powsybl.dynawo.DynawoSimulationConstants.FINAL_STATE_FOLDER;
-import static com.powsybl.dynawo.DynawoSimulationConstants.OUTPUTS_FOLDER;
-import static com.powsybl.dynawo.commons.DynawoConstants.DYNAWO_TIMELINE_FOLDER;
+import static com.powsybl.dynaflow.SecurityAnalysisConstants.CONSTRAINTS_FOLDER;
+import static com.powsybl.dynawo.commons.DynawoConstants.*;
 import static com.powsybl.dynawo.commons.DynawoUtil.getCommandExecutions;
 
 /**
@@ -71,7 +67,7 @@ public final class DynawoSecurityAnalysisHandler extends AbstractExecutionHandle
     @Override
     public List<CommandExecution> before(Path workingDir) throws IOException {
         network.getVariantManager().setWorkingVariant(context.getWorkingVariantId());
-        Path outputNetworkFile = workingDir.resolve(OUTPUTS_FOLDER).resolve(FINAL_STATE_FOLDER).resolve(DynawoConstants.OUTPUT_IIDM_FILENAME);
+        Path outputNetworkFile = workingDir.resolve(OUTPUT_IIDM_FILENAME_FULL_PATH);
         if (Files.exists(outputNetworkFile)) {
             Files.delete(outputNetworkFile);
         }
@@ -83,23 +79,23 @@ public final class DynawoSecurityAnalysisHandler extends AbstractExecutionHandle
     public SecurityAnalysisReport after(Path workingDir, ExecutionReport report) throws IOException {
         super.after(workingDir, report);
         context.getNetwork().getVariantManager().setWorkingVariant(context.getWorkingVariantId());
-        Path outputNetworkFile = workingDir.resolve(OUTPUTS_FOLDER).resolve(FINAL_STATE_FOLDER).resolve(DynawoConstants.OUTPUT_IIDM_FILENAME);
+        Path outputNetworkFile = workingDir.resolve(OUTPUT_IIDM_FILENAME_FULL_PATH);
         if (Files.exists(outputNetworkFile)) {
             NetworkResultsUpdater.update(context.getNetwork(), NetworkSerDe.read(outputNetworkFile), context.getDynawoSimulationParameters().isMergeLoads());
         }
-        ContingencyResultsUtils.reportContingenciesTimelines(context.getContingencies(), workingDir.resolve(DYNAWO_TIMELINE_FOLDER), reportNode);
+        ContingencyResultsUtils.reportContingenciesTimelines(context.getContingencies(), workingDir.resolve(TIMELINE_FOLDER), reportNode);
 
         return new SecurityAnalysisReport(
                 new SecurityAnalysisResult(
                         ContingencyResultsUtils.getPreContingencyResult(network, violationFilter),
-                        ContingencyResultsUtils.getPostContingencyResults(network, violationFilter, workingDir.resolve(DYNAWO_CONSTRAINTS_FOLDER), context.getContingencies()),
+                        ContingencyResultsUtils.getPostContingencyResults(network, violationFilter, workingDir.resolve(CONSTRAINTS_FOLDER), context.getContingencies()),
                         Collections.emptyList())
         );
     }
 
     private void writeInputFiles(Path workingDir) {
         try {
-            DynawoUtil.writeIidm(network, workingDir.resolve(DynawoSimulationConstants.NETWORK_FILENAME));
+            DynawoUtil.writeIidm(network, workingDir.resolve(NETWORK_FILENAME));
             JobsXml.write(workingDir, context);
             DydXml.write(workingDir, context);
             ParametersXml.write(workingDir, context);

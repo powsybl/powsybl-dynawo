@@ -10,7 +10,7 @@ package com.powsybl.dynawo.security.xml;
 import com.powsybl.contingency.Contingency;
 import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.security.SecurityAnalysisContext;
-import com.powsybl.dynawo.xml.DynawoSimulationConstants;
+import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.xml.DynawoTestUtil;
 import com.powsybl.security.dynamic.DynamicSecurityAnalysisParameters;
 import org.junit.jupiter.api.Test;

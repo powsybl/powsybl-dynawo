@@ -36,10 +36,10 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.powsybl.dynaflow.DynaFlowConstants.CONFIG_FILENAME;
-import static com.powsybl.dynaflow.DynaFlowConstants.IIDM_FILENAME;
 import static com.powsybl.dynaflow.SecurityAnalysisConstants.CONTINGENCIES_FILENAME;
-import static com.powsybl.dynaflow.SecurityAnalysisConstants.DYNAWO_CONSTRAINTS_FOLDER;
-import static com.powsybl.dynawo.commons.DynawoConstants.DYNAWO_TIMELINE_FOLDER;
+import static com.powsybl.dynaflow.SecurityAnalysisConstants.CONSTRAINTS_FOLDER;
+import static com.powsybl.dynawo.commons.DynawoConstants.NETWORK_FILENAME;
+import static com.powsybl.dynawo.commons.DynawoConstants.TIMELINE_FOLDER;
 import static com.powsybl.dynawo.commons.DynawoUtil.getCommandExecutions;
 
 /**
@@ -74,7 +74,7 @@ public final class DynaFlowSecurityAnalysisHandler extends AbstractExecutionHand
     public List<CommandExecution> before(Path workingDir) throws IOException {
         network.getVariantManager().setWorkingVariant(workingVariantId);
 
-        DynawoUtil.writeIidm(network, workingDir.resolve(IIDM_FILENAME));
+        DynawoUtil.writeIidm(network, workingDir.resolve(NETWORK_FILENAME));
         writeParameters(securityAnalysisParameters, workingDir);
         writeContingencies(contingencies, workingDir);
         return getCommandExecutions(command);
@@ -84,11 +84,11 @@ public final class DynaFlowSecurityAnalysisHandler extends AbstractExecutionHand
     public SecurityAnalysisReport after(Path workingDir, ExecutionReport report) throws IOException {
         super.after(workingDir, report);
         network.getVariantManager().setWorkingVariant(workingVariantId);
-        ContingencyResultsUtils.reportContingenciesTimelines(contingencies, workingDir.resolve(DYNAWO_TIMELINE_FOLDER), reportNode);
+        ContingencyResultsUtils.reportContingenciesTimelines(contingencies, workingDir.resolve(TIMELINE_FOLDER), reportNode);
         return new SecurityAnalysisReport(
                 new SecurityAnalysisResult(
                         ContingencyResultsUtils.getPreContingencyResult(network, violationFilter),
-                        ContingencyResultsUtils.getPostContingencyResults(network, violationFilter, workingDir.resolve(DYNAWO_CONSTRAINTS_FOLDER), contingencies),
+                        ContingencyResultsUtils.getPostContingencyResults(network, violationFilter, workingDir.resolve(CONSTRAINTS_FOLDER), contingencies),
                         Collections.emptyList())
         );
     }
