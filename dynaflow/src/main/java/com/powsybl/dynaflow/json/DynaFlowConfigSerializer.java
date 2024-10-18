@@ -102,7 +102,7 @@ public final class DynaFlowConfigSerializer {
 
     private static void serialize(DynaFlowSecurityAnalysisParameters saParameters, JsonGenerator jsonGenerator) throws IOException {
         jsonGenerator.writeObjectFieldStart("sa");
-        jsonGenerator.writeNumberField("TimeOfEvent", saParameters.getTimeOfEvent());
+        jsonGenerator.writeNumberField("TimeOfEvent", saParameters.getContingenciesStartTime());
         jsonGenerator.writeEndObject();
     }
 

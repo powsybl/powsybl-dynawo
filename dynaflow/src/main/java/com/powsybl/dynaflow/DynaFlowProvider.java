@@ -36,8 +36,6 @@ import static com.powsybl.dynaflow.DynaFlowConstants.*;
 @AutoService(LoadFlowProvider.class)
 public class DynaFlowProvider implements LoadFlowProvider {
 
-    public static final String MODULE_SPECIFIC_PARAMETERS = "dynaflow-default-parameters";
-
     private static final String WORKING_DIR_PREFIX = "dynaflow_";
 
     private final Supplier<DynaFlowConfig> configSupplier;

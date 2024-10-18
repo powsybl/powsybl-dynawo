@@ -140,12 +140,12 @@ class DynaFlowSecurityAnalysisTest extends AbstractSerDeTest {
     @Test
     void loadDynaflowParameters() {
         DynaFlowSecurityAnalysisProvider provider = new DynaFlowSecurityAnalysisProvider();
-        Map<String, String> properties = Map.of("timeOfEvent", Double.toString(23d));
+        Map<String, String> properties = Map.of("contingenciesStartTime", Double.toString(23d));
         assertThat(provider.loadSpecificParameters(properties))
                 .isNotEmpty()
                 .get()
                 .isInstanceOf(DynaFlowSecurityAnalysisParameters.class)
-                .hasFieldOrPropertyWithValue("timeOfEvent", 23.);
+                .hasFieldOrPropertyWithValue("contingenciesStartTime", 23.);
 
     }
 

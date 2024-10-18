@@ -29,7 +29,7 @@
   },
   "extensions" : {
     "DynaFlowSecurityAnalysisParameters" : {
-      "timeOfEvent" : 14.0
+      "contingenciesStartTime" : 14.0
     }
   }
 }

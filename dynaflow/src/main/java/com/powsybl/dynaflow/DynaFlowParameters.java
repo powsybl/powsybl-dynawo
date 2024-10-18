@@ -27,12 +27,12 @@ import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.powsybl.dynaflow.DynaFlowProvider.MODULE_SPECIFIC_PARAMETERS;
-
 /**
  * @author Guillaume Pernin {@literal <guillaume.pernin at rte-france.com>}
  */
 public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
+
+    public static final String MODULE_SPECIFIC_PARAMETERS = "dynaflow-default-parameters";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DynaFlowParameters.class);
     private static final String CHOSEN_OUTPUT_STRING_DELIMITER = ",";

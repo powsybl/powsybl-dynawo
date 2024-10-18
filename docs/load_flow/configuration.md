@@ -66,10 +66,6 @@ The default value is `100`.
 **(TODO: description)**  
 The default value is `Nan`.
 
-**timeOfEvent**  
-**(TODO: description)**  
-The default value is `10`.
-
 **chosenOutputs**  
 **(TODO: description)**   
 Available values **(TODO: describe them)**:
@@ -115,7 +111,6 @@ dynaflow-default-parameters:
     startTime: 0.0
     stopTime: 100.0
     precision: 1.0
-    timeOfEvent: 10.0
     chosenOutputs: [ "STEADYSTATE", "LOSTEQ", "TIMELINE", "CONSTRAINTS" ]
     timeStep: 2.6
     mergeLoads: true
@@ -141,9 +136,6 @@ Alternatively, you can provide parameters as a JSON file where supported
       "startTime" : 0.0,
       "stopTime" : 100.0,
       "precision" : 1.0,
-      "sa" : {
-        "timeOfEvent" : 10.0
-      },
       "chosenOutputs" : [ "STEADYSTATE", "LOSTEQ", "TIMELINE", "CONSTRAINTS" ],
       "timeStep" : 2.6,
       "mergeLoads" : true,

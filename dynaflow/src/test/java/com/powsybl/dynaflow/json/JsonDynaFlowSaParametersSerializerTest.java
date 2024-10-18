@@ -29,7 +29,7 @@ class JsonDynaFlowSaParametersSerializerTest extends AbstractSerDeTest {
         InMemoryPlatformConfig platformConfig = new InMemoryPlatformConfig(fileSystem);
         SecurityAnalysisParameters parameters = SecurityAnalysisParameters.load(platformConfig);
         DynaFlowSecurityAnalysisParameters params = new DynaFlowSecurityAnalysisParameters()
-                .setTimeOfEvent(23.);
+                .setContingenciesStartTime(23.);
         parameters.addExtension(DynaFlowSecurityAnalysisParameters.class, params);
 
         roundTripTest(parameters, JsonSecurityAnalysisParameters::write,
@@ -50,6 +50,6 @@ class JsonDynaFlowSaParametersSerializerTest extends AbstractSerDeTest {
         JsonSecurityAnalysisParameters.update(parameters, getClass().getResourceAsStream("/dynaflow_sa_update.json"));
         DynaFlowSecurityAnalysisParameters dynaFlowSaParameters = parameters.getExtension(DynaFlowSecurityAnalysisParameters.class);
         assertNotNull(dynaFlowSaParameters);
-        assertEquals(14., dynaFlowSaParameters.getTimeOfEvent());
+        assertEquals(14., dynaFlowSaParameters.getContingenciesStartTime());
     }
 }

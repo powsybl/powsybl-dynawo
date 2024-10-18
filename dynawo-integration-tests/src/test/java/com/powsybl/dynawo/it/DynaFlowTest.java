@@ -62,7 +62,7 @@ class DynaFlowTest extends AbstractDynawoTest {
         securityAnalysisParameters = new SecurityAnalysisParameters();
         loadFlowParameters.addExtension(DynaFlowParameters.class, new DynaFlowParameters());
         securityAnalysisParameters.addExtension(DynaFlowSecurityAnalysisParameters.class,
-                new DynaFlowSecurityAnalysisParameters().setTimeOfEvent(15.));
+                new DynaFlowSecurityAnalysisParameters().setContingenciesStartTime(15.));
     }
 
     @Test

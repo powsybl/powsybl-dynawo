@@ -41,7 +41,6 @@ import static com.powsybl.dynaflow.DynaFlowConstants.DYNAFLOW_NAME;
 @AutoService(SecurityAnalysisProvider.class)
 public class DynaFlowSecurityAnalysisProvider implements SecurityAnalysisProvider {
 
-    public static final String MODULE_SPECIFIC_PARAMETERS = "dynaflow-security-analysis-default-parameters";
     private static final Logger LOG = LoggerFactory.getLogger(DynaFlowSecurityAnalysisProvider.class);
     private static final String WORKING_DIR_PREFIX = "dynaflow_sa_";
     private final Supplier<DynaFlowConfig> configSupplier;

@@ -18,25 +18,25 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-import static com.powsybl.dynaflow.DynaFlowSecurityAnalysisProvider.MODULE_SPECIFIC_PARAMETERS;
-
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class DynaFlowSecurityAnalysisParameters extends AbstractExtension<SecurityAnalysisParameters> {
 
-    private static final double DEFAULT_TIME_OF_EVENT = 10d;
-    private static final String TIME_OF_EVENT = "timeOfEvent";
-    public static final List<String> SPECIFIC_PARAMETER_NAMES = List.of(TIME_OF_EVENT);
+    public static final String MODULE_SPECIFIC_PARAMETERS = "dynaflow-security-analysis-default-parameters";
 
-    private Double timeOfEvent = DEFAULT_TIME_OF_EVENT;
+    private static final double DEFAULT_CONTINGENCIES_START_TIME = 10d;
+    private static final String CONTINGENCIES_START_TIME = "contingenciesStartTime";
+    public static final List<String> SPECIFIC_PARAMETER_NAMES = List.of(CONTINGENCIES_START_TIME);
 
-    public Double getTimeOfEvent() {
-        return timeOfEvent;
+    private Double contingenciesStartTime = DEFAULT_CONTINGENCIES_START_TIME;
+
+    public Double getContingenciesStartTime() {
+        return contingenciesStartTime;
     }
 
-    public DynaFlowSecurityAnalysisParameters setTimeOfEvent(Double timeOfEvent) {
-        this.timeOfEvent = timeOfEvent;
+    public DynaFlowSecurityAnalysisParameters setContingenciesStartTime(Double contingenciesStartTime) {
+        this.contingenciesStartTime = contingenciesStartTime;
         return this;
     }
 
@@ -48,7 +48,7 @@ public class DynaFlowSecurityAnalysisParameters extends AbstractExtension<Securi
     @Override
     public String toString() {
         return MoreObjects.toStringHelper("").omitNullValues()
-                .add(TIME_OF_EVENT, timeOfEvent).toString();
+                .add(CONTINGENCIES_START_TIME, contingenciesStartTime).toString();
     }
 
     public static DynaFlowSecurityAnalysisParameters load(PlatformConfig platformConfig) {
@@ -74,11 +74,11 @@ public class DynaFlowSecurityAnalysisParameters extends AbstractExtension<Securi
     }
 
     private static void load(DynaFlowSecurityAnalysisParameters parameters, ModuleConfig config) {
-        config.getOptionalDoubleProperty(TIME_OF_EVENT).ifPresent(parameters::setTimeOfEvent);
+        config.getOptionalDoubleProperty(CONTINGENCIES_START_TIME).ifPresent(parameters::setContingenciesStartTime);
     }
 
     public void update(Map<String, String> properties) {
         Objects.requireNonNull(properties);
-        Optional.ofNullable(properties.get(TIME_OF_EVENT)).ifPresent(prop -> setTimeOfEvent(Double.parseDouble(prop)));
+        Optional.ofNullable(properties.get(CONTINGENCIES_START_TIME)).ifPresent(prop -> setContingenciesStartTime(Double.parseDouble(prop)));
     }
 }

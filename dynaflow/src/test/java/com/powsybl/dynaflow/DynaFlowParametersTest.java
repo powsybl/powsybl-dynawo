@@ -27,7 +27,7 @@ import java.nio.file.Path;
 import java.util.*;
 
 import static com.powsybl.commons.test.ComparisonUtils.assertTxtEquals;
-import static com.powsybl.dynaflow.DynaFlowProvider.MODULE_SPECIFIC_PARAMETERS;
+import static com.powsybl.dynaflow.DynaFlowParameters.MODULE_SPECIFIC_PARAMETERS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -64,7 +64,6 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
         double startTime = 0.;
         double stopTime = 100.;
         double precision = 15.45;
-        double timeOfEvent = 14.;
         List<String> chosenOutputs = List.of(OutputTypes.STEADYSTATE.name(), OutputTypes.TIMELINE.name());
         double timeStep = 0;
         StartingPointMode startingPointMode = StartingPointMode.FLAT;
@@ -81,7 +80,6 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
         moduleConfig.setStringProperty("startTime", Double.toString(startTime));
         moduleConfig.setStringProperty("stopTime", Double.toString(stopTime));
         moduleConfig.setStringProperty("precision", Double.toString(precision));
-        moduleConfig.setStringProperty("timeOfEvent", Double.toString(timeOfEvent));
         moduleConfig.setStringListProperty("chosenOutputs", chosenOutputs);
         moduleConfig.setStringProperty("timeStep", Double.toString(timeStep));
         moduleConfig.setStringProperty("startingPointMode", startingPointMode.getName());
@@ -144,7 +142,6 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
         double startTime = 0.;
         double stopTime = 100.;
         double precision = 15.45;
-        double timeOfEvent = 10.;
         List<String> chosenOutputs = Arrays.asList(OutputTypes.STEADYSTATE.name(), OutputTypes.TIMELINE.name());
         double timeStep = 0;
         StartingPointMode startingPointMode = StartingPointMode.WARM;
@@ -161,7 +158,6 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
         properties.put("startTime", Double.toString(startTime));
         properties.put("stopTime", Double.toString(stopTime));
         properties.put("precision", Double.toString(precision));
-        properties.put("timeOfEvent", Double.toString(timeOfEvent));
         properties.put("chosenOutputs", OutputTypes.STEADYSTATE.name() + "," + OutputTypes.TIMELINE.name());
         properties.put("timeStep", Double.toString(timeStep));
         properties.put("startingPointMode", startingPointMode.name());
@@ -254,7 +250,6 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
         double startTime = 0.;
         double stopTime = 100.;
         double precision = 15.45;
-        double timeOfEvent = 10.;
         Set<OutputTypes> chosenOutputs = Set.of(OutputTypes.STEADYSTATE, OutputTypes.TIMELINE);
         double timeStep = 0;
         StartingPointMode startingPointMode = StartingPointMode.WARM;
@@ -271,7 +266,6 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
         properties.put("startTime", Double.toString(startTime));
         properties.put("stopTime", Double.toString(stopTime));
         properties.put("precision", Double.toString(precision));
-        properties.put("timeOfEvent", Double.toString(timeOfEvent));
         properties.put("chosenOutputs", "STEADYSTATE, TIMELINE");
         properties.put("timeStep", Double.toString(timeStep));
         properties.put("startingPointMode", startingPointMode.getName());

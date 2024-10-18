@@ -25,7 +25,7 @@ import java.nio.file.Path;
 import java.util.Map;
 
 import static com.powsybl.commons.test.ComparisonUtils.assertTxtEquals;
-import static com.powsybl.dynaflow.DynaFlowSecurityAnalysisProvider.MODULE_SPECIFIC_PARAMETERS;
+import static com.powsybl.dynaflow.DynaFlowSecurityAnalysisParameters.MODULE_SPECIFIC_PARAMETERS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -51,18 +51,18 @@ class DynaFlowSecurityAnalysisParametersTest extends AbstractSerDeTest {
 
     @Test
     void checkParameters() {
-        double timeOfEvent = 24.;
+        double contingenciesStartTime = 24.;
         MapModuleConfig moduleConfig = platformConfig.createModuleConfig(MODULE_SPECIFIC_PARAMETERS);
-        moduleConfig.setStringProperty("timeOfEvent", Double.toString(timeOfEvent));
+        moduleConfig.setStringProperty("contingenciesStartTime", Double.toString(contingenciesStartTime));
         DynaFlowSecurityAnalysisParameters saParam = DynaFlowSecurityAnalysisParameters.load(moduleConfig);
-        assertEquals(timeOfEvent, saParam.getTimeOfEvent());
+        assertEquals(contingenciesStartTime, saParam.getContingenciesStartTime());
     }
 
     @Test
     void checkAllParametersAssignedToString() {
         DynaFlowSecurityAnalysisParameters saParam = new DynaFlowSecurityAnalysisParameters();
-        saParam.update(Map.of("timeOfEvent", Double.toString(23d)));
-        assertEquals("{timeOfEvent=23.0}", saParam.toString());
+        saParam.update(Map.of("contingenciesStartTime", Double.toString(23d)));
+        assertEquals("{contingenciesStartTime=23.0}", saParam.toString());
     }
 
     @Test
@@ -85,7 +85,7 @@ class DynaFlowSecurityAnalysisParametersTest extends AbstractSerDeTest {
     @Test
     void parametersSerialization() throws IOException {
         DynaFlowSecurityAnalysisParameters saParam = new DynaFlowSecurityAnalysisParameters()
-                .setTimeOfEvent(20d);
+                .setContingenciesStartTime(20d);
         Path workingDir = fileSystem.getPath("dynaflow_sa/workingDir");
         Path parameterFile = fileSystem.getPath(DynaFlowConstants.CONFIG_FILENAME);
         DynaFlowConfigSerializer.serialize(LoadFlowParameters.load(platformConfig),
