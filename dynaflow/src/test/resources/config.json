@@ -17,9 +17,6 @@
       "startTime" : 0.0,
       "stopTime" : 100.0,
       "precision" : 0.0,
-      "sa" : {
-        "timeOfEvent" : 10.0
-      },
       "chosenOutputs" : [ "STEADYSTATE", "TIMELINE" ],
       "timeStep" : 2.6,
       "startingPointMode" : "warm",

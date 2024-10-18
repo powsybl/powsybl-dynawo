@@ -35,7 +35,6 @@ class JsonDynaFlowParametersSerializerTest extends AbstractSerDeTest {
         double expectedStartTime = 0.;
         double expectedStopTime = 100.;
         double expectedPrecision = 0.;
-        double expectedTimeOfEvent = 10.;
         Set<DynaFlowConstants.OutputTypes> expectedChosenOutputs = Set.of(DynaFlowConstants.OutputTypes.STEADYSTATE, DynaFlowConstants.OutputTypes.TIMELINE);
         double expectedTimeStep = 2.6;
 
@@ -54,7 +53,6 @@ class JsonDynaFlowParametersSerializerTest extends AbstractSerDeTest {
         assertEquals(expectedStartTime, dynaFlowParameters.getStartTime(), 0.1d);
         assertEquals(expectedStopTime, dynaFlowParameters.getStopTime(), 0.1d);
         assertEquals(expectedPrecision, dynaFlowParameters.getPrecision(), 0.1d);
-        assertEquals(expectedTimeOfEvent, dynaFlowParameters.getTimeOfEvent(), 0.1d);
         assertThat(dynaFlowParameters.getChosenOutputs()).containsExactlyInAnyOrderElementsOf(expectedChosenOutputs);
         assertEquals(expectedTimeStep, dynaFlowParameters.getTimeStep(), 0.1d);
         assertEquals(DynaFlowConstants.StartingPointMode.WARM, dynaFlowParameters.getStartingPointMode());
@@ -83,7 +81,6 @@ class JsonDynaFlowParametersSerializerTest extends AbstractSerDeTest {
             .setStartTime(0.)
             .setStopTime(100.)
             .setPrecision(0.)
-            .setTimeOfEvent(10.)
             .setChosenOutputs(Set.of(DynaFlowConstants.OutputTypes.STEADYSTATE))
             .setTimeStep(2.6)
             .setStartingPointMode(DynaFlowConstants.StartingPointMode.WARM)

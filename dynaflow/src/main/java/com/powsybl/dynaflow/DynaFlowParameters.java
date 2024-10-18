@@ -6,8 +6,6 @@
  */
 package com.powsybl.dynaflow;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.core.JsonGenerator;
 import com.google.common.base.MoreObjects;
 import com.powsybl.commons.config.ModuleConfig;
 import com.powsybl.commons.config.PlatformConfig;
@@ -24,59 +22,19 @@ import de.vandermeer.asciitable.CWC_LongestWord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static com.powsybl.dynaflow.DynaFlowProvider.MODULE_SPECIFIC_PARAMETERS;
 
 /**
  * @author Guillaume Pernin {@literal <guillaume.pernin at rte-france.com>}
  */
 public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
 
+    public static final String MODULE_SPECIFIC_PARAMETERS = "dynaflow-default-parameters";
+
     private static final Logger LOGGER = LoggerFactory.getLogger(DynaFlowParameters.class);
-
-    /**
-     * Inner class dedicated to Security Analysis (SA) namespace
-     */
-    public static class Sa {
-        private static final String SECURITY_ANALYSIS = "sa"; //Security analysis
-        private static final double DEFAULT_TIME_OF_EVENT = 10d;
-        protected static final String TIME_OF_EVENT = "timeOfEvent";
-
-        private Double timeOfEvent = DEFAULT_TIME_OF_EVENT;
-
-        public Double getTimeOfEvent() {
-            return timeOfEvent;
-        }
-
-        public void setTimeOfEvent(Double timeOfEvent) {
-            this.timeOfEvent = timeOfEvent;
-        }
-
-        @Override
-        public String toString() {
-            return MoreObjects.toStringHelper("").omitNullValues()
-                    .add(TIME_OF_EVENT, timeOfEvent).toString();
-        }
-
-        public static void writeJson(JsonGenerator jsonGenerator, DynaFlowParameters dynaFlowParameters) throws IOException {
-            if (dynaFlowParameters.getSa().isSerializable()) {
-                jsonGenerator.writeObjectFieldStart("sa");
-                jsonGenerator.writeNumberField("TimeOfEvent", dynaFlowParameters.getTimeOfEvent());
-                jsonGenerator.writeEndObject();
-            }
-        }
-
-        @JsonIgnore
-        public boolean isSerializable() {
-            return timeOfEvent != null;
-        }
-    }
-
     private static final String CHOSEN_OUTPUT_STRING_DELIMITER = ",";
     private static final String SVC_REGULATION_ON = "svcRegulationOn";
     private static final String SHUNT_REGULATION_ON = "shuntRegulationOn";
@@ -122,7 +80,6 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
             new Parameter(START_TIME, ParameterType.DOUBLE, "Start time", DEFAULT_START_TIME),
             new Parameter(STOP_TIME, ParameterType.DOUBLE, "Stop time", DEFAULT_STOP_TIME),
             new Parameter(PRECISION_NAME, ParameterType.DOUBLE, "Precision", DEFAULT_PRECISION),
-            new Parameter(Sa.TIME_OF_EVENT, ParameterType.DOUBLE, "Time of event", Sa.DEFAULT_TIME_OF_EVENT),
             new Parameter(CHOSEN_OUTPUTS, ParameterType.STRING_LIST, "Chosen outputs", DEFAULT_CHOSEN_OUTPUTS.stream().map(OutputTypes::name).toList(), getEnumPossibleValues(OutputTypes.class), ParameterScope.TECHNICAL),
             new Parameter(TIME_STEP, ParameterType.DOUBLE, "Time step", DEFAULT_TIME_STEP),
             new Parameter(STARTING_POINT_MODE, ParameterType.STRING, "Starting point mode", DEFAULT_STARTING_POINT_MODE.name(), getEnumPossibleValues(StartingPointMode.class)),
@@ -138,7 +95,6 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
     private double startTime = DEFAULT_START_TIME;
     private double stopTime = DEFAULT_STOP_TIME;
     private Double precision = null;
-    private Sa securityAnalysis = null;
     private EnumSet<OutputTypes> chosenOutputs = DEFAULT_CHOSEN_OUTPUTS;
     private double timeStep = DEFAULT_TIME_STEP;
     private StartingPointMode startingPointMode = DEFAULT_STARTING_POINT_MODE;
@@ -234,19 +190,6 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         return this;
     }
 
-    @JsonIgnore
-    public Double getTimeOfEvent() {
-        return securityAnalysis == null ? null : securityAnalysis.getTimeOfEvent();
-    }
-
-    public DynaFlowParameters setTimeOfEvent(Double timeOfEvent) {
-        if (this.securityAnalysis == null) {
-            securityAnalysis = new Sa();
-        }
-        securityAnalysis.setTimeOfEvent(timeOfEvent);
-        return this;
-    }
-
     public Set<OutputTypes> getChosenOutputs() {
         return chosenOutputs;
     }
@@ -279,15 +222,6 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         return this;
     }
 
-    public Sa getSa() {
-        return this.securityAnalysis;
-    }
-
-    public DynaFlowParameters setSa(Sa securityAnalysis) {
-        this.securityAnalysis = securityAnalysis;
-        return this;
-    }
-
     public boolean isMergeLoads() {
         return mergeLoads;
     }
@@ -315,7 +249,6 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
                 .add(START_TIME, startTime)
                 .add(STOP_TIME, stopTime)
                 .add(PRECISION_NAME, precision)
-                .add(Sa.SECURITY_ANALYSIS, securityAnalysis)
                 .add(CHOSEN_OUTPUTS, chosenOutputs)
                 .add(TIME_STEP, timeStep)
                 .add(STARTING_POINT_MODE, startingPointMode)
@@ -326,10 +259,8 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
     public static DynaFlowParameters load(PlatformConfig platformConfig) {
         Objects.requireNonNull(platformConfig);
         DynaFlowParameters parameters = new DynaFlowParameters();
-
         platformConfig.getOptionalModuleConfig(MODULE_SPECIFIC_PARAMETERS)
                 .ifPresent(config -> load(parameters, config));
-
         return parameters;
     }
 
@@ -338,6 +269,12 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         if (config != null) {
             load(parameters, config);
         }
+        return parameters;
+    }
+
+    public static DynaFlowParameters load(Map<String, String> properties) {
+        DynaFlowParameters parameters = new DynaFlowParameters();
+        parameters.update(properties);
         return parameters;
     }
 
@@ -352,7 +289,6 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         config.getOptionalDoubleProperty(START_TIME).ifPresent(parameters::setStartTime);
         config.getOptionalDoubleProperty(STOP_TIME).ifPresent(parameters::setStopTime);
         config.getOptionalDoubleProperty(PRECISION_NAME).ifPresent(parameters::setPrecision);
-        config.getOptionalDoubleProperty(Sa.TIME_OF_EVENT).ifPresent(parameters::setTimeOfEvent);
         config.getOptionalEnumSetProperty(CHOSEN_OUTPUTS, OutputTypes.class).ifPresent(parameters::setChosenOutputs);
         config.getOptionalDoubleProperty(TIME_STEP).ifPresent(parameters::setTimeStep);
         config.getOptionalStringProperty(STARTING_POINT_MODE).map(StartingPointMode::fromString).ifPresent(parameters::setStartingPointMode);
@@ -390,12 +326,6 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         Optional.ofNullable(properties.get(START_TIME)).ifPresent(prop -> setStartTime(Double.parseDouble(prop)));
         Optional.ofNullable(properties.get(STOP_TIME)).ifPresent(prop -> setStopTime(Double.parseDouble(prop)));
         Optional.ofNullable(properties.get(PRECISION_NAME)).ifPresent(prop -> setPrecision(Double.parseDouble(prop)));
-        Optional.ofNullable(properties.get(Sa.TIME_OF_EVENT)).ifPresent(prop -> {
-            if (securityAnalysis == null) {
-                securityAnalysis = new Sa();
-            }
-            securityAnalysis.setTimeOfEvent(Double.parseDouble(prop));
-        });
         Optional.ofNullable(properties.get(CHOSEN_OUTPUTS)).ifPresent(prop ->
                 setChosenOutputs(Stream.of(prop.split(CHOSEN_OUTPUT_STRING_DELIMITER)).map(o -> OutputTypes.valueOf(o.trim())).collect(Collectors.toSet())));
         Optional.ofNullable(properties.get(TIME_STEP)).ifPresent(prop -> setTimeStep(Double.parseDouble(prop)));
@@ -417,7 +347,6 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         addNotNullEntry(START_TIME, startTime, parameters::put);
         addNotNullEntry(STOP_TIME, stopTime, parameters::put);
         addNotNullEntry(PRECISION_NAME, precision, parameters::put);
-        addNotNullEntry(Sa.TIME_OF_EVENT, getTimeOfEvent(), parameters::put);
         if (!chosenOutputs.isEmpty()) {
             parameters.put(CHOSEN_OUTPUTS, String.join(CHOSEN_OUTPUT_STRING_DELIMITER, chosenOutputs.stream().map(OutputTypes::name).toList()));
         }
@@ -431,11 +360,5 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         if (value != null) {
             adder.accept(key, Objects.toString(value));
         }
-    }
-
-    public static DynaFlowParameters load(Map<String, String> properties) {
-        DynaFlowParameters parameters = new DynaFlowParameters();
-        parameters.update(properties);
-        return parameters;
     }
 }

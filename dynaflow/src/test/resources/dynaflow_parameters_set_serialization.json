@@ -31,10 +31,7 @@
       "chosenOutputs" : [ "STEADYSTATE" ],
       "timeStep" : 2.6,
       "startingPointMode" : "warm",
-      "mergeLoads" : false,
-      "sa" : {
-        "timeOfEvent" : 10.0
-      }
+      "mergeLoads" : false
     }
   }
 }

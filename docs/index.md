@@ -8,6 +8,7 @@ Powsybl-dynawo is an interface between PowSyBl and [Dynaωo](https://dynawo.gith
 ```{toctree}
 :hidden:
 load_flow/index.md
+security_analysis/index.md
 dynamic_simulation/index.md
 dynamic_security_analysis/index.md
 ```
