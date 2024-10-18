@@ -10,6 +10,7 @@ import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
 import com.powsybl.commons.config.InMemoryPlatformConfig;
 import com.powsybl.commons.config.MapModuleConfig;
+import com.powsybl.commons.parameters.Parameter;
 import com.powsybl.commons.test.AbstractSerDeTest;
 import com.powsybl.dynaflow.DynaFlowConstants.ActivePowerCompensation;
 import com.powsybl.dynaflow.DynaFlowConstants.OutputTypes;
@@ -126,6 +127,16 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
         assertEquals(10d, parametersExt.getTimeStep());
         assertEquals(StartingPointMode.WARM, parametersExt.getStartingPointMode());
         assertTrue(parametersExt.isMergeLoads());
+    }
+
+    @Test
+    void testConfigSpecificParameters() {
+        MapModuleConfig moduleConfig = platformConfig.createModuleConfig(MODULE_SPECIFIC_PARAMETERS);
+        moduleConfig.setStringProperty("svcRegulationOn", "false");
+
+        List<Parameter> parameters = new DynaFlowProvider().getSpecificParameters(platformConfig);
+
+        assertEquals(false, parameters.get(0).getDefaultValue());
     }
 
     @Test
