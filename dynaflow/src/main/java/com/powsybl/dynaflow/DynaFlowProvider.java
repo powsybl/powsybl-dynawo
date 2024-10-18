@@ -138,7 +138,7 @@ public class DynaFlowProvider implements LoadFlowProvider {
 
     @Override
     public Optional<ModuleConfig> getModuleConfig(PlatformConfig platformConfig) {
-        return platformConfig.getOptionalModuleConfig(MODULE_SPECIFIC_PARAMETERS);
+        return platformConfig.getOptionalModuleConfig(DynaFlowParameters.MODULE_SPECIFIC_PARAMETERS);
     }
 
     @Override
