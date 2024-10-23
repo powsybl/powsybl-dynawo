@@ -29,16 +29,13 @@ import com.powsybl.dynawo.models.transformers.TransformerFixedRatioBuilder;
 import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.dynawo.xml.ParametersXml;
 import com.powsybl.iidm.network.Network;
-import com.powsybl.iidm.network.TwoSides;
 import com.powsybl.iidm.network.VariantManagerConstants;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
-import com.powsybl.iidm.network.test.HvdcTestNetwork;
 import com.powsybl.iidm.network.test.ShuntTestCaseFactory;
 import com.powsybl.iidm.network.test.SvcTestCaseFactory;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -48,12 +45,9 @@ import java.io.StringWriter;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.function.BiFunction;
-import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-import static com.powsybl.commons.report.ReportNode.NO_OP;
 import static com.powsybl.dynawo.builders.VersionBound.MODEL_DEFAULT_MIN_VERSION;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -61,13 +55,33 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @Disabled
 public class ModelsTest extends AbstractDynawoTest {
 
-    private static final Network smib = Network.read(new ResourceDataSource("SMIB", new ResourceSet("/smib", "SMIB.iidm")));
-    private static final Network eurostag = EurostagTutorialExample1Factory.create();
-    private static final Network hvdc = Network.read(new ResourceDataSource("HvdcPowerTransfer", new ResourceSet("/hvdc", "HvdcPowerTransfer.iidm")));
+    private static final Network SMIB = Network.read(new ResourceDataSource("SMIB", new ResourceSet("/smib", "SMIB.iidm")));
+    private static final Network EUROSTAG = EurostagTutorialExample1Factory.create();
+    private static final Network HVDC = Network.read(new ResourceDataSource("HvdcPowerTransfer", new ResourceSet("/hvdc", "HvdcPowerTransfer.iidm")));
+    //TODO remove skipped model list when fixed (see issue #400)
+    private static final List<String> SKIPPED_MODELS = List.of(
+            "GeneratorPQPropSignalN",
+            "GeneratorPQPropDiagramPQSignalN",
+            "GeneratorPVRemoteSignalN",
+            "GeneratorPVRemoteDiagramPQSignalN",
+            "StaticVarCompensatorPVRemote",
+            "StaticVarCompensatorPVPropRemote",
+            "StaticVarCompensatorPVRemoteModeHandling",
+            "StaticVarCompensatorPVPropRemoteModeHandling",
+            "HvdcPQProp",
+            "HvdcPQPropDangling",
+            "HvdcPQPropDanglingDiagramPQ",
+            "HvdcPQPropDiagramPQ",
+            "HvdcPQPropDiagramPQEmulation",
+            "HvdcPQPropDiagramPQEmulationSet",
+            "HvdcPQPropDiagramPQEmulationVariableK",
+            "HvdcPQPropEmulation",
+            "HvdcPQPropEmulationSet",
+            "HvdcPQPropEmulationVariableK"
+    );
 
     private DynamicSimulationProvider provider;
     private DynamicSimulationParameters parameters;
-    private DynawoSimulationParameters dynawoSimulationParameters;
 
     @BeforeEach
     void setup() {
@@ -75,7 +89,7 @@ public class ModelsTest extends AbstractDynawoTest {
         parameters = new DynamicSimulationParameters()
                 .setStartTime(0)
                 .setStopTime(1);
-        dynawoSimulationParameters = new DynawoSimulationParameters();
+        DynawoSimulationParameters dynawoSimulationParameters = new DynawoSimulationParameters();
         parameters.addExtension(DynawoSimulationParameters.class, dynawoSimulationParameters);
         List<ParametersSet> modelsParameters = ParametersXml.load(getResourceAsStream("/models/models.par"));
         ParametersSet networkParameters = ParametersXml.load(getResourceAsStream("/smib/network.par"), "8");
@@ -88,10 +102,10 @@ public class ModelsTest extends AbstractDynawoTest {
 
     @MethodSource("dynamicModelBuilderProvider")
     @ParameterizedTest
-    void testDynamicModel(Network network, Collection<ModelInfo> models, BiFunction<Network, String, List<DynamicModel>> dynamicModelSupplier) throws IOException {
+    void testDynamicModel(Network network, Collection<ModelInfo> models, BiFunction<Network, String, List<DynamicModel>> dynamicModelSupplier) {
         SoftAssertions assertions = new SoftAssertions();
         StringBuilder sb = new StringBuilder();
-        for(ModelInfo modelInfo : models) {
+        for(ModelInfo modelInfo : models.stream().filter(m -> !SKIPPED_MODELS.contains(m.name())).toList()) {
             ReportNode reportNode = ReportNode.newRootReportNode().withMessageTemplate("modelTest", "Model test").build();
             provider.run(network, (n, r) -> dynamicModelSupplier.apply(n, modelInfo.name()), EventModelsSupplier.empty(),
                             CurvesSupplier.empty(), VariantManagerConstants.INITIAL_VARIANT_ID, computationManager,
@@ -128,211 +142,209 @@ public class ModelsTest extends AbstractDynawoTest {
     private static Stream<Arguments> dynamicModelBuilderProvider() {
         return Stream.of(
                 Arguments.of(
-                        smib,
+                        SMIB,
                         GeneratorFictitiousBuilder.getSupportedModelInfos(MODEL_DEFAULT_MIN_VERSION),
                         (BiFunction<Network, String, List<DynamicModel>>) (n, m) ->  List.of(GeneratorFictitiousBuilder.of(n, m)
                                 .staticId("SM")
                                 .parameterSetId("BaseGenerator")
                                 .build())
+                ),
+                Arguments.of(
+                        SMIB,
+                        SynchronizedGeneratorBuilder.getSupportedModelInfos(MODEL_DEFAULT_MIN_VERSION),
+                        (BiFunction<Network, String, List<DynamicModel>>) (n, m) ->  List.of(SynchronizedGeneratorBuilder.of(n, m)
+                                .staticId("SM")
+                                .parameterSetId("SynchronizedGenerator")
+                                .build())
+                ),
+                Arguments.of(
+                        SMIB,
+                        SynchronousGeneratorBuilder.getSupportedModelInfos(MODEL_DEFAULT_MIN_VERSION),
+                        (BiFunction<Network, String, List<DynamicModel>>) (n, m) ->  List.of(SynchronousGeneratorBuilder.of(n, m)
+                                .staticId("SM")
+                                .parameterSetId("SynchronousGenerator")
+                                .build())
+                ),
+                Arguments.of(
+                        SMIB,
+                        WeccBuilder.getSupportedModelInfos(MODEL_DEFAULT_MIN_VERSION),
+                        (BiFunction<Network, String, List<DynamicModel>>) (n, m) ->  List.of(WeccBuilder.of(n, m)
+                                .staticId("SM")
+                                .parameterSetId("GridForming")
+                                .build())
+                ),
+                Arguments.of(
+                        SMIB,
+                        GridFormingConverterBuilder.getSupportedModelInfos(MODEL_DEFAULT_MIN_VERSION),
+                        (BiFunction<Network, String, List<DynamicModel>>) (n, m) ->  List.of(GridFormingConverterBuilder.of(n, m)
+                                .staticId("SM")
+                                .parameterSetId("GridForming")
+                                .build())
+                ),
+                Arguments.of(
+                        SMIB,
+                         SignalNGeneratorBuilder.getSupportedModelInfos(MODEL_DEFAULT_MIN_VERSION),
+                         (BiFunction<Network, String, List<DynamicModel>>) (n, m) ->  List.of(SignalNGeneratorBuilder.of(n, m)
+                                  .staticId("SM")
+                                  .parameterSetId("GeneratorPVSignalN")
+                                  .build())
+                ),
+                Arguments.of(
+                        SMIB,
+                        StandardBusBuilder.getSupportedModelInfos(MODEL_DEFAULT_MIN_VERSION),
+                        (BiFunction<Network, String, List<DynamicModel>>) (n, m) ->  List.of(
+                                StandardBusBuilder.of(n, m)
+                                    .staticId("VL1_BUS1")
+                                    .parameterSetId("Bus")
+                                    .build(),
+                                StandardBusBuilder.of(n)
+                                        .staticId("VL2_BUS1")
+                                        .parameterSetId("Bus")
+                                        .build(),
+                                StandardBusBuilder.of(n)
+                                        .staticId("VL3_BUS1")
+                                        .parameterSetId("Bus")
+                                        .build(),
+                                LineBuilder.of(n)
+                                        .staticId("line1")
+                                        .parameterSetId("Line")
+                                        .build(),
+                                LineBuilder.of(n)
+                                        .staticId("line2")
+                                        .parameterSetId("Line")
+                                        .build(),
+                                TransformerFixedRatioBuilder.of(n)
+                                        .staticId("TR")
+                                        .parameterSetId("Transformer")
+                                        .build(),
+                                GeneratorFictitiousBuilder.of(n)
+                                        .staticId("SM")
+                                        .parameterSetId("BaseGenerator")
+                                        .build())
+                ),
+                Arguments.of(
+                        SMIB,
+                        InfiniteBusBuilder.getSupportedModelInfos(MODEL_DEFAULT_MIN_VERSION),
+                        (BiFunction<Network, String, List<DynamicModel>>) (n, m) ->  List.of(
+                                InfiniteBusBuilder.of(n, m)
+                                        .staticId("VL1_BUS1")
+                                        .parameterSetId("Bus")
+                                        .build(),
+                                StandardBusBuilder.of(n)
+                                        .staticId("VL2_BUS1")
+                                        .parameterSetId("Bus")
+                                        .build(),
+                                StandardBusBuilder.of(n)
+                                        .staticId("VL3_BUS1")
+                                        .parameterSetId("Bus")
+                                        .build(),
+                                LineBuilder.of(n)
+                                        .staticId("line1")
+                                        .parameterSetId("Line")
+                                        .build(),
+                                LineBuilder.of(n)
+                                        .staticId("line2")
+                                        .parameterSetId("Line")
+                                        .build(),
+                                TransformerFixedRatioBuilder.of(n)
+                                        .staticId("TR")
+                                        .parameterSetId("Transformer")
+                                        .build(),
+                                GeneratorFictitiousBuilder.of(n)
+                                        .staticId("SM")
+                                        .parameterSetId("BaseGenerator")
+                                        .build())
+                ),
+                Arguments.of(
+                        EUROSTAG,
+                        BaseLoadBuilder.getSupportedModelInfos(MODEL_DEFAULT_MIN_VERSION),
+                        (BiFunction<Network, String, List<DynamicModel>>) (n, m) -> List.of(BaseLoadBuilder.of(n, m)
+                                .staticId("LOAD")
+                                .parameterSetId("LAB")
+                                .build())
+                ),
+                Arguments.of(
+                        EUROSTAG,
+                        LoadOneTransformerBuilder.getSupportedModelInfos(MODEL_DEFAULT_MIN_VERSION),
+                        (BiFunction<Network, String, List<DynamicModel>>) (n, m) -> List.of(LoadOneTransformerBuilder.of(n, m)
+                                .staticId("LOAD")
+                                .parameterSetId("LAB")
+                                .build())
+                ),
+                Arguments.of(
+                        EUROSTAG,
+                        LoadOneTransformerTapChangerBuilder.getSupportedModelInfos(MODEL_DEFAULT_MIN_VERSION),
+                        (BiFunction<Network, String, List<DynamicModel>>) (n, m) -> List.of(LoadOneTransformerTapChangerBuilder.of(n, m)
+                                .staticId("LOAD")
+                                .parameterSetId("LAB")
+                                .build())
+                ),
+                Arguments.of(
+                        EUROSTAG,
+                        LoadTwoTransformersBuilder.getSupportedModelInfos(MODEL_DEFAULT_MIN_VERSION),
+                        (BiFunction<Network, String, List<DynamicModel>>) (n, m) -> List.of(LoadTwoTransformersBuilder.of(n, m)
+                                .staticId("LOAD")
+                                .parameterSetId("LAB")
+                                .build())
+                ),
+                Arguments.of(
+                        EUROSTAG,
+                        LoadTwoTransformersTapChangersBuilder.getSupportedModelInfos(MODEL_DEFAULT_MIN_VERSION),
+                        (BiFunction<Network, String, List<DynamicModel>>) (n, m) -> List.of(LoadTwoTransformersTapChangersBuilder.of(n, m)
+                                .staticId("LOAD")
+                                .parameterSetId("LAB")
+                                .build())
+                ),
+                Arguments.of(
+                        SMIB,
+                        LineBuilder.getSupportedModelInfos(MODEL_DEFAULT_MIN_VERSION),
+                        (BiFunction<Network, String, List<DynamicModel>>) (n, m) ->  List.of(
+                                LineBuilder.of(n,m)
+                                        .staticId("line1")
+                                        .parameterSetId("Line")
+                                        .build())
+                ),
+                Arguments.of(
+                        EUROSTAG,
+                        TransformerFixedRatioBuilder.getSupportedModelInfos(MODEL_DEFAULT_MIN_VERSION),
+                        (BiFunction<Network, String, List<DynamicModel>>) (n, m) ->  List.of(
+                                TransformerFixedRatioBuilder.of(n,m)
+                                        .staticId("NGEN_NHV1")
+                                        .parameterSetId("Transformer")
+                                        .build())
+                ),
+                Arguments.of(
+                        ShuntTestCaseFactory.create(),
+                        BaseShuntBuilder.getSupportedModelInfos(VersionBound.MODEL_DEFAULT_MIN_VERSION),
+                        (BiFunction<Network, String, List<DynamicModel>>) (n, m) -> List.of(BaseShuntBuilder.of(n, m)
+                                .staticId("SHUNT")
+                                .parameterSetId("Shunt")
+                                .build())
+                ),
+                Arguments.of(
+                        SvcTestCaseFactory.create(),
+                        BaseStaticVarCompensatorBuilder.getSupportedModelInfos(VersionBound.MODEL_DEFAULT_MIN_VERSION),
+                        (BiFunction<Network, String, List<DynamicModel>>) (n, m) -> List.of(BaseStaticVarCompensatorBuilder.of(n, m)
+                                .staticId("SVC2")
+                                .parameterSetId("SvarC")
+                                .build())
+                ),
+                Arguments.of(
+                        HVDC,
+                        HvdcPBuilder.getSupportedModelInfos(VersionBound.MODEL_DEFAULT_MIN_VERSION),
+                        (BiFunction<Network, String, List<DynamicModel>>) (n, m) ->  List.of(HvdcPBuilder.of(n, m)
+                                    .staticId("HVDC1")
+                                    .parameterSetId("Hvdc")
+                                    .build())
+                ),
+                Arguments.of(
+                        HVDC,
+                        HvdcVscBuilder.getSupportedModelInfos(VersionBound.MODEL_DEFAULT_MIN_VERSION),
+                        (BiFunction<Network, String, List<DynamicModel>>) (n, m) -> List.of(HvdcVscBuilder.of(n, m)
+                                    .staticId("HVDC1")
+                                    .parameterSetId("Hvdc")
+                                    .build())
                 )
-//                Arguments.of(
-//                        smib,
-//                        SynchronizedGeneratorBuilder.getSupportedModelInfos(MODEL_DEFAULT_MIN_VERSION),
-//                        (BiFunction<Network, String, List<DynamicModel>>) (n, m) ->  List.of(SynchronizedGeneratorBuilder.of(n, m)
-//                                .staticId("SM")
-//                                .parameterSetId("SynchronizedGenerator")
-//                                .build())
-//                )
-//                Arguments.of(
-//                        smib,
-//                        SynchronousGeneratorBuilder.getSupportedModelInfos(MODEL_DEFAULT_MIN_VERSION),
-//                        (BiFunction<Network, String, List<DynamicModel>>) (n, m) ->  List.of(SynchronousGeneratorBuilder.of(n, m)
-//                                .staticId("SM")
-//                                .parameterSetId("SynchronousGenerator")
-//                                .build())
-//                ),
-//                Arguments.of(
-//                        smib,
-//                        WeccBuilder.getSupportedModelInfos(MODEL_DEFAULT_MIN_VERSION),
-//                        (BiFunction<Network, String, List<DynamicModel>>) (n, m) ->  List.of(WeccBuilder.of(n, m)
-//                                .staticId("SM")
-//                                .parameterSetId("GridForming")
-//                                .build())
-//                ),
-//                Arguments.of(
-//                        smib,
-//                        GridFormingConverterBuilder.getSupportedModelInfos(MODEL_DEFAULT_MIN_VERSION),
-//                        (BiFunction<Network, String, List<DynamicModel>>) (n, m) ->  List.of(GridFormingConverterBuilder.of(n, m)
-//                                .staticId("SM")
-//                                .parameterSetId("GridForming")
-//                                .build())
-//                ),
-//                Arguments.of(
-//                         smib,
-//                         SignalNGeneratorBuilder.getSupportedModelInfos(MODEL_DEFAULT_MIN_VERSION),
-//                         (BiFunction<Network, String, List<DynamicModel>>) (n, m) ->  List.of(SignalNGeneratorBuilder.of(n, m)
-//                                  .staticId("SM")
-//                                  .parameterSetId("GeneratorPVSignalN")
-//                                  .build())
-//                ),
-//                Arguments.of(
-//                        smib,
-//                        StandardBusBuilder.getSupportedModelInfos(MODEL_DEFAULT_MIN_VERSION),
-//                        (BiFunction<Network, String, List<DynamicModel>>) (n, m) ->  List.of(
-//                                StandardBusBuilder.of(n, m)
-//                                    .staticId("VL1_BUS1")
-//                                    .parameterSetId("Bus")
-//                                    .build(),
-//                                StandardBusBuilder.of(n)
-//                                        .staticId("VL2_BUS1")
-//                                        .parameterSetId("Bus")
-//                                        .build(),
-//                                StandardBusBuilder.of(n)
-//                                        .staticId("VL3_BUS1")
-//                                        .parameterSetId("Bus")
-//                                        .build(),
-//                                LineBuilder.of(n)
-//                                        .staticId("line1")
-//                                        .parameterSetId("Line")
-//                                        .build(),
-//                                LineBuilder.of(n)
-//                                        .staticId("line2")
-//                                        .parameterSetId("Line")
-//                                        .build(),
-//                                TransformerFixedRatioBuilder.of(n)
-//                                        .staticId("TR")
-//                                        .parameterSetId("Transformer")
-//                                        .build(),
-//                                GeneratorFictitiousBuilder.of(n)
-//                                        .staticId("SM")
-//                                        .parameterSetId("BaseGenerator")
-//                                        .build())
-//                ),
-//                Arguments.of(
-//                        smib,
-//                        InfiniteBusBuilder.getSupportedModelInfos(MODEL_DEFAULT_MIN_VERSION),
-//                        (BiFunction<Network, String, List<DynamicModel>>) (n, m) ->  List.of(
-//                                InfiniteBusBuilder.of(n, m)
-//                                        .staticId("VL1_BUS1")
-//                                        .parameterSetId("Bus")
-//                                        .build(),
-//                                StandardBusBuilder.of(n)
-//                                        .staticId("VL2_BUS1")
-//                                        .parameterSetId("Bus")
-//                                        .build(),
-//                                StandardBusBuilder.of(n)
-//                                        .staticId("VL3_BUS1")
-//                                        .parameterSetId("Bus")
-//                                        .build(),
-//                                LineBuilder.of(n)
-//                                        .staticId("line1")
-//                                        .parameterSetId("Line")
-//                                        .build(),
-//                                LineBuilder.of(n)
-//                                        .staticId("line2")
-//                                        .parameterSetId("Line")
-//                                        .build(),
-//                                TransformerFixedRatioBuilder.of(n)
-//                                        .staticId("TR")
-//                                        .parameterSetId("Transformer")
-//                                        .build(),
-//                                GeneratorFictitiousBuilder.of(n)
-//                                        .staticId("SM")
-//                                        .parameterSetId("BaseGenerator")
-//                                        .build())
-//                )
-//                Arguments.of(
-//                        eurostag,
-//                        BaseLoadBuilder.getSupportedModelInfos(MODEL_DEFAULT_MIN_VERSION),
-//                        (BiFunction<Network, String, List<DynamicModel>>) (n, m) -> List.of(BaseLoadBuilder.of(n, m)
-//                                .staticId("LOAD")
-//                                .parameterSetId("LAB")
-//                                .build())
-//                ),
-//                Arguments.of(
-//                        eurostag,
-//                        LoadOneTransformerBuilder.getSupportedModelInfos(MODEL_DEFAULT_MIN_VERSION),
-//                        (BiFunction<Network, String, List<DynamicModel>>) (n, m) -> List.of(LoadOneTransformerBuilder.of(n, m)
-//                                .staticId("LOAD")
-//                                .parameterSetId("LAB")
-//                                .build())
-//                ),
-//                Arguments.of(
-//                        eurostag,
-//                        LoadOneTransformerTapChangerBuilder.getSupportedModelInfos(MODEL_DEFAULT_MIN_VERSION),
-//                        (BiFunction<Network, String, List<DynamicModel>>) (n, m) -> List.of(LoadOneTransformerTapChangerBuilder.of(n, m)
-//                                .staticId("LOAD")
-//                                .parameterSetId("LAB")
-//                                .build())
-//                ),
-//                Arguments.of(
-//                        eurostag,
-//                        LoadTwoTransformersBuilder.getSupportedModelInfos(MODEL_DEFAULT_MIN_VERSION),
-//                        (BiFunction<Network, String, List<DynamicModel>>) (n, m) -> List.of(LoadTwoTransformersBuilder.of(n, m)
-//                                .staticId("LOAD")
-//                                .parameterSetId("LAB")
-//                                .build())
-//                ),
-//                Arguments.of(
-//                        eurostag,
-//                        LoadTwoTransformersTapChangersBuilder.getSupportedModelInfos(MODEL_DEFAULT_MIN_VERSION),
-//                        (BiFunction<Network, String, List<DynamicModel>>) (n, m) -> List.of(LoadTwoTransformersTapChangersBuilder.of(n, m)
-//                                .staticId("LOAD")
-//                                .parameterSetId("LAB")
-//                                .build())
-//                )
-//                Arguments.of(
-//                        smib,
-//                        LineBuilder.getSupportedModelInfos(MODEL_DEFAULT_MIN_VERSION),
-//                        (BiFunction<Network, String, List<DynamicModel>>) (n, m) ->  List.of(
-//                                LineBuilder.of(n,m)
-//                                        .staticId("line1")
-//                                        .parameterSetId("Line")
-//                                        .build())
-//                ),
-//                Arguments.of(
-//                        eurostag,
-//                        TransformerFixedRatioBuilder.getSupportedModelInfos(MODEL_DEFAULT_MIN_VERSION),
-//                        (BiFunction<Network, String, List<DynamicModel>>) (n, m) ->  List.of(
-//                                TransformerFixedRatioBuilder.of(n,m)
-//                                        .staticId("NGEN_NHV1")
-//                                        .parameterSetId("Transformer")
-//                                        .build())
-//                )
-//                Arguments.of(
-//                        ShuntTestCaseFactory.create(),
-//                        BaseShuntBuilder.getSupportedModelInfos(VersionBound.MODEL_DEFAULT_MIN_VERSION),
-//                        (BiFunction<Network, String, List<DynamicModel>>) (n, m) -> List.of(BaseShuntBuilder.of(n, m)
-//                                .staticId("SHUNT")
-//                                .parameterSetId("Shunt")
-//                                .build())
-//                ),
-//                Arguments.of(
-//                        hvdc,
-//                        HvdcPBuilder.getSupportedModelInfos(VersionBound.MODEL_DEFAULT_MIN_VERSION),
-//                        (BiFunction<Network, String, List<DynamicModel>>) (n, m) ->  {
-//                            HvdcPBuilder builder = HvdcPBuilder.of(n, m)
-//                                    .staticId("HVDC1")
-//                                    .parameterSetId("Hvdc");
-//                            if (m.contains("Dangling")) {
-//                                builder.dangling(TwoSides.ONE);
-//                            }
-//                            return List.of(builder.build());
-//                        }
-//                ),
-//                Arguments.of(
-//                        hvdc,
-//                        HvdcVscBuilder.getSupportedModelInfos(VersionBound.MODEL_DEFAULT_MIN_VERSION),
-//                        (BiFunction<Network, String, List<DynamicModel>>) (n, m) -> {
-//                            HvdcVscBuilder builder = HvdcVscBuilder.of(n, m)
-//                                    .staticId("HVDC1")
-//                                    .parameterSetId("Hvdc");
-//                            if (m.contains("Dangling")) {
-//                                builder.dangling(TwoSides.ONE);
-//                            }
-//                            return List.of(builder.build());
-//                        }
-//                )
         );
     }
 }
