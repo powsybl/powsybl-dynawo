@@ -43,6 +43,10 @@ public class WeccBuilder extends AbstractGeneratorBuilder<WeccBuilder> {
         return new WeccBuilder(network, modelConfig, reportNode);
     }
 
+    public static ModelInfo getDefaultModelInfo() {
+        return MODEL_CONFIGS.getDefaultModelConfig();
+    }
+
     public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();
     }
