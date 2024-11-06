@@ -43,6 +43,10 @@ public class PhaseShifterPAutomationSystemBuilder extends AbstractPhaseShifterMo
         return new PhaseShifterPAutomationSystemBuilder(network, modelConfig, reportNode);
     }
 
+    public static ModelInfo getDefaultModelInfo() {
+        return MODEL_CONFIGS.getDefaultModelConfig();
+    }
+
     public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();
     }

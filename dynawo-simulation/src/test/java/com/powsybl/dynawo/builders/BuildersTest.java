@@ -17,6 +17,9 @@ import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterIAu
 import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterPAutomationSystemBuilder;
 import com.powsybl.dynawo.models.buses.InfiniteBusBuilder;
 import com.powsybl.dynawo.models.buses.StandardBusBuilder;
+import com.powsybl.dynawo.models.events.EventActivePowerVariationBuilder;
+import com.powsybl.dynawo.models.events.EventDisconnectionBuilder;
+import com.powsybl.dynawo.models.events.NodeFaultEventBuilder;
 import com.powsybl.dynawo.models.generators.*;
 import com.powsybl.dynawo.models.hvdc.HvdcPBuilder;
 import com.powsybl.dynawo.models.hvdc.HvdcVscBuilder;
@@ -84,14 +87,46 @@ class BuildersTest {
     }
 
     @Test
-    void testWrongLibAutomationSystem() {
-        assertNull(UnderVoltageAutomationSystemBuilder.of(NETWORK).build());
-        assertNull(TapChangerBlockingAutomationSystemBuilder.of(NETWORK).build());
-        assertNull(TapChangerAutomationSystemBuilder.of(NETWORK).build());
-        assertNull(DynamicOverloadManagementSystemBuilder.of(NETWORK).build());
-        assertNull(DynamicTwoLevelsOverloadManagementSystemBuilder.of(NETWORK).build());
-        assertNull(PhaseShifterIAutomationSystemBuilder.of(NETWORK).build());
-        assertNull(PhaseShifterPAutomationSystemBuilder.of(NETWORK).build());
+    void testDefaultModelGetterAutomationSystems() {
+        assertNotNull(UnderVoltageAutomationSystemBuilder.getDefaultModelInfo());
+        assertNotNull(TapChangerBlockingAutomationSystemBuilder.getDefaultModelInfo());
+        assertNotNull(TapChangerAutomationSystemBuilder.getDefaultModelInfo());
+        assertNotNull(DynamicOverloadManagementSystemBuilder.getDefaultModelInfo());
+        assertNotNull(DynamicTwoLevelsOverloadManagementSystemBuilder.getDefaultModelInfo());
+        assertNotNull(PhaseShifterIAutomationSystemBuilder.getDefaultModelInfo());
+        assertNotNull(PhaseShifterBlockingIAutomationSystemBuilder.getDefaultModelInfo());
+        assertNotNull(PhaseShifterPAutomationSystemBuilder.getDefaultModelInfo());
+    }
+
+    @Test
+    void testDefaultModelGetterEquipments() {
+        // Load
+        assertNotNull(BaseLoadBuilder.getDefaultModelInfo());
+        assertNotNull(LoadOneTransformerBuilder.getDefaultModelInfo());
+        assertNotNull(LoadOneTransformerTapChangerBuilder.getDefaultModelInfo());
+        assertNotNull(LoadTwoTransformersBuilder.getDefaultModelInfo());
+        assertNotNull(LoadTwoTransformersTapChangersBuilder.getDefaultModelInfo());
+        // Bus
+        assertNotNull(StandardBusBuilder.getDefaultModelInfo());
+        assertNotNull(InfiniteBusBuilder.getDefaultModelInfo());
+        // Transformer
+        assertNotNull(TransformerFixedRatioBuilder.getDefaultModelInfo());
+        // Line
+        assertNotNull(LineBuilder.getDefaultModelInfo());
+        // Generator
+        assertNotNull(BaseGeneratorBuilder.getDefaultModelInfo());
+        assertNotNull(SynchronizedGeneratorBuilder.getDefaultModelInfo());
+        assertNotNull(SynchronousGeneratorBuilder.getDefaultModelInfo());
+        assertNotNull(WeccBuilder.getDefaultModelInfo());
+        assertNotNull(GridFormingConverterBuilder.getDefaultModelInfo());
+        assertNotNull(SignalNGeneratorBuilder.getDefaultModelInfo());
+        // HVDC
+        assertNotNull(HvdcPBuilder.getDefaultModelInfo());
+        assertNotNull(HvdcVscBuilder.getDefaultModelInfo());
+        // Shunt
+        assertNotNull(BaseShuntBuilder.getDefaultModelInfo());
+        // Static var comp
+        assertNotNull(BaseStaticVarCompensatorBuilder.getDefaultModelInfo());
     }
 
     @Test
@@ -126,7 +161,7 @@ class BuildersTest {
     }
 
     @Test
-    void testNotInstantiableAutomationSystem() {
+    void testWrongLibAutomationSystem() {
         assertNull(UnderVoltageAutomationSystemBuilder.of(NETWORK, WRONG_LIB));
         assertNull(TapChangerBlockingAutomationSystemBuilder.of(NETWORK, WRONG_LIB));
         assertNull(TapChangerAutomationSystemBuilder.of(NETWORK, WRONG_LIB));
@@ -165,5 +200,23 @@ class BuildersTest {
         assertNull(BaseShuntBuilder.of(NETWORK).build());
         // Static var comp
         assertNull(BaseStaticVarCompensatorBuilder.of(NETWORK).build());
+    }
+
+    @Test
+    void testNotInstantiableAutomationSystem() {
+        assertNull(UnderVoltageAutomationSystemBuilder.of(NETWORK).build());
+        assertNull(TapChangerBlockingAutomationSystemBuilder.of(NETWORK).build());
+        assertNull(TapChangerAutomationSystemBuilder.of(NETWORK).build());
+        assertNull(DynamicOverloadManagementSystemBuilder.of(NETWORK).build());
+        assertNull(DynamicTwoLevelsOverloadManagementSystemBuilder.of(NETWORK).build());
+        assertNull(PhaseShifterIAutomationSystemBuilder.of(NETWORK).build());
+        assertNull(PhaseShifterPAutomationSystemBuilder.of(NETWORK).build());
+    }
+
+    @Test
+    void testNotInstantiableEvent() {
+        assertNull(EventActivePowerVariationBuilder.of(NETWORK).build());
+        assertNull(NodeFaultEventBuilder.of(NETWORK).build());
+        assertNull(EventDisconnectionBuilder.of(NETWORK).build());
     }
 }

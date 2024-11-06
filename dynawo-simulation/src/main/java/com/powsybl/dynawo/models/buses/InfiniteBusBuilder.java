@@ -43,6 +43,10 @@ public class InfiniteBusBuilder extends AbstractBusBuilder<InfiniteBusBuilder> {
         return new InfiniteBusBuilder(network, modelConfig, reportNode);
     }
 
+    public static ModelInfo getDefaultModelInfo() {
+        return MODEL_CONFIGS.getDefaultModelConfig();
+    }
+
     public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();
     }
