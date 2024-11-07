@@ -9,7 +9,8 @@ The `dynaflow-security-analysis-default-parameters` module defines the default v
 ### Optional parameters
 
 **contingenciesStartTime**  
-`contingenciesStartTime` defines when the contingencies start, in seconds.  
+`contingenciesStartTime` defines when the contingencies start, in seconds.
+If the start time occurs between two :ref:`time steps <timeStepDef>`: the contingencies will start on the next time step.
 The default value of this property is 10.
 
 ### Examples

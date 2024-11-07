@@ -76,12 +76,13 @@ Available values **(TODO: describe them)**:
 
 The default value is a list of all of them.
 
+.. _timeStepDef:
 **timeStep**  
-**(TODO: description)**  
+`timeStep` defines the maximum time solver step value (in s).
 The default value is `10`.
 
 **mergeLoads**  
-`mergeLoads` is used to indicates if loads connected to the same bus are merged.  
+`mergeLoads` indicates if loads connected to the same bus are merged.  
 The default value is `TRUE`.
 
 **startingPointMode**  
