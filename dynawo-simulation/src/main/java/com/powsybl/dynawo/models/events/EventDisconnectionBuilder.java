@@ -11,6 +11,7 @@ import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.builders.BuilderEquipment;
 import com.powsybl.dynawo.builders.BuilderReports;
 import com.powsybl.dynawo.builders.EventModelInfo;
+import com.powsybl.dynawo.builders.ModelInfo;
 import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.iidm.network.*;
 
@@ -43,14 +44,14 @@ public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identif
         return new EventDisconnectionBuilder(network, reportNode);
     }
 
-    public static EventModelInfo getEventModelInfo() {
+    public static ModelInfo getModelInfo() {
         return MODEL_INFO;
     }
 
     /**
      * Returns the model info if usable with the given {@link DynawoVersion}
      */
-    public static EventModelInfo getEventModelInfo(DynawoVersion dynawoVersion) {
+    public static ModelInfo getModelInfo(DynawoVersion dynawoVersion) {
         return MODEL_INFO.version().includes(dynawoVersion) ? MODEL_INFO : null;
     }
 

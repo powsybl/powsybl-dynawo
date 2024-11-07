@@ -70,9 +70,9 @@ public final class ModelConfigLoaderImpl implements ModelConfigLoader {
             new BuilderConfig(SignalNGeneratorBuilder.CATEGORY, SignalNGeneratorBuilder::of, SignalNGeneratorBuilder::getSupportedModelInfos));
 
     private static final Stream<EventBuilderConfig> EVENT_BUILDER_CONFIGS = Stream.of(
-            new EventBuilderConfig(EventActivePowerVariationBuilder::of, EventActivePowerVariationBuilder.getEventModelInfo()),
-            new EventBuilderConfig(EventDisconnectionBuilder::of, EventDisconnectionBuilder.getEventModelInfo()),
-            new EventBuilderConfig(NodeFaultEventBuilder::of, NodeFaultEventBuilder.getEventModelInfo()));
+            new EventBuilderConfig(EventActivePowerVariationBuilder::of, EventActivePowerVariationBuilder.getModelInfo()),
+            new EventBuilderConfig(EventDisconnectionBuilder::of, EventDisconnectionBuilder.getModelInfo()),
+            new EventBuilderConfig(NodeFaultEventBuilder::of, NodeFaultEventBuilder.getModelInfo()));
 
     @Override
     public String getModelConfigFileName() {

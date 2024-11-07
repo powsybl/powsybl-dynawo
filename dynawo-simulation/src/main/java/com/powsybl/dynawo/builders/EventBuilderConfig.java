@@ -22,9 +22,9 @@ public class EventBuilderConfig {
     }
 
     private final EventModelBuilderConstructor builderConstructor;
-    private final EventModelInfo eventModelInfo;
+    private final ModelInfo eventModelInfo;
 
-    public EventBuilderConfig(EventModelBuilderConstructor builderConstructor, EventModelInfo eventModelInfo) {
+    public EventBuilderConfig(EventModelBuilderConstructor builderConstructor, ModelInfo eventModelInfo) {
         this.builderConstructor = builderConstructor;
         this.eventModelInfo = eventModelInfo;
     }
@@ -33,7 +33,7 @@ public class EventBuilderConfig {
         return builderConstructor;
     }
 
-    public EventModelInfo getEventModelInfo() {
+    public ModelInfo getEventModelInfo() {
         return eventModelInfo;
     }
 }
