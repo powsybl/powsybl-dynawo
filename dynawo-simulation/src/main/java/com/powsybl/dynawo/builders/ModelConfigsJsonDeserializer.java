@@ -40,7 +40,7 @@ public class ModelConfigsJsonDeserializer extends StdDeserializer<Map<String, Mo
     private static ModelConfigs parseModelConfigs(JsonParser parser) {
         var parsingContext = new Object() {
             String defaultLib = null;
-            final Map<String, ModelConfig> libs = new HashMap<>();
+            final SortedMap<String, ModelConfig> libs = new TreeMap<>();
         };
         JsonUtil.parseObject(parser, name ->
             switch (name) {

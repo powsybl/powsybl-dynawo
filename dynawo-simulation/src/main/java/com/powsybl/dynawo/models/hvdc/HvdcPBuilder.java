@@ -46,6 +46,10 @@ public class HvdcPBuilder extends AbstractHvdcBuilder<HvdcPBuilder> {
         return new HvdcPBuilder(network, modelConfig, reportNode);
     }
 
+    public static ModelInfo getDefaultModelInfo() {
+        return MODEL_CONFIGS.getDefaultModelConfig();
+    }
+
     public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();
     }
