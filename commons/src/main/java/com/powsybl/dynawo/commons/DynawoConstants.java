@@ -37,4 +37,6 @@ public final class DynawoConstants {
             "standbyAutomaton");
 
     public static final String OUTPUT_IIDM_FILENAME = "outputIIDM.xml";
+
+    public static final String AGGREGATED_RESULTS = "aggregatedResults.xml";
 }

@@ -58,7 +58,7 @@ class DynaFlowTest extends AbstractDynawoTest {
     @BeforeEach
     void setUp() throws Exception {
         super.setUp();
-        DynaFlowConfig config = new DynaFlowConfig(Path.of("/dynaflow-launcher"), false);
+        DynaFlowConfig config = new DynaFlowConfig(Path.of("/dynaflow-launcher"), true);
         loadFlowProvider = new DynaFlowProvider(() -> config);
         loadFlowParameters = new LoadFlowParameters();
         securityAnalysisProvider = new DynaFlowSecurityAnalysisProvider(() -> config);

@@ -19,6 +19,7 @@ import com.powsybl.contingency.Contingency;
 import com.powsybl.contingency.contingency.list.ContingencyList;
 import com.powsybl.contingency.json.ContingencyJsonModule;
 import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
+import com.powsybl.dynaflow.results.ContingencyResultsUtils;
 import com.powsybl.dynawo.commons.DynawoUtil;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.loadflow.LoadFlowParameters;
@@ -38,7 +39,6 @@ import java.util.List;
 import static com.powsybl.dynaflow.DynaFlowConstants.CONFIG_FILENAME;
 import static com.powsybl.dynaflow.DynaFlowConstants.IIDM_FILENAME;
 import static com.powsybl.dynaflow.SecurityAnalysisConstants.CONTINGENCIES_FILENAME;
-import static com.powsybl.dynaflow.SecurityAnalysisConstants.DYNAWO_CONSTRAINTS_FOLDER;
 import static com.powsybl.dynawo.commons.DynawoConstants.DYNAWO_TIMELINE_FOLDER;
 import static com.powsybl.dynawo.commons.DynawoUtil.getCommandExecutions;
 
@@ -88,7 +88,7 @@ public final class DynaFlowSecurityAnalysisHandler extends AbstractExecutionHand
         return new SecurityAnalysisReport(
                 new SecurityAnalysisResult(
                         ContingencyResultsUtils.getPreContingencyResult(network, violationFilter),
-                        ContingencyResultsUtils.getPostContingencyResults(network, violationFilter, workingDir.resolve(DYNAWO_CONSTRAINTS_FOLDER), contingencies),
+                        ContingencyResultsUtils.getPostContingencyResults(network, violationFilter, workingDir, contingencies),
                         Collections.emptyList())
         );
     }

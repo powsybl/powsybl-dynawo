@@ -13,7 +13,7 @@ import com.powsybl.computation.AbstractExecutionHandler;
 import com.powsybl.computation.Command;
 import com.powsybl.computation.CommandExecution;
 import com.powsybl.computation.ExecutionReport;
-import com.powsybl.dynaflow.ContingencyResultsUtils;
+import com.powsybl.dynaflow.results.ContingencyResultsUtils;
 import com.powsybl.dynawo.xml.DydXml;
 import com.powsybl.dynawo.xml.DynawoSimulationConstants;
 import com.powsybl.dynawo.xml.JobsXml;
@@ -39,7 +39,6 @@ import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 
-import static com.powsybl.dynaflow.SecurityAnalysisConstants.DYNAWO_CONSTRAINTS_FOLDER;
 import static com.powsybl.dynawo.DynawoSimulationConstants.FINAL_STATE_FOLDER;
 import static com.powsybl.dynawo.DynawoSimulationConstants.OUTPUTS_FOLDER;
 import static com.powsybl.dynawo.commons.DynawoConstants.DYNAWO_TIMELINE_FOLDER;
@@ -92,7 +91,7 @@ public final class DynawoSecurityAnalysisHandler extends AbstractExecutionHandle
         return new SecurityAnalysisReport(
                 new SecurityAnalysisResult(
                         ContingencyResultsUtils.getPreContingencyResult(network, violationFilter),
-                        ContingencyResultsUtils.getPostContingencyResults(network, violationFilter, workingDir.resolve(DYNAWO_CONSTRAINTS_FOLDER), context.getContingencies()),
+                        ContingencyResultsUtils.getPostContingencyResults(network, violationFilter, workingDir, context.getContingencies()),
                         Collections.emptyList())
         );
     }

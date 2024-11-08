@@ -27,7 +27,7 @@ class XmlTimeLineParserTest {
     void test() throws XMLStreamException {
 
         InputStreamReader xml = new InputStreamReader(Objects.requireNonNull(getClass().getResourceAsStream("/timeline.xml")));
-        List<TimelineEntry> timeline = XmlTimeLineParser.parse(xml);
+        List<TimelineEntry> timeline = new XmlTimeLineParser().parse(xml);
 
         assertEquals(5, timeline.size());
         assertEquals("PMIN : activation", timeline.get(0).message());
@@ -54,7 +54,7 @@ class XmlTimeLineParserTest {
     @Test
     void testInconsistentFile() throws XMLStreamException {
         InputStreamReader xml = new InputStreamReader(Objects.requireNonNull(getClass().getResourceAsStream("/wrongTimeline.xml")));
-        List<TimelineEntry> timeline = XmlTimeLineParser.parse(xml);
+        List<TimelineEntry> timeline = new XmlTimeLineParser().parse(xml);
         assertEquals(4, timeline.size());
     }
 }
