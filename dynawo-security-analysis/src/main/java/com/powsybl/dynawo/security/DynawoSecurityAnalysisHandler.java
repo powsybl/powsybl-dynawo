@@ -67,7 +67,7 @@ public final class DynawoSecurityAnalysisHandler extends AbstractExecutionHandle
     @Override
     public List<CommandExecution> before(Path workingDir) throws IOException {
         network.getVariantManager().setWorkingVariant(context.getWorkingVariantId());
-        Path outputNetworkFile = workingDir.resolve(OUTPUT_IIDM_FILENAME_FULL_PATH);
+        Path outputNetworkFile = workingDir.resolve(OUTPUT_IIDM_FILENAME_PATH);
         if (Files.exists(outputNetworkFile)) {
             Files.delete(outputNetworkFile);
         }
@@ -79,7 +79,7 @@ public final class DynawoSecurityAnalysisHandler extends AbstractExecutionHandle
     public SecurityAnalysisReport after(Path workingDir, ExecutionReport report) throws IOException {
         super.after(workingDir, report);
         context.getNetwork().getVariantManager().setWorkingVariant(context.getWorkingVariantId());
-        Path outputNetworkFile = workingDir.resolve(OUTPUT_IIDM_FILENAME_FULL_PATH);
+        Path outputNetworkFile = workingDir.resolve(OUTPUT_IIDM_FILENAME_PATH);
         if (Files.exists(outputNetworkFile)) {
             NetworkResultsUpdater.update(context.getNetwork(), NetworkSerDe.read(outputNetworkFile), context.getDynawoSimulationParameters().isMergeLoads());
         }

@@ -93,7 +93,7 @@ class DynaFlowProviderTest extends AbstractSerDeTest {
             try {
                 copyFile(stdOutFileRef, errFile);
                 copyFile(outputResults, workingDir.resolve(OUTPUT_RESULTS_FILENAME));
-                Path finalState = Files.createDirectories(workingDir.resolve(OUTPUTS_FOLDER).resolve(FINAL_STATE_FOLDER));
+                Path finalState = Files.createDirectories(workingDir.resolve(FINAL_STATE_FOLDER_PATH));
                 copyFile(outputIidm, finalState.resolve(OUTPUT_IIDM_FILENAME));
 
                 return 0;
@@ -115,7 +115,7 @@ class DynaFlowProviderTest extends AbstractSerDeTest {
         public int execute(String program, List<String> args, Path outFile, Path errFile, Path workingDir, Map<String, String> env) {
             try {
                 copyFile(stdOutFileRef, errFile);
-                Files.createDirectories(workingDir.resolve(OUTPUTS_FOLDER).resolve(FINAL_STATE_FOLDER));
+                Files.createDirectories(workingDir.resolve(FINAL_STATE_FOLDER_PATH));
                 return 0;
             } catch (IOException e) {
                 throw new UncheckedIOException(e);

@@ -9,6 +9,7 @@ package com.powsybl.dynawo.commons;
 
 import com.powsybl.iidm.serde.IidmVersion;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -46,5 +47,7 @@ public final class DynawoConstants {
 
     public static final String TIMELINE_FILENAME = "timeline";
 
-    public static final String OUTPUT_IIDM_FILENAME_FULL_PATH = "%s/%s/%s".formatted(OUTPUTS_FOLDER, FINAL_STATE_FOLDER, OUTPUT_IIDM_FILENAME);
+    public static final String FINAL_STATE_FOLDER_PATH = String.join(File.separator, OUTPUTS_FOLDER, FINAL_STATE_FOLDER);
+
+    public static final String OUTPUT_IIDM_FILENAME_PATH = String.join(File.separator, OUTPUTS_FOLDER, FINAL_STATE_FOLDER, OUTPUT_IIDM_FILENAME);
 }

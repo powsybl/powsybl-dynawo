@@ -28,7 +28,7 @@ import java.util.concurrent.CompletableFuture;
 
 import static com.powsybl.dynaflow.DynaFlowConstants.*;
 import static com.powsybl.dynawo.commons.DynawoConstants.NETWORK_FILENAME;
-import static com.powsybl.dynawo.commons.DynawoConstants.OUTPUT_IIDM_FILENAME_FULL_PATH;
+import static com.powsybl.dynawo.commons.DynawoConstants.OUTPUT_IIDM_FILENAME_PATH;
 
 /**
  *
@@ -60,7 +60,7 @@ public class DynaFlowProvider implements LoadFlowProvider {
                 .inputFiles(new InputFile(NETWORK_FILENAME),
                             new InputFile(CONFIG_FILENAME))
                 .outputFiles(new OutputFile(OUTPUT_RESULTS_FILENAME),
-                             new OutputFile(OUTPUT_IIDM_FILENAME_FULL_PATH))
+                             new OutputFile(OUTPUT_IIDM_FILENAME_PATH.toString()))
                 .build();
     }
 

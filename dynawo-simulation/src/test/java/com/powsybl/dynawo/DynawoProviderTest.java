@@ -74,7 +74,7 @@ class DynawoProviderTest extends AbstractSerDeTest {
         public int execute(String program, List<String> args, Path outFile, Path errFile, Path workingDir, Map<String, String> env) {
             try {
                 copyFile(stdOutFileRef, outFile);
-                Path finalState = Files.createDirectories(workingDir.resolve(OUTPUTS_FOLDER).resolve(FINAL_STATE_FOLDER));
+                Path finalState = Files.createDirectories(workingDir.resolve(FINAL_STATE_FOLDER_PATH));
                 copyFile(outputIidm, finalState.resolve(OUTPUT_IIDM_FILENAME));
                 return 0;
             } catch (IOException e) {

@@ -76,7 +76,7 @@ public class DynaFlowHandler extends AbstractExecutionHandler<LoadFlowResult> {
         report.log();
         network.getVariantManager().setWorkingVariant(workingStateId);
         boolean status = true;
-        Path outputNetworkFile = workingDir.resolve(OUTPUT_IIDM_FILENAME_FULL_PATH);
+        Path outputNetworkFile = workingDir.resolve(OUTPUT_IIDM_FILENAME_PATH);
 
         if (Files.exists(outputNetworkFile)) {
             NetworkResultsUpdater.update(network, NetworkSerDe.read(outputNetworkFile), dynaFlowParameters.isMergeLoads());

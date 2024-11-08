@@ -117,7 +117,7 @@ public final class DynawoSimulationHandler extends AbstractExecutionHandler<Dyna
 
     private void setSuccessOutputs(Path workingDir, Path outputsFolder) throws IOException {
         DynawoSimulationParameters parameters = context.getDynawoSimulationParameters();
-        updateNetwork(outputsFolder);
+        updateNetwork(workingDir);
         DumpFileParameters dumpFileParameters = parameters.getDumpFileParameters();
         if (dumpFileParameters.exportDumpFile()) {
             setDumpFile(outputsFolder, dumpFileParameters.dumpFileFolder(), workingDir.getFileName());
@@ -151,8 +151,8 @@ public final class DynawoSimulationHandler extends AbstractExecutionHandler<Dyna
         }
     }
 
-    private void updateNetwork(Path outputsFolder) {
-        Path outputNetworkFile = outputsFolder.resolve(FINAL_STATE_FOLDER).resolve(OUTPUT_IIDM_FILENAME);
+    private void updateNetwork(Path workDir) {
+        Path outputNetworkFile = workDir.resolve(OUTPUT_IIDM_FILENAME_PATH);
         if (Files.exists(outputNetworkFile)) {
             NetworkResultsUpdater.update(context.getNetwork(), NetworkSerDe.read(outputNetworkFile), context.getDynawoSimulationParameters().isMergeLoads());
         } else {
