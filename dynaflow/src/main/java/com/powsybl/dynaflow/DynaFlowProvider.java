@@ -39,8 +39,6 @@ import static com.powsybl.dynawo.commons.DynawoConstants.OUTPUT_IIDM_FILENAME_PA
 @AutoService(LoadFlowProvider.class)
 public class DynaFlowProvider implements LoadFlowProvider {
 
-    public static final String MODULE_SPECIFIC_PARAMETERS = "dynaflow-default-parameters";
-
     private static final String WORKING_DIR_PREFIX = "dynaflow_";
 
     private final Supplier<DynaFlowConfig> configSupplier;
@@ -74,10 +72,10 @@ public class DynaFlowProvider implements LoadFlowProvider {
                 .build();
     }
 
-    private static DynaFlowParameters getParametersExt(LoadFlowParameters parameters) {
+    static DynaFlowParameters getParametersExt(LoadFlowParameters parameters) {
         DynaFlowParameters parametersExt = parameters.getExtension(DynaFlowParameters.class);
         if (parametersExt == null) {
-            parametersExt = new DynaFlowParameters();
+            return new DynaFlowParameters();
         }
         return parametersExt;
     }
@@ -140,7 +138,7 @@ public class DynaFlowProvider implements LoadFlowProvider {
 
     @Override
     public Optional<ModuleConfig> getModuleConfig(PlatformConfig platformConfig) {
-        return platformConfig.getOptionalModuleConfig(MODULE_SPECIFIC_PARAMETERS);
+        return platformConfig.getOptionalModuleConfig(DynaFlowParameters.MODULE_SPECIFIC_PARAMETERS);
     }
 
     @Override

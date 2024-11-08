@@ -10,6 +10,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.powsybl.commons.json.JsonUtil;
 import com.powsybl.dynaflow.DynaFlowConstants;
 import com.powsybl.dynaflow.DynaFlowParameters;
+import com.powsybl.dynaflow.DynaFlowSecurityAnalysisParameters;
 import com.powsybl.loadflow.LoadFlowParameters;
 
 import java.io.BufferedWriter;
@@ -30,50 +31,32 @@ public final class DynaFlowConfigSerializer {
     private DynaFlowConfigSerializer() {
     }
 
+    public static void serialize(LoadFlowParameters lfParameters, DynaFlowParameters dynaFlowParameters,
+                                 DynaFlowSecurityAnalysisParameters saParameters, Path workingDir, Path file) throws IOException {
+        try (BufferedWriter writer = Files.newBufferedWriter(file, StandardCharsets.UTF_8)) {
+            JsonUtil.writeJson(writer, jsonGenerator -> serialize(lfParameters, dynaFlowParameters, saParameters, workingDir, jsonGenerator));
+        }
+    }
+
     public static void serialize(LoadFlowParameters lfParameters, DynaFlowParameters dynaFlowParameters, Path workingDir, Path file) throws IOException {
         try (BufferedWriter writer = Files.newBufferedWriter(file, StandardCharsets.UTF_8)) {
-            JsonUtil.writeJson(writer, jsonGenerator -> serialize(lfParameters, dynaFlowParameters, workingDir, jsonGenerator));
+            JsonUtil.writeJson(writer, jsonGenerator -> serialize(lfParameters, dynaFlowParameters, null, workingDir, jsonGenerator));
         }
     }
 
     public static void serialize(LoadFlowParameters lfParameters, DynaFlowParameters dynaFlowParameters, Path workingDir, Writer writer) {
-        JsonUtil.writeJson(writer, jsonGenerator -> serialize(lfParameters, dynaFlowParameters, workingDir, jsonGenerator));
+        JsonUtil.writeJson(writer, jsonGenerator -> serialize(lfParameters, dynaFlowParameters, null, workingDir, jsonGenerator));
     }
 
-    private static void serialize(LoadFlowParameters lfParameters, DynaFlowParameters dynaFlowParameters, Path workingDir, JsonGenerator jsonGenerator) {
+    private static void serialize(LoadFlowParameters lfParameters, DynaFlowParameters dynaFlowParameters,
+                                  DynaFlowSecurityAnalysisParameters saParameters, Path workingDir, JsonGenerator jsonGenerator) {
         try {
             jsonGenerator.writeStartObject();
             jsonGenerator.writeObjectFieldStart("dfl-config");
-            writeNonNullField(jsonGenerator, "SVCRegulationOn", dynaFlowParameters.getSvcRegulationOn());
-            writeNonNullField(jsonGenerator, "ShuntRegulationOn", dynaFlowParameters.getShuntRegulationOn());
-            writeNonNullField(jsonGenerator, "AutomaticSlackBusOn", dynaFlowParameters.getAutomaticSlackBusOn());
-            writeNonNullField(jsonGenerator, "DsoVoltageLevel", dynaFlowParameters.getDsoVoltageLevel());
-            jsonGenerator.writeBooleanField("InfiniteReactiveLimits", !lfParameters.isUseReactiveLimits());
-
-            if (dynaFlowParameters.getActivePowerCompensation() != null) {
-                jsonGenerator.writeStringField("ActivePowerCompensation", dynaFlowParameters.getActivePowerCompensation().getDynaflowName());
-            }
-            writeNonNullField(jsonGenerator, "SettingPath", dynaFlowParameters.getSettingPath());
-            writeNonNullField(jsonGenerator, "AssemblingPath", dynaFlowParameters.getAssemblingPath());
-            writeNonNullField(jsonGenerator, "StartTime", dynaFlowParameters.getStartTime());
-            writeNonNullField(jsonGenerator, "StopTime", dynaFlowParameters.getStopTime());
-            writeNonNullField(jsonGenerator, "Precision", dynaFlowParameters.getPrecision());
-
-            if (dynaFlowParameters.getSa() != null) {
-                DynaFlowParameters.Sa.writeJson(jsonGenerator, dynaFlowParameters);
-            }
-            if (dynaFlowParameters.getChosenOutputs() != null) {
-                jsonGenerator.writeFieldName("ChosenOutputs");
-                jsonGenerator.writeStartArray();
-                for (DynaFlowConstants.OutputTypes outputType : dynaFlowParameters.getChosenOutputs()) {
-                    jsonGenerator.writeString(outputType.name());
-                }
-                jsonGenerator.writeEndArray();
-            }
-
-            writeNonNullField(jsonGenerator, "TimeStep", dynaFlowParameters.getTimeStep());
-            if (dynaFlowParameters.getStartingPointMode() != null) {
-                jsonGenerator.writeStringField("StartingPointMode", dynaFlowParameters.getStartingPointMode().getName());
+            serialize(lfParameters, jsonGenerator);
+            serialize(dynaFlowParameters, jsonGenerator);
+            if (saParameters != null) {
+                serialize(saParameters, jsonGenerator);
             }
             jsonGenerator.writeStringField("OutputDir", workingDir.toString());
             jsonGenerator.writeEndObject();
@@ -81,6 +64,46 @@ public final class DynaFlowConfigSerializer {
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
+    }
+
+    private static void serialize(DynaFlowParameters dynaFlowParameters, JsonGenerator jsonGenerator) throws IOException {
+        writeNonNullField(jsonGenerator, "SVCRegulationOn", dynaFlowParameters.getSvcRegulationOn());
+        writeNonNullField(jsonGenerator, "ShuntRegulationOn", dynaFlowParameters.getShuntRegulationOn());
+        writeNonNullField(jsonGenerator, "AutomaticSlackBusOn", dynaFlowParameters.getAutomaticSlackBusOn());
+        writeNonNullField(jsonGenerator, "DsoVoltageLevel", dynaFlowParameters.getDsoVoltageLevel());
+
+        if (dynaFlowParameters.getActivePowerCompensation() != null) {
+            jsonGenerator.writeStringField("ActivePowerCompensation", dynaFlowParameters.getActivePowerCompensation().getDynaflowName());
+        }
+        writeNonNullField(jsonGenerator, "SettingPath", dynaFlowParameters.getSettingPath());
+        writeNonNullField(jsonGenerator, "AssemblingPath", dynaFlowParameters.getAssemblingPath());
+        writeNonNullField(jsonGenerator, "StartTime", dynaFlowParameters.getStartTime());
+        writeNonNullField(jsonGenerator, "StopTime", dynaFlowParameters.getStopTime());
+        writeNonNullField(jsonGenerator, "Precision", dynaFlowParameters.getPrecision());
+
+        if (dynaFlowParameters.getChosenOutputs() != null) {
+            jsonGenerator.writeFieldName("ChosenOutputs");
+            jsonGenerator.writeStartArray();
+            for (DynaFlowConstants.OutputTypes outputType : dynaFlowParameters.getChosenOutputs()) {
+                jsonGenerator.writeString(outputType.name());
+            }
+            jsonGenerator.writeEndArray();
+        }
+
+        writeNonNullField(jsonGenerator, "TimeStep", dynaFlowParameters.getTimeStep());
+        if (dynaFlowParameters.getStartingPointMode() != null) {
+            jsonGenerator.writeStringField("StartingPointMode", dynaFlowParameters.getStartingPointMode().getName());
+        }
+    }
+
+    private static void serialize(LoadFlowParameters lfParameters, JsonGenerator jsonGenerator) throws IOException {
+        jsonGenerator.writeBooleanField("InfiniteReactiveLimits", !lfParameters.isUseReactiveLimits());
+    }
+
+    private static void serialize(DynaFlowSecurityAnalysisParameters saParameters, JsonGenerator jsonGenerator) throws IOException {
+        jsonGenerator.writeObjectFieldStart("sa");
+        jsonGenerator.writeNumberField("TimeOfEvent", saParameters.getContingenciesStartTime());
+        jsonGenerator.writeEndObject();
     }
 
     private static void writeNonNullField(JsonGenerator jsonGenerator, String fieldName, Boolean value) throws IOException {

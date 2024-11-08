@@ -15,7 +15,10 @@ import com.powsybl.contingency.Contingency;
 import com.powsybl.iidm.network.*;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import com.powsybl.loadflow.LoadFlowResult;
-import com.powsybl.security.*;
+import com.powsybl.security.SecurityAnalysis;
+import com.powsybl.security.SecurityAnalysisReport;
+import com.powsybl.security.SecurityAnalysisResult;
+import com.powsybl.security.SecurityAnalysisRunParameters;
 import com.powsybl.security.json.SecurityAnalysisResultSerializer;
 import org.junit.jupiter.api.Test;
 
@@ -33,10 +36,12 @@ import java.util.concurrent.ForkJoinPool;
 
 import static com.powsybl.commons.test.ComparisonUtils.assertTxtEquals;
 import static com.powsybl.commons.test.ComparisonUtils.assertXmlEquals;
-import static com.powsybl.dynaflow.DynaFlowConstants.*;
-import static com.powsybl.dynaflow.SecurityAnalysisConstants.CONTINGENCIES_FILENAME;
+import static com.powsybl.dynaflow.DynaFlowConstants.CONFIG_FILENAME;
+import static com.powsybl.dynaflow.DynaFlowConstants.DYNAFLOW_NAME;
 import static com.powsybl.dynaflow.SecurityAnalysisConstants.CONSTRAINTS_FOLDER;
+import static com.powsybl.dynaflow.SecurityAnalysisConstants.CONTINGENCIES_FILENAME;
 import static com.powsybl.dynawo.commons.DynawoConstants.NETWORK_FILENAME;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -137,6 +142,18 @@ class DynaFlowSecurityAnalysisTest extends AbstractSerDeTest {
                 .setComputationManager(new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool()));
         List<Contingency> contingencies = List.of();
         assertThrows(PowsyblException.class, () -> SecurityAnalysis.run(network, contingencies, runParameters));
+    }
+
+    @Test
+    void loadDynaflowParameters() {
+        DynaFlowSecurityAnalysisProvider provider = new DynaFlowSecurityAnalysisProvider();
+        Map<String, String> properties = Map.of("contingenciesStartTime", Double.toString(23d));
+        assertThat(provider.loadSpecificParameters(properties))
+                .isNotEmpty()
+                .get()
+                .isInstanceOf(DynaFlowSecurityAnalysisParameters.class)
+                .hasFieldOrPropertyWithValue("contingenciesStartTime", 23.);
+
     }
 
     private static Network buildNetwork() {
