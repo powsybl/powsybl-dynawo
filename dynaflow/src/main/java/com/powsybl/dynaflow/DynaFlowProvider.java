@@ -28,6 +28,8 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 import static com.powsybl.dynaflow.DynaFlowConstants.*;
+import static com.powsybl.dynawo.commons.DynawoConstants.NETWORK_FILENAME;
+import static com.powsybl.dynawo.commons.DynawoConstants.OUTPUT_IIDM_FILENAME_PATH;
 
 /**
  *
@@ -50,16 +52,14 @@ public class DynaFlowProvider implements LoadFlowProvider {
     }
 
     public static Command getCommand(DynaFlowConfig config) {
-        List<String> args = Arrays.asList("--network", IIDM_FILENAME, "--config", CONFIG_FILENAME);
-
         return new SimpleCommandBuilder()
                 .id("dynaflow_lf")
                 .program(config.getProgram())
-                .args(args)
-                .inputFiles(new InputFile(IIDM_FILENAME),
+                .args("--network", NETWORK_FILENAME, "--config", CONFIG_FILENAME)
+                .inputFiles(new InputFile(NETWORK_FILENAME),
                             new InputFile(CONFIG_FILENAME))
                 .outputFiles(new OutputFile(OUTPUT_RESULTS_FILENAME),
-                             new OutputFile("outputs/finalState/" + OUTPUT_IIDM_FILENAME))
+                             new OutputFile(OUTPUT_IIDM_FILENAME_PATH))
                 .build();
     }
 

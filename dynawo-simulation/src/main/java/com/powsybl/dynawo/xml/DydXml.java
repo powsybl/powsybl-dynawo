@@ -17,7 +17,7 @@ import javax.xml.stream.XMLStreamWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 
-import static com.powsybl.dynawo.xml.DynawoSimulationConstants.DYD_FILENAME;
+import static com.powsybl.dynawo.DynawoSimulationConstants.DYD_FILENAME;
 
 /**
  * @author Mathieu Bague {@literal <mathieu.bague@rte-france.com>}

@@ -14,8 +14,8 @@ import javax.xml.stream.XMLStreamWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 
-import static com.powsybl.dynawo.xml.DynawoSimulationConstants.CRV_FILENAME;
-import static com.powsybl.dynawo.xml.DynawoSimulationConstants.FSV_FILENAME;
+import static com.powsybl.dynawo.DynawoSimulationConstants.CRV_FILENAME;
+import static com.powsybl.dynawo.DynawoSimulationConstants.FSV_FILENAME;
 import static com.powsybl.dynawo.xml.DynawoSimulationXmlConstants.DYN_URI;
 
 /**
