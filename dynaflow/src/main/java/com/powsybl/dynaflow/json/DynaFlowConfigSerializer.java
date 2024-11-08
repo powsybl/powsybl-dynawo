@@ -51,7 +51,7 @@ public final class DynaFlowConfigSerializer {
             jsonGenerator.writeBooleanField("InfiniteReactiveLimits", !lfParameters.isUseReactiveLimits());
 
             if (dynaFlowParameters.getActivePowerCompensation() != null) {
-                jsonGenerator.writeStringField("ActivePowerCompensation", dynaFlowParameters.getActivePowerCompensation().name());
+                jsonGenerator.writeStringField("ActivePowerCompensation", dynaFlowParameters.getActivePowerCompensation().getDynaflowName());
             }
             writeNonNullField(jsonGenerator, "SettingPath", dynaFlowParameters.getSettingPath());
             writeNonNullField(jsonGenerator, "AssemblingPath", dynaFlowParameters.getAssemblingPath());
