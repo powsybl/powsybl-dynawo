@@ -73,7 +73,7 @@ public final class DynaFlowConfigSerializer {
         writeNonNullField(jsonGenerator, "DsoVoltageLevel", dynaFlowParameters.getDsoVoltageLevel());
 
         if (dynaFlowParameters.getActivePowerCompensation() != null) {
-            jsonGenerator.writeStringField("ActivePowerCompensation", dynaFlowParameters.getActivePowerCompensation().name());
+            jsonGenerator.writeStringField("ActivePowerCompensation", dynaFlowParameters.getActivePowerCompensation().getDynaflowName());
         }
         writeNonNullField(jsonGenerator, "SettingPath", dynaFlowParameters.getSettingPath());
         writeNonNullField(jsonGenerator, "AssemblingPath", dynaFlowParameters.getAssemblingPath());

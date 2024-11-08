@@ -31,9 +31,19 @@ public final class DynaFlowConstants {
     }
 
     public enum ActivePowerCompensation {
-        P,
-        TARGET_P,
-        PMAX
+        P("P"),
+        TARGET_P("targetP"),
+        PMAX("PMax");
+
+        private final String dynaflowName;
+
+        ActivePowerCompensation(String dynaflowName) {
+            this.dynaflowName = dynaflowName;
+        }
+
+        public String getDynaflowName() {
+            return dynaflowName;
+        }
     }
 
     public enum StartingPointMode {
