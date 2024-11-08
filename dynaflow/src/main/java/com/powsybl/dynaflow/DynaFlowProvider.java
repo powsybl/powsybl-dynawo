@@ -60,7 +60,7 @@ public class DynaFlowProvider implements LoadFlowProvider {
                 .inputFiles(new InputFile(NETWORK_FILENAME),
                             new InputFile(CONFIG_FILENAME))
                 .outputFiles(new OutputFile(OUTPUT_RESULTS_FILENAME),
-                             new OutputFile(OUTPUT_IIDM_FILENAME_PATH.toString()))
+                             new OutputFile(OUTPUT_IIDM_FILENAME_PATH))
                 .build();
     }
 
