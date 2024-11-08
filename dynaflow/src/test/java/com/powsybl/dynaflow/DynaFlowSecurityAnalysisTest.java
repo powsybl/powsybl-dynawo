@@ -33,8 +33,10 @@ import java.util.concurrent.ForkJoinPool;
 
 import static com.powsybl.commons.test.ComparisonUtils.assertTxtEquals;
 import static com.powsybl.commons.test.ComparisonUtils.assertXmlEquals;
-import static com.powsybl.dynaflow.DynaFlowConstants.DYNAFLOW_NAME;
-import static com.powsybl.dynaflow.DynaFlowConstants.IIDM_FILENAME;
+import static com.powsybl.dynaflow.DynaFlowConstants.*;
+import static com.powsybl.dynaflow.SecurityAnalysisConstants.CONTINGENCIES_FILENAME;
+import static com.powsybl.dynaflow.SecurityAnalysisConstants.CONSTRAINTS_FOLDER;
+import static com.powsybl.dynawo.commons.DynawoConstants.NETWORK_FILENAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -69,7 +71,8 @@ class DynaFlowSecurityAnalysisTest extends AbstractSerDeTest {
                 if (args.get(0).equals("--version")) {
                     copyFile(stdOutFileRef, errFile);
                 } else {
-                    assertEquals("--network network.xiidm --config config.json --contingencies contingencies.json", String.join(" ", args));
+                    assertEquals("--network %s --config %s --contingencies %s".formatted(NETWORK_FILENAME, CONFIG_FILENAME, CONTINGENCIES_FILENAME),
+                            String.join(" ", args));
                     validateInputs(workingDir);
                     copyOutputs(workingDir);
                 }
@@ -81,16 +84,16 @@ class DynaFlowSecurityAnalysisTest extends AbstractSerDeTest {
 
         private void validateInputs(Path workingDir) throws IOException {
             if (inputFile != null) {
-                assertXmlEquals(getClass().getResourceAsStream(inputFile), Files.newInputStream(workingDir.resolve(IIDM_FILENAME)));
+                assertXmlEquals(getClass().getResourceAsStream(inputFile), Files.newInputStream(workingDir.resolve(NETWORK_FILENAME)));
             }
             if (contingencyFile != null) {
                 InputStream contingencyIs = Objects.requireNonNull(getClass().getResourceAsStream(contingencyFile));
-                assertTxtEquals(contingencyIs, Files.newInputStream(workingDir.resolve("contingencies.json")));
+                assertTxtEquals(contingencyIs, Files.newInputStream(workingDir.resolve(CONTINGENCIES_FILENAME)));
             }
         }
 
         private void copyOutputs(Path workingDir) throws IOException {
-            Path constraintsFolder = Files.createDirectories(workingDir.resolve("constraints"));
+            Path constraintsFolder = Files.createDirectories(workingDir.resolve(CONSTRAINTS_FOLDER));
             for (int i = 0; i < contingencyIds.size(); i++) {
                 copyFile(constraints.get(i), constraintsFolder.resolve("constraints_" + contingencyIds.get(i) + ".xml"));
             }

@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawo.xml;
 
+import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.models.events.EventDisconnectionBuilder;
 import com.powsybl.iidm.network.TwoSides;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;

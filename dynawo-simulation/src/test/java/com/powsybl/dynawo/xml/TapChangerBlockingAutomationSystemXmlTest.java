@@ -8,6 +8,7 @@
 package com.powsybl.dynawo.xml;
 
 import com.powsybl.commons.PowsyblException;
+import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.models.loads.LoadOneTransformerTapChangerBuilder;
 import com.powsybl.dynawo.models.loads.LoadTwoTransformersTapChangersBuilder;
 import com.powsybl.dynawo.models.transformers.TransformerFixedRatioBuilder;

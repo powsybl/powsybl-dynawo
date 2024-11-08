@@ -12,7 +12,7 @@ package com.powsybl.dynaflow;
  */
 public final class SecurityAnalysisConstants {
 
-    public static final String DYNAWO_CONSTRAINTS_FOLDER = "constraints";
+    public static final String CONSTRAINTS_FOLDER = "constraints";
 
     public static final String CONTINGENCIES_FILENAME = "contingencies.json";
 

@@ -7,6 +7,7 @@
 package com.powsybl.dynawo.xml;
 
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
+import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.DynawoSimulationParameters;
 import org.junit.jupiter.api.Test;

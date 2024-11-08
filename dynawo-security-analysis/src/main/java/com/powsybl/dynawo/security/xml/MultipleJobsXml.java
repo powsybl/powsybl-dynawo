@@ -16,8 +16,8 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Objects;
 
-import static com.powsybl.dynawo.xml.DynawoSimulationConstants.JOBS_FILENAME;
-import static com.powsybl.dynawo.xml.DynawoSimulationConstants.MULTIPLE_JOBS_FILENAME;
+import static com.powsybl.dynawo.DynawoSimulationConstants.JOBS_FILENAME;
+import static com.powsybl.dynawo.DynawoSimulationConstants.MULTIPLE_JOBS_FILENAME;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>

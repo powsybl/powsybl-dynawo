@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
-import static com.powsybl.dynawo.xml.DynawoSimulationConstants.JOBS_FILENAME;
+import static com.powsybl.dynawo.DynawoSimulationConstants.JOBS_FILENAME;
 
 /**
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
