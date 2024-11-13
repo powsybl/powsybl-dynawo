@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.powsybl.dynaflow.SecurityAnalysisConstants.DYNAWO_CONSTRAINTS_FOLDER;
+import static com.powsybl.dynaflow.SecurityAnalysisConstants.CONSTRAINTS_FOLDER;
 import static com.powsybl.dynawo.commons.DynawoConstants.AGGREGATED_RESULTS;
 
 /**
@@ -55,7 +55,7 @@ public final class ContingencyResultsUtils {
      */
     public static List<PostContingencyResult> getPostContingencyResults(Network network, LimitViolationFilter violationFilter,
                                                                   Path workingDir, List<Contingency> contingencies) {
-        Path constraintsDir = workingDir.resolve(DYNAWO_CONSTRAINTS_FOLDER);
+        Path constraintsDir = workingDir.resolve(CONSTRAINTS_FOLDER);
         Path results = workingDir.resolve(AGGREGATED_RESULTS);
         Map<String, Status> scenarioResults = new HashMap<>();
         if (Files.exists(results)) {

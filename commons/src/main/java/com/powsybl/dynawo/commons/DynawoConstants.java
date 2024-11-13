@@ -42,7 +42,7 @@ public final class DynawoConstants {
     public static final String OUTPUT_IIDM_FILENAME = "outputIIDM.xml";
 
     public static final String AGGREGATED_RESULTS = "aggregatedResults.xml";
-  
+
     public static final String FINAL_STATE_FOLDER = "finalState";
 
     public static final String TIMELINE_FOLDER = "timeLine";

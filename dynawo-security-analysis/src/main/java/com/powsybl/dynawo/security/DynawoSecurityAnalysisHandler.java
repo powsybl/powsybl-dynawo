@@ -37,8 +37,7 @@ import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 
-import static com.powsybl.dynawo.commons.DynawoConstants.OUTPUT_IIDM_FILENAME_PATH;
-import static com.powsybl.dynawo.commons.DynawoConstants.TIMELINE_FOLDER;
+import static com.powsybl.dynawo.commons.DynawoConstants.*;
 import static com.powsybl.dynawo.commons.DynawoUtil.getCommandExecutions;
 
 /**
