@@ -11,6 +11,7 @@ import com.powsybl.dynawo.DumpFileParameters;
 import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.DynawoSimulationParameters.SolverType;
+import com.powsybl.dynawo.commons.ExportMode;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -18,7 +19,9 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Optional;
 
-import static com.powsybl.dynawo.xml.DynawoSimulationConstants.*;
+import static com.powsybl.dynawo.DynawoSimulationConstants.*;
+import static com.powsybl.dynawo.commons.DynawoConstants.NETWORK_FILENAME;
+import static com.powsybl.dynawo.commons.DynawoConstants.OUTPUTS_FOLDER;
 import static com.powsybl.dynawo.xml.DynawoSimulationXmlConstants.DYN_URI;
 
 /**
@@ -102,7 +105,7 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter {
     private static void writeOutput(XMLStreamWriter writer, DynawoSimulationContext context) throws XMLStreamException {
         DynawoSimulationParameters parameters = context.getDynawoSimulationParameters();
         writer.writeStartElement(DYN_URI, "outputs");
-        writer.writeAttribute("directory", "outputs");
+        writer.writeAttribute("directory", OUTPUTS_FOLDER);
 
         writer.writeEmptyElement(DYN_URI, "dumpInitValues");
         writer.writeAttribute("local", Boolean.toString(false));
@@ -118,13 +121,13 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter {
         if (context.withCurveVariables()) {
             writer.writeEmptyElement(DYN_URI, "curves");
             writer.writeAttribute("inputFile", CRV_FILENAME);
-            writer.writeAttribute(EXPORT_MODE, DynawoSimulationParameters.ExportMode.CSV.toString());
+            writer.writeAttribute(EXPORT_MODE, ExportMode.CSV.toString());
         }
 
         if (context.withFsvVariables()) {
             writer.writeEmptyElement(DYN_URI, "finalStateValues");
             writer.writeAttribute("inputFile", FSV_FILENAME);
-            writer.writeAttribute(EXPORT_MODE, DynawoSimulationParameters.ExportMode.CSV.toString());
+            writer.writeAttribute(EXPORT_MODE, ExportMode.CSV.toString());
         }
 
         writer.writeStartElement(DYN_URI, "logs");
@@ -137,7 +140,7 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter {
     private static void writeAppender(XMLStreamWriter writer, DynawoSimulationParameters parameters) throws XMLStreamException {
         writer.writeEmptyElement(DYN_URI, "appender");
         writer.writeAttribute("tag", "");
-        writer.writeAttribute("file", "dynawo.log");
+        writer.writeAttribute("file", LOGS_FILENAME);
         writer.writeAttribute("lvlFilter", parameters.getLogLevelFilter().toString());
         for (DynawoSimulationParameters.SpecificLog log : parameters.getSpecificLogs()) {
             writeSpecificAppender(writer, log);

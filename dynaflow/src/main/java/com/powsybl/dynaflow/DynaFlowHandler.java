@@ -15,6 +15,7 @@ import com.powsybl.computation.ExecutionReport;
 import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
 import com.powsybl.dynawo.commons.CommonReports;
 import com.powsybl.dynawo.commons.DynawoUtil;
+import com.powsybl.dynawo.commons.ExportMode;
 import com.powsybl.dynawo.commons.NetworkResultsUpdater;
 import com.powsybl.dynawo.commons.loadmerge.LoadsMerger;
 import com.powsybl.dynawo.commons.timeline.TimelineEntry;
@@ -35,7 +36,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.powsybl.dynaflow.DynaFlowConstants.*;
-import static com.powsybl.dynawo.commons.DynawoConstants.DYNAWO_TIMELINE_FOLDER;
+import static com.powsybl.dynawo.commons.DynawoConstants.*;
 import static com.powsybl.dynawo.commons.DynawoUtil.getCommandExecutions;
 
 /**
@@ -63,7 +64,7 @@ public class DynaFlowHandler extends AbstractExecutionHandler<LoadFlowResult> {
     @Override
     public List<CommandExecution> before(Path workingDir) throws IOException {
         network.getVariantManager().setWorkingVariant(workingStateId);
-        DynawoUtil.writeIidm(dynawoInput, workingDir.resolve(IIDM_FILENAME));
+        DynawoUtil.writeIidm(dynawoInput, workingDir.resolve(NETWORK_FILENAME));
         DynaFlowConfigSerializer.serialize(loadFlowParameters, dynaFlowParameters, Path.of("."), workingDir.resolve(CONFIG_FILENAME));
         return getCommandExecutions(command);
     }
@@ -75,7 +76,8 @@ public class DynaFlowHandler extends AbstractExecutionHandler<LoadFlowResult> {
         report.log();
         network.getVariantManager().setWorkingVariant(workingStateId);
         boolean status = true;
-        Path outputNetworkFile = workingDir.resolve("outputs").resolve("finalState").resolve(DynaFlowConstants.OUTPUT_IIDM_FILENAME);
+        Path outputNetworkFile = workingDir.resolve(OUTPUT_IIDM_FILENAME_PATH);
+
         if (Files.exists(outputNetworkFile)) {
             NetworkResultsUpdater.update(network, NetworkSerDe.read(outputNetworkFile), dynaFlowParameters.isMergeLoads());
         } else {
@@ -99,9 +101,9 @@ public class DynaFlowHandler extends AbstractExecutionHandler<LoadFlowResult> {
 
     private void reportTimeLine(Path workingDir) {
         ReportNode dfReporter = DynaflowReports.createDynaFlowReportNode(reportNode, network.getId());
-        Path timelineFile = workingDir.resolve(DYNAFLOW_OUTPUTS_FOLDER)
-                .resolve(DYNAWO_TIMELINE_FOLDER)
-                .resolve(DYNAFLOW_TIMELINE_FILE);
+        Path timelineFile = workingDir.resolve(OUTPUTS_FOLDER)
+                .resolve(TIMELINE_FOLDER)
+                .resolve(TIMELINE_FILENAME + ExportMode.XML.getFileExtension());
         List<TimelineEntry> tl = new XmlTimeLineParser().parse(timelineFile);
         tl.forEach(e -> CommonReports.reportTimelineEntry(dfReporter, e));
     }
