@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aggregatedResults xmlns="http://www.rte-france.com/dynawo">
+    <scenarioResults id="DisconnectGroup" status="CONVERGENCE">
+        <criterionNonRespected id="total load power = 276.374MW" time="185.000000"/>
+    </scenarioResults>
+    <scenarioResults id="DisconnectGroup" status="CRITERIA_NON_RESPECTED"/>
+    <scenarioResults id="DisconnectGroup" status="CRITERIA_NON_RESPECTED">
+        <criterionNonRespected id="total load power = 276.374MW"/>
+    </scenarioResults>
+</aggregatedResults>

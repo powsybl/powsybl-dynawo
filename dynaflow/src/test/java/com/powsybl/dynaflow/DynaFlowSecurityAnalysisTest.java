@@ -39,6 +39,7 @@ import static com.powsybl.commons.test.ComparisonUtils.assertXmlEquals;
 import static com.powsybl.dynaflow.DynaFlowConstants.CONFIG_FILENAME;
 import static com.powsybl.dynaflow.DynaFlowConstants.DYNAFLOW_NAME;
 import static com.powsybl.dynaflow.SecurityAnalysisConstants.CONSTRAINTS_FOLDER;
+import static com.powsybl.dynawo.commons.DynawoConstants.AGGREGATED_RESULTS;
 import static com.powsybl.dynaflow.SecurityAnalysisConstants.CONTINGENCIES_FILENAME;
 import static com.powsybl.dynawo.commons.DynawoConstants.NETWORK_FILENAME;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -57,17 +58,19 @@ class DynaFlowSecurityAnalysisTest extends AbstractSerDeTest {
         private final String contingencyFile;
         private final List<String> contingencyIds;
         private final List<String> constraints;
+        private final String aggregatedResult;
 
         public LocalCommandExecutorMock(String stdoutFileRef, String inputFile) {
-            this(stdoutFileRef, inputFile, null, List.of(), List.of());
+            this(stdoutFileRef, inputFile, null, List.of(), List.of(), null);
         }
 
-        public LocalCommandExecutorMock(String stdoutFileRef, String inputFile, String contingencyFile, List<String> contingencyIds, List<String> outputConstraints) {
+        public LocalCommandExecutorMock(String stdoutFileRef, String inputFile, String contingencyFile, List<String> contingencyIds, List<String> outputConstraints, String aggregatedResult) {
             this.stdOutFileRef = Objects.requireNonNull(stdoutFileRef);
             this.inputFile = inputFile;
             this.contingencyFile = contingencyFile;
             this.contingencyIds = contingencyIds;
             this.constraints = outputConstraints;
+            this.aggregatedResult = aggregatedResult;
         }
 
         @Override
@@ -98,6 +101,7 @@ class DynaFlowSecurityAnalysisTest extends AbstractSerDeTest {
         }
 
         private void copyOutputs(Path workingDir) throws IOException {
+            copyFile(aggregatedResult, Files.createFile(workingDir.resolve(AGGREGATED_RESULTS)));
             Path constraintsFolder = Files.createDirectories(workingDir.resolve(CONSTRAINTS_FOLDER));
             for (int i = 0; i < contingencyIds.size(); i++) {
                 copyFile(constraints.get(i), constraintsFolder.resolve("constraints_" + contingencyIds.get(i) + ".xml"));
@@ -122,7 +126,8 @@ class DynaFlowSecurityAnalysisTest extends AbstractSerDeTest {
 
         LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynawo_version.out",
                 "/SecurityAnalysis/input.xiidm", "/SecurityAnalysis/contingencies.json",
-                contingencyIds, List.of("/SecurityAnalysis/constraints1.xml", "/SecurityAnalysis/constraints2.xml"));
+                contingencyIds, List.of("/SecurityAnalysis/constraints1.xml", "/SecurityAnalysis/constraints2.xml"),
+                "/SecurityAnalysis/aggregatedResults.xml");
         SecurityAnalysisRunParameters runParameters = new SecurityAnalysisRunParameters()
                 .setComputationManager(new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool()));
         SecurityAnalysisReport report = SecurityAnalysis.run(network, contingencies, runParameters);
