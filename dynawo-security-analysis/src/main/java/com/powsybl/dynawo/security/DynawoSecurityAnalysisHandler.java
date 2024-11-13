@@ -14,9 +14,7 @@ import com.powsybl.computation.Command;
 import com.powsybl.computation.CommandExecution;
 import com.powsybl.computation.ExecutionReport;
 import com.powsybl.dynaflow.results.ContingencyResultsUtils;
-import com.powsybl.dynawo.xml.DydXml;
-import com.powsybl.dynawo.xml.JobsXml;
-import com.powsybl.dynawo.xml.ParametersXml;
+import com.powsybl.dynawo.DynawoFilesUtils;
 import com.powsybl.dynawo.commons.DynawoUtil;
 import com.powsybl.dynawo.commons.NetworkResultsUpdater;
 import com.powsybl.dynawo.security.xml.ContingenciesDydXml;
@@ -37,6 +35,7 @@ import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 
+import static com.powsybl.dynawo.DynawoFilesUtils.deleteExistingFile;
 import static com.powsybl.dynawo.commons.DynawoConstants.*;
 import static com.powsybl.dynawo.commons.DynawoUtil.getCommandExecutions;
 
@@ -66,10 +65,7 @@ public final class DynawoSecurityAnalysisHandler extends AbstractExecutionHandle
     @Override
     public List<CommandExecution> before(Path workingDir) throws IOException {
         network.getVariantManager().setWorkingVariant(context.getWorkingVariantId());
-        Path outputNetworkFile = workingDir.resolve(OUTPUT_IIDM_FILENAME_PATH);
-        if (Files.exists(outputNetworkFile)) {
-            Files.delete(outputNetworkFile);
-        }
+        deleteExistingFile(workingDir.resolve(OUTPUTS_FOLDER), FINAL_STATE_FOLDER, OUTPUT_IIDM_FILENAME);
         writeInputFiles(workingDir);
         return getCommandExecutions(command);
     }
@@ -95,9 +91,7 @@ public final class DynawoSecurityAnalysisHandler extends AbstractExecutionHandle
     private void writeInputFiles(Path workingDir) {
         try {
             DynawoUtil.writeIidm(network, workingDir.resolve(NETWORK_FILENAME));
-            JobsXml.write(workingDir, context);
-            DydXml.write(workingDir, context);
-            ParametersXml.write(workingDir, context);
+            DynawoFilesUtils.writeInputFiles(workingDir, context);
             MultipleJobsXml.write(workingDir, context);
             ContingenciesDydXml.write(workingDir, context);
             ContingenciesParXml.write(workingDir, context);
