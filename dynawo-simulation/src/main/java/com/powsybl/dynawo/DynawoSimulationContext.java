@@ -303,6 +303,10 @@ public class DynawoSimulationContext {
         return outputVariables.containsKey(OutputVariable.OutputType.FINAL_STATE);
     }
 
+    public boolean withConstraints() {
+        return false;
+    }
+
     public List<ParametersSet> getDynamicModelsParameters() {
         return dynamicModelsParameters;
     }

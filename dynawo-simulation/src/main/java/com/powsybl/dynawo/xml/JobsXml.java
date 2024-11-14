@@ -111,6 +111,11 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter {
         writer.writeAttribute("local", Boolean.toString(false));
         writer.writeAttribute("global", Boolean.toString(false));
 
+        if (context.withConstraints()) {
+            writer.writeEmptyElement(DYN_URI, "constraints");
+            writer.writeAttribute(EXPORT_MODE, ExportMode.XML.toString());
+        }
+
         writer.writeEmptyElement(DYN_URI, "timeline");
         writer.writeAttribute(EXPORT_MODE, parameters.getTimelineExportMode().toString());
 
