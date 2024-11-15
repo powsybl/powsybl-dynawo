@@ -9,6 +9,6 @@
 package eventWarnings
 
 Disconnect {
-    staticId "NGEN"
+    staticId "WRONG_ID"
     startTime 1
 }

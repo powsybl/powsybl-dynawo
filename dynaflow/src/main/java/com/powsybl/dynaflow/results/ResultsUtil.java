@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Optional;
 
+import static com.powsybl.dynaflow.results.Status.CONVERGENCE;
 import static com.powsybl.dynaflow.results.Status.CRITERIA_NON_RESPECTED;
 import static com.powsybl.security.PostContingencyComputationStatus.*;
 
@@ -41,11 +42,10 @@ public final class ResultsUtil {
         } else {
             try {
                 Status statusE = Status.valueOf(status);
-                boolean isCriterionError = CRITERIA_NON_RESPECTED == statusE;
-                if (isCriterionError && failedCriteria.isEmpty()) {
+                if (CRITERIA_NON_RESPECTED == statusE && failedCriteria.isEmpty()) {
                     LOGGER.warn("ScenarioResult with {} status should have failed criteria", status);
                     return Optional.empty();
-                } else if (!isCriterionError && !failedCriteria.isEmpty()) {
+                } else if (CONVERGENCE == statusE && !failedCriteria.isEmpty()) {
                     LOGGER.warn("ScenarioResult with {} status should not have failed criteria", status);
                     return Optional.empty();
                 }

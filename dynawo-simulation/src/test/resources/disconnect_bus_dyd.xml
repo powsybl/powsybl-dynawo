@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
+    <dyn:blackBoxModel id="Disconnect_B1" lib="EventConnectedStatus" parFile="svcTestCase.par" parId="Disconnect_B1"/>
+    <dyn:macroConnector id="MC_EventBusDisconnection-DefaultActionConnectionPoint">
+        <dyn:connect var1="event_state1_value" var2="@NAME@_state_value"/>
+    </dyn:macroConnector>
+    <dyn:macroConnect connector="MC_EventBusDisconnection-DefaultActionConnectionPoint" id1="Disconnect_B1" id2="NETWORK" name2="B1"/>
+</dyn:dynamicModelsArchitecture>

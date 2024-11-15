@@ -125,8 +125,8 @@ class EventModelsSupplierTest extends AbstractModelSupplierTest {
                         + DSL tests
                            + Groovy Event Models Supplier
                               + DSL model builder for Disconnect
-                                 'staticId' field value 'NGEN' not found for equipment type(s) Disconnectable equipment
-                                 Model Disconnect_NGEN cannot be instantiated
+                                 'staticId' field value 'WRONG_ID' not found for equipment type(s) Disconnectable equipment
+                                 Model Disconnect_WRONG_ID cannot be instantiated
                         """),
                 Arguments.of("/eventWarnings/missingDisconnectionSide.groovy", EurostagTutorialExample1Factory.create(),
                         """

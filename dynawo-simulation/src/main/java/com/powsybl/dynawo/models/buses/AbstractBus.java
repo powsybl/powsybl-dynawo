@@ -63,4 +63,9 @@ public abstract class AbstractBus extends AbstractEquipmentBlackBoxModel<Bus> im
     public Optional<String> getUpuImpinVarName() {
         return Optional.empty();
     }
+
+    @Override
+    public Optional<String> getStateValueVarName() {
+        return Optional.empty();
+    }
 }

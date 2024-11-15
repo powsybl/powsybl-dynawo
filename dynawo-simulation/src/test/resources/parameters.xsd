@@ -7,6 +7,7 @@
     License, v. 2.0. If a copy of the MPL was not distributed with this
     file, you can obtain one at http://mozilla.org/MPL/2.0/.
     SPDX-License-Identifier: MPL-2.0
+
     This file is part of Dynawo, an hybrid C++/Modelica open source time domain
     simulation tool for power systems.
 -->
@@ -18,14 +19,15 @@
 
   <xs:element name="parametersSet">
     <xs:complexType>
-      <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:element name="set" type="dyn:Set" maxOccurs="unbounded">
           <xs:unique name="UniqueParameterName">
-            <xs:selector xpath="dyn:par|dyn:reference|dyn:parTable"/>
+            <xs:selector xpath="dyn:par|dyn:reference|dyn:parTable|dyn:macroParSet"/>
             <xs:field xpath="@name"/>
           </xs:unique>
         </xs:element>
-      </xs:sequence>
+        <xs:element name="macroParameterSet" type="dyn:MacroParameterSet" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:choice>
     </xs:complexType>
     <xs:unique name="UniqueId">
       <xs:selector xpath="dyn:set"/>
@@ -38,6 +40,7 @@
       <xs:element name="parTable" type="dyn:TableParameter"/>
       <xs:element name="par" type="dyn:Parameter"/>
       <xs:element name="reference" type="dyn:Reference"/>
+      <xs:element name="macroParSet" type="dyn:MacroParSet"/>
     </xs:choice>
     <xs:attribute name="id" use="required" type="xs:string"/>
   </xs:complexType>
@@ -69,11 +72,14 @@
     <xs:attribute name="origData" use="required" type="dyn:OriginData"/>
     <xs:attribute name="origName" use="required" type="dyn:String"/>
     <xs:attribute name="componentId" type="dyn:String"/>
+    <xs:attribute name="parId" type="dyn:String"/>
+    <xs:attribute name="parFile" type="dyn:String"/>
   </xs:complexType>
 
   <xs:simpleType name="OriginData">
     <xs:restriction base="dyn:String">
       <xs:enumeration value="IIDM"/>
+      <xs:enumeration value="PAR"/>
     </xs:restriction>
   </xs:simpleType>
 
@@ -87,9 +93,19 @@
   </xs:simpleType>
 
   <xs:simpleType name="String">
-    <xs:restriction base="xs:string">
-      <xs:pattern value="([+-])*([a-zA-Z0-9_.\s-])+([+-])*([0-9])*"/>
-    </xs:restriction>
+    <xs:restriction base="xs:string"/>
   </xs:simpleType>
+
+  <xs:complexType name="MacroParameterSet">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="reference" type="dyn:Reference" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="par" type="dyn:Parameter" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:choice>
+    <xs:attribute name="id" use="required" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="MacroParSet">
+    <xs:attribute name="id" use="required" type="xs:string"/>
+  </xs:complexType>
 
 </xs:schema>

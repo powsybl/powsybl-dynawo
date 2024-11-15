@@ -9,7 +9,7 @@ The Event Models DSL is a domain specific language written in groovy for the sim
 - `startTime` defines when the event starts.
 
 ## Disconnect
-Use this event to disconnect a branch, injection or an HVDC line.
+Use this event to disconnect a bus, branch, injection or an HVDC line.
 
 **Example**
 ```groovy
