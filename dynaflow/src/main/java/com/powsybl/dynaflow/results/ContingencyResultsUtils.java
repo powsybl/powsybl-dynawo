@@ -16,10 +16,7 @@ import com.powsybl.dynawo.commons.timeline.TimelineEntry;
 import com.powsybl.dynawo.commons.timeline.XmlTimeLineParser;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.loadflow.LoadFlowResult;
-import com.powsybl.security.LimitViolation;
-import com.powsybl.security.LimitViolationFilter;
-import com.powsybl.security.LimitViolationsResult;
-import com.powsybl.security.Security;
+import com.powsybl.security.*;
 import com.powsybl.security.results.NetworkResult;
 import com.powsybl.security.results.PostContingencyResult;
 import com.powsybl.security.results.PreContingencyResult;
@@ -31,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.powsybl.dynaflow.SecurityAnalysisConstants.BASE_SCENARIO_NAME;
 import static com.powsybl.dynaflow.SecurityAnalysisConstants.CONSTRAINTS_FOLDER;
 import static com.powsybl.dynawo.commons.DynawoConstants.AGGREGATED_RESULTS;
 
@@ -42,37 +40,59 @@ public final class ContingencyResultsUtils {
     private ContingencyResultsUtils() {
     }
 
+    public static SecurityAnalysisResult createSecurityAnalysisResult(Network network, LimitViolationFilter violationFilter,
+                                                                      Path workingDir, List<Contingency> contingencies) {
+        Map<String, Status> aggregatedResults = getAggregatedResults(workingDir);
+        Path constraintsDir = workingDir.resolve(CONSTRAINTS_FOLDER);
+        return new SecurityAnalysisResult(
+                ContingencyResultsUtils.getPreContingencyResult(network, violationFilter, constraintsDir, aggregatedResults),
+                ContingencyResultsUtils.getPostContingencyResults(network, violationFilter, constraintsDir, aggregatedResults, contingencies),
+                Collections.emptyList());
+    }
+
     /**
-     * Build the pre-contingency results from the input network
+     * Build the pre-contingency results from the constraints file written by dynawo or directly form the network if the results are not found
      */
-    public static PreContingencyResult getPreContingencyResult(Network network, LimitViolationFilter violationFilter) {
-        List<LimitViolation> limitViolations = Security.checkLimits(network);
-        List<LimitViolation> filteredViolations = violationFilter.apply(limitViolations, network);
+    private static PreContingencyResult getPreContingencyResult(Network network, LimitViolationFilter violationFilter,
+                                                                Path constraintsDir, Map<String, Status> scenarioResults) {
         NetworkResult networkResult = new NetworkResult(Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
-        return new PreContingencyResult(LoadFlowResult.ComponentResult.Status.CONVERGED, new LimitViolationsResult(filteredViolations), networkResult);
+        if (scenarioResults.containsKey(BASE_SCENARIO_NAME)) {
+            return new PreContingencyResult(ResultsUtil.convertToPreStatus(scenarioResults.get(BASE_SCENARIO_NAME)),
+                    getLimitViolationsResult(network, violationFilter, constraintsDir, BASE_SCENARIO_NAME),
+                    networkResult);
+        } else {
+            //Dynaflow SA case (see issue #174)
+            List<LimitViolation> limitViolations = Security.checkLimits(network);
+            List<LimitViolation> filteredViolations = violationFilter.apply(limitViolations, network);
+            return new PreContingencyResult(LoadFlowResult.ComponentResult.Status.CONVERGED, new LimitViolationsResult(filteredViolations), networkResult);
+        }
     }
 
     /**
      * Build the post-contingency results from the constraints files written by dynawo
      */
-    public static List<PostContingencyResult> getPostContingencyResults(Network network, LimitViolationFilter violationFilter,
-                                                                  Path workingDir, List<Contingency> contingencies) {
-        Path constraintsDir = workingDir.resolve(CONSTRAINTS_FOLDER);
+    private static List<PostContingencyResult> getPostContingencyResults(Network network, LimitViolationFilter violationFilter,
+                                                                        Path constraintsDir, Map<String, Status> scenarioResults,
+                                                                        List<Contingency> contingencies) {
+        return contingencies.stream()
+                .map(c -> new PostContingencyResult(c,
+                        ResultsUtil.convertToPostStatus(scenarioResults.getOrDefault(c.getId(), Status.EXECUTION_PROBLEM)),
+                        getLimitViolationsResult(network, violationFilter, constraintsDir, c.getId())))
+                .toList();
+    }
+
+    private static Map<String, Status> getAggregatedResults(Path workingDir) {
         Path results = workingDir.resolve(AGGREGATED_RESULTS);
         Map<String, Status> scenarioResults = new HashMap<>();
         if (Files.exists(results)) {
             new XmlScenarioResultParser().parse(results, s -> scenarioResults.put(s.id(), s.status()));
         }
-        return contingencies.stream()
-                .map(c -> new PostContingencyResult(c,
-                        ResultsUtil.convertStatus(scenarioResults.getOrDefault(c.getId(), Status.EXECUTION_PROBLEM)),
-                        getLimitViolationsResult(network, violationFilter, constraintsDir, c)))
-                .toList();
+        return scenarioResults;
     }
 
     private static LimitViolationsResult getLimitViolationsResult(Network network, LimitViolationFilter violationFilter,
-                                            Path constraintsDir, Contingency contingency) {
-        Path constraintsFile = constraintsDir.resolve("constraints_" + contingency.getId() + ".xml");
+                                            Path constraintsDir, String contingencyName) {
+        Path constraintsFile = constraintsDir.resolve("constraints_" + contingencyName + ".xml");
         if (Files.exists(constraintsFile)) {
             List<LimitViolation> limitViolationsRead = ConstraintsReader.read(network, constraintsFile);
             List<LimitViolation> limitViolationsFiltered = violationFilter.apply(limitViolationsRead, network);

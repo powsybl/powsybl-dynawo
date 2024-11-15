@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynaflow.results;
 
+import com.powsybl.loadflow.LoadFlowResult;
 import com.powsybl.security.PostContingencyComputationStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +17,6 @@ import java.util.Optional;
 
 import static com.powsybl.dynaflow.results.Status.CONVERGENCE;
 import static com.powsybl.dynaflow.results.Status.CRITERIA_NON_RESPECTED;
-import static com.powsybl.security.PostContingencyComputationStatus.*;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -28,11 +28,18 @@ public final class ResultsUtil {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ResultsUtil.class);
 
-    public static PostContingencyComputationStatus convertStatus(Status status) {
+    public static PostContingencyComputationStatus convertToPostStatus(Status status) {
         return switch (status) {
-            case CONVERGENCE -> CONVERGED;
-            case DIVERGENCE -> SOLVER_FAILED;
-            case EXECUTION_PROBLEM, CRITERIA_NON_RESPECTED -> FAILED;
+            case CONVERGENCE -> PostContingencyComputationStatus.CONVERGED;
+            case DIVERGENCE -> PostContingencyComputationStatus.SOLVER_FAILED;
+            case EXECUTION_PROBLEM, CRITERIA_NON_RESPECTED -> PostContingencyComputationStatus.FAILED;
+        };
+    }
+
+    public static LoadFlowResult.ComponentResult.Status convertToPreStatus(Status status) {
+        return switch (status) {
+            case CONVERGENCE -> LoadFlowResult.ComponentResult.Status.CONVERGED;
+            case DIVERGENCE, EXECUTION_PROBLEM, CRITERIA_NON_RESPECTED -> LoadFlowResult.ComponentResult.Status.FAILED;
         };
     }
 

@@ -7,10 +7,10 @@
         "subjectId" : "_BUS____1-BUS____2-1_AC",
         "subjectName" : "BUS    1-BUS    2-1",
         "limitType" : "CURRENT",
-        "limitName" : "permanent",
+        "limitName" : "PATL",
         "limit" : 836.74,
         "limitReduction" : 1.0,
-        "value" : 1248.0773003764798,
+        "value" : 1248.100487597837,
         "side" : "ONE"
       } ],
       "actionsTaken" : [ ]
