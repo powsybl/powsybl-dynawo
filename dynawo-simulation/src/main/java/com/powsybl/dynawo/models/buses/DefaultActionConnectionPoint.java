@@ -40,4 +40,9 @@ public class DefaultActionConnectionPoint extends AbstractDefaultModel implement
     public Optional<String> getUpuImpinVarName() {
         return Optional.of("@NAME@_Upu");
     }
+
+    @Override
+    public Optional<String> getStateValueVarName() {
+        return Optional.of("@NAME@_state_value");
+    }
 }
