@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
+import java.util.regex.Pattern;
 
 /**
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
@@ -53,6 +54,7 @@ public final class ConstraintsReader {
 
     private static final Supplier<XMLInputFactory> XML_INPUT_FACTORY_SUPPLIER = Suppliers.memoize(XMLInputFactory::newInstance);
     public static final String DYN_CALCULATED_BUS_PREFIX = "calculatedBus_";
+    public static final Pattern DYN_CALCULATED_BUS_PATTERN = Pattern.compile("calculatedBus_" + ".*_\\d*");
 
     public static List<LimitViolation> read(Network network, Path xmlFile) {
         try (InputStream is = Files.newInputStream(xmlFile)) {
@@ -130,7 +132,7 @@ public final class ConstraintsReader {
     }
 
     private static Optional<Identifiable<?>> getLimitViolationIdentifiable(Network network, String name) {
-        if (name.matches(DYN_CALCULATED_BUS_PREFIX + ".*_\\d*")) {
+        if (DYN_CALCULATED_BUS_PATTERN.matcher(name).matches()) {
             // FIXME: the voltage level information should be directly referenced
             // The naming corresponds to buses which are calculated in dynawo: https://github.com/dynawo/dynawo/blob/8f1e20e43db7ec4d2e4982deac8307dfa8d0dbec/dynawo/sources/Modeler/DataInterface/PowSyblIIDM/DYNVoltageLevelInterfaceIIDM.cpp#L290
             String vlId = name.substring(DYN_CALCULATED_BUS_PREFIX.length(), name.lastIndexOf("_"));

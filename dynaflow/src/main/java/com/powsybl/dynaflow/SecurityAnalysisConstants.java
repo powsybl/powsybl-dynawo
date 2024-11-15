@@ -16,6 +16,8 @@ public final class SecurityAnalysisConstants {
 
     public static final String CONTINGENCIES_FILENAME = "contingencies.json";
 
+    public static final String BASE_SCENARIO_NAME = "Base";
+
     private SecurityAnalysisConstants() {
     }
 
