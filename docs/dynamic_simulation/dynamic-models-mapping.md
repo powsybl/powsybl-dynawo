@@ -334,7 +334,7 @@ PhaseShifterBlockingI {
 #### Tap Changer
 Tap changer automation system added to a transformer.  
 With specific attributes:
-- `staticId`: transformer or load mapped to a dynamic model with transformer
+- `staticId`: load mapped to a dynamic model with transformer
 - `side`: transformer side where the tap changer is added, can be: 
   - `HIGH_VOLTAGE`
   - `LOW_VOLTAGE`
