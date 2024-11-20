@@ -100,12 +100,13 @@ The default value is `1e-6`.
 
 **log.levelFilter**  
 `log.levelFilter` defines the log level for Dynawo log.  
-The default value is `INFO`.
 The available `com.powsybl.dynawo.DynawoSimulationParameters.LogLevel` values are:
 - `DEBUG`
 - `INFO`
 - `WARN`
 - `ERROR`
+
+The default value is `INFO`.
 
 **log.specificLogs**  
 `log.specificLogs` defines as a list the specifics logs to return besides the regular Dynawo log.  
@@ -117,6 +118,7 @@ The available `com.powsybl.dynawo.DynawoSimulationParameters.SpecificLog` values
 - `VARIABLES`
 - `EQUATIONS`
 
+The default value is an empty list.
 
 **criteria.file**  
 `criteria.file` defines the simulation criteria file.  
