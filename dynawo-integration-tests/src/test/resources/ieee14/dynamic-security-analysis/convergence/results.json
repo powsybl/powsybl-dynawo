@@ -26,7 +26,8 @@
       "id" : "_BUS____1-BUS____5-1_AC",
       "elements" : [ {
         "id" : "_BUS____1-BUS____5-1_AC",
-        "type" : "LINE"
+        "type" : "LINE",
+        "voltageLevelId" : "_BUS____5_VL"
       } ]
     },
     "status" : "CONVERGED",
