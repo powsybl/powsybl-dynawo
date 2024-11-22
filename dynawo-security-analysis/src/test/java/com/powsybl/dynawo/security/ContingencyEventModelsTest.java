@@ -70,7 +70,7 @@ public class ContingencyEventModelsTest {
         assertFalse(parametersSet.getBool("event_disconnectExtremity"));
     }
 
-    private DynawoSimulationContext setupDynawoContext(Network network,List<BlackBoxModel> dynamicModels) {
+    private DynawoSimulationContext setupDynawoContext(Network network, List<BlackBoxModel> dynamicModels) {
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load();
         return new DynawoSimulationContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels,
