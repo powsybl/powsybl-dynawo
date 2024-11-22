@@ -7,25 +7,17 @@
  */
 package com.powsybl.dynawo.security;
 
-import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.contingency.Contingency;
-import com.powsybl.contingency.ContingencyElement;
 import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.commons.DynawoConstants;
 import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.models.BlackBoxModel;
-import com.powsybl.dynawo.models.events.ContextDependentEvent;
-import com.powsybl.dynawo.models.events.EventDisconnectionBuilder;
-import com.powsybl.dynawo.models.macroconnections.MacroConnect;
-import com.powsybl.dynawo.models.macroconnections.MacroConnector;
-import com.powsybl.dynawo.parameters.ParametersSet;
-import com.powsybl.iidm.network.Network;
+import com.powsybl.iidm.network.*;
 import com.powsybl.security.dynamic.DynamicSecurityAnalysisParameters;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
@@ -53,40 +45,7 @@ public class SecurityAnalysisContext extends DynawoSimulationContext {
                 parameters.getDynamicSimulationParameters(), dynawoSimulationParameters, currentVersion, ReportNode.NO_OP);
         double contingenciesStartTime = parameters.getDynamicContingenciesParameters().getContingenciesStartTime();
         this.contingencies = contingencies;
-        this.contingencyEventModels = contingencies.stream()
-                .map(c -> {
-                    List<BlackBoxModel> contEventModels = c.getElements().stream()
-                            .map(ce -> {
-                                BlackBoxModel bbm = this.createContingencyEventModel(ce, contingenciesStartTime);
-                                if (bbm instanceof ContextDependentEvent cde) {
-                                    cde.setEquipmentHasDynamicModel(this);
-                                }
-                                return bbm;
-                            })
-                            .collect(Collectors.toList());
-                    Map<String, MacroConnector> macroConnectorsMap = new HashMap<>();
-                    List<MacroConnect> macroConnects = new ArrayList<>();
-                    List<ParametersSet> parametersSets = new ArrayList<>(contEventModels.size());
-                    macroConnectionsAdder.setMacroConnectorAdder(macroConnectorsMap::computeIfAbsent);
-                    macroConnectionsAdder.setMacroConnectAdder(macroConnects::add);
-                    for (BlackBoxModel bbm : contEventModels) {
-                        bbm.createMacroConnections(macroConnectionsAdder);
-                        bbm.createDynamicModelParameters(this, parametersSets::add);
-                    }
-                    return new ContingencyEventModels(c, contEventModels, macroConnectorsMap, macroConnects, parametersSets);
-                })
-                .collect(Collectors.toList());
-    }
-
-    private BlackBoxModel createContingencyEventModel(ContingencyElement element, double contingenciesStartTime) {
-        BlackBoxModel bbm = EventDisconnectionBuilder.of(network)
-                .staticId(element.getId())
-                .startTime(contingenciesStartTime)
-                .build();
-        if (bbm == null) {
-            throw new PowsyblException("Contingency element " + element.getType() + " not supported");
-        }
-        return bbm;
+        this.contingencyEventModels = ContingencyEventModelsFactory.createFrom(contingencies, this, macroConnectionsAdder, contingenciesStartTime, ReportNode.NO_OP);
     }
 
     public List<Contingency> getContingencies() {
