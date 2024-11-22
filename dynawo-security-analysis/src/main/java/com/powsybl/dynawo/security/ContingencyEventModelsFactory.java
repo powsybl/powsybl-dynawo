@@ -24,10 +24,7 @@ import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.TwoSides;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -42,7 +39,11 @@ public final class ContingencyEventModelsFactory {
                 .map(c -> {
                     List<BlackBoxModel> eventModels = c.getElements().stream()
                             .map(ce -> createContingencyEventModel(ce, context, contingenciesStartTime, reportNode))
+                            .filter(Objects::nonNull)
                             .toList();
+                    if (eventModels.isEmpty()) {
+                        return null;
+                    }
                     Map<String, MacroConnector> macroConnectorsMap = new HashMap<>();
                     List<MacroConnect> macroConnectList = new ArrayList<>();
                     List<ParametersSet> eventParameters = new ArrayList<>(eventModels.size());
@@ -55,6 +56,7 @@ public final class ContingencyEventModelsFactory {
                     });
                     return new ContingencyEventModels(c, eventModels, macroConnectorsMap, macroConnectList, eventParameters);
                 })
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 
@@ -71,6 +73,7 @@ public final class ContingencyEventModelsFactory {
             } else {
                 DynamicSecurityAnalysisReports.createContingencyVoltageIdNotFoundReportNode(reportNode,
                         sidedElement.getId(), sidedElement.getVoltageLevelId());
+                return null;
             }
         }
         BlackBoxModel bbm = builder.build();
