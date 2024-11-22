@@ -31,10 +31,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class ContingencyEventModelsTest {
+class ContingencyEventModelsTest {
 
     @Test
-    public void test() {
+    void test() {
         Network network = EurostagTutorialExample1Factory.create();
         List<BlackBoxModel> dynamicModels = List.of(
                 BaseGeneratorBuilder.of(network)
