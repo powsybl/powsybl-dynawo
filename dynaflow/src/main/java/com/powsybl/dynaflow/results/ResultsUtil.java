@@ -7,7 +7,6 @@
  */
 package com.powsybl.dynaflow.results;
 
-import com.powsybl.loadflow.LoadFlowResult;
 import com.powsybl.security.PostContingencyComputationStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,13 +32,6 @@ public final class ResultsUtil {
             case CONVERGENCE -> PostContingencyComputationStatus.CONVERGED;
             case DIVERGENCE -> PostContingencyComputationStatus.SOLVER_FAILED;
             case EXECUTION_PROBLEM, CRITERIA_NON_RESPECTED -> PostContingencyComputationStatus.FAILED;
-        };
-    }
-
-    public static LoadFlowResult.ComponentResult.Status convertToPreStatus(Status status) {
-        return switch (status) {
-            case CONVERGENCE -> LoadFlowResult.ComponentResult.Status.CONVERGED;
-            case DIVERGENCE, EXECUTION_PROBLEM, CRITERIA_NON_RESPECTED -> LoadFlowResult.ComponentResult.Status.FAILED;
         };
     }
 

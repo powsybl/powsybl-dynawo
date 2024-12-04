@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Objects;
 
-import static com.powsybl.dynaflow.SecurityAnalysisConstants.BASE_SCENARIO_NAME;
 import static com.powsybl.dynawo.DynawoSimulationConstants.JOBS_FILENAME;
 import static com.powsybl.dynawo.DynawoSimulationConstants.MULTIPLE_JOBS_FILENAME;
 
@@ -41,7 +40,6 @@ public final class MultipleJobsXml {
         for (ContingencyEventModels model : context.getContingencyEventModels()) {
             writeScenario(writer, model.getId());
         }
-        writeBaseScenario(writer);
         writer.writeEndElement();
     }
 
@@ -49,10 +47,5 @@ public final class MultipleJobsXml {
         writer.writeEmptyElement("scenario");
         writer.writeAttribute("id", id);
         writer.writeAttribute("dydFile", id + ".dyd");
-    }
-
-    private static void writeBaseScenario(XMLStreamWriter writer) throws XMLStreamException {
-        writer.writeEmptyElement("scenario");
-        writer.writeAttribute("id", BASE_SCENARIO_NAME);
     }
 }
