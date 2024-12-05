@@ -27,13 +27,6 @@ jobs:
         with:
           java-version: 17
 
-      - name: Checkout powsybl-core branch
-        uses: actions/checkout@v4
-        with:
-          repository: powsybl/powsybl-core
-          ref: refs/heads/sided_contingency_side_conversion
-          path: powsybl-core
-
       - name: Build and install powsybl-core with Maven
         run: mvn --batch-mode -DskipTests=true --file ./powsybl-core/pom.xml install
 
