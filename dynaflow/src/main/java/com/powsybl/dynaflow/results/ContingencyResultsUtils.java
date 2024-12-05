@@ -55,9 +55,9 @@ public final class ContingencyResultsUtils {
     private static PreContingencyResult getPreContingencyResult(Network network, LimitViolationFilter violationFilter,
                                                                 Path constraintsDir, Map<String, Status> scenarioResults) {
         NetworkResult networkResult = new NetworkResult(Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
-        //Dynaflow SA case (see issue #174)
         List<LimitViolation> limitViolations = Security.checkLimits(network);
         List<LimitViolation> filteredViolations = violationFilter.apply(limitViolations, network);
+        // Pre contingency always set to CONVERGED (see issue #174 & #414)
         return new PreContingencyResult(LoadFlowResult.ComponentResult.Status.CONVERGED, new LimitViolationsResult(filteredViolations), networkResult);
     }
 
