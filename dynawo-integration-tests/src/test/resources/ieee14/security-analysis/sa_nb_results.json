@@ -83,7 +83,7 @@
         "type" : "GENERATOR"
       } ]
     },
-    "status" : "CONVERGED",
+    "status" : "SOLVER_FAILED",
     "limitViolationsResult" : {
       "limitViolations" : [ ],
       "actionsTaken" : [ ]
@@ -108,7 +108,7 @@
         "type" : "GENERATOR"
       } ]
     },
-    "status" : "CONVERGED",
+    "status" : "SOLVER_FAILED",
     "limitViolationsResult" : {
       "limitViolations" : [ {
         "subjectId" : "S1VL1_BBS",

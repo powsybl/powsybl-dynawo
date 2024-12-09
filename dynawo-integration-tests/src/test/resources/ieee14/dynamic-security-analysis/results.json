@@ -29,7 +29,7 @@
         "type" : "LOAD"
       } ]
     },
-    "status" : "FAILED",
+    "status" : "CONVERGED",
     "limitViolationsResult" : {
       "limitViolations" : [ ],
       "actionsTaken" : [ ]
