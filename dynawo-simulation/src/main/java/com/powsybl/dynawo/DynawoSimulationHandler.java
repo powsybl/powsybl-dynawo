@@ -67,8 +67,8 @@ public final class DynawoSimulationHandler extends AbstractExecutionHandler<Dyna
     private final ReportNode reportNode;
 
     private final List<TimelineEvent> timeline = new ArrayList<>();
-    private final Map<String, DoubleTimeSeries> curves = new HashMap<>();
-    private final Map<String, Double> fsv = new HashMap<>();
+    private final Map<String, DoubleTimeSeries> curves = new LinkedHashMap<>();
+    private final Map<String, Double> fsv = new LinkedHashMap<>();
     private DynamicSimulationResult.Status status = DynamicSimulationResult.Status.SUCCESS;
     private String statusText = "";
 
