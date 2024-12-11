@@ -47,17 +47,20 @@ public final class DynawoFilesUtils {
         if (context.withFsvVariables()) {
             OutputVariablesXml.writeFsv(workingDir, context);
         }
-        writeInputFiles(workingDir, context.getDynawoSimulationParameters());
+        writeDumpFiles(workingDir, context.getDynawoSimulationParameters().getDumpFileParameters());
+        writeCriteriaFile(workingDir, context.getDynawoSimulationParameters());
     }
 
-    public static void writeInputFiles(Path workingDir, DynawoSimulationParameters parameters) throws IOException {
-        DumpFileParameters dumpFileParameters = parameters.getDumpFileParameters();
+    private static void writeDumpFiles(Path workingDir, DumpFileParameters dumpFileParameters) throws IOException {
         if (dumpFileParameters.useDumpFile()) {
             Path dumpFilePath = dumpFileParameters.getDumpFilePath();
             if (dumpFilePath != null) {
                 Files.copy(dumpFilePath, workingDir.resolve(dumpFileParameters.dumpFile()), StandardCopyOption.REPLACE_EXISTING);
             }
         }
+    }
+
+    private static void writeCriteriaFile(Path workingDir, DynawoSimulationParameters parameters) {
         parameters.getCriteriaFilePath().ifPresent(filePath -> {
             try {
                 Files.copy(filePath, workingDir.resolve(filePath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
