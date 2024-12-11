@@ -67,7 +67,7 @@ public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identif
             case HVDC_LINE -> DisconnectionType.HVDC;
             case GENERATOR, LOAD, STATIC_VAR_COMPENSATOR, SHUNT_COMPENSATOR -> DisconnectionType.INJECTION;
             case LINE, TWO_WINDINGS_TRANSFORMER -> DisconnectionType.BRANCH;
-            default -> null;
+            default -> DisconnectionType.NONE;
         };
     }
 

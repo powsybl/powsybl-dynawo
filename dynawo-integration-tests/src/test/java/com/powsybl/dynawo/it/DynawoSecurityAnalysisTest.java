@@ -117,7 +117,7 @@ class DynawoSecurityAnalysisTest extends AbstractDynawoTest {
                         List.of(Contingency.builder("Disconnect")
                                 .addLine("_BUS____1-BUS____5-1_AC")
                                 .addGenerator("_GEN____2_SM")
-                                        .addBus("_BUS____1_TN")
+                                .addBus("_BUS____1_TN")
                                 .build()),
                         "/ieee14/dynamic-security-analysis/divergence/results.json")
         );
