@@ -96,7 +96,7 @@ public final class DynaFlowSecurityAnalysisHandler extends AbstractExecutionHand
             ObjectWriter writer = mapper.writerWithDefaultPrettyPrinter();
             writer.writeValue(os, ContingencyList.of(
                     contingencies.stream().filter(c -> {
-                        if (c instanceof SidedContingencyElement sidedC && sidedC.hasVoltageLevelId()) {
+                        if (c instanceof SidedContingencyElement sidedC && sidedC.getVoltageLevelId() != null) {
                             DynaflowReports.createSidedContingencyReportNode(reportNode, c.getId());
                             return false;
                         }

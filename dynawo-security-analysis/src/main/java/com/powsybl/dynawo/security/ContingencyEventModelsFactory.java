@@ -9,10 +9,9 @@ package com.powsybl.dynawo.security;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.report.ReportNode;
-import com.powsybl.contingency.AbstractSidedContingency;
 import com.powsybl.contingency.Contingency;
 import com.powsybl.contingency.ContingencyElement;
-import com.powsybl.contingency.SidedContingencyElementUtils;
+import com.powsybl.contingency.SidedContingencyElement;
 import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.events.ContextDependentEvent;
@@ -66,8 +65,8 @@ public final class ContingencyEventModelsFactory {
         EventDisconnectionBuilder builder = EventDisconnectionBuilder.of(network)
                 .staticId(element.getId())
                 .startTime(contingenciesStartTime);
-        if (element instanceof AbstractSidedContingency sidedElement && sidedElement.hasVoltageLevelId()) {
-            TwoSides side = SidedContingencyElementUtils.getContingencySide(network, sidedElement);
+        if (element instanceof SidedContingencyElement sidedElement && sidedElement.getVoltageLevelId() != null) {
+            TwoSides side = SidedContingencyElement.getContingencySide(network, sidedElement);
             if (side != null) {
                 builder.disconnectOnly(side);
             } else {
