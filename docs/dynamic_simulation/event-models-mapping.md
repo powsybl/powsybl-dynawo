@@ -21,7 +21,7 @@ In the following examples the array will be omitted.
 - `startTime`: defines when the event starts.
 
 ### Disconnect
-Disconnects a branch, an injection or an HVDC line.
+Disconnects a bus, a branch, an injection or an HVDC line.
 With specific attributes:
 - `disconnectOnly`: optional attribute that specifies the side to disconnect for Branch or HVDC (by default both sides are disconnected)
 
