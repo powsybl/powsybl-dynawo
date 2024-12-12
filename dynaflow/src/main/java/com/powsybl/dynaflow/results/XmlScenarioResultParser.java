@@ -49,10 +49,10 @@ public final class XmlScenarioResultParser extends AbstractXmlParser<ScenarioRes
     public static void readFailedCriterion(String elementName, XMLStreamReader xmlReader, Consumer<FailedCriterion> resultConsumer) {
         try {
             if (elementName.equals("criterionNonRespected")) {
-                String message = xmlReader.getAttributeValue(null, ID);
+                String description = xmlReader.getAttributeValue(null, ID);
                 String time = xmlReader.getAttributeValue(null, TIME);
                 XmlUtil.readEndElementOrThrow(xmlReader);
-                ResultsUtil.createFailedCriterion(message, time).ifPresent(resultConsumer);
+                ResultsUtil.createFailedCriterion(description, time).ifPresent(resultConsumer);
             }
         } catch (XMLStreamException e) {
             throw new UncheckedXmlStreamException(e);

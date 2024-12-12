@@ -57,13 +57,13 @@ public final class ResultsUtil {
         return Optional.empty();
     }
 
-    static Optional<FailedCriterion> createFailedCriterion(String message, String time) {
-        if (message == null || time == null) {
-            LOGGER.warn("Inconsistent failed criterion entry (message: '{}', time: '{}')", message, time);
+    static Optional<FailedCriterion> createFailedCriterion(String description, String time) {
+        if (description == null || time == null) {
+            LOGGER.warn("Inconsistent failed criterion entry (description: '{}', time: '{}')", description, time);
         } else {
             try {
                 double timeD = Double.parseDouble(time);
-                return Optional.of(new FailedCriterion(message, timeD));
+                return Optional.of(new FailedCriterion(description, timeD));
             } catch (NumberFormatException e) {
                 logInconsistentEntry("time", time);
             }

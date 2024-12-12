@@ -9,9 +9,9 @@ package com.powsybl.dynaflow.results;
 
 /**
  * scenarioResults or loadIncreaseResults failed criterion
- * @param message Failed criterion message
+ * @param description Failed criterion description
  * @param time Failure time (in seconds)
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public record FailedCriterion(String message, double time) {
+public record FailedCriterion(String description, double time) {
 }
