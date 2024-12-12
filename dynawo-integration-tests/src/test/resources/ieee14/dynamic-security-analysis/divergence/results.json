@@ -1,16 +1,16 @@
 {
   "version" : "1.7",
   "preContingencyResult" : {
-    "status" : "CONVERGED",
+    "status" : "FAILED",
     "limitViolationsResult" : {
       "limitViolations" : [ {
         "subjectId" : "_BUS____1-BUS____2-1_AC",
         "subjectName" : "BUS    1-BUS    2-1",
         "limitType" : "CURRENT",
-        "limitName" : "permanent",
+        "limitName" : "PATL",
         "limit" : 836.74,
         "limitReduction" : 1.0,
-        "value" : 1248.0773003764798,
+        "value" : 1248.100487597837,
         "side" : "ONE"
       } ],
       "actionsTaken" : [ ]
@@ -23,13 +23,19 @@
   },
   "postContingencyResults" : [ {
     "contingency" : {
-      "id" : "_LOAD__11_EC",
+      "id" : "Disconnect",
       "elements" : [ {
-        "id" : "_LOAD__11_EC",
-        "type" : "LOAD"
+        "id" : "_BUS____1-BUS____5-1_AC",
+        "type" : "LINE"
+      }, {
+        "id" : "_GEN____2_SM",
+        "type" : "GENERATOR"
+      }, {
+        "id" : "_BUS____1_TN",
+        "type" : "BUS"
       } ]
     },
-    "status" : "FAILED",
+    "status" : "SOLVER_FAILED",
     "limitViolationsResult" : {
       "limitViolations" : [ ],
       "actionsTaken" : [ ]
