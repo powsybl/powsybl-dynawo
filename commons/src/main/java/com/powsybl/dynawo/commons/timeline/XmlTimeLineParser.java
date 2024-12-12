@@ -9,68 +9,25 @@ package com.powsybl.dynawo.commons.timeline;
 
 import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
 import com.powsybl.commons.xml.XmlUtil;
+import com.powsybl.dynawo.commons.AbstractXmlParser;
 
-import javax.xml.XMLConstants;
-import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.UncheckedIOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.function.Consumer;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  */
-public final class XmlTimeLineParser implements TimeLineParser {
+public final class XmlTimeLineParser extends AbstractXmlParser<TimelineEntry> implements TimeLineParser {
 
     private static final String TIME = "time";
     private static final String MODEL_NAME = "modelName";
     private static final String MESSAGE = "message";
 
-    public List<TimelineEntry> parse(Path timeLineFile) {
-        Objects.requireNonNull(timeLineFile);
-        if (!Files.exists(timeLineFile)) {
-            return Collections.emptyList();
-        }
-
-        try (Reader reader = Files.newBufferedReader(timeLineFile, StandardCharsets.UTF_8)) {
-            return parse(reader);
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        } catch (XMLStreamException e) {
-            throw new UncheckedXmlStreamException(e);
-        }
-    }
-
-    public static List<TimelineEntry> parse(Reader reader) throws XMLStreamException {
-
-        List<TimelineEntry> timeLineSeries;
-        XMLInputFactory factory = XMLInputFactory.newInstance();
-        factory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
-        factory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
-        XMLStreamReader xmlReader = null;
-        try {
-            xmlReader = factory.createXMLStreamReader(reader);
-            timeLineSeries = read(xmlReader);
-        } finally {
-            if (xmlReader != null) {
-                xmlReader.close();
-            }
-        }
-        return timeLineSeries;
-    }
-
-    private static List<TimelineEntry> read(XMLStreamReader xmlReader) throws XMLStreamException {
-        List<TimelineEntry> timeline = new ArrayList<>();
+    @Override
+    protected void read(XMLStreamReader xmlReader, Consumer<TimelineEntry> consumer) throws XMLStreamException {
         int state = xmlReader.next();
         while (state == XMLStreamConstants.COMMENT) {
             state = xmlReader.next();
@@ -83,12 +40,11 @@ public final class XmlTimeLineParser implements TimeLineParser {
                     String message = xmlReader.getAttributeValue(null, MESSAGE);
                     XmlUtil.readEndElementOrThrow(xmlReader);
                     TimeLineUtil.createEvent(time, modelName, message)
-                            .ifPresent(timeline::add);
+                            .ifPresent(consumer);
                 }
             } catch (XMLStreamException e) {
                 throw new UncheckedXmlStreamException(e);
             }
         });
-        return timeline;
     }
 }
