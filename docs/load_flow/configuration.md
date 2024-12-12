@@ -71,22 +71,22 @@ The default value is a list of all values.
 
 **startingPointMode**  
 `startingPointMode` indicates the starting point values considered in the simulation
-Available values  **(TODO: describe them)**:
-- `WARM`: starting point values for voltage, phase and injections are considered previously calculated.
-- `FLAT`: starting point values considered are nominal value for bus voltages and set points values for injections.
+Available values:
+- `WARM`: starting point values for voltage, phase and injections are the ones in the network.
+- `FLAT`: starting point values are the nominal value for bus voltages and the set points values for injections.
 
 The default value is `WARM`.
 
 **precision**  
 `precision` defines the real number precision  
-The default value is `Nan`.
+The default value is `NaN`.
 
 **assemblingPath**  
-`assemblingPath` is used to indicates the file which defines the models' association.  
+`assemblingPath` indicates the file which defines the models' association.  
 The default value is `null`.
 
 **settingPath**  
-`settingPath` is used to indicates the file which defines the model settings values.  
+`settingPath` indicates the file which defines the model settings values.  
 The default value is `null`.
 
 **mergeLoads**  

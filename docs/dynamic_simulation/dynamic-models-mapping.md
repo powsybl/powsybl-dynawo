@@ -1,6 +1,6 @@
 # Dynamic models mapping
-Dynamic models mapping permit the creation of dynamic models used by Dynawo. that occurs during the simulation.
-Most of them are associated with a static equipment present in the network.
+Dynamic model mapping creates dynamic models used by Dynawo.
+Most of the dynamic models are associated with a static equipment present in the network.
 If some equipments are not configured, Dynawo would use a default model and set of parameters.
 
 ## Implementation
@@ -18,9 +18,9 @@ In the following examples the array will be omitted.
 
 ## Dynamic Model
 - All the models share three attributes:
-- `modelName`: refers to the dynamic model library used in Dynawo. (used as a keyword in Groovy script)
+- `modelName`: refers to the dynamic model library used in Dynawo (used as a keyword in Groovy script).
 - `dynamicModelId`: identifies the model.
-- `parameterSetId`: refers a set of parameters for this model in one of the network parameters file.
+- `parameterSetId`: refers to a set of parameters for this model in the model parameters file.
 
 **Note**: In Json configuration file `parameterSetId` is replaced by the `group` attribute and can be customized with the `groupType` attribute taking one of the following value:
 - `FIXED`: the `parameterSetId` equals the `group` (default value)
@@ -86,7 +86,7 @@ LoadAlphaBeta {
 Dynamic models representing an automation system without network representation.
 
 #### Overload Management System
-Automation system which emits a specific order when the current on the monitored line goes above a given threshold during some time.  
+Automation system which emits a specific order when the current on the monitored line exceeds a given threshold for a given duration.  
 With specific attributes:
 - `controlledBranch`
 - `iMeasurement`
@@ -134,8 +134,8 @@ OverloadManagementSystem {
 }
 ```
 
-#### Two Levels Overload Management System
-Automation system which emits a specific order when the current on two monitored lines goes above a given threshold during some time.  
+#### Two Level Overload Management System
+Automation system which emits a specific order when the current on two monitored lines exceeds a given threshold for a given duration.  
 With specific attributes:
 - `controlledBranch`
 - `iMeasurement1`
@@ -198,7 +198,7 @@ TwoLevelsOverloadManagementSystem {
 ```
 
 #### Under Voltage Automation System
-Send switch-off signal to the monitored generator when the voltage goes below a threshold.  
+Sends switch-off signal to the monitored generator when the voltage goes below a threshold.  
 With specific attribute:
 - `generator`: generator static id
 
@@ -231,7 +231,7 @@ UnderVoltage {
 ```
 
 #### Phase Shifter P
-Phase-shifter which monitors a given active power. When the active power goes above a given threshold max, taps will be changed in order to decrease it. When the active power goes below another threshold stop, the phase-shifter is automatically deactivated.  
+Phase-shifter which monitors a given active power. When the active power goes above a given threshold, taps will be changed in order to decrease it. When the active power goes below another threshold, the phase-shifter is automatically deactivated.  
 With specific attribute:
 - `transformer`: transformer static id
 
@@ -264,7 +264,7 @@ PhaseShifterP {
 ```
 
 #### Phase Shifter I
-Phase-shifter which monitors a given current. When the current goes above a given threshold max, taps will be changed in order to decrease it. When the active power goes below another threshold stop, the phase-shifter is automatically deactivated.  
+Phase-shifter which monitors a given current. When the current goes above a given threshold, taps will be changed in order to decrease it. When the active power goes below another threshold, the phase-shifter is automatically deactivated.  
 With specific attribute:
 - `transformer`: transformer static id
 
@@ -297,7 +297,7 @@ PhaseShifterI {
 ```
 
 #### Phase Shifter Blocking I
-Block phase shifter I when the monitored intensity go below a threshold.  
+Blocks phase shifter I when the monitored intensity go below a threshold.  
 With specific attributes:
 - `phaseShifterId`: Phase shifter I dynamic model id
 
@@ -377,7 +377,7 @@ TapChangerAutomaton {
 ```
 
 #### Tap Changer Blocking Automaton
-Block tap-changers when one of the monitored voltages goes below a threshold.   
+Blocks tap changers when one of the monitored voltages goes below a threshold.   
 With specific attributes:
 - `transformers`: static ids handling three types of equipment:
   - transformer
@@ -467,7 +467,7 @@ The list is statically loaded via [ModelConfigLoader](https://javadoc.io/doc/com
 * `lib`: library name used in dynawo
 * `alias`: name used in powsybl-dynawo instead of lib
 * `properties`: dynamic model properties (synchronized, dangling, etc.)
-* `internalModelPrefix`: used for dyd file creation
+* `internalModelPrefix`: used for dynamic model file creation
 * `doc`: library documentation
 * `minVersion`: Dynawo minimum version required
 * `maxVersion`: Dynawo maximum version required

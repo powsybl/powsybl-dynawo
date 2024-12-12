@@ -1,5 +1,5 @@
 # Event models mapping
-Event models mapping permit the creation of events that occurs during the simulation.
+Event models mapping allows the creation of events that occurs during the simulation.
 
 ## Implementation
 Powsybl-Dynawo handles two methods of mapping:
@@ -16,12 +16,12 @@ In the following examples the array will be omitted.
 
 ## Event Model
 - All the models share three attributes:
-- `modelName`: refers to the event model library used in Dynawo. (used as a keyword in Groovy script)
+- `modelName`: refers to the event model library used in Dynawo (used as a keyword in Groovy script).
 - `staticId`: identifies the equipment affected by the event.
 - `startTime`: defines when the event starts.
 
 ### Disconnect
-Disconnect a branch, injection or an HVDC line.
+Disconnects a branch, an injection or an HVDC line.
 With specific attributes:
 - `disconnectOnly`: optional attribute that specifies the side to disconnect for Branch or HVDC (by default both sides are disconnected)
 

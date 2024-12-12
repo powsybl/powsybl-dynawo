@@ -22,7 +22,7 @@ import java.util.EnumSet;
  */
 public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identifiable<?>, EventDisconnectionBuilder> {
 
-    private static final EventModelInfo MODEL_INFO = new EventModelInfo("Disconnect", "Disconnect network equipment (injection, branch or hvdc)");
+    private static final EventModelInfo MODEL_INFO = new EventModelInfo("Disconnect", "Disconnects a branch, an injection or an HVDC line.");
     private static final EnumSet<IdentifiableType> CONNECTABLE_INJECTIONS = EnumSet.of(IdentifiableType.GENERATOR, IdentifiableType.LOAD, IdentifiableType.STATIC_VAR_COMPENSATOR, IdentifiableType.SHUNT_COMPENSATOR);
     private static final EnumSet<IdentifiableType> CONNECTABLE_BRANCHES = EnumSet.of(IdentifiableType.LINE, IdentifiableType.TWO_WINDINGS_TRANSFORMER);
 
