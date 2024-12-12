@@ -65,7 +65,7 @@ public final class ContingencyResultsUtils {
                 .map(c -> new PostContingencyResult(c,
                         ResultsUtil.convertStatus(scenarioResults.getOrDefault(c.getId(), Status.EXECUTION_PROBLEM)),
                         getLimitViolationsResult(network, violationFilter, constraintsDir, c)))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private static LimitViolationsResult getLimitViolationsResult(Network network, LimitViolationFilter violationFilter,
