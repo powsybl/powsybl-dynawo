@@ -107,11 +107,19 @@ class DynawoSecurityAnalysisTest extends AbstractDynawoTest {
     private static Stream<Arguments> provideSimulationParameter() {
         return Stream.of(
                 Arguments.of("/ieee14/dynamic-security-analysis/convergence/criteria.crt",
-                        List.of(Contingency.line("_BUS____1-BUS____5-1_AC"), Contingency.generator("_GEN____2_SM")),
+                        List.of(Contingency.line("_BUS____1-BUS____5-1_AC"),
+                                Contingency.generator("_GEN____2_SM")),
                         "/ieee14/dynamic-security-analysis/convergence/results.json"),
                 Arguments.of("/ieee14/dynamic-security-analysis/failed-criteria/criteria.crt",
                         List.of(Contingency.line("_BUS____1-BUS____5-1_AC")),
-                        "/ieee14/dynamic-security-analysis/failed-criteria/results.json")
+                        "/ieee14/dynamic-security-analysis/failed-criteria/results.json"),
+                Arguments.of("/ieee14/dynamic-security-analysis/divergence/criteria.crt",
+                        List.of(Contingency.builder("Disconnect")
+                                .addLine("_BUS____1-BUS____5-1_AC")
+                                .addGenerator("_GEN____2_SM")
+                                .addBus("_BUS____1_TN")
+                                .build()),
+                        "/ieee14/dynamic-security-analysis/divergence/results.json")
         );
     }
 }
