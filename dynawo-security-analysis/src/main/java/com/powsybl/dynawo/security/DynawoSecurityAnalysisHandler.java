@@ -24,7 +24,6 @@ import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.serde.NetworkSerDe;
 import com.powsybl.security.LimitViolationFilter;
 import com.powsybl.security.SecurityAnalysisReport;
-import com.powsybl.security.SecurityAnalysisResult;
 import com.powsybl.security.interceptors.SecurityAnalysisInterceptor;
 
 import javax.xml.stream.XMLStreamException;
@@ -32,9 +31,9 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collections;
 import java.util.List;
 
+import static com.powsybl.dynaflow.results.ContingencyResultsUtils.createSecurityAnalysisResult;
 import static com.powsybl.dynawo.DynawoFilesUtils.deleteExistingFile;
 import static com.powsybl.dynawo.commons.DynawoConstants.*;
 import static com.powsybl.dynawo.commons.DynawoUtil.getCommandExecutions;
@@ -79,13 +78,7 @@ public final class DynawoSecurityAnalysisHandler extends AbstractExecutionHandle
             NetworkResultsUpdater.update(context.getNetwork(), NetworkSerDe.read(outputNetworkFile), context.getDynawoSimulationParameters().isMergeLoads());
         }
         ContingencyResultsUtils.reportContingenciesTimelines(context.getContingencies(), workingDir.resolve(TIMELINE_FOLDER), reportNode);
-
-        return new SecurityAnalysisReport(
-                new SecurityAnalysisResult(
-                        ContingencyResultsUtils.getPreContingencyResult(network, violationFilter),
-                        ContingencyResultsUtils.getPostContingencyResults(network, violationFilter, workingDir, context.getContingencies()),
-                        Collections.emptyList())
-        );
+        return new SecurityAnalysisReport(createSecurityAnalysisResult(network, violationFilter, workingDir, context.getContingencies()));
     }
 
     private void writeInputFiles(Path workingDir) {
