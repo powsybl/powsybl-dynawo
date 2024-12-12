@@ -66,7 +66,7 @@ class TapChangerAutomationSystemXmlTest extends AbstractDynamicModelXmlTest {
                 .dynamicModelId("BBM_TC3")
                 .parameterSetId("tc")
                 .staticId("LOAD3")
-                .side(TransformerSide.HIGH_VOLTAGE)
+                .side("HIGH_VOLTAGE")
                 .build());
     }
 
