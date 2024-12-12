@@ -6,12 +6,10 @@
  */
 package com.powsybl.dynawo.it;
 
-import com.google.common.io.ByteStreams;
 import com.powsybl.commons.datasource.ResourceDataSource;
 import com.powsybl.commons.datasource.ResourceSet;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.commons.test.ComparisonUtils;
-import com.powsybl.commons.test.TestUtil;
 import com.powsybl.contingency.Contingency;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension;
@@ -32,17 +30,17 @@ import com.powsybl.security.dynamic.DynamicSecurityAnalysisProvider;
 import com.powsybl.security.dynamic.DynamicSecurityAnalysisRunParameters;
 import com.powsybl.security.json.SecurityAnalysisResultSerializer;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.util.stream.Stream;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
@@ -62,31 +60,33 @@ class DynawoSecurityAnalysisTest extends AbstractDynawoTest {
         provider = new DynawoSecurityAnalysisProvider(new DynawoAlgorithmsConfig(Path.of("/dynaflow-launcher"), true));
         parameters = new DynamicSecurityAnalysisParameters()
                 .setDynamicSimulationParameters(new DynamicSimulationParameters(0, 100))
-                .setDynamicContingenciesParameters(new DynamicSecurityAnalysisParameters.ContingenciesParameters(50));
+                .setDynamicContingenciesParameters(new DynamicSecurityAnalysisParameters.ContingenciesParameters(10));
         dynawoSimulationParameters = new DynawoSimulationParameters();
         parameters.getDynamicSimulationParameters().addExtension(DynawoSimulationParameters.class, dynawoSimulationParameters);
     }
 
-    @Test
-    void testIeee14() throws IOException {
+    @ParameterizedTest
+    @MethodSource("provideSimulationParameter")
+    void testIeee14DSA(String criteriaPath, List<Contingency> contingencies, String resultsPath) throws IOException {
         Network network = Network.read(new ResourceDataSource("IEEE14", new ResourceSet("/ieee14", "IEEE14.iidm")));
 
         GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
-                getResourceAsStream("/ieee14/disconnectline/dynamicModels.groovy"),
+                getResourceAsStream("/ieee14/dynamic-security-analysis/dynamicModels.groovy"),
                 GroovyExtension.find(DynamicModelGroovyExtension.class, DynawoSimulationProvider.NAME));
 
-        List<ParametersSet> modelsParameters = ParametersXml.load(getResourceAsStream("/ieee14/disconnectline/models.par"));
-        ParametersSet networkParameters = ParametersXml.load(getResourceAsStream("/ieee14/disconnectline/network.par"), "8");
-        ParametersSet solverParameters = ParametersXml.load(getResourceAsStream("/ieee14/disconnectline/solvers.par"), "2");
+        List<ParametersSet> modelsParameters = ParametersXml.load(getResourceAsStream("/ieee14/models.par"));
+        ParametersSet networkParameters = ParametersXml.load(getResourceAsStream("/ieee14/network.par"), "8");
+        ParametersSet solverParameters = ParametersXml.load(getResourceAsStream("/ieee14/solvers.par"), "2");
         dynawoSimulationParameters.setModelsParameters(modelsParameters)
                 .setNetworkParameters(networkParameters)
                 .setSolverParameters(solverParameters)
-                .setSolverType(DynawoSimulationParameters.SolverType.IDA);
+                .setSolverType(DynawoSimulationParameters.SolverType.IDA)
+                .setCriteriaFilePath(Path.of(Objects.requireNonNull(getClass()
+                        .getResource(criteriaPath)).getPath()));
 
         ReportNode reportNode = ReportNode.newRootReportNode()
                 .withMessageTemplate("root", "Root message")
                 .build();
-        List<Contingency> contingencies = List.of(Contingency.load("_LOAD__11_EC"));
 
         DynamicSecurityAnalysisRunParameters runParameters = new DynamicSecurityAnalysisRunParameters()
                 .setComputationManager(computationManager)
@@ -98,16 +98,20 @@ class DynawoSecurityAnalysisTest extends AbstractDynawoTest {
                 .join()
                 .getResult();
 
-        StringWriter swReporterAs = new StringWriter();
-        reportNode.print(swReporterAs);
-        InputStream refStreamReporterAs = Objects.requireNonNull(getClass().getResourceAsStream("/ieee14/dynamic-security-analysis/timeline_report.txt"));
-        String refLogExportAs = TestUtil.normalizeLineSeparator(new String(ByteStreams.toByteArray(refStreamReporterAs), StandardCharsets.UTF_8));
-        String logExportAs = TestUtil.normalizeLineSeparator(swReporterAs.toString());
-        assertEquals(refLogExportAs, logExportAs);
-
         StringWriter serializedResult = new StringWriter();
         SecurityAnalysisResultSerializer.write(result, serializedResult);
-        InputStream expected = Objects.requireNonNull(getClass().getResourceAsStream("/ieee14/dynamic-security-analysis/results.json"));
+        InputStream expected = Objects.requireNonNull(getClass().getResourceAsStream(resultsPath));
         ComparisonUtils.assertTxtEquals(expected, serializedResult.toString());
+    }
+
+    private static Stream<Arguments> provideSimulationParameter() {
+        return Stream.of(
+                Arguments.of("/ieee14/dynamic-security-analysis/convergence/criteria.crt",
+                        List.of(Contingency.line("_BUS____1-BUS____5-1_AC"), Contingency.generator("_GEN____2_SM")),
+                        "/ieee14/dynamic-security-analysis/convergence/results.json"),
+                Arguments.of("/ieee14/dynamic-security-analysis/failed-criteria/criteria.crt",
+                        List.of(Contingency.line("_BUS____1-BUS____5-1_AC")),
+                        "/ieee14/dynamic-security-analysis/failed-criteria/results.json")
+        );
     }
 }

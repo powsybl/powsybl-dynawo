@@ -96,4 +96,19 @@ public class SecurityAnalysisContext extends DynawoSimulationContext {
     public List<ContingencyEventModels> getContingencyEventModels() {
         return contingencyEventModels;
     }
+
+    @Override
+    public boolean withCurveVariables() {
+        return false;
+    }
+
+    @Override
+    public boolean withFsvVariables() {
+        return false;
+    }
+
+    @Override
+    public boolean withConstraints() {
+        return true;
+    }
 }
