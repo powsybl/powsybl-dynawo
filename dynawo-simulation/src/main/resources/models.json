@@ -724,7 +724,7 @@
     "libs": [
       {
         "lib": "PhaseShifterBlockingI",
-        "doc": "Blocks phase shifter I when the monitored intensity go below a threshold"
+        "doc": "Blocks phase shifter I when the monitored intensity goes below a threshold"
       }
     ]
   },

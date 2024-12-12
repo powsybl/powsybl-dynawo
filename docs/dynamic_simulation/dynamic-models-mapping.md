@@ -297,7 +297,7 @@ PhaseShifterI {
 ```
 
 #### Phase Shifter Blocking I
-Blocks phase shifter I when the monitored intensity go below a threshold.  
+Blocks phase shifter I when the monitored intensity goes below a threshold.  
 With specific attributes:
 - `phaseShifterId`: Phase shifter I dynamic model id
 
