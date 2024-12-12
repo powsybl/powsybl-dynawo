@@ -7,7 +7,6 @@
  */
 package com.powsybl.dynawo;
 
-import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.computation.AbstractExecutionHandler;
 import com.powsybl.computation.Command;
@@ -18,10 +17,6 @@ import com.powsybl.dynamicsimulation.DynamicSimulationResultImpl;
 import com.powsybl.dynamicsimulation.TimelineEvent;
 import com.powsybl.dynawo.commons.ExportMode;
 import com.powsybl.dynawo.outputvariables.CsvFsvParser;
-import com.powsybl.dynawo.xml.OutputVariablesXml;
-import com.powsybl.dynawo.xml.DydXml;
-import com.powsybl.dynawo.xml.JobsXml;
-import com.powsybl.dynawo.xml.ParametersXml;
 import com.powsybl.dynawo.commons.CommonReports;
 import com.powsybl.dynawo.commons.DynawoUtil;
 import com.powsybl.dynawo.commons.NetworkResultsUpdater;
@@ -44,6 +39,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.powsybl.dynawo.DynawoFilesUtils.*;
 import static com.powsybl.dynawo.DynawoSimulationConstants.*;
 import static com.powsybl.dynawo.commons.DynawoConstants.*;
 import static com.powsybl.dynawo.commons.DynawoUtil.getCommandExecutions;
@@ -215,41 +211,7 @@ public final class DynawoSimulationHandler extends AbstractExecutionHandler<Dyna
     }
 
     private void writeInputFiles(Path workingDir) throws IOException {
-        DynawoSimulationParameters parameters = context.getDynawoSimulationParameters();
         DynawoUtil.writeIidm(dynawoInput, workingDir.resolve(NETWORK_FILENAME));
-        JobsXml.write(workingDir, context);
-        DydXml.write(workingDir, context);
-        ParametersXml.write(workingDir, context);
-        if (context.withCurveVariables()) {
-            OutputVariablesXml.writeCurve(workingDir, context);
-        }
-        if (context.withFsvVariables()) {
-            OutputVariablesXml.writeFsv(workingDir, context);
-        }
-        DumpFileParameters dumpFileParameters = parameters.getDumpFileParameters();
-        if (dumpFileParameters.useDumpFile()) {
-            Path dumpFilePath = dumpFileParameters.getDumpFilePath();
-            if (dumpFilePath != null) {
-                Files.copy(dumpFilePath, workingDir.resolve(dumpFileParameters.dumpFile()), StandardCopyOption.REPLACE_EXISTING);
-            }
-        }
-        parameters.getCriteriaFilePath().ifPresent(filePath -> {
-            try {
-                Files.copy(filePath, workingDir.resolve(filePath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
-            } catch (IOException e) {
-                throw new PowsyblException("Simulation criteria file error", e);
-            }
-        });
-    }
-
-    private static void deleteExistingFile(Path basePath, String... elements) throws IOException {
-        Path finalPath = basePath;
-        for (String element : elements) {
-            finalPath = finalPath.resolve(element);
-            if (!Files.exists(finalPath)) {
-                return;
-            }
-        }
-        Files.delete(finalPath);
+        DynawoFilesUtils.writeInputFiles(workingDir, context);
     }
 }

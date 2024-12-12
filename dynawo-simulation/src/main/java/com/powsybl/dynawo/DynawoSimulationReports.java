@@ -102,6 +102,17 @@ public final class DynawoSimulationReports {
                 .add();
     }
 
+    public static void reportFailedDynamicModelHandling(ReportNode reportNode, String modelName, String dynamicId, String equipmentType) {
+        reportNode.newReportNode()
+                .withMessageTemplate("emptyListAutomaton",
+                        "${modelName} ${dynamicId} cannot handle ${equipmentType} dynamic model, the model will be skipped")
+                .withUntypedValue(MODEL_NAME_FIELD, modelName)
+                .withUntypedValue(DYNAMIC_ID_FIELD, dynamicId)
+                .withUntypedValue("equipmentType", equipmentType)
+                .withSeverity(TypedValue.WARN_SEVERITY)
+                .add();
+    }
+
     public static ReportNode createDynawoSpecificLogReportNode(ReportNode reportNode, DynawoSimulationParameters.SpecificLog logType) {
         String logTypeName = StringUtils.capitalize(logType.toString().toLowerCase());
         return reportNode.newReportNode()

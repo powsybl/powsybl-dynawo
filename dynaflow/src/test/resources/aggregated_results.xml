@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aggregatedResults xmlns="http://www.rte-france.com/dynawo">
+    <scenarioResults id="DisconnectLine" status="CONVERGENCE"/>
+    <scenarioResults id="DisconnectGenerator" status="DIVERGENCE"/>
+    <scenarioResults id="DisconnectGroup" status="CRITERIA_NON_RESPECTED">
+        <criterionNonRespected id="total load power = 276.374MW" time="185.000000"/>
+    </scenarioResults>
+    <scenarioResults id="DisconnectGenerator2" status="EXECUTION_PROBLEM"/>
+</aggregatedResults>
