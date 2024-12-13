@@ -44,7 +44,7 @@ public final class ContingencyResultsUtils {
         Map<String, Status> aggregatedResults = getAggregatedResults(workingDir);
         Path constraintsDir = workingDir.resolve(CONSTRAINTS_FOLDER);
         return new SecurityAnalysisResult(
-                ContingencyResultsUtils.getPreContingencyResult(network, violationFilter, constraintsDir, aggregatedResults),
+                ContingencyResultsUtils.getPreContingencyResult(network, violationFilter),
                 ContingencyResultsUtils.getPostContingencyResults(network, violationFilter, constraintsDir, aggregatedResults, contingencies),
                 Collections.emptyList());
     }
@@ -52,8 +52,7 @@ public final class ContingencyResultsUtils {
     /**
      * Build the pre-contingency results from the constraints file written by dynawo or directly form the network if the results are not found
      */
-    private static PreContingencyResult getPreContingencyResult(Network network, LimitViolationFilter violationFilter,
-                                                                Path constraintsDir, Map<String, Status> scenarioResults) {
+    private static PreContingencyResult getPreContingencyResult(Network network, LimitViolationFilter violationFilter) {
         NetworkResult networkResult = new NetworkResult(Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
         List<LimitViolation> limitViolations = Security.checkLimits(network);
         List<LimitViolation> filteredViolations = violationFilter.apply(limitViolations, network);
