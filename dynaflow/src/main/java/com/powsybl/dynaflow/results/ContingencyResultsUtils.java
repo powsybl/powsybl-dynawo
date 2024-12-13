@@ -28,7 +28,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.powsybl.dynaflow.SecurityAnalysisConstants.BASE_SCENARIO_NAME;
 import static com.powsybl.dynaflow.SecurityAnalysisConstants.CONSTRAINTS_FOLDER;
 import static com.powsybl.dynawo.commons.DynawoConstants.AGGREGATED_RESULTS;
 
@@ -45,7 +44,7 @@ public final class ContingencyResultsUtils {
         Map<String, Status> aggregatedResults = getAggregatedResults(workingDir);
         Path constraintsDir = workingDir.resolve(CONSTRAINTS_FOLDER);
         return new SecurityAnalysisResult(
-                ContingencyResultsUtils.getPreContingencyResult(network, violationFilter, constraintsDir, aggregatedResults),
+                ContingencyResultsUtils.getPreContingencyResult(network, violationFilter),
                 ContingencyResultsUtils.getPostContingencyResults(network, violationFilter, constraintsDir, aggregatedResults, contingencies),
                 Collections.emptyList());
     }
@@ -53,19 +52,12 @@ public final class ContingencyResultsUtils {
     /**
      * Build the pre-contingency results from the constraints file written by dynawo or directly form the network if the results are not found
      */
-    private static PreContingencyResult getPreContingencyResult(Network network, LimitViolationFilter violationFilter,
-                                                                Path constraintsDir, Map<String, Status> scenarioResults) {
+    private static PreContingencyResult getPreContingencyResult(Network network, LimitViolationFilter violationFilter) {
         NetworkResult networkResult = new NetworkResult(Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
-        if (scenarioResults.containsKey(BASE_SCENARIO_NAME)) {
-            return new PreContingencyResult(ResultsUtil.convertToPreStatus(scenarioResults.get(BASE_SCENARIO_NAME)),
-                    getLimitViolationsResult(network, violationFilter, constraintsDir, BASE_SCENARIO_NAME),
-                    networkResult);
-        } else {
-            //Dynaflow SA case (see issue #174)
-            List<LimitViolation> limitViolations = Security.checkLimits(network);
-            List<LimitViolation> filteredViolations = violationFilter.apply(limitViolations, network);
-            return new PreContingencyResult(LoadFlowResult.ComponentResult.Status.CONVERGED, new LimitViolationsResult(filteredViolations), networkResult);
-        }
+        List<LimitViolation> limitViolations = Security.checkLimits(network);
+        List<LimitViolation> filteredViolations = violationFilter.apply(limitViolations, network);
+        // Pre contingency always set to CONVERGED (see issue #174 & #414)
+        return new PreContingencyResult(LoadFlowResult.ComponentResult.Status.CONVERGED, new LimitViolationsResult(filteredViolations), networkResult);
     }
 
     /**
