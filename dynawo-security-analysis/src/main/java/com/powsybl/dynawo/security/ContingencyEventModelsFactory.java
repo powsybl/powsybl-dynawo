@@ -24,7 +24,6 @@ import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.TwoSides;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
@@ -32,35 +31,50 @@ import java.util.stream.Collectors;
 public final class ContingencyEventModelsFactory {
 
     public static List<ContingencyEventModels> createFrom(List<Contingency> contingencies, DynawoSimulationContext context,
-                                                           MacroConnectionsAdder macroConnectionsAdder, double contingenciesStartTime,
+                                                          MacroConnectionsAdder macroConnectionsAdder,
+                                                          double contingenciesStartTime,
                                                           ReportNode reportNode) {
         return contingencies.stream()
-                .map(c -> {
-                    List<BlackBoxModel> eventModels = c.getElements().stream()
-                            .map(ce -> createContingencyEventModel(ce, context, contingenciesStartTime, reportNode))
-                            .filter(Objects::nonNull)
-                            .toList();
-                    if (eventModels.isEmpty()) {
-                        return null;
-                    }
-                    Map<String, MacroConnector> macroConnectorsMap = new HashMap<>();
-                    List<MacroConnect> macroConnectList = new ArrayList<>();
-                    List<ParametersSet> eventParameters = new ArrayList<>(eventModels.size());
-                    // Set Contingencies connections and parameters
-                    macroConnectionsAdder.setMacroConnectorAdder(macroConnectorsMap::computeIfAbsent);
-                    macroConnectionsAdder.setMacroConnectAdder(macroConnectList::add);
-                    eventModels.forEach(em -> {
-                        em.createMacroConnections(macroConnectionsAdder);
-                        em.createDynamicModelParameters(context, eventParameters::add);
-                    });
-                    return new ContingencyEventModels(c, eventModels, macroConnectorsMap, macroConnectList, eventParameters);
-                })
+                .map(c -> createFrom(c, context, macroConnectionsAdder, contingenciesStartTime, reportNode))
                 .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+                .toList();
     }
 
-    private static BlackBoxModel createContingencyEventModel(ContingencyElement element, DynawoSimulationContext context,
-                                                             double contingenciesStartTime, ReportNode reportNode) {
+    public static ContingencyEventModels createFrom(Contingency contingency, DynawoSimulationContext context,
+                                                    MacroConnectionsAdder macroConnectionsAdder,
+                                                    double contingenciesStartTime,
+                                                    ReportNode reportNode) {
+        List<BlackBoxModel> eventModels = createContingencyEventModelList(contingency, context, contingenciesStartTime, reportNode);
+        if (eventModels.isEmpty()) {
+            return null;
+        }
+        Map<String, MacroConnector> macroConnectorsMap = new HashMap<>();
+        List<MacroConnect> macroConnectList = new ArrayList<>();
+        List<ParametersSet> eventParameters = new ArrayList<>(eventModels.size());
+        // Set Contingencies connections and parameters
+        macroConnectionsAdder.setMacroConnectorAdder(macroConnectorsMap::computeIfAbsent);
+        macroConnectionsAdder.setMacroConnectAdder(macroConnectList::add);
+        eventModels.forEach(em -> {
+            em.createMacroConnections(macroConnectionsAdder);
+            em.createDynamicModelParameters(context, eventParameters::add);
+        });
+        return new ContingencyEventModels(contingency, eventModels, macroConnectorsMap, macroConnectList, eventParameters);
+    }
+
+    private static List<BlackBoxModel> createContingencyEventModelList(Contingency contingency,
+                                                                       DynawoSimulationContext context,
+                                                                       double contingenciesStartTime,
+                                                                       ReportNode reportNode) {
+        return contingency.getElements().stream()
+                .map(ce -> createContingencyEventModel(ce, context, contingenciesStartTime, reportNode))
+                .filter(Objects::nonNull)
+                .toList();
+    }
+
+    private static BlackBoxModel createContingencyEventModel(ContingencyElement element,
+                                                             DynawoSimulationContext context,
+                                                             double contingenciesStartTime,
+                                                             ReportNode reportNode) {
         Network network = context.getNetwork();
         EventDisconnectionBuilder builder = EventDisconnectionBuilder.of(network)
                 .staticId(element.getId())
