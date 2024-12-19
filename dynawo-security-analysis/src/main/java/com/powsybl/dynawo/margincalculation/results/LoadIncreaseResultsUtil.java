@@ -7,23 +7,24 @@
  */
 package com.powsybl.dynawo.margincalculation.results;
 
+import com.powsybl.dynaflow.results.FailedCriterion;
+import com.powsybl.dynaflow.results.ScenarioResult;
+import com.powsybl.dynaflow.results.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Optional;
 
-import static com.powsybl.dynawo.margincalculation.results.Status.*;
-
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public final class ResultsUtil {
+public final class LoadIncreaseResultsUtil {
 
-    private ResultsUtil() {
+    private LoadIncreaseResultsUtil() {
     }
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ResultsUtil.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LoadIncreaseResultsUtil.class);
 
     static Optional<LoadIncreaseResult> createLoadIncreaseResult(String loadLevel, String status, List<ScenarioResult> scenarioResults,
                                                                  List<FailedCriterion> failedCriteria) {
@@ -71,42 +72,6 @@ public final class ResultsUtil {
                 logInconsistentEntry("loadLevel", loadLevel);
             } catch (IllegalArgumentException e) {
                 logInconsistentEntry("status", status);
-            }
-        }
-        return Optional.empty();
-    }
-
-    static Optional<ScenarioResult> createScenarioResult(String id, String status, List<FailedCriterion> failedCriteria) {
-        if (id == null || status == null || failedCriteria == null) {
-            LOGGER.warn("Inconsistent scenario result entry (id: '{}', status: '{}', failedCriteria: '{}')", id, status, failedCriteria);
-        } else {
-            try {
-                Status statusE = Status.valueOf(status);
-                boolean isCriterionError = CRITERIA_NON_RESPECTED == statusE;
-                if (isCriterionError && failedCriteria.isEmpty()) {
-                    LOGGER.warn("ScenarioResult with {} status should have failed criteria", status);
-                    return Optional.empty();
-                } else if (!isCriterionError && !failedCriteria.isEmpty()) {
-                    LOGGER.warn("ScenarioResult with {} status should not have failed criteria", status);
-                    return Optional.empty();
-                }
-                return Optional.of(new ScenarioResult(id, statusE, failedCriteria));
-            } catch (IllegalArgumentException e) {
-                logInconsistentEntry("status", status);
-            }
-        }
-        return Optional.empty();
-    }
-
-    static Optional<FailedCriterion> createFailedCriterion(String message, String time) {
-        if (message == null || time == null) {
-            LOGGER.warn("Inconsistent failed criterion entry (message: '{}', time: '{}')", message, time);
-        } else {
-            try {
-                double timeD = Double.parseDouble(time);
-                return Optional.of(new FailedCriterion(message, timeD));
-            } catch (NumberFormatException e) {
-                logInconsistentEntry("time", time);
             }
         }
         return Optional.empty();

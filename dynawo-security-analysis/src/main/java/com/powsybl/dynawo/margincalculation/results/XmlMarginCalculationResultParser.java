@@ -9,6 +9,8 @@ package com.powsybl.dynawo.margincalculation.results;
 
 import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
 import com.powsybl.commons.xml.XmlUtil;
+import com.powsybl.dynaflow.results.FailedCriterion;
+import com.powsybl.dynaflow.results.ScenarioResult;
 import com.powsybl.dynawo.commons.AbstractXmlParser;
 
 import javax.xml.stream.XMLStreamConstants;
@@ -17,6 +19,9 @@ import javax.xml.stream.XMLStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+
+import static com.powsybl.dynaflow.results.ResultsUtil.createFailedCriterion;
+import static com.powsybl.dynaflow.results.ResultsUtil.createScenarioResult;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -44,7 +49,7 @@ public final class XmlMarginCalculationResultParser extends AbstractXmlParser<Lo
             List<ScenarioResult> scenarioResults = new ArrayList<>();
             List<FailedCriterion> failedCriteria = new ArrayList<>();
             XmlUtil.readSubElements(xmlReader, subElementName -> readLoadIncreaseResultSubElements(subElementName, xmlReader, scenarioResults::add, failedCriteria::add));
-            ResultsUtil.createLoadIncreaseResult(loadLevel, status, scenarioResults, failedCriteria).ifPresent(resultConsumer);
+            LoadIncreaseResultsUtil.createLoadIncreaseResult(loadLevel, status, scenarioResults, failedCriteria).ifPresent(resultConsumer);
         }
     }
 
@@ -54,7 +59,7 @@ public final class XmlMarginCalculationResultParser extends AbstractXmlParser<Lo
             String status = xmlReader.getAttributeValue(null, STATUS);
             List<FailedCriterion> failedCriteria = new ArrayList<>();
             XmlUtil.readSubElements(xmlReader, subElementName -> readFailedCriterion(subElementName, xmlReader, failedCriteria::add));
-            ResultsUtil.createScenarioResult(id, status, failedCriteria).ifPresent(scenarioConsumer);
+            createScenarioResult(id, status, failedCriteria).ifPresent(scenarioConsumer);
         } else {
             readFailedCriterion(elementName, xmlReader, criterionConsumer);
         }
@@ -67,7 +72,7 @@ public final class XmlMarginCalculationResultParser extends AbstractXmlParser<Lo
                 String message = xmlReader.getAttributeValue(null, ID);
                 String time = xmlReader.getAttributeValue(null, TIME);
                 XmlUtil.readEndElementOrThrow(xmlReader);
-                ResultsUtil.createFailedCriterion(message, time).ifPresent(resultConsumer);
+                createFailedCriterion(message, time).ifPresent(resultConsumer);
             }
         } catch (XMLStreamException e) {
             throw new UncheckedXmlStreamException(e);

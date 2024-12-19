@@ -59,7 +59,7 @@ public class MarginCalculationContext extends DynawoSimulationContext {
                 new DynamicSimulationParameters(parameters.getStartTime(), parameters.getStopTime()), dynawoSimulationParameters, null, DynawoConstants.VERSION_MIN, reportNode);
         this.marginCalculationParameters = parameters;
         double contingenciesStartTime = parameters.getContingenciesStartTime();
-        this.contingencyEventModels = ContingencyEventModelsFactory.createFrom(contingencies, this, macroConnectionsAdder, contingenciesStartTime);
+        this.contingencyEventModels = ContingencyEventModelsFactory.createFrom(contingencies, this, macroConnectionsAdder, contingenciesStartTime, reportNode);
         this.loadVariationArea = new LoadVariationAreaAutomationSystem(loadsVariations, parameters.getLoadIncreaseStartTime(), parameters.getLoadIncreaseStopTime());
 
         macroConnectionsAdder.setMacroConnectorAdder(loadVariationMacroConnectorsMap::computeIfAbsent);

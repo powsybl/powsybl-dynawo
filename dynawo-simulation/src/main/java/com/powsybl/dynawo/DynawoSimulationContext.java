@@ -65,17 +65,6 @@ public class DynawoSimulationContext implements DydDataSupplier {
     protected final MacroConnectionsAdder macroConnectionsAdder;
     private Phase2Models phase2Models;
 
-//    public DynawoSimulationContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
-//                                   List<OutputVariable> outputVariables, DynamicSimulationParameters parameters, DynawoSimulationParameters dynawoSimulationParameters) {
-//        this(network, workingVariantId, dynamicModels, eventModels, outputVariables, parameters, dynawoSimulationParameters, ReportNode.NO_OP);
-//    }
-//
-//    public DynawoSimulationContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
-//                                   List<OutputVariable> outputVariables, DynamicSimulationParameters parameters, DynawoSimulationParameters dynawoSimulationParameters,
-//                                   Predicate<BlackBoxModel> phase2ModelsPredicate) {
-//        this(network, workingVariantId, dynamicModels, eventModels, outputVariables, parameters, dynawoSimulationParameters, phase2ModelsPredicate, ReportNode.NO_OP);
-//    }
-
     public DynawoSimulationContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
                                    List<OutputVariable> outputVariables, DynamicSimulationParameters parameters, DynawoSimulationParameters dynawoSimulationParameters,
                                    DynawoVersion currentVersion, ReportNode reportNode) {

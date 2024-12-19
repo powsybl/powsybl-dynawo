@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawo.security.xml;
+package com.powsybl.dynawo.algorithms;
 
 import com.powsybl.contingency.Contingency;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
@@ -25,6 +25,7 @@ import java.util.List;
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
+//TODO replace SecurityAnalysisContext
 class ContingenciesXmlTest extends DynawoTestUtil {
 
     @Test

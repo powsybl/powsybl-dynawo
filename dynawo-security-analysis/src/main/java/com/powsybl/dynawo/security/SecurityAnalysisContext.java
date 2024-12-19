@@ -12,6 +12,7 @@ import com.powsybl.contingency.Contingency;
 import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.algorithms.ContingencyEventModels;
+import com.powsybl.dynawo.algorithms.ContingencyEventModelsFactory;
 import com.powsybl.dynawo.commons.DynawoConstants;
 import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.models.BlackBoxModel;

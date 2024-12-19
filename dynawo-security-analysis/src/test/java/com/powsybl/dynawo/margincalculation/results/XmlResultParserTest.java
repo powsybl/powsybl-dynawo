@@ -7,6 +7,8 @@
  */
 package com.powsybl.dynawo.margincalculation.results;
 
+import com.powsybl.dynaflow.results.FailedCriterion;
+import com.powsybl.dynaflow.results.ScenarioResult;
 import org.junit.jupiter.api.Test;
 
 import javax.xml.stream.XMLStreamException;
@@ -18,7 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import static com.powsybl.dynawo.margincalculation.results.Status.*;
+import static com.powsybl.dynaflow.results.Status.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

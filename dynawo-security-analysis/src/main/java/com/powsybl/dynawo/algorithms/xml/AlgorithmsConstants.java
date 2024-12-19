@@ -14,11 +14,7 @@ public final class AlgorithmsConstants {
 
     public static final String MULTIPLE_JOBS_FILENAME = "multiple_jobs.xml";
 
-    public static final String AGGREGATED_RESULTS = "aggregatedResults.xml";
-
     public static final String PHASE_2_JOBS_FILENAME = "phase_2.jobs";
-
-    public static final String BASE_SCENARIO_FOLDER = "base";
 
     private AlgorithmsConstants() {
     }

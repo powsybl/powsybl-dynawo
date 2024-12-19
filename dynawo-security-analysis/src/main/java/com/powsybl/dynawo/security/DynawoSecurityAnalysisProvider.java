@@ -21,7 +21,6 @@ import com.powsybl.dynawo.DynawoSimulationProvider;
 import com.powsybl.dynawo.algorithms.DynawoAlgorithmsConfig;
 import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.models.utils.BlackBoxSupplierUtils;
-import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.commons.DynawoUtil;
 import com.powsybl.dynawo.commons.PowsyblDynawoVersion;
 import com.powsybl.iidm.network.Network;
@@ -39,6 +38,8 @@ import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 import static com.powsybl.dynawo.DynawoSimulationConfig.DYNAWO_LAUNCHER_PROGRAM_NAME;
+import static com.powsybl.dynawo.algorithms.xml.AlgorithmsConstants.MULTIPLE_JOBS_FILENAME;
+import static com.powsybl.dynawo.commons.DynawoConstants.AGGREGATED_RESULTS;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
@@ -108,8 +109,8 @@ public class DynawoSecurityAnalysisProvider implements DynamicSecurityAnalysisPr
     public static Command getCommand(DynawoAlgorithmsConfig config) {
         List<String> args = Arrays.asList(
                 "SA",
-                "--input", DynawoSimulationConstants.MULTIPLE_JOBS_FILENAME,
-                "--output", DynawoSimulationConstants.AGGREGATED_RESULTS);
+                "--input", MULTIPLE_JOBS_FILENAME,
+                "--output", AGGREGATED_RESULTS);
         return new SimpleCommandBuilder()
                 .id("dynawo_dynamic_sa")
                 .program(config.getProgram())

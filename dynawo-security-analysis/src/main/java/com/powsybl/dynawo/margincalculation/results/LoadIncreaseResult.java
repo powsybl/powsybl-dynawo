@@ -7,6 +7,10 @@
  */
 package com.powsybl.dynawo.margincalculation.results;
 
+import com.powsybl.dynaflow.results.FailedCriterion;
+import com.powsybl.dynaflow.results.ScenarioResult;
+import com.powsybl.dynaflow.results.Status;
+
 import java.util.Collections;
 import java.util.List;
 

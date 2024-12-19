@@ -29,10 +29,6 @@ public final class DynawoSimulationConstants {
 
     public static final String FSV_OUTPUT_FILENAME = "finalStateValues.csv";
 
-    public static final String MULTIPLE_JOBS_FILENAME = "multiple_jobs.xml";
-
-    public static final String AGGREGATED_RESULTS = "aggregatedResults.xml";
-
     public static final String LOGS_FOLDER = "logs";
 
     public static final String LOGS_FILENAME = "dynawo.log";

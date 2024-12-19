@@ -21,7 +21,7 @@ import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.nio.file.Path;
 
-import static com.powsybl.dynawo.algorithms.xml.AlgorithmsConstants.AGGREGATED_RESULTS;
+import static com.powsybl.dynawo.commons.DynawoConstants.AGGREGATED_RESULTS;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}

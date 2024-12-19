@@ -6,11 +6,14 @@
  */
 package com.powsybl.dynawo.xml;
 
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawo.DumpFileParameters;
 import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.DynawoSimulationParameters;
+import com.powsybl.dynawo.commons.DynawoConstants;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -45,5 +48,18 @@ class JobsXmlTest extends DynawoTestUtil {
                 Arguments.of("jobsWithCriteria.xml", DynawoSimulationParameters.load()
                         .setCriteriaFilePath(Path.of("criteria.crt")))
         );
+    }
+
+    @Test
+    void writeJobWithPhase2() throws SAXException, IOException {
+        DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
+        DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load();
+        DynawoSimulationContext context = new DynawoSimulationContext(network, network.getVariantManager().getWorkingVariantId(),
+                dynamicModels, eventModels, outputVariables, parameters, dynawoParameters,
+                bbm -> bbm.getDynamicModelId().equalsIgnoreCase("BBM_LOAD2"),
+                DynawoConstants.VERSION_MIN, ReportNode.NO_OP);
+
+        JobsXml.writePhase2(tmpDir, context);
+        validate("jobs.xsd", "jobsWithPhase2.xml", tmpDir.resolve(DynawoSimulationConstants.JOBS_FILENAME));
     }
 }

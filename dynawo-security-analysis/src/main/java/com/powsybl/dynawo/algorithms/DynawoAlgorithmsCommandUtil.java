@@ -14,8 +14,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static com.powsybl.dynawo.algorithms.xml.AlgorithmsConstants.AGGREGATED_RESULTS;
 import static com.powsybl.dynawo.algorithms.xml.AlgorithmsConstants.MULTIPLE_JOBS_FILENAME;
+import static com.powsybl.dynawo.commons.DynawoConstants.AGGREGATED_RESULTS;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
