@@ -6,6 +6,7 @@
  */
 package com.powsybl.dynawo.models.events;
 
+import com.powsybl.dynawo.builders.EventModelInfo;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.automationsystems.BranchModel;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
@@ -26,8 +27,8 @@ public class EventBranchDisconnection extends AbstractEvent {
 
     private final TwoSides disconnectSide;
 
-    protected EventBranchDisconnection(String eventId, Branch<?> equipment, double startTime, TwoSides disconnectSide) {
-        super(eventId, equipment, startTime, "EventQuadripoleDisconnection");
+    protected EventBranchDisconnection(String eventId, Branch<?> equipment, EventModelInfo eventModelInfo, double startTime, TwoSides disconnectSide) {
+        super(eventId, equipment, eventModelInfo, startTime);
         this.disconnectSide = disconnectSide;
     }
 
@@ -50,5 +51,10 @@ public class EventBranchDisconnection extends AbstractEvent {
     @Override
     public String getName() {
         return "EventBranchDisconnection";
+    }
+
+    @Override
+    public String getLib() {
+        return "EventQuadripoleDisconnection";
     }
 }

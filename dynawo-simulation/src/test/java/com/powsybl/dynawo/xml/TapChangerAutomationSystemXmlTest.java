@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawo.xml;
 
+import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.models.TransformerSide;
 import com.powsybl.dynawo.models.automationsystems.TapChangerAutomationSystemBuilder;
 import com.powsybl.dynawo.models.loads.LoadOneTransformerBuilder;
@@ -65,7 +66,7 @@ class TapChangerAutomationSystemXmlTest extends AbstractDynamicModelXmlTest {
                 .dynamicModelId("BBM_TC3")
                 .parameterSetId("tc")
                 .staticId("LOAD3")
-                .side(TransformerSide.HIGH_VOLTAGE)
+                .side("HIGH_VOLTAGE")
                 .build());
     }
 

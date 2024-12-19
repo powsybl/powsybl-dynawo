@@ -26,10 +26,8 @@ import com.powsybl.dynawo.models.buses.InfiniteBus;
 import com.powsybl.dynawo.models.buses.StandardBus;
 import com.powsybl.dynawo.models.generators.*;
 import com.powsybl.dynawo.models.loads.*;
-import com.powsybl.dynawo.models.hvdc.HvdcP;
-import com.powsybl.dynawo.models.hvdc.HvdcPDangling;
-import com.powsybl.dynawo.models.hvdc.HvdcVsc;
-import com.powsybl.dynawo.models.hvdc.HvdcVscDangling;
+import com.powsybl.dynawo.models.hvdc.BaseHvdc;
+import com.powsybl.dynawo.models.hvdc.HvdcDangling;
 import com.powsybl.dynawo.models.lines.StandardLine;
 import com.powsybl.dynawo.models.svarcs.BaseStaticVarCompensator;
 import com.powsybl.dynawo.models.transformers.TransformerFixedRatio;
@@ -118,10 +116,10 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
     private static Stream<Arguments> provideEquipmentModelData() {
         return Stream.of(
                 Arguments.of("/dynamicModels/bus.groovy", StandardBus.class, EurostagTutorialExample1Factory.create(), "NGEN", "BBM_NGEN", "SB", "Bus"),
-                Arguments.of("/dynamicModels/hvdcP.groovy", HvdcP.class, HvdcTestNetwork.createVsc(), "L", "BBM_HVDC_L", "HVDC", "HvdcPV"),
-                Arguments.of("/dynamicModels/hvdcVsc.groovy", HvdcVsc.class, HvdcTestNetwork.createVsc(), "L", "BBM_HVDC_L", "HVDC", "HvdcVSC"),
-                Arguments.of("/dynamicModels/hvdcPDangling.groovy", HvdcPDangling.class, HvdcTestNetwork.createVsc(), "L", "BBM_HVDC_L", "HVDC", "HvdcPVDanglingDiagramPQ"),
-                Arguments.of("/dynamicModels/hvdcVscDangling.groovy", HvdcVscDangling.class, HvdcTestNetwork.createVsc(), "L", "BBM_HVDC_L", "HVDC", "HvdcVSCDanglingUdc"),
+                Arguments.of("/dynamicModels/hvdcP.groovy", BaseHvdc.class, HvdcTestNetwork.createVsc(), "L", "BBM_HVDC_L", "HVDC", "HvdcPV"),
+                Arguments.of("/dynamicModels/hvdcVsc.groovy", BaseHvdc.class, HvdcTestNetwork.createVsc(), "L", "BBM_HVDC_L", "HVDC", "HvdcVsc"),
+                Arguments.of("/dynamicModels/hvdcPDangling.groovy", HvdcDangling.class, HvdcTestNetwork.createVsc(), "L", "BBM_HVDC_L", "HVDC", "HvdcPVDanglingDiagramPQ"),
+                Arguments.of("/dynamicModels/hvdcVscDangling.groovy", HvdcDangling.class, HvdcTestNetwork.createVsc(), "L", "BBM_HVDC_L", "HVDC", "HvdcVscDanglingUdc"),
                 Arguments.of("/dynamicModels/loadAB.groovy", BaseLoad.class, EurostagTutorialExample1Factory.create(), "LOAD", "LOAD", "LAB", "LoadAlphaBetaRestorative"),
                 Arguments.of("/dynamicModels/loadABControllable.groovy", BaseLoadControllable.class, EurostagTutorialExample1Factory.create(), "LOAD", "LOAD", "LAB", "LoadAlphaBeta"),
                 Arguments.of("/dynamicModels/loadTransformer.groovy", LoadOneTransformer.class, EurostagTutorialExample1Factory.create(), "LOAD", "LOAD", "LOT", "LoadOneTransformer"),
@@ -130,7 +128,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                 Arguments.of("/dynamicModels/loadTwoTransformersTapChangers.groovy", LoadTwoTransformersTapChangers.class, EurostagTutorialExample1Factory.create(), "LOAD", "LOAD", "LTT", "LoadTwoTransformersTapChangers"),
                 Arguments.of("/dynamicModels/infiniteBus.groovy", InfiniteBus.class, HvdcTestNetwork.createVsc(), "B1", "BBM_BUS", "b", "InfiniteBusWithVariations"),
                 Arguments.of("/dynamicModels/line.groovy", StandardLine.class, EurostagTutorialExample1Factory.create(), "NHV1_NHV2_1", "BBM_NHV1_NHV2_1", "LINE", "Line"),
-                Arguments.of("/dynamicModels/genFictitious.groovy", GeneratorFictitious.class, EurostagTutorialExample1Factory.create(), "GEN", "BBM_GEN", "GF", "GeneratorFictitious"),
+                Arguments.of("/dynamicModels/genFictitious.groovy", BaseGenerator.class, EurostagTutorialExample1Factory.create(), "GEN", "BBM_GEN", "GF", "GeneratorFictitious"),
                 Arguments.of("/dynamicModels/gen.groovy", SynchronousGenerator.class, EurostagTutorialExample1Factory.create(), "GEN", "BBM_GEN", "GSFWPR", "GeneratorSynchronousThreeWindings"),
                 Arguments.of("/dynamicModels/genControllable.groovy", SynchronousGeneratorControllable.class, EurostagTutorialExample1Factory.create(), "GEN", "BBM_GEN", "GSFWPR", "GeneratorSynchronousFourWindingsProportionalRegulations"),
                 Arguments.of("/dynamicModels/omegaGen.groovy", SynchronizedGenerator.class, EurostagTutorialExample1Factory.create(), "GEN", "BBM_GEN", "GPQ", "GeneratorPQ"),
@@ -184,14 +182,6 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                                  'staticId' field value 'GEN' not found for equipment type(s) LOAD
                                  'dynamicModelId' field is not set, staticId GEN will be used instead
                                  Model GEN cannot be instantiated
-                        """),
-                Arguments.of("/warnings/missingDangling.groovy", HvdcTestNetwork.createVsc(),
-                        """
-                        + DSL tests
-                           + Groovy Dynamic Models Supplier
-                              + DSL model builder for HvdcPVDangling
-                                 'dangling' field is not set
-                                 Model BBM_HVDC_L cannot be instantiated
                         """),
                 Arguments.of("/warnings/missingDanglingProperty.groovy", HvdcTestNetwork.createVsc(),
                         """
@@ -291,7 +281,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                         """
                         + DSL tests
                            + Groovy Dynamic Models Supplier
-                              + DSL model builder for HvdcVSC
+                              + DSL model builder for HvdcVsc
                                  'staticId' field value 'L' not found for equipment type(s) VSC HVDC_LINE
                                  Model BBM_HVDC cannot be instantiated
                         """)

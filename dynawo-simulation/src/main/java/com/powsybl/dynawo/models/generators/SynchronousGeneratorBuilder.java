@@ -10,9 +10,10 @@ package com.powsybl.dynawo.models.generators;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.builders.*;
+import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.iidm.network.Network;
 
-import java.util.Set;
+import java.util.Collection;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -43,8 +44,19 @@ public class SynchronousGeneratorBuilder extends AbstractGeneratorBuilder<Synchr
         return new SynchronousGeneratorBuilder(network, modelConfig, reportNode);
     }
 
-    public static Set<ModelInfo> getSupportedModelInfos() {
+    public static ModelInfo getDefaultModelInfo() {
+        return MODEL_CONFIGS.getDefaultModelConfig();
+    }
+
+    public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();
+    }
+
+    /**
+     * Returns models usable with the given {@link DynawoVersion}
+     */
+    public static Collection<ModelInfo> getSupportedModelInfos(DynawoVersion dynawoVersion) {
+        return MODEL_CONFIGS.getModelInfos(dynawoVersion);
     }
 
     protected SynchronousGeneratorBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
@@ -68,9 +80,9 @@ public class SynchronousGeneratorBuilder extends AbstractGeneratorBuilder<Synchr
     public SynchronousGenerator build() {
         if (isInstantiable()) {
             if (modelConfig.isControllable()) {
-                return new SynchronousGeneratorControllable(dynamicModelId, getEquipment(), parameterSetId, modelConfig.lib(), getGeneratorComponent());
+                return new SynchronousGeneratorControllable(dynamicModelId, getEquipment(), parameterSetId, modelConfig, getGeneratorComponent());
             } else {
-                return new SynchronousGenerator(dynamicModelId, getEquipment(), parameterSetId, modelConfig.lib(), getGeneratorComponent());
+                return new SynchronousGenerator(dynamicModelId, getEquipment(), parameterSetId, modelConfig, getGeneratorComponent());
             }
         }
         return null;

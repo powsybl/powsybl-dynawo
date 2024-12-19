@@ -6,26 +6,39 @@
  */
 package com.powsybl.dynawo.models;
 
+import com.powsybl.dynawo.builders.ModelConfig;
+import com.powsybl.dynawo.builders.VersionInterval;
+
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import static com.powsybl.dynawo.xml.DynawoSimulationXmlConstants.DYN_URI;
 
 /**
- * Superclass for automation system and event black box models (model without IIDM static id)
+ * Superclass for automation system black box models (model without IIDM static id)
  * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public abstract class AbstractPureDynamicBlackBoxModel extends AbstractBlackBoxModel {
 
-    protected AbstractPureDynamicBlackBoxModel(String dynamicModelId, String parameterSetId, String lib) {
-        super(dynamicModelId, parameterSetId, lib);
+    private final ModelConfig modelConfig;
+
+    protected AbstractPureDynamicBlackBoxModel(String dynamicModelId, String parameterSetId, ModelConfig modelConfig) {
+        super(dynamicModelId, parameterSetId);
+        this.modelConfig = Objects.requireNonNull(modelConfig);
     }
 
-    protected AbstractPureDynamicBlackBoxModel(String dynamicModelId, String lib) {
-        super(dynamicModelId, dynamicModelId, lib);
+    @Override
+    public String getLib() {
+        return modelConfig.lib();
+    }
+
+    @Override
+    public VersionInterval getVersionInterval() {
+        return modelConfig.version();
     }
 
     @Override

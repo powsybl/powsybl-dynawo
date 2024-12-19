@@ -14,8 +14,7 @@ import com.powsybl.dynawo.commons.AbstractXmlParser;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -28,8 +27,7 @@ public final class XmlTimeLineParser extends AbstractXmlParser<TimelineEntry> im
     private static final String MESSAGE = "message";
 
     @Override
-    protected List<TimelineEntry> read(XMLStreamReader xmlReader) throws XMLStreamException {
-        List<TimelineEntry> timeline = new ArrayList<>();
+    protected void read(XMLStreamReader xmlReader, Consumer<TimelineEntry> consumer) throws XMLStreamException {
         int state = xmlReader.next();
         while (state == XMLStreamConstants.COMMENT) {
             state = xmlReader.next();
@@ -42,12 +40,11 @@ public final class XmlTimeLineParser extends AbstractXmlParser<TimelineEntry> im
                     String message = xmlReader.getAttributeValue(null, MESSAGE);
                     XmlUtil.readEndElementOrThrow(xmlReader);
                     TimeLineUtil.createEvent(time, modelName, message)
-                            .ifPresent(timeline::add);
+                            .ifPresent(consumer);
                 }
             } catch (XMLStreamException e) {
                 throw new UncheckedXmlStreamException(e);
             }
         });
-        return timeline;
     }
 }

@@ -5,6 +5,9 @@
       {
         "lib": "GeneratorFictitious",
         "doc": "Fictitious generator (behaves in a similar way as an alpha-beta load)"
+      },
+      {
+        "lib": "GeneratorPVFixed"
       }
     ]
   },
@@ -52,7 +55,8 @@
         "lib": "GeneratorSynchronousFourWindingsVRKundur"
       },
       {
-        "lib": "GeneratorSynchronousFourWindingsVRKundurPssKundur"
+        "lib": "GeneratorSynchronousFourWindingsVRKundurPssKundur",
+        "minVersion": "1.7.0"
       },
       {
         "lib": "GeneratorSynchronousProportionalRegulationsInternalParameters"
@@ -92,97 +96,128 @@
         ]
       },
       {
-        "lib": "GeneratorSynchronousFourWindingsIEEEG1Ac1a"
+        "lib": "GeneratorSynchronousFourWindingsIEEEG1Ac1a",
+        "minVersion": "1.7.0"
       },
       {
-        "lib": "GeneratorSynchronousFourWindingsIEEEG1Dc1a"
+        "lib": "GeneratorSynchronousFourWindingsIEEEG1Dc1a",
+        "minVersion": "1.6.0"
       },
       {
-        "lib": "GeneratorSynchronousFourWindingsIEEEG1IEEX2A"
+        "lib": "GeneratorSynchronousFourWindingsIEEEG1IEEX2A",
+        "minVersion": "1.7.0"
       },
       {
-        "lib": "GeneratorSynchronousFourWindingsPmConstAc6aPss3b"
+        "lib": "GeneratorSynchronousFourWindingsPmConstAc6aPss3b",
+        "minVersion": "1.7.0"
       },
       {
-        "lib": "GeneratorSynchronousFourWindingsPmConstAc7bPss3b"
+        "lib": "GeneratorSynchronousFourWindingsPmConstAc7bPss3b",
+        "minVersion": "1.7.0"
       },
       {
-        "lib": "GeneratorSynchronousFourWindingsPmConstAc7cPss2c"
+        "lib": "GeneratorSynchronousFourWindingsPmConstAc7cPss2c",
+        "minVersion": "1.7.0"
       },
       {
-        "lib": "GeneratorSynchronousFourWindingsPmConstAc8b"
+        "lib": "GeneratorSynchronousFourWindingsPmConstAc8b",
+        "minVersion": "1.7.0"
       },
       {
-        "lib": "GeneratorSynchronousFourWindingsPmConstAc8bPss3b"
+        "lib": "GeneratorSynchronousFourWindingsPmConstAc8bPss3b",
+        "minVersion": "1.7.0"
       },
       {
-        "lib": "GeneratorSynchronousFourWindingsPmConstDc1a"
+        "lib": "GeneratorSynchronousFourWindingsPmConstDc1a",
+        "minVersion": "1.6.0"
       },
       {
-        "lib": "GeneratorSynchronousFourWindingsPmConstIEEX2A"
+        "lib": "GeneratorSynchronousFourWindingsPmConstIEEX2A",
+        "minVersion": "1.7.0"
       },
       {
-        "lib": "GeneratorSynchronousFourWindingsPmConstSt5bPss2b"
+        "lib": "GeneratorSynchronousFourWindingsPmConstSt5bPss2b",
+        "minVersion": "1.7.0"
       },
       {
-        "lib": "GeneratorSynchronousFourWindingsPmConstSt6bPss3b"
+        "lib": "GeneratorSynchronousFourWindingsPmConstSt6bPss3b",
+        "minVersion": "1.7.0"
       },
       {
-        "lib": "GeneratorSynchronousFourWindingsPmConstSt6cPss6c"
+        "lib": "GeneratorSynchronousFourWindingsPmConstSt6cPss6c",
+        "minVersion": "1.7.0"
       },
       {
-        "lib": "GeneratorSynchronousFourWindingsPmConstSt7bPss2a"
+        "lib": "GeneratorSynchronousFourWindingsPmConstSt7bPss2a",
+        "minVersion": "1.7.0"
       },
       {
-        "lib": "GeneratorSynchronousFourWindingsPmConstSt9cPss2c"
+        "lib": "GeneratorSynchronousFourWindingsPmConstSt9cPss2c",
+        "minVersion": "1.6.0"
       },
       {
-        "lib": "GeneratorSynchronousFourWindingsTGov1Dc1a"
+        "lib": "GeneratorSynchronousFourWindingsTGov1Dc1a",
+        "minVersion": "1.6.0"
       },
       {
-        "lib": "GeneratorSynchronousFourWindingsTGov1Scrx"
+        "lib": "GeneratorSynchronousFourWindingsTGov1Scrx",
+        "minVersion": "1.6.0"
       },
       {
-        "lib": "GeneratorSynchronousFourWindingsTGov3IEEX2A"
+        "lib": "GeneratorSynchronousFourWindingsTGov3IEEX2A",
+        "minVersion": "1.6.0"
       },
       {
-        "lib": "GeneratorSynchronousThreeWindingsHyGovBbSex1"
+        "lib": "GeneratorSynchronousThreeWindingsHyGovBbSex1",
+        "minVersion": "1.6.0"
       },
       {
-        "lib": "GeneratorSynchronousThreeWindingsHyGovScrx"
+        "lib": "GeneratorSynchronousThreeWindingsHyGovScrx",
+        "minVersion": "1.6.0"
       },
       {
-        "lib": "GeneratorSynchronousThreeWindingsHyGovScrxRvs"
+        "lib": "GeneratorSynchronousThreeWindingsHyGovScrxRvs",
+        "minVersion": "1.6.0"
       },
       {
-        "lib": "GeneratorSynchronousThreeWindingsHyGovScrxRvsTfo"
+        "lib": "GeneratorSynchronousThreeWindingsHyGovScrxRvsTfo",
+        "minVersion": "1.7.0"
       },
       {
-        "lib": "GeneratorSynchronousThreeWindingsIeeeG1IeeeT1"
+        "lib": "GeneratorSynchronousThreeWindingsIeeeG1IeeeT1",
+        "minVersion": "1.6.0"
       },
       {
-        "lib": "GeneratorSynchronousThreeWindingsIeeeG1IeeeT1Tfo"
+        "lib": "GeneratorSynchronousThreeWindingsIeeeG1IeeeT1Tfo",
+        "minVersion": "1.6.0"
       },
       {
-        "lib": "GeneratorSynchronousThreeWindingsIeeeG1Scrx"
+        "lib": "GeneratorSynchronousThreeWindingsIeeeG1Scrx",
+        "minVersion": "1.6.0"
       },
       {
-        "lib": "GeneratorSynchronousThreeWindingsIeeeG1ScrxTfo"
+        "lib": "GeneratorSynchronousThreeWindingsIeeeG1ScrxTfo",
+        "minVersion": "1.6.0"
       },
       {
-        "lib": "GeneratorSynchronousThreeWindingsIEEEG2BbSex1"
+        "lib": "GeneratorSynchronousThreeWindingsIEEEG2BbSex1",
+        "minVersion": "1.6.0"
       },
       {
-        "lib": "GeneratorSynchronousThreeWindingsPmConstExcIeeeAc1a"
+        "lib": "GeneratorSynchronousThreeWindingsPmConstExcIeeeAc1a",
+        "minVersion": "1.6.0"
       },
       {
-        "lib": "GeneratorSynchronousThreeWindingsPmConstExcIeeeAc1aTfo"
+        "lib": "GeneratorSynchronousThreeWindingsPmConstExcIeeeAc1aTfo",
+        "minVersion": "1.6.0"
       },
       {
-        "lib": "GeneratorSynchronousThreeWindingsPmConstScrx"
+        "lib": "GeneratorSynchronousThreeWindingsPmConstScrx",
+        "minVersion": "1.6.0"
       },
       {
-        "lib": "GeneratorSynchronousThreeWindingsPmConstScrxTfo"
+        "lib": "GeneratorSynchronousThreeWindingsPmConstScrxTfo",
+        "minVersion": "1.6.0"
       }
     ]
   },
@@ -201,10 +236,39 @@
         "doc": "Generator with fixed active power and voltage targets. The reactive power output changes over time in order to follow the voltage target (when it is not possible to do so, the reactive power is set to the minimum or maximum value). The active power outputs may vary in order to mimic frequency regulation"
       },
       {
-        "lib": "GeneratorPVFixed"
+        "lib": "GeneratorPVDiagramPQ"
+      }
+    ]
+  },
+  "SIGNAL_N_GENERATOR": {
+    "defaultLib": "GeneratorPVSignalN",
+    "libs": [
+      {
+        "lib": "GeneratorPVSignalN"
       },
       {
-        "lib": "GeneratorPVDiagramPQ"
+        "lib": "GeneratorPQPropSignalN"
+      },
+      {
+        "lib": "GeneratorPQPropDiagramPQSignalN"
+      },
+      {
+        "lib": "GeneratorPVPropSignalN"
+      },
+      {
+        "lib": "GeneratorPVDiagramPQSignalN"
+      },
+      {
+        "lib": "GeneratorPVRemoteDiagramPQSignalN"
+      },
+      {
+        "lib": "GeneratorPVTfoDiagramPQSignalN"
+      },
+      {
+        "lib": "GeneratorPVTfoSignalN"
+      },
+      {
+        "lib": "GeneratorPVRemoteSignalN"
       }
     ]
   },
@@ -298,29 +362,59 @@
     ]
   },
   "HVDC_VSC": {
-    "defaultLib": "HvdcVSC",
+    "defaultLib": "HvdcVsc",
     "libs": [
       {
+        "lib": "HvdcVsc",
+        "doc": "Standard dynamic model for Hvdc-Vsc link"
+      },
+      {
+        "lib": "HvdcVscEmulation",
+        "doc": "Standard dynamic model for Hvdc-Vsc link with AC emulation"
+      },
+      {
+        "lib": "HvdcVscDanglingP",
+        "properties": [
+          "DANGLING"
+        ],
+        "doc": "Standard dynamic model for Hvdc-Vsc link between two different synchronous areas (P control on the main one)"
+      },
+      {
+        "lib": "HvdcVscDanglingUdc",
+        "properties": [
+          "DANGLING"
+        ],
+        "doc": "Standard dynamic model for Hvdc-Vsc link between two different synchronous areas (P control on the main one)"
+      },
+      {
         "lib": "HvdcVSC",
-        "doc": "Standard dynamic model for Hvdc-VSC link"
+        "doc": "Standard dynamic model for Hvdc-VSC link",
+        "maxVersion": "1.5.0",
+        "endCause": "Renamed HvdcVsc"
       },
       {
         "lib": "HvdcVSCEmulation",
-        "doc": "Standard dynamic model for Hvdc-VSC link with AC emulation"
+        "doc": "Standard dynamic model for Hvdc-VSC link with AC emulation",
+        "maxVersion": "1.5.0",
+        "endCause": "Renamed HvdcVscEmulation"
       },
       {
         "lib": "HvdcVSCDanglingP",
         "properties": [
           "DANGLING"
         ],
-        "doc": "Standard dynamic model for Hvdc-VSC link between two different synchronous areas (P control on the main one)"
+        "doc": "Standard dynamic model for Hvdc-VSC link between two different synchronous areas (P control on the main one)",
+        "maxVersion": "1.5.0",
+        "endCause": "Renamed HvdcVscDanglingP"
       },
       {
         "lib": "HvdcVSCDanglingUdc",
         "properties": [
           "DANGLING"
         ],
-        "doc": "Standard dynamic model for Hvdc-VSC link between two different synchronous areas (P control on the main one)"
+        "doc": "Standard dynamic model for Hvdc-VSC link between two different synchronous areas (P control on the main one)",
+        "maxVersion": "1.5.0",
+        "endCause": "Renamed HvdcVSCDanglingUdc"
       }
     ]
   },
@@ -365,32 +459,57 @@
         "lib": "LoadAlphaBetaRestorativeLimitsRecalc"
       },
       {
-        "lib": "LoadAlphaBetaMotor"
+        "lib": "LoadAlphaBetaMotor",
+        "properties": [
+          "SYNCHRONIZED"
+        ]
       },
       {
         "lib": "LoadPQ",
         "doc": "PQ load"
       },
       {
-        "lib": "LoadAlphaBetaRestorativeNetwork"
+        "lib": "LoadAlphaBetaRestorativeNetwork",
+        "minVersion": "1.6.0"
       },
       {
-        "lib": "ElectronicLoad"
+        "lib": "ElectronicLoad",
+        "minVersion": "1.7.0"
       },
       {
-        "lib": "LoadAlphaBetaMotorFifthOrder"
+        "lib": "LoadAlphaBetaMotorFifthOrder",
+        "properties": [
+          "SYNCHRONIZED"
+        ],
+        "minVersion": "1.7.0"
       },
       {
-        "lib": "LoadAlphaBetaMotorSimplified"
+        "lib": "LoadAlphaBetaMotorSimplified",
+        "properties": [
+          "SYNCHRONIZED"
+        ],
+        "minVersion": "1.7.0"
       },
       {
-        "lib": "LoadAlphaBetaThreeMotorFifthOrder"
+        "lib": "LoadAlphaBetaThreeMotorFifthOrder",
+        "properties": [
+          "SYNCHRONIZED"
+        ],
+        "minVersion": "1.7.0"
       },
       {
-        "lib": "LoadAlphaBetaTwoMotorFifthOrder"
+        "lib": "LoadAlphaBetaTwoMotorFifthOrder",
+        "properties": [
+          "SYNCHRONIZED"
+        ],
+        "minVersion": "1.7.0"
       },
       {
-        "lib": "LoadAlphaBetaTwoMotorSimplified"
+        "lib": "LoadAlphaBetaTwoMotorSimplified",
+        "properties": [
+          "SYNCHRONIZED"
+        ],
+        "minVersion": "1.7.0"
       },
       {
         "lib": "LoadZIP"
@@ -493,7 +612,8 @@
         "lib": "TransformerFixedRatio"
       },
       {
-        "lib": "NetworkTransformer"
+        "lib": "NetworkTransformer",
+        "minVersion": "1.7.0"
       }
     ]
   },
@@ -567,7 +687,7 @@
       {
         "lib": "CurrentLimitAutomaton",
         "alias": "OverloadManagementSystem",
-        "doc": "Automation system which emits a specific order when the current on the monitored line goes above a given threshold during some time"
+        "doc": "Automation system which emits a specific order when the current on the monitored line exceeds a given threshold for a given duration"
       }
     ]
   },
@@ -577,7 +697,7 @@
       {
         "lib": "CurrentLimitAutomatonTwoLevels",
         "alias": "TwoLevelsOverloadManagementSystem",
-        "doc": "Automation system which emits a specific order when the current on two monitored lines goes above a given threshold during some time"
+        "doc": "Automation system which emits a specific order when the current on two monitored lines exceeds a given threshold for a given duration"
       }
     ]
   },
@@ -586,7 +706,7 @@
     "libs": [
       {
         "lib": "PhaseShifterI",
-        "doc": "Phase-shifter which monitors a given current. When the current goes above a given threshold max, taps will be changed in order to decrease it. When the active power goes below another threshold stop, the phase-shifter is automatically deactivated"
+        "doc": "Phase-shifter which monitors a given current. When the current goes above a given threshold, taps will be changed in order to decrease it. When the active power goes below another threshold, the phase-shifter is automatically deactivated"
       }
     ]
   },
@@ -595,7 +715,7 @@
     "libs": [
       {
         "lib": "PhaseShifterP",
-        "doc": "Phase-shifter which monitors a given active power. When the active power goes above a given threshold max, taps will be changed in order to decrease it. When the active power goes below another threshold stop, the phase-shifter is automatically deactivated"
+        "doc": "Phase-shifter which monitors a given active power. When the active power goes above a given threshold, taps will be changed in order to decrease it. When the active power goes below another threshold, the phase-shifter is automatically deactivated"
       }
     ]
   },
@@ -603,7 +723,8 @@
     "defaultLib": "PhaseShifterBlockingI",
     "libs": [
       {
-        "lib": "PhaseShifterBlockingI"
+        "lib": "PhaseShifterBlockingI",
+        "doc": "Blocks phase shifter I when the monitored intensity goes below a threshold"
       }
     ]
   },
@@ -621,7 +742,7 @@
     "libs": [
       {
         "lib": "TapChangerBlockingAutomaton",
-        "doc": "Block tap-changers when one of the monitored voltages goes below a threshold"
+        "doc": "Blocks tap changers when one of the monitored voltages goes below a threshold"
       }
     ]
   },
@@ -631,7 +752,7 @@
       {
         "lib": "UnderVoltageAutomaton",
         "alias": "UnderVoltage",
-        "doc": "Send switch-off signal to the monitored generator when the voltage goes below a threshold"
+        "doc": "Sends switch-off signal to the monitored generator when the voltage goes below a threshold"
       }
     ]
   }

@@ -9,9 +9,10 @@ package com.powsybl.dynawo.models.hvdc;
 
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.builders.*;
+import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.iidm.network.*;
 
-import java.util.Set;
+import java.util.Collection;
 import java.util.function.Predicate;
 
 /**
@@ -21,6 +22,7 @@ public class HvdcVscBuilder extends AbstractHvdcBuilder<HvdcVscBuilder> {
 
     public static final String CATEGORY = "HVDC_VSC";
     private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
+    private static final HvdcVarNameHandler VSC_NAME_HANDLER = new VscVarNameHandler();
     private static final Predicate<HvdcLine> IS_VSC = eq -> HvdcConverterStation.HvdcType.VSC == eq.getConverterStation1().getHvdcType();
 
     public static HvdcVscBuilder of(Network network) {
@@ -44,25 +46,24 @@ public class HvdcVscBuilder extends AbstractHvdcBuilder<HvdcVscBuilder> {
         return new HvdcVscBuilder(network, modelConfig, reportNode);
     }
 
-    public static Set<ModelInfo> getSupportedModelInfos() {
+    public static ModelInfo getDefaultModelInfo() {
+        return MODEL_CONFIGS.getDefaultModelConfig();
+    }
+
+    public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();
     }
 
-    protected HvdcVscBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
-        super(network, modelConfig, "VSC " + IdentifiableType.HVDC_LINE, reportNode);
-        addEquipmentPredicate(IS_VSC);
+    /**
+     * Returns models usable with the given {@link DynawoVersion}
+     */
+    public static Collection<ModelInfo> getSupportedModelInfos(DynawoVersion dynawoVersion) {
+        return MODEL_CONFIGS.getModelInfos(dynawoVersion);
     }
 
-    @Override
-    public HvdcVsc build() {
-        if (isInstantiable()) {
-            if (modelConfig.isDangling()) {
-                return new HvdcVscDangling(dynamicModelId, getEquipment(), parameterSetId, modelConfig.lib(), danglingSide);
-            } else {
-                return new HvdcVsc(dynamicModelId, getEquipment(), parameterSetId, modelConfig.lib());
-            }
-        }
-        return null;
+    protected HvdcVscBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
+        super(network, modelConfig, "VSC " + IdentifiableType.HVDC_LINE, reportNode, VSC_NAME_HANDLER);
+        addEquipmentPredicate(IS_VSC);
     }
 
     @Override

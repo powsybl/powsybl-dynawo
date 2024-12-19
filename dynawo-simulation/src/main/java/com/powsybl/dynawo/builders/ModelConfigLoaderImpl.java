@@ -62,16 +62,17 @@ public final class ModelConfigLoaderImpl implements ModelConfigLoader {
             new BuilderConfig(LoadTwoTransformersTapChangersBuilder.CATEGORY, LoadTwoTransformersTapChangersBuilder::of, LoadTwoTransformersTapChangersBuilder::getSupportedModelInfos),
             new BuilderConfig(BaseShuntBuilder.CATEGORY, BaseShuntBuilder::of, BaseShuntBuilder::getSupportedModelInfos),
             new BuilderConfig(BaseStaticVarCompensatorBuilder.CATEGORY, BaseStaticVarCompensatorBuilder::of, BaseStaticVarCompensatorBuilder::getSupportedModelInfos),
-            new BuilderConfig(GeneratorFictitiousBuilder.CATEGORY, GeneratorFictitiousBuilder::of, GeneratorFictitiousBuilder::getSupportedModelInfos),
+            new BuilderConfig(BaseGeneratorBuilder.CATEGORY, BaseGeneratorBuilder::of, BaseGeneratorBuilder::getSupportedModelInfos),
             new BuilderConfig(SynchronizedGeneratorBuilder.CATEGORY, SynchronizedGeneratorBuilder::of, SynchronizedGeneratorBuilder::getSupportedModelInfos),
             new BuilderConfig(SynchronousGeneratorBuilder.CATEGORY, SynchronousGeneratorBuilder::of, SynchronousGeneratorBuilder::getSupportedModelInfos),
             new BuilderConfig(WeccBuilder.CATEGORY, WeccBuilder::of, WeccBuilder::getSupportedModelInfos),
-            new BuilderConfig(GridFormingConverterBuilder.CATEGORY, GridFormingConverterBuilder::of, GridFormingConverterBuilder::getSupportedModelInfos));
+            new BuilderConfig(GridFormingConverterBuilder.CATEGORY, GridFormingConverterBuilder::of, GridFormingConverterBuilder::getSupportedModelInfos),
+            new BuilderConfig(SignalNGeneratorBuilder.CATEGORY, SignalNGeneratorBuilder::of, SignalNGeneratorBuilder::getSupportedModelInfos));
 
     private static final Stream<EventBuilderConfig> EVENT_BUILDER_CONFIGS = Stream.of(
-            new EventBuilderConfig(EventActivePowerVariationBuilder::of, EventActivePowerVariationBuilder.getEventModelInfo()),
-            new EventBuilderConfig(EventDisconnectionBuilder::of, EventDisconnectionBuilder.getEventModelInfo()),
-            new EventBuilderConfig(NodeFaultEventBuilder::of, NodeFaultEventBuilder.getEventModelInfo()));
+            new EventBuilderConfig(EventActivePowerVariationBuilder::of, EventActivePowerVariationBuilder.getModelInfo()),
+            new EventBuilderConfig(EventDisconnectionBuilder::of, EventDisconnectionBuilder.getModelInfo()),
+            new EventBuilderConfig(NodeFaultEventBuilder::of, NodeFaultEventBuilder.getModelInfo()));
 
     @Override
     public String getModelConfigFileName() {

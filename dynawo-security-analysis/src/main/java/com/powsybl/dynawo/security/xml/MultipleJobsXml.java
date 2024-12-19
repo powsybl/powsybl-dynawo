@@ -17,8 +17,8 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Objects;
 
-import static com.powsybl.dynawo.algorithms.xml.AlgorithmsConstants.MULTIPLE_JOBS_FILENAME;
-import static com.powsybl.dynawo.xml.DynawoSimulationConstants.*;
+import static com.powsybl.dynawo.DynawoSimulationConstants.JOBS_FILENAME;
+import static com.powsybl.dynawo.DynawoSimulationConstants.MULTIPLE_JOBS_FILENAME;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
@@ -34,28 +34,18 @@ public final class MultipleJobsXml {
         XmlUtil.write(file, "multipleJobs", w -> writeContingencies(w, context));
     }
 
-    private static void writeContingencies(XMLStreamWriter writer, SecurityAnalysisContext context) {
-        try {
-            writer.writeStartElement("scenarios");
-            writer.writeAttribute("jobsFile", JOBS_FILENAME);
-            for (ContingencyEventModels model : context.getContingencyEventModels()) {
-                writeScenario(writer, model.getId());
-            }
-            writeBaseScenario(writer);
-            writer.writeEndElement();
-        } catch (XMLStreamException e) {
-            throw new RuntimeException(e);
+    private static void writeContingencies(XMLStreamWriter writer, SecurityAnalysisContext context) throws XMLStreamException {
+        writer.writeStartElement("scenarios");
+        writer.writeAttribute("jobsFile", JOBS_FILENAME);
+        for (ContingencyEventModels model : context.getContingencyEventModels()) {
+            writeScenario(writer, model.getId());
         }
+        writer.writeEndElement();
     }
 
     private static void writeScenario(XMLStreamWriter writer, String id) throws XMLStreamException {
         writer.writeEmptyElement("scenario");
         writer.writeAttribute("id", id);
         writer.writeAttribute("dydFile", id + ".dyd");
-    }
-
-    private static void writeBaseScenario(XMLStreamWriter writer) throws XMLStreamException {
-        writer.writeEmptyElement("scenario");
-        writer.writeAttribute("id", "Base");
     }
 }

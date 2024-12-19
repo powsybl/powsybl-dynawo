@@ -7,6 +7,8 @@
  */
 package com.powsybl.dynawo.models.frequencysynchronizers;
 
+import com.powsybl.dynawo.DynawoSimulationContext;
+import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.AbstractPureDynamicBlackBoxModel;
 
 import java.util.List;
@@ -21,8 +23,8 @@ public abstract class AbstractFrequencySynchronizer extends AbstractPureDynamicB
     protected final List<FrequencySynchronizedModel> synchronizedEquipments;
     private final String defaultParFile;
 
-    protected AbstractFrequencySynchronizer(List<FrequencySynchronizedModel> synchronizedEquipments, String lib, String defaultParFile) {
-        super(FREQUENCY_SYNCHRONIZER_ID, FREQUENCY_SYNCHRONIZER_PARAMETER_SET_ID, lib);
+    protected AbstractFrequencySynchronizer(List<FrequencySynchronizedModel> synchronizedEquipments, ModelConfig modelConfig, String defaultParFile) {
+        super(FREQUENCY_SYNCHRONIZER_ID, FREQUENCY_SYNCHRONIZER_PARAMETER_SET_ID, modelConfig);
         this.synchronizedEquipments = synchronizedEquipments;
         this.defaultParFile = defaultParFile;
     }

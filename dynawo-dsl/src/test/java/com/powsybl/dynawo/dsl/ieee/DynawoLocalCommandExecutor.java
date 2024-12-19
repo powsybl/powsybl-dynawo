@@ -25,7 +25,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.powsybl.dynawo.xml.DynawoSimulationConstants.*;
+import static com.powsybl.dynawo.DynawoSimulationConstants.*;
+import static com.powsybl.dynawo.commons.DynawoConstants.NETWORK_FILENAME;
+import static com.powsybl.dynawo.commons.DynawoConstants.OUTPUTS_FOLDER;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
@@ -61,8 +63,8 @@ public class DynawoLocalCommandExecutor implements LocalCommandExecutor {
     }
 
     protected void copyOutputs(Path workingDir) throws IOException {
-        Path output = Files.createDirectories(workingDir.resolve("outputs/curves").toAbsolutePath());
-        Files.copy(Objects.requireNonNull(getClass().getResourceAsStream("/" + baseDirName + "/dynawo-outputs/curves.csv")), output.resolve("curves.csv"));
+        Path output = Files.createDirectories(workingDir.resolve(OUTPUTS_FOLDER).resolve(CURVES_OUTPUT_PATH).toAbsolutePath());
+        Files.copy(Objects.requireNonNull(getClass().getResourceAsStream("/" + baseDirName + "/dynawo-outputs/curves.csv")), output.resolve(CURVES_FILENAME));
     }
 
     @Override

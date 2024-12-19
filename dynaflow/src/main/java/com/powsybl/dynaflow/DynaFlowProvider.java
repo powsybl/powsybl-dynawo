@@ -9,6 +9,7 @@ package com.powsybl.dynaflow;
 import com.google.auto.service.AutoService;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
+import com.powsybl.commons.config.ModuleConfig;
 import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.extensions.Extension;
 import com.powsybl.commons.extensions.ExtensionJsonSerializer;
@@ -27,6 +28,8 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 import static com.powsybl.dynaflow.DynaFlowConstants.*;
+import static com.powsybl.dynawo.commons.DynawoConstants.NETWORK_FILENAME;
+import static com.powsybl.dynawo.commons.DynawoConstants.OUTPUT_IIDM_FILENAME_PATH;
 
 /**
  *
@@ -35,8 +38,6 @@ import static com.powsybl.dynaflow.DynaFlowConstants.*;
  */
 @AutoService(LoadFlowProvider.class)
 public class DynaFlowProvider implements LoadFlowProvider {
-
-    public static final String MODULE_SPECIFIC_PARAMETERS = "dynaflow-default-parameters";
 
     private static final String WORKING_DIR_PREFIX = "dynaflow_";
 
@@ -51,16 +52,14 @@ public class DynaFlowProvider implements LoadFlowProvider {
     }
 
     public static Command getCommand(DynaFlowConfig config) {
-        List<String> args = Arrays.asList("--network", IIDM_FILENAME, "--config", CONFIG_FILENAME);
-
         return new SimpleCommandBuilder()
                 .id("dynaflow_lf")
                 .program(config.getProgram())
-                .args(args)
-                .inputFiles(new InputFile(IIDM_FILENAME),
+                .args("--network", NETWORK_FILENAME, "--config", CONFIG_FILENAME)
+                .inputFiles(new InputFile(NETWORK_FILENAME),
                             new InputFile(CONFIG_FILENAME))
                 .outputFiles(new OutputFile(OUTPUT_RESULTS_FILENAME),
-                             new OutputFile("outputs/finalState/" + OUTPUT_IIDM_FILENAME))
+                             new OutputFile(OUTPUT_IIDM_FILENAME_PATH))
                 .build();
     }
 
@@ -73,10 +72,10 @@ public class DynaFlowProvider implements LoadFlowProvider {
                 .build();
     }
 
-    private static DynaFlowParameters getParametersExt(LoadFlowParameters parameters) {
+    static DynaFlowParameters getParametersExt(LoadFlowParameters parameters) {
         DynaFlowParameters parametersExt = parameters.getExtension(DynaFlowParameters.class);
         if (parametersExt == null) {
-            parametersExt = new DynaFlowParameters();
+            return new DynaFlowParameters();
         }
         return parametersExt;
     }
@@ -135,6 +134,11 @@ public class DynaFlowProvider implements LoadFlowProvider {
     @Override
     public List<Parameter> getSpecificParameters() {
         return DynaFlowParameters.SPECIFIC_PARAMETERS;
+    }
+
+    @Override
+    public Optional<ModuleConfig> getModuleConfig(PlatformConfig platformConfig) {
+        return platformConfig.getOptionalModuleConfig(DynaFlowParameters.MODULE_SPECIFIC_PARAMETERS);
     }
 
     @Override

@@ -3,6 +3,5 @@
     <scenarios jobsFile="powsybl_dynawo.jobs">
         <scenario id="LOAD" dydFile="LOAD.dyd"/>
         <scenario id="DisconnectLineGenerator" dydFile="DisconnectLineGenerator.dyd"/>
-        <scenario id="Base"/>
     </scenarios>
 </multipleJobs>

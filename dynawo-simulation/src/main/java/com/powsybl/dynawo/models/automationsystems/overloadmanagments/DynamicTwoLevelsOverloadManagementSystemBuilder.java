@@ -9,11 +9,12 @@ package com.powsybl.dynawo.models.automationsystems.overloadmanagments;
 
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.builders.*;
+import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.iidm.network.Branch;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.TwoSides;
 
-import java.util.Set;
+import java.util.Collection;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -47,8 +48,19 @@ public class DynamicTwoLevelsOverloadManagementSystemBuilder extends AbstractOve
         return new DynamicTwoLevelsOverloadManagementSystemBuilder(network, modelConfig, reportNode);
     }
 
-    public static Set<ModelInfo> getSupportedModelInfos() {
+    public static ModelInfo getDefaultModelInfo() {
+        return MODEL_CONFIGS.getDefaultModelConfig();
+    }
+
+    public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();
+    }
+
+    /**
+     * Returns models usable with the given {@link DynawoVersion}
+     */
+    public static Collection<ModelInfo> getSupportedModelInfos(DynawoVersion dynawoVersion) {
+        return MODEL_CONFIGS.getModelInfos(dynawoVersion);
     }
 
     protected DynamicTwoLevelsOverloadManagementSystemBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
@@ -91,7 +103,7 @@ public class DynamicTwoLevelsOverloadManagementSystemBuilder extends AbstractOve
     public DynamicTwoLevelsOverloadManagementSystem build() {
         return isInstantiable() ? new DynamicTwoLevelsOverloadManagementSystem(dynamicModelId, parameterSetId,
                 iMeasurement.getEquipment(), iMeasurementSide, iMeasurement2.getEquipment(), iMeasurement2Side,
-                controlledEquipment.getEquipment(), getLib())
+                controlledEquipment.getEquipment(), modelConfig)
                 : null;
     }
 

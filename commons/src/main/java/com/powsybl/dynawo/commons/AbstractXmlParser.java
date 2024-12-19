@@ -19,9 +19,10 @@ import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -29,13 +30,18 @@ import java.util.Objects;
 public abstract class AbstractXmlParser<T> {
 
     public List<T> parse(Path path) {
+        List<T> series = new ArrayList<>();
+        parse(path, series::add);
+        return series;
+    }
+
+    public void parse(Path path, Consumer<T> consumer) {
         Objects.requireNonNull(path);
         if (!Files.exists(path)) {
-            return Collections.emptyList();
+            return;
         }
-
         try (Reader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
-            return parse(reader);
+            parse(reader, consumer);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         } catch (XMLStreamException e) {
@@ -44,22 +50,25 @@ public abstract class AbstractXmlParser<T> {
     }
 
     public List<T> parse(Reader reader) throws XMLStreamException {
+        List<T> series = new ArrayList<>();
+        parse(reader, series::add);
+        return series;
+    }
 
-        List<T> series;
+    public void parse(Reader reader, Consumer<T> consumer) throws XMLStreamException {
         XMLInputFactory factory = XMLInputFactory.newInstance();
         factory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
         factory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
         XMLStreamReader xmlReader = null;
         try {
             xmlReader = factory.createXMLStreamReader(reader);
-            series = read(xmlReader);
+            read(xmlReader, consumer);
         } finally {
             if (xmlReader != null) {
                 xmlReader.close();
             }
         }
-        return series;
     }
 
-    protected abstract List<T> read(XMLStreamReader reader) throws XMLStreamException;
+    protected abstract void read(XMLStreamReader reader, Consumer<T> consumer) throws XMLStreamException;
 }

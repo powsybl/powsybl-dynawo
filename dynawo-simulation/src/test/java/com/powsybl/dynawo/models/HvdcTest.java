@@ -7,16 +7,19 @@
  */
 package com.powsybl.dynawo.models;
 
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.models.hvdc.HvdcPBuilder;
 import com.powsybl.dynawo.models.hvdc.HvdcVscBuilder;
-import com.powsybl.dynawo.models.hvdc.HvdcP;
-import com.powsybl.dynawo.models.hvdc.HvdcVsc;
+import com.powsybl.dynawo.models.hvdc.BaseHvdc;
 import com.powsybl.iidm.network.HvdcLine;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.TwoSides;
 import com.powsybl.iidm.network.test.HvdcTestNetwork;
 import org.junit.jupiter.api.Test;
 
+import java.util.Objects;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -28,7 +31,7 @@ class HvdcTest {
     @Test
     void testConnectedStation() {
         Network network = HvdcTestNetwork.createVsc();
-        HvdcP hvdc = HvdcPBuilder.of(network, "HvdcPV")
+        BaseHvdc hvdc = HvdcPBuilder.of(network, "HvdcPV")
                 .dynamicModelId("hvdc")
                 .staticId("L")
                 .parameterSetId("HVDC")
@@ -40,21 +43,10 @@ class HvdcTest {
     void testDanglingConnectedStation() {
         Network network = HvdcTestNetwork.createVsc();
         HvdcLine line = network.getHvdcLine("L");
-
-        HvdcP hvdcPDangling = HvdcPBuilder.of(network, "HvdcPVDangling")
+        BaseHvdc hvdcVscDangling = HvdcVscBuilder.of(network, "HvdcVSCDanglingP")
                 .dynamicModelId("hvdc")
                 .staticId("L")
                 .parameterSetId("HVDC")
-                .dangling(TwoSides.ONE)
-                .build();
-        assertEquals(1, hvdcPDangling.getConnectedStations().size());
-        assertEquals(line.getConverterStation2(), hvdcPDangling.getConnectedStations().get(0));
-
-        HvdcVsc hvdcVscDangling = HvdcVscBuilder.of(network, "HvdcVSCDanglingP")
-                .dynamicModelId("hvdc")
-                .staticId("L")
-                .parameterSetId("HVDC")
-                .dangling(TwoSides.TWO)
                 .build();
         assertEquals(1, hvdcVscDangling.getConnectedStations().size());
         assertEquals(line.getConverterStation1(), hvdcVscDangling.getConnectedStations().get(0));
@@ -68,5 +60,32 @@ class HvdcTest {
                 .staticId("L")
                 .parameterSetId("HVDC")
                 .build());
+    }
+
+    @Test
+    void testDefaultDanglingSide() {
+        ReportNode reportNode = ReportNode.newRootReportNode()
+                .withMessageTemplate("hvdcBuilder", "HVDC builder")
+                .build();
+        Network network = HvdcTestNetwork.createVsc();
+        HvdcLine line = network.getHvdcLine("L");
+
+        // dangling side ONE replaced by side TWO
+        BaseHvdc hvdcPDangling = Objects.requireNonNull(
+                HvdcPBuilder.of(network, "HvdcPVDangling", reportNode))
+                    .dynamicModelId("hvdc")
+                    .staticId("L")
+                    .parameterSetId("HVDC")
+                    .dangling(TwoSides.ONE)
+                    .build();
+        assertEquals(1, hvdcPDangling.getConnectedStations().size());
+        assertEquals(line.getConverterStation1(), hvdcPDangling.getConnectedStations().get(0));
+        assertThat(reportNode.getChildren().stream()
+                .filter(r -> r.getMessageKey().equalsIgnoreCase("fieldOptionNotImplemented"))
+                .findFirst())
+                .isNotEmpty()
+                .get()
+                .hasFieldOrPropertyWithValue("message",
+                        "'dangling' field is set but this option is not implemented yet, default value TWO will be used");
     }
 }

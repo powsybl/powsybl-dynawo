@@ -9,6 +9,7 @@ package com.powsybl.dynawo.commons;
 
 import com.powsybl.iidm.serde.IidmVersion;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -24,8 +25,6 @@ public final class DynawoConstants {
      */
     public static final String IIDM_VERSION = IidmVersion.V_1_4.toString(".");
 
-    public static final String DYNAWO_TIMELINE_FOLDER = "timeLine";
-
     public static final DynawoVersion VERSION_MIN = new DynawoVersion(1, 5, 0);
 
     public static final List<String> IIDM_EXTENSIONS = List.of(
@@ -36,5 +35,21 @@ public final class DynawoConstants {
             "hvdcOperatorActivePowerRange",
             "standbyAutomaton");
 
+    public static final String NETWORK_FILENAME = "powsybl_dynawo.xiidm";
+
+    public static final String OUTPUTS_FOLDER = "outputs";
+
     public static final String OUTPUT_IIDM_FILENAME = "outputIIDM.xml";
+
+    public static final String AGGREGATED_RESULTS = "aggregatedResults.xml";
+
+    public static final String FINAL_STATE_FOLDER = "finalState";
+
+    public static final String TIMELINE_FOLDER = "timeLine";
+
+    public static final String TIMELINE_FILENAME = "timeline";
+
+    public static final String FINAL_STATE_FOLDER_PATH = String.join(File.separator, OUTPUTS_FOLDER, FINAL_STATE_FOLDER);
+
+    public static final String OUTPUT_IIDM_FILENAME_PATH = String.join(File.separator, OUTPUTS_FOLDER, FINAL_STATE_FOLDER, OUTPUT_IIDM_FILENAME);
 }

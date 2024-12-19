@@ -18,14 +18,21 @@ import com.powsybl.iidm.network.*;
  */
 public abstract class AbstractHvdcBuilder<R extends AbstractEquipmentModelBuilder<HvdcLine, R>> extends AbstractEquipmentModelBuilder<HvdcLine, R> {
 
-    protected TwoSides danglingSide;
+    protected static final TwoSides DEFAULT_DANGLING_SIDE = TwoSides.TWO;
 
-    protected AbstractHvdcBuilder(Network network, ModelConfig modelConfig, IdentifiableType identifiableType, ReportNode reportNode) {
+    protected TwoSides danglingSide;
+    protected final HvdcVarNameHandler varNameHandler;
+
+    protected AbstractHvdcBuilder(Network network, ModelConfig modelConfig, IdentifiableType identifiableType,
+                                  ReportNode reportNode, HvdcVarNameHandler varNameHandler) {
         super(network, modelConfig, identifiableType, reportNode);
+        this.varNameHandler = varNameHandler;
     }
 
-    protected AbstractHvdcBuilder(Network network, ModelConfig modelConfig, String equipmentType, ReportNode reportNode) {
+    protected AbstractHvdcBuilder(Network network, ModelConfig modelConfig, String equipmentType, ReportNode reportNode,
+                                  HvdcVarNameHandler varNameHandler) {
         super(network, modelConfig, equipmentType, reportNode);
+        this.varNameHandler = varNameHandler;
     }
 
     public R dangling(TwoSides danglingSide) {
@@ -37,12 +44,23 @@ public abstract class AbstractHvdcBuilder<R extends AbstractEquipmentModelBuilde
     protected void checkData() {
         super.checkData();
         boolean isDangling = modelConfig.isDangling();
-        if (isDangling && danglingSide == null) {
-            BuilderReports.reportFieldNotSet(reportNode, "dangling");
-            isInstantiable = false;
+        if (isDangling && danglingSide != null) {
+            BuilderReports.reportFieldOptionNotImplemented(reportNode, "dangling", DEFAULT_DANGLING_SIDE.toString());
         } else if (!isDangling && danglingSide != null) {
             BuilderReports.reportFieldSetWithWrongEquipment(reportNode, "dangling", modelConfig.lib());
             isInstantiable = false;
         }
+    }
+
+    @Override
+    public BaseHvdc build() {
+        if (isInstantiable()) {
+            if (modelConfig.isDangling()) {
+                return new HvdcDangling(dynamicModelId, getEquipment(), parameterSetId, modelConfig, varNameHandler, DEFAULT_DANGLING_SIDE);
+            } else {
+                return new BaseHvdc(dynamicModelId, getEquipment(), parameterSetId, modelConfig, varNameHandler);
+            }
+        }
+        return null;
     }
 }

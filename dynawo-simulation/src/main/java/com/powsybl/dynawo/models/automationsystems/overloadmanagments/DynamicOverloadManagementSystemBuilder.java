@@ -9,10 +9,11 @@ package com.powsybl.dynawo.models.automationsystems.overloadmanagments;
 
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.builders.*;
+import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.TwoSides;
 
-import java.util.Set;
+import java.util.Collection;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -43,8 +44,19 @@ public class DynamicOverloadManagementSystemBuilder extends AbstractOverloadMana
         return new DynamicOverloadManagementSystemBuilder(network, modelConfig, reportNode);
     }
 
-    public static Set<ModelInfo> getSupportedModelInfos() {
+    public static ModelInfo getDefaultModelInfo() {
+        return MODEL_CONFIGS.getDefaultModelConfig();
+    }
+
+    public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();
+    }
+
+    /**
+     * Returns models usable with the given {@link DynawoVersion}
+     */
+    public static Collection<ModelInfo> getSupportedModelInfos(DynawoVersion dynawoVersion) {
+        return MODEL_CONFIGS.getModelInfos(dynawoVersion);
     }
 
     protected DynamicOverloadManagementSystemBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
@@ -65,7 +77,7 @@ public class DynamicOverloadManagementSystemBuilder extends AbstractOverloadMana
     @Override
     public DynamicOverloadManagementSystem build() {
         return isInstantiable() ? new DynamicOverloadManagementSystem(dynamicModelId, parameterSetId,
-                iMeasurement.getEquipment(), iMeasurementSide, controlledEquipment.getEquipment(), getLib())
+                iMeasurement.getEquipment(), iMeasurementSide, controlledEquipment.getEquipment(), modelConfig)
                 : null;
     }
 

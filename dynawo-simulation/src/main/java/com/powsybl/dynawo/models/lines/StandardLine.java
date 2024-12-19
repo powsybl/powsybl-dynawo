@@ -7,6 +7,8 @@
  */
 package com.powsybl.dynawo.models.lines;
 
+import com.powsybl.dynawo.builders.ModelConfig;
+import com.powsybl.dynawo.models.VarMapping;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.AbstractEquipmentBlackBoxModel;
 import com.powsybl.dynawo.models.VarConnection;
@@ -14,6 +16,7 @@ import com.powsybl.dynawo.models.buses.EquipmentConnectionPoint;
 import com.powsybl.iidm.network.Line;
 import com.powsybl.iidm.network.TwoSides;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -21,12 +24,19 @@ import java.util.List;
  */
 public class StandardLine extends AbstractEquipmentBlackBoxModel<Line> implements LineModel {
 
-    protected StandardLine(String dynamicModelId, Line line, String parameterSetId, String lib) {
-        super(dynamicModelId, parameterSetId, line, lib);
+    private static final List<VarMapping> VAR_MAPPING = Arrays.asList(
+            new VarMapping("line_P1Pu", "p1"),
+            new VarMapping("line_Q1Pu", "q1"),
+            new VarMapping("line_P2Pu", "p2"),
+            new VarMapping("line_Q2Pu", "q2"),
+            new VarMapping("line_state", "state"));
+
+    protected StandardLine(String dynamicModelId, Line line, String parameterSetId, ModelConfig modelConfig) {
+        super(dynamicModelId, parameterSetId, line, modelConfig);
     }
 
     private List<VarConnection> getVarConnectionsWith(EquipmentConnectionPoint connected, TwoSides side) {
-        return List.of(new VarConnection(getTerminalVarName(side), connected.getTerminalVarName()));
+        return List.of(new VarConnection(getTerminalVarName(side), connected.getTerminalVarName(side)));
     }
 
     private String getTerminalVarName(TwoSides side) {
@@ -34,13 +44,13 @@ public class StandardLine extends AbstractEquipmentBlackBoxModel<Line> implement
     }
 
     @Override
-    public void createMacroConnections(MacroConnectionsAdder adder) {
-        equipment.getTerminals().forEach(t -> adder.createTerminalMacroConnections(this, t, this::getVarConnectionsWith, equipment.getSide(t)));
+    public List<VarMapping> getVarsMapping() {
+        return VAR_MAPPING;
     }
 
     @Override
-    public String getName() {
-        return getDynamicModelId();
+    public void createMacroConnections(MacroConnectionsAdder adder) {
+        equipment.getTerminals().forEach(t -> adder.createTerminalMacroConnections(this, t, this::getVarConnectionsWith, equipment.getSide(t)));
     }
 
     @Override

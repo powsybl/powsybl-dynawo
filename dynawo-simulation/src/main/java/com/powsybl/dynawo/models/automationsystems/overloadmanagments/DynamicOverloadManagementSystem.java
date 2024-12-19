@@ -6,6 +6,7 @@
  */
 package com.powsybl.dynawo.models.automationsystems.overloadmanagments;
 
+import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawo.models.VarConnection;
@@ -31,8 +32,8 @@ public class DynamicOverloadManagementSystem extends AbstractPureDynamicBlackBox
     protected final TwoSides measuredSide;
     protected final Branch<?> controlledBranch;
 
-    protected DynamicOverloadManagementSystem(String dynamicModelId, String parameterSetId, Branch<?> measuredBranch, TwoSides measuredSide, Branch<?> controlledBranch, String lib) {
-        super(dynamicModelId, parameterSetId, lib);
+    protected DynamicOverloadManagementSystem(String dynamicModelId, String parameterSetId, Branch<?> measuredBranch, TwoSides measuredSide, Branch<?> controlledBranch, ModelConfig modelConfig) {
+        super(dynamicModelId, parameterSetId, modelConfig);
         this.measuredBranch = Objects.requireNonNull(measuredBranch);
         this.measuredSide = Objects.requireNonNull(measuredSide);
         this.controlledBranch = Objects.requireNonNull(controlledBranch);

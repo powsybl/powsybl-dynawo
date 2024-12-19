@@ -8,9 +8,11 @@ package com.powsybl.dynawo;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.report.ReportNode;
-import com.powsybl.dynamicsimulation.Curve;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
-import com.powsybl.dynawo.curves.DynawoCurve;
+import com.powsybl.dynamicsimulation.OutputVariable;
+import com.powsybl.dynawo.builders.VersionInterval;
+import com.powsybl.dynawo.commons.DynawoConstants;
+import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.EquipmentBlackBoxModel;
@@ -18,16 +20,12 @@ import com.powsybl.dynawo.models.Model;
 import com.powsybl.dynawo.models.buses.AbstractBus;
 import com.powsybl.dynawo.models.defaultmodels.DefaultModelsHandler;
 import com.powsybl.dynawo.models.events.ContextDependentEvent;
-import com.powsybl.dynawo.models.frequencysynchronizers.FrequencySynchronizedModel;
-import com.powsybl.dynawo.models.frequencysynchronizers.FrequencySynchronizerModel;
-import com.powsybl.dynawo.models.frequencysynchronizers.OmegaRef;
-import com.powsybl.dynawo.models.frequencysynchronizers.SetPoint;
+import com.powsybl.dynawo.models.frequencysynchronizers.*;
 import com.powsybl.dynawo.models.macroconnections.MacroConnect;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.macroconnections.MacroConnector;
 import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.dynawo.xml.DydDataSupplier;
-import com.powsybl.dynawo.xml.DynawoSimulationConstants;
 import com.powsybl.dynawo.xml.MacroStaticReference;
 import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.Network;
@@ -57,7 +55,7 @@ public class DynawoSimulationContext implements DydDataSupplier {
     private final List<BlackBoxModel> dynamicModels;
     private final List<BlackBoxModel> eventModels;
     private final Map<String, EquipmentBlackBoxModel> staticIdBlackBoxModelMap;
-    private final List<DynawoCurve> curves;
+    private final Map<OutputVariable.OutputType, List<OutputVariable>> outputVariables;
     private final Map<String, MacroStaticReference> macroStaticReferences = new LinkedHashMap<>();
     private final List<MacroConnect> macroConnectList = new ArrayList<>();
     private final Map<String, MacroConnector> macroConnectorsMap = new LinkedHashMap<>();
@@ -76,28 +74,28 @@ public class DynawoSimulationContext implements DydDataSupplier {
                                    List<Curve> curves, DynamicSimulationParameters parameters, DynawoSimulationParameters dynawoSimulationParameters,
                                    Predicate<BlackBoxModel> phase2ModelsPredicate) {
         this(network, workingVariantId, dynamicModels, eventModels, curves, parameters, dynawoSimulationParameters, phase2ModelsPredicate, ReportNode.NO_OP);
-
     }
 
     public DynawoSimulationContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
-                                   List<Curve> curves, DynamicSimulationParameters parameters, DynawoSimulationParameters dynawoSimulationParameters, ReportNode reportNode) {
-        this(network, workingVariantId, dynamicModels, eventModels, curves, parameters, dynawoSimulationParameters, null, reportNode);
-
+                                   List<OutputVariable> outputVariables, DynamicSimulationParameters parameters, DynawoSimulationParameters dynawoSimulationParameters) {
+        this(network, workingVariantId, dynamicModels, eventModels, outputVariables, parameters, dynawoSimulationParameters, null, DynawoConstants.VERSION_MIN, ReportNode.NO_OP);
     }
 
     public DynawoSimulationContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
-                                   List<Curve> curves, DynamicSimulationParameters parameters, DynawoSimulationParameters dynawoSimulationParameters,
-                                   //TODO change predicate to Identifiable ?
-                                   Predicate<BlackBoxModel> phase2ModelsPredicate, ReportNode reportNode) {
-
+                                   List<OutputVariable> outputVariables, DynamicSimulationParameters parameters, DynawoSimulationParameters dynawoSimulationParameters,
+                                   Predicate<BlackBoxModel> phase2ModelsPredicate, DynawoVersion currentVersion, ReportNode reportNode) {
+        //TODO change predicate to Identifiable ?
         ReportNode contextReportNode = DynawoSimulationReports.createDynawoSimulationContextReportNode(reportNode);
+        DynawoVersion dynawoVersion = Objects.requireNonNull(currentVersion);
         this.network = Objects.requireNonNull(network);
         this.workingVariantId = Objects.requireNonNull(workingVariantId);
         this.parameters = Objects.requireNonNull(parameters);
         this.dynawoSimulationParameters = Objects.requireNonNull(dynawoSimulationParameters);
 
         Stream<BlackBoxModel> uniqueIdsDynamicModels = Objects.requireNonNull(dynamicModels).stream()
-                .filter(distinctByDynamicId(contextReportNode).and(distinctByStaticId(contextReportNode)));
+                .filter(distinctByDynamicId(contextReportNode)
+                        .and(distinctByStaticId(contextReportNode)
+                        .and(supportedVersion(dynawoVersion, contextReportNode))));
         if (dynawoSimulationParameters.isUseModelSimplifiers()) {
             uniqueIdsDynamicModels = simplifyModels(uniqueIdsDynamicModels, contextReportNode);
         }
@@ -112,7 +110,8 @@ public class DynawoSimulationContext implements DydDataSupplier {
         }
 
         this.eventModels = Objects.requireNonNull(eventModels).stream()
-                .filter(distinctByDynamicId(contextReportNode))
+                .filter(distinctByDynamicId(contextReportNode)
+                        .and(supportedVersion(dynawoVersion, contextReportNode)))
                 .toList();
         this.staticIdBlackBoxModelMap = getInputBlackBoxDynamicModelStream()
                 .filter(EquipmentBlackBoxModel.class::isInstance)
@@ -125,13 +124,9 @@ public class DynawoSimulationContext implements DydDataSupplier {
                 .map(ContextDependentEvent.class::cast)
                 .forEach(e -> e.setEquipmentHasDynamicModel(this));
 
-        this.curves = Objects.requireNonNull(curves).stream()
-                .filter(DynawoCurve.class::isInstance)
-                .map(DynawoCurve.class::cast)
-                .toList();
-        this.frequencySynchronizer = setupFrequencySynchronizer(dynamicModels.stream().anyMatch(AbstractBus.class::isInstance)
-                ? m -> new SetPoint(m, DynawoSimulationConstants.getSimulationParFile(getNetwork()))
-                : m -> new OmegaRef(m, DynawoSimulationConstants.getSimulationParFile(getNetwork())));
+        this.outputVariables = Objects.requireNonNull(outputVariables).stream()
+                .collect(Collectors.groupingBy(OutputVariable::getOutputType));
+        this.frequencySynchronizer = setupFrequencySynchronizer();
         this.macroConnectionsAdder = new MacroConnectionsAdder(this::getDynamicModel,
                 this::getPureDynamicModel,
                 macroConnectList::add,
@@ -173,11 +168,25 @@ public class DynawoSimulationContext implements DydDataSupplier {
         return outputBbm;
     }
 
-    private FrequencySynchronizerModel setupFrequencySynchronizer(Function<List<FrequencySynchronizedModel>, FrequencySynchronizerModel> fsConstructor) {
-        return fsConstructor.apply(dynamicModels.stream()
-                .filter(FrequencySynchronizedModel.class::isInstance)
-                .map(FrequencySynchronizedModel.class::cast)
-                .toList());
+    private FrequencySynchronizerModel setupFrequencySynchronizer() {
+        List<SignalNModel> signalNModels = filterDynamicModels(SignalNModel.class);
+        List<FrequencySynchronizedModel> frequencySynchronizedModels = filterDynamicModels(FrequencySynchronizedModel.class);
+        boolean hasSpecificBuses = dynamicModels.stream().anyMatch(AbstractBus.class::isInstance);
+        boolean hasSignalNModel = !signalNModels.isEmpty();
+        if (!frequencySynchronizedModels.isEmpty() && hasSignalNModel) {
+            throw new PowsyblException("Signal N and frequency synchronized generators cannot be used with one another");
+        }
+        if (hasSignalNModel) {
+            return new SignalN(signalNModels);
+        }
+        return hasSpecificBuses ? new SetPoint(frequencySynchronizedModels) : new OmegaRef(frequencySynchronizedModels);
+    }
+
+    private <T extends Model> List<T> filterDynamicModels(Class<T> modelClass) {
+        return dynamicModels.stream()
+                .filter(modelClass::isInstance)
+                .map(modelClass::cast)
+                .toList();
     }
 
     public Network getNetwork() {
@@ -263,6 +272,21 @@ public class DynawoSimulationContext implements DydDataSupplier {
         };
     }
 
+    protected static Predicate<BlackBoxModel> supportedVersion(DynawoVersion currentVersion, ReportNode reportNode) {
+        return bbm -> {
+            VersionInterval versionInterval = bbm.getVersionInterval();
+            if (currentVersion.compareTo(versionInterval.min()) < 0) {
+                DynawoSimulationReports.reportDynawoVersionTooHigh(reportNode, bbm.getName(), bbm.getDynamicModelId(), versionInterval.min(), currentVersion);
+                return false;
+            }
+            if (versionInterval.max() != null && currentVersion.compareTo(versionInterval.max()) >= 0) {
+                DynawoSimulationReports.reportDynawoVersionTooLow(reportNode, bbm.getName(), bbm.getDynamicModelId(), versionInterval.max(), currentVersion, versionInterval.endCause());
+                return false;
+            }
+            return true;
+        };
+    }
+
     public boolean hasDynamicModel(Identifiable<?> equipment) {
         return staticIdBlackBoxModelMap.containsKey(equipment.getId());
     }
@@ -303,12 +327,20 @@ public class DynawoSimulationContext implements DydDataSupplier {
         return eventModels;
     }
 
-    public List<DynawoCurve> getCurves() {
-        return curves;
+    public List<OutputVariable> getOutputVariables(OutputVariable.OutputType type) {
+        return outputVariables.get(type);
     }
 
-    public boolean withCurves() {
-        return !curves.isEmpty();
+    public boolean withCurveVariables() {
+        return outputVariables.containsKey(OutputVariable.OutputType.CURVE);
+    }
+
+    public boolean withFsvVariables() {
+        return outputVariables.containsKey(OutputVariable.OutputType.FINAL_STATE);
+    }
+
+    public boolean withConstraints() {
+        return false;
     }
 
     public List<ParametersSet> getDynamicModelsParameters() {

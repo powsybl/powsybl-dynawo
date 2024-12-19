@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawo.models.generators;
 
+import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.frequencysynchronizers.FrequencySynchronizedModel;
 import com.powsybl.dynawo.models.utils.BusUtils;
@@ -19,10 +20,10 @@ import java.util.List;
  * @author Dimitri Baudrier {@literal <dimitri.baudrier at rte-france.com>}
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class SynchronizedGenerator extends AbstractGenerator implements FrequencySynchronizedModel {
+public class SynchronizedGenerator extends BaseGenerator implements FrequencySynchronizedModel {
 
-    protected SynchronizedGenerator(String dynamicModelId, Generator generator, String parameterSetId, String generatorLib) {
-        super(dynamicModelId, generator, parameterSetId, generatorLib);
+    protected SynchronizedGenerator(String dynamicModelId, Generator generator, String parameterSetId, ModelConfig modelConfig) {
+        super(dynamicModelId, generator, parameterSetId, modelConfig);
     }
 
     @Override
@@ -31,18 +32,6 @@ public class SynchronizedGenerator extends AbstractGenerator implements Frequenc
                 new VarConnection("omegaRef_grp_@INDEX@", getOmegaRefPuVarName()),
                 new VarConnection("running_grp_@INDEX@", getRunningVarName())
         );
-    }
-
-    @Override
-    public List<VarConnection> getSetPointVarConnections() {
-        return List.of(
-                new VarConnection("setPoint_setPoint", getOmegaRefPuVarName())
-        );
-    }
-
-    @Override
-    public String getOmegaRefPuVarName() {
-        return "generator_omegaRefPu";
     }
 
     @Override

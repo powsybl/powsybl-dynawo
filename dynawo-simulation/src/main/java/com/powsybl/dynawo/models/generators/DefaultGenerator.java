@@ -8,12 +8,12 @@
 package com.powsybl.dynawo.models.generators;
 
 import com.powsybl.dynawo.models.defaultmodels.AbstractInjectionDefaultModel;
-import com.powsybl.dynawo.models.events.ControllableEquipmentModel;
+import com.powsybl.dynawo.models.events.ControllableEquipment;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class DefaultGenerator extends AbstractInjectionDefaultModel implements GeneratorModel, ControllableEquipmentModel {
+public class DefaultGenerator extends AbstractInjectionDefaultModel implements GeneratorModel, ControllableEquipment {
 
     public DefaultGenerator(String staticId) {
         super(staticId);

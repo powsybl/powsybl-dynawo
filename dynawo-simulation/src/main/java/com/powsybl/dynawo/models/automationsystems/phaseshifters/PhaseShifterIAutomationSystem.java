@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawo.models.automationsystems.phaseshifters;
 
+import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.automationsystems.ConnectionStatefulModel;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.VarConnection;
@@ -23,8 +24,8 @@ public class PhaseShifterIAutomationSystem extends AbstractPhaseShifterAutomatio
 
     private ConnectionState connection = null;
 
-    protected PhaseShifterIAutomationSystem(String dynamicModelId, TwoWindingsTransformer transformer, String parameterSetId, String lib) {
-        super(dynamicModelId, transformer, parameterSetId, lib);
+    protected PhaseShifterIAutomationSystem(String dynamicModelId, TwoWindingsTransformer transformer, String parameterSetId, ModelConfig modelConfig) {
+        super(dynamicModelId, transformer, parameterSetId, modelConfig);
     }
 
     @Override

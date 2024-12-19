@@ -9,11 +9,12 @@ package com.powsybl.dynawo.models.transformers;
 
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.builders.*;
+import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.TwoWindingsTransformer;
 
-import java.util.Set;
+import java.util.Collection;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -44,8 +45,19 @@ public class TransformerFixedRatioBuilder extends AbstractEquipmentModelBuilder<
         return new TransformerFixedRatioBuilder(network, modelConfig, reportNode);
     }
 
-    public static Set<ModelInfo> getSupportedModelInfos() {
+    public static ModelInfo getDefaultModelInfo() {
+        return MODEL_CONFIGS.getDefaultModelConfig();
+    }
+
+    public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();
+    }
+
+    /**
+     * Returns models usable with the given {@link DynawoVersion}
+     */
+    public static Collection<ModelInfo> getSupportedModelInfos(DynawoVersion dynawoVersion) {
+        return MODEL_CONFIGS.getModelInfos(dynawoVersion);
     }
 
     protected TransformerFixedRatioBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
@@ -59,7 +71,7 @@ public class TransformerFixedRatioBuilder extends AbstractEquipmentModelBuilder<
 
     @Override
     public TransformerFixedRatio build() {
-        return isInstantiable() ? new TransformerFixedRatio(dynamicModelId, getEquipment(), parameterSetId, modelConfig.lib()) : null;
+        return isInstantiable() ? new TransformerFixedRatio(dynamicModelId, getEquipment(), parameterSetId, modelConfig) : null;
     }
 
     @Override

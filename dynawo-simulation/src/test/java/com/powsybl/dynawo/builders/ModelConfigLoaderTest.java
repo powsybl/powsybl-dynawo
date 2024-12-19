@@ -10,13 +10,11 @@ package com.powsybl.dynawo.builders;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.powsybl.dynawo.commons.DynawoVersion;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -40,6 +38,9 @@ class ModelConfigLoaderTest {
                               "properties": [
                                 "SYNCHRONIZED"
                               ],
+                              "minVersion": "1.3.0",
+                              "maxVersion": "1.4.0",
+                              "endCause": "Deleted",
                               "doc": "Photovoltaics Wecc generator"
                             },
                             {
@@ -51,7 +52,8 @@ class ModelConfigLoaderTest {
                             },
                             {
                               "lib": "WT4AWeccCurrentSource",
-                              "doc": "WT4A Wecc generator"
+                              "doc": "WT4A Wecc generator",
+                              "minVersion": "1.6.0"
                             }
                         ]
                     }
@@ -63,46 +65,50 @@ class ModelConfigLoaderTest {
         objectMapper.registerModule(module);
         Map<String, ModelConfigs> configs = objectMapper.readValue(json, new TypeReference<>() {
         });
-        assertThat(configs.keySet()).containsExactlyInAnyOrder("synchronousGenerators");
+        assertThat(configs.keySet()).containsExactly("synchronousGenerators");
         ModelConfigs synchroGens = configs.get("synchronousGenerators");
-        assertThat(synchroGens.getModelsName()).containsExactlyInAnyOrder(
-                "Wecc",
+        assertThat(synchroGens.getModelsName()).containsExactly(
+                "WT4AWeccCurrentSource",
                 "WT4BWeccCurrentSource",
-                "WT4AWeccCurrentSource");
-        ModelConfig defaultModel = new ModelConfig("WT4BWeccCurrentSource", null, null, List.of("SYNCHRONIZED", "CONTROLLABLE"));
-        assertThat(listModelConfigs(synchroGens)).containsExactlyInAnyOrder(
-                new ModelConfig("PhotovoltaicsWeccCurrentSource", "Wecc", "WTG4A", List.of("SYNCHRONIZED"), "Photovoltaics Wecc generator"),
-                defaultModel,
-                new ModelConfig("WT4AWeccCurrentSource", null, null, Collections.emptyList(), "WT4A Wecc generator"));
+                "Wecc");
+        ModelConfig defaultModel = new ModelConfig("WT4BWeccCurrentSource", List.of("SYNCHRONIZED", "CONTROLLABLE"));
         assertEquals(defaultModel, synchroGens.getDefaultModelConfig());
-        assertThat(synchroGens.getModelInfos()).map(ModelInfo::formattedInfo).containsExactlyInAnyOrder("Wecc (PhotovoltaicsWeccCurrentSource): Photovoltaics Wecc generator", "WT4BWeccCurrentSource", "WT4AWeccCurrentSource: WT4A Wecc generator");
+        assertThat(synchroGens.getModelInfos())
+                .containsExactly(
+                    new ModelConfig("WT4AWeccCurrentSource", null, null, Collections.emptyList(), "WT4A Wecc generator", new VersionInterval(new DynawoVersion(1, 6, 0))),
+                    defaultModel,
+                    new ModelConfig("PhotovoltaicsWeccCurrentSource", "Wecc", "WTG4A", List.of("SYNCHRONIZED"), "Photovoltaics Wecc generator", new VersionInterval(new DynawoVersion(1, 3, 0), new DynawoVersion(1, 4, 0), "Deleted")))
+                // Check formatted info
+                .map(ModelInfo::formattedInfo)
+                .containsExactly(
+                    "WT4AWeccCurrentSource: WT4A Wecc generator (Dynawo Version 1.6.0)",
+                    "WT4BWeccCurrentSource (Dynawo Version 1.5.0)",
+                    "Wecc (PhotovoltaicsWeccCurrentSource): Photovoltaics Wecc generator (Dynawo Version 1.3.0 - 1.4.0 (Deleted))");
+        assertThat(synchroGens.getModelInfos(DynawoVersion.createFromString("1.5.0")))
+                .map(ModelInfo::name)
+                .hasSize(1)
+                .containsExactly("WT4BWeccCurrentSource");
     }
 
     @Test
     void mergeModelConfigs() {
-        ModelConfig defaultModel = new ModelConfig("AA", null, null, Collections.emptyList());
-        ModelConfigs modelConfigs1 = new ModelConfigs(new HashMap<>(Map.of(defaultModel.name(), defaultModel)), defaultModel.name());
+        ModelConfig defaultModel = new ModelConfig("AA");
+        ModelConfigs modelConfigs1 = new ModelConfigs(new TreeMap<>(Map.of(defaultModel.name(), defaultModel)), defaultModel.name());
 
-        ModelConfig mc1 = new ModelConfig("BB", null, null, Collections.emptyList());
-        ModelConfig mc2 = new ModelConfig("CC", null, null, Collections.emptyList());
-        ModelConfigs modelConfigs2 = new ModelConfigs(new HashMap<>(Map.of(mc1.name(), mc1, mc2.name(), mc2)), mc1.name());
+        ModelConfig mc1 = new ModelConfig("BB");
+        ModelConfig mc2 = new ModelConfig("CC");
+        ModelConfigs modelConfigs2 = new ModelConfigs(new TreeMap<>(Map.of(mc1.name(), mc1, mc2.name(), mc2)), mc1.name());
 
         modelConfigs1.addModelConfigs(modelConfigs2);
-        assertThat(listModelConfigs(modelConfigs1)).containsExactlyInAnyOrder(
+        assertThat(modelConfigs1.getModelInfos()).containsExactly(
                 defaultModel,
-                new ModelConfig("BB", null, null, Collections.emptyList()),
+                new ModelConfig("BB"),
                 mc2);
         assertEquals(defaultModel, modelConfigs1.getDefaultModelConfig());
 
-        ModelConfigs modelConfigs3 = new ModelConfigs(new HashMap<>(Map.of(mc2.name(), mc2)), null);
-        ModelConfigs modelConfigs4 = new ModelConfigs(new HashMap<>(Map.of(defaultModel.name(), defaultModel)), defaultModel.name());
+        ModelConfigs modelConfigs3 = new ModelConfigs(new TreeMap<>(Map.of(mc2.name(), mc2)), null);
+        ModelConfigs modelConfigs4 = new ModelConfigs(new TreeMap<>(Map.of(defaultModel.name(), defaultModel)), defaultModel.name());
         modelConfigs3.addModelConfigs(modelConfigs4);
         assertEquals(defaultModel, modelConfigs3.getDefaultModelConfig());
-    }
-
-    private List<ModelConfig> listModelConfigs(ModelConfigs modelConfigs) {
-        return modelConfigs.getModelsName().stream()
-                .map(modelConfigs::getModelConfig)
-                .toList();
     }
 }

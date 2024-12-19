@@ -9,6 +9,7 @@ package com.powsybl.dynawo.models.automationsystems;
 
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.builders.*;
+import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.iidm.network.*;
 
 import java.util.*;
@@ -50,8 +51,19 @@ public class TapChangerBlockingAutomationSystemBuilder extends AbstractAutomatio
         return new TapChangerBlockingAutomationSystemBuilder(network, modelConfig, reportNode);
     }
 
-    public static Set<ModelInfo> getSupportedModelInfos() {
+    public static ModelInfo getDefaultModelInfo() {
+        return MODEL_CONFIGS.getDefaultModelConfig();
+    }
+
+    public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();
+    }
+
+    /**
+     * Returns models usable with the given {@link DynawoVersion}
+     */
+    public static Collection<ModelInfo> getSupportedModelInfos(DynawoVersion dynawoVersion) {
+        return MODEL_CONFIGS.getModelInfos(dynawoVersion);
     }
 
     protected TapChangerBlockingAutomationSystemBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
@@ -109,7 +121,7 @@ public class TapChangerBlockingAutomationSystemBuilder extends AbstractAutomatio
 
     @Override
     public TapChangerBlockingAutomationSystem build() {
-        return isInstantiable() ? new TapChangerBlockingAutomationSystem(dynamicModelId, parameterSetId, tapChangerEquipments.getEquipments(), tapChangerEquipments.getMissingEquipmentIds(), uMeasurementPoints.getEquipments(), getLib()) : null;
+        return isInstantiable() ? new TapChangerBlockingAutomationSystem(dynamicModelId, parameterSetId, tapChangerEquipments.getEquipments(), tapChangerEquipments.getMissingEquipmentIds(), uMeasurementPoints.getEquipments(), modelConfig) : null;
     }
 
     @Override

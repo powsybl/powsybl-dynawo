@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<aggregatedResults xmlns="http://www.rte-france.com/dynawo" status="CONVERGENCE">
+    <scenarioResults id="NHV1_NHV2_2_contingency" status="CONVERGENCE"/>
+    <scenarioResults id="NB_NGEN_contingency" status="CONVERGENCE"/>
+</aggregatedResults>

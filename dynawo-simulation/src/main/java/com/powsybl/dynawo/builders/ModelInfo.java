@@ -36,4 +36,9 @@ public interface ModelInfo {
      * Concatenation of lib, alias and doc field
      */
     String formattedInfo();
+
+    /**
+     * Dynawo version range where the model can be used
+     */
+    VersionInterval version();
 }

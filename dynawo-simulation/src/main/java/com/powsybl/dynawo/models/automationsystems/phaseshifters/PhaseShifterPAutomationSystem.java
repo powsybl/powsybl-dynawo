@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawo.models.automationsystems.phaseshifters;
 
+import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.transformers.TransformerModel;
 import com.powsybl.iidm.network.TwoWindingsTransformer;
@@ -19,8 +20,8 @@ import java.util.List;
  */
 public class PhaseShifterPAutomationSystem extends AbstractPhaseShifterAutomationSystem {
 
-    protected PhaseShifterPAutomationSystem(String dynamicModelId, TwoWindingsTransformer transformer, String parameterSetId, String lib) {
-        super(dynamicModelId, transformer, parameterSetId, lib);
+    protected PhaseShifterPAutomationSystem(String dynamicModelId, TwoWindingsTransformer transformer, String parameterSetId, ModelConfig modelConfig) {
+        super(dynamicModelId, transformer, parameterSetId, modelConfig);
     }
 
     protected List<VarConnection> getVarConnectionsWith(TransformerModel connected) {

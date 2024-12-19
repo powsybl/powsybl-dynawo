@@ -11,8 +11,8 @@ import com.google.auto.service.AutoService;
 import com.google.common.collect.Lists;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
-import com.powsybl.dynawo.models.generators.AbstractGenerator;
-import com.powsybl.dynawo.models.generators.GeneratorFictitiousBuilder;
+import com.powsybl.dynawo.models.generators.BaseGenerator;
+import com.powsybl.dynawo.models.generators.BaseGeneratorBuilder;
 import com.powsybl.dynawo.models.loads.BaseLoadBuilder;
 import com.powsybl.dynawo.models.transformers.TransformerFixedRatioBuilder;
 import com.powsybl.dynawo.models.BlackBoxModel;
@@ -51,7 +51,7 @@ class ModelsSimplifierTest {
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load().setUseModelSimplifiers(true);
         List<BlackBoxModel> dynamicModels = List.of(
-                GeneratorFictitiousBuilder.of(network)
+                BaseGeneratorBuilder.of(network)
                         .dynamicModelId("BBM_GEN")
                         .staticId("GEN")
                         .parameterSetId("GPV")
@@ -85,8 +85,8 @@ class ModelsSimplifierTest {
         @Override
         public Function<BlackBoxModel, BlackBoxModel> getModelSubstitutionFunction(Network network, DynawoSimulationParameters dynawoSimulationParameters, ReportNode reportNode) {
             return m -> {
-                if ("BBM_GEN".equalsIgnoreCase(m.getDynamicModelId()) && m instanceof AbstractGenerator gen) {
-                    return GeneratorFictitiousBuilder.of(network)
+                if ("BBM_GEN".equalsIgnoreCase(m.getDynamicModelId()) && m instanceof BaseGenerator gen) {
+                    return BaseGeneratorBuilder.of(network)
                             .dynamicModelId("newModel")
                             .staticId(gen.getStaticId())
                             .parameterSetId("G")

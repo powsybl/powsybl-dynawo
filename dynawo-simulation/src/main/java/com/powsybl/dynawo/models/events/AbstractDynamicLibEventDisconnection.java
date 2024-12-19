@@ -8,6 +8,7 @@
 package com.powsybl.dynawo.models.events;
 
 import com.powsybl.dynawo.DynawoSimulationContext;
+import com.powsybl.dynawo.builders.EventModelInfo;
 import com.powsybl.dynawo.models.utils.ImmutableLateInit;
 import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.iidm.network.Identifiable;
@@ -21,15 +22,15 @@ import static java.lang.Boolean.TRUE;
  */
 public abstract class AbstractDynamicLibEventDisconnection extends AbstractEvent implements ContextDependentEvent {
 
-    private static final String DYNAMIC_MODEL_LIB = "EventSetPointBoolean";
-    private static final String DEFAULT_MODEL_LIB = "EventConnectedStatus";
+    protected static final String DYNAMIC_MODEL_LIB = "EventSetPointBoolean";
+    protected static final String DEFAULT_MODEL_LIB = "EventConnectedStatus";
     protected static final String DISCONNECTION_VAR_CONNECT = "event_state1";
 
-    private final boolean disconnect;
+    protected final boolean disconnect;
     private final ImmutableLateInit<Boolean> equipmentHasDynamicModel = new ImmutableLateInit<>();
 
-    protected AbstractDynamicLibEventDisconnection(String eventId, Identifiable<?> equipment, double startTime, boolean disconnect) {
-        super(eventId, equipment, startTime, DYNAMIC_MODEL_LIB);
+    protected AbstractDynamicLibEventDisconnection(String eventId, Identifiable<?> equipment, EventModelInfo eventModelInfo, double startTime, boolean disconnect) {
+        super(eventId, equipment, eventModelInfo, startTime);
         this.disconnect = disconnect;
     }
 

@@ -15,7 +15,10 @@ import com.powsybl.contingency.Contingency;
 import com.powsybl.iidm.network.*;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import com.powsybl.loadflow.LoadFlowResult;
-import com.powsybl.security.*;
+import com.powsybl.security.SecurityAnalysis;
+import com.powsybl.security.SecurityAnalysisReport;
+import com.powsybl.security.SecurityAnalysisResult;
+import com.powsybl.security.SecurityAnalysisRunParameters;
 import com.powsybl.security.json.SecurityAnalysisResultSerializer;
 import org.junit.jupiter.api.Test;
 
@@ -33,8 +36,13 @@ import java.util.concurrent.ForkJoinPool;
 
 import static com.powsybl.commons.test.ComparisonUtils.assertTxtEquals;
 import static com.powsybl.commons.test.ComparisonUtils.assertXmlEquals;
+import static com.powsybl.dynaflow.DynaFlowConstants.CONFIG_FILENAME;
 import static com.powsybl.dynaflow.DynaFlowConstants.DYNAFLOW_NAME;
-import static com.powsybl.dynaflow.DynaFlowConstants.IIDM_FILENAME;
+import static com.powsybl.dynaflow.SecurityAnalysisConstants.CONSTRAINTS_FOLDER;
+import static com.powsybl.dynawo.commons.DynawoConstants.AGGREGATED_RESULTS;
+import static com.powsybl.dynaflow.SecurityAnalysisConstants.CONTINGENCIES_FILENAME;
+import static com.powsybl.dynawo.commons.DynawoConstants.NETWORK_FILENAME;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -50,17 +58,19 @@ class DynaFlowSecurityAnalysisTest extends AbstractSerDeTest {
         private final String contingencyFile;
         private final List<String> contingencyIds;
         private final List<String> constraints;
+        private final String aggregatedResult;
 
         public LocalCommandExecutorMock(String stdoutFileRef, String inputFile) {
-            this(stdoutFileRef, inputFile, null, List.of(), List.of());
+            this(stdoutFileRef, inputFile, null, List.of(), List.of(), null);
         }
 
-        public LocalCommandExecutorMock(String stdoutFileRef, String inputFile, String contingencyFile, List<String> contingencyIds, List<String> outputConstraints) {
+        public LocalCommandExecutorMock(String stdoutFileRef, String inputFile, String contingencyFile, List<String> contingencyIds, List<String> outputConstraints, String aggregatedResult) {
             this.stdOutFileRef = Objects.requireNonNull(stdoutFileRef);
             this.inputFile = inputFile;
             this.contingencyFile = contingencyFile;
             this.contingencyIds = contingencyIds;
             this.constraints = outputConstraints;
+            this.aggregatedResult = aggregatedResult;
         }
 
         @Override
@@ -69,7 +79,8 @@ class DynaFlowSecurityAnalysisTest extends AbstractSerDeTest {
                 if (args.get(0).equals("--version")) {
                     copyFile(stdOutFileRef, errFile);
                 } else {
-                    assertEquals("--network network.xiidm --config config.json --contingencies contingencies.json", String.join(" ", args));
+                    assertEquals("--network %s --config %s --contingencies %s".formatted(NETWORK_FILENAME, CONFIG_FILENAME, CONTINGENCIES_FILENAME),
+                            String.join(" ", args));
                     validateInputs(workingDir);
                     copyOutputs(workingDir);
                 }
@@ -81,16 +92,17 @@ class DynaFlowSecurityAnalysisTest extends AbstractSerDeTest {
 
         private void validateInputs(Path workingDir) throws IOException {
             if (inputFile != null) {
-                assertXmlEquals(getClass().getResourceAsStream(inputFile), Files.newInputStream(workingDir.resolve(IIDM_FILENAME)));
+                assertXmlEquals(getClass().getResourceAsStream(inputFile), Files.newInputStream(workingDir.resolve(NETWORK_FILENAME)));
             }
             if (contingencyFile != null) {
                 InputStream contingencyIs = Objects.requireNonNull(getClass().getResourceAsStream(contingencyFile));
-                assertTxtEquals(contingencyIs, Files.newInputStream(workingDir.resolve("contingencies.json")));
+                assertTxtEquals(contingencyIs, Files.newInputStream(workingDir.resolve(CONTINGENCIES_FILENAME)));
             }
         }
 
         private void copyOutputs(Path workingDir) throws IOException {
-            Path constraintsFolder = Files.createDirectories(workingDir.resolve("constraints"));
+            copyFile(aggregatedResult, Files.createFile(workingDir.resolve(AGGREGATED_RESULTS)));
+            Path constraintsFolder = Files.createDirectories(workingDir.resolve(CONSTRAINTS_FOLDER));
             for (int i = 0; i < contingencyIds.size(); i++) {
                 copyFile(constraints.get(i), constraintsFolder.resolve("constraints_" + contingencyIds.get(i) + ".xml"));
             }
@@ -114,7 +126,8 @@ class DynaFlowSecurityAnalysisTest extends AbstractSerDeTest {
 
         LocalCommandExecutor commandExecutor = new LocalCommandExecutorMock("/dynawo_version.out",
                 "/SecurityAnalysis/input.xiidm", "/SecurityAnalysis/contingencies.json",
-                contingencyIds, List.of("/SecurityAnalysis/constraints1.xml", "/SecurityAnalysis/constraints2.xml"));
+                contingencyIds, List.of("/SecurityAnalysis/constraints1.xml", "/SecurityAnalysis/constraints2.xml"),
+                "/SecurityAnalysis/aggregatedResults.xml");
         SecurityAnalysisRunParameters runParameters = new SecurityAnalysisRunParameters()
                 .setComputationManager(new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool()));
         SecurityAnalysisReport report = SecurityAnalysis.run(network, contingencies, runParameters);
@@ -134,6 +147,18 @@ class DynaFlowSecurityAnalysisTest extends AbstractSerDeTest {
                 .setComputationManager(new LocalComputationManager(new LocalComputationConfig(fileSystem.getPath("/working-dir"), 1), commandExecutor, ForkJoinPool.commonPool()));
         List<Contingency> contingencies = List.of();
         assertThrows(PowsyblException.class, () -> SecurityAnalysis.run(network, contingencies, runParameters));
+    }
+
+    @Test
+    void loadDynaflowParameters() {
+        DynaFlowSecurityAnalysisProvider provider = new DynaFlowSecurityAnalysisProvider();
+        Map<String, String> properties = Map.of("contingenciesStartTime", Double.toString(23d));
+        assertThat(provider.loadSpecificParameters(properties))
+                .isNotEmpty()
+                .get()
+                .isInstanceOf(DynaFlowSecurityAnalysisParameters.class)
+                .hasFieldOrPropertyWithValue("contingenciesStartTime", 23.);
+
     }
 
     private static Network buildNetwork() {

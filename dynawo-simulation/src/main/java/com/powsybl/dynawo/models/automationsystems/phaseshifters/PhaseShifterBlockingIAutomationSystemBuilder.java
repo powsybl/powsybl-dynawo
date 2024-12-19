@@ -9,10 +9,11 @@ package com.powsybl.dynawo.models.automationsystems.phaseshifters;
 
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.builders.*;
+import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.models.automationsystems.AbstractAutomationSystemModelBuilder;
 import com.powsybl.iidm.network.Network;
 
-import java.util.Set;
+import java.util.Collection;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -43,8 +44,19 @@ public class PhaseShifterBlockingIAutomationSystemBuilder extends AbstractAutoma
         return new PhaseShifterBlockingIAutomationSystemBuilder(network, modelConfig, reportNode);
     }
 
-    public static Set<ModelInfo> getSupportedModelInfos() {
+    public static ModelInfo getDefaultModelInfo() {
+        return MODEL_CONFIGS.getDefaultModelConfig();
+    }
+
+    public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();
+    }
+
+    /**
+     * Returns models usable with the given {@link DynawoVersion}
+     */
+    public static Collection<ModelInfo> getSupportedModelInfos(DynawoVersion dynawoVersion) {
+        return MODEL_CONFIGS.getModelInfos(dynawoVersion);
     }
 
     private String phaseShifterIDynamicId;
@@ -69,7 +81,7 @@ public class PhaseShifterBlockingIAutomationSystemBuilder extends AbstractAutoma
 
     @Override
     public PhaseShifterBlockingIAutomationSystem build() {
-        return isInstantiable() ? new PhaseShifterBlockingIAutomationSystem(dynamicModelId, phaseShifterIDynamicId, parameterSetId, getLib()) : null;
+        return isInstantiable() ? new PhaseShifterBlockingIAutomationSystem(dynamicModelId, phaseShifterIDynamicId, parameterSetId, modelConfig) : null;
     }
 
     @Override

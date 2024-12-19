@@ -9,11 +9,12 @@ package com.powsybl.dynawo.models.lines;
 
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.builders.*;
+import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Line;
 import com.powsybl.iidm.network.Network;
 
-import java.util.Set;
+import java.util.Collection;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -44,8 +45,19 @@ public class LineBuilder extends AbstractEquipmentModelBuilder<Line, LineBuilder
         return new LineBuilder(network, modelConfig, reportNode);
     }
 
-    public static Set<ModelInfo> getSupportedModelInfos() {
+    public static ModelInfo getDefaultModelInfo() {
+        return MODEL_CONFIGS.getDefaultModelConfig();
+    }
+
+    public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();
+    }
+
+    /**
+     * Returns models usable with the given {@link DynawoVersion}
+     */
+    public static Collection<ModelInfo> getSupportedModelInfos(DynawoVersion dynawoVersion) {
+        return MODEL_CONFIGS.getModelInfos(dynawoVersion);
     }
 
     protected LineBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
@@ -59,7 +71,7 @@ public class LineBuilder extends AbstractEquipmentModelBuilder<Line, LineBuilder
 
     @Override
     public StandardLine build() {
-        return isInstantiable() ? new StandardLine(dynamicModelId, getEquipment(), parameterSetId, modelConfig.lib()) : null;
+        return isInstantiable() ? new StandardLine(dynamicModelId, getEquipment(), parameterSetId, modelConfig) : null;
     }
 
     @Override

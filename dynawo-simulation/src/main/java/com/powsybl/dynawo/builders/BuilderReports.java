@@ -55,9 +55,9 @@ public final class BuilderReports {
                 .add();
     }
 
-    public static void reportCurveInstantiationFailure(ReportNode reportNode, String id) {
+    public static void reportOutputVariableInstantiationFailure(ReportNode reportNode, String id) {
         reportNode.newReportNode()
-                .withMessageTemplate("curveInstantiationError", "Curve ${id} cannot be instantiated")
+                .withMessageTemplate("outputVariableInstantiationError", "Output variable ${id} cannot be instantiated")
                 .withUntypedValue("id", id)
                 .withSeverity(TypedValue.WARN_SEVERITY)
                 .add();
@@ -135,6 +135,15 @@ public final class BuilderReports {
         reportNode.newReportNode()
                 .withMessageTemplate("fieldSetWithWrongEquipment", "'${fieldName}' field is set but ${equipment} does not possess this option")
                 .withUntypedValue(FIELD_NAME, fieldName).withUntypedValue("equipment", equipment).withSeverity(TypedValue.WARN_SEVERITY)
+                .add();
+    }
+
+    public static void reportFieldOptionNotImplemented(ReportNode reportNode, String fieldName, String defaultValue) {
+        reportNode.newReportNode()
+                .withMessageTemplate("fieldOptionNotImplemented", "'${fieldName}' field is set but this option is not implemented yet, default value ${defaultValue} will be used")
+                .withUntypedValue(FIELD_NAME, fieldName)
+                .withUntypedValue("defaultValue", defaultValue)
+                .withSeverity(TypedValue.WARN_SEVERITY)
                 .add();
     }
 

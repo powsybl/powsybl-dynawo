@@ -8,7 +8,7 @@
         <dyn:connect var1="WTG4B_terminal" var2="@STATIC_ID@@NODE@_ACPIN"/>
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_DYNModelOmegaRef-WTG4BWeccCurrentSource">
-        <dyn:connect var1="omegaRef_grp_@INDEX@" var2="WTG4B_omegaRefPu"/>
+        <dyn:connect var1="omegaRef_grp_@INDEX@_value" var2="WTG4B_omegaRefPu"/>
         <dyn:connect var1="running_grp_@INDEX@" var2="WTG4B_injector_running"/>
     </dyn:macroConnector>
     <dyn:macroConnector id="MC_DYNModelOmegaRef-DefaultBusOfFrequencySynchronized">

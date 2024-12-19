@@ -9,15 +9,30 @@ package com.powsybl.dynawo.builders;
 
 /**
  * @param name Model name
- * @param info Definition of the event model
+ * @param doc Definition of the event model
+ * @param version Dynawo version range where the model can be used
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public record EventModelInfo(String name, String info) {
+public record EventModelInfo(String name, String doc, VersionInterval version) implements ModelInfo {
+
+    public EventModelInfo(String name, String info) {
+        this(name, info, VersionInterval.createDefaultVersion());
+    }
+
+    @Override
+    public String lib() {
+        return name;
+    }
+
+    @Override
+    public String alias() {
+        return null;
+    }
 
     /**
-     * Concatenation of name and doc
+     * Concatenation of name, doc and version bound
      */
     public String formattedInfo() {
-        return String.format("%s: %s", name, info);
+        return String.format("%s: %s (%s)", name, doc, version);
     }
 }

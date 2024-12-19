@@ -11,7 +11,7 @@ import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.iidm.network.Network;
 
-import java.util.Set;
+import java.util.Collection;
 import java.util.function.Supplier;
 
 /**
@@ -26,9 +26,9 @@ public class BuilderConfig {
 
     private final String category;
     private final ModelBuilderConstructor builderConstructor;
-    private final Supplier<Set<ModelInfo>> modelInfosSupplier;
+    private final Supplier<Collection<ModelInfo>> modelInfosSupplier;
 
-    public BuilderConfig(String category, ModelBuilderConstructor builderConstructor, Supplier<Set<ModelInfo>> modelInfosSupplier) {
+    public BuilderConfig(String category, ModelBuilderConstructor builderConstructor, Supplier<Collection<ModelInfo>> modelInfosSupplier) {
         this.category = category;
         this.builderConstructor = builderConstructor;
         this.modelInfosSupplier = modelInfosSupplier;
@@ -42,7 +42,7 @@ public class BuilderConfig {
         return builderConstructor;
     }
 
-    public Set<ModelInfo> getModelInfos() {
+    public Collection<ModelInfo> getModelInfos() {
         return modelInfosSupplier.get();
     }
 }

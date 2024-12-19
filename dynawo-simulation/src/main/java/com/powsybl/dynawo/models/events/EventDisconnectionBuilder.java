@@ -11,20 +11,19 @@ import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.builders.BuilderEquipment;
 import com.powsybl.dynawo.builders.BuilderReports;
 import com.powsybl.dynawo.builders.EventModelInfo;
+import com.powsybl.dynawo.builders.ModelInfo;
+import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.iidm.network.*;
-
-import java.util.EnumSet;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identifiable<?>, EventDisconnectionBuilder> {
 
-    private static final EventModelInfo MODEL_INFO = new EventModelInfo("Disconnect", "Disconnect network equipment (injection, branch or hvdc)");
-    private static final EnumSet<IdentifiableType> CONNECTABLE_INJECTIONS = EnumSet.of(IdentifiableType.GENERATOR, IdentifiableType.LOAD, IdentifiableType.STATIC_VAR_COMPENSATOR, IdentifiableType.SHUNT_COMPENSATOR);
-    private static final EnumSet<IdentifiableType> CONNECTABLE_BRANCHES = EnumSet.of(IdentifiableType.LINE, IdentifiableType.TWO_WINDINGS_TRANSFORMER);
+    private static final EventModelInfo MODEL_INFO = new EventModelInfo("Disconnect", "Disconnects a bus, a branch, an injection or an HVDC line");
 
     private enum DisconnectionType {
+        BUS,
         INJECTION,
         BRANCH,
         HVDC,
@@ -42,8 +41,15 @@ public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identif
         return new EventDisconnectionBuilder(network, reportNode);
     }
 
-    public static EventModelInfo getEventModelInfo() {
+    public static ModelInfo getModelInfo() {
         return MODEL_INFO;
+    }
+
+    /**
+     * Returns the model info if usable with the given {@link DynawoVersion}
+     */
+    public static ModelInfo getModelInfo(DynawoVersion dynawoVersion) {
+        return MODEL_INFO.version().includes(dynawoVersion) ? MODEL_INFO : null;
     }
 
     EventDisconnectionBuilder(Network network, ReportNode reportNode) {
@@ -56,13 +62,13 @@ public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identif
     }
 
     private void setDisconnectionType(IdentifiableType type) {
-        if (CONNECTABLE_INJECTIONS.contains(type)) {
-            disconnectionType = DisconnectionType.INJECTION;
-        } else if (CONNECTABLE_BRANCHES.contains(type)) {
-            disconnectionType = DisconnectionType.BRANCH;
-        } else if (IdentifiableType.HVDC_LINE == type) {
-            disconnectionType = DisconnectionType.HVDC;
-        }
+        disconnectionType = switch (type) {
+            case BUS -> DisconnectionType.BUS;
+            case HVDC_LINE -> DisconnectionType.HVDC;
+            case GENERATOR, LOAD, STATIC_VAR_COMPENSATOR, SHUNT_COMPENSATOR -> DisconnectionType.INJECTION;
+            case LINE, TWO_WINDINGS_TRANSFORMER -> DisconnectionType.BRANCH;
+            default -> DisconnectionType.NONE;
+        };
     }
 
     @Override
@@ -84,7 +90,7 @@ public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identif
                 BuilderReports.reportStaticIdUnknown(reportNode, "staticId", builderEquipment.getStaticId(), "Disconnectable equipment");
                 isInstantiable = false;
             }
-            if (DisconnectionType.INJECTION == disconnectionType && disconnectSide != null) {
+            if ((DisconnectionType.INJECTION == disconnectionType || DisconnectionType.BUS == disconnectionType) && disconnectSide != null) {
                 BuilderReports.reportFieldSetWithWrongEquipment(reportNode, "disconnectOnly", builderEquipment.getEquipment().getType(), builderEquipment.getStaticId());
                 isInstantiable = false;
             }
@@ -95,11 +101,13 @@ public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identif
     public AbstractEvent build() {
         if (isInstantiable()) {
             return switch (disconnectionType) {
-                case INJECTION -> new EventInjectionDisconnection(eventId, (Injection<?>) builderEquipment.getEquipment(), startTime, true);
+                case INJECTION -> new EventInjectionDisconnection(eventId, (Injection<?>) builderEquipment.getEquipment(), MODEL_INFO, startTime, true);
                 case BRANCH ->
-                        new EventBranchDisconnection(eventId, (Branch<?>) builderEquipment.getEquipment(), startTime, disconnectSide);
+                        new EventBranchDisconnection(eventId, (Branch<?>) builderEquipment.getEquipment(), MODEL_INFO, startTime, disconnectSide);
                 case HVDC ->
-                        new EventHvdcDisconnection(eventId, (HvdcLine) builderEquipment.getEquipment(), startTime, disconnectSide);
+                        new EventHvdcDisconnection(eventId, (HvdcLine) builderEquipment.getEquipment(), MODEL_INFO, startTime, disconnectSide);
+                case BUS ->
+                        new EventBusDisconnection(eventId, (Bus) builderEquipment.getEquipment(), MODEL_INFO, startTime, true);
                 default -> null;
             };
         }

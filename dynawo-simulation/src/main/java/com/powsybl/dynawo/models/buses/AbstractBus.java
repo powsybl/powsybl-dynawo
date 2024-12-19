@@ -8,6 +8,7 @@
 package com.powsybl.dynawo.models.buses;
 
 import com.powsybl.commons.PowsyblException;
+import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectAttribute;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.AbstractEquipmentBlackBoxModel;
@@ -23,8 +24,8 @@ import java.util.Optional;
  */
 public abstract class AbstractBus extends AbstractEquipmentBlackBoxModel<Bus> implements EquipmentConnectionPoint, ActionConnectionPoint {
 
-    protected AbstractBus(String dynamicModelId, Bus bus, String parameterSetId, String lib) {
-        super(dynamicModelId, parameterSetId, bus, lib);
+    protected AbstractBus(String dynamicModelId, Bus bus, String parameterSetId, ModelConfig modelConfig) {
+        super(dynamicModelId, parameterSetId, bus, modelConfig);
     }
 
     @Override
@@ -60,6 +61,11 @@ public abstract class AbstractBus extends AbstractEquipmentBlackBoxModel<Bus> im
 
     @Override
     public Optional<String> getUpuImpinVarName() {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<String> getStateValueVarName() {
         return Optional.empty();
     }
 }

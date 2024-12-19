@@ -38,7 +38,6 @@
       },
       "solverType" : "IDA",
       "mergeLoads" : false,
-      "writeFinalState" : true,
       "useModelSimplifiers" : false,
       "dumpFileParameters" : {
         "exportDumpFile" : false,
@@ -50,6 +49,7 @@
       "timelineExportMode" : "TXT",
       "logLevelFilter" : "INFO",
       "specificLogs" : [ "PARAMETERS", "VARIABLES" ],
+      "criteriaFilePath" : null,
       "modelsParameters" : [ {
         "id" : "test",
         "parameters" : {

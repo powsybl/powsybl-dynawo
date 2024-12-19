@@ -7,6 +7,8 @@
  */
 package com.powsybl.dynawo.models;
 
+import com.powsybl.dynawo.builders.ModelConfig;
+import com.powsybl.dynawo.builders.VersionInterval;
 import com.powsybl.dynawo.xml.MacroStaticReference;
 import com.powsybl.iidm.network.Identifiable;
 
@@ -23,10 +25,22 @@ import static com.powsybl.dynawo.xml.DynawoSimulationXmlConstants.DYN_URI;
 public abstract class AbstractEquipmentBlackBoxModel<T extends Identifiable<?>> extends AbstractBlackBoxModel implements EquipmentBlackBoxModel {
 
     protected final T equipment;
+    private final ModelConfig modelConfig;
 
-    protected AbstractEquipmentBlackBoxModel(String dynamicModelId, String parameterSetId, T equipment, String lib) {
-        super(dynamicModelId, parameterSetId, lib);
+    protected AbstractEquipmentBlackBoxModel(String dynamicModelId, String parameterSetId, T equipment, ModelConfig modelConfig) {
+        super(dynamicModelId, parameterSetId);
         this.equipment = Objects.requireNonNull(equipment);
+        this.modelConfig = Objects.requireNonNull(modelConfig);
+    }
+
+    @Override
+    public String getLib() {
+        return modelConfig.lib();
+    }
+
+    @Override
+    public VersionInterval getVersionInterval() {
+        return modelConfig.version();
     }
 
     @Override

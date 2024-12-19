@@ -9,11 +9,12 @@ package com.powsybl.dynawo.models.hvdc;
 
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.builders.*;
+import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.iidm.network.HvdcLine;
 import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Network;
 
-import java.util.Set;
+import java.util.Collection;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -22,6 +23,7 @@ public class HvdcPBuilder extends AbstractHvdcBuilder<HvdcPBuilder> {
 
     public static final String CATEGORY = "HVDC_P";
     private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
+    private static final HvdcVarNameHandler P_NAME_HANDLER = new HvdcPVarNameHandler();
 
     public static HvdcPBuilder of(Network network) {
         return of(network, ReportNode.NO_OP);
@@ -44,24 +46,23 @@ public class HvdcPBuilder extends AbstractHvdcBuilder<HvdcPBuilder> {
         return new HvdcPBuilder(network, modelConfig, reportNode);
     }
 
-    public static Set<ModelInfo> getSupportedModelInfos() {
+    public static ModelInfo getDefaultModelInfo() {
+        return MODEL_CONFIGS.getDefaultModelConfig();
+    }
+
+    public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();
     }
 
-    protected HvdcPBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
-        super(network, modelConfig, IdentifiableType.HVDC_LINE, reportNode);
+    /**
+     * Returns models usable with the given {@link DynawoVersion}
+     */
+    public static Collection<ModelInfo> getSupportedModelInfos(DynawoVersion dynawoVersion) {
+        return MODEL_CONFIGS.getModelInfos(dynawoVersion);
     }
 
-    @Override
-    public HvdcP build() {
-        if (isInstantiable()) {
-            if (modelConfig.isDangling()) {
-                return new HvdcPDangling(dynamicModelId, getEquipment(), parameterSetId, modelConfig.lib(), danglingSide);
-            } else {
-                return new HvdcP(dynamicModelId, getEquipment(), parameterSetId, modelConfig.lib());
-            }
-        }
-        return null;
+    protected HvdcPBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
+        super(network, modelConfig, IdentifiableType.HVDC_LINE, reportNode, P_NAME_HANDLER);
     }
 
     @Override

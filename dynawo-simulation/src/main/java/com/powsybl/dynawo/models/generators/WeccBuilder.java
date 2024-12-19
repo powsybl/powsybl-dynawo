@@ -9,9 +9,10 @@ package com.powsybl.dynawo.models.generators;
 
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.builders.*;
+import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.iidm.network.Network;
 
-import java.util.Set;
+import java.util.Collection;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -42,8 +43,19 @@ public class WeccBuilder extends AbstractGeneratorBuilder<WeccBuilder> {
         return new WeccBuilder(network, modelConfig, reportNode);
     }
 
-    public static Set<ModelInfo> getSupportedModelInfos() {
+    public static ModelInfo getDefaultModelInfo() {
+        return MODEL_CONFIGS.getDefaultModelConfig();
+    }
+
+    public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();
+    }
+
+    /**
+     * Returns models usable with the given {@link DynawoVersion}
+     */
+    public static Collection<ModelInfo> getSupportedModelInfos(DynawoVersion dynawoVersion) {
+        return MODEL_CONFIGS.getModelInfos(dynawoVersion);
     }
 
     protected WeccBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
@@ -54,9 +66,9 @@ public class WeccBuilder extends AbstractGeneratorBuilder<WeccBuilder> {
     public WeccGen build() {
         if (isInstantiable()) {
             if (modelConfig.isSynchronized()) {
-                return new SynchronizedWeccGen(dynamicModelId, getEquipment(), parameterSetId, modelConfig.lib(), modelConfig.internalModelPrefix());
+                return new SynchronizedWeccGen(dynamicModelId, getEquipment(), parameterSetId, modelConfig, modelConfig.internalModelPrefix());
             } else {
-                return new WeccGen(dynamicModelId, getEquipment(), parameterSetId, modelConfig.lib(), modelConfig.internalModelPrefix());
+                return new WeccGen(dynamicModelId, getEquipment(), parameterSetId, modelConfig, modelConfig.internalModelPrefix());
             }
         }
         return null;

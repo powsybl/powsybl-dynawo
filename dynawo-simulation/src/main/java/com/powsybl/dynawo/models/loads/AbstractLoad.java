@@ -6,6 +6,7 @@
  */
 package com.powsybl.dynawo.models.loads;
 
+import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.AbstractEquipmentBlackBoxModel;
 import com.powsybl.dynawo.models.InjectionModel;
@@ -23,8 +24,8 @@ public abstract class AbstractLoad extends AbstractEquipmentBlackBoxModel<Load> 
 
     protected final String terminalVarName;
 
-    protected AbstractLoad(String dynamicModelId, Load load, String parameterSetId, String lib, String terminalVarName) {
-        super(dynamicModelId, parameterSetId, load, lib);
+    protected AbstractLoad(String dynamicModelId, Load load, String parameterSetId, ModelConfig modelConfig, String terminalVarName) {
+        super(dynamicModelId, parameterSetId, load, modelConfig);
         this.terminalVarName = terminalVarName;
     }
 

@@ -9,9 +9,10 @@ package com.powsybl.dynawo.models.loads;
 
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.builders.*;
+import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.iidm.network.Network;
 
-import java.util.Set;
+import java.util.Collection;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -42,8 +43,19 @@ public class BaseLoadBuilder extends AbstractLoadModelBuilder<BaseLoadBuilder> {
         return new BaseLoadBuilder(network, modelConfig, reportNode);
     }
 
-    public static Set<ModelInfo> getSupportedModelInfos() {
+    public static ModelInfo getDefaultModelInfo() {
+        return MODEL_CONFIGS.getDefaultModelConfig();
+    }
+
+    public static Collection<ModelInfo> getSupportedModelInfos() {
         return MODEL_CONFIGS.getModelInfos();
+    }
+
+    /**
+     * Returns models usable with the given {@link DynawoVersion}
+     */
+    public static Collection<ModelInfo> getSupportedModelInfos(DynawoVersion dynawoVersion) {
+        return MODEL_CONFIGS.getModelInfos(dynawoVersion);
     }
 
     protected BaseLoadBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
@@ -54,9 +66,11 @@ public class BaseLoadBuilder extends AbstractLoadModelBuilder<BaseLoadBuilder> {
     public BaseLoad build() {
         if (isInstantiable()) {
             if (modelConfig.isControllable()) {
-                return new BaseLoadControllable(dynamicModelId, getEquipment(), parameterSetId, modelConfig.lib());
+                return new BaseLoadControllable(dynamicModelId, getEquipment(), parameterSetId, modelConfig);
+            } else if (modelConfig.isSynchronized()) {
+                return new SynchronizedLoad(dynamicModelId, getEquipment(), parameterSetId, modelConfig);
             } else {
-                return new BaseLoad(dynamicModelId, getEquipment(), parameterSetId, modelConfig.lib());
+                return new BaseLoad(dynamicModelId, getEquipment(), parameterSetId, modelConfig);
             }
         } else {
             return null;

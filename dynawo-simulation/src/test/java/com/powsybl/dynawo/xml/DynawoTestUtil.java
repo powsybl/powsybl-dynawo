@@ -7,12 +7,12 @@
 package com.powsybl.dynawo.xml;
 
 import com.powsybl.commons.test.AbstractSerDeTest;
-import com.powsybl.dynamicsimulation.Curve;
-import com.powsybl.dynawo.curves.DynawoCurvesBuilder;
+import com.powsybl.dynamicsimulation.OutputVariable;
+import com.powsybl.dynawo.outputvariables.DynawoOutputVariablesBuilder;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.automationsystems.overloadmanagments.DynamicOverloadManagementSystemBuilder;
 import com.powsybl.dynawo.models.events.EventDisconnectionBuilder;
-import com.powsybl.dynawo.models.generators.GeneratorFictitiousBuilder;
+import com.powsybl.dynawo.models.generators.BaseGeneratorBuilder;
 import com.powsybl.dynawo.models.generators.SynchronizedGeneratorBuilder;
 import com.powsybl.dynawo.models.generators.SynchronousGeneratorBuilder;
 import com.powsybl.dynawo.models.lines.LineBuilder;
@@ -47,25 +47,34 @@ public class DynawoTestUtil extends AbstractSerDeTest {
     protected Network network;
     protected List<BlackBoxModel> dynamicModels;
     protected List<BlackBoxModel> eventModels;
-    protected List<Curve> curves;
+    protected List<OutputVariable> outputVariables;
 
     @BeforeEach
     void setup() {
 
         network = createEurostagTutorialExample1WithMoreLoads();
 
-        curves = new ArrayList<>();
-        network.getBusBreakerView().getBusStream().forEach(b -> new DynawoCurvesBuilder()
+        outputVariables = new ArrayList<>();
+
+        network.getLoadStream().forEach(b -> new DynawoOutputVariablesBuilder()
+                .staticId(b.getId())
+                .variables("load_PPu", "load_QPu")
+                .outputType(OutputVariable.OutputType.FINAL_STATE)
+                .add(outputVariables::add));
+
+        network.getBusBreakerView().getBusStream().forEach(b -> new DynawoOutputVariablesBuilder()
                 .staticId(b.getId())
                 .variables("Upu_value")
-                .add(curves::add));
+                .outputType(OutputVariable.OutputType.CURVE)
+                .add(outputVariables::add));
 
         // A curve is made up of the id of the dynamic model and the variable to plot.
         // The static id of the generator is used as the id of the dynamic model (dynamicModelId).
-        network.getGeneratorStream().forEach(g -> new DynawoCurvesBuilder()
+        network.getGeneratorStream().forEach(g -> new DynawoOutputVariablesBuilder()
                 .dynamicModelId(g.getId())
                 .variables("generator_omegaPu", "generator_PGen", "generator_UStatorPu", "voltageRegulator_UcEfdP", "voltageRegulator_EfdPu")
-                .add(curves::add));
+                .outputType(OutputVariable.OutputType.CURVE)
+                .add(outputVariables::add));
 
         // Dynamic Models
         dynamicModels = new ArrayList<>();
@@ -104,7 +113,7 @@ public class DynawoTestUtil extends AbstractSerDeTest {
                         .parameterSetId("GSTW")
                         .build());
             } else if (g.getId().equals("GEN6")) {
-                dynamicModels.add(GeneratorFictitiousBuilder.of(network)
+                dynamicModels.add(BaseGeneratorBuilder.of(network)
                         .dynamicModelId("BBM_" + g.getId())
                         .staticId(g.getId())
                         .parameterSetId("GF")

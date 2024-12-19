@@ -1,0 +1,19 @@
+{
+  "dfl-config" : {
+    "InfiniteReactiveLimits" : false,
+    "SVCRegulationOn" : true,
+    "ShuntRegulationOn" : true,
+    "AutomaticSlackBusOn" : true,
+    "DsoVoltageLevel" : 45.0,
+    "ActivePowerCompensation" : "PMax",
+    "StartTime" : 0.0,
+    "StopTime" : 100.0,
+    "ChosenOutputs" : [ "TIMELINE" ],
+    "TimeStep" : 10.0,
+    "StartingPointMode" : "warm",
+    "sa" : {
+      "TimeOfEvent" : 10.0
+    },
+    "OutputDir" : "dynaflow_sa/workingDir"
+  }
+}

@@ -7,12 +7,12 @@
  */
 package com.powsybl.dynawo.builders;
 
+import com.powsybl.dynawo.commons.DynawoVersion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -22,9 +22,9 @@ public class ModelConfigs {
     private static final Logger LOGGER = LoggerFactory.getLogger(ModelConfigs.class);
 
     private ModelConfig defaultModelConfig;
-    private final Map<String, ModelConfig> modelConfigMap;
+    private final SortedMap<String, ModelConfig> modelConfigMap;
 
-    ModelConfigs(Map<String, ModelConfig> modelConfigMap, String defaultModelConfigName) {
+    ModelConfigs(SortedMap<String, ModelConfig> modelConfigMap, String defaultModelConfigName) {
         this.modelConfigMap = Objects.requireNonNull(modelConfigMap);
         if (defaultModelConfigName != null) {
             this.defaultModelConfig = Objects.requireNonNull(modelConfigMap.get(defaultModelConfigName));
@@ -43,16 +43,21 @@ public class ModelConfigs {
         return modelConfigMap.get(modelName);
     }
 
-    public Set<ModelInfo> getModelInfos() {
-        return Set.copyOf(modelConfigMap.values());
+    public Collection<ModelInfo> getModelInfos() {
+        return Collections.unmodifiableCollection(modelConfigMap.values());
+    }
+
+    public Collection<ModelInfo> getModelInfos(DynawoVersion dynawoVersion) {
+        return modelConfigMap.values().stream()
+                .filter(m -> m.version().includes(dynawoVersion))
+                .collect(Collectors.toUnmodifiableList());
     }
 
     Set<String> getModelsName() {
-        return modelConfigMap.keySet();
+        return Collections.unmodifiableSet(modelConfigMap.keySet());
     }
 
     void addModelConfigs(ModelConfigs modelConfigsToMerge) {
-        modelConfigMap.putAll(modelConfigsToMerge.modelConfigMap);
         if (hasDefaultModelConfig() && modelConfigsToMerge.hasDefaultModelConfig()) {
             LOGGER.warn("Default model configs {} & {} found, the first one will be kept",
                     defaultModelConfig.lib(),
