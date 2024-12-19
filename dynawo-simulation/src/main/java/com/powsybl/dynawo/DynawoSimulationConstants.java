@@ -6,6 +6,8 @@
  */
 package com.powsybl.dynawo;
 
+import com.powsybl.iidm.network.Network;
+
 /**
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  */
@@ -27,14 +29,17 @@ public final class DynawoSimulationConstants {
 
     public static final String FSV_OUTPUT_FILENAME = "finalStateValues.csv";
 
-    public static final String MULTIPLE_JOBS_FILENAME = "multiple_jobs.xml";
-
-    public static final String AGGREGATED_RESULTS = "aggregatedResults.xml";
-
     public static final String LOGS_FOLDER = "logs";
 
     public static final String LOGS_FILENAME = "dynawo.log";
 
+    // TODO use it in dyna algo ?
+    public static final String PHASE_2_DYD_FILENAME = "phase_2_powsybl_dynawo.dyd";
+
     private DynawoSimulationConstants() {
+    }
+
+    public static String getSimulationParFile(Network network) {
+        return network.getId() + ".par";
     }
 }

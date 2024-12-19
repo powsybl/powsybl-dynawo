@@ -7,7 +7,8 @@
  */
 package com.powsybl.dynawo.security.xml;
 
-import com.powsybl.dynawo.security.ContingencyEventModels;
+import com.powsybl.dynawo.algorithms.xml.XmlUtil;
+import com.powsybl.dynawo.algorithms.ContingencyEventModels;
 import com.powsybl.dynawo.security.SecurityAnalysisContext;
 
 import javax.xml.stream.XMLStreamException;
@@ -17,7 +18,7 @@ import java.nio.file.Path;
 import java.util.Objects;
 
 import static com.powsybl.dynawo.DynawoSimulationConstants.JOBS_FILENAME;
-import static com.powsybl.dynawo.DynawoSimulationConstants.MULTIPLE_JOBS_FILENAME;
+import static com.powsybl.dynawo.algorithms.xml.AlgorithmsConstants.MULTIPLE_JOBS_FILENAME;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
@@ -30,17 +31,20 @@ public final class MultipleJobsXml {
     public static void write(Path workingDir, SecurityAnalysisContext context) throws IOException, XMLStreamException {
         Objects.requireNonNull(workingDir);
         Path file = workingDir.resolve(MULTIPLE_JOBS_FILENAME);
-
-        XmlUtil.write(file, context, "multipleJobs", MultipleJobsXml::writeContingencies);
+        XmlUtil.write(file, "multipleJobs", w -> writeContingencies(w, context));
     }
 
-    private static void writeContingencies(XMLStreamWriter writer, SecurityAnalysisContext context) throws XMLStreamException {
-        writer.writeStartElement("scenarios");
-        writer.writeAttribute("jobsFile", JOBS_FILENAME);
-        for (ContingencyEventModels model : context.getContingencyEventModels()) {
-            writeScenario(writer, model.getId());
+    private static void writeContingencies(XMLStreamWriter writer, SecurityAnalysisContext context) {
+        try {
+            writer.writeStartElement("scenarios");
+            writer.writeAttribute("jobsFile", JOBS_FILENAME);
+            for (ContingencyEventModels model : context.getContingencyEventModels()) {
+                writeScenario(writer, model.getId());
+            }
+            writer.writeEndElement();
+        } catch (XMLStreamException e) {
+            throw new RuntimeException(e);
         }
-        writer.writeEndElement();
     }
 
     private static void writeScenario(XMLStreamWriter writer, String id) throws XMLStreamException {

@@ -5,10 +5,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawo.security.xml;
+package com.powsybl.dynawo.algorithms;
 
 import com.powsybl.contingency.Contingency;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
+import com.powsybl.dynawo.algorithms.xml.ContingenciesDydXml;
+import com.powsybl.dynawo.algorithms.xml.ContingenciesParXml;
 import com.powsybl.dynawo.xml.DynawoTestUtil;
 import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.security.SecurityAnalysisContext;
@@ -23,6 +25,7 @@ import java.util.List;
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
+//TODO replace SecurityAnalysisContext
 class ContingenciesXmlTest extends DynawoTestUtil {
 
     @Test
@@ -39,8 +42,8 @@ class ContingenciesXmlTest extends DynawoTestUtil {
                         .build());
         SecurityAnalysisContext context = new SecurityAnalysisContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, parameters, dynawoSimulationParameters, contingencies);
 
-        ContingenciesDydXml.write(tmpDir, context);
-        ContingenciesParXml.write(tmpDir, context);
+        ContingenciesDydXml.write(tmpDir, context.getContingencyEventModels());
+        ContingenciesParXml.write(tmpDir, context.getContingencyEventModels());
         validate("dyd.xsd", "LOAD.xml", tmpDir.resolve("LOAD.dyd"));
         validate("dyd.xsd", "DisconnectLineGenerator.xml", tmpDir.resolve("DisconnectLineGenerator.dyd"));
         validate("parameters.xsd", "LOAD_par.xml", tmpDir.resolve("LOAD.par"));

@@ -20,6 +20,7 @@ import static com.powsybl.dynaflow.results.Status.CRITERIA_NON_RESPECTED;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
+//TODO move results and factorize with load margin results
 public final class ResultsUtil {
 
     private ResultsUtil() {
@@ -35,7 +36,7 @@ public final class ResultsUtil {
         };
     }
 
-    static Optional<ScenarioResult> createScenarioResult(String id, String status, List<FailedCriterion> failedCriteria) {
+    public static Optional<ScenarioResult> createScenarioResult(String id, String status, List<FailedCriterion> failedCriteria) {
         if (id == null || status == null || failedCriteria == null) {
             LOGGER.warn("Inconsistent scenario result entry (id: '{}', status: '{}', failedCriteria: '{}')", id, status, failedCriteria);
         } else {
@@ -56,7 +57,7 @@ public final class ResultsUtil {
         return Optional.empty();
     }
 
-    static Optional<FailedCriterion> createFailedCriterion(String description, String time) {
+    public static Optional<FailedCriterion> createFailedCriterion(String description, String time) {
         if (description == null || time == null) {
             LOGGER.warn("Inconsistent failed criterion entry (description: '{}', time: '{}')", description, time);
         } else {

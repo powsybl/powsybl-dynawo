@@ -20,6 +20,7 @@ import java.nio.file.Path;
 import java.util.Optional;
 
 import static com.powsybl.dynawo.DynawoSimulationConstants.*;
+import static com.powsybl.dynawo.DynawoSimulationConstants.DYD_FILENAME;
 import static com.powsybl.dynawo.commons.DynawoConstants.NETWORK_FILENAME;
 import static com.powsybl.dynawo.commons.DynawoConstants.OUTPUTS_FOLDER;
 import static com.powsybl.dynawo.xml.DynawoSimulationXmlConstants.DYN_URI;
@@ -27,16 +28,26 @@ import static com.powsybl.dynawo.xml.DynawoSimulationXmlConstants.DYN_URI;
 /**
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  */
-public final class JobsXml extends AbstractXmlDynawoSimulationWriter {
+public final class JobsXml extends AbstractXmlDynawoSimulationWriter<DynawoSimulationContext> {
 
     private static final String EXPORT_MODE = "exportMode";
+    private final boolean isPhase2;
 
     private JobsXml() {
+        this(false);
+    }
+
+    private JobsXml(boolean isPhase2) {
         super(JOBS_FILENAME, "jobs");
+        this.isPhase2 = isPhase2;
     }
 
     public static void write(Path workingDir, DynawoSimulationContext context) throws IOException {
-        new JobsXml().createXmlFileFromContext(workingDir, context);
+        new JobsXml().createXmlFileFromDataSupplier(workingDir, context);
+    }
+
+    public static void writePhase2(Path workingDir, DynawoSimulationContext context) throws IOException {
+        new JobsXml(true).createXmlFileFromDataSupplier(workingDir, context);
     }
 
     @Override
@@ -45,7 +56,7 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter {
         writer.writeStartElement(DYN_URI, "job");
         writer.writeAttribute("name", "Job");
         writeSolver(writer, parameters);
-        writeModeler(writer, parameters);
+        writeModeler(writer, parameters, isPhase2 && context.getPhase2DydData().isPresent());
         writeSimulation(writer, parameters, context.getParameters());
         writeOutput(writer, context);
         writer.writeEndElement();
@@ -58,7 +69,7 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter {
         writer.writeAttribute("parId", parameters.getSolverParameters().getId());
     }
 
-    private static void writeModeler(XMLStreamWriter writer, DynawoSimulationParameters parameters) throws XMLStreamException {
+    private static void writeModeler(XMLStreamWriter writer, DynawoSimulationParameters parameters, boolean phase2) throws XMLStreamException {
         writer.writeStartElement(DYN_URI, "modeler");
         writer.writeAttribute("compileDir", "outputs/compilation");
 
@@ -69,6 +80,10 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter {
 
         writer.writeEmptyElement(DYN_URI, "dynModels");
         writer.writeAttribute("dydFile", DYD_FILENAME);
+        if (phase2) {
+            writer.writeEmptyElement(DYN_URI, "dynModels");
+            writer.writeAttribute("dydFile", PHASE_2_DYD_FILENAME);
+        }
 
         DumpFileParameters dumpFileParameters = parameters.getDumpFileParameters();
         if (dumpFileParameters.useDumpFile()) {

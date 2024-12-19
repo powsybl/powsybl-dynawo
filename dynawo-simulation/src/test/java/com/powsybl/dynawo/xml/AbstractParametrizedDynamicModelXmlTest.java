@@ -33,6 +33,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Predicate;
 
 import static com.powsybl.commons.test.ComparisonUtils.assertTxtEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -61,10 +62,14 @@ public abstract class AbstractParametrizedDynamicModelXmlTest extends AbstractSe
         assertTxtEquals(expected, actual);
     }
 
-    protected void setupDynawoContext() {
+    void setupDynawoContext() {
+        setupDynawoContext(null);
+    }
+
+    protected void setupDynawoContext(Predicate<BlackBoxModel> phase2ModelsPredicate) {
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load();
-        context = new DynawoSimulationContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, eventModels, outputVariables, parameters, dynawoParameters, DynawoConstants.VERSION_MIN, reportNode);
+        context = new DynawoSimulationContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, eventModels, outputVariables, parameters, dynawoParameters, phase2ModelsPredicate, DynawoConstants.VERSION_MIN, reportNode);
     }
 
     protected void checkReport(String report) throws IOException {

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dyn:parametersSet xmlns:dyn="http://www.rte-france.com/dynawo">
+    <dyn:set id="loadVarArea">
+        <dyn:par type="DOUBLE" name="deltaP_load_0" value="1"/>
+        <dyn:par type="DOUBLE" name="deltaQ_load_0" value="1"/>
+        <dyn:par type="DOUBLE" name="deltaP_load_1" value="1"/>
+        <dyn:par type="DOUBLE" name="deltaQ_load_1" value="1"/>
+        <dyn:par type="DOUBLE" name="deltaP_load_2" value="1"/>
+        <dyn:par type="DOUBLE" name="deltaQ_load_2" value="1"/>
+        <dyn:par type="INT" name="nbLoads" value="3"/>
+        <dyn:par type="DOUBLE" name="startTime" value="10.0"/>
+        <dyn:par type="DOUBLE" name="stopTime" value="50.0"/>
+    </dyn:set>
+</dyn:parametersSet>

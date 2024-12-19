@@ -7,20 +7,15 @@
  */
 package com.powsybl.dynawo.security;
 
-import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
 import com.powsybl.commons.report.ReportNode;
-import com.powsybl.computation.AbstractExecutionHandler;
 import com.powsybl.computation.Command;
-import com.powsybl.computation.CommandExecution;
 import com.powsybl.computation.ExecutionReport;
 import com.powsybl.dynaflow.results.ContingencyResultsUtils;
-import com.powsybl.dynawo.DynawoFilesUtils;
-import com.powsybl.dynawo.commons.DynawoUtil;
+import com.powsybl.dynawo.algorithms.AbstractDynawoAlgorithmsHandler;
+import com.powsybl.dynawo.algorithms.xml.ContingenciesDydXml;
+import com.powsybl.dynawo.algorithms.xml.ContingenciesParXml;
 import com.powsybl.dynawo.commons.NetworkResultsUpdater;
-import com.powsybl.dynawo.security.xml.ContingenciesDydXml;
-import com.powsybl.dynawo.security.xml.ContingenciesParXml;
 import com.powsybl.dynawo.security.xml.MultipleJobsXml;
-import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.serde.NetworkSerDe;
 import com.powsybl.security.LimitViolationFilter;
 import com.powsybl.security.SecurityAnalysisReport;
@@ -28,45 +23,27 @@ import com.powsybl.security.interceptors.SecurityAnalysisInterceptor;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
 import static com.powsybl.dynaflow.results.ContingencyResultsUtils.createSecurityAnalysisResult;
-import static com.powsybl.dynawo.DynawoFilesUtils.deleteExistingFile;
 import static com.powsybl.dynawo.commons.DynawoConstants.*;
-import static com.powsybl.dynawo.commons.DynawoUtil.getCommandExecutions;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public final class DynawoSecurityAnalysisHandler extends AbstractExecutionHandler<SecurityAnalysisReport> {
+public final class DynawoSecurityAnalysisHandler extends AbstractDynawoAlgorithmsHandler<SecurityAnalysisReport, SecurityAnalysisContext> {
 
-    private final SecurityAnalysisContext context;
-    private final Command command;
-    private final Network network;
     private final LimitViolationFilter violationFilter;
     private final List<SecurityAnalysisInterceptor> interceptors;
-    private final ReportNode reportNode;
 
     public DynawoSecurityAnalysisHandler(SecurityAnalysisContext context, Command command,
                                          LimitViolationFilter violationFilter, List<SecurityAnalysisInterceptor> interceptors,
                                          ReportNode reportNode) {
-        this.context = context;
-        this.network = context.getNetwork();
-        this.command = command;
+        super(context, command, reportNode);
         this.violationFilter = violationFilter;
         this.interceptors = interceptors;
-        this.reportNode = reportNode;
-    }
-
-    @Override
-    public List<CommandExecution> before(Path workingDir) throws IOException {
-        network.getVariantManager().setWorkingVariant(context.getWorkingVariantId());
-        deleteExistingFile(workingDir.resolve(OUTPUTS_FOLDER), FINAL_STATE_FOLDER, OUTPUT_IIDM_FILENAME);
-        writeInputFiles(workingDir);
-        return getCommandExecutions(command);
     }
 
     @Override
@@ -81,17 +58,10 @@ public final class DynawoSecurityAnalysisHandler extends AbstractExecutionHandle
         return new SecurityAnalysisReport(createSecurityAnalysisResult(network, violationFilter, workingDir, context.getContingencies()));
     }
 
-    private void writeInputFiles(Path workingDir) {
-        try {
-            DynawoUtil.writeIidm(network, workingDir.resolve(NETWORK_FILENAME));
-            DynawoFilesUtils.writeInputFiles(workingDir, context);
-            MultipleJobsXml.write(workingDir, context);
-            ContingenciesDydXml.write(workingDir, context);
-            ContingenciesParXml.write(workingDir, context);
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        } catch (XMLStreamException e) {
-            throw new UncheckedXmlStreamException(e);
-        }
+    @Override
+    protected void writeMultipleJobs(Path workingDir) throws XMLStreamException, IOException {
+        MultipleJobsXml.write(workingDir, context);
+        ContingenciesDydXml.write(workingDir, context.getContingencyEventModels());
+        ContingenciesParXml.write(workingDir, context.getContingencyEventModels());
     }
 }
