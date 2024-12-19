@@ -10,30 +10,25 @@ package com.powsybl.dynawo.security;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.computation.Command;
 import com.powsybl.computation.ExecutionReport;
-import com.powsybl.dynaflow.ContingencyResultsUtils;
+import com.powsybl.dynaflow.results.ContingencyResultsUtils;
 import com.powsybl.dynawo.algorithms.AbstractDynawoAlgorithmsHandler;
 import com.powsybl.dynawo.algorithms.xml.ContingenciesDydXml;
 import com.powsybl.dynawo.algorithms.xml.ContingenciesParXml;
-import com.powsybl.dynawo.commons.DynawoConstants;
 import com.powsybl.dynawo.commons.NetworkResultsUpdater;
 import com.powsybl.dynawo.security.xml.MultipleJobsXml;
 import com.powsybl.iidm.serde.NetworkSerDe;
 import com.powsybl.security.LimitViolationFilter;
 import com.powsybl.security.SecurityAnalysisReport;
-import com.powsybl.security.SecurityAnalysisResult;
 import com.powsybl.security.interceptors.SecurityAnalysisInterceptor;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collections;
 import java.util.List;
 
-import static com.powsybl.dynaflow.SecurityAnalysisConstants.DYNAWO_CONSTRAINTS_FOLDER;
-import static com.powsybl.dynawo.algorithms.xml.AlgorithmsConstants.BASE_SCENARIO_FOLDER;
-import static com.powsybl.dynawo.commons.DynawoConstants.DYNAWO_TIMELINE_FOLDER;
-import static com.powsybl.dynawo.xml.DynawoSimulationConstants.*;
+import static com.powsybl.dynaflow.results.ContingencyResultsUtils.createSecurityAnalysisResult;
+import static com.powsybl.dynawo.commons.DynawoConstants.*;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
@@ -55,18 +50,12 @@ public final class DynawoSecurityAnalysisHandler extends AbstractDynawoAlgorithm
     public SecurityAnalysisReport after(Path workingDir, ExecutionReport report) throws IOException {
         super.after(workingDir, report);
         context.getNetwork().getVariantManager().setWorkingVariant(context.getWorkingVariantId());
-        Path outputNetworkFile = workingDir.resolve(BASE_SCENARIO_FOLDER).resolve(OUTPUTS_FOLDER).resolve(FINAL_STATE_FOLDER).resolve(DynawoConstants.OUTPUT_IIDM_FILENAME);
+        Path outputNetworkFile = workingDir.resolve(OUTPUT_IIDM_FILENAME_PATH);
         if (Files.exists(outputNetworkFile)) {
             NetworkResultsUpdater.update(context.getNetwork(), NetworkSerDe.read(outputNetworkFile), context.getDynawoSimulationParameters().isMergeLoads());
         }
-        ContingencyResultsUtils.reportContingenciesTimelines(context.getContingencies(), workingDir.resolve(DYNAWO_TIMELINE_FOLDER), reportNode);
-
-        return new SecurityAnalysisReport(
-                new SecurityAnalysisResult(
-                        ContingencyResultsUtils.getPreContingencyResult(network, violationFilter),
-                        ContingencyResultsUtils.getPostContingencyResults(network, violationFilter, workingDir.resolve(DYNAWO_CONSTRAINTS_FOLDER), context.getContingencies()),
-                        Collections.emptyList())
-        );
+        ContingencyResultsUtils.reportContingenciesTimelines(context.getContingencies(), workingDir.resolve(TIMELINE_FOLDER), reportNode);
+        return new SecurityAnalysisReport(createSecurityAnalysisResult(network, violationFilter, workingDir, context.getContingencies()));
     }
 
     @Override

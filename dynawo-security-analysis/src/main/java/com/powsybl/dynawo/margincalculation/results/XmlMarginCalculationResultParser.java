@@ -29,14 +29,12 @@ public final class XmlMarginCalculationResultParser extends AbstractXmlParser<Lo
     private static final String TIME = "time";
 
     @Override
-    protected List<LoadIncreaseResult> read(XMLStreamReader xmlReader) throws XMLStreamException {
-        List<LoadIncreaseResult> loadIncreaseResults = new ArrayList<>();
+    protected void read(XMLStreamReader xmlReader, Consumer<LoadIncreaseResult> consumer) throws XMLStreamException {
         int state = xmlReader.next();
         while (state == XMLStreamConstants.COMMENT) {
             state = xmlReader.next();
         }
-        XmlUtil.readSubElements(xmlReader, elementName -> readLoadIncreaseResult(elementName, xmlReader, loadIncreaseResults::add));
-        return loadIncreaseResults;
+        XmlUtil.readSubElements(xmlReader, elementName -> readLoadIncreaseResult(elementName, xmlReader, consumer));
     }
 
     private static void readLoadIncreaseResult(String elementName, XMLStreamReader xmlReader, Consumer<LoadIncreaseResult> resultConsumer) {
@@ -62,6 +60,7 @@ public final class XmlMarginCalculationResultParser extends AbstractXmlParser<Lo
         }
     }
 
+    //TODO factorize
     private static void readFailedCriterion(String elementName, XMLStreamReader xmlReader, Consumer<FailedCriterion> resultConsumer) {
         try {
             if (elementName.equals("criterionNonRespected")) {

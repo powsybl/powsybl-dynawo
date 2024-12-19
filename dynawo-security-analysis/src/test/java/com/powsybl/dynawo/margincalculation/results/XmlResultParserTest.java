@@ -13,6 +13,7 @@ import javax.xml.stream.XMLStreamException;
 import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -28,7 +29,6 @@ class XmlResultParserTest {
 
     @Test
     void test() throws XMLStreamException {
-
         InputStreamReader xml = new InputStreamReader(Objects.requireNonNull(getClass().getResourceAsStream("/result.xml")));
         List<LoadIncreaseResult> result = new XmlMarginCalculationResultParser().parse(xml);
 
@@ -46,8 +46,9 @@ class XmlResultParserTest {
 
     @Test
     void parseFromPath() throws URISyntaxException {
+        List<LoadIncreaseResult> result = new ArrayList<>();
         Path path = Path.of(Objects.requireNonNull(getClass().getResource("/result.xml")).toURI());
-        List<LoadIncreaseResult> result = new XmlMarginCalculationResultParser().parse(path);
+        new XmlMarginCalculationResultParser().parse(path, result::add);
         assertEquals(4, result.size());
     }
 

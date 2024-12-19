@@ -8,6 +8,7 @@
 package com.powsybl.dynawo.margincalculation.loadsvariation;
 
 import com.powsybl.dynawo.DynawoSimulationContext;
+import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.loads.ControllableLoadModel;
@@ -30,14 +31,14 @@ public class LoadVariationAreaAutomationSystem extends AbstractPureDynamicBlackB
 
     private static final String ID = "LOAD_VARIATION_AREA";
     private static final String PAR_ID = "loadVarArea";
-    private static final String LIB = "DYNModelVariationArea";
+    private static final ModelConfig MODEL_CONFIG = new ModelConfig("DYNModelVariationArea");
 
     private final List<LoadsVariation> loadsVariations;
     private final double loadIncreaseStartTime;
     private final double loadIncreaseStopTime;
 
     public LoadVariationAreaAutomationSystem(List<LoadsVariation> loadsVariations, double loadIncreaseStartTime, double loadIncreaseStopTime) {
-        super(ID, PAR_ID, LIB);
+        super(ID, PAR_ID, MODEL_CONFIG);
         this.loadsVariations = Objects.requireNonNull(loadsVariations);
         this.loadIncreaseStartTime = loadIncreaseStartTime;
         this.loadIncreaseStopTime = loadIncreaseStopTime;

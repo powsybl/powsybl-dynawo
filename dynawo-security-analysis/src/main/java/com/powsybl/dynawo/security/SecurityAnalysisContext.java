@@ -11,6 +11,7 @@ import com.powsybl.commons.report.ReportNode;
 import com.powsybl.contingency.Contingency;
 import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.DynawoSimulationParameters;
+import com.powsybl.dynawo.algorithms.ContingencyEventModels;
 import com.powsybl.dynawo.commons.DynawoConstants;
 import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.models.BlackBoxModel;
@@ -32,7 +33,7 @@ public class SecurityAnalysisContext extends DynawoSimulationContext {
                                    DynamicSecurityAnalysisParameters parameters,
                                    DynawoSimulationParameters dynawoSimulationParameters,
                                    List<Contingency> contingencies) {
-        this(network, workingVariantId, dynamicModels, parameters, dynawoSimulationParameters, contingencies, DynawoConstants.VERSION_MIN);
+        this(network, workingVariantId, dynamicModels, parameters, dynawoSimulationParameters, contingencies, DynawoConstants.VERSION_MIN, ReportNode.NO_OP);
     }
 
     public SecurityAnalysisContext(Network network, String workingVariantId,

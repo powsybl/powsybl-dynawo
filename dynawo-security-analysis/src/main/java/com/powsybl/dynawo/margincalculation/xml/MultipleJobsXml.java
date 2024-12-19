@@ -19,9 +19,9 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
 
+import static com.powsybl.dynawo.DynawoSimulationConstants.JOBS_FILENAME;
 import static com.powsybl.dynawo.algorithms.xml.AlgorithmsConstants.MULTIPLE_JOBS_FILENAME;
 import static com.powsybl.dynawo.algorithms.xml.AlgorithmsConstants.PHASE_2_JOBS_FILENAME;
-import static com.powsybl.dynawo.xml.DynawoSimulationConstants.*;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>

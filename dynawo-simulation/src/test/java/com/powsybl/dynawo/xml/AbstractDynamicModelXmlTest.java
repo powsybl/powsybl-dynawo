@@ -77,7 +77,7 @@ public abstract class AbstractDynamicModelXmlTest extends AbstractSerDeTest {
         assertTxtEquals(expected, actual);
     }
 
-    void setupDynawoContext() {
+    protected void setupDynawoContext() {
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load();
         context = new DynawoSimulationContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, eventModels, outputVariables, parameters, dynawoParameters, DynawoConstants.VERSION_MIN, reportNode);

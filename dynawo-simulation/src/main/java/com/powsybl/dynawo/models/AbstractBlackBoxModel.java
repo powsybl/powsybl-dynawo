@@ -89,11 +89,6 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel {
         return Collections.emptyList();
     }
 
-    @Override
-    public void write(XMLStreamWriter writer, DynawoSimulationContext context) throws XMLStreamException {
-        write(writer, getParFile(context));
-    }
-
     protected void writeDynamicAttributes(XMLStreamWriter writer, String parFileName) throws XMLStreamException {
         writer.writeAttribute("id", getDynamicModelId());
         writer.writeAttribute("lib", getLib());

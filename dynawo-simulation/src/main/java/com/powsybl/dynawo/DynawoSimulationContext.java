@@ -65,15 +65,21 @@ public class DynawoSimulationContext implements DydDataSupplier {
     protected final MacroConnectionsAdder macroConnectionsAdder;
     private Phase2Models phase2Models;
 
-    public DynawoSimulationContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
-                                   List<Curve> curves, DynamicSimulationParameters parameters, DynawoSimulationParameters dynawoSimulationParameters) {
-        this(network, workingVariantId, dynamicModels, eventModels, curves, parameters, dynawoSimulationParameters, ReportNode.NO_OP);
-    }
+//    public DynawoSimulationContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
+//                                   List<OutputVariable> outputVariables, DynamicSimulationParameters parameters, DynawoSimulationParameters dynawoSimulationParameters) {
+//        this(network, workingVariantId, dynamicModels, eventModels, outputVariables, parameters, dynawoSimulationParameters, ReportNode.NO_OP);
+//    }
+//
+//    public DynawoSimulationContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
+//                                   List<OutputVariable> outputVariables, DynamicSimulationParameters parameters, DynawoSimulationParameters dynawoSimulationParameters,
+//                                   Predicate<BlackBoxModel> phase2ModelsPredicate) {
+//        this(network, workingVariantId, dynamicModels, eventModels, outputVariables, parameters, dynawoSimulationParameters, phase2ModelsPredicate, ReportNode.NO_OP);
+//    }
 
     public DynawoSimulationContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
-                                   List<Curve> curves, DynamicSimulationParameters parameters, DynawoSimulationParameters dynawoSimulationParameters,
-                                   Predicate<BlackBoxModel> phase2ModelsPredicate) {
-        this(network, workingVariantId, dynamicModels, eventModels, curves, parameters, dynawoSimulationParameters, phase2ModelsPredicate, ReportNode.NO_OP);
+                                   List<OutputVariable> outputVariables, DynamicSimulationParameters parameters, DynawoSimulationParameters dynawoSimulationParameters,
+                                   DynawoVersion currentVersion, ReportNode reportNode) {
+        this(network, workingVariantId, dynamicModels, eventModels, outputVariables, parameters, dynawoSimulationParameters, null, currentVersion, reportNode);
     }
 
     public DynawoSimulationContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
@@ -173,13 +179,14 @@ public class DynawoSimulationContext implements DydDataSupplier {
         List<FrequencySynchronizedModel> frequencySynchronizedModels = filterDynamicModels(FrequencySynchronizedModel.class);
         boolean hasSpecificBuses = dynamicModels.stream().anyMatch(AbstractBus.class::isInstance);
         boolean hasSignalNModel = !signalNModels.isEmpty();
+        String defaultParFile = DynawoSimulationConstants.getSimulationParFile(getNetwork());
         if (!frequencySynchronizedModels.isEmpty() && hasSignalNModel) {
             throw new PowsyblException("Signal N and frequency synchronized generators cannot be used with one another");
         }
         if (hasSignalNModel) {
-            return new SignalN(signalNModels);
+            return new SignalN(signalNModels, defaultParFile);
         }
-        return hasSpecificBuses ? new SetPoint(frequencySynchronizedModels) : new OmegaRef(frequencySynchronizedModels);
+        return hasSpecificBuses ? new SetPoint(frequencySynchronizedModels, defaultParFile) : new OmegaRef(frequencySynchronizedModels, defaultParFile);
     }
 
     private <T extends Model> List<T> filterDynamicModels(Class<T> modelClass) {

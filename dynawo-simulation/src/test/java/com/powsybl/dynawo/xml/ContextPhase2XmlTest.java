@@ -22,8 +22,8 @@ import java.io.IOException;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import static com.powsybl.dynawo.xml.DynawoSimulationConstants.DYD_FILENAME;
-import static com.powsybl.dynawo.xml.DynawoSimulationConstants.PHASE_2_DYD_FILENAME;
+import static com.powsybl.dynawo.DynawoSimulationConstants.DYD_FILENAME;
+import static com.powsybl.dynawo.DynawoSimulationConstants.PHASE_2_DYD_FILENAME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**

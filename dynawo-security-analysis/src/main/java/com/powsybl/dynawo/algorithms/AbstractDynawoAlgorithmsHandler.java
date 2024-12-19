@@ -12,25 +12,20 @@ import com.powsybl.commons.report.ReportNode;
 import com.powsybl.computation.AbstractExecutionHandler;
 import com.powsybl.computation.Command;
 import com.powsybl.computation.CommandExecution;
+import com.powsybl.dynawo.DynawoFilesUtils;
 import com.powsybl.dynawo.DynawoSimulationContext;
-import com.powsybl.dynawo.commons.DynawoConstants;
 import com.powsybl.dynawo.commons.DynawoUtil;
-import com.powsybl.dynawo.xml.DydXml;
-import com.powsybl.dynawo.xml.DynawoSimulationConstants;
-import com.powsybl.dynawo.xml.JobsXml;
-import com.powsybl.dynawo.xml.ParametersXml;
 import com.powsybl.iidm.network.Network;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
+import static com.powsybl.dynawo.DynawoFilesUtils.deleteExistingFile;
+import static com.powsybl.dynawo.commons.DynawoConstants.*;
 import static com.powsybl.dynawo.commons.DynawoUtil.getCommandExecutions;
-import static com.powsybl.dynawo.xml.DynawoSimulationConstants.FINAL_STATE_FOLDER;
-import static com.powsybl.dynawo.xml.DynawoSimulationConstants.OUTPUTS_FOLDER;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -52,20 +47,15 @@ public abstract class AbstractDynawoAlgorithmsHandler<R, S extends DynawoSimulat
     @Override
     public List<CommandExecution> before(Path workingDir) throws IOException {
         network.getVariantManager().setWorkingVariant(context.getWorkingVariantId());
-        Path outputNetworkFile = workingDir.resolve(OUTPUTS_FOLDER).resolve(FINAL_STATE_FOLDER).resolve(DynawoConstants.OUTPUT_IIDM_FILENAME);
-        if (Files.exists(outputNetworkFile)) {
-            Files.delete(outputNetworkFile);
-        }
+        deleteExistingFile(workingDir.resolve(OUTPUTS_FOLDER), FINAL_STATE_FOLDER, OUTPUT_IIDM_FILENAME);
         writeInputFiles(workingDir);
         return getCommandExecutions(command);
     }
 
     private void writeInputFiles(Path workingDir) {
         try {
-            DynawoUtil.writeIidm(network, workingDir.resolve(DynawoSimulationConstants.NETWORK_FILENAME));
-            JobsXml.write(workingDir, context);
-            DydXml.write(workingDir, context);
-            ParametersXml.write(workingDir, context);
+            DynawoUtil.writeIidm(network, workingDir.resolve(NETWORK_FILENAME));
+            DynawoFilesUtils.writeInputFiles(workingDir, context);
             writeMultipleJobs(workingDir);
         } catch (IOException e) {
             throw new UncheckedIOException(e);

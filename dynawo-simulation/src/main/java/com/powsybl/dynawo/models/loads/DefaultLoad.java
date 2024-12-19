@@ -8,12 +8,11 @@
 package com.powsybl.dynawo.models.loads;
 
 import com.powsybl.dynawo.models.defaultmodels.AbstractInjectionDefaultModel;
-import com.powsybl.dynawo.models.events.ControllableEquipment;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class DefaultLoad extends AbstractInjectionDefaultModel implements ControllableEquipment {
+public class DefaultLoad extends AbstractInjectionDefaultModel implements ControllableLoadModel {
 
     public DefaultLoad(String staticId) {
         super(staticId);
@@ -27,5 +26,10 @@ public class DefaultLoad extends AbstractInjectionDefaultModel implements Contro
     @Override
     public String getDeltaPVarName() {
         return "@NAME@_DeltaPc";
+    }
+
+    @Override
+    public String getDeltaQVarName() {
+        return "@NAME@_DeltaQc";
     }
 }

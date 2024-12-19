@@ -34,13 +34,17 @@ public final class MultipleJobsXml {
         XmlUtil.write(file, "multipleJobs", w -> writeContingencies(w, context));
     }
 
-    private static void writeContingencies(XMLStreamWriter writer, SecurityAnalysisContext context) throws XMLStreamException {
-        writer.writeStartElement("scenarios");
-        writer.writeAttribute("jobsFile", JOBS_FILENAME);
-        for (ContingencyEventModels model : context.getContingencyEventModels()) {
-            writeScenario(writer, model.getId());
+    private static void writeContingencies(XMLStreamWriter writer, SecurityAnalysisContext context) {
+        try {
+            writer.writeStartElement("scenarios");
+            writer.writeAttribute("jobsFile", JOBS_FILENAME);
+            for (ContingencyEventModels model : context.getContingencyEventModels()) {
+                writeScenario(writer, model.getId());
+            }
+            writer.writeEndElement();
+        } catch (XMLStreamException e) {
+            throw new RuntimeException(e);
         }
-        writer.writeEndElement();
     }
 
     private static void writeScenario(XMLStreamWriter writer, String id) throws XMLStreamException {

@@ -7,7 +7,6 @@
  */
 package com.powsybl.dynawo.models.frequencysynchronizers;
 
-import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.AbstractPureDynamicBlackBoxModel;
 

@@ -10,9 +10,10 @@ package com.powsybl.dynawo.margincalculation;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.contingency.Contingency;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
+import com.powsybl.dynawo.DynawoSimulationConstants;
+import com.powsybl.dynawo.commons.DynawoConstants;
 import com.powsybl.dynawo.margincalculation.loadsvariation.LoadVariationAreaAutomationSystem;
 import com.powsybl.dynawo.margincalculation.loadsvariation.LoadsVariation;
-import com.powsybl.dynawo.xml.DynawoSimulationConstants;
 import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.models.BlackBoxModel;
@@ -54,8 +55,8 @@ public class MarginCalculationContext extends DynawoSimulationContext {
                                     ReportNode reportNode) {
         super(network, workingVariantId, dynamicModels, List.of(), Collections.emptyList(),
                 //TODO fix
-                //TODO calculate phase 2 predicate
-                new DynamicSimulationParameters(parameters.getStartTime(), parameters.getStopTime()), dynawoSimulationParameters, reportNode);
+                //TODO calculate phase 2 predicate - hande dyna version
+                new DynamicSimulationParameters(parameters.getStartTime(), parameters.getStopTime()), dynawoSimulationParameters, null, DynawoConstants.VERSION_MIN, reportNode);
         this.marginCalculationParameters = parameters;
         double contingenciesStartTime = parameters.getContingenciesStartTime();
         this.contingencyEventModels = ContingencyEventModelsFactory.createFrom(contingencies, this, macroConnectionsAdder, contingenciesStartTime);
