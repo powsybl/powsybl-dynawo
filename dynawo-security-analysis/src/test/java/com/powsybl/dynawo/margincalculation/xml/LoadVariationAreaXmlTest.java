@@ -14,6 +14,7 @@ import com.powsybl.dynawo.margincalculation.MarginCalculationParameters;
 import com.powsybl.dynawo.xml.DydXml;
 import com.powsybl.dynawo.xml.AbstractDynamicModelXmlTest;
 import com.powsybl.dynawo.xml.ParametersXml;
+import com.powsybl.iidm.network.Load;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
@@ -32,6 +33,11 @@ class LoadVariationAreaXmlTest extends AbstractDynamicModelXmlTest {
     @Override
     protected void setupNetwork() {
         network = EurostagTutorialExample1Factory.createWithMultipleConnectedComponents();
+        network.getLoad("LOAD").setP0(400);
+        network.getLoad("LOAD2").setP0(200);
+        Load load3 = network.getLoad("LOAD3");
+        load3.setP0(100);
+        load3.getTerminal().connect();
     }
 
     @Override
@@ -44,8 +50,8 @@ class LoadVariationAreaXmlTest extends AbstractDynamicModelXmlTest {
         MarginCalculationParameters parameters = MarginCalculationParameters.builder().build();
         DynawoSimulationParameters dynawoSimulationParameters = DynawoSimulationParameters.load();
         List<LoadsVariation> loadsVariationList = List.of(
-                new LoadsVariation(List.of(network.getLoad("LOAD")), 2, LoadsVariation.VariationMode.PROPORTIONAL),
-                new LoadsVariation(List.of(network.getLoad("LOAD2"), network.getLoad("LOAD3")), 5, LoadsVariation.VariationMode.PROPORTIONAL));
+                new LoadsVariation(List.of(network.getLoad("LOAD")), 20),
+                new LoadsVariation(List.of(network.getLoad("LOAD2"), network.getLoad("LOAD3")), 30));
         context = new MarginCalculationContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels,
                 parameters, dynawoSimulationParameters, Collections.emptyList(), loadsVariationList);
     }

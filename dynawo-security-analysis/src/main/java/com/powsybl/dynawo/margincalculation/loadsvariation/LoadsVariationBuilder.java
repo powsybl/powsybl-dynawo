@@ -29,7 +29,6 @@ public class LoadsVariationBuilder {
 
     private final BuilderEquipmentsList<Load> loads;
     private double variationValue = Double.NaN;
-    private LoadsVariation.VariationMode mode;
 
     public LoadsVariationBuilder(Network network, ReportNode reportNode) {
         this.network = Objects.requireNonNull(network);
@@ -38,13 +37,18 @@ public class LoadsVariationBuilder {
     }
 
     public LoadsVariationBuilder loads(String... loadIds) {
-        loads.addEquipments(loadIds, network::getLoad);
+        loads.addEquipments(loadIds, this::getConnectedLoad);
         return this;
     }
 
     public LoadsVariationBuilder loads(Collection<String> loadIds) {
-        loads.addEquipments(loadIds, network::getLoad);
+        loads.addEquipments(loadIds, this::getConnectedLoad);
         return this;
+    }
+
+    private Load getConnectedLoad(String loadId) {
+        Load load = network.getLoad(loadId);
+        return load != null && load.getTerminal().isConnected() ? load : null;
     }
 
     public LoadsVariationBuilder variationValue(double variationValue) {
@@ -52,19 +56,10 @@ public class LoadsVariationBuilder {
         return this;
     }
 
-    public LoadsVariationBuilder variationMode(LoadsVariation.VariationMode mode) {
-        this.mode = mode;
-        return this;
-    }
-
     protected void checkData() {
         isInstantiable = loads.checkEquipmentData(reportNode);
         if (Double.isNaN(variationValue)) {
             BuilderReports.reportFieldNotSet(reportNode, "variationValue");
-            isInstantiable = false;
-        }
-        if (mode == null) {
-            BuilderReports.reportFieldNotSet(reportNode, "variationMode");
             isInstantiable = false;
         }
     }
@@ -78,6 +73,6 @@ public class LoadsVariationBuilder {
     }
 
     public LoadsVariation build() {
-        return isInstantiable() ? new LoadsVariation(loads.getEquipments(), variationValue, mode) : null;
+        return isInstantiable() ? new LoadsVariation(loads.getEquipments(), variationValue) : null;
     }
 }

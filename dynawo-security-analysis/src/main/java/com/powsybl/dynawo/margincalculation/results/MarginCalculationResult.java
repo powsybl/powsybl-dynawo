@@ -15,16 +15,16 @@ import java.util.Optional;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class MarginCalculationReport {
+public class MarginCalculationResult {
 
     private final List<LoadIncreaseResult> loadIncreaseResults;
     private byte[] logBytes;
 
-    public static MarginCalculationReport empty() {
-        return new MarginCalculationReport(Collections.emptyList());
+    public static MarginCalculationResult empty() {
+        return new MarginCalculationResult(Collections.emptyList());
     }
 
-    public MarginCalculationReport(List<LoadIncreaseResult> loadIncreaseResults) {
+    public MarginCalculationResult(List<LoadIncreaseResult> loadIncreaseResults) {
         this.loadIncreaseResults = Objects.requireNonNull(loadIncreaseResults);
     }
 
@@ -40,7 +40,7 @@ public class MarginCalculationReport {
         return Optional.ofNullable(logBytes);
     }
 
-    public MarginCalculationReport setLogBytes(byte[] logBytes) {
+    public MarginCalculationResult setLogBytes(byte[] logBytes) {
         this.logBytes = logBytes;
         return this;
     }

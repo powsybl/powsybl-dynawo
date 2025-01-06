@@ -13,6 +13,7 @@ import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.commons.DynawoConstants;
 import com.powsybl.dynawo.margincalculation.loadsvariation.LoadVariationAreaAutomationSystem;
+import com.powsybl.dynawo.margincalculation.loadsvariation.LoadsProportionalScalable;
 import com.powsybl.dynawo.margincalculation.loadsvariation.LoadsVariation;
 import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.DynawoSimulationParameters;
@@ -22,9 +23,12 @@ import com.powsybl.dynawo.models.macroconnections.MacroConnector;
 import com.powsybl.dynawo.algorithms.ContingencyEventModels;
 import com.powsybl.dynawo.algorithms.ContingencyEventModelsFactory;
 import com.powsybl.dynawo.xml.DydDataSupplier;
+import com.powsybl.iidm.modification.scalable.Scalable;
+import com.powsybl.iidm.modification.scalable.ScalingParameters;
 import com.powsybl.iidm.network.Network;
 
 import java.util.*;
+import java.util.function.BiConsumer;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
@@ -60,7 +64,10 @@ public class MarginCalculationContext extends DynawoSimulationContext {
         this.marginCalculationParameters = parameters;
         double contingenciesStartTime = parameters.getContingenciesStartTime();
         this.contingencyEventModels = ContingencyEventModelsFactory.createFrom(contingencies, this, macroConnectionsAdder, contingenciesStartTime, reportNode);
-        this.loadVariationArea = new LoadVariationAreaAutomationSystem(loadsVariations, parameters.getLoadIncreaseStartTime(), parameters.getLoadIncreaseStopTime());
+        this.loadVariationArea = new LoadVariationAreaAutomationSystem(loadsVariations,
+                parameters.getLoadIncreaseStartTime(),
+                parameters.getLoadIncreaseStopTime(),
+                getScalableConfig(network));
 
         macroConnectionsAdder.setMacroConnectorAdder(loadVariationMacroConnectorsMap::computeIfAbsent);
         macroConnectionsAdder.setMacroConnectAdder(loadVariationMacroConnectList::add);
@@ -103,5 +110,12 @@ public class MarginCalculationContext extends DynawoSimulationContext {
                 return DynawoSimulationConstants.getSimulationParFile(getNetwork());
             }
         };
+    }
+
+    private static BiConsumer<LoadsProportionalScalable, Double> getScalableConfig(Network network) {
+        ScalingParameters scalingParameters = new ScalingParameters()
+                .setScalingConvention(Scalable.ScalingConvention.LOAD)
+                .setConstantPowerFactor(true);
+        return (s, v) -> s.scale(network, v, scalingParameters);
     }
 }

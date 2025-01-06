@@ -18,7 +18,7 @@ import com.powsybl.dynawo.DynawoSimulationProvider;
 import com.powsybl.dynawo.commons.DynawoUtil;
 import com.powsybl.dynawo.commons.PowsyblDynawoVersion;
 import com.powsybl.dynawo.margincalculation.loadsvariation.supplier.LoadsVariationSupplier;
-import com.powsybl.dynawo.margincalculation.results.MarginCalculationReport;
+import com.powsybl.dynawo.margincalculation.results.MarginCalculationResult;
 import com.powsybl.dynawo.models.utils.BlackBoxSupplierUtils;
 import com.powsybl.dynawo.algorithms.DynawoAlgorithmsConfig;
 import com.powsybl.iidm.network.Network;
@@ -52,7 +52,7 @@ public class MarginCalculationProvider implements Versionable {
         this.config = Objects.requireNonNull(config);
     }
 
-    public CompletableFuture<MarginCalculationReport> run(Network network, String workingVariantId,
+    public CompletableFuture<MarginCalculationResult> run(Network network, String workingVariantId,
                                                           DynamicModelsSupplier dynamicModelsSupplier,
                                                           ContingenciesProvider contingenciesProvider,
                                                           LoadsVariationSupplier loadsVariationSupplier,

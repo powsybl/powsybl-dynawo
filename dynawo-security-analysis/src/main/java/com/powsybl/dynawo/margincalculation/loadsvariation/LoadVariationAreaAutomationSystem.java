@@ -19,6 +19,7 @@ import com.powsybl.iidm.network.Load;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import static com.powsybl.dynawo.parameters.ParameterType.DOUBLE;
@@ -36,12 +37,16 @@ public class LoadVariationAreaAutomationSystem extends AbstractPureDynamicBlackB
     private final List<LoadsVariation> loadsVariations;
     private final double loadIncreaseStartTime;
     private final double loadIncreaseStopTime;
+    private final BiConsumer<LoadsProportionalScalable, Double> scalingConfig;
 
-    public LoadVariationAreaAutomationSystem(List<LoadsVariation> loadsVariations, double loadIncreaseStartTime, double loadIncreaseStopTime) {
+    public LoadVariationAreaAutomationSystem(List<LoadsVariation> loadsVariations, double loadIncreaseStartTime,
+                                             double loadIncreaseStopTime,
+                                             BiConsumer<LoadsProportionalScalable, Double> scalingConfig) {
         super(ID, PAR_ID, MODEL_CONFIG);
         this.loadsVariations = Objects.requireNonNull(loadsVariations);
         this.loadIncreaseStartTime = loadIncreaseStartTime;
         this.loadIncreaseStopTime = loadIncreaseStopTime;
+        this.scalingConfig = scalingConfig;
     }
 
     @Override
@@ -63,12 +68,13 @@ public class LoadVariationAreaAutomationSystem extends AbstractPureDynamicBlackB
     @Override
     public void createDynamicModelParameters(DynawoSimulationContext context, Consumer<ParametersSet> parametersAdder) {
         ParametersSet paramSet = new ParametersSet(getParameterSetId());
-        //TODO calc delta
         int index = 0;
         for (LoadsVariation lv : loadsVariations) {
-            for (Load load : lv.loads()) {
-                paramSet.addParameter("deltaP_load_" + index, DOUBLE, String.valueOf(1));
-                paramSet.addParameter("deltaQ_load_" + index, DOUBLE, String.valueOf(1));
+            LoadsProportionalScalable proportionalScalable = new LoadsProportionalScalable(lv.loads());
+            scalingConfig.accept(proportionalScalable, lv.variationValue());
+            for (CalculatedPower load : proportionalScalable.getLoadScalable()) {
+                paramSet.addParameter("deltaP_load_" + index, DOUBLE, String.valueOf(load.getCalculatedP0()));
+                paramSet.addParameter("deltaQ_load_" + index, DOUBLE, String.valueOf(load.getCalculatedQ0()));
                 index++;
             }
         }

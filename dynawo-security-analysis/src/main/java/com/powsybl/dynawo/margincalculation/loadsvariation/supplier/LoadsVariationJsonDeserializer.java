@@ -52,32 +52,15 @@ public class LoadsVariationJsonDeserializer extends StdDeserializer<List<LoadsVa
         JsonUtil.parseObject(parser, name -> {
             boolean handled = true;
             switch (name) {
-                case "loadsIds" -> {
-                    List<String> loadsIds = new ArrayList<>();
-                    JsonUtil.parseObjectArray(parser, loadsIds::add, this::parseLoadsIds);
-                    loadsVariationBuilder.loads(loadsIds);
+                case "loadsIds" -> loadsVariationBuilder.loads(JsonUtil.parseStringArray(parser));
+                case "variationValue" -> {
+                    parser.nextToken();
+                    loadsVariationBuilder.variationValue(parser.getDoubleValue());
                 }
-                case "variationValue" -> loadsVariationBuilder.variationValue(Double.parseDouble(parser.nextTextValue()));
-                case "variationMode" -> loadsVariationBuilder.variationMode(LoadsVariation.VariationMode.valueOf(parser.nextTextValue()));
                 default -> handled = false;
             }
             return handled;
         });
         return loadsVariationBuilder;
-    }
-
-    //TODO check json model
-    private String parseLoadsIds(JsonParser parser) {
-        var temp = new Object() {
-            String loadId;
-        };
-        JsonUtil.parseObject(parser, name -> {
-            if (name.equals("id")) {
-                temp.loadId = parser.nextTextValue();
-                return true;
-            }
-            return false;
-        });
-        return temp.loadId;
     }
 }

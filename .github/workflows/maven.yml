@@ -18,7 +18,16 @@ jobs:
 
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v1
+        uses: actions/checkout@v4
+        with:
+          path: main
+
+      - name: Checkout powsybl-core branch
+        uses: actions/checkout@v4
+        with:
+          repository: powsybl/powsybl-core
+          ref: refs/heads/scalable_access
+          path: powsybl-core
 
       - name: Set up JDK 17
         uses: actions/setup-java@v1

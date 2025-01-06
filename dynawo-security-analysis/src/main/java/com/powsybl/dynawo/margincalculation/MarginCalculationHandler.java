@@ -13,7 +13,7 @@ import com.powsybl.computation.ExecutionReport;
 import com.powsybl.dynawo.algorithms.AbstractDynawoAlgorithmsHandler;
 import com.powsybl.dynawo.algorithms.xml.ContingenciesDydXml;
 import com.powsybl.dynawo.algorithms.xml.ContingenciesParXml;
-import com.powsybl.dynawo.margincalculation.results.MarginCalculationReport;
+import com.powsybl.dynawo.margincalculation.results.MarginCalculationResult;
 import com.powsybl.dynawo.margincalculation.results.XmlMarginCalculationResultParser;
 import com.powsybl.dynawo.margincalculation.xml.MultipleJobsXml;
 
@@ -26,19 +26,19 @@ import static com.powsybl.dynawo.commons.DynawoConstants.AGGREGATED_RESULTS;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class MarginCalculationHandler extends AbstractDynawoAlgorithmsHandler<MarginCalculationReport, MarginCalculationContext> {
+public class MarginCalculationHandler extends AbstractDynawoAlgorithmsHandler<MarginCalculationResult, MarginCalculationContext> {
 
     public MarginCalculationHandler(MarginCalculationContext context, Command command, ReportNode reportNode) {
         super(context, command, reportNode);
     }
 
     @Override
-    public MarginCalculationReport after(Path workingDir, ExecutionReport report) throws IOException {
+    public MarginCalculationResult after(Path workingDir, ExecutionReport report) throws IOException {
         super.after(workingDir, report);
         context.getNetwork().getVariantManager().setWorkingVariant(context.getWorkingVariantId());
         Path resultsFile = workingDir.resolve(AGGREGATED_RESULTS);
         new XmlMarginCalculationResultParser().parse(resultsFile);
-        return new MarginCalculationReport(new XmlMarginCalculationResultParser().parse(resultsFile));
+        return new MarginCalculationResult(new XmlMarginCalculationResultParser().parse(resultsFile));
     }
 
     @Override
