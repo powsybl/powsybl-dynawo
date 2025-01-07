@@ -23,12 +23,4 @@ public final class DynamicSecurityAnalysisReports {
                 .withUntypedValue("networkId", networkId)
                 .add();
     }
-
-    public static ReportNode createContingencyVoltageIdNotFoundReportNode(ReportNode reportNode, String contingencyId, String voltageLevelId) {
-        return reportNode.newReportNode()
-                .withMessageTemplate("contingencyVlIdNotFound", "Voltage id '${voltageLevelId}' of contingency '${contingencyId}' not found, contingency will be skipped")
-                .withUntypedValue("voltageLevelId", voltageLevelId)
-                .withUntypedValue("contingencyId", contingencyId)
-                .add();
-    }
 }

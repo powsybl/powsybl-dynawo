@@ -7,7 +7,6 @@
  */
 package com.powsybl.dynawo.algorithms;
 
-import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.contingency.Contingency;
 import com.powsybl.contingency.ContingencyElement;
@@ -20,11 +19,13 @@ import com.powsybl.dynawo.models.macroconnections.MacroConnect;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.macroconnections.MacroConnector;
 import com.powsybl.dynawo.parameters.ParametersSet;
-import com.powsybl.dynawo.security.DynamicSecurityAnalysisReports;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.TwoSides;
 
 import java.util.*;
+
+import static com.powsybl.dynawo.algorithms.DynawoAlgorithmsReports.createContingencyVoltageIdNotFoundReportNode;
+import static com.powsybl.dynawo.algorithms.DynawoAlgorithmsReports.createNotSupportedContingencyTypeReportNode;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
@@ -85,14 +86,14 @@ public final class ContingencyEventModelsFactory {
             if (side != null) {
                 builder.disconnectOnly(side);
             } else {
-                DynamicSecurityAnalysisReports.createContingencyVoltageIdNotFoundReportNode(reportNode,
+                createContingencyVoltageIdNotFoundReportNode(reportNode,
                         sidedElement.getId(), sidedElement.getVoltageLevelId());
                 return null;
             }
         }
         BlackBoxModel bbm = builder.build();
         if (bbm == null) {
-            throw new PowsyblException("Contingency element " + element.getType() + " not supported");
+            createNotSupportedContingencyTypeReportNode(reportNode, element.getType().toString());
         }
         if (bbm instanceof ContextDependentEvent cde) {
             cde.setEquipmentHasDynamicModel(context);

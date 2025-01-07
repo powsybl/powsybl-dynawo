@@ -11,7 +11,7 @@ import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawo.models.VarConnection;
-import com.powsybl.dynawo.models.loads.ControllableLoadModel;
+import com.powsybl.dynawo.models.loads.DefaultControllableLoadModel;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectAttribute;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.parameters.ParametersSet;
@@ -54,13 +54,13 @@ public class LoadVariationAreaAutomationSystem extends AbstractPureDynamicBlackB
         int index = 0;
         for (LoadsVariation lv : loadsVariations) {
             for (Load load : lv.loads()) {
-                adder.createMacroConnections(this, load, ControllableLoadModel.class, this::getVarConnectionsWith, MacroConnectAttribute.ofIndex1(index));
+                adder.createMacroConnections(this, load, DefaultControllableLoadModel.class, this::getVarConnectionsWith, MacroConnectAttribute.ofIndex1(index));
                 index++;
             }
         }
     }
 
-    private List<VarConnection> getVarConnectionsWith(ControllableLoadModel connected) {
+    private List<VarConnection> getVarConnectionsWith(DefaultControllableLoadModel connected) {
         return List.of(new VarConnection("DeltaPc_load_@INDEX@", connected.getDeltaPVarName()),
                 new VarConnection("DeltaQc_load_@INDEX@", connected.getDeltaQVarName()));
     }

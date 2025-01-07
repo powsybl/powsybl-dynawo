@@ -12,7 +12,7 @@ import com.powsybl.dynawo.models.defaultmodels.AbstractInjectionDefaultModel;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class DefaultLoad extends AbstractInjectionDefaultModel implements ControllableLoadModel {
+public class DefaultLoad extends AbstractInjectionDefaultModel implements DefaultControllableLoadModel {
 
     public DefaultLoad(String staticId) {
         super(staticId);

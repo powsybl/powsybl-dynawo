@@ -27,7 +27,7 @@ public final class MarginCalculationParameters {
     public static final double DEFAULT_LOAD_INCREASE_STOP_TIME = 50;
     public static final double DEFAULT_CONTINGENCIES_START_TIME = 120;
     public static final CalculationType DEFAULT_CALCULATION_TYPE = CalculationType.GLOBAL_MARGIN;
-    public static final double DEFAULT_ACCURACY = 2;
+    public static final int DEFAULT_ACCURACY = 2;
     public static final LoadModelsRule DEFAULT_LOAD_MODELS_RULE = LoadModelsRule.EVERY_MODELS;
 
     public enum CalculationType {
@@ -38,6 +38,7 @@ public final class MarginCalculationParameters {
     /**
      * Indicates how to handle loads in the first phase
      */
+    //TODO rename
     public enum LoadModelsRule {
         /**
          * Remove every specific loads dynamic models
@@ -58,7 +59,7 @@ public final class MarginCalculationParameters {
         private double loadIncreaseStopTime = DEFAULT_LOAD_INCREASE_STOP_TIME;
         private double contingenciesStartTime = DEFAULT_CONTINGENCIES_START_TIME;
         private CalculationType calculationType = DEFAULT_CALCULATION_TYPE;
-        private double accuracy = DEFAULT_ACCURACY;
+        private int accuracy = DEFAULT_ACCURACY;
         private LoadModelsRule loadModelsRule = DEFAULT_LOAD_MODELS_RULE;
 
         /**
@@ -114,7 +115,7 @@ public final class MarginCalculationParameters {
             return this;
         }
 
-        public Builder setAccuracy(double accuracy) {
+        public Builder setAccuracy(int accuracy) {
             this.accuracy = accuracy;
             return this;
         }
@@ -180,7 +181,7 @@ public final class MarginCalculationParameters {
             c.getOptionalDoubleProperty("loadIncrease.stopTime").ifPresent(builder::setLoadIncreaseStopTime);
             c.getOptionalDoubleProperty("contingencies-start-time").ifPresent(builder::setContingenciesStartTime);
             c.getOptionalEnumProperty("calculation-type", CalculationType.class).ifPresent(builder::setCalculationType);
-            c.getOptionalDoubleProperty("accuracy").ifPresent(builder::setAccuracy);
+            c.getOptionalIntProperty("accuracy").ifPresent(builder::setAccuracy);
             c.getOptionalEnumProperty("loads-models-rule", LoadModelsRule.class).ifPresent(builder::setLoadModelsRule);
         });
         return builder.build();
@@ -193,10 +194,10 @@ public final class MarginCalculationParameters {
     private final double loadIncreaseStopTime;
     private final double contingenciesStartTime;
     private final CalculationType calculationType;
-    private final double accuracy;
+    private final int accuracy;
     private final LoadModelsRule loadModelsRule;
 
-    private MarginCalculationParameters(double startTime, double stopTime, double marginCalculationStartTime, double loadIncreaseStartTime, double loadIncreaseStopTime, double contingenciesStartTime, CalculationType calculationType, double accuracy, LoadModelsRule loadModelsRule) {
+    private MarginCalculationParameters(double startTime, double stopTime, double marginCalculationStartTime, double loadIncreaseStartTime, double loadIncreaseStopTime, double contingenciesStartTime, CalculationType calculationType, int accuracy, LoadModelsRule loadModelsRule) {
         this.startTime = startTime;
         this.stopTime = stopTime;
         this.marginCalculationStartTime = marginCalculationStartTime;
@@ -236,7 +237,7 @@ public final class MarginCalculationParameters {
         return calculationType;
     }
 
-    public double getAccuracy() {
+    public int getAccuracy() {
         return accuracy;
     }
 

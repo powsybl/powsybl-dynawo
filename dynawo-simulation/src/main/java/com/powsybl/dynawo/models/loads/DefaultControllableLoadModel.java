@@ -12,7 +12,7 @@ import com.powsybl.dynawo.models.events.ControllableEquipmentModel;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public interface ControllableLoadModel extends ControllableEquipmentModel {
+public interface DefaultControllableLoadModel extends ControllableEquipmentModel {
 
     String getDeltaQVarName();
 }

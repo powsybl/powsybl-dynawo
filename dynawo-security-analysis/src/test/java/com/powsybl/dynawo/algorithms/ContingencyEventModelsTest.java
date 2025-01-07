@@ -51,7 +51,8 @@ class ContingencyEventModelsTest {
                 Contingency.load("LOAD"),
                 Contingency.generator("GEN"),
                 Contingency.line(NHV1_NHV2_1, VLHV1),
-                Contingency.branch(NHV1_NHV2_2, "WRONG_ID"));
+                Contingency.branch(NHV1_NHV2_2, "WRONG_ID"),
+                Contingency.battery("BATTERY"));
 
         List<ContingencyEventModels> contingencyEvents = ContingencyEventModelsFactory.createFrom(contingencies, context,
                 macroConnectionsAdder, 2, ReportNode.NO_OP);
