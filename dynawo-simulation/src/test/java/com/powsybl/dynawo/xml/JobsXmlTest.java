@@ -54,6 +54,7 @@ class JobsXmlTest extends DynawoTestUtil {
     void writeJobWithPhase2() throws SAXException, IOException {
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load();
+        //TODO wrap start/stop time in context (use phase2 Config with predicate + stop time 2)
         DynawoSimulationContext context = new DynawoSimulationContext(network, network.getVariantManager().getWorkingVariantId(),
                 dynamicModels, eventModels, outputVariables, parameters, dynawoParameters,
                 bbm -> bbm.getDynamicModelId().equalsIgnoreCase("BBM_LOAD2"),

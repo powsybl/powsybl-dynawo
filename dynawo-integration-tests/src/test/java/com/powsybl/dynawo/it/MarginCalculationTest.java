@@ -9,47 +9,44 @@ package com.powsybl.dynawo.it;
 import com.powsybl.commons.datasource.ResourceDataSource;
 import com.powsybl.commons.datasource.ResourceSet;
 import com.powsybl.commons.report.ReportNode;
-import com.powsybl.commons.test.ComparisonUtils;
 import com.powsybl.contingency.Contingency;
-import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension;
 import com.powsybl.dynamicsimulation.groovy.GroovyDynamicModelsSupplier;
 import com.powsybl.dynamicsimulation.groovy.GroovyExtension;
 import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.DynawoSimulationProvider;
 import com.powsybl.dynawo.algorithms.DynawoAlgorithmsConfig;
+import com.powsybl.dynawo.margincalculation.MarginCalculationParameters;
+import com.powsybl.dynawo.margincalculation.MarginCalculationProvider;
+import com.powsybl.dynawo.margincalculation.MarginCalculationRunParameters;
+import com.powsybl.dynawo.margincalculation.loadsvariation.LoadsVariationBuilder;
+import com.powsybl.dynawo.margincalculation.loadsvariation.supplier.LoadsVariationSupplier;
+import com.powsybl.dynawo.margincalculation.results.LoadIncreaseResult;
 import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.dynawo.xml.ParametersXml;
-
-import com.powsybl.dynawo.security.DynawoSecurityAnalysisProvider;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.VariantManagerConstants;
-import com.powsybl.security.SecurityAnalysisResult;
-import com.powsybl.security.dynamic.DynamicSecurityAnalysisParameters;
-import com.powsybl.security.dynamic.DynamicSecurityAnalysisProvider;
-import com.powsybl.security.dynamic.DynamicSecurityAnalysisRunParameters;
-import com.powsybl.security.json.SecurityAnalysisResultSerializer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-class DynawoSecurityAnalysisTest extends AbstractDynawoTest {
+class MarginCalculationTest extends AbstractDynawoTest {
 
-    private DynamicSecurityAnalysisProvider provider;
+    private MarginCalculationProvider provider;
 
-    private DynamicSecurityAnalysisParameters parameters;
+    private MarginCalculationParameters parameters;
 
     private DynawoSimulationParameters dynawoSimulationParameters;
 
@@ -57,22 +54,25 @@ class DynawoSecurityAnalysisTest extends AbstractDynawoTest {
     @BeforeEach
     void setUp() throws Exception {
         super.setUp();
-        provider = new DynawoSecurityAnalysisProvider(new DynawoAlgorithmsConfig(Path.of("/dynaflow-launcher"), true));
-        parameters = new DynamicSecurityAnalysisParameters()
-                .setDynamicSimulationParameters(new DynamicSimulationParameters(0, 100))
-                .setDynamicContingenciesParameters(new DynamicSecurityAnalysisParameters.ContingenciesParameters(10));
+        provider = new MarginCalculationProvider(new DynawoAlgorithmsConfig(Path.of("/dynaflow-launcher"), true));
+        parameters = MarginCalculationParameters.builder()
+                .setStartTime(0)
+                .setLoadIncreaseStartTime(10)
+                .setLoadIncreaseStopTime(70)
+                .setMarginCalculationStartTime(100)
+                .setContingenciesStartTime(110)
+                .setStopTime(200)
+                .build();
         dynawoSimulationParameters = new DynawoSimulationParameters();
-        parameters.getDynamicSimulationParameters().addExtension(DynawoSimulationParameters.class, dynawoSimulationParameters);
     }
 
     @ParameterizedTest
     @MethodSource("provideSimulationParameter")
-    void testIeee14DSA(String criteriaPath, List<Contingency> contingencies, String resultsPath) throws IOException {
+    void testIeee14MC(String criteriaPath, List<Contingency> contingencies) throws IOException {
         Network network = Network.read(new ResourceDataSource("IEEE14", new ResourceSet("/ieee14", "IEEE14.iidm")));
 
         GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
-                //TODO use the MC groovyscript
-                getResourceAsStream("/ieee14/dynamic-security-analysis/dynamicModels.groovy"),
+                getResourceAsStream("/ieee14/dynamicModels.groovy"),
                 GroovyExtension.find(DynamicModelGroovyExtension.class, DynawoSimulationProvider.NAME));
 
         List<ParametersSet> modelsParameters = ParametersXml.load(getResourceAsStream("/ieee14/models.par"));
@@ -86,41 +86,34 @@ class DynawoSecurityAnalysisTest extends AbstractDynawoTest {
                         .getResource(criteriaPath)).getPath()));
 
         ReportNode reportNode = ReportNode.newRootReportNode()
-                .withMessageTemplate("root", "Root message")
+                .withMessageTemplate("mc_test", "Margin calculation integration test")
                 .build();
 
-        DynamicSecurityAnalysisRunParameters runParameters = new DynamicSecurityAnalysisRunParameters()
+        MarginCalculationRunParameters runParameters = new MarginCalculationRunParameters()
                 .setComputationManager(computationManager)
-                .setDynamicSecurityAnalysisParameters(parameters)
+                .setMarginCalculationParameters(parameters)
                 .setReportNode(reportNode);
 
-        SecurityAnalysisResult result = provider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID,
-                        dynamicModelsSupplier, n -> contingencies, runParameters)
-                .join()
-                .getResult();
+        LoadsVariationSupplier loadsVariationSupplier = (n, r) -> List.of(
+                new LoadsVariationBuilder(n, r)
+                    .loads("_LOAD___3_EC", "_LOAD___6_EC", "_LOAD___9_EC")
+                    .variationValue(10)
+                    .build());
 
-        StringWriter serializedResult = new StringWriter();
-        SecurityAnalysisResultSerializer.write(result, serializedResult);
-        InputStream expected = Objects.requireNonNull(getClass().getResourceAsStream(resultsPath));
-        ComparisonUtils.assertTxtEquals(expected, serializedResult.toString());
+        List<LoadIncreaseResult> results = provider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID,
+                        dynamicModelsSupplier, n -> contingencies, loadsVariationSupplier, runParameters)
+                .join()
+                .getResults();
+
+        //TODO assert results
+        assertThat(results).isNotEmpty();
     }
 
     private static Stream<Arguments> provideSimulationParameter() {
         return Stream.of(
                 Arguments.of("/ieee14/dynamic-security-analysis/convergence/criteria.crt",
                         List.of(Contingency.line("_BUS____1-BUS____5-1_AC", "_BUS____5_VL"),
-                                Contingency.generator("_GEN____2_SM")),
-                        "/ieee14/dynamic-security-analysis/convergence/results.json"),
-                Arguments.of("/ieee14/dynamic-security-analysis/failed-criteria/criteria.crt",
-                        List.of(Contingency.line("_BUS____1-BUS____5-1_AC", "_BUS____5_VL")),
-                        "/ieee14/dynamic-security-analysis/failed-criteria/results.json"),
-                Arguments.of("/ieee14/dynamic-security-analysis/divergence/criteria.crt",
-                        List.of(Contingency.builder("Disconnect")
-                                .addLine("_BUS____1-BUS____5-1_AC", "_BUS____5_VL")
-                                .addGenerator("_GEN____2_SM")
-                                .addBus("_BUS____1_TN")
-                                .build()),
-                        "/ieee14/dynamic-security-analysis/divergence/results.json")
+                                Contingency.generator("_GEN____2_SM")))
         );
     }
 }

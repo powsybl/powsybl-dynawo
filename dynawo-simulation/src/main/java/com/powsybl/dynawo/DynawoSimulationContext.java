@@ -79,7 +79,6 @@ public class DynawoSimulationContext implements DydDataSupplier {
     public DynawoSimulationContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
                                    List<OutputVariable> outputVariables, DynamicSimulationParameters parameters, DynawoSimulationParameters dynawoSimulationParameters,
                                    Predicate<BlackBoxModel> phase2ModelsPredicate, DynawoVersion currentVersion, ReportNode reportNode) {
-        //TODO change predicate to Identifiable ?
         ReportNode contextReportNode = DynawoSimulationReports.createDynawoSimulationContextReportNode(reportNode);
         DynawoVersion dynawoVersion = Objects.requireNonNull(currentVersion);
         this.network = Objects.requireNonNull(network);

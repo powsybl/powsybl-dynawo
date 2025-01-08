@@ -16,6 +16,7 @@ import com.powsybl.dynamicsimulation.DynamicModelsSupplier;
 import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.DynawoSimulationProvider;
 import com.powsybl.dynawo.commons.DynawoUtil;
+import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.commons.PowsyblDynawoVersion;
 import com.powsybl.dynawo.margincalculation.loadsvariation.supplier.LoadsVariationSupplier;
 import com.powsybl.dynawo.margincalculation.results.MarginCalculationResult;
@@ -61,7 +62,7 @@ public class MarginCalculationProvider implements Versionable {
         ReportNode mcReportNode = MarginCalculationReports.createMarginCalculationReportNode(runParameters.getReportNode(), network.getId());
         network.getVariantManager().setWorkingVariant(workingVariantId);
         ExecutionEnvironment execEnv = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, config.isDebug());
-        DynawoUtil.requireDynaMinVersion(execEnv, runParameters.getComputationManager(), getVersionCommand(config), DYNAWO_LAUNCHER_PROGRAM_NAME, false);
+        DynawoVersion currentVersion = DynawoUtil.requireDynaMinVersion(execEnv, runParameters.getComputationManager(), getVersionCommand(config), DYNAWO_LAUNCHER_PROGRAM_NAME, false);
         MarginCalculationParameters parameters = runParameters.getMarginCalculationParameters();
         MarginCalculationContext context = new MarginCalculationContext(network, workingVariantId,
                 BlackBoxSupplierUtils.getBlackBoxModelList(dynamicModelsSupplier, network, mcReportNode),
@@ -69,7 +70,9 @@ public class MarginCalculationProvider implements Versionable {
                 //TODO fix
                 DynawoSimulationParameters.load(),
                 contingenciesProvider.getContingencies(network),
-                loadsVariationSupplier.getLoadsVariations(network));
+                loadsVariationSupplier.getLoadsVariations(network, mcReportNode),
+                currentVersion,
+                mcReportNode);
 
         return runParameters.getComputationManager().execute(execEnv,
                 new MarginCalculationHandler(context, getCommand(config, "MC", "dynawo_dynamic_mc"), mcReportNode));
