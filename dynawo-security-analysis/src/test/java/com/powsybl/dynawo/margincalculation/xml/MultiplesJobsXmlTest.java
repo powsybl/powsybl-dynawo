@@ -8,7 +8,6 @@
 package com.powsybl.dynawo.margincalculation.xml;
 
 import com.powsybl.contingency.Contingency;
-import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.margincalculation.MarginCalculationContext;
 import com.powsybl.dynawo.margincalculation.MarginCalculationParameters;
 import com.powsybl.dynawo.margincalculation.loadsvariation.LoadsVariation;
@@ -46,12 +45,11 @@ class MultiplesJobsXmlTest extends AbstractDynamicModelXmlTest {
                         .addLine("NHV1_NHV2_1")
                         .addGenerator("GEN2")
                         .build());
-        MarginCalculationParameters parameters = MarginCalculationParameters.builder().build();
-        DynawoSimulationParameters dynawoSimulationParameters = DynawoSimulationParameters.load();
+        MarginCalculationParameters parameters = MarginCalculationParameters.load();
         List<LoadsVariation> loadsVariationList = List.of(
                 new LoadsVariation(List.of(network.getLoad("LOAD"), network.getLoad("LOAD2")), 10));
-        context = new MarginCalculationContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels,
-                parameters, dynawoSimulationParameters, contingencies, loadsVariationList);
+        context = new MarginCalculationContext(network, network.getVariantManager().getWorkingVariantId(),
+                dynamicModels, parameters, contingencies, loadsVariationList);
     }
 
     @Test

@@ -30,7 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-class Phase2HybridXmlTest extends AbstractDynamicModelXmlTest {
+class Phase2TargetedXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void setupNetwork() {
@@ -59,12 +59,13 @@ class Phase2HybridXmlTest extends AbstractDynamicModelXmlTest {
     @Override
     protected void setupDynawoContext() {
         MarginCalculationParameters parameters = MarginCalculationParameters.builder()
-                .setLoadModelsRule(MarginCalculationParameters.LoadModelsRule.HYBRID).build();
-        DynawoSimulationParameters dynawoSimulationParameters = DynawoSimulationParameters.load();
+                .setLoadModelsRule(MarginCalculationParameters.LoadModelsRule.TARGETED_LOADS)
+                .setDynawoParameters(DynawoSimulationParameters.load())
+                .build();
         List<LoadsVariation> loadsVariationList = List.of(
                 new LoadsVariation(List.of(network.getLoad("LOAD2"), network.getLoad("LOAD3")), 30));
-        context = new MarginCalculationContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels,
-                parameters, dynawoSimulationParameters, Collections.emptyList(), loadsVariationList);
+        context = new MarginCalculationContext(network, network.getVariantManager().getWorkingVariantId(),
+                dynamicModels, parameters, Collections.emptyList(), loadsVariationList);
     }
 
     @Test
@@ -72,7 +73,7 @@ class Phase2HybridXmlTest extends AbstractDynamicModelXmlTest {
         DydXml.write(tmpDir, context);
         assertThat(context.getPhase2DydData()).isPresent();
         DydXml.write(tmpDir, PHASE_2_DYD_FILENAME, context.getPhase2DydData().get());
-        validate("dyd.xsd", "phase1_hybrid_dyd.xml", tmpDir.resolve(DYD_FILENAME));
-        validate("dyd.xsd", "phase2_hybrid_dyd.xml", tmpDir.resolve(PHASE_2_DYD_FILENAME));
+        validate("dyd.xsd", "phase1_targeted_dyd.xml", tmpDir.resolve(DYD_FILENAME));
+        validate("dyd.xsd", "phase2_targeted_dyd.xml", tmpDir.resolve(PHASE_2_DYD_FILENAME));
     }
 }

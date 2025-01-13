@@ -9,6 +9,7 @@ package com.powsybl.dynawo.margincalculation;
 
 import com.powsybl.commons.config.ModuleConfig;
 import com.powsybl.commons.config.PlatformConfig;
+import com.powsybl.dynawo.DynawoSimulationParameters;
 
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
@@ -17,7 +18,6 @@ import java.util.Optional;
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-//TODO reuse core parameters ?
 public final class MarginCalculationParameters {
 
     public static final double DEFAULT_START_TIME = 0;
@@ -28,7 +28,7 @@ public final class MarginCalculationParameters {
     public static final double DEFAULT_CONTINGENCIES_START_TIME = 120;
     public static final CalculationType DEFAULT_CALCULATION_TYPE = CalculationType.GLOBAL_MARGIN;
     public static final int DEFAULT_ACCURACY = 2;
-    public static final LoadModelsRule DEFAULT_LOAD_MODELS_RULE = LoadModelsRule.EVERY_MODELS;
+    public static final LoadModelsRule DEFAULT_LOAD_MODELS_RULE = LoadModelsRule.ALL_LOADS;
 
     public enum CalculationType {
         GLOBAL_MARGIN,
@@ -36,18 +36,17 @@ public final class MarginCalculationParameters {
     }
 
     /**
-     * Indicates how to handle loads in the first phase
+     * Indicates how to handle load dynamic models in the first phase
      */
-    //TODO rename
     public enum LoadModelsRule {
         /**
          * Remove every specific loads dynamic models
          */
-        EVERY_MODELS,
+        ALL_LOADS,
         /**
          * Remove dynamic models on loads affected by the margin calculation
          */
-        HYBRID
+        TARGETED_LOADS
     }
 
     public static class Builder {
@@ -61,6 +60,7 @@ public final class MarginCalculationParameters {
         private CalculationType calculationType = DEFAULT_CALCULATION_TYPE;
         private int accuracy = DEFAULT_ACCURACY;
         private LoadModelsRule loadModelsRule = DEFAULT_LOAD_MODELS_RULE;
+        private DynawoSimulationParameters dynawoParameters = new DynawoSimulationParameters();
 
         /**
          * Set dynamic simulation start time, must be greater than 0
@@ -125,6 +125,11 @@ public final class MarginCalculationParameters {
             return this;
         }
 
+        public Builder setDynawoParameters(DynawoSimulationParameters dynawoParameters) {
+            this.dynawoParameters = dynawoParameters;
+            return this;
+        }
+
         public MarginCalculationParameters build() {
             if (startTime < 0) {
                 throw new IllegalStateException("Start time should be zero or positive");
@@ -145,7 +150,7 @@ public final class MarginCalculationParameters {
                 throw new IllegalStateException("Load increase stop time should be between load increase start time and margin calculation start time");
             }
             return new MarginCalculationParameters(startTime, stopTime, marginCalculationStartTime, loadIncreaseStartTime,
-                    loadIncreaseStopTime, contingenciesStartTime, calculationType, accuracy, loadModelsRule);
+                    loadIncreaseStopTime, contingenciesStartTime, calculationType, accuracy, loadModelsRule, dynawoParameters);
         }
     }
 
@@ -184,6 +189,7 @@ public final class MarginCalculationParameters {
             c.getOptionalIntProperty("accuracy").ifPresent(builder::setAccuracy);
             c.getOptionalEnumProperty("loads-models-rule", LoadModelsRule.class).ifPresent(builder::setLoadModelsRule);
         });
+        builder.setDynawoParameters(DynawoSimulationParameters.load(platformConfig, fileSystem));
         return builder.build();
     }
 
@@ -196,8 +202,12 @@ public final class MarginCalculationParameters {
     private final CalculationType calculationType;
     private final int accuracy;
     private final LoadModelsRule loadModelsRule;
+    private final DynawoSimulationParameters dynawoParameters;
 
-    private MarginCalculationParameters(double startTime, double stopTime, double marginCalculationStartTime, double loadIncreaseStartTime, double loadIncreaseStopTime, double contingenciesStartTime, CalculationType calculationType, int accuracy, LoadModelsRule loadModelsRule) {
+    private MarginCalculationParameters(double startTime, double stopTime, double marginCalculationStartTime,
+                                        double loadIncreaseStartTime, double loadIncreaseStopTime,
+                                        double contingenciesStartTime, CalculationType calculationType,
+                                        int accuracy, LoadModelsRule loadModelsRule, DynawoSimulationParameters dynawoParameters) {
         this.startTime = startTime;
         this.stopTime = stopTime;
         this.marginCalculationStartTime = marginCalculationStartTime;
@@ -207,6 +217,7 @@ public final class MarginCalculationParameters {
         this.calculationType = calculationType;
         this.accuracy = accuracy;
         this.loadModelsRule = loadModelsRule;
+        this.dynawoParameters = dynawoParameters;
     }
 
     public double getStartTime() {
@@ -243,5 +254,9 @@ public final class MarginCalculationParameters {
 
     public LoadModelsRule getLoadModelsRule() {
         return loadModelsRule;
+    }
+
+    public DynawoSimulationParameters getDynawoParameters() {
+        return dynawoParameters;
     }
 }

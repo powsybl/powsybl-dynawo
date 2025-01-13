@@ -55,6 +55,7 @@ class MarginCalculationTest extends AbstractDynawoTest {
     void setUp() throws Exception {
         super.setUp();
         provider = new MarginCalculationProvider(new DynawoAlgorithmsConfig(Path.of("/dynaflow-launcher"), true));
+        dynawoSimulationParameters = new DynawoSimulationParameters();
         parameters = MarginCalculationParameters.builder()
                 .setStartTime(0)
                 .setLoadIncreaseStartTime(10)
@@ -62,8 +63,8 @@ class MarginCalculationTest extends AbstractDynawoTest {
                 .setMarginCalculationStartTime(100)
                 .setContingenciesStartTime(110)
                 .setStopTime(200)
+                .setDynawoParameters(dynawoSimulationParameters)
                 .build();
-        dynawoSimulationParameters = new DynawoSimulationParameters();
     }
 
     @ParameterizedTest

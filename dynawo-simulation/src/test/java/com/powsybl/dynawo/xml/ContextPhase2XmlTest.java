@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawo.xml;
 
+import com.powsybl.dynawo.Phase2Config;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.loads.BaseLoadBuilder;
 import com.powsybl.dynawo.models.shunts.BaseShuntBuilder;
@@ -36,7 +37,7 @@ class ContextPhase2XmlTest extends AbstractParametrizedDynamicModelXmlTest {
     void setup(String dydName, String phase2DydName, Predicate<BlackBoxModel> phase2ModelsPredicate) {
         setupNetwork();
         addDynamicModels();
-        setupDynawoContext(phase2ModelsPredicate);
+        setupDynawoContext(new Phase2Config(200, phase2ModelsPredicate));
     }
 
     protected void setupNetwork() {

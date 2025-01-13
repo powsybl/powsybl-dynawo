@@ -7,7 +7,6 @@
  */
 package com.powsybl.dynawo.margincalculation.xml;
 
-import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.margincalculation.MarginCalculationContext;
 import com.powsybl.dynawo.margincalculation.MarginCalculationParameters;
 import com.powsybl.dynawo.margincalculation.loadsvariation.LoadsVariation;
@@ -58,12 +57,11 @@ class Phase2GlobalXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void setupDynawoContext() {
-        MarginCalculationParameters parameters = MarginCalculationParameters.builder().build();
-        DynawoSimulationParameters dynawoSimulationParameters = DynawoSimulationParameters.load();
+        MarginCalculationParameters parameters = MarginCalculationParameters.load();
         List<LoadsVariation> loadsVariationList = List.of(
                 new LoadsVariation(List.of(network.getLoad("LOAD2"), network.getLoad("LOAD3")), 30));
-        context = new MarginCalculationContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels,
-                parameters, dynawoSimulationParameters, Collections.emptyList(), loadsVariationList);
+        context = new MarginCalculationContext(network, network.getVariantManager().getWorkingVariantId(),
+                dynamicModels, parameters, Collections.emptyList(), loadsVariationList);
     }
 
     @Test

@@ -20,8 +20,8 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.powsybl.dynawo.DynawoSimulationConstants.JOBS_FILENAME;
+import static com.powsybl.dynawo.DynawoSimulationConstants.PHASE_2_JOBS_FILENAME;
 import static com.powsybl.dynawo.algorithms.xml.AlgorithmsConstants.MULTIPLE_JOBS_FILENAME;
-import static com.powsybl.dynawo.algorithms.xml.AlgorithmsConstants.PHASE_2_JOBS_FILENAME;
 import static com.powsybl.dynawo.margincalculation.xml.MarginCalculationConstant.LOAD_VARIATION_AREA_FILENAME;
 
 /**

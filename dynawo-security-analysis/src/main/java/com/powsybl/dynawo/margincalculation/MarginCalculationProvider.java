@@ -13,7 +13,6 @@ import com.powsybl.commons.report.ReportNode;
 import com.powsybl.computation.ExecutionEnvironment;
 import com.powsybl.contingency.ContingenciesProvider;
 import com.powsybl.dynamicsimulation.DynamicModelsSupplier;
-import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.DynawoSimulationProvider;
 import com.powsybl.dynawo.commons.DynawoUtil;
 import com.powsybl.dynawo.commons.DynawoVersion;
@@ -35,7 +34,7 @@ import static com.powsybl.dynawo.algorithms.DynawoAlgorithmsCommandUtil.getVersi
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-//TODO add an interface and API
+//TODO add an interface, API and itools command
 public class MarginCalculationProvider implements Versionable {
 
     private static final String WORKING_DIR_PREFIX = "dynawo_mc_";
@@ -67,8 +66,6 @@ public class MarginCalculationProvider implements Versionable {
         MarginCalculationContext context = new MarginCalculationContext(network, workingVariantId,
                 BlackBoxSupplierUtils.getBlackBoxModelList(dynamicModelsSupplier, network, mcReportNode),
                 parameters,
-                //TODO fix
-                DynawoSimulationParameters.load(),
                 contingenciesProvider.getContingencies(network),
                 loadsVariationSupplier.getLoadsVariations(network, mcReportNode),
                 currentVersion,

@@ -11,13 +11,13 @@ import com.powsybl.commons.report.ReportNode;
 import com.powsybl.contingency.Contingency;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawo.DynawoSimulationConstants;
+import com.powsybl.dynawo.Phase2Config;
 import com.powsybl.dynawo.commons.DynawoConstants;
 import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.margincalculation.loadsvariation.LoadVariationAreaAutomationSystem;
 import com.powsybl.dynawo.margincalculation.loadsvariation.LoadsProportionalScalable;
 import com.powsybl.dynawo.margincalculation.loadsvariation.LoadsVariation;
 import com.powsybl.dynawo.DynawoSimulationContext;
-import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.loads.AbstractLoad;
 import com.powsybl.dynawo.models.macroconnections.MacroConnect;
@@ -32,7 +32,6 @@ import com.powsybl.iidm.network.Network;
 
 import java.util.*;
 import java.util.function.BiConsumer;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -49,26 +48,24 @@ public class MarginCalculationContext extends DynawoSimulationContext {
     public MarginCalculationContext(Network network, String workingVariantId,
                                     List<BlackBoxModel> dynamicModels,
                                     MarginCalculationParameters parameters,
-                                    DynawoSimulationParameters dynawoSimulationParameters,
                                     List<Contingency> contingencies,
                                     List<LoadsVariation> loadsVariations) {
-        this(network, workingVariantId, dynamicModels, parameters, dynawoSimulationParameters, contingencies,
+        this(network, workingVariantId, dynamicModels, parameters, contingencies,
                 loadsVariations, DynawoConstants.VERSION_MIN, ReportNode.NO_OP);
     }
 
     public MarginCalculationContext(Network network, String workingVariantId,
                                     List<BlackBoxModel> dynamicModels,
                                     MarginCalculationParameters parameters,
-                                    DynawoSimulationParameters dynawoSimulationParameters,
                                     List<Contingency> contingencies,
                                     List<LoadsVariation> loadsVariations,
                                     DynawoVersion currentVersion,
                                     ReportNode reportNode) {
-        super(network, workingVariantId, dynamicModels, List.of(), Collections.emptyList(),
-                //TODO fix parameters handling
-                new DynamicSimulationParameters(parameters.getStartTime(), parameters.getStopTime()),
-                dynawoSimulationParameters,
-                configurePhase2Predicate(parameters.getLoadModelsRule(), loadsVariations), currentVersion, reportNode);
+        super(network, workingVariantId, dynamicModels, Collections.emptyList(), Collections.emptyList(),
+                new DynamicSimulationParameters(parameters.getStartTime(), parameters.getMarginCalculationStartTime()),
+                parameters.getDynawoParameters(),
+                configurePhase2(parameters, loadsVariations),
+                currentVersion, reportNode);
         this.marginCalculationParameters = parameters;
         double contingenciesStartTime = parameters.getContingenciesStartTime();
         this.contingencyEventModels = ContingencyEventModelsFactory
@@ -117,16 +114,16 @@ public class MarginCalculationContext extends DynawoSimulationContext {
         };
     }
 
-    private static Predicate<BlackBoxModel> configurePhase2Predicate(MarginCalculationParameters.LoadModelsRule rule,
-                                                                     List<LoadsVariation> loadsVariations) {
-        return switch (rule) {
-            case EVERY_MODELS -> AbstractLoad.class::isInstance;
-            case HYBRID -> {
+    private static Phase2Config configurePhase2(MarginCalculationParameters parameters, List<LoadsVariation> loadsVariations) {
+        return switch (parameters.getLoadModelsRule()) {
+            case ALL_LOADS -> new Phase2Config(parameters.getStopTime(), AbstractLoad.class::isInstance);
+            case TARGETED_LOADS -> {
                 Set<String> loadIds = loadsVariations.stream()
                         .flatMap(l -> l.loads().stream())
                         .map(Identifiable::getId)
                         .collect(Collectors.toSet());
-                yield bbm -> bbm instanceof AbstractLoad eBbm && loadIds.contains(eBbm.getStaticId());
+                yield new Phase2Config(parameters.getStopTime(),
+                        bbm -> bbm instanceof AbstractLoad eBbm && loadIds.contains(eBbm.getStaticId()));
             }
         };
     }

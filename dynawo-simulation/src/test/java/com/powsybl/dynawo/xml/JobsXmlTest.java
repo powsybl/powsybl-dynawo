@@ -8,10 +8,7 @@ package com.powsybl.dynawo.xml;
 
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
-import com.powsybl.dynawo.DumpFileParameters;
-import com.powsybl.dynawo.DynawoSimulationConstants;
-import com.powsybl.dynawo.DynawoSimulationContext;
-import com.powsybl.dynawo.DynawoSimulationParameters;
+import com.powsybl.dynawo.*;
 import com.powsybl.dynawo.commons.DynawoConstants;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -54,10 +51,9 @@ class JobsXmlTest extends DynawoTestUtil {
     void writeJobWithPhase2() throws SAXException, IOException {
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load();
-        //TODO wrap start/stop time in context (use phase2 Config with predicate + stop time 2)
         DynawoSimulationContext context = new DynawoSimulationContext(network, network.getVariantManager().getWorkingVariantId(),
                 dynamicModels, eventModels, outputVariables, parameters, dynawoParameters,
-                bbm -> bbm.getDynamicModelId().equalsIgnoreCase("BBM_LOAD2"),
+                new Phase2Config(200, bbm -> bbm.getDynamicModelId().equalsIgnoreCase("BBM_LOAD2")),
                 DynawoConstants.VERSION_MIN, ReportNode.NO_OP);
 
         JobsXml.writePhase2(tmpDir, context);

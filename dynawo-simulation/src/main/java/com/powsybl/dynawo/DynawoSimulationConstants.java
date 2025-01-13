@@ -33,8 +33,9 @@ public final class DynawoSimulationConstants {
 
     public static final String LOGS_FILENAME = "dynawo.log";
 
-    // TODO use it in dyna algo ?
     public static final String PHASE_2_DYD_FILENAME = "phase_2_powsybl_dynawo.dyd";
+
+    public static final String PHASE_2_JOBS_FILENAME = "phase_2.jobs";
 
     private DynawoSimulationConstants() {
     }

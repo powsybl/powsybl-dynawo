@@ -6,7 +6,6 @@
  */
 package com.powsybl.dynawo.xml;
 
-import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawo.DumpFileParameters;
 import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.DynawoSimulationParameters;
@@ -33,21 +32,17 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter<DynawoSimul
     private static final String EXPORT_MODE = "exportMode";
     private final boolean isPhase2;
 
-    private JobsXml() {
-        this(false);
-    }
-
-    private JobsXml(boolean isPhase2) {
-        super(JOBS_FILENAME, "jobs");
+    private JobsXml(String xmlFileName, boolean isPhase2) {
+        super(xmlFileName, "jobs");
         this.isPhase2 = isPhase2;
     }
 
     public static void write(Path workingDir, DynawoSimulationContext context) throws IOException {
-        new JobsXml().createXmlFileFromDataSupplier(workingDir, context);
+        new JobsXml(JOBS_FILENAME, false).createXmlFileFromDataSupplier(workingDir, context);
     }
 
     public static void writePhase2(Path workingDir, DynawoSimulationContext context) throws IOException {
-        new JobsXml(true).createXmlFileFromDataSupplier(workingDir, context);
+        new JobsXml(PHASE_2_JOBS_FILENAME, true).createXmlFileFromDataSupplier(workingDir, context);
     }
 
     @Override
@@ -57,7 +52,7 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter<DynawoSimul
         writer.writeAttribute("name", "Job");
         writeSolver(writer, parameters);
         writeModeler(writer, parameters, isPhase2 && context.getPhase2DydData().isPresent());
-        writeSimulation(writer, parameters, context.getParameters());
+        writeSimulation(writer, parameters, context.getStartTime(isPhase2), context.getStopTime(isPhase2));
         writeOutput(writer, context);
         writer.writeEndElement();
     }
@@ -100,15 +95,15 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter<DynawoSimul
         writer.writeEndElement();
     }
 
-    private static void writeSimulation(XMLStreamWriter writer, DynawoSimulationParameters parameters, DynamicSimulationParameters dynamicSimulationParameters) throws XMLStreamException {
+    private static void writeSimulation(XMLStreamWriter writer, DynawoSimulationParameters parameters, double startTime, double stopTime) throws XMLStreamException {
         Optional<String> criteriaFileName = parameters.getCriteriaFileName();
         if (criteriaFileName.isPresent()) {
             writer.writeStartElement(DYN_URI, "simulation");
         } else {
             writer.writeEmptyElement(DYN_URI, "simulation");
         }
-        writer.writeAttribute("startTime", Double.toString(dynamicSimulationParameters.getStartTime()));
-        writer.writeAttribute("stopTime", Double.toString(dynamicSimulationParameters.getStopTime()));
+        writer.writeAttribute("startTime", Double.toString(startTime));
+        writer.writeAttribute("stopTime", Double.toString(stopTime));
         writer.writeAttribute("precision", Double.toString(parameters.getPrecision()));
         if (criteriaFileName.isPresent()) {
             writer.writeEmptyElement(DYN_URI, "criteria");

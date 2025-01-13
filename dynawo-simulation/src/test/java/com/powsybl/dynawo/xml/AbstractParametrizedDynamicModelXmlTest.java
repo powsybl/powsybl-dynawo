@@ -14,6 +14,7 @@ import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynamicsimulation.OutputVariable;
 import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.DynawoSimulationParameters;
+import com.powsybl.dynawo.Phase2Config;
 import com.powsybl.dynawo.commons.DynawoConstants;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.iidm.network.Network;
@@ -33,7 +34,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Predicate;
 
 import static com.powsybl.commons.test.ComparisonUtils.assertTxtEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -66,10 +66,11 @@ public abstract class AbstractParametrizedDynamicModelXmlTest extends AbstractSe
         setupDynawoContext(null);
     }
 
-    protected void setupDynawoContext(Predicate<BlackBoxModel> phase2ModelsPredicate) {
+    protected void setupDynawoContext(Phase2Config phase2Config) {
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load();
-        context = new DynawoSimulationContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, eventModels, outputVariables, parameters, dynawoParameters, phase2ModelsPredicate, DynawoConstants.VERSION_MIN, reportNode);
+        context = new DynawoSimulationContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels,
+                eventModels, outputVariables, parameters, dynawoParameters, phase2Config, DynawoConstants.VERSION_MIN, reportNode);
     }
 
     protected void checkReport(String report) throws IOException {

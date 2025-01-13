@@ -63,6 +63,7 @@ public class DynawoSimulationContext implements DydDataSupplier {
     private final FrequencySynchronizerModel frequencySynchronizer;
     private final List<ParametersSet> dynamicModelsParameters = new ArrayList<>();
     protected final MacroConnectionsAdder macroConnectionsAdder;
+    private final Phase2Config phase2Config;
     private Phase2Models phase2Models;
 
     public DynawoSimulationContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
@@ -78,13 +79,14 @@ public class DynawoSimulationContext implements DydDataSupplier {
 
     public DynawoSimulationContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
                                    List<OutputVariable> outputVariables, DynamicSimulationParameters parameters, DynawoSimulationParameters dynawoSimulationParameters,
-                                   Predicate<BlackBoxModel> phase2ModelsPredicate, DynawoVersion currentVersion, ReportNode reportNode) {
+                                   Phase2Config phase2Config, DynawoVersion currentVersion, ReportNode reportNode) {
         ReportNode contextReportNode = DynawoSimulationReports.createDynawoSimulationContextReportNode(reportNode);
         DynawoVersion dynawoVersion = Objects.requireNonNull(currentVersion);
         this.network = Objects.requireNonNull(network);
         this.workingVariantId = Objects.requireNonNull(workingVariantId);
         this.parameters = Objects.requireNonNull(parameters);
         this.dynawoSimulationParameters = Objects.requireNonNull(dynawoSimulationParameters);
+        this.phase2Config = phase2Config;
 
         Stream<BlackBoxModel> uniqueIdsDynamicModels = Objects.requireNonNull(dynamicModels).stream()
                 .filter(distinctByDynamicId(contextReportNode)
@@ -95,8 +97,8 @@ public class DynawoSimulationContext implements DydDataSupplier {
         }
 
         List<BlackBoxModel> phase2DynamicModels = List.of();
-        if (phase2ModelsPredicate != null) {
-            Map<Boolean, List<BlackBoxModel>> splitModels = uniqueIdsDynamicModels.collect(Collectors.partitioningBy(phase2ModelsPredicate));
+        if (phase2Config != null) {
+            Map<Boolean, List<BlackBoxModel>> splitModels = uniqueIdsDynamicModels.collect(Collectors.partitioningBy(phase2Config.phase2ModelsPredicate()));
             this.dynamicModels = splitModels.get(false);
             phase2DynamicModels = splitModels.get(true);
         } else {
@@ -192,8 +194,12 @@ public class DynawoSimulationContext implements DydDataSupplier {
         return workingVariantId;
     }
 
-    public DynamicSimulationParameters getParameters() {
-        return parameters;
+    public double getStartTime(boolean isPhase2) {
+        return isPhase2 ? parameters.getStopTime() : parameters.getStartTime();
+    }
+
+    public double getStopTime(boolean isPhase2) {
+        return isPhase2 ? phase2Config.phase2stopTime() : parameters.getStopTime();
     }
 
     public DynawoSimulationParameters getDynawoSimulationParameters() {
