@@ -7,25 +7,17 @@
  */
 package com.powsybl.dynaflow.results;
 
-import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
 import com.powsybl.commons.xml.XmlUtil;
-import com.powsybl.dynawo.commons.AbstractXmlParser;
 
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Consumer;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public final class XmlScenarioResultParser extends AbstractXmlParser<ScenarioResult> {
-
-    private static final String STATUS = "status";
-    private static final String ID = "id";
-    private static final String TIME = "time";
+public final class XmlScenarioResultParser extends AbstractXmlAggregatedResultParser<ScenarioResult> {
 
     @Override
     protected void read(XMLStreamReader xmlReader, Consumer<ScenarioResult> consumer) throws XMLStreamException {
@@ -34,28 +26,5 @@ public final class XmlScenarioResultParser extends AbstractXmlParser<ScenarioRes
             state = xmlReader.next();
         }
         XmlUtil.readSubElements(xmlReader, elementName -> readScenarioResult(elementName, xmlReader, consumer));
-    }
-
-    public static void readScenarioResult(String elementName, XMLStreamReader xmlReader, Consumer<ScenarioResult> scenarioConsumer) {
-        if (elementName.equals("scenarioResults")) {
-            String id = xmlReader.getAttributeValue(null, ID);
-            String status = xmlReader.getAttributeValue(null, STATUS);
-            List<FailedCriterion> failedCriteria = new ArrayList<>();
-            XmlUtil.readSubElements(xmlReader, subElementName -> readFailedCriterion(subElementName, xmlReader, failedCriteria::add));
-            ResultsUtil.createScenarioResult(id, status, failedCriteria).ifPresent(scenarioConsumer);
-        }
-    }
-
-    public static void readFailedCriterion(String elementName, XMLStreamReader xmlReader, Consumer<FailedCriterion> resultConsumer) {
-        try {
-            if (elementName.equals("criterionNonRespected")) {
-                String description = xmlReader.getAttributeValue(null, ID);
-                String time = xmlReader.getAttributeValue(null, TIME);
-                XmlUtil.readEndElementOrThrow(xmlReader);
-                ResultsUtil.createFailedCriterion(description, time).ifPresent(resultConsumer);
-            }
-        } catch (XMLStreamException e) {
-            throw new UncheckedXmlStreamException(e);
-        }
     }
 }

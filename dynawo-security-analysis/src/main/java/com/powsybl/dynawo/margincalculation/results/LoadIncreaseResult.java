@@ -20,6 +20,10 @@ import java.util.List;
 public record LoadIncreaseResult(double loadLevel, Status status,
                                  List<ScenarioResult> scenarioResults, List<FailedCriterion> failedCriteria) {
 
+    public LoadIncreaseResult(double loadLevel, Status status, List<ScenarioResult> scenarioResults) {
+        this(loadLevel, status, scenarioResults, Collections.emptyList());
+    }
+
     public LoadIncreaseResult(double loadLevel, Status status) {
         this(loadLevel, status, Collections.emptyList(), Collections.emptyList());
     }

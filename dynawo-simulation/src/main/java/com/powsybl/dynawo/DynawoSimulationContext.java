@@ -348,7 +348,6 @@ public class DynawoSimulationContext implements DydDataSupplier {
         return dynamicModelsParameters;
     }
 
-    //TODO remove ?
     public String getSimulationParFile() {
         return getNetwork().getId() + ".par";
     }

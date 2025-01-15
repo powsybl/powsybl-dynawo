@@ -48,7 +48,7 @@ class JobsXmlTest extends DynawoTestUtil {
     }
 
     @Test
-    void writeJobWithPhase2() throws SAXException, IOException {
+    void writePhase2Job() throws SAXException, IOException {
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load();
         DynawoSimulationContext context = new DynawoSimulationContext(network, network.getVariantManager().getWorkingVariantId(),
@@ -57,6 +57,6 @@ class JobsXmlTest extends DynawoTestUtil {
                 DynawoConstants.VERSION_MIN, ReportNode.NO_OP);
 
         JobsXml.writePhase2(tmpDir, context);
-        validate("jobs.xsd", "jobsWithPhase2.xml", tmpDir.resolve(DynawoSimulationConstants.JOBS_FILENAME));
+        validate("jobs.xsd", "jobsWithPhase2.xml", tmpDir.resolve(DynawoSimulationConstants.PHASE_2_JOBS_FILENAME));
     }
 }

@@ -20,7 +20,6 @@ import static com.powsybl.dynaflow.results.Status.CRITERIA_NON_RESPECTED;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-//TODO move results and factorize with load margin results
 public final class ResultsUtil {
 
     private ResultsUtil() {

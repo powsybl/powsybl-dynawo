@@ -7,11 +7,10 @@
  */
 package com.powsybl.dynawo.margincalculation.results;
 
-import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
 import com.powsybl.commons.xml.XmlUtil;
+import com.powsybl.dynaflow.results.AbstractXmlAggregatedResultParser;
 import com.powsybl.dynaflow.results.FailedCriterion;
 import com.powsybl.dynaflow.results.ScenarioResult;
-import com.powsybl.dynawo.commons.AbstractXmlParser;
 
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
@@ -20,18 +19,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import static com.powsybl.dynaflow.results.ResultsUtil.createFailedCriterion;
-import static com.powsybl.dynaflow.results.ResultsUtil.createScenarioResult;
-
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public final class XmlMarginCalculationResultParser extends AbstractXmlParser<LoadIncreaseResult> {
+public final class XmlMarginCalculationResultParser extends AbstractXmlAggregatedResultParser<LoadIncreaseResult> {
 
     private static final String LOAD_LEVEL = "loadLevel";
-    private static final String STATUS = "status";
-    private static final String ID = "id";
-    private static final String TIME = "time";
 
     @Override
     protected void read(XMLStreamReader xmlReader, Consumer<LoadIncreaseResult> consumer) throws XMLStreamException {
@@ -54,28 +47,8 @@ public final class XmlMarginCalculationResultParser extends AbstractXmlParser<Lo
     }
 
     private static void readLoadIncreaseResultSubElements(String elementName, XMLStreamReader xmlReader, Consumer<ScenarioResult> scenarioConsumer, Consumer<FailedCriterion> criterionConsumer) {
-        if (elementName.equals("scenarioResults")) {
-            String id = xmlReader.getAttributeValue(null, ID);
-            String status = xmlReader.getAttributeValue(null, STATUS);
-            List<FailedCriterion> failedCriteria = new ArrayList<>();
-            XmlUtil.readSubElements(xmlReader, subElementName -> readFailedCriterion(subElementName, xmlReader, failedCriteria::add));
-            createScenarioResult(id, status, failedCriteria).ifPresent(scenarioConsumer);
-        } else {
+        if (!readScenarioResult(elementName, xmlReader, scenarioConsumer)) {
             readFailedCriterion(elementName, xmlReader, criterionConsumer);
-        }
-    }
-
-    //TODO factorize
-    private static void readFailedCriterion(String elementName, XMLStreamReader xmlReader, Consumer<FailedCriterion> resultConsumer) {
-        try {
-            if (elementName.equals("criterionNonRespected")) {
-                String message = xmlReader.getAttributeValue(null, ID);
-                String time = xmlReader.getAttributeValue(null, TIME);
-                XmlUtil.readEndElementOrThrow(xmlReader);
-                createFailedCriterion(message, time).ifPresent(resultConsumer);
-            }
-        } catch (XMLStreamException e) {
-            throw new UncheckedXmlStreamException(e);
         }
     }
 }

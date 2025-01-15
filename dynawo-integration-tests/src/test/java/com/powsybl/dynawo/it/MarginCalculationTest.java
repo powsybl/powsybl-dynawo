@@ -10,6 +10,8 @@ import com.powsybl.commons.datasource.ResourceDataSource;
 import com.powsybl.commons.datasource.ResourceSet;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.contingency.Contingency;
+import com.powsybl.dynaflow.results.ScenarioResult;
+import com.powsybl.dynaflow.results.Status;
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension;
 import com.powsybl.dynamicsimulation.groovy.GroovyDynamicModelsSupplier;
 import com.powsybl.dynamicsimulation.groovy.GroovyExtension;
@@ -31,7 +33,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
@@ -69,7 +70,7 @@ class MarginCalculationTest extends AbstractDynawoTest {
 
     @ParameterizedTest
     @MethodSource("provideSimulationParameter")
-    void testIeee14MC(String criteriaPath, List<Contingency> contingencies) throws IOException {
+    void testIeee14MC(String criteriaPath, List<Contingency> contingencies) {
         Network network = Network.read(new ResourceDataSource("IEEE14", new ResourceSet("/ieee14", "IEEE14.iidm")));
 
         GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
@@ -106,8 +107,17 @@ class MarginCalculationTest extends AbstractDynawoTest {
                 .join()
                 .getResults();
 
-        //TODO assert results
-        assertThat(results).isNotEmpty();
+        List<ScenarioResult> expectedResults = contingencies.stream()
+                .map(c -> new ScenarioResult(c.getId(), Status.CONVERGENCE))
+                .toList();
+        assertThat(results).containsExactly(
+                new LoadIncreaseResult(0, Status.CONVERGENCE, expectedResults),
+                new LoadIncreaseResult(50, Status.CONVERGENCE, expectedResults),
+                new LoadIncreaseResult(75, Status.CONVERGENCE, expectedResults),
+                new LoadIncreaseResult(88, Status.CONVERGENCE, expectedResults),
+                new LoadIncreaseResult(94, Status.CONVERGENCE, expectedResults),
+                new LoadIncreaseResult(97, Status.CONVERGENCE, expectedResults),
+                new LoadIncreaseResult(99, Status.CONVERGENCE, expectedResults));
     }
 
     private static Stream<Arguments> provideSimulationParameter() {

@@ -71,8 +71,7 @@ class DynawoSecurityAnalysisTest extends AbstractDynawoTest {
         Network network = Network.read(new ResourceDataSource("IEEE14", new ResourceSet("/ieee14", "IEEE14.iidm")));
 
         GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
-                //TODO use the MC groovyscript
-                getResourceAsStream("/ieee14/dynamic-security-analysis/dynamicModels.groovy"),
+                getResourceAsStream("/ieee14/dynamicModels.groovy"),
                 GroovyExtension.find(DynamicModelGroovyExtension.class, DynawoSimulationProvider.NAME));
 
         List<ParametersSet> modelsParameters = ParametersXml.load(getResourceAsStream("/ieee14/models.par"));

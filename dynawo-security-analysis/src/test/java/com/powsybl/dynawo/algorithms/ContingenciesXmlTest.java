@@ -25,7 +25,6 @@ import java.util.List;
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-//TODO replace SecurityAnalysisContext
 class ContingenciesXmlTest extends DynawoTestUtil {
 
     @Test
@@ -49,5 +48,4 @@ class ContingenciesXmlTest extends DynawoTestUtil {
         validate("parameters.xsd", "LOAD_par.xml", tmpDir.resolve("LOAD.par"));
         validate("parameters.xsd", "DisconnectLineGenerator_par.xml", tmpDir.resolve("DisconnectLineGenerator.par"));
     }
-
 }
