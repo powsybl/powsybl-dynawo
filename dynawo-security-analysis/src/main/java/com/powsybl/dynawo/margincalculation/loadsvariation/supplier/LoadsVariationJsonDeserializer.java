@@ -13,7 +13,9 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.powsybl.commons.json.JsonUtil;
 import com.powsybl.dynawo.margincalculation.loadsvariation.LoadsVariation;
 import com.powsybl.dynawo.margincalculation.loadsvariation.LoadsVariationBuilder;
+import com.powsybl.dynawo.suppliers.SupplierJsonDeserializer;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;

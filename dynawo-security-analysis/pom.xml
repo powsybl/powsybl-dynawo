@@ -35,6 +35,10 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>powsybl-dynaflow</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.powsybl</groupId>
+            <artifactId>powsybl-contingency-dsl</artifactId>
+        </dependency>
 
         <!-- Test dependencies -->
         <dependency>

@@ -18,6 +18,7 @@ import java.util.Optional;
 public class MarginCalculationResult {
 
     private final List<LoadIncreaseResult> loadIncreaseResults;
+    //TODO remove ?
     private byte[] logBytes;
 
     public static MarginCalculationResult empty() {

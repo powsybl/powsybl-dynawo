@@ -34,7 +34,6 @@ import static com.powsybl.dynawo.algorithms.DynawoAlgorithmsCommandUtil.getVersi
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-//TODO add an interface, API and itools command
 public class MarginCalculationProvider implements Versionable {
 
     private static final String WORKING_DIR_PREFIX = "dynawo_mc_";

@@ -131,6 +131,7 @@ public final class MarginCalculationParameters {
         }
 
         public MarginCalculationParameters build() {
+            //TODO add values to exception
             if (startTime < 0) {
                 throw new IllegalStateException("Start time should be zero or positive");
             }
@@ -187,7 +188,7 @@ public final class MarginCalculationParameters {
             c.getOptionalDoubleProperty("contingencies-start-time").ifPresent(builder::setContingenciesStartTime);
             c.getOptionalEnumProperty("calculation-type", CalculationType.class).ifPresent(builder::setCalculationType);
             c.getOptionalIntProperty("accuracy").ifPresent(builder::setAccuracy);
-            c.getOptionalEnumProperty("loads-models-rule", LoadModelsRule.class).ifPresent(builder::setLoadModelsRule);
+            c.getOptionalEnumProperty("load-models-rule", LoadModelsRule.class).ifPresent(builder::setLoadModelsRule);
         });
         builder.setDynawoParameters(DynawoSimulationParameters.load(platformConfig, fileSystem));
         return builder.build();

@@ -102,6 +102,10 @@ public final class MarginCalculation {
         }
     }
 
+    public static Runner getRunner() {
+        return new Runner();
+    }
+
     public static CompletableFuture<MarginCalculationResult> runAsync(Network network, String workingVariantId,
                                                                DynamicModelsSupplier dynamicModelsSupplier,
                                                                ContingenciesProvider contingenciesProvider,
