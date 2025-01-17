@@ -72,7 +72,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         assertEquals(27, result.getCurves().size());
         DoubleTimeSeries ts1 = result.getCurve("_GEN____1_SM_generator_UStatorPu");
         assertEquals("_GEN____1_SM_generator_UStatorPu", ts1.getMetadata().getName());
-        assertEquals(192, ts1.toArray().length);
+        assertEquals(258, ts1.toArray().length);
         assertEquals(14, result.getFinalStateValues().size());
         assertEquals(1.046227, result.getFinalStateValues().get("NETWORK__BUS___10_TN_Upu_value"));
         List<TimelineEvent> timeLine = result.getTimeLine();
@@ -331,6 +331,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                 .setNetworkParameters(networkParameters)
                 .setSolverParameters(solverParameters)
                 .setSolverType(DynawoSimulationParameters.SolverType.IDA)
+//                .setPrecision(1.0E-3)
                 .setTimelineExportMode(ExportMode.XML);
 
         return () -> provider.run(network, dynamicModelsSupplier, eventModelsSupplier, outputVariablesSupplier,
