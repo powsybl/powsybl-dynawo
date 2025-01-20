@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.powsybl.dynawo.DynawoSimulationConstants.JOBS_FILENAME;
-import static com.powsybl.dynawo.DynawoSimulationConstants.PHASE_2_JOBS_FILENAME;
+import static com.powsybl.dynawo.DynawoSimulationConstants.FINAL_STEP_JOBS_FILENAME;
 import static com.powsybl.dynawo.algorithms.xml.AlgorithmsConstants.MULTIPLE_JOBS_FILENAME;
 import static com.powsybl.dynawo.margincalculation.xml.MarginCalculationConstant.LOAD_VARIATION_AREA_FILENAME;
 
@@ -56,7 +56,7 @@ public final class MultipleJobsXml {
 
     private static void writeScenarios(XMLStreamWriter writer, List<ContingencyEventModels> models) throws XMLStreamException {
         writer.writeStartElement("scenarios");
-        writer.writeAttribute("jobsFile", PHASE_2_JOBS_FILENAME);
+        writer.writeAttribute("jobsFile", FINAL_STEP_JOBS_FILENAME);
         for (ContingencyEventModels model : models) {
             writeScenario(writer, model.getId());
         }

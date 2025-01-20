@@ -48,15 +48,15 @@ class JobsXmlTest extends DynawoTestUtil {
     }
 
     @Test
-    void writePhase2Job() throws SAXException, IOException {
+    void writeFinalStepJob() throws SAXException, IOException {
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load();
         DynawoSimulationContext context = new DynawoSimulationContext(network, network.getVariantManager().getWorkingVariantId(),
                 dynamicModels, eventModels, outputVariables, parameters, dynawoParameters,
-                new Phase2Config(200, bbm -> bbm.getDynamicModelId().equalsIgnoreCase("BBM_LOAD2")),
+                new FinalStepConfig(200, bbm -> bbm.getDynamicModelId().equalsIgnoreCase("BBM_LOAD2")),
                 DynawoConstants.VERSION_MIN, ReportNode.NO_OP);
 
-        JobsXml.writePhase2(tmpDir, context);
-        validate("jobs.xsd", "jobsWithPhase2.xml", tmpDir.resolve(DynawoSimulationConstants.PHASE_2_JOBS_FILENAME));
+        JobsXml.writeFinalStep(tmpDir, context);
+        validate("jobs.xsd", "jobsWithFinalStep.xml", tmpDir.resolve(DynawoSimulationConstants.FINAL_STEP_JOBS_FILENAME));
     }
 }

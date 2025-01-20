@@ -63,8 +63,8 @@ public class DynawoSimulationContext implements DydDataSupplier {
     private final FrequencySynchronizerModel frequencySynchronizer;
     private final List<ParametersSet> dynamicModelsParameters = new ArrayList<>();
     protected final MacroConnectionsAdder macroConnectionsAdder;
-    private final Phase2Config phase2Config;
-    private Phase2Models phase2Models;
+    private final FinalStepConfig finalStepConfig;
+    private FinalStepModels finalStepModels;
 
     public DynawoSimulationContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
                                    List<OutputVariable> outputVariables, DynamicSimulationParameters parameters, DynawoSimulationParameters dynawoSimulationParameters,
@@ -79,14 +79,14 @@ public class DynawoSimulationContext implements DydDataSupplier {
 
     public DynawoSimulationContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
                                    List<OutputVariable> outputVariables, DynamicSimulationParameters parameters, DynawoSimulationParameters dynawoSimulationParameters,
-                                   Phase2Config phase2Config, DynawoVersion currentVersion, ReportNode reportNode) {
+                                   FinalStepConfig finalStepConfig, DynawoVersion currentVersion, ReportNode reportNode) {
         ReportNode contextReportNode = DynawoSimulationReports.createDynawoSimulationContextReportNode(reportNode);
         DynawoVersion dynawoVersion = Objects.requireNonNull(currentVersion);
         this.network = Objects.requireNonNull(network);
         this.workingVariantId = Objects.requireNonNull(workingVariantId);
         this.parameters = Objects.requireNonNull(parameters);
         this.dynawoSimulationParameters = Objects.requireNonNull(dynawoSimulationParameters);
-        this.phase2Config = phase2Config;
+        this.finalStepConfig = finalStepConfig;
 
         Stream<BlackBoxModel> uniqueIdsDynamicModels = Objects.requireNonNull(dynamicModels).stream()
                 .filter(distinctByDynamicId(contextReportNode)
@@ -96,11 +96,11 @@ public class DynawoSimulationContext implements DydDataSupplier {
             uniqueIdsDynamicModels = simplifyModels(uniqueIdsDynamicModels, contextReportNode);
         }
 
-        List<BlackBoxModel> phase2DynamicModels = List.of();
-        if (phase2Config != null) {
-            Map<Boolean, List<BlackBoxModel>> splitModels = uniqueIdsDynamicModels.collect(Collectors.partitioningBy(phase2Config.phase2ModelsPredicate()));
+        List<BlackBoxModel> finalStepDynamicModels = List.of();
+        if (finalStepConfig != null) {
+            Map<Boolean, List<BlackBoxModel>> splitModels = uniqueIdsDynamicModels.collect(Collectors.partitioningBy(finalStepConfig.modelsPredicate()));
             this.dynamicModels = splitModels.get(false);
-            phase2DynamicModels = splitModels.get(true);
+            finalStepDynamicModels = splitModels.get(true);
         } else {
             this.dynamicModels = uniqueIdsDynamicModels.toList();
         }
@@ -143,12 +143,12 @@ public class DynawoSimulationContext implements DydDataSupplier {
             bbem.createNetworkParameter(networkParameters);
         }
 
-        // Write phase 2 macro connections
-        if (!phase2DynamicModels.isEmpty()) {
-            phase2Models = new Phase2Models(phase2DynamicModels, macroConnectionsAdder,
+        // Write final step macro connections
+        if (!finalStepDynamicModels.isEmpty()) {
+            finalStepModels = new FinalStepModels(finalStepDynamicModels, macroConnectionsAdder,
                     bbm -> !macroStaticReferences.containsKey(bbm.getName()),
                     n -> !macroConnectorsMap.containsKey(n));
-            phase2Models.getBlackBoxDynamicModels().forEach(bbm -> bbm.createDynamicModelParameters(this, dynamicModelsParameters::add));
+            finalStepModels.getBlackBoxDynamicModels().forEach(bbm -> bbm.createDynamicModelParameters(this, dynamicModelsParameters::add));
         }
     }
 
@@ -194,12 +194,12 @@ public class DynawoSimulationContext implements DydDataSupplier {
         return workingVariantId;
     }
 
-    public double getStartTime(boolean isPhase2) {
-        return isPhase2 ? parameters.getStopTime() : parameters.getStartTime();
+    public double getStartTime(boolean isFinalStep) {
+        return isFinalStep ? parameters.getStopTime() : parameters.getStartTime();
     }
 
-    public double getStopTime(boolean isPhase2) {
-        return isPhase2 ? phase2Config.phase2stopTime() : parameters.getStopTime();
+    public double getStopTime(boolean isFinalStep) {
+        return isFinalStep ? finalStepConfig.stopTime() : parameters.getStopTime();
     }
 
     public DynawoSimulationParameters getDynawoSimulationParameters() {
@@ -352,7 +352,7 @@ public class DynawoSimulationContext implements DydDataSupplier {
         return getNetwork().getId() + ".par";
     }
 
-    public Optional<DydDataSupplier> getPhase2DydData() {
-        return Optional.ofNullable(phase2Models);
+    public Optional<DydDataSupplier> getFinalStepDydData() {
+        return Optional.ofNullable(finalStepModels);
     }
 }

@@ -14,7 +14,7 @@ import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynamicsimulation.OutputVariable;
 import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.DynawoSimulationParameters;
-import com.powsybl.dynawo.Phase2Config;
+import com.powsybl.dynawo.FinalStepConfig;
 import com.powsybl.dynawo.commons.DynawoConstants;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.iidm.network.Network;
@@ -66,11 +66,11 @@ public abstract class AbstractParametrizedDynamicModelXmlTest extends AbstractSe
         setupDynawoContext(null);
     }
 
-    protected void setupDynawoContext(Phase2Config phase2Config) {
+    protected void setupDynawoContext(FinalStepConfig finalStepConfig) {
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load();
         context = new DynawoSimulationContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels,
-                eventModels, outputVariables, parameters, dynawoParameters, phase2Config, DynawoConstants.VERSION_MIN, reportNode);
+                eventModels, outputVariables, parameters, dynawoParameters, finalStepConfig, DynawoConstants.VERSION_MIN, reportNode);
     }
 
     protected void checkReport(String report) throws IOException {

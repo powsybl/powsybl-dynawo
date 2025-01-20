@@ -23,13 +23,13 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.powsybl.dynawo.DynawoSimulationConstants.DYD_FILENAME;
-import static com.powsybl.dynawo.DynawoSimulationConstants.PHASE_2_DYD_FILENAME;
+import static com.powsybl.dynawo.DynawoSimulationConstants.FINAL_STEP_DYD_FILENAME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-class Phase2GlobalXmlTest extends AbstractDynamicModelXmlTest {
+class FinalStepGlobalXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void setupNetwork() {
@@ -67,9 +67,9 @@ class Phase2GlobalXmlTest extends AbstractDynamicModelXmlTest {
     @Test
     void writeDyd() throws SAXException, IOException {
         DydXml.write(tmpDir, context);
-        assertThat(context.getPhase2DydData()).isPresent();
-        DydXml.write(tmpDir, PHASE_2_DYD_FILENAME, context.getPhase2DydData().get());
-        validate("dyd.xsd", "phase1_global_dyd.xml", tmpDir.resolve(DYD_FILENAME));
-        validate("dyd.xsd", "phase2_global_dyd.xml", tmpDir.resolve(PHASE_2_DYD_FILENAME));
+        assertThat(context.getFinalStepDydData()).isPresent();
+        DydXml.write(tmpDir, FINAL_STEP_DYD_FILENAME, context.getFinalStepDydData().get());
+        validate("dyd.xsd", "first_step_global_dyd.xml", tmpDir.resolve(DYD_FILENAME));
+        validate("dyd.xsd", "final_step_global_dyd.xml", tmpDir.resolve(FINAL_STEP_DYD_FILENAME));
     }
 }

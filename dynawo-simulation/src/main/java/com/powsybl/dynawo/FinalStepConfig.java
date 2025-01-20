@@ -12,10 +12,10 @@ import com.powsybl.dynawo.models.BlackBoxModel;
 import java.util.function.Predicate;
 
 /**
- * Configures the dynamic simulation phase 2
- * @param phase2stopTime Simulation phase 2 stop time, start time will be equal to phase 1 stop time
- * @param phase2ModelsPredicate Discriminate models used only during phase 2
+ * Configures the dynamic simulation final step
+ * @param stopTime Simulation final step stop time, start time will be equal to the first step stop time
+ * @param modelsPredicate Discriminate models used only during final step
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public record Phase2Config(double phase2stopTime, Predicate<BlackBoxModel> phase2ModelsPredicate) {
+public record FinalStepConfig(double stopTime, Predicate<BlackBoxModel> modelsPredicate) {
 }

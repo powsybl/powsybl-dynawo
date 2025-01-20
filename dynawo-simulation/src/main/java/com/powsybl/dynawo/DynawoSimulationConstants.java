@@ -33,9 +33,9 @@ public final class DynawoSimulationConstants {
 
     public static final String LOGS_FILENAME = "dynawo.log";
 
-    public static final String PHASE_2_DYD_FILENAME = "phase_2_powsybl_dynawo.dyd";
+    public static final String FINAL_STEP_DYD_FILENAME = "final_step_powsybl_dynawo.dyd";
 
-    public static final String PHASE_2_JOBS_FILENAME = "phase_2.jobs";
+    public static final String FINAL_STEP_JOBS_FILENAME = "final_step.jobs";
 
     private DynawoSimulationConstants() {
     }

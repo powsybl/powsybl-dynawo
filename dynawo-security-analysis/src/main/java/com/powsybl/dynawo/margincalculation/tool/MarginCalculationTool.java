@@ -137,7 +137,6 @@ public class MarginCalculationTool implements Tool {
                 .withMessageTemplate("marginCalculationTool", "Margin Calculation Tool")
                 .build();
         Path caseFile = context.getFileSystem().getPath(line.getOptionValue(CASE_FILE));
-        // process a single network: output-file/output-format options available
 
         context.getOutputStream().println("Loading network '" + caseFile + "'");
         Properties inputParams = ConversionToolUtils.readProperties(line, ConversionToolUtils.OptionType.IMPORT, context);
@@ -203,9 +202,9 @@ public class MarginCalculationTool implements Tool {
                                               TableFormatterFactory formatterFactory,
                                               TableFormatterConfig formatterConfig) {
         try (TableFormatter formatter = formatterFactory.create(writer,
-                "dynamic simulation results",
+                "Margin calculation results",
                 formatterConfig,
-                new Column("Result"))) {
+                getColumns())) {
             for (LoadIncreaseResult result : results.getResults()) {
                 formatter.writeCell(result.loadLevel());
                 formatter.writeCell(result.status().toString());
@@ -260,14 +259,14 @@ public class MarginCalculationTool implements Tool {
 
     private static Column[] getColumns() {
         return new Column[]{
-                new Column("Load level"),
-                new Column("Status"),
-                new Column("Failed criteria"),
-                new Column("Failed criteria time"),
-                new Column("Scenarios"),
-                new Column("Scenarios Status"),
-                new Column("Scenarios failed criteria"),
-                new Column("Scenarios failed criteria time")
+            new Column("Load level"),
+            new Column("Status"),
+            new Column("Failed criteria"),
+            new Column("Failed criteria time"),
+            new Column("Scenarios"),
+            new Column("Scenarios Status"),
+            new Column("Scenarios failed criteria"),
+            new Column("Scenarios failed criteria time")
         };
     }
 }

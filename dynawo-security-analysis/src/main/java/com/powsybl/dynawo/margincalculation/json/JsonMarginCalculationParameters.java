@@ -25,7 +25,10 @@ import java.util.Objects;
  *
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class JsonMarginCalculationParameters {
+public final class JsonMarginCalculationParameters {
+
+    private JsonMarginCalculationParameters() {
+    }
 
     /**
      * Reads parameters from a JSON file (will NOT rely on platform config).

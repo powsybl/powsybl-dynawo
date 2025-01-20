@@ -11,7 +11,7 @@ import com.powsybl.commons.report.ReportNode;
 import com.powsybl.contingency.Contingency;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawo.DynawoSimulationConstants;
-import com.powsybl.dynawo.Phase2Config;
+import com.powsybl.dynawo.FinalStepConfig;
 import com.powsybl.dynawo.commons.DynawoConstants;
 import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.margincalculation.loadsvariation.LoadVariationAreaAutomationSystem;
@@ -64,7 +64,7 @@ public class MarginCalculationContext extends DynawoSimulationContext {
         super(network, workingVariantId, dynamicModels, Collections.emptyList(), Collections.emptyList(),
                 new DynamicSimulationParameters(parameters.getStartTime(), parameters.getMarginCalculationStartTime()),
                 parameters.getDynawoParameters(),
-                configurePhase2(parameters, loadsVariations),
+                configureFinalStep(parameters, loadsVariations),
                 currentVersion, reportNode);
         this.marginCalculationParameters = parameters;
         double contingenciesStartTime = parameters.getContingenciesStartTime();
@@ -114,15 +114,15 @@ public class MarginCalculationContext extends DynawoSimulationContext {
         };
     }
 
-    private static Phase2Config configurePhase2(MarginCalculationParameters parameters, List<LoadsVariation> loadsVariations) {
+    private static FinalStepConfig configureFinalStep(MarginCalculationParameters parameters, List<LoadsVariation> loadsVariations) {
         return switch (parameters.getLoadModelsRule()) {
-            case ALL_LOADS -> new Phase2Config(parameters.getStopTime(), AbstractLoad.class::isInstance);
+            case ALL_LOADS -> new FinalStepConfig(parameters.getStopTime(), AbstractLoad.class::isInstance);
             case TARGETED_LOADS -> {
                 Set<String> loadIds = loadsVariations.stream()
                         .flatMap(l -> l.loads().stream())
                         .map(Identifiable::getId)
                         .collect(Collectors.toSet());
-                yield new Phase2Config(parameters.getStopTime(),
+                yield new FinalStepConfig(parameters.getStopTime(),
                         bbm -> bbm instanceof AbstractLoad eBbm && loadIds.contains(eBbm.getStaticId()));
             }
         };

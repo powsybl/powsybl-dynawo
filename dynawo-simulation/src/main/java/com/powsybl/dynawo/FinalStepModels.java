@@ -20,15 +20,15 @@ import java.util.function.Predicate;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class Phase2Models implements DydDataSupplier {
+public class FinalStepModels implements DydDataSupplier {
 
     private final List<BlackBoxModel> dynamicModels;
     private final Map<String, MacroStaticReference> macroStaticReferences = new LinkedHashMap<>();
     private final List<MacroConnect> macroConnectList = new ArrayList<>();
     private final Map<String, MacroConnector> macroConnectorsMap = new LinkedHashMap<>();
 
-    public Phase2Models(List<BlackBoxModel> dynamicModels, MacroConnectionsAdder macroConnectionsAdder,
-                        Predicate<BlackBoxModel> macroStaticDuplicatePredicate, Predicate<String> macroConnectorDuplicatePredicate) {
+    public FinalStepModels(List<BlackBoxModel> dynamicModels, MacroConnectionsAdder macroConnectionsAdder,
+                           Predicate<BlackBoxModel> macroStaticDuplicatePredicate, Predicate<String> macroConnectorDuplicatePredicate) {
         this.dynamicModels = dynamicModels;
         macroConnectionsAdder.setMacroConnectorAdder((n, f) -> {
             if (macroConnectorDuplicatePredicate.test(n)) {

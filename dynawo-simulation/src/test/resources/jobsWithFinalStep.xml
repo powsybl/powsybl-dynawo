@@ -5,7 +5,7 @@
         <dyn:modeler compileDir="outputs/compilation">
             <dyn:network iidmFile="powsybl_dynawo.xiidm" parFile="network.par" parId="1"/>
             <dyn:dynModels dydFile="powsybl_dynawo.dyd"/>
-            <dyn:dynModels dydFile="phase_2_powsybl_dynawo.dyd"/>
+            <dyn:dynModels dydFile="final_step_powsybl_dynawo.dyd"/>
             <dyn:precompiledModels useStandardModels="true"/>
             <dyn:modelicaModels useStandardModels="false"/>
         </dyn:modeler>

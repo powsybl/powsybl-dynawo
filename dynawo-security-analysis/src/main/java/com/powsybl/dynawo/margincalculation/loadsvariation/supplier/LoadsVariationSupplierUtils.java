@@ -15,7 +15,10 @@ import java.nio.file.Path;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class LoadsVariationSupplierUtils {
+public final class LoadsVariationSupplierUtils {
+
+    private LoadsVariationSupplierUtils() {
+    }
 
     public static LoadsVariationSupplier getLoadsVariationSupplierForJson(Path loadVariationsPath) {
         return (n, r) -> new SupplierJsonDeserializer<>(

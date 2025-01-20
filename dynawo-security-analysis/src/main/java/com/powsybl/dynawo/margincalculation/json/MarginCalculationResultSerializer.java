@@ -16,8 +16,6 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.powsybl.commons.json.JsonUtil;
 import com.powsybl.dynaflow.results.FailedCriterion;
 import com.powsybl.dynaflow.results.ScenarioResult;
-import com.powsybl.dynamicsimulation.DynamicSimulationResult;
-import com.powsybl.dynamicsimulation.json.DynamicSimulationResultSerializer;
 import com.powsybl.dynawo.margincalculation.results.LoadIncreaseResult;
 import com.powsybl.dynawo.margincalculation.results.MarginCalculationResult;
 

@@ -23,7 +23,7 @@ import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.nio.file.Path;
 
-import static com.powsybl.dynawo.DynawoSimulationConstants.PHASE_2_DYD_FILENAME;
+import static com.powsybl.dynawo.DynawoSimulationConstants.FINAL_STEP_DYD_FILENAME;
 import static com.powsybl.dynawo.commons.DynawoConstants.AGGREGATED_RESULTS;
 
 /**
@@ -49,9 +49,9 @@ public class MarginCalculationHandler extends AbstractDynawoAlgorithmsHandler<Ma
         MultipleJobsXml.write(workingDir, context);
         ContingenciesDydXml.write(workingDir, context.getContingencyEventModels());
         ContingenciesParXml.write(workingDir, context.getContingencyEventModels());
-        JobsXml.writePhase2(workingDir, context);
-        if (context.getPhase2DydData().isPresent()) {
-            DydXml.write(workingDir, PHASE_2_DYD_FILENAME, context.getPhase2DydData().get());
+        JobsXml.writeFinalStep(workingDir, context);
+        if (context.getFinalStepDydData().isPresent()) {
+            DydXml.write(workingDir, FINAL_STEP_DYD_FILENAME, context.getFinalStepDydData().get());
         }
     }
 }
