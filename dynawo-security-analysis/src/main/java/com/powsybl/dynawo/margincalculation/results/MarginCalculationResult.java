@@ -10,7 +10,6 @@ package com.powsybl.dynawo.margincalculation.results;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -18,8 +17,6 @@ import java.util.Optional;
 public class MarginCalculationResult {
 
     private final List<LoadIncreaseResult> loadIncreaseResults;
-    //TODO remove ?
-    private byte[] logBytes;
 
     public static MarginCalculationResult empty() {
         return new MarginCalculationResult(Collections.emptyList());
@@ -29,20 +26,7 @@ public class MarginCalculationResult {
         this.loadIncreaseResults = Objects.requireNonNull(loadIncreaseResults);
     }
 
-    public List<LoadIncreaseResult> getResults() {
+    public List<LoadIncreaseResult> getLoadIncreaseResults() {
         return loadIncreaseResults;
-    }
-
-    /**
-     * Gets log file in bytes.
-     * @return an Optional describing the zip bytes
-     */
-    public Optional<byte[]> getLogBytes() {
-        return Optional.ofNullable(logBytes);
-    }
-
-    public MarginCalculationResult setLogBytes(byte[] logBytes) {
-        this.logBytes = logBytes;
-        return this;
     }
 }

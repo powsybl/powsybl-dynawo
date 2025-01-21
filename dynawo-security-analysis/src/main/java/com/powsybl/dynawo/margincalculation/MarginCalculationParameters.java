@@ -131,27 +131,29 @@ public final class MarginCalculationParameters {
         }
 
         public MarginCalculationParameters build() {
-            //TODO add values to exception
             if (startTime < 0) {
-                throw new IllegalStateException("Start time should be zero or positive");
+                throw new IllegalStateException("Start time (%.2f) should be zero or positive".formatted(startTime));
             }
             if (stopTime <= startTime) {
-                throw new IllegalStateException("Stop time should be greater than start time");
+                throw new IllegalStateException("Stop time (%.2f) should be greater than start time (%.2f)".formatted(stopTime, startTime));
             }
             if (marginCalculationStartTime <= startTime || marginCalculationStartTime >= stopTime) {
-                throw new IllegalStateException("Margin calculation start time should be between start and stop time");
+                throw new IllegalStateException("Margin calculation start time (%.2f) should be between start (%.2f) and stop time (%.2f)"
+                        .formatted(marginCalculationStartTime, startTime, stopTime));
             }
             if (contingenciesStartTime <= marginCalculationStartTime || contingenciesStartTime >= stopTime) {
-                throw new IllegalStateException("Contingencies start time should be between margin calculation start time and stop time");
+                throw new IllegalStateException("Contingencies start time (%.2f) should be between margin calculation start time (%.2f) and stop time (%.2f)"
+                        .formatted(contingenciesStartTime, marginCalculationStartTime, stopTime));
             }
             if (loadIncreaseStartTime <= startTime) {
-                throw new IllegalStateException("Load increase start time should be greater start time");
+                throw new IllegalStateException("Load increase start time (%.2f) should be greater than start time (%.2f)"
+                        .formatted(loadIncreaseStartTime, startTime));
             }
             if (loadIncreaseStopTime <= loadIncreaseStartTime || loadIncreaseStopTime >= marginCalculationStartTime) {
-                throw new IllegalStateException("Load increase stop time should be between load increase start time and margin calculation start time");
+                throw new IllegalStateException("Load increase stop time (%.2f) should be between load increase start time (%.2f) and margin calculation start time (%.2f)"
+                        .formatted(loadIncreaseStopTime, loadIncreaseStartTime, marginCalculationStartTime));
             }
-            return new MarginCalculationParameters(startTime, stopTime, marginCalculationStartTime, loadIncreaseStartTime,
-                    loadIncreaseStopTime, contingenciesStartTime, calculationType, accuracy, loadModelsRule, dynawoParameters);
+            return new MarginCalculationParameters(this);
         }
     }
 
@@ -205,20 +207,17 @@ public final class MarginCalculationParameters {
     private final LoadModelsRule loadModelsRule;
     private final DynawoSimulationParameters dynawoParameters;
 
-    private MarginCalculationParameters(double startTime, double stopTime, double marginCalculationStartTime,
-                                        double loadIncreaseStartTime, double loadIncreaseStopTime,
-                                        double contingenciesStartTime, CalculationType calculationType,
-                                        int accuracy, LoadModelsRule loadModelsRule, DynawoSimulationParameters dynawoParameters) {
-        this.startTime = startTime;
-        this.stopTime = stopTime;
-        this.marginCalculationStartTime = marginCalculationStartTime;
-        this.loadIncreaseStartTime = loadIncreaseStartTime;
-        this.loadIncreaseStopTime = loadIncreaseStopTime;
-        this.contingenciesStartTime = contingenciesStartTime;
-        this.calculationType = calculationType;
-        this.accuracy = accuracy;
-        this.loadModelsRule = loadModelsRule;
-        this.dynawoParameters = dynawoParameters;
+    private MarginCalculationParameters(MarginCalculationParameters.Builder builder) {
+        this.startTime = builder.startTime;
+        this.stopTime = builder.stopTime;
+        this.marginCalculationStartTime = builder.marginCalculationStartTime;
+        this.loadIncreaseStartTime = builder.loadIncreaseStartTime;
+        this.loadIncreaseStopTime = builder.loadIncreaseStopTime;
+        this.contingenciesStartTime = builder.contingenciesStartTime;
+        this.calculationType = builder.calculationType;
+        this.accuracy = builder.accuracy;
+        this.loadModelsRule = builder.loadModelsRule;
+        this.dynawoParameters = builder.dynawoParameters;
     }
 
     public double getStartTime() {

@@ -105,7 +105,7 @@ class MarginCalculationTest extends AbstractDynawoTest {
         List<LoadIncreaseResult> results = provider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID,
                         dynamicModelsSupplier, n -> contingencies, loadsVariationSupplier, runParameters)
                 .join()
-                .getResults();
+                .getLoadIncreaseResults();
 
         List<ScenarioResult> expectedResults = contingencies.stream()
                 .map(c -> new ScenarioResult(c.getId(), Status.CONVERGENCE))

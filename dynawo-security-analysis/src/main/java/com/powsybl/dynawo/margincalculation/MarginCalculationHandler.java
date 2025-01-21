@@ -16,12 +16,14 @@ import com.powsybl.dynawo.algorithms.xml.ContingenciesParXml;
 import com.powsybl.dynawo.margincalculation.results.MarginCalculationResult;
 import com.powsybl.dynawo.margincalculation.results.XmlMarginCalculationResultParser;
 import com.powsybl.dynawo.margincalculation.xml.MultipleJobsXml;
+import com.powsybl.dynawo.xml.DydDataSupplier;
 import com.powsybl.dynawo.xml.DydXml;
 import com.powsybl.dynawo.xml.JobsXml;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Optional;
 
 import static com.powsybl.dynawo.DynawoSimulationConstants.FINAL_STEP_DYD_FILENAME;
 import static com.powsybl.dynawo.commons.DynawoConstants.AGGREGATED_RESULTS;
@@ -50,8 +52,9 @@ public class MarginCalculationHandler extends AbstractDynawoAlgorithmsHandler<Ma
         ContingenciesDydXml.write(workingDir, context.getContingencyEventModels());
         ContingenciesParXml.write(workingDir, context.getContingencyEventModels());
         JobsXml.writeFinalStep(workingDir, context);
-        if (context.getFinalStepDydData().isPresent()) {
-            DydXml.write(workingDir, FINAL_STEP_DYD_FILENAME, context.getFinalStepDydData().get());
+        Optional<DydDataSupplier> dydData = context.getFinalStepDydData();
+        if (dydData.isPresent()) {
+            DydXml.write(workingDir, FINAL_STEP_DYD_FILENAME, dydData.get());
         }
     }
 }

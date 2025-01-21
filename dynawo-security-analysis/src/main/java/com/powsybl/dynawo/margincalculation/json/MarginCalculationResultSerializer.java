@@ -61,7 +61,7 @@ public class MarginCalculationResultSerializer extends StdSerializer<MarginCalcu
         jsonGenerator.writeStringField("version", VERSION);
         jsonGenerator.writeFieldName("loadIncreases");
         jsonGenerator.writeStartArray();
-        for (LoadIncreaseResult loadIncrease : result.getResults()) {
+        for (LoadIncreaseResult loadIncrease : result.getLoadIncreaseResults()) {
             jsonGenerator.writeStartObject();
             jsonGenerator.writeNumberField("loadLevel", loadIncrease.loadLevel());
             jsonGenerator.writeStringField("status", loadIncrease.status().toString());

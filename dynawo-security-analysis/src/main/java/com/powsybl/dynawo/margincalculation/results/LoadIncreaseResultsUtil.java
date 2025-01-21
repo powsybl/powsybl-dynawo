@@ -33,41 +33,7 @@ public final class LoadIncreaseResultsUtil {
                     loadLevel, status, scenarioResults, failedCriteria);
         } else {
             try {
-                double loadLevelD = Double.parseDouble(loadLevel);
-                Status statusE = Status.valueOf(status);
-                switch (statusE) {
-                    case CONVERGENCE -> {
-                        if (scenarioResults.isEmpty()) {
-                            LOGGER.warn("LoadIncreaseResult with {} status should have scenario results", status);
-                            return Optional.empty();
-                        }
-                        if (!failedCriteria.isEmpty()) {
-                            LOGGER.warn("LoadIncreaseResult with {} status should not have failed criteria", status);
-                            return Optional.empty();
-                        }
-                    }
-                    case CRITERIA_NON_RESPECTED -> {
-                        if (!scenarioResults.isEmpty()) {
-                            LOGGER.warn("LoadIncreaseResult with {} status should not have scenario results", status);
-                            return Optional.empty();
-                        }
-                        if (failedCriteria.isEmpty()) {
-                            LOGGER.warn("LoadIncreaseResult with {} status should have failed criteria", status);
-                            return Optional.empty();
-                        }
-                    }
-                    case DIVERGENCE, EXECUTION_PROBLEM -> {
-                        if (!scenarioResults.isEmpty()) {
-                            LOGGER.warn("LoadIncreaseResult with {} status should not have scenario results", status);
-                            return Optional.empty();
-                        }
-                        if (!failedCriteria.isEmpty()) {
-                            LOGGER.warn("LoadIncreaseResult with {} status should not have failed criteria", status);
-                            return Optional.empty();
-                        }
-                    }
-                }
-                return Optional.of(new LoadIncreaseResult(loadLevelD, statusE, scenarioResults, failedCriteria));
+                return buildLoadIncreaseResult(Double.parseDouble(loadLevel), Status.valueOf(status), scenarioResults, failedCriteria);
             } catch (NumberFormatException e) {
                 logInconsistentEntry("loadLevel", loadLevel);
             } catch (IllegalArgumentException e) {
@@ -75,6 +41,44 @@ public final class LoadIncreaseResultsUtil {
             }
         }
         return Optional.empty();
+    }
+
+    private static Optional<LoadIncreaseResult> buildLoadIncreaseResult(double loadLevel, Status status,
+                                                                        List<ScenarioResult> scenarioResults,
+                                                                        List<FailedCriterion> failedCriteria) {
+        switch (status) {
+            case CONVERGENCE -> {
+                if (scenarioResults.isEmpty()) {
+                    LOGGER.warn("LoadIncreaseResult with {} status should have scenario results", status);
+                    return Optional.empty();
+                }
+                if (!failedCriteria.isEmpty()) {
+                    LOGGER.warn("LoadIncreaseResult with {} status should not have failed criteria", status);
+                    return Optional.empty();
+                }
+            }
+            case CRITERIA_NON_RESPECTED -> {
+                if (!scenarioResults.isEmpty()) {
+                    LOGGER.warn("LoadIncreaseResult with {} status should not have scenario results", status);
+                    return Optional.empty();
+                }
+                if (failedCriteria.isEmpty()) {
+                    LOGGER.warn("LoadIncreaseResult with {} status should have failed criteria", status);
+                    return Optional.empty();
+                }
+            }
+            case DIVERGENCE, EXECUTION_PROBLEM -> {
+                if (!scenarioResults.isEmpty()) {
+                    LOGGER.warn("LoadIncreaseResult with {} status should not have scenario results", status);
+                    return Optional.empty();
+                }
+                if (!failedCriteria.isEmpty()) {
+                    LOGGER.warn("LoadIncreaseResult with {} status should not have failed criteria", status);
+                    return Optional.empty();
+                }
+            }
+        }
+        return Optional.of(new LoadIncreaseResult(loadLevel, status, scenarioResults, failedCriteria));
     }
 
     private static void logInconsistentEntry(String fieldName, String message) {

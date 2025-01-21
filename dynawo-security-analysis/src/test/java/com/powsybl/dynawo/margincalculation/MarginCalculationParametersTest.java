@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class MarginCalculationParametersTest {
+class MarginCalculationParametersTest {
 
     @ParameterizedTest(name = "{6}")
     @MethodSource("provideMarginCalculationTimes")
@@ -38,15 +38,15 @@ public class MarginCalculationParametersTest {
 
     private static Stream<Arguments> provideMarginCalculationTimes() {
         return Stream.of(
-                Arguments.of(-1, 200, 100, 20, 70, 150, "Start time should be zero or positive"),
-                Arguments.of(10, 5, 100, 20, 70, 150, "Stop time should be greater than start time"),
-                Arguments.of(10, 200, 5, 20, 70, 150, "Margin calculation start time should be between start and stop time"),
-                Arguments.of(10, 200, 205, 20, 70, 150, "Margin calculation start time should be between start and stop time"),
-                Arguments.of(10, 200, 100, 20, 70, 90, "Contingencies start time should be between margin calculation start time and stop time"),
-                Arguments.of(10, 200, 100, 20, 70, 210, "Contingencies start time should be between margin calculation start time and stop time"),
-                Arguments.of(10, 200, 100, 5, 70, 150, "Load increase start time should be greater start time"),
-                Arguments.of(10, 200, 100, 20, 15, 150, "Load increase stop time should be between load increase start time and margin calculation start time"),
-                Arguments.of(10, 200, 100, 20, 110, 150, "Load increase stop time should be between load increase start time and margin calculation start time")
+                Arguments.of(-1, 200, 100, 20, 70, 150, "Start time (-1,00) should be zero or positive"),
+                Arguments.of(10, 5, 100, 20, 70, 150, "Stop time (5,00) should be greater than start time (10,00)"),
+                Arguments.of(10, 200, 5, 20, 70, 150, "Margin calculation start time (5,00) should be between start (10,00) and stop time (200,00)"),
+                Arguments.of(10, 200, 205, 20, 70, 150, "Margin calculation start time (205,00) should be between start (10,00) and stop time (200,00)"),
+                Arguments.of(10, 200, 100, 20, 70, 90, "Contingencies start time (90,00) should be between margin calculation start time (100,00) and stop time (200,00)"),
+                Arguments.of(10, 200, 100, 20, 70, 210, "Contingencies start time (210,00) should be between margin calculation start time (100,00) and stop time (200,00)"),
+                Arguments.of(10, 200, 100, 5, 70, 150, "Load increase start time (5,00) should be greater than start time (10,00)"),
+                Arguments.of(10, 200, 100, 20, 15, 150, "Load increase stop time (15,00) should be between load increase start time (20,00) and margin calculation start time (100,00)"),
+                Arguments.of(10, 200, 100, 20, 110, 150, "Load increase stop time (110,00) should be between load increase start time (20,00) and margin calculation start time (100,00)")
         );
     }
 }

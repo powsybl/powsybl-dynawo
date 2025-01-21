@@ -38,20 +38,16 @@ public final class MultipleJobsXml {
         XmlUtil.write(file, "multipleJobs", w -> writeMarginCalculation(w, context));
     }
 
-    private static void writeMarginCalculation(XMLStreamWriter writer, MarginCalculationContext context) {
-        try {
-            MarginCalculationParameters parameters = context.getMarginCalculationParameters();
-            writer.writeStartElement("marginCalculation");
-            writer.writeAttribute("calculationType", parameters.getCalculationType().toString());
-            writer.writeAttribute("accuracy", Integer.toString(parameters.getAccuracy()));
-            writeScenarios(writer, context.getContingencyEventModels());
-            writer.writeEmptyElement("loadIncrease");
-            writer.writeAttribute("id", LOAD_VARIATION_AREA_FILENAME);
-            writer.writeAttribute("jobsFile", JOBS_FILENAME);
-            writer.writeEndElement();
-        } catch (XMLStreamException e) {
-            throw new RuntimeException(e);
-        }
+    private static void writeMarginCalculation(XMLStreamWriter writer, MarginCalculationContext context) throws XMLStreamException {
+        MarginCalculationParameters parameters = context.getMarginCalculationParameters();
+        writer.writeStartElement("marginCalculation");
+        writer.writeAttribute("calculationType", parameters.getCalculationType().toString());
+        writer.writeAttribute("accuracy", Integer.toString(parameters.getAccuracy()));
+        writeScenarios(writer, context.getContingencyEventModels());
+        writer.writeEmptyElement("loadIncrease");
+        writer.writeAttribute("id", LOAD_VARIATION_AREA_FILENAME);
+        writer.writeAttribute("jobsFile", JOBS_FILENAME);
+        writer.writeEndElement();
     }
 
     private static void writeScenarios(XMLStreamWriter writer, List<ContingencyEventModels> models) throws XMLStreamException {

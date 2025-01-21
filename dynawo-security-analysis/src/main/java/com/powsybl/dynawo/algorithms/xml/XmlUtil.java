@@ -18,7 +18,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
-import java.util.function.Consumer;
 
 import static com.powsybl.dynawo.xml.DynawoSimulationXmlConstants.DYN_PREFIX;
 import static com.powsybl.dynawo.xml.DynawoSimulationXmlConstants.DYN_URI;
@@ -31,6 +30,11 @@ public final class XmlUtil {
     @FunctionalInterface
     public interface XmlDynawoEventWriter {
         void writeEvent(XMLStreamWriter writer, ContingencyEventModels model) throws XMLStreamException;
+    }
+
+    @FunctionalInterface
+    public interface XmlJobWriter {
+        void writeJob(XMLStreamWriter writer) throws XMLStreamException;
     }
 
     private XmlUtil() {
@@ -59,7 +63,7 @@ public final class XmlUtil {
         }
     }
 
-    public static void write(Path file, String elementName, Consumer<XMLStreamWriter> xmlStreamWriterConsumer) throws IOException, XMLStreamException {
+    public static void write(Path file, String elementName, XmlJobWriter xmlStreamWriterConsumer) throws IOException, XMLStreamException {
         Objects.requireNonNull(file);
         Objects.requireNonNull(elementName);
         Objects.requireNonNull(xmlStreamWriterConsumer);
@@ -71,7 +75,7 @@ public final class XmlUtil {
                 xmlWriter.writeStartElement(elementName);
                 xmlWriter.writeNamespace("", DYN_URI);
 
-                xmlStreamWriterConsumer.accept(xmlWriter);
+                xmlStreamWriterConsumer.writeJob(xmlWriter);
 
                 xmlWriter.writeEndElement();
                 xmlWriter.writeEndDocument();

@@ -190,7 +190,7 @@ public class MarginCalculationTool implements Tool {
     private void printResult(MarginCalculationResult result, ToolRunningContext context) {
         Writer writer = new OutputStreamWriter(context.getOutputStream());
         AsciiTableFormatterFactory asciiTableFormatterFactory = new AsciiTableFormatterFactory();
-        printDynamicSimulationResult(result, writer, asciiTableFormatterFactory, TableFormatterConfig.load());
+        printMarginCalculationResult(result, writer, asciiTableFormatterFactory, TableFormatterConfig.load());
     }
 
     private void exportResult(MarginCalculationResult result, ToolRunningContext context, Path outputFile) {
@@ -198,14 +198,14 @@ public class MarginCalculationTool implements Tool {
         MarginCalculationResultSerializer.write(result, outputFile);
     }
 
-    private void printDynamicSimulationResult(MarginCalculationResult results, Writer writer,
+    private void printMarginCalculationResult(MarginCalculationResult results, Writer writer,
                                               TableFormatterFactory formatterFactory,
                                               TableFormatterConfig formatterConfig) {
         try (TableFormatter formatter = formatterFactory.create(writer,
                 "Margin calculation results",
                 formatterConfig,
                 getColumns())) {
-            for (LoadIncreaseResult result : results.getResults()) {
+            for (LoadIncreaseResult result : results.getLoadIncreaseResults()) {
                 formatter.writeCell(result.loadLevel());
                 formatter.writeCell(result.status().toString());
 
@@ -232,28 +232,31 @@ public class MarginCalculationTool implements Tool {
                     formatter.writeEmptyCells(4);
                 }
 
-                for (ScenarioResult scenarioResult : scenarioResults) {
-                    formatter.writeEmptyCells(4);
-                    formatter.writeCell(scenarioResult.id());
-                    formatter.writeCell(scenarioResult.status().toString());
-                    formatter.writeEmptyCells(2);
-                    List<FailedCriterion> scenarioCriteria = scenarioResult.failedCriteria();
-                    if (scenarioCriteria.isEmpty()) {
-                        formatter.writeEmptyCells(2);
-                    } else {
-                        formatter.writeCell("Scenario failed criteria (%s)".formatted(scenarioCriteria.size()));
-                        formatter.writeEmptyCell();
-                    }
-                    for (FailedCriterion criterion : failedCriteria) {
-                        formatter.writeEmptyCells(6);
-                        formatter.writeCell(criterion.description());
-                        formatter.writeCell(criterion.time());
-                    }
-                }
-
+                printScenarioResult(scenarioResults, formatter);
             }
         } catch (IOException e) {
             throw new UncheckedIOException(e);
+        }
+    }
+
+    private void printScenarioResult(List<ScenarioResult> scenarioResults, TableFormatter formatter) throws IOException {
+        for (ScenarioResult scenarioResult : scenarioResults) {
+            formatter.writeEmptyCells(4);
+            formatter.writeCell(scenarioResult.id());
+            formatter.writeCell(scenarioResult.status().toString());
+            formatter.writeEmptyCells(2);
+            List<FailedCriterion> scenarioCriteria = scenarioResult.failedCriteria();
+            if (scenarioCriteria.isEmpty()) {
+                formatter.writeEmptyCells(2);
+            } else {
+                formatter.writeCell("Scenario failed criteria (%s)".formatted(scenarioCriteria.size()));
+                formatter.writeEmptyCell();
+            }
+            for (FailedCriterion criterion : scenarioResult.failedCriteria()) {
+                formatter.writeEmptyCells(6);
+                formatter.writeCell(criterion.description());
+                formatter.writeCell(criterion.time());
+            }
         }
     }
 
