@@ -48,6 +48,14 @@ class JobsXmlTest extends DynawoTestUtil {
     }
 
     @Test
+    void testAdditionalDydJobXml() throws IOException, SAXException {
+        DynawoSimulationContext context = new DynawoSimulationContext(network, network.getVariantManager().getWorkingVariantId(),
+                dynamicModels, eventModels, outputVariables, DynamicSimulationParameters.load(), DynawoSimulationParameters.load());
+        JobsXml.write(tmpDir, context, "additional_models.dyd");
+        validate("jobs.xsd", "jobsWithAdditionalDyd.xml", tmpDir.resolve(DynawoSimulationConstants.JOBS_FILENAME));
+    }
+
+    @Test
     void writeFinalStepJob() throws SAXException, IOException {
         DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
         DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load();

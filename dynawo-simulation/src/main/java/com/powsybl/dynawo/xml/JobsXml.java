@@ -31,18 +31,29 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter<DynawoSimul
 
     private static final String EXPORT_MODE = "exportMode";
     private final boolean isFinalStep;
+    private final String additionalDydFile;
 
     private JobsXml(String xmlFileName, boolean isFinalStep) {
+        this(xmlFileName, isFinalStep, null);
+    }
+
+    private JobsXml(String xmlFileName, boolean isFinalStep, String additionalDydFile) {
         super(xmlFileName, "jobs");
         this.isFinalStep = isFinalStep;
+        this.additionalDydFile = additionalDydFile;
     }
 
     public static void write(Path workingDir, DynawoSimulationContext context) throws IOException {
         new JobsXml(JOBS_FILENAME, false).createXmlFileFromDataSupplier(workingDir, context);
     }
 
+    public static void write(Path workingDir, DynawoSimulationContext context, String additionalDydFile) throws IOException {
+        new JobsXml(JOBS_FILENAME, false, additionalDydFile).createXmlFileFromDataSupplier(workingDir, context);
+    }
+
+    //TODO replace with context info ?
     public static void writeFinalStep(Path workingDir, DynawoSimulationContext context) throws IOException {
-        new JobsXml(FINAL_STEP_JOBS_FILENAME, true).createXmlFileFromDataSupplier(workingDir, context);
+        new JobsXml(FINAL_STEP_JOBS_FILENAME, true, FINAL_STEP_DYD_FILENAME).createXmlFileFromDataSupplier(workingDir, context);
     }
 
     @Override
@@ -51,8 +62,12 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter<DynawoSimul
         writer.writeStartElement(DYN_URI, "job");
         writer.writeAttribute("name", "Job");
         writeSolver(writer, parameters);
-        writeModeler(writer, parameters, isFinalStep && context.getFinalStepDydData().isPresent());
-        writeSimulation(writer, parameters, context.getStartTime(isFinalStep), context.getStopTime(isFinalStep));
+        writeModeler(writer, parameters, additionalDydFile);
+        if (isFinalStep) {
+            writeSimulation(writer, parameters, context.getFinalStepStartTime(), context.getFinalStepStopTime());
+        } else {
+            writeSimulation(writer, parameters, context.getStartTime(), context.getStopTime());
+        }
         writeOutput(writer, context);
         writer.writeEndElement();
     }
@@ -64,7 +79,7 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter<DynawoSimul
         writer.writeAttribute("parId", parameters.getSolverParameters().getId());
     }
 
-    private static void writeModeler(XMLStreamWriter writer, DynawoSimulationParameters parameters, boolean isFinalStep) throws XMLStreamException {
+    private static void writeModeler(XMLStreamWriter writer, DynawoSimulationParameters parameters, String additionalDydFile) throws XMLStreamException {
         writer.writeStartElement(DYN_URI, "modeler");
         writer.writeAttribute("compileDir", "outputs/compilation");
 
@@ -75,9 +90,9 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter<DynawoSimul
 
         writer.writeEmptyElement(DYN_URI, "dynModels");
         writer.writeAttribute("dydFile", DYD_FILENAME);
-        if (isFinalStep) {
+        if (additionalDydFile != null) {
             writer.writeEmptyElement(DYN_URI, "dynModels");
-            writer.writeAttribute("dydFile", FINAL_STEP_DYD_FILENAME);
+            writer.writeAttribute("dydFile", additionalDydFile);
         }
 
         DumpFileParameters dumpFileParameters = parameters.getDumpFileParameters();
@@ -95,7 +110,7 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter<DynawoSimul
         writer.writeEndElement();
     }
 
-    private static void writeSimulation(XMLStreamWriter writer, DynawoSimulationParameters parameters, double startTime, double stopTime) throws XMLStreamException {
+    private static void writeSimulation(XMLStreamWriter writer, DynawoSimulationParameters parameters, Double startTime, Double stopTime) throws XMLStreamException {
         Optional<String> criteriaFileName = parameters.getCriteriaFileName();
         if (criteriaFileName.isPresent()) {
             writer.writeStartElement(DYN_URI, "simulation");

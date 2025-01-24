@@ -16,6 +16,7 @@ import com.powsybl.dynawo.algorithms.xml.ContingenciesDydXml;
 import com.powsybl.dynawo.algorithms.xml.ContingenciesParXml;
 import com.powsybl.dynawo.commons.NetworkResultsUpdater;
 import com.powsybl.dynawo.security.xml.MultipleJobsXml;
+import com.powsybl.dynawo.xml.JobsXml;
 import com.powsybl.iidm.serde.NetworkSerDe;
 import com.powsybl.security.LimitViolationFilter;
 import com.powsybl.security.SecurityAnalysisReport;
@@ -60,6 +61,7 @@ public final class DynawoSecurityAnalysisHandler extends AbstractDynawoAlgorithm
 
     @Override
     protected void writeMultipleJobs(Path workingDir) throws XMLStreamException, IOException {
+        JobsXml.write(workingDir, context);
         MultipleJobsXml.write(workingDir, context);
         ContingenciesDydXml.write(workingDir, context.getContingencyEventModels());
         ContingenciesParXml.write(workingDir, context.getContingencyEventModels());

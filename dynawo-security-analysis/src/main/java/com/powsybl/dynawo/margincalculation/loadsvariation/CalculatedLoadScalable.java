@@ -14,13 +14,16 @@ import com.powsybl.iidm.network.Load;
  * The scaled P and Q are not set in the given load but kept in properties, contrary to {@link LoadScalable}
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class CalculatedLoadScalable extends LoadScalable implements CalculatedPower {
+public class CalculatedLoadScalable extends LoadScalable implements CalculatedPowerDelta {
+
+    private final Load load;
 
     private Double calculatedP0 = Double.NaN;
     private Double calculatedQ0 = Double.NaN;
 
-    CalculatedLoadScalable(String id) {
-        super(id);
+    CalculatedLoadScalable(Load load) {
+        super(load.getId());
+        this.load = load;
     }
 
     @Override
@@ -44,12 +47,12 @@ public class CalculatedLoadScalable extends LoadScalable implements CalculatedPo
     }
 
     @Override
-    public Double getCalculatedP0() {
-        return calculatedP0;
+    public Double getCalculatedDeltaP() {
+        return calculatedP0 - load.getP0();
     }
 
     @Override
-    public Double getCalculatedQ0() {
-        return calculatedQ0;
+    public Double getCalculatedDeltaQ() {
+        return calculatedQ0 - load.getQ0();
     }
 }

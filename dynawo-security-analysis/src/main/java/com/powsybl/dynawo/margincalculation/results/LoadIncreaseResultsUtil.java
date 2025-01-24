@@ -64,7 +64,6 @@ public final class LoadIncreaseResultsUtil {
                 }
                 if (failedCriteria.isEmpty()) {
                     LOGGER.warn("LoadIncreaseResult with {} status should have failed criteria", status);
-                    return Optional.empty();
                 }
             }
             case DIVERGENCE, EXECUTION_PROBLEM -> {

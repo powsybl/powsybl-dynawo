@@ -25,6 +25,7 @@ import com.powsybl.dynawo.commons.loadmerge.LoadsMerger;
 import com.powsybl.dynawo.commons.timeline.CsvTimeLineParser;
 import com.powsybl.dynawo.commons.timeline.TimeLineParser;
 import com.powsybl.dynawo.commons.timeline.XmlTimeLineParser;
+import com.powsybl.dynawo.xml.JobsXml;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.serde.NetworkSerDe;
 import com.powsybl.timeseries.*;
@@ -212,6 +213,7 @@ public final class DynawoSimulationHandler extends AbstractExecutionHandler<Dyna
 
     private void writeInputFiles(Path workingDir) throws IOException {
         DynawoUtil.writeIidm(dynawoInput, workingDir.resolve(NETWORK_FILENAME));
+        JobsXml.write(workingDir, context);
         DynawoFilesUtils.writeInputFiles(workingDir, context);
     }
 }

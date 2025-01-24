@@ -194,12 +194,21 @@ public class DynawoSimulationContext implements DydDataSupplier {
         return workingVariantId;
     }
 
-    public double getStartTime(boolean isFinalStep) {
-        return isFinalStep ? parameters.getStopTime() : parameters.getStartTime();
+    public double getStartTime() {
+        return parameters.getStartTime();
     }
 
-    public double getStopTime(boolean isFinalStep) {
-        return isFinalStep ? finalStepConfig.stopTime() : parameters.getStopTime();
+    public double getStopTime() {
+        return parameters.getStopTime();
+    }
+
+    //TODO represents start-stop time as a record ?
+    public Double getFinalStepStartTime() {
+        return finalStepConfig != null ? parameters.getStopTime() : Double.NaN;
+    }
+
+    public Double getFinalStepStopTime() {
+        return finalStepConfig != null ? finalStepConfig.stopTime() : Double.NaN;
     }
 
     public DynawoSimulationParameters getDynawoSimulationParameters() {

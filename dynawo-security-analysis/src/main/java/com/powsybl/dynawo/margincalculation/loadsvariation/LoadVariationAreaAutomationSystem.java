@@ -22,8 +22,7 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-import static com.powsybl.dynawo.parameters.ParameterType.DOUBLE;
-import static com.powsybl.dynawo.parameters.ParameterType.INT;
+import static com.powsybl.dynawo.parameters.ParameterType.*;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -31,7 +30,7 @@ import static com.powsybl.dynawo.parameters.ParameterType.INT;
 public class LoadVariationAreaAutomationSystem extends AbstractPureDynamicBlackBoxModel {
 
     private static final String ID = "LOAD_VARIATION_AREA";
-    private static final String PAR_ID = "loadVarArea";
+    private static final String PAR_ID = "LOAD_VAR_AREA";
     private static final ModelConfig MODEL_CONFIG = new ModelConfig("DYNModelVariationArea");
 
     private final List<LoadsVariation> loadsVariations;
@@ -72,9 +71,9 @@ public class LoadVariationAreaAutomationSystem extends AbstractPureDynamicBlackB
         for (LoadsVariation lv : loadsVariations) {
             LoadsProportionalScalable proportionalScalable = new LoadsProportionalScalable(lv.loads());
             scalingConfig.accept(proportionalScalable, lv.variationValue());
-            for (CalculatedPower load : proportionalScalable.getLoadScalable()) {
-                paramSet.addParameter("deltaP_load_" + index, DOUBLE, String.valueOf(load.getCalculatedP0()));
-                paramSet.addParameter("deltaQ_load_" + index, DOUBLE, String.valueOf(load.getCalculatedQ0()));
+            for (CalculatedPowerDelta load : proportionalScalable.getLoadScalable()) {
+                paramSet.addParameter("deltaP_load_" + index, DOUBLE, String.valueOf(load.getCalculatedDeltaP()));
+                paramSet.addParameter("deltaQ_load_" + index, DOUBLE, String.valueOf(load.getCalculatedDeltaQ()));
                 index++;
             }
         }
@@ -82,5 +81,14 @@ public class LoadVariationAreaAutomationSystem extends AbstractPureDynamicBlackB
         paramSet.addParameter("startTime", DOUBLE, String.valueOf(loadIncreaseStartTime));
         paramSet.addParameter("stopTime", DOUBLE, String.valueOf(loadIncreaseStopTime));
         parametersAdder.accept(paramSet);
+    }
+
+    @Override
+    public void createNetworkParameter(ParametersSet networkParameters) {
+        for (LoadsVariation lv : loadsVariations) {
+            for (Load load : lv.loads()) {
+                networkParameters.addParameter(load.getId() + "_isControllable", BOOL, Boolean.toString(true));
+            }
+        }
     }
 }

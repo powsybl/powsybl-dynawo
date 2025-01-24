@@ -27,6 +27,7 @@ import java.util.Optional;
 
 import static com.powsybl.dynawo.DynawoSimulationConstants.FINAL_STEP_DYD_FILENAME;
 import static com.powsybl.dynawo.commons.DynawoConstants.AGGREGATED_RESULTS;
+import static com.powsybl.dynawo.margincalculation.xml.MarginCalculationConstant.LOAD_VARIATION_AREA_FILENAME;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -49,6 +50,8 @@ public class MarginCalculationHandler extends AbstractDynawoAlgorithmsHandler<Ma
     @Override
     protected void writeMultipleJobs(Path workingDir) throws XMLStreamException, IOException {
         MultipleJobsXml.write(workingDir, context);
+        JobsXml.write(workingDir, context, LOAD_VARIATION_AREA_FILENAME);
+        DydXml.write(workingDir, LOAD_VARIATION_AREA_FILENAME, context.getLoadVariationAreaDydData());
         ContingenciesDydXml.write(workingDir, context.getContingencyEventModels());
         ContingenciesParXml.write(workingDir, context.getContingencyEventModels());
         JobsXml.writeFinalStep(workingDir, context);

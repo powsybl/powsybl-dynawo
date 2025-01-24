@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
-    <dyn:blackBoxModel id="LOAD_VARIATION_AREA" lib="DYNModelVariationArea" parFile="sim1.par" parId="loadVarArea"/>
+    <dyn:blackBoxModel id="LOAD_VARIATION_AREA" lib="DYNModelVariationArea" parFile="sim1.par" parId="LOAD_VAR_AREA"/>
     <dyn:macroConnector id="MC_DYNModelVariationArea-DefaultLoad">
         <dyn:connect var1="DeltaPc_load_@INDEX@" var2="@NAME@_DeltaPc"/>
         <dyn:connect var1="DeltaQc_load_@INDEX@" var2="@NAME@_DeltaQc"/>

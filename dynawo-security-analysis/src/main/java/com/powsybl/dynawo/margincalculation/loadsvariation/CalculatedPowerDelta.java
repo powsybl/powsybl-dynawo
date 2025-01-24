@@ -10,9 +10,9 @@ package com.powsybl.dynawo.margincalculation.loadsvariation;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public interface CalculatedPower {
+public interface CalculatedPowerDelta {
 
-    Double getCalculatedP0();
+    Double getCalculatedDeltaP();
 
-    Double getCalculatedQ0();
+    Double getCalculatedDeltaQ();
 }

@@ -20,11 +20,11 @@ import static com.powsybl.iidm.modification.scalable.ProportionalScalable.Distri
 public class LoadsProportionalScalable extends ProportionalScalable {
 
     public LoadsProportionalScalable(List<Load> loads) {
-        super(loads, i ->
-                new CalculatedLoadScalable(i.getId()), PROPORTIONAL_TO_P0, -Double.MAX_VALUE, Double.MAX_VALUE);
+        super(loads, l ->
+                new CalculatedLoadScalable((Load) l), PROPORTIONAL_TO_P0, -Double.MAX_VALUE, Double.MAX_VALUE);
     }
 
-    public List<CalculatedPower> getLoadScalable() {
-        return getScalables().stream().map(CalculatedPower.class::cast).toList();
+    public List<CalculatedPowerDelta> getLoadScalable() {
+        return getScalables().stream().map(CalculatedPowerDelta.class::cast).toList();
     }
 }

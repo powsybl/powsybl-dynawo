@@ -12,7 +12,9 @@ package com.powsybl.dynawo.margincalculation.xml;
  */
 public final class MarginCalculationConstant {
 
-    public static final String LOAD_VARIATION_AREA_FILENAME = "load_variation_area.dyd";
+    public static final String LOAD_VARIATION_AREA_ID = "load_variation_area";
+
+    public static final String LOAD_VARIATION_AREA_FILENAME = LOAD_VARIATION_AREA_ID + ".dyd";
 
     private MarginCalculationConstant() {
     }

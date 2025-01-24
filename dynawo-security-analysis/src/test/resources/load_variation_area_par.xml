@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dyn:parametersSet xmlns:dyn="http://www.rte-france.com/dynawo">
-    <dyn:set id="loadVarArea">
+    <dyn:set id="LOAD_VAR_AREA">
         <dyn:par type="DOUBLE" name="deltaP_load_0" value="420.0"/>
         <dyn:par type="DOUBLE" name="deltaQ_load_0" value="210.0"/>
         <dyn:par type="DOUBLE" name="deltaP_load_1" value="220.0"/>

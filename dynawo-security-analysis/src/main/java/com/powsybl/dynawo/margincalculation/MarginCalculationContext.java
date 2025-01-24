@@ -79,6 +79,7 @@ public class MarginCalculationContext extends DynawoSimulationContext {
         macroConnectionsAdder.setMacroConnectAdder(loadVariationMacroConnectList::add);
         loadVariationArea.createMacroConnections(macroConnectionsAdder);
         loadVariationArea.createDynamicModelParameters(this, getDynamicModelsParameters()::add);
+        loadVariationArea.createNetworkParameter(getDynawoSimulationParameters().getNetworkParameters());
     }
 
     public MarginCalculationParameters getMarginCalculationParameters() {

@@ -22,7 +22,7 @@ import java.util.Objects;
 import static com.powsybl.dynawo.DynawoSimulationConstants.JOBS_FILENAME;
 import static com.powsybl.dynawo.DynawoSimulationConstants.FINAL_STEP_JOBS_FILENAME;
 import static com.powsybl.dynawo.algorithms.xml.AlgorithmsConstants.MULTIPLE_JOBS_FILENAME;
-import static com.powsybl.dynawo.margincalculation.xml.MarginCalculationConstant.LOAD_VARIATION_AREA_FILENAME;
+import static com.powsybl.dynawo.margincalculation.xml.MarginCalculationConstant.LOAD_VARIATION_AREA_ID;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
@@ -45,7 +45,7 @@ public final class MultipleJobsXml {
         writer.writeAttribute("accuracy", Integer.toString(parameters.getAccuracy()));
         writeScenarios(writer, context.getContingencyEventModels());
         writer.writeEmptyElement("loadIncrease");
-        writer.writeAttribute("id", LOAD_VARIATION_AREA_FILENAME);
+        writer.writeAttribute("id", LOAD_VARIATION_AREA_ID);
         writer.writeAttribute("jobsFile", JOBS_FILENAME);
         writer.writeEndElement();
     }
