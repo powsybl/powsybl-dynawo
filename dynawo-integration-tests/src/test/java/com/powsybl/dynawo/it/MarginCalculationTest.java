@@ -10,8 +10,8 @@ import com.powsybl.commons.datasource.ResourceDataSource;
 import com.powsybl.commons.datasource.ResourceSet;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.contingency.Contingency;
-import com.powsybl.dynaflow.results.FailedCriterion;
-import com.powsybl.dynaflow.results.ScenarioResult;
+import com.powsybl.dynawo.contingency.results.FailedCriterion;
+import com.powsybl.dynawo.contingency.results.ScenarioResult;
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension;
 import com.powsybl.dynamicsimulation.groovy.GroovyDynamicModelsSupplier;
 import com.powsybl.dynamicsimulation.groovy.GroovyExtension;
@@ -39,8 +39,8 @@ import java.util.Objects;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static com.powsybl.dynaflow.results.Status.CONVERGENCE;
-import static com.powsybl.dynaflow.results.Status.CRITERIA_NON_RESPECTED;
+import static com.powsybl.dynawo.contingency.results.Status.CONVERGENCE;
+import static com.powsybl.dynawo.contingency.results.Status.CRITERIA_NON_RESPECTED;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**

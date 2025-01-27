@@ -43,6 +43,11 @@
             <artifactId>powsybl-dynawo-commons</artifactId>
         </dependency>
         <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>powsybl-dynawo-contingencies</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>de.vandermeer</groupId>
             <artifactId>asciitable</artifactId>
         </dependency>
@@ -103,6 +108,5 @@
             <artifactId>powsybl-iidm-test</artifactId>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
 </project>

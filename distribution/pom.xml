@@ -31,8 +31,12 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>powsybl-dynawo-contingencies</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>powsybl-dynaflow</artifactId>
-
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -44,7 +48,7 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>powsybl-dynawo-security-analysis</artifactId>
+            <artifactId>powsybl-dynawo-algorithms</artifactId>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>

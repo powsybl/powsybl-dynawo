@@ -51,8 +51,9 @@
         <module>dynaflow</module>
         <module>dynawo-simulation</module>
         <module>dynawo-dsl</module>
-        <module>dynawo-security-analysis</module>
+        <module>dynawo-algorithms</module>
         <module>distribution</module>
+        <module>dynawo-contingencies</module>
     </modules>
 
     <properties>
@@ -144,7 +145,7 @@
             </dependency>
             <dependency>
                 <groupId>com.powsybl</groupId>
-                <artifactId>powsybl-dynawo-security-analysis</artifactId>
+                <artifactId>powsybl-dynawo-algorithms</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

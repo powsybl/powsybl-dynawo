@@ -21,8 +21,9 @@ import com.powsybl.contingency.contingency.list.ContingencyList;
 import com.powsybl.contingency.contingency.list.DefaultContingencyList;
 import com.powsybl.contingency.json.ContingencyJsonModule;
 import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
-import com.powsybl.dynaflow.results.ContingencyResultsUtils;
 import com.powsybl.dynawo.commons.DynawoUtil;
+import com.powsybl.dynawo.contingency.ContingencyReports;
+import com.powsybl.dynawo.contingency.ContingencyResultsUtils;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.loadflow.LoadFlowParameters;
 import com.powsybl.security.LimitViolationFilter;
@@ -39,10 +40,10 @@ import java.util.function.Predicate;
 
 import static com.powsybl.dynaflow.DynaFlowConstants.CONFIG_FILENAME;
 import static com.powsybl.dynaflow.SecurityAnalysisConstants.CONTINGENCIES_FILENAME;
-import static com.powsybl.dynaflow.results.ContingencyResultsUtils.createSecurityAnalysisResult;
 import static com.powsybl.dynawo.commons.DynawoConstants.NETWORK_FILENAME;
 import static com.powsybl.dynawo.commons.DynawoConstants.TIMELINE_FOLDER;
 import static com.powsybl.dynawo.commons.DynawoUtil.getCommandExecutions;
+import static com.powsybl.dynawo.contingency.ContingencyResultsUtils.createSecurityAnalysisResult;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
@@ -107,7 +108,7 @@ public final class DynaFlowSecurityAnalysisHandler extends AbstractExecutionHand
     private Predicate<Contingency> nonSidedContingency() {
         return c -> {
             if (c instanceof SidedContingencyElement sidedC && sidedC.getVoltageLevelId() != null) {
-                DynaflowReports.createSidedContingencyReportNode(reportNode, c.getId());
+                ContingencyReports.createSidedContingencyReportNode(reportNode, c.getId());
                 return false;
             }
             return true;
