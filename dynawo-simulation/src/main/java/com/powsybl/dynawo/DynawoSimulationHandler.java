@@ -183,21 +183,14 @@ public final class DynawoSimulationHandler extends AbstractExecutionHandler<Dyna
     private void setCurves(Path workingDir) {
         Path curvesPath = workingDir.resolve(CURVES_OUTPUT_PATH).resolve(CURVES_FILENAME);
         if (Files.exists(curvesPath)) {
-            TimeSeries.parseCsv(curvesPath, new TimeSeriesCsvConfig(TimeSeriesConstants.DEFAULT_SEPARATOR, false, TimeSeries.TimeFormat.FRACTIONS_OF_SECOND))
-                    .values().forEach(l -> l.forEach(curve -> curves.put(curve.getMetadata().getName(), sanitizeDoubleTimeSeries((DoubleTimeSeries) curve))));
+            TimeSeries.parseCsv(curvesPath, new TimeSeriesCsvConfig(TimeSeriesConstants.DEFAULT_SEPARATOR, false,
+                            TimeSeries.TimeFormat.FRACTIONS_OF_SECOND, true, true))
+                    .values().forEach(l -> l.forEach(curve -> curves.put(curve.getMetadata().getName(), (DoubleTimeSeries) curve)));
         } else {
             LOGGER.warn("Curves folder not found");
             status = DynamicSimulationResult.Status.FAILURE;
             statusText = "Dynawo curves folder not found";
         }
-    }
-
-    private DoubleTimeSeries sanitizeDoubleTimeSeries(DoubleTimeSeries series) {
-        Set<Long> times = new LinkedHashSet<>();
-        double[] values = series.stream().filter(dp -> times.add(dp.getTime())).mapToDouble(DoublePoint::getValue).toArray();
-        return TimeSeries.createDouble(series.getMetadata().getName(),
-                new IrregularTimeSeriesIndex(times.stream().mapToLong(l -> l).toArray()),
-                values);
     }
 
     private void setFinalStateValues(Path workingDir) {
