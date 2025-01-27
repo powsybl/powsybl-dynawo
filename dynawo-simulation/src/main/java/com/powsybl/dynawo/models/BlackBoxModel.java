@@ -36,9 +36,9 @@ public interface BlackBoxModel extends Model {
 
     List<MacroConnectAttribute> getMacroConnectFromAttributes();
 
-    String getParFile(DynawoSimulationContext context);
+    String getDefaultParFile();
 
-    void write(XMLStreamWriter writer, DynawoSimulationContext context) throws XMLStreamException;
+    void write(XMLStreamWriter writer) throws XMLStreamException;
 
     void write(XMLStreamWriter writer, String parFileName) throws XMLStreamException;
 

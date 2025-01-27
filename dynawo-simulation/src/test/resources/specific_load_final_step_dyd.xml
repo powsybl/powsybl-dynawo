@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
+    <dyn:blackBoxModel id="LOAD" lib="LoadAlphaBeta" parFile="models.par" parId="lab" staticId="LOAD">
+        <dyn:macroStaticRef id="MSR_LoadAlphaBeta"/>
+    </dyn:blackBoxModel>
+    <dyn:macroConnect connector="MC_LoadAlphaBeta-DefaultEquipmentConnectionPoint" id1="LOAD" id2="NETWORK"/>
+</dyn:dynamicModelsArchitecture>

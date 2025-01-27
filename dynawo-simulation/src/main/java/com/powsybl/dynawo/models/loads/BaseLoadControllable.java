@@ -8,13 +8,13 @@
 package com.powsybl.dynawo.models.loads;
 
 import com.powsybl.dynawo.builders.ModelConfig;
-import com.powsybl.dynawo.models.events.ControllableEquipment;
+import com.powsybl.dynawo.models.events.ControllableEquipmentModel;
 import com.powsybl.iidm.network.Load;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class BaseLoadControllable extends BaseLoad implements ControllableEquipment {
+public class BaseLoadControllable extends BaseLoad implements ControllableEquipmentModel {
 
     protected BaseLoadControllable(String dynamicModelId, Load load, String parameterSetId, ModelConfig modelConfig) {
         super(dynamicModelId, load, parameterSetId, modelConfig);
