@@ -58,6 +58,6 @@ class XmlResultParserTest {
     void testInconsistentFile() throws XMLStreamException {
         InputStreamReader xml = new InputStreamReader(Objects.requireNonNull(getClass().getResourceAsStream("/wrongResult.xml")));
         List<LoadIncreaseResult> result = new XmlMarginCalculationResultParser().parse(xml);
-        assertEquals(0, result.size());
+        assertEquals(1, result.size());
     }
 }

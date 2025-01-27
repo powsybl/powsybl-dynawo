@@ -5,6 +5,6 @@
             <scenario id="LOAD" dydFile="LOAD.dyd"/>
             <scenario id="DisconnectLineGenerator" dydFile="DisconnectLineGenerator.dyd"/>
         </scenarios>
-        <loadIncrease id="load_variation_area.dyd" jobsFile="powsybl_dynawo.jobs"/>
+        <loadIncrease id="load_variation_area" jobsFile="powsybl_dynawo.jobs"/>
     </marginCalculation>
 </multipleJobs>
