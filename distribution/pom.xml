@@ -28,6 +28,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>powsybl-dynawo-commons</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -37,14 +38,17 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>powsybl-dynaflow</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>powsybl-dynawo-simulation</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>powsybl-dynawo-dsl</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -64,6 +68,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>powsybl-dynawo-integration-tests</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 

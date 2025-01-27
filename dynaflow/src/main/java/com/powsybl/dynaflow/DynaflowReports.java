@@ -30,4 +30,11 @@ public final class DynaflowReports {
                 .withUntypedValue("networkId", networkId)
                 .add();
     }
+
+    public static void createSidedContingencyReportNode(ReportNode reportNode, String contingencyId) {
+        reportNode.newReportNode()
+                .withMessageTemplate("saContingency", "Contingency '${contingencyId}' has a voltageId information and cannot be handle by DynaFlow, the contingency will be skipped")
+                .withUntypedValue("contingencyId", contingencyId)
+                .add();
+    }
 }

@@ -22,7 +22,6 @@ import com.powsybl.contingency.contingency.list.DefaultContingencyList;
 import com.powsybl.contingency.json.ContingencyJsonModule;
 import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
 import com.powsybl.dynawo.commons.DynawoUtil;
-import com.powsybl.dynawo.contingency.ContingencyReports;
 import com.powsybl.dynawo.contingency.ContingencyResultsUtils;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.loadflow.LoadFlowParameters;
@@ -39,6 +38,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import static com.powsybl.dynaflow.DynaFlowConstants.CONFIG_FILENAME;
+import static com.powsybl.dynaflow.DynaflowReports.createSidedContingencyReportNode;
 import static com.powsybl.dynaflow.SecurityAnalysisConstants.CONTINGENCIES_FILENAME;
 import static com.powsybl.dynawo.commons.DynawoConstants.NETWORK_FILENAME;
 import static com.powsybl.dynawo.commons.DynawoConstants.TIMELINE_FOLDER;
@@ -108,7 +108,7 @@ public final class DynaFlowSecurityAnalysisHandler extends AbstractExecutionHand
     private Predicate<Contingency> nonSidedContingency() {
         return c -> {
             if (c instanceof SidedContingencyElement sidedC && sidedC.getVoltageLevelId() != null) {
-                ContingencyReports.createSidedContingencyReportNode(reportNode, c.getId());
+                createSidedContingencyReportNode(reportNode, c.getId());
                 return false;
             }
             return true;
