@@ -244,7 +244,6 @@ public class MarginCalculationTool implements Tool {
             formatter.writeEmptyCells(4);
             formatter.writeCell(scenarioResult.id());
             formatter.writeCell(scenarioResult.status().toString());
-            formatter.writeEmptyCells(2);
             List<FailedCriterion> scenarioCriteria = scenarioResult.failedCriteria();
             if (scenarioCriteria.isEmpty()) {
                 formatter.writeEmptyCells(2);

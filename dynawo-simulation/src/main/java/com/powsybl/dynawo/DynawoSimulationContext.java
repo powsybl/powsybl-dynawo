@@ -50,7 +50,6 @@ public class DynawoSimulationContext implements DydDataSupplier {
 
     protected final Network network;
     private final String workingVariantId;
-    private final DynamicSimulationParameters parameters;
     private final DynawoSimulationParameters dynawoSimulationParameters;
     private final List<BlackBoxModel> dynamicModels;
     private final List<BlackBoxModel> eventModels;
@@ -63,7 +62,8 @@ public class DynawoSimulationContext implements DydDataSupplier {
     private final FrequencySynchronizerModel frequencySynchronizer;
     private final List<ParametersSet> dynamicModelsParameters = new ArrayList<>();
     protected final MacroConnectionsAdder macroConnectionsAdder;
-    private final FinalStepConfig finalStepConfig;
+    private final SimulationTime simulationTime;
+    private final SimulationTime finalStepTime;
     private FinalStepModels finalStepModels;
 
     public DynawoSimulationContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
@@ -84,9 +84,11 @@ public class DynawoSimulationContext implements DydDataSupplier {
         DynawoVersion dynawoVersion = Objects.requireNonNull(currentVersion);
         this.network = Objects.requireNonNull(network);
         this.workingVariantId = Objects.requireNonNull(workingVariantId);
-        this.parameters = Objects.requireNonNull(parameters);
         this.dynawoSimulationParameters = Objects.requireNonNull(dynawoSimulationParameters);
-        this.finalStepConfig = finalStepConfig;
+        this.simulationTime = new SimulationTime(parameters.getStartTime(), parameters.getStopTime());
+        this.finalStepTime = finalStepConfig != null
+                ? new SimulationTime(parameters.getStopTime(), finalStepConfig.stopTime())
+                : null;
 
         Stream<BlackBoxModel> uniqueIdsDynamicModels = Objects.requireNonNull(dynamicModels).stream()
                 .filter(distinctByDynamicId(contextReportNode)
@@ -194,21 +196,12 @@ public class DynawoSimulationContext implements DydDataSupplier {
         return workingVariantId;
     }
 
-    public double getStartTime() {
-        return parameters.getStartTime();
+    public SimulationTime getSimulationTime() {
+        return simulationTime;
     }
 
-    public double getStopTime() {
-        return parameters.getStopTime();
-    }
-
-    //TODO represents start-stop time as a record ?
-    public Double getFinalStepStartTime() {
-        return finalStepConfig != null ? parameters.getStopTime() : Double.NaN;
-    }
-
-    public Double getFinalStepStopTime() {
-        return finalStepConfig != null ? finalStepConfig.stopTime() : Double.NaN;
+    public SimulationTime getFinalStepSimulationTime() {
+        return finalStepTime;
     }
 
     public DynawoSimulationParameters getDynawoSimulationParameters() {

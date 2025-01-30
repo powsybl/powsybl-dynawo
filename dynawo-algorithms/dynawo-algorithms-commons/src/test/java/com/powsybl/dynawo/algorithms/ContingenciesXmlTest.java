@@ -36,17 +36,12 @@ class ContingenciesXmlTest extends DynawoTestUtil {
 
     @Test
     void writeDyds() throws SAXException, IOException, XMLStreamException {
-//        DynamicSecurityAnalysisParameters parameters = DynamicSecurityAnalysisParameters.load();
-//        parameters.setDynamicSimulationParameters(new DynamicSimulationParameters(0, 20));
-//        parameters.setDynamicContingenciesParameters(new DynamicSecurityAnalysisParameters.ContingenciesParameters(10));
-        DynawoSimulationParameters dynawoSimulationParameters = DynawoSimulationParameters.load();
         List<Contingency> contingencies = List.of(
                 Contingency.load("LOAD"),
                 Contingency.builder("DisconnectLineGenerator")
                         .addLine("NHV1_NHV2_1")
                         .addGenerator("GEN2")
                         .build());
-//        SecurityAnalysisContext context = new SecurityAnalysisContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, parameters, dynawoSimulationParameters, contingencies);
 
         DynawoSimulationContext context = setupDynawoContext(network, dynamicModels);
         MacroConnectionsAdder macroConnectionsAdder = new MacroConnectionsAdder(context::getDynamicModel,

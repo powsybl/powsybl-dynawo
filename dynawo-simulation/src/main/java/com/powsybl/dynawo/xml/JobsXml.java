@@ -10,6 +10,7 @@ import com.powsybl.dynawo.DumpFileParameters;
 import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.DynawoSimulationParameters.SolverType;
+import com.powsybl.dynawo.SimulationTime;
 import com.powsybl.dynawo.commons.ExportMode;
 
 import javax.xml.stream.XMLStreamException;
@@ -17,6 +18,7 @@ import javax.xml.stream.XMLStreamWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import static com.powsybl.dynawo.DynawoSimulationConstants.*;
 import static com.powsybl.dynawo.DynawoSimulationConstants.DYD_FILENAME;
@@ -30,30 +32,30 @@ import static com.powsybl.dynawo.xml.DynawoSimulationXmlConstants.DYN_URI;
 public final class JobsXml extends AbstractXmlDynawoSimulationWriter<DynawoSimulationContext> {
 
     private static final String EXPORT_MODE = "exportMode";
-    private final boolean isFinalStep;
+    private final Supplier<SimulationTime> simulationTimeSupplier;
     private final String additionalDydFile;
 
-    private JobsXml(String xmlFileName, boolean isFinalStep) {
-        this(xmlFileName, isFinalStep, null);
+    private JobsXml(String xmlFileName, Supplier<SimulationTime> simulationTimeSupplier) {
+        this(xmlFileName, simulationTimeSupplier, null);
     }
 
-    private JobsXml(String xmlFileName, boolean isFinalStep, String additionalDydFile) {
+    private JobsXml(String xmlFileName, Supplier<SimulationTime> simulationTimeSupplier, String additionalDydFile) {
         super(xmlFileName, "jobs");
-        this.isFinalStep = isFinalStep;
+        this.simulationTimeSupplier = simulationTimeSupplier;
         this.additionalDydFile = additionalDydFile;
     }
 
     public static void write(Path workingDir, DynawoSimulationContext context) throws IOException {
-        new JobsXml(JOBS_FILENAME, false).createXmlFileFromDataSupplier(workingDir, context);
+        new JobsXml(JOBS_FILENAME, context::getSimulationTime).createXmlFileFromDataSupplier(workingDir, context);
     }
 
     public static void write(Path workingDir, DynawoSimulationContext context, String additionalDydFile) throws IOException {
-        new JobsXml(JOBS_FILENAME, false, additionalDydFile).createXmlFileFromDataSupplier(workingDir, context);
+        new JobsXml(JOBS_FILENAME, context::getSimulationTime, additionalDydFile).createXmlFileFromDataSupplier(workingDir, context);
     }
 
-    //TODO replace with context info ?
     public static void writeFinalStep(Path workingDir, DynawoSimulationContext context) throws IOException {
-        new JobsXml(FINAL_STEP_JOBS_FILENAME, true, FINAL_STEP_DYD_FILENAME).createXmlFileFromDataSupplier(workingDir, context);
+        new JobsXml(FINAL_STEP_JOBS_FILENAME, context::getFinalStepSimulationTime, FINAL_STEP_DYD_FILENAME)
+                .createXmlFileFromDataSupplier(workingDir, context);
     }
 
     @Override
@@ -63,11 +65,7 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter<DynawoSimul
         writer.writeAttribute("name", "Job");
         writeSolver(writer, parameters);
         writeModeler(writer, parameters, additionalDydFile);
-        if (isFinalStep) {
-            writeSimulation(writer, parameters, context.getFinalStepStartTime(), context.getFinalStepStopTime());
-        } else {
-            writeSimulation(writer, parameters, context.getStartTime(), context.getStopTime());
-        }
+        writeSimulation(writer, parameters, simulationTimeSupplier.get());
         writeOutput(writer, context);
         writer.writeEndElement();
     }
@@ -110,15 +108,15 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter<DynawoSimul
         writer.writeEndElement();
     }
 
-    private static void writeSimulation(XMLStreamWriter writer, DynawoSimulationParameters parameters, Double startTime, Double stopTime) throws XMLStreamException {
+    private static void writeSimulation(XMLStreamWriter writer, DynawoSimulationParameters parameters, SimulationTime simulationTime) throws XMLStreamException {
         Optional<String> criteriaFileName = parameters.getCriteriaFileName();
         if (criteriaFileName.isPresent()) {
             writer.writeStartElement(DYN_URI, "simulation");
         } else {
             writer.writeEmptyElement(DYN_URI, "simulation");
         }
-        writer.writeAttribute("startTime", Double.toString(startTime));
-        writer.writeAttribute("stopTime", Double.toString(stopTime));
+        writer.writeAttribute("startTime", Double.toString(simulationTime.startTime()));
+        writer.writeAttribute("stopTime", Double.toString(simulationTime.stopTime()));
         writer.writeAttribute("precision", Double.toString(parameters.getPrecision()));
         if (criteriaFileName.isPresent()) {
             writer.writeEmptyElement(DYN_URI, "criteria");
