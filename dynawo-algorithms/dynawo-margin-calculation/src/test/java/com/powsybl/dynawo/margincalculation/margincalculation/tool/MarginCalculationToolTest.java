@@ -116,7 +116,7 @@ class MarginCalculationToolTest extends AbstractToolTest {
                     |            |                        |                     |                      | Disconnect gen  | CONVERGENCE            |                              |                                |
                     | 25,0000    | CONVERGENCE            |                     |                      |                 |                        |                              |                                |
                     +------------+------------------------+---------------------+----------------------+-----------------+------------------------+------------------------------+--------------------------------+
-                    """.replaceAll("\n", System.lineSeparator());
+                    """;
             assertCommandSuccessful(new String[]{"margin-calculation",
                 "--case-file", "/network.xiidm",
                 "--dynamic-models-file", "/dynamicModels.groovy",
@@ -133,7 +133,7 @@ class MarginCalculationToolTest extends AbstractToolTest {
                     Loading network '/network.xiidm'
                     Margin Calculation Tool
                     Writing results to 'outputTest.json'
-                    """.replaceAll("\n", System.lineSeparator());
+                    """;
             String expectedOutputFile = """
                     {
                       "version" : "1.0",
@@ -205,7 +205,7 @@ class MarginCalculationToolTest extends AbstractToolTest {
                     |            |                        |                     |                      | Disconnect gen  | CONVERGENCE            |                              |                                |
                     | 25,0000    | CONVERGENCE            |                     |                      |                 |                        |                              |                                |
                     +------------+------------------------+---------------------+----------------------+-----------------+------------------------+------------------------------+--------------------------------+
-                    """.replaceAll("\n", System.lineSeparator());
+                    """;
             String expectedOutputFile = "Margin Calculation Tool\n";
             assertCommandSuccessful(new String[]{"margin-calculation",
                 "--case-file", "/network.xiidm",
