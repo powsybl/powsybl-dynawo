@@ -41,7 +41,7 @@ class MixedFreqSynchSignalNXmlTest extends AbstractDynamicModelXmlTest {
     }
 
     @Override
-    void setupDynawoContext() {
+    protected void setupDynawoContext() {
         // empty to call super in test
     }
 

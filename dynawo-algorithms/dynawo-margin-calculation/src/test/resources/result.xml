@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aggregatedResults xmlns="http://www.rte-france.com/dynawo">
+    <loadIncreaseResults loadLevel="100" status="CRITERIA_NON_RESPECTED">
+        <criterionNonRespected id="total load power = 295.381MW" time="70.000000"/>
+    </loadIncreaseResults>
+    <loadIncreaseResults loadLevel="50" status="CONVERGENCE">
+        <scenarioResults id="DisconnectLine" status="CONVERGENCE"/>
+        <scenarioResults id="DisconnectGroup" status="CRITERIA_NON_RESPECTED">
+            <criterionNonRespected id="total load power = 276.374MW" time="185.000000"/>
+        </scenarioResults>
+        <scenarioResults id="DisconnectGenerator" status="DIVERGENCE"/>
+    </loadIncreaseResults>
+    <loadIncreaseResults loadLevel="60" status="DIVERGENCE">
+    </loadIncreaseResults>
+    <loadIncreaseResults loadLevel="70" status="EXECUTION_PROBLEM">
+    </loadIncreaseResults>
+</aggregatedResults>

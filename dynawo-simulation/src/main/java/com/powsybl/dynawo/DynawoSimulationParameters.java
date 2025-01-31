@@ -274,7 +274,11 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
     }
 
     public DynawoSimulationParameters setSpecificLogs(Set<SpecificLog> specificLogs) {
-        this.specificLogs = EnumSet.copyOf(specificLogs);
+        if (specificLogs.isEmpty()) {
+            this.specificLogs = EnumSet.noneOf(SpecificLog.class);
+        } else {
+            this.specificLogs = EnumSet.copyOf(specificLogs);
+        }
         return this;
     }
 

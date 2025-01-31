@@ -9,7 +9,6 @@ package com.powsybl.dynawo;
 
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawo.xml.DydXml;
-import com.powsybl.dynawo.xml.JobsXml;
 import com.powsybl.dynawo.xml.OutputVariablesXml;
 import com.powsybl.dynawo.xml.ParametersXml;
 
@@ -38,7 +37,6 @@ public final class DynawoFilesUtils {
     }
 
     public static void writeInputFiles(Path workingDir, DynawoSimulationContext context) throws IOException {
-        JobsXml.write(workingDir, context);
         DydXml.write(workingDir, context);
         ParametersXml.write(workingDir, context);
         if (context.withCurveVariables()) {

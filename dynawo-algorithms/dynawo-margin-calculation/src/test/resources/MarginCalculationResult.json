@@ -1,0 +1,33 @@
+{
+  "version" : "1.0",
+  "loadIncreases" : [ {
+    "loadLevel" : 100.0,
+    "status" : "CRITERIA_NON_RESPECTED",
+    "failedCriteria" : [ {
+      "description" : "Failed crit1",
+      "time" : 23.2
+    } ],
+    "scenarioResults" : [ ]
+  }, {
+    "loadLevel" : 75.0,
+    "status" : "DIVERGENCE",
+    "failedCriteria" : [ ],
+    "scenarioResults" : [ {
+      "id" : "cont1",
+      "status" : "CONVERGENCE",
+      "failedCriteria" : [ ]
+    }, {
+      "id" : "cont2",
+      "status" : "CRITERIA_NON_RESPECTED",
+      "failedCriteria" : [ {
+        "description" : "Failed crit",
+        "time" : 3.3
+      } ]
+    } ]
+  }, {
+    "loadLevel" : 50.0,
+    "status" : "CONVERGENCE",
+    "failedCriteria" : [ ],
+    "scenarioResults" : [ ]
+  } ]
+}

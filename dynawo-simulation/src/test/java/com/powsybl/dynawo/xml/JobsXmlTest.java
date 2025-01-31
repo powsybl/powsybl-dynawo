@@ -6,11 +6,11 @@
  */
 package com.powsybl.dynawo.xml;
 
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
-import com.powsybl.dynawo.DumpFileParameters;
-import com.powsybl.dynawo.DynawoSimulationConstants;
-import com.powsybl.dynawo.DynawoSimulationContext;
-import com.powsybl.dynawo.DynawoSimulationParameters;
+import com.powsybl.dynawo.*;
+import com.powsybl.dynawo.commons.DynawoConstants;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -45,5 +45,26 @@ class JobsXmlTest extends DynawoTestUtil {
                 Arguments.of("jobsWithCriteria.xml", DynawoSimulationParameters.load()
                         .setCriteriaFilePath(Path.of("criteria.crt")))
         );
+    }
+
+    @Test
+    void testAdditionalDydJobXml() throws IOException, SAXException {
+        DynawoSimulationContext context = new DynawoSimulationContext(network, network.getVariantManager().getWorkingVariantId(),
+                dynamicModels, eventModels, outputVariables, DynamicSimulationParameters.load(), DynawoSimulationParameters.load());
+        JobsXml.write(tmpDir, context, "additional_models.dyd");
+        validate("jobs.xsd", "jobsWithAdditionalDyd.xml", tmpDir.resolve(DynawoSimulationConstants.JOBS_FILENAME));
+    }
+
+    @Test
+    void writeFinalStepJob() throws SAXException, IOException {
+        DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
+        DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load();
+        DynawoSimulationContext context = new DynawoSimulationContext(network, network.getVariantManager().getWorkingVariantId(),
+                dynamicModels, eventModels, outputVariables, parameters, dynawoParameters,
+                new FinalStepConfig(200, bbm -> bbm.getDynamicModelId().equalsIgnoreCase("BBM_LOAD2")),
+                DynawoConstants.VERSION_MIN, ReportNode.NO_OP);
+
+        JobsXml.writeFinalStep(tmpDir, context);
+        validate("jobs.xsd", "jobsWithFinalStep.xml", tmpDir.resolve(DynawoSimulationConstants.FINAL_STEP_JOBS_FILENAME));
     }
 }

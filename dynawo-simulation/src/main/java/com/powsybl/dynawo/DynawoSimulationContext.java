@@ -25,6 +25,7 @@ import com.powsybl.dynawo.models.macroconnections.MacroConnect;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.macroconnections.MacroConnector;
 import com.powsybl.dynawo.parameters.ParametersSet;
+import com.powsybl.dynawo.xml.DydDataSupplier;
 import com.powsybl.dynawo.xml.MacroStaticReference;
 import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.Network;
@@ -41,7 +42,7 @@ import java.util.stream.Stream;
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class DynawoSimulationContext {
+public class DynawoSimulationContext implements DydDataSupplier {
 
     protected static final Logger LOGGER = LoggerFactory.getLogger(DynawoSimulationContext.class);
     private static final String MODEL_ID_EXCEPTION = "The model identified by the static id %s does not match the expected model (%s)";
@@ -49,7 +50,6 @@ public class DynawoSimulationContext {
 
     protected final Network network;
     private final String workingVariantId;
-    private final DynamicSimulationParameters parameters;
     private final DynawoSimulationParameters dynawoSimulationParameters;
     private final List<BlackBoxModel> dynamicModels;
     private final List<BlackBoxModel> eventModels;
@@ -62,30 +62,50 @@ public class DynawoSimulationContext {
     private final FrequencySynchronizerModel frequencySynchronizer;
     private final List<ParametersSet> dynamicModelsParameters = new ArrayList<>();
     protected final MacroConnectionsAdder macroConnectionsAdder;
-
-    public DynawoSimulationContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
-                                   List<OutputVariable> outputVariables, DynamicSimulationParameters parameters, DynawoSimulationParameters dynawoSimulationParameters) {
-        this(network, workingVariantId, dynamicModels, eventModels, outputVariables, parameters, dynawoSimulationParameters, DynawoConstants.VERSION_MIN, ReportNode.NO_OP);
-    }
+    private final SimulationTime simulationTime;
+    private final SimulationTime finalStepTime;
+    private FinalStepModels finalStepModels;
 
     public DynawoSimulationContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
                                    List<OutputVariable> outputVariables, DynamicSimulationParameters parameters, DynawoSimulationParameters dynawoSimulationParameters,
                                    DynawoVersion currentVersion, ReportNode reportNode) {
+        this(network, workingVariantId, dynamicModels, eventModels, outputVariables, parameters, dynawoSimulationParameters, null, currentVersion, reportNode);
+    }
 
+    public DynawoSimulationContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
+                                   List<OutputVariable> outputVariables, DynamicSimulationParameters parameters, DynawoSimulationParameters dynawoSimulationParameters) {
+        this(network, workingVariantId, dynamicModels, eventModels, outputVariables, parameters, dynawoSimulationParameters, null, DynawoConstants.VERSION_MIN, ReportNode.NO_OP);
+    }
+
+    public DynawoSimulationContext(Network network, String workingVariantId, List<BlackBoxModel> dynamicModels, List<BlackBoxModel> eventModels,
+                                   List<OutputVariable> outputVariables, DynamicSimulationParameters parameters, DynawoSimulationParameters dynawoSimulationParameters,
+                                   FinalStepConfig finalStepConfig, DynawoVersion currentVersion, ReportNode reportNode) {
         ReportNode contextReportNode = DynawoSimulationReports.createDynawoSimulationContextReportNode(reportNode);
         DynawoVersion dynawoVersion = Objects.requireNonNull(currentVersion);
         this.network = Objects.requireNonNull(network);
         this.workingVariantId = Objects.requireNonNull(workingVariantId);
-        this.parameters = Objects.requireNonNull(parameters);
         this.dynawoSimulationParameters = Objects.requireNonNull(dynawoSimulationParameters);
+        this.simulationTime = new SimulationTime(parameters.getStartTime(), parameters.getStopTime());
+        this.finalStepTime = finalStepConfig != null
+                ? new SimulationTime(parameters.getStopTime(), finalStepConfig.stopTime())
+                : null;
 
         Stream<BlackBoxModel> uniqueIdsDynamicModels = Objects.requireNonNull(dynamicModels).stream()
                 .filter(distinctByDynamicId(contextReportNode)
                         .and(distinctByStaticId(contextReportNode)
                         .and(supportedVersion(dynawoVersion, contextReportNode))));
-        this.dynamicModels = dynawoSimulationParameters.isUseModelSimplifiers()
-                ? simplifyModels(uniqueIdsDynamicModels, contextReportNode).toList()
-                : uniqueIdsDynamicModels.toList();
+        if (dynawoSimulationParameters.isUseModelSimplifiers()) {
+            uniqueIdsDynamicModels = simplifyModels(uniqueIdsDynamicModels, contextReportNode);
+        }
+
+        List<BlackBoxModel> finalStepDynamicModels = List.of();
+        if (finalStepConfig != null) {
+            Map<Boolean, List<BlackBoxModel>> splitModels = uniqueIdsDynamicModels.collect(Collectors.partitioningBy(finalStepConfig.modelsPredicate()));
+            this.dynamicModels = splitModels.get(false);
+            finalStepDynamicModels = splitModels.get(true);
+        } else {
+            this.dynamicModels = uniqueIdsDynamicModels.toList();
+        }
 
         this.eventModels = Objects.requireNonNull(eventModels).stream()
                 .filter(distinctByDynamicId(contextReportNode)
@@ -111,17 +131,26 @@ public class DynawoSimulationContext {
                 macroConnectorsMap::computeIfAbsent,
                 contextReportNode);
 
-        for (BlackBoxModel bbm : getBlackBoxDynamicModelStream().toList()) {
+        // Write macro connection
+        getBlackBoxDynamicModelStream().forEach(bbm -> {
             macroStaticReferences.computeIfAbsent(bbm.getName(), k -> new MacroStaticReference(k, bbm.getVarsMapping()));
             bbm.createMacroConnections(macroConnectionsAdder);
             bbm.createDynamicModelParameters(this, dynamicModelsParameters::add);
-        }
+        });
 
         ParametersSet networkParameters = getDynawoSimulationParameters().getNetworkParameters();
         for (BlackBoxModel bbem : eventModels) {
             bbem.createMacroConnections(macroConnectionsAdder);
             bbem.createDynamicModelParameters(this, dynamicModelsParameters::add);
             bbem.createNetworkParameter(networkParameters);
+        }
+
+        // Write final step macro connections
+        if (!finalStepDynamicModels.isEmpty()) {
+            finalStepModels = new FinalStepModels(finalStepDynamicModels, macroConnectionsAdder,
+                    bbm -> !macroStaticReferences.containsKey(bbm.getName()),
+                    n -> !macroConnectorsMap.containsKey(n));
+            finalStepModels.getBlackBoxDynamicModels().forEach(bbm -> bbm.createDynamicModelParameters(this, dynamicModelsParameters::add));
         }
     }
 
@@ -142,13 +171,14 @@ public class DynawoSimulationContext {
         List<FrequencySynchronizedModel> frequencySynchronizedModels = filterDynamicModels(FrequencySynchronizedModel.class);
         boolean hasSpecificBuses = dynamicModels.stream().anyMatch(AbstractBus.class::isInstance);
         boolean hasSignalNModel = !signalNModels.isEmpty();
+        String defaultParFile = DynawoSimulationConstants.getSimulationParFile(getNetwork());
         if (!frequencySynchronizedModels.isEmpty() && hasSignalNModel) {
             throw new PowsyblException("Signal N and frequency synchronized generators cannot be used with one another");
         }
         if (hasSignalNModel) {
-            return new SignalN(signalNModels);
+            return new SignalN(signalNModels, defaultParFile);
         }
-        return hasSpecificBuses ? new SetPoint(frequencySynchronizedModels) : new OmegaRef(frequencySynchronizedModels);
+        return hasSpecificBuses ? new SetPoint(frequencySynchronizedModels, defaultParFile) : new OmegaRef(frequencySynchronizedModels, defaultParFile);
     }
 
     private <T extends Model> List<T> filterDynamicModels(Class<T> modelClass) {
@@ -166,14 +196,19 @@ public class DynawoSimulationContext {
         return workingVariantId;
     }
 
-    public DynamicSimulationParameters getParameters() {
-        return parameters;
+    public SimulationTime getSimulationTime() {
+        return simulationTime;
+    }
+
+    public SimulationTime getFinalStepSimulationTime() {
+        return finalStepTime;
     }
 
     public DynawoSimulationParameters getDynawoSimulationParameters() {
         return dynawoSimulationParameters;
     }
 
+    @Override
     public Collection<MacroStaticReference> getMacroStaticReferences() {
         return macroStaticReferences.values();
     }
@@ -259,10 +294,12 @@ public class DynawoSimulationContext {
         return staticIdBlackBoxModelMap.containsKey(equipment.getId());
     }
 
+    @Override
     public List<MacroConnect> getMacroConnectList() {
         return macroConnectList;
     }
 
+    @Override
     public Collection<MacroConnector> getMacroConnectors() {
         return macroConnectorsMap.values();
     }
@@ -279,6 +316,7 @@ public class DynawoSimulationContext {
         return Stream.concat(getInputBlackBoxDynamicModelStream(), Stream.of(frequencySynchronizer));
     }
 
+    @Override
     public List<BlackBoxModel> getBlackBoxDynamicModels() {
         return getBlackBoxDynamicModelStream().toList();
     }
@@ -287,6 +325,7 @@ public class DynawoSimulationContext {
         return eventModels.stream();
     }
 
+    @Override
     public List<BlackBoxModel> getBlackBoxEventModels() {
         return eventModels;
     }
@@ -313,5 +352,9 @@ public class DynawoSimulationContext {
 
     public String getSimulationParFile() {
         return getNetwork().getId() + ".par";
+    }
+
+    public Optional<DydDataSupplier> getFinalStepDydData() {
+        return Optional.ofNullable(finalStepModels);
     }
 }

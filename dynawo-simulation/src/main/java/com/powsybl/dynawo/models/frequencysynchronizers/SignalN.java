@@ -26,10 +26,12 @@ public class SignalN extends AbstractPureDynamicBlackBoxModel implements Frequen
     private static final String SIGNAL_N_ID = "Signal_N";
     private static final ModelConfig MODEL_CONFIG = new ModelConfig("SignalN");
     private final List<SignalNModel> signalNEquipments;
+    private final String defaultParFile;
 
-    public SignalN(List<SignalNModel> signalNEquipments) {
+    public SignalN(List<SignalNModel> signalNEquipments, String defaultParFile) {
         super(SIGNAL_N_ID, "", MODEL_CONFIG);
         this.signalNEquipments = signalNEquipments;
+        this.defaultParFile = defaultParFile;
     }
 
     @Override
@@ -59,5 +61,10 @@ public class SignalN extends AbstractPureDynamicBlackBoxModel implements Frequen
     protected void writeDynamicAttributes(XMLStreamWriter writer, String parFileName) throws XMLStreamException {
         writer.writeAttribute("id", getDynamicModelId());
         writer.writeAttribute("lib", getLib());
+    }
+
+    @Override
+    public String getDefaultParFile() {
+        return defaultParFile;
     }
 }
