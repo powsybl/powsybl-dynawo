@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -228,5 +229,11 @@ class MarginCalculationToolTest extends AbstractToolTest {
                 CommandLineTools.EXECUTION_ERROR_STATUS,
                 "File /wrong_network.xiidm does not exist");
         }
+    }
+
+    @Override
+    protected void assertCommandSuccessful(String[] args, String expectedOut) {
+        assertCommandResult(args, CommandLineTools.COMMAND_OK_STATUS, expectedOut, "",
+                (s1, s2) -> assertThat(s1).isEqualToNormalizingNewlines(s2));
     }
 }
