@@ -19,6 +19,7 @@ import com.powsybl.tools.Command;
 import com.powsybl.tools.CommandLineTools;
 import com.powsybl.tools.Tool;
 import com.powsybl.tools.test.AbstractToolTest;
+import org.apache.commons.text.StringEscapeUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedConstruction;
@@ -234,6 +235,6 @@ class MarginCalculationToolTest extends AbstractToolTest {
     @Override
     protected void assertCommandSuccessful(String[] args, String expectedOut) {
         assertCommandResult(args, CommandLineTools.COMMAND_OK_STATUS, expectedOut, "",
-                (s1, s2) -> assertThat(s2.trim()).isEqualToIgnoringNewLines(s1.trim()));
+                (s1, s2) -> assertThat(s2).withFailMessage(StringEscapeUtils.escapeJava(s1) + "\n -- \n" + StringEscapeUtils.escapeJava(s2)).isEqualToIgnoringNewLines(s1));
     }
 }
