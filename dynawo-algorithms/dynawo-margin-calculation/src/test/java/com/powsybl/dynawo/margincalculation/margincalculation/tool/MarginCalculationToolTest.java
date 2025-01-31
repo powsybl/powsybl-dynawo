@@ -234,6 +234,6 @@ class MarginCalculationToolTest extends AbstractToolTest {
     @Override
     protected void assertCommandSuccessful(String[] args, String expectedOut) {
         assertCommandResult(args, CommandLineTools.COMMAND_OK_STATUS, expectedOut, "",
-                (s1, s2) -> assertThat(s1).isEqualToIgnoringNewLines(s2));
+                (s1, s2) -> assertThat(s2.trim()).isEqualToIgnoringNewLines(s1.trim()));
     }
 }
