@@ -5,14 +5,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawo.margincalculation.margincalculation.json;
+package com.powsybl.dynawo.margincalculation.json;
 
 import com.powsybl.commons.test.AbstractSerDeTest;
 import com.powsybl.dynawo.contingency.results.FailedCriterion;
 import com.powsybl.dynawo.contingency.results.ScenarioResult;
 import com.powsybl.dynawo.contingency.results.Status;
-import com.powsybl.dynawo.margincalculation.json.MarginCalculationResultDeserializer;
-import com.powsybl.dynawo.margincalculation.json.MarginCalculationResultSerializer;
 import com.powsybl.dynawo.margincalculation.results.LoadIncreaseResult;
 import com.powsybl.dynawo.margincalculation.results.MarginCalculationResult;
 import org.junit.jupiter.api.Test;

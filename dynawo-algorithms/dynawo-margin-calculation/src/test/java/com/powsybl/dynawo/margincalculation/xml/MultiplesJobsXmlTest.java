@@ -5,13 +5,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawo.margincalculation.margincalculation.xml;
+package com.powsybl.dynawo.margincalculation.xml;
 
 import com.powsybl.contingency.Contingency;
 import com.powsybl.dynawo.margincalculation.MarginCalculationContext;
 import com.powsybl.dynawo.margincalculation.MarginCalculationParameters;
 import com.powsybl.dynawo.margincalculation.loadsvariation.LoadsVariation;
-import com.powsybl.dynawo.margincalculation.xml.MultipleJobsXml;
 import com.powsybl.dynawo.xml.AbstractDynamicModelXmlTest;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.Test;

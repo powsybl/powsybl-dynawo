@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawo.margincalculation.margincalculation.xml;
+package com.powsybl.dynawo.margincalculation.xml;
 
 import com.powsybl.dynawo.margincalculation.loadsvariation.LoadsVariation;
 import com.powsybl.dynawo.margincalculation.MarginCalculationContext;

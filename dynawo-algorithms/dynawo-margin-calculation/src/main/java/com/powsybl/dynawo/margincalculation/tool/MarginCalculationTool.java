@@ -48,7 +48,6 @@ import java.util.Properties;
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 @AutoService(Tool.class)
-//TODO add tests
 public class MarginCalculationTool implements Tool {
 
     private static final String CASE_FILE = "case-file";

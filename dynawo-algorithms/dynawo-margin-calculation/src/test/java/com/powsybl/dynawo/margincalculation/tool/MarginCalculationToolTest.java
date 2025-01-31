@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * SPDX-License-Identifier: MPL-2.0
  */
-package com.powsybl.dynawo.margincalculation.margincalculation.tool;
+package com.powsybl.dynawo.margincalculation.tool;
 
 import com.powsybl.commons.test.ComparisonUtils;
 import com.powsybl.dynawo.contingency.results.FailedCriterion;
@@ -14,12 +14,10 @@ import com.powsybl.dynawo.contingency.results.Status;
 import com.powsybl.dynawo.margincalculation.MarginCalculationProvider;
 import com.powsybl.dynawo.margincalculation.results.LoadIncreaseResult;
 import com.powsybl.dynawo.margincalculation.results.MarginCalculationResult;
-import com.powsybl.dynawo.margincalculation.tool.MarginCalculationTool;
 import com.powsybl.tools.Command;
 import com.powsybl.tools.CommandLineTools;
 import com.powsybl.tools.Tool;
 import com.powsybl.tools.test.AbstractToolTest;
-import org.apache.commons.text.StringEscapeUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedConstruction;
@@ -32,7 +30,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -108,15 +105,15 @@ class MarginCalculationToolTest extends AbstractToolTest {
                     +------------+------------------------+---------------------+----------------------+-----------------+------------------------+------------------------------+--------------------------------+
                     | Load level | Status                 | Failed criteria     | Failed criteria time | Scenarios       | Scenarios Status       | Scenarios failed criteria    | Scenarios failed criteria time |
                     +------------+------------------------+---------------------+----------------------+-----------------+------------------------+------------------------------+--------------------------------+
-                    | 100,000    | CRITERIA_NON_RESPECTED | Failed criteria (2) |                      |                 |                        |                              |                                |
-                    |            |                        | failed              | 10,0000              |                 |                        |                              |                                |
-                    |            |                        | failed2             | 20,0000              |                 |                        |                              |                                |
-                    | 50,0000    | DIVERGENCE             |                     |                      | Scenarios (2)   |                        |                              |                                |
+                    | 100.000    | CRITERIA_NON_RESPECTED | Failed criteria (2) |                      |                 |                        |                              |                                |
+                    |            |                        | failed              | 10.0000              |                 |                        |                              |                                |
+                    |            |                        | failed2             | 20.0000              |                 |                        |                              |                                |
+                    | 50.0000    | DIVERGENCE             |                     |                      | Scenarios (2)   |                        |                              |                                |
                     |            |                        |                     |                      | Disconnect line | CRITERIA_NON_RESPECTED | Scenario failed criteria (2) |                                |
-                    |            |                        |                     |                      |                 |                        | Sc failed                    | 10,0000                        |
-                    |            |                        |                     |                      |                 |                        | Sc failed2                   | 20,0000                        |
+                    |            |                        |                     |                      |                 |                        | Sc failed                    | 10.0000                        |
+                    |            |                        |                     |                      |                 |                        | Sc failed2                   | 20.0000                        |
                     |            |                        |                     |                      | Disconnect gen  | CONVERGENCE            |                              |                                |
-                    | 25,0000    | CONVERGENCE            |                     |                      |                 |                        |                              |                                |
+                    | 25.0000    | CONVERGENCE            |                     |                      |                 |                        |                              |                                |
                     +------------+------------------------+---------------------+----------------------+-----------------+------------------------+------------------------------+--------------------------------+
                     """;
             assertCommandSuccessful(new String[]{"margin-calculation",
@@ -197,15 +194,15 @@ class MarginCalculationToolTest extends AbstractToolTest {
                     +------------+------------------------+---------------------+----------------------+-----------------+------------------------+------------------------------+--------------------------------+
                     | Load level | Status                 | Failed criteria     | Failed criteria time | Scenarios       | Scenarios Status       | Scenarios failed criteria    | Scenarios failed criteria time |
                     +------------+------------------------+---------------------+----------------------+-----------------+------------------------+------------------------------+--------------------------------+
-                    | 100,000    | CRITERIA_NON_RESPECTED | Failed criteria (2) |                      |                 |                        |                              |                                |
-                    |            |                        | failed              | 10,0000              |                 |                        |                              |                                |
-                    |            |                        | failed2             | 20,0000              |                 |                        |                              |                                |
-                    | 50,0000    | DIVERGENCE             |                     |                      | Scenarios (2)   |                        |                              |                                |
+                    | 100.000    | CRITERIA_NON_RESPECTED | Failed criteria (2) |                      |                 |                        |                              |                                |
+                    |            |                        | failed              | 10.0000              |                 |                        |                              |                                |
+                    |            |                        | failed2             | 20.0000              |                 |                        |                              |                                |
+                    | 50.0000    | DIVERGENCE             |                     |                      | Scenarios (2)   |                        |                              |                                |
                     |            |                        |                     |                      | Disconnect line | CRITERIA_NON_RESPECTED | Scenario failed criteria (2) |                                |
-                    |            |                        |                     |                      |                 |                        | Sc failed                    | 10,0000                        |
-                    |            |                        |                     |                      |                 |                        | Sc failed2                   | 20,0000                        |
+                    |            |                        |                     |                      |                 |                        | Sc failed                    | 10.0000                        |
+                    |            |                        |                     |                      |                 |                        | Sc failed2                   | 20.0000                        |
                     |            |                        |                     |                      | Disconnect gen  | CONVERGENCE            |                              |                                |
-                    | 25,0000    | CONVERGENCE            |                     |                      |                 |                        |                              |                                |
+                    | 25.0000    | CONVERGENCE            |                     |                      |                 |                        |                              |                                |
                     +------------+------------------------+---------------------+----------------------+-----------------+------------------------+------------------------------+--------------------------------+
                     """;
             String expectedOutputFile = "Margin Calculation Tool\n";
@@ -230,11 +227,5 @@ class MarginCalculationToolTest extends AbstractToolTest {
                 CommandLineTools.EXECUTION_ERROR_STATUS,
                 "File /wrong_network.xiidm does not exist");
         }
-    }
-
-    @Override
-    protected void assertCommandSuccessful(String[] args, String expectedOut) {
-        assertCommandResult(args, CommandLineTools.COMMAND_OK_STATUS, expectedOut, "",
-                (s1, s2) -> assertThat(s2).withFailMessage(StringEscapeUtils.escapeJava(s1) + "\n -- \n" + StringEscapeUtils.escapeJava(s2)).isEqualToIgnoringNewLines(s1));
     }
 }
