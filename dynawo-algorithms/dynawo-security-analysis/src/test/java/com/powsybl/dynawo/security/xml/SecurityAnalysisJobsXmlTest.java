@@ -9,11 +9,9 @@ package com.powsybl.dynawo.security.xml;
 
 import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.DynawoSimulationContext;
-import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.security.SecurityAnalysisContext;
 import com.powsybl.dynawo.xml.DynawoTestUtil;
 import com.powsybl.dynawo.xml.JobsXml;
-import com.powsybl.security.dynamic.DynamicSecurityAnalysisParameters;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
@@ -27,8 +25,7 @@ class SecurityAnalysisJobsXmlTest extends DynawoTestUtil {
 
     @Test
     void testJobXml() throws IOException, SAXException {
-        DynawoSimulationContext context = new SecurityAnalysisContext(network, network.getVariantManager().getWorkingVariantId(),
-                dynamicModels, DynamicSecurityAnalysisParameters.load(), DynawoSimulationParameters.load(), Collections.emptyList());
+        DynawoSimulationContext context = new SecurityAnalysisContext.Builder<>(network, dynamicModels, Collections.emptyList()).build();
         JobsXml.write(tmpDir, context);
         validate("jobs.xsd", "saJobs.xml", tmpDir.resolve(DynawoSimulationConstants.JOBS_FILENAME));
     }

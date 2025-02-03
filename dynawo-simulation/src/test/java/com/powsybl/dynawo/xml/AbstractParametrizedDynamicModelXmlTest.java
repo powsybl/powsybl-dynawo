@@ -10,12 +10,9 @@ package com.powsybl.dynawo.xml;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.commons.test.AbstractSerDeTest;
 import com.powsybl.commons.test.TestUtil;
-import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynamicsimulation.OutputVariable;
 import com.powsybl.dynawo.DynawoSimulationContext;
-import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.FinalStepConfig;
-import com.powsybl.dynawo.commons.DynawoConstants;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.iidm.network.Network;
 import org.xml.sax.SAXException;
@@ -67,10 +64,15 @@ public abstract class AbstractParametrizedDynamicModelXmlTest extends AbstractSe
     }
 
     protected void setupDynawoContext(FinalStepConfig finalStepConfig) {
-        DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
-        DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load();
-        context = new DynawoSimulationContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels,
-                eventModels, outputVariables, parameters, dynawoParameters, finalStepConfig, DynawoConstants.VERSION_MIN, reportNode);
+        DynawoSimulationContext.Builder<?> builder = new DynawoSimulationContext
+                .Builder<>(network, dynamicModels)
+                .eventModels(eventModels)
+                .outputVariables(outputVariables)
+                .reportNode(reportNode);
+        if (finalStepConfig != null) {
+            builder.finalStepConfig(finalStepConfig);
+        }
+        context = builder.build();
     }
 
     protected void checkReport(String report) throws IOException {

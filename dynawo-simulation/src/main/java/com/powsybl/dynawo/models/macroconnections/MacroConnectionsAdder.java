@@ -8,6 +8,7 @@
 package com.powsybl.dynawo.models.macroconnections;
 
 import com.powsybl.commons.report.ReportNode;
+import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.models.automationsystems.ConnectionStatefulModel;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.Model;
@@ -53,6 +54,12 @@ public final class MacroConnectionsAdder {
         this.macroConnectAdder = macroConnectAdder;
         this.macroConnectorAdder = macroConnectorAdder;
         this.reportNode = reportNode;
+    }
+
+    public static MacroConnectionsAdder createFrom(DynawoSimulationContext context,
+                                                   Consumer<MacroConnect> macroConnectAdder,
+                                                   BiConsumer<String, Function<String, MacroConnector>> macroConnectorAdder) {
+        return new MacroConnectionsAdder(context::getDynamicModel, context::getPureDynamicModel, macroConnectAdder, macroConnectorAdder, context.getReportNode());
     }
 
     /**
@@ -218,10 +225,12 @@ public final class MacroConnectionsAdder {
         macroConnectorAdder.accept(macroConnectorId, k -> new MacroConnector(macroConnectorId, varConnectionsSupplier.apply(connectedModel, parametrizedName)));
     }
 
+    //TODO remove
     public void setMacroConnectAdder(Consumer<MacroConnect> macroConnectAdder) {
         this.macroConnectAdder = macroConnectAdder;
     }
 
+    //TODO remove
     public void setMacroConnectorAdder(BiConsumer<String, Function<String, MacroConnector>> macroConnectorAdder) {
         this.macroConnectorAdder = macroConnectorAdder;
     }

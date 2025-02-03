@@ -6,10 +6,8 @@
  */
 package com.powsybl.dynawo.xml;
 
-import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.DynawoSimulationContext;
-import com.powsybl.dynawo.DynawoSimulationParameters;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
@@ -22,10 +20,11 @@ class OutputVariablesXmlTest extends DynawoTestUtil {
 
     @Test
     void writeOutputVariables() throws SAXException, IOException {
-        DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
-        DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load();
-        DynawoSimulationContext context = new DynawoSimulationContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, eventModels, outputVariables, parameters, dynawoParameters);
-
+        DynawoSimulationContext context = new DynawoSimulationContext
+                .Builder<>(network, dynamicModels)
+                .eventModels(eventModels)
+                .outputVariables(outputVariables)
+                .build();
         OutputVariablesXml.writeCurve(tmpDir, context);
         validate("curvesInput.xsd", "curvesInput.xml", tmpDir.resolve(DynawoSimulationConstants.CRV_FILENAME));
         OutputVariablesXml.writeFsv(tmpDir, context);

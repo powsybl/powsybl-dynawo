@@ -58,7 +58,7 @@ public final class ContingencyEventModelsFactory {
         macroConnectionsAdder.setMacroConnectAdder(macroConnectList::add);
         eventModels.forEach(em -> {
             em.createMacroConnections(macroConnectionsAdder);
-            em.createDynamicModelParameters(context, eventParameters::add);
+            em.createDynamicModelParameters(eventParameters::add);
         });
         return new ContingencyEventModels(contingency, eventModels, macroConnectorsMap, macroConnectList, eventParameters);
     }

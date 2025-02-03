@@ -10,11 +10,8 @@ package com.powsybl.dynawo.xml;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.commons.test.AbstractSerDeTest;
 import com.powsybl.commons.test.TestUtil;
-import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynamicsimulation.OutputVariable;
 import com.powsybl.dynawo.DynawoSimulationContext;
-import com.powsybl.dynawo.DynawoSimulationParameters;
-import com.powsybl.dynawo.commons.DynawoConstants;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.iidm.network.Network;
 import org.junit.jupiter.api.AfterEach;
@@ -78,9 +75,12 @@ public abstract class AbstractDynamicModelXmlTest extends AbstractSerDeTest {
     }
 
     protected void setupDynawoContext() {
-        DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
-        DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load();
-        context = new DynawoSimulationContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, eventModels, outputVariables, parameters, dynawoParameters, DynawoConstants.VERSION_MIN, reportNode);
+        context = new DynawoSimulationContext
+                .Builder<>(network, dynamicModels)
+                .eventModels(eventModels)
+                .outputVariables(outputVariables)
+                .reportNode(reportNode)
+                .build();
     }
 
     protected abstract void setupNetwork();

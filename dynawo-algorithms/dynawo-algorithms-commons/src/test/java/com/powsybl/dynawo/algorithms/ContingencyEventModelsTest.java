@@ -9,9 +9,7 @@ package com.powsybl.dynawo.algorithms;
 
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.contingency.Contingency;
-import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawo.DynawoSimulationContext;
-import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.generators.BaseGeneratorBuilder;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
@@ -72,9 +70,8 @@ class ContingencyEventModelsTest {
     }
 
     private DynawoSimulationContext setupDynawoContext(Network network, List<BlackBoxModel> dynamicModels) {
-        DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
-        DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load();
-        return new DynawoSimulationContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels,
-                Collections.emptyList(), Collections.emptyList(), parameters, dynawoParameters);
+        return new DynawoSimulationContext
+                .Builder<>(network, dynamicModels)
+                .build();
     }
 }

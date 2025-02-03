@@ -9,7 +9,6 @@ package com.powsybl.dynawo.models.events;
 
 import com.powsybl.dynamicsimulation.EventModel;
 import com.powsybl.dynawo.DynawoSimulationConstants;
-import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.builders.EventModelInfo;
 import com.powsybl.dynawo.builders.VersionInterval;
 import com.powsybl.dynawo.models.AbstractBlackBoxModel;
@@ -74,7 +73,7 @@ public abstract class AbstractEvent extends AbstractBlackBoxModel implements Eve
     }
 
     @Override
-    public void createDynamicModelParameters(DynawoSimulationContext context, Consumer<ParametersSet> parametersAdder) {
+    public void createDynamicModelParameters(Consumer<ParametersSet> parametersAdder) {
         ParametersSet paramSet = new ParametersSet(getParameterSetId());
         createEventSpecificParameters(paramSet);
         parametersAdder.accept(paramSet);

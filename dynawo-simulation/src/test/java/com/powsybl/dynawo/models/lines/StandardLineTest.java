@@ -7,17 +7,13 @@
  */
 package com.powsybl.dynawo.models.lines;
 
-import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
-import com.powsybl.dynamicsimulation.OutputVariable;
 import com.powsybl.dynawo.DynawoSimulationContext;
-import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.automationsystems.overloadmanagments.DynamicOverloadManagementSystemBuilder;
 import com.powsybl.iidm.network.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -48,13 +44,10 @@ class StandardLineTest {
                         .iMeasurement(l.getId())
                         .iMeasurementSide(TwoSides.ONE)
                         .build());
-        DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
-        DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load();
-        String workingVariantId = network.getVariantManager().getWorkingVariantId();
-        List<BlackBoxModel> events = Collections.emptyList();
-        List<OutputVariable> outputVariables = Collections.emptyList();
         UnsupportedOperationException e = assertThrows(UnsupportedOperationException.class,
-            () -> new DynawoSimulationContext(network, workingVariantId, dynamicModels, events, outputVariables, parameters, dynawoParameters));
+            () -> new DynawoSimulationContext
+                    .Builder<>(network, dynamicModels)
+                    .build());
         assertEquals("i variable not implemented in StandardLine dynawo's model", e.getMessage());
     }
 }

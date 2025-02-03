@@ -90,14 +90,16 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
         network.getVariantManager().setWorkingVariant(workingVariantId);
         ExecutionEnvironment execEnv = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, config.isDebug());
         DynawoVersion currentVersion = DynawoUtil.requireDynaMinVersion(execEnv, computationManager, getVersionCommand(config), DynawoSimulationConfig.DYNAWO_LAUNCHER_PROGRAM_NAME, false);
-        DynawoSimulationContext context = new DynawoSimulationContext(network, workingVariantId,
-                BlackBoxSupplierUtils.getBlackBoxModelList(dynamicModelsSupplier, network, dsReportNode),
-                BlackBoxSupplierUtils.getBlackBoxModelList(eventModelsSupplier, network, dsReportNode),
-                outputVariablesSupplier.get(network),
-                parameters,
-                DynawoSimulationParameters.load(parameters),
-                currentVersion,
-                reportNode);
+        DynawoSimulationContext context = new DynawoSimulationContext
+                .Builder<>(network, BlackBoxSupplierUtils.getBlackBoxModelList(dynamicModelsSupplier, network, dsReportNode))
+                .workingVariantId(workingVariantId)
+                .dynamicSimulationParameters(parameters)
+                .dynawoParameters(DynawoSimulationParameters.load(parameters))
+                .eventModels(BlackBoxSupplierUtils.getBlackBoxModelList(eventModelsSupplier, network, dsReportNode))
+                .outputVariables(outputVariablesSupplier.get(network))
+                .currentVersion(currentVersion)
+                .reportNode(reportNode)
+                .build();
 
         return computationManager.execute(execEnv, new DynawoSimulationHandler(context, getCommand(config), reportNode));
     }

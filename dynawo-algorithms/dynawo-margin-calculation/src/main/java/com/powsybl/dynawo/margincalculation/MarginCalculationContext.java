@@ -7,13 +7,10 @@
  */
 package com.powsybl.dynawo.margincalculation;
 
-import com.powsybl.commons.report.ReportNode;
 import com.powsybl.contingency.Contingency;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.FinalStepConfig;
-import com.powsybl.dynawo.commons.DynawoConstants;
-import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.margincalculation.loadsvariation.LoadVariationAreaAutomationSystem;
 import com.powsybl.dynawo.margincalculation.loadsvariation.LoadsProportionalScalable;
 import com.powsybl.dynawo.margincalculation.loadsvariation.LoadsVariation;
@@ -45,40 +42,71 @@ public class MarginCalculationContext extends DynawoSimulationContext {
     private final List<MacroConnect> loadVariationMacroConnectList = new ArrayList<>();
     private final Map<String, MacroConnector> loadVariationMacroConnectorsMap = new LinkedHashMap<>();
 
-    public MarginCalculationContext(Network network, String workingVariantId,
-                                    List<BlackBoxModel> dynamicModels,
-                                    MarginCalculationParameters parameters,
-                                    List<Contingency> contingencies,
-                                    List<LoadsVariation> loadsVariations) {
-        this(network, workingVariantId, dynamicModels, parameters, contingencies,
-                loadsVariations, DynawoConstants.VERSION_MIN, ReportNode.NO_OP);
+    public static class Builder<T extends DynawoSimulationContext.Builder<T>> extends DynawoSimulationContext.Builder<T> {
+
+        private final List<Contingency> contingencies;
+        private final List<LoadsVariation> loadsVariations;
+        private MarginCalculationParameters parameters;
+
+        public Builder(Network network, List<BlackBoxModel> dynamicModels, List<Contingency> contingencies,
+                       List<LoadsVariation> loadsVariations) {
+            super(network, dynamicModels);
+            this.contingencies = contingencies;
+            this.loadsVariations = loadsVariations;
+        }
+
+        public T marginCalculationParameters(MarginCalculationParameters parameters) {
+            this.parameters = Objects.requireNonNull(parameters);
+            return self();
+        }
+
+        @Override
+        protected void setup() {
+            if (parameters == null) {
+                parameters = MarginCalculationParameters.load();
+            }
+            dynamicSimulationParameters(new DynamicSimulationParameters(parameters.getStartTime(), parameters.getMarginCalculationStartTime()));
+            dynawoParameters(parameters.getDynawoParameters());
+            finalStepConfig(configureFinalStep(parameters, loadsVariations));
+            super.setup();
+        }
+
+        @Override
+        public MarginCalculationContext build() {
+            setup();
+            return new MarginCalculationContext(this);
+        }
+
+        private static FinalStepConfig configureFinalStep(MarginCalculationParameters parameters, List<LoadsVariation> loadsVariations) {
+            return switch (parameters.getLoadModelsRule()) {
+                case ALL_LOADS -> new FinalStepConfig(parameters.getStopTime(), AbstractLoad.class::isInstance);
+                case TARGETED_LOADS -> {
+                    Set<String> loadIds = loadsVariations.stream()
+                            .flatMap(l -> l.loads().stream())
+                            .map(Identifiable::getId)
+                            .collect(Collectors.toSet());
+                    yield new FinalStepConfig(parameters.getStopTime(),
+                            bbm -> bbm instanceof AbstractLoad eBbm && loadIds.contains(eBbm.getStaticId()));
+                }
+            };
+        }
     }
 
-    public MarginCalculationContext(Network network, String workingVariantId,
-                                    List<BlackBoxModel> dynamicModels,
-                                    MarginCalculationParameters parameters,
-                                    List<Contingency> contingencies,
-                                    List<LoadsVariation> loadsVariations,
-                                    DynawoVersion currentVersion,
-                                    ReportNode reportNode) {
-        super(network, workingVariantId, dynamicModels, Collections.emptyList(), Collections.emptyList(),
-                new DynamicSimulationParameters(parameters.getStartTime(), parameters.getMarginCalculationStartTime()),
-                parameters.getDynawoParameters(),
-                configureFinalStep(parameters, loadsVariations),
-                currentVersion, reportNode);
-        this.marginCalculationParameters = parameters;
-        double contingenciesStartTime = parameters.getContingenciesStartTime();
+    private MarginCalculationContext(Builder<?> builder) {
+        super(builder);
+        double contingenciesStartTime = builder.parameters.getContingenciesStartTime();
+        this.marginCalculationParameters = builder.parameters;
         this.contingencyEventModels = ContingencyEventModelsFactory
-                .createFrom(contingencies, this, macroConnectionsAdder, contingenciesStartTime, reportNode);
-        this.loadVariationArea = new LoadVariationAreaAutomationSystem(loadsVariations,
-                parameters.getLoadIncreaseStartTime(),
-                parameters.getLoadIncreaseStopTime(),
+                .createFrom(builder.contingencies, this, macroConnectionsAdder, contingenciesStartTime, getReportNode());
+        this.loadVariationArea = new LoadVariationAreaAutomationSystem(builder.loadsVariations,
+                marginCalculationParameters.getLoadIncreaseStartTime(),
+                marginCalculationParameters.getLoadIncreaseStopTime(),
                 configureScaling(network));
 
         macroConnectionsAdder.setMacroConnectorAdder(loadVariationMacroConnectorsMap::computeIfAbsent);
         macroConnectionsAdder.setMacroConnectAdder(loadVariationMacroConnectList::add);
         loadVariationArea.createMacroConnections(macroConnectionsAdder);
-        loadVariationArea.createDynamicModelParameters(this, getDynamicModelsParameters()::add);
+        loadVariationArea.createDynamicModelParameters(getDynamicModelsParameters()::add);
         loadVariationArea.createNetworkParameter(getDynawoSimulationParameters().getNetworkParameters());
     }
 
@@ -115,19 +143,6 @@ public class MarginCalculationContext extends DynawoSimulationContext {
         };
     }
 
-    private static FinalStepConfig configureFinalStep(MarginCalculationParameters parameters, List<LoadsVariation> loadsVariations) {
-        return switch (parameters.getLoadModelsRule()) {
-            case ALL_LOADS -> new FinalStepConfig(parameters.getStopTime(), AbstractLoad.class::isInstance);
-            case TARGETED_LOADS -> {
-                Set<String> loadIds = loadsVariations.stream()
-                        .flatMap(l -> l.loads().stream())
-                        .map(Identifiable::getId)
-                        .collect(Collectors.toSet());
-                yield new FinalStepConfig(parameters.getStopTime(),
-                        bbm -> bbm instanceof AbstractLoad eBbm && loadIds.contains(eBbm.getStaticId()));
-            }
-        };
-    }
 
     private static BiConsumer<LoadsProportionalScalable, Double> configureScaling(Network network) {
         ScalingParameters scalingParameters = new ScalingParameters()

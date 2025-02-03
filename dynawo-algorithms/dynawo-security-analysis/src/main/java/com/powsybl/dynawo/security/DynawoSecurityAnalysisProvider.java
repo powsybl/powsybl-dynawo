@@ -85,13 +85,15 @@ public class DynawoSecurityAnalysisProvider implements DynamicSecurityAnalysisPr
         DynawoVersion currentVersion = DynawoUtil.requireDynaMinVersion(execEnv, runParameters.getComputationManager(), getVersionCommand(config), DYNAWO_LAUNCHER_PROGRAM_NAME, false);
         List<Contingency> contingencies = contingenciesProvider.getContingencies(network);
         DynamicSecurityAnalysisParameters parameters = runParameters.getDynamicSecurityAnalysisParameters();
-        SecurityAnalysisContext context = new SecurityAnalysisContext(network, workingVariantId,
+        //fixme remove cast
+        SecurityAnalysisContext context = (SecurityAnalysisContext) new SecurityAnalysisContext.Builder<>(network,
                 BlackBoxSupplierUtils.getBlackBoxModelList(dynamicModelsSupplier, network, dsaReportNode),
-                parameters,
-                DynawoSimulationParameters.load(parameters.getDynamicSimulationParameters()),
-                contingencies,
-                currentVersion,
-                dsaReportNode);
+                contingencies)
+                .dynamicSecurityAnalysisParameters(parameters)
+                .dynawoParameters(DynawoSimulationParameters.load(parameters.getDynamicSimulationParameters()))
+                .currentVersion(currentVersion)
+                .reportNode(dsaReportNode)
+                .build();
 
         return runParameters.getComputationManager().execute(execEnv, new DynawoSecurityAnalysisHandler(context, getCommand(config), runParameters.getFilter(), runParameters.getInterceptors(), dsaReportNode));
     }

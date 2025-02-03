@@ -7,14 +7,10 @@
  */
 package com.powsybl.dynawo.security;
 
-import com.powsybl.commons.report.ReportNode;
 import com.powsybl.contingency.Contingency;
 import com.powsybl.dynawo.DynawoSimulationContext;
-import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.algorithms.ContingencyEventModels;
 import com.powsybl.dynawo.algorithms.ContingencyEventModelsFactory;
-import com.powsybl.dynawo.commons.DynawoConstants;
-import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.iidm.network.*;
 import com.powsybl.security.dynamic.DynamicSecurityAnalysisParameters;
@@ -29,26 +25,45 @@ public class SecurityAnalysisContext extends DynawoSimulationContext {
     private final List<Contingency> contingencies;
     private final List<ContingencyEventModels> contingencyEventModels;
 
-    public SecurityAnalysisContext(Network network, String workingVariantId,
-                                   List<BlackBoxModel> dynamicModels,
-                                   DynamicSecurityAnalysisParameters parameters,
-                                   DynawoSimulationParameters dynawoSimulationParameters,
-                                   List<Contingency> contingencies) {
-        this(network, workingVariantId, dynamicModels, parameters, dynawoSimulationParameters, contingencies, DynawoConstants.VERSION_MIN, ReportNode.NO_OP);
+    public static class Builder<T extends DynawoSimulationContext.Builder<T>> extends DynawoSimulationContext.Builder<T> {
+
+        private final List<Contingency> contingencies;
+        private DynamicSecurityAnalysisParameters parameters;
+        private double contingenciesStartTime;
+
+        public Builder(Network network, List<BlackBoxModel> dynamicModels, List<Contingency> contingencies) {
+            super(network, dynamicModels);
+            this.contingencies = contingencies;
+        }
+
+        public T dynamicSecurityAnalysisParameters(DynamicSecurityAnalysisParameters parameters) {
+            this.parameters = Objects.requireNonNull(parameters);
+            return self();
+        }
+
+        @Override
+        protected void setup() {
+            if (parameters == null) {
+                parameters = DynamicSecurityAnalysisParameters.load();
+            }
+            dynamicSimulationParameters(parameters.getDynamicSimulationParameters());
+            //TODO use pnmy param ?
+            contingenciesStartTime = parameters.getDynamicContingenciesParameters().getContingenciesStartTime();
+            super.setup();
+        }
+
+        @Override
+        public SecurityAnalysisContext build() {
+            setup();
+            return new SecurityAnalysisContext(this);
+        }
     }
 
-    public SecurityAnalysisContext(Network network, String workingVariantId,
-                                   List<BlackBoxModel> dynamicModels,
-                                   DynamicSecurityAnalysisParameters parameters,
-                                   DynawoSimulationParameters dynawoSimulationParameters,
-                                   List<Contingency> contingencies,
-                                   DynawoVersion currentVersion,
-                                   ReportNode reportNode) {
-        super(network, workingVariantId, dynamicModels, List.of(), Collections.emptyList(),
-                parameters.getDynamicSimulationParameters(), dynawoSimulationParameters, currentVersion, reportNode);
-        double contingenciesStartTime = parameters.getDynamicContingenciesParameters().getContingenciesStartTime();
-        this.contingencies = contingencies;
-        this.contingencyEventModels = ContingencyEventModelsFactory.createFrom(contingencies, this, macroConnectionsAdder, contingenciesStartTime, reportNode);
+    private SecurityAnalysisContext(Builder<?> builder) {
+        super(builder);
+        //TODO keep contingencies ?
+        this.contingencies = builder.contingencies;
+        this.contingencyEventModels = ContingencyEventModelsFactory.createFrom(contingencies, this, macroConnectionsAdder, builder.contingenciesStartTime, getReportNode());
     }
 
     public List<Contingency> getContingencies() {

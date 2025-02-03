@@ -6,7 +6,6 @@
  */
 package com.powsybl.dynawo.models;
 
-import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.builders.VersionInterval;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectAttribute;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
@@ -42,7 +41,7 @@ public interface BlackBoxModel extends Model {
 
     void write(XMLStreamWriter writer, String parFileName) throws XMLStreamException;
 
-    void createDynamicModelParameters(DynawoSimulationContext context, Consumer<ParametersSet> parametersAdder);
+    void createDynamicModelParameters(Consumer<ParametersSet> parametersAdder);
 
     void createNetworkParameter(ParametersSet networkParameters);
 }

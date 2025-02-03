@@ -6,7 +6,6 @@
  */
 package com.powsybl.dynawo.models;
 
-import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectAttribute;
 import com.powsybl.dynawo.parameters.ParametersSet;
@@ -55,7 +54,7 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel {
     }
 
     @Override
-    public void createDynamicModelParameters(DynawoSimulationContext context, Consumer<ParametersSet> parametersAdder) {
+    public void createDynamicModelParameters(Consumer<ParametersSet> parametersAdder) {
         // method empty by default to be redefined by specific models
     }
 

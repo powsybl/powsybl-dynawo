@@ -9,10 +9,7 @@
 package com.powsybl.dynawo.models.buses;
 
 import com.powsybl.commons.PowsyblException;
-import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
-import com.powsybl.dynamicsimulation.OutputVariable;
 import com.powsybl.dynawo.DynawoSimulationContext;
-import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.NetworkFactory;
@@ -20,7 +17,6 @@ import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -41,12 +37,9 @@ class StandardBusTest {
                 .staticId("NHV1")
                 .parameterSetId("SB")
                 .build());
-        DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
-        DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load();
-        String workingVariantId = network.getVariantManager().getWorkingVariantId();
-        List<BlackBoxModel> events = Collections.emptyList();
-        List<OutputVariable> outputVariables = Collections.emptyList();
-        PowsyblException e = assertThrows(PowsyblException.class, () -> new DynawoSimulationContext(network, workingVariantId, dynamicModels, events, outputVariables, parameters, dynawoParameters));
+        PowsyblException e = assertThrows(PowsyblException.class, () -> new DynawoSimulationContext
+                .Builder<>(network, dynamicModels)
+                .build());
         assertEquals("The equipment NHV1_NHV2_1 linked to the StandardBus NHV1 does not possess a dynamic model", e.getMessage());
     }
 }

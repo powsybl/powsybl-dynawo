@@ -7,7 +7,6 @@
  */
 package com.powsybl.dynawo.margincalculation.loadsvariation;
 
-import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawo.models.VarConnection;
@@ -65,7 +64,7 @@ public class LoadVariationAreaAutomationSystem extends AbstractPureDynamicBlackB
     }
 
     @Override
-    public void createDynamicModelParameters(DynawoSimulationContext context, Consumer<ParametersSet> parametersAdder) {
+    public void createDynamicModelParameters(Consumer<ParametersSet> parametersAdder) {
         ParametersSet paramSet = new ParametersSet(getParameterSetId());
         int index = 0;
         for (LoadsVariation lv : loadsVariations) {

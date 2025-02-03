@@ -9,7 +9,6 @@ package com.powsybl.dynawo.algorithms;
 
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.contingency.Contingency;
-import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.algorithms.xml.ContingenciesDydXml;
 import com.powsybl.dynawo.algorithms.xml.ContingenciesParXml;
@@ -17,7 +16,6 @@ import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.macroconnections.MacroConnector;
 import com.powsybl.dynawo.xml.DynawoTestUtil;
-import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.iidm.network.Network;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
@@ -25,7 +23,6 @@ import org.xml.sax.SAXException;
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -61,9 +58,8 @@ class ContingenciesXmlTest extends DynawoTestUtil {
     }
 
     private DynawoSimulationContext setupDynawoContext(Network network, List<BlackBoxModel> dynamicModels) {
-        DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
-        DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load();
-        return new DynawoSimulationContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels,
-                Collections.emptyList(), Collections.emptyList(), parameters, dynawoParameters);
+        return new DynawoSimulationContext
+                .Builder<>(network, dynamicModels)
+                .build();
     }
 }
