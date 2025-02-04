@@ -28,7 +28,7 @@ class JobsXmlTest extends DynawoTestUtil {
     @MethodSource("provideParameters")
     void testJobXml(String xmlResult, DynawoSimulationParameters parameters) throws IOException, SAXException {
         DynawoSimulationContext context = new DynawoSimulationContext
-                .Builder<>(network, dynamicModels)
+                .Builder(network, dynamicModels)
                 .dynawoParameters(parameters)
                 .eventModels(eventModels)
                 .outputVariables(outputVariables)
@@ -52,7 +52,7 @@ class JobsXmlTest extends DynawoTestUtil {
     @Test
     void testAdditionalDydJobXml() throws IOException, SAXException {
         DynawoSimulationContext context = new DynawoSimulationContext
-                .Builder<>(network, dynamicModels)
+                .Builder(network, dynamicModels)
                 .eventModels(eventModels)
                 .outputVariables(outputVariables)
                 .build();
@@ -63,7 +63,7 @@ class JobsXmlTest extends DynawoTestUtil {
     @Test
     void writeFinalStepJob() throws SAXException, IOException {
         DynawoSimulationContext context = new DynawoSimulationContext
-                .Builder<>(network, dynamicModels)
+                .Builder(network, dynamicModels)
                 .eventModels(eventModels)
                 .outputVariables(outputVariables)
                 .finalStepConfig(new FinalStepConfig(200, bbm -> bbm.getDynamicModelId().equalsIgnoreCase("BBM_LOAD2")))

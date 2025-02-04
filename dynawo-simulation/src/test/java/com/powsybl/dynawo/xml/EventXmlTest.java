@@ -32,7 +32,7 @@ class EventXmlTest extends DynawoTestUtil {
                 .parameterSetId("GSFWPR")
                 .build());
         DynawoSimulationContext context = new DynawoSimulationContext
-                .Builder<>(network, dynamicModels)
+                .Builder(network, dynamicModels)
                 .eventModels(eventModels)
                 .outputVariables(outputVariables)
                 .build();
@@ -66,7 +66,7 @@ class EventXmlTest extends DynawoTestUtil {
         eventModels.add(event1Duplicate);
         eventModels.add(event2Duplicate);
         DynawoSimulationContext context = new DynawoSimulationContext
-                .Builder<>(network, dynamicModels)
+                .Builder(network, dynamicModels)
                 .eventModels(eventModels)
                 .outputVariables(outputVariables)
                 .build();

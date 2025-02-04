@@ -59,7 +59,7 @@ class ContingenciesXmlTest extends DynawoTestUtil {
 
     private DynawoSimulationContext setupDynawoContext(Network network, List<BlackBoxModel> dynamicModels) {
         return new DynawoSimulationContext
-                .Builder<>(network, dynamicModels)
+                .Builder(network, dynamicModels)
                 .build();
     }
 }

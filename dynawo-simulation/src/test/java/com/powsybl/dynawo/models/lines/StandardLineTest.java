@@ -46,7 +46,7 @@ class StandardLineTest {
                         .build());
         UnsupportedOperationException e = assertThrows(UnsupportedOperationException.class,
             () -> new DynawoSimulationContext
-                    .Builder<>(network, dynamicModels)
+                    .Builder(network, dynamicModels)
                     .build());
         assertEquals("i variable not implemented in StandardLine dynawo's model", e.getMessage());
     }

@@ -21,7 +21,7 @@ class OutputVariablesXmlTest extends DynawoTestUtil {
     @Test
     void writeOutputVariables() throws SAXException, IOException {
         DynawoSimulationContext context = new DynawoSimulationContext
-                .Builder<>(network, dynamicModels)
+                .Builder(network, dynamicModels)
                 .eventModels(eventModels)
                 .outputVariables(outputVariables)
                 .build();

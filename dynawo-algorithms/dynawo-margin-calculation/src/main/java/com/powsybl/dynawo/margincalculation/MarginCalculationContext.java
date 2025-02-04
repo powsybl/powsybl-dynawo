@@ -8,13 +8,10 @@
 package com.powsybl.dynawo.margincalculation;
 
 import com.powsybl.contingency.Contingency;
-import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
-import com.powsybl.dynawo.DynawoSimulationConstants;
-import com.powsybl.dynawo.FinalStepConfig;
+import com.powsybl.dynawo.*;
 import com.powsybl.dynawo.margincalculation.loadsvariation.LoadVariationAreaAutomationSystem;
 import com.powsybl.dynawo.margincalculation.loadsvariation.LoadsProportionalScalable;
 import com.powsybl.dynawo.margincalculation.loadsvariation.LoadsVariation;
-import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.loads.AbstractLoad;
 import com.powsybl.dynawo.models.macroconnections.MacroConnect;
@@ -34,7 +31,7 @@ import java.util.stream.Collectors;
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class MarginCalculationContext extends DynawoSimulationContext {
+public final class MarginCalculationContext extends DynawoSimulationContext {
 
     private final MarginCalculationParameters marginCalculationParameters;
     private final List<ContingencyEventModels> contingencyEventModels;
@@ -42,11 +39,12 @@ public class MarginCalculationContext extends DynawoSimulationContext {
     private final List<MacroConnect> loadVariationMacroConnectList = new ArrayList<>();
     private final Map<String, MacroConnector> loadVariationMacroConnectorsMap = new LinkedHashMap<>();
 
-    public static class Builder<T extends DynawoSimulationContext.Builder<T>> extends DynawoSimulationContext.Builder<T> {
+    public static class Builder extends AbstractContextBuilder<Builder> {
 
         private final List<Contingency> contingencies;
         private final List<LoadsVariation> loadsVariations;
         private MarginCalculationParameters parameters;
+        private LoadVariationAreaAutomationSystem loadVariationArea;
 
         public Builder(Network network, List<BlackBoxModel> dynamicModels, List<Contingency> contingencies,
                        List<LoadsVariation> loadsVariations) {
@@ -55,7 +53,7 @@ public class MarginCalculationContext extends DynawoSimulationContext {
             this.loadsVariations = loadsVariations;
         }
 
-        public T marginCalculationParameters(MarginCalculationParameters parameters) {
+        public Builder marginCalculationParameters(MarginCalculationParameters parameters) {
             this.parameters = Objects.requireNonNull(parameters);
             return self();
         }
@@ -65,10 +63,27 @@ public class MarginCalculationContext extends DynawoSimulationContext {
             if (parameters == null) {
                 parameters = MarginCalculationParameters.load();
             }
-            dynamicSimulationParameters(new DynamicSimulationParameters(parameters.getStartTime(), parameters.getMarginCalculationStartTime()));
-            dynawoParameters(parameters.getDynawoParameters());
-            finalStepConfig(configureFinalStep(parameters, loadsVariations));
+            finalStepConfig = configureFinalStep(parameters, loadsVariations);
+            setupLoadVariationArea();
             super.setup();
+        }
+
+        @Override
+        protected void setupSimulationTime() {
+            this.simulationTime = new SimulationTime(parameters.getStartTime(), parameters.getMarginCalculationStartTime());
+            this.finalStepTime = new SimulationTime(simulationTime.stopTime(), finalStepConfig.stopTime());
+        }
+
+        private void setupLoadVariationArea() {
+            loadVariationArea = new LoadVariationAreaAutomationSystem(loadsVariations,
+                    parameters.getLoadIncreaseStartTime(),
+                    parameters.getLoadIncreaseStopTime(),
+                    configureScaling(network));
+        }
+
+        @Override
+        protected Builder self() {
+            return this;
         }
 
         @Override
@@ -90,19 +105,22 @@ public class MarginCalculationContext extends DynawoSimulationContext {
                 }
             };
         }
+
+        private static BiConsumer<LoadsProportionalScalable, Double> configureScaling(Network network) {
+            ScalingParameters scalingParameters = new ScalingParameters()
+                    .setScalingConvention(Scalable.ScalingConvention.LOAD)
+                    .setConstantPowerFactor(true);
+            return (s, v) -> s.scale(network, v, scalingParameters);
+        }
     }
 
-    private MarginCalculationContext(Builder<?> builder) {
+    private MarginCalculationContext(Builder builder) {
         super(builder);
         double contingenciesStartTime = builder.parameters.getContingenciesStartTime();
         this.marginCalculationParameters = builder.parameters;
         this.contingencyEventModels = ContingencyEventModelsFactory
                 .createFrom(builder.contingencies, this, macroConnectionsAdder, contingenciesStartTime, getReportNode());
-        this.loadVariationArea = new LoadVariationAreaAutomationSystem(builder.loadsVariations,
-                marginCalculationParameters.getLoadIncreaseStartTime(),
-                marginCalculationParameters.getLoadIncreaseStopTime(),
-                configureScaling(network));
-
+        this.loadVariationArea = builder.loadVariationArea;
         macroConnectionsAdder.setMacroConnectorAdder(loadVariationMacroConnectorsMap::computeIfAbsent);
         macroConnectionsAdder.setMacroConnectAdder(loadVariationMacroConnectList::add);
         loadVariationArea.createMacroConnections(macroConnectionsAdder);
@@ -141,13 +159,5 @@ public class MarginCalculationContext extends DynawoSimulationContext {
                 return DynawoSimulationConstants.getSimulationParFile(getNetwork());
             }
         };
-    }
-
-
-    private static BiConsumer<LoadsProportionalScalable, Double> configureScaling(Network network) {
-        ScalingParameters scalingParameters = new ScalingParameters()
-                .setScalingConvention(Scalable.ScalingConvention.LOAD)
-                .setConstantPowerFactor(true);
-        return (s, v) -> s.scale(network, v, scalingParameters);
     }
 }

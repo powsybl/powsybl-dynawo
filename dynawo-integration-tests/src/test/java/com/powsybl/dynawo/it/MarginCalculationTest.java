@@ -149,6 +149,7 @@ class MarginCalculationTest extends AbstractDynawoTest {
                             new LoadIncreaseResult(52, CONVERGENCE,
                                     List.of(new ScenarioResult(LINE_ID, CONVERGENCE),
                                             new ScenarioResult(GEN_ID, CONVERGENCE)))))
+                //TODO add divergence test
 //                Arguments.of("/ieee14/dynamic-security-analysis/convergence/criteria.crt",
 //                        List.of(Contingency.generator(GEN_ID)),
 //                        List.of(20, 10, 10),

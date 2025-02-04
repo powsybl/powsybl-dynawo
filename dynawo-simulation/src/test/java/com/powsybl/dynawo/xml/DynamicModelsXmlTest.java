@@ -33,7 +33,7 @@ class DynamicModelsXmlTest extends DynawoTestUtil {
     @Test
     void writeDynamicModel() throws SAXException, IOException {
         DynawoSimulationContext context = new DynawoSimulationContext
-                .Builder<>(network, dynamicModels)
+                .Builder(network, dynamicModels)
                 .outputVariables(outputVariables)
                 .build();
         DydXml.write(tmpDir, context);
@@ -50,7 +50,7 @@ class DynamicModelsXmlTest extends DynawoTestUtil {
                 .build());
 
         DynawoSimulationContext context = new DynawoSimulationContext
-                .Builder<>(network, dynamicModels)
+                .Builder(network, dynamicModels)
                 .outputVariables(outputVariables)
                 .build();
 
@@ -74,7 +74,7 @@ class DynamicModelsXmlTest extends DynawoTestUtil {
         dynamicModels.add(load1);
         dynamicModels.add(load2);
         DynawoSimulationContext context = new DynawoSimulationContext
-                .Builder<>(network, dynamicModels)
+                .Builder(network, dynamicModels)
                 .eventModels(eventModels)
                 .outputVariables(outputVariables)
                 .build();
@@ -97,7 +97,7 @@ class DynamicModelsXmlTest extends DynawoTestUtil {
         dynamicModels.add(load1);
         dynamicModels.add(load2);
         DynawoSimulationContext context = new DynawoSimulationContext
-                .Builder<>(network, dynamicModels)
+                .Builder(network, dynamicModels)
                 .eventModels(eventModels)
                 .outputVariables(outputVariables)
                 .build();
@@ -113,7 +113,7 @@ class DynamicModelsXmlTest extends DynawoTestUtil {
                 .parameterSetId("lab")
                 .build());
         DynawoSimulationContext context = new DynawoSimulationContext
-                .Builder<>(network, dynamicModels)
+                .Builder(network, dynamicModels)
                 .eventModels(eventModels)
                 .outputVariables(outputVariables)
                 .currentVersion(new DynawoVersion(1, 2, 0))
@@ -124,7 +124,7 @@ class DynamicModelsXmlTest extends DynawoTestUtil {
     @Test
     void testIncorrectModelException() {
         DynawoSimulationContext dc = new DynawoSimulationContext
-                .Builder<>(network, dynamicModels)
+                .Builder(network, dynamicModels)
                 .eventModels(eventModels)
                 .outputVariables(outputVariables)
                 .build();

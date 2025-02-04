@@ -62,12 +62,12 @@ public class MarginCalculationProvider implements Versionable {
         ExecutionEnvironment execEnv = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, config.isDebug());
         DynawoVersion currentVersion = DynawoUtil.requireDynaMinVersion(execEnv, runParameters.getComputationManager(), getVersionCommand(config), DYNAWO_LAUNCHER_PROGRAM_NAME, false);
         MarginCalculationParameters parameters = runParameters.getMarginCalculationParameters();
-        //TODO fix cast
-        MarginCalculationContext context = (MarginCalculationContext) new MarginCalculationContext.Builder<>(network,
+        MarginCalculationContext context = new MarginCalculationContext.Builder(network,
                 BlackBoxSupplierUtils.getBlackBoxModelList(dynamicModelsSupplier, network, mcReportNode),
                 contingenciesProvider.getContingencies(network),
                 loadsVariationSupplier.getLoadsVariations(network, mcReportNode))
                 .marginCalculationParameters(parameters)
+                .dynawoParameters(parameters.getDynawoParameters())
                 .currentVersion(currentVersion)
                 .reportNode(mcReportNode)
                 .workingVariantId(workingVariantId)

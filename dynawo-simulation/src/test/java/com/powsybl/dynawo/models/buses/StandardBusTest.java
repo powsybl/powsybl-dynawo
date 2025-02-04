@@ -38,7 +38,7 @@ class StandardBusTest {
                 .parameterSetId("SB")
                 .build());
         PowsyblException e = assertThrows(PowsyblException.class, () -> new DynawoSimulationContext
-                .Builder<>(network, dynamicModels)
+                .Builder(network, dynamicModels)
                 .build());
         assertEquals("The equipment NHV1_NHV2_1 linked to the StandardBus NHV1 does not possess a dynamic model", e.getMessage());
     }

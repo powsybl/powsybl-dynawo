@@ -22,7 +22,7 @@ class ParametersXmlTest extends DynawoTestUtil {
     @Test
     void writeOmegaRef() throws SAXException, IOException {
         DynawoSimulationContext context = new DynawoSimulationContext
-                .Builder<>(network, dynamicModels)
+                .Builder(network, dynamicModels)
                 .dynawoParameters(DynawoSimulationParameters.load(PlatformConfig.defaultConfig(), fileSystem))
                 .eventModels(eventModels)
                 .outputVariables(outputVariables)

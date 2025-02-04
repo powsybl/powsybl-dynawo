@@ -8,6 +8,7 @@
 package com.powsybl.dynawo.security;
 
 import com.powsybl.contingency.Contingency;
+import com.powsybl.dynawo.AbstractContextBuilder;
 import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.algorithms.ContingencyEventModels;
 import com.powsybl.dynawo.algorithms.ContingencyEventModelsFactory;
@@ -20,15 +21,15 @@ import java.util.*;
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public class SecurityAnalysisContext extends DynawoSimulationContext {
+public final class SecurityAnalysisContext extends DynawoSimulationContext {
 
     private final List<Contingency> contingencies;
     private final List<ContingencyEventModels> contingencyEventModels;
 
-    public static class Builder<T extends DynawoSimulationContext.Builder<T>> extends DynawoSimulationContext.Builder<T> {
+    public static class Builder extends AbstractContextBuilder<Builder> {
 
         private final List<Contingency> contingencies;
-        private DynamicSecurityAnalysisParameters parameters;
+        private DynamicSecurityAnalysisParameters securityParameters;
         private double contingenciesStartTime;
 
         public Builder(Network network, List<BlackBoxModel> dynamicModels, List<Contingency> contingencies) {
@@ -36,20 +37,24 @@ public class SecurityAnalysisContext extends DynawoSimulationContext {
             this.contingencies = contingencies;
         }
 
-        public T dynamicSecurityAnalysisParameters(DynamicSecurityAnalysisParameters parameters) {
-            this.parameters = Objects.requireNonNull(parameters);
+        public Builder dynamicSecurityAnalysisParameters(DynamicSecurityAnalysisParameters parameters) {
+            this.securityParameters = Objects.requireNonNull(parameters);
             return self();
         }
 
         @Override
         protected void setup() {
-            if (parameters == null) {
-                parameters = DynamicSecurityAnalysisParameters.load();
+            if (securityParameters == null) {
+                securityParameters = DynamicSecurityAnalysisParameters.load();
             }
-            dynamicSimulationParameters(parameters.getDynamicSimulationParameters());
-            //TODO use pnmy param ?
-            contingenciesStartTime = parameters.getDynamicContingenciesParameters().getContingenciesStartTime();
+            simulationParameters = securityParameters.getDynamicSimulationParameters();
+            contingenciesStartTime = securityParameters.getDynamicContingenciesParameters().getContingenciesStartTime();
             super.setup();
+        }
+
+        @Override
+        protected Builder self() {
+            return this;
         }
 
         @Override
@@ -59,11 +64,11 @@ public class SecurityAnalysisContext extends DynawoSimulationContext {
         }
     }
 
-    private SecurityAnalysisContext(Builder<?> builder) {
+    private SecurityAnalysisContext(Builder builder) {
         super(builder);
-        //TODO keep contingencies ?
         this.contingencies = builder.contingencies;
-        this.contingencyEventModels = ContingencyEventModelsFactory.createFrom(contingencies, this, macroConnectionsAdder, builder.contingenciesStartTime, getReportNode());
+        this.contingencyEventModels = ContingencyEventModelsFactory.createFrom(contingencies, this,
+                macroConnectionsAdder, builder.contingenciesStartTime, getReportNode());
     }
 
     public List<Contingency> getContingencies() {

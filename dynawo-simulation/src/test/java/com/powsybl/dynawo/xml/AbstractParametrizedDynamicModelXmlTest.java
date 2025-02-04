@@ -64,8 +64,8 @@ public abstract class AbstractParametrizedDynamicModelXmlTest extends AbstractSe
     }
 
     protected void setupDynawoContext(FinalStepConfig finalStepConfig) {
-        DynawoSimulationContext.Builder<?> builder = new DynawoSimulationContext
-                .Builder<>(network, dynamicModels)
+        DynawoSimulationContext.Builder builder = new DynawoSimulationContext
+                .Builder(network, dynamicModels)
                 .eventModels(eventModels)
                 .outputVariables(outputVariables)
                 .reportNode(reportNode);

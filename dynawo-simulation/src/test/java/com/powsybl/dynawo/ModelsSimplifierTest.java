@@ -63,7 +63,7 @@ class ModelsSimplifierTest {
                         .parameterSetId("TR")
                         .build());
         DynawoSimulationContext context = new DynawoSimulationContext
-                .Builder<>(network, dynamicModels)
+                .Builder(network, dynamicModels)
                 .dynawoParameters(DynawoSimulationParameters.load().setUseModelSimplifiers(true))
                 .build();
         assertEquals(2, context.getBlackBoxDynamicModels().size());

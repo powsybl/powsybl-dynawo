@@ -60,7 +60,7 @@ class FinalStepGlobalXmlTest extends AbstractDynamicModelXmlTest {
         MarginCalculationParameters parameters = MarginCalculationParameters.load();
         List<LoadsVariation> loadsVariationList = List.of(
                 new LoadsVariation(List.of(network.getLoad("LOAD2"), network.getLoad("LOAD3")), 30));
-        context = new MarginCalculationContext.Builder<>(network, dynamicModels, Collections.emptyList(), loadsVariationList)
+        context = new MarginCalculationContext.Builder(network, dynamicModels, Collections.emptyList(), loadsVariationList)
                 .marginCalculationParameters(parameters)
                 .build();
     }

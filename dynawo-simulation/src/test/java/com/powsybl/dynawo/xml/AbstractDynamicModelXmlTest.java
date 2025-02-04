@@ -76,7 +76,7 @@ public abstract class AbstractDynamicModelXmlTest extends AbstractSerDeTest {
 
     protected void setupDynawoContext() {
         context = new DynawoSimulationContext
-                .Builder<>(network, dynamicModels)
+                .Builder(network, dynamicModels)
                 .eventModels(eventModels)
                 .outputVariables(outputVariables)
                 .reportNode(reportNode)
