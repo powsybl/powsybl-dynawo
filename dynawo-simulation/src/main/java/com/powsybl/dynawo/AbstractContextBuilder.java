@@ -48,7 +48,7 @@ public abstract class AbstractContextBuilder<T extends AbstractContextBuilder<T>
     protected DynawoVersion dynawoVersion = DynawoConstants.VERSION_MIN;
     protected ReportNode reportNode = ReportNode.NO_OP;
 
-    public AbstractContextBuilder(Network network, List<BlackBoxModel> dynamicModels) {
+    protected AbstractContextBuilder(Network network, List<BlackBoxModel> dynamicModels) {
         this.network = network;
         this.dynamicModels = dynamicModels;
     }

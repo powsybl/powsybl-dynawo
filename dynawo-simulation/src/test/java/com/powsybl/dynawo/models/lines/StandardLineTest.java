@@ -16,8 +16,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
@@ -44,10 +43,9 @@ class StandardLineTest {
                         .iMeasurement(l.getId())
                         .iMeasurementSide(TwoSides.ONE)
                         .build());
-        UnsupportedOperationException e = assertThrows(UnsupportedOperationException.class,
-            () -> new DynawoSimulationContext
-                    .Builder(network, dynamicModels)
-                    .build());
-        assertEquals("i variable not implemented in StandardLine dynawo's model", e.getMessage());
+        DynawoSimulationContext.Builder contextBuilder = new DynawoSimulationContext.Builder(network, dynamicModels);
+        assertThatThrownBy(contextBuilder::build)
+                .isInstanceOf(UnsupportedOperationException.class)
+                .hasMessage("i variable not implemented in StandardLine dynawo's model");
     }
 }

@@ -13,8 +13,6 @@ import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.algorithms.xml.ContingenciesDydXml;
 import com.powsybl.dynawo.algorithms.xml.ContingenciesParXml;
 import com.powsybl.dynawo.models.BlackBoxModel;
-import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
-import com.powsybl.dynawo.models.macroconnections.MacroConnector;
 import com.powsybl.dynawo.xml.DynawoTestUtil;
 import com.powsybl.iidm.network.Network;
 import org.junit.jupiter.api.Test;
@@ -22,8 +20,6 @@ import org.xml.sax.SAXException;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -41,13 +37,8 @@ class ContingenciesXmlTest extends DynawoTestUtil {
                         .build());
 
         DynawoSimulationContext context = setupDynawoContext(network, dynamicModels);
-        MacroConnectionsAdder macroConnectionsAdder = new MacroConnectionsAdder(context::getDynamicModel,
-                context::getPureDynamicModel,
-                new ArrayList<>()::add,
-                new HashMap<String, MacroConnector>()::computeIfAbsent,
-                ReportNode.NO_OP);
         List<ContingencyEventModels> contingencyEvents = ContingencyEventModelsFactory.createFrom(contingencies, context,
-                macroConnectionsAdder, 10, ReportNode.NO_OP);
+                10, ReportNode.NO_OP);
 
         ContingenciesDydXml.write(tmpDir, contingencyEvents);
         ContingenciesParXml.write(tmpDir, contingencyEvents);

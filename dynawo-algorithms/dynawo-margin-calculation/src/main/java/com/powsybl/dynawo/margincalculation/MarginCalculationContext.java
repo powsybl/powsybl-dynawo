@@ -15,6 +15,7 @@ import com.powsybl.dynawo.margincalculation.loadsvariation.LoadsVariation;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.loads.AbstractLoad;
 import com.powsybl.dynawo.models.macroconnections.MacroConnect;
+import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.macroconnections.MacroConnector;
 import com.powsybl.dynawo.algorithms.ContingencyEventModels;
 import com.powsybl.dynawo.algorithms.ContingencyEventModelsFactory;
@@ -119,11 +120,12 @@ public final class MarginCalculationContext extends DynawoSimulationContext {
         double contingenciesStartTime = builder.parameters.getContingenciesStartTime();
         this.marginCalculationParameters = builder.parameters;
         this.contingencyEventModels = ContingencyEventModelsFactory
-                .createFrom(builder.contingencies, this, macroConnectionsAdder, contingenciesStartTime, getReportNode());
+                .createFrom(builder.contingencies, this, contingenciesStartTime, getReportNode());
         this.loadVariationArea = builder.loadVariationArea;
-        macroConnectionsAdder.setMacroConnectorAdder(loadVariationMacroConnectorsMap::computeIfAbsent);
-        macroConnectionsAdder.setMacroConnectAdder(loadVariationMacroConnectList::add);
-        loadVariationArea.createMacroConnections(macroConnectionsAdder);
+        MacroConnectionsAdder adder = MacroConnectionsAdder.createFrom(this,
+                loadVariationMacroConnectList::add,
+                loadVariationMacroConnectorsMap::computeIfAbsent);
+        loadVariationArea.createMacroConnections(adder);
         loadVariationArea.createDynamicModelParameters(getDynamicModelsParameters()::add);
         loadVariationArea.createNetworkParameter(getDynawoSimulationParameters().getNetworkParameters());
     }

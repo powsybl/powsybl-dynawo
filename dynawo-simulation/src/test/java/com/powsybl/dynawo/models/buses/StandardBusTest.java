@@ -19,8 +19,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * @author Dimitri Baudrier {@literal <dimitri.baudrier at rte-france.com>}
@@ -37,9 +36,9 @@ class StandardBusTest {
                 .staticId("NHV1")
                 .parameterSetId("SB")
                 .build());
-        PowsyblException e = assertThrows(PowsyblException.class, () -> new DynawoSimulationContext
-                .Builder(network, dynamicModels)
-                .build());
-        assertEquals("The equipment NHV1_NHV2_1 linked to the StandardBus NHV1 does not possess a dynamic model", e.getMessage());
+        DynawoSimulationContext.Builder contextBuilder = new DynawoSimulationContext.Builder(network, dynamicModels);
+        assertThatThrownBy(contextBuilder::build)
+                .isInstanceOf(PowsyblException.class)
+                .hasMessage("The equipment NHV1_NHV2_1 linked to the StandardBus NHV1 does not possess a dynamic model");
     }
 }

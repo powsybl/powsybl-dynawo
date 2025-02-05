@@ -45,7 +45,6 @@ public class DynawoSimulationContext implements DydDataSupplier {
     protected final Network network;
     private final String workingVariantId;
     private final DynawoSimulationParameters dynawoSimulationParameters;
-    //TODO create a model equivalent to FinalStepModels ?
     private final List<BlackBoxModel> dynamicModels;
     private final List<BlackBoxModel> eventModels;
     private final Map<String, EquipmentBlackBoxModel> staticIdBlackBoxModelMap;
@@ -60,7 +59,7 @@ public class DynawoSimulationContext implements DydDataSupplier {
     private final SimulationTime simulationTime;
     private final SimulationTime finalStepTime;
     private FinalStepModels finalStepModels;
-    private ReportNode reportNode;
+    private final ReportNode reportNode;
 
     public static class Builder extends AbstractContextBuilder<Builder> {
 
@@ -89,14 +88,10 @@ public class DynawoSimulationContext implements DydDataSupplier {
             return self();
         }
 
+        @Override
         protected void setup() {
             super.setup();
             setupEventModels();
-        }
-
-        public DynawoSimulationContext build() {
-            setup();
-            return new DynawoSimulationContext(this);
         }
 
         private void setupEventModels() {
@@ -106,8 +101,15 @@ public class DynawoSimulationContext implements DydDataSupplier {
                     .toList();
         }
 
+        @Override
         protected Builder self() {
             return this;
+        }
+
+        @Override
+        public DynawoSimulationContext build() {
+            setup();
+            return new DynawoSimulationContext(this);
         }
     }
 
@@ -147,10 +149,10 @@ public class DynawoSimulationContext implements DydDataSupplier {
 
         // Write final step macro connections
         if (!builder.finalStepDynamicModels.isEmpty()) {
-            finalStepModels = new FinalStepModels(builder.finalStepDynamicModels, macroConnectionsAdder,
+            finalStepModels = new FinalStepModels(this, builder.finalStepDynamicModels,
                     bbm -> !macroStaticReferences.containsKey(bbm.getName()),
-                    n -> !macroConnectorsMap.containsKey(n));
-            finalStepModels.getBlackBoxDynamicModels().forEach(bbm -> bbm.createDynamicModelParameters(dynamicModelsParameters::add));
+                    n -> !macroConnectorsMap.containsKey(n),
+                    dynamicModelsParameters::add);
         }
     }
 

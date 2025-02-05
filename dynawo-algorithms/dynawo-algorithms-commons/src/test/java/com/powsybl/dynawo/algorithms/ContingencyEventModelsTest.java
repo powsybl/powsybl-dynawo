@@ -12,8 +12,6 @@ import com.powsybl.contingency.Contingency;
 import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.generators.BaseGeneratorBuilder;
-import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
-import com.powsybl.dynawo.models.macroconnections.MacroConnector;
 import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
@@ -40,11 +38,6 @@ class ContingencyEventModelsTest {
                     .parameterSetId("gen")
                     .build());
         DynawoSimulationContext context = setupDynawoContext(network, dynamicModels);
-        MacroConnectionsAdder macroConnectionsAdder = new MacroConnectionsAdder(context::getDynamicModel,
-                context::getPureDynamicModel,
-                new ArrayList<>()::add,
-                new HashMap<String, MacroConnector>()::computeIfAbsent,
-                ReportNode.NO_OP);
         List<Contingency> contingencies = List.of(
                 Contingency.load("LOAD"),
                 Contingency.generator("GEN"),
@@ -53,7 +46,7 @@ class ContingencyEventModelsTest {
                 Contingency.battery("BATTERY"));
 
         List<ContingencyEventModels> contingencyEvents = ContingencyEventModelsFactory.createFrom(contingencies, context,
-                macroConnectionsAdder, 2, ReportNode.NO_OP);
+                2, ReportNode.NO_OP);
         assertThat(contingencyEvents).hasSize(3);
         assertThat(contingencyEvents.get(0).eventModels())
                 .hasSize(1)

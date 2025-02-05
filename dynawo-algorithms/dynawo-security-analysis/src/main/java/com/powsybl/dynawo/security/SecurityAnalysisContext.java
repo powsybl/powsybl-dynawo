@@ -68,7 +68,7 @@ public final class SecurityAnalysisContext extends DynawoSimulationContext {
         super(builder);
         this.contingencies = builder.contingencies;
         this.contingencyEventModels = ContingencyEventModelsFactory.createFrom(contingencies, this,
-                macroConnectionsAdder, builder.contingenciesStartTime, getReportNode());
+                builder.contingenciesStartTime, getReportNode());
     }
 
     public List<Contingency> getContingencies() {

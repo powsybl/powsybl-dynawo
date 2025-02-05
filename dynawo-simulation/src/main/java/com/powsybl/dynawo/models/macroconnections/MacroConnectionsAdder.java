@@ -44,8 +44,8 @@ public final class MacroConnectionsAdder {
     private final ReportNode reportNode;
     private final DynamicModelGetter dynamicModelGetter;
     private final PureDynamicModelGetter pureDynamicModelGetter;
-    private Consumer<MacroConnect> macroConnectAdder;
-    private BiConsumer<String, Function<String, MacroConnector>> macroConnectorAdder;
+    private final Consumer<MacroConnect> macroConnectAdder;
+    private final BiConsumer<String, Function<String, MacroConnector>> macroConnectorAdder;
 
     public MacroConnectionsAdder(DynamicModelGetter dynamicModelGetter, PureDynamicModelGetter pureDynamicModelGetter, Consumer<MacroConnect> macroConnectAdder,
                                  BiConsumer<String, Function<String, MacroConnector>> macroConnectorAdder, ReportNode reportNode) {
@@ -223,16 +223,6 @@ public final class MacroConnectionsAdder {
     private <T extends Model> void addMacroConnections(T connectedModel, String macroConnectorId, MacroConnect mc, BiFunction<T, String, List<VarConnection>> varConnectionsSupplier, String parametrizedName) {
         macroConnectAdder.accept(mc);
         macroConnectorAdder.accept(macroConnectorId, k -> new MacroConnector(macroConnectorId, varConnectionsSupplier.apply(connectedModel, parametrizedName)));
-    }
-
-    //TODO remove
-    public void setMacroConnectAdder(Consumer<MacroConnect> macroConnectAdder) {
-        this.macroConnectAdder = macroConnectAdder;
-    }
-
-    //TODO remove
-    public void setMacroConnectorAdder(BiConsumer<String, Function<String, MacroConnector>> macroConnectorAdder) {
-        this.macroConnectorAdder = macroConnectorAdder;
     }
 
     public ReportNode getReportNode() {

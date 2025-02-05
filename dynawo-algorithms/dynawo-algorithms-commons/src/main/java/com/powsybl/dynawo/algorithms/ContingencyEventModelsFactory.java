@@ -32,18 +32,17 @@ import static com.powsybl.dynawo.algorithms.DynawoAlgorithmsReports.createNotSup
  */
 public final class ContingencyEventModelsFactory {
 
-    public static List<ContingencyEventModels> createFrom(List<Contingency> contingencies, DynawoSimulationContext context,
-                                                          MacroConnectionsAdder macroConnectionsAdder,
+    public static List<ContingencyEventModels> createFrom(List<Contingency> contingencies,
+                                                          DynawoSimulationContext context,
                                                           double contingenciesStartTime,
                                                           ReportNode reportNode) {
         return contingencies.stream()
-                .map(c -> createFrom(c, context, macroConnectionsAdder, contingenciesStartTime, reportNode))
+                .map(c -> createFrom(c, context, contingenciesStartTime, reportNode))
                 .filter(Objects::nonNull)
                 .toList();
     }
 
     public static ContingencyEventModels createFrom(Contingency contingency, DynawoSimulationContext context,
-                                                    MacroConnectionsAdder macroConnectionsAdder,
                                                     double contingenciesStartTime,
                                                     ReportNode reportNode) {
         List<BlackBoxModel> eventModels = createContingencyEventModelList(contingency, context, contingenciesStartTime, reportNode);
@@ -54,8 +53,7 @@ public final class ContingencyEventModelsFactory {
         List<MacroConnect> macroConnectList = new ArrayList<>();
         List<ParametersSet> eventParameters = new ArrayList<>(eventModels.size());
         // Set Contingencies connections and parameters
-        macroConnectionsAdder.setMacroConnectorAdder(macroConnectorsMap::computeIfAbsent);
-        macroConnectionsAdder.setMacroConnectAdder(macroConnectList::add);
+        MacroConnectionsAdder macroConnectionsAdder = MacroConnectionsAdder.createFrom(context, macroConnectList::add, macroConnectorsMap::computeIfAbsent);
         eventModels.forEach(em -> {
             em.createMacroConnections(macroConnectionsAdder);
             em.createDynamicModelParameters(eventParameters::add);

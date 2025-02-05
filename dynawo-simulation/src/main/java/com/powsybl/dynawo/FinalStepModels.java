@@ -11,10 +11,12 @@ import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.macroconnections.MacroConnect;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.macroconnections.MacroConnector;
+import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.dynawo.xml.DydDataSupplier;
 import com.powsybl.dynawo.xml.MacroStaticReference;
 
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 /**
@@ -27,20 +29,24 @@ public class FinalStepModels implements DydDataSupplier {
     private final List<MacroConnect> macroConnectList = new ArrayList<>();
     private final Map<String, MacroConnector> macroConnectorsMap = new LinkedHashMap<>();
 
-    public FinalStepModels(List<BlackBoxModel> dynamicModels, MacroConnectionsAdder macroConnectionsAdder,
-                           Predicate<BlackBoxModel> macroStaticDuplicatePredicate, Predicate<String> macroConnectorDuplicatePredicate) {
+    public FinalStepModels(DynawoSimulationContext context, List<BlackBoxModel> dynamicModels,
+                           Predicate<BlackBoxModel> macroStaticDuplicatePredicate,
+                           Predicate<String> macroConnectorDuplicatePredicate,
+                           Consumer<ParametersSet> parametersAdder) {
         this.dynamicModels = dynamicModels;
-        macroConnectionsAdder.setMacroConnectorAdder((n, f) -> {
-            if (macroConnectorDuplicatePredicate.test(n)) {
-                macroConnectorsMap.computeIfAbsent(n, f);
-            }
-        });
-        macroConnectionsAdder.setMacroConnectAdder(macroConnectList::add);
+        MacroConnectionsAdder macroConnectionsAdder = MacroConnectionsAdder.createFrom(context, macroConnectList::add,
+                (n, f) -> {
+                    if (macroConnectorDuplicatePredicate.test(n)) {
+                        macroConnectorsMap.computeIfAbsent(n, f);
+                    }
+                });
+        // Write macro connection
         for (BlackBoxModel bbm : dynamicModels) {
             if (macroStaticDuplicatePredicate.test(bbm)) {
                 macroStaticReferences.computeIfAbsent(bbm.getName(), k -> new MacroStaticReference(k, bbm.getVarsMapping()));
             }
             bbm.createMacroConnections(macroConnectionsAdder);
+            bbm.createDynamicModelParameters(parametersAdder);
         }
     }
 
