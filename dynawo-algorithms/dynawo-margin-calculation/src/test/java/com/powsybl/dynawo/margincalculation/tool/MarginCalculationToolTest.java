@@ -120,7 +120,7 @@ class MarginCalculationToolTest extends AbstractToolTest {
                 "--case-file", "/network.xiidm",
                 "--dynamic-models-file", "/dynamicModels.groovy",
                 "--contingencies-file", "/contingencies.groovy",
-                "--load-variations-file", "/loadsVariations.groovy"}, expectedOut);
+                "--load-variations-file", "/loadsVariations.json"}, expectedOut);
         }
     }
 
@@ -177,7 +177,7 @@ class MarginCalculationToolTest extends AbstractToolTest {
                 "--case-file", "/network.xiidm",
                 "--dynamic-models-file", "/dynamicModels.groovy",
                 "--contingencies-file", "/contingencies.groovy",
-                "--load-variations-file", "/loadsVariations.groovy",
+                "--load-variations-file", "/loadsVariations.json",
                 "--output-file", "outputTest.json"}, expectedOut);
             ComparisonUtils.assertTxtEquals(expectedOutputFile, Files.newInputStream(fileSystem.getPath("outputTest.json")));
         }
@@ -210,7 +210,7 @@ class MarginCalculationToolTest extends AbstractToolTest {
                 "--case-file", "/network.xiidm",
                 "--dynamic-models-file", "/dynamicModels.groovy",
                 "--contingencies-file", "/contingencies.groovy",
-                "--load-variations-file", "/loadsVariations.groovy",
+                "--load-variations-file", "/loadsVariations.json",
                 "--output-log-file", "outputTest.log"}, expectedOut);
             ComparisonUtils.assertTxtEquals(expectedOutputFile, Files.newInputStream(fileSystem.getPath("outputTest.log")));
         }
@@ -223,7 +223,7 @@ class MarginCalculationToolTest extends AbstractToolTest {
                 "--case-file", "/wrong_network.xiidm",
                 "--dynamic-models-file", "/dynamicModels.groovy",
                 "--contingencies-file", "/contingencies.groovy",
-                "--load-variations-file", "/loadsVariations.groovy"},
+                "--load-variations-file", "/loadsVariations.json"},
                 CommandLineTools.EXECUTION_ERROR_STATUS,
                 "File /wrong_network.xiidm does not exist");
         }

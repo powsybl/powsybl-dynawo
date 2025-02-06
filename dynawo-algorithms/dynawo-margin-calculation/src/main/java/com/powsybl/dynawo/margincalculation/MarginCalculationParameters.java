@@ -44,7 +44,7 @@ public final class MarginCalculationParameters {
          */
         ALL_LOADS,
         /**
-         * Remove dynamic models on loads affected by the margin calculation
+         * Remove dynamic models on loads affected by a load variation
          */
         TARGETED_LOADS
     }
