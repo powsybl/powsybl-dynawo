@@ -106,16 +106,16 @@ public abstract class AbstractContextBuilder<T extends AbstractContextBuilder<T>
 
         if (finalStepConfig != null) {
             Map<Boolean, List<BlackBoxModel>> splitModels = uniqueIdsDynamicModels.collect(Collectors.partitioningBy(finalStepConfig.modelsPredicate()));
-            this.dynamicModels = splitModels.get(false);
+            dynamicModels = splitModels.get(false);
             finalStepDynamicModels = splitModels.get(true);
         } else {
-            this.dynamicModels = uniqueIdsDynamicModels.toList();
+            dynamicModels = uniqueIdsDynamicModels.toList();
         }
         setupDynamicModelsMap();
     }
 
     private void setupDynamicModelsMap() {
-        this.staticIdBlackBoxModelMap = dynamicModels.stream()
+        staticIdBlackBoxModelMap = dynamicModels.stream()
                 .filter(EquipmentBlackBoxModel.class::isInstance)
                 .map(EquipmentBlackBoxModel.class::cast)
                 .collect(Collectors.toMap(EquipmentBlackBoxModel::getStaticId, Function.identity()));

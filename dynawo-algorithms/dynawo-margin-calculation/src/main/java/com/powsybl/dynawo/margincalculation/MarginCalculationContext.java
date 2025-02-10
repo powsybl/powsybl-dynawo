@@ -14,9 +14,6 @@ import com.powsybl.dynawo.margincalculation.loadsvariation.LoadsProportionalScal
 import com.powsybl.dynawo.margincalculation.loadsvariation.LoadsVariation;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.loads.AbstractLoad;
-import com.powsybl.dynawo.models.macroconnections.MacroConnect;
-import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
-import com.powsybl.dynawo.models.macroconnections.MacroConnector;
 import com.powsybl.dynawo.algorithms.ContingencyEventModels;
 import com.powsybl.dynawo.algorithms.ContingencyEventModelsFactory;
 import com.powsybl.dynawo.xml.DydDataSupplier;
@@ -36,9 +33,7 @@ public final class MarginCalculationContext extends DynawoSimulationContext {
 
     private final MarginCalculationParameters marginCalculationParameters;
     private final List<ContingencyEventModels> contingencyEventModels;
-    private final LoadVariationAreaAutomationSystem loadVariationArea;
-    private final List<MacroConnect> loadVariationMacroConnectList = new ArrayList<>();
-    private final Map<String, MacroConnector> loadVariationMacroConnectorsMap = new LinkedHashMap<>();
+    private final LoadVariationModels loadVariationModels;
 
     public static class Builder extends AbstractContextBuilder<Builder> {
 
@@ -121,13 +116,7 @@ public final class MarginCalculationContext extends DynawoSimulationContext {
         this.marginCalculationParameters = builder.parameters;
         this.contingencyEventModels = ContingencyEventModelsFactory
                 .createFrom(builder.contingencies, this, contingenciesStartTime, getReportNode());
-        this.loadVariationArea = builder.loadVariationArea;
-        MacroConnectionsAdder adder = MacroConnectionsAdder.createFrom(this,
-                loadVariationMacroConnectList::add,
-                loadVariationMacroConnectorsMap::computeIfAbsent);
-        loadVariationArea.createMacroConnections(adder);
-        loadVariationArea.createDynamicModelParameters(getDynamicModelsParameters()::add);
-        loadVariationArea.createNetworkParameter(getDynawoSimulationParameters().getNetworkParameters());
+        this.loadVariationModels = LoadVariationModels.createFrom(this, builder.loadVariationArea);
     }
 
     public MarginCalculationParameters getMarginCalculationParameters() {
@@ -139,27 +128,6 @@ public final class MarginCalculationContext extends DynawoSimulationContext {
     }
 
     public DydDataSupplier getLoadVariationAreaDydData() {
-        return new DydDataSupplier() {
-
-            @Override
-            public List<BlackBoxModel> getBlackBoxDynamicModels() {
-                return List.of(loadVariationArea);
-            }
-
-            @Override
-            public Collection<MacroConnector> getMacroConnectors() {
-                return loadVariationMacroConnectorsMap.values();
-            }
-
-            @Override
-            public List<MacroConnect> getMacroConnectList() {
-                return loadVariationMacroConnectList;
-            }
-
-            @Override
-            public String getParFileName() {
-                return DynawoSimulationConstants.getSimulationParFile(getNetwork());
-            }
-        };
+        return loadVariationModels;
     }
 }
