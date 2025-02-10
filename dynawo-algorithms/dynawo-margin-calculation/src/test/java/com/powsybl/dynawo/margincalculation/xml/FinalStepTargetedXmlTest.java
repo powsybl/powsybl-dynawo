@@ -71,7 +71,7 @@ class FinalStepTargetedXmlTest extends AbstractDynamicModelXmlTest {
 
     @Test
     void writeDyd() throws SAXException, IOException {
-        DydXml.write(tmpDir, context);
+        DydXml.write(tmpDir, context.getSimulationDydData());
         assertThat(context.getFinalStepDydData()).isPresent();
         DydXml.write(tmpDir, FINAL_STEP_DYD_FILENAME, context.getFinalStepDydData().get());
         validate("dyd.xsd", "first_step_targeted_dyd.xml", tmpDir.resolve(DYD_FILENAME));

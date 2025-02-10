@@ -67,8 +67,8 @@ class ModelsSimplifierTest {
                 .dynawoParameters(DynawoSimulationParameters.load().setUseModelSimplifiers(true))
                 .build();
         assertEquals(2, context.getBlackBoxDynamicModels().size());
-        assertFalse(context.getBlackBoxDynamicModelStream().anyMatch(bbm -> bbm.getDynamicModelId().equalsIgnoreCase("BBM_LOAD")));
-        assertTrue(context.getBlackBoxDynamicModelStream().anyMatch(bbm -> bbm.getDynamicModelId().equalsIgnoreCase("newModel")));
+        assertFalse(context.getBlackBoxDynamicModels().stream().anyMatch(bbm -> bbm.getDynamicModelId().equalsIgnoreCase("BBM_LOAD")));
+        assertTrue(context.getBlackBoxDynamicModels().stream().anyMatch(bbm -> bbm.getDynamicModelId().equalsIgnoreCase("newModel")));
     }
 
     @AutoService(ModelsRemovalSimplifier.class)

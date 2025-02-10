@@ -37,7 +37,7 @@ class EventXmlTest extends DynawoTestUtil {
                 .outputVariables(outputVariables)
                 .build();
 
-        DydXml.write(tmpDir, context);
+        DydXml.write(tmpDir, context.getSimulationDydData());
         validate("dyd.xsd", "events.xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
     }
 

@@ -27,7 +27,7 @@ class ParametersXmlTest extends DynawoTestUtil {
                 .eventModels(eventModels)
                 .outputVariables(outputVariables)
                 .build();
-        DydXml.write(tmpDir, context);
+        DydXml.write(tmpDir, context.getSimulationDydData());
         ParametersXml.write(tmpDir, context);
         validate("parameters.xsd", "omega_ref.xml", tmpDir.resolve(context.getSimulationParFile()));
     }

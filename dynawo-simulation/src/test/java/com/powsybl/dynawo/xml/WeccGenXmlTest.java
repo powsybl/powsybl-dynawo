@@ -51,7 +51,7 @@ class WeccGenXmlTest extends AbstractParametrizedDynamicModelXmlTest {
     @ParameterizedTest(name = "{0}")
     @MethodSource("provideWecc")
     void writeModel(String dydName, String parName, Function< Network, BlackBoxModel> constructor) throws SAXException, IOException {
-        DydXml.write(tmpDir, context);
+        DydXml.write(tmpDir, context.getSimulationDydData());
         ParametersXml.write(tmpDir, context);
         validate("dyd.xsd", dydName, tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
         if (!parName.isEmpty()) {

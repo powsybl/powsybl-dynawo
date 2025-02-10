@@ -62,7 +62,7 @@ class ContextFinalStepXmlTest extends AbstractParametrizedDynamicModelXmlTest {
     @ParameterizedTest(name = "{0}")
     @MethodSource("provideBbm")
     void writeFinalStepModels(String dydName, String finalStepDydName, Predicate<BlackBoxModel> finalStepModelsPredicate) throws SAXException, IOException {
-        DydXml.write(tmpDir, context);
+        DydXml.write(tmpDir, context.getSimulationDydData());
         validate("dyd.xsd", dydName, tmpDir.resolve(DYD_FILENAME));
         assertThat(context.getFinalStepDydData()).isPresent();
         DydXml.write(tmpDir, FINAL_STEP_DYD_FILENAME, context.getFinalStepDydData().get());

@@ -10,19 +10,13 @@ import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynamicsimulation.OutputVariable;
-import com.powsybl.dynawo.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.EquipmentBlackBoxModel;
 import com.powsybl.dynawo.models.Model;
 import com.powsybl.dynawo.models.defaultmodels.DefaultModelsHandler;
 import com.powsybl.dynawo.models.events.ContextDependentEvent;
-import com.powsybl.dynawo.models.frequencysynchronizers.*;
-import com.powsybl.dynawo.models.macroconnections.MacroConnect;
-import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
-import com.powsybl.dynawo.models.macroconnections.MacroConnector;
 import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.dynawo.xml.DydDataSupplier;
-import com.powsybl.dynawo.xml.MacroStaticReference;
 import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.Network;
 import org.slf4j.Logger;
@@ -30,13 +24,12 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class DynawoSimulationContext implements DydDataSupplier {
+public class DynawoSimulationContext {
 
     protected static final Logger LOGGER = LoggerFactory.getLogger(DynawoSimulationContext.class);
     private static final String MODEL_ID_EXCEPTION = "The model identified by the static id %s does not match the expected model (%s)";
@@ -45,20 +38,15 @@ public class DynawoSimulationContext implements DydDataSupplier {
     protected final Network network;
     private final String workingVariantId;
     private final DynawoSimulationParameters dynawoSimulationParameters;
-    private final List<BlackBoxModel> dynamicModels;
-    private final List<BlackBoxModel> eventModels;
     private final Map<String, EquipmentBlackBoxModel> staticIdBlackBoxModelMap;
+    private final Map<String, BlackBoxModel> pureDynamicModelMap;
     private final Map<OutputVariable.OutputType, List<OutputVariable>> outputVariables;
-    private final Map<String, MacroStaticReference> macroStaticReferences = new LinkedHashMap<>();
-    private final List<MacroConnect> macroConnectList = new ArrayList<>();
-    private final Map<String, MacroConnector> macroConnectorsMap = new LinkedHashMap<>();
     private final DefaultModelsHandler defaultModelsHandler = new DefaultModelsHandler();
-    private final FrequencySynchronizerModel frequencySynchronizer;
     private final List<ParametersSet> dynamicModelsParameters = new ArrayList<>();
-    protected final MacroConnectionsAdder macroConnectionsAdder;
+    private final SimulationModels simulationModels;
+    private final FinalStepModels finalStepModels;
     private final SimulationTime simulationTime;
     private final SimulationTime finalStepTime;
-    private FinalStepModels finalStepModels;
     private final ReportNode reportNode;
 
     public static class Builder extends AbstractContextBuilder<Builder> {
@@ -119,41 +107,27 @@ public class DynawoSimulationContext implements DydDataSupplier {
         this.dynawoSimulationParameters = builder.dynawoParameters;
         this.simulationTime = builder.simulationTime;
         this.finalStepTime = builder.finalStepTime;
-        this.dynamicModels = builder.dynamicModels;
         this.staticIdBlackBoxModelMap = builder.staticIdBlackBoxModelMap;
-        this.frequencySynchronizer = builder.frequencySynchronizer;
-        this.eventModels = builder.eventModels;
+        this.pureDynamicModelMap = builder.pureDynamicModelMap;
         this.outputVariables = builder.outputVariables;
         this.reportNode = builder.reportNode;
-        this.macroConnectionsAdder = MacroConnectionsAdder.createFrom(this, macroConnectList::add, macroConnectorsMap::computeIfAbsent);
 
         // Late init on ContextDependentEvents
-        this.eventModels.stream()
+        builder.eventModels.stream()
                 .filter(ContextDependentEvent.class::isInstance)
                 .map(ContextDependentEvent.class::cast)
                 .forEach(e -> e.setEquipmentHasDynamicModel(this));
 
-        // Write macro connection
-        getBlackBoxDynamicModelStream().forEach(bbm -> {
-            macroStaticReferences.computeIfAbsent(bbm.getName(), k -> new MacroStaticReference(k, bbm.getVarsMapping()));
-            bbm.createMacroConnections(macroConnectionsAdder);
-            bbm.createDynamicModelParameters(dynamicModelsParameters::add);
-        });
-
-        ParametersSet networkParameters = getDynawoSimulationParameters().getNetworkParameters();
-        for (BlackBoxModel bbem : eventModels) {
-            bbem.createMacroConnections(macroConnectionsAdder);
-            bbem.createDynamicModelParameters(dynamicModelsParameters::add);
-            bbem.createNetworkParameter(networkParameters);
-        }
+        simulationModels = SimulationModels.createFrom(this, builder.dynamicModels, builder.eventModels);
 
         // Write final step macro connections
-        if (!builder.finalStepDynamicModels.isEmpty()) {
-            finalStepModels = new FinalStepModels(this, builder.finalStepDynamicModels,
-                    bbm -> !macroStaticReferences.containsKey(bbm.getName()),
-                    n -> !macroConnectorsMap.containsKey(n),
-                    dynamicModelsParameters::add);
-        }
+        //TODO reference firstStep in final step
+        finalStepModels = !builder.finalStepDynamicModels.isEmpty() ?
+                new FinalStepModels(this, builder.finalStepDynamicModels,
+                    bbm -> !simulationModels.hasMacroStaticReference(bbm),
+                    n -> !simulationModels.hasMacroConnector(n),
+                    dynamicModelsParameters::add)
+            : null;
     }
 
     public Network getNetwork() {
@@ -176,11 +150,6 @@ public class DynawoSimulationContext implements DydDataSupplier {
         return dynawoSimulationParameters;
     }
 
-    @Override
-    public Collection<MacroStaticReference> getMacroStaticReferences() {
-        return macroStaticReferences.values();
-    }
-
     public <T extends Model> T getDynamicModel(Identifiable<?> equipment, Class<T> connectableClass, boolean throwException) {
         BlackBoxModel bbm = staticIdBlackBoxModelMap.get(equipment.getId());
         if (bbm == null) {
@@ -198,10 +167,7 @@ public class DynawoSimulationContext implements DydDataSupplier {
     }
 
     public <T extends Model> T getPureDynamicModel(String dynamicId, Class<T> connectableClass, boolean throwException) {
-        BlackBoxModel bbm = dynamicModels.stream()
-                .filter(dm -> dynamicId.equals(dm.getDynamicModelId()))
-                .filter(AbstractPureDynamicBlackBoxModel.class::isInstance)
-                .findFirst().orElse(null);
+        BlackBoxModel bbm = pureDynamicModelMap.get(dynamicId);
         if (bbm == null) {
             if (throwException) {
                 throw new PowsyblException("Pure dynamic model " + dynamicId + " not found");
@@ -225,36 +191,12 @@ public class DynawoSimulationContext implements DydDataSupplier {
         return staticIdBlackBoxModelMap.containsKey(equipment.getId());
     }
 
-    @Override
-    public List<MacroConnect> getMacroConnectList() {
-        return macroConnectList;
-    }
-
-    @Override
-    public Collection<MacroConnector> getMacroConnectors() {
-        return macroConnectorsMap.values();
-    }
-
-    private Stream<BlackBoxModel> getInputBlackBoxDynamicModelStream() {
-        // Doesn't include the OmegaRef, it only concerns the DynamicModels provided by the user
-        return dynamicModels.stream();
-    }
-
-    public Stream<BlackBoxModel> getBlackBoxDynamicModelStream() {
-        if (frequencySynchronizer.isEmpty()) {
-            return getInputBlackBoxDynamicModelStream();
-        }
-        return Stream.concat(getInputBlackBoxDynamicModelStream(), Stream.of(frequencySynchronizer));
-    }
-
-    @Override
     public List<BlackBoxModel> getBlackBoxDynamicModels() {
-        return getBlackBoxDynamicModelStream().toList();
+        return simulationModels.getBlackBoxDynamicModels();
     }
 
-    @Override
     public List<BlackBoxModel> getBlackBoxEventModels() {
-        return eventModels;
+        return simulationModels.getBlackBoxEventModels();
     }
 
     public List<OutputVariable> getOutputVariables(OutputVariable.OutputType type) {
@@ -283,6 +225,10 @@ public class DynawoSimulationContext implements DydDataSupplier {
 
     public String getSimulationParFile() {
         return getNetwork().getId() + ".par";
+    }
+
+    public DydDataSupplier getSimulationDydData() {
+        return simulationModels;
     }
 
     public Optional<DydDataSupplier> getFinalStepDydData() {

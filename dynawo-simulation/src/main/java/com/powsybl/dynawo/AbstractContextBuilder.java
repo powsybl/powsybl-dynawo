@@ -14,6 +14,7 @@ import com.powsybl.dynamicsimulation.OutputVariable;
 import com.powsybl.dynawo.builders.VersionInterval;
 import com.powsybl.dynawo.commons.DynawoConstants;
 import com.powsybl.dynawo.commons.DynawoVersion;
+import com.powsybl.dynawo.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.EquipmentBlackBoxModel;
 import com.powsybl.dynawo.models.Model;
@@ -38,7 +39,7 @@ public abstract class AbstractContextBuilder<T extends AbstractContextBuilder<T>
     protected String workingVariantId;
     protected List<BlackBoxModel> dynamicModels;
     protected Map<String, EquipmentBlackBoxModel> staticIdBlackBoxModelMap;
-    protected FrequencySynchronizerModel frequencySynchronizer;
+    protected Map<String, BlackBoxModel> pureDynamicModelMap;
     protected List<BlackBoxModel> eventModels = Collections.emptyList();
     protected Map<OutputVariable.OutputType, List<OutputVariable>> outputVariables = Collections.emptyMap();
     protected FinalStepConfig finalStepConfig = null;
@@ -82,7 +83,6 @@ public abstract class AbstractContextBuilder<T extends AbstractContextBuilder<T>
         }
         setupSimulationTime();
         setupDynamicModels();
-        setupFrequencySynchronizer();
     }
 
     protected void setupSimulationTime() {
@@ -105,13 +105,15 @@ public abstract class AbstractContextBuilder<T extends AbstractContextBuilder<T>
         }
 
         if (finalStepConfig != null) {
-            Map<Boolean, List<BlackBoxModel>> splitModels = uniqueIdsDynamicModels.collect(Collectors.partitioningBy(finalStepConfig.modelsPredicate()));
+            Map<Boolean, List<BlackBoxModel>> splitModels = uniqueIdsDynamicModels
+                    .collect(Collectors.partitioningBy(finalStepConfig.modelsPredicate(), Collectors.toCollection(ArrayList::new)));
             dynamicModels = splitModels.get(false);
             finalStepDynamicModels = splitModels.get(true);
         } else {
-            dynamicModels = uniqueIdsDynamicModels.toList();
+            dynamicModels = uniqueIdsDynamicModels.collect(Collectors.toCollection(ArrayList::new));
         }
         setupDynamicModelsMap();
+        setupFrequencySynchronizer();
     }
 
     private void setupDynamicModelsMap() {
@@ -119,6 +121,10 @@ public abstract class AbstractContextBuilder<T extends AbstractContextBuilder<T>
                 .filter(EquipmentBlackBoxModel.class::isInstance)
                 .map(EquipmentBlackBoxModel.class::cast)
                 .collect(Collectors.toMap(EquipmentBlackBoxModel::getStaticId, Function.identity()));
+
+        pureDynamicModelMap = dynamicModels.stream()
+                .filter(AbstractPureDynamicBlackBoxModel.class::isInstance)
+                .collect(Collectors.toMap(BlackBoxModel::getDynamicModelId, Function.identity()));
     }
 
     private Stream<BlackBoxModel> simplifyModels(Stream<BlackBoxModel> inputBbm, ReportNode reportNode) {
@@ -134,6 +140,7 @@ public abstract class AbstractContextBuilder<T extends AbstractContextBuilder<T>
     }
 
     private void setupFrequencySynchronizer() {
+        FrequencySynchronizerModel frequencySynchronizer;
         List<SignalNModel> signalNModels = filterDynamicModels(SignalNModel.class);
         List<FrequencySynchronizedModel> frequencySynchronizedModels = filterDynamicModels(FrequencySynchronizedModel.class);
         boolean hasSpecificBuses = dynamicModels.stream().anyMatch(AbstractBus.class::isInstance);
@@ -147,6 +154,10 @@ public abstract class AbstractContextBuilder<T extends AbstractContextBuilder<T>
         } else {
             frequencySynchronizer = hasSpecificBuses ? new SetPoint(frequencySynchronizedModels, defaultParFile)
                     : new OmegaRef(frequencySynchronizedModels, defaultParFile, dynawoParameters);
+        }
+        if (!frequencySynchronizer.isEmpty()) {
+            //TODO dynamicModels should be immutable
+            dynamicModels.add(frequencySynchronizer);
         }
     }
 

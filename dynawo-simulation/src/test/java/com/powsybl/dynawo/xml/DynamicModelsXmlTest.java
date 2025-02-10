@@ -36,7 +36,7 @@ class DynamicModelsXmlTest extends DynawoTestUtil {
                 .Builder(network, dynamicModels)
                 .outputVariables(outputVariables)
                 .build();
-        DydXml.write(tmpDir, context);
+        DydXml.write(tmpDir, context.getSimulationDydData());
         validate("dyd.xsd", "dyd.xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
     }
 
@@ -54,7 +54,7 @@ class DynamicModelsXmlTest extends DynawoTestUtil {
                 .outputVariables(outputVariables)
                 .build();
 
-        DydXml.write(tmpDir, context);
+        DydXml.write(tmpDir, context.getSimulationDydData());
         validate("dyd.xsd", "dyd_fictitious.xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
     }
 
