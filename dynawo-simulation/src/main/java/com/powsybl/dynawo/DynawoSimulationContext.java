@@ -6,21 +6,13 @@
  */
 package com.powsybl.dynawo;
 
-import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynamicsimulation.OutputVariable;
 import com.powsybl.dynawo.models.BlackBoxModel;
-import com.powsybl.dynawo.models.EquipmentBlackBoxModel;
-import com.powsybl.dynawo.models.Model;
-import com.powsybl.dynawo.models.defaultmodels.DefaultModelsHandler;
-import com.powsybl.dynawo.models.events.ContextDependentEvent;
 import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.dynawo.xml.DydDataSupplier;
-import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.Network;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -31,18 +23,11 @@ import java.util.stream.Collectors;
  */
 public class DynawoSimulationContext {
 
-    protected static final Logger LOGGER = LoggerFactory.getLogger(DynawoSimulationContext.class);
-    private static final String MODEL_ID_EXCEPTION = "The model identified by the static id %s does not match the expected model (%s)";
-    private static final String MODEL_ID_LOG = "The model identified by the static id {} does not match the expected model ({})";
-
     protected final Network network;
     private final String workingVariantId;
     private final DynawoSimulationParameters dynawoSimulationParameters;
-    private final Map<String, EquipmentBlackBoxModel> staticIdBlackBoxModelMap;
-    private final Map<String, BlackBoxModel> pureDynamicModelMap;
     private final Map<OutputVariable.OutputType, List<OutputVariable>> outputVariables;
-    private final DefaultModelsHandler defaultModelsHandler = new DefaultModelsHandler();
-    private final List<ParametersSet> dynamicModelsParameters = new ArrayList<>();
+    private final List<ParametersSet> dynamicModelsParameters;
     private final SimulationModels simulationModels;
     private final FinalStepModels finalStepModels;
     private final SimulationTime simulationTime;
@@ -107,27 +92,11 @@ public class DynawoSimulationContext {
         this.dynawoSimulationParameters = builder.dynawoParameters;
         this.simulationTime = builder.simulationTime;
         this.finalStepTime = builder.finalStepTime;
-        this.staticIdBlackBoxModelMap = builder.staticIdBlackBoxModelMap;
-        this.pureDynamicModelMap = builder.pureDynamicModelMap;
+        this.dynamicModelsParameters = builder.dynamicModelsParameters;
         this.outputVariables = builder.outputVariables;
         this.reportNode = builder.reportNode;
-
-        // Late init on ContextDependentEvents
-        builder.eventModels.stream()
-                .filter(ContextDependentEvent.class::isInstance)
-                .map(ContextDependentEvent.class::cast)
-                .forEach(e -> e.setEquipmentHasDynamicModel(this));
-
-        simulationModels = SimulationModels.createFrom(this, builder.dynamicModels, builder.eventModels);
-
-        // Write final step macro connections
-        //TODO reference firstStep in final step
-        finalStepModels = !builder.finalStepDynamicModels.isEmpty() ?
-                new FinalStepModels(this, builder.finalStepDynamicModels,
-                    bbm -> !simulationModels.hasMacroStaticReference(bbm),
-                    n -> !simulationModels.hasMacroConnector(n),
-                    dynamicModelsParameters::add)
-            : null;
+        this.simulationModels = builder.simulationModels;
+        this.finalStepModels = builder.finalStepModels;
     }
 
     public Network getNetwork() {
@@ -148,47 +117,6 @@ public class DynawoSimulationContext {
 
     public DynawoSimulationParameters getDynawoSimulationParameters() {
         return dynawoSimulationParameters;
-    }
-
-    public <T extends Model> T getDynamicModel(Identifiable<?> equipment, Class<T> connectableClass, boolean throwException) {
-        BlackBoxModel bbm = staticIdBlackBoxModelMap.get(equipment.getId());
-        if (bbm == null) {
-            return defaultModelsHandler.getDefaultModel(equipment, connectableClass, throwException);
-        }
-        if (connectableClass.isInstance(bbm)) {
-            return connectableClass.cast(bbm);
-        }
-        if (throwException) {
-            throw new PowsyblException(String.format(MODEL_ID_EXCEPTION, equipment.getId(), connectableClass.getSimpleName()));
-        } else {
-            LOGGER.warn(MODEL_ID_LOG, equipment.getId(), connectableClass.getSimpleName());
-            return null;
-        }
-    }
-
-    public <T extends Model> T getPureDynamicModel(String dynamicId, Class<T> connectableClass, boolean throwException) {
-        BlackBoxModel bbm = pureDynamicModelMap.get(dynamicId);
-        if (bbm == null) {
-            if (throwException) {
-                throw new PowsyblException("Pure dynamic model " + dynamicId + " not found");
-            } else {
-                LOGGER.warn("Pure dynamic model {} not found", dynamicId);
-                return null;
-            }
-        }
-        if (connectableClass.isInstance(bbm)) {
-            return connectableClass.cast(bbm);
-        }
-        if (throwException) {
-            throw new PowsyblException(String.format(MODEL_ID_EXCEPTION, dynamicId, connectableClass.getSimpleName()));
-        } else {
-            LOGGER.warn(MODEL_ID_LOG, dynamicId, connectableClass.getSimpleName());
-            return null;
-        }
-    }
-
-    public boolean hasDynamicModel(Identifiable<?> equipment) {
-        return staticIdBlackBoxModelMap.containsKey(equipment.getId());
     }
 
     public List<BlackBoxModel> getBlackBoxDynamicModels() {

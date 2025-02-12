@@ -20,6 +20,7 @@ import com.powsybl.dynawo.models.EquipmentBlackBoxModel;
 import com.powsybl.dynawo.models.Model;
 import com.powsybl.dynawo.models.buses.AbstractBus;
 import com.powsybl.dynawo.models.frequencysynchronizers.*;
+import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.iidm.network.Network;
 
 import java.util.*;
@@ -38,12 +39,16 @@ public abstract class AbstractContextBuilder<T extends AbstractContextBuilder<T>
     protected DynawoSimulationParameters dynawoParameters = null;
     protected String workingVariantId;
     protected List<BlackBoxModel> dynamicModels;
+    //TODO delete if useless
     protected Map<String, EquipmentBlackBoxModel> staticIdBlackBoxModelMap;
     protected Map<String, BlackBoxModel> pureDynamicModelMap;
     protected List<BlackBoxModel> eventModels = Collections.emptyList();
+    protected List<ParametersSet> dynamicModelsParameters = new ArrayList<>();
+    protected SimulationModels simulationModels;
     protected Map<OutputVariable.OutputType, List<OutputVariable>> outputVariables = Collections.emptyMap();
     protected FinalStepConfig finalStepConfig = null;
     protected List<BlackBoxModel> finalStepDynamicModels = Collections.emptyList();
+    protected FinalStepModels finalStepModels = null;
     protected SimulationTime simulationTime;
     protected SimulationTime finalStepTime = null;
     protected DynawoVersion dynawoVersion = DynawoConstants.VERSION_MIN;
@@ -83,6 +88,12 @@ public abstract class AbstractContextBuilder<T extends AbstractContextBuilder<T>
         }
         setupSimulationTime();
         setupDynamicModels();
+        simulationModels = SimulationModels.createFrom(dynamicModels, eventModels, dynamicModelsParameters::add,
+                dynawoParameters.getNetworkParameters(), reportNode);
+        if (!finalStepDynamicModels.isEmpty()) {
+            finalStepModels = FinalStepModels.createFrom(simulationModels, finalStepDynamicModels,
+                    dynamicModelsParameters::add, reportNode);
+        }
     }
 
     protected void setupSimulationTime() {

@@ -17,9 +17,15 @@ public interface ContextDependentEvent {
 
     Identifiable<?> getEquipment();
 
+    //TODO delete
     default boolean hasDynamicModel(DynawoSimulationContext context) {
-        return context.hasDynamicModel(getEquipment());
+        return true;
     }
 
+    //TODO delete
     void setEquipmentHasDynamicModel(DynawoSimulationContext context);
+
+    default void setEquipmentHasDynamicModel(boolean hasDynamicModel) {
+        //TODO implements method
+    }
 }

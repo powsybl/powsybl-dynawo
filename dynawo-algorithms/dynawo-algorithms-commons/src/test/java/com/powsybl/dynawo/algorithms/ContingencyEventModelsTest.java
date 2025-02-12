@@ -9,10 +9,12 @@ package com.powsybl.dynawo.algorithms;
 
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.contingency.Contingency;
-import com.powsybl.dynawo.DynawoSimulationContext;
+import com.powsybl.dynawo.BlackBoxModelSupplier;
 import com.powsybl.dynawo.models.BlackBoxModel;
+import com.powsybl.dynawo.models.EquipmentBlackBoxModel;
 import com.powsybl.dynawo.models.generators.BaseGeneratorBuilder;
 import com.powsybl.dynawo.parameters.ParametersSet;
+import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.Test;
@@ -32,12 +34,29 @@ class ContingencyEventModelsTest {
     @Test
     void test() {
         Network network = EurostagTutorialExample1Factory.create();
-        List<BlackBoxModel> dynamicModels = List.of(
-                BaseGeneratorBuilder.of(network)
-                    .staticId("GEN")
-                    .parameterSetId("gen")
-                    .build());
-        DynawoSimulationContext context = setupDynawoContext(network, dynamicModels);
+        BlackBoxModelSupplier bbmSupplier = new BlackBoxModelSupplier() {
+
+            private final Map<String, EquipmentBlackBoxModel> equipments = Map.of("GEN",
+                    BaseGeneratorBuilder.of(network)
+                            .staticId("GEN")
+                            .parameterSetId("gen")
+                            .build());
+
+            @Override
+            public EquipmentBlackBoxModel getStaticIdBlackBoxModel(String id) {
+                return equipments.get(id);
+            }
+
+            @Override
+            public BlackBoxModel getPureDynamicModel(String id) {
+                return null;
+            }
+
+            @Override
+            public boolean hasDynamicModel(Identifiable<?> equipment) {
+                return equipments.containsKey(equipment.getId());
+            }
+        };
         List<Contingency> contingencies = List.of(
                 Contingency.load("LOAD"),
                 Contingency.generator("GEN"),
@@ -45,8 +64,8 @@ class ContingencyEventModelsTest {
                 Contingency.branch(NHV1_NHV2_2, "WRONG_ID"),
                 Contingency.battery("BATTERY"));
 
-        List<ContingencyEventModels> contingencyEvents = ContingencyEventModelsFactory.createFrom(contingencies, context,
-                2, ReportNode.NO_OP);
+        List<ContingencyEventModels> contingencyEvents = ContingencyEventModelsFactory.createFrom(contingencies,
+                2, network, bbmSupplier, ReportNode.NO_OP);
         assertThat(contingencyEvents).hasSize(3);
         assertThat(contingencyEvents.get(0).eventModels())
                 .hasSize(1)
@@ -60,11 +79,5 @@ class ContingencyEventModelsTest {
         ParametersSet parametersSet = contingencyEvents.get(2).eventParameters().get(0);
         assertTrue(parametersSet.getBool("event_disconnectOrigin"));
         assertFalse(parametersSet.getBool("event_disconnectExtremity"));
-    }
-
-    private DynawoSimulationContext setupDynawoContext(Network network, List<BlackBoxModel> dynamicModels) {
-        return new DynawoSimulationContext
-                .Builder(network, dynamicModels)
-                .build();
     }
 }

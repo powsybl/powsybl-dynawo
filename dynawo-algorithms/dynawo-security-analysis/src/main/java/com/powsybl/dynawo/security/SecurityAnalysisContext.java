@@ -30,7 +30,7 @@ public final class SecurityAnalysisContext extends DynawoSimulationContext {
 
         private final List<Contingency> contingencies;
         private DynamicSecurityAnalysisParameters securityParameters;
-        private double contingenciesStartTime;
+        private List<ContingencyEventModels> contingencyEventModels;
 
         public Builder(Network network, List<BlackBoxModel> dynamicModels, List<Contingency> contingencies) {
             super(network, dynamicModels);
@@ -44,12 +44,19 @@ public final class SecurityAnalysisContext extends DynawoSimulationContext {
 
         @Override
         protected void setup() {
+            //TODO use different methods to kepp the excution order clean instad of using super in the middle
             if (securityParameters == null) {
                 securityParameters = DynamicSecurityAnalysisParameters.load();
             }
             simulationParameters = securityParameters.getDynamicSimulationParameters();
-            contingenciesStartTime = securityParameters.getDynamicContingenciesParameters().getContingenciesStartTime();
             super.setup();
+            setupContingencyEventModels();
+        }
+
+        private void setupContingencyEventModels() {
+            this.contingencyEventModels = ContingencyEventModelsFactory.createFrom(contingencies,
+                    securityParameters.getDynamicContingenciesParameters().getContingenciesStartTime(),
+                    network, simulationModels, reportNode);
         }
 
         @Override
@@ -67,8 +74,7 @@ public final class SecurityAnalysisContext extends DynawoSimulationContext {
     private SecurityAnalysisContext(Builder builder) {
         super(builder);
         this.contingencies = builder.contingencies;
-        this.contingencyEventModels = ContingencyEventModelsFactory.createFrom(contingencies, this,
-                builder.contingenciesStartTime, getReportNode());
+        this.contingencyEventModels = builder.contingencyEventModels;
     }
 
     public List<Contingency> getContingencies() {

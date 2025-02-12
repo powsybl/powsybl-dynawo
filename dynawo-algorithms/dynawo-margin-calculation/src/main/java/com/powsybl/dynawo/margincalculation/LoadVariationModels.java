@@ -7,15 +7,21 @@
  */
 package com.powsybl.dynawo.margincalculation;
 
+import com.powsybl.commons.report.ReportNode;
+import com.powsybl.dynawo.BlackBoxModelSupplier;
 import com.powsybl.dynawo.DynawoSimulationConstants;
+import com.powsybl.dynawo.SimulationModels;
 import com.powsybl.dynawo.margincalculation.loadsvariation.LoadVariationAreaAutomationSystem;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.macroconnections.MacroConnect;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.macroconnections.MacroConnector;
+import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.dynawo.xml.DydDataSupplier;
+import com.powsybl.iidm.network.Network;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -27,18 +33,18 @@ public class LoadVariationModels implements DydDataSupplier {
     private final Map<String, MacroConnector> macroConnectorsMap;
     private final String parFileName;
 
-    public static LoadVariationModels createFrom(MarginCalculationContext context, LoadVariationAreaAutomationSystem loadVariationArea) {
+    public static LoadVariationModels createFrom(BlackBoxModelSupplier bbmSupplier, LoadVariationAreaAutomationSystem loadVariationArea,
+                                                 Consumer<ParametersSet> parametersAdder, ParametersSet networkParameters,
+                                                 String simulationParFile, ReportNode reportNode) {
         List<MacroConnect> macroConnectList = new ArrayList<>();
         Map<String, MacroConnector> macroConnectorsMap = new LinkedHashMap<>();
-        MacroConnectionsAdder adder = MacroConnectionsAdder.createFrom(context,
-                macroConnectList::add,
-                macroConnectorsMap::computeIfAbsent);
+        MacroConnectionsAdder adder = new MacroConnectionsAdder(bbmSupplier::getStaticIdBlackBoxModel,
+                bbmSupplier::getPureDynamicModel, macroConnectList::add, macroConnectorsMap::computeIfAbsent, reportNode);
         loadVariationArea.createMacroConnections(adder);
-        loadVariationArea.createDynamicModelParameters(context.getDynamicModelsParameters()::add);
-        loadVariationArea.createNetworkParameter(context.getDynawoSimulationParameters().getNetworkParameters());
+        loadVariationArea.createDynamicModelParameters(parametersAdder);
+        loadVariationArea.createNetworkParameter(networkParameters);
 
-        return new LoadVariationModels(loadVariationArea, macroConnectList, macroConnectorsMap,
-                DynawoSimulationConstants.getSimulationParFile(context.getNetwork()));
+        return new LoadVariationModels(loadVariationArea, macroConnectList, macroConnectorsMap, simulationParFile);
     }
 
     private LoadVariationModels(LoadVariationAreaAutomationSystem loadVariationArea,

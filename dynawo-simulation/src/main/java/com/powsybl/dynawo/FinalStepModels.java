@@ -7,7 +7,10 @@
  */
 package com.powsybl.dynawo;
 
+import com.powsybl.commons.report.ReportNode;
+import com.powsybl.dynawo.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawo.models.BlackBoxModel;
+import com.powsybl.dynawo.models.EquipmentBlackBoxModel;
 import com.powsybl.dynawo.models.macroconnections.MacroConnect;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.macroconnections.MacroConnector;
@@ -17,37 +20,74 @@ import com.powsybl.dynawo.xml.MacroStaticReference;
 
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class FinalStepModels implements DydDataSupplier {
+class FinalStepModels implements DydDataSupplier {
 
     private final List<BlackBoxModel> dynamicModels;
-    private final Map<String, MacroStaticReference> macroStaticReferences = new LinkedHashMap<>();
-    private final List<MacroConnect> macroConnectList = new ArrayList<>();
-    private final Map<String, MacroConnector> macroConnectorsMap = new LinkedHashMap<>();
+    private final Map<String, MacroStaticReference> macroStaticReferences;
+    private final List<MacroConnect> macroConnectList;
+    private final Map<String, MacroConnector> macroConnectorsMap;
 
-    public FinalStepModels(DynawoSimulationContext context, List<BlackBoxModel> dynamicModels,
-                           Predicate<BlackBoxModel> macroStaticDuplicatePredicate,
-                           Predicate<String> macroConnectorDuplicatePredicate,
-                           Consumer<ParametersSet> parametersAdder) {
-        this.dynamicModels = dynamicModels;
-        MacroConnectionsAdder macroConnectionsAdder = MacroConnectionsAdder.createFrom(context, macroConnectList::add,
+    protected Map<String, EquipmentBlackBoxModel> staticIdBlackBoxModelMap;
+    protected Map<String, BlackBoxModel> pureDynamicModelMap;
+
+    public static FinalStepModels createFrom(SimulationModels simulationModels, List<BlackBoxModel> dynamicModels,
+                                             Consumer<ParametersSet> parametersAdder, ReportNode reportNode) {
+        //TODO factorize
+        Map<String, EquipmentBlackBoxModel> staticIdBlackBoxModelMap = dynamicModels.stream()
+                .filter(EquipmentBlackBoxModel.class::isInstance)
+                .map(EquipmentBlackBoxModel.class::cast)
+                .collect(Collectors.toMap(EquipmentBlackBoxModel::getStaticId, Function.identity()));
+        Map<String, BlackBoxModel> pureDynamicModelMap = dynamicModels.stream()
+                .filter(AbstractPureDynamicBlackBoxModel.class::isInstance)
+                .collect(Collectors.toMap(BlackBoxModel::getDynamicModelId, Function.identity()));
+
+        Map<String, MacroStaticReference> macroStaticReferences = new LinkedHashMap<>();
+        List<MacroConnect> macroConnectList = new ArrayList<>();
+        Map<String, MacroConnector> macroConnectorsMap = new LinkedHashMap<>();
+        MacroConnectionsAdder macroConnectionsAdder = new MacroConnectionsAdder(
+                id -> {
+                    //TODO refactor
+                    BlackBoxModel bbm = simulationModels.getStaticIdBlackBoxModel(id);
+                    return bbm != null ? bbm : staticIdBlackBoxModelMap.get(id);
+                },
+                id -> {
+                    //TODO refactor
+                    BlackBoxModel bbm = simulationModels.getPureDynamicModel(id);
+                    return bbm != null ? bbm : pureDynamicModelMap.get(id);
+                },
+                macroConnectList::add,
                 (n, f) -> {
-                    if (macroConnectorDuplicatePredicate.test(n)) {
+                    if (!simulationModels.hasMacroConnector(n)) {
                         macroConnectorsMap.computeIfAbsent(n, f);
                     }
-                });
+                },
+                reportNode);
         // Write macro connection
         for (BlackBoxModel bbm : dynamicModels) {
-            if (macroStaticDuplicatePredicate.test(bbm)) {
+            if (!simulationModels.hasMacroStaticReference(bbm)) {
                 macroStaticReferences.computeIfAbsent(bbm.getName(), k -> new MacroStaticReference(k, bbm.getVarsMapping()));
             }
             bbm.createMacroConnections(macroConnectionsAdder);
             bbm.createDynamicModelParameters(parametersAdder);
         }
+        return new FinalStepModels(dynamicModels, macroConnectList, macroConnectorsMap, macroStaticReferences);
+    }
+
+    private FinalStepModels(List<BlackBoxModel> dynamicModels,
+                            List<MacroConnect> macroConnectList,
+                            Map<String, MacroConnector> macroConnectorsMap,
+                            Map<String, MacroStaticReference> macroStaticReferences) {
+        this.dynamicModels = dynamicModels;
+        this.macroConnectList = macroConnectList;
+        this.macroConnectorsMap = macroConnectorsMap;
+        this.macroStaticReferences = macroStaticReferences;
+        setupDynamicModelsMap();
     }
 
     @Override
@@ -68,5 +108,16 @@ public class FinalStepModels implements DydDataSupplier {
     @Override
     public List<MacroConnect> getMacroConnectList() {
         return macroConnectList;
+    }
+
+    private void setupDynamicModelsMap() {
+        staticIdBlackBoxModelMap = dynamicModels.stream()
+                .filter(EquipmentBlackBoxModel.class::isInstance)
+                .map(EquipmentBlackBoxModel.class::cast)
+                .collect(Collectors.toMap(EquipmentBlackBoxModel::getStaticId, Function.identity()));
+
+        pureDynamicModelMap = dynamicModels.stream()
+                .filter(AbstractPureDynamicBlackBoxModel.class::isInstance)
+                .collect(Collectors.toMap(BlackBoxModel::getDynamicModelId, Function.identity()));
     }
 }

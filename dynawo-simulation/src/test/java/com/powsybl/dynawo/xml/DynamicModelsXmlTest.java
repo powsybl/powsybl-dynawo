@@ -123,13 +123,14 @@ class DynamicModelsXmlTest extends DynawoTestUtil {
 
     @Test
     void testIncorrectModelException() {
+        //TODO fix
         DynawoSimulationContext dc = new DynawoSimulationContext
                 .Builder(network, dynamicModels)
                 .eventModels(eventModels)
                 .outputVariables(outputVariables)
                 .build();
         Identifiable<?> gen = network.getIdentifiable("GEN5");
-        Exception e = assertThrows(PowsyblException.class, () -> dc.getDynamicModel(gen, LineModel.class, true));
+        Exception e = assertThrows(PowsyblException.class, () -> dc.getDynamicModelsParameters());
         assertEquals("The model identified by the static id GEN5 does not match the expected model (LineModel)", e.getMessage());
     }
 }

@@ -40,7 +40,8 @@ public final class MarginCalculationContext extends DynawoSimulationContext {
         private final List<Contingency> contingencies;
         private final List<LoadsVariation> loadsVariations;
         private MarginCalculationParameters parameters;
-        private LoadVariationAreaAutomationSystem loadVariationArea;
+        private LoadVariationModels loadVariationModels;
+        private List<ContingencyEventModels> contingencyEventModels;
 
         public Builder(Network network, List<BlackBoxModel> dynamicModels, List<Contingency> contingencies,
                        List<LoadsVariation> loadsVariations) {
@@ -60,8 +61,9 @@ public final class MarginCalculationContext extends DynawoSimulationContext {
                 parameters = MarginCalculationParameters.load();
             }
             finalStepConfig = configureFinalStep(parameters, loadsVariations);
-            setupLoadVariationArea();
             super.setup();
+            setupLoadVariationModels();
+            setupContingencyEventModels();
         }
 
         @Override
@@ -70,11 +72,18 @@ public final class MarginCalculationContext extends DynawoSimulationContext {
             this.finalStepTime = new SimulationTime(simulationTime.stopTime(), finalStepConfig.stopTime());
         }
 
-        private void setupLoadVariationArea() {
-            loadVariationArea = new LoadVariationAreaAutomationSystem(loadsVariations,
+        private void setupLoadVariationModels() {
+            LoadVariationAreaAutomationSystem loadVariationArea = new LoadVariationAreaAutomationSystem(loadsVariations,
                     parameters.getLoadIncreaseStartTime(),
                     parameters.getLoadIncreaseStopTime(),
                     configureScaling(network));
+            loadVariationModels = LoadVariationModels.createFrom(simulationModels, loadVariationArea, dynamicModelsParameters::add,
+                    dynawoParameters.getNetworkParameters(), DynawoSimulationConstants.getSimulationParFile(network), reportNode);
+        }
+
+        private void setupContingencyEventModels() {
+            this.contingencyEventModels = ContingencyEventModelsFactory.createFrom(contingencies,
+                    parameters.getContingenciesStartTime(), network, simulationModels, reportNode);
         }
 
         @Override
@@ -112,11 +121,9 @@ public final class MarginCalculationContext extends DynawoSimulationContext {
 
     private MarginCalculationContext(Builder builder) {
         super(builder);
-        double contingenciesStartTime = builder.parameters.getContingenciesStartTime();
         this.marginCalculationParameters = builder.parameters;
-        this.contingencyEventModels = ContingencyEventModelsFactory
-                .createFrom(builder.contingencies, this, contingenciesStartTime, getReportNode());
-        this.loadVariationModels = LoadVariationModels.createFrom(this, builder.loadVariationArea);
+        this.contingencyEventModels = builder.contingencyEventModels;
+        this.loadVariationModels = builder.loadVariationModels;
     }
 
     public MarginCalculationParameters getMarginCalculationParameters() {
