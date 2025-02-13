@@ -8,9 +8,7 @@
 package com.powsybl.dynawo;
 
 import com.powsybl.commons.report.ReportNode;
-import com.powsybl.dynawo.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawo.models.BlackBoxModel;
-import com.powsybl.dynawo.models.EquipmentBlackBoxModel;
 import com.powsybl.dynawo.models.macroconnections.MacroConnect;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.macroconnections.MacroConnector;
@@ -20,47 +18,26 @@ import com.powsybl.dynawo.xml.MacroStaticReference;
 
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-class FinalStepModels implements DydDataSupplier {
+public final class FinalStepModels implements DydDataSupplier {
 
     private final List<BlackBoxModel> dynamicModels;
     private final Map<String, MacroStaticReference> macroStaticReferences;
     private final List<MacroConnect> macroConnectList;
     private final Map<String, MacroConnector> macroConnectorsMap;
 
-    protected Map<String, EquipmentBlackBoxModel> staticIdBlackBoxModelMap;
-    protected Map<String, BlackBoxModel> pureDynamicModelMap;
-
-    public static FinalStepModels createFrom(SimulationModels simulationModels, List<BlackBoxModel> dynamicModels,
-                                             Consumer<ParametersSet> parametersAdder, ReportNode reportNode) {
-        //TODO factorize
-        Map<String, EquipmentBlackBoxModel> staticIdBlackBoxModelMap = dynamicModels.stream()
-                .filter(EquipmentBlackBoxModel.class::isInstance)
-                .map(EquipmentBlackBoxModel.class::cast)
-                .collect(Collectors.toMap(EquipmentBlackBoxModel::getStaticId, Function.identity()));
-        Map<String, BlackBoxModel> pureDynamicModelMap = dynamicModels.stream()
-                .filter(AbstractPureDynamicBlackBoxModel.class::isInstance)
-                .collect(Collectors.toMap(BlackBoxModel::getDynamicModelId, Function.identity()));
-
+    public static FinalStepModels createFrom(BlackBoxModelSupplier blackBoxModelSupplier, SimulationModels simulationModels,
+                                             List<BlackBoxModel> dynamicModels, Consumer<ParametersSet> parametersAdder, ReportNode reportNode) {
+        BlackBoxModelSupplier finalStepBbmSupplier = BlackBoxModelSupplier.createFrom(blackBoxModelSupplier, dynamicModels);
         Map<String, MacroStaticReference> macroStaticReferences = new LinkedHashMap<>();
         List<MacroConnect> macroConnectList = new ArrayList<>();
         Map<String, MacroConnector> macroConnectorsMap = new LinkedHashMap<>();
         MacroConnectionsAdder macroConnectionsAdder = new MacroConnectionsAdder(
-                id -> {
-                    //TODO refactor
-                    BlackBoxModel bbm = simulationModels.getStaticIdBlackBoxModel(id);
-                    return bbm != null ? bbm : staticIdBlackBoxModelMap.get(id);
-                },
-                id -> {
-                    //TODO refactor
-                    BlackBoxModel bbm = simulationModels.getPureDynamicModel(id);
-                    return bbm != null ? bbm : pureDynamicModelMap.get(id);
-                },
+                finalStepBbmSupplier::getStaticIdBlackBoxModel,
+                finalStepBbmSupplier::getPureDynamicModel,
                 macroConnectList::add,
                 (n, f) -> {
                     if (!simulationModels.hasMacroConnector(n)) {
@@ -87,7 +64,6 @@ class FinalStepModels implements DydDataSupplier {
         this.macroConnectList = macroConnectList;
         this.macroConnectorsMap = macroConnectorsMap;
         this.macroStaticReferences = macroStaticReferences;
-        setupDynamicModelsMap();
     }
 
     @Override
@@ -108,16 +84,5 @@ class FinalStepModels implements DydDataSupplier {
     @Override
     public List<MacroConnect> getMacroConnectList() {
         return macroConnectList;
-    }
-
-    private void setupDynamicModelsMap() {
-        staticIdBlackBoxModelMap = dynamicModels.stream()
-                .filter(EquipmentBlackBoxModel.class::isInstance)
-                .map(EquipmentBlackBoxModel.class::cast)
-                .collect(Collectors.toMap(EquipmentBlackBoxModel::getStaticId, Function.identity()));
-
-        pureDynamicModelMap = dynamicModels.stream()
-                .filter(AbstractPureDynamicBlackBoxModel.class::isInstance)
-                .collect(Collectors.toMap(BlackBoxModel::getDynamicModelId, Function.identity()));
     }
 }

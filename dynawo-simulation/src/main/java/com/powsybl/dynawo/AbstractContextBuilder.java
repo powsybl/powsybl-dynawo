@@ -14,7 +14,6 @@ import com.powsybl.dynamicsimulation.OutputVariable;
 import com.powsybl.dynawo.builders.VersionInterval;
 import com.powsybl.dynawo.commons.DynawoConstants;
 import com.powsybl.dynawo.commons.DynawoVersion;
-import com.powsybl.dynawo.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.EquipmentBlackBoxModel;
 import com.powsybl.dynawo.models.Model;
@@ -24,7 +23,6 @@ import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.iidm.network.Network;
 
 import java.util.*;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -39,9 +37,7 @@ public abstract class AbstractContextBuilder<T extends AbstractContextBuilder<T>
     protected DynawoSimulationParameters dynawoParameters = null;
     protected String workingVariantId;
     protected List<BlackBoxModel> dynamicModels;
-    //TODO delete if useless
-    protected Map<String, EquipmentBlackBoxModel> staticIdBlackBoxModelMap;
-    protected Map<String, BlackBoxModel> pureDynamicModelMap;
+    protected BlackBoxModelSupplier blackBoxModelSupplier;
     protected List<BlackBoxModel> eventModels = Collections.emptyList();
     protected List<ParametersSet> dynamicModelsParameters = new ArrayList<>();
     protected SimulationModels simulationModels;
@@ -79,7 +75,12 @@ public abstract class AbstractContextBuilder<T extends AbstractContextBuilder<T>
         return self();
     }
 
-    protected void setup() {
+    protected final void setup() {
+        setupData();
+        setupMacroConnections();
+    }
+
+    protected void setupData() {
         if (workingVariantId == null) {
             workingVariantId = network.getVariantManager().getWorkingVariantId();
         }
@@ -88,10 +89,13 @@ public abstract class AbstractContextBuilder<T extends AbstractContextBuilder<T>
         }
         setupSimulationTime();
         setupDynamicModels();
-        simulationModels = SimulationModels.createFrom(dynamicModels, eventModels, dynamicModelsParameters::add,
+    }
+
+    protected void setupMacroConnections() {
+        simulationModels = SimulationModels.createFrom(blackBoxModelSupplier, dynamicModels, eventModels, dynamicModelsParameters::add,
                 dynawoParameters.getNetworkParameters(), reportNode);
         if (!finalStepDynamicModels.isEmpty()) {
-            finalStepModels = FinalStepModels.createFrom(simulationModels, finalStepDynamicModels,
+            finalStepModels = FinalStepModels.createFrom(blackBoxModelSupplier, simulationModels, finalStepDynamicModels,
                     dynamicModelsParameters::add, reportNode);
         }
     }
@@ -123,19 +127,8 @@ public abstract class AbstractContextBuilder<T extends AbstractContextBuilder<T>
         } else {
             dynamicModels = uniqueIdsDynamicModels.collect(Collectors.toCollection(ArrayList::new));
         }
-        setupDynamicModelsMap();
         setupFrequencySynchronizer();
-    }
-
-    private void setupDynamicModelsMap() {
-        staticIdBlackBoxModelMap = dynamicModels.stream()
-                .filter(EquipmentBlackBoxModel.class::isInstance)
-                .map(EquipmentBlackBoxModel.class::cast)
-                .collect(Collectors.toMap(EquipmentBlackBoxModel::getStaticId, Function.identity()));
-
-        pureDynamicModelMap = dynamicModels.stream()
-                .filter(AbstractPureDynamicBlackBoxModel.class::isInstance)
-                .collect(Collectors.toMap(BlackBoxModel::getDynamicModelId, Function.identity()));
+        blackBoxModelSupplier = BlackBoxModelSupplier.createFrom(dynamicModels);
     }
 
     private Stream<BlackBoxModel> simplifyModels(Stream<BlackBoxModel> inputBbm, ReportNode reportNode) {
@@ -167,7 +160,6 @@ public abstract class AbstractContextBuilder<T extends AbstractContextBuilder<T>
                     : new OmegaRef(frequencySynchronizedModels, defaultParFile, dynawoParameters);
         }
         if (!frequencySynchronizer.isEmpty()) {
-            //TODO dynamicModels should be immutable
             dynamicModels.add(frequencySynchronizer);
         }
     }

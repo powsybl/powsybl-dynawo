@@ -43,20 +43,20 @@ public final class SecurityAnalysisContext extends DynawoSimulationContext {
         }
 
         @Override
-        protected void setup() {
-            //TODO use different methods to kepp the excution order clean instad of using super in the middle
+        protected void setupData() {
+            super.setupData();
             if (securityParameters == null) {
                 securityParameters = DynamicSecurityAnalysisParameters.load();
             }
             simulationParameters = securityParameters.getDynamicSimulationParameters();
-            super.setup();
-            setupContingencyEventModels();
         }
 
-        private void setupContingencyEventModels() {
+        @Override
+        protected void setupMacroConnections() {
+            super.setupMacroConnections();
             this.contingencyEventModels = ContingencyEventModelsFactory.createFrom(contingencies,
                     securityParameters.getDynamicContingenciesParameters().getContingenciesStartTime(),
-                    network, simulationModels, reportNode);
+                    network, blackBoxModelSupplier, reportNode);
         }
 
         @Override

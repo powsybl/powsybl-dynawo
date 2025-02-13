@@ -9,8 +9,6 @@ package com.powsybl.dynawo.margincalculation;
 
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.BlackBoxModelSupplier;
-import com.powsybl.dynawo.DynawoSimulationConstants;
-import com.powsybl.dynawo.SimulationModels;
 import com.powsybl.dynawo.margincalculation.loadsvariation.LoadVariationAreaAutomationSystem;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.macroconnections.MacroConnect;
@@ -18,7 +16,6 @@ import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.macroconnections.MacroConnector;
 import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.dynawo.xml.DydDataSupplier;
-import com.powsybl.iidm.network.Network;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -26,7 +23,7 @@ import java.util.function.Consumer;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class LoadVariationModels implements DydDataSupplier {
+public final class LoadVariationModels implements DydDataSupplier {
 
     private final LoadVariationAreaAutomationSystem loadVariationArea;
     private final List<MacroConnect> macroConnectList;

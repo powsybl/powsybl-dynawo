@@ -34,19 +34,18 @@ public final class MacroConnectionsAdder {
     private static final Logger LOGGER = LoggerFactory.getLogger(MacroConnectionsAdder.class);
     private static final String MODEL_ID_EXCEPTION = "The model identified by the id %s does not match the expected model (%s)";
     private static final String MODEL_ID_LOG = "The model identified by the id {} does not match the expected model ({})";
-    
-    private final DefaultModelsHandler defaultModelsHandler = new DefaultModelsHandler();
 
-    private final ReportNode reportNode;
-    private final Function<String, BlackBoxModel> dynamicModelGetterNew;
-    private final Function<String, BlackBoxModel> pureDynamicModelGetterNew;
+    private final DefaultModelsHandler defaultModelsHandler = new DefaultModelsHandler();
+    private final Function<String, BlackBoxModel> dynamicModelGetter;
+    private final Function<String, BlackBoxModel> pureDynamicModelGetter;
     private final Consumer<MacroConnect> macroConnectAdder;
     private final BiConsumer<String, Function<String, MacroConnector>> macroConnectorAdder;
+    private final ReportNode reportNode;
 
     public MacroConnectionsAdder(Function<String, BlackBoxModel> dynamicModelGetter, Function<String, BlackBoxModel> pureDynamicModelGetter, Consumer<MacroConnect> macroConnectAdder,
                                  BiConsumer<String, Function<String, MacroConnector>> macroConnectorAdder, ReportNode reportNode) {
-        this.dynamicModelGetterNew = dynamicModelGetter;
-        this.pureDynamicModelGetterNew = pureDynamicModelGetter;
+        this.dynamicModelGetter = dynamicModelGetter;
+        this.pureDynamicModelGetter = pureDynamicModelGetter;
         this.macroConnectAdder = macroConnectAdder;
         this.macroConnectorAdder = macroConnectorAdder;
         this.reportNode = reportNode;
@@ -219,9 +218,8 @@ public final class MacroConnectionsAdder {
         return reportNode;
     }
 
-
     private <T extends Model> T getDynamicModel(Identifiable<?> equipment, Class<T> connectableClass, boolean throwException) {
-        BlackBoxModel bbm = dynamicModelGetterNew.apply(equipment.getId());
+        BlackBoxModel bbm = dynamicModelGetter.apply(equipment.getId());
         if (bbm == null) {
             return defaultModelsHandler.getDefaultModel(equipment, connectableClass, throwException);
         }
@@ -237,7 +235,7 @@ public final class MacroConnectionsAdder {
     }
 
     private <T extends Model> T getPureDynamicModel(String dynamicId, Class<T> connectableClass, boolean throwException) {
-        BlackBoxModel bbm = pureDynamicModelGetterNew.apply(dynamicId);
+        BlackBoxModel bbm = pureDynamicModelGetter.apply(dynamicId);
         if (bbm == null) {
             if (throwException) {
                 throw new PowsyblException("Pure dynamic model " + dynamicId + " not found");

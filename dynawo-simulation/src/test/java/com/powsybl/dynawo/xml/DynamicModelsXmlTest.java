@@ -7,19 +7,23 @@
 package com.powsybl.dynawo.xml;
 
 import com.powsybl.commons.PowsyblException;
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.commons.DynawoVersion;
+import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.generators.BaseGeneratorBuilder;
 import com.powsybl.dynawo.models.lines.LineModel;
 import com.powsybl.dynawo.models.loads.BaseLoad;
 import com.powsybl.dynawo.models.loads.BaseLoadBuilder;
+import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.iidm.network.Identifiable;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -123,14 +127,19 @@ class DynamicModelsXmlTest extends DynawoTestUtil {
 
     @Test
     void testIncorrectModelException() {
-        //TODO fix
-        DynawoSimulationContext dc = new DynawoSimulationContext
-                .Builder(network, dynamicModels)
-                .eventModels(eventModels)
-                .outputVariables(outputVariables)
-                .build();
         Identifiable<?> gen = network.getIdentifiable("GEN5");
-        Exception e = assertThrows(PowsyblException.class, () -> dc.getDynamicModelsParameters());
-        assertEquals("The model identified by the static id GEN5 does not match the expected model (LineModel)", e.getMessage());
+        MacroConnectionsAdder adder = new MacroConnectionsAdder(
+                id -> dynamicModels.stream()
+                        .filter(dm -> dm.getDynamicModelId().equals("BBM_" + id))
+                        .findFirst().orElse(null),
+                id -> null,
+                mc -> { },
+                (mc, f) -> { },
+                ReportNode.NO_OP
+        );
+        BlackBoxModel bbm = dynamicModels.get(0);
+
+        Exception e = assertThrows(PowsyblException.class, () -> adder.createMacroConnections(bbm, gen, LineModel.class, l -> List.of()));
+        assertEquals("The model identified by the id GEN5 does not match the expected model (LineModel)", e.getMessage());
     }
 }

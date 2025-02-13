@@ -7,7 +7,6 @@
  */
 package com.powsybl.dynawo.models.events;
 
-import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.builders.EventModelInfo;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.VarConnection;
@@ -86,7 +85,7 @@ public class EventActivePowerVariation extends AbstractEvent implements ContextD
     }
 
     @Override
-    public final void setEquipmentHasDynamicModel(DynawoSimulationContext context) {
-        this.equipmentHasDynamicModel.setValue(hasDynamicModel(context));
+    public final void setEquipmentHasDynamicModel(boolean hasDynamicModel) {
+        this.equipmentHasDynamicModel.setValue(hasDynamicModel);
     }
 }

@@ -10,6 +10,7 @@ import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynamicsimulation.OutputVariable;
 import com.powsybl.dynawo.models.BlackBoxModel;
+import com.powsybl.dynawo.models.events.ContextDependentEvent;
 import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.dynawo.xml.DydDataSupplier;
 import com.powsybl.iidm.network.Network;
@@ -62,16 +63,17 @@ public class DynawoSimulationContext {
         }
 
         @Override
-        protected void setup() {
-            super.setup();
-            setupEventModels();
-        }
-
-        private void setupEventModels() {
-            this.eventModels = Objects.requireNonNull(eventModels).stream()
+        protected void setupData() {
+            super.setupData();
+            eventModels = Objects.requireNonNull(eventModels).stream()
                     .filter(distinctByDynamicId(reportNode)
                             .and(supportedVersion(dynawoVersion, reportNode)))
                     .toList();
+            // Late init on ContextDependentEvents
+            eventModels.stream()
+                    .filter(ContextDependentEvent.class::isInstance)
+                    .map(ContextDependentEvent.class::cast)
+                    .forEach(e -> e.setEquipmentHasDynamicModel(blackBoxModelSupplier.hasDynamicModel(e.getEquipment())));
         }
 
         @Override

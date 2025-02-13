@@ -11,10 +11,8 @@ import com.powsybl.commons.report.ReportNode;
 import com.powsybl.contingency.Contingency;
 import com.powsybl.dynawo.BlackBoxModelSupplier;
 import com.powsybl.dynawo.models.BlackBoxModel;
-import com.powsybl.dynawo.models.EquipmentBlackBoxModel;
 import com.powsybl.dynawo.models.generators.BaseGeneratorBuilder;
 import com.powsybl.dynawo.parameters.ParametersSet;
-import com.powsybl.iidm.network.Identifiable;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.Test;
@@ -34,29 +32,11 @@ class ContingencyEventModelsTest {
     @Test
     void test() {
         Network network = EurostagTutorialExample1Factory.create();
-        BlackBoxModelSupplier bbmSupplier = new BlackBoxModelSupplier() {
-
-            private final Map<String, EquipmentBlackBoxModel> equipments = Map.of("GEN",
-                    BaseGeneratorBuilder.of(network)
-                            .staticId("GEN")
-                            .parameterSetId("gen")
-                            .build());
-
-            @Override
-            public EquipmentBlackBoxModel getStaticIdBlackBoxModel(String id) {
-                return equipments.get(id);
-            }
-
-            @Override
-            public BlackBoxModel getPureDynamicModel(String id) {
-                return null;
-            }
-
-            @Override
-            public boolean hasDynamicModel(Identifiable<?> equipment) {
-                return equipments.containsKey(equipment.getId());
-            }
-        };
+        BlackBoxModelSupplier bbmSupplier = BlackBoxModelSupplier.createFrom(List.of(
+                BaseGeneratorBuilder.of(network)
+                        .staticId("GEN")
+                        .parameterSetId("gen")
+                        .build()));
         List<Contingency> contingencies = List.of(
                 Contingency.load("LOAD"),
                 Contingency.generator("GEN"),

@@ -7,7 +7,6 @@
  */
 package com.powsybl.dynawo.models.events;
 
-import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.DynawoSimulationReports;
 import com.powsybl.dynawo.builders.EventModelInfo;
 import com.powsybl.dynawo.models.VarConnection;
@@ -80,8 +79,8 @@ public class EventBusDisconnection extends AbstractEvent implements ContextDepen
     }
 
     @Override
-    public final void setEquipmentHasDynamicModel(DynawoSimulationContext context) {
-        hasDefaultModel = !hasDynamicModel(context);
+    public final void setEquipmentHasDynamicModel(boolean hasDynamicModel) {
+        hasDefaultModel = !hasDynamicModel;
     }
 
     @Override
