@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
-    <dyn:blackBoxModel id="BBM_SHUNT" lib="ShuntB" parFile="models.par" parId="sh" staticId="SHUNT"/>
+    <dyn:blackBoxModel id="SHUNT" lib="ShuntB" parFile="models.par" parId="sh" staticId="SHUNT"/>
     <dyn:macroConnector id="MC_ShuntB-DefaultEquipmentConnectionPoint">
         <dyn:connect var1="shunt_terminal" var2="@STATIC_ID@@NODE@_ACPIN"/>
     </dyn:macroConnector>
-    <dyn:macroConnect connector="MC_ShuntB-DefaultEquipmentConnectionPoint" id1="BBM_SHUNT" id2="NETWORK"/>
+    <dyn:macroConnect connector="MC_ShuntB-DefaultEquipmentConnectionPoint" id1="SHUNT" id2="NETWORK"/>
 </dyn:dynamicModelsArchitecture>

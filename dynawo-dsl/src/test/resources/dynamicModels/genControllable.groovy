@@ -10,6 +10,5 @@ package dynamicModels
 
 GeneratorSynchronousFourWindingsProportionalRegulations {
     staticId "GEN"
-    dynamicModelId "BBM_GEN"
     parameterSetId "GSFWPR"
 }

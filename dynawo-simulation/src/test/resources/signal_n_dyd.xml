@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
-    <dyn:blackBoxModel id="BBM_GEN" lib="GeneratorPVRemoteDiagramPQSignalN" parFile="models.par" parId="n" staticId="GEN">
+    <dyn:blackBoxModel id="GEN" lib="GeneratorPVRemoteDiagramPQSignalN" parFile="models.par" parId="n" staticId="GEN">
         <dyn:macroStaticRef id="MSR_GeneratorPVRemoteDiagramPQSignalN"/>
     </dyn:blackBoxModel>
-    <dyn:blackBoxModel id="BBM_GEN2" lib="GeneratorPVRemoteDiagramPQSignalN" parFile="models.par" parId="n" staticId="GEN2">
+    <dyn:blackBoxModel id="GEN2" lib="GeneratorPVRemoteDiagramPQSignalN" parFile="models.par" parId="n" staticId="GEN2">
         <dyn:macroStaticRef id="MSR_GeneratorPVRemoteDiagramPQSignalN"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="Signal_N" lib="SignalN"/>
@@ -22,9 +22,9 @@
         <dyn:staticRef var="generator_QGenPu" staticVar="q"/>
         <dyn:staticRef var="generator_state" staticVar="state"/>
     </dyn:macroStaticReference>
-    <dyn:macroConnect connector="MC_GeneratorPVRemoteDiagramPQSignalN-DefaultEquipmentConnectionPoint" id1="BBM_GEN" id2="NETWORK"/>
-    <dyn:macroConnect connector="MC_GeneratorPVRemoteDiagramPQSignalN-DefaultEquipmentConnectionPoint" id1="BBM_GEN2" id2="NETWORK"/>
-    <dyn:macroConnect connector="MC_SignalN-GeneratorPVRemoteDiagramPQSignalN" id1="Signal_N" id2="BBM_GEN"/>
-    <dyn:macroConnect connector="MC_SignalN-GeneratorPVRemoteDiagramPQSignalN" id1="Signal_N" id2="BBM_GEN2"/>
+    <dyn:macroConnect connector="MC_GeneratorPVRemoteDiagramPQSignalN-DefaultEquipmentConnectionPoint" id1="GEN" id2="NETWORK"/>
+    <dyn:macroConnect connector="MC_GeneratorPVRemoteDiagramPQSignalN-DefaultEquipmentConnectionPoint" id1="GEN2" id2="NETWORK"/>
+    <dyn:macroConnect connector="MC_SignalN-GeneratorPVRemoteDiagramPQSignalN" id1="Signal_N" id2="GEN"/>
+    <dyn:macroConnect connector="MC_SignalN-GeneratorPVRemoteDiagramPQSignalN" id1="Signal_N" id2="GEN2"/>
     <dyn:macroConnect connector="MC_SignalN-DefaultBusOfSignalN" id1="Signal_N" id2="NETWORK" name2="GEN"/>
 </dyn:dynamicModelsArchitecture>

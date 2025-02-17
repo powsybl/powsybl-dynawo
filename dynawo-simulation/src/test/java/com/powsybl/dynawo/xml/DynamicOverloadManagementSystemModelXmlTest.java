@@ -44,7 +44,6 @@ class DynamicOverloadManagementSystemModelXmlTest extends AbstractDynamicModelXm
                 .iMeasurementSide(TwoSides.TWO)
                 .build());
         dynamicModels.add(TransformerFixedRatioBuilder.of(network)
-                .dynamicModelId("BBM_TRANSFORMER")
                 .staticId("NHV2_NLOAD")
                 .parameterSetId("tf")
                 .build());

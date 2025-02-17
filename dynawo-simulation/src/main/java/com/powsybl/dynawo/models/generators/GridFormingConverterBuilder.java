@@ -64,7 +64,7 @@ public class GridFormingConverterBuilder extends AbstractGeneratorBuilder<GridFo
 
     @Override
     public GridFormingConverter build() {
-        return isInstantiable() ? new GridFormingConverter(dynamicModelId, getEquipment(), parameterSetId, modelConfig) : null;
+        return isInstantiable() ? new GridFormingConverter(getEquipment(), parameterSetId, modelConfig) : null;
     }
 
     @Override

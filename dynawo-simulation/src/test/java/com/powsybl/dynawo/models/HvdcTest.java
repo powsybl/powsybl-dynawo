@@ -32,7 +32,6 @@ class HvdcTest {
     void testConnectedStation() {
         Network network = HvdcTestNetwork.createVsc();
         BaseHvdc hvdc = HvdcPBuilder.of(network, "HvdcPV")
-                .dynamicModelId("hvdc")
                 .staticId("L")
                 .parameterSetId("HVDC")
                 .build();
@@ -44,7 +43,6 @@ class HvdcTest {
         Network network = HvdcTestNetwork.createVsc();
         HvdcLine line = network.getHvdcLine("L");
         BaseHvdc hvdcVscDangling = HvdcVscBuilder.of(network, "HvdcVSCDanglingP")
-                .dynamicModelId("hvdc")
                 .staticId("L")
                 .parameterSetId("HVDC")
                 .build();
@@ -56,7 +54,6 @@ class HvdcTest {
     void vscDynamicModelOnLCC() {
         Network network = HvdcTestNetwork.createLcc();
         assertNull(HvdcVscBuilder.of(network)
-                .dynamicModelId("hvdc")
                 .staticId("L")
                 .parameterSetId("HVDC")
                 .build());
@@ -74,7 +71,6 @@ class HvdcTest {
         // dangling side ONE replaced by side TWO
         BaseHvdc hvdcPDangling = Objects.requireNonNull(
                 HvdcPBuilder.of(network, "HvdcPVDangling", reportNode))
-                    .dynamicModelId("hvdc")
                     .staticId("L")
                     .parameterSetId("HVDC")
                     .dangling(TwoSides.ONE)

@@ -26,8 +26,8 @@ public class BaseLoad extends AbstractLoad {
             new VarMapping("load_QPu", "q"),
             new VarMapping("load_state", "state"));
 
-    protected BaseLoad(String dynamicModelId, Load load, String parameterSetId, ModelConfig modelConfig) {
-        super(dynamicModelId, load, parameterSetId, modelConfig, "load_terminal");
+    protected BaseLoad(Load load, String parameterSetId, ModelConfig modelConfig) {
+        super(load, parameterSetId, modelConfig, "load_terminal");
     }
 
     @Override

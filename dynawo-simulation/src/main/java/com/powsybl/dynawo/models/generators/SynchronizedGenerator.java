@@ -22,8 +22,8 @@ import java.util.List;
  */
 public class SynchronizedGenerator extends BaseGenerator implements FrequencySynchronizedModel {
 
-    protected SynchronizedGenerator(String dynamicModelId, Generator generator, String parameterSetId, ModelConfig modelConfig) {
-        super(dynamicModelId, generator, parameterSetId, modelConfig);
+    protected SynchronizedGenerator(Generator generator, String parameterSetId, ModelConfig modelConfig) {
+        super(generator, parameterSetId, modelConfig);
     }
 
     @Override

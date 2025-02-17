@@ -34,8 +34,8 @@ public class TransformerFixedRatio extends AbstractEquipmentBlackBoxModel<TwoWin
             new VarMapping("transformer_Q2Pu", "q2"),
             new VarMapping("transformer_state", "state"));
 
-    protected TransformerFixedRatio(String dynamicModelId, TwoWindingsTransformer transformer, String parameterSetId, ModelConfig modelConfig) {
-        super(dynamicModelId, parameterSetId, transformer, modelConfig);
+    protected TransformerFixedRatio(TwoWindingsTransformer transformer, String parameterSetId, ModelConfig modelConfig) {
+        super(transformer, parameterSetId, modelConfig);
     }
 
     private List<VarConnection> getVarConnectionsWith(EquipmentConnectionPoint connected, TwoSides side) {

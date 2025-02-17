@@ -71,7 +71,7 @@ public class BaseShuntBuilder extends AbstractEquipmentModelBuilder<ShuntCompens
 
     @Override
     public BaseShunt build() {
-        return isInstantiable() ? new BaseShunt(dynamicModelId, getEquipment(), parameterSetId, modelConfig) : null;
+        return isInstantiable() ? new BaseShunt(getEquipment(), parameterSetId, modelConfig) : null;
     }
 
     @Override

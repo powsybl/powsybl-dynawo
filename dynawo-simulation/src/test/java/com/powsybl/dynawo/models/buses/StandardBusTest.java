@@ -32,7 +32,6 @@ class StandardBusTest {
         Network network = EurostagTutorialExample1Factory.create(NetworkFactory.findDefault());
         List<BlackBoxModel> dynamicModels = new ArrayList<>();
         dynamicModels.add(StandardBusBuilder.of(network)
-                .dynamicModelId("BBM_NHV1")
                 .staticId("NHV1")
                 .parameterSetId("SB")
                 .build());

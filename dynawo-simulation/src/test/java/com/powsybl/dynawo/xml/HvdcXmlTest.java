@@ -31,7 +31,6 @@ import java.util.stream.Stream;
 class HvdcXmlTest extends AbstractParametrizedDynamicModelXmlTest {
 
     private static final String HVDC_NAME = "L";
-    private static final String DYN_NAME = "BBM_" + HVDC_NAME;
 
     @BeforeEach
     void setup(String dydName, Function< Network, BlackBoxModel> constructor) {
@@ -58,22 +57,18 @@ class HvdcXmlTest extends AbstractParametrizedDynamicModelXmlTest {
     private static Stream<Arguments> provideHvdc() {
         return Stream.of(
                 Arguments.of("hvdc_p_dyd.xml", (Function<Network, BlackBoxModel>) n -> HvdcPBuilder.of(n, "HvdcPV")
-                        .dynamicModelId(DYN_NAME)
                         .staticId(HVDC_NAME)
                         .parameterSetId("hv")
                         .build()),
                 Arguments.of("hvdc_vsc_dyd.xml", (Function<Network, BlackBoxModel>) n -> HvdcVscBuilder.of(n, "HvdcVsc")
-                        .dynamicModelId(DYN_NAME)
                         .staticId(HVDC_NAME)
                         .parameterSetId("hv")
                         .build()),
                 Arguments.of("hvdc_p_dangling_dyd.xml", (Function<Network, BlackBoxModel>) n -> HvdcPBuilder.of(n, "HvdcPVDangling")
-                        .dynamicModelId(DYN_NAME)
                         .staticId(HVDC_NAME)
                         .parameterSetId("hv")
                         .build()),
                 Arguments.of("hvdc_vsc_dangling_dyd.xml", (Function<Network, BlackBoxModel>) n -> HvdcVscBuilder.of(n, "HvdcVscDanglingP")
-                        .dynamicModelId(DYN_NAME)
                         .staticId(HVDC_NAME)
                         .parameterSetId("hv")
                         .build())

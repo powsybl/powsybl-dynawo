@@ -64,7 +64,7 @@ public class LoadTwoTransformersBuilder extends AbstractLoadModelBuilder<LoadTwo
 
     @Override
     public LoadTwoTransformers build() {
-        return isInstantiable() ? new LoadTwoTransformers(dynamicModelId, getEquipment(), parameterSetId, modelConfig) : null;
+        return isInstantiable() ? new LoadTwoTransformers(getEquipment(), parameterSetId, modelConfig) : null;
     }
 
     @Override

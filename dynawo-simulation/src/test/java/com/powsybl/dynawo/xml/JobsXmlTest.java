@@ -66,7 +66,7 @@ class JobsXmlTest extends DynawoTestUtil {
                 .Builder(network, dynamicModels)
                 .eventModels(eventModels)
                 .outputVariables(outputVariables)
-                .finalStepConfig(new FinalStepConfig(200, bbm -> bbm.getDynamicModelId().equalsIgnoreCase("BBM_LOAD2")))
+                .finalStepConfig(new FinalStepConfig(200, bbm -> bbm.getDynamicModelId().equalsIgnoreCase("LOAD2")))
                 .build();
         JobsXml.writeFinalStep(tmpDir, context);
         validate("jobs.xsd", "jobsWithFinalStep.xml", tmpDir.resolve(DynawoSimulationConstants.FINAL_STEP_JOBS_FILENAME));

@@ -10,6 +10,5 @@ package dynamicModels
 
 HvdcVsc {
     staticId "L"
-    dynamicModelId "BBM_HVDC_L"
     parameterSetId "HVDC"
 }

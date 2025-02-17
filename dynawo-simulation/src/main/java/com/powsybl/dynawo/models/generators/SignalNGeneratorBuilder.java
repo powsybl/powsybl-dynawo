@@ -64,7 +64,7 @@ public class SignalNGeneratorBuilder extends AbstractGeneratorBuilder<SignalNGen
 
     @Override
     public SignalNGenerator build() {
-        return isInstantiable() ? new SignalNGenerator(dynamicModelId, getEquipment(), parameterSetId, modelConfig) : null;
+        return isInstantiable() ? new SignalNGenerator(getEquipment(), parameterSetId, modelConfig) : null;
     }
 
     @Override
