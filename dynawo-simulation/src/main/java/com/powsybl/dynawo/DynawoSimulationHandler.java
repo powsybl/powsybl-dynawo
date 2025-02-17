@@ -90,6 +90,13 @@ public final class DynawoSimulationHandler extends AbstractExecutionHandler<Dyna
         Path outputsFolder = workingDir.resolve(OUTPUTS_FOLDER);
         context.getNetwork().getVariantManager().setWorkingVariant(context.getWorkingVariantId());
         setDynawoLog(outputsFolder, context.getDynawoSimulationParameters().getSpecificLogs());
+        setTimeline(outputsFolder);
+        if (context.withCurveVariables()) {
+            setCurves(outputsFolder);
+        }
+        if (context.withFsvVariables()) {
+            setFinalStateValues(outputsFolder);
+        }
         Path errorFile = workingDir.resolve(ERROR_FILENAME);
         if (Files.exists(errorFile)) {
             Matcher errorMatcher = Pattern.compile(DYNAWO_ERROR_PATTERN + "(.*)").matcher(Files.readString(errorFile));
@@ -104,23 +111,14 @@ public final class DynawoSimulationHandler extends AbstractExecutionHandler<Dyna
             status = DynamicSimulationResult.Status.FAILURE;
             statusText = "Dynawo error log file not found";
         }
-
         return new DynamicSimulationResultImpl(status, statusText, curves, fsv, timeline);
     }
 
     private void setSuccessOutputs(Path workingDir, Path outputsFolder) throws IOException {
-        DynawoSimulationParameters parameters = context.getDynawoSimulationParameters();
         updateNetwork(workingDir);
-        DumpFileParameters dumpFileParameters = parameters.getDumpFileParameters();
+        DumpFileParameters dumpFileParameters = context.getDynawoSimulationParameters().getDumpFileParameters();
         if (dumpFileParameters.exportDumpFile()) {
             setDumpFile(outputsFolder, dumpFileParameters.dumpFileFolder(), workingDir.getFileName());
-        }
-        setTimeline(outputsFolder);
-        if (context.withCurveVariables()) {
-            setCurves(outputsFolder);
-        }
-        if (context.withFsvVariables()) {
-            setFinalStateValues(outputsFolder);
         }
     }
 
