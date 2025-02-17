@@ -36,7 +36,7 @@ public final class FinalStepModels implements DynawoData {
         List<MacroConnect> macroConnectList = new ArrayList<>();
         Map<String, MacroConnector> macroConnectorsMap = new LinkedHashMap<>();
         MacroConnectionsAdder macroConnectionsAdder = new MacroConnectionsAdder(
-                finalStepBbmSupplier::getStaticIdBlackBoxModel,
+                finalStepBbmSupplier::getEquipmentDynamicModel,
                 finalStepBbmSupplier::getPureDynamicModel,
                 macroConnectList::add,
                 (n, f) -> {

@@ -37,7 +37,7 @@ public final class SimulationModels implements DynawoData {
         List<MacroConnect> macroConnectList = new ArrayList<>();
         Map<String, MacroConnector> macroConnectorsMap = new LinkedHashMap<>();
         Map<String, MacroStaticReference> macroStaticReferences = new LinkedHashMap<>();
-        MacroConnectionsAdder adder = new MacroConnectionsAdder(bbmSupplier::getStaticIdBlackBoxModel,
+        MacroConnectionsAdder adder = new MacroConnectionsAdder(bbmSupplier::getEquipmentDynamicModel,
                 bbmSupplier::getPureDynamicModel, macroConnectList::add, macroConnectorsMap::computeIfAbsent, reportNode);
         // Write macro connection
         for (BlackBoxModel bbm : dynamicModels) {

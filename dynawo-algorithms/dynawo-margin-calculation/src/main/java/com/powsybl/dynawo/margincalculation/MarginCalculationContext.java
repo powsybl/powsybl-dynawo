@@ -111,7 +111,7 @@ public final class MarginCalculationContext extends DynawoSimulationContext {
                             .map(Identifiable::getId)
                             .collect(Collectors.toSet());
                     yield new FinalStepConfig(parameters.getStopTime(),
-                            bbm -> bbm instanceof AbstractLoad eBbm && loadIds.contains(eBbm.getStaticId()));
+                            bbm -> bbm instanceof AbstractLoad eBbm && loadIds.contains(eBbm.getDynamicModelId()));
                 }
             };
         }

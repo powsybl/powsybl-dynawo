@@ -83,7 +83,7 @@ class ModelsSimplifierTest {
             return m -> {
                 if ("GEN".equalsIgnoreCase(m.getDynamicModelId()) && m instanceof BaseGenerator gen) {
                     return BaseGeneratorBuilder.of(network, "GeneratorFictitious")
-                            .staticId(gen.getStaticId())
+                            .staticId(gen.getDynamicModelId())
                             .parameterSetId("G")
                             .build();
                 }
