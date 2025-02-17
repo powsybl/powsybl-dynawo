@@ -144,7 +144,7 @@ public class DynawoTestUtil extends AbstractSerDeTest {
                 .build());
 
         // Automatons
-        network.getLineStream().filter(line -> !line.getId().equalsIgnoreCase(standardLine.getStaticId()))
+        network.getLineStream().filter(line -> !line.getId().equalsIgnoreCase(standardLine.getDynamicModelId()))
                 .forEach(l -> dynamicModels.add(DynamicOverloadManagementSystemBuilder.of(network, "OverloadManagementSystem")
                         .dynamicModelId("CLA_" + l.getId())
                         .parameterSetId("CLA")

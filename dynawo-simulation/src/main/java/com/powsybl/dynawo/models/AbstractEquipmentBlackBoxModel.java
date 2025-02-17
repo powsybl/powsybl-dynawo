@@ -44,13 +44,12 @@ public abstract class AbstractEquipmentBlackBoxModel<T extends Identifiable<?>> 
     }
 
     @Override
-    public String getStaticId() {
-        return equipment.getId();
-    }
-
-    @Override
     public T getEquipment() {
         return equipment;
+    }
+
+    public String getStaticId() {
+        return equipment.getId();
     }
 
     @Override
@@ -62,7 +61,7 @@ public abstract class AbstractEquipmentBlackBoxModel<T extends Identifiable<?>> 
             writer.writeEmptyElement(DYN_URI, "blackBoxModel");
         }
         writeDynamicAttributes(writer, parFileName);
-        writer.writeAttribute("staticId", getStaticId());
+        writer.writeAttribute("staticId", getDynamicModelId());
         if (hasVarMapping) {
             MacroStaticReference.writeMacroStaticRef(writer, getLib());
             writer.writeEndElement();

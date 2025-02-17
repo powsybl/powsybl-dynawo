@@ -15,7 +15,6 @@ import com.powsybl.dynawo.builders.VersionInterval;
 import com.powsybl.dynawo.commons.DynawoConstants;
 import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.models.BlackBoxModel;
-import com.powsybl.dynawo.models.EquipmentBlackBoxModel;
 import com.powsybl.dynawo.models.Model;
 import com.powsybl.dynawo.models.buses.AbstractBus;
 import com.powsybl.dynawo.models.frequencysynchronizers.*;
@@ -112,9 +111,7 @@ public abstract class AbstractContextBuilder<T extends AbstractContextBuilder<T>
 
     private void setupDynamicModels() {
         Stream<BlackBoxModel> uniqueIdsDynamicModels = Objects.requireNonNull(dynamicModels).stream()
-                .filter(distinctByDynamicId(reportNode)
-                        .and(distinctByStaticId(reportNode)
-                                .and(supportedVersion(dynawoVersion, reportNode))));
+                .filter(distinctByDynamicId(reportNode).and(supportedVersion(dynawoVersion, reportNode)));
         if (dynawoParameters.isUseModelSimplifiers()) {
             uniqueIdsDynamicModels = simplifyModels(uniqueIdsDynamicModels);
         }
@@ -167,17 +164,6 @@ public abstract class AbstractContextBuilder<T extends AbstractContextBuilder<T>
                 .filter(modelClass::isInstance)
                 .map(modelClass::cast)
                 .toList();
-    }
-
-    protected static Predicate<BlackBoxModel> distinctByStaticId(ReportNode reportNode) {
-        Set<String> seen = new HashSet<>();
-        return bbm -> {
-            if (bbm instanceof EquipmentBlackBoxModel eBbm && !seen.add(eBbm.getStaticId())) {
-                DynawoSimulationReports.reportDuplicateStaticId(reportNode, eBbm.getStaticId(), eBbm.getLib(), eBbm.getDynamicModelId());
-                return false;
-            }
-            return true;
-        };
     }
 
     protected static Predicate<BlackBoxModel> distinctByDynamicId(ReportNode reportNode) {
