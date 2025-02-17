@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
-    <dyn:blackBoxModel id="BBM_LOAD" lib="LoadOneTransformer" parFile="models.par" parId="LOT" staticId="LOAD">
+    <dyn:blackBoxModel id="LOAD" lib="LoadOneTransformer" parFile="models.par" parId="LOT" staticId="LOAD">
         <dyn:macroStaticRef id="MSR_LoadOneTransformer"/>
     </dyn:blackBoxModel>
-    <dyn:blackBoxModel id="BBM_LOAD2" lib="LoadTwoTransformers" parFile="models.par" parId="LTT" staticId="LOAD2">
+    <dyn:blackBoxModel id="LOAD2" lib="LoadTwoTransformers" parFile="models.par" parId="LTT" staticId="LOAD2">
         <dyn:macroStaticRef id="MSR_LoadTwoTransformers"/>
     </dyn:blackBoxModel>
-    <dyn:blackBoxModel id="BBM_LOAD3" lib="LoadTwoTransformers" parFile="models.par" parId="LTT" staticId="LOAD3">
+    <dyn:blackBoxModel id="LOAD3" lib="LoadTwoTransformers" parFile="models.par" parId="LTT" staticId="LOAD3">
         <dyn:macroStaticRef id="MSR_LoadTwoTransformers"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="BBM_TC" lib="TapChangerAutomaton" parFile="models.par" parId="tc"/>
@@ -61,12 +61,12 @@
         <dyn:staticRef var="transformerT_Q1Pu_value" staticVar="q"/>
         <dyn:staticRef var="transformerT_state" staticVar="state"/>
     </dyn:macroStaticReference>
-    <dyn:macroConnect connector="MC_LoadOneTransformer-DefaultEquipmentConnectionPoint" id1="BBM_LOAD" id2="NETWORK"/>
-    <dyn:macroConnect connector="MC_LoadTwoTransformers-DefaultEquipmentConnectionPoint" id1="BBM_LOAD2" id2="NETWORK"/>
-    <dyn:macroConnect connector="MC_LoadTwoTransformers-DefaultEquipmentConnectionPoint" id1="BBM_LOAD3" id2="NETWORK"/>
-    <dyn:macroConnect connector="MC_TapChangerAutomaton-LoadOneTransformer" id1="BBM_TC" id2="BBM_LOAD"/>
-    <dyn:macroConnect connector="MC_TapChangerAutomatonD-LoadTwoTransformers" id1="BBM_TC2" id2="BBM_LOAD2"/>
-    <dyn:macroConnect connector="MC_TapChangerAutomatonT-LoadTwoTransformers" id1="BBM_TC3" id2="BBM_LOAD3"/>
+    <dyn:macroConnect connector="MC_LoadOneTransformer-DefaultEquipmentConnectionPoint" id1="LOAD" id2="NETWORK"/>
+    <dyn:macroConnect connector="MC_LoadTwoTransformers-DefaultEquipmentConnectionPoint" id1="LOAD2" id2="NETWORK"/>
+    <dyn:macroConnect connector="MC_LoadTwoTransformers-DefaultEquipmentConnectionPoint" id1="LOAD3" id2="NETWORK"/>
+    <dyn:macroConnect connector="MC_TapChangerAutomaton-LoadOneTransformer" id1="BBM_TC" id2="LOAD"/>
+    <dyn:macroConnect connector="MC_TapChangerAutomatonD-LoadTwoTransformers" id1="BBM_TC2" id2="LOAD2"/>
+    <dyn:macroConnect connector="MC_TapChangerAutomatonT-LoadTwoTransformers" id1="BBM_TC3" id2="LOAD3"/>
     <dyn:macroConnect connector="MC_TapChangerBlockingAutomaton-TapChangerAutomaton" id1="BBM_TapChangerBlocking" id2="BBM_TC"/>
     <dyn:macroConnect connector="MC_TapChangerBlockingAutomaton-TapChangerAutomatonD" id1="BBM_TapChangerBlocking" id2="BBM_TC2"/>
     <dyn:macroConnect connector="MC_TapChangerBlockingAutomaton-TapChangerAutomatonT" id1="BBM_TapChangerBlocking" id2="BBM_TC3"/>

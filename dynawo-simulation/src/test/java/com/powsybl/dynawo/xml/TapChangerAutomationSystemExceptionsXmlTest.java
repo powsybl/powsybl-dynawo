@@ -36,7 +36,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class TapChangerAutomationSystemExceptionsXmlTest extends AbstractParametrizedDynamicModelXmlTest {
 
     private static final String LOAD_NAME = "LOAD";
-    private static final String DYN_LOAD_NAME = "BBM_" + LOAD_NAME;
 
     @BeforeEach
     void setup(TransformerSide side, Function<Network, BlackBoxModel> loadConstructor, String exceptionMessage) {
@@ -68,25 +67,21 @@ class TapChangerAutomationSystemExceptionsXmlTest extends AbstractParametrizedDy
     private static Stream<Arguments> provideTapChangers() {
         return Stream.of(
                 Arguments.of(TransformerSide.HIGH_VOLTAGE, (Function<Network, BlackBoxModel>) n -> LoadOneTransformerBuilder.of(n, "LoadOneTransformer")
-                        .dynamicModelId(DYN_LOAD_NAME)
                         .staticId(LOAD_NAME)
                         .parameterSetId("LOT")
                         .build(),
                         "LoadOneTransformer doesn't have a transformer side"),
                 Arguments.of(TransformerSide.NONE, (Function<Network, BlackBoxModel>) n -> LoadOneTransformerTapChangerBuilder.of(n, "LoadOneTransformerTapChanger")
-                        .dynamicModelId(DYN_LOAD_NAME)
                         .staticId(LOAD_NAME)
                         .parameterSetId("LOTTC")
                         .build(),
                         "LoadOneTransformerTapChanger already have a tap changer"),
                 Arguments.of(TransformerSide.NONE, (Function<Network, BlackBoxModel>) n -> LoadTwoTransformersBuilder.of(n, "LoadTwoTransformers")
-                        .dynamicModelId(DYN_LOAD_NAME)
                         .staticId(LOAD_NAME)
                         .parameterSetId("LTT")
                         .build(),
                         "LoadTwoTransformers must have a side connected to the Tap changer automaton"),
                 Arguments.of(TransformerSide.HIGH_VOLTAGE, (Function<Network, BlackBoxModel>) n -> LoadTwoTransformersTapChangersBuilder.of(n, "LoadTwoTransformersTapChangers")
-                        .dynamicModelId(DYN_LOAD_NAME)
                         .staticId(LOAD_NAME)
                         .parameterSetId("LTTTC")
                         .build(),

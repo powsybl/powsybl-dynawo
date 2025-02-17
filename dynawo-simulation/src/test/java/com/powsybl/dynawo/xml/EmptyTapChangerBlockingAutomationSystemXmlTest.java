@@ -37,7 +37,6 @@ class EmptyTapChangerBlockingAutomationSystemXmlTest extends AbstractDynamicMode
     @Override
     protected void addDynamicModels() {
         dynamicModels.add(LoadOneTransformerBuilder.of(network, "LoadOneTransformer")
-                .dynamicModelId("BBM_LOAD")
                 .staticId("LOAD")
                 .parameterSetId("lot")
                 .build());

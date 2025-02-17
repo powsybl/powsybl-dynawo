@@ -42,17 +42,14 @@ class TapChangerBlockingAutomationSystemXmlTest extends AbstractDynamicModelXmlT
     @Override
     protected void addDynamicModels() {
         dynamicModels.add(TransformerFixedRatioBuilder.of(network)
-                .dynamicModelId("BBM_NGEN_NHV1")
                 .staticId("NGEN_NHV1")
                 .parameterSetId("transformer")
                 .build());
         dynamicModels.add(LoadOneTransformerTapChangerBuilder.of(network, "LoadOneTransformerTapChanger")
-                .dynamicModelId("BBM_LOAD")
                 .staticId("LOAD")
                 .parameterSetId("lot")
                 .build());
         dynamicModels.add(LoadTwoTransformersTapChangersBuilder.of(network, "LoadTwoTransformersTapChangers")
-                .dynamicModelId("BBM_LOAD2")
                 .staticId("LOAD2")
                 .parameterSetId("ltt")
                 .build());

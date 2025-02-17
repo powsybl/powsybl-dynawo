@@ -81,14 +81,12 @@ public class DynawoTestUtil extends AbstractSerDeTest {
         network.getLoadStream().forEach(l -> {
             if (l.getId().equals("LOAD2")) {
                 dynamicModels.add(LoadOneTransformerBuilder.of(network, "LoadOneTransformer")
-                        .dynamicModelId("BBM_" + l.getId())
-                        .staticId(l.getId())
+                        .equipment(l)
                         .parameterSetId("LOT")
                         .build());
             } else {
                 dynamicModels.add(BaseLoadBuilder.of(network, "LoadAlphaBeta")
-                        .dynamicModelId("BBM_" + l.getId())
-                        .staticId(l.getId())
+                        .equipment(l)
                         .parameterSetId("LAB")
                         .build());
             }
@@ -96,45 +94,38 @@ public class DynawoTestUtil extends AbstractSerDeTest {
         network.getGeneratorStream().forEach(g -> {
             if (g.getId().equals("GEN2")) {
                 dynamicModels.add(SynchronousGeneratorBuilder.of(network, "GeneratorSynchronousFourWindingsProportionalRegulations")
-                        .dynamicModelId("BBM_" + g.getId())
-                        .staticId(g.getId())
+                        .equipment(g)
                         .parameterSetId("GSFWPR")
                         .build());
             } else if (g.getId().equals("GEN3")) {
                 dynamicModels.add(SynchronousGeneratorBuilder.of(network, "GeneratorSynchronousFourWindings")
-                        .dynamicModelId("BBM_" + g.getId())
-                        .staticId(g.getId())
+                        .equipment(g)
                         .parameterSetId("GSFW")
                         .build());
             } else if (g.getId().equals("GEN4")) {
                 dynamicModels.add(SynchronousGeneratorBuilder.of(network, "GeneratorSynchronousThreeWindings")
-                        .dynamicModelId("BBM_" + g.getId())
-                        .staticId(g.getId())
+                        .equipment(g)
                         .parameterSetId("GSTW")
                         .build());
             } else if (g.getId().equals("GEN6")) {
                 dynamicModels.add(BaseGeneratorBuilder.of(network)
-                        .dynamicModelId("BBM_" + g.getId())
-                        .staticId(g.getId())
+                        .equipment(g)
                         .parameterSetId("GF")
                         .build());
             } else if (g.getId().equals("GEN7")) {
                 dynamicModels.add(SynchronizedGeneratorBuilder.of(network, "GeneratorPQ")
-                        .dynamicModelId("BBM_" + g.getId())
-                        .staticId(g.getId())
+                        .equipment(g)
                         .parameterSetId("GPQ")
                         .build());
             } else {
                 dynamicModels.add(SynchronousGeneratorBuilder.of(network, "GeneratorSynchronousThreeWindingsProportionalRegulations")
-                        .dynamicModelId("BBM_" + g.getId())
-                        .staticId(g.getId())
+                        .equipment(g)
                         .parameterSetId("GSTWPR")
                         .build());
             }
         });
 
         StandardLine standardLine = LineBuilder.of(network)
-                .dynamicModelId("Line_NHV1_NHV2_1")
                 .staticId("NHV1_NHV2_1")
                 .parameterSetId("SL")
                 .build();
@@ -155,7 +146,7 @@ public class DynawoTestUtil extends AbstractSerDeTest {
         // Automatons
         network.getLineStream().filter(line -> !line.getId().equalsIgnoreCase(standardLine.getStaticId()))
                 .forEach(l -> dynamicModels.add(DynamicOverloadManagementSystemBuilder.of(network, "OverloadManagementSystem")
-                        .dynamicModelId("BBM_" + l.getId())
+                        .dynamicModelId("CLA_" + l.getId())
                         .parameterSetId("CLA")
                         .controlledBranch(l.getId())
                         .iMeasurement(l.getId())

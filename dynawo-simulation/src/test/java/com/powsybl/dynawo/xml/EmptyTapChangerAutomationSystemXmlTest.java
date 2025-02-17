@@ -29,7 +29,6 @@ class EmptyTapChangerAutomationSystemXmlTest extends AbstractDynamicModelXmlTest
     @Override
     protected void addDynamicModels() {
         dynamicModels.add(BaseLoadBuilder.of(network, "LoadAlphaBeta")
-                .dynamicModelId("BBM_LOAD")
                 .staticId("LOAD")
                 .parameterSetId("LAB")
                 .build());

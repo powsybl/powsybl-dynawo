@@ -27,7 +27,6 @@ class EventXmlTest extends DynawoTestUtil {
     void writeDynamicModel() throws SAXException, IOException {
         dynamicModels.clear();
         dynamicModels.add(SynchronousGeneratorBuilder.of(network, "GeneratorSynchronousFourWindingsProportionalRegulations")
-                .dynamicModelId("BBM_GEN2")
                 .staticId("GEN2")
                 .parameterSetId("GSFWPR")
                 .build());

@@ -10,6 +10,5 @@ package dynamicModels
 
 WTG4AWeccCurrentSource {
     staticId "GEN"
-    dynamicModelId "BBM_WT"
     parameterSetId "Wind"
 }
