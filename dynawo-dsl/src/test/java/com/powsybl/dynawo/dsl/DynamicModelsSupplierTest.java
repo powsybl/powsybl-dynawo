@@ -142,7 +142,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
 
     private static Stream<Arguments> provideAutomationSystemModelData() {
         return Stream.of(
-                Arguments.of("/dynamicModels/overloadManagement", DynamicOverloadManagementSystem.class, EurostagTutorialExample1Factory.create(), "AM_NHV1_NHV2_1", "CLA", "CurrentLimitAutomaton"),
+                Arguments.of("/dynamicModels/overloadManagement.groovy", DynamicOverloadManagementSystem.class, EurostagTutorialExample1Factory.create(), "AM_NHV1_NHV2_1", "CLA", "CurrentLimitAutomaton"),
                 Arguments.of("/dynamicModels/overloadManagementTwoLevels.groovy", DynamicTwoLevelsOverloadManagementSystem.class, EurostagTutorialExample1Factory.create(), "AM_NHV1_NHV2_1", "CLA", "CurrentLimitAutomatonTwoLevels"),
                 Arguments.of("/dynamicModels/tapChanger.groovy", TapChangerAutomationSystem.class, EurostagTutorialExample1Factory.create(), "TC", "tc", "TapChangerAutomaton"),
                 Arguments.of("/dynamicModels/tapChangerBlockingBusBar.groovy", TapChangerBlockingAutomationSystem.class, FourSubstationsNodeBreakerFactory.create(), "ZAB", "ZAB", "TapChangerBlockingAutomaton2"),
