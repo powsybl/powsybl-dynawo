@@ -48,10 +48,6 @@ public abstract class AbstractEquipmentBlackBoxModel<T extends Identifiable<?>> 
         return equipment;
     }
 
-    public String getStaticId() {
-        return equipment.getId();
-    }
-
     @Override
     public void write(XMLStreamWriter writer, String parFileName) throws XMLStreamException {
         boolean hasVarMapping = !getVarsMapping().isEmpty();
