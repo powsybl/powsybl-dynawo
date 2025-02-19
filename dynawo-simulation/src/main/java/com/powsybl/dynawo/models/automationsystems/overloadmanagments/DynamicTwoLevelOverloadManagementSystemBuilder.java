@@ -19,7 +19,7 @@ import java.util.Collection;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class DynamicTwoLevelsOverloadManagementSystemBuilder extends AbstractOverloadManagementSystemBuilder<DynamicTwoLevelsOverloadManagementSystemBuilder> {
+public class DynamicTwoLevelOverloadManagementSystemBuilder extends AbstractOverloadManagementSystemBuilder<DynamicTwoLevelOverloadManagementSystemBuilder> {
 
     public static final String CATEGORY = "TWO_LEVEL_OVERLOAD_MANAGEMENT";
     private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
@@ -27,25 +27,25 @@ public class DynamicTwoLevelsOverloadManagementSystemBuilder extends AbstractOve
     protected final BuilderEquipment<Branch<?>> iMeasurement2;
     protected TwoSides iMeasurement2Side;
 
-    public static DynamicTwoLevelsOverloadManagementSystemBuilder of(Network network) {
+    public static DynamicTwoLevelOverloadManagementSystemBuilder of(Network network) {
         return of(network, ReportNode.NO_OP);
     }
 
-    public static DynamicTwoLevelsOverloadManagementSystemBuilder of(Network network, ReportNode reportNode) {
-        return new DynamicTwoLevelsOverloadManagementSystemBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reportNode);
+    public static DynamicTwoLevelOverloadManagementSystemBuilder of(Network network, ReportNode reportNode) {
+        return new DynamicTwoLevelOverloadManagementSystemBuilder(network, MODEL_CONFIGS.getDefaultModelConfig(), reportNode);
     }
 
-    public static DynamicTwoLevelsOverloadManagementSystemBuilder of(Network network, String modelName) {
+    public static DynamicTwoLevelOverloadManagementSystemBuilder of(Network network, String modelName) {
         return of(network, modelName, ReportNode.NO_OP);
     }
 
-    public static DynamicTwoLevelsOverloadManagementSystemBuilder of(Network network, String modelName, ReportNode reportNode) {
+    public static DynamicTwoLevelOverloadManagementSystemBuilder of(Network network, String modelName, ReportNode reportNode) {
         ModelConfig modelConfig = MODEL_CONFIGS.getModelConfig(modelName);
         if (modelConfig == null) {
-            BuilderReports.reportModelNotFound(reportNode, DynamicTwoLevelsOverloadManagementSystemBuilder.class.getSimpleName(), modelName);
+            BuilderReports.reportModelNotFound(reportNode, DynamicTwoLevelOverloadManagementSystemBuilder.class.getSimpleName(), modelName);
             return null;
         }
-        return new DynamicTwoLevelsOverloadManagementSystemBuilder(network, modelConfig, reportNode);
+        return new DynamicTwoLevelOverloadManagementSystemBuilder(network, modelConfig, reportNode);
     }
 
     public static ModelInfo getDefaultModelInfo() {
@@ -63,28 +63,28 @@ public class DynamicTwoLevelsOverloadManagementSystemBuilder extends AbstractOve
         return MODEL_CONFIGS.getModelInfos(dynawoVersion);
     }
 
-    protected DynamicTwoLevelsOverloadManagementSystemBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
+    protected DynamicTwoLevelOverloadManagementSystemBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
         super(network, modelConfig, reportNode, new BuilderEquipment<>(BRANCH_TYPE, "iMeasurement1"),
                 new BuilderEquipment<>(BRANCH_TYPE, "controlledBranch1"));
         iMeasurement2 = new BuilderEquipment<>(BRANCH_TYPE, "iMeasurement2");
     }
 
-    public DynamicTwoLevelsOverloadManagementSystemBuilder iMeasurement1(String staticId) {
+    public DynamicTwoLevelOverloadManagementSystemBuilder iMeasurement1(String staticId) {
         iMeasurement.addEquipment(staticId, network::getBranch);
         return self();
     }
 
-    public DynamicTwoLevelsOverloadManagementSystemBuilder iMeasurement1Side(TwoSides side) {
+    public DynamicTwoLevelOverloadManagementSystemBuilder iMeasurement1Side(TwoSides side) {
         this.iMeasurementSide = side;
         return self();
     }
 
-    public DynamicTwoLevelsOverloadManagementSystemBuilder iMeasurement2(String staticId) {
+    public DynamicTwoLevelOverloadManagementSystemBuilder iMeasurement2(String staticId) {
         iMeasurement2.addEquipment(staticId, network::getBranch);
         return self();
     }
 
-    public DynamicTwoLevelsOverloadManagementSystemBuilder iMeasurement2Side(TwoSides side) {
+    public DynamicTwoLevelOverloadManagementSystemBuilder iMeasurement2Side(TwoSides side) {
         this.iMeasurement2Side = side;
         return self();
     }
@@ -100,15 +100,15 @@ public class DynamicTwoLevelsOverloadManagementSystemBuilder extends AbstractOve
     }
 
     @Override
-    public DynamicTwoLevelsOverloadManagementSystem build() {
-        return isInstantiable() ? new DynamicTwoLevelsOverloadManagementSystem(dynamicModelId, parameterSetId,
+    public DynamicTwoLevelOverloadManagementSystem build() {
+        return isInstantiable() ? new DynamicTwoLevelOverloadManagementSystem(dynamicModelId, parameterSetId,
                 iMeasurement.getEquipment(), iMeasurementSide, iMeasurement2.getEquipment(), iMeasurement2Side,
                 controlledEquipment.getEquipment(), modelConfig)
                 : null;
     }
 
     @Override
-    protected DynamicTwoLevelsOverloadManagementSystemBuilder self() {
+    protected DynamicTwoLevelOverloadManagementSystemBuilder self() {
         return this;
     }
 }

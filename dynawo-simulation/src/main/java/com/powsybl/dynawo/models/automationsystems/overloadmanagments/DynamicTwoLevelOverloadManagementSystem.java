@@ -22,7 +22,7 @@ import java.util.Objects;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class DynamicTwoLevelsOverloadManagementSystem extends DynamicOverloadManagementSystem {
+public class DynamicTwoLevelOverloadManagementSystem extends DynamicOverloadManagementSystem {
 
     protected static final String FIRST_MEASURE_SUFFIX = MEASURE_SUFFIX + "1";
     protected static final String SECOND_MEASURE_SUFFIX = MEASURE_SUFFIX + "2";
@@ -30,7 +30,7 @@ public class DynamicTwoLevelsOverloadManagementSystem extends DynamicOverloadMan
     private final Branch<?> secondMeasuredBranch;
     private final TwoSides secondMeasuredSide;
 
-    protected DynamicTwoLevelsOverloadManagementSystem(String dynamicModelId, String parameterSetId, Branch<?> measuredBranch, TwoSides measuredSide, Branch<?> secondMeasuredBranch, TwoSides secondMeasuredSide, Branch<?> controlledBranch, ModelConfig modelConfig) {
+    protected DynamicTwoLevelOverloadManagementSystem(String dynamicModelId, String parameterSetId, Branch<?> measuredBranch, TwoSides measuredSide, Branch<?> secondMeasuredBranch, TwoSides secondMeasuredSide, Branch<?> controlledBranch, ModelConfig modelConfig) {
         super(dynamicModelId, parameterSetId, measuredBranch, measuredSide, controlledBranch, modelConfig);
         this.secondMeasuredBranch = Objects.requireNonNull(secondMeasuredBranch);
         this.secondMeasuredSide = Objects.requireNonNull(secondMeasuredSide);
