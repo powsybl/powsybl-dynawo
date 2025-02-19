@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class SignalN extends AbstractPureDynamicBlackBoxModel implements FrequencySynchronizerModel {
+public class SignalN extends AbstractPureDynamicBlackBoxModel {
 
     private static final String SIGNAL_N_ID = "Signal_N";
     private static final ModelConfig MODEL_CONFIG = new ModelConfig("SignalN");
@@ -50,11 +50,6 @@ public class SignalN extends AbstractPureDynamicBlackBoxModel implements Frequen
 
     private List<VarConnection> getVarConnectionsWithBus(BusOfSignalNModel connected) {
         return List.of(new VarConnection("signalN_thetaRef", connected.getPhiVarName()));
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return signalNEquipments.isEmpty();
     }
 
     @Override

@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public abstract class AbstractFrequencySynchronizer extends AbstractPureDynamicBlackBoxModel implements FrequencySynchronizerModel {
+public abstract class AbstractFrequencySynchronizer extends AbstractPureDynamicBlackBoxModel {
 
     private static final String FREQUENCY_SYNCHRONIZER_ID = "FREQ_SYNC";
     private static final String FREQUENCY_SYNCHRONIZER_PARAMETER_SET_ID = "FREQ_SYNC_PAR";
@@ -26,11 +26,6 @@ public abstract class AbstractFrequencySynchronizer extends AbstractPureDynamicB
         super(FREQUENCY_SYNCHRONIZER_ID, FREQUENCY_SYNCHRONIZER_PARAMETER_SET_ID, modelConfig);
         this.synchronizedEquipments = synchronizedEquipments;
         this.defaultParFile = defaultParFile;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return synchronizedEquipments.isEmpty();
     }
 
     @Override

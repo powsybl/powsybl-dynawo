@@ -144,23 +144,21 @@ public abstract class AbstractContextBuilder<T extends AbstractContextBuilder<T>
     }
 
     private void setupFrequencySynchronizer() {
-        FrequencySynchronizerModel frequencySynchronizer;
         List<SignalNModel> signalNModels = filterDynamicModels(SignalNModel.class);
         List<FrequencySynchronizedModel> frequencySynchronizedModels = filterDynamicModels(FrequencySynchronizedModel.class);
         boolean hasSpecificBuses = dynamicModels.stream().anyMatch(AbstractBus.class::isInstance);
-        boolean hasSignalNModel = !signalNModels.isEmpty();
+        boolean hasFrequencySynchronizedModels = !frequencySynchronizedModels.isEmpty();
+        boolean hasSignalNModels = !signalNModels.isEmpty();
         String defaultParFile = DynawoSimulationConstants.getSimulationParFile(network);
-        if (!frequencySynchronizedModels.isEmpty() && hasSignalNModel) {
+        if (hasFrequencySynchronizedModels && hasSignalNModels) {
             throw new PowsyblException("Signal N and frequency synchronized generators cannot be used with one another");
         }
-        if (hasSignalNModel) {
-            frequencySynchronizer = new SignalN(signalNModels, defaultParFile);
-        } else {
-            frequencySynchronizer = hasSpecificBuses ? new SetPoint(frequencySynchronizedModels, defaultParFile)
-                    : new OmegaRef(frequencySynchronizedModels, defaultParFile, dynawoParameters);
-        }
-        if (!frequencySynchronizer.isEmpty()) {
-            dynamicModels.add(frequencySynchronizer);
+        if (hasSignalNModels) {
+            dynamicModels.add(new SignalN(signalNModels, defaultParFile));
+        } else if (hasFrequencySynchronizedModels) {
+            dynamicModels.add(hasSpecificBuses
+                    ? new SetPoint(frequencySynchronizedModels, defaultParFile)
+                    : new OmegaRef(frequencySynchronizedModels, defaultParFile, dynawoParameters));
         }
     }
 
