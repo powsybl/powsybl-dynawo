@@ -19,7 +19,7 @@ import com.powsybl.dynawo.models.automationsystems.TapChangerAutomationSystem;
 import com.powsybl.dynawo.models.automationsystems.TapChangerBlockingAutomationSystem;
 import com.powsybl.dynawo.models.automationsystems.UnderVoltageAutomationSystem;
 import com.powsybl.dynawo.models.automationsystems.overloadmanagments.DynamicOverloadManagementSystem;
-import com.powsybl.dynawo.models.automationsystems.overloadmanagments.DynamicTwoLevelsOverloadManagementSystem;
+import com.powsybl.dynawo.models.automationsystems.overloadmanagments.DynamicTwoLevelOverloadManagementSystem;
 import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterIAutomationSystem;
 import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterPAutomationSystem;
 import com.powsybl.dynawo.models.buses.InfiniteBus;
@@ -144,7 +144,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
     private static Stream<Arguments> provideAutomationSystemModelData() {
         return Stream.of(
                 Arguments.of("/dynamicModels/overloadManagement", DynamicOverloadManagementSystem.class, EurostagTutorialExample1Factory.create(), "AM_NHV1_NHV2_1", "CLA", "CurrentLimitAutomaton"),
-                Arguments.of("/dynamicModels/overloadManagementTwoLevels.groovy", DynamicTwoLevelsOverloadManagementSystem.class, EurostagTutorialExample1Factory.create(), "AM_NHV1_NHV2_1", "CLA", "CurrentLimitAutomatonTwoLevels"),
+                Arguments.of("/dynamicModels/overloadManagementTwoLevel.groovy", DynamicTwoLevelOverloadManagementSystem.class, EurostagTutorialExample1Factory.create(), "AM_NHV1_NHV2_1", "CLA", "CurrentLimitAutomatonTwoLevels"),
                 Arguments.of("/dynamicModels/tapChanger.groovy", TapChangerAutomationSystem.class, EurostagTutorialExample1Factory.create(), "TC", "tc", "TapChangerAutomaton"),
                 Arguments.of("/dynamicModels/tapChangerBlockingBusBar.groovy", TapChangerBlockingAutomationSystem.class, FourSubstationsNodeBreakerFactory.create(), "ZAB", "ZAB", "TapChangerBlockingAutomaton2"),
                 Arguments.of("/dynamicModels/tapChangerBlocking.groovy", TapChangerBlockingAutomationSystem.class, EurostagTutorialExample1Factory.createWithLFResults(), "ZAB", "ZAB", "TapChangerBlockingAutomaton3"),
@@ -235,7 +235,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                         """
                         + DSL tests
                            + Groovy Dynamic Models Supplier
-                              + DSL model builder for TwoLevelsOverloadManagementSystem
+                              + DSL model builder for TwoLevelOverloadManagementSystem
                                  'iMeasurement2' field value 'NGEN' not found for equipment type(s) BRANCH
                                  Model CLA_NGEN cannot be instantiated
                         """),
@@ -243,7 +243,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                         """
                         + DSL tests
                            + Groovy Dynamic Models Supplier
-                              + DSL model builder for TwoLevelsOverloadManagementSystem
+                              + DSL model builder for TwoLevelOverloadManagementSystem
                                  'iMeasurement2Side' field is not set
                                  Model CLA_NGEN cannot be instantiated
                         """),
