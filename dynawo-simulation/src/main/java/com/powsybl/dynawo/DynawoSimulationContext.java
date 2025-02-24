@@ -6,7 +6,6 @@
  */
 package com.powsybl.dynawo;
 
-import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynamicsimulation.OutputVariable;
 import com.powsybl.dynawo.models.BlackBoxModel;
@@ -33,7 +32,6 @@ public class DynawoSimulationContext {
     private final FinalStepModels finalStepModels;
     private final SimulationTime simulationTime;
     private final SimulationTime finalStepTime;
-    private final ReportNode reportNode;
 
     public static class Builder extends AbstractContextBuilder<Builder> {
 
@@ -96,7 +94,6 @@ public class DynawoSimulationContext {
         this.finalStepTime = builder.finalStepTime;
         this.dynamicModelsParameters = builder.dynamicModelsParameters;
         this.outputVariables = builder.outputVariables;
-        this.reportNode = builder.reportNode;
         this.simulationModels = builder.simulationModels;
         this.finalStepModels = builder.finalStepModels;
     }
@@ -147,10 +144,6 @@ public class DynawoSimulationContext {
 
     public List<ParametersSet> getDynamicModelsParameters() {
         return dynamicModelsParameters;
-    }
-
-    public ReportNode getReportNode() {
-        return reportNode;
     }
 
     public String getSimulationParFile() {

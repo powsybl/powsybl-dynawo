@@ -116,7 +116,7 @@ public abstract class AbstractContextBuilder<T extends AbstractContextBuilder<T>
                         .and(distinctByStaticId(reportNode)
                                 .and(supportedVersion(dynawoVersion, reportNode))));
         if (dynawoParameters.isUseModelSimplifiers()) {
-            uniqueIdsDynamicModels = simplifyModels(uniqueIdsDynamicModels, reportNode);
+            uniqueIdsDynamicModels = simplifyModels(uniqueIdsDynamicModels);
         }
 
         if (finalStepConfig != null) {
@@ -131,7 +131,7 @@ public abstract class AbstractContextBuilder<T extends AbstractContextBuilder<T>
         blackBoxModelSupplier = BlackBoxModelSupplier.createFrom(dynamicModels);
     }
 
-    private Stream<BlackBoxModel> simplifyModels(Stream<BlackBoxModel> inputBbm, ReportNode reportNode) {
+    private Stream<BlackBoxModel> simplifyModels(Stream<BlackBoxModel> inputBbm) {
         Stream<BlackBoxModel> outputBbm = inputBbm;
         for (ModelsRemovalSimplifier modelsSimplifier : ServiceLoader.load(ModelsRemovalSimplifier.class)) {
             outputBbm = outputBbm.filter(modelsSimplifier.getModelRemovalPredicate(reportNode));
