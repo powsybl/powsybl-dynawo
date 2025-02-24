@@ -9,8 +9,11 @@ package com.powsybl.dynawo.margincalculation.loadsvariation.supplier;
 
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.margincalculation.loadsvariation.LoadsVariation;
+import com.powsybl.dynawo.margincalculation.loadsvariation.LoadsVariationBuilder;
+import com.powsybl.dynawo.suppliers.SupplierJsonDeserializer;
 import com.powsybl.iidm.network.Network;
 
+import java.nio.file.Path;
 import java.util.List;
 
 /**
@@ -22,6 +25,12 @@ public interface LoadsVariationSupplier {
 
     default List<LoadsVariation> getLoadsVariations(Network network) {
         return getLoadsVariations(network, ReportNode.NO_OP);
+    }
+
+    static LoadsVariationSupplier getLoadsVariationSupplierForJson(Path loadVariationsPath) {
+        return (n, r) -> new SupplierJsonDeserializer<>(
+                new LoadsVariationJsonDeserializer(() -> new LoadsVariationBuilder(n, r)))
+                .deserialize(loadVariationsPath);
     }
 
 }

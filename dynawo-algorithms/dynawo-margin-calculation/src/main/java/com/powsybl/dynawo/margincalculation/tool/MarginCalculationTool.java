@@ -23,7 +23,6 @@ import com.powsybl.dynawo.margincalculation.MarginCalculationRunParameters;
 import com.powsybl.dynawo.margincalculation.json.JsonMarginCalculationParameters;
 import com.powsybl.dynawo.margincalculation.json.MarginCalculationResultSerializer;
 import com.powsybl.dynawo.margincalculation.loadsvariation.supplier.LoadsVariationSupplier;
-import com.powsybl.dynawo.margincalculation.loadsvariation.supplier.LoadsVariationSupplierUtils;
 import com.powsybl.dynawo.margincalculation.results.LoadIncreaseResult;
 import com.powsybl.dynawo.margincalculation.results.MarginCalculationResult;
 import com.powsybl.iidm.network.ImportConfig;
@@ -150,7 +149,7 @@ public class MarginCalculationTool implements Tool {
         Path contingenciesFile = context.getFileSystem().getPath(line.getOptionValue(CONTINGENCIES_FILE));
         ContingenciesProvider contingenciesProvider = new GroovyDslContingenciesProviderFactory().create(contingenciesFile);
         Path loadVariationsFile = context.getFileSystem().getPath(line.getOptionValue(LOAD_VARIATIONS_FILE));
-        LoadsVariationSupplier loadsVariationSupplier = LoadsVariationSupplierUtils.getLoadsVariationSupplierForJson(loadVariationsFile);
+        LoadsVariationSupplier loadsVariationSupplier = LoadsVariationSupplier.getLoadsVariationSupplierForJson(loadVariationsFile);
         MarginCalculationParameters parameters = line.hasOption(PARAMETERS_FILE) ?
                 JsonMarginCalculationParameters.read(context.getFileSystem().getPath(line.getOptionValue(PARAMETERS_FILE)))
                 : MarginCalculationParameters.builder().build();
