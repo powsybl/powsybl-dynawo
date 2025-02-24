@@ -50,7 +50,7 @@ class DynawoDynamicModelGroovyExtension implements DynamicModelGroovyExtension {
                 binding.setVariable(modelName , { Closure<Void> closure ->
                     def cloned = closure.clone()
                     ModelBuilder<DynamicModel> builder = conf.builderConstructor
-                            .createBuilder(binding.getVariable("network") as Network, modelName, DslReports.createModelBuilderReportNode(reportNode, modelName))
+                            .createBuilder(binding.getVariable("network") as Network, modelName, reportNode)
                     cloned.delegate = builder
                     cloned()
                     builder.build()?.tap {
