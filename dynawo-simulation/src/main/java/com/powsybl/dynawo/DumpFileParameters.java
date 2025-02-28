@@ -11,10 +11,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.config.ModuleConfig;
 
-import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Objects;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -24,16 +26,23 @@ public record DumpFileParameters(boolean exportDumpFile, boolean useDumpFile, Pa
 
     public static final boolean DEFAULT_EXPORT_DUMP = false;
     public static final boolean DEFAULT_USE_DUMP = false;
-    public static final String DEFAULT_DUMP_FOLDER = null;
+    public static final Path DEFAULT_DUMP_FOLDER = null;
     public static final String DEFAULT_DUMP_NAME = null;
-    private static final DumpFileParameters DEFAULT_DUMP_FILE_PARAMETERS = new DumpFileParameters(DEFAULT_EXPORT_DUMP, DEFAULT_USE_DUMP, null, DEFAULT_DUMP_NAME);
+    private static final DumpFileParameters DEFAULT_DUMP_FILE_PARAMETERS =
+            new DumpFileParameters(DEFAULT_EXPORT_DUMP, DEFAULT_USE_DUMP, DEFAULT_DUMP_FOLDER, DEFAULT_DUMP_NAME);
+
+    private static final String DUMP_EXPORT = "dump.export";
+    private static final String DUMP_EXPORT_FOLDER = "dump.exportFolder";
+    private static final String DUMP_USE_AS_INPUT = "dump.useAsInput";
+    private static final String DUMP_FILE_NAME = "dump.fileName";
 
     public DumpFileParameters {
-        if (useDumpFile) {
-            Objects.requireNonNull(dumpFileFolder);
-            Objects.requireNonNull(dumpFile);
-        } else if (exportDumpFile) {
-            Objects.requireNonNull(dumpFileFolder);
+        boolean exportFolderNotFound = dumpFileFolder == null || Files.notExists(dumpFileFolder);
+        if (exportDumpFile && exportFolderNotFound) {
+            throw new PowsyblException("Folder " + dumpFileFolder + " set in 'dumpFileFolder' property cannot be found");
+        }
+        if (useDumpFile && (exportFolderNotFound || dumpFile == null || Files.notExists(dumpFileFolder.resolve(dumpFile)))) {
+            throw new PowsyblException("File " + dumpFile + " set in 'dumpFile' property cannot be found");
         }
     }
 
@@ -53,20 +62,36 @@ public record DumpFileParameters(boolean exportDumpFile, boolean useDumpFile, Pa
         return new DumpFileParameters(true, true, dumpFileFolder, dumpFile);
     }
 
-    public static DumpFileParameters createDumpFileParametersFromConfig(ModuleConfig config, FileSystem fileSystem) {
-        boolean exportDumpFile = config.getOptionalBooleanProperty("dump.export").orElse(DumpFileParameters.DEFAULT_EXPORT_DUMP);
-        String exportDumpFileFolder = config.getOptionalStringProperty("dump.exportFolder").orElse(DumpFileParameters.DEFAULT_DUMP_FOLDER);
-        Path exportDumpFileFolderPath = exportDumpFileFolder != null ? fileSystem.getPath(exportDumpFileFolder) : null;
-        boolean exportFolderNotFound = exportDumpFileFolderPath == null || !Files.exists(exportDumpFileFolderPath);
-        if (exportDumpFile && exportFolderNotFound) {
-            throw new PowsyblException("Folder " + exportDumpFileFolder + " set in 'dumpFileFolder' property cannot be found");
-        }
-        boolean useDumpFile = config.getOptionalBooleanProperty("dump.useAsInput").orElse(DumpFileParameters.DEFAULT_USE_DUMP);
-        String dumpFile = config.getOptionalStringProperty("dump.fileName").orElse(DumpFileParameters.DEFAULT_DUMP_NAME);
-        if (useDumpFile && (exportFolderNotFound || dumpFile == null || !Files.exists(exportDumpFileFolderPath.resolve(dumpFile)))) {
-            throw new PowsyblException("File " + dumpFile + " set in 'dumpFile' property cannot be found");
-        }
-        return new DumpFileParameters(exportDumpFile, useDumpFile, exportDumpFileFolderPath, dumpFile);
+    public static DumpFileParameters createDumpFileParametersFromConfig(ModuleConfig config, Function<String, Path> pathGetter) {
+        boolean exportDumpFile = config.getOptionalBooleanProperty(DUMP_EXPORT).orElse(DEFAULT_EXPORT_DUMP);
+        Path dumpFileFolder = config.getOptionalStringProperty(DUMP_EXPORT_FOLDER).map(pathGetter).orElse(DEFAULT_DUMP_FOLDER);
+        boolean useDumpFile = config.getOptionalBooleanProperty(DUMP_USE_AS_INPUT).orElse(DEFAULT_USE_DUMP);
+        String dumpFile = config.getOptionalStringProperty(DUMP_FILE_NAME).orElse(DEFAULT_DUMP_NAME);
+        return new DumpFileParameters(exportDumpFile, useDumpFile, dumpFileFolder, dumpFile);
+    }
+
+    public static DumpFileParameters createDumpFileParametersFromPropertiesMap(Map<String, String> properties, Function<String, Path> pathGetter) {
+        boolean exportDumpFile = Optional.ofNullable(properties.get(DUMP_EXPORT)).map(Boolean::valueOf).orElse(DumpFileParameters.DEFAULT_EXPORT_DUMP);
+        Path dumpFileFolder = Optional.ofNullable(properties.get(DUMP_EXPORT_FOLDER)).map(pathGetter).orElse(DEFAULT_DUMP_FOLDER);
+        boolean useDumpFile = Optional.ofNullable(properties.get(DUMP_USE_AS_INPUT)).map(Boolean::valueOf).orElse(DEFAULT_USE_DUMP);
+        String dumpFile = Optional.ofNullable(properties.get(DUMP_FILE_NAME)).orElse(DEFAULT_DUMP_NAME);
+        return new DumpFileParameters(exportDumpFile, useDumpFile, dumpFileFolder, dumpFile);
+    }
+
+    public static DumpFileParameters updateDumpFileParametersFromPropertiesMap(Map<String, String> properties,
+                                                                        DumpFileParameters dumpFileParameters, Function<String, Path> pathGetter) {
+        boolean exportDumpFile = Optional.ofNullable(properties.get(DUMP_EXPORT)).map(Boolean::valueOf).orElse(dumpFileParameters.exportDumpFile);
+        Path dumpFileFolder = Optional.ofNullable(properties.get(DUMP_EXPORT_FOLDER)).map(pathGetter).orElse(dumpFileParameters.dumpFileFolder);
+        boolean useDumpFile = Optional.ofNullable(properties.get(DUMP_USE_AS_INPUT)).map(Boolean::valueOf).orElse(dumpFileParameters.useDumpFile);
+        String dumpFile = Optional.ofNullable(properties.get(DUMP_FILE_NAME)).orElse(dumpFileParameters.dumpFile);
+        return new DumpFileParameters(exportDumpFile, useDumpFile, dumpFileFolder, dumpFile);
+    }
+
+    public void addParametersToMap(BiConsumer<String, Object> mapAdder) {
+        mapAdder.accept(DUMP_EXPORT, exportDumpFile);
+        mapAdder.accept(DUMP_EXPORT_FOLDER, dumpFileFolder);
+        mapAdder.accept(DUMP_USE_AS_INPUT, useDumpFile);
+        mapAdder.accept(DUMP_FILE_NAME, dumpFile);
     }
 
     public Path getDumpFilePath() {
