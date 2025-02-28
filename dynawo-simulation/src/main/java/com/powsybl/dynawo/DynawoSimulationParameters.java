@@ -18,11 +18,15 @@ import com.powsybl.dynawo.commons.ExportMode;
 import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.dynawo.xml.ParametersXml;
 
+import java.io.InputStream;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -36,9 +40,11 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
     public static final String DEFAULT_NETWORK_PAR_ID = "1";
     public static final String DEFAULT_SOLVER_PAR_ID = "1";
     public static final boolean DEFAULT_MERGE_LOADS = false;
+    //TODO check usage
     public static final String DEFAULT_INPUT_PARAMETERS_FILE = "models.par";
     public static final String DEFAULT_INPUT_NETWORK_PARAMETERS_FILE = "network.par";
     public static final String DEFAULT_INPUT_SOLVER_PARAMETERS_FILE = "solvers.par";
+    //TODO should not be here
     public static final String MODELS_OUTPUT_PARAMETERS_FILE = "models.par";
     public static final String NETWORK_OUTPUT_PARAMETERS_FILE = "network.par";
     public static final String SOLVER_OUTPUT_PARAMETERS_FILE = "solvers.par";
@@ -46,6 +52,20 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
     public static final double DEFAULT_PRECISION = 1e-6;
     public static final ExportMode DEFAULT_TIMELINE_EXPORT_MODE = ExportMode.TXT;
     public static final LogLevel DEFAULT_LOG_LEVEL_FILTER = LogLevel.INFO;
+
+    private static final String PARAMETERS_FILE = "parametersFile";
+    private static final String NETWORK_PARAMETERS_FILE = "network.parametersFile";
+    private static final String NETWORK_PARAMETERS_ID = "network.parametersId";
+    private static final String SOLVER_PARAMETERS_FILE = "solver.parametersFile";
+    private static final String SOLVER_PARAMETERS_ID = "solver.parametersId";
+    private static final String SOLVER_TYPE = "solver.type";
+    private static final String MERGE_LOADS = "mergeLoads";
+    private static final String USE_MODEL_SIMPLIFIERS = "useModelSimplifiers";
+    private static final String PRECISION = "precision";
+    private static final String TIMELINE_EXPORT_MODE = "timeline.exportMode";
+    private static final String LOG_LEVEL_FILTER = "log.levelFilter";
+    private static final String LOG_SPECIFIC_LOGS = "log.specificLogs";
+    private static final String CRITERIA_FILE = "criteria.file";
 
     /**
      * Information about the solver to use in the simulation
@@ -119,35 +139,42 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
     public static DynawoSimulationParameters load(PlatformConfig platformConfig, FileSystem fileSystem) {
         DynawoSimulationParameters parameters = new DynawoSimulationParameters();
         Optional<ModuleConfig> config = platformConfig.getOptionalModuleConfig("dynawo-simulation-default-parameters");
-
-        String parametersFile = config.flatMap(c -> c.getOptionalStringProperty("parametersFile")).orElse(DEFAULT_INPUT_PARAMETERS_FILE);
-        String networkParametersFile = config.flatMap(c -> c.getOptionalStringProperty("network.parametersFile")).orElse(DEFAULT_INPUT_NETWORK_PARAMETERS_FILE);
-        String networkParametersId = config.flatMap(c -> c.getOptionalStringProperty("network.parametersId")).orElse(DEFAULT_NETWORK_PAR_ID);
-        String solverParametersFile = config.flatMap(c -> c.getOptionalStringProperty("solver.parametersFile")).orElse(DEFAULT_INPUT_SOLVER_PARAMETERS_FILE);
-        String solverParametersId = config.flatMap(c -> c.getOptionalStringProperty("solver.parametersId")).orElse(DEFAULT_SOLVER_PAR_ID);
-        // File with all the dynamic models' parameters for the simulation
-        parameters.setModelsParameters(ParametersXml.load(resolveParameterPath(parametersFile, platformConfig, fileSystem)))
-                // File with all the network's parameters for the simulation
-                .setNetworkParameters(ParametersXml.load(resolveParameterPath(networkParametersFile, platformConfig, fileSystem), networkParametersId))
-                // File with all the solvers' parameters for the simulation
-                .setSolverParameters(ParametersXml.load(resolveParameterPath(solverParametersFile, platformConfig, fileSystem), solverParametersId));
-
         config.ifPresent(c -> {
-            parameters.setDumpFileParameters(DumpFileParameters.createDumpFileParametersFromConfig(c, fileSystem));
-            c.getOptionalEnumProperty("solver.type", SolverType.class).ifPresent(parameters::setSolverType);
+            c.getOptionalStringProperty(PARAMETERS_FILE).ifPresent(f -> {
+                Path path = resolveFilePath(f, platformConfig, fileSystem);
+                if (Files.exists(path)) {
+                    parameters.setModelsParameters(ParametersXml.load(path));
+                }
+            });
+            c.getOptionalStringProperty(NETWORK_PARAMETERS_FILE).ifPresent(f -> {
+                Path path = resolveFilePath(f, platformConfig, fileSystem);
+                if (Files.exists(path)) {
+                    parameters.setNetworkParameters(ParametersXml.load(path,
+                            c.getOptionalStringProperty(NETWORK_PARAMETERS_ID).orElse(DEFAULT_NETWORK_PAR_ID)));
+                }
+            });
+            c.getOptionalStringProperty(SOLVER_PARAMETERS_FILE).ifPresent(f -> {
+                Path path = resolveFilePath(f, platformConfig, fileSystem);
+                if (Files.exists(path)) {
+                    parameters.setSolverParameters(ParametersXml.load(path,
+                            c.getOptionalStringProperty(SOLVER_PARAMETERS_ID).orElse(DEFAULT_SOLVER_PAR_ID)));
+                }
+            });
+            parameters.setDumpFileParameters(DumpFileParameters.createDumpFileParametersFromConfig(c, f -> resolveFilePath(f, platformConfig, fileSystem)));
+            c.getOptionalEnumProperty(SOLVER_TYPE, SolverType.class).ifPresent(parameters::setSolverType);
             // If merging loads on each bus to simplify dynawo's analysis
-            c.getOptionalBooleanProperty("mergeLoads").ifPresent(parameters::setMergeLoads);
-            c.getOptionalBooleanProperty("useModelSimplifiers").ifPresent(parameters::setUseModelSimplifiers);
-            c.getOptionalDoubleProperty("precision").ifPresent(parameters::setPrecision);
-            c.getOptionalEnumProperty("timeline.exportMode", ExportMode.class).ifPresent(parameters::setTimelineExportMode);
-            c.getOptionalEnumProperty("log.levelFilter", LogLevel.class).ifPresent(parameters::setLogLevelFilter);
-            c.getOptionalEnumSetProperty("log.specificLogs", SpecificLog.class).ifPresent(parameters::setSpecificLogs);
-            c.getOptionalStringProperty("criteria.file").ifPresent(cf -> parameters.setCriteriaFilePath(cf, fileSystem));
+            c.getOptionalBooleanProperty(MERGE_LOADS).ifPresent(parameters::setMergeLoads);
+            c.getOptionalBooleanProperty(USE_MODEL_SIMPLIFIERS).ifPresent(parameters::setUseModelSimplifiers);
+            c.getOptionalDoubleProperty(PRECISION).ifPresent(parameters::setPrecision);
+            c.getOptionalEnumProperty(TIMELINE_EXPORT_MODE, ExportMode.class).ifPresent(parameters::setTimelineExportMode);
+            c.getOptionalEnumProperty(LOG_LEVEL_FILTER, LogLevel.class).ifPresent(parameters::setLogLevelFilter);
+            c.getOptionalEnumSetProperty(LOG_SPECIFIC_LOGS, SpecificLog.class).ifPresent(parameters::setSpecificLogs);
+            c.getOptionalStringProperty(CRITERIA_FILE).ifPresent(cf -> parameters.setCriteriaFilePath(resolveFilePath(cf, platformConfig, fileSystem)));
         });
         return parameters;
     }
 
-    private static Path resolveParameterPath(String fileName, PlatformConfig platformConfig, FileSystem fileSystem) {
+    private static Path resolveFilePath(String fileName, PlatformConfig platformConfig, FileSystem fileSystem) {
         return platformConfig.getConfigDir().map(configDir -> configDir.resolve(fileName)).orElse(fileSystem.getPath(fileName));
     }
 
@@ -162,6 +189,69 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
     @Override
     public String getName() {
         return "DynawoSimulationParameters";
+    }
+
+    public void update(Map<String, String> properties) {
+        update(properties, FileSystems.getDefault());
+    }
+
+    public void update(Map<String, String> properties, FileSystem fileSystem) {
+        Objects.requireNonNull(properties);
+        Optional.ofNullable(properties.get(PARAMETERS_FILE)).ifPresent(prop -> {
+            Path path = fileSystem.getPath(prop);
+            if (Files.exists(path)) {
+                setModelsParameters(ParametersXml.load(path));
+            }
+        });
+        Optional.ofNullable(properties.get(NETWORK_PARAMETERS_FILE)).ifPresent(prop -> {
+            Path path = fileSystem.getPath(prop);
+            if (Files.exists(path)) {
+                setNetworkParameters(ParametersXml.load(path,
+                        Optional.ofNullable(properties.get(NETWORK_PARAMETERS_ID)).orElse(DEFAULT_NETWORK_PAR_ID)));
+            }
+        });
+        Optional.ofNullable(properties.get(SOLVER_PARAMETERS_FILE)).ifPresent(prop -> {
+            Path path = fileSystem.getPath(prop);
+            if (Files.exists(path)) {
+                setSolverParameters(ParametersXml.load(path,
+                        Optional.ofNullable(properties.get(SOLVER_PARAMETERS_ID)).orElse(DEFAULT_SOLVER_PAR_ID)));
+            }
+        });
+        Optional.ofNullable(properties.get(MERGE_LOADS)).ifPresent(prop -> setMergeLoads(Boolean.parseBoolean(prop)));
+        Optional.ofNullable(properties.get(USE_MODEL_SIMPLIFIERS)).ifPresent(prop -> setUseModelSimplifiers(Boolean.parseBoolean(prop)));
+        Optional.ofNullable(properties.get(PRECISION)).ifPresent(prop -> setPrecision(Double.parseDouble(prop)));
+        Optional.ofNullable(properties.get(TIMELINE_EXPORT_MODE)).ifPresent(prop -> setTimelineExportMode(ExportMode.valueOf(prop)));
+        Optional.ofNullable(properties.get(LOG_LEVEL_FILTER)).ifPresent(prop -> setLogLevelFilter(LogLevel.valueOf(prop)));
+        Optional.ofNullable(properties.get(LOG_SPECIFIC_LOGS)).ifPresent(prop ->
+                setSpecificLogs(Stream.of(prop.split(",")).map(o -> SpecificLog.valueOf(o.trim())).collect(Collectors.toSet())));
+        Optional.ofNullable(properties.get(CRITERIA_FILE)).ifPresent(prop -> setCriteriaFilePath(prop, fileSystem));
+        dumpFileParameters = DumpFileParameters.updateDumpFileParametersFromPropertiesMap(properties, dumpFileParameters, fileSystem::getPath);
+    }
+
+    public Map<String, String> createMapFromParameters() {
+        Map<String, String> properties = new HashMap<>();
+        //TODO test parameter set output - test as input parameter set serialization and path / OR we choose to never export parameters
+        addNotNullEntry("modelParameters", modelsParameters, properties::put);
+        addNotNullEntry("networkParameters", networkParameters, properties::put);
+        addNotNullEntry("solverParameters", solverParameters, properties::put);
+        addNotNullEntry(SOLVER_TYPE, solverType, properties::put);
+        addNotNullEntry(MERGE_LOADS, mergeLoads, properties::put);
+        addNotNullEntry(USE_MODEL_SIMPLIFIERS, useModelSimplifiers, properties::put);
+        addNotNullEntry(PRECISION, precision, properties::put);
+        addNotNullEntry(TIMELINE_EXPORT_MODE, timelineExportMode, properties::put);
+        addNotNullEntry(LOG_LEVEL_FILTER, logLevelFilter, properties::put);
+        if (!specificLogs.isEmpty()) {
+            properties.put(LOG_SPECIFIC_LOGS, String.join(",", specificLogs.stream().map(SpecificLog::name).toList()));
+        }
+        addNotNullEntry(CRITERIA_FILE, criteriaFilePath, properties::put);
+        dumpFileParameters.addParametersToMap((k, v) -> addNotNullEntry(k, v, properties::put));
+        return properties;
+    }
+
+    private void addNotNullEntry(String key, Object value, BiConsumer<String, String> adder) {
+        if (value != null) {
+            adder.accept(key, Objects.toString(value));
+        }
     }
 
     public void addModelParameters(ParametersSet parameterSet) {
@@ -188,8 +278,18 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
         return this;
     }
 
+    public DynawoSimulationParameters setModelsParameters(InputStream inputStream) {
+        setModelsParameters(ParametersXml.load(inputStream));
+        return this;
+    }
+
     public DynawoSimulationParameters setNetworkParameters(ParametersSet networkParameters) {
         this.networkParameters = Objects.requireNonNull(networkParameters);
+        return this;
+    }
+
+    public DynawoSimulationParameters setNetworkParameters(InputStream inputStream, String parameterSetId) {
+        this.networkParameters = ParametersXml.load(inputStream, parameterSetId);
         return this;
     }
 
@@ -199,6 +299,11 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
 
     public DynawoSimulationParameters setSolverParameters(ParametersSet solverParameters) {
         this.solverParameters = Objects.requireNonNull(solverParameters);
+        return this;
+    }
+
+    public DynawoSimulationParameters setSolverParameters(InputStream inputStream, String parameterSetId) {
+        this.solverParameters = ParametersXml.load(inputStream, parameterSetId);
         return this;
     }
 

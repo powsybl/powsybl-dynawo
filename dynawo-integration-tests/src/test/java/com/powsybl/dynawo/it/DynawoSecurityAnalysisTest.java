@@ -17,8 +17,6 @@ import com.powsybl.dynamicsimulation.groovy.GroovyDynamicModelsSupplier;
 import com.powsybl.dynamicsimulation.groovy.GroovyExtension;
 import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.DynawoSimulationProvider;
-import com.powsybl.dynawo.parameters.ParametersSet;
-import com.powsybl.dynawo.xml.ParametersXml;
 
 import com.powsybl.dynawo.security.DynawoAlgorithmsConfig;
 import com.powsybl.dynawo.security.DynawoSecurityAnalysisProvider;
@@ -74,15 +72,11 @@ class DynawoSecurityAnalysisTest extends AbstractDynawoTest {
                 getResourceAsStream("/ieee14/dynamic-security-analysis/dynamicModels.groovy"),
                 GroovyExtension.find(DynamicModelGroovyExtension.class, DynawoSimulationProvider.NAME));
 
-        List<ParametersSet> modelsParameters = ParametersXml.load(getResourceAsStream("/ieee14/models.par"));
-        ParametersSet networkParameters = ParametersXml.load(getResourceAsStream("/ieee14/network.par"), "8");
-        ParametersSet solverParameters = ParametersXml.load(getResourceAsStream("/ieee14/solvers.par"), "2");
-        dynawoSimulationParameters.setModelsParameters(modelsParameters)
-                .setNetworkParameters(networkParameters)
-                .setSolverParameters(solverParameters)
+        dynawoSimulationParameters.setModelsParameters(getResourceAsStream("/ieee14/models.par"))
+                .setNetworkParameters(getResourceAsStream("/ieee14/network.par"), "8")
+                .setSolverParameters(getResourceAsStream("/ieee14/solvers.par"), "2")
                 .setSolverType(DynawoSimulationParameters.SolverType.IDA)
-                .setCriteriaFilePath(Path.of(Objects.requireNonNull(getClass()
-                        .getResource(criteriaPath)).getPath()));
+                .setCriteriaFilePath(Path.of(Objects.requireNonNull(getClass().getResource(criteriaPath)).getPath()));
 
         ReportNode reportNode = ReportNode.newRootReportNode()
                 .withMessageTemplate("root", "Root message")

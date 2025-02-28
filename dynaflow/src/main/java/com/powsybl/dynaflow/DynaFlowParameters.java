@@ -35,6 +35,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
     public static final String MODULE_SPECIFIC_PARAMETERS = "dynaflow-default-parameters";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DynaFlowParameters.class);
+    //TODO use commons string delimimiter for all parameters
     private static final String CHOSEN_OUTPUT_STRING_DELIMITER = ",";
     private static final String SVC_REGULATION_ON = "svcRegulationOn";
     private static final String SHUNT_REGULATION_ON = "shuntRegulationOn";
