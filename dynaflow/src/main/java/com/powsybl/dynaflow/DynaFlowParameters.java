@@ -23,9 +23,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
-import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static com.powsybl.dynawo.commons.ParametersUtils.*;
 
 /**
  * @author Guillaume Pernin {@literal <guillaume.pernin at rte-france.com>}
@@ -35,8 +36,6 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
     public static final String MODULE_SPECIFIC_PARAMETERS = "dynaflow-default-parameters";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DynaFlowParameters.class);
-    //TODO use commons string delimimiter for all parameters
-    private static final String CHOSEN_OUTPUT_STRING_DELIMITER = ",";
     private static final String SVC_REGULATION_ON = "svcRegulationOn";
     private static final String SHUNT_REGULATION_ON = "shuntRegulationOn";
     private static final String AUTOMATIC_SLACK_BUS_ON = "automaticSlackBusOn";
@@ -65,10 +64,6 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
     private static final double DEFAULT_TIME_STEP = 10d;
     private static final StartingPointMode DEFAULT_STARTING_POINT_MODE = StartingPointMode.WARM;
     private static final boolean DEFAULT_MERGE_LOADS = true;
-
-    private static <E extends Enum<E>> List<Object> getEnumPossibleValues(Class<E> enumClass) {
-        return EnumSet.allOf(enumClass).stream().map(Enum::name).collect(Collectors.toList());
-    }
 
     public static final List<Parameter> SPECIFIC_PARAMETERS = List.of(
             new Parameter(SVC_REGULATION_ON, ParameterType.BOOLEAN, "Static Var Compensator regulation on", DEFAULT_SVC_REGULATION_ON),
@@ -332,7 +327,7 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         Optional.ofNullable(properties.get(STOP_TIME)).ifPresent(prop -> setStopTime(Double.parseDouble(prop)));
         Optional.ofNullable(properties.get(PRECISION_NAME)).ifPresent(prop -> setPrecision(Double.parseDouble(prop)));
         Optional.ofNullable(properties.get(CHOSEN_OUTPUTS)).ifPresent(prop ->
-                setChosenOutputs(Stream.of(prop.split(CHOSEN_OUTPUT_STRING_DELIMITER)).map(o -> OutputTypes.valueOf(o.trim())).collect(Collectors.toSet())));
+                setChosenOutputs(Stream.of(prop.split(PROPERTY_LIST_DELIMITER)).map(o -> OutputTypes.valueOf(o.trim())).collect(Collectors.toSet())));
         Optional.ofNullable(properties.get(TIME_STEP)).ifPresent(prop -> setTimeStep(Double.parseDouble(prop)));
         Optional.ofNullable(properties.get(STARTING_POINT_MODE)).ifPresent(prop -> setStartingPointMode(StartingPointMode.fromString(prop)));
         Optional.ofNullable(properties.get(MERGE_LOADS)).ifPresent(prop -> setMergeLoads(Boolean.parseBoolean(prop)));
@@ -353,17 +348,11 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
         addNotNullEntry(STOP_TIME, stopTime, parameters::put);
         addNotNullEntry(PRECISION_NAME, precision, parameters::put);
         if (!chosenOutputs.isEmpty()) {
-            parameters.put(CHOSEN_OUTPUTS, String.join(CHOSEN_OUTPUT_STRING_DELIMITER, chosenOutputs.stream().map(OutputTypes::name).toList()));
+            parameters.put(CHOSEN_OUTPUTS, String.join(PROPERTY_LIST_DELIMITER, chosenOutputs.stream().map(OutputTypes::name).toList()));
         }
         addNotNullEntry(TIME_STEP, timeStep, parameters::put);
         addNotNullEntry(STARTING_POINT_MODE, startingPointMode, parameters::put);
         addNotNullEntry(MERGE_LOADS, mergeLoads, parameters::put);
         return parameters;
-    }
-
-    private void addNotNullEntry(String key, Object value, BiConsumer<String, String> adder) {
-        if (value != null) {
-            adder.accept(key, Objects.toString(value));
-        }
     }
 }

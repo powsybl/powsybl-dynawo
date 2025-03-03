@@ -10,9 +10,12 @@ package com.powsybl.dynawo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.config.ModuleConfig;
+import com.powsybl.commons.parameters.Parameter;
+import com.powsybl.commons.parameters.ParameterType;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiConsumer;
@@ -35,6 +38,13 @@ public record DumpFileParameters(boolean exportDumpFile, boolean useDumpFile, Pa
     private static final String DUMP_EXPORT_FOLDER = "dump.exportFolder";
     private static final String DUMP_USE_AS_INPUT = "dump.useAsInput";
     private static final String DUMP_FILE_NAME = "dump.fileName";
+
+    public static final List<Parameter> SPECIFIC_PARAMETERS = List.of(
+            new Parameter(DUMP_EXPORT, ParameterType.BOOLEAN, "Static Var Compensator regulation on", DEFAULT_EXPORT_DUMP),
+            new Parameter(DUMP_EXPORT_FOLDER, ParameterType.STRING, "Static Var Compensator regulation on", DEFAULT_USE_DUMP),
+            new Parameter(DUMP_USE_AS_INPUT, ParameterType.BOOLEAN, "Static Var Compensator regulation on", DEFAULT_DUMP_FOLDER),
+            new Parameter(DUMP_FILE_NAME, ParameterType.STRING, "Static Var Compensator regulation on", DEFAULT_DUMP_FOLDER)
+    );
 
     public DumpFileParameters {
         boolean exportFolderNotFound = dumpFileFolder == null || Files.notExists(dumpFileFolder);

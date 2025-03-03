@@ -28,6 +28,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
+import static com.powsybl.dynawo.DynawoSimulationParameters.MODULE_SPECIFIC_PARAMETERS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -122,6 +123,7 @@ class DynawoParametersTest extends AbstractSerDeTest {
     }
 
     @Test
+    //TODO check result - compare to map properties
     void roundTripParametersSerializing() throws IOException {
         String networkParametersId = "networkParametersId";
         SolverType solverType = SolverType.IDA;
@@ -146,7 +148,7 @@ class DynawoParametersTest extends AbstractSerDeTest {
         String solverParametersFile = USER_HOME + "solverParametersFile";
         String criteriaFile = criteriaFileName != null ? USER_HOME + criteriaFileName : null;
 
-        MapModuleConfig moduleConfig = platformConfig.createModuleConfig("dynawo-simulation-default-parameters");
+        MapModuleConfig moduleConfig = platformConfig.createModuleConfig(MODULE_SPECIFIC_PARAMETERS);
         moduleConfig.setStringProperty("parametersFile", parametersFile);
         moduleConfig.setStringProperty("network.parametersFile", networkParametersFile);
         moduleConfig.setStringProperty("solver.parametersFile", solverParametersFile);
@@ -180,7 +182,7 @@ class DynawoParametersTest extends AbstractSerDeTest {
         Files.createDirectories(fileSystem.getPath(folderName));
         String fileName = "dumpFile.dmp";
         Files.createFile(fileSystem.getPath(folderName, fileName));
-        MapModuleConfig moduleConfig = platformConfig.createModuleConfig("dynawo-simulation-default-parameters");
+        MapModuleConfig moduleConfig = platformConfig.createModuleConfig(MODULE_SPECIFIC_PARAMETERS);
         moduleConfig.setStringProperty("parametersFile", DynawoSimulationParameters.DEFAULT_INPUT_PARAMETERS_FILE);
         moduleConfig.setStringProperty("network.parametersFile", DynawoSimulationParameters.DEFAULT_INPUT_NETWORK_PARAMETERS_FILE);
         moduleConfig.setStringProperty("dump.export", Boolean.toString(true));
@@ -196,6 +198,10 @@ class DynawoParametersTest extends AbstractSerDeTest {
         copyFile("/parametersSet/models.par", DynawoSimulationParameters.DEFAULT_INPUT_PARAMETERS_FILE);
         copyFile("/parametersSet/network.par", DynawoSimulationParameters.DEFAULT_INPUT_NETWORK_PARAMETERS_FILE);
         copyFile("/parametersSet/solvers.par", DynawoSimulationParameters.DEFAULT_INPUT_SOLVER_PARAMETERS_FILE);
+        MapModuleConfig moduleConfig = platformConfig.createModuleConfig(MODULE_SPECIFIC_PARAMETERS);
+        moduleConfig.setStringProperty("parametersFile", "/work/inmemory/models.par");
+        moduleConfig.setStringProperty("network.parametersFile", "/work/inmemory/network.par");
+        moduleConfig.setStringProperty("solver.parametersFile", "/work/inmemory/solvers.par");
 
         DynawoSimulationParameters parameters = DynawoSimulationParameters.load(platformConfig, fileSystem);
         checkModelParameters(parameters);
@@ -215,26 +221,21 @@ class DynawoParametersTest extends AbstractSerDeTest {
     }
 
     @Test
-    void checkDefaultDumpParameters() throws IOException {
-        Files.createDirectories(fileSystem.getPath(USER_HOME));
-        copyFile("/parametersSet/models.par", DynawoSimulationParameters.DEFAULT_INPUT_PARAMETERS_FILE);
-        copyFile("/parametersSet/network.par", DynawoSimulationParameters.DEFAULT_INPUT_NETWORK_PARAMETERS_FILE);
-        copyFile("/parametersSet/solvers.par", DynawoSimulationParameters.DEFAULT_INPUT_SOLVER_PARAMETERS_FILE);
-
+    void checkDefaultDumpParameters() {
         DynawoSimulationParameters parameters = DynawoSimulationParameters.load(platformConfig, fileSystem);
         DumpFileParameters dumpFileParameters = parameters.getDumpFileParameters();
         assertEquals(DumpFileParameters.DEFAULT_EXPORT_DUMP, dumpFileParameters.exportDumpFile());
         assertEquals(DumpFileParameters.DEFAULT_USE_DUMP, dumpFileParameters.useDumpFile());
-        assertNull(dumpFileParameters.dumpFileFolder());
+        assertEquals(DumpFileParameters.DEFAULT_DUMP_FOLDER, dumpFileParameters.dumpFileFolder());
         assertEquals(DumpFileParameters.DEFAULT_DUMP_NAME, dumpFileParameters.dumpFile());
     }
 
     @Test
     void checkException() throws IOException {
         Files.createDirectories(fileSystem.getPath(USER_HOME));
-        copyFile("/parametersSet/models.par", DynawoSimulationParameters.DEFAULT_INPUT_PARAMETERS_FILE);
-        copyFile("/parametersSet/network.par", DynawoSimulationParameters.DEFAULT_INPUT_NETWORK_PARAMETERS_FILE);
         copyFile("/parametersSet/solversMissingDefault.par", DynawoSimulationParameters.DEFAULT_INPUT_SOLVER_PARAMETERS_FILE);
+        MapModuleConfig moduleConfig = platformConfig.createModuleConfig(MODULE_SPECIFIC_PARAMETERS);
+        moduleConfig.setStringProperty("solver.parametersFile", "/work/inmemory/solvers.par");
 
         PowsyblException e1 = assertThrows(PowsyblException.class, () -> DynawoSimulationParameters.load(platformConfig, fileSystem));
         assertEquals("Could not find parameters set with id='1' in file '/work/inmemory/solvers.par'", e1.getMessage());
@@ -261,6 +262,16 @@ class DynawoParametersTest extends AbstractSerDeTest {
         initDumpFilePlatformConfig(folderProperty, fileProperty);
         PowsyblException e = assertThrows(PowsyblException.class, () -> DynawoSimulationParameters.load(platformConfig, fileSystem));
         assertEquals("File wrongFile.dmp set in 'dumpFile' property cannot be found", e.getMessage());
+    }
+
+    @Test
+    void testGetParametersMap() {
+       //TODO
+    }
+
+    @Test
+    void loadMapDynaflowParameters() {
+        //TODO
     }
 
     private static void checkModelParameters(DynawoSimulationParameters dynawoSimulationParameters) {
