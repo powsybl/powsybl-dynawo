@@ -55,9 +55,9 @@ public class DynawoLocalCommandExecutor implements LocalCommandExecutor {
         compareXml(getClass().getResourceAsStream("/" + baseDirName + "/dynawo-inputs/powsybl_dynawo.xiidm"), Files.newInputStream(workingDir.resolve(NETWORK_FILENAME)));
         compareXml(getClass().getResourceAsStream("/" + baseDirName + "/dynawo-inputs/powsybl_dynawo.jobs"), Files.newInputStream(workingDir.resolve(JOBS_FILENAME)));
         compareXml(getClass().getResourceAsStream("/" + baseDirName + "/dynawo-inputs/powsybl_dynawo.dyd"), Files.newInputStream(workingDir.resolve(DYD_FILENAME)));
-        compareXml(getClass().getResourceAsStream("/" + baseDirName + "/dynawo-inputs/models.par"), Files.newInputStream(workingDir.resolve(fileSystem.getPath(DynawoSimulationParameters.MODELS_OUTPUT_PARAMETERS_FILE).getFileName().toString())));
-        compareXml(getClass().getResourceAsStream("/" + baseDirName + "/dynawo-inputs/network.par"), Files.newInputStream(workingDir.resolve(fileSystem.getPath(DynawoSimulationParameters.NETWORK_OUTPUT_PARAMETERS_FILE).getFileName().toString())));
-        compareXml(getClass().getResourceAsStream("/" + baseDirName + "/dynawo-inputs/solvers.par"), Files.newInputStream(workingDir.resolve(fileSystem.getPath(DynawoSimulationParameters.SOLVER_OUTPUT_PARAMETERS_FILE).getFileName().toString())));
+        compareXml(getClass().getResourceAsStream("/" + baseDirName + "/dynawo-inputs/models.par"), Files.newInputStream(workingDir.resolve(fileSystem.getPath(MODELS_PARAMETERS_FILENAME).getFileName().toString())));
+        compareXml(getClass().getResourceAsStream("/" + baseDirName + "/dynawo-inputs/network.par"), Files.newInputStream(workingDir.resolve(fileSystem.getPath(NETWORK_PARAMETERS_FILENAME).getFileName().toString())));
+        compareXml(getClass().getResourceAsStream("/" + baseDirName + "/dynawo-inputs/solvers.par"), Files.newInputStream(workingDir.resolve(fileSystem.getPath(SOLVER_PARAMETERS_FILENAME).getFileName().toString())));
         compareXml(getClass().getResourceAsStream("/" + baseDirName + "/dynawo-inputs/" + networkId + ".par"), Files.newInputStream(workingDir.resolve(networkId + ".par")));
         compareXml(getClass().getResourceAsStream("/" + baseDirName + "/dynawo-inputs/powsybl_dynawo.crv"), Files.newInputStream(workingDir.resolve(CRV_FILENAME)));
     }

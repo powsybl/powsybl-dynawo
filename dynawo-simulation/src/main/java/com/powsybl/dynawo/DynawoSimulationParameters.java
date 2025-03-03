@@ -13,6 +13,8 @@ import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.config.ModuleConfig;
 import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.extensions.AbstractExtension;
+import com.powsybl.commons.parameters.Parameter;
+import com.powsybl.commons.parameters.ParameterType;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawo.commons.ExportMode;
 import com.powsybl.dynawo.parameters.ParametersSet;
@@ -28,6 +30,8 @@ import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.powsybl.dynawo.commons.ParametersUtils.*;
+
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
@@ -36,18 +40,15 @@ import java.util.stream.Stream;
 @JsonIgnoreProperties(value = { "criteriaFileName" })
 public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulationParameters> {
 
+    public static final String MODULE_SPECIFIC_PARAMETERS = "dynawo-simulation-default-parameters";
+
+    public static final String DEFAULT_INPUT_PARAMETERS_FILE = "models.par";
+    public static final String DEFAULT_INPUT_NETWORK_PARAMETERS_FILE = "network.par";
+    public static final String DEFAULT_INPUT_SOLVER_PARAMETERS_FILE = "solvers.par";
     public static final SolverType DEFAULT_SOLVER_TYPE = SolverType.SIM;
     public static final String DEFAULT_NETWORK_PAR_ID = "1";
     public static final String DEFAULT_SOLVER_PAR_ID = "1";
     public static final boolean DEFAULT_MERGE_LOADS = false;
-    //TODO check usage
-    public static final String DEFAULT_INPUT_PARAMETERS_FILE = "models.par";
-    public static final String DEFAULT_INPUT_NETWORK_PARAMETERS_FILE = "network.par";
-    public static final String DEFAULT_INPUT_SOLVER_PARAMETERS_FILE = "solvers.par";
-    //TODO should not be here
-    public static final String MODELS_OUTPUT_PARAMETERS_FILE = "models.par";
-    public static final String NETWORK_OUTPUT_PARAMETERS_FILE = "network.par";
-    public static final String SOLVER_OUTPUT_PARAMETERS_FILE = "solvers.par";
     public static final boolean DEFAULT_USE_MODEL_SIMPLIFIERS = false;
     public static final double DEFAULT_PRECISION = 1e-6;
     public static final ExportMode DEFAULT_TIMELINE_EXPORT_MODE = ExportMode.TXT;
@@ -122,6 +123,22 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
     private EnumSet<SpecificLog> specificLogs = EnumSet.noneOf(SpecificLog.class);
     private Path criteriaFilePath = null;
 
+    public static final List<Parameter> SPECIFIC_PARAMETERS = Stream.concat(Stream.of(
+            new Parameter(PARAMETERS_FILE, ParameterType.STRING, "Static Var Compensator regulation on", DEFAULT_INPUT_PARAMETERS_FILE),
+            new Parameter(NETWORK_PARAMETERS_FILE, ParameterType.STRING, "Static Var Compensator regulation on", DEFAULT_INPUT_NETWORK_PARAMETERS_FILE),
+            new Parameter(NETWORK_PARAMETERS_ID, ParameterType.STRING, "Static Var Compensator regulation on", DEFAULT_NETWORK_PAR_ID),
+            new Parameter(SOLVER_PARAMETERS_FILE, ParameterType.STRING, "Static Var Compensator regulation on", DEFAULT_INPUT_SOLVER_PARAMETERS_FILE),
+            new Parameter(SOLVER_PARAMETERS_ID, ParameterType.STRING, "Static Var Compensator regulation on", DEFAULT_SOLVER_PAR_ID),
+            new Parameter(SOLVER_TYPE, ParameterType.STRING, "Static Var Compensator regulation on", DEFAULT_SOLVER_TYPE, getEnumPossibleValues(SolverType.class)),
+            new Parameter(MERGE_LOADS, ParameterType.BOOLEAN, "Static Var Compensator regulation on", DEFAULT_MERGE_LOADS),
+            new Parameter(USE_MODEL_SIMPLIFIERS, ParameterType.BOOLEAN, "Static Var Compensator regulation on", DEFAULT_USE_MODEL_SIMPLIFIERS),
+            new Parameter(PRECISION, ParameterType.DOUBLE, "Static Var Compensator regulation on", DEFAULT_PRECISION),
+            new Parameter(TIMELINE_EXPORT_MODE, ParameterType.STRING, "Static Var Compensator regulation on", DEFAULT_TIMELINE_EXPORT_MODE, getEnumPossibleValues(ExportMode.class)),
+            new Parameter(LOG_LEVEL_FILTER, ParameterType.STRING, "Static Var Compensator regulation on", DEFAULT_LOG_LEVEL_FILTER, getEnumPossibleValues(LogLevel.class)),
+            new Parameter(LOG_SPECIFIC_LOGS, ParameterType.STRING, "Static Var Compensator regulation on", null, getEnumPossibleValues(SpecificLog.class)),
+            new Parameter(CRITERIA_FILE, ParameterType.STRING, "Static Var Compensator regulation on", null)),
+            DumpFileParameters.SPECIFIC_PARAMETERS.stream()).toList();
+
     /**
      * Loads parameters from the default platform configuration.
      */
@@ -138,7 +155,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
 
     public static DynawoSimulationParameters load(PlatformConfig platformConfig, FileSystem fileSystem) {
         DynawoSimulationParameters parameters = new DynawoSimulationParameters();
-        Optional<ModuleConfig> config = platformConfig.getOptionalModuleConfig("dynawo-simulation-default-parameters");
+        Optional<ModuleConfig> config = platformConfig.getOptionalModuleConfig(MODULE_SPECIFIC_PARAMETERS);
         config.ifPresent(c -> {
             c.getOptionalStringProperty(PARAMETERS_FILE).ifPresent(f -> {
                 Path path = resolveFilePath(f, platformConfig, fileSystem);
@@ -176,6 +193,12 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
 
     private static Path resolveFilePath(String fileName, PlatformConfig platformConfig, FileSystem fileSystem) {
         return platformConfig.getConfigDir().map(configDir -> configDir.resolve(fileName)).orElse(fileSystem.getPath(fileName));
+    }
+
+    public static DynawoSimulationParameters load(Map<String, String> properties) {
+        DynawoSimulationParameters parameters = new DynawoSimulationParameters();
+        parameters.update(properties);
+        return parameters;
     }
 
     public static DynawoSimulationParameters load(DynamicSimulationParameters parameters) {
@@ -223,7 +246,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
         Optional.ofNullable(properties.get(TIMELINE_EXPORT_MODE)).ifPresent(prop -> setTimelineExportMode(ExportMode.valueOf(prop)));
         Optional.ofNullable(properties.get(LOG_LEVEL_FILTER)).ifPresent(prop -> setLogLevelFilter(LogLevel.valueOf(prop)));
         Optional.ofNullable(properties.get(LOG_SPECIFIC_LOGS)).ifPresent(prop ->
-                setSpecificLogs(Stream.of(prop.split(",")).map(o -> SpecificLog.valueOf(o.trim())).collect(Collectors.toSet())));
+                setSpecificLogs(Stream.of(prop.split(PROPERTY_LIST_DELIMITER)).map(o -> SpecificLog.valueOf(o.trim())).collect(Collectors.toSet())));
         Optional.ofNullable(properties.get(CRITERIA_FILE)).ifPresent(prop -> setCriteriaFilePath(prop, fileSystem));
         dumpFileParameters = DumpFileParameters.updateDumpFileParametersFromPropertiesMap(properties, dumpFileParameters, fileSystem::getPath);
     }
@@ -241,17 +264,11 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
         addNotNullEntry(TIMELINE_EXPORT_MODE, timelineExportMode, properties::put);
         addNotNullEntry(LOG_LEVEL_FILTER, logLevelFilter, properties::put);
         if (!specificLogs.isEmpty()) {
-            properties.put(LOG_SPECIFIC_LOGS, String.join(",", specificLogs.stream().map(SpecificLog::name).toList()));
+            properties.put(LOG_SPECIFIC_LOGS, String.join(PROPERTY_LIST_DELIMITER, specificLogs.stream().map(SpecificLog::name).toList()));
         }
         addNotNullEntry(CRITERIA_FILE, criteriaFilePath, properties::put);
         dumpFileParameters.addParametersToMap((k, v) -> addNotNullEntry(k, v, properties::put));
         return properties;
-    }
-
-    private void addNotNullEntry(String key, Object value, BiConsumer<String, String> adder) {
-        if (value != null) {
-            adder.accept(key, Objects.toString(value));
-        }
     }
 
     public void addModelParameters(ParametersSet parameterSet) {
