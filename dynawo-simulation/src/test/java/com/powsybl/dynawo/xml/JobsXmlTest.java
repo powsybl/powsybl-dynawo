@@ -17,8 +17,11 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
+import java.nio.file.FileSystem;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.EnumSet;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 /**
@@ -29,21 +32,34 @@ class JobsXmlTest extends DynawoTestUtil {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("provideParameters")
-    void testJobXml(String xmlResult, DynawoSimulationParameters parameters) throws IOException, SAXException {
-        DynawoSimulationContext context = new DynawoSimulationContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, eventModels, outputVariables, DynamicSimulationParameters.load(), parameters);
+    void testJobXml(String xmlResult, Function<FileSystem, DynawoSimulationParameters> parametersSupplier) throws IOException, SAXException {
+        DynawoSimulationContext context = new DynawoSimulationContext(network, network.getVariantManager().getWorkingVariantId(),
+                dynamicModels, eventModels, outputVariables, DynamicSimulationParameters.load(), parametersSupplier.apply(fileSystem));
         JobsXml.write(tmpDir, context);
         validate("jobs.xsd", xmlResult, tmpDir.resolve(DynawoSimulationConstants.JOBS_FILENAME));
     }
 
     private static Stream<Arguments> provideParameters() {
         return Stream.of(
-                Arguments.of("jobs.xml", DynawoSimulationParameters.load()),
-                Arguments.of("jobsWithDump.xml", DynawoSimulationParameters.load()
-                        .setDumpFileParameters(DumpFileParameters.createImportExportDumpFileParameters(Path.of("/dumpFiles"), "dump.dmp"))),
-                Arguments.of("jobsWithSpecificLogs.xml", DynawoSimulationParameters.load()
-                        .setSpecificLogs(EnumSet.allOf(DynawoSimulationParameters.SpecificLog.class))),
-                Arguments.of("jobsWithCriteria.xml", DynawoSimulationParameters.load()
-                        .setCriteriaFilePath(Path.of("criteria.crt")))
+                Arguments.of("jobs.xml",
+                        (Function<FileSystem, DynawoSimulationParameters>) fs ->
+                                DynawoSimulationParameters.load()),
+                Arguments.of("jobsWithDump.xml",
+                        (Function<FileSystem, DynawoSimulationParameters>) fs -> {
+                            try {
+                                Files.createFile(fs.getPath("tmp", "dump.dmp"));
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                            return DynawoSimulationParameters.load()
+                                        .setDumpFileParameters(DumpFileParameters.createImportExportDumpFileParameters(fs.getPath("tmp"), "dump.dmp"));
+                        }),
+                Arguments.of("jobsWithSpecificLogs.xml",
+                        (Function<FileSystem, DynawoSimulationParameters>) fs ->
+                                DynawoSimulationParameters.load().setSpecificLogs(EnumSet.allOf(DynawoSimulationParameters.SpecificLog.class))),
+                Arguments.of("jobsWithCriteria.xml",
+                        (Function<FileSystem, DynawoSimulationParameters>) fs ->
+                                DynawoSimulationParameters.load().setCriteriaFilePath(Path.of("criteria.crt")))
         );
     }
 }

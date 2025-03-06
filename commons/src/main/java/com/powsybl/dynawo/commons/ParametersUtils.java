@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class ParametersUtils {
+public final class ParametersUtils {
 
     public static final String PROPERTY_LIST_DELIMITER = ",";
 
@@ -28,5 +28,8 @@ public class ParametersUtils {
         if (value != null) {
             adder.accept(key, Objects.toString(value));
         }
+    }
+
+    private ParametersUtils() {
     }
 }
