@@ -9,6 +9,7 @@ package com.powsybl.dynawo.parameters;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.powsybl.commons.PowsyblException;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 
@@ -99,5 +100,10 @@ public class ParametersSet {
             throw new PowsyblException("Invalid parameter type: " + parameter.type() + " (" + type + " expected)");
         }
         return parameter;
+    }
+
+    @Override
+    public String toString() {
+        return StringUtils.joinWith(",", id, StringUtils.join(parameters), StringUtils.join(references));
     }
 }
