@@ -40,10 +40,10 @@ public record DumpFileParameters(boolean exportDumpFile, boolean useDumpFile, Pa
     private static final String DUMP_FILE_NAME = "dump.fileName";
 
     public static final List<Parameter> SPECIFIC_PARAMETERS = List.of(
-            new Parameter(DUMP_EXPORT, ParameterType.BOOLEAN, "Static Var Compensator regulation on", DEFAULT_EXPORT_DUMP),
-            new Parameter(DUMP_EXPORT_FOLDER, ParameterType.STRING, "Static Var Compensator regulation on", DEFAULT_USE_DUMP),
-            new Parameter(DUMP_USE_AS_INPUT, ParameterType.BOOLEAN, "Static Var Compensator regulation on", DEFAULT_DUMP_FOLDER),
-            new Parameter(DUMP_FILE_NAME, ParameterType.STRING, "Static Var Compensator regulation on", DEFAULT_DUMP_FOLDER)
+            new Parameter(DUMP_EXPORT, ParameterType.BOOLEAN, "Dump file name", DEFAULT_EXPORT_DUMP),
+            new Parameter(DUMP_EXPORT_FOLDER, ParameterType.STRING, "Dump export folder path", DEFAULT_DUMP_FOLDER),
+            new Parameter(DUMP_USE_AS_INPUT, ParameterType.BOOLEAN, "Use dump file as simulation input", DEFAULT_USE_DUMP),
+            new Parameter(DUMP_FILE_NAME, ParameterType.STRING, "Input dump file name", DEFAULT_DUMP_NAME)
     );
 
     public DumpFileParameters {
@@ -77,14 +77,6 @@ public record DumpFileParameters(boolean exportDumpFile, boolean useDumpFile, Pa
         Path dumpFileFolder = config.getOptionalStringProperty(DUMP_EXPORT_FOLDER).map(pathGetter).orElse(DEFAULT_DUMP_FOLDER);
         boolean useDumpFile = config.getOptionalBooleanProperty(DUMP_USE_AS_INPUT).orElse(DEFAULT_USE_DUMP);
         String dumpFile = config.getOptionalStringProperty(DUMP_FILE_NAME).orElse(DEFAULT_DUMP_NAME);
-        return new DumpFileParameters(exportDumpFile, useDumpFile, dumpFileFolder, dumpFile);
-    }
-
-    public static DumpFileParameters createDumpFileParametersFromPropertiesMap(Map<String, String> properties, Function<String, Path> pathGetter) {
-        boolean exportDumpFile = Optional.ofNullable(properties.get(DUMP_EXPORT)).map(Boolean::valueOf).orElse(DumpFileParameters.DEFAULT_EXPORT_DUMP);
-        Path dumpFileFolder = Optional.ofNullable(properties.get(DUMP_EXPORT_FOLDER)).map(pathGetter).orElse(DEFAULT_DUMP_FOLDER);
-        boolean useDumpFile = Optional.ofNullable(properties.get(DUMP_USE_AS_INPUT)).map(Boolean::valueOf).orElse(DEFAULT_USE_DUMP);
-        String dumpFile = Optional.ofNullable(properties.get(DUMP_FILE_NAME)).orElse(DEFAULT_DUMP_NAME);
         return new DumpFileParameters(exportDumpFile, useDumpFile, dumpFileFolder, dumpFile);
     }
 

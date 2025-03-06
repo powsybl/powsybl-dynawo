@@ -10,11 +10,13 @@ import com.google.auto.service.AutoService;
 import com.powsybl.commons.config.ModuleConfig;
 import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.extensions.Extension;
+import com.powsybl.commons.extensions.ExtensionJsonSerializer;
 import com.powsybl.commons.parameters.Parameter;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.computation.*;
 import com.powsybl.dynamicsimulation.*;
 import com.powsybl.dynawo.commons.DynawoVersion;
+import com.powsybl.dynawo.json.DynawoSimulationParametersSerializer;
 import com.powsybl.dynawo.models.utils.BlackBoxSupplierUtils;
 import com.powsybl.dynawo.commons.DynawoUtil;
 import com.powsybl.dynawo.commons.PowsyblDynawoVersion;
@@ -109,6 +111,11 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
     @Override
     public Optional<Class<? extends Extension<DynamicSimulationParameters>>> getSpecificParametersClass() {
         return Optional.of(DynawoSimulationParameters.class);
+    }
+
+    @Override
+    public Optional<ExtensionJsonSerializer> getSpecificParametersSerializer() {
+        return Optional.of(new DynawoSimulationParametersSerializer());
     }
 
     @Override
