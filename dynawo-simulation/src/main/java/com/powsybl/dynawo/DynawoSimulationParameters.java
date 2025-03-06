@@ -26,7 +26,6 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
-import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -124,19 +123,19 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
     private Path criteriaFilePath = null;
 
     public static final List<Parameter> SPECIFIC_PARAMETERS = Stream.concat(Stream.of(
-            new Parameter(PARAMETERS_FILE, ParameterType.STRING, "Static Var Compensator regulation on", DEFAULT_INPUT_PARAMETERS_FILE),
-            new Parameter(NETWORK_PARAMETERS_FILE, ParameterType.STRING, "Static Var Compensator regulation on", DEFAULT_INPUT_NETWORK_PARAMETERS_FILE),
-            new Parameter(NETWORK_PARAMETERS_ID, ParameterType.STRING, "Static Var Compensator regulation on", DEFAULT_NETWORK_PAR_ID),
-            new Parameter(SOLVER_PARAMETERS_FILE, ParameterType.STRING, "Static Var Compensator regulation on", DEFAULT_INPUT_SOLVER_PARAMETERS_FILE),
-            new Parameter(SOLVER_PARAMETERS_ID, ParameterType.STRING, "Static Var Compensator regulation on", DEFAULT_SOLVER_PAR_ID),
-            new Parameter(SOLVER_TYPE, ParameterType.STRING, "Static Var Compensator regulation on", DEFAULT_SOLVER_TYPE, getEnumPossibleValues(SolverType.class)),
-            new Parameter(MERGE_LOADS, ParameterType.BOOLEAN, "Static Var Compensator regulation on", DEFAULT_MERGE_LOADS),
-            new Parameter(USE_MODEL_SIMPLIFIERS, ParameterType.BOOLEAN, "Static Var Compensator regulation on", DEFAULT_USE_MODEL_SIMPLIFIERS),
-            new Parameter(PRECISION, ParameterType.DOUBLE, "Static Var Compensator regulation on", DEFAULT_PRECISION),
-            new Parameter(TIMELINE_EXPORT_MODE, ParameterType.STRING, "Static Var Compensator regulation on", DEFAULT_TIMELINE_EXPORT_MODE, getEnumPossibleValues(ExportMode.class)),
-            new Parameter(LOG_LEVEL_FILTER, ParameterType.STRING, "Static Var Compensator regulation on", DEFAULT_LOG_LEVEL_FILTER, getEnumPossibleValues(LogLevel.class)),
-            new Parameter(LOG_SPECIFIC_LOGS, ParameterType.STRING, "Static Var Compensator regulation on", null, getEnumPossibleValues(SpecificLog.class)),
-            new Parameter(CRITERIA_FILE, ParameterType.STRING, "Static Var Compensator regulation on", null)),
+            new Parameter(PARAMETERS_FILE, ParameterType.STRING, "Main parameters file path", DEFAULT_INPUT_PARAMETERS_FILE),
+            new Parameter(NETWORK_PARAMETERS_FILE, ParameterType.STRING, "Network parameters file path", DEFAULT_INPUT_NETWORK_PARAMETERS_FILE),
+            new Parameter(NETWORK_PARAMETERS_ID, ParameterType.STRING, "Network parameters set id", DEFAULT_NETWORK_PAR_ID),
+            new Parameter(SOLVER_PARAMETERS_FILE, ParameterType.STRING, "Solver parameters file path", DEFAULT_INPUT_SOLVER_PARAMETERS_FILE),
+            new Parameter(SOLVER_PARAMETERS_ID, ParameterType.STRING, "Solver parameters set id", DEFAULT_SOLVER_PAR_ID),
+            new Parameter(SOLVER_TYPE, ParameterType.STRING, "Solver used in the simulation", DEFAULT_SOLVER_TYPE.toString(), getEnumPossibleValues(SolverType.class)),
+            new Parameter(MERGE_LOADS, ParameterType.BOOLEAN, "Merge loads connected to same bus", DEFAULT_MERGE_LOADS),
+            new Parameter(USE_MODEL_SIMPLIFIERS, ParameterType.BOOLEAN, "Simplifiers used before macro connection computation", DEFAULT_USE_MODEL_SIMPLIFIERS),
+            new Parameter(PRECISION, ParameterType.DOUBLE, "Simulation step precision", DEFAULT_PRECISION),
+            new Parameter(TIMELINE_EXPORT_MODE, ParameterType.STRING, "Timeline export file extension", DEFAULT_TIMELINE_EXPORT_MODE.toString(), getEnumPossibleValues(ExportMode.class)),
+            new Parameter(LOG_LEVEL_FILTER, ParameterType.STRING, "Dynawo log level", DEFAULT_LOG_LEVEL_FILTER.toString(), getEnumPossibleValues(LogLevel.class)),
+            new Parameter(LOG_SPECIFIC_LOGS, ParameterType.STRING, "List specific logs returned", null, getEnumPossibleValues(SpecificLog.class)),
+            new Parameter(CRITERIA_FILE, ParameterType.STRING, "Simulation criteria file path", null)),
             DumpFileParameters.SPECIFIC_PARAMETERS.stream()).toList();
 
     /**
@@ -179,7 +178,6 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
             });
             parameters.setDumpFileParameters(DumpFileParameters.createDumpFileParametersFromConfig(c, f -> resolveFilePath(f, platformConfig, fileSystem)));
             c.getOptionalEnumProperty(SOLVER_TYPE, SolverType.class).ifPresent(parameters::setSolverType);
-            // If merging loads on each bus to simplify dynawo's analysis
             c.getOptionalBooleanProperty(MERGE_LOADS).ifPresent(parameters::setMergeLoads);
             c.getOptionalBooleanProperty(USE_MODEL_SIMPLIFIERS).ifPresent(parameters::setUseModelSimplifiers);
             c.getOptionalDoubleProperty(PRECISION).ifPresent(parameters::setPrecision);
@@ -196,8 +194,12 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
     }
 
     public static DynawoSimulationParameters load(Map<String, String> properties) {
+        return load(properties, FileSystems.getDefault());
+    }
+
+    public static DynawoSimulationParameters load(Map<String, String> properties, FileSystem fileSystem) {
         DynawoSimulationParameters parameters = new DynawoSimulationParameters();
-        parameters.update(properties);
+        parameters.update(properties, fileSystem);
         return parameters;
     }
 
@@ -240,6 +242,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
                         Optional.ofNullable(properties.get(SOLVER_PARAMETERS_ID)).orElse(DEFAULT_SOLVER_PAR_ID)));
             }
         });
+        Optional.ofNullable(properties.get(SOLVER_TYPE)).ifPresent(prop -> setSolverType(SolverType.valueOf(prop)));
         Optional.ofNullable(properties.get(MERGE_LOADS)).ifPresent(prop -> setMergeLoads(Boolean.parseBoolean(prop)));
         Optional.ofNullable(properties.get(USE_MODEL_SIMPLIFIERS)).ifPresent(prop -> setUseModelSimplifiers(Boolean.parseBoolean(prop)));
         Optional.ofNullable(properties.get(PRECISION)).ifPresent(prop -> setPrecision(Double.parseDouble(prop)));
@@ -253,7 +256,6 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
 
     public Map<String, String> createMapFromParameters() {
         Map<String, String> properties = new HashMap<>();
-        //TODO test parameter set output - test as input parameter set serialization and path / OR we choose to never export parameters
         addNotNullEntry("modelParameters", modelsParameters, properties::put);
         addNotNullEntry("networkParameters", networkParameters, properties::put);
         addNotNullEntry("solverParameters", solverParameters, properties::put);
