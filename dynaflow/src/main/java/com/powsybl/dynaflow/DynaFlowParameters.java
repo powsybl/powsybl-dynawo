@@ -257,11 +257,15 @@ public class DynaFlowParameters extends AbstractExtension<LoadFlowParameters> {
     }
 
     public static DynaFlowParameters load(PlatformConfig platformConfig) {
-        Objects.requireNonNull(platformConfig);
         DynaFlowParameters parameters = new DynaFlowParameters();
-        platformConfig.getOptionalModuleConfig(MODULE_SPECIFIC_PARAMETERS)
-                .ifPresent(config -> load(parameters, config));
+        parameters.update(platformConfig);
         return parameters;
+    }
+
+    public void update(PlatformConfig platformConfig) {
+        Objects.requireNonNull(platformConfig);
+        platformConfig.getOptionalModuleConfig(MODULE_SPECIFIC_PARAMETERS)
+                .ifPresent(config -> load(this, config));
     }
 
     public static DynaFlowParameters load(ModuleConfig config) {
