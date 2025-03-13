@@ -29,15 +29,11 @@ import com.powsybl.dynawo.xml.ParametersXml;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.VariantManagerConstants;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.api.Test;
 
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import static com.powsybl.dynawo.contingency.results.Status.CONVERGENCE;
 import static com.powsybl.dynawo.contingency.results.Status.CRITERIA_NON_RESPECTED;
@@ -58,7 +54,29 @@ class MarginCalculationTest extends AbstractDynawoTest {
 
     private static final String GEN_ID = "_GEN____2_SM";
 
-    private final List<String> loads = List.of("_LOAD___3_EC", "_LOAD___6_EC", "_LOAD___9_EC");
+    private static final List<String> LOADS = List.of("_LOAD___3_EC", "_LOAD___6_EC", "_LOAD___9_EC");
+
+    private static final List<LoadIncreaseResult> EXPECTED_RESULTS = List.of(
+                new LoadIncreaseResult(0, CONVERGENCE,
+                        List.of(new ScenarioResult(LINE_ID, CONVERGENCE),
+                                new ScenarioResult(GEN_ID, CONVERGENCE))),
+                new LoadIncreaseResult(50, CONVERGENCE,
+                        List.of(new ScenarioResult(LINE_ID, CONVERGENCE),
+                                new ScenarioResult(GEN_ID, CONVERGENCE))),
+                new LoadIncreaseResult(75, CRITERIA_NON_RESPECTED),
+                new LoadIncreaseResult(63, CRITERIA_NON_RESPECTED),
+                new LoadIncreaseResult(57, CONVERGENCE,
+                        List.of(new ScenarioResult(LINE_ID, CRITERIA_NON_RESPECTED,
+                                        List.of(new FailedCriterion("total load power = 221.465MW > 200MW (criteria id: Risque QdE)", 174.2))),
+                                new ScenarioResult(GEN_ID, CRITERIA_NON_RESPECTED,
+                                        List.of(new FailedCriterion("total load power = 216.81MW > 200MW (criteria id: Risque QdE)", 174.2))))),
+                new LoadIncreaseResult(54, CONVERGENCE,
+                        List.of(new ScenarioResult(LINE_ID, CRITERIA_NON_RESPECTED,
+                                        List.of(new FailedCriterion("total load power = 208.882MW > 200MW (criteria id: Risque QdE)", 172.4))),
+                                new ScenarioResult(GEN_ID, CONVERGENCE))),
+                new LoadIncreaseResult(52, CONVERGENCE,
+                        List.of(new ScenarioResult(LINE_ID, CONVERGENCE),
+                                new ScenarioResult(GEN_ID, CONVERGENCE))));
 
     @Override
     @BeforeEach
@@ -78,9 +96,8 @@ class MarginCalculationTest extends AbstractDynawoTest {
                 .build();
     }
 
-    @ParameterizedTest
-    @MethodSource("provideSimulationParameter")
-    void testIeee14MC(String criteriaPath, List<Contingency> contingencies, List<Integer> variations, List<LoadIncreaseResult> expectedResults) {
+    @Test
+    void testIeee14MC() {
         Network network = Network.read(new ResourceDataSource("IEEE14", new ResourceSet("/ieee14", "IEEE14.iidm")));
 
         GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
@@ -95,7 +112,7 @@ class MarginCalculationTest extends AbstractDynawoTest {
                 .setSolverParameters(solverParameters)
                 .setSolverType(DynawoSimulationParameters.SolverType.IDA)
                 .setCriteriaFilePath(Path.of(Objects.requireNonNull(getClass()
-                        .getResource(criteriaPath)).getPath()));
+                        .getResource("/ieee14/margin-calculation/criteria.crt")).getPath()));
 
         ReportNode reportNode = ReportNode.newRootReportNode()
                 .withMessageTemplate("mc_test", "Margin calculation integration test")
@@ -106,11 +123,14 @@ class MarginCalculationTest extends AbstractDynawoTest {
                 .setMarginCalculationParameters(parameters)
                 .setReportNode(reportNode);
 
-        LoadsVariationSupplier loadsVariationSupplier = (n, r) -> IntStream
-                .range(0, loads.size())
-                .mapToObj(i -> new LoadsVariationBuilder(n, r)
-                        .loads(loads.get(i))
-                        .variationValue(variations.get(i))
+        List<Contingency> contingencies = List.of(
+                Contingency.line(LINE_ID, "_BUS____5_VL"),
+                Contingency.generator(GEN_ID));
+
+        LoadsVariationSupplier loadsVariationSupplier = (n, r) ->
+                LOADS.stream().map(load -> new LoadsVariationBuilder(n, r)
+                        .loads(load)
+                        .variationValue(10)
                         .build())
                 .toList();
 
@@ -119,41 +139,6 @@ class MarginCalculationTest extends AbstractDynawoTest {
                 .join()
                 .getLoadIncreaseResults();
 
-        assertThat(results).containsExactlyElementsOf(expectedResults);
-    }
-
-    private static Stream<Arguments> provideSimulationParameter() {
-        return Stream.of(
-                Arguments.of("/ieee14/margin-calculation/convergence/criteria.crt",
-                        List.of(Contingency.line(LINE_ID, "_BUS____5_VL"),
-                                Contingency.generator(GEN_ID)),
-                        List.of(10, 10, 10),
-                        List.of(
-                            new LoadIncreaseResult(0, CONVERGENCE,
-                                    List.of(new ScenarioResult(LINE_ID, CONVERGENCE),
-                                            new ScenarioResult(GEN_ID, CONVERGENCE))),
-                            new LoadIncreaseResult(50, CONVERGENCE,
-                                    List.of(new ScenarioResult(LINE_ID, CONVERGENCE),
-                                            new ScenarioResult(GEN_ID, CONVERGENCE))),
-                            new LoadIncreaseResult(75, CRITERIA_NON_RESPECTED),
-                            new LoadIncreaseResult(63, CRITERIA_NON_RESPECTED),
-                            new LoadIncreaseResult(57, CONVERGENCE,
-                                    List.of(new ScenarioResult(LINE_ID, CRITERIA_NON_RESPECTED,
-                                                    List.of(new FailedCriterion("total load power = 221.465MW > 200MW (criteria id: Risque QdE)", 174.2))),
-                                            new ScenarioResult(GEN_ID, CRITERIA_NON_RESPECTED,
-                                                    List.of(new FailedCriterion("total load power = 216.81MW > 200MW (criteria id: Risque QdE)", 174.2))))),
-                            new LoadIncreaseResult(54, CONVERGENCE,
-                                    List.of(new ScenarioResult(LINE_ID, CRITERIA_NON_RESPECTED,
-                                                    List.of(new FailedCriterion("total load power = 208.882MW > 200MW (criteria id: Risque QdE)", 172.4))),
-                                            new ScenarioResult(GEN_ID, CONVERGENCE))),
-                            new LoadIncreaseResult(52, CONVERGENCE,
-                                    List.of(new ScenarioResult(LINE_ID, CONVERGENCE),
-                                            new ScenarioResult(GEN_ID, CONVERGENCE)))))
-                //TODO add divergence test
-//                Arguments.of("/ieee14/dynamic-security-analysis/convergence/criteria.crt",
-//                        List.of(Contingency.generator(GEN_ID)),
-//                        List.of(20, 10, 10),
-//                        List.of())
-        );
+        assertThat(results).containsExactlyElementsOf(EXPECTED_RESULTS);
     }
 }
