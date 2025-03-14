@@ -51,7 +51,7 @@ class HvdcXmlTest extends AbstractParametrizedDynamicModelXmlTest {
     @ParameterizedTest(name = "{0}")
     @MethodSource("provideHvdc")
     void writeHvdcModel(String dydName, Function< Network, BlackBoxModel> constructor) throws SAXException, IOException {
-        DydXml.write(tmpDir, context);
+        DydXml.write(tmpDir, context.getSimulationDydData());
         validate("dyd.xsd", dydName, tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
     }
 

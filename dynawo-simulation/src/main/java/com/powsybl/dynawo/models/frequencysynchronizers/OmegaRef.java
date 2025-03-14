@@ -7,7 +7,6 @@
 package com.powsybl.dynawo.models.frequencysynchronizers;
 
 import com.powsybl.commons.PowsyblException;
-import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.VarConnection;
@@ -35,19 +34,24 @@ import static com.powsybl.dynawo.parameters.ParameterType.INT;
  */
 public class OmegaRef extends AbstractFrequencySynchronizer {
 
-    public OmegaRef(List<FrequencySynchronizedModel> synchronizedEquipments) {
-        super(synchronizedEquipments, new ModelConfig("DYNModelOmegaRef"));
+    private static final ModelConfig MODEL_CONFIG = new ModelConfig("DYNModelOmegaRef");
+
+    private final DynawoSimulationParameters dynawoParameters;
+
+    public OmegaRef(List<FrequencySynchronizedModel> synchronizedEquipments, String defaultParFile,
+                    DynawoSimulationParameters dynawoParameters) {
+        super(synchronizedEquipments, MODEL_CONFIG, defaultParFile);
+        this.dynawoParameters = dynawoParameters;
     }
 
     @Override
-    public void createDynamicModelParameters(DynawoSimulationContext context, Consumer<ParametersSet> parametersAdder) {
+    public void createDynamicModelParameters(Consumer<ParametersSet> parametersAdder) {
         ParametersSet paramSet = new ParametersSet(getParameterSetId());
-        DynawoSimulationParameters dynawoSimulationParameters = context.getDynawoSimulationParameters();
         // The dynamic models are declared in the DYD following the order of dynamic models' supplier.
         // The OmegaRef parameters index the weight of each generator according to that declaration order.
         int index = 0;
         for (FrequencySynchronizedModel eq : synchronizedEquipments) {
-            paramSet.addParameter("weight_gen_" + index, DOUBLE, Double.toString(eq.getWeightGen(dynawoSimulationParameters)));
+            paramSet.addParameter("weight_gen_" + index, DOUBLE, Double.toString(eq.getWeightGen(dynawoParameters)));
             index++;
         }
         paramSet.addParameter("nbGen", INT, Long.toString(synchronizedEquipments.size()));
