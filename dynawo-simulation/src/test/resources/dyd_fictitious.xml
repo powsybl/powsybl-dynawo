@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
-    <dyn:blackBoxModel id="BBM_GEN6" lib="GeneratorFictitious" parFile="models.par" parId="GF" staticId="GEN6">
+    <dyn:blackBoxModel id="GEN6" lib="GeneratorFictitious" parFile="models.par" parId="GF" staticId="GEN6">
         <dyn:macroStaticRef id="MSR_GeneratorFictitious"/>
     </dyn:blackBoxModel>
     <dyn:macroConnector id="MC_GeneratorFictitious-DefaultEquipmentConnectionPoint">
@@ -12,5 +12,5 @@
         <dyn:staticRef var="generator_QGenPu" staticVar="q"/>
         <dyn:staticRef var="generator_state" staticVar="state"/>
     </dyn:macroStaticReference>
-    <dyn:macroConnect connector="MC_GeneratorFictitious-DefaultEquipmentConnectionPoint" id1="BBM_GEN6" id2="NETWORK"/>
+    <dyn:macroConnect connector="MC_GeneratorFictitious-DefaultEquipmentConnectionPoint" id1="GEN6" id2="NETWORK"/>
 </dyn:dynamicModelsArchitecture>

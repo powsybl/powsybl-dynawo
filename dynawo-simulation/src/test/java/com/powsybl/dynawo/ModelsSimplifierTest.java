@@ -47,18 +47,15 @@ class ModelsSimplifierTest {
     void simplifyModels() {
         Network network = EurostagTutorialExample1Factory.create();
         List<BlackBoxModel> dynamicModels = List.of(
-                BaseGeneratorBuilder.of(network)
-                        .dynamicModelId("BBM_GEN")
+                BaseGeneratorBuilder.of(network, "GeneratorPVFixed")
                         .staticId("GEN")
                         .parameterSetId("GPV")
                         .build(),
                 BaseLoadBuilder.of(network, "LoadAlphaBeta")
-                        .dynamicModelId("BBM_LOAD")
                         .staticId("LOAD")
                         .parameterSetId("LOAD")
                         .build(),
                 TransformerFixedRatioBuilder.of(network)
-                        .dynamicModelId("BBM_NGEN_NHV1")
                         .staticId("NGEN_NHV1")
                         .parameterSetId("TR")
                         .build());
@@ -67,15 +64,15 @@ class ModelsSimplifierTest {
                 .dynawoParameters(DynawoSimulationParameters.load().setUseModelSimplifiers(true))
                 .build();
         assertEquals(2, context.getBlackBoxDynamicModels().size());
-        assertFalse(context.getBlackBoxDynamicModels().stream().anyMatch(bbm -> bbm.getDynamicModelId().equalsIgnoreCase("BBM_LOAD")));
-        assertTrue(context.getBlackBoxDynamicModels().stream().anyMatch(bbm -> bbm.getDynamicModelId().equalsIgnoreCase("newModel")));
+        assertFalse(context.getBlackBoxDynamicModels().stream().anyMatch(bbm -> bbm.getDynamicModelId().equalsIgnoreCase("LOAD")));
+        assertTrue(context.getBlackBoxDynamicModels().stream().anyMatch(bbm -> bbm.getDynamicModelId().equalsIgnoreCase("GEN") && bbm.getLib().equalsIgnoreCase("GeneratorFictitious")));
     }
 
     @AutoService(ModelsRemovalSimplifier.class)
     public static class ModelsSimplifierFilter implements ModelsRemovalSimplifier {
         @Override
         public Predicate<BlackBoxModel> getModelRemovalPredicate(ReportNode reportNode) {
-            return m -> !m.getDynamicModelId().equalsIgnoreCase("BBM_LOAD");
+            return m -> !m.getDynamicModelId().equalsIgnoreCase("LOAD");
         }
     }
 
@@ -84,10 +81,9 @@ class ModelsSimplifierTest {
         @Override
         public Function<BlackBoxModel, BlackBoxModel> getModelSubstitutionFunction(Network network, DynawoSimulationParameters dynawoSimulationParameters, ReportNode reportNode) {
             return m -> {
-                if ("BBM_GEN".equalsIgnoreCase(m.getDynamicModelId()) && m instanceof BaseGenerator gen) {
-                    return BaseGeneratorBuilder.of(network)
-                            .dynamicModelId("newModel")
-                            .staticId(gen.getStaticId())
+                if ("GEN".equalsIgnoreCase(m.getDynamicModelId()) && m instanceof BaseGenerator gen) {
+                    return BaseGeneratorBuilder.of(network, "GeneratorFictitious")
+                            .staticId(gen.getDynamicModelId())
                             .parameterSetId("G")
                             .build();
                 }

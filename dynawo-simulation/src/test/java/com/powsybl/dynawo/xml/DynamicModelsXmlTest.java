@@ -12,6 +12,7 @@ import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.models.BlackBoxModel;
+import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterPAutomationSystemBuilder;
 import com.powsybl.dynawo.models.generators.BaseGeneratorBuilder;
 import com.powsybl.dynawo.models.lines.LineModel;
 import com.powsybl.dynawo.models.loads.BaseLoad;
@@ -48,7 +49,6 @@ class DynamicModelsXmlTest extends DynawoTestUtil {
     void writeDynamicModelWithLoadsAndOnlyOneFictitiousGenerator() throws SAXException, IOException {
         dynamicModels.clear();
         dynamicModels.add(BaseGeneratorBuilder.of(network)
-                .dynamicModelId("BBM_GEN6")
                 .staticId("GEN6")
                 .parameterSetId("GF")
                 .build());
@@ -66,12 +66,10 @@ class DynamicModelsXmlTest extends DynawoTestUtil {
     void duplicateStaticId() {
         dynamicModels.clear();
         BaseLoad load1 = BaseLoadBuilder.of(network, "LoadAlphaBeta")
-                .dynamicModelId("BBM_LOAD")
                 .staticId("LOAD")
                 .parameterSetId("lab")
                 .build();
         BaseLoad load2 = BaseLoadBuilder.of(network, "LoadAlphaBeta")
-                .dynamicModelId("BBM_LOAD2")
                 .staticId("LOAD")
                 .parameterSetId("LAB")
                 .build();
@@ -87,32 +85,31 @@ class DynamicModelsXmlTest extends DynawoTestUtil {
 
     @Test
     void duplicateDynamicId() {
+        String duplicatedId = "LOAD";
         dynamicModels.clear();
-        BaseLoad load1 = BaseLoadBuilder.of(network, "LoadAlphaBeta")
-                .dynamicModelId("BBM_LOAD")
-                .staticId("LOAD")
+        BaseLoad load = BaseLoadBuilder.of(network, "LoadAlphaBeta")
+                .staticId(duplicatedId)
                 .parameterSetId("lab")
                 .build();
-        BaseLoad load2 = BaseLoadBuilder.of(network, "LoadAlphaBeta")
-                .dynamicModelId("BBM_LOAD")
-                .staticId("LOAD2")
-                .parameterSetId("LAB")
+        BlackBoxModel phaseShifter = PhaseShifterPAutomationSystemBuilder.of(network)
+                .dynamicModelId(duplicatedId)
+                .transformer("NGEN_NHV1")
+                .parameterSetId("PS")
                 .build();
-        dynamicModels.add(load1);
-        dynamicModels.add(load2);
+        dynamicModels.add(load);
+        dynamicModels.add(phaseShifter);
         DynawoSimulationContext context = new DynawoSimulationContext
                 .Builder(network, dynamicModels)
                 .eventModels(eventModels)
                 .outputVariables(outputVariables)
                 .build();
-        Assertions.assertThat(context.getBlackBoxDynamicModels()).containsExactly(load1);
+        Assertions.assertThat(context.getBlackBoxDynamicModels()).containsExactly(load);
     }
 
     @Test
     void wrongDynawoVersionModel() {
         dynamicModels.clear();
         dynamicModels.add(BaseLoadBuilder.of(network, "ElectronicLoad")
-                .dynamicModelId("BBM_L")
                 .staticId("LOAD")
                 .parameterSetId("lab")
                 .build());
@@ -130,7 +127,7 @@ class DynamicModelsXmlTest extends DynawoTestUtil {
         Identifiable<?> gen = network.getIdentifiable("GEN5");
         MacroConnectionsAdder adder = new MacroConnectionsAdder(
                 id -> dynamicModels.stream()
-                        .filter(dm -> dm.getDynamicModelId().equals("BBM_" + id))
+                        .filter(dm -> dm.getDynamicModelId().equals(id))
                         .findFirst().orElse(null),
                 id -> null,
                 mc -> { },

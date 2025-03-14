@@ -28,7 +28,6 @@ class ShuntModelXmlTest extends AbstractDynamicModelXmlTest {
     @Override
     protected void addDynamicModels() {
         dynamicModels.add(BaseShuntBuilder.of(network, "ShuntB")
-                .dynamicModelId("BBM_SHUNT")
                 .staticId("SHUNT")
                 .parameterSetId("sh")
                 .build());

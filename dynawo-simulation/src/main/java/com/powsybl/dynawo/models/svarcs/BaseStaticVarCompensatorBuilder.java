@@ -71,7 +71,7 @@ public class BaseStaticVarCompensatorBuilder extends AbstractEquipmentModelBuild
 
     @Override
     public BaseStaticVarCompensator build() {
-        return isInstantiable() ? new BaseStaticVarCompensator(dynamicModelId, getEquipment(), parameterSetId, modelConfig) : null;
+        return isInstantiable() ? new BaseStaticVarCompensator(getEquipment(), parameterSetId, modelConfig) : null;
     }
 
     @Override

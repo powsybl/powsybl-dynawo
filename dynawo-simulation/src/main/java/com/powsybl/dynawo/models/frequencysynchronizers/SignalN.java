@@ -40,7 +40,7 @@ public class SignalN extends AbstractPureDynamicBlackBoxModel {
             adder.createMacroConnections(this, eq, getVarConnectionsWith(eq));
         }
         SignalNModel firstModel = signalNEquipments.get(0);
-        BusOfSignalNModel busOf = new DefaultBusOfSignalN(firstModel.getConnectableBus().getId(), firstModel.getStaticId());
+        BusOfSignalNModel busOf = DefaultBusOfSignalN.of(firstModel);
         adder.createMacroConnections(this, busOf, getVarConnectionsWithBus(busOf));
     }
 

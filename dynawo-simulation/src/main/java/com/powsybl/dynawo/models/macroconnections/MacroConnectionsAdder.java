@@ -226,12 +226,7 @@ public final class MacroConnectionsAdder {
         if (connectableClass.isInstance(bbm)) {
             return connectableClass.cast(bbm);
         }
-        if (throwException) {
-            throw new PowsyblException(String.format(MODEL_ID_EXCEPTION, equipment.getId(), connectableClass.getSimpleName()));
-        } else {
-            LOGGER.warn(MODEL_ID_LOG, equipment.getId(), connectableClass.getSimpleName());
-            return null;
-        }
+        return handleModelNotFound(equipment.getId(), connectableClass, throwException);
     }
 
     private <T extends Model> T getPureDynamicModel(String dynamicId, Class<T> connectableClass, boolean throwException) {
@@ -247,10 +242,14 @@ public final class MacroConnectionsAdder {
         if (connectableClass.isInstance(bbm)) {
             return connectableClass.cast(bbm);
         }
+        return handleModelNotFound(dynamicId, connectableClass, throwException);
+    }
+
+    private <T extends Model> T handleModelNotFound(String id, Class<T> connectableClass, boolean throwException) {
         if (throwException) {
-            throw new PowsyblException(String.format(MODEL_ID_EXCEPTION, dynamicId, connectableClass.getSimpleName()));
+            throw new PowsyblException(String.format(MODEL_ID_EXCEPTION, id, connectableClass.getSimpleName()));
         } else {
-            LOGGER.warn(MODEL_ID_LOG, dynamicId, connectableClass.getSimpleName());
+            LOGGER.warn(MODEL_ID_LOG, id, connectableClass.getSimpleName());
             return null;
         }
     }

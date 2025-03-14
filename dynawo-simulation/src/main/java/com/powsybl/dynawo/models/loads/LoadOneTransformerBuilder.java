@@ -64,7 +64,7 @@ public class LoadOneTransformerBuilder extends AbstractLoadModelBuilder<LoadOneT
 
     @Override
     public LoadOneTransformer build() {
-        return isInstantiable() ? new LoadOneTransformer(dynamicModelId, getEquipment(), parameterSetId, modelConfig) : null;
+        return isInstantiable() ? new LoadOneTransformer(getEquipment(), parameterSetId, modelConfig) : null;
     }
 
     @Override

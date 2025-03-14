@@ -20,7 +20,6 @@ import java.util.function.Predicate;
  */
 public abstract class AbstractEquipmentModelBuilder<T extends Identifiable<?>, R extends AbstractEquipmentModelBuilder<T, R>> extends AbstractDynamicModelBuilder implements EquipmentModelBuilder<T, R> {
 
-    protected String dynamicModelId;
     protected String parameterSetId;
     protected final ModelConfig modelConfig;
     protected final BuilderEquipment<T> builderEquipment;
@@ -51,12 +50,6 @@ public abstract class AbstractEquipmentModelBuilder<T extends Identifiable<?>, R
     }
 
     @Override
-    public R dynamicModelId(String dynamicModelId) {
-        this.dynamicModelId = dynamicModelId;
-        return self();
-    }
-
-    @Override
     public R parameterSetId(String parameterSetId) {
         this.parameterSetId = parameterSetId;
         return self();
@@ -68,10 +61,6 @@ public abstract class AbstractEquipmentModelBuilder<T extends Identifiable<?>, R
         if (parameterSetId == null) {
             BuilderReports.reportFieldNotSet(reportNode, "parameterSetId");
             isInstantiable = false;
-        }
-        if (dynamicModelId == null) {
-            BuilderReports.reportFieldReplacement(reportNode, "dynamicModelId", "staticId", builderEquipment.hasStaticId() ? builderEquipment.getStaticId() : "(unknown staticId)");
-            dynamicModelId = builderEquipment.getStaticId();
         }
     }
 
@@ -91,7 +80,7 @@ public abstract class AbstractEquipmentModelBuilder<T extends Identifiable<?>, R
 
     @Override
     public String getModelId() {
-        return dynamicModelId != null ? dynamicModelId : "unknownDynamicId";
+        return builderEquipment.hasStaticId() ? builderEquipment.getStaticId() : "unknownId";
     }
 
     protected abstract R self();

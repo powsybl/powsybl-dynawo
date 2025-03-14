@@ -66,9 +66,9 @@ public class WeccBuilder extends AbstractGeneratorBuilder<WeccBuilder> {
     public WeccGen build() {
         if (isInstantiable()) {
             if (modelConfig.isSynchronized()) {
-                return new SynchronizedWeccGen(dynamicModelId, getEquipment(), parameterSetId, modelConfig, modelConfig.internalModelPrefix());
+                return new SynchronizedWeccGen(getEquipment(), parameterSetId, modelConfig, modelConfig.internalModelPrefix());
             } else {
-                return new WeccGen(dynamicModelId, getEquipment(), parameterSetId, modelConfig, modelConfig.internalModelPrefix());
+                return new WeccGen(getEquipment(), parameterSetId, modelConfig, modelConfig.internalModelPrefix());
             }
         }
         return null;

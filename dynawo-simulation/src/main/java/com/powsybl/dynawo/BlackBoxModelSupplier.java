@@ -7,7 +7,6 @@
  */
 package com.powsybl.dynawo;
 
-import com.powsybl.dynawo.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.EquipmentBlackBoxModel;
 import com.powsybl.iidm.network.Identifiable;
@@ -22,42 +21,34 @@ import java.util.stream.Collectors;
  */
 public final class BlackBoxModelSupplier {
 
-    private final Map<String, EquipmentBlackBoxModel> staticIdBlackBoxModelMap;
+    private final Map<String, BlackBoxModel> dynamicModelMap;
     private final Map<String, BlackBoxModel> pureDynamicModelMap;
 
     public static BlackBoxModelSupplier createFrom(List<BlackBoxModel> dynamicModels) {
-        return new BlackBoxModelSupplier(createStaticIdBlackBoxModelMap(dynamicModels),
-                createPureDynamicModelMap(dynamicModels));
+        Map<Boolean, Map<String, BlackBoxModel>> maps = createDynamicModelMaps(dynamicModels);
+        return new BlackBoxModelSupplier(maps.get(true), maps.get(false));
     }
 
     public static BlackBoxModelSupplier createFrom(BlackBoxModelSupplier bbmSupplier, List<BlackBoxModel> dynamicModels) {
-        Map<String, EquipmentBlackBoxModel> newStaticIdBlackBoxModelMap = createStaticIdBlackBoxModelMap(dynamicModels);
-        Map<String, BlackBoxModel> newPureDynamicModelMap = createPureDynamicModelMap(dynamicModels);
-        newStaticIdBlackBoxModelMap.putAll(bbmSupplier.staticIdBlackBoxModelMap);
-        newPureDynamicModelMap.putAll(bbmSupplier.pureDynamicModelMap);
-        return new BlackBoxModelSupplier(newStaticIdBlackBoxModelMap, newPureDynamicModelMap);
+        Map<Boolean, Map<String, BlackBoxModel>> newMaps = createDynamicModelMaps(dynamicModels);
+        newMaps.get(true).putAll(bbmSupplier.dynamicModelMap);
+        newMaps.get(false).putAll(bbmSupplier.pureDynamicModelMap);
+        return new BlackBoxModelSupplier(newMaps.get(true), newMaps.get(false));
     }
 
-    private static Map<String, EquipmentBlackBoxModel> createStaticIdBlackBoxModelMap(List<BlackBoxModel> dynamicModels) {
+    private static Map<Boolean, Map<String, BlackBoxModel>> createDynamicModelMaps(List<BlackBoxModel> dynamicModels) {
         return dynamicModels.stream()
-                .filter(EquipmentBlackBoxModel.class::isInstance)
-                .map(EquipmentBlackBoxModel.class::cast)
-                .collect(Collectors.toMap(EquipmentBlackBoxModel::getStaticId, Function.identity()));
+                .collect(Collectors.partitioningBy(EquipmentBlackBoxModel.class::isInstance,
+                        Collectors.toMap(BlackBoxModel::getDynamicModelId, Function.identity())));
     }
 
-    private static Map<String, BlackBoxModel> createPureDynamicModelMap(List<BlackBoxModel> dynamicModels) {
-        return dynamicModels.stream()
-                .filter(AbstractPureDynamicBlackBoxModel.class::isInstance)
-                .collect(Collectors.toMap(BlackBoxModel::getDynamicModelId, Function.identity()));
-    }
-
-    private BlackBoxModelSupplier(Map<String, EquipmentBlackBoxModel> staticIdBlackBoxModelMap, Map<String, BlackBoxModel> pureDynamicModelMap) {
-        this.staticIdBlackBoxModelMap = staticIdBlackBoxModelMap;
+    private BlackBoxModelSupplier(Map<String, BlackBoxModel> dynamicModelMap, Map<String, BlackBoxModel> pureDynamicModelMap) {
+        this.dynamicModelMap = dynamicModelMap;
         this.pureDynamicModelMap = pureDynamicModelMap;
     }
 
-    public EquipmentBlackBoxModel getStaticIdBlackBoxModel(String id) {
-        return staticIdBlackBoxModelMap.get(id);
+    public BlackBoxModel getEquipmentDynamicModel(String id) {
+        return dynamicModelMap.get(id);
     }
 
     public BlackBoxModel getPureDynamicModel(String id) {
@@ -65,6 +56,6 @@ public final class BlackBoxModelSupplier {
     }
 
     public boolean hasDynamicModel(Identifiable<?> equipment) {
-        return staticIdBlackBoxModelMap.containsKey(equipment.getId());
+        return dynamicModelMap.containsKey(equipment.getId());
     }
 }

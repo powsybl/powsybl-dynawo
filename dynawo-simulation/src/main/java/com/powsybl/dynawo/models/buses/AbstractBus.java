@@ -24,14 +24,14 @@ import java.util.Optional;
  */
 public abstract class AbstractBus extends AbstractEquipmentBlackBoxModel<Bus> implements EquipmentConnectionPoint, ActionConnectionPoint {
 
-    protected AbstractBus(String dynamicModelId, Bus bus, String parameterSetId, ModelConfig modelConfig) {
-        super(dynamicModelId, parameterSetId, bus, modelConfig);
+    protected AbstractBus(Bus bus, String parameterSetId, ModelConfig modelConfig) {
+        super(bus, parameterSetId, modelConfig);
     }
 
     @Override
     public List<MacroConnectAttribute> getMacroConnectToAttributes() {
         List<MacroConnectAttribute> attributesConnectTo = new ArrayList<>(super.getMacroConnectToAttributes());
-        attributesConnectTo.add(MacroConnectAttribute.of("name2", getStaticId()));
+        attributesConnectTo.add(MacroConnectAttribute.of("name2", getDynamicModelId()));
         return attributesConnectTo;
     }
 
@@ -39,7 +39,7 @@ public abstract class AbstractBus extends AbstractEquipmentBlackBoxModel<Bus> im
         equipment.getConnectedTerminalStream().forEach(t -> {
             if (!adder.checkMacroConnections(t.getConnectable(), EquipmentBlackBoxModel.class)) {
                 throw new PowsyblException(String.format("The equipment %s linked to the %s %s does not possess a dynamic model",
-                        t.getConnectable().getId(), this.getClass().getSimpleName(), getStaticId()));
+                        t.getConnectable().getId(), this.getClass().getSimpleName(), getDynamicModelId()));
             }
         });
     }

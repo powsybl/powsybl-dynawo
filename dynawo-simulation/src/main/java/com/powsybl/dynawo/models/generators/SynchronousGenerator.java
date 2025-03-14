@@ -27,8 +27,8 @@ public class SynchronousGenerator extends BaseGenerator implements FrequencySync
 
     private final EnumGeneratorComponent generatorComponent;
 
-    protected SynchronousGenerator(String dynamicModelId, Generator generator, String parameterSetId, ModelConfig modelConfig, EnumGeneratorComponent generatorComponent) {
-        super(dynamicModelId, generator, parameterSetId, modelConfig);
+    protected SynchronousGenerator(Generator generator, String parameterSetId, ModelConfig modelConfig, EnumGeneratorComponent generatorComponent) {
+        super(generator, parameterSetId, modelConfig);
         this.generatorComponent = Objects.requireNonNull(generatorComponent);
     }
 
