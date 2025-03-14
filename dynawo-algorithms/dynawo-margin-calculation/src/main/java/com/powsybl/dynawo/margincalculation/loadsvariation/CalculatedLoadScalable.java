@@ -18,12 +18,14 @@ public class CalculatedLoadScalable extends LoadScalable implements CalculatedPo
 
     private final Load load;
 
-    private Double calculatedP0 = Double.NaN;
-    private Double calculatedQ0 = Double.NaN;
+    private Double calculatedP0;
+    private Double calculatedQ0;
 
     CalculatedLoadScalable(Load load) {
         super(load.getId());
         this.load = load;
+        calculatedP0 = load.getP0();
+        calculatedQ0 = load.getQ0();
     }
 
     @Override
@@ -33,7 +35,7 @@ public class CalculatedLoadScalable extends LoadScalable implements CalculatedPo
 
     @Override
     protected double getP0(Load l) {
-        return calculatedP0.isNaN() ? l.getP0() : calculatedP0;
+        return calculatedP0;
     }
 
     @Override
@@ -43,7 +45,7 @@ public class CalculatedLoadScalable extends LoadScalable implements CalculatedPo
 
     @Override
     protected double getQ0(Load l) {
-        return calculatedQ0.isNaN() ? l.getQ0() : calculatedQ0;
+        return calculatedQ0;
     }
 
     @Override
