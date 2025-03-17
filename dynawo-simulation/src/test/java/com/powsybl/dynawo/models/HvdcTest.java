@@ -65,6 +65,7 @@ class HvdcTest {
     @Test
     void testDefaultDanglingSide() {
         ReportNode reportNode = ReportNode.newRootReportNode()
+                .withAllResourceBundlesFromClasspath()
                 .withMessageTemplate("hvdcBuilder", "HVDC builder")
                 .build();
         Network network = HvdcTestNetwork.createVsc();

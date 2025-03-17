@@ -74,7 +74,9 @@ class DynaFlowTest extends AbstractDynawoTest {
                 .setPermanentLimit(200)
                 .add();
 
-        ReportNode reportNode = ReportNode.newRootReportNode().withMessageTemplate("root", "testLf root report").build();
+        ReportNode reportNode = ReportNode.newRootReportNode()
+                .withAllResourceBundlesFromClasspath()
+                .withMessageTemplate("root", "testLf root report").build();
         LoadFlowResult result = loadFlowProvider.run(network, computationManager, VariantManagerConstants.INITIAL_VARIANT_ID, loadFlowParameters, reportNode)
                 .join();
 
@@ -107,7 +109,9 @@ class DynaFlowTest extends AbstractDynawoTest {
         network.getVoltageLevelStream().forEach(vl -> vl.setLowVoltageLimit(vl.getNominalV() * 0.97));
 
         // Launching a load flow before the security analysis is required
-        ReportNode reportNodeLf = ReportNode.newRootReportNode().withMessageTemplate("root", "Root message").build();
+        ReportNode reportNodeLf = ReportNode.newRootReportNode()
+                .withAllResourceBundlesFromClasspath()
+                .withMessageTemplate("root", "Root message").build();
         loadFlowProvider.run(network, computationManager, VariantManagerConstants.INITIAL_VARIANT_ID, loadFlowParameters, reportNodeLf).join();
 
         StringWriter swReportNodeLf = new StringWriter();
@@ -121,7 +125,9 @@ class DynaFlowTest extends AbstractDynawoTest {
                 .map(l -> Contingency.line(l.getId()))
                 .toList();
 
-        ReportNode reportNode = ReportNode.newRootReportNode().withMessageTemplate("root", "Root message").build();
+        ReportNode reportNode = ReportNode.newRootReportNode()
+                .withAllResourceBundlesFromClasspath()
+                .withMessageTemplate("root", "Root message").build();
         SecurityAnalysisRunParameters runParameters = new SecurityAnalysisRunParameters()
                 .setComputationManager(computationManager)
                 .setSecurityAnalysisParameters(securityAnalysisParameters)
