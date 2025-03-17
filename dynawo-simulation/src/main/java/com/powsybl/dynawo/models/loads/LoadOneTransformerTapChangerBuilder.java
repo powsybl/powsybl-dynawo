@@ -64,7 +64,7 @@ public class LoadOneTransformerTapChangerBuilder extends AbstractLoadModelBuilde
 
     @Override
     public LoadOneTransformerTapChanger build() {
-        return isInstantiable() ? new LoadOneTransformerTapChanger(dynamicModelId, getEquipment(), parameterSetId, modelConfig) : null;
+        return isInstantiable() ? new LoadOneTransformerTapChanger(getEquipment(), parameterSetId, modelConfig) : null;
     }
 
     @Override

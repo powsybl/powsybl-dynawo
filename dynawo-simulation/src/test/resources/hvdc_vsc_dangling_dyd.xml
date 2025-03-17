@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
-    <dyn:blackBoxModel id="BBM_L" lib="HvdcVscDanglingP" parFile="models.par" parId="hv" staticId="L">
+    <dyn:blackBoxModel id="L" lib="HvdcVscDanglingP" parFile="models.par" parId="hv" staticId="L">
         <dyn:macroStaticRef id="MSR_HvdcVscDanglingP"/>
     </dyn:blackBoxModel>
     <dyn:macroConnector id="MC_HvdcVscDanglingPSide2-DefaultEquipmentConnectionPoint">
@@ -18,6 +18,6 @@
         <dyn:staticRef var="hvdc_QInj2Pu" staticVar="q2"/>
         <dyn:staticRef var="hvdc_state" staticVar="state2"/>
     </dyn:macroStaticReference>
-    <dyn:macroConnect connector="MC_HvdcVscDanglingPSide2-DefaultEquipmentConnectionPoint" id1="BBM_L" id2="NETWORK"/>
-    <dyn:macroConnect connector="MC_HvdcVscDanglingPSide1-DefaultEquipmentConnectionPoint" id1="BBM_L" id2="NETWORK"/>
+    <dyn:macroConnect connector="MC_HvdcVscDanglingPSide2-DefaultEquipmentConnectionPoint" id1="L" id2="NETWORK"/>
+    <dyn:macroConnect connector="MC_HvdcVscDanglingPSide1-DefaultEquipmentConnectionPoint" id1="L" id2="NETWORK"/>
 </dyn:dynamicModelsArchitecture>

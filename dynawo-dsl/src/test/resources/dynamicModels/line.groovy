@@ -10,7 +10,6 @@ package dynamicModels
 
 Line {
     staticId "NHV1_NHV2_1"
-    dynamicModelId "BBM_NHV1_NHV2_1"
     parameterSetId "LINE"
 }
 

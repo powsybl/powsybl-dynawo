@@ -10,6 +10,5 @@ package dynamicModels
 
 StaticVarCompensatorPV {
     staticId "SVC2"
-    dynamicModelId "BBM_SVARC"
     parameterSetId "svarc"
 }

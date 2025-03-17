@@ -26,8 +26,8 @@ public class StandardBus extends AbstractBus {
             new VarMapping("bus_UPu", "v"),
             new VarMapping("bus_UPhase", "angle"));
 
-    protected StandardBus(String dynamicModelId, Bus bus, String parameterSetId, ModelConfig modelConfig) {
-        super(dynamicModelId, bus, parameterSetId, modelConfig);
+    protected StandardBus(Bus bus, String parameterSetId, ModelConfig modelConfig) {
+        super(bus, parameterSetId, modelConfig);
     }
 
     @Override

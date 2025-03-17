@@ -21,8 +21,8 @@ import java.util.List;
  */
 public class SynchronizedLoad extends BaseLoad implements FrequencySynchronizedModel {
 
-    protected SynchronizedLoad(String dynamicModelId, Load load, String parameterSetId, ModelConfig modelConfig) {
-        super(dynamicModelId, load, parameterSetId, modelConfig);
+    protected SynchronizedLoad(Load load, String parameterSetId, ModelConfig modelConfig) {
+        super(load, parameterSetId, modelConfig);
     }
 
     @Override

@@ -28,7 +28,6 @@ class BaseGeneratorModelXmlTest extends AbstractDynamicModelXmlTest {
     @Override
     protected void addDynamicModels() {
         dynamicModels.add(BaseGeneratorBuilder.of(network, "GeneratorPVFixed")
-                .dynamicModelId("BBM_GEN")
                 .staticId("GEN")
                 .parameterSetId("g")
                 .build());

@@ -33,7 +33,6 @@ import java.util.stream.Stream;
 class DisconnectHvdcEventXmlTest extends AbstractParametrizedDynamicModelXmlTest {
 
     private static final String HVDC_NAME = "L";
-    private static final String DYN_HVDC_NAME = "BBM_HVDC";
 
     @BeforeEach
     void setup(String dydName, Function< Network, BlackBoxModel> hvdcConstructor, Function< Network, BlackBoxModel> disconnectConstructor) {
@@ -73,7 +72,6 @@ class DisconnectHvdcEventXmlTest extends AbstractParametrizedDynamicModelXmlTest
                                 .build()),
                 Arguments.of("disconnect_hvdc_pv_dyd.xml",
                         (Function<Network, BlackBoxModel>) n -> HvdcPBuilder.of(n, "HvdcPV")
-                                .dynamicModelId(DYN_HVDC_NAME)
                                 .staticId(HVDC_NAME)
                                 .parameterSetId("hvdc")
                                 .build(),
@@ -84,7 +82,6 @@ class DisconnectHvdcEventXmlTest extends AbstractParametrizedDynamicModelXmlTest
                                 .build()),
                 Arguments.of("disconnect_hvdc_vsc_dyd.xml",
                         (Function<Network, BlackBoxModel>) n -> HvdcVscBuilder.of(n, "HvdcVsc")
-                                .dynamicModelId(DYN_HVDC_NAME)
                                 .staticId(HVDC_NAME)
                                 .parameterSetId("hvdc")
                                 .build(),
@@ -95,7 +92,6 @@ class DisconnectHvdcEventXmlTest extends AbstractParametrizedDynamicModelXmlTest
                                 .build()),
                 Arguments.of("disconnect_hvdc_pv_dangling_dyd.xml",
                         (Function<Network, BlackBoxModel>) n -> HvdcPBuilder.of(n, "HvdcPVDangling")
-                                .dynamicModelId(DYN_HVDC_NAME)
                                 .staticId(HVDC_NAME)
                                 .parameterSetId("hvdc")
                                 .dangling(TwoSides.TWO)
@@ -107,7 +103,6 @@ class DisconnectHvdcEventXmlTest extends AbstractParametrizedDynamicModelXmlTest
                                 .build()),
                 Arguments.of("disconnect_hvdc_vsc_dangling_dyd.xml",
                         (Function<Network, BlackBoxModel>) n -> HvdcVscBuilder.of(n, "HvdcVscDanglingUdc")
-                                .dynamicModelId(DYN_HVDC_NAME)
                                 .staticId(HVDC_NAME)
                                 .parameterSetId("hvdc")
                                 .dangling(TwoSides.TWO)

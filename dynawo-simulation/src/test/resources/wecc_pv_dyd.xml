@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
-    <dyn:blackBoxModel id="BBM_WT" lib="PhotovoltaicsWeccCurrentSource" parFile="models.par" parId="Wind" staticId="GEN">
+    <dyn:blackBoxModel id="GEN" lib="PhotovoltaicsWeccCurrentSource" parFile="models.par" parId="Wind" staticId="GEN">
         <dyn:macroStaticRef id="MSR_PhotovoltaicsWeccCurrentSource"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="FREQ_SYNC" lib="DYNModelOmegaRef" parFile="sim1.par" parId="FREQ_SYNC_PAR"/>
@@ -19,7 +19,7 @@
         <dyn:staticRef var="photovoltaics_measurements_QPuSnRef" staticVar="q"/>
         <dyn:staticRef var="photovoltaics_injector_state" staticVar="state"/>
     </dyn:macroStaticReference>
-    <dyn:macroConnect connector="MC_PhotovoltaicsWeccCurrentSource-DefaultEquipmentConnectionPoint" id1="BBM_WT" id2="NETWORK"/>
-    <dyn:macroConnect connector="MC_DYNModelOmegaRef-PhotovoltaicsWeccCurrentSource" id1="FREQ_SYNC" index1="0" id2="BBM_WT"/>
+    <dyn:macroConnect connector="MC_PhotovoltaicsWeccCurrentSource-DefaultEquipmentConnectionPoint" id1="GEN" id2="NETWORK"/>
+    <dyn:macroConnect connector="MC_DYNModelOmegaRef-PhotovoltaicsWeccCurrentSource" id1="FREQ_SYNC" index1="0" id2="GEN"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRef-DefaultBusOfFrequencySynchronized" id1="FREQ_SYNC" index1="0" id2="NETWORK" name2="GEN"/>
 </dyn:dynamicModelsArchitecture>

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
-    <dyn:blackBoxModel id="BBM_GEN" lib="GeneratorFictitious" parFile="models.par" parId="gen" staticId="G1">
+    <dyn:blackBoxModel id="G1" lib="GeneratorFictitious" parFile="models.par" parId="gen" staticId="G1">
         <dyn:macroStaticRef id="MSR_GeneratorFictitious"/>
     </dyn:blackBoxModel>
-    <dyn:blackBoxModel id="BBM_B1" lib="Bus" staticId="B1">
+    <dyn:blackBoxModel id="B1" lib="Bus" staticId="B1">
         <dyn:macroStaticRef id="MSR_Bus"/>
     </dyn:blackBoxModel>
-    <dyn:blackBoxModel id="BBM_L1" lib="Line" parFile="models.par" parId="line" staticId="L1">
+    <dyn:blackBoxModel id="L1" lib="Line" parFile="models.par" parId="line" staticId="L1">
         <dyn:macroStaticRef id="MSR_Line"/>
     </dyn:blackBoxModel>
     <dyn:macroConnector id="MC_GeneratorFictitious-Bus">
@@ -34,7 +34,7 @@
         <dyn:staticRef var="line_Q2Pu" staticVar="q2"/>
         <dyn:staticRef var="line_state" staticVar="state"/>
     </dyn:macroStaticReference>
-    <dyn:macroConnect connector="MC_GeneratorFictitious-Bus" id1="BBM_GEN" id2="BBM_B1" name2="B1"/>
-    <dyn:macroConnect connector="MC_LineSide1-Bus" id1="BBM_L1" id2="BBM_B1" name2="B1"/>
-    <dyn:macroConnect connector="MC_LineSide2-DefaultEquipmentConnectionPoint" id1="BBM_L1" id2="NETWORK"/>
+    <dyn:macroConnect connector="MC_GeneratorFictitious-Bus" id1="G1" id2="B1" name2="B1"/>
+    <dyn:macroConnect connector="MC_LineSide1-Bus" id1="L1" id2="B1" name2="B1"/>
+    <dyn:macroConnect connector="MC_LineSide2-DefaultEquipmentConnectionPoint" id1="L1" id2="NETWORK"/>
 </dyn:dynamicModelsArchitecture>

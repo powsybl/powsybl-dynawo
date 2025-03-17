@@ -38,8 +38,8 @@ public class BaseHvdc extends AbstractEquipmentBlackBoxModel<HvdcLine> implement
 
     private final HvdcVarNameHandler varNameHandler;
 
-    protected BaseHvdc(String dynamicModelId, HvdcLine hvdc, String parameterSetId, ModelConfig modelConfig, HvdcVarNameHandler varNameHandler) {
-        super(dynamicModelId, parameterSetId, hvdc, modelConfig);
+    protected BaseHvdc(HvdcLine hvdc, String parameterSetId, ModelConfig modelConfig, HvdcVarNameHandler varNameHandler) {
+        super(hvdc, parameterSetId, modelConfig);
         this.varNameHandler = varNameHandler;
     }
 

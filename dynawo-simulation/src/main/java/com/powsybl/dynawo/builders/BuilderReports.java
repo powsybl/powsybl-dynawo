@@ -63,16 +63,6 @@ public final class BuilderReports {
                 .add();
     }
 
-    public static void reportFieldReplacement(ReportNode reportNode, String fieldName, String replacementName, String replacement) {
-        reportNode.newReportNode()
-                .withMessageTemplate("fieldReplacement", "'${fieldName}' field is not set, ${replacementName} ${replacement} will be used instead")
-                .withUntypedValue(FIELD_NAME, fieldName)
-                .withUntypedValue("replacementName", replacementName)
-                .withUntypedValue("replacement", replacement)
-                .withSeverity(TypedValue.TRACE_SEVERITY)
-                .add();
-    }
-
     public static void reportFieldNotSet(ReportNode reportNode, String fieldName) {
         reportNode.newReportNode()
                 .withMessageTemplate("fieldNotSet", "'${fieldName}' field is not set")
@@ -83,7 +73,7 @@ public final class BuilderReports {
 
     public static void reportStaticIdUnknown(ReportNode reportNode, String fieldName, String staticId, String equipmentType) {
         reportNode.newReportNode()
-                .withMessageTemplate("unknownStaticIdToDynamic", "'${fieldName}' field value '${staticId}' not found for equipment type(s) ${equipmentType}")
+                .withMessageTemplate("unknownIdToDynamic", "'${fieldName}' field value '${staticId}' not found for equipment type(s) ${equipmentType}")
                 .withUntypedValue(EQUIPMENT_TYPE_FIELD, equipmentType)
                 .withUntypedValue(FIELD_NAME, fieldName)
                 .withUntypedValue("staticId", staticId)
