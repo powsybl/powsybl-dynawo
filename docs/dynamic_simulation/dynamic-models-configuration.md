@@ -1,10 +1,10 @@
-# Dynamic models mapping
-Dynamic model mapping creates dynamic models used by Dynawo.
+# Dynamic models configuration
+Dynamic model configuration creates dynamic models used by Dynawo.
 Most of the dynamic models are associated with a static equipment present in the network.
 If some equipments are not configured, Dynawo would use a default model and set of parameters.
 
 ## Implementation
-Powsybl-Dynawo handles two methods of mapping:
+Powsybl-Dynawo handles two methods of configuration:
 - **Dynamic Models DSL**: a domain specific language written in groovy (used in iTools)
 - **Dynawo Dynamic Models**: a JSON configuration file.
 
@@ -147,7 +147,7 @@ With specific attributes:
 ```groovy
 import com.powsybl.iidm.network.TwoSides
 
-TwoLevelsOverloadManagementSystem {
+TwoLevelOverloadManagementSystem {
     dynamicModelId "OVERLOAD_TL_1"
     parameterSetId "OMS_TL"
     controlledBranch "LINE1"
@@ -160,7 +160,7 @@ TwoLevelsOverloadManagementSystem {
 **Json configuration:**
 ```json
 {
-  "model":"TwoLevelsOverloadManagementSystem",
+  "model":"TwoLevelOverloadManagementSystem",
   "group": "OMS_TL",
   "properties":[
     {
@@ -500,7 +500,7 @@ Ultimately, all groovy scripts call dedicated builders that can be used directly
 * TapChangerBlockingAutomationSystemBuilder
 * UnderVoltageAutomationSystemBuilder
 * DynamicOverloadManagementSystemBuilder
-* DynamicTwoLevelsOverloadManagementSystemBuilder
+* DynamicTwoLevelOverloadManagementSystemBuilder
 * PhaseShifterPAutomationSystemBuilder
 * PhaseShifterIAutomationSystemBuilder
 * PhaseShifterBlockingIAutomationSystemBuilder

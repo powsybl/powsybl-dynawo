@@ -14,5 +14,5 @@ Read this [documentation page](https://dynawo.github.io/install/dynalgo) to lear
 ## Going further
 
 You may find an extensive documentation of the Dynawo project [here](https://github.com/dynawo/dynawo/releases/latest/download/DynawoDocumentation.pdf).  
-The dynamic security analysis uses the same dynamic models supplier as the dynamic simulation implementation, documentation can be found [here](../dynamic_simulation/dynamic-models-mapping).
+The dynamic security analysis uses the same dynamic models supplier as the dynamic simulation implementation, documentation can be found [here](../dynamic_simulation/dynamic-models-configuration).
 

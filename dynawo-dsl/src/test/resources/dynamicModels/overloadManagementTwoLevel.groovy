@@ -10,7 +10,7 @@ package dynamicModels
 
 import com.powsybl.iidm.network.TwoSides
 
-TwoLevelsOverloadManagementSystem {
+TwoLevelOverloadManagementSystem {
     dynamicModelId "AM_NHV1_NHV2_1"
     parameterSetId "CLA"
     controlledBranch "NHV1_NHV2_2"
