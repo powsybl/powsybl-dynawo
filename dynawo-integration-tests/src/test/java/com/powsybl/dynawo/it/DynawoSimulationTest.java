@@ -108,7 +108,9 @@ class DynawoSimulationTest extends AbstractDynawoTest {
 
     @Test
     void testIeee14WithSimulationCriteria() {
-        ReportNode reportNode = ReportNode.newRootReportNode().withMessageTemplate("integrationTest", "Integration test").build();
+        ReportNode reportNode = ReportNode.newRootReportNode()
+                .withAllResourceBundlesFromClasspath()
+                .withMessageTemplate("integrationTest", "Integration test").build();
         Supplier<DynamicSimulationResult> resultSupplier = setupIEEE14Simulation(reportNode);
         dynawoSimulationParameters.setCriteriaFilePath(Path.of(Objects.requireNonNull(getClass().getResource("/ieee14/criteria.crt")).getPath()));
         DynamicSimulationResult result = resultSupplier.get();

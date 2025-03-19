@@ -49,7 +49,9 @@ public abstract class AbstractDynamicModelXmlTest extends AbstractSerDeTest {
     protected List<BlackBoxModel> eventModels = new ArrayList<>();
     protected List<OutputVariable> outputVariables = new ArrayList<>();
     protected DynawoSimulationContext context;
-    protected ReportNode reportNode = ReportNode.newRootReportNode().withMessageTemplate("testDyd", "Test DYD").build();
+    protected ReportNode reportNode = ReportNode.newRootReportNode()
+            .withAllResourceBundlesFromClasspath()
+            .withMessageTemplate("testDyd", "Test DYD").build();
 
     @BeforeEach
     void setup() {
