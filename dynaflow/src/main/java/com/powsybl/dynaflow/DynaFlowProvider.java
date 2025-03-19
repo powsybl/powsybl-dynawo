@@ -130,6 +130,11 @@ public class DynaFlowProvider implements LoadFlowProvider {
     }
 
     @Override
+    public void updateSpecificParameters(Extension<LoadFlowParameters> extension, Map<String, String> properties) {
+        getParametersExt(extension.getExtendable()).update(properties);
+    }
+
+    @Override
     public Map<String, String> createMapFromSpecificParameters(Extension<LoadFlowParameters> extension) {
         if (extension instanceof DynaFlowParameters dfp) {
             return dfp.createMapFromParameters();
@@ -150,10 +155,5 @@ public class DynaFlowProvider implements LoadFlowProvider {
     @Override
     public Optional<ExtensionJsonSerializer> getSpecificParametersSerializer() {
         return Optional.of(new JsonDynaFlowParametersSerializer());
-    }
-
-    @Override
-    public void updateSpecificParameters(Extension<LoadFlowParameters> extension, Map<String, String> properties) {
-        getParametersExt(extension.getExtendable()).update(properties);
     }
 }
