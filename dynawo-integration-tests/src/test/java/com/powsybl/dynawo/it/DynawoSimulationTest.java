@@ -72,7 +72,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         assertEquals(27, result.getCurves().size());
         DoubleTimeSeries ts1 = result.getCurve("_GEN____1_SM_generator_UStatorPu");
         assertEquals("_GEN____1_SM_generator_UStatorPu", ts1.getMetadata().getName());
-        assertEquals(258, ts1.toArray().length);
+        assertEquals(512, ts1.toArray().length);
         assertEquals(14, result.getFinalStateValues().size());
         assertEquals(1.046227, result.getFinalStateValues().get("NETWORK__BUS___10_TN_Upu_value"));
         List<TimelineEvent> timeLine = result.getTimeLine();
@@ -108,7 +108,9 @@ class DynawoSimulationTest extends AbstractDynawoTest {
 
     @Test
     void testIeee14WithSimulationCriteria() {
-        ReportNode reportNode = ReportNode.newRootReportNode().withMessageTemplate("integrationTest", "Integration test").build();
+        ReportNode reportNode = ReportNode.newRootReportNode()
+                .withAllResourceBundlesFromClasspath()
+                .withMessageTemplate("integrationTest", "Integration test").build();
         Supplier<DynamicSimulationResult> resultSupplier = setupIEEE14Simulation(reportNode);
         dynawoSimulationParameters.setCriteriaFilePath(Path.of(Objects.requireNonNull(getClass().getResource("/ieee14/criteria.crt")).getPath()));
         DynamicSimulationResult result = resultSupplier.get();
