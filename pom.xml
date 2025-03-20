@@ -33,16 +33,16 @@
 
     <developers>
         <developer>
+            <name>Laurent Issertial</name>
+            <email>laurent.issertial@rte-france.com</email>
+            <organization>Aubay</organization>
+            <organizationUrl>https://aubay.com</organizationUrl>
+        </developer>
+        <developer>
             <name>Florian DUPUY</name>
             <email>florian.dupuy@rte-france.com</email>
             <organization>RTE</organization>
             <organizationUrl>http://www.rte-france.com</organizationUrl>
-        </developer>
-        <developer>
-            <name>Marcos de Miguel</name>
-            <email>demiguelm@aia.es</email>
-            <organization>Grupo AIA</organization>
-            <organizationUrl>http://www.aia.es</organizationUrl>
         </developer>
     </developers>
 
