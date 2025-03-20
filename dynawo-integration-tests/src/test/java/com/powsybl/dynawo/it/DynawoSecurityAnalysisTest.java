@@ -85,6 +85,7 @@ class DynawoSecurityAnalysisTest extends AbstractDynawoTest {
                         .getResource(criteriaPath)).getPath()));
 
         ReportNode reportNode = ReportNode.newRootReportNode()
+                .withAllResourceBundlesFromClasspath()
                 .withMessageTemplate("root", "Root message")
                 .build();
 

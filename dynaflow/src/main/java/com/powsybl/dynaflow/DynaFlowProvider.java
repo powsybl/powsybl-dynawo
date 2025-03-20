@@ -28,6 +28,7 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 import static com.powsybl.dynaflow.DynaFlowConstants.*;
+import static com.powsybl.dynaflow.DynaFlowParameters.MODULE_SPECIFIC_PARAMETERS;
 import static com.powsybl.dynawo.commons.DynawoConstants.NETWORK_FILENAME;
 import static com.powsybl.dynawo.commons.DynawoConstants.OUTPUT_IIDM_FILENAME_PATH;
 
@@ -119,8 +120,18 @@ public class DynaFlowProvider implements LoadFlowProvider {
     }
 
     @Override
+    public void updateSpecificParameters(Extension<LoadFlowParameters> extension, PlatformConfig platformConfig) {
+        ((DynaFlowParameters) extension).update(platformConfig);
+    }
+
+    @Override
     public Optional<Extension<LoadFlowParameters>> loadSpecificParameters(Map<String, String> properties) {
         return Optional.of(DynaFlowParameters.load(properties));
+    }
+
+    @Override
+    public void updateSpecificParameters(Extension<LoadFlowParameters> extension, Map<String, String> properties) {
+        getParametersExt(extension.getExtendable()).update(properties);
     }
 
     @Override
@@ -138,16 +149,11 @@ public class DynaFlowProvider implements LoadFlowProvider {
 
     @Override
     public Optional<ModuleConfig> getModuleConfig(PlatformConfig platformConfig) {
-        return platformConfig.getOptionalModuleConfig(DynaFlowParameters.MODULE_SPECIFIC_PARAMETERS);
+        return platformConfig.getOptionalModuleConfig(MODULE_SPECIFIC_PARAMETERS);
     }
 
     @Override
     public Optional<ExtensionJsonSerializer> getSpecificParametersSerializer() {
         return Optional.of(new JsonDynaFlowParametersSerializer());
-    }
-
-    @Override
-    public void updateSpecificParameters(Extension<LoadFlowParameters> extension, Map<String, String> properties) {
-        getParametersExt(extension.getExtendable()).update(properties);
     }
 }

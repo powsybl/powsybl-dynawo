@@ -33,7 +33,9 @@ class BuilderEquipmentSetterTest {
         Line ln1 = network.getLine("L1");
         Network network2 = PhaseShifterTestCaseFactory.create();
         Line ln2 = network2.getLine("L1");
-        ReportNode reportNode = ReportNode.newRootReportNode().withMessageTemplate("builderTests", "Builder tests").build();
+        ReportNode reportNode = ReportNode.newRootReportNode()
+                .withAllResourceBundlesFromClasspath()
+                .withMessageTemplate("builderTests", "Builder tests").build();
 
         BlackBoxModel bbm1 = LineBuilder.of(network)
                 .dynamicModelId("BBM_LINE_NETWORK_1")

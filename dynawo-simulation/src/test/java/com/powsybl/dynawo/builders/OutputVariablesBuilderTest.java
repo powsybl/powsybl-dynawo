@@ -24,7 +24,9 @@ class OutputVariablesBuilderTest {
 
     @BeforeEach
     void setup() {
-        reporter = ReportNode.newRootReportNode().withMessageTemplate("builderTests", "Builder tests").build();
+        reporter = ReportNode.newRootReportNode()
+                .withAllResourceBundlesFromClasspath()
+                .withMessageTemplate("builderTests", "Builder tests").build();
     }
 
     @Test
