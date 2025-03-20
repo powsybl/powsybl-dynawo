@@ -45,7 +45,9 @@ public abstract class AbstractParametrizedDynamicModelXmlTest extends AbstractSe
     protected List<BlackBoxModel> eventModels = new ArrayList<>();
     protected List<OutputVariable> outputVariables = new ArrayList<>();
     protected DynawoSimulationContext context;
-    protected ReportNode reportNode = ReportNode.newRootReportNode().withMessageTemplate("testDyd", "Test DYD").build();
+    protected ReportNode reportNode = ReportNode.newRootReportNode()
+            .withAllResourceBundlesFromClasspath()
+            .withMessageTemplate("testDyd", "Test DYD").build();
 
     public void validate(String schemaDefinition, String expectedResourceName, Path xmlFile) throws SAXException, IOException {
         InputStream expected = Objects.requireNonNull(getClass().getResourceAsStream("/" + expectedResourceName));
