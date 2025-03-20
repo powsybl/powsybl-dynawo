@@ -32,7 +32,7 @@ public final class DynawoSimulationReports {
 
     public static ReportNode createDynawoSimulationContextReportNode(ReportNode reportNode) {
         return reportNode.newReportNode()
-                .withMessageTemplate("dynawoSimulationContext", "Dynawo models processing")
+                .withMessageTemplate("dynawoModelsProcessing", "Dynawo models processing")
                 .add();
     }
 

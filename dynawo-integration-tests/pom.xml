@@ -45,6 +45,12 @@
         <dependency>
             <groupId>com.powsybl</groupId>
             <artifactId>powsybl-dynawo-security-analysis</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.powsybl</groupId>
+            <artifactId>powsybl-dynawo-margin-calculation</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.powsybl</groupId>

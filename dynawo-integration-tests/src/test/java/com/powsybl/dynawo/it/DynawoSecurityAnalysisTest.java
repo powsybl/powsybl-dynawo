@@ -17,10 +17,10 @@ import com.powsybl.dynamicsimulation.groovy.GroovyDynamicModelsSupplier;
 import com.powsybl.dynamicsimulation.groovy.GroovyExtension;
 import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.DynawoSimulationProvider;
+import com.powsybl.dynawo.algorithms.DynawoAlgorithmsConfig;
 import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.dynawo.xml.ParametersXml;
 
-import com.powsybl.dynawo.security.DynawoAlgorithmsConfig;
 import com.powsybl.dynawo.security.DynawoSecurityAnalysisProvider;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.VariantManagerConstants;
@@ -71,7 +71,7 @@ class DynawoSecurityAnalysisTest extends AbstractDynawoTest {
         Network network = Network.read(new ResourceDataSource("IEEE14", new ResourceSet("/ieee14", "IEEE14.iidm")));
 
         GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
-                getResourceAsStream("/ieee14/dynamic-security-analysis/dynamicModels.groovy"),
+                getResourceAsStream("/ieee14/dynamicModels.groovy"),
                 GroovyExtension.find(DynamicModelGroovyExtension.class, DynawoSimulationProvider.NAME));
 
         List<ParametersSet> modelsParameters = ParametersXml.load(getResourceAsStream("/ieee14/models.par"));

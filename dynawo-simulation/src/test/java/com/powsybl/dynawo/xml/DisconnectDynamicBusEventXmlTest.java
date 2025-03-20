@@ -53,7 +53,7 @@ class DisconnectDynamicBusEventXmlTest extends AbstractDynamicModelXmlTest {
 
     @Test
     void testEmptyEvent() throws IOException, SAXException {
-        DydXml.write(tmpDir, context);
+        DydXml.write(tmpDir, context.getSimulationDydData());
         ParametersXml.write(tmpDir, context);
         validate("dyd.xsd", "disconnect_dynamic_bus_dyd.xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
         validate("parameters.xsd", "disconnect_dynamic_bus_par.xml", tmpDir.resolve(context.getSimulationParFile()));

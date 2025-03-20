@@ -21,7 +21,7 @@ import static com.powsybl.dynawo.xml.DynawoSimulationXmlConstants.DYN_URI;
 /**
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  */
-public final class OutputVariablesXml extends AbstractXmlDynawoSimulationWriter {
+public final class OutputVariablesXml extends AbstractXmlDynawoSimulationWriter<DynawoSimulationContext> {
 
     private final OutputVariable.OutputType outputType;
     private final String xmlElementName;
@@ -34,12 +34,12 @@ public final class OutputVariablesXml extends AbstractXmlDynawoSimulationWriter 
 
     public static void writeCurve(Path workingDir, DynawoSimulationContext context) throws IOException {
         new OutputVariablesXml(CRV_FILENAME, "curvesInput", "curve", OutputVariable.OutputType.CURVE)
-                .createXmlFileFromContext(workingDir, context);
+                .createXmlFileFromDataSupplier(workingDir, context);
     }
 
     public static void writeFsv(Path workingDir, DynawoSimulationContext context) throws IOException {
         new OutputVariablesXml(FSV_FILENAME, "finalStateValuesInput", "finalStateValue", OutputVariable.OutputType.FINAL_STATE)
-                .createXmlFileFromContext(workingDir, context);
+                .createXmlFileFromDataSupplier(workingDir, context);
     }
 
     @Override
