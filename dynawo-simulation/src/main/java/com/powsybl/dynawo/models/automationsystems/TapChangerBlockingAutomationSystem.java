@@ -10,6 +10,7 @@ package com.powsybl.dynawo.models.automationsystems;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawo.DynawoSimulationReports;
 import com.powsybl.dynawo.builders.ModelConfig;
+import com.powsybl.dynawo.extensions.DynamicAutomationSystemInfo;
 import com.powsybl.dynawo.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawo.models.MeasurementPointSuffix;
 import com.powsybl.dynawo.models.buses.ActionConnectionPoint;
@@ -35,6 +36,7 @@ public class TapChangerBlockingAutomationSystem extends AbstractPureDynamicBlack
     private final List<String> tapChangerAutomatonIds;
     private final List<Identifiable<?>> uMeasurements;
     private boolean isConnected = true;
+    private List<String> operatedModelIds = new ArrayList<>();
 
     protected TapChangerBlockingAutomationSystem(String dynamicModelId, String parameterSetId, List<Identifiable<?>> tapChangerEquipments, List<String> tapChangerAutomatonIds, List<Identifiable<?>> uMeasurements, ModelConfig modelConfig) {
         super(dynamicModelId, parameterSetId, modelConfig);
@@ -72,11 +74,13 @@ public class TapChangerBlockingAutomationSystem extends AbstractPureDynamicBlack
         for (Identifiable<?> tc : tapChangerEquipments) {
             if (adder.createMacroConnectionsOrSkip(this, tc, TapChangerModel.class, this::getVarConnectionsWith)) {
                 skippedTapChangers++;
+                operatedModelIds.add(tc.getId());
             }
         }
         for (String id : tapChangerAutomatonIds) {
             if (adder.createMacroConnectionsOrSkip(this, id, TapChangerAutomationSystem.class, this::getVarConnectionsWith)) {
                 skippedTapChangers++;
+                operatedModelIds.add(id);
             }
         }
         if (skippedTapChangers < (tapChangerEquipments.size() + tapChangerAutomatonIds.size())) {
@@ -105,6 +109,15 @@ public class TapChangerBlockingAutomationSystem extends AbstractPureDynamicBlack
     public void write(XMLStreamWriter writer, String parFileName) throws XMLStreamException {
         if (isConnected) {
             super.write(writer, parFileName);
+        }
+    }
+
+    @Override
+    public void createDynamicModelInfoExtension() {
+        if (isConnected) {
+            addDynamicAutomationSystemInfo(uMeasurements.get(0).getNetwork(),
+                    new DynamicAutomationSystemInfo(getDynamicModelId(), modelConfig.name(), operatedModelIds,
+                            uMeasurements.stream().map(Identifiable::getId).toList()));
         }
     }
 }

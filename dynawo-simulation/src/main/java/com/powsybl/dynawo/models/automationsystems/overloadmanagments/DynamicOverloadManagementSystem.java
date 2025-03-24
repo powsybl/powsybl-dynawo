@@ -7,6 +7,7 @@
 package com.powsybl.dynawo.models.automationsystems.overloadmanagments;
 
 import com.powsybl.dynawo.builders.ModelConfig;
+import com.powsybl.dynawo.extensions.DynamicAutomationSystemInfo;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawo.models.VarConnection;
@@ -54,5 +55,12 @@ public class DynamicOverloadManagementSystem extends AbstractPureDynamicBlackBox
 
     protected List<VarConnection> getVarConnectionsWithControlledBranch(BranchModel connected) {
         return List.of(new VarConnection("currentLimitAutomaton_order", connected.getStateVarName()));
+    }
+
+    @Override
+    public void createDynamicModelInfoExtension() {
+        addDynamicAutomationSystemInfo(controlledBranch.getNetwork(),
+                new DynamicAutomationSystemInfo(getDynamicModelId(), modelConfig.name(),
+                        controlledBranch.getId(), measuredBranch.getId()));
     }
 }

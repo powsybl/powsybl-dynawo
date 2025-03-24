@@ -8,6 +8,8 @@ package com.powsybl.dynawo.models;
 
 import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.builders.VersionInterval;
+import com.powsybl.dynawo.extensions.*;
+import com.powsybl.iidm.network.Network;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -24,7 +26,7 @@ import static com.powsybl.dynawo.xml.DynawoSimulationXmlConstants.DYN_URI;
  */
 public abstract class AbstractPureDynamicBlackBoxModel extends AbstractBlackBoxModel {
 
-    private final ModelConfig modelConfig;
+    protected final ModelConfig modelConfig;
 
     protected AbstractPureDynamicBlackBoxModel(String dynamicModelId, String parameterSetId, ModelConfig modelConfig) {
         super(dynamicModelId, parameterSetId);
@@ -51,5 +53,10 @@ public abstract class AbstractPureDynamicBlackBoxModel extends AbstractBlackBoxM
     public void write(XMLStreamWriter writer, String parFileName) throws XMLStreamException {
         writer.writeEmptyElement(DYN_URI, "blackBoxModel");
         writeDynamicAttributes(writer, parFileName);
+    }
+
+    protected void addDynamicAutomationSystemInfo(Network network, DynamicAutomationSystemInfo info) {
+        //TODO handle extension creation in context
+        network.getExtension(DynamicAutomationSystemInfos.class).addDynamicAutomationSystemInfos(info);
     }
 }

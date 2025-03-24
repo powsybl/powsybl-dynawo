@@ -8,6 +8,7 @@
 package com.powsybl.dynawo.models.automationsystems;
 
 import com.powsybl.dynawo.builders.ModelConfig;
+import com.powsybl.dynawo.extensions.DynamicAutomationSystemInfo;
 import com.powsybl.dynawo.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.generators.GeneratorModel;
@@ -40,5 +41,11 @@ public class UnderVoltageAutomationSystem extends AbstractPureDynamicBlackBoxMod
                 new VarConnection("underVoltageAutomaton_UMonitoredPu", connected.getUPuVarName()),
                 new VarConnection("underVoltageAutomaton_switchOffSignal", connected.getSwitchOffSignalAutomatonVarName())
         );
+    }
+
+    @Override
+    public void createDynamicModelInfoExtension() {
+        addDynamicAutomationSystemInfo(generator.getNetwork(),
+                new DynamicAutomationSystemInfo(getDynamicModelId(), modelConfig.name(), generator.getId()));
     }
 }

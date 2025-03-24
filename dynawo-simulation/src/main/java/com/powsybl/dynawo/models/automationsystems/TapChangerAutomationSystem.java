@@ -9,6 +9,7 @@ package com.powsybl.dynawo.models.automationsystems;
 
 import com.powsybl.dynawo.DynawoSimulationReports;
 import com.powsybl.dynawo.builders.ModelConfig;
+import com.powsybl.dynawo.extensions.DynamicAutomationSystemInfo;
 import com.powsybl.dynawo.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawo.models.TransformerSide;
 import com.powsybl.dynawo.models.VarConnection;
@@ -85,5 +86,13 @@ public class TapChangerAutomationSystem extends AbstractPureDynamicBlackBoxModel
     public boolean connect(MacroConnectionsAdder adder) {
         createMacroConnections(adder);
         return ConnectionState.CONNECTED == getConnectionState();
+    }
+
+    @Override
+    public void createDynamicModelInfoExtension() {
+        if (ConnectionState.CONNECTED == connection) {
+            addDynamicAutomationSystemInfo(load.getNetwork(),
+                    new DynamicAutomationSystemInfo(getDynamicModelId(), modelConfig.name(), load.getId()));
+        }
     }
 }

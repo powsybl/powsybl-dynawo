@@ -8,6 +8,7 @@
 package com.powsybl.dynawo.models.automationsystems.overloadmanagments;
 
 import com.powsybl.dynawo.builders.ModelConfig;
+import com.powsybl.dynawo.extensions.DynamicAutomationSystemInfo;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.dynawo.models.automationsystems.BranchModel;
@@ -52,5 +53,13 @@ public class DynamicTwoLevelsOverloadManagementSystem extends DynamicOverloadMan
 
     private List<VarConnection> getVarConnectionsWithSecondMeasuredBranch(BranchModel connected) {
         return List.of(new VarConnection("currentLimitAutomaton_IMonitored2", connected.getIVarName(secondMeasuredSide)));
+    }
+
+    @Override
+    public void createDynamicModelInfoExtension() {
+        addDynamicAutomationSystemInfo(controlledBranch.getNetwork(),
+                new DynamicAutomationSystemInfo(getDynamicModelId(), modelConfig.name(),
+                        List.of(controlledBranch.getId()),
+                        List.of(measuredBranch.getId(), secondMeasuredBranch.getId())));
     }
 }

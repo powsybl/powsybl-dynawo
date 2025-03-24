@@ -8,6 +8,7 @@
 package com.powsybl.dynawo.models.automationsystems.phaseshifters;
 
 import com.powsybl.dynawo.builders.ModelConfig;
+import com.powsybl.dynawo.extensions.DynamicAutomationSystemInfo;
 import com.powsybl.dynawo.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.VarConnection;
@@ -35,4 +36,10 @@ public abstract class AbstractPhaseShifterAutomationSystem extends AbstractPureD
     }
 
     protected abstract List<VarConnection> getVarConnectionsWith(TransformerModel connected);
+
+    @Override
+    public void createDynamicModelInfoExtension() {
+        addDynamicAutomationSystemInfo(transformer.getNetwork(),
+                new DynamicAutomationSystemInfo(getDynamicModelId(), modelConfig.name(), transformer.getId()));
+    }
 }
