@@ -7,6 +7,8 @@
  */
 package com.powsybl.dynawo.models;
 
+import com.powsybl.dynamicsimulation.extension.DynamicModelInfo;
+import com.powsybl.dynamicsimulation.extension.DynamicModelInfoAdder;
 import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.builders.VersionInterval;
 import com.powsybl.dynawo.xml.MacroStaticReference;
@@ -22,7 +24,7 @@ import static com.powsybl.dynawo.xml.DynawoSimulationXmlConstants.DYN_URI;
  * @author Luma Zamarreño {@literal <zamarrenolm at aia.es>}
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public abstract class AbstractEquipmentBlackBoxModel<T extends Identifiable<?>> extends AbstractBlackBoxModel implements EquipmentBlackBoxModel {
+public abstract class AbstractEquipmentBlackBoxModel<T extends Identifiable<T>> extends AbstractBlackBoxModel implements EquipmentBlackBoxModel {
 
     protected final T equipment;
     private final ModelConfig modelConfig;
@@ -66,6 +68,16 @@ public abstract class AbstractEquipmentBlackBoxModel<T extends Identifiable<?>> 
         if (hasVarMapping) {
             MacroStaticReference.writeMacroStaticRef(writer, getLib());
             writer.writeEndElement();
+        }
+    }
+
+    @Override
+    public void createDynamicModelInfoExtension() {
+        DynamicModelInfo<T> extension = equipment.getExtension(DynamicModelInfo.class);
+        if (extension == null) {
+            equipment.newExtension(DynamicModelInfoAdder.class).setModelName(modelConfig.name()).add();
+        } else {
+            extension.setModelName(modelConfig.name());
         }
     }
 }

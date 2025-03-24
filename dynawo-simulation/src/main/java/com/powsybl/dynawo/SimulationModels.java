@@ -44,6 +44,7 @@ public final class SimulationModels implements DydDataSupplier {
             macroStaticReferences.computeIfAbsent(bbm.getName(), k -> new MacroStaticReference(k, bbm.getVarsMapping()));
             bbm.createMacroConnections(adder);
             bbm.createDynamicModelParameters(parametersAdder);
+            bbm.createDynamicModelInfoExtension();
         }
         for (BlackBoxModel bbem : eventModels) {
             bbem.createMacroConnections(adder);

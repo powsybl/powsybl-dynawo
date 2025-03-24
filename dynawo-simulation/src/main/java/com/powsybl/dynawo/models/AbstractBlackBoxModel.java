@@ -94,4 +94,9 @@ public abstract class AbstractBlackBoxModel implements BlackBoxModel {
         writer.writeAttribute("parFile", parFileName);
         writer.writeAttribute("parId", getParameterSetId());
     }
+
+    @Override
+    public void createDynamicModelInfoExtension() {
+        // method empty by default to be redefined by specific models
+    }
 }

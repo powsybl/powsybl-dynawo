@@ -44,4 +44,6 @@ public interface BlackBoxModel extends Model {
     void createDynamicModelParameters(Consumer<ParametersSet> parametersAdder);
 
     void createNetworkParameter(ParametersSet networkParameters);
+
+    void createDynamicModelInfoExtension();
 }
