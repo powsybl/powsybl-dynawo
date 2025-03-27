@@ -161,7 +161,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                            + Groovy Dynamic Models Supplier
                               + DSL model builder for LoadAlphaBeta
                                  'staticId' field is not set
-                                 Model unknownId cannot be instantiated
+                                 Model null cannot be instantiated
                         """),
                 Arguments.of("/warnings/missingParameterId.groovy", EurostagTutorialExample1Factory.create(),
                         """
