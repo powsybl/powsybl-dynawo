@@ -23,7 +23,6 @@ import java.io.UncheckedIOException;
 import java.nio.file.Path;
 import java.util.List;
 
-import static com.powsybl.dynawo.DynawoFilesUtils.deleteExistingFile;
 import static com.powsybl.dynawo.commons.DynawoConstants.*;
 import static com.powsybl.dynawo.commons.DynawoUtil.getCommandExecutions;
 
@@ -47,7 +46,7 @@ public abstract class AbstractDynawoAlgorithmsHandler<R, S extends DynawoSimulat
     @Override
     public List<CommandExecution> before(Path workingDir) throws IOException {
         network.getVariantManager().setWorkingVariant(context.getWorkingVariantId());
-        deleteExistingFile(workingDir.resolve(OUTPUTS_FOLDER), FINAL_STATE_FOLDER, OUTPUT_IIDM_FILENAME);
+        DynawoFilesUtils.deleteExistingFile(workingDir.resolve(OUTPUTS_FOLDER), FINAL_STATE_FOLDER, OUTPUT_IIDM_FILENAME);
         writeInputFiles(workingDir);
         return getCommandExecutions(command);
     }

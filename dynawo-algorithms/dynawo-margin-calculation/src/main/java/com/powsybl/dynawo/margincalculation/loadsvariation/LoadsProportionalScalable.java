@@ -24,7 +24,7 @@ public class LoadsProportionalScalable extends ProportionalScalable {
                 new CalculatedLoadScalable((Load) l), PROPORTIONAL_TO_P0, -Double.MAX_VALUE, Double.MAX_VALUE);
     }
 
-    public List<CalculatedPowerDelta> getLoadScalable() {
-        return getScalables().stream().map(CalculatedPowerDelta.class::cast).toList();
+    public List<CalculatedLoadScalable> getLoadScalable() {
+        return getScalables().stream().map(CalculatedLoadScalable.class::cast).toList();
     }
 }

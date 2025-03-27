@@ -13,7 +13,7 @@ import com.powsybl.dynawo.models.macroconnections.MacroConnect;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.macroconnections.MacroConnector;
 import com.powsybl.dynawo.parameters.ParametersSet;
-import com.powsybl.dynawo.xml.DydDataSupplier;
+import com.powsybl.dynawo.xml.DynawoData;
 import com.powsybl.dynawo.xml.MacroStaticReference;
 
 import java.util.*;
@@ -22,7 +22,7 @@ import java.util.function.Consumer;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public final class SimulationModels implements DydDataSupplier {
+public final class SimulationModels implements DynawoData {
 
     private final List<BlackBoxModel> dynamicModels;
     private final List<BlackBoxModel> eventModels;

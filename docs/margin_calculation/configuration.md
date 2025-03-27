@@ -1,6 +1,6 @@
 # Configuration
 
-The margin calculation reuse the `dynawo-simulation-default-parameters` [module](../dynamic_simulation/configuration.md#default-parameters).
+The margin calculation reuses the `dynawo-simulation-default-parameters` [module](../dynamic_simulation/configuration.md#default-parameters).
 
 ## Default parameters
 The `margin-calculation-default-parameters` module defines the default values for all parameters of a margin calculation run with Dynawo.  
@@ -16,17 +16,17 @@ The default value of this property is `0`.
 The default value of this property is `200`.
 
 **loadIncrease.startTime**  
-`loadIncrease.startTime` defines when the load variation start, in seconds.
+`loadIncrease.startTime` defines when the load variation starts, in seconds.
 This property value should be between start time and margin calculation start time.
 The default value of this property is `10`.
 
 **loadIncrease.stopTime**  
-`loadIncrease.stopTime` defines when the load variation stop, in seconds.
+`loadIncrease.stopTime` defines when the load variation stops, in seconds.
 This property value should be between load increase start time and margin calculation start time.
 The default value of this property is `50`.
 
 **margin-calculation-start-time**  
-`margin-calculation-start-time` defines when the margin calculation start, in seconds.
+`margin-calculation-start-time` defines when the margin calculation starts, in seconds.
 This property value should be between start and stop time.
 The default value of this property is `100`.
 

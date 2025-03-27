@@ -16,7 +16,7 @@ import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.loads.AbstractLoad;
 import com.powsybl.dynawo.algorithms.ContingencyEventModels;
 import com.powsybl.dynawo.algorithms.ContingencyEventModelsFactory;
-import com.powsybl.dynawo.xml.DydDataSupplier;
+import com.powsybl.dynawo.xml.DynawoData;
 import com.powsybl.iidm.modification.scalable.Scalable;
 import com.powsybl.iidm.modification.scalable.ScalingParameters;
 import com.powsybl.iidm.network.Identifiable;
@@ -139,7 +139,7 @@ public final class MarginCalculationContext extends DynawoSimulationContext {
         return contingencyEventModels;
     }
 
-    public DydDataSupplier getLoadVariationAreaDydData() {
+    public DynawoData getLoadVariationAreaDydData() {
         return loadVariationModels;
     }
 }

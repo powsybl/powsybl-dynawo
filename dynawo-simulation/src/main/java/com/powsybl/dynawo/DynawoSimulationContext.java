@@ -11,7 +11,7 @@ import com.powsybl.dynamicsimulation.OutputVariable;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.events.ContextDependentEvent;
 import com.powsybl.dynawo.parameters.ParametersSet;
-import com.powsybl.dynawo.xml.DydDataSupplier;
+import com.powsybl.dynawo.xml.DynawoData;
 import com.powsybl.iidm.network.Network;
 
 import java.util.*;
@@ -150,11 +150,11 @@ public class DynawoSimulationContext {
         return getNetwork().getId() + ".par";
     }
 
-    public DydDataSupplier getSimulationDydData() {
+    public DynawoData getSimulationDydData() {
         return simulationModels;
     }
 
-    public Optional<DydDataSupplier> getFinalStepDydData() {
+    public Optional<DynawoData> getFinalStepDydData() {
         return Optional.ofNullable(finalStepModels);
     }
 }

@@ -2,13 +2,13 @@
 Loads variation supplier creates loads variations used for the margin calculation.
 
 ## Implementation
-Powsybl-Dynawo handle provide one supplier using JSON configuration file.
-All variations should be written in an `variations` array.
+Powsybl-Dynawo provides one supplier base on a JSON configuration file.
+All load variations should be written in a `variations` array.
 
 ## Loads variation model
 The variation model has two attributes:
 - `loadsIds`: an array of load ids.
-- `variationValue`: the variation to apply on loads.
+- `variationValue`: the variation to apply on each load.
 
 **Json configuration:**
 ```json
@@ -27,4 +27,4 @@ The variation model has two attributes:
 ```
 
 ## Loads variation builder
-Ultimately, the supplier call the dedicated builder `LoadsVariationBuilder` that can be used directly by developers.
+Ultimately, the supplier calls the dedicated builder `LoadsVariationBuilder` that can be used directly by developers.

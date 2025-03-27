@@ -21,7 +21,7 @@ import static com.powsybl.dynawo.DynawoSimulationConstants.DYD_FILENAME;
 /**
  * @author Mathieu Bague {@literal <mathieu.bague@rte-france.com>}
  */
-public final class DydXml extends AbstractXmlDynawoSimulationWriter<DydDataSupplier> {
+public final class DydXml extends AbstractXmlDynawoSimulationWriter<DynawoData> {
 
     private DydXml(String fileName) {
         super(fileName, "dynamicModelsArchitecture");
@@ -31,16 +31,16 @@ public final class DydXml extends AbstractXmlDynawoSimulationWriter<DydDataSuppl
         this(DYD_FILENAME);
     }
 
-    public static void write(Path workingDir, DydDataSupplier dataSupplier) throws IOException {
+    public static void write(Path workingDir, DynawoData dataSupplier) throws IOException {
         new DydXml().createXmlFileFromDataSupplier(workingDir, dataSupplier);
     }
 
-    public static void write(Path workingDir, String fileName, DydDataSupplier dataSupplier) throws IOException {
+    public static void write(Path workingDir, String fileName, DynawoData dataSupplier) throws IOException {
         new DydXml(fileName).createXmlFileFromDataSupplier(workingDir, dataSupplier);
     }
 
     @Override
-    public void write(XMLStreamWriter writer, DydDataSupplier dataSupplier) throws XMLStreamException {
+    public void write(XMLStreamWriter writer, DynawoData dataSupplier) throws XMLStreamException {
         // loop over the values of the map indexed by dynamicIds to write only once objects with the same dynamicId
         String parFileName = dataSupplier.getParFileName();
         if (parFileName == null || parFileName.isEmpty()) {

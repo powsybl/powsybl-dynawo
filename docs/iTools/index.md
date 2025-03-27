@@ -1,6 +1,6 @@
 # iTools Commands
 
-This section introduce iTools commands specific to Powsybl-Dynawo.
+This section introduces iTools commands specific to Powsybl-Dynawo.
 General information about iTools and its commands can be found [here](inv:powsyblcore:*:*#user/itools/index). 
 
 ```{toctree}

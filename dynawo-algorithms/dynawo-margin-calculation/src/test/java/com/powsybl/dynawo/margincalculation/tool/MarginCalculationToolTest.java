@@ -133,53 +133,14 @@ class MarginCalculationToolTest extends AbstractToolTest {
                     Margin Calculation Tool
                     Writing results to 'outputTest.json'
                     """;
-            String expectedOutputFile = """
-                    {
-                      "version" : "1.0",
-                      "loadIncreases" : [ {
-                        "loadLevel" : 100.0,
-                        "status" : "CRITERIA_NON_RESPECTED",
-                        "failedCriteria" : [ {
-                          "description" : "failed",
-                          "time" : 10.0
-                        }, {
-                          "description" : "failed2",
-                          "time" : 20.0
-                        } ],
-                        "scenarioResults" : [ ]
-                      }, {
-                        "loadLevel" : 50.0,
-                        "status" : "DIVERGENCE",
-                        "failedCriteria" : [ ],
-                        "scenarioResults" : [ {
-                          "id" : "Disconnect line",
-                          "status" : "CRITERIA_NON_RESPECTED",
-                          "failedCriteria" : [ {
-                            "description" : "Sc failed",
-                            "time" : 10.0
-                          }, {
-                            "description" : "Sc failed2",
-                            "time" : 20.0
-                          } ]
-                        }, {
-                          "id" : "Disconnect gen",
-                          "status" : "CONVERGENCE",
-                          "failedCriteria" : [ ]
-                        } ]
-                      }, {
-                        "loadLevel" : 25.0,
-                        "status" : "CONVERGENCE",
-                        "failedCriteria" : [ ],
-                        "scenarioResults" : [ ]
-                      } ]
-                    }""";
             assertCommandSuccessful(new String[]{"margin-calculation",
                 "--case-file", "/network.xiidm",
                 "--dynamic-models-file", "/dynamicModels.groovy",
                 "--contingencies-file", "/contingencies.groovy",
                 "--load-variations-file", "/loadsVariations.json",
                 "--output-file", "outputTest.json"}, expectedOut);
-            ComparisonUtils.assertTxtEquals(expectedOutputFile, Files.newInputStream(fileSystem.getPath("outputTest.json")));
+            ComparisonUtils.assertTxtEquals(Objects.requireNonNull(getClass().getResourceAsStream("/tool_result.json")),
+                    Files.newInputStream(fileSystem.getPath("outputTest.json")));
         }
     }
 

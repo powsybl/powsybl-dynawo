@@ -15,7 +15,7 @@ import com.powsybl.dynawo.models.macroconnections.MacroConnect;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.macroconnections.MacroConnector;
 import com.powsybl.dynawo.parameters.ParametersSet;
-import com.powsybl.dynawo.xml.DydDataSupplier;
+import com.powsybl.dynawo.xml.DynawoData;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -23,7 +23,7 @@ import java.util.function.Consumer;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public final class LoadVariationModels implements DydDataSupplier {
+public final class LoadVariationModels implements DynawoData {
 
     private final LoadVariationAreaAutomationSystem loadVariationArea;
     private final List<MacroConnect> macroConnectList;

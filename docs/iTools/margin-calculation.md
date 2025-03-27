@@ -1,6 +1,6 @@
 # iTools margin-calculation
 
-The `margin-calculation` command loads a network, apply dynamic models, contingencies, loads variations and run a [margin calculation](../margin_calculation/index.md).
+The `margin-calculation` command loads a network, applies dynamic models, contingencies, loads variations and runs a [margin calculation](../margin_calculation/index.md).
 In the end, the results and the modified network can be exported to files.
 
 ## Usage

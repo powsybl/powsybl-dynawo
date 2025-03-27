@@ -25,7 +25,7 @@ import java.util.concurrent.CompletableFuture;
 public final class MarginCalculation {
 
     private MarginCalculation() {
-        throw new IllegalStateException("Utility class should not been instantiated");
+        throw new IllegalStateException("Utility class should not be instantiated");
     }
 
     /**

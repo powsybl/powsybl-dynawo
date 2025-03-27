@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
  */
-public interface DydDataSupplier {
+public interface DynawoData {
 
     default List<BlackBoxModel> getBlackBoxDynamicModels() {
         return Collections.emptyList();

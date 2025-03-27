@@ -70,7 +70,7 @@ public class LoadVariationAreaAutomationSystem extends AbstractPureDynamicBlackB
         for (LoadsVariation lv : loadsVariations) {
             LoadsProportionalScalable proportionalScalable = new LoadsProportionalScalable(lv.loads());
             scalingConfig.accept(proportionalScalable, lv.variationValue());
-            for (CalculatedPowerDelta load : proportionalScalable.getLoadScalable()) {
+            for (CalculatedLoadScalable load : proportionalScalable.getLoadScalable()) {
                 paramSet.addParameter("deltaP_load_" + index, DOUBLE, String.valueOf(load.getCalculatedDeltaP()));
                 paramSet.addParameter("deltaQ_load_" + index, DOUBLE, String.valueOf(load.getCalculatedDeltaQ()));
                 index++;
