@@ -22,6 +22,25 @@ public final class BuilderReports {
     private BuilderReports() {
     }
 
+    public static ReportNode createModelInstantiationReportNode(ReportNode reportNode) {
+        return reportNode.newReportNode()
+                .withMessageTemplate("modelInstantiation", "Model ${modelName} ${dynamicId} instantiation ${state}")
+                .add();
+    }
+
+    public static void setupModelInstantiation(ReportNode reportNode, String modelName, String dynamicId,
+                                               boolean isInstantiable) {
+        reportNode.addUntypedValue("modelName", modelName)
+                .addUntypedValue("dynamicId", dynamicId != null ? dynamicId : "null");
+        if (isInstantiable) {
+            reportNode.addUntypedValue("state", "successful")
+                    .addSeverity(TypedValue.INFO_SEVERITY);
+        } else {
+            reportNode.addUntypedValue("state", "failed")
+                    .addSeverity(TypedValue.WARN_SEVERITY);
+        }
+    }
+
     public static void reportBuilderNotFound(ReportNode reportNode, String lib) {
         reportNode.newReportNode()
                 .withMessageTemplate("builderNotFound", "No builder found for ${lib}")
@@ -36,22 +55,6 @@ public final class BuilderReports {
                 .withUntypedValue("builderName", builderName)
                 .withUntypedValue("modelName", modelName)
                 .withSeverity(TypedValue.INFO_SEVERITY)
-                .add();
-    }
-
-    public static void reportModelInstantiation(ReportNode reportNode, String dynamicId) {
-        reportNode.newReportNode()
-                .withMessageTemplate("modelInstantiation", "Model ${dynamicId} instantiation successful")
-                .withUntypedValue("dynamicId", dynamicId)
-                .withSeverity(TypedValue.TRACE_SEVERITY)
-                .add();
-    }
-
-    public static void reportModelInstantiationFailure(ReportNode reportNode, String dynamicId) {
-        reportNode.newReportNode()
-                .withMessageTemplate("modelInstantiationError", "Model ${dynamicId} cannot be instantiated")
-                .withUntypedValue("dynamicId", dynamicId != null ? dynamicId : "null")
-                .withSeverity(TypedValue.WARN_SEVERITY)
                 .add();
     }
 

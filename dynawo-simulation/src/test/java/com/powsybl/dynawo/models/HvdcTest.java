@@ -77,7 +77,7 @@ class HvdcTest {
                     .build();
         assertEquals(1, hvdcPDangling.getConnectedStations().size());
         assertEquals(line.getConverterStation1(), hvdcPDangling.getConnectedStations().get(0));
-        assertThat(reportNode.getChildren().stream()
+        assertThat(reportNode.getChildren().get(0).getChildren().stream()
                 .filter(r -> r.getMessageKey().equalsIgnoreCase("fieldOptionNotImplemented"))
                 .findFirst())
                 .isNotEmpty()

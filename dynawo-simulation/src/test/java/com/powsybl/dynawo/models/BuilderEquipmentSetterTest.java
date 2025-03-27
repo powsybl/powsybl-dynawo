@@ -52,8 +52,8 @@ class BuilderEquipmentSetterTest {
         reportNode.print(sw);
         assertEquals("""
                         + Builder tests
-                           'equipment' field value LINE L1 does not belong to the builder network
-                           Model L1 cannot be instantiated
+                           + Model Line L1 instantiation failed
+                              'equipment' field value LINE L1 does not belong to the builder network
                         """,
                 TestUtil.normalizeLineSeparator(sw.toString()));
     }

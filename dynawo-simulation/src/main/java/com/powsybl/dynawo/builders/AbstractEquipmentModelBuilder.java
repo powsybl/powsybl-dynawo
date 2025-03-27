@@ -79,6 +79,11 @@ public abstract class AbstractEquipmentModelBuilder<T extends Identifiable<?>, R
     }
 
     @Override
+    public String getModelName() {
+        return modelConfig.name();
+    }
+
+    @Override
     public String getModelId() {
         return builderEquipment.getStaticId();
     }
