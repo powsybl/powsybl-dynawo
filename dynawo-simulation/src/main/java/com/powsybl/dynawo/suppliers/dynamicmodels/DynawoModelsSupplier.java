@@ -53,8 +53,11 @@ public class DynawoModelsSupplier implements DynamicModelsSupplier {
 
     @Override
     public List<DynamicModel> get(Network network, ReportNode reportNode) {
+        ReportNode supplierReportNode = reportNode.newReportNode()
+                .withMessageTemplate("jsonDynamicModels", "Dynawo Dynamic Models Supplier")
+                .add();
         return dynamicModelConfigs.stream()
-                .map(dynamicModelConfig -> buildDynamicModel(dynamicModelConfig, network, reportNode))
+                .map(dynamicModelConfig -> buildDynamicModel(dynamicModelConfig, network, supplierReportNode))
                 .filter(Objects::nonNull)
                 .toList();
     }

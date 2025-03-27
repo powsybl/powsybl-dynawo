@@ -46,8 +46,7 @@ class DynawoEventModelGroovyExtension implements EventModelGroovyExtension {
             binding.setVariable(it.eventModelInfo.name(), { Closure<Void> closure ->
                 def cloned = closure.clone()
                 ModelBuilder<EventModel> builder = it.builderConstructor.createBuilder(
-                        binding.getVariable("network") as Network,
-                        DslReports.createModelBuilderReportNode(reportNode, it.eventModelInfo.name()))
+                        binding.getVariable("network") as Network, reportNode)
                 cloned.delegate = builder
                 cloned()
                 builder.build()?.tap {

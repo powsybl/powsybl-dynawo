@@ -51,8 +51,11 @@ public class DynawoEventModelsSupplier implements EventModelsSupplier {
 
     @Override
     public List<EventModel> get(Network network, ReportNode reportNode) {
+        ReportNode supplierReportNode = reportNode.newReportNode()
+                .withMessageTemplate("jsonEventModels", "Dynawo Event Models Supplier")
+                .add();
         return eventModelConfigs.stream()
-                .map(eventModelConfig -> buildEventModel(eventModelConfig, network, reportNode))
+                .map(eventModelConfig -> buildEventModel(eventModelConfig, network, supplierReportNode))
                 .filter(Objects::nonNull)
                 .toList();
     }

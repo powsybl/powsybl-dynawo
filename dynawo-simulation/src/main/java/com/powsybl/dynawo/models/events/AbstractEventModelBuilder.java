@@ -62,8 +62,6 @@ abstract class AbstractEventModelBuilder<T extends Identifiable<?>, R extends Ab
         return generateEventId("unknownId");
     }
 
-    protected abstract String getModelName();
-
     @Override
     public String getModelId() {
         return eventId;
