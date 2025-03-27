@@ -27,8 +27,8 @@ public abstract class AbstractEquipmentBlackBoxModel<T extends Identifiable<?>> 
     protected final T equipment;
     private final ModelConfig modelConfig;
 
-    protected AbstractEquipmentBlackBoxModel(String dynamicModelId, String parameterSetId, T equipment, ModelConfig modelConfig) {
-        super(dynamicModelId, parameterSetId);
+    protected AbstractEquipmentBlackBoxModel(T equipment, String parameterSetId, ModelConfig modelConfig) {
+        super(equipment.getId(), parameterSetId);
         this.equipment = Objects.requireNonNull(equipment);
         this.modelConfig = Objects.requireNonNull(modelConfig);
     }
@@ -41,11 +41,6 @@ public abstract class AbstractEquipmentBlackBoxModel<T extends Identifiable<?>> 
     @Override
     public VersionInterval getVersionInterval() {
         return modelConfig.version();
-    }
-
-    @Override
-    public String getStaticId() {
-        return equipment.getId();
     }
 
     @Override
@@ -62,7 +57,7 @@ public abstract class AbstractEquipmentBlackBoxModel<T extends Identifiable<?>> 
             writer.writeEmptyElement(DYN_URI, "blackBoxModel");
         }
         writeDynamicAttributes(writer, parFileName);
-        writer.writeAttribute("staticId", getStaticId());
+        writer.writeAttribute("staticId", getDynamicModelId());
         if (hasVarMapping) {
             MacroStaticReference.writeMacroStaticRef(writer, getLib());
             writer.writeEndElement();

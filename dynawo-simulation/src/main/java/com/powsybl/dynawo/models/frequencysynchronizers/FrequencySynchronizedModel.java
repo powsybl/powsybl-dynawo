@@ -11,6 +11,7 @@ import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.models.Model;
 import com.powsybl.dynawo.models.VarConnection;
 import com.powsybl.iidm.network.Bus;
+import com.powsybl.iidm.network.Identifiable;
 
 import java.util.List;
 
@@ -37,7 +38,7 @@ public interface FrequencySynchronizedModel extends Model {
 
     String getRunningVarName();
 
-    String getStaticId();
+    Identifiable<?> getEquipment();
 
     Bus getConnectableBus();
 }

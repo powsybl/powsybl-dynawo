@@ -31,8 +31,8 @@ public class StandardLine extends AbstractEquipmentBlackBoxModel<Line> implement
             new VarMapping("line_Q2Pu", "q2"),
             new VarMapping("line_state", "state"));
 
-    protected StandardLine(String dynamicModelId, Line line, String parameterSetId, ModelConfig modelConfig) {
-        super(dynamicModelId, parameterSetId, line, modelConfig);
+    protected StandardLine(Line line, String parameterSetId, ModelConfig modelConfig) {
+        super(line, parameterSetId, modelConfig);
     }
 
     private List<VarConnection> getVarConnectionsWith(EquipmentConnectionPoint connected, TwoSides side) {

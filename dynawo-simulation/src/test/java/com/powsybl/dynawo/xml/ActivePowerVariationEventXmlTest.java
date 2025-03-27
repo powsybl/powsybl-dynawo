@@ -31,17 +31,14 @@ class ActivePowerVariationEventXmlTest extends AbstractDynamicModelXmlTest {
     @Override
     protected void addDynamicModels() {
         dynamicModels.add(SynchronizedGeneratorBuilder.of(network, "GeneratorPV")
-                .dynamicModelId("BBM_GENC")
                 .staticId("GEN2")
                 .parameterSetId("GPV")
                 .build());
         dynamicModels.add(SynchronousGeneratorBuilder.of(network, "GeneratorSynchronousFourWindingsGoverPropVRPropInt")
-                .dynamicModelId("BBM_GENC2")
                 .staticId("GEN3")
                 .parameterSetId("GSTWPR")
                 .build());
         dynamicModels.add(BaseLoadBuilder.of(network, "LoadAlphaBeta")
-                .dynamicModelId("BBM_LOADC")
                 .staticId("LOAD2")
                 .parameterSetId("load")
                 .build());

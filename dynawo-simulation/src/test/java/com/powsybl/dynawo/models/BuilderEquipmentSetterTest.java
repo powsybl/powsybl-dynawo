@@ -37,25 +37,23 @@ class BuilderEquipmentSetterTest {
                 .withAllResourceBundlesFromClasspath()
                 .withMessageTemplate("builderTests", "Builder tests").build();
 
-        BlackBoxModel bbm1 = LineBuilder.of(network)
-                .dynamicModelId("BBM_LINE_NETWORK_1")
+        BlackBoxModel bbmNetwork1 = LineBuilder.of(network)
                 .equipment(ln1)
                 .parameterSetId("sl")
                 .build();
-        BlackBoxModel bbm2 = LineBuilder.of(network, reportNode)
-                .dynamicModelId("BBM_LINE_NETWORK_2")
+        BlackBoxModel bbmNetwork2 = LineBuilder.of(network, reportNode)
                 .equipment(ln2)
                 .parameterSetId("sl")
                 .build();
 
-        assertNotNull(bbm1);
-        assertNull(bbm2);
+        assertNotNull(bbmNetwork1);
+        assertNull(bbmNetwork2);
         StringWriter sw = new StringWriter();
         reportNode.print(sw);
         assertEquals("""
                         + Builder tests
                            'equipment' field value LINE L1 does not belong to the builder network
-                           Model BBM_LINE_NETWORK_2 cannot be instantiated
+                           Model L1 cannot be instantiated
                         """,
                 TestUtil.normalizeLineSeparator(sw.toString()));
     }

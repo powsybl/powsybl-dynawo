@@ -9,17 +9,22 @@ package com.powsybl.dynawo.models.buses;
 
 import java.util.List;
 import com.powsybl.dynawo.models.defaultmodels.AbstractDefaultModel;
+import com.powsybl.dynawo.models.frequencysynchronizers.SignalNModel;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectAttribute;
 import com.powsybl.dynawo.xml.DynawoSimulationXmlConstants;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class DefaultBusOfSignalN extends AbstractDefaultModel implements BusOfSignalNModel {
+public final class DefaultBusOfSignalN extends AbstractDefaultModel implements BusOfSignalNModel {
 
     private final String signalNEquipmentStaticId;
 
-    public DefaultBusOfSignalN(String staticId, String signalNEquipmentStaticId) {
+    public static DefaultBusOfSignalN of(SignalNModel model) {
+        return new DefaultBusOfSignalN(model.getConnectableBus().getId(), model.getEquipment().getId());
+    }
+
+    private DefaultBusOfSignalN(String staticId, String signalNEquipmentStaticId) {
         super(staticId);
         this.signalNEquipmentStaticId = signalNEquipmentStaticId;
     }

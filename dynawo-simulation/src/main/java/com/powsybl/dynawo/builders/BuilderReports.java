@@ -50,7 +50,7 @@ public final class BuilderReports {
     public static void reportModelInstantiationFailure(ReportNode reportNode, String dynamicId) {
         reportNode.newReportNode()
                 .withMessageTemplate("modelInstantiationError", "Model ${dynamicId} cannot be instantiated")
-                .withUntypedValue("dynamicId", dynamicId)
+                .withUntypedValue("dynamicId", dynamicId != null ? dynamicId : "null")
                 .withSeverity(TypedValue.WARN_SEVERITY)
                 .add();
     }
@@ -60,16 +60,6 @@ public final class BuilderReports {
                 .withMessageTemplate("outputVariableInstantiationError", "Output variable ${id} cannot be instantiated")
                 .withUntypedValue("id", id)
                 .withSeverity(TypedValue.WARN_SEVERITY)
-                .add();
-    }
-
-    public static void reportFieldReplacement(ReportNode reportNode, String fieldName, String replacementName, String replacement) {
-        reportNode.newReportNode()
-                .withMessageTemplate("fieldReplacement", "'${fieldName}' field is not set, ${replacementName} ${replacement} will be used instead")
-                .withUntypedValue(FIELD_NAME, fieldName)
-                .withUntypedValue("replacementName", replacementName)
-                .withUntypedValue("replacement", replacement)
-                .withSeverity(TypedValue.TRACE_SEVERITY)
                 .add();
     }
 
@@ -83,7 +73,7 @@ public final class BuilderReports {
 
     public static void reportStaticIdUnknown(ReportNode reportNode, String fieldName, String staticId, String equipmentType) {
         reportNode.newReportNode()
-                .withMessageTemplate("unknownStaticIdToDynamic", "'${fieldName}' field value '${staticId}' not found for equipment type(s) ${equipmentType}")
+                .withMessageTemplate("unknownIdToDynamic", "'${fieldName}' field value '${staticId}' not found for equipment type(s) ${equipmentType}")
                 .withUntypedValue(EQUIPMENT_TYPE_FIELD, equipmentType)
                 .withUntypedValue(FIELD_NAME, fieldName)
                 .withUntypedValue("staticId", staticId)

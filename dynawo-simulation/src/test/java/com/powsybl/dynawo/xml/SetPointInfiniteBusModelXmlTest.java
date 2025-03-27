@@ -30,17 +30,14 @@ class SetPointInfiniteBusModelXmlTest extends AbstractDynamicModelXmlTest {
     @Override
     protected void addDynamicModels() {
         dynamicModels.add(SynchronizedGeneratorBuilder.of(network, "GeneratorPQ")
-                .dynamicModelId("BBM_GEN")
                 .staticId("GEN")
                 .parameterSetId("pq")
                 .build());
         dynamicModels.add(TransformerFixedRatioBuilder.of(network)
-                .dynamicModelId("BBM_TR")
                 .staticId("NGEN_NHV1")
                 .parameterSetId("t")
                 .build());
         dynamicModels.add(InfiniteBusBuilder.of(network, "InfiniteBus")
-                .dynamicModelId("BBM_BUS")
                 .staticId("NGEN")
                 .parameterSetId("ib")
                 .build());

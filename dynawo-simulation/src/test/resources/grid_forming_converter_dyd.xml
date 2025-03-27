@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
-    <dyn:blackBoxModel id="BBM_GFC" lib="GridFormingConverterDroopControl" parFile="models.par" parId="GF" staticId="GEN">
+    <dyn:blackBoxModel id="GEN" lib="GridFormingConverterDroopControl" parFile="models.par" parId="GF" staticId="GEN">
         <dyn:macroStaticRef id="MSR_GridFormingConverterDroopControl"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="FREQ_SYNC" lib="DYNModelOmegaRef" parFile="sim1.par" parId="FREQ_SYNC_PAR"/>
@@ -20,7 +20,7 @@
         <dyn:staticRef var="converter_QGenPu" staticVar="q"/>
         <dyn:staticRef var="converter_state" staticVar="state"/>
     </dyn:macroStaticReference>
-    <dyn:macroConnect connector="MC_GridFormingConverterDroopControl-DefaultEquipmentConnectionPoint" id1="BBM_GFC" id2="NETWORK"/>
-    <dyn:macroConnect connector="MC_DYNModelOmegaRef-GridFormingConverterDroopControl" id1="FREQ_SYNC" index1="0" id2="BBM_GFC"/>
+    <dyn:macroConnect connector="MC_GridFormingConverterDroopControl-DefaultEquipmentConnectionPoint" id1="GEN" id2="NETWORK"/>
+    <dyn:macroConnect connector="MC_DYNModelOmegaRef-GridFormingConverterDroopControl" id1="FREQ_SYNC" index1="0" id2="GEN"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRef-DefaultBusOfFrequencySynchronized" id1="FREQ_SYNC" index1="0" id2="NETWORK" name2="GEN"/>
 </dyn:dynamicModelsArchitecture>

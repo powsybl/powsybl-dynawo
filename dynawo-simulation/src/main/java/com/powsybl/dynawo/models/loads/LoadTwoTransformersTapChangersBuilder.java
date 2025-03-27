@@ -64,7 +64,7 @@ public class LoadTwoTransformersTapChangersBuilder extends AbstractLoadModelBuil
 
     @Override
     public LoadTwoTransformersTapChangers build() {
-        return isInstantiable() ? new LoadTwoTransformersTapChangers(dynamicModelId, getEquipment(), parameterSetId, modelConfig) : null;
+        return isInstantiable() ? new LoadTwoTransformersTapChangers(getEquipment(), parameterSetId, modelConfig) : null;
     }
 
     @Override

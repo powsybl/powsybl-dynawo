@@ -21,8 +21,8 @@ import java.util.List;
  */
 public class BaseShunt extends AbstractEquipmentBlackBoxModel<ShuntCompensator> implements ShuntModel {
 
-    protected BaseShunt(String dynamicModelId, ShuntCompensator svarc, String parameterSetId, ModelConfig modelConfig) {
-        super(dynamicModelId, parameterSetId, svarc, modelConfig);
+    protected BaseShunt(ShuntCompensator svarc, String parameterSetId, ModelConfig modelConfig) {
+        super(svarc, parameterSetId, modelConfig);
     }
 
     @Override

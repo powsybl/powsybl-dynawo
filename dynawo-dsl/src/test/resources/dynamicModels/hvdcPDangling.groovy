@@ -12,7 +12,6 @@ import com.powsybl.iidm.network.TwoSides
 
 HvdcPVDanglingDiagramPQ {
     staticId "L"
-    dynamicModelId "BBM_HVDC_L"
     parameterSetId "HVDC"
     dangling TwoSides.ONE
 }

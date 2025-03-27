@@ -19,7 +19,7 @@ In the following examples the array will be omitted.
 ## Dynamic Model
 - All the models share three attributes:
 - `modelName`: refers to the dynamic model library used in Dynawo (used as a keyword in Groovy script).
-- `dynamicModelId`: identifies the model.
+- `dynamicModelId`: identifies the model (set explicitly or implicitly depending on the model type).
 - `parameterSetId`: refers to a set of parameters for this model in the model parameters file.
 
 **Note**: In Json configuration file `parameterSetId` is replaced by the `group` attribute and can be customized with the `groupType` attribute taking one of the following value:
@@ -34,13 +34,12 @@ Dynamic models matching a network equipment (generator, load, ...).
 With specific attribute:
 - `staticId`: equipment id in the network.
 
-The `dynamicModelId` is optional for these models and will be equal to the `staticId` if not set.
+The `dynamicModelId` will be set implicitly to `staticId` and cannot be modified.
 
 **Groovy script:**
 ```groovy
 GeneratorSynchronousThreeWindings {
     staticId 'GEN'
-    dynamicModelId 'BBM_GEN'
     parameterSetId 'GSTW'
 }
 LoadAlphaBeta {
@@ -55,11 +54,6 @@ LoadAlphaBeta {
     "model":"GeneratorSynchronousThreeWindings",
     "group": "GSTW",
     "properties":[
-      {
-       "name":"dynamicModelId",
-       "value":"LOAD",
-       "type":"STRING"
-      },
       {
         "name":"staticId",
         "value":"GEN",
@@ -84,6 +78,7 @@ LoadAlphaBeta {
 
 ### Automation system models
 Dynamic models representing an automation system without network representation.
+The `dynamicModelId` have to be set explicitly.
 
 #### Overload Management System
 Automation system which emits a specific order when the current on the monitored line exceeds a given threshold for a given duration.  

@@ -29,17 +29,14 @@ class OmegaRefModelXmlTest extends AbstractDynamicModelXmlTest {
     @Override
     protected void addDynamicModels() {
         dynamicModels.add(SynchronousGeneratorBuilder.of(network, "GeneratorSynchronousFourWindingsPmConstVRNordic")
-                .dynamicModelId("BBM_GEN_SYNCHRO")
                 .staticId("GEN")
                 .parameterSetId("GSFW")
                 .build());
         dynamicModels.add(SynchronizedGeneratorBuilder.of(network, "GeneratorPQ")
-                .dynamicModelId("BBM_GEN_PQ")
                 .staticId("GEN2")
                 .parameterSetId("GPQ")
                 .build());
         dynamicModels.add(SynchronousGeneratorBuilder.of(network, "GeneratorSynchronousThreeWindingsPmConstVRNordic")
-                .dynamicModelId("BBM_GEN_SYNCHRO2")
                 .staticId("GEN3")
                 .parameterSetId("GSTW")
                 .build());

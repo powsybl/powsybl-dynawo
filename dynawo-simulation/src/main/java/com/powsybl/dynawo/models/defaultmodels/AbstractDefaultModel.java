@@ -15,10 +15,6 @@ public abstract class AbstractDefaultModel implements Model {
         this.staticId = Objects.requireNonNull(staticId);
     }
 
-    public String getStaticId() {
-        return staticId;
-    }
-
     @Override
     public List<MacroConnectAttribute> getMacroConnectToAttributes() {
         return List.of(

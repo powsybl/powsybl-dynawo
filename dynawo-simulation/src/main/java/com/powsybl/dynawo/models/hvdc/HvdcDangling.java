@@ -26,9 +26,9 @@ public class HvdcDangling extends BaseHvdc {
 
     private final TwoSides danglingSide;
 
-    protected HvdcDangling(String dynamicModelId, HvdcLine hvdc, String parameterSetId, ModelConfig modelConfig,
+    protected HvdcDangling(HvdcLine hvdc, String parameterSetId, ModelConfig modelConfig,
                            HvdcVarNameHandler varNameHandler, TwoSides danglingSide) {
-        super(dynamicModelId, hvdc, parameterSetId, modelConfig, varNameHandler);
+        super(hvdc, parameterSetId, modelConfig, varNameHandler);
         this.danglingSide = danglingSide;
     }
 

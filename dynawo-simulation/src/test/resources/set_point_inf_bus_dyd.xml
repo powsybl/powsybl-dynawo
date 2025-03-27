@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
-    <dyn:blackBoxModel id="BBM_GEN" lib="GeneratorPQ" parFile="models.par" parId="pq" staticId="GEN">
+    <dyn:blackBoxModel id="GEN" lib="GeneratorPQ" parFile="models.par" parId="pq" staticId="GEN">
         <dyn:macroStaticRef id="MSR_GeneratorPQ"/>
     </dyn:blackBoxModel>
-    <dyn:blackBoxModel id="BBM_TR" lib="TransformerFixedRatio" parFile="models.par" parId="t" staticId="NGEN_NHV1">
+    <dyn:blackBoxModel id="NGEN_NHV1" lib="TransformerFixedRatio" parFile="models.par" parId="t" staticId="NGEN_NHV1">
         <dyn:macroStaticRef id="MSR_TransformerFixedRatio"/>
     </dyn:blackBoxModel>
-    <dyn:blackBoxModel id="BBM_BUS" lib="InfiniteBus" parFile="models.par" parId="ib" staticId="NGEN">
+    <dyn:blackBoxModel id="NGEN" lib="InfiniteBus" parFile="models.par" parId="ib" staticId="NGEN">
         <dyn:macroStaticRef id="MSR_InfiniteBus"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="FREQ_SYNC" lib="SetPoint" parFile="sim1.par" parId="FREQ_SYNC_PAR"/>
@@ -38,8 +38,8 @@
         <dyn:staticRef var="infiniteBus_UPuVar" staticVar="v"/>
         <dyn:staticRef var="infiniteBus_UPhaseVar" staticVar="angle"/>
     </dyn:macroStaticReference>
-    <dyn:macroConnect connector="MC_GeneratorPQ-InfiniteBus" id1="BBM_GEN" id2="BBM_BUS" name2="NGEN"/>
-    <dyn:macroConnect connector="MC_TransformerFixedRatioSide1-InfiniteBus" id1="BBM_TR" id2="BBM_BUS" name2="NGEN"/>
-    <dyn:macroConnect connector="MC_TransformerFixedRatioSide2-DefaultEquipmentConnectionPoint" id1="BBM_TR" id2="NETWORK"/>
-    <dyn:macroConnect connector="MC_SetPoint-GeneratorPQ" id1="FREQ_SYNC" id2="BBM_GEN"/>
+    <dyn:macroConnect connector="MC_GeneratorPQ-InfiniteBus" id1="GEN" id2="NGEN" name2="NGEN"/>
+    <dyn:macroConnect connector="MC_TransformerFixedRatioSide1-InfiniteBus" id1="NGEN_NHV1" id2="NGEN" name2="NGEN"/>
+    <dyn:macroConnect connector="MC_TransformerFixedRatioSide2-DefaultEquipmentConnectionPoint" id1="NGEN_NHV1" id2="NETWORK"/>
+    <dyn:macroConnect connector="MC_SetPoint-GeneratorPQ" id1="FREQ_SYNC" id2="GEN"/>
 </dyn:dynamicModelsArchitecture>
