@@ -80,7 +80,7 @@ public abstract class AbstractEquipmentModelBuilder<T extends Identifiable<?>, R
 
     @Override
     public String getModelId() {
-        return builderEquipment.hasStaticId() ? builderEquipment.getStaticId() : "unknownId";
+        return builderEquipment.getStaticId();
     }
 
     protected abstract R self();

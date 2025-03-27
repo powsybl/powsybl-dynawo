@@ -50,7 +50,7 @@ public final class BuilderReports {
     public static void reportModelInstantiationFailure(ReportNode reportNode, String dynamicId) {
         reportNode.newReportNode()
                 .withMessageTemplate("modelInstantiationError", "Model ${dynamicId} cannot be instantiated")
-                .withUntypedValue("dynamicId", dynamicId)
+                .withUntypedValue("dynamicId", dynamicId != null ? dynamicId : "null")
                 .withSeverity(TypedValue.WARN_SEVERITY)
                 .add();
     }
