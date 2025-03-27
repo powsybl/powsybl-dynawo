@@ -1,8 +1,8 @@
-# Output variable mapping
+# Output variable configuration
 The output variable domain specific language allows a user to configure the curves or final state values Dynawo will export at the end of the simulation.
 This DSL defines the `curve` and `fsv`keywords.
 
-The `curve` keyword combined with the `variable` field create a single curve for a dynamic model. The dynamic model is identified by its ID, the same as the one used in the [Dynamic Models DSL](dynamic-models-mapping). The variable to plot is identified by its name.
+The `curve` keyword combined with the `variable` field create a single curve for a dynamic model. The dynamic model is identified by its ID, the same as the one used in the [Dynamic Models DSL](dynamic-models-configuration). The variable to plot is identified by its name.
 ```groovy
 curve {
     dynamicModelId "dynamicId"

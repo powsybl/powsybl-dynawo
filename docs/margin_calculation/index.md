@@ -19,7 +19,7 @@ Read this [documentation page](https://dynawo.github.io/install/dynalgo) to lear
 
 The inputs of the margin calculation are the following:
 - a static network
-- a set of dynamic models provided by the same [suppliers](../dynamic_simulation/dynamic-models-mapping) used for the dynawo dynamic simulation
+- a set of dynamic models provided by the same [suppliers](../dynamic_simulation/dynamic-models-configuration) used for the dynawo dynamic simulation
 - a set of [contingencies](inv:powsyblcore:*:*#simulation/security/contingency-dsl)
 - a set of [load variations](load_variations_supplier)
 - a set of parameters for the [margin calculation](/configuration) and for [Dynawo](../dynamic_simulation/configuration)
