@@ -8,7 +8,7 @@
 package com.powsybl.dynawo.xml;
 
 import com.powsybl.dynawo.DynawoSimulationConstants;
-import com.powsybl.dynawo.models.automationsystems.overloadmanagments.DynamicTwoLevelsOverloadManagementSystemBuilder;
+import com.powsybl.dynawo.models.automationsystems.overloadmanagments.DynamicTwoLevelOverloadManagementSystemBuilder;
 import com.powsybl.iidm.network.TwoSides;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import org.junit.jupiter.api.Test;
@@ -19,7 +19,7 @@ import java.io.IOException;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-class DynamicTwoLevelsOverloadManagementSystemModelXmlTest extends AbstractDynamicModelXmlTest {
+class DynamicTwoLevelOverloadManagementSystemModelXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void setupNetwork() {
@@ -28,7 +28,7 @@ class DynamicTwoLevelsOverloadManagementSystemModelXmlTest extends AbstractDynam
 
     @Override
     protected void addDynamicModels() {
-        dynamicModels.add(DynamicTwoLevelsOverloadManagementSystemBuilder.of(network, "TwoLevelsOverloadManagementSystem")
+        dynamicModels.add(DynamicTwoLevelOverloadManagementSystemBuilder.of(network, "TwoLevelOverloadManagementSystem")
                 .dynamicModelId("BBM_CLA_TWO_LEVELS")
                 .parameterSetId("cla")
                 .controlledBranch("NGEN_NHV1")

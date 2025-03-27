@@ -1,8 +1,8 @@
-# Event models mapping
-Event models mapping allows the creation of events that occurs during the simulation.
+# Event models configuration
+Event models configuration allows the creation of events that occurs during the simulation.
 
 ## Implementation
-Powsybl-Dynawo handles two methods of mapping:
+Powsybl-Dynawo handles two methods of configuration:
 - **Event Models DSL**: a domain specific language written in groovy (used in iTools)
 - **Dynawo Event Models**: a JSON configuration file. 
 
