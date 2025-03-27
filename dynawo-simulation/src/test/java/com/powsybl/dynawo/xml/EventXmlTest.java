@@ -6,10 +6,8 @@
  */
 package com.powsybl.dynawo.xml;
 
-import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawo.DynawoSimulationConstants;
 import com.powsybl.dynawo.DynawoSimulationContext;
-import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.events.EventDisconnectionBuilder;
 import com.powsybl.dynawo.models.generators.SynchronousGeneratorBuilder;
@@ -33,12 +31,13 @@ class EventXmlTest extends DynawoTestUtil {
                 .staticId("GEN2")
                 .parameterSetId("GSFWPR")
                 .build());
-        DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
-        DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load();
-        DynawoSimulationContext context = new DynawoSimulationContext(network, network.getVariantManager().getWorkingVariantId(),
-                dynamicModels, eventModels, outputVariables, parameters, dynawoParameters);
+        DynawoSimulationContext context = new DynawoSimulationContext
+                .Builder(network, dynamicModels)
+                .eventModels(eventModels)
+                .outputVariables(outputVariables)
+                .build();
 
-        DydXml.write(tmpDir, context);
+        DydXml.write(tmpDir, context.getSimulationDydData());
         validate("dyd.xsd", "events.xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
     }
 
@@ -66,8 +65,11 @@ class EventXmlTest extends DynawoTestUtil {
         eventModels.add(event2);
         eventModels.add(event1Duplicate);
         eventModels.add(event2Duplicate);
-        String workingVariantId = network.getVariantManager().getWorkingVariantId();
-        DynawoSimulationContext context = new DynawoSimulationContext(network, workingVariantId, dynamicModels, eventModels, outputVariables, DynamicSimulationParameters.load(), DynawoSimulationParameters.load());
+        DynawoSimulationContext context = new DynawoSimulationContext
+                .Builder(network, dynamicModels)
+                .eventModels(eventModels)
+                .outputVariables(outputVariables)
+                .build();
         Assertions.assertThat(context.getBlackBoxEventModels()).containsExactly(event1, event2);
     }
 }

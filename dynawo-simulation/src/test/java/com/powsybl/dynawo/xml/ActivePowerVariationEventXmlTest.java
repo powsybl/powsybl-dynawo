@@ -74,7 +74,7 @@ class ActivePowerVariationEventXmlTest extends AbstractDynamicModelXmlTest {
 
     @Test
     void writeDisconnectModel() throws SAXException, IOException {
-        DydXml.write(tmpDir, context);
+        DydXml.write(tmpDir, context.getSimulationDydData());
         ParametersXml.write(tmpDir, context);
         validate("dyd.xsd", "apv_dyd.xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
         validate("parameters.xsd", "apv_par.xml", tmpDir.resolve(context.getSimulationParFile()));

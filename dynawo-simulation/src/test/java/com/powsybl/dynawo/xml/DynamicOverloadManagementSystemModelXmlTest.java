@@ -59,7 +59,7 @@ class DynamicOverloadManagementSystemModelXmlTest extends AbstractDynamicModelXm
 
     @Test
     void writeModel() throws SAXException, IOException {
-        DydXml.write(tmpDir, context);
+        DydXml.write(tmpDir, context.getSimulationDydData());
         validate("dyd.xsd", "cla_dyd.xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
     }
 }

@@ -7,7 +7,6 @@
  */
 package com.powsybl.dynawo.models.events;
 
-import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.builders.EventModelInfo;
 import com.powsybl.dynawo.models.utils.ImmutableLateInit;
 import com.powsybl.dynawo.parameters.ParametersSet;
@@ -51,7 +50,7 @@ public abstract class AbstractDynamicLibEventDisconnection extends AbstractEvent
     }
 
     @Override
-    public final void setEquipmentHasDynamicModel(DynawoSimulationContext context) {
-        this.equipmentHasDynamicModel.setValue(hasDynamicModel(context));
+    public final void setEquipmentHasDynamicModel(boolean hasDynamicModel) {
+        this.equipmentHasDynamicModel.setValue(hasDynamicModel);
     }
 }

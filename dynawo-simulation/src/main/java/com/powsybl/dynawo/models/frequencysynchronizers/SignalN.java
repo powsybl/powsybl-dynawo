@@ -21,15 +21,17 @@ import java.util.List;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class SignalN extends AbstractPureDynamicBlackBoxModel implements FrequencySynchronizerModel {
+public class SignalN extends AbstractPureDynamicBlackBoxModel {
 
     private static final String SIGNAL_N_ID = "Signal_N";
     private static final ModelConfig MODEL_CONFIG = new ModelConfig("SignalN");
     private final List<SignalNModel> signalNEquipments;
+    private final String defaultParFile;
 
-    public SignalN(List<SignalNModel> signalNEquipments) {
+    public SignalN(List<SignalNModel> signalNEquipments, String defaultParFile) {
         super(SIGNAL_N_ID, "", MODEL_CONFIG);
         this.signalNEquipments = signalNEquipments;
+        this.defaultParFile = defaultParFile;
     }
 
     @Override
@@ -51,13 +53,13 @@ public class SignalN extends AbstractPureDynamicBlackBoxModel implements Frequen
     }
 
     @Override
-    public boolean isEmpty() {
-        return signalNEquipments.isEmpty();
-    }
-
-    @Override
     protected void writeDynamicAttributes(XMLStreamWriter writer, String parFileName) throws XMLStreamException {
         writer.writeAttribute("id", getDynamicModelId());
         writer.writeAttribute("lib", getLib());
+    }
+
+    @Override
+    public String getDefaultParFile() {
+        return defaultParFile;
     }
 }

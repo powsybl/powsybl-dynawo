@@ -1,0 +1,12 @@
+{
+  "variations": [
+    {
+      "loadsIds": ["LOAD", "LOAD2"],
+      "variationValue": 20
+    },
+    {
+      "loadsIds": ["LOAD3"],
+      "variationValue": 10.2
+    }
+  ]
+}

@@ -59,7 +59,7 @@ class PhaseShiftersXmlTest extends AbstractParametrizedDynamicModelXmlTest {
     @ParameterizedTest(name = "{0}")
     @MethodSource("providePhaseShifter")
     void writeLoadModel(String dydName, Function<Network, BlackBoxModel> phaseShifterConstructor, boolean dynamicTransformer) throws SAXException, IOException {
-        DydXml.write(tmpDir, context);
+        DydXml.write(tmpDir, context.getSimulationDydData());
         validate("dyd.xsd", dydName, tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
     }
 
