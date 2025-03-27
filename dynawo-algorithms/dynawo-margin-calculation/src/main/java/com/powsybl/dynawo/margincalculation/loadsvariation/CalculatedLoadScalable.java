@@ -11,7 +11,7 @@ import com.powsybl.iidm.modification.scalable.LoadScalable;
 import com.powsybl.iidm.network.Load;
 
 /**
- * The scaled P and Q are not set in the given load but kept in  class parameters, contrary to {@link LoadScalable}
+ * The scaled P and Q are not set in the given load but kept in class parameters, contrary to {@link LoadScalable}
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class CalculatedLoadScalable extends LoadScalable {
