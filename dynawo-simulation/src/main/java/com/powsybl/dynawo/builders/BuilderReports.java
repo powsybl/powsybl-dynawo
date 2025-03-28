@@ -18,6 +18,7 @@ public final class BuilderReports {
 
     private static final String FIELD_NAME = "fieldName";
     private static final String EQUIPMENT_TYPE_FIELD = "equipmentType";
+    private static final String STATIC_ID = "staticId";
 
     private BuilderReports() {
     }
@@ -79,7 +80,7 @@ public final class BuilderReports {
                 .withMessageTemplate("unknownIdToDynamic", "'${fieldName}' field value '${staticId}' not found for equipment type(s) ${equipmentType}")
                 .withUntypedValue(EQUIPMENT_TYPE_FIELD, equipmentType)
                 .withUntypedValue(FIELD_NAME, fieldName)
-                .withUntypedValue("staticId", staticId)
+                .withUntypedValue(STATIC_ID, staticId)
                 .withSeverity(TypedValue.WARN_SEVERITY)
                 .add();
     }
@@ -89,7 +90,7 @@ public final class BuilderReports {
                 .withMessageTemplate("wrongNetwork", "'${fieldName}' field value ${equipmentType} ${staticId} does not belong to the builder network")
                 .withUntypedValue(EQUIPMENT_TYPE_FIELD, equipmentType)
                 .withUntypedValue(FIELD_NAME, fieldName)
-                .withUntypedValue("staticId", staticId)
+                .withUntypedValue(STATIC_ID, staticId)
                 .withSeverity(TypedValue.WARN_SEVERITY)
                 .add();
     }
@@ -98,7 +99,8 @@ public final class BuilderReports {
         reportNode.newReportNode()
                 .withMessageTemplate("staticIdUnknown", "'${fieldName}' field value '${staticId}' not found for equipment type(s) ${equipmentType}, id will be used as pure dynamic model id")
                 .withUntypedValue(EQUIPMENT_TYPE_FIELD, equipmentType)
-                .withUntypedValue(FIELD_NAME, fieldName).withUntypedValue("staticId", staticId)
+                .withUntypedValue(FIELD_NAME, fieldName)
+                .withUntypedValue(STATIC_ID, staticId)
                 .withSeverity(TypedValue.INFO_SEVERITY)
                 .add();
     }
@@ -127,7 +129,8 @@ public final class BuilderReports {
     public static void reportFieldSetWithWrongEquipment(ReportNode reportNode, String fieldName, String equipment) {
         reportNode.newReportNode()
                 .withMessageTemplate("fieldSetWithWrongEquipment", "'${fieldName}' field is set but ${equipment} does not possess this option")
-                .withUntypedValue(FIELD_NAME, fieldName).withUntypedValue("equipment", equipment).withSeverity(TypedValue.WARN_SEVERITY)
+                .withUntypedValue(FIELD_NAME, fieldName)
+                .withUntypedValue("equipment", equipment).withSeverity(TypedValue.WARN_SEVERITY)
                 .add();
     }
 

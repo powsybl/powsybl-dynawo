@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class Ieee14DisconnectLineTest extends AbstractIeeeTest {
 
     @BeforeEach
-    public void setup() throws IOException {
+    void setup() throws IOException {
         super.setup(
             "/ieee14-disconnectline/config/models.par",
             "/ieee14-disconnectline/config/network.par", "8",
@@ -36,7 +36,7 @@ class Ieee14DisconnectLineTest extends AbstractIeeeTest {
 
     @Test
     void testSimulation() throws Exception {
-        DynawoLocalCommandExecutor commandExecutor = new DynawoLocalCommandExecutor(fileSystem, network.getId(), getDynamicSimulationParameters(parameters), getWorkingDirName(), "/dynawo_version.out");
+        DynawoLocalCommandExecutor commandExecutor = new DynawoLocalCommandExecutor(fileSystem, network.getId(), getWorkingDirName(), "/dynawo_version.out");
         DynamicSimulationResult result;
         result = runSimulation(commandExecutor);
         assertNotNull(result);
