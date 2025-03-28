@@ -18,7 +18,7 @@ import java.util.function.Predicate;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public abstract class AbstractEquipmentModelBuilder<T extends Identifiable<?>, R extends AbstractEquipmentModelBuilder<T, R>> extends AbstractDynamicModelBuilder implements EquipmentModelBuilder<T, R> {
+public abstract class AbstractEquipmentModelBuilder<T extends Identifiable<T>, R extends AbstractEquipmentModelBuilder<T, R>> extends AbstractDynamicModelBuilder implements EquipmentModelBuilder<T, R> {
 
     protected String parameterSetId;
     protected final ModelConfig modelConfig;
