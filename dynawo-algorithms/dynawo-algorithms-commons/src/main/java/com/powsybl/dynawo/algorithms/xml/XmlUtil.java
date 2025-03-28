@@ -23,7 +23,7 @@ import static com.powsybl.dynawo.xml.DynawoSimulationXmlConstants.DYN_PREFIX;
 import static com.powsybl.dynawo.xml.DynawoSimulationXmlConstants.DYN_URI;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public final class XmlUtil {
 

@@ -42,7 +42,7 @@ import static com.powsybl.dynawo.algorithms.xml.AlgorithmsConstants.MULTIPLE_JOB
 import static com.powsybl.dynawo.contingency.ContingencyConstants.AGGREGATED_RESULTS;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 @AutoService(DynamicSecurityAnalysisProvider.class)
 public class DynawoSecurityAnalysisProvider implements DynamicSecurityAnalysisProvider {

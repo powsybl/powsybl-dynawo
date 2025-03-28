@@ -21,7 +21,7 @@ import static com.powsybl.dynawo.DynawoSimulationConstants.JOBS_FILENAME;
 import static com.powsybl.dynawo.algorithms.xml.AlgorithmsConstants.MULTIPLE_JOBS_FILENAME;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public final class MultipleJobsXml {
 
