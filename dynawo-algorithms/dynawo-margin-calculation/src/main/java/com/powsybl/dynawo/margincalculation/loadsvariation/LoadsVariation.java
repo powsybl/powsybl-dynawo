@@ -12,7 +12,7 @@ import com.powsybl.iidm.network.Load;
 import java.util.List;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public record LoadsVariation(List<Load> loads, double variationValue) {
 }

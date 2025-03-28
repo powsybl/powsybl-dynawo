@@ -27,7 +27,7 @@ import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public final class MarginCalculationContext extends DynawoSimulationContext {
 

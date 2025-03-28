@@ -25,7 +25,7 @@ import java.util.List;
 import static com.powsybl.dynawo.margincalculation.xml.MarginCalculationConstant.LOAD_VARIATION_AREA_FILENAME;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 class LoadVariationAreaXmlTest extends AbstractDynamicModelXmlTest {
 
