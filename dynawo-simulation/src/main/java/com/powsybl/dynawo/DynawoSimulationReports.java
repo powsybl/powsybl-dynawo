@@ -10,7 +10,6 @@ package com.powsybl.dynawo;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.commons.report.TypedValue;
 import com.powsybl.dynawo.commons.DynawoVersion;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -69,11 +68,11 @@ public final class DynawoSimulationReports {
                 .add();
     }
 
-    public static void reportEmptyAutomaton(ReportNode reportNode, String automatonName, String dynamicId, String equipmentId, String expectedModels) {
+    public static void reportEmptyAutomationSystem(ReportNode reportNode, String automationSystemName, String dynamicId, String equipmentId, String expectedModels) {
         reportNode.newReportNode()
-                .withMessageTemplate("emptyAutomaton",
-                        "${automatonName} ${dynamicId} equipment ${equipmentId} is not a ${expectedModels}, the automation system will be skipped")
-                .withUntypedValue("automatonName", automatonName)
+                .withMessageTemplate("emptyAutomationSystem",
+                        "${automationSystemName} ${dynamicId} equipment ${equipmentId} is not a ${expectedModels}, the automation system will be skipped")
+                .withUntypedValue("automationSystemName", automationSystemName)
                 .withUntypedValue(DYNAMIC_ID_FIELD, dynamicId)
                 .withUntypedValue("equipmentId", equipmentId)
                 .withUntypedValue("expectedModels", expectedModels)
@@ -81,11 +80,11 @@ public final class DynawoSimulationReports {
                 .add();
     }
 
-    public static void reportEmptyListAutomaton(ReportNode reportNode, String automatonName, String dynamicId, String expectedModels) {
+    public static void reportEmptyListAutomationSystem(ReportNode reportNode, String automationSystemName, String dynamicId, String expectedModels) {
         reportNode.newReportNode()
-                .withMessageTemplate("emptyListAutomaton",
-                        "None of ${automatonName} ${dynamicId} equipments are ${expectedModels}, the automation system will be skipped")
-                .withUntypedValue("automatonName", automatonName)
+                .withMessageTemplate("emptyListAutomationSystem",
+                        "None of ${automationSystemName} ${dynamicId} equipments are ${expectedModels}, the automation system will be skipped")
+                .withUntypedValue("automationSystemName", automationSystemName)
                 .withUntypedValue(DYNAMIC_ID_FIELD, dynamicId)
                 .withUntypedValue("expectedModels", expectedModels)
                 .withSeverity(TypedValue.WARN_SEVERITY)
@@ -94,7 +93,7 @@ public final class DynawoSimulationReports {
 
     public static void reportFailedDynamicModelHandling(ReportNode reportNode, String modelName, String dynamicId, String equipmentType) {
         reportNode.newReportNode()
-                .withMessageTemplate("emptyListAutomaton",
+                .withMessageTemplate("failedDynamicModelHandling",
                         "${modelName} ${dynamicId} cannot handle ${equipmentType} dynamic model, the model will be skipped")
                 .withUntypedValue(MODEL_NAME_FIELD, modelName)
                 .withUntypedValue(DYNAMIC_ID_FIELD, dynamicId)
@@ -104,11 +103,13 @@ public final class DynawoSimulationReports {
     }
 
     public static ReportNode createDynawoSpecificLogReportNode(ReportNode reportNode, DynawoSimulationParameters.SpecificLog logType) {
-        String logTypeName = StringUtils.capitalize(logType.toString().toLowerCase());
-        return reportNode.newReportNode()
-                .withMessageTemplate("dynawo" + logTypeName + "Log", logTypeName + " log")
-                .add();
-
+        return switch (logType) {
+            case NETWORK -> reportNode.newReportNode().withMessageTemplate("dynawoNetworkLog", "Network log").add();
+            case MODELER -> reportNode.newReportNode().withMessageTemplate("dynawoModelerLog", "Modeler log").add();
+            case PARAMETERS -> reportNode.newReportNode().withMessageTemplate("dynawoParametersLog", "Parameters log").add();
+            case VARIABLES -> reportNode.newReportNode().withMessageTemplate("dynawoVariablesLog", "Variables log").add();
+            case EQUATIONS -> reportNode.newReportNode().withMessageTemplate("dynawoEquationsLog", "Equations log").add();
+        };
     }
 
     public static void reportSpecificLogEntry(ReportNode reportNode, String logEntry) {
