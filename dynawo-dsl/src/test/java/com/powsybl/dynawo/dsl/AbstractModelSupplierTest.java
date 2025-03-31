@@ -9,6 +9,7 @@ package com.powsybl.dynawo.dsl;
 
 import com.powsybl.commons.report.PowsyblCoreReportResourceBundle;
 import com.powsybl.commons.report.ReportNode;
+import com.powsybl.commons.test.PowsyblCoreTestReportResourceBundle;
 import com.powsybl.commons.test.TestUtil;
 import com.powsybl.dynawo.commons.PowsyblDynawoReportResourceBundle;
 
@@ -25,8 +26,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 abstract class AbstractModelSupplierTest {
 
     protected final ReportNode reportNode = ReportNode.newRootReportNode()
-            .withResourceBundles(PowsyblCoreReportResourceBundle.BASE_NAME, PowsyblDynawoReportResourceBundle.BASE_NAME)
-            .withMessageTemplate("dslTests", "DSL tests").build();
+            .withResourceBundles(PowsyblCoreReportResourceBundle.BASE_NAME,
+                    PowsyblDynawoReportResourceBundle.BASE_NAME,
+                    PowsyblCoreTestReportResourceBundle.TEST_BASE_NAME)
+            .withMessageTemplate("testDSL")
+            .build();
 
     protected InputStream getResourceAsStream(String name) {
         return Objects.requireNonNull(AbstractModelSupplierTest.class.getResourceAsStream(name));

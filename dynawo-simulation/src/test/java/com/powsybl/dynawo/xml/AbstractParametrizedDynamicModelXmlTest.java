@@ -10,6 +10,7 @@ package com.powsybl.dynawo.xml;
 import com.powsybl.commons.report.PowsyblCoreReportResourceBundle;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.commons.test.AbstractSerDeTest;
+import com.powsybl.commons.test.PowsyblCoreTestReportResourceBundle;
 import com.powsybl.commons.test.TestUtil;
 import com.powsybl.dynamicsimulation.OutputVariable;
 import com.powsybl.dynawo.DynawoSimulationContext;
@@ -48,8 +49,11 @@ public abstract class AbstractParametrizedDynamicModelXmlTest extends AbstractSe
     protected List<OutputVariable> outputVariables = new ArrayList<>();
     protected DynawoSimulationContext context;
     protected ReportNode reportNode = ReportNode.newRootReportNode()
-            .withResourceBundles(PowsyblCoreReportResourceBundle.BASE_NAME, PowsyblDynawoReportResourceBundle.BASE_NAME)
-            .withMessageTemplate("testDyd", "Test DYD").build();
+            .withResourceBundles(PowsyblCoreReportResourceBundle.BASE_NAME,
+                    PowsyblDynawoReportResourceBundle.BASE_NAME,
+                    PowsyblCoreTestReportResourceBundle.TEST_BASE_NAME)
+            .withMessageTemplate("testDyd")
+            .build();
 
     public void validate(String schemaDefinition, String expectedResourceName, Path xmlFile) throws SAXException, IOException {
         InputStream expected = Objects.requireNonNull(getClass().getResourceAsStream("/" + expectedResourceName));

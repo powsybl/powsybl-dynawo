@@ -45,8 +45,6 @@ public final class DynawoSimulationReports {
 
     public static ReportNode createDynawoSimulationContextReportNode(ReportNode reportNode) {
         return reportNode.newReportNode()
-                //TODO keep ?
-                .withResourceBundles(PowsyblDynawoReportResourceBundle.BASE_NAME)
                 .withMessageTemplate("dynawo.dynasim.dynawoModelsProcessing")
                 .add();
     }
