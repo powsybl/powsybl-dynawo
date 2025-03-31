@@ -19,7 +19,7 @@ public final class DynawoAlgorithmsReports {
 
     public static ReportNode createContingencyVoltageIdNotFoundReportNode(ReportNode reportNode, String contingencyId, String voltageLevelId) {
         return reportNode.newReportNode()
-                .withMessageTemplate("contingencyVlIdNotFound", "Voltage id '${voltageLevelId}' of contingency '${contingencyId}' not found, contingency will be skipped")
+                .withMessageTemplate("dynawo.algorithms.contingencyVlIdNotFound", "Voltage id '${voltageLevelId}' of contingency '${contingencyId}' not found, contingency will be skipped")
                 .withUntypedValue("voltageLevelId", voltageLevelId)
                 .withUntypedValue("contingencyId", contingencyId)
                 .add();
@@ -27,7 +27,7 @@ public final class DynawoAlgorithmsReports {
 
     public static ReportNode createNotSupportedContingencyTypeReportNode(ReportNode reportNode, String contingencyType) {
         return reportNode.newReportNode()
-                .withMessageTemplate("contingencyNotSupported", "Contingency element '${contingencyType}' not supported, contingency will be skipped")
+                .withMessageTemplate("dynawo.algorithms.contingencyNotSupported", "Contingency element '${contingencyType}' not supported, contingency will be skipped")
                 .withUntypedValue("contingencyType", contingencyType)
                 .add();
     }

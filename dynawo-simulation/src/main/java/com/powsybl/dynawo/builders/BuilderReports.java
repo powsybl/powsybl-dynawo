@@ -24,7 +24,7 @@ public final class BuilderReports {
 
     public static ReportNode createModelInstantiationReportNode(ReportNode reportNode) {
         return reportNode.newReportNode()
-                .withMessageTemplate("modelInstantiation", "Model ${modelName} ${dynamicId} instantiation ${state}")
+                .withMessageTemplate("dynawo.dynasim.modelInstantiation", "Model ${modelName} ${dynamicId} instantiation ${state}")
                 .add();
     }
 
@@ -43,7 +43,7 @@ public final class BuilderReports {
 
     public static void reportBuilderNotFound(ReportNode reportNode, String lib) {
         reportNode.newReportNode()
-                .withMessageTemplate("builderNotFound", "No builder found for ${lib}")
+                .withMessageTemplate("dynawo.dynasim.builderNotFound", "No builder found for ${lib}")
                 .withUntypedValue("lib", lib)
                 .withSeverity(TypedValue.INFO_SEVERITY)
                 .add();
@@ -51,7 +51,7 @@ public final class BuilderReports {
 
     public static void reportModelNotFound(ReportNode reportNode, String builderName, String modelName) {
         reportNode.newReportNode()
-                .withMessageTemplate("modelNotFound", "Model ${lib} not found for ${builderName}")
+                .withMessageTemplate("dynawo.dynasim.modelNotFound", "Model ${lib} not found for ${builderName}")
                 .withUntypedValue("builderName", builderName)
                 .withUntypedValue("modelName", modelName)
                 .withSeverity(TypedValue.INFO_SEVERITY)
@@ -60,7 +60,7 @@ public final class BuilderReports {
 
     public static void reportOutputVariableInstantiationFailure(ReportNode reportNode, String id) {
         reportNode.newReportNode()
-                .withMessageTemplate("outputVariableInstantiationError", "Output variable ${id} cannot be instantiated")
+                .withMessageTemplate("dynawo.dynasim.outputVariableInstantiationError", "Output variable ${id} cannot be instantiated")
                 .withUntypedValue("id", id)
                 .withSeverity(TypedValue.WARN_SEVERITY)
                 .add();
@@ -68,7 +68,7 @@ public final class BuilderReports {
 
     public static void reportFieldNotSet(ReportNode reportNode, String fieldName) {
         reportNode.newReportNode()
-                .withMessageTemplate("fieldNotSet", "'${fieldName}' field is not set")
+                .withMessageTemplate("dynawo.dynasim.fieldNotSet", "'${fieldName}' field is not set")
                 .withUntypedValue(FIELD_NAME, fieldName)
                 .withSeverity(TypedValue.WARN_SEVERITY)
                 .add();
@@ -76,7 +76,7 @@ public final class BuilderReports {
 
     public static void reportStaticIdUnknown(ReportNode reportNode, String fieldName, String staticId, String equipmentType) {
         reportNode.newReportNode()
-                .withMessageTemplate("unknownIdToDynamic", "'${fieldName}' field value '${staticId}' not found for equipment type(s) ${equipmentType}")
+                .withMessageTemplate("dynawo.dynasim.unknownIdToDynamic", "'${fieldName}' field value '${staticId}' not found for equipment type(s) ${equipmentType}")
                 .withUntypedValue(EQUIPMENT_TYPE_FIELD, equipmentType)
                 .withUntypedValue(FIELD_NAME, fieldName)
                 .withUntypedValue("staticId", staticId)
@@ -86,7 +86,7 @@ public final class BuilderReports {
 
     public static void reportDifferentNetwork(ReportNode reportNode, String fieldName, String staticId, String equipmentType) {
         reportNode.newReportNode()
-                .withMessageTemplate("wrongNetwork", "'${fieldName}' field value ${equipmentType} ${staticId} does not belong to the builder network")
+                .withMessageTemplate("dynawo.dynasim.wrongNetwork", "'${fieldName}' field value ${equipmentType} ${staticId} does not belong to the builder network")
                 .withUntypedValue(EQUIPMENT_TYPE_FIELD, equipmentType)
                 .withUntypedValue(FIELD_NAME, fieldName)
                 .withUntypedValue("staticId", staticId)
@@ -96,7 +96,7 @@ public final class BuilderReports {
 
     public static void reportUnknownStaticIdHandling(ReportNode reportNode, String fieldName, String staticId, String equipmentType) {
         reportNode.newReportNode()
-                .withMessageTemplate("staticIdUnknown", "'${fieldName}' field value '${staticId}' not found for equipment type(s) ${equipmentType}, id will be used as pure dynamic model id")
+                .withMessageTemplate("dynawo.dynasim.staticIdUnknown", "'${fieldName}' field value '${staticId}' not found for equipment type(s) ${equipmentType}, id will be used as pure dynamic model id")
                 .withUntypedValue(EQUIPMENT_TYPE_FIELD, equipmentType)
                 .withUntypedValue(FIELD_NAME, fieldName).withUntypedValue("staticId", staticId)
                 .withSeverity(TypedValue.INFO_SEVERITY)
@@ -105,7 +105,7 @@ public final class BuilderReports {
 
     public static void reportCrossThreshold(ReportNode reportNode, String fieldName, double fieldValue, String threshold) {
         reportNode.newReportNode()
-                .withMessageTemplate("crossThreshold", "${fieldName} should be ${threshold} (${fieldValue})")
+                .withMessageTemplate("dynawo.dynasim.crossThreshold", "${fieldName} should be ${threshold} (${fieldValue})")
                 .withUntypedValue(FIELD_NAME, fieldName)
                 .withUntypedValue("fieldValue", fieldValue)
                 .withUntypedValue("threshold", threshold)
@@ -114,7 +114,7 @@ public final class BuilderReports {
 
     public static void reportEmptyList(ReportNode reportNode, String fieldName) {
         reportNode.newReportNode()
-                .withMessageTemplate("emptyList", "'${fieldName}' list is empty")
+                .withMessageTemplate("dynawo.dynasim.emptyList", "'${fieldName}' list is empty")
                 .withUntypedValue(FIELD_NAME, fieldName)
                 .withSeverity(TypedValue.WARN_SEVERITY)
                 .add();
@@ -126,14 +126,14 @@ public final class BuilderReports {
 
     public static void reportFieldSetWithWrongEquipment(ReportNode reportNode, String fieldName, String equipment) {
         reportNode.newReportNode()
-                .withMessageTemplate("fieldSetWithWrongEquipment", "'${fieldName}' field is set but ${equipment} does not possess this option")
+                .withMessageTemplate("dynawo.dynasim.fieldSetWithWrongEquipment", "'${fieldName}' field is set but ${equipment} does not possess this option")
                 .withUntypedValue(FIELD_NAME, fieldName).withUntypedValue("equipment", equipment).withSeverity(TypedValue.WARN_SEVERITY)
                 .add();
     }
 
     public static void reportFieldOptionNotImplemented(ReportNode reportNode, String fieldName, String defaultValue) {
         reportNode.newReportNode()
-                .withMessageTemplate("fieldOptionNotImplemented", "'${fieldName}' field is set but this option is not implemented yet, default value ${defaultValue} will be used")
+                .withMessageTemplate("dynawo.dynasim.fieldOptionNotImplemented", "'${fieldName}' field is set but this option is not implemented yet, default value ${defaultValue} will be used")
                 .withUntypedValue(FIELD_NAME, fieldName)
                 .withUntypedValue("defaultValue", defaultValue)
                 .withSeverity(TypedValue.WARN_SEVERITY)
@@ -142,7 +142,7 @@ public final class BuilderReports {
 
     public static void reportFieldConflict(ReportNode reportNode, String firstFieldName, String secondFieldName) {
         reportNode.newReportNode()
-                .withMessageTemplate("fieldConflict", "Both '${firstFieldName}' and '${secondFieldName}' are defined, '${firstFieldName}' will be used")
+                .withMessageTemplate("dynawo.dynasim.fieldConflict", "Both '${firstFieldName}' and '${secondFieldName}' are defined, '${firstFieldName}' will be used")
                 .withUntypedValue("firstFieldName", firstFieldName)
                 .withUntypedValue("secondFieldName", secondFieldName)
                 .withSeverity(TypedValue.TRACE_SEVERITY)

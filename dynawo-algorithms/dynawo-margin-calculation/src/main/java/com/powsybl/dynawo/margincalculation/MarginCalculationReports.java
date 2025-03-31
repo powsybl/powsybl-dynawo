@@ -20,14 +20,20 @@ public final class MarginCalculationReports {
 
     public static ReportNode createMarginCalculationReportNode(ReportNode reportNode, String networkId) {
         return reportNode.newReportNode()
-                .withMessageTemplate("mc", "Dynawo margin calculation on network '${networkId}'")
+                .withMessageTemplate("dynawo.margincalc.mc", "Dynawo margin calculation on network '${networkId}'")
                 .withUntypedValue("networkId", networkId)
                 .add();
     }
 
+    public static ReportNode createMarginCalculationToolReportNode() {
+        return ReportNode.newRootReportNode()
+                .withMessageTemplate("dynawo.margincalc.marginCalculationTool", "Margin Calculation Tool")
+                .build();
+    }
+
     public static void reportLoadVariationInstantiationFailure(ReportNode reportNode) {
         reportNode.newReportNode()
-                .withMessageTemplate("loadsVariationInstantiationError", "LoadVariation cannot be instantiated")
+                .withMessageTemplate("dynawo.margincalc.loadsVariationInstantiationError", "LoadVariation cannot be instantiated")
                 .withSeverity(TypedValue.WARN_SEVERITY)
                 .add();
     }

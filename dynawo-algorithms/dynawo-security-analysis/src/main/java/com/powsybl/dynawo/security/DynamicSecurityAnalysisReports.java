@@ -19,7 +19,7 @@ public final class DynamicSecurityAnalysisReports {
 
     public static ReportNode createDynamicSecurityAnalysisReportNode(ReportNode reportNode, String networkId) {
         return reportNode.newReportNode()
-                .withMessageTemplate("dsa", "Dynawo dynamic security analysis on network '${networkId}'")
+                .withMessageTemplate("dynawo.dynasa.dsa", "Dynawo dynamic security analysis on network '${networkId}'")
                 .withUntypedValue("networkId", networkId)
                 .add();
     }

@@ -19,21 +19,21 @@ public final class DynaflowReports {
 
     public static ReportNode createDynaFlowReportNode(ReportNode reportNode, String networkId) {
         return reportNode.newReportNode()
-                .withMessageTemplate("dynaflow", "Dynaflow loadflow on network '${networkId}'")
+                .withMessageTemplate("dynawo.dynaflow.loadflow", "Dynaflow loadflow on network '${networkId}'")
                 .withUntypedValue("networkId", networkId)
                 .add();
     }
 
     public static ReportNode createDynaFlowSecurityAnalysisReportNode(ReportNode reportNode, String networkId) {
         return reportNode.newReportNode()
-                .withMessageTemplate("dynaflowSa", "Dynaflow security analysis on network '${networkId}'")
+                .withMessageTemplate("dynawo.dynaflow.sa", "Dynaflow security analysis on network '${networkId}'")
                 .withUntypedValue("networkId", networkId)
                 .add();
     }
 
     public static void createSidedContingencyReportNode(ReportNode reportNode, String contingencyId) {
         reportNode.newReportNode()
-                .withMessageTemplate("sidedContingency", "Contingency '${contingencyId}' has a voltageId information and cannot be handle by DynaFlow, the contingency will be skipped")
+                .withMessageTemplate("dynawo.dynaflow.sidedContingency", "Contingency '${contingencyId}' has a voltageId information and cannot be handle by DynaFlow, the contingency will be skipped")
                 .withUntypedValue("contingencyId", contingencyId)
                 .add();
     }
