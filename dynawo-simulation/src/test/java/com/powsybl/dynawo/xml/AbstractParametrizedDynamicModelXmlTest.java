@@ -7,12 +7,14 @@
  */
 package com.powsybl.dynawo.xml;
 
+import com.powsybl.commons.report.PowsyblCoreReportResourceBundle;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.commons.test.AbstractSerDeTest;
 import com.powsybl.commons.test.TestUtil;
 import com.powsybl.dynamicsimulation.OutputVariable;
 import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.FinalStepConfig;
+import com.powsybl.dynawo.commons.PowsyblDynawoReportResourceBundle;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.iidm.network.Network;
 import org.xml.sax.SAXException;
@@ -46,7 +48,7 @@ public abstract class AbstractParametrizedDynamicModelXmlTest extends AbstractSe
     protected List<OutputVariable> outputVariables = new ArrayList<>();
     protected DynawoSimulationContext context;
     protected ReportNode reportNode = ReportNode.newRootReportNode()
-            .withAllResourceBundlesFromClasspath()
+            .withResourceBundles(PowsyblCoreReportResourceBundle.BASE_NAME, PowsyblDynawoReportResourceBundle.BASE_NAME)
             .withMessageTemplate("testDyd", "Test DYD").build();
 
     public void validate(String schemaDefinition, String expectedResourceName, Path xmlFile) throws SAXException, IOException {

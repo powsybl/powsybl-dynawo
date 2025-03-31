@@ -7,7 +7,9 @@
  */
 package com.powsybl.dynawo.models;
 
+import com.powsybl.commons.report.PowsyblCoreReportResourceBundle;
 import com.powsybl.commons.report.ReportNode;
+import com.powsybl.dynawo.commons.PowsyblDynawoReportResourceBundle;
 import com.powsybl.dynawo.models.hvdc.HvdcPBuilder;
 import com.powsybl.dynawo.models.hvdc.HvdcVscBuilder;
 import com.powsybl.dynawo.models.hvdc.BaseHvdc;
@@ -62,7 +64,7 @@ class HvdcTest {
     @Test
     void testDefaultDanglingSide() {
         ReportNode reportNode = ReportNode.newRootReportNode()
-                .withAllResourceBundlesFromClasspath()
+                .withResourceBundles(PowsyblCoreReportResourceBundle.BASE_NAME, PowsyblDynawoReportResourceBundle.BASE_NAME)
                 .withMessageTemplate("hvdcBuilder", "HVDC builder")
                 .build();
         Network network = HvdcTestNetwork.createVsc();
@@ -78,7 +80,7 @@ class HvdcTest {
         assertEquals(1, hvdcPDangling.getConnectedStations().size());
         assertEquals(line.getConverterStation1(), hvdcPDangling.getConnectedStations().get(0));
         assertThat(reportNode.getChildren().get(0).getChildren().stream()
-                .filter(r -> r.getMessageKey().equalsIgnoreCase("fieldOptionNotImplemented"))
+                .filter(r -> r.getMessageKey().equalsIgnoreCase("dynawo.dynasim.fieldOptionNotImplemented"))
                 .findFirst())
                 .isNotEmpty()
                 .get()

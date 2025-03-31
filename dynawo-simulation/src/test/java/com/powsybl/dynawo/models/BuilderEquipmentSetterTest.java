@@ -7,8 +7,10 @@
  */
 package com.powsybl.dynawo.models;
 
+import com.powsybl.commons.report.PowsyblCoreReportResourceBundle;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.commons.test.TestUtil;
+import com.powsybl.dynawo.commons.PowsyblDynawoReportResourceBundle;
 import com.powsybl.dynawo.models.lines.LineBuilder;
 import com.powsybl.iidm.network.Line;
 import com.powsybl.iidm.network.Network;
@@ -34,7 +36,7 @@ class BuilderEquipmentSetterTest {
         Network network2 = PhaseShifterTestCaseFactory.create();
         Line ln2 = network2.getLine("L1");
         ReportNode reportNode = ReportNode.newRootReportNode()
-                .withAllResourceBundlesFromClasspath()
+                .withResourceBundles(PowsyblCoreReportResourceBundle.BASE_NAME, PowsyblDynawoReportResourceBundle.BASE_NAME)
                 .withMessageTemplate("builderTests", "Builder tests").build();
 
         BlackBoxModel bbmNetwork1 = LineBuilder.of(network)

@@ -25,13 +25,13 @@ public final class CommonReports {
 
     public static ReportNode createDynawoLogReportNode(ReportNode reportNode) {
         return reportNode.newReportNode()
-                .withMessageTemplate("dynawo.commons.dynawoLog", "Dynawo Log")
+                .withMessageTemplate("dynawo.commons.dynawoLog")
                 .add();
     }
 
     public static void reportTimelineEntry(ReportNode reportNode, TimelineEntry timelineEntry) {
         reportNode.newReportNode()
-                .withMessageTemplate("dynawo.commons.dynawoTimelineEntry", "[t=${time}] ${message} on equipment '${identifiableId}'")
+                .withMessageTemplate("dynawo.commons.dynawoTimelineEntry")
                 .withTypedValue("time", timelineEntry.time(), TIME_MS)
                 .withTypedValue("identifiableId", timelineEntry.modelName(), ID)
                 .withUntypedValue("message", timelineEntry.message())
@@ -41,7 +41,7 @@ public final class CommonReports {
 
     public static void reportLogEntry(ReportNode reportNode, LogEntry logEntry) {
         reportNode.newReportNode()
-                .withMessageTemplate("dynawo.commons.dynawoLogEntry", "${message}")
+                .withMessageTemplate("dynawo.commons.dynawoLogEntry")
                 .withUntypedValue("message", logEntry.message())
                 .withSeverity(logEntry.severity())
                 .add();

@@ -1,8 +1,10 @@
 package com.powsybl.dynawo.builders;
 
+import com.powsybl.commons.report.PowsyblCoreReportResourceBundle;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.commons.test.TestUtil;
 import com.powsybl.dynamicsimulation.OutputVariable;
+import com.powsybl.dynawo.commons.PowsyblDynawoReportResourceBundle;
 import com.powsybl.dynawo.outputvariables.DynawoOutputVariablesBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,7 +27,7 @@ class OutputVariablesBuilderTest {
     @BeforeEach
     void setup() {
         reporter = ReportNode.newRootReportNode()
-                .withAllResourceBundlesFromClasspath()
+                .withResourceBundles(PowsyblCoreReportResourceBundle.BASE_NAME, PowsyblDynawoReportResourceBundle.BASE_NAME)
                 .withMessageTemplate("builderTests", "Builder tests").build();
     }
 

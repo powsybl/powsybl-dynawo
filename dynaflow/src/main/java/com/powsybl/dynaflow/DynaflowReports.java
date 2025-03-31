@@ -8,6 +8,7 @@
 package com.powsybl.dynaflow;
 
 import com.powsybl.commons.report.ReportNode;
+import com.powsybl.dynawo.commons.PowsyblDynawoReportResourceBundle;
 
 /**
  * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
@@ -19,21 +20,23 @@ public final class DynaflowReports {
 
     public static ReportNode createDynaFlowReportNode(ReportNode reportNode, String networkId) {
         return reportNode.newReportNode()
-                .withMessageTemplate("dynawo.dynaflow.loadflow", "Dynaflow loadflow on network '${networkId}'")
+                .withResourceBundles(PowsyblDynawoReportResourceBundle.BASE_NAME)
+                .withMessageTemplate("dynawo.dynaflow.loadflow")
                 .withUntypedValue("networkId", networkId)
                 .add();
     }
 
     public static ReportNode createDynaFlowSecurityAnalysisReportNode(ReportNode reportNode, String networkId) {
         return reportNode.newReportNode()
-                .withMessageTemplate("dynawo.dynaflow.sa", "Dynaflow security analysis on network '${networkId}'")
+                .withResourceBundles(PowsyblDynawoReportResourceBundle.BASE_NAME)
+                .withMessageTemplate("dynawo.dynaflow.sa")
                 .withUntypedValue("networkId", networkId)
                 .add();
     }
 
     public static void createSidedContingencyReportNode(ReportNode reportNode, String contingencyId) {
         reportNode.newReportNode()
-                .withMessageTemplate("dynawo.dynaflow.sidedContingency", "Contingency '${contingencyId}' has a voltageId information and cannot be handle by DynaFlow, the contingency will be skipped")
+                .withMessageTemplate("dynawo.dynaflow.sidedContingency")
                 .withUntypedValue("contingencyId", contingencyId)
                 .add();
     }
