@@ -14,11 +14,10 @@ import com.powsybl.dynamicsimulation.groovy.EventModelGroovyExtension;
 import com.powsybl.dynamicsimulation.groovy.GroovyEventModelsSupplier;
 import com.powsybl.dynamicsimulation.groovy.GroovyExtension;
 import com.powsybl.dynawo.DynawoSimulationProvider;
+import com.powsybl.dynawo.LfResultsUtils;
 import com.powsybl.dynawo.models.events.*;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
-import com.powsybl.iidm.network.test.HvdcTestNetwork;
-import com.powsybl.iidm.network.test.SvcTestCaseFactory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -77,38 +76,39 @@ class EventModelsSupplierTest extends AbstractModelSupplierTest {
 
     private static Stream<Arguments> provideEventModelData() {
         return Stream.of(
-                Arguments.of("/eventModels/branchDisconnection.groovy", EventBranchDisconnection.class, EurostagTutorialExample1Factory.create(), "NHV1_NHV2_1", "Disconnect_NHV1_NHV2_1", "EventQuadripoleDisconnection", 4),
-                Arguments.of("/eventModels/equipmentDisconnection.groovy", EventInjectionDisconnection.class, EurostagTutorialExample1Factory.create(), "GEN", "Disconnect_GEN", null, 1),
-                Arguments.of("/eventModels/hvdcDisconnection.groovy", EventHvdcDisconnection.class, HvdcTestNetwork.createVsc(), "L", "Disconnect_L", null, 2),
-                Arguments.of("/eventModels/nodeFault.groovy", NodeFaultEvent.class, EurostagTutorialExample1Factory.create(), "NGEN", "NodeFault_NGEN", "NodeFault", 1),
-                Arguments.of("/eventModels/step.groovy", EventActivePowerVariation.class, EurostagTutorialExample1Factory.create(), "LOAD", "Step_LOAD", null, 2)
+                Arguments.of("/eventModels/branchDisconnection.groovy", EventBranchDisconnection.class, EurostagTutorialExample1Factory.createWithLFResults(), "NHV1_NHV2_1", "Disconnect_NHV1_NHV2_1", "EventQuadripoleDisconnection", 4),
+                Arguments.of("/eventModels/equipmentDisconnection.groovy", EventInjectionDisconnection.class, EurostagTutorialExample1Factory.createWithLFResults(), "GEN", "Disconnect_GEN", null, 1),
+                Arguments.of("/eventModels/hvdcDisconnection.groovy", EventHvdcDisconnection.class, LfResultsUtils.createHvdcTestNetworkVscWithLFResults(), "L", "Disconnect_L", null, 2),
+                Arguments.of("/eventModels/nodeFault.groovy", NodeFaultEvent.class, EurostagTutorialExample1Factory.createWithLFResults(), "NGEN", "NodeFault_NGEN", "NodeFault", 1),
+                Arguments.of("/eventModels/step.groovy", EventActivePowerVariation.class, EurostagTutorialExample1Factory.createWithLFResults(), "LOAD", "Step_LOAD", null, 2)
         );
     }
 
     private static Stream<Arguments> provideWarningsModel() {
         return Stream.of(
-                Arguments.of("/eventWarnings/missingStaticId.groovy", EurostagTutorialExample1Factory.create(),
+                Arguments.of("/eventWarnings/missingStaticId.groovy", EurostagTutorialExample1Factory.createWithLFResults(),
                         """
                         + DSL tests
                            + Groovy Event Models Supplier
                               + Model NodeFault NodeFault_GEN instantiation failed
                                  'staticId' field value 'GEN' not found for equipment type(s) BUS
                         """),
-                Arguments.of("/eventWarnings/missingStartTime.groovy", EurostagTutorialExample1Factory.create(),
+                Arguments.of("/eventWarnings/missingStartTime.groovy", EurostagTutorialExample1Factory.createWithLFResults(),
                         """
                         + DSL tests
                            + Groovy Event Models Supplier
                               + Model NodeFault NodeFault_NGEN instantiation failed
                                  'startTime' field is not set
                         """),
-                Arguments.of("/eventWarnings/missingNodeFaultParameters.groovy", EurostagTutorialExample1Factory.create(),
+                Arguments.of("/eventWarnings/missingNodeFaultParameters.groovy", EurostagTutorialExample1Factory.createWithLFResults(),
                         """
                         + DSL tests
                            + Groovy Event Models Supplier
                               + Model NodeFault NodeFault_NGEN instantiation failed
                                  faultTime should be strictly positive (0.0)
                         """),
-                Arguments.of("/eventWarnings/missingAPVParameters.groovy", SvcTestCaseFactory.create(),
+                Arguments.of("/eventWarnings/missingAPVParameters.groovy",
+                        LfResultsUtils.createSvcTestCaseWithLFResults(),
                         """
                         + DSL tests
                            + Groovy Event Models Supplier
@@ -116,14 +116,14 @@ class EventModelsSupplierTest extends AbstractModelSupplierTest {
                                  'staticId' field value 'SVC2' not found for equipment type(s) GENERATOR/LOAD
                                  'deltaP' field is not set
                         """),
-                Arguments.of("/eventWarnings/missingDisconnectionEquipment.groovy", EurostagTutorialExample1Factory.create(),
+                Arguments.of("/eventWarnings/missingDisconnectionEquipment.groovy", EurostagTutorialExample1Factory.createWithLFResults(),
                         """
                         + DSL tests
                            + Groovy Event Models Supplier
                               + Model Disconnect Disconnect_WRONG_ID instantiation failed
                                  'staticId' field value 'WRONG_ID' not found for equipment type(s) Disconnectable equipment
                         """),
-                Arguments.of("/eventWarnings/missingDisconnectionSide.groovy", EurostagTutorialExample1Factory.create(),
+                Arguments.of("/eventWarnings/missingDisconnectionSide.groovy", EurostagTutorialExample1Factory.createWithLFResults(),
                         """
                         + DSL tests
                            + Groovy Event Models Supplier

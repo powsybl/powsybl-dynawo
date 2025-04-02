@@ -9,6 +9,8 @@ package com.powsybl.dynawo.builders;
 
 import com.powsybl.iidm.network.*;
 
+import static com.powsybl.dynawo.models.utils.EnergizedUtils.isEnergized;
+
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
@@ -29,18 +31,9 @@ public final class BuildersUtil {
     public static Identifiable<?> getActionConnectionPoint(Network network, String staticId) {
         BusbarSection busbarSection = network.getBusbarSection(staticId);
         if (busbarSection != null) {
-            return isEnergizedBus(busbarSection.getTerminal().getBusBreakerView().getBus()) ? busbarSection : null;
+            return isEnergized(busbarSection) ? busbarSection : null;
         }
         Bus bus = network.getBusBreakerView().getBus(staticId);
-        return isEnergizedBus(bus) ? bus : null;
-    }
-
-    /**
-     * Verifies a bus is energized and in main connected component
-     * @param bus the reviewed bus
-     * @return <code>true</code> if energized, <code>false</code> if not
-     */
-    private static boolean isEnergizedBus(Bus bus) {
-        return bus != null && !Double.isNaN(bus.getV()) && bus.isInMainConnectedComponent();
+        return isEnergized(bus) ? bus : null;
     }
 }
