@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.util.List;
 
 import static com.powsybl.dynawo.algorithms.xml.AlgorithmsConstants.MULTIPLE_JOBS_FILENAME;
+import static com.powsybl.iidm.network.test.EurostagTutorialExample1Factory.NGEN;
+import static com.powsybl.iidm.network.test.EurostagTutorialExample1Factory.NHV1;
 
 /**
  * @author Laurent Issertial <laurent.issertial at rte-france.com>
@@ -30,6 +32,18 @@ class MultiplesJobsXmlTest extends AbstractDynamicModelXmlTest {
     @Override
     protected void setupNetwork() {
         network = EurostagTutorialExample1Factory.createWithMultipleConnectedComponents();
+        network.getBusBreakerView().getBus(NGEN)
+                .setV(24.500000610351563)
+                .setAngle(2.3259763717651367);
+        network.getBusBreakerView().getBus(NHV1)
+                .setV(402.1428451538086)
+                .setAngle(0.0);
+        network.getBusBreakerView().getBus("NHV2")
+                .setV(389.9526763916016)
+                .setAngle(-3.5063576698303223);
+        network.getBusBreakerView().getBus("NLOAD")
+                .setV(147.57861328125)
+                .setAngle(-9.614486694335938);
     }
 
     @Override

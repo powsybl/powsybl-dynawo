@@ -31,7 +31,7 @@ class ContingencyEventModelsTest {
 
     @Test
     void test() {
-        Network network = EurostagTutorialExample1Factory.create();
+        Network network = EurostagTutorialExample1Factory.createWithLFResults();
         BlackBoxModelSupplier bbmSupplier = BlackBoxModelSupplier.createFrom(List.of(
                 BaseGeneratorBuilder.of(network)
                         .staticId("GEN")
