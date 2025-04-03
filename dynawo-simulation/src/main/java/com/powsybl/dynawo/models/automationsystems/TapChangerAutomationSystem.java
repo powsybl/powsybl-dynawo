@@ -53,7 +53,7 @@ public class TapChangerAutomationSystem extends AbstractPureDynamicBlackBoxModel
             boolean isSkipped = adder.createMacroConnectionsOrSkip(this, load, LoadWithTransformers.class, this::getVarConnectionsWith);
             if (isSkipped) {
                 connection = ConnectionState.CANNOT_CONNECT;
-                DynawoSimulationReports.reportEmptyAutomaton(adder.getReportNode(), getName(), getDynamicModelId(), load.getId(), LoadWithTransformers.class.getSimpleName());
+                DynawoSimulationReports.reportEmptyAutomationSystem(adder.getReportNode(), getName(), getDynamicModelId(), load.getId(), LoadWithTransformers.class.getSimpleName());
             } else {
                 connection = ConnectionState.CONNECTED;
             }
