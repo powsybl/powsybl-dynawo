@@ -35,7 +35,7 @@ import static com.powsybl.dynawo.contingency.ContingencyConstants.AGGREGATED_RES
 import static com.powsybl.dynawo.contingency.ContingencyConstants.CONSTRAINTS_FOLDER;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public final class ContingencyResultsUtils {
 

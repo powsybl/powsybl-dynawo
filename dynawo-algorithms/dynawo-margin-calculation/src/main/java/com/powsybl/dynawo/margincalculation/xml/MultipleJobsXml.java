@@ -25,7 +25,7 @@ import static com.powsybl.dynawo.algorithms.xml.AlgorithmsConstants.MULTIPLE_JOB
 import static com.powsybl.dynawo.margincalculation.xml.MarginCalculationConstant.LOAD_VARIATION_AREA_ID;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public final class MultipleJobsXml {
 

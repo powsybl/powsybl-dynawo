@@ -43,7 +43,7 @@ import static com.powsybl.dynawo.contingency.results.Status.CRITERIA_NON_RESPECT
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 class MarginCalculationTest extends AbstractDynawoTest {
 
