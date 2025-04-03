@@ -35,7 +35,7 @@ import static com.powsybl.dynawo.commons.DynawoConstants.OUTPUT_IIDM_FILENAME_PA
 /**
  *
  * @author Guillaume Pernin {@literal <guillaume.pernin at rte-france.com>}
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 @AutoService(LoadFlowProvider.class)
 public class DynaFlowProvider implements LoadFlowProvider {

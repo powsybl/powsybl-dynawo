@@ -32,7 +32,7 @@ import static com.powsybl.dynawo.commons.DynawoConstants.*;
 import static com.powsybl.dynawo.contingency.ContingencyResultsUtils.createSecurityAnalysisResult;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public final class DynawoSecurityAnalysisHandler extends AbstractDynawoAlgorithmsHandler<SecurityAnalysisReport, SecurityAnalysisContext> {
 
