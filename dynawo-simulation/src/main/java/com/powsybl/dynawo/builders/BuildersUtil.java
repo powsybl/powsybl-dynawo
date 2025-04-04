@@ -7,7 +7,10 @@
  */
 package com.powsybl.dynawo.builders;
 
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.iidm.network.*;
+
+import static com.powsybl.dynawo.models.utils.EnergizedUtils.isEnergized;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -15,6 +18,26 @@ import com.powsybl.iidm.network.*;
 public final class BuildersUtil {
 
     public static final String MEASUREMENT_POINT_TYPE = IdentifiableType.BUS + "/" + IdentifiableType.BUSBAR_SECTION;
+
+    /**
+     * Verifies the ActionConnectionPoint (bus or busbar section) is energized and in main connected component
+     */
+    public static final EquipmentPredicate<Identifiable<?>> IS_ACTION_CONNECTION_POINT_ENERGIZED = (eq, f, r) -> {
+        boolean isEnergized = switch (eq.getType()) {
+            case BUS -> isEnergized((Bus) eq);
+            case BUSBAR_SECTION -> isEnergized((BusbarSection) eq);
+            default -> throw new UnsupportedOperationException("Only bus and bus bar section are supported");
+        };
+        if (!isEnergized) {
+            BuilderReports.reportNotEnergized(r, f, eq.getId());
+        }
+        return isEnergized;
+    };
+
+    @FunctionalInterface
+    public interface EquipmentPredicate<T> {
+        boolean test(T equipment, String fieldName, ReportNode reportNode);
+    }
 
     private BuildersUtil() {
     }
@@ -29,18 +52,9 @@ public final class BuildersUtil {
     public static Identifiable<?> getActionConnectionPoint(Network network, String staticId) {
         BusbarSection busbarSection = network.getBusbarSection(staticId);
         if (busbarSection != null) {
-            return isEnergizedBus(busbarSection.getTerminal().getBusBreakerView().getBus()) ? busbarSection : null;
+            return isEnergized(busbarSection) ? busbarSection : null;
         }
         Bus bus = network.getBusBreakerView().getBus(staticId);
-        return isEnergizedBus(bus) ? bus : null;
-    }
-
-    /**
-     * Verifies a bus is energized and in main connected component
-     * @param bus the reviewed bus
-     * @return <code>true</code> if energized, <code>false</code> if not
-     */
-    private static boolean isEnergizedBus(Bus bus) {
-        return bus != null && !Double.isNaN(bus.getV()) && bus.isInMainConnectedComponent();
+        return isEnergized(bus) ? bus : null;
     }
 }

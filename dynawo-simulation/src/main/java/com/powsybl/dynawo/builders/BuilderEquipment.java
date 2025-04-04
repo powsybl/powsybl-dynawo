@@ -94,4 +94,8 @@ public class BuilderEquipment<T extends Identifiable<?>> {
     public boolean hasEquipment() {
         return equipment != null;
     }
+
+    public String getFieldName() {
+        return fieldName;
+    }
 }

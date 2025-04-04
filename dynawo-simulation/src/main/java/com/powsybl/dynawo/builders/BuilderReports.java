@@ -9,6 +9,7 @@ package com.powsybl.dynawo.builders;
 
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.commons.report.TypedValue;
+import com.powsybl.iidm.network.HvdcConverterStation;
 import com.powsybl.iidm.network.IdentifiableType;
 
 /**
@@ -18,6 +19,7 @@ public final class BuilderReports {
 
     private static final String FIELD_NAME = "fieldName";
     private static final String EQUIPMENT_TYPE_FIELD = "equipmentType";
+    private static final String STATIC_ID = "staticId";
 
     private BuilderReports() {
     }
@@ -79,7 +81,7 @@ public final class BuilderReports {
                 .withMessageTemplate("dynawo.dynasim.unknownIdToDynamic")
                 .withUntypedValue(EQUIPMENT_TYPE_FIELD, equipmentType)
                 .withUntypedValue(FIELD_NAME, fieldName)
-                .withUntypedValue("staticId", staticId)
+                .withUntypedValue(STATIC_ID, staticId)
                 .withSeverity(TypedValue.WARN_SEVERITY)
                 .add();
     }
@@ -89,7 +91,7 @@ public final class BuilderReports {
                 .withMessageTemplate("dynawo.dynasim.wrongNetwork")
                 .withUntypedValue(EQUIPMENT_TYPE_FIELD, equipmentType)
                 .withUntypedValue(FIELD_NAME, fieldName)
-                .withUntypedValue("staticId", staticId)
+                .withUntypedValue(STATIC_ID, staticId)
                 .withSeverity(TypedValue.WARN_SEVERITY)
                 .add();
     }
@@ -98,7 +100,8 @@ public final class BuilderReports {
         reportNode.newReportNode()
                 .withMessageTemplate("dynawo.dynasim.staticIdUnknown")
                 .withUntypedValue(EQUIPMENT_TYPE_FIELD, equipmentType)
-                .withUntypedValue(FIELD_NAME, fieldName).withUntypedValue("staticId", staticId)
+                .withUntypedValue(FIELD_NAME, fieldName)
+                .withUntypedValue(STATIC_ID, staticId)
                 .withSeverity(TypedValue.INFO_SEVERITY)
                 .add();
     }
@@ -146,6 +149,35 @@ public final class BuilderReports {
                 .withUntypedValue("firstFieldName", firstFieldName)
                 .withUntypedValue("secondFieldName", secondFieldName)
                 .withSeverity(TypedValue.TRACE_SEVERITY)
+                .add();
+    }
+
+    public static void reportWrongHvdcType(ReportNode reportNode, String fieldName, String staticId,
+                                           HvdcConverterStation.HvdcType hvdcType) {
+        reportNode.newReportNode()
+                .withMessageTemplate("dynawo.dynasim.wrongHvdcType")
+                .withUntypedValue("type", hvdcType.toString())
+                .withUntypedValue(FIELD_NAME, fieldName)
+                .withUntypedValue(STATIC_ID, staticId)
+                .withSeverity(TypedValue.WARN_SEVERITY)
+                .add();
+    }
+
+    public static void reportFictitiousEquipment(ReportNode reportNode, String fieldName, String staticId) {
+        reportNode.newReportNode()
+                .withMessageTemplate("dynawo.dynasim.fictitiousEquipment")
+                .withUntypedValue(FIELD_NAME, fieldName)
+                .withUntypedValue(STATIC_ID, staticId)
+                .withSeverity(TypedValue.WARN_SEVERITY)
+                .add();
+    }
+
+    public static void reportNotEnergized(ReportNode reportNode, String fieldName, String staticId) {
+        reportNode.newReportNode()
+                .withMessageTemplate("dynawo.dynasim.notEnergized")
+                .withUntypedValue(FIELD_NAME, fieldName)
+                .withUntypedValue(STATIC_ID, staticId)
+                .withSeverity(TypedValue.WARN_SEVERITY)
                 .add();
     }
 }

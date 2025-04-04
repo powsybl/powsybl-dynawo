@@ -8,13 +8,13 @@
 package com.powsybl.dynawo.xml;
 
 import com.powsybl.commons.PowsyblException;
+import com.powsybl.dynawo.LfResultsUtils;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.events.EventDisconnectionBuilder;
 import com.powsybl.dynawo.models.hvdc.HvdcPBuilder;
 import com.powsybl.dynawo.models.hvdc.HvdcVscBuilder;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.TwoSides;
-import com.powsybl.iidm.network.test.HvdcTestNetwork;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -40,7 +40,7 @@ class DisconnectionExceptionXmlTest extends AbstractParametrizedDynamicModelXmlT
     }
 
     protected void setupNetwork() {
-        network = HvdcTestNetwork.createVsc();
+        network = LfResultsUtils.createHvdcTestNetworkVscWithLFResults();
     }
 
     protected void addDynamicModels(TwoSides side, BiFunction<Network, TwoSides, BlackBoxModel> constructor) {

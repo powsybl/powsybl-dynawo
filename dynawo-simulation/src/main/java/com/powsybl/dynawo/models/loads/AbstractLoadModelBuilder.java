@@ -9,28 +9,32 @@ package com.powsybl.dynawo.models.loads;
 
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.builders.AbstractEquipmentModelBuilder;
+import com.powsybl.dynawo.builders.BuilderReports;
 import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Load;
 import com.powsybl.iidm.network.Network;
-
-import java.util.function.Predicate;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public abstract class AbstractLoadModelBuilder<R extends AbstractEquipmentModelBuilder<Load, R>> extends AbstractEquipmentModelBuilder<Load, R> {
 
-    private static final Predicate<Load> IS_NOT_FICTITIOUS = eq -> !eq.isFictitious();
-
     protected AbstractLoadModelBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
         super(network, modelConfig, IdentifiableType.LOAD, reportNode);
-        addEquipmentPredicate(IS_NOT_FICTITIOUS);
     }
 
     @Override
     protected Load findEquipment(String staticId) {
-        Load load = network.getLoad(staticId);
-        return load != null && IS_NOT_FICTITIOUS.test(load) ? load : null;
+        return network.getLoad(staticId);
+    }
+
+    @Override
+    protected void checkData() {
+        super.checkData();
+        if (builderEquipment.hasEquipment() && getEquipment().isFictitious()) {
+            BuilderReports.reportFictitiousEquipment(reportNode, builderEquipment.getFieldName(), getModelId());
+            isInstantiable = false;
+        }
     }
 }
