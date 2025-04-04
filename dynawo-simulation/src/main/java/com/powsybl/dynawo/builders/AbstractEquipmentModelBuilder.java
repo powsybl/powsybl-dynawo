@@ -8,7 +8,9 @@
 package com.powsybl.dynawo.builders;
 
 import com.powsybl.commons.report.ReportNode;
-import com.powsybl.iidm.network.*;
+import com.powsybl.iidm.network.Identifiable;
+import com.powsybl.iidm.network.IdentifiableType;
+import com.powsybl.iidm.network.Network;
 
 import java.util.Objects;
 
@@ -24,20 +26,13 @@ public abstract class AbstractEquipmentModelBuilder<T extends Identifiable<T>, R
     protected AbstractEquipmentModelBuilder(Network network, ModelConfig modelConfig, IdentifiableType equipmentType, ReportNode reportNode) {
         super(network, reportNode);
         this.modelConfig = Objects.requireNonNull(modelConfig);
-        this.builderEquipment = new BuilderEquipment<>(equipmentType.toString());
+        this.builderEquipment = new BuilderEquipment<>(equipmentType);
     }
 
     protected AbstractEquipmentModelBuilder(Network network, ModelConfig modelConfig, String equipmentType, ReportNode reportNode) {
         super(network, reportNode);
         this.modelConfig = modelConfig;
         this.builderEquipment = new BuilderEquipment<>(equipmentType);
-    }
-
-    protected AbstractEquipmentModelBuilder(Network network, ModelConfig modelConfig, String equipmentType,
-                                            BuilderEquipment.EquipmentPredicate<T> equipmentPredicate, ReportNode reportNode) {
-        super(network, reportNode);
-        this.modelConfig = modelConfig;
-        this.builderEquipment = new BuilderEquipment<>(equipmentType, equipmentPredicate);
     }
 
     @Override
@@ -48,7 +43,7 @@ public abstract class AbstractEquipmentModelBuilder<T extends Identifiable<T>, R
 
     @Override
     public R equipment(T equipment) {
-        builderEquipment.addEquipment(equipment, network);
+        builderEquipment.addEquipment(equipment, eq -> Objects.equals(network, eq.getNetwork()));
         return self();
     }
 

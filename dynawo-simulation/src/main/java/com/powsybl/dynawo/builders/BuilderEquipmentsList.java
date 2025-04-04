@@ -27,7 +27,7 @@ public class BuilderEquipmentsList<T extends Identifiable<?>> {
     private final boolean missingIdsHasDynamicIds;
     protected List<String> missingEquipmentIds = new ArrayList<>();
     protected List<T> equipments = new ArrayList<>();
-    private final BuilderEquipment.EquipmentPredicate<T> equipmentPredicate;
+    private final BuildersUtil.EquipmentPredicate<T> equipmentPredicate;
 
     public BuilderEquipmentsList(IdentifiableType identifiableType, String fieldName) {
         this(identifiableType.toString(), fieldName, false);
@@ -42,7 +42,7 @@ public class BuilderEquipmentsList<T extends Identifiable<?>> {
     }
 
     public BuilderEquipmentsList(String equipmentType, String fieldName, boolean missingIdsHasDynamicIds,
-                                 BuilderEquipment.EquipmentPredicate<T> equipmentPredicate) {
+                                 BuildersUtil.EquipmentPredicate<T> equipmentPredicate) {
         this.equipmentType = equipmentType;
         this.fieldName = fieldName;
         this.missingIdsHasDynamicIds = missingIdsHasDynamicIds;
