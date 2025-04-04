@@ -41,6 +41,11 @@ public abstract class AbstractHvdcBuilder<R extends AbstractEquipmentModelBuilde
     }
 
     @Override
+    protected HvdcLine findEquipment(String staticId) {
+        return network.getHvdcLine(staticId);
+    }
+
+    @Override
     protected void checkData() {
         super.checkData();
         boolean isDangling = modelConfig.isDangling();

@@ -18,7 +18,7 @@ import java.util.function.Function;
  */
 public class BuilderIdListEquipmentList<T extends Identifiable<?>> extends BuilderEquipmentsList<T> {
 
-    public BuilderIdListEquipmentList(String equipmentType, String fieldName, BuilderEquipment.EquipmentPredicate<T> equipmentPredicate) {
+    public BuilderIdListEquipmentList(String equipmentType, String fieldName, BuildersUtil.EquipmentPredicate<T> equipmentPredicate) {
         super(equipmentType, fieldName, false, equipmentPredicate);
     }
 
