@@ -23,7 +23,7 @@ public final class MarginCalculationReports {
     public static ReportNode createMarginCalculationReportNode(ReportNode reportNode, String networkId) {
         return reportNode.newReportNode()
                 .withMessageTemplate("dynawo.margincalc.mc")
-                .withUntypedValue("networkId", networkId)
+                .withTypedValue("networkId", networkId, TypedValue.ID)
                 .add();
     }
 

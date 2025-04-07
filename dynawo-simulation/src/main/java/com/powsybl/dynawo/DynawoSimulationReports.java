@@ -25,7 +25,7 @@ public final class DynawoSimulationReports {
     public static ReportNode createDynawoSimulationReportNode(ReportNode reportNode, String networkId) {
         return reportNode.newReportNode()
                 .withMessageTemplate("dynawo.dynasim.dynawoSimulation")
-                .withUntypedValue("networkId", networkId)
+                .withTypedValue("networkId", networkId, TypedValue.ID)
                 .add();
     }
 
