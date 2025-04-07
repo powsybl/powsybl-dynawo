@@ -10,7 +10,6 @@ package com.powsybl.dynawo;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.commons.report.TypedValue;
 import com.powsybl.dynawo.commons.DynawoVersion;
-import com.powsybl.dynawo.commons.PowsyblDynawoReportResourceBundle;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -25,7 +24,6 @@ public final class DynawoSimulationReports {
 
     public static ReportNode createDynawoSimulationReportNode(ReportNode reportNode, String networkId) {
         return reportNode.newReportNode()
-                .withResourceBundles(PowsyblDynawoReportResourceBundle.BASE_NAME)
                 .withMessageTemplate("dynawo.dynasim.dynawoSimulation")
                 .withUntypedValue("networkId", networkId)
                 .add();
