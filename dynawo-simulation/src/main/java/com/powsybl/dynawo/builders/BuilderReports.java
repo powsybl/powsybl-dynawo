@@ -155,7 +155,7 @@ public final class BuilderReports {
         reportNode.newReportNode()
                 .withMessageTemplate("dynawo.dynasim.notEnergized")
                 .withUntypedValue(FIELD_NAME, fieldName)
-                .withUntypedValue(STATIC_ID, staticId)
+                .withTypedValue(STATIC_ID, staticId, TypedValue.ID)
                 .withSeverity(TypedValue.WARN_SEVERITY)
                 .add();
     }

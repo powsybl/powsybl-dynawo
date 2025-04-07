@@ -87,7 +87,7 @@ public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identif
             switch (disconnectionType) {
                 case BUS -> {
                     Bus bus = (Bus) builderEquipment.getEquipment();
-                    reportNotEnergized(EnergizedUtils.isEnergized(bus));
+                    handleNotEnergized(EnergizedUtils.isEnergized(bus));
                     if (disconnectSide != null) {
                         BuilderReports.reportFieldSetWithWrongEquipment(reportNode, "disconnectOnly", bus.getType(), bus.getId());
                         isInstantiable = false;
@@ -95,7 +95,7 @@ public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identif
                 }
                 case INJECTION -> {
                     Injection<?> injection = (Injection<?>) builderEquipment.getEquipment();
-                    reportNotEnergized(EnergizedUtils.isEnergized(injection));
+                    handleNotEnergized(EnergizedUtils.isEnergized(injection));
                     if (disconnectSide != null) {
                         BuilderReports.reportFieldSetWithWrongEquipment(reportNode, "disconnectOnly", injection.getType(), injection.getId());
                         isInstantiable = false;
@@ -103,11 +103,11 @@ public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identif
                 }
                 case BRANCH -> {
                     Branch<?> branch = (Branch<?>) builderEquipment.getEquipment();
-                    reportNotEnergized(disconnectSide != null ? EnergizedUtils.isEnergized(branch, disconnectSide) : EnergizedUtils.isEnergized(branch));
+                    handleNotEnergized(disconnectSide != null ? EnergizedUtils.isEnergized(branch, disconnectSide) : EnergizedUtils.isEnergized(branch));
                 }
                 case HVDC -> {
                     HvdcLine hvdcLine = (HvdcLine) builderEquipment.getEquipment();
-                    reportNotEnergized(disconnectSide != null ? EnergizedUtils.isEnergized(hvdcLine, disconnectSide) : EnergizedUtils.isEnergized(hvdcLine));
+                    handleNotEnergized(disconnectSide != null ? EnergizedUtils.isEnergized(hvdcLine, disconnectSide) : EnergizedUtils.isEnergized(hvdcLine));
                 }
                 case NONE -> {
                     BuilderReports.reportStaticIdUnknown(reportNode, "staticId", builderEquipment.getStaticId(), "Disconnectable equipment");
@@ -117,7 +117,7 @@ public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identif
         }
     }
 
-    private void reportNotEnergized(boolean isEnergized) {
+    private void handleNotEnergized(boolean isEnergized) {
         if (!isEnergized) {
             BuilderReports.reportNotEnergized(reportNode, "staticId", builderEquipment.getStaticId());
             isInstantiable = false;
