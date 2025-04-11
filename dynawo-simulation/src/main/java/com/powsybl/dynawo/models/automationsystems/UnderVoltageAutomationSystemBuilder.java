@@ -64,7 +64,7 @@ public class UnderVoltageAutomationSystemBuilder extends AbstractAutomationSyste
 
     protected UnderVoltageAutomationSystemBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
         super(network, modelConfig, reportNode);
-        generator = new BuilderEquipment<>(IdentifiableType.GENERATOR, "generator");
+        generator = new BuilderEquipment<>(IdentifiableType.GENERATOR.toString(), "generator", this.reportNode);
     }
 
     public UnderVoltageAutomationSystemBuilder generator(String staticId) {
@@ -75,7 +75,7 @@ public class UnderVoltageAutomationSystemBuilder extends AbstractAutomationSyste
     @Override
     protected void checkData() {
         super.checkData();
-        isInstantiable &= generator.checkEquipmentData(reportNode);
+        isInstantiable &= generator.checkEquipmentData();
     }
 
     @Override

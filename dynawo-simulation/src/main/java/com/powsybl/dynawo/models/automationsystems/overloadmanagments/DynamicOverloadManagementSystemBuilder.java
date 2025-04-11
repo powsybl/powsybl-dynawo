@@ -60,8 +60,7 @@ public class DynamicOverloadManagementSystemBuilder extends AbstractOverloadMana
     }
 
     protected DynamicOverloadManagementSystemBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
-        super(network, modelConfig, reportNode, new BuilderEquipment<>(BRANCH_TYPE, "iMeasurement"),
-            new BuilderEquipment<>(BRANCH_TYPE, "controlledBranch"));
+        super(network, modelConfig, reportNode, "iMeasurement", "controlledBranch");
     }
 
     public DynamicOverloadManagementSystemBuilder iMeasurement(String staticId) {

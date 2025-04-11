@@ -7,7 +7,6 @@
  */
 package com.powsybl.dynawo.builders;
 
-import com.powsybl.commons.report.ReportNode;
 import com.powsybl.iidm.network.*;
 
 import static com.powsybl.dynawo.models.utils.EnergizedUtils.isEnergized;
@@ -34,11 +33,6 @@ public final class BuildersUtil {
         return isEnergized;
     };
 
-    @FunctionalInterface
-    public interface EquipmentPredicate<T> {
-        boolean test(T equipment, String fieldName, ReportNode reportNode);
-    }
-
     private BuildersUtil() {
     }
 
@@ -49,6 +43,7 @@ public final class BuildersUtil {
      * @param staticId the identifiable id
      * @return the energized action connection point if found, <code>null</code> instead
      */
+    //TODO remove is energized test
     public static Identifiable<?> getActionConnectionPoint(Network network, String staticId) {
         BusbarSection busbarSection = network.getBusbarSection(staticId);
         if (busbarSection != null) {

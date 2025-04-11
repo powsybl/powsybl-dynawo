@@ -26,9 +26,9 @@ abstract class AbstractEventModelBuilder<T extends Identifiable<?>, R extends Ab
     protected String staticId;
     protected Double startTime;
 
-    protected AbstractEventModelBuilder(Network network, BuilderEquipment<T> builderEquipment, ReportNode reportNode) {
+    protected AbstractEventModelBuilder(Network network, String fieldName, ReportNode reportNode) {
         super(network, reportNode);
-        this.builderEquipment = builderEquipment;
+        this.builderEquipment = new BuilderEquipment<>(fieldName, this.reportNode);
         this.eventId = generateDefaultEventId();
     }
 
@@ -45,7 +45,7 @@ abstract class AbstractEventModelBuilder<T extends Identifiable<?>, R extends Ab
 
     @Override
     protected void checkData() {
-        isInstantiable &= builderEquipment.checkEquipmentData(reportNode);
+        isInstantiable &= builderEquipment.checkEquipmentData();
         if (startTime == null) {
             BuilderReports.reportFieldNotSet(reportNode, "startTime");
             isInstantiable = false;
