@@ -52,7 +52,7 @@ public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identif
     }
 
     EventDisconnectionBuilder(Network network, ReportNode reportNode) {
-        super(network, new BuilderEquipment<>("Disconnectable equipment"), reportNode);
+        super(network, "Disconnectable equipment", reportNode);
     }
 
     public EventDisconnectionBuilder disconnectOnly(TwoSides side) {

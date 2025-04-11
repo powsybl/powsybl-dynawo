@@ -66,7 +66,7 @@ public class TapChangerAutomationSystemBuilder extends AbstractAutomationSystemM
 
     protected TapChangerAutomationSystemBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
         super(network, modelConfig, reportNode);
-        load = new BuilderEquipment<>(IdentifiableType.LOAD);
+        load = new BuilderEquipment<>(IdentifiableType.LOAD.toString(), this.reportNode);
     }
 
     public TapChangerAutomationSystemBuilder staticId(String staticId) {
@@ -87,7 +87,7 @@ public class TapChangerAutomationSystemBuilder extends AbstractAutomationSystemM
     @Override
     protected void checkData() {
         super.checkData();
-        isInstantiable &= load.checkEquipmentData(reportNode);
+        isInstantiable &= load.checkEquipmentData();
     }
 
     @Override

@@ -22,6 +22,13 @@ public class HvdcVscBuilder extends AbstractHvdcBuilder<HvdcVscBuilder> {
     public static final String CATEGORY = "HVDC_VSC";
     private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
     private static final HvdcVarNameHandler VSC_NAME_HANDLER = new VscVarNameHandler();
+    private static final EquipmentPredicate<HvdcLine> IS_VSC = (eq, f, r) -> {
+        if (HvdcConverterStation.HvdcType.VSC != eq.getConverterStation1().getHvdcType()) {
+            BuilderReports.reportWrongHvdcType(r, f, eq.getId(), HvdcConverterStation.HvdcType.VSC);
+            return false;
+        }
+        return true;
+    };
 
     public static HvdcVscBuilder of(Network network) {
         return of(network, ReportNode.NO_OP);
@@ -64,14 +71,15 @@ public class HvdcVscBuilder extends AbstractHvdcBuilder<HvdcVscBuilder> {
     }
 
     @Override
-    protected void checkData() {
-        super.checkData();
-        if (builderEquipment.hasEquipment() &&
-                HvdcConverterStation.HvdcType.VSC != getEquipment().getConverterStation1().getHvdcType()) {
-            BuilderReports.reportWrongHvdcType(reportNode, builderEquipment.getFieldName(), getModelId(),
-                    HvdcConverterStation.HvdcType.VSC);
-            isInstantiable = false;
-        }
+    public HvdcVscBuilder staticId(String staticId) {
+        builderEquipment.addEquipment(staticId, this::findEquipment, IS_VSC);
+        return self();
+    }
+
+    @Override
+    public HvdcVscBuilder equipment(HvdcLine equipment) {
+        builderEquipment.addEquipment(equipment, hasSameNetwork, IS_VSC);
+        return self();
     }
 
     @Override
