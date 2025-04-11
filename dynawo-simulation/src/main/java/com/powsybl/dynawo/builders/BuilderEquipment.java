@@ -27,7 +27,7 @@ public class BuilderEquipment<T extends Identifiable<?>> {
 
     protected String staticId;
     protected T equipment;
-    private final String equipmentType;
+    protected final String equipmentType;
     protected final String fieldName;
     protected final ReportNode reportNode;
 
