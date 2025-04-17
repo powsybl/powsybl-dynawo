@@ -33,7 +33,7 @@ public class LoadsVariationBuilder {
     public LoadsVariationBuilder(Network network, ReportNode reportNode) {
         this.network = Objects.requireNonNull(network);
         this.reportNode = Objects.requireNonNull(reportNode);
-        this.loads = new BuilderEquipmentsList<>(IdentifiableType.LOAD, "loads");
+        this.loads = new BuilderEquipmentsList<>(IdentifiableType.LOAD.toString(), "loads", reportNode);
     }
 
     public LoadsVariationBuilder loads(String... loadIds) {

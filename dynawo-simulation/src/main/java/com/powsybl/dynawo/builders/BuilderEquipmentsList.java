@@ -9,7 +9,6 @@ package com.powsybl.dynawo.builders;
 
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.iidm.network.Identifiable;
-import com.powsybl.iidm.network.IdentifiableType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,32 +20,25 @@ import java.util.function.Function;
  */
 public class BuilderEquipmentsList<T extends Identifiable<?>> {
 
-    private final String equipmentType;
-    private final String fieldName;
+    protected final String equipmentType;
+    protected final String fieldName;
     // when set to true equipment ids not found in the network are seen as dynamic ids for automatons and reported as such
-    private final boolean missingIdsHasDynamicIds;
+    protected final boolean missingIdsAsDynamicIds;
+    protected final ReportNode reportNode;
+
     protected List<String> missingEquipmentIds = new ArrayList<>();
     protected List<T> equipments = new ArrayList<>();
-    private final EquipmentPredicate<T> equipmentPredicate;
+    protected boolean failedPredicate = false;
 
-    public BuilderEquipmentsList(IdentifiableType identifiableType, String fieldName) {
-        this(identifiableType.toString(), fieldName, false);
+    public BuilderEquipmentsList(String equipmentType, String fieldName, ReportNode reportNode) {
+        this(equipmentType, fieldName, false, reportNode);
     }
 
-    public BuilderEquipmentsList(String equipmentType, String fieldName) {
-        this(equipmentType, fieldName, false);
-    }
-
-    public BuilderEquipmentsList(String equipmentType, String fieldName, boolean missingIdsHasDynamicIds) {
-        this(equipmentType, fieldName, missingIdsHasDynamicIds, null);
-    }
-
-    public BuilderEquipmentsList(String equipmentType, String fieldName, boolean missingIdsHasDynamicIds,
-                                 EquipmentPredicate<T> equipmentPredicate) {
+    public BuilderEquipmentsList(String equipmentType, String fieldName, boolean missingIdsAsDynamicIds, ReportNode reportNode) {
         this.equipmentType = equipmentType;
         this.fieldName = fieldName;
-        this.missingIdsHasDynamicIds = missingIdsHasDynamicIds;
-        this.equipmentPredicate = equipmentPredicate;
+        this.missingIdsAsDynamicIds = missingIdsAsDynamicIds;
+        this.reportNode = reportNode;
     }
 
     public void addEquipments(String[] staticIds, Function<String, T> equipmentsSupplier) {
@@ -57,34 +49,56 @@ public class BuilderEquipmentsList<T extends Identifiable<?>> {
         staticIds.forEach(id -> addEquipment(id, equipmentsSupplier));
     }
 
+    public void addEquipments(String[] staticIds, Function<String, T> equipmentsSupplier,
+                              EquipmentPredicate<T> equipmentPredicate) {
+        addEquipments(() -> Arrays.stream(staticIds).iterator(), equipmentsSupplier, equipmentPredicate);
+    }
+
+    public void addEquipments(Iterable<String> staticIds, Function<String, T> equipmentsSupplier,
+                              EquipmentPredicate<T> equipmentPredicate) {
+        staticIds.forEach(id -> addEquipment(id, equipmentsSupplier, equipmentPredicate));
+    }
+
     public void addEquipment(String staticId, Function<String, T> equipmentsSupplier) {
         T equipment = equipmentsSupplier.apply(staticId);
-        if (equipment != null) {
+        if (equipment == null) {
+            handleMissingId(staticId);
+        } else {
+            equipments.add(equipment);
+        }
+    }
+
+    public void addEquipment(String staticId, Function<String, T> equipmentsSupplier,
+                             EquipmentPredicate<T> equipmentPredicate) {
+        T equipment = equipmentsSupplier.apply(staticId);
+        if (equipment == null) {
+            handleMissingId(staticId);
+        } else if (equipmentPredicate.test(equipment, fieldName, reportNode)) {
             equipments.add(equipment);
         } else {
-            missingEquipmentIds.add(staticId);
+            failedPredicate = true;
+        }
+    }
+
+    private void handleMissingId(String staticId) {
+        missingEquipmentIds.add(staticId);
+        if (missingIdsAsDynamicIds) {
+            BuilderReports.reportUnknownStaticIdHandling(reportNode, fieldName, staticId, equipmentType);
+        } else {
+            BuilderReports.reportStaticIdUnknown(reportNode, fieldName, staticId, equipmentType);
         }
     }
 
     public boolean checkEquipmentData(ReportNode reportNode) {
         boolean emptyList = equipments.isEmpty();
-        if (missingEquipmentIds.isEmpty() && emptyList) {
+        if (missingEquipmentIds.isEmpty() && emptyList && !failedPredicate) {
             BuilderReports.reportFieldNotSet(reportNode, fieldName);
             return false;
-        } else if (!missingIdsHasDynamicIds) {
-            missingEquipmentIds.forEach(missingId ->
-                    BuilderReports.reportStaticIdUnknown(reportNode, fieldName, missingId, equipmentType));
-            if (emptyList) {
-                BuilderReports.reportEmptyList(reportNode, fieldName);
-            } else if (equipmentPredicate != null) {
-                equipments = equipments.stream().filter(eq -> equipmentPredicate.test(eq, fieldName, reportNode)).toList();
-            }
-            return !equipments.isEmpty();
-        } else {
-            missingEquipmentIds.forEach(missingId ->
-                    BuilderReports.reportUnknownStaticIdHandling(reportNode, fieldName, missingId, equipmentType));
-            return true;
+        } else if (!missingIdsAsDynamicIds && emptyList) {
+            BuilderReports.reportEmptyList(reportNode, fieldName);
+            return false;
         }
+        return true;
     }
 
     public List<T> getEquipments() {
