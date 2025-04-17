@@ -69,8 +69,9 @@ public class TapChangerBlockingAutomationSystemBuilder extends AbstractAutomatio
 
     protected TapChangerBlockingAutomationSystemBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
         super(network, modelConfig, reportNode);
-        tapChangerEquipments = new BuilderEquipmentsList<>(TAP_CHANGER_TYPE, TRANSFORMER_FIELD, true);
-        uMeasurementPoints = new BuilderIdListEquipmentList<>(MEASUREMENT_POINT_TYPE, U_MEASUREMENTS_FIELD, IS_ACTION_CONNECTION_POINT_ENERGIZED);
+        //TODO replace this.reportNode
+        tapChangerEquipments = new BuilderEquipmentsList<>(TAP_CHANGER_TYPE, TRANSFORMER_FIELD, true, this.reportNode);
+        uMeasurementPoints = new BuilderIdListEquipmentList<>(MEASUREMENT_POINT_TYPE, U_MEASUREMENTS_FIELD, this.reportNode);
     }
 
     public TapChangerBlockingAutomationSystemBuilder transformers(String staticId) {
@@ -94,22 +95,26 @@ public class TapChangerBlockingAutomationSystemBuilder extends AbstractAutomatio
     }
 
     public TapChangerBlockingAutomationSystemBuilder uMeasurements(String staticId) {
-        uMeasurementPoints.addEquipment(staticId, id -> BuildersUtil.getActionConnectionPoint(network, id));
+        uMeasurementPoints.addEquipment(staticId, id -> BuildersUtil.getActionConnectionPoint(network, id),
+                IS_ACTION_CONNECTION_POINT_ENERGIZED);
         return self();
     }
 
     public TapChangerBlockingAutomationSystemBuilder uMeasurements(String... staticIds) {
-        uMeasurementPoints.addEquipments(staticIds, id -> BuildersUtil.getActionConnectionPoint(network, id));
+        uMeasurementPoints.addEquipments(staticIds, id -> BuildersUtil.getActionConnectionPoint(network, id),
+                IS_ACTION_CONNECTION_POINT_ENERGIZED);
         return self();
     }
 
     public TapChangerBlockingAutomationSystemBuilder uMeasurements(Collection<String> staticIds) {
-        uMeasurementPoints.addEquipments(staticIds, id -> BuildersUtil.getActionConnectionPoint(network, id));
+        uMeasurementPoints.addEquipments(staticIds, id -> BuildersUtil.getActionConnectionPoint(network, id),
+                IS_ACTION_CONNECTION_POINT_ENERGIZED);
         return self();
     }
 
     public TapChangerBlockingAutomationSystemBuilder uMeasurements(Collection<String>[] staticIdsArray) {
-        uMeasurementPoints.addEquipments(staticIdsArray, id -> BuildersUtil.getActionConnectionPoint(network, id));
+        uMeasurementPoints.addEquipments(staticIdsArray, id -> BuildersUtil.getActionConnectionPoint(network, id),
+                IS_ACTION_CONNECTION_POINT_ENERGIZED);
         return self();
     }
 

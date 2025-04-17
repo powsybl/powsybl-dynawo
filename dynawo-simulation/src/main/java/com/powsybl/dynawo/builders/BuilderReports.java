@@ -78,7 +78,7 @@ public final class BuilderReports {
 
     public static void reportStaticIdUnknown(ReportNode reportNode, String fieldName, String staticId, String equipmentType) {
         reportNode.newReportNode()
-                .withMessageTemplate("dynawo.dynasim.unknownIdToDynamic")
+                .withMessageTemplate("dynawo.dynasim.staticIdUnknown")
                 .withUntypedValue(EQUIPMENT_TYPE_FIELD, equipmentType)
                 .withUntypedValue(FIELD_NAME, fieldName)
                 .withUntypedValue(STATIC_ID, staticId)
@@ -98,7 +98,7 @@ public final class BuilderReports {
 
     public static void reportUnknownStaticIdHandling(ReportNode reportNode, String fieldName, String staticId, String equipmentType) {
         reportNode.newReportNode()
-                .withMessageTemplate("dynawo.dynasim.staticIdUnknown")
+                .withMessageTemplate("dynawo.dynasim.unknownIdToDynamic")
                 .withUntypedValue(EQUIPMENT_TYPE_FIELD, equipmentType)
                 .withUntypedValue(FIELD_NAME, fieldName)
                 .withUntypedValue(STATIC_ID, staticId)

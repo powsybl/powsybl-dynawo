@@ -7,6 +7,7 @@
  */
 package com.powsybl.dynawo.builders;
 
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.iidm.network.Identifiable;
 
 import java.util.Collection;
@@ -18,26 +19,32 @@ import java.util.function.Function;
  */
 public class BuilderIdListEquipmentList<T extends Identifiable<?>> extends BuilderEquipmentsList<T> {
 
-    public BuilderIdListEquipmentList(String equipmentType, String fieldName, EquipmentPredicate<T> equipmentPredicate) {
-        super(equipmentType, fieldName, false, equipmentPredicate);
+    public BuilderIdListEquipmentList(String equipmentType, String fieldName, ReportNode reportNode) {
+        super(equipmentType, fieldName, reportNode);
     }
 
-    public BuilderIdListEquipmentList(String equipmentType, String fieldName) {
-        super(equipmentType, fieldName);
-    }
-
-    public void addEquipments(Collection<String>[] staticIdsArray, Function<String, T> equipmentSupplier) {
+    public void addEquipments(Collection<String>[] staticIdsArray, Function<String, T> equipmentSupplier,
+                              EquipmentPredicate<T> equipmentPredicate) {
         for (Collection<String> staticIds : staticIdsArray) {
-            addEquipment(staticIds, equipmentSupplier);
+            addEquipment(staticIds, equipmentSupplier, equipmentPredicate);
         }
     }
 
-    private void addEquipment(Collection<String> staticIds, Function<String, T> equipmentSupplier) {
+    private void addEquipment(Collection<String> staticIds, Function<String, T> equipmentSupplier, EquipmentPredicate<T> equipmentPredicate) {
         staticIds.stream()
                 .map(equipmentSupplier)
                 .filter(Objects::nonNull)
                 .findFirst()
-                .ifPresentOrElse(equipments::add,
-                    () -> missingEquipmentIds.add(staticIds.toString()));
+                .ifPresentOrElse(eq -> {
+                    if (equipmentPredicate.test(eq, fieldName, reportNode)) {
+                        equipments.add(eq);
+                    } else {
+                        failedPredicate = true;
+                    }
+                }, () -> {
+                    String ids = staticIds.toString();
+                    missingEquipmentIds.add(ids);
+                    BuilderReports.reportStaticIdUnknown(reportNode, fieldName, ids, equipmentType);
+                });
     }
 }

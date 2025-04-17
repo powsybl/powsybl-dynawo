@@ -38,18 +38,12 @@ public final class BuildersUtil {
 
     /**
      * Returns the ActionConnectionPoint (bus or busbar section) identified by the staticId parameter
-     * Verifies the point is energized and in main connected component, if not returns null
      * @param network the network containing the ActionConnectionPoint
      * @param staticId the identifiable id
-     * @return the energized action connection point if found, <code>null</code> instead
+     * @return the action connection point if found, <code>null</code> instead
      */
-    //TODO remove is energized test
     public static Identifiable<?> getActionConnectionPoint(Network network, String staticId) {
         BusbarSection busbarSection = network.getBusbarSection(staticId);
-        if (busbarSection != null) {
-            return isEnergized(busbarSection) ? busbarSection : null;
-        }
-        Bus bus = network.getBusBreakerView().getBus(staticId);
-        return isEnergized(bus) ? bus : null;
+        return busbarSection != null ? busbarSection : network.getBusBreakerView().getBus(staticId);
     }
 }

@@ -69,8 +69,7 @@ public class BuilderEquipment<T extends Identifiable<?>> {
         }
     }
 
-    public void addEquipment(T equipment, Predicate<T> equipmentChecker,
-                             EquipmentPredicate<T> equipmentPredicate) {
+    public void addEquipment(T equipment, Predicate<T> equipmentChecker, EquipmentPredicate<T> equipmentPredicate) {
         staticId = equipment.getId();
         if (!equipmentChecker.test(equipment)) {
             BuilderReports.reportDifferentNetwork(reportNode, EQUIPMENT_FIELD_NAME, staticId, equipmentType);
