@@ -58,8 +58,8 @@ public class WeccBuilder extends AbstractGeneratorBuilder<WeccBuilder> {
         return MODEL_CONFIGS.getModelInfos(dynawoVersion);
     }
 
-    protected WeccBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
-        super(network, modelConfig, reportNode);
+    protected WeccBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode) {
+        super(network, modelConfig, parentReportNode);
     }
 
     @Override

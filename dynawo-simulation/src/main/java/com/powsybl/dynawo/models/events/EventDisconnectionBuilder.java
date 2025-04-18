@@ -36,8 +36,8 @@ public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identif
         return of(network, ReportNode.NO_OP);
     }
 
-    public static EventDisconnectionBuilder of(Network network, ReportNode reportNode) {
-        return new EventDisconnectionBuilder(network, reportNode);
+    public static EventDisconnectionBuilder of(Network network, ReportNode parentReportNode) {
+        return new EventDisconnectionBuilder(network, parentReportNode);
     }
 
     public static ModelInfo getModelInfo() {

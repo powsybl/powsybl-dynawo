@@ -62,9 +62,9 @@ public class UnderVoltageAutomationSystemBuilder extends AbstractAutomationSyste
         return MODEL_CONFIGS.getModelInfos(dynawoVersion);
     }
 
-    protected UnderVoltageAutomationSystemBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
-        super(network, modelConfig, reportNode);
-        generator = new BuilderEquipment<>(IdentifiableType.GENERATOR.toString(), "generator", this.reportNode);
+    protected UnderVoltageAutomationSystemBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode) {
+        super(network, modelConfig, parentReportNode);
+        generator = new BuilderEquipment<>(IdentifiableType.GENERATOR.toString(), "generator", reportNode);
     }
 
     public UnderVoltageAutomationSystemBuilder generator(String staticId) {

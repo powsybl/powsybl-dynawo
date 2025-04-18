@@ -60,8 +60,8 @@ public class HvdcPBuilder extends AbstractHvdcBuilder<HvdcPBuilder> {
         return MODEL_CONFIGS.getModelInfos(dynawoVersion);
     }
 
-    protected HvdcPBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
-        super(network, modelConfig, IdentifiableType.HVDC_LINE, reportNode, P_NAME_HANDLER);
+    protected HvdcPBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode) {
+        super(network, modelConfig, IdentifiableType.HVDC_LINE, parentReportNode, P_NAME_HANDLER);
     }
 
     @Override

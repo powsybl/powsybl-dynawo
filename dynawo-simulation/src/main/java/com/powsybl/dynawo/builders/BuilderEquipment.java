@@ -52,11 +52,11 @@ public class BuilderEquipment<T extends Identifiable<?>> {
     public void addEquipment(String equipmentId, Function<String, T> equipmentSupplier,
                              EquipmentPredicate<T> equipmentPredicate) {
         staticId = equipmentId;
-        T equipment = equipmentSupplier.apply(staticId);
-        if (equipment == null) {
+        T eq = equipmentSupplier.apply(staticId);
+        if (eq == null) {
             BuilderReports.reportStaticIdUnknown(reportNode, fieldName, staticId, equipmentType);
-        } else if (equipmentPredicate.test(equipment, fieldName, reportNode)) {
-            this.equipment = equipment;
+        } else if (equipmentPredicate.test(eq, fieldName, reportNode)) {
+            this.equipment = eq;
         }
     }
 

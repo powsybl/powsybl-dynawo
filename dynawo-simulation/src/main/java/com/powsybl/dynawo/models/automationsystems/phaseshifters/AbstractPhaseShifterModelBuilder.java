@@ -22,10 +22,10 @@ abstract class AbstractPhaseShifterModelBuilder<T extends AbstractAutomationSyst
 
     protected final BuilderEquipment<TwoWindingsTransformer> transformer;
 
-    protected AbstractPhaseShifterModelBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
-        super(network, modelConfig, reportNode);
+    protected AbstractPhaseShifterModelBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode) {
+        super(network, modelConfig, parentReportNode);
         transformer = new BuilderEquipment<>(IdentifiableType.TWO_WINDINGS_TRANSFORMER.toString(),
-                "transformer", this.reportNode);
+                "transformer", reportNode);
     }
 
     public T transformer(String staticId) {

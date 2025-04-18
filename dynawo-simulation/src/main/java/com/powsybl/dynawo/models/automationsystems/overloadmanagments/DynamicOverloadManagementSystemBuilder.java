@@ -59,8 +59,8 @@ public class DynamicOverloadManagementSystemBuilder extends AbstractOverloadMana
         return MODEL_CONFIGS.getModelInfos(dynawoVersion);
     }
 
-    protected DynamicOverloadManagementSystemBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
-        super(network, modelConfig, reportNode, "iMeasurement", "controlledBranch");
+    protected DynamicOverloadManagementSystemBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode) {
+        super(network, modelConfig, parentReportNode, "iMeasurement", "controlledBranch");
     }
 
     public DynamicOverloadManagementSystemBuilder iMeasurement(String staticId) {

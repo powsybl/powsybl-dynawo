@@ -25,16 +25,16 @@ public abstract class AbstractEquipmentModelBuilder<T extends Identifiable<T>, R
     protected final BuilderEquipment<T> builderEquipment;
     protected final Predicate<T> hasSameNetwork = eq -> Objects.equals(network, eq.getNetwork());
 
-    protected AbstractEquipmentModelBuilder(Network network, ModelConfig modelConfig, IdentifiableType equipmentType, ReportNode reportNode) {
-        super(network, reportNode);
+    protected AbstractEquipmentModelBuilder(Network network, ModelConfig modelConfig, IdentifiableType equipmentType, ReportNode parentReportNode) {
+        super(network, parentReportNode);
         this.modelConfig = Objects.requireNonNull(modelConfig);
-        this.builderEquipment = new BuilderEquipment<>(equipmentType.toString(), this.reportNode);
+        this.builderEquipment = new BuilderEquipment<>(equipmentType.toString(), reportNode);
     }
 
-    protected AbstractEquipmentModelBuilder(Network network, ModelConfig modelConfig, String equipmentType, ReportNode reportNode) {
-        super(network, reportNode);
+    protected AbstractEquipmentModelBuilder(Network network, ModelConfig modelConfig, String equipmentType, ReportNode parentReportNode) {
+        super(network, parentReportNode);
         this.modelConfig = modelConfig;
-        this.builderEquipment = new BuilderEquipment<>(equipmentType, this.reportNode);
+        this.builderEquipment = new BuilderEquipment<>(equipmentType, reportNode);
     }
 
     @Override

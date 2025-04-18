@@ -60,8 +60,8 @@ public class TransformerFixedRatioBuilder extends AbstractEquipmentModelBuilder<
         return MODEL_CONFIGS.getModelInfos(dynawoVersion);
     }
 
-    protected TransformerFixedRatioBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
-        super(network, modelConfig, IdentifiableType.TWO_WINDINGS_TRANSFORMER, reportNode);
+    protected TransformerFixedRatioBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode) {
+        super(network, modelConfig, IdentifiableType.TWO_WINDINGS_TRANSFORMER, parentReportNode);
     }
 
     @Override

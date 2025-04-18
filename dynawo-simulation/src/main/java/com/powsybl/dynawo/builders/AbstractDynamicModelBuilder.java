@@ -24,9 +24,9 @@ public abstract class AbstractDynamicModelBuilder {
     protected final ReportNode reportNode;
     protected boolean isInstantiable = true;
 
-    protected AbstractDynamicModelBuilder(Network network, ReportNode reportNode) {
+    protected AbstractDynamicModelBuilder(Network network, ReportNode parentReportNode) {
         this.network = Objects.requireNonNull(network);
-        this.reportNode = createModelInstantiationReportNode(Objects.requireNonNull(reportNode));
+        this.reportNode = createModelInstantiationReportNode(Objects.requireNonNull(parentReportNode));
     }
 
     protected abstract void checkData();

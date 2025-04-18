@@ -58,8 +58,8 @@ public class LoadOneTransformerTapChangerBuilder extends AbstractLoadModelBuilde
         return MODEL_CONFIGS.getModelInfos(dynawoVersion);
     }
 
-    protected LoadOneTransformerTapChangerBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
-        super(network, modelConfig, reportNode);
+    protected LoadOneTransformerTapChangerBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode) {
+        super(network, modelConfig, parentReportNode);
     }
 
     @Override
