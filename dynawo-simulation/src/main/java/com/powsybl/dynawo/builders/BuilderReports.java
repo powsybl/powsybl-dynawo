@@ -81,7 +81,7 @@ public final class BuilderReports {
                 .withMessageTemplate("dynawo.dynasim.staticIdUnknown")
                 .withUntypedValue(EQUIPMENT_TYPE_FIELD, equipmentType)
                 .withUntypedValue(FIELD_NAME, fieldName)
-                .withUntypedValue(STATIC_ID, staticId)
+                .withTypedValue(STATIC_ID, staticId, TypedValue.ID)
                 .withSeverity(TypedValue.WARN_SEVERITY)
                 .add();
     }
@@ -91,7 +91,7 @@ public final class BuilderReports {
                 .withMessageTemplate("dynawo.dynasim.wrongNetwork")
                 .withUntypedValue(EQUIPMENT_TYPE_FIELD, equipmentType)
                 .withUntypedValue(FIELD_NAME, fieldName)
-                .withUntypedValue(STATIC_ID, staticId)
+                .withTypedValue(STATIC_ID, staticId, TypedValue.ID)
                 .withSeverity(TypedValue.WARN_SEVERITY)
                 .add();
     }
@@ -101,7 +101,7 @@ public final class BuilderReports {
                 .withMessageTemplate("dynawo.dynasim.unknownIdToDynamic")
                 .withUntypedValue(EQUIPMENT_TYPE_FIELD, equipmentType)
                 .withUntypedValue(FIELD_NAME, fieldName)
-                .withUntypedValue(STATIC_ID, staticId)
+                .withTypedValue(STATIC_ID, staticId, TypedValue.ID)
                 .withSeverity(TypedValue.INFO_SEVERITY)
                 .add();
     }

@@ -8,7 +8,7 @@
 package com.powsybl.dynaflow;
 
 import com.powsybl.commons.report.ReportNode;
-import com.powsybl.dynawo.commons.PowsyblDynawoReportResourceBundle;
+import com.powsybl.commons.report.TypedValue;
 
 /**
  * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
@@ -20,17 +20,15 @@ public final class DynaflowReports {
 
     public static ReportNode createDynaFlowReportNode(ReportNode reportNode, String networkId) {
         return reportNode.newReportNode()
-                .withResourceBundles(PowsyblDynawoReportResourceBundle.BASE_NAME)
                 .withMessageTemplate("dynawo.dynaflow.loadflow")
-                .withUntypedValue("networkId", networkId)
+                .withTypedValue("networkId", networkId, TypedValue.ID)
                 .add();
     }
 
     public static ReportNode createDynaFlowSecurityAnalysisReportNode(ReportNode reportNode, String networkId) {
         return reportNode.newReportNode()
-                .withResourceBundles(PowsyblDynawoReportResourceBundle.BASE_NAME)
                 .withMessageTemplate("dynawo.dynaflow.sa")
-                .withUntypedValue("networkId", networkId)
+                .withTypedValue("networkId", networkId, TypedValue.ID)
                 .add();
     }
 
