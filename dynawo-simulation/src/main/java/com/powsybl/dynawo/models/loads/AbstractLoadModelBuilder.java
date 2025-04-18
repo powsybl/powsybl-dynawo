@@ -26,8 +26,8 @@ public abstract class AbstractLoadModelBuilder<R extends AbstractEquipmentModelB
         return true;
     };
 
-    protected AbstractLoadModelBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
-        super(network, modelConfig, IdentifiableType.LOAD, reportNode);
+    protected AbstractLoadModelBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode) {
+        super(network, modelConfig, IdentifiableType.LOAD, parentReportNode);
     }
 
     @Override

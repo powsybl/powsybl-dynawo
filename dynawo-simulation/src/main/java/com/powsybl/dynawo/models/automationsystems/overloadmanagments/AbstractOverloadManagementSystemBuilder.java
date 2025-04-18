@@ -27,11 +27,11 @@ public abstract class AbstractOverloadManagementSystemBuilder<T extends Abstract
     protected TwoSides iMeasurementSide;
     protected final BuilderEquipment<Branch<?>> controlledEquipment;
 
-    protected AbstractOverloadManagementSystemBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode,
+    protected AbstractOverloadManagementSystemBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode,
                                                       String iMeasurementFieldName, String controlledEquipmentFieldName) {
-        super(network, modelConfig, reportNode);
-        this.iMeasurement = new BuilderEquipment<>(BRANCH_TYPE, iMeasurementFieldName, this.reportNode);
-        this.controlledEquipment = new BuilderEquipment<>(BRANCH_TYPE, controlledEquipmentFieldName, this.reportNode);
+        super(network, modelConfig, parentReportNode);
+        this.iMeasurement = new BuilderEquipment<>(BRANCH_TYPE, iMeasurementFieldName, reportNode);
+        this.controlledEquipment = new BuilderEquipment<>(BRANCH_TYPE, controlledEquipmentFieldName, reportNode);
     }
 
     public T controlledBranch(String staticId) {

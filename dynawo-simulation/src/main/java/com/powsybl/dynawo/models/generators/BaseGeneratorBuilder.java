@@ -58,8 +58,8 @@ public class BaseGeneratorBuilder extends AbstractGeneratorBuilder<BaseGenerator
         return MODEL_CONFIGS.getModelInfos(dynawoVersion);
     }
 
-    protected BaseGeneratorBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
-        super(network, modelConfig, reportNode);
+    protected BaseGeneratorBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode) {
+        super(network, modelConfig, parentReportNode);
     }
 
     @Override

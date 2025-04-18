@@ -61,8 +61,8 @@ public class PhaseShifterBlockingIAutomationSystemBuilder extends AbstractAutoma
 
     private String phaseShifterIDynamicId;
 
-    protected PhaseShifterBlockingIAutomationSystemBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
-        super(network, modelConfig, reportNode);
+    protected PhaseShifterBlockingIAutomationSystemBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode) {
+        super(network, modelConfig, parentReportNode);
     }
 
     public PhaseShifterBlockingIAutomationSystemBuilder phaseShifterId(String phaseShifterIDynamicId) {

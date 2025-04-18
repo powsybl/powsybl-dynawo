@@ -66,8 +66,8 @@ public class HvdcVscBuilder extends AbstractHvdcBuilder<HvdcVscBuilder> {
         return MODEL_CONFIGS.getModelInfos(dynawoVersion);
     }
 
-    protected HvdcVscBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
-        super(network, modelConfig, "VSC " + IdentifiableType.HVDC_LINE, reportNode, VSC_NAME_HANDLER);
+    protected HvdcVscBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode) {
+        super(network, modelConfig, "VSC " + IdentifiableType.HVDC_LINE, parentReportNode, VSC_NAME_HANDLER);
     }
 
     @Override

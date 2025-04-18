@@ -26,9 +26,9 @@ abstract class AbstractEventModelBuilder<T extends Identifiable<?>, R extends Ab
     protected String staticId;
     protected Double startTime;
 
-    protected AbstractEventModelBuilder(Network network, String fieldName, ReportNode reportNode) {
-        super(network, reportNode);
-        this.builderEquipment = new BuilderEquipment<>(fieldName, this.reportNode);
+    protected AbstractEventModelBuilder(Network network, String fieldName, ReportNode parentReportNode) {
+        super(network, parentReportNode);
+        this.builderEquipment = new BuilderEquipment<>(fieldName, reportNode);
         this.eventId = generateDefaultEventId();
     }
 

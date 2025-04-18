@@ -31,8 +31,8 @@ public class NodeFaultEventBuilder extends AbstractEventModelBuilder<Bus, NodeFa
         return of(network, ReportNode.NO_OP);
     }
 
-    public static NodeFaultEventBuilder of(Network network, ReportNode reportNode) {
-        return new NodeFaultEventBuilder(network, reportNode);
+    public static NodeFaultEventBuilder of(Network network, ReportNode parentReportNode) {
+        return new NodeFaultEventBuilder(network, parentReportNode);
     }
 
     public static ModelInfo getModelInfo() {

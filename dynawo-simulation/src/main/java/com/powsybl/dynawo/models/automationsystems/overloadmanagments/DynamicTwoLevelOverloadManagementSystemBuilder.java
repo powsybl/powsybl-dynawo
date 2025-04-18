@@ -63,9 +63,9 @@ public class DynamicTwoLevelOverloadManagementSystemBuilder extends AbstractOver
         return MODEL_CONFIGS.getModelInfos(dynawoVersion);
     }
 
-    protected DynamicTwoLevelOverloadManagementSystemBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
-        super(network, modelConfig, reportNode, "iMeasurement1", "controlledBranch1");
-        iMeasurement2 = new BuilderEquipment<>(BRANCH_TYPE, "iMeasurement2", this.reportNode);
+    protected DynamicTwoLevelOverloadManagementSystemBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode) {
+        super(network, modelConfig, parentReportNode, "iMeasurement1", "controlledBranch1");
+        iMeasurement2 = new BuilderEquipment<>(BRANCH_TYPE, "iMeasurement2", reportNode);
     }
 
     public DynamicTwoLevelOverloadManagementSystemBuilder iMeasurement1(String staticId) {

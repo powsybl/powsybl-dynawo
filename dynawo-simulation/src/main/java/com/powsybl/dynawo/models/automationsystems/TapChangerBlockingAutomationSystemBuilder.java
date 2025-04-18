@@ -67,11 +67,10 @@ public class TapChangerBlockingAutomationSystemBuilder extends AbstractAutomatio
         return MODEL_CONFIGS.getModelInfos(dynawoVersion);
     }
 
-    protected TapChangerBlockingAutomationSystemBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
-        super(network, modelConfig, reportNode);
-        //TODO replace this.reportNode
-        tapChangerEquipments = new BuilderEquipmentsList<>(TAP_CHANGER_TYPE, TRANSFORMER_FIELD, true, this.reportNode);
-        uMeasurementPoints = new BuilderIdListEquipmentList<>(MEASUREMENT_POINT_TYPE, U_MEASUREMENTS_FIELD, this.reportNode);
+    protected TapChangerBlockingAutomationSystemBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode) {
+        super(network, modelConfig, parentReportNode);
+        tapChangerEquipments = new BuilderEquipmentsList<>(TAP_CHANGER_TYPE, TRANSFORMER_FIELD, true, reportNode);
+        uMeasurementPoints = new BuilderIdListEquipmentList<>(MEASUREMENT_POINT_TYPE, U_MEASUREMENTS_FIELD, reportNode);
     }
 
     public TapChangerBlockingAutomationSystemBuilder transformers(String staticId) {
