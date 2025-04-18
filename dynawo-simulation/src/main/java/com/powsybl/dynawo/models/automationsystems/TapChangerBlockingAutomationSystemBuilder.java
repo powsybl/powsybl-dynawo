@@ -120,8 +120,8 @@ public class TapChangerBlockingAutomationSystemBuilder extends AbstractAutomatio
     @Override
     protected void checkData() {
         super.checkData();
-        isInstantiable &= tapChangerEquipments.checkEquipmentData(reportNode);
-        isInstantiable &= uMeasurementPoints.checkEquipmentData(reportNode);
+        isInstantiable &= tapChangerEquipments.checkEquipmentData();
+        isInstantiable &= uMeasurementPoints.checkEquipmentData();
     }
 
     @Override

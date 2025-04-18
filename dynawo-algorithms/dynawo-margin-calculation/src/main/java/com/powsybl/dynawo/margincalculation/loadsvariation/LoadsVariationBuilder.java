@@ -57,7 +57,7 @@ public class LoadsVariationBuilder {
     }
 
     protected void checkData() {
-        isInstantiable = loads.checkEquipmentData(reportNode);
+        isInstantiable = loads.checkEquipmentData();
         if (Double.isNaN(variationValue)) {
             BuilderReports.reportFieldNotSet(reportNode, "variationValue");
             isInstantiable = false;
