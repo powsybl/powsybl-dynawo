@@ -113,7 +113,19 @@ public final class BuilderReports {
                 .withUntypedValue(FIELD_NAME, fieldName)
                 .withUntypedValue("fieldValue", fieldValue)
                 .withUntypedValue("threshold", threshold)
-                .withSeverity(TypedValue.WARN_SEVERITY).add();
+                .withSeverity(TypedValue.WARN_SEVERITY)
+                .add();
+    }
+
+    public static void reportStaticIdListUnknown(ReportNode reportNode, String fieldName, String staticIds, String equipmentType, String predicate) {
+        reportNode.newReportNode()
+                .withMessageTemplate("dynawo.dynasim.staticIdListUnknown")
+                .withUntypedValue(EQUIPMENT_TYPE_FIELD, equipmentType)
+                .withUntypedValue(FIELD_NAME, fieldName)
+                .withUntypedValue("staticIds", staticIds)
+                .withUntypedValue("predicate", predicate)
+                .withSeverity(TypedValue.WARN_SEVERITY)
+                .add();
     }
 
     public static void reportEmptyList(ReportNode reportNode, String fieldName) {

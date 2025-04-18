@@ -22,22 +22,14 @@ public class BuilderEquipmentsList<T extends Identifiable<?>> {
 
     protected final String equipmentType;
     protected final String fieldName;
-    // when set to true equipment ids not found in the network are seen as dynamic ids for automatons and reported as such
-    protected final boolean missingIdsAsDynamicIds;
     protected final ReportNode reportNode;
 
     protected List<String> missingEquipmentIds = new ArrayList<>();
     protected List<T> equipments = new ArrayList<>();
-    protected boolean failedPredicate = false;
 
     public BuilderEquipmentsList(String equipmentType, String fieldName, ReportNode reportNode) {
-        this(equipmentType, fieldName, false, reportNode);
-    }
-
-    public BuilderEquipmentsList(String equipmentType, String fieldName, boolean missingIdsAsDynamicIds, ReportNode reportNode) {
         this.equipmentType = equipmentType;
         this.fieldName = fieldName;
-        this.missingIdsAsDynamicIds = missingIdsAsDynamicIds;
         this.reportNode = reportNode;
     }
 
@@ -47,6 +39,7 @@ public class BuilderEquipmentsList<T extends Identifiable<?>> {
 
     public void addEquipments(Iterable<String> staticIds, Function<String, T> equipmentsSupplier) {
         staticIds.forEach(id -> addEquipment(id, equipmentsSupplier));
+        reportEmptyList();
     }
 
     public void addEquipments(String[] staticIds, Function<String, T> equipmentsSupplier,
@@ -57,6 +50,7 @@ public class BuilderEquipmentsList<T extends Identifiable<?>> {
     public void addEquipments(Iterable<String> staticIds, Function<String, T> equipmentsSupplier,
                               EquipmentPredicate<T> equipmentPredicate) {
         staticIds.forEach(id -> addEquipment(id, equipmentsSupplier, equipmentPredicate));
+        reportEmptyList();
     }
 
     public void addEquipment(String staticId, Function<String, T> equipmentsSupplier) {
@@ -76,36 +70,31 @@ public class BuilderEquipmentsList<T extends Identifiable<?>> {
         } else if (equipmentPredicate.test(equipment, fieldName, reportNode)) {
             equipments.add(equipment);
         } else {
-            failedPredicate = true;
+            missingEquipmentIds.add(staticId);
         }
     }
 
-    private void handleMissingId(String staticId) {
+    protected void handleMissingId(String staticId) {
         missingEquipmentIds.add(staticId);
-        if (missingIdsAsDynamicIds) {
-            BuilderReports.reportUnknownStaticIdHandling(reportNode, fieldName, staticId, equipmentType);
-        } else {
-            BuilderReports.reportStaticIdUnknown(reportNode, fieldName, staticId, equipmentType);
+        BuilderReports.reportStaticIdUnknown(reportNode, fieldName, staticId, equipmentType);
+    }
+
+    protected void reportEmptyList() {
+        if (equipments.isEmpty()) {
+            BuilderReports.reportEmptyList(reportNode, fieldName);
         }
     }
 
     public boolean checkEquipmentData() {
         boolean emptyList = equipments.isEmpty();
-        if (missingEquipmentIds.isEmpty() && emptyList && !failedPredicate) {
+        if (emptyList && missingEquipmentIds.isEmpty()) {
             BuilderReports.reportFieldNotSet(reportNode, fieldName);
             return false;
-        } else if (!missingIdsAsDynamicIds && emptyList) {
-            BuilderReports.reportEmptyList(reportNode, fieldName);
-            return false;
         }
-        return true;
+        return !emptyList;
     }
 
     public List<T> getEquipments() {
         return equipments;
-    }
-
-    public List<String> getMissingEquipmentIds() {
-        return missingEquipmentIds;
     }
 }

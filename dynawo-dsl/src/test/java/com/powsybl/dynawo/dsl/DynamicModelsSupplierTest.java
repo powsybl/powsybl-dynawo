@@ -246,8 +246,8 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                         + DSL tests
                            + Groovy Dynamic Models Supplier
                               + Model TapChangerBlockingAutomaton ZAB instantiation KO
-                                 'uMeasurements' field value '[LOAD, Wrong_ID]' not found for equipment type(s) BUS/BUSBAR_SECTION
-                                 'uMeasurements' field value '[NGEN_NHV1]' not found for equipment type(s) BUS/BUSBAR_SECTION
+                                 None of '[LOAD, Wrong_ID]' values from 'uMeasurements' field where found for energized equipment type(s) BUS/BUSBAR_SECTION
+                                 None of '[NGEN_NHV1]' values from 'uMeasurements' field where found for energized equipment type(s) BUS/BUSBAR_SECTION
                                  'uMeasurements' list is empty
                         """),
                 Arguments.of("/warnings/tapChangerCompatible.groovy", EurostagTutorialExample1Factory.create(),
@@ -257,7 +257,6 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                               + Model TapChangerBlockingAutomaton ZAB instantiation KO
                                  'uMeasurements' field value 'GEN' not found for equipment type(s) BUS/BUSBAR_SECTION
                                  'transformers' field value 'GEN' not found for equipment type(s) TWO_WINDINGS_TRANSFORMER/LOAD, id will be used as pure dynamic model id
-                                 'uMeasurements' list is empty
                         """),
                 Arguments.of("/warnings/hvdcVscWrongStaticType.groovy", HvdcTestNetwork.createLcc(),
                         """
