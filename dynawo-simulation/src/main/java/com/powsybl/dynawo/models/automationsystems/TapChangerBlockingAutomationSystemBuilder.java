@@ -28,7 +28,7 @@ public class TapChangerBlockingAutomationSystemBuilder extends AbstractAutomatio
     private static final String U_MEASUREMENTS_FIELD = "uMeasurements";
     private static final String TRANSFORMER_FIELD = "transformers";
 
-    private final BuilderEquipmentsList<Identifiable<?>> tapChangerEquipments;
+    private final BuilderModelEquipmentsList<Identifiable<?>> tapChangerEquipments;
     private final BuilderIdListEquipmentList<Identifiable<?>> uMeasurementPoints;
 
     public static TapChangerBlockingAutomationSystemBuilder of(Network network) {
@@ -69,7 +69,7 @@ public class TapChangerBlockingAutomationSystemBuilder extends AbstractAutomatio
 
     protected TapChangerBlockingAutomationSystemBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode) {
         super(network, modelConfig, parentReportNode);
-        tapChangerEquipments = new BuilderEquipmentsList<>(TAP_CHANGER_TYPE, TRANSFORMER_FIELD, true, reportNode);
+        tapChangerEquipments = new BuilderModelEquipmentsList<>(TAP_CHANGER_TYPE, TRANSFORMER_FIELD, reportNode);
         uMeasurementPoints = new BuilderIdListEquipmentList<>(MEASUREMENT_POINT_TYPE, U_MEASUREMENTS_FIELD, reportNode);
     }
 
@@ -126,7 +126,7 @@ public class TapChangerBlockingAutomationSystemBuilder extends AbstractAutomatio
 
     @Override
     public TapChangerBlockingAutomationSystem build() {
-        return isInstantiable() ? new TapChangerBlockingAutomationSystem(dynamicModelId, parameterSetId, tapChangerEquipments.getEquipments(), tapChangerEquipments.getMissingEquipmentIds(), uMeasurementPoints.getEquipments(), modelConfig) : null;
+        return isInstantiable() ? new TapChangerBlockingAutomationSystem(dynamicModelId, parameterSetId, tapChangerEquipments.getEquipments(), tapChangerEquipments.getDynamicModelIds(), uMeasurementPoints.getEquipments(), modelConfig) : null;
     }
 
     @Override

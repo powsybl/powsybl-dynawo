@@ -28,23 +28,19 @@ public class BuilderIdListEquipmentList<T extends Identifiable<?>> extends Build
         for (Collection<String> staticIds : staticIdsArray) {
             addEquipment(staticIds, equipmentSupplier, equipmentPredicate);
         }
+        reportEmptyList();
     }
 
     private void addEquipment(Collection<String> staticIds, Function<String, T> equipmentSupplier, EquipmentPredicate<T> equipmentPredicate) {
         staticIds.stream()
                 .map(equipmentSupplier)
                 .filter(Objects::nonNull)
+                .filter(eq -> equipmentPredicate.test(eq, fieldName, reportNode))
                 .findFirst()
-                .ifPresentOrElse(eq -> {
-                    if (equipmentPredicate.test(eq, fieldName, reportNode)) {
-                        equipments.add(eq);
-                    } else {
-                        failedPredicate = true;
-                    }
-                }, () -> {
+                .ifPresentOrElse(equipments::add, () -> {
                     String ids = staticIds.toString();
                     missingEquipmentIds.add(ids);
-                    BuilderReports.reportStaticIdUnknown(reportNode, fieldName, ids, equipmentType);
+                    BuilderReports.reportStaticIdListUnknown(reportNode, fieldName, ids, equipmentType, "energized");
                 });
     }
 }
