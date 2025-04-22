@@ -11,6 +11,8 @@ import com.powsybl.commons.config.PlatformConfig;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.computation.*;
 import com.powsybl.dynamicsimulation.*;
+import com.powsybl.dynawo.builders.AdditionalModelConfigLoader;
+import com.powsybl.dynawo.builders.ModelConfigsHandler;
 import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.models.utils.BlackBoxSupplierUtils;
 import com.powsybl.dynawo.commons.DynawoUtil;
@@ -90,11 +92,14 @@ public class DynawoSimulationProvider implements DynamicSimulationProvider {
         network.getVariantManager().setWorkingVariant(workingVariantId);
         ExecutionEnvironment execEnv = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, config.isDebug());
         DynawoVersion currentVersion = DynawoUtil.requireDynaMinVersion(execEnv, computationManager, getVersionCommand(config), DynawoSimulationConfig.DYNAWO_LAUNCHER_PROGRAM_NAME, false);
+        DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load(parameters);
+        dynawoParameters.getAdditionalModelPath().ifPresent(additionalModelPath ->
+                ModelConfigsHandler.getInstance().addModels(new AdditionalModelConfigLoader(additionalModelPath)));
         DynawoSimulationContext context = new DynawoSimulationContext
                 .Builder(network, BlackBoxSupplierUtils.getBlackBoxModelList(dynamicModelsSupplier, network, dsReportNode))
                 .workingVariantId(workingVariantId)
                 .dynamicSimulationParameters(parameters)
-                .dynawoParameters(DynawoSimulationParameters.load(parameters))
+                .dynawoParameters(dynawoParameters)
                 .eventModels(BlackBoxSupplierUtils.getBlackBoxModelList(eventModelsSupplier, network, dsReportNode))
                 .outputVariables(outputVariablesSupplier.get(network))
                 .currentVersion(currentVersion)

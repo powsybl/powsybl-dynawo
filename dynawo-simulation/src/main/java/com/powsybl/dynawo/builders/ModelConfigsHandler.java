@@ -12,6 +12,8 @@ import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynamicsimulation.DynamicModel;
 import com.powsybl.dynamicsimulation.EventModel;
 import com.powsybl.iidm.network.Network;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -21,6 +23,7 @@ import java.util.stream.Collectors;
  */
 public final class ModelConfigsHandler {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ModelConfigsHandler.class);
     private static final ModelConfigsHandler INSTANCE = new ModelConfigsHandler();
 
     private final Map<String, ModelConfigs> modelConfigsCat = new HashMap<>();
@@ -63,6 +66,11 @@ public final class ModelConfigsHandler {
         return builderConfigs;
     }
 
+    //TODO refactor builderConfigs handling
+    public BuilderConfig getBuilderConfigs(String categoryName) {
+        return builderConfigs.stream().filter(bc -> bc.getCategory().equals(categoryName)).findFirst().get();
+    }
+
     public List<EventBuilderConfig> getEventBuilderConfigs() {
         return eventBuilderConfigs;
     }
@@ -83,5 +91,22 @@ public final class ModelConfigsHandler {
             return null;
         }
         return constructor.createBuilder(network, reportNode);
+    }
+
+    public void addModels(AdditionalModelConfigLoader additionalModelsLoader) {
+        additionalModelsLoader.loadModelConfigs().forEach(
+                (cat, modelsMap) -> {
+                    ModelConfigs currentModelConfigs = modelConfigsCat.get(cat);
+                    if (currentModelConfigs != null) {
+                        //TODO handle already defined model
+                        currentModelConfigs.addModelConfigs(modelsMap);
+                        modelsMap.getModelsName().forEach(lib ->
+                                builderConstructorByName.put(lib, getBuilderConfigs(cat).getBuilderConstructor()));
+                    } else {
+                        LOGGER.warn("Category {} not found, the additional models under this category will be skipped", cat);
+                    }
+                }
+        );
+
     }
 }
