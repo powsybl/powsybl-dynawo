@@ -12,7 +12,11 @@ import com.powsybl.commons.report.ReportNode;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-@FunctionalInterface
 public interface EquipmentPredicate<T> {
+
     boolean test(T equipment, String fieldName, ReportNode reportNode);
+
+    default String getDefinition() {
+        return "";
+    }
 }
