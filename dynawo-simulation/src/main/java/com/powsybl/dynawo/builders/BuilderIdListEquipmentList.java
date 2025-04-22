@@ -40,7 +40,7 @@ public class BuilderIdListEquipmentList<T extends Identifiable<?>> extends Build
                 .ifPresentOrElse(equipments::add, () -> {
                     String ids = staticIds.toString();
                     missingEquipmentIds.add(ids);
-                    BuilderReports.reportStaticIdListUnknown(reportNode, fieldName, ids, equipmentType, "energized");
+                    BuilderReports.reportStaticIdListUnknown(reportNode, fieldName, ids, equipmentType, equipmentPredicate.getDefinition());
                 });
     }
 }
