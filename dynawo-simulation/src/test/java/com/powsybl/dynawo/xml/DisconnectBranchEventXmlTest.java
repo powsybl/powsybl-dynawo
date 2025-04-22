@@ -23,7 +23,7 @@ class DisconnectBranchEventXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void setupNetwork() {
-        network = EurostagTutorialExample1Factory.create();
+        network = EurostagTutorialExample1Factory.createWithLFResults();
     }
 
     @Override

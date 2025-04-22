@@ -33,7 +33,7 @@ public class LoadsVariationBuilder {
     public LoadsVariationBuilder(Network network, ReportNode reportNode) {
         this.network = Objects.requireNonNull(network);
         this.reportNode = Objects.requireNonNull(reportNode);
-        this.loads = new BuilderEquipmentsList<>(IdentifiableType.LOAD, "loads");
+        this.loads = new BuilderEquipmentsList<>(IdentifiableType.LOAD.toString(), "loads", reportNode);
     }
 
     public LoadsVariationBuilder loads(String... loadIds) {
@@ -57,7 +57,7 @@ public class LoadsVariationBuilder {
     }
 
     protected void checkData() {
-        isInstantiable = loads.checkEquipmentData(reportNode);
+        isInstantiable = loads.checkEquipmentData();
         if (Double.isNaN(variationValue)) {
             BuilderReports.reportFieldNotSet(reportNode, "variationValue");
             isInstantiable = false;

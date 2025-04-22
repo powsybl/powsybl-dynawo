@@ -63,10 +63,9 @@ public class DynamicTwoLevelOverloadManagementSystemBuilder extends AbstractOver
         return MODEL_CONFIGS.getModelInfos(dynawoVersion);
     }
 
-    protected DynamicTwoLevelOverloadManagementSystemBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
-        super(network, modelConfig, reportNode, new BuilderEquipment<>(BRANCH_TYPE, "iMeasurement1"),
-                new BuilderEquipment<>(BRANCH_TYPE, "controlledBranch1"));
-        iMeasurement2 = new BuilderEquipment<>(BRANCH_TYPE, "iMeasurement2");
+    protected DynamicTwoLevelOverloadManagementSystemBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode) {
+        super(network, modelConfig, parentReportNode, "iMeasurement1", "controlledBranch1");
+        iMeasurement2 = new BuilderEquipment<>(BRANCH_TYPE, "iMeasurement2", reportNode);
     }
 
     public DynamicTwoLevelOverloadManagementSystemBuilder iMeasurement1(String staticId) {
@@ -92,7 +91,7 @@ public class DynamicTwoLevelOverloadManagementSystemBuilder extends AbstractOver
     @Override
     protected void checkData() {
         super.checkData();
-        isInstantiable &= iMeasurement2.checkEquipmentData(reportNode);
+        isInstantiable &= iMeasurement2.checkEquipmentData();
         if (iMeasurement2Side == null) {
             BuilderReports.reportFieldNotSet(reportNode, "iMeasurement2Side");
             isInstantiable = false;
