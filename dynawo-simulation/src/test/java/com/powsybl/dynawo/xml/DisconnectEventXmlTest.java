@@ -44,12 +44,10 @@ class DisconnectEventXmlTest extends AbstractDynamicModelXmlTest {
     @Override
     protected void addDynamicModels() {
         dynamicModels.add(BaseGeneratorBuilder.of(network)
-                .dynamicModelId("BBM_GEN")
                 .staticId("G1")
                 .parameterSetId("GF")
                 .build());
         dynamicModels.add(BaseShuntBuilder.of(network)
-                .dynamicModelId("BBM_SHUNT")
                 .staticId("SH1")
                 .parameterSetId("BS")
                 .build());
@@ -73,7 +71,7 @@ class DisconnectEventXmlTest extends AbstractDynamicModelXmlTest {
 
     @Test
     void writeDisconnectModel() throws SAXException, IOException {
-        DydXml.write(tmpDir, context);
+        DydXml.write(tmpDir, context.getSimulationDydData());
         ParametersXml.write(tmpDir, context);
         validate("dyd.xsd", "disconnect_dyd.xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
         validate("parameters.xsd", "disconnect_par.xml", tmpDir.resolve(context.getSimulationParFile()));

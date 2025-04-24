@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
-    <dyn:blackBoxModel id="BBM_LOAD" lib="LoadOneTransformer" parFile="models.par" parId="LOT" staticId="LOAD">
+    <dyn:blackBoxModel id="LOAD" lib="LoadOneTransformer" parFile="models.par" parId="LOT" staticId="LOAD">
         <dyn:macroStaticRef id="MSR_LoadOneTransformer"/>
     </dyn:blackBoxModel>
     <dyn:macroConnector id="MC_LoadOneTransformer-DefaultEquipmentConnectionPoint">
@@ -13,5 +13,5 @@
         <dyn:staticRef var="transformer_Q1Pu_value" staticVar="q"/>
         <dyn:staticRef var="transformer_state" staticVar="state"/>
     </dyn:macroStaticReference>
-    <dyn:macroConnect connector="MC_LoadOneTransformer-DefaultEquipmentConnectionPoint" id1="BBM_LOAD" id2="NETWORK"/>
+    <dyn:macroConnect connector="MC_LoadOneTransformer-DefaultEquipmentConnectionPoint" id1="LOAD" id2="NETWORK"/>
 </dyn:dynamicModelsArchitecture>

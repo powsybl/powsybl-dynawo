@@ -31,17 +31,14 @@ class DisconnectDynamicBusEventXmlTest extends AbstractDynamicModelXmlTest {
     @Override
     protected void addDynamicModels() {
         dynamicModels.add(BaseGeneratorBuilder.of(network)
-                .dynamicModelId("BBM_GEN")
                 .staticId("G1")
                 .parameterSetId("gen")
                 .build());
         dynamicModels.add(StandardBusBuilder.of(network)
-                .dynamicModelId("BBM_B1")
                 .staticId("B1")
                 .parameterSetId("bus")
                 .build());
         dynamicModels.add(LineBuilder.of(network)
-                .dynamicModelId("BBM_L1")
                 .staticId("L1")
                 .parameterSetId("line")
                 .build());
@@ -53,7 +50,7 @@ class DisconnectDynamicBusEventXmlTest extends AbstractDynamicModelXmlTest {
 
     @Test
     void testEmptyEvent() throws IOException, SAXException {
-        DydXml.write(tmpDir, context);
+        DydXml.write(tmpDir, context.getSimulationDydData());
         ParametersXml.write(tmpDir, context);
         validate("dyd.xsd", "disconnect_dynamic_bus_dyd.xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
         validate("parameters.xsd", "disconnect_dynamic_bus_par.xml", tmpDir.resolve(context.getSimulationParFile()));

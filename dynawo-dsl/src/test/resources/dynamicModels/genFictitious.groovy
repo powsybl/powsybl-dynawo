@@ -10,6 +10,5 @@ package dynamicModels
 
 GeneratorFictitious {
     staticId "GEN"
-    dynamicModelId "BBM_GEN"
     parameterSetId "GF"
 }

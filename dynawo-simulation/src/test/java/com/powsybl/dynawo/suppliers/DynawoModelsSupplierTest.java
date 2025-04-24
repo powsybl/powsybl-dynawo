@@ -87,7 +87,7 @@ class DynawoModelsSupplierTest {
     @Test
     void testSupplierFromPath() throws URISyntaxException {
         Network network = EurostagTutorialExample1Factory.createWithLFResults();
-        Path path = Path.of(Objects.requireNonNull(getClass().getResource("/suppliers/mappingDynamicModel.json")).toURI());
+        Path path = Path.of(Objects.requireNonNull(getClass().getResource("/suppliers/dynamicModels.json")).toURI());
         List<DynamicModel> models = DynawoModelsSupplier.load(path).get(network);
         assertEquals(2, models.size());
     }
@@ -95,7 +95,7 @@ class DynawoModelsSupplierTest {
     @Test
     void testModelConfigDeserializer() throws IOException {
         SupplierJsonDeserializer<DynamicModelConfig> deserializer = new SupplierJsonDeserializer<>(new DynamicModelConfigsJsonDeserializer());
-        try (InputStream is = getClass().getResourceAsStream("/suppliers/mappingDynamicModel.json")) {
+        try (InputStream is = getClass().getResourceAsStream("/suppliers/dynamicModels.json")) {
             List<DynamicModelConfig> configs = deserializer.deserialize(is);
             assertEquals(2, configs.size());
             assertThat(configs.get(0)).usingRecursiveComparison().isEqualTo(getLoadConfig());

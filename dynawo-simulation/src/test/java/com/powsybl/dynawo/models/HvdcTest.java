@@ -32,7 +32,6 @@ class HvdcTest {
     void testConnectedStation() {
         Network network = HvdcTestNetwork.createVsc();
         BaseHvdc hvdc = HvdcPBuilder.of(network, "HvdcPV")
-                .dynamicModelId("hvdc")
                 .staticId("L")
                 .parameterSetId("HVDC")
                 .build();
@@ -44,7 +43,6 @@ class HvdcTest {
         Network network = HvdcTestNetwork.createVsc();
         HvdcLine line = network.getHvdcLine("L");
         BaseHvdc hvdcVscDangling = HvdcVscBuilder.of(network, "HvdcVSCDanglingP")
-                .dynamicModelId("hvdc")
                 .staticId("L")
                 .parameterSetId("HVDC")
                 .build();
@@ -56,7 +54,6 @@ class HvdcTest {
     void vscDynamicModelOnLCC() {
         Network network = HvdcTestNetwork.createLcc();
         assertNull(HvdcVscBuilder.of(network)
-                .dynamicModelId("hvdc")
                 .staticId("L")
                 .parameterSetId("HVDC")
                 .build());
@@ -65,6 +62,7 @@ class HvdcTest {
     @Test
     void testDefaultDanglingSide() {
         ReportNode reportNode = ReportNode.newRootReportNode()
+                .withAllResourceBundlesFromClasspath()
                 .withMessageTemplate("hvdcBuilder", "HVDC builder")
                 .build();
         Network network = HvdcTestNetwork.createVsc();
@@ -73,14 +71,13 @@ class HvdcTest {
         // dangling side ONE replaced by side TWO
         BaseHvdc hvdcPDangling = Objects.requireNonNull(
                 HvdcPBuilder.of(network, "HvdcPVDangling", reportNode))
-                    .dynamicModelId("hvdc")
                     .staticId("L")
                     .parameterSetId("HVDC")
                     .dangling(TwoSides.ONE)
                     .build();
         assertEquals(1, hvdcPDangling.getConnectedStations().size());
         assertEquals(line.getConverterStation1(), hvdcPDangling.getConnectedStations().get(0));
-        assertThat(reportNode.getChildren().stream()
+        assertThat(reportNode.getChildren().get(0).getChildren().stream()
                 .filter(r -> r.getMessageKey().equalsIgnoreCase("fieldOptionNotImplemented"))
                 .findFirst())
                 .isNotEmpty()

@@ -8,16 +8,16 @@
 package com.powsybl.dynawo.models.generators;
 
 import com.powsybl.dynawo.builders.ModelConfig;
-import com.powsybl.dynawo.models.events.ControllableEquipment;
+import com.powsybl.dynawo.models.events.ControllableEquipmentModel;
 import com.powsybl.iidm.network.Generator;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class SynchronousGeneratorControllable extends SynchronousGenerator implements ControllableEquipment {
+public class SynchronousGeneratorControllable extends SynchronousGenerator implements ControllableEquipmentModel {
 
-    protected SynchronousGeneratorControllable(String dynamicModelId, Generator generator, String parameterSetId, ModelConfig modelConfig, EnumGeneratorComponent generatorComponent) {
-        super(dynamicModelId, generator, parameterSetId, modelConfig, generatorComponent);
+    protected SynchronousGeneratorControllable(Generator generator, String parameterSetId, ModelConfig modelConfig, EnumGeneratorComponent generatorComponent) {
+        super(generator, parameterSetId, modelConfig, generatorComponent);
     }
 
     @Override

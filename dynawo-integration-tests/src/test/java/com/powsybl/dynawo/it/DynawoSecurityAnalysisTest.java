@@ -17,8 +17,8 @@ import com.powsybl.dynamicsimulation.groovy.GroovyDynamicModelsSupplier;
 import com.powsybl.dynamicsimulation.groovy.GroovyExtension;
 import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.DynawoSimulationProvider;
+import com.powsybl.dynawo.algorithms.DynawoAlgorithmsConfig;
 
-import com.powsybl.dynawo.security.DynawoAlgorithmsConfig;
 import com.powsybl.dynawo.security.DynawoSecurityAnalysisProvider;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.VariantManagerConstants;
@@ -41,7 +41,7 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 class DynawoSecurityAnalysisTest extends AbstractDynawoTest {
 
@@ -69,7 +69,7 @@ class DynawoSecurityAnalysisTest extends AbstractDynawoTest {
         Network network = Network.read(new ResourceDataSource("IEEE14", new ResourceSet("/ieee14", "IEEE14.iidm")));
 
         GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
-                getResourceAsStream("/ieee14/dynamic-security-analysis/dynamicModels.groovy"),
+                getResourceAsStream("/ieee14/dynamicModels.groovy"),
                 GroovyExtension.find(DynamicModelGroovyExtension.class, DynawoSimulationProvider.NAME));
 
         dynawoSimulationParameters.setModelsParameters(getResourceAsStream("/ieee14/models.par"))
@@ -79,6 +79,7 @@ class DynawoSecurityAnalysisTest extends AbstractDynawoTest {
                 .setCriteriaFilePath(Path.of(Objects.requireNonNull(getClass().getResource(criteriaPath)).getPath()));
 
         ReportNode reportNode = ReportNode.newRootReportNode()
+                .withAllResourceBundlesFromClasspath()
                 .withMessageTemplate("root", "Root message")
                 .build();
 

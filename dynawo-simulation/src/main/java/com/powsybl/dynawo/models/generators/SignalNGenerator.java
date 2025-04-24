@@ -18,8 +18,8 @@ import com.powsybl.iidm.network.Generator;
  */
 public class SignalNGenerator extends BaseGenerator implements SignalNModel {
 
-    protected SignalNGenerator(String dynamicModelId, Generator generator, String parameterSetId, ModelConfig modelConfig) {
-        super(dynamicModelId, generator, parameterSetId, modelConfig);
+    protected SignalNGenerator(Generator generator, String parameterSetId, ModelConfig modelConfig) {
+        super(generator, parameterSetId, modelConfig);
     }
 
     @Override

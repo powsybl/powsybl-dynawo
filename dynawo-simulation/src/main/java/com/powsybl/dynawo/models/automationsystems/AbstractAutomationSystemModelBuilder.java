@@ -54,8 +54,13 @@ public abstract class AbstractAutomationSystemModelBuilder<T extends AbstractAut
     }
 
     @Override
+    public String getModelName() {
+        return modelConfig.name();
+    }
+
+    @Override
     public String getModelId() {
-        return dynamicModelId != null ? dynamicModelId : "unknownDynamicId";
+        return dynamicModelId;
     }
 
     protected String getLib() {

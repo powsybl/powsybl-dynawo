@@ -29,19 +29,17 @@ class MixedFreqSynchSignalNXmlTest extends AbstractDynamicModelXmlTest {
     @Override
     protected void addDynamicModels() {
         dynamicModels.add(SignalNGeneratorBuilder.of(network, "GeneratorPQPropSignalN")
-                .dynamicModelId("BBM_GEN")
                 .staticId("GEN")
                 .parameterSetId("n")
                 .build());
         dynamicModels.add(SynchronizedGeneratorBuilder.of(network, "GeneratorPQ")
-                .dynamicModelId("BBM_GEN2")
                 .staticId("GEN2")
                 .parameterSetId("n")
                 .build());
     }
 
     @Override
-    void setupDynawoContext() {
+    protected void setupDynawoContext() {
         // empty to call super in test
     }
 

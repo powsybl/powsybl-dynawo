@@ -11,7 +11,7 @@ import com.powsybl.dynawo.models.automationsystems.TapChangerAutomationSystemBui
 import com.powsybl.dynawo.models.automationsystems.TapChangerBlockingAutomationSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.UnderVoltageAutomationSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.overloadmanagments.DynamicOverloadManagementSystemBuilder;
-import com.powsybl.dynawo.models.automationsystems.overloadmanagments.DynamicTwoLevelsOverloadManagementSystemBuilder;
+import com.powsybl.dynawo.models.automationsystems.overloadmanagments.DynamicTwoLevelOverloadManagementSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterBlockingIAutomationSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterIAutomationSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterPAutomationSystemBuilder;
@@ -49,7 +49,7 @@ class BuildersTest {
         assertNotNull(TapChangerBlockingAutomationSystemBuilder.of(NETWORK));
         assertNotNull(TapChangerAutomationSystemBuilder.of(NETWORK));
         assertNotNull(DynamicOverloadManagementSystemBuilder.of(NETWORK));
-        assertNotNull(DynamicTwoLevelsOverloadManagementSystemBuilder.of(NETWORK));
+        assertNotNull(DynamicTwoLevelOverloadManagementSystemBuilder.of(NETWORK));
         assertNotNull(PhaseShifterIAutomationSystemBuilder.of(NETWORK));
         assertNotNull(PhaseShifterBlockingIAutomationSystemBuilder.of(NETWORK));
         assertNotNull(PhaseShifterPAutomationSystemBuilder.of(NETWORK));
@@ -92,7 +92,7 @@ class BuildersTest {
         assertNotNull(TapChangerBlockingAutomationSystemBuilder.getDefaultModelInfo());
         assertNotNull(TapChangerAutomationSystemBuilder.getDefaultModelInfo());
         assertNotNull(DynamicOverloadManagementSystemBuilder.getDefaultModelInfo());
-        assertNotNull(DynamicTwoLevelsOverloadManagementSystemBuilder.getDefaultModelInfo());
+        assertNotNull(DynamicTwoLevelOverloadManagementSystemBuilder.getDefaultModelInfo());
         assertNotNull(PhaseShifterIAutomationSystemBuilder.getDefaultModelInfo());
         assertNotNull(PhaseShifterBlockingIAutomationSystemBuilder.getDefaultModelInfo());
         assertNotNull(PhaseShifterPAutomationSystemBuilder.getDefaultModelInfo());
@@ -166,7 +166,7 @@ class BuildersTest {
         assertNull(TapChangerBlockingAutomationSystemBuilder.of(NETWORK, WRONG_LIB));
         assertNull(TapChangerAutomationSystemBuilder.of(NETWORK, WRONG_LIB));
         assertNull(DynamicOverloadManagementSystemBuilder.of(NETWORK, WRONG_LIB));
-        assertNull(DynamicTwoLevelsOverloadManagementSystemBuilder.of(NETWORK, WRONG_LIB));
+        assertNull(DynamicTwoLevelOverloadManagementSystemBuilder.of(NETWORK, WRONG_LIB));
         assertNull(PhaseShifterIAutomationSystemBuilder.of(NETWORK, WRONG_LIB));
         assertNull(PhaseShifterPAutomationSystemBuilder.of(NETWORK, WRONG_LIB));
     }
@@ -208,7 +208,7 @@ class BuildersTest {
         assertNull(TapChangerBlockingAutomationSystemBuilder.of(NETWORK).build());
         assertNull(TapChangerAutomationSystemBuilder.of(NETWORK).build());
         assertNull(DynamicOverloadManagementSystemBuilder.of(NETWORK).build());
-        assertNull(DynamicTwoLevelsOverloadManagementSystemBuilder.of(NETWORK).build());
+        assertNull(DynamicTwoLevelOverloadManagementSystemBuilder.of(NETWORK).build());
         assertNull(PhaseShifterIAutomationSystemBuilder.of(NETWORK).build());
         assertNull(PhaseShifterPAutomationSystemBuilder.of(NETWORK).build());
     }

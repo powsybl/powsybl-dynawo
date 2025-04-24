@@ -7,6 +7,8 @@
 package com.powsybl.dynaflow;
 
 import com.powsybl.commons.PowsyblException;
+import com.powsybl.commons.config.InMemoryPlatformConfig;
+import com.powsybl.commons.config.MapModuleConfig;
 import com.powsybl.commons.test.AbstractSerDeTest;
 import com.powsybl.computation.ComputationManager;
 import com.powsybl.computation.local.LocalCommandExecutor;
@@ -34,6 +36,7 @@ import java.util.concurrent.ForkJoinPool;
 
 import static com.powsybl.commons.test.ComparisonUtils.assertXmlEquals;
 import static com.powsybl.dynaflow.DynaFlowConstants.*;
+import static com.powsybl.dynaflow.DynaFlowParameters.MODULE_SPECIFIC_PARAMETERS;
 import static com.powsybl.dynawo.commons.DynawoConstants.*;
 import static com.powsybl.loadflow.LoadFlowResult.Status.FAILED;
 import static com.powsybl.loadflow.LoadFlowResult.Status.FULLY_CONVERGED;
@@ -195,7 +198,34 @@ class DynaFlowProviderTest extends AbstractSerDeTest {
     }
 
     @Test
-    void testUpdateSpecificParameters() {
+    void testUpdateSpecificParametersFromPlatform() {
+        InMemoryPlatformConfig platformConfig = new InMemoryPlatformConfig(fileSystem);
+        double dsoVoltageLevel = 2.0;
+        double timeStep = 0;
+        List<String> chosenOutputs = List.of(OutputTypes.STEADYSTATE.name(), OutputTypes.CONSTRAINTS.name());
+
+        MapModuleConfig moduleConfig = platformConfig.createModuleConfig(MODULE_SPECIFIC_PARAMETERS);
+        moduleConfig.setStringProperty("svcRegulationOn", Boolean.TRUE.toString());
+        moduleConfig.setStringProperty("shuntRegulationOn", Boolean.TRUE.toString());
+        moduleConfig.setStringProperty("automaticSlackBusOn", Boolean.FALSE.toString());
+        moduleConfig.setStringProperty("dsoVoltageLevel", Double.toString(dsoVoltageLevel));
+        moduleConfig.setStringListProperty("chosenOutputs", chosenOutputs);
+        moduleConfig.setStringProperty("timeStep", Double.toString(timeStep));
+
+        LoadFlowParameters params = LoadFlowParameters.load();
+        DynaFlowParameters dynaParams = params.getExtension(DynaFlowParameters.class);
+        provider.updateSpecificParameters(dynaParams, platformConfig);
+
+        assertTrue(dynaParams.getSvcRegulationOn());
+        assertTrue(dynaParams.getShuntRegulationOn());
+        assertFalse(dynaParams.getAutomaticSlackBusOn());
+        assertEquals(dsoVoltageLevel, dynaParams.getDsoVoltageLevel(), 0.1d);
+        assertThat(dynaParams.getChosenOutputs()).containsExactlyInAnyOrder(OutputTypes.STEADYSTATE, OutputTypes.CONSTRAINTS);
+        assertEquals(timeStep, dynaParams.getTimeStep(), 0.1d);
+    }
+
+    @Test
+    void testUpdateSpecificParametersFromProperties() {
         Map<String, String> properties = Map.of(
                 "svcRegulationOn", "true",
                 "shuntRegulationOn", "true",

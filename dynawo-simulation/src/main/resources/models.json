@@ -692,11 +692,11 @@
     ]
   },
   "TWO_LEVEL_OVERLOAD_MANAGEMENT": {
-    "defaultLib": "TwoLevelsOverloadManagementSystem",
+    "defaultLib": "TwoLevelOverloadManagementSystem",
     "libs": [
       {
         "lib": "CurrentLimitAutomatonTwoLevels",
-        "alias": "TwoLevelsOverloadManagementSystem",
+        "alias": "TwoLevelOverloadManagementSystem",
         "doc": "Automation system which emits a specific order when the current on two monitored lines exceeds a given threshold for a given duration"
       }
     ]

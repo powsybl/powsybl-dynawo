@@ -32,17 +32,7 @@ public final class DynawoSimulationReports {
 
     public static ReportNode createDynawoSimulationContextReportNode(ReportNode reportNode) {
         return reportNode.newReportNode()
-                .withMessageTemplate("dynawoSimulationContext", "Dynawo models processing")
-                .add();
-    }
-
-    public static void reportDuplicateStaticId(ReportNode reportNode, String duplicateId, String modelName, String dynamicId) {
-        reportNode.newReportNode()
-                .withMessageTemplate("duplicateStaticId", "Duplicate static id found: ${duplicateId} -> model ${modelName} ${dynamicId} will be skipped")
-                .withUntypedValue("duplicateId", duplicateId)
-                .withUntypedValue(MODEL_NAME_FIELD, modelName)
-                .withUntypedValue(DYNAMIC_ID_FIELD, dynamicId)
-                .withSeverity(TypedValue.WARN_SEVERITY)
+                .withMessageTemplate("dynawoModelsProcessing", "Dynawo models processing")
                 .add();
     }
 

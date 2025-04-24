@@ -10,6 +10,5 @@ package dynamicModels
 
 GeneratorPQ {
     staticId "GEN"
-    dynamicModelId "BBM_GEN"
     parameterSetId "GPQ"
 }

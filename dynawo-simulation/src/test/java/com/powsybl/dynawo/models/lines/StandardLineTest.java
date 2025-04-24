@@ -7,21 +7,16 @@
  */
 package com.powsybl.dynawo.models.lines;
 
-import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
-import com.powsybl.dynamicsimulation.OutputVariable;
 import com.powsybl.dynawo.DynawoSimulationContext;
-import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.models.BlackBoxModel;
 import com.powsybl.dynawo.models.automationsystems.overloadmanagments.DynamicOverloadManagementSystemBuilder;
 import com.powsybl.iidm.network.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
@@ -40,7 +35,7 @@ class StandardLineTest {
                 .setR(1).setX(3).setG1(0).setG2(0).setB1(0).setB2(0).add();
 
         List<BlackBoxModel> dynamicModels = new ArrayList<>();
-        dynamicModels.add(LineBuilder.of(network).dynamicModelId("BBM_l").staticId("l").parameterSetId("SL").build());
+        dynamicModels.add(LineBuilder.of(network).staticId("l").parameterSetId("SL").build());
         dynamicModels.add(DynamicOverloadManagementSystemBuilder.of(network, "OverloadManagementSystem")
                         .dynamicModelId("BBM_CLA")
                         .parameterSetId("CLA")
@@ -48,13 +43,9 @@ class StandardLineTest {
                         .iMeasurement(l.getId())
                         .iMeasurementSide(TwoSides.ONE)
                         .build());
-        DynamicSimulationParameters parameters = DynamicSimulationParameters.load();
-        DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load();
-        String workingVariantId = network.getVariantManager().getWorkingVariantId();
-        List<BlackBoxModel> events = Collections.emptyList();
-        List<OutputVariable> outputVariables = Collections.emptyList();
-        UnsupportedOperationException e = assertThrows(UnsupportedOperationException.class,
-            () -> new DynawoSimulationContext(network, workingVariantId, dynamicModels, events, outputVariables, parameters, dynawoParameters));
-        assertEquals("i variable not implemented in StandardLine dynawo's model", e.getMessage());
+        DynawoSimulationContext.Builder contextBuilder = new DynawoSimulationContext.Builder(network, dynamicModels);
+        assertThatThrownBy(contextBuilder::build)
+                .isInstanceOf(UnsupportedOperationException.class)
+                .hasMessage("i variable not implemented in StandardLine dynawo's model");
     }
 }
