@@ -79,6 +79,11 @@ public class TapChangerAutomationSystemBuilder extends AbstractAutomationSystemM
         return self();
     }
 
+    public TapChangerAutomationSystemBuilder side(String side) {
+        this.side = TransformerSide.valueOf(side);
+        return self();
+    }
+
     @Override
     protected void checkData() {
         super.checkData();

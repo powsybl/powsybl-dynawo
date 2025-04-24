@@ -29,8 +29,8 @@ public class BaseGenerator extends AbstractEquipmentBlackBoxModel<Generator> imp
             new VarMapping("generator_QGenPu", "q"),
             new VarMapping("generator_state", "state"));
 
-    protected BaseGenerator(String dynamicModelId, Generator generator, String parameterSetId, ModelConfig modelConfig) {
-        super(dynamicModelId, parameterSetId, generator, modelConfig);
+    protected BaseGenerator(Generator generator, String parameterSetId, ModelConfig modelConfig) {
+        super(generator, parameterSetId, modelConfig);
     }
 
     @Override

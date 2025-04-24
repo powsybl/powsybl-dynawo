@@ -16,34 +16,37 @@ import com.powsybl.computation.Command;
 import com.powsybl.computation.CommandExecution;
 import com.powsybl.computation.ExecutionReport;
 import com.powsybl.contingency.Contingency;
+import com.powsybl.contingency.SidedContingencyElement;
 import com.powsybl.contingency.contingency.list.ContingencyList;
+import com.powsybl.contingency.contingency.list.DefaultContingencyList;
 import com.powsybl.contingency.json.ContingencyJsonModule;
 import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
 import com.powsybl.dynawo.commons.DynawoUtil;
+import com.powsybl.dynawo.contingency.ContingencyResultsUtils;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.loadflow.LoadFlowParameters;
 import com.powsybl.security.LimitViolationFilter;
 import com.powsybl.security.SecurityAnalysisParameters;
 import com.powsybl.security.SecurityAnalysisReport;
-import com.powsybl.security.SecurityAnalysisResult;
 import com.powsybl.security.interceptors.SecurityAnalysisInterceptor;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collections;
 import java.util.List;
+import java.util.function.Predicate;
 
 import static com.powsybl.dynaflow.DynaFlowConstants.CONFIG_FILENAME;
+import static com.powsybl.dynaflow.DynaflowReports.createSidedContingencyReportNode;
 import static com.powsybl.dynaflow.SecurityAnalysisConstants.CONTINGENCIES_FILENAME;
-import static com.powsybl.dynaflow.SecurityAnalysisConstants.CONSTRAINTS_FOLDER;
 import static com.powsybl.dynawo.commons.DynawoConstants.NETWORK_FILENAME;
 import static com.powsybl.dynawo.commons.DynawoConstants.TIMELINE_FOLDER;
 import static com.powsybl.dynawo.commons.DynawoUtil.getCommandExecutions;
+import static com.powsybl.dynawo.contingency.ContingencyResultsUtils.createSecurityAnalysisResult;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public final class DynaFlowSecurityAnalysisHandler extends AbstractExecutionHandler<SecurityAnalysisReport> {
 
@@ -85,22 +88,31 @@ public final class DynaFlowSecurityAnalysisHandler extends AbstractExecutionHand
         super.after(workingDir, report);
         network.getVariantManager().setWorkingVariant(workingVariantId);
         ContingencyResultsUtils.reportContingenciesTimelines(contingencies, workingDir.resolve(TIMELINE_FOLDER), reportNode);
-        return new SecurityAnalysisReport(
-                new SecurityAnalysisResult(
-                        ContingencyResultsUtils.getPreContingencyResult(network, violationFilter),
-                        ContingencyResultsUtils.getPostContingencyResults(network, violationFilter, workingDir.resolve(CONSTRAINTS_FOLDER), contingencies),
-                        Collections.emptyList())
-        );
+        return new SecurityAnalysisReport(createSecurityAnalysisResult(network, violationFilter, workingDir, contingencies));
     }
 
-    private static void writeContingencies(List<Contingency> contingencies, Path workingDir) throws IOException {
+    private void writeContingencies(List<Contingency> contingencies, Path workingDir) throws IOException {
         try (OutputStream os = Files.newOutputStream(workingDir.resolve(CONTINGENCIES_FILENAME))) {
             ObjectMapper mapper = JsonUtil.createObjectMapper();
             ContingencyJsonModule module = new ContingencyJsonModule();
             mapper.registerModule(module);
             ObjectWriter writer = mapper.writerWithDefaultPrettyPrinter();
-            writer.writeValue(os, ContingencyList.of(contingencies.toArray(Contingency[]::new)));
+            writer.writeValue(os, buildContingencyList(contingencies));
         }
+    }
+
+    private ContingencyList buildContingencyList(List<Contingency> contingencies) {
+        return new DefaultContingencyList("", contingencies.stream().filter(nonSidedContingency()).toList());
+    }
+
+    private Predicate<Contingency> nonSidedContingency() {
+        return c -> {
+            if (c instanceof SidedContingencyElement sidedC && sidedC.getVoltageLevelId() != null) {
+                createSidedContingencyReportNode(reportNode, c.getId());
+                return false;
+            }
+            return true;
+        };
     }
 
     private static void writeParameters(SecurityAnalysisParameters securityAnalysisParameters, Path workingDir) throws IOException {

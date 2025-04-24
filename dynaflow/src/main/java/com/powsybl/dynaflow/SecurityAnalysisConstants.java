@@ -8,11 +8,9 @@
 package com.powsybl.dynaflow;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public final class SecurityAnalysisConstants {
-
-    public static final String CONSTRAINTS_FOLDER = "constraints";
 
     public static final String CONTINGENCIES_FILENAME = "contingencies.json";
 

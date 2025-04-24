@@ -22,4 +22,6 @@ public interface ActionConnectionPoint extends Model {
     Optional<String> getUImpinVarName();
 
     Optional<String> getUpuImpinVarName();
+
+    Optional<String> getStateValueVarName();
 }

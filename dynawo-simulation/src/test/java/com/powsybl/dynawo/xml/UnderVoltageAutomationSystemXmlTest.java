@@ -36,7 +36,7 @@ class UnderVoltageAutomationSystemXmlTest extends AbstractDynamicModelXmlTest {
 
     @Test
     void writeModel() throws SAXException, IOException {
-        DydXml.write(tmpDir, context);
+        DydXml.write(tmpDir, context.getSimulationDydData());
         ParametersXml.write(tmpDir, context);
         validate("dyd.xsd", "under_voltage_dyd.xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
     }

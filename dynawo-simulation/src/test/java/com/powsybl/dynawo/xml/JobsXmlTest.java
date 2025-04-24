@@ -6,11 +6,8 @@
  */
 package com.powsybl.dynawo.xml;
 
-import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
-import com.powsybl.dynawo.DumpFileParameters;
-import com.powsybl.dynawo.DynawoSimulationConstants;
-import com.powsybl.dynawo.DynawoSimulationContext;
-import com.powsybl.dynawo.DynawoSimulationParameters;
+import com.powsybl.dynawo.*;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -30,7 +27,12 @@ class JobsXmlTest extends DynawoTestUtil {
     @ParameterizedTest(name = "{0}")
     @MethodSource("provideParameters")
     void testJobXml(String xmlResult, DynawoSimulationParameters parameters) throws IOException, SAXException {
-        DynawoSimulationContext context = new DynawoSimulationContext(network, network.getVariantManager().getWorkingVariantId(), dynamicModels, eventModels, outputVariables, DynamicSimulationParameters.load(), parameters);
+        DynawoSimulationContext context = new DynawoSimulationContext
+                .Builder(network, dynamicModels)
+                .dynawoParameters(parameters)
+                .eventModels(eventModels)
+                .outputVariables(outputVariables)
+                .build();
         JobsXml.write(tmpDir, context);
         validate("jobs.xsd", xmlResult, tmpDir.resolve(DynawoSimulationConstants.JOBS_FILENAME));
     }
@@ -45,5 +47,28 @@ class JobsXmlTest extends DynawoTestUtil {
                 Arguments.of("jobsWithCriteria.xml", DynawoSimulationParameters.load()
                         .setCriteriaFilePath(Path.of("criteria.crt")))
         );
+    }
+
+    @Test
+    void testAdditionalDydJobXml() throws IOException, SAXException {
+        DynawoSimulationContext context = new DynawoSimulationContext
+                .Builder(network, dynamicModels)
+                .eventModels(eventModels)
+                .outputVariables(outputVariables)
+                .build();
+        JobsXml.write(tmpDir, context, "additional_models.dyd");
+        validate("jobs.xsd", "jobsWithAdditionalDyd.xml", tmpDir.resolve(DynawoSimulationConstants.JOBS_FILENAME));
+    }
+
+    @Test
+    void writeFinalStepJob() throws SAXException, IOException {
+        DynawoSimulationContext context = new DynawoSimulationContext
+                .Builder(network, dynamicModels)
+                .eventModels(eventModels)
+                .outputVariables(outputVariables)
+                .finalStepConfig(new FinalStepConfig(200, bbm -> bbm.getDynamicModelId().equalsIgnoreCase("LOAD2")))
+                .build();
+        JobsXml.writeFinalStep(tmpDir, context);
+        validate("jobs.xsd", "jobsWithFinalStep.xml", tmpDir.resolve(DynawoSimulationConstants.FINAL_STEP_JOBS_FILENAME));
     }
 }

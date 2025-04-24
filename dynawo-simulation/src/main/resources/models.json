@@ -687,17 +687,17 @@
       {
         "lib": "CurrentLimitAutomaton",
         "alias": "OverloadManagementSystem",
-        "doc": "Automation system which emits a specific order when the current on the monitored line goes above a given threshold during some time"
+        "doc": "Automation system which emits a specific order when the current on the monitored line exceeds a given threshold for a given duration"
       }
     ]
   },
   "TWO_LEVEL_OVERLOAD_MANAGEMENT": {
-    "defaultLib": "TwoLevelsOverloadManagementSystem",
+    "defaultLib": "TwoLevelOverloadManagementSystem",
     "libs": [
       {
         "lib": "CurrentLimitAutomatonTwoLevels",
-        "alias": "TwoLevelsOverloadManagementSystem",
-        "doc": "Automation system which emits a specific order when the current on two monitored lines goes above a given threshold during some time"
+        "alias": "TwoLevelOverloadManagementSystem",
+        "doc": "Automation system which emits a specific order when the current on two monitored lines exceeds a given threshold for a given duration"
       }
     ]
   },
@@ -706,7 +706,7 @@
     "libs": [
       {
         "lib": "PhaseShifterI",
-        "doc": "Phase-shifter which monitors a given current. When the current goes above a given threshold max, taps will be changed in order to decrease it. When the active power goes below another threshold stop, the phase-shifter is automatically deactivated"
+        "doc": "Phase-shifter which monitors a given current. When the current goes above a given threshold, taps will be changed in order to decrease it. When the active power goes below another threshold, the phase-shifter is automatically deactivated"
       }
     ]
   },
@@ -715,7 +715,7 @@
     "libs": [
       {
         "lib": "PhaseShifterP",
-        "doc": "Phase-shifter which monitors a given active power. When the active power goes above a given threshold max, taps will be changed in order to decrease it. When the active power goes below another threshold stop, the phase-shifter is automatically deactivated"
+        "doc": "Phase-shifter which monitors a given active power. When the active power goes above a given threshold, taps will be changed in order to decrease it. When the active power goes below another threshold, the phase-shifter is automatically deactivated"
       }
     ]
   },
@@ -723,7 +723,8 @@
     "defaultLib": "PhaseShifterBlockingI",
     "libs": [
       {
-        "lib": "PhaseShifterBlockingI"
+        "lib": "PhaseShifterBlockingI",
+        "doc": "Blocks phase shifter I when the monitored intensity goes below a threshold"
       }
     ]
   },
@@ -741,7 +742,7 @@
     "libs": [
       {
         "lib": "TapChangerBlockingAutomaton",
-        "doc": "Block tap-changers when one of the monitored voltages goes below a threshold"
+        "doc": "Blocks tap changers when one of the monitored voltages goes below a threshold"
       }
     ]
   },
@@ -751,7 +752,7 @@
       {
         "lib": "UnderVoltageAutomaton",
         "alias": "UnderVoltage",
-        "doc": "Send switch-off signal to the monitored generator when the voltage goes below a threshold"
+        "doc": "Sends switch-off signal to the monitored generator when the voltage goes below a threshold"
       }
     ]
   }

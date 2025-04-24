@@ -10,7 +10,6 @@ package dynamicModels
 
 Bus {
     staticId "NGEN"
-    dynamicModelId "BBM_NGEN"
     parameterSetId "SB"
 }
 

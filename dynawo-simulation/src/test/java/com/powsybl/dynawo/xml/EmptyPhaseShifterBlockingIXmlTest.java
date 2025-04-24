@@ -47,15 +47,15 @@ class EmptyPhaseShifterBlockingIXmlTest extends AbstractDynamicModelXmlTest {
 
     @Test
     void writeModel() throws SAXException, IOException {
-        DydXml.write(tmpDir, context);
+        DydXml.write(tmpDir, context.getSimulationDydData());
         ParametersXml.write(tmpDir, context);
         validate("dyd.xsd", "empty_phase_shifter_blocking_i_dyd.xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
         checkReport("""
                 + Test DYD
-                   Model BBM_PS instantiation successful
-                   Model BBM_PSB instantiation successful
-                   'phaseShifterId' field is not set
-                   Model BBM_PSB2 cannot be instantiated
+                   Model PhaseShifterI BBM_PS instantiation successful
+                   Model PhaseShifterBlockingI BBM_PSB instantiation successful
+                   + Model PhaseShifterBlockingI BBM_PSB2 instantiation failed
+                      'phaseShifterId' field is not set
                    + Dynawo models processing
                       PhaseShifterBlockingI BBM_PSB equipment WRONG_ID is not a PhaseShifterIModel, the automation system will be skipped
                 """);

@@ -72,7 +72,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         assertEquals(27, result.getCurves().size());
         DoubleTimeSeries ts1 = result.getCurve("_GEN____1_SM_generator_UStatorPu");
         assertEquals("_GEN____1_SM_generator_UStatorPu", ts1.getMetadata().getName());
-        assertEquals(192, ts1.toArray().length);
+        assertEquals(512, ts1.toArray().length);
         assertEquals(14, result.getFinalStateValues().size());
         assertEquals(1.046227, result.getFinalStateValues().get("NETWORK__BUS___10_TN_Upu_value"));
         List<TimelineEvent> timeLine = result.getTimeLine();
@@ -108,7 +108,9 @@ class DynawoSimulationTest extends AbstractDynawoTest {
 
     @Test
     void testIeee14WithSimulationCriteria() {
-        ReportNode reportNode = ReportNode.newRootReportNode().withMessageTemplate("integrationTest", "Integration test").build();
+        ReportNode reportNode = ReportNode.newRootReportNode()
+                .withAllResourceBundlesFromClasspath()
+                .withMessageTemplate("integrationTest", "Integration test").build();
         Supplier<DynamicSimulationResult> resultSupplier = setupIEEE14Simulation(reportNode);
         dynawoSimulationParameters.setCriteriaFilePath(Path.of(Objects.requireNonNull(getClass().getResource("/ieee14/criteria.crt")).getPath()));
         DynamicSimulationResult result = resultSupplier.get();
@@ -220,10 +222,12 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
                 getResourceAsStream("/error/models.groovy"),
                 GroovyExtension.find(DynamicModelGroovyExtension.class, DynawoSimulationProvider.NAME));
-
         GroovyEventModelsSupplier eventModelsSupplier = new GroovyEventModelsSupplier(
                 getResourceAsStream("/error/eventModels.groovy"),
                 GroovyExtension.find(EventModelGroovyExtension.class, DynawoSimulationProvider.NAME));
+        GroovyOutputVariablesSupplier outputVariablesSupplier = new GroovyOutputVariablesSupplier(
+                getResourceAsStream("/ieee14/disconnectline/outputVariables.groovy"),
+                GroovyExtension.find(OutputVariableGroovyExtension.class, DynawoSimulationProvider.NAME));
 
         parameters.setStopTime(200);
         dynawoSimulationParameters.setModelsParameters(ParametersXml.load(getResourceAsStream("/error/models.par")))
@@ -231,14 +235,15 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                 .setSolverParameters(ParametersXml.load(getResourceAsStream("/error/solvers.par"), "3"))
                 .setSolverType(DynawoSimulationParameters.SolverType.SIM);
 
-        DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, OutputVariablesSupplier.empty(),
+        DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, outputVariablesSupplier,
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, NO_OP)
                 .join();
 
         assertEquals(DynamicSimulationResult.Status.FAILURE, result.getStatus());
         assertThat(result.getStatusText()).contains("time step <= 0.1 s for more than 10 iterations");
-        assertThat(result.getTimeLine()).isEmpty();
-        assertThat(result.getCurves()).isEmpty();
+        assertThat(result.getTimeLine()).isNotEmpty();
+        assertThat(result.getCurves()).isNotEmpty();
+        assertThat(result.getFinalStateValues()).isNotEmpty();
     }
 
     @Test
@@ -248,9 +253,9 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         DynamicModelsSupplier dynamicModelsSupplier = DynawoModelsSupplier.load(getResourceAsStream("/ieee14/disconnectline/dynamicModels.json"));
         EventModelsSupplier eventModelsSupplier = DynawoEventModelsSupplier.load(getResourceAsStream("/ieee14/disconnectline/eventModels.json"));
 
-        List<ParametersSet> modelsParameters = ParametersXml.load(getResourceAsStream("/ieee14/disconnectline/models.par"));
-        ParametersSet networkParameters = ParametersXml.load(getResourceAsStream("/ieee14/disconnectline/network.par"), "8");
-        ParametersSet solverParameters = ParametersXml.load(getResourceAsStream("/ieee14/disconnectline/solvers.par"), "2");
+        List<ParametersSet> modelsParameters = ParametersXml.load(getResourceAsStream("/ieee14/models.par"));
+        ParametersSet networkParameters = ParametersXml.load(getResourceAsStream("/ieee14/network.par"), "8");
+        ParametersSet solverParameters = ParametersXml.load(getResourceAsStream("/ieee14/solvers.par"), "2");
         dynawoSimulationParameters.setModelsParameters(modelsParameters)
                 .setNetworkParameters(networkParameters)
                 .setSolverParameters(solverParameters)
@@ -324,9 +329,9 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                 getResourceAsStream("/ieee14/disconnectline/outputVariables.groovy"),
                 GroovyExtension.find(OutputVariableGroovyExtension.class, DynawoSimulationProvider.NAME));
 
-        List<ParametersSet> modelsParameters = ParametersXml.load(getResourceAsStream("/ieee14/disconnectline/models.par"));
-        ParametersSet networkParameters = ParametersXml.load(getResourceAsStream("/ieee14/disconnectline/network.par"), "8");
-        ParametersSet solverParameters = ParametersXml.load(getResourceAsStream("/ieee14/disconnectline/solvers.par"), "2");
+        List<ParametersSet> modelsParameters = ParametersXml.load(getResourceAsStream("/ieee14/models.par"));
+        ParametersSet networkParameters = ParametersXml.load(getResourceAsStream("/ieee14/network.par"), "8");
+        ParametersSet solverParameters = ParametersXml.load(getResourceAsStream("/ieee14/solvers.par"), "2");
         dynawoSimulationParameters.setModelsParameters(modelsParameters)
                 .setNetworkParameters(networkParameters)
                 .setSolverParameters(solverParameters)

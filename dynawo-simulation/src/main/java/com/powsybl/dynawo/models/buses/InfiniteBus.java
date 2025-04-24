@@ -23,8 +23,8 @@ public class InfiniteBus extends AbstractBus {
             new VarMapping("infiniteBus_UPuVar", "v"),
             new VarMapping("infiniteBus_UPhaseVar", "angle"));
 
-    protected InfiniteBus(String dynamicModelId, Bus bus, String parameterSetId, ModelConfig modelConfig) {
-        super(dynamicModelId, bus, parameterSetId, modelConfig);
+    protected InfiniteBus(Bus bus, String parameterSetId, ModelConfig modelConfig) {
+        super(bus, parameterSetId, modelConfig);
     }
 
     @Override

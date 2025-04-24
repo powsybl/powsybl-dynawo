@@ -7,7 +7,6 @@
  */
 package com.powsybl.dynawo.models.events;
 
-import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.iidm.network.Identifiable;
 
 /**
@@ -17,9 +16,5 @@ public interface ContextDependentEvent {
 
     Identifiable<?> getEquipment();
 
-    default boolean hasDynamicModel(DynawoSimulationContext context) {
-        return context.hasDynamicModel(getEquipment());
-    }
-
-    void setEquipmentHasDynamicModel(DynawoSimulationContext context);
+    void setEquipmentHasDynamicModel(boolean hasDynamicModel);
 }

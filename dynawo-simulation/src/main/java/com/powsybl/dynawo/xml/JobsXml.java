@@ -6,11 +6,11 @@
  */
 package com.powsybl.dynawo.xml;
 
-import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynawo.DumpFileParameters;
 import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.DynawoSimulationParameters.SolverType;
+import com.powsybl.dynawo.SimulationTime;
 import com.powsybl.dynawo.commons.ExportMode;
 
 import javax.xml.stream.XMLStreamException;
@@ -18,8 +18,10 @@ import javax.xml.stream.XMLStreamWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import static com.powsybl.dynawo.DynawoSimulationConstants.*;
+import static com.powsybl.dynawo.DynawoSimulationConstants.DYD_FILENAME;
 import static com.powsybl.dynawo.commons.DynawoConstants.NETWORK_FILENAME;
 import static com.powsybl.dynawo.commons.DynawoConstants.OUTPUTS_FOLDER;
 import static com.powsybl.dynawo.xml.DynawoSimulationXmlConstants.DYN_URI;
@@ -27,16 +29,33 @@ import static com.powsybl.dynawo.xml.DynawoSimulationXmlConstants.DYN_URI;
 /**
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  */
-public final class JobsXml extends AbstractXmlDynawoSimulationWriter {
+public final class JobsXml extends AbstractXmlDynawoSimulationWriter<DynawoSimulationContext> {
 
     private static final String EXPORT_MODE = "exportMode";
+    private final Supplier<SimulationTime> simulationTimeSupplier;
+    private final String additionalDydFile;
 
-    private JobsXml() {
-        super(JOBS_FILENAME, "jobs");
+    private JobsXml(String xmlFileName, Supplier<SimulationTime> simulationTimeSupplier) {
+        this(xmlFileName, simulationTimeSupplier, null);
+    }
+
+    private JobsXml(String xmlFileName, Supplier<SimulationTime> simulationTimeSupplier, String additionalDydFile) {
+        super(xmlFileName, "jobs");
+        this.simulationTimeSupplier = simulationTimeSupplier;
+        this.additionalDydFile = additionalDydFile;
     }
 
     public static void write(Path workingDir, DynawoSimulationContext context) throws IOException {
-        new JobsXml().createXmlFileFromContext(workingDir, context);
+        new JobsXml(JOBS_FILENAME, context::getSimulationTime).createXmlFileFromDataSupplier(workingDir, context);
+    }
+
+    public static void write(Path workingDir, DynawoSimulationContext context, String additionalDydFile) throws IOException {
+        new JobsXml(JOBS_FILENAME, context::getSimulationTime, additionalDydFile).createXmlFileFromDataSupplier(workingDir, context);
+    }
+
+    public static void writeFinalStep(Path workingDir, DynawoSimulationContext context) throws IOException {
+        new JobsXml(FINAL_STEP_JOBS_FILENAME, context::getFinalStepSimulationTime, FINAL_STEP_DYD_FILENAME)
+                .createXmlFileFromDataSupplier(workingDir, context);
     }
 
     @Override
@@ -45,8 +64,8 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter {
         writer.writeStartElement(DYN_URI, "job");
         writer.writeAttribute("name", "Job");
         writeSolver(writer, parameters);
-        writeModeler(writer, parameters);
-        writeSimulation(writer, parameters, context.getParameters());
+        writeModeler(writer, parameters, additionalDydFile);
+        writeSimulation(writer, parameters, simulationTimeSupplier.get());
         writeOutput(writer, context);
         writer.writeEndElement();
     }
@@ -58,7 +77,7 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter {
         writer.writeAttribute("parId", parameters.getSolverParameters().getId());
     }
 
-    private static void writeModeler(XMLStreamWriter writer, DynawoSimulationParameters parameters) throws XMLStreamException {
+    private static void writeModeler(XMLStreamWriter writer, DynawoSimulationParameters parameters, String additionalDydFile) throws XMLStreamException {
         writer.writeStartElement(DYN_URI, "modeler");
         writer.writeAttribute("compileDir", "outputs/compilation");
 
@@ -69,6 +88,10 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter {
 
         writer.writeEmptyElement(DYN_URI, "dynModels");
         writer.writeAttribute("dydFile", DYD_FILENAME);
+        if (additionalDydFile != null) {
+            writer.writeEmptyElement(DYN_URI, "dynModels");
+            writer.writeAttribute("dydFile", additionalDydFile);
+        }
 
         DumpFileParameters dumpFileParameters = parameters.getDumpFileParameters();
         if (dumpFileParameters.useDumpFile()) {
@@ -85,15 +108,15 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter {
         writer.writeEndElement();
     }
 
-    private static void writeSimulation(XMLStreamWriter writer, DynawoSimulationParameters parameters, DynamicSimulationParameters dynamicSimulationParameters) throws XMLStreamException {
+    private static void writeSimulation(XMLStreamWriter writer, DynawoSimulationParameters parameters, SimulationTime simulationTime) throws XMLStreamException {
         Optional<String> criteriaFileName = parameters.getCriteriaFileName();
         if (criteriaFileName.isPresent()) {
             writer.writeStartElement(DYN_URI, "simulation");
         } else {
             writer.writeEmptyElement(DYN_URI, "simulation");
         }
-        writer.writeAttribute("startTime", Double.toString(dynamicSimulationParameters.getStartTime()));
-        writer.writeAttribute("stopTime", Double.toString(dynamicSimulationParameters.getStopTime()));
+        writer.writeAttribute("startTime", Double.toString(simulationTime.startTime()));
+        writer.writeAttribute("stopTime", Double.toString(simulationTime.stopTime()));
         writer.writeAttribute("precision", Double.toString(parameters.getPrecision()));
         if (criteriaFileName.isPresent()) {
             writer.writeEmptyElement(DYN_URI, "criteria");
@@ -110,6 +133,11 @@ public final class JobsXml extends AbstractXmlDynawoSimulationWriter {
         writer.writeEmptyElement(DYN_URI, "dumpInitValues");
         writer.writeAttribute("local", Boolean.toString(false));
         writer.writeAttribute("global", Boolean.toString(false));
+
+        if (context.withConstraints()) {
+            writer.writeEmptyElement(DYN_URI, "constraints");
+            writer.writeAttribute(EXPORT_MODE, ExportMode.XML.toString());
+        }
 
         writer.writeEmptyElement(DYN_URI, "timeline");
         writer.writeAttribute(EXPORT_MODE, parameters.getTimelineExportMode().toString());

@@ -71,7 +71,7 @@ public class TransformerFixedRatioBuilder extends AbstractEquipmentModelBuilder<
 
     @Override
     public TransformerFixedRatio build() {
-        return isInstantiable() ? new TransformerFixedRatio(dynamicModelId, getEquipment(), parameterSetId, modelConfig) : null;
+        return isInstantiable() ? new TransformerFixedRatio(getEquipment(), parameterSetId, modelConfig) : null;
     }
 
     @Override

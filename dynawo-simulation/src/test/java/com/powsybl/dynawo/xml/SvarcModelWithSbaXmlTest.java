@@ -37,7 +37,6 @@ class SvarcModelWithSbaXmlTest extends AbstractDynamicModelXmlTest {
     @Override
     protected void addDynamicModels() {
         dynamicModels.add(BaseStaticVarCompensatorBuilder.of(network)
-                .dynamicModelId("BBM_SVARC2")
                 .staticId("SVC2")
                 .parameterSetId("svc")
                 .build());
@@ -45,7 +44,7 @@ class SvarcModelWithSbaXmlTest extends AbstractDynamicModelXmlTest {
 
     @Test
     void writeModel() throws SAXException, IOException {
-        DydXml.write(tmpDir, context);
+        DydXml.write(tmpDir, context.getSimulationDydData());
         validate("dyd.xsd", "svarc_sba_dyd.xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
     }
 }

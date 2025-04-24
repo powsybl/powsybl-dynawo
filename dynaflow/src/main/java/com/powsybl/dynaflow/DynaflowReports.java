@@ -31,9 +31,9 @@ public final class DynaflowReports {
                 .add();
     }
 
-    public static ReportNode createContingenciesTimelineReportNode(ReportNode reportNode, String contingencyId) {
-        return reportNode.newReportNode()
-                .withMessageTemplate("saContingency", "Contingency '${contingencyId}'")
+    public static void createSidedContingencyReportNode(ReportNode reportNode, String contingencyId) {
+        reportNode.newReportNode()
+                .withMessageTemplate("saContingency", "Contingency '${contingencyId}' has a voltageId information and cannot be handle by DynaFlow, the contingency will be skipped")
                 .withUntypedValue("contingencyId", contingencyId)
                 .add();
     }

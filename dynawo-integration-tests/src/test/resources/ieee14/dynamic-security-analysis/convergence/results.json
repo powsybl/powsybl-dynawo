@@ -1,0 +1,95 @@
+{
+  "version" : "1.7",
+  "preContingencyResult" : {
+    "status" : "CONVERGED",
+    "limitViolationsResult" : {
+      "limitViolations" : [ {
+        "subjectId" : "_BUS____1-BUS____2-1_AC",
+        "subjectName" : "BUS    1-BUS    2-1",
+        "limitType" : "CURRENT",
+        "limitName" : "permanent",
+        "limit" : 836.74,
+        "limitReduction" : 1.0,
+        "value" : 1248.0773003764798,
+        "side" : "ONE"
+      } ],
+      "actionsTaken" : [ ]
+    },
+    "networkResult" : {
+      "branchResults" : [ ],
+      "busResults" : [ ],
+      "threeWindingsTransformerResults" : [ ]
+    }
+  },
+  "postContingencyResults" : [ {
+    "contingency" : {
+      "id" : "_BUS____1-BUS____5-1_AC",
+      "elements" : [ {
+        "id" : "_BUS____1-BUS____5-1_AC",
+        "type" : "LINE",
+        "voltageLevelId" : "_BUS____5_VL"
+      } ]
+    },
+    "status" : "CONVERGED",
+    "limitViolationsResult" : {
+      "limitViolations" : [ {
+        "subjectId" : "_BUS____1-BUS____2-1_AC",
+        "subjectName" : "BUS    1-BUS    2-1",
+        "limitType" : "CURRENT",
+        "limitName" : "PATL",
+        "limit" : 836.74,
+        "limitReduction" : 1.0,
+        "value" : 1248.100487597837,
+        "side" : "ONE"
+      } ],
+      "actionsTaken" : [ ]
+    },
+    "networkResult" : {
+      "branchResults" : [ ],
+      "busResults" : [ ],
+      "threeWindingsTransformerResults" : [ ]
+    },
+    "connectivityResult" : {
+      "createdSynchronousComponentCount" : 0,
+      "createdConnectedComponentCount" : 0,
+      "disconnectedLoadActivePower" : 0.0,
+      "disconnectedGenerationActivePower" : 0.0,
+      "disconnectedElements" : [ ]
+    }
+  }, {
+    "contingency" : {
+      "id" : "_GEN____2_SM",
+      "elements" : [ {
+        "id" : "_GEN____2_SM",
+        "type" : "GENERATOR"
+      } ]
+    },
+    "status" : "CONVERGED",
+    "limitViolationsResult" : {
+      "limitViolations" : [ {
+        "subjectId" : "_BUS____1-BUS____2-1_AC",
+        "subjectName" : "BUS    1-BUS    2-1",
+        "limitType" : "CURRENT",
+        "limitName" : "PATL",
+        "limit" : 836.74,
+        "limitReduction" : 1.0,
+        "value" : 1248.100487597837,
+        "side" : "ONE"
+      } ],
+      "actionsTaken" : [ ]
+    },
+    "networkResult" : {
+      "branchResults" : [ ],
+      "busResults" : [ ],
+      "threeWindingsTransformerResults" : [ ]
+    },
+    "connectivityResult" : {
+      "createdSynchronousComponentCount" : 0,
+      "createdConnectedComponentCount" : 0,
+      "disconnectedLoadActivePower" : 0.0,
+      "disconnectedGenerationActivePower" : 0.0,
+      "disconnectedElements" : [ ]
+    }
+  } ],
+  "operatorStrategyResults" : [ ]
+}

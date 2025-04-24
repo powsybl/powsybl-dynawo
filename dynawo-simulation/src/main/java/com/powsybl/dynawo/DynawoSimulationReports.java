@@ -32,17 +32,7 @@ public final class DynawoSimulationReports {
 
     public static ReportNode createDynawoSimulationContextReportNode(ReportNode reportNode) {
         return reportNode.newReportNode()
-                .withMessageTemplate("dynawoSimulationContext", "Dynawo models processing")
-                .add();
-    }
-
-    public static void reportDuplicateStaticId(ReportNode reportNode, String duplicateId, String modelName, String dynamicId) {
-        reportNode.newReportNode()
-                .withMessageTemplate("duplicateStaticId", "Duplicate static id found: ${duplicateId} -> model ${modelName} ${dynamicId} will be skipped")
-                .withUntypedValue("duplicateId", duplicateId)
-                .withUntypedValue(MODEL_NAME_FIELD, modelName)
-                .withUntypedValue(DYNAMIC_ID_FIELD, dynamicId)
-                .withSeverity(TypedValue.WARN_SEVERITY)
+                .withMessageTemplate("dynawoModelsProcessing", "Dynawo models processing")
                 .add();
     }
 
@@ -98,6 +88,17 @@ public final class DynawoSimulationReports {
                 .withUntypedValue("automatonName", automatonName)
                 .withUntypedValue(DYNAMIC_ID_FIELD, dynamicId)
                 .withUntypedValue("expectedModels", expectedModels)
+                .withSeverity(TypedValue.WARN_SEVERITY)
+                .add();
+    }
+
+    public static void reportFailedDynamicModelHandling(ReportNode reportNode, String modelName, String dynamicId, String equipmentType) {
+        reportNode.newReportNode()
+                .withMessageTemplate("emptyListAutomaton",
+                        "${modelName} ${dynamicId} cannot handle ${equipmentType} dynamic model, the model will be skipped")
+                .withUntypedValue(MODEL_NAME_FIELD, modelName)
+                .withUntypedValue(DYNAMIC_ID_FIELD, dynamicId)
+                .withUntypedValue("equipmentType", equipmentType)
                 .withSeverity(TypedValue.WARN_SEVERITY)
                 .add();
     }

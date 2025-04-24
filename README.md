@@ -1,6 +1,6 @@
 # powsybl-dynawo
 
-[![Actions Status](https://github.com/powsybl/powsybl-dynawo/workflows/CI/badge.svg)](https://github.com/powsybl/powsybl-dynawo/actions)
+[![Actions Status](https://github.com/powsybl/powsybl-dynawo/actions/workflows/maven.yml/badge.svg?branch=main)](https://github.com/powsybl/powsybl-dynawo/actions)
 [![Coverage Status](https://sonarcloud.io/api/project_badges/measure?project=com.powsybl%3Apowsybl-dynawo&metric=coverage)](https://sonarcloud.io/component_measures?id=com.powsybl%3Apowsybl-dynawo&metric=coverage)
 [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=com.powsybl%3Apowsybl-dynawo&metric=alert_status)](https://sonarcloud.io/dashboard?id=com.powsybl%3Apowsybl-dynawo)
 [![MPL-2.0 License](https://img.shields.io/badge/license-MPL_2.0-blue.svg)](https://www.mozilla.org/en-US/MPL/2.0/)
@@ -37,9 +37,9 @@ The simulation parameters can be configured either in the `config.yml` file or u
 ```java
 Network network = Network.read("/path/to/the/casefile.xiidm");
 
-// Load the dynamic models mapping
+// Load the dynamic models configuration
 DynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
-    Paths.get("/path/to/dynamicModelsMapping.groovy"),
+    Paths.get("/path/to/dynamicModelsConfiguration.groovy"),
     GroovyExtension.find(DynamicModelGroovyExtension.class, DynawoSimulationProvider.NAME));
 
 // Load the events
@@ -66,7 +66,7 @@ To learn more about the usage of Dynawo, read the [dedicated page](https://powsy
 
 ### Examples
 
-This is an example of a dynamic models mapping file:
+This is an example of a dynamic models configuration file:
 ```groovy
 import com.powsybl.iidm.network.Line
 import com.powsybl.iidm.network.Load
@@ -98,7 +98,7 @@ for (Line line : network.lines) {
 }
 ```
 
-Note that this mapping file refers to parameter set ids which should be found in the Dynawo parameters file.
+Note that this configuration file refers to parameter set ids which should be found in the Dynawo parameters file.
 For the above example, the corresponding parameter file could be:
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>

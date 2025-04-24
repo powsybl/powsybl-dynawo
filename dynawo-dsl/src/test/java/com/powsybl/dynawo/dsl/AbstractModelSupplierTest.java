@@ -22,7 +22,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 abstract class AbstractModelSupplierTest {
 
-    protected final ReportNode reportNode = ReportNode.newRootReportNode().withMessageTemplate("dslTests", "DSL tests").build();
+    protected final ReportNode reportNode = ReportNode.newRootReportNode()
+            .withAllResourceBundlesFromClasspath()
+            .withMessageTemplate("dslTests", "DSL tests").build();
 
     protected InputStream getResourceAsStream(String name) {
         return Objects.requireNonNull(AbstractModelSupplierTest.class.getResourceAsStream(name));

@@ -7,7 +7,6 @@
  */
 package com.powsybl.dynawo.models.automationsystems.phaseshifters;
 
-import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.DynawoSimulationReports;
 import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.AbstractPureDynamicBlackBoxModel;
@@ -55,9 +54,9 @@ public class PhaseShifterBlockingIAutomationSystem extends AbstractPureDynamicBl
     }
 
     @Override
-    public void write(XMLStreamWriter writer, DynawoSimulationContext context) throws XMLStreamException {
+    public void write(XMLStreamWriter writer, String parFileName) throws XMLStreamException {
         if (isConnected) {
-            super.write(writer, context);
+            super.write(writer, parFileName);
         }
     }
 }

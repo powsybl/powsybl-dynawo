@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
-    <dyn:blackBoxModel id="BBM_HVDC" lib="HvdcVscDanglingUdc" parFile="models.par" parId="hvdc" staticId="L">
+    <dyn:blackBoxModel id="L" lib="HvdcVscDanglingUdc" parFile="models.par" parId="hvdc" staticId="L">
         <dyn:macroStaticRef id="MSR_HvdcVscDanglingUdc"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="Disconnect_L" lib="EventSetPointBoolean" parFile="hvdctest.par" parId="Disconnect_L"/>
@@ -22,7 +22,7 @@
         <dyn:staticRef var="hvdc_QInj2Pu" staticVar="q2"/>
         <dyn:staticRef var="hvdc_state" staticVar="state2"/>
     </dyn:macroStaticReference>
-    <dyn:macroConnect connector="MC_HvdcVscDanglingUdcSide2-DefaultEquipmentConnectionPoint" id1="BBM_HVDC" id2="NETWORK"/>
-    <dyn:macroConnect connector="MC_HvdcVscDanglingUdcSide1-DefaultEquipmentConnectionPoint" id1="BBM_HVDC" id2="NETWORK"/>
-    <dyn:macroConnect connector="MC_EventHvdcDisconnectionSide1-HvdcVscDanglingUdc" id1="Disconnect_L" id2="BBM_HVDC"/>
+    <dyn:macroConnect connector="MC_HvdcVscDanglingUdcSide2-DefaultEquipmentConnectionPoint" id1="L" id2="NETWORK"/>
+    <dyn:macroConnect connector="MC_HvdcVscDanglingUdcSide1-DefaultEquipmentConnectionPoint" id1="L" id2="NETWORK"/>
+    <dyn:macroConnect connector="MC_EventHvdcDisconnectionSide1-HvdcVscDanglingUdc" id1="Disconnect_L" id2="L"/>
 </dyn:dynamicModelsArchitecture>

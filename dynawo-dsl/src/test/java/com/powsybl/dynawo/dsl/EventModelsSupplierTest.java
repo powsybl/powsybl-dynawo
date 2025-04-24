@@ -91,50 +91,44 @@ class EventModelsSupplierTest extends AbstractModelSupplierTest {
                         """
                         + DSL tests
                            + Groovy Event Models Supplier
-                              + DSL model builder for NodeFault
+                              + Model NodeFault NodeFault_GEN instantiation failed
                                  'staticId' field value 'GEN' not found for equipment type(s) BUS
-                                 Model NodeFault_GEN cannot be instantiated
                         """),
                 Arguments.of("/eventWarnings/missingStartTime.groovy", EurostagTutorialExample1Factory.create(),
                         """
                         + DSL tests
                            + Groovy Event Models Supplier
-                              + DSL model builder for NodeFault
+                              + Model NodeFault NodeFault_NGEN instantiation failed
                                  'startTime' field is not set
-                                 Model NodeFault_NGEN cannot be instantiated
                         """),
                 Arguments.of("/eventWarnings/missingNodeFaultParameters.groovy", EurostagTutorialExample1Factory.create(),
                         """
                         + DSL tests
                            + Groovy Event Models Supplier
-                              + DSL model builder for NodeFault
+                              + Model NodeFault NodeFault_NGEN instantiation failed
                                  faultTime should be strictly positive (0.0)
-                                 Model NodeFault_NGEN cannot be instantiated
                         """),
                 Arguments.of("/eventWarnings/missingAPVParameters.groovy", SvcTestCaseFactory.create(),
                         """
                         + DSL tests
                            + Groovy Event Models Supplier
-                              + DSL model builder for Step
+                              + Model Step Step_SVC2 instantiation failed
                                  'staticId' field value 'SVC2' not found for equipment type(s) GENERATOR/LOAD
                                  'deltaP' field is not set
-                                 Model Step_SVC2 cannot be instantiated
                         """),
                 Arguments.of("/eventWarnings/missingDisconnectionEquipment.groovy", EurostagTutorialExample1Factory.create(),
                         """
                         + DSL tests
                            + Groovy Event Models Supplier
-                              + DSL model builder for Disconnect
-                                 'staticId' field value 'NGEN' not found for equipment type(s) Disconnectable equipment
-                                 Model Disconnect_NGEN cannot be instantiated
+                              + Model Disconnect Disconnect_WRONG_ID instantiation failed
+                                 'staticId' field value 'WRONG_ID' not found for equipment type(s) Disconnectable equipment
                         """),
                 Arguments.of("/eventWarnings/missingDisconnectionSide.groovy", EurostagTutorialExample1Factory.create(),
                         """
                         + DSL tests
                            + Groovy Event Models Supplier
-                              + DSL model builder for Disconnect
+                              + Model Disconnect Disconnect_GEN instantiation failed
                                  'disconnectOnly' field is set but GENERATOR GEN does not possess this option
-                                 Model Disconnect_GEN cannot be instantiated
                         """)
         );
     }

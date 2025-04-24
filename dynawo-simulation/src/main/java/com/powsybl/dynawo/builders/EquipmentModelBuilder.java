@@ -19,7 +19,5 @@ public interface EquipmentModelBuilder<T extends Identifiable<?>, R extends Equi
 
     R equipment(T equipment);
 
-    R dynamicModelId(String dynamicModelId);
-
     R parameterSetId(String parameterSetId);
 }

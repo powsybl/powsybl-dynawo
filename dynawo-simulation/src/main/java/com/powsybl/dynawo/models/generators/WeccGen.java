@@ -26,8 +26,8 @@ public class WeccGen extends AbstractEquipmentBlackBoxModel<Generator> {
     private final List<VarMapping> varsMapping;
     protected final String weccPrefix;
 
-    protected WeccGen(String dynamicModelId, Generator generator, String parameterSetId, ModelConfig modelConfig, String weccPrefix) {
-        super(dynamicModelId, parameterSetId, generator, modelConfig);
+    protected WeccGen(Generator generator, String parameterSetId, ModelConfig modelConfig, String weccPrefix) {
+        super(generator, parameterSetId, modelConfig);
         this.weccPrefix = Objects.requireNonNull(weccPrefix);
         varsMapping = List.of(
                 new VarMapping(weccPrefix + "_measurements_PPuSnRef", "p"),

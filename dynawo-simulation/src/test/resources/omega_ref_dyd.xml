@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dyn:dynamicModelsArchitecture xmlns:dyn="http://www.rte-france.com/dynawo">
-    <dyn:blackBoxModel id="BBM_GEN_SYNCHRO" lib="GeneratorSynchronousFourWindingsPmConstVRNordic" parFile="models.par" parId="GSFW" staticId="GEN">
+    <dyn:blackBoxModel id="GEN" lib="GeneratorSynchronousFourWindingsPmConstVRNordic" parFile="models.par" parId="GSFW" staticId="GEN">
         <dyn:macroStaticRef id="MSR_GeneratorSynchronousFourWindingsPmConstVRNordic"/>
     </dyn:blackBoxModel>
-    <dyn:blackBoxModel id="BBM_GEN_PQ" lib="GeneratorPQ" parFile="models.par" parId="GPQ" staticId="GEN2">
+    <dyn:blackBoxModel id="GEN2" lib="GeneratorPQ" parFile="models.par" parId="GPQ" staticId="GEN2">
         <dyn:macroStaticRef id="MSR_GeneratorPQ"/>
     </dyn:blackBoxModel>
-    <dyn:blackBoxModel id="BBM_GEN_SYNCHRO2" lib="GeneratorSynchronousThreeWindingsPmConstVRNordic" parFile="models.par" parId="GSTW" staticId="GEN3">
+    <dyn:blackBoxModel id="GEN3" lib="GeneratorSynchronousThreeWindingsPmConstVRNordic" parFile="models.par" parId="GSTW" staticId="GEN3">
         <dyn:macroStaticRef id="MSR_GeneratorSynchronousThreeWindingsPmConstVRNordic"/>
     </dyn:blackBoxModel>
     <dyn:blackBoxModel id="FREQ_SYNC" lib="DYNModelOmegaRef" parFile="sim1.par" parId="FREQ_SYNC_PAR"/>
@@ -54,13 +54,13 @@
         <dyn:staticRef var="generator_QGenPu" staticVar="q"/>
         <dyn:staticRef var="generator_state" staticVar="state"/>
     </dyn:macroStaticReference>
-    <dyn:macroConnect connector="MC_GeneratorSynchronousFourWindingsPmConstVRNordic-DefaultEquipmentConnectionPoint" id1="BBM_GEN_SYNCHRO" id2="NETWORK"/>
-    <dyn:macroConnect connector="MC_GeneratorPQ-DefaultEquipmentConnectionPoint" id1="BBM_GEN_PQ" id2="NETWORK"/>
-    <dyn:macroConnect connector="MC_GeneratorSynchronousThreeWindingsPmConstVRNordic-DefaultEquipmentConnectionPoint" id1="BBM_GEN_SYNCHRO2" id2="NETWORK"/>
-    <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorSynchronousFourWindingsPmConstVRNordic" id1="FREQ_SYNC" index1="0" id2="BBM_GEN_SYNCHRO"/>
+    <dyn:macroConnect connector="MC_GeneratorSynchronousFourWindingsPmConstVRNordic-DefaultEquipmentConnectionPoint" id1="GEN" id2="NETWORK"/>
+    <dyn:macroConnect connector="MC_GeneratorPQ-DefaultEquipmentConnectionPoint" id1="GEN2" id2="NETWORK"/>
+    <dyn:macroConnect connector="MC_GeneratorSynchronousThreeWindingsPmConstVRNordic-DefaultEquipmentConnectionPoint" id1="GEN3" id2="NETWORK"/>
+    <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorSynchronousFourWindingsPmConstVRNordic" id1="FREQ_SYNC" index1="0" id2="GEN"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRef-DefaultBusOfFrequencySynchronized" id1="FREQ_SYNC" index1="0" id2="NETWORK" name2="GEN"/>
-    <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorPQ" id1="FREQ_SYNC" index1="1" id2="BBM_GEN_PQ"/>
+    <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorPQ" id1="FREQ_SYNC" index1="1" id2="GEN2"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRef-DefaultBusOfFrequencySynchronized" id1="FREQ_SYNC" index1="1" id2="NETWORK" name2="GEN2"/>
-    <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorSynchronousThreeWindingsPmConstVRNordic" id1="FREQ_SYNC" index1="2" id2="BBM_GEN_SYNCHRO2"/>
+    <dyn:macroConnect connector="MC_DYNModelOmegaRef-GeneratorSynchronousThreeWindingsPmConstVRNordic" id1="FREQ_SYNC" index1="2" id2="GEN3"/>
     <dyn:macroConnect connector="MC_DYNModelOmegaRef-DefaultBusOfFrequencySynchronized" id1="FREQ_SYNC" index1="2" id2="NETWORK" name2="GEN3"/>
 </dyn:dynamicModelsArchitecture>

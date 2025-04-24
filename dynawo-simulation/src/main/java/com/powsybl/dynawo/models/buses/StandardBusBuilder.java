@@ -64,7 +64,7 @@ public class StandardBusBuilder extends AbstractBusBuilder<StandardBusBuilder> {
 
     @Override
     public StandardBus build() {
-        return isInstantiable() ? new StandardBus(dynamicModelId, getEquipment(), parameterSetId, modelConfig) : null;
+        return isInstantiable() ? new StandardBus(getEquipment(), parameterSetId, modelConfig) : null;
     }
 
     @Override

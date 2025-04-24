@@ -37,17 +37,14 @@ class TapChangerAutomationSystemXmlTest extends AbstractDynamicModelXmlTest {
     @Override
     protected void addDynamicModels() {
         dynamicModels.add(LoadOneTransformerBuilder.of(network, "LoadOneTransformer")
-                .dynamicModelId("BBM_LOAD")
                 .staticId("LOAD")
                 .parameterSetId("LOT")
                 .build());
         dynamicModels.add(LoadTwoTransformersBuilder.of(network, "LoadTwoTransformers")
-                .dynamicModelId("BBM_LOAD2")
                 .staticId("LOAD2")
                 .parameterSetId("LTT")
                 .build());
         dynamicModels.add(LoadTwoTransformersBuilder.of(network, "LoadTwoTransformers")
-                .dynamicModelId("BBM_LOAD3")
                 .staticId("LOAD3")
                 .parameterSetId("LTT")
                 .build());
@@ -66,13 +63,13 @@ class TapChangerAutomationSystemXmlTest extends AbstractDynamicModelXmlTest {
                 .dynamicModelId("BBM_TC3")
                 .parameterSetId("tc")
                 .staticId("LOAD3")
-                .side(TransformerSide.HIGH_VOLTAGE)
+                .side("HIGH_VOLTAGE")
                 .build());
     }
 
     @Test
     void writeModel() throws SAXException, IOException {
-        DydXml.write(tmpDir, context);
+        DydXml.write(tmpDir, context.getSimulationDydData());
         ParametersXml.write(tmpDir, context);
         validate("dyd.xsd", "tap_changer_dyd.xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
     }

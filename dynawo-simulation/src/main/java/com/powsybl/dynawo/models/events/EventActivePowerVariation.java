@@ -7,7 +7,6 @@
  */
 package com.powsybl.dynawo.models.events;
 
-import com.powsybl.dynawo.DynawoSimulationContext;
 import com.powsybl.dynawo.builders.EventModelInfo;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.dynawo.models.VarConnection;
@@ -53,7 +52,7 @@ public class EventActivePowerVariation extends AbstractEvent implements ContextD
         return EventActivePowerVariation.class.getSimpleName();
     }
 
-    private List<VarConnection> getVarConnectionsWith(ControllableEquipment connected) {
+    private List<VarConnection> getVarConnectionsWith(ControllableEquipmentModel connected) {
         return List.of(TRUE == equipmentHasDynamicModel.getValue() ? new VarConnection("step_step_value", connected.getDeltaPVarName())
                 : new VarConnection("event_state1", connected.getDeltaPVarName()));
     }
@@ -62,7 +61,7 @@ public class EventActivePowerVariation extends AbstractEvent implements ContextD
     public void createMacroConnections(MacroConnectionsAdder adder) {
         adder.createMacroConnections(this,
                 getEquipment(),
-                ControllableEquipment.class,
+                ControllableEquipmentModel.class,
                 this::getVarConnectionsWith);
     }
 
@@ -86,7 +85,7 @@ public class EventActivePowerVariation extends AbstractEvent implements ContextD
     }
 
     @Override
-    public final void setEquipmentHasDynamicModel(DynawoSimulationContext context) {
-        this.equipmentHasDynamicModel.setValue(hasDynamicModel(context));
+    public final void setEquipmentHasDynamicModel(boolean hasDynamicModel) {
+        this.equipmentHasDynamicModel.setValue(hasDynamicModel);
     }
 }

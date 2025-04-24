@@ -10,6 +10,5 @@ package dynamicModels
 
 GridFormingConverterMatchingControl {
     staticId "GEN"
-    dynamicModelId "BBM_GFC"
     parameterSetId "GF"
 }
