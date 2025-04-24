@@ -19,6 +19,7 @@ import com.powsybl.iidm.network.test.NoEquipmentNetworkFactory;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.util.*;
 
@@ -120,8 +121,9 @@ class ModelConfigLoaderTest {
     }
 
     @Test
-    void loadAdditionalModels() {
-        Path additionalModels = Path.of(Objects.requireNonNull(getClass().getResource("/additionalModels.json")).getPath());
+    void loadAdditionalModels() throws URISyntaxException {
+        Path additionalModels = Path.of
+                (Objects.requireNonNull(getClass().getResource("/additionalModels.json")).toURI());
         Network network = NoEquipmentNetworkFactory.create();
         ModelConfigsHandler handler = ModelConfigsHandler.getInstance();
         int baseGenNumber = BaseGeneratorBuilder.getSupportedModelInfos().size();
