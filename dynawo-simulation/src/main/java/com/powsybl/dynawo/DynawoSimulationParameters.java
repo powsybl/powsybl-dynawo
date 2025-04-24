@@ -305,7 +305,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
     private void setCriteriaFilePath(String criteriaPathName, FileSystem fileSystem) {
         Path criteriaPath = criteriaPathName != null ? fileSystem.getPath(criteriaPathName) : null;
         if (criteriaPath == null || !Files.exists(criteriaPath)) {
-            throw new PowsyblException("File " + criteriaPath + " set in 'criteria.file' property cannot be found");
+            throw new PowsyblException("File " + criteriaPathName + " set in 'criteria.file' property cannot be found");
         }
         setCriteriaFilePath(criteriaPath);
     }
@@ -320,10 +320,10 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
     }
 
     private void setAdditionalModelPath(String additionalModelsPathName, FileSystem fileSystem) {
-        Path additionalModelsPath = additionalModelsPathName != null ? fileSystem.getPath(additionalModelsPathName) : null;
-        if (additionalModelsPath == null || !Files.exists(additionalModelsPath)) {
-            throw new PowsyblException("File " + additionalModelsPath + " set in 'additionalModelsFile' property cannot be found");
+        Path path = additionalModelsPathName != null ? fileSystem.getPath(additionalModelsPathName) : null;
+        if (path == null || !Files.exists(path)) {
+            throw new PowsyblException("File " + additionalModelsPathName + " set in 'additionalModelsFile' property cannot be found");
         }
-        setAdditionalModelPath(additionalModelsPath);
+        setAdditionalModelPath(path);
     }
 }
