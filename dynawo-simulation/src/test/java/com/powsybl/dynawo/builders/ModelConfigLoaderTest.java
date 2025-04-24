@@ -122,8 +122,7 @@ class ModelConfigLoaderTest {
 
     @Test
     void loadAdditionalModels() throws URISyntaxException {
-        Path additionalModels = Path.of
-                (Objects.requireNonNull(getClass().getResource("/additionalModels.json")).toURI());
+        Path additionalModels = Path.of(Objects.requireNonNull(getClass().getResource("/additionalModels.json")).toURI());
         Network network = NoEquipmentNetworkFactory.create();
         ModelConfigsHandler handler = ModelConfigsHandler.getInstance();
         int baseGenNumber = BaseGeneratorBuilder.getSupportedModelInfos().size();
