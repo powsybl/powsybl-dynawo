@@ -102,7 +102,6 @@ class DynawoParametersTest extends AbstractSerDeTest {
     }
 
     @Test
-    //TODO check result - compare to map properties
     void roundTripParametersSerializing() throws IOException {
         String networkParametersId = "networkParametersId";
         SolverType solverType = SolverType.IDA;
