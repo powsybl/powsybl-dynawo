@@ -61,7 +61,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
     private static final String SOLVER_TYPE = "solver.type";
     private static final String MERGE_LOADS = "mergeLoads";
     private static final String USE_MODEL_SIMPLIFIERS = "useModelSimplifiers";
-    private static final String PRECISION = "precision";
+    private static final String PRECISION_PROPERTY_NAME = "precision";
     private static final String TIMELINE_EXPORT_MODE = "timeline.exportMode";
     private static final String LOG_LEVEL_FILTER = "log.levelFilter";
     private static final String LOG_SPECIFIC_LOGS = "log.specificLogs";
@@ -131,7 +131,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
             new Parameter(SOLVER_TYPE, ParameterType.STRING, "Solver used in the simulation", DEFAULT_SOLVER_TYPE.toString(), getEnumPossibleValues(SolverType.class)),
             new Parameter(MERGE_LOADS, ParameterType.BOOLEAN, "Merge loads connected to same bus", DEFAULT_MERGE_LOADS),
             new Parameter(USE_MODEL_SIMPLIFIERS, ParameterType.BOOLEAN, "Simplifiers used before macro connection computation", DEFAULT_USE_MODEL_SIMPLIFIERS),
-            new Parameter(PRECISION, ParameterType.DOUBLE, "Simulation step precision", DEFAULT_PRECISION),
+            new Parameter(PRECISION_PROPERTY_NAME, ParameterType.DOUBLE, "Simulation step precision", DEFAULT_PRECISION),
             new Parameter(TIMELINE_EXPORT_MODE, ParameterType.STRING, "Timeline export file extension", DEFAULT_TIMELINE_EXPORT_MODE.toString(), getEnumPossibleValues(ExportMode.class)),
             new Parameter(LOG_LEVEL_FILTER, ParameterType.STRING, "Dynawo log level", DEFAULT_LOG_LEVEL_FILTER.toString(), getEnumPossibleValues(LogLevel.class)),
             new Parameter(LOG_SPECIFIC_LOGS, ParameterType.STRING, "List specific logs returned", null, getEnumPossibleValues(SpecificLog.class)),
@@ -180,7 +180,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
             c.getOptionalEnumProperty(SOLVER_TYPE, SolverType.class).ifPresent(parameters::setSolverType);
             c.getOptionalBooleanProperty(MERGE_LOADS).ifPresent(parameters::setMergeLoads);
             c.getOptionalBooleanProperty(USE_MODEL_SIMPLIFIERS).ifPresent(parameters::setUseModelSimplifiers);
-            c.getOptionalDoubleProperty(PRECISION).ifPresent(parameters::setPrecision);
+            c.getOptionalDoubleProperty(PRECISION_PROPERTY_NAME).ifPresent(parameters::setPrecision);
             c.getOptionalEnumProperty(TIMELINE_EXPORT_MODE, ExportMode.class).ifPresent(parameters::setTimelineExportMode);
             c.getOptionalEnumProperty(LOG_LEVEL_FILTER, LogLevel.class).ifPresent(parameters::setLogLevelFilter);
             c.getOptionalEnumSetProperty(LOG_SPECIFIC_LOGS, SpecificLog.class).ifPresent(parameters::setSpecificLogs);
@@ -245,7 +245,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
         Optional.ofNullable(properties.get(SOLVER_TYPE)).ifPresent(prop -> setSolverType(SolverType.valueOf(prop)));
         Optional.ofNullable(properties.get(MERGE_LOADS)).ifPresent(prop -> setMergeLoads(Boolean.parseBoolean(prop)));
         Optional.ofNullable(properties.get(USE_MODEL_SIMPLIFIERS)).ifPresent(prop -> setUseModelSimplifiers(Boolean.parseBoolean(prop)));
-        Optional.ofNullable(properties.get(PRECISION)).ifPresent(prop -> setPrecision(Double.parseDouble(prop)));
+        Optional.ofNullable(properties.get(PRECISION_PROPERTY_NAME)).ifPresent(prop -> setPrecision(Double.parseDouble(prop)));
         Optional.ofNullable(properties.get(TIMELINE_EXPORT_MODE)).ifPresent(prop -> setTimelineExportMode(ExportMode.valueOf(prop)));
         Optional.ofNullable(properties.get(LOG_LEVEL_FILTER)).ifPresent(prop -> setLogLevelFilter(LogLevel.valueOf(prop)));
         Optional.ofNullable(properties.get(LOG_SPECIFIC_LOGS)).ifPresent(prop ->
@@ -262,7 +262,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
         addNotNullEntry(SOLVER_TYPE, solverType, properties::put);
         addNotNullEntry(MERGE_LOADS, mergeLoads, properties::put);
         addNotNullEntry(USE_MODEL_SIMPLIFIERS, useModelSimplifiers, properties::put);
-        addNotNullEntry(PRECISION, precision, properties::put);
+        addNotNullEntry(PRECISION_PROPERTY_NAME, precision, properties::put);
         addNotNullEntry(TIMELINE_EXPORT_MODE, timelineExportMode, properties::put);
         addNotNullEntry(LOG_LEVEL_FILTER, logLevelFilter, properties::put);
         if (!specificLogs.isEmpty()) {
