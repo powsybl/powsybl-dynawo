@@ -8,6 +8,7 @@
 package com.powsybl.dynawo.models.transformers;
 
 import com.powsybl.dynawo.models.automationsystems.BranchModel;
+import com.powsybl.iidm.network.TwoSides;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -23,4 +24,6 @@ public interface TransformerModel extends BranchModel {
     String getPMonitoredVarName();
 
     String getDisableInternalTapChangerVarName();
+
+    String getUPuVarName(TwoSides sides);
 }
