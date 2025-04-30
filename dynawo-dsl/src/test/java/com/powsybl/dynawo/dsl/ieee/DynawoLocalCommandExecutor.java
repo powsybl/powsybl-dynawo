@@ -39,14 +39,12 @@ public class DynawoLocalCommandExecutor implements LocalCommandExecutor {
     private static final Logger LOGGER = LoggerFactory.getLogger(DynawoLocalCommandExecutor.class);
     private final FileSystem fileSystem;
     private final String networkId;
-    private final DynawoSimulationParameters dynawoSimulationParameters;
     private final String baseDirName;
     private final String stdOutFileRef;
 
-    public DynawoLocalCommandExecutor(FileSystem fileSystem, String networkId, DynawoSimulationParameters dynawoSimulationParameters, String baseDir, String stdOutFileRef) {
+    public DynawoLocalCommandExecutor(FileSystem fileSystem, String networkId, String baseDir, String stdOutFileRef) {
         this.fileSystem = Objects.requireNonNull(fileSystem);
         this.networkId = Objects.requireNonNull(networkId);
-        this.dynawoSimulationParameters = Objects.requireNonNull(dynawoSimulationParameters);
         this.baseDirName = baseDir;
         this.stdOutFileRef = stdOutFileRef;
     }
@@ -90,10 +88,12 @@ public class DynawoLocalCommandExecutor implements LocalCommandExecutor {
 
     @Override
     public void stop(Path workingDir) {
+        // Do nothing
     }
 
     @Override
     public void stopForcibly(Path workingDir) {
+        // Do nothing
     }
 
     protected void copyFile(String source, Path target) throws IOException {
