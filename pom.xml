@@ -117,17 +117,27 @@
             </dependency>
 
             <dependency>
-                <groupId>com.powsybl</groupId>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>powsybl-dynawo-commons</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.powsybl</groupId>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>powsybl-dynawo-contingencies</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>powsybl-dynawo-distribution</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>powsybl-dynaflow</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.powsybl</groupId>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>powsybl-dynawo-simulation</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -139,17 +149,27 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>com.powsybl</groupId>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>powsybl-dynawo-dsl</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.powsybl</groupId>
-                <artifactId>powsybl-dynawo-algorithms</artifactId>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>powsybl-dynawo-algorithms-commons</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.powsybl</groupId>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>powsybl-dynawo-security-analysis</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>powsybl-dynawo-margin-calculation</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>powsybl-dynawo-integration-tests</artifactId>
                 <version>${project.version}</version>
             </dependency>
