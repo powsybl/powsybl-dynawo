@@ -7,8 +7,10 @@
  */
 package com.powsybl.dynawo.margincalculation;
 
+import com.powsybl.commons.report.PowsyblCoreReportResourceBundle;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.commons.report.TypedValue;
+import com.powsybl.dynawo.commons.PowsyblDynawoReportResourceBundle;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -20,14 +22,21 @@ public final class MarginCalculationReports {
 
     public static ReportNode createMarginCalculationReportNode(ReportNode reportNode, String networkId) {
         return reportNode.newReportNode()
-                .withMessageTemplate("mc", "Dynawo margin calculation on network '${networkId}'")
-                .withUntypedValue("networkId", networkId)
+                .withMessageTemplate("dynawo.margincalc.mc")
+                .withTypedValue("networkId", networkId, TypedValue.ID)
                 .add();
+    }
+
+    public static ReportNode createMarginCalculationToolReportNode() {
+        return ReportNode.newRootReportNode()
+                .withResourceBundles(PowsyblCoreReportResourceBundle.BASE_NAME, PowsyblDynawoReportResourceBundle.BASE_NAME)
+                .withMessageTemplate("dynawo.margincalc.marginCalculationTool")
+                .build();
     }
 
     public static void reportLoadVariationInstantiationFailure(ReportNode reportNode) {
         reportNode.newReportNode()
-                .withMessageTemplate("loadsVariationInstantiationError", "LoadVariation cannot be instantiated")
+                .withMessageTemplate("dynawo.margincalc.loadsVariationInstantiationError")
                 .withSeverity(TypedValue.WARN_SEVERITY)
                 .add();
     }
