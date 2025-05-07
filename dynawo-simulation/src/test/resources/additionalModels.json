@@ -1,0 +1,22 @@
+{
+  "BASE_GENERATOR": {
+    "libs": [
+      {
+        "lib": "AdditionalGenerator1"
+      },
+      {
+        "lib": "AdditionalGenerator2"
+      }
+    ]
+  },
+  "BASE_LINE": {
+    "libs": [
+      {
+        "lib": "AdditionalLine"
+      },
+      {
+        "lib": "Line"
+      }
+    ]
+  }
+}

@@ -65,6 +65,10 @@ public class ModelConfigs {
         } else if (!hasDefaultModelConfig()) {
             defaultModelConfig = modelConfigsToMerge.defaultModelConfig;
         }
-        modelConfigMap.putAll(modelConfigsToMerge.modelConfigMap);
+        modelConfigsToMerge.modelConfigMap.forEach((k, v) -> {
+            if (modelConfigMap.putIfAbsent(k, v) != null) {
+                LOGGER.warn("Model {} already exist, the first one will be kept", k);
+            }
+        });
     }
 }
