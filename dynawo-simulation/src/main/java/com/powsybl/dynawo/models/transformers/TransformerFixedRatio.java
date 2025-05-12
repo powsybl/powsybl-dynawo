@@ -100,4 +100,9 @@ public class TransformerFixedRatio extends AbstractEquipmentBlackBoxModel<TwoWin
     public String getDeactivateCurrentLimitsVarName() {
         return "transformer_desactivate_currentLimits";
     }
+
+    @Override
+    public String getUPuVarName(TwoSides sides) {
+        return "@STATIC_ID@@NODE" + sides.getNum() + "@_Upu_value";
+    }
 }

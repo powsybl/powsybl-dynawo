@@ -56,6 +56,11 @@ public class DefaultTransformer extends AbstractDefaultModel implements Transfor
     }
 
     @Override
+    public String getUPuVarName(TwoSides sides) {
+        return "@@NAME@@@NODE" + sides.getNum() + "@_Upu_value";
+    }
+
+    @Override
     public List<VarConnection> getTapChangerBlockerVarConnections() {
         return List.of(new VarConnection(getTapChangerBlockingVarName(NONE), "@NAME@_TAP_CHANGER_locked_value"));
     }
