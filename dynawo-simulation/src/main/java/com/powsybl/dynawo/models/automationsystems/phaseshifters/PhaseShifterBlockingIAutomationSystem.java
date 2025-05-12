@@ -40,7 +40,7 @@ public class PhaseShifterBlockingIAutomationSystem extends AbstractPureDynamicBl
         if (isConnected) {
             adder.createMacroConnections(this, transformer.getValue(), TransformerModel.class, this::getVarConnectionsWith);
         } else {
-            DynawoSimulationReports.reportEmptyAutomaton(adder.getReportNode(), getName(), getDynamicModelId(), phaseShifterIDynamicId, PhaseShifterIModel.class.getSimpleName());
+            DynawoSimulationReports.reportEmptyAutomationSystem(adder.getReportNode(), getName(), getDynamicModelId(), phaseShifterIDynamicId, PhaseShifterIModel.class.getSimpleName());
         }
     }
 

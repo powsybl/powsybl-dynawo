@@ -91,28 +91,28 @@ class EventModelsSupplierTest extends AbstractModelSupplierTest {
                         """
                         + DSL tests
                            + Groovy Event Models Supplier
-                              + Model NodeFault NodeFault_GEN instantiation failed
+                              + Model NodeFault NodeFault_GEN instantiation KO
                                  'staticId' field value 'GEN' not found for equipment type(s) BUS
                         """),
                 Arguments.of("/eventWarnings/missingStartTime.groovy", EurostagTutorialExample1Factory.create(),
                         """
                         + DSL tests
                            + Groovy Event Models Supplier
-                              + Model NodeFault NodeFault_NGEN instantiation failed
+                              + Model NodeFault NodeFault_NGEN instantiation KO
                                  'startTime' field is not set
                         """),
                 Arguments.of("/eventWarnings/missingNodeFaultParameters.groovy", EurostagTutorialExample1Factory.create(),
                         """
                         + DSL tests
                            + Groovy Event Models Supplier
-                              + Model NodeFault NodeFault_NGEN instantiation failed
+                              + Model NodeFault NodeFault_NGEN instantiation KO
                                  faultTime should be strictly positive (0.0)
                         """),
                 Arguments.of("/eventWarnings/missingAPVParameters.groovy", SvcTestCaseFactory.create(),
                         """
                         + DSL tests
                            + Groovy Event Models Supplier
-                              + Model Step Step_SVC2 instantiation failed
+                              + Model Step Step_SVC2 instantiation KO
                                  'staticId' field value 'SVC2' not found for equipment type(s) GENERATOR/LOAD
                                  'deltaP' field is not set
                         """),
@@ -120,14 +120,14 @@ class EventModelsSupplierTest extends AbstractModelSupplierTest {
                         """
                         + DSL tests
                            + Groovy Event Models Supplier
-                              + Model Disconnect Disconnect_WRONG_ID instantiation failed
+                              + Model Disconnect Disconnect_WRONG_ID instantiation KO
                                  'staticId' field value 'WRONG_ID' not found for equipment type(s) Disconnectable equipment
                         """),
                 Arguments.of("/eventWarnings/missingDisconnectionSide.groovy", EurostagTutorialExample1Factory.create(),
                         """
                         + DSL tests
                            + Groovy Event Models Supplier
-                              + Model Disconnect Disconnect_GEN instantiation failed
+                              + Model Disconnect Disconnect_GEN instantiation KO
                                  'disconnectOnly' field is set but GENERATOR GEN does not possess this option
                         """)
         );

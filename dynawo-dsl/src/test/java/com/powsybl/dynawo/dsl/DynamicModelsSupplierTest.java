@@ -159,84 +159,84 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                         """
                         + DSL tests
                            + Groovy Dynamic Models Supplier
-                              + Model LoadAlphaBeta null instantiation failed
+                              + Model LoadAlphaBeta null instantiation KO
                                  'staticId' field is not set
                         """),
                 Arguments.of("/warnings/missingParameterId.groovy", EurostagTutorialExample1Factory.create(),
                         """
                         + DSL tests
                            + Groovy Dynamic Models Supplier
-                              + Model LoadAlphaBeta LOAD instantiation failed
+                              + Model LoadAlphaBeta LOAD instantiation KO
                                  'parameterSetId' field is not set
                         """),
                 Arguments.of("/warnings/missingEquipment.groovy", EurostagTutorialExample1Factory.create(),
                         """
                         + DSL tests
                            + Groovy Dynamic Models Supplier
-                              + Model LoadAlphaBeta GEN instantiation failed
+                              + Model LoadAlphaBeta GEN instantiation KO
                                  'staticId' field value 'GEN' not found for equipment type(s) LOAD
                         """),
                 Arguments.of("/warnings/missingDanglingProperty.groovy", HvdcTestNetwork.createVsc(),
                         """
                         + DSL tests
                            + Groovy Dynamic Models Supplier
-                              + Model HvdcPV L instantiation failed
+                              + Model HvdcPV L instantiation KO
                                  'dangling' field is set but HvdcPV does not possess this option
                         """),
                 Arguments.of("/warnings/underVoltageMissingGenerator.groovy", EurostagTutorialExample1Factory.create(),
                         """
                         + DSL tests
                            + Groovy Dynamic Models Supplier
-                              + Model UnderVoltage UV_GEN instantiation failed
+                              + Model UnderVoltage UV_GEN instantiation KO
                                  'generator' field value 'NGEN' not found for equipment type(s) GENERATOR
                         """),
                 Arguments.of("/warnings/phaseShifterMissingTransformer.groovy", EurostagTutorialExample1Factory.create(),
                         """
                         + DSL tests
                            + Groovy Dynamic Models Supplier
-                              + Model PhaseShifterI PS_NGEN_NHV1 instantiation failed
+                              + Model PhaseShifterI PS_NGEN_NHV1 instantiation KO
                                  'transformer' field value 'NGEN' not found for equipment type(s) TWO_WINDINGS_TRANSFORMER
                         """),
                 Arguments.of("/warnings/claMissingMeasurement.groovy", EurostagTutorialExample1Factory.create(),
                         """
                         + DSL tests
                            + Groovy Dynamic Models Supplier
-                              + Model OverloadManagementSystem CLA_NGEN instantiation failed
+                              + Model OverloadManagementSystem CLA_NGEN instantiation KO
                                  'iMeasurement' field value 'NGEN' not found for equipment type(s) BRANCH
                         """),
                 Arguments.of("/warnings/claMissingMeasurementSide.groovy", EurostagTutorialExample1Factory.create(),
                         """
                         + DSL tests
                            + Groovy Dynamic Models Supplier
-                              + Model OverloadManagementSystem CLA_NGEN instantiation failed
+                              + Model OverloadManagementSystem CLA_NGEN instantiation KO
                                  'iMeasurementSide' field is not set
                         """),
                 Arguments.of("/warnings/claMissingControlled.groovy", EurostagTutorialExample1Factory.create(),
                         """
                         + DSL tests
                            + Groovy Dynamic Models Supplier
-                              + Model OverloadManagementSystem CLA_NGEN instantiation failed
+                              + Model OverloadManagementSystem CLA_NGEN instantiation KO
                                  'controlledBranch' field value 'GEN' not found for equipment type(s) BRANCH
                         """),
                 Arguments.of("/warnings/cla2MissingMeasurement2.groovy", EurostagTutorialExample1Factory.create(),
                         """
                         + DSL tests
                            + Groovy Dynamic Models Supplier
-                              + Model TwoLevelOverloadManagementSystem CLA_NGEN instantiation failed
+                              + Model TwoLevelOverloadManagementSystem CLA_NGEN instantiation KO
                                  'iMeasurement2' field value 'NGEN' not found for equipment type(s) BRANCH
                         """),
                 Arguments.of("/warnings/cla2MissingMeasurementSide2.groovy", EurostagTutorialExample1Factory.create(),
                         """
                         + DSL tests
                            + Groovy Dynamic Models Supplier
-                              + Model TwoLevelOverloadManagementSystem CLA_NGEN instantiation failed
+                              + Model TwoLevelOverloadManagementSystem CLA_NGEN instantiation KO
                                  'iMeasurement2Side' field is not set
                         """),
                 Arguments.of("/warnings/tapChangerMissingBus.groovy", EurostagTutorialExample1Factory.create(),
                         """
                         + DSL tests
                            + Groovy Dynamic Models Supplier
-                              + Model TapChangerBlockingAutomaton ZAB instantiation failed
+                              + Model TapChangerBlockingAutomaton ZAB instantiation KO
                                  'uMeasurements' field value 'LOAD' not found for equipment type(s) BUS/BUSBAR_SECTION
                                  'uMeasurements' field value 'Wrong_ID' not found for equipment type(s) BUS/BUSBAR_SECTION
                                  'uMeasurements' list is empty
@@ -245,7 +245,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                         """
                         + DSL tests
                            + Groovy Dynamic Models Supplier
-                              + Model TapChangerBlockingAutomaton ZAB instantiation failed
+                              + Model TapChangerBlockingAutomaton ZAB instantiation KO
                                  'uMeasurements' field value '[LOAD, Wrong_ID]' not found for equipment type(s) BUS/BUSBAR_SECTION
                                  'uMeasurements' field value '[NGEN_NHV1]' not found for equipment type(s) BUS/BUSBAR_SECTION
                                  'uMeasurements' list is empty
@@ -254,7 +254,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                         """
                         + DSL tests
                            + Groovy Dynamic Models Supplier
-                              + Model TapChangerBlockingAutomaton ZAB instantiation failed
+                              + Model TapChangerBlockingAutomaton ZAB instantiation KO
                                  'transformers' field value 'GEN' not found for equipment type(s) TWO_WINDINGS_TRANSFORMER/LOAD, id will be used as pure dynamic model id
                                  'uMeasurements' field value 'GEN' not found for equipment type(s) BUS/BUSBAR_SECTION
                                  'uMeasurements' list is empty
@@ -263,7 +263,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                         """
                         + DSL tests
                            + Groovy Dynamic Models Supplier
-                              + Model HvdcVsc L instantiation failed
+                              + Model HvdcVsc L instantiation KO
                                  'staticId' field value 'L' not found for equipment type(s) VSC HVDC_LINE
                         """)
                 );
@@ -275,13 +275,13 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
                         """
                         + DSL tests
                            + Groovy Dynamic Models Supplier
-                              Model GeneratorSynchronousThreeWindings GEN instantiation successful
+                              Model GeneratorSynchronousThreeWindings GEN instantiation OK
                         """),
                 Arguments.of("/dynamicModels/genTfo.groovy", SynchronousGenerator.class, EurostagTutorialExample1Factory.create(), "transformer_terminal1",
                         """
                         + DSL tests
                            + Groovy Dynamic Models Supplier
-                              Model GeneratorSynchronousThreeWindingsPmConstVRNordicTfo GEN instantiation successful
+                              Model GeneratorSynchronousThreeWindingsPmConstVRNordicTfo GEN instantiation OK
                         """)
         );
     }
