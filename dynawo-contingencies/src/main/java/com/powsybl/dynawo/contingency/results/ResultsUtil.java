@@ -32,6 +32,7 @@ public final class ResultsUtil {
             case CONVERGENCE -> PostContingencyComputationStatus.CONVERGED;
             case DIVERGENCE -> PostContingencyComputationStatus.SOLVER_FAILED;
             case EXECUTION_PROBLEM, CRITERIA_NON_RESPECTED -> PostContingencyComputationStatus.FAILED;
+            case NOT_SIMULATED -> PostContingencyComputationStatus.NO_IMPACT;
         };
     }
 

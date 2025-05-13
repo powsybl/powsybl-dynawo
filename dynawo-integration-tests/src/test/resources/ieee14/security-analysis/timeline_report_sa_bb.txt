@@ -1,0 +1,15 @@
++ Root message
+   + Dynaflow security analysis on network 'ieee14bus'
+      Contingency element '_BUS___10-BUS___11-1_AC' has a voltageId information and cannot be handle by DynaFlow, the contingency '_BUS___10-BUS___11-1_AC' will be skipped
+      + Contingency '_BUS____1-BUS____5-1_AC'
+         [t=20.0] LINE : opening both sides on equipment '_BUS____1-BUS____5-1_AC'
+         [t=20.0] Generator : maximum reactive power limit reached on equipment '_GEN____2_SM'
+      + Contingency '_BUS____1-BUS____2-1_AC'
+         [t=20.0] LINE : opening both sides on equipment '_BUS____1-BUS____2-1_AC'
+         [t=20.0] Generator : maximum reactive power limit reached on equipment '_GEN____2_SM'
+         [t=30.0] Generator : maximum reactive power limit reached on equipment '_GEN____3_SM'
+         [t=30.0] Generator : maximum reactive power limit reached on equipment '_GEN____6_SM'
+         [t=35.0] Generator : maximum reactive power limit reached on equipment '_GEN____8_SM'
+      + Contingency '_BUS____7-BUS____8-1_AC'
+         [t=20.0] LINE : opening both sides on equipment '_BUS____7-BUS____8-1_AC'
+         [t=20.0] GENERATOR : disconnecting on equipment '_GEN____8_SM'

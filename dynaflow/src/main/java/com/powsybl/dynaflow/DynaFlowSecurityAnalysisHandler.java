@@ -16,6 +16,7 @@ import com.powsybl.computation.Command;
 import com.powsybl.computation.CommandExecution;
 import com.powsybl.computation.ExecutionReport;
 import com.powsybl.contingency.Contingency;
+import com.powsybl.contingency.ContingencyElement;
 import com.powsybl.contingency.SidedContingencyElement;
 import com.powsybl.contingency.contingency.list.ContingencyList;
 import com.powsybl.contingency.contingency.list.DefaultContingencyList;
@@ -79,7 +80,7 @@ public final class DynaFlowSecurityAnalysisHandler extends AbstractExecutionHand
 
         DynawoUtil.writeIidm(network, workingDir.resolve(NETWORK_FILENAME));
         writeParameters(securityAnalysisParameters, workingDir);
-        writeContingencies(contingencies, workingDir);
+        writeContingencies(workingDir);
         return getCommandExecutions(command);
     }
 
@@ -91,24 +92,26 @@ public final class DynaFlowSecurityAnalysisHandler extends AbstractExecutionHand
         return new SecurityAnalysisReport(createSecurityAnalysisResult(network, violationFilter, workingDir, contingencies));
     }
 
-    private void writeContingencies(List<Contingency> contingencies, Path workingDir) throws IOException {
+    private void writeContingencies(Path workingDir) throws IOException {
         try (OutputStream os = Files.newOutputStream(workingDir.resolve(CONTINGENCIES_FILENAME))) {
             ObjectMapper mapper = JsonUtil.createObjectMapper();
             ContingencyJsonModule module = new ContingencyJsonModule();
             mapper.registerModule(module);
             ObjectWriter writer = mapper.writerWithDefaultPrettyPrinter();
-            writer.writeValue(os, buildContingencyList(contingencies));
+            writer.writeValue(os, buildContingencyList());
         }
     }
 
-    private ContingencyList buildContingencyList(List<Contingency> contingencies) {
-        return new DefaultContingencyList("", contingencies.stream().filter(nonSidedContingency()).toList());
+    private ContingencyList buildContingencyList() {
+        return new DefaultContingencyList("", contingencies.stream()
+                .filter(c -> c.getElements().stream().allMatch(nonSidedContingencyElement(c.getId(), reportNode)))
+                .toList());
     }
 
-    private Predicate<Contingency> nonSidedContingency() {
-        return c -> {
-            if (c instanceof SidedContingencyElement sidedC && sidedC.getVoltageLevelId() != null) {
-                createSidedContingencyReportNode(reportNode, c.getId());
+    private static Predicate<ContingencyElement> nonSidedContingencyElement(String contingencyId, ReportNode reportNode) {
+        return ce -> {
+            if (ce instanceof SidedContingencyElement sidedC && sidedC.getVoltageLevelId() != null) {
+                createSidedContingencyReportNode(reportNode, contingencyId, ce.getId());
                 return false;
             }
             return true;

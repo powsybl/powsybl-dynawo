@@ -14,5 +14,6 @@ public enum Status {
         CONVERGENCE,
         DIVERGENCE,
         EXECUTION_PROBLEM,
-        CRITERIA_NON_RESPECTED
+        CRITERIA_NON_RESPECTED,
+        NOT_SIMULATED,
 }

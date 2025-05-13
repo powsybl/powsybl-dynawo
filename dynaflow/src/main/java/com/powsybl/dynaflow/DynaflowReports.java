@@ -34,10 +34,11 @@ public final class DynaflowReports {
                 .add();
     }
 
-    public static void createSidedContingencyReportNode(ReportNode reportNode, String contingencyId) {
+    public static void createSidedContingencyReportNode(ReportNode reportNode, String contingencyId, String contingencyElementId) {
         reportNode.newReportNode()
                 .withMessageTemplate("dynawo.dynaflow.sidedContingency")
                 .withUntypedValue("contingencyId", contingencyId)
+                .withUntypedValue("contingencyElementId", contingencyElementId)
                 .add();
     }
 }

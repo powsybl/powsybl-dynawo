@@ -71,7 +71,7 @@ public final class ContingencyResultsUtils {
                                                                         List<Contingency> contingencies) {
         return contingencies.stream()
                 .map(c -> new PostContingencyResult(c,
-                        ResultsUtil.convertToPostStatus(scenarioResults.getOrDefault(c.getId(), Status.EXECUTION_PROBLEM)),
+                        ResultsUtil.convertToPostStatus(scenarioResults.getOrDefault(c.getId(), Status.NOT_SIMULATED)),
                         getLimitViolationsResult(network, violationFilter, constraintsDir, c.getId())))
                 .toList();
     }
@@ -99,13 +99,12 @@ public final class ContingencyResultsUtils {
     // Report the timeline events from the timeline files written by dynawo
     public static void reportContingenciesTimelines(List<Contingency> contingencies, Path timelineDir, ReportNode reportNode) {
         contingencies.forEach(c -> {
-            ReportNode contingencyReporter = createContingenciesTimelineReportNode(reportNode, c.getId());
-            getTimeline(timelineDir, c).forEach(e -> CommonReports.reportTimelineEntry(contingencyReporter, e));
+            Path timelineFile = timelineDir.resolve("timeline_" + c.getId() + ".xml");
+            if (Files.exists(timelineFile)) {
+                List<TimelineEntry> entries = new XmlTimeLineParser().parse(timelineFile);
+                ReportNode contingencyReporter = createContingenciesTimelineReportNode(reportNode, c.getId());
+                entries.forEach(e -> CommonReports.reportTimelineEntry(contingencyReporter, e));
+            }
         });
-    }
-
-    private static List<TimelineEntry> getTimeline(Path timelineDir, Contingency c) {
-        Path timelineFile = timelineDir.resolve("timeline_" + c.getId() + ".xml");
-        return new XmlTimeLineParser().parse(timelineFile);
     }
 }

@@ -91,14 +91,8 @@ class DynaFlowTest extends AbstractDynawoTest {
         assertEquals(CONVERGED, componentResult.getStatus());
         assertEquals("B4", componentResult.getSlackBusResults().get(0).getId());
 
-        StringWriter sw = new StringWriter();
-        reportNode.print(sw);
-        System.out.println(sw);
-
-        InputStream refStream = Objects.requireNonNull(getClass().getResourceAsStream("/loadflow_timeline_report.txt"));
-        String refLogExport = TestUtil.normalizeLineSeparator(new String(ByteStreams.toByteArray(refStream), StandardCharsets.UTF_8));
-        String logExport = TestUtil.normalizeLineSeparator(sw.toString());
-        assertEquals(refLogExport, logExport);
+        assertEquals(getExpectedReportNormalizedString("/loadflow_timeline_report.txt"),
+                getReportNodeNormalizedString(reportNode));
     }
 
     @Test
@@ -130,9 +124,13 @@ class DynaFlowTest extends AbstractDynawoTest {
         String logExportLf = TestUtil.normalizeLineSeparator(swReportNodeLf.toString());
         assertEquals(refLogExportLf, logExportLf);
 
-        List<Contingency> contingencies = network.getLineStream()
-                .map(l -> Contingency.line(l.getId()))
-                .toList();
+        List<Contingency> contingencies = List.of(
+                Contingency.line("_BUS____1-BUS____5-1_AC"),
+                Contingency.line("_BUS____1-BUS____2-1_AC"),
+                Contingency.line("_BUS____7-BUS____8-1_AC"),
+                // will be skipped because Dynaflow cannot handle sided contingency
+                Contingency.line("_BUS___10-BUS___11-1_AC", "_BUS___10_VL")
+        );
 
         ReportNode reportNode = ReportNode.newRootReportNode()
                 .withResourceBundles(PowsyblCoreReportResourceBundle.BASE_NAME,
@@ -148,12 +146,8 @@ class DynaFlowTest extends AbstractDynawoTest {
                 .join()
                 .getResult();
 
-        StringWriter swReportAs = new StringWriter();
-        reportNode.print(swReportAs);
-        InputStream refStreamReportAs = Objects.requireNonNull(getClass().getResourceAsStream("/ieee14/security-analysis/timeline_report_as.txt"));
-        String refLogExportAs = TestUtil.normalizeLineSeparator(new String(ByteStreams.toByteArray(refStreamReportAs), StandardCharsets.UTF_8));
-        String logExportAs = TestUtil.normalizeLineSeparator(swReportAs.toString());
-        assertEquals(refLogExportAs, logExportAs);
+        assertEquals(getExpectedReportNormalizedString("/ieee14/security-analysis/timeline_report_sa_bb.txt"),
+                getReportNodeNormalizedString(reportNode));
 
         StringWriter serializedResult = new StringWriter();
         SecurityAnalysisResultSerializer.write(result, serializedResult);
@@ -164,20 +158,41 @@ class DynaFlowTest extends AbstractDynawoTest {
     @Test
     void testSaNb() throws IOException {
         Network network = FourSubstationsNodeBreakerFactory.create();
-
+        ReportNode reportNode = ReportNode.newRootReportNode()
+                .withResourceBundles(PowsyblCoreReportResourceBundle.BASE_NAME,
+                        PowsyblDynawoReportResourceBundle.BASE_NAME,
+                        PowsyblCoreTestReportResourceBundle.TEST_BASE_NAME)
+                .withMessageTemplate("testIEEE14")
+                .build();
         List<Contingency> contingencies = network.getGeneratorStream()
                 .map(g -> Contingency.generator(g.getId()))
                 .toList();
         SecurityAnalysisRunParameters runParameters = new SecurityAnalysisRunParameters()
                 .setComputationManager(computationManager)
-                .setSecurityAnalysisParameters(securityAnalysisParameters);
+                .setSecurityAnalysisParameters(securityAnalysisParameters)
+                .setReportNode(reportNode);
         SecurityAnalysisResult result = securityAnalysisProvider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID, n -> contingencies, runParameters)
                 .join()
                 .getResult();
+
+        assertEquals(getExpectedReportNormalizedString("/ieee14/security-analysis/timeline_report_sa_nb.txt"),
+                getReportNodeNormalizedString(reportNode));
 
         StringWriter serializedResult = new StringWriter();
         SecurityAnalysisResultSerializer.write(result, serializedResult);
         InputStream expected = Objects.requireNonNull(getClass().getResourceAsStream("/ieee14/security-analysis/sa_nb_results.json"));
         assertTxtEquals(expected, serializedResult.toString());
+
+    }
+
+    private String getReportNodeNormalizedString(ReportNode reportNode) throws IOException {
+        StringWriter swReportAs = new StringWriter();
+        reportNode.print(swReportAs);
+        return TestUtil.normalizeLineSeparator(swReportAs.toString());
+    }
+
+    private String getExpectedReportNormalizedString(String resourceName) throws IOException {
+        InputStream refStreamReportAs = Objects.requireNonNull(getClass().getResourceAsStream(resourceName));
+        return TestUtil.normalizeLineSeparator(new String(ByteStreams.toByteArray(refStreamReportAs), StandardCharsets.UTF_8));
     }
 }

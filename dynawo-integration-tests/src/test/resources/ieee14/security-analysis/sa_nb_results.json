@@ -171,7 +171,7 @@
         "type" : "GENERATOR"
       } ]
     },
-    "status" : "FAILED",
+    "status" : "NO_IMPACT",
     "limitViolationsResult" : {
       "limitViolations" : [ ],
       "actionsTaken" : [ ]
@@ -196,7 +196,7 @@
         "type" : "GENERATOR"
       } ]
     },
-    "status" : "FAILED",
+    "status" : "NO_IMPACT",
     "limitViolationsResult" : {
       "limitViolations" : [ ],
       "actionsTaken" : [ ]
