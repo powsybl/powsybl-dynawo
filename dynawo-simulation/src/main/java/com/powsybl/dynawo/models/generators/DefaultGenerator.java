@@ -34,10 +34,7 @@ public class DefaultGenerator extends AbstractInjectionDefaultModel implements G
         return "@NAME@_switchOffSignal1";
     }
 
-    @Override
-    public String getSwitchOffSignalEventVarName() {
-        return "@NAME@_switchOffSignal2";
-    }
+    //TODO handle the 2 others switch cases
 
     @Override
     public String getSwitchOffSignalAutomatonVarName() {
