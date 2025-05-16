@@ -12,17 +12,10 @@ import com.powsybl.dynawo.models.InjectionModel;
  * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
  */
 public interface GeneratorModel extends InjectionModel {
-    String getTerminalVarName();
-
-    String getSwitchOffSignalNodeVarName();
 
     String getSwitchOffSignalEventVarName();
 
     String getSwitchOffSignalAutomatonVarName();
-
-    String getRunningVarName();
-
-    String getQStatorPuVarName();
 
     String getUPuVarName();
 }

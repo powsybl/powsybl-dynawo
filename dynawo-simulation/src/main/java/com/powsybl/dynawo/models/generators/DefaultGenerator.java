@@ -24,36 +24,16 @@ public class DefaultGenerator extends AbstractInjectionDefaultModel implements G
         return "DefaultGenerator";
     }
 
-    @Override
-    public String getTerminalVarName() {
-        return "@NAME@_terminal";
-    }
-
-    @Override
-    public String getSwitchOffSignalNodeVarName() {
-        return "@NAME@_switchOffSignal1";
-    }
-
-    //TODO handle the 2 others switch cases
-
+//TODO remove ?
     @Override
     public String getSwitchOffSignalAutomatonVarName() {
-        return "@NAME@_switchOffSignal3";
+        return getStateValueVarName();
     }
 
-    @Override
-    public String getRunningVarName() {
-        return "@NAME@_running";
-    }
-
-    @Override
-    public String getQStatorPuVarName() {
-        return "@NAME@_QStatorPu";
-    }
-
+    //TODO remove ?
     @Override
     public String getUPuVarName() {
-        return "@NAME@_UPu";
+        return "@NAME@_P_value";
     }
 
     @Override

@@ -53,8 +53,8 @@ public class EventActivePowerVariation extends AbstractEvent implements ContextD
     }
 
     private List<VarConnection> getVarConnectionsWith(ControllableEquipmentModel connected) {
-        return List.of(TRUE == equipmentHasDynamicModel.getValue() ? new VarConnection("step_step_value", connected.getDeltaPVarName())
-                : new VarConnection("event_state1", connected.getDeltaPVarName()));
+        return List.of(new VarConnection(TRUE == equipmentHasDynamicModel.getValue() ? "step_step_value" : "event_state1",
+                connected.getDeltaPVarName()));
     }
 
     @Override
