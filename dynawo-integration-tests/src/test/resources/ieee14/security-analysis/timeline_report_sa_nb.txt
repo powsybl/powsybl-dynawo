@@ -1,4 +1,4 @@
-+ Root message
++ Test
    + Dynaflow security analysis on network 'fourSubstations'
       + Contingency 'GH1'
          [t=20.0] GENERATOR : disconnecting on equipment 'GH1'
