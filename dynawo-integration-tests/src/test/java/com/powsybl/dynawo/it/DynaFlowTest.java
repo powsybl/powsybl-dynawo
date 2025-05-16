@@ -162,7 +162,7 @@ class DynaFlowTest extends AbstractDynawoTest {
                 .withResourceBundles(PowsyblCoreReportResourceBundle.BASE_NAME,
                         PowsyblDynawoReportResourceBundle.BASE_NAME,
                         PowsyblCoreTestReportResourceBundle.TEST_BASE_NAME)
-                .withMessageTemplate("testIEEE14")
+                .withMessageTemplate("test")
                 .build();
         List<Contingency> contingencies = network.getGeneratorStream()
                 .map(g -> Contingency.generator(g.getId()))
@@ -175,6 +175,7 @@ class DynaFlowTest extends AbstractDynawoTest {
                 .join()
                 .getResult();
 
+        // GTH1 and GTH2 not simulated because they are not in the main connected component
         assertEquals(getExpectedReportNormalizedString("/ieee14/security-analysis/timeline_report_sa_nb.txt"),
                 getReportNodeNormalizedString(reportNode));
 
