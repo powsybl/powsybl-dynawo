@@ -10,38 +10,34 @@ import com.powsybl.commons.datasource.ResourceDataSource;
 import com.powsybl.commons.datasource.ResourceSet;
 import com.powsybl.commons.report.PowsyblCoreReportResourceBundle;
 import com.powsybl.commons.report.ReportNode;
-import com.powsybl.commons.test.ComparisonUtils;
 import com.powsybl.commons.test.PowsyblCoreTestReportResourceBundle;
-import com.powsybl.contingency.Contingency;
 import com.powsybl.dynamicsimulation.*;
 import com.powsybl.dynamicsimulation.groovy.*;
 import com.powsybl.dynawo.*;
 import com.powsybl.dynawo.commons.ExportMode;
 import com.powsybl.dynawo.commons.PowsyblDynawoReportResourceBundle;
+import com.powsybl.dynawo.models.automationsystems.TapChangerBlockingAutomationSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.UnderVoltageAutomationSystemBuilder;
+import com.powsybl.dynawo.models.automationsystems.overloadmanagments.DynamicOverloadManagementSystemBuilder;
+import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterIAutomationSystemBuilder;
 import com.powsybl.dynawo.models.events.EventActivePowerVariationBuilder;
 import com.powsybl.dynawo.models.events.EventDisconnectionBuilder;
 import com.powsybl.dynawo.models.events.NodeFaultEventBuilder;
-import com.powsybl.dynawo.models.generators.SynchronousGeneratorBuilder;
-import com.powsybl.dynawo.models.loads.BaseLoadBuilder;
 import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.dynawo.suppliers.dynamicmodels.DynawoModelsSupplier;
 import com.powsybl.dynawo.suppliers.events.DynawoEventModelsSupplier;
 import com.powsybl.dynawo.xml.ParametersXml;
 import com.powsybl.iidm.network.Network;
+import com.powsybl.iidm.network.TwoSides;
 import com.powsybl.iidm.network.VariantManagerConstants;
 import com.powsybl.iidm.network.test.EurostagTutorialExample1Factory;
 import com.powsybl.iidm.network.test.FourSubstationsNodeBreakerFactory;
 import com.powsybl.iidm.network.test.SvcTestCaseFactory;
-import com.powsybl.security.SecurityAnalysisResult;
-import com.powsybl.security.dynamic.DynamicSecurityAnalysisRunParameters;
-import com.powsybl.security.json.SecurityAnalysisResultSerializer;
 import com.powsybl.timeseries.DoubleTimeSeries;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -368,7 +364,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
     }
 
     @Test
-    void testDefaultModelEvent() {
+    void testDefaultModelEventConnections() throws IOException {
 
         Network network = FourSubstationsNodeBreakerFactory.create();
         ReportNode reportNode = ReportNode.newRootReportNode()
@@ -411,6 +407,11 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                         .staticId("GH2")
                         .startTime(80)
                         .deltaP(0.5)
+                        .build(),
+                EventActivePowerVariationBuilder.of(n, r)
+                        .staticId("LD4")
+                        .startTime(90)
+                        .deltaP(0.5)
                         .build()
         );
 
@@ -425,7 +426,10 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         DynamicSimulationResult result = provider.run(network, (n, r) -> List.of(), eventModelsSupplier, OutputVariablesSupplier.empty(),
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, reportNode)
                 .join();
-
+        //TODO remove
+        StringWriter sw = new StringWriter();
+        reportNode.print(sw);
+        System.out.println(sw);
         ReportNode eventReport = reportNode.getChildren().get(0);
         assertEquals("dynawo.dynasim.dynawoSimulation", eventReport.getMessageKey());
         assertTrue(eventReport.getChildren().stream().allMatch(r -> r.getMessage().contains("instantiation OK")));
@@ -441,7 +445,6 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                 .withMessageTemplate("test")
                 .build();
 
-
         eventModelsSupplier = (n, r) -> List.of(
                 EventDisconnectionBuilder.of(n, r)
                         .staticId("NLOAD")
@@ -456,9 +459,77 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         result = provider.run(network, (n, r) -> List.of(), eventModelsSupplier, OutputVariablesSupplier.empty(),
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, reportNode)
                 .join();
+
         eventReport = reportNode.getChildren().get(0);
         assertEquals("dynawo.dynasim.dynawoSimulation", eventReport.getMessageKey());
         assertTrue(eventReport.getChildren().stream().allMatch(r -> r.getMessage().contains("instantiation OK")));
         assertEquals(DynamicSimulationResult.Status.SUCCESS, result.getStatus());
+    }
+
+    @Test
+    void testDefaultModelConnections() throws IOException {
+
+        Network network = EurostagTutorialExample1Factory.createWithLFResults();
+        ReportNode reportNode = ReportNode.newRootReportNode()
+                .withResourceBundles(PowsyblCoreReportResourceBundle.BASE_NAME,
+                        PowsyblDynawoReportResourceBundle.BASE_NAME,
+                        PowsyblCoreTestReportResourceBundle.TEST_BASE_NAME)
+                .withMessageTemplate("test")
+                .build();
+
+        List<ParametersSet> modelsParameters = ParametersXml.load(getResourceAsStream("/automation_system_models.par"));
+        ParametersSet networkParameters = ParametersXml.load(getResourceAsStream("/ieee14/network.par"), "8");
+        ParametersSet solverParameters = ParametersXml.load(getResourceAsStream("/ieee14/solvers.par"), "2");
+        dynawoSimulationParameters.setModelsParameters(modelsParameters)
+                .setNetworkParameters(networkParameters)
+                .setSolverParameters(solverParameters)
+                .setSolverType(DynawoSimulationParameters.SolverType.IDA);
+
+        DynamicModelsSupplier dynamicModelsSupplier = (n, r) -> List.of(
+                DynamicOverloadManagementSystemBuilder.of(n, r)
+                        .dynamicModelId("CLA_LINE")
+                        .parameterSetId("CLA")
+                        .iMeasurement(EurostagTutorialExample1Factory.NHV1_NHV2_2)
+                        .iMeasurementSide(TwoSides.TWO)
+                        .controlledBranch(EurostagTutorialExample1Factory.NHV1_NHV2_2)
+                        .build(),
+                DynamicOverloadManagementSystemBuilder.of(n, r)
+                        .dynamicModelId("CLA_TFO")
+                        .parameterSetId("CLA")
+                        .iMeasurement(EurostagTutorialExample1Factory.NGEN_NHV1)
+                        .iMeasurementSide(TwoSides.TWO)
+                        .controlledBranch(EurostagTutorialExample1Factory.NGEN_NHV1)
+                        .build(),
+                PhaseShifterIAutomationSystemBuilder.of(n, r)
+                        .dynamicModelId("PS")
+                        .parameterSetId("PS")
+                        .transformer(EurostagTutorialExample1Factory.NHV2_NLOAD)
+                        .build(),
+                TapChangerBlockingAutomationSystemBuilder.of(n, r)
+                        .dynamicModelId("TCB")
+                        .parameterSetId("TCB")
+                        .uMeasurements(EurostagTutorialExample1Factory.NGEN)
+                        .transformers(EurostagTutorialExample1Factory.NHV2_NLOAD)
+                        .build(),
+                UnderVoltageAutomationSystemBuilder.of(n , r)
+                        .dynamicModelId("Under_voltage")
+                        .parameterSetId("UV")
+                        .generator("GEN")
+                        .build()
+        );
+        EventModelsSupplier eventModelsSupplier = (n, r) -> List.of();
+        DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, OutputVariablesSupplier.empty(),
+                        VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, reportNode)
+                .join();
+        //TODO remove
+        StringWriter sw = new StringWriter();
+        reportNode.print(sw);
+        System.out.println(sw);
+
+        ReportNode eventReport = reportNode.getChildren().get(0);
+        assertEquals("dynawo.dynasim.dynawoSimulation", eventReport.getMessageKey());
+        assertTrue(eventReport.getChildren().stream().allMatch(r -> r.getMessage().contains("instantiation OK")));
+        assertEquals(DynamicSimulationResult.Status.FAILURE, result.getStatus());
+        assertThat(result.getStatusText()).contains("KINSOL fails to solve the problem");
     }
 }
