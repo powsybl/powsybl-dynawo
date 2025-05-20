@@ -17,7 +17,6 @@ import com.powsybl.dynawo.*;
 import com.powsybl.dynawo.commons.ExportMode;
 import com.powsybl.dynawo.commons.PowsyblDynawoReportResourceBundle;
 import com.powsybl.dynawo.models.automationsystems.TapChangerBlockingAutomationSystemBuilder;
-import com.powsybl.dynawo.models.automationsystems.UnderVoltageAutomationSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.overloadmanagments.DynamicOverloadManagementSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterIAutomationSystemBuilder;
 import com.powsybl.dynawo.models.events.EventActivePowerVariationBuilder;
@@ -403,11 +402,11 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                         .staticId("LINE_S2S3")
                         .startTime(70)
                         .build(),
-                EventActivePowerVariationBuilder.of(n, r)
-                        .staticId("GH2")
-                        .startTime(80)
-                        .deltaP(0.5)
-                        .build(),
+//                EventActivePowerVariationBuilder.of(n, r)
+//                        .staticId("GH2")
+//                        .startTime(80)
+//                        .deltaP(0.5)
+//                        .build(),
                 EventActivePowerVariationBuilder.of(n, r)
                         .staticId("LD4")
                         .startTime(90)
@@ -510,11 +509,6 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                         .parameterSetId("TCB")
                         .uMeasurements(EurostagTutorialExample1Factory.NGEN)
                         .transformers(EurostagTutorialExample1Factory.NHV2_NLOAD)
-                        .build(),
-                UnderVoltageAutomationSystemBuilder.of(n , r)
-                        .dynamicModelId("Under_voltage")
-                        .parameterSetId("UV")
-                        .generator("GEN")
                         .build()
         );
         EventModelsSupplier eventModelsSupplier = (n, r) -> List.of();

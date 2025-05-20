@@ -13,7 +13,7 @@ import com.powsybl.dynawo.models.events.ControllableEquipmentModel;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class DefaultGenerator extends AbstractInjectionDefaultModel implements GeneratorModel, ControllableEquipmentModel {
+public class DefaultGenerator extends AbstractInjectionDefaultModel implements ControllableEquipmentModel {
 
     public DefaultGenerator(String staticId) {
         super(staticId);
@@ -22,18 +22,6 @@ public class DefaultGenerator extends AbstractInjectionDefaultModel implements G
     @Override
     public String getName() {
         return "DefaultGenerator";
-    }
-
-//TODO remove ?
-    @Override
-    public String getSwitchOffSignalAutomatonVarName() {
-        return getStateValueVarName();
-    }
-
-    //TODO remove ?
-    @Override
-    public String getUPuVarName() {
-        return "@NAME@_P_value";
     }
 
     @Override

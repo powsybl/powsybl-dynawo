@@ -10,7 +10,7 @@ package com.powsybl.dynawo.models.automationsystems;
 import com.powsybl.dynawo.builders.ModelConfig;
 import com.powsybl.dynawo.models.AbstractPureDynamicBlackBoxModel;
 import com.powsybl.dynawo.models.VarConnection;
-import com.powsybl.dynawo.models.generators.GeneratorModel;
+import com.powsybl.dynawo.models.generators.SpecifiedGeneratorModel;
 import com.powsybl.dynawo.models.macroconnections.MacroConnectionsAdder;
 import com.powsybl.iidm.network.Generator;
 
@@ -32,10 +32,10 @@ public class UnderVoltageAutomationSystem extends AbstractPureDynamicBlackBoxMod
 
     @Override
     public void createMacroConnections(MacroConnectionsAdder adder) {
-        adder.createMacroConnections(this, generator, GeneratorModel.class, this::getVarConnectionsWith);
+        adder.createMacroConnections(this, generator, SpecifiedGeneratorModel.class, this::getVarConnectionsWith);
     }
 
-    protected List<VarConnection> getVarConnectionsWith(GeneratorModel connected) {
+    protected List<VarConnection> getVarConnectionsWith(SpecifiedGeneratorModel connected) {
         return Arrays.asList(
                 new VarConnection("underVoltageAutomaton_UMonitoredPu", connected.getUPuVarName()),
                 new VarConnection("underVoltageAutomaton_switchOffSignal", connected.getSwitchOffSignalAutomatonVarName())

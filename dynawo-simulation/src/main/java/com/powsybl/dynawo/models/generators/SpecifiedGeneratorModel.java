@@ -9,11 +9,11 @@ package com.powsybl.dynawo.models.generators;
 import com.powsybl.dynawo.models.InjectionModel;
 
 /**
+ * Implemented by user specified generator model
+ * Default generator model does not implement this interface
  * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
  */
-public interface GeneratorModel extends InjectionModel {
-
-    String getSwitchOffSignalEventVarName();
+public interface SpecifiedGeneratorModel extends InjectionModel {
 
     String getSwitchOffSignalAutomatonVarName();
 
