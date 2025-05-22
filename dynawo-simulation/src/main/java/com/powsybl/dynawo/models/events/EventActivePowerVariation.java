@@ -66,7 +66,7 @@ public class EventActivePowerVariation extends AbstractEvent implements ContextD
         return switch (equipmentModelType.getValue()) {
             case SPECIFIED -> List.of(new VarConnection("step_step_value", connected.getDeltaPVarName()));
             case DEFAULT_GENERATOR -> List.of(new VarConnection("event_state1", connected.getDeltaPVarName()));
-            case DEFAULT_LOAD -> List.of();
+            default -> List.of();
         };
     }
 
@@ -101,6 +101,7 @@ public class EventActivePowerVariation extends AbstractEvent implements ContextD
                 paramSet.addParameter("event_tEvent", DOUBLE, Double.toString(getStartTime()));
                 paramSet.addParameter("event_stateEvent1", DOUBLE, Double.toString(deltaP));
             }
+            default -> {}
         }
     }
 
