@@ -101,7 +101,8 @@ public class EventActivePowerVariation extends AbstractEvent implements ContextD
                 paramSet.addParameter("event_tEvent", DOUBLE, Double.toString(getStartTime()));
                 paramSet.addParameter("event_stateEvent1", DOUBLE, Double.toString(deltaP));
             }
-            default -> {}
+            default -> {
+            }
         }
     }
 
