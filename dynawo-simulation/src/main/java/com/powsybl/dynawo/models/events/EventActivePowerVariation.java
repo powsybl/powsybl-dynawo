@@ -91,18 +91,14 @@ public class EventActivePowerVariation extends AbstractEvent implements ContextD
 
     @Override
     protected void createEventSpecificParameters(ParametersSet paramSet) {
-        switch (equipmentModelType.getValue()) {
-            case SPECIFIED -> {
-                paramSet.addParameter("step_Value0", DOUBLE, Double.toString(0));
-                paramSet.addParameter("step_tStep", DOUBLE, Double.toString(getStartTime()));
-                paramSet.addParameter("step_Height", DOUBLE, Double.toString(deltaP));
-            }
-            case DEFAULT_GENERATOR -> {
-                paramSet.addParameter("event_tEvent", DOUBLE, Double.toString(getStartTime()));
-                paramSet.addParameter("event_stateEvent1", DOUBLE, Double.toString(deltaP));
-            }
-            default -> {
-            }
+        EquipmentModelType type = equipmentModelType.getValue();
+        if (type == EquipmentModelType.SPECIFIED) {
+            paramSet.addParameter("step_Value0", DOUBLE, Double.toString(0));
+            paramSet.addParameter("step_tStep", DOUBLE, Double.toString(getStartTime()));
+            paramSet.addParameter("step_Height", DOUBLE, Double.toString(deltaP));
+        } else if (type == EquipmentModelType.DEFAULT_GENERATOR) {
+            paramSet.addParameter("event_tEvent", DOUBLE, Double.toString(getStartTime()));
+            paramSet.addParameter("event_stateEvent1", DOUBLE, Double.toString(deltaP));
         }
     }
 
