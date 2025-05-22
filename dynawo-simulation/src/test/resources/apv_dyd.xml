@@ -13,7 +13,6 @@
     <dyn:blackBoxModel id="Step_GEN" lib="EventSetPointReal" parFile="sim1.par" parId="Step_GEN"/>
     <dyn:blackBoxModel id="Step_GEN2" lib="Step" parFile="sim1.par" parId="Step_GEN2"/>
     <dyn:blackBoxModel id="Step_GEN3" lib="Step" parFile="sim1.par" parId="Step_GEN3"/>
-    <dyn:blackBoxModel id="Step_LOAD" lib="EventSetPointReal" parFile="sim1.par" parId="Step_LOAD"/>
     <dyn:blackBoxModel id="Step_LOAD2" lib="Step" parFile="sim1.par" parId="Step_LOAD2"/>
     <dyn:macroConnector id="MC_GeneratorPV-DefaultEquipmentConnectionPoint">
         <dyn:connect var1="generator_terminal" var2="@STATIC_ID@@NODE@_ACPIN"/>
@@ -48,9 +47,6 @@
     <dyn:macroConnector id="MC_EventActivePowerVariation-GeneratorSynchronousFourWindingsGoverPropVRPropInt">
         <dyn:connect var1="step_step_value" var2="governor_deltaPmRefPu"/>
     </dyn:macroConnector>
-    <dyn:macroConnector id="MC_EventActivePowerVariation-DefaultLoad">
-        <dyn:connect var1="event_state1" var2="@NAME@_DeltaPc"/>
-    </dyn:macroConnector>
     <dyn:macroConnector id="MC_EventActivePowerVariation-LoadAlphaBeta">
         <dyn:connect var1="step_step_value" var2="load_deltaP"/>
     </dyn:macroConnector>
@@ -79,6 +75,5 @@
     <dyn:macroConnect connector="MC_EventActivePowerVariation-DefaultGenerator" id1="Step_GEN" id2="NETWORK" name2="GEN"/>
     <dyn:macroConnect connector="MC_EventActivePowerVariation-GeneratorPV" id1="Step_GEN2" id2="GEN2"/>
     <dyn:macroConnect connector="MC_EventActivePowerVariation-GeneratorSynchronousFourWindingsGoverPropVRPropInt" id1="Step_GEN3" id2="GEN3"/>
-    <dyn:macroConnect connector="MC_EventActivePowerVariation-DefaultLoad" id1="Step_LOAD" id2="NETWORK" name2="LOAD"/>
     <dyn:macroConnect connector="MC_EventActivePowerVariation-LoadAlphaBeta" id1="Step_LOAD2" id2="LOAD2"/>
 </dyn:dynamicModelsArchitecture>

@@ -402,14 +402,9 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                         .staticId("LINE_S2S3")
                         .startTime(70)
                         .build(),
-//                EventActivePowerVariationBuilder.of(n, r)
-//                        .staticId("GH2")
-//                        .startTime(80)
-//                        .deltaP(0.5)
-//                        .build(),
                 EventActivePowerVariationBuilder.of(n, r)
-                        .staticId("LD4")
-                        .startTime(90)
+                        .staticId("GH2")
+                        .startTime(80)
                         .deltaP(0.5)
                         .build()
         );
@@ -425,10 +420,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         DynamicSimulationResult result = provider.run(network, (n, r) -> List.of(), eventModelsSupplier, OutputVariablesSupplier.empty(),
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, reportNode)
                 .join();
-        //TODO remove
-        StringWriter sw = new StringWriter();
-        reportNode.print(sw);
-        System.out.println(sw);
+
         ReportNode eventReport = reportNode.getChildren().get(0);
         assertEquals("dynawo.dynasim.dynawoSimulation", eventReport.getMessageKey());
         assertTrue(eventReport.getChildren().stream().allMatch(r -> r.getMessage().contains("instantiation OK")));
@@ -515,10 +507,6 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, OutputVariablesSupplier.empty(),
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, reportNode)
                 .join();
-        //TODO remove
-        StringWriter sw = new StringWriter();
-        reportNode.print(sw);
-        System.out.println(sw);
 
         ReportNode eventReport = reportNode.getChildren().get(0);
         assertEquals("dynawo.dynasim.dynawoSimulation", eventReport.getMessageKey());

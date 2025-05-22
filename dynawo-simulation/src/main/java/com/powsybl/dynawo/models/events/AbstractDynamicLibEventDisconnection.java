@@ -22,7 +22,7 @@ public abstract class AbstractDynamicLibEventDisconnection extends AbstractEvent
 
     protected enum EquipmentModelType {
 
-        DYNAMIC("EventSetPointBoolean", "event_state1", "event_stateEvent1"),
+        SPECIFIED("EventSetPointBoolean", "event_state1", "event_stateEvent1"),
         DEFAULT("EventConnectedStatus", "event_state1_value", "event_open"),;
 
         private final String lib;
@@ -73,7 +73,7 @@ public abstract class AbstractDynamicLibEventDisconnection extends AbstractEvent
     }
 
     @Override
-    public final void setEquipmentHasDynamicModel(boolean hasDynamicModel) {
-        this.equipmentModelType.setValue(hasDynamicModel ? EquipmentModelType.DYNAMIC : EquipmentModelType.DEFAULT);
+    public final void setEquipmentModelType(boolean hasDynamicModel) {
+        this.equipmentModelType.setValue(hasDynamicModel ? EquipmentModelType.SPECIFIED : EquipmentModelType.DEFAULT);
     }
 }
