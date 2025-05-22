@@ -98,7 +98,7 @@ public final class ContingencyEventModelsFactory {
             createNotSupportedContingencyTypeReportNode(reportNode, element.getType().toString());
         }
         if (bbm instanceof ContextDependentEvent cde) {
-            cde.setEquipmentHasDynamicModel(bbmSupplier.hasDynamicModel(cde.getEquipment()));
+            cde.setEquipmentModelType(bbmSupplier.hasDynamicModel(cde.getEquipment()));
         }
         return bbm;
     }

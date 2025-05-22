@@ -66,9 +66,7 @@ public class EventBusDisconnection extends AbstractEvent implements ContextDepen
     @Override
     public void createDynamicModelParameters(Consumer<ParametersSet> parametersAdder) {
         if (hasDefaultModel) {
-            ParametersSet paramSet = new ParametersSet(getParameterSetId());
-            createEventSpecificParameters(paramSet);
-            parametersAdder.accept(paramSet);
+            super.createDynamicModelParameters(parametersAdder);
         }
     }
 
@@ -79,7 +77,7 @@ public class EventBusDisconnection extends AbstractEvent implements ContextDepen
     }
 
     @Override
-    public final void setEquipmentHasDynamicModel(boolean hasDynamicModel) {
+    public final void setEquipmentModelType(boolean hasDynamicModel) {
         hasDefaultModel = !hasDynamicModel;
     }
 

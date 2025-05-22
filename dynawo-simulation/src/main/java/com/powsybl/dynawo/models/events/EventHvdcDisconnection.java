@@ -29,12 +29,13 @@ public class EventHvdcDisconnection extends AbstractDynamicLibEventDisconnection
     }
 
     private List<VarConnection> getVarConnectionsWithHvdcModel(HvdcModel connected) {
-        return List.of(new VarConnection(DISCONNECTION_VAR_CONNECT, connected.getSwitchOffSignalEventVarName(TwoSides.ONE)),
-                new VarConnection(DISCONNECTION_VAR_CONNECT, connected.getSwitchOffSignalEventVarName(TwoSides.TWO)));
+        String varConnection = equipmentModelType.getValue().getVarConnection();
+        return List.of(new VarConnection(varConnection, connected.getSwitchOffSignalEventVarName(TwoSides.ONE)),
+                new VarConnection(varConnection, connected.getSwitchOffSignalEventVarName(TwoSides.TWO)));
     }
 
     private List<VarConnection> getVarConnectionsWithHvdcModelSide(HvdcModel connected, TwoSides side) {
-        return List.of(new VarConnection(DISCONNECTION_VAR_CONNECT, connected.getSwitchOffSignalEventVarName(side)));
+        return List.of(new VarConnection(equipmentModelType.getValue().getVarConnection(), connected.getSwitchOffSignalEventVarName(side)));
     }
 
     @Override

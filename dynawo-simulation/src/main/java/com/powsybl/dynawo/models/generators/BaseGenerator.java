@@ -22,7 +22,7 @@ import java.util.List;
  * @author Marcos de Miguel {@literal <demiguelm at aia.es>}
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class BaseGenerator extends AbstractEquipmentBlackBoxModel<Generator> implements GeneratorModel {
+public class BaseGenerator extends AbstractEquipmentBlackBoxModel<Generator> implements SpecifiedGeneratorModel {
 
     protected static final List<VarMapping> VAR_MAPPING = Arrays.asList(
             new VarMapping("generator_PGenPu", "p"),

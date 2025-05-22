@@ -57,6 +57,7 @@ class ActivePowerVariationEventXmlTest extends AbstractDynamicModelXmlTest {
                 .startTime(1)
                 .deltaP(1.3)
                 .build());
+        // will be skipped
         eventModels.add(EventActivePowerVariationBuilder.of(network)
                 .staticId("LOAD")
                 .startTime(10)
@@ -75,6 +76,10 @@ class ActivePowerVariationEventXmlTest extends AbstractDynamicModelXmlTest {
         ParametersXml.write(tmpDir, context);
         validate("dyd.xsd", "apv_dyd.xml", tmpDir.resolve(DynawoSimulationConstants.DYD_FILENAME));
         validate("parameters.xsd", "apv_par.xml", tmpDir.resolve(context.getSimulationParFile()));
-        validate("parameters.xsd", "apv_network_par.xml", tmpDir.resolve("network.par"));
+        checkReport("""
+                + Test DYD
+                   + Dynawo models processing
+                      EventActivePowerVariation Step_LOAD cannot handle connection with LOAD default model, the model will be skipped
+                """);
     }
 }
