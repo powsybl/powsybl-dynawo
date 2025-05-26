@@ -19,7 +19,7 @@ public final class ContingencyReports {
 
     public static ReportNode createContingenciesTimelineReportNode(ReportNode reportNode, String contingencyId) {
         return reportNode.newReportNode()
-                .withMessageTemplate("saContingency", "Contingency '${contingencyId}'")
+                .withMessageTemplate("dynawo.contingency.contingencyCreation")
                 .withUntypedValue("contingencyId", contingencyId)
                 .add();
     }

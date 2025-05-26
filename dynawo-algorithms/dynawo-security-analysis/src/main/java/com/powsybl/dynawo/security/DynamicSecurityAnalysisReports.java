@@ -8,6 +8,7 @@
 package com.powsybl.dynawo.security;
 
 import com.powsybl.commons.report.ReportNode;
+import com.powsybl.commons.report.TypedValue;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -19,8 +20,8 @@ public final class DynamicSecurityAnalysisReports {
 
     public static ReportNode createDynamicSecurityAnalysisReportNode(ReportNode reportNode, String networkId) {
         return reportNode.newReportNode()
-                .withMessageTemplate("dsa", "Dynawo dynamic security analysis on network '${networkId}'")
-                .withUntypedValue("networkId", networkId)
+                .withMessageTemplate("dynawo.dynasa.dsa")
+                .withTypedValue("networkId", networkId, TypedValue.ID)
                 .add();
     }
 }
