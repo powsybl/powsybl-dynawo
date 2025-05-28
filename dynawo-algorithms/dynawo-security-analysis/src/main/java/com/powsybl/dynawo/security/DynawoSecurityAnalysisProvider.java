@@ -88,6 +88,7 @@ public class DynawoSecurityAnalysisProvider implements DynamicSecurityAnalysisPr
         SecurityAnalysisContext context = new SecurityAnalysisContext.Builder(network,
                 BlackBoxSupplierUtils.getBlackBoxModelList(dynamicModelsSupplier, network, dsaReportNode),
                 contingencies)
+                .eventModels(BlackBoxSupplierUtils.getBlackBoxModelList(runParameters.getEventModelsSupplier(), network, dsaReportNode))
                 .dynamicSecurityAnalysisParameters(parameters)
                 .dynawoParameters(DynawoSimulationParameters.load(parameters.getDynamicSimulationParameters()))
                 .currentVersion(currentVersion)
