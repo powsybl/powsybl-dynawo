@@ -45,7 +45,7 @@ class ContingencyEventModelsTest {
                 Contingency.battery("BATTERY"));
 
         List<ContingencyEventModels> contingencyEvents = ContingencyEventModelsFactory.createFrom(contingencies,
-                2, network, bbmSupplier, ReportNode.NO_OP);
+                2, network, bbmSupplier, n -> false, ReportNode.NO_OP);
         assertThat(contingencyEvents).hasSize(3);
         assertThat(contingencyEvents.get(0).eventModels())
                 .hasSize(1)
