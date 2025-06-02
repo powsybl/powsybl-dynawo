@@ -7,11 +7,13 @@
  */
 package com.powsybl.dynawo.commons;
 
+import com.google.auto.service.AutoService;
 import com.powsybl.commons.report.ReportResourceBundle;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
+@AutoService(ReportResourceBundle.class)
 public class PowsyblDynawoReportResourceBundle implements ReportResourceBundle {
 
     public static final String BASE_NAME = "com.powsybl.dynawo.commons.reports";

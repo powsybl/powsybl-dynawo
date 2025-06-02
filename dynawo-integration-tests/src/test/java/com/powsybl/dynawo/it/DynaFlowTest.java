@@ -78,8 +78,7 @@ class DynaFlowTest extends AbstractDynawoTest {
                 .add();
 
         ReportNode reportNode = ReportNode.newRootReportNode()
-                .withResourceBundles(PowsyblCoreReportResourceBundle.BASE_NAME,
-                        PowsyblDynawoReportResourceBundle.BASE_NAME,
+                .withResourceBundles(PowsyblDynawoReportResourceBundle.BASE_NAME,
                         PowsyblCoreTestReportResourceBundle.TEST_BASE_NAME)
                 .withMessageTemplate("testIEEE14")
                 .build();
@@ -116,8 +115,7 @@ class DynaFlowTest extends AbstractDynawoTest {
 
         // Launching a load flow before the security analysis is required
         ReportNode reportNodeLf = ReportNode.newRootReportNode()
-                .withResourceBundles(PowsyblCoreReportResourceBundle.BASE_NAME,
-                        PowsyblDynawoReportResourceBundle.BASE_NAME,
+                .withResourceBundles(PowsyblDynawoReportResourceBundle.BASE_NAME,
                         PowsyblCoreTestReportResourceBundle.TEST_BASE_NAME)
                 .withMessageTemplate("testIEEE14")
                 .build();
@@ -135,8 +133,7 @@ class DynaFlowTest extends AbstractDynawoTest {
                 .toList();
 
         ReportNode reportNode = ReportNode.newRootReportNode()
-                .withResourceBundles(PowsyblCoreReportResourceBundle.BASE_NAME,
-                        PowsyblDynawoReportResourceBundle.BASE_NAME,
+                .withResourceBundles(PowsyblDynawoReportResourceBundle.BASE_NAME,
                         PowsyblCoreTestReportResourceBundle.TEST_BASE_NAME)
                 .withMessageTemplate("testIEEE14")
                 .build();

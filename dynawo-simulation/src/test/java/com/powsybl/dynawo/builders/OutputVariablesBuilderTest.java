@@ -28,8 +28,7 @@ class OutputVariablesBuilderTest {
     @BeforeEach
     void setup() {
         reporter = ReportNode.newRootReportNode()
-                .withResourceBundles(PowsyblCoreReportResourceBundle.BASE_NAME,
-                        PowsyblDynawoReportResourceBundle.BASE_NAME,
+                .withResourceBundles(PowsyblDynawoReportResourceBundle.BASE_NAME,
                         PowsyblCoreTestReportResourceBundle.TEST_BASE_NAME)
                 .withMessageTemplate("testBuilder")
                 .build();

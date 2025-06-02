@@ -10,7 +10,6 @@ package com.powsybl.dynawo;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.commons.report.TypedValue;
 import com.powsybl.dynawo.commons.DynawoVersion;
-import com.powsybl.dynawo.commons.PowsyblDynawoReportResourceBundle;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -25,9 +24,8 @@ public final class DynawoSimulationReports {
 
     public static ReportNode createDynawoSimulationReportNode(ReportNode reportNode, String networkId) {
         return reportNode.newReportNode()
-                .withResourceBundles(PowsyblDynawoReportResourceBundle.BASE_NAME)
                 .withMessageTemplate("dynawo.dynasim.dynawoSimulation")
-                .withUntypedValue("networkId", networkId)
+                .withTypedValue("networkId", networkId, TypedValue.ID)
                 .add();
     }
 
@@ -113,13 +111,14 @@ public final class DynawoSimulationReports {
     }
 
     public static ReportNode createDynawoSpecificLogReportNode(ReportNode reportNode, DynawoSimulationParameters.SpecificLog logType) {
-        return switch (logType) {
-            case NETWORK -> reportNode.newReportNode().withMessageTemplate("dynawo.dynasim.dynawoNetworkLog").add();
-            case MODELER -> reportNode.newReportNode().withMessageTemplate("dynawo.dynasim.dynawoModelerLog").add();
-            case PARAMETERS -> reportNode.newReportNode().withMessageTemplate("dynawo.dynasim.dynawoParametersLog").add();
-            case VARIABLES -> reportNode.newReportNode().withMessageTemplate("dynawo.dynasim.dynawoVariablesLog").add();
-            case EQUATIONS -> reportNode.newReportNode().withMessageTemplate("dynawo.dynasim.dynawoEquationsLog").add();
+        String key = switch (logType) {
+            case NETWORK -> "dynawo.dynasim.dynawoNetworkLog";
+            case MODELER -> "dynawo.dynasim.dynawoModelerLog";
+            case PARAMETERS -> "dynawo.dynasim.dynawoParametersLog";
+            case VARIABLES -> "dynawo.dynasim.dynawoVariablesLog";
+            case EQUATIONS -> "dynawo.dynasim.dynawoEquationsLog";
         };
+        return reportNode.newReportNode().withMessageTemplate(key).add();
     }
 
     public static void reportSpecificLogEntry(ReportNode reportNode, String logEntry) {

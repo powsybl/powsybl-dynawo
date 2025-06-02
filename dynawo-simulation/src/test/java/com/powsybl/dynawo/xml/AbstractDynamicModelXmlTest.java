@@ -50,8 +50,7 @@ public abstract class AbstractDynamicModelXmlTest extends AbstractSerDeTest {
     protected List<OutputVariable> outputVariables = new ArrayList<>();
     protected DynawoSimulationContext context;
     protected ReportNode reportNode = ReportNode.newRootReportNode()
-            .withResourceBundles(PowsyblCoreReportResourceBundle.BASE_NAME,
-                    PowsyblDynawoReportResourceBundle.BASE_NAME,
+            .withResourceBundles(PowsyblDynawoReportResourceBundle.BASE_NAME,
                     PowsyblCoreTestReportResourceBundle.TEST_BASE_NAME)
             .withMessageTemplate("testDyd")
             .build();

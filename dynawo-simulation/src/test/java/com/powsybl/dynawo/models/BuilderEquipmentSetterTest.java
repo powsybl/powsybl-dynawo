@@ -37,8 +37,7 @@ class BuilderEquipmentSetterTest {
         Network network2 = PhaseShifterTestCaseFactory.create();
         Line ln2 = network2.getLine("L1");
         ReportNode reportNode = ReportNode.newRootReportNode()
-                .withResourceBundles(PowsyblCoreReportResourceBundle.BASE_NAME,
-                        PowsyblDynawoReportResourceBundle.BASE_NAME,
+                .withResourceBundles(PowsyblDynawoReportResourceBundle.BASE_NAME,
                         PowsyblCoreTestReportResourceBundle.TEST_BASE_NAME)
                 .withMessageTemplate("testBuilder")
                 .build();
@@ -58,7 +57,7 @@ class BuilderEquipmentSetterTest {
         reportNode.print(sw);
         assertEquals("""
                         + Builder tests
-                           + Model Line L1 instantiation failed
+                           + Model Line L1 instantiation KO
                               'equipment' field value LINE L1 does not belong to the builder network
                         """,
                 TestUtil.normalizeLineSeparator(sw.toString()));
