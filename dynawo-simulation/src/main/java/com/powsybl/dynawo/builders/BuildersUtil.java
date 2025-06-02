@@ -7,40 +7,55 @@
  */
 package com.powsybl.dynawo.builders;
 
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.iidm.network.*;
+
+import static com.powsybl.dynawo.models.utils.EnergizedUtils.isEnergized;
+import static com.powsybl.iidm.network.IdentifiableType.BUS;
+import static com.powsybl.iidm.network.IdentifiableType.BUSBAR_SECTION;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public final class BuildersUtil {
 
-    public static final String MEASUREMENT_POINT_TYPE = IdentifiableType.BUS + "/" + IdentifiableType.BUSBAR_SECTION;
+    public static final String MEASUREMENT_POINT_TYPE = BUS + "/" + BUSBAR_SECTION;
+
+    /**
+     * Verifies the ActionConnectionPoint (bus or busbar section) is energized and in main connected component
+     */
+    public static final EquipmentPredicate<Identifiable<?>> IS_ACTION_CONNECTION_POINT_ENERGIZED = new EquipmentPredicate<>() {
+
+        @Override
+        public boolean test(Identifiable<?> equipment, String fieldName, ReportNode reportNode) {
+            boolean isEnergized = switch (equipment.getType()) {
+                case BUS -> isEnergized((Bus) equipment);
+                case BUSBAR_SECTION -> isEnergized((BusbarSection) equipment);
+                default -> throw new UnsupportedOperationException("Only bus and bus bar section are supported");
+            };
+            if (!isEnergized) {
+                BuilderReports.reportNotEnergized(reportNode, fieldName, equipment.getId());
+            }
+            return isEnergized;
+        }
+
+        @Override
+        public String getDefinition() {
+            return "energized";
+        }
+    };
 
     private BuildersUtil() {
     }
 
     /**
      * Returns the ActionConnectionPoint (bus or busbar section) identified by the staticId parameter
-     * Verifies the point is energized and in main connected component, if not returns null
      * @param network the network containing the ActionConnectionPoint
      * @param staticId the identifiable id
-     * @return the energized action connection point if found, <code>null</code> instead
+     * @return the action connection point if found, <code>null</code> instead
      */
     public static Identifiable<?> getActionConnectionPoint(Network network, String staticId) {
         BusbarSection busbarSection = network.getBusbarSection(staticId);
-        if (busbarSection != null) {
-            return isEnergizedBus(busbarSection.getTerminal().getBusBreakerView().getBus()) ? busbarSection : null;
-        }
-        Bus bus = network.getBusBreakerView().getBus(staticId);
-        return isEnergizedBus(bus) ? bus : null;
-    }
-
-    /**
-     * Verifies a bus is energized and in main connected component
-     * @param bus the reviewed bus
-     * @return <code>true</code> if energized, <code>false</code> if not
-     */
-    private static boolean isEnergizedBus(Bus bus) {
-        return bus != null && !Double.isNaN(bus.getV()) && bus.isInMainConnectedComponent();
+        return busbarSection != null ? busbarSection : network.getBusBreakerView().getBus(staticId);
     }
 }
