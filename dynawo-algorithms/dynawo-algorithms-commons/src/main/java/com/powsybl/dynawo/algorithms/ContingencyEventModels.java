@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public record ContingencyEventModels(Contingency contingency, List<BlackBoxModel> eventModels,
                                      Map<String, MacroConnector> macroConnectorsMap,

@@ -14,7 +14,7 @@ import com.powsybl.iidm.network.Network;
 import java.util.function.Function;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public interface ModelsSubstitutionSimplifier {
 

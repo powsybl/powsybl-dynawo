@@ -19,7 +19,7 @@ import com.powsybl.security.dynamic.DynamicSecurityAnalysisParameters;
 import java.util.*;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public final class SecurityAnalysisContext extends DynawoSimulationContext {
 

@@ -8,8 +8,11 @@ package com.powsybl.dynawo.it;
 
 import com.powsybl.commons.datasource.ResourceDataSource;
 import com.powsybl.commons.datasource.ResourceSet;
+import com.powsybl.commons.report.PowsyblCoreReportResourceBundle;
 import com.powsybl.commons.report.ReportNode;
+import com.powsybl.commons.test.PowsyblCoreTestReportResourceBundle;
 import com.powsybl.contingency.Contingency;
+import com.powsybl.dynawo.commons.PowsyblDynawoReportResourceBundle;
 import com.powsybl.dynawo.contingency.results.FailedCriterion;
 import com.powsybl.dynawo.contingency.results.ScenarioResult;
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension;
@@ -40,7 +43,7 @@ import static com.powsybl.dynawo.contingency.results.Status.CRITERIA_NON_RESPECT
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 class MarginCalculationTest extends AbstractDynawoTest {
 
@@ -115,7 +118,10 @@ class MarginCalculationTest extends AbstractDynawoTest {
                         .getResource("/ieee14/margin-calculation/criteria.crt")).getPath()));
 
         ReportNode reportNode = ReportNode.newRootReportNode()
-                .withMessageTemplate("mc_test", "Margin calculation integration test")
+                .withResourceBundles(PowsyblCoreReportResourceBundle.BASE_NAME,
+                        PowsyblDynawoReportResourceBundle.BASE_NAME,
+                        PowsyblCoreTestReportResourceBundle.TEST_BASE_NAME)
+                .withMessageTemplate("testMC")
                 .build();
 
         MarginCalculationRunParameters runParameters = new MarginCalculationRunParameters()

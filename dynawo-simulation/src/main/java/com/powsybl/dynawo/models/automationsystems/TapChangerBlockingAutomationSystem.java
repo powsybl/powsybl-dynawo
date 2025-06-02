@@ -87,7 +87,7 @@ public class TapChangerBlockingAutomationSystem extends AbstractPureDynamicBlack
             }
         } else {
             isConnected = false;
-            DynawoSimulationReports.reportEmptyListAutomaton(adder.getReportNode(), this.getName(), getDynamicModelId(), TapChangerModel.class.getSimpleName());
+            DynawoSimulationReports.reportEmptyListAutomationSystem(adder.getReportNode(), this.getName(), getDynamicModelId(), TapChangerModel.class.getSimpleName());
         }
     }
 

@@ -24,6 +24,8 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
 
+import static com.powsybl.dynawo.DynawoSimulationReports.createDynawoEventModelSupplierReportNode;
+
 /**
  * Instantiates an {@link EventModel} list from {@link EventModelConfig} or JSON input
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -51,9 +53,7 @@ public class DynawoEventModelsSupplier implements EventModelsSupplier {
 
     @Override
     public List<EventModel> get(Network network, ReportNode reportNode) {
-        ReportNode supplierReportNode = reportNode.newReportNode()
-                .withMessageTemplate("jsonEventModels", "Dynawo Event Models Supplier")
-                .add();
+        ReportNode supplierReportNode = createDynawoEventModelSupplierReportNode(reportNode);
         return eventModelConfigs.stream()
                 .map(eventModelConfig -> buildEventModel(eventModelConfig, network, supplierReportNode))
                 .filter(Objects::nonNull)
