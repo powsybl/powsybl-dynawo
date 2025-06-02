@@ -46,7 +46,7 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 class DynawoSecurityAnalysisTest extends AbstractDynawoTest {
 

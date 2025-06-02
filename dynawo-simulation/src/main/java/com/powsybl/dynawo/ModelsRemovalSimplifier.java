@@ -13,7 +13,7 @@ import com.powsybl.dynawo.models.BlackBoxModel;
 import java.util.function.Predicate;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public interface ModelsRemovalSimplifier {
 

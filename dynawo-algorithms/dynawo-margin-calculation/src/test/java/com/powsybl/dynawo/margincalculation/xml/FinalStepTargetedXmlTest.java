@@ -28,7 +28,7 @@ import static com.powsybl.dynawo.DynawoSimulationConstants.FINAL_STEP_DYD_FILENA
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 class FinalStepTargetedXmlTest extends AbstractDynamicModelXmlTest {
 

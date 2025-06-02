@@ -35,10 +35,10 @@ public final class BuilderReports {
         reportNode.addUntypedValue("modelName", modelName)
                 .addUntypedValue("dynamicId", dynamicId != null ? dynamicId : "null");
         if (isInstantiable) {
-            reportNode.addUntypedValue("state", "successful")
+            reportNode.addUntypedValue("state", "OK")
                     .addSeverity(TypedValue.INFO_SEVERITY);
         } else {
-            reportNode.addUntypedValue("state", "failed")
+            reportNode.addUntypedValue("state", "KO")
                     .addSeverity(TypedValue.WARN_SEVERITY);
         }
     }

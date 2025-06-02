@@ -25,7 +25,7 @@ import static com.powsybl.iidm.network.test.EurostagTutorialExample1Factory.NGEN
 import static com.powsybl.iidm.network.test.EurostagTutorialExample1Factory.NHV1;
 
 /**
- * @author Laurent Issertial <laurent.issertial at rte-france.com>
+ * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 class MultiplesJobsXmlTest extends AbstractDynamicModelXmlTest {
 

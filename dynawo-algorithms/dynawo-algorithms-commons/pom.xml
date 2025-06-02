@@ -28,12 +28,10 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>powsybl-dynawo-simulation</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>powsybl-dynawo-contingencies</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.powsybl</groupId>
