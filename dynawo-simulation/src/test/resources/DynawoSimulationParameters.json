@@ -2,6 +2,7 @@
   "version" : "1.1",
   "startTime" : 0.0,
   "stopTime" : 3600.0,
+  "debugDir" : null,
   "extensions" : {
     "DynawoSimulationParameters" : {
       "networkParameters" : {
