@@ -9,23 +9,24 @@ package com.powsybl.dynawo.algorithms;
 
 import com.powsybl.commons.config.ModuleConfig;
 import com.powsybl.commons.config.PlatformConfig;
-import com.powsybl.dynawo.DynawoSimulationConfig;
+import com.powsybl.dynawo.commons.AbstractDynawoConfig;
 
 import java.nio.file.Path;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public class DynawoAlgorithmsConfig extends DynawoSimulationConfig {
+public class DynawoAlgorithmsConfig extends AbstractDynawoConfig {
 
     public static final String DYNAWO_ALGORITHMS_LAUNCHER_PROGRAM_NAME = "dynawo-algorithms";
+    protected static final String MODULE_NAME = "dynawo-algorithms";
 
     public static DynawoAlgorithmsConfig load() {
-        return load(DynawoAlgorithmsConfig::new, DYNAWO_MODULE_NAME);
+        return load(DynawoAlgorithmsConfig::new, MODULE_NAME);
     }
 
     public static DynawoAlgorithmsConfig load(PlatformConfig platformConfig) {
-        return load(DynawoAlgorithmsConfig::new, DYNAWO_MODULE_NAME, platformConfig);
+        return load(DynawoAlgorithmsConfig::new, MODULE_NAME, platformConfig);
     }
 
     public DynawoAlgorithmsConfig(Path homeDir, boolean debug) {
