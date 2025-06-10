@@ -1,0 +1,40 @@
+Loading network '/home/issertiallau/projects/PowSyBl/powsybl-dynawo/dynawo-integration-tests/target/test-classes/ieee14/IEEE14.iidm'
++ Margin Calculation Tool
+   + Dynawo margin calculation on network 'ieee14bus'
+      + Groovy Dynamic Models Supplier
+         Model LoadAlphaBeta _LOAD__10_EC instantiation OK
+         Model LoadAlphaBeta _LOAD__11_EC instantiation OK
+         Model LoadAlphaBeta _LOAD__12_EC instantiation OK
+         Model LoadAlphaBeta _LOAD__13_EC instantiation OK
+         Model LoadAlphaBeta _LOAD__14_EC instantiation OK
+         Model LoadAlphaBeta _LOAD___2_EC instantiation OK
+         Model LoadAlphaBeta _LOAD___3_EC instantiation OK
+         Model LoadAlphaBeta _LOAD___9_EC instantiation OK
+         Model LoadAlphaBeta _LOAD___4_EC instantiation OK
+         Model LoadAlphaBeta _LOAD___6_EC instantiation OK
+         Model LoadAlphaBeta _LOAD___5_EC instantiation OK
+         Model GeneratorSynchronousFourWindingsProportionalRegulations _GEN____1_SM instantiation OK
+         Model GeneratorSynchronousFourWindingsProportionalRegulations _GEN____2_SM instantiation OK
+         Model GeneratorSynchronousFourWindingsProportionalRegulations _GEN____3_SM instantiation OK
+         Model GeneratorSynchronousThreeWindingsProportionalRegulations _GEN____6_SM instantiation OK
+         Model GeneratorSynchronousThreeWindingsProportionalRegulations _GEN____8_SM instantiation OK
+      Dynawo models processing
+Margin calculation results:
++------------+-------------+-----------------+----------------------+---------------+------------------+---------------------------+--------------------------------+
+| Load level | Status      | Failed criteria | Failed criteria time | Scenarios     | Scenarios Status | Scenarios failed criteria | Scenarios failed criteria time |
++------------+-------------+-----------------+----------------------+---------------+------------------+---------------------------+--------------------------------+
+| 0.00000    | CONVERGENCE |                 |                      | Scenarios (1) |                  |                           |                                |
+|            |             |                 |                      | GEN           | CONVERGENCE      |                           |                                |
+| 50.0000    | CONVERGENCE |                 |                      | Scenarios (1) |                  |                           |                                |
+|            |             |                 |                      | GEN           | CONVERGENCE      |                           |                                |
+| 75.0000    | CONVERGENCE |                 |                      | Scenarios (1) |                  |                           |                                |
+|            |             |                 |                      | GEN           | CONVERGENCE      |                           |                                |
+| 88.0000    | CONVERGENCE |                 |                      | Scenarios (1) |                  |                           |                                |
+|            |             |                 |                      | GEN           | CONVERGENCE      |                           |                                |
+| 94.0000    | CONVERGENCE |                 |                      | Scenarios (1) |                  |                           |                                |
+|            |             |                 |                      | GEN           | CONVERGENCE      |                           |                                |
+| 97.0000    | CONVERGENCE |                 |                      | Scenarios (1) |                  |                           |                                |
+|            |             |                 |                      | GEN           | CONVERGENCE      |                           |                                |
+| 99.0000    | CONVERGENCE |                 |                      | Scenarios (1) |                  |                           |                                |
+|            |             |                 |                      | GEN           | CONVERGENCE      |                           |                                |
++------------+-------------+-----------------+----------------------+---------------+------------------+---------------------------+--------------------------------+

@@ -45,4 +45,8 @@ public abstract class AbstractDynawoTest {
     protected static InputStream getResourceAsStream(String name) {
         return Objects.requireNonNull(AbstractDynawoTest.class.getResourceAsStream(name));
     }
+
+    protected static String getResource(String resourceName) {
+        return Objects.requireNonNull(AbstractDynawoTest.class.getResource(resourceName)).getPath();
+    }
 }
