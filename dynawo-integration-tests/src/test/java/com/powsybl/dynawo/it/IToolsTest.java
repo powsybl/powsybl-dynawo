@@ -14,13 +14,12 @@ import com.powsybl.tools.CommandLineTools;
 import com.powsybl.tools.ToolInitializationContext;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Options;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-import java.nio.charset.StandardCharsets;
+import java.io.*;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.util.List;
@@ -84,9 +83,19 @@ class IToolsTest extends AbstractDynawoTest {
         };
     }
 
-    @Test
-    void testIeee14Itools() {
+    @AfterEach
+    void tearDown() {
+        super.tearDown();
+        try {
+            bout.close();
+            berr.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
+    @Test
+    void testIeee14MC() {
         String[] args = {"margin-calculation", "--case-file", getResource("/ieee14/IEEE14.iidm"),
             "--dynamic-models-file", getResource("/ieee14/dynamicModels.groovy"),
             "--contingencies-file", getResource("/ieee14/contingencies.groovy"),
@@ -94,15 +103,29 @@ class IToolsTest extends AbstractDynawoTest {
         int status = TOOLS.run(args, toolContext);
 
         assertEquals(CommandLineTools.COMMAND_OK_STATUS, status);
-        ComparisonUtils.assertTxtEquals(getResourceAsStream("/itools/mc_out.txt"), getOutputString());
-        assertThat(getErrorString()).isEmpty();
+        ComparisonUtils.assertTxtEquals(getResourceAsStream("/itools/mc_out.txt"), getOutput());
+        assertThat(getError()).isEmpty();
     }
 
-    private String getOutputString() {
-        return bout.toString(StandardCharsets.UTF_8);
+    @Test
+    void testIeee14MCJsonParameters() {
+        String[] args = {"margin-calculation", "--case-file", getResource("/ieee14/IEEE14.iidm"),
+                "--dynamic-models-file", getResource("/ieee14/dynamicModels.groovy"),
+                "--contingencies-file", getResource("/ieee14/contingencies.groovy"),
+                "--load-variations-file", getResource("/ieee14/loadsVariations.json"),
+                "--parameters-file", getResource("/itools/MarginCalculationParameters.json")};
+        int status = TOOLS.run(args, toolContext);
+
+        assertEquals(CommandLineTools.COMMAND_OK_STATUS, status);
+        ComparisonUtils.assertTxtEquals(getResourceAsStream("/itools/mc_out.txt"), getOutput());
+        assertThat(getError()).isEmpty();
     }
 
-    private String getErrorString() {
-        return berr.toString(StandardCharsets.UTF_8);
+    private InputStream getOutput() {
+        return new ByteArrayInputStream(bout.toByteArray());
+    }
+
+    private InputStream getError() {
+        return new ByteArrayInputStream(berr.toByteArray());
     }
 }
