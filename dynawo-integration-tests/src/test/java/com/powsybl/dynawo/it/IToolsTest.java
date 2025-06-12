@@ -110,10 +110,10 @@ class IToolsTest extends AbstractDynawoTest {
     @Test
     void testIeee14MCJsonParameters() {
         String[] args = {"margin-calculation", "--case-file", getResource("/ieee14/IEEE14.iidm"),
-                "--dynamic-models-file", getResource("/ieee14/dynamicModels.groovy"),
-                "--contingencies-file", getResource("/ieee14/contingencies.groovy"),
-                "--load-variations-file", getResource("/ieee14/loadsVariations.json"),
-                "--parameters-file", getResource("/itools/MarginCalculationParameters.json")};
+            "--dynamic-models-file", getResource("/ieee14/dynamicModels.groovy"),
+            "--contingencies-file", getResource("/ieee14/contingencies.groovy"),
+            "--load-variations-file", getResource("/ieee14/loadsVariations.json"),
+            "--parameters-file", getResource("/itools/MarginCalculationParameters.json")};
         int status = TOOLS.run(args, toolContext);
 
         assertEquals(CommandLineTools.COMMAND_OK_STATUS, status);
