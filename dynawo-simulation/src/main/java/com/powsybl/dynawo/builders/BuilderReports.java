@@ -42,10 +42,10 @@ public final class BuilderReports {
         }
     }
 
-    public static void reportBuilderNotFound(ReportNode reportNode, String lib) {
+    public static void reportBuilderNotFound(ReportNode reportNode, String modelName) {
         reportNode.newReportNode()
                 .withMessageTemplate("dynawo.dynasim.builderNotFound")
-                .withUntypedValue("lib", lib)
+                .withUntypedValue("modelName", modelName)
                 .withSeverity(TypedValue.INFO_SEVERITY)
                 .add();
     }
