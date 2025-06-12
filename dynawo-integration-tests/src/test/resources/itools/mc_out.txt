@@ -1,4 +1,3 @@
-Loading network '/home/issertiallau/projects/PowSyBl/powsybl-dynawo/dynawo-integration-tests/target/test-classes/ieee14/IEEE14.iidm'
 + Margin Calculation Tool
    + Dynawo margin calculation on network 'ieee14bus'
       + Groovy Dynamic Models Supplier

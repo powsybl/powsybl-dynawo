@@ -7,25 +7,24 @@
  */
 package com.powsybl.dynawo.it;
 
-import com.powsybl.commons.test.ComparisonUtils;
 import com.powsybl.computation.ComputationManager;
 import com.powsybl.dynawo.margincalculation.tool.MarginCalculationTool;
 import com.powsybl.tools.CommandLineTools;
 import com.powsybl.tools.ToolInitializationContext;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Options;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -95,7 +94,7 @@ class IToolsTest extends AbstractDynawoTest {
     }
 
     @Test
-    void testIeee14MC() {
+    void testIeee14MC() throws IOException {
         String[] args = {"margin-calculation", "--case-file", getResource("/ieee14/IEEE14.iidm"),
             "--dynamic-models-file", getResource("/ieee14/dynamicModels.groovy"),
             "--contingencies-file", getResource("/ieee14/contingencies.groovy"),
@@ -103,12 +102,12 @@ class IToolsTest extends AbstractDynawoTest {
         int status = TOOLS.run(args, toolContext);
 
         assertEquals(CommandLineTools.COMMAND_OK_STATUS, status);
-        ComparisonUtils.assertTxtEquals(getResourceAsStream("/itools/mc_out.txt"), getOutput());
+        assertTrue(getOutput().contains(Files.readString(getResourcePath("/itools/mc_out.txt"))));
         assertThat(getError()).isEmpty();
     }
 
     @Test
-    void testIeee14MCJsonParameters() {
+    void testIeee14MCJsonParameters() throws IOException {
         String[] args = {"margin-calculation", "--case-file", getResource("/ieee14/IEEE14.iidm"),
             "--dynamic-models-file", getResource("/ieee14/dynamicModels.groovy"),
             "--contingencies-file", getResource("/ieee14/contingencies.groovy"),
@@ -117,15 +116,15 @@ class IToolsTest extends AbstractDynawoTest {
         int status = TOOLS.run(args, toolContext);
 
         assertEquals(CommandLineTools.COMMAND_OK_STATUS, status);
-        ComparisonUtils.assertTxtEquals(getResourceAsStream("/itools/mc_out.txt"), getOutput());
+        assertTrue(getOutput().contains(Files.readString(getResourcePath("/itools/mc_out.txt"))));
         assertThat(getError()).isEmpty();
     }
 
-    private InputStream getOutput() {
-        return new ByteArrayInputStream(bout.toByteArray());
+    private String getOutput() {
+        return bout.toString(StandardCharsets.UTF_8);
     }
 
-    private InputStream getError() {
-        return new ByteArrayInputStream(berr.toByteArray());
+    private String getError() {
+        return berr.toString(StandardCharsets.UTF_8);
     }
 }
