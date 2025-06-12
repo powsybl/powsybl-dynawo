@@ -34,6 +34,7 @@ public class MarginCalculationParametersDeserializer extends StdDeserializer<Mar
                 case "version" -> parser.nextToken();
                 case "startTime" -> builder.setStartTime(parser.getValueAsDouble());
                 case "stopTime" -> builder.setStopTime(parser.getValueAsDouble());
+                case "debugDir" -> builder.setDebugDir(parser.getValueAsString());
                 case "marginCalculationStartTime" -> builder.setMarginCalculationStartTime(parser.getValueAsDouble());
                 case "loadIncreaseStartTime" -> builder.setLoadIncreaseStartTime(parser.getValueAsDouble());
                 case "loadIncreaseStopTime" -> builder.setLoadIncreaseStopTime(parser.getValueAsDouble());
