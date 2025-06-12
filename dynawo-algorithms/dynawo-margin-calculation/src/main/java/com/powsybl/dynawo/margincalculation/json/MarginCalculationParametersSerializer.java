@@ -29,6 +29,9 @@ public class MarginCalculationParametersSerializer extends StdSerializer<MarginC
         jsonGenerator.writeStartObject();
         jsonGenerator.writeNumberField("startTime", parameters.getStartTime());
         jsonGenerator.writeNumberField("stopTime", parameters.getStopTime());
+        if (parameters.getDebugDir() != null) {
+            jsonGenerator.writeStringField("debugDir", parameters.getDebugDir());
+        }
         jsonGenerator.writeNumberField("marginCalculationStartTime", parameters.getMarginCalculationStartTime());
         jsonGenerator.writeNumberField("loadIncreaseStartTime", parameters.getLoadIncreaseStartTime());
         jsonGenerator.writeNumberField("loadIncreaseStopTime", parameters.getLoadIncreaseStopTime());
