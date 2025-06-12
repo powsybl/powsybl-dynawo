@@ -23,6 +23,7 @@ import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.TwoSides;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 import static com.powsybl.dynawo.algorithms.DynawoAlgorithmsReports.createContingencyVoltageIdNotFoundReportNode;
 import static com.powsybl.dynawo.algorithms.DynawoAlgorithmsReports.createNotSupportedContingencyTypeReportNode;
@@ -36,9 +37,10 @@ public final class ContingencyEventModelsFactory {
                                                           double contingenciesStartTime,
                                                           Network network,
                                                           BlackBoxModelSupplier bbmSupplier,
+                                                          Predicate<String> hasMacroConnector,
                                                           ReportNode reportNode) {
         return contingencies.stream()
-                .map(c -> createFrom(c, contingenciesStartTime, network, bbmSupplier, reportNode))
+                .map(c -> createFrom(c, contingenciesStartTime, network, bbmSupplier, hasMacroConnector, reportNode))
                 .filter(Objects::nonNull)
                 .toList();
     }
@@ -46,6 +48,7 @@ public final class ContingencyEventModelsFactory {
     public static ContingencyEventModels createFrom(Contingency contingency, double contingenciesStartTime,
                                                     Network network,
                                                     BlackBoxModelSupplier bbmSupplier,
+                                                    Predicate<String> hasMacroConnector,
                                                     ReportNode reportNode) {
         List<BlackBoxModel> eventModels = createContingencyEventModelList(contingency, contingenciesStartTime, network, bbmSupplier, reportNode);
         if (eventModels.isEmpty()) {
@@ -56,7 +59,13 @@ public final class ContingencyEventModelsFactory {
         List<ParametersSet> eventParameters = new ArrayList<>(eventModels.size());
         // Set Contingencies connections and parameters
         MacroConnectionsAdder macroConnectionsAdder = new MacroConnectionsAdder(bbmSupplier::getEquipmentDynamicModel,
-                bbmSupplier::getPureDynamicModel, macroConnectList::add, macroConnectorsMap::computeIfAbsent, reportNode);
+                bbmSupplier::getPureDynamicModel, macroConnectList::add,
+                (n, f) -> {
+                    if (!hasMacroConnector.test(n)) {
+                        macroConnectorsMap.computeIfAbsent(n, f);
+                    }
+                },
+                reportNode);
         eventModels.forEach(em -> {
             em.createMacroConnections(macroConnectionsAdder);
             em.createDynamicModelParameters(eventParameters::add);

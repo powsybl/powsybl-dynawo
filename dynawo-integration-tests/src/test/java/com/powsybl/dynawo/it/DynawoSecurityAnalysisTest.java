@@ -14,6 +14,7 @@ import com.powsybl.commons.test.ComparisonUtils;
 import com.powsybl.commons.test.PowsyblCoreTestReportResourceBundle;
 import com.powsybl.contingency.Contingency;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
+import com.powsybl.dynamicsimulation.EventModelsSupplier;
 import com.powsybl.dynamicsimulation.groovy.DynamicModelGroovyExtension;
 import com.powsybl.dynamicsimulation.groovy.GroovyDynamicModelsSupplier;
 import com.powsybl.dynamicsimulation.groovy.GroovyExtension;
@@ -21,6 +22,7 @@ import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.DynawoSimulationProvider;
 import com.powsybl.dynawo.algorithms.DynawoAlgorithmsConfig;
 import com.powsybl.dynawo.commons.PowsyblDynawoReportResourceBundle;
+import com.powsybl.dynawo.models.events.EventDisconnectionBuilder;
 import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.dynawo.xml.ParametersXml;
 
@@ -70,7 +72,7 @@ class DynawoSecurityAnalysisTest extends AbstractDynawoTest {
 
     @ParameterizedTest
     @MethodSource("provideSimulationParameter")
-    void testIeee14DSA(String criteriaPath, List<Contingency> contingencies, String resultsPath) throws IOException {
+    void testIeee14DSA(String criteriaPath, List<Contingency> contingencies, EventModelsSupplier eventModelsSupplier, String resultsPath) throws IOException {
         Network network = Network.read(new ResourceDataSource("IEEE14", new ResourceSet("/ieee14", "IEEE14.iidm")));
 
         GroovyDynamicModelsSupplier dynamicModelsSupplier = new GroovyDynamicModelsSupplier(
@@ -97,6 +99,7 @@ class DynawoSecurityAnalysisTest extends AbstractDynawoTest {
         DynamicSecurityAnalysisRunParameters runParameters = new DynamicSecurityAnalysisRunParameters()
                 .setComputationManager(computationManager)
                 .setDynamicSecurityAnalysisParameters(parameters)
+                .setEventModelsSupplier(eventModelsSupplier)
                 .setReportNode(reportNode);
 
         SecurityAnalysisResult result = provider.run(network, VariantManagerConstants.INITIAL_VARIANT_ID,
@@ -115,9 +118,11 @@ class DynawoSecurityAnalysisTest extends AbstractDynawoTest {
                 Arguments.of("/ieee14/dynamic-security-analysis/convergence/criteria.crt",
                         List.of(Contingency.line("_BUS____1-BUS____5-1_AC", "_BUS____5_VL"),
                                 Contingency.generator("_GEN____2_SM")),
+                        EventModelsSupplier.empty(),
                         "/ieee14/dynamic-security-analysis/convergence/results.json"),
                 Arguments.of("/ieee14/dynamic-security-analysis/failed-criteria/criteria.crt",
                         List.of(Contingency.line("_BUS____1-BUS____5-1_AC", "_BUS____5_VL")),
+                        EventModelsSupplier.empty(),
                         "/ieee14/dynamic-security-analysis/failed-criteria/results.json"),
                 Arguments.of("/ieee14/dynamic-security-analysis/divergence/criteria.crt",
                         List.of(Contingency.builder("Disconnect")
@@ -125,7 +130,17 @@ class DynawoSecurityAnalysisTest extends AbstractDynawoTest {
                                 .addGenerator("_GEN____2_SM")
                                 .addBus("_BUS____1_TN")
                                 .build()),
-                        "/ieee14/dynamic-security-analysis/divergence/results.json")
+                        EventModelsSupplier.empty(),
+                        "/ieee14/dynamic-security-analysis/divergence/results.json"),
+                Arguments.of("/ieee14/dynamic-security-analysis/convergence/criteria.crt",
+                        List.of(Contingency.line("_BUS____1-BUS____5-1_AC", "_BUS____5_VL"),
+                                Contingency.generator("_GEN____2_SM")),
+                        (EventModelsSupplier) (n, r) -> List.of(
+                                EventDisconnectionBuilder.of(n, r)
+                                        .staticId("_BUS____9-BUS___10-1_AC")
+                                        .startTime(10)
+                                        .build()),
+                        "/ieee14/dynamic-security-analysis/convergence/results.json")
         );
     }
 }
