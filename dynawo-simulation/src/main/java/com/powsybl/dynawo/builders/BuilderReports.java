@@ -16,8 +16,9 @@ import com.powsybl.iidm.network.IdentifiableType;
  */
 public final class BuilderReports {
 
-    private static final String FIELD_NAME = "fieldName";
     private static final String EQUIPMENT_TYPE_FIELD = "equipmentType";
+    private static final String FIELD_NAME = "fieldName";
+    private static final String MODEL_NAME = "modelName";
     private static final String STATIC_ID = "staticId";
 
     private BuilderReports() {
@@ -31,7 +32,7 @@ public final class BuilderReports {
 
     public static void setupModelInstantiation(ReportNode reportNode, String modelName, String dynamicId,
                                                boolean isInstantiable) {
-        reportNode.addUntypedValue("modelName", modelName)
+        reportNode.addUntypedValue(MODEL_NAME, modelName)
                 .addUntypedValue("dynamicId", dynamicId != null ? dynamicId : "null");
         if (isInstantiable) {
             reportNode.addUntypedValue("state", "OK")
@@ -45,7 +46,7 @@ public final class BuilderReports {
     public static void reportBuilderNotFound(ReportNode reportNode, String modelName) {
         reportNode.newReportNode()
                 .withMessageTemplate("dynawo.dynasim.builderNotFound")
-                .withUntypedValue("modelName", modelName)
+                .withUntypedValue(MODEL_NAME, modelName)
                 .withSeverity(TypedValue.INFO_SEVERITY)
                 .add();
     }
@@ -54,7 +55,7 @@ public final class BuilderReports {
         reportNode.newReportNode()
                 .withMessageTemplate("dynawo.dynasim.modelNotFound")
                 .withUntypedValue("builderName", builderName)
-                .withUntypedValue("modelName", modelName)
+                .withUntypedValue(MODEL_NAME, modelName)
                 .withSeverity(TypedValue.INFO_SEVERITY)
                 .add();
     }
