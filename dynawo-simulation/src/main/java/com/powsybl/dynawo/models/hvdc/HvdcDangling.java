@@ -34,8 +34,8 @@ public class HvdcDangling extends BaseHvdc {
 
     @Override
     public void createMacroConnections(MacroConnectionsAdder adder) {
-        adder.createTerminalMacroConnections(this, equipment, this::getVarConnectionsWithDangling, danglingSide);
-        adder.createTerminalMacroConnections(this, equipment, this::getVarConnectionsWith, SideUtils.getOppositeSide(danglingSide));
+        adder.createTerminalMacroConnections(this, equipment, this::getVarConnectionsWithDangling, danglingSide, isInverted);
+        adder.createTerminalMacroConnections(this, equipment, this::getVarConnectionsWith, SideUtils.getOppositeSide(danglingSide), isInverted);
     }
 
     @Override
@@ -52,6 +52,6 @@ public class HvdcDangling extends BaseHvdc {
     }
 
     private List<VarConnection> getVarConnectionsWithDangling(EquipmentConnectionPoint connected, TwoSides side) {
-        return List.of(new VarConnection(TERMINAL_PREFIX + side.getNum(), connected.getTerminalVarName(side)));
+        return List.of(new VarConnection(TERMINAL_PREFIX + side.getNum(), connected.getTerminalVarName(getConnectionSide(side))));
     }
 }
