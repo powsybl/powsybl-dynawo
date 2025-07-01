@@ -27,21 +27,23 @@ import java.util.List;
  */
 public class BaseHvdc extends AbstractEquipmentBlackBoxModel<HvdcLine> implements HvdcModel {
 
+    protected static final String HVDC_STATE = "hvdc_state";
+
     private static final List<VarMapping> VAR_MAPPING = Arrays.asList(
             new VarMapping("hvdc_PInj1Pu", "p1"),
             new VarMapping("hvdc_QInj1Pu", "q1"),
-            new VarMapping("hvdc_state", "state1"),
+            new VarMapping(HVDC_STATE, "state1"),
             new VarMapping("hvdc_PInj2Pu", "p2"),
             new VarMapping("hvdc_QInj2Pu", "q2"),
-            new VarMapping("hvdc_state", "state2"));
+            new VarMapping(HVDC_STATE, "state2"));
 
     private static final List<VarMapping> INVERTED_VAR_MAPPING = Arrays.asList(
             new VarMapping("hvdc_PInj1Pu", "p2"),
             new VarMapping("hvdc_QInj1Pu", "q2"),
-            new VarMapping("hvdc_state", "state2"),
+            new VarMapping(HVDC_STATE, "state2"),
             new VarMapping("hvdc_PInj2Pu", "p1"),
             new VarMapping("hvdc_QInj2Pu", "q1"),
-            new VarMapping("hvdc_state", "state1"));
+            new VarMapping(HVDC_STATE, "state1"));
 
     protected static final String TERMINAL_PREFIX = "hvdc_terminal";
 
