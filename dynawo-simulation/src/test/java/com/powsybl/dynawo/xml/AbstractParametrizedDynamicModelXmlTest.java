@@ -9,7 +9,7 @@ package com.powsybl.dynawo.xml;
 
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.commons.test.AbstractSerDeTest;
-import com.powsybl.commons.test.PowsyblCoreTestReportResourceBundle;
+import com.powsybl.commons.test.PowsyblTestReportResourceBundle;
 import com.powsybl.commons.test.TestUtil;
 import com.powsybl.dynamicsimulation.OutputVariable;
 import com.powsybl.dynawo.DynawoSimulationContext;
@@ -49,7 +49,7 @@ public abstract class AbstractParametrizedDynamicModelXmlTest extends AbstractSe
     protected DynawoSimulationContext context;
     protected ReportNode reportNode = ReportNode.newRootReportNode()
             .withResourceBundles(PowsyblDynawoReportResourceBundle.BASE_NAME,
-                    PowsyblCoreTestReportResourceBundle.TEST_BASE_NAME)
+                    PowsyblTestReportResourceBundle.TEST_BASE_NAME)
             .withMessageTemplate("testDyd")
             .build();
 
