@@ -103,14 +103,6 @@ public abstract class AbstractIeeeTest {
                 .setSolverType(DynawoSimulationParameters.SolverType.IDA);
     }
 
-    protected DynawoSimulationParameters getDynamicSimulationParameters(DynamicSimulationParameters parameters) {
-        DynawoSimulationParameters dynawoSimulationParameters = parameters.getExtension(DynawoSimulationParameters.class);
-        if (dynawoSimulationParameters == null) {
-            dynawoSimulationParameters = DynawoSimulationParameters.load();
-        }
-        return dynawoSimulationParameters;
-    }
-
     public DynamicSimulationResult runSimulation(LocalCommandExecutor commandExecutor) throws Exception {
         ComputationManager computationManager = new LocalComputationManager(new LocalComputationConfig(workingDir, 1), commandExecutor, ForkJoinPool.commonPool());
         DynamicSimulation.Runner dynawoSimulation = DynamicSimulation.find();
