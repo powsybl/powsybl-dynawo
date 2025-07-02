@@ -8,9 +8,9 @@
 package com.powsybl.dynawo.models.defaultmodels;
 
 import com.powsybl.commons.PowsyblException;
+import com.powsybl.dynawo.models.InjectionModel;
 import com.powsybl.dynawo.models.Model;
 import com.powsybl.dynawo.models.buses.EquipmentConnectionPoint;
-import com.powsybl.dynawo.models.generators.GeneratorModel;
 import com.powsybl.dynawo.models.shunts.ShuntModel;
 import com.powsybl.iidm.network.Bus;
 import com.powsybl.iidm.network.Generator;
@@ -31,7 +31,7 @@ class DefaultModelHandlerTest {
 
     @Test
     void getSimpleDefaultModel() {
-        Model model = defaultModelHandler.getDefaultModel(network.getGenerator("GEN"), GeneratorModel.class, false);
+        Model model = defaultModelHandler.getDefaultModel(network.getGenerator("GEN"), InjectionModel.class, false);
         assertNotNull(model);
         assertEquals("DefaultGenerator", model.getName());
     }

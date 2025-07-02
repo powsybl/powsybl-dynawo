@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<parametersSet xmlns="http://www.rte-france.com/dynawo">
+    <set id="CLA">
+        <par type="INT" name="currentLimitAutomaton_OrderToEmit" value="1"/>
+        <par type="BOOL" name="currentLimitAutomaton_Running" value="true"/>
+        <par type="DOUBLE" name="currentLimitAutomaton_IMax" value="600"/>
+        <par type="DOUBLE" name="currentLimitAutomaton_tLagBeforeActing" value="5"/>
+    </set>
+    <set id="UV">
+        <par type="DOUBLE" name="underVoltageAutomaton_UMinPu" value="0.85"/>
+        <par type="DOUBLE" name="underVoltageAutomaton_tLagAction" value="5"/>
+    </set>
+    <set id="PS">
+        <par type="DOUBLE" name="phaseShifter_t1st" value="40"/>
+        <par type="DOUBLE" name="phaseShifter_tNext" value="20"/>
+        <par type="DOUBLE" name="phaseShifter_PDeadBand" value="0.1"/>
+        <par type="DOUBLE" name="phaseShifter_iMax" value="0.273"/>
+        <par type="DOUBLE" name="phaseShifter_iStop" value="0.273"/>
+        <par type="BOOL" name="phaseShifter_regulating0" value="true"/>
+        <par type="INT" name="phaseShifter_increasePhase" value="1"/>
+        <reference type="DOUBLE" name="phaseShifter_I0" origData="IIDM" origName="i1" componentId="NHV2_NLOAD"/>
+        <reference type="DOUBLE" name="phaseShifter_P0" origData="IIDM" origName="p1" componentId="NHV2_NLOAD"/>
+        <reference type="INT" name="phaseShifter_tap0" origData="IIDM" origName="tapPosition" componentId="NHV2_NLOAD"/>
+        <reference type="INT" name="phaseShifter_tapMin" origData="IIDM" origName="lowTapPosition" componentId="NHV2_NLOAD"/>
+        <reference type="INT" name="phaseShifter_tapMax" origData="IIDM" origName="highTapPosition" componentId="NHV2_NLOAD"/>
+    </set>
+    <set id="TCB">
+        <par type="DOUBLE" name="tapChangerBlocking_UMin" value="68.240"/>
+        <par type="DOUBLE" name="tapChangerBlocking_tLagBeforeBlocked" value="20"/>
+        <par type="DOUBLE" name="tapChangerBlocking_tLagTransBlockedT" value="10"/>
+        <par type="DOUBLE" name="tapChangerBlocking_tLagTransBlockedD" value="10"/>
+    </set>
+</parametersSet>

@@ -71,7 +71,7 @@ public class DynawoSimulationContext {
             eventModels.stream()
                     .filter(ContextDependentEvent.class::isInstance)
                     .map(ContextDependentEvent.class::cast)
-                    .forEach(e -> e.setEquipmentHasDynamicModel(blackBoxModelSupplier.hasDynamicModel(e.getEquipment())));
+                    .forEach(e -> e.setEquipmentModelType(blackBoxModelSupplier.hasDynamicModel(e.getEquipment())));
         }
 
         @Override

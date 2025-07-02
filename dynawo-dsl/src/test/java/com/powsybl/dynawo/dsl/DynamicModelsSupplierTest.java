@@ -91,7 +91,7 @@ class DynamicModelsSupplierTest extends AbstractModelSupplierTest {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("provideGenerator")
-    void testGeneratorPrefixes(String groovyScriptName, Class<? extends GeneratorModel> modelClass, Network network, String terminalVarName, String report) throws IOException {
+    void testGeneratorPrefixes(String groovyScriptName, Class<? extends BaseGenerator> modelClass, Network network, String terminalVarName, String report) throws IOException {
         DynamicModelsSupplier supplier = new GroovyDynamicModelsSupplier(getResourceAsStream(groovyScriptName), EXTENSIONS);
         List<DynamicModel> dynamicModels = supplier.get(network, reportNode);
         assertEquals(1, dynamicModels.size());
