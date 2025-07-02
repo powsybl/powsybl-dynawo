@@ -122,7 +122,8 @@ class NetworkResultsUpdaterTest extends AbstractDynawoCommonsTest {
             reset(targetShuntCompensator.getTerminal());
         }
         for (StaticVarCompensator targetStaticVarCompensator : targetNetwork.getStaticVarCompensators()) {
-            targetStaticVarCompensator.setRegulationMode(StaticVarCompensator.RegulationMode.OFF);
+            targetStaticVarCompensator.setRegulating(true);
+            targetStaticVarCompensator.setRegulationMode(StaticVarCompensator.RegulationMode.VOLTAGE);
             reset(targetStaticVarCompensator.getTerminal());
         }
     }
