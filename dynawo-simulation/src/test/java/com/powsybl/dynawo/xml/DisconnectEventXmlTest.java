@@ -29,6 +29,8 @@ class DisconnectEventXmlTest extends AbstractDynamicModelXmlTest {
         network = SvcTestCaseFactory.create();
         VoltageLevel vl = network.getVoltageLevel("VL1");
         Bus b = vl.getBusBreakerView().getBus("B1");
+        b.setV(400).setAngle(0);
+        network.getBusBreakerView().getBus("B2").setV(400).setAngle(0);
         vl.newShuntCompensator()
                 .setId("SH1")
                 .setConnectableBus(b.getId())
