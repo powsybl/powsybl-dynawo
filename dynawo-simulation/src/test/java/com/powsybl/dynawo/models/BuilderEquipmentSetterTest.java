@@ -8,7 +8,9 @@
 package com.powsybl.dynawo.models;
 
 import com.powsybl.commons.report.ReportNode;
+import com.powsybl.commons.test.PowsyblCoreTestReportResourceBundle;
 import com.powsybl.commons.test.TestUtil;
+import com.powsybl.dynawo.commons.PowsyblDynawoReportResourceBundle;
 import com.powsybl.dynawo.models.lines.LineBuilder;
 import com.powsybl.iidm.network.Line;
 import com.powsybl.iidm.network.Network;
@@ -34,8 +36,10 @@ class BuilderEquipmentSetterTest {
         Network network2 = PhaseShifterTestCaseFactory.create();
         Line ln2 = network2.getLine("L1");
         ReportNode reportNode = ReportNode.newRootReportNode()
-                .withAllResourceBundlesFromClasspath()
-                .withMessageTemplate("builderTests", "Builder tests").build();
+                .withResourceBundles(PowsyblDynawoReportResourceBundle.BASE_NAME,
+                        PowsyblCoreTestReportResourceBundle.TEST_BASE_NAME)
+                .withMessageTemplate("testBuilder")
+                .build();
 
         BlackBoxModel bbmNetwork1 = LineBuilder.of(network)
                 .equipment(ln1)
@@ -52,7 +56,7 @@ class BuilderEquipmentSetterTest {
         reportNode.print(sw);
         assertEquals("""
                         + Builder tests
-                           + Model Line L1 instantiation failed
+                           + Model Line L1 instantiation KO
                               'equipment' field value LINE L1 does not belong to the builder network
                         """,
                 TestUtil.normalizeLineSeparator(sw.toString()));

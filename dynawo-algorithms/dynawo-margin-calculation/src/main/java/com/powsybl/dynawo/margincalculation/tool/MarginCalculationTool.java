@@ -43,6 +43,8 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Properties;
 
+import static com.powsybl.dynawo.margincalculation.MarginCalculationReports.createMarginCalculationToolReportNode;
+
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
@@ -131,9 +133,7 @@ public class MarginCalculationTool implements Tool {
     @Override
     public void run(CommandLine line, ToolRunningContext context) throws Exception {
 
-        ReportNode reportNode = ReportNode.newRootReportNode()
-                .withMessageTemplate("marginCalculationTool", "Margin Calculation Tool")
-                .build();
+        ReportNode reportNode = createMarginCalculationToolReportNode();
         Path caseFile = context.getFileSystem().getPath(line.getOptionValue(CASE_FILE));
 
         context.getOutputStream().println("Loading network '" + caseFile + "'");
