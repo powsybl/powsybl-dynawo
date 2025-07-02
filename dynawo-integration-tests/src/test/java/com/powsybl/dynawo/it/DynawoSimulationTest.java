@@ -10,7 +10,7 @@ import com.powsybl.commons.datasource.ResourceDataSource;
 import com.powsybl.commons.datasource.ResourceSet;
 import com.powsybl.commons.report.PowsyblCoreReportResourceBundle;
 import com.powsybl.commons.report.ReportNode;
-import com.powsybl.commons.test.PowsyblCoreTestReportResourceBundle;
+import com.powsybl.commons.test.PowsyblTestReportResourceBundle;
 import com.powsybl.dynamicsimulation.*;
 import com.powsybl.dynamicsimulation.groovy.*;
 import com.powsybl.dynawo.*;
@@ -114,7 +114,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         ReportNode reportNode = ReportNode.newRootReportNode()
                 .withResourceBundles(PowsyblCoreReportResourceBundle.BASE_NAME,
                         PowsyblDynawoReportResourceBundle.BASE_NAME,
-                        PowsyblCoreTestReportResourceBundle.TEST_BASE_NAME)
+                        PowsyblTestReportResourceBundle.TEST_BASE_NAME)
                 .withMessageTemplate("testIEEE14")
                 .build();
         Supplier<DynamicSimulationResult> resultSupplier = setupIEEE14Simulation(reportNode);
@@ -170,7 +170,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         ReportNode reportNode = newRootReportNode()
                 .withResourceBundles(PowsyblCoreReportResourceBundle.BASE_NAME,
                         PowsyblDynawoReportResourceBundle.BASE_NAME,
-                        PowsyblCoreTestReportResourceBundle.TEST_BASE_NAME)
+                        PowsyblTestReportResourceBundle.TEST_BASE_NAME)
                 .withMessageTemplate("testHvdc")
                 .build();
         dynawoSimulationParameters.setModelsParameters(modelsParameters)
