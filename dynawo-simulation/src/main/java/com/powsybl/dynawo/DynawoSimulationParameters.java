@@ -101,6 +101,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
     private LogLevel logLevelFilter = DEFAULT_LOG_LEVEL_FILTER;
     private EnumSet<SpecificLog> specificLogs = EnumSet.noneOf(SpecificLog.class);
     private Path criteriaFilePath = null;
+    private Path additionalModelsPath = null;
 
     /**
      * Loads parameters from the default platform configuration.
@@ -143,6 +144,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
             c.getOptionalEnumProperty("log.levelFilter", LogLevel.class).ifPresent(parameters::setLogLevelFilter);
             c.getOptionalEnumSetProperty("log.specificLogs", SpecificLog.class).ifPresent(parameters::setSpecificLogs);
             c.getOptionalStringProperty("criteria.file").ifPresent(cf -> parameters.setCriteriaFilePath(cf, fileSystem));
+            c.getOptionalStringProperty("additionalModelsFile").ifPresent(am -> parameters.setAdditionalModelPath(am, fileSystem));
         });
         return parameters;
     }
@@ -303,8 +305,25 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
     private void setCriteriaFilePath(String criteriaPathName, FileSystem fileSystem) {
         Path criteriaPath = criteriaPathName != null ? fileSystem.getPath(criteriaPathName) : null;
         if (criteriaPath == null || !Files.exists(criteriaPath)) {
-            throw new PowsyblException("File " + criteriaPath + " set in 'criteria.file' property cannot be found");
+            throw new PowsyblException("File " + criteriaPathName + " set in 'criteria.file' property cannot be found");
         }
         setCriteriaFilePath(criteriaPath);
+    }
+
+    public Optional<Path> getAdditionalModelPath() {
+        return Optional.ofNullable(additionalModelsPath);
+    }
+
+    public DynawoSimulationParameters setAdditionalModelPath(Path additionalModelsPath) {
+        this.additionalModelsPath = additionalModelsPath;
+        return this;
+    }
+
+    private void setAdditionalModelPath(String additionalModelsPathName, FileSystem fileSystem) {
+        Path path = additionalModelsPathName != null ? fileSystem.getPath(additionalModelsPathName) : null;
+        if (path == null || !Files.exists(path)) {
+            throw new PowsyblException("File " + additionalModelsPathName + " set in 'additionalModelsFile' property cannot be found");
+        }
+        setAdditionalModelPath(path);
     }
 }
