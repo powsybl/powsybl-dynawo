@@ -51,7 +51,7 @@ public class HvdcDangling extends BaseHvdc {
         return List.of(danglingSide == TwoSides.ONE ? equipment.getConverterStation2() : equipment.getConverterStation1());
     }
 
-    private List<VarConnection> getVarConnectionsWithDangling(EquipmentConnectionPoint connected, TwoSides side) {
-        return List.of(new VarConnection(TERMINAL_PREFIX + side.getNum(), connected.getTerminalVarName(getConnectionSide(side))));
+    private List<VarConnection> getVarConnectionsWithDangling(EquipmentConnectionPoint connected, TwoSides hvdcSide) {
+        return List.of(new VarConnection(TERMINAL_PREFIX + hvdcSide.getNum(), connected.getTerminalVarName(getConnectionPointSide(hvdcSide))));
     }
 }

@@ -72,22 +72,25 @@ public class BaseHvdc extends AbstractEquipmentBlackBoxModel<HvdcLine> implement
         return isInverted ? getLib() + "Inverted" : getLib();
     }
 
-    public TwoSides getConnectionSide(TwoSides side) {
-        return isInverted ? SideUtils.getOppositeSide(side) : side;
+    protected TwoSides getConnectionPointSide(TwoSides hvdcSide) {
+        return isInverted ? SideUtils.getOppositeSide(hvdcSide) : hvdcSide;
     }
 
-    protected List<VarConnection> getVarConnectionsWith(EquipmentConnectionPoint connected, TwoSides side) {
-        TwoSides connectionSide = getConnectionSide(side);
+    /**
+     * If the ConvertersMode is inverted, hvdc side will be connected to the opposite side EquipmentConnectionPoint
+     */
+    protected List<VarConnection> getVarConnectionsWith(EquipmentConnectionPoint connected, TwoSides hvdcSide) {
+        TwoSides connectionPointSide = getConnectionPointSide(hvdcSide);
         List<VarConnection> varConnections = new ArrayList<>(2);
-        varConnections.add(getSimpleVarConnectionWithBus(connected, side, connectionSide));
-        connected.getSwitchOffSignalVarName(connectionSide)
-                .map(switchOff -> new VarConnection(varNameHandler.getConnectionPointVarName(side), switchOff))
+        varConnections.add(getSimpleVarConnectionWithBus(connected, hvdcSide, connectionPointSide));
+        connected.getSwitchOffSignalVarName(connectionPointSide)
+                .map(switchOff -> new VarConnection(varNameHandler.getConnectionPointVarName(hvdcSide), switchOff))
                 .ifPresent(varConnections::add);
         return varConnections;
     }
 
-    protected final VarConnection getSimpleVarConnectionWithBus(EquipmentConnectionPoint connected, TwoSides side, TwoSides connectionSide) {
-        return new VarConnection(TERMINAL_PREFIX + side.getNum(), connected.getTerminalVarName(connectionSide));
+    protected final VarConnection getSimpleVarConnectionWithBus(EquipmentConnectionPoint connected, TwoSides hvdcSide, TwoSides connectionPointSide) {
+        return new VarConnection(TERMINAL_PREFIX + hvdcSide.getNum(), connected.getTerminalVarName(connectionPointSide));
     }
 
     public List<HvdcConverterStation<?>> getConnectedStations() {
