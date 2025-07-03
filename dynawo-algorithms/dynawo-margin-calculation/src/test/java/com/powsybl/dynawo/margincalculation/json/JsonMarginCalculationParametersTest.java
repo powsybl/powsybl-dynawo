@@ -54,6 +54,7 @@ class JsonMarginCalculationParametersTest extends AbstractSerDeTest {
     void roundTrip() throws IOException {
         MarginCalculationParameters parameters = MarginCalculationParameters.builder()
                 .setDynawoParameters(DynawoSimulationParameters.load(platformConfig))
+                .setDebugDir("/tmp/debugDir")
                 .build();
         roundTripTest(parameters, JsonMarginCalculationParameters::write, JsonMarginCalculationParameters::read, "/MarginCalculationParameters.json");
     }

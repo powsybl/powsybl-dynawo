@@ -15,6 +15,9 @@ The default value of this property is `0`.
 `stopTime` defines when the simulation stops, in seconds.
 The default value of this property is `200`.
 
+**debugDir**
+This property specifies the directory path where debug files will be dumped. If `null`, no file will be dumped.
+
 **loadIncrease.startTime**  
 `loadIncrease.startTime` defines when the load variation starts, in seconds.
 This property value should be between start time and margin calculation start time.
@@ -70,6 +73,7 @@ margin-calculation-default-parameters:
   calculationType: GLOBAL_MARGIN
   accuracy: 2
   load-models-rule: ALL_LOADS
+  debugDir: "/tmp/debugDir"
 ```
 
 **XML configuration:**
@@ -84,5 +88,6 @@ margin-calculation-default-parameters:
     <calculationType>GLOBAL_MARGIN</calculationType>
     <accuracy>2</accuracy>
     <load-models-rule>ALL_LOADS</load-models-rule>
+    <debugDir>/tmp/debugDir</debugDir>
 </margin-calculation-default-parameters>
 ```
