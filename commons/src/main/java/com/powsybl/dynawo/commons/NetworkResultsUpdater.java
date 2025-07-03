@@ -54,6 +54,7 @@ public final class NetworkResultsUpdater {
         for (StaticVarCompensator sourceStaticVarCompensator : sourceNetwork.getStaticVarCompensators()) {
             update(targetNetwork.getStaticVarCompensator(sourceStaticVarCompensator.getId()).getTerminal(), sourceStaticVarCompensator.getTerminal());
             targetNetwork.getStaticVarCompensator(sourceStaticVarCompensator.getId()).setRegulationMode(sourceStaticVarCompensator.getRegulationMode());
+            targetNetwork.getStaticVarCompensator(sourceStaticVarCompensator.getId()).setRegulating(sourceStaticVarCompensator.isRegulating());
         }
         for (Switch sourceSwitch : sourceNetwork.getSwitches()) {
             targetNetwork.getSwitch(sourceSwitch.getId()).setOpen(sourceSwitch.isOpen());
