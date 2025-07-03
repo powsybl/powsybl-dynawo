@@ -7,7 +7,6 @@
 package com.powsybl.dynawo.dsl.ieee;
 
 import com.powsybl.computation.local.LocalCommandExecutor;
-import com.powsybl.dynawo.DynawoSimulationParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xmlunit.builder.DiffBuilder;
