@@ -12,6 +12,8 @@ import com.powsybl.commons.report.ReportNode;
 import com.powsybl.commons.report.TypedValue;
 import com.powsybl.dynawo.commons.PowsyblDynawoReportResourceBundle;
 
+import java.util.Locale;
+
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
@@ -29,6 +31,7 @@ public final class MarginCalculationReports {
 
     public static ReportNode createMarginCalculationToolReportNode() {
         return ReportNode.newRootReportNode()
+                .withLocale(Locale.US)
                 .withResourceBundles(PowsyblCoreReportResourceBundle.BASE_NAME, PowsyblDynawoReportResourceBundle.BASE_NAME)
                 .withMessageTemplate("dynawo.margincalc.marginCalculationTool")
                 .build();

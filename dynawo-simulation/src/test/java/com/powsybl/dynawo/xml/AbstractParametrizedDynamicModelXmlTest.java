@@ -32,6 +32,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import static com.powsybl.commons.test.ComparisonUtils.assertTxtEquals;
@@ -48,6 +49,7 @@ public abstract class AbstractParametrizedDynamicModelXmlTest extends AbstractSe
     protected List<OutputVariable> outputVariables = new ArrayList<>();
     protected DynawoSimulationContext context;
     protected ReportNode reportNode = ReportNode.newRootReportNode()
+            .withLocale(Locale.US)
             .withResourceBundles(PowsyblDynawoReportResourceBundle.BASE_NAME,
                     PowsyblTestReportResourceBundle.TEST_BASE_NAME)
             .withMessageTemplate("testDyd")

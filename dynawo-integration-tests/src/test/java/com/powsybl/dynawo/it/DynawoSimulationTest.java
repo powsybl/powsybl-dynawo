@@ -30,6 +30,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -110,6 +111,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
     @Test
     void testIeee14WithSimulationCriteria() {
         ReportNode reportNode = ReportNode.newRootReportNode()
+                .withLocale(Locale.US)
                 .withResourceBundles(PowsyblCoreReportResourceBundle.BASE_NAME,
                         PowsyblDynawoReportResourceBundle.BASE_NAME,
                         PowsyblTestReportResourceBundle.TEST_BASE_NAME)
@@ -159,6 +161,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                 GroovyExtension.find(DynamicModelGroovyExtension.class, DynawoSimulationProvider.NAME));
 
         ReportNode reportNode = newRootReportNode()
+                .withLocale(Locale.US)
                 .withResourceBundles(PowsyblCoreReportResourceBundle.BASE_NAME,
                         PowsyblDynawoReportResourceBundle.BASE_NAME,
                         PowsyblTestReportResourceBundle.TEST_BASE_NAME)

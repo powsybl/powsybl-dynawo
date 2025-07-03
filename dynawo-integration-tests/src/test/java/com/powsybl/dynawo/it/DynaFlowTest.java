@@ -34,6 +34,7 @@ import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import static com.powsybl.commons.test.ComparisonUtils.assertTxtEquals;
@@ -77,6 +78,7 @@ class DynaFlowTest extends AbstractDynawoTest {
                 .add();
 
         ReportNode reportNode = ReportNode.newRootReportNode()
+                .withLocale(Locale.US)
                 .withResourceBundles(PowsyblDynawoReportResourceBundle.BASE_NAME,
                         PowsyblTestReportResourceBundle.TEST_BASE_NAME)
                 .withMessageTemplate("testIEEE14")
@@ -114,6 +116,7 @@ class DynaFlowTest extends AbstractDynawoTest {
 
         // Launching a load flow before the security analysis is required
         ReportNode reportNodeLf = ReportNode.newRootReportNode()
+                .withLocale(Locale.US)
                 .withResourceBundles(PowsyblDynawoReportResourceBundle.BASE_NAME,
                         PowsyblTestReportResourceBundle.TEST_BASE_NAME)
                 .withMessageTemplate("testIEEE14")
@@ -132,6 +135,7 @@ class DynaFlowTest extends AbstractDynawoTest {
                 .toList();
 
         ReportNode reportNode = ReportNode.newRootReportNode()
+                .withLocale(Locale.US)
                 .withResourceBundles(PowsyblDynawoReportResourceBundle.BASE_NAME,
                         PowsyblTestReportResourceBundle.TEST_BASE_NAME)
                 .withMessageTemplate("testIEEE14")

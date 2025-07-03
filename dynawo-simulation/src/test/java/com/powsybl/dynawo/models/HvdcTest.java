@@ -19,6 +19,7 @@ import com.powsybl.iidm.network.TwoSides;
 import com.powsybl.iidm.network.test.HvdcTestNetwork;
 import org.junit.jupiter.api.Test;
 
+import java.util.Locale;
 import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -64,6 +65,7 @@ class HvdcTest {
     @Test
     void testDefaultDanglingSide() {
         ReportNode reportNode = ReportNode.newRootReportNode()
+                .withLocale(Locale.US)
                 .withResourceBundles(PowsyblDynawoReportResourceBundle.BASE_NAME,
                         PowsyblTestReportResourceBundle.TEST_BASE_NAME)
                 .withMessageTemplate("hvdcBuilder")

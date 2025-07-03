@@ -15,6 +15,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.List;
+import java.util.Locale;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -27,6 +28,7 @@ class OutputVariablesBuilderTest {
     @BeforeEach
     void setup() {
         reporter = ReportNode.newRootReportNode()
+                .withLocale(Locale.US)
                 .withResourceBundles(PowsyblDynawoReportResourceBundle.BASE_NAME,
                         PowsyblTestReportResourceBundle.TEST_BASE_NAME)
                 .withMessageTemplate("testBuilder")

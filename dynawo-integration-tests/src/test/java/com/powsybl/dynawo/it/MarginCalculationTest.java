@@ -36,6 +36,7 @@ import org.junit.jupiter.api.Test;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import static com.powsybl.dynawo.contingency.results.Status.CONVERGENCE;
@@ -118,6 +119,7 @@ class MarginCalculationTest extends AbstractDynawoTest {
                         .getResource("/ieee14/margin-calculation/criteria.crt")).getPath()));
 
         ReportNode reportNode = ReportNode.newRootReportNode()
+                .withLocale(Locale.US)
                 .withResourceBundles(PowsyblCoreReportResourceBundle.BASE_NAME,
                         PowsyblDynawoReportResourceBundle.BASE_NAME,
                         PowsyblTestReportResourceBundle.TEST_BASE_NAME)
