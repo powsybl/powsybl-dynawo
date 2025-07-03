@@ -18,7 +18,7 @@ import java.nio.file.Path;
 public class DynawoSimulationConfig extends AbstractDynawoConfig {
 
     public static final String DYNAWO_LAUNCHER_PROGRAM_NAME = "dynawo";
-    protected static final String DYNAWO_MODULE_NAME = "dynawo";
+    private static final String DYNAWO_MODULE_NAME = "dynawo";
 
     public static DynawoSimulationConfig load() {
         return load(DynawoSimulationConfig::new, DYNAWO_MODULE_NAME);

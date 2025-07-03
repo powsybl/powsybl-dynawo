@@ -1,6 +1,6 @@
 # Configuration
 
-The margin calculation reuses the `dynawo-simulation-default-parameters` [module](../dynamic_simulation/configuration.md#default-parameters).
+The margin calculation reuses the `dynawo-simulation-default-parameters` [module](../dynamic_simulation/configuration.md#default-parameters) and the `dynawo-algorithms` [module](../dynamic_security_analysis/configuration.md#dynawo-algorithms-properties).
 
 ## Default parameters
 The `margin-calculation-default-parameters` module defines the default values for all parameters of a margin calculation run with Dynawo.  
