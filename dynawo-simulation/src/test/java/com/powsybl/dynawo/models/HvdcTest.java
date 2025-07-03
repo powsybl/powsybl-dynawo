@@ -8,7 +8,7 @@
 package com.powsybl.dynawo.models;
 
 import com.powsybl.commons.report.ReportNode;
-import com.powsybl.commons.test.PowsyblCoreTestReportResourceBundle;
+import com.powsybl.commons.test.PowsyblTestReportResourceBundle;
 import com.powsybl.dynawo.commons.PowsyblDynawoReportResourceBundle;
 import com.powsybl.dynawo.models.hvdc.HvdcPBuilder;
 import com.powsybl.dynawo.models.hvdc.HvdcVscBuilder;
@@ -65,7 +65,7 @@ class HvdcTest {
     void testDefaultDanglingSide() {
         ReportNode reportNode = ReportNode.newRootReportNode()
                 .withResourceBundles(PowsyblDynawoReportResourceBundle.BASE_NAME,
-                        PowsyblCoreTestReportResourceBundle.TEST_BASE_NAME)
+                        PowsyblTestReportResourceBundle.TEST_BASE_NAME)
                 .withMessageTemplate("hvdcBuilder")
                 .build();
         Network network = HvdcTestNetwork.createVsc();

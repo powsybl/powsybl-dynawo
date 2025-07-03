@@ -31,7 +31,7 @@ import static com.powsybl.dynawo.xml.DynawoSimulationXmlConstants.DYN_URI;
 public abstract class AbstractEvent extends AbstractBlackBoxModel implements EventModel {
 
     private final EventModelInfo eventModelInfo;
-    private final Identifiable<? extends Identifiable<?>> equipment;
+    private final Identifiable<?> equipment;
     private final double startTime;
 
     protected AbstractEvent(String eventId, Identifiable<?> equipment, EventModelInfo eventModelInfo, double startTime) {
