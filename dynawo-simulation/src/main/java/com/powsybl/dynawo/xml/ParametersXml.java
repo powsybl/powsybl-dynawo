@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static com.powsybl.dynawo.DynawoSimulationConstants.*;
 import static com.powsybl.dynawo.xml.DynawoSimulationXmlConstants.DYN_PREFIX;
 import static com.powsybl.dynawo.xml.DynawoSimulationXmlConstants.DYN_URI;
 
@@ -183,9 +184,9 @@ public final class ParametersXml {
 
         write(context.getDynamicModelsParameters(), context.getSimulationParFile(), workingDir, DYN_PREFIX);
         DynawoSimulationParameters parameters = context.getDynawoSimulationParameters();
-        write(parameters.getModelParameters(), DynawoSimulationParameters.MODELS_OUTPUT_PARAMETERS_FILE, workingDir, "");
-        write(List.of(parameters.getNetworkParameters()), DynawoSimulationParameters.NETWORK_OUTPUT_PARAMETERS_FILE, workingDir, "");
-        write(List.of(parameters.getSolverParameters()), DynawoSimulationParameters.SOLVER_OUTPUT_PARAMETERS_FILE, workingDir, "");
+        write(parameters.getModelParameters(), MODELS_PARAMETERS_FILENAME, workingDir, "");
+        write(List.of(parameters.getNetworkParameters()), NETWORK_PARAMETERS_FILENAME, workingDir, "");
+        write(List.of(parameters.getSolverParameters()), SOLVER_PARAMETERS_FILENAME, workingDir, "");
     }
 
     public static void write(Collection<ParametersSet> parametersSets, String filename, Path workingDir, String dynPrefix) {

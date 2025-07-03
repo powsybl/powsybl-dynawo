@@ -16,6 +16,7 @@ import com.powsybl.dynawo.commons.PowsyblDynawoReportResourceBundle;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.util.Locale;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -26,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 abstract class AbstractModelSupplierTest {
 
     protected final ReportNode reportNode = ReportNode.newRootReportNode()
+            .withLocale(Locale.US)
             .withResourceBundles(PowsyblCoreReportResourceBundle.BASE_NAME,
                     PowsyblDynawoReportResourceBundle.BASE_NAME,
                     PowsyblTestReportResourceBundle.TEST_BASE_NAME)
