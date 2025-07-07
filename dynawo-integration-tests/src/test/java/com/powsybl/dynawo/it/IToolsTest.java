@@ -7,6 +7,8 @@
  */
 package com.powsybl.dynawo.it;
 
+import com.google.common.jimfs.Configuration;
+import com.google.common.jimfs.Jimfs;
 import com.powsybl.computation.ComputationManager;
 import com.powsybl.dynawo.margincalculation.tool.MarginCalculationTool;
 import com.powsybl.tools.CommandLineTools;
@@ -18,13 +20,11 @@ import org.junit.jupiter.api.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -33,6 +33,7 @@ class IToolsTest extends AbstractDynawoTest {
 
     private static CommandLineTools TOOLS;
     private ToolInitializationContext toolContext;
+    private FileSystem fileSystem;
     private ByteArrayOutputStream bout;
     private ByteArrayOutputStream berr;
 
@@ -44,6 +45,13 @@ class IToolsTest extends AbstractDynawoTest {
     @BeforeEach
     void setUp() throws Exception {
         super.setUp();
+        fileSystem = Jimfs.newFileSystem(Configuration.unix());
+        Files.copy(getResourceAsStream("/ieee14/IEEE14.iidm"), fileSystem.getPath("IEEE14.iidm"));
+        Files.copy(getResourceAsStream("/ieee14/dynamicModels.groovy"), fileSystem.getPath("dynamicModels.groovy"));
+        Files.copy(getResourceAsStream("/ieee14/contingencies.groovy"), fileSystem.getPath("contingencies.groovy"));
+        Files.copy(getResourceAsStream("/ieee14/loadsVariations.json"), fileSystem.getPath("loadsVariations.json"));
+        Files.copy(getResourceAsStream("/itools/MarginCalculationParameters.json"), fileSystem.getPath("MarginCalculationParameters.json"));
+
         bout = new ByteArrayOutputStream();
         berr = new ByteArrayOutputStream();
         PrintStream out = new PrintStream(bout);
@@ -62,7 +70,7 @@ class IToolsTest extends AbstractDynawoTest {
 
             @Override
             public FileSystem getFileSystem() {
-                return FileSystems.getDefault();
+                return fileSystem;
             }
 
             @Override
@@ -86,6 +94,7 @@ class IToolsTest extends AbstractDynawoTest {
     void tearDown() {
         super.tearDown();
         try {
+            fileSystem.close();
             bout.close();
             berr.close();
         } catch (IOException e) {
@@ -95,28 +104,30 @@ class IToolsTest extends AbstractDynawoTest {
 
     @Test
     void testIeee14MC() throws IOException {
-        String[] args = {"margin-calculation", "--case-file", getResource("/ieee14/IEEE14.iidm"),
-            "--dynamic-models-file", getResource("/ieee14/dynamicModels.groovy"),
-            "--contingencies-file", getResource("/ieee14/contingencies.groovy"),
-            "--load-variations-file", getResource("/ieee14/loadsVariations.json")};
+        String[] args = {"margin-calculation", "--case-file", "IEEE14.iidm",
+            "--dynamic-models-file", "dynamicModels.groovy",
+            "--contingencies-file", "contingencies.groovy",
+            "--load-variations-file", "loadsVariations.json"};
         int status = TOOLS.run(args, toolContext);
 
         assertEquals(CommandLineTools.COMMAND_OK_STATUS, status);
-        assertTrue(getOutput().contains(Files.readString(getResourcePath("/itools/mc_out.txt"))));
+        String expectedOutput = new String(getResourceAsStream("/itools/mc_out.txt").readAllBytes(), StandardCharsets.UTF_8);
+        assertEquals(expectedOutput, getOutput());
         assertThat(getError()).isEmpty();
     }
 
     @Test
     void testIeee14MCJsonParameters() throws IOException {
-        String[] args = {"margin-calculation", "--case-file", getResource("/ieee14/IEEE14.iidm"),
-            "--dynamic-models-file", getResource("/ieee14/dynamicModels.groovy"),
-            "--contingencies-file", getResource("/ieee14/contingencies.groovy"),
-            "--load-variations-file", getResource("/ieee14/loadsVariations.json"),
-            "--parameters-file", getResource("/itools/MarginCalculationParameters.json")};
+        String[] args = {"margin-calculation", "--case-file", "IEEE14.iidm",
+            "--dynamic-models-file", "dynamicModels.groovy",
+            "--contingencies-file", "contingencies.groovy",
+            "--load-variations-file", "loadsVariations.json",
+            "--parameters-file", "MarginCalculationParameters.json"};
         int status = TOOLS.run(args, toolContext);
 
         assertEquals(CommandLineTools.COMMAND_OK_STATUS, status);
-        assertTrue(getOutput().contains(Files.readString(getResourcePath("/itools/mc_out.txt"))));
+        String expectedOutput = new String(getResourceAsStream("/itools/mc_out.txt").readAllBytes(), StandardCharsets.UTF_8);
+        assertEquals(expectedOutput, getOutput());
         assertThat(getError()).isEmpty();
     }
 

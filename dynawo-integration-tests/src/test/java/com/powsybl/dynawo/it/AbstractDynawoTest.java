@@ -14,7 +14,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.io.TempDir;
 
 import java.io.InputStream;
-import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.util.Objects;
 
@@ -45,17 +44,5 @@ public abstract class AbstractDynawoTest {
 
     protected static InputStream getResourceAsStream(String name) {
         return Objects.requireNonNull(AbstractDynawoTest.class.getResourceAsStream(name));
-    }
-
-    protected static String getResource(String resourceName) {
-        return Objects.requireNonNull(AbstractDynawoTest.class.getResource(resourceName)).getPath();
-    }
-
-    protected static Path getResourcePath(String resourceName) {
-        try {
-            return Path.of(Objects.requireNonNull(AbstractDynawoTest.class.getResource(resourceName)).toURI());
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

@@ -1,3 +1,4 @@
+Loading network 'IEEE14.iidm'
 + Margin Calculation Tool
    + Dynawo margin calculation on network 'ieee14bus'
       + Groovy Dynamic Models Supplier
