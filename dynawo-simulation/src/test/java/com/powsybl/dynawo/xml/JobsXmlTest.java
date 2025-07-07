@@ -14,11 +14,9 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
-import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.EnumSet;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
 /**
@@ -29,10 +27,10 @@ class JobsXmlTest extends DynawoTestUtil {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("provideParameters")
-    void testJobXml(String xmlResult, Function<FileSystem, DynawoSimulationParameters> parametersSupplier) throws IOException, SAXException {
+    void testJobXml(String xmlResult, DynawoSimulationParameters parameters) throws IOException, SAXException {
         DynawoSimulationContext context = new DynawoSimulationContext
                 .Builder(network, dynamicModels)
-                .dynawoParameters(parametersSupplier.apply(fileSystem))
+                .dynawoParameters(parameters)
                 .eventModels(eventModels)
                 .outputVariables(outputVariables)
                 .build();
@@ -42,26 +40,27 @@ class JobsXmlTest extends DynawoTestUtil {
 
     private static Stream<Arguments> provideParameters() {
         return Stream.of(
-                Arguments.of("jobs.xml",
-                        (Function<FileSystem, DynawoSimulationParameters>) fs ->
-                                DynawoSimulationParameters.load()),
-                Arguments.of("jobsWithDump.xml",
-                        (Function<FileSystem, DynawoSimulationParameters>) fs -> {
-                            try {
-                                Files.createFile(fs.getPath("tmp", "dump.dmp"));
-                            } catch (IOException e) {
-                                throw new RuntimeException(e);
-                            }
-                            return DynawoSimulationParameters.load()
-                                        .setDumpFileParameters(DumpFileParameters.createImportExportDumpFileParameters(fs.getPath("tmp"), "dump.dmp"));
-                        }),
+                Arguments.of("jobs.xml", DynawoSimulationParameters.load()),
                 Arguments.of("jobsWithSpecificLogs.xml",
-                        (Function<FileSystem, DynawoSimulationParameters>) fs ->
-                                DynawoSimulationParameters.load().setSpecificLogs(EnumSet.allOf(DynawoSimulationParameters.SpecificLog.class))),
+                        DynawoSimulationParameters.load().setSpecificLogs(EnumSet.allOf(DynawoSimulationParameters.SpecificLog.class))),
                 Arguments.of("jobsWithCriteria.xml",
-                        (Function<FileSystem, DynawoSimulationParameters>) fs ->
-                                DynawoSimulationParameters.load().setCriteriaFilePath(Path.of("criteria.crt")))
+                        DynawoSimulationParameters.load().setCriteriaFilePath(Path.of("criteria.crt")))
         );
+    }
+
+    @Test
+    void testJobWithDump() throws IOException, SAXException {
+        Files.createFile(fileSystem.getPath("tmp", "dump.dmp"));
+        DynawoSimulationParameters parameters = DynawoSimulationParameters.load()
+                .setDumpFileParameters(DumpFileParameters.createImportExportDumpFileParameters(fileSystem.getPath("tmp"), "dump.dmp"));
+        DynawoSimulationContext context = new DynawoSimulationContext
+                .Builder(network, dynamicModels)
+                .dynawoParameters(parameters)
+                .eventModels(eventModels)
+                .outputVariables(outputVariables)
+                .build();
+        JobsXml.write(tmpDir, context);
+        validate("jobs.xsd", "jobsWithDump.xml", tmpDir.resolve(DynawoSimulationConstants.JOBS_FILENAME));
     }
 
     @Test
