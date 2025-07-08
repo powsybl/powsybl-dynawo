@@ -18,6 +18,7 @@ import com.powsybl.dynawo.DynawoSimulationParameters.SpecificLog;
 import com.powsybl.dynawo.commons.ExportMode;
 import com.powsybl.dynawo.parameters.Parameter;
 import com.powsybl.dynawo.parameters.ParameterType;
+import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.dynawo.xml.ParametersXml;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -331,7 +332,29 @@ class DynawoParametersTest extends AbstractSerDeTest {
         assertEquals(dumpFile, dumpParameters.dumpFile());
     }
 
-    //TODO add load parameter set from methods and check output
+    @Test
+    void testParameterSetsSetters() {
+        Map<String, String> expectedProperties = Map.ofEntries(
+                Map.entry("network.parametersId", "test"),
+                Map.entry("solver.parametersId", "test"),
+                Map.entry("solver.type", "SIM"),
+                Map.entry("mergeLoads", "false"),
+                Map.entry("useModelSimplifiers", "false"),
+                Map.entry("precision", "1.0E-6"),
+                Map.entry("timeline.exportMode", "TXT"),
+                Map.entry("log.levelFilter", "INFO"),
+                Map.entry("dump.export", "false"),
+                Map.entry("dump.useAsInput", "false"));
+
+        ParametersSet parametersSet = new ParametersSet("test");
+        parametersSet.addParameter("id", ParameterType.STRING, "value");
+        Map<String, String> properties = new DynawoSimulationParameters().setModelsParameters(List.of(parametersSet))
+                .setNetworkParameters(parametersSet)
+                .setSolverParameters(parametersSet)
+                .createMapFromParameters();
+
+        assertThat(properties).containsExactlyInAnyOrderEntriesOf(expectedProperties);
+    }
 
     private void createFiles(String parametersFile, String networkParametersFile, String solverParametersFile, String criteriaFile) throws IOException {
         Files.createDirectories(fileSystem.getPath(USER_HOME));
@@ -349,7 +372,7 @@ class DynawoParametersTest extends AbstractSerDeTest {
     }
 
     private void checkModelParameters(DynawoSimulationParameters dynawoSimulationParameters, String path) {
-        assertThat(dynawoSimulationParameters.getModelsParametersFilePath()).hasValue(fileSystem.getPath(path));
+        assertThat(dynawoSimulationParameters.getModelsParametersFilePath()).hasValue(path);
         Parameter booleanParameter = dynawoSimulationParameters.getModelParameters("test").getParameters().get("boolean");
         assertEquals("true", booleanParameter.value());
         assertEquals("boolean", booleanParameter.name());
@@ -361,10 +384,9 @@ class DynawoParametersTest extends AbstractSerDeTest {
     }
 
     private void checkNetworkParameters(DynawoSimulationParameters parameters, String networkParametersId, String path) {
-        assertThat(parameters.getNetworkParametersFilePath()).hasValue(fileSystem.getPath(path));
+        assertThat(parameters.getNetworkParametersFilePath()).hasValue(path);
         Map<String, Parameter> networkParameters = parameters.getNetworkParameters().getParameters();
         assertEquals(networkParametersId, parameters.getNetworkParameters().getId());
-        //TODO get id from paramset ?
         assertEquals(networkParametersId, parameters.getNetworkParametersSetId());
         Parameter loadTp = networkParameters.get("load_Tp");
         assertEquals("90", loadTp.value());
@@ -377,7 +399,7 @@ class DynawoParametersTest extends AbstractSerDeTest {
     }
 
     private void checkSolverParameters(DynawoSimulationParameters parameters, String solverParametersId, String path, SolverType solverType) {
-        assertThat(parameters.getSolverParametersFilePath()).hasValue(fileSystem.getPath(path));
+        assertThat(parameters.getSolverParametersFilePath()).hasValue(path);
         Map<String, Parameter> solverParameters = parameters.getSolverParameters().getParameters();
         assertEquals(solverParametersId, parameters.getSolverParameters().getId());
         assertEquals(solverParametersId, parameters.getSolverParametersSetId());

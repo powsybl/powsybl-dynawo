@@ -112,11 +112,11 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
         }
     }
 
-    private Path modelsParametersFilePath = null;
-    private Path networkParametersFilePath = null;
-    private String networkParameterSetId = DEFAULT_NETWORK_PAR_ID;
-    private Path solverParametersFilePath = null;
-    private String solverParameterSetId = DEFAULT_SOLVER_PAR_ID;
+    private String modelsParametersFilePath = null;
+    private String networkParametersFilePath = null;
+    private String networkParametersSetId = DEFAULT_NETWORK_PAR_ID;
+    private String solverParametersFilePath = null;
+    private String solverParametersSetId = DEFAULT_SOLVER_PAR_ID;
     private Map<String, ParametersSet> modelsParameters = new LinkedHashMap<>();
     private ParametersSet networkParameters;
     private ParametersSet solverParameters;
@@ -220,9 +220,9 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
         Objects.requireNonNull(properties);
         Optional.ofNullable(properties.get(PARAMETERS_FILE)).ifPresent(prop -> setModelsParameters(fileSystem.getPath(prop)));
         Optional.ofNullable(properties.get(NETWORK_PARAMETERS_FILE)).ifPresent(prop ->
-                setNetworkParameters(fileSystem.getPath(prop), Optional.ofNullable(properties.get(NETWORK_PARAMETERS_ID)).orElse(networkParameterSetId)));
+                setNetworkParameters(fileSystem.getPath(prop), Optional.ofNullable(properties.get(NETWORK_PARAMETERS_ID)).orElse(networkParametersSetId)));
         Optional.ofNullable(properties.get(SOLVER_PARAMETERS_FILE)).ifPresent(prop ->
-                setSolverParameters(fileSystem.getPath(prop), Optional.ofNullable(properties.get(SOLVER_PARAMETERS_ID)).orElse(solverParameterSetId)));
+                setSolverParameters(fileSystem.getPath(prop), Optional.ofNullable(properties.get(SOLVER_PARAMETERS_ID)).orElse(solverParametersSetId)));
         Optional.ofNullable(properties.get(SOLVER_TYPE)).ifPresent(prop -> setSolverType(SolverType.valueOf(prop)));
         Optional.ofNullable(properties.get(MERGE_LOADS)).ifPresent(prop -> setMergeLoads(Boolean.parseBoolean(prop)));
         Optional.ofNullable(properties.get(USE_MODEL_SIMPLIFIERS)).ifPresent(prop -> setUseModelSimplifiers(Boolean.parseBoolean(prop)));
@@ -239,9 +239,9 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
         Map<String, String> properties = new HashMap<>();
         addNotNullEntry(PARAMETERS_FILE, modelsParametersFilePath, properties::put);
         addNotNullEntry(NETWORK_PARAMETERS_FILE, networkParametersFilePath, properties::put);
-        addNotNullEntry(NETWORK_PARAMETERS_ID, networkParameterSetId, properties::put);
+        addNotNullEntry(NETWORK_PARAMETERS_ID, networkParametersSetId, properties::put);
         addNotNullEntry(SOLVER_PARAMETERS_FILE, solverParametersFilePath, properties::put);
-        addNotNullEntry(SOLVER_PARAMETERS_ID, solverParameterSetId, properties::put);
+        addNotNullEntry(SOLVER_PARAMETERS_ID, solverParametersSetId, properties::put);
         addNotNullEntry(SOLVER_TYPE, solverType, properties::put);
         addNotNullEntry(MERGE_LOADS, mergeLoads, properties::put);
         addNotNullEntry(USE_MODEL_SIMPLIFIERS, useModelSimplifiers, properties::put);
@@ -273,12 +273,12 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
         return modelsParameters.values();
     }
 
-    public Optional<Path> getModelsParametersFilePath() {
+    public Optional<String> getModelsParametersFilePath() {
         return Optional.ofNullable(modelsParametersFilePath);
     }
 
     public DynawoSimulationParameters setModelsParameters(Path modelsParametersFilePath) {
-        this.modelsParametersFilePath = modelsParametersFilePath;
+        this.modelsParametersFilePath = modelsParametersFilePath.toString();
         if (Files.exists(modelsParametersFilePath)) {
             setModelsParameters(ParametersXml.load(modelsParametersFilePath));
         } else {
@@ -300,8 +300,8 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
     }
 
     public DynawoSimulationParameters setNetworkParameters(Path networkParametersFilePath, String parameterSetId) {
-        this.networkParametersFilePath = networkParametersFilePath;
-        this.networkParameterSetId = parameterSetId;
+        this.networkParametersFilePath = networkParametersFilePath.toString();
+        this.networkParametersSetId = parameterSetId;
         if (Files.exists(networkParametersFilePath)) {
             setNetworkParameters(ParametersXml.load(networkParametersFilePath, parameterSetId));
         } else {
@@ -312,11 +312,13 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
 
     public DynawoSimulationParameters setNetworkParameters(ParametersSet networkParameters) {
         this.networkParameters = Objects.requireNonNull(networkParameters);
+        this.networkParametersSetId = networkParameters.getId();
         return this;
     }
 
     public DynawoSimulationParameters setNetworkParameters(InputStream inputStream, String parameterSetId) {
         this.networkParameters = ParametersXml.load(inputStream, parameterSetId);
+        this.networkParametersSetId = parameterSetId;
         return this;
     }
 
@@ -324,17 +326,17 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
         return networkParameters;
     }
 
-    public Optional<Path> getNetworkParametersFilePath() {
+    public Optional<String> getNetworkParametersFilePath() {
         return Optional.ofNullable(networkParametersFilePath);
     }
 
     public String getNetworkParametersSetId() {
-        return networkParameterSetId;
+        return networkParametersSetId;
     }
 
     public DynawoSimulationParameters setSolverParameters(Path solverParametersFilePath, String parameterSetId) {
-        this.solverParametersFilePath = solverParametersFilePath;
-        this.solverParameterSetId = parameterSetId;
+        this.solverParametersFilePath = solverParametersFilePath.toString();
+        this.solverParametersSetId = parameterSetId;
         if (Files.exists(solverParametersFilePath)) {
             setSolverParameters(ParametersXml.load(solverParametersFilePath, parameterSetId));
         } else {
@@ -345,11 +347,13 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
 
     public DynawoSimulationParameters setSolverParameters(ParametersSet solverParameters) {
         this.solverParameters = Objects.requireNonNull(solverParameters);
+        this.solverParametersSetId = solverParameters.getId();
         return this;
     }
 
     public DynawoSimulationParameters setSolverParameters(InputStream inputStream, String parameterSetId) {
         this.solverParameters = ParametersXml.load(inputStream, parameterSetId);
+        this.solverParametersSetId = parameterSetId;
         return this;
     }
 
@@ -357,12 +361,12 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
         return solverParameters;
     }
 
-    public Optional<Path> getSolverParametersFilePath() {
+    public Optional<String> getSolverParametersFilePath() {
         return Optional.ofNullable(solverParametersFilePath);
     }
 
     public String getSolverParametersSetId() {
-        return solverParameterSetId;
+        return solverParametersSetId;
     }
 
     public DynawoSimulationParameters setSolverType(SolverType solverType) {

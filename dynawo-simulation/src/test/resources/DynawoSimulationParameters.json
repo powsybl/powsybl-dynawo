@@ -6,7 +6,9 @@
     "DynawoSimulationParameters" : {
       "modelsParametersFilePath" : "/home/user/parametersFile",
       "networkParametersFilePath" : "/home/user/networkParametersFile",
+      "networkParametersSetId" : "networkParametersId",
       "solverParametersFilePath" : "/home/user/solverParametersFile",
+      "solverParametersSetId" : "solverParametersId",
       "solverType" : "IDA",
       "mergeLoads" : false,
       "useModelSimplifiers" : false,
@@ -20,9 +22,7 @@
       "timelineExportMode" : "TXT",
       "logLevelFilter" : "INFO",
       "specificLogs" : [ "PARAMETERS", "VARIABLES" ],
-      "criteriaFilePath" : null,
-      "networkParametersSetId" : "networkParametersId",
-      "solverParametersSetId" : "solverParametersId"
+      "criteriaFilePath" : null
     }
   }
 }
