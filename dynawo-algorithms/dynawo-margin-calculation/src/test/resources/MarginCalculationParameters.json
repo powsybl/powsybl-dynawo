@@ -9,27 +9,11 @@
   "accuracy" : 2,
   "loadModelsRule" : "ALL_LOADS",
   "dynawoParameters" : {
-    "networkParameters" : {
-      "id" : "1",
-      "parameters" : { },
-      "references" : [ ]
-    },
-    "solverParameters" : {
-      "id" : "1",
-      "parameters" : {
-        "order" : {
-          "name" : "order",
-          "type" : "INT",
-          "value" : "1"
-        },
-        "absAccuracy" : {
-          "name" : "absAccuracy",
-          "type" : "DOUBLE",
-          "value" : "1e-4"
-        }
-      },
-      "references" : [ ]
-    },
+    "modelsParametersFilePath" : "/work/inmemory/models.par",
+    "networkParametersFilePath" : "/work/inmemory/network.par",
+    "networkParametersSetId" : "1",
+    "solverParametersFilePath" : "/work/inmemory/solvers.par",
+    "solverParametersSetId" : "1",
     "solverType" : "SIM",
     "mergeLoads" : false,
     "useModelSimplifiers" : false,
@@ -43,22 +27,6 @@
     "timelineExportMode" : "TXT",
     "logLevelFilter" : "INFO",
     "specificLogs" : [ ],
-    "criteriaFilePath" : null,
-    "modelsParameters" : [ {
-      "id" : "test",
-      "parameters" : {
-        "boolean" : {
-          "name" : "boolean",
-          "type" : "BOOL",
-          "value" : "true"
-        },
-        "string" : {
-          "name" : "string",
-          "type" : "STRING",
-          "value" : "aString"
-        }
-      },
-      "references" : [ ]
-    } ]
+    "criteriaFilePath" : null
   }
 }
