@@ -10,7 +10,7 @@ package com.powsybl.dynawo.models.utils;
 import com.powsybl.iidm.network.*;
 
 /**
- * Verifies na equipment terminal(s) are connected and the relates buses are energized and in main connected component
+ * Verifies that the equipment terminal(s) are connected and that the related buses are energized and in main connected component
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public final class EnergizedUtils {
@@ -18,33 +18,33 @@ public final class EnergizedUtils {
     private EnergizedUtils() {
     }
 
-    public static boolean isEnergized(Injection<?> equipment) {
-        return isEnergized(equipment.getTerminal());
+    public static boolean isEnergizedAndInMainConnectedComponent(Injection<?> equipment) {
+        return isEnergizedAndInMainConnectedComponent(equipment.getTerminal());
     }
 
-    public static boolean isEnergized(Branch<?> equipment) {
-        return isEnergized(equipment.getTerminal1()) && isEnergized(equipment.getTerminal2());
+    public static boolean isEnergizedAndInMainConnectedComponent(Branch<?> equipment) {
+        return isEnergizedAndInMainConnectedComponent(equipment.getTerminal1()) && isEnergizedAndInMainConnectedComponent(equipment.getTerminal2());
     }
 
-    public static boolean isEnergized(Branch<?> equipment, TwoSides side) {
-        return TwoSides.ONE == side ? isEnergized(equipment.getTerminal1()) : isEnergized(equipment.getTerminal2());
+    public static boolean isEnergizedAndInMainConnectedComponent(Branch<?> equipment, TwoSides side) {
+        return TwoSides.ONE == side ? isEnergizedAndInMainConnectedComponent(equipment.getTerminal1()) : isEnergizedAndInMainConnectedComponent(equipment.getTerminal2());
     }
 
-    public static boolean isEnergized(HvdcLine equipment) {
-        return isEnergized(equipment.getConverterStation1().getTerminal())
-                && isEnergized(equipment.getConverterStation1().getTerminal());
+    public static boolean isEnergizedAndInMainConnectedComponent(HvdcLine equipment) {
+        return isEnergizedAndInMainConnectedComponent(equipment.getConverterStation1().getTerminal())
+                && isEnergizedAndInMainConnectedComponent(equipment.getConverterStation1().getTerminal());
     }
 
-    public static boolean isEnergized(HvdcLine equipment, TwoSides side) {
-        return TwoSides.ONE == side ? isEnergized(equipment.getConverterStation1().getTerminal())
-                : isEnergized(equipment.getConverterStation2().getTerminal());
+    public static boolean isEnergizedAndInMainConnectedComponent(HvdcLine equipment, TwoSides side) {
+        return TwoSides.ONE == side ? isEnergizedAndInMainConnectedComponent(equipment.getConverterStation1().getTerminal())
+                : isEnergizedAndInMainConnectedComponent(equipment.getConverterStation2().getTerminal());
     }
 
-    public static boolean isEnergized(Terminal terminal) {
+    public static boolean isEnergizedAndInMainConnectedComponent(Terminal terminal) {
         if (!terminal.isConnected()) {
             return false;
         }
-        return isEnergized(terminal.getBusBreakerView().getBus());
+        return isEnergizedAndInMainConnectedComponent(terminal.getBusBreakerView().getBus());
     }
 
     /**
@@ -52,7 +52,7 @@ public final class EnergizedUtils {
      * @param bus the reviewed bus
      * @return <code>true</code> if energized, <code>false</code> if not
      */
-    public static boolean isEnergized(Bus bus) {
+    public static boolean isEnergizedAndInMainConnectedComponent(Bus bus) {
         return bus != null && !Double.isNaN(bus.getV()) && bus.isInMainConnectedComponent();
     }
 }

@@ -7,9 +7,10 @@
  */
 package com.powsybl.dynawo.builders;
 
+import com.powsybl.dynawo.models.utils.EnergizedUtils;
 import com.powsybl.iidm.network.*;
 
-import static com.powsybl.dynawo.models.utils.EnergizedUtils.isEnergized;
+import static com.powsybl.dynawo.models.utils.EnergizedUtils.isEnergizedAndInMainConnectedComponent;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -31,9 +32,9 @@ public final class BuildersUtil {
     public static Identifiable<?> getActionConnectionPoint(Network network, String staticId) {
         BusbarSection busbarSection = network.getBusbarSection(staticId);
         if (busbarSection != null) {
-            return isEnergized(busbarSection) ? busbarSection : null;
+            return EnergizedUtils.isEnergizedAndInMainConnectedComponent(busbarSection) ? busbarSection : null;
         }
         Bus bus = network.getBusBreakerView().getBus(staticId);
-        return isEnergized(bus) ? bus : null;
+        return isEnergizedAndInMainConnectedComponent(bus) ? bus : null;
     }
 }

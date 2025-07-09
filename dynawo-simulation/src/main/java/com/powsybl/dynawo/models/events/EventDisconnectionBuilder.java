@@ -19,6 +19,7 @@ import com.powsybl.iidm.network.*;
 public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identifiable<?>, EventDisconnectionBuilder> {
 
     private static final EventModelInfo MODEL_INFO = new EventModelInfo("Disconnect", "Disconnects a bus, a branch, an injection or an HVDC line");
+    private static final String STATIC_ID_FIELD_NAME = "staticId";
 
     private enum DisconnectionType {
         BUS,
@@ -87,7 +88,10 @@ public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identif
             switch (disconnectionType) {
                 case BUS -> {
                     Bus bus = (Bus) builderEquipment.getEquipment();
-                    handleNotEnergized(EnergizedUtils.isEnergized(bus));
+                    if (!EnergizedUtils.isEnergizedAndInMainConnectedComponent(bus)) {
+                        BuilderReports.reportNotEnergized(reportNode, STATIC_ID_FIELD_NAME, builderEquipment.getStaticId());
+                        isInstantiable = false;
+                    }
                     if (disconnectSide != null) {
                         BuilderReports.reportFieldSetWithWrongEquipment(reportNode, "disconnectOnly", bus.getType(), bus.getId());
                         isInstantiable = false;
@@ -95,7 +99,10 @@ public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identif
                 }
                 case INJECTION -> {
                     Injection<?> injection = (Injection<?>) builderEquipment.getEquipment();
-                    handleNotEnergized(EnergizedUtils.isEnergized(injection));
+                    if (!EnergizedUtils.isEnergizedAndInMainConnectedComponent(injection)) {
+                        BuilderReports.reportNotEnergized(reportNode, STATIC_ID_FIELD_NAME, builderEquipment.getStaticId());
+                        isInstantiable = false;
+                    }
                     if (disconnectSide != null) {
                         BuilderReports.reportFieldSetWithWrongEquipment(reportNode, "disconnectOnly", injection.getType(), injection.getId());
                         isInstantiable = false;
@@ -103,24 +110,25 @@ public class EventDisconnectionBuilder extends AbstractEventModelBuilder<Identif
                 }
                 case BRANCH -> {
                     Branch<?> branch = (Branch<?>) builderEquipment.getEquipment();
-                    handleNotEnergized(disconnectSide != null ? EnergizedUtils.isEnergized(branch, disconnectSide) : EnergizedUtils.isEnergized(branch));
+                    if (disconnectSide != null && !EnergizedUtils.isEnergizedAndInMainConnectedComponent(branch, disconnectSide)
+                            || disconnectSide == null && !EnergizedUtils.isEnergizedAndInMainConnectedComponent(branch)) {
+                        BuilderReports.reportNotEnergized(reportNode, STATIC_ID_FIELD_NAME, builderEquipment.getStaticId());
+                        isInstantiable = false;
+                    }
                 }
                 case HVDC -> {
                     HvdcLine hvdcLine = (HvdcLine) builderEquipment.getEquipment();
-                    handleNotEnergized(disconnectSide != null ? EnergizedUtils.isEnergized(hvdcLine, disconnectSide) : EnergizedUtils.isEnergized(hvdcLine));
+                    if (disconnectSide != null && !EnergizedUtils.isEnergizedAndInMainConnectedComponent(hvdcLine, disconnectSide)
+                            || disconnectSide == null && !EnergizedUtils.isEnergizedAndInMainConnectedComponent(hvdcLine)) {
+                        BuilderReports.reportNotEnergized(reportNode, STATIC_ID_FIELD_NAME, builderEquipment.getStaticId());
+                        isInstantiable = false;
+                    }
                 }
                 case NONE -> {
-                    BuilderReports.reportStaticIdUnknown(reportNode, "staticId", builderEquipment.getStaticId(), "Disconnectable equipment");
+                    BuilderReports.reportStaticIdUnknown(reportNode, STATIC_ID_FIELD_NAME, builderEquipment.getStaticId(), "Disconnectable equipment");
                     isInstantiable = false;
                 }
             }
-        }
-    }
-
-    private void handleNotEnergized(boolean isEnergized) {
-        if (!isEnergized) {
-            BuilderReports.reportNotEnergized(reportNode, "staticId", builderEquipment.getStaticId());
-            isInstantiable = false;
         }
     }
 
