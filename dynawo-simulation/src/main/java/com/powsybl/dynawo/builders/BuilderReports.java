@@ -153,4 +153,13 @@ public final class BuilderReports {
                 .withSeverity(TypedValue.TRACE_SEVERITY)
                 .add();
     }
+
+    public static void reportNotEnergized(ReportNode reportNode, String fieldName, String staticId) {
+        reportNode.newReportNode()
+                .withMessageTemplate("dynawo.dynasim.notEnergized")
+                .withUntypedValue(FIELD_NAME, fieldName)
+                .withTypedValue(STATIC_ID, staticId, TypedValue.ID)
+                .withSeverity(TypedValue.WARN_SEVERITY)
+                .add();
+    }
 }
