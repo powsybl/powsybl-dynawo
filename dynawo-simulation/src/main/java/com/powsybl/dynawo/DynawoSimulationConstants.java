@@ -17,6 +17,12 @@ public final class DynawoSimulationConstants {
 
     public static final String DYD_FILENAME = "powsybl_dynawo.dyd";
 
+    public static final String MODELS_PARAMETERS_FILENAME = "models.par";
+
+    public static final String NETWORK_PARAMETERS_FILENAME = "network.par";
+
+    public static final String SOLVER_PARAMETERS_FILENAME = "solvers.par";
+
     public static final String CRV_FILENAME = "powsybl_dynawo.crv";
 
     public static final String FSV_FILENAME = "powsybl_dynawo.fsv";
