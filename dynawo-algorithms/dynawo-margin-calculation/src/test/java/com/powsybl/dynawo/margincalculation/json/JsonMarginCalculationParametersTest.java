@@ -12,14 +12,10 @@ import com.powsybl.commons.config.MapModuleConfig;
 import com.powsybl.commons.test.AbstractSerDeTest;
 import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.margincalculation.MarginCalculationParameters;
-import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
@@ -70,21 +66,18 @@ class JsonMarginCalculationParametersTest extends AbstractSerDeTest {
     }
 
     @Test
+    void roundTripNoDebugDir() throws IOException {
+        MarginCalculationParameters parameters = MarginCalculationParameters.builder()
+                .setDynawoParameters(DynawoSimulationParameters.load(platformConfig))
+                .build();
+        roundTripTest(parameters, JsonMarginCalculationParameters::write, JsonMarginCalculationParameters::read, "/MarginCalculationParametersNoDebugDir.json");
+    }
+
+    @Test
     void readError() throws IOException {
         try (var is = getClass().getResourceAsStream("/MarginCalculationParametersError.json")) {
             IllegalStateException e = assertThrows(IllegalStateException.class, () -> JsonMarginCalculationParameters.read(is));
             assertEquals("Unexpected field: unknownParameter", e.getMessage());
-        }
-    }
-
-    @Test
-    void readNoDebugDir() throws IOException {
-        MarginCalculationParameters parameters = MarginCalculationParameters.builder()
-                .setDynawoParameters(DynawoSimulationParameters.load(platformConfig))
-                .build();
-        try (OutputStream outputStream = new ByteArrayOutputStream(); var inputStream = getClass().getResourceAsStream("/MarginCalculationParametersNoDebugDir.json")) {
-            JsonMarginCalculationParameters.write(parameters, outputStream);
-            assertEquals(IOUtils.toString(inputStream, StandardCharsets.UTF_8), outputStream.toString());
         }
     }
 }
