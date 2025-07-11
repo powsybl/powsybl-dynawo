@@ -61,6 +61,7 @@ public final class MarginCalculationParameters {
         private int accuracy = DEFAULT_ACCURACY;
         private LoadModelsRule loadModelsRule = DEFAULT_LOAD_MODELS_RULE;
         private DynawoSimulationParameters dynawoParameters = new DynawoSimulationParameters();
+        private String debugDir;
 
         /**
          * Set dynamic simulation start time, must be greater than 0
@@ -130,6 +131,11 @@ public final class MarginCalculationParameters {
             return this;
         }
 
+        public Builder setDebugDir(String debugDir) {
+            this.debugDir = debugDir;
+            return this;
+        }
+
         public MarginCalculationParameters build() {
             if (startTime < 0) {
                 throw new IllegalStateException("Start time (%.2f) should be zero or positive".formatted(startTime));
@@ -191,6 +197,7 @@ public final class MarginCalculationParameters {
             c.getOptionalEnumProperty("calculation-type", CalculationType.class).ifPresent(builder::setCalculationType);
             c.getOptionalIntProperty("accuracy").ifPresent(builder::setAccuracy);
             c.getOptionalEnumProperty("load-models-rule", LoadModelsRule.class).ifPresent(builder::setLoadModelsRule);
+            c.getOptionalStringProperty("debugDir").ifPresent(builder::setDebugDir);
         });
         builder.setDynawoParameters(DynawoSimulationParameters.load(platformConfig, fileSystem));
         return builder.build();
@@ -206,6 +213,7 @@ public final class MarginCalculationParameters {
     private final int accuracy;
     private final LoadModelsRule loadModelsRule;
     private final DynawoSimulationParameters dynawoParameters;
+    private final String debugDir;
 
     private MarginCalculationParameters(MarginCalculationParameters.Builder builder) {
         this.startTime = builder.startTime;
@@ -218,6 +226,7 @@ public final class MarginCalculationParameters {
         this.accuracy = builder.accuracy;
         this.loadModelsRule = builder.loadModelsRule;
         this.dynawoParameters = builder.dynawoParameters;
+        this.debugDir = builder.debugDir;
     }
 
     public double getStartTime() {
@@ -258,5 +267,14 @@ public final class MarginCalculationParameters {
 
     public DynawoSimulationParameters getDynawoParameters() {
         return dynawoParameters;
+    }
+
+    /**
+     * Get the directory where execution files will be dumped
+     *
+     * @return the debug directory
+     */
+    public String getDebugDir() {
+        return debugDir;
     }
 }
