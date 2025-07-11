@@ -7,7 +7,10 @@
  */
 package com.powsybl.dynawo.builders;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auto.service.AutoService;
+import com.powsybl.commons.PowsyblException;
 import com.powsybl.dynawo.models.automationsystems.TapChangerAutomationSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.TapChangerBlockingAutomationSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.UnderVoltageAutomationSystemBuilder;
@@ -30,6 +33,9 @@ import com.powsybl.dynawo.models.shunts.BaseShuntBuilder;
 import com.powsybl.dynawo.models.svarcs.BaseStaticVarCompensatorBuilder;
 import com.powsybl.dynawo.models.transformers.TransformerFixedRatioBuilder;
 
+import java.io.IOException;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 /**
@@ -75,8 +81,16 @@ public final class ModelConfigLoaderImpl implements ModelConfigLoader {
             new EventBuilderConfig(NodeFaultEventBuilder::of, NodeFaultEventBuilder.getModelInfo()));
 
     @Override
-    public String getModelConfigFileName() {
-        return MODEL_CONFIG_FILENAME;
+    public Map<String, ModelConfigs> loadModelConfigs() {
+        try {
+            ObjectMapper objectMapper = ModelConfigLoader.getModelConfigObjectMapper();
+            return objectMapper.readValue(Objects.requireNonNull(
+                            ModelConfigLoader.class.getClassLoader().getResource(MODEL_CONFIG_FILENAME)).openStream(),
+                    new TypeReference<>() {
+                    });
+        } catch (IOException e) {
+            throw new PowsyblException("Dynamic models configuration file not found");
+        }
     }
 
     @Override
