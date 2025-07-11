@@ -55,7 +55,8 @@ public final class DynawoSecurityAnalysisHandler extends AbstractDynawoAlgorithm
         if (Files.exists(outputNetworkFile)) {
             NetworkResultsUpdater.update(context.getNetwork(), NetworkSerDe.read(outputNetworkFile), context.getDynawoSimulationParameters().isMergeLoads());
         }
-        ContingencyResultsUtils.reportContingenciesTimelines(context.getContingencies(), workingDir.resolve(TIMELINE_FOLDER), reportNode);
+        ContingencyResultsUtils.reportContingenciesTimelines(context.getContingencies(), workingDir.resolve(TIMELINE_FOLDER),
+                context.getDynawoSimulationParameters().getTimelineExportMode(), reportNode);
         return new SecurityAnalysisReport(createSecurityAnalysisResult(network, violationFilter, workingDir, context.getContingencies()));
     }
 

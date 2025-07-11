@@ -22,6 +22,7 @@ import com.powsybl.contingency.contingency.list.DefaultContingencyList;
 import com.powsybl.contingency.json.ContingencyJsonModule;
 import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
 import com.powsybl.dynawo.commons.DynawoUtil;
+import com.powsybl.dynawo.commons.ExportMode;
 import com.powsybl.dynawo.contingency.ContingencyResultsUtils;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.loadflow.LoadFlowParameters;
@@ -83,7 +84,7 @@ public final class DynaFlowSecurityAnalysisHandler extends AbstractExecutionHand
     public SecurityAnalysisReport after(Path workingDir, ExecutionReport report) throws IOException {
         super.after(workingDir, report);
         network.getVariantManager().setWorkingVariant(workingVariantId);
-        ContingencyResultsUtils.reportContingenciesTimelines(contingencies, workingDir.resolve(TIMELINE_FOLDER), reportNode);
+        ContingencyResultsUtils.reportContingenciesTimelines(contingencies, workingDir.resolve(TIMELINE_FOLDER), ExportMode.XML, reportNode);
         return new SecurityAnalysisReport(createSecurityAnalysisResult(network, violationFilter, workingDir, contingencies));
     }
 

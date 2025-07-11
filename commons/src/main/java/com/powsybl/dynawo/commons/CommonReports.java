@@ -29,6 +29,12 @@ public final class CommonReports {
                 .add();
     }
 
+    public static ReportNode createDynawoTimelineReportNode(ReportNode reportNode) {
+        return reportNode.newReportNode()
+                .withMessageTemplate("dynawo.commons.dynawoTimeline")
+                .add();
+    }
+
     public static void reportTimelineEntry(ReportNode reportNode, TimelineEntry timelineEntry) {
         reportNode.newReportNode()
                 .withMessageTemplate("dynawo.commons.dynawoTimelineEntry")
