@@ -33,16 +33,21 @@ class ContingenciesXmlTest extends DynawoTestUtil {
                 Contingency.builder("DisconnectLineGenerator")
                         .addLine("NHV1_NHV2_1")
                         .addGenerator("GEN2")
-                        .build());
+                        .build(),
+                Contingency.bus("NLOAD"));
         BlackBoxModelSupplier bbmSupplier = BlackBoxModelSupplier.createFrom(dynamicModels);
         List<ContingencyEventModels> contingencyEvents = ContingencyEventModelsFactory.createFrom(contingencies, 10,
-                network, bbmSupplier, ReportNode.NO_OP);
+                network, bbmSupplier,
+                n -> n.equalsIgnoreCase("MC_EventBusDisconnection-DefaultActionConnectionPoint"),
+                ReportNode.NO_OP);
 
         ContingenciesDydXml.write(tmpDir, contingencyEvents);
         ContingenciesParXml.write(tmpDir, contingencyEvents);
         validate("dyd.xsd", "LOAD.xml", tmpDir.resolve("LOAD.dyd"));
         validate("dyd.xsd", "DisconnectLineGenerator.xml", tmpDir.resolve("DisconnectLineGenerator.dyd"));
+        validate("dyd.xsd", "NLOAD.xml", tmpDir.resolve("NLOAD.dyd"));
         validate("parameters.xsd", "LOAD_par.xml", tmpDir.resolve("LOAD.par"));
         validate("parameters.xsd", "DisconnectLineGenerator_par.xml", tmpDir.resolve("DisconnectLineGenerator.par"));
+        validate("parameters.xsd", "NLOAD_par.xml", tmpDir.resolve("NLOAD.par"));
     }
 }
