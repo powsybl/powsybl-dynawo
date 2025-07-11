@@ -72,4 +72,12 @@ class JsonMarginCalculationParametersTest extends AbstractSerDeTest {
             assertEquals("Unexpected field: unknownParameter", e.getMessage());
         }
     }
+
+    @Test
+    void readNoDebugDir() throws IOException {
+        try (var is = getClass().getResourceAsStream("/MarginCalculationParametersNoDebugDir.json")) {
+            MarginCalculationParameters marginCalculationParametersJson = JsonMarginCalculationParameters.read(is);
+            assertEquals(null, marginCalculationParametersJson.getDebugDir());
+        }
+    }
 }
