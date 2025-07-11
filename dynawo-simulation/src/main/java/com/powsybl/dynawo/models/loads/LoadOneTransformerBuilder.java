@@ -58,8 +58,8 @@ public class LoadOneTransformerBuilder extends AbstractLoadModelBuilder<LoadOneT
         return MODEL_CONFIGS.getModelInfos(dynawoVersion);
     }
 
-    protected LoadOneTransformerBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
-        super(network, modelConfig, reportNode);
+    protected LoadOneTransformerBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode) {
+        super(network, modelConfig, parentReportNode);
     }
 
     @Override

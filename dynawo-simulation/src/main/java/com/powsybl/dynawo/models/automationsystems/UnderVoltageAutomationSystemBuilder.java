@@ -62,9 +62,9 @@ public class UnderVoltageAutomationSystemBuilder extends AbstractAutomationSyste
         return MODEL_CONFIGS.getModelInfos(dynawoVersion);
     }
 
-    protected UnderVoltageAutomationSystemBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
-        super(network, modelConfig, reportNode);
-        generator = new BuilderEquipment<>(IdentifiableType.GENERATOR, "generator");
+    protected UnderVoltageAutomationSystemBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode) {
+        super(network, modelConfig, parentReportNode);
+        generator = new BuilderEquipment<>(IdentifiableType.GENERATOR.toString(), "generator", reportNode);
     }
 
     public UnderVoltageAutomationSystemBuilder generator(String staticId) {
@@ -75,7 +75,7 @@ public class UnderVoltageAutomationSystemBuilder extends AbstractAutomationSyste
     @Override
     protected void checkData() {
         super.checkData();
-        isInstantiable &= generator.checkEquipmentData(reportNode);
+        isInstantiable &= generator.checkEquipmentData();
     }
 
     @Override

@@ -29,15 +29,20 @@ public abstract class AbstractHvdcBuilder<R extends AbstractEquipmentModelBuilde
         this.varNameHandler = varNameHandler;
     }
 
-    protected AbstractHvdcBuilder(Network network, ModelConfig modelConfig, String equipmentType, ReportNode reportNode,
+    protected AbstractHvdcBuilder(Network network, ModelConfig modelConfig, String equipmentType, ReportNode parentReportNode,
                                   HvdcVarNameHandler varNameHandler) {
-        super(network, modelConfig, equipmentType, reportNode);
+        super(network, modelConfig, equipmentType, parentReportNode);
         this.varNameHandler = varNameHandler;
     }
 
     public R dangling(TwoSides danglingSide) {
         this.danglingSide = danglingSide;
         return self();
+    }
+
+    @Override
+    protected HvdcLine findEquipment(String staticId) {
+        return network.getHvdcLine(staticId);
     }
 
     @Override

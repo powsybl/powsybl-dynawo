@@ -22,9 +22,10 @@ abstract class AbstractPhaseShifterModelBuilder<T extends AbstractAutomationSyst
 
     protected final BuilderEquipment<TwoWindingsTransformer> transformer;
 
-    protected AbstractPhaseShifterModelBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
-        super(network, modelConfig, reportNode);
-        transformer = new BuilderEquipment<>(IdentifiableType.TWO_WINDINGS_TRANSFORMER, "transformer");
+    protected AbstractPhaseShifterModelBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode) {
+        super(network, modelConfig, parentReportNode);
+        transformer = new BuilderEquipment<>(IdentifiableType.TWO_WINDINGS_TRANSFORMER.toString(),
+                "transformer", reportNode);
     }
 
     public T transformer(String staticId) {
@@ -35,6 +36,6 @@ abstract class AbstractPhaseShifterModelBuilder<T extends AbstractAutomationSyst
     @Override
     protected void checkData() {
         super.checkData();
-        isInstantiable &= transformer.checkEquipmentData(reportNode);
+        isInstantiable &= transformer.checkEquipmentData();
     }
 }

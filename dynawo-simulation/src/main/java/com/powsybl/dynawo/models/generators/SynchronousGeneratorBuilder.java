@@ -58,8 +58,8 @@ public class SynchronousGeneratorBuilder extends AbstractSynchronousGeneratorBui
         return MODEL_CONFIGS.getModelInfos(dynawoVersion);
     }
 
-    protected SynchronousGeneratorBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
-        super(network, modelConfig, reportNode);
+    protected SynchronousGeneratorBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode) {
+        super(network, modelConfig, parentReportNode);
     }
 
     @Override
