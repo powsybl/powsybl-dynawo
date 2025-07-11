@@ -8,8 +8,8 @@
 package com.powsybl.dynawo.xml;
 
 import com.powsybl.dynawo.DynawoSimulationConstants;
+import com.powsybl.dynawo.LfResultsUtils;
 import com.powsybl.dynawo.models.events.EventDisconnectionBuilder;
-import com.powsybl.iidm.network.test.SvcTestCaseFactory;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
@@ -22,7 +22,7 @@ class DisconnectBusEventXmlTest extends AbstractDynamicModelXmlTest {
 
     @Override
     protected void setupNetwork() {
-        network = SvcTestCaseFactory.create();
+        network = LfResultsUtils.createSvcTestCaseWithLFResults();
     }
 
     @Override

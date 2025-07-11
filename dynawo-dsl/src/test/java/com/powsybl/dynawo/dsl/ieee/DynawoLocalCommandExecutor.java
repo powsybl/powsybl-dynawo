@@ -7,7 +7,6 @@
 package com.powsybl.dynawo.dsl.ieee;
 
 import com.powsybl.computation.local.LocalCommandExecutor;
-import com.powsybl.dynawo.DynawoSimulationParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xmlunit.builder.DiffBuilder;
@@ -39,14 +38,12 @@ public class DynawoLocalCommandExecutor implements LocalCommandExecutor {
     private static final Logger LOGGER = LoggerFactory.getLogger(DynawoLocalCommandExecutor.class);
     private final FileSystem fileSystem;
     private final String networkId;
-    private final DynawoSimulationParameters dynawoSimulationParameters;
     private final String baseDirName;
     private final String stdOutFileRef;
 
-    public DynawoLocalCommandExecutor(FileSystem fileSystem, String networkId, DynawoSimulationParameters dynawoSimulationParameters, String baseDir, String stdOutFileRef) {
+    public DynawoLocalCommandExecutor(FileSystem fileSystem, String networkId, String baseDir, String stdOutFileRef) {
         this.fileSystem = Objects.requireNonNull(fileSystem);
         this.networkId = Objects.requireNonNull(networkId);
-        this.dynawoSimulationParameters = Objects.requireNonNull(dynawoSimulationParameters);
         this.baseDirName = baseDir;
         this.stdOutFileRef = stdOutFileRef;
     }
@@ -55,9 +52,9 @@ public class DynawoLocalCommandExecutor implements LocalCommandExecutor {
         compareXml(getClass().getResourceAsStream("/" + baseDirName + "/dynawo-inputs/powsybl_dynawo.xiidm"), Files.newInputStream(workingDir.resolve(NETWORK_FILENAME)));
         compareXml(getClass().getResourceAsStream("/" + baseDirName + "/dynawo-inputs/powsybl_dynawo.jobs"), Files.newInputStream(workingDir.resolve(JOBS_FILENAME)));
         compareXml(getClass().getResourceAsStream("/" + baseDirName + "/dynawo-inputs/powsybl_dynawo.dyd"), Files.newInputStream(workingDir.resolve(DYD_FILENAME)));
-        compareXml(getClass().getResourceAsStream("/" + baseDirName + "/dynawo-inputs/models.par"), Files.newInputStream(workingDir.resolve(fileSystem.getPath(DynawoSimulationParameters.MODELS_OUTPUT_PARAMETERS_FILE).getFileName().toString())));
-        compareXml(getClass().getResourceAsStream("/" + baseDirName + "/dynawo-inputs/network.par"), Files.newInputStream(workingDir.resolve(fileSystem.getPath(DynawoSimulationParameters.NETWORK_OUTPUT_PARAMETERS_FILE).getFileName().toString())));
-        compareXml(getClass().getResourceAsStream("/" + baseDirName + "/dynawo-inputs/solvers.par"), Files.newInputStream(workingDir.resolve(fileSystem.getPath(DynawoSimulationParameters.SOLVER_OUTPUT_PARAMETERS_FILE).getFileName().toString())));
+        compareXml(getClass().getResourceAsStream("/" + baseDirName + "/dynawo-inputs/models.par"), Files.newInputStream(workingDir.resolve(fileSystem.getPath(MODELS_PARAMETERS_FILENAME).getFileName().toString())));
+        compareXml(getClass().getResourceAsStream("/" + baseDirName + "/dynawo-inputs/network.par"), Files.newInputStream(workingDir.resolve(fileSystem.getPath(NETWORK_PARAMETERS_FILENAME).getFileName().toString())));
+        compareXml(getClass().getResourceAsStream("/" + baseDirName + "/dynawo-inputs/solvers.par"), Files.newInputStream(workingDir.resolve(fileSystem.getPath(SOLVER_PARAMETERS_FILENAME).getFileName().toString())));
         compareXml(getClass().getResourceAsStream("/" + baseDirName + "/dynawo-inputs/" + networkId + ".par"), Files.newInputStream(workingDir.resolve(networkId + ".par")));
         compareXml(getClass().getResourceAsStream("/" + baseDirName + "/dynawo-inputs/powsybl_dynawo.crv"), Files.newInputStream(workingDir.resolve(CRV_FILENAME)));
     }
@@ -90,10 +87,12 @@ public class DynawoLocalCommandExecutor implements LocalCommandExecutor {
 
     @Override
     public void stop(Path workingDir) {
+        // Do nothing
     }
 
     @Override
     public void stopForcibly(Path workingDir) {
+        // Do nothing
     }
 
     protected void copyFile(String source, Path target) throws IOException {

@@ -8,6 +8,7 @@
 package com.powsybl.dynawo.margincalculation.json;
 
 import com.powsybl.commons.config.InMemoryPlatformConfig;
+import com.powsybl.commons.config.MapModuleConfig;
 import com.powsybl.commons.test.AbstractSerDeTest;
 import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.margincalculation.MarginCalculationParameters;
@@ -19,6 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
 
+import static com.powsybl.dynawo.DynawoSimulationParameters.MODULE_SPECIFIC_PARAMETERS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -40,6 +42,10 @@ class JsonMarginCalculationParametersTest extends AbstractSerDeTest {
         copyFile("/parametersSet/models.par", DynawoSimulationParameters.DEFAULT_INPUT_PARAMETERS_FILE);
         copyFile("/parametersSet/network.par", DynawoSimulationParameters.DEFAULT_INPUT_NETWORK_PARAMETERS_FILE);
         copyFile("/parametersSet/solvers.par", DynawoSimulationParameters.DEFAULT_INPUT_SOLVER_PARAMETERS_FILE);
+        MapModuleConfig moduleConfig = platformConfig.createModuleConfig(MODULE_SPECIFIC_PARAMETERS);
+        moduleConfig.setStringProperty("parametersFile", "/work/inmemory/models.par");
+        moduleConfig.setStringProperty("network.parametersFile", "/work/inmemory/network.par");
+        moduleConfig.setStringProperty("solver.parametersFile", "/work/inmemory/solvers.par");
     }
 
     private void copyFile(String name, String parametersFile) throws IOException {

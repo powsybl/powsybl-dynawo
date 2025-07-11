@@ -28,7 +28,6 @@ import com.powsybl.loadflow.LoadFlowParameters;
 import com.powsybl.security.LimitViolationFilter;
 import com.powsybl.security.SecurityAnalysisParameters;
 import com.powsybl.security.SecurityAnalysisReport;
-import com.powsybl.security.interceptors.SecurityAnalysisInterceptor;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -56,20 +55,17 @@ public final class DynaFlowSecurityAnalysisHandler extends AbstractExecutionHand
     private final SecurityAnalysisParameters securityAnalysisParameters;
     private final List<Contingency> contingencies;
     private final LimitViolationFilter violationFilter;
-    private final List<SecurityAnalysisInterceptor> interceptors;
     private final ReportNode reportNode;
 
     public DynaFlowSecurityAnalysisHandler(Network network, String workingVariantId, Command command,
                                            SecurityAnalysisParameters securityAnalysisParameters, List<Contingency> contingencies,
-                                           LimitViolationFilter violationFilter, List<SecurityAnalysisInterceptor> interceptors,
-                                           ReportNode reportNode) {
+                                           LimitViolationFilter violationFilter, ReportNode reportNode) {
         this.network = network;
         this.workingVariantId = workingVariantId;
         this.command = command;
         this.securityAnalysisParameters = securityAnalysisParameters;
         this.contingencies = contingencies;
         this.violationFilter = violationFilter;
-        this.interceptors = interceptors;
         this.reportNode = reportNode;
     }
 
