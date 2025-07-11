@@ -6,8 +6,6 @@
  */
 package com.powsybl.dynaflow;
 
-import com.google.common.jimfs.Configuration;
-import com.google.common.jimfs.Jimfs;
 import com.powsybl.commons.config.InMemoryPlatformConfig;
 import com.powsybl.commons.config.MapModuleConfig;
 import com.powsybl.commons.parameters.Parameter;
@@ -17,7 +15,6 @@ import com.powsybl.dynaflow.DynaFlowConstants.OutputTypes;
 import com.powsybl.dynaflow.DynaFlowConstants.StartingPointMode;
 import com.powsybl.dynaflow.json.DynaFlowConfigSerializer;
 import com.powsybl.loadflow.LoadFlowParameters;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -42,15 +39,9 @@ class DynaFlowParametersTest extends AbstractSerDeTest {
 
     @BeforeEach
     @Override
-    public void setUp() {
-        fileSystem = Jimfs.newFileSystem(Configuration.unix());
+    public void setUp() throws IOException {
+        super.setUp();
         platformConfig = new InMemoryPlatformConfig(fileSystem);
-    }
-
-    @AfterEach
-    @Override
-    public void tearDown() throws IOException {
-        fileSystem.close();
     }
 
     @Test
