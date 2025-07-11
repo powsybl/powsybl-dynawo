@@ -33,6 +33,10 @@ import static com.powsybl.dynawo.algorithms.DynawoAlgorithmsReports.createNotSup
  */
 public final class ContingencyEventModelsFactory {
 
+    /**
+     * Creates ContingencyEventModels from contingency list and context
+     * The hasMacroConnector predicate is needed in order to verify if a macro connector used by a contingency is already defined in the base simulation model
+     */
     public static List<ContingencyEventModels> createFrom(List<Contingency> contingencies,
                                                           double contingenciesStartTime,
                                                           Network network,
