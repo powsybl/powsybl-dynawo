@@ -165,7 +165,7 @@ public class DynawoTestUtil extends AbstractSerDeTest {
     }
 
     private static Network createEurostagTutorialExample1WithMoreLoads() {
-        Network network = EurostagTutorialExample1Factory.create(NetworkFactory.findDefault());
+        Network network = EurostagTutorialExample1Factory.createWithLFResults();
 
         VoltageLevel vlload = network.getVoltageLevel("VLLOAD");
         Bus nload = vlload.getBusBreakerView().getBus("NLOAD");

@@ -89,7 +89,8 @@ public class DynaFlowSecurityAnalysisProvider implements SecurityAnalysisProvide
         List<Contingency> contingencies = contingenciesProvider.getContingencies(network);
         ReportNode dfsaReportNode = DynaflowReports.createDynaFlowSecurityAnalysisReportNode(runParameters.getReportNode(), network.getId());
 
-        DynaFlowSecurityAnalysisHandler executionHandler = new DynaFlowSecurityAnalysisHandler(network, workingVariantId, getCommand(config), runParameters.getSecurityAnalysisParameters(), contingencies, runParameters.getFilter(), runParameters.getInterceptors(), dfsaReportNode);
+        DynaFlowSecurityAnalysisHandler executionHandler = new DynaFlowSecurityAnalysisHandler(network, workingVariantId, getCommand(config),
+                runParameters.getSecurityAnalysisParameters(), contingencies, runParameters.getFilter(), dfsaReportNode);
         return runParameters.getComputationManager().execute(execEnv, executionHandler);
     }
 

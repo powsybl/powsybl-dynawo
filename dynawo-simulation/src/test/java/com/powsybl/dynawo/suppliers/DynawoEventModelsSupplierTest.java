@@ -38,7 +38,7 @@ class DynawoEventModelsSupplierTest {
 
     @Test
     void testEventSupplier() {
-        Network network = EurostagTutorialExample1Factory.create();
+        Network network = EurostagTutorialExample1Factory.createWithLFResults();
         List<EventModelConfig> eventModelConfigList = getEventConfigs();
         List<EventModel> events = new DynawoEventModelsSupplier(eventModelConfigList).get(network, ReportNode.NO_OP);
 

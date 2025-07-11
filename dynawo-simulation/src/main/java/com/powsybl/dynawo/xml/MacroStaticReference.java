@@ -47,9 +47,9 @@ public final class MacroStaticReference {
         writer.writeAttribute("staticVar", staticVar);
     }
 
-    public static void writeMacroStaticRef(XMLStreamWriter writer, String lib) throws XMLStreamException {
+    public static void writeMacroStaticRef(XMLStreamWriter writer, String name) throws XMLStreamException {
         writer.writeEmptyElement(DYN_URI, "macroStaticRef");
-        writer.writeAttribute("id", MACRO_STATIC_REFERENCE_PREFIX + lib);
+        writer.writeAttribute("id", MACRO_STATIC_REFERENCE_PREFIX + name);
     }
 
     @Override
