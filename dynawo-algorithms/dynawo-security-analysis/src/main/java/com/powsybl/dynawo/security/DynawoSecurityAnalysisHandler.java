@@ -20,6 +20,7 @@ import com.powsybl.dynawo.xml.JobsXml;
 import com.powsybl.iidm.serde.NetworkSerDe;
 import com.powsybl.security.LimitViolationFilter;
 import com.powsybl.security.SecurityAnalysisReport;
+import com.powsybl.security.SecurityAnalysisResult;
 import com.powsybl.security.interceptors.SecurityAnalysisInterceptor;
 
 import javax.xml.stream.XMLStreamException;
@@ -55,8 +56,10 @@ public final class DynawoSecurityAnalysisHandler extends AbstractDynawoAlgorithm
         if (Files.exists(outputNetworkFile)) {
             NetworkResultsUpdater.update(context.getNetwork(), NetworkSerDe.read(outputNetworkFile), context.getDynawoSimulationParameters().isMergeLoads());
         }
-        ContingencyResultsUtils.reportContingenciesTimelines(context.getContingencies(), workingDir.resolve(TIMELINE_FOLDER), reportNode);
-        return new SecurityAnalysisReport(createSecurityAnalysisResult(network, violationFilter, workingDir, context.getContingencies()));
+        SecurityAnalysisResult result = createSecurityAnalysisResult(network, violationFilter, workingDir, context.getContingencies());
+        ContingencyResultsUtils.reportContingencyResults(result.getPostContingencyResults(), workingDir.resolve(TIMELINE_FOLDER),
+                context.getDynawoSimulationParameters().getTimelineExportMode(), reportNode);
+        return new SecurityAnalysisReport(result);
     }
 
     @Override
