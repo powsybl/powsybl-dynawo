@@ -9,6 +9,7 @@ package com.powsybl.dynawo;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.config.InMemoryPlatformConfig;
 import com.powsybl.commons.config.MapModuleConfig;
+import com.powsybl.commons.extensions.Extension;
 import com.powsybl.commons.test.AbstractSerDeTest;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynamicsimulation.json.JsonDynamicSimulationParameters;
@@ -347,6 +348,19 @@ class DynawoParametersTest extends AbstractSerDeTest {
         assertEquals(useDumpFile, dumpParameters.useDumpFile());
         assertEquals(dumpFolder, dumpParameters.dumpFileFolder().toString());
         assertEquals(dumpFile, dumpParameters.dumpFile());
+    }
+
+    @Test
+    void loadAndUploadFromExtendable() {
+        DynawoSimulationProvider provider = new DynawoSimulationProvider();
+        Optional<Extension<DynamicSimulationParameters>> specificParameters = provider.loadSpecificParameters(Map.of("log.specificLogs", "EQUATIONS"));
+        assertThat(specificParameters).isPresent();
+        DynawoSimulationParameters parameters = (DynawoSimulationParameters) specificParameters.get();
+        assertThat(parameters.getSpecificLogs()).containsExactly(SpecificLog.EQUATIONS);
+        parameters.addSpecificLog(SpecificLog.PARAMETERS);
+        provider.updateSpecificParameters(parameters, Map.of("useModelSimplifiers", "True"));
+        assertThat(parameters.getSpecificLogs()).containsExactly(SpecificLog.PARAMETERS, SpecificLog.EQUATIONS);
+        assertTrue(parameters.isUseModelSimplifiers());
     }
 
     private void createFiles(String parametersFile, String networkParametersFile, String solverParametersFile, String criteriaFile, String additionalModelsFile) throws IOException {

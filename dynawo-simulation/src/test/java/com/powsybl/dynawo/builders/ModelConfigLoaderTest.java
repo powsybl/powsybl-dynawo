@@ -10,6 +10,7 @@ package com.powsybl.dynawo.builders;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.models.generators.BaseGeneratorBuilder;
@@ -24,8 +25,8 @@ import java.nio.file.Path;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -139,5 +140,15 @@ class ModelConfigLoaderTest {
                 .hasSize(baseLineNumber + 1)
                 .contains(new ModelConfig("AdditionalLine"));
         assertNotNull(handler.getModelBuilder(network, "AdditionalLine", ReportNode.NO_OP));
+    }
+
+    @Test
+    void additionalModelsFileNotFound() {
+        ModelConfigsHandler handler = ModelConfigsHandler.getInstance();
+        AdditionalModelConfigLoader loader = new AdditionalModelConfigLoader(Path.of("wrongPath"));
+        assertThatThrownBy(() -> handler.addModels(loader))
+                .isInstanceOf(PowsyblException.class)
+                .hasMessage("Additional dynamic models configuration file not found");
+
     }
 }
