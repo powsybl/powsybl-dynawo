@@ -18,7 +18,6 @@ import com.powsybl.dynawo.commons.DynawoUtil;
 import com.powsybl.dynawo.commons.ExportMode;
 import com.powsybl.dynawo.commons.NetworkResultsUpdater;
 import com.powsybl.dynawo.commons.loadmerge.LoadsMerger;
-import com.powsybl.dynawo.commons.timeline.TimelineEntry;
 import com.powsybl.dynawo.commons.timeline.XmlTimeLineParser;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.serde.NetworkSerDe;
@@ -26,6 +25,8 @@ import com.powsybl.loadflow.LoadFlowParameters;
 import com.powsybl.loadflow.LoadFlowResult;
 import com.powsybl.loadflow.LoadFlowResultImpl;
 import com.powsybl.loadflow.json.LoadFlowResultDeserializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -43,6 +44,9 @@ import static com.powsybl.dynawo.commons.DynawoUtil.getCommandExecutions;
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public class DynaFlowHandler extends AbstractExecutionHandler<LoadFlowResult> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(DynaFlowHandler.class);
+
     private final Network network;
     private final Network dynawoInput;
     private final String workingStateId;
@@ -104,7 +108,12 @@ public class DynaFlowHandler extends AbstractExecutionHandler<LoadFlowResult> {
         Path timelineFile = workingDir.resolve(OUTPUTS_FOLDER)
                 .resolve(TIMELINE_FOLDER)
                 .resolve(TIMELINE_FILENAME + ExportMode.XML.getFileExtension());
-        List<TimelineEntry> tl = new XmlTimeLineParser().parse(timelineFile);
-        tl.forEach(e -> CommonReports.reportTimelineEntry(dfReporter, e));
+        if (Files.exists(timelineFile)) {
+            ReportNode timelineReporter = CommonReports.createDynawoTimelineReportNode(dfReporter);
+            new XmlTimeLineParser().parse(timelineFile)
+                    .forEach(e -> CommonReports.reportTimelineEntry(timelineReporter, e));
+        } else {
+            LOGGER.warn("Timeline file not found");
+        }
     }
 }
