@@ -50,7 +50,7 @@
       "logLevelFilter" : "INFO",
       "specificLogs" : [ "PARAMETERS", "VARIABLES" ],
       "criteriaFilePath" : null,
-      "additionalModelPath" : null,
+      "additionalModelsPath" : null,
       "modelsParameters" : [ {
         "id" : "test",
         "parameters" : {

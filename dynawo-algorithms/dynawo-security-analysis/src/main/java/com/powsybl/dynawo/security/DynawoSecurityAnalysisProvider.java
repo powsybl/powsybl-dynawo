@@ -86,7 +86,7 @@ public class DynawoSecurityAnalysisProvider implements DynamicSecurityAnalysisPr
         DynawoVersion currentVersion = DynawoUtil.requireDynaMinVersion(execEnv, runParameters.getComputationManager(), getVersionCommand(config), DYNAWO_LAUNCHER_PROGRAM_NAME, false);
         DynamicSecurityAnalysisParameters parameters = runParameters.getDynamicSecurityAnalysisParameters();
         DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load(parameters.getDynamicSimulationParameters());
-        dynawoParameters.getAdditionalModelPath().ifPresent(additionalModelPath ->
+        dynawoParameters.getAdditionalModelsPath().ifPresent(additionalModelPath ->
                 ModelConfigsHandler.getInstance().addModels(new AdditionalModelConfigLoader(additionalModelPath)));
         SecurityAnalysisContext context = new SecurityAnalysisContext.Builder(network,
                 BlackBoxSupplierUtils.getBlackBoxModelList(dynamicModelsSupplier, network, dsaReportNode),

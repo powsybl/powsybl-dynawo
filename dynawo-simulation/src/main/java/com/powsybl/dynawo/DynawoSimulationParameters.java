@@ -66,6 +66,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
     private static final String LOG_LEVEL_FILTER = "log.levelFilter";
     private static final String LOG_SPECIFIC_LOGS = "log.specificLogs";
     private static final String CRITERIA_FILE = "criteria.file";
+    private static final String ADDITIONAL_MODELS_FILE = "additionalModelsFile";
 
     /**
      * Information about the solver to use in the simulation
@@ -136,7 +137,8 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
             new Parameter(TIMELINE_EXPORT_MODE, ParameterType.STRING, "Timeline export file extension", DEFAULT_TIMELINE_EXPORT_MODE.toString(), getEnumPossibleValues(ExportMode.class)),
             new Parameter(LOG_LEVEL_FILTER, ParameterType.STRING, "Dynawo log level", DEFAULT_LOG_LEVEL_FILTER.toString(), getEnumPossibleValues(LogLevel.class)),
             new Parameter(LOG_SPECIFIC_LOGS, ParameterType.STRING, "List specific logs returned", null, getEnumPossibleValues(SpecificLog.class)),
-            new Parameter(CRITERIA_FILE, ParameterType.STRING, "Simulation criteria file path", null)),
+            new Parameter(CRITERIA_FILE, ParameterType.STRING, "Simulation criteria file path", null),
+            new Parameter(ADDITIONAL_MODELS_FILE, ParameterType.STRING, "Additional models file path", null)),
             DumpFileParameters.SPECIFIC_PARAMETERS.stream()).toList();
 
     /**
@@ -186,7 +188,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
             c.getOptionalEnumProperty(LOG_LEVEL_FILTER, LogLevel.class).ifPresent(parameters::setLogLevelFilter);
             c.getOptionalEnumSetProperty(LOG_SPECIFIC_LOGS, SpecificLog.class).ifPresent(parameters::setSpecificLogs);
             c.getOptionalStringProperty(CRITERIA_FILE).ifPresent(cf -> parameters.setCriteriaFilePath(resolveFilePath(cf, platformConfig, fileSystem)));
-            c.getOptionalStringProperty("additionalModelsFile").ifPresent(am -> parameters.setAdditionalModelPath(am, fileSystem));
+            c.getOptionalStringProperty(ADDITIONAL_MODELS_FILE).ifPresent(am -> parameters.setAdditionalModelsPath(resolveFilePath(am, platformConfig, fileSystem)));
         });
         return parameters;
     }
@@ -253,6 +255,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
         Optional.ofNullable(properties.get(LOG_SPECIFIC_LOGS)).ifPresent(prop ->
                 setSpecificLogs(Stream.of(prop.split(PROPERTY_LIST_DELIMITER)).map(o -> SpecificLog.valueOf(o.trim())).collect(Collectors.toSet())));
         Optional.ofNullable(properties.get(CRITERIA_FILE)).ifPresent(prop -> setCriteriaFilePath(prop, fileSystem));
+        Optional.ofNullable(properties.get(ADDITIONAL_MODELS_FILE)).ifPresent(prop -> setAdditionalModelsPath(prop, fileSystem));
         dumpFileParameters = DumpFileParameters.updateDumpFileParametersFromPropertiesMap(properties, dumpFileParameters, fileSystem::getPath);
     }
 
@@ -271,6 +274,7 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
             properties.put(LOG_SPECIFIC_LOGS, String.join(PROPERTY_LIST_DELIMITER, specificLogs.stream().map(SpecificLog::name).toList()));
         }
         addNotNullEntry(CRITERIA_FILE, criteriaFilePath, properties::put);
+        addNotNullEntry(ADDITIONAL_MODELS_FILE, additionalModelsPath, properties::put);
         dumpFileParameters.addParametersToMap((k, v) -> addNotNullEntry(k, v, properties::put));
         return properties;
     }
@@ -434,20 +438,20 @@ public class DynawoSimulationParameters extends AbstractExtension<DynamicSimulat
         setCriteriaFilePath(criteriaPath);
     }
 
-    public Optional<Path> getAdditionalModelPath() {
+    public Optional<Path> getAdditionalModelsPath() {
         return Optional.ofNullable(additionalModelsPath);
     }
 
-    public DynawoSimulationParameters setAdditionalModelPath(Path additionalModelsPath) {
+    public DynawoSimulationParameters setAdditionalModelsPath(Path additionalModelsPath) {
         this.additionalModelsPath = additionalModelsPath;
         return this;
     }
 
-    private void setAdditionalModelPath(String additionalModelsPathName, FileSystem fileSystem) {
+    private void setAdditionalModelsPath(String additionalModelsPathName, FileSystem fileSystem) {
         Path path = additionalModelsPathName != null ? fileSystem.getPath(additionalModelsPathName) : null;
         if (path == null || !Files.exists(path)) {
             throw new PowsyblException("File " + additionalModelsPathName + " set in 'additionalModelsFile' property cannot be found");
         }
-        setAdditionalModelPath(path);
+        setAdditionalModelsPath(path);
     }
 }
