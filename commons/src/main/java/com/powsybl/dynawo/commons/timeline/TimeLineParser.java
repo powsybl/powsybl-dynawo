@@ -7,6 +7,8 @@
  */
 package com.powsybl.dynawo.commons.timeline;
 
+import com.powsybl.dynawo.commons.ExportMode;
+
 import java.nio.file.Path;
 import java.util.List;
 
@@ -14,5 +16,15 @@ import java.util.List;
  * @author Florian Dupuy {@literal <florian.dupuy at rte-france.com>}
  */
 public interface TimeLineParser {
+
     List<TimelineEntry> parse(Path timeLineFile);
+
+    static List<TimelineEntry> parse(Path timelineFile, ExportMode exportMode) {
+        TimeLineParser parser = switch (exportMode) {
+            case CSV -> new CsvTimeLineParser(';');
+            case TXT -> new CsvTimeLineParser();
+            case XML -> new XmlTimeLineParser();
+        };
+        return parser.parse(timelineFile);
+    }
 }

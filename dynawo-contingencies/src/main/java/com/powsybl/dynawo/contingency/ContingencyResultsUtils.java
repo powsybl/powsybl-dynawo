@@ -10,8 +10,9 @@ package com.powsybl.dynawo.contingency;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.contingency.Contingency;
 import com.powsybl.dynawo.commons.CommonReports;
+import com.powsybl.dynawo.commons.ExportMode;
+import com.powsybl.dynawo.commons.timeline.TimeLineParser;
 import com.powsybl.dynawo.commons.timeline.TimelineEntry;
-import com.powsybl.dynawo.commons.timeline.XmlTimeLineParser;
 import com.powsybl.dynawo.contingency.results.ResultsUtil;
 import com.powsybl.dynawo.contingency.results.Status;
 import com.powsybl.dynawo.contingency.xml.XmlScenarioResultParser;
@@ -22,6 +23,8 @@ import com.powsybl.security.*;
 import com.powsybl.security.results.NetworkResult;
 import com.powsybl.security.results.PostContingencyResult;
 import com.powsybl.security.results.PreContingencyResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -30,7 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.powsybl.dynawo.contingency.ContingencyReports.createContingenciesTimelineReportNode;
+import static com.powsybl.dynawo.contingency.ContingencyReports.createContingencyReportNode;
 import static com.powsybl.dynawo.contingency.ContingencyConstants.AGGREGATED_RESULTS;
 import static com.powsybl.dynawo.contingency.ContingencyConstants.CONSTRAINTS_FOLDER;
 
@@ -38,6 +41,8 @@ import static com.powsybl.dynawo.contingency.ContingencyConstants.CONSTRAINTS_FO
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public final class ContingencyResultsUtils {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ContingencyResultsUtils.class);
 
     private ContingencyResultsUtils() {
     }
@@ -96,16 +101,29 @@ public final class ContingencyResultsUtils {
         return LimitViolationsResult.empty();
     }
 
-    // Report the timeline events from the timeline files written by dynawo
-    public static void reportContingenciesTimelines(List<Contingency> contingencies, Path timelineDir, ReportNode reportNode) {
-        contingencies.forEach(c -> {
-            ReportNode contingencyReporter = createContingenciesTimelineReportNode(reportNode, c.getId());
-            getTimeline(timelineDir, c).forEach(e -> CommonReports.reportTimelineEntry(contingencyReporter, e));
+    public static void reportContingencyResults(List<PostContingencyResult> contingencyResult, Path timelineDir,
+                                                    ExportMode exportMode, ReportNode reportNode) {
+        contingencyResult.forEach(cr -> {
+            String id = cr.getContingency().getId();
+            ReportNode contingencyReporter = createContingencyReportNode(reportNode, id, cr.getStatus().toString());
+            reportContingencyTimeline(id, timelineDir, exportMode, contingencyReporter);
         });
     }
 
-    private static List<TimelineEntry> getTimeline(Path timelineDir, Contingency c) {
-        Path timelineFile = timelineDir.resolve("timeline_" + c.getId() + ".xml");
-        return new XmlTimeLineParser().parse(timelineFile);
+    // Report the timeline events from the timeline files written by dynawo
+    private static void reportContingencyTimeline(String contingencyId, Path timelineDir, ExportMode exportMode,
+                                                  ReportNode contingencyReporter) {
+        Path timelineFile = timelineDir.resolve("timeline_" + contingencyId + exportMode.getFileExtension());
+        if (Files.exists(timelineFile)) {
+            List<TimelineEntry> entries = TimeLineParser.parse(timelineFile, exportMode);
+            if (!entries.isEmpty()) {
+                ReportNode timelineReporter = CommonReports.createDynawoTimelineReportNode(contingencyReporter);
+                entries.forEach(e -> CommonReports.reportTimelineEntry(timelineReporter, e));
+            } else {
+                CommonReports.reportEmptyTimeline(contingencyReporter);
+            }
+        } else {
+            LOGGER.warn("Timeline file not found");
+        }
     }
 }
