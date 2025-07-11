@@ -16,7 +16,6 @@ import com.powsybl.dynamicsimulation.*;
 import com.powsybl.dynamicsimulation.groovy.*;
 import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.DynawoSimulationProvider;
-import com.powsybl.dynawo.xml.ParametersXml;
 import com.powsybl.iidm.network.Network;
 import org.junit.jupiter.api.AfterEach;
 
@@ -97,18 +96,10 @@ public abstract class AbstractIeeeTest {
                 .setStopTime(stopTime);
         DynawoSimulationParameters dynawoSimulationParameters = new DynawoSimulationParameters();
         parameters.addExtension(DynawoSimulationParameters.class, dynawoSimulationParameters);
-        dynawoSimulationParameters.setModelsParameters(ParametersXml.load(getClass().getResourceAsStream(parametersFile)))
-                .setNetworkParameters(ParametersXml.load(getClass().getResourceAsStream(networkParametersFile), networkParametersId))
-                .setSolverParameters(ParametersXml.load(getClass().getResourceAsStream(solverParametersFile), solverParametersId))
+        dynawoSimulationParameters.setModelsParameters(getClass().getResourceAsStream(parametersFile))
+                .setNetworkParameters(getClass().getResourceAsStream(networkParametersFile), networkParametersId)
+                .setSolverParameters(getClass().getResourceAsStream(solverParametersFile), solverParametersId)
                 .setSolverType(DynawoSimulationParameters.SolverType.IDA);
-    }
-
-    protected DynawoSimulationParameters getDynamicSimulationParameters(DynamicSimulationParameters parameters) {
-        DynawoSimulationParameters dynawoSimulationParameters = parameters.getExtension(DynawoSimulationParameters.class);
-        if (dynawoSimulationParameters == null) {
-            dynawoSimulationParameters = DynawoSimulationParameters.load();
-        }
-        return dynawoSimulationParameters;
     }
 
     public DynamicSimulationResult runSimulation(LocalCommandExecutor commandExecutor) throws Exception {

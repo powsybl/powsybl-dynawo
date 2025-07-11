@@ -22,7 +22,7 @@ import static com.powsybl.dynawo.xml.DynawoSimulationXmlConstants.DYN_URI;
  * @author Luma Zamarreño {@literal <zamarrenolm at aia.es>}
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public abstract class AbstractEquipmentBlackBoxModel<T extends Identifiable<?>> extends AbstractBlackBoxModel implements EquipmentBlackBoxModel {
+public abstract class AbstractEquipmentBlackBoxModel<T extends Identifiable<T>> extends AbstractBlackBoxModel implements EquipmentBlackBoxModel {
 
     protected final T equipment;
     private final ModelConfig modelConfig;
@@ -59,7 +59,7 @@ public abstract class AbstractEquipmentBlackBoxModel<T extends Identifiable<?>> 
         writeDynamicAttributes(writer, parFileName);
         writer.writeAttribute("staticId", getDynamicModelId());
         if (hasVarMapping) {
-            MacroStaticReference.writeMacroStaticRef(writer, getLib());
+            MacroStaticReference.writeMacroStaticRef(writer, getName());
             writer.writeEndElement();
         }
     }

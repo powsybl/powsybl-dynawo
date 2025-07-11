@@ -152,7 +152,7 @@ public class MarginCalculationTool implements Tool {
         LoadsVariationSupplier loadsVariationSupplier = LoadsVariationSupplier.getLoadsVariationSupplierForJson(loadVariationsFile);
         MarginCalculationParameters parameters = line.hasOption(PARAMETERS_FILE) ?
                 JsonMarginCalculationParameters.read(context.getFileSystem().getPath(line.getOptionValue(PARAMETERS_FILE)))
-                : MarginCalculationParameters.builder().build();
+                : MarginCalculationParameters.load();
         MarginCalculationRunParameters runParameters = new MarginCalculationRunParameters()
                 .setMarginCalculationParameters(parameters)
                 .setComputationManager(context.getShortTimeExecutionComputationManager())

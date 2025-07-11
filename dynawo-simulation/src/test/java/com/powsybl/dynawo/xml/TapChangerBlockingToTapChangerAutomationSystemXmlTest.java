@@ -31,6 +31,7 @@ class TapChangerBlockingToTapChangerAutomationSystemXmlTest extends TapChangerAu
     }
 
     @Test
+    @Override
     void writeModel() throws SAXException, IOException {
         DydXml.write(tmpDir, context.getSimulationDydData());
         ParametersXml.write(tmpDir, context);

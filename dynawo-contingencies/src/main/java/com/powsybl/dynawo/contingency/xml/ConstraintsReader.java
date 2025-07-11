@@ -13,6 +13,7 @@ import com.powsybl.commons.exceptions.UncheckedXmlStreamException;
 import com.powsybl.commons.xml.XmlUtil;
 import com.powsybl.iidm.network.*;
 import com.powsybl.security.LimitViolation;
+import com.powsybl.security.LimitViolationBuilder;
 import com.powsybl.security.LimitViolationType;
 import com.powsybl.security.comparator.LimitViolationComparator;
 import org.slf4j.Logger;
@@ -92,7 +93,7 @@ public final class ConstraintsReader {
                     int acceptableDuration = XmlUtil.readIntAttribute(reader, ACCEPTABLE_DURATION, Integer.MAX_VALUE);
                     XmlUtil.readEndElementOrThrow(reader);
 
-                    getLimitViolation(network, name, kind, limit, 1f, value, side, acceptableDuration)
+                    getLimitViolation(network, name, kind, limit, value, side, acceptableDuration)
                             .ifPresent(lvRead -> addOrDismiss(lvRead, limitViolations));
 
                 } catch (XMLStreamException e) {
@@ -122,13 +123,23 @@ public final class ConstraintsReader {
     }
 
     private static Optional<LimitViolation> getLimitViolation(Network network, String name, String kind, double limit,
-                                                              float limitReduction, double value, Integer side, Integer acceptableDuration) {
+                                                              double value, Integer side, Integer acceptableDuration) {
 
         return getLimitViolationIdentifiable(network, name)
-                .map(identifiable -> new LimitViolation(
-                        identifiable.getId(), identifiable.getOptionalName().orElse(null),
-                        toLimitViolationType(kind), kind, acceptableDuration,
-                        limit, limitReduction, value, toThreeSides(side)));
+                .map(identifiable -> {
+                    LimitViolationBuilder builder = new LimitViolationBuilder()
+                        .subject(identifiable.getId())
+                        .type(toLimitViolationType(kind))
+                        .limitName(kind)
+                        .duration(acceptableDuration)
+                        .limit(limit)
+                        .value(value);
+                    identifiable.getOptionalName().ifPresent(builder::subjectName);
+                    if (side != null) {
+                        builder.side(ThreeSides.valueOf(side));
+                    }
+                    return builder.build();
+                });
     }
 
     private static Optional<Identifiable<?>> getLimitViolationIdentifiable(Network network, String name) {
@@ -151,13 +162,6 @@ public final class ConstraintsReader {
             }
             return Optional.ofNullable(identifiable);
         }
-    }
-
-    private static ThreeSides toThreeSides(Integer side) {
-        if (side == null) {
-            return null;
-        }
-        return ThreeSides.valueOf(side);
     }
 
     private static LimitViolationType toLimitViolationType(String kind) {
