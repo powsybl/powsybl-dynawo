@@ -100,19 +100,25 @@ public final class ContingencyResultsUtils {
         return LimitViolationsResult.empty();
     }
 
-    // Report the timeline events from the timeline files written by dynawo
-    public static void reportContingenciesTimelines(List<Contingency> contingencies, Path timelineDir,
+    public static void reportContingencyResults(List<PostContingencyResult> contingencyResult, Path timelineDir,
                                                     ExportMode exportMode, ReportNode reportNode) {
-        contingencies.forEach(c -> {
-            ReportNode contingencyReporter = createContingencyReportNode(reportNode, c.getId());
-            Path timelineFile = timelineDir.resolve("timeline_" + c.getId() + exportMode.getFileExtension());
-            if (Files.exists(timelineFile)) {
-                ReportNode timelineReporter = CommonReports.createDynawoTimelineReportNode(contingencyReporter);
-                TimeLineParser.parse(timelineFile, exportMode)
-                        .forEach(e -> CommonReports.reportTimelineEntry(timelineReporter, e));
-            } else {
-                LOGGER.warn("Timeline file not found");
-            }
+        contingencyResult.forEach(cr -> {
+            String id = cr.getContingency().getId();
+            ReportNode contingencyReporter = createContingencyReportNode(reportNode, id, cr.getStatus().toString());
+            reportContingencyTimeline(id, timelineDir, exportMode, contingencyReporter);
         });
+    }
+
+    // Report the timeline events from the timeline files written by dynawo
+    private static void reportContingencyTimeline(String contingencyId, Path timelineDir, ExportMode exportMode,
+                                                  ReportNode contingencyReporter) {
+        Path timelineFile = timelineDir.resolve("timeline_" + contingencyId + exportMode.getFileExtension());
+        if (Files.exists(timelineFile)) {
+            ReportNode timelineReporter = CommonReports.createDynawoTimelineReportNode(contingencyReporter);
+            TimeLineParser.parse(timelineFile, exportMode)
+                    .forEach(e -> CommonReports.reportTimelineEntry(timelineReporter, e));
+        } else {
+            LOGGER.warn("Timeline file not found");
+        }
     }
 }

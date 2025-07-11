@@ -29,6 +29,7 @@ import com.powsybl.loadflow.LoadFlowParameters;
 import com.powsybl.security.LimitViolationFilter;
 import com.powsybl.security.SecurityAnalysisParameters;
 import com.powsybl.security.SecurityAnalysisReport;
+import com.powsybl.security.SecurityAnalysisResult;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -84,8 +85,10 @@ public final class DynaFlowSecurityAnalysisHandler extends AbstractExecutionHand
     public SecurityAnalysisReport after(Path workingDir, ExecutionReport report) throws IOException {
         super.after(workingDir, report);
         network.getVariantManager().setWorkingVariant(workingVariantId);
-        ContingencyResultsUtils.reportContingenciesTimelines(contingencies, workingDir.resolve(TIMELINE_FOLDER), ExportMode.XML, reportNode);
-        return new SecurityAnalysisReport(createSecurityAnalysisResult(network, violationFilter, workingDir, contingencies));
+        SecurityAnalysisResult result = createSecurityAnalysisResult(network, violationFilter, workingDir, contingencies);
+        ContingencyResultsUtils.reportContingencyResults(result.getPostContingencyResults(),
+                workingDir.resolve(TIMELINE_FOLDER), ExportMode.XML, reportNode);
+        return new SecurityAnalysisReport(result);
     }
 
     private void writeContingencies(List<Contingency> contingencies, Path workingDir) throws IOException {
