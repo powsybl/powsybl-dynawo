@@ -48,12 +48,13 @@ public final class NetworkResultsUpdater {
             update(targetNetwork.getGenerator(sourceGenerator.getId()).getTerminal(), sourceGenerator.getTerminal());
         }
         for (ShuntCompensator sourceShuntCompensator : sourceNetwork.getShuntCompensators()) {
-            targetNetwork.getShuntCompensator(sourceShuntCompensator.getId()).setSectionCount(sourceShuntCompensator.getSectionCount());
+            targetNetwork.getShuntCompensator(sourceShuntCompensator.getId()).setSolvedSectionCount(sourceShuntCompensator.getSectionCount());
             update(targetNetwork.getShuntCompensator(sourceShuntCompensator.getId()).getTerminal(), sourceShuntCompensator.getTerminal());
         }
         for (StaticVarCompensator sourceStaticVarCompensator : sourceNetwork.getStaticVarCompensators()) {
             update(targetNetwork.getStaticVarCompensator(sourceStaticVarCompensator.getId()).getTerminal(), sourceStaticVarCompensator.getTerminal());
             targetNetwork.getStaticVarCompensator(sourceStaticVarCompensator.getId()).setRegulationMode(sourceStaticVarCompensator.getRegulationMode());
+            targetNetwork.getStaticVarCompensator(sourceStaticVarCompensator.getId()).setRegulating(sourceStaticVarCompensator.isRegulating());
         }
         for (Switch sourceSwitch : sourceNetwork.getSwitches()) {
             targetNetwork.getSwitch(sourceSwitch.getId()).setOpen(sourceSwitch.isOpen());
@@ -99,13 +100,13 @@ public final class NetworkResultsUpdater {
             PhaseTapChanger sourcePhaseTapChanger = sourceTwoWindingsTransformer.getPhaseTapChanger();
             PhaseTapChanger targetPhaseTapChanger = targetNetwork.getTwoWindingsTransformer(sourceTwoWindingsTransformer.getId()).getPhaseTapChanger();
             if (targetPhaseTapChanger != null) {
-                targetPhaseTapChanger.setTapPosition(sourcePhaseTapChanger.getTapPosition());
+                targetPhaseTapChanger.setSolvedTapPosition(sourcePhaseTapChanger.getTapPosition());
             }
 
             RatioTapChanger sourceRatioTapChanger = sourceTwoWindingsTransformer.getRatioTapChanger();
             RatioTapChanger targetRatioTapChanger = targetNetwork.getTwoWindingsTransformer(sourceTwoWindingsTransformer.getId()).getRatioTapChanger();
             if (targetRatioTapChanger != null) {
-                targetRatioTapChanger.setTapPosition(sourceRatioTapChanger.getTapPosition());
+                targetRatioTapChanger.setSolvedTapPosition(sourceRatioTapChanger.getTapPosition());
             }
         }
     }
@@ -125,13 +126,13 @@ public final class NetworkResultsUpdater {
         PhaseTapChanger sourcePhaseTapChanger = source.getPhaseTapChanger();
         PhaseTapChanger targetPhaseTapChanger = target.getPhaseTapChanger();
         if (targetPhaseTapChanger != null) {
-            targetPhaseTapChanger.setTapPosition(sourcePhaseTapChanger.getTapPosition());
+            targetPhaseTapChanger.setSolvedTapPosition(sourcePhaseTapChanger.getTapPosition());
         }
 
         RatioTapChanger sourceRatioTapChanger = source.getRatioTapChanger();
         RatioTapChanger targetRatioTapChanger = target.getRatioTapChanger();
         if (targetRatioTapChanger != null) {
-            targetRatioTapChanger.setTapPosition(sourceRatioTapChanger.getTapPosition());
+            targetRatioTapChanger.setSolvedTapPosition(sourceRatioTapChanger.getTapPosition());
         }
     }
 

@@ -10,16 +10,14 @@ import com.powsybl.commons.datasource.ResourceDataSource;
 import com.powsybl.commons.datasource.ResourceSet;
 import com.powsybl.commons.report.PowsyblCoreReportResourceBundle;
 import com.powsybl.commons.report.ReportNode;
-import com.powsybl.commons.test.PowsyblCoreTestReportResourceBundle;
+import com.powsybl.commons.test.PowsyblTestReportResourceBundle;
 import com.powsybl.dynamicsimulation.*;
 import com.powsybl.dynamicsimulation.groovy.*;
 import com.powsybl.dynawo.*;
 import com.powsybl.dynawo.commons.ExportMode;
 import com.powsybl.dynawo.commons.PowsyblDynawoReportResourceBundle;
-import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.dynawo.suppliers.dynamicmodels.DynawoModelsSupplier;
 import com.powsybl.dynawo.suppliers.events.DynawoEventModelsSupplier;
-import com.powsybl.dynawo.xml.ParametersXml;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.network.VariantManagerConstants;
 import com.powsybl.iidm.network.test.SvcTestCaseFactory;
@@ -61,7 +59,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         parameters = new DynamicSimulationParameters()
                 .setStartTime(0)
                 .setStopTime(100);
-        dynawoSimulationParameters = new DynawoSimulationParameters();
+        dynawoSimulationParameters = DynawoSimulationParameters.load();
         parameters.addExtension(DynawoSimulationParameters.class, dynawoSimulationParameters);
     }
 
@@ -114,7 +112,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         ReportNode reportNode = ReportNode.newRootReportNode()
                 .withResourceBundles(PowsyblCoreReportResourceBundle.BASE_NAME,
                         PowsyblDynawoReportResourceBundle.BASE_NAME,
-                        PowsyblCoreTestReportResourceBundle.TEST_BASE_NAME)
+                        PowsyblTestReportResourceBundle.TEST_BASE_NAME)
                 .withMessageTemplate("testIEEE14")
                 .build();
         Supplier<DynamicSimulationResult> resultSupplier = setupIEEE14Simulation(reportNode);
@@ -135,14 +133,10 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                 getResourceAsStream("/svarc/dynamicModels.groovy"),
                 GroovyExtension.find(DynamicModelGroovyExtension.class, DynawoSimulationProvider.NAME));
 
-        List<ParametersSet> modelsParameters = ParametersXml.load(getResourceAsStream("/svarc/models.par"));
-        ParametersSet networkParameters = ParametersXml.load(getResourceAsStream("/svarc/network.par"), "8");
-        ParametersSet solverParameters = ParametersXml.load(getResourceAsStream("/svarc/solvers.par"), "2");
-        dynawoSimulationParameters.setModelsParameters(modelsParameters)
-                .setNetworkParameters(networkParameters)
-                .setSolverParameters(solverParameters)
-                .setSolverType(DynawoSimulationParameters.SolverType.IDA)
-                .setPrecision(10e-8);
+        dynawoSimulationParameters.setModelsParameters(getResourceAsStream("/svarc/models.par"))
+                .setNetworkParameters(getResourceAsStream("/svarc/network.par"), "8")
+                .setSolverParameters(getResourceAsStream("/svarc/solvers.par"), "2")
+                .setSolverType(DynawoSimulationParameters.SolverType.IDA);
 
         DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, EventModelsSupplier.empty(), OutputVariablesSupplier.empty(),
                         VariantManagerConstants.INITIAL_VARIANT_ID, computationManager, parameters, NO_OP)
@@ -164,18 +158,15 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                 getResourceAsStream("/hvdc/dynamicModels.groovy"),
                 GroovyExtension.find(DynamicModelGroovyExtension.class, DynawoSimulationProvider.NAME));
 
-        List<ParametersSet> modelsParameters = ParametersXml.load(getResourceAsStream("/hvdc/models.par"));
-        ParametersSet networkParameters = ParametersXml.load(getResourceAsStream("/hvdc/network.par"), "8");
-        ParametersSet solverParameters = ParametersXml.load(getResourceAsStream("/hvdc/solvers.par"), "2");
         ReportNode reportNode = newRootReportNode()
                 .withResourceBundles(PowsyblCoreReportResourceBundle.BASE_NAME,
                         PowsyblDynawoReportResourceBundle.BASE_NAME,
-                        PowsyblCoreTestReportResourceBundle.TEST_BASE_NAME)
+                        PowsyblTestReportResourceBundle.TEST_BASE_NAME)
                 .withMessageTemplate("testHvdc")
                 .build();
-        dynawoSimulationParameters.setModelsParameters(modelsParameters)
-                .setNetworkParameters(networkParameters)
-                .setSolverParameters(solverParameters)
+        dynawoSimulationParameters.setModelsParameters(getResourceAsStream("/hvdc/models.par"))
+                .setNetworkParameters(getResourceAsStream("/hvdc/network.par"), "8")
+                .setSolverParameters(getResourceAsStream("/hvdc/solvers.par"), "2")
                 .setSolverType(DynawoSimulationParameters.SolverType.IDA)
                 .setSpecificLogs(EnumSet.allOf(DynawoSimulationParameters.SpecificLog.class));
 
@@ -207,12 +198,9 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                 getResourceAsStream("/smib/curves.groovy"),
                 GroovyExtension.find(OutputVariableGroovyExtension.class, DynawoSimulationProvider.NAME));
 
-        List<ParametersSet> modelsParameters = ParametersXml.load(getResourceAsStream("/smib/SMIB.par"));
-        ParametersSet networkParameters = ParametersXml.load(getResourceAsStream("/smib/network.par"), "8");
-        ParametersSet solverParameters = ParametersXml.load(getResourceAsStream("/smib/solvers.par"), "1");
-        dynawoSimulationParameters.setModelsParameters(modelsParameters)
-                .setNetworkParameters(networkParameters)
-                .setSolverParameters(solverParameters)
+        dynawoSimulationParameters.setModelsParameters(getResourceAsStream("/smib/SMIB.par"))
+                .setNetworkParameters(getResourceAsStream("/smib/network.par"), "8")
+                .setSolverParameters(getResourceAsStream("/smib/solvers.par"), "1")
                 .setSolverType(DynawoSimulationParameters.SolverType.IDA);
 
         DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, outputVariablesSupplier,
@@ -241,9 +229,9 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                 GroovyExtension.find(OutputVariableGroovyExtension.class, DynawoSimulationProvider.NAME));
 
         parameters.setStopTime(200);
-        dynawoSimulationParameters.setModelsParameters(ParametersXml.load(getResourceAsStream("/error/models.par")))
-                .setNetworkParameters(ParametersXml.load(getResourceAsStream("/error/network.par"), "NETWORK"))
-                .setSolverParameters(ParametersXml.load(getResourceAsStream("/error/solvers.par"), "3"))
+        dynawoSimulationParameters.setModelsParameters(getResourceAsStream("/error/models.par"))
+                .setNetworkParameters(getResourceAsStream("/error/network.par"), "NETWORK")
+                .setSolverParameters(getResourceAsStream("/error/solvers.par"), "3")
                 .setSolverType(DynawoSimulationParameters.SolverType.SIM);
 
         DynamicSimulationResult result = provider.run(network, dynamicModelsSupplier, eventModelsSupplier, outputVariablesSupplier,
@@ -264,12 +252,9 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         DynamicModelsSupplier dynamicModelsSupplier = DynawoModelsSupplier.load(getResourceAsStream("/ieee14/disconnectline/dynamicModels.json"));
         EventModelsSupplier eventModelsSupplier = DynawoEventModelsSupplier.load(getResourceAsStream("/ieee14/disconnectline/eventModels.json"));
 
-        List<ParametersSet> modelsParameters = ParametersXml.load(getResourceAsStream("/ieee14/models.par"));
-        ParametersSet networkParameters = ParametersXml.load(getResourceAsStream("/ieee14/network.par"), "8");
-        ParametersSet solverParameters = ParametersXml.load(getResourceAsStream("/ieee14/solvers.par"), "2");
-        dynawoSimulationParameters.setModelsParameters(modelsParameters)
-                .setNetworkParameters(networkParameters)
-                .setSolverParameters(solverParameters)
+        dynawoSimulationParameters.setModelsParameters(getResourceAsStream("/ieee14/models.par"))
+                .setNetworkParameters(getResourceAsStream("/ieee14/network.par"), "8")
+                .setSolverParameters(getResourceAsStream("/ieee14/solvers.par"), "2")
                 .setSolverType(DynawoSimulationParameters.SolverType.IDA)
                 .setTimelineExportMode(ExportMode.XML);
 
@@ -302,9 +287,9 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                 getResourceAsStream("/ieee14/disconnectline/eventModels.groovy"),
                 GroovyExtension.find(EventModelGroovyExtension.class, DynawoSimulationProvider.NAME));
 
-        dynawoSimulationParameters.setModelsParameters(ParametersXml.load(getResourceAsStream("/ieee14/signal_n/IEEE14.par")))
-                .setNetworkParameters(ParametersXml.load(getResourceAsStream("/ieee14/signal_n/IEEE14.par"), "Network"))
-                .setSolverParameters(ParametersXml.load(getResourceAsStream("/ieee14/signal_n/IEEE14.par"), "SimplifiedSolver"))
+        dynawoSimulationParameters.setModelsParameters(getResourceAsStream("/ieee14/signal_n/IEEE14.par"))
+                .setNetworkParameters(getResourceAsStream("/ieee14/signal_n/IEEE14.par"), "Network")
+                .setSolverParameters(getResourceAsStream("/ieee14/signal_n/IEEE14.par"), "SimplifiedSolver")
                 .setLogLevelFilter(DynawoSimulationParameters.LogLevel.DEBUG)
                 .setSolverType(DynawoSimulationParameters.SolverType.SIM)
                 .setTimelineExportMode(ExportMode.XML);
@@ -340,12 +325,9 @@ class DynawoSimulationTest extends AbstractDynawoTest {
                 getResourceAsStream("/ieee14/disconnectline/outputVariables.groovy"),
                 GroovyExtension.find(OutputVariableGroovyExtension.class, DynawoSimulationProvider.NAME));
 
-        List<ParametersSet> modelsParameters = ParametersXml.load(getResourceAsStream("/ieee14/models.par"));
-        ParametersSet networkParameters = ParametersXml.load(getResourceAsStream("/ieee14/network.par"), "8");
-        ParametersSet solverParameters = ParametersXml.load(getResourceAsStream("/ieee14/solvers.par"), "2");
-        dynawoSimulationParameters.setModelsParameters(modelsParameters)
-                .setNetworkParameters(networkParameters)
-                .setSolverParameters(solverParameters)
+        dynawoSimulationParameters.setModelsParameters(getResourceAsStream("/ieee14/models.par"))
+                .setNetworkParameters(getResourceAsStream("/ieee14/network.par"), "8")
+                .setSolverParameters(getResourceAsStream("/ieee14/solvers.par"), "2")
                 .setSolverType(DynawoSimulationParameters.SolverType.IDA)
                 .setTimelineExportMode(ExportMode.XML);
 

@@ -8,7 +8,7 @@
 package com.powsybl.dynawo.models;
 
 import com.powsybl.commons.report.ReportNode;
-import com.powsybl.commons.test.PowsyblCoreTestReportResourceBundle;
+import com.powsybl.commons.test.PowsyblTestReportResourceBundle;
 import com.powsybl.commons.test.TestUtil;
 import com.powsybl.dynawo.commons.PowsyblDynawoReportResourceBundle;
 import com.powsybl.dynawo.models.lines.LineBuilder;
@@ -37,7 +37,7 @@ class BuilderEquipmentSetterTest {
         Line ln2 = network2.getLine("L1");
         ReportNode reportNode = ReportNode.newRootReportNode()
                 .withResourceBundles(PowsyblDynawoReportResourceBundle.BASE_NAME,
-                        PowsyblCoreTestReportResourceBundle.TEST_BASE_NAME)
+                        PowsyblTestReportResourceBundle.TEST_BASE_NAME)
                 .withMessageTemplate("testBuilder")
                 .build();
 

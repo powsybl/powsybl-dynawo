@@ -10,7 +10,7 @@ import com.google.common.io.ByteStreams;
 import com.powsybl.commons.datasource.ResourceDataSource;
 import com.powsybl.commons.datasource.ResourceSet;
 import com.powsybl.commons.report.ReportNode;
-import com.powsybl.commons.test.PowsyblCoreTestReportResourceBundle;
+import com.powsybl.commons.test.PowsyblTestReportResourceBundle;
 import com.powsybl.commons.test.TestUtil;
 import com.powsybl.contingency.Contingency;
 import com.powsybl.dynaflow.*;
@@ -78,7 +78,7 @@ class DynaFlowTest extends AbstractDynawoTest {
 
         ReportNode reportNode = ReportNode.newRootReportNode()
                 .withResourceBundles(PowsyblDynawoReportResourceBundle.BASE_NAME,
-                        PowsyblCoreTestReportResourceBundle.TEST_BASE_NAME)
+                        PowsyblTestReportResourceBundle.TEST_BASE_NAME)
                 .withMessageTemplate("testIEEE14")
                 .build();
         LoadFlowResult result = loadFlowProvider.run(network, computationManager, VariantManagerConstants.INITIAL_VARIANT_ID, loadFlowParameters, reportNode)
@@ -115,7 +115,7 @@ class DynaFlowTest extends AbstractDynawoTest {
         // Launching a load flow before the security analysis is required
         ReportNode reportNodeLf = ReportNode.newRootReportNode()
                 .withResourceBundles(PowsyblDynawoReportResourceBundle.BASE_NAME,
-                        PowsyblCoreTestReportResourceBundle.TEST_BASE_NAME)
+                        PowsyblTestReportResourceBundle.TEST_BASE_NAME)
                 .withMessageTemplate("testIEEE14")
                 .build();
         loadFlowProvider.run(network, computationManager, VariantManagerConstants.INITIAL_VARIANT_ID, loadFlowParameters, reportNodeLf).join();
@@ -133,7 +133,7 @@ class DynaFlowTest extends AbstractDynawoTest {
 
         ReportNode reportNode = ReportNode.newRootReportNode()
                 .withResourceBundles(PowsyblDynawoReportResourceBundle.BASE_NAME,
-                        PowsyblCoreTestReportResourceBundle.TEST_BASE_NAME)
+                        PowsyblTestReportResourceBundle.TEST_BASE_NAME)
                 .withMessageTemplate("testIEEE14")
                 .build();
         SecurityAnalysisRunParameters runParameters = new SecurityAnalysisRunParameters()
