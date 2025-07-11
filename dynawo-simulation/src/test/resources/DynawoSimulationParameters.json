@@ -4,11 +4,38 @@
   "stopTime" : 3600.0,
   "extensions" : {
     "DynawoSimulationParameters" : {
-      "modelsParametersFilePath" : "/home/user/parametersFile",
-      "networkParametersFilePath" : "/home/user/networkParametersFile",
-      "networkParametersSetId" : "networkParametersId",
-      "solverParametersFilePath" : "/home/user/solverParametersFile",
-      "solverParametersSetId" : "solverParametersId",
+      "networkParameters" : {
+        "id" : "networkParametersId",
+        "parameters" : {
+          "load_Tp" : {
+            "name" : "load_Tp",
+            "type" : "DOUBLE",
+            "value" : "90"
+          },
+          "load_isControllable" : {
+            "name" : "load_isControllable",
+            "type" : "BOOL",
+            "value" : "false"
+          }
+        },
+        "references" : [ ]
+      },
+      "solverParameters" : {
+        "id" : "solverParametersId",
+        "parameters" : {
+          "order" : {
+            "name" : "order",
+            "type" : "INT",
+            "value" : "1"
+          },
+          "absAccuracy" : {
+            "name" : "absAccuracy",
+            "type" : "DOUBLE",
+            "value" : "1e-4"
+          }
+        },
+        "references" : [ ]
+      },
       "solverType" : "IDA",
       "mergeLoads" : false,
       "useModelSimplifiers" : false,
@@ -22,7 +49,23 @@
       "timelineExportMode" : "TXT",
       "logLevelFilter" : "INFO",
       "specificLogs" : [ "PARAMETERS", "VARIABLES" ],
-      "criteriaFilePath" : null
+      "criteriaFilePath" : null,
+      "modelsParameters" : [ {
+        "id" : "test",
+        "parameters" : {
+          "boolean" : {
+            "name" : "boolean",
+            "type" : "BOOL",
+            "value" : "true"
+          },
+          "string" : {
+            "name" : "string",
+            "type" : "STRING",
+            "value" : "aString"
+          }
+        },
+        "references" : [ ]
+      } ]
     }
   }
 }

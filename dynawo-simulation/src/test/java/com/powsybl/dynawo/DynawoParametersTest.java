@@ -18,7 +18,6 @@ import com.powsybl.dynawo.DynawoSimulationParameters.SpecificLog;
 import com.powsybl.dynawo.commons.ExportMode;
 import com.powsybl.dynawo.parameters.Parameter;
 import com.powsybl.dynawo.parameters.ParameterType;
-import com.powsybl.dynawo.parameters.ParametersSet;
 import com.powsybl.dynawo.xml.ParametersXml;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -74,9 +73,9 @@ class DynawoParametersTest extends AbstractSerDeTest {
 
         DynawoSimulationParameters parameters = DynawoSimulationParameters.load(platformConfig, fileSystem);
 
-        checkModelParameters(parameters, "/home/user/parametersFile");
-        checkNetworkParameters(parameters, networkParametersId, "/home/user/networkParametersFile");
-        checkSolverParameters(parameters, solverParametersId, "/home/user/solverParametersFile", solverType);
+        checkModelParameters(parameters);
+        checkNetworkParameters(parameters, networkParametersId);
+        checkSolverParameters(parameters, solverParametersId, solverType);
 
         assertEquals(mergeLoads, parameters.isMergeLoads());
         assertEquals(useModelSimplifiers, parameters.isUseModelSimplifiers());
@@ -170,7 +169,7 @@ class DynawoParametersTest extends AbstractSerDeTest {
         moduleConfig.setStringProperty("solver.parametersFile", "/work/inmemory/solvers.par");
 
         DynawoSimulationParameters parameters = DynawoSimulationParameters.load(platformConfig, fileSystem);
-        checkModelParameters(parameters, "/work/inmemory/models.par");
+        checkModelParameters(parameters);
 
         assertEquals(DEFAULT_NETWORK_PAR_ID, parameters.getNetworkParameters().getId());
         assertTrue(parameters.getNetworkParameters().getParameters().isEmpty());
@@ -178,6 +177,7 @@ class DynawoParametersTest extends AbstractSerDeTest {
 
         assertEquals(DEFAULT_SOLVER_TYPE, parameters.getSolverType());
         assertEquals(DEFAULT_SOLVER_PAR_ID, parameters.getSolverParameters().getId());
+        assertEquals("1", parameters.getSolverParameters().getId());
 
         assertEquals(DEFAULT_MERGE_LOADS, parameters.isMergeLoads());
         assertEquals(DEFAULT_USE_MODEL_SIMPLIFIERS, parameters.isUseModelSimplifiers());
@@ -247,11 +247,12 @@ class DynawoParametersTest extends AbstractSerDeTest {
         initPlatformConfig(networkParametersId, solverType, solverParametersId, mergeLoads, useModelSimplifiers, precision, timelinExportMode, logLevel, specificLogs, criteriaFileName);
         initDumpFilePlatformConfig(dumpFolder, dumpFile);
         Map<String, String> expectedProperties = Map.ofEntries(
-                Map.entry("parametersFile", "/home/user/parametersFile"),
-                Map.entry("network.parametersFile", "/home/user/networkParametersFile"),
-                Map.entry("network.parametersId", "networkParametersId"),
-                Map.entry("solver.parametersFile", "/home/user/solverParametersFile"),
-                Map.entry("solver.parametersId", "solverParametersId"),
+                Map.entry("modelParameters",
+                        "{test=test,{boolean=Parameter[name=boolean, type=BOOL, value=true], string=Parameter[name=string, type=STRING, value=aString]},[]}"),
+                Map.entry("networkParameters",
+                        "networkParametersId,{load_Tp=Parameter[name=load_Tp, type=DOUBLE, value=90], load_isControllable=Parameter[name=load_isControllable, type=BOOL, value=false]},[]"),
+                Map.entry("solverParameters",
+                        "solverParametersId,{order=Parameter[name=order, type=INT, value=1], absAccuracy=Parameter[name=absAccuracy, type=DOUBLE, value=1e-4]},[]"),
                 Map.entry("solver.type", "IDA"),
                 Map.entry("mergeLoads", "true"),
                 Map.entry("useModelSimplifiers", "true"),
@@ -315,45 +316,20 @@ class DynawoParametersTest extends AbstractSerDeTest {
         createDumpFiles(dumpFolder, dumpFile);
 
         DynawoSimulationParameters parameters = DynawoSimulationParameters.load(properties, fileSystem);
-        checkModelParameters(parameters, parametersFile);
-        checkNetworkParameters(parameters, networkParametersId, networkParametersFile);
-        checkSolverParameters(parameters, solverParametersId, solverParametersFile, solverType);
+        checkModelParameters(parameters);
+        checkNetworkParameters(parameters, networkParametersId);
+        checkSolverParameters(parameters, solverParametersId, solverType);
         assertEquals(mergeLoads, parameters.isMergeLoads());
         assertEquals(useModelSimplifiers, parameters.isUseModelSimplifiers());
         assertEquals(precision, parameters.getPrecision());
         assertEquals(timelinExportMode, parameters.getTimelineExportMode());
         assertEquals(logLevel, parameters.getLogLevelFilter());
         assertThat(parameters.getSpecificLogs()).containsExactlyInAnyOrderElementsOf(specificLogs);
-        assertThat(parameters.getCriteriaFilePath()).hasValue(fileSystem.getPath(criteriaFile));
         DumpFileParameters dumpParameters = parameters.getDumpFileParameters();
         assertEquals(exportDumpFile, dumpParameters.exportDumpFile());
         assertEquals(useDumpFile, dumpParameters.useDumpFile());
         assertEquals(dumpFolder, dumpParameters.dumpFileFolder().toString());
         assertEquals(dumpFile, dumpParameters.dumpFile());
-    }
-
-    @Test
-    void testParameterSetsSetters() {
-        Map<String, String> expectedProperties = Map.ofEntries(
-                Map.entry("network.parametersId", "test"),
-                Map.entry("solver.parametersId", "test"),
-                Map.entry("solver.type", "SIM"),
-                Map.entry("mergeLoads", "false"),
-                Map.entry("useModelSimplifiers", "false"),
-                Map.entry("precision", "1.0E-6"),
-                Map.entry("timeline.exportMode", "TXT"),
-                Map.entry("log.levelFilter", "INFO"),
-                Map.entry("dump.export", "false"),
-                Map.entry("dump.useAsInput", "false"));
-
-        ParametersSet parametersSet = new ParametersSet("test");
-        parametersSet.addParameter("id", ParameterType.STRING, "value");
-        Map<String, String> properties = new DynawoSimulationParameters().setModelsParameters(List.of(parametersSet))
-                .setNetworkParameters(parametersSet)
-                .setSolverParameters(parametersSet)
-                .createMapFromParameters();
-
-        assertThat(properties).containsExactlyInAnyOrderEntriesOf(expectedProperties);
     }
 
     private void createFiles(String parametersFile, String networkParametersFile, String solverParametersFile, String criteriaFile) throws IOException {
@@ -371,8 +347,7 @@ class DynawoParametersTest extends AbstractSerDeTest {
         Files.createFile(fileSystem.getPath(folderName, fileName));
     }
 
-    private void checkModelParameters(DynawoSimulationParameters dynawoSimulationParameters, String path) {
-        assertThat(dynawoSimulationParameters.getModelsParametersFilePath()).hasValue(path);
+    private static void checkModelParameters(DynawoSimulationParameters dynawoSimulationParameters) {
         Parameter booleanParameter = dynawoSimulationParameters.getModelParameters("test").getParameters().get("boolean");
         assertEquals("true", booleanParameter.value());
         assertEquals("boolean", booleanParameter.name());
@@ -383,11 +358,9 @@ class DynawoParametersTest extends AbstractSerDeTest {
         assertEquals(ParameterType.STRING, stringParameter.type());
     }
 
-    private void checkNetworkParameters(DynawoSimulationParameters parameters, String networkParametersId, String path) {
-        assertThat(parameters.getNetworkParametersFilePath()).hasValue(path);
-        Map<String, Parameter> networkParameters = parameters.getNetworkParameters().getParameters();
+    private static void checkNetworkParameters(DynawoSimulationParameters parameters, String networkParametersId) {
         assertEquals(networkParametersId, parameters.getNetworkParameters().getId());
-        assertEquals(networkParametersId, parameters.getNetworkParametersSetId());
+        Map<String, Parameter> networkParameters = parameters.getNetworkParameters().getParameters();
         Parameter loadTp = networkParameters.get("load_Tp");
         assertEquals("90", loadTp.value());
         assertEquals("load_Tp", loadTp.name());
@@ -398,11 +371,9 @@ class DynawoParametersTest extends AbstractSerDeTest {
         assertEquals(ParameterType.BOOL, loadControllable.type());
     }
 
-    private void checkSolverParameters(DynawoSimulationParameters parameters, String solverParametersId, String path, SolverType solverType) {
-        assertThat(parameters.getSolverParametersFilePath()).hasValue(path);
+    private static void checkSolverParameters(DynawoSimulationParameters parameters, String solverParametersId, SolverType solverType) {
         Map<String, Parameter> solverParameters = parameters.getSolverParameters().getParameters();
         assertEquals(solverParametersId, parameters.getSolverParameters().getId());
-        assertEquals(solverParametersId, parameters.getSolverParametersSetId());
         assertEquals(solverType, parameters.getSolverType());
         Parameter order = solverParameters.get("order");
         assertEquals("1", order.value());
