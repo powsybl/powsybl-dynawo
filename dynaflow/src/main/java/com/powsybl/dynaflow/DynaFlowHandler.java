@@ -18,6 +18,7 @@ import com.powsybl.dynawo.commons.DynawoUtil;
 import com.powsybl.dynawo.commons.ExportMode;
 import com.powsybl.dynawo.commons.NetworkResultsUpdater;
 import com.powsybl.dynawo.commons.loadmerge.LoadsMerger;
+import com.powsybl.dynawo.commons.timeline.TimelineEntry;
 import com.powsybl.dynawo.commons.timeline.XmlTimeLineParser;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.iidm.serde.NetworkSerDe;
@@ -109,9 +110,13 @@ public class DynaFlowHandler extends AbstractExecutionHandler<LoadFlowResult> {
                 .resolve(TIMELINE_FOLDER)
                 .resolve(TIMELINE_FILENAME + ExportMode.XML.getFileExtension());
         if (Files.exists(timelineFile)) {
-            ReportNode timelineReporter = CommonReports.createDynawoTimelineReportNode(dfReporter);
-            new XmlTimeLineParser().parse(timelineFile)
-                    .forEach(e -> CommonReports.reportTimelineEntry(timelineReporter, e));
+            List<TimelineEntry> entries = new XmlTimeLineParser().parse(timelineFile);
+            if (!entries.isEmpty()) {
+                ReportNode timelineReporter = CommonReports.createDynawoTimelineReportNode(dfReporter);
+                entries.forEach(e -> CommonReports.reportTimelineEntry(timelineReporter, e));
+            } else {
+                CommonReports.reportEmptyTimeline(dfReporter);
+            }
         } else {
             LOGGER.warn("Timeline file not found");
         }

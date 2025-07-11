@@ -12,6 +12,7 @@ import com.powsybl.contingency.Contingency;
 import com.powsybl.dynawo.commons.CommonReports;
 import com.powsybl.dynawo.commons.ExportMode;
 import com.powsybl.dynawo.commons.timeline.TimeLineParser;
+import com.powsybl.dynawo.commons.timeline.TimelineEntry;
 import com.powsybl.dynawo.contingency.results.ResultsUtil;
 import com.powsybl.dynawo.contingency.results.Status;
 import com.powsybl.dynawo.contingency.xml.XmlScenarioResultParser;
@@ -114,9 +115,13 @@ public final class ContingencyResultsUtils {
                                                   ReportNode contingencyReporter) {
         Path timelineFile = timelineDir.resolve("timeline_" + contingencyId + exportMode.getFileExtension());
         if (Files.exists(timelineFile)) {
-            ReportNode timelineReporter = CommonReports.createDynawoTimelineReportNode(contingencyReporter);
-            TimeLineParser.parse(timelineFile, exportMode)
-                    .forEach(e -> CommonReports.reportTimelineEntry(timelineReporter, e));
+            List<TimelineEntry> entries = TimeLineParser.parse(timelineFile, exportMode);
+            if (!entries.isEmpty()) {
+                ReportNode timelineReporter = CommonReports.createDynawoTimelineReportNode(contingencyReporter);
+                entries.forEach(e -> CommonReports.reportTimelineEntry(timelineReporter, e));
+            } else {
+                CommonReports.reportEmptyTimeline(contingencyReporter);
+            }
         } else {
             LOGGER.warn("Timeline file not found");
         }

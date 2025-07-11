@@ -35,6 +35,13 @@ public final class CommonReports {
                 .add();
     }
 
+    public static void reportEmptyTimeline(ReportNode reportNode) {
+        reportNode.newReportNode()
+                .withMessageTemplate("dynawo.commons.dynawoTimelineEmpty")
+                .withSeverity(TypedValue.WARN_SEVERITY)
+                .add();
+    }
+
     public static void reportTimelineEntry(ReportNode reportNode, TimelineEntry timelineEntry) {
         reportNode.newReportNode()
                 .withMessageTemplate("dynawo.commons.dynawoTimelineEntry")

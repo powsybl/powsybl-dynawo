@@ -1,3 +1,3 @@
 + IEEE14 test
    + Dynaflow loadflow on network 'ieee14bus'
-      Timeline
+      Empty timeline, no event has occurred
