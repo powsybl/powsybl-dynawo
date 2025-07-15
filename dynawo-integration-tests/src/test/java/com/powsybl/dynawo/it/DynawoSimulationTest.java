@@ -22,7 +22,6 @@ import com.powsybl.dynawo.commons.PowsyblDynawoReportResourceBundle;
 import com.powsybl.dynawo.models.automationsystems.TapChangerBlockingAutomationSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.overloadmanagments.DynamicOverloadManagementSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterIAutomationSystemBuilder;
-import com.powsybl.dynawo.models.events.AbstractEvent;
 import com.powsybl.dynawo.models.events.EventActivePowerVariationBuilder;
 import com.powsybl.dynawo.models.events.EventDisconnectionBuilder;
 import com.powsybl.dynawo.models.events.NodeFaultEventBuilder;
