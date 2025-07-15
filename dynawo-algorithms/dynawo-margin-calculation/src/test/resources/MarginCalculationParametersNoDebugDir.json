@@ -1,7 +1,6 @@
 {
   "startTime" : 0.0,
   "stopTime" : 200.0,
-  "debugDir" : "/tmp/debugDir",
   "marginCalculationStartTime" : 100.0,
   "loadIncreaseStartTime" : 10.0,
   "loadIncreaseStopTime" : 50.0,
