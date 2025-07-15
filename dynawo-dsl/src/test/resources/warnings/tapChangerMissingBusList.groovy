@@ -7,7 +7,7 @@
  */
 package warnings
 
-List[] measurementPoints = [["LOAD", "Wrong_ID"], ["NGEN_NHV1"]]
+List[] measurementPoints = [["LOAD", "Wrong_ID"], ["NGEN_NHV1", "NGEN"]]
 
 TapChangerBlockingAutomaton {
     dynamicModelId "ZAB"
