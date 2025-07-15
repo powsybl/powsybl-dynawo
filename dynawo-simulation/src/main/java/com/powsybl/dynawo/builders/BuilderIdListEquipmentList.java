@@ -24,23 +24,24 @@ public class BuilderIdListEquipmentList<T extends Identifiable<?>> extends Build
     }
 
     public void addEquipments(Collection<String>[] staticIdsArray, Function<String, T> equipmentSupplier,
-                              EquipmentPredicate<T> equipmentPredicate) {
+                              EquipmentChecker<T> equipmentChecker, StaticIdListUnknownReportNodeBuilder reportNodeBuilder) {
         for (Collection<String> staticIds : staticIdsArray) {
-            addEquipment(staticIds, equipmentSupplier, equipmentPredicate);
+            addEquipment(staticIds, equipmentSupplier, equipmentChecker, reportNodeBuilder);
         }
-        reportEmptyList();
+        reportIfEmptyList();
     }
 
-    private void addEquipment(Collection<String> staticIds, Function<String, T> equipmentSupplier, EquipmentPredicate<T> equipmentPredicate) {
+    private void addEquipment(Collection<String> staticIds, Function<String, T> equipmentSupplier,
+                              EquipmentChecker<T> equipmentChecker, StaticIdListUnknownReportNodeBuilder reportNodeBuilder) {
         staticIds.stream()
                 .map(equipmentSupplier)
                 .filter(Objects::nonNull)
-                .filter(eq -> equipmentPredicate.test(eq, fieldName, reportNode))
+                .filter(eq -> equipmentChecker.test(eq, fieldName, reportNode))
                 .findFirst()
                 .ifPresentOrElse(equipments::add, () -> {
                     String ids = staticIds.toString();
                     missingEquipmentIds.add(ids);
-                    BuilderReports.reportStaticIdListUnknown(reportNode, fieldName, ids, equipmentType, equipmentPredicate.getDefinition());
+                    reportNodeBuilder.buildReportNode(reportNode, fieldName, ids, equipmentType);
                 });
     }
 }

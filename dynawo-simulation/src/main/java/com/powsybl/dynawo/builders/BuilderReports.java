@@ -97,7 +97,7 @@ public final class BuilderReports {
                 .add();
     }
 
-    public static void reportUnknownStaticIdHandling(ReportNode reportNode, String fieldName, String staticId, String equipmentType) {
+    public static void reportUnknownStaticIdAsDynamicId(ReportNode reportNode, String fieldName, String staticId, String equipmentType) {
         reportNode.newReportNode()
                 .withMessageTemplate("dynawo.dynasim.unknownIdToDynamic")
                 .withUntypedValue(EQUIPMENT_TYPE_FIELD, equipmentType)
@@ -117,13 +117,12 @@ public final class BuilderReports {
                 .add();
     }
 
-    public static void reportStaticIdListUnknown(ReportNode reportNode, String fieldName, String staticIds, String equipmentType, String predicate) {
+    public static void reportEnergizedStaticIdListUnknown(ReportNode reportNode, String fieldName, String staticIds, String equipmentType) {
         reportNode.newReportNode()
-                .withMessageTemplate("dynawo.dynasim.staticIdListUnknown")
+                .withMessageTemplate("dynawo.dynasim.energizedStaticIdListUnknown")
                 .withUntypedValue(EQUIPMENT_TYPE_FIELD, equipmentType)
                 .withUntypedValue(FIELD_NAME, fieldName)
                 .withUntypedValue("staticIds", staticIds)
-                .withUntypedValue("predicate", predicate)
                 .withSeverity(TypedValue.WARN_SEVERITY)
                 .add();
     }

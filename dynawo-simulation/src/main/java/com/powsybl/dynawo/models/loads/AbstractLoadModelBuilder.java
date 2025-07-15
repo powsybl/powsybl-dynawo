@@ -18,7 +18,7 @@ import com.powsybl.iidm.network.Network;
  */
 public abstract class AbstractLoadModelBuilder<R extends AbstractEquipmentModelBuilder<Load, R>> extends AbstractEquipmentModelBuilder<Load, R> {
 
-    private static final EquipmentPredicate<Load> IS_NOT_FICTITIOUS = (eq, f, r) -> {
+    private static final EquipmentChecker<Load> IS_NOT_FICTITIOUS = (eq, f, r) -> {
         if (eq.isFictitious()) {
             BuilderReports.reportFictitiousEquipment(r, f, eq.getId());
             return false;
@@ -38,7 +38,7 @@ public abstract class AbstractLoadModelBuilder<R extends AbstractEquipmentModelB
 
     @Override
     public R equipment(Load equipment) {
-        builderEquipment.addEquipment(equipment, hasSameNetwork, IS_NOT_FICTITIOUS);
+        builderEquipment.addEquipment(equipment, network, IS_NOT_FICTITIOUS);
         return self();
     }
 

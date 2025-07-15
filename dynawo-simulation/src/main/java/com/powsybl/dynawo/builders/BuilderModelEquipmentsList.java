@@ -28,11 +28,11 @@ public class BuilderModelEquipmentsList<T extends Identifiable<?>> extends Build
     @Override
     protected void handleMissingId(String staticId) {
         dynamicModelIds.add(staticId);
-        BuilderReports.reportUnknownStaticIdHandling(reportNode, fieldName, staticId, equipmentType);
+        BuilderReports.reportUnknownStaticIdAsDynamicId(reportNode, fieldName, staticId, equipmentType);
     }
 
     @Override
-    protected void reportEmptyList() {
+    protected void reportIfEmptyList() {
         if (equipments.isEmpty() && missingEquipmentIds.isEmpty()) {
             BuilderReports.reportEmptyList(reportNode, fieldName);
         }

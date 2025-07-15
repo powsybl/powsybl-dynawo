@@ -39,18 +39,18 @@ public class BuilderEquipmentsList<T extends Identifiable<?>> {
 
     public void addEquipments(Iterable<String> staticIds, Function<String, T> equipmentsSupplier) {
         staticIds.forEach(id -> addEquipment(id, equipmentsSupplier));
-        reportEmptyList();
+        reportIfEmptyList();
     }
 
     public void addEquipments(String[] staticIds, Function<String, T> equipmentsSupplier,
-                              EquipmentPredicate<T> equipmentPredicate) {
-        addEquipments(() -> Arrays.stream(staticIds).iterator(), equipmentsSupplier, equipmentPredicate);
+                              EquipmentChecker<T> equipmentChecker) {
+        addEquipments(() -> Arrays.stream(staticIds).iterator(), equipmentsSupplier, equipmentChecker);
     }
 
     public void addEquipments(Iterable<String> staticIds, Function<String, T> equipmentsSupplier,
-                              EquipmentPredicate<T> equipmentPredicate) {
-        staticIds.forEach(id -> addEquipment(id, equipmentsSupplier, equipmentPredicate));
-        reportEmptyList();
+                              EquipmentChecker<T> equipmentChecker) {
+        staticIds.forEach(id -> addEquipment(id, equipmentsSupplier, equipmentChecker));
+        reportIfEmptyList();
     }
 
     public void addEquipment(String staticId, Function<String, T> equipmentsSupplier) {
@@ -63,11 +63,11 @@ public class BuilderEquipmentsList<T extends Identifiable<?>> {
     }
 
     public void addEquipment(String staticId, Function<String, T> equipmentsSupplier,
-                             EquipmentPredicate<T> equipmentPredicate) {
+                             EquipmentChecker<T> equipmentChecker) {
         T equipment = equipmentsSupplier.apply(staticId);
         if (equipment == null) {
             handleMissingId(staticId);
-        } else if (equipmentPredicate.test(equipment, fieldName, reportNode)) {
+        } else if (equipmentChecker.test(equipment, fieldName, reportNode)) {
             equipments.add(equipment);
         } else {
             missingEquipmentIds.add(staticId);
@@ -79,7 +79,7 @@ public class BuilderEquipmentsList<T extends Identifiable<?>> {
         BuilderReports.reportStaticIdUnknown(reportNode, fieldName, staticId, equipmentType);
     }
 
-    protected void reportEmptyList() {
+    protected void reportIfEmptyList() {
         if (equipments.isEmpty()) {
             BuilderReports.reportEmptyList(reportNode, fieldName);
         }

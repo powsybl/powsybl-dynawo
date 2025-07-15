@@ -14,8 +14,7 @@ import com.powsybl.iidm.network.*;
 
 import java.util.*;
 
-import static com.powsybl.dynawo.builders.BuildersUtil.IS_ACTION_CONNECTION_POINT_ENERGIZED;
-import static com.powsybl.dynawo.builders.BuildersUtil.MEASUREMENT_POINT_TYPE;
+import static com.powsybl.dynawo.builders.BuildersUtil.*;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -113,7 +112,7 @@ public class TapChangerBlockingAutomationSystemBuilder extends AbstractAutomatio
 
     public TapChangerBlockingAutomationSystemBuilder uMeasurements(Collection<String>[] staticIdsArray) {
         uMeasurementPoints.addEquipments(staticIdsArray, id -> BuildersUtil.getActionConnectionPoint(network, id),
-                IS_ACTION_CONNECTION_POINT_ENERGIZED);
+                IS_ACTION_CONNECTION_POINT_ENERGIZED, ENERGIZED_REPORT_NODE_BUILDER);
         return self();
     }
 

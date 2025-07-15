@@ -13,7 +13,6 @@ import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Network;
 
 import java.util.Objects;
-import java.util.function.Predicate;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -23,7 +22,6 @@ public abstract class AbstractEquipmentModelBuilder<T extends Identifiable<T>, R
     protected String parameterSetId;
     protected final ModelConfig modelConfig;
     protected final BuilderEquipment<T> builderEquipment;
-    protected final Predicate<T> hasSameNetwork = eq -> Objects.equals(network, eq.getNetwork());
 
     protected AbstractEquipmentModelBuilder(Network network, ModelConfig modelConfig, IdentifiableType equipmentType, ReportNode parentReportNode) {
         super(network, parentReportNode);
@@ -45,7 +43,7 @@ public abstract class AbstractEquipmentModelBuilder<T extends Identifiable<T>, R
 
     @Override
     public R equipment(T equipment) {
-        builderEquipment.addEquipment(equipment, hasSameNetwork);
+        builderEquipment.addEquipment(equipment, network);
         return self();
     }
 

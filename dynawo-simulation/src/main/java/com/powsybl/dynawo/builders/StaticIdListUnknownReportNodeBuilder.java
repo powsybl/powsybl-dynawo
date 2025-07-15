@@ -12,11 +12,8 @@ import com.powsybl.commons.report.ReportNode;
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
-public interface EquipmentPredicate<T> {
+@FunctionalInterface
+public interface StaticIdListUnknownReportNodeBuilder {
 
-    boolean test(T equipment, String fieldName, ReportNode reportNode);
-
-    default String getDefinition() {
-        return "";
-    }
+    void buildReportNode(ReportNode reportNode, String fieldName, String staticIds, String equipmentType);
 }

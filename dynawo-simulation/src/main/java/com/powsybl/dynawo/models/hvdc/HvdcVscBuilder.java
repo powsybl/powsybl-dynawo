@@ -22,7 +22,7 @@ public class HvdcVscBuilder extends AbstractHvdcBuilder<HvdcVscBuilder> {
     public static final String CATEGORY = "HVDC_VSC";
     private static final ModelConfigs MODEL_CONFIGS = ModelConfigsHandler.getInstance().getModelConfigs(CATEGORY);
     private static final HvdcVarNameHandler VSC_NAME_HANDLER = new VscVarNameHandler();
-    private static final EquipmentPredicate<HvdcLine> IS_VSC = (eq, f, r) -> {
+    private static final EquipmentChecker<HvdcLine> IS_VSC = (eq, f, r) -> {
         if (HvdcConverterStation.HvdcType.VSC != eq.getConverterStation1().getHvdcType()) {
             BuilderReports.reportWrongHvdcType(r, f, eq.getId(), HvdcConverterStation.HvdcType.VSC);
             return false;
@@ -78,7 +78,7 @@ public class HvdcVscBuilder extends AbstractHvdcBuilder<HvdcVscBuilder> {
 
     @Override
     public HvdcVscBuilder equipment(HvdcLine equipment) {
-        builderEquipment.addEquipment(equipment, hasSameNetwork, IS_VSC);
+        builderEquipment.addEquipment(equipment, network, IS_VSC);
         return self();
     }
 

@@ -9,9 +9,10 @@ package com.powsybl.dynawo.builders;
 
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.iidm.network.Identifiable;
+import com.powsybl.iidm.network.Network;
 
+import java.util.Objects;
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 /**
  * Represents an equipment field identified by a static ID in a builder
@@ -50,30 +51,30 @@ public class BuilderEquipment<T extends Identifiable<?>> {
     }
 
     public void addEquipment(String equipmentId, Function<String, T> equipmentSupplier,
-                             EquipmentPredicate<T> equipmentPredicate) {
+                             EquipmentChecker<T> equipmentChecker) {
         staticId = equipmentId;
         T eq = equipmentSupplier.apply(staticId);
         if (eq == null) {
             BuilderReports.reportStaticIdUnknown(reportNode, fieldName, staticId, equipmentType);
-        } else if (equipmentPredicate.test(eq, fieldName, reportNode)) {
+        } else if (equipmentChecker.test(eq, fieldName, reportNode)) {
             this.equipment = eq;
         }
     }
 
-    public void addEquipment(T equipment, Predicate<T> equipmentChecker) {
+    public void addEquipment(T equipment, Network network) {
         staticId = equipment.getId();
-        if (equipmentChecker.test(equipment)) {
-            this.equipment = equipment;
-        } else {
+        if (!Objects.equals(network, equipment.getNetwork())) {
             BuilderReports.reportDifferentNetwork(reportNode, EQUIPMENT_FIELD_NAME, staticId, equipmentType);
+        } else {
+            this.equipment = equipment;
         }
     }
 
-    public void addEquipment(T equipment, Predicate<T> equipmentChecker, EquipmentPredicate<T> equipmentPredicate) {
+    public void addEquipment(T equipment, Network network, EquipmentChecker<T> equipmentChecker) {
         staticId = equipment.getId();
-        if (!equipmentChecker.test(equipment)) {
+        if (!Objects.equals(network, equipment.getNetwork())) {
             BuilderReports.reportDifferentNetwork(reportNode, EQUIPMENT_FIELD_NAME, staticId, equipmentType);
-        } else if (equipmentPredicate.test(equipment, fieldName, reportNode)) {
+        } else if (equipmentChecker.test(equipment, fieldName, reportNode)) {
             this.equipment = equipment;
         }
     }
