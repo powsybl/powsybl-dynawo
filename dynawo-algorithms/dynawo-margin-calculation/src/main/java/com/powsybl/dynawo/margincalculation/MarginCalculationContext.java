@@ -88,7 +88,8 @@ public final class MarginCalculationContext extends DynawoSimulationContext {
 
         private void setupContingencyEventModels() {
             this.contingencyEventModels = ContingencyEventModelsFactory.createFrom(contingencies,
-                    parameters.getContingenciesStartTime(), network, blackBoxModelSupplier, reportNode);
+                    parameters.getContingenciesStartTime(), network, blackBoxModelSupplier,
+                    simulationModels::hasMacroConnector, reportNode);
         }
 
         @Override
