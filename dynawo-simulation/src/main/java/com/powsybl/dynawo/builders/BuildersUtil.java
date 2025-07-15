@@ -51,10 +51,5 @@ public final class BuildersUtil {
     public static Identifiable<?> getActionConnectionPoint(Network network, String staticId) {
         BusbarSection busbarSection = network.getBusbarSection(staticId);
         return busbarSection != null ? busbarSection : network.getBusBreakerView().getBus(staticId);
-//        if (busbarSection != null) {
-//            return EnergizedUtils.isEnergizedAndInMainConnectedComponent(busbarSection) ? busbarSection : null;
-//        }
-//        Bus bus = network.getBusBreakerView().getBus(staticId);
-//        return isEnergizedAndInMainConnectedComponent(bus) ? bus : null;
     }
 }
