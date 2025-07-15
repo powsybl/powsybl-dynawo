@@ -23,7 +23,9 @@ import com.powsybl.dynawo.builders.ModelConfigsHandler;
 import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.models.utils.BlackBoxSupplierUtils;
 import com.powsybl.dynawo.commons.DynawoUtil;
+import com.powsybl.dynawo.commons.DynawoVersion;
 import com.powsybl.dynawo.commons.PowsyblDynawoVersion;
+import com.powsybl.dynawo.models.utils.BlackBoxSupplierUtils;
 import com.powsybl.iidm.network.Network;
 import com.powsybl.security.SecurityAnalysisReport;
 import com.powsybl.security.dynamic.DynamicSecurityAnalysisParameters;
@@ -82,7 +84,7 @@ public class DynawoSecurityAnalysisProvider implements DynamicSecurityAnalysisPr
 
         ReportNode dsaReportNode = DynamicSecurityAnalysisReports.createDynamicSecurityAnalysisReportNode(runParameters.getReportNode(), network.getId());
         network.getVariantManager().setWorkingVariant(workingVariantId);
-        ExecutionEnvironment execEnv = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, config.isDebug());
+        ExecutionEnvironment execEnv = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, config.isDebug(), runParameters.getDynamicSecurityAnalysisParameters().getDebugDir());
         DynawoVersion currentVersion = DynawoUtil.requireDynaMinVersion(execEnv, runParameters.getComputationManager(), getVersionCommand(config), DYNAWO_LAUNCHER_PROGRAM_NAME, false);
         DynamicSecurityAnalysisParameters parameters = runParameters.getDynamicSecurityAnalysisParameters();
         DynawoSimulationParameters dynawoParameters = DynawoSimulationParameters.load(parameters.getDynamicSimulationParameters());
@@ -91,6 +93,7 @@ public class DynawoSecurityAnalysisProvider implements DynamicSecurityAnalysisPr
         SecurityAnalysisContext context = new SecurityAnalysisContext.Builder(network,
                 BlackBoxSupplierUtils.getBlackBoxModelList(dynamicModelsSupplier, network, dsaReportNode),
                 contingenciesProvider.getContingencies(network))
+                .eventModels(BlackBoxSupplierUtils.getBlackBoxModelList(runParameters.getEventModelsSupplier(), network, dsaReportNode))
                 .dynamicSecurityAnalysisParameters(parameters)
                 .dynawoParameters(dynawoParameters)
                 .currentVersion(currentVersion)
