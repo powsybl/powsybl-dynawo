@@ -37,6 +37,11 @@ public final class SecurityAnalysisContext extends DynawoSimulationContext {
             this.contingencies = contingencies;
         }
 
+        public Builder eventModels(List<BlackBoxModel> eventModels) {
+            this.eventModels = eventModels;
+            return self();
+        }
+
         public Builder dynamicSecurityAnalysisParameters(DynamicSecurityAnalysisParameters parameters) {
             this.securityParameters = Objects.requireNonNull(parameters);
             return self();
@@ -56,7 +61,7 @@ public final class SecurityAnalysisContext extends DynawoSimulationContext {
             super.setupMacroConnections();
             this.contingencyEventModels = ContingencyEventModelsFactory.createFrom(contingencies,
                     securityParameters.getDynamicContingenciesParameters().getContingenciesStartTime(),
-                    network, blackBoxModelSupplier, reportNode);
+                    network, blackBoxModelSupplier, simulationModels::hasMacroConnector, reportNode);
         }
 
         @Override

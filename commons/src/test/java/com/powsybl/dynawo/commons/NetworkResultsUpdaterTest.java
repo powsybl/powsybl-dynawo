@@ -9,6 +9,7 @@ package com.powsybl.dynawo.commons;
 import com.powsybl.dynawo.commons.loadmerge.LoadsMerger;
 import com.powsybl.iidm.network.*;
 import com.powsybl.iidm.network.test.FourSubstationsNodeBreakerFactory;
+import com.powsybl.iidm.network.test.ThreeWindingsTransformerNetworkFactory;
 import com.powsybl.iidm.serde.ExportOptions;
 import com.powsybl.iidm.serde.NetworkSerDe;
 import org.junit.jupiter.api.Test;
@@ -59,20 +60,69 @@ class NetworkResultsUpdaterTest extends AbstractDynawoCommonsTest {
 
     @Test
     void testUpdateWithDisconnects() throws IOException {
-        Network expected = FourSubstationsNodeBreakerFactory.create();
-        Network actual = NetworkSerDe.copy(expected);
+        Network updated = FourSubstationsNodeBreakerFactory.create();
+        Network actual = NetworkSerDe.copy(updated);
         reset(actual);
 
         // Test with some elements disconnected in the network
-        expected.getLoads().iterator().next().getTerminal().disconnect();
-        expected.getGenerators().iterator().next().getTerminal().disconnect();
-        expected.getShuntCompensators().iterator().next().getTerminal().disconnect();
-        expected.getLines().iterator().next().getTerminal1().disconnect();
-        expected.getLines().iterator().next().getTerminal2().disconnect();
-        expected.getTwoWindingsTransformers().iterator().next().getTerminal1().disconnect();
-        expected.getTwoWindingsTransformers().iterator().next().getTerminal2().disconnect();
+        updated.getLoads().iterator().next().getTerminal().disconnect();
+        updated.getGenerators().iterator().next().getTerminal().disconnect();
+        updated.getShuntCompensators().iterator().next().getTerminal().disconnect();
+        updated.getLines().iterator().next().getTerminal1().disconnect();
+        updated.getLines().iterator().next().getTerminal2().disconnect();
+        updated.getTwoWindingsTransformers().iterator().next().getTerminal1().disconnect();
+        updated.getTwoWindingsTransformers().iterator().next().getTerminal2().disconnect();
 
-        NetworkResultsUpdater.update(actual, expected, false);
+        Network expected = NetworkSerDe.copy(updated);
+        expected.getShuntCompensator("SHUNT").setSolvedSectionCount(1);
+        expected.getTwoWindingsTransformer("TWT").getPhaseTapChanger().setSolvedTapPosition(15);
+        expected.getTwoWindingsTransformer("TWT").getRatioTapChanger().setSolvedTapPosition(1);
+
+        NetworkResultsUpdater.update(actual, updated, false);
+        compare(expected, actual);
+    }
+
+    @Test
+    void testUpdateSolvedValues() throws IOException {
+        Network expected = FourSubstationsNodeBreakerFactory.create();
+        Network updated = NetworkSerDe.copy(expected);
+        Network actual = NetworkSerDe.copy(expected);
+        reset(actual);
+
+        updated.getShuntCompensator("SHUNT").setSectionCount(1);
+        updated.getTwoWindingsTransformer("TWT").getPhaseTapChanger().setTapPosition(2);
+        updated.getTwoWindingsTransformer("TWT").getRatioTapChanger().setTapPosition(2);
+        expected.getShuntCompensator("SHUNT").setSolvedSectionCount(1);
+        expected.getTwoWindingsTransformer("TWT").getPhaseTapChanger().setSolvedTapPosition(2);
+        expected.getTwoWindingsTransformer("TWT").getRatioTapChanger().setSolvedTapPosition(2);
+
+        NetworkResultsUpdater.update(actual, updated, false);
+        compare(expected, actual);
+    }
+
+    @Test
+    void testUpdateThreeWindingsTransformerSolvedValues() throws IOException {
+        Network expected = ThreeWindingsTransformerNetworkFactory.create();
+        expected.getThreeWindingsTransformer("3WT").getLeg2().newPhaseTapChanger()
+                .setLowTapPosition(0)
+                .setTapPosition(2)
+                .setRegulationMode(PhaseTapChanger.RegulationMode.CURRENT_LIMITER)
+                .setRegulating(false)
+                .beginStep().setR(39.78473).setX(29.784725).setG(0.0).setB(0.0).setRho(1.0).setAlpha(-42.8).endStep()
+                .beginStep().setR(31.720245).setX(21.720242).setG(0.0).setB(0.0).setRho(1.0).setAlpha(-40.18).endStep()
+                .beginStep().setR(23.655737).setX(13.655735).setG(0.0).setB(0.0).setRho(1.0).setAlpha(-37.54).endStep()
+                .add();
+        Network updated = NetworkSerDe.copy(expected);
+        Network actual = NetworkSerDe.copy(expected);
+        reset(actual);
+
+        updated.getThreeWindingsTransformer("3WT").getLeg2().getPhaseTapChanger().setTapPosition(1);
+        updated.getThreeWindingsTransformer("3WT").getLeg2().getRatioTapChanger().setTapPosition(1);
+        expected.getThreeWindingsTransformer("3WT").getLeg2().getPhaseTapChanger().setSolvedTapPosition(1);
+        expected.getThreeWindingsTransformer("3WT").getLeg2().getRatioTapChanger().setSolvedTapPosition(1);
+        expected.getThreeWindingsTransformer("3WT").getLeg3().getRatioTapChanger().setSolvedTapPosition(0);
+
+        NetworkResultsUpdater.update(actual, updated, false);
         compare(expected, actual);
     }
 
@@ -98,12 +148,12 @@ class NetworkResultsUpdaterTest extends AbstractDynawoCommonsTest {
 
             PhaseTapChanger targetPhaseTapChanger = targetTwoWindingsTransformer.getPhaseTapChanger();
             if (targetPhaseTapChanger != null) {
-                targetPhaseTapChanger.setTapPosition(targetPhaseTapChanger.getLowTapPosition());
+                targetPhaseTapChanger.setSolvedTapPosition(targetPhaseTapChanger.getLowTapPosition());
             }
 
             RatioTapChanger targetRatioTapChanger = targetTwoWindingsTransformer.getRatioTapChanger();
             if (targetRatioTapChanger != null) {
-                targetRatioTapChanger.setTapPosition(targetRatioTapChanger.getLowTapPosition());
+                targetRatioTapChanger.setSolvedTapPosition(targetRatioTapChanger.getLowTapPosition());
             }
         }
         for (ThreeWindingsTransformer targetThreeWindingsTransformer : targetNetwork.getThreeWindingsTransformers()) {
@@ -118,7 +168,7 @@ class NetworkResultsUpdaterTest extends AbstractDynawoCommonsTest {
             reset(targetGenerator.getTerminal());
         }
         for (ShuntCompensator targetShuntCompensator : targetNetwork.getShuntCompensators()) {
-            targetShuntCompensator.setSectionCount(0);
+            targetShuntCompensator.setSolvedSectionCount(0);
             reset(targetShuntCompensator.getTerminal());
         }
         for (StaticVarCompensator targetStaticVarCompensator : targetNetwork.getStaticVarCompensators()) {
@@ -132,11 +182,11 @@ class NetworkResultsUpdaterTest extends AbstractDynawoCommonsTest {
         reset(leg.getTerminal());
         PhaseTapChanger phaseTapChanger = leg.getPhaseTapChanger();
         if (phaseTapChanger != null) {
-            phaseTapChanger.setTapPosition(phaseTapChanger.getLowTapPosition());
+            phaseTapChanger.setSolvedTapPosition(phaseTapChanger.getLowTapPosition());
         }
         RatioTapChanger ratioTapChanger = leg.getRatioTapChanger();
         if (ratioTapChanger != null) {
-            ratioTapChanger.setTapPosition(ratioTapChanger.getLowTapPosition());
+            ratioTapChanger.setSolvedTapPosition(ratioTapChanger.getLowTapPosition());
         }
     }
 

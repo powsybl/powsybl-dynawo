@@ -8,6 +8,7 @@
 package com.powsybl.dynawo.contingency;
 
 import com.powsybl.commons.report.ReportNode;
+import com.powsybl.commons.report.TypedValue;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -17,10 +18,12 @@ public final class ContingencyReports {
     private ContingencyReports() {
     }
 
-    public static ReportNode createContingenciesTimelineReportNode(ReportNode reportNode, String contingencyId) {
+    public static ReportNode createContingencyReportNode(ReportNode reportNode, String contingencyId, String status) {
         return reportNode.newReportNode()
                 .withMessageTemplate("dynawo.contingency.contingencyCreation")
                 .withUntypedValue("contingencyId", contingencyId)
+                .withUntypedValue("status", status)
+                .withSeverity(TypedValue.INFO_SEVERITY)
                 .add();
     }
 }

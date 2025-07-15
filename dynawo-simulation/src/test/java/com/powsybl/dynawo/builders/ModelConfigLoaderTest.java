@@ -10,14 +10,23 @@ package com.powsybl.dynawo.builders;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.powsybl.commons.PowsyblException;
+import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.commons.DynawoVersion;
+import com.powsybl.dynawo.models.generators.BaseGeneratorBuilder;
+import com.powsybl.dynawo.models.lines.LineBuilder;
+import com.powsybl.iidm.network.Network;
+import com.powsybl.iidm.network.test.NoEquipmentNetworkFactory;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Path;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -110,5 +119,36 @@ class ModelConfigLoaderTest {
         ModelConfigs modelConfigs4 = new ModelConfigs(new TreeMap<>(Map.of(defaultModel.name(), defaultModel)), defaultModel.name());
         modelConfigs3.addModelConfigs(modelConfigs4);
         assertEquals(defaultModel, modelConfigs3.getDefaultModelConfig());
+    }
+
+    @Test
+    void loadAdditionalModels() throws URISyntaxException {
+        Path additionalModels = Path.of(Objects.requireNonNull(getClass().getResource("/additionalModels.json")).toURI());
+        Network network = NoEquipmentNetworkFactory.create();
+        ModelConfigsHandler handler = ModelConfigsHandler.getInstance();
+        int baseGenNumber = BaseGeneratorBuilder.getSupportedModelInfos().size();
+        int baseLineNumber = LineBuilder.getSupportedModelInfos().size();
+        handler.addModels(new AdditionalModelConfigLoader(additionalModels));
+
+        assertThat(BaseGeneratorBuilder.getSupportedModelInfos())
+                .hasSize(baseGenNumber + 2)
+                .contains(new ModelConfig("AdditionalGenerator1"), new ModelConfig("AdditionalGenerator2"));
+        assertNotNull(handler.getModelBuilder(network, "AdditionalGenerator1", ReportNode.NO_OP));
+        assertNotNull(handler.getModelBuilder(network, "AdditionalGenerator2", ReportNode.NO_OP));
+
+        assertThat(LineBuilder.getSupportedModelInfos())
+                .hasSize(baseLineNumber + 1)
+                .contains(new ModelConfig("AdditionalLine"));
+        assertNotNull(handler.getModelBuilder(network, "AdditionalLine", ReportNode.NO_OP));
+    }
+
+    @Test
+    void additionalModelsFileNotFound() {
+        ModelConfigsHandler handler = ModelConfigsHandler.getInstance();
+        AdditionalModelConfigLoader loader = new AdditionalModelConfigLoader(Path.of("wrongPath"));
+        assertThatThrownBy(() -> handler.addModels(loader))
+                .isInstanceOf(PowsyblException.class)
+                .hasMessage("Additional dynamic models configuration file not found");
+
     }
 }

@@ -14,7 +14,6 @@ import com.powsybl.dynawo.models.buses.DefaultActionConnectionPoint;
 import com.powsybl.dynawo.models.buses.DefaultEquipmentConnectionPoint;
 import com.powsybl.dynawo.models.buses.EquipmentConnectionPoint;
 import com.powsybl.dynawo.models.generators.DefaultGenerator;
-import com.powsybl.dynawo.models.generators.GeneratorModel;
 import com.powsybl.dynawo.models.hvdc.DefaultHvdc;
 import com.powsybl.dynawo.models.hvdc.HvdcModel;
 import com.powsybl.dynawo.models.lines.DefaultLine;
@@ -42,7 +41,7 @@ public enum DefaultModelConfiguration {
             EquipmentConnectionPoint.class,
             staticId -> DefaultEquipmentConnectionPoint.getDefaultModel()),
     GENERATOR(IdentifiableType.GENERATOR,
-            GeneratorModel.class,
+            InjectionModel.class,
             new DefaultModelFactory<>(DefaultGenerator::new)),
     HVDC(IdentifiableType.HVDC_LINE,
             HvdcModel.class,

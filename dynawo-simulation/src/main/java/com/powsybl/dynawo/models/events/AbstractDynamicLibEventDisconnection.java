@@ -14,19 +14,42 @@ import com.powsybl.iidm.network.Identifiable;
 
 import static com.powsybl.dynawo.parameters.ParameterType.BOOL;
 import static com.powsybl.dynawo.parameters.ParameterType.DOUBLE;
-import static java.lang.Boolean.TRUE;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
  */
 public abstract class AbstractDynamicLibEventDisconnection extends AbstractEvent implements ContextDependentEvent {
 
-    protected static final String DYNAMIC_MODEL_LIB = "EventSetPointBoolean";
-    protected static final String DEFAULT_MODEL_LIB = "EventConnectedStatus";
-    protected static final String DISCONNECTION_VAR_CONNECT = "event_state1";
+    protected enum EquipmentModelType {
+
+        SPECIFIED("EventSetPointBoolean", "event_state1", "event_stateEvent1"),
+        DEFAULT("EventConnectedStatus", "event_state1_value", "event_open"),;
+
+        private final String lib;
+        private final String varConnection;
+        private final String parameterName;
+
+        EquipmentModelType(String lib, String varConnection, String parameterName) {
+            this.lib = lib;
+            this.varConnection = varConnection;
+            this.parameterName = parameterName;
+        }
+
+        public String getLib() {
+            return lib;
+        }
+
+        public String getVarConnection() {
+            return varConnection;
+        }
+
+        public String getParameterName() {
+            return parameterName;
+        }
+    }
 
     protected final boolean disconnect;
-    private final ImmutableLateInit<Boolean> equipmentHasDynamicModel = new ImmutableLateInit<>();
+    protected final ImmutableLateInit<EquipmentModelType> equipmentModelType = new ImmutableLateInit<>();
 
     protected AbstractDynamicLibEventDisconnection(String eventId, Identifiable<?> equipment, EventModelInfo eventModelInfo, double startTime, boolean disconnect) {
         super(eventId, equipment, eventModelInfo, startTime);
@@ -35,7 +58,7 @@ public abstract class AbstractDynamicLibEventDisconnection extends AbstractEvent
 
     @Override
     public String getLib() {
-        return TRUE == equipmentHasDynamicModel.getValue() ? DYNAMIC_MODEL_LIB : DEFAULT_MODEL_LIB;
+        return equipmentModelType.getValue().getLib();
     }
 
     @Override
@@ -46,11 +69,11 @@ public abstract class AbstractDynamicLibEventDisconnection extends AbstractEvent
     @Override
     protected void createEventSpecificParameters(ParametersSet paramSet) {
         paramSet.addParameter("event_tEvent", DOUBLE, Double.toString(getStartTime()));
-        paramSet.addParameter("event_stateEvent1", BOOL, Boolean.toString(disconnect));
+        paramSet.addParameter(equipmentModelType.getValue().getParameterName(), BOOL, Boolean.toString(disconnect));
     }
 
     @Override
-    public final void setEquipmentHasDynamicModel(boolean hasDynamicModel) {
-        this.equipmentHasDynamicModel.setValue(hasDynamicModel);
+    public final void setEquipmentModelType(boolean hasDynamicModel) {
+        this.equipmentModelType.setValue(hasDynamicModel ? EquipmentModelType.SPECIFIED : EquipmentModelType.DEFAULT);
     }
 }

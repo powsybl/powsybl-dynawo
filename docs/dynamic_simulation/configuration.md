@@ -123,6 +123,12 @@ The default value is an empty list.
 `criteria.file` defines the simulation criteria file.  
 The default value is `null`.
 
+**additionalModelsFile**  
+`additionalModelsFile` defines the JSON file listing additional models used in the simulation.  
+The file must follow the `models.json` pattern defined [here](dynamic-models-configuration.md#supported-models).
+The models added in the file cannot overload an existing model and must belong to an existing category otherwise they will be skipped.  
+The default value is `null`.
+
 ### Examples
 
 **YAML configuration:**
