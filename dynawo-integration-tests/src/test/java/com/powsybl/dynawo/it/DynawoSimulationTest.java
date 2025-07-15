@@ -22,6 +22,7 @@ import com.powsybl.dynawo.commons.PowsyblDynawoReportResourceBundle;
 import com.powsybl.dynawo.models.automationsystems.TapChangerBlockingAutomationSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.overloadmanagments.DynamicOverloadManagementSystemBuilder;
 import com.powsybl.dynawo.models.automationsystems.phaseshifters.PhaseShifterIAutomationSystemBuilder;
+import com.powsybl.dynawo.models.events.AbstractEvent;
 import com.powsybl.dynawo.models.events.EventActivePowerVariationBuilder;
 import com.powsybl.dynawo.models.events.EventDisconnectionBuilder;
 import com.powsybl.dynawo.models.events.NodeFaultEventBuilder;
@@ -352,7 +353,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
     }
 
     @Test
-    void testDefaultModelEventConnections() throws IOException {
+    void testDefaultModelEventConnections() {
 
         Network network = FourSubstationsNodeBreakerFactory.create();
         ReportNode reportNode = ReportNode.newRootReportNode()
@@ -417,7 +418,7 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         assertThat(result.getStatusText()).contains("KINSOL fails to solve the problem");
 
         // Test bus events
-        network = EurostagTutorialExample1Factory.create();
+        network = EurostagTutorialExample1Factory.createWithLFResults();
         reportNode = ReportNode.newRootReportNode()
                 .withResourceBundles(PowsyblCoreReportResourceBundle.BASE_NAME,
                         PowsyblDynawoReportResourceBundle.BASE_NAME,
@@ -443,7 +444,8 @@ class DynawoSimulationTest extends AbstractDynawoTest {
         eventReport = reportNode.getChildren().get(0);
         assertEquals("dynawo.dynasim.dynawoSimulation", eventReport.getMessageKey());
         assertTrue(eventReport.getChildren().stream().allMatch(r -> r.getMessage().contains("instantiation OK")));
-        assertEquals(DynamicSimulationResult.Status.SUCCESS, result.getStatus());
+        assertEquals(DynamicSimulationResult.Status.FAILURE, result.getStatus());
+        assertThat(result.getStatusText()).contains("KINSOL fails to solve the problem");
     }
 
     @Test
