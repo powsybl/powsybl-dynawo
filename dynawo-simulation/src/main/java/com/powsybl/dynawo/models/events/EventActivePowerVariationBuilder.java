@@ -8,7 +8,6 @@
 package com.powsybl.dynawo.models.events;
 
 import com.powsybl.commons.report.ReportNode;
-import com.powsybl.dynawo.builders.BuilderEquipment;
 import com.powsybl.dynawo.builders.BuilderReports;
 import com.powsybl.dynawo.builders.EventModelInfo;
 import com.powsybl.dynawo.builders.ModelInfo;
@@ -44,8 +43,8 @@ public class EventActivePowerVariationBuilder extends AbstractEventModelBuilder<
         return MODEL_INFO.version().includes(dynawoVersion) ? MODEL_INFO : null;
     }
 
-    EventActivePowerVariationBuilder(Network network, ReportNode reportNode) {
-        super(network, new BuilderEquipment<>("GENERATOR/LOAD"), reportNode);
+    EventActivePowerVariationBuilder(Network network, ReportNode parentReportNode) {
+        super(network, "GENERATOR/LOAD", parentReportNode);
     }
 
     public EventActivePowerVariationBuilder deltaP(double deltaP) {

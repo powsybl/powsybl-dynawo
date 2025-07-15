@@ -64,9 +64,9 @@ public class TapChangerAutomationSystemBuilder extends AbstractAutomationSystemM
         return MODEL_CONFIGS.getModelInfos(dynawoVersion);
     }
 
-    protected TapChangerAutomationSystemBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
-        super(network, modelConfig, reportNode);
-        load = new BuilderEquipment<>(IdentifiableType.LOAD);
+    protected TapChangerAutomationSystemBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode) {
+        super(network, modelConfig, parentReportNode);
+        load = new BuilderEquipment<>(IdentifiableType.LOAD.toString(), reportNode);
     }
 
     public TapChangerAutomationSystemBuilder staticId(String staticId) {
@@ -87,7 +87,7 @@ public class TapChangerAutomationSystemBuilder extends AbstractAutomationSystemM
     @Override
     protected void checkData() {
         super.checkData();
-        isInstantiable &= load.checkEquipmentData(reportNode);
+        isInstantiable &= load.checkEquipmentData();
     }
 
     @Override

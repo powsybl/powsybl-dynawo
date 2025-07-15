@@ -13,7 +13,6 @@ import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Network;
 
 import java.util.Objects;
-import java.util.function.Predicate;
 
 /**
  * @author Laurent Issertial {@literal <laurent.issertial at rte-france.com>}
@@ -23,18 +22,17 @@ public abstract class AbstractEquipmentModelBuilder<T extends Identifiable<T>, R
     protected String parameterSetId;
     protected final ModelConfig modelConfig;
     protected final BuilderEquipment<T> builderEquipment;
-    private Predicate<T> equipmentPredicates = eq -> Objects.equals(network, eq.getNetwork());
 
-    protected AbstractEquipmentModelBuilder(Network network, ModelConfig modelConfig, IdentifiableType equipmentType, ReportNode reportNode) {
-        super(network, reportNode);
+    protected AbstractEquipmentModelBuilder(Network network, ModelConfig modelConfig, IdentifiableType equipmentType, ReportNode parentReportNode) {
+        super(network, parentReportNode);
         this.modelConfig = Objects.requireNonNull(modelConfig);
-        this.builderEquipment = new BuilderEquipment<>(equipmentType);
+        this.builderEquipment = new BuilderEquipment<>(equipmentType.toString(), reportNode);
     }
 
-    protected AbstractEquipmentModelBuilder(Network network, ModelConfig modelConfig, String equipmentType, ReportNode reportNode) {
-        super(network, reportNode);
+    protected AbstractEquipmentModelBuilder(Network network, ModelConfig modelConfig, String equipmentType, ReportNode parentReportNode) {
+        super(network, parentReportNode);
         this.modelConfig = modelConfig;
-        this.builderEquipment = new BuilderEquipment<>(equipmentType);
+        this.builderEquipment = new BuilderEquipment<>(equipmentType, reportNode);
     }
 
     @Override
@@ -45,7 +43,7 @@ public abstract class AbstractEquipmentModelBuilder<T extends Identifiable<T>, R
 
     @Override
     public R equipment(T equipment) {
-        builderEquipment.addEquipment(equipment, this::checkEquipment);
+        builderEquipment.addEquipment(equipment, network);
         return self();
     }
 
@@ -57,7 +55,7 @@ public abstract class AbstractEquipmentModelBuilder<T extends Identifiable<T>, R
 
     @Override
     protected void checkData() {
-        isInstantiable = builderEquipment.checkEquipmentData(reportNode);
+        isInstantiable = builderEquipment.checkEquipmentData();
         if (parameterSetId == null) {
             BuilderReports.reportFieldNotSet(reportNode, "parameterSetId");
             isInstantiable = false;
@@ -65,14 +63,6 @@ public abstract class AbstractEquipmentModelBuilder<T extends Identifiable<T>, R
     }
 
     protected abstract T findEquipment(String staticId);
-
-    protected boolean checkEquipment(T equipment) {
-        return equipmentPredicates.test(equipment);
-    }
-
-    protected void addEquipmentPredicate(Predicate<T> predicate) {
-        equipmentPredicates = equipmentPredicates.and(predicate);
-    }
 
     public T getEquipment() {
         return builderEquipment.getEquipment();

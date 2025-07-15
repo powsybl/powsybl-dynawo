@@ -58,8 +58,8 @@ public class SignalNGeneratorBuilder extends AbstractGeneratorBuilder<SignalNGen
         return MODEL_CONFIGS.getModelInfos(dynawoVersion);
     }
 
-    protected SignalNGeneratorBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
-        super(network, modelConfig, reportNode);
+    protected SignalNGeneratorBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode) {
+        super(network, modelConfig, parentReportNode);
     }
 
     @Override

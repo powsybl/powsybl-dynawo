@@ -60,8 +60,8 @@ public class LineBuilder extends AbstractEquipmentModelBuilder<Line, LineBuilder
         return MODEL_CONFIGS.getModelInfos(dynawoVersion);
     }
 
-    protected LineBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
-        super(network, modelConfig, IdentifiableType.LINE, reportNode);
+    protected LineBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode) {
+        super(network, modelConfig, IdentifiableType.LINE, parentReportNode);
     }
 
     @Override

@@ -58,8 +58,8 @@ public class GridFormingConverterBuilder extends AbstractGeneratorBuilder<GridFo
         return MODEL_CONFIGS.getModelInfos(dynawoVersion);
     }
 
-    protected GridFormingConverterBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
-        super(network, modelConfig, reportNode);
+    protected GridFormingConverterBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode) {
+        super(network, modelConfig, parentReportNode);
     }
 
     @Override

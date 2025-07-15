@@ -10,7 +10,6 @@ package com.powsybl.dynawo.models.hvdc;
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.dynawo.builders.*;
 import com.powsybl.dynawo.commons.DynawoVersion;
-import com.powsybl.iidm.network.HvdcLine;
 import com.powsybl.iidm.network.IdentifiableType;
 import com.powsybl.iidm.network.Network;
 
@@ -61,13 +60,8 @@ public class HvdcPBuilder extends AbstractHvdcBuilder<HvdcPBuilder> {
         return MODEL_CONFIGS.getModelInfos(dynawoVersion);
     }
 
-    protected HvdcPBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
-        super(network, modelConfig, IdentifiableType.HVDC_LINE, reportNode, P_NAME_HANDLER);
-    }
-
-    @Override
-    protected HvdcLine findEquipment(String staticId) {
-        return network.getHvdcLine(staticId);
+    protected HvdcPBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode) {
+        super(network, modelConfig, IdentifiableType.HVDC_LINE, parentReportNode, P_NAME_HANDLER);
     }
 
     @Override

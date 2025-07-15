@@ -19,8 +19,8 @@ import com.powsybl.iidm.network.Network;
  */
 public abstract class AbstractBusBuilder<R extends AbstractEquipmentModelBuilder<Bus, R>> extends AbstractEquipmentModelBuilder<Bus, R> {
 
-    protected AbstractBusBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode) {
-        super(network, modelConfig, IdentifiableType.BUS, reportNode);
+    protected AbstractBusBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode) {
+        super(network, modelConfig, IdentifiableType.BUS, parentReportNode);
     }
 
     @Override

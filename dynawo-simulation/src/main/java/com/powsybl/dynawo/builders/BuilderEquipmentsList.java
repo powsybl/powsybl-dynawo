@@ -9,7 +9,6 @@ package com.powsybl.dynawo.builders;
 
 import com.powsybl.commons.report.ReportNode;
 import com.powsybl.iidm.network.Identifiable;
-import com.powsybl.iidm.network.IdentifiableType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,25 +20,17 @@ import java.util.function.Function;
  */
 public class BuilderEquipmentsList<T extends Identifiable<?>> {
 
-    private final String equipmentType;
-    private final String fieldName;
-    // when set to true equipment ids not found in the network are seen as dynamic ids for automatons and reported as such
-    private final boolean missingIdsHasDynamicIds;
+    protected final String equipmentType;
+    protected final String fieldName;
+    protected final ReportNode reportNode;
+
     protected List<String> missingEquipmentIds = new ArrayList<>();
-    protected final List<T> equipments = new ArrayList<>();
+    protected List<T> equipments = new ArrayList<>();
 
-    public BuilderEquipmentsList(IdentifiableType identifiableType, String fieldName) {
-        this(identifiableType.toString(), fieldName, false);
-    }
-
-    public BuilderEquipmentsList(String equipmentType, String fieldName) {
-        this(equipmentType, fieldName, false);
-    }
-
-    public BuilderEquipmentsList(String equipmentType, String fieldName, boolean missingIdsHasDynamicIds) {
+    public BuilderEquipmentsList(String equipmentType, String fieldName, ReportNode reportNode) {
         this.equipmentType = equipmentType;
         this.fieldName = fieldName;
-        this.missingIdsHasDynamicIds = missingIdsHasDynamicIds;
+        this.reportNode = reportNode;
     }
 
     public void addEquipments(String[] staticIds, Function<String, T> equipmentsSupplier) {
@@ -48,41 +39,62 @@ public class BuilderEquipmentsList<T extends Identifiable<?>> {
 
     public void addEquipments(Iterable<String> staticIds, Function<String, T> equipmentsSupplier) {
         staticIds.forEach(id -> addEquipment(id, equipmentsSupplier));
+        reportIfEmptyList();
+    }
+
+    public void addEquipments(String[] staticIds, Function<String, T> equipmentsSupplier,
+                              EquipmentChecker<T> equipmentChecker) {
+        addEquipments(() -> Arrays.stream(staticIds).iterator(), equipmentsSupplier, equipmentChecker);
+    }
+
+    public void addEquipments(Iterable<String> staticIds, Function<String, T> equipmentsSupplier,
+                              EquipmentChecker<T> equipmentChecker) {
+        staticIds.forEach(id -> addEquipment(id, equipmentsSupplier, equipmentChecker));
+        reportIfEmptyList();
     }
 
     public void addEquipment(String staticId, Function<String, T> equipmentsSupplier) {
         T equipment = equipmentsSupplier.apply(staticId);
-        if (equipment != null) {
+        if (equipment == null) {
+            handleMissingId(staticId);
+        } else {
+            equipments.add(equipment);
+        }
+    }
+
+    public void addEquipment(String staticId, Function<String, T> equipmentsSupplier,
+                             EquipmentChecker<T> equipmentChecker) {
+        T equipment = equipmentsSupplier.apply(staticId);
+        if (equipment == null) {
+            handleMissingId(staticId);
+        } else if (equipmentChecker.test(equipment, fieldName, reportNode)) {
             equipments.add(equipment);
         } else {
             missingEquipmentIds.add(staticId);
         }
     }
 
-    public boolean checkEquipmentData(ReportNode reportNode) {
+    protected void handleMissingId(String staticId) {
+        missingEquipmentIds.add(staticId);
+        BuilderReports.reportStaticIdUnknown(reportNode, fieldName, staticId, equipmentType);
+    }
+
+    protected void reportIfEmptyList() {
+        if (equipments.isEmpty()) {
+            BuilderReports.reportEmptyList(reportNode, fieldName);
+        }
+    }
+
+    public boolean checkEquipmentData() {
         boolean emptyList = equipments.isEmpty();
-        if (missingEquipmentIds.isEmpty() && emptyList) {
+        if (emptyList && missingEquipmentIds.isEmpty()) {
             BuilderReports.reportFieldNotSet(reportNode, fieldName);
             return false;
-        } else if (!missingIdsHasDynamicIds) {
-            missingEquipmentIds.forEach(missingId ->
-                    BuilderReports.reportStaticIdUnknown(reportNode, fieldName, missingId, equipmentType));
-            if (emptyList) {
-                BuilderReports.reportEmptyList(reportNode, fieldName);
-            }
-            return !emptyList;
-        } else {
-            missingEquipmentIds.forEach(missingId ->
-                    BuilderReports.reportUnknownStaticIdHandling(reportNode, fieldName, missingId, equipmentType));
-            return true;
         }
+        return !emptyList;
     }
 
     public List<T> getEquipments() {
         return equipments;
-    }
-
-    public List<String> getMissingEquipmentIds() {
-        return missingEquipmentIds;
     }
 }

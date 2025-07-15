@@ -27,10 +27,11 @@ public abstract class AbstractOverloadManagementSystemBuilder<T extends Abstract
     protected TwoSides iMeasurementSide;
     protected final BuilderEquipment<Branch<?>> controlledEquipment;
 
-    protected AbstractOverloadManagementSystemBuilder(Network network, ModelConfig modelConfig, ReportNode reportNode, BuilderEquipment<Branch<?>> iMeasurement, BuilderEquipment<Branch<?>> controlledEquipment) {
-        super(network, modelConfig, reportNode);
-        this.iMeasurement = iMeasurement;
-        this.controlledEquipment = controlledEquipment;
+    protected AbstractOverloadManagementSystemBuilder(Network network, ModelConfig modelConfig, ReportNode parentReportNode,
+                                                      String iMeasurementFieldName, String controlledEquipmentFieldName) {
+        super(network, modelConfig, parentReportNode);
+        this.iMeasurement = new BuilderEquipment<>(BRANCH_TYPE, iMeasurementFieldName, reportNode);
+        this.controlledEquipment = new BuilderEquipment<>(BRANCH_TYPE, controlledEquipmentFieldName, reportNode);
     }
 
     public T controlledBranch(String staticId) {
@@ -41,8 +42,8 @@ public abstract class AbstractOverloadManagementSystemBuilder<T extends Abstract
     @Override
     protected void checkData() {
         super.checkData();
-        isInstantiable &= controlledEquipment.checkEquipmentData(reportNode);
-        isInstantiable &= iMeasurement.checkEquipmentData(reportNode);
+        isInstantiable &= controlledEquipment.checkEquipmentData();
+        isInstantiable &= iMeasurement.checkEquipmentData();
         if (iMeasurementSide == null) {
             BuilderReports.reportFieldNotSet(reportNode, "iMeasurementSide");
             isInstantiable = false;
