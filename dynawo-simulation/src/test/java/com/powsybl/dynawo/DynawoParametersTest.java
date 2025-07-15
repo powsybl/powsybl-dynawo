@@ -9,6 +9,7 @@ package com.powsybl.dynawo;
 import com.powsybl.commons.PowsyblException;
 import com.powsybl.commons.config.InMemoryPlatformConfig;
 import com.powsybl.commons.config.MapModuleConfig;
+import com.powsybl.commons.extensions.Extension;
 import com.powsybl.commons.test.AbstractSerDeTest;
 import com.powsybl.dynamicsimulation.DynamicSimulationParameters;
 import com.powsybl.dynamicsimulation.json.JsonDynamicSimulationParameters;
@@ -68,8 +69,10 @@ class DynawoParametersTest extends AbstractSerDeTest {
         LogLevel logLevel = LogLevel.WARN;
         Set<SpecificLog> specificLogs = EnumSet.of(SpecificLog.MODELER, SpecificLog.EQUATIONS);
         String criteriaFileName = "criteria.crt";
+        String additionalModelsFileName = "additionalModels.json";
 
-        initPlatformConfig(networkParametersId, solverType, solverParametersId, mergeLoads, useModelSimplifiers, precision, timelinExportMode, logLevel, specificLogs, criteriaFileName);
+        initPlatformConfig(networkParametersId, solverType, solverParametersId, mergeLoads, useModelSimplifiers,
+                precision, timelinExportMode, logLevel, specificLogs, criteriaFileName, additionalModelsFileName);
 
         DynawoSimulationParameters parameters = DynawoSimulationParameters.load(platformConfig, fileSystem);
 
@@ -85,6 +88,7 @@ class DynawoParametersTest extends AbstractSerDeTest {
         assertEquals(specificLogs, parameters.getSpecificLogs());
         assertThat(parameters.getCriteriaFileName()).hasValue(criteriaFileName);
         assertThat(parameters.getCriteriaFilePath()).hasValue(fileSystem.getPath(USER_HOME + criteriaFileName));
+        assertThat(parameters.getAdditionalModelsPath()).hasValue(fileSystem.getPath(USER_HOME + additionalModelsFileName));
     }
 
     @Test
@@ -107,7 +111,9 @@ class DynawoParametersTest extends AbstractSerDeTest {
         SolverType solverType = SolverType.IDA;
         String solverParametersId = "solverParametersId";
         boolean mergeLoads = false;
-        initPlatformConfig(networkParametersId, solverType, solverParametersId, mergeLoads, false, 1e-7, ExportMode.TXT, LogLevel.INFO, Set.of(SpecificLog.PARAMETERS, SpecificLog.VARIABLES), null);
+        initPlatformConfig(networkParametersId, solverType, solverParametersId, mergeLoads, false,
+                1e-7, ExportMode.TXT, LogLevel.INFO, Set.of(SpecificLog.PARAMETERS, SpecificLog.VARIABLES),
+                null, null);
 
         DynamicSimulationParameters dynamicSimulationParameters = new DynamicSimulationParameters()
                 .setStartTime(0)
@@ -120,11 +126,13 @@ class DynawoParametersTest extends AbstractSerDeTest {
 
     private void initPlatformConfig(String networkParametersId, SolverType solverType, String solverParametersId,
                                     boolean mergeLoads, boolean useModelSimplifiers, double precision, ExportMode timelineExportMode,
-                                    LogLevel logLevel, Set<SpecificLog> specificLogs, String criteriaFileName) throws IOException {
+                                    LogLevel logLevel, Set<SpecificLog> specificLogs, String criteriaFileName,
+                                    String additionalModelsFileName) throws IOException {
         String parametersFile = USER_HOME + "parametersFile";
         String networkParametersFile = USER_HOME + "networkParametersFile";
         String solverParametersFile = USER_HOME + "solverParametersFile";
         String criteriaFile = criteriaFileName != null ? USER_HOME + criteriaFileName : null;
+        String additionalModelsFile = additionalModelsFileName != null ? USER_HOME + additionalModelsFileName : null;
 
         MapModuleConfig moduleConfig = platformConfig.createModuleConfig(MODULE_SPECIFIC_PARAMETERS);
         moduleConfig.setStringProperty("parametersFile", parametersFile);
@@ -140,8 +148,9 @@ class DynawoParametersTest extends AbstractSerDeTest {
         moduleConfig.setStringProperty("log.levelFilter", logLevel.toString());
         moduleConfig.setStringListProperty("log.specificLogs", specificLogs.stream().map(SpecificLog::toString).toList());
         moduleConfig.setStringProperty("criteria.file", criteriaFile);
+        moduleConfig.setStringProperty("additionalModelsFile", additionalModelsFile);
 
-        createFiles(parametersFile, networkParametersFile, solverParametersFile, criteriaFile);
+        createFiles(parametersFile, networkParametersFile, solverParametersFile, criteriaFile, additionalModelsFile);
     }
 
     private void initDumpFilePlatformConfig(String folderProperty, String fileProperty) throws IOException {
@@ -183,6 +192,7 @@ class DynawoParametersTest extends AbstractSerDeTest {
         assertEquals(DEFAULT_USE_MODEL_SIMPLIFIERS, parameters.isUseModelSimplifiers());
         assertEquals(DEFAULT_TIMELINE_EXPORT_MODE, parameters.getTimelineExportMode());
         assertTrue(parameters.getCriteriaFilePath().isEmpty());
+        assertTrue(parameters.getAdditionalModelsPath().isEmpty());
     }
 
     @Test
@@ -243,8 +253,9 @@ class DynawoParametersTest extends AbstractSerDeTest {
         String criteriaFileName = "criteria.crt";
         String dumpFolder = USER_HOME + "dumpFiles";
         String dumpFile = "dumpFile.dmp";
+        String additionalModelsFileName = "additionalModels.json";
 
-        initPlatformConfig(networkParametersId, solverType, solverParametersId, mergeLoads, useModelSimplifiers, precision, timelinExportMode, logLevel, specificLogs, criteriaFileName);
+        initPlatformConfig(networkParametersId, solverType, solverParametersId, mergeLoads, useModelSimplifiers, precision, timelinExportMode, logLevel, specificLogs, criteriaFileName, additionalModelsFileName);
         initDumpFilePlatformConfig(dumpFolder, dumpFile);
         Map<String, String> expectedProperties = Map.ofEntries(
                 Map.entry("modelParameters",
@@ -261,6 +272,7 @@ class DynawoParametersTest extends AbstractSerDeTest {
                 Map.entry("log.levelFilter", "WARN"),
                 Map.entry("log.specificLogs", "MODELER,EQUATIONS"),
                 Map.entry("criteria.file", "/home/user/criteria.crt"),
+                Map.entry("additionalModelsFile", "/home/user/additionalModels.json"),
                 Map.entry("dump.export", "true"),
                 Map.entry("dump.exportFolder", "/home/user/dumpFiles"),
                 Map.entry("dump.useAsInput", "true"),
@@ -283,6 +295,7 @@ class DynawoParametersTest extends AbstractSerDeTest {
         LogLevel logLevel = LogLevel.WARN;
         Set<SpecificLog> specificLogs = EnumSet.of(SpecificLog.MODELER, SpecificLog.EQUATIONS);
         String criteriaFileName = "criteria.crt";
+        String additionalModelsFileName = "additionalModels.json";
         String dumpFolder = USER_HOME + "dumpFiles";
         String dumpFile = "dumpFile.dmp";
         boolean useDumpFile = true;
@@ -292,6 +305,7 @@ class DynawoParametersTest extends AbstractSerDeTest {
         String networkParametersFile = USER_HOME + "networkParametersFile";
         String solverParametersFile = USER_HOME + "solverParametersFile";
         String criteriaFile = USER_HOME + criteriaFileName;
+        String additionalModelsFile = USER_HOME + "additionalModels.json";
 
         Map<String, String> properties = new HashMap<>();
         properties.put("parametersFile", parametersFile);
@@ -307,12 +321,13 @@ class DynawoParametersTest extends AbstractSerDeTest {
         properties.put("log.levelFilter", logLevel.toString());
         properties.put("log.specificLogs", "MODELER, EQUATIONS");
         properties.put("criteria.file", criteriaFile);
+        properties.put("additionalModelsFile", additionalModelsFile);
         properties.put("dump.export", Boolean.toString(exportDumpFile));
         properties.put("dump.exportFolder", dumpFolder);
         properties.put("dump.useAsInput", Boolean.toString(useDumpFile));
         properties.put("dump.fileName", dumpFile);
 
-        createFiles(parametersFile, networkParametersFile, solverParametersFile, criteriaFile);
+        createFiles(parametersFile, networkParametersFile, solverParametersFile, criteriaFile, additionalModelsFile);
         createDumpFiles(dumpFolder, dumpFile);
 
         DynawoSimulationParameters parameters = DynawoSimulationParameters.load(properties, fileSystem);
@@ -325,6 +340,9 @@ class DynawoParametersTest extends AbstractSerDeTest {
         assertEquals(timelinExportMode, parameters.getTimelineExportMode());
         assertEquals(logLevel, parameters.getLogLevelFilter());
         assertThat(parameters.getSpecificLogs()).containsExactlyInAnyOrderElementsOf(specificLogs);
+        assertThat(parameters.getCriteriaFileName()).hasValue(criteriaFileName);
+        assertThat(parameters.getCriteriaFilePath()).hasValue(fileSystem.getPath(USER_HOME + criteriaFileName));
+        assertThat(parameters.getAdditionalModelsPath()).hasValue(fileSystem.getPath(USER_HOME + additionalModelsFileName));
         DumpFileParameters dumpParameters = parameters.getDumpFileParameters();
         assertEquals(exportDumpFile, dumpParameters.exportDumpFile());
         assertEquals(useDumpFile, dumpParameters.useDumpFile());
@@ -332,13 +350,29 @@ class DynawoParametersTest extends AbstractSerDeTest {
         assertEquals(dumpFile, dumpParameters.dumpFile());
     }
 
-    private void createFiles(String parametersFile, String networkParametersFile, String solverParametersFile, String criteriaFile) throws IOException {
+    @Test
+    void loadAndUploadFromExtendable() {
+        DynawoSimulationProvider provider = new DynawoSimulationProvider();
+        Optional<Extension<DynamicSimulationParameters>> specificParameters = provider.loadSpecificParameters(Map.of("log.specificLogs", "EQUATIONS"));
+        assertThat(specificParameters).isPresent();
+        DynawoSimulationParameters parameters = (DynawoSimulationParameters) specificParameters.get();
+        assertThat(parameters.getSpecificLogs()).containsExactly(SpecificLog.EQUATIONS);
+        parameters.addSpecificLog(SpecificLog.PARAMETERS);
+        provider.updateSpecificParameters(parameters, Map.of("useModelSimplifiers", "True"));
+        assertThat(parameters.getSpecificLogs()).containsExactly(SpecificLog.PARAMETERS, SpecificLog.EQUATIONS);
+        assertTrue(parameters.isUseModelSimplifiers());
+    }
+
+    private void createFiles(String parametersFile, String networkParametersFile, String solverParametersFile, String criteriaFile, String additionalModelsFile) throws IOException {
         Files.createDirectories(fileSystem.getPath(USER_HOME));
         copyFile("/parametersSet/models.par", parametersFile);
         copyFile("/parametersSet/network.par", networkParametersFile);
         copyFile("/parametersSet/solvers.par", solverParametersFile);
         if (criteriaFile != null) {
             copyFile("/criteria.crt", criteriaFile);
+        }
+        if (additionalModelsFile != null) {
+            copyFile("/additionalModels.json", additionalModelsFile);
         }
     }
 

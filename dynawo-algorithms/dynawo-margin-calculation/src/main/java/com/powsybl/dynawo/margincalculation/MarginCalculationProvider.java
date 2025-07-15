@@ -13,7 +13,10 @@ import com.powsybl.commons.report.ReportNode;
 import com.powsybl.computation.ExecutionEnvironment;
 import com.powsybl.contingency.ContingenciesProvider;
 import com.powsybl.dynamicsimulation.DynamicModelsSupplier;
+import com.powsybl.dynawo.DynawoSimulationParameters;
 import com.powsybl.dynawo.DynawoSimulationProvider;
+import com.powsybl.dynawo.builders.AdditionalModelConfigLoader;
+import com.powsybl.dynawo.builders.ModelConfigsHandler;
 import com.powsybl.dynawo.algorithms.DynawoAlgorithmsConfig;
 import com.powsybl.dynawo.commons.DynawoUtil;
 import com.powsybl.dynawo.commons.DynawoVersion;
@@ -62,12 +65,15 @@ public class MarginCalculationProvider implements Versionable {
         ExecutionEnvironment execEnv = new ExecutionEnvironment(Collections.emptyMap(), WORKING_DIR_PREFIX, config.isDebug(), runParameters.getMarginCalculationParameters().getDebugDir());
         DynawoVersion currentVersion = DynawoUtil.requireDynaMinVersion(execEnv, runParameters.getComputationManager(), getVersionCommand(config), DYNAWO_LAUNCHER_PROGRAM_NAME, false);
         MarginCalculationParameters parameters = runParameters.getMarginCalculationParameters();
+        DynawoSimulationParameters dynawoParameters = parameters.getDynawoParameters();
+        dynawoParameters.getAdditionalModelsPath().ifPresent(additionalModelPath ->
+                ModelConfigsHandler.getInstance().addModels(new AdditionalModelConfigLoader(additionalModelPath)));
         MarginCalculationContext context = new MarginCalculationContext.Builder(network,
                 BlackBoxSupplierUtils.getBlackBoxModelList(dynamicModelsSupplier, network, mcReportNode),
                 contingenciesProvider.getContingencies(network),
                 loadsVariationSupplier.getLoadsVariations(network, mcReportNode))
                 .marginCalculationParameters(parameters)
-                .dynawoParameters(parameters.getDynawoParameters())
+                .dynawoParameters(dynawoParameters)
                 .currentVersion(currentVersion)
                 .reportNode(mcReportNode)
                 .workingVariantId(workingVariantId)
